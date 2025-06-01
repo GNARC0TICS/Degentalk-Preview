@@ -6,7 +6,7 @@ alwaysApply: false
 # API Client Pattern Rule
 
 ## Overview
-This rule defines the standardized approach for API client usage in the ForumFusion codebase.
+This rule defines the standardized approach for API client usage in the Degentalk codebase.
 
 ## Preferred API Client
 The preferred API client implementation is `apiRequest` from `@/lib/queryClient.ts`. All API calls should standardize on this implementation for consistency and improved error handling.

@@ -1,11 +1,11 @@
-# Context Portal (ConPort) Integration Guide for ForumFusion
+# Context Portal (ConPort) Integration Guide for Degentalk
 
 ## 1. Introduction
-This guide details how the Context Portal (ConPort) MCP server is integrated into the ForumFusion project. ConPort serves as the **primary, authoritative source of project memory**, enhancing collaboration, context retention, and the effectiveness of AI-assisted development.
+This guide details how the Context Portal (ConPort) MCP server is integrated into the Degentalk project. ConPort serves as the **primary, authoritative source of project memory**, enhancing collaboration, context retention, and the effectiveness of AI-assisted development.
 
 All AI agents (including Cline) and developers should prioritize ConPort for storing, retrieving, and managing project context.
 
-## 2. Role of ConPort in ForumFusion
+## 2. Role of ConPort in Degentalk
 - **Centralized Knowledge Base:** Replaces fragmented, file-based memory systems with a structured, queryable database.
 - **AI Agent Empowerment:** Provides AI agents with consistent, up-to-date project information, enabling more accurate and context-aware assistance.
 - **Improved Developer Onboarding:** New team members can quickly get up to speed by querying ConPort for project history, decisions, and architecture.
@@ -15,12 +15,12 @@ All AI agents (including Cline) and developers should prioritize ConPort for sto
 ConPort is initialized at the start of every AI agent session. The process is governed by `.clinerules/conport-usage-protocol.mdc`.
 
 ### 3.1. Workspace ID
-- ConPort operations are workspace-specific. The `workspace_id` for ForumFusion is the absolute path to the project root (`/Users/gnarcotic/Degentalk/ForumFusion`).
+- ConPort operations are workspace-specific. The `workspace_id` for Degentalk is the absolute path to the project root (`/Users/gnarcotic/Degentalk`).
 
 ### 3.2. First-Time Setup in a Workspace
 - If ConPort's database (`<workspace_root>/context_portal/context.db`) doesn't exist, it will be created on the first ConPort tool use.
 - **Using `projectBrief.md`**:
-    - A `projectBrief.md` file in the workspace root (`/Users/gnarcotic/Degentalk/ForumFusion/projectBrief.md`) is used to bootstrap ConPort's **Product Context**.
+    - A `projectBrief.md` file in the workspace root (`/Users/gnarcotic/Degentalk/projectBrief.md`) is used to bootstrap ConPort's **Product Context**.
     - During the initial setup, AI agents will prompt to import content from this file into ConPort. This provides an immediate baseline understanding of the project.
 
 ## 4. Key ConPort Tools & Usage
@@ -55,7 +55,7 @@ Refer to `.clinerules/conport-usage-protocol.mdc` and the `cline_conport_strateg
 - To keep ConPort informed of the project structure:
     1.  When `directory-tree.md` is updated (e.g., after significant refactoring), its content **SHOULD** be logged into ConPort.
     2.  Use the `log_custom_data` tool:
-        *   `workspace_id`: The ForumFusion project root path.
+        *   `workspace_id`: The Degentalk project root path.
         *   `category`: "ProjectStructure"
         *   `key`: "directoryTree"
         *   `value`: The full string content of `directory-tree.md`.
@@ -69,4 +69,4 @@ Refer to `.clinerules/conport-usage-protocol.mdc` and the `cline_conport_strateg
 - **Use `workspace_id`:** Always provide the correct `workspace_id` with every ConPort tool call.
 - **"ConPort Sync"**: Developers can request a "ConPort Sync" from AI agents to ensure the session's discussions are fully captured in ConPort.
 
-By consistently using ConPort, the ForumFusion project will benefit from a robust, dynamic, and easily accessible memory, improving development efficiency and AI collaboration.
+By consistently using ConPort, the Degentalk project will benefit from a robust, dynamic, and easily accessible memory, improving development efficiency and AI collaboration.

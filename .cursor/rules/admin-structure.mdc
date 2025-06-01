@@ -6,7 +6,7 @@ alwaysApply: false
 # Admin Section Structure
 
 ## Overview
-The ForumFusion admin section provides interfaces for platform management including user management, content moderation, wallet administration, XP system management, and system configuration.
+The Degentalk admin section provides interfaces for platform management including user management, content moderation, wallet administration, XP system management, and system configuration.
 
 ## Layout Pattern
 All admin pages use a consistent layout structure:

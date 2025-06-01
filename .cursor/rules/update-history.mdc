@@ -46,7 +46,7 @@ During codebase audit, identified inconsistent API client usage between `api` fr
 # API Client Pattern
 
 ## Overview
-This rule defines the standardized approach for API client usage in the ForumFusion codebase.
+This rule defines the standardized approach for API client usage in the Degentalk codebase.
 
 ## Preferred API Client
 The preferred API client implementation is `apiRequest` from `@/lib/queryClient.ts`.
@@ -138,7 +138,7 @@ Schema consistency auditing, API standardization, and comprehensive testing.
 **Change Type:** Code Optimization & Cleanup
 
 **Context/Reason:**
-Completed comprehensive code optimization focusing on eliminating redundancies and centralizing logic as part of the ForumFusion audit and optimization plan. This optimization phase addressed multiple technical debt issues and improved code maintainability.
+Completed comprehensive code optimization focusing on eliminating redundancies and centralizing logic as part of the Degentalk audit and optimization plan. This optimization phase addressed multiple technical debt issues and improved code maintainability.
 
 **Optimizations Completed:**
 1. **AnnouncementCard Duplication Removed**: Eliminated identical component definitions from `home.tsx` and `forum.tsx`
@@ -166,7 +166,7 @@ Completed comprehensive code optimization focusing on eliminating redundancies a
 - Eliminated duplicate network requests
 
 **Triggered By:**
-ForumFusion audit and next steps plan identifying multiple redundancies and architectural inconsistencies.
+Degentalk audit and next steps plan identifying multiple redundancies and architectural inconsistencies.
 
 **Next Phase Ready:**
 Schema consistency auditing, API standardization, and comprehensive testing.

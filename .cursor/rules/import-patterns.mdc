@@ -6,7 +6,7 @@ alwaysApply: true
 # Import Patterns and Best Practices
 
 ## Export Styles
-The ForumFusion codebase uses a mix of export styles that need to be handled properly:
+The Degentalk codebase uses a mix of export styles that need to be handled properly:
 
 ### Default Exports
 Many components use default exports:
