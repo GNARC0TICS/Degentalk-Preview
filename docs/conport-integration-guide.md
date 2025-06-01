@@ -1,7 +1,7 @@
 # Context Portal (ConPort) Integration Guide for Degentalk
 
 ## 1. Introduction
-This guide details how the Context Portal (ConPort) MCP server is integrated into the Degentalk project. ConPort serves as the **primary, authoritative source of project memory**, enhancing collaboration, context retention, and the effectiveness of AI-assisted development.
+This guide details how the Context Portal (ConPort) MCP server is integrated into the Degentalk project. ConPort serves as the **primary, authoritative source of project memory**, enhancing collaboration, context retention, and the effectiveness of AI-assisted development
 
 All AI agents (including Cline) and developers should prioritize ConPort for storing, retrieving, and managing project context.
 
