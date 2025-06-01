@@ -23,6 +23,12 @@ import AuthPage from "./pages/auth";
 // Admin Pages
 import AdminDashboardPage from "./pages/admin/index";
 import AdminUsersPage from "./pages/admin/users";
+import AdminUserEdit from "./pages/admin/edit-user"; // Added for Admin User Edit Page
+import UserXpAdjustmentPage from "./pages/admin/xp/adjust"; // Added for Admin XP Adjust Page
+import BadgeManagementPage from "./pages/admin/xp/badges"; // Added for Admin XP Badges Page
+import LevelManagementPage from "./pages/admin/xp/levels"; // Added for Admin XP Levels Page
+import XpSettingsPage from "./pages/admin/xp/settings"; // Added for Admin XP Settings Page
+import TitleManagementPage from "./pages/admin/xp/titles"; // Added for Admin XP Titles Page
 import AdminThreadsPage from "./pages/admin/threads";
 import AdminTreasuryPage from "./pages/admin/treasury";
 import AdminWalletsPage from "./pages/admin/wallets";
@@ -124,6 +130,12 @@ function App() {
               </AdminLayout>
             );
           }} />
+          {/* Added route for Admin User Edit Page */}
+          <Route path="/admin/users/:id" component={() => (
+            <AdminLayout>
+              <AdminUserEdit />
+            </AdminLayout>
+          )} />
           <Route path="/admin/threads" component={() => {
             return (
               <AdminLayout>
@@ -205,6 +217,33 @@ function App() {
           <Route path="/admin/cooldowns" component={() => (
             <AdminLayout>
               <CooldownSettingsPage />
+            </AdminLayout>
+          )} />
+          {/* Added route for Admin XP Adjust Page */}
+          <Route path="/admin/xp/adjust" component={() => (
+            <AdminLayout>
+              <UserXpAdjustmentPage />
+            </AdminLayout>
+          )} />
+          {/* Added routes for Admin XP Management Pages */}
+          <Route path="/admin/xp/badges" component={() => (
+            <AdminLayout>
+              <BadgeManagementPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/xp/levels" component={() => (
+            <AdminLayout>
+              <LevelManagementPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/xp/settings" component={() => (
+            <AdminLayout>
+              <XpSettingsPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/xp/titles" component={() => (
+            <AdminLayout>
+              <TitleManagementPage />
             </AdminLayout>
           )} />
 

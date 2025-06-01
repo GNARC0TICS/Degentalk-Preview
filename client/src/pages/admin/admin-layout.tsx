@@ -1,6 +1,6 @@
 import { ReactNode, useMemo, useState } from "react";
 import { Link } from "wouter";
-import { Search, ExternalLink, Bell, Menu, HomeIcon, Users, MessageSquare, FolderIcon, TagIcon, CoinsIcon, Package, Smile, Settings, Flag, Users2, Megaphone, CloudRain, Clock, Sparkles, Trophy, BarChart3 } from "lucide-react";
+import { Search, ExternalLink, Bell, Menu, HomeIcon, Users, MessageSquare, FolderIcon, TagIcon, CoinsIcon, Package, Smile, Settings, Flag, Users2, Megaphone, CloudRain, Clock, Sparkles, Trophy, BarChart3, BadgeIcon } from "lucide-react";
 import AdminSidebar from "@/components/admin/admin-sidebar";
 import { AdminRoutePermission, adminRouteGroups, moderatorRouteGroups, ROUTES } from "@/config/admin-routes";
 import { Button } from "@/components/ui/button";
@@ -18,9 +18,11 @@ const adminLinks = [
   { href: "/admin/categories", label: "Categories", icon: <FolderIcon className="h-4 w-4 mr-2" /> },
   { href: "/admin/prefixes", label: "Prefixes", icon: <TagIcon className="h-4 w-4 mr-2" /> },
   { href: "/admin/treasury", label: "Treasury", icon: <CoinsIcon className="h-4 w-4 mr-2" /> },
-  { href: "/admin/xp-settings", label: "XP Settings", icon: <Sparkles className="h-4 w-4 mr-2" /> },
-  { href: "/admin/levels", label: "User Levels", icon: <BarChart3 className="h-4 w-4 mr-2" /> },
-  { href: "/admin/badges", label: "Badges", icon: <Trophy className="h-4 w-4 mr-2" /> },
+  { href: "/admin/xp/adjust", label: "Adjust User XP", icon: <Sparkles className="h-4 w-4 mr-2" /> },
+  { href: "/admin/xp/settings", label: "XP Settings", icon: <Settings className="h-4 w-4 mr-2" /> }, // Changed icon for consistency
+  { href: "/admin/xp/levels", label: "User Levels", icon: <BarChart3 className="h-4 w-4 mr-2" /> },
+  { href: "/admin/xp/badges", label: "Badges", icon: <Trophy className="h-4 w-4 mr-2" /> },
+  { href: "/admin/xp/titles", label: "Titles", icon: <BadgeIcon className="h-4 w-4 mr-2" /> }, // Added Titles link
   { href: "/admin/dgt-packages", label: "DGT Packages", icon: <Package className="h-4 w-4 mr-2" /> },
   { href: "/admin/emojis", label: "Emojis", icon: <Smile className="h-4 w-4 mr-2" /> },
   { href: "/admin/platform-settings", label: "Platform Settings", icon: <Settings className="h-4 w-4 mr-2" /> },

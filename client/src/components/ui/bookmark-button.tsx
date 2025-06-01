@@ -70,7 +70,7 @@ export function BookmarkButton({
         title: 'Login Required', 
         description: 'Please sign in to bookmark threads', 
         variant: 'default',
-        action: <a href="/login" className="px-2 py-1 bg-zinc-800 rounded text-sm">Sign In</a>
+        action: <a href="/auth" className="px-2 py-1 bg-zinc-800 rounded text-sm">Sign In</a>
       });
       return;
     }
@@ -94,7 +94,7 @@ export function BookmarkButton({
     <button
       aria-label={active ? 'Remove bookmark' : 'Add bookmark'}
       onClick={handleClick}
-      disabled={mutation.isLoading}
+      disabled={mutation.isPending}
       className={cn(
         'relative flex items-center justify-center rounded-full transition-all outline-none',
         'focus:ring-2 focus:ring-cyan-500',

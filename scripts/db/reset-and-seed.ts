@@ -6,6 +6,10 @@ import { seedTreasurySettings } from './seed-treasury';
 import { seedVaults } from './seed-vaults';
 import { sql } from 'drizzle-orm';
 import * as schema from './utils/schema';
+
+// Dynamically import child_process to avoid 'require is not defined' error
+// const { exec } = await import('child_process');
+
 // Import other seed functions as they are created
 // e.g., import { seedUsers } from './seed-users';
 
@@ -22,16 +26,65 @@ async function main() {
   try {
     logSeed(SCRIPT_NAME, 'Starting database cleanup...');
 
-    await db.delete(schema.xpActionSettings);
-    logSeed(SCRIPT_NAME, '🧼 Cleaned xp_action_settings');
-    await db.delete(schema.badges);
-    logSeed(SCRIPT_NAME, '🧼 Cleaned badges');
-    await db.delete(schema.platformTreasurySettings);
-    logSeed(SCRIPT_NAME, '🧼 Cleaned platform_treasury_settings');
-    await db.delete(schema.vaults);
-    logSeed(SCRIPT_NAME, '🧼 Cleaned vaults');
-    // Add other tables to clean if necessary, respecting foreign key constraints
+    // Drop tables that are being re-created or significantly altered in new migrations
+    await db.execute(sql`DROP TABLE IF EXISTS admin_manual_airdrop_logs CASCADE;`);
+    logSeed(SCRIPT_NAME, '🗑️ Dropped admin_manual_airdrop_logs (if exists)');
+    await db.execute(sql`DROP TABLE IF EXISTS inventory_transaction_links CASCADE;`);
+    logSeed(SCRIPT_NAME, '🗑️ Dropped inventory_transaction_links (if exists)');
+    await db.execute(sql`DROP TABLE IF EXISTS user_inventory CASCADE;`);
+    logSeed(SCRIPT_NAME, '🗑️ Dropped user_inventory (if exists)');
+    await db.execute(sql`DROP TABLE IF EXISTS platform_treasury_settings CASCADE;`);
+    logSeed(SCRIPT_NAME, '🗑️ Dropped platform_treasury_settings (if exists)');
+    await db.execute(sql`DROP TABLE IF EXISTS thread_feature_permissions CASCADE;`);
+    logSeed(SCRIPT_NAME, '🗑️ Dropped thread_feature_permissions (if exists)');
+
+    // Existing DELETE statements for seeded tables (commented out as drops handle full reset)
+    // await db.delete(schema.xpActionSettings);
+    // logSeed(SCRIPT_NAME, '🧼 Cleaned xp_action_settings');
+    // await db.delete(schema.badges);
+    // logSeed(SCRIPT_NAME, '🧼 Cleaned badges');
+    // await db.delete(schema.platformTreasurySettings);
+    // logSeed(SCRIPT_NAME, '🧼 Cleaned platform_treasury_settings');
+    // await db.delete(schema.vaults);
+    // logSeed(SCRIPT_NAME, '🧼 Cleaned vaults');
     logSeed(SCRIPT_NAME, '✅ Database cleanup complete.');
+
+    // Apply migrations after cleanup but before seeding
+    logSeed(SCRIPT_NAME, 'Applying database migrations...');
+    const { exec } = await import('child_process');
+    await new Promise((resolve, reject) => {
+      // Increased maxBuffer and added a timeout
+      const child = exec('npm run db:migrate:apply', { maxBuffer: 1024 * 500, timeout: 120000 }, (error: any, stdout: any, stderr: any) => {
+        console.log('exec callback invoked.');
+        if (error) {
+          console.error(`exec error: ${error}`);
+          logSeed(SCRIPT_NAME, `❌ Error applying migrations: ${error.message}`, true);
+          reject(error);
+          return;
+        }
+        if (stderr) {
+          console.error(`stderr: ${stderr}`);
+          logSeed(SCRIPT_NAME, `⚠️ Stderr during migrations: ${stderr}`, true);
+        }
+        logSeed(SCRIPT_NAME, `stdout: ${stdout}`);
+        logSeed(SCRIPT_NAME, '✅ Database migrations applied successfully within exec callback.');
+        resolve(null);
+      });
+
+      child.on('close', (code: number) => {
+        console.log(`child process exited with code ${code}`);
+        if (code !== 0) {
+          reject(new Error(`Migration process exited with non-zero code ${code}`));
+        }
+      });
+
+      child.on('error', (err: Error) => {
+        console.error(`child process failed to start or encountered an error: ${err.message}`);
+        reject(err);
+      });
+
+    });
+    logSeed(SCRIPT_NAME, '✅ Database migrations promise resolved.');
 
     await seedXpActions();
     await seedBadges();

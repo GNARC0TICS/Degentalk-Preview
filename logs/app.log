@@ -12559,3 +12559,48 @@ User not found
   "logPath": "logs/app.log"
 }
 [2025-06-01T15:58:43.425Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T16:36:50.115Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T16:36:50.129Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T16:37:32.079Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T16:37:32.099Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T16:37:49.848Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T16:37:49.863Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T16:40:04.427Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T16:40:04.540Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T16:41:48.638Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T16:41:48.652Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T16:47:39.400Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T16:47:39.415Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T16:53:46.122Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T16:53:46.136Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T16:56:11.534Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T16:56:11.551Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T16:58:25.884Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T16:58:26.073Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.

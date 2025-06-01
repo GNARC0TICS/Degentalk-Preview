@@ -76,7 +76,7 @@ export function SiteHeader() {
   // Handle logout
   const handleLogout = () => {
     if (!isDevelopment && logoutMutation?.mutate) {
-      logoutMutation.mutate();
+      logoutMutation.mutate(undefined);
     }
   };
 
@@ -240,7 +240,7 @@ export function SiteHeader() {
               </div>
             ) : (
               <div className="flex items-center space-x-3">
-                <Link href="/login">
+                <Link href="/auth">
                   <Button variant="outline" className="border-zinc-700 bg-zinc-800/50 hover:bg-zinc-800">
                     Log In
                   </Button>
@@ -388,7 +388,7 @@ export function SiteHeader() {
                     Sign Up
                   </Button>
                 </Link>
-                <Link href="/login" onClick={() => setIsOpen(false)}>
+                <Link href="/auth" onClick={() => setIsOpen(false)}>
                   <Button className="w-full border-zinc-700 bg-zinc-800/50 hover:bg-zinc-800">
                     Log In
                   </Button>
