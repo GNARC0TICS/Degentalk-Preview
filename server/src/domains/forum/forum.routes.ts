@@ -14,7 +14,7 @@ import {
   postReactions,
   reactionTypeEnum,
   transactions, 
-  treasurySettings, 
+  treasurySettings,
   transactionTypeEnum,
   transactionStatusEnum, 
   users,
@@ -29,7 +29,7 @@ import {
   threadPrefixes,
   tags,
   threadTags
-} from "@shared/schema";
+} from "@db/schema";
 import { sql, eq, and, desc, count, isNotNull, asc, ilike, or, gt, ne, inArray, isNull } from "drizzle-orm";
 import { awardPathXp } from "@server/utils/path-utils";
 import { xpRewards } from "@shared/path-config";

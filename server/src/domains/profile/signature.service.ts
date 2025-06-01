@@ -5,7 +5,7 @@
  */
 
 import { db } from '../../../db';
-import { users, signatureShopItems, userSignatureItems } from '@shared/schema';
+import { users, signatureShopItems, userSignatureItems } from '@db/schema';
 import { eq, and } from 'drizzle-orm';
 import { getSignatureTierForLevel } from '@shared/signature/SignatureTierConfig';
 

@@ -1,5 +1,5 @@
 import { db } from '../../../../core/db';
-import { users, userToUserGroups, adminManualAirdropLogs, type NewAdminManualAirdropLog } from '@/db/schema';
+import { users, adminManualAirdropLogs, type NewAdminManualAirdropLog } from '@db/schema';
 import { xpService } from '../../../xp/xp.service'; // Core XP service for XP adjustments
 import { dgtService } from '../../../wallet/dgt.service'; // Core DGT service for DGT adjustments
 import { eq, inArray } from 'drizzle-orm';
@@ -32,9 +32,9 @@ export class AirdropAdminService {
       const groupId = targetCriteria.value as number;
       try {
         const usersInGroup = await db
-          .select({ userId: userToUserGroups.userId })
-          .from(userToUserGroups)
-          .where(eq(userToUserGroups.groupId, groupId));
+          .select({ userId: users.id })
+          .from(users)
+          .where(eq(users.groupId, groupId));
         targetUserIds = usersInGroup.map((u) => u.userId);
       } catch (error) {
         logger.error('AIRDROP_SERVICE', `Error fetching users in group ${groupId}:`, error);

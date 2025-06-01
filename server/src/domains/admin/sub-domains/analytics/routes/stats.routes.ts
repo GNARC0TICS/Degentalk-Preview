@@ -5,7 +5,7 @@
  */
 import { Router } from 'express';
 import { db } from '@server/src/core/db';
-import { platformStatistics } from '@shared/schema';
+import { platformStatistics } from '@db/schema';
 import { eq } from 'drizzle-orm';
 import { platformStatsService } from '../services/platformStats.service';
 import { isAdmin } from '../../../../auth/middleware/auth.middleware';

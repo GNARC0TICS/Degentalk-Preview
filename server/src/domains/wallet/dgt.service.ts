@@ -18,7 +18,7 @@ import {
   transactions, 
   transactionTypeEnum, 
   transactionStatusEnum
-} from '@shared/schema';
+} from '@db/schema';
 import { db } from '../../core/db';
 import { logger } from '../../core/logger';
 import { eq, sql } from 'drizzle-orm';

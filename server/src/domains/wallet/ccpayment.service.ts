@@ -18,7 +18,7 @@ import {
   transactions, 
   users,
   dgtPurchaseOrders
-} from '@shared/schema';
+} from '@db/schema';
 import { eq, and } from 'drizzle-orm';
 import { WalletError, ErrorCodes } from '../../core/errors';
 import { SUPPORTED_CRYPTO_CURRENCIES } from './wallet.constants';

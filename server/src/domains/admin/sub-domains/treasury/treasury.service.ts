@@ -5,8 +5,8 @@
  */
 
 import { db } from '../../../../core/db';
-import { users, transactions, adminAuditLogs, treasurySettings, siteSettings as platformSiteSettings } from '@shared/schema';
-import type { Transaction } from '@shared/schema';
+import { users, transactions, adminAuditLogs, dgtEconomyParameters, siteSettings as platformSiteSettings } from '@db/schema';
+import type { Transaction } from '@db/schema';
 import { sql, eq, desc, and, inArray } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type { TreasuryDepositInput, TreasuryWithdrawalInput, TreasurySettingsUpdateInput, MassAirdropInput } from './treasury.validators';
@@ -33,19 +33,17 @@ export class AdminTreasuryService {
         .from(users)
         .where(sql`${users.id} != 999999`); // Exclude treasury user ID if you have one
         
-      // Assuming treasurySettings table has one row for all treasury related monetary values
       const [treasurySpecificSettings] = await db.select({ 
-          dgtTreasuryBalance: treasurySettings.dgtTreasuryBalance 
+          dgtTreasuryBalance: dgtEconomyParameters.dgtTreasuryBalance 
         })
-        .from(treasurySettings)
-        // Add a .where clause if your treasurySettings table has an identifier, e.g., eq(treasurySettings.id, 1)
+        .from(dgtEconomyParameters)
         .limit(1);
         
       const holdersCountResult = await db.select({ count: sql<number>`count(*)` })
         .from(users)
         .where(and(sql`${users.dgtWalletBalance} > 0`, sql`${users.id} != 999999`));
 
-      const totalSupply = parseDgtAmount(parseFloat(totalSupplySetting?.value || '1000000000')); // Default to 1 Billion DGT if not set
+      const totalSupply = parseDgtAmount(parseFloat(totalSupplySetting?.value || '1000000000'));
       const circulatingAmount = Number(circulatingSupplyResult[0]?.circulating) || 0;
       const treasuryAmount = Number(treasurySpecificSettings?.dgtTreasuryBalance) || 0;
       const holdersCount = Number(holdersCountResult[0]?.count) || 0;
@@ -68,12 +66,11 @@ export class AdminTreasuryService {
     const transferAmountDgt = parseDgtAmount(amount);
 
     return db.transaction(async (tx) => {
-      const [currentTreasurySettings] = await tx.select({ balance: treasurySettings.dgtTreasuryBalance })
-        .from(treasurySettings)
-        // .where(eq(treasurySettings.id, 1)) // Assuming a single settings row with ID 1
+      const [currentDgtParams] = await tx.select({ balance: dgtEconomyParameters.dgtTreasuryBalance })
+        .from(dgtEconomyParameters)
         .limit(1);
 
-      const currentTreasuryBalance = Number(currentTreasurySettings?.balance) || 0;
+      const currentTreasuryBalance = Number(currentDgtParams?.balance) || 0;
       if (currentTreasuryBalance < transferAmountDgt) {
         throw new AdminError('Insufficient treasury balance', 400, AdminErrorCodes.OPERATION_FAILED);
       }
@@ -83,14 +80,12 @@ export class AdminTreasuryService {
         throw new AdminError('Recipient user not found', 404, AdminErrorCodes.USER_NOT_FOUND);
       }
 
-      // Update treasury balance
-      await tx.update(treasurySettings)
+      await tx.update(dgtEconomyParameters)
         .set({
-          dgtTreasuryBalance: sql`${treasurySettings.dgtTreasuryBalance} - ${transferAmountDgt}`,
+          dgtTreasuryBalance: sql`${dgtEconomyParameters.dgtTreasuryBalance} - ${transferAmountDgt}`,
           updatedAt: new Date(),
           updatedBy: adminUserId
-        })
-        // .where(eq(treasurySettings.id, 1)); // Assuming a single settings row with ID 1
+        });
       
       await tx.update(users)
         .set({
@@ -140,13 +135,12 @@ export class AdminTreasuryService {
         })
         .where(eq(users.id, userId));
         
-      await tx.update(treasurySettings)
+      await tx.update(dgtEconomyParameters)
         .set({
-          dgtTreasuryBalance: sql`${treasurySettings.dgtTreasuryBalance || 0} + ${transferAmountDgt}`,
+          dgtTreasuryBalance: sql`${dgtEconomyParameters.dgtTreasuryBalance || 0} + ${transferAmountDgt}`,
           updatedAt: new Date(),
           updatedBy: adminUserId
-        })
-        // .where(eq(treasurySettings.id, 1)); // Assuming a single settings row with ID 1
+        });
 
       const [newTransaction] = await tx.insert(transactions).values({
         userId: userId,
@@ -170,11 +164,10 @@ export class AdminTreasuryService {
     const totalDgtAmountStorage = dgtAmountPerUserStorage * userIds.length;
 
     return db.transaction(async (tx) => {
-      const [currentTreasurySettings] = await tx.select({ balance: treasurySettings.dgtTreasuryBalance })
-        .from(treasurySettings)
-        // .where(eq(treasurySettings.id, 1)) // Assuming a single settings row with ID 1
+      const [currentDgtParams] = await tx.select({ balance: dgtEconomyParameters.dgtTreasuryBalance })
+        .from(dgtEconomyParameters)
         .limit(1);
-      const currentTreasuryBalance = Number(currentTreasurySettings?.balance) || 0;
+      const currentTreasuryBalance = Number(currentDgtParams?.balance) || 0;
 
       if (currentTreasuryBalance < totalDgtAmountStorage) {
         throw new AdminError(
@@ -195,13 +188,12 @@ export class AdminTreasuryService {
         throw new AdminError('No valid users found for airdrop.', 404, AdminErrorCodes.USER_NOT_FOUND);
       }
 
-      await tx.update(treasurySettings)
+      await tx.update(dgtEconomyParameters)
         .set({
-          dgtTreasuryBalance: sql`${treasurySettings.dgtTreasuryBalance || 0} - ${totalDgtAmountStorage}`,
+          dgtTreasuryBalance: sql`${dgtEconomyParameters.dgtTreasuryBalance || 0} - ${totalDgtAmountStorage}`,
           updatedAt: new Date(),
           updatedBy: adminUserId
-        })
-        // .where(eq(treasurySettings.id, 1)); // Assuming a single settings row with ID 1
+        });
 
       const airdropResults: Array<{ userId: number; username: string; amount: number; transactionId?: number; status: string; error?: string }> = [];
 
@@ -242,17 +234,13 @@ export class AdminTreasuryService {
     });
   }
   
-  async getTreasurySettings() {
+  async getDgtEconomyParameters() {
     try {
-        const settings = await db.query.treasurySettings.findFirst({
-          // Add orderBy or where clause if there can be multiple rows, e.g., orderBy: [desc(treasurySettings.createdAt)]
-          // or where: eq(treasurySettings.isActive, true)
-        }); 
+        const settings = await db.query.dgtEconomyParameters.findFirst({});
         
         if (!settings) {
             return null; 
         }
-        // Format amounts for display before returning
         return {
           ...settings,
           dgtTreasuryBalance: settings.dgtTreasuryBalance ? formatDgtAmount(Number(settings.dgtTreasuryBalance)) : 0,
@@ -261,9 +249,9 @@ export class AdminTreasuryService {
           maxTipAmount: settings.maxTipAmount ? formatDgtAmount(Number(settings.maxTipAmount)) : 0,
         };
     } catch (error: any) {
-        console.error("Error in getTreasurySettings:", error);
+        console.error("Error in getDgtEconomyParameters:", error);
         throw new AdminError(
-            'Failed to fetch treasury settings',
+            'Failed to fetch DGT economy parameters',
             500,
             AdminErrorCodes.DB_ERROR,
             { originalError: error.message }
@@ -271,17 +259,16 @@ export class AdminTreasuryService {
     }
 }
 
-async updateTreasurySettings(input: TreasurySettingsUpdateInput, adminUserId: number) {
+async updateDgtEconomyParameters(input: TreasurySettingsUpdateInput, adminUserId: number) {
     try {
-        const [existingSettings] = await db.select().from(treasurySettings)
-          // .where(eq(treasurySettings.id, 1)) // Assuming a single settings row with ID 1
+        const [existingSettings] = await db.select().from(dgtEconomyParameters)
           .limit(1);
 
         if (!existingSettings) {
-             throw new AdminError('Treasury settings record not found. Cannot update.', 404, AdminErrorCodes.NOT_FOUND);
+             throw new AdminError('DGT Economy Parameters record not found. Cannot update.', 404, AdminErrorCodes.NOT_FOUND);
         }
 
-        const dataToUpdate: Partial<typeof treasurySettings.$inferInsert> = {
+        const dataToUpdate: Partial<typeof dgtEconomyParameters.$inferInsert> = {
             treasuryWalletAddress: input.treasuryWalletAddress,
             minWithdrawalAmount: input.minWithdrawalAmount !== undefined ? parseDgtAmount(input.minWithdrawalAmount) : undefined,
             withdrawalFeePercent: input.withdrawalFeePercent,
@@ -294,16 +281,15 @@ async updateTreasurySettings(input: TreasurySettingsUpdateInput, adminUserId: nu
             updatedBy: adminUserId,
         };
         
-        // Remove undefined fields to prevent them from overwriting existing values with null
         Object.keys(dataToUpdate).forEach(key => dataToUpdate[key as keyof typeof dataToUpdate] === undefined && delete dataToUpdate[key as keyof typeof dataToUpdate]);
 
-        const [updatedSettings] = await db.update(treasurySettings)
+        const [updatedSettings] = await db.update(dgtEconomyParameters)
             .set(dataToUpdate)
-            .where(eq(treasurySettings.id, existingSettings.id)) // Assuming your treasurySettings table has an 'id' column
+            .where(eq(dgtEconomyParameters.id, existingSettings.id))
             .returning();
         
         if (!updatedSettings) {
-          throw new AdminError('Failed to update treasury settings record.', 500, AdminErrorCodes.OPERATION_FAILED);
+          throw new AdminError('Failed to update DGT Economy Parameters record.', 500, AdminErrorCodes.OPERATION_FAILED);
         }
 
         return {
@@ -314,9 +300,9 @@ async updateTreasurySettings(input: TreasurySettingsUpdateInput, adminUserId: nu
           maxTipAmount: updatedSettings.maxTipAmount ? formatDgtAmount(Number(updatedSettings.maxTipAmount)) : 0,
         };
     } catch (error: any) {
-         console.error("Error in updateTreasurySettings:", error);
+         console.error("Error in updateDgtEconomyParameters:", error);
         throw new AdminError(
-            'Failed to update treasury settings',
+            'Failed to update DGT economy parameters',
             500,
             AdminErrorCodes.DB_ERROR,
             { originalError: error.message }

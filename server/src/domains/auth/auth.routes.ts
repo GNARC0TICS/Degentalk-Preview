@@ -2,7 +2,7 @@ import { Router } from 'express';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import session from 'express-session';
-import { User } from '@shared/schema';
+import { User } from '@db/schema';
 import { storage } from '../../../storage'; // Will be refactored in a future step
 import { 
   comparePasswords, 

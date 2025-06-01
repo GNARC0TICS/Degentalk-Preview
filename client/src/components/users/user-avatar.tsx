@@ -1,4 +1,4 @@
-import { User } from "@shared/schema";
+import { User } from "@db/schema";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 

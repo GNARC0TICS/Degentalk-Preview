@@ -1,5 +1,5 @@
 import { db } from '../../../../core/db';
-import { xpActionSettings } from '@shared/schema';
+import { xpActionSettings } from '@db/schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '../../core/logger';
 import { XP_ACTION, getXpActions, loadXpActionsFromDb } from '../xp-actions';

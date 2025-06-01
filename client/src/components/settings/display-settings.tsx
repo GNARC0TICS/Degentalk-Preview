@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User } from '@shared/schema';
+import { User } from '@db/schema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';

@@ -1,4 +1,4 @@
-import { users, products, userInventory } from "@shared/schema";
+import { users, products, userInventory } from "@db/schema";
 import { eq, and, desc, sql } from "drizzle-orm";
 import { pool } from "../src/core/db";
 import { logger, LogLevel, LogAction } from "../src/core/logger";

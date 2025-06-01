@@ -8,7 +8,7 @@
  */
 
 import { db } from '../../server/src/core/db';
-import { xpActionSettings } from '../../shared/schema';
+import { xpActionSettings, type InsertXpActionSetting } from './utils/schema';
 import { XP_ACTION } from '../../server/src/domains/xp/xp-actions';
 import { eq } from 'drizzle-orm';
 
@@ -86,9 +86,7 @@ export async function seedXpActions() {
           maxPerDay: config.maxPerDay,
           cooldownSec: config.cooldownSec,
           enabled: true,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }).execute(); // drizzle-orm v0.29+ uses .execute()
+        } as InsertXpActionSetting).execute(); // drizzle-orm v0.29+ uses .execute()
         console.log(`✅ [SEED-XP-ACTIONS] Seeded XP action: ${config.action}`);
         seededCount++;
       } else {

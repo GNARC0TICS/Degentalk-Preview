@@ -1,5 +1,5 @@
 import { db } from '../../core/db';
-import { settings as settingsTable, users as usersTable } from '@shared/schema';
+import { settings as settingsTable, users as usersTable } from '@db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { logger } from '../../core/logger';
 import { 
@@ -9,7 +9,7 @@ import {
   type User,
   type UserSetting,
   type NotificationSetting
-} from '@shared/schema';
+} from '@db/schema';
 import { 
   ProfileSettingsInput, 
   AccountSettingsInput, 

@@ -1,5 +1,7 @@
-import { db } from '@server/src/core/db';
-import { forumCategories } from '@shared/schema';
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
+import { forumCategories } from './utils/schema';
+import { sql } from 'drizzle-orm';
 
 async function main() {
   try {

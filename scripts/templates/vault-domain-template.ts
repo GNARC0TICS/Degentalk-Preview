@@ -238,7 +238,7 @@ export const vaultServiceTemplate = `/**
 
 import { db } from '../db';
 import { sql, eq, and, gte, lte, desc } from 'drizzle-orm';
-import { vaults, users as usersTable, transactions as transactionsTable, walletTransactions } from '@shared/schema';
+import { vaults, users as usersTable, transactions as transactionsTable } from '../db/utils/schema';
 import { logger } from '../../../../core/logger';
 import { WalletService } from '../wallet/wallet.service';
 import { VaultError, VaultErrorCodes } from './vault.errors';
@@ -497,17 +497,17 @@ export class VaultService {
       if (vaultTransactionIds.length > 0) {
         vaultTransactions = await db
           .select()
-          .from(transactions)
+          .from(transactionsTable)
           .where(
             and(
-              eq(transactions.userId, userId),
+              eq(transactionsTable.userId, userId),
               // Use 'in' operator with transaction IDs
               // This might need to be adjusted based on your ORM/query builder
               // or you might need to do multiple queries
               // For this example, assuming a hypothetical 'in' operator
               // transactions.id.in(vaultTransactionIds)
-              eq(transactions.type, 'VAULT_DEPOSIT'),
-              eq(transactions.userId, userId)
+              eq(transactionsTable.type, 'VAULT_DEPOSIT'),
+              eq(transactionsTable.userId, userId)
             )
           );
       }

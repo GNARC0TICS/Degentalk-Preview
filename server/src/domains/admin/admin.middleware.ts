@@ -5,7 +5,7 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { users } from '@shared/schema';
+import { users } from '@db/schema';
 import { eq } from 'drizzle-orm';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
 import { pool } from '../../core/db';

@@ -6,7 +6,7 @@
  */
 
 import { WalletService } from '../wallet/wallet.service';
-import { dgtPurchaseOrders, users, transactions } from '@shared/schema';
+import { dgtPurchaseOrders, users, transactions } from '@db/schema';
 import { eq, and } from 'drizzle-orm';
 import { db } from '../../core/db'; // Corrected path
 import { logger } from '../../core/logger'; // Corrected path

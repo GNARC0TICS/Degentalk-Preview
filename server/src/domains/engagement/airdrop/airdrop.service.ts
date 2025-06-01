@@ -7,7 +7,7 @@
  */
 
 import { db } from '../../../../db';
-import { transactions, users, airdropSettings, airdropRecords } from '@shared/schema';
+import { transactions, users, airdropSettings, airdropRecords } from '@db/schema';
 import { eq, and, gt, sql, desc, between } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../../core/errors';

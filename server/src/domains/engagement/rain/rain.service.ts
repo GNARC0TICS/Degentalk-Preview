@@ -9,7 +9,7 @@
  */
 
 import { db } from '../../../../db';
-import { transactions, users, rainSettings, onlineUsers, cooldownSettings, rainEvents } from '@shared/schema';
+import { transactions, users, rainSettings, onlineUsers, cooldownSettings, rainEvents } from '@db/schema';
 import { eq, and, gt, sql, desc, inArray } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../../core/errors';

@@ -8,7 +8,7 @@
  */
 
 import { db } from '../../server/src/core/db';
-import { forumCategories } from '@shared/schema';
+import { forumCategories } from './utils/schema';
 import { eq, and, isNull, sql } from 'drizzle-orm';
 
 // Expected relationships based on canonical structure

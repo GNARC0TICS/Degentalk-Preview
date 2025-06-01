@@ -4,7 +4,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
 // Import auth from the new domain location
 import { setupAuthPassport, authRoutes } from "./src/domains/auth";
-import { passwordResetTokens, adminAuditLogs } from "@shared/schema";
+import { passwordResetTokens, adminAuditLogs } from "@db/schema";
 import { z } from "zod";
 import { registerAdminRoutes } from './src/domains/admin/admin.routes';
 // Import domain-based wallet routes

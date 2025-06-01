@@ -76,6 +76,8 @@ import { Request, Response } from 'express';
 import { logger } from '../../core/logger';
 import { transactionService } from './transaction.service';
 import { WalletError, WalletErrorCodes } from '../wallet/wallet.errors';
+import { eq, and, desc, or, like, count } from "drizzle-orm";
+import { transactions, users, dgtPurchaseOrders } from '../db/utils/schema';
 
 /**
  * Transaction controller for handling transaction-related requests
@@ -216,7 +218,7 @@ export const transactionServiceTemplate = `/**
 
 import { db } from '../core/db';
 import { sql, eq, and, desc, or, count, inArray } from 'drizzle-orm';
-import { transactions, users, dgtTransfers } from '@shared/schema';
+import { transactions, users, dgtPurchaseOrders } from '../db/utils/schema';
 import { logger } from '../../core/logger';
 import { WalletError, WalletErrorCodes } from '../wallet/wallet.errors';
 import { ccpaymentService } from '../wallet/ccpayment.service';
@@ -402,8 +404,8 @@ export class TransactionService {
         if (transaction.type === 'PURCHASE' && transaction.metadata?.purchaseOrderId) {
           const [purchaseOrder] = await db
             .select()
-            .from(dgtTransfers)
-            .where(eq(dgtTransfers.id, transaction.metadata.purchaseOrderId))
+            .from(dgtPurchaseOrders)
+            .where(eq(dgtPurchaseOrders.id, transaction.metadata.purchaseOrderId as number))
             .limit(1);
           
           return {

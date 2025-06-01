@@ -6,7 +6,7 @@
 
 import { db } from '../../../../core/db';
 import { count, desc, eq, sql, and, like, isNull, or, ne } from 'drizzle-orm';
-import { users, userGroups, posts, threads } from '@shared/schema';
+import { users, userGroups, posts, threads } from '@db/schema';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { AdminPaginationQuery } from '@shared/validators/admin';
 import { z } from 'zod';

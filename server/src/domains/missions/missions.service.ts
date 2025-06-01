@@ -3,11 +3,11 @@ import { eq, and, gte, lte, SQL, isNull, inArray } from "drizzle-orm";
 import {
   missions,
   userMissionProgress,
-  MissionType,
-  Mission,
-  UserMissionProgress,
-  InsertMission
-} from '@shared/schema';
+  // MissionType, // Assuming MissionType is defined locally or this import is not strictly needed from schema
+  type Mission,
+  type UserMissionProgress,
+  type InsertMission
+} from '@db/schema';
 import { logger } from '../../core/logger';
 import {
   addDays,

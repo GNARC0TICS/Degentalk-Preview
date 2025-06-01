@@ -29,12 +29,13 @@ export * from './forum/tags';
 export * from './forum/threadTags';
 export * from './forum/postReactions';
 export * from './forum/postDrafts';
-export * from './forum/threadDrafts'; // Ensure this file exists and has exports
+export * from './forum/threadDrafts';
 export * from './forum/threadBookmarks';
 export * from './forum/rules';
 export * from './forum/userRuleAgreements';
 export * from './forum/customEmojis';
 export * from './forum/postLikes';
+export * from './forum/threadFeaturePermissions';
 
 // Economy domain exports
 export * from './economy/wallets';
@@ -54,6 +55,7 @@ export * from './economy/postTips';
 export * from './economy/dgtPackages';
 export * from './economy/dgtPurchaseOrders';
 export * from './economy/settings';
+export * from './economy/treasurySettings';
 
 // Economy domain - airdrop
 export * from "./economy/airdropSettings";
@@ -65,7 +67,7 @@ export * from './shop/productCategories';
 export * from './shop/productMedia';
 export * from './shop/orders';
 export * from './shop/orderItems';
-export * from './shop/inventory';
+export * from './shop/userInventory';
 export * from './shop/inventoryTransactions';
 export * from './shop/signatureItems';
 export * from './shop/userSignatureItems';
@@ -106,9 +108,6 @@ export * from './system/rateLimits';
 export * from './system/notifications';
 export * from './system/analyticsEvents';
 export * from './system/activityFeed';
-export * from './system/site-settings';
-export * from './system/audit-log';
-export * from './system/jobs';
 export * from './system/airdrop-records';
 
 // Note: './forum/threadDrafts.ts' was commented out as it was empty in the previous steps.

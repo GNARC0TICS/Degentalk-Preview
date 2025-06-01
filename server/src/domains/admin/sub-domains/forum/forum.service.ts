@@ -10,7 +10,7 @@ import {
   threads, 
   posts,
   threadPrefixes,
-} from '@shared/schema';
+} from '@db/schema';
 import { eq, and, sql, count, desc, asc, isNull, not, ne } from 'drizzle-orm';
 import { AdminError } from '../../../../core/errors';
 import type { 

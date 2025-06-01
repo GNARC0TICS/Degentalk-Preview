@@ -8,7 +8,7 @@ import { WalletService } from '../wallet/wallet.service';
 import { DgtService } from '../wallet/dgt.service';
 import { db } from '../../core/db';
 import { count, desc, eq, sql, and, like, isNull, or, ne, sum } from 'drizzle-orm';
-import { users, adminAuditLogs, transactions } from '@shared/schema';
+import { users, auditLogs, transactions } from '@db/schema';
 import { AdminError, AdminErrorCodes } from './admin.errors';
 
 export class AdminService {
@@ -17,7 +17,7 @@ export class AdminService {
    */
   async logAdminAction(adminId: number, action: string, entityType: string, entityId: string, details: any = {}) {
     try {
-      await db.insert(adminAuditLogs).values({
+      await db.insert(auditLogs).values({
         userId: adminId,
         action,
         entityType,
@@ -100,18 +100,18 @@ export class AdminService {
   async getRecentAdminActions(limit: number = 10) {
     try {
       const recentActions = await db.select({
-        id: adminAuditLogs.id,
-        userId: adminAuditLogs.userId,
-        action: adminAuditLogs.action,
-        entityType: adminAuditLogs.entityType,
-        entityId: adminAuditLogs.entityId,
-        details: adminAuditLogs.details,
-        createdAt: adminAuditLogs.createdAt,
+        id: auditLogs.id,
+        userId: auditLogs.userId,
+        action: auditLogs.action,
+        entityType: auditLogs.entityType,
+        entityId: auditLogs.entityId,
+        details: auditLogs.details,
+        createdAt: auditLogs.createdAt,
         username: users.username
       })
-      .from(adminAuditLogs)
-      .leftJoin(users, eq(adminAuditLogs.userId, users.id))
-      .orderBy(desc(adminAuditLogs.createdAt))
+      .from(auditLogs)
+      .leftJoin(users, eq(auditLogs.userId, users.id))
+      .orderBy(desc(auditLogs.createdAt))
       .limit(limit);
       
       return recentActions;

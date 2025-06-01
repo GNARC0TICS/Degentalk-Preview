@@ -18,7 +18,7 @@ import {
   forumRules, 
   userRulesAgreements,
   contentEditStatusEnum
-} from "@shared/schema";
+} from "@db/schema";
 import crypto from "crypto";
 import { z } from "zod";
 import { isAuthenticated, isAdminOrModerator, isAdmin } from "../../auth/middleware/auth.middleware";

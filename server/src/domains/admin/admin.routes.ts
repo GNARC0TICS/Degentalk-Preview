@@ -19,7 +19,6 @@ import settingsRoutes from './sub-domains/settings/settings.routes';
 import xpRoutes from './sub-domains/xp/xp.routes';
 import missionsRoutes from '../missions/missions.admin.routes';
 import announcementRoutes from './sub-domains/announcements/announcements.routes';
-import featureFlagsRoutes from './sub-domains/feature-flags/feature-flags.routes';
 import airdropRoutes from './sub-domains/airdrop/airdrop.routes';
 
 // Create admin router
@@ -39,7 +38,6 @@ adminRouter.use('/settings', settingsRoutes);
 adminRouter.use('/xp', xpRoutes);
 adminRouter.use('/missions', missionsRoutes);
 adminRouter.use('/announcements', announcementRoutes);
-adminRouter.use('/feature-flags', featureFlagsRoutes);
 adminRouter.use('/airdrop', airdropRoutes);
 
 // Dashboard overview route

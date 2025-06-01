@@ -2,7 +2,7 @@ import { pgTable, serial, varchar, bigint, integer, doublePrecision, boolean, ti
 import { sql } from "drizzle-orm";
 import { users } from "../user/users";
 
-export const treasurySettings = pgTable('treasury_settings', {
+export const dgtEconomyParameters = pgTable('dgt_economy_parameters', {
   id: serial('setting_id').primaryKey(), // Added primary key for consistency, can be a single row table if needed
   treasuryWalletAddress: varchar('treasury_wallet_address', { length: 255 }),
   dgtTreasuryBalance: bigint('dgt_treasury_balance', { mode: 'number' }).notNull().default(0),
@@ -24,8 +24,8 @@ export const treasurySettings = pgTable('treasury_settings', {
   updatedBy: integer('updated_by').references(() => users.id, { onDelete: 'set null' }),
 });
 
-export type TreasurySetting = typeof treasurySettings.$inferSelect;
-export type InsertTreasurySetting = typeof treasurySettings.$inferInsert; // Assuming full insert okay for settings
+export type DgtEconomyParameter = typeof dgtEconomyParameters.$inferSelect;
+export type InsertDgtEconomyParameter = typeof dgtEconomyParameters.$inferInsert; // Assuming full insert okay for settings
 
 export const tipSettings = pgTable('tip_settings', {
   id: serial('setting_id').primaryKey(),

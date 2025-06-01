@@ -1,6 +1,6 @@
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
-import { User, betaFeatureFlags, users } from "@shared/schema";
+import { User, featureFlags, users } from "@db/schema";
 import { db } from "../../../core/db";
 import { eq, count } from "drizzle-orm";
 import { isDevMode } from "../../../utils/environment";
@@ -43,12 +43,12 @@ export async function storeTempDevMetadata(password: string): Promise<string | n
     if (userCount > 50) return null;
     
     // Check if beta tools are enabled
-    const [betaFeature] = await db
+    const [devToolsFeature] = await db
       .select()
-      .from(betaFeatureFlags)
-      .where(eq(betaFeatureFlags.name, 'dev_tools_enabled'));
+      .from(featureFlags)
+      .where(eq(featureFlags.key, 'dev_tools_enabled'));
     
-    if (!betaFeature || !betaFeature.enabled) return null;
+    if (!devToolsFeature || !devToolsFeature.isEnabled) return null;
     
     // Simple encoding - not for security, just for obfuscation
     return Buffer.from(password).toString('base64');

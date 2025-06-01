@@ -1,5 +1,5 @@
 import { db } from '../../../../core/db';
-import { users, levels, economySettings, badges, titles, xpAdjustmentLogs, xpCloutSettings } from '@shared/schema';
+import { users, levels, economySettings, badges, titles, xpAdjustmentLogs, xpCloutSettings } from '@db/schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
 // Import core XP service once refactored, e.g.:

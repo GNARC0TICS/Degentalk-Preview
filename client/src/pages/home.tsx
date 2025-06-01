@@ -39,7 +39,7 @@ import {
 
 // Import types
 import { ThreadWithUser } from '@shared/types';
-import { User } from '@shared/schema';
+import { User } from '@db/schema';
 import { useAuth } from '@/hooks/use-auth';
 import { ForumEntityBase } from '@/utils/forum-routing-helper';
 

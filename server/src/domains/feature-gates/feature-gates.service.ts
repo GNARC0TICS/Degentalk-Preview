@@ -1,5 +1,5 @@
 import { db } from '../../core/db';
-import { featureFlags, users } from '@shared/schema'; // Corrected import
+import { featureFlags, users } from '@db/schema'; // Corrected import
 import { logger, LogLevel } from '../../core/logger';
 import { eq, and } from 'drizzle-orm';
 

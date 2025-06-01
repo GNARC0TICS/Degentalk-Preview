@@ -6,7 +6,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { db } from '../../../../core/db';
-import { xpActionSettings } from '@shared/schema';
+import { xpActionSettings } from '@db/schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
 import { xpService } from '../../../xp/xp.service';

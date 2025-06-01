@@ -7,8 +7,10 @@ import {
   threadPrefixes, 
   tags, 
   threadTags,
-  postReactions
-} from '@shared/schema';
+  postReactions,
+  // Types that might be needed for Insert operations or function signatures
+  type InsertThread, type InsertPost, type InsertTag, type InsertThreadTag, type InsertPostReaction
+} from './utils/schema'; // Corrected import path
 import { eq, isNull, count } from 'drizzle-orm';
 import { faker } from '@faker-js/faker';
 import { sql } from 'drizzle-orm';

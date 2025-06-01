@@ -8,7 +8,7 @@
 import { Router, Request, Response } from 'express';
 import { db } from '../../../db';
 import { sql } from 'drizzle-orm';
-import { users, transactions } from '@shared/schema';
+import { users, transactions } from '@db/schema';
 import { eq } from 'drizzle-orm';
 import { isAdmin } from '../auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
@@ -68,7 +68,7 @@ async function adjustTreasuryBalance(req: Request, res: Response, params: {
     await db.transaction(async (tx) => {
       // Fetch current treasury settings
       const treasuryResult = await tx.execute(sql`
-        SELECT treasury_usdt_balance, dgt_treasury_balance FROM treasury_settings LIMIT 1
+        SELECT treasury_usdt_balance, dgt_treasury_balance FROM dgt_economy_parameters LIMIT 1
       `);
       
       if (treasuryResult.rows.length === 0) {
@@ -105,7 +105,7 @@ async function adjustTreasuryBalance(req: Request, res: Response, params: {
       // Update treasury balance using standard SQL for improved parameter safety
       if (dbField === 'treasury_usdt_balance') {
         await tx.execute(sql`
-          UPDATE treasury_settings
+          UPDATE dgt_economy_parameters
           SET treasury_usdt_balance = ${newBalance}, 
               updated_at = NOW(),
               updated_by = ${adminId}
@@ -113,7 +113,7 @@ async function adjustTreasuryBalance(req: Request, res: Response, params: {
         `);
       } else {
         await tx.execute(sql`
-          UPDATE treasury_settings
+          UPDATE dgt_economy_parameters
           SET dgt_treasury_balance = ${newBalance}, 
               updated_at = NOW(),
               updated_by = ${adminId}
@@ -168,7 +168,7 @@ async function adjustTreasuryBalance(req: Request, res: Response, params: {
         ) VALUES (
           ${adminId},
           ${`TREASURY_${currency}_${type.toUpperCase()}`},
-          ${'treasury_settings'},
+          ${'dgt_economy_parameters'},
           ${1},
           ${JSON.stringify({
             amount: currency === 'DGT' ? amountNumeric : amountToAdjust, // Display amount for DGT
@@ -213,7 +213,7 @@ router.get('/overview', isAdmin, async (req: Request, res: Response) => {
         withdrawal_fee_percent as "withdrawalFeePercent",
         dgt_usdt_exchange_rate as "dgtUsdtExchangeRate",
         updated_at as "lastUpdated"
-      FROM treasury_settings
+      FROM dgt_economy_parameters
       LIMIT 1
     `);
     
@@ -320,36 +320,28 @@ router.get('/overview', isAdmin, async (req: Request, res: Response) => {
     const treasuryBalance = formatDgtAmount(treasurySettings.dgtTreasuryBalance);
     const dailyDgtVolume = formatDgtAmount(mockDgtVolume);
     
-    return res.status(200).json({
-      // Treasury balances
-      treasury_balance: treasuryBalance,
-      treasury_balance_usdt: Number(treasurySettings.treasuryUsdtBalance) || 0,
-      treasury_wallet_address: treasurySettings.treasuryWalletAddress,
-      
-      // Supply statistics
-      circulating_supply: circulatingSupply,
-      total_supply: totalSupply,
-      percent_circulating: ((circulatingSupply / totalSupply) * 100).toFixed(2),
-      
-      // Settings
-      min_withdrawal_amount: formatDgtAmount(treasurySettings.minWithdrawalAmount),
-      withdrawal_fee_percent: treasurySettings.withdrawalFeePercent,
-      dgt_usdt_exchange_rate: treasurySettings.dgtUsdtExchangeRate || 1,
-      last_updated: treasurySettings.lastUpdated,
-      
-      // Wallet statistics
-      active_wallets: Number(walletStats.rows[0].activeWallets) || 0,
-      pending_withdrawal_count: Number(walletStats.rows[0].pendingWithdrawalCount) || 0,
-      pending_withdrawal_total: Number(walletStats.rows[0].pendingWithdrawalTotal) || 0,
-      
-      // Transaction volume
-      daily_dgt_volume: dailyDgtVolume,
-      daily_usdt_volume: mockUsdtVolume,
-      daily_transaction_count: Number(transactionVolumeResult.rows[0].transactionCount) || 0,
-      
-      // Recent activity
-      recent_transactions: formattedTransactions
-    });
+    const overview = {
+      dgt_stats: {
+        circulating_supply: circulatingSupply,
+        total_supply: formatDgtAmount(totalSupply),
+        treasury_balance: treasuryBalance,
+        treasury_balance_usdt: Number(treasurySettings.treasuryUsdtBalance) || 0,
+        treasury_wallet_address: treasurySettings.treasuryWalletAddress,
+      },
+      platform_stats: {
+        active_wallets: Number(walletStats.rows[0].activeWallets) || 0,
+        pending_withdrawal_count: Number(walletStats.rows[0].pendingWithdrawalCount) || 0,
+        pending_withdrawal_total: Number(walletStats.rows[0].pendingWithdrawalTotal) || 0,
+      },
+      economy_settings: {
+        min_withdrawal_amount: formatDgtAmount(treasurySettings.minWithdrawalAmount),
+        withdrawal_fee_percent: treasurySettings.withdrawalFeePercent,
+        dgt_usdt_exchange_rate: treasurySettings.dgtUsdtExchangeRate || 1,
+        last_updated: treasurySettings.lastUpdated,
+      }
+    };
+
+    return res.status(200).json(overview);
   } catch (error) {
     console.error('Error fetching treasury overview:', error);
     return res.status(500).json({ message: "Internal server error" });
@@ -400,7 +392,7 @@ router.post('/adjust-balance', isAdmin, async (req: Request, res: Response) => {
         
         // Reduce from treasury
         await tx.execute(sql`
-          UPDATE treasury_settings
+          UPDATE dgt_economy_parameters
           SET dgt_treasury_balance = dgt_treasury_balance - ${dgtAmountInStorage}
         `);
       } else {
@@ -417,7 +409,7 @@ router.post('/adjust-balance', isAdmin, async (req: Request, res: Response) => {
         
         // Add to treasury
         await tx.execute(sql`
-          UPDATE treasury_settings
+          UPDATE dgt_economy_parameters
           SET dgt_treasury_balance = dgt_treasury_balance + ${dgtAmountInStorage}
         `);
       }
@@ -507,55 +499,67 @@ router.post('/adjust', isAdmin, async (req: Request, res: Response) => {
 router.put('/settings', isAdmin, async (req: Request, res: Response) => {
   try {
     const adminId = getUserId(req);
-    const { 
-      min_withdrawal_amount, 
+    const {
+      treasury_wallet_address,
+      min_withdrawal_amount,
       withdrawal_fee_percent,
-      dgt_usdt_exchange_rate
+      dgt_usdt_exchange_rate,
+      auto_approve_withdrawals,
+      max_daily_withdrawal_limit
     } = req.body;
-    
-    const updates = [];
-    const updateValues = {};
-    
-    // Check if any valid updates were provided
-    if (min_withdrawal_amount === undefined && 
-        withdrawal_fee_percent === undefined && 
-        dgt_usdt_exchange_rate === undefined) {
-      return res.status(400).json({ message: "No valid updates provided" });
+
+    // Basic validation
+    if (min_withdrawal_amount && (isNaN(parseFloat(min_withdrawal_amount)) || parseFloat(min_withdrawal_amount) < 0)) {
+      return res.status(400).json({ message: "Minimum withdrawal amount must be a non-negative number" });
     }
-    
-    // Build update query directly with parameters
-    let query = sql`UPDATE treasury_settings SET `;
-    let updateParts = [];
-    
+    if (withdrawal_fee_percent && (isNaN(parseFloat(withdrawal_fee_percent)) || parseFloat(withdrawal_fee_percent) < 0 || parseFloat(withdrawal_fee_percent) > 100)) {
+      return res.status(400).json({ message: "Withdrawal fee percent must be between 0 and 100" });
+    }
+    // Add more validation as needed
+
+    // Construct the SET clause dynamically to only update provided fields
+    const setClauses: string[] = [];
+    const params: any[] = [];
+    let paramIndex = 1;
+
+    if (treasury_wallet_address !== undefined) {
+      setClauses.push(`treasury_wallet_address = $${paramIndex++}`);
+      params.push(treasury_wallet_address);
+    }
     if (min_withdrawal_amount !== undefined) {
-      updateParts.push(sql`min_withdrawal_amount = ${parseDgtAmount(min_withdrawal_amount)}`);
+      setClauses.push(`min_withdrawal_amount = $${paramIndex++}`);
+      params.push(parseDgtAmount(parseFloat(min_withdrawal_amount)));
     }
-    
     if (withdrawal_fee_percent !== undefined) {
-      updateParts.push(sql`withdrawal_fee_percent = ${withdrawal_fee_percent}`);
+      setClauses.push(`withdrawal_fee_percent = $${paramIndex++}`);
+      params.push(parseFloat(withdrawal_fee_percent));
     }
-    
     if (dgt_usdt_exchange_rate !== undefined) {
-      updateParts.push(sql`dgt_usdt_exchange_rate = ${dgt_usdt_exchange_rate}`);
+      setClauses.push(`dgt_usdt_exchange_rate = $${paramIndex++}`);
+      params.push(parseFloat(dgt_usdt_exchange_rate));
+    }
+    if (auto_approve_withdrawals !== undefined) {
+      setClauses.push(`auto_approve_withdrawals = $${paramIndex++}`);
+      params.push(auto_approve_withdrawals);
+    }
+    if (max_daily_withdrawal_limit !== undefined) {
+      setClauses.push(`max_daily_withdrawal_limit = $${paramIndex++}`);
+      params.push(parseDgtAmount(parseFloat(max_daily_withdrawal_limit)));
     }
     
-    // Add updated_at and updated_by fields
-    updateParts.push(sql`updated_at = NOW()`);
-    updateParts.push(sql`updated_by = ${adminId}`);
-    
-    // Combine all update parts with commas
-    let updateStr = updateParts[0];
-    for (let i = 1; i < updateParts.length; i++) {
-      updateStr = sql`${updateStr}, ${updateParts[i]}`;
+    if (setClauses.length === 0) {
+      return res.status(400).json({ message: "No settings provided to update" });
     }
-    
-    // Complete the query
-    query = sql`${query} ${updateStr} WHERE setting_id = 1`;
-    
-    // Execute the update
-    await db.execute(query);
-    
-    // Log admin action
+
+    setClauses.push(`updated_at = NOW()`);
+    setClauses.push(`updated_by = $${paramIndex++}`);
+    params.push(adminId);
+
+    const query = `UPDATE dgt_economy_parameters SET ${setClauses.join(', ')} WHERE setting_id = 1`;
+
+    await db.execute(sql.raw(query), ...params.slice(0, params.length -1 )); // Pass params directly to execute
+
+    // Admin Audit Log
     await db.execute(sql`
       INSERT INTO admin_audit_logs (
         user_id,
@@ -567,20 +571,20 @@ router.put('/settings', isAdmin, async (req: Request, res: Response) => {
         ip_address
       ) VALUES (
         ${adminId},
-        ${'UPDATE_TREASURY_SETTINGS'},
-        ${'treasury_settings'},
-        ${1},
-        ${JSON.stringify(req.body)},
+        'TREASURY_SETTINGS_UPDATE',
+        'dgt_economy_parameters',
+        1, -- Assuming setting_id 1 for the single row
+        ${JSON.stringify(req.body)}, -- Log all changes sent in the request
         NOW(),
         ${req.ip || '127.0.0.1'}
       )
     `);
-    
+
     return res.status(200).json({
       success: true,
       message: "Treasury settings updated successfully"
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error updating treasury settings:', error);
     return res.status(500).json({ message: "Internal server error" });
   }
@@ -601,6 +605,65 @@ router.post('/adjust-usdt', isAdmin, async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Error in adjust-usdt endpoint:', error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Get treasury balance history (mocked for now, replace with actual query)
+router.get('/balance-history', isAdmin, async (req: Request, res: Response) => {
+  try {
+    const historyResult = await db.execute(sql`
+      SELECT 
+        created_at as date,
+        dgt_treasury_balance as "dgtBalance",
+        treasury_usdt_balance as "usdtBalance"
+      FROM dgt_economy_parameters_history -- MOCKED - THIS TABLE DOES NOT EXIST YET
+      ORDER BY created_at DESC
+      LIMIT 30
+    `);
+
+    const history = historyResult.rows.map(row => ({
+      date: row.date,
+      dgtBalance: formatDgtAmount(Number(row.dgtBalance) || 0),
+      usdtBalance: Number(row.usdtBalance) || 0
+    }));
+
+    return res.status(200).json(history);
+  } catch (error: any) {
+    console.error('Error fetching treasury balance history:', error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Get treasury transaction history (admin only)
+router.get('/transaction-history', isAdmin, async (req: Request, res: Response) => {
+  try {
+    const historyResult = await db.execute(sql`
+      SELECT 
+        created_at as date,
+        type,
+        amount,
+        status,
+        description,
+        metadata
+      FROM transactions
+      WHERE is_treasury_transaction = true
+      ORDER BY created_at DESC
+      LIMIT 30
+    `);
+
+    const history = historyResult.rows.map(row => ({
+      date: row.date,
+      type: row.type,
+      amount: formatDgtAmount(Number(row.amount) || 0),
+      status: row.status,
+      description: row.description,
+      metadata: row.metadata
+    }));
+
+    return res.status(200).json(history);
+  } catch (error: any) {
+    console.error('Error fetching treasury transaction history:', error);
     return res.status(500).json({ message: "Internal server error" });
   }
 });

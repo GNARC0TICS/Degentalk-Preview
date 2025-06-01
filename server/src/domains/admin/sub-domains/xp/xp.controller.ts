@@ -4,7 +4,7 @@ import { logger } from '../../../../core/logger';
 import { xpService } from '../../../xp/xp.service';
 import { XP_ACTION } from '../../../xp/xp-actions';
 import { db } from '../../../../core/db';
-import { xpAdjustmentLogs } from '@shared/schema';
+import { xpAdjustmentLogs } from '@db/schema';
 import { eq, desc } from 'drizzle-orm';
 
 // --- XP Settings Management ---

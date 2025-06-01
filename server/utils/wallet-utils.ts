@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { sql } from 'drizzle-orm';
-import { users, transactions } from '@shared/schema';
+import { users, transactions } from '@db/schema';
 import { eq } from 'drizzle-orm';
 import { logger, LogLevel, LogAction } from "../src/core/logger";
 
@@ -25,7 +25,7 @@ export async function calculateDgtFromUsdt(usdtAmount: number): Promise<number> 
   try {
     // Get current exchange rate from treasury settings
     const [treasurySettings] = await db.execute(sql`
-      SELECT * FROM treasury_settings LIMIT 1
+      SELECT * FROM dgt_economy_parameters LIMIT 1
     `);
     
     // Default to 1:1 exchange rate if not configured
@@ -94,7 +94,7 @@ export async function confirmDeposit(
       
       // Update treasury settings (USDT balance)
       await tx.execute(sql`
-        UPDATE treasury_settings
+        UPDATE dgt_economy_parameters
         SET treasury_usdt_balance = treasury_usdt_balance + ${usdtAmount}
       `);
     });
@@ -162,7 +162,7 @@ export async function processWithdrawal(
         
         // Update treasury USDT balance
         await tx.execute(sql`
-          UPDATE treasury_settings
+          UPDATE dgt_economy_parameters
           SET treasury_usdt_balance = treasury_usdt_balance - ${usdtAmount}
         `);
       }

@@ -6,7 +6,7 @@
  */
 
 import { pgTable, serial, integer, text, timestamp, jsonb } from 'drizzle-orm/pg-core';
-import { users } from '@shared/schema';
+import { users } from '@db/schema';
 
 /**
  * xpActionLogs table schema

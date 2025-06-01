@@ -5,7 +5,7 @@
  */
 
 import { db } from '../../../../core/db';
-import { userGroups, users } from '@shared/schema';
+import { userGroups, users } from '@db/schema';
 import { eq, and, sql, count, desc, ne } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type { UserGroupInput, ListGroupUsersQueryInput } from './user-groups.validators';

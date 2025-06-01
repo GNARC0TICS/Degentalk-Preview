@@ -1,5 +1,7 @@
 import { db } from '@server/src/core/db';
-import { threads } from '@shared/schema';
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
+import { threads } from './utils/schema';
 import { eq } from 'drizzle-orm';
 
 async function main() {

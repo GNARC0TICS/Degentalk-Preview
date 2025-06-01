@@ -7,7 +7,7 @@
 import express from 'express';
 import { z } from 'zod';
 import { db } from '../../../db';
-import { transactions, users, withdrawalRequests } from '@shared/schema';
+import { transactions, users, withdrawalRequests } from '@db/schema';
 import { eq, and } from 'drizzle-orm';
 import { logger } from '../../../src/core/logger';
 

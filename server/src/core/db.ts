@@ -3,7 +3,7 @@ import { drizzle as drizzleNeon } from 'drizzle-orm/neon-serverless';
 import { drizzle as drizzleSqlite } from 'drizzle-orm/better-sqlite3';
 import Database from 'better-sqlite3';
 import ws from "ws";
-import * as schema from "@shared/schema";
+import * as schema from "@db/schema";
 import { config } from 'dotenv';
 import { logger, LogLevel, LogAction } from './logger';
 

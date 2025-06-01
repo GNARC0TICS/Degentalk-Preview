@@ -12,7 +12,7 @@ import {
   postReactions,
   transactions,
   shoutboxMessages
-} from '@shared/schema';
+} from '@db/schema';
 import { sql, eq, desc, and, count, sum, gte, lte, between } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type { AnalyticsPeriodInput, AnalyticsQueryInput } from './analytics.validators';

@@ -1,5 +1,5 @@
 import { db } from '../db';
-import { users, levels, economySettings, userTitles, userBadges, titles, badges, xpCloutSettings } from '@shared/schema';
+import { users, levels, economySettings, userTitles, userBadges, titles, badges, xpCloutSettings } from '@db/schema';
 import { eq, sql, lte, desc, and, isNull } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 

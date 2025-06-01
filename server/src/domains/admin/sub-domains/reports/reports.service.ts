@@ -13,8 +13,8 @@ import {
   posts,
   threads,
   shoutboxMessages,
-  adminAuditLogs
-} from '@shared/schema';
+  auditLogs
+} from '@db/schema';
 import { eq, and, like, ilike, or, desc, sql, asc, inArray } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type { GetReportsQueryInput, ReportActionInput, BanUserInput, DeleteContentInput } from './reports.validators';

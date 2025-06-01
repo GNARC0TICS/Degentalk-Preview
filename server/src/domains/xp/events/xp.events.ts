@@ -15,7 +15,7 @@ import {
   userTitles,
   notifications,
   xpAdjustmentLogs
-} from '@shared/schema';
+} from '@db/schema';
 import { eq, desc } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
 import { dgtService } from '../../wallet/dgt.service';

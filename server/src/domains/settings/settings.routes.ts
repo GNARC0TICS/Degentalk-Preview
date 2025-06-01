@@ -23,7 +23,7 @@ import {
 } from './settings.service';
 import { Request, Response, Router } from "express";
 import { db } from "../../../db";
-import { users, userSettings } from "@shared/schema";
+import { users, userSettings } from "@db/schema";
 import { eq, and } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import { z } from "zod";

@@ -12,7 +12,7 @@ import {
   users, 
   chatRooms,
   customEmojis
-} from '@shared/schema';
+} from '@db/schema';
 import { sql, desc, eq, and, isNull, inArray, asc, not, or } from 'drizzle-orm';
 import { ZodError } from 'zod';
 import { isAuthenticated, isAuthenticatedOptional, isAdminOrModerator } from "../auth/middleware/auth.middleware";

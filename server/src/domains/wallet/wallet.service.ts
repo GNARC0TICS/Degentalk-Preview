@@ -16,7 +16,7 @@ import {
   transactions, 
   dgtPurchaseOrders,
   transactionTypeEnum // Import the enum
-} from '@shared/schema';
+} from '@db/schema';
 import { db } from '../../core/db';
 import { eq, and, desc, sql, SQL } from 'drizzle-orm'; // Import SQL type
 import { v4 as uuidv4 } from 'uuid';

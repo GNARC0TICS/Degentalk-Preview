@@ -5,7 +5,7 @@
  */
 
 import { db } from '../../../../core/db';
-import { siteSettings } from '@shared/schema';
+import { siteSettings } from '@db/schema';
 import { eq, and, sql, or, like, ilike, asc, desc } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { 
