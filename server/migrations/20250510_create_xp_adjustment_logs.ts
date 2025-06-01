@@ -1,0 +1,33 @@
+import { db } from "../src/core/db";
+import { xpAdjustmentLogs } from "../../shared/schema";
+import { sql } from "drizzle-orm";
+
+export async function up() {
+  console.log('Running migration: Create XP adjustment logs table');
+
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS xp_adjustment_logs (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+      admin_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE SET NULL,
+      adjustment_type VARCHAR(20) NOT NULL,
+      amount INTEGER NOT NULL,
+      reason TEXT NOT NULL,
+      old_xp INTEGER NOT NULL,
+      new_xp INTEGER NOT NULL,
+      created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    );
+    
+    CREATE INDEX IF NOT EXISTS idx_xp_adjustment_logs_user_id ON xp_adjustment_logs(user_id);
+    CREATE INDEX IF NOT EXISTS idx_xp_adjustment_logs_admin_id ON xp_adjustment_logs(admin_id);
+    CREATE INDEX IF NOT EXISTS idx_xp_adjustment_logs_created_at ON xp_adjustment_logs(created_at);
+  `);
+}
+
+export async function down() {
+  console.log('Reverting migration: Create XP adjustment logs table');
+  
+  await db.execute(sql`
+    DROP TABLE IF EXISTS xp_adjustment_logs;
+  `);
+} 

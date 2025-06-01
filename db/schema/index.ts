@@ -1,0 +1,115 @@
+// Core exports
+export * from './core/enums';
+
+// User domain exports
+export * from './user/users';
+export * from './user/userGroups';
+export * from './user/sessions';
+export * from './user/settings';
+export * from './user/permissions';
+export * from './user/roles';
+export * from './user/userRoles';
+export * from './user/rolePermissions';
+export * from './user/bans';
+export * from './user/relationships';
+export * from './user/verificationTokens';
+export * from './user/passwordResetTokens';
+export * from './user/settingsHistory';
+export * from './user/avatarFrames';
+
+// User domain - feature permissions
+export * from "./user/featurePermissions";
+
+// Forum domain exports
+export * from './forum/categories';
+export * from './forum/threads';
+export * from './forum/posts';
+export * from './forum/prefixes';
+export * from './forum/tags';
+export * from './forum/threadTags';
+export * from './forum/postReactions';
+export * from './forum/postDrafts';
+export * from './forum/threadDrafts'; // Ensure this file exists and has exports
+export * from './forum/threadBookmarks';
+export * from './forum/rules';
+export * from './forum/userRuleAgreements';
+export * from './forum/customEmojis';
+export * from './forum/postLikes';
+
+// Economy domain exports
+export * from './economy/wallets';
+export * from './economy/transactions';
+export * from './economy/levels';
+export * from './economy/xpAdjustmentLogs';
+export * from './economy/xpActionSettings';
+export * from './economy/titles';
+export * from './economy/badges';
+export * from './economy/userTitles';
+export * from './economy/userBadges';
+export * from './economy/vaults';
+export * from './economy/withdrawalRequests';
+export * from './economy/userCommands';
+export * from './economy/rainEvents';
+export * from './economy/postTips';
+export * from './economy/dgtPackages';
+export * from './economy/dgtPurchaseOrders';
+export * from './economy/settings';
+
+// Economy domain - airdrop
+export * from "./economy/airdropSettings";
+export * from "./economy/airdropRecords";
+
+// Shop domain exports
+export * from './shop/products';
+export * from './shop/productCategories';
+export * from './shop/productMedia';
+export * from './shop/orders';
+export * from './shop/orderItems';
+export * from './shop/inventory';
+export * from './shop/inventoryTransactions';
+export * from './shop/signatureItems';
+export * from './shop/userSignatureItems';
+
+// Messaging domain exports
+export * from './messaging/conversations';
+export * from './messaging/conversationParticipants';
+export * from './messaging/messages';
+export * from './messaging/messageReads';
+export * from './messaging/directMessages';
+export * from './messaging/chatRooms';
+export * from './messaging/shoutboxMessages';
+export * from './messaging/onlineUsers';
+
+// Admin domain exports
+export * from './admin/auditLogs';
+export * from './admin/reports';
+export * from './admin/moderationActions';
+export * from './admin/announcements';
+export * from './admin/siteSettings';
+export * from './admin/themes';
+export * from './admin/templates';
+export * from './admin/featureFlags';
+export * from './admin/seoMetadata';
+export * from './admin/scheduledTasks';
+export * from './admin/mediaLibrary';
+
+// Gamification domain exports
+export * from './gamification/achievements';
+export * from './gamification/userAchievements';
+export * from './gamification/missions';
+export * from './gamification/userMissionProgress';
+export * from './gamification/leaderboards';
+export * from './gamification/platformStats';
+
+// System domain exports
+export * from './system/rateLimits';
+export * from './system/notifications';
+export * from './system/analyticsEvents';
+export * from './system/activityFeed';
+export * from './system/site-settings';
+export * from './system/audit-log';
+export * from './system/jobs';
+export * from './system/airdrop-records';
+
+// Note: './forum/threadDrafts.ts' was commented out as it was empty in the previous steps.
+// Ensure all files listed for export actually exist and contain exports. 

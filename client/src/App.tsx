@@ -1,0 +1,245 @@
+import React from "react";
+import { Switch, Route, Redirect, useLocation, useParams } from "wouter";
+import { Toaster } from "@/components/ui/toaster";
+import AdminLayout from "./pages/admin/admin-layout";
+import { ModLayout } from "./components/mod/mod-layout";
+import { SiteHeader } from "@/components/layout/site-header";
+import SettingsPage from "@/pages/settings/index";
+import { ProtectedRoute } from "@/components/auth/protected-route";
+import WalletPage from "./pages/wallet";
+
+// Pages
+import HomePage from "./pages/home";
+ import ForumsPage from "./pages/forums";
+// Import forum system pages
+import ForumBySlugPage from "./pages/forums/[forum_slug]";
+import ThreadPage from "./pages/threads/[thread_slug]";
+import CreateThreadPage from "./pages/threads/create";
+import ShopPage from "./pages/shop";
+import NotFoundPage from "./pages/not-found";
+import LeaderboardPage from "./pages/leaderboard";
+import AuthPage from "./pages/auth";
+
+// Admin Pages
+import AdminDashboardPage from "./pages/admin/index";
+import AdminUsersPage from "./pages/admin/users";
+import AdminThreadsPage from "./pages/admin/threads";
+import AdminTreasuryPage from "./pages/admin/treasury";
+import AdminWalletsPage from "./pages/admin/wallets";
+import AdminTransactionsPage from "./pages/admin/transactions";
+import AdminStatsPage from "./pages/admin/stats";
+import AdminReportsPage from "./pages/admin/reports";
+import AdminAnnouncementsPage from "./pages/admin/announcements";
+import AdminCategoriesPage from "./pages/admin/categories";
+import AdminPrefixesPage from "./pages/admin/prefixes";
+import PlatformSettingsPage from "./pages/admin/platform-settings";
+import AdminDgtPackagesPage from "./pages/admin/dgt-packages";
+import TipRainSettingsPage from "./pages/admin/tip-rain-settings";
+import CooldownSettingsPage from "./pages/admin/cooldowns";
+
+// Shop Pages
+import DgtPurchasePage from "./pages/shop/dgt-purchase";
+import PurchaseSuccessPage from "./pages/shop/purchase-success";
+
+// Mod Pages
+import ModDashboardPage from "./pages/mod/index";
+import ModShoutboxPage from "./pages/mod/shoutbox";
+import ModUsersPage from "./pages/mod/users";
+
+// Import user profile page and whispers page
+import ProfilePage from "./pages/profile/[username]";
+import WhispersPage from "./pages/whispers";
+
+// Define admin pages using lazy loading
+const AdminEmojisPage = React.lazy(() => import("./pages/admin/emojis"));
+const AdminUserGroupsPage = React.lazy(() => import("./pages/admin/user-groups"));
+
+// Import Dev Role Switcher
+import { DevRoleSwitcher } from '@/components/dev/dev-role-switcher';
+
+// Permission wrapper for mod routes
+function RequireMod({ children }: { children: React.ReactNode }) {
+  // Always allow access without permission checks
+  // This enables unrestricted navigation to moderator routes
+  return <>{children}</>;
+}
+
+function App() {
+  // Use location to conditionally show SiteHeader
+  const [location] = useLocation();
+  const isAdminRoute = location.startsWith('/admin');
+  const isModRoute = location.startsWith('/mod');
+  const isAuthRoute = location === '/auth';
+
+  return (
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      {/* Only show SiteHeader on non-admin, non-mod, and non-auth routes */}
+      {!isAdminRoute && !isModRoute && !isAuthRoute && <SiteHeader />}
+      <React.Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+        <Switch>
+          {/* Auth Routes */}
+          <Route path="/auth" component={AuthPage} />
+
+          {/* Protected Main Routes */}
+          <ProtectedRoute path="/" component={HomePage} />
+          
+          {/* Forum Structure Routes */}
+          {/* Forum Structure Routes */}
+          {/* Forum Structure Routes */}
+          {/* Updated path to match singular '/forum/:slug' */}
+          <ProtectedRoute path="/forums/:slug" component={ForumBySlugPage} />
+          {/* The /forum route might be for a general forum listing page if needed */}
+          <ProtectedRoute path="/forum" component={ForumsPage} />
+          
+          {/* Thread Routes */}
+          <ProtectedRoute path="/threads/create" component={CreateThreadPage} />
+          <ProtectedRoute path="/threads/:id" component={ThreadPage} />
+          
+          {/* Other Routes */}
+          <ProtectedRoute path="/shop" component={ShopPage} />
+          <ProtectedRoute path="/shop/dgt-purchase" component={DgtPurchasePage} />
+          <ProtectedRoute path="/shop/purchase-success" component={PurchaseSuccessPage} />
+          <ProtectedRoute path="/leaderboard" component={LeaderboardPage} />
+          <ProtectedRoute path="/wallet" component={WalletPage} />
+          <ProtectedRoute path="/profile/:username?" component={ProfilePage} />
+          <ProtectedRoute path="/whispers" component={WhispersPage} />
+          <ProtectedRoute path="/settings" component={SettingsPage} />
+
+          {/* Admin Routes */}
+          <Route path="/admin" component={() => {
+            return (
+              <AdminLayout>
+                <div>
+                  <AdminDashboardPage />
+                </div>
+              </AdminLayout>
+            );
+          }} />
+          <Route path="/admin/users" component={() => {
+            return (
+              <AdminLayout>
+                <div>
+                  <AdminUsersPage />
+                </div>
+              </AdminLayout>
+            );
+          }} />
+          <Route path="/admin/threads" component={() => {
+            return (
+              <AdminLayout>
+                <div>
+                  <AdminThreadsPage />
+                </div>
+              </AdminLayout>
+            );
+          }} />
+          <Route path="/admin/treasury" component={() => (
+            <AdminLayout>
+              <div>
+                <AdminTreasuryPage />
+              </div>
+            </AdminLayout>
+          )} />
+          <Route path="/admin/wallets" component={() => (
+            <AdminLayout>
+              <AdminWalletsPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/user-groups" component={() => (
+            <AdminLayout>
+              <AdminUserGroupsPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/transactions" component={() => (
+            <AdminLayout>
+              <AdminTransactionsPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/stats" component={() => (
+            <AdminLayout>
+              <AdminStatsPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/reports" component={() => (
+            <AdminLayout>
+              <AdminReportsPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/announcements" component={() => (
+            <AdminLayout>
+              <AdminAnnouncementsPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/emojis" component={() => (
+            <AdminLayout>
+              <React.Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+                <AdminEmojisPage />
+              </React.Suspense>
+            </AdminLayout>
+          )} />
+          <Route path="/admin/categories" component={() => (
+            <AdminLayout>
+              <AdminCategoriesPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/prefixes" component={() => (
+            <AdminLayout>
+              <AdminPrefixesPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/platform-settings" component={() => (
+            <AdminLayout>
+              <PlatformSettingsPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/dgt-packages" component={() => (
+            <AdminLayout>
+              <AdminDgtPackagesPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/tip-rain-settings" component={() => (
+            <AdminLayout>
+              <TipRainSettingsPage />
+            </AdminLayout>
+          )} />
+          <Route path="/admin/cooldowns" component={() => (
+            <AdminLayout>
+              <CooldownSettingsPage />
+            </AdminLayout>
+          )} />
+
+          {/* Moderator Routes */}
+          <Route path="/mod" component={() => (
+            <RequireMod>
+              <ModLayout>
+                <ModDashboardPage />
+              </ModLayout>
+            </RequireMod>
+          )} />
+          <Route path="/mod/shoutbox" component={() => (
+            <RequireMod>
+              <ModLayout>
+                <ModShoutboxPage />
+              </ModLayout>
+            </RequireMod>
+          )} />
+          <Route path="/mod/users" component={() => (
+            <RequireMod>
+              <ModLayout>
+                <ModUsersPage />
+              </ModLayout>
+            </RequireMod>
+          )} />
+
+          {/* 404 Route - Render the custom NotFoundPage component */}
+          <Route component={NotFoundPage} />
+        </Switch>
+      </React.Suspense>
+      <Toaster />
+      {/* Conditionally render the DevRoleSwitcher */}
+      {import.meta.env.MODE === 'development' && <DevRoleSwitcher />}
+    </div>
+  );
+}
+
+export default App;

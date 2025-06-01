@@ -1,0 +1,357 @@
+/**
+ * Zone Themes - CSS Styling for Primary Zones
+ * 
+ * This file contains theme-specific styling for Primary Zones.
+ * Each zone has a distinct visual identity through its `colorTheme` property.
+ */
+
+/* Base Zone Card Styling */
+.zone-card {
+  min-height: 180px;
+  background-color: rgba(24, 24, 27, 0.8); /* Default background (zinc-900 with opacity) */
+  border-color: rgba(63, 63, 70, 0.5); /* Default border (zinc-700 with opacity) */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.zone-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+.zone-card:active {
+  transform: scale(0.98);
+}
+
+/* The Pit - Raw, unfiltered discussions */
+.zone-theme-pit {
+  background: linear-gradient(135deg, rgba(42, 1, 1, 0.8) 0%, rgba(80, 1, 1, 0.8) 100%);
+  border-color: rgba(255, 81, 81, 0.5);
+}
+
+.zone-theme-pit:hover {
+  border-color: rgba(255, 81, 81, 0.9);
+  box-shadow: 0 8px 25px -5px rgba(255, 81, 81, 0.25);
+}
+
+.zone-nav-theme-pit {
+  color: rgb(255, 81, 81);
+}
+
+.zone-nav-theme-pit.active {
+  background-color: rgba(255, 81, 81, 0.15);
+  border-left: 3px solid rgb(255, 81, 81);
+}
+
+/* Mission Control - Strategic discussions */
+.zone-theme-mission {
+  background: linear-gradient(135deg, rgba(1, 42, 28, 0.8) 0%, rgba(1, 80, 54, 0.8) 100%);
+  border-color: rgba(81, 255, 176, 0.5);
+}
+
+.zone-theme-mission:hover {
+  border-color: rgba(81, 255, 176, 0.9);
+  box-shadow: 0 8px 25px -5px rgba(81, 255, 176, 0.25);
+}
+
+.zone-nav-theme-mission {
+  color: rgb(81, 255, 176);
+}
+
+.zone-nav-theme-mission.active {
+  background-color: rgba(81, 255, 176, 0.15);
+  border-left: 3px solid rgb(81, 255, 176);
+}
+
+/* Casino Floor - Trading and gambling */
+.zone-theme-casino {
+  background: linear-gradient(135deg, rgba(42, 1, 39, 0.8) 0%, rgba(80, 1, 66, 0.8) 100%);
+  border-color: rgba(255, 81, 235, 0.5);
+}
+
+.zone-theme-casino:hover {
+  border-color: rgba(255, 81, 235, 0.9);
+  box-shadow: 0 8px 25px -5px rgba(255, 81, 235, 0.25);
+}
+
+.zone-nav-theme-casino {
+  color: rgb(255, 81, 235);
+}
+
+.zone-nav-theme-casino.active {
+  background-color: rgba(255, 81, 235, 0.15);
+  border-left: 3px solid rgb(255, 81, 235);
+}
+
+/* Briefing Room - News and updates */
+.zone-theme-briefing {
+  background: linear-gradient(135deg, rgba(1, 24, 42, 0.8) 0%, rgba(1, 44, 80, 0.8) 100%);
+  border-color: rgba(81, 162, 255, 0.5);
+}
+
+.zone-theme-briefing:hover {
+  border-color: rgba(81, 162, 255, 0.9);
+  box-shadow: 0 8px 25px -5px rgba(81, 162, 255, 0.25);
+}
+
+.zone-nav-theme-briefing {
+  color: rgb(81, 162, 255);
+}
+
+.zone-nav-theme-briefing.active {
+  background-color: rgba(81, 162, 255, 0.15);
+  border-left: 3px solid rgb(81, 162, 255);
+}
+
+/* Archive - Historical records */
+.zone-theme-archive {
+  background: linear-gradient(135deg, rgba(39, 42, 1, 0.8) 0%, rgba(80, 73, 1, 0.8) 100%);
+  border-color: rgba(255, 235, 81, 0.5);
+}
+
+.zone-theme-archive:hover {
+  border-color: rgba(255, 235, 81, 0.9);
+  box-shadow: 0 8px 25px -5px rgba(255, 235, 81, 0.25);
+}
+
+.zone-nav-theme-archive {
+  color: rgb(255, 235, 81);
+}
+
+.zone-nav-theme-archive.active {
+  background-color: rgba(255, 235, 81, 0.15);
+  border-left: 3px solid rgb(255, 235, 81);
+}
+
+/* Forum Header Styling for Primary Zones */
+.forum-header-theme-pit {
+  --accent-color: rgb(255, 81, 81);
+  --accent-color-faded: rgba(255, 81, 81, 0.3);
+}
+
+.forum-header-theme-mission {
+  --accent-color: rgb(81, 255, 176);
+  --accent-color-faded: rgba(81, 255, 176, 0.3);
+}
+
+.forum-header-theme-casino {
+  --accent-color: rgb(255, 81, 235);
+  --accent-color-faded: rgba(255, 81, 235, 0.3);
+}
+
+.forum-header-theme-briefing {
+  --accent-color: rgb(81, 162, 255);
+  --accent-color-faded: rgba(81, 162, 255, 0.3);
+}
+
+.forum-header-theme-archive {
+  --accent-color: rgb(255, 235, 81);
+  --accent-color-faded: rgba(255, 235, 81, 0.3);
+}
+
+/* Primary Zone Page Styling */
+.forum-theme-pit {
+  --thread-accent: rgba(255, 81, 81, 0.3);
+  background: radial-gradient(circle at top, rgba(42, 1, 1, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+.forum-theme-mission {
+  --thread-accent: rgba(81, 255, 176, 0.3);
+  background: radial-gradient(circle at top, rgba(1, 42, 28, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+.forum-theme-casino {
+  --thread-accent: rgba(255, 81, 235, 0.3);
+  background: radial-gradient(circle at top, rgba(42, 1, 39, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+.forum-theme-briefing {
+  --thread-accent: rgba(81, 162, 255, 0.3);
+  background: radial-gradient(circle at top, rgba(1, 24, 42, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+.forum-theme-archive {
+  --thread-accent: rgba(255, 235, 81, 0.3);
+  background: radial-gradient(circle at top, rgba(39, 42, 1, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+/* Primary Zone Thread Card Styling */
+.primary-zone-thread-card {
+  transition: transform 0.15s ease-out, border-color 0.15s ease;
+}
+
+.primary-zone-thread-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--thread-accent, rgba(16, 185, 129, 0.5)) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Rarity styles for future implementation */
+.zone-card-uncommon {
+  box-shadow: 0 0 10px rgba(81, 255, 176, 0.2);
+}
+
+.zone-card-rare {
+  box-shadow: 0 0 15px rgba(81, 162, 255, 0.3);
+  animation: subtle-pulse 3s infinite;
+}
+
+.zone-card-epic {
+  box-shadow: 0 0 20px rgba(255, 81, 235, 0.4);
+  animation: border-pulse 2s infinite;
+}
+
+.zone-card-legendary {
+  box-shadow: 0 0 25px rgba(255, 175, 0, 0.5);
+  animation: legendary-glow 3s infinite;
+  border-width: 3px;
+  border-image: linear-gradient(45deg, gold, orange, purple, cyan) 1;
+}
+
+/* XP Boost Animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.7);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Other animations for rarity */
+@keyframes subtle-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(81, 162, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(81, 162, 255, 0.4);
+  }
+}
+
+@keyframes border-pulse {
+  0%, 100% {
+    border-color: rgba(255, 81, 235, 0.6);
+  }
+  50% {
+    border-color: rgba(255, 81, 235, 1);
+  }
+}
+
+@keyframes legendary-glow {
+  0% {
+    border-image: linear-gradient(45deg, gold, orange, purple, cyan) 1;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  }
+  25% {
+    border-image: linear-gradient(90deg, orange, purple, cyan, gold) 1;
+    box-shadow: 0 0 20px rgba(255, 165, 0, 0.5);
+  }
+  50% {
+    border-image: linear-gradient(135deg, purple, cyan, gold, orange) 1;
+    box-shadow: 0 0 20px rgba(128, 0, 128, 0.5);
+  }
+  75% {
+    border-image: linear-gradient(180deg, cyan, gold, orange, purple) 1;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  }
+  100% {
+    border-image: linear-gradient(225deg, gold, orange, purple, cyan) 1;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  }
+}
+
+/* Zone Theme CSS for Primary Zones Navigation */
+
+/* Navigation theme styles for Primary Zones */
+.zone-nav-theme-pit {
+  @apply text-red-300 hover:text-red-200;
+}
+
+.zone-nav-theme-pit.active {
+  @apply text-red-400 bg-red-900/20;
+}
+
+.zone-nav-theme-mission {
+  @apply text-blue-300 hover:text-blue-200;
+}
+
+.zone-nav-theme-mission.active {
+  @apply text-blue-400 bg-blue-900/20;
+}
+
+.zone-nav-theme-casino {
+  @apply text-purple-300 hover:text-purple-200;
+}
+
+.zone-nav-theme-casino.active {
+  @apply text-purple-400 bg-purple-900/20;
+}
+
+.zone-nav-theme-briefing {
+  @apply text-amber-300 hover:text-amber-200;
+}
+
+.zone-nav-theme-briefing.active {
+  @apply text-amber-400 bg-amber-900/20;
+}
+
+.zone-nav-theme-archive {
+  @apply text-gray-300 hover:text-gray-200;
+}
+
+.zone-nav-theme-archive.active {
+  @apply text-gray-400 bg-gray-900/20;
+}
+
+/* Zone Card Themes for CanonicalZoneGrid */
+.zone-theme-pit {
+  @apply bg-gradient-to-br from-red-900/40 to-red-800/20 border-red-700/50;
+}
+
+.zone-theme-pit:hover {
+  @apply border-red-600/70 shadow-lg shadow-red-900/25;
+}
+
+.zone-theme-mission {
+  @apply bg-gradient-to-br from-blue-900/40 to-blue-800/20 border-blue-700/50;
+}
+
+.zone-theme-mission:hover {
+  @apply border-blue-600/70 shadow-lg shadow-blue-900/25;
+}
+
+.zone-theme-casino {
+  @apply bg-gradient-to-br from-purple-900/40 to-purple-800/20 border-purple-700/50;
+}
+
+.zone-theme-casino:hover {
+  @apply border-purple-600/70 shadow-lg shadow-purple-900/25;
+}
+
+.zone-theme-briefing {
+  @apply bg-gradient-to-br from-amber-900/40 to-amber-800/20 border-amber-700/50;
+}
+
+.zone-theme-briefing:hover {
+  @apply border-amber-600/70 shadow-lg shadow-amber-900/25;
+}
+
+.zone-theme-archive {
+  @apply bg-gradient-to-br from-gray-900/40 to-gray-800/20 border-gray-700/50;
+}
+
+.zone-theme-archive:hover {
+  @apply border-gray-600/70 shadow-lg shadow-gray-900/25;
+}
+
+.zone-theme-default {
+  @apply bg-gradient-to-br from-zinc-900/40 to-zinc-800/20 border-zinc-700/50;
+}
+
+.zone-theme-default:hover {
+  @apply border-zinc-600/70 shadow-lg shadow-zinc-900/25;
+} 

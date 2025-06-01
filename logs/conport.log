@@ -1,0 +1,69 @@
+2025-05-31 21:21:35,974 - INFO - __main__ - Logging to file: /Users/gnarcotic/Degentalk/Degentalk/logs/conport.log
+2025-05-31 21:21:35,975 - INFO - __main__ - Starting ConPort in STDIO mode using FastMCP for initial CLI arg workspace_id: ${workspaceFolder}
+2025-05-31 21:21:35,975 - INFO - __main__ - Logging to file: /Users/gnarcotic/Degentalk/Degentalk/logs/conport.log
+2025-05-31 21:21:35,976 - INFO - __main__ - Starting ConPort in STDIO mode using FastMCP for initial CLI arg workspace_id: ${workspaceFolder}
+2025-05-31 21:21:35,976 - WARNING - __main__ - MAIN.PY: WARNING - Workspace ID was literally '${workspaceFolder}'. This variable was not expanded by the client IDE. Falling back to current working directory as workspace_id: /. Ensure CWD in MCP config ('/') is the correct project workspace.
+2025-05-31 21:21:35,976 - WARNING - __main__ - MAIN.PY: WARNING - Workspace ID was literally '${workspaceFolder}'. This variable was not expanded by the client IDE. Falling back to current working directory as workspace_id: /. Ensure CWD in MCP config ('/') is the correct project workspace.
+2025-05-31 21:21:35,977 - INFO - context_portal_mcp.db.database - Copying missing alembic.ini from templates to /alembic.ini
+2025-05-31 21:21:35,977 - INFO - context_portal_mcp.db.database - Copying missing alembic.ini from templates to /alembic.ini
+2025-05-31 21:21:35,978 - ERROR - __main__ - Unexpected error processing effective_workspace_id '/' in STDIO mode setup: [Errno 30] Read-only file system: '/alembic.ini'
+2025-05-31 21:21:35,979 - ERROR - __main__ - Unexpected error processing effective_workspace_id '/' in STDIO mode setup: [Errno 30] Read-only file system: '/alembic.ini'
+2025-05-31 21:21:35,978 - INFO - __main__ - Logging to file: /Users/gnarcotic/Degentalk/Degentalk/logs/conport.log
+2025-05-31 21:21:35,979 - INFO - __main__ - Starting ConPort in STDIO mode using FastMCP for initial CLI arg workspace_id: ${workspaceFolder}
+2025-05-31 21:21:35,981 - WARNING - __main__ - MAIN.PY: WARNING - Workspace ID was literally '${workspaceFolder}'. This variable was not expanded by the client IDE. Falling back to current working directory as workspace_id: /. Ensure CWD in MCP config ('/') is the correct project workspace.
+2025-05-31 21:21:35,987 - INFO - context_portal_mcp.db.database - Copying missing alembic.ini from templates to /alembic.ini
+2025-05-31 21:21:35,995 - ERROR - __main__ - Unexpected error processing effective_workspace_id '/' in STDIO mode setup: [Errno 30] Read-only file system: '/alembic.ini'
+2025-05-31 21:22:53,206 - INFO - __main__ - Logging to file: /Users/gnarcotic/Degentalk/Degentalk/logs/conport.log
+2025-05-31 21:22:53,210 - INFO - __main__ - Starting ConPort in STDIO mode using FastMCP for initial CLI arg workspace_id: ${workspaceFolder}
+2025-05-31 21:22:53,211 - WARNING - __main__ - MAIN.PY: WARNING - Workspace ID was literally '${workspaceFolder}'. This variable was not expanded by the client IDE. Falling back to current working directory as workspace_id: /. Ensure CWD in MCP config ('/') is the correct project workspace.
+2025-05-31 21:22:53,212 - INFO - context_portal_mcp.db.database - Copying missing alembic.ini from templates to /alembic.ini
+2025-05-31 21:22:53,213 - ERROR - __main__ - Unexpected error processing effective_workspace_id '/' in STDIO mode setup: [Errno 30] Read-only file system: '/alembic.ini'
+2025-05-31 21:22:53,270 - INFO - __main__ - Logging to file: ./logs/conport.log
+2025-05-31 21:22:53,323 - INFO - __main__ - Starting ConPort in STDIO mode using FastMCP for initial CLI arg workspace_id: /Users/gnarcotic/Degentalk/Degentalk
+2025-05-31 21:22:53,328 - INFO - context_portal_mcp.db.database - Copying missing alembic.ini from templates to /Users/gnarcotic/Degentalk/Degentalk/alembic.ini
+2025-05-31 21:22:53,332 - INFO - context_portal_mcp.db.database - Copying missing alembic/ scripts from templates to /Users/gnarcotic/Degentalk/Degentalk/alembic
+2025-05-31 21:22:53,363 - INFO - __main__ - STDIO mode: Using effective_workspace_id '/Users/gnarcotic/Degentalk/Degentalk'. Database directory will be created on first actual DB use.
+2025-05-31 21:22:53,403 - INFO - __main__ - ConPort FastMCP server lifespan starting.
+2025-05-31 21:23:08,059 - INFO - __main__ - ConPort FastMCP server lifespan shutting down. Closing all DB connections.
+2025-05-31 21:23:08,095 - ERROR - __main__ - Error running FastMCP in STDIO mode
+  + Exception Group Traceback (most recent call last):
+  |   File "/Users/gnarcotic/Degentalk/Degentalk/.venv-conport-py310/lib/python3.10/site-packages/context_portal_mcp/main.py", line 881, in main_logic
+  |     conport_mcp.run(transport="stdio")
+  |   File "/Users/gnarcotic/Degentalk/Degentalk/.venv-conport-py310/lib/python3.10/site-packages/mcp/server/fastmcp/server.py", line 236, in run
+  |     anyio.run(self.run_stdio_async)
+  |   File "/Users/gnarcotic/Degentalk/Degentalk/.venv-conport-py310/lib/python3.10/site-packages/anyio/_core/_eventloop.py", line 74, in run
+  |     return async_backend.run(func, args, {}, backend_options)
+  |   File "/Users/gnarcotic/Degentalk/Degentalk/.venv-conport-py310/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 2310, in run
+  |     return runner.run(wrapper())
+  |   File "/Users/gnarcotic/Degentalk/Degentalk/.venv-conport-py310/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 217, in run
+  |     return self._loop.run_until_complete(task)
+  |   File "/usr/local/Cellar/python@3.10/3.10.13_2/Frameworks/Python.framework/Versions/3.10/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+  |     return future.result()
+  |   File "/Users/gnarcotic/Degentalk/Degentalk/.venv-conport-py310/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 2298, in wrapper
+  |     return await func(*args)
+  |   File "/Users/gnarcotic/Degentalk/Degentalk/.venv-conport-py310/lib/python3.10/site-packages/mcp/server/fastmcp/server.py", line 594, in run_stdio_async
+  |     async with stdio_server() as (read_stream, write_stream):
+  |   File "/usr/local/Cellar/python@3.10/3.10.13_2/Frameworks/Python.framework/Versions/3.10/lib/python3.10/contextlib.py", line 217, in __aexit__
+  |     await self.gen.athrow(typ, value, traceback)
+  |   File "/Users/gnarcotic/Degentalk/Degentalk/.venv-conport-py310/lib/python3.10/site-packages/mcp/server/stdio.py", line 87, in stdio_server
+  |     async with anyio.create_task_group() as tg:
+  |   File "/Users/gnarcotic/Degentalk/Degentalk/.venv-conport-py310/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 772, in __aexit__
+  |     raise BaseExceptionGroup(
+  | exceptiongroup.ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "/Users/gnarcotic/Degentalk/Degentalk/.venv-conport-py310/lib/python3.10/site-packages/mcp/server/stdio.py", line 67, in stdin_reader
+    |     await read_stream_writer.send(exc)
+    |   File "/Users/gnarcotic/Degentalk/Degentalk/.venv-conport-py310/lib/python3.10/site-packages/anyio/streams/memory.py", line 255, in send
+    |     raise BrokenResourceError from None
+    | anyio.BrokenResourceError
+    +------------------------------------
+2025-05-31 21:24:07,319 - INFO - __main__ - Logging to file: /Users/gnarcotic/Degentalk/Degentalk/logs/conport.log
+2025-05-31 21:24:07,320 - INFO - __main__ - Starting ConPort in STDIO mode using FastMCP for initial CLI arg workspace_id: ${workspaceFolder}
+2025-05-31 21:24:07,320 - WARNING - __main__ - MAIN.PY: WARNING - Workspace ID was literally '${workspaceFolder}'. This variable was not expanded by the client IDE. Falling back to current working directory as workspace_id: /. Ensure CWD in MCP config ('/') is the correct project workspace.
+2025-05-31 21:24:07,321 - INFO - context_portal_mcp.db.database - Copying missing alembic.ini from templates to /alembic.ini
+2025-05-31 21:24:07,321 - ERROR - __main__ - Unexpected error processing effective_workspace_id '/' in STDIO mode setup: [Errno 30] Read-only file system: '/alembic.ini'
+2025-05-31 21:24:07,334 - INFO - __main__ - Logging to file: ./logs/conport.log
+2025-05-31 21:24:07,335 - INFO - __main__ - Starting ConPort in STDIO mode using FastMCP for initial CLI arg workspace_id: /Users/gnarcotic/Degentalk/Degentalk
+2025-05-31 21:24:07,336 - INFO - __main__ - STDIO mode: Using effective_workspace_id '/Users/gnarcotic/Degentalk/Degentalk'. Database directory will be created on first actual DB use.
+2025-05-31 21:24:07,351 - INFO - __main__ - ConPort FastMCP server lifespan starting.

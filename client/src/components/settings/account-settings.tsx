@@ -1,0 +1,259 @@
+import React, { useState, useEffect } from 'react';
+import { User } from '@shared/schema';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { AlertCircle, Check, X } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { SettingsCard } from './SettingsCard';
+import { SettingsGroup } from './SettingsGroup';
+import { SettingsInput } from './SettingsInput';
+import { SettingsSelect } from './SettingsSelect';
+import { useUserSettings } from '@/hooks/settings/useUserSettings';
+import { useUpdateUserSettings, useUpdatePassword } from '@/hooks/settings/useUpdateUserSettings';
+
+interface AccountSettingsProps {
+  user: User;
+}
+
+// Language options
+const LANGUAGE_OPTIONS = [
+  { value: 'en', label: 'English' },
+  { value: 'es', label: 'Spanish' },
+  { value: 'fr', label: 'French' },
+  { value: 'de', label: 'German' },
+  { value: 'ja', label: 'Japanese' },
+  { value: 'zh', label: 'Chinese' },
+];
+
+// Timezone options (abbreviated list)
+const TIMEZONE_OPTIONS = [
+  { value: 'UTC', label: 'UTC (Coordinated Universal Time)' },
+  { value: 'America/New_York', label: 'Eastern Time (US & Canada)' },
+  { value: 'America/Chicago', label: 'Central Time (US & Canada)' },
+  { value: 'America/Denver', label: 'Mountain Time (US & Canada)' },
+  { value: 'America/Los_Angeles', label: 'Pacific Time (US & Canada)' },
+  { value: 'Europe/London', label: 'London, Edinburgh' },
+  { value: 'Europe/Paris', label: 'Paris, Berlin, Rome, Madrid' },
+  { value: 'Asia/Tokyo', label: 'Tokyo, Osaka' },
+  { value: 'Asia/Shanghai', label: 'Beijing, Shanghai' },
+  { value: 'Australia/Sydney', label: 'Sydney, Melbourne' },
+];
+
+export function AccountSettings({ user }: AccountSettingsProps) {
+  const { data: userSettings, isLoading } = useUserSettings();
+  const updateAccountSettings = useUpdateUserSettings('account');
+  const updatePassword = useUpdatePassword();
+  
+  // Account settings form
+  const [accountForm, setAccountForm] = useState({
+    language: 'en',
+    timezone: '',
+  });
+  
+  // Password change form
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+  
+  // Form validation errors
+  const [passwordErrors, setPasswordErrors] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+
+  // Initialize form with user data when loaded
+  useEffect(() => {
+    if (userSettings?.settings) {
+      setAccountForm({
+        language: userSettings.settings.language || 'en',
+        timezone: userSettings.settings.timezone || '',
+      });
+    }
+  }, [userSettings]);
+
+  // Handle account form changes
+  const handleAccountChange = (field: keyof typeof accountForm) => (value: string) => {
+    setAccountForm(prev => ({ ...prev, [field]: value }));
+  };
+  
+  // Handle password form changes
+  const handlePasswordChange = (field: keyof typeof passwordForm) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordForm(prev => ({ ...prev, [field]: e.target.value }));
+    
+    // Clear validation error when user types
+    if (passwordErrors[field]) {
+      setPasswordErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+  
+  // Save account settings
+  const handleSaveAccount = () => {
+    updateAccountSettings.mutate(accountForm);
+  };
+  
+  // Validate and submit password change
+  const handleSavePassword = () => {
+    // Clear previous errors
+    setPasswordErrors({
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+    });
+    
+    // Validate fields
+    let isValid = true;
+    
+    if (!passwordForm.currentPassword) {
+      setPasswordErrors(prev => ({ ...prev, currentPassword: 'Current password is required' }));
+      isValid = false;
+    }
+    
+    if (!passwordForm.newPassword) {
+      setPasswordErrors(prev => ({ ...prev, newPassword: 'New password is required' }));
+      isValid = false;
+    } else if (passwordForm.newPassword.length < 8) {
+      setPasswordErrors(prev => ({ ...prev, newPassword: 'Password must be at least 8 characters' }));
+      isValid = false;
+    }
+    
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordErrors(prev => ({ ...prev, confirmPassword: 'Passwords do not match' }));
+      isValid = false;
+    }
+    
+    if (isValid) {
+      updatePassword.mutate({
+        oldPassword: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword,
+      });
+      
+      // Clear form on successful submission
+      if (!updatePassword.isError) {
+        setPasswordForm({
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: '',
+        });
+      }
+    }
+  };
+  
+  if (isLoading) {
+    return <div>Loading account settings...</div>;
+  }
+
+  return (
+    <div>
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">Account Settings</h2>
+        <p className="text-muted-foreground">Manage your account preferences and security</p>
+      </div>
+      
+      <SettingsCard title="Account Information" description="Your basic account info">
+        <SettingsGroup>
+          <SettingsInput
+            id="email"
+            label="Email Address"
+            type="email"
+            value={userSettings?.profile.email || ''}
+            onChange={() => {}}
+            disabled={true}
+            description="Contact support to change your email address"
+          />
+          
+          <SettingsInput
+            id="username"
+            label="Username"
+            value={userSettings?.profile.username || ''}
+            onChange={() => {}}
+            disabled={true}
+            description="Your unique username cannot be changed"
+          />
+        </SettingsGroup>
+      </SettingsCard>
+      
+      <SettingsCard title="Preferences" description="Regional and language settings">
+        <SettingsGroup>
+          <SettingsSelect
+            id="language"
+            label="Language"
+            description="Select your preferred language"
+            value={accountForm.language}
+            onChange={handleAccountChange('language')}
+            options={LANGUAGE_OPTIONS}
+          />
+          
+          <SettingsSelect
+            id="timezone"
+            label="Timezone"
+            description="Set your local timezone"
+            value={accountForm.timezone}
+            onChange={handleAccountChange('timezone')}
+            options={TIMEZONE_OPTIONS}
+            placeholder="Select a timezone"
+          />
+        </SettingsGroup>
+        
+        <div className="flex justify-end mt-4">
+          <Button 
+            onClick={handleSaveAccount} 
+            disabled={updateAccountSettings.isPending}
+          >
+            {updateAccountSettings.isPending ? 'Saving...' : 'Save Preferences'}
+          </Button>
+        </div>
+      </SettingsCard>
+      
+      <SettingsCard title="Change Password" description="Update your password regularly for better security">
+        <SettingsGroup>
+          <SettingsInput
+            id="currentPassword"
+            label="Current Password"
+            type="password"
+            value={passwordForm.currentPassword}
+            onChange={(v) => handlePasswordChange('currentPassword')({ target: { value: v } } as any)}
+            required
+            error={passwordErrors.currentPassword}
+          />
+          
+          <SettingsInput
+            id="newPassword"
+            label="New Password"
+            type="password"
+            value={passwordForm.newPassword}
+            onChange={(v) => handlePasswordChange('newPassword')({ target: { value: v } } as any)}
+            required
+            error={passwordErrors.newPassword}
+            description="Use at least 8 characters with a mix of letters, numbers & symbols"
+          />
+          
+          <SettingsInput
+            id="confirmPassword"
+            label="Confirm New Password"
+            type="password"
+            value={passwordForm.confirmPassword}
+            onChange={(v) => handlePasswordChange('confirmPassword')({ target: { value: v } } as any)}
+            required
+            error={passwordErrors.confirmPassword}
+          />
+        </SettingsGroup>
+        
+        <div className="flex justify-end mt-4">
+          <Button 
+            onClick={handleSavePassword} 
+            disabled={updatePassword.isPending}
+          >
+            {updatePassword.isPending ? 'Updating...' : 'Update Password'}
+          </Button>
+        </div>
+      </SettingsCard>
+    </div>
+  );
+}

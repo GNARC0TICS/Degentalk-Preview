@@ -1,0 +1,1078 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'wouter';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { formatNumber, formatCurrency, formatRelativeTime, cn } from '@/lib/utils';
+import { useAuth } from '@/hooks/use-auth.tsx';
+import { FramedAvatar } from '@/components/users/framed-avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Home, Settings, BarChart2, ShoppingBag, Users, Award, UserCheck, UserPlus, HomeIcon, Trophy } from 'lucide-react';
+import { apiRequest } from '@/lib/queryClient';
+import { useToast } from '@/hooks/use-toast';
+import { SeoHead } from '@/components/ui/SeoHead';
+import { WhisperButton } from '@/components/messages/WhisperButton';
+import { WhisperModal } from '@/components/messages/WhisperModal';
+import { useAsyncButton } from '@/hooks/use-async-button';
+import { LoadingSpinner } from "@/components/ui/loader";
+import { ErrorDisplay } from "@/components/ui/error-display";
+import { XPProgressBar } from '@/components/profile/XPProgressBar';
+import { UserBadges } from '@/components/profile/UserBadges';
+import { UserTitles } from '@/components/profile/UserTitles';
+import { ProfileSkeleton } from '@/components/profile/ProfileSkeleton';
+import { XPProfileSection } from '@/components/profile/XPProfileSection';
+import { SiteFooter } from '@/components/layout/site-footer';
+
+// Define profile data interface
+interface ProfileData {
+  id: number;
+  username: string;
+  avatarUrl: string | null;
+  role: string;
+  bio: string | null;
+  signature: string | null;
+  joinedAt: string;
+  lastActiveAt: string;
+  dgtBalance: number;
+  totalPosts: number;
+  totalThreads: number;
+  totalLikes: number;
+  totalTips: number;
+  clout: number;
+  level: number;
+  xp: number;
+  nextLevelXp: number;
+  bannerUrl: string | null;
+  activeFrameId: number | null;
+  activeFrame: {
+    id: number;
+    name: string;
+    imageUrl: string;
+    rarity: string;
+  } | null;
+  activeTitleId: number | null;
+  activeTitle: {
+    id: number;
+    name: string;
+    description: string | null;
+    iconUrl: string | null;
+    rarity: string;
+  } | null;
+  activeBadgeId: number | null;
+  activeBadge: {
+    id: number;
+    name: string;
+    description: string | null;
+    iconUrl: string;
+    rarity: string;
+  } | null;
+  badges: {
+    id: number;
+    name: string;
+    description: string | null;
+    iconUrl: string;
+    rarity: string;
+  }[];
+  titles: {
+    id: number;
+    name: string;
+    description: string | null;
+    iconUrl: string | null;
+    rarity: string;
+  }[];
+  inventory: {
+    id: number;
+    productId: number;
+    isEquipped: boolean;
+    productName: string;
+    productType: string;
+    imageUrl: string;
+    rarity: string;
+  }[];
+  relationships: {
+    friends: {
+      id: number;
+      username: string;
+      avatarUrl: string | null;
+    }[];
+    friendRequestsSent: number;
+    friendRequestsReceived: number;
+  };
+  stats: {
+    threadViewCount: number;
+    posterRank: number | null;
+    tipperRank: number | null;
+    likerRank: number | null;
+  };
+}
+
+// Profile left sidebar component
+const ProfileSidebar: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> = ({ profile, isOwnProfile }) => {
+  const { toast } = useToast();
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [messageText, setMessageText] = useState("");
+  const [isFollowing, setIsFollowing] = useState(false);
+  const queryClient = useQueryClient();
+  
+  // Check follow status
+  const { data: followStatus } = useQuery({
+    queryKey: ['/api/relationships/is-following', profile.id],
+    queryFn: async () => {
+      if (isOwnProfile) return { isFollowing: false }; // Return an object to match expected type
+      const response = await fetch(`/api/relationships/is-following/${profile.id}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch follow status');
+      }
+      return response.json() as Promise<{ isFollowing: boolean }>; // Ensure return type
+    },
+    enabled: !isOwnProfile,
+    // Removed onSuccess callback from here
+  });
+
+  // Handle setting isFollowing state based on query result
+  useEffect(() => {
+    if (followStatus !== undefined && followStatus !== null) {
+      setIsFollowing(followStatus.isFollowing);
+    }
+  }, [followStatus]);
+  
+  // Follow/Unfollow mutations
+  const followMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest({ url: `/api/relationships/follow/${profile.id}`, method: 'POST' });
+    },
+    onSuccess: () => {
+      setIsFollowing(true);
+      toast({
+        title: "Success",
+        description: `You are now following ${profile.username}`,
+        variant: "default",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/relationships/is-following', profile.id] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: `Failed to follow user: ${error.message}`,
+        variant: "destructive",
+      });
+    }
+  });
+  
+  const unfollowMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest({ url: `/api/relationships/unfollow/${profile.id}`, method: 'DELETE' });
+    },
+    onSuccess: () => {
+      setIsFollowing(false);
+      toast({
+        title: "Success",
+        description: `You have unfollowed ${profile.username}`,
+        variant: "default",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/relationships/is-following', profile.id] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: `Failed to unfollow user: ${error.message}`,
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Message mutation
+  const sendMessageMutation = useMutation({
+    mutationFn: async (message: string) => {
+      return apiRequest({ url: `/api/messages/send/${profile.id}`, method: 'POST', data: { message } });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Message Sent",
+        description: `Your message has been sent to ${profile.username}`,
+        variant: "default",
+      });
+      setMessageText("");
+      setIsMessageModalOpen(false);
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: `Failed to send message: ${error.message}`,
+        variant: "destructive",
+      });
+    }
+  });
+
+  const handleFollowClick = () => {
+    if (isFollowing) {
+      unfollowMutation.mutate();
+    } else {
+      followMutation.mutate();
+    }
+  };
+
+  const handleMessageClick = () => {
+    setIsMessageModalOpen(true);
+  };
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (messageText.trim() === '') {
+      toast({
+        title: "Error",
+        description: "Message cannot be empty",
+        variant: "destructive",
+      });
+      return;
+    }
+    sendMessageMutation.mutate(messageText);
+  };
+  
+  const frameRarityClass = profile.activeFrame ? getRarityBorderClass(profile.activeFrame.rarity) : '';
+  const isPro = profile.level >= 10; // Define PRO status based on level
+  
+  return (
+    <div className={cn(
+      "bg-gradient-to-b from-zinc-800/80 to-zinc-900/85 backdrop-blur-sm rounded-lg overflow-hidden shadow-xl relative border",
+      frameRarityClass || "border-zinc-700/50"
+    )}>
+      {/* Profile Card Content */}
+      <div className="p-6 flex flex-col items-center">
+        {/* Avatar with Frame */}
+        <div className="relative mb-4">
+          <FramedAvatar 
+            avatarUrl={profile.avatarUrl} 
+            frameUrl={profile.activeFrame?.imageUrl || null}
+            username={profile.username}
+            size="xl"
+            shape="circle"
+            className="mb-2"
+          />
+        </div>
+        
+        {/* Username, Title and Role */}
+        <h1 className="text-2xl font-bold text-center text-white mb-1">{profile.username}</h1>
+        
+        {/* Active Title (if any) */}
+        {profile.activeTitle && (
+          <div className={cn(
+            'text-sm font-medium mb-2 px-3 py-0.5 rounded-full text-center',
+            profile.activeTitle.rarity === 'common' ? 'bg-slate-800 text-white' :
+            profile.activeTitle.rarity === 'uncommon' ? 'bg-emerald-900/50 text-emerald-300' :
+            profile.activeTitle.rarity === 'rare' ? 'bg-blue-900/50 text-blue-300' :
+            profile.activeTitle.rarity === 'epic' ? 'bg-purple-900/50 text-purple-300' :
+            'bg-amber-900/50 text-amber-300'
+          )}>
+            {profile.activeTitle.name}
+          </div>
+        )}
+        
+        <Badge className="mb-4 uppercase bg-indigo-600 text-white">
+          {profile.role || 'User'}
+        </Badge>
+        
+        {/* Action Buttons */}
+        <div className="flex gap-2 w-full mb-6">
+          {isOwnProfile ? (
+             <Link href="/settings">
+               <Button className="flex-1 bg-indigo-700 hover:bg-indigo-600 text-white">
+                 <Settings className="mr-2 h-4 w-4" />
+                 Settings
+               </Button>
+             </Link>
+          ) : (
+            <>
+              <Button 
+                className={`flex-1 ${isFollowing ? 'bg-zinc-700 hover:bg-zinc-600' : 'bg-emerald-700 hover:bg-emerald-600'} text-white transition-colors`}
+                onClick={handleFollowClick}
+                disabled={followMutation.isPending || unfollowMutation.isPending}
+              >
+                {followMutation.isPending || unfollowMutation.isPending ? (
+                  <LoadingSpinner size="sm" color="zinc" className="mr-2" />
+                ) : isFollowing ? (
+                  <UserCheck className="mr-2 h-4 w-4" />
+                ) : (
+                  <UserPlus className="mr-2 h-4 w-4" />
+                )}
+                {followMutation.isPending || unfollowMutation.isPending
+                  ? (isFollowing ? 'Unfollowing...' : 'Following...')
+                  : (isFollowing ? 'Unfollow' : 'Follow')}
+              </Button>
+              <WhisperButton 
+                onClick={handleMessageClick}
+                className="flex-1"
+              />
+            </>
+          )}
+        </div>
+        
+        {/* Whisper Modal */}
+        {isMessageModalOpen && profile && (
+          <WhisperModal
+            isOpen={isMessageModalOpen}
+            onClose={() => setIsMessageModalOpen(false)}
+            initialUser={{
+              id: profile.id,
+              username: profile.username,
+              avatarUrl: profile.avatarUrl || undefined
+            }}
+          />
+        )}
+        
+        
+        {/* User Stats */}
+        <div className="grid grid-cols-3 gap-4 w-full text-center mb-6 bg-zinc-800/30 p-3 rounded-lg border border-zinc-700/30">
+          <div className="flex flex-col">
+            <span className="text-xl font-bold text-indigo-400">{formatNumber(profile.totalThreads)}</span>
+            <span className="text-sm text-zinc-300">Threads</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xl font-bold text-indigo-400">{formatNumber(profile.totalPosts)}</span>
+            <span className="text-sm text-zinc-300">Posts</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xl font-bold text-indigo-400">{formatNumber(profile.totalLikes)}</span>
+            <span className="text-sm text-zinc-300">Likes</span>
+          </div>
+        </div>
+        
+        {/* About Section */}
+        <div className="w-full bg-zinc-800/20 p-4 rounded-lg border border-zinc-700/30 mb-4">
+          <h3 className="text-md font-semibold text-zinc-200 mb-2">About</h3>
+          {profile.bio ? (
+            <p className="text-zinc-300 text-sm">{profile.bio}</p>
+          ) : (
+            <p className="text-zinc-500 italic text-sm">No bio provided</p>
+          )}
+        </div>
+        
+        {/* Level & XP */}
+        <div className="w-full mb-4">
+          <XPProgressBar
+            level={profile.level}
+            currentXP={profile.xp}
+            nextLevelXP={profile.nextLevelXp}
+            showProBadge={isPro}
+            variant="compact"
+          />
+        </div>
+        
+        {/* Wallet & Clout */}
+        <div className="bg-zinc-800/30 w-full p-4 rounded-lg border border-zinc-700/30 mb-4">
+          <div className="flex justify-between items-center">
+            <span className="text-zinc-300">Balance:</span>
+            <span className="text-indigo-400 font-semibold">{formatCurrency(profile.dgtBalance)}</span>
+          </div>
+          <div className="flex justify-between items-center mt-2">
+            <span className="text-zinc-300">Clout:</span>
+            <span className="text-indigo-400 font-semibold">{formatNumber(profile.clout)}</span>
+          </div>
+        </div>
+        
+        {/* Join Date */}
+        <div className="text-xs text-zinc-400 w-full bg-zinc-800/20 p-3 rounded-lg">
+          <div>Member since {new Date(profile.joinedAt).toLocaleDateString()}</div>
+          {profile.lastActiveAt && <div className="mt-1">Last active {formatRelativeTime(profile.lastActiveAt)}</div>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Content tab views
+const OverviewTab: React.FC<{ profile: ProfileData }> = ({ profile }) => (
+  <div className="space-y-6">
+    {/* XP Progress Bar (Full Version) */}
+    <XPProgressBar
+      level={profile.level}
+      currentXP={profile.xp}
+      nextLevelXP={profile.nextLevelXp}
+      showProBadge={profile.level >= 10}
+    />
+    
+    {/* Stats Cards */}
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <StatCard 
+        label="Total Views" 
+        value={profile.stats.threadViewCount} 
+        icon={<BarChart2 className="h-5 w-5 text-indigo-400" />} 
+      />
+      <StatCard 
+        label="Tips Received" 
+        value={profile.totalTips} 
+        icon={<ShoppingBag className="h-5 w-5 text-indigo-400" />} 
+        isCurrency 
+      />
+      <StatCard 
+        label="Poster Rank" 
+        value={profile.stats.posterRank || 0} 
+        icon={<Award className="h-5 w-5 text-indigo-400" />} 
+        isRank 
+      />
+      <StatCard 
+        label="Tipper Rank" 
+        value={profile.stats.tipperRank || 0} 
+        icon={<Award className="h-5 w-5 text-indigo-400" />} 
+        isRank 
+      />
+    </div>
+    
+    {/* Signature */}
+    {profile.signature && (
+      <div className="bg-zinc-900/70 backdrop-blur-sm p-4 rounded-lg border border-zinc-700/30">
+        <h3 className="text-sm text-zinc-300 mb-2">Signature</h3>
+        <div className="text-zinc-200 text-sm border-l-2 border-indigo-700/50 pl-3 py-1">{profile.signature}</div>
+      </div>
+    )}
+    
+    {/* Recent Activity Placeholder */}
+    <div className="bg-zinc-900/70 backdrop-blur-sm p-4 rounded-lg border border-zinc-700/30">
+      <h3 className="text-md font-semibold text-zinc-200 mb-4">Recent Activity</h3>
+      <div className="text-zinc-500 italic">
+        Recent activity will be shown here
+      </div>
+    </div>
+  </div>
+);
+
+// Inventory tab
+const InventoryTab: React.FC<{ profile: ProfileData }> = ({ profile }) => (
+  <div className="space-y-6">
+    <h3 className="text-lg font-semibold text-slate-200">Inventory</h3>
+    {profile.inventory.length > 0 ? (
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {profile.inventory.map(item => (
+          <div key={item.id} className={`rounded-lg overflow-hidden border ${item.isEquipped ? 'border-indigo-500' : 'border-zinc-700/50'} bg-zinc-900/70 backdrop-blur-sm transition-all hover:bg-zinc-900/90 hover:border-zinc-700/80`}>
+            <div className="h-24 bg-zinc-800/70 relative overflow-hidden">
+              {item.imageUrl ? (
+                <img src={item.imageUrl} alt={item.productName} className="w-full h-full object-cover" />
+              ) : (
+                <div className="flex items-center justify-center h-full text-zinc-400">No Image</div>
+              )}
+              <div className={`absolute top-1 right-1 text-xs py-1 px-2 rounded-full ${getRarityColor(item.rarity)}`}>
+                {item.rarity}
+              </div>
+            </div>
+            <div className="p-2">
+              <div className="text-sm font-medium text-zinc-200 truncate">{item.productName}</div>
+              <div className="text-xs text-zinc-400">{item.productType}</div>
+              {item.isEquipped && (
+                <Badge variant="secondary" className="mt-1 text-xs bg-indigo-900/70 text-indigo-300">Equipped</Badge>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div className="text-slate-500 italic">No items in inventory</div>
+    )}
+  </div>
+);
+
+// New Achievements tab
+const AchievementsTab: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> = ({ profile, isOwnProfile }) => {
+  const [isPending, setIsPending] = useState(false);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  // Mutation to update active badge
+  const updateActiveBadgeMutation = useMutation({
+    mutationFn: async (badgeId: number) => {
+      setIsPending(true);
+      try {
+        return await apiRequest({ method: 'POST', url: `/api/profile/set-active-badge`, data: { badgeId } });
+      } finally {
+        setIsPending(false);
+      }
+    },
+    onSuccess: () => {
+      toast({
+        title: "Badge Updated",
+        description: "Your active badge has been updated",
+        variant: "default",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: `Failed to update badge: ${error.message}`,
+        variant: "destructive",
+      });
+    }
+  });
+  
+  // Mutation to update active title
+  const updateActiveTitleMutation = useMutation({
+    mutationFn: async (titleId: number) => {
+      setIsPending(true);
+      try {
+        return await apiRequest({ method: 'POST', url: `/api/profile/set-active-title`, data: { titleId } });
+      } finally {
+        setIsPending(false);
+      }
+    },
+    onSuccess: () => {
+      toast({
+        title: "Title Updated",
+        description: "Your active title has been updated",
+        variant: "default",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: `Failed to update title: ${error.message}`,
+        variant: "destructive",
+      });
+    }
+  });
+  
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-slate-200">Achievements</h3>
+        
+        {/* Level Display */}
+        <div className="flex items-center px-3 py-1 bg-zinc-850 rounded-full border border-zinc-750">
+          <Trophy className="h-4 w-4 mr-2 text-indigo-400" />
+          <span className="text-sm font-medium">Level {profile.level}</span>
+        </div>
+      </div>
+      
+      {/* XP Progress Bar */}
+      <XPProgressBar
+        level={profile.level}
+        currentXP={profile.xp}
+        nextLevelXP={profile.nextLevelXp}
+        showProBadge={profile.level >= 10}
+      />
+      
+      {/* Badges Section */}
+      <div>
+        <div className="flex justify-between items-center mb-3">
+          <h4 className="text-md font-semibold text-slate-200">Badges</h4>
+          {isOwnProfile && (
+            <span className="text-xs text-slate-400">
+              {isPending ? 'Updating...' : 'Click a badge to equip it'}
+            </span>
+          )}
+        </div>
+        
+        <UserBadges
+          badges={profile.badges || []}
+          activeBadgeId={profile.activeBadgeId}
+          onSelectBadge={(badgeId) => updateActiveBadgeMutation.mutate(badgeId)}
+          editable={isOwnProfile}
+        />
+      </div>
+      
+      {/* Titles Section */}
+      <div>
+        <div className="flex justify-between items-center mb-3">
+          <h4 className="text-md font-semibold text-slate-200">Titles</h4>
+          {isOwnProfile && (
+            <span className="text-xs text-slate-400">
+              {isPending ? 'Updating...' : 'Click a title to equip it'}
+            </span>
+          )}
+        </div>
+        
+        <UserTitles
+          titles={profile.titles || []}
+          activeTitleId={profile.activeTitleId}
+          onSelectTitle={(titleId) => updateActiveTitleMutation.mutate(titleId)}
+          editable={isOwnProfile}
+        />
+      </div>
+    </div>
+  );
+};
+
+// Friends and followers tab
+const FriendsTab: React.FC<{ profile: ProfileData }> = ({ profile }) => {
+  const [activeTab, setActiveTab] = useState('friends');
+  const [followers, setFollowers] = useState<Array<{id: number, username: string, avatarUrl: string | null}>>([]);
+  const [following, setFollowing] = useState<Array<{id: number, username: string, avatarUrl: string | null}>>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Fetch followers
+  const { data: followersData, isLoading: isLoadingFollowers, isError: isErrorFollowers, error: followersError, refetch: refetchFollowers } = useQuery({
+    queryKey: ['/api/relationships', profile.id, 'followers'],
+    queryFn: async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`/api/relationships/${profile.id}/followers`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch followers');
+        }
+        const data = await response.json();
+        setFollowers(data);
+        return data;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    enabled: activeTab === 'followers'
+  });
+  
+  // Fetch following
+  const { data: followingData, isLoading: isLoadingFollowing, isError: isErrorFollowing, error: followingError, refetch: refetchFollowing } = useQuery({
+    queryKey: ['/api/relationships', profile.id, 'following'],
+    queryFn: async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`/api/relationships/${profile.id}/following`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch following');
+        }
+        const data = await response.json();
+        setFollowing(data);
+        return data;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    enabled: activeTab === 'following'
+  });
+  
+  // Function to render user cards
+  const renderUserCards = (users: Array<{id: number, username: string, avatarUrl: string | null}> | undefined, loading: boolean, error: any, onRetry: () => void) => {
+    if (loading) {
+      return (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-slate-900">
+              <Skeleton className="w-12 h-12 rounded-full" />
+              <div className="flex-1 space-y-1">
+                 <Skeleton className="h-4 w-20" />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+    
+    if (error) {
+       return <ErrorDisplay title="Could not load list" error={error} onRetry={onRetry} variant="inline" />;
+    }
+    
+    if (!users || users.length === 0) {
+      return (
+        <div className="text-slate-500 italic">
+          {activeTab === 'friends' && 'No friends added yet'}
+          {activeTab === 'followers' && 'No followers yet'}
+          {activeTab === 'following' && 'Not following anyone yet'}
+        </div>
+      );
+    }
+    
+    return (
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {users.map(user => (
+          <a key={user.id} href={`/profile/${user.username}`} className="flex items-center gap-3 p-3 rounded-lg bg-slate-900 hover:bg-slate-800 transition-colors">
+            <div className="w-12 h-12 rounded-full bg-slate-700 overflow-hidden">
+              {user.avatarUrl ? (
+                <img src={user.avatarUrl} alt={user.username} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-slate-300 font-bold">
+                  {user.username.substring(0, 2).toUpperCase()}
+                </div>
+              )}
+            </div>
+            <div className="truncate">
+              <div className="text-slate-200 font-medium truncate">{user.username}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+    );
+  };
+  
+  return (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold text-slate-200">Social Network</h3>
+      
+      {/* Tabs */}
+      <div className="border-b border-slate-700">
+        <div className="flex space-x-8">
+          <button
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'friends'
+                ? 'border-indigo-500 text-indigo-400'
+                : 'border-transparent text-slate-400 hover:text-slate-300'
+            }`}
+            onClick={() => setActiveTab('friends')}
+          >
+            Friends
+          </button>
+          <button
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'followers'
+                ? 'border-indigo-500 text-indigo-400'
+                : 'border-transparent text-slate-400 hover:text-slate-300'
+            }`}
+            onClick={() => setActiveTab('followers')}
+          >
+            Followers
+          </button>
+          <button
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'following'
+                ? 'border-indigo-500 text-indigo-400'
+                : 'border-transparent text-slate-400 hover:text-slate-300'
+            }`}
+            onClick={() => setActiveTab('following')}
+          >
+            Following
+          </button>
+        </div>
+      </div>
+      
+      {/* Content */}
+      <div className="pt-2">
+        {isLoading ? (
+          <div className="flex justify-center py-8">
+            <div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full"></div>
+          </div>
+        ) : (
+          <>
+            {activeTab === 'friends' && renderUserCards(profile.relationships.friends, false, null, () => {})}
+            {activeTab === 'followers' && renderUserCards(followersData, isLoadingFollowers, followersError, refetchFollowers)}
+            {activeTab === 'following' && renderUserCards(followingData, isLoadingFollowing, followingError, refetchFollowing)}
+          </>
+        )}
+      </div>
+      
+      {/* Friend Requests */}
+      {activeTab === 'friends' && (profile.relationships.friendRequestsSent > 0 || profile.relationships.friendRequestsReceived > 0) && (
+        <div className="mt-4 flex gap-4">
+          {profile.relationships.friendRequestsSent > 0 && (
+            <div className="text-sm text-slate-400">
+              <span className="text-indigo-400 font-medium">{profile.relationships.friendRequestsSent}</span> sent requests
+            </div>
+          )}
+          {profile.relationships.friendRequestsReceived > 0 && (
+            <div className="text-sm text-slate-400">
+              <span className="text-indigo-400 font-medium">{profile.relationships.friendRequestsReceived}</span> received requests
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Stat Card Component
+const StatCard: React.FC<{ label: string; value: number; icon: React.ReactNode; isCurrency?: boolean; isRank?: boolean }> = ({ 
+  label, value, icon, isCurrency = false, isRank = false 
+}) => (
+  <div className="bg-zinc-900/70 backdrop-blur-sm p-4 rounded-lg border border-zinc-700/30 transition-all hover:bg-zinc-900/90 hover:border-zinc-700/50">
+    <div className="flex justify-between items-start mb-2">
+      <span className="text-zinc-300 text-sm">{label}</span>
+      {icon}
+    </div>
+    <div className="text-2xl font-bold text-indigo-400">
+      {isCurrency ? formatCurrency(value) : isRank ? `#${value}` : formatNumber(value)}
+    </div>
+  </div>
+);
+
+// Helper function for rarity colors
+function getRarityColor(rarity: string): string {
+  switch (rarity?.toLowerCase()) {
+    case 'common': return 'bg-slate-600 text-slate-200';
+    case 'uncommon': return 'bg-green-800 text-green-200';
+    case 'rare': return 'bg-blue-800 text-blue-200';
+    case 'epic': return 'bg-purple-800 text-purple-200';
+    case 'legendary': return 'bg-amber-800 text-amber-200';
+    case 'mythic': return 'bg-red-800 text-red-200';
+    default: return 'bg-slate-600 text-slate-200';
+  }
+}
+
+// Helper function for rarity border classes
+function getRarityBorderClass(rarity: string): string {
+  switch (rarity?.toLowerCase()) {
+    case 'common': return 'border-2 border-slate-700';
+    case 'uncommon': return 'border-2 border-green-700';
+    case 'rare': return 'border-2 border-blue-700';
+    case 'epic': return 'border-2 border-purple-700';
+    case 'legendary': return 'border-3 border-amber-600 shadow-lg shadow-amber-900/20';
+    case 'mythic': return 'border-3 border-red-600 shadow-lg shadow-red-900/20';
+    default: return '';
+  }
+}
+
+// Mock data for development purposes
+function getMockProfileData(username: string): ProfileData {
+  return {
+    id: 1,
+    username: username || 'DevUser',
+    avatarUrl: 'https://i.pravatar.cc/300',
+    role: 'Developer',
+    bio: 'This is a mock profile for development purposes. You can edit this user in the getMockProfileData function.',
+    signature: 'Developing the future of web3 forums',
+    joinedAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(), // 90 days ago
+    lastActiveAt: new Date().toISOString(),
+    dgtBalance: 15000,
+    totalPosts: 42,
+    totalThreads: 7,
+    totalLikes: 128,
+    totalTips: 350,
+    clout: 750,
+    level: 12,
+    xp: 5750,
+    nextLevelXp: 6500,
+    bannerUrl: null,
+    activeFrameId: 1,
+    activeFrame: {
+      id: 1,
+      name: 'Developer Frame',
+      imageUrl: 'https://via.placeholder.com/500/4f46e5/ffffff?text=DEV',
+      rarity: 'rare'
+    },
+    activeTitleId: 1,
+    activeTitle: {
+      id: 1,
+      name: 'Early Adopter',
+      description: 'Joined during development phase',
+      iconUrl: null,
+      rarity: 'rare'
+    },
+    activeBadgeId: 2,
+    activeBadge: {
+      id: 2,
+      name: 'Developer',
+      description: 'Contributed to the platform',
+      iconUrl: 'https://via.placeholder.com/100/5046e5/ffffff?text=DEV',
+      rarity: 'epic'
+    },
+    badges: [
+      {
+        id: 1,
+        name: 'Early Bird',
+        description: 'One of the first users',
+        iconUrl: 'https://via.placeholder.com/100/4299e1/ffffff?text=EARLY',
+        rarity: 'rare'
+      },
+      {
+        id: 2,
+        name: 'Developer',
+        description: 'Contributed to the platform',
+        iconUrl: 'https://via.placeholder.com/100/5046e5/ffffff?text=DEV',
+        rarity: 'epic'
+      },
+      {
+        id: 3,
+        name: 'Bug Hunter',
+        description: 'Reported critical bugs',
+        iconUrl: 'https://via.placeholder.com/100/9f7aea/ffffff?text=BUG',
+        rarity: 'uncommon'
+      }
+    ],
+    titles: [
+      {
+        id: 1,
+        name: 'Early Adopter',
+        description: 'Joined during development phase',
+        iconUrl: null,
+        rarity: 'rare'
+      },
+      {
+        id: 2,
+        name: 'Crypto Enthusiast',
+        description: 'Shown deep knowledge of crypto',
+        iconUrl: null,
+        rarity: 'uncommon'
+      }
+    ],
+    inventory: [
+      {
+        id: 1,
+        productId: 101,
+        isEquipped: true,
+        productName: 'Developer Frame',
+        productType: 'frame',
+        imageUrl: 'https://via.placeholder.com/200/4f46e5/ffffff?text=DEV+FRAME',
+        rarity: 'rare'
+      },
+      {
+        id: 2,
+        productId: 102,
+        isEquipped: false,
+        productName: 'Gold Username',
+        productType: 'color',
+        imageUrl: 'https://via.placeholder.com/200/f59e0b/ffffff?text=GOLD',
+        rarity: 'legendary'
+      }
+    ],
+    relationships: {
+      friends: [
+        {
+          id: 2,
+          username: 'TestUser1',
+          avatarUrl: 'https://i.pravatar.cc/300?u=1'
+        },
+        {
+          id: 3,
+          username: 'TestUser2',
+          avatarUrl: 'https://i.pravatar.cc/300?u=2'
+        }
+      ],
+      friendRequestsSent: 1,
+      friendRequestsReceived: 2
+    },
+    stats: {
+      threadViewCount: 1250,
+      posterRank: 5,
+      tipperRank: 3,
+      likerRank: 7
+    }
+  };
+}
+
+// Profile page component
+export default function ProfilePage() {
+  const { username } = useParams();
+  const { user: currentUser } = useAuth();
+  const [activeTab, setActiveTab] = useState('overview');
+  
+  // Fetch the profile data for the specified username
+  const { data: profile, isLoading, isError, error } = useQuery<ProfileData>({
+    queryKey: ['profile', username],
+    queryFn: async () => {
+      try {
+        const response = await fetch(`/api/profile/${username}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch profile');
+        }
+        return response.json();
+      } catch (err) {
+        // In development mode, return mock data for certain usernames
+        if (import.meta.env.DEV && (username?.toLowerCase() === 'devuser' || username?.toLowerCase() === 'dev')) {
+          console.log('Using mock profile data for development');
+          return getMockProfileData(username);
+        }
+        throw err;
+      }
+    }
+  });
+  
+  // Determine if the profile being viewed belongs to the current user
+  const isOwnProfile = currentUser?.username === username;
+  
+  if (isLoading) {
+    return (
+      <div className="flex flex-col min-h-screen bg-gradient-to-b from-zinc-900 to-black">
+        <ProfileSkeleton />
+        <SiteFooter />
+      </div>
+    );
+  }
+  
+  if (isError || !profile) {
+    return (
+      <div className="flex flex-col min-h-screen bg-gradient-to-b from-zinc-900 to-black">
+        <div className="container max-w-screen-xl mx-auto p-4 flex-1">
+          <ErrorDisplay 
+            title={profile ? "Error Loading Profile" : "Profile Not Found"}
+            error={error}
+            message={profile ? (error?.message || "An unexpected error occurred.") : `We couldn't find a profile for the username "${username}". ${import.meta.env.DEV ? 'Try using "DevUser" for development.' : ''}`}
+            variant="card"
+          />
+        </div>
+        <SiteFooter />
+      </div>
+    );
+  }
+  
+  return (
+    <div className="flex flex-col min-h-screen">
+      <SeoHead 
+        title={`${profile.username}'s Profile - DegenTalk`}
+        description={`View ${profile.username}'s profile, posts, and stats on DegenTalk.`}
+        ogImage={profile.avatarUrl || undefined}
+      />
+      
+      {/* Profile content with background image */}
+      <main className="flex-1 py-8 relative">
+        {/* Background image constrained to main content area */}
+        <div 
+          className="absolute inset-0 -z-10"
+          style={{
+            backgroundImage: "url('/images/profile-background.png')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        >
+          {/* Semi-transparent overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/80 to-black/90"></div>
+        </div>
+
+        <div className="container max-w-screen-xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Left Sidebar */}
+            <div className="col-span-1">
+              <ProfileSidebar profile={profile} isOwnProfile={isOwnProfile} />
+            </div>
+            
+            {/* Main Content */}
+            <div className="col-span-1 lg:col-span-3">
+              <div className="rounded-lg overflow-hidden bg-zinc-800/70 backdrop-blur-sm shadow-xl border border-zinc-700/50 p-6">
+                <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
+                  <TabsList className="grid grid-cols-4 mb-6 bg-black/40 backdrop-blur-sm">
+                    <TabsTrigger value="overview" className="flex items-center">
+                      <Home className="mr-2 h-4 w-4" />
+                      <span className="hidden sm:inline">Overview</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="achievements" className="flex items-center">
+                      <Trophy className="mr-2 h-4 w-4" />
+                      <span className="hidden sm:inline">Achievements</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="inventory" className="flex items-center">
+                      <ShoppingBag className="mr-2 h-4 w-4" />
+                      <span className="hidden sm:inline">Inventory</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="friends" className="flex items-center">
+                      <Users className="mr-2 h-4 w-4" />
+                      <span className="hidden sm:inline">Friends</span>
+                    </TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="overview">
+                    <OverviewTab profile={profile} />
+                  </TabsContent>
+                  
+                  <TabsContent value="achievements">
+                    <div className="space-y-6">
+                      <XPProfileSection userId={String(profile.id)} />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="inventory">
+                    <InventoryTab profile={profile} />
+                  </TabsContent>
+                  
+                  <TabsContent value="friends">
+                    <FriendsTab profile={profile} />
+                  </TabsContent>
+                </Tabs>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      
+      {/* Footer - separate from the profile background */}
+      <SiteFooter />
+    </div>
+  );
+}
