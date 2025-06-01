@@ -1,0 +1,39 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Rule: Route Deprecation & Domain Migration
+
+## Summary
+No routes should be registered via flat files in `server/`. All routing logic must be organized under `server/src/domains/*`.
+
+## Enforce:
+- `server/routes.ts` may only import from `@/domains/...`
+- Reject any new route files placed directly in `server/`
+- Archive all files matching `server/*-routes.ts` if not in `domains/`
+
+## Exceptions:
+- Temporary staging allowed ONLY if marked `// DEPRECATED` and logged in `RESTRUCTURE.MD`
+
+## Migration Process:
+1. Create domain structure in `server/src/domains/{feature}`
+2. Implement feature routes in `{feature}.routes.ts`
+3. Mark original file with `// ARCHIVED` comment
+4. Update imports in `server/routes.ts`
+5. Test thoroughly before removing legacy routes
+
+## Common Patterns:
+```typescript
+// Good: Domain-based import
+import walletRoutes from './src/domains/wallet/wallet.routes';
+
+// Good: Domain-based registration
+app.use('/api/wallet', walletRoutes);
+
+// Bad: Legacy route import
+import { registerWalletRoutes } from "./wallet-routes";
+
+// Bad: Legacy registration pattern
+registerWalletRoutes(app);
+```

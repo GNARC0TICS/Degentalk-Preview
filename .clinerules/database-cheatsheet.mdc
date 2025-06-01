@@ -1,0 +1,59 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Database Cheatsheet Rule
+
+## Overview
+This rule ensures proper usage and maintenance of the ForumFusion database cheatsheet, which serves as the central reference for database structure, relationships, and query patterns.
+
+## Rule Description
+The database cheatsheet (`docs/database-cheatsheet.mdc`) is the authoritative reference for database structure. When working with database-related code:
+
+1. **Always consult the cheatsheet first** before proposing changes to database schema or queries
+2. **Keep the cheatsheet updated** when schema changes occur
+3. **Use the update script** (`scripts/db/update-database-cheatsheet.js`) to analyze schema changes
+
+## When to Consult
+- Before creating or modifying database models
+- When writing queries or database-related functions
+- When exploring relationships between tables
+- When optimizing database performance
+
+## Maintenance Process
+When the database schema changes:
+
+1. **Run the analysis tool**:
+   ```bash
+   node scripts/db/update-database-cheatsheet.js
+   ```
+
+2. **Review the generated report** in `db/schema-analysis-{date}.json`
+
+3. **Update the cheatsheet** with new tables, relationships, or query patterns
+
+4. **Commit both the report and the updated cheatsheet** to maintain the history of schema evolution
+
+## Key Information in Cheatsheet
+The cheatsheet organizes tables by domain areas:
+- Forum (categories, threads, posts)
+- Users (accounts, roles, sessions)
+- Wallet & Economy (transactions, wallets)
+- XP & Leveling (achievements, badges)
+- Messaging (conversations, messages)
+- Moderation (reports, bans)
+- Shop & Products (products, orders)
+- Content & Media (uploads, emojis)
+- System & Settings (configuration, flags)
+
+## Guidelines for Schema Changes
+- Follow the existing domain organization
+- Document relationships between tables
+- Provide example queries for common operations
+- Maintain consistent naming conventions
+
+## Enforcement
+- All PRs that modify database schema must include updates to the cheatsheet
+- Database-related code reviews should reference the cheatsheet
+- Encourage team members to contribute to keeping the cheatsheet up to date
