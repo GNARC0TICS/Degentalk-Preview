@@ -12604,3 +12604,169 @@ User not found
   "logPath": "logs/app.log"
 }
 [2025-06-01T16:58:26.073Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T17:00:37.347Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T17:00:37.367Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T17:01:57.756Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T17:01:57.773Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T17:02:25.880Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T17:02:25.903Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T17:04:25.244Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T17:04:25.345Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T19:35:01.856Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T19:35:01.869Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T19:35:01.912Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T19:35:02.943Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T19:35:02.946Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T19:35:02.947Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T19:35:02.950Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-01T19:35:02.074Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T19:35:02.101Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T19:35:02.154Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T19:35:34.147Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T19:35:34.161Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T19:35:34.230Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T19:35:34.161Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T19:35:34.177Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T19:35:34.271Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T19:35:35.084Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T19:35:35.085Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T19:35:35.085Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T19:35:35.086Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-01T19:38:34.980Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T19:38:35.001Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T19:38:35.063Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T19:38:35.553Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T19:38:35.554Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T19:38:35.554Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T19:38:35.555Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-01T19:43:35.654Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T19:43:35.656Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T19:43:35.656Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T19:43:35.656Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-01T19:48:35.656Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T19:48:35.656Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T19:48:35.656Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T19:48:35.656Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-01T19:51:33.630Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T19:51:33.665Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T19:51:33.792Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T19:51:35.111Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T19:51:35.112Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T19:51:35.113Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T19:51:35.113Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-01T19:56:35.122Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T19:56:35.123Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T19:56:35.123Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T19:56:35.123Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-01T20:02:52.108Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T20:02:52.130Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T20:02:52.316Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T20:02:53.564Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T20:02:53.565Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T20:02:53.565Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T20:02:53.566Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-01T20:04:54.882Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T20:04:55.063Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T20:04:55.129Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T20:04:57.858Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T20:04:57.859Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T20:04:57.859Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T20:04:57.860Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-01T20:06:25.522Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T20:06:25.549Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T20:06:25.644Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T20:06:27.097Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T20:06:27.098Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T20:06:27.098Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T20:06:27.102Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-01T20:07:13.387Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T20:07:13.400Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T20:07:13.519Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T20:07:14.266Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T20:07:14.267Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T20:07:14.267Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T20:07:14.268Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-01T20:07:38.343Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T20:07:38.369Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T20:07:38.467Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T20:07:39.799Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T20:07:39.800Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T20:07:39.800Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T20:07:39.800Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-01T20:11:47.918Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T20:11:48.164Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T20:11:48.367Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T20:11:48.100Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T20:11:48.142Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T20:11:48.343Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T20:11:48.135Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T20:11:48.314Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T20:11:48.431Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T20:11:50.383Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T20:11:50.384Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T20:11:50.385Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T20:11:50.387Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-01T20:12:21.423Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-01T20:12:21.438Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-01T20:12:21.464Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-01T20:12:22.320Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-01T20:12:22.322Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-01T20:12:22.323Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-01T20:12:22.328Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed

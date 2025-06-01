@@ -53,8 +53,8 @@ async function main() {
     logSeed(SCRIPT_NAME, 'Applying database migrations...');
     const { exec } = await import('child_process');
     await new Promise((resolve, reject) => {
-      // Increased maxBuffer and added a timeout
-      const child = exec('npm run db:migrate:apply', { maxBuffer: 1024 * 500, timeout: 120000 }, (error: any, stdout: any, stderr: any) => {
+      // Increased timeout and removed '| yes' to simplify
+      const child = exec('npm run db:migrate:apply > /dev/null 2>&1', { timeout: 300000 }, (error: any, stdout: any, stderr: any) => {
         console.log('exec callback invoked.');
         if (error) {
           console.error(`exec error: ${error}`);
@@ -84,7 +84,7 @@ async function main() {
       });
 
     });
-    logSeed(SCRIPT_NAME, '✅ Database migrations promise resolved.');
+    logSeed(SCRIPT_NAME, '✅ Database migrations promise successfully completed and resolved.');
 
     await seedXpActions();
     await seedBadges();

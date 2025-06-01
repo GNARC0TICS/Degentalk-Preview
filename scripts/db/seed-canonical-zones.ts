@@ -6,7 +6,7 @@
 // ... existing code ... 
 
 import { db } from '../../server/src/core/db';
-import { forumCategories, threads as threadsTable, posts as postsTable, users as usersTable } from './utils/schema';
+import { forumCategories, threads as threadsTable, posts as postsTable, users as usersTable } from '@db/schema';
 import { sql, eq, and, desc } from 'drizzle-orm';
 import bcrypt from 'bcryptjs'; // For password hashing
 import { randomUUID } from 'crypto'; // For UUID generation

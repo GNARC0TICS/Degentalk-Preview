@@ -8,7 +8,7 @@
  */
 
 import { db } from '../../server/src/core/db';
-import { xpActionSettings, type InsertXpActionSetting } from './utils/schema';
+import { xpActionSettings, type InsertXpActionSetting } from '@db/schema';
 import { XP_ACTION } from '../../server/src/domains/xp/xp-actions';
 import { eq } from 'drizzle-orm';
 
@@ -113,4 +113,4 @@ seedXpActions().then(() => {
   console.error('💥 [SEED-XP-ACTIONS] Fatal error during seeding:', error);
   process.exit(1);
 });
-*/ 
+*/

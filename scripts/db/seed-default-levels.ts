@@ -1,7 +1,7 @@
 // WALLET FINALIZATION ON HOLD - Do not prioritize wallet-related features.
 
 import { db } from '../../server/src/core/db';
-import { levels, titles, badges, economySettings } from '../../shared/schema';
+import { levels, titles, badges, economySettings } from '@db/schema';
 import { eq } from 'drizzle-orm';
 import { fileURLToPath } from 'url';
 import { config } from 'dotenv';
@@ -227,4 +227,4 @@ if (isMainModule) {
     });
 }
 
-export { seedDefaultLevels, calculateXpForLevel }; 
+export { seedDefaultLevels, calculateXpForLevel };

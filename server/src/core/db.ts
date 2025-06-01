@@ -4,11 +4,11 @@ import { drizzle as drizzleSqlite } from 'drizzle-orm/better-sqlite3';
 import Database from 'better-sqlite3';
 import ws from "ws";
 import * as schema from "@db/schema";
-import { config } from 'dotenv';
+// Removed: import { config } from 'dotenv'; // No longer needed here
 import { logger, LogLevel, LogAction } from './logger';
 
-// Load environment variables from .env file
-config();
+// Environment variables should be loaded by the application entry point (e.g., server/index.ts)
+// Removed: config(); 
 
 neonConfig.webSocketConstructor = ws;
 

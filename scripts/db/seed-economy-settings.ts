@@ -1,7 +1,7 @@
 // WALLET FINALIZATION ON HOLD - Do not prioritize wallet-related features.
 
 import { db } from '../../server/src/core/db';
-import { economySettings } from '../../shared/schema';
+import { economySettings } from '@db/schema';
 import { eq } from 'drizzle-orm'; // Import eq for precise updates
 
 const defaultSettings = [
@@ -51,4 +51,4 @@ seed().then(() => {
   console.error('💥 [SEED-ECONOMY] Fatal error during seeding:', err);
   process.exit(1);
 });
-*/ 
+*/

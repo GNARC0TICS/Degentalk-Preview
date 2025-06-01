@@ -45,6 +45,6 @@ export default defineConfig({
     emptyOutDir: true,
   },
   css: {
-    postcss: './postcss.config.js'
+    postcss: path.resolve(projectRoot, 'config/postcss.config.js')
   }
 });

@@ -1,3 +1,6 @@
+import './config/loadEnv'; // Ensures environment variables are loaded first
+
+// All other imports follow
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
@@ -10,11 +13,6 @@ import { seedDefaultLevels } from "../scripts/db/seed-default-levels";
 import { seedEconomySettings } from "../scripts/db/seed-economy-settings";
 import { createMissingTables } from "../scripts/db/create-missing-tables";
 import { seedCanonicalZones } from "../scripts/db/seed-canonical-zones";
-import dotenv from 'dotenv';
-
-// Load environment variables
-dotenv.config({ path: 'env.local' }); // Load env.local first
-dotenv.config(); // Then load .env for defaults
 
 // Startup logging helper
 const startupLog = (message: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
@@ -115,7 +113,7 @@ app.use((req, res, next) => {
 
     // Setup vite or serve static files
     if (process.env.NODE_ENV === 'production') {
-      await serveStatic(app, server);
+      await serveStatic(app);
     } else {
       await setupVite(app, server);
     }
@@ -132,11 +130,8 @@ app.use((req, res, next) => {
       }
       process.exit(1);
     });
-    
-    server.listen({
-      port,
-      host: "0.0.0.0",
-    }, () => {
+
+    server.on('listening', () => {
       startupLog(`Backend API running on http://localhost:${port}`, 'success');
       
       // Run scheduled tasks on server start and then every 5 minutes
@@ -149,6 +144,11 @@ app.use((req, res, next) => {
       }, 5 * 60 * 1000);
       
       startupLog('Server initialization complete!', 'success');
+    });
+    
+    server.listen({
+      port,
+      host: "0.0.0.0",
     });
   } catch (error) {
     startupLog(`Failed to start server: ${error}`, 'error');

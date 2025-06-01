@@ -2,7 +2,7 @@ import { drizzle as drizzleSqlite } from 'drizzle-orm/better-sqlite3';
 import { drizzle as drizzleNeon } from 'drizzle-orm/neon-serverless';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import Database from 'better-sqlite3';
-import * as schema from '../shared/schema';
+import * as schema from '../db/schema';
 import { config } from 'dotenv';
 import ws from 'ws';
 
