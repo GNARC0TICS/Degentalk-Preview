@@ -126,7 +126,7 @@ export default function ForumPage() {
   };
 
   // Convert primary zones to the format expected by carousel
-  const zoneCardData: ZoneCardData[] = primaryZones.map((zone) => {
+  const zoneCardData: ZoneCardData[] = (primaryZones || []).map((zone) => {
     // Extract properties from ForumEntityBase
     const { id, name, slug, description, icon, colorTheme, threadCount, postCount } = zone;
     
@@ -236,7 +236,7 @@ export default function ForumPage() {
   };
 
   // Before rendering categories, map them to ensure parentSlug and parentName are string | undefined (never null)
-  const safeCategories = categories.map(category => ({
+  const safeCategories = (categories || []).map(category => ({
     ...category,
     parentSlug: category.parentSlug === null ? undefined : category.parentSlug,
     parentName: category.parentName === null ? undefined : category.parentName,
@@ -391,7 +391,7 @@ export default function ForumPage() {
                   variant="outline" 
                   size="icon" 
                   onClick={prevZone}
-                  disabled={primaryZones.length <= 1}
+                  disabled={(primaryZones || []).length <= 1}
                   className="h-8 w-8 rounded-full"
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -400,7 +400,7 @@ export default function ForumPage() {
                   variant="outline" 
                   size="icon" 
                   onClick={nextZone}
-                  disabled={primaryZones.length <= 1}
+                  disabled={(primaryZones || []).length <= 1}
                   className="h-8 w-8 rounded-full"
                 >
                   <ChevronRight className="h-4 w-4" />
@@ -415,6 +415,14 @@ export default function ForumPage() {
                 ))}
               </div>
             ) : primaryZones.length > 0 ? (
+              <div 
+                ref={carouselRef} 
+                className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar" 
+                style={{ scrollbarWidth: 'none' }}
+              >
+                {primaryZones.map((zone, index) => renderZoneCard(zone as ForumEntityBase, index))}
+              </div>
+            ) : (primaryZones || []).length > 0 ? (
               <div 
                 ref={carouselRef} 
                 className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar" 

@@ -69,7 +69,7 @@ export function HeroSection() {
           <div className="mt-8 md:mt-12 flex justify-center">
             <Link href="/forum">
               <div className="flex items-center text-emerald-400 hover:text-emerald-300 transition-colors text-sm">
-                <span>Insert success story here (or not)</span>
+                <span>Browse our topics</span>
                 <ArrowRight className="w-4 h-4 ml-1" />
               </div>
             </Link>
