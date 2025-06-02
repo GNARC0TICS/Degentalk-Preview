@@ -5,8 +5,8 @@ import { users, posts, threads, forumCategories, threadTags, tags, postReactions
   type InsertForumCategory, type CustomEmoji, type InsertCustomEmoji, type Notification, type Product, type Order,
   type Conversation, type ConversationParticipant, type Message, type MessageRead,
   type UserInventoryItem, type InsertUserInventoryItem, type ThreadDraft, type InsertThreadDraft, type SiteSetting, type InsertSiteSetting,
-  type ForumRule, type InsertForumRule, type UserRulesAgreement, contentEditStatusEnum } from "@db/schema";
-import { db, pool } from "./src/core/db";
+  type ForumRule, type InsertForumRule, type UserRulesAgreement, contentEditStatusEnum } from "@schema";
+import { db, pool } from '@db';
 import { and, eq, desc, sql, count, isNull, not, inArray, ne, lte } from "drizzle-orm";
 import { ThreadWithUser, PostWithUser, ForumCategoryWithStats, UserPluginData, EmojiWithAvailability } from "@shared/types";
 import session from "express-session";

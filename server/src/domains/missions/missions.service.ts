@@ -1,4 +1,4 @@
-import { db } from '../../core/db';
+import { db } from '@db';
 import { eq, and, gte, lte, SQL, isNull, inArray } from "drizzle-orm";
 import {
   missions,
@@ -7,7 +7,7 @@ import {
   type Mission,
   type UserMissionProgress,
   type InsertMission
-} from '@db/schema';
+} from '@schema';
 import { logger } from '../../core/logger';
 import {
   addDays,

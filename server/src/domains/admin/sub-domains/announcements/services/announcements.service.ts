@@ -1,7 +1,7 @@
-import { db } from '../../../../../core/db';
-import { announcements, users } from '@db/schema';
+import { db } from '@db';
+import { announcements, users } from '@schema';
 import { count, desc, eq, isNull, lte, gte, sql, and } from 'drizzle-orm';
-import { insertAnnouncementSchema } from '@db/schema';
+import { insertAnnouncementSchema } from '@schema';
 
 /**
  * Get all active announcements with filtering

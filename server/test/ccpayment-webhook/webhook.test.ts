@@ -13,7 +13,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { ccpaymentWebhookService } from '../../src/domains/ccpayment-webhook/ccpayment-webhook.service';
 import { ccpaymentService } from '../../src/domains/wallet/ccpayment.service';
 import { dgtService } from '../../src/domains/wallet/dgt.service';
-import { db } from '../../src/core/db';
+import { db } from '@db';
 
 // Mock dependencies
 vi.mock('../../src/domains/wallet/dgt.service', () => ({

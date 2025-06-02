@@ -11,7 +11,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { tipService } from '../../src/domains/engagement/tip/tip.service';
 import { dgtService } from '../../src/domains/wallet/dgt.service';
-import { db } from '../../src/core/db';
+import { db } from '@db';
 import { WalletError } from '../../src/domains/wallet/wallet.errors';
 
 // Mock dependencies

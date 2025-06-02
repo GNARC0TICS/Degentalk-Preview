@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { User } from '@db/schema';
+import React, { useState, useEffect } from 'react';
+import { User } from '@schema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -7,33 +7,53 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Sun, Moon, Monitor, LayoutGrid, LayoutList, Eye } from 'lucide-react';
+import { useUserSettings } from '@/hooks/preferences/useUserSettings';
+import { useUpdateUserSettings } from '@/hooks/preferences/useUpdateUserSettings';
 
 interface DisplayPreferencesProps {
   user: User;
 }
 
 export function DisplayPreferences({ user }: DisplayPreferencesProps) {
-  const [theme, setTheme] = useState('system');
-  const [fontSize, setFontSize] = useState('medium');
-  const [threadDisplayMode, setThreadDisplayMode] = useState('card');
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [hideNsfw, setHideNsfw] = useState(true);
-  const [showMatureContent, setShowMatureContent] = useState(false);
-  const [showOfflineUsers, setShowOfflineUsers] = useState(true);
-  
-  const handleSaveChanges = () => {
-    // Mock implementation - would send to API in real app
-    console.log('Saving display preferences:', {
-      theme,
-      fontSize,
-      threadDisplayMode,
-      reducedMotion,
-      hideNsfw,
-      showMatureContent,
-      showOfflineUsers
-    });
+  const { data: userSettings, isLoading } = useUserSettings();
+  const updateDisplaySettings = useUpdateUserSettings('display');
+
+  const [formData, setFormData] = useState({
+    theme: 'system',
+    fontSize: 'medium',
+    threadDisplayMode: 'card',
+    reducedMotion: false,
+    hideNsfw: true,
+    showMatureContent: false,
+    showOfflineUsers: true,
+  });
+
+  useEffect(() => {
+    if (userSettings?.display) {
+      setFormData({
+        theme: userSettings.display.theme || 'system',
+        fontSize: userSettings.display.fontSize || 'medium',
+        threadDisplayMode: userSettings.display.threadDisplayMode || 'card',
+        reducedMotion: userSettings.display.reducedMotion || false,
+        hideNsfw: userSettings.display.hideNsfw || true,
+        showMatureContent: userSettings.display.showMatureContent || false,
+        showOfflineUsers: userSettings.display.showOfflineUsers || true,
+      });
+    }
+  }, [userSettings]);
+
+  const handleValueChange = (key: keyof typeof formData) => (value: any) => {
+    setFormData(prev => ({ ...prev, [key]: value }));
   };
   
+  const handleSaveChanges = () => {
+    updateDisplaySettings.mutate(formData);
+  };
+
+  if (isLoading) {
+    return <div>Loading display preferences...</div>;
+  }
+
   return (
     <div>
       <div className="mb-6">
@@ -47,8 +67,8 @@ export function DisplayPreferences({ user }: DisplayPreferencesProps) {
           <h3 className="text-lg font-medium mb-4">Theme</h3>
           
           <RadioGroup 
-            value={theme} 
-            onValueChange={setTheme}
+            value={formData.theme} 
+            onValueChange={handleValueChange('theme')}
             className="flex flex-col space-y-2"
           >
             <div className="flex items-center space-x-2 p-2 rounded-md hover:bg-zinc-800">
@@ -93,7 +113,7 @@ export function DisplayPreferences({ user }: DisplayPreferencesProps) {
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-medium">Text Size</h3>
             
-            <Select value={fontSize} onValueChange={setFontSize}>
+            <Select value={formData.fontSize} onValueChange={handleValueChange('fontSize')}>
               <SelectTrigger className="w-[180px] bg-zinc-800 border-zinc-700">
                 <SelectValue placeholder="Select size" />
               </SelectTrigger>
@@ -107,7 +127,7 @@ export function DisplayPreferences({ user }: DisplayPreferencesProps) {
           </div>
           
           <div className="bg-zinc-900 p-4 rounded-md">
-            <p className={`text-sm ${fontSize === 'small' ? 'text-sm' : fontSize === 'medium' ? 'text-base' : fontSize === 'large' ? 'text-lg' : 'text-xl'}`}>
+            <p className={`text-sm ${formData.fontSize === 'small' ? 'text-sm' : formData.fontSize === 'medium' ? 'text-base' : formData.fontSize === 'large' ? 'text-lg' : 'text-xl'}`}>
               This is how text will appear in the forum.
             </p>
           </div>
@@ -120,8 +140,8 @@ export function DisplayPreferences({ user }: DisplayPreferencesProps) {
           <h3 className="text-lg font-medium mb-4">Thread Display Mode</h3>
           
           <RadioGroup 
-            value={threadDisplayMode} 
-            onValueChange={setThreadDisplayMode}
+            value={formData.threadDisplayMode} 
+            onValueChange={handleValueChange('threadDisplayMode')}
             className="flex flex-col space-y-2"
           >
             <div className="flex items-center space-x-2 p-2 rounded-md hover:bg-zinc-800">
@@ -163,8 +183,8 @@ export function DisplayPreferences({ user }: DisplayPreferencesProps) {
                 </p>
               </div>
               <Switch
-                checked={reducedMotion}
-                onCheckedChange={setReducedMotion}
+                checked={formData.reducedMotion}
+                onCheckedChange={handleValueChange('reducedMotion')}
               />
             </div>
             
@@ -176,8 +196,8 @@ export function DisplayPreferences({ user }: DisplayPreferencesProps) {
                 </p>
               </div>
               <Switch
-                checked={hideNsfw}
-                onCheckedChange={setHideNsfw}
+                checked={formData.hideNsfw}
+                onCheckedChange={handleValueChange('hideNsfw')}
               />
             </div>
             
@@ -189,8 +209,8 @@ export function DisplayPreferences({ user }: DisplayPreferencesProps) {
                 </p>
               </div>
               <Switch
-                checked={showMatureContent}
-                onCheckedChange={setShowMatureContent}
+                checked={formData.showMatureContent}
+                onCheckedChange={handleValueChange('showMatureContent')}
               />
             </div>
             
@@ -202,8 +222,8 @@ export function DisplayPreferences({ user }: DisplayPreferencesProps) {
                 </p>
               </div>
               <Switch
-                checked={showOfflineUsers}
-                onCheckedChange={setShowOfflineUsers}
+                checked={formData.showOfflineUsers}
+                onCheckedChange={handleValueChange('showOfflineUsers')}
               />
             </div>
           </div>

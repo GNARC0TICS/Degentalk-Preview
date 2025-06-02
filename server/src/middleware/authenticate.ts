@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { db } from '../core/db';
-import { users } from '@db/schema';
+import { db } from '@db';
+import { users } from '@schema';
 import { eq } from 'drizzle-orm';
 
 // Extend Express Request type to include user

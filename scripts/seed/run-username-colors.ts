@@ -1,4 +1,4 @@
-import { db } from '../../server/src/core/db';
+import { db } from '@db';
 import { products } from '../../shared/schema';
 import { USERNAME_COLOR_PRODUCTS } from './shop/username-colors';
 

@@ -7,7 +7,7 @@
 import express from 'express';
 import { z } from 'zod';
 import { db } from '../../../db';
-import { transactions } from '@db/schema';
+import { transactions } from '@schema';
 import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../../../src/core/logger';
 

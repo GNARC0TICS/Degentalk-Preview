@@ -1,4 +1,4 @@
-import { db } from '../../server/src/core/db';
+import { db } from '@db';
 import { forumCategories } from '../../shared/schema';
 import { sql } from 'drizzle-orm';
 

@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { db } from '../../../db';
 import { randomUUID } from 'crypto';
 import { eq, and, or, desc, sql } from 'drizzle-orm';
-import { messages, users } from '@db/schema';
+import { messages, users } from '@schema';
 
 import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware/auth.middleware';
 

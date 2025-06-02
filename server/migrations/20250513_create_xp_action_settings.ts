@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { db } from "../src/core/db";
+import { db } from '@db';
 import { xpActionSettings } from "../../shared/schema";
 
 export async function up() {

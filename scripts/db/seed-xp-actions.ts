@@ -7,8 +7,8 @@
  * npx tsx scripts/seed-xp-actions.ts
  */
 
-import { db } from '../../server/src/core/db';
-import { xpActionSettings, type InsertXpActionSetting } from '@db/schema';
+import { db } from '@db';
+import { xpActionSettings, type InsertXpActionSetting } from '@schema/economy/xpActionSettings.ts';
 import { XP_ACTION } from '../../server/src/domains/xp/xp-actions';
 import { eq } from 'drizzle-orm';
 

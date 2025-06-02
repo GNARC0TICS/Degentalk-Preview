@@ -11,7 +11,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi, Mock } from 'vitest';
 import { dgtService } from '../../src/domains/wallet/dgt.service';
-import { db } from '../../src/core/db';
+import { db } from '@db';
 import { eq } from 'drizzle-orm';
 import { WalletError } from '../../src/domains/wallet/wallet.errors';
 

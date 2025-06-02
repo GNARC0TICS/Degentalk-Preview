@@ -1,5 +1,5 @@
 import { db } from '../db';
-import { users, xpCloutSettings } from '@db/schema';
+import { users, xpCloutSettings } from '@schema';
 import { eq, sql } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 

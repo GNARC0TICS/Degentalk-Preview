@@ -2,24 +2,27 @@ import { db } from '../../../db';
 import { 
   users, 
   userSettings as userPreferencesSchema, 
-  notificationSettings as notificationPreferencesSchema, 
+  notificationSettings as notificationPreferencesSchema,
+  displayPreferences as displayPreferencesSchema,
   userSettingsHistory,
   type User,
   type UserSetting as UserPreference,
-  type NotificationSetting as NotificationPreference
-} from '@db/schema';
+  type NotificationSetting as NotificationPreference,
+  type DisplayPreference
+} from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { logger } from '../../../src/core/logger';
 import { 
   ProfileSettingsInput, 
   AccountSettingsInput, 
   NotificationSettingsInput, 
-  PasswordChangeInput 
+  PasswordChangeInput,
+  DisplayPreferencesInput
 } from './preferences.validators';
 import bcrypt from 'bcrypt';
 
 /**
- * Fetches all preferences for a user (profile, account, notifications)
+ * Fetches all preferences for a user (profile, account, notifications, display)
  * @param userId The user ID
  */
 export const getAllPreferences = async (userId: number) => {
@@ -48,7 +51,7 @@ export const getAllPreferences = async (userId: number) => {
     throw new Error('User not found');
   }
 
-  // Fetch the user's preferences
+  // Fetch the user's preferences (account settings)
   const preferences = await db.query.userPreferencesSchema.findFirst({
     where: eq(userPreferencesSchema.userId, userId)
   });
@@ -58,10 +61,16 @@ export const getAllPreferences = async (userId: number) => {
     where: eq(notificationPreferencesSchema.userId, userId)
   });
 
+  // Fetch the user's display preferences
+  const displayPreferences = await db.query.displayPreferencesSchema.findFirst({
+    where: eq(displayPreferencesSchema.userId, userId)
+  });
+
   return {
     profile: user,
     preferences: preferences || {},
-    notifications: notifPreferences || {}
+    notifications: notifPreferences || {},
+    display: displayPreferences || {}
   };
 };
 
@@ -239,6 +248,63 @@ export const updateNotificationPreferences = async (
 };
 
 /**
+ * Updates a user's display preferences
+ * @param userId The user ID
+ * @param data Display preferences to update
+ * @param ipAddress The IP address of the requester
+ */
+export const updateDisplayPreferences = async (
+  userId: number, 
+  data: DisplayPreferencesInput, 
+  ipAddress?: string
+) => {
+  // Check if display preferences exist
+  const existingPreferences = await db.query.displayPreferencesSchema.findFirst({
+    where: eq(displayPreferencesSchema.userId, userId)
+  });
+
+  // If no preferences exist yet, create them
+  if (!existingPreferences) {
+    await db.insert(displayPreferencesSchema).values({
+      userId,
+      ...data,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+    return { success: true };
+  }
+
+  // Track changes in preferences history
+  const trackedFields: Array<keyof DisplayPreferencesInput> = [
+    'theme', 'fontSize', 'threadDisplayMode', 'reducedMotion', 
+    'hideNsfw', 'showMatureContent', 'showOfflineUsers'
+  ];
+
+  for (const field of trackedFields) {
+    if (field in data && data[field] !== existingPreferences[field as keyof DisplayPreference]) {
+      await db.insert(userSettingsHistory).values({
+        userId,
+        settingKey: `display.${field}`,
+        oldValue: existingPreferences[field as keyof DisplayPreference]?.toString() || null,
+        newValue: data[field]?.toString() || null,
+        changedAt: new Date(),
+        changedByIp: ipAddress
+      });
+    }
+  }
+
+  // Update the display preferences
+  await db.update(displayPreferencesSchema)
+    .set({
+      ...data,
+      updatedAt: new Date()
+    })
+    .where(eq(displayPreferencesSchema.userId, userId));
+
+  return { success: true };
+};
+
+/**
  * Changes a user's password
  * @param userId The user ID
  * @param data Password change input
@@ -333,9 +399,23 @@ export const createDefaultPreferences = async (userId: number) => {
     updatedAt: new Date(),
   };
 
+  const defaultDisplayPreferences = {
+    userId,
+    theme: 'system',
+    fontSize: 'medium',
+    threadDisplayMode: 'card',
+    reducedMotion: false,
+    hideNsfw: true,
+    showMatureContent: false,
+    showOfflineUsers: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
   await db.transaction(async (tx) => {
     await tx.insert(users).values(defaultProfilePreferences); // Assuming users table is for profile preferences
     await tx.insert(userPreferencesSchema).values(defaultUserPreferences);
     await tx.insert(notificationPreferencesSchema).values(defaultNotificationPreferences);
+    await tx.insert(displayPreferencesSchema).values(defaultDisplayPreferences);
   });
 }; 

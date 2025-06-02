@@ -5,7 +5,7 @@ export * from './core/enums';
 export * from './user/users';
 export * from './user/userGroups';
 export * from './user/sessions';
-export * from './user/settings';
+export * from './user/preferences';
 export * from './user/permissions';
 export * from './user/roles';
 export * from './user/userRoles';

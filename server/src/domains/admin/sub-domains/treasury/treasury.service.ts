@@ -4,9 +4,9 @@
  * Handles business logic for treasury operations in the admin panel.
  */
 
-import { db } from '../../../../core/db';
-import { users, transactions, adminAuditLogs, dgtEconomyParameters, siteSettings as platformSiteSettings } from '@db/schema';
-import type { Transaction } from '@db/schema';
+import { db } from '@db';
+import { users, transactions, adminAuditLogs, dgtEconomyParameters, siteSettings as platformSiteSettings } from '@schema';
+import type { Transaction } from '@schema';
 import { sql, eq, desc, and, inArray } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type { TreasuryDepositInput, TreasuryWithdrawalInput, TreasurySettingsUpdateInput, MassAirdropInput } from './treasury.validators';

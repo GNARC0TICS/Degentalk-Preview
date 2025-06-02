@@ -23,7 +23,9 @@
       "@/*": ["client/src/*"],
       "@shared/*": ["shared/*"],
       "@server/*": ["server/*"],
-      "@db/*": ["db/*"]
+      "@db": ["db/index.ts"],
+      "@schema": ["db/schema/index.ts"],
+      "@schema/*": ["db/schema/*"]
     }
   }
 }

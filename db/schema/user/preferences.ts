@@ -29,6 +29,21 @@ export const notificationSettings = pgTable('notification_settings', {
   updatedAt: timestamp('updated_at').notNull().default(sql`now()`),
 });
 
+export const displayPreferences = pgTable('display_preferences', {
+  userId: integer('user_id').primaryKey().references(() => users.id, { onDelete: 'cascade' }),
+  theme: varchar('theme', { length: 40 }).notNull().default('system'),
+  fontSize: varchar('font_size', { length: 20 }).notNull().default('medium'),
+  threadDisplayMode: varchar('thread_display_mode', { length: 20 }).notNull().default('card'),
+  reducedMotion: boolean('reduced_motion').notNull().default(false),
+  hideNsfw: boolean('hide_nsfw').notNull().default(true),
+  showMatureContent: boolean('show_mature_content').notNull().default(false),
+  showOfflineUsers: boolean('show_offline_users').notNull().default(true),
+  createdAt: timestamp('created_at').notNull().default(sql`now()`),
+  updatedAt: timestamp('updated_at').notNull().default(sql`now()`),
+}, (table) => ({
+  userIdx: index('idx_display_preferences_user_id').on(table.userId)
+}));
+
 // Placeholder for notificationSettings table that will be merged here or related
 
 // Add zod schema or relations as needed
@@ -36,4 +51,6 @@ export const notificationSettings = pgTable('notification_settings', {
 // export type InsertUserSetting = typeof userSettings.$inferInsert;
 
 // export type NotificationSetting = typeof notificationSettings.$inferSelect;
-// export type InsertNotificationSetting = typeof notificationSettings.$inferInsert; 
+// export type InsertNotificationSetting = typeof notificationSettings.$inferInsert;
+// export type DisplayPreference = typeof displayPreferences.$inferSelect;
+// export type InsertDisplayPreference = typeof displayPreferences.$inferInsert; 

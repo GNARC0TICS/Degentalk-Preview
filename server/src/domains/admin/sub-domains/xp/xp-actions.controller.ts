@@ -5,8 +5,8 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { db } from '../../../../core/db';
-import { xpActionSettings } from '@db/schema';
+import { db } from '@db';
+import { xpActionSettings } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
 import { xpService } from '../../../xp/xp.service';

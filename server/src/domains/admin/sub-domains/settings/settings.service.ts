@@ -4,8 +4,8 @@
  * Handles business logic for platform settings management.
  */
 
-import { db } from '../../../../core/db';
-import { siteSettings } from '@db/schema';
+import { db } from '@db';
+import { siteSettings } from '@schema';
 import { eq, and, sql, or, like, ilike, asc, desc } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { 

@@ -4,13 +4,13 @@
  * Handles business logic for forum management.
  */
 
-import { db } from '../../../../core/db';
+import { db } from '@db';
 import { 
   forumCategories, 
   threads, 
   posts,
   threadPrefixes,
-} from '@db/schema';
+} from '@schema';
 import { eq, and, sql, count, desc, asc, isNull, not, ne } from 'drizzle-orm';
 import { AdminError } from '../../../../core/errors';
 import type { 

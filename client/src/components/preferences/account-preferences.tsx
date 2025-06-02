@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User } from '@db/schema';
+import { User } from '@schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -74,10 +74,10 @@ export function AccountPreferences({ user }: AccountPreferencesProps) {
 
   // Initialize form with user data when loaded
   useEffect(() => {
-    if (userSettings?.settings) {
+    if (userSettings?.preferences) {
       setAccountForm({
-        language: userSettings.settings.language || 'en',
-        timezone: userSettings.settings.timezone || '',
+        language: userSettings.preferences.language || 'en',
+        timezone: userSettings.preferences.timezone || '',
       });
     }
   }, [userSettings]);

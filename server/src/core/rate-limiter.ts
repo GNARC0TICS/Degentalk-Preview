@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { db } from './db';
-import { rateLimits } from '@db/schema';
+import { rateLimits } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { logger, LogLevel, LogAction } from './logger';
 

@@ -22,7 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import { useUser } from "@stackframe/stack";
-import { forumCategories } from "@/db/schema"; // Adjusted path
+import { forumCategories } from '@schema'; // Adjusted path
 import type { ForumCategoryWithStats } from "@shared/types"; // Keep if used elsewhere, or combine if ForumCategoryWithStats extends ForumCategory
 import { useLocation } from "wouter";
 import { HierarchicalZoneNav } from "@/features/forum/components/HierarchicalZoneNav";

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
-import { insertAnnouncementSchema } from '@db/schema';
+import { insertAnnouncementSchema } from '@schema';
 import {
   getActiveAnnouncements,
   getAllAnnouncements,

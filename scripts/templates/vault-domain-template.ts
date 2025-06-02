@@ -656,7 +656,7 @@ export const vaultTestTemplate = `/**
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { vaultService } from '../../src/domains/engagement/vault/vault.service';
 import { dgtService } from '../../src/domains/wallet/dgt.service';
-import { db } from '../../src/core/db';
+import { db } from '@db';
 import { WalletError } from '../../src/domains/wallet/wallet.errors';
 
 // Mock dependencies
@@ -667,7 +667,7 @@ vi.mock('../../src/domains/wallet/dgt.service', () => ({
   }
 }));
 
-vi.mock('../../src/core/db', () => ({
+vi.mock('@db', () => ({
   db: {
     select: vi.fn(() => ({
       from: vi.fn(() => ({

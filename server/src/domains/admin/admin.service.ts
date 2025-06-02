@@ -6,9 +6,9 @@
 
 import { WalletService } from '../wallet/wallet.service';
 import { DgtService } from '../wallet/dgt.service';
-import { db } from '../../core/db';
+import { db } from '@db';
 import { count, desc, eq, sql, and, like, isNull, or, ne, sum } from 'drizzle-orm';
-import { users, auditLogs, transactions } from '@db/schema';
+import { users, auditLogs, transactions } from '@schema';
 import { AdminError, AdminErrorCodes } from './admin.errors';
 
 export class AdminService {

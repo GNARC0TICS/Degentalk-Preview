@@ -5,7 +5,7 @@
  * This separates event logic from service logic for better modularity.
  */
 
-import { db } from '../../../core/db';
+import { db } from '@db';
 import { 
   users, 
   levels, 
@@ -15,7 +15,7 @@ import {
   userTitles,
   notifications,
   xpAdjustmentLogs
-} from '@db/schema';
+} from '@schema';
 import { eq, desc } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
 import { dgtService } from '../../wallet/dgt.service';

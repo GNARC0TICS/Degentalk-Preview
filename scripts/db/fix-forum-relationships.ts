@@ -7,7 +7,7 @@
  * forums properly linked through parentId.
  */
 
-import { db } from '../../server/src/core/db';
+import { db } from '@db';
 import { forumCategories } from './utils/schema';
 import { eq, and, isNull, sql } from 'drizzle-orm';
 

@@ -1,8 +1,8 @@
 // WALLET FINALIZATION ON HOLD - Do not prioritize wallet-related features.
 
-import { users, userGroups } from "@db/schema";
+import { users, userGroups } from '@schema';
 import { eq } from "drizzle-orm";
-import { pool } from "../src/core/db";
+import { pool } from '@db';
 import * as crypto from "crypto";
 import { logger } from "../src/core/logger";
 import bcrypt from "bcryptjs";

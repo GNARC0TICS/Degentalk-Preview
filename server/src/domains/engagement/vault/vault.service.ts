@@ -12,7 +12,7 @@ import {
   users, 
   /* vaultSettings, */ // vaultSettings is not in schema
   vaults as vaultLocks 
-} from '@db/schema';
+} from '@schema';
 import { eq, and, lt, sql, gte } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
 import { WalletError, ErrorCodes } from '../../../core/errors';

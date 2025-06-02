@@ -39,9 +39,11 @@ import {
 
 // Import types
 import { ThreadWithUser } from '@shared/types';
-import { User } from '@db/schema';
+import { User } from '@schema';
 import { useAuth } from '@/hooks/use-auth';
 import { ForumEntityBase } from '@/utils/forum-routing-helper';
+import { getThreadTitle } from '@/utils/thread-utils';
+import { ChevronRightIcon, ChatBubbleBottomCenterTextIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
 
 // Define API Path Constants
 const API_PATHS = {

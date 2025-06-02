@@ -1,4 +1,4 @@
-import { db } from '@server/src/core/db';
+import { db } from '@db';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import { threads } from './utils/schema';

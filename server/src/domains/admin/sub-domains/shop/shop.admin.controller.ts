@@ -1,5 +1,5 @@
-import { db } from '../../../core/db'; // Adjust path to your db instance
-import { products } from '../../../../../db/schema'; // Adjust path to your schema
+import { db } from '@db'; // Adjust path to your db instance
+import { products } from '@schema'; // Adjust path to your schema
 import { eq, desc, and } from 'drizzle-orm';
 
 export const shopAdminController = {

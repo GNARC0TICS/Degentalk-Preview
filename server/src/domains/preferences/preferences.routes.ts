@@ -19,17 +19,19 @@ import {
   updateProfilePreferences,
   updateAccountPreferences,
   updateNotificationPreferences,
-  changePassword
+  changePassword,
+  updateDisplayPreferences
 } from './preferences.service';
 import { Request, Response, Router } from "express";
 import { db } from "../../../db";
-import { users, userSettings as userPreferencesSchema } from "@db/schema";
+import { users, userSettings as userPreferencesSchema } from '@schema';
 import { eq, and } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import { z } from "zod";
 import { WebSocket } from 'ws';
 import { isAuthenticated, isAuthenticatedOptional } from '../auth/middleware/auth.middleware';
 import { logger, LogLevel, LogAction } from "../../../src/core/logger";
+import { displayPreferencesSchema } from './preferences.validators';
 
 // Helper function to get user ID from req.user, handling both id and user_id formats
 function getUserId(req: Request): number {
@@ -133,6 +135,30 @@ router.put(
       logger.error("PREFERENCES", 'Error updating notification preferences', error);
       res.status(500).json({ 
         error: 'Failed to update notification preferences',
+        message: error.message
+      });
+    }
+  }
+);
+
+/**
+ * PUT /api/users/me/preferences/display
+ * Update display preferences for the authenticated user
+ */
+router.put(
+  '/me/preferences/display',
+  authenticate,
+  validateBody(displayPreferencesSchema),
+  async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const ipAddress = req.ip;
+      const result = await updateDisplayPreferences(userId, req.body, ipAddress);
+      res.json(result);
+    } catch (error) {
+      logger.error("PREFERENCES", 'Error updating display preferences', error);
+      res.status(500).json({ 
+        error: 'Failed to update display preferences',
         message: error.message
       });
     }

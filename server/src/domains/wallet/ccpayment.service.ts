@@ -13,12 +13,12 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import crypto from 'crypto';
 import { logger } from '../../core/logger';
-import { db } from '../../core/db';
+import { db } from '@db';
 import { 
   transactions, 
   users,
   dgtPurchaseOrders
-} from '@db/schema';
+} from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { WalletError, ErrorCodes } from '../../core/errors';
 import { SUPPORTED_CRYPTO_CURRENCIES } from './wallet.constants';

@@ -6,7 +6,7 @@
 
 import { Router, Request, Response } from 'express';
 import { db } from '../../../db';
-import { users, userInventory, products, forumCategories, threads, posts, userRelationships, avatarFrames, userTitles, userBadges } from "@db/schema";
+import { users, userInventory, products, forumCategories, threads, posts, userRelationships, avatarFrames, userTitles, userBadges } from "@schema";
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';
 import signatureRoutes from './signature.routes'; // Import signature routes
 

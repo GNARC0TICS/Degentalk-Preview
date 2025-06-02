@@ -1,4 +1,4 @@
-import { db } from '../server/db';
+import { db } from '@db';
 import { users, levels, userTitles, userBadges } from '../shared/schema';
 import { xpLevelService, XP_ACTIONS } from '../server/services/xp-level-service';
 import { eq } from 'drizzle-orm';

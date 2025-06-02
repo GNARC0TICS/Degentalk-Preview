@@ -7,13 +7,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { xpService } from './xp.service'; // Changed from XpService to xpService instance
 // import { XpActionLogService } from './xp-action-log.service'; // Removed as not found and not used
-// import { xpAdjustmentLog } from '@db/schema'; // Removed as unused
+// import { xpAdjustmentLog } from '@schema'; // Removed as unused
 import { logger } from '../../core/logger';
 import { XP_ACTION } from './xp-actions';
-import { db } from '../../core/db';
+import { db } from '@db';
 import { xpActionLogs } from './xp-actions-schema';
 import { desc, eq, and, gte, sql } from 'drizzle-orm';
-import { xpActionSettings, users, xpAdjustmentLogs, levels } from '@db/schema'; // Adjusted path
+import { xpActionSettings, users, xpAdjustmentLogs, levels } from '@schema'; // Adjusted path
 import { handleXpAward } from './events/xp.events'; // Assuming this handles level ups and logging
 // import { z } from 'zod'; // Removed as unused
 // import { x } from 'drizzle-orm/select-builder/select'; // Removed as unused

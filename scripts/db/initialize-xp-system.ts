@@ -1,6 +1,6 @@
 import { addDailyXpTracking } from '../../server/migrations/add-daily-xp-tracking';
 import { seedDefaultLevels } from './seed-default-levels';
-import { db } from '../../server/src/core/db';
+import { db } from '@db';
 import { users } from '../../shared/schema';
 import { sql } from 'drizzle-orm';
 import { fileURLToPath } from 'url';

@@ -21,7 +21,7 @@ export interface UserSettingsData {
     activeBadgeId: number | null;
     activeFrameId: number | null;
   };
-  settings: {
+  preferences: {
     userId: number;
     theme: string;
     language: string;

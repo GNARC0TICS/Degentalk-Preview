@@ -5,9 +5,9 @@
  * This service is used by both admin and public-facing features.
  */
 
-import { users, levels, titles, badges, userBadges, userTitles, xpAdjustmentLogs } from '@db/schema';
+import { users, levels, titles, badges, userBadges, userTitles, xpAdjustmentLogs } from '@schema';
 import { eq, sql, and, desc, gte, lt, asc, gt } from 'drizzle-orm';
-import { db } from '../../core/db';
+import { db } from '@db';
 import { MissionsService } from '../missions/missions.service';
 import { logger } from '../../core/logger';
 import { getXpAction, XP_ACTION } from './xp-actions';

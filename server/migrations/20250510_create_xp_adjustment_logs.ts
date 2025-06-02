@@ -1,4 +1,4 @@
-import { db } from "../src/core/db";
+import { db } from '@db';
 import { xpAdjustmentLogs } from "../../shared/schema";
 import { sql } from "drizzle-orm";
 

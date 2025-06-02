@@ -1,6 +1,6 @@
-import { users, products, userInventory } from "@db/schema";
+import { users, products, userInventory } from '@schema';
 import { eq, and, desc, sql } from "drizzle-orm";
-import { pool } from "../src/core/db";
+import { pool } from '@db';
 import { logger, LogLevel, LogAction } from "../src/core/logger";
 
 // Mock shop items for when database items can't be fetched

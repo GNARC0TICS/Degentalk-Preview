@@ -1,7 +1,7 @@
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
-import { User, featureFlags, users } from "@db/schema";
-import { db } from "../../../core/db";
+import { User, featureFlags, users } from '@schema';
+import { db } from "@db";
 import { eq, count } from "drizzle-orm";
 import { isDevMode } from "../../../utils/environment";
 

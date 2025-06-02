@@ -1,4 +1,4 @@
-import { db } from '../../server/src/core/db';
+import { db } from '@db';
 import { logSeed } from './utils/seedUtils';
 import { seedXpActions } from './seed-xp-actions';
 import { seedBadges } from './seed-badges';

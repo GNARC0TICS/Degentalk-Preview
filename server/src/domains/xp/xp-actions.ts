@@ -5,9 +5,9 @@
  * These actions are used by the XP service to grant XP to users.
  */
 
-import { xpActionSettings, users } from '@db/schema';
+import { xpActionSettings, users } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
-import { db } from '../../core/db';
+import { db } from '@db';
 import { getXpActionSettings, type XpActionSetting } from './xp-actions-schema';
 import { logger } from '../../core/logger';
 

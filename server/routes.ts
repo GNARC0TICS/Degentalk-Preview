@@ -4,7 +4,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
 // Import auth from the new domain location
 import { setupAuthPassport, authRoutes } from "./src/domains/auth";
-import { passwordResetTokens, adminAuditLogs } from "@db/schema";
+import { passwordResetTokens, adminAuditLogs } from '@schema';
 import { z } from "zod";
 import { registerAdminRoutes } from './src/domains/admin/admin.routes';
 // Import domain-based wallet routes
@@ -33,6 +33,8 @@ import vaultRoutes from './src/domains/engagement/vault/vault.routes';
 // Import domain-based announcement routes
 import { registerAnnouncementRoutes } from './src/domains/admin/sub-domains/announcements';
 import featureGatesRoutes from './src/domains/feature-gates/feature-gates.routes';
+// Import domain-based preferences routes
+import preferencesRoutes from './src/domains/preferences/preferences.routes';
 
 // REFACTORED: Using the new centralized error handlers
 import { walletErrorHandler, adminErrorHandler, forumErrorHandler, globalErrorHandler } from "./src/core/errors";
@@ -203,8 +205,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Make storage available to editor routes
   app.set('storage', storage);
   
-  // Set up settings routes with domain-based approach
-  app.use('/api/users', settingsRoutes);
+  // Use the domain-based preferences routes
+  app.use('/api/users', preferencesRoutes);
+  // Use the centralized admin error handler
+  app.use('/api/admin', adminErrorHandler);
   
   // Set up profile routes with domain-based approach
   app.use('/api/profile', profileRoutes);

@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { sql } from 'drizzle-orm';
-import { users, transactions } from '@db/schema';
+import { users, transactions } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger, LogLevel, LogAction } from "../src/core/logger";
 

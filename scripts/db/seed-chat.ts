@@ -1,4 +1,4 @@
-import { db } from "@server/src/core/db";
+import { db } from '@db';
 import { sql } from "drizzle-orm";
 
 export async function seedChatRooms() {

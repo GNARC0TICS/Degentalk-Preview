@@ -55,4 +55,19 @@ export const passwordChangeSchema = z.object({
 export type ProfileSettingsInput = z.infer<typeof profileSettingsSchema>;
 export type AccountSettingsInput = z.infer<typeof accountSettingsSchema>;
 export type NotificationSettingsInput = z.infer<typeof notificationSettingsSchema>;
-export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>; 
+export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>;
+
+/**
+ * Display preferences validation schema
+ */
+export const displayPreferencesSchema = z.object({
+  theme: z.enum(['light', 'dark', 'system']).optional(),
+  fontSize: z.enum(['small', 'medium', 'large', 'x-large']).optional(),
+  threadDisplayMode: z.enum(['card', 'list']).optional(),
+  reducedMotion: z.boolean().optional(),
+  hideNsfw: z.boolean().optional(),
+  showMatureContent: z.boolean().optional(),
+  showOfflineUsers: z.boolean().optional(),
+});
+
+export type DisplayPreferencesInput = z.infer<typeof displayPreferencesSchema>; 

@@ -1,5 +1,5 @@
-import { db } from '../../../../core/db';
-import { users, adminManualAirdropLogs, type NewAdminManualAirdropLog } from '@db/schema';
+import { db } from '@db';
+import { users, adminManualAirdropLogs, type NewAdminManualAirdropLog } from '@schema';
 import { xpService } from '../../../xp/xp.service'; // Core XP service for XP adjustments
 import { dgtService } from '../../../wallet/dgt.service'; // Core DGT service for DGT adjustments
 import { eq, inArray } from 'drizzle-orm';

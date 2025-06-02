@@ -216,7 +216,7 @@ export const transactionServiceTemplate = `/**
  * services (dgt.service.ts, ccpayment.service.ts).
  */
 
-import { db } from '../core/db';
+import { db } from '@db';
 import { sql, eq, and, desc, or, count, inArray } from 'drizzle-orm';
 import { transactions, users, dgtPurchaseOrders } from '../db/utils/schema';
 import { logger } from '../../core/logger';
@@ -774,7 +774,7 @@ export const transactionTestTemplate = `/**
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { transactionService } from '../../src/domains/transactions/transaction.service';
 import { ccpaymentService } from '../../src/domains/wallet/ccpayment.service';
-import { db } from '../../src/core/db';
+import { db } from '@db';
 import { WalletError } from '../../src/domains/wallet/wallet.errors';
 
 // Mock dependencies
@@ -801,7 +801,7 @@ vi.mock('../../src/domains/wallet/ccpayment.service', () => ({
   }
 }));
 
-vi.mock('../../src/core/db', () => ({
+vi.mock('@db', () => ({
   db: {
     select: vi.fn(() => ({
       from: vi.fn(() => ({

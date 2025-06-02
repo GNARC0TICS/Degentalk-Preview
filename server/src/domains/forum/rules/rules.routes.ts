@@ -5,29 +5,33 @@
  */
 
 import { Request, Response, Router } from "express";
-import { db } from '@server/src/core/db';
+import { db } from '@db';
 import { 
   count, 
   desc, 
   eq, 
   and,
   like,
-  sql
+  sql,
+  inArray
 } from "drizzle-orm";
 import { 
   forumRules, 
   userRulesAgreements,
-  contentEditStatusEnum
-} from "@db/schema";
+  contentEditStatusEnum,
+  type ForumRule,
+  type UserRulesAgreement,
+  type User 
+} from "@schema";
 import crypto from "crypto";
 import { z } from "zod";
-import { isAuthenticated, isAdminOrModerator, isAdmin } from "../../auth/middleware/auth.middleware";
+import { isAuthenticated } from "../../auth/middleware/auth.middleware";
 import { storage } from "@server/storage";
 import { asyncHandler } from "@server/src/core/errors"; // Assuming asyncHandler is in core errors
 
 // Helper function to get user ID from req.user, handling both id and user_id formats
 function getUserId(req: Request): number {
-  return (req.user as any)?.id || (req.user as any)?.user_id || 0;
+  return (req.user as any)?.id || (req.user as any)?.user_id || 0; // Keeping as any for now due to complex Express Request typing
 }
 
 const router = Router();
@@ -79,7 +83,7 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
     
     // Only allow published rules to be viewed, unless the user is an admin
-    if (rule.status !== 'published' && !req.user?.isAdmin) {
+    if (rule.status !== 'published' && (!req.user || (req.user as any).role !== 'admin')) { // Fixed isAdmin check
       return res.status(403).json({ error: 'This rule is not published' });
     }
     
@@ -111,17 +115,17 @@ router.get('/user-agreements', async (req: Request, res: Response) => {
       .where(eq(forumRules.status, 'published'));
     
     // Find which rules require agreement
-    const requiredRules = rules.filter(rule => rule.isRequired);
+    const requiredRules = rules.filter((rule: ForumRule) => rule.isRequired); 
     
     // Check which required rules have been agreed to
     const agreedRequiredRuleIds = agreements
-      .filter(agreement => {
-        const rule = rules.find(r => r.id === agreement.ruleId);
+      .filter((agreement: UserRulesAgreement) => {
+        const rule = rules.find((r: ForumRule) => r.id === agreement.ruleId); 
         return rule && rule.isRequired;
       })
-      .map(agreement => agreement.ruleId);
+      .map((agreement: UserRulesAgreement) => agreement.ruleId); 
     
-    const allRequiredRulesAgreed = requiredRules.every(rule => 
+    const allRequiredRulesAgreed = requiredRules.every((rule: ForumRule) => 
       agreedRequiredRuleIds.includes(rule.id)
     );
     
@@ -165,7 +169,7 @@ router.post('/agree', async (req: Request, res: Response) => {
     const rules = await db.select()
       .from(forumRules)
       .where(and(
-        forumRules.id.in(ruleIds),
+        inArray(forumRules.id, ruleIds), 
         eq(forumRules.status, 'published')
       ));
     
@@ -179,13 +183,13 @@ router.post('/agree', async (req: Request, res: Response) => {
     const existingAgreements = await db.select()
       .from(userRulesAgreements)
       .where(and(
-        userRulesAgreements.userId.equals(userId),
-        userRulesAgreements.ruleId.in(ruleIds)
+        eq(userRulesAgreements.userId, userId), 
+        inArray(userRulesAgreements.ruleId, ruleIds) 
       ));
     
     // Create map of existing agreements for faster lookup
-    const existingAgreementMap = new Map();
-    existingAgreements.forEach(agreement => {
+    const existingAgreementMap = new Map<number, UserRulesAgreement>(); 
+    existingAgreements.forEach((agreement: UserRulesAgreement) => { 
       existingAgreementMap.set(agreement.ruleId, agreement);
     });
     
@@ -205,7 +209,10 @@ router.post('/agree', async (req: Request, res: Response) => {
             versionHash: rule.versionHash,
             agreedAt: new Date()
           })
-          .where(eq(userRulesAgreements.id, existingAgreement.id));
+          .where(and(
+            eq(userRulesAgreements.userId, existingAgreement.userId),
+            eq(userRulesAgreements.ruleId, existingAgreement.ruleId)
+          ));
         
         // Also update the rule's lastAgreedVersionHash if not already set
         if (!rule.lastAgreedVersionHash) {

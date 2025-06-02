@@ -8,7 +8,7 @@
 import { Router, Request, Response } from 'express';
 import { db } from '../../../db';
 import { sql } from 'drizzle-orm';
-import { users, transactions } from '@db/schema';
+import { users, transactions } from '@schema';
 import { eq } from 'drizzle-orm';
 import { isAdmin } from '../auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';

@@ -4,8 +4,8 @@
  * Provides methods to calculate and update platform statistics
  */
 
-import { db } from '@server/src/core/db';
-import { platformStatistics, users, threads, posts, postReactions } from '@db/schema';
+import { db } from '@db';
+import { platformStatistics, users, threads, posts, postReactions } from '@schema';
 import { eq, sql, count, countDistinct } from 'drizzle-orm';
 
 /**

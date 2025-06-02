@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { db } from '../server/db';
+import { db } from '@db';
 import fs from 'fs';
 import path from 'path';
-import { logger } from '../server/src/core/logger';
+import { logger } from '@core/logger';
 import { users, wallets, transactions } from '../shared/schema';
 import { eq, sql } from 'drizzle-orm';
 

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { missionsService } from '../domains/missions/missions.service';
-import { MissionType } from '@db/schema';
+import { MissionType } from '@schema';
 import { logger } from '../core/logger';
 
 /**

@@ -1,5 +1,5 @@
-import { db } from '../../../core/db'; // Adjust
-import { userInventory, products } from '../../../../../db/schema'; // Adjust
+import { db } from '@db'; // Adjust
+import { userInventory, products } from '@schema'; // Adjust
 import { eq, and, getTableColumns } from 'drizzle-orm';
 
 export const userInventoryAdminController = {

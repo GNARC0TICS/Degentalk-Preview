@@ -6,7 +6,7 @@
  */
 
 import { Router, Request, Response } from "express";
-import { db } from '@server/src/core/db';
+import { db } from '@db';
 import { z } from "zod";
 import { 
   posts, 
@@ -29,7 +29,7 @@ import {
   threadPrefixes,
   tags,
   threadTags
-} from "@db/schema";
+} from '@schema';
 import { sql, eq, and, desc, count, isNotNull, asc, ilike, or, gt, ne, inArray, isNull } from "drizzle-orm";
 import { awardPathXp } from "@server/utils/path-utils";
 import { xpRewards } from "@shared/path-config";

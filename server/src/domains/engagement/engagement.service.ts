@@ -11,7 +11,7 @@
  */
 
 import { logger } from '../../../core/logger';
-import { db } from '../../../core/db';
+import { db } from '@db';
 import { dgtService } from '../wallet/dgt.service';
 import { tipService } from './tip/tip.service';
 import { rainService } from './rain/rain.service';

@@ -22,7 +22,7 @@ import announcementRoutes from './sub-domains/announcements/announcements.routes
 import airdropRoutes from './sub-domains/airdrop/airdrop.routes';
 import shopAdminApiRoutes from './sub-domains/shop/shop.admin.routes';
 import userInventoryAdminApiRoutes from './sub-domains/users/inventory.admin.routes';
-import userAdminRoutes from './users/users.admin.routes';
+// import userAdminRoutes from './users/users.admin.routes'; // DEPRECATED
 // import economyAdminRoutes from './settings/economy.routes'; // Placeholder for future
 
 // Create admin router
@@ -45,7 +45,7 @@ adminRouter.use('/announcements', announcementRoutes);
 adminRouter.use('/airdrop', airdropRoutes);
 adminRouter.use('/shop-management', shopAdminApiRoutes);
 adminRouter.use('/user-inventory', userInventoryAdminApiRoutes);
-adminRouter.use('/users', userAdminRoutes);
+// adminRouter.use('/users', userAdminRoutes); // DEPRECATED - Handled by userRoutes
 // router.use('/economy', economyAdminRoutes); // Placeholder for future
 
 // Dashboard overview route

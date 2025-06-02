@@ -12832,3 +12832,13 @@ User not found
 [2025-06-01T23:10:11.061Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
 [2025-06-01T23:10:11.061Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
 [2025-06-01T23:10:11.061Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-02T05:00:13.307Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-02T05:00:13.317Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-02T05:00:13.830Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-02T05:00:14.166Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-02T05:00:14.166Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-02T05:00:14.167Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-02T05:00:14.167Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed

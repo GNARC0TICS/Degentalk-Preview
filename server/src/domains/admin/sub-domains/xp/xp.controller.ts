@@ -3,8 +3,8 @@ import { xpAdminService } from './xp.service';
 import { logger } from '../../../../core/logger';
 import { xpService } from '../../../xp/xp.service';
 import { XP_ACTION } from '../../../xp/xp-actions';
-import { db } from '../../../../core/db';
-import { xpAdjustmentLogs } from '@db/schema';
+import { db } from '@db';
+import { xpAdjustmentLogs } from '@schema';
 import { eq, desc } from 'drizzle-orm';
 
 // --- XP Settings Management ---

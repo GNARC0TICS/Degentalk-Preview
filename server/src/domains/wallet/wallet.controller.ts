@@ -12,8 +12,8 @@ import { logger } from '../../core/logger';
 import { dgtService } from './dgt.service';
 import { ccpaymentService, type CryptoBalance } from './ccpayment.service'; // Import instance and CryptoBalance type
 // import { TransactionService } from '../transactions/transaction.service'; // Ensure this is commented or removed
-import { db } from '../../core/db';
-import { users, dgtPurchaseOrders, transactions, transactionTypeEnum } from '@db/schema';
+import { db } from '@db';
+import { users, dgtPurchaseOrders, transactions, transactionTypeEnum } from '@schema';
 import { eq, desc, and, sql, SQL } from 'drizzle-orm';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
 import crypto from 'crypto';

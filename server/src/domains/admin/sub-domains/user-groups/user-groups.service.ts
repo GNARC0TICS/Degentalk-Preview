@@ -4,8 +4,8 @@
  * Handles business logic for user group management.
  */
 
-import { db } from '../../../../core/db';
-import { userGroups, users } from '@db/schema';
+import { db } from '@db';
+import { userGroups, users } from '@schema';
 import { eq, and, sql, count, desc, ne } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type { UserGroupInput, ListGroupUsersQueryInput } from './user-groups.validators';

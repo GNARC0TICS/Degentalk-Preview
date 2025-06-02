@@ -4,7 +4,7 @@
  * Handles business logic for generating platform analytics.
  */
 
-import { db } from '../../../../core/db';
+import { db } from '@db';
 import {
   users,
   threads,
@@ -12,7 +12,7 @@ import {
   postReactions,
   transactions,
   shoutboxMessages
-} from '@db/schema';
+} from '@schema';
 import { sql, eq, desc, and, count, sum, gte, lte, between } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type { AnalyticsPeriodInput, AnalyticsQueryInput } from './analytics.validators';

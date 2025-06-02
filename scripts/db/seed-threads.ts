@@ -1,4 +1,4 @@
-import { db, pool } from '../../server/src/core/db';
+import { db, pool } from '@db';
 import { 
   users, 
   forumCategories, 

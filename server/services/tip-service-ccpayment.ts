@@ -6,7 +6,7 @@
  */
 
 import { db } from '../db';
-import { transactions, users, tipSettings, cooldownSettings } from '@db/schema';
+import { transactions, users, tipSettings, cooldownSettings } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../src/core/errors';

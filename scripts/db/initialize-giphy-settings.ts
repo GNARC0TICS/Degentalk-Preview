@@ -1,4 +1,4 @@
-import { db } from '../../server/src/core/db';
+import { db } from '@db';
 import { siteSettings } from '../../shared/schema';
 import { eq } from 'drizzle-orm';
 

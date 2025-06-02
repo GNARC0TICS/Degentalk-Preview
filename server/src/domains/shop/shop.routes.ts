@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { shopItems } from '../../../utils/shop-utils';
-import { db } from '../../core/db';
-import { products } from '../../../../db/schema';
+import { db } from '@db';
+import { products } from '@schema';
 import { eq, isNull, or, and, gte, lte } from 'drizzle-orm';
 
 const router = Router();

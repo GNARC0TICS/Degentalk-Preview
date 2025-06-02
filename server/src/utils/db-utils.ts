@@ -4,7 +4,7 @@
  * Helper functions to optimize database operations
  */
 
-import { db, withRetry } from '../core/db';
+import { db, withRetry } from '@db';
 import { sql } from 'drizzle-orm';
 import { logger, LogLevel, LogAction } from '../core/logger';
 

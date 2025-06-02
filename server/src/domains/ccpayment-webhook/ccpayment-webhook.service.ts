@@ -6,9 +6,9 @@
  */
 
 import { WalletService } from '../wallet/wallet.service';
-import { dgtPurchaseOrders, users, transactions } from '@db/schema';
+import { dgtPurchaseOrders, users, transactions } from '@schema';
 import { eq, and } from 'drizzle-orm';
-import { db } from '../../core/db'; // Corrected path
+import { db } from '@db'; // Corrected path
 import { logger } from '../../core/logger'; // Corrected path
 import { CCPaymentWebhookEvent } from '../wallet/ccpayment.service';
 import { dgtService } from '../wallet/dgt.service';

@@ -4,8 +4,8 @@
  * Provides API endpoints for platform statistics
  */
 import { Router } from 'express';
-import { db } from '@server/src/core/db';
-import { platformStatistics } from '@db/schema';
+import { db } from '@db';
+import { platformStatistics } from '@schema';
 import { eq } from 'drizzle-orm';
 import { platformStatsService } from '../services/platformStats.service';
 import { isAdmin } from '../../../../auth/middleware/auth.middleware';

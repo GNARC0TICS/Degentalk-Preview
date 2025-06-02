@@ -16,8 +16,8 @@ import {
   transactions, 
   dgtPurchaseOrders,
   transactionTypeEnum // Import the enum
-} from '@db/schema';
-import { db } from '../../core/db';
+} from '@schema';
+import { db } from '@db';
 import { eq, and, desc, sql, SQL } from 'drizzle-orm'; // Import SQL type
 import { v4 as uuidv4 } from 'uuid';
 import { WalletError, ErrorCodes } from '../../core/errors'; // Import ErrorCodes
