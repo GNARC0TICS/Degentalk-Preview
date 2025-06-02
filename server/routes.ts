@@ -1,4 +1,4 @@
-files firin the te/**
+/**
  * @file server/routes.ts
  * @description Centralized routing file for the Degentalk backend application.
  * @purpose Aggregates and registers all domain-specific API routes with the Express application.
