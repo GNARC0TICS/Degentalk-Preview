@@ -30,6 +30,8 @@ import { useActiveUsers } from '@/features/users/hooks';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 
 // Import icons
 import { 
@@ -60,7 +62,7 @@ export default function HomePage() {
   const { 
     data: forumStructure,
     isLoading: structureLoading,
-    error
+    error: forumStructureError
   } = useForumStructure();
   
   const primaryZones = forumStructure?.primaryZones || [];
@@ -142,23 +144,42 @@ export default function HomePage() {
           {/* Hot Threads */}
           <HotThreads className="mb-6" />
           
-          {/* Primary Zones Grid */}
-          {structureLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={i} className="h-48 w-full" />
-              ))}
+          {/* Primary Zones Section */}
+          <section className="mb-16">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-2xl font-bold text-white mb-2">Primary Zones</h2>
+                <p className="text-zinc-400">Jump into the action</p>
+              </div>
+              <Link href="/zones">
+                <Button variant="ghost" className="text-zinc-400 hover:text-white">
+                  View All Zones
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
-          ) : error ? (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                Failed to load forum structure. Please try refreshing the page.
-              </AlertDescription>
-            </Alert>
-          ) : (
-            <CanonicalZoneGrid zones={zoneCardData} />
-          )}
+            
+            {forumStructureError ? (
+              <div className="text-center py-12">
+                <p className="text-red-400">Failed to load zones</p>
+              </div>
+                         ) : structureLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="bg-zinc-900 rounded-xl h-48 animate-pulse" />
+                ))}
+              </div>
+            ) : (
+              <CanonicalZoneGrid 
+                zones={forumStructure?.primaryZones || []} 
+                includeShopCard={true}
+                shopCardData={{
+                  name: "Legendary Diamond Frame",
+                  price: 2500
+                }}
+              />
+            )}
+          </section>
         </div>
         
         {/* Sidebar (1/3 width) */}
@@ -184,10 +205,10 @@ export default function HomePage() {
                     <Skeleton key={i} className="h-8 w-full" />
                   ))}
                 </div>
-              ) : error ? (
+              ) : forumStructureError ? (
                 <div className="text-red-500 p-4" role="alert">
                   <p className="text-sm">Failed to load forum structure</p>
-                  {error && <p className="text-xs mt-1 opacity-75">{error.message}</p>}
+                  {forumStructureError && <p className="text-xs mt-1 opacity-75">{forumStructureError.message}</p>}
                 </div>
               ) : (
                 <HierarchicalZoneNav className="text-zinc-200" />

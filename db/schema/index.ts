@@ -1,3 +1,25 @@
+/**
+ * @file db/schema/index.ts
+ * @description Barrel file re-exporting all Drizzle ORM schema definitions for the Degentalk project.
+ *
+ * @purpose Provides a single entry point for importing all database table schemas.
+ *          Organized by domain (e.g., user, forum, economy) for clarity.
+ *          This file is typically aliased as `@schema` in `tsconfig.json` for easy access.
+ *
+ * @dependencies None directly, but all exported files depend on `drizzle-orm`.
+ *
+ * @environment Relies on Drizzle ORM and the chosen database driver (SQLite/PostgreSQL).
+ *
+ * @important_notes
+ *   - This file SHOULD ONLY contain export statements.
+ *   - When adding new schema files, ensure they are exported here.
+ *   - The order of exports does not typically matter unless there are inter-schema dependencies
+ *     that Drizzle cannot resolve automatically (rare).
+ *
+ * @status Production
+ * @last_reviewed YYYY-MM-DD by @username (TODO: Update this)
+ * @owner Database Team / Backend Team (TODO: Confirm owner)
+ */
 // Core exports
 export * from './core/enums';
 
@@ -111,4 +133,4 @@ export * from './system/activityFeed';
 export * from './system/airdrop-records';
 
 // Note: './forum/threadDrafts.ts' was commented out as it was empty in the previous steps.
-// Ensure all files listed for export actually exist and contain exports. 
+// Ensure all files listed for export actually exist and contain exports.

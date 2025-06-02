@@ -1,3 +1,36 @@
+/**
+ * @file server/index.ts
+ * @description Main entry point for the Degentalk backend server.
+ *
+ * @purpose Initializes and starts the Express application, sets up middleware,
+ *          registers API routes, handles database migrations/seeding (in dev),
+ *          integrates Vite for development or serves static assets in production,
+ *          and starts scheduled tasks.
+ *
+ * @dependencies
+ *   - `express`: Web framework.
+ *   - `./config/loadEnv`: For loading environment variables.
+ *   - `./routes`: For API route registration.
+ *   - `./vite`: For Vite HMR and middleware integration.
+ *   - `./utils/task-scheduler`: For running background tasks.
+ *   - `../scripts/db/*`: Various database seeding and migration scripts.
+ *
+ * @environment
+ *   - `NODE_ENV`: ('development' or 'production') Controls behavior like seeding and Vite integration.
+ *   - `PORT`: Port number for the server to listen on.
+ *   - `DATABASE_PROVIDER`: ('sqlite' or 'postgresql') Determines migration logic.
+ *   - `DATABASE_URL`: Connection string for the database.
+ *   - `QUICK_MODE`: ('true' or 'false') If true, skips seeding in development.
+ *
+ * @important_notes
+ *   - Environment variables MUST be loaded first via `import './config/loadEnv';`.
+ *   - Seeding and some migrations are conditional based on `NODE_ENV` and `DATABASE_PROVIDER`.
+ *   - Error handling middleware is the last `app.use()` call before server start.
+ *
+ * @status Production
+ * @last_reviewed YYYY-MM-DD by @username (TODO: Update this)
+ * @owner Backend Team (TODO: Confirm owner)
+ */
 import './config/loadEnv'; // Ensures environment variables are loaded first
 
 // All other imports follow

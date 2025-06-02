@@ -1,3 +1,5 @@
+## Status: ✅ Up to Date (Needs expansion based on full plan)
+
 # Database (DB) Layer
 
 This directory contains all database-related files, including schema definitions, migration scripts, and Drizzle configuration.
@@ -17,4 +19,4 @@ This directory contains all database-related files, including schema definitions
 
 - **Schema Definitions:** Define your database tables and relationships in `db/schema/`.
 - **Migrations:** Use Drizzle Kit to generate and apply migrations when your schema changes.
-- **Database Access:** Import the `db` instance from `@db` to interact with the database. 
+- **Database Access:** Import the `db` instance from `@db` to interact with the database.

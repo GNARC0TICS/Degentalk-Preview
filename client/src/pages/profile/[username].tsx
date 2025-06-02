@@ -276,7 +276,7 @@ const ProfileSidebar: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> 
           </div>
         )}
         
-        <Badge className="mb-4 uppercase bg-indigo-600 text-white">
+        <Badge className="mb-4 uppercase bg-gradient-to-r from-purple-600 to-violet-600 text-white border-0">
           {profile.role || 'User'}
         </Badge>
         
@@ -284,7 +284,7 @@ const ProfileSidebar: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> 
         <div className="flex gap-2 w-full mb-6">
           {isOwnProfile ? (
              <Link href="/preferences">
-               <Button className="flex-1 bg-indigo-700 hover:bg-indigo-600 text-white">
+               <Button className="flex-1 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white border-0 shadow-lg">
                  <Settings className="mr-2 h-4 w-4" />
                  Preferences
                </Button>
@@ -292,7 +292,10 @@ const ProfileSidebar: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> 
           ) : (
             <>
               <Button 
-                className={`flex-1 ${isFollowing ? 'bg-zinc-700 hover:bg-zinc-600' : 'bg-emerald-700 hover:bg-emerald-600'} text-white transition-colors`}
+                className={`flex-1 ${isFollowing 
+                  ? 'bg-gradient-to-r from-zinc-600 to-zinc-700 hover:from-zinc-500 hover:to-zinc-600' 
+                  : 'bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500'
+                } text-white transition-all duration-200 border-0 shadow-lg`}
                 onClick={handleFollowClick}
                 disabled={followMutation.isPending || unfollowMutation.isPending}
               >
@@ -330,18 +333,18 @@ const ProfileSidebar: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> 
         
         
         {/* User Stats */}
-        <div className="grid grid-cols-3 gap-4 w-full text-center mb-6 bg-zinc-800/30 p-3 rounded-lg border border-zinc-700/30">
+        <div className="grid grid-cols-3 gap-4 w-full text-center mb-6 bg-gradient-to-r from-zinc-800/40 to-zinc-900/40 p-4 rounded-lg border border-zinc-700/30 backdrop-blur-sm">
           <div className="flex flex-col">
-            <span className="text-xl font-bold text-indigo-400">{formatNumber(profile.totalThreads)}</span>
-            <span className="text-sm text-zinc-300">Threads</span>
+            <span className="text-xl font-bold text-zinc-200">{formatNumber(profile.totalThreads)}</span>
+            <span className="text-sm text-zinc-400">Threads</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-xl font-bold text-indigo-400">{formatNumber(profile.totalPosts)}</span>
-            <span className="text-sm text-zinc-300">Posts</span>
+            <span className="text-xl font-bold text-zinc-200">{formatNumber(profile.totalPosts)}</span>
+            <span className="text-sm text-zinc-400">Posts</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-xl font-bold text-indigo-400">{formatNumber(profile.totalLikes)}</span>
-            <span className="text-sm text-zinc-300">Likes</span>
+            <span className="text-xl font-bold text-zinc-200">{formatNumber(profile.totalLikes)}</span>
+            <span className="text-sm text-zinc-400">Likes</span>
           </div>
         </div>
         
@@ -367,14 +370,14 @@ const ProfileSidebar: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> 
         </div>
         
         {/* Wallet & Clout */}
-        <div className="bg-zinc-800/30 w-full p-4 rounded-lg border border-zinc-700/30 mb-4">
+        <div className="bg-gradient-to-br from-zinc-800/30 to-zinc-900/40 w-full p-4 rounded-lg border border-zinc-700/30 mb-4 backdrop-blur-sm">
           <div className="flex justify-between items-center">
             <span className="text-zinc-300">Balance:</span>
-            <span className="text-indigo-400 font-semibold">{formatCurrency(profile.dgtBalance)}</span>
+            <span className="text-amber-400 font-semibold">{formatCurrency(profile.dgtBalance)}</span>
           </div>
           <div className="flex justify-between items-center mt-2">
             <span className="text-zinc-300">Clout:</span>
-            <span className="text-indigo-400 font-semibold">{formatNumber(profile.clout)}</span>
+            <span className="text-orange-400 font-semibold">{formatNumber(profile.clout)}</span>
           </div>
         </div>
         
@@ -404,24 +407,24 @@ const OverviewTab: React.FC<{ profile: ProfileData }> = ({ profile }) => (
       <StatCard 
         label="Total Views" 
         value={profile.stats.threadViewCount} 
-        icon={<BarChart2 className="h-5 w-5 text-indigo-400" />} 
+        icon={<BarChart2 className="h-5 w-5 text-zinc-400" />} 
       />
       <StatCard 
         label="Tips Received" 
         value={profile.totalTips} 
-        icon={<ShoppingBag className="h-5 w-5 text-indigo-400" />} 
+        icon={<ShoppingBag className="h-5 w-5 text-amber-400" />} 
         isCurrency 
       />
       <StatCard 
         label="Poster Rank" 
         value={profile.stats.posterRank || 0} 
-        icon={<Award className="h-5 w-5 text-indigo-400" />} 
+        icon={<Award className="h-5 w-5 text-emerald-400" />} 
         isRank 
       />
       <StatCard 
         label="Tipper Rank" 
         value={profile.stats.tipperRank || 0} 
-        icon={<Award className="h-5 w-5 text-indigo-400" />} 
+        icon={<Award className="h-5 w-5 text-zinc-400" />} 
         isRank 
       />
     </div>
@@ -430,7 +433,7 @@ const OverviewTab: React.FC<{ profile: ProfileData }> = ({ profile }) => (
     {profile.signature && (
       <div className="bg-zinc-900/70 backdrop-blur-sm p-4 rounded-lg border border-zinc-700/30">
         <h3 className="text-sm text-zinc-300 mb-2">Signature</h3>
-        <div className="text-zinc-200 text-sm border-l-2 border-indigo-700/50 pl-3 py-1">{profile.signature}</div>
+        <div className="text-zinc-200 text-sm border-l-2 border-violet-500/50 pl-3 py-1">{profile.signature}</div>
       </div>
     )}
     
@@ -544,9 +547,9 @@ const AchievementsTab: React.FC<{ profile: ProfileData; isOwnProfile: boolean }>
         <h3 className="text-lg font-semibold text-slate-200">Achievements</h3>
         
         {/* Level Display */}
-        <div className="flex items-center px-3 py-1 bg-zinc-850 rounded-full border border-zinc-750">
-          <Trophy className="h-4 w-4 mr-2 text-indigo-400" />
-          <span className="text-sm font-medium">Level {profile.level}</span>
+        <div className="flex items-center px-3 py-1 bg-gradient-to-r from-amber-600/20 to-amber-600/10 rounded-full border border-amber-500/30">
+          <Trophy className="h-4 w-4 mr-2 text-amber-400" />
+          <span className="text-sm font-medium text-amber-300">Level {profile.level}</span>
         </div>
       </div>
       
@@ -707,9 +710,9 @@ const FriendsTab: React.FC<{ profile: ProfileData }> = ({ profile }) => {
       <div className="border-b border-slate-700">
         <div className="flex space-x-8">
           <button
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
               activeTab === 'friends'
-                ? 'border-indigo-500 text-indigo-400'
+                ? 'border-emerald-500 text-emerald-400'
                 : 'border-transparent text-slate-400 hover:text-slate-300'
             }`}
             onClick={() => setActiveTab('friends')}
@@ -717,9 +720,9 @@ const FriendsTab: React.FC<{ profile: ProfileData }> = ({ profile }) => {
             Friends
           </button>
           <button
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
               activeTab === 'followers'
-                ? 'border-indigo-500 text-indigo-400'
+                ? 'border-zinc-500 text-zinc-300'
                 : 'border-transparent text-slate-400 hover:text-slate-300'
             }`}
             onClick={() => setActiveTab('followers')}
@@ -727,9 +730,9 @@ const FriendsTab: React.FC<{ profile: ProfileData }> = ({ profile }) => {
             Followers
           </button>
           <button
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
               activeTab === 'following'
-                ? 'border-indigo-500 text-indigo-400'
+                ? 'border-zinc-500 text-zinc-300'
                 : 'border-transparent text-slate-400 hover:text-slate-300'
             }`}
             onClick={() => setActiveTab('following')}
@@ -743,7 +746,7 @@ const FriendsTab: React.FC<{ profile: ProfileData }> = ({ profile }) => {
       <div className="pt-2">
         {isLoading ? (
           <div className="flex justify-center py-8">
-            <div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full"></div>
+            <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full"></div>
           </div>
         ) : (
           <>
@@ -759,12 +762,12 @@ const FriendsTab: React.FC<{ profile: ProfileData }> = ({ profile }) => {
         <div className="mt-4 flex gap-4">
           {profile.relationships.friendRequestsSent > 0 && (
             <div className="text-sm text-slate-400">
-              <span className="text-indigo-400 font-medium">{profile.relationships.friendRequestsSent}</span> sent requests
+              <span className="text-zinc-300 font-medium">{profile.relationships.friendRequestsSent}</span> sent requests
             </div>
           )}
           {profile.relationships.friendRequestsReceived > 0 && (
             <div className="text-sm text-slate-400">
-              <span className="text-indigo-400 font-medium">{profile.relationships.friendRequestsReceived}</span> received requests
+              <span className="text-emerald-400 font-medium">{profile.relationships.friendRequestsReceived}</span> received requests
             </div>
           )}
         </div>
@@ -777,12 +780,12 @@ const FriendsTab: React.FC<{ profile: ProfileData }> = ({ profile }) => {
 const StatCard: React.FC<{ label: string; value: number; icon: React.ReactNode; isCurrency?: boolean; isRank?: boolean }> = ({ 
   label, value, icon, isCurrency = false, isRank = false 
 }) => (
-  <div className="bg-zinc-900/70 backdrop-blur-sm p-4 rounded-lg border border-zinc-700/30 transition-all hover:bg-zinc-900/90 hover:border-zinc-700/50">
+  <div className="bg-zinc-900/70 backdrop-blur-sm p-4 rounded-lg border border-zinc-700/30 transition-all hover:bg-zinc-900/90 hover:border-zinc-700/50 group">
     <div className="flex justify-between items-start mb-2">
       <span className="text-zinc-300 text-sm">{label}</span>
       {icon}
     </div>
-    <div className="text-2xl font-bold text-indigo-400">
+    <div className="text-2xl font-bold text-zinc-200 group-hover:text-white transition-colors">
       {isCurrency ? formatCurrency(value) : isRank ? `#${value}` : formatNumber(value)}
     </div>
   </div>
@@ -1042,24 +1045,24 @@ export default function ProfilePage() {
               <div className="rounded-lg overflow-hidden bg-zinc-800/70 backdrop-blur-sm shadow-xl border border-zinc-700/50 p-6">
                 <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
                   <TabsList className={`grid ${isOwnProfile ? 'grid-cols-5' : 'grid-cols-4'} mb-6 bg-black/40 backdrop-blur-sm`}>
-                    <TabsTrigger value="overview" className="flex items-center">
+                    <TabsTrigger value="overview" className="flex items-center data-[state=active]:bg-emerald-600/20 data-[state=active]:text-emerald-400">
                       <Home className="mr-2 h-4 w-4" />
                       <span className="hidden sm:inline">Overview</span>
                     </TabsTrigger>
-                    <TabsTrigger value="achievements" className="flex items-center">
+                    <TabsTrigger value="achievements" className="flex items-center data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-400">
                       <Trophy className="mr-2 h-4 w-4" />
                       <span className="hidden sm:inline">Achievements</span>
                     </TabsTrigger>
-                    <TabsTrigger value="inventory" className="flex items-center">
+                    <TabsTrigger value="inventory" className="flex items-center data-[state=active]:bg-zinc-600/20 data-[state=active]:text-zinc-300">
                       <ShoppingBag className="mr-2 h-4 w-4" />
                       <span className="hidden sm:inline">Inventory</span>
                     </TabsTrigger>
-                    <TabsTrigger value="friends" className="flex items-center">
+                    <TabsTrigger value="friends" className="flex items-center data-[state=active]:bg-zinc-600/20 data-[state=active]:text-zinc-300">
                       <Users className="mr-2 h-4 w-4" />
                       <span className="hidden sm:inline">Friends</span>
                     </TabsTrigger>
                     {isOwnProfile && (
-                      <TabsTrigger value="cosmetics" className="flex items-center">
+                      <TabsTrigger value="cosmetics" className="flex items-center data-[state=active]:bg-purple-600/20 data-[state=active]:text-purple-400">
                         <Sparkles className="mr-2 h-4 w-4" />
                         <span className="hidden sm:inline">Cosmetics</span>
                       </TabsTrigger>

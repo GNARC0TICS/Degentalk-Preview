@@ -83,93 +83,95 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
       <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-zinc-900 border-zinc-700">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Edit Profile</CardTitle>
+            <CardTitle className="text-purple-300">Edit Profile</CardTitle>
             <CardDescription>Update your profile information</CardDescription>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <Button variant="ghost" size="icon" onClick={onClose} className="hover:bg-zinc-800">
             <X className="h-4 w-4" />
           </Button>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
             <Tabs defaultValue="basic" className="w-full">
-              <TabsList className="grid grid-cols-3 w-full mb-6">
-                <TabsTrigger value="basic">Basic Info</TabsTrigger>
-                <TabsTrigger value="social">Social Links</TabsTrigger>
-                <TabsTrigger value="media">Media</TabsTrigger>
+              <TabsList className="grid grid-cols-3 w-full mb-6 bg-zinc-800/50">
+                <TabsTrigger value="basic" className="data-[state=active]:bg-emerald-600/20 data-[state=active]:text-emerald-400">Basic Info</TabsTrigger>
+                <TabsTrigger value="social" className="data-[state=active]:bg-purple-600/20 data-[state=active]:text-purple-400">Social Links</TabsTrigger>
+                <TabsTrigger value="media" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-400">Media</TabsTrigger>
               </TabsList>
               
               <TabsContent value="basic" className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="bio">Bio</Label>
+                  <Label htmlFor="bio" className="text-emerald-300">Bio</Label>
                   <Textarea
                     id="bio"
                     placeholder="Tell us about yourself..."
                     value={formData.bio}
                     onChange={handleInputChange('bio')}
                     rows={4}
-                    className="resize-none"
+                    className="resize-none bg-zinc-800/50 border-zinc-700 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="signature">Forum Signature</Label>
+                  <Label htmlFor="signature" className="text-emerald-300">Forum Signature</Label>
                   <Textarea
                     id="signature"
                     placeholder="Your signature appears at the bottom of your posts..."
                     value={formData.signature}
                     onChange={handleInputChange('signature')}
                     rows={3}
-                    className="resize-none"
+                    className="resize-none bg-zinc-800/50 border-zinc-700 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="location">Location</Label>
+                  <Label htmlFor="location" className="text-emerald-300">Location</Label>
                   <Input
                     id="location"
                     placeholder="Where are you from?"
                     value={formData.location}
                     onChange={handleInputChange('location')}
+                    className="bg-zinc-800/50 border-zinc-700 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
               </TabsContent>
               
               <TabsContent value="social" className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="website">Website</Label>
+                  <Label htmlFor="website" className="text-purple-300">Website</Label>
                   <div className="relative">
-                    <Globe className="absolute left-3 top-3 h-4 w-4 text-zinc-400" />
+                    <Globe className="absolute left-3 top-3 h-4 w-4 text-purple-400" />
                     <Input
                       id="website"
                       placeholder="https://your-website.com"
                       value={formData.website}
                       onChange={handleInputChange('website')}
-                      className="pl-10"
+                      className="pl-10 bg-zinc-800/50 border-zinc-700 focus:border-purple-500 focus:ring-purple-500/20"
                     />
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="twitter">Twitter/X</Label>
+                  <Label htmlFor="twitter" className="text-purple-300">Twitter/X</Label>
                   <Input
                     id="twitter"
                     placeholder="@username"
                     value={formData.twitter}
                     onChange={handleInputChange('twitter')}
+                    className="bg-zinc-800/50 border-zinc-700 focus:border-purple-500 focus:ring-purple-500/20"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="discord">Discord</Label>
+                  <Label htmlFor="discord" className="text-purple-300">Discord</Label>
                   <div className="relative">
-                    <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-zinc-400" />
+                    <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-purple-400" />
                     <Input
                       id="discord"
                       placeholder="username#0000"
                       value={formData.discord}
                       onChange={handleInputChange('discord')}
-                      className="pl-10"
+                      className="pl-10 bg-zinc-800/50 border-zinc-700 focus:border-purple-500 focus:ring-purple-500/20"
                     />
                   </div>
                 </div>
@@ -177,9 +179,9 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
               
               <TabsContent value="media" className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Profile Picture</Label>
+                  <Label className="text-amber-300">Profile Picture</Label>
                   <div className="flex items-center gap-4">
-                    <div className="w-20 h-20 rounded-full bg-zinc-800 overflow-hidden">
+                    <div className="w-20 h-20 rounded-full bg-zinc-800 overflow-hidden border border-amber-500/30">
                       {profile.avatarUrl ? (
                         <img src={profile.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                       ) : (
@@ -188,7 +190,7 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
                         </div>
                       )}
                     </div>
-                    <Button variant="outline" disabled>
+                    <Button variant="outline" disabled className="border-amber-500/30 text-amber-400">
                       <Upload className="mr-2 h-4 w-4" />
                       Upload Avatar
                     </Button>
@@ -197,9 +199,9 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label>Profile Banner</Label>
+                  <Label className="text-amber-300">Profile Banner</Label>
                   <div className="space-y-2">
-                    <div className="w-full h-32 rounded-lg bg-zinc-800 overflow-hidden">
+                    <div className="w-full h-32 rounded-lg bg-zinc-800 overflow-hidden border border-amber-500/30">
                       {profile.bannerUrl ? (
                         <img src={profile.bannerUrl} alt="Banner" className="w-full h-full object-cover" />
                       ) : (
@@ -208,7 +210,7 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
                         </div>
                       )}
                     </div>
-                    <Button variant="outline" disabled>
+                    <Button variant="outline" disabled className="border-amber-500/30 text-amber-400">
                       <Upload className="mr-2 h-4 w-4" />
                       Upload Banner
                     </Button>
@@ -219,10 +221,10 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
             </Tabs>
             
             <div className="flex justify-end gap-3 mt-6">
-              <Button variant="outline" type="button" onClick={onClose}>
+              <Button variant="outline" type="button" onClick={onClose} className="border-zinc-600 text-zinc-400 hover:bg-zinc-800">
                 Cancel
               </Button>
-              <Button type="submit" disabled={updateProfileMutation.isPending}>
+              <Button type="submit" disabled={updateProfileMutation.isPending} className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 border-0 shadow-lg">
                 <Save className="mr-2 h-4 w-4" />
                 {updateProfileMutation.isPending ? 'Saving...' : 'Save Changes'}
               </Button>

@@ -1,3 +1,5 @@
+## Status: ✅ Up to Date (Restructuring in progress)
+
 # DegenTalk Client
 
 This folder contains all frontend code for the DegenTalk platform.

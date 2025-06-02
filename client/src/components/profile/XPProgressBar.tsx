@@ -34,10 +34,10 @@ export function XPProgressBar({
   
   // Generate glow color based on level range
   const getGlowColor = () => {
-    if (level < 10) return 'from-emerald-500/20 to-emerald-500/5'; // Beginner: Emerald
-    if (level < 25) return 'from-cyan-500/20 to-cyan-500/5';      // Intermediate: Cyan
-    if (level < 50) return 'from-purple-500/20 to-purple-500/5';  // Advanced: Purple
-    return 'from-amber-500/20 to-amber-500/5';                     // Expert: Gold
+    if (level < 10) return 'from-emerald-500/10 to-emerald-500/5'; // Beginner: Emerald
+    if (level < 25) return 'from-cyan-500/10 to-cyan-500/5';      // Intermediate: Cyan
+    if (level < 50) return 'from-purple-500/10 to-purple-500/5';  // Advanced: Purple
+    return 'from-amber-500/10 to-amber-500/5';                     // Expert: Gold
   };
   
   // Get progress bar color based on level range
@@ -47,6 +47,22 @@ export function XPProgressBar({
     if (level < 50) return 'bg-purple-500';
     return 'bg-amber-500';
   };
+
+  // Get level text color
+  const getLevelTextColor = () => {
+    if (level < 10) return 'text-emerald-400';
+    if (level < 25) return 'text-cyan-400';
+    if (level < 50) return 'text-purple-400';
+    return 'text-amber-400';
+  };
+
+  // Get border color for level circle
+  const getLevelBorderColor = () => {
+    if (level < 10) return 'border-emerald-500';
+    if (level < 25) return 'border-cyan-500';
+    if (level < 50) return 'border-purple-500';
+    return 'border-amber-500';
+  };
   
   if (variant === 'compact') {
     return (
@@ -54,7 +70,7 @@ export function XPProgressBar({
         <div className="flex items-center justify-between mb-1">
           <div className="flex items-center gap-1">
             <span className="text-xs font-medium text-slate-400">LVL</span>
-            <span className={cn('text-sm font-bold', level < 10 ? 'text-emerald-400' : level < 25 ? 'text-cyan-400' : level < 50 ? 'text-purple-400' : 'text-amber-400')}>
+            <span className={cn('text-sm font-bold', getLevelTextColor())}>
               {level}
             </span>
           </div>
@@ -62,11 +78,10 @@ export function XPProgressBar({
             {formatNumber(currentXP)} / {formatNumber(nextLevelXP)}
           </span>
         </div>
-        <div className="relative h-1.5">
-          <div className="absolute inset-0 bg-zinc-800 rounded-full"></div>
-          <Progress 
-            value={progressPercentage} 
-            className={cn('h-full animate-pulse-glow', getProgressColor())}
+        <div className="relative h-2 bg-zinc-800 rounded-full overflow-hidden">
+          <div 
+            className={cn('h-full rounded-full transition-all duration-300', getProgressColor())}
+            style={{ width: `${progressPercentage}%` }}
           />
         </div>
       </div>
@@ -74,20 +89,18 @@ export function XPProgressBar({
   }
   
   return (
-    <div className={cn('bg-zinc-850 rounded-lg p-4 relative overflow-hidden shadow-md border border-zinc-750', className)}>
-      {/* Background Glow Effect */}
-      <div className={cn('absolute inset-0 bg-gradient-to-br opacity-20', getGlowColor())}></div>
+    <div className={cn('bg-zinc-800/80 rounded-lg p-4 relative overflow-hidden shadow-md border border-zinc-700/50', className)}>
+      {/* Background Glow Effect - Much more subtle */}
+      <div className={cn('absolute inset-0 bg-gradient-to-br opacity-10', getGlowColor())}></div>
       
       {/* Content */}
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <div className={cn(
-              'flex items-center justify-center w-12 h-12 rounded-full bg-black/40 border',
-              level < 10 ? 'border-emerald-500 text-emerald-400' : 
-              level < 25 ? 'border-cyan-500 text-cyan-400' : 
-              level < 50 ? 'border-purple-500 text-purple-400' : 
-              'border-amber-500 text-amber-400'
+              'flex items-center justify-center w-12 h-12 rounded-full bg-black/40 border-2',
+              getLevelBorderColor(),
+              getLevelTextColor()
             )}>
               <span className="text-xl font-bold">{level}</span>
             </div>
@@ -102,34 +115,35 @@ export function XPProgressBar({
           {/* PRO Badge - Only shown if showProBadge is true */}
           {showProBadge && (
             <div className="flex items-center">
-              <img 
-                src="/images/ART/LETSGOPRO.png" 
-                alt="PRO" 
-                className="h-14 animate-float"
-              />
+              <div className="bg-amber-600 text-black px-3 py-1 rounded-full text-xs font-bold">
+                PRO
+              </div>
             </div>
           )}
         </div>
         
         {/* Progress Bar */}
-        <div className="mb-1">
-          <div className="flex justify-between items-center mb-1">
+        <div className="mb-2">
+          <div className="flex justify-between items-center mb-2">
             <span className="text-xs text-slate-400">Progress to Level {level + 1}</span>
             <span className="text-xs text-slate-500">
               {formatNumber(currentXP)} / {formatNumber(nextLevelXP)} XP
             </span>
           </div>
-          <div className="relative h-2.5">
-            <div className="absolute inset-0 bg-zinc-800 rounded-full"></div>
-            <Progress 
-              value={progressPercentage} 
-              className={cn('h-full animate-pulse-glow', getProgressColor())}
+          <div className="relative h-3 bg-zinc-800 rounded-full overflow-hidden">
+            <div 
+              className={cn('h-full rounded-full transition-all duration-500 ease-out', getProgressColor())}
+              style={{ width: `${progressPercentage}%` }}
             />
           </div>
         </div>
         
         {/* Percentage Display */}
-        <div className="text-right text-xs text-slate-400">{progressPercentage}% Complete</div>
+        <div className="text-right">
+          <span className={cn('text-sm font-medium', getLevelTextColor())}>
+            {progressPercentage}% Complete
+          </span>
+        </div>
       </div>
     </div>
   );

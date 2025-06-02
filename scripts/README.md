@@ -1,3 +1,5 @@
+## Status: ✅ Up to Date
+
 # ForumFusion Scripts
 
 This directory contains scripts for various operations in the ForumFusion project.
@@ -78,4 +80,4 @@ When adding new scripts, please:
 1. Place them in the appropriate directory based on functionality
 2. Use consistent naming conventions (kebab-case recommended)
 3. Include proper documentation and usage examples in the script
-4. Update this README if adding a new category or important script 
+4. Update this README if adding a new category or important script

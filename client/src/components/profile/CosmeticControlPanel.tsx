@@ -93,7 +93,7 @@ export function CosmeticControlPanel({
             Cosmetics Panel
           </CardTitle>
           {onEditProfile && (
-            <Button variant="outline" size="sm" onClick={onEditProfile}>
+            <Button variant="outline" size="sm" onClick={onEditProfile} className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
               <Edit className="mr-2 h-4 w-4" />
               Edit Profile
             </Button>
@@ -103,12 +103,12 @@ export function CosmeticControlPanel({
       <CardContent className="space-y-6">
         {/* Currently Equipped Section */}
         <div>
-          <h3 className="text-lg font-semibold mb-4">Currently Equipped</h3>
+          <h3 className="text-lg font-semibold mb-4 text-purple-300">Currently Equipped</h3>
           <div className="space-y-3">
             {/* Username Color */}
-            <div className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg border border-zinc-700/30 hover:border-purple-500/30 transition-all">
               <div className="flex items-center gap-3">
-                <Palette className="h-5 w-5 text-zinc-400" />
+                <Palette className="h-5 w-5 text-purple-400" />
                 <div>
                   <p className="text-sm font-medium">Username Color</p>
                   {equippedByType.usernameColor ? (
@@ -126,6 +126,7 @@ export function CosmeticControlPanel({
                   size="sm"
                   onClick={() => handleUnequip(equippedByType.usernameColor!.id)}
                   disabled={toggleEquipMutation.isPending}
+                  className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
                 >
                   Unequip
                 </Button>
@@ -133,9 +134,9 @@ export function CosmeticControlPanel({
             </div>
 
             {/* Avatar Frame */}
-            <div className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg border border-zinc-700/30 hover:border-cyan-500/30 transition-all">
               <div className="flex items-center gap-3">
-                <Frame className="h-5 w-5 text-zinc-400" />
+                <Frame className="h-5 w-5 text-cyan-400" />
                 <div>
                   <p className="text-sm font-medium">Avatar Frame</p>
                   {activeFrame ? (
@@ -151,6 +152,7 @@ export function CosmeticControlPanel({
                   size="sm"
                   onClick={() => handleUnequip(equippedByType.avatarFrame!.id)}
                   disabled={toggleEquipMutation.isPending}
+                  className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
                 >
                   Unequip
                 </Button>
@@ -158,9 +160,9 @@ export function CosmeticControlPanel({
             </div>
 
             {/* User Title */}
-            <div className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg border border-zinc-700/30 hover:border-violet-500/30 transition-all">
               <div className="flex items-center gap-3">
-                <Crown className="h-5 w-5 text-zinc-400" />
+                <Crown className="h-5 w-5 text-violet-400" />
                 <div>
                   <p className="text-sm font-medium">User Title</p>
                   {activeTitle ? (
@@ -184,6 +186,7 @@ export function CosmeticControlPanel({
                   size="sm"
                   onClick={() => handleUnequip(equippedByType.userTitle!.id)}
                   disabled={toggleEquipMutation.isPending}
+                  className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
                 >
                   Unequip
                 </Button>
@@ -196,12 +199,12 @@ export function CosmeticControlPanel({
 
         {/* Preview Section */}
         <div>
-          <h3 className="text-lg font-semibold mb-4">Preview</h3>
+          <h3 className="text-lg font-semibold mb-4 text-emerald-300">Preview</h3>
           <Tabs value={previewTab} onValueChange={setPreviewTab}>
             <TabsList className="grid grid-cols-3 w-full bg-zinc-800/50">
-              <TabsTrigger value="post">Forum Post</TabsTrigger>
-              <TabsTrigger value="shoutbox">Shoutbox</TabsTrigger>
-              <TabsTrigger value="profile">Profile Card</TabsTrigger>
+              <TabsTrigger value="post" className="data-[state=active]:bg-emerald-600/20 data-[state=active]:text-emerald-400">Forum Post</TabsTrigger>
+              <TabsTrigger value="shoutbox" className="data-[state=active]:bg-purple-600/20 data-[state=active]:text-purple-400">Shoutbox</TabsTrigger>
+              <TabsTrigger value="profile" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-400">Profile Card</TabsTrigger>
             </TabsList>
 
             <TabsContent value="post" className="mt-4">
@@ -238,7 +241,7 @@ export function CosmeticControlPanel({
         {/* Shop Link */}
         <div className="text-center pt-4">
           <Link href="/shop">
-            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500">
+            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 border-0 shadow-lg">
               <ShoppingBag className="mr-2 h-4 w-4" />
               Want more? Shop Cosmetics
             </Button>
@@ -252,7 +255,7 @@ export function CosmeticControlPanel({
 // Preview Components
 function PostPreview({ username, avatarUrl, frameUrl, usernameColor, userTitle, message }: any) {
   return (
-    <div className="bg-zinc-800/50 rounded-lg p-4">
+    <div className="bg-zinc-800/50 rounded-lg p-4 border border-zinc-700/30">
       <div className="flex gap-3">
         <FramedAvatar
           avatarUrl={avatarUrl}
@@ -266,7 +269,7 @@ function PostPreview({ username, avatarUrl, frameUrl, usernameColor, userTitle, 
               {username}
             </span>
             {userTitle && (
-              <Badge variant="secondary" className="text-xs">
+              <Badge variant="secondary" className="text-xs bg-purple-900/50 text-purple-300 border-purple-500/30">
                 {userTitle}
               </Badge>
             )}
@@ -280,7 +283,7 @@ function PostPreview({ username, avatarUrl, frameUrl, usernameColor, userTitle, 
 
 function ShoutboxPreview({ username, usernameColor, message }: any) {
   return (
-    <div className="bg-zinc-800/50 rounded-lg p-3">
+    <div className="bg-zinc-800/50 rounded-lg p-3 border border-zinc-700/30">
       <div className="flex items-center gap-2">
         <span className="font-medium text-sm" style={{ color: usernameColor || '#ffffff' }}>
           {username}:
@@ -293,7 +296,7 @@ function ShoutboxPreview({ username, usernameColor, message }: any) {
 
 function ProfileCardPreview({ username, avatarUrl, frameUrl, usernameColor, userTitle }: any) {
   return (
-    <div className="bg-zinc-800/50 rounded-lg p-6 text-center">
+    <div className="bg-zinc-800/50 rounded-lg p-6 text-center border border-zinc-700/30">
       <FramedAvatar
         avatarUrl={avatarUrl}
         frameUrl={frameUrl}
@@ -305,7 +308,7 @@ function ProfileCardPreview({ username, avatarUrl, frameUrl, usernameColor, user
         {username}
       </h3>
       {userTitle && (
-        <Badge variant="secondary" className="text-sm">
+        <Badge variant="secondary" className="text-sm bg-purple-900/50 text-purple-300 border-purple-500/30">
           {userTitle}
         </Badge>
       )}
