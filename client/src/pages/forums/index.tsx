@@ -23,8 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { SiteFooter } from '@/components/layout/site-footer';
 import { ForumGuidelines } from '@/components/forum/forum-guidelines';
 import { ForumSearch } from '@/components/forum/forum-search';
-import { useForumStructure } from '@/features/forum/hooks/useForumStructure';
-import { ForumEntityBase } from '@/utils/forum-routing-helper';
+import { useForumStructure, ForumStructure } from '@/features/forum/hooks/useForumStructure';
 import { ZoneCardData } from '@/components/forum/CanonicalZoneGrid';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -33,6 +32,7 @@ import { Badge } from '@/components/ui/badge';
 import { getForumEntityUrl, isPrimaryZone } from '@/utils/forum-routing-helper';
 import { ActiveMembersWidget, ActiveUser } from '@/components/users';
 import { useActiveUsers } from '@/features/users/hooks';
+import { ForumCategoryWithStats } from '@shared/types';
 
 // Map theme keys to icon components and colors
 const THEME_ICONS = {
@@ -77,12 +77,16 @@ export default function ForumPage() {
   const carouselRef = useRef<HTMLDivElement>(null);
 
   // Use centralized forum structure hook
+  const queryResult = useForumStructure();
   const {
-    primaryZones,
-    categories,
+    data: forumData,
     isLoading: structureLoading, 
     error: structureErrorDetails
-  } = useForumStructure();
+  } = queryResult;
+  
+  // Extract data with defaults
+  const primaryZones: ForumCategoryWithStats[] = forumData?.primaryZones || [];
+  const categories: any[] = forumData?.categories || [];
   
   // Fetch active users
   const {
@@ -126,7 +130,7 @@ export default function ForumPage() {
   };
 
   // Convert primary zones to the format expected by carousel
-  const zoneCardData: ZoneCardData[] = (primaryZones || []).map((zone) => {
+  const zoneCardData: ZoneCardData[] = primaryZones.map((zone: ForumCategoryWithStats) => {
     // Extract properties from ForumEntityBase
     const { id, name, slug, description, icon, colorTheme, threadCount, postCount } = zone;
     
@@ -148,7 +152,7 @@ export default function ForumPage() {
   });
   
   // Helper to render forum stats
-  const renderForumStats = (entity: ForumEntityBase) => {
+  const renderForumStats = (entity: ForumCategoryWithStats) => {
     return (
       <div className="flex items-center gap-3 text-xs text-zinc-400">
         <div className="flex items-center">
@@ -163,7 +167,7 @@ export default function ForumPage() {
   };
 
   // Render a zone card for the carousel
-  const renderZoneCard = (zone: ForumEntityBase, index: number) => {
+  const renderZoneCard = (zone: ForumCategoryWithStats, index: number) => {
     const IconComponent = zone.colorTheme && zone.colorTheme in THEME_ICONS 
       ? THEME_ICONS[zone.colorTheme as keyof typeof THEME_ICONS] 
       : THEME_ICONS.default;
@@ -235,25 +239,13 @@ export default function ForumPage() {
     );
   };
 
-  // Before rendering categories, map them to ensure parentSlug and parentName are string | undefined (never null)
-  const safeCategories = (categories || []).map(category => ({
-    ...category,
-    parentSlug: category.parentSlug === null ? undefined : category.parentSlug,
-    parentName: category.parentName === null ? undefined : category.parentName,
-    forums: (category.forums || []).map(forum => ({
-      ...forum,
-      parentSlug: forum.parentSlug === null ? undefined : forum.parentSlug,
-      parentName: forum.parentName === null ? undefined : forum.parentName
-    }))
-  }));
-
   // Render a category with its child forums
-  const renderCategory = (category: ForumEntityBase & { forums?: ForumEntityBase[] }, index: number) => {
-    if (!category.forums || category.forums.length === 0) return null;
+  const renderCategory = (category: any, index: number) => {
+    if (!category.childForums || category.childForums.length === 0) return null;
     
     // Calculate aggregate counts
-    const threadCount = category.forums.reduce((sum: number, forum: ForumEntityBase) => sum + (forum.threadCount || 0), 0);
-    const postCount = category.forums.reduce((sum: number, forum: ForumEntityBase) => sum + (forum.postCount || 0), 0);
+    const threadCount = category.childForums.reduce((sum: number, forum: ForumCategoryWithStats) => sum + (forum.threadCount || 0), 0);
+    const postCount = category.childForums.reduce((sum: number, forum: ForumCategoryWithStats) => sum + (forum.postCount || 0), 0);
     
     // Determine category color based on index or color property
     const categoryColor = category.colorTheme && category.colorTheme in THEME_COLORS
@@ -269,7 +261,7 @@ export default function ForumPage() {
               {category.name}
             </CardTitle>
             <Badge variant="outline" className="bg-zinc-800/50 text-zinc-300 border-zinc-700/50">
-              {category.forums.length} {category.forums.length === 1 ? 'forum' : 'forums'}
+              {category.childForums.length} {category.childForums.length === 1 ? 'forum' : 'forums'}
             </Badge>
           </div>
           {category.description && (
@@ -283,7 +275,7 @@ export default function ForumPage() {
         </CardHeader>
         <CardContent className="p-0">
           <div className="divide-y divide-zinc-800/50">
-            {category.forums.map((forum: ForumEntityBase) => (
+            {category.childForums.map((forum: ForumCategoryWithStats) => (
               forum.canHaveThreads ? (
                 <Link 
                   key={forum.id}
@@ -420,7 +412,7 @@ export default function ForumPage() {
                 className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar" 
                 style={{ scrollbarWidth: 'none' }}
               >
-                {primaryZones.map((zone, index) => renderZoneCard(zone as ForumEntityBase, index))}
+                {primaryZones.map((zone: ForumCategoryWithStats, index: number) => renderZoneCard(zone, index))}
               </div>
             ) : (primaryZones || []).length > 0 ? (
               <div 
@@ -428,7 +420,7 @@ export default function ForumPage() {
                 className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar" 
                 style={{ scrollbarWidth: 'none' }}
               >
-                {primaryZones.map((zone, index) => renderZoneCard(zone as ForumEntityBase, index))}
+                {primaryZones.map((zone: ForumCategoryWithStats, index: number) => renderZoneCard(zone, index))}
               </div>
             ) : (
               <div className="text-center py-10 text-zinc-500">
@@ -451,9 +443,9 @@ export default function ForumPage() {
                 <Skeleton key={i} className="h-64 w-full" />
               ))}
             </div>
-          ) : safeCategories.length > 0 ? (
+          ) : categories.length > 0 ? (
             <div className="max-w-4xl mx-auto">
-              {safeCategories.map((category, index) => renderCategory(category, index))}
+              {categories.map((category: any, index: number) => renderCategory(category, index))}
             </div>
           ) : (
             <div className="text-center py-10 text-zinc-500 max-w-4xl mx-auto">

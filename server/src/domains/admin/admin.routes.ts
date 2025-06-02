@@ -20,6 +20,10 @@ import xpRoutes from './sub-domains/xp/xp.routes';
 import missionsRoutes from '../missions/missions.admin.routes';
 import announcementRoutes from './sub-domains/announcements/announcements.routes';
 import airdropRoutes from './sub-domains/airdrop/airdrop.routes';
+import shopAdminApiRoutes from './sub-domains/shop/shop.admin.routes';
+import userInventoryAdminApiRoutes from './sub-domains/users/inventory.admin.routes';
+import userAdminRoutes from './users/users.admin.routes';
+// import economyAdminRoutes from './settings/economy.routes'; // Placeholder for future
 
 // Create admin router
 const adminRouter = Router();
@@ -39,6 +43,10 @@ adminRouter.use('/xp', xpRoutes);
 adminRouter.use('/missions', missionsRoutes);
 adminRouter.use('/announcements', announcementRoutes);
 adminRouter.use('/airdrop', airdropRoutes);
+adminRouter.use('/shop-management', shopAdminApiRoutes);
+adminRouter.use('/user-inventory', userInventoryAdminApiRoutes);
+adminRouter.use('/users', userAdminRoutes);
+// router.use('/economy', economyAdminRoutes); // Placeholder for future
 
 // Dashboard overview route
 adminRouter.get('/dashboard', asyncHandler(adminController.getDashboardOverview));

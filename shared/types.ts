@@ -1,4 +1,4 @@
-import { CustomEmoji, ForumCategory, Post, Thread, User } from "./schema";
+import { CustomEmoji, ForumCategory, Post, Thread, User } from "../db/schema";
 
 // Extended types with additional fields from joins
 export interface ThreadWithUser extends Thread {

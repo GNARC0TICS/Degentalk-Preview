@@ -11,7 +11,7 @@ import { formatNumber, formatCurrency, formatRelativeTime, cn } from '@/lib/util
 import { useAuth } from '@/hooks/use-auth.tsx';
 import { FramedAvatar } from '@/components/users/framed-avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Home, Settings, BarChart2, ShoppingBag, Users, Award, UserCheck, UserPlus, HomeIcon, Trophy } from 'lucide-react';
+import { Home, Settings, BarChart2, ShoppingBag, Users, Award, UserCheck, UserPlus, HomeIcon, Trophy, Sparkles } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { SeoHead } from '@/components/ui/SeoHead';
@@ -26,6 +26,10 @@ import { UserTitles } from '@/components/profile/UserTitles';
 import { ProfileSkeleton } from '@/components/profile/ProfileSkeleton';
 import { XPProfileSection } from '@/components/profile/XPProfileSection';
 import { SiteFooter } from '@/components/layout/site-footer';
+import { CosmeticControlPanel } from '@/components/profile/CosmeticControlPanel';
+import { ProfileEditor } from '@/components/profile/ProfileEditor';
+import { UserInventoryWithProduct } from '@/types/inventory';
+import { useUserInventory } from '@/hooks/useUserInventory';
 
 // Define profile data interface
 interface ProfileData {
@@ -943,6 +947,8 @@ export default function ProfilePage() {
   const { username } = useParams();
   const { user: currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
+  const [isEditMode, setIsEditMode] = useState(false);
+  const isDevelopment = import.meta.env.DEV;
   
   // Fetch the profile data for the specified username
   const { data: profile, isLoading, isError, error } = useQuery<ProfileData>({
@@ -956,7 +962,7 @@ export default function ProfilePage() {
         return response.json();
       } catch (err) {
         // In development mode, return mock data for certain usernames
-        if (import.meta.env.DEV && (username?.toLowerCase() === 'devuser' || username?.toLowerCase() === 'dev')) {
+        if (isDevelopment && (username?.toLowerCase() === 'devuser' || username?.toLowerCase() === 'dev')) {
           console.log('Using mock profile data for development');
           return getMockProfileData(username);
         }
@@ -966,7 +972,14 @@ export default function ProfilePage() {
   });
   
   // Determine if the profile being viewed belongs to the current user
-  const isOwnProfile = currentUser?.username === username;
+  const isOwnProfile = isDevelopment 
+    ? username?.toLowerCase() === 'devuser' // In dev, if viewing DevUser, it's "own"
+    : currentUser?.username === username;
+  
+  // Fetch user inventory if viewing own profile
+  const { data: userInventory = [], isLoading: inventoryLoading } = useUserInventory(
+    isOwnProfile ? profile?.id : undefined
+  );
   
   if (isLoading) {
     return (
@@ -1028,7 +1041,7 @@ export default function ProfilePage() {
             <div className="col-span-1 lg:col-span-3">
               <div className="rounded-lg overflow-hidden bg-zinc-800/70 backdrop-blur-sm shadow-xl border border-zinc-700/50 p-6">
                 <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className="grid grid-cols-4 mb-6 bg-black/40 backdrop-blur-sm">
+                  <TabsList className={`grid ${isOwnProfile ? 'grid-cols-5' : 'grid-cols-4'} mb-6 bg-black/40 backdrop-blur-sm`}>
                     <TabsTrigger value="overview" className="flex items-center">
                       <Home className="mr-2 h-4 w-4" />
                       <span className="hidden sm:inline">Overview</span>
@@ -1045,6 +1058,12 @@ export default function ProfilePage() {
                       <Users className="mr-2 h-4 w-4" />
                       <span className="hidden sm:inline">Friends</span>
                     </TabsTrigger>
+                    {isOwnProfile && (
+                      <TabsTrigger value="cosmetics" className="flex items-center">
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        <span className="hidden sm:inline">Cosmetics</span>
+                      </TabsTrigger>
+                    )}
                   </TabsList>
                   
                   <TabsContent value="overview">
@@ -1064,6 +1083,42 @@ export default function ProfilePage() {
                   <TabsContent value="friends">
                     <FriendsTab profile={profile} />
                   </TabsContent>
+                  
+                  {isOwnProfile && (
+                    <TabsContent value="cosmetics">
+                      {inventoryLoading ? (
+                        <div className="flex justify-center p-8">
+                          <LoadingSpinner size="lg" />
+                        </div>
+                      ) : (
+                        <CosmeticControlPanel
+                          userId={profile.id}
+                          username={profile.username}
+                          avatarUrl={profile.avatarUrl}
+                          inventory={userInventory.map(item => ({
+                            id: item.id,
+                            userId: item.userId,
+                            productId: item.productId,
+                            equipped: item.equipped,
+                            purchasedAt: item.purchasedAt,
+                            product: {
+                              id: item.product.id,
+                              name: item.product.name,
+                              description: item.product.description,
+                              price: item.product.price,
+                              pluginReward: item.product.pluginReward,
+                              imageUrl: item.product.imageUrl,
+                              category: item.product.category
+                            }
+                          }))}
+                          activeFrame={profile.activeFrame}
+                          activeTitle={profile.activeTitle}
+                          activeBadge={profile.activeBadge}
+                          onEditProfile={() => setIsEditMode(true)}
+                        />
+                      )}
+                    </TabsContent>
+                  )}
                 </Tabs>
               </div>
             </div>
@@ -1073,6 +1128,25 @@ export default function ProfilePage() {
       
       {/* Footer - separate from the profile background */}
       <SiteFooter />
+      
+      {/* Profile Editor Modal */}
+      {isEditMode && (
+        <ProfileEditor
+          profile={{
+            id: profile.id,
+            username: profile.username,
+            bio: profile.bio,
+            signature: profile.signature,
+            avatarUrl: profile.avatarUrl,
+            bannerUrl: profile.bannerUrl,
+            website: null, // Add these fields to ProfileData interface if needed
+            discord: null,
+            twitter: null,
+            location: null
+          }}
+          onClose={() => setIsEditMode(false)}
+        />
+      )}
     </div>
   );
 }

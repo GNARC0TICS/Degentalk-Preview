@@ -18,9 +18,12 @@ import { ProtectedRoute } from '@/lib/protected-route';
  * This page is protected and only accessible to logged-in users.
  */
 function SettingsPage() {
+  console.log("SettingsPage component started rendering.");
   const { user } = useAuth();
+  console.log("User in SettingsPage:", user);
   
   if (!user) {
+    console.log("User is null, rendering authentication required message.");
     return (
       <div className="min-h-screen bg-black text-white flex flex-col">
         <SiteHeader />
@@ -40,6 +43,7 @@ function SettingsPage() {
     );
   }
   
+  console.log("User is present, rendering main settings content.");
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
       <SiteHeader />

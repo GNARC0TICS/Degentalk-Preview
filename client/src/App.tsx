@@ -44,8 +44,8 @@ import TipRainSettingsPage from "./pages/admin/tip-rain-settings";
 import CooldownSettingsPage from "./pages/admin/cooldowns";
 
 // Shop Pages
-import DgtPurchasePage from "./pages/shop/dgt-purchase";
-import PurchaseSuccessPage from "./pages/shop/purchase-success";
+import DgtPurchasePage from "./pages/shop-management/dgt-purchase";
+import PurchaseSuccessPage from "./pages/shop-management/purchase-success";
 
 // Mod Pages
 import ModDashboardPage from "./pages/mod/index";

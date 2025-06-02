@@ -52,7 +52,8 @@ import {
   Ban,
   CheckCircle,
   ShieldAlert,
-  Shield 
+  Shield,
+  Package 
 } from "lucide-react";
 import { ROUTES } from '@/config/admin-routes';
 
@@ -229,6 +230,12 @@ export default function AdminUsersPage() {
                                 <Link href={`${ROUTES.ADMIN_USERS}/${user.id}`}>
                                   <Pencil className="h-4 w-4 mr-2" />
                                   Edit User
+                                </Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem asChild>
+                                <Link href={`/admin/user-inventory/${user.id}`}>
+                                  <Package className="h-4 w-4 mr-2" />
+                                  View Inventory
                                 </Link>
                               </DropdownMenuItem>
                               <DropdownMenuItem>

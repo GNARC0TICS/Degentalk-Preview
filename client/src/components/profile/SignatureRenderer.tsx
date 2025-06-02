@@ -1,36 +1,69 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
 import { SignatureTierLevel } from '@shared/signature/SignatureTierConfig';
+import { useUserCosmetics } from '@/hooks/useUserCosmetics';
+import { AppliedCosmetics } from '@/types/inventory';
 
 type SignatureRendererProps = {
   signature: string;
   tier?: SignatureTierLevel;
   isCollapsible?: boolean;
   className?: string;
-  activeEffects?: string[];
+  userId?: number;
 };
 
 /**
- * Component for rendering user signatures with BBCode support and safety measures
+ * Component for rendering user signatures with BBCode support, safety measures,
+ * and cosmetic effects from user inventory.
  */
 export function SignatureRenderer({
   signature,
   tier,
   isCollapsible = true,
   className = '',
-  activeEffects = []
+  userId,
 }: SignatureRendererProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(isCollapsible);
-  
+  const { cosmetics, isLoading: isLoadingCosmetics } = useUserCosmetics();
+
   // If no signature, return nothing
   if (!signature || signature.trim() === '') {
     return null;
   }
-  
+
+  // Handle loading state for cosmetics
+  if (isLoadingCosmetics) {
+    return (
+      <div className="signature-container text-sm border-t pt-2 mt-2 border-gray-700">Loading signature...</div>
+    );
+  }
+
+  // Determine features from cosmetics
+  const { emojiMap, unlockedFeatures } = cosmetics;
+  const hasCustomFont = unlockedFeatures.includes('customSignatureFont');
+  const hasUnicodeSignatures = unlockedFeatures.includes('unicode_signatures');
+
   // Simple BBCode parser - in a real app, use a full BBCode parser library
   const parseBBCode = (text: string) => {
+    let parsed = text;
+
+    // Apply custom font if unlocked
+    if (hasCustomFont) {
+      parsed = `<span class="custom-signature-font">${parsed}</span>`;
+    }
+
+    // Replace emoji codes with image tags from emojiMap
+    for (const emojiCode in emojiMap) {
+      if (emojiMap.hasOwnProperty(emojiCode)) {
+        const imageUrl = emojiMap[emojiCode];
+        const escapedEmojiCode = emojiCode.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`:${escapedEmojiCode}:`, 'g');
+        parsed = parsed.replace(regex, `<img src="${imageUrl}" alt="${emojiCode}" class="inline-block h-5 w-5 align-text-bottom" />`);
+      }
+    }
+
     // Start with basic formatting
-    let parsed = text
+    parsed = parsed
       // Bold
       .replace(/\[b\](.*?)\[\/b\]/g, '<strong>$1</strong>')
       // Italic
@@ -66,33 +99,17 @@ export function SignatureRenderer({
     ALLOW_DATA_ATTR: false
   });
   
-  // Apply signature effects
-  const applyEffects = () => {
+  // Apply signature effects (these are general visual effects, not specific unlocks)
+  const applyVisualEffects = () => {
     let effectClasses = '';
     
-    activeEffects.forEach(effect => {
-      switch (effect) {
-        case 'animated_glow':
-          effectClasses += ' animate-pulse';
-          break;
-        case 'gradient_text':
-          effectClasses += ' bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500';
-          break;
-        case 'sparkle_effect':
-          // In a real app, this would be a more complex effect
-          effectClasses += ' sparkle-effect';
-          break;
-        case 'rainbow_animation':
-          effectClasses += ' rainbow-text';
-          break;
-        case '3d_shadow':
-          effectClasses += ' text-shadow-3d';
-          break;
-        default:
-          break;
-      }
-    });
-    
+    if (unlockedFeatures.includes('animated_glow')) {
+      effectClasses += ' animate-pulse';
+    }
+    if (unlockedFeatures.includes('gradient_text')) {
+      effectClasses += ' bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500';
+    }
+
     return effectClasses;
   };
   
@@ -104,7 +121,7 @@ export function SignatureRenderer({
     'pt-2',
     'mt-2',
     'border-gray-700',
-    applyEffects(),
+    applyVisualEffects(),
     className,
     isCollapsed ? 'max-h-16 overflow-hidden' : ''
   ].filter(Boolean).join(' ');
