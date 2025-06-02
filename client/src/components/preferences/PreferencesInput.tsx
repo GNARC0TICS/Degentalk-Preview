@@ -16,9 +16,9 @@ interface SettingsInputProps {
 }
 
 /**
- * A input field component for text-based settings
+ * A input field component for text-based preferences
  */
-export function SettingsInput({
+export function PreferencesInput({
   id,
   label,
   description,

@@ -9,9 +9,9 @@ interface SettingsGroupProps {
 }
 
 /**
- * A component for grouping related settings within a card
+ * A component for grouping related preferences within a card
  */
-export function SettingsGroup({ title, description, children, className }: SettingsGroupProps) {
+export function PreferencesGroup({ title, description, children, className }: SettingsGroupProps) {
   return (
     <div className={`mb-6 ${className}`}>
       {(title || description) && (

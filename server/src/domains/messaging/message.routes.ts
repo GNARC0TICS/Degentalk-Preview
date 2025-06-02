@@ -6,7 +6,7 @@
 
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
-import { db } from '../../../db';
+import { db } from '@db';
 import { randomUUID } from 'crypto';
 import { eq, and, or, desc, sql } from 'drizzle-orm';
 import { messages, users } from '@schema';

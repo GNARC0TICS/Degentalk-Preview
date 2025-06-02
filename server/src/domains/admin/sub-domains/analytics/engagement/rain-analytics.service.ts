@@ -4,7 +4,7 @@
  * Provides analytics data about rain events for the admin dashboard
  */
 
-import { db } from '../../../../../../db';
+import { db } from '@db';
 import { rainEvents, users, transactions } from '@schema';
 import { sql, desc, eq, count, sum, and, between } from 'drizzle-orm';
 import { startOfDay, subDays, format } from 'date-fns';

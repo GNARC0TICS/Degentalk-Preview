@@ -111,7 +111,6 @@ function App() {
           <ProtectedRoute path="/wallet" component={WalletPage} />
           <ProtectedRoute path="/profile/:username?" component={ProfilePage} />
           <ProtectedRoute path="/whispers" component={WhispersPage} />
-          <ProtectedRoute path="/settings" component={SettingsPage} />
           <ProtectedRoute path="/preferences" component={PreferencesPage} />
 
           {/* Admin Routes */}

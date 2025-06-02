@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '@db';
 import { users, levels, economySettings, userTitles, userBadges, titles, badges, xpCloutSettings } from '@schema';
 import { eq, sql, lte, desc, and, isNull } from 'drizzle-orm';
 import { logger } from '../src/core/logger';

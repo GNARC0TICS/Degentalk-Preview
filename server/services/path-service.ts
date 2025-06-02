@@ -2,7 +2,7 @@
  * Path Service
  * Provides functions for XP path system management
  */
-import { db } from '../db';
+import { db } from '@db';
 import { sql } from 'drizzle-orm';
 
 interface XpPath {

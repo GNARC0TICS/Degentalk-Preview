@@ -12,9 +12,9 @@ interface SettingsToggleProps {
 }
 
 /**
- * A toggle switch component for boolean settings
+ * A toggle switch component for boolean preferences
  */
-export function SettingsToggle({
+export function PreferencesToggle({
   id,
   label,
   description,

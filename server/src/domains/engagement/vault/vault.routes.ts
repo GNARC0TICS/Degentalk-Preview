@@ -6,7 +6,7 @@
 
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
-import { db } from '../../../../db';
+import { db } from '@db';
 import { sql, eq } from 'drizzle-orm';
 import { vaults, transactions } from '@schema';
 import { VaultService } from './vault.service';

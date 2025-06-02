@@ -9,9 +9,9 @@ interface SettingsCardProps {
 }
 
 /**
- * A card component for displaying settings sections
+ * A card component for displaying preferences sections
  */
-export function SettingsCard({ title, description, children, className }: SettingsCardProps) {
+export function PreferencesCard({ title, description, children, className }: SettingsCardProps) {
   return (
     <Card className={`mb-6 border-border ${className}`}>
       <CardHeader className="pb-3">

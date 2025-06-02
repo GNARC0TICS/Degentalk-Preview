@@ -6,7 +6,7 @@
  * // [REFAC-VAULT]
  */
 
-import { db } from '../../../../db';
+import { db } from '@db';
 import { 
   transactions, 
   users, 

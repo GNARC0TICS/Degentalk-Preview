@@ -5,7 +5,7 @@
 import { Router, Request, Response } from 'express';
 import { PathService } from '../../../services/path-service';
 import { XpProcessor } from '@server/utils/xpProcessor';
-import { db } from '@server/db';
+import { db } from '@db';
 import { sql } from 'drizzle-orm';
 
 import { isAuthenticated, isAdminOrModerator, isAdmin } from "../auth/middleware/auth.middleware";

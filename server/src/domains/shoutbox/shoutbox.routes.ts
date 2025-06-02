@@ -5,7 +5,7 @@
  */
 
 import { Router, Request, Response } from 'express';
-import { db } from '@server/db';
+import { db } from '@db';
 import { 
   shoutboxMessages, 
   insertShoutboxMessageSchema, 

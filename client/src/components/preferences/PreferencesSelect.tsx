@@ -27,9 +27,9 @@ interface SettingsSelectProps {
 }
 
 /**
- * A select dropdown component for settings with predefined options
+ * A select dropdown component for preferences with predefined options
  */
-export function SettingsSelect({
+export function PreferencesSelect({
   id,
   label,
   description,

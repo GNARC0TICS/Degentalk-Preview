@@ -4,7 +4,7 @@
  * Provides analytics data about tipping activity for the admin dashboard
  */
 
-import { db } from '../../../../../../db';
+import { db } from '@db';
 import { transactions, users, postTips } from '@schema';
 import { sql, desc, eq, count, sum, and, between, isNotNull } from 'drizzle-orm';
 import { startOfDay, subDays, format } from 'date-fns';

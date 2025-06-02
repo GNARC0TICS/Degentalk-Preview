@@ -8,7 +8,7 @@
  * // [REFAC-RAIN]
  */
 
-import { db } from '../../../../db';
+import { db } from '@db';
 import { transactions, users, rainSettings, onlineUsers, cooldownSettings, rainEvents } from '@schema';
 import { eq, and, gt, sql, desc, inArray } from 'drizzle-orm';
 import { logger } from '../../../core/logger';

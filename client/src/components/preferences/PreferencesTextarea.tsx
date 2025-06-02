@@ -16,9 +16,9 @@ interface SettingsTextareaProps {
 }
 
 /**
- * A textarea component for multiline text settings
+ * A textarea component for multiline text preferences
  */
-export function SettingsTextarea({
+export function PreferencesTextarea({
   id,
   label,
   description,

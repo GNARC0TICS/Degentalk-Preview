@@ -6,7 +6,7 @@
  * // [REFAC-TIP]
  */
 
-import { db } from '../../../../db';
+import { db } from '@db';
 import { users, transactions, tips } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { logger } from '../../../core/logger';

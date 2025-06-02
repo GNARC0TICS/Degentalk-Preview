@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '@db';
 import { users, xpCloutSettings } from '@schema';
 import { eq, sql } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
