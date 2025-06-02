@@ -12,7 +12,7 @@ interface WalletDisplayProps {
 }
 
 /**
- * Displays the user's wallet information including DGT points and USDT balance
+ * Displays the user's wallet information including DGT and USDT balance
  * @param variant 'mini', 'standard', or 'detailed' display modes
  * @param className Additional CSS classes
  * @param horizontal Display in horizontal layout (for header etc.)
@@ -100,7 +100,7 @@ export function WalletDisplay({
           )}>
             <div className="bg-black/40 backdrop-blur-sm border border-zinc-800 rounded-lg p-3">
               <div className="text-xs text-zinc-500 flex items-center">
-                <TrendingUp className="mr-1 h-3 w-3" /> DGT Points
+                                  <TrendingUp className="mr-1 h-3 w-3" /> DGT
               </div>
               <div className="text-lg font-bold text-white">
                 {wallet.dgtPoints.toLocaleString()}

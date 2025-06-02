@@ -102,7 +102,7 @@ export function WalletModal({ open, onOpenChange }: WalletModalProps) {
             <div>
               <DialogTitle className="text-xl text-white">Wallet Dashboard</DialogTitle>
               <DialogDescription className="text-zinc-400">
-                Manage your DGT points and USDT balance
+                Manage your DGT and USDT balance
               </DialogDescription>
             </div>
           </div>

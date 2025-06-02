@@ -128,7 +128,7 @@ export function WithdrawButton({
       if (amount > dgtPoints) {
         toast({
           title: "Insufficient Balance",
-          description: "Your DGT points balance is too low for this withdrawal",
+          description: "Your DGT balance is too low for this withdrawal",
           variant: "error",
         });
         return;
@@ -210,7 +210,7 @@ export function WithdrawButton({
     <div className={`bg-black/30 rounded-lg p-4 border border-zinc-800 shadow-lg space-y-4 ${className}`}>
       <h3 className="text-lg font-medium text-white mb-2">Withdraw Funds</h3>
       <p className="text-zinc-400 text-sm">
-        Withdraw your USDT or convert DGT points to exclusive items in our shop.
+        Withdraw your USDT or convert DGT to exclusive items in our shop.
       </p>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -226,7 +226,7 @@ export function WithdrawButton({
             value="dgt"
             className="data-[state=active]:bg-amber-900/30 data-[state=active]:text-white"
           >
-            DGT Points
+            DGT
             <Badge variant="outline" className="ml-2 bg-zinc-900 text-amber-500">{dgtPoints?.toLocaleString() || '0'}</Badge>
           </TabsTrigger>
         </TabsList>
@@ -291,7 +291,7 @@ export function WithdrawButton({
 
         <TabsContent value="dgt" className="space-y-4 mt-4">
           <div>
-            <h4 className="text-sm text-zinc-400 mb-2">Convert DGT Points</h4>
+            <h4 className="text-sm text-zinc-400 mb-2">Convert DGT</h4>
             <div className="flex items-center space-x-2">
               <Input
                 type="number"
@@ -313,14 +313,14 @@ export function WithdrawButton({
               </Button>
             </div>
             <p className="text-xs text-zinc-500 mt-1">
-              Minimum conversion: 1,000 DGT Points
+              Minimum conversion: 1,000 DGT
             </p>
           </div>
           
           <div className="bg-zinc-900/50 p-3 rounded-lg">
-            <h4 className="text-sm text-zinc-300 mb-2">Convert DGT Points to Shop Credits</h4>
+            <h4 className="text-sm text-zinc-300 mb-2">Convert DGT to Shop Credits</h4>
             <p className="text-xs text-zinc-500">
-              DGT Points can be converted to shop credits for purchasing exclusive items, badges, 
+              DGT can be converted to shop credits for purchasing exclusive items, badges, 
               frames, and other special perks in our marketplace.
             </p>
           </div>
@@ -366,10 +366,10 @@ export function WithdrawButton({
           </ul>
         ) : (
           <ul className="list-disc pl-5 space-y-1 text-zinc-500">
-            <li>DGT points can be converted to shop credits at a 1:1 ratio.</li>
+            <li>DGT can be converted to shop credits at a 1:1 ratio.</li>
             <li>Shop credits can be used to purchase exclusive items and perks.</li>
-            <li>Minimum conversion amount is 1,000 DGT points.</li>
-            <li>DGT point conversions are instant and non-reversible.</li>
+            <li>Minimum conversion amount is 1,000 DGT.</li>
+            <li>DGT conversions are instant and non-reversible.</li>
           </ul>
         )}
       </div>
