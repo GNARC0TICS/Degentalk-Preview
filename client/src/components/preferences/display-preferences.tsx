@@ -8,11 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Sun, Moon, Monitor, LayoutGrid, LayoutList, Eye } from 'lucide-react';
 
-interface DisplaySettingsProps {
+interface DisplayPreferencesProps {
   user: User;
 }
 
-export function DisplaySettings({ user }: DisplaySettingsProps) {
+export function DisplayPreferences({ user }: DisplayPreferencesProps) {
   const [theme, setTheme] = useState('system');
   const [fontSize, setFontSize] = useState('medium');
   const [threadDisplayMode, setThreadDisplayMode] = useState('card');
@@ -23,7 +23,7 @@ export function DisplaySettings({ user }: DisplaySettingsProps) {
   
   const handleSaveChanges = () => {
     // Mock implementation - would send to API in real app
-    console.log('Saving display settings:', {
+    console.log('Saving display preferences:', {
       theme,
       fontSize,
       threadDisplayMode,
@@ -37,11 +37,11 @@ export function DisplaySettings({ user }: DisplaySettingsProps) {
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2">Display Settings</h2>
+        <h2 className="text-2xl font-bold mb-2">Display Preferences</h2>
         <p className="text-zinc-400">Customize how DegenTalk looks for you</p>
       </div>
       
-      {/* Theme Settings */}
+      {/* Theme Preferences */}
       <Card className="mb-6 bg-zinc-800/50 border-zinc-700">
         <CardContent className="pt-6">
           <h3 className="text-lg font-medium mb-4">Theme</h3>
@@ -87,7 +87,7 @@ export function DisplaySettings({ user }: DisplaySettingsProps) {
         </CardContent>
       </Card>
       
-      {/* Text Size Settings */}
+      {/* Text Size Preferences */}
       <Card className="mb-6 bg-zinc-800/50 border-zinc-700">
         <CardContent className="pt-6">
           <div className="flex items-center justify-between mb-4">
@@ -114,7 +114,7 @@ export function DisplaySettings({ user }: DisplaySettingsProps) {
         </CardContent>
       </Card>
       
-      {/* Thread Display Settings */}
+      {/* Thread Display Preferences */}
       <Card className="mb-6 bg-zinc-800/50 border-zinc-700">
         <CardContent className="pt-6">
           <h3 className="text-lg font-medium mb-4">Thread Display Mode</h3>
@@ -149,7 +149,7 @@ export function DisplaySettings({ user }: DisplaySettingsProps) {
         </CardContent>
       </Card>
       
-      {/* Accessibility & Content Settings */}
+      {/* Accessibility & Content Preferences */}
       <Card className="mb-6 bg-zinc-800/50 border-zinc-700">
         <CardContent className="pt-6">
           <h3 className="text-lg font-medium mb-4">Accessibility & Content</h3>

@@ -105,7 +105,7 @@ export default function AdminShopItemEditPage() {
       setDescription(itemData.description || '');
       setPriceDGT(itemData.price || '');
       setPointsPrice(itemData.pointsPrice || '');
-      setStockLimit(itemData.stockLimit === null ? '' : itemData.stockLimit);
+      setStockLimit(itemData.stockLimit == null ? '' : itemData.stockLimit);
       setPluginReward(itemData.pluginReward ? JSON.stringify(itemData.pluginReward, null, 2) : getCosmeticTemplate('usernameColor'));
       setStatus(itemData.status || 'published');
       

@@ -1,31 +1,31 @@
-import { db } from '../../core/db';
-import { settings as settingsTable, users as usersTable } from '@db/schema';
-import { eq, and, sql } from 'drizzle-orm';
-import { logger } from '../../core/logger';
+import { db } from '../../../db';
 import { 
-  userSettings, 
-  notificationSettings, 
+  users, 
+  userSettings as userPreferencesSchema, 
+  notificationSettings as notificationPreferencesSchema, 
   userSettingsHistory,
   type User,
-  type UserSetting,
-  type NotificationSetting
+  type UserSetting as UserPreference,
+  type NotificationSetting as NotificationPreference
 } from '@db/schema';
+import { eq, and, sql } from 'drizzle-orm';
+import { logger } from '../../../src/core/logger';
 import { 
   ProfileSettingsInput, 
   AccountSettingsInput, 
   NotificationSettingsInput, 
   PasswordChangeInput 
-} from './settings.validators';
+} from './preferences.validators';
 import bcrypt from 'bcrypt';
 
 /**
- * Fetches all settings for a user (profile, account, notifications)
+ * Fetches all preferences for a user (profile, account, notifications)
  * @param userId The user ID
  */
-export const getAllSettings = async (userId: number) => {
+export const getAllPreferences = async (userId: number) => {
   // Fetch the user's profile data
   const user = await db.query.users.findFirst({
-    where: eq(usersTable.id, userId),
+    where: eq(users.id, userId),
     columns: {
       id: true,
       username: true,
@@ -48,44 +48,44 @@ export const getAllSettings = async (userId: number) => {
     throw new Error('User not found');
   }
 
-  // Fetch the user's settings
-  const settings = await db.query.userSettings.findFirst({
-    where: eq(userSettings.userId, userId)
+  // Fetch the user's preferences
+  const preferences = await db.query.userPreferencesSchema.findFirst({
+    where: eq(userPreferencesSchema.userId, userId)
   });
 
-  // Fetch the user's notification settings
-  const notifSettings = await db.query.notificationSettings.findFirst({
-    where: eq(notificationSettings.userId, userId)
+  // Fetch the user's notification preferences
+  const notifPreferences = await db.query.notificationPreferencesSchema.findFirst({
+    where: eq(notificationPreferencesSchema.userId, userId)
   });
 
   return {
     profile: user,
-    settings: settings || {},
-    notifications: notifSettings || {}
+    preferences: preferences || {},
+    notifications: notifPreferences || {}
   };
 };
 
 /**
- * Updates a user's profile settings
+ * Updates a user's profile preferences
  * @param userId The user ID
- * @param data Profile settings to update
+ * @param data Profile preferences to update
  * @param ipAddress The IP address of the requester
  */
-export const updateProfileSettings = async (
+export const updateProfilePreferences = async (
   userId: number, 
   data: ProfileSettingsInput, 
   ipAddress?: string
 ) => {
   // Get current profile data for change tracking
   const currentProfile = await db.query.users.findFirst({
-    where: eq(usersTable.id, userId)
+    where: eq(users.id, userId)
   });
 
   if (!currentProfile) {
     throw new Error('User not found');
   }
 
-  // Track changes in settings history
+  // Track changes in preferences history
   const trackedFields = [
     'bio', 'signature', 'avatarUrl', 'profileBannerUrl', 
     'discordHandle', 'twitterHandle', 'website', 'telegramHandle',
@@ -106,32 +106,32 @@ export const updateProfileSettings = async (
   }
 
   // Update the user's profile
-  await db.update(usersTable)
+  await db.update(users)
     .set(data)
-    .where(eq(usersTable.id, userId));
+    .where(eq(users.id, userId));
 
   return { success: true };
 };
 
 /**
- * Updates a user's account settings
+ * Updates a user's account preferences
  * @param userId The user ID
- * @param data Account settings to update
+ * @param data Account preferences to update
  * @param ipAddress The IP address of the requester
  */
-export const updateAccountSettings = async (
+export const updateAccountPreferences = async (
   userId: number, 
   data: AccountSettingsInput, 
   ipAddress?: string
 ) => {
-  // Check if settings exist
-  const existingSettings = await db.query.userSettings.findFirst({
-    where: eq(userSettings.userId, userId)
+  // Check if preferences exist
+  const existingPreferences = await db.query.userPreferencesSchema.findFirst({
+    where: eq(userPreferencesSchema.userId, userId)
   });
 
-  // If no settings exist yet, create them
-  if (!existingSettings) {
-    await db.insert(userSettings).values({
+  // If no preferences exist yet, create them
+  if (!existingPreferences) {
+    await db.insert(userPreferencesSchema).values({
       userId,
       ...data,
       createdAt: new Date(),
@@ -140,17 +140,17 @@ export const updateAccountSettings = async (
     return { success: true };
   }
 
-  // Track changes in settings history
+  // Track changes in preferences history
   const trackedFields = [
     'theme', 'language', 'timezone', 'shoutboxPosition', 'profileVisibility'
   ];
 
   for (const field of trackedFields) {
-    if (field in data && data[field as keyof AccountSettingsInput] !== existingSettings[field as keyof UserSetting]) {
+    if (field in data && data[field as keyof AccountSettingsInput] !== existingPreferences[field as keyof UserPreference]) {
       await db.insert(userSettingsHistory).values({
         userId,
         settingKey: `account.${field}`,
-        oldValue: existingSettings[field as keyof UserSetting]?.toString() || null,
+        oldValue: existingPreferences[field as keyof UserPreference]?.toString() || null,
         newValue: data[field as keyof AccountSettingsInput]?.toString() || null,
         changedAt: new Date(),
         changedByIp: ipAddress
@@ -159,47 +159,47 @@ export const updateAccountSettings = async (
   }
 
   // Handle the sidebarState separately as it's a JSON object
-  if (data.sidebarState && JSON.stringify(data.sidebarState) !== JSON.stringify(existingSettings.sidebarState)) {
+  if (data.sidebarState && JSON.stringify(data.sidebarState) !== JSON.stringify(existingPreferences.sidebarState)) {
     await db.insert(userSettingsHistory).values({
       userId,
       settingKey: 'account.sidebarState',
-      oldValue: JSON.stringify(existingSettings.sidebarState),
+      oldValue: JSON.stringify(existingPreferences.sidebarState),
       newValue: JSON.stringify(data.sidebarState),
       changedAt: new Date(),
       changedByIp: ipAddress
     });
   }
 
-  // Update the settings
-  await db.update(userSettings)
+  // Update the preferences
+  await db.update(userPreferencesSchema)
     .set({
       ...data,
       updatedAt: new Date()
     })
-    .where(eq(userSettings.userId, userId));
+    .where(eq(userPreferencesSchema.userId, userId));
 
   return { success: true };
 };
 
 /**
- * Updates a user's notification settings
+ * Updates a user's notification preferences
  * @param userId The user ID
- * @param data Notification settings to update
+ * @param data Notification preferences to update
  * @param ipAddress The IP address of the requester
  */
-export const updateNotificationSettings = async (
+export const updateNotificationPreferences = async (
   userId: number, 
   data: NotificationSettingsInput, 
   ipAddress?: string
 ) => {
-  // Check if notification settings exist
-  const existingSettings = await db.query.notificationSettings.findFirst({
-    where: eq(notificationSettings.userId, userId)
+  // Check if notification preferences exist
+  const existingPreferences = await db.query.notificationPreferencesSchema.findFirst({
+    where: eq(notificationPreferencesSchema.userId, userId)
   });
 
-  // If no settings exist yet, create them
-  if (!existingSettings) {
-    await db.insert(notificationSettings).values({
+  // If no preferences exist yet, create them
+  if (!existingPreferences) {
+    await db.insert(notificationPreferencesSchema).values({
       userId,
       ...data,
       createdAt: new Date(),
@@ -208,18 +208,18 @@ export const updateNotificationSettings = async (
     return { success: true };
   }
 
-  // Track changes in settings history
+  // Track changes in preferences history
   const trackedFields = [
     'receiveEmailNotifications', 'notifyOnMentions', 'notifyOnNewReplies',
     'notifyOnLevelUp', 'notifyOnMissionUpdates', 'notifyOnWalletTransactions'
   ];
 
   for (const field of trackedFields) {
-    if (field in data && data[field as keyof NotificationSettingsInput] !== existingSettings[field as keyof NotificationSetting]) {
+    if (field in data && data[field as keyof NotificationSettingsInput] !== existingPreferences[field as keyof NotificationPreference]) {
       await db.insert(userSettingsHistory).values({
         userId,
         settingKey: `notifications.${field}`,
-        oldValue: existingSettings[field as keyof NotificationSetting]?.toString() || null,
+        oldValue: existingPreferences[field as keyof NotificationPreference]?.toString() || null,
         newValue: data[field as keyof NotificationSettingsInput]?.toString() || null,
         changedAt: new Date(),
         changedByIp: ipAddress
@@ -227,13 +227,13 @@ export const updateNotificationSettings = async (
     }
   }
 
-  // Update the notification settings
-  await db.update(notificationSettings)
+  // Update the notification preferences
+  await db.update(notificationPreferencesSchema)
     .set({
       ...data,
       updatedAt: new Date()
     })
-    .where(eq(notificationSettings.userId, userId));
+    .where(eq(notificationPreferencesSchema.userId, userId));
 
   return { success: true };
 };
@@ -241,7 +241,7 @@ export const updateNotificationSettings = async (
 /**
  * Changes a user's password
  * @param userId The user ID
- * @param data Password change data
+ * @param data Password change input
  * @param ipAddress The IP address of the requester
  */
 export const changePassword = async (
@@ -251,10 +251,10 @@ export const changePassword = async (
 ) => {
   // Get the user
   const user = await db.query.users.findFirst({
-    where: eq(usersTable.id, userId),
+    where: eq(users.id, userId),
     columns: {
       id: true,
-      password: true
+      password: true,
     }
   });
 
@@ -263,61 +263,79 @@ export const changePassword = async (
   }
 
   // Verify current password
-  const isValidPassword = await bcrypt.compare(data.currentPassword, user.password);
-  if (!isValidPassword) {
-    throw new Error('Current password is incorrect');
+  const isPasswordValid = await bcrypt.compare(data.currentPassword, user.password || '');
+  if (!isPasswordValid) {
+    throw new Error('Invalid current password');
   }
 
-  // Hash the new password
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(data.newPassword, saltRounds);
+  // Hash new password
+  const hashedPassword = await bcrypt.hash(data.newPassword, 10); // 10 is the salt rounds
 
   // Update the password
-  await db.update(usersTable)
+  await db.update(users)
     .set({ password: hashedPassword })
-    .where(eq(usersTable.id, userId));
+    .where(eq(users.id, userId));
 
   // Log the password change (without storing the actual passwords)
   await db.insert(userSettingsHistory).values({
     userId,
-    settingKey: 'security.passwordChanged',
-    oldValue: null, // Don't store old password
-    newValue: null, // Don't store new password
+    settingKey: 'account.password',
+    oldValue: '[redacted]',
+    newValue: '[redacted]',
     changedAt: new Date(),
-    changedByIp: ipAddress
+    changedByIp: ipAddress,
   });
 
-  return { success: true };
+  return { success: true, message: 'Password updated successfully' };
 };
 
 /**
- * Create default settings for a new user
- * @param userId The user ID
+ * Creates default preferences for a new user
+ * @param userId The ID of the user to create preferences for
  */
-export const createDefaultSettings = async (userId: number) => {
-  // Create default user settings
-  await db.insert(userSettings).values({
+export const createDefaultPreferences = async (userId: number) => {
+  const defaultProfilePreferences = {
+    userId,
+    bio: null,
+    signature: null,
+    avatarUrl: null,
+    profileBannerUrl: null,
+    discordHandle: null,
+    twitterHandle: null,
+    website: null,
+    telegramHandle: null,
+    activeTitleId: null,
+    activeBadgeId: null,
+    activeFrameId: null,
+  };
+
+  const defaultUserPreferences = {
     userId,
     theme: 'auto',
-    language: 'en',
     shoutboxPosition: 'sidebar-top',
+    sidebarState: {},
     profileVisibility: 'public',
+    language: 'en',
+    timezone: 'UTC',
     createdAt: new Date(),
-    updatedAt: new Date()
-  });
+    updatedAt: new Date(),
+  };
 
-  // Create default notification settings
-  await db.insert(notificationSettings).values({
+  const defaultNotificationPreferences = {
     userId,
-    receiveEmailNotifications: false,
+    receiveEmailNotifications: true,
     notifyOnMentions: true,
     notifyOnNewReplies: true,
     notifyOnLevelUp: true,
     notifyOnMissionUpdates: true,
     notifyOnWalletTransactions: true,
     createdAt: new Date(),
-    updatedAt: new Date()
-  });
+    updatedAt: new Date(),
+  };
 
-  return { success: true };
+  await db.transaction(async (tx) => {
+    await tx.insert(users).values(defaultProfilePreferences); // Assuming users table is for profile preferences
+    await tx.insert(userPreferencesSchema).values(defaultUserPreferences);
+    await tx.insert(notificationPreferencesSchema).values(defaultNotificationPreferences);
+  });
 }; 

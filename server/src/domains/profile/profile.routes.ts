@@ -6,12 +6,15 @@
 
 import { Router, Request, Response } from 'express';
 import { db } from '../../../db';
-import { users, userInventory, products, forumCategories, threads, posts, userRelationships, avatarFrames } from "@db/schema";
+import { users, userInventory, products, forumCategories, threads, posts, userRelationships, avatarFrames, userTitles, userBadges } from "@db/schema";
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';
 import signatureRoutes from './signature.routes'; // Import signature routes
 
 // Helper function to get user ID from req.user
 function getUserId(req: Request): number {
+  if (process.env.NODE_ENV === "development" && (req.user as any)?.devId) {
+    return (req.user as any).devId;
+  }
   if (req.user && typeof (req.user as any).id === 'number') {
     return (req.user as any).id;
   }
@@ -33,211 +36,121 @@ router.get('/:username', async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Username is required" });
     }
     
-    // Check if the user exists with a direct SQL query
-    const userCheckResult = await db.execute(
-      sql`SELECT user_id FROM users WHERE username = ${username} LIMIT 1`
-    );
+    // Fetch user data using Drizzle ORM
+    const user = await db.query.users.findFirst({
+      where: eq(users.username, username),
+      with: {
+        activeFrame: true, // Eager load active frame
+        activeTitle: true, // Eager load active title
+        activeBadge: true, // Eager load active badge
+      }
+    });
     
-    if (userCheckResult.rows.length === 0) {
+    if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
     
-    const userId = userCheckResult.rows[0].user_id;
-    
-    // Get user data with a direct SQL query
-    const userDataResult = await db.execute(
-      sql`
-        SELECT 
-          user_id as id,
-          username,
-          avatar_url as "avatarUrl",
-          role,
-          bio,
-          signature,
-          created_at as "joinedAt",
-          last_seen_at as "lastActiveAt",
-          profile_banner_url as "bannerUrl",
-          level,
-          xp,
-          dgt_wallet_balance as "dgtBalance",
-          clout,
-          active_frame_id as "activeFrameId",
-          avatar_frame_id as "avatarFrameId"
-        FROM 
-          users
-        WHERE 
-          user_id = ${userId}
-      `
-    );
-    
-    if (userDataResult.rows.length === 0) {
-      return res.status(404).json({ message: "User data could not be retrieved" });
-    }
-    
-    // Define user data with proper typing
-    interface UserData {
-      id: number;
-      username: string;
-      avatarUrl: string | null;
-      role: string;
-      bio: string | null;
-      signature: string | null;
-      joinedAt: string;
-      lastActiveAt: string | null;
-      bannerUrl: string | null;
-      level: number;
-      xp: number;
-      dgtBalance: number;
-      clout: number;
-      activeFrameId: number | null;
-      avatarFrameId: number | null;
-    }
-    
-    const userData = userDataResult.rows[0] as unknown as UserData;
-    
-    // Get active frame if any
-    let activeFrame = null;
-    
-    // Check if avatar_frames table exists before querying it
-    // Now that we have avatar_frame_id column, we can query it
-    if (userData.avatarFrameId) {
-      const frameDataResult = await db.execute(
-        sql`
-          SELECT 
-            id,
-            name,
-            image_url as "imageUrl",
-            rarity
-          FROM 
-            avatar_frames
-          WHERE 
-            id = ${userData.avatarFrameId}
-          LIMIT 1
-        `
-      );
-      
-      if (frameDataResult.rows.length > 0) {
-        // Extract frame data from avatar_frames
-        activeFrame = frameDataResult.rows[0];
-      }
-    }
-    
-    // Use active_frame_id for now
-    if (userData.activeFrameId) {
-      const frameDataResult = await db.execute(
-        sql`
-          SELECT 
-            product_id as id,
-            plugin_reward->>'name' as name,
-            plugin_reward->>'type' as type
-          FROM 
-            products
-          WHERE 
-            product_id = ${userData.activeFrameId}
-          LIMIT 1
-        `
-      );
-      
-      if (frameDataResult.rows.length > 0) {
-        // Extract frame data from product
-        const frameProduct = frameDataResult.rows[0];
-        activeFrame = {
-          id: frameProduct.id,
-          name: frameProduct.name || 'Unknown Frame',
-          imageUrl: `/api/images/frames/${frameProduct.type || 'default.png'}`,
-          rarity: 'common' // Default rarity
-        };
-      }
-    }
+    const userId = user.id;
+
+    // Fetch user's inventory
+    const inventory = await db.query.userInventory.findMany({
+      where: eq(userInventory.userId, userId),
+      with: {
+        product: true,
+      },
+    });
+
+    // Fetch user's badges
+    const badges = await db.query.userBadges.findMany({
+      where: eq(userBadges.userId, userId),
+      with: {
+        badge: true,
+      },
+    });
+
+    // Fetch user's titles
+    const titles = await db.query.userTitles.findMany({
+      where: eq(userTitles.userId, userId),
+      with: {
+        title: true,
+      },
+    });
     
     // Get thread count
-    const threadCountResult = await db.execute(
-      sql`SELECT COUNT(*) as value FROM threads WHERE user_id = ${userId}`
-    );
-    const threadCount = [{ value: Number(threadCountResult.rows[0].value) || 0 }];
+    const threadCountResult = await db.select({ value: count() }).from(threads).where(eq(threads.userId, userId));
+    const totalThreads = threadCountResult[0]?.value || 0;
     
     // Get post count
-    const postCountResult = await db.execute(
-      sql`SELECT COUNT(*) as value FROM posts WHERE user_id = ${userId}`
-    );
-    const postCount = [{ value: Number(postCountResult.rows[0].value) || 0 }];
+    const postCountResult = await db.select({ value: count() }).from(posts).where(eq(posts.userId, userId));
+    const totalPosts = postCountResult[0]?.value || 0;
     
     // Get total likes received
-    const likesResult = await db.execute(
-      sql`SELECT COALESCE(SUM(like_count), 0) as value FROM posts WHERE user_id = ${userId}`
-    );
-    const likesCount = [{ value: Number(likesResult.rows[0].value) || 0 }];
+    const likesResult = await db.select({ value: sql<number>`COALESCE(SUM(${posts.likeCount}), 0)` }).from(posts).where(eq(posts.userId, userId));
+    const totalLikes = likesResult[0]?.value || 0;
     
     // Get total tips received
-    const tipsResult = await db.execute(
-      sql`SELECT COALESCE(SUM(total_tips), 0) as value FROM posts WHERE user_id = ${userId}`
-    );
-    const tipsCount = [{ value: Number(tipsResult.rows[0].value) || 0 }];
-    
-    // We'll skip inventory for now
-    const userItems: { 
-      id: number; 
-      productId: number; 
-      isEquipped: boolean; 
-      productName: string; 
-      productType: string;
-      imageUrl: string;
-      rarity: string;
-    }[] = [];
-    
-    // Simplified user relationships for now
-    const friends: { id: number; username: string; avatarUrl: string | null }[] = [];
-    const sentRequests = [{ value: 0 }];
-    const receivedRequests = [{ value: 0 }];
+    const tipsResult = await db.select({ value: sql<number>`COALESCE(SUM(${posts.totalTips}), 0)` }).from(posts).where(eq(posts.userId, userId));
+    const totalTips = tipsResult[0]?.value || 0;
     
     // Thread view count
-    const viewCountResult = await db.execute(
-      sql`SELECT COALESCE(SUM(view_count), 0) as value FROM threads WHERE user_id = ${userId}`
-    );
-    const threadViewCount = [{ value: Number(viewCountResult.rows[0].value) || 0 }];
+    const viewCountResult = await db.select({ value: sql<number>`COALESCE(SUM(${threads.viewCount}), 0)` }).from(threads).where(eq(threads.userId, userId));
+    const threadViewCount = viewCountResult[0]?.value || 0;
     
     // Calculate next level XP requirement
-    const nextLevelXp = (Number(userData.level || 1) + 1) * 1000;
+    const nextLevelXp = (Number(user.level || 1) + 1) * 1000;
     
-    // Placeholder leaderboard ranks
-    const posterRank = [{ value: 1 }];
-    const tipperRank = [{ value: 1 }];
-    const likerRank = [{ value: 1 }];
+    // Placeholder leaderboard ranks (these would come from a separate ranking system)
+    const posterRank = 1;
+    const tipperRank = 1;
+    const likerRank = 1;
     
     // Assemble profile data
     const profileData = {
-      id: userData.id,
-      username: userData.username,
-      avatarUrl: userData.avatarUrl,
-      role: userData.role,
-      bio: userData.bio,
-      signature: userData.signature,
-      joinedAt: userData.joinedAt,
-      lastActiveAt: userData.lastActiveAt,
-      dgtBalance: userData.dgtBalance,
-      totalPosts: postCount[0].value,
-      totalThreads: threadCount[0].value,
-      totalLikes: likesCount[0].value,
-      totalTips: tipsCount[0].value,
-      clout: userData.clout,
-      level: userData.level,
-      xp: userData.xp,
+      id: user.id,
+      username: user.username,
+      avatarUrl: user.avatarUrl,
+      role: user.role,
+      bio: user.bio,
+      signature: user.signature,
+      joinedAt: user.createdAt,
+      lastActiveAt: user.lastSeenAt,
+      dgtBalance: user.dgtWalletBalance,
+      totalPosts,
+      totalThreads,
+      totalLikes,
+      totalTips,
+      clout: user.clout,
+      level: user.level,
+      xp: user.xp,
       nextLevelXp,
-      bannerUrl: userData.bannerUrl,
-      activeFrameId: userData.activeFrameId,
-      avatarFrameId: userData.avatarFrameId,
-      activeFrame,
-      inventory: userItems,
+      bannerUrl: user.profileBannerUrl,
+      activeFrameId: user.activeFrameId,
+      activeFrame: user.activeFrame,
+      activeTitleId: user.activeTitleId,
+      activeTitle: user.activeTitle,
+      activeBadgeId: user.activeBadgeId,
+      activeBadge: user.activeBadge,
+      badges: badges.map(b => b.badge),
+      titles: titles.map(t => t.title),
+      inventory: inventory.map(item => ({
+        id: item.id,
+        productId: item.productId,
+        isEquipped: item.equipped,
+        productName: item.product.name,
+        productType: item.product.category || 'unknown', // Assuming category for productType
+        imageUrl: item.product.imageUrl || '',
+        rarity: item.product.pluginReward?.rarity || 'common',
+      })),
       relationships: {
-        friends,
-        friendRequestsSent: sentRequests[0].value,
-        friendRequestsReceived: receivedRequests[0].value
+        friends: [], // TODO: Implement friend relationships
+        friendRequestsSent: 0,
+        friendRequestsReceived: 0
       },
       stats: {
-        threadViewCount: threadViewCount[0].value,
-        posterRank: posterRank[0].value,
-        tipperRank: tipperRank[0].value,
-        likerRank: likerRank[0].value
+        threadViewCount,
+        posterRank,
+        tipperRank,
+        likerRank
       }
     };
     

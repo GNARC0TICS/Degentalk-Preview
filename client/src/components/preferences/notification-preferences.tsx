@@ -13,17 +13,17 @@ import {
   Users,
   BarChart
 } from 'lucide-react';
-import { SettingsCard } from './SettingsCard';
-import { SettingsGroup } from './SettingsGroup';
-import { SettingsToggle } from './SettingsToggle';
-import { useUserSettings } from '@/hooks/settings/useUserSettings';
-import { useUpdateUserSettings } from '@/hooks/settings/useUpdateUserSettings';
+import { PreferencesCard } from './PreferencesCard';
+import { PreferencesGroup } from './PreferencesGroup';
+import { PreferencesToggle } from './PreferencesToggle';
+import { useUserSettings } from '@/hooks/preferences/useUserSettings';
+import { useUpdateUserSettings } from '@/hooks/preferences/useUpdateUserSettings';
 
-interface NotificationSettingsProps {
+interface NotificationPreferencesProps {
   user: User;
 }
 
-export function NotificationSettings({ user }: NotificationSettingsProps) {
+export function NotificationPreferences({ user }: NotificationPreferencesProps) {
   const { data: userSettings, isLoading } = useUserSettings();
   const updateNotificationSettings = useUpdateUserSettings('notifications');
   
@@ -55,43 +55,43 @@ export function NotificationSettings({ user }: NotificationSettingsProps) {
     setNotificationForm(prev => ({ ...prev, [key]: value }));
   };
   
-  // Save notification settings
+  // Save notification preferences
   const handleSave = () => {
     updateNotificationSettings.mutate(notificationForm);
   };
   
   if (isLoading) {
-    return <div>Loading notification settings...</div>;
+    return <div>Loading notification preferences...</div>;
   }
 
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2">Notification Settings</h2>
+        <h2 className="text-2xl font-bold mb-2">Notification Preferences</h2>
         <p className="text-muted-foreground">Choose how and when you want to be notified</p>
       </div>
       
-      <SettingsCard 
+      <PreferencesCard 
         title="Email Notifications" 
         description="Manage email notifications for important updates"
       >
-        <SettingsGroup>
-          <SettingsToggle
+        <PreferencesGroup>
+          <PreferencesToggle
             id="email-notifications"
             label="Receive Email Notifications"
             description="Allow the system to send you email notifications"
             checked={notificationForm.receiveEmailNotifications}
             onCheckedChange={handleToggleChange('receiveEmailNotifications')}
           />
-        </SettingsGroup>
-      </SettingsCard>
+        </PreferencesGroup>
+      </PreferencesCard>
       
-      <SettingsCard 
+      <PreferencesCard 
         title="Forum Notifications" 
         description="Notifications related to forum activity"
       >
-        <SettingsGroup>
-          <SettingsToggle
+        <PreferencesGroup>
+          <PreferencesToggle
             id="mentions"
             label="Mentions"
             description="Notify when someone mentions you in a post"
@@ -99,22 +99,22 @@ export function NotificationSettings({ user }: NotificationSettingsProps) {
             onCheckedChange={handleToggleChange('notifyOnMentions')}
           />
           
-          <SettingsToggle
+          <PreferencesToggle
             id="replies"
             label="Replies"
             description="Notify when someone replies to your posts"
             checked={notificationForm.notifyOnNewReplies}
             onCheckedChange={handleToggleChange('notifyOnNewReplies')}
           />
-        </SettingsGroup>
-      </SettingsCard>
+        </PreferencesGroup>
+      </PreferencesCard>
       
-      <SettingsCard 
+      <PreferencesCard 
         title="Achievement Notifications" 
         description="Notifications for achievements and rewards"
       >
-        <SettingsGroup>
-          <SettingsToggle
+        <PreferencesGroup>
+          <PreferencesToggle
             id="level-up"
             label="Level Ups"
             description="Notify when you level up"
@@ -122,37 +122,37 @@ export function NotificationSettings({ user }: NotificationSettingsProps) {
             onCheckedChange={handleToggleChange('notifyOnLevelUp')}
           />
           
-          <SettingsToggle
+          <PreferencesToggle
             id="missions"
             label="Mission Updates"
             description="Notify about missions and challenges"
             checked={notificationForm.notifyOnMissionUpdates}
             onCheckedChange={handleToggleChange('notifyOnMissionUpdates')}
           />
-        </SettingsGroup>
-      </SettingsCard>
+        </PreferencesGroup>
+      </PreferencesCard>
       
-      <SettingsCard 
+      <PreferencesCard 
         title="Financial Notifications" 
         description="Wallet and transaction notifications"
       >
-        <SettingsGroup>
-          <SettingsToggle
+        <PreferencesGroup>
+          <PreferencesToggle
             id="wallet-transactions"
             label="Wallet Transactions"
             description="Notify about wallet activities and transactions"
             checked={notificationForm.notifyOnWalletTransactions}
             onCheckedChange={handleToggleChange('notifyOnWalletTransactions')}
           />
-        </SettingsGroup>
-      </SettingsCard>
+        </PreferencesGroup>
+      </PreferencesCard>
       
       <div className="flex justify-end mt-6">
         <Button
           onClick={handleSave}
           disabled={updateNotificationSettings.isPending}
         >
-          {updateNotificationSettings.isPending ? 'Saving...' : 'Save Notification Settings'}
+          {updateNotificationSettings.isPending ? 'Saving...' : 'Save Notification Preferences'}
         </Button>
       </div>
     </div>

@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/dialog';
 import { formatDistanceToNow } from 'date-fns';
 
-interface SessionSettingsProps {
+interface SessionPreferencesProps {
   user: User;
 }
 
@@ -41,7 +41,7 @@ interface Session {
   isCurrentSession: boolean;
 }
 
-export function SessionSettings({ user }: SessionSettingsProps) {
+export function SessionPreferences({ user }: SessionPreferencesProps) {
   // Mock sessions data - would come from API in real app
   const [sessions, setSessions] = useState<Session[]>([
     {
@@ -115,7 +115,7 @@ export function SessionSettings({ user }: SessionSettingsProps) {
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2">Active Sessions</h2>
+        <h2 className="text-2xl font-bold mb-2">Session Preferences</h2>
         <p className="text-zinc-400">Manage your active login sessions across devices</p>
       </div>
       

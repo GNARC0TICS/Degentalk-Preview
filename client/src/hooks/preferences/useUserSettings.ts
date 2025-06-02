@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 
 /**
- * Type definitions for User Settings data
+ * Type definitions for User Preferences data
  */
 export interface UserSettingsData {
   profile: {
@@ -42,16 +42,16 @@ export interface UserSettingsData {
 }
 
 /**
- * Hook to fetch user settings from the API
+ * Hook to fetch user preferences from the API
  * 
- * @returns Query result containing user settings data, loading state, and error state
+ * @returns Query result containing user preferences data, loading state, and error state
  */
 export function useUserSettings() {
   return useQuery<UserSettingsData>({
-    queryKey: ['user-settings'],
+    queryKey: ['user-preferences'],
     queryFn: async () => {
       return apiRequest({
-        url: '/api/users/me/settings-all',
+        url: '/api/users/me/preferences-all',
         method: 'GET'
       });
     },

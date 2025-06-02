@@ -52,15 +52,16 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
   const isMobile = useMobileDetector();
   
   // Cache key for the settings
-  const SETTINGS_QUERY_KEY = '/api/settings';
+  const SETTINGS_QUERY_KEY = '/api/preferences';
   const queryClient = useQueryClient();
   
   // Get user settings from API
   const { data, isLoading } = useQuery({
     queryKey: [SETTINGS_QUERY_KEY],
     queryFn: async () => {
+      console.log('ShoutboxContext: Attempting to fetch settings from /api/preferences');
       try {
-        const response = await fetch('/api/settings', {
+        const response = await fetch('/api/preferences', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -68,8 +69,11 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
           },
         });
         
+        console.log(`ShoutboxContext: Received response status: ${response.status}`);
+
         // If we get a 401, just use local storage + default
         if (response.status === 401) {
+          console.warn('ShoutboxContext: Authentication required (401), falling back to local storage.');
           const savedPosition = localStorage.getItem('shoutboxPosition');
           return { 
             shoutboxPosition: savedPosition && isValidPosition(savedPosition) 
@@ -80,13 +84,16 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
         }
         
         if (!response.ok) {
-          throw new Error('Failed to fetch settings');
+          const errorText = await response.text();
+          console.error('ShoutboxContext: Response not OK. Status:', response.status, 'Body:', errorText);
+          throw new Error(`Failed to fetch settings: ${response.status} ${response.statusText}`);
         }
         
         const responseData = await response.json();
+        console.log('ShoutboxContext: Successfully fetched settings:', responseData);
         return { ...responseData, isAuthenticated: true };
       } catch (error) {
-        console.error('Error fetching user settings:', error);
+        console.error('ShoutboxContext: Error during settings fetch:', error);
         // Fall back to default position if fetch fails
         const savedPosition = localStorage.getItem('shoutboxPosition');
         return { 

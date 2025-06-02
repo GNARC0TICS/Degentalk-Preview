@@ -12,10 +12,14 @@ import { SettingsCard } from './SettingsCard';
 import { SettingsGroup } from './SettingsGroup';
 import { SettingsInput } from './SettingsInput';
 import { SettingsSelect } from './SettingsSelect';
-import { useUserSettings } from '@/hooks/settings/useUserSettings';
-import { useUpdateUserSettings, useUpdatePassword } from '@/hooks/settings/useUpdateUserSettings';
+import { PreferencesCard } from './PreferencesCard';
+import { PreferencesGroup } from './PreferencesGroup';
+import { PreferencesInput } from './PreferencesInput';
+import { PreferencesSelect } from './PreferencesSelect';
+import { useUserSettings } from '@/hooks/preferences/useUserSettings';
+import { useUpdateUserSettings, useUpdatePassword } from '@/hooks/preferences/useUpdateUserSettings';
 
-interface AccountSettingsProps {
+interface AccountPreferencesProps {
   user: User;
 }
 
@@ -43,12 +47,12 @@ const TIMEZONE_OPTIONS = [
   { value: 'Australia/Sydney', label: 'Sydney, Melbourne' },
 ];
 
-export function AccountSettings({ user }: AccountSettingsProps) {
+export function AccountPreferences({ user }: AccountPreferencesProps) {
   const { data: userSettings, isLoading } = useUserSettings();
   const updateAccountSettings = useUpdateUserSettings('account');
   const updatePassword = useUpdatePassword();
   
-  // Account settings form
+  // Account preferences form
   const [accountForm, setAccountForm] = useState({
     language: 'en',
     timezone: '',
@@ -93,7 +97,7 @@ export function AccountSettings({ user }: AccountSettingsProps) {
     }
   };
   
-  // Save account settings
+  // Save account preferences
   const handleSaveAccount = () => {
     updateAccountSettings.mutate(accountForm);
   };
@@ -146,19 +150,19 @@ export function AccountSettings({ user }: AccountSettingsProps) {
   };
   
   if (isLoading) {
-    return <div>Loading account settings...</div>;
+    return <div>Loading account preferences...</div>;
   }
 
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2">Account Settings</h2>
+        <h2 className="text-2xl font-bold mb-2">Account Preferences</h2>
         <p className="text-muted-foreground">Manage your account preferences and security</p>
       </div>
       
-      <SettingsCard title="Account Information" description="Your basic account info">
-        <SettingsGroup>
-          <SettingsInput
+      <PreferencesCard title="Account Information" description="Your basic account info">
+        <PreferencesGroup>
+          <PreferencesInput
             id="email"
             label="Email Address"
             type="email"
@@ -168,7 +172,7 @@ export function AccountSettings({ user }: AccountSettingsProps) {
             description="Contact support to change your email address"
           />
           
-          <SettingsInput
+          <PreferencesInput
             id="username"
             label="Username"
             value={userSettings?.profile.username || ''}
@@ -176,12 +180,12 @@ export function AccountSettings({ user }: AccountSettingsProps) {
             disabled={true}
             description="Your unique username cannot be changed"
           />
-        </SettingsGroup>
-      </SettingsCard>
+        </PreferencesGroup>
+      </PreferencesCard>
       
-      <SettingsCard title="Preferences" description="Regional and language settings">
-        <SettingsGroup>
-          <SettingsSelect
+      <PreferencesCard title="Preferences" description="Regional and language preferences">
+        <PreferencesGroup>
+          <PreferencesSelect
             id="language"
             label="Language"
             description="Select your preferred language"
@@ -190,7 +194,7 @@ export function AccountSettings({ user }: AccountSettingsProps) {
             options={LANGUAGE_OPTIONS}
           />
           
-          <SettingsSelect
+          <PreferencesSelect
             id="timezone"
             label="Timezone"
             description="Set your local timezone"
@@ -199,7 +203,7 @@ export function AccountSettings({ user }: AccountSettingsProps) {
             options={TIMEZONE_OPTIONS}
             placeholder="Select a timezone"
           />
-        </SettingsGroup>
+        </PreferencesGroup>
         
         <div className="flex justify-end mt-4">
           <Button 
@@ -209,11 +213,11 @@ export function AccountSettings({ user }: AccountSettingsProps) {
             {updateAccountSettings.isPending ? 'Saving...' : 'Save Preferences'}
           </Button>
         </div>
-      </SettingsCard>
+      </PreferencesCard>
       
-      <SettingsCard title="Change Password" description="Update your password regularly for better security">
-        <SettingsGroup>
-          <SettingsInput
+      <PreferencesCard title="Change Password" description="Update your password regularly for better security">
+        <PreferencesGroup>
+          <PreferencesInput
             id="currentPassword"
             label="Current Password"
             type="password"
@@ -223,7 +227,7 @@ export function AccountSettings({ user }: AccountSettingsProps) {
             error={passwordErrors.currentPassword}
           />
           
-          <SettingsInput
+          <PreferencesInput
             id="newPassword"
             label="New Password"
             type="password"
@@ -234,7 +238,7 @@ export function AccountSettings({ user }: AccountSettingsProps) {
             description="Use at least 8 characters with a mix of letters, numbers & symbols"
           />
           
-          <SettingsInput
+          <PreferencesInput
             id="confirmPassword"
             label="Confirm New Password"
             type="password"
@@ -243,17 +247,17 @@ export function AccountSettings({ user }: AccountSettingsProps) {
             required
             error={passwordErrors.confirmPassword}
           />
-        </SettingsGroup>
+        </PreferencesGroup>
         
         <div className="flex justify-end mt-4">
           <Button 
             onClick={handleSavePassword} 
             disabled={updatePassword.isPending}
           >
-            {updatePassword.isPending ? 'Updating...' : 'Update Password'}
+            {updatePassword.isPending ? 'Saving...' : 'Change Password'}
           </Button>
         </div>
-      </SettingsCard>
+      </PreferencesCard>
     </div>
   );
 }

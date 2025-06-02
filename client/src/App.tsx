@@ -4,13 +4,12 @@ import { Toaster } from "@/components/ui/toaster";
 import AdminLayout from "./pages/admin/admin-layout";
 import { ModLayout } from "./components/mod/mod-layout";
 import { SiteHeader } from "@/components/layout/site-header";
-import SettingsPage from "@/pages/settings/index";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import WalletPage from "./pages/wallet";
 
 // Pages
 import HomePage from "./pages/home";
- import ForumsPage from "./pages/forums";
+import ForumsPage from "./pages/forums";
 // Import forum system pages
 import ForumBySlugPage from "./pages/forums/[forum_slug]";
 import ThreadPage from "./pages/threads/[thread_slug]";
@@ -63,6 +62,9 @@ const AdminUserGroupsPage = React.lazy(() => import("./pages/admin/user-groups")
 // Import Dev Role Switcher
 import { DevRoleSwitcher } from '@/components/dev/dev-role-switcher';
 
+// Import Preferences Page
+import PreferencesPage from "./pages/preferences/index";
+
 // Permission wrapper for mod routes
 function RequireMod({ children }: { children: React.ReactNode }) {
   // Always allow access without permission checks
@@ -110,6 +112,7 @@ function App() {
           <ProtectedRoute path="/profile/:username?" component={ProfilePage} />
           <ProtectedRoute path="/whispers" component={WhispersPage} />
           <ProtectedRoute path="/settings" component={SettingsPage} />
+          <ProtectedRoute path="/preferences" component={PreferencesPage} />
 
           {/* Admin Routes */}
           <Route path="/admin" component={() => {

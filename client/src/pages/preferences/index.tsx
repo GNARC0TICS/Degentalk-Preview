@@ -4,23 +4,23 @@ import { SiteFooter } from '@/components/layout/site-footer';
 import { useAuth } from '@/hooks/use-auth.tsx';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ProfileSettings } from '@/components/settings/profile-settings';
-import { AccountSettings } from '@/components/settings/account-settings';
-import { NotificationSettings } from '@/components/settings/notification-settings';
-import { DisplaySettings } from '@/components/settings/display-settings';
-import { SessionSettings } from '@/components/settings/session-settings';
+import { ProfilePreferences } from '@/components/preferences/profile-preferences';
+import { AccountPreferences } from '@/components/preferences/account-preferences';
+import { NotificationPreferences } from '@/components/preferences/notification-preferences';
+import { DisplayPreferences } from '@/components/preferences/display-preferences';
+import { SessionPreferences } from '@/components/preferences/session-preferences';
 import { User, Shield, Bell, Monitor, Lock } from 'lucide-react';
 import { useProfile } from '@/contexts/profile-context';
 import { ProtectedRoute } from '@/lib/protected-route';
 
 /**
- * Settings page with tabbed interface for different setting categories.
+ * Preferences page with tabbed interface for different preferences categories.
  * This page is protected and only accessible to logged-in users.
  */
-function SettingsPage() {
-  console.log("SettingsPage component started rendering.");
+function PreferencesPage() {
+  console.log("PreferencesPage component started rendering.");
   const { user } = useAuth();
-  console.log("User in SettingsPage:", user);
+  console.log("User in PreferencesPage:", user);
   
   if (!user) {
     console.log("User is null, rendering authentication required message.");
@@ -31,10 +31,10 @@ function SettingsPage() {
           <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
             <CardHeader>
               <CardTitle>Authentication Required</CardTitle>
-              <CardDescription>You need to be logged in to access settings.</CardDescription>
+              <CardDescription>You need to be logged in to access preferences.</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-zinc-400">Please log in to view and manage your settings.</p>
+              <p className="text-zinc-400">Please log in to view and manage your preferences.</p>
             </CardContent>
           </Card>
         </div>
@@ -43,7 +43,7 @@ function SettingsPage() {
     );
   }
   
-  console.log("User is present, rendering main settings content.");
+  console.log("User is present, rendering main preferences content.");
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
       <SiteHeader />
@@ -51,8 +51,8 @@ function SettingsPage() {
       <main className="container mx-auto px-4 py-6 md:py-12 flex-1">
         <div className="max-w-5xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Settings</h1>
-            <p className="text-zinc-400">Manage your account preferences and settings</p>
+            <h1 className="text-3xl font-bold mb-2">Preferences</h1>
+            <p className="text-zinc-400">Manage your account preferences and preferences</p>
           </div>
           
           <Tabs defaultValue="profile" className="w-full">
@@ -81,23 +81,23 @@ function SettingsPage() {
             
             <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
               <TabsContent value="profile">
-                <ProfileSettings user={user} />
+                <ProfilePreferences user={user} />
               </TabsContent>
               
               <TabsContent value="account">
-                <AccountSettings user={user} />
+                <AccountPreferences user={user} />
               </TabsContent>
               
               <TabsContent value="notifications">
-                <NotificationSettings user={user} />
+                <NotificationPreferences user={user} />
               </TabsContent>
               
               <TabsContent value="display">
-                <DisplaySettings user={user} />
+                <DisplayPreferences user={user} />
               </TabsContent>
               
               <TabsContent value="sessions">
-                <SessionSettings user={user} />
+                <SessionPreferences user={user} />
               </TabsContent>
             </div>
           </Tabs>
@@ -113,7 +113,7 @@ function SettingsPage() {
 export default function ProtectedSettingsPage() {
   return (
     <ProtectedRoute>
-      <SettingsPage />
+      <PreferencesPage />
     </ProtectedRoute>
   );
 }

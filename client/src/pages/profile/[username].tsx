@@ -283,10 +283,10 @@ const ProfileSidebar: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> 
         {/* Action Buttons */}
         <div className="flex gap-2 w-full mb-6">
           {isOwnProfile ? (
-             <Link href="/settings">
+             <Link href="/preferences">
                <Button className="flex-1 bg-indigo-700 hover:bg-indigo-600 text-white">
                  <Settings className="mr-2 h-4 w-4" />
-                 Settings
+                 Preferences
                </Button>
              </Link>
           ) : (

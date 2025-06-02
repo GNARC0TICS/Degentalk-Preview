@@ -2,44 +2,44 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
-// Type for supported settings sections
-export type SettingsSection = 'profile' | 'account' | 'notifications';
+// Type for supported preferences sections
+export type PreferencesSection = 'profile' | 'account' | 'notifications';
 
 /**
- * Hook to update user settings
+ * Hook to update user preferences
  * 
- * @param section - The settings section to update (profile, account, notifications)
- * @returns Mutation for updating the specified settings section
+ * @param section - The preferences section to update (profile, account, notifications)
+ * @returns Mutation for updating the specified preferences section
  */
-export function useUpdateUserSettings(section: SettingsSection) {
+export function useUpdateUserSettings(section: PreferencesSection) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   
   return useMutation({
     mutationFn: async (data: Record<string, any>) => {
       return apiRequest({
-        url: `/api/users/me/settings/${section}`,
+        url: `/api/users/me/preferences/${section}`,
         method: 'PUT',
         data
       });
     },
     onSuccess: () => {
-      // Invalidate the user settings query to refetch the updated data
+      // Invalidate the user preferences query to refetch the updated data
       queryClient.invalidateQueries({
-        queryKey: ['user-settings']
+        queryKey: ['user-preferences']
       });
       
       // Show success toast
       toast({
-        title: "Settings updated",
-        description: "Your settings have been saved successfully.",
+        title: "Preferences updated",
+        description: "Your preferences have been saved successfully.",
         variant: "default",
       });
     },
     onError: (error: any) => {
       // Show error toast
       toast({
-        title: "Failed to update settings",
+        title: "Failed to update preferences",
         description: error.message || "An unexpected error occurred.",
         variant: "destructive",
       });

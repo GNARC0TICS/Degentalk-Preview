@@ -1,8 +1,8 @@
 // REFACTORED: Updated auth middleware imports to use canonical path
 /**
- * Settings Routes
+ * Preferences Routes
  * 
- * Defines API routes for user settings management.
+ * Defines API routes for user preferences management.
  */
 
 import express from 'express';
@@ -13,17 +13,17 @@ import {
   accountSettingsSchema, 
   notificationSettingsSchema,
   passwordChangeSchema
-} from './settings.validators';
+} from './preferences.validators';
 import { 
-  getAllSettings,
-  updateProfileSettings,
-  updateAccountSettings,
-  updateNotificationSettings,
+  getAllPreferences,
+  updateProfilePreferences,
+  updateAccountPreferences,
+  updateNotificationPreferences,
   changePassword
-} from './settings.service';
+} from './preferences.service';
 import { Request, Response, Router } from "express";
 import { db } from "../../../db";
-import { users, userSettings } from "@db/schema";
+import { users, userSettings as userPreferencesSchema } from "@db/schema";
 import { eq, and } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import { z } from "zod";
@@ -33,6 +33,10 @@ import { logger, LogLevel, LogAction } from "../../../src/core/logger";
 
 // Helper function to get user ID from req.user, handling both id and user_id formats
 function getUserId(req: Request): number {
+  // In development, if a mock user is set, prioritize its ID
+  if (process.env.NODE_ENV === "development" && (req.user as any)?.devId) {
+    return (req.user as any).devId;
+  }
   return (req.user as any)?.id || (req.user as any)?.user_id || 0;
 }
 
@@ -46,41 +50,41 @@ const updateShoutboxPositionSchema = z.object({
 const router = express.Router();
 
 /**
- * GET /api/users/me/settings-all
- * Get all settings for the authenticated user
+ * GET /api/users/me/preferences-all
+ * Get all preferences for the authenticated user
  */
-router.get('/me/settings-all', authenticate, async (req, res) => {
+router.get('/me/preferences-all', authenticate, async (req, res) => {
   try {
     const userId = req.user.id;
-    const settings = await getAllSettings(userId);
-    res.json(settings);
+    const preferences = await getAllPreferences(userId);
+    res.json(preferences);
   } catch (error) {
-    logger.error("SETTINGS", 'Error getting user settings', error);
-    res.status(500).json({ 
-      error: 'Failed to retrieve user settings',
+    logger.error("PREFERENCES", 'Error getting user preferences', error);
+    res.status(500).json({
+      error: 'Failed to retrieve user preferences',
       message: error.message
     });
   }
 });
 
 /**
- * PUT /api/users/me/settings/profile
- * Update profile settings for the authenticated user
+ * PUT /api/users/me/preferences/profile
+ * Update profile preferences for the authenticated user
  */
 router.put(
-  '/me/settings/profile',
+  '/me/preferences/profile',
   authenticate,
   validateBody(profileSettingsSchema),
   async (req, res) => {
     try {
       const userId = req.user.id;
       const ipAddress = req.ip;
-      const result = await updateProfileSettings(userId, req.body, ipAddress);
+      const result = await updateProfilePreferences(userId, req.body, ipAddress);
       res.json(result);
     } catch (error) {
-      logger.error("SETTINGS", 'Error updating profile settings', error);
+      logger.error("PREFERENCES", 'Error updating profile preferences', error);
       res.status(500).json({ 
-        error: 'Failed to update profile settings',
+        error: 'Failed to update profile preferences',
         message: error.message
       });
     }
@@ -88,23 +92,23 @@ router.put(
 );
 
 /**
- * PUT /api/users/me/settings/account
- * Update account settings for the authenticated user
+ * PUT /api/users/me/preferences/account
+ * Update account preferences for the authenticated user
  */
 router.put(
-  '/me/settings/account',
+  '/me/preferences/account',
   authenticate,
   validateBody(accountSettingsSchema),
   async (req, res) => {
     try {
       const userId = req.user.id;
       const ipAddress = req.ip;
-      const result = await updateAccountSettings(userId, req.body, ipAddress);
+      const result = await updateAccountPreferences(userId, req.body, ipAddress);
       res.json(result);
     } catch (error) {
-      logger.error("SETTINGS", 'Error updating account settings', error);
+      logger.error("PREFERENCES", 'Error updating account preferences', error);
       res.status(500).json({ 
-        error: 'Failed to update account settings',
+        error: 'Failed to update account preferences',
         message: error.message
       });
     }
@@ -112,23 +116,23 @@ router.put(
 );
 
 /**
- * PUT /api/users/me/settings/notifications
- * Update notification settings for the authenticated user
+ * PUT /api/users/me/preferences/notifications
+ * Update notification preferences for the authenticated user
  */
 router.put(
-  '/me/settings/notifications',
+  '/me/preferences/notifications',
   authenticate,
   validateBody(notificationSettingsSchema),
   async (req, res) => {
     try {
       const userId = req.user.id;
       const ipAddress = req.ip;
-      const result = await updateNotificationSettings(userId, req.body, ipAddress);
+      const result = await updateNotificationPreferences(userId, req.body, ipAddress);
       res.json(result);
     } catch (error) {
-      logger.error("SETTINGS", 'Error updating notification settings', error);
+      logger.error("PREFERENCES", 'Error updating notification preferences', error);
       res.status(500).json({ 
-        error: 'Failed to update notification settings',
+        error: 'Failed to update notification preferences',
         message: error.message
       });
     }
@@ -150,7 +154,7 @@ router.post(
       const result = await changePassword(userId, req.body, ipAddress);
       res.json(result);
     } catch (error) {
-      logger.error("SETTINGS", 'Error changing password', error);
+      logger.error("PREFERENCES", 'Error changing password', error);
       res.status(400).json({ 
         error: 'Failed to change password',
         message: error.message
@@ -159,27 +163,40 @@ router.post(
   }
 );
 
-// Get user settings
+// Get user preferences
 router.get('/', isAuthenticated, async (req: Request, res: Response) => {
   try {
-    // Use either id or user_id depending on what's available
     const userId = getUserId(req);
     
-    if (!userId) {
-      logger.error("SETTINGS", 'No user ID found in authenticated request', { user: req.user });
+    // Ensure userId is valid, especially in dev mode for mock users
+    if (!userId || userId === 0) {
+      logger.error("PREFERENCES", 'Invalid or missing user ID in authenticated request', { user: req.user, derivedUserId: userId });
+      // In development, default to a known mock user ID for consistency
+      if (process.env.NODE_ENV === "development") {
+        logger.info("PREFERENCES", `🔧 Defaulting to mock user ID 1 for preferences fetch (dev mode only)`);
+        const mockPreferences = {
+          userId: 1, // Default to mock user ID 1
+          theme: 'auto',
+          shoutboxPosition: 'sidebar-top',
+          sidebarState: {},
+          notificationPrefs: {},
+          profileVisibility: 'public',
+          language: 'en'
+        };
+        return res.status(200).json(mockPreferences);
+      }
       return res.status(500).json({ message: "Failed to identify user" });
     }
     
-    // Check if user settings exist
+    // Check if user preferences exist
     const userSettingsData = await db
       .select()
-      .from(userSettings)
-      .where(eq(userSettings.userId, userId))
+      .from(userPreferencesSchema)
+      .where(eq(userPreferencesSchema.userId, userId))
       .limit(1);
     
     if (!userSettingsData || userSettingsData.length === 0) {
-      // Create default settings if none exist
-      const defaultSettings = {
+      const defaultPreferences = {
         userId,
         theme: 'auto',
         shoutboxPosition: 'sidebar-top',
@@ -190,30 +207,30 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
       };
       
       try {
-        await db.insert(userSettings).values(defaultSettings);
-        return res.status(200).json(defaultSettings);
+        await db.insert(userPreferencesSchema).values(defaultPreferences);
+        return res.status(200).json(defaultPreferences);
       } catch (insertError) {
-        logger.error("SETTINGS", 'Error creating default user settings', insertError);
+        logger.error("PREFERENCES", 'Error creating default user preferences', insertError);
         
-        // For development mode, return mock settings
+        // Even in development, if insert fails, it's better to return the default preferences directly
         if (process.env.NODE_ENV === "development") {
-          logger.info("SETTINGS", `🔧 Returning mock settings for user ${userId} (dev mode only)`);
-          return res.status(200).json(defaultSettings);
+          logger.info("PREFERENCES", `🔧 Returning default mock preferences for user ${userId} after insert failure (dev mode only)`);
+          return res.status(200).json(defaultPreferences);
         }
         
-        return res.status(500).json({ message: "Failed to create user settings" });
+        return res.status(500).json({ message: "Failed to create user preferences" });
       }
     }
     
     return res.status(200).json(userSettingsData[0]);
   } catch (error) {
-    logger.error("SETTINGS", 'Error fetching user settings', error);
+    logger.error("PREFERENCES", 'Error fetching user preferences', error);
     
-    // For development mode, return mock settings
+    // For development mode, return mock preferences consistently if any error occurs
     if (process.env.NODE_ENV === "development") {
-      const userId = getUserId(req);
-      logger.info("SETTINGS", `🔧 Returning mock settings for user ${userId} (dev mode only)`);
-      const mockSettings = {
+      const userId = getUserId(req); // Re-derive userId for logging consistency
+      logger.info("PREFERENCES", `🔧 Returning mock preferences for user ${userId} on error (dev mode only)`);
+      const mockPreferences = {
         userId,
         theme: 'auto',
         shoutboxPosition: 'sidebar-top',
@@ -222,7 +239,7 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
         profileVisibility: 'public',
         language: 'en'
       };
-      return res.status(200).json(mockSettings);
+      return res.status(200).json(mockPreferences);
     }
     
     return res.status(500).json({ message: "Internal server error" });
@@ -230,7 +247,7 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
 });
 
 // Update shoutbox position
-router.put('/shoutbox-position', isAuthenticated, async (req: Request, res: Response) => {
+router.put('/preferences/shoutbox-position', isAuthenticated, async (req: Request, res: Response) => {
   try {
     const userId = getUserId(req);
     const validation = updateShoutboxPositionSchema.safeParse(req.body);
@@ -244,25 +261,25 @@ router.put('/shoutbox-position', isAuthenticated, async (req: Request, res: Resp
     
     const { position } = validation.data;
     
-    // Check if user settings exist
+    // Check if user preferences exist
     const userSettingsData = await db
       .select()
-      .from(userSettings)
-      .where(eq(userSettings.userId, userId))
+      .from(userPreferencesSchema)
+      .where(eq(userPreferencesSchema.userId, userId))
       .limit(1);
     
     if (!userSettingsData || userSettingsData.length === 0) {
-      // Create settings record if it doesn't exist
-      await db.insert(userSettings).values({
+      // Create preferences record if it doesn't exist
+      await db.insert(userPreferencesSchema).values({
         userId,
         shoutboxPosition: position
       });
     } else {
-      // Update existing settings
+      // Update existing preferences
       await db
-        .update(userSettings)
+        .update(userPreferencesSchema)
         .set({ shoutboxPosition: position })
-        .where(eq(userSettings.userId, userId));
+        .where(eq(userPreferencesSchema.userId, userId));
     }
     
     // Log the change in user_settings_history table
@@ -294,10 +311,10 @@ router.put('/shoutbox-position', isAuthenticated, async (req: Request, res: Resp
             client.send(broadcastMessage);
           }
         });
-        logger.info("SETTINGS", `Broadcast shoutbox position update for user ${username}`);
+        logger.info("PREFERENCES", `Broadcast shoutbox position update for user ${username}`);
       }
     } catch (broadcastError) {
-      logger.error("SETTINGS", 'Error broadcasting position change', broadcastError);
+      logger.error("PREFERENCES", 'Error broadcasting position change', broadcastError);
       // Continue with the response even if broadcast fails
     }
     
@@ -306,7 +323,7 @@ router.put('/shoutbox-position', isAuthenticated, async (req: Request, res: Resp
       position
     });
   } catch (error) {
-    logger.error("SETTINGS", 'Error updating shoutbox position', error);
+    logger.error("PREFERENCES", 'Error updating shoutbox position', error);
     return res.status(500).json({ message: "Internal server error" });
   }
 });

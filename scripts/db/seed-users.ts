@@ -1,5 +1,5 @@
 import { db } from '../../server/src/core/db';
-import { users } from '../../shared/schema';
+import { users } from '../../db/schema/user/users';
 import bcrypt from 'bcryptjs';
 import { faker } from '@faker-js/faker';
 

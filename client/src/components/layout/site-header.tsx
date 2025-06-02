@@ -201,7 +201,7 @@ export function SiteHeader() {
                         <span>Wallet</span>
                       </div>
                     </DropdownMenuItem>
-                    <Link href="/settings">
+                    <Link href="/preferences">
                       <DropdownMenuItem>
                         <div className="flex w-full items-center cursor-pointer">
                           <Settings className="mr-2 h-4 w-4" />
@@ -335,7 +335,7 @@ export function SiteHeader() {
                     <Wallet className="h-5 w-5 inline mr-2" />
                     Wallet
                   </div>
-                      <Link href="/settings">
+                      <Link href="/preferences">
                         <div 
                           className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
                           onClick={() => setIsOpen(false)}

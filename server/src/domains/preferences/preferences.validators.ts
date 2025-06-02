@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /**
- * Profile settings validation schema
+ * Profile preferences validation schema
  * Used for updating user profile data
  */
 export const profileSettingsSchema = z.object({
@@ -19,7 +19,7 @@ export const profileSettingsSchema = z.object({
 });
 
 /**
- * Account settings validation schema
+ * Account preferences validation schema
  * Used for updating user display and accessibility preferences
  */
 export const accountSettingsSchema = z.object({
@@ -32,7 +32,7 @@ export const accountSettingsSchema = z.object({
 });
 
 /**
- * Notification settings validation schema
+ * Notification preferences validation schema
  * Used for updating user notification preferences
  */
 export const notificationSettingsSchema = z.object({

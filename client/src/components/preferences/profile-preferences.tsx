@@ -9,18 +9,18 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { UploadCloud } from 'lucide-react';
-import { SettingsCard } from './SettingsCard';
-import { SettingsGroup } from './SettingsGroup';
-import { SettingsInput } from './SettingsInput';
-import { SettingsTextarea } from './SettingsTextarea';
-import { useUserSettings } from '@/hooks/settings/useUserSettings';
-import { useUpdateUserSettings } from '@/hooks/settings/useUpdateUserSettings';
+import { PreferencesCard } from './PreferencesCard';
+import { PreferencesGroup } from './PreferencesGroup';
+import { PreferencesInput } from './PreferencesInput';
+import { PreferencesTextarea } from './PreferencesTextarea';
+import { useUserSettings } from '@/hooks/preferences/useUserSettings';
+import { useUpdateUserSettings } from '@/hooks/preferences/useUpdateUserSettings';
 
-interface ProfileSettingsProps {
+interface ProfilePreferencesProps {
   user: User;
 }
 
-export function ProfileSettings({ user }: ProfileSettingsProps) {
+export function ProfilePreferences({ user }: ProfilePreferencesProps) {
   const { data: userSettings, isLoading } = useUserSettings();
   const updateProfileSettings = useUpdateUserSettings('profile');
 
@@ -61,17 +61,17 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
   };
 
   if (isLoading) {
-    return <div>Loading profile settings...</div>;
+    return <div>Loading profile preferences...</div>;
   }
 
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2">Profile Settings</h2>
+        <h2 className="text-2xl font-bold mb-2">Profile Preferences</h2>
         <p className="text-muted-foreground">Manage how others see you on the platform</p>
       </div>
 
-      <SettingsCard title="Profile Images" description="Your avatar and profile banner">
+      <PreferencesCard title="Profile Images" description="Your avatar and profile banner">
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex flex-col items-center gap-3">
             <Avatar className="w-24 h-24">
@@ -104,11 +104,11 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
             </Button>
           </div>
         </div>
-      </SettingsCard>
+      </PreferencesCard>
 
-      <SettingsCard title="Profile Information" description="How you present yourself to the community">
-        <SettingsGroup>
-          <SettingsTextarea
+      <PreferencesCard title="Profile Information" description="How you present yourself to the community">
+        <PreferencesGroup>
+          <PreferencesTextarea
             id="bio"
             label="Bio"
             description="Tell others a bit about yourself"
@@ -117,7 +117,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
             placeholder="Write a short bio..."
           />
 
-          <SettingsTextarea
+          <PreferencesTextarea
             id="signature"
             label="Forum Signature"
             description="Appears at the bottom of your forum posts"
@@ -125,12 +125,12 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
             onChange={handleInputChange('signature')}
             placeholder="Your signature text..."
           />
-        </SettingsGroup>
-      </SettingsCard>
+        </PreferencesGroup>
+      </PreferencesCard>
 
-      <SettingsCard title="Social Profiles" description="Link your social media accounts">
-        <SettingsGroup>
-          <SettingsInput
+      <PreferencesCard title="Social Profiles" description="Link your social media accounts">
+        <PreferencesGroup>
+          <PreferencesInput
             id="discordHandle"
             label="Discord"
             value={formData.discordHandle}
@@ -138,7 +138,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
             placeholder="Your Discord username"
           />
 
-          <SettingsInput
+          <PreferencesInput
             id="twitterHandle"
             label="Twitter"
             value={formData.twitterHandle}
@@ -146,7 +146,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
             placeholder="Your Twitter handle"
           />
 
-          <SettingsInput
+          <PreferencesInput
             id="telegramHandle"
             label="Telegram"
             value={formData.telegramHandle}
@@ -154,15 +154,15 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
             placeholder="Your Telegram username"
           />
 
-          <SettingsInput
+          <PreferencesInput
             id="website"
             label="Website"
             value={formData.website}
             onChange={handleInputChange('website')}
             placeholder="https://your-website.com"
           />
-        </SettingsGroup>
-      </SettingsCard>
+        </PreferencesGroup>
+      </PreferencesCard>
 
       <div className="flex justify-end mt-6">
         <Button
