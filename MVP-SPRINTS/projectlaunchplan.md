@@ -5,7 +5,7 @@
 ### Phase 1: Core Functionality & Security
 
 #### Wallet & Vault System *(Deferred)*
-- **All wallet/vault tasks are deferred until after core forum, XP, and shop features are complete.*
+- **All wallet tasks are deferred until after core forum, XP, and shop features are complete.*
 
 #### XP, DGT, and Authentication
 - **[✅] Backend XP/DGT API, Admin Endpoints, and XP Triggers:**  
