@@ -96,7 +96,7 @@ export function ForumZoneCard({ zone, isClickable = false }: { zone: ZoneCardDat
       />
       
       {/* Activity pulse indicator */}
-      {zone.activeUsersCount > 0 && (
+      {zone.activeUsersCount && zone.activeUsersCount > 0 && (
         <div className="absolute top-4 right-4">
           <motion.div
             className="flex items-center gap-1 text-xs"

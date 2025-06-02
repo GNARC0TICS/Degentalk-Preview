@@ -5,10 +5,11 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { ThreadCard } from '@/components/forum/thread-card';
 import { ThreadTag } from '@shared/types';
 import { Link } from 'wouter';
-import { MessageSquare, Eye, ThumbsUp, ArrowRight, Clock } from 'lucide-react';
+import { MessageSquare, Eye, ThumbsUp, ArrowRight, Clock, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ThreadResponse {
   thread_id: number;
@@ -54,14 +55,23 @@ export function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
     },
   });
 
-  // Track which thread is being hovered for dynamic animations
-  const [hoveredThreadId, setHoveredThreadId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const threadsPerPage = 3;
+  const maxPages = Math.ceil((threads?.length || 0) / threadsPerPage);
 
-  // Get the color based on hot score
-  const getHotScoreColor = (score: number) => {
-    if (score >= 100) return 'text-red-500';
-    if (score >= 50) return 'text-orange-500';
-    return 'text-yellow-500';
+  // Get badge styling based on hotness
+  const getBadgeStyle = (score: number) => {
+    if (score >= 100) return 'bg-gradient-to-r from-red-500 to-orange-500 text-white border-0';
+    if (score >= 75) return 'bg-gradient-to-r from-orange-500 to-yellow-500 text-white border-0';
+    if (score >= 50) return 'bg-gradient-to-r from-yellow-500 to-orange-400 text-white border-0';
+    return 'bg-gradient-to-r from-orange-400 to-red-400 text-white border-0'; // Warmer color for "warm"
+  };
+
+  const getHotnessLevel = (score: number) => {
+    if (score >= 100) return 'VOLCANIC';
+    if (score >= 75) return 'BLAZING';
+    if (score >= 50) return 'HOT';
+    return 'WARM';
   };
 
   // Format relative time
@@ -73,155 +83,202 @@ export function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
     }
   };
 
-  // Transform the API response to match what ThreadCard expects (ThreadWithUserAndCategory)
-  const formattedThreads = threads?.map(thread => ({
-    id: thread.thread_id,
-    uuid: thread.uuid || `hot-thread-${thread.thread_id}`,
-    title: thread.title,
-    slug: thread.slug,
-    categoryId: 0,
-    userId: thread.user_id,
-    prefixId: thread.prefix_id || null,
-    isSticky: thread.isSticky || false,
-    isLocked: thread.isLocked || false,
-    isHidden: thread.isHidden || false,
-    isFeatured: thread.isFeatured || false,
-    viewCount: thread.view_count,
-    postCount: thread.post_count,
-    firstPostLikeCount: thread.like_count,
-    lastPostAt: new Date(thread.last_post_at),
-    createdAt: new Date(thread.created_at),
-    updatedAt: new Date(thread.updated_at || thread.created_at),
-    isSolved: thread.isSolved || false,
-    solvingPostId: thread.solving_post_id || null,
-    user: {
-      id: thread.user_id,
-      username: thread.username,
-      avatarUrl: thread.avatar_url,
-    },
-    hotScore: thread.hot_score,
-    category: {
-      id: 0,
-      name: thread.category_name,
-      slug: thread.category_slug,
-      description: null,
-    },
-    tags: thread.tags || [],
-    prefix: undefined,
-  })) || [];
-
   // Get initials for avatar fallback
   const getInitials = (name: string) => {
     return name?.substring(0, 2).toUpperCase() || 'UN';
   };
 
+  // Get current threads to display
+  const getCurrentThreads = () => {
+    if (!threads) return [];
+    const start = currentPage * threadsPerPage;
+    return threads.slice(start, start + threadsPerPage);
+  };
+
+  const nextPage = () => {
+    setCurrentPage((prev) => (prev + 1) % maxPages);
+  };
+
+  const prevPage = () => {
+    setCurrentPage((prev) => (prev - 1 + maxPages) % maxPages);
+  };
+
   return (
-    <Card className={`bg-zinc-900/60 border border-zinc-800 shadow-md ${className}`}>
-      <CardHeader className="pb-2 flex items-center gap-2">
-        <div className="h-6 w-6 flex items-center justify-center">
-          <DotLottieReact
-            src="https://lottie.host/abeba818-d877-4e4d-8d8a-7f7f9099411c/6Pqbh2E87a.lottie"
-            loop
-            autoplay
-            style={{ height: '32px', width: '32px' }}
-          />
+    <Card className={`bg-gradient-to-br from-zinc-900/90 to-zinc-900/60 border border-zinc-800/60 shadow-xl backdrop-blur-sm ${className}`}>
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 flex items-center justify-center">
+              <DotLottieReact
+                src="https://lottie.host/abeba818-d877-4e4d-8d8a-7f7f9099411c/6Pqbh2E87a.lottie"
+                loop
+                autoplay
+                style={{ height: '32px', width: '32px' }}
+              />
+            </div>
+            <div>
+              <CardTitle className="text-xl font-bold bg-gradient-to-r from-orange-400 to-red-400 text-transparent bg-clip-text">
+                Hot Threads
+              </CardTitle>
+              <p className="text-xs text-zinc-400 mt-0.5">Trending discussions</p>
+            </div>
+          </div>
+          
+          {/* Pagination controls */}
+          {threads && threads.length > threadsPerPage && (
+            <div className="flex items-center gap-1">
+              <button
+                onClick={prevPage}
+                className="p-1 text-zinc-400 hover:text-orange-400 transition-colors"
+                disabled={maxPages <= 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <span className="text-xs text-zinc-500 px-2">
+                {currentPage + 1} / {maxPages}
+              </span>
+              <button
+                onClick={nextPage}
+                className="p-1 text-zinc-400 hover:text-orange-400 transition-colors"
+                disabled={maxPages <= 1}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          )}
         </div>
-        <CardTitle className="text-lg font-bold text-orange-300">Hot Threads</CardTitle>
       </CardHeader>
-      <CardContent>
+      
+      <CardContent className="space-y-0">
         {isLoading ? (
-          <div className="text-zinc-400">Loading...</div>
+          <div className="flex items-center justify-center py-8">
+            <div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
+            <span className="ml-3 text-zinc-400">Loading hot threads...</span>
+          </div>
         ) : error ? (
-          <div className="text-red-400">Failed to load hot threads.</div>
+          <div className="text-center py-8">
+            <div className="text-red-400 flex items-center justify-center gap-2">
+              <span>Failed to load hot threads</span>
+            </div>
+          </div>
         ) : threads && threads.length > 0 ? (
           <div className="space-y-3">
-            {threads.map(thread => (
-              <Card 
-                key={thread.thread_id} 
-                className="bg-zinc-900/50 border border-zinc-800 hover:bg-zinc-900/80 transition-all cursor-pointer relative overflow-hidden"
-                onMouseEnter={() => setHoveredThreadId(thread.thread_id)}
-                onMouseLeave={() => setHoveredThreadId(null)}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentPage}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-3"
               >
-                {/* Animated flame icon for hovered thread with high score */}
-                {hoveredThreadId === thread.thread_id && thread.hot_score > 50 && (
-                  <div className="absolute -right-2 -top-2 opacity-30 pointer-events-none">
-                    <DotLottieReact
-                      src="https://lottie.host/abeba818-d877-4e4d-8d8a-7f7f9099411c/6Pqbh2E87a.lottie"
-                      loop
-                      autoplay
-                      style={{ height: '64px', width: '64px' }}
-                    />
-                  </div>
-                )}
-                
-                <Link href={`/threads/${thread.thread_id}`}>
-                  <div className="p-3">
-                    <div className="flex justify-between items-start mb-2">
-                      <Badge variant="outline" className="bg-zinc-800 text-orange-400 border-orange-800/30">
-                        Hot 🔥
-                      </Badge>
-                      <span className={`font-medium ${getHotScoreColor(thread.hot_score)}`}>
-                        {thread.hot_score} points
-                      </span>
-                    </div>
-                    
-                    <h3 className="font-medium text-zinc-100 line-clamp-2 mb-2 hover:text-orange-300 transition-colors">
-                      {thread.title}
-                    </h3>
-                    
-                    <div className="flex items-center gap-2 text-xs text-zinc-400 mb-3">
-                      <Avatar className="h-5 w-5">
-                        <AvatarImage src={thread.avatar_url} alt={thread.username} />
-                        <AvatarFallback className="text-[10px] bg-zinc-800">
-                          {getInitials(thread.username)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-zinc-300">{thread.username}</span>
-                      <span>•</span>
-                      <span className="flex items-center">
-                        <Clock className="h-3 w-3 mr-1" />
-                        {formatTimeAgo(thread.last_post_at)}
-                      </span>
-                      <span>•</span>
-                      <Link href={`/forums/${thread.category_slug}`}>
-                        <span className="text-zinc-300 hover:text-orange-300 transition-colors">
-                          {thread.category_name}
-                        </span>
-                      </Link>
-                    </div>
-                    
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-1 text-zinc-400">
-                          <MessageSquare className="h-3.5 w-3.5 text-emerald-500" />
-                          <span>{thread.post_count} replies</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-zinc-400">
-                          <Eye className="h-3.5 w-3.5 text-emerald-500" />
-                          <span>{thread.view_count} views</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-zinc-400">
-                          <ThumbsUp className="h-3.5 w-3.5 text-emerald-500" />
-                          <span>{thread.like_count} likes</span>
+                {getCurrentThreads().map((thread) => (
+                  <div key={thread.thread_id} className="group">
+                    <Link href={`/threads/${thread.thread_id}`}>
+                      <div className="relative p-4 rounded-lg bg-gradient-to-r from-zinc-800/50 to-zinc-800/30 border border-zinc-700/50 hover:border-orange-500/30 transition-all duration-300 cursor-pointer">
+                        <div className="relative z-10">
+                          {/* Header with badge */}
+                          <div className="flex items-start justify-between mb-3">
+                            <div className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 ${getBadgeStyle(thread.hot_score)}`}>
+                              <TrendingUp className="h-3 w-3" />
+                              {getHotnessLevel(thread.hot_score)}
+                            </div>
+                            
+                            {/* Simple flame for very hot threads */}
+                            {thread.hot_score > 75 && (
+                              <div className="text-orange-500">
+                                <DotLottieReact
+                                  src="https://lottie.host/abeba818-d877-4e4d-8d8a-7f7f9099411c/6Pqbh2E87a.lottie"
+                                  loop
+                                  autoplay
+                                  style={{ height: '16px', width: '16px' }}
+                                />
+                              </div>
+                            )}
+                          </div>
+                          
+                          {/* Thread title */}
+                          <h3 className="font-semibold text-zinc-100 line-clamp-2 mb-3 group-hover:text-orange-300 transition-colors text-base leading-relaxed">
+                            {thread.title}
+                          </h3>
+                          
+                          {/* Author and meta info */}
+                          <div className="flex items-center gap-3 text-sm text-zinc-400 mb-3">
+                            <div className="flex items-center gap-2">
+                              <Avatar className="h-6 w-6">
+                                <AvatarImage src={thread.avatar_url} alt={thread.username} />
+                                <AvatarFallback className="text-xs bg-zinc-800 text-zinc-300">
+                                  {getInitials(thread.username)}
+                                </AvatarFallback>
+                              </Avatar>
+                              <span className="text-zinc-300 font-medium">{thread.username}</span>
+                            </div>
+                            
+                            <span className="text-zinc-600">•</span>
+                            
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-3.5 w-3.5" />
+                              <span>{formatTimeAgo(thread.last_post_at)}</span>
+                            </div>
+                          </div>
+                          
+                          {/* Stats */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-6 text-xs">
+                              <div className="flex items-center gap-1.5 text-zinc-400">
+                                <MessageSquare className="h-4 w-4" />
+                                <span className="font-medium">{thread.post_count}</span>
+                              </div>
+                              <div className="flex items-center gap-1.5 text-zinc-400">
+                                <Eye className="h-4 w-4" />
+                                <span className="font-medium">{thread.view_count}</span>
+                              </div>
+                              <div className="flex items-center gap-1.5 text-zinc-400">
+                                <ThumbsUp className="h-4 w-4" />
+                                <span className="font-medium">{thread.like_count}</span>
+                              </div>
+                            </div>
+                            
+                            {/* Category tag */}
+                            <Link href={`/forums/${thread.category_slug}`}>
+                              <Badge variant="outline" className="bg-zinc-800/50 text-zinc-400 border-zinc-600 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs">
+                                {thread.category_name}
+                              </Badge>
+                            </Link>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   </div>
-                </Link>
-              </Card>
-            ))}
+                ))}
+              </motion.div>
+            </AnimatePresence>
           </div>
         ) : (
-          <div className="text-zinc-400">No hot threads right now.</div>
+          <div className="text-center py-8 text-zinc-400">
+            <div className="flex justify-center mb-2">
+              <DotLottieReact
+                src="https://lottie.host/abeba818-d877-4e4d-8d8a-7f7f9099411c/6Pqbh2E87a.lottie"
+                loop
+                autoplay
+                style={{ height: '32px', width: '32px', opacity: 0.6 }}
+              />
+            </div>
+            <p>No hot threads right now</p>
+            <p className="text-xs text-zinc-500">Check back later for trending discussions</p>
+          </div>
         )}
         
-        <div className="mt-4 text-center">
-          <Link href="/hot-threads">
-            <Badge className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-zinc-100 border-zinc-700 px-3 py-1.5 cursor-pointer transition-colors">
-              View More Hot Threads
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Badge>
-          </Link>
+        {/* View more button with proper spacing */}
+        <div className="mt-8 pt-4 border-t border-zinc-800/50">
+          <div className="text-center">
+            <Link href="/hot-threads">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500/10 to-red-500/10 hover:from-orange-500/20 hover:to-red-500/20 border border-orange-500/20 hover:border-orange-500/40 rounded-lg text-orange-300 hover:text-orange-200 transition-all duration-300 cursor-pointer">
+                <span className="font-medium">View All Hot Threads</span>
+                <ArrowRight className="h-4 w-4" />
+              </div>
+            </Link>
+          </div>
         </div>
       </CardContent>
     </Card>
