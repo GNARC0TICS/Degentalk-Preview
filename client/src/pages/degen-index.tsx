@@ -5,8 +5,8 @@ import { ErrorDisplay } from "@/components/ui/error-display";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, Filter, Users, TrendingUp } from "lucide-react";
-import { UserCard } from "@/components/users/UserCard";
+import { Search, Filter, Users, TrendingUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { UserDirectoryTable } from "@/components/users/UserDirectoryTable";
 import { UserFilters } from "@/components/users/UserFilters";
 import { motion } from 'framer-motion';
 
@@ -20,28 +20,36 @@ export interface DegenUser {
   joinDate: string;
   lastActive: string;
   isOnline: boolean;
-  badges: string[];
+  level: number;
+  title: string;
 }
 
 export default function DegenIndexPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(50); // Show 50 users per page
   const [filters, setFilters] = useState({
-    sortBy: 'username' as 'username' | 'xp' | 'clout' | 'joinDate' | 'lastActive',
+    sortBy: 'username' as 'username' | 'level' | 'xp' | 'clout' | 'joinDate',
     sortOrder: 'asc' as 'asc' | 'desc',
     onlineOnly: false,
     minXP: 0,
   });
 
   // Mock data - replace with actual API call
-  const { data: users, isLoading, isError, error, refetch } = useQuery<DegenUser[]>({
-    queryKey: ["degens", searchTerm, filters],
+  const { data: response, isLoading, isError, error, refetch } = useQuery<{
+    users: DegenUser[];
+    totalCount: number;
+    totalPages: number;
+  }>({
+    queryKey: ["degens", searchTerm, filters, currentPage],
     queryFn: async () => {
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Mock data
-      const mockUsers: DegenUser[] = [
+      // Generate more mock data (150 users total)
+      const generateMockUsers = (): DegenUser[] => {
+        const baseUsers = [
         {
           id: 1,
           username: 'CryptoKing',
@@ -52,7 +60,8 @@ export default function DegenIndexPage() {
           joinDate: '2023-01-15',
           lastActive: '2 minutes ago',
           isOnline: true,
-          badges: ['Veteran', 'Whale']
+          level: 15,
+          title: 'Crypto Overlord'
         },
         {
           id: 2,
@@ -64,7 +73,8 @@ export default function DegenIndexPage() {
           joinDate: '2023-03-22',
           lastActive: '1 hour ago',
           isOnline: false,
-          badges: ['HODLer']
+          level: 12,
+          title: 'HODL Master'
         },
         {
           id: 3,
@@ -76,7 +86,8 @@ export default function DegenIndexPage() {
           joinDate: '2023-02-10',
           lastActive: '5 minutes ago',
           isOnline: true,
-          badges: ['Analyst', 'Contributor']
+          level: 11,
+          title: 'Market Analyst'
         },
         {
           id: 4,
@@ -88,7 +99,8 @@ export default function DegenIndexPage() {
           joinDate: '2023-04-05',
           lastActive: '3 hours ago',
           isOnline: false,
-          badges: ['Artist']
+          level: 9,
+          title: 'Digital Artist'
         },
         {
           id: 5,
@@ -100,7 +112,8 @@ export default function DegenIndexPage() {
           joinDate: '2023-05-18',
           lastActive: '1 day ago',
           isOnline: false,
-          badges: ['Promoter']
+          level: 8,
+          title: 'Marketing Guru'
         },
         {
           id: 6,
@@ -112,7 +125,8 @@ export default function DegenIndexPage() {
           joinDate: '2024-01-20',
           lastActive: '2 weeks ago',
           isOnline: false,
-          badges: []
+          level: 1,
+          title: 'Newbie Trader'
         },
         {
           id: 7,
@@ -123,7 +137,8 @@ export default function DegenIndexPage() {
           joinDate: '2023-06-12',
           lastActive: '30 minutes ago',
           isOnline: true,
-          badges: ['Visionary']
+          level: 7,
+          title: 'Future Seer'
         },
         {
           id: 8,
@@ -134,12 +149,61 @@ export default function DegenIndexPage() {
           joinDate: '2023-07-30',
           lastActive: '4 hours ago',
           isOnline: false,
-          badges: ['Optimist']
+          level: 6,
+          title: 'Moon Chaser'
         }
       ];
 
+      // Generate additional users
+      const additionalUsers: DegenUser[] = [];
+      const usernames = [
+        'ApeStrong', 'CryptoNinja', 'DeFiGuru', 'NFTHunter', 'YieldFarmer', 'TokenMaster',
+        'BlockchainBoy', 'EthereumGirl', 'BitcoinBull', 'AltcoinAlice', 'StakeKing', 'LiquidityLord',
+        'GasFeeGoblin', 'RugpullRick', 'PumpItPete', 'DumpItDave', 'HODLHannah', 'FOMOFred',
+        'SAFUSteve', 'DegenDave', 'CryptoCarl', 'TokenTina', 'ChainCharlie', 'BlockBella',
+        'MiningMike', 'ValidatorVic', 'NodeNancy', 'ProtocolPaul', 'SmartContractSam', 'OraclOllie',
+        'FlashLoanFrank', 'ArbitragueAnna', 'LeverageLuke', 'MarginMary', 'SpotSally', 'FuturesFinn',
+        'OptionsOscar', 'SwapSophie', 'BridgeBob', 'WrapperWill', 'UnwrapperUma', 'StakerStan',
+        'UnstakerUrsula', 'BurnerBill', 'MinterMolly', 'FarmerPhil', 'PoolerPenny', 'LenderLiam',
+        'BorrowerBeth', 'CollateralCole', 'LiquidatorLola', 'FlashLoanPhil', 'MEVMaxine',
+        'SandwichSid', 'FrontrunnerFay', 'BackrunnerBen', 'ArbitragerAmy', 'ScalperScott'
+      ];
+      
+      const titles = [
+        'Crypto Newbie', 'Token Collector', 'DeFi Explorer', 'Yield Farmer', 'NFT Enthusiast',
+        'Smart Contract Dev', 'Blockchain Builder', 'DeFi Degen', 'Alpha Hunter', 'Whale Watcher',
+        'Protocol Master', 'Liquidity Provider', 'DAO Participant', 'Validator Node', 'MEV Searcher',
+        'Flash Loan Expert', 'Arbitrage Pro', 'Market Maker', 'Staking Specialist', 'Bridge Builder',
+        'Layer 2 Pioneer', 'ZK Proof Master', 'Consensus Expert', 'Tokenomics Guru', 'Crypto Sage'
+      ];
+
+      for (let i = 0; i < 120; i++) {
+        const username = usernames[i % usernames.length] + (i > usernames.length ? (Math.floor(i / usernames.length) + 1) : '');
+        const xp = Math.floor(Math.random() * 50000) + 100;
+        const level = Math.max(1, Math.floor(xp / 1000)); // 1000 XP per level
+        
+        additionalUsers.push({
+          id: 9 + i,
+          username,
+          avatarUrl: `https://avatar.vercel.sh/${username.toLowerCase()}`,
+          xp,
+          clout: Math.floor(Math.random() * 1000) + 5,
+          postCount: Math.floor(Math.random() * 2000) + 1,
+          joinDate: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
+          lastActive: Math.random() > 0.7 ? 'Online' : `${Math.floor(Math.random() * 24) + 1} hours ago`,
+          isOnline: Math.random() > 0.8,
+          level,
+          title: titles[Math.min(level - 1, titles.length - 1)]
+        });
+      }
+
+      return [...baseUsers, ...additionalUsers];
+    };
+
+    const allUsers = generateMockUsers();
+
       // Apply search filter
-      let filteredUsers = mockUsers.filter(user => 
+      let filteredUsers = allUsers.filter(user => 
         user.username.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
@@ -157,6 +221,10 @@ export default function DegenIndexPage() {
         let aVal: any, bVal: any;
         
         switch (filters.sortBy) {
+          case 'level':
+            aVal = a.level;
+            bVal = b.level;
+            break;
           case 'xp':
             aVal = a.xp;
             bVal = b.xp;
@@ -169,11 +237,6 @@ export default function DegenIndexPage() {
             aVal = new Date(a.joinDate);
             bVal = new Date(b.joinDate);
             break;
-          case 'lastActive':
-            // This would need proper date parsing in real implementation
-            aVal = a.lastActive;
-            bVal = b.lastActive;
-            break;
           default:
             aVal = a.username.toLowerCase();
             bVal = b.username.toLowerCase();
@@ -185,12 +248,30 @@ export default function DegenIndexPage() {
         return aVal > bVal ? 1 : -1;
       });
 
-      return filteredUsers;
+      // Calculate pagination
+      const totalCount = filteredUsers.length;
+      const totalPages = Math.ceil(totalCount / itemsPerPage);
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+
+      return {
+        users: paginatedUsers,
+        totalCount,
+        totalPages
+      };
     }
   });
 
-  const onlineUsers = users?.filter(user => user.isOnline).length || 0;
-  const totalUsers = users?.length || 0;
+  const users = response?.users || [];
+  const totalCount = response?.totalCount || 0;
+  const totalPages = response?.totalPages || 0;
+  const onlineUsers = users.filter(user => user.isOnline).length;
+
+  // Reset to page 1 when search or filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filters]);
 
   if (isLoading) {
     return (
@@ -229,10 +310,10 @@ export default function DegenIndexPage() {
       >
         <h1 className="text-3xl font-bold mb-4 text-white flex items-center">
           <Users className="mr-3 h-8 w-8 text-emerald-400" />
-          Degen Index
+          Member Directory
         </h1>
         <p className="text-zinc-400 mb-6">
-          Browse and discover all members of the DegenTalk community
+          Browse and search the complete member directory
         </p>
         
         {/* Stats */}
@@ -243,7 +324,11 @@ export default function DegenIndexPage() {
           </div>
           <div className="flex items-center gap-2 text-cyan-400">
             <TrendingUp className="w-4 h-4" />
-            <span>{totalUsers} total degens</span>
+            <span>{totalCount} total members</span>
+          </div>
+          <div className="flex items-center gap-2 text-zinc-400">
+            <Users className="w-4 h-4" />
+            <span>Page {currentPage} of {totalPages}</span>
           </div>
         </div>
       </motion.div>
@@ -291,35 +376,93 @@ export default function DegenIndexPage() {
         </Card>
       </motion.div>
 
-      {/* User Grid */}
+      {/* User Directory Table */}
       <motion.div 
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        {users?.map((user, index) => (
-          <motion.div
-            key={user.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
+        {users.length > 0 ? (
+          <UserDirectoryTable users={users} />
+        ) : (
+          <motion.div 
+            className="text-center py-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
           >
-            <UserCard user={user} />
+            <Users className="mx-auto h-16 w-16 text-zinc-600 mb-4" />
+            <h3 className="text-xl font-medium text-zinc-400 mb-2">No members found</h3>
+            <p className="text-zinc-500">Try adjusting your search or filters</p>
           </motion.div>
-        ))}
+        )}
       </motion.div>
 
-      {/* No Results */}
-      {users?.length === 0 && (
+      {/* Pagination */}
+      {totalPages > 1 && (
         <motion.div 
-          className="text-center py-12"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          className="flex items-center justify-between mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
         >
-          <Users className="mx-auto h-16 w-16 text-zinc-600 mb-4" />
-          <h3 className="text-xl font-medium text-zinc-400 mb-2">No degens found</h3>
-          <p className="text-zinc-500">Try adjusting your search or filters</p>
+          <div className="flex items-center gap-2 text-zinc-400 text-sm">
+            Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, totalCount)} of {totalCount} members
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+              className="border-zinc-700 bg-zinc-800/40 hover:bg-zinc-800 text-zinc-300 disabled:opacity-50"
+            >
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              Previous
+            </Button>
+            
+            <div className="flex items-center gap-1">
+              {[...Array(Math.min(5, totalPages))].map((_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+                
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={currentPage === pageNum ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={`w-8 h-8 p-0 ${
+                      currentPage === pageNum 
+                        ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600" 
+                        : "border-zinc-700 bg-zinc-800/40 hover:bg-zinc-800 text-zinc-300"
+                    }`}
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+            </div>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+              className="border-zinc-700 bg-zinc-800/40 hover:bg-zinc-800 text-zinc-300 disabled:opacity-50"
+            >
+              Next
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
         </motion.div>
       )}
     </div>
