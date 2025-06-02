@@ -1,4 +1,4 @@
----
+ng ushe ---
 description:
 globs:
 alwaysApply: false
@@ -9,43 +9,43 @@ alwaysApply: false
 This rule ensures proper usage and maintenance of the ForumFusion database cheatsheet, which serves as the central reference for database structure, relationships, and query patterns.
 
 ## Rule Description
-The database cheatsheet (`docs/database-cheatsheet.mdc`) is the authoritative reference for database structure. When working with database-related code:
+The database schema defined in `db/schema/` is the **single source of truth** for the Degentalk database structure. The database cheatsheet (`docs/database-cheatsheet.mdc`) serves as a derived, high-level reference and documentation of this structure.
 
-1. **Always consult the cheatsheet first** before proposing changes to database schema or queries
-2. **Keep the cheatsheet updated** when schema changes occur
-3. **Use the update script** (`scripts/db/update-database-cheatsheet.js`) to analyze schema changes
+When working with database-related code:
+
+1.  **Always consult `db/schema/` first** for precise schema definitions.
+2.  **Consult this cheatsheet** for a high-level overview, relationships, and common query patterns.
+3.  **Keep this cheatsheet updated** to reflect changes in `db/schema/`.
+4.  **Use the update script** (`scripts/db/update-database-cheatsheet.js`) to analyze schema changes and inform updates to this document.
 
 ## When to Consult
-- Before creating or modifying database models
-- When writing queries or database-related functions
-- When exploring relationships between tables
-- When optimizing database performance
+-   Before creating or modifying database models (referencing `db/schema/` for definitive structure).
+-   When writing queries or database-related functions.
+-   When exploring relationships between tables.
+-   When optimizing database performance.
 
 ## Maintenance Process
-When the database schema changes:
+When the database schema (`db/schema/`) changes:
 
-1. **Run the analysis tool**:
-   ```bash
-   node scripts/db/update-database-cheatsheet.js
-   ```
-
-2. **Review the generated report** in `db/schema-analysis-{date}.json`
-
-3. **Update the cheatsheet** with new tables, relationships, or query patterns
-
-4. **Commit both the report and the updated cheatsheet** to maintain the history of schema evolution
+1.  **Run the analysis tool**:
+    ```bash
+    node scripts/db/update-database-cheatsheet.js
+    ```
+2.  **Review the generated report** in `db/schema-analysis-{date}.json`.
+3.  **Update this cheatsheet** with new tables, relationships, or query patterns based on the schema changes and the analysis report.
+4.  **Commit both the report and the updated cheatsheet** to maintain the history of schema evolution.
 
 ## Key Information in Cheatsheet
-The cheatsheet organizes tables by domain areas:
-- Forum (categories, threads, posts)
-- Users (accounts, roles, sessions)
-- Wallet & Economy (transactions, wallets)
-- XP & Leveling (achievements, badges)
-- Messaging (conversations, messages)
-- Moderation (reports, bans)
-- Shop & Products (products, orders)
-- Content & Media (uploads, emojis)
-- System & Settings (configuration, flags)
+This cheatsheet organizes tables by their primary domain areas, mirroring the structure in `db/schema/`:
+-   Forum (categories, threads, posts, rules, custom emojis)
+-   Users (accounts, roles, sessions, preferences, permissions, bans, relationships)
+-   Wallet & Economy (transactions, wallets, XP, levels, badges, titles, vaults, airdrops, rain, tips, DGT packages)
+-   Messaging (conversations, messages, shoutbox, online users)
+-   Moderation (reports, moderation actions)
+-   Shop & Products (products, orders, inventory, signature items)
+-   Admin (audit logs, announcements, site settings, feature flags, media library)
+-   Gamification (achievements, missions, leaderboards, platform stats)
+-   System (notifications, analytics events, activity feed, rate limits)
 
 ## Guidelines for Schema Changes
 - Follow the existing domain organization

@@ -62,7 +62,7 @@ export function SiteFooter() {
       <div className="container mx-auto px-4">
         {/* Live stats section */}
         <motion.div 
-          className="flex justify-center gap-6 mb-8 text-sm"
+          className="flex justify-center gap-8 mb-8 text-sm"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
@@ -74,10 +74,6 @@ export function SiteFooter() {
           <div className="flex items-center gap-2 text-cyan-400">
             <MessageSquare className="w-4 h-4" />
             <span>42,069 posts today</span>
-          </div>
-          <div className="flex items-center gap-2 text-purple-400">
-            <TrendingUp className="w-4 h-4" />
-            <span>+69% portfolio movement</span>
           </div>
         </motion.div>
         

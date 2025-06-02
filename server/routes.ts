@@ -1,10 +1,33 @@
+files firin the te/**
+ * @file server/routes.ts
+ * @description Centralized routing file for the Degentalk backend application.
+ * @purpose Aggregates and registers all domain-specific API routes with the Express application.
+ *          Also handles global middleware, authentication setup, and WebSocket server initialization.
+ * @dependencies
+ * - express: Web framework for Node.js.
+ * - http: Node.js built-in module for creating HTTP servers.
+ * - ws: WebSocket library for Node.js.
+ * - storage: Local storage utility (e.g., for session store).
+ * - Domain-specific routes and middleware (e.g., auth, wallet, forum, admin).
+ * - Drizzle ORM for database interactions.
+ * - Centralized error handlers.
+ * @environment Server-side (Node.js).
+ * @important_notes
+ * - This file should primarily import route handlers from `src/domains/` subdirectories.
+ * - Legacy routes are being deprecated and should be migrated to domain-driven structures.
+ * - WebSocket server is enabled only in production to prevent development conflicts.
+ * - Global error handler is registered as the final middleware.
+ * @status Stable, but ongoing refactoring for route deprecation.
+ * @last_reviewed 2025-06-01
+ * @owner Backend Team / API Team
+ */
 import express, { type Express, type Request, type Response } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
 // Import auth from the new domain location
 import { setupAuthPassport, authRoutes } from "./src/domains/auth";
-import { passwordResetTokens, adminAuditLogs } from '@schema';
+import { auditLogs } from '@schema';
 import { z } from "zod";
 import { registerAdminRoutes } from './src/domains/admin/admin.routes';
 // Import domain-based wallet routes
@@ -20,8 +43,8 @@ import shoutboxRoutes from './src/domains/shoutbox/shoutbox.routes';
 import forumRoutes from './src/domains/forum/forum.routes';
 // Import domain-based editor routes
 import editorRoutes from './src/domains/editor/editor.routes';
-// Import domain-based settings routes
-import settingsRoutes from './src/domains/settings/settings.routes';
+// TODO: @routeDeprecation Investigate settings.routes.ts location or remove if deprecated.
+// import settingsRoutes from './src/domains/settings/settings.routes';
 // Import domain-based profile routes
 import profileRoutes from './src/domains/profile/profile.routes';
 // Import domain-based relationships routes
@@ -54,7 +77,9 @@ import {
 } from './utils/platform-energy';
 import { shopItems, addOGDripColorItem } from './utils/shop-utils';
 import { randomBytes } from "crypto";
-import { db, pool } from "./db";
+import { db } from "./src/core/db"; // Assuming db is now in src/core/db.ts
+// TODO: @cleanup Remove 'pool' if not used after db migration.
+// import { pool } from "./db";
 import { and, eq, sql } from "drizzle-orm";
 // Import auth middleware from the new domain location
 import { isAuthenticated, isAuthenticatedOptional, isAdminOrModerator, isAdmin } from "./src/domains/auth/middleware/auth.middleware";

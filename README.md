@@ -14,8 +14,8 @@ A crypto-native forum and social platform designed for cryptocurrency enthusiast
 
 1. **Clone and install dependencies:**
    ```bash
-   git clone <repository-url>
-   cd ForumFusion
+   git clone https://github.com/GNARC0TICS/Degentalk-BETA
+   cd Degentalk
    npm install
    ```
 
@@ -30,6 +30,9 @@ A crypto-native forum and social platform designed for cryptocurrency enthusiast
    # Server
    NODE_ENV=development
    PORT=5001
+   
+   # Client - Vite Port
+   VITE_PORT=5173
    ```
 
 3. **Database Setup:**
@@ -137,21 +140,31 @@ Clear startup logs show which services are starting:
 ```
 ├── client/src/           # Frontend React application
 │   ├── components/       # Reusable UI components
-│   ├── features/         # Feature-based modules
-│   ├── hooks/           # Custom React hooks
-│   ├── lib/             # Utilities and API clients
-│   └── pages/           # Page components
-├── server/              # Backend Express application
-│   ├── src/domains/     # Domain-driven architecture
-│   ├── utils/           # Server utilities
-│   └── routes.ts        # Main route registration
-├── shared/              # Shared types and schemas
-├── scripts/             # Database and utility scripts
-└── db/                  # Database-related files (e.g., seeds)
+│   ├── features/         # Feature-based modules (client-side logic)
+│   ├── hooks/            # Custom React hooks
+│   ├── lib/              # Utilities, API clients, and core client logic
+│   ├── pages/            # Page components (route handlers)
+│   ├── contexts/         # React Context API providers
+│   ├── styles/           # Global and component-specific styles
+│   └── types/            # Client-specific TypeScript types
+├── server/src/           # Backend Express application
+│   ├── domains/          # Domain-driven backend modules
+│   ├── core/             # Core server functionalities (DB, error handling, etc.)
+│   ├── middleware/       # Express middleware
+│   ├── utils/            # Server-side utility functions
+│   └── app.ts            # Main Express app configuration
+├── shared/               # Code shared between client and server
+│   ├── types.ts          # Shared TypeScript types and interfaces
+│   └── validators/       # Shared Zod validators
+├── scripts/              # Build, deployment, and utility scripts
+├── db/                   # Database-related files
+│   └── schema/           # Drizzle ORM schema definitions (organized by domain)
+├── migrations/           # Database migration files (managed by Drizzle Kit)
+└── public/               # Static assets served by the client
 ```
 
 ### API Client
-The project uses a standardized API client (`apiRequest` from `@/lib/queryClient.ts`) with:
+The project uses a standardized API client (`apiRequest` from `client/src/lib/queryClient.ts` or `api` from `client/src/lib/api.ts` - *verify which is primary*) with:
 - Automatic XP gain detection
 - Consistent error handling
 - Built-in loading states
@@ -161,17 +174,19 @@ The project uses a standardized API client (`apiRequest` from `@/lib/queryClient
 
 ### Schema Management
 Database schema is managed through Drizzle ORM:
-- Schema definitions in `shared/schema.ts`
-- Migrations in `migrations/postgres/` 
+- Schema definitions in `db/schema/` (organized by domain, e.g., `db/schema/user/users.ts`, `db/schema/forum/threads.ts`)
+- Migrations in `migrations/` (e.g., `migrations/postgres/`) 
 - Supports PostgreSQL
 
 ### Key Tables
-- **Users** - User accounts and profiles
-- **Forum Categories** - Forum structure and categories
-- **Threads & Posts** - Forum content
-- **Wallets & Transactions** - Economy system
-- **XP System** - User progression
-- **Shop Items** - Digital marketplace
+(Refer to `db/schema/` for a comprehensive list. Key domains include:)
+- **User**: `users`, `roles`, `permissions`, `profiles`, `preferences`
+- **Forum**: `categories` (zones/forums), `threads`, `posts`, `tags`
+- **Economy**: `wallets`, `transactions`, `dgtPackages`, `badges`, `levels`
+- **Shop**: `products`, `orders`, `userInventory`
+- **XP System**: `xpActionSettings`, `xpAdjustmentLogs`
+- **Messaging**: `shoutboxMessages`, `directMessages`
+- **Admin**: `announcements`, `reports`, `siteSettings`
 
 ## 🎮 Features
 
@@ -205,8 +220,12 @@ NEXT_PUBLIC_TRONGRID_API_KEY=your_api_key
 
 # Payment Processing
 STRIPE_SECRET_KEY=your_stripe_key
-CCPAYMENT_APP_ID=your_ccpayment_id
-CCPAYMENT_APP_SECRET=your_ccpayment_secret
+# CCPayment - if used for crypto payments
+# CCPAYMENT_APP_ID=your_ccpayment_id 
+# CCPAYMENT_APP_SECRET=your_ccpayment_secret
+
+# Giphy API for GIF picker in editor
+# GIPHY_API_KEY=your_giphy_api_key 
 ```
 
 ### Development vs Production
@@ -290,15 +309,14 @@ To incentivize user participation, the platform awards Experience Points (XP) an
 *   **XP Service & Rewards:**
     *   Controller: `server/src/domains/xp/xp.controller.ts` (function: `awardActionXp`)
     *   Route: `POST /api/xp/award-action` (defined in `server/src/domains/xp/xp.routes.ts`)
-    *   Core Logic: `server/src/domains/xp/events/xp.events.ts` (function: `handleXpAward`)
-    *   Relevant Schemas: `xpActionSettings`, `xpAdjustmentLogs`, `levels`, `users`.
+    *   Core Logic: `server/src/domains/xp/xp.service.ts` (e.g., `handleXpTrigger`, `processXpAction`) and `server/src/domains/xp/events/xp.events.ts`
+    *   Relevant Schemas: `db/schema/economy/xpActionSettings.ts`, `db/schema/economy/xpAdjustmentLogs.ts`, `db/schema/economy/levels.ts`, `db/schema/user/users.ts`.
 *   **DGT & Wallet Service Rewards:**
-    *   Controller: `server/src/domains/wallet/wallet.controller.ts` (function: `createDgtRewardTransaction`)
-    *   Route: `POST /api/wallet/transactions/create` (defined in `server/src/domains/wallet/wallet.routes.ts`)
-    *   Core Logic: `server/src/domains/wallet/dgt.service.ts` (function: `addDgt`)
-    *   Relevant Schemas: `users` (for `dgtWalletBalance`), `transactions`.
+    *   Controller: `server/src/domains/wallet/wallet.controller.ts` (e.g., `createDgtTransaction` or similar for rewards)
+    *   Route: e.g., `POST /api/wallet/dgt/reward` (defined in `server/src/domains/wallet/wallet.routes.ts`)
+    *   Core Logic: `server/src/domains/wallet/dgt.service.ts` (e.g., `addDgtToUserWallet`)
+    *   Relevant Schemas: `db/schema/user/users.ts` (for `dgtWalletBalance`), `db/schema/economy/transactions.ts`.
 
 **Configuration:**
-
-*   XP amounts for actions are configured in the `xpActionSettings` table (column: `baseValue`).
-*   The DGT reward amount for thread creation is configured via the `DGT_REWARD_CREATE_THREAD` environment variable, with a fallback to `DEFAULT_DGT_REWARD_CREATE_THREAD` in `server/src/domains/wallet/wallet.constants.ts`. 
+*   XP amounts for actions are configured in the `xpActionSettings` table (schema: `db/schema/economy/xpActionSettings.ts`).
+*   The DGT reward amount for actions like thread creation might be in environment variables or a configuration table (e.g., `economySettings` in `db/schema/economy/settings.ts`). Refer to `server/src/domains/wallet/wallet.constants.ts` or service logic for defaults.

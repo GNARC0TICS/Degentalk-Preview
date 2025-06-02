@@ -88,6 +88,7 @@ Generated on: 2025-06-02
 │  │  │  │  ├─ post-card.tsx
 │  │  │  │  ├─ prefix-badge.tsx
 │  │  │  │  ├─ ShareButton.tsx
+│  │  │  │  ├─ ShopCard.tsx
 │  │  │  │  ├─ SolveBadge.tsx
 │  │  │  │  ├─ tag-input.tsx
 │  │  │  │  ├─ thread-card.tsx
@@ -460,6 +461,8 @@ Generated on: 2025-06-02
 │  │  │  ├─ app-providers.tsx
 │  │  │  └─ root-provider.tsx
 │  │  ├─ styles/
+│  │  │  ├─ animations.css
+│  │  │  ├─ globals.css
 │  │  │  ├─ ticker.css
 │  │  │  ├─ wallet-animations.css
 │  │  │  └─ zone-themes.css
@@ -474,9 +477,11 @@ Generated on: 2025-06-02
 │  │  ├─ index.css
 │  │  ├─ main.tsx
 │  ├─ index.html
-│  └─ README.md
+│  ├─ README.md
+│  └─ tailwind.config.js
 ├─ config/
 │  ├─ postcss.config.js
+│  ├─ README.md
 │  ├─ tailwind.config.ts
 │  └─ vite.config.ts
 ├─ db/
@@ -616,6 +621,7 @@ Generated on: 2025-06-02
 │  ├─ admin-panel-implementation-progress.md
 │  ├─ admin-panel-refactoring-plan.md
 │  ├─ audit-findings.md
+│  ├─ audit-summary.md
 │  ├─ CCPAYMENT.md
 │  ├─ CODEBASE_AUDIT_FINDINGS.md
 │  ├─ codebase-overview.md
@@ -623,8 +629,10 @@ Generated on: 2025-06-02
 │  ├─ designworkflow.md
 │  ├─ dgt-token-management-plan.md
 │  ├─ FORUM_README.md
+│  ├─ frontend-enhancement-plan.md
 │  ├─ launch-readiness-audit-may-2025.md
 │  ├─ README_API.md
+│  ├─ README.md
 │  ├─ refactor-tracker.md
 │  ├─ RESTRUCTURE.md
 │  ├─ REWRITE_IMPORTS.md
@@ -752,7 +760,8 @@ Generated on: 2025-06-02
 │  ├─ fix-db-schema-alias.ts
 │  ├─ README.md
 │  ├─ test-admin-xp.js
-│  └─ test-forum-api.ts
+│  ├─ test-forum-api.ts
+│  └─ verify-imports.ts
 ├─ server/
 │  ├─ config/
 │  │  └─ loadEnv.ts
@@ -918,6 +927,7 @@ Generated on: 2025-06-02
 │  │  ├─ wallet-utils.ts
 │  │  └─ walletEngine.ts
 │  ├─ index.ts
+│  ├─ README.md
 │  ├─ routes.ts
 │  ├─ storage.ts
 │  └─ vite.ts
@@ -928,6 +938,7 @@ Generated on: 2025-06-02
 │  │  └─ admin.ts
 │  ├─ constants.ts
 │  ├─ path-config.ts
+│  ├─ README.md
 │  └─ types.ts
 ├─ .DS_Store
 ├─ .gitignore

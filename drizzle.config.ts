@@ -12,12 +12,12 @@ if (!dbUrl) {
 }
 
 export default defineConfig({
-  dialect: "postgresql" as const,
+  dialect: "postgresql", // Explicitly set to PostgreSQL
   dbCredentials: {
     url: dbUrl,
   },
   schema: "./db/schema/index.ts", // Or "./db/schema/"
-  out: "./migrations/postgres",
+  out: "./migrations/postgres", // Output migrations to a PostgreSQL-specific directory
   verbose: true,
   strict: true,
 });
