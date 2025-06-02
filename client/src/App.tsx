@@ -17,6 +17,7 @@ import CreateThreadPage from "./pages/threads/create";
 import ShopPage from "./pages/shop";
 import NotFoundPage from "./pages/not-found";
 import LeaderboardPage from "./pages/leaderboard";
+import DegenIndexPage from "./pages/degen-index";
 import AuthPage from "./pages/auth";
 
 // Admin Pages
@@ -108,6 +109,7 @@ function App() {
           <ProtectedRoute path="/shop/dgt-purchase" component={DgtPurchasePage} />
           <ProtectedRoute path="/shop/purchase-success" component={PurchaseSuccessPage} />
           <ProtectedRoute path="/leaderboard" component={LeaderboardPage} />
+          <ProtectedRoute path="/degen-index" component={DegenIndexPage} />
           <ProtectedRoute path="/wallet" component={WalletPage} />
           <ProtectedRoute path="/profile/:username?" component={ProfilePage} />
           <ProtectedRoute path="/whispers" component={WhispersPage} />

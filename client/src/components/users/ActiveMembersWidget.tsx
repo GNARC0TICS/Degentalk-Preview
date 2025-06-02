@@ -34,7 +34,7 @@ export function ActiveMembersWidget({
   description = "Members active in the last 30 minutes",
   className = "",
   limit = 5,
-  viewAllLink = "/leaderboard",
+  viewAllLink = "/degen-index",
   isLoading = false
 }: ActiveMembersWidgetProps) {
   // Limit the number of users displayed
@@ -97,7 +97,7 @@ export function ActiveMembersWidget({
       </CardContent>
       <CardFooter className="bg-zinc-900/90 p-3 border-t border-zinc-800">
         <Link href={viewAllLink} className="group text-sm text-zinc-400 hover:text-emerald-400 flex items-center w-full justify-center transition-colors">
-          View Leaderboard 
+          View All Members 
           <ArrowRight className="h-3.5 w-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
         </Link>
       </CardFooter>

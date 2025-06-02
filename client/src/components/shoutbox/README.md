@@ -1,5 +1,7 @@
 # DegenTalk Shoutbox Rain & Tip Features
 
+## Status: Reviewed – Awaiting Final Approval | 2025-06-02
+
 This directory contains components for implementing the rain and tip features in the DegenTalk shoutbox.
 
 ## Components
@@ -137,4 +139,4 @@ All messages include elegant animations and currency badges for maximum visual i
 
 ## Example Implementation
 
-See the `integration-example.tsx` file for a complete implementation example. 
+See the `integration-example.tsx` file for a complete implementation example.

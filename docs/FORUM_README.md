@@ -1,5 +1,7 @@
 # ForumFusion Forum System
 
+## Status: Reviewed – Awaiting Final Approval | 2025-06-02
+
 ## Overview
 
 ForumFusion provides a full-featured forum system built with React and Express. The system supports hierarchical forum categories, thread creation, replies, likes, bookmarks, and thread solving.
@@ -153,4 +155,4 @@ To test the forum endpoints, run:
 npm run test:forum-endpoints
 ```
 
-This script verifies that all forum API endpoints are responding correctly. 
+This script verifies that all forum API endpoints are responding correctly.

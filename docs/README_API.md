@@ -1,6 +1,8 @@
 # Wallet & Engagement API Documentation
 
-This document provides detailed information about the wallet and engagement API endpoints available in the ForumFusion platform. Use these endpoints to interact with the wallet, tip, and rain functionality.
+This document provides detailed information about the wallet and engagement API endpoints available in the degentalk platform. Use these endpoints to interact with the wallet, tip, and rain functionality.
+
+## Status: Reviewed – Awaiting Final Approval | 2025-06-02
 
 ## Table of Contents
 
@@ -574,4 +576,4 @@ Common error codes:
 
 ## Webhooks
 
-The platform also supports sending webhooks for real-time updates on transactions. To receive these, register a webhook URL in your application settings. 
+The platform also supports sending webhooks for real-time updates on transactions. To receive these, register a webhook URL in your application settings.
