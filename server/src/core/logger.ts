@@ -5,8 +5,8 @@
  * It handles different log levels, formats, and outputs (console, file).
  */
 
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import { createWriteStream, WriteStream } from 'fs';
 
 // Log levels
@@ -262,4 +262,4 @@ export const logger = {
   error,
   critical,
   init: initLogger
-}; 
+};

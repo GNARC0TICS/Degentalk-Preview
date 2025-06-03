@@ -5,11 +5,12 @@
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/.tsbuildinfo",
     "noEmit": true,
-    "module": "ESNext",
-    "target": "ES2022",
+    "module": "NodeNext", // Changed from ESNext
+    "target": "ES2017",
+    "downlevelIteration": true,
     "lib": ["esnext", "dom", "dom.iterable"],
     "jsx": "react-jsx",
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext", // Changed from "node"
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -18,14 +19,15 @@
     "forceConsistentCasingInFileNames": true,
     "allowImportingTsExtensions": true,
     "baseUrl": ".",
+    "rootDir": ".", // Explicitly set rootDir
     "types": ["node", "vite/client"],
     "paths": {
       "@/*": ["client/src/*"],
       "@shared/*": ["shared/*"],
       "@server/*": ["server/*"],
-      "@db": ["db/index.ts"],
-      "@schema": ["db/schema/index.ts"],
-      "@schema/*": ["db/schema/*"]
+      "@db": ["db/index.ts"], // Keep as is, points to the file
+      "@schema": ["db/schema/index.ts"], // Keep as is, points to the file
+      "@schema/*": ["db/schema/*"] // Keep as is for sub-modules
     }
   }
 }

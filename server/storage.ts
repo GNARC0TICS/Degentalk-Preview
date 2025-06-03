@@ -9,22 +9,24 @@ import { users, posts, threads, forumCategories, threadTags, tags, postReactions
 import { db, pool } from '@db';
 import { and, eq, desc, sql, count, isNull, not, inArray, ne, lte } from "drizzle-orm";
 import { ThreadWithUser, PostWithUser, ForumCategoryWithStats, UserPluginData, EmojiWithAvailability } from "@shared/types";
-import session from "express-session";
-import connectPGSink from "connect-pg-simple";
+import * as session from "express-session";
+import * as connectPGSink from "connect-pg-simple";
 import { randomBytes, scrypt } from "crypto";
 import { promisify } from "util";
-import { xpCloutService } from './src/domains/xp/services/xp-clout-service';
-import { logger, LogLevel, LogAction } from "./src/core/logger";
+import { xpCloutService } from './src/domains/xp/services/xp-clout-service.js';
+import { logger, LogLevel, LogAction } from "./src/core/logger.js";
 import { PgTransaction } from 'drizzle-orm/pg-core';
 // import multerS3 from "multer-s3"; // Removed as not a dependency
 // import { S3Client } from "@aws-sdk/client-s3"; // Removed as not a dependency
 
 const environment = process.env.NODE_ENV || "development";
 
-const PGStore = connectPGSink(session);
+// Correctly get the function from the namespace import
+const connectPgSimpleFunction = (connectPGSink as any).default || connectPGSink;
+const PGStore = connectPgSimpleFunction(session.default || session); // Pass the actual session module
 
 // Define Store type
-type SessionStore = connectPGSink.PGStore;
+type SessionStore = ReturnType<typeof connectPgSimpleFunction>;
 
 export interface IStorage {
   // User methods
@@ -1920,22 +1922,25 @@ export class DatabaseStorage implements IStorage {
       throw new Error("User not found");
     }
     
-    const pathXp = user.pathXp || {};
+    const pathXpData = user.pathXp || {};
     const currentMultipliers = user.pathMultipliers || {};
     let newMultipliers = { ...currentMultipliers };
     let multiplierChanged = false;
     
     // Apply multiplier rules - example rule: 1.2x multiplier at 1000 XP
-    Object.entries(pathXp).forEach(([path, xp]) => {
+    Object.entries(pathXpData).forEach(([path, xpValue]) => {
       // Define multiplier thresholds and values
       let newMultiplier = 1; // Default multiplier
       
-      if (xp >= 5000) {
-        newMultiplier = 1.5; // 1.5x multiplier at 5000 XP
-      } else if (xp >= 2500) {
-        newMultiplier = 1.3; // 1.3x multiplier at 2500 XP
-      } else if (xp >= 1000) {
-        newMultiplier = 1.2; // 1.2x multiplier at 1000 XP
+      if (typeof xpValue === 'number') {
+        const xp = xpValue; // xp is now safely a number
+        if (xp >= 5000) {
+          newMultiplier = 1.5; // 1.5x multiplier at 5000 XP
+        } else if (xp >= 2500) {
+          newMultiplier = 1.3; // 1.3x multiplier at 2500 XP
+        } else if (xp >= 1000) {
+          newMultiplier = 1.2; // 1.2x multiplier at 1000 XP
+        }
       }
       
       if (newMultiplier !== (currentMultipliers[path] || 1)) {

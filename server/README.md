@@ -80,3 +80,30 @@ The server codebase follows a domain-driven design approach to organize its modu
 
 ---
 *This README is intended to be a living document. Please update it as the server architecture or key components change.*
+
+## 🧩 Server-Side Architecture: Domain-Driven Layout
+
+As of June 2025, all backend logic in DegenTalk follows a domain-based folder structure under `server/src/domains/`.
+
+Each domain contains its own:
+- `routes/` — Express route handlers
+- `services/` — Business logic or integrations
+- `types.ts` — Domain-specific types
+- `controllers/` — (Optional) controller abstraction
+
+Example:
+
+```
+server/src/domains/xp/
+├── routes/
+│   └── adjust-xp.ts
+├── services/
+│   └── xp-clout-service.ts
+├── types.ts
+```
+
+> ❗ **Deprecated:** The use of `server/routes/api/` and `server/services/` is no longer allowed. All logic must live within a domain.
+
+Enums are now colocated within their domain-specific schema files:
+- `transactionTypeEnum` → `db/schema/economy/transactions.ts`
+- `contentEditStatusEnum` → `db/schema/forum/posts.ts`
