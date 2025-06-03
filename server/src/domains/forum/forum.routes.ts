@@ -33,12 +33,12 @@ import {
 import { sql, eq, and, desc, count, isNotNull, asc, ilike, or, gt, ne, inArray, isNull } from "drizzle-orm";
 import { awardPathXp } from "@server/utils/path-utils";
 import { xpRewards } from "@shared/path-config";
-import { xpCloutService } from '../../../services/xp-clout-service';
+import { xpCloutService } from '../xp/services/xp-clout-service';
 import { isAuthenticated as requireAuth, isAdmin, isAdminOrModerator } from '../auth/middleware/auth.middleware';
 import { ThreadWithUserAndCategory, PostWithUser } from "@shared/types";
 import { slugify } from "@server/utils/slugify";
 import { XpService } from '../../../services/xp-service';
-import { xpLevelService, XP_ACTIONS } from '../../../services/xp-level-service';
+import { xpLevelService, XP_ACTIONS } from '../xp/services/xp-level-service';
 import rulesRoutes from './rules/rules.routes';
 import { forumController } from './forum.controller';
 import { forumService } from './forum.service';

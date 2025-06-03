@@ -1,7 +1,7 @@
 import { db } from '@db';
 import { users, levels, economySettings, userTitles, userBadges, titles, badges, xpCloutSettings } from '@schema';
 import { eq, sql, lte, desc, and, isNull } from 'drizzle-orm';
-import { logger } from '../src/core/logger';
+import { logger } from '../../../core/logger';
 
 /**
  * XP Action types used in economySettings
@@ -419,4 +419,4 @@ export class XpLevelService {
 }
 
 // Export a singleton instance
-export const xpLevelService = new XpLevelService(); 
+export const xpLevelService = new XpLevelService();

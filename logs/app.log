@@ -13013,3 +13013,12 @@ User not found
 [2025-06-02T09:11:35.147Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
 [2025-06-02T09:11:35.147Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
 [2025-06-02T09:11:35.147Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-03T04:17:15.770Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-03T04:17:15.775Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-03T04:17:16.229Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-03T04:17:16.229Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-03T04:17:16.229Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-03T04:17:16.229Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed

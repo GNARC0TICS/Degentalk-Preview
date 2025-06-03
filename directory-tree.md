@@ -1,6 +1,6 @@
 # ForumFusion Directory Structure
   
-Generated on: 2025-06-02
+Generated on: 2025-06-03
 
 ```
 ├─ .clinerules/
@@ -251,6 +251,9 @@ Generated on: 2025-06-02
 │  │  │  │  ├─ framed-avatar.tsx
 │  │  │  │  ├─ index.ts
 │  │  │  │  ├─ user-avatar.tsx
+│  │  │  │  ├─ UserCard.tsx
+│  │  │  │  ├─ UserDirectoryTable.tsx
+│  │  │  │  ├─ UserFilters.tsx
 │  │  │  │  └─ Username.tsx
 │  │  │  ├─ xp/
 │  │  │  │  ├─ LevelUpModal.tsx
@@ -435,6 +438,7 @@ Generated on: 2025-06-02
 │  │  │  ├─ _app.tsx
 │  │  │  ├─ auth-page.tsx
 │  │  │  ├─ auth.tsx
+│  │  │  ├─ degen-index.tsx
 │  │  │  ├─ forum-rules.tsx
 │  │  │  ├─ home.tsx
 │  │  │  ├─ leaderboard.tsx
@@ -593,8 +597,7 @@ Generated on: 2025-06-02
 │  └─ README.md
 ├─ docs/
 │  ├─ archive/
-│  │  ├─ FORUM_PRIMARY_ZONES_REFACTOR_PLAN.md
-│  │  └─ placeholder.txt
+│  │  └─ FORUM_PRIMARY_ZONES_REFACTOR_PLAN.md
 │  ├─ engagement/
 │  │  ├─ rain-analytics.md
 │  │  └─ tipping-analytics.md

@@ -1,7 +1,7 @@
 import { db } from '@db';
 import { users, xpCloutSettings } from '@schema';
 import { eq, sql } from 'drizzle-orm';
-import { logger } from '../src/core/logger';
+import { logger } from '../../../core/logger';
 
 export class XpCloutService {
   /**
@@ -98,4 +98,4 @@ export class XpCloutService {
 }
 
 // Export a singleton instance
-export const xpCloutService = new XpCloutService(); 
+export const xpCloutService = new XpCloutService();

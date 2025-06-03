@@ -1,7 +1,7 @@
 import { pgTable, serial, varchar, text, integer, boolean, timestamp, index } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { users } from "../user/users";
-import { contentEditStatusEnum } from "../core/enums";
+import { contentEditStatusEnum } from "./posts"; // Updated import path
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -41,4 +41,4 @@ export const insertForumRuleSchema = createInsertSchema(forumRules, {
 });
 
 export type ForumRule = typeof forumRules.$inferSelect;
-export type InsertForumRule = z.infer<typeof insertForumRuleSchema>; 
+export type InsertForumRule = z.infer<typeof insertForumRuleSchema>;

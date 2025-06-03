@@ -1,7 +1,15 @@
-import { pgTable, serial, integer, text, boolean, timestamp, uuid, bigint, jsonb, AnyPgColumn, index } from "drizzle-orm/pg-core";
+import { pgTable, serial, integer, text, boolean, timestamp, uuid, bigint, jsonb, AnyPgColumn, index, pgEnum } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { users } from "../user/users"; // Adjusted import path
 import { threads } from "./threads"; // Adjusted import path
+
+export const contentEditStatusEnum = pgEnum('content_edit_status', [
+  'draft',
+  'pending_review',
+  'published',
+  'rejected',
+  'archived',
+]);
 
 export const posts = pgTable('posts', {
   id: serial('post_id').primaryKey(),
@@ -69,4 +77,4 @@ export const insertPostSchema = createInsertSchema(posts, {
 });
 
 export type Post = typeof posts.$inferSelect;
-export type InsertPost = z.infer<typeof insertPostSchema>; 
+export type InsertPost = z.infer<typeof insertPostSchema>;

@@ -13,7 +13,7 @@ import session from "express-session";
 import connectPGSink from "connect-pg-simple";
 import { randomBytes, scrypt } from "crypto";
 import { promisify } from "util";
-import { xpCloutService } from './services/xp-clout-service';
+import { xpCloutService } from './src/domains/xp/services/xp-clout-service';
 import { logger, LogLevel, LogAction } from "./src/core/logger";
 import { PgTransaction } from 'drizzle-orm/pg-core';
 // import multerS3 from "multer-s3"; // Removed as not a dependency
@@ -2109,4 +2109,3 @@ export class DatabaseStorage implements IStorage {
 }
 
 export const storage = new DatabaseStorage();
-      
