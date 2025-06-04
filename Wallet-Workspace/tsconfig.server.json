@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "./dist/server", // Output directory for compiled server files
+    "module": "NodeNext", // Ensure consistent module system for server
+    "moduleResolution": "nodenext",
+    // "types": ["node"], // Server-specific types, Vite/client types not needed
+    // Remove client-specific paths if they cause issues, or ensure they are not included
+    "paths": {
+      // "@/*": ["client/src/*"], // Not needed for server build
+      "@db": ["db/index.ts"],
+      "@schema": ["db/schema/index.ts"],
+      "@schema/*": ["db/schema/*"]
+    }
+  },
+  "include": ["server/src/**/*", "db/schema/**/*"], // Only include server-side and schema files
+  "exclude": ["node_modules", "dist", "client/src/**/*", "**/*.test.ts"]
+}

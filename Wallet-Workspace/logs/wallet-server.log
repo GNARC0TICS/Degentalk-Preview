@@ -1,0 +1,20 @@
+[2025-06-04T06:48:31.863Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/wallet-server.log"
+}
+[2025-06-04T06:48:31.867Z] [INFO] [SERVER_SETUP] Placeholder for wallet routes - uncomment and adjust above.
+[2025-06-04T06:48:31.915Z] [INFO] [SERVER_STARTUP] Wallet test server running on http://localhost:5002
+[2025-06-04T06:48:31.916Z] [WARN] [SERVER_STARTUP] DATABASE_URL is not set. Database operations will likely fail.
+[2025-06-04T06:48:31.917Z] [WARN] [SERVER_STARTUP] CCPAYMENT_APP_ID or CCPAYMENT_APP_SECRET is not set. CCPayment features will not work.
+[2025-06-04T06:50:09.437Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/wallet-server.log"
+}
+[2025-06-04T06:50:09.440Z] [INFO] [SERVER_SETUP] Placeholder for wallet routes - uncomment and adjust above.
+[2025-06-04T06:50:09.445Z] [INFO] [SERVER_STARTUP] Wallet test server running on http://localhost:5002
+[2025-06-04T06:51:27.941Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/wallet-server.log"
+}
+[2025-06-04T06:51:27.968Z] [INFO] [SERVER_SETUP] Placeholder for wallet routes - uncomment and adjust above.
+[2025-06-04T06:51:28.003Z] [INFO] [SERVER_STARTUP] Wallet test server running on http://localhost:5002
