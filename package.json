@@ -51,6 +51,7 @@
     "lint:aliases": "grep -r \"@db/schema\" . && echo '❌ Found @db/schema again. Nope.' && exit 1 || echo '✅ No @db/schema imports found.'"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^3.10.0",
     "@jridgewell/trace-mapping": "^0.3.25",
     "@lottiefiles/dotlottie-react": "^0.13.5",
