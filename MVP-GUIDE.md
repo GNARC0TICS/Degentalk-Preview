@@ -2,12 +2,12 @@
 
 ## 1. ✅ MVP Overview
 
-DegenTalk is a next-gen crypto-native forum and social platform designed for cryptocurrency enthusiasts, traders, developers, and the terminally online. It combines a feature-rich discussion board with real-time social mechanics, a platform-exclusive token (**DGT**), and a gamified **XP** economy that rewards engagement.
+Degentalk is a satirical next-gen crypto-native forum and social platform designed for cryptocurrency enthusiasts, gamblers, traders, developers, and the terminally online degenerates. It combines a feature-rich discussion board tied to satirical degen culture. with real-time social mechanics, a platform-exclusive token (**DGT**), and a gamified **XP** economy that rewards engagement.
 
-**Core Features for Beta Launch (as per `projectBrief.md` & `DegenTalk XP & DGT Economy Manifesto` - Phase 1 & 1.5):**
-- **User Authentication:** Register, login, logout.
-- **Forum Core:** Create/Edit/View Threads & Posts, Rich Text Editor (Tiptap JSON based).
-- **XP & Level System:** Earn XP via actions (posting, reactions, being tipped, referrals). Levels unlock perks/recognition.
+**Core Features for Beta Launch (as per `projectBrief.md` & `Degentalk XP & DGT Economy Manifesto` - Phase 1 & 1.5):**
+- **User Authentication:** Register, login, logout, refer to earn.
+- **Forum Core:** Create/Edit/View/Draft Threads & Posts, Rich Text Editor (Tiptap JSON based). Reaction System, Forums and Threads.
+- **XP & Level System:** Earn XP via actions (posting, reactions, being tipped, referrals, tasks). Levels unlock perks/recognition.
 - **DGT Wallet & Utility:** Internal currency (**DGT pegged at $0.10 USD**), earned (milestones, referrals, faucet) or purchased.
 - **Basic Shop:** Purchase initial cosmetic items (e.g., Signature Unlock) with DGT.
 - **Tipping & Rain:** Basic `/tip` command. `/rain` might be post-MVP if complex.

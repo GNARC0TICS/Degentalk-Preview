@@ -1,725 +1,725 @@
-# CCPayment API Documentation
+CCPAYMENT-API-DOCS.md
 
-## Table of Contents
+ccpayment
+Introduction
+Quick Guide
+Credentials
+API Authentication and Specifications
+Request Limits
+Testnet
+Webhook
+Webhook Guide
+Set Webhook URL
+How to Handle Incoming Webhooks
+Retry Logic
+Idempotency
+View Webhook Notification Logs and Resend Webhooks
+Resend Webhook by Calling API
+Deposit APIs
+Get Permanent Deposit Address
+Webhook for Direct Deposit
+Webhook for Risky Address
+Deposit Address for Order
+Deposit with merchant-specified currency and network
+Deposit with customer-selected currency and network
+Address Unbinding
+Get Deposit Record
+Get Deposit Record List
+Withdrawal API
+Create Network Withdrawal Order
+Webhook for API Withdrawal
+Withdrawal to Cwallet Account
+Get Withdrawal Record
+Get Withdrawal Record List
+Swap API
+Get Swap Quote
+Create and Fulfill Swap Order
+Get Swap Record
+Get Swap Record List
+Create a Wallet System
+User Balance
+Get User Balance List
+Get coin balance of users
+User Deposit API
+Create or Get User Deposit Address
+Webhook for User Deposit
+Get User Deposit Record
+Get User Deposit Record List
+User Withdrawal API
+Withdrawal to Blockchain Address
+Webhook for User Withdrawal
+Withdrawal to Cwallet Account
+Get User Withdrawal Record
+Get User Withdrawal Record List
+User Internal Transaction API
+Create an Internal Transaction
+Get User Internal Transaction Record
+Get User Internal Transaction Record List
+User Swap API
+User Get Swap Quote
+Create and Fulfill User Swap Order
+Get User Swap Record
+Get User Swap Record List
+Common API
+Get Token List
+Get Token Information
+Get Token Price
+Balance Query APIs
+Get Balance List
+Get Coin Balance
+Rescan Lost Transaction
+Get Cwallet User Information
+Check Withdrawal Address Validity
+Get Withdrawal Network Fee
+Get Fiat List
+Get Swap Coin List
+Get Chain List
+Support
+FAQ
+Status Code
+Error Code
+Contact Us
 
-*   [Introduction](#introduction)
-*   [Quick Guide](#quick-guide)
-    *   [Credentials](#credentials)
-*   [SDKs and Code Examples](#sdks-and-code-examples)
-*   [API Authentication and Specifications](#api-authentication-and-specifications)
-    *   [Rules for API Calls](#rules-for-api-calls)
-    *   [Signature](#signature)
-    *   [Request Header](#request-header)
-    *   [HMAC Signature Example](#hmac-signature-example)
-    *   [API Usage Example (HMAC)](#api-usage-example-hmac)
-    *   [RSA Signature Example](#rsa-signature-example)
-    *   [API Usage Example (RSA)](#api-usage-example-rsa)
-*   [Request Limits](#request-limits)
-*   [Testnet](#testnet)
-*   [Webhook](#webhook)
-    *   [Webhook Guide](#webhook-guide)
-    *   [Set Webhook URL](#set-webhook-url)
-    *   [How to Handle Incoming Webhooks](#how-to-handle-incoming-webhooks)
-    *   [Retry Logic](#retry-logic)
-    *   [Idempotency](#idempotency)
-    *   [View Webhook Notification Logs and Resend Webhooks](#view-webhook-notification-logs-and-resend-webhooks)
-    *   [Resend Webhook by Calling API](#resend-webhook-by-calling-api)
-*   [Deposit APIs](#deposit-apis)
-    *   [Get Permanent Deposit Address](#get-permanent-deposit-address)
-    *   [Webhook for Direct Deposit](#webhook-for-direct-deposit)
-    *   [Webhook for Risky Address](#webhook-for-risky-address)
-    *   [Deposit Address for Order](#deposit-address-for-order)
-        *   [Deposit with merchant-specified currency and network](#deposit-with-merchant-specified-currency-and-network)
-        *   [Webhook for API Deposit (Merchant-Specified)](#webhook-for-api-deposit-merchant-specified)
-        *   [Get order information (merchant-specified currency deposit order)](#get-order-information-merchant-specified-currency-deposit-order)
-        *   [Deposit with customer-selected currency and network](#deposit-with-customer-selected-currency-and-network)
-        *   [Webhook for Invoice API Deposit (Customer-Selected)](#webhook-for-invoice-api-deposit-customer-selected)
-        *   [Get order information (customer-selected currency deposit order)](#get-order-information-customer-selected-currency-deposit-order)
-    *   [Address Unbinding](#address-unbinding)
-    *   [Get Deposit Record](#get-deposit-record)
-    *   [Get Deposit Record List](#get-deposit-record-list)
-*   [Withdrawal API](#withdrawal-api)
-    *   [Create Network Withdrawal Order](#create-network-withdrawal-order)
-    *   [Webhook for API Withdrawal](#webhook-for-api-withdrawal)
-    *   [Withdrawal to Cwallet Account](#withdrawal-to-cwallet-account)
-    *   [Get Withdrawal Record](#get-withdrawal-record)
-    *   [Get Withdrawal Record List](#get-withdrawal-record-list)
-*   [Swap API](#swap-api)
-    *   [Get Swap Quote](#get-swap-quote)
-    *   [Create and Fulfill Swap Order](#create-and-fulfill-swap-order)
-    *   [Get Swap Record](#get-swap-record)
-    *   [Get Swap Record List](#get-swap-record-list)
-*   [Create a Wallet System](#create-a-wallet-system)
-    *   [User Balance](#user-balance)
-        *   [Get User Balance List](#get-user-balance-list)
-        *   [Get coin balance of users](#get-coin-balance-of-users)
-    *   [User Deposit API](#user-deposit-api)
-        *   [Create or Get User Deposit Address](#create-or-get-user-deposit-address)
-        *   [Webhook for User Deposit](#webhook-for-user-deposit)
-        *   [Get User Deposit Record](#get-user-deposit-record)
-        *   [Get User Deposit Record List](#get-user-deposit-record-list)
-    *   [User Withdrawal API](#user-withdrawal-api)
-        *   [Withdrawal to Blockchain Address](#withdrawal-to-blockchain-address)
-        *   [Webhook for User Withdrawal](#webhook-for-user-withdrawal)
-        *   [Withdrawal to Cwallet Account (User)](#withdrawal-to-cwallet-account-user)
-        *   [Get User Withdrawal Record](#get-user-withdrawal-record)
-        *   [Get User Withdrawal Record List](#get-user-withdrawal-record-list)
-    *   [User Internal Transaction API](#user-internal-transaction-api)
-        *   [Create an Internal Transaction](#create-an-internal-transaction)
-        *   [Get User Internal Transaction Record](#get-user-internal-transaction-record)
-        *   [Get User Internal Transaction Record List](#get-user-internal-transaction-record-list)
-    *   [User Swap API](#user-swap-api)
-        *   [User Get Swap Quote](#user-get-swap-quote)
-        *   [Create and Fulfill User Swap Order](#create-and-fulfill-user-swap-order)
-        *   [Get User Swap Record](#get-user-swap-record)
-        *   [Get User Swap Record List](#get-user-swap-record-list)
-*   [Common API](#common-api)
-    *   [Get Token List](#get-token-list)
-    *   [Get Token Information](#get-token-information)
-    *   [Get Token Price](#get-token-price)
-    *   [Balance Query APIs](#balance-query-apis)
-        *   [Get Balance List](#get-balance-list)
-        *   [Get Coin Balance](#get-coin-balance)
-    *   [Rescan Lost Transaction](#rescan-lost-transaction)
-    *   [Get Cwallet User Information](#get-cwallet-user-information)
-    *   [Check Withdrawal Address Validity](#check-withdrawal-address-validity)
-    *   [Get Withdrawal Network Fee](#get-withdrawal-network-fee)
-    *   [Get Fiat List](#get-fiat-list)
-    *   [Get Swap Coin List](#get-swap-coin-list)
-    *   [Get Chain List](#get-chain-list)
-*   [Support](#support)
-    *   [FAQ](#faq)
-    *   [Status Code](#status-code)
-    *   [Error Code](#error-code)
-    *   [Contact Us](#contact-us)
+Question?
 
----
-
-## Introduction
-
+Degentalk.io@gmail.com
+Deg***@gmail.com
+Role: Owner
+Java
+PHP
+Python
+Node
+Golang
+Introduction
 CCPayment is a cryptocurrency payment platform allowing merchants to accept and payout over 100 cryptocurrencies with the lowest fees on the market.
-
----
-
-## Quick Guide
-
-### Credentials
-
+Quick Guide
+Credentials
 To establish communication with CCPayment systems, you need credentials for your Terminals.
-
-**How to obtain Credentials:**
-
-1.  **Step 1:** Go to the registration page of CCPayment and sign up using your email address.
-2.  **Step 2:** Log in and navigate to the **Dashboard > Developer** to obtain your "APP ID" and "APP Secret", which will serve as your credentials to communicate with CCPayment.
-
----
-
-## SDKs and Code Examples
-
-The code examples provided in this documentation primarily use Node.js. CCPayment may offer SDKs or further examples for other programming languages such as:
-
-*   Java
-*   PHP
-*   Python
-*   Node.js (as shown)
-*   Golang
-
-For the latest information on available SDKs and language-specific integration guides, please refer to the official CCPayment developer portal or contact our support team.
-
----
-
-## API Authentication and Specifications
-
+How to obtain Credentials
+Step1: Go to the registration page of CCPayment and sign up using your email address.
+Step2: Log in and navigate to the Dashboard > developer to obtain your "APP ID" and "APP Secret", which will serve as your credentials to communicate with CCPayment.
+API Authentication and Specifications
 You will need "APP ID" and "APP Secret" to sign every message sent to CCPayment.
-
-### Rules for API Calls
-
-| Rule                | Description                                       |
-| :------------------ | :------------------------------------------------ |
-| Transfer Mode       | HTTPS                                             |
-| Submit Mode         | POST, may vary for different APIs                 |
-| Content-Type        | `application/json`                                |
-| Char Encoding       | UTF-8                                             |
-| Signature Algorithm | HmacSHA256 (or RSA, depending on your setup)      |
-
-### Signature
-
-Prepare a `signText` by creating a string concatenating your `Appid` and `timestamp`, and then append the request payload (body) if present.
-
-**Example:** `signText = {Appid} + {timestamp} + PayloadInJSONFormat`
-
-*   **HMAC:** Use SHA-256 hashing algorithm with your `AppSecret` to compute the signature of the `signText`.
-*   **RSA:** Use your RSA private key to sign the SHA-256 hash of the `signText` and convert the signature into a Base64-encoded string.
-
-The `timestamp` must be a 10-digit Unix timestamp (seconds). The payload of the requests must be a JSON object. The payload you sign should be exactly the same as the payload you send in the request body.
-
-**Before signing, please check the following:**
-
-1.  Ensure the **APP ID** and **App Secret** (or RSA keys) are correct. You can verify them on your dashboard.
-    *   **Note:** If you use a random APP ID for unauthorized actions, CCPayment will block the IP and APP ID after a number of requests.
-2.  Make sure your website has been verified. Only verified merchant accounts have access to APIs.
-3.  If you have set up an IP whitelist on your dashboard, ensure the IP address of your requests is included in your whitelist.
-
-### Request Header
-
-To ensure the proper handling of your requests by the server, please include the following headers in each request:
-
-| Parameters | Type   | Required | Description                                                     |
-| :--------- | :----- | :------- | :-------------------------------------------------------------- |
-| `Appid`    | String | Yes      | Your CCPayment APP ID.                                          |
-| `Timestamp`| String | Yes      | 10-digit Unix timestamp. Valid for 2 minutes. Example: `1677152720`. |
-| `Sign`     | String | Yes      | The generated signature. See examples below.                    |
+Rules for API Calls
+Rule	Description
+Transfer Mode	HTTPS
+Submit Mode	POST, may vary for different APIs
+Content-Type	Application/Json
+Char Encoding	UTF-8
+Signature Algorithm	HmacSHA-256
+Signature
+Prepare a signText by creating a string concatenating appId and timestamp, and append the request payload if present. Example: signText = {Appid} + {timestamp} + Payload in JSON format
+HMAC: Use SHA-256 hashing algorithm to compute the signature of the request data.
+RSA: Use the RSA private key to sign the hashed data(SHA-256) and convert the signature into a Base64-encoded string.
+10-digit timestamp The payload of the requests must be a JSON object. And the payload you sign should be exactly the same as the payload you send in the request.
+Before signing, here are a few things you should check:
+1. Ensure the APP ID and App Secret are correct. You can check it on your dashboard. Note: If you use a random APP ID for any unauthorized actions, we will block the IP and APP ID after a number of requests.
+2. Make sure your website has been verified. Only verified merchant accounts have access to APIs.
+3. If you have set up an IP whitelist on your dashboard, ensure the IP address of your requests is included in your whitelist.
+Request Header
+To ensure the proper handling of your requests by the server, please include the following headers in each request
+Parameters	Type	Required	Description
+Appid	String	Yes	Your CCPayment APP ID
+Timestamp	String	Yes	10-digit timestamp. Valid in 2 minutes. Example: 1677152720
+Sign	String	Yes	
+Check the example on your right hand  HMAC Example: 871f0223c66ea72435208d03603a0cb00b90f6ac4a4ba725d00164d967e291f6  RSA Example: R3l4l53fLcQ9mVRFVzXMk5CN5KTbKq5jdEaQZJ9z6+IoYQjCW1/36FJGx6YG/yC3kBErf2p5A==
 
 Headers for all requests made to CCPayment follow the same rule.
+HMAC Signature Example
 
-#### HMAC Signature Example
-```javascript
-// Example: Generating an HMAC SHA256 signature
-// const appSecret = 'YOUR_APP_SECRET';
-// const signText = appId + timestamp + requestBody; // requestBody is the JSON string payload
-// const sign = CryptoJS.HmacSHA256(signText, appSecret).toString();
+1var sign = CryptoJS.HmacSHA256('The quick brown fox jumped over the lazy dog.',appSecret).toString();
+API usage example
+getCoinList interface (no parameters):
 
-// A conceptual example from the original docs:
-// var sign = CryptoJS.HmacSHA256('The quick brown fox jumped over the lazy dog.', appSecret).toString();
-```
+1const https = require('https');
+2const crypto = require('crypto');
+3
+4const appId ='*** your appId ***';
+5const appSecret ='*** your appSecret ***';
+6
+7const path = 'https://ccpayment.com/ccpayment/v2/getCoinList';
+8const args = '';
+9
+10const timestamp = Math.floor(Date.now() / 1000);
+11let signText = appId + timestamp;
+12if (args) {
+13  signText += args;
+14}
+15
+16const sign = crypto
+17  .createHmac('sha256', appSecret)
+18  .update(signText)
+19  .digest('hex');
+20
+21const options = {
+22  method: 'POST',
+23  headers: {
+24    'Content-Type': 'application/json',
+25    'Appid': appId,
+26    'Sign': sign,
+27    'Timestamp': timestamp.toString(),
+28  },
+29};
+30
+31const req = https.request(path, options, (res) => {
+32  let respData = '';
+33
+34  res.on('data', (chunk) => {
+35    respData += chunk;
+36  });
+37
+38  res.on('end', () => {
+39    console.log('Response:', respData);
+40  });
+41});
+42
+43req.write(args);
+44req.end();
+getCoin interface (need parameters):
 
-#### API Usage Example (HMAC)
+1const https = require('https');
+2const crypto = require('crypto');
+3
+4const appId ='*** your appId ***';
+5const appSecret ='*** your appSecret ***';
+6
+7const path = 'https://ccpayment.com/ccpayment/v2/getCoin';
+8const args = JSON.stringify({ "coinId": 1280 });
+9
+10const timestamp = Math.floor(Date.now() / 1000);
+11let signText = appId + timestamp;
+12if (args) {
+13  signText += args;
+14}
+15
+16const sign = crypto
+17  .createHmac('sha256', appSecret)
+18  .update(signText)
+19  .digest('hex');
+20
+21const options = {
+22  method: 'POST',
+23  headers: {
+24    'Content-Type': 'application/json',
+25    'Appid': appId,
+26    'Sign': sign,
+27    'Timestamp': timestamp.toString(),
+28  },
+29};
+30
+31const req = https.request(path, options, (res) => {
+32  let respData = '';
+33
+34  res.on('data', (chunk) => {
+35    respData += chunk;
+36  });
+37
+38  res.on('end', () => {
+39    console.log('Response:', respData);
+40  });
+41});
+42
+43req.write(args);
+44req.end();
+RSA Signature Example
 
-**`getCoinList` interface (no parameters):**
-```javascript
-const https = require('https');
-const crypto = require('crypto');
+1// Prepare data to be signed
+2    const dataToSign = apiID + timestamp + apiParams;
+3
+4    // Load the private key
+5    const privateKey = crypto.createPrivateKey(privateKeyPem);
+6
+7    // Sign the data
+8    const sign = crypto.createSign('SHA256');
+9    sign.update(dataToSign);
+10    sign.end();
+11
+12    const signature = sign.sign(privateKey, 'base64');
+API usage example
+getCoinList interface (need parameters):
 
-const appId = '*** your appId ***';
-const appSecret = '*** your appSecret ***';
-
-const path = 'https://ccpayment.com/ccpayment/v2/getCoinList';
-const args = ''; // No request body for this endpoint
-
-const timestamp = Math.floor(Date.now() / 1000);
-let signText = appId + timestamp;
-if (args) { // Though args is empty here, this structure is for consistency
-  signText += args;
-}
-
-const sign = crypto
-  .createHmac('sha256', appSecret)
-  .update(signText)
-  .digest('hex');
-
-const options = {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Appid': appId,
-    'Sign': sign,
-    'Timestamp': timestamp.toString(),
-  },
-};
-
-const req = https.request(path, options, (res) => {
-  let respData = '';
-
-  res.on('data', (chunk) => {
-    respData += chunk;
-  });
-
-  res.on('end', () => {
-    console.log('Response:', respData);
-  });
-});
-
-req.on('error', (error) => {
-  console.error('Error:', error);
-});
-
-// If there were args (a request body), you would write it here.
-// Since args is empty, this effectively sends an empty body.
-req.write(args);
-req.end();
-```
-
-**`getCoin` interface (with parameters):**
-```javascript
-const https = require('https');
-const crypto = require('crypto');
-
-const appId = '*** your appId ***';
-const appSecret = '*** your appSecret ***';
-
-const path = 'https://ccpayment.com/ccpayment/v2/getCoin';
-const requestPayload = { "coinId": 1280 };
-const args = JSON.stringify(requestPayload);
-
-const timestamp = Math.floor(Date.now() / 1000);
-let signText = appId + timestamp;
-if (args) {
-  signText += args;
-}
-
-const sign = crypto
-  .createHmac('sha256', appSecret)
-  .update(signText)
-  .digest('hex');
-
-const options = {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Appid': appId,
-    'Sign': sign,
-    'Timestamp': timestamp.toString(),
-  },
-};
-
-const req = https.request(path, options, (res) => {
-  let respData = '';
-
-  res.on('data', (chunk) => {
-    respData += chunk;
-  });
-
-  res.on('end', () => {
-    console.log('Response:', respData);
-  });
-});
-
-req.on('error', (error) => {
-  console.error('Error:', error);
-});
-
-req.write(args);
-req.end();
-```
-
-#### RSA Signature Example
-```javascript
-// Prepare data to be signed
-// const dataToSign = apiID + timestamp + apiParams; // apiParams is the JSON string payload
-
-// Load the private key
-// const privateKey = crypto.createPrivateKey(privateKeyPem);
-
-// Sign the data
-// const signInstance = crypto.createSign('SHA256');
-// signInstance.update(dataToSign);
-// signInstance.end();
-
-// const signature = signInstance.sign(privateKey, 'base64');
-```
-
-#### API Usage Example (RSA)
-
-**`getCoinList` interface (no parameters, using RSA):**
-```javascript
-const crypto = require('crypto');
-const https = require('https');
-
-// Usage example
-const apiID = "*** your app_id ***";
-const privateKeyPem = `-----BEGIN PRIVATE KEY-----
-*** YOUR RSA PRIVATE KEY CONTENTS ***
------END PRIVATE KEY-----`;
-const apiParamsJsonString = ""; // No parameters for getCoinList
-const apiPath = "https://ccpayment.com/ccpayment/v2/getCoinList";
-
-async function signWithPrivateKeyAndRequest(apiID, privateKeyPem, apiParamsJsonString, apiPath) {
-  return new Promise((resolve, reject) => {
-    const timestamp = Math.floor(Date.now() / 1000).toString();
-    const dataToSign = apiID + timestamp + apiParamsJsonString;
-
-    let signature;
-    try {
-        const privateKey = crypto.createPrivateKey(privateKeyPem);
-        const signInstance = crypto.createSign('SHA256');
-        signInstance.update(dataToSign);
-        signInstance.end();
-        signature = signInstance.sign(privateKey, 'base64');
-    } catch (e) {
-        reject(new Error("Error creating RSA signature: " + e.message));
-        return;
-    }
-    
-    const postData = apiParamsJsonString; // This will be an empty string for getCoinList
-
-    const url = new URL(apiPath);
-    const options = {
-      hostname: url.hostname,
-      path: url.pathname + url.search,
-      method: 'POST',
-      headers: {
-        'Appid': apiID,
-        'Sign': signature,
-        'Timestamp': timestamp,
-        // 'Content-Type': 'application/json', // For JSON body
-        // If sending form-urlencoded (as in original example, but JSON is more common for APIs)
-        'Content-Type': apiParamsJsonString ? 'application/json' : 'application/x-www-form-urlencoded', 
-        // Ensure Content-Length is set if body is not empty, or let Node.js handle it.
-      }
-    };
-
-    const req = https.request(options, (res) => {
-      let data = '';
-      res.on('data', (chunk) => { data += chunk; });
-      res.on('end', () => { resolve(data); });
-    });
-
-    req.on('error', (e) => { reject(e); });
-    req.write(postData);
-    req.end();
-  });
-}
-
-(async () => {
-  try {
-    const response = await signWithPrivateKeyAndRequest(apiID, privateKeyPem, apiParamsJsonString, apiPath);
-    console.log("Response:", response);
-  } catch (err) {
-    console.error("Error:", err);
-  }
-})();
-```
-**Note on RSA Example:** The original RSA example used `Content-Type: application/x-www-form-urlencoded` even for an empty body. For JSON APIs, `application/json` is standard. If the body is empty, some servers might expect `Content-Length: 0` or no `Content-Type` for POST, or a specific one like `application/x-www-form-urlencoded`. The example above uses `application/json` if `apiParamsJsonString` is present, otherwise `application/x-www-form-urlencoded` to align with the original example's header, but this might need adjustment based on actual server requirements for empty bodies.
-
----
-
-## Request Limits
-
-Check the specific interface documentation for exact rate limit information.
-If you receive an error with `"Errorcode": "11004"`, it means you have reached the rate limit.
+1const crypto = require('crypto');
+2const https = require('https');
+3
+4// Usage example
+5const apiID = "*** your app_id ***";
+6const privateKeyPem = `-----BEGIN PRIVATE KEY-----
+7*** your PRIVATE KEY ***
+8-----END PRIVATE KEY-----`
+9const apiParams = "";
+10const apiPath = "https://ccpayment.com/ccpayment/v2/getCoinList";
+11
+12(async () => {
+13  try {
+14    const response = await signWithPrivateKey(apiID, privateKeyPem, apiParams, apiPath);
+15    console.log("Response:", response);
+16  } catch (err) {
+17    console.error("Error:", err);
+18  }
+19})();
+20
+21function signWithPrivateKey(apiID, privateKeyPem, apiParams, apiPath) {
+22  return new Promise((resolve, reject) => {
+23    // Calculate the timestamp
+24    const timestamp = Math.floor(Date.now() / 1000).toString();
+25
+26    // Prepare data to be signed
+27    const dataToSign = apiID + timestamp + apiParams;
+28
+29    // Load the private key
+30    const privateKey = crypto.createPrivateKey(privateKeyPem);
+31
+32    // Sign the data
+33    const sign = crypto.createSign('SHA256');
+34    sign.update(dataToSign);
+35    sign.end();
+36
+37    const signature = sign.sign(privateKey, 'base64');
+38
+39    // Send the request
+40    const postData = apiParams;
+41
+42    const url = new URL(apiPath);
+43    const options = {
+44      hostname: url.hostname,
+45      path: url.pathname + url.search,
+46      method: 'POST',
+47      headers: {
+48        'Appid': apiID,
+49        'Sign': signature,
+50        'Timestamp': timestamp,
+51        'Content-Type': 'application/x-www-form-urlencoded'
+52      }
+53    };
+54
+55    const req = https.request(options, (res) => {
+56      let data = '';
+57
+58      // Collect response data
+59      res.on('data', (chunk) => {
+60        data += chunk;
+61      });
+62
+63      // Resolve the response when it ends
+64      res.on('end', () => {
+65        resolve(data);
+66      });
+67    });
+68
+69    // Handle request error
+70    req.on('error', (e) => {
+71      reject(e);
+72    });
+73
+74    // Write POST data
+75    req.write(postData);
+76    req.end();
+77  });
+78}
+79
+Request Limits
+Check the specific interface documentation to know the exact information.
+"Errorcode": "11004" means you have reached the rate limit.
 To increase the limit, please contact your CCPayment account manager.
-
----
-
-## Testnet
-
-If you would like to test your integration with test currencies, you can use ETH Sepolia to test the functions. Navigate to **CCPayment dashboard > Merchant Settings > Merchant Settings > ETH test network** and turn the switch on to enable the test network.
-
-**Get free test Sepolia ETH from Faucets:**
-Faucets are online resources where you can receive free testnet coins.
-*   [https://cloud.google.com/application/web3/faucet/ethereum/sepolia](https://cloud.google.com/application/web3/faucet/ethereum/sepolia)
-*   [https://sepolia-faucet.pk910.de](https://sepolia-faucet.pk910.de)
-*   [https://www.allthatnode.com/faucet/ethereum.dsrv](https://www.allthatnode.com/faucet/ethereum.dsrv)
-*   [https://faucet.quicknode.com/drip](https://faucet.quicknode.com/drip)
-
-**Check transaction details on blockchain explorer:**
-`https://sepolia.etherscan.io/[your_txid]`
-
-When you finish testing and debugging, switch the ETH test network off.
-**Note:** Testing Sepolia ETH has no real value. It is only for testing purposes.
-
----
-
-## Webhook
-
-CCPayment notifies you of real-time transaction statuses by sending Webhook notifications to your server.
+Testnet
+If you would like to test your integration with test currencies, you can use ETH Sepolia to test the functions. Navigate to CCPayment dashboard > Merchant Settings > Merchant Settings > ETH test network and turn the switch on to enable test network.
+Get free test Sepolia ETH:  Faucets are online resources where you can receive free testnet coins.
+https://cloud.google.com/application/web3/faucet/ethereum/sepolia
+https://sepolia-faucet.pk910.de
+https://www.allthatnode.com/faucet/ethereum.dsrv
+https://faucet.quicknode.com/drip
+Check the transaction details on blockchain explorer
+https://sepolia.etherscan.io/[your txid]
+When you finish the test and debugging, switch the ETH test network off.
+Testing Sepolia ETH has no real value. It is only for testing purposes.
+Webhook
+CCPayment notifies you of the real-time transaction statuses by sending the Webhook to your server.
 When a merchant's server receives a Webhook request, it can parse the information in the payload and perform corresponding operations, such as updating order status or generating shipping notifications.
+Webhook Guide
+Deposits of coins in the "Tokens for your business" list will have webhook notifications sent. Deposits of non-supported coins for your business will not have webhook notifications sent to your server. Navigate to Dashboard > Settings > Tokens for your business to configure it.
 
-### Webhook Guide
+Set Webhook URL
+Go to Dashboard > Developer > Webhook URL to set your Webhook receiving URL.
+Please note that if your server has an IP whitelist configured, make sure to add our Webhook sending IPs (54.150.123.157, 35.72.150.75 and 18.176.186.244) to the whitelist.
 
-Deposits of coins in the "Tokens for your business" list will have webhook notifications sent. Deposits of non-supported coins for your business will not have webhook notifications sent to your server. Navigate to **Dashboard > Settings > Tokens for your business** to configure it.
+How to Handle Incoming Webhooks
+1. Always verify if signature provided in webhook matches the one you generate on your own.
+Obtain the value of sign from the request header and other necessary parameters. The request header parameters are as follows.
+Parameters	Type	Required	Description
+Appid	String	Yes	Your CCPayment APP ID
+Timestamp	String	Yes	10-digit timestamp. Valid in 2 minutes. Example: 1677152720
+Sign	String	Yes	Check the example code on the right
 
-### Set Webhook URL
+HMAC Example:
+871f0223c66ea72435208d03603a0cb00b90f6ac4a4ba725d00164d967e291f6
 
-Go to **Dashboard > Developer > Webhook URL** to set your Webhook receiving URL.
-Please note that if your server has an IP whitelist configured, make sure to add our Webhook sending IPs to the whitelist:
-*   `54.150.123.157`
-*   `35.72.150.75`
-*   `18.176.186.244`
+RSA Example:
+R3l4l53fLcQ9mVRFVzXMk5CN5KTbKq5jdEaQZJ9z6+IoYQjCW1/36FJGx6YG/yC3kBErf2p5A==
+{Appid} + {timestamp} + PayloadJSON. Please refer to the signature documentation. (See the signature verification code example on the right)
+HMAC signature verificaiton
+Use HMAC-SHA256 to generate the Sign value.
+Compare the generated sign value with the one sent in the request header.
+If the two sign values are equal, the verification is a success. You can proceed to handle the webhook request. If the sign values do not match, the verification will fail, which indicates the request may have been tampered with.
+RSA Signature Verification:
+Decode the Base64-encoded signature received in the request.
+Use the RSA private key to decrypt the decoded signature.
+The decrypted data should reveal a string composed of {APP ID} + {Timestamp} + Payload JSON object}.
+Compare the decrypted string with the expected concatenation of {APP ID} + {Timestamp} + Payload JSON object}
+If the two strings match, the verification is successful, and you can proceed to handle the webhook request. If the strings do not match, the verification fails, indicating that the request may have been tampered with.
+2. Parse the Payload: Use the recordID or referenceID in the payload of webhook to retrieve transaction details by calling the interface. Credit users based on transaction details returned by the interface.
+3. Response: After receiving a Webhook notification, set the response body format to: "Content-Type: text/plain; charset=utf-8" and return {http code: 200}. Include a "Success" string in the HTTP Payload. When CCPayment receives the right response, we will stop pushing the notification.
+Signature verification example
 
-### How to Handle Incoming Webhooks
-
-1.  **Verify Signature:** Always verify if the signature provided in the webhook matches the one you generate on your own. Obtain the value of `Sign` from the request header and other necessary parameters. The request header parameters are as follows:
-
-    | Parameters | Type   | Required | Description                                         |
-    | :--------- | :----- | :------- | :-------------------------------------------------- |
-    | `Appid`    | String | Yes      | Your CCPayment APP ID.                              |
-    | `Timestamp`| String | Yes      | 10-digit timestamp. Valid for 2 minutes.            |
-    | `Sign`     | String | Yes      | Signature to verify. See example code below.        |
-
-    The `signText` for webhook verification is `{Appid} + {timestamp} + PayloadJSON`. Please refer to the [Signature](#signature) documentation.
-
-    **HMAC Signature Verification:**
-    Use HMAC-SHA256 to generate the `Sign` value using your `AppSecret` and the `signText`. Compare the generated sign value with the one sent in the request header. If the two sign values are equal, the verification is successful. You can proceed to handle the webhook request. If the sign values do not match, the verification fails, which indicates the request may have been tampered with.
-
-    **RSA Signature Verification:**
-    Decode the Base64-encoded signature received in the request. Use your RSA public key (corresponding to the private key CCPayment uses, or vice-versa if CCPayment signs with their private key and you verify with their public key - clarify this flow from CCPayment's main RSA setup guide) to verify the signature against the `signText` (`{APP ID} + {Timestamp} + PayloadJSON object}`). If the verification is successful, proceed. Otherwise, the request may have been tampered with.
-
-2.  **Parse the Payload:** Use the `recordID` or `referenceID` (or other relevant identifiers like `orderId`) in the payload of the webhook to retrieve transaction details by calling the appropriate API endpoint (e.g., Get Deposit Record, Get Order Information). Credit users based on transaction details returned by the API interface, not solely on the webhook payload.
-
-3.  **Respond:** After successfully processing and verifying a Webhook notification, your server must respond with an HTTP status code `200`. The response body should be `Content-Type: text/plain; charset=utf-8` and include the string "Success" in the HTTP Payload. When CCPayment receives this response, it will stop pushing further notifications for that event.
-
-**Signature Verification Example (HMAC):**
-```javascript
-const express = require('express');
-const crypto = require('crypto');
-const app = express();
-
-// Middleware to parse text/plain body, as CCPayment sends webhook payload as plain text JSON string
-app.use(express.text({ type: '*/*' })); // Adjust type if CCPayment sends a specific Content-Type for webhooks
-
-function verifySignature(requestBodyText, signatureFromHeader, appId, appSecret, timestampFromHeader) {
-  // Ensure requestBodyText is the raw, unmodified string of the JSON payload
-  let signText = `${appId}${timestampFromHeader}${requestBodyText}`;
-  let serverCalculatedSign = crypto.createHmac('sha256', appSecret).update(signText).digest('hex');
-  return signatureFromHeader === serverCalculatedSign;
-}
-
-app.post('/webhook', (req, res) => {
-    const appIdFromHeader = req.header('Appid'); // Or your configured App ID
-    const appSecret = '*** your_app_secret ***'; // Load this securely
-    const timestampFromHeader = req.header('Timestamp');
-    const signatureFromHeader = req.header('Sign');
-    
-    // req.body will contain the raw request payload as a string due to express.text()
-    const requestBodyText = req.body; 
-
-    // It's crucial that appIdFromHeader matches the AppId you expect for this endpoint/secret
-    if (appIdFromHeader !== '*** your_app_id ***') {
-        console.warn('Webhook received with unexpected Appid:', appIdFromHeader);
-        res.status(400).send('Invalid Appid');
-        return;
-    }
-
-    if (verifySignature(requestBodyText, signatureFromHeader, appIdFromHeader, appSecret, timestampFromHeader)) {
-        console.log('Webhook signature verified. Payload:', requestBodyText);
-        // Process the webhook payload (e.g., parse requestBodyText as JSON and handle event)
-        // JSON.parse(requestBodyText); 
-        res.status(200).type('text/plain').send('Success');
-    } else {
-        console.warn('Webhook signature verification failed.');
-        res.status(401).send('Invalid signature');
-    }
-});
-
-const port = 3000;
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
-```
-
-### Retry Logic
-
-If CCPayment does not receive an HTTP `200` response with a "Success" string in the response body, we will try to reach your endpoint again up to 6 times.
-
-**Retry Intervals:**
-*   30 seconds
-*   1 minute 30 seconds
-*   3 minutes 30 seconds
-*   7 minutes 30 seconds
-*   15 minutes 30 seconds
-*   31 minutes 30 seconds
-
+1const express = require('express');
+2const crypto = require('crypto');
+3const app = express();
+4function verifySignature(content, signature, app_id, app_secret, timestamp) {
+5  let sign_text = `${app_id}${timestamp}${content}`;
+6  let server_sign = crypto.createHmac('sha256', app_secret).update(sign_text).digest('hex');
+7  return signature === server_sign;
+8}
+9app.use(express.text());
+10app.post('/webhook', (req, res) => {
+11    const app_id = 'your_app_id';
+12    const app_secret = 'your_app_secret';
+13    const timestamp = req.header('Timestamp');
+14    const sign = req.header('Sign');
+15    const sign_text = req.body;
+16    if (verifySignature(sign_text, sign, app_id, app_secret, timestamp)) {
+17        res.send('success');
+18    } else {
+19        res.status(401).send('Invalid signature');
+20    }
+21});
+22app.listen(3000, () => {
+23    console.log('Server is running on port 3000');
+24});
+Retry Logic
+If CCPayment does not receive HTTP 200 with a "Success" string in the response body, we will try to reach endpoint again up to 6 times.
+Retry Interval
+30 seconds
+1 minute 30 seconds
+3 minute 30 seconds
+7 minute 30 seconds
+15 minute 30 seconds
+31 minute 30 seconds
 Merchants must implement idempotency in their code upon receiving Webhook notifications to prevent multiple crediting for one payment.
+Idempotency Implementation for Transactions
+Overview
+To prevent the processing of duplicate transactions due to network issues or retry mechanisms, the system must ensure that each transaction is processed only once. This can be achieved using idempotency, where the TxID (transaction hash ID) or another unique identifier serves as the basis for checking and ensuring that a transaction is not processed more than once.
+How to Implement Idempotency
+Upon receiving a deposit notification from CCPayment, check if the transaction is already recorded in the database based on the TxID. If it exists, skip processing to prevent duplicate credits.
+Example
 
-### Idempotency
-
-**Overview**
-To prevent the processing of duplicate transactions due to network issues or retry mechanisms, your system must ensure that each transaction (identified by a unique `recordId` or `txId`) is processed only once.
-
-**How to Implement Idempotency**
-Upon receiving a deposit notification (or any event) from CCPayment, check if the transaction/event (e.g., using `recordId` or `txId` from the webhook payload, after fetching full details via API) is already recorded and processed in your database. If it exists and was successfully processed, skip further processing to prevent duplicate actions (e.g., crediting a user multiple times).
-
-**Example:**
-```javascript
-// Pseudocode for handling idempotency
-// const eventData = JSON.parse(webhookPayloadText);
-// const uniqueTransactionId = eventData.msg.recordId; // Or another unique ID like txId from API call
-
-if (db.transactionHasBeenProcessed(uniqueTransactionId)) {
-    console.log(`Transaction ${uniqueTransactionId} has already been processed.`);
-    // Still respond with 200 OK, "Success" to acknowledge receipt
-} else {
-    // Business processing logic (e.g., fetch full details via API, credit user)
-    // Mark transaction as processed in db
-    // db.markTransactionAsProcessed(uniqueTransactionId);
-}
-```
-
-### View Webhook Notification Logs and Resend Webhooks
-
-Navigate to **Dashboard > Webhook** to view webhook logs. You can also resend one webhook or multiple webhooks in batch on this page.
-
-### Resend Webhook by Calling API
-
+1if (db.includes(txId)) {
+2    console.log("Transaction has already been processed");
+3} else {
+4    // business processing logic
+5    // record transaction to db
+6}
+View Webhook Notification Logs and Resend Webhooks:
+Navigate to Dashboard > Webhook to view webhook logs. You can also resend one webhook or multiple webhooks in batch on this page.
+Resend Webhook by Calling API
 Resend webhooks for transactions within a specified time period through this interface.
+HTTP Request
+POST
+https://ccpayment.com/ccpayment/v2/webhook/resend
 
-**HTTP Request:** `POST https://ccpayment.com/ccpayment/v2/webhook/resend`
+Parameters
+Parameters	Type	Required	Description
+recordIds	Array	No	Specify the record IDs to resend the webhook. A maximum of 50 webhooks can be resent in one batch.
+startTimestamp	Integer	Yes	Resend webhooks for all transactions created after this start time. It should be a 10-digit timestamp
+endTimestamp	Integer	No	
+Resend webhooks for all transactions created before this start time. It should be a 10-digit timestamp
 
-**Parameters:**
+If the end_timestamp is empty, resend webhooks for all transaction created within one hour after the start time.
 
-| Parameters        | Type         | Required | Description                                                                                                                               |
-| :---------------- | :----------- | :------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
-| `recordIds`       | Array        | No       | Specify the record IDs to resend the webhook. A maximum of 50 webhooks can be resent in one batch.                                        |
-| `startTimestamp`  | Integer      | Yes      | Resend webhooks for all transactions created after this start time. It should be a 10-digit timestamp.                                    |
-| `endTimestamp`    | Integer      | No       | Resend webhooks for all transactions created before this end time. It should be a 10-digit timestamp. If empty, defaults to 1 hour after `startTimestamp`. Max 1-hour difference. |
-| `webhookResult`   | String       | No       | `Failed` (Default): Only resend failed webhooks. `AllResult`: Resend all webhooks.                                                        |
-| `transactionType` | String       | No       | `AllType` (Default), `ApiDeposit`, `DirectDeposit`, `ApiWithdrawal`, `UserDeposit`, `UserWithdrawal`.                                       |
+Note: The maximum time difference between end_timestamp and start_timestamp is 1 hour.
+webhookResult	String	No	
+Failed: (Default) Only resend failed webhooks within the specified time range.
+AllResult: Resend all webhooks within the specified time range.
+transactionType	String	No	
+Which type of transactions will the webhooks be resent
 
-**Request Example:**
-```javascript
-const https = require('https');
-const crypto = require('crypto');
+AllType: (Default) Resend all types
+ApiDeposit: Resend API deposit transactions
+DirectDeposit: Resend permanent address deposit transactions
+ApiWithdrawal: Resend API withdrawal transactions
+UserDeposit: Resend user deposit transactions
+UserWithdrawal: Resend user withdrawal transactions
+Request Example
 
-const appId = '*** your appId ***';
-const appSecret = '*** your appSecret ***';
+1const https = require('https');
+2const crypto = require('crypto');
+3
+4const appId ='*** your appId ***';
+5const appSecret ='*** your appSecret ***';
+6
+7const path = 'https://ccpayment.com/ccpayment/v2/webhook/resend';
+8const args = JSON.stringify({"startTimestamp": 1710145756});
+9
+10const timestamp = Math.floor(Date.now() / 1000);
+11let signText = appId + timestamp;
+12if (args) {
+13  signText += args;
+14}
+15
+16const sign = crypto
+17  .createHmac('sha256', appSecret)
+18  .update(signText)
+19  .digest('hex');
+20
+21const options = {
+22  method: 'POST',
+23  headers: {
+24    'Content-Type': 'application/json',
+25    'Appid': appId,
+26    'Sign': sign,
+27    'Timestamp': timestamp.toString(),
+28  },
+29};
+30
+31const req = https.request(path, options, (res) => {
+32  let respData = '';
+33
+34  res.on('data', (chunk) => {
+35    respData += chunk;
+36  });
+37
+38  res.on('end', () => {
+39    console.log('Response:', respData);
+40  });
+41});
+42
+43req.write(args);
+44req.end();
+Response Parameters
+Parameters	Type	Description
+data	Object	   
+data.resendCount	Integer	Number of webhooks successfully resent in the specified timeframe.
+Result Example
 
-const path = 'https://ccpayment.com/ccpayment/v2/webhook/resend';
-const requestPayload = {"startTimestamp": 1710145756}; // Example: resend failed webhooks for 1hr from this time
-const args = JSON.stringify(requestPayload);
+1{
+2      "code": 10000,
+3      "msg": "Success",
+4      "data": {
+5        "resendCount": 1,
+6      }
+7  }
+8    
+Deposit APIs
+Get Permanent Deposit Address
+When you make a request to this endpoint with a referenceId and chain specified, CCPayment first checks to see if there is an existing permanent address associated with the given reference ID.
+Address Handling:
+Existing Address: If a permanent address is already linked to the reference ID, CCPayment will return this address in the response.
+New Address: If no address is linked to the reference ID, CCPayment will generate a new deposit address for that reference ID on the specified blockchain network and return this new address.
+Each APP ID can obtain 1000 addresses via this interface. If you need more addresses, please contact customer service for help.
 
-const timestamp = Math.floor(Date.now() / 1000);
-let signText = appId + timestamp;
-if (args) {
-  signText += args;
-}
+HTTP Request
+POST
+https://ccpayment.com/ccpayment/v2/getOrCreateAppDepositAddress
 
-const sign = crypto
-  .createHmac('sha256', appSecret)
-  .update(signText)
-  .digest('hex');
+Parameters
+Parameters	Type	Required	Description
+referenceId	String	Yes	3 - 64 characters in length. Unique reference ID for the user in your system.
+chain	String	Yes	
+Symbol of the chain. Call Get Token Information the API and use data.coin[index].networks[chain].chain to get the chain symbol. Example:'chain': 'TRX'
+Request Example
 
-const options = {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Appid': appId,
-    'Sign': sign,
-    'Timestamp': timestamp.toString(),
-  },
-};
+1const https = require("https");
+2const crypto = require("crypto");
+3
+4const appId = "*** your appId ***";
+5const appSecret = "*** your appSecret ***";
+6
+7const path = "https://ccpayment.com/ccpayment/v2/getOrCreateAppDepositAddress";
+8const args = JSON.stringify({
+9  "referenceId": String(Math.floor(Date.now() / 1000)), 
+10  "chain": "POLYGON",  
+11});
+12
+13const timestamp = Math.floor(Date.now() / 1000);
+14let signText = appId + timestamp;
+15if (args.length !== 0) {
+16  signText += args;
+17}
+18
+19const sign = crypto
+20  .createHmac("sha256", appSecret)
+21  .update(signText)
+22  .digest("hex");
+23
+24const options = {
+25  method: "POST",
+26  headers: {
+27    "Content-Type": "application/json",
+28    "Appid": appId,
+29    "Sign": sign,
+30    "Timestamp": timestamp.toString(),
+31  },
+32};
+33
+34const req = https.request(path, options, (res) => {
+35  let respData = "";
+36
+37  res.on("data", (chunk) => {
+38    respData += chunk;
+39  });
+40
+41  res.on("end", () => {
+42    console.log("Response:", respData);
+43  });
+44});
+45
+46req.write(args);
+47req.end();
+Response Parameters
+Parameters	Type	Description
+data	Object
+data.address	String	Permanent deposit address
+data.memo	String	For memo-required coins (such as XRP, XLM, etc.), the payer must fill in the correct memo to initiate the payment.
+Response
 
-const req = https.request(path, options, (res) => {
-  let respData = '';
-  res.on('data', (chunk) => { respData += chunk; });
-  res.on('end', () => { console.log('Response:', JSON.parse(respData)); });
-});
-req.on('error', (e) => { console.error('Error:', e); });
-req.write(args);
-req.end();
-```
+1{
+2  "code": 10000,
+3  "msg": "success",
+4  "data": {
+5    "address": "0x7C631947c139F0163fECc0eef39f251D72dAE3B8",
+6    "memo": ""
+7  }
+8}
+Webhook for Direct Deposit
+After receiving a webhook, the merchant's server should call the Get Deposit Record API to confirm the deposit information.
+Webhook Parameters
+Parameters	Type	Description
+type	String	Type: DirectDeposit
+msg	Object
+msg.recordId	String	CCPayment unique ID for a transaction
+msg.referenceId	String	Your unique reference ID for the user
+msg.coinId	Integer	Coin ID
+msg.coinSymbol	String	Coin symbol
+msg.status	String	
+Processing: blockchain is processing the transaction
 
-**Response Parameters:**
+Success: the transaction has been confirmed
 
-| Parameters           | Type    | Description                                                       |
-| :------------------- | :------ | :---------------------------------------------------------------- |
-| `data`               | Object  |                                                                   |
-| `data.resendCount`   | Integer | Number of webhooks successfully queued for resending.             |
+Failed: the transaction was not completed and the funds were not received
 
-**Result Example:**
-```json
-{
-  "code": 10000,
-  "msg": "Success",
-  "data": {
-    "resendCount": 1
-  }
-}
-```
+Learn more about transaction status
+msg.isFlaggedAsRisky	Boolean	
+true: The transaction is considered risky, and the amount will not be credited to the merchant's balance. Please process the amount in Transaction > Risky Transaction on the merchant dashboard.
 
----
+false: The transaction is not considered risky. 
+Note: If a payment is flagged as risky, CCPayment will not automatically credit the amount to your CCPayment account. We strongly recommend not automatically crediting risky payments to your users' accounts. After processing the payment, you can choose to either credit the user or refund the payment manually.
+Request Example
 
-## Deposit APIs
+1{
+2  "type": "DirectDeposit",
+3  "msg": {
+4    "recordId": "2024031311310811...",
+5    "referenceId": "63224704901...",
+6    "coinId": 1329,
+7    "coinSymbol": "MATIC",
+8    "status": "Success",
+9    "isFlaggedAsRisky":false
+10  }
+11}
+Webhook for Risky Address
+Risky addresses are immediately disabled. CCPayment will send a webhook notification to your server when an address has been flagged as risky. Deposits to flagged addresses will not trigger automatic webhook notifications. However, you can manually send webhooks on your dashboard for those deposits.
+Webhook Parameters
+Parameters	Type	Description
+chainId	String	Chain ID
+address	String	The receiving address flagged as risky
+riskAt	Integer	Address flagged timestamp
+After receiving the webhook, promptly inform your clients to stop depositing to the flagged address and call the Address Unbinding API to unbind the address.
+Deposit Address for Order
+CCPayment provides two flexible methods for order-based deposits, tailored to meet different merchant needs:
+Create a deposit address with merchant-specified currency and network.
+Create a checkout page where the customer selects the currency and network.
+Deposit with merchant-specified currency and network
+Merchants will receive Webhook notification for every payment made to this address. This type of deposit is "API Deposit".
 
-### Get Permanent Deposit Address
+HTTP Request
+POST
+https://ccpayment.com/ccpayment/v2/createAppOrderDepositAddress
 
-When you make a request to this endpoint with a `referenceId` and `chain` specified, CCPayment first checks to see if there is an existing permanent address associated with the given reference ID.
+Parameters
+Parameters	Type	Required	Description
+coinId	Integer	Yes	Coin ID of the coin to pay
+fiatId	Integer	No	
+If fiatId has a value, the price for the product will be the provided fiat. 
 
-**Address Handling:**
-*   **Existing Address:** If a permanent address is already linked to the `referenceId`, CCPayment will return this address.
-*   **New Address:** If no address is linked, CCPayment will generate a new deposit address for that `referenceId` on the specified blockchain network and return this new address.
+CCPayment will convert the fiat value to coin amount and generate the address based on the provided coinID.Retrieve fiatId by  calling fiat list interface.
+price	String	Yes	
+Product price, it can be fiat or cryptocurrency.
 
-Each APP ID can obtain 1000 addresses via this interface. If you need more, contact customer service.
+If you pass fiatId, price will be fiat (Precision: Up to 2 Decimal Places). If fiatId is left empty, the price will be the same as the coin to pay (Precision: Up to 18 Decimal Places).  
+chain	String	Yes	Symbol of the chain
+orderId	String	Yes	Order ID, 3-64 characters in length
+expiredAt	Integer	No	A 10-digit timestamp. Order will expire at this time. Default value is 10 days. 
 
-**HTTP Request:** `POST https://ccpayment.com/ccpayment/v2/getOrCreateAppDepositAddress`
+Example: If Order is only valid for 30 mins. 
 
-**Parameters:**
+expiredAt = Timestamp of creation + 60*30
+Before the expiration time, the rate will be locked. Crypto market is very volatile. We recommend you to lock the rate for a relatively short period to prevent potential loss.
 
-| Parameters    | Type   | Required | Description                                                                                                |
-| :------------ | :----- | :------- | :--------------------------------------------------------------------------------------------------------- |
-| `referenceId` | String | Yes      | 3 - 64 characters. Unique reference ID for the user in your system.                                        |
-| `chain`       | String | Yes      | Symbol of the chain. Call "Get Token Information" API and use `data.coin[index].networks[chain].chain`. E.g., `TRX`. |
+After the expiration time, your account will still receive all payments to the deposit address within 7 days.
+buyerEmail	String	No	CCPayment will send order and payment information to the provided mail address. CCPayment will not use the provided mail addresses for other purposes. 
+generateCheckoutURL	Boolean	No	
+true: Create a checkout URL for this order
+false: (default) Do not create checkout URL  
+product	String	No	The product name will be displayed on the checkout page. This parameter is only valid when a checkout URL has been created. It cannot exceed 120 characters.
+returnUrl	String	No	
+The next URL after successful payment. It will be displayed on the checkout page and is only valid when a checkout URL has been created. 
+Request Example
 
-**Request Example:**
-```javascript
-const https = require("https");
-const crypto = require("crypto");
-
-const appId = "*** your appId ***";
-const appSecret = "*** your appSecret ***";
-
-const path = "https://ccpayment.com/ccpayment/v2/getOrCreateAppDepositAddress";
-const requestPayload = {
-  "referenceId": String(Math.floor(Date.now() / 1000)), // Example unique ID
-  "chain": "POLYGON",
-};
-const args = JSON.stringify(requestPayload);
-
-const timestamp = Math.floor(Date.now() / 1000);
-let signText = appId + timestamp;
-if (args.length > 0) { // Check if args is not an empty string
-  signText += args;
-}
-
-const sign = crypto
-  .createHmac("sha256", appSecret)
-  .update(signText)
-  .digest("hex");
-
-const options = {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "Appid": appId,
-    "Sign": sign,
-    "Timestamp": timestamp.toString(),
-  },
-};
-
-const req = https.request(path, options, (res) => {
-  let respData = "";
-  res.on("data", (chunk) => { respData += chunk; });
-  res.on("end", () => { console.log("Response:", JSON.parse(respData)); });
-});
-req.on('error', (e) => { console.error('Error:', e); });
-req.write(args);
-req.end();
-```
-
-**Response Parameters:**
-
-| Parameters   | Type   | Description                                                                                             |
-| :----------- | :----- | :------------------------------------------------------------------------------------------------------ |
-| `data`       | Object |                                                                                                         |
-| `data.address` | String | Permanent deposit address.                                                                              |
-| `data.memo`  | String | For memo-required coins (e.g., XRP, XLM), the payer must fill in the correct memo to initiate the payment. |
-
-**Response Example:**
-```json
-{
-  "code": 10000,
-  "msg": "success",
-  "data": {
-    "address": "0x7C631947c139F0163fECc0eef39f251D72dAE3B8",
-    "memo": ""
-  }
-}
-```
-
-### Webhook for Direct Deposit
-
-After receiving this webhook, the merchant's server should call the [Get Deposit Record](#get-deposit-record) API to confirm the deposit information.
-
-**Webhook Parameters (Payload):**
-
-| Parameters             | Type    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             HINL_PROMPT_BLOCK_KIND_SYSTEM
-The user wants to update the content of the file `CCPAYMENT-API-DOCS.M`.
-The user provided the current content of the_file via the `file_content` parameter.
-The user also provided a PDF file which might contain additional information or context.
-The goal is to make the Markdown file clear and easy to
-understand.
-
-I will perform the following actions:
+1const https = require("https");
+2const crypto = require("crypto");
+3
+4const appId = "*** your appId ***";
+5const appSecret = "*** your appSecret ***";
+6
+7const path = "https://ccpayment.com/ccpayment/v2/createAppOrderDepositAddress";
+8const args = JSON.stringify({
+9  "coinId": 1280,
+10  "price": "1",
+11  "orderId": "testorderid1111",
+12  "chain": "POLYGON",
+13});
+14
+15const timestamp = Math.floor(Date.now() / 1000);
+16let signText = appId + timestamp;
+17if (args.length !== 0) {
+18  signText += args;
+19}
+20
+21const sign = crypto
+22  .createHmac("sha256", appSecret)
+23  .update(signText)
+24  .digest("hex");
+25
+26const options = {
+27  method: "POST",
+28  headers: {
+29    "Content-Type": "application/json",
+30    "Appid": appId,
+31    "Sign": sign,
+32    "Timestamp": timestamp.toString(),
+33  },
+34};
+35
+36const req = https.request(path, options, (res) => {
+37  let respData = "";
+38
+39  res.on("data", (chunk) => {
+40    respData += chunk;
+41  });
+42
+43  res.on("end", () => {
+44    console.log("Response:", respData);
+45  });
+46});
+47
 48req.write(args);
 49req.end();
 Response Parameters
