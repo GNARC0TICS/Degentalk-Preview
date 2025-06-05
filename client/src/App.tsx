@@ -9,6 +9,7 @@ import WalletPage from "./pages/wallet";
 
 // Pages
 import HomePage from "./pages/home";
+import LandingPage from "./pages/landing-page";
 import ForumsPage from "./pages/forums";
 // Import forum system pages
 import ForumBySlugPage from "./pages/forums/[forum_slug]";
@@ -79,15 +80,23 @@ function App() {
   const isAdminRoute = location.startsWith('/admin');
   const isModRoute = location.startsWith('/mod');
   const isAuthRoute = location === '/auth';
+  const isLandingRoute = location === '/landing';
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
-      {/* Only show SiteHeader on non-admin, non-mod, and non-auth routes */}
-      {!isAdminRoute && !isModRoute && !isAuthRoute && <SiteHeader />}
+      {/* Only show SiteHeader on non-admin, non-mod, non-auth, and non-landing routes */}
+      {!isAdminRoute && !isModRoute && !isAuthRoute && !isLandingRoute && <SiteHeader />}
       <React.Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
         <Switch>
           {/* Auth Routes */}
           <Route path="/auth" component={AuthPage} />
+
+          {/* Pre-Launch Landing Page (non-protected) */}
+          <Route path="/landing" component={LandingPage} />
+          
+          {/* For pre-launch: Temporarily redirect root to landing, or use landing directly */}
+          {/* Remove the comment below to make landing page the root during pre-launch */}
+          {/* <Route path="/" component={LandingPage} /> */}
 
           {/* Protected Main Routes */}
           <ProtectedRoute path="/" component={HomePage} />
