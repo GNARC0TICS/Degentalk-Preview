@@ -1679,4 +1679,26 @@ router.get('/threads/:categoryId', async (req: Request, res: Response) => {
   }
 });
 
+// GET /api/zone/:slug/metrics - Get metrics for a specific zone
+router.get('/zone/:slug/metrics', async (req: Request, res: Response) => {
+  try {
+    const { slug } = req.params;
+    if (!slug) {
+      return res.status(400).json({ message: "Zone slug is required" });
+    }
+
+    const metrics = await forumService.getZoneMetricsBySlug(slug);
+
+    if (!metrics) {
+      return res.status(404).json({ message: `Metrics not found for zone with slug '${slug}'` });
+    }
+
+    return res.status(200).json(metrics);
+
+  } catch (error) {
+    console.error(`Error fetching metrics for zone ${req.params.slug}:`, error);
+    res.status(500).json({ message: "An error occurred fetching zone metrics" });
+  }
+});
+
 export default router;

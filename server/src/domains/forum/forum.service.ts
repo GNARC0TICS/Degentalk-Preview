@@ -10,28 +10,63 @@ import {
   users as usersTable // Alias users
 } from '@schema';
 import { sql, desc, asc, and, eq, isNull, count, like, ilike, or, inArray, SQL } from 'drizzle-orm'; // Added inArray and SQL
-import { ForumCategoryWithStats, ThreadWithUser } from '@shared/types';
+// Removed: import { ForumCategoryWithStats, ThreadWithUser } from '@shared/types';
 import type { User } from '@schema'; // Import User type from schema
 // Import threadPrefixes table to infer type - already imported above
+
+// Import shared Zod schemas and types
+import { 
+  ForumCategorySharedSchema,
+  type ForumCategoryShared,
+  ThreadRulesSchema,
+  type ThreadRules,
+  AccessControlSchema,
+  type AccessControl,
+  SEOSchema,
+  type SEO,
+  ForumStatsSchema,
+  type ForumStats
+} from '../../../../shared/schemas/forum'; // Adjust path if necessary
+import { ThreadWithUser } from '@shared/types'; // Keep this if used elsewhere
+
 
 // Define type for ThreadPrefix based on schema
 type ThreadPrefixType = typeof threadPrefixes.$inferSelect;
 
 // Define a type for the result of the getCategoriesWithStats Drizzle query
 type CategoryWithCountsResult = {
-  id: number;
+  id: number; // from forumCategories.id (aliased from category_id)
   name: string;
-  description: string | null;
   slug: string;
-  position: number;
-  minGroupIdRequired: number | null;
+  description: string | null;
   parentId: number | null;
-  createdAt: string;
-  updatedAt: string;
-  pluginData: string | null;
-  type: string;
+  type: string; // existing 'type' field from db
+  position: number;
+  isVip: boolean;
+  isLocked: boolean;
+  minXp: number;
+  color: string;
+  icon: string;
   colorTheme: string | null;
-  threadCount: number | null;
+  isHidden: boolean;
+  isZone: boolean;
+  canonical: boolean;
+  minGroupIdRequired: number | null;
+  pluginData: any; 
+  createdAt: Date; 
+  updatedAt: Date;
+
+  // New fields from schema
+  forumType: string; 
+  slugOverride: string | null;
+  components: string[]; 
+  threadRules: ThreadRules; 
+  accessControl: AccessControl; 
+  displayPriority: number;
+  seo: SEO; 
+
+  // Aggregated fields
+  threadCount: number | null; 
   postCount: number | null;
 };
 
@@ -52,10 +87,11 @@ interface CategoriesTreeOptions {
 
 export const forumService = {
   // Get all forum categories with forum stats
-  async getCategoriesWithStats(): Promise<ForumCategoryWithStats[]> {
+  async getCategoriesWithStats(): Promise<ForumCategoryShared[]> {
     try {
       // Fetch categories and join with threads and posts to get counts
-      const categoriesWithCounts = await db.select({
+      const categoriesWithCountsDb = await db.select({
+        // Existing fields (ensure all are covered)
         id: forumCategories.id,
         name: forumCategories.name,
         description: forumCategories.description,
@@ -66,8 +102,26 @@ export const forumService = {
         createdAt: forumCategories.createdAt,
         updatedAt: forumCategories.updatedAt,
         pluginData: forumCategories.pluginData,
-        type: forumCategories.type,
+        type: forumCategories.type, // existing 'type' field
         colorTheme: forumCategories.colorTheme,
+        isVip: forumCategories.isVip,
+        isLocked: forumCategories.isLocked,
+        minXp: forumCategories.minXp,
+        color: forumCategories.color,
+        icon: forumCategories.icon,
+        isHidden: forumCategories.isHidden,
+        isZone: forumCategories.isZone,
+        canonical: forumCategories.canonical,
+
+        // New fields
+        forumType: forumCategories.forumType,
+        slugOverride: forumCategories.slugOverride,
+        components: forumCategories.components,
+        threadRules: forumCategories.threadRules,
+        accessControl: forumCategories.accessControl,
+        displayPriority: forumCategories.displayPriority,
+        seo: forumCategories.seo,
+        
         // Calculate thread count for each category
         threadCount: sql<number>`count(DISTINCT ${threads.id})`.as('threadCount'),
         // Calculate total post count for each category by joining with posts
@@ -96,30 +150,87 @@ export const forumService = {
         forumCategories.updatedAt,
         forumCategories.pluginData,
         forumCategories.type,
-        forumCategories.colorTheme
+        forumCategories.colorTheme,
+        forumCategories.isVip,
+        forumCategories.isLocked,
+        forumCategories.minXp,
+        forumCategories.color,
+        forumCategories.icon,
+        forumCategories.isHidden,
+        forumCategories.isZone,
+        forumCategories.canonical,
+        // New fields for groupBy
+        forumCategories.forumType,
+        forumCategories.slugOverride,
+        forumCategories.components,
+        forumCategories.threadRules,
+        forumCategories.accessControl,
+        forumCategories.displayPriority,
+        forumCategories.seo
       )
       .orderBy(asc(forumCategories.position));
 
-      console.log(`[forumService] getCategoriesWithStats - Raw query result count: ${categoriesWithCounts.length}`);
-      console.log('[forumService] getCategoriesWithStats - Raw query result (first 5):', categoriesWithCounts.slice(0, 5));
-      console.log('[forumService] getCategoriesWithStats - Raw query result (full):', categoriesWithCounts); // Added full raw result log
+      // Cast to the internal result type
+      const categoriesWithCounts = categoriesWithCountsDb as unknown as CategoryWithCountsResult[];
 
-      // Map the results to the ForumCategoryWithStats type, handling potential nulls from aggregation
-      const categories: ForumCategoryWithStats[] = categoriesWithCounts.map((c: CategoryWithCountsResult) => ({
-        ...c,
-        parentId: c.parentId,
-        pluginData: c.pluginData || {},
-        // Ensure counts are numbers, defaulting to 0 if null from aggregation (e.g., no threads/posts)
-        threadCount: Number(c.threadCount || 0),
-        postCount: Number(c.postCount || 0)
-      }));
+      console.log(`[forumService] getCategoriesWithStats - Raw query result count: ${categoriesWithCounts.length}`);
+      // console.log('[forumService] getCategoriesWithStats - Raw query result (first 5):', categoriesWithCounts.slice(0, 5));
+      // console.log('[forumService] getCategoriesWithStats - Raw query result (full):', categoriesWithCounts);
+
+      // Map the results to the ForumCategoryShared type
+      const categories: ForumCategoryShared[] = categoriesWithCounts.map((c) => {
+        // Ensure defaults for complex objects if DB returns null or empty JSON string for them
+        // Drizzle's $type and default values in schema (e.g., default('{}')) should handle most of this.
+        const parsedPluginData = typeof c.pluginData === 'string' ? JSON.parse(c.pluginData || '{}') : c.pluginData || {};
+        const parsedComponents = Array.isArray(c.components) ? c.components : (typeof c.components === 'string' ? JSON.parse(c.components || '[]') : []);
+        const parsedThreadRules = (c.threadRules && typeof c.threadRules === 'object' && Object.keys(c.threadRules).length > 0) ? c.threadRules : ThreadRulesSchema.parse({});
+        const parsedAccessControl = (c.accessControl && typeof c.accessControl === 'object' && Object.keys(c.accessControl).length > 0) ? c.accessControl : AccessControlSchema.parse({});
+        const parsedSeo = (c.seo && typeof c.seo === 'object' && Object.keys(c.seo).length > 0) ? c.seo : SEOSchema.parse({});
+
+        return {
+          id: c.id,
+          name: c.name,
+          slug: c.slug,
+          description: c.description,
+          parentId: c.parentId,
+          type: c.type, // existing db 'type' field
+          position: c.position,
+          isVip: c.isVip,
+          isLocked: c.isLocked,
+          minXp: c.minXp,
+          color: c.color,
+          icon: c.icon,
+          colorTheme: c.colorTheme,
+          isHidden: c.isHidden,
+          isZone: c.isZone,
+          canonical: c.canonical,
+          minGroupIdRequired: c.minGroupIdRequired,
+          pluginData: parsedPluginData,
+          createdAt: new Date(c.createdAt), // Ensure Date object
+          updatedAt: new Date(c.updatedAt), // Ensure Date object
+
+          // New fields
+          forumType: c.forumType as ForumCategoryShared['forumType'], // Cast to specific enum
+          slugOverride: c.slugOverride,
+          components: parsedComponents,
+          threadRules: parsedThreadRules,
+          accessControl: parsedAccessControl,
+          displayPriority: c.displayPriority,
+          seo: parsedSeo,
+          
+          stats: {
+            threadCount: Number(c.threadCount || 0),
+            postCount: Number(c.postCount || 0),
+            activeUsersCount: 0, // Placeholder - requires separate calculation or source
+          },
+        };
+      });
 
       console.log(`[forumService] getCategoriesWithStats - Mapped categories count: ${categories.length}`);
-      console.log('[forumService] getCategoriesWithStats - Mapped categories (full):', categories); // Added full mapped result log
-      // Log counts for a few categories for verification
-      categories.slice(0, 5).forEach(cat => {
-          console.log(`[forumService] Category ${cat.name} (ID: ${cat.id}): Threads=${cat.threadCount}, Posts=${cat.postCount}`);
-      });
+      // console.log('[forumService] getCategoriesWithStats - Mapped categories (full):', categories);
+      // categories.slice(0, 5).forEach(cat => {
+      //     console.log(`[forumService] Category ${cat.name} (ID: ${cat.id}): Threads=${cat.stats.threadCount}, Posts=${cat.stats.postCount}`);
+      // });
 
       return categories;
     } catch (error) {
@@ -140,38 +251,35 @@ export const forumService = {
   async getCategoriesTree(options: CategoriesTreeOptions = {}): Promise<any[]> {
     const { includeEmptyStats = false, includeHidden = false } = options;
     
-    const allCategories = await this.getCategoriesWithStats();
+    const allCategoriesShared: ForumCategoryShared[] = await this.getCategoriesWithStats();
 
-    if (!allCategories || !Array.isArray(allCategories)) {
+    if (!allCategoriesShared || !Array.isArray(allCategoriesShared)) {
         console.error('[SERVICE-FORUM] getCategoriesWithStats did not return a valid array for tree construction.');
         return [];
     }
     
-    const visibleCategories = allCategories.filter(cat => cat); 
+    // Assuming isHidden is a property on ForumCategoryShared
+    const visibleCategories = includeHidden ? allCategoriesShared : allCategoriesShared.filter(cat => cat && !cat.isHidden); 
     
-    const categoriesWithStats = includeEmptyStats
-      ? visibleCategories.map(cat => ({
-          ...(cat || {}), 
-          threadCount: Number(cat?.threadCount || 0), 
-          postCount: Number(cat?.postCount || 0)
-        }))
-      : visibleCategories;
+    const categoriesWithLocalStats = visibleCategories.map(cat => ({
+      ...(cat || {}), 
+      // stats object is already part of ForumCategoryShared
+    }));
 
-    const categoryMap = new Map<number, ForumCategoryWithStats & { children: any[] }>();
+    const categoryMap = new Map<number, ForumCategoryShared & { children: any[] }>();
     const tree: any[] = [];
 
-    categoriesWithStats.forEach(category => {
+    categoriesWithLocalStats.forEach(category => {
         if (!category || typeof category !== 'object' || category.id === undefined) return; 
         categoryMap.set(category.id, { ...category, children: [] });
     });
 
-    categoriesWithStats.forEach(category => {
+    categoriesWithLocalStats.forEach(category => {
         if (!category || typeof category !== 'object' || category.id === undefined) return; 
         
         const mappedCategory = categoryMap.get(category.id);
         if (!mappedCategory) return; 
 
-        // Now that parentId is back in the schema, we can restore the original hierarchical logic
         if (category.parentId && categoryMap.has(category.parentId)) {
             const parent = categoryMap.get(category.parentId);
             if (parent && parent.children) { 
@@ -185,37 +293,49 @@ export const forumService = {
     return tree;
   },
   
-  async getCategoryBySlug(slug: string): Promise<ForumCategoryWithStats | null> {
+  async getCategoryBySlug(slug: string): Promise<ForumCategoryShared | null> {
     const categories = await this.getCategoriesWithStats();
-    return categories.find(cat => cat.slug === slug) || null;
+    // Logic needs to be updated to consider forumType and slugOverride
+    const foundCategory = categories.find(cat => {
+      if (cat.forumType === 'primary') {
+        return cat.slugOverride === slug || cat.slug === slug;
+      }
+      return cat.slug === slug;
+    });
+    return foundCategory || null;
   },
   
   async getForumBySlugWithTopics(slug: string): Promise<{
-    forum: ForumCategoryWithStats | null,
-    topics: ForumCategoryWithStats[]
+    forum: ForumCategoryShared | null,
+    topics: ForumCategoryShared[] // Changed from ForumCategoryWithStats
   }> {
     console.log(`[Forum Service] getForumBySlugWithTopics called with slug: ${slug}`);
     const categories = await this.getCategoriesWithStats();
-    const forum = categories.find(cat => cat.slug === slug) || null;
+    // Logic needs to be updated to consider forumType and slugOverride for the main forum
+    const forum = categories.find(cat => {
+      if (cat.forumType === 'primary') {
+        return cat.slugOverride === slug || cat.slug === slug;
+      }
+      return cat.slug === slug;
+    }) || null;
+
     if (!forum) {
       console.log(`[Forum Service] getForumBySlugWithTopics - Forum not found for slug: ${slug}`);
       return { forum: null, topics: [] };
     }
-    // parentId is now fully restored in the schema and queries
     const topics = categories.filter(cat => cat.parentId === forum.id);
-    topics.sort((a, b) => a.position - b.position);
+    // topics.sort((a, b) => a.position - b.position); // position is on ForumCategoryShared
     console.log(`[Forum Service] getForumBySlugWithTopics - Found forum "${forum.name}" and ${topics.length} topics for slug: ${slug}`);
     return { forum, topics };
   },
   
-  async getCategoryById(id: number): Promise<ForumCategoryWithStats | null> {
+  async getCategoryById(id: number): Promise<ForumCategoryShared | null> {
     const categories = await this.getCategoriesWithStats();
     return categories.find(cat => cat.id === id) || null;
   },
   
-  async getForumsByParentId(parentId: number): Promise<ForumCategoryWithStats[]> {
+  async getForumsByParentId(parentId: number): Promise<ForumCategoryShared[]> {
     try {
-      // Get all categories and filter by parent ID
       const categories = await this.getCategoriesWithStats();
       const parentForum = categories.find(cat => cat.id === parentId);
       const childForums = categories.filter(cat => cat.parentId === parentId);
@@ -229,11 +349,12 @@ export const forumService = {
       }
       
       // Add canHaveThreads property and parent info to each child forum
+      // canHaveThreads is part of ForumCategoryShared (via Drizzle schema defaults)
+      // Parent slug/name can be derived if needed, or added to ForumCategoryShared if frequently used
       return childForums.map(forum => ({
         ...forum,
-        canHaveThreads: true, // Child forums should always be able to have threads
-        parentSlug: parentForum?.slug || null,
-        parentName: parentForum?.name || null
+        // parentSlug: parentForum?.slug || null, // Example: add if needed
+        // parentName: parentForum?.name || null  // Example: add if needed
       }));
     } catch (error) {
       console.error('Error in getForumsByParentId:', error);
@@ -243,44 +364,48 @@ export const forumService = {
   
   // Debug method to verify parent-child relationships in forum structure
   async debugForumRelationships(): Promise<{
-    primaryZones: Array<{id: number, name: string, slug: string}>,
+    primaryZones: Array<{id: number, name: string, slug: string, forumType?: string}>, // Added forumType
     categories: Array<{
       id: number, 
       name: string, 
       slug: string, 
-      childForums: Array<{id: number, name: string, slug: string, parentId: number}>
+      forumType?: string, // Added forumType
+      childForums: Array<{id: number, name: string, slug: string, parentId: number, forumType?: string}> // Added forumType
     }>
   }> {
     try {
       const allCategories = await this.getCategoriesWithStats();
       
-      // Find primary zones (type is 'zone')
+      // Find primary zones (forumType is 'primary')
       const primaryZones = allCategories
-        .filter(cat => cat.type === 'zone')
+        .filter(cat => cat.forumType === 'primary')
         .map(zone => ({
           id: zone.id,
           name: zone.name,
-          slug: zone.slug
+          slug: zone.slugOverride || zone.slug, // Use slugOverride if available
+          forumType: zone.forumType
         }));
       
-      // Find categories (type is 'category' and parentId is not null)
+      // Find categories (forumType is 'general' and has child forums, or is a parent without being primary)
+      // This logic might need refinement based on exact definition of "category" in new structure
       const categories = allCategories
-        .filter(cat => cat.type === 'category' && cat.parentId !== null)
+        .filter(cat => cat.forumType === 'general' && allCategories.some(child => child.parentId === cat.id)) // Example: General forums that are parents
         .map(category => {
-          // Find child forums (type 'forum') for this category
           const childForums = allCategories
-            .filter(forum => forum.parentId === category.id && forum.type === 'forum')
+            .filter(forum => forum.parentId === category.id) // Children can be 'general' forums
             .map(forum => ({
               id: forum.id,
               name: forum.name,
               slug: forum.slug,
-              parentId: forum.parentId || 0
+              parentId: forum.parentId || 0, // parentId should exist
+              forumType: forum.forumType
             }));
             
           return {
             id: category.id,
             name: category.name,
             slug: category.slug,
+            forumType: category.forumType,
             childForums
           };
         });
@@ -463,6 +588,109 @@ export const forumService = {
       return updatedThread || null;
     } catch (error) {
       console.error('Error in forumService.updateThreadSolvedStatus:', error);
+      throw error;
+    }
+  },
+
+  async getZoneMetricsBySlug(slug: string): Promise<{
+    zoneId: number;
+    threadCount: number;
+    postCount: number;
+    totalXp: number;
+    totalDgt: number;
+    activeUsers: number;
+    hotThreads: Array<{
+      id: number;
+      title: string;
+      replies: number;
+      views: number;
+      lastActivity: string;
+    }>;
+  } | null> {
+    try {
+      const zone = await this.getCategoryBySlug(slug);
+      if (!zone) {
+        console.log(`[forumService] getZoneMetricsBySlug - Zone not found for slug: ${slug}`);
+        return null;
+      }
+      const zoneId = zone.id;
+      // 1. Get all thread IDs in this zone
+      const threadRows = await db.select({ id: threads.id, title: threads.title, postCount: threads.postCount, viewCount: threads.viewCount, lastPostAt: threads.lastPostAt })
+        .from(threads)
+        .where(eq(threads.categoryId, zoneId));
+      const threadIds = threadRows.map(t => t.id);
+      // 2. XP: Sum all xp_awards for posts/threads in this zone
+      let totalXp = 0;
+      if (threadIds.length > 0) {
+        // XP from xp_awards.thread_id directly
+        const xpFromThreads = await db.select({ value: sql`COALESCE(SUM(amount),0)` })
+          .from('xp_awards')
+          .where(sql`thread_id IN (${threadIds.join(',')})`);
+        // XP from xp_awards.post_id (join posts to get thread_id)
+        const xpFromPosts = await db.select({ value: sql`COALESCE(SUM(xa.amount),0)` })
+          .from(sql`xp_awards xa`)
+          .innerJoin(posts, sql`xa.post_id = ${posts.id}`)
+          .where(sql`posts.thread_id IN (${threadIds.join(',')})`);
+        totalXp = Number(xpFromThreads[0]?.value || 0) + Number(xpFromPosts[0]?.value || 0);
+      }
+      // 3. DGT: Sum all DGT transactions for posts/threads in this zone
+      let totalDgt = 0;
+      if (threadIds.length > 0) {
+        // DGT from transactions.thread_id
+        const dgtFromThreads = await db.select({ value: sql`COALESCE(SUM(amount),0)` })
+          .from('transactions')
+          .where(sql`thread_id IN (${threadIds.join(',')}) AND currency = 'DGT' AND type IN ('tip','boost','creation_fee','stake')`);
+        // DGT from transactions.post_id (join posts to get thread_id)
+        const dgtFromPosts = await db.select({ value: sql`COALESCE(SUM(t.amount),0)` })
+          .from(sql`transactions t`)
+          .innerJoin(posts, sql`t.post_id = ${posts.id}`)
+          .where(sql`posts.thread_id IN (${threadIds.join(',')}) AND t.currency = 'DGT' AND t.type IN ('tip','boost','creation_fee','stake')`);
+        totalDgt = Number(dgtFromThreads[0]?.value || 0) + Number(dgtFromPosts[0]?.value || 0);
+      }
+      // 4. Hot Threads: Top 5 by score
+      const now = new Date();
+      const hotThreads = threadRows
+        .map(t => {
+          // Score = (views * 0.3) + (replies * 0.5) + (recent activity * 0.2)
+          const hoursSinceLast = t.lastPostAt ? (now.getTime() - new Date(t.lastPostAt).getTime()) / (1000 * 60 * 60) : 9999;
+          const recencyScore = Math.max(0, 48 - hoursSinceLast) / 48; // 1 if <1h, 0 if >48h
+          const score = (Number(t.viewCount || 0) * 0.3) + (Number(t.postCount || 0) * 0.5) + (recencyScore * 0.2 * 100);
+          return {
+            id: t.id,
+            title: t.title,
+            replies: t.postCount || 0,
+            views: t.viewCount || 0,
+            lastActivity: t.lastPostAt ? new Date(t.lastPostAt).toISOString() : '',
+            score
+          };
+        })
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5)
+        .map(({ score, ...rest }) => rest); // Remove score from output
+      // 5. Active Users: Distinct users who posted in this zone in last 48h
+      let activeUsers = 0;
+      if (threadIds.length > 0) {
+        const since = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+        const activeUserRows = await db.select({ userId: posts.userId })
+          .from(posts)
+          .where(sql`posts.thread_id IN (${threadIds.join(',')}) AND posts.created_at > ${since}`)
+          .groupBy(posts.userId);
+        activeUsers = activeUserRows.length;
+      }
+      // 6. Thread/Post counts
+      const threadCount = threadRows.length;
+      const postCount = threadRows.reduce((sum, t) => sum + (t.postCount || 0), 0);
+      return {
+        zoneId,
+        threadCount,
+        postCount,
+        totalXp,
+        totalDgt,
+        activeUsers,
+        hotThreads
+      };
+    } catch (error) {
+      console.error(`Error in forumService.getZoneMetricsBySlug for slug ${slug}:`, error);
       throw error;
     }
   },

@@ -23,6 +23,13 @@ export const forumCategories = pgTable('forum_categories', {
   pluginData: jsonb('plugin_data').default('{}'),
   createdAt: timestamp('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+  forumType: text('forum_type').notNull().default('general'), // 'primary', 'general', etc.
+  slugOverride: text('slug_override'),
+  components: jsonb('components').default('[]'),
+  threadRules: jsonb('thread_rules').default('{}'),
+  accessControl: jsonb('access_control').default('{}'),
+  displayPriority: integer('display_priority').notNull().default(0),
+  seo: jsonb('seo').default('{}'),
 });
 
 // Placeholder for relations
