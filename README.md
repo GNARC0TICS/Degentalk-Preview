@@ -320,3 +320,12 @@ To incentivize user participation, the platform awards Experience Points (XP) an
 **Configuration:**
 *   XP amounts for actions are configured in the `xpActionSettings` table (schema: `db/schema/economy/xpActionSettings.ts`).
 *   The DGT reward amount for actions like thread creation might be in environment variables or a configuration table (e.g., `economySettings` in `db/schema/economy/settings.ts`). Refer to `server/src/domains/wallet/wallet.constants.ts` or service logic for defaults.
+
+## 🔧 Developer Setup Notes
+
+This repo uses `vite-tsconfig-paths` to sync `@/*` path aliases between Vite and TypeScript.
+
+Make sure to:
+- Use `pnpm install` to install dev dependencies
+- Restart VSCode's TS server (`Cmd+Shift+P → TypeScript: Restart TS Server`) if alias errors appear
+- Run dev with: `pnpm dev:frontend`

@@ -1,14 +1,24 @@
 import React from 'react';
 import { Link } from 'wouter';
+
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Eye, MessageSquare, Users, Clock, Flame, AlertTriangle } from 'lucide-react'; // Added AlertTriangle
+
+import {
+  Eye,
+  MessageSquare,
+  Users,
+  Clock,
+  Flame,
+  AlertTriangle // grouped alphabetically for clarity
+} from 'lucide-react';
+
 import { formatDistanceToNow } from 'date-fns';
-import { primaryZones, PrimaryZone } from '@/constants/primaryZones'; // Import the registry
+
+import { primaryZones, type PrimaryZone } from '@/constants/primaryZones';
 
 export interface ZoneCardProps {
   zoneId: string; // Use zoneId (slug) to look up in the registry
-  
   // Stats and metadata can still be passed as props or fetched if not in registry
   threadCount?: number;
   postCount?: number;
