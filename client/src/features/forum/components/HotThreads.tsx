@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card.tsx';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { ThreadCard } from '@/components/forum/thread-card';
-import { ThreadTag } from '@shared/types';
+import { ThreadCard } from '../../../components/forum/thread-card.tsx';
+import { ThreadTag } from '../../../../shared/types.ts';
 import { Link } from 'wouter';
 import { MessageSquare, Eye, ThumbsUp, ArrowRight, Clock, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '../../../components/ui/badge.tsx';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar.tsx';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ThreadResponse {
@@ -47,9 +47,9 @@ interface HotThreadsProps {
 
 export function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
   const { data: threads, isLoading, error } = useQuery<ThreadResponse[]>({
-    queryKey: ['/api/forum/hot-threads', { limit }],
+    queryKey: ['/api/analytics/hot-threads', { limit }],
     queryFn: async () => {
-      const res = await fetch(`/api/forum/hot-threads?limit=${limit}`);
+      const res = await fetch(`/api/analytics/hot-threads?limit=${limit}`);
       if (!res.ok) throw new Error('Failed to fetch hot threads');
       return res.json();
     },

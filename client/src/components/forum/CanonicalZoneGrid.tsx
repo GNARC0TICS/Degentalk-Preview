@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { ZoneCard } from '@/components/forum/ZoneCard';
-import { ShopCard } from '@/components/forum/ShopCard';
+import { ZoneCard } from './ZoneCard.tsx'; // Relative path with extension
+import { ShopCard } from './ShopCard.tsx'; // Relative path with extension
 import { motion } from 'framer-motion';
 import { 
   Activity, 
@@ -15,6 +15,7 @@ import {
   FileText, 
   Folder 
 } from 'lucide-react';
+import { ForumEntityBase, getZonePath, isPrimaryZone } from '../../utils/forum-routing-helper.ts'; // Relative path with extension
 
 // Zone theme configuration matching HierarchicalZoneNav
 const ZONE_THEMES = {
@@ -66,14 +67,26 @@ const ZONE_THEMES = {
 } as const;
 
 export interface ZoneCardData {
-  id: string | number;
+  // Explicitly listing properties that would be inherited from ForumEntityBase
+  // to ensure they are recognized, especially if module resolution for ForumEntityBase is problematic.
+  id: number; // or string, ensure consistency with ForumEntityBase
   name: string;
   slug: string;
-  description: string;
-  icon?: string | null;
-  colorTheme?: string | null;
+  description?: string;
+  isZone?: boolean; 
+  canonical?: boolean; 
+  forum_type?: 'primary' | 'general' | 'merged' | 'deprecated';
+  parentId?: number | null;
+  parentSlug?: string;
+  parentName?: string;
+  icon?: string;
+  colorTheme?: string;
   threadCount?: number;
   postCount?: number;
+  canHaveThreads?: boolean;
+  position?: number;
+
+  // Own properties of ZoneCardData
   activeUsersCount?: number;
   lastActivityAt?: Date;
   hasXpBoost?: boolean;
@@ -125,14 +138,25 @@ export function CanonicalZoneGrid({
   if (!zones || zones.length === 0) {
     return (
       <div className="text-center text-zinc-400 py-12">
-        <p>No primary zones available</p>
+        <p>No zones available</p> {/* Changed from "primary zones" */}
       </div>
     );
   }
 
+  // Separate and sort zones
+  const primaryDisplayZones = zones
+    .filter(zone => isPrimaryZone(zone))
+    .sort((a, b) => (a.position || 0) - (b.position || 0));
+
+  const generalDisplayZones = zones
+    .filter(zone => zone.forum_type === 'general') // Assuming 'general' is the type
+    .sort((a, b) => (a.position || 0) - (b.position || 0));
+  
+  const displayableZones = [...primaryDisplayZones, ...generalDisplayZones];
+
   // Prepare grid data with zones + optional shop card
   const gridData: GridCardData[] = [
-    ...zones.map(zone => ({ ...zone, type: 'zone' as const, isStatic: false })),
+    ...displayableZones.map(zone => ({ ...zone, type: 'zone' as const, isStatic: false })),
     ...(includeShopCard ? [{
       id: 'shop-card',
       type: 'shop',
@@ -164,7 +188,7 @@ export function CanonicalZoneGrid({
 }
 
 export function ForumZoneCard({ zone, isClickable = false }: { zone: ZoneCardData; isClickable?: boolean }) {
-  const zoneUrl = `/forum/${zone.slug}`;
+  const zoneUrl = getZonePath(zone); // Use new utility function
   
   // Get theme configuration
   const theme = zone.colorTheme as keyof typeof ZONE_THEMES;
@@ -312,4 +336,4 @@ export function ForumZoneCard({ zone, isClickable = false }: { zone: ZoneCardDat
   return cardContent;
 }
 
-export default CanonicalZoneGrid; 
+export default CanonicalZoneGrid;

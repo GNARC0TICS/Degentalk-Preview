@@ -2,21 +2,14 @@ import React from 'react';
 import { Link } from 'wouter';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Eye, MessageSquare, Users, Clock, Flame } from 'lucide-react';
+import { Eye, MessageSquare, Users, Clock, Flame, AlertTriangle } from 'lucide-react'; // Added AlertTriangle
 import { formatDistanceToNow } from 'date-fns';
+import { primaryZones, PrimaryZone } from '@/constants/primaryZones'; // Import the registry
 
 export interface ZoneCardProps {
-  // Core data
-  id: string | number;
-  name: string;
-  slug: string;
-  description: string;
+  zoneId: string; // Use zoneId (slug) to look up in the registry
   
-  // Visual customization
-  icon?: string;
-  colorTheme?: string;
-  
-  // Stats and metadata
+  // Stats and metadata can still be passed as props or fetched if not in registry
   threadCount?: number;
   postCount?: number;
   activeUsersCount?: number;
@@ -43,12 +36,7 @@ export interface ZoneCardProps {
  * from regular category cards.
  */
 export function ZoneCard({
-  id,
-  name,
-  slug,
-  description,
-  icon,
-  colorTheme = 'default',
+  zoneId,
   threadCount = 0,
   postCount = 0,
   activeUsersCount = 0,
@@ -61,12 +49,37 @@ export function ZoneCard({
   className = '',
   onClick,
 }: ZoneCardProps) {
-  // Determine the URL
-  const zoneUrl = `/forums/${slug}`;
-  console.log('ZoneCard generated URL:', zoneUrl);
+  const zoneConfig = primaryZones[zoneId];
+
+  if (!zoneConfig) {
+    // Fallback for when zoneId is not found in the registry
+    return (
+      <Card className={`p-4 border-2 border-red-500 bg-red-900/30 ${className}`}>
+        <div className="flex items-center text-red-400">
+          <AlertTriangle className="h-6 w-6 mr-2" />
+          <div>
+            <h3 className="font-bold">Zone Config Error</h3>
+            <p className="text-xs">No configuration found for zone ID: "{zoneId}"</p>
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  const { 
+    label: name, 
+    description, 
+    icon: zoneIcon, // Renamed to avoid conflict with Flame icon from lucide-react
+    gradient, 
+    slug 
+  } = zoneConfig;
+
+  // Determine the URL - Primary zones are at root level
+  const zoneUrl = `/${slug}`; 
   
-  // Custom class based on colorTheme
-  const themeClass = `zone-theme-${colorTheme}`;
+  // Custom class based on gradient (instead of colorTheme)
+  // The gradient string itself can be applied directly if it's a Tailwind class
+  const themeClass = gradient || 'bg-zinc-800'; // Fallback gradient
   
   // Handle click if provided
   const handleClick = (e: React.MouseEvent) => {
@@ -78,12 +91,13 @@ export function ZoneCard({
   
   // Render icon based on format (emoji or component)
   const renderIcon = () => {
-    // If icon is an emoji (starts with a character that could be emoji)
-    if (icon && /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(icon)) {
-      return <span className="text-3xl mr-2">{icon}</span>;
+    if (typeof zoneIcon === 'string' && /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(zoneIcon)) {
+      return <span className="text-3xl mr-2">{zoneIcon}</span>;
     }
-    
-    // If icon is not provided, use a default flame icon
+    if (React.isValidElement(zoneIcon)) {
+      return <div className="mr-2">{zoneIcon}</div>; // Render ReactNode
+    }
+    // Fallback icon
     return <Flame className="h-6 w-6 mr-2" />;
   };
   

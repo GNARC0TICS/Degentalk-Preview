@@ -66,7 +66,15 @@ export default function HomePage() {
   } = useForumStructure();
   
   const primaryZones = forumStructure?.primaryZones || [];
-  const categories = forumStructure?.categories || [];
+  const categories = forumStructure?.categories || []; // Assuming these are general forums/zones
+
+  // Combine primary zones and categories (general zones) for the grid
+  // It's assumed that items in 'categories' from useForumStructure 
+  // are also compatible with ForumEntityBase and have forum_type: 'general' and a position.
+  const allZonesFromHook: ForumEntityBase[] = [
+    ...(primaryZones || []),
+    ...(categories || []), // Ensure categories are also ForumEntityBase compatible
+  ];
 
   // Fetch hot threads
   const { 
@@ -101,26 +109,25 @@ export default function HomePage() {
     return <PositionedShoutbox />;
   };
 
-  // Convert primary zones to the format expected by CanonicalZoneGrid
-  const zoneCardData: ZoneCardData[] = primaryZones.map((zone) => {
-    // Extract properties from ForumEntityBase
-    const { id, name, slug, description, icon, colorTheme, threadCount, postCount } = zone;
-    
-    // Return the complete ZoneCardData object with additional properties
+  // Convert all zones (primary and general) to the format expected by CanonicalZoneGrid
+  // This mapping ensures all necessary fields for ZoneCardData are present.
+  // The CanonicalZoneGrid itself will handle sorting by primary/general and then by position.
+  const allZonesForGrid: ZoneCardData[] = allZonesFromHook.map((zone) => {
+    // Ensure all properties from ForumEntityBase are passed through,
+    // and add any additional ones specific to ZoneCardData's direct fields if necessary.
     return {
-      id,
-      name,
-      slug,
-      description: description || '',
-      icon: icon || '📁',
-      colorTheme: colorTheme || 'default',
-      threadCount: threadCount || 0,
-      postCount: postCount || 0,
-      // Add properties required by ZoneCardData but not in ForumEntityBase
-      activeUsersCount: 0,
-      hasXpBoost: false,
-      boostMultiplier: 1
-    };
+      ...zone, // Spread all properties from ForumEntityBase (id, name, slug, forum_type, position, etc.)
+      description: zone.description || '', // Ensure description is not undefined
+      icon: zone.icon || '📁', // Default icon
+      colorTheme: zone.colorTheme || 'default', // Default theme
+      threadCount: zone.threadCount || 0,
+      postCount: zone.postCount || 0,
+      // Optional fields for ZoneCardData, if not present in ForumEntityBase from hook:
+      activeUsersCount: zone.activeUsersCount || 0, // Assuming activeUsersCount might come from hook or be defaulted
+      hasXpBoost: zone.hasXpBoost || false,
+      boostMultiplier: zone.boostMultiplier || 1,
+      // isEventActive and eventData would also be mapped if available
+    } as ZoneCardData; // Cast to ZoneCardData to satisfy the type
   });
 
   return (
@@ -171,7 +178,7 @@ export default function HomePage() {
               </div>
             ) : (
               <CanonicalZoneGrid 
-                zones={forumStructure?.primaryZones || []} 
+                zones={allZonesForGrid} // Pass the combined and mapped list of all zones
                 includeShopCard={true}
                 shopCardData={{
                   name: "Legendary Diamond Frame",
