@@ -15,10 +15,17 @@ import {
   FileText, 
   Folder,
   Lock,
-  ShieldCheck
+  ShieldCheck,
+  Loader2,
+  BarChart2,
+  Users as UsersIcon,
+  Flame as FlameIcon,
+  Zap as ZapIcon,
+  Coins as CoinsIcon
 } from 'lucide-react';
 import { getZonePath } from '../../utils/forum-routing-helper.ts'; // Relative path with extension
 import { getPrimaryZone, primaryZonesArray, PrimaryZone } from '@/constants/primaryZones.tsx'; // Added import
+import { useZoneMetrics } from '@/features/forum/hooks/useZoneMetrics';
 
 // Zone theme configuration matching primaryZones colorTheme values
 const ZONE_THEMES = {
@@ -33,20 +40,20 @@ const ZONE_THEMES = {
   },
   'mission': { 
     icon: Target, 
-    color: 'text-blue-400', 
-    bgColor: 'bg-gradient-to-br from-blue-900/20 to-blue-800/10',
-    borderColor: 'border-blue-500/30',
-    glowColor: 'rgba(59, 130, 246, 0.15)',
-    accentColor: 'text-blue-300',
+    color: 'text-green-400',
+    bgColor: 'bg-gradient-to-br from-green-900/20 to-green-800/10',
+    borderColor: 'border-green-500/30',
+    glowColor: 'rgba(34,197,94,0.15)',
+    accentColor: 'text-green-300',
     label: 'Mission Control'
   },
   'briefing': { 
     icon: FileText, 
-    color: 'text-amber-400', 
-    bgColor: 'bg-gradient-to-br from-amber-900/20 to-amber-800/10',
-    borderColor: 'border-amber-500/30',
-    glowColor: 'rgba(245, 158, 11, 0.15)',
-    accentColor: 'text-amber-300',
+    color: 'text-gray-400',
+    bgColor: 'bg-gradient-to-br from-gray-900/20 to-gray-800/10',
+    borderColor: 'border-gray-500/30',
+    glowColor: 'rgba(107, 114, 128, 0.15)',
+    accentColor: 'text-gray-300',
     label: 'Briefing Room'
   },
   'archive': { 
@@ -66,6 +73,15 @@ const ZONE_THEMES = {
     glowColor: 'rgba(217, 119, 6, 0.25)',
     accentColor: 'text-yellow-200',
     label: 'The Vault'
+  },
+  'shop': {
+    icon: Dices,
+    color: 'text-purple-400',
+    bgColor: 'bg-gradient-to-br from-purple-900/30 to-purple-700/20',
+    borderColor: 'border-purple-600/40',
+    glowColor: 'rgba(168,85,247,0.18)',
+    accentColor: 'text-purple-200',
+    label: 'Degen Shop'
   }
 } as const;
 
@@ -213,6 +229,8 @@ export function CanonicalZoneGrid({
 
 export function ForumZoneCard({ zoneId, isClickable = false }: { zoneId: string; isClickable?: boolean }) {
   const zone = getPrimaryZone(zoneId);
+  const [showStats, setShowStats] = React.useState(false);
+  const { data: metrics, isLoading: metricsLoading, error: metricsError } = useZoneMetrics(zone?.slug || '');
 
   if (!zone) {
     // Handle case where zone is not found, though this shouldn't happen if zoneIds are valid
@@ -264,7 +282,6 @@ export function ForumZoneCard({ zoneId, isClickable = false }: { zoneId: string;
         transition-all duration-300
         ${themeConfig ? `${themeConfig.bgColor} ${themeConfig.borderColor}` : 'bg-zinc-900/50 border-zinc-700/50'}
         ${isClickable ? 'cursor-pointer group hover:shadow-xl' : ''}
-        ${hasXpBoost ? 'ring-2 ring-emerald-500/30' : ''}
       `}
       whileHover={isClickable ? { 
         scale: 1.02,
@@ -291,22 +308,6 @@ export function ForumZoneCard({ zoneId, isClickable = false }: { zoneId: string;
           >
             <Activity className="w-3 h-3 text-emerald-400" />
             <span className="text-xs text-emerald-400 font-medium">{activeUsersCount}</span>
-          </motion.div>
-        </div>
-      )}
-      
-      {/* XP Boost indicator */}
-      {hasXpBoost && (
-        <div className="absolute top-4 left-4">
-          <motion.div 
-            className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30"
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            <Zap className="w-3 h-3 text-emerald-400" />
-            <span className="text-xs text-emerald-400 font-medium">
-              {boostMultiplier}x XP
-            </span>
           </motion.div>
         </div>
       )}
@@ -350,25 +351,77 @@ export function ForumZoneCard({ zoneId, isClickable = false }: { zoneId: string;
         {/* Description */}
         <p className="text-sm text-zinc-400 mb-6 line-clamp-3 flex-grow">{zone.description}</p>
         
-        {/* Stats */}
-        <div className="flex items-center gap-6 text-xs text-zinc-500 mt-auto">
-          <motion.div 
-            className="flex items-center gap-1.5"
-            whileHover={{ scale: 1.05 }}
-          >
+        {/* Unified stats row at bottom */}
+        <div className="flex items-center gap-4 text-xs text-zinc-500 mt-auto pt-2 border-t border-zinc-800/50">
+          <div className="flex items-center gap-1.5 min-w-[70px] justify-center">
             <MessageCircle className="w-4 h-4" />
             <span className="font-medium">{threadCount}</span>
             <span className="text-zinc-600">threads</span>
-          </motion.div>
-          <motion.div 
-            className="flex items-center gap-1.5"
-            whileHover={{ scale: 1.05 }}
-          >
+          </div>
+          <div className="flex items-center gap-1.5 min-w-[70px] justify-center">
             <Hash className="w-4 h-4" />
             <span className="font-medium">{postCount}</span>
             <span className="text-zinc-600">posts</span>
-          </motion.div>
+          </div>
+          {/* XP Boost badge now in stats row */}
+          {hasXpBoost && (
+            <div className="flex items-center gap-1.5 min-w-[70px] justify-center">
+              <ZapIcon className="w-4 h-4 text-emerald-400" />
+              <span className="font-medium text-emerald-400">{boostMultiplier}x XP</span>
+            </div>
+          )}
+          {/* Live metrics toggle */}
+          <button
+            className="ml-auto flex items-center gap-1 text-xs text-zinc-400 hover:text-emerald-400 transition-colors"
+            onClick={e => { e.stopPropagation(); setShowStats(s => !s); }}
+            tabIndex={0}
+            aria-label="Show zone stats"
+            type="button"
+          >
+            <BarChart2 className="w-4 h-4" />
+            Stats
+          </button>
         </div>
+        {/* Expandable metrics panel with error boundary and null checks */}
+        {showStats && (
+          <div className="mt-4 p-3 rounded-lg bg-zinc-900/80 border border-zinc-800 text-xs text-zinc-200 space-y-2">
+            {metricsLoading ? (
+              <div className="flex items-center gap-2 text-zinc-400"><Loader2 className="animate-spin w-4 h-4" /> Loading zone stats...</div>
+            ) : metricsError ? (
+              <div className="text-red-400">Failed to load zone stats</div>
+            ) : metrics && typeof metrics === 'object' ? (
+              <>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <ZapIcon className="w-4 h-4 text-emerald-400" />
+                  <span className="font-semibold">XP:</span>
+                  <span>{metrics.totalXp?.toLocaleString?.() ?? 0}</span>
+                  <CoinsIcon className="w-4 h-4 text-yellow-400 ml-4" />
+                  <span className="font-semibold">DGT:</span>
+                  <span>{metrics.totalDgt?.toLocaleString?.() ?? 0}</span>
+                  <UsersIcon className="w-4 h-4 text-blue-400 ml-4" />
+                  <span className="font-semibold">Active:</span>
+                  <span>{metrics.activeUsers ?? 0}</span>
+                </div>
+                <div className="mt-2">
+                  <div className="font-semibold text-zinc-300 mb-1 flex items-center gap-1"><FlameIcon className="w-4 h-4 text-orange-400" /> Hot Threads</div>
+                  {Array.isArray(metrics.hotThreads) && metrics.hotThreads.length === 0 ? (
+                    <div className="text-zinc-500">No hot threads</div>
+                  ) : (
+                    <ul className="space-y-1">
+                      {Array.isArray(metrics.hotThreads) && metrics.hotThreads.map(ht => (
+                        <li key={ht.id} className="flex items-center gap-2">
+                          <span className="truncate font-medium text-zinc-100">{ht.title}</span>
+                          <span className="text-zinc-400 ml-auto">{ht.replies} replies</span>
+                          <span className="text-zinc-400">{ht.views} views</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </>
+            ) : null}
+          </div>
+        )}
       </div>
       
       {/* Hover glow effect */}
