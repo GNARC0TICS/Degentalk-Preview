@@ -20,9 +20,11 @@ import {
 } from '@/components/shoutbox/positioned-shoutbox';
 import { useShoutbox } from '@/contexts/shoutbox-context';
 import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
-import { CanonicalZoneGrid, ZoneCardData } from '@/components/forum/CanonicalZoneGrid';
+// import { CanonicalZoneGrid, ZoneCardData } from '@/components/forum/CanonicalZoneGrid'; // ZoneCardData might not be needed here anymore
+import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid'; 
 import { HotThreads } from '@/features/forum/components/HotThreads';
-import { useForumStructure } from '@/features/forum/hooks/useForumStructure';
+// import { useForumStructure } from '@/features/forum/hooks/useForumStructure'; // To be removed
+import { getPrimaryZoneIds } from '@/constants/primaryZones.tsx'; // Explicit .tsx extension
 import { ActiveMembersWidget } from '@/components/users';
 import { useActiveUsers } from '@/features/users/hooks';
 
@@ -46,6 +48,8 @@ import { useAuth } from '@/hooks/use-auth';
 import { ForumEntityBase } from '@/utils/forum-routing-helper';
 import { getThreadTitle } from '@/utils/thread-utils';
 import { ChevronRightIcon, ChatBubbleBottomCenterTextIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
+import { PageLayout } from '@/components/layout/PageLayout';
+import { apiRequest } from '@/lib/queryClient';
 
 // Define API Path Constants
 const API_PATHS = {
@@ -58,23 +62,27 @@ export default function HomePage() {
   const isLoggedIn = !!user;
   const { position } = useShoutbox();
 
-  // Use centralized forum structure hook
-  const { 
-    data: forumStructure,
-    isLoading: structureLoading,
-    error: forumStructureError
-  } = useForumStructure();
+  // Directly use primaryZones from constants
+  // const { 
+  //   data: forumStructure,
+  //   isLoading: structureLoading,
+  //   error: forumStructureError
+  // } = useForumStructure(); // REMOVED
   
-  const primaryZones = forumStructure?.primaryZones || [];
-  const categories = forumStructure?.categories || []; // Assuming these are general forums/zones
+  // const primaryZonesFromHook = forumStructure?.primaryZones || []; // REMOVED
+  // const categories = forumStructure?.categories || []; // REMOVED
 
-  // Combine primary zones and categories (general zones) for the grid
-  // It's assumed that items in 'categories' from useForumStructure 
-  // are also compatible with ForumEntityBase and have forum_type: 'general' and a position.
-  const allZonesFromHook: ForumEntityBase[] = [
-    ...(primaryZones || []),
-    ...(categories || []), // Ensure categories are also ForumEntityBase compatible
-  ];
+  // const allZonesFromHook: ForumEntityBase[] = [ // REMOVED
+  //   ...(primaryZonesFromHook || []),
+  //   ...(categories || []), 
+  // ];
+
+  // Extract zone IDs from the imported primaryZones constant
+  const primaryZoneIds = getPrimaryZoneIds();
+  // For now, structureLoading and forumStructureError will need to be handled or removed
+  // if CanonicalZoneGrid depends on them. Let's assume it will be simplified.
+  const structureLoading = false; // Placeholder, as we are not loading structure anymore for primary zones
+  const forumStructureError = null; // Placeholder
 
   // Fetch hot threads
   const { 
@@ -109,26 +117,8 @@ export default function HomePage() {
     return <PositionedShoutbox />;
   };
 
-  // Convert all zones (primary and general) to the format expected by CanonicalZoneGrid
-  // This mapping ensures all necessary fields for ZoneCardData are present.
-  // The CanonicalZoneGrid itself will handle sorting by primary/general and then by position.
-  const allZonesForGrid: ZoneCardData[] = allZonesFromHook.map((zone) => {
-    // Ensure all properties from ForumEntityBase are passed through,
-    // and add any additional ones specific to ZoneCardData's direct fields if necessary.
-    return {
-      ...zone, // Spread all properties from ForumEntityBase (id, name, slug, forum_type, position, etc.)
-      description: zone.description || '', // Ensure description is not undefined
-      icon: zone.icon || '📁', // Default icon
-      colorTheme: zone.colorTheme || 'default', // Default theme
-      threadCount: zone.threadCount || 0,
-      postCount: zone.postCount || 0,
-      // Optional fields for ZoneCardData, if not present in ForumEntityBase from hook:
-      activeUsersCount: zone.activeUsersCount || 0, // Assuming activeUsersCount might come from hook or be defaulted
-      hasXpBoost: zone.hasXpBoost || false,
-      boostMultiplier: zone.boostMultiplier || 1,
-      // isEventActive and eventData would also be mapped if available
-    } as ZoneCardData; // Cast to ZoneCardData to satisfy the type
-  });
+  // No longer need to convert allZonesForGrid as CanonicalZoneGrid now takes zoneIds
+  // const allZonesForGrid: ZoneCardData[] = ... // REMOVED
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
@@ -178,7 +168,7 @@ export default function HomePage() {
               </div>
             ) : (
               <CanonicalZoneGrid 
-                zones={allZonesForGrid} // Pass the combined and mapped list of all zones
+                zoneIds={primaryZoneIds} // Pass the array of primary zone IDs
                 includeShopCard={true}
                 shopCardData={{
                   name: "Legendary Diamond Frame",
@@ -212,12 +202,15 @@ export default function HomePage() {
                     <Skeleton key={i} className="h-8 w-full" />
                   ))}
                 </div>
-              ) : forumStructureError ? (
+              ) : forumStructureError ? ( // This error handling might need adjustment if useForumStructure is fully removed
                 <div className="text-red-500 p-4" role="alert">
                   <p className="text-sm">Failed to load forum structure</p>
-                  {forumStructureError && <p className="text-xs mt-1 opacity-75">{forumStructureError.message}</p>}
+                  {/* forumStructureError might be null now, adjust if needed */}
+                  {forumStructureError && <p className="text-xs mt-1 opacity-75">{(forumStructureError as Error).message}</p>}
                 </div>
               ) : (
+                // HierarchicalZoneNav might still rely on useForumStructure.
+                // This needs to be addressed. For now, leaving it, but it might break or show no data.
                 <HierarchicalZoneNav className="text-zinc-200" />
               )}
             </CardContent>

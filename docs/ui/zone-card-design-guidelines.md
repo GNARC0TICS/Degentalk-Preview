@@ -1,9 +1,11 @@
 # Zone Card Design Guidelines
 
 ## Overview
+
 The ZoneCard component is a core UI element that represents Primary Zones in DegenTalk's forum structure. Unlike regular category cards, Zone Cards are specialized, visually distinct elements that represent canonical forum destinations rather than expandable categories.
 
 ## Component Purpose
+
 - Visually represent Primary Zones with distinct branding
 - Provide clear navigation to single-forum destinations
 - Support dynamic theming and visual states
@@ -21,7 +23,7 @@ interface ZoneCardProps {
   
   // Visual customization
   icon?: string;                // Emoji or icon identifier
-  colorTheme?: string;          // Theme key (e.g., 'pit', 'casino', etc.)
+  colorTheme?: string;          // Theme key (e.g., 'pit', 'vault', etc.)
   
   // Stats and metadata
   threadCount?: number;
@@ -47,6 +49,7 @@ interface ZoneCardProps {
 ## Visual Design Guidelines
 
 ### Base Card Structure
+
 - **Dimensions**: Responsive, minimum height 180px on desktop, full width on mobile
 - **Shape**: Rounded corners (use Tailwind `rounded-lg` or similar)
 - **Layout**: Flexible grid with emphasis on zone name and icon
@@ -60,7 +63,10 @@ interface ZoneCardProps {
 
 Each zone should have a distinct visual identity through its `colorTheme` property:
 
+**Note:** The themes outlined below serve as a foundational guide. There is ample room for creative enhancements, minor adjustments, and further refinement to best suit the evolving visual identity of the platform. These examples are a starting point, not a rigid final specification.
+
 #### Base Implementation Example
+
 ```tsx
 // Example colorTheme CSS implementation
 <div className={`zone-card zone-theme-${colorTheme || 'default'}`}>
@@ -84,11 +90,6 @@ Define CSS classes for each theme in a dedicated stylesheet:
   border-color: #51ffb0;
 }
 
-.zone-theme-casino {
-  background: linear-gradient(135deg, #2a0127 0%, #500142 100%);
-  border-color: #ff51eb;
-}
-
 .zone-theme-briefing {
   background: linear-gradient(135deg, #01182a 0%, #012c50 100%);
   border-color: #51a2ff;
@@ -98,11 +99,17 @@ Define CSS classes for each theme in a dedicated stylesheet:
   background: linear-gradient(135deg, #272a01 0%, #504901 100%);
   border-color: #ffeb51;
 }
+
+.zone-theme-vault {
+  background: linear-gradient(135deg, rgba(120, 53, 15, 0.9) 0%, rgba(180, 83, 9, 0.9) 100%); /* dark yellow-brown to amber approx */
+  border-color: #D97706; /* amber-600 */
+}
 ```
 
 ### Special State Styling
 
 #### XP Boost Indicator
+
 - Visual cue: Pulse glow effect on card border
 - Color: Green/emerald to indicate XP gain
 - Badge or pill showing multiplier (e.g., "2x XP")
@@ -119,12 +126,15 @@ Define CSS classes for each theme in a dedicated stylesheet:
 ```
 
 #### Event Active Indicator
+
 - Distinct banner or ribbon across card corner
 - Timer showing event time remaining if applicable
 - Higher visual contrast compared to the base card
 
 #### Rarity Styling (Future Implementation)
+
 For loot-style rarity differentiation:
+
 - **Common**: Subtle, neutral styling
 - **Uncommon**: Light glow effect
 - **Rare**: Medium glow effect + subtle animation
@@ -134,6 +144,7 @@ For loot-style rarity differentiation:
 ### Hover & Interactive States
 
 #### Hover State
+
 - Subtle scale transform (1.02-1.05x)
 - Increased border brightness
 - Optional light elevation (shadow)
@@ -151,17 +162,20 @@ For loot-style rarity differentiation:
 ```
 
 #### Active/Clicked State
+
 - Slight scale reduction (0.98x)
 - Brief flash effect or other visual feedback
 
 ### Icon Implementation
 
 Icons can be implemented in multiple ways:
+
 1. **Emoji**: Simple text emoji (e.g., "🔥" for The Pit)
 2. **SVG Icons**: Custom SVG icons from icon library
 3. **Component Icons**: Lucide React or similar icon components
 
 Example implementation:
+
 ```tsx
 // Icon rendering logic
 const renderIcon = () => {
@@ -186,15 +200,18 @@ const renderIcon = () => {
 The ZoneCard should adapt across different screen sizes:
 
 ### Desktop
+
 - Display in grid layout (3-4 cards per row)
 - Full visual treatments and animations
 - Mouse hover effects
 
 ### Tablet
+
 - 2 cards per row
 - Slightly simplified animations
 
 ### Mobile
+
 - Single column layout (full width)
 - Reduced height
 - Touch-optimized interactions
@@ -210,6 +227,7 @@ The ZoneCard should adapt across different screen sizes:
 ## Usage Examples
 
 ### Basic Zone Card
+
 ```tsx
 <ZoneCard
   id="the-pit"
@@ -224,6 +242,7 @@ The ZoneCard should adapt across different screen sizes:
 ```
 
 ### Zone Card with XP Boost
+
 ```tsx
 <ZoneCard
   id="mission-control"
@@ -239,26 +258,23 @@ The ZoneCard should adapt across different screen sizes:
 />
 ```
 
-### Zone Card with Active Event
+### Zone Card with The Vault Theme (New)
+
 ```tsx
 <ZoneCard
-  id="casino-floor"
-  name="The Casino Floor"
-  slug="casino-floor"
-  description="Trading strategies and market plays."
-  icon="🎰"
-  colorTheme="casino"
-  threadCount={980}
-  postCount={5432}
-  isEventActive={true}
-  eventData={{
-    name: "Prediction Tournament",
-    endsAt: new Date("2025-06-01T00:00:00Z")
-  }}
+  id="the-vault"
+  name="The Vault"
+  slug="the-vault"
+  description="Exclusive access for VIPs and high-value contributors."
+  icon="ShieldCheck" // Assuming ShieldCheck icon from Lucide for a premium, secure feel
+  colorTheme="vault"
+  threadCount={320}
+  postCount={1500}
 />
 ```
 
 ## Integration Notes
+
 - Zone Cards should be used on the homepage in a dedicated "Primary Zones" section
 - They can also be featured in sidebar navigation with simplified styling
-- Consider adding zone-specific header styling when viewing a zone's content 
+- Consider adding zone-specific header styling when viewing a zone's content

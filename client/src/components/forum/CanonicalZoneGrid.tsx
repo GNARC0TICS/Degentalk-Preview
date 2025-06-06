@@ -13,13 +13,16 @@ import {
   Archive, 
   Dices, 
   FileText, 
-  Folder 
+  Folder,
+  Lock,
+  ShieldCheck
 } from 'lucide-react';
-import { ForumEntityBase, getZonePath, isPrimaryZone } from '../../utils/forum-routing-helper.ts'; // Relative path with extension
+import { getZonePath } from '../../utils/forum-routing-helper.ts'; // Relative path with extension
+import { getPrimaryZone, primaryZonesArray, PrimaryZone } from '@/constants/primaryZones.tsx'; // Added import
 
-// Zone theme configuration matching HierarchicalZoneNav
+// Zone theme configuration matching primaryZones colorTheme values
 const ZONE_THEMES = {
-  'theme-pit': { 
+  'pit': { 
     icon: Flame, 
     color: 'text-red-400', 
     bgColor: 'bg-gradient-to-br from-red-900/20 to-red-800/10',
@@ -28,7 +31,7 @@ const ZONE_THEMES = {
     accentColor: 'text-red-300',
     label: 'The Pit'
   },
-  'theme-mission': { 
+  'mission': { 
     icon: Target, 
     color: 'text-blue-400', 
     bgColor: 'bg-gradient-to-br from-blue-900/20 to-blue-800/10',
@@ -37,16 +40,7 @@ const ZONE_THEMES = {
     accentColor: 'text-blue-300',
     label: 'Mission Control'
   },
-  'theme-casino': { 
-    icon: Dices, 
-    color: 'text-purple-400', 
-    bgColor: 'bg-gradient-to-br from-purple-900/20 to-purple-800/10',
-    borderColor: 'border-purple-500/30',
-    glowColor: 'rgba(147, 51, 234, 0.15)',
-    accentColor: 'text-purple-300',
-    label: 'Casino Floor'
-  },
-  'theme-briefing': { 
+  'briefing': { 
     icon: FileText, 
     color: 'text-amber-400', 
     bgColor: 'bg-gradient-to-br from-amber-900/20 to-amber-800/10',
@@ -55,7 +49,7 @@ const ZONE_THEMES = {
     accentColor: 'text-amber-300',
     label: 'Briefing Room'
   },
-  'theme-archive': { 
+  'archive': { 
     icon: Archive, 
     color: 'text-gray-400', 
     bgColor: 'bg-gradient-to-br from-gray-900/20 to-gray-800/10',
@@ -63,13 +57,22 @@ const ZONE_THEMES = {
     glowColor: 'rgba(107, 114, 128, 0.15)',
     accentColor: 'text-gray-300',
     label: 'Archive'
+  },
+  'vault': {
+    icon: ShieldCheck, 
+    color: 'text-amber-400', 
+    bgColor: 'bg-gradient-to-br from-yellow-900/30 to-amber-700/20',
+    borderColor: 'border-amber-600/40',
+    glowColor: 'rgba(217, 119, 6, 0.25)',
+    accentColor: 'text-yellow-200',
+    label: 'The Vault'
   }
 } as const;
 
 export interface ZoneCardData {
   // Explicitly listing properties that would be inherited from ForumEntityBase
   // to ensure they are recognized, especially if module resolution for ForumEntityBase is problematic.
-  id: number; // or string, ensure consistency with ForumEntityBase
+  id: number | string; // Allow both number and string for compatibility
   name: string;
   slug: string;
   description?: string;
@@ -119,7 +122,7 @@ export interface ShopCardData {
 export type GridCardData = CardData | ShopCardData;
 
 interface CanonicalZoneGridProps {
-  zones: ZoneCardData[];
+  zoneIds: string[]; // Changed from zones: ZoneCardData[]
   className?: string;
   includeShopCard?: boolean;
   shopCardData?: ShopCardData['featuredItem'];
@@ -130,33 +133,54 @@ interface CanonicalZoneGridProps {
  * Renders special, branded cards for each canonical zone plus optional promotional cards
  */
 export function CanonicalZoneGrid({ 
-  zones, 
+  zoneIds, // Changed from zones
   className = '', 
   includeShopCard = true,
   shopCardData 
 }: CanonicalZoneGridProps) {
-  if (!zones || zones.length === 0) {
+  if (!zoneIds || zoneIds.length === 0) {
     return (
       <div className="text-center text-zinc-400 py-12">
-        <p>No zones available</p> {/* Changed from "primary zones" */}
+        <p>No zones available</p>
       </div>
     );
   }
 
-  // Separate and sort zones
-  const primaryDisplayZones = zones
-    .filter(zone => isPrimaryZone(zone))
-    .sort((a, b) => (a.position || 0) - (b.position || 0));
+  // Retrieve zone data from the registry
+  const resolvedZones = zoneIds.map(id => getPrimaryZone(id)).filter(Boolean) as PrimaryZone[];
 
-  const generalDisplayZones = zones
-    .filter(zone => zone.forum_type === 'general') // Assuming 'general' is the type
-    .sort((a, b) => (a.position || 0) - (b.position || 0));
+  // Separate and sort zones (using PrimaryZone properties)
+  const primaryDisplayZones = resolvedZones
+    .sort((a, b) => a.displayPriority - b.displayPriority);
   
-  const displayableZones = [...primaryDisplayZones, ...generalDisplayZones];
+  const displayableZones: PrimaryZone[] = [...primaryDisplayZones];
 
   // Prepare grid data with zones + optional shop card
   const gridData: GridCardData[] = [
-    ...displayableZones.map(zone => ({ ...zone, type: 'zone' as const, isStatic: false })),
+    // Map PrimaryZone to ZoneCardData compatible structure
+    ...displayableZones.map(zone => {
+      const cardZoneData: ZoneCardData = {
+        id: zone.id, // Keep as string to match PrimaryZone.id
+        name: zone.label, // PrimaryZone uses 'label' not 'name'
+        slug: zone.slug,
+        description: zone.description,
+        icon: typeof zone.icon === 'string' ? zone.icon : undefined,
+        colorTheme: zone.colorTheme,
+        forum_type: 'primary',
+        position: zone.displayPriority,
+        threadCount: zone.stats?.threadCount || 0,
+        postCount: zone.stats?.postCount || 0,
+        activeUsersCount: zone.stats?.activeUsersCount || 0,
+        hasXpBoost: zone.features?.xpBoost?.enabled || false,
+        boostMultiplier: zone.features?.xpBoost?.multiplier || 1,
+        isEventActive: zone.features?.events?.isActive || false,
+        eventData: zone.features?.events?.isActive ? {
+          name: zone.features.events.name || 'Event',
+          endsAt: zone.features.events.endsAt || new Date()
+        } : undefined,
+      };
+      return { ...cardZoneData, type: 'zone' as const, isStatic: false };
+    }),
     ...(includeShopCard ? [{
       id: 'shop-card',
       type: 'shop',
@@ -179,7 +203,7 @@ export function CanonicalZoneGrid({
               featuredItem={(cardData as ShopCardData).featuredItem} 
             />
           ) : (
-            <ForumZoneCard zone={cardData as ZoneCardData} isClickable />
+            <ForumZoneCard zoneId={cardData.id as string} isClickable /> 
           )}
         </motion.div>
       ))}
@@ -187,12 +211,28 @@ export function CanonicalZoneGrid({
   );
 }
 
-export function ForumZoneCard({ zone, isClickable = false }: { zone: ZoneCardData; isClickable?: boolean }) {
-  const zoneUrl = getZonePath(zone); // Use new utility function
+export function ForumZoneCard({ zoneId, isClickable = false }: { zoneId: string; isClickable?: boolean }) {
+  const zone = getPrimaryZone(zoneId);
+
+  if (!zone) {
+    // Handle case where zone is not found, though this shouldn't happen if zoneIds are valid
+    return <div className="p-4 bg-red-900/50 border-red-700/50 rounded-xl text-white">Error: Zone '{zoneId}' not found.</div>;
+  }
+
+  // Use getZonePath directly with PrimaryZone object
+  const zoneUrl = getZonePath(zone);
   
   // Get theme configuration
   const theme = zone.colorTheme as keyof typeof ZONE_THEMES;
   const themeConfig = ZONE_THEMES[theme] || null;
+  
+  // Extract stats and features safely
+  const threadCount = zone.stats?.threadCount || 0;
+  const postCount = zone.stats?.postCount || 0;
+  const activeUsersCount = zone.stats?.activeUsersCount || 0;
+  const hasXpBoost = zone.features?.xpBoost?.enabled || false;
+  const boostMultiplier = zone.features?.xpBoost?.multiplier || 1;
+  const isEventActive = zone.features?.events?.isActive || false;
   
   // Render icon based on theme or fallback to emoji
   const renderZoneIcon = () => {
@@ -203,8 +243,8 @@ export function ForumZoneCard({ zone, isClickable = false }: { zone: ZoneCardDat
     }
     
     // Fallback to emoji icon if available
-    if (zone.icon && /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(zone.icon)) {
-      return <span className="text-3xl" role="img" aria-label={`${zone.name} icon`}>{zone.icon}</span>;
+    if (zone.icon && typeof zone.icon === 'string' && /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(zone.icon)) {
+      return <span className="text-3xl" role="img" aria-label={`${zone.label} icon`}>{zone.icon}</span>;
     }
     
     // Default folder icon
@@ -224,7 +264,7 @@ export function ForumZoneCard({ zone, isClickable = false }: { zone: ZoneCardDat
         transition-all duration-300
         ${themeConfig ? `${themeConfig.bgColor} ${themeConfig.borderColor}` : 'bg-zinc-900/50 border-zinc-700/50'}
         ${isClickable ? 'cursor-pointer group hover:shadow-xl' : ''}
-        ${zone.hasXpBoost ? 'ring-2 ring-emerald-500/30' : ''}
+        ${hasXpBoost ? 'ring-2 ring-emerald-500/30' : ''}
       `}
       whileHover={isClickable ? { 
         scale: 1.02,
@@ -242,7 +282,7 @@ export function ForumZoneCard({ zone, isClickable = false }: { zone: ZoneCardDat
       />
       
       {/* Activity pulse indicator */}
-      {zone.activeUsersCount && zone.activeUsersCount > 0 && (
+      {activeUsersCount > 0 && (
         <div className="absolute top-4 right-4">
           <motion.div
             className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30"
@@ -250,13 +290,13 @@ export function ForumZoneCard({ zone, isClickable = false }: { zone: ZoneCardDat
             transition={{ duration: 2, repeat: Infinity }}
           >
             <Activity className="w-3 h-3 text-emerald-400" />
-            <span className="text-xs text-emerald-400 font-medium">{zone.activeUsersCount}</span>
+            <span className="text-xs text-emerald-400 font-medium">{activeUsersCount}</span>
           </motion.div>
         </div>
       )}
       
       {/* XP Boost indicator */}
-      {zone.hasXpBoost && (
+      {hasXpBoost && (
         <div className="absolute top-4 left-4">
           <motion.div 
             className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30"
@@ -265,8 +305,21 @@ export function ForumZoneCard({ zone, isClickable = false }: { zone: ZoneCardDat
           >
             <Zap className="w-3 h-3 text-emerald-400" />
             <span className="text-xs text-emerald-400 font-medium">
-              {zone.boostMultiplier}x XP
+              {boostMultiplier}x XP
             </span>
+          </motion.div>
+        </div>
+      )}
+      
+      {/* Event indicator */}
+      {isEventActive && (
+        <div className="absolute bottom-4 right-4">
+          <motion.div 
+            className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-purple-500/20 border border-purple-500/30"
+            animate={{ opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <span className="text-xs text-purple-400 font-medium">Event Active</span>
           </motion.div>
         </div>
       )}
@@ -279,11 +332,16 @@ export function ForumZoneCard({ zone, isClickable = false }: { zone: ZoneCardDat
           </div>
           <div className="flex-1 min-w-0">
             <h3 className={`text-xl font-bold mb-1 transition-colors group-hover:${themeConfig?.color || 'text-emerald-400'}`}>
-              {zone.name}
+              {zone.label}
             </h3>
             {themeConfig && (
               <div className={`text-xs font-medium ${themeConfig.accentColor} opacity-75`}>
                 {themeConfig.label}
+              </div>
+            )}
+            {zone.tagline && (
+              <div className="text-xs text-zinc-500 mt-1">
+                {zone.tagline}
               </div>
             )}
           </div>
@@ -299,7 +357,7 @@ export function ForumZoneCard({ zone, isClickable = false }: { zone: ZoneCardDat
             whileHover={{ scale: 1.05 }}
           >
             <MessageCircle className="w-4 h-4" />
-            <span className="font-medium">{zone.threadCount || 0}</span>
+            <span className="font-medium">{threadCount}</span>
             <span className="text-zinc-600">threads</span>
           </motion.div>
           <motion.div 
@@ -307,7 +365,7 @@ export function ForumZoneCard({ zone, isClickable = false }: { zone: ZoneCardDat
             whileHover={{ scale: 1.05 }}
           >
             <Hash className="w-4 h-4" />
-            <span className="font-medium">{zone.postCount || 0}</span>
+            <span className="font-medium">{postCount}</span>
             <span className="text-zinc-600">posts</span>
           </motion.div>
         </div>

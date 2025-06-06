@@ -15,7 +15,7 @@ import {
 
 import { formatDistanceToNow } from 'date-fns';
 
-import { primaryZones, type PrimaryZone } from '@/constants/primaryZones';
+import { primaryZones, type PrimaryZone } from '@/constants/primaryZones.tsx';
 
 export interface ZoneCardProps {
   zoneId: string; // Use zoneId (slug) to look up in the registry
