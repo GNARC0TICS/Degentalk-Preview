@@ -23,6 +23,7 @@
     "db:drop": "drizzle-kit drop",
     "db:studio": "drizzle-kit studio",
     "db:create-tables": "npx dotenv-cli -e env.local -- npx tsx -r tsconfig-paths/register scripts/db/create-missing-tables.ts",
+    "db:apply-migrations": "tsx scripts/db/migrate.ts",
     "db:seed-chat": "npx dotenv-cli -e env.local -- npx tsx -r tsconfig-paths/register scripts/db/seed-chat.ts",
     "seed:all": "npm run db:migrate:apply && npm run seed:users && npm run seed:forum && npm run seed:threads && npm run seed:xp && npm run seed:levels && npm run seed:economy && npm run seed:shop",
     "reset-and-seed": "npx dotenv-cli -e env.local -- npx tsx scripts/db/reset-and-seed.ts",

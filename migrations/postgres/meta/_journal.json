@@ -29,6 +29,13 @@
       "when": 1748794135352,
       "tag": "0003_faulty_blink",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1749336935781,
+      "tag": "0004_greedy_venom",
+      "breakpoints": true
     }
   ]
 }

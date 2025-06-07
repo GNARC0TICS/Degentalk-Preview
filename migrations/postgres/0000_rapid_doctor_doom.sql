@@ -30,16 +30,16 @@ CREATE TABLE "activity_feed" (
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "admin_audit_logs" (
-	"log_id" serial PRIMARY KEY NOT NULL,
-	"user_id" integer NOT NULL,
-	"action" varchar(100) NOT NULL,
-	"entity_type" varchar(50) NOT NULL,
-	"entity_id" varchar(100),
-	"details" jsonb DEFAULT '{}' NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"ip_address" varchar(45)
-);
+-- CREATE TABLE "admin_audit_logs" (
+-- 	"log_id" serial PRIMARY KEY NOT NULL,
+-- 	"user_id" integer NOT NULL,
+-- 	"action" varchar(100) NOT NULL,
+-- 	"entity_type" varchar(50) NOT NULL,
+-- 	"entity_id" varchar(100),
+-- 	"details" jsonb DEFAULT '{}' NOT NULL,
+-- 	"created_at" timestamp DEFAULT now() NOT NULL,
+-- 	"ip_address" varchar(45)
+-- );
 --> statement-breakpoint
 CREATE TABLE "admin_themes" (
 	"theme_id" serial PRIMARY KEY NOT NULL,
@@ -54,36 +54,36 @@ CREATE TABLE "admin_themes" (
 	CONSTRAINT "admin_themes_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
-CREATE TABLE "airdrop_records" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"admin_user_id" integer,
-	"title" varchar(255) NOT NULL,
-	"description" text,
-	"amount" bigint NOT NULL,
-	"per_user_amount" bigint NOT NULL,
-	"currency" varchar(10) NOT NULL,
-	"recipient_count" integer NOT NULL,
-	"target" varchar(50),
-	"activity_days" integer,
-	"threshold" integer,
-	"reference" uuid NOT NULL,
-	"status" varchar(20) DEFAULT 'pending' NOT NULL,
-	"metadata" jsonb,
-	"transaction_id" integer,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "airdrop_records_reference_unique" UNIQUE("reference")
-);
+-- CREATE TABLE "airdrop_records" (
+-- 	"id" serial PRIMARY KEY NOT NULL,
+-- 	"admin_user_id" integer,
+-- 	"title" varchar(255) NOT NULL,
+-- 	"description" text,
+-- 	"amount" bigint NOT NULL,
+-- 	"per_user_amount" bigint NOT NULL,
+-- 	"currency" varchar(10) NOT NULL,
+-- 	"recipient_count" integer NOT NULL,
+-- 	"target" varchar(50),
+-- 	"activity_days" integer,
+-- 	"threshold" integer,
+-- 	"reference" uuid NOT NULL,
+-- 	"status" varchar(20) DEFAULT 'pending' NOT NULL,
+-- 	"metadata" jsonb,
+-- 	"transaction_id" integer,
+-- 	"created_at" timestamp DEFAULT now() NOT NULL,
+-- 	"updated_at" timestamp DEFAULT now() NOT NULL,
+-- 	CONSTRAINT "airdrop_records_reference_unique" UNIQUE("reference")
+-- );
 --> statement-breakpoint
-CREATE TABLE "airdrop_settings" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"key" varchar(100) NOT NULL,
-	"value" text NOT NULL,
-	"description" text,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "airdrop_settings_key_unique" UNIQUE("key")
-);
+-- CREATE TABLE "airdrop_settings" (
+-- 	"id" serial PRIMARY KEY NOT NULL,
+-- 	"key" varchar(100) NOT NULL,
+-- 	"value" text NOT NULL,
+-- 	"description" text,
+-- 	"created_at" timestamp DEFAULT now() NOT NULL,
+-- 	"updated_at" timestamp DEFAULT now() NOT NULL,
+-- 	CONSTRAINT "airdrop_settings_key_unique" UNIQUE("key")
+-- );
 --> statement-breakpoint
 CREATE TABLE "analytics_events" (
 	"event_id" serial PRIMARY KEY NOT NULL,
@@ -144,26 +144,26 @@ CREATE TABLE "badges" (
 	"created_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "beta_feature_flags" (
-	"flag_id" serial PRIMARY KEY NOT NULL,
-	"name" varchar(100) NOT NULL,
-	"enabled" boolean DEFAULT false NOT NULL,
-	"description" text,
-	"access_code" varchar(100),
-	"expires_at" timestamp,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
-	"created_by" integer,
-	"updated_by" integer,
-	CONSTRAINT "beta_feature_flags_name_unique" UNIQUE("name")
-);
+-- CREATE TABLE "beta_feature_flags" (
+-- 	"flag_id" serial PRIMARY KEY NOT NULL,
+-- 	"name" varchar(100) NOT NULL,
+-- 	"enabled" boolean DEFAULT false NOT NULL,
+-- 	"description" text,
+-- 	"access_code" varchar(100),
+-- 	"expires_at" timestamp,
+-- 	"created_at" timestamp DEFAULT now() NOT NULL,
+-- 	"updated_at" timestamp DEFAULT now() NOT NULL,
+-- 	"created_by" integer,
+-- 	"updated_by" integer,
+-- 	CONSTRAINT "beta_feature_flags_name_unique" UNIQUE("name")
+-- );
 --> statement-breakpoint
-CREATE TABLE "chat_messages" (
-	"message_id" serial PRIMARY KEY NOT NULL,
-	"user_id" integer NOT NULL,
-	"message" text NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
-);
+-- CREATE TABLE "chat_messages" (
+-- 	"message_id" serial PRIMARY KEY NOT NULL,
+-- 	"user_id" integer NOT NULL,
+-- 	"message" text NOT NULL,
+-- 	"created_at" timestamp DEFAULT now() NOT NULL
+-- );
 --> statement-breakpoint
 CREATE TABLE "chat_rooms" (
 	"room_id" serial PRIMARY KEY NOT NULL,
@@ -389,8 +389,7 @@ CREATE TABLE "media_library" (
 	"deleted_at" timestamp,
 	"deleted_by" integer,
 	"created_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	"updated_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	CONSTRAINT "media_library_filename_unique" UNIQUE("file_name")
+	"updated_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "message_reads" (
@@ -818,21 +817,21 @@ CREATE TABLE "tags" (
 	CONSTRAINT "tags_slug_unique" UNIQUE("slug")
 );
 --> statement-breakpoint
-CREATE TABLE "thread_drafts" (
-	"draft_id" serial PRIMARY KEY NOT NULL,
-	"uuid" uuid DEFAULT gen_random_uuid() NOT NULL,
-	"user_id" integer NOT NULL,
-	"category_id" integer NOT NULL,
-	"title" varchar(255),
-	"content" text,
-	"content_html" text,
-	"editor_state" jsonb,
-	"prefix_id" integer,
-	"is_published" boolean DEFAULT false NOT NULL,
-	"last_saved_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
-);
+-- CREATE TABLE "thread_drafts" (
+-- 	"draft_id" serial PRIMARY KEY NOT NULL,
+-- 	"uuid" uuid DEFAULT gen_random_uuid() NOT NULL,
+-- 	"user_id" integer NOT NULL,
+-- 	"category_id" integer NOT NULL,
+-- 	"title" varchar(255),
+-- 	"content" text,
+-- 	"content_html" text,
+-- 	"editor_state" jsonb,
+-- 	"prefix_id" integer,
+-- 	"is_published" boolean DEFAULT false NOT NULL,
+-- 	"last_saved_at" timestamp DEFAULT now() NOT NULL,
+-- 	"updated_at" timestamp DEFAULT now() NOT NULL,
+-- 	"created_at" timestamp DEFAULT now() NOT NULL
+-- );
 --> statement-breakpoint
 CREATE TABLE "thread_feature_permissions" (
 	"feature_id" serial PRIMARY KEY NOT NULL,
@@ -1274,16 +1273,16 @@ CREATE TABLE "xp_clout_settings" (
 );
 --> statement-breakpoint
 ALTER TABLE "activity_feed" ADD CONSTRAINT "activity_feed_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "admin_audit_logs" ADD CONSTRAINT "admin_audit_logs_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+-- ALTER TABLE "admin_audit_logs" ADD CONSTRAINT "admin_audit_logs_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "admin_themes" ADD CONSTRAINT "admin_themes_created_by_users_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."users"("user_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "airdrop_records" ADD CONSTRAINT "airdrop_records_admin_user_id_users_user_id_fk" FOREIGN KEY ("admin_user_id") REFERENCES "public"."users"("user_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "airdrop_records" ADD CONSTRAINT "airdrop_records_transaction_id_transactions_transaction_id_fk" FOREIGN KEY ("transaction_id") REFERENCES "public"."transactions"("transaction_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+-- ALTER TABLE "airdrop_records" ADD CONSTRAINT "airdrop_records_admin_user_id_users_user_id_fk" FOREIGN KEY ("admin_user_id") REFERENCES "public"."users"("user_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+-- ALTER TABLE "airdrop_records" ADD CONSTRAINT "airdrop_records_transaction_id_transactions_transaction_id_fk" FOREIGN KEY ("transaction_id") REFERENCES "public"."transactions"("transaction_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "analytics_events" ADD CONSTRAINT "analytics_events_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "announcements" ADD CONSTRAINT "announcements_created_by_users_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."users"("user_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "beta_feature_flags" ADD CONSTRAINT "beta_feature_flags_created_by_users_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."users"("user_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "beta_feature_flags" ADD CONSTRAINT "beta_feature_flags_updated_by_users_user_id_fk" FOREIGN KEY ("updated_by") REFERENCES "public"."users"("user_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "chat_messages" ADD CONSTRAINT "chat_messages_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+-- ALTER TABLE "beta_feature_flags" ADD CONSTRAINT "beta_feature_flags_created_by_users_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."users"("user_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+-- ALTER TABLE "beta_feature_flags" ADD CONSTRAINT "beta_feature_flags_updated_by_users_user_id_fk" FOREIGN KEY ("updated_by") REFERENCES "public"."users"("user_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+-- ALTER TABLE "chat_messages" ADD CONSTRAINT "chat_messages_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "chat_rooms" ADD CONSTRAINT "chat_rooms_min_group_id_required_user_groups_group_id_fk" FOREIGN KEY ("min_group_id_required") REFERENCES "public"."user_groups"("group_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "chat_rooms" ADD CONSTRAINT "chat_rooms_created_by_users_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."users"("user_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "content_moderation_actions" ADD CONSTRAINT "content_moderation_actions_moderator_id_users_user_id_fk" FOREIGN KEY ("moderator_id") REFERENCES "public"."users"("user_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -1407,10 +1406,6 @@ ALTER TABLE "withdrawal_requests" ADD CONSTRAINT "withdrawal_requests_transactio
 ALTER TABLE "withdrawal_requests" ADD CONSTRAINT "withdrawal_requests_processed_by_users_user_id_fk" FOREIGN KEY ("processed_by") REFERENCES "public"."users"("user_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "xp_adjustment_logs" ADD CONSTRAINT "xp_adjustment_logs_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "xp_adjustment_logs" ADD CONSTRAINT "xp_adjustment_logs_admin_id_users_user_id_fk" FOREIGN KEY ("admin_id") REFERENCES "public"."users"("user_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "idx_airdrop_records_admin_user_id" ON "airdrop_records" USING btree ("admin_user_id");--> statement-breakpoint
-CREATE INDEX "idx_airdrop_records_reference" ON "airdrop_records" USING btree ("reference");--> statement-breakpoint
-CREATE INDEX "idx_airdrop_records_status" ON "airdrop_records" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_airdrop_records_created_at" ON "airdrop_records" USING btree ("created_at");--> statement-breakpoint
 CREATE INDEX "idx_analytics_events_user_id" ON "analytics_events" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "idx_analytics_events_type" ON "analytics_events" USING btree ("event_type");--> statement-breakpoint
 CREATE INDEX "idx_analytics_events_created_at" ON "analytics_events" USING btree ("created_at");--> statement-breakpoint
@@ -1419,8 +1414,8 @@ CREATE INDEX "idx_announcements_created_at" ON "announcements" USING btree ("cre
 CREATE INDEX "idx_audit_logs_user_id" ON "audit_logs" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "idx_audit_logs_entity_type" ON "audit_logs" USING btree ("entity_type");--> statement-breakpoint
 CREATE INDEX "idx_audit_logs_created_at" ON "audit_logs" USING btree ("created_at");--> statement-breakpoint
-CREATE INDEX "idx_chat_messages_user_id" ON "chat_messages" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "idx_chat_messages_created_at" ON "chat_messages" USING btree ("created_at");--> statement-breakpoint
+-- CREATE INDEX "idx_chat_messages_user_id" ON "chat_messages" USING btree ("user_id");--> statement-breakpoint
+-- CREATE INDEX "idx_chat_messages_created_at" ON "chat_messages" USING btree ("created_at");--> statement-breakpoint
 CREATE INDEX "idx_chat_rooms_name" ON "chat_rooms" USING btree ("name");--> statement-breakpoint
 CREATE INDEX "idx_chat_rooms_is_private" ON "chat_rooms" USING btree ("is_private");--> statement-breakpoint
 CREATE INDEX "idx_chat_rooms_order" ON "chat_rooms" USING btree ("order");--> statement-breakpoint
