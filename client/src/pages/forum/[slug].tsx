@@ -1,10 +1,12 @@
+// This file handles the display of General Forums under the /forum/[slug] route.
+// It displays child categories or threads depending on the forum type.
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import {
-  Home,
   MessageSquare,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth.tsx';
@@ -14,7 +16,6 @@ import { ForumGuidelines } from '@/components/forum/forum-guidelines';
 import { Link } from 'wouter';
 import { ActiveMembersWidget } from '@/components/users';
 import { useActiveUsers } from '@/features/users/hooks';
-import { ForumEntityBase } from '@/utils/forum-routing-helper';
 import { ForumCategoryWithStats } from '@shared/types'; // Import ForumCategoryWithStats type
 
 interface Thread {
@@ -26,7 +27,7 @@ interface Thread {
   // Removed content as it's not returned by the API for thread listings
 }
 
-export default function ForumPage() {
+export default function GeneralForumPage() { // Renamed component for clarity
   const { slug } = useParams<{ slug: string }>();
   const { user } = useAuth();
   const isLoggedIn = !!user;
