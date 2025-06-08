@@ -56,6 +56,7 @@ export * from './forum/threadBookmarks';
 export * from './forum/rules';
 export * from './forum/userRuleAgreements';
 export * from './forum/customEmojis';
+export * from './forum/stickers';
 export * from './forum/postLikes';
 export * from './forum/threadFeaturePermissions';
 

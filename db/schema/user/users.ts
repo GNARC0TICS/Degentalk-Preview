@@ -52,7 +52,7 @@ export const users = pgTable('users', {
   role: userRoleEnum('role').default('user'),
   walletAddress: varchar('wallet_address', { length: 255 }),
   encryptedPrivateKey: varchar('encrypted_private_key', { length: 512 }),
-  walletBalanceUSDT: bigint('wallet_balance_usdt', {mode: 'number'}).notNull().default(0), // Corrected to bigint based on schema.ts (doublePrecision was used there, but bigint seems more appropriate for currency)
+  walletBalanceUSDT: bigint('wallet_balance_usdt', { mode: 'number' }).notNull().default(0), // Corrected to bigint based on schema.ts (doublePrecision was used there, but bigint seems more appropriate for currency)
   walletPendingWithdrawals: jsonb('wallet_pending_withdrawals').default('[]'),
   ccpaymentAccountId: varchar('ccpayment_account_id', { length: 100 }),
   verifyToken: varchar('verify_token', { length: 255 }),
@@ -64,6 +64,9 @@ export const users = pgTable('users', {
   pathXp: jsonb('path_xp').default('{}'),
   pathMultipliers: jsonb('path_multipliers').default('{}'),
   pluginData: jsonb('plugin_data').default('{}'),
+  unlockedEmojis: jsonb('unlocked_emojis').default('[]'),
+  unlockedStickers: jsonb('unlocked_stickers').default('[]'),
+  equippedFlairEmoji: varchar('equipped_flair_emoji', { length: 100 }),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 }, (table) => ({
   usernameUnique: unique('users_username_unique').on(table.username),

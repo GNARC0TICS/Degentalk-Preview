@@ -49,6 +49,81 @@ export const EmojiUnlockMethodSchema = z.object({
 
 export type EmojiUnlockMethod = z.infer<typeof EmojiUnlockMethodSchema>;
 
+// -------------------- Sticker Category Section --------------------
+/**
+ * Sticker category definition.
+ */
+export const StickerCategorySchema = z.object({
+  /** Category key (e.g., 'memes', 'reactions') */
+  key: z.string(),
+  /** Display label */
+  label: z.string(),
+});
+
+export type StickerCategory = z.infer<typeof StickerCategorySchema>;
+
+// -------------------- Individual Emoji Definition --------------------
+/**
+ * Individual emoji definition for the config.
+ */
+export const EmojiDefinitionSchema = z.object({
+  /** Unique ID */
+  id: z.string(),
+  /** Display name */
+  name: z.string(),
+  /** Emoji code (e.g., ':smile:') */
+  code: z.string(),
+  /** Media type */
+  mediaType: z.enum(['static', 'lottie', 'webp', 'gif']),
+  /** Source URL or path */
+  src: z.string(),
+  /** Preview URL for lottie animations */
+  previewUrl: z.string().optional(),
+  /** Category key */
+  category: z.string(),
+  /** Whether emoji is locked */
+  isLocked: z.boolean().default(true),
+  /** Unlock method key */
+  unlockType: z.string(),
+  /** Unlock value (price, level, etc.) */
+  unlockValue: z.union([z.number(), z.string()]).optional(),
+  /** Tags for filtering */
+  tags: z.array(z.string()).optional(),
+});
+
+export type EmojiDefinition = z.infer<typeof EmojiDefinitionSchema>;
+
+// -------------------- Individual Sticker Definition --------------------
+/**
+ * Individual sticker definition for the config.
+ */
+export const StickerDefinitionSchema = z.object({
+  /** Unique ID */
+  id: z.string(),
+  /** Display name */
+  name: z.string(),
+  /** Sticker code (e.g., ':doge_sticker:') */
+  code: z.string(),
+  /** Media type */
+  mediaType: z.enum(['static', 'webp', 'gif', 'lottie']),
+  /** Source URL or path */
+  src: z.string(),
+  /** Preview URL for lottie animations */
+  previewUrl: z.string().optional(),
+  /** Category key */
+  category: z.string(),
+  /** Whether sticker is locked */
+  isLocked: z.boolean().default(true),
+  /** Unlock method key */
+  unlockType: z.string(),
+  /** Unlock value (price, level, etc.) */
+  unlockValue: z.union([z.number(), z.string()]).optional(),
+  /** Tags for filtering */
+  tags: z.array(z.string()).optional(),
+});
+
+export type StickerDefinition = z.infer<typeof StickerDefinitionSchema>;
+
 // -------------------- Color Scheme Section --------------------
 /**
  * Available color definition for UI elements.
@@ -129,6 +204,8 @@ export const CosmeticsConfigSchema = z.object({
   rarities: z.record(z.string(), RaritySchema),
   /** Emoji Category definitions */
   emojiCategories: z.record(z.string(), EmojiCategorySchema),
+  /** Sticker Category definitions */
+  stickerCategories: z.record(z.string(), StickerCategorySchema),
   /** Emoji Unlock Method definitions */
   emojiUnlockMethods: z.record(z.string(), EmojiUnlockMethodSchema),
   /** Available color schemes for UI elements like prefixes */
@@ -141,6 +218,10 @@ export const CosmeticsConfigSchema = z.object({
   shopTemplates: z.record(z.string(), ShopCosmeticTemplateSchema),
   /** System role colors (for username override) */
   systemRoleColors: z.record(z.string(), z.string()),
+  /** Individual emoji definitions */
+  emojis: z.record(z.string(), EmojiDefinitionSchema),
+  /** Individual sticker definitions */
+  stickers: z.record(z.string(), StickerDefinitionSchema),
 });
 
 /**
@@ -163,7 +244,18 @@ export const cosmeticsConfig = {
     special: { key: 'special', label: 'Special' },
     seasonal: { key: 'seasonal', label: 'Seasonal' },
     crypto: { key: 'crypto', label: 'Crypto' },
-    standard: { key: 'standard', label: 'Standard' }
+    standard: { key: 'standard', label: 'Standard' },
+    flex: { key: 'flex', label: 'Flex' },
+    memes: { key: 'memes', label: 'Memes' },
+    rare: { key: 'rare', label: 'Rare' }
+  },
+  stickerCategories: {
+    memes: { key: 'memes', label: 'Memes' },
+    reactions: { key: 'reactions', label: 'Reactions' },
+    crypto: { key: 'crypto', label: 'Crypto' },
+    special: { key: 'special', label: 'Special' },
+    animated: { key: 'animated', label: 'Animated' },
+    seasonal: { key: 'seasonal', label: 'Seasonal' }
   },
   emojiUnlockMethods: {
     free: { key: 'free', label: 'Free' },
@@ -261,6 +353,20 @@ export const cosmeticsConfig = {
         },
         name: 'Custom Emoji Pack',
         description: 'Unlocks custom emojis for use in posts',
+        unlocksEmoji: ['diamond_hands', 'pepe_dance'],
+      },
+    },
+    stickerPack: {
+      key: 'stickerPack',
+      template: {
+        type: 'stickerPack',
+        value: {
+          doge_pack: '/stickers/doge-pack.webp',
+          crypto_pack: '/stickers/crypto-pack.webp',
+        },
+        name: 'Premium Sticker Pack',
+        description: 'Unlocks premium stickers for posts and messages',
+        unlocksSticker: ['doge_wow', 'moon_rocket'],
       },
     },
     featureUnlock: {
@@ -279,5 +385,135 @@ export const cosmeticsConfig = {
     mod: '#1E88E5',
     dev: '#8E24AA',
     // TODO: Add more system roles/colors as needed
+  },
+  emojis: {
+    // Basic free emojis
+    smile: {
+      id: 'smile',
+      name: 'Smile',
+      code: ':smile:',
+      mediaType: 'static',
+      src: '/emojis/smile.png',
+      category: 'basic',
+      isLocked: false,
+      unlockType: 'free',
+      tags: ['basic', 'emotions']
+    },
+    heart: {
+      id: 'heart',
+      name: 'Heart',
+      code: ':heart:',
+      mediaType: 'static',
+      src: '/emojis/heart.png',
+      category: 'basic',
+      isLocked: false,
+      unlockType: 'free',
+      tags: ['basic', 'emotions', 'love']
+    },
+    // Premium shop emojis
+    diamond_hands: {
+      id: 'diamond_hands',
+      name: 'Diamond Hands',
+      code: ':diamond_hands:',
+      mediaType: 'lottie',
+      src: '/emojis/diamond_hands.json',
+      previewUrl: '/emojis/diamond_hands_preview.webp',
+      category: 'crypto',
+      isLocked: true,
+      unlockType: 'shop',
+      unlockValue: 100,
+      tags: ['crypto', 'premium', 'diamond']
+    },
+    pepe_dance: {
+      id: 'pepe_dance',
+      name: 'Pepe Dance',
+      code: ':pepe_dance:',
+      mediaType: 'gif',
+      src: '/emojis/pepe_dance.gif',
+      category: 'memes',
+      isLocked: true,
+      unlockType: 'shop',
+      unlockValue: 50,
+      tags: ['memes', 'pepe', 'animated']
+    },
+    // XP unlock emojis
+    hodl_master: {
+      id: 'hodl_master',
+      name: 'HODL Master',
+      code: ':hodl_master:',
+      mediaType: 'static',
+      src: '/emojis/hodl_master.png',
+      category: 'flex',
+      isLocked: true,
+      unlockType: 'xp',
+      unlockValue: 1000,
+      tags: ['flex', 'achievement', 'crypto']
+    },
+    // Event/Rare emojis
+    golden_pepe: {
+      id: 'golden_pepe',
+      name: 'Golden Pepe',
+      code: ':golden_pepe:',
+      mediaType: 'lottie',
+      src: '/emojis/golden_pepe.json',
+      previewUrl: '/emojis/golden_pepe_preview.webp',
+      category: 'rare',
+      isLocked: true,
+      unlockType: 'event',
+      tags: ['rare', 'special', 'golden', 'pepe']
+    }
+  },
+  stickers: {
+    // Free basic stickers
+    thumbs_up: {
+      id: 'thumbs_up',
+      name: 'Thumbs Up',
+      code: ':thumbs_up_sticker:',
+      mediaType: 'static',
+      src: '/stickers/thumbs_up.webp',
+      category: 'reactions',
+      isLocked: false,
+      unlockType: 'free',
+      tags: ['basic', 'reactions', 'positive']
+    },
+    // Premium stickers
+    doge_wow: {
+      id: 'doge_wow',
+      name: 'Doge Wow',
+      code: ':doge_wow:',
+      mediaType: 'webp',
+      src: '/stickers/doge_wow.webp',
+      category: 'memes',
+      isLocked: true,
+      unlockType: 'shop',
+      unlockValue: 75,
+      tags: ['memes', 'doge', 'premium']
+    },
+    moon_rocket: {
+      id: 'moon_rocket',
+      name: 'Moon Rocket',
+      code: ':moon_rocket:',
+      mediaType: 'lottie',
+      src: '/stickers/moon_rocket.json',
+      previewUrl: '/stickers/moon_rocket_preview.webp',
+      category: 'crypto',
+      isLocked: true,
+      unlockType: 'shop',
+      unlockValue: 150,
+      tags: ['crypto', 'moon', 'rocket', 'animated']
+    },
+    // XP unlock stickers
+    diamond_sticker: {
+      id: 'diamond_sticker',
+      name: 'Diamond Achievement',
+      code: ':diamond_achievement:',
+      mediaType: 'static',
+      src: '/stickers/diamond_achievement.webp',
+      category: 'special',
+      isLocked: true,
+      unlockType: 'xp',
+      unlockValue: 5000,
+      tags: ['special', 'achievement', 'diamond']
+    }
   },
 } as const; 

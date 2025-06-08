@@ -31,10 +31,12 @@ export interface UserPluginData {
   // Paths XP and multipliers
   paths?: Record<string, number>;
   pathMultipliers?: Record<string, number>;
-  
-  // Emoji unlocks
-  unlockedEmojis?: number[]; // Array of unlocked emoji IDs
-  
+
+  // Emoji and sticker unlocks
+  unlockedEmojis?: string[]; // Array of unlocked emoji IDs (now strings to match config)
+  unlockedStickers?: string[]; // Array of unlocked sticker IDs
+  equippedFlairEmoji?: string; // Currently equipped flair emoji ID
+
   // Other plugin data as needed for future extensions
   [key: string]: any;
 }
