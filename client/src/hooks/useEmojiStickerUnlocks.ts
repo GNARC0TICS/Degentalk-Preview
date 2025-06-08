@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { hasUnlockedItem, getUnlockedItems, filterItemsByUnlockStatus, getUnlockRequirement } from '@/lib/unlockHelper';
+import { hasUnlockedItem, getUnlockedItems, filterItemsByUnlockStatus, getUnlockRequirement, canAffordShopItem } from '@/lib/unlockHelper';
 import { useAuth } from '@/hooks/use-auth';
 
 // Type for user data from auth context or props
@@ -131,13 +131,6 @@ export function useEmojiStickerUnlocks(userData?: UserData) {
     }, [user]);
 
     return unlockHelpers;
-}
-
-// Helper function for canAffordShopItem (imported from unlockHelper)
-function canAffordShopItem(itemId: string, type: 'emoji' | 'sticker', userDgtBalance: number): boolean {
-    // This would import from unlockHelper, but to avoid circular imports, 
-    // we'll implement a simplified version here
-    return userDgtBalance > 0; // Simplified for now
 }
 
 /**

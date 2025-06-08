@@ -1,11 +1,13 @@
-import { users, posts, threads, forumCategories, threadTags, tags, postReactions, notifications, customEmojis, userGroups, 
+import {
+  users, posts, threads, forumCategories, threadTags, tags, postReactions, notifications, customEmojis, userGroups,
   conversations, conversationParticipants, messages, messageReads, products, productCategories, orders, orderItems, inventoryTransactions,
   userInventory, threadDrafts, threadFeaturePermissions, siteSettings, forumRules, userRulesAgreements, verificationTokens,
-  type User, type InsertUser, type Thread, type InsertThread, type Post, type InsertPost, type ForumCategory, 
+  type User, type InsertUser, type Thread, type InsertThread, type Post, type InsertPost, type ForumCategory,
   type InsertForumCategory, type CustomEmoji, type InsertCustomEmoji, type Notification, type Product, type Order,
   type Conversation, type ConversationParticipant, type Message, type MessageRead,
   type UserInventoryItem, type InsertUserInventoryItem, type ThreadDraft, type InsertThreadDraft, type SiteSetting, type InsertSiteSetting,
-  type ForumRule, type InsertForumRule, type UserRulesAgreement, contentEditStatusEnum } from "@schema";
+  type ForumRule, type InsertForumRule, type UserRulesAgreement, contentEditStatusEnum
+} from "@schema";
 import { db, pool } from '@db';
 import { and, eq, desc, sql, count, isNull, not, inArray, ne, lte } from "drizzle-orm";
 import { ThreadWithUser, PostWithUser, ForumCategoryWithStats, UserPluginData, EmojiWithAvailability } from "@shared/types";
@@ -14,7 +16,7 @@ import * as connectPGSink from "connect-pg-simple";
 import { randomBytes, scrypt } from "crypto";
 import { promisify } from "util";
 // TODO: Adjust this import path or provide a stub if xpCloutService is not part of the workspace yet
-import { xpCloutService } from './src/domains/xp/services/xp-clout-service.js'; 
+import { xpCloutService } from './src/domains/xp/services/xp-clout-service.js';
 import { logger, LogLevel, LogAction } from "./src/core/logger.js";
 import { PgTransaction } from 'drizzle-orm/pg-core';
 // import multerS3 from "multer-s3"; // Removed as not a dependency
@@ -38,14 +40,14 @@ export interface IStorage {
   updateUser(id: number, userData: Partial<User>): Promise<User>;
   getUsersInGroup(groupId: number): Promise<User[]>;
   hashPassword(password: string): Promise<string>;
-  
+
   // Staff and groups methods
   getUserGroups(): Promise<typeof userGroups.$inferSelect[]>;
   getUserGroup(id: number): Promise<typeof userGroups.$inferSelect | undefined>;
   createUserGroup(group: typeof userGroups.$inferInsert): Promise<typeof userGroups.$inferSelect>;
   updateUserGroup(id: number, data: Partial<typeof userGroups.$inferSelect>): Promise<typeof userGroups.$inferSelect>;
   deleteUserGroup(id: number): Promise<void>;
-  
+
   // Forum rules methods
   getForumRules(section?: string, status?: string): Promise<ForumRule[]>;
   getForumRule(id: number): Promise<ForumRule | undefined>;
@@ -54,20 +56,20 @@ export interface IStorage {
   deleteForumRule(id: number): Promise<void>;
   getUserRuleAgreements(userId: number): Promise<UserRulesAgreement[]>;
   agreeToRule(userId: number, ruleId: number, versionHash: string): Promise<void>;
-  
+
   // Forum category methods
   getCategories(): Promise<ForumCategoryWithStats[]>;
   getCategory(id: number): Promise<ForumCategoryWithStats | undefined>;
   getCategoryBySlug(slug: string): Promise<ForumCategoryWithStats | undefined>;
   createCategory(category: InsertForumCategory): Promise<ForumCategory>;
-  
+
   // Thread methods
   getThreads(categoryId?: number, limit?: number, offset?: number, sortBy?: string): Promise<ThreadWithUser[]>;
   getThread(id: number): Promise<ThreadWithUser | undefined>;
   getThreadBySlug(slug: string): Promise<ThreadWithUser | undefined>;
   createThread(thread: InsertThread & { userId: number }): Promise<Thread>;
   incrementThreadViewCount(id: number): Promise<void>;
-  
+
   // Thread draft methods
   getDraft(id: number): Promise<ThreadDraft | undefined>;
   getDraftsByUser(userId: number, categoryId?: number): Promise<ThreadDraft[]>;
@@ -75,26 +77,26 @@ export interface IStorage {
   updateDraft(id: number, data: Partial<ThreadDraft>): Promise<ThreadDraft>;
   deleteDraft(id: number): Promise<void>;
   publishDraft(id: number): Promise<Thread>;
-  
+
   // Thread feature permissions methods
   getThreadFeaturePermissions(): Promise<typeof threadFeaturePermissions.$inferSelect[]>;
   getThreadFeaturePermissionsForUser(userId: number): Promise<Record<string, boolean>>;
-  
+
   // Post methods
   getPosts(threadId: number, limit?: number, offset?: number): Promise<PostWithUser[]>;
   getPost(id: number): Promise<PostWithUser | undefined>;
   createPost(post: InsertPost & { userId: number, isFirstPost?: boolean }): Promise<Post>;
   updatePost(id: number, postData: Partial<Post> & { editorId: number }): Promise<Post>;
   deletePost(id: number): Promise<void>;
-  
+
   // Reaction methods
   addReaction(userId: number, postId: number, reaction: string): Promise<void>;
   removeReaction(userId: number, postId: number, reaction: string): Promise<void>;
-  
+
   // Notification methods
   getNotifications(userId: number, limit?: number, offset?: number): Promise<Notification[]>;
   markNotificationAsRead(id: number): Promise<void>;
-  
+
   // Custom emoji methods
   getEmojis(category?: string): Promise<CustomEmoji[]>;
   getEmoji(id: number): Promise<CustomEmoji | undefined>;
@@ -103,7 +105,7 @@ export interface IStorage {
   deleteEmoji(id: number): Promise<void>;
   getAvailableEmojisForUser(userId: number): Promise<EmojiWithAvailability[]>;
   unlockEmojiForUser(userId: number, emojiId: number): Promise<void>;
-  
+
   // Shop and products methods
   getProducts(category?: string): Promise<Product[]>;
   getProduct(id: number): Promise<Product | undefined>;
@@ -111,7 +113,7 @@ export interface IStorage {
   updateProduct(id: number, data: Partial<Product>): Promise<Product>;
   deleteProduct(id: number): Promise<void>;
   purchaseProduct(userId: number, productId: number, quantity?: number): Promise<Order>;
-  
+
   // Messaging system
   getConversations(userId: number): Promise<(Conversation & { participants: ConversationParticipant[] })[]>;
   getConversation(id: number): Promise<Conversation | undefined>;
@@ -119,12 +121,12 @@ export interface IStorage {
   getMessages(conversationId: number, limit?: number, offset?: number): Promise<(Message & { sender: User })[]>;
   sendMessage(data: { conversationId: number, senderId: number, content: string, attachmentUrl?: string, attachmentType?: string }): Promise<Message>;
   markMessagesAsRead(conversationId: number, userId: number): Promise<void>;
-  
+
   // XP engine methods
   addUserXp(userId: number, amount: number, path?: string): Promise<void>;
   getUserPathXp(userId: number, path?: string): Promise<Record<string, number>>;
   recalculateUserPathMultipliers(userId: number): Promise<Record<string, number>>;
-  
+
   // User inventory methods
   getUserInventory(userId: number): Promise<UserInventoryItem[]>;
   checkUserOwnsProduct(userId: number, productId: number): Promise<boolean>;
@@ -140,10 +142,10 @@ export interface IStorage {
     status?: string;
     metadata?: Record<string, any>;
   }): Promise<typeof inventoryTransactions.$inferSelect>;
-  
+
   // Session store
   sessionStore: SessionStore;
-  
+
   // Site settings methods
   getSiteSettings(): Promise<SiteSetting[]>;
   getSiteSetting(key: string): Promise<SiteSetting | undefined>;
@@ -153,7 +155,7 @@ export interface IStorage {
 
 export class DatabaseStorage implements IStorage {
   sessionStore: SessionStore;
-  
+
   constructor() {
     this.sessionStore = new PGStore({
       pool: pool, // This will use the pool from Wallet-Workspace/server/src/core/db.ts
@@ -162,7 +164,7 @@ export class DatabaseStorage implements IStorage {
     // Assuming logger is available at ./src/core/logger.js relative to this file in Wallet-Workspace
     logger.info('DATABASE', '🐘 PostgreSQL session store initialized (using default table name \'session\').');
   }
-  
+
   // User methods
   async getUser(id: number): Promise<User | undefined> {
     try {
@@ -200,7 +202,7 @@ export class DatabaseStorage implements IStorage {
       throw error;
     }
   }
-  
+
   async getUserByUsername(username: string): Promise<User | undefined> {
     try {
       const [user] = await db.select().from(users).where(and(eq(users.username, username), eq(users.isDeleted, false)));
@@ -223,7 +225,7 @@ export class DatabaseStorage implements IStorage {
     }
     return undefined;
   }
-  
+
   async getUserByEmail(email: string): Promise<User | undefined> {
     try {
       const [user] = await db.select().from(users).where(and(eq(users.email, email), eq(users.isDeleted, false)));
@@ -246,24 +248,24 @@ export class DatabaseStorage implements IStorage {
     }
     return undefined;
   }
-  
+
   async hashPassword(password: string): Promise<string> {
     const scryptAsync = promisify(scrypt);
     const salt = randomBytes(16).toString("hex");
     const buf = (await scryptAsync(password, salt, 64)) as Buffer;
     return `${buf.toString("hex")}.${salt}`;
   }
-  
+
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
-  
+
   async updateUser(id: number, userData: Partial<User>): Promise<User> {
-    const [updatedUser] = await db.update(users).set({...userData, updatedAt: new Date()}).where(eq(users.id, id)).returning();
+    const [updatedUser] = await db.update(users).set({ ...userData, updatedAt: new Date() }).where(eq(users.id, id)).returning();
     return updatedUser;
   }
-  
+
   async getCategories(): Promise<ForumCategoryWithStats[]> {
     const categoriesData = await db.select({
       id: forumCategories.id,
@@ -284,21 +286,21 @@ export class DatabaseStorage implements IStorage {
       updatedAt: forumCategories.updatedAt,
       threadCount: count(threads.id).as('thread_count'),
     })
-    .from(forumCategories)
-    .leftJoin(threads, eq(forumCategories.id, threads.categoryId))
-    .groupBy(forumCategories.id, forumCategories.name, forumCategories.slug, forumCategories.description, forumCategories.parentId, forumCategories.position, forumCategories.isVip, forumCategories.isLocked, forumCategories.minGroupIdRequired, forumCategories.pluginData, forumCategories.minXp, forumCategories.color, forumCategories.icon, forumCategories.isHidden, forumCategories.createdAt, forumCategories.updatedAt)
-    .orderBy(forumCategories.position);
-    
+      .from(forumCategories)
+      .leftJoin(threads, eq(forumCategories.id, threads.categoryId))
+      .groupBy(forumCategories.id, forumCategories.name, forumCategories.slug, forumCategories.description, forumCategories.parentId, forumCategories.position, forumCategories.isVip, forumCategories.isLocked, forumCategories.minGroupIdRequired, forumCategories.pluginData, forumCategories.minXp, forumCategories.color, forumCategories.icon, forumCategories.isHidden, forumCategories.createdAt, forumCategories.updatedAt)
+      .orderBy(forumCategories.position);
+
     const categoriesWithStats: ForumCategoryWithStats[] = categoriesData.map(category => ({
       ...category,
       threadCount: Number(category.threadCount) || 0,
-      postCount: 0, 
+      postCount: 0,
       children: [] as ForumCategoryWithStats[]
     }));
-    
+
     const categoryMap = new Map<number, ForumCategoryWithStats>();
     categoriesWithStats.forEach(category => categoryMap.set(category.id, category));
-    
+
     const rootCategories: ForumCategoryWithStats[] = [];
     categoriesWithStats.forEach(category => {
       if (category.parentId === null) {
@@ -314,7 +316,7 @@ export class DatabaseStorage implements IStorage {
     });
     return categoriesWithStats;
   }
-  
+
   async getCategory(id: number): Promise<ForumCategoryWithStats | undefined> {
     const [categoryData] = await db.select({
       id: forumCategories.id,
@@ -335,11 +337,11 @@ export class DatabaseStorage implements IStorage {
       updatedAt: forumCategories.updatedAt,
       threadCount: count(threads.id).as('thread_count'),
     })
-    .from(forumCategories)
-    .leftJoin(threads, eq(forumCategories.id, threads.categoryId))
-    .where(eq(forumCategories.id, id))
-    .groupBy(forumCategories.id, forumCategories.name, forumCategories.slug, forumCategories.description, forumCategories.parentId, forumCategories.position, forumCategories.isVip, forumCategories.isLocked, forumCategories.minGroupIdRequired, forumCategories.pluginData, forumCategories.minXp, forumCategories.color, forumCategories.icon, forumCategories.isHidden, forumCategories.createdAt, forumCategories.updatedAt);
-    
+      .from(forumCategories)
+      .leftJoin(threads, eq(forumCategories.id, threads.categoryId))
+      .where(eq(forumCategories.id, id))
+      .groupBy(forumCategories.id, forumCategories.name, forumCategories.slug, forumCategories.description, forumCategories.parentId, forumCategories.position, forumCategories.isVip, forumCategories.isLocked, forumCategories.minGroupIdRequired, forumCategories.pluginData, forumCategories.minXp, forumCategories.color, forumCategories.icon, forumCategories.isHidden, forumCategories.createdAt, forumCategories.updatedAt);
+
     if (!categoryData) return undefined;
     return { ...categoryData, threadCount: Number(categoryData.threadCount) || 0, postCount: 0 };
   }
@@ -364,20 +366,20 @@ export class DatabaseStorage implements IStorage {
       updatedAt: forumCategories.updatedAt,
       threadCount: count(threads.id).as('thread_count'),
     })
-    .from(forumCategories)
-    .leftJoin(threads, eq(forumCategories.id, threads.categoryId))
-    .where(eq(forumCategories.slug, slug))
-    .groupBy(forumCategories.id, forumCategories.name, forumCategories.slug, forumCategories.description, forumCategories.parentId, forumCategories.position, forumCategories.isVip, forumCategories.isLocked, forumCategories.minGroupIdRequired, forumCategories.pluginData, forumCategories.minXp, forumCategories.color, forumCategories.icon, forumCategories.isHidden, forumCategories.createdAt, forumCategories.updatedAt);
+      .from(forumCategories)
+      .leftJoin(threads, eq(forumCategories.id, threads.categoryId))
+      .where(eq(forumCategories.slug, slug))
+      .groupBy(forumCategories.id, forumCategories.name, forumCategories.slug, forumCategories.description, forumCategories.parentId, forumCategories.position, forumCategories.isVip, forumCategories.isLocked, forumCategories.minGroupIdRequired, forumCategories.pluginData, forumCategories.minXp, forumCategories.color, forumCategories.icon, forumCategories.isHidden, forumCategories.createdAt, forumCategories.updatedAt);
 
     if (!categoryData) return undefined;
     return { ...categoryData, threadCount: Number(categoryData.threadCount) || 0, postCount: 0 };
   }
-  
+
   async createCategory(category: InsertForumCategory): Promise<ForumCategory> {
-    const [newCategory] = await db.insert(forumCategories).values({...category, updatedAt: new Date()}).returning();
+    const [newCategory] = await db.insert(forumCategories).values({ ...category, updatedAt: new Date() }).returning();
     return newCategory;
   }
-  
+
   async getThreads(categoryId?: number, limit = 20, offset = 0, sortBy = 'latest'): Promise<ThreadWithUser[]> {
     let query = db.select({
       id: threads.id,
@@ -397,11 +399,11 @@ export class DatabaseStorage implements IStorage {
       updatedAt: threads.updatedAt,
       user: users,
     })
-    .from(threads)
-    .innerJoin(users, eq(threads.userId, users.id))
-    .where(and(eq(threads.isHidden, false), ...(categoryId ? [eq(threads.categoryId, categoryId)] : [])))
-    .limit(limit)
-    .offset(offset);
+      .from(threads)
+      .innerJoin(users, eq(threads.userId, users.id))
+      .where(and(eq(threads.isHidden, false), ...(categoryId ? [eq(threads.categoryId, categoryId)] : [])))
+      .limit(limit)
+      .offset(offset);
 
     switch (sortBy) {
       case 'popular': query = query.orderBy(desc(threads.isSticky), desc(threads.viewCount), desc(threads.createdAt)); break;
@@ -411,7 +413,7 @@ export class DatabaseStorage implements IStorage {
     }
     return query as unknown as Promise<ThreadWithUser[]>; // Cast needed due to complex select
   }
-  
+
   async getThread(id: number): Promise<ThreadWithUser | undefined> {
     const [thread] = await db.select({
       id: threads.id, title: threads.title, slug: threads.slug, categoryId: threads.categoryId, userId: threads.userId,
@@ -431,22 +433,22 @@ export class DatabaseStorage implements IStorage {
     }).from(threads).innerJoin(users, eq(threads.userId, users.id)).where(eq(threads.slug, slug));
     return thread as ThreadWithUser | undefined; // Cast needed
   }
-  
+
   async createThread(threadData: InsertThread & { userId: number; content: string }): Promise<Thread> {
     const slugBase = (threadData.title || 'untitled').toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, '-');
     const uniqueSlug = `${slugBase}-${Date.now()}`;
-    
+
     const [newThread] = await db.transaction(async (tx) => {
       const [createdThread] = await tx.insert(threads).values({
         title: threadData.title, slug: uniqueSlug, categoryId: threadData.categoryId, userId: threadData.userId,
         prefixId: threadData.prefixId, updatedAt: new Date(),
       }).returning();
-      
+
       const [firstPost] = await tx.insert(posts).values({
         threadId: createdThread.id, userId: threadData.userId, content: threadData.content,
         isFirstPost: true, updatedAt: new Date(),
       }).returning();
-      
+
       const [updatedThread] = await tx.update(threads).set({
         lastPostId: firstPost.id, lastPostAt: firstPost.createdAt, postCount: 1,
       }).where(eq(threads.id, createdThread.id)).returning();
@@ -454,9 +456,9 @@ export class DatabaseStorage implements IStorage {
     });
     return newThread;
   }
-  
+
   async incrementThreadViewCount(id: number): Promise<void> {
-    await db.update(threads).set({ viewCount: sql`${threads.viewCount} + 1`}).where(eq(threads.id, id));
+    await db.update(threads).set({ viewCount: sql`${threads.viewCount} + 1` }).where(eq(threads.id, id));
   }
 
   // Implement other IStorage methods similarly...
@@ -475,12 +477,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async saveDraft(draft: InsertThreadDraft): Promise<ThreadDraft> {
-    const [newDraft] = await db.insert(threadDrafts).values({...draft, lastSavedAt: new Date(), updatedAt: new Date()}).returning();
+    const [newDraft] = await db.insert(threadDrafts).values({ ...draft, lastSavedAt: new Date(), updatedAt: new Date() }).returning();
     return newDraft;
   }
 
   async updateDraft(id: number, data: Partial<ThreadDraft>): Promise<ThreadDraft> {
-    const [updatedDraft] = await db.update(threadDrafts).set({...data, lastSavedAt: new Date(), updatedAt: new Date()}).where(eq(threadDrafts.id, id)).returning();
+    const [updatedDraft] = await db.update(threadDrafts).set({ ...data, lastSavedAt: new Date(), updatedAt: new Date() }).where(eq(threadDrafts.id, id)).returning();
     return updatedDraft;
   }
 
@@ -504,7 +506,7 @@ export class DatabaseStorage implements IStorage {
       const [updatedThread] = await tx.update(threads).set({
         lastPostId: firstPost.id, lastPostAt: firstPost.createdAt, postCount: 1,
       }).where(eq(threads.id, thread.id)).returning();
-      await tx.update(threadDrafts).set({isPublished: true, updatedAt: new Date()}).where(eq(threadDrafts.id, id));
+      await tx.update(threadDrafts).set({ isPublished: true, updatedAt: new Date() }).where(eq(threadDrafts.id, id));
       return updatedThread;
     });
   }
@@ -533,8 +535,8 @@ export class DatabaseStorage implements IStorage {
       editedBy: posts.editedBy, replyToPostId: posts.replyToPostId, likeCount: posts.likeCount,
       createdAt: posts.createdAt, updatedAt: posts.updatedAt, user: users,
     }).from(posts).innerJoin(users, eq(posts.userId, users.id))
-    .where(and(eq(posts.threadId, threadId), eq(posts.isHidden, false)))
-    .orderBy(posts.createdAt).limit(limit).offset(offset) as unknown as Promise<PostWithUser[]>; // Cast needed
+      .where(and(eq(posts.threadId, threadId), eq(posts.isHidden, false)))
+      .orderBy(posts.createdAt).limit(limit).offset(offset) as unknown as Promise<PostWithUser[]>; // Cast needed
   }
 
   async getPost(id: number): Promise<PostWithUser | undefined> {
@@ -572,7 +574,7 @@ export class DatabaseStorage implements IStorage {
       }).where(eq(posts.id, id)).returning();
       const [thread] = await tx.select().from(threads).where(eq(threads.id, existingPost.threadId));
       if (thread && thread.lastPostId === id) {
-        await tx.update(threads).set({updatedAt: new Date()}).where(eq(threads.id, existingPost.threadId));
+        await tx.update(threads).set({ updatedAt: new Date() }).where(eq(threads.id, existingPost.threadId));
       }
       return [post];
     });
@@ -584,15 +586,15 @@ export class DatabaseStorage implements IStorage {
       const [post] = await tx.select().from(posts).where(eq(posts.id, id));
       if (!post) throw new Error("Post not found");
       if (post.isFirstPost) throw new Error("Cannot delete the first post of a thread. Delete the thread instead.");
-      await tx.update(posts).set({isHidden: true, updatedAt: new Date()}).where(eq(posts.id, id));
-      await tx.update(threads).set({postCount: sql`${threads.postCount} - 1`, updatedAt: new Date()}).where(eq(threads.id, post.threadId));
+      await tx.update(posts).set({ isHidden: true, updatedAt: new Date() }).where(eq(posts.id, id));
+      await tx.update(threads).set({ postCount: sql`${threads.postCount} - 1`, updatedAt: new Date() }).where(eq(threads.id, post.threadId));
       const [thread] = await tx.select().from(threads).where(eq(threads.id, post.threadId));
       if (thread && thread.lastPostId === id) {
         const [previousPost] = await tx.select().from(posts)
           .where(and(eq(posts.threadId, post.threadId), eq(posts.isHidden, false), not(eq(posts.id, id))))
           .orderBy(desc(posts.createdAt)).limit(1);
         if (previousPost) {
-          await tx.update(threads).set({lastPostId: previousPost.id, lastPostAt: previousPost.createdAt}).where(eq(threads.id, post.threadId));
+          await tx.update(threads).set({ lastPostId: previousPost.id, lastPostAt: previousPost.createdAt }).where(eq(threads.id, post.threadId));
         }
       }
     });
@@ -600,9 +602,9 @@ export class DatabaseStorage implements IStorage {
 
   async addReaction(userId: number, postId: number, reaction: string): Promise<void> {
     await db.transaction(async (tx) => {
-      await tx.insert(postReactions).values({ userId, postId, reaction: reaction as any, createdAt: new Date()}).onConflictDoNothing();
+      await tx.insert(postReactions).values({ userId, postId, reaction: reaction as any, createdAt: new Date() }).onConflictDoNothing();
       if (reaction === 'like') {
-        await tx.update(posts).set({likeCount: sql`${posts.likeCount} + 1`}).where(eq(posts.id, postId));
+        await tx.update(posts).set({ likeCount: sql`${posts.likeCount} + 1` }).where(eq(posts.id, postId));
       }
       const [post] = await tx.select().from(posts).where(eq(posts.id, postId));
       if (post && post.userId !== userId) {
@@ -617,7 +619,7 @@ export class DatabaseStorage implements IStorage {
     await db.transaction(async (tx) => {
       const deleteResult = await tx.delete(postReactions).where(and(eq(postReactions.userId, userId), eq(postReactions.postId, postId), eq(postReactions.reaction, reaction as any)));
       if (reaction === 'like') {
-        await tx.update(posts).set({likeCount: sql`${posts.likeCount} - 1`}).where(eq(posts.id, postId));
+        await tx.update(posts).set({ likeCount: sql`${posts.likeCount} - 1` }).where(eq(posts.id, postId));
       }
       const [post] = await tx.select().from(posts).where(eq(posts.id, postId));
       if (deleteResult.rowCount > 0 && post && post.userId !== userId) {
@@ -628,7 +630,7 @@ export class DatabaseStorage implements IStorage {
           const xpToRemove = Math.min(values.xpValue, author?.xp || 0);
           const cloutToRemove = Math.min(values.cloutValue, author?.clout || 0);
           try {
-            await tx.update(users).set({ xp: sql`${users.xp} - ${xpToRemove}`, clout: sql`${users.clout} - ${cloutToRemove}`, updatedAt: new Date()}).where(eq(users.id, post.userId));
+            await tx.update(users).set({ xp: sql`${users.xp} - ${xpToRemove}`, clout: sql`${users.clout} - ${cloutToRemove}`, updatedAt: new Date() }).where(eq(users.id, post.userId));
             logger.info('XpCloutService', `Subtracted ${xpToRemove} XP and ${cloutToRemove} Clout from user ${post.userId} for reaction removal ${actionKey}`);
           } catch (updateError) { logger.error('XpCloutService', `Error subtracting points from user ${post.userId}:`, updateError); }
         }
@@ -641,7 +643,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async markNotificationAsRead(id: number): Promise<void> {
-    await db.update(notifications).set({isRead: true, readAt: new Date()}).where(eq(notifications.id, id));
+    await db.update(notifications).set({ isRead: true, readAt: new Date() }).where(eq(notifications.id, id));
   }
 
   async getEmojis(category?: string): Promise<CustomEmoji[]> {
@@ -656,17 +658,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createEmoji(emoji: InsertCustomEmoji): Promise<CustomEmoji> {
-    const [newEmoji] = await db.insert(customEmojis).values({...emoji, updatedAt: new Date()}).returning();
+    const [newEmoji] = await db.insert(customEmojis).values({ ...emoji, updatedAt: new Date() }).returning();
     return newEmoji;
   }
 
   async updateEmoji(id: number, emoji: Partial<CustomEmoji>): Promise<CustomEmoji> {
-    const [updatedEmoji] = await db.update(customEmojis).set({...emoji, updatedAt: new Date()}).where(eq(customEmojis.id, id)).returning();
+    const [updatedEmoji] = await db.update(customEmojis).set({ ...emoji, updatedAt: new Date() }).where(eq(customEmojis.id, id)).returning();
     return updatedEmoji;
   }
 
   async deleteEmoji(id: number): Promise<void> {
-    await db.update(customEmojis).set({isDeleted: true, deletedAt: new Date()}).where(eq(customEmojis.id, id));
+    await db.update(customEmojis).set({ isDeleted: true, deletedAt: new Date() }).where(eq(customEmojis.id, id));
   }
 
   async getAvailableEmojisForUser(userId: number): Promise<EmojiWithAvailability[]> {
@@ -681,7 +683,7 @@ export class DatabaseStorage implements IStorage {
         if (emoji.unlockType === 'path_xp') unlockRequirement = `Requires ${emoji.requiredPathXP} XP in ${emoji.requiredPath || 'unknown'} path`;
         else if (emoji.unlockType === 'shop') unlockRequirement = 'Available in the shop';
       }
-      return {...emoji, isAvailable, unlockRequirement: isAvailable ? undefined : unlockRequirement };
+      return { ...emoji, isAvailable, unlockRequirement: isAvailable ? undefined : unlockRequirement };
     });
   }
 
@@ -691,7 +693,7 @@ export class DatabaseStorage implements IStorage {
     if (!user || !emoji || !emoji.isLocked) return;
     const unlockedEmojis = user.unlockedEmojis || [];
     if (unlockedEmojis.includes(emojiId)) return;
-    await db.update(users).set({unlockedEmojis: [...unlockedEmojis, emojiId], updatedAt: new Date()}).where(eq(users.id, userId));
+    await db.update(users).set({ unlockedEmojis: [...unlockedEmojis, emojiId], updatedAt: new Date() }).where(eq(users.id, userId));
   }
 
   async getUsersInGroup(groupId: number): Promise<User[]> {
@@ -721,13 +723,13 @@ export class DatabaseStorage implements IStorage {
 
   async createForumRule(rule: InsertForumRule & { createdBy?: number }): Promise<ForumRule> {
     const versionHash = Buffer.from(rule.content).toString('base64').substring(0, 20);
-    const [newRule] = await db.insert(forumRules).values({...rule, lastAgreedVersionHash: versionHash, createdAt: new Date(), updatedAt: new Date()}).returning();
+    const [newRule] = await db.insert(forumRules).values({ ...rule, lastAgreedVersionHash: versionHash, createdAt: new Date(), updatedAt: new Date() }).returning();
     return newRule;
   }
 
   async updateForumRule(id: number, rule: Partial<ForumRule> & { updatedBy?: number }): Promise<ForumRule> {
     let versionHash = rule.content ? Buffer.from(rule.content).toString('base64').substring(0, 20) : undefined;
-    const [updatedRule] = await db.update(forumRules).set({...rule, ...(versionHash && {lastAgreedVersionHash: versionHash}), updatedAt: new Date()}).where(eq(forumRules.id, id)).returning();
+    const [updatedRule] = await db.update(forumRules).set({ ...rule, ...(versionHash && { lastAgreedVersionHash: versionHash }), updatedAt: new Date() }).where(eq(forumRules.id, id)).returning();
     return updatedRule;
   }
 
@@ -742,9 +744,9 @@ export class DatabaseStorage implements IStorage {
   async agreeToRule(userId: number, ruleId: number, versionHash: string): Promise<void> {
     const [existingAgreement] = await db.select().from(userRulesAgreements).where(and(eq(userRulesAgreements.userId, userId), eq(userRulesAgreements.ruleId, ruleId)));
     if (existingAgreement) {
-      await db.update(userRulesAgreements).set({versionHash, agreedAt: new Date()}).where(and(eq(userRulesAgreements.userId, userId), eq(userRulesAgreements.ruleId, ruleId)));
+      await db.update(userRulesAgreements).set({ versionHash, agreedAt: new Date() }).where(and(eq(userRulesAgreements.userId, userId), eq(userRulesAgreements.ruleId, ruleId)));
     } else {
-      await db.insert(userRulesAgreements).values({userId, ruleId, versionHash, agreedAt: new Date()});
+      await db.insert(userRulesAgreements).values({ userId, ruleId, versionHash, agreedAt: new Date() });
     }
   }
 
@@ -760,10 +762,10 @@ export class DatabaseStorage implements IStorage {
   async setSiteSetting(key: string, value: string, valueType = 'string', group = 'general', description = '', isPublic = false): Promise<SiteSetting> {
     const existingSetting = await this.getSiteSetting(key);
     if (existingSetting) {
-      const [updatedSetting] = await db.update(siteSettings).set({value, valueType, group, description, isPublic, updatedAt: new Date()}).where(eq(siteSettings.key, key)).returning();
+      const [updatedSetting] = await db.update(siteSettings).set({ value, valueType, group, description, isPublic, updatedAt: new Date() }).where(eq(siteSettings.key, key)).returning();
       return updatedSetting;
     } else {
-      const [newSetting] = await db.insert(siteSettings).values({key, value, valueType, group, description, isPublic, updatedAt: new Date()}).returning();
+      const [newSetting] = await db.insert(siteSettings).values({ key, value, valueType, group, description, isPublic, updatedAt: new Date() }).returning();
       return newSetting;
     }
   }
@@ -780,17 +782,17 @@ export class DatabaseStorage implements IStorage {
     });
     return result;
   }
-  
+
   async createUserGroup(group: typeof userGroups.$inferInsert): Promise<typeof userGroups.$inferSelect> {
-    const [newGroup] = await db.insert(userGroups).values({...group, updatedAt: new Date()}).returning();
+    const [newGroup] = await db.insert(userGroups).values({ ...group, updatedAt: new Date() }).returning();
     return newGroup;
   }
-  
+
   async updateUserGroup(id: number, data: Partial<typeof userGroups.$inferSelect>): Promise<typeof userGroups.$inferSelect> {
-    const [updatedGroup] = await db.update(userGroups).set({...data, updatedAt: new Date()}).where(eq(userGroups.id, id)).returning();
+    const [updatedGroup] = await db.update(userGroups).set({ ...data, updatedAt: new Date() }).where(eq(userGroups.id, id)).returning();
     return updatedGroup;
   }
-  
+
   async deleteUserGroup(id: number): Promise<void> {
     const [group] = await db.select().from(userGroups).where(eq(userGroups.id, id));
     if (group && group.isDefault) throw new Error("Cannot delete a default user group");
@@ -798,7 +800,7 @@ export class DatabaseStorage implements IStorage {
     if (defaultGroup) await db.update(users).set({ groupId: defaultGroup.id }).where(eq(users.groupId, id));
     await db.delete(userGroups).where(eq(userGroups.id, id));
   }
-  
+
   async getProducts(category?: string): Promise<Product[]> {
     let query = db.select({
       id: products.id, name: products.name, description: products.description, price: products.price,
@@ -813,7 +815,7 @@ export class DatabaseStorage implements IStorage {
     }
     return query.orderBy(products.name) as unknown as Promise<Product[]>; // Cast needed
   }
-  
+
   async getProduct(id: number): Promise<Product | undefined> {
     const [product] = await db.select({
       id: products.id, name: products.name, description: products.description, price: products.price,
@@ -824,21 +826,21 @@ export class DatabaseStorage implements IStorage {
     }).from(products).where(and(eq(products.id, id), eq(products.isDeleted, false)));
     return product as Product | undefined; // Cast needed
   }
-  
+
   async createProduct(productData: typeof products.$inferInsert): Promise<Product> {
-    const [newProduct] = await db.insert(products).values({...productData, updatedAt: new Date()}).returning();
+    const [newProduct] = await db.insert(products).values({ ...productData, updatedAt: new Date() }).returning();
     return newProduct;
   }
-  
+
   async updateProduct(id: number, data: Partial<Product>): Promise<Product> {
-    const [updatedProduct] = await db.update(products).set({...data, updatedAt: new Date()}).where(eq(products.id, id)).returning();
+    const [updatedProduct] = await db.update(products).set({ ...data, updatedAt: new Date() }).where(eq(products.id, id)).returning();
     return updatedProduct;
   }
-  
+
   async deleteProduct(id: number): Promise<void> {
-    await db.update(products).set({isDeleted: true, deletedAt: new Date()}).where(eq(products.id, id));
+    await db.update(products).set({ isDeleted: true, deletedAt: new Date() }).where(eq(products.id, id));
   }
-  
+
   async purchaseProduct(userId: number, productId: number, quantity = 1): Promise<Order> {
     const [user] = await db.select().from(users).where(eq(users.id, userId));
     const [product] = await db.select().from(products).where(eq(products.id, productId));
@@ -846,30 +848,34 @@ export class DatabaseStorage implements IStorage {
     if (product.stock !== null && product.stock < quantity) throw new Error("Not enough product in stock");
     const totalPrice = product.price * quantity;
     if (user.dgtWalletBalance < totalPrice) throw new Error("Insufficient wallet balance");
-    
+
     return db.transaction(async (tx) => {
-      await tx.update(users).set({dgtWalletBalance: user.dgtWalletBalance - totalPrice, updatedAt: new Date()}).where(eq(users.id, userId));
-      if (product.stock !== null) await tx.update(products).set({stock: product.stock - quantity, updatedAt: new Date()}).where(eq(products.id, productId));
+      await tx.update(users).set({ dgtWalletBalance: user.dgtWalletBalance - totalPrice, updatedAt: new Date() }).where(eq(users.id, userId));
+      if (product.stock !== null) await tx.update(products).set({ stock: product.stock - quantity, updatedAt: new Date() }).where(eq(products.id, productId));
       const [order] = await tx.insert(orders).values({
         userId, status: 'completed', totalAmount: totalPrice, paymentMethod: 'wallet',
         notes: `Purchase of ${quantity} x ${product.name}`, updatedAt: new Date()
       }).returning();
-      await tx.insert(orderItems).values({orderId: order.id, productId, quantity, price: product.price, discount: 0});
+      await tx.insert(orderItems).values({ orderId: order.id, productId, quantity, price: product.price, discount: 0 });
       await tx.insert(inventoryTransactions).values({
         productId, type: 'sale', quantity: -quantity, reference: `Order #${order.id}`, createdBy: userId
       });
       if (product.pluginReward) {
         if (product.pluginReward.emojiUnlocks) {
           const emojiIds = product.pluginReward.emojiUnlocks; const currentUnlocks = user.unlockedEmojis || [];
-          await tx.update(users).set({unlockedEmojis: [...new Set([...currentUnlocks, ...emojiIds])]}).where(eq(users.id, userId));
+          await tx.update(users).set({ unlockedEmojis: [...new Set([...currentUnlocks, ...emojiIds])] }).where(eq(users.id, userId));
+        }
+        if (product.pluginReward.stickerUnlocks) {
+          const stickerIds = product.pluginReward.stickerUnlocks; const currentUnlocks = user.unlockedStickers || [];
+          await tx.update(users).set({ unlockedStickers: [...new Set([...currentUnlocks, ...stickerIds])] }).where(eq(users.id, userId));
         }
         if (product.pluginReward.badgeUnlocks) {
           const badgeIds = product.pluginReward.badgeUnlocks; const currentUnlocks = user.unlockedBadges || [];
-          await tx.update(users).set({unlockedBadges: [...new Set([...currentUnlocks, ...badgeIds])]}).where(eq(users.id, userId));
+          await tx.update(users).set({ unlockedBadges: [...new Set([...currentUnlocks, ...badgeIds])] }).where(eq(users.id, userId));
         }
         if (product.pluginReward.titleUnlocks) {
           const titleIds = product.pluginReward.titleUnlocks; const currentUnlocks = user.unlockedTitles || [];
-          await tx.update(users).set({unlockedTitles: [...new Set([...currentUnlocks, ...titleIds])]}).where(eq(users.id, userId));
+          await tx.update(users).set({ unlockedTitles: [...new Set([...currentUnlocks, ...titleIds])] }).where(eq(users.id, userId));
         }
         if (product.pluginReward.xpGrant) {
           const xpAmount = product.pluginReward.xpGrant.amount || 0; const pathId = product.pluginReward.xpGrant.pathId;
@@ -940,12 +946,12 @@ export class DatabaseStorage implements IStorage {
 
   async markMessagesAsRead(conversationId: number, userId: number): Promise<void> {
     await db.transaction(async (tx) => {
-      const unread = await tx.select({id: messages.id}).from(messages).leftJoin(messageReads, and(eq(messages.id, messageReads.messageId), eq(messageReads.userId, userId))).where(and(eq(messages.conversationId, conversationId), isNull(messageReads.messageId)));
+      const unread = await tx.select({ id: messages.id }).from(messages).leftJoin(messageReads, and(eq(messages.id, messageReads.messageId), eq(messageReads.userId, userId))).where(and(eq(messages.conversationId, conversationId), isNull(messageReads.messageId)));
       for (const msg of unread) await tx.insert(messageReads).values({ messageId: msg.id, userId }).onConflictDoNothing();
       await tx.update(conversationParticipants).set({ lastReadAt: new Date() }).where(and(eq(conversationParticipants.conversationId, conversationId), eq(conversationParticipants.userId, userId)));
     });
   }
-  
+
   async addUserXp(userId: number, amount: number, path?: string): Promise<void> {
     if (amount <= 0) return;
     const [user] = await db.select().from(users).where(eq(users.id, userId));

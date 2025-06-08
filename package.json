@@ -34,6 +34,8 @@
     "seed:levels": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-default-levels.ts",
     "seed:economy": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-economy-settings.ts",
     "seed:shop": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-shop.ts",
+    "seed:emoji-sticker-shop": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-emoji-sticker-shop.ts",
+    "migrate:emoji-sticker-fields": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register server/migrations/add-emoji-sticker-fields.ts",
     "db:seed:zones": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-zone-registry.ts",
     "init:xp": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/initialize-xp-system.ts",
     "test:xp": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/testing/test-xp-system.ts",

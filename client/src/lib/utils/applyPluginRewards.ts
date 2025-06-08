@@ -87,6 +87,14 @@ export function applyPluginRewards(
           effects.emojiMap = { ...effects.emojiMap, ...value };
         }
         break;
+      case 'stickerPack':
+        // Sticker packs work similarly to emoji packs but for stickers
+        // We could add a stickerMap if needed in the future
+        if (typeof value === 'object' && value !== null) {
+          // For now, just track that the user has access to stickers
+          // The actual sticker unlocks are handled in the purchase logic
+        }
+        break;
       case 'feature_unlock':
       case 'featureUnlock':
         if (typeof value === 'string' && !effects.unlockedFeatures.includes(value)) {
