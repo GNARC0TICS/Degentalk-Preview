@@ -6,12 +6,15 @@ import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
 import { Coins, ChevronLeft, Loader2, Info, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'wouter';
+import { economyConfig, DgtPackage } from '@/config/economy.config';
+import { cn } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/queryClient';
 
-// Define the package type for DGT purchases
 interface Package {
   id: string;
   name: string;
@@ -30,13 +33,16 @@ export default function DgtPurchasePage() {
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
   const [isLoadingPackages, setIsLoadingPackages] = useState(true);
   const [devMode, setDevMode] = useState(false);
-  
+  const [paymentMethod, setPaymentMethod] = useState("ccpayment");
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [isLoadingCheckout, setIsLoadingCheckout] = useState(false);
+
   // Get the DGT purchase hook
-  const { 
-    createPaymentIntent, 
+  const {
+    createPaymentIntent,
     devModePurchase,
-    clientSecret, 
-    isLoading: isProcessing 
+    clientSecret,
+    isLoading: isProcessing
   } = useDgtPurchase();
 
   // Load packages when component mounts
@@ -46,7 +52,7 @@ export default function DgtPurchasePage() {
         // Check for dev mode in localStorage
         const isDev = localStorage.getItem('degentalk-dev-mode') === 'true';
         setDevMode(isDev);
-        
+
         // Mock data for development
         if (isDev) {
           const mockPackages = [
@@ -84,19 +90,19 @@ export default function DgtPurchasePage() {
               discount_percentage: 30
             },
           ];
-          
+
           setPackages(mockPackages);
           setIsLoadingPackages(false);
           return;
         }
-        
+
         // Make API request to fetch packages
         const response = await fetch('/api/dgt-purchase/packages');
-        
+
         if (!response.ok) {
           throw new Error(`Error ${response.status}: Failed to fetch DGT packages`);
         }
-        
+
         const data = await response.json();
         setPackages(data);
       } catch (error) {
@@ -117,7 +123,7 @@ export default function DgtPurchasePage() {
   // Handler for selecting a package
   const handleSelectPackage = async (pkg: Package) => {
     setSelectedPackage(pkg);
-    
+
     try {
       // Based on mode, either create a payment intent or use dev mode purchase
       if (devMode) {
@@ -140,6 +146,42 @@ export default function DgtPurchasePage() {
     }
   };
 
+  const handlePayment = async () => {
+    if (!selectedPackage) {
+      toast({
+        title: "No package selected",
+        description: "Please select a DGT package to purchase.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoadingCheckout(true);
+    try {
+      const response = await apiRequest("POST", "/api/ccpayment/create-order", {
+        amount: selectedPackage.usd_price,
+        currency: "USD",
+        productId: selectedPackage.id,
+        productName: selectedPackage.name,
+        // userId: 'current_user_id', // TODO: Get actual user ID from auth context
+      });
+
+      if (response.payment_url) {
+        setCheckoutUrl(response.payment_url);
+      } else {
+        throw new Error(response.error || "Failed to create payment order.");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Payment Error",
+        description: error.message || "An unknown error occurred during payment initiation.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingCheckout(false);
+    }
+  };
+
   // Determine which view to show
   const renderContent = () => {
     // Loading state
@@ -151,31 +193,31 @@ export default function DgtPurchasePage() {
         </div>
       );
     }
-    
+
     // Payment form view (when a package is selected and clientSecret is available)
     if (selectedPackage && clientSecret) {
       return (
         <div className="max-w-md mx-auto">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             className="mb-6"
             onClick={() => setSelectedPackage(null)}
           >
             <ChevronLeft className="h-4 w-4 mr-1" /> Back to packages
           </Button>
-          
+
           <h2 className="text-2xl font-bold mb-6">Complete Your Purchase</h2>
-          
+
           <StripeElementsWrapper clientSecret={clientSecret}>
-            <PaymentForm 
-              packageDetail={selectedPackage} 
+            <PaymentForm
+              packageDetail={selectedPackage}
               returnUrl={`${window.location.origin}/shop/purchase-success`}
             />
           </StripeElementsWrapper>
         </div>
       );
     }
-    
+
     // Package selection view
     return (
       <>
@@ -186,7 +228,7 @@ export default function DgtPurchasePage() {
               Purchase DGT tokens to unlock exclusive items and features on DegenTalk
             </p>
           </div>
-          
+
           {devMode && (
             <div className="bg-yellow-900/30 border border-yellow-900/50 rounded-md p-4 mb-8">
               <div className="flex items-center">
@@ -197,61 +239,61 @@ export default function DgtPurchasePage() {
               </div>
             </div>
           )}
-          
+
           <Tabs defaultValue="all" className="mb-8">
             <TabsList className="grid grid-cols-3 md:w-[400px] mx-auto">
               <TabsTrigger value="all">All Packages</TabsTrigger>
               <TabsTrigger value="popular">Most Popular</TabsTrigger>
               <TabsTrigger value="best-value">Best Value</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="all" className="mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {packages.map((pkg) => (
-                  <PackageCard 
-                    key={pkg.id} 
-                    pkg={pkg} 
+                  <PackageCard
+                    key={pkg.id}
+                    pkg={pkg}
                     onSelect={handleSelectPackage}
                     isLoading={isProcessing}
                   />
                 ))}
               </div>
             </TabsContent>
-            
+
             <TabsContent value="popular" className="mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {packages
                   .filter(pkg => pkg.is_featured)
                   .map((pkg) => (
-                    <PackageCard 
-                      key={pkg.id} 
-                      pkg={pkg} 
-                      onSelect={handleSelectPackage} 
+                    <PackageCard
+                      key={pkg.id}
+                      pkg={pkg}
+                      onSelect={handleSelectPackage}
                       isLoading={isProcessing}
                     />
                   ))}
               </div>
             </TabsContent>
-            
+
             <TabsContent value="best-value" className="mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {packages
                   .filter(pkg => pkg.discount_percentage && pkg.discount_percentage > 0)
-                  .sort((a, b) => 
+                  .sort((a, b) =>
                     (b.discount_percentage || 0) - (a.discount_percentage || 0)
                   )
                   .map((pkg) => (
-                    <PackageCard 
-                      key={pkg.id} 
-                      pkg={pkg} 
+                    <PackageCard
+                      key={pkg.id}
+                      pkg={pkg}
                       onSelect={handleSelectPackage}
-                      isLoading={isProcessing} 
+                      isLoading={isProcessing}
                     />
                   ))}
               </div>
             </TabsContent>
           </Tabs>
-          
+
           <div className="bg-primary/10 border border-primary/20 rounded-md p-4">
             <div className="flex items-start">
               <Info className="h-5 w-5 text-primary mr-3 mt-0.5 flex-shrink-0" />
@@ -279,6 +321,55 @@ export default function DgtPurchasePage() {
             </div>
           </div>
         </div>
+
+        {selectedPackage && (
+          <div className="mt-10 pt-8 border-t border-zinc-800">
+            <h3 className="text-xl font-semibold text-white mb-2">Selected Package: {selectedPackage.name}</h3>
+            <p className="text-zinc-400 mb-1">DGT Amount: <span className="text-amber-400 font-medium">{selectedPackage.dgt_amount.toLocaleString()}</span></p>
+            <p className="text-zinc-400 mb-4">Price: <span className="text-primary font-medium">${(selectedPackage.discount_percentage ? selectedPackage.usd_price * (1 - selectedPackage.discount_percentage / 100) : selectedPackage.usd_price).toFixed(2)}</span></p>
+
+            <Tabs value={paymentMethod} onValueChange={setPaymentMethod} className="max-w-md">
+              <TabsList className="grid w-full grid-cols-2 bg-zinc-800">
+                <TabsTrigger value="ccpayment" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">CCPayment</TabsTrigger>
+                <TabsTrigger value="crypto" disabled>Crypto (Soon)</TabsTrigger>
+              </TabsList>
+              <TabsContent value="ccpayment">
+                <div className="bg-zinc-800/50 border border-zinc-700 rounded-md p-6 mt-4">
+                  <p className="text-sm text-zinc-400 mb-4">
+                    You will be redirected to CCPayment to complete your purchase securely.
+                  </p>
+                  <Button
+                    onClick={handlePayment}
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                    disabled={isLoadingCheckout || !!checkoutUrl}
+                  >
+                    {isLoadingCheckout ? (
+                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
+                    ) : checkoutUrl ? (
+                      'Proceed to CCPayment'
+                    ) : (
+                      'Pay with CCPayment'
+                    )}
+                  </Button>
+                  {checkoutUrl && (
+                    <Button
+                      onClick={() => window.open(checkoutUrl, '_blank')}
+                      className="w-full mt-3 bg-green-600 hover:bg-green-500 text-white"
+                    >
+                      Open CCPayment Page
+                    </Button>
+                  )}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+        )}
+
+        {!selectedPackage && (
+          <div className="text-center text-zinc-500 pt-10">
+            Please select a DGT package above to proceed with your purchase.
+          </div>
+        )}
       </>
     );
   };
@@ -294,29 +385,29 @@ export default function DgtPurchasePage() {
           </Button>
         </Link>
       </div>
-      
+
       {renderContent()}
     </div>
   );
 }
 
 // Component for displaying a package card
-function PackageCard({ 
-  pkg, 
-  onSelect, 
-  isLoading 
-}: { 
-  pkg: Package; 
+function PackageCard({
+  pkg,
+  onSelect,
+  isLoading
+}: {
+  pkg: Package;
   onSelect: (pkg: Package) => void;
   isLoading: boolean;
 }) {
   // Function to calculate savings amount
   const calculateSavings = () => {
     if (!pkg.discount_percentage) return null;
-    
+
     const basePrice = parseFloat(pkg.usd_price) / (1 - pkg.discount_percentage / 100);
     const savingsAmount = basePrice - parseFloat(pkg.usd_price);
-    
+
     return savingsAmount.toFixed(2);
   };
 
@@ -330,11 +421,11 @@ function PackageCard({
           {pkg.is_featured && <Badge className="bg-white/20 hover:bg-white/30">Most Popular</Badge>}
         </div>
       </div>
-      
+
       <CardContent className="p-6">
         <div className="mb-4">
           <p className="text-sm text-muted-foreground mb-4">{pkg.description}</p>
-          
+
           <div className="flex items-baseline mb-1">
             <span className="text-3xl font-bold">${parseFloat(pkg.usd_price).toFixed(2)}</span>
             {savingsAmount && (
@@ -343,14 +434,14 @@ function PackageCard({
               </span>
             )}
           </div>
-          
+
           {pkg.discount_percentage && (
             <p className="text-xs text-green-500 mb-3">
               Save {pkg.discount_percentage}% (${savingsAmount})
             </p>
           )}
         </div>
-        
+
         <div className="flex items-center justify-between text-sm border-t border-zinc-800 pt-4 mb-6">
           <span className="text-muted-foreground">You receive:</span>
           <div className="flex items-center font-medium">
@@ -358,9 +449,9 @@ function PackageCard({
             {pkg.dgt_amount.toLocaleString()} DGT
           </div>
         </div>
-        
-        <Button 
-          className="w-full" 
+
+        <Button
+          className="w-full"
           onClick={() => onSelect(pkg)}
           disabled={isLoading}
         >

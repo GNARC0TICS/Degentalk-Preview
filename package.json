@@ -7,7 +7,7 @@
     "dev": "npm run kill-ports && concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:seed": "npm run kill-ports && npm run seed:all && concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:quick": "npm run kill-ports && concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend:quick\" \"npm run dev:frontend\"",
-    "dev:frontend": "vite --port 5173 --strictPort --config config/vite.config.ts",
+    "dev:frontend": "vite --port 5173 --strictPort --config config/vite.config.ts --force",
     "dev:backend": "tsx --tsconfig tsconfig.json --require tsconfig-paths/register server/index.ts",
     "dev:backend:seed": "npm run seed:all && tsx --watch -r tsconfig-paths/register server/index.ts",
     "dev:backend:quick": "QUICK_MODE=true tsx --watch -r tsconfig-paths/register server/index.ts",

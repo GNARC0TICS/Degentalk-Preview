@@ -12,6 +12,7 @@ import { AlertCircle, Loader2, Settings, CloudRain, Gift, Save } from 'lucide-re
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { economyConfig } from '@/config/economy.config.ts';
 
 type TipSettings = {
   enabled: boolean;
@@ -36,7 +37,7 @@ export default function TipRainSettings() {
   const [activeTab, setActiveTab] = useState('tip');
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  
+
   // Fetch tip settings
   const {
     data: tipSettings,
@@ -50,26 +51,17 @@ export default function TipRainSettings() {
       return response.data as TipSettings;
     }
   });
-  
+
   // Form state for tip settings
-  const [tipFormData, setTipFormData] = useState<TipSettings>({
-    enabled: true,
-    minAmountDGT: 10,
-    minAmountUSDT: 0.1,
-    maxAmountDGT: 1000,
-    maxAmountUSDT: 100,
-    burnPercentage: 5,
-    processingFeePercentage: 2.5,
-    cooldownSeconds: 60
-  });
-  
+  const [tipFormData, setTipFormData] = useState<TipSettings>(economyConfig.tipRain.tip);
+
   // Update form when data loads
   React.useEffect(() => {
     if (tipSettings) {
       setTipFormData(tipSettings);
     }
   }, [tipSettings]);
-  
+
   // Fetch rain settings
   const {
     data: rainSettings,
@@ -83,23 +75,17 @@ export default function TipRainSettings() {
       return response.data as RainSettings;
     }
   });
-  
+
   // Form state for rain settings
-  const [rainFormData, setRainFormData] = useState<RainSettings>({
-    enabled: true,
-    minAmountDGT: 10,
-    minAmountUSDT: 1,
-    maxRecipients: 15,
-    cooldownSeconds: 60
-  });
-  
+  const [rainFormData, setRainFormData] = useState<RainSettings>(economyConfig.tipRain.rain);
+
   // Update form when data loads
   React.useEffect(() => {
     if (rainSettings) {
       setRainFormData(rainSettings);
     }
   }, [rainSettings]);
-  
+
   // Handle tip form changes
   const handleTipChange = (field: keyof TipSettings, value: any) => {
     setTipFormData(prev => ({
@@ -107,7 +93,7 @@ export default function TipRainSettings() {
       [field]: field === 'enabled' ? value : Number(value)
     }));
   };
-  
+
   // Handle rain form changes
   const handleRainChange = (field: keyof RainSettings, value: any) => {
     setRainFormData(prev => ({
@@ -115,7 +101,7 @@ export default function TipRainSettings() {
       [field]: field === 'enabled' ? value : Number(value)
     }));
   };
-  
+
   // Save tip settings mutation
   const saveTipSettings = useMutation({
     mutationFn: async (settings: TipSettings) => {
@@ -138,7 +124,7 @@ export default function TipRainSettings() {
       });
     }
   });
-  
+
   // Save rain settings mutation
   const saveRainSettings = useMutation({
     mutationFn: async (settings: RainSettings) => {
@@ -161,18 +147,18 @@ export default function TipRainSettings() {
       });
     }
   });
-  
+
   // Handle form submissions
   const handleSaveTipSettings = (e: React.FormEvent) => {
     e.preventDefault();
     saveTipSettings.mutate(tipFormData);
   };
-  
+
   const handleSaveRainSettings = (e: React.FormEvent) => {
     e.preventDefault();
     saveRainSettings.mutate(rainFormData);
   };
-  
+
   if (isLoadingTipSettings || isLoadingRainSettings) {
     return (
       <AdminLayout>
@@ -183,7 +169,7 @@ export default function TipRainSettings() {
       </AdminLayout>
     );
   }
-  
+
   return (
     <AdminLayout>
       <div className="container px-4 mx-auto py-6">
@@ -191,7 +177,7 @@ export default function TipRainSettings() {
           <h2 className="text-3xl font-bold tracking-tight text-white mb-2">Tip & Rain Settings</h2>
           <p className="text-gray-400">Configure tip and rain settings for the platform.</p>
         </header>
-        
+
         {(isTipSettingsError || isRainSettingsError) && (
           <Alert variant="destructive" className="mb-6">
             <AlertCircle className="h-4 w-4" />
@@ -203,7 +189,7 @@ export default function TipRainSettings() {
             </AlertDescription>
           </Alert>
         )}
-        
+
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full max-w-md grid-cols-2 mb-8">
             <TabsTrigger value="tip" className="flex items-center gap-2 data-[state=active]:bg-amber-900/30">
@@ -215,7 +201,7 @@ export default function TipRainSettings() {
               <span>Rain Settings</span>
             </TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="tip">
             <Card className="border-zinc-800 bg-zinc-950/50">
               <form onSubmit={handleSaveTipSettings}>
@@ -228,7 +214,7 @@ export default function TipRainSettings() {
                     Configure how users can tip each other in the shoutbox and across the platform.
                   </CardDescription>
                 </CardHeader>
-                
+
                 <CardContent className="space-y-6">
                   <div className="flex items-center justify-between p-4 rounded-lg bg-black/30 border border-zinc-800">
                     <div className="space-y-0.5">
@@ -243,12 +229,12 @@ export default function TipRainSettings() {
                       onCheckedChange={(value) => handleTipChange('enabled', value)}
                     />
                   </div>
-                  
+
                   <Separator className="bg-zinc-800" />
-                  
+
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium text-white">DGT Tip Settings</h3>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="min-dgt">Minimum DGT Tip</Label>
@@ -262,7 +248,7 @@ export default function TipRainSettings() {
                           className="bg-zinc-900 border-zinc-800"
                         />
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="max-dgt">Maximum DGT Tip</Label>
                         <Input
@@ -277,10 +263,10 @@ export default function TipRainSettings() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium text-white">USDT Tip Settings</h3>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="min-usdt">Minimum USDT Tip</Label>
@@ -294,7 +280,7 @@ export default function TipRainSettings() {
                           className="bg-zinc-900 border-zinc-800"
                         />
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="max-usdt">Maximum USDT Tip</Label>
                         <Input
@@ -309,10 +295,10 @@ export default function TipRainSettings() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium text-white">Tip Economics</h3>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="burn-percentage">Burn Percentage (%)</Label>
@@ -328,7 +314,7 @@ export default function TipRainSettings() {
                         />
                         <p className="text-xs text-gray-400">Percentage of the tip that gets burned/staked.</p>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="fee-percentage">Platform Fee (%)</Label>
                         <Input
@@ -345,7 +331,7 @@ export default function TipRainSettings() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="tip-cooldown">Cooldown Period (seconds)</Label>
                     <Input
@@ -360,7 +346,7 @@ export default function TipRainSettings() {
                     <p className="text-xs text-gray-400">Time users must wait between tips (0 to disable).</p>
                   </div>
                 </CardContent>
-                
+
                 <CardFooter className="border-t border-zinc-800 bg-black/30 gap-2 flex justify-end">
                   <Button
                     type="submit"
@@ -377,7 +363,7 @@ export default function TipRainSettings() {
               </form>
             </Card>
           </TabsContent>
-          
+
           <TabsContent value="rain">
             <Card className="border-zinc-800 bg-zinc-950/50">
               <form onSubmit={handleSaveRainSettings}>
@@ -390,7 +376,7 @@ export default function TipRainSettings() {
                     Configure how users can make it rain tokens to multiple users in the shoutbox.
                   </CardDescription>
                 </CardHeader>
-                
+
                 <CardContent className="space-y-6">
                   <div className="flex items-center justify-between p-4 rounded-lg bg-black/30 border border-zinc-800">
                     <div className="space-y-0.5">
@@ -405,12 +391,12 @@ export default function TipRainSettings() {
                       onCheckedChange={(value) => handleRainChange('enabled', value)}
                     />
                   </div>
-                  
+
                   <Separator className="bg-zinc-800" />
-                  
+
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium text-white">Rain Amount Settings</h3>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="rain-min-dgt">Minimum DGT Rain</Label>
@@ -424,7 +410,7 @@ export default function TipRainSettings() {
                           className="bg-zinc-900 border-zinc-800"
                         />
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="rain-min-usdt">Minimum USDT Rain</Label>
                         <Input
@@ -439,10 +425,10 @@ export default function TipRainSettings() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium text-white">Recipient Settings</h3>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="max-recipients">Maximum Recipients</Label>
                       <Input
@@ -460,7 +446,7 @@ export default function TipRainSettings() {
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="rain-cooldown">Cooldown Period (seconds)</Label>
                     <Input
@@ -475,7 +461,7 @@ export default function TipRainSettings() {
                     <p className="text-xs text-gray-400">Time users must wait between rains (0 to disable).</p>
                   </div>
                 </CardContent>
-                
+
                 <CardFooter className="border-t border-zinc-800 bg-black/30 gap-2 flex justify-end">
                   <Button
                     type="submit"

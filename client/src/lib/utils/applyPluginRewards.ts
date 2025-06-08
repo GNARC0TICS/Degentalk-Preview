@@ -1,11 +1,9 @@
 import { UserInventoryWithProduct } from '@/types/inventory'; // Assuming this type exists or will be created
+import { cosmeticsConfig } from '@/config/cosmetics.config.ts'; // [CONFIG-REFAC] cosmetics config import
+import { rolesConfig } from '@/config/roles.config.ts'; // [CONFIG-REFAC] roles config import
 
 // System role colors - these override any cosmetic colors
-const SYSTEM_ROLE_COLORS: Record<string, string> = {
-  admin: '#D72638',     // Red - Admin power
-  mod: '#1E88E5',       // Blue - Moderator trust
-  dev: '#8E24AA',       // Purple - Developer magic
-};
+const SYSTEM_ROLE_COLORS: Record<string, string> = cosmeticsConfig.systemRoleColors; // [CONFIG-REFAC] moved from hardcoded object to config
 
 interface AppliedCosmetics {
   usernameColor: string | null;
@@ -25,7 +23,7 @@ interface AppliedCosmetics {
  * @returns An object containing aggregated cosmetic effects.
  */
 export function applyPluginRewards(
-  inventory: UserInventoryWithProduct[], 
+  inventory: UserInventoryWithProduct[],
   userRole?: string
 ): AppliedCosmetics {
   const effects: AppliedCosmetics = {
@@ -55,12 +53,12 @@ export function applyPluginRewards(
         pluginRewardData = JSON.parse(pluginRewardData);
       } catch (error) {
         console.error('Failed to parse pluginReward JSON string:', pluginRewardData, error);
-        continue; 
+        continue;
       }
     }
 
     if (typeof pluginRewardData !== 'object' || pluginRewardData === null) {
-      continue; 
+      continue;
     }
 
     const { type, value } = pluginRewardData as any;
@@ -72,8 +70,8 @@ export function applyPluginRewards(
         }
         break;
       case 'avatar_frame':
-        effects.avatarFrameUrl = value?.startsWith('http') 
-          ? value 
+        effects.avatarFrameUrl = value?.startsWith('http')
+          ? value
           : `/api/images/frames/${value || 'default'}.png`;
         break;
       case 'user_title':
@@ -149,11 +147,11 @@ interface FeatureUnlockPluginReward extends BasePluginReward {
   value: string; // Identifier for the unlocked feature
 }
 
-export type PluginReward = 
-  | UsernameColorPluginReward 
-  | UserTitlePluginReward 
-  | AvatarFramePluginReward 
-  | EmojiPackPluginReward 
+export type PluginReward =
+  | UsernameColorPluginReward
+  | UserTitlePluginReward
+  | AvatarFramePluginReward
+  | EmojiPackPluginReward
   | FeatureUnlockPluginReward;
 */
 

@@ -6,6 +6,8 @@
  * corresponding path, forming their dynamic identity on the platform.
  */
 
+import { economyConfig } from '@/config/economy.config.ts'; // [CONFIG-REFAC] XP config import
+
 export interface PathDefinition {
   id: string;
   name: string;
@@ -89,15 +91,7 @@ export const categoryPathMappings: Record<number, string> = {
 };
 
 // XP reward values for various actions
-export const xpRewards = {
-  newThread: 10,
-  newPost: 5,
-  receivedLike: 2,
-  receivedReaction: 1,
-  generalXpPerAction: 5,
-  // XP at which multipliers are awarded (1000 XP = 1.2× multiplier)
-  multiplierThreshold: 1000
-};
+export const xpRewards = economyConfig.xp; // [CONFIG-REFAC] moved from hardcoded object to config
 
 /**
  * Gets the path ID associated with a category
@@ -124,16 +118,16 @@ export function getPathDefinition(pathId: string): PathDefinition | undefined {
  */
 export function getDominantPath(paths: Record<string, number> | undefined): string | undefined {
   if (!paths || Object.keys(paths).length === 0) return undefined;
-  
+
   let maxXP = 0;
   let dominantPath: string | undefined = undefined;
-  
+
   for (const [pathId, xp] of Object.entries(paths)) {
     if (xp > maxXP) {
       maxXP = xp;
       dominantPath = pathId;
     }
   }
-  
+
   return dominantPath;
 }

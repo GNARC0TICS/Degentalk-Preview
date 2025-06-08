@@ -10,6 +10,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, Link, useLocation } from 'wouter';
 import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { cosmeticsConfig } from '@/config/cosmetics.config.ts';
+import { economyConfig } from '@/config/economy.config.ts';
 
 // Define Product type locally for now since we don't have the exact import path
 interface Product {
@@ -29,43 +31,7 @@ interface Product {
 
 // Helper function to get cosmetic type template
 const getCosmeticTemplate = (type: string) => {
-  const templates: Record<string, any> = {
-    usernameColor: {
-      type: "usernameColor",
-      value: "#FF0000", // Hex color
-      name: "Red Username",
-      description: "Makes your username appear in red"
-    },
-    userTitle: {
-      type: "userTitle", 
-      value: "VIP Member",
-      name: "VIP Title",
-      description: "Displays a custom title next to your username"
-    },
-    avatarFrame: {
-      type: "avatarFrame",
-      value: "/frames/gold-frame.png", // URL to frame image
-      name: "Gold Frame",
-      description: "Adds a golden frame around your avatar"
-    },
-    emojiPack: {
-      type: "emojiPack",
-      value: {
-        "custom_smile": "/emojis/custom-smile.gif",
-        "custom_laugh": "/emojis/custom-laugh.webp"
-      },
-      name: "Custom Emoji Pack",
-      description: "Unlocks custom emojis for use in posts"
-    },
-    featureUnlock: {
-      type: "featureUnlock",
-      value: "customSignatureFont",
-      name: "Custom Signature Font",
-      description: "Allows using custom fonts in your signature"
-    }
-  };
-  
-  return JSON.stringify(templates[type] || templates.usernameColor, null, 2);
+  return JSON.stringify(cosmeticsConfig.shopTemplates[type]?.template || cosmeticsConfig.shopTemplates['usernameColor'].template, null, 2);
 };
 
 export default function AdminShopItemEditPage() {

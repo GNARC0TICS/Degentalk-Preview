@@ -2,25 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient, apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  CirclePlus, Pencil, Trash2, 
-  Save, X, Image, Check, 
+import {
+  CirclePlus, Pencil, Trash2,
+  Save, X, Image, Check,
   DollarSign, Coins, Package
 } from 'lucide-react';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from '@/components/ui/table';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
 } from '@/components/ui/card';
 import {
   AlertDialog,
@@ -39,6 +39,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
+import { economyConfig } from '@/config/economy.config'; // [CONFIG-REFAC] economyConfig import
 
 // Package interface
 interface DgtPackage {
@@ -78,6 +79,8 @@ export default function AdminDgtPackagesPage() {
   // Create package mutation
   const createPackageMutation = useMutation({
     mutationFn: async (packageData: Partial<DgtPackage>) => {
+      // [CONFIG-REFAC] Example: If base prices are config-driven, apply logic here
+      // packageData.usd_price = calculateDynamicPrice(packageData.dgt_amount, economyConfig.dgt.pegUSD);
       const response = await apiRequest('POST', '/api/admin/dgt-packages', packageData);
       if (!response.ok) {
         const errorData = await response.json();
@@ -107,18 +110,19 @@ export default function AdminDgtPackagesPage() {
   const updatePackageMutation = useMutation({
     mutationFn: async (packageData: Partial<DgtPackage>) => {
       if (!packageData.id) throw new Error('Package ID is required');
-      
+      // [CONFIG-REFAC] Example: If base prices are config-driven, apply logic here
+      // packageData.usd_price = calculateDynamicPrice(packageData.dgt_amount, economyConfig.dgt.pegUSD);
       const response = await apiRequest(
-        'PATCH', 
-        `/api/admin/dgt-packages/${packageData.id}`, 
+        'PATCH',
+        `/api/admin/dgt-packages/${packageData.id}`,
         packageData
       );
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to update package');
       }
-      
+
       return await response.json();
     },
     onSuccess: () => {
@@ -208,7 +212,7 @@ export default function AdminDgtPackagesPage() {
   // Handle save
   const handleSave = () => {
     if (!editingPackage) return;
-    
+
     // Validate required fields
     if (!editingPackage.name || !editingPackage.dgt_amount || !editingPackage.usd_price) {
       toast({
@@ -218,7 +222,7 @@ export default function AdminDgtPackagesPage() {
       });
       return;
     }
-    
+
     // Ensure price is formatted correctly
     const price = parseFloat(editingPackage.usd_price.toString());
     if (isNaN(price) || price <= 0) {
@@ -229,17 +233,17 @@ export default function AdminDgtPackagesPage() {
       });
       return;
     }
-    
+
     // Format the package data
     const packageData = {
       ...editingPackage,
       dgt_amount: Number(editingPackage.dgt_amount),
-      usd_price: price.toFixed(2),
-      discount_percentage: editingPackage.discount_percentage 
-        ? Number(editingPackage.discount_percentage) 
-        : undefined,
+      usd_price: price.toFixed(2), // [CONFIG-REFAC] Price formatting, ensure this aligns with any config rules for display vs storage
+      discount_percentage: editingPackage.discount_percentage
+        ? Number(editingPackage.discount_percentage)
+        : undefined, // [CONFIG-REFAC] Discount from config or 0
     };
-    
+
     // Create or update based on mode
     if (isCreating) {
       createPackageMutation.mutate(packageData);
@@ -260,9 +264,9 @@ export default function AdminDgtPackagesPage() {
   };
 
   // Determine if we're in a loading state for any mutation
-  const isMutating = 
-    createPackageMutation.isPending || 
-    updatePackageMutation.isPending || 
+  const isMutating =
+    createPackageMutation.isPending ||
+    updatePackageMutation.isPending ||
     deletePackageMutation.isPending;
 
   return (
@@ -274,61 +278,61 @@ export default function AdminDgtPackagesPage() {
             Manage DGT token packages available for purchase
           </p>
         </div>
-        
+
         <Button onClick={handleCreateNew} disabled={!!editingPackage || isMutating}>
           <CirclePlus className="h-4 w-4 mr-2" />
           Add New Package
         </Button>
       </div>
-      
+
       {/* Editor Card */}
       {editingPackage && (
         <Card className="border-primary/50">
           <CardHeader>
             <CardTitle>{isCreating ? 'Create New Package' : 'Edit Package'}</CardTitle>
             <CardDescription>
-              {isCreating 
-                ? 'Define a new DGT package for users to purchase' 
+              {isCreating
+                ? 'Define a new DGT package for users to purchase'
                 : 'Modify the properties of this DGT package'}
             </CardDescription>
           </CardHeader>
-          
+
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Package Name</Label>
-                  <Input 
-                    id="name" 
-                    value={editingPackage.name || ''} 
-                    onChange={(e) => setEditingPackage({...editingPackage, name: e.target.value})}
+                  <Input
+                    id="name"
+                    value={editingPackage.name || ''}
+                    onChange={(e) => setEditingPackage({ ...editingPackage, name: e.target.value })}
                     placeholder="e.g. Standard Pack"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="description">Description</Label>
-                  <Textarea 
-                    id="description" 
-                    value={editingPackage.description || ''} 
-                    onChange={(e) => setEditingPackage({...editingPackage, description: e.target.value})}
+                  <Textarea
+                    id="description"
+                    value={editingPackage.description || ''}
+                    onChange={(e) => setEditingPackage({ ...editingPackage, description: e.target.value })}
                     placeholder="Description of the package benefits"
                     rows={3}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="image_url">Image URL (optional)</Label>
                   <div className="flex gap-2">
-                    <Input 
-                      id="image_url" 
-                      value={editingPackage.image_url || ''} 
-                      onChange={(e) => setEditingPackage({...editingPackage, image_url: e.target.value})}
+                    <Input
+                      id="image_url"
+                      value={editingPackage.image_url || ''}
+                      onChange={(e) => setEditingPackage({ ...editingPackage, image_url: e.target.value })}
                       placeholder="https://example.com/image.png"
                     />
                     {editingPackage.image_url && (
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="icon"
                         onClick={() => window.open(editingPackage.image_url, '_blank')}
                         type="button"
@@ -339,7 +343,7 @@ export default function AdminDgtPackagesPage() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="dgt_amount">DGT Amount</Label>
@@ -347,13 +351,13 @@ export default function AdminDgtPackagesPage() {
                     <div className="flex items-center px-3 rounded-l-md border border-r-0 border-input bg-muted">
                       <Coins className="h-4 w-4 text-muted-foreground" />
                     </div>
-                    <Input 
-                      id="dgt_amount" 
-                      value={editingPackage.dgt_amount || ''} 
+                    <Input
+                      id="dgt_amount"
+                      value={editingPackage.dgt_amount || ''}
                       onChange={(e) => {
                         const value = parseInt(e.target.value);
                         setEditingPackage({
-                          ...editingPackage, 
+                          ...editingPackage,
                           dgt_amount: isNaN(value) ? 0 : value
                         });
                       }}
@@ -364,37 +368,37 @@ export default function AdminDgtPackagesPage() {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="usd_price">Price (USD)</Label>
                   <div className="flex">
                     <div className="flex items-center px-3 rounded-l-md border border-r-0 border-input bg-muted">
                       <DollarSign className="h-4 w-4 text-muted-foreground" />
                     </div>
-                    <Input 
-                      id="usd_price" 
-                      value={editingPackage.usd_price || ''} 
+                    <Input
+                      id="usd_price"
+                      value={editingPackage.usd_price || ''}
                       onChange={(e) => {
                         // Allow only valid price inputs
                         const value = e.target.value.replace(/[^0-9.]/g, '');
-                        setEditingPackage({...editingPackage, usd_price: value});
+                        setEditingPackage({ ...editingPackage, usd_price: value });
                       }}
                       placeholder="24.99"
                       className="rounded-l-none"
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="discount_percentage">Discount Percentage (optional)</Label>
                   <div className="flex">
-                    <Input 
-                      id="discount_percentage" 
+                    <Input
+                      id="discount_percentage"
                       value={editingPackage.discount_percentage || ''}
                       onChange={(e) => {
                         const value = parseInt(e.target.value);
                         setEditingPackage({
-                          ...editingPackage, 
+                          ...editingPackage,
                           discount_percentage: isNaN(value) ? undefined : Math.min(99, Math.max(0, value))
                         });
                       }}
@@ -408,14 +412,14 @@ export default function AdminDgtPackagesPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-2 pt-4">
-                  <Checkbox 
-                    id="is_featured" 
+                  <Checkbox
+                    id="is_featured"
                     checked={editingPackage.is_featured || false}
-                    onCheckedChange={(checked) => 
+                    onCheckedChange={(checked) =>
                       setEditingPackage({
-                        ...editingPackage, 
+                        ...editingPackage,
                         is_featured: !!checked
                       })
                     }
@@ -424,18 +428,18 @@ export default function AdminDgtPackagesPage() {
                 </div>
               </div>
             </div>
-            
+
             <div className="flex justify-end gap-2 mt-6">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={handleCancel}
                 disabled={isMutating}
               >
                 <X className="h-4 w-4 mr-2" />
                 Cancel
               </Button>
-              
-              <Button 
+
+              <Button
                 onClick={handleSave}
                 disabled={isMutating}
               >
@@ -458,7 +462,7 @@ export default function AdminDgtPackagesPage() {
           </CardContent>
         </Card>
       )}
-      
+
       {/* Table of Packages */}
       <Card>
         <CardContent className="p-0">
@@ -490,7 +494,7 @@ export default function AdminDgtPackagesPage() {
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
-              
+
               <TableBody>
                 {packages.map((pkg) => (
                   <TableRow key={pkg.id}>
@@ -500,14 +504,14 @@ export default function AdminDgtPackagesPage() {
                         <span className="text-xs text-muted-foreground">{pkg.description}</span>
                       </div>
                     </TableCell>
-                    
+
                     <TableCell>
                       <div className="flex items-center">
                         <Coins className="h-4 w-4 mr-1.5 text-amber-500" />
                         {pkg.dgt_amount.toLocaleString()}
                       </div>
                     </TableCell>
-                    
+
                     <TableCell>
                       <div className="flex flex-col">
                         <span>{formatPrice(pkg.usd_price)}</span>
@@ -518,7 +522,7 @@ export default function AdminDgtPackagesPage() {
                         )}
                       </div>
                     </TableCell>
-                    
+
                     <TableCell>
                       {pkg.is_featured ? (
                         <Badge variant="default">Featured</Badge>
@@ -526,11 +530,11 @@ export default function AdminDgtPackagesPage() {
                         <Badge variant="outline">Standard</Badge>
                       )}
                     </TableCell>
-                    
+
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => handleEdit(pkg)}
                           disabled={!!editingPackage || isMutating}
@@ -538,9 +542,9 @@ export default function AdminDgtPackagesPage() {
                           <Pencil className="h-4 w-4" />
                           <span className="sr-only">Edit</span>
                         </Button>
-                        
-                        <Button 
-                          size="sm" 
+
+                        <Button
+                          size="sm"
                           variant="outline"
                           className="text-red-500 hover:text-red-600 border-red-200 hover:border-red-600"
                           onClick={() => handleConfirmDelete(pkg.id)}
@@ -558,7 +562,7 @@ export default function AdminDgtPackagesPage() {
           )}
         </CardContent>
       </Card>
-      
+
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={isConfirmingDelete} onOpenChange={setIsConfirmingDelete}>
         <AlertDialogContent>
@@ -571,7 +575,7 @@ export default function AdminDgtPackagesPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deletePackageMutation.isPending}>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={executeDelete}
               disabled={deletePackageMutation.isPending}
               className="bg-red-600 hover:bg-red-700"

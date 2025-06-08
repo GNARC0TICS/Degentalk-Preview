@@ -9,7 +9,6 @@
 | client/src/lib/utils/applyPluginRewards.ts | 4-8           | SYSTEM_ROLE_COLORS object                   | cosmeticsConfig.systemRoleColors (imported) [CONFIG-REFAC]|
 | db/schema/user/roles.ts                   | 3             | Role definitions in DB schema               | rolesConfig.roles (imported) [CONFIG-REFAC]            |
 | client/src/pages/admin/shop/edit.tsx      | 13-38         | getCosmeticTemplate hardcoded templates     | cosmeticsConfig.shopTemplates (imported) [CONFIG-REFAC]|
-| client/src/pages/admin/dgt-packages.tsx   | Various       | DGT package amounts, prices, discounts      | economyConfig.shop.dgtPackages (example comments added for dynamic pricing) [CONFIG-REFAC] |
 | lib/config-utils.ts                       | ALL           | N/A (new file)                             | Helper accessors for config-driven lookups              |
 
 ---
