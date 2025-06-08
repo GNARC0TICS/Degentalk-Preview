@@ -1,0 +1,36 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Naming Convention Rules
+
+## Objective
+Ensure clear, consistent, and intent-based naming for files, variables, functions, and components across the codebase.
+
+## File Naming
+- **Flag Vague Names:** Automatically flag files named `index.ts` (if not a barrel export), `utils.ts`, `helpers.ts`, `types.ts`, `constants.ts`, `shared.ts`, `common.ts`, `data.ts`, `config.ts`, `stuff.ts`, or similar generic terms, especially when they exist outside of a clearly defined domain's `lib`, `types`, or `constants` subdirectory.
+    - **Suggestion:** Prompt for a rename based on the primary entity or purpose of the file (e.g., `user-api.ts`, `forum-hooks.ts`, `wallet-schemas.ts`). If a file contains multiple unrelated concerns, suggest splitting it.
+- **Enforce Intent:** Filenames should clearly state their primary purpose or the main component/logic they contain.
+    - Use kebab-case (`file-name.ts`).
+    - Components: PascalCase (`ComponentName.tsx`).
+    - Hooks: camelCase with `use` prefix (`useUserData.ts`).
+    - API Services/Routes: Describe the domain and action (`forumApi.ts`, `walletRoutes.ts`).
+    - Types/Schemas: Include domain and suffix (`UserSchema.ts`, `ForumTypes.ts`).
+    - Tests: Include `.test.ts` or `.spec.ts` suffix (`user-api.test.ts`).
+- **Consistency:** Follow established patterns within the project (e.g., `-api.ts`, `-hooks.ts`, `-utils.ts` when scoped within a feature).
+
+## Variable & Function Naming
+- **Clarity over Brevity:** Use descriptive names even if they are longer. Avoid single-letter variables (except for simple loop counters like `i`, `j`, `k`) or obscure abbreviations.
+- **Booleans:** Prefix with `is`, `has`, `should`, `can` (e.g., `isActive`, `hasPermission`, `shouldRedirect`).
+- **Functions:** Use verbs that describe the action (e.g., `getUserData`, `calculateTotal`, `validateInput`).
+- **Constants:** Use SCREAMING_SNAKE_CASE (`MAX_USERS`, `API_ENDPOINT`).
+- **Types/Interfaces:** Use PascalCase (`UserProfile`, `TransactionData`).
+
+## Auto-Suggestions
+- **On Edit:** When editing a file flagged for a vague name, proactively suggest a rename based on the recent changes or the most prominent functions/classes within it.
+- **On Creation:** When creating new files/functions, suggest names based on context or keywords used.
+
+## Rule Linking
+- Findings from this rule (files needing rename/split) should be reported to `refactor-rules.mdc` and potentially logged as tasks in `refactor-tracker.md`.
+- Refer to `import-patterns.mdc` for consistency in how modules are named and imported.

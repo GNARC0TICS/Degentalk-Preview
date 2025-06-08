@@ -1,0 +1,90 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Import Patterns and Best Practices
+
+## Export Styles
+The Degentalk codebase uses a mix of export styles that need to be handled properly:
+
+### Default Exports
+Many components use default exports:
+```typescript
+export default function Component() { ... }
+// or
+const Component = () => { ... };
+export default Component;
+```
+
+These must be imported without curly braces:
+```typescript
+import ComponentName from '@/path/to/component';
+```
+
+### Named Exports
+Utility functions, hooks, and some components use named exports:
+```typescript
+export function utilityFunction() { ... }
+// or
+export const CONSTANT_VALUE = 'value';
+```
+
+These must be imported with curly braces:
+```typescript
+import { utilityFunction, CONSTANT_VALUE } from '@/path/to/module';
+```
+
+## Common Import Mistakes
+1. Importing default exports as named imports
+   ```typescript
+   // INCORRECT
+   import { AdminLayout } from '../admin-layout';
+   
+   // CORRECT
+   import AdminLayout from '../admin-layout';
+   ```
+
+2. Importing named exports without curly braces
+   ```typescript
+   // INCORRECT
+   import apiRequest from '@/lib/queryClient';
+   
+   // CORRECT
+   import { apiRequest } from '@/lib/queryClient';
+   ```
+
+3. Using incorrect path aliases
+   ```typescript
+   // INCORRECT
+   import Component from 'components/ui/component';
+   
+   // CORRECT
+   import Component from '@/components/ui/component';
+   ```
+
+## Path Aliases
+The project uses the following path aliases:
+- `@/` - Points to `client/src/`
+- Always use the `@/` prefix for imports from the src directory
+
+## Barrel Exports
+Some directories use barrel exports (index.ts files that re-export from multiple files):
+```typescript
+// components/ui/index.ts
+export * from './button';
+export * from './input';
+```
+
+These can be imported collectively:
+```typescript
+import { Button, Input } from '@/components/ui';
+```
+
+## API/Services
+For consistent API imports:
+```typescript
+import { api } from '@/lib/api';
+// Then use specific endpoints
+api.shop.getItems()
+```

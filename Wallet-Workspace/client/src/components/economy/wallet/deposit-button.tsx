@@ -136,7 +136,7 @@ export function DepositButton({
     <div className={`bg-black/30 rounded-lg p-4 border border-zinc-800 shadow-lg space-y-4 ${className} ${showGlow ? 'deposit-glow' : ''}`}>
       <h3 className="text-lg font-medium text-white mb-2">Deposit USDT</h3>
       <p className="text-zinc-400 text-sm mb-4">
-        Deposit USDT (TRC-20) to your DegenTalk wallet to start tipping, making it rain, or purchasing items.
+        Deposit USDT (TRC-20) to your Degentalk™™ wallet to start tipping, making it rain, or purchasing items.
       </p>
       
       <div>

@@ -1,0 +1,25 @@
+// REFACTORED: Updated auth middleware imports to use canonical path
+import { Router } from 'express';
+import { isAuthenticated, isAdmin } from '../../auth/middleware/auth.middleware';
+import * as missionsController from './missions.controller';
+
+const router = Router();
+
+// Public routes
+// None for missions - all require authentication
+
+// User routes (authenticated)
+router.get('/active', isAuthenticated, missionsController.getActiveMissions);
+router.get('/progress', isAuthenticated, missionsController.getUserMissionProgress);
+router.post('/claim/:missionId', isAuthenticated, missionsController.claimMissionReward);
+
+// Admin routes
+router.get('/admin/all', isAdmin, missionsController.getAllMissions);
+router.post('/admin/create', isAdmin, missionsController.createMission);
+router.put('/admin/:id', isAdmin, missionsController.updateMission);
+router.get('/admin/progress/:userId', isAdmin, missionsController.getUserMissionProgressById);
+router.post('/admin/initialize-defaults', isAdmin, missionsController.initializeDefaultMissions);
+router.post('/admin/reset-daily', isAdmin, missionsController.resetDailyMissions);
+router.post('/admin/reset-weekly', isAdmin, missionsController.resetWeeklyMissions);
+
+export default router; 

@@ -1,0 +1,51 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Refactoring Cheat Codes (Advanced)
+
+## Objective
+Provide advanced directives for automated code health and architectural integrity.
+
+## Cheat Codes
+
+1.  **Two-Way Schema Syncing (@syncSchema)**
+    -   **Trigger:** Changes detected in `shared/schema.ts`, Drizzle models (`drizzle.config.ts`), or database migration files (`migrations/*`).
+    -   **Action:**
+        -   *Required:* Ping `schema-sync-rules.mdc` to initiate its workflow (migration generation, downstream impact analysis).
+        -   *Optional:* Automatically scan server routes (`server/src/domains/**/routes.ts`) and client-side API services/hooks (`client/src/features/**/services/`, `client/src/features/**/hooks/`) that import the changed schema or related types.
+        -   *Suggest:* Generate TODO comments (`// TODO: @syncSchema Update based on recent changes in schema.ts: [Changed Parts]`) in potentially affected files.
+
+2.  **Auto Audit on Edit (@auditOnChange)**
+    -   **Trigger:** On significant edits (configurable threshold, e.g., >10 lines changed) to any `.ts` or `.tsx` file.
+    -   **Action:**
+        -   Run a lightweight audit based on `refactor-rules.mdc` and `naming-rules.mdc` specifically on the edited file.
+        -   Flag immediate violations (e.g., unused imports introduced, vague function name added) directly in the editor or as suggestions.
+        -   *Optional:* If potential `@domainLeak` is detected, cross-reference with `directory-tree.md` for confirmation.
+
+3.  **Import Zoning (@zoneImports)**
+    -   **Trigger:** Analysis of imports within a file.
+    -   **Action:**
+        -   Enforce import grouping (e.g., React/Next imports, library imports, absolute `@/` imports, relative `../` imports).
+        -   Flag imports that cross major domain boundaries unnecessarily (e.g., `client/src/features/wallet/**` importing directly from `client/src/features/forum/**` instead of using shared libs or contexts).
+        -   Reference `import-patterns.mdc` for standard alias usage.
+
+4.  **UI/Logic Segregation (@segregateLogic)**
+    -   **Trigger:** Analysis of `.tsx` component files.
+    -   **Action:**
+        -   Flag components containing excessive business logic, direct API calls (instead of using hooks/services), or complex state manipulation that could be extracted into hooks or utility functions.
+        -   Promote the use of container/presentational patterns or hook-based logic extraction.
+        -   Suggest moving logic to `hooks/`, `services/`, or `lib/utils/` within the relevant feature domain.
+
+5.  **Rule Mutation Based on Usage (@evolveRule)**
+    -   **Trigger:** Repeated violations of a specific rule across the codebase, or consistent patterns emerging that contradict existing rules (monitored by `rule-evolution.mdc`).
+    -   **Action:**
+        -   Alert the user/agent about the potential rule drift.
+        -   Ping `rule-evolution.mdc` to analyze the pattern and propose a rule update or clarification.
+        -   Log the observation and potential update in `rules/update-history.mdc`.
+
+## Implementation Notes
+- These cheat codes represent advanced automation goals.
+- Implementation may require sophisticated code analysis capabilities.
+- Start with suggestions and gradually move towards automated fixes where confidence is high.

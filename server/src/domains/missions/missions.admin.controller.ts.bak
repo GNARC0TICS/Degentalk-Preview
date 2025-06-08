@@ -1,0 +1,50 @@
+/**
+ * Admin Missions Controller
+ * 
+ * Handles admin-specific mission management functionality
+ */
+
+import { Request, Response, NextFunction } from 'express';
+import { MissionsService } from './missions.service';
+// import { MissionSchema, MissionUpdateSchema } from './missions.validators'; // Removed as file not found and schemas not used
+// import { MissionAlreadyExistsError } from './missions.errors'; // Removed as file not found and error not used
+import { logger } from '../../core/logger';
+import { asyncHandler } from '../../core/errors';
+
+/**
+ * Admin-specific functions for mission management
+ * 
+ * Note: The missions.controller.ts file already contains the admin endpoints.
+ * This file exists for future admin-specific mission operations that may
+ * be needed beyond what's in the main controller.
+ * 
+ * Currently, all admin functionality is implemented in missions.controller.ts:
+ * - getAllMissions
+ * - createMission 
+ * - updateMission
+ * - getUserMissionProgressById
+ * - initializeDefaultMissions
+ * - resetDailyMissions
+ * - resetWeeklyMissions
+ */
+
+/**
+ * Example admin-only function for future use
+ */
+export const getMissionAuditLog = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // This would be implemented when we add mission audit logging
+    // For now, just return a placeholder response
+    
+    res.status(200).json({
+      message: 'Mission audit log feature coming soon',
+      timestamp: new Date()
+    });
+  } catch (error) {
+    logger.error('Error getting mission audit log:', error instanceof Error ? error.message : String(error));
+    next(error);
+  }
+};
+
+// Export existing mission controller functions
+export * from './missions.controller';

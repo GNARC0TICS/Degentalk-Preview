@@ -1,0 +1,79 @@
+---
+description: admin panel building structure
+globs: 
+alwaysApply: false
+---
+# Admin Section Structure
+
+## Overview
+The Degentalk admin section provides interfaces for platform management including user management, content moderation, wallet administration, XP system management, and system configuration.
+
+## Layout Pattern
+All admin pages use a consistent layout structure:
+
+```
+AdminLayout
+└── Page content
+    ├── Header (title + actions)
+    └── Content sections (cards, tables, forms)
+```
+
+The `AdminLayout` component is a default export from [client/src/pages/admin/admin-layout.tsx](mdc:client/src/pages/admin/admin-layout.tsx) and should be imported and used in all admin pages:
+
+```typescript
+import AdminLayout from '../admin-layout';
+
+export default function SomePage() {
+  return (
+    <AdminLayout>
+      {/* Page content */}
+    </AdminLayout>
+  );
+}
+```
+
+## Admin Sections
+The admin interface is organized into these main sections:
+
+1. **Users & Accounts**
+   - User management
+   - Permissions
+   - Bans and restrictions
+
+2. **Content Moderation**
+   - Reports
+   - Content approval
+   - Flagged content
+
+3. **Wallet Administration**
+   - User wallets
+   - Transactions
+   - DGT management
+   - Cryptocurrency integration (CCPayment)
+
+4. **XP & Rewards**
+   - XP adjustments [client/src/pages/admin/xp/adjust.tsx](mdc:client/src/pages/admin/xp/adjust.tsx)
+   - Badges [client/src/pages/admin/xp/badges.tsx](mdc:client/src/pages/admin/xp/badges.tsx)
+   - Titles [client/src/pages/admin/xp/titles.tsx](mdc:client/src/pages/admin/xp/titles.tsx)
+   - Level configuration [client/src/pages/admin/xp/levels.tsx](mdc:client/src/pages/admin/xp/levels.tsx)
+   - XP system settings [client/src/pages/admin/xp/settings.tsx](mdc:client/src/pages/admin/xp/settings.tsx)
+
+5. **System & Settings**
+   - Announcements
+   - Site configuration
+   - Stats and analytics
+
+## Data Patterns
+Admin pages typically follow this data pattern:
+1. Use React Query for data fetching and mutations
+2. Import `apiRequest` from `@/lib/queryClient` for API calls
+3. Use optimistic updates for better UX
+4. Use toasts for operation feedback
+
+## Component Patterns
+Admin pages generally use these UI patterns:
+1. Card-based layout for different sections
+2. Tabs for organizing related content
+3. Tables for data display with sorting capabilities
+4. Forms with validation for data entry
+5. Confirmation dialogs for destructive actions
