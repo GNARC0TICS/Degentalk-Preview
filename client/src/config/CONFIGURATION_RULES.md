@@ -26,7 +26,8 @@
 
 | File | Responsibility | DO Include | DON'T Include |
 |------|----------------|------------|---------------|
-| `cosmetics.config.ts` | UI styling, visual elements, Hero section rotating quotes | Colors, rarities, badges, shop templates, headlines, subheaders | Business logic, API endpoints |
+| `cosmetics.config.ts` | UI styling, visual elements | Colors, rarities, badges, shop templates | Business logic, API endpoints |
+| `ui.config.ts` | General UI elements, text strings, global layouts, Hero and Footer section quotes | Hero section quotes, Footer section quotes, general UI text, layout configurations | Business logic, user/item specific cosmetics |
 | `economy.config.ts` | Economic systems, rewards | XP values, DGT limits, pricing | UI components, styling |
 | `forumRules.config.ts` | Forum structure, moderation | Thread options, zones, prefixes | User permissions, economy |
 | `roles.config.ts` | Users, permissions, access | Role definitions, permission categories | Forum structure, styling |
@@ -54,9 +55,17 @@ export const HeroQuoteSchema = z.object({
   subheader: z.string().optional() // Optional subheader
 });
 
+// ✅ GOOD: Schema for Footer Quotes (simple string for now)
+export const FooterQuoteSchema = z.string().min(1);
+
+export const UiConfigSchema = z.object({
+  heroQuotes: z.array(HeroQuoteSchema).min(1),
+  footerQuotes: z.array(FooterQuoteSchema).min(1),
+  // ... other UI configurations
+});
+
 export const CosmeticsConfigSchema = z.object({
-  heroQuotes: z.array(HeroQuoteSchema).min(1), // Array of hero quotes
-  // ... other cosmetic configurations
+  // ... existing cosmetic configurations
 });
 ```
 

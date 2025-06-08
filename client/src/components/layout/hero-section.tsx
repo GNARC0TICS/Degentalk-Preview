@@ -4,164 +4,14 @@ import { Users, MessageSquare, ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AnimatedLogo } from '@/components/ui/animated-logo';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const quotes = [
-  {
-    headline: "Where the risk is real and the advice is imaginary.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Post first. Cope later.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Built by winners. Maintained by the wreckage.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "The only forum where 'bad idea' is a compliment.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "We chart pain in real-time.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Alpha, anxiety, and the occasional enlightenment.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Proof-of-sanity not required.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "A support group for people who call their losses 'lessons.'",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "No roadmap. No mercy.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Join the conversation before the voices win.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "We eat pump and dumps for breakfast.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Dox your thoughts. Keep your wallet private.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "One rug away from greatness.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "This is not financial advice. It's worse.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "A forum for people banned from better forums.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "More insight than CT. Fewer scams than Discord.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Your subconscious made this site. We're just hosting it.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Built by gamblers pretending to be philosophers.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "The tab you check before blowing your last $20.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Welcome to the frontlines of financial chaos.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "If Reddit and 4chan had a DAO baby.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Lurk. Post. Ascend.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Bridging the gap between genius and gambling addiction.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "No GM's, Not another Web3 project. Keep your money.. You're gonna need it.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "The only forum where losing money makes you smarter.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Alpha is temporary. Reputations are forever.",
-    subheader: "Post wisely. Or don't."
-  },
-  {
-    headline: "We backtest trauma.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Mentally unwell. Financially overexposed.",
-    subheader: "Join thousands of others doing just fine."
-  },
-  {
-    headline: "You're early. But still down bad.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "Where your bags get sympathy… and screenshots.",
-    subheader: "This is a safe space for unsafe bets."
-  },
-  {
-    headline: "A forum for people who should log off… but won't.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "An experimental forum for financially curious masochists.",
-    subheader: "We study losses so you don't have to."
-  },
-  {
-    headline: "Technically legal. Morally bankrupt.",
-    subheader: "Welcome to DegenTalk."
-  },
-  {
-    headline: "Lurk harder. Think worse. Win more.",
-    subheader: "Discover, Discuss, Degen."
-  },
-  {
-    headline: "We're not addicted. We're informed.",
-    subheader: "This is the last tab you close before bed."
-  },
-  {
-    headline: "One good post away from greatness.",
-    subheader: "And three bad ones from a ban."
-  },
-  {
-    headline: "Sell your SOL, buy DGT 😈",
-    subheader: "Discover, Discuss, Degen."
-  }
-];
+import { uiConfig } from '@/config/ui.config';
 
 export function HeroSection() {
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentQuoteIndex((prev) => (prev + 1) % quotes.length);
+      setCurrentQuoteIndex((prev) => (prev + 1) % uiConfig.heroQuotes.length);
     }, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -212,7 +62,7 @@ export function HeroSection() {
                   textShadow: '0 2px 4px rgba(0,0,0,0.3), 0 8px 16px rgba(0,0,0,0.1)'
                 }}
               >
-                {quotes[currentQuoteIndex].headline}
+                {uiConfig.heroQuotes[currentQuoteIndex].headline}
               </motion.h1>
             </AnimatePresence>
           </div>
@@ -228,7 +78,7 @@ export function HeroSection() {
               className="text-lg md:text-xl text-white mb-8 md:mb-10 flex items-center gap-2 justify-center font-semibold"
               style={{ textShadow: '0 0 8px rgba(255,255,255,0.1)' }}
             >
-              {quotes[currentQuoteIndex].subheader}
+              {uiConfig.heroQuotes[currentQuoteIndex].subheader}
             </motion.p>
           </AnimatePresence>
 

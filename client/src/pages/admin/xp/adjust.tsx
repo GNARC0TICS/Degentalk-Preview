@@ -142,9 +142,9 @@ export default function UserXpAdjustmentPage() {
       setIsAdjustDialogOpen(false);
       // Update the local state with the new XP
       if (users?.users) {
-        const updatedUsers = users.users.map(user => 
-          user.id === data.user.id 
-            ? { ...user, xp: data.user.xp, level: data.user.level } 
+        const updatedUsers = users.users.map(user =>
+          user.id === data.user.id
+            ? { ...user, xp: data.user.xp, level: data.user.level }
             : user
         );
         queryClient.setQueryData(['/api/admin/users/search', debouncedSearchTerm], { users: updatedUsers });
@@ -194,7 +194,7 @@ export default function UserXpAdjustmentPage() {
   const handleSubmitAdjustment = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedUser) return;
-    
+
     adjustXpMutation.mutate({
       userId: selectedUser.id,
       amount: adjustmentAmount,
@@ -230,7 +230,7 @@ export default function UserXpAdjustmentPage() {
   // Calculate adjusted XP
   const calculateAdjustedXp = () => {
     if (!selectedUser) return 0;
-    
+
     switch (adjustmentType) {
       case 'add':
         return selectedUser.xp + adjustmentAmount;
@@ -245,330 +245,328 @@ export default function UserXpAdjustmentPage() {
 
   return (
     <AdminLayout>
-      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">User XP Adjustment</h2>
-        </div>
-        
-        <Tabs defaultValue="search" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="search">Search Users</TabsTrigger>
-            <TabsTrigger value="recent">Recent Adjustments</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="search" className="space-y-4">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle>Search Users</CardTitle>
-                <CardDescription>
-                  Search for users by username or ID to adjust their XP
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col space-y-4">
-                  <div className="relative">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search by username or ID (min 3 characters)..."
-                      className="pl-8"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                  
-                  {debouncedSearchTerm.length > 0 && debouncedSearchTerm.length < 3 && (
-                    <p className="text-sm text-muted-foreground">Enter at least 3 characters to search</p>
-                  )}
-                  
-                  {isLoading && (
-                    <div className="text-center py-4">
-                      <p className="text-muted-foreground">Searching...</p>
-                    </div>
-                  )}
-                  
-                  {isError && (
-                    <div className="text-center py-4">
-                      <p className="text-destructive">Error: {error.message}</p>
-                    </div>
-                  )}
-                  
-                  {!isLoading && !isError && users?.users && users.users.length === 0 && debouncedSearchTerm.length >= 3 && (
-                    <div className="text-center py-4">
-                      <p className="text-muted-foreground">No users found</p>
-                    </div>
-                  )}
-                  
-                  {users?.users && users.users.length > 0 && (
-                    <div className="rounded-md border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>User</TableHead>
-                            <TableHead>
-                              <div 
-                                className="flex items-center cursor-pointer"
-                                onClick={() => handleSort('level')}
-                              >
-                                Level
-                                <ArrowUpDown className="ml-2 h-4 w-4" />
-                              </div>
-                            </TableHead>
-                            <TableHead>
-                              <div 
-                                className="flex items-center cursor-pointer"
-                                onClick={() => handleSort('xp')}
-                              >
-                                XP
-                                <ArrowUpDown className="ml-2 h-4 w-4" />
-                              </div>
-                            </TableHead>
-                            <TableHead>Progress</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {sortedUsers.map(user => (
-                            <TableRow key={user.id}>
-                              <TableCell>
-                                <div className="flex items-center gap-2">
-                                  <Avatar className="h-8 w-8">
-                                    {user.avatarUrl ? (
-                                      <AvatarImage src={user.avatarUrl} alt={user.username} />
-                                    ) : (
-                                      <AvatarFallback>
-                                        {user.username.substring(0, 2).toUpperCase()}
-                                      </AvatarFallback>
-                                    )}
-                                  </Avatar>
-                                  <div>
-                                    <p className="font-medium">{user.username}</p>
-                                    <p className="text-xs text-muted-foreground">ID: {user.id}</p>
-                                  </div>
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant="outline" className="bg-zinc-800">
-                                  {user.level}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>{user.xp.toLocaleString()}</TableCell>
-                              <TableCell>
-                                <div className="w-full bg-zinc-800 rounded-full h-2.5 mb-1">
-                                  <div 
-                                    className="bg-emerald-600 h-2.5 rounded-full" 
-                                    style={{ width: `${user.progressPercent}%` }}
-                                  ></div>
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                  {user.progressPercent}% to level {user.level + 1}
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-right">
-                                <div className="flex justify-end gap-2">
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    onClick={() => handleViewHistory(user)}
-                                  >
-                                    <History className="h-4 w-4 mr-1" />
-                                    History
-                                  </Button>
-                                  <Button 
-                                    variant="default" 
-                                    size="sm"
-                                    onClick={() => handleAdjustXp(user)}
-                                  >
-                                    <PlusCircle className="h-4 w-4 mr-1" />
-                                    Adjust XP
-                                  </Button>
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  )}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-3xl font-bold tracking-tight">User XP Adjustment</h2>
+      </div>
+
+      <Tabs defaultValue="search" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="search">Search Users</TabsTrigger>
+          <TabsTrigger value="recent">Recent Adjustments</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="search" className="space-y-4">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>Search Users</CardTitle>
+              <CardDescription>
+                Search for users by username or ID to adjust their XP
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col space-y-4">
+                <div className="relative">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search by username or ID (min 3 characters)..."
+                    className="pl-8"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="recent" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent XP Adjustments</CardTitle>
-                <CardDescription>
-                  View the most recent XP adjustments made by administrators
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <RecentAdjustmentsTable />
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-        
-        {/* XP Adjustment Dialog */}
-        <Dialog open={isAdjustDialogOpen} onOpenChange={setIsAdjustDialogOpen}>
-          <DialogContent className="sm:max-w-[500px]">
-            <form onSubmit={handleSubmitAdjustment}>
-              <DialogHeader>
-                <DialogTitle>Adjust User XP</DialogTitle>
-                <DialogDescription>
-                  Modify the XP of {selectedUser?.username}
-                </DialogDescription>
-              </DialogHeader>
-              
-              <div className="grid gap-4 py-4">
-                {selectedUser && (
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10">
-                      {selectedUser.avatarUrl ? (
-                        <AvatarImage src={selectedUser.avatarUrl} alt={selectedUser.username} />
-                      ) : (
-                        <AvatarFallback>
-                          {selectedUser.username.substring(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      )}
-                    </Avatar>
-                    <div>
-                      <p className="font-medium">{selectedUser.username}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Current XP: {selectedUser.xp.toLocaleString()} | Level {selectedUser.level}
-                      </p>
-                    </div>
+
+                {debouncedSearchTerm.length > 0 && debouncedSearchTerm.length < 3 && (
+                  <p className="text-sm text-muted-foreground">Enter at least 3 characters to search</p>
+                )}
+
+                {isLoading && (
+                  <div className="text-center py-4">
+                    <p className="text-muted-foreground">Searching...</p>
                   </div>
                 )}
-                
-                <div className="space-y-2">
-                  <Label htmlFor="adjustmentType">Adjustment Type</Label>
-                  <RadioGroup 
-                    id="adjustmentType" 
-                    value={adjustmentType} 
-                    onValueChange={(value) => setAdjustmentType(value as 'add' | 'subtract' | 'set')}
-                    className="flex space-x-4"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="add" id="add" />
-                      <Label htmlFor="add" className="flex items-center">
-                        <PlusCircle className="h-4 w-4 mr-1 text-emerald-500" />
-                        Add
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="subtract" id="subtract" />
-                      <Label htmlFor="subtract" className="flex items-center">
-                        <MinusCircle className="h-4 w-4 mr-1 text-red-500" />
-                        Subtract
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="set" id="set" />
-                      <Label htmlFor="set" className="flex items-center">
-                        <RotateCcw className="h-4 w-4 mr-1" />
-                        Set
-                      </Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="amount">
-                    XP Amount
-                  </Label>
-                  <Input
-                    id="amount"
-                    type="number"
-                    min="0"
-                    max="1000000"
-                    value={adjustmentAmount}
-                    onChange={(e) => setAdjustmentAmount(parseInt(e.target.value))}
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="reason">Reason for Adjustment</Label>
-                  <Textarea
-                    id="reason"
-                    value={adjustmentReason}
-                    onChange={(e) => setAdjustmentReason(e.target.value)}
-                    placeholder="Explain why this adjustment is being made"
-                    required
-                  />
-                </div>
-                
-                {selectedUser && (
-                  <div className="rounded-md bg-muted p-4">
-                    <div className="text-sm font-medium">Adjustment Preview</div>
-                    <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
-                      <div>
-                        <div className="text-muted-foreground">Current XP</div>
-                        <div className="font-medium">{selectedUser.xp.toLocaleString()}</div>
-                      </div>
-                      <div>
-                        <div className="text-muted-foreground">
-                          {adjustmentType === 'add' 
-                            ? 'Adding' 
-                            : adjustmentType === 'subtract' 
-                              ? 'Subtracting' 
-                              : 'Setting to'
-                          }
-                        </div>
-                        <div className="font-medium">{adjustmentAmount.toLocaleString()}</div>
-                      </div>
-                      <div>
-                        <div className="text-muted-foreground">New XP</div>
-                        <div className="font-medium">{calculateAdjustedXp().toLocaleString()}</div>
-                      </div>
-                    </div>
+
+                {isError && (
+                  <div className="text-center py-4">
+                    <p className="text-destructive">Error: {error.message}</p>
+                  </div>
+                )}
+
+                {!isLoading && !isError && users?.users && users.users.length === 0 && debouncedSearchTerm.length >= 3 && (
+                  <div className="text-center py-4">
+                    <p className="text-muted-foreground">No users found</p>
+                  </div>
+                )}
+
+                {users?.users && users.users.length > 0 && (
+                  <div className="rounded-md border">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>User</TableHead>
+                          <TableHead>
+                            <div
+                              className="flex items-center cursor-pointer"
+                              onClick={() => handleSort('level')}
+                            >
+                              Level
+                              <ArrowUpDown className="ml-2 h-4 w-4" />
+                            </div>
+                          </TableHead>
+                          <TableHead>
+                            <div
+                              className="flex items-center cursor-pointer"
+                              onClick={() => handleSort('xp')}
+                            >
+                              XP
+                              <ArrowUpDown className="ml-2 h-4 w-4" />
+                            </div>
+                          </TableHead>
+                          <TableHead>Progress</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {sortedUsers.map(user => (
+                          <TableRow key={user.id}>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Avatar className="h-8 w-8">
+                                  {user.avatarUrl ? (
+                                    <AvatarImage src={user.avatarUrl} alt={user.username} />
+                                  ) : (
+                                    <AvatarFallback>
+                                      {user.username.substring(0, 2).toUpperCase()}
+                                    </AvatarFallback>
+                                  )}
+                                </Avatar>
+                                <div>
+                                  <p className="font-medium">{user.username}</p>
+                                  <p className="text-xs text-muted-foreground">ID: {user.id}</p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className="bg-zinc-800">
+                                {user.level}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{user.xp.toLocaleString()}</TableCell>
+                            <TableCell>
+                              <div className="w-full bg-zinc-800 rounded-full h-2.5 mb-1">
+                                <div
+                                  className="bg-emerald-600 h-2.5 rounded-full"
+                                  style={{ width: `${user.progressPercent}%` }}
+                                ></div>
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                {user.progressPercent}% to level {user.level + 1}
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleViewHistory(user)}
+                                >
+                                  <History className="h-4 w-4 mr-1" />
+                                  History
+                                </Button>
+                                <Button
+                                  variant="default"
+                                  size="sm"
+                                  onClick={() => handleAdjustXp(user)}
+                                >
+                                  <PlusCircle className="h-4 w-4 mr-1" />
+                                  Adjust XP
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </div>
                 )}
               </div>
-              
-              <DialogFooter>
-                <Button 
-                  type="button"
-                  variant="outline" 
-                  onClick={() => setIsAdjustDialogOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  type="submit" 
-                  disabled={adjustXpMutation.isPending || !adjustmentReason.trim()}
-                >
-                  {adjustXpMutation.isPending ? 'Applying...' : 'Apply Adjustment'}
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-        
-        {/* XP History Dialog */}
-        <Dialog open={isHistoryDialogOpen} onOpenChange={setIsHistoryDialogOpen}>
-          <DialogContent className="sm:max-w-[700px]">
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="recent" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent XP Adjustments</CardTitle>
+              <CardDescription>
+                View the most recent XP adjustments made by administrators
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <RecentAdjustmentsTable />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      {/* XP Adjustment Dialog */}
+      <Dialog open={isAdjustDialogOpen} onOpenChange={setIsAdjustDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <form onSubmit={handleSubmitAdjustment}>
             <DialogHeader>
-              <DialogTitle>XP Adjustment History</DialogTitle>
+              <DialogTitle>Adjust User XP</DialogTitle>
               <DialogDescription>
-                {selectedUser && `XP adjustments for ${selectedUser.username}`}
+                Modify the XP of {selectedUser?.username}
               </DialogDescription>
             </DialogHeader>
-            
-            <XpHistoryTable userId={selectedUser?.id} />
-            
+
+            <div className="grid gap-4 py-4">
+              {selectedUser && (
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-10 w-10">
+                    {selectedUser.avatarUrl ? (
+                      <AvatarImage src={selectedUser.avatarUrl} alt={selectedUser.username} />
+                    ) : (
+                      <AvatarFallback>
+                        {selectedUser.username.substring(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                  <div>
+                    <p className="font-medium">{selectedUser.username}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Current XP: {selectedUser.xp.toLocaleString()} | Level {selectedUser.level}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="adjustmentType">Adjustment Type</Label>
+                <RadioGroup
+                  id="adjustmentType"
+                  value={adjustmentType}
+                  onValueChange={(value) => setAdjustmentType(value as 'add' | 'subtract' | 'set')}
+                  className="flex space-x-4"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="add" id="add" />
+                    <Label htmlFor="add" className="flex items-center">
+                      <PlusCircle className="h-4 w-4 mr-1 text-emerald-500" />
+                      Add
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="subtract" id="subtract" />
+                    <Label htmlFor="subtract" className="flex items-center">
+                      <MinusCircle className="h-4 w-4 mr-1 text-red-500" />
+                      Subtract
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="set" id="set" />
+                    <Label htmlFor="set" className="flex items-center">
+                      <RotateCcw className="h-4 w-4 mr-1" />
+                      Set
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="amount">
+                  XP Amount
+                </Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  min="0"
+                  max="1000000"
+                  value={adjustmentAmount}
+                  onChange={(e) => setAdjustmentAmount(parseInt(e.target.value))}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="reason">Reason for Adjustment</Label>
+                <Textarea
+                  id="reason"
+                  value={adjustmentReason}
+                  onChange={(e) => setAdjustmentReason(e.target.value)}
+                  placeholder="Explain why this adjustment is being made"
+                  required
+                />
+              </div>
+
+              {selectedUser && (
+                <div className="rounded-md bg-muted p-4">
+                  <div className="text-sm font-medium">Adjustment Preview</div>
+                  <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
+                    <div>
+                      <div className="text-muted-foreground">Current XP</div>
+                      <div className="font-medium">{selectedUser.xp.toLocaleString()}</div>
+                    </div>
+                    <div>
+                      <div className="text-muted-foreground">
+                        {adjustmentType === 'add'
+                          ? 'Adding'
+                          : adjustmentType === 'subtract'
+                            ? 'Subtracting'
+                            : 'Setting to'
+                        }
+                      </div>
+                      <div className="font-medium">{adjustmentAmount.toLocaleString()}</div>
+                    </div>
+                    <div>
+                      <div className="text-muted-foreground">New XP</div>
+                      <div className="font-medium">{calculateAdjustedXp().toLocaleString()}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <DialogFooter>
-              <Button 
-                variant="outline" 
-                onClick={() => setIsHistoryDialogOpen(false)}
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsAdjustDialogOpen(false)}
               >
-                Close
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={adjustXpMutation.isPending || !adjustmentReason.trim()}
+              >
+                {adjustXpMutation.isPending ? 'Applying...' : 'Apply Adjustment'}
               </Button>
             </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* XP History Dialog */}
+      <Dialog open={isHistoryDialogOpen} onOpenChange={setIsHistoryDialogOpen}>
+        <DialogContent className="sm:max-w-[700px]">
+          <DialogHeader>
+            <DialogTitle>XP Adjustment History</DialogTitle>
+            <DialogDescription>
+              {selectedUser && `XP adjustments for ${selectedUser.username}`}
+            </DialogDescription>
+          </DialogHeader>
+
+          <XpHistoryTable userId={selectedUser?.id} />
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsHistoryDialogOpen(false)}
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AdminLayout>
   );
 }
@@ -643,15 +641,15 @@ function RecentAdjustmentsTable() {
                       adjustment.adjustmentType === 'add'
                         ? 'bg-emerald-900 text-emerald-300'
                         : adjustment.adjustmentType === 'subtract'
-                        ? 'bg-red-900 text-red-300'
-                        : 'bg-blue-900 text-blue-300'
+                          ? 'bg-red-900 text-red-300'
+                          : 'bg-blue-900 text-blue-300'
                     }
                   >
                     {adjustment.adjustmentType === 'add'
                       ? `+${adjustment.amount}`
                       : adjustment.adjustmentType === 'subtract'
-                      ? `-${adjustment.amount}`
-                      : `Set to ${adjustment.amount}`}
+                        ? `-${adjustment.amount}`
+                        : `Set to ${adjustment.amount}`}
                   </Badge>
                   <span className="text-xs text-muted-foreground mt-1">
                     {adjustment.oldXp.toLocaleString()} → {adjustment.newXp.toLocaleString()}
@@ -734,15 +732,15 @@ function XpHistoryTable({ userId }: { userId?: number }) {
                       adjustment.adjustmentType === 'add'
                         ? 'bg-emerald-900 text-emerald-300'
                         : adjustment.adjustmentType === 'subtract'
-                        ? 'bg-red-900 text-red-300'
-                        : 'bg-blue-900 text-blue-300'
+                          ? 'bg-red-900 text-red-300'
+                          : 'bg-blue-900 text-blue-300'
                     }
                   >
                     {adjustment.adjustmentType === 'add'
                       ? `+${adjustment.amount}`
                       : adjustment.adjustmentType === 'subtract'
-                      ? `-${adjustment.amount}`
-                      : `Set to ${adjustment.amount}`}
+                        ? `-${adjustment.amount}`
+                        : `Set to ${adjustment.amount}`}
                   </Badge>
                   <span className="text-xs text-muted-foreground mt-1">
                     {adjustment.oldXp.toLocaleString()} → {adjustment.newXp.toLocaleString()}

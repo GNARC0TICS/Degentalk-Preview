@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Pencil, Trash2, ArrowUpDown, Search, ChevronUp, ChevronDown } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast.ts';
+import { Input } from '@/components/ui/input.tsx';
+import { Button } from '@/components/ui/button.tsx';
+import { Badge } from '@/components/ui/badge.tsx';
 import {
   Table,
   TableBody,
@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/table.tsx';
 import {
   Dialog,
   DialogContent,
@@ -20,13 +20,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useDebounce } from '@/hooks/use-debounce';
-import AdminLayout from '../admin-layout';
-import { apiRequest } from '@/lib/queryClient';
+} from '@/components/ui/dialog.tsx';
+import { Label } from '@/components/ui/label.tsx';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
+import { useDebounce } from '@/hooks/use-debounce.ts';
+import AdminLayout from '../admin-layout.tsx';
+import { apiRequest } from '@/lib/queryClient.ts';
 
 // Level types
 interface Level {
@@ -217,13 +217,13 @@ export default function LevelManagementPage() {
     });
     setSelectedLevel(null);
   };
-  
+
   const handleGenerateLevels = () => {
     const startLevel = 1;
     const endLevel = 100;
     const baseXp = 100;
     const multiplier = 1.1;
-    
+
     generateLevelsMutation.mutate({ startLevel, endLevel, baseXp, multiplier });
   };
 
@@ -241,7 +241,7 @@ export default function LevelManagementPage() {
               {isEdit ? 'Update the level details below.' : 'Define a new XP level with its requirements and rewards.'}
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-2">
               <div>
@@ -267,7 +267,7 @@ export default function LevelManagementPage() {
                 />
               </div>
             </div>
-            
+
             <div>
               <Label htmlFor="description">Description</Label>
               <Input
@@ -277,7 +277,7 @@ export default function LevelManagementPage() {
                 placeholder="Level up description (optional)"
               />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <Label htmlFor="rewardDgt">DGT Reward</Label>
@@ -300,7 +300,7 @@ export default function LevelManagementPage() {
                 />
               </div>
             </div>
-            
+
             <div className="text-sm text-muted-foreground">
               <p>Level {formData.level} will require {formData.xpRequired} XP</p>
               {formData.level > 1 && levelsData?.levels && (
@@ -317,10 +317,10 @@ export default function LevelManagementPage() {
               )}
             </div>
           </div>
-          
+
           <DialogFooter>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               disabled={createLevelMutation.isPending || updateLevelMutation.isPending}
             >
               {(createLevelMutation.isPending || updateLevelMutation.isPending) ? 'Saving...' : (isEdit ? 'Update Level' : 'Create Level')}
@@ -341,7 +341,7 @@ export default function LevelManagementPage() {
             Are you sure you want to delete this level? This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
-        
+
         {selectedLevel && (
           <div className="py-4">
             <p className="font-medium">Level {selectedLevel.level}</p>
@@ -351,16 +351,16 @@ export default function LevelManagementPage() {
             )}
           </div>
         )}
-        
+
         <DialogFooter>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => setIsDeleteDialogOpen(false)}
           >
             Cancel
           </Button>
-          <Button 
-            variant="destructive" 
+          <Button
+            variant="destructive"
             onClick={() => selectedLevel && deleteLevelMutation.mutate(selectedLevel.id)}
             disabled={deleteLevelMutation.isPending}
           >
@@ -377,7 +377,7 @@ export default function LevelManagementPage() {
       <TableHeader>
         <TableRow>
           <TableHead>
-            <div 
+            <div
               className="flex items-center cursor-pointer"
               onClick={() => handleSort('level')}
             >
@@ -386,7 +386,7 @@ export default function LevelManagementPage() {
             </div>
           </TableHead>
           <TableHead>
-            <div 
+            <div
               className="flex items-center cursor-pointer"
               onClick={() => handleSort('xpRequired')}
             >
@@ -396,7 +396,7 @@ export default function LevelManagementPage() {
           </TableHead>
           <TableHead>Description</TableHead>
           <TableHead>
-            <div 
+            <div
               className="flex items-center cursor-pointer"
               onClick={() => handleSort('rewardDgt')}
             >
@@ -455,15 +455,15 @@ export default function LevelManagementPage() {
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="icon"
                     onClick={() => handleEditClick(level)}
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="icon"
                     className="text-destructive"
                     onClick={() => handleDeleteClick(level)}
@@ -482,82 +482,80 @@ export default function LevelManagementPage() {
   // Main render
   return (
     <AdminLayout>
-      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">Level Management</h2>
-          <div className="flex gap-2">
-            <Button onClick={() => setIsCreateDialogOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Create Level
-            </Button>
-            <Button variant="outline" onClick={handleGenerateLevels} disabled={generateLevelsMutation.isPending}>
-              {generateLevelsMutation.isPending ? 'Generating...' : 'Generate Levels'}
-            </Button>
-          </div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-3xl font-bold tracking-tight">Level Management</h2>
+        <div className="flex gap-2">
+          <Button onClick={() => setIsCreateDialogOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Create Level
+          </Button>
+          <Button variant="outline" onClick={handleGenerateLevels} disabled={generateLevelsMutation.isPending}>
+            {generateLevelsMutation.isPending ? 'Generating...' : 'Generate Levels'}
+          </Button>
         </div>
-        
-        <Tabs defaultValue="all-levels" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="all-levels">All Levels</TabsTrigger>
-            <TabsTrigger value="statistics">Level Stats</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="all-levels" className="space-y-4">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle>XP Levels</CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <LevelTable />
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="statistics" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Level Statistics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm font-medium text-muted-foreground">Total Levels</div>
-                      <div className="text-2xl font-bold mt-1">{levelsData?.totalLevels || 0}</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm font-medium text-muted-foreground">Highest Level</div>
-                      <div className="text-2xl font-bold mt-1">{levelsData?.highestLevel || 0}</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm font-medium text-muted-foreground">Max XP Required</div>
-                      <div className="text-2xl font-bold mt-1">{(levelsData?.maxXpRequired || 0).toLocaleString()}</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm font-medium text-muted-foreground">Total DGT Rewards</div>
-                      <div className="text-2xl font-bold mt-1">{(levelsData?.totalDgtRewards || 0).toLocaleString()}</div>
-                    </CardContent>
-                  </Card>
-                </div>
-                
-                <div className="mt-6">
-                  <h3 className="text-lg font-medium mb-4">XP Progression Chart</h3>
-                  <div className="h-64 bg-zinc-800 rounded-md flex items-center justify-center">
-                    <span className="text-muted-foreground">XP progression chart will be displayed here</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
       </div>
-      
+
+      <Tabs defaultValue="all-levels" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="all-levels">All Levels</TabsTrigger>
+          <TabsTrigger value="statistics">Level Stats</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="all-levels" className="space-y-4">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>XP Levels</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <LevelTable />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="statistics" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Level Statistics</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium text-muted-foreground">Total Levels</div>
+                    <div className="text-2xl font-bold mt-1">{levelsData?.totalLevels || 0}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium text-muted-foreground">Highest Level</div>
+                    <div className="text-2xl font-bold mt-1">{levelsData?.highestLevel || 0}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium text-muted-foreground">Max XP Required</div>
+                    <div className="text-2xl font-bold mt-1">{(levelsData?.maxXpRequired || 0).toLocaleString()}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium text-muted-foreground">Total DGT Rewards</div>
+                    <div className="text-2xl font-bold mt-1">{(levelsData?.totalDgtRewards || 0).toLocaleString()}</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="mt-6">
+                <h3 className="text-lg font-medium mb-4">XP Progression Chart</h3>
+                <div className="h-64 bg-zinc-800 rounded-md flex items-center justify-center">
+                  <span className="text-muted-foreground">XP progression chart will be displayed here</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
       {/* Dialogs */}
       <LevelFormDialog isOpen={isCreateDialogOpen} setIsOpen={setIsCreateDialogOpen} isEdit={false} />
       <LevelFormDialog isOpen={isEditDialogOpen} setIsOpen={setIsEditDialogOpen} isEdit={true} />

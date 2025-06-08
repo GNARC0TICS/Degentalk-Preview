@@ -69,6 +69,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import { useLocation } from 'wouter'; // Fixed import for useLocation
+import AdminLayout from "./admin-layout.tsx";
 // Remove Next.js Head component since we're not using Next.js
 
 const categorySchema = z.object({
@@ -113,10 +114,10 @@ export default function AdminCategoriesPage() {
     },
   });
 
-  const { 
-    data: categories, 
-    isLoading, 
-    isError 
+  const {
+    data: categories,
+    isLoading,
+    isError
   } = useQuery({
     queryKey: ['/admin/forum/categories'],
     queryFn: async () => {
@@ -326,8 +327,8 @@ export default function AdminCategoriesPage() {
     return (
       <TableRow key={category.id}> {/* Added key prop here */}
         <TableCell>
-          <div 
-            className="flex items-center" 
+          <div
+            className="flex items-center"
             style={{ paddingLeft: `${depth * 1.5}rem` }}
           >
             {category.icon && (
@@ -385,13 +386,13 @@ export default function AdminCategoriesPage() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   onClick={() => handleEditCategory(category)}
                 >
                   <Pencil className="h-4 w-4 mr-2" />
                   Edit Category
                 </DropdownMenuItem>
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   onClick={() => {
                     setSelectedCategory(category);
                     setIsDeleteDialogOpen(true);
@@ -402,7 +403,7 @@ export default function AdminCategoriesPage() {
                   Delete Category
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   onClick={() => window.open(`/categories/${category.slug}`, '_blank')}
                 >
                   <Eye className="h-4 w-4 mr-2" />
@@ -417,14 +418,15 @@ export default function AdminCategoriesPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-        <h1 className="text-3xl font-bold">Forum Categories</h1>
-        <Button onClick={handleOpenCreateDialog}>
-          <Plus className="h-4 w-4 mr-2" />
-          Create Category
-        </Button>
-      </div>
+    <AdminLayout>
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+          <h1 className="text-3xl font-bold">Forum Categories</h1>
+          <Button onClick={handleOpenCreateDialog}>
+            <Plus className="h-4 w-4 mr-2" />
+            Create Category
+          </Button>
+        </div>
 
         <Card>
           <CardHeader>
@@ -535,9 +537,9 @@ export default function AdminCategoriesPage() {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea 
-                          placeholder="Discuss general topics related to the community" 
-                          {...field} 
+                        <Textarea
+                          placeholder="Discuss general topics related to the community"
+                          {...field}
                           rows={3}
                         />
                       </FormControl>
@@ -611,10 +613,10 @@ export default function AdminCategoriesPage() {
                     <FormItem>
                       <FormLabel>Display Order</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
-                          min="0" 
-                          placeholder="0" 
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="0"
                           {...field}
                           onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                         />
@@ -645,9 +647,9 @@ export default function AdminCategoriesPage() {
                 />
 
                 <DialogFooter>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
+                  <Button
+                    type="button"
+                    variant="outline"
                     onClick={() => setIsCreateDialogOpen(false)}
                   >
                     Cancel
@@ -713,9 +715,9 @@ export default function AdminCategoriesPage() {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea 
-                          placeholder="Discuss general topics related to the community" 
-                          {...field} 
+                        <Textarea
+                          placeholder="Discuss general topics related to the community"
+                          {...field}
                           rows={3}
                         />
                       </FormControl>
@@ -744,7 +746,7 @@ export default function AdminCategoriesPage() {
                             }}
                           >
                             <option value="">None (Top Level)</option>
-                            {categories?.filter((category: Category) => 
+                            {categories?.filter((category: Category) =>
                               selectedCategory && category.id !== selectedCategory.id
                             ).map((category: Category) => (
                               <option key={category.id} value={category.id}>
@@ -791,10 +793,10 @@ export default function AdminCategoriesPage() {
                     <FormItem>
                       <FormLabel>Display Order</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
-                          min="0" 
-                          placeholder="0" 
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="0"
                           {...field}
                           onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                         />
@@ -825,9 +827,9 @@ export default function AdminCategoriesPage() {
                 />
 
                 <DialogFooter>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
+                  <Button
+                    type="button"
+                    variant="outline"
                     onClick={() => setIsEditDialogOpen(false)}
                   >
                     Cancel
@@ -887,5 +889,6 @@ export default function AdminCategoriesPage() {
           </DialogContent>
         </Dialog>
       </div>
+    </AdminLayout>
   );
 }

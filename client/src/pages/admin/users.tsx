@@ -6,10 +6,10 @@
 // Remove Next.js Head component since we're not using Next.js
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
+import {
+  Card,
+  CardContent,
+  CardHeader,
   CardTitle,
   CardDescription
 } from "@/components/ui/card";
@@ -41,10 +41,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { 
-  User, 
-  MoreHorizontal, 
-  Search, 
+import {
+  User,
+  MoreHorizontal,
+  Search,
   UserPlus,
   Filter,
   Pencil,
@@ -53,9 +53,10 @@ import {
   CheckCircle,
   ShieldAlert,
   Shield,
-  Package 
+  Package
 } from "lucide-react";
 import { ROUTES } from '@/config/admin-routes';
+import AdminLayout from "./admin-layout.tsx";
 
 // Define user type for type safety
 interface AdminUser {
@@ -86,17 +87,17 @@ export default function AdminUsersPage() {
       const params = new URLSearchParams();
       params.append('page', page.toString());
       params.append('limit', '10');
-      
+
       if (searchQuery) {
         params.append('search', searchQuery);
       }
-      
+
       const response = await fetch(`/api/admin/users?${params.toString()}`);
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch users: ${response.statusText}`);
       }
-      
+
       return await response.json();
     }
   });
@@ -130,7 +131,8 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <AdminLayout>
+      <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
           <h1 className="text-3xl font-bold">Users Management</h1>
           <Button>
@@ -262,12 +264,12 @@ export default function AdminUsersPage() {
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
 
             {/* Pagination */}
             <div className="mt-4 flex items-center justify-end space-x-2">
@@ -279,12 +281,12 @@ export default function AdminUsersPage() {
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationPrevious 
-                      href="#" 
+                    <PaginationPrevious
+                      href="#"
                       onClick={(e) => {
                         e.preventDefault();
                         setPage(p => Math.max(1, p - 1));
-                      }} 
+                      }}
                     />
                   </PaginationItem>
                   <PaginationItem>
@@ -299,8 +301,8 @@ export default function AdminUsersPage() {
                     <PaginationLink href="#">3</PaginationLink>
                   </PaginationItem>
                   <PaginationItem>
-                    <PaginationNext 
-                      href="#" 
+                    <PaginationNext
+                      href="#"
                       onClick={(e) => {
                         e.preventDefault();
                         setPage(p => p + 1);
@@ -313,5 +315,6 @@ export default function AdminUsersPage() {
           </CardContent>
         </Card>
       </div>
+    </AdminLayout>
   );
 }

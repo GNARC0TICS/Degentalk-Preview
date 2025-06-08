@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Pencil, Trash2, ArrowUpDown, Search, Upload } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast.ts';
+import { Input } from '@/components/ui/input.tsx';
+import { Button } from '@/components/ui/button.tsx';
+import { Badge } from '@/components/ui/badge.tsx';
 import {
   Table,
   TableBody,
@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/table.tsx';
 import {
   Dialog,
   DialogClose,
@@ -22,7 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/ui/dialog.tsx';
 import {
   Select,
   SelectContent,
@@ -31,14 +31,14 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useDebounce } from '@/hooks/use-debounce';
-import AdminLayout from '../admin-layout';
-import { apiRequest } from '@/lib/queryClient';
+} from '@/components/ui/select.tsx';
+import { Label } from '@/components/ui/label.tsx';
+import { Textarea } from '@/components/ui/textarea.tsx';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
+import { useDebounce } from '@/hooks/use-debounce.ts';
+import AdminLayout from '../admin-layout.tsx';
+import { apiRequest } from '@/lib/queryClient.ts';
 
 // Badge types
 interface Badge {
@@ -231,7 +231,7 @@ export default function BadgeManagementPage() {
               {isEdit ? 'Update the badge details below.' : 'Add a new badge to reward users.'}
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="name">Badge Name</Label>
@@ -242,7 +242,7 @@ export default function BadgeManagementPage() {
                 required
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="description">Description</Label>
               <Textarea
@@ -252,7 +252,7 @@ export default function BadgeManagementPage() {
                 placeholder="Describe what this badge is for..."
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="iconUrl">Icon URL</Label>
               <div className="flex gap-2">
@@ -270,9 +270,9 @@ export default function BadgeManagementPage() {
               </div>
               {formData.iconUrl && (
                 <div className="mt-2 flex items-center gap-2">
-                  <img 
-                    src={formData.iconUrl} 
-                    alt="Badge Preview" 
+                  <img
+                    src={formData.iconUrl}
+                    alt="Badge Preview"
                     className="w-10 h-10 object-contain border border-slate-700 rounded"
                     onError={(e) => (e.target as HTMLImageElement).src = 'https://placehold.co/100x100?text=Error'}
                   />
@@ -280,11 +280,11 @@ export default function BadgeManagementPage() {
                 </div>
               )}
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="rarity">Rarity</Label>
-              <Select 
-                value={formData.rarity} 
+              <Select
+                value={formData.rarity}
                 onValueChange={(value) => setFormData({ ...formData, rarity: value })}
               >
                 <SelectTrigger>
@@ -306,10 +306,10 @@ export default function BadgeManagementPage() {
               </Select>
             </div>
           </div>
-          
+
           <DialogFooter>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               disabled={createBadgeMutation.isPending || updateBadgeMutation.isPending}
             >
               {(createBadgeMutation.isPending || updateBadgeMutation.isPending) ? 'Saving...' : (isEdit ? 'Update Badge' : 'Create Badge')}
@@ -330,13 +330,13 @@ export default function BadgeManagementPage() {
             Are you sure you want to delete this badge? This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
-        
+
         {selectedBadge && (
           <div className="flex items-center gap-3 py-4">
-            <img 
-              src={selectedBadge.iconUrl} 
+            <img
+              src={selectedBadge.iconUrl}
               alt={selectedBadge.name}
-              className="w-12 h-12 object-contain border border-slate-700 rounded" 
+              className="w-12 h-12 object-contain border border-slate-700 rounded"
               onError={(e) => (e.target as HTMLImageElement).src = 'https://placehold.co/100x100?text=Error'}
             />
             <div>
@@ -345,16 +345,16 @@ export default function BadgeManagementPage() {
             </div>
           </div>
         )}
-        
+
         <DialogFooter>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => setIsDeleteDialogOpen(false)}
           >
             Cancel
           </Button>
-          <Button 
-            variant="destructive" 
+          <Button
+            variant="destructive"
             onClick={() => selectedBadge && deleteBadgeMutation.mutate(selectedBadge.id)}
             disabled={deleteBadgeMutation.isPending}
           >
@@ -372,7 +372,7 @@ export default function BadgeManagementPage() {
         <TableRow>
           <TableHead className="w-[80px]">Icon</TableHead>
           <TableHead>
-            <div 
+            <div
               className="flex items-center cursor-pointer"
               onClick={() => handleSort('name')}
             >
@@ -382,7 +382,7 @@ export default function BadgeManagementPage() {
           </TableHead>
           <TableHead>Description</TableHead>
           <TableHead>
-            <div 
+            <div
               className="flex items-center cursor-pointer"
               onClick={() => handleSort('rarity')}
             >
@@ -391,7 +391,7 @@ export default function BadgeManagementPage() {
             </div>
           </TableHead>
           <TableHead>
-            <div 
+            <div
               className="flex items-center cursor-pointer"
               onClick={() => handleSort('createdAt')}
             >
@@ -427,10 +427,10 @@ export default function BadgeManagementPage() {
           badgesData?.badges?.map((badge: Badge) => (
             <TableRow key={badge.id}>
               <TableCell>
-                <img 
-                  src={badge.iconUrl} 
+                <img
+                  src={badge.iconUrl}
                   alt={badge.name}
-                  className="w-10 h-10 object-contain border border-slate-700 rounded" 
+                  className="w-10 h-10 object-contain border border-slate-700 rounded"
                   onError={(e) => (e.target as HTMLImageElement).src = 'https://placehold.co/100x100?text=Error'}
                 />
               </TableCell>
@@ -444,15 +444,15 @@ export default function BadgeManagementPage() {
               <TableCell>{new Date(badge.createdAt).toLocaleDateString()}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="icon"
                     onClick={() => handleEditClick(badge)}
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="icon"
                     className="text-destructive"
                     onClick={() => handleDeleteClick(badge)}
@@ -484,106 +484,104 @@ export default function BadgeManagementPage() {
   // Main render
   return (
     <AdminLayout>
-      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">Badge Management</h2>
-          <Button onClick={() => setIsCreateDialogOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Create Badge
-          </Button>
-        </div>
-        
-        <Tabs defaultValue="all-badges" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="all-badges">All Badges</TabsTrigger>
-            <TabsTrigger value="statistics">Statistics</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="all-badges" className="space-y-4">
-            <Card>
-              <CardHeader className="pb-3">
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-                  <CardTitle>Badges</CardTitle>
-                  <div className="relative w-full sm:w-72">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search badges..."
-                      className="pl-8"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <BadgeTable />
-                
-                {/* Pagination */}
-                {badgesData?.totalPages > 1 && (
-                  <div className="flex items-center justify-end gap-2 p-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPage(p => Math.max(1, p - 1))}
-                      disabled={page === 1}
-                    >
-                      Previous
-                    </Button>
-                    <span className="text-sm">
-                      Page {page} of {badgesData.totalPages}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPage(p => Math.min(badgesData.totalPages, p + 1))}
-                      disabled={page === badgesData.totalPages}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="statistics" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Badge Statistics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm font-medium text-muted-foreground">Total Badges</div>
-                      <div className="text-2xl font-bold mt-1">{badgesData?.totalBadges || 0}</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm font-medium text-muted-foreground">Badges Awarded</div>
-                      <div className="text-2xl font-bold mt-1">{badgesData?.badgesAwarded || 0}</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm font-medium text-muted-foreground">Most Common</div>
-                      <div className="text-2xl font-bold mt-1">{badgesData?.mostCommonBadge?.name || 'N/A'}</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm font-medium text-muted-foreground">Rarest</div>
-                      <div className="text-2xl font-bold mt-1">{badgesData?.rarestBadge?.name || 'N/A'}</div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-3xl font-bold tracking-tight">Badge Management</h2>
+        <Button onClick={() => setIsCreateDialogOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Create Badge
+        </Button>
       </div>
-      
+
+      <Tabs defaultValue="all-badges" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="all-badges">All Badges</TabsTrigger>
+          <TabsTrigger value="statistics">Statistics</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="all-badges" className="space-y-4">
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                <CardTitle>Badges</CardTitle>
+                <div className="relative w-full sm:w-72">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search badges..."
+                    className="pl-8"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              <BadgeTable />
+
+              {/* Pagination */}
+              {badgesData?.totalPages > 1 && (
+                <div className="flex items-center justify-end gap-2 p-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                  >
+                    Previous
+                  </Button>
+                  <span className="text-sm">
+                    Page {page} of {badgesData.totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(p => Math.min(badgesData.totalPages, p + 1))}
+                    disabled={page === badgesData.totalPages}
+                  >
+                    Next
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="statistics" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Badge Statistics</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium text-muted-foreground">Total Badges</div>
+                    <div className="text-2xl font-bold mt-1">{badgesData?.totalBadges || 0}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium text-muted-foreground">Badges Awarded</div>
+                    <div className="text-2xl font-bold mt-1">{badgesData?.badgesAwarded || 0}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium text-muted-foreground">Most Common</div>
+                    <div className="text-2xl font-bold mt-1">{badgesData?.mostCommonBadge?.name || 'N/A'}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium text-muted-foreground">Rarest</div>
+                    <div className="text-2xl font-bold mt-1">{badgesData?.rarestBadge?.name || 'N/A'}</div>
+                  </CardContent>
+                </Card>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
       {/* Dialogs */}
       <BadgeFormDialog isOpen={isCreateDialogOpen} setIsOpen={setIsCreateDialogOpen} isEdit={false} />
       <BadgeFormDialog isOpen={isEditDialogOpen} setIsOpen={setIsEditDialogOpen} isEdit={true} />

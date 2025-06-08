@@ -9,6 +9,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Loader2, Save, Settings, Edit, Image } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
+import AdminLayout from "./admin-layout.tsx";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -31,7 +32,7 @@ type SiteSetting = {
 export default function PlatformSettings() {
   const { toast } = useToast();
   const [tab, setTab] = useState("xp");
-  
+
   // Fetch all site settings
   const { data: settings, isLoading } = useQuery<SiteSetting[]>({
     queryKey: ['/api/admin/settings'],
@@ -54,12 +55,12 @@ export default function PlatformSettings() {
         },
         body: JSON.stringify({ value }),
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Failed to update setting');
       }
-      
+
       return response.json();
     },
     onSuccess: (data) => {
@@ -96,8 +97,8 @@ export default function PlatformSettings() {
 
     if (setting.valueType === 'boolean') {
       return (
-        <Switch 
-          checked={setting.value === 'true'} 
+        <Switch
+          checked={setting.value === 'true'}
           onCheckedChange={(checked) => handleChange(checked)}
         />
       );
@@ -133,7 +134,8 @@ export default function PlatformSettings() {
   }
 
   return (
-    <div className="space-y-6">
+    <AdminLayout>
+      <div className="space-y-6">
         <Tabs defaultValue="xp" value={tab} onValueChange={setTab} className="space-y-4">
           <TabsList>
             <TabsTrigger value="xp">XP & Rewards</TabsTrigger>
@@ -383,7 +385,7 @@ export default function PlatformSettings() {
                 <div className="grid gap-6">
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium">GIF Integration</h3>
-                    
+
                     {/* Enable Giphy Integration */}
                     {getSetting('giphy_enabled') && (
                       <div className="grid gap-2">
@@ -396,7 +398,7 @@ export default function PlatformSettings() {
                         </p>
                       </div>
                     )}
-                    
+
                     {/* Giphy Result Limit */}
                     {getSetting('giphy_result_limit') && (
                       <div className="grid gap-2">
@@ -409,7 +411,7 @@ export default function PlatformSettings() {
                         </p>
                       </div>
                     )}
-                    
+
                     {/* Giphy Content Rating */}
                     {getSetting('giphy_rating') && (
                       <div className="grid gap-2">
@@ -455,7 +457,7 @@ export default function PlatformSettings() {
                         </div>
                       </div>
                     )}
-                    
+
                     {/* API Key Status */}
                     <div className="mt-6">
                       <div className="flex items-center gap-2 p-4 bg-slate-100 dark:bg-slate-800 rounded-md">
@@ -473,7 +475,7 @@ export default function PlatformSettings() {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           {/* Treasury Tab */}
           <TabsContent value="treasury" className="space-y-4">
             <Card>
@@ -499,5 +501,6 @@ export default function PlatformSettings() {
           </TabsContent>
         </Tabs>
       </div>
+    </AdminLayout>
   );
 }

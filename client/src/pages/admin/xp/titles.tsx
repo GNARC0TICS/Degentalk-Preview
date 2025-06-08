@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Pencil, Trash2, ArrowUpDown, Search, Badge as BadgeIcon } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast.ts';
+import { Input } from '@/components/ui/input.tsx';
+import { Button } from '@/components/ui/button.tsx';
+import { Badge } from '@/components/ui/badge.tsx';
 import {
   Table,
   TableBody,
@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/table.tsx';
 import {
   Dialog,
   DialogContent,
@@ -20,21 +20,21 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from '@/components/ui/dialog.tsx';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useDebounce } from '@/hooks/use-debounce';
-import AdminLayout from '../admin-layout';
-import { apiRequest } from '@/lib/queryClient';
+} from '@/components/ui/select.tsx';
+import { Label } from '@/components/ui/label.tsx';
+import { Textarea } from '@/components/ui/textarea.tsx';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
+import { useDebounce } from '@/hooks/use-debounce.ts';
+import AdminLayout from '../admin-layout.tsx';
+import { apiRequest } from '@/lib/queryClient.ts';
 
 // Title types
 interface Title {
@@ -285,14 +285,14 @@ export default function TitleManagementPage() {
               {isEdit ? 'Update the title details below.' : 'Add a new title that users can earn or purchase.'}
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid gap-4 py-4">
-            <TitlePreview 
+            <TitlePreview
               name={formData.name}
               color={formData.color}
               icon={formData.icon}
             />
-            
+
             <div className="grid gap-2">
               <Label htmlFor="name">Title Name</Label>
               <Input
@@ -302,7 +302,7 @@ export default function TitleManagementPage() {
                 required
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="description">Description</Label>
               <Textarea
@@ -312,7 +312,7 @@ export default function TitleManagementPage() {
                 placeholder="Describe how this title is earned or what it represents..."
               />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="color">Text Color</Label>
@@ -331,7 +331,7 @@ export default function TitleManagementPage() {
                   />
                 </div>
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="icon">Icon (Emoji)</Label>
                 <Input
@@ -342,12 +342,12 @@ export default function TitleManagementPage() {
                 />
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="rarity">Rarity</Label>
-                <Select 
-                  value={formData.rarity} 
+                <Select
+                  value={formData.rarity}
                   onValueChange={(value) => setFormData({ ...formData, rarity: value })}
                 >
                   <SelectTrigger>
@@ -365,11 +365,11 @@ export default function TitleManagementPage() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="category">Category</Label>
-                <Select 
-                  value={formData.category} 
+                <Select
+                  value={formData.category}
                   onValueChange={(value) => setFormData({ ...formData, category: value })}
                 >
                   <SelectTrigger>
@@ -385,12 +385,12 @@ export default function TitleManagementPage() {
                 </Select>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="requiredPath">Required Path</Label>
-                <Select 
-                  value={formData.requiredPath} 
+                <Select
+                  value={formData.requiredPath}
                   onValueChange={(value) => setFormData({ ...formData, requiredPath: value })}
                 >
                   <SelectTrigger>
@@ -405,7 +405,7 @@ export default function TitleManagementPage() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="requiredLevel">
                   Required Level {formData.requiredLevel === null && '(None)'}
@@ -423,7 +423,7 @@ export default function TitleManagementPage() {
                 />
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -437,10 +437,10 @@ export default function TitleManagementPage() {
               </Label>
             </div>
           </div>
-          
+
           <DialogFooter>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               disabled={createTitleMutation.isPending || updateTitleMutation.isPending}
             >
               {(createTitleMutation.isPending || updateTitleMutation.isPending) ? 'Saving...' : (isEdit ? 'Update Title' : 'Create Title')}
@@ -461,13 +461,13 @@ export default function TitleManagementPage() {
             Are you sure you want to delete this title? This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
-        
+
         {selectedTitle && (
           <div className="flex flex-col items-center gap-3 py-4">
             <div className="flex items-center gap-2">
               {selectedTitle.icon && <span className="text-xl">{selectedTitle.icon}</span>}
-              <span 
-                className="font-medium text-lg" 
+              <span
+                className="font-medium text-lg"
                 style={{ color: selectedTitle.color }}
               >
                 {selectedTitle.name}
@@ -476,16 +476,16 @@ export default function TitleManagementPage() {
             <p className="text-sm text-center text-muted-foreground">{selectedTitle.description}</p>
           </div>
         )}
-        
+
         <DialogFooter>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => setIsDeleteDialogOpen(false)}
           >
             Cancel
           </Button>
-          <Button 
-            variant="destructive" 
+          <Button
+            variant="destructive"
             onClick={() => selectedTitle && deleteTitleMutation.mutate(selectedTitle.id)}
             disabled={deleteTitleMutation.isPending}
           >
@@ -528,7 +528,7 @@ export default function TitleManagementPage() {
         <TableRow>
           <TableHead>Title</TableHead>
           <TableHead>
-            <div 
+            <div
               className="flex items-center cursor-pointer"
               onClick={() => handleSort('rarity')}
             >
@@ -537,7 +537,7 @@ export default function TitleManagementPage() {
             </div>
           </TableHead>
           <TableHead>
-            <div 
+            <div
               className="flex items-center cursor-pointer"
               onClick={() => handleSort('category')}
             >
@@ -547,7 +547,7 @@ export default function TitleManagementPage() {
           </TableHead>
           <TableHead>Requirements</TableHead>
           <TableHead>
-            <div 
+            <div
               className="flex items-center cursor-pointer"
               onClick={() => handleSort('createdAt')}
             >
@@ -629,15 +629,15 @@ export default function TitleManagementPage() {
               <TableCell>{new Date(title.createdAt).toLocaleDateString()}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="icon"
                     onClick={() => handleEditClick(title)}
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="icon"
                     className="text-destructive"
                     onClick={() => handleDeleteClick(title)}
@@ -656,113 +656,111 @@ export default function TitleManagementPage() {
   // Main render
   return (
     <AdminLayout>
-      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">Title Management</h2>
-          <Button onClick={() => setIsCreateDialogOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Create Title
-          </Button>
-        </div>
-        
-        <Tabs defaultValue="all-titles" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="all-titles">All Titles</TabsTrigger>
-            <TabsTrigger value="statistics">Statistics</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="all-titles" className="space-y-4">
-            <Card>
-              <CardHeader className="pb-3">
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-                  <CardTitle>Title Library</CardTitle>
-                  <div className="relative w-full sm:w-72">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search titles..."
-                      className="pl-8"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <TitleTable />
-                
-                {/* Pagination */}
-                {titlesData?.totalPages > 1 && (
-                  <div className="flex items-center justify-end gap-2 p-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPage(p => Math.max(1, p - 1))}
-                      disabled={page === 1}
-                    >
-                      Previous
-                    </Button>
-                    <span className="text-sm">
-                      Page {page} of {titlesData.totalPages}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPage(p => Math.min(titlesData.totalPages, p + 1))}
-                      disabled={page === titlesData.totalPages}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="statistics" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Title Statistics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm font-medium text-muted-foreground">Total Titles</div>
-                      <div className="text-2xl font-bold mt-1">{titlesData?.totalTitles || 0}</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm font-medium text-muted-foreground">Path Titles</div>
-                      <div className="text-2xl font-bold mt-1">{titlesData?.pathTitles || 0}</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm font-medium text-muted-foreground">Achievement Titles</div>
-                      <div className="text-2xl font-bold mt-1">{titlesData?.achievementTitles || 0}</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm font-medium text-muted-foreground">Rarest Title</div>
-                      <div className="text-2xl font-bold mt-1 truncate">{titlesData?.rarestTitle?.name || 'N/A'}</div>
-                    </CardContent>
-                  </Card>
-                </div>
-                
-                <div className="mt-6">
-                  <h3 className="text-lg font-medium mb-4">Title Distribution</h3>
-                  <div className="h-64 bg-zinc-800 rounded-md flex items-center justify-center">
-                    <span className="text-muted-foreground">Title distribution chart will be displayed here</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-3xl font-bold tracking-tight">Title Management</h2>
+        <Button onClick={() => setIsCreateDialogOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Create Title
+        </Button>
       </div>
-      
+
+      <Tabs defaultValue="all-titles" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="all-titles">All Titles</TabsTrigger>
+          <TabsTrigger value="statistics">Statistics</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="all-titles" className="space-y-4">
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                <CardTitle>Title Library</CardTitle>
+                <div className="relative w-full sm:w-72">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search titles..."
+                    className="pl-8"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              <TitleTable />
+
+              {/* Pagination */}
+              {titlesData?.totalPages > 1 && (
+                <div className="flex items-center justify-end gap-2 p-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                  >
+                    Previous
+                  </Button>
+                  <span className="text-sm">
+                    Page {page} of {titlesData.totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(p => Math.min(titlesData.totalPages, p + 1))}
+                    disabled={page === titlesData.totalPages}
+                  >
+                    Next
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="statistics" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Title Statistics</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium text-muted-foreground">Total Titles</div>
+                    <div className="text-2xl font-bold mt-1">{titlesData?.totalTitles || 0}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium text-muted-foreground">Path Titles</div>
+                    <div className="text-2xl font-bold mt-1">{titlesData?.pathTitles || 0}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium text-muted-foreground">Achievement Titles</div>
+                    <div className="text-2xl font-bold mt-1">{titlesData?.achievementTitles || 0}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm font-medium text-muted-foreground">Rarest Title</div>
+                    <div className="text-2xl font-bold mt-1 truncate">{titlesData?.rarestTitle?.name || 'N/A'}</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="mt-6">
+                <h3 className="text-lg font-medium mb-4">Title Distribution</h3>
+                <div className="h-64 bg-zinc-800 rounded-md flex items-center justify-center">
+                  <span className="text-muted-foreground">Title distribution chart will be displayed here</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
       {/* Dialogs */}
       <TitleFormDialog isOpen={isCreateDialogOpen} setIsOpen={setIsCreateDialogOpen} isEdit={false} />
       <TitleFormDialog isOpen={isEditDialogOpen} setIsOpen={setIsEditDialogOpen} isEdit={true} />

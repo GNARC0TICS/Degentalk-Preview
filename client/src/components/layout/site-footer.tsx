@@ -2,38 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, MessageSquare, TrendingUp } from 'lucide-react';
-
-const funnyTaglines = [
-  "This is not financial advice. But if it works, you're welcome.",
-  "Degentalk™ is powered by caffeine, cope, and completely unlicensed opinions.",
-  "We are not financial advisors. We just yell louder when we're right.",
-  "Not financial advice. Consult your local psychic for better accuracy.",
-  "Any gains you make are pure coincidence. Any losses are definitely your fault.",
-  "This isn't financial advice. It's just aggressive optimism with a side of chaos.",
-  "If this feels like good advice, please reconsider everything.",
-  "Everything here is entirely theoretical. Especially your profits.",
-  "Don't sue us. Sue the market.",
-  "Side effects of listening to Degentalk™ may include delusion, euphoria, or margin calls.",
-  "DYOR. Then ignore it and ape anyway.",
-  "This is not financial advice, seriously.",
-  "Shoutout to the guy who lost his paycheck today.",
-  "Up only... in spirit.",
-  "Post your wins. Hide your losses.",
-  "No charts. Just vibes.",
-  "Rugged? Good. Now you're one of us.",
-  "Built different. Just not financially stable.",
-  "Degens don't cry—we redeposit.",
-  "Who needs therapy when you have leverage?",
-  "Your portfolio is our entertainment.",
-  "Welcome to group therapy with bonus rounds.",
-  "0xFaith, 100x Cope.",
-  "Lose fast, post faster.",
-  "If this site loads, you haven't been liquidated yet.",
-  "Do NOT try this at home. Try it on-chain."
-];
+import { uiConfig } from '@/config/ui.config';
 
 export function SiteFooter() {
-  const [tagline, setTagline] = useState(funnyTaglines[0]);
+  const [tagline, setTagline] = useState(uiConfig.footerQuotes[0]);
   const [isGlitching, setIsGlitching] = useState(false);
   const [onlineCount, setOnlineCount] = useState(237);
 
@@ -48,7 +20,7 @@ export function SiteFooter() {
   const handleTaglineHover = () => {
     setIsGlitching(true);
     setTimeout(() => {
-      const newTagline = funnyTaglines[Math.floor(Math.random() * funnyTaglines.length)];
+      const newTagline = uiConfig.footerQuotes[Math.floor(Math.random() * uiConfig.footerQuotes.length)];
       setTagline(newTagline);
       setIsGlitching(false);
     }, 300);
