@@ -12,21 +12,22 @@ import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  AlertCircle, 
-  Coins, 
-  RefreshCw, 
-  Search, 
-  ShoppingCart, 
-  Wallet, 
-  Filter, 
-  Home, 
+import {
+  AlertCircle,
+  Coins,
+  RefreshCw,
+  Search,
+  ShoppingCart,
+  Wallet,
+  Filter,
+  Home,
   ChevronLeft,
   Sparkles,
   TrendingUp,
   Clock
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { SiteFooter } from '@/components/layout/site-footer';
 
 const categories: Array<{ id: ItemCategory | 'all'; label: string; icon?: React.ElementType }> = [
   { id: 'all', label: 'All Items', icon: ShoppingCart },
@@ -44,50 +45,50 @@ export default function ShopPage() {
   // State
   const [selectedCategory, setSelectedCategory] = useState<ItemCategory | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // Hooks
   const { items, isLoading, isError, error, refetch } = useShopItems(selectedCategory !== 'all' ? selectedCategory as ItemCategory : undefined);
-  
+
   // Placeholder function for wallet actions
   const handleWalletAction = () => {
     // Wallet action clicked (was console.log)
     // Feature coming soon: Wallet functionality is not yet available (was console.log)
   };
-  
+
   // Filter items by search query - Fix the runtime error by ensuring items is an array
   const filteredItems = React.useMemo(() => {
     if (isLoading || isError || !items || !Array.isArray(items)) {
       return [];
     }
-    
+
     if (!searchQuery.trim()) {
       return items;
     }
-    
-    return items.filter(item => 
+
+    return items.filter(item =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [items, searchQuery, isLoading, isError]);
-  
+
   // Handle refresh
   const handleRefresh = () => {
     refetch(); // Use refetch from useQuery
   };
-  
+
   // Handle item purchase
   const handlePurchase = (item: ShopItem) => {
     // Sign in required: Please sign in to purchase shop items (was console.log)
   };
-  
+
   // Get selected category data
   const selectedCategoryData = categories.find(cat => cat.id === selectedCategory);
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black">
       <div className="container mx-auto px-4 py-8">
         {/* Navigation */}
-        <motion.div 
+        <motion.div
           className="mb-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -103,7 +104,7 @@ export default function ShopPage() {
         </motion.div>
 
         {/* Shop Header */}
-        <motion.div 
+        <motion.div
           className="mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -111,11 +112,11 @@ export default function ShopPage() {
         >
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 text-transparent bg-clip-text mb-2">
-                Degentalk™™ Shop
+              <h1 className="text-4xl font-bold text-white mb-2">
+                Degen Shop™
               </h1>
               <p className="text-zinc-400 text-lg">Upgrade your profile with unique items and boosts</p>
-              
+
               {/* Stats badges */}
               <div className="flex items-center gap-3 mt-3">
                 <Badge variant="outline" className="bg-zinc-800/50 text-zinc-400 border-zinc-700">
@@ -130,19 +131,19 @@ export default function ShopPage() {
                 )}
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <Link href="/shop/dgt-purchase">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-700 hover:border-zinc-600 backdrop-blur-sm"
                 >
                   <Coins className="h-4 w-4 mr-2 text-emerald-500" />
                   Buy DGT
                 </Button>
               </Link>
-              
-              <Button 
+
+              <Button
                 onClick={() => handleWalletAction()}
                 className="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 shadow-lg shadow-emerald-500/20"
               >
@@ -151,7 +152,7 @@ export default function ShopPage() {
               </Button>
             </div>
           </div>
-          
+
           {/* Search and Filters */}
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
@@ -163,7 +164,7 @@ export default function ShopPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            
+
             <Button
               variant="outline"
               className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-700 backdrop-blur-sm"
@@ -178,7 +179,7 @@ export default function ShopPage() {
               Refresh
             </Button>
           </div>
-          
+
           {/* Categories */}
           <div className="no-scrollbar overflow-x-auto pb-2">
             <div className="flex gap-2 min-w-max">
@@ -206,7 +207,7 @@ export default function ShopPage() {
             </div>
           </div>
         </motion.div>
-        
+
         {/* Error State */}
         <AnimatePresence>
           {isError && (
@@ -216,8 +217,8 @@ export default function ShopPage() {
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3 }}
             >
-              <ErrorDisplay 
-                title="Error Loading Shop Items" 
+              <ErrorDisplay
+                title="Error Loading Shop Items"
                 error={error}
                 onRetry={handleRefresh}
                 variant="card"
@@ -226,18 +227,18 @@ export default function ShopPage() {
             </motion.div>
           )}
         </AnimatePresence>
-        
+
         {/* Loading State */}
         {isLoading && (
-          <motion.div 
+          <motion.div
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
             {Array.from({ length: 8 }).map((_, index) => (
-              <motion.div 
-                key={index} 
+              <motion.div
+                key={index}
                 className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-4 backdrop-blur-sm"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -254,10 +255,10 @@ export default function ShopPage() {
             ))}
           </motion.div>
         )}
-        
+
         {/* Empty State */}
         {!isLoading && !isError && filteredItems.length === 0 && (
-          <motion.div 
+          <motion.div
             className="flex flex-col items-center justify-center py-16 px-4 text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -273,8 +274,8 @@ export default function ShopPage() {
                 : 'No items found in this category. Check back soon for new additions.'}
             </p>
             {searchQuery && (
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setSearchQuery('')}
                 className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-700 backdrop-blur-sm"
               >
@@ -283,10 +284,10 @@ export default function ShopPage() {
             )}
           </motion.div>
         )}
-        
+
         {/* Item Grid */}
         {!isLoading && !isError && filteredItems.length > 0 && (
-          <motion.div 
+          <motion.div
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -302,8 +303,8 @@ export default function ShopPage() {
                   transition={{ duration: 0.5, delay: index * 0.05 }}
                   layout
                 >
-                  <ShopItemCard 
-                    item={item} 
+                  <ShopItemCard
+                    item={item}
                     onPurchaseClick={() => handlePurchase(item)}
                   />
                 </motion.div>
@@ -312,6 +313,7 @@ export default function ShopPage() {
           </motion.div>
         )}
       </div>
+      <SiteFooter />
     </div>
   );
 }

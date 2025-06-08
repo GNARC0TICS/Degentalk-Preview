@@ -50,28 +50,28 @@ export interface PrimaryZone {
   label: string;                  // e.g., "Mission Control"
   description: string;            // Appears in ZoneCard
   tagline?: string;               // Short phrase under the label
-  
+
   // Visual/UI configuration
   icon: React.ReactNode | string; // Icon name or React element
   gradient: string;               // Tailwind gradient class or custom string
   colorTheme?: string;            // Theme for styling (e.g., 'mission', 'pit')
-  
+
   // Forum structure
   forums: string[];               // Slugs of forums under this zone
   displayPriority: number;        // Order on homepage (lower = higher priority)
-  
+
   // Dynamic features (as per refactor plan)
   components: string[];           // Components to dynamically mount
   threadRules: ThreadRules;       // Thread creation/posting rules
   accessControl: AccessControl;   // Role-based access control
-  
+
   // SEO and metadata
   seo: SEOConfig;
-  
+
   // Stats and features
   stats?: ZoneStats;
   features?: ZoneFeatures;
-  
+
   // Custom overrides
   customComponents?: {
     cardOverride?: React.FC<any>;
@@ -264,17 +264,17 @@ export function isPrimaryZoneSlug(slug: string): boolean {
 
 // Reserved routes as per the refactor plan
 export const reservedRoutes = [
-  'mission-control', 
-  'the-pit', 
-  'the-vault', 
-  'briefing-room', 
-  'forums', 
-  'forum', 
-  'threads', 
-  'profile', 
-  'wallet', 
-  'admin', 
-  'auth', 
+  'mission-control',
+  'the-pit',
+  'the-vault',
+  'briefing-room',
+  'forums',
+  'forum',
+  'threads',
+  'profile',
+  'wallet',
+  'admin',
+  'auth',
   'leaderboard',
   'shop',
   'preferences',

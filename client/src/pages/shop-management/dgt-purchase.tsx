@@ -14,6 +14,7 @@ import { economyConfig, DgtPackage } from '@/config/economy.config';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
+import { SiteFooter } from '@/components/layout/site-footer';
 
 interface Package {
   id: string;
@@ -225,7 +226,7 @@ export default function DgtPurchasePage() {
           <div className="flex flex-col space-y-2 text-center mb-8">
             <h1 className="text-3xl font-bold">DGT Token Packages</h1>
             <p className="text-muted-foreground">
-              Purchase DGT tokens to unlock exclusive items and features on Degentalk™™
+              Purchase DGT tokens to unlock exclusive items and features on Degentalk™
             </p>
           </div>
 
@@ -314,7 +315,7 @@ export default function DgtPurchasePage() {
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="h-3.5 w-3.5 mr-1.5 text-primary" />
-                    Support the Degentalk™™ community
+                    Support the Degentalk™ community
                   </li>
                 </ul>
               </div>
@@ -366,7 +367,7 @@ export default function DgtPurchasePage() {
         )}
 
         {!selectedPackage && (
-          <div className="text-center text-zinc-500 pt-10">
+          <div className="text-center text-zinc-500 pt-10 mb-12">
             Please select a DGT package above to proceed with your purchase.
           </div>
         )}
@@ -387,6 +388,7 @@ export default function DgtPurchasePage() {
       </div>
 
       {renderContent()}
+      <SiteFooter />
     </div>
   );
 }
