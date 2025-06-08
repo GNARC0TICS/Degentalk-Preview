@@ -14861,3 +14861,7 @@ User not found
     "routine": "errorMissingColumn"
   }
 }
+[2025-06-08T05:08:17.590Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-08T05:08:17.590Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-08T05:08:17.590Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-08T05:08:17.590Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed

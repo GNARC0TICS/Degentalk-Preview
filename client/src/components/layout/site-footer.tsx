@@ -36,7 +36,7 @@ export function SiteFooter() {
   const [tagline, setTagline] = useState(funnyTaglines[0]);
   const [isGlitching, setIsGlitching] = useState(false);
   const [onlineCount, setOnlineCount] = useState(237);
-  
+
   // Simulate changing online user count
   useEffect(() => {
     const interval = setInterval(() => {
@@ -44,7 +44,7 @@ export function SiteFooter() {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
-  
+
   const handleTaglineHover = () => {
     setIsGlitching(true);
     setTimeout(() => {
@@ -58,10 +58,10 @@ export function SiteFooter() {
     <footer className="bg-gradient-to-b from-zinc-900/50 to-cod-gray-950 border-t border-zinc-800 py-8 mt-auto">
       {/* Animated gradient border */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-emerald-500/0 via-emerald-500/50 to-emerald-500/0 animate-gradient-shift" />
-      
+
       <div className="container mx-auto px-4">
         {/* Live stats section */}
-        <motion.div 
+        <motion.div
           className="flex justify-center gap-8 mb-8 text-sm"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -76,33 +76,33 @@ export function SiteFooter() {
             <span>42,069 posts today</span>
           </div>
         </motion.div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <motion.h3 
+            <motion.h3
               className="text-lg font-bold mb-4 text-white"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400 }}
             >
-              Degentalk™
+              Degentalk<span style={{ fontSize: '0.65em', verticalAlign: 'super', marginLeft: '1px' }}>™</span>
             </motion.h3>
             <p className="text-zinc-400 text-sm">
               The premier crypto-native forum and social platform for enthusiasts, traders, and developers.
             </p>
           </div>
-          
+
           <div>
             <h4 className="font-medium mb-3 text-zinc-300">Navigation</h4>
             <ul className="space-y-2 text-sm">
               {['Home', 'Forum', 'Shop', 'Leaderboard'].map((item, index) => (
-                <motion.li 
+                <motion.li
                   key={item}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
                   <Link href={item === 'Home' ? '/' : `/${item.toLowerCase()}`}>
-                    <motion.span 
+                    <motion.span
                       className="text-zinc-400 hover:text-emerald-400 transition-colors cursor-pointer inline-block"
                       whileHover={{ x: 5 }}
                     >
@@ -113,7 +113,7 @@ export function SiteFooter() {
               ))}
             </ul>
           </div>
-          
+
           <div>
             <h4 className="font-medium mb-3 text-zinc-300">Resources</h4>
             <ul className="space-y-2 text-sm">
@@ -123,14 +123,14 @@ export function SiteFooter() {
                 'Token Economics',
                 'Platform FAQ'
               ].map((item, index) => (
-                <motion.li 
+                <motion.li
                   key={item}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 + 0.2 }}
                 >
-                  <motion.a 
-                    href="#" 
+                  <motion.a
+                    href="#"
                     className="text-zinc-400 hover:text-emerald-400 transition-colors inline-block"
                     whileHover={{ x: 5 }}
                   >
@@ -140,7 +140,7 @@ export function SiteFooter() {
               ))}
             </ul>
           </div>
-          
+
           <div>
             <h4 className="font-medium mb-3 text-zinc-300">Legal</h4>
             <ul className="space-y-2 text-sm">
@@ -150,14 +150,14 @@ export function SiteFooter() {
                 'Cookie Policy',
                 'Disclaimer'
               ].map((item, index) => (
-                <motion.li 
+                <motion.li
                   key={item}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 + 0.4 }}
                 >
-                  <motion.a 
-                    href="#" 
+                  <motion.a
+                    href="#"
                     className="text-zinc-400 hover:text-emerald-400 transition-colors inline-block"
                     whileHover={{ x: 5 }}
                   >
@@ -168,18 +168,18 @@ export function SiteFooter() {
             </ul>
           </div>
         </div>
-        
+
         <div className="border-t border-zinc-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-zinc-500">
-          <motion.div 
+          <motion.div
             className="order-2 md:order-1"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
           >
-            &copy; {new Date().getFullYear()} Degentalk™. All rights reserved.
+            &copy; {new Date().getFullYear()} Degentalk<span style={{ fontSize: '0.65em', verticalAlign: 'super', marginLeft: '1px' }}>™</span>. All rights reserved.
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             className="order-1 md:order-2 mb-4 md:mb-0 italic cursor-pointer select-none"
             onHoverStart={handleTaglineHover}
             initial={{ opacity: 0 }}

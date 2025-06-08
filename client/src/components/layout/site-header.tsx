@@ -89,7 +89,7 @@ export function SiteHeader() {
             <Link href="/">
               <div className="flex items-center cursor-pointer">
                 <span className="text-xl font-bold text-white">
-                  Degentalk™
+                  Degentalk<span style={{ fontSize: '0.65em', verticalAlign: 'super', marginLeft: '1px' }}>™</span>
                 </span>
               </div>
             </Link>
