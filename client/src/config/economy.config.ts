@@ -113,6 +113,19 @@ export const TipRainConfigSchema = z.object({
 
 export type TipRainConfig = z.infer<typeof TipRainConfigSchema>;
 
+// -------------------- Airdroppable Tokens Section --------------------
+/**
+ * Defines a token type that can be airdropped.
+ */
+export const AirdroppableTokenSchema = z.object({
+  /** Unique key for the token (e.g., 'XP', 'DGT') */
+  key: z.string(),
+  /** Display label for the token (e.g., 'XP (Experience Points)') */
+  label: z.string(),
+});
+
+export type AirdroppableToken = z.infer<typeof AirdroppableTokenSchema>;
+
 // -------------------- Main Economy Config --------------------
 export const EconomyConfigSchema = z.object({
   xp: XpRewardsSchema,
@@ -120,6 +133,7 @@ export const EconomyConfigSchema = z.object({
   dgt: DgtConfigSchema,
   shop: ShopConfigSchema,
   tipRain: TipRainConfigSchema,
+  airdroppableTokens: z.record(z.string(), AirdroppableTokenSchema),
 });
 
 /**
@@ -170,7 +184,7 @@ export const economyConfig = {
       maxAmountUSDT: 100,
       burnPercentage: 5,
       processingFeePercentage: 2.5,
-      cooldownSeconds: 60,
+      cooldownSeconds: 10,
     },
     rain: {
       enabled: true,
@@ -179,5 +193,9 @@ export const economyConfig = {
       maxRecipients: 15,
       cooldownSeconds: 60,
     },
+  },
+  airdroppableTokens: {
+    xp: { key: 'XP', label: 'XP (Experience Points)' },
+    dgt: { key: 'DGT', label: 'DGT (Digital Gold Token)' },
   },
 } as const; 

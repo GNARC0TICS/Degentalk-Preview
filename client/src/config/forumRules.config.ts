@@ -23,6 +23,48 @@ export const ThreadRulesSchema = z.object({
 
 export type ThreadRules = z.infer<typeof ThreadRulesSchema>;
 
+// -------------------- Thread Management Section --------------------
+/**
+ * Thread status option for filtering.
+ */
+export const ThreadStatusOptionSchema = z.object({
+    /** Status key (e.g., 'active', 'pinned') */
+    key: z.string(),
+    /** Display label */
+    label: z.string(),
+});
+
+export type ThreadStatusOption = z.infer<typeof ThreadStatusOptionSchema>;
+
+/**
+ * Thread sort option for ordering.
+ */
+export const ThreadSortOptionSchema = z.object({
+    /** Sort key (e.g., 'newest', 'activity') */
+    key: z.string(),
+    /** Display label */
+    label: z.string(),
+});
+
+export type ThreadSortOption = z.infer<typeof ThreadSortOptionSchema>;
+
+// -------------------- Prefix Styles Section --------------------
+/**
+ * Thread prefix style definition.
+ */
+export const PrefixStyleSchema = z.object({
+    /** Prefix key */
+    key: z.string(),
+    /** Display label */
+    label: z.string(),
+    /** Icon name (Lucide icon) */
+    icon: z.string(),
+    /** CSS classes for styling */
+    cssClasses: z.string(),
+});
+
+export type PrefixStyle = z.infer<typeof PrefixStyleSchema>;
+
 // -------------------- Access Control Section --------------------
 /**
  * Role-based access control for a forum.
@@ -91,6 +133,12 @@ export type ForumConfig = z.infer<typeof ForumConfigSchema>;
 // -------------------- Main Forum Rules Config --------------------
 export const ForumRulesConfigSchema = z.object({
     forums: z.record(z.string(), ForumConfigSchema),
+    /** Available thread status options for filtering */
+    threadStatusOptions: z.record(z.string(), ThreadStatusOptionSchema),
+    /** Available thread sort options for ordering */
+    threadSortOptions: z.record(z.string(), ThreadSortOptionSchema),
+    /** Available prefix styles for thread prefixes */
+    prefixStyles: z.record(z.string(), PrefixStyleSchema),
 });
 
 /**
@@ -146,5 +194,32 @@ export const forumRulesConfig = {
             theme: 'mission-theme',
         },
         // TODO: Add all other forums/zones from zoneRegistry.ts and primaryZones.tsx
+    },
+    threadStatusOptions: {
+        all: { key: 'all', label: 'All Status' },
+        active: { key: 'active', label: 'Active' },
+        pinned: { key: 'pinned', label: 'Pinned' },
+        locked: { key: 'locked', label: 'Locked' },
+        hidden: { key: 'hidden', label: 'Hidden' },
+    },
+    threadSortOptions: {
+        newest: { key: 'newest', label: 'Newest First' },
+        oldest: { key: 'oldest', label: 'Oldest First' },
+        activity: { key: 'activity', label: 'Most Active' },
+        views: { key: 'views', label: 'Most Views' },
+        hot: { key: 'hot', label: 'Hot' },
+        new: { key: 'new', label: 'New' },
+        top: { key: 'top', label: 'Top' },
+    },
+    prefixStyles: {
+        hot: { key: 'hot', label: 'Hot', icon: 'Flame', cssClasses: 'bg-gradient-to-r from-orange-600 to-red-600 border-none text-white' },
+        pinned: { key: 'pinned', label: 'Pinned', icon: 'ThumbsUp', cssClasses: 'bg-gradient-to-r from-cyan-600 to-blue-600 border-none text-white' },
+        'scam-alert': { key: 'scam-alert', label: 'Scam Alert', icon: 'MessageSquare', cssClasses: 'bg-gradient-to-r from-red-600 to-pink-600 border-none text-white' },
+        signal: { key: 'signal', label: 'Signal', icon: 'MessageSquare', cssClasses: 'bg-gradient-to-r from-amber-600 to-yellow-600 border-none text-white' },
+        strategy: { key: 'strategy', label: 'Strategy', icon: 'MessageSquare', cssClasses: 'bg-gradient-to-r from-emerald-600 to-green-600 border-none text-white' },
+        request: { key: 'request', label: 'Request', icon: 'MessageSquare', cssClasses: 'bg-gradient-to-r from-blue-600 to-indigo-600 border-none text-white' },
+        guide: { key: 'guide', label: 'Guide', icon: 'MessageSquare', cssClasses: 'bg-gradient-to-r from-purple-600 to-violet-600 border-none text-white' },
+        shill: { key: 'shill', label: 'Shill', icon: 'MessageSquare', cssClasses: 'bg-gradient-to-r from-fuchsia-600 to-pink-600 border-none text-white' },
+        leak: { key: 'leak', label: 'Leak', icon: 'MessageSquare', cssClasses: 'bg-gradient-to-r from-teal-600 to-cyan-600 border-none text-white' },
     },
 } as const; 

@@ -44,9 +44,10 @@ import { Badge } from "@/components/ui/badge";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { cosmeticsConfig, Rarity } from "@/config/cosmetics.config.ts";
 
 // Define the badge type
-type Badge = {
+type AdminBadge = {
   id: number;
   name: string;
   description: string | null;
@@ -60,7 +61,7 @@ const badgeFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100, "Name must be at most 100 characters"),
   description: z.string().optional(),
   iconUrl: z.string().url("Please enter a valid URL").optional().nullable(),
-  rarity: z.string().default("common"),
+  rarity: z.string().default(cosmeticsConfig.rarities.common.key),
 });
 
 type BadgeFormValues = z.infer<typeof badgeFormSchema>;
@@ -68,7 +69,7 @@ type BadgeFormValues = z.infer<typeof badgeFormSchema>;
 export default function BadgesAdmin() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
+  const [selectedBadge, setSelectedBadge] = useState<AdminBadge | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -79,12 +80,12 @@ export default function BadgesAdmin() {
       name: "",
       description: "",
       iconUrl: "",
-      rarity: "common",
+      rarity: cosmeticsConfig.rarities.common.key,
     },
   });
 
   // Query to fetch badges
-  const { data: badges, isLoading, error } = useQuery<Badge[]>({
+  const { data: badges, isLoading, error } = useQuery<AdminBadge[]>({
     queryKey: ["badges"],
     queryFn: async () => {
       const response = await fetch("/api/admin/badges");
@@ -208,7 +209,7 @@ export default function BadgesAdmin() {
   };
 
   // Open edit dialog and set form values
-  const handleEditBadge = (badge: Badge) => {
+  const handleEditBadge = (badge: AdminBadge) => {
     setSelectedBadge(badge);
     form.reset({
       name: badge.name,
@@ -227,20 +228,8 @@ export default function BadgesAdmin() {
   };
 
   // Helper function to display rarity badge with color
-  const getRarityBadgeColor = (rarity: string) => {
-    switch (rarity) {
-      case "legendary":
-        return "bg-amber-500 text-black";
-      case "epic":
-        return "bg-purple-500";
-      case "rare":
-        return "bg-blue-500";
-      case "uncommon":
-        return "bg-green-500";
-      case "common":
-      default:
-        return "bg-gray-500";
-    }
+  const getRarityBadgeClass = (rarityKey: string) => {
+    return cosmeticsConfig.rarities[rarityKey]?.tailwindClass || 'bg-gray-500';
   };
 
   return (
@@ -326,11 +315,11 @@ export default function BadgesAdmin() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="common">Common</SelectItem>
-                            <SelectItem value="uncommon">Uncommon</SelectItem>
-                            <SelectItem value="rare">Rare</SelectItem>
-                            <SelectItem value="epic">Epic</SelectItem>
-                            <SelectItem value="legendary">Legendary</SelectItem>
+                            {Object.values(cosmeticsConfig.rarities).map((rarity: Rarity) => (
+                              <SelectItem key={rarity.key} value={rarity.key}>
+                                {rarity.emoji} {rarity.label}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -423,11 +412,11 @@ export default function BadgesAdmin() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="common">Common</SelectItem>
-                          <SelectItem value="uncommon">Uncommon</SelectItem>
-                          <SelectItem value="rare">Rare</SelectItem>
-                          <SelectItem value="epic">Epic</SelectItem>
-                          <SelectItem value="legendary">Legendary</SelectItem>
+                          {Object.values(cosmeticsConfig.rarities).map((rarity: Rarity) => (
+                            <SelectItem key={rarity.key} value={rarity.key}>
+                              {rarity.emoji} {rarity.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -493,8 +482,8 @@ export default function BadgesAdmin() {
                         {badge.description || "No description"}
                       </TableCell>
                       <TableCell>
-                        <Badge className={getRarityBadgeColor(badge.rarity)}>
-                          {badge.rarity}
+                        <Badge className={getRarityBadgeClass(badge.rarity)}>
+                          {cosmeticsConfig.rarities[badge.rarity]?.label || badge.rarity}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">

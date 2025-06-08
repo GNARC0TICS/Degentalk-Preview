@@ -10,6 +10,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, AlertCircle, Save, CloudRain, Gift } from 'lucide-react';
+import { economyConfig } from '@/config/economy.config.ts';
+import { rolesConfig } from '@/config/roles.config.ts';
 
 interface CooldownSettings {
   tipCooldownSeconds: number;
@@ -38,10 +40,10 @@ export function CooldownSettings() {
 
   // Form state
   const [formData, setFormData] = React.useState<CooldownSettings>({
-    tipCooldownSeconds: 10,
-    rainCooldownSeconds: 60,
-    moderatorBypassCooldown: true,
-    adminBypassCooldown: true
+    tipCooldownSeconds: economyConfig.tipRain.tip.cooldownSeconds,
+    rainCooldownSeconds: economyConfig.tipRain.rain.cooldownSeconds,
+    moderatorBypassCooldown: rolesConfig.roles.mod?.bypassCooldowns || false,
+    adminBypassCooldown: rolesConfig.roles.admin?.bypassCooldowns || false,
   });
 
   // Update form when data loads
@@ -173,7 +175,7 @@ export function CooldownSettings() {
 
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Bypass Settings</h3>
-            
+
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -184,7 +186,7 @@ export function CooldownSettings() {
               />
               <Label htmlFor="mod-bypass">Moderators bypass cooldowns</Label>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"

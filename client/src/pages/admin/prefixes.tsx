@@ -58,6 +58,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { ThreadPrefix } from '@shared/types';
+import { cosmeticsConfig, ColorScheme } from '@/config/cosmetics.config.ts'; // [CONFIG-REFAC]
 
 // Define validation schema for prefixes
 const prefixSchema = z.object({
@@ -80,35 +81,15 @@ export default function AdminPrefixesPage() {
     resolver: zodResolver(prefixSchema),
     defaultValues: {
       name: '',
-      color: 'zinc',
+      color: cosmeticsConfig.colorSchemes.zinc.value, // [CONFIG-REFAC]
       isActive: true,
       position: 0,
       categoryId: null,
     },
   });
 
-  // Available colors based on Tailwind CSS
-  const availableColors = [
-    { name: 'Slate', value: 'slate' },
-    { name: 'Gray', value: 'gray' },
-    { name: 'Zinc', value: 'zinc' },
-    { name: 'Red', value: 'red' },
-    { name: 'Orange', value: 'orange' },
-    { name: 'Amber', value: 'amber' },
-    { name: 'Yellow', value: 'yellow' },
-    { name: 'Lime', value: 'lime' },
-    { name: 'Green', value: 'green' },
-    { name: 'Emerald', value: 'emerald' },
-    { name: 'Teal', value: 'teal' },
-    { name: 'Cyan', value: 'cyan' },
-    { name: 'Blue', value: 'blue' },
-    { name: 'Indigo', value: 'indigo' },
-    { name: 'Violet', value: 'violet' },
-    { name: 'Purple', value: 'purple' },
-    { name: 'Fuchsia', value: 'fuchsia' },
-    { name: 'Pink', value: 'pink' },
-    { name: 'Rose', value: 'rose' },
-  ];
+  // Available colors from cosmeticsConfig [CONFIG-REFAC]
+  const availableColors: ColorScheme[] = Object.values(cosmeticsConfig.colorSchemes);
 
   // Fetch prefixes
   const { data: prefixes, isLoading, isError } = useQuery({
@@ -271,13 +252,13 @@ export default function AdminPrefixesPage() {
 
   // Filter prefixes based on search query
   const filteredPrefixes = prefixes
-    ? prefixes.filter((prefix: ThreadPrefix) => 
-        prefix.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    ? prefixes.filter((prefix: ThreadPrefix) =>
+      prefix.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : [];
 
   // Generate a badge with the selected color for preview
   const ColorPreview = ({ color }: { color: string }) => (
-    <Badge 
+    <Badge
       className={`bg-${color}-900/60 text-${color}-300 border-${color}-700/30`}
     >
       Preview
@@ -348,7 +329,7 @@ export default function AdminPrefixesPage() {
                     <TableRow key={prefix.id}>
                       <TableCell className="font-medium">{prefix.name}</TableCell>
                       <TableCell>
-                        <Badge 
+                        <Badge
                           className={`bg-${prefix.color}-900/60 text-${prefix.color}-300 border-${prefix.color}-700/30`}
                         >
                           {prefix.name}
@@ -364,7 +345,7 @@ export default function AdminPrefixesPage() {
                       </TableCell>
                       <TableCell>{prefix.position}</TableCell>
                       <TableCell>
-                        {prefix.categoryId 
+                        {prefix.categoryId
                           ? categories?.find((cat: any) => cat.id === prefix.categoryId)?.name || 'Unknown'
                           : 'Global'
                         }
@@ -398,13 +379,13 @@ export default function AdminPrefixesPage() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem 
+                              <DropdownMenuItem
                                 onClick={() => handleEditPrefix(prefix)}
                               >
                                 <Pencil className="h-4 w-4 mr-2" />
                                 Edit Prefix
                               </DropdownMenuItem>
-                              <DropdownMenuItem 
+                              <DropdownMenuItem
                                 onClick={() => {
                                   setSelectedPrefix(prefix);
                                   setIsDeleteDialogOpen(true);
@@ -523,10 +504,10 @@ export default function AdminPrefixesPage() {
                     <FormItem>
                       <FormLabel>Display Order</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
-                          min="0" 
-                          placeholder="0" 
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="0"
                           {...field}
                           onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                         />
@@ -563,9 +544,9 @@ export default function AdminPrefixesPage() {
               </div>
 
               <DialogFooter>
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   onClick={() => setIsCreateDialogOpen(false)}
                 >
                   Cancel
@@ -673,10 +654,10 @@ export default function AdminPrefixesPage() {
                     <FormItem>
                       <FormLabel>Display Order</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
-                          min="0" 
-                          placeholder="0" 
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="0"
                           {...field}
                           onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                         />
@@ -710,9 +691,9 @@ export default function AdminPrefixesPage() {
               </div>
 
               <DialogFooter>
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   onClick={() => setIsEditDialogOpen(false)}
                 >
                   Cancel
@@ -738,7 +719,7 @@ export default function AdminPrefixesPage() {
           <div className="py-4">
             {selectedPrefix && (
               <div className="flex items-center justify-center gap-4 p-4 border rounded-md">
-                <Badge 
+                <Badge
                   className={`bg-${selectedPrefix.color}-900/60 text-${selectedPrefix.color}-300 border-${selectedPrefix.color}-700/30`}
                 >
                   {selectedPrefix.name}

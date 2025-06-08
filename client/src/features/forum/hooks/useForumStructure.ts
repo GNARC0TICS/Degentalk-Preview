@@ -19,11 +19,10 @@ export function useForumStructure() {
     queryFn: async () => {
       const categories = await forumApi.getCategories();
       
-      // Filter zones and categories
-      const primaryZones = categories.filter(c => c.type === 'zone');
+      // Map categories to include child forums and all properties
+      // Primary zones filtering will be handled in the component
       const topLevelCategories = categories.filter(c => c.type === 'category' && !c.parentId);
       
-      // Map categories to include child forums and all properties
       const categoriesWithForums = topLevelCategories.map(category => ({
         ...category,
         childForums: categories.filter(f => 
@@ -32,7 +31,8 @@ export function useForumStructure() {
       }));
 
       return {
-        primaryZones,
+        // primaryZones will be handled by constants in the component
+        primaryZones: [], // Return empty array as primary zones are from constants
         categories: categoriesWithForums
       };
     },

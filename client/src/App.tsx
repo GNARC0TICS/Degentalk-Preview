@@ -10,7 +10,7 @@ import WalletPage from "./pages/wallet";
 // Pages
 import HomePage from "./pages/home";
 import LandingPage from "./pages/landing-page";
-import ForumsPage from "./pages/forums";
+import ForumsPage from "./pages/forum";
 // Import forum system pages
 import ForumBySlugPage from "./pages/forums/[forum_slug]";
 import ThreadPage from "./pages/threads/[thread_slug]";
@@ -66,6 +66,12 @@ import { DevRoleSwitcher } from '@/components/dev/dev-role-switcher';
 
 // Import Preferences Page
 import PreferencesPage from "./pages/preferences/index";
+
+// Import Primary Zone Pages
+import MissionControlPage from "./pages/mission-control";
+import ThePitPage from "./pages/the-pit";
+import TheVaultPage from "./pages/the-vault";
+import BriefingRoomPage from "./pages/briefing-room";
 
 // Permission wrapper for mod routes
 function RequireMod({ children }: { children: React.ReactNode }) {
@@ -123,6 +129,12 @@ function App() {
           <ProtectedRoute path="/profile/:username?" component={ProfilePage} />
           <ProtectedRoute path="/whispers" component={WhispersPage} />
           <ProtectedRoute path="/preferences" component={PreferencesPage} />
+          
+          {/* Primary Zone Routes */}
+          <ProtectedRoute path="/mission-control" component={MissionControlPage} />
+          <ProtectedRoute path="/the-pit" component={ThePitPage} />
+          <ProtectedRoute path="/the-vault" component={TheVaultPage} />
+          <ProtectedRoute path="/briefing-room" component={BriefingRoomPage} />
 
           {/* Admin Routes */}
           <Route path="/admin" component={() => {

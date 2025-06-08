@@ -55,6 +55,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import Lottie from "lottie-react";
+import { cosmeticsConfig, EmojiCategory, EmojiUnlockMethod } from "@/config/cosmetics.config.ts";
 
 // Type for emoji schema validation
 const emojiFormSchema = z.object({
@@ -62,9 +63,9 @@ const emojiFormSchema = z.object({
   code: z.string().min(1, "Code is required"),
   imageUrl: z.string().min(1, "Image URL is required"),
   previewUrl: z.string().nullable().optional(),
-  category: z.string().default("standard"),
+  category: z.string().default(cosmeticsConfig.emojiCategories.standard.key),
   isLocked: z.boolean().default(true),
-  unlockType: z.string().default("free"),
+  unlockType: z.string().default(cosmeticsConfig.emojiUnlockMethods.free.key),
   type: z.enum(["static", "lottie"]).default("static"),
   priceDgt: z.number().nullable().optional(),
   requiredPathXP: z.number().nullable().optional(),
@@ -207,9 +208,9 @@ export default function AdminEmojisPage() {
       code: "",
       imageUrl: "",
       previewUrl: "",
-      category: "standard",
+      category: cosmeticsConfig.emojiCategories.standard.key,
       isLocked: true,
-      unlockType: "free",
+      unlockType: cosmeticsConfig.emojiUnlockMethods.free.key,
       type: "static",
       priceDgt: null,
       requiredPathXP: null,
@@ -242,9 +243,9 @@ export default function AdminEmojisPage() {
       code: "",
       imageUrl: "",
       previewUrl: "",
-      category: "standard",
+      category: cosmeticsConfig.emojiCategories.standard.key,
       isLocked: true,
-      unlockType: "free",
+      unlockType: cosmeticsConfig.emojiUnlockMethods.free.key,
       type: "static",
       priceDgt: null,
       requiredPathXP: null,
@@ -276,7 +277,7 @@ export default function AdminEmojisPage() {
   // Group emojis by category for display
   const emojisGroupedByCategory = () => {
     if (!emojis) return {};
-    
+
     return emojis.reduce((acc: { [key: string]: Emoji[] }, emoji: Emoji) => {
       const category = emoji.category || "standard";
       if (!acc[category]) {
@@ -292,15 +293,15 @@ export default function AdminEmojisPage() {
     if (emoji.type === 'lottie' && emoji.previewUrl) {
       return (
         <div className="w-10 h-10 flex items-center justify-center">
-          <Lottie 
-            animationData={emoji.previewUrl} 
-            loop={true} 
-            style={{ width: 32, height: 32 }} 
+          <Lottie
+            animationData={emoji.previewUrl}
+            loop={true}
+            style={{ width: 32, height: 32 }}
           />
         </div>
       );
     }
-    
+
     return (
       <div className="w-10 h-10 flex items-center justify-center">
         <img src={emoji.imageUrl} alt={emoji.name} className="max-w-full max-h-full" />
@@ -328,7 +329,7 @@ export default function AdminEmojisPage() {
               <TabsTrigger value="lottie">Lottie</TabsTrigger>
               <TabsTrigger value="locked">Locked</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="all">
               <Card>
                 <CardHeader>
@@ -394,7 +395,7 @@ export default function AdminEmojisPage() {
                 </CardContent>
               </Card>
             </TabsContent>
-            
+
             <TabsContent value="static">
               <Card>
                 <CardHeader>
@@ -417,47 +418,47 @@ export default function AdminEmojisPage() {
                     </TableHeader>
                     <TableBody>
                       {emojis
-                          ?.filter((emoji: Emoji) => emoji.type === "static")
-                          .map((emoji: Emoji) => (
-                        <TableRow key={emoji.id}>
-                          <TableCell>
-                            <div className="w-10 h-10 flex items-center justify-center">
-                              <img src={emoji.imageUrl} alt={emoji.name} className="max-w-full max-h-full" />
-                            </div>
-                          </TableCell>
-                          <TableCell>{emoji.name}</TableCell>
-                          <TableCell>{emoji.code}</TableCell>
-                          <TableCell className="capitalize">{emoji.category}</TableCell>
-                          <TableCell className="capitalize">
-                            {emoji.isLocked ? emoji.unlockType : 'Free'}
-                            {emoji.priceDgt && ` (${emoji.priceDgt} DGT)`}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() => handleEditEmoji(emoji)}
-                              >
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="destructive"
-                                size="icon"
-                                onClick={() => handleDeleteEmoji(emoji)}
-                              >
-                                <Trash className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                        ?.filter((emoji: Emoji) => emoji.type === "static")
+                        .map((emoji: Emoji) => (
+                          <TableRow key={emoji.id}>
+                            <TableCell>
+                              <div className="w-10 h-10 flex items-center justify-center">
+                                <img src={emoji.imageUrl} alt={emoji.name} className="max-w-full max-h-full" />
+                              </div>
+                            </TableCell>
+                            <TableCell>{emoji.name}</TableCell>
+                            <TableCell>{emoji.code}</TableCell>
+                            <TableCell className="capitalize">{emoji.category}</TableCell>
+                            <TableCell className="capitalize">
+                              {emoji.isLocked ? emoji.unlockType : 'Free'}
+                              {emoji.priceDgt && ` (${emoji.priceDgt} DGT)`}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  onClick={() => handleEditEmoji(emoji)}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="destructive"
+                                  size="icon"
+                                  onClick={() => handleDeleteEmoji(emoji)}
+                                >
+                                  <Trash className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 </CardContent>
               </Card>
             </TabsContent>
-            
+
             <TabsContent value="lottie">
               <Card>
                 <CardHeader>
@@ -480,45 +481,45 @@ export default function AdminEmojisPage() {
                     </TableHeader>
                     <TableBody>
                       {emojis
-                          ?.filter((emoji: Emoji) => emoji.type === "lottie")
-                          .map((emoji: Emoji) => (
-                        <TableRow key={emoji.id}>
-                          <TableCell>
-                            <EmojiPreview emoji={emoji} />
-                          </TableCell>
-                          <TableCell>{emoji.name}</TableCell>
-                          <TableCell>{emoji.code}</TableCell>
-                          <TableCell className="capitalize">{emoji.category}</TableCell>
-                          <TableCell className="capitalize">
-                            {emoji.isLocked ? emoji.unlockType : 'Free'}
-                            {emoji.priceDgt && ` (${emoji.priceDgt} DGT)`}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() => handleEditEmoji(emoji)}
-                              >
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="destructive"
-                                size="icon"
-                                onClick={() => handleDeleteEmoji(emoji)}
-                              >
-                                <Trash className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                        ?.filter((emoji: Emoji) => emoji.type === "lottie")
+                        .map((emoji: Emoji) => (
+                          <TableRow key={emoji.id}>
+                            <TableCell>
+                              <EmojiPreview emoji={emoji} />
+                            </TableCell>
+                            <TableCell>{emoji.name}</TableCell>
+                            <TableCell>{emoji.code}</TableCell>
+                            <TableCell className="capitalize">{emoji.category}</TableCell>
+                            <TableCell className="capitalize">
+                              {emoji.isLocked ? emoji.unlockType : 'Free'}
+                              {emoji.priceDgt && ` (${emoji.priceDgt} DGT)`}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  onClick={() => handleEditEmoji(emoji)}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="destructive"
+                                  size="icon"
+                                  onClick={() => handleDeleteEmoji(emoji)}
+                                >
+                                  <Trash className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 </CardContent>
               </Card>
             </TabsContent>
-            
+
             <TabsContent value="locked">
               <Card>
                 <CardHeader>
@@ -542,41 +543,41 @@ export default function AdminEmojisPage() {
                     </TableHeader>
                     <TableBody>
                       {emojis
-                          ?.filter((emoji: Emoji) => emoji.isLocked)
-                          .map((emoji: Emoji) => (
-                        <TableRow key={emoji.id}>
-                          <TableCell>
-                            <EmojiPreview emoji={emoji} />
-                          </TableCell>
-                          <TableCell>{emoji.name}</TableCell>
-                          <TableCell>{emoji.code}</TableCell>
-                          <TableCell className="capitalize">{emoji.type}</TableCell>
-                          <TableCell className="capitalize">{emoji.category}</TableCell>
-                          <TableCell className="capitalize">
-                            {emoji.unlockType}
-                            {emoji.priceDgt && ` (${emoji.priceDgt} DGT)`}
-                            {emoji.requiredPathXP && ` (${emoji.requiredPathXP} XP)`}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() => handleEditEmoji(emoji)}
-                              >
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="destructive"
-                                size="icon"
-                                onClick={() => handleDeleteEmoji(emoji)}
-                              >
-                                <Trash className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                        ?.filter((emoji: Emoji) => emoji.isLocked)
+                        .map((emoji: Emoji) => (
+                          <TableRow key={emoji.id}>
+                            <TableCell>
+                              <EmojiPreview emoji={emoji} />
+                            </TableCell>
+                            <TableCell>{emoji.name}</TableCell>
+                            <TableCell>{emoji.code}</TableCell>
+                            <TableCell className="capitalize">{emoji.type}</TableCell>
+                            <TableCell className="capitalize">{emoji.category}</TableCell>
+                            <TableCell className="capitalize">
+                              {emoji.unlockType}
+                              {emoji.priceDgt && ` (${emoji.priceDgt} DGT)`}
+                              {emoji.requiredPathXP && ` (${emoji.requiredPathXP} XP)`}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  onClick={() => handleEditEmoji(emoji)}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="destructive"
+                                  size="icon"
+                                  onClick={() => handleDeleteEmoji(emoji)}
+                                >
+                                  <Trash className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 </CardContent>
@@ -647,11 +648,11 @@ export default function AdminEmojisPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="basic">Basic</SelectItem>
-                          <SelectItem value="premium">Premium</SelectItem>
-                          <SelectItem value="special">Special</SelectItem>
-                          <SelectItem value="seasonal">Seasonal</SelectItem>
-                          <SelectItem value="crypto">Crypto</SelectItem>
+                          {Object.values(cosmeticsConfig.emojiCategories).map((cat: EmojiCategory) => (
+                            <SelectItem key={cat.key} value={cat.key}>
+                              {cat.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -760,10 +761,11 @@ export default function AdminEmojisPage() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="free">Free</SelectItem>
-                            <SelectItem value="shop">Shop Purchase</SelectItem>
-                            <SelectItem value="xp">XP Achievement</SelectItem>
-                            <SelectItem value="event">Special Event</SelectItem>
+                            {Object.values(cosmeticsConfig.emojiUnlockMethods).map((method: EmojiUnlockMethod) => (
+                              <SelectItem key={method.key} value={method.key}>
+                                {method.label}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -817,8 +819,8 @@ export default function AdminEmojisPage() {
 
               <DialogFooter>
                 <Button type="submit" disabled={createEmojiMutation.isPending || updateEmojiMutation.isPending}>
-                  {createEmojiMutation.isPending || updateEmojiMutation.isPending ? 
-                    "Saving..." : 
+                  {createEmojiMutation.isPending || updateEmojiMutation.isPending ?
+                    "Saving..." :
                     currentEmoji ? "Update Emoji" : "Add Emoji"}
                 </Button>
               </DialogFooter>

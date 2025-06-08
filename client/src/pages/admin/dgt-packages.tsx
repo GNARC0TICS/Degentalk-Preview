@@ -39,7 +39,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { economyConfig } from '@/config/economy.config'; // [CONFIG-REFAC] economyConfig import
+import { economyConfig } from '@/config/economy.config.ts'; // [CONFIG-REFAC] economyConfig import
 
 // Package interface
 interface DgtPackage {

@@ -14502,3 +14502,136 @@ User not found
     "routine": "errorMissingColumn"
   }
 }
+[2025-06-08T02:29:45.047Z] [ERROR] [WALLET_CONTROLLER] Error getting transaction history: column "type" does not exist. Details: error: column "type" does not exist
+    at file:///Users/gnarcotic/Degentalk/node_modules/@neondatabase/serverless/index.mjs:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at NeonPreparedQuery.execute (/Users/gnarcotic/Degentalk/node_modules/src/neon-serverless/session.ts:142:18)
+    at WalletController.getTransactionHistory (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:121:25)
+{
+  "stack": "error: column \"type\" does not exist\n    at file:///Users/gnarcotic/Degentalk/node_modules/@neondatabase/serverless/index.mjs:1345:74\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at NeonPreparedQuery.execute (/Users/gnarcotic/Degentalk/node_modules/src/neon-serverless/session.ts:142:18)\n    at WalletController.getTransactionHistory (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:121:25)",
+  "errorObj": {
+    "length": 104,
+    "name": "error",
+    "severity": "ERROR",
+    "code": "42703",
+    "position": "90",
+    "file": "parse_relation.c",
+    "line": "3716",
+    "routine": "errorMissingColumn"
+  }
+}
+[2025-06-08T02:29:48.218Z] [ERROR] [WALLET_CONTROLLER] Error getting transaction history: column "type" does not exist. Details: error: column "type" does not exist
+    at file:///Users/gnarcotic/Degentalk/node_modules/@neondatabase/serverless/index.mjs:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at NeonPreparedQuery.execute (/Users/gnarcotic/Degentalk/node_modules/src/neon-serverless/session.ts:142:18)
+    at WalletController.getTransactionHistory (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:121:25)
+{
+  "stack": "error: column \"type\" does not exist\n    at file:///Users/gnarcotic/Degentalk/node_modules/@neondatabase/serverless/index.mjs:1345:74\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at NeonPreparedQuery.execute (/Users/gnarcotic/Degentalk/node_modules/src/neon-serverless/session.ts:142:18)\n    at WalletController.getTransactionHistory (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:121:25)",
+  "errorObj": {
+    "length": 104,
+    "name": "error",
+    "severity": "ERROR",
+    "code": "42703",
+    "position": "90",
+    "file": "parse_relation.c",
+    "line": "3716",
+    "routine": "errorMissingColumn"
+  }
+}
+[2025-06-08T02:31:39.521Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-08T02:31:39.522Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-08T02:31:39.523Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-08T02:31:39.523Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-08T02:35:39.297Z] [ERROR] [WALLET_CONTROLLER] Error getting transaction history: column "type" does not exist. Details: error: column "type" does not exist
+    at file:///Users/gnarcotic/Degentalk/node_modules/@neondatabase/serverless/index.mjs:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at NeonPreparedQuery.execute (/Users/gnarcotic/Degentalk/node_modules/src/neon-serverless/session.ts:142:18)
+    at WalletController.getTransactionHistory (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:121:25)
+{
+  "stack": "error: column \"type\" does not exist\n    at file:///Users/gnarcotic/Degentalk/node_modules/@neondatabase/serverless/index.mjs:1345:74\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at NeonPreparedQuery.execute (/Users/gnarcotic/Degentalk/node_modules/src/neon-serverless/session.ts:142:18)\n    at WalletController.getTransactionHistory (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:121:25)",
+  "errorObj": {
+    "length": 104,
+    "name": "error",
+    "severity": "ERROR",
+    "code": "42703",
+    "position": "90",
+    "file": "parse_relation.c",
+    "line": "3716",
+    "routine": "errorMissingColumn"
+  }
+}
+[2025-06-08T02:35:41.929Z] [ERROR] [WALLET_CONTROLLER] Error getting transaction history: column "type" does not exist. Details: error: column "type" does not exist
+    at file:///Users/gnarcotic/Degentalk/node_modules/@neondatabase/serverless/index.mjs:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at NeonPreparedQuery.execute (/Users/gnarcotic/Degentalk/node_modules/src/neon-serverless/session.ts:142:18)
+    at WalletController.getTransactionHistory (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:121:25)
+{
+  "stack": "error: column \"type\" does not exist\n    at file:///Users/gnarcotic/Degentalk/node_modules/@neondatabase/serverless/index.mjs:1345:74\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at NeonPreparedQuery.execute (/Users/gnarcotic/Degentalk/node_modules/src/neon-serverless/session.ts:142:18)\n    at WalletController.getTransactionHistory (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:121:25)",
+  "errorObj": {
+    "length": 104,
+    "name": "error",
+    "severity": "ERROR",
+    "code": "42703",
+    "position": "90",
+    "file": "parse_relation.c",
+    "line": "3716",
+    "routine": "errorMissingColumn"
+  }
+}
+[2025-06-08T02:36:39.532Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-08T02:36:39.532Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-08T02:36:39.532Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-08T02:36:39.532Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-08T02:37:32.199Z] [ERROR] [WALLET_CONTROLLER] Error getting transaction history: column "type" does not exist. Details: error: column "type" does not exist
+    at file:///Users/gnarcotic/Degentalk/node_modules/@neondatabase/serverless/index.mjs:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at NeonPreparedQuery.execute (/Users/gnarcotic/Degentalk/node_modules/src/neon-serverless/session.ts:142:18)
+    at WalletController.getTransactionHistory (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:121:25)
+{
+  "stack": "error: column \"type\" does not exist\n    at file:///Users/gnarcotic/Degentalk/node_modules/@neondatabase/serverless/index.mjs:1345:74\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at NeonPreparedQuery.execute (/Users/gnarcotic/Degentalk/node_modules/src/neon-serverless/session.ts:142:18)\n    at WalletController.getTransactionHistory (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:121:25)",
+  "errorObj": {
+    "length": 104,
+    "name": "error",
+    "severity": "ERROR",
+    "code": "42703",
+    "position": "90",
+    "file": "parse_relation.c",
+    "line": "3716",
+    "routine": "errorMissingColumn"
+  }
+}
+[2025-06-08T02:37:34.348Z] [ERROR] [WALLET_CONTROLLER] Error getting transaction history: column "type" does not exist. Details: error: column "type" does not exist
+    at file:///Users/gnarcotic/Degentalk/node_modules/@neondatabase/serverless/index.mjs:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at NeonPreparedQuery.execute (/Users/gnarcotic/Degentalk/node_modules/src/neon-serverless/session.ts:142:18)
+    at WalletController.getTransactionHistory (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:121:25)
+{
+  "stack": "error: column \"type\" does not exist\n    at file:///Users/gnarcotic/Degentalk/node_modules/@neondatabase/serverless/index.mjs:1345:74\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at NeonPreparedQuery.execute (/Users/gnarcotic/Degentalk/node_modules/src/neon-serverless/session.ts:142:18)\n    at WalletController.getTransactionHistory (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:121:25)",
+  "errorObj": {
+    "length": 104,
+    "name": "error",
+    "severity": "ERROR",
+    "code": "42703",
+    "position": "90",
+    "file": "parse_relation.c",
+    "line": "3716",
+    "routine": "errorMissingColumn"
+  }
+}
+[2025-06-08T02:41:39.542Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-08T02:41:39.543Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-08T02:41:39.543Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-08T02:41:39.543Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-08T02:46:39.552Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-08T02:46:39.558Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-08T02:46:39.558Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-08T02:46:39.558Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-08T02:48:55.902Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-08T02:48:55.907Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-08T02:48:56.738Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-08T02:48:56.739Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-08T02:48:56.739Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-08T02:48:56.739Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed

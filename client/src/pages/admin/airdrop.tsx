@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Send } from 'lucide-react';
+import { economyConfig, AirdroppableToken } from '@/config/economy.config.ts'; // [CONFIG-REFAC]
 
 // Types
 interface UserGroup {
@@ -19,7 +20,7 @@ interface UserGroup {
 }
 
 interface AirdropPayload {
-  tokenType: 'XP' | 'DGT';
+  tokenType: string; // [CONFIG-REFAC] Changed to string to store key from config
   amount: number;
   targetCriteria: {
     type: 'group' | 'userIds' | 'role'; // Extend as needed
@@ -30,7 +31,9 @@ interface AirdropPayload {
 
 const AdminAirdropPage: React.FC = () => {
   const { toast } = useToast();
-  const [tokenType, setTokenType] = useState<'XP' | 'DGT'>('XP');
+  // [CONFIG-REFAC] Default to the key of the first airdroppable token
+  const defaultTokenTypeKey = Object.keys(economyConfig.airdroppableTokens)[0] || 'xp';
+  const [tokenType, setTokenType] = useState<string>(defaultTokenTypeKey); // [CONFIG-REFAC]
   const [amount, setAmount] = useState<number>(0);
   const [targetGroupId, setTargetGroupId] = useState<string>(''); // Store as string for Select component
   const [note, setNote] = useState<string>('');
@@ -59,6 +62,7 @@ const AdminAirdropPage: React.FC = () => {
       setAmount(0);
       setTargetGroupId('');
       setNote('');
+      setTokenType(defaultTokenTypeKey); // [CONFIG-REFAC] Reset to default config key
       queryClient.invalidateQueries({ queryKey: ['adminAirdropHistory'] }); // TODO: For future history table
     },
     onError: (error: any) => {
@@ -82,7 +86,7 @@ const AdminAirdropPage: React.FC = () => {
     }
 
     const payload: AirdropPayload = {
-      tokenType,
+      tokenType, // This is now the key, e.g., 'xp' or 'dgt'
       amount,
       targetCriteria: {
         type: 'group',
@@ -108,13 +112,17 @@ const AdminAirdropPage: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="tokenType">Token Type</Label>
-                  <Select onValueChange={(value) => setTokenType(value as 'XP' | 'DGT')} defaultValue={tokenType}>
+                  <Select onValueChange={(value) => setTokenType(value)} defaultValue={tokenType}>
                     <SelectTrigger id="tokenType" className="mt-1">
                       <SelectValue placeholder="Select token type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="XP">XP (Experience Points)</SelectItem>
-                      <SelectItem value="DGT">DGT (Digital Gold Token)</SelectItem>
+                      {/* [CONFIG-REFAC] Dynamically generate token type options */}
+                      {Object.values(economyConfig.airdroppableTokens).map((token: AirdroppableToken) => (
+                        <SelectItem key={token.key} value={token.key}>
+                          {token.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>

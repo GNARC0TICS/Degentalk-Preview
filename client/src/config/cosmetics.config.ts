@@ -17,9 +17,65 @@ export const RaritySchema = z.object({
   color: z.string(),
   /** Emoji or icon (optional) */
   emoji: z.string().optional(),
+  /** Tailwind CSS class for badges (optional) */
+  tailwindClass: z.string().optional(),
 });
 
 export type Rarity = z.infer<typeof RaritySchema>;
+
+// -------------------- Emoji Category Section --------------------
+/**
+ * Emoji category definition.
+ */
+export const EmojiCategorySchema = z.object({
+  /** Category key (e.g., 'basic', 'premium') */
+  key: z.string(),
+  /** Display label */
+  label: z.string(),
+});
+
+export type EmojiCategory = z.infer<typeof EmojiCategorySchema>;
+
+// -------------------- Emoji Unlock Method Section --------------------
+/**
+ * Emoji unlock method definition.
+ */
+export const EmojiUnlockMethodSchema = z.object({
+  /** Unlock method key (e.g., 'free', 'shop') */
+  key: z.string(),
+  /** Display label */
+  label: z.string(),
+});
+
+export type EmojiUnlockMethod = z.infer<typeof EmojiUnlockMethodSchema>;
+
+// -------------------- Color Scheme Section --------------------
+/**
+ * Available color definition for UI elements.
+ */
+export const ColorSchemeSchema = z.object({
+  /** Color name (display label) */
+  name: z.string(),
+  /** Color value (Tailwind class name or hex) */
+  value: z.string(),
+});
+
+export type ColorScheme = z.infer<typeof ColorSchemeSchema>;
+
+// -------------------- Tag Styles Section --------------------
+/**
+ * Tag style definition for forum tags.
+ */
+export const TagStyleSchema = z.object({
+  /** Tag key */
+  key: z.string(),
+  /** Display label */
+  label: z.string(),
+  /** CSS classes for styling */
+  cssClasses: z.string(),
+});
+
+export type TagStyle = z.infer<typeof TagStyleSchema>;
 
 // -------------------- Cosmetic Item Section --------------------
 /**
@@ -71,6 +127,14 @@ export type ShopCosmeticTemplate = z.infer<typeof ShopCosmeticTemplateSchema>;
 export const CosmeticsConfigSchema = z.object({
   /** Rarity definitions */
   rarities: z.record(z.string(), RaritySchema),
+  /** Emoji Category definitions */
+  emojiCategories: z.record(z.string(), EmojiCategorySchema),
+  /** Emoji Unlock Method definitions */
+  emojiUnlockMethods: z.record(z.string(), EmojiUnlockMethodSchema),
+  /** Available color schemes for UI elements like prefixes */
+  colorSchemes: z.record(z.string(), ColorSchemeSchema),
+  /** Tag styles for forum tags */
+  tagStyles: z.record(z.string(), TagStyleSchema),
   /** All cosmetic items */
   items: z.record(z.string(), CosmeticItemSchema),
   /** Shop cosmetic templates */
@@ -84,13 +148,57 @@ export const CosmeticsConfigSchema = z.object({
  */
 export const cosmeticsConfig = {
   rarities: {
-    common: { key: 'common', label: 'Common', color: '#A0AEC0', emoji: '⚪' },
-    rare: { key: 'rare', label: 'Rare', color: '#4299E1', emoji: '🔵' },
-    epic: { key: 'epic', label: 'Epic', color: '#9F7AEA', emoji: '🟣' },
-    legendary: { key: 'legendary', label: 'Legendary', color: '#F6E05E', emoji: '🟡' },
-    mythic: { key: 'mythic', label: 'Mythic', color: '#F56565', emoji: '🔴' },
-    cope: { key: 'cope', label: 'Cope', color: '#8B5CF6', emoji: '🟪' },
+    common: { key: 'common', label: 'Common', color: '#A0AEC0', emoji: '⚪', tailwindClass: 'bg-gray-500' },
+    uncommon: { key: 'uncommon', label: 'Uncommon', color: '#38A169', emoji: '🟢', tailwindClass: 'bg-green-500' },
+    rare: { key: 'rare', label: 'Rare', color: '#4299E1', emoji: '🔵', tailwindClass: 'bg-blue-500' },
+    epic: { key: 'epic', label: 'Epic', color: '#9F7AEA', emoji: '🟣', tailwindClass: 'bg-purple-500' },
+    legendary: { key: 'legendary', label: 'Legendary', color: '#F6E05E', emoji: '🟡', tailwindClass: 'bg-amber-500 text-black' },
+    mythic: { key: 'mythic', label: 'Mythic', color: '#F56565', emoji: '🔴', tailwindClass: 'bg-red-600' },
+    cope: { key: 'cope', label: 'Cope', color: '#8B5CF6', emoji: '🟪', tailwindClass: 'bg-violet-500' },
     // TODO: Add more rarities as needed
+  },
+  emojiCategories: {
+    basic: { key: 'basic', label: 'Basic' },
+    premium: { key: 'premium', label: 'Premium' },
+    special: { key: 'special', label: 'Special' },
+    seasonal: { key: 'seasonal', label: 'Seasonal' },
+    crypto: { key: 'crypto', label: 'Crypto' },
+    standard: { key: 'standard', label: 'Standard' }
+  },
+  emojiUnlockMethods: {
+    free: { key: 'free', label: 'Free' },
+    shop: { key: 'shop', label: 'Shop Purchase' },
+    xp: { key: 'xp', label: 'XP Achievement' },
+    event: { key: 'event', label: 'Special Event' },
+  },
+  colorSchemes: {
+    slate: { name: 'Slate', value: 'slate' },
+    gray: { name: 'Gray', value: 'gray' },
+    zinc: { name: 'Zinc', value: 'zinc' },
+    red: { name: 'Red', value: 'red' },
+    orange: { name: 'Orange', value: 'orange' },
+    amber: { name: 'Amber', value: 'amber' },
+    yellow: { name: 'Yellow', value: 'yellow' },
+    lime: { name: 'Lime', value: 'lime' },
+    green: { name: 'Green', value: 'green' },
+    emerald: { name: 'Emerald', value: 'emerald' },
+    teal: { name: 'Teal', value: 'teal' },
+    cyan: { name: 'Cyan', value: 'cyan' },
+    blue: { name: 'Blue', value: 'blue' },
+    indigo: { name: 'Indigo', value: 'indigo' },
+    violet: { name: 'Violet', value: 'violet' },
+    purple: { name: 'Purple', value: 'purple' },
+    fuchsia: { name: 'Fuchsia', value: 'fuchsia' },
+    pink: { name: 'Pink', value: 'pink' },
+    rose: { name: 'Rose', value: 'rose' },
+  },
+  tagStyles: {
+    nfts: { key: 'nfts', label: 'NFTs', cssClasses: 'bg-purple-900/20 text-purple-300 border-purple-800/30' },
+    eth: { key: 'eth', label: 'ETH', cssClasses: 'bg-blue-900/20 text-blue-300 border-blue-800/30' },
+    solana: { key: 'solana', label: 'Solana', cssClasses: 'bg-emerald-900/20 text-emerald-300 border-emerald-800/30' },
+    defi: { key: 'defi', label: 'DeFi', cssClasses: 'bg-cyan-900/20 text-cyan-300 border-cyan-800/30' },
+    mindset: { key: 'mindset', label: 'Mindset', cssClasses: 'bg-amber-900/20 text-amber-300 border-amber-800/30' },
+    casino: { key: 'casino', label: 'Casino', cssClasses: 'bg-red-900/20 text-red-300 border-red-800/30' },
   },
   items: {
     'exit-liquidity-flair': {
