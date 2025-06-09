@@ -26,6 +26,13 @@ import { RootProvider } from './providers/root-provider';
 import { Router } from 'wouter';
 import { BASE_URL } from '@/core/constants';
 
+/**
+ * Degentalk™ Main Client Entry
+ *
+ * This is the main entry point for the React client application.
+ * Handles root rendering and global providers.
+ */
+
 // IMPORTANT: All providers are now managed by RootProvider.
 // Do not add providers directly in this file or in App.tsx.
 

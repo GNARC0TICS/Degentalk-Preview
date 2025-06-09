@@ -1,5 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
+// React hook to fetch and provide live metrics for a forum zone in Degentalk™.
+// Usage: const { data, isLoading, error } = useZoneMetrics(slug);
+
 export interface ZoneMetrics {
   zoneId: number;
   threadCount: number;

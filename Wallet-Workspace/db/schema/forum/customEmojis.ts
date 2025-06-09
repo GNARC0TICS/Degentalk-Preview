@@ -7,7 +7,7 @@ export const customEmojis = pgTable('custom_emojis', {
   name: varchar('name', { length: 50 }).notNull().unique(),
   code: varchar('code', { length: 50 }).notNull(),
   type: varchar('type', { length: 20 }).notNull().default('static'),
-  url: varchar('url', { length: 255 }).notNull(),
+  url: text('url').notNull(),
   previewUrl: varchar('preview_url', { length: 255 }),
   category: varchar('category', { length: 50 }).default('standard'),
   isLocked: boolean('is_locked').notNull().default(true),

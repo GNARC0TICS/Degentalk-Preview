@@ -97,7 +97,7 @@ app.use((req, res, next) => {
     startupLog(`Starting Degentalk™™ Backend Server...`);
     startupLog(`Environment: ${process.env.NODE_ENV || 'development'}`);
     startupLog(`Database: ${process.env.DATABASE_PROVIDER || 'sqlite'} (${process.env.DATABASE_URL || 'db/dev.db'})`);
-    
+
     // Run Drizzle migrations for PostgreSQL
     if (process.env.DATABASE_PROVIDER === 'postgresql' || process.env.DATABASE_PROVIDER === 'postgres') {
       startupLog('Using PostgreSQL - skipping SQLite table creation script');
@@ -140,7 +140,7 @@ app.use((req, res, next) => {
       if (err.stack) {
         console.error(err.stack);
       }
-      
+
       res.status(status).json({ message });
     });
 
@@ -154,7 +154,7 @@ app.use((req, res, next) => {
     // Start the server
     const port = process.env.PORT ? parseInt(process.env.PORT) : 5001;
     startupLog(`Starting server on port ${port}...`);
-    
+
     server.on('error', (error: any) => {
       if (error.code === 'EADDRINUSE') {
         startupLog(`Port ${port} is already in use. Another process might be running on this port.`, 'error');
@@ -166,19 +166,19 @@ app.use((req, res, next) => {
 
     server.on('listening', () => {
       startupLog(`Backend API running on http://localhost:${port}`, 'success');
-      
+
       // Run scheduled tasks on server start and then every 5 minutes
       startupLog('Initializing scheduled tasks...');
       runScheduledTasks();
-      
+
       // Set up scheduled tasks to run every 5 minutes
       setInterval(() => {
         runScheduledTasks();
       }, 5 * 60 * 1000);
-      
+
       startupLog('Server initialization complete!', 'success');
     });
-    
+
     server.listen({
       port,
       host: "0.0.0.0",
@@ -188,3 +188,10 @@ app.use((req, res, next) => {
     process.exit(1);
   }
 })();
+
+/**
+ * Degentalk™ Main Server Entry
+ *
+ * This is the main entry point for the Express backend server.
+ * Loads environment, sets up app, and starts listening.
+ */

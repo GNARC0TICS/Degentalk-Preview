@@ -45,7 +45,7 @@ export function SiteFooter() {
           </div>
           <div className="flex items-center gap-2 text-cyan-400">
             <MessageSquare className="w-4 h-4" />
-            <span>42,069 posts today</span>
+            <span>42,069 shitposts today</span>
           </div>
         </motion.div>
 

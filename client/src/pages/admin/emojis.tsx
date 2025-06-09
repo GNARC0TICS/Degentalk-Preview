@@ -156,14 +156,6 @@ export default function AdminEmojisPage() {
   const [isLoadingLotties, setIsLoadingLotties] = useState(false);
   const [lottieSearchError, setLottieSearchError] = useState<string | null>(null);
 
-  // State for Manual Lottie Upload
-  const [manualUploadFile, setManualUploadFile] = useState<File | null>(null);
-  const [manualUploadDataString, setManualUploadDataString] = useState<string | null>(null);
-  const [manualUploadPreviewKey, setManualUploadPreviewKey] = useState<string>(Date.now().toString());
-  const [manualUploadError, setManualUploadError] = useState<string | null>(null);
-  const [manualUploadNameSuggestion, setManualUploadNameSuggestion] = useState<string | null>(null);
-  const [isProcessingFile, setIsProcessingFile] = useState(false);
-
   // Fetch emojis
   const { data: emojis, isLoading } = useQuery({
     queryKey: ["/api/admin/emojis"],
@@ -181,20 +173,25 @@ export default function AdminEmojisPage() {
 
   // Create emoji mutation
   const createEmojiMutation = useMutation({
-    mutationFn: (newEmoji: EmojiFormValues) =>
-      apiRequest("/api/admin/emojis", {
+    mutationFn: (newEmoji: EmojiFormValues) => {
+      console.log("createEmojiMutation - mutationFn called with:", JSON.stringify(newEmoji, null, 2)); // DEBUG
+      const { imageUrl, previewUrl, isLocked, unlockType, priceDgt, requiredPathXP, ...rest } = newEmoji;
+      return apiRequest({
+        url: "/api/admin/emojis",
         method: "POST",
         data: {
-          ...newEmoji,
-          url: newEmoji.imageUrl,
-          preview_url: newEmoji.previewUrl,
-          is_locked: newEmoji.isLocked,
-          unlock_type: newEmoji.unlockType,
-          price_dgt: newEmoji.priceDgt,
-          required_path_xp: newEmoji.requiredPathXP,
+          ...rest,
+          url: imageUrl, // Map imageUrl to url
+          preview_url: previewUrl,
+          is_locked: isLocked,
+          unlock_type: unlockType,
+          price_dgt: priceDgt,
+          required_path_xp: requiredPathXP,
         },
-      }),
+      });
+    },
     onSuccess: () => {
+      console.log("createEmojiMutation - onSuccess"); // DEBUG
       queryClient.invalidateQueries({ queryKey: ["/api/admin/emojis"] });
       setIsOpen(false);
       toast({
@@ -203,9 +200,18 @@ export default function AdminEmojisPage() {
       });
     },
     onError: (error: any) => {
+      console.error("createEmojiMutation - onError:", error); // DEBUG: More detailed error
+      let description = "There was an error creating the emoji.";
+      if (error.message) {
+        description = error.message;
+      }
+      // If the error object has a response with data.message (common for API errors)
+      if (error.response && error.response.data && error.response.data.message) {
+        description = error.response.data.message;
+      }
       toast({
         title: "Failed to create emoji",
-        description: error.message || "There was an error creating the emoji.",
+        description: description,
         variant: "destructive",
       });
     },
@@ -213,19 +219,22 @@ export default function AdminEmojisPage() {
 
   // Update emoji mutation
   const updateEmojiMutation = useMutation({
-    mutationFn: ({ id, emoji }: { id: number; emoji: EmojiFormValues }) =>
-      apiRequest(`/api/admin/emojis/${id}`, {
+    mutationFn: ({ id, emoji }: { id: number; emoji: EmojiFormValues }) => {
+      const { imageUrl, previewUrl, isLocked, unlockType, priceDgt, requiredPathXP, ...rest } = emoji;
+      return apiRequest({
+        url: `/api/admin/emojis/${id}`,
         method: "PUT",
         data: {
-          ...emoji,
-          url: emoji.imageUrl,
-          preview_url: emoji.previewUrl,
-          is_locked: emoji.isLocked,
-          unlock_type: emoji.unlockType,
-          price_dgt: emoji.priceDgt,
-          required_path_xp: emoji.requiredPathXP,
+          ...rest,
+          url: imageUrl,
+          preview_url: previewUrl,
+          is_locked: isLocked,
+          unlock_type: unlockType,
+          price_dgt: priceDgt,
+          required_path_xp: requiredPathXP,
         },
-      }),
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/emojis"] });
       setIsOpen(false);
@@ -247,7 +256,8 @@ export default function AdminEmojisPage() {
   // Delete emoji mutation
   const deleteEmojiMutation = useMutation({
     mutationFn: (id: number) =>
-      apiRequest(`/api/admin/emojis/${id}`, {
+      apiRequest({
+        url: `/api/admin/emojis/${id}`,
         method: "DELETE",
       }),
     onSuccess: () => {
@@ -291,6 +301,9 @@ export default function AdminEmojisPage() {
   const watchedImageUrl = form.watch("imageUrl");
   const watchedPreviewUrl = form.watch("previewUrl");
   const watchedName = form.watch("name");
+
+  // State for dialog file input
+  const [isDialogProcessingFile, setIsDialogProcessingFile] = useState(false);
 
   // Handle edit emoji
   const handleEditEmoji = (emoji: Emoji) => {
@@ -350,11 +363,68 @@ export default function AdminEmojisPage() {
     setIsOpen(true);
   };
 
+  // Handle file upload within the dialog for Lottie type
+  const handleDialogLottieFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsDialogProcessingFile(true);
+    let localError = null;
+
+    if (!file.type.includes("json") && !file.name.endsWith(".lottie")) {
+      localError = "Invalid file type. Please upload a .json or .lottie file.";
+      toast({ title: "Upload Error", description: localError, variant: "destructive" });
+      setIsDialogProcessingFile(false);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const text = e.target?.result as string;
+        JSON.parse(text); // Validate JSON structure
+        form.setValue("imageUrl", text, { shouldValidate: true });
+        // If name field is empty or still a default, suggest from filename
+        if (!form.getValues("name") || form.getValues("name").startsWith(":lottie-")) {
+          const fileName = file.name.split('.').slice(0, -1).join('.') || file.name;
+          const slugifiedName = fileName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+          form.setValue("name", fileName, { shouldValidate: true });
+          form.setValue("code", `:lottie-${slugifiedName}:`, { shouldValidate: true });
+        }
+        toast({ title: "File Uploaded", description: "Lottie JSON populated in the URL/Data field." });
+      } catch (err) {
+        localError = "Invalid Lottie JSON structure in the file.";
+        console.error("Error parsing Lottie file in dialog:", err);
+        toast({ title: "Upload Error", description: localError, variant: "destructive" });
+        form.setValue("imageUrl", "", { shouldValidate: true }); // Clear field on error
+      }
+      setIsDialogProcessingFile(false);
+    };
+    reader.onerror = () => {
+      localError = "Failed to read the file.";
+      toast({ title: "Upload Error", description: localError, variant: "destructive" });
+      setIsDialogProcessingFile(false);
+    };
+    reader.readAsText(file);
+    // Reset file input so the same file can be re-uploaded if needed after an error
+    if (event.target) {
+      event.target.value = "";
+    }
+  };
+
   // Form submission
   const onSubmit = (values: EmojiFormValues) => {
+    console.log("Submitting emoji form with values:", JSON.stringify(values, null, 2)); // DEBUG: Log submitted values
+
+    // For manually uploaded Lotties, imageUrl contains the raw JSON string.
+    // For API-imported Lotties, imageUrl contains the .lottie file URL.
+    // The backend needs to be able to handle both cases for the 'url' field.
+
     if (currentEmoji) {
+      console.log("Calling updateEmojiMutation for ID:", currentEmoji.id);
       updateEmojiMutation.mutate({ id: currentEmoji.id, emoji: values });
     } else {
+      console.log("Calling createEmojiMutation");
       createEmojiMutation.mutate(values);
     }
   };
@@ -369,156 +439,6 @@ export default function AdminEmojisPage() {
     if (currentEmoji) {
       deleteEmojiMutation.mutate(currentEmoji.id);
     }
-  };
-
-  // Function to search LottieFiles API
-  const searchLottieAnimations = useCallback(async () => {
-    if (!lottieSearchTerm.trim()) {
-      setLottieResults([]);
-      setLottieSearchError(null);
-      return;
-    }
-    setIsLoadingLotties(true);
-    setLottieSearchError(null);
-    console.log(`Searching LottieFiles for: "${lottieSearchTerm}"`); // DEBUG
-    try {
-      const response = await fetch(
-        `https://api.lottiefiles.com/v2/search/animations?q=${encodeURIComponent(lottieSearchTerm)}`
-      );
-
-      console.log("Lottie API Response Status:", response.status); // DEBUG
-
-      if (!response.ok) {
-        let errorData = { message: "Unknown server error" };
-        try {
-          errorData = await response.json();
-          console.error("Lottie API Error Data:", errorData); // DEBUG
-        } catch (e) {
-          console.error("Failed to parse error JSON from Lottie API", e); // DEBUG
-        }
-        throw new Error(
-          `Failed to fetch animations: ${response.status} ${response.statusText} - ${errorData.message || 'Server error'}`
-        );
-      }
-
-      const data: LottieApiSearchResponse = await response.json();
-      console.log("Lottie API Success Data:", JSON.stringify(data, null, 2)); // DEBUG
-
-      if (!data.animations || !data.animations.results) {
-        console.error("Lottie API Response missing animations.results:", data);
-        throw new Error("Invalid API response structure from LottieFiles.");
-      }
-
-      const simplifiedResults: SimplifiedLottieItem[] = data.animations.results.map(({ node }) => ({
-        id: node.id,
-        name: node.name,
-        tags: node.tags || [],
-        author: node.author || "Unknown",
-        animationUrl: node.lottie_link || node.json_link, // Prefer .lottie if available
-        previewImageUrl: node.preview_url,
-      }));
-
-      console.log("Simplified Lottie Results:", simplifiedResults); // DEBUG
-      setLottieResults(simplifiedResults);
-
-      if (simplifiedResults.length === 0) {
-        setLottieSearchError(`No results found for "${lottieSearchTerm}".`);
-      }
-    } catch (error: any) {
-      console.error("Error fetching Lottie animations:", error);
-      setLottieSearchError(error.message || "An unexpected error occurred while searching.");
-      setLottieResults([]);
-      toast({
-        title: "Lottie Search Failed",
-        description: error.message || "Could not fetch animations from LottieFiles.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoadingLotties(false);
-    }
-  }, [lottieSearchTerm, toast]);
-
-  // Handle file selection for manual Lottie upload
-  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) {
-      setManualUploadFile(null);
-      setManualUploadDataString(null);
-      setManualUploadError(null);
-      setManualUploadNameSuggestion(null);
-      return;
-    }
-
-    setIsProcessingFile(true);
-    setManualUploadFile(file);
-    setManualUploadError(null);
-    setManualUploadDataString(null);
-
-    // Suggest name from filename (without extension)
-    const fileName = file.name.split('.').slice(0, -1).join('.') || file.name;
-    setManualUploadNameSuggestion(fileName);
-
-    if (!file.type.includes("json") && !file.name.endsWith(".lottie")) {
-      setManualUploadError("Invalid file type. Please upload a .json or .lottie file.");
-      setIsProcessingFile(false);
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const text = e.target?.result as string;
-        // Attempt to parse to ensure it's valid JSON (Lottie files are JSON)
-        JSON.parse(text);
-        setManualUploadDataString(text);
-        setManualUploadPreviewKey(Date.now().toString()); // Force re-render preview
-      } catch (err) {
-        console.error("Error parsing Lottie file:", err);
-        setManualUploadError("Invalid Lottie JSON structure in the file.");
-        setManualUploadDataString(null);
-      }
-      setIsProcessingFile(false);
-    };
-    reader.onerror = () => {
-      setManualUploadError("Failed to read the file.");
-      setIsProcessingFile(false);
-    };
-    reader.readAsText(file);
-  };
-
-  // Handle import of manually uploaded Lottie
-  const handleImportManualLottie = () => {
-    if (!manualUploadDataString) {
-      toast({
-        title: "Import Error",
-        description: "No Lottie data to import. Please upload a valid file first.",
-        variant: "destructive",
-      });
-      return;
-    }
-    setCurrentEmoji(null); // Ensure it's a new emoji creation
-    const suggestedName = manualUploadNameSuggestion || "Uploaded Lottie";
-    const slugifiedName = suggestedName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-
-    form.reset({
-      name: suggestedName,
-      code: `:lottie-${slugifiedName}:`, // Auto-generate code
-      imageUrl: manualUploadDataString, // Store the RAW JSON string here
-      previewUrl: null, // Manually uploaded Lotties might not have a separate static preview URL easily
-      category: cosmeticsConfig.emojiCategories.lottie?.key || cosmeticsConfig.emojiCategories.standard.key,
-      isLocked: true,
-      unlockType: cosmeticsConfig.emojiUnlockMethods.shop.key,
-      type: "lottie",
-      priceDgt: 5,
-      requiredPathXP: null,
-      tags: [], // TODO: Could potentially try to extract tags if Lottie JSON has them, or let admin add manually
-    });
-    setIsOpen(true);
-    // Clear manual upload state after initiating import
-    setManualUploadFile(null);
-    setManualUploadDataString(null);
-    setManualUploadError(null);
-    setManualUploadNameSuggestion(null);
   };
 
   // Group emojis by category for display
@@ -896,104 +816,66 @@ export default function AdminEmojisPage() {
                   <CardHeader>
                     <CardTitle>Browse Lottie Animations</CardTitle>
                     <CardDescription>
-                      Search for Lottie animations from LottieFiles and import them, or upload your own.
+                      Search for Lottie animations from LottieFiles.com and import them.
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-4">
                     {/* LottieFiles API Search Section */}
-                    <div className="space-y-4 p-4 border rounded-md">
-                      <h3 class="text-lg font-semibold">Search LottieFiles.com</h3>
-                      <div className="flex gap-2 items-center">
-                        <Input
-                          type="search"
-                          placeholder="Search LottieFiles... (e.g., 'checkmark', 'loading')"
-                          value={lottieSearchTerm}
-                          onChange={(e) => setLottieSearchTerm(e.target.value)}
-                          className="flex-grow"
-                        />
-                        <Button onClick={searchLottieAnimations} disabled={isLoadingLotties || !lottieSearchTerm.trim()}>
-                          {isLoadingLotties ? "Searching..." : <Search className="h-4 w-4" />}
-                        </Button>
-                      </div>
-
-                      {/* Lottie Results Display */}
-                      {isLoadingLotties && <div className="text-center p-4">Loading animations...</div>}
-                      {lottieSearchError && !isLoadingLotties && (
-                        <div className="text-center p-4 text-destructive">{lottieSearchError}</div>
-                      )}
-                      {!isLoadingLotties && !lottieSearchError && lottieResults.length === 0 && lottieSearchTerm && (
-                        <div className="text-center p-4 text-muted-foreground">No results found for "{lottieSearchTerm}". Try a different term.</div>
-                      )}
-                      {!isLoadingLotties && !lottieSearchError && lottieResults.length === 0 && !lottieSearchTerm && (
-                        <div className="text-center p-4 text-muted-foreground">Enter a search term above to find Lottie animations.</div>
-                      )}
-
-                      {lottieResults.length > 0 && (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pt-4">
-                          {lottieResults.map((lottieItem) => (
-                            <Card key={lottieItem.id} className="flex flex-col">
-                              <CardContent className="p-2 flex-grow flex flex-col items-center justify-center aspect-square">
-                                <LottiePreview src={lottieItem.animationUrl} width={100} height={100} />
-                                <p className="text-sm font-medium mt-2 truncate w-full text-center" title={lottieItem.name}>
-                                  {lottieItem.name}
-                                </p>
-                                {lottieItem.tags && lottieItem.tags.length > 0 && (
-                                  <p className="text-xs text-muted-foreground truncate w-full text-center" title={lottieItem.tags.join(', ')}>
-                                    {lottieItem.tags.join(', ')}
-                                  </p>
-                                )}
-                              </CardContent>
-                              <div className="p-2 border-t">
-                                <Button
-                                  size="sm"
-                                  className="w-full"
-                                  onClick={() => handleImportLottie(lottieItem)}
-                                >
-                                  Import
-                                </Button>
-                              </div>
-                            </Card>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Manual Upload Section */}
-                    <div className="space-y-4 p-4 border rounded-md">
-                      <h3 class="text-lg font-semibold">Manual Lottie Upload</h3>
+                    <div className="flex gap-2 items-center">
                       <Input
-                        id="manual-lottie-upload"
-                        type="file"
-                        accept=".json,.lottie"
-                        onChange={handleFileChange}
-                        disabled={isProcessingFile}
-                        className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                        type="search"
+                        placeholder="Search LottieFiles... (e.g., 'checkmark', 'loading')"
+                        value={lottieSearchTerm}
+                        onChange={(e) => setLottieSearchTerm(e.target.value)}
+                        className="flex-grow"
                       />
-                      {isProcessingFile && <p className="text-sm text-muted-foreground">Processing file...</p>}
-                      {manualUploadError && (
-                        <p className="text-sm text-destructive">Error: {manualUploadError}</p>
-                      )}
-                      {manualUploadDataString && !manualUploadError && (
-                        <div className="mt-4 p-4 border rounded-md bg-muted/10 flex flex-col items-center space-y-4">
-                          <h4 className="text-md font-medium">Preview: {manualUploadNameSuggestion || 'Uploaded Lottie'}</h4>
-                          <div className="w-32 h-32 border rounded-md flex items-center justify-center overflow-hidden bg-white">
-                            <Lottie
-                              animationData={JSON.parse(manualUploadDataString)}
-                              loop
-                              style={{ width: 120, height: 120 }}
-                              key={manualUploadPreviewKey}
-                            />
-                          </div>
-                          <Button
-                            onClick={handleImportManualLottie}
-                            disabled={!manualUploadDataString || isProcessingFile}
-                          >
-                            Import this Lottie
-                          </Button>
-                        </div>
-                      )}
+                      <Button onClick={() => {
+                        // This function is now empty as the search logic is handled by the API
+                      }} disabled={isLoadingLotties || !lottieSearchTerm.trim()}>
+                        {isLoadingLotties ? "Searching..." : <Search className="h-4 w-4" />}
+                      </Button>
                     </div>
 
+                    {/* Lottie Results Display */}
+                    {isLoadingLotties && <div className="text-center p-4">Loading animations...</div>}
+                    {lottieSearchError && !isLoadingLotties && (
+                      <div className="text-center p-4 text-destructive">{lottieSearchError}</div>
+                    )}
+                    {!isLoadingLotties && !lottieSearchError && lottieResults.length === 0 && lottieSearchTerm && (
+                      <div className="text-center p-4 text-muted-foreground">No results found for "{lottieSearchTerm}". Try a different term.</div>
+                    )}
+                    {!isLoadingLotties && !lottieSearchError && lottieResults.length === 0 && !lottieSearchTerm && (
+                      <div className="text-center p-4 text-muted-foreground">Enter a search term above to find Lottie animations.</div>
+                    )}
+
+                    {lottieResults.length > 0 && (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pt-4">
+                        {lottieResults.map((lottieItem) => (
+                          <Card key={lottieItem.id} className="flex flex-col">
+                            <CardContent className="p-2 flex-grow flex flex-col items-center justify-center aspect-square">
+                              <LottiePreview src={lottieItem.animationUrl} width={100} height={100} />
+                              <p className="text-sm font-medium mt-2 truncate w-full text-center" title={lottieItem.name}>
+                                {lottieItem.name}
+                              </p>
+                              {lottieItem.tags && lottieItem.tags.length > 0 && (
+                                <p className="text-xs text-muted-foreground truncate w-full text-center" title={lottieItem.tags.join(', ')}>
+                                  {lottieItem.tags.join(', ')}
+                                </p>
+                              )}
+                            </CardContent>
+                            <div className="p-2 border-t">
+                              <Button
+                                size="sm"
+                                className="w-full"
+                                onClick={() => handleImportLottie(lottieItem)}
+                              >
+                                Import
+                              </Button>
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -1071,17 +953,34 @@ export default function AdminEmojisPage() {
                   name="imageUrl"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{watchedType === "lottie" ? "Lottie Animation URL" : "Static Image URL"}</FormLabel>
+                      <FormLabel>{watchedType === "lottie" ? "Lottie Animation URL / JSON Data" : "Static Image URL"}</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder={watchedType === "lottie" ? "Enter Lottie JSON URL (e.g., https://.../animation.json)" : "Enter image URL (e.g., https://.../image.png)"}
+                          placeholder={watchedType === "lottie" ? "Enter Lottie URL, paste JSON, or upload file" : "Enter image URL (e.g., https://.../image.png)"}
                           {...field}
-                          value={field.value ?? ''}
+                          value={field.value ?? ''} // Ensure value is not null/undefined for Input
+                          disabled={isDialogProcessingFile}
                         />
                       </FormControl>
+                      {watchedType === "lottie" && (
+                        <div className="mt-2">
+                          <label htmlFor="dialog-lottie-upload"
+                            className={`inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 ${isDialogProcessingFile ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}>
+                            {isDialogProcessingFile ? "Processing..." : "Upload .json/.lottie File"}
+                          </label>
+                          <input
+                            type="file"
+                            id="dialog-lottie-upload"
+                            accept=".json,.lottie"
+                            onChange={handleDialogLottieFileChange}
+                            style={{ display: 'none' }} // Hide the default input styling
+                            disabled={isDialogProcessingFile}
+                          />
+                        </div>
+                      )}
                       <FormDescription>
                         {watchedType === "lottie"
-                          ? "Direct URL to the Lottie JSON animation file."
+                          ? "Direct URL, raw Lottie JSON data, or upload a file."
                           : "Direct URL of the static emoji image (PNG, GIF, JPG, SVG)."}
                       </FormDescription>
                       <FormMessage />

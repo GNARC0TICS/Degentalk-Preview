@@ -11,17 +11,17 @@ import { AnnouncementTicker } from '@/components/layout/announcement-ticker';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { LeaderboardWidget } from '@/components/sidebar/leaderboard-widget';
 import { WalletSummaryWidget } from '@/components/sidebar/wallet-summary-widget';
-import { 
-  ShoutboxSidebarTop, 
-  ShoutboxSidebarBottom, 
-  ShoutboxMainTop, 
+import {
+  ShoutboxSidebarTop,
+  ShoutboxSidebarBottom,
+  ShoutboxMainTop,
   ShoutboxMainBottom,
   PositionedShoutbox
 } from '@/components/shoutbox/positioned-shoutbox';
 import { useShoutbox } from '@/contexts/shoutbox-context';
 import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
 // import { CanonicalZoneGrid, ZoneCardData } from '@/components/forum/CanonicalZoneGrid'; // ZoneCardData might not be needed here anymore
-import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid'; 
+import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
 import { HotThreads } from '@/features/forum/components/HotThreads';
 // import { useForumStructure } from '@/features/forum/hooks/useForumStructure'; // To be removed
 import { getPrimaryZoneIds } from '@/constants/primaryZones.tsx'; // Explicit .tsx extension
@@ -36,7 +36,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
 // Import icons
-import { 
+import {
   AlertCircle,
   FolderOpen
 } from 'lucide-react';
@@ -58,6 +58,8 @@ const API_PATHS = {
   LEADERBOARD_XP: '/api/leaderboards/xp',
 };
 
+// Degentalk™ Home Page
+// Shows main forum zones, announcements, and featured content.
 export default function HomePage() {
   const { user } = useAuth();
   const isLoggedIn = !!user;
@@ -69,7 +71,7 @@ export default function HomePage() {
   //   isLoading: structureLoading,
   //   error: forumStructureError
   // } = useForumStructure(); // REMOVED
-  
+
   // const primaryZonesFromHook = forumStructure?.primaryZones || []; // REMOVED
   // const categories = forumStructure?.categories || []; // REMOVED
 
@@ -86,9 +88,9 @@ export default function HomePage() {
   const forumStructureError = null; // Placeholder
 
   // Fetch hot threads
-  const { 
-    data: threads, 
-    isLoading: threadsLoading, 
+  const {
+    data: threads,
+    isLoading: threadsLoading,
     error: threadsError
   } = useQuery<ThreadWithUser[]>({
     queryKey: [API_PATHS.HOT_THREADS, { limit: 5 }],
@@ -96,8 +98,8 @@ export default function HomePage() {
   });
 
   // Fetch top users for leaderboard
-  const { 
-    data: topUsers, 
+  const {
+    data: topUsers,
     isLoading: usersLoading,
     error: usersError
   } = useQuery<User[]>({
@@ -105,7 +107,7 @@ export default function HomePage() {
     queryFn: getQueryFn({ on401: "returnNull" }),
     enabled: false // Temporarily disabled until we have this API route
   });
-  
+
   // Fetch active users
   const {
     data: activeUsers,
@@ -125,23 +127,23 @@ export default function HomePage() {
     <div className="min-h-screen bg-black text-white flex flex-col">
       {/* Hero Section */}
       <HeroSection />
-      
+
       {/* Announcement Ticker */}
       <AnnouncementTicker />
-      
+
       {/* Floating Shoutbox */}
       <FloatingShoutboxPositioner />
-      
+
       {/* Main Content */}
       <main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 md:py-12 flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8">
         {/* Main Content Area (2/3 width) */}
         <div className="w-full lg:w-2/3 space-y-6">
           {/* Shoutbox at main-top position */}
           <ShoutboxMainTop />
-          
+
           {/* Hot Threads */}
           <HotThreads className="mb-6" />
-          
+
           {/* Primary Zones Section */}
           <section className="mb-16">
             <div className="flex items-center justify-between mb-8">
@@ -156,34 +158,34 @@ export default function HomePage() {
                 </Button>
               </Link>
             </div>
-            
+
             {forumStructureError ? (
               <div className="text-center py-12">
                 <p className="text-red-400">Failed to load zones</p>
               </div>
-                         ) : structureLoading ? (
+            ) : structureLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="bg-zinc-900 rounded-xl h-48 animate-pulse" />
                 ))}
               </div>
             ) : (
-              <CanonicalZoneGrid 
+              <CanonicalZoneGrid
                 zoneIds={primaryZoneIds} // Pass the array of primary zone IDs
                 includeShopCard={true}
               />
             )}
           </section>
         </div>
-        
+
         {/* Sidebar (1/3 width) */}
         <aside className="w-full lg:w-1/3 space-y-4 sm:space-y-6 md:space-y-8">
           {/* Shoutbox at sidebar-top */}
           <ShoutboxSidebarTop />
-          
+
           {/* Wallet Summary */}
           <WalletSummaryWidget isLoggedIn={isLoggedIn} />
-          
+
           {/* Forum Navigation */}
           <Card className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden">
             <CardHeader className="pb-3">
@@ -212,29 +214,29 @@ export default function HomePage() {
               )}
             </CardContent>
           </Card>
-          
+
           {/* Leaderboard Widget */}
           <LeaderboardWidget users={topUsers} />
-          
+
           {/* Active Members Widget */}
-          <ActiveMembersWidget 
+          <ActiveMembersWidget
             users={activeUsers || []}
             title="Active Degens"
             description="Community members online now"
             isLoading={activeUsersLoading}
             className="mt-auto"
           />
-          
+
           {/* Shoutbox at sidebar-bottom */}
           <ShoutboxSidebarBottom />
         </aside>
       </main>
-      
+
       {/* Shoutbox at main-bottom for mobile */}
       <div className="container mx-auto px-3 sm:px-4 mb-6">
         <ShoutboxMainBottom />
       </div>
-      
+
       {/* Footer */}
       <SiteFooter />
     </div>

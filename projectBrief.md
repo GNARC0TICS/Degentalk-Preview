@@ -1,13 +1,17 @@
 # Degentalk™™ Project Brief (MVP Edition)
 
 ## Project Name
+
 **Degentalk™™**
 
 ## Overview
+
 Degentalk™™ is a next-gen crypto-native forum and social platform for degens, traders, builders, and gamblers. It combines a feature-rich discussion board with real-time social mechanics, a platform-exclusive token (DGT), and a gamified XP economy that rewards engagement, not fluff.
 
 ## Core Problem Solved
+
 Traditional platforms lack:
+
 - On-site token economies and tipping systems.
 - Reputation mechanics that *actually* mean something.
 - A home for unfiltered, long-form, crypto-native chaos.
@@ -15,12 +19,14 @@ Traditional platforms lack:
 Degentalk™™ fixes that by turning forum posting into a game, clout into currency, and the community into an engine.
 
 ## Target Users
+
 - Degenerate gamblers & crypto traders
 - Builders & Web3 devs who want feedback, alpha, or users
 - Meme lords & terminally online shitposters
 - Anyone rugged by Reddit, bored by Discord, or banned from CT
 
 ## Key Modules (MVP Focused)
+
 - **Forum Core:** Threads, replies, reactions, rich text, tags, quote/saved status
 - **XP & Level System:** Posts earn XP; levels unlock perks
 - **DGT Wallet & Utility:** Internal currency with real USD value peg ($0.10), earned or purchased
@@ -29,6 +35,7 @@ Degentalk™™ fixes that by turning forum posting into a game, clout into curr
 - **Admin Tools:** XP/DGT distribution, bans, moderation logs, economy tuning
 
 ## Build Stack
+
 **Frontend:** React (Vite), TailwindCSS, Framer Motion  
 **Backend:** Node.js/Express, Neon PostgreSQL, Drizzle ORM  
 **Payments:** Stripe (fiat), CCPayment (crypto, USDT)  
@@ -38,7 +45,7 @@ Degentalk™™ fixes that by turning forum posting into a game, clout into curr
 
 # Degentalk™™ Manifesto
 
-### “This isn’t for everyone. It’s for us.”
+### "This isn't for everyone. It's for us."
 
 A forum built like a casino.  
 An XP system forged in shitposts.  
@@ -51,11 +58,13 @@ No paid roles. No corporate filters. Just raw clout.
 ## XP & DGT System: TL;DR for MVP
 
 ### 🔹 XP (Experience Points)
+
 - Earned via posting, tipping, referrals, and reactions
 - Never spent — fuels leveling, rep, and unlocks
 - XP cap: **1000/day**
 
 ### 🔸 DGT (DegenToken)
+
 - Internal-only token pegged at **$0.10 USD**
 - Earned through:
   - Milestones (e.g. referrals)
@@ -67,6 +76,7 @@ No paid roles. No corporate filters. Just raw clout.
   - Gated content/forum access
 
 ### 🪙 Peg & Ratio
+
 - **1000 XP = 1 DGT**
 - Symbolic XP bonus for being tipped: **10 XP/DGT**
 
@@ -100,12 +110,14 @@ No paid roles. No corporate filters. Just raw clout.
 ## Tipping & Rain (v1 Logic)
 
 **/tip @user 10 dgt**  
+
 - User gets tokens + 10 XP/DGT tipped  
 - Min: 1 DGT  
 - XP Cap: 200 XP/day  
 - Optional: 1–5% fee to treasury
 
 **/rain 10 dgt**  
+
 - Min: 5 DGT  
 - Max 15 recipients  
 - Eligible users = active in threads/shoutbox  
@@ -148,6 +160,12 @@ No paid roles. No corporate filters. Just raw clout.
 - DGT is **not a token** (yet). Internal only.
 - No plans for trading or bridging — this is about status, not speculation.
 - All values, rates, and shop prices stored in a **central config file**.
+
+---
+
+## Contributor Guidelines & Legal
+
+All contributions to Degentalk™ are subject to the [Degentalk Developer Agreement](contracts/degentalk_dev_agreement.md). Please review this document before contributing to the codebase. It outlines important terms regarding intellectual property ownership and your contributions to the project.
 
 This is our foundation.  
 Now we build chaos on top of it.

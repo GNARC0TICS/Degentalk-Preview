@@ -1,8 +1,7 @@
 /**
- * ForumFusion - Consolidated Logging System
- * 
- * This is the centralized logging utility for the entire application.
- * It handles different log levels, formats, and outputs (console, file).
+ * Centralized Logger Utility for Degentalk™
+ *
+ * Use this logger for all server-side logging to ensure consistency.
  */
 
 import * as fs from 'fs';
@@ -24,40 +23,40 @@ export enum LogAction {
   SYSTEM_STARTUP = 'SYSTEM_STARTUP',
   SYSTEM_SHUTDOWN = 'SYSTEM_SHUTDOWN',
   SCHEDULED_TASK = 'SCHEDULED_TASK',
-  
+
   // User actions
   USER_REGISTER = 'USER_REGISTER',
   USER_LOGIN = 'USER_LOGIN',
   USER_LOGOUT = 'USER_LOGOUT',
   USER_UPDATE = 'USER_UPDATE',
-  
+
   // Wallet actions
   WALLET_CREATE = 'WALLET_CREATE',
   WALLET_IMPORT = 'WALLET_IMPORT',
   WALLET_TRANSACTION = 'WALLET_TRANSACTION',
   TRANSACTION_VERIFY = 'TRANSACTION_VERIFY',
-  
+
   // Vault actions
   VAULT_CREATE = 'VAULT_CREATE',
   VAULT_UNLOCK = 'VAULT_UNLOCK',
   VAULT_AUTO_UNLOCK = 'VAULT_AUTO_UNLOCK',
-  
+
   // Forum actions
   THREAD_CREATE = 'THREAD_CREATE',
   POST_CREATE = 'POST_CREATE',
   POST_EDIT = 'POST_EDIT',
   POST_DELETE = 'POST_DELETE',
-  
+
   // XP actions
   XP_AWARD = 'XP_AWARD',
   XP_ADJUSTMENT = 'XP_ADJUSTMENT',
   LEVEL_UP = 'LEVEL_UP',
-  
+
   // API actions
   API_REQUEST = 'API_REQUEST',
   API_RESPONSE = 'API_RESPONSE',
   API_ERROR = 'API_ERROR',
-  
+
   // Custom
   CUSTOM = 'CUSTOM'
 }
@@ -83,31 +82,31 @@ let logStream: WriteStream | null = null;
  */
 export function initLogger(customConfig = {}) {
   config = { ...DEFAULT_CONFIG, ...customConfig };
-  
+
   // Create log directory if it doesn't exist
   if (config.file) {
     try {
       if (!fs.existsSync(config.filePath)) {
         fs.mkdirSync(config.filePath, { recursive: true });
       }
-      
+
       const logFilePath = path.join(config.filePath, config.fileName);
       logStream = createWriteStream(logFilePath, { flags: 'a' });
-      
+
       // Ensure logs are flushed on process exit
       process.on('exit', () => {
         if (logStream) {
           logStream.end();
         }
       });
-      
+
       // Log initial startup message
       log({
         level: LogLevel.INFO,
         action: LogAction.SYSTEM_STARTUP,
         message: 'Logger initialized',
-        data: { 
-          env: process.env.NODE_ENV, 
+        data: {
+          env: process.env.NODE_ENV,
           logPath: logFilePath
         }
       });
@@ -121,9 +120,9 @@ export function initLogger(customConfig = {}) {
  * Format a log message with timestamp, level, and namespace
  */
 function formatLogMessage(level: LogLevel, namespace: string, message: string): string {
-  const timestamp = config.formatTimestamp ? 
+  const timestamp = config.formatTimestamp ?
     `[${new Date().toISOString()}] ` : '';
-  
+
   return `${timestamp}[${level}] [${namespace}] ${message}`;
 }
 
@@ -138,18 +137,18 @@ export function log(options: {
   data?: any;
 }) {
   const { level, action, namespace, message, data } = options;
-  
+
   // Skip if level is below minimum
   const levels = Object.values(LogLevel);
   if (levels.indexOf(level) < levels.indexOf(config.minLevel)) {
     return;
   }
-  
+
   // Use action as namespace if no namespace is provided
   const logNamespace = namespace || (action ? action : 'APP');
-  
+
   const formattedMessage = formatLogMessage(level, logNamespace, message);
-  
+
   // Format data if present
   let dataString = '';
   if (data) {
@@ -163,7 +162,7 @@ export function log(options: {
       dataString = '\n[Error formatting data]';
     }
   }
-  
+
   // Log to console
   if (config.console) {
     switch (level) {
@@ -184,7 +183,7 @@ export function log(options: {
         console.log(formattedMessage, data);
     }
   }
-  
+
   // Log to file
   if (config.file && logStream) {
     logStream.write(formattedMessage + dataString + '\n');

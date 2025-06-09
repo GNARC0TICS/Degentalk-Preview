@@ -1,3 +1,9 @@
+> **Important: Contribution Guidelines**
+>
+> Before contributing, please review the [Developer Agreement](contracts/degentalk_dev_agreement.md) and add your name to the [Contributors Log](CONTRIBUTORS.md).
+>
+> ---
+
 # Degentalk™™ - Crypto Community Platform
 
 A crypto-native forum and social platform designed for cryptocurrency enthusiasts, traders, and developers. Features integrated wallet functionality, a digital goods marketplace, and gamified social features with XP/DGT economy.
@@ -308,11 +314,46 @@ STRIPE_SECRET_KEY=your_stripe_key
 
 ## 🤝 Contributing
 
-1. Start the development environment: `npm run dev`
-2. Use the role switcher to test different permission levels
-3. Seed the database with realistic data: `npm run dev:seed`
-4. Make changes - both frontend and backend will hot reload
-5. Check types and linting: `npm run check && npm run lint`
+We welcome contributions to Degentalk™! To ensure a smooth process, please follow these guidelines:
+
+**1. Setting Up Your Environment:**
+
+- Follow the [Quick Start](#-quick-start) and [Development](#️-development) sections to get your local environment running.
+- Familiarize yourself with the [Development Features](#development-features) like role switching.
+
+**2. Contributor Agreement & Legal (Mandatory for First-Time Contributors):**
+
+- **Read the Agreement:** Before making any contributions, you MUST read and understand the [Degentalk™ Developer Agreement](contracts/degentalk_dev_agreement.md). This document outlines important terms regarding intellectual property, confidentiality, and your contributions.
+- **Sign the Log:** As part of your first pull request, you MUST add your name, GitHub handle, and the date to the [CONTRIBUTORS.md](CONTRIBUTORS.md) file. This signifies your agreement to the terms in the Developer Agreement.
+- The Pull Request template includes a checklist to confirm these steps. Our CI system also includes a basic check for this.
+
+**3. Contribution Workflow:**
+
+- **Fork the Repository:** Start by forking the main Degentalk™ repository to your own GitHub account.
+- **Create a Branch:** For any new feature or bugfix, create a descriptive branch from the `main` (or `develop` if applicable) branch in your fork (e.g., `git checkout -b feature/new-shoutbox-emoji` or `fix/login-page-bug`).
+- **Make Your Changes:** Write your code, ensuring you adhere to the project's existing coding style and patterns. (Look for any linting configurations or style guides in the project).
+- **Test Thoroughly:** Ensure your changes don't break existing functionality and that new features work as expected. Add tests if applicable.
+- **Commit Your Changes:** Use clear and descriptive commit messages.
+- **Lint and Type-Check:** Run `npm run lint` and `npm run check` to catch any issues before pushing.
+- **Push to Your Fork:** Push your changes to the branch in your fork.
+- **Submit a Pull Request (PR):** Open a PR from your branch to the `main` (or `develop`) branch of the main Degentalk™ repository.
+  - Provide a clear title and description for your PR, explaining the changes and why they were made.
+  - Ensure you've completed the checklist in the PR template, including confirming the Developer Agreement and updating `CONTRIBUTORS.md` if it's your first PR.
+
+**4. Code Review & Merging:**
+
+- Your PR will be reviewed by maintainers.
+- Be prepared to discuss your changes and make any necessary adjustments based on feedback.
+- Once approved and all checks pass, your PR will be merged.
+
+**General Guidelines:**
+
+- Start the development environment: `npm run dev`
+- Use the role switcher to test different permission levels.
+- Seed the database with realistic data if needed: `npm run dev:seed`
+- Make changes - both frontend and backend will hot reload.
+
+Thank you for contributing to Degentalk™!
 
 ---
 
@@ -351,6 +392,7 @@ To incentivize user participation, the platform awards Experience Points (XP) an
   - Relevant Schemas: `db/schema/user/users.ts` (for `dgtWalletBalance`), `db/schema/economy/transactions.ts`.
 
 **Configuration:**
+
 - XP amounts for actions are configured in the `xpActionSettings` table (schema: `db/schema/economy/xpActionSettings.ts`).
 - The DGT reward amount for actions like thread creation might be in environment variables or a configuration table (e.g., `economySettings` in `db/schema/economy/settings.ts`). Refer to `server/src/domains/wallet/wallet.constants.ts` or service logic for defaults.
 
