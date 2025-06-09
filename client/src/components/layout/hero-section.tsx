@@ -4,17 +4,35 @@ import { Users, MessageSquare, ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AnimatedLogo } from '@/components/ui/animated-logo';
 import { motion, AnimatePresence } from 'framer-motion';
-import { uiConfig } from '@/config/ui.config';
+import { uiConfig, HeroQuote } from '@/config/ui.config';
+
+// Fisher-Yates shuffle
+function shuffleArray<T>(array: T[]): T[] {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
 export function HeroSection() {
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const [shuffledQuotes, setShuffledQuotes] = useState<HeroQuote[]>(() => shuffleArray(uiConfig.heroQuotes));
+
+  useEffect(() => {
+    // Shuffle once per mount/session
+    setShuffledQuotes(shuffleArray(uiConfig.heroQuotes));
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentQuoteIndex((prev) => (prev + 1) % uiConfig.heroQuotes.length);
+      setCurrentQuoteIndex((prev) => (prev + 1) % shuffledQuotes.length);
     }, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [shuffledQuotes.length]);
+
+  const currentQuote: HeroQuote = shuffledQuotes[currentQuoteIndex];
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-cod-gray-950 via-cod-gray-900 to-black">
@@ -62,7 +80,7 @@ export function HeroSection() {
                   textShadow: '0 2px 4px rgba(0,0,0,0.3), 0 8px 16px rgba(0,0,0,0.1)'
                 }}
               >
-                {uiConfig.heroQuotes[currentQuoteIndex].headline}
+                {currentQuote.headline}
               </motion.h1>
             </AnimatePresence>
           </div>
@@ -78,7 +96,7 @@ export function HeroSection() {
               className="text-lg md:text-xl text-white mb-8 md:mb-10 flex items-center gap-2 justify-center font-semibold"
               style={{ textShadow: '0 0 8px rgba(255,255,255,0.1)' }}
             >
-              {uiConfig.heroQuotes[currentQuoteIndex].subheader}
+              {currentQuote.subheader}
             </motion.p>
           </AnimatePresence>
 
