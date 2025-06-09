@@ -4,43 +4,37 @@ import { Users, MessageSquare, ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AnimatedLogo } from '@/components/ui/animated-logo';
 import { motion, AnimatePresence } from 'framer-motion';
+import { uiConfig, HeroQuote } from '@/config/ui.config';
 
-const taglines = [
-	"The playground for those who don't play it safe.",
-	'Where Risk and Strategy Connect.',
-	"Let's tilt together ;)",
-	'The Hub of Degenerates.',
-	'From Whispers to Wins',
-	'Connect, Bet, Win.',
-	'Post your wins. Hide your losses.',
-	'The one–stop shop for all things Degen.',
-	'Fortune Favors the Bold.',
-	'From Ideas to Wins.',
-	"It's About Seeing the Play Before It Happens.",
-	'Read the Trends. See the Patterns. Make the Play.',
-	'No charts. Just vibes.',
-	"Rugged? Good. Now you're one of us.",
-	'Built different. Just not financially stable.',
-	"Degens don't cry—we redeposit.",
-	'Who needs therapy when you have leverage',
-	'Where Risk Meets Reward.',
-	'For Those Who Play to Win.',
-	"If There's Odds, We're In.",
-	'The High-Stakes Playground.',
-	'The Edge You Need.',
-	"Every degen's playground for market chaos.",
-	'No Limits. No Filters. All Degen.'
-];
+// Fisher-Yates shuffle
+function shuffleArray<T>(array: T[]): T[] {
+	const arr = [...array];
+	for (let i = arr.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[arr[i], arr[j]] = [arr[j], arr[i]];
+	}
+	return arr;
+}
 
 export function HeroSection() {
-	const [currentTagline, setCurrentTagline] = useState(0);
+	const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+	const [shuffledQuotes, setShuffledQuotes] = useState<HeroQuote[]>(() =>
+		shuffleArray(uiConfig.heroQuotes)
+	);
+
+	useEffect(() => {
+		// Shuffle once per mount/session
+		setShuffledQuotes(shuffleArray(uiConfig.heroQuotes));
+	}, []);
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setCurrentTagline((prev) => (prev + 1) % taglines.length);
+			setCurrentQuoteIndex((prev) => (prev + 1) % shuffledQuotes.length);
 		}, 30000);
 		return () => clearInterval(interval);
-	}, []);
+	}, [shuffledQuotes.length]);
+
+	const currentQuote: HeroQuote = shuffledQuotes[currentQuoteIndex];
 
 	return (
 		<section className="relative overflow-hidden bg-gradient-to-br from-cod-gray-950 via-cod-gray-900 to-black">
@@ -74,11 +68,11 @@ export function HeroSection() {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.8 }}
 				>
-					{/* Animated tagline */}
+					{/* Animated headline */}
 					<div className="h-[120px] md:h-[140px] lg:h-[168px] flex items-center justify-center mb-4">
 						<AnimatePresence mode="wait">
 							<motion.h1
-								key={currentTagline}
+								key={currentQuoteIndex}
 								initial={{ opacity: 0, y: 20 }}
 								animate={{ opacity: 1, y: 0 }}
 								exit={{ opacity: 0, y: -20 }}
@@ -88,29 +82,25 @@ export function HeroSection() {
 									textShadow: '0 2px 4px rgba(0,0,0,0.3), 0 8px 16px rgba(0,0,0,0.1)'
 								}}
 							>
-								{taglines[currentTagline]}
+								{currentQuote.headline}
 							</motion.h1>
 						</AnimatePresence>
 					</div>
 
-					<motion.p
-						className="text-lg md:text-xl text-white mb-8 md:mb-10 flex items-center gap-2 justify-center font-semibold"
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						transition={{ delay: 0.3, duration: 0.8 }}
-					>
-						<span className="text-white" style={{ textShadow: '0 0 8px rgba(16,185,129,0.3)' }}>
-							Discover
-						</span>
-						<span className="text-white">,</span>
-						<span className="text-white" style={{ textShadow: '0 0 8px rgba(234,179,8,0.3)' }}>
-							Discuss
-						</span>
-						<span className="text-white">,</span>
-						<span className="text-white" style={{ textShadow: '0 0 8px rgba(239,68,68,0.3)' }}>
-							Degen.
-						</span>
-					</motion.p>
+					{/* Animated subheader */}
+					<AnimatePresence mode="wait">
+						<motion.p
+							key={`subheader-${currentQuoteIndex}`}
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0, y: -20 }}
+							transition={{ duration: 0.5, delay: 0.1 }}
+							className="text-lg md:text-xl text-white mb-8 md:mb-10 flex items-center gap-2 justify-center font-semibold"
+							style={{ textShadow: '0 0 8px rgba(255,255,255,0.1)' }}
+						>
+							{currentQuote.subheader}
+						</motion.p>
+					</AnimatePresence>
 
 					<motion.div
 						className="flex flex-wrap gap-4 justify-center"

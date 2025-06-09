@@ -116,6 +116,7 @@ export * from './admin/featureFlags';
 export * from './admin/seoMetadata';
 export * from './admin/scheduledTasks';
 export * from './admin/mediaLibrary';
+export * from './admin/uiConfig';
 
 // Gamification domain exports
 export * from './gamification/achievements';
