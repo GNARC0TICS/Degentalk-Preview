@@ -1,17 +1,10 @@
 /**
-<<<<<<< HEAD
  * DegenTalk Dynamic Path System Configuration
  *
-=======
- * Degentalk™™ Dynamic Path System Configuration
- * 
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
  * This file defines the mappings between forum categories and user identity paths.
  * When users interact with content in specific categories, they gain XP in the
  * corresponding path, forming their dynamic identity on the platform.
  */
-
-import { economyConfig } from '@/config/economy.config.ts'; // [CONFIG-REFAC] XP config import
 
 export interface PathDefinition {
 	id: string;
@@ -96,7 +89,6 @@ export const categoryPathMappings: Record<number, string> = {
 };
 
 // XP reward values for various actions
-<<<<<<< HEAD
 export const xpRewards = {
 	newThread: 10,
 	newPost: 5,
@@ -106,9 +98,6 @@ export const xpRewards = {
 	// XP at which multipliers are awarded (1000 XP = 1.2× multiplier)
 	multiplierThreshold: 1000
 };
-=======
-export const xpRewards = economyConfig.xp; // [CONFIG-REFAC] moved from hardcoded object to config
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 /**
  * Gets the path ID associated with a category
@@ -134,7 +123,6 @@ export function getPathDefinition(pathId: string): PathDefinition | undefined {
  * @returns The dominant path ID or undefined if no paths
  */
 export function getDominantPath(paths: Record<string, number> | undefined): string | undefined {
-<<<<<<< HEAD
 	if (!paths || Object.keys(paths).length === 0) return undefined;
 
 	let maxXP = 0;
@@ -149,19 +137,3 @@ export function getDominantPath(paths: Record<string, number> | undefined): stri
 
 	return dominantPath;
 }
-=======
-  if (!paths || Object.keys(paths).length === 0) return undefined;
-
-  let maxXP = 0;
-  let dominantPath: string | undefined = undefined;
-
-  for (const [pathId, xp] of Object.entries(paths)) {
-    if (xp > maxXP) {
-      maxXP = xp;
-      dominantPath = pathId;
-    }
-  }
-
-  return dominantPath;
-}
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a

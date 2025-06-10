@@ -1,23 +1,13 @@
-import React, { useState } from 'react';
-import { Link } from 'wouter';
-import { 
-  Filter,
-  Search,
-  Users,
-  MessageCircle,
-  Hash,
-  Star,
-  ArrowLeft,
-  Folder,
-  AlertCircle,
-  ArrowRight
-} from 'lucide-react';
-import { primaryZonesArray, getPrimaryZoneIds } from '@/constants/primaryZones.tsx';
-import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid.tsx';
-import { Button } from '@/components/ui/button.tsx';
+import React from 'react';
+import { SiteFooter } from '@/components/layout/site-footer';
+import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
+import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
+import { useForumStructure } from '@/features/forum/hooks/useForumStructure';
+import { LoadingSpinner } from '@/components/ui/loader';
+import { ErrorDisplay } from '@/components/ui/error-display';
+import { Folder, LayoutGrid } from 'lucide-react';
 
 export default function ZonesPage() {
-<<<<<<< HEAD
 	const { primaryZones, categories, isLoading, error } = useForumStructure();
 
 	if (isLoading) {
@@ -99,157 +89,4 @@ export default function ZonesPage() {
 			<SiteFooter />
 		</div>
 	);
-=======
-  const [searchTerm, setSearchTerm] = useState('');
-
-  return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <div className="bg-zinc-900/50 border-b border-zinc-800">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center gap-4 mb-6">
-            <Link href="/">
-              <button className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors">
-                <ArrowLeft className="w-4 h-4" />
-                Back to Home
-              </button>
-            </Link>
-          </div>
-          
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div>
-              <h1 className="text-3xl font-bold text-white mb-2">All Zones</h1>
-              <p className="text-zinc-400">Explore all zones, shop, and community areas</p>
-            </div>
-            
-            {/* Stats Overview */}
-            <div className="flex items-center gap-6 text-sm">
-              <div className="flex items-center gap-2 text-zinc-400">
-                <Star className="w-4 h-4 text-emerald-400" />
-                <span className="font-medium text-white">{primaryZonesArray.length}</span>
-                <span>Primary Zones</span>
-              </div>
-              <div className="flex items-center gap-2 text-zinc-400">
-                <Folder className="w-4 h-4 text-amber-400" />
-                <span className="font-medium text-white">0</span>
-                <span>Categories</span>
-              </div>
-              <div className="flex items-center gap-2 text-zinc-400">
-                <Users className="w-4 h-4 text-blue-400" />
-                <span className="font-medium text-white">0</span>
-                <span>Active Users</span>
-              </div>
-              <div className="flex items-center gap-2 text-zinc-400">
-                <MessageCircle className="w-4 h-4 text-purple-400" />
-                <span className="font-medium text-white">0</span>
-                <span>Threads</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="container mx-auto px-4 py-6">
-        {/* Search and Filter */}
-        <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-6 mb-8">
-          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Filter className="w-5 h-5 text-emerald-400" />
-            Filter & Sort Zones
-          </h2>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-zinc-400" />
-            <input
-              type="text"
-              placeholder="Search zones and forums..."
-              value={searchTerm}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-            />
-          </div>
-        </div>
-
-        {/* Primary Zones + Shop Section */}
-        <section className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-1">Primary Zones & Shop</h2>
-              <p className="text-zinc-400">Feature-rich ecosystems with unique layouts and the Degen Shop</p>
-            </div>
-            <div className="text-sm text-zinc-500">{primaryZonesArray.length + 1} items</div>
-          </div>
-
-          {/* Primary Zone Grid with Shop Card */}
-          <CanonicalZoneGrid 
-            zoneIds={getPrimaryZoneIds()} 
-            includeShopCard={true}
-          />
-        </section>
-
-        {/* Quick Actions */}
-        <section className="mb-8">
-          <div className="bg-zinc-900/30 border border-zinc-800 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Link href="/forum">
-                <Button variant="outline" className="w-full justify-between border-zinc-700 hover:border-emerald-500 hover:bg-emerald-500/10">
-                  Browse Forums
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link href="/shop">
-                <Button variant="outline" className="w-full justify-between border-zinc-700 hover:border-purple-500 hover:bg-purple-500/10">
-                  Visit Shop
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link href="/leaderboard">
-                <Button variant="outline" className="w-full justify-between border-zinc-700 hover:border-amber-500 hover:bg-amber-500/10">
-                  Leaderboards
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* General Forums Section */}
-        <section>
-          <div className="h-px bg-zinc-800/50 my-8" />
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-1">General Forums</h2>
-              <p className="text-zinc-400">Classic forum structure for community discussions</p>
-            </div>
-            <div className="text-sm text-zinc-500">0 categories</div>
-          </div>
-
-          <div className="text-center py-12">
-            <AlertCircle className="w-12 h-12 mx-auto mb-4 text-zinc-600" />
-            <p className="text-zinc-400">General forums will be populated from the API</p>
-            <p className="text-zinc-600 text-sm mt-2">API integration in progress...</p>
-          </div>
-        </section>
-
-        {/* Footer Info */}
-        <section className="mt-12 text-center">
-          <div className="bg-zinc-900/30 border border-zinc-800 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-white mb-2">About Degentalk™ Zones</h3>
-            <p className="text-zinc-400 mb-4">
-              Primary zones are feature-rich communities with unique themes, XP multipliers, and special events. 
-              The Degen Shop offers exclusive items and upgrades for your forum experience.
-            </p>
-            <div className="flex items-center justify-center gap-6 text-sm text-zinc-500">
-              <span>🎯 Mission Control</span>
-              <span>🔥 The Pit</span>
-              <span>📋 Briefing Room</span>
-              <span>🏛️ Archive</span>
-              <span>🛒 Degen Shop</span>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-  );
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }

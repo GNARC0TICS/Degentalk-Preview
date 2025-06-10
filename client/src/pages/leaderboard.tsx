@@ -193,7 +193,6 @@ export default function LeaderboardPage() {
 		</Card>
 	);
 
-<<<<<<< HEAD
 	return (
 		<div className="max-w-5xl mx-auto px-4 py-8">
 			<h1 className="text-3xl font-bold mb-8 text-center text-white">DegenTalk Leaderboards</h1>
@@ -204,21 +203,3 @@ export default function LeaderboardPage() {
 		</div>
 	);
 }
-=======
-  return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center text-white">
-        Degentalk™™ Leaderboards
-      </h1>
-      
-      {/* Add Tabs for different leaderboards (XP, Clout, DGT) here later */}
-      
-      {isLoading
-        ? renderLoadingState()
-        : isError
-        ? renderErrorState()
-        : renderLeaderboardTable()}
-    </div>
-  );
-}
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a

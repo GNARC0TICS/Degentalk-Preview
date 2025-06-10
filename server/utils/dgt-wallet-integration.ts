@@ -14,7 +14,6 @@ if (process.env.STRIPE_SECRET_KEY) {
 
 // Available DGT packages
 const DGT_PACKAGES = [
-<<<<<<< HEAD
 	{
 		id: 'basic',
 		name: 'Basic Pack',
@@ -51,44 +50,6 @@ const DGT_PACKAGES = [
 		discount_percentage: 25,
 		is_featured: false
 	}
-=======
-  {
-    id: 'basic',
-    name: 'Basic Pack',
-    description: 'Get started with a small amount of DGT',
-    dgt_amount: 100,
-    usd_price: 5.99,
-    discount_percentage: 0,
-    is_featured: false
-  },
-  {
-    id: 'standard',
-    name: 'Standard Pack',
-    description: 'The most popular choice for regular users',
-    dgt_amount: 500,
-    usd_price: 24.99,
-    discount_percentage: 5,
-    is_featured: true
-  },
-  {
-    id: 'premium',
-    name: 'Premium Pack',
-    description: 'Best value for active community members',
-    dgt_amount: 1200,
-    usd_price: 49.99,
-    discount_percentage: 15,
-    is_featured: false
-  },
-  {
-    id: 'whale',
-    name: 'Whale Pack',
-    description: 'For serious Degentalk™™ power users',
-    dgt_amount: 3000,
-    usd_price: 99.99,
-    discount_percentage: 25,
-    is_featured: false
-  }
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 ];
 
 export class DgtWalletIntegration {

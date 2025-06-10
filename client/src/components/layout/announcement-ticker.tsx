@@ -101,7 +101,6 @@ export function AnnouncementTicker() {
 		staleTime: 5 * 60 * 1000
 	});
 
-<<<<<<< HEAD
 	const [fallbackAnnouncements] = useState<Announcement[]>([
 		{
 			id: 0,
@@ -112,18 +111,6 @@ export function AnnouncementTicker() {
 			tickerMode: true
 		}
 	]);
-=======
-  const [fallbackAnnouncements] = useState<Announcement[]>([
-    { 
-      id: 0, 
-      type: 'info', 
-      content: 'Welcome to Degentalk™! The community-powered crypto forum', 
-      createdAt: new Date().toISOString(),
-      priority: 0,
-      tickerMode: true
-    }
-  ]);
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	// Ensure displayAnnouncements is always an array
 	const displayAnnouncements =

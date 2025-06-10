@@ -125,7 +125,6 @@ export default function CreateThreadPage() {
 								</CardContent>
 							</Card>
 
-<<<<<<< HEAD
 							{/* Community Stats */}
 							<Card className="bg-zinc-900/70 backdrop-blur-sm border-zinc-700/50 mt-6">
 								<CardHeader>
@@ -155,59 +154,6 @@ export default function CreateThreadPage() {
 								</CardContent>
 							</Card>
 						</div>
-=======
-            {/* Main Form Area */}
-            <div className="lg:col-span-2 order-1 lg:order-2">
-              <Card className="bg-zinc-900/70 backdrop-blur-sm border-zinc-700/50 shadow-xl">
-                <CardHeader className="text-center">
-                  <CardTitle className="text-2xl text-white flex items-center justify-center">
-                    <MessageSquare className="h-6 w-6 mr-2 text-emerald-400" />
-                    Create Your Thread
-                  </CardTitle>
-                  <CardDescription className="text-zinc-300">
-                    Start a new discussion and engage with the Degentalk™™ community
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-6">
-                  {!user ? (
-                    <div className="text-center py-12">
-                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center">
-                        <Users className="h-8 w-8 text-amber-400" />
-                      </div>
-                      <h3 className="text-xl font-semibold text-white mb-2">Authentication Required</h3>
-                      <p className="text-zinc-400 mb-6">You need to be signed in to create a new thread</p>
-                      <div className="flex gap-3 justify-center">
-                        <Link href="/auth">
-                          <Button className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 border-0">
-                            Sign In
-                          </Button>
-                        </Link>
-                        <Link href="/forums">
-                          <Button variant="outline" className="border-zinc-600 text-zinc-400 hover:bg-zinc-800">
-                            Browse Forums
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 flex items-center justify-center">
-                        <Sparkles className="h-8 w-8 text-emerald-400" />
-                      </div>
-                      <h3 className="text-xl font-semibold text-white mb-2">Ready to Share?</h3>
-                      <p className="text-zinc-400 mb-6">Click below to open the thread creation form</p>
-                      <Button 
-                        onClick={() => setIsModalOpen(true)}
-                        className="bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 border-0 shadow-lg"
-                      >
-                        <MessageSquare className="h-4 w-4 mr-2" />
-                        Start Writing
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 						{/* Main Form Area */}
 						<div className="lg:col-span-2 order-1 lg:order-2">

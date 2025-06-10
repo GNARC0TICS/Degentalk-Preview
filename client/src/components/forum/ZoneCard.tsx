@@ -1,24 +1,11 @@
 import React from 'react';
 import { Link } from 'wouter';
-
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-
-import {
-  Eye,
-  MessageSquare,
-  Users,
-  Clock,
-  Flame,
-  AlertTriangle // grouped alphabetically for clarity
-} from 'lucide-react';
-
+import { Eye, MessageSquare, Users, Clock, Flame } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
-import { primaryZones, type PrimaryZone } from '@/constants/primaryZones.tsx';
-
 export interface ZoneCardProps {
-<<<<<<< HEAD
 	// Core data
 	id: string | number;
 	name: string;
@@ -48,28 +35,6 @@ export interface ZoneCardProps {
 	// Component behavior
 	className?: string;
 	onClick?: () => void;
-=======
-  zoneId: string; // Use zoneId (slug) to look up in the registry
-  // Stats and metadata can still be passed as props or fetched if not in registry
-  threadCount?: number;
-  postCount?: number;
-  activeUsersCount?: number;
-  lastActivityAt?: Date;
-  
-  // Special states
-  hasXpBoost?: boolean;
-  boostMultiplier?: number;
-  isEventActive?: boolean;
-  eventData?: {
-    name: string;
-    endsAt: Date;
-  };
-  rarity?: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-  
-  // Component behavior
-  className?: string;
-  onClick?: () => void;
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }
 
 /**
@@ -78,7 +43,6 @@ export interface ZoneCardProps {
  * from regular category cards.
  */
 export function ZoneCard({
-<<<<<<< HEAD
 	id,
 	name,
 	slug,
@@ -136,86 +100,6 @@ export function ZoneCard({
 		<Link href={zoneUrl} onClick={handleClick}>
 			<Card
 				className={`
-=======
-  zoneId,
-  threadCount = 0,
-  postCount = 0,
-  activeUsersCount = 0,
-  lastActivityAt,
-  hasXpBoost = false,
-  boostMultiplier = 1,
-  isEventActive = false,
-  eventData,
-  rarity = 'common',
-  className = '',
-  onClick,
-}: ZoneCardProps) {
-  const zoneConfig = primaryZones[zoneId];
-
-  if (!zoneConfig) {
-    // Fallback for when zoneId is not found in the registry
-    return (
-      <Card className={`p-4 border-2 border-red-500 bg-red-900/30 ${className}`}>
-        <div className="flex items-center text-red-400">
-          <AlertTriangle className="h-6 w-6 mr-2" />
-          <div>
-            <h3 className="font-bold">Zone Config Error</h3>
-            <p className="text-xs">No configuration found for zone ID: "{zoneId}"</p>
-          </div>
-        </div>
-      </Card>
-    );
-  }
-
-  const { 
-    label: name, 
-    description, 
-    icon: zoneIcon, // Renamed to avoid conflict with Flame icon from lucide-react
-    gradient, 
-    slug 
-  } = zoneConfig;
-
-  // Determine the URL - Primary zones are at root level
-  const zoneUrl = `/${slug}`; 
-  
-  // Custom class based on gradient (instead of colorTheme)
-  // The gradient string itself can be applied directly if it's a Tailwind class
-  const themeClass = gradient || 'bg-zinc-800'; // Fallback gradient
-  
-  // Handle click if provided
-  const handleClick = (e: React.MouseEvent) => {
-    if (onClick) {
-      e.preventDefault();
-      onClick();
-    }
-  };
-  
-  // Render icon based on format (emoji or component)
-  const renderIcon = () => {
-    if (typeof zoneIcon === 'string' && /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(zoneIcon)) {
-      return <span className="text-3xl mr-2">{zoneIcon}</span>;
-    }
-    if (React.isValidElement(zoneIcon)) {
-      return <div className="mr-2">{zoneIcon}</div>; // Render ReactNode
-    }
-    // Fallback icon
-    return <Flame className="h-6 w-6 mr-2" />;
-  };
-  
-  // Rarity-based styles (for future implementation)
-  const rarityClasses = {
-    common: '',
-    uncommon: 'zone-card-uncommon',
-    rare: 'zone-card-rare',
-    epic: 'zone-card-epic',
-    legendary: 'zone-card-legendary',
-  };
-  
-  return (
-    <Link href={zoneUrl} onClick={handleClick}>
-      <Card 
-        className={`
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
           zone-card
           ${themeClass}
           ${rarityClasses[rarity]}

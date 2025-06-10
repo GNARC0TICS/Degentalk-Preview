@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card.tsx';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { ThreadCard } from '../../../components/forum/thread-card.tsx';
-import { ThreadTag } from '../../../../shared/types.ts';
+import { ThreadCard } from '@/components/forum/thread-card';
+import { ThreadTag } from '@shared/types';
 import { Link } from 'wouter';
 import {
 	MessageSquare,
@@ -16,8 +16,8 @@ import {
 	ChevronRight
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { Badge } from '../../../components/ui/badge.tsx';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar.tsx';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ThreadResponse {
@@ -55,7 +55,6 @@ interface HotThreadsProps {
 }
 
 export function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
-<<<<<<< HEAD
 	const {
 		data: threads,
 		isLoading,
@@ -68,16 +67,6 @@ export function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 			return res.json();
 		}
 	});
-=======
-  const { data: threads, isLoading, error } = useQuery<ThreadResponse[]>({
-    queryKey: ['/api/analytics/hot-threads', { limit }],
-    queryFn: async () => {
-      const res = await fetch(`/api/analytics/hot-threads?limit=${limit}`);
-      if (!res.ok) throw new Error('Failed to fetch hot threads');
-      return res.json();
-    },
-  });
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	const [currentPage, setCurrentPage] = useState(0);
 	const threadsPerPage = 3;

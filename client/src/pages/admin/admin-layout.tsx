@@ -82,7 +82,6 @@ const adminLinks = [
 ];
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-<<<<<<< HEAD
 	const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
 	// Mocked admin permissions - in a real app, these would come from auth context
@@ -141,63 +140,4 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 			</div>
 		</div>
 	);
-=======
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-
-  // Mocked admin permissions - in a real app, these would come from auth context
-  const userPermissions = useMemo<AdminRoutePermission[]>(() =>
-    Object.values(AdminRoutePermission), []
-  );
-
-  return (
-    <div className="h-screen flex flex-col bg-zinc-950 text-white overflow-hidden">
-      {/* Admin top navbar */}
-      <header className="border-b border-zinc-800 bg-black/30 px-4 h-14 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="p-2 hover:bg-zinc-800 rounded-md"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-          <Link href="/admin" className="font-bold text-lg">
-            Degentalk™™ Admin
-          </Link>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="relative hidden md:flex items-center text-muted-foreground focus-within:text-foreground">
-            <Search className="absolute left-2.5 h-4 w-4" />
-            <input
-              type="search"
-              placeholder="Search..."
-              className="h-9 rounded-md border border-zinc-800 bg-zinc-950 pl-8 pr-4 text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-700"
-            />
-          </div>
-
-          <button className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] font-medium flex items-center justify-center">
-              3
-            </span>
-          </button>
-
-          <Link href="/" className="flex items-center text-sm text-zinc-400 hover:text-white">
-            <ExternalLink className="h-4 w-4 mr-1" />
-            <span className="hidden md:inline">View Site</span>
-          </Link>
-        </div>
-      </header>
-
-      {/* Main layout with sidebar and content */}
-      <div className="flex flex-1 overflow-hidden">
-        <AdminSidebar links={adminLinks} collapsed={sidebarCollapsed} />
-
-        <main className="flex-1 overflow-auto bg-gradient-to-b from-zinc-900 to-zinc-950 p-4 md:p-8">
-          {children}
-        </main>
-      </div>
-    </div>
-  );
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }

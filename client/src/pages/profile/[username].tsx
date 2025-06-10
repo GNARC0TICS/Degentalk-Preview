@@ -1079,99 +1079,11 @@ function getMockProfileData(username: string): ProfileData {
 
 // Profile page component
 export default function ProfilePage() {
-<<<<<<< HEAD
 	const { username } = useParams();
 	const { user: currentUser } = useAuth();
 	const [activeTab, setActiveTab] = useState('overview');
 	const [isEditMode, setIsEditMode] = useState(false);
 	const isDevelopment = import.meta.env.DEV;
-=======
-  const { username } = useParams();
-  const { user: currentUser } = useAuth();
-  const [activeTab, setActiveTab] = useState('overview');
-  const [isEditMode, setIsEditMode] = useState(false);
-  const isDevelopment = import.meta.env.DEV;
-  
-  // Fetch the profile data for the specified username
-  const { data: profile, isLoading, isError, error } = useQuery<ProfileData>({
-    queryKey: ['profile', username],
-    queryFn: async () => {
-      try {
-        const response = await fetch(`/api/profile/${username}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch profile');
-        }
-        return response.json();
-      } catch (err) {
-        // In development mode, return mock data for certain usernames
-        if (isDevelopment && (username?.toLowerCase() === 'devuser' || username?.toLowerCase() === 'dev')) {
-          console.log('Using mock profile data for development');
-          return getMockProfileData(username);
-        }
-        throw err;
-      }
-    }
-  });
-  
-  // Determine if the profile being viewed belongs to the current user
-  const isOwnProfile = isDevelopment 
-    ? username?.toLowerCase() === 'devuser' // In dev, if viewing DevUser, it's "own"
-    : currentUser?.username === username;
-  
-  // Fetch user inventory if viewing own profile
-  const { data: userInventory = [], isLoading: inventoryLoading } = useUserInventory(
-    isOwnProfile ? profile?.id : undefined
-  );
-  
-  if (isLoading) {
-    return (
-      <div className="flex flex-col min-h-screen bg-gradient-to-b from-zinc-900 to-black">
-        <ProfileSkeleton />
-        <SiteFooter />
-      </div>
-    );
-  }
-  
-  if (isError || !profile) {
-    return (
-      <div className="flex flex-col min-h-screen bg-gradient-to-b from-zinc-900 to-black">
-        <div className="container max-w-screen-xl mx-auto p-4 flex-1">
-          <ErrorDisplay 
-            title={profile ? "Error Loading Profile" : "Profile Not Found"}
-            error={error}
-            message={profile ? (error?.message || "An unexpected error occurred.") : `We couldn't find a profile for the username "${username}". ${import.meta.env.DEV ? 'Try using "DevUser" for development.' : ''}`}
-            variant="card"
-          />
-        </div>
-        <SiteFooter />
-      </div>
-    );
-  }
-  
-  return (
-    <div className="flex flex-col min-h-screen">
-      <SeoHead 
-        title={`${profile.username}'s Profile - Degentalk™™`}
-        description={`View ${profile.username}'s profile, posts, and stats on Degentalk™™.`}
-        ogImage={profile.avatarUrl || undefined}
-      />
-      
-      {/* Profile content with background image */}
-      <main className="flex-1 py-8 relative">
-        {/* Background image constrained to main content area */}
-        <div 
-          className="absolute inset-0 -z-10"
-          style={{
-            backgroundImage: "url('/images/profile-background.png')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
-          }}
-        >
-          {/* Semi-transparent overlay for readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/80 to-black/90"></div>
-        </div>
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	// Fetch the profile data for the specified username
 	const {

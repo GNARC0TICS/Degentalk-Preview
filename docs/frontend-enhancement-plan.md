@@ -1,7 +1,7 @@
-# Frontend Enhancement Plan - Degentalk™
+# Frontend Enhancement Plan - Degentalk
 
 ## Overview
-This document tracks the implementation of the modern gamified visual enhancements for the Degentalk™ platform, following the styling guide principles.
+This document tracks the implementation of the modern gamified visual enhancements for the Degentalk platform, following the styling guide principles.
 
 ## Core Theme Configuration ✅
 

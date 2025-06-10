@@ -1,6 +1,6 @@
-# Degentalk™™ Codebase Overview
+# DegenTalk Codebase Overview
 
-This document provides a comprehensive overview of the Degentalk™™ platform codebase, a crypto-native forum designed for dynamic user engagement and community management.
+This document provides a comprehensive overview of the DegenTalk platform codebase, a crypto-native forum designed for dynamic user engagement and community management.
 
 ## Project Structure
 

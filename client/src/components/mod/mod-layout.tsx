@@ -91,15 +91,9 @@ export function ModLayout({ children, title = 'Dashboard' }: ModLayoutProps) {
 						</SheetContent>
 					</Sheet>
 
-<<<<<<< HEAD
 					<Link href="/mod" className="mr-6 flex items-center space-x-2">
 						<span className="font-bold text-primary">DegenTalk Moderator</span>
 					</Link>
-=======
-          <Link href="/mod" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold text-primary">Degentalk™™ Moderator</span>
-          </Link>
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 					{/* Breadcrumbs */}
 					<div className="hidden md:flex items-center text-sm text-zinc-400">

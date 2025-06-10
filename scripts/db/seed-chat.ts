@@ -31,7 +31,7 @@ export async function seedChatRooms() {
     if (userCheck) {
       await db.run(sql`
         INSERT OR IGNORE INTO "chat_messages" ("room_id", "user_id", "message")
-        SELECT 1, 1, 'Welcome to the Degentalk™™ shoutbox! 🚀'
+        SELECT 1, 1, 'Welcome to the DegenTalk shoutbox! 🚀'
         WHERE EXISTS (SELECT 1 FROM users WHERE user_id = 1);
       `);
       

@@ -4,7 +4,6 @@
 // - Applied DEV_MODE gating (if applicable)
 
 // Remove Next.js Head component since we're not using Next.js
-<<<<<<< HEAD
 import { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Loader2, Save, Settings, Edit, Image } from 'lucide-react';
@@ -23,20 +22,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
-=======
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Loader2, Save, Settings, Edit, Image } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { queryClient, apiRequest } from "@/lib/queryClient";
-import AdminLayout from "./admin-layout.tsx";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 type SiteSetting = {
 	id: number;
@@ -51,7 +36,6 @@ type SiteSetting = {
 };
 
 export default function PlatformSettings() {
-<<<<<<< HEAD
 	const { toast } = useToast();
 	const [tab, setTab] = useState('xp');
 
@@ -66,56 +50,6 @@ export default function PlatformSettings() {
 			return response.json();
 		}
 	});
-=======
-  const { toast } = useToast();
-  const [tab, setTab] = useState("xp");
-
-  // Fetch all site settings
-  const { data: settings, isLoading } = useQuery<SiteSetting[]>({
-    queryKey: ['/api/admin/settings'],
-    queryFn: async () => {
-      const response = await fetch('/api/admin/settings');
-      if (!response.ok) {
-        throw new Error('Failed to load settings');
-      }
-      return response.json();
-    }
-  });
-
-  // Setting update mutation
-  const updateSetting = useMutation({
-    mutationFn: async ({ key, value }: { key: string, value: string | number | boolean }) => {
-      const response = await fetch(`/api/admin/settings/${key}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ value }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to update setting');
-      }
-
-      return response.json();
-    },
-    onSuccess: (data) => {
-      toast({
-        title: "Setting updated",
-        description: `The ${data.key} setting has been updated.`,
-      });
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/settings'] });
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	// Setting update mutation
 	const updateSetting = useMutation({
@@ -151,21 +85,10 @@ export default function PlatformSettings() {
 		}
 	});
 
-<<<<<<< HEAD
 	// Helper to get a setting value
 	const getSetting = (key: string): SiteSetting | undefined => {
 		return settings?.find((s) => s.key === key);
 	};
-=======
-    if (setting.valueType === 'boolean') {
-      return (
-        <Switch
-          checked={setting.value === 'true'}
-          onCheckedChange={(checked) => handleChange(checked)}
-        />
-      );
-    }
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	// Helper to update a setting
 	const handleUpdateSetting = (key: string, value: string | number | boolean) => {
@@ -187,7 +110,6 @@ export default function PlatformSettings() {
 			);
 		}
 
-<<<<<<< HEAD
 		if (setting.valueType === 'number') {
 			return (
 				<Input
@@ -198,19 +120,6 @@ export default function PlatformSettings() {
 				/>
 			);
 		}
-=======
-  return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <Tabs defaultValue="xp" value={tab} onValueChange={setTab} className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="xp">XP & Rewards</TabsTrigger>
-            <TabsTrigger value="algorithms">Algorithms</TabsTrigger>
-            <TabsTrigger value="system">System</TabsTrigger>
-            <TabsTrigger value="editor">Editor</TabsTrigger>
-            <TabsTrigger value="treasury">Treasury</TabsTrigger>
-          </TabsList>
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 		return (
 			<Input
@@ -447,7 +356,6 @@ export default function PlatformSettings() {
 									</div>
 								)}
 
-<<<<<<< HEAD
 								{/* Disable New Posts */}
 								{getSetting('disable_new_posts') && (
 									<div className="grid gap-2">
@@ -641,137 +549,3 @@ export default function PlatformSettings() {
 		</div>
 	);
 }
-=======
-          {/* Editor Tab */}
-          <TabsContent value="editor" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Editor Settings</CardTitle>
-                <CardDescription>
-                  Configure rich text editor features and integrations
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-6">
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">GIF Integration</h3>
-
-                    {/* Enable Giphy Integration */}
-                    {getSetting('giphy_enabled') && (
-                      <div className="grid gap-2">
-                        <div className="flex items-center justify-between">
-                          <Label htmlFor="giphy_enabled" className="text-base">Enable Giphy Integration</Label>
-                          {renderSettingInput(getSetting('giphy_enabled')!)}
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          Enable or disable the Giphy GIF search in the rich text editor
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Giphy Result Limit */}
-                    {getSetting('giphy_result_limit') && (
-                      <div className="grid gap-2">
-                        <div className="flex items-center justify-between">
-                          <Label htmlFor="giphy_result_limit" className="text-base">Results Per Request</Label>
-                          {renderSettingInput(getSetting('giphy_result_limit')!)}
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          Number of GIF results to display per search (5-50 recommended)
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Giphy Content Rating */}
-                    {getSetting('giphy_rating') && (
-                      <div className="grid gap-2">
-                        <div className="grid gap-2">
-                          <Label htmlFor="giphy_rating" className="text-base">Content Rating</Label>
-                          <div className="flex items-center gap-4">
-                            <Button
-                              type="button"
-                              variant={getSetting('giphy_rating')!.value === 'g' ? 'default' : 'outline'}
-                              onClick={() => handleUpdateSetting('giphy_rating', 'g')}
-                              className="w-24"
-                            >
-                              G
-                            </Button>
-                            <Button
-                              type="button"
-                              variant={getSetting('giphy_rating')!.value === 'pg' ? 'default' : 'outline'}
-                              onClick={() => handleUpdateSetting('giphy_rating', 'pg')}
-                              className="w-24"
-                            >
-                              PG
-                            </Button>
-                            <Button
-                              type="button"
-                              variant={getSetting('giphy_rating')!.value === 'pg-13' ? 'default' : 'outline'}
-                              onClick={() => handleUpdateSetting('giphy_rating', 'pg-13')}
-                              className="w-24"
-                            >
-                              PG-13
-                            </Button>
-                            <Button
-                              type="button"
-                              variant={getSetting('giphy_rating')!.value === 'r' ? 'default' : 'outline'}
-                              onClick={() => handleUpdateSetting('giphy_rating', 'r')}
-                              className="w-24"
-                            >
-                              R
-                            </Button>
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            Content rating for Giphy results (G is most restrictive, R is least)
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* API Key Status */}
-                    <div className="mt-6">
-                      <div className="flex items-center gap-2 p-4 bg-slate-100 dark:bg-slate-800 rounded-md">
-                        <Image className="h-5 w-5 text-slate-700 dark:text-slate-300" />
-                        <span className="text-sm font-medium">
-                          Giphy API Key: Configured via environment variables
-                        </span>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        The API key is configured in your environment variables and is not editable from this interface.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Treasury Tab */}
-          <TabsContent value="treasury" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Treasury Settings</CardTitle>
-                <CardDescription>
-                  Configure treasury wallet and transaction settings
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center justify-center">
-                  <div className="p-6 text-center">
-                    <Settings className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <h3 className="text-lg font-medium mb-2">Treasury Management Coming Soon</h3>
-                    <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                      Treasury management features are planned for a future update.
-                      This will include wallet controls, transaction settings, and payment system configuration.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </AdminLayout>
-  );
-}
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a

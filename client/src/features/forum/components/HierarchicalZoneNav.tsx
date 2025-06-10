@@ -19,7 +19,6 @@ import { LoadingSpinner } from '@/components/ui/loader';
 import { Badge } from '@/components/ui/badge';
 import { ForumCategoryWithStats } from '@shared/types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { primaryZonesArray, PrimaryZone } from '@/constants/primaryZones.tsx'; // Import primaryZonesArray and PrimaryZone
 
 // Enhanced theme configuration
 const ZONE_THEMES = {
@@ -254,45 +253,15 @@ export function HierarchicalZoneNav({
 	showCounts = true,
 	compact = false
 }: HierarchicalZoneNavProps) {
-<<<<<<< HEAD
 	const { data: forumStructure, isLoading, error } = useForumStructure();
 	const primaryZones = forumStructure?.primaryZones || [];
 	const categories = forumStructure?.categories || [];
-=======
-  // Fetch general categories from API
-  const { data: forumStructure, isLoading, error } = useForumStructure();
-  const categories = forumStructure?.categories || [];
-  
-  // Use static primary zones from constants
-  const primaryZones: PrimaryZone[] = primaryZonesArray;
-
-  // Optimized state management with localStorage persistence
-  const [expandedCategories, setExpandedCategories] = useState<Record<string | number, boolean>>({});
-  
-  // Load state from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem('dt-expanded-forum-categories');
-    if (stored) {
-      try {
-        setExpandedCategories(JSON.parse(stored));
-      } catch (e) {
-        console.error('Failed to parse stored expanded categories', e);
-      }
-    }
-  }, []);
-
-  // Debounced localStorage save
-  const saveToStorage = useCallback((newState: Record<string | number, boolean>) => {
-    localStorage.setItem('dt-expanded-forum-categories', JSON.stringify(newState));
-  }, []);
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	// Optimized state management with localStorage persistence
 	const [expandedCategories, setExpandedCategories] = useState<Record<string | number, boolean>>(
 		{}
 	);
 
-<<<<<<< HEAD
 	// Load state from localStorage on mount
 	useEffect(() => {
 		const stored = localStorage.getItem('dt-expanded-forum-categories');
@@ -446,125 +415,6 @@ export function HierarchicalZoneNav({
 			)}
 		</nav>
 	);
-=======
-  // Memoized icon renderer for Primary Zones (using PrimaryZone type)
-  const renderPrimaryZoneIcon = useCallback((zone: PrimaryZone) => {
-    // Handle emoji icons
-    if (zone.icon && typeof zone.icon === 'string' && /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(zone.icon)) {
-      return <span className="mr-3 text-lg" role="img" aria-label={`${zone.label} icon`}>{zone.icon}</span>;
-    }
-    
-    // Handle themed icons
-    const theme = zone.colorTheme as keyof typeof ZONE_THEMES;
-    const themeConfig = ZONE_THEMES[theme];
-    if (themeConfig) {
-      const IconComponent = themeConfig.icon;
-      return <IconComponent className={`w-4 h-4 mr-3 ${themeConfig.color}`} />;
-    }
-    
-    return <Folder className="w-4 h-4 mr-3 text-zinc-400" />;
-  }, []);
-
-  // Loading state for API data (categories)
-  if (isLoading) {
-    return (
-      <div className="flex justify-center p-6" role="status" aria-label="Loading forum navigation">
-        <LoadingSpinner size="sm" />
-      </div>
-    );
-  }
-  
-  // Error state for API data (categories)
-  if (error) {
-    return (
-      <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4" role="alert">
-        <p className="text-sm text-red-400 font-medium">Failed to load general forum structure</p>
-        {error && <p className="text-xs text-red-300/70 mt-1">{error.message}</p>}
-      </div>
-    );
-  }
-  
-  // Empty state (only if NO primary zones AND NO categories)
-  if (primaryZones.length === 0 && categories.length === 0) {
-    return (
-      <div className="text-center p-6 bg-zinc-900/30 rounded-lg border border-zinc-800">
-        <Folder className="w-8 h-8 mx-auto mb-2 text-zinc-600" />
-        <p className="text-sm text-zinc-500">No forums available</p>
-      </div>
-    );
-  }
-  
-  return (
-    <nav className={`space-y-3 ${className}`} aria-label="Forum Navigation" role="navigation">
-      {/* Quick Navigation */}
-      <div className="space-y-1">
-        <NavItem
-          href="/forum" // Link to the new main forum page
-          isActive={currentZoneId === undefined && currentForumId === undefined}
-          icon={LayoutGrid}
-        >
-          All Forums
-        </NavItem>
-      </div>
-      
-      {/* Primary Zones */}
-      {primaryZones.length > 0 && (
-        <section className="space-y-2">
-          <div className="px-3 py-1">
-            <h3 className="text-xs font-semibold uppercase text-zinc-500 tracking-wider">
-              Primary Zones
-            </h3>
-            <p className="text-xs text-zinc-600 mt-0.5">{primaryZones.length} zones</p>
-          </div>
-          
-          <div className="space-y-1">
-            {primaryZones.map(zone => (
-              <NavItem
-                key={zone.id}
-                href={`/${zone.slug}`} // Link directly to primary zone slug
-                isActive={currentZoneId === zone.id} // Need to adjust isActive logic if zoneId is string
-                icon={() => renderPrimaryZoneIcon(zone)} // Use the new icon renderer
-                theme={zone.colorTheme as keyof typeof ZONE_THEMES}
-                disabled={!zone.forums || zone.forums.length === 0} // Disable if no associated forums
-                counts={showCounts ? { threads: zone.stats?.threadCount, posts: zone.stats?.postCount } : undefined} // Use stats from PrimaryZone
-              >
-                {zone.label} {/* Use label for PrimaryZone */}
-              </NavItem>
-            ))}
-          </div>
-        </section>
-      )}
-      
-      {/* Categories (General Forums) */}
-      {categories.length > 0 && (
-        <section className="space-y-2">
-          {primaryZones.length > 0 && (
-            <div className="h-px bg-zinc-800/50 my-4" />
-          )}
-          
-          <div className="px-3 py-1">
-            <h3 className="text-xs font-semibold uppercase text-zinc-500 tracking-wider">
-              Categories
-            </h3>
-            <p className="text-xs text-zinc-600 mt-0.5">{categories.length} categories</p>
-          </div>
-          
-          <div className="space-y-1">
-            {categories.map(category => (
-              <CategorySection
-                key={category.id}
-                category={category}
-                isExpanded={!!expandedCategories[category.id]}
-                onToggle={() => toggleCategory(category.id)}
-                currentForumId={currentForumId}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-    </nav>
-  );
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }
 
 export { HierarchicalZoneNav as HierarchicalForumNav };

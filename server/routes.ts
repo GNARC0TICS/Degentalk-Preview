@@ -1,6 +1,6 @@
 /**
  * @file server/routes.ts
- * @description Centralized routing file for the Degentalk™ backend application.
+ * @description Centralized routing file for the Degentalk backend application.
  * @purpose Aggregates and registers all domain-specific API routes with the Express application.
  *          Also handles global middleware, authentication setup, and WebSocket server initialization.
  * @dependencies
@@ -193,7 +193,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 				}
 			];
 
-<<<<<<< HEAD
 			res.json(hotThreads.slice(0, limit));
 		} catch (error) {
 			console.error('Error fetching hot threads:', error);
@@ -388,92 +387,4 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	(app as any).wss = { clients };
 
 	return httpServer;
-=======
-  const httpServer = createServer(app);
-  
-  // Check if we're in development mode
-  const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
-  
-  // Default empty clients set
-  const clients = new Set<WebSocket>();
-  
-  // WebSocket server setup - only in production
-  if (!IS_DEVELOPMENT) {
-    console.log('🚀 Setting up WebSocket server in production mode');
-    
-    // Set up WebSocket server on the same HTTP server but with a distinct path
-    const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
-    
-    // Handle WebSocket connections
-    wss.on('connection', (ws) => {
-      console.log('WebSocket client connected');
-      clients.add(ws);
-      
-      // Send initial message
-      ws.send(JSON.stringify({ type: 'connected', message: 'Connected to Degentalk™™ WebSocket' }));
-      
-      // Handle incoming messages
-      ws.on('message', (message) => {
-        try {
-          console.log('Received message:', message.toString());
-          const data = JSON.parse(message.toString());
-          
-          // Process different message types
-          if (data.type === 'chat_message') {
-            // Broadcast chat message to all connected clients
-            // This is just the broadcast mechanism
-            // Actual database persistence is handled by the HTTP API
-            const broadcastData = {
-              type: 'chat_update',
-              action: 'new_message',
-              message: data.message,
-              roomId: data.roomId,
-              timestamp: new Date().toISOString()
-            };
-            
-            // Broadcast to all connected clients
-            for (const client of clients) {
-              if (client.readyState === WebSocket.OPEN) {
-                client.send(JSON.stringify(broadcastData));
-              }
-            }
-          }
-          
-          // Handle room change events to notify other users
-          if (data.type === 'room_change') {
-            const broadcastData = {
-              type: 'room_update',
-              roomId: data.roomId,
-              timestamp: new Date().toISOString()
-            };
-            
-            // Broadcast room change to all connected clients
-            for (const client of clients) {
-              if (client.readyState === WebSocket.OPEN) {
-                client.send(JSON.stringify(broadcastData));
-              }
-            }
-          }
-        } catch (error) {
-          console.error('Error processing WebSocket message:', error);
-        }
-      });
-      
-      // Handle disconnection
-      ws.on('close', () => {
-        console.log('WebSocket client disconnected');
-        clients.delete(ws);
-      });
-    });
-  } else {
-    // In development mode, log that WebSocket is disabled
-    console.log('⚠️ WebSocket server is DISABLED in development mode to prevent connection errors');
-  }
-  
-  // Export the WebSocket clients set so other routes can access it
-  // Even in development mode, we provide an empty set for compatibility
-  (app as any).wss = { clients };
-  
-  return httpServer;
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }

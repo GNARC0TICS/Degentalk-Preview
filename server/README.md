@@ -1,10 +1,10 @@
-# Degentalk™ Server
+# Degentalk Server
 
 ## Status: Reviewed – Awaiting Final Approval | 2025-06-02
 
 ## 1. Purpose & Role
 
-The `server/` directory houses the backend application for the Degentalk™ platform. It is responsible for handling API requests from the client, interacting with the database, managing business logic, user authentication, and real-time communication. Built with Node.js, Express.js, and TypeScript, it uses Drizzle ORM for database interactions with PostgreSQL.
+The `server/` directory houses the backend application for the Degentalk platform. It is responsible for handling API requests from the client, interacting with the database, managing business logic, user authentication, and real-time communication. Built with Node.js, Express.js, and TypeScript, it uses Drizzle ORM for database interactions with PostgreSQL.
 
 ## 2. Structure & Key Components
 
@@ -53,15 +53,9 @@ The server codebase follows a domain-driven design approach to organize its modu
 
 ## 5. Status & Known Issues
 
-<<<<<<< HEAD
 - **Status:** The backend is actively developed and serves as the core API for the Degentalk platform.
 - **Domain Migration:** The structure largely follows DDD, but some older routes or logic might exist outside strict domain encapsulation (e.g., in a global `server/routes.ts` if still heavily used).
 - (TODO: Add any other known major issues, areas of active refactoring, or performance considerations specific to the server.)
-=======
-*   **Status:** The backend is actively developed and serves as the core API for the Degentalk™ platform.
-*   **Domain Migration:** The structure largely follows DDD, but some older routes or logic might exist outside strict domain encapsulation (e.g., in a global `server/routes.ts` if still heavily used).
-*   (TODO: Add any other known major issues, areas of active refactoring, or performance considerations specific to the server.)
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 ## 6. Getting Started (Development)
 
@@ -85,36 +79,5 @@ The server codebase follows a domain-driven design approach to organize its modu
 - **jsonwebtoken & bcrypt:** For authentication and password hashing (if implementing full auth).
 
 ---
-<<<<<<< HEAD
 
 _This README is intended to be a living document. Please update it as the server architecture or key components change._
-=======
-*This README is intended to be a living document. Please update it as the server architecture or key components change.*
-
-## 🧩 Server-Side Architecture: Domain-Driven Layout
-
-As of June 2025, all backend logic in Degentalk™™ follows a domain-based folder structure under `server/src/domains/`.
-
-Each domain contains its own:
-- `routes/` — Express route handlers
-- `services/` — Business logic or integrations
-- `types.ts` — Domain-specific types
-- `controllers/` — (Optional) controller abstraction
-
-Example:
-
-```
-server/src/domains/xp/
-├── routes/
-│   └── adjust-xp.ts
-├── services/
-│   └── xp-clout-service.ts
-├── types.ts
-```
-
-> ❗ **Deprecated:** The use of `server/routes/api/` and `server/services/` is no longer allowed. All logic must live within a domain.
-
-Enums are now colocated within their domain-specific schema files:
-- `transactionTypeEnum` → `db/schema/economy/transactions.ts`
-- `contentEditStatusEnum` → `db/schema/forum/posts.ts`
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a

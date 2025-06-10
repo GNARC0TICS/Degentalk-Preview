@@ -1,7 +1,7 @@
 # Forum Routing Logic
 
 ## Overview
-The Degentalk™™ forum structure consists of three distinct entity types:
+The DegenTalk forum structure consists of three distinct entity types:
 1. **Primary Zones**: Single-forum, branded destinations (`isZone: true, canonical: true, parentId: null`)
 2. **Expandable Categories**: Containers for child forums (`isZone: false, parentId: null`)
 3. **Child Forums**: Individual forums within categories (`isZone: false, parentId: [category_id]`)

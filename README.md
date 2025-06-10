@@ -1,10 +1,4 @@
-> **Important: Contribution Guidelines**
->
-> Before contributing, please review the [Developer Agreement](contracts/degentalk_dev_agreement.md) and add your name to the [Contributors Log](CONTRIBUTORS.md).
->
-> ---
-
-# Degentalk™™ - Crypto Community Platform
+# DegenTalk - Crypto Community Platform
 
 A crypto-native forum and social platform designed for cryptocurrency enthusiasts, traders, and developers. Features integrated wallet functionality, a digital goods marketplace, and gamified social features with XP/DGT economy.
 
@@ -21,8 +15,8 @@ A crypto-native forum and social platform designed for cryptocurrency enthusiast
 1. **Clone and install dependencies:**
 
    ```bash
-   git clone https://github.com/GNARC0TICS/Degentalk™-BETA
-   cd Degentalk™
+   git clone https://github.com/GNARC0TICS/Degentalk-BETA
+   cd Degentalk
    npm install
    ```
 
@@ -44,7 +38,6 @@ A crypto-native forum and social platform designed for cryptocurrency enthusiast
    ```
 
 3. **Database Setup:**
-
    ```bash
    # Generate and apply migrations
    npm run db:migrate
@@ -189,11 +182,7 @@ Clear startup logs show which services are starting:
 
 ### API Client
 
-<<<<<<< HEAD
 The project uses a standardized API client (`apiRequest` from `client/src/lib/queryClient.ts` or `api` from `client/src/lib/api.ts` - _verify which is primary_) with:
-=======
-The project uses a standardized API client (`apiRequest` from `client/src/lib/queryClient.ts` or `api` from `client/src/lib/api.ts` - *verify which is primary*) with:
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 - Automatic XP gain detection
 - Consistent error handling
@@ -318,46 +307,11 @@ STRIPE_SECRET_KEY=your_stripe_key
 
 ## 🤝 Contributing
 
-We welcome contributions to Degentalk™! To ensure a smooth process, please follow these guidelines:
-
-**1. Setting Up Your Environment:**
-
-- Follow the [Quick Start](#-quick-start) and [Development](#️-development) sections to get your local environment running.
-- Familiarize yourself with the [Development Features](#development-features) like role switching.
-
-**2. Contributor Agreement & Legal (Mandatory for First-Time Contributors):**
-
-- **Read the Agreement:** Before making any contributions, you MUST read and understand the [Degentalk™ Developer Agreement](contracts/degentalk_dev_agreement.md). This document outlines important terms regarding intellectual property, confidentiality, and your contributions.
-- **Sign the Log:** As part of your first pull request, you MUST add your name, GitHub handle, and the date to the [CONTRIBUTORS.md](CONTRIBUTORS.md) file. This signifies your agreement to the terms in the Developer Agreement.
-- The Pull Request template includes a checklist to confirm these steps. Our CI system also includes a basic check for this.
-
-**3. Contribution Workflow:**
-
-- **Fork the Repository:** Start by forking the main Degentalk™ repository to your own GitHub account.
-- **Create a Branch:** For any new feature or bugfix, create a descriptive branch from the `main` (or `develop` if applicable) branch in your fork (e.g., `git checkout -b feature/new-shoutbox-emoji` or `fix/login-page-bug`).
-- **Make Your Changes:** Write your code, ensuring you adhere to the project's existing coding style and patterns. (Look for any linting configurations or style guides in the project).
-- **Test Thoroughly:** Ensure your changes don't break existing functionality and that new features work as expected. Add tests if applicable.
-- **Commit Your Changes:** Use clear and descriptive commit messages.
-- **Lint and Type-Check:** Run `npm run lint` and `npm run check` to catch any issues before pushing.
-- **Push to Your Fork:** Push your changes to the branch in your fork.
-- **Submit a Pull Request (PR):** Open a PR from your branch to the `main` (or `develop`) branch of the main Degentalk™ repository.
-  - Provide a clear title and description for your PR, explaining the changes and why they were made.
-  - Ensure you've completed the checklist in the PR template, including confirming the Developer Agreement and updating `CONTRIBUTORS.md` if it's your first PR.
-
-**4. Code Review & Merging:**
-
-- Your PR will be reviewed by maintainers.
-- Be prepared to discuss your changes and make any necessary adjustments based on feedback.
-- Once approved and all checks pass, your PR will be merged.
-
-**General Guidelines:**
-
-- Start the development environment: `npm run dev`
-- Use the role switcher to test different permission levels.
-- Seed the database with realistic data if needed: `npm run dev:seed`
-- Make changes - both frontend and backend will hot reload.
-
-Thank you for contributing to Degentalk™!
+1. Start the development environment: `npm run dev`
+2. Use the role switcher to test different permission levels
+3. Seed the database with realistic data: `npm run dev:seed`
+4. Make changes - both frontend and backend will hot reload
+5. Check types and linting: `npm run check && npm run lint`
 
 ---
 
@@ -371,7 +325,6 @@ To incentivize user participation, the platform awards Experience Points (XP) an
 
 **Flow for Thread Creation Rewards:**
 
-<<<<<<< HEAD
 1.  A user creates a new thread through the client application.
 2.  Upon successful thread creation, the client makes a `POST` request to `/api/xp/award-action`.
     - **Payload**: `{ userId: number, action: 'create_thread', entityId: number (threadId) }`
@@ -382,18 +335,6 @@ To incentivize user participation, the platform awards Experience Points (XP) an
     - **Backend Logic**: The DGT service (`server/src/domains/wallet/dgt.service.ts`) credits the user's DGT wallet balance (stored on the `users` table as `dgtWalletBalance`), and logs the transaction in the `transactions` table.
     - **Response**: `{ dgtAwarded: number, newBalance: string }`
 4.  The client displays toasts to inform the user of the XP and DGT awarded.
-=======
-1. A user creates a new thread through the client application.
-2. Upon successful thread creation, the client makes a `POST` request to `/api/xp/award-action`.
-    - **Payload**: `{ userId: number, action: 'create_thread', entityId: number (threadId) }`
-    - **Backend Logic**: The XP service (`server/src/domains/xp/xp.service.ts` using `server/src/domains/xp/events/xp.events.ts`) looks up `xpActionSettings` for `'create_thread'`, awards the `baseValue` XP to the user, updates their total XP and level (if applicable), and logs the adjustment in `xpAdjustmentLogs`.
-    - **Response**: `{ xpAwarded: number, newTotalXp: number, leveledUp: boolean, currentLevel: number }`
-3. The client then (or in parallel) makes a `POST` request to `/api/wallet/transactions/create` (actual path for DGT rewards, routed via `server/src/domains/wallet/wallet.routes.ts`).
-    - **Payload**: `{ userId: number, currency: 'DGT', amount: number (determined by backend config, e.g., DGT_REWARD_CREATE_THREAD), type: 'reward', reason: string, relatedEntityId: number (threadId), context: 'create_thread' }`
-    - **Backend Logic**: The DGT service (`server/src/domains/wallet/dgt.service.ts`) credits the user's DGT wallet balance (stored on the `users` table as `dgtWalletBalance`), and logs the transaction in the `transactions` table.
-    - **Response**: `{ dgtAwarded: number, newBalance: string }`
-4. The client displays toasts to inform the user of the XP and DGT awarded.
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 **Key Backend Components & Endpoints:**
 
@@ -412,48 +353,3 @@ To incentivize user participation, the platform awards Experience Points (XP) an
 
 - XP amounts for actions are configured in the `xpActionSettings` table (schema: `db/schema/economy/xpActionSettings.ts`).
 - The DGT reward amount for actions like thread creation might be in environment variables or a configuration table (e.g., `economySettings` in `db/schema/economy/settings.ts`). Refer to `server/src/domains/wallet/wallet.constants.ts` or service logic for defaults.
-<<<<<<< HEAD
-=======
-
-## 🔧 Developer Setup Notes
-
-This repo uses `vite-tsconfig-paths` to sync `@/*` path aliases between Vite and TypeScript.
-
-Make sure to:
-
-- Use `pnpm install` to install dev dependencies
-- Restart VSCode's TS server (`Cmd+Shift+P → TypeScript: Restart TS Server`) if alias errors appear
-- Run dev with: `pnpm dev:frontend`
-
-## Zone Metrics API
-
-**GET /api/zone/:slug/metrics**
-
-Returns live stats for a forum zone:
-
-```
-{
-  zoneId: number,
-  threadCount: number,
-  postCount: number,
-  totalXp: number,
-  totalDgt: number,
-  activeUsers: number,
-  hotThreads: [
-    { id, title, replies, views, lastActivity }
-  ]
-}
-```
-
-**React Hook:**
-
-Use the `useZoneMetrics(slug)` React hook to fetch and display these stats in your UI:
-
-```
-import { useZoneMetrics } from '@/features/forum/hooks/useZoneMetrics';
-
-const { data: metrics, isLoading, error } = useZoneMetrics('the-pit');
-```
-
-See `ForumZoneCard` for a usage example.
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a

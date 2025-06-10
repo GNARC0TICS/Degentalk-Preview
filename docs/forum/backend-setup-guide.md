@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide covers how to set up the backend to support the new canonical zone structure for Degentalk™™ forums. Follow these steps to ensure your backend can serve the new frontend components.
+This guide covers how to set up the backend to support the new canonical zone structure for DegenTalk forums. Follow these steps to ensure your backend can serve the new frontend components.
 
 ## Prerequisites
 

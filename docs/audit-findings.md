@@ -1,4 +1,4 @@
-# Degentalk™™ Audit Tracker
+# DegenTalk Audit Tracker
 
 ```mermaid
 graph TD

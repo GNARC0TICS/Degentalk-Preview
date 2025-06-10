@@ -1,11 +1,11 @@
-# Degentalk™™ Project Launch Plan & Checklist
+# DegenTalk Project Launch Plan & Checklist
 
 ## MVP SPRINTS – Streamlined (May 2025)
 
 ### Phase 1: Core Functionality & Security
 
 #### Wallet & Vault System *(Deferred)*
-- **All wallet tasks are deferred until after core forum, XP, and shop features are complete.*
+- **All wallet/vault tasks are deferred until after core forum, XP, and shop features are complete.*
 
 #### XP, DGT, and Authentication
 - **[✅] Backend XP/DGT API, Admin Endpoints, and XP Triggers:**  

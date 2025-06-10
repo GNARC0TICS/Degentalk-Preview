@@ -3,8 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 // ESM equivalent for __dirname
-// __filename will be /Users/gnarcotic/Degentalk™/server/config/loadEnv.ts (or similar based on execution)
-// __dirname will be /Users/gnarcotic/Degentalk™/server/config
+// __filename will be /Users/gnarcotic/Degentalk/server/config/loadEnv.ts (or similar based on execution)
+// __dirname will be /Users/gnarcotic/Degentalk/server/config
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

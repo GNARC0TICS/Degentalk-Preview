@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
 	"include": ["client/src/**/*", "shared/**/*", "server/**/*"],
 	"exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
 	"compilerOptions": {
@@ -29,37 +28,4 @@
 			"@schema/*": ["db/schema/*"]
 		}
 	}
-=======
-  "include": ["client/src/**/*", "shared/**/*", "server/**/*"],
-  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
-  "compilerOptions": {
-    "incremental": true,
-    "tsBuildInfoFile": "./node_modules/.tsbuildinfo",
-    "noEmit": true,
-    "module": "NodeNext", // Changed from ESNext
-    "target": "ES2017",
-    "downlevelIteration": true,
-    "lib": ["esnext", "dom", "dom.iterable"],
-    "jsx": "react-jsx",
-    "moduleResolution": "nodenext", // Changed from "node"
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowImportingTsExtensions": true,
-    "baseUrl": ".",
-    "rootDir": ".", // Explicitly set rootDir
-    "types": ["node", "vite/client"],
-    "paths": {
-      "@/*": ["client/src/*"],
-      "@shared/*": ["shared/*"],
-      "@server/*": ["server/*"],
-      "@db": ["db/index.ts"], // Keep as is, points to the file
-      "@schema": ["db/schema/index.ts"], // Keep as is, points to the file
-      "@schema/*": ["db/schema/*"] // Keep as is for sub-modules
-    }
-  }
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }

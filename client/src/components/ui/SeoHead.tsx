@@ -22,7 +22,6 @@ export const SeoHead: React.FC<SeoHeadProps> = ({
 	twitterCard = 'summary',
 	noIndex = false
 }) => {
-<<<<<<< HEAD
 	const siteName = 'DegenTalk';
 	const formattedTitle = title ? `${title} | ${siteName}` : siteName;
 
@@ -50,32 +49,3 @@ export const SeoHead: React.FC<SeoHeadProps> = ({
 		</Helmet>
 	);
 };
-=======
-  const siteName = 'Degentalk™™';
-  const formattedTitle = title ? `${title} | ${siteName}` : siteName;
-  
-  return (
-    <Helmet>
-      <title>{formattedTitle}</title>
-      {description && <meta name="description" content={description} />}
-      
-      {/* Open Graph Meta Tags */}
-      <meta property="og:title" content={formattedTitle} />
-      {description && <meta property="og:description" content={description} />}
-      {ogImage && <meta property="og:image" content={ogImage} />}
-      {ogUrl && <meta property="og:url" content={ogUrl} />}
-      <meta property="og:type" content="website" />
-      <meta property="og:site_name" content={siteName} />
-      
-      {/* Twitter Card Meta Tags */}
-      <meta name="twitter:card" content={twitterCard} />
-      <meta name="twitter:title" content={formattedTitle} />
-      {description && <meta name="twitter:description" content={description} />}
-      {ogImage && <meta name="twitter:image" content={ogImage} />}
-      
-      {/* No index if specified */}
-      {noIndex && <meta name="robots" content="noindex,nofollow" />}
-    </Helmet>
-  );
-};
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a

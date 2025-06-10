@@ -4,12 +4,7 @@
 // - Applied DEV_MODE gating (if applicable)
 
 // Remove Next.js Head component since we're not using Next.js
-<<<<<<< HEAD
 import React, { useState } from 'react';
-=======
-import React, { useState } from "react";
-import AdminLayout from "./admin-layout.tsx";
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 import {
 	Card,
 	CardContent,
@@ -36,7 +31,6 @@ import {
 	DialogTitle
 } from '@/components/ui/dialog';
 import {
-<<<<<<< HEAD
 	Form,
 	FormControl,
 	FormDescription,
@@ -65,31 +59,6 @@ import * as z from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-=======
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Plus, Edit, Trash, Check, X, Users, Shield, BookOpen } from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { useToast } from "@/hooks/use-toast";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
-import { rolesConfig, Permission } from "@/config/roles.config.ts"; // [CONFIG-REFAC]
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 // Define the schema for user groups
 const userGroupSchema = z.object({
@@ -109,7 +78,6 @@ type UserGroup = z.infer<typeof userGroupSchema> & {
 	updatedAt: string;
 };
 
-<<<<<<< HEAD
 // Available permissions categories
 const permissionCategories = [
 	{
@@ -164,30 +132,9 @@ const permissionCategories = [
 		]
 	}
 ];
-=======
-// Available permissions categories - dynamically generated from rolesConfig [CONFIG-REFAC]
-const permissionCategories = (() => {
-  const categoriesMap = new Map<string, string[]>();
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
-  // Group permissions by category from rolesConfig
-  Object.values(rolesConfig.permissions).forEach((permission: Permission) => {
-    if (!categoriesMap.has(permission.category)) {
-      categoriesMap.set(permission.category, []);
-    }
-    categoriesMap.get(permission.category)!.push(permission.key);
-  });
-
-  // Convert to array format expected by the UI
-  return Array.from(categoriesMap.entries()).map(([name, permissions]) => ({
-    name,
-    permissions,
-  }));
-})();
-
-// Helper function to get permission details from rolesConfig [CONFIG-REFAC]
+// Helper function to get permission details
 const getPermissionDetails = (id: string) => {
-<<<<<<< HEAD
 	const permissionMap: Record<string, { id: string; label: string; description: string }> = {
 		canLogin: {
 			id: 'canLogin',
@@ -347,14 +294,6 @@ const getPermissionDetails = (id: string) => {
 	};
 
 	return permissionMap[id] || { id, label: id, description: 'No description available' };
-=======
-  const permission = rolesConfig.permissions[id];
-  return permission ? {
-    id: permission.key,
-    label: permission.label,
-    description: permission.description
-  } : { id, label: id, description: "No description available" };
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 };
 
 export default function AdminUserGroupsPage() {
@@ -504,7 +443,6 @@ export default function AdminUserGroupsPage() {
 		}
 	};
 
-<<<<<<< HEAD
 	// Filter user groups based on search term
 	const filteredGroups =
 		searchTerm.trim() === ''
@@ -538,37 +476,6 @@ export default function AdminUserGroupsPage() {
 					<Plus className="mr-2 h-4 w-4" /> Add New Group
 				</Button>
 			</div>
-=======
-  // Filter user groups based on search term
-  const filteredGroups = searchTerm.trim() === ""
-    ? userGroups
-    : userGroups.filter((group: UserGroup) =>
-      group.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (group.description && group.description.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-
-  return (
-    <AdminLayout>
-      <div className="container mx-auto py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">User Group Management</h1>
-          <Button onClick={() => {
-            setSelectedGroup(null);
-            form.reset({
-              name: "",
-              description: "",
-              color: "#6366F1",
-              isActive: true,
-              isDefault: false,
-              priority: 0,
-              permissions: [],
-            });
-            setIsCreateDialogOpen(true);
-          }}>
-            <Plus className="mr-2 h-4 w-4" /> Add New Group
-          </Button>
-        </div>
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 			<Card className="mb-6">
 				<CardHeader>
@@ -698,7 +605,6 @@ export default function AdminUserGroupsPage() {
 						</DialogDescription>
 					</DialogHeader>
 
-<<<<<<< HEAD
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onCreateSubmit)} className="space-y-6">
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -740,226 +646,6 @@ export default function AdminUserGroupsPage() {
 									)}
 								/>
 							</div>
-=======
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onCreateSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Group Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Administrators" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          The name displayed for this group
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="color"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Group Color</FormLabel>
-                        <div className="flex items-center gap-2">
-                          <FormControl>
-                            <Input type="color" {...field} className="w-12 h-10 p-1" />
-                          </FormControl>
-                          <Input
-                            value={field.value}
-                            onChange={field.onChange}
-                            placeholder="#6366F1"
-                            className="flex-1"
-                          />
-                        </div>
-                        <FormDescription>
-                          Color used to highlight the group
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Group for site administrators with full permissions"
-                          {...field}
-                          rows={3}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Briefly describe the purpose of this group
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="isActive"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between p-4 border rounded-md">
-                        <div className="space-y-0.5">
-                          <FormLabel>Active Status</FormLabel>
-                          <FormDescription>
-                            Enable or disable this user group
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="isDefault"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between p-4 border rounded-md">
-                        <div className="space-y-0.5">
-                          <FormLabel>Default Group</FormLabel>
-                          <FormDescription>
-                            Assign to new users automatically
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="priority"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Priority</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          placeholder="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Higher priority groups override lower ones when a user belongs to multiple groups
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="permissions"
-                  render={() => (
-                    <FormItem>
-                      <div className="mb-4">
-                        <FormLabel className="text-base">Permissions</FormLabel>
-                        <FormDescription>
-                          Select the permissions for this user group
-                        </FormDescription>
-                      </div>
-
-                      {permissionCategories.map((category) => (
-                        <div key={category.name} className="mb-6">
-                          <h4 className="font-medium mb-2 border-b pb-1">{category.name}</h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                            {category.permissions.map((permId) => {
-                              const permission = getPermissionDetails(permId);
-                              return (
-                                <FormField
-                                  key={permission.id}
-                                  control={form.control}
-                                  name="permissions"
-                                  render={({ field }) => {
-                                    return (
-                                      <FormItem
-                                        key={permission.id}
-                                        className="flex flex-row items-start space-x-3 space-y-0 p-2 hover:bg-secondary/20 rounded-md"
-                                      >
-                                        <FormControl>
-                                          <Checkbox
-                                            checked={field.value?.includes(permission.id)}
-                                            onCheckedChange={(checked) => {
-                                              const currentPermissions = field.value || [];
-                                              return checked
-                                                ? field.onChange([...currentPermissions, permission.id])
-                                                : field.onChange(
-                                                  currentPermissions.filter(
-                                                    (value) => value !== permission.id
-                                                  )
-                                                );
-                                            }}
-                                          />
-                                        </FormControl>
-                                        <div className="space-y-1 leading-none">
-                                          <FormLabel className="font-normal cursor-pointer">
-                                            {permission.label}
-                                          </FormLabel>
-                                          <FormDescription className="text-xs">
-                                            {permission.description}
-                                          </FormDescription>
-                                        </div>
-                                      </FormItem>
-                                    );
-                                  }}
-                                />
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ))}
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <DialogFooter>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsCreateDialogOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={createUserGroupMutation.isPending}>
-                    {createUserGroupMutation.isPending ? "Creating..." : "Create Group"}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 							<FormField
 								control={form.control}
@@ -980,7 +666,6 @@ export default function AdminUserGroupsPage() {
 								)}
 							/>
 
-<<<<<<< HEAD
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 								<FormField
 									control={form.control}
@@ -1370,257 +1055,3 @@ export default function AdminUserGroupsPage() {
 		</div>
 	);
 }
-=======
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onEditSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Group Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Administrators" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          The name displayed for this group
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="color"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Group Color</FormLabel>
-                        <div className="flex items-center gap-2">
-                          <FormControl>
-                            <Input type="color" {...field} className="w-12 h-10 p-1" />
-                          </FormControl>
-                          <Input
-                            value={field.value}
-                            onChange={field.onChange}
-                            placeholder="#6366F1"
-                            className="flex-1"
-                          />
-                        </div>
-                        <FormDescription>
-                          Color used to highlight the group
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Group for site administrators with full permissions"
-                          {...field}
-                          rows={3}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Briefly describe the purpose of this group
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="isActive"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between p-4 border rounded-md">
-                        <div className="space-y-0.5">
-                          <FormLabel>Active Status</FormLabel>
-                          <FormDescription>
-                            Enable or disable this user group
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="isDefault"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between p-4 border rounded-md">
-                        <div className="space-y-0.5">
-                          <FormLabel>Default Group</FormLabel>
-                          <FormDescription>
-                            Assign to new users automatically
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            disabled={selectedGroup?.isDefault && field.value}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="priority"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Priority</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          placeholder="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Higher priority groups override lower ones when a user belongs to multiple groups
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="permissions"
-                  render={() => (
-                    <FormItem>
-                      <div className="mb-4">
-                        <FormLabel className="text-base">Permissions</FormLabel>
-                        <FormDescription>
-                          Select the permissions for this user group
-                        </FormDescription>
-                      </div>
-
-                      {permissionCategories.map((category) => (
-                        <div key={category.name} className="mb-6">
-                          <h4 className="font-medium mb-2 border-b pb-1">{category.name}</h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                            {category.permissions.map((permId) => {
-                              const permission = getPermissionDetails(permId);
-                              return (
-                                <FormField
-                                  key={permission.id}
-                                  control={form.control}
-                                  name="permissions"
-                                  render={({ field }) => {
-                                    return (
-                                      <FormItem
-                                        key={permission.id}
-                                        className="flex flex-row items-start space-x-3 space-y-0 p-2 hover:bg-secondary/20 rounded-md"
-                                      >
-                                        <FormControl>
-                                          <Checkbox
-                                            checked={field.value?.includes(permission.id)}
-                                            onCheckedChange={(checked) => {
-                                              const currentPermissions = field.value || [];
-                                              return checked
-                                                ? field.onChange([...currentPermissions, permission.id])
-                                                : field.onChange(
-                                                  currentPermissions.filter(
-                                                    (value) => value !== permission.id
-                                                  )
-                                                );
-                                            }}
-                                          />
-                                        </FormControl>
-                                        <div className="space-y-1 leading-none">
-                                          <FormLabel className="font-normal cursor-pointer">
-                                            {permission.label}
-                                          </FormLabel>
-                                          <FormDescription className="text-xs">
-                                            {permission.description}
-                                          </FormDescription>
-                                        </div>
-                                      </FormItem>
-                                    );
-                                  }}
-                                />
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ))}
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <DialogFooter>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsEditDialogOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={updateUserGroupMutation.isPending}>
-                    {updateUserGroupMutation.isPending ? "Updating..." : "Update Group"}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
-
-        {/* Delete Confirmation Dialog */}
-        <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Confirm Deletion</DialogTitle>
-              <DialogDescription>
-                Are you sure you want to delete the "{selectedGroup?.name}" group?
-                {selectedGroup?.userCount && selectedGroup.userCount > 0 && (
-                  <span className="text-red-500 block mt-2 font-medium">
-                    Warning: This group has {selectedGroup.userCount} members who will lose this group's permissions.
-                  </span>
-                )}
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={confirmDelete}
-                disabled={deleteUserGroupMutation.isPending}
-              >
-                {deleteUserGroupMutation.isPending ? "Deleting..." : "Delete Group"}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </AdminLayout>
-  );
-}
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a

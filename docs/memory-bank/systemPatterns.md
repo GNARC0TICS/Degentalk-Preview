@@ -1,8 +1,8 @@
-# Degentalk™™ System Patterns
+# DegenTalk System Patterns
 
 ## System Architecture
 
-Degentalk™™ follows a **client-server architecture** with a PostgreSQL database.
+DegenTalk follows a **client-server architecture** with a PostgreSQL database.
 
 *   **Client (Frontend):** A React application built with Vite, using React Query for server state, Context for global state, and wouter for routing. It is currently being restructured into a feature-based organization (`client/src/features/`).
 *   **Server (Backend):** An Express.js application handling API requests, database interactions, and real-time communication via WebSockets. It is being migrated to a domain-driven structure (`server/src/domains/`).

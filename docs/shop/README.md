@@ -1,4 +1,4 @@
-# Degentalk™™ Shop System Docs
+# DegenTalk Shop System Docs
 
 "Welcome to the only store where Cope is a common item and Exit Liquidity is a flex."
 
@@ -18,13 +18,13 @@
 
 ## 1. Overview
 
-The Degentalk™™ Shop allows users to purchase cosmetics, XP boosters, perks, and potential 1/1 mythic items using DGT (Degen Tokens). Items are tied to rarity tiers and offer equippable functionality or passive effects. The system is designed to enhance user engagement and provide a way to showcase status and achievements within the forum.
+The DegenTalk Shop allows users to purchase cosmetics, XP boosters, perks, and potential 1/1 mythic items using DGT (Degen Tokens). Items are tied to rarity tiers and offer equippable functionality or passive effects. The system is designed to enhance user engagement and provide a way to showcase status and achievements within the forum.
 
 ---
 
 ## 2. Rarity Tiers
 
-The Degentalk™™ Shop uses the following rarity ladder (v2.0 - No Copium Edition):
+The DegenTalk Shop uses the following rarity ladder (v2.0 - No Copium Edition):
 
 | Tier | Name             | Tooltip / Flavor Text                     | Max Supply         |
 |------|------------------|-------------------------------------------|--------------------|

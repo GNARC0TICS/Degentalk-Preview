@@ -1,8 +1,8 @@
-# Degentalk™™ Shoutbox Rain & Tip Features
+# DegenTalk Shoutbox Rain & Tip Features
 
 ## Status: Reviewed – Awaiting Final Approval | 2025-06-02
 
-This directory contains components for implementing the rain and tip features in the Degentalk™™ shoutbox.
+This directory contains components for implementing the rain and tip features in the DegenTalk shoutbox.
 
 ## Components
 

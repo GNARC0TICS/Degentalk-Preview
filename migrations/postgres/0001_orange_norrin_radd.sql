@@ -1,18 +1,18 @@
--- ALTER TABLE "admin_audit_logs" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
--- ALTER TABLE "airdrop_records" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
--- ALTER TABLE "airdrop_settings" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
--- ALTER TABLE "beta_feature_flags" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
--- ALTER TABLE "chat_messages" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "admin_audit_logs" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "airdrop_records" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "airdrop_settings" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "beta_feature_flags" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "chat_messages" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
 ALTER TABLE "thread_drafts" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
 ALTER TABLE "thread_feature_permissions" DISABLE ROW LEVEL SECURITY;--> statement-breakpoint
--- DROP TABLE "admin_audit_logs" CASCADE;--> statement-breakpoint
--- DROP TABLE "airdrop_records" CASCADE;--> statement-breakpoint
--- DROP TABLE "airdrop_settings" CASCADE;--> statement-breakpoint
--- DROP TABLE "beta_feature_flags" CASCADE;--> statement-breakpoint
--- DROP TABLE "chat_messages" CASCADE;--> statement-breakpoint
+DROP TABLE "admin_audit_logs" CASCADE;--> statement-breakpoint
+DROP TABLE "airdrop_records" CASCADE;--> statement-breakpoint
+DROP TABLE "airdrop_settings" CASCADE;--> statement-breakpoint
+DROP TABLE "beta_feature_flags" CASCADE;--> statement-breakpoint
+DROP TABLE "chat_messages" CASCADE;--> statement-breakpoint
 DROP TABLE "thread_drafts" CASCADE;--> statement-breakpoint
 DROP TABLE "thread_feature_permissions" CASCADE;--> statement-breakpoint
--- ALTER TABLE "media_library" DROP CONSTRAINT "media_library_filename_unique";--> statement-breakpoint
+ALTER TABLE "media_library" DROP CONSTRAINT "media_library_filename_unique";--> statement-breakpoint
 ALTER TABLE "threads" DROP CONSTRAINT "threads_solving_post_id_posts_post_id_fk";
 --> statement-breakpoint
 ALTER TABLE "user_inventory" DROP CONSTRAINT "user_inventory_transaction_id_inventory_transactions_transaction_id_fk";

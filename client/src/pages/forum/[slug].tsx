@@ -1,18 +1,9 @@
-// This file handles the display of General Forums under the /forum/[slug] route.
-// It displays child categories or threads depending on the forum type.
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
-<<<<<<< HEAD
 import { Home, MessageSquare } from 'lucide-react';
-=======
-import {
-  MessageSquare,
-} from 'lucide-react';
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 import { useAuth } from '@/hooks/use-auth.tsx';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { SiteFooter } from '@/components/layout/site-footer';
@@ -20,6 +11,7 @@ import { ForumGuidelines } from '@/components/forum/forum-guidelines';
 import { Link } from 'wouter';
 import { ActiveMembersWidget } from '@/components/users';
 import { useActiveUsers } from '@/features/users/hooks';
+import { ForumEntityBase } from '@/utils/forum-routing-helper';
 import { ForumCategoryWithStats } from '@shared/types'; // Import ForumCategoryWithStats type
 
 interface Thread {
@@ -31,17 +23,10 @@ interface Thread {
 	// Removed content as it's not returned by the API for thread listings
 }
 
-<<<<<<< HEAD
 export default function ForumPage() {
 	const { slug } = useParams<{ slug: string }>();
 	const { user } = useAuth();
 	const isLoggedIn = !!user;
-=======
-export default function GeneralForumPage() { // Renamed component for clarity
-  const { slug } = useParams<{ slug: string }>();
-  const { user } = useAuth();
-  const isLoggedIn = !!user;
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	const [forum, setForum] = useState<ForumCategoryWithStats | null>(null); // Use ForumCategoryWithStats type
 	const [childForums, setChildForums] = useState<ForumCategoryWithStats[]>([]); // State for child forums

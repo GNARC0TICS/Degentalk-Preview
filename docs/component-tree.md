@@ -1,4 +1,4 @@
-# Degentalk™™ v2 Component Tree
+# DegenTalk v2 Component Tree
 
 ## Core Layout Components
 
@@ -158,7 +158,7 @@ Animations/
 ## Patterns for Component Enhancement
 
 1. **Standard to Enhanced**
-   - Base components from shadcn/ui will be extended with Degentalk™™-specific styling and functionality
+   - Base components from shadcn/ui will be extended with DegenTalk-specific styling and functionality
    - Example: Button → GradientButton, Card → GlowingCard
 
 2. **Composition Over Inheritance**

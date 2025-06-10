@@ -1,7 +1,7 @@
 # Wallet System Documentation
 
 ## Overview
-The Degentalk™™ wallet system provides cryptocurrency functionality for the platform, enabling users to manage DGT points and USDT balances, make transactions, and interact with the platform's economy.
+The DegenTalk wallet system provides cryptocurrency functionality for the platform, enabling users to manage DGT points and USDT balances, make transactions, and interact with the platform's economy.
 
 ## Components Structure
 

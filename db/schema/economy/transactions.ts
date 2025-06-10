@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import {
 	pgTable,
 	serial,
@@ -15,35 +14,6 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { wallets } from './wallets';
 import { transactionTypeEnum, transactionStatusEnum } from '../core/enums';
-=======
-import { pgTable, serial, integer, bigint, text, varchar, boolean, jsonb, timestamp, index, pgEnum } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
-import { users } from "../user/users";
-import { wallets } from "./wallets";
-
-// Define enums directly in this file
-export const transactionTypeEnum = pgEnum('transaction_type', [
-  'purchase',
-  'sale',
-  'transfer',
-  'deposit',
-  'withdrawal',
-  'admin_grant',
-  'tip',
-  'rain',
-  'fee',
-  'refund',
-  'other',
-]);
-
-export const transactionStatusEnum = pgEnum('transaction_status', [
-  'pending',
-  'confirmed',
-  'failed',
-  'reversed',
-  'disputed'
-]);
->>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 export const transactions = pgTable(
 	'transactions',

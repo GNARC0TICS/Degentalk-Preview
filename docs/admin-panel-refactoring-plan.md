@@ -2,7 +2,7 @@
 
 ## Overview and Scope
 
-This document details the complete plan for refactoring the Admin Panel system for the Degentalk™™ platform. The work is strictly limited to admin-related components and will not touch shared domains being worked on by other team members.
+This document details the complete plan for refactoring the Admin Panel system for the DegenTalk platform. The work is strictly limited to admin-related components and will not touch shared domains being worked on by other team members.
 
 ## Scope Boundaries
 

@@ -17,7 +17,7 @@
 
 ## Overview
 
-ForumFusion powers a modern, hierarchical forum system for Degentalk™™, designed for high engagement, clarity, and extensibility. The forum is organized as:
+ForumFusion powers a modern, hierarchical forum system for DegenTalk, designed for high engagement, clarity, and extensibility. The forum is organized as:
 
 - **Zones**: Top-level destinations (singular site featured branded forums) (e.g., "The Pit", "Mission Control")
 - **Forums**: Sub-containers within Zones (e.g., "Signals & TA" in "Market Moves")
