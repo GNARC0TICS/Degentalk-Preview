@@ -17009,3 +17009,24 @@ User not found
   "logPath": "logs/app.log"
 }
 [2025-06-09T07:08:05.148Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-10T11:15:56.189Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-10T11:15:56.190Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-10T11:15:56.246Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-10T11:15:56.383Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-10T11:15:56.383Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-10T11:15:56.383Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-10T11:15:56.383Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-10T11:16:06.052Z] [ERROR] [WALLET_CONTROLLER] Error getting transaction history: . Details: AggregateError [ETIMEDOUT]: 
+    at /home/deveshdas/projects/degentalk/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async <anonymous> (/home/deveshdas/projects/degentalk/node_modules/src/node-postgres/session.ts:144:19)
+    at async WalletController.getTransactionHistory (/home/deveshdas/projects/degentalk/server/src/domains/wallet/wallet.controller.ts:141:22)
+{
+  "stack": "AggregateError [ETIMEDOUT]: \n    at /home/deveshdas/projects/degentalk/node_modules/pg-pool/index.js:45:11\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async <anonymous> (/home/deveshdas/projects/degentalk/node_modules/src/node-postgres/session.ts:144:19)\n    at async WalletController.getTransactionHistory (/home/deveshdas/projects/degentalk/server/src/domains/wallet/wallet.controller.ts:141:22)",
+  "errorObj": {
+    "code": "ETIMEDOUT"
+  }
+}

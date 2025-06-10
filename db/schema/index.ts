@@ -21,7 +21,7 @@
  * @owner Database Team / Backend Team (TODO: Confirm owner)
  */
 // Core exports (Note: db/schema/core/ is deprecated. Enums are now directly managed within their respective domains or shared types if truly global.)
-// export * from './core/enums'; // Removed as db/schema/core/ is deprecated.
+export * from './core/enums'; // Removed as db/schema/core/ is deprecated.
 
 // User domain exports
 export * from './user/users';
