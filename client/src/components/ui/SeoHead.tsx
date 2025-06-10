@@ -2,12 +2,12 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 
 interface SeoHeadProps {
-  title: string;
-  description?: string;
-  ogImage?: string;
-  ogUrl?: string;
-  twitterCard?: 'summary' | 'summary_large_image';
-  noIndex?: boolean;
+	title: string;
+	description?: string;
+	ogImage?: string;
+	ogUrl?: string;
+	twitterCard?: 'summary' | 'summary_large_image';
+	noIndex?: boolean;
 }
 
 /**
@@ -15,37 +15,37 @@ interface SeoHeadProps {
  * Wraps react-helmet for easier management of meta tags
  */
 export const SeoHead: React.FC<SeoHeadProps> = ({
-  title,
-  description,
-  ogImage,
-  ogUrl,
-  twitterCard = 'summary',
-  noIndex = false,
+	title,
+	description,
+	ogImage,
+	ogUrl,
+	twitterCard = 'summary',
+	noIndex = false
 }) => {
-  const siteName = 'DegenTalk';
-  const formattedTitle = title ? `${title} | ${siteName}` : siteName;
-  
-  return (
-    <Helmet>
-      <title>{formattedTitle}</title>
-      {description && <meta name="description" content={description} />}
-      
-      {/* Open Graph Meta Tags */}
-      <meta property="og:title" content={formattedTitle} />
-      {description && <meta property="og:description" content={description} />}
-      {ogImage && <meta property="og:image" content={ogImage} />}
-      {ogUrl && <meta property="og:url" content={ogUrl} />}
-      <meta property="og:type" content="website" />
-      <meta property="og:site_name" content={siteName} />
-      
-      {/* Twitter Card Meta Tags */}
-      <meta name="twitter:card" content={twitterCard} />
-      <meta name="twitter:title" content={formattedTitle} />
-      {description && <meta name="twitter:description" content={description} />}
-      {ogImage && <meta name="twitter:image" content={ogImage} />}
-      
-      {/* No index if specified */}
-      {noIndex && <meta name="robots" content="noindex,nofollow" />}
-    </Helmet>
-  );
+	const siteName = 'DegenTalk';
+	const formattedTitle = title ? `${title} | ${siteName}` : siteName;
+
+	return (
+		<Helmet>
+			<title>{formattedTitle}</title>
+			{description && <meta name="description" content={description} />}
+
+			{/* Open Graph Meta Tags */}
+			<meta property="og:title" content={formattedTitle} />
+			{description && <meta property="og:description" content={description} />}
+			{ogImage && <meta property="og:image" content={ogImage} />}
+			{ogUrl && <meta property="og:url" content={ogUrl} />}
+			<meta property="og:type" content="website" />
+			<meta property="og:site_name" content={siteName} />
+
+			{/* Twitter Card Meta Tags */}
+			<meta name="twitter:card" content={twitterCard} />
+			<meta name="twitter:title" content={formattedTitle} />
+			{description && <meta name="twitter:description" content={description} />}
+			{ogImage && <meta name="twitter:image" content={ogImage} />}
+
+			{/* No index if specified */}
+			{noIndex && <meta name="robots" content="noindex,nofollow" />}
+		</Helmet>
+	);
 };

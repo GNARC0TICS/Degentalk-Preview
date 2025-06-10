@@ -1,6 +1,6 @@
 /**
  * Messaging Routes
- * 
+ *
  * Defines API routes for user-to-user messaging functionality.
  */
 
@@ -15,22 +15,22 @@ import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware
 
 // Helper function to get user ID from req.user
 function getUserId(req: Request): number {
-  if (req.user && typeof (req.user as any).id === 'number') {
-    return (req.user as any).id;
-  }
-  console.error("User ID not found in req.user");
-  return (req.user as any)?.user_id;
+	if (req.user && typeof (req.user as any).id === 'number') {
+		return (req.user as any).id;
+	}
+	console.error('User ID not found in req.user');
+	return (req.user as any)?.user_id;
 }
 
 const router = Router();
 
 // Get all conversations for the current user
 router.get('/conversations', isAuthenticated, async (req: Request, res: Response) => {
-  try {
-    const userId = getUserId(req);
+	try {
+		const userId = getUserId(req);
 
-    // Get unique conversations with last message and unread count
-    const conversations = await db.execute(sql`
+		// Get unique conversations with last message and unread count
+		const conversations = await db.execute(sql`
       WITH latest_messages AS (
         SELECT 
           CASE 
@@ -64,201 +64,189 @@ router.get('/conversations', isAuthenticated, async (req: Request, res: Response
       ORDER BY m.created_at DESC
     `);
 
-    res.json(conversations.rows);
-  } catch (error) {
-    console.error('Error getting conversations:', error);
-    res.status(500).json({ message: 'Failed to get conversations' });
-  }
+		res.json(conversations.rows);
+	} catch (error) {
+		console.error('Error getting conversations:', error);
+		res.status(500).json({ message: 'Failed to get conversations' });
+	}
 });
 
 // Get messages for a specific conversation
 router.get('/conversation/:userId', isAuthenticated, async (req: Request, res: Response) => {
-  try {
-    const currentUserId = getUserId(req);
-    const otherUserId = parseInt(req.params.userId);
-    
-    if (isNaN(otherUserId)) {
-      return res.status(400).json({ message: 'Invalid user ID' });
-    }
+	try {
+		const currentUserId = getUserId(req);
+		const otherUserId = parseInt(req.params.userId);
 
-    // Get messages between the two users
-    const conversationMessages = await db
-      .select({
-        id: messages.id,
-        senderId: messages.senderId,
-        recipientId: messages.recipientId,
-        content: messages.content,
-        timestamp: messages.createdAt,
-        isRead: messages.isRead
-      })
-      .from(messages)
-      .where(
-        or(
-          and(
-            eq(messages.senderId, currentUserId),
-            eq(messages.recipientId, otherUserId)
-          ),
-          and(
-            eq(messages.senderId, otherUserId),
-            eq(messages.recipientId, currentUserId)
-          )
-        )
-      )
-      .orderBy(messages.createdAt);
+		if (isNaN(otherUserId)) {
+			return res.status(400).json({ message: 'Invalid user ID' });
+		}
 
-    res.json(conversationMessages);
-  } catch (error) {
-    console.error('Error getting conversation messages:', error);
-    res.status(500).json({ message: 'Failed to get conversation messages' });
-  }
+		// Get messages between the two users
+		const conversationMessages = await db
+			.select({
+				id: messages.id,
+				senderId: messages.senderId,
+				recipientId: messages.recipientId,
+				content: messages.content,
+				timestamp: messages.createdAt,
+				isRead: messages.isRead
+			})
+			.from(messages)
+			.where(
+				or(
+					and(eq(messages.senderId, currentUserId), eq(messages.recipientId, otherUserId)),
+					and(eq(messages.senderId, otherUserId), eq(messages.recipientId, currentUserId))
+				)
+			)
+			.orderBy(messages.createdAt);
+
+		res.json(conversationMessages);
+	} catch (error) {
+		console.error('Error getting conversation messages:', error);
+		res.status(500).json({ message: 'Failed to get conversation messages' });
+	}
 });
 
 // Send a new message
 router.post('/send', isAuthenticated, async (req: Request, res: Response) => {
-  try {
-    const sendMessageSchema = z.object({
-      recipientId: z.number(),
-      content: z.string().min(1).max(2000)
-    });
-    
-    const { recipientId, content } = sendMessageSchema.parse(req.body);
-    const senderId = getUserId(req);
-    
-    // Check if recipient exists
-    const recipientExists = await db
-      .select({ id: users.id })
-      .from(users)
-      .where(eq(users.id, recipientId))
-      .limit(1);
-      
-    if (recipientExists.length === 0) {
-      return res.status(404).json({ message: 'Recipient not found' });
-    }
-    
-    // Don't allow sending messages to self
-    if (senderId === recipientId) {
-      return res.status(400).json({ message: 'Cannot send messages to yourself' });
-    }
-    
-    // Insert the new message
-    const [newMessage] = await db
-      .insert(messages)
-      .values({
-        id: parseInt(Date.now().toString().slice(-9)),
-        uuid: randomUUID(),
-        senderId,
-        recipientId,
-        content,
-        isRead: false,
-        isDeleted: false,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      })
-      .returning();
-    
-    res.status(201).json(newMessage);
-  } catch (error) {
-    console.error('Error sending message:', error);
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({ message: 'Invalid message data', errors: error.errors });
-    }
-    res.status(500).json({ message: 'Failed to send message' });
-  }
+	try {
+		const sendMessageSchema = z.object({
+			recipientId: z.number(),
+			content: z.string().min(1).max(2000)
+		});
+
+		const { recipientId, content } = sendMessageSchema.parse(req.body);
+		const senderId = getUserId(req);
+
+		// Check if recipient exists
+		const recipientExists = await db
+			.select({ id: users.id })
+			.from(users)
+			.where(eq(users.id, recipientId))
+			.limit(1);
+
+		if (recipientExists.length === 0) {
+			return res.status(404).json({ message: 'Recipient not found' });
+		}
+
+		// Don't allow sending messages to self
+		if (senderId === recipientId) {
+			return res.status(400).json({ message: 'Cannot send messages to yourself' });
+		}
+
+		// Insert the new message
+		const [newMessage] = await db
+			.insert(messages)
+			.values({
+				id: parseInt(Date.now().toString().slice(-9)),
+				uuid: randomUUID(),
+				senderId,
+				recipientId,
+				content,
+				isRead: false,
+				isDeleted: false,
+				createdAt: new Date(),
+				updatedAt: new Date()
+			})
+			.returning();
+
+		res.status(201).json(newMessage);
+	} catch (error) {
+		console.error('Error sending message:', error);
+		if (error instanceof z.ZodError) {
+			return res.status(400).json({ message: 'Invalid message data', errors: error.errors });
+		}
+		res.status(500).json({ message: 'Failed to send message' });
+	}
 });
 
 // Mark messages as read
 router.post('/mark-read/:userId', isAuthenticated, async (req: Request, res: Response) => {
-  try {
-    const currentUserId = getUserId(req);
-    const senderId = parseInt(req.params.userId);
-    
-    if (isNaN(senderId)) {
-      return res.status(400).json({ message: 'Invalid user ID' });
-    }
-    
-    // Update all unread messages from the sender to the current user
-    await db
-      .update(messages)
-      .set({ 
-        isRead: true,
-        updatedAt: new Date()
-      })
-      .where(
-        and(
-          eq(messages.senderId, senderId),
-          eq(messages.recipientId, currentUserId),
-          eq(messages.isRead, false)
-        )
-      );
-    
-    res.json({ success: true, message: 'Messages marked as read' });
-  } catch (error) {
-    console.error('Error marking messages as read:', error);
-    res.status(500).json({ message: 'Failed to mark messages as read' });
-  }
+	try {
+		const currentUserId = getUserId(req);
+		const senderId = parseInt(req.params.userId);
+
+		if (isNaN(senderId)) {
+			return res.status(400).json({ message: 'Invalid user ID' });
+		}
+
+		// Update all unread messages from the sender to the current user
+		await db
+			.update(messages)
+			.set({
+				isRead: true,
+				updatedAt: new Date()
+			})
+			.where(
+				and(
+					eq(messages.senderId, senderId),
+					eq(messages.recipientId, currentUserId),
+					eq(messages.isRead, false)
+				)
+			);
+
+		res.json({ success: true, message: 'Messages marked as read' });
+	} catch (error) {
+		console.error('Error marking messages as read:', error);
+		res.status(500).json({ message: 'Failed to mark messages as read' });
+	}
 });
 
 // Delete a conversation
 router.delete('/conversation/:userId', isAuthenticated, async (req: Request, res: Response) => {
-  try {
-    const currentUserId = getUserId(req);
-    const otherUserId = parseInt(req.params.userId);
-    
-    if (isNaN(otherUserId)) {
-      return res.status(400).json({ message: 'Invalid user ID' });
-    }
-    
-    // Soft delete all messages between the two users
-    await db
-      .update(messages)
-      .set({ 
-        isDeleted: true,
-        updatedAt: new Date()
-      })
-      .where(
-        or(
-          and(
-            eq(messages.senderId, currentUserId),
-            eq(messages.recipientId, otherUserId)
-          ),
-          and(
-            eq(messages.senderId, otherUserId),
-            eq(messages.recipientId, currentUserId)
-          )
-        )
-      );
-    
-    res.json({ success: true, message: 'Conversation deleted' });
-  } catch (error) {
-    console.error('Error deleting conversation:', error);
-    res.status(500).json({ message: 'Failed to delete conversation' });
-  }
+	try {
+		const currentUserId = getUserId(req);
+		const otherUserId = parseInt(req.params.userId);
+
+		if (isNaN(otherUserId)) {
+			return res.status(400).json({ message: 'Invalid user ID' });
+		}
+
+		// Soft delete all messages between the two users
+		await db
+			.update(messages)
+			.set({
+				isDeleted: true,
+				updatedAt: new Date()
+			})
+			.where(
+				or(
+					and(eq(messages.senderId, currentUserId), eq(messages.recipientId, otherUserId)),
+					and(eq(messages.senderId, otherUserId), eq(messages.recipientId, currentUserId))
+				)
+			);
+
+		res.json({ success: true, message: 'Conversation deleted' });
+	} catch (error) {
+		console.error('Error deleting conversation:', error);
+		res.status(500).json({ message: 'Failed to delete conversation' });
+	}
 });
 
 // Get unread message count
 router.get('/unread-count', isAuthenticated, async (req: Request, res: Response) => {
-  try {
-    const userId = getUserId(req);
-    
-    // Count unread messages for the current user
-    const result = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(messages)
-      .where(
-        and(
-          eq(messages.recipientId, userId),
-          eq(messages.isRead, false),
-          eq(messages.isDeleted, false)
-        )
-      );
-    
-    const total = result[0]?.count || 0;
-    
-    res.json({ total });
-  } catch (error) {
-    console.error('Error getting unread count:', error);
-    res.status(500).json({ message: 'Failed to get unread message count' });
-  }
+	try {
+		const userId = getUserId(req);
+
+		// Count unread messages for the current user
+		const result = await db
+			.select({ count: sql<number>`count(*)` })
+			.from(messages)
+			.where(
+				and(
+					eq(messages.recipientId, userId),
+					eq(messages.isRead, false),
+					eq(messages.isDeleted, false)
+				)
+			);
+
+		const total = result[0]?.count || 0;
+
+		res.json({ total });
+	} catch (error) {
+		console.error('Error getting unread count:', error);
+		res.status(500).json({ message: 'Failed to get unread message count' });
+	}
 });
 
-export default router; 
+export default router;

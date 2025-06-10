@@ -1,56 +1,82 @@
-import { pgTable, serial, varchar, integer, boolean, timestamp, uuid, bigint, real, jsonb, AnyPgColumn, index, unique } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
-import { forumCategories } from "./categories"; // Adjusted import path
-import { users } from "../user/users"; // Adjusted import path
-import { threadPrefixes } from "./prefixes"; // Placeholder for future import
+import {
+	pgTable,
+	serial,
+	varchar,
+	integer,
+	boolean,
+	timestamp,
+	uuid,
+	bigint,
+	real,
+	jsonb,
+	AnyPgColumn,
+	index,
+	unique
+} from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { forumCategories } from './categories'; // Adjusted import path
+import { users } from '../user/users'; // Adjusted import path
+import { threadPrefixes } from './prefixes'; // Placeholder for future import
 // import { posts } from "./posts"; // Placeholder for self-reference with posts
 
 // Forward declare the post type for solvingPostId reference
 export type PostTable = { id: PgColumn<any, any, any> }; // More generic PgColumn
 
-export const threads = pgTable('threads', {
-  id: serial('thread_id').primaryKey(),
-  uuid: uuid('uuid').notNull().defaultRandom(),
-  title: varchar('title', { length: 255 }).notNull(),
-  slug: varchar('slug', { length: 255 }).notNull(),
-  categoryId: integer('category_id').notNull().references(() => forumCategories.id, { onDelete: 'cascade' }),
-  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  prefixId: integer('prefix_id').references(() => threadPrefixes.id, { onDelete: 'set null' }),
-  isSticky: boolean('is_sticky').notNull().default(false),
-  isLocked: boolean('is_locked').notNull().default(false),
-  isHidden: boolean('is_hidden').notNull().default(false),
-  isFeatured: boolean('is_featured').notNull().default(false),
-  featuredAt: timestamp('featured_at'),
-  featuredBy: integer('featured_by').references(() => users.id, { onDelete: 'set null' }),
-  featuredExpiresAt: timestamp('featured_expires_at'),
-  isDeleted: boolean('is_deleted').notNull().default(false),
-  deletedAt: timestamp('deleted_at'),
-  deletedBy: integer('deleted_by').references(() => users.id, { onDelete: 'set null' }),
-  viewCount: integer('view_count').notNull().default(0),
-  postCount: integer('post_count').notNull().default(0),
-  firstPostLikeCount: integer('first_post_like_count').notNull().default(0),
-  dgtStaked: bigint('dgt_staked', { mode: 'number' }).notNull().default(0),
-  hotScore: real('hot_score').notNull().default(0),
-  isBoosted: boolean('is_boosted').notNull().default(false),
-  boostAmountDgt: bigint('boost_amount_dgt', { mode: 'number' }).default(0),
-  boostExpiresAt: timestamp('boost_expires_at'),
-  lastPostId: bigint('last_post_id', { mode: 'number' }),
-  lastPostAt: timestamp('last_post_at'),
-  createdAt: timestamp('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: timestamp('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
-  isArchived: boolean('is_archived').notNull().default(false),
-  pollId: bigint('poll_id', { mode: 'number' }),
-  isSolved: boolean('is_solved').notNull().default(false),
-  solvingPostId: integer('solving_post_id'), // .references((): AnyPgColumn => posts.id, { onDelete: 'set null' }), // Placeholder
-  pluginData: jsonb('plugin_data').default('{}'),
-}, (table) => ({
-  categoryIdx: index('idx_threads_category_id').on(table.categoryId),
-  userIdx: index('idx_threads_user_id').on(table.userId),
-  createdAtIdx: index('idx_threads_created_at').on(table.createdAt),
-  slugUnique: unique('threads_slug_visible_unique').on(table.slug),
-  hotScoreIdx: index('idx_threads_hot_score').on(table.hotScore),
-  isBoostedIdx: index('idx_threads_is_boosted').on(table.isBoosted)
-}));
+export const threads = pgTable(
+	'threads',
+	{
+		id: serial('thread_id').primaryKey(),
+		uuid: uuid('uuid').notNull().defaultRandom(),
+		title: varchar('title', { length: 255 }).notNull(),
+		slug: varchar('slug', { length: 255 }).notNull(),
+		categoryId: integer('category_id')
+			.notNull()
+			.references(() => forumCategories.id, { onDelete: 'cascade' }),
+		userId: integer('user_id')
+			.notNull()
+			.references(() => users.id, { onDelete: 'cascade' }),
+		prefixId: integer('prefix_id').references(() => threadPrefixes.id, { onDelete: 'set null' }),
+		isSticky: boolean('is_sticky').notNull().default(false),
+		isLocked: boolean('is_locked').notNull().default(false),
+		isHidden: boolean('is_hidden').notNull().default(false),
+		isFeatured: boolean('is_featured').notNull().default(false),
+		featuredAt: timestamp('featured_at'),
+		featuredBy: integer('featured_by').references(() => users.id, { onDelete: 'set null' }),
+		featuredExpiresAt: timestamp('featured_expires_at'),
+		isDeleted: boolean('is_deleted').notNull().default(false),
+		deletedAt: timestamp('deleted_at'),
+		deletedBy: integer('deleted_by').references(() => users.id, { onDelete: 'set null' }),
+		viewCount: integer('view_count').notNull().default(0),
+		postCount: integer('post_count').notNull().default(0),
+		firstPostLikeCount: integer('first_post_like_count').notNull().default(0),
+		dgtStaked: bigint('dgt_staked', { mode: 'number' }).notNull().default(0),
+		hotScore: real('hot_score').notNull().default(0),
+		isBoosted: boolean('is_boosted').notNull().default(false),
+		boostAmountDgt: bigint('boost_amount_dgt', { mode: 'number' }).default(0),
+		boostExpiresAt: timestamp('boost_expires_at'),
+		lastPostId: bigint('last_post_id', { mode: 'number' }),
+		lastPostAt: timestamp('last_post_at'),
+		createdAt: timestamp('created_at')
+			.notNull()
+			.default(sql`CURRENT_TIMESTAMP`),
+		updatedAt: timestamp('updated_at')
+			.notNull()
+			.default(sql`CURRENT_TIMESTAMP`),
+		isArchived: boolean('is_archived').notNull().default(false),
+		pollId: bigint('poll_id', { mode: 'number' }),
+		isSolved: boolean('is_solved').notNull().default(false),
+		solvingPostId: integer('solving_post_id'), // .references((): AnyPgColumn => posts.id, { onDelete: 'set null' }), // Placeholder
+		pluginData: jsonb('plugin_data').default('{}')
+	},
+	(table) => ({
+		categoryIdx: index('idx_threads_category_id').on(table.categoryId),
+		userIdx: index('idx_threads_user_id').on(table.userId),
+		createdAtIdx: index('idx_threads_created_at').on(table.createdAt),
+		slugUnique: unique('threads_slug_visible_unique').on(table.slug),
+		hotScoreIdx: index('idx_threads_hot_score').on(table.hotScore),
+		isBoostedIdx: index('idx_threads_is_boosted').on(table.isBoosted)
+	})
+);
 
 // Placeholder for relations
 // import { relations } from "drizzle-orm";
@@ -63,41 +89,43 @@ export const threads = pgTable('threads', {
 //   // ... other relations
 // }));
 
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { createInsertSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
-export const insertThreadSchema = createInsertSchema(threads).extend({
-  title: z.string().min(3).max(255),
-}).omit({
-  id: true,
-  uuid: true,
-  slug: true,
-  isSticky: true,
-  isLocked: true,
-  isHidden: true,
-  isFeatured: true,
-  featuredAt: true,
-  featuredBy: true,
-  featuredExpiresAt: true,
-  isDeleted: true,
-  deletedAt: true,
-  deletedBy: true,
-  viewCount: true,
-  postCount: true,
-  firstPostLikeCount: true,
-  dgtStaked: true,
-  hotScore: true,
-  isBoosted: true,
-  boostAmountDgt: true,
-  boostExpiresAt: true,
-  lastPostId: true,
-  lastPostAt: true,
-  createdAt: true,
-  updatedAt: true,
-  isArchived: true,
-  pollId: true,
-  pluginData: true,
-});
+export const insertThreadSchema = createInsertSchema(threads)
+	.extend({
+		title: z.string().min(3).max(255)
+	})
+	.omit({
+		id: true,
+		uuid: true,
+		slug: true,
+		isSticky: true,
+		isLocked: true,
+		isHidden: true,
+		isFeatured: true,
+		featuredAt: true,
+		featuredBy: true,
+		featuredExpiresAt: true,
+		isDeleted: true,
+		deletedAt: true,
+		deletedBy: true,
+		viewCount: true,
+		postCount: true,
+		firstPostLikeCount: true,
+		dgtStaked: true,
+		hotScore: true,
+		isBoosted: true,
+		boostAmountDgt: true,
+		boostExpiresAt: true,
+		lastPostId: true,
+		lastPostAt: true,
+		createdAt: true,
+		updatedAt: true,
+		isArchived: true,
+		pollId: true,
+		pluginData: true
+	});
 
 export type Thread = typeof threads.$inferSelect;
-export type InsertThread = z.infer<typeof insertThreadSchema>; 
+export type InsertThread = z.infer<typeof insertThreadSchema>;

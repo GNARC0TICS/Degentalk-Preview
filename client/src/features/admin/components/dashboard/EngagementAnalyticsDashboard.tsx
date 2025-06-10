@@ -4,34 +4,36 @@ import RainAnalyticsCard from './RainAnalyticsCard';
 import TippingAnalyticsCard from './TippingAnalyticsCard';
 
 interface EngagementAnalyticsDashboardProps {
-  className?: string;
+	className?: string;
 }
 
 /**
  * Unified dashboard for engagement analytics
- * 
+ *
  * Displays both Rain and Tipping analytics in a single component
  * for a comprehensive view of token-based user interactions
  */
-const EngagementAnalyticsDashboard: React.FC<EngagementAnalyticsDashboardProps> = ({ className }) => {
-  return (
-    <div className={`space-y-6 ${className}`}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Engagement Analytics</CardTitle>
-          <CardDescription>
-            Comprehensive analytics for token-based user interactions
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-6 md:grid-cols-2">
-            <TippingAnalyticsCard className="w-full" />
-            <RainAnalyticsCard className="w-full" />
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
+const EngagementAnalyticsDashboard: React.FC<EngagementAnalyticsDashboardProps> = ({
+	className
+}) => {
+	return (
+		<div className={`space-y-6 ${className}`}>
+			<Card>
+				<CardHeader>
+					<CardTitle>Engagement Analytics</CardTitle>
+					<CardDescription>
+						Comprehensive analytics for token-based user interactions
+					</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<div className="grid gap-6 md:grid-cols-2">
+						<TippingAnalyticsCard className="w-full" />
+						<RainAnalyticsCard className="w-full" />
+					</div>
+				</CardContent>
+			</Card>
+		</div>
+	);
 };
 
-export default EngagementAnalyticsDashboard; 
+export default EngagementAnalyticsDashboard;

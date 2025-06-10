@@ -65,4 +65,4 @@ router.post('/actions/:actionKey/toggle', isAdmin, xpActionsController.toggleXpA
 // POST /api/admin/xp/actions/:actionKey/reset - Reset an XP action to defaults
 router.post('/actions/:actionKey/reset', isAdmin, xpActionsController.resetXpAction);
 
-export default router; 
+export default router;

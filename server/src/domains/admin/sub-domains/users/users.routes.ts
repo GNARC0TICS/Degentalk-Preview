@@ -1,6 +1,6 @@
 /**
  * Admin Users Routes
- * 
+ *
  * Define routes for user management in the admin panel
  */
 
@@ -32,4 +32,4 @@ router.get('/:id', asyncHandler(adminUsersController.getUserById.bind(adminUsers
  */
 router.put('/:id', asyncHandler(adminUsersController.updateUser.bind(adminUsersController)));
 
-export default router; 
+export default router;

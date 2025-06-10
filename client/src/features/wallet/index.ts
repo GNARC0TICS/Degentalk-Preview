@@ -1,8 +1,8 @@
 /**
  * Wallet Feature Index
- * 
+ *
  * [REFAC-WALLET]
- * 
+ *
  * This file exports the wallet feature components, hooks and services
  * for use in the application.
  */
@@ -24,4 +24,4 @@ export { default as WalletPage } from './pages/WalletPage';
 export { walletApiService } from './services/wallet-api.service';
 
 // Export types
-export type { WalletBalance, Transaction, DepositAddress } from './services/wallet-api.service'; 
+export type { WalletBalance, Transaction, DepositAddress } from './services/wallet-api.service';

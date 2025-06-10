@@ -1,35 +1,45 @@
-import { pgTable, serial, integer, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
-import { users } from "../user/users"; // Adjusted path
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { pgTable, serial, integer, text, timestamp, boolean, index } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { users } from '../user/users'; // Adjusted path
+import { createInsertSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
-export const directMessages = pgTable('direct_messages', {
-  id: serial('message_id').primaryKey(),
-  senderId: integer('sender_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  recipientId: integer('recipient_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  content: text('content').notNull(),
-  timestamp: timestamp('timestamp').notNull().default(sql`now()`), // Changed defaultNow() to sql`now()`
-  isRead: boolean('is_read').notNull().default(false),
-  isDeleted: boolean('is_deleted').notNull().default(false),
-}, (table) => ({
-  senderIdx: index('idx_direct_messages_sender_id').on(table.senderId),
-  recipientIdx: index('idx_direct_messages_recipient_id').on(table.recipientId),
-  timestampIdx: index('idx_direct_messages_timestamp').on(table.timestamp)
-}));
+export const directMessages = pgTable(
+	'direct_messages',
+	{
+		id: serial('message_id').primaryKey(),
+		senderId: integer('sender_id')
+			.notNull()
+			.references(() => users.id, { onDelete: 'cascade' }),
+		recipientId: integer('recipient_id')
+			.notNull()
+			.references(() => users.id, { onDelete: 'cascade' }),
+		content: text('content').notNull(),
+		timestamp: timestamp('timestamp')
+			.notNull()
+			.default(sql`now()`), // Changed defaultNow() to sql`now()`
+		isRead: boolean('is_read').notNull().default(false),
+		isDeleted: boolean('is_deleted').notNull().default(false)
+	},
+	(table) => ({
+		senderIdx: index('idx_direct_messages_sender_id').on(table.senderId),
+		recipientIdx: index('idx_direct_messages_recipient_id').on(table.recipientId),
+		timestampIdx: index('idx_direct_messages_timestamp').on(table.timestamp)
+	})
+);
 
 export const insertDirectMessageSchema = createInsertSchema(directMessages, {
-  // id: undefined, // This is how it was in schema.ts, but serial id is auto-generated
-  // timestamp: undefined, // defaultNow should handle this
-  // isRead: undefined, // default(false) should handle this
-  // isDeleted: undefined, // default(false) should handle this
-  // Correcting schema to reflect that these are usually set by application logic, not direct insert
+	// id: undefined, // This is how it was in schema.ts, but serial id is auto-generated
+	// timestamp: undefined, // defaultNow should handle this
+	// isRead: undefined, // default(false) should handle this
+	// isDeleted: undefined, // default(false) should handle this
+	// Correcting schema to reflect that these are usually set by application logic, not direct insert
 }).omit({
-  id: true,
-  timestamp: true,
-  isRead: true,
-  isDeleted: true
+	id: true,
+	timestamp: true,
+	isRead: true,
+	isDeleted: true
 });
 
 export type DirectMessage = typeof directMessages.$inferSelect;
-export type InsertDirectMessage = z.infer<typeof insertDirectMessageSchema>; 
+export type InsertDirectMessage = z.infer<typeof insertDirectMessageSchema>;

@@ -1,6 +1,6 @@
 /**
  * WebSocket Disabled Flag
- * 
+ *
  * This file serves as a central control for disabling WebSocket functionality
  * across the entire application. By importing this constant in any file
  * that uses WebSockets, we can easily disable WebSocket functionality

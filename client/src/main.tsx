@@ -30,9 +30,9 @@ import { BASE_URL } from '@/core/constants';
 // Do not add providers directly in this file or in App.tsx.
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <RootProvider>
-    <Router base={BASE_URL}>
-      <App />
-    </Router>
-  </RootProvider>
+	<RootProvider>
+		<Router base={BASE_URL}>
+			<App />
+		</Router>
+	</RootProvider>
 );

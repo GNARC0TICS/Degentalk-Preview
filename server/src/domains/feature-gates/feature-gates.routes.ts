@@ -13,7 +13,15 @@ router.get('/access', isAuthenticated, featureGatesController.checkAllFeatureAcc
 router.get('/access/:featureId', isAuthenticated, featureGatesController.checkFeatureAccess);
 
 // Admin routes
-router.get('/admin/user/:userId/access', isAdmin, featureGatesController.getAllFeatureAccessForUser);
-router.get('/admin/user/:userId/access/:featureId', isAdmin, featureGatesController.checkFeatureAccessForUser);
+router.get(
+	'/admin/user/:userId/access',
+	isAdmin,
+	featureGatesController.getAllFeatureAccessForUser
+);
+router.get(
+	'/admin/user/:userId/access/:featureId',
+	isAdmin,
+	featureGatesController.checkFeatureAccessForUser
+);
 
-export default router; 
+export default router;

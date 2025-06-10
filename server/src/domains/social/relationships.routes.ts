@@ -1,6 +1,6 @@
 /**
  * Social Relationships Routes
- * 
+ *
  * Defines API routes for user relationships including following, blocking, etc.
  */
 
@@ -13,219 +13,229 @@ import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware
 
 // Helper function to get user ID from req.user
 function getUserId(req: Request): number {
-  if (req.user && typeof (req.user as any).id === 'number') {
-    return (req.user as any).id;
-  }
-  console.error("User ID not found in req.user");
-  return (req.user as any)?.user_id;
+	if (req.user && typeof (req.user as any).id === 'number') {
+		return (req.user as any).id;
+	}
+	console.error('User ID not found in req.user');
+	return (req.user as any)?.user_id;
 }
 
 const router = Router();
-  
+
 // Get followers for a user
 router.get('/:userId/followers', async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
-    
-    if (!userId || isNaN(Number(userId))) {
-      return res.status(400).json({ message: "Valid user ID is required" });
-    }
-    
-    // Get followers
-    const followers = await db.select({
-      id: users.id,
-      username: users.username,
-      avatarUrl: users.avatarUrl,
-      createdAt: userRelationships.createdAt
-    })
-    .from(userRelationships)
-    .innerJoin(users, eq(users.id, userRelationships.followerId))
-    .where(
-      and(
-        eq(userRelationships.followingId, Number(userId)),
-        eq(userRelationships.relationshipType, 'follow')
-      )
-    )
-    .orderBy(desc(userRelationships.createdAt));
-    
-    return res.status(200).json(followers);
-  } catch (error) {
-    console.error('Error fetching followers:', error);
-    return res.status(500).json({ message: "Error fetching followers" });
-  }
+	try {
+		const { userId } = req.params;
+
+		if (!userId || isNaN(Number(userId))) {
+			return res.status(400).json({ message: 'Valid user ID is required' });
+		}
+
+		// Get followers
+		const followers = await db
+			.select({
+				id: users.id,
+				username: users.username,
+				avatarUrl: users.avatarUrl,
+				createdAt: userRelationships.createdAt
+			})
+			.from(userRelationships)
+			.innerJoin(users, eq(users.id, userRelationships.followerId))
+			.where(
+				and(
+					eq(userRelationships.followingId, Number(userId)),
+					eq(userRelationships.relationshipType, 'follow')
+				)
+			)
+			.orderBy(desc(userRelationships.createdAt));
+
+		return res.status(200).json(followers);
+	} catch (error) {
+		console.error('Error fetching followers:', error);
+		return res.status(500).json({ message: 'Error fetching followers' });
+	}
 });
 
 // Get following for a user
 router.get('/:userId/following', async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
-    
-    if (!userId || isNaN(Number(userId))) {
-      return res.status(400).json({ message: "Valid user ID is required" });
-    }
-    
-    // Get following
-    const following = await db.select({
-      id: users.id,
-      username: users.username,
-      avatarUrl: users.avatarUrl,
-      createdAt: userRelationships.createdAt
-    })
-    .from(userRelationships)
-    .innerJoin(users, eq(users.id, userRelationships.followingId))
-    .where(
-      and(
-        eq(userRelationships.followerId, Number(userId)),
-        eq(userRelationships.relationshipType, 'follow')
-      )
-    )
-    .orderBy(desc(userRelationships.createdAt));
-    
-    return res.status(200).json(following);
-  } catch (error) {
-    console.error('Error fetching following:', error);
-    return res.status(500).json({ message: "Error fetching following" });
-  }
+	try {
+		const { userId } = req.params;
+
+		if (!userId || isNaN(Number(userId))) {
+			return res.status(400).json({ message: 'Valid user ID is required' });
+		}
+
+		// Get following
+		const following = await db
+			.select({
+				id: users.id,
+				username: users.username,
+				avatarUrl: users.avatarUrl,
+				createdAt: userRelationships.createdAt
+			})
+			.from(userRelationships)
+			.innerJoin(users, eq(users.id, userRelationships.followingId))
+			.where(
+				and(
+					eq(userRelationships.followerId, Number(userId)),
+					eq(userRelationships.relationshipType, 'follow')
+				)
+			)
+			.orderBy(desc(userRelationships.createdAt));
+
+		return res.status(200).json(following);
+	} catch (error) {
+		console.error('Error fetching following:', error);
+		return res.status(500).json({ message: 'Error fetching following' });
+	}
 });
 
 // Follow a user
 router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
-    const followerId = getUserId(req);
-    
-    if (!userId || isNaN(Number(userId))) {
-      return res.status(400).json({ message: "Valid user ID is required" });
-    }
-    
-    if (!followerId) {
-      return res.status(401).json({ message: "You must be logged in to follow users" });
-    }
-    
-    // Check if already following
-    const existingRelationship = await db.select()
-      .from(userRelationships)
-      .where(
-        and(
-          eq(userRelationships.followerId, followerId),
-          eq(userRelationships.followingId, Number(userId)),
-          eq(userRelationships.relationshipType, 'follow')
-        )
-      );
-    
-    if (existingRelationship.length > 0) {
-      return res.status(400).json({ message: "You are already following this user" });
-    }
-    
-    // Check if user exists
-    const userExists = await db.select().from(users).where(eq(users.id, Number(userId)));
-    
-    if (userExists.length === 0) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    
-    // Cannot follow yourself
-    if (followerId === Number(userId)) {
-      return res.status(400).json({ message: "You cannot follow yourself" });
-    }
-    
-    // Create follow relationship
-    const newRelationship = await db.insert(userRelationships)
-      .values({
-        followerId: followerId,
-        followingId: Number(userId),
-        relationshipType: 'follow',
-        isAccepted: true, // follow doesn't need acceptance
-        createdAt: new Date(),
-      })
-      .returning();
-    
-    return res.status(201).json({ 
-      message: "Successfully followed user",
-      relationship: newRelationship[0]
-    });
-  } catch (error) {
-    console.error('Error following user:', error);
-    return res.status(500).json({ message: "Error following user" });
-  }
+	try {
+		const { userId } = req.params;
+		const followerId = getUserId(req);
+
+		if (!userId || isNaN(Number(userId))) {
+			return res.status(400).json({ message: 'Valid user ID is required' });
+		}
+
+		if (!followerId) {
+			return res.status(401).json({ message: 'You must be logged in to follow users' });
+		}
+
+		// Check if already following
+		const existingRelationship = await db
+			.select()
+			.from(userRelationships)
+			.where(
+				and(
+					eq(userRelationships.followerId, followerId),
+					eq(userRelationships.followingId, Number(userId)),
+					eq(userRelationships.relationshipType, 'follow')
+				)
+			);
+
+		if (existingRelationship.length > 0) {
+			return res.status(400).json({ message: 'You are already following this user' });
+		}
+
+		// Check if user exists
+		const userExists = await db
+			.select()
+			.from(users)
+			.where(eq(users.id, Number(userId)));
+
+		if (userExists.length === 0) {
+			return res.status(404).json({ message: 'User not found' });
+		}
+
+		// Cannot follow yourself
+		if (followerId === Number(userId)) {
+			return res.status(400).json({ message: 'You cannot follow yourself' });
+		}
+
+		// Create follow relationship
+		const newRelationship = await db
+			.insert(userRelationships)
+			.values({
+				followerId: followerId,
+				followingId: Number(userId),
+				relationshipType: 'follow',
+				isAccepted: true, // follow doesn't need acceptance
+				createdAt: new Date()
+			})
+			.returning();
+
+		return res.status(201).json({
+			message: 'Successfully followed user',
+			relationship: newRelationship[0]
+		});
+	} catch (error) {
+		console.error('Error following user:', error);
+		return res.status(500).json({ message: 'Error following user' });
+	}
 });
 
 // Unfollow a user
 router.delete('/unfollow/:userId', isAuthenticated, async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
-    const followerId = getUserId(req);
-    
-    if (!userId || isNaN(Number(userId))) {
-      return res.status(400).json({ message: "Valid user ID is required" });
-    }
-    
-    if (!followerId) {
-      return res.status(401).json({ message: "You must be logged in to unfollow users" });
-    }
-    
-    // Check if relationship exists
-    const existingRelationship = await db.select()
-      .from(userRelationships)
-      .where(
-        and(
-          eq(userRelationships.followerId, followerId),
-          eq(userRelationships.followingId, Number(userId)),
-          eq(userRelationships.relationshipType, 'follow')
-        )
-      );
-    
-    if (existingRelationship.length === 0) {
-      return res.status(400).json({ message: "You are not following this user" });
-    }
-    
-    // Delete relationship
-    await db.delete(userRelationships)
-      .where(
-        and(
-          eq(userRelationships.followerId, followerId),
-          eq(userRelationships.followingId, Number(userId)),
-          eq(userRelationships.relationshipType, 'follow')
-        )
-      );
-    
-    return res.status(200).json({ message: "Successfully unfollowed user" });
-  } catch (error) {
-    console.error('Error unfollowing user:', error);
-    return res.status(500).json({ message: "Error unfollowing user" });
-  }
+	try {
+		const { userId } = req.params;
+		const followerId = getUserId(req);
+
+		if (!userId || isNaN(Number(userId))) {
+			return res.status(400).json({ message: 'Valid user ID is required' });
+		}
+
+		if (!followerId) {
+			return res.status(401).json({ message: 'You must be logged in to unfollow users' });
+		}
+
+		// Check if relationship exists
+		const existingRelationship = await db
+			.select()
+			.from(userRelationships)
+			.where(
+				and(
+					eq(userRelationships.followerId, followerId),
+					eq(userRelationships.followingId, Number(userId)),
+					eq(userRelationships.relationshipType, 'follow')
+				)
+			);
+
+		if (existingRelationship.length === 0) {
+			return res.status(400).json({ message: 'You are not following this user' });
+		}
+
+		// Delete relationship
+		await db
+			.delete(userRelationships)
+			.where(
+				and(
+					eq(userRelationships.followerId, followerId),
+					eq(userRelationships.followingId, Number(userId)),
+					eq(userRelationships.relationshipType, 'follow')
+				)
+			);
+
+		return res.status(200).json({ message: 'Successfully unfollowed user' });
+	} catch (error) {
+		console.error('Error unfollowing user:', error);
+		return res.status(500).json({ message: 'Error unfollowing user' });
+	}
 });
 
 // Check if current user is following a user
 router.get('/is-following/:userId', isAuthenticated, async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
-    const followerId = getUserId(req);
-    
-    if (!userId || isNaN(Number(userId))) {
-      return res.status(400).json({ message: "Valid user ID is required" });
-    }
-    
-    if (!followerId) {
-      return res.status(401).json({ message: "You must be logged in to check follow status" });
-    }
-    
-    // Check if relationship exists
-    const existingRelationship = await db.select()
-      .from(userRelationships)
-      .where(
-        and(
-          eq(userRelationships.followerId, followerId),
-          eq(userRelationships.followingId, Number(userId)),
-          eq(userRelationships.relationshipType, 'follow')
-        )
-      );
-    
-    return res.status(200).json({ isFollowing: existingRelationship.length > 0 });
-  } catch (error) {
-    console.error('Error checking follow status:', error);
-    return res.status(500).json({ message: "Error checking follow status" });
-  }
+	try {
+		const { userId } = req.params;
+		const followerId = getUserId(req);
+
+		if (!userId || isNaN(Number(userId))) {
+			return res.status(400).json({ message: 'Valid user ID is required' });
+		}
+
+		if (!followerId) {
+			return res.status(401).json({ message: 'You must be logged in to check follow status' });
+		}
+
+		// Check if relationship exists
+		const existingRelationship = await db
+			.select()
+			.from(userRelationships)
+			.where(
+				and(
+					eq(userRelationships.followerId, followerId),
+					eq(userRelationships.followingId, Number(userId)),
+					eq(userRelationships.relationshipType, 'follow')
+				)
+			);
+
+		return res.status(200).json({ isFollowing: existingRelationship.length > 0 });
+	} catch (error) {
+		console.error('Error checking follow status:', error);
+		return res.status(500).json({ message: 'Error checking follow status' });
+	}
 });
 
-export default router; 
+export default router;

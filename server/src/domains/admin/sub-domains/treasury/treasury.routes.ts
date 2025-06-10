@@ -1,6 +1,6 @@
 /**
  * Admin Treasury Routes
- * 
+ *
  * Defines API routes for treasury management in the admin panel.
  */
 
@@ -11,19 +11,37 @@ import { asyncHandler } from '../../admin.middleware'; // Assuming isAdmin is ap
 const router = Router();
 
 // DGT Supply Statistics
-router.get('/dgt-supply', asyncHandler(adminTreasuryController.getDgtSupplyStats.bind(adminTreasuryController)));
+router.get(
+	'/dgt-supply',
+	asyncHandler(adminTreasuryController.getDgtSupplyStats.bind(adminTreasuryController))
+);
 
 // Send DGT from Treasury to a user
-router.post('/send', asyncHandler(adminTreasuryController.sendFromTreasury.bind(adminTreasuryController)));
+router.post(
+	'/send',
+	asyncHandler(adminTreasuryController.sendFromTreasury.bind(adminTreasuryController))
+);
 
 // Recover DGT from a user to Treasury
-router.post('/recover', asyncHandler(adminTreasuryController.recoverToTreasury.bind(adminTreasuryController)));
+router.post(
+	'/recover',
+	asyncHandler(adminTreasuryController.recoverToTreasury.bind(adminTreasuryController))
+);
 
 // Mass send DGT (Airdrop)
-router.post('/mass-send', asyncHandler(adminTreasuryController.massAirdrop.bind(adminTreasuryController)));
+router.post(
+	'/mass-send',
+	asyncHandler(adminTreasuryController.massAirdrop.bind(adminTreasuryController))
+);
 
 // Treasury Settings
-router.get('/settings', asyncHandler(adminTreasuryController.getTreasurySettings.bind(adminTreasuryController)));
-router.put('/settings', asyncHandler(adminTreasuryController.updateTreasurySettings.bind(adminTreasuryController)));
+router.get(
+	'/settings',
+	asyncHandler(adminTreasuryController.getTreasurySettings.bind(adminTreasuryController))
+);
+router.put(
+	'/settings',
+	asyncHandler(adminTreasuryController.updateTreasurySettings.bind(adminTreasuryController))
+);
 
 export default router;

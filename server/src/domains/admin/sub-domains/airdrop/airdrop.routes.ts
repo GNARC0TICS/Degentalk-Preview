@@ -10,4 +10,4 @@ router.post('/', isAdmin, airdropController.executeAirdrop);
 // TODO: Add GET route for fetching airdrop history if implementing that feature
 // router.get('/history', isAdmin, airdropController.getAirdropHistory);
 
-export default router; 
+export default router;

@@ -17,4 +17,4 @@ export { useDgtPurchase } from './use-dgt-purchase';
 
 // Media hooks
 export { useImageUpload } from './use-image-upload';
-export { useAvatarUpload } from './use-avatar-upload'; 
+export { useAvatarUpload } from './use-avatar-upload';

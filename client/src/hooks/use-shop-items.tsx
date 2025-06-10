@@ -4,30 +4,30 @@ import { ItemCategory } from '@/hooks/use-vault-items';
 
 // Define the ShopItem type
 export interface ShopItem {
-  id: string;
-  name: string;
-  description: string;
-  category: ItemCategory;
-  priceDGT: number;
-  priceUSDT: number;
-  rarity: 'common' | 'rare' | 'legendary';
-  imageUrl?: string;
-  isOwned?: boolean;
-  isEquipped?: boolean;
-  isLocked?: boolean;
-  requiredXP?: number;
-  expiresAt?: Date | null;
-  
-  // Availability properties
-  availableFrom?: Date | null;
-  availableUntil?: Date | null;
-  stockLimit?: number | null;
-  stockLeft?: number | null;
-  
-  // Featured and promotion properties
-  isFeatured?: boolean;
-  featuredUntil?: Date | null;
-  promotionLabel?: string | null;
+	id: string;
+	name: string;
+	description: string;
+	category: ItemCategory;
+	priceDGT: number;
+	priceUSDT: number;
+	rarity: 'common' | 'rare' | 'legendary';
+	imageUrl?: string;
+	isOwned?: boolean;
+	isEquipped?: boolean;
+	isLocked?: boolean;
+	requiredXP?: number;
+	expiresAt?: Date | null;
+
+	// Availability properties
+	availableFrom?: Date | null;
+	availableUntil?: Date | null;
+	stockLimit?: number | null;
+	stockLeft?: number | null;
+
+	// Featured and promotion properties
+	isFeatured?: boolean;
+	featuredUntil?: Date | null;
+	promotionLabel?: string | null;
 }
 
 /**
@@ -36,30 +36,30 @@ export interface ShopItem {
  * Handles loading, error, and data states using TanStack Query.
  */
 export function useShopItems(category?: ItemCategory) {
-  const {
-    data: items = [],
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ['shopItems', category],
-    queryFn: async () => {
-      return await apiRequest<ShopItem[]>({
-        url: '/api/shop/items',
-        params: category ? { category } : undefined
-      });
-    },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
+	const {
+		data: items = [],
+		isLoading,
+		isError,
+		error,
+		refetch
+	} = useQuery({
+		queryKey: ['shopItems', category],
+		queryFn: async () => {
+			return await apiRequest<ShopItem[]>({
+				url: '/api/shop/items',
+				params: category ? { category } : undefined
+			});
+		},
+		staleTime: 5 * 60 * 1000 // 5 minutes
+	});
 
-  return {
-    items,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  };
+	return {
+		items,
+		isLoading,
+		isError,
+		error,
+		refetch
+	};
 }
 
 /**
@@ -68,26 +68,26 @@ export function useShopItems(category?: ItemCategory) {
  * Handles loading, error, and data states using TanStack Query.
  */
 export function useShopItem(itemId: string) {
-  const {
-    data: item,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ['shopItem', itemId],
-    queryFn: async () => {
-      return await apiRequest<ShopItem>({
-        url: `/api/shop/items/${itemId}`
-      });
-    },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    enabled: !!itemId,
-  });
+	const {
+		data: item,
+		isLoading,
+		isError,
+		error
+	} = useQuery({
+		queryKey: ['shopItem', itemId],
+		queryFn: async () => {
+			return await apiRequest<ShopItem>({
+				url: `/api/shop/items/${itemId}`
+			});
+		},
+		staleTime: 5 * 60 * 1000, // 5 minutes
+		enabled: !!itemId
+	});
 
-  return {
-    item,
-    isLoading,
-    isError,
-    error,
-  };
+	return {
+		item,
+		isLoading,
+		isError,
+		error
+	};
 }

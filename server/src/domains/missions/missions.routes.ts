@@ -22,4 +22,4 @@ router.post('/admin/initialize-defaults', isAdmin, missionsController.initialize
 router.post('/admin/reset-daily', isAdmin, missionsController.resetDailyMissions);
 router.post('/admin/reset-weekly', isAdmin, missionsController.resetWeeklyMissions);
 
-export default router; 
+export default router;

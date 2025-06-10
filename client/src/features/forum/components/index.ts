@@ -1,6 +1,6 @@
 /**
  * Forum Components
- * 
+ *
  * This file exports all forum-related components for easy importing.
  * Follows the hierarchy: Zone > Forum > Thread > Reply
  */
@@ -28,7 +28,7 @@ export { default as ZoneCard } from './ZoneCard';
 export { default as ZoneGroup } from './ZoneGroup';
 
 // ==============================================================================
-// FORUM LISTING COMPONENTS  
+// FORUM LISTING COMPONENTS
 // ==============================================================================
 
 export { ForumListItem } from './ForumListItem';

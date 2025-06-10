@@ -8,27 +8,35 @@ const missionsService = new MissionsService();
  * Initialize cron jobs for resetting daily and weekly missions
  */
 export function initializeMissionResetJobs() {
-  // Reset daily missions at midnight (00:00)
-  cron.schedule('0 0 * * *', async () => {
-    try {
-      logger.info('MISSION_RESET', 'Running daily mission reset job');
-      await missionsService.resetDailyMissions();
-      logger.info('MISSION_RESET', 'Daily mission reset completed successfully');
-    } catch (error) {
-      logger.error('MISSION_RESET', 'Error resetting daily missions:', error instanceof Error ? error.message : String(error));
-    }
-  });
-  
-  // Reset weekly missions at midnight on Sunday (00:00 Sunday)
-  cron.schedule('0 0 * * 0', async () => {
-    try {
-      logger.info('MISSION_RESET', 'Running weekly mission reset job');
-      await missionsService.resetWeeklyMissions();
-      logger.info('MISSION_RESET', 'Weekly mission reset completed successfully');
-    } catch (error) {
-      logger.error('MISSION_RESET', 'Error resetting weekly missions:', error instanceof Error ? error.message : String(error));
-    }
-  });
-  
-  logger.info('MISSION_RESET', 'Mission reset jobs initialized');
-} 
+	// Reset daily missions at midnight (00:00)
+	cron.schedule('0 0 * * *', async () => {
+		try {
+			logger.info('MISSION_RESET', 'Running daily mission reset job');
+			await missionsService.resetDailyMissions();
+			logger.info('MISSION_RESET', 'Daily mission reset completed successfully');
+		} catch (error) {
+			logger.error(
+				'MISSION_RESET',
+				'Error resetting daily missions:',
+				error instanceof Error ? error.message : String(error)
+			);
+		}
+	});
+
+	// Reset weekly missions at midnight on Sunday (00:00 Sunday)
+	cron.schedule('0 0 * * 0', async () => {
+		try {
+			logger.info('MISSION_RESET', 'Running weekly mission reset job');
+			await missionsService.resetWeeklyMissions();
+			logger.info('MISSION_RESET', 'Weekly mission reset completed successfully');
+		} catch (error) {
+			logger.error(
+				'MISSION_RESET',
+				'Error resetting weekly missions:',
+				error instanceof Error ? error.message : String(error)
+			);
+		}
+	});
+
+	logger.info('MISSION_RESET', 'Mission reset jobs initialized');
+}

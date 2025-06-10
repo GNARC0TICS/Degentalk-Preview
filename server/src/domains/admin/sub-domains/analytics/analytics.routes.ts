@@ -1,6 +1,6 @@
 /**
  * Admin Analytics Routes
- * 
+ *
  * Aggregates all analytics-related routes for the admin dashboard
  */
 

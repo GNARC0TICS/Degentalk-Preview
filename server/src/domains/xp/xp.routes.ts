@@ -1,7 +1,7 @@
 // REFACTORED: Updated auth middleware imports to use canonical path
 /**
  * XP Routes
- * 
+ *
  * API endpoints for XP-related functionality
  */
 
@@ -26,4 +26,4 @@ router.get('/actions', isAuthenticated, xpController.getXpActions);
 // Route to get user XP action logs with filtering
 router.get('/logs/:userId?', isAuthenticated, xpController.getUserXpLogs);
 
-export default router; 
+export default router;

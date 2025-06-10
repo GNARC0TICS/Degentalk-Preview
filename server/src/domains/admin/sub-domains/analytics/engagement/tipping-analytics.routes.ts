@@ -1,6 +1,6 @@
 /**
  * Tipping Analytics Routes
- * 
+ *
  * Defines endpoints for accessing tipping analytics data in the admin dashboard
  */
 
@@ -16,4 +16,4 @@ router.use(isAdmin);
 // GET /api/admin/analytics/engagement/tips
 router.get('/', tippingAnalyticsController.getTippingAnalytics);
 
-export default router; 
+export default router;

@@ -8,20 +8,20 @@ import { WalletProvider } from '@/contexts/wallet-context';
 const queryClient = new QueryClient();
 
 interface AppProvidersProps {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }
 
 export function AppProviders({ children }: AppProvidersProps) {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="system" storageKey="forum-fusion-theme">
-        <AuthProvider>
-          <WalletProvider>
-            {children}
-            <Toaster />
-          </WalletProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
-  );
+	return (
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider defaultTheme="system" storageKey="forum-fusion-theme">
+				<AuthProvider>
+					<WalletProvider>
+						{children}
+						<Toaster />
+					</WalletProvider>
+				</AuthProvider>
+			</ThemeProvider>
+		</QueryClientProvider>
+	);
 }

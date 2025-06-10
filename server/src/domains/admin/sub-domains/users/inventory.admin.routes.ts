@@ -11,9 +11,15 @@ router.get('/:userId', asyncHandler(userInventoryAdminController.viewInventory))
 router.post('/:userId/grant', asyncHandler(userInventoryAdminController.grantItem));
 
 // POST /api/admin/user-inventory/:userId/:inventoryItemId/equip - Force equip item
-router.post('/:userId/:inventoryItemId/equip', asyncHandler(userInventoryAdminController.equipItem));
+router.post(
+	'/:userId/:inventoryItemId/equip',
+	asyncHandler(userInventoryAdminController.equipItem)
+);
 
 // POST /api/admin/user-inventory/:userId/:inventoryItemId/unequip - Force unequip item
-router.post('/:userId/:inventoryItemId/unequip', asyncHandler(userInventoryAdminController.unequipItem));
+router.post(
+	'/:userId/:inventoryItemId/unequip',
+	asyncHandler(userInventoryAdminController.unequipItem)
+);
 
-export default router; 
+export default router;

@@ -1,6 +1,6 @@
 /**
  * Admin Routes
- * 
+ *
  * Main router for admin panel API endpoints
  */
 
@@ -59,7 +59,7 @@ adminRouter.get('/validate', (req, res) => res.json({ isAdmin: true }));
  * @param app Express application or router
  */
 export function registerAdminRoutes(app) {
-  app.use('/api/admin', adminRouter);
+	app.use('/api/admin', adminRouter);
 }
 
 export default adminRouter;

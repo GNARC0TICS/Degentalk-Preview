@@ -1,7 +1,7 @@
 // REFACTORED: Updated auth middleware imports to use canonical path
 /**
  * Admin Missions Routes
- * 
+ *
  * API endpoints for mission management in the admin panel
  */
 
@@ -13,7 +13,7 @@ const router = Router();
 
 // Create a simple asyncHandler utility
 const asyncHandler = (fn) => (req, res, next) => {
-  Promise.resolve(fn(req, res, next)).catch(next);
+	Promise.resolve(fn(req, res, next)).catch(next);
 };
 
 // Get all missions (admin view)
@@ -35,4 +35,4 @@ router.post('/initialize-defaults', asyncHandler(missionsController.initializeDe
 router.post('/reset-daily', asyncHandler(missionsController.resetDailyMissions));
 router.post('/reset-weekly', asyncHandler(missionsController.resetWeeklyMissions));
 
-export default router; 
+export default router;

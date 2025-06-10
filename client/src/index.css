@@ -3,414 +3,433 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    
-    --card: 240 5% 5%;
-    --card-foreground: 0 0% 100%;
-    
-    --popover: 240 5% 5%;
-    --popover-foreground: 0 0% 100%;
-    
-    --primary: 160 84% 39%;
-    --primary-foreground: 160 100% 97%;
-    
-    --secondary: 240 4% 16%;
-    --secondary-foreground: 0 0% 98%;
-    
-    --muted: 240 4% 16%;
-    --muted-foreground: 240 5% 65%;
-    
-    --accent: 180 100% 45%;
-    --accent-foreground: 0 0% 98%;
-    
-    --destructive: 0 74% 42%;
-    --destructive-foreground: 0 0% 98%;
-    
-    --border: 240 4% 16%;
-    --input: 240 4% 16%;
-    --ring: 160 84% 39%;
-    
-    --radius: 0.5rem;
-  }
+	:root {
+		--background: 0 0% 0%;
+		--foreground: 0 0% 100%;
+
+		--card: 240 5% 5%;
+		--card-foreground: 0 0% 100%;
+
+		--popover: 240 5% 5%;
+		--popover-foreground: 0 0% 100%;
+
+		--primary: 160 84% 39%;
+		--primary-foreground: 160 100% 97%;
+
+		--secondary: 240 4% 16%;
+		--secondary-foreground: 0 0% 98%;
+
+		--muted: 240 4% 16%;
+		--muted-foreground: 240 5% 65%;
+
+		--accent: 180 100% 45%;
+		--accent-foreground: 0 0% 98%;
+
+		--destructive: 0 74% 42%;
+		--destructive-foreground: 0 0% 98%;
+
+		--border: 240 4% 16%;
+		--input: 240 4% 16%;
+		--ring: 160 84% 39%;
+
+		--radius: 0.5rem;
+	}
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
-  .bg-gradient-text {
-    background-size: 200% 200%;
-    animation: gradient 8s ease infinite;
-  }
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+		font-feature-settings:
+			'rlig' 1,
+			'calt' 1;
+	}
+	.bg-gradient-text {
+		background-size: 200% 200%;
+		animation: gradient 8s ease infinite;
+	}
 }
 
 @keyframes gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+	width: 6px;
+	height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #27272a;
+	background: #27272a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4c4c52;
-  border-radius: 3px;
+	background: #4c4c52;
+	border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #10b981;
+	background: #10b981;
 }
 
 /* Pulse animation for highlighted elements */
 .pulse-animation {
-  animation: pulse 2s infinite;
+	animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-  }
+	0% {
+		box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+	}
+	70% {
+		box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+	}
 }
 
 /* Glow effect for highlighted text */
 .text-glow {
-  text-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
+	text-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
 }
 
 /* Input focus overrides */
-input:focus, select:focus, textarea:focus {
-  @apply border-emerald-500 ring-1 ring-emerald-500 ring-opacity-50;
-  outline: none;
+input:focus,
+select:focus,
+textarea:focus {
+	@apply border-emerald-500 ring-1 ring-emerald-500 ring-opacity-50;
+	outline: none;
 }
 
 /* Button transitions */
 button {
-  @apply transition-all duration-200;
+	@apply transition-all duration-200;
 }
 
 /* Custom ticker animation */
 .ticker-track {
-  width: 100%;
-  overflow: hidden;
+	width: 100%;
+	overflow: hidden;
 }
 
 .ticker-content {
-  display: inline-block;
-  white-space: nowrap;
-  animation: ticker 30s linear infinite;
+	display: inline-block;
+	white-space: nowrap;
+	animation: ticker 30s linear infinite;
 }
 
 @keyframes ticker {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(-50%);
+	}
 }
 
 /* Custom scrollbar for the shoutbox */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+	width: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(39, 39, 42, 0.5);
-  border-radius: 2px;
+	background: rgba(39, 39, 42, 0.5);
+	border-radius: 2px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(16, 185, 129, 0.6);
-  border-radius: 2px;
+	background: rgba(16, 185, 129, 0.6);
+	border-radius: 2px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(16, 185, 129, 0.8);
+	background: rgba(16, 185, 129, 0.8);
 }
 
 /* Shoutbox message animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .shoutbox-message-new {
-  animation: fadeIn 0.3s ease-out forwards;
+	animation: fadeIn 0.3s ease-out forwards;
 }
 
 /* Custom Hamburger Menu Styles */
 /* Hamburger Menu - Legacy Component */
 .hamburger {
-  width: 40px;
-  height: 36px;
-  position: relative;
-  cursor: pointer;
-  display: inline-block;
-  padding: 8px;
+	width: 40px;
+	height: 36px;
+	position: relative;
+	cursor: pointer;
+	display: inline-block;
+	padding: 8px;
 }
 
 .hamburger .line {
-  width: 36px;
-  height: 3px;
-  background-color: #9ca3af;
-  display: block;
-  margin: 6px auto;
-  transition: all 0.3s ease-in-out;
-  position: relative;
-  border-radius: 1px;
+	width: 36px;
+	height: 3px;
+	background-color: #9ca3af;
+	display: block;
+	margin: 6px auto;
+	transition: all 0.3s ease-in-out;
+	position: relative;
+	border-radius: 1px;
 }
 
 /* Candlestick Tips */
 .hamburger .line::before,
 .hamburger .line::after {
-  content: '';
-  position: absolute;
-  width: 7px;
-  height: 2px;
-  background: rgba(156, 163, 175, 0.6);
-  opacity: 0;
-  transition: opacity 0.4s ease-in-out, transform 0.3s ease-in-out;
-  top: 0;
-  border-radius: 2px;
+	content: '';
+	position: absolute;
+	width: 7px;
+	height: 2px;
+	background: rgba(156, 163, 175, 0.6);
+	opacity: 0;
+	transition:
+		opacity 0.4s ease-in-out,
+		transform 0.3s ease-in-out;
+	top: 0;
+	border-radius: 2px;
 }
 
 .hamburger .line::before {
-  left: -4px;
+	left: -4px;
 }
 
 .hamburger .line::after {
-  right: -4px;
+	right: -4px;
 }
 
 /* Animation */
 #hamburger-10 {
-  transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
 }
 
 #hamburger-10.is-active {
-  transform: rotate(90deg);
+	transform: rotate(90deg);
 }
 
 #hamburger-10.is-active .line::before,
 #hamburger-10.is-active .line::after {
-  opacity: 1;
+	opacity: 1;
 }
 
 /* Line 1 tip positioning */
 #hamburger-10.is-active .line:nth-child(1)::before {
-  width: 4px;
-  height: 3px;
+	width: 4px;
+	height: 3px;
 }
 #hamburger-10.is-active .line:nth-child(1)::after {
-  width: 4px;
-  height: 3px;
+	width: 4px;
+	height: 3px;
 }
 
 /* Line 2 tip positioning */
 #hamburger-10.is-active .line:nth-child(2)::before {
-  width: 4px;
-  height: 3px;
+	width: 4px;
+	height: 3px;
 }
 #hamburger-10.is-active .line:nth-child(2)::after {
-  width: 4px;
-  height: 3px;
+	width: 4px;
+	height: 3px;
 }
 
 /* Line 3 tip positioning */
 #hamburger-10.is-active .line:nth-child(3)::before {
-  width: 4px;
-  height: 3px;
+	width: 4px;
+	height: 3px;
 }
 #hamburger-10.is-active .line:nth-child(3)::after {
-  width: 4px;
-  height: 3px;
+	width: 4px;
+	height: 3px;
 }
 
 #hamburger-10.is-active .line:nth-child(1) {
-  width: 28px;
-  transform: translateX(-5px);
-  background-color: #10B981;
+	width: 28px;
+	transform: translateX(-5px);
+	background-color: #10b981;
 }
 
 #hamburger-10.is-active .line:nth-child(2) {
-  width: 20px;
-  transform: translateX(0);
-  background-color: #10B981;
+	width: 20px;
+	transform: translateX(0);
+	background-color: #10b981;
 }
 
 #hamburger-10.is-active .line:nth-child(3) {
-  width: 32px;
-  transform: translateX(5px);
-  background-color: #EF4444;
+	width: 32px;
+	transform: translateX(5px);
+	background-color: #ef4444;
 }
 
 /* Candlestick Chart Menu - Exact match from gist */
 
 /* Base Variables */
 :root {
-  /* Core colors - can be customized */
-  --bullish-color: #10B981;
-  --bearish-color: #EF4444;
-  --wick-color: #1e293b;
-  
-  /* Animation settings */
-  --transition-speed: 0.4s;
+	/* Core colors - can be customized */
+	--bullish-color: #10b981;
+	--bearish-color: #ef4444;
+	--wick-color: #1e293b;
+
+	/* Animation settings */
+	--transition-speed: 0.4s;
 }
 
 /* Component Container */
 .chart-menu {
-  /* Core sizing and positioning */
-  width: 40px; /* Adjusted size from original */
-  height: 40px; /* Adjusted size from original */
-  position: relative;
-  cursor: pointer;
-  display: inline-block;
-  padding: 5px; /* Adjusted size from original */
-  transform-origin: center;
+	/* Core sizing and positioning */
+	width: 40px; /* Adjusted size from original */
+	height: 40px; /* Adjusted size from original */
+	position: relative;
+	cursor: pointer;
+	display: inline-block;
+	padding: 5px; /* Adjusted size from original */
+	transform-origin: center;
 }
 
 /* Base Line Styles */
 .chart-menu .line {
-  /* Only handle positioning and dimensions */
-  width: 30px; /* Adjusted size from original */
-  height: 3px; /* Adjusted size from original */
-  background-color: transparent; /* Color handled by inner */
-  display: block;
-  margin: 6px auto; /* Adjusted size from original */
-  transition: width var(--transition-speed) ease-in-out, 
-              height var(--transition-speed) ease-in-out, 
-              transform var(--transition-speed) ease-in-out; /* Animate specific props */
-  position: absolute; /* Use absolute for easier positioning */
-  top: 0;
-  left: 0;
-  transform-origin: center;
-  z-index: 2; /* Ensure lines (bodies) are above wicks */
+	/* Only handle positioning and dimensions */
+	width: 30px; /* Adjusted size from original */
+	height: 3px; /* Adjusted size from original */
+	background-color: transparent; /* Color handled by inner */
+	display: block;
+	margin: 6px auto; /* Adjusted size from original */
+	transition:
+		width var(--transition-speed) ease-in-out,
+		height var(--transition-speed) ease-in-out,
+		transform var(--transition-speed) ease-in-out; /* Animate specific props */
+	position: absolute; /* Use absolute for easier positioning */
+	top: 0;
+	left: 0;
+	transform-origin: center;
+	z-index: 2; /* Ensure lines (bodies) are above wicks */
 }
 
 /* Inner Line for Color and Hover Animation */
 .chart-menu .line-inner {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background-color: var(--wick-color); /* Default hamburger color */
-  transition: background-color var(--transition-speed) ease-in-out;
-  transform-origin: center; /* Ensure hover scales from center */
-  border-radius: 1px; /* Subtle rounded edges */
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.08); /* Subtle inner shadow for depth */
+	display: block;
+	width: 100%;
+	height: 100%;
+	background-color: var(--wick-color); /* Default hamburger color */
+	transition: background-color var(--transition-speed) ease-in-out;
+	transform-origin: center; /* Ensure hover scales from center */
+	border-radius: 1px; /* Subtle rounded edges */
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.08); /* Subtle inner shadow for depth */
 }
 
 /* Wick Styles - Hidden by default */
 .chart-menu .wick {
-  width: 2px;
-  height: 0;
-  background-color: var(--wick-color);
-  position: absolute;
-  opacity: 0;
-  /* Animate specific properties for wicks, add delay */
-  transition: 
-    height var(--transition-speed) ease-in-out calc(var(--transition-speed) * 0.5), 
-    top var(--transition-speed) ease-in-out, 
-    left var(--transition-speed) ease-in-out, 
-    opacity var(--transition-speed) ease-in-out calc(var(--transition-speed) * 0.5);
-  z-index: 1; /* Wicks behind bodies */
-  top: 0;
-  left: 0;
+	width: 2px;
+	height: 0;
+	background-color: var(--wick-color);
+	position: absolute;
+	opacity: 0;
+	/* Animate specific properties for wicks, add delay */
+	transition:
+		height var(--transition-speed) ease-in-out calc(var(--transition-speed) * 0.5),
+		top var(--transition-speed) ease-in-out,
+		left var(--transition-speed) ease-in-out,
+		opacity var(--transition-speed) ease-in-out calc(var(--transition-speed) * 0.5);
+	z-index: 1; /* Wicks behind bodies */
+	top: 0;
+	left: 0;
 }
 
 /* Additional Elements - Hidden initially */
 .chart-menu .line-4,
 .chart-menu .line-5 {
-  opacity: 0;
-  transform: scale(0);
+	opacity: 0;
+	transform: scale(0);
 }
 
 /* Hamburger State (Default) - Position lines absolutely */
 .chart-menu:not(.is-active) .line {
-  width: 30px; /* Adjusted size from original */
-  height: 3px; /* Adjusted size from original */
+	width: 30px; /* Adjusted size from original */
+	height: 3px; /* Adjusted size from original */
 }
 .chart-menu:not(.is-active) .line-inner {
-  background-color: #9ca3af; /* Match original color */
+	background-color: #9ca3af; /* Match original color */
 }
 .chart-menu:not(.is-active) .line-1 {
-  transform: translate(5px, 8px); /* Adjusted for our container */
+	transform: translate(5px, 8px); /* Adjusted for our container */
 }
 .chart-menu:not(.is-active) .line-2 {
-  transform: translate(5px, 17px); /* Adjusted for our container */
+	transform: translate(5px, 17px); /* Adjusted for our container */
 }
 .chart-menu:not(.is-active) .line-3 {
-  transform: translate(5px, 26px); /* Adjusted for our container */
+	transform: translate(5px, 26px); /* Adjusted for our container */
 }
 
 /* Pattern Base State - Shared properties when active */
 .chart-menu.is-active .wick {
-  opacity: 1;
+	opacity: 1;
 }
 
 /* ======== PATTERN: THREE INSIDE UP ======== */
 /* Candle 1 (Large Red) */
 .chart-menu.is-active.pattern-three-inside-up .line-1 {
-  width: 10px; /* Adjusted size from original */
-  height: 20px; /* Adjusted size from original */
-  transform: translate(5px, 5px); /* Adjusted for our container */
+	width: 10px; /* Adjusted size from original */
+	height: 20px; /* Adjusted size from original */
+	transform: translate(5px, 5px); /* Adjusted for our container */
 }
 .chart-menu.is-active.pattern-three-inside-up .line-1 .line-inner {
-  background-color: var(--bearish-color);
+	background-color: var(--bearish-color);
 }
 .chart-menu.is-active.pattern-three-inside-up .wick-1 {
-  height: 25px; /* Adjusted size from original */
-  top: 2px; /* Adjusted for our container */
-  left: 9px; /* Center wick on body */
+	height: 25px; /* Adjusted size from original */
+	top: 2px; /* Adjusted for our container */
+	left: 9px; /* Center wick on body */
 }
 
 /* Candle 2 (Small Green) */
 .chart-menu.is-active.pattern-three-inside-up .line-2 {
-  width: 8px; /* Adjusted size from original */
-  height: 10px; /* Adjusted size from original */
-  transform: translate(17px, 10px); /* Adjusted for our container */
+	width: 8px; /* Adjusted size from original */
+	height: 10px; /* Adjusted size from original */
+	transform: translate(17px, 10px); /* Adjusted for our container */
 }
 .chart-menu.is-active.pattern-three-inside-up .line-2 .line-inner {
-  background-color: var(--bullish-color);
+	background-color: var(--bullish-color);
 }
 .chart-menu.is-active.pattern-three-inside-up .wick-2 {
-  height: 15px; /* Adjusted size from original */
-  top: 8px; /* Adjusted for our container */
-  left: 21px; /* Center wick on body */
+	height: 15px; /* Adjusted size from original */
+	top: 8px; /* Adjusted for our container */
+	left: 21px; /* Center wick on body */
 }
 
 /* Candle 3 (Larger Green) */
 .chart-menu.is-active.pattern-three-inside-up .line-3 {
-  width: 10px; /* Adjusted size from original */
-  height: 15px; /* Adjusted size from original */
-  transform: translate(28px, 5px); /* Adjusted for our container */
+	width: 10px; /* Adjusted size from original */
+	height: 15px; /* Adjusted size from original */
+	transform: translate(28px, 5px); /* Adjusted for our container */
 }
 .chart-menu.is-active.pattern-three-inside-up .line-3 .line-inner {
-  background-color: var(--bullish-color);
+	background-color: var(--bullish-color);
 }
 .chart-menu.is-active.pattern-three-inside-up .wick-3 {
-  height: 20px; /* Adjusted size from original */
-  top: 2px; /* Adjusted for our container */
-  left: 32px; /* Center wick on body */
+	height: 20px; /* Adjusted size from original */
+	top: 2px; /* Adjusted for our container */
+	left: 32px; /* Center wick on body */
 }
 
 /* Hide unused elements */
@@ -418,50 +437,53 @@ button {
 .chart-menu.is-active.pattern-three-inside-up .line-5,
 .chart-menu.is-active.pattern-three-inside-up .wick-4,
 .chart-menu.is-active.pattern-three-inside-up .wick-5 {
-  opacity: 0; transform: scale(0); height: 0; width: 0;
+	opacity: 0;
+	transform: scale(0);
+	height: 0;
+	width: 0;
 }
 
 /* ======== PATTERN: WHITE SOLDIERS ======== */
 .chart-menu.is-active.pattern-white-soldiers .line-1 {
-  width: 8px; /* Adjusted size from original */
-  height: 12px; /* Adjusted size from original */
-  transform: translate(5px, 12px); /* Adjusted for our container */
+	width: 8px; /* Adjusted size from original */
+	height: 12px; /* Adjusted size from original */
+	transform: translate(5px, 12px); /* Adjusted for our container */
 }
 .chart-menu.is-active.pattern-white-soldiers .line-1 .line-inner {
-  background-color: var(--bullish-color);
+	background-color: var(--bullish-color);
 }
 .chart-menu.is-active.pattern-white-soldiers .wick-1 {
-  height: 18px; /* Adjusted size from original */
-  top: 9px; /* Adjusted for our container */
-  left: 9px; /* Center wick on body */
+	height: 18px; /* Adjusted size from original */
+	top: 9px; /* Adjusted for our container */
+	left: 9px; /* Center wick on body */
 }
 
 .chart-menu.is-active.pattern-white-soldiers .line-2 {
-  width: 9px; /* Adjusted size from original */
-  height: 15px; /* Adjusted size from original */
-  transform: translate(16px, 8px); /* Adjusted for our container */
+	width: 9px; /* Adjusted size from original */
+	height: 15px; /* Adjusted size from original */
+	transform: translate(16px, 8px); /* Adjusted for our container */
 }
 .chart-menu.is-active.pattern-white-soldiers .line-2 .line-inner {
-  background-color: var(--bullish-color);
+	background-color: var(--bullish-color);
 }
 .chart-menu.is-active.pattern-white-soldiers .wick-2 {
-  height: 20px; /* Adjusted size from original */
-  top: 5px; /* Adjusted for our container */
-  left: 20px; /* Center wick on body */
+	height: 20px; /* Adjusted size from original */
+	top: 5px; /* Adjusted for our container */
+	left: 20px; /* Center wick on body */
 }
 
 .chart-menu.is-active.pattern-white-soldiers .line-3 {
-  width: 10px; /* Adjusted size from original */
-  height: 18px; /* Adjusted size from original */
-  transform: translate(28px, 4px); /* Adjusted for our container */
+	width: 10px; /* Adjusted size from original */
+	height: 18px; /* Adjusted size from original */
+	transform: translate(28px, 4px); /* Adjusted for our container */
 }
 .chart-menu.is-active.pattern-white-soldiers .line-3 .line-inner {
-  background-color: var(--bullish-color);
+	background-color: var(--bullish-color);
 }
 .chart-menu.is-active.pattern-white-soldiers .wick-3 {
-  height: 22px; /* Adjusted size from original */
-  top: 2px; /* Adjusted for our container */
-  left: 32px; /* Center wick on body */
+	height: 22px; /* Adjusted size from original */
+	top: 2px; /* Adjusted for our container */
+	left: 32px; /* Center wick on body */
 }
 
 /* Hide unused elements */
@@ -469,36 +491,39 @@ button {
 .chart-menu.is-active.pattern-white-soldiers .line-5,
 .chart-menu.is-active.pattern-white-soldiers .wick-4,
 .chart-menu.is-active.pattern-white-soldiers .wick-5 {
-  opacity: 0; transform: scale(0); height: 0; width: 0;
+	opacity: 0;
+	transform: scale(0);
+	height: 0;
+	width: 0;
 }
 
 /* ======== PATTERN: BULLISH ENGULFING ======== */
 .chart-menu.is-active.pattern-bullish-engulfing .line-1 {
-  width: 9px; /* Adjusted size from original */
-  height: 15px; /* Adjusted size from original */
-  transform: translate(7px, 8px); /* Adjusted for our container */
+	width: 9px; /* Adjusted size from original */
+	height: 15px; /* Adjusted size from original */
+	transform: translate(7px, 8px); /* Adjusted for our container */
 }
 .chart-menu.is-active.pattern-bullish-engulfing .line-1 .line-inner {
-  background-color: var(--bearish-color);
+	background-color: var(--bearish-color);
 }
 .chart-menu.is-active.pattern-bullish-engulfing .wick-1 {
-  height: 20px; /* Adjusted size from original */
-  top: 5px; /* Adjusted for our container */
-  left: 11px; /* Center wick on body */
+	height: 20px; /* Adjusted size from original */
+	top: 5px; /* Adjusted for our container */
+	left: 11px; /* Center wick on body */
 }
 
 .chart-menu.is-active.pattern-bullish-engulfing .line-2 {
-  width: 12px; /* Adjusted size from original */
-  height: 18px; /* Adjusted size from original */
-  transform: translate(22px, 5px); /* Adjusted for our container */
+	width: 12px; /* Adjusted size from original */
+	height: 18px; /* Adjusted size from original */
+	transform: translate(22px, 5px); /* Adjusted for our container */
 }
 .chart-menu.is-active.pattern-bullish-engulfing .line-2 .line-inner {
-  background-color: var(--bullish-color);
+	background-color: var(--bullish-color);
 }
 .chart-menu.is-active.pattern-bullish-engulfing .wick-2 {
-  height: 22px; /* Adjusted size from original */
-  top: 3px; /* Adjusted for our container */
-  left: 28px; /* Center wick on body */
+	height: 22px; /* Adjusted size from original */
+	top: 3px; /* Adjusted for our container */
+	left: 28px; /* Center wick on body */
 }
 
 /* Hide unused elements */
@@ -508,53 +533,56 @@ button {
 .chart-menu.is-active.pattern-bullish-engulfing .wick-3,
 .chart-menu.is-active.pattern-bullish-engulfing .wick-4,
 .chart-menu.is-active.pattern-bullish-engulfing .wick-5 {
-  opacity: 0; transform: scale(0); height: 0; width: 0;
+	opacity: 0;
+	transform: scale(0);
+	height: 0;
+	width: 0;
 }
 
 /* ======== PATTERN: THREE OUTSIDE UP ======== */
 /* Candle 1 (Red) */
 .chart-menu.is-active.pattern-three-outside-up .line-1 {
-  width: 9px; /* Adjusted size from original */
-  height: 15px; /* Adjusted size from original */
-  transform: translate(4px, 8px); /* Adjusted for our container */
+	width: 9px; /* Adjusted size from original */
+	height: 15px; /* Adjusted size from original */
+	transform: translate(4px, 8px); /* Adjusted for our container */
 }
 .chart-menu.is-active.pattern-three-outside-up .line-1 .line-inner {
-  background-color: var(--bearish-color);
+	background-color: var(--bearish-color);
 }
 .chart-menu.is-active.pattern-three-outside-up .wick-1 {
-  height: 20px; /* Adjusted size from original */
-  top: 5px; /* Adjusted for our container */
-  left: 8px; /* Center wick on body */
+	height: 20px; /* Adjusted size from original */
+	top: 5px; /* Adjusted for our container */
+	left: 8px; /* Center wick on body */
 }
 
 /* Candle 2 (Large Green, engulfing) */
 .chart-menu.is-active.pattern-three-outside-up .line-2 {
-  width: 10px; /* Adjusted size from original */
-  height: 16px; /* Adjusted size from original */
-  transform: translate(15px, 7px); /* Adjusted for our container */
+	width: 10px; /* Adjusted size from original */
+	height: 16px; /* Adjusted size from original */
+	transform: translate(15px, 7px); /* Adjusted for our container */
 }
 .chart-menu.is-active.pattern-three-outside-up .line-2 .line-inner {
-  background-color: var(--bullish-color);
+	background-color: var(--bullish-color);
 }
 .chart-menu.is-active.pattern-three-outside-up .wick-2 {
-  height: 22px; /* Adjusted size from original */
-  top: 4px; /* Adjusted for our container */
-  left: 19px; /* Center wick on body */
+	height: 22px; /* Adjusted size from original */
+	top: 4px; /* Adjusted for our container */
+	left: 19px; /* Center wick on body */
 }
 
 /* Candle 3 (Green, closes higher) */
 .chart-menu.is-active.pattern-three-outside-up .line-3 {
-  width: 10px; /* Adjusted size from original */
-  height: 14px; /* Adjusted size from original */
-  transform: translate(28px, 5px); /* Adjusted for our container */
+	width: 10px; /* Adjusted size from original */
+	height: 14px; /* Adjusted size from original */
+	transform: translate(28px, 5px); /* Adjusted for our container */
 }
 .chart-menu.is-active.pattern-three-outside-up .line-3 .line-inner {
-  background-color: var(--bullish-color);
+	background-color: var(--bullish-color);
 }
 .chart-menu.is-active.pattern-three-outside-up .wick-3 {
-  height: 18px; /* Adjusted size from original */
-  top: 3px; /* Adjusted for our container */
-  left: 32px; /* Center wick on body */
+	height: 18px; /* Adjusted size from original */
+	top: 3px; /* Adjusted for our container */
+	left: 32px; /* Center wick on body */
 }
 
 /* Hide unused elements */
@@ -562,15 +590,18 @@ button {
 .chart-menu.is-active.pattern-three-outside-up .line-5,
 .chart-menu.is-active.pattern-three-outside-up .wick-4,
 .chart-menu.is-active.pattern-three-outside-up .wick-5 {
-  opacity: 0; transform: scale(0); height: 0; width: 0;
+	opacity: 0;
+	transform: scale(0);
+	height: 0;
+	width: 0;
 }
 
 /* Hide unused elements in hamburger state */
 .chart-menu:not(.is-active) .line-4,
 .chart-menu:not(.is-active) .line-5,
 .chart-menu:not(.is-active) .wick {
-  width: 0;
-  height: 0;
-  opacity: 0;
-  transform: scale(0);
+	width: 0;
+	height: 0;
+	opacity: 0;
+	transform: scale(0);
 }

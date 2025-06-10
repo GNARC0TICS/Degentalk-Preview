@@ -40,7 +40,7 @@ export * from './user/settingsHistory';
 export * from './user/avatarFrames';
 
 // User domain - feature permissions
-export * from "./user/featurePermissions";
+export * from './user/featurePermissions';
 
 // Forum domain exports
 export * from './forum/categories';
@@ -80,8 +80,8 @@ export * from './economy/settings';
 export * from './economy/treasurySettings';
 
 // Economy domain - airdrop
-export * from "./economy/airdropSettings";
-export * from "./economy/airdropRecords";
+export * from './economy/airdropSettings';
+export * from './economy/airdropRecords';
 
 // Shop domain exports
 export * from './shop/products';

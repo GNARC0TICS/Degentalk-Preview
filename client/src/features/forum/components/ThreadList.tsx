@@ -11,39 +11,39 @@ import { ThreadWithUser } from '@shared/types';
  * Skeleton loader for thread list
  */
 function ThreadListSkeleton({ count = 5 }: { count?: number }) {
-  return (
-    <div className="space-y-4">
-      {Array.from({ length: count }).map((_, i) => (
-        <Skeleton key={i} className="h-20 w-full" />
-      ))}
-    </div>
-  );
+	return (
+		<div className="space-y-4">
+			{Array.from({ length: count }).map((_, i) => (
+				<Skeleton key={i} className="h-20 w-full" />
+			))}
+		</div>
+	);
 }
 
 /**
  * Placeholder for error/empty/loading states
  */
 function ThreadListPlaceholder({
-  icon,
-  title,
-  message,
-  children
+	icon,
+	title,
+	message,
+	children
 }: {
-  icon?: React.ReactNode;
-  title: string;
-  message?: string;
-  children?: React.ReactNode;
+	icon?: React.ReactNode;
+	title: string;
+	message?: string;
+	children?: React.ReactNode;
 }) {
-  return (
-    <Card className="bg-zinc-900/60 border-zinc-800">
-      <CardContent className="p-6 text-center">
-        {icon && <div className="mb-2 mx-auto text-red-500">{icon}</div>}
-        <p className="text-zinc-300">{title}</p>
-        {message && <p className="text-zinc-500 text-sm mt-1">{message}</p>}
-        {children}
-      </CardContent>
-    </Card>
-  );
+	return (
+		<Card className="bg-zinc-900/60 border-zinc-800">
+			<CardContent className="p-6 text-center">
+				{icon && <div className="mb-2 mx-auto text-red-500">{icon}</div>}
+				<p className="text-zinc-300">{title}</p>
+				{message && <p className="text-zinc-500 text-sm mt-1">{message}</p>}
+				{children}
+			</CardContent>
+		</Card>
+	);
 }
 
 /**
@@ -56,95 +56,94 @@ function ThreadListPlaceholder({
  * @param onErrorRetry - Optional retry handler for error state
  */
 export function ThreadList({
-  categoryId,
-  isPrimaryZone = false,
-  canHaveThreads = true,
-  className = '',
-  skeletonCount = 5,
-  onErrorRetry
+	categoryId,
+	isPrimaryZone = false,
+	canHaveThreads = true,
+	className = '',
+	skeletonCount = 5,
+	onErrorRetry
 }: {
-  categoryId: string | number;
-  isPrimaryZone?: boolean;
-  canHaveThreads?: boolean;
-  className?: string;
-  skeletonCount?: number;
-  onErrorRetry?: () => void;
+	categoryId: string | number;
+	isPrimaryZone?: boolean;
+	canHaveThreads?: boolean;
+	className?: string;
+	skeletonCount?: number;
+	onErrorRetry?: () => void;
 }) {
-  const listClassName = useMemo(
-    () => `${isPrimaryZone ? 'primary-zone-thread-list' : ''} ${className}`,
-    [isPrimaryZone, className]
-  );
+	const listClassName = useMemo(
+		() => `${isPrimaryZone ? 'primary-zone-thread-list' : ''} ${className}`,
+		[isPrimaryZone, className]
+	);
 
-  // Only fetch and display threads if canHaveThreads is true
-  if (!canHaveThreads) {
-    return (
-      <ThreadListPlaceholder
-        icon={<AlertCircle className="h-8 w-8" />}
-        title="Threads are not allowed in this forum."
-      />
-    );
-  }
+	// Only fetch and display threads if canHaveThreads is true
+	if (!canHaveThreads) {
+		return (
+			<ThreadListPlaceholder
+				icon={<AlertCircle className="h-8 w-8" />}
+				title="Threads are not allowed in this forum."
+			/>
+		);
+	}
 
-  // Future-proof: add page param if needed
-  const {
-    data: threads,
-    isLoading,
-    isError,
-    error,
-    refetch
-  } = useQuery<any>({
-    queryKey: ['forum-threads', categoryId],
-    queryFn: async () => {
-      const response = await fetch(`/api/forum/threads?categoryId=${categoryId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch threads');
-      }
-      const data = await response.json();
-      // Handle both response formats - object with threads array or direct array
-      return data && data.threads ? data.threads : data;
-    },
-    enabled: !!categoryId
-  });
+	// Future-proof: add page param if needed
+	const {
+		data: threads,
+		isLoading,
+		isError,
+		error,
+		refetch
+	} = useQuery<any>({
+		queryKey: ['forum-threads', categoryId],
+		queryFn: async () => {
+			const response = await fetch(`/api/forum/threads?categoryId=${categoryId}`);
+			if (!response.ok) {
+				throw new Error('Failed to fetch threads');
+			}
+			const data = await response.json();
+			// Handle both response formats - object with threads array or direct array
+			return data && data.threads ? data.threads : data;
+		},
+		enabled: !!categoryId
+	});
 
-  if (isLoading) {
-    return <ThreadListSkeleton count={skeletonCount} />;
-  }
+	if (isLoading) {
+		return <ThreadListSkeleton count={skeletonCount} />;
+	}
 
-  if (isError) {
-    return (
-      <ThreadListPlaceholder
-        icon={<AlertCircle className="h-8 w-8" />}
-        title="Failed to load threads."
-        message="Please try again later."
-      >
-        {onErrorRetry && (
-          <button onClick={onErrorRetry} className="mt-3 text-emerald-400 underline">Retry</button>
-        )}
-      </ThreadListPlaceholder>
-    );
-  }
+	if (isError) {
+		return (
+			<ThreadListPlaceholder
+				icon={<AlertCircle className="h-8 w-8" />}
+				title="Failed to load threads."
+				message="Please try again later."
+			>
+				{onErrorRetry && (
+					<button onClick={onErrorRetry} className="mt-3 text-emerald-400 underline">
+						Retry
+					</button>
+				)}
+			</ThreadListPlaceholder>
+		);
+	}
 
-  if (!threads || threads.length === 0) {
-    return (
-      <ThreadListPlaceholder
-        title="No threads found in this forum."
-        message="Be the first to create a thread!"
-      />
-    );
-  }
+	if (!threads || threads.length === 0) {
+		return (
+			<ThreadListPlaceholder
+				title="No threads found in this forum."
+				message="Be the first to create a thread!"
+			/>
+		);
+	}
 
-  return (
-    <div className={`space-y-4 ${listClassName}`}>
-      {threads.map(thread => (
-        <ThreadCard 
-          key={thread.id} 
-          thread={thread}
-        />
-      ))}
-    </div>
-  );
+	return (
+		<div className={`space-y-4 ${listClassName}`}>
+			{threads.map((thread) => (
+				<ThreadCard key={thread.id} thread={thread} />
+			))}
+		</div>
+	);
 }
 
 // TODO: Add Storybook/demo variant with MockProvider and mock data for ThreadList
 
-export default ThreadList; 
+export default ThreadList;

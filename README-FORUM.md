@@ -1,6 +1,7 @@
 # ForumFusion Forum System
 
 ## Table of Contents
+
 - [Overview](#overview)
 - [Primary Zones & Forum Structure](#primary-zones--forum-structure)
 - [Backend Logic & API Endpoints](#backend-logic--api-endpoints)
@@ -33,17 +34,18 @@ All logic, endpoints, and UI are built around this hierarchy.
 
 Primary Zones are the main branded destinations, each with a unique theme and icon:
 
-| Name              | Slug             | Theme         | Description                        |
-|-------------------|------------------|---------------|------------------------------------|
-| The Pit           | the-pit          | theme-pit     | Raw, unfiltered discussions        |
-| Mission Control   | mission-control  | theme-mission | Strategic/alpha/project analysis   |
-| The Casino Floor  | the-casino-floor | theme-casino  | Trading, gambling, high-stakes     |
-| The Briefing Room | the-briefing-room| theme-briefing| News, announcements, updates       |
-| The Archive       | the-archive      | theme-archive | Historical records, past glories   |
+| Name              | Slug              | Theme          | Description                      |
+| ----------------- | ----------------- | -------------- | -------------------------------- |
+| The Pit           | the-pit           | theme-pit      | Raw, unfiltered discussions      |
+| Mission Control   | mission-control   | theme-mission  | Strategic/alpha/project analysis |
+| The Casino Floor  | the-casino-floor  | theme-casino   | Trading, gambling, high-stakes   |
+| The Briefing Room | the-briefing-room | theme-briefing | News, announcements, updates     |
+| The Archive       | the-archive       | theme-archive  | Historical records, past glories |
 
 ### Expandable Categories
 
 Traditional forum categories with sub-forums, e.g.:
+
 - Market Moves
 - Alpha & Leaks
 - Casino & DeGen
@@ -75,12 +77,14 @@ Traditional forum categories with sub-forums, e.g.:
 ### Core Endpoints
 
 #### Forum Structure
+
 - `GET /api/forum/structure` — Flat array of all zones and forums (with all fields)
 - `GET /api/forum/categories` — Categories with thread/post stats
 - `GET /api/forum/zones` — All primary zones with stats
 - `GET /api/forum/zones/tree` — Hierarchical forum structure
 
 #### Threads & Posts
+
 - `GET /api/forum/threads` — Paginated thread listings (filter/sort/search)
 - `GET /api/forum/threads/:id` — Single thread with replies
 - `POST /api/forum/threads` — Create a new thread
@@ -88,6 +92,7 @@ Traditional forum categories with sub-forums, e.g.:
 - `POST /api/forum/posts` — Create a new reply
 
 #### Tags, Prefixes, Bookmarks, Reactions
+
 - `POST /api/forum/threads/:threadId/tags` — Add tag to thread
 - `DELETE /api/forum/threads/:threadId/tags/:tagId` — Remove tag
 - `GET /api/forum/threads/:threadId/tags` — Get all tags for a thread
@@ -96,6 +101,7 @@ Traditional forum categories with sub-forums, e.g.:
 - `DELETE /api/forum/bookmarks/:threadId` — Remove bookmark
 
 #### Solved Threads
+
 - `PUT /api/forum/threads/:threadId/solve` — Mark/unmark thread as solved
 
 ### Schema
@@ -207,6 +213,7 @@ Traditional forum categories with sub-forums, e.g.:
 ## Vibes & Philosophy
 
 ForumFusion is built for:
+
 - **Clarity**: One canonical structure, no legacy confusion
 - **Speed**: Fast dev environment, hot reload, clear scripts
 - **Extensibility**: Easy to add new zones, forums, features
@@ -216,4 +223,4 @@ ForumFusion is built for:
 
 ---
 
-**For any changes, always update this README-FORUM.md to keep the team and future devs in sync.** 
+**For any changes, always update this README-FORUM.md to keep the team and future devs in sync.**

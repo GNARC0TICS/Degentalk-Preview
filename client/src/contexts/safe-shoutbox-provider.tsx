@@ -4,7 +4,7 @@ import { MockShoutboxProvider } from './mock-shoutbox-context';
 import { IS_PRODUCTION } from '@/constants/env';
 
 interface SafeShoutboxProviderProps {
-  children: ReactNode;
+	children: ReactNode;
 }
 
 /**
@@ -12,50 +12,56 @@ interface SafeShoutboxProviderProps {
  * and ensures proper WebSocket initialization
  */
 export function SafeShoutboxProvider({ children }: SafeShoutboxProviderProps) {
-  const [hasError, setHasError] = useState(false);
+	const [hasError, setHasError] = useState(false);
 
-  // In development mode, always use the mock provider to avoid WebSocket issues
-  if (!IS_PRODUCTION) {
-    console.log('Using MockShoutboxProvider in development mode');
-    return <MockShoutboxProvider>{children}</MockShoutboxProvider>;
-  }
+	// In development mode, always use the mock provider to avoid WebSocket issues
+	if (!IS_PRODUCTION) {
+		console.log('Using MockShoutboxProvider in development mode');
+		return <MockShoutboxProvider>{children}</MockShoutboxProvider>;
+	}
 
-  // React Error Boundary is class-based, so we're using try/catch and state for functional components
-  try {
-    if (hasError) {
-      console.log('Using MockShoutboxProvider due to previous error');
-      return <MockShoutboxProvider>{children}</MockShoutboxProvider>;
-    }
+	// React Error Boundary is class-based, so we're using try/catch and state for functional components
+	try {
+		if (hasError) {
+			console.log('Using MockShoutboxProvider due to previous error');
+			return <MockShoutboxProvider>{children}</MockShoutboxProvider>;
+		}
 
-    // Error handler for runtime errors
-    const handleError = (error: Error) => {
-      console.error('Error in ShoutboxProvider:', error);
-      setHasError(true);
-    };
+		// Error handler for runtime errors
+		const handleError = (error: Error) => {
+			console.error('Error in ShoutboxProvider:', error);
+			setHasError(true);
+		};
 
-    // Try to use the real shoutbox provider with error handling
-    return (
-      <ErrorCatcher onError={handleError}>
-        <ShoutboxProvider>{children}</ShoutboxProvider>
-      </ErrorCatcher>
-    );
-  } catch (error) {
-    console.error('Error initializing ShoutboxProvider:', error);
-    return <MockShoutboxProvider>{children}</MockShoutboxProvider>;
-  }
+		// Try to use the real shoutbox provider with error handling
+		return (
+			<ErrorCatcher onError={handleError}>
+				<ShoutboxProvider>{children}</ShoutboxProvider>
+			</ErrorCatcher>
+		);
+	} catch (error) {
+		console.error('Error initializing ShoutboxProvider:', error);
+		return <MockShoutboxProvider>{children}</MockShoutboxProvider>;
+	}
 }
 
 // Simple error boundary wrapper for functional components
-function ErrorCatcher({ children, onError }: { children: ReactNode; onError: (error: Error) => void }) {
-  useEffect(() => {
-    const handler = (event: ErrorEvent) => {
-      event.preventDefault();
-      onError(event.error);
-    };
+function ErrorCatcher({
+	children,
+	onError
+}: {
+	children: ReactNode;
+	onError: (error: Error) => void;
+}) {
+	useEffect(() => {
+		const handler = (event: ErrorEvent) => {
+			event.preventDefault();
+			onError(event.error);
+		};
 
-    window.addEventListener('error', handler);
-    return () => window.removeEventListener('error', handler);
-  }, [onError]);
+		window.addEventListener('error', handler);
+		return () => window.removeEventListener('error', handler);
+	}, [onError]);
 
-  return <>{children}</>;
+	return <>{children}</>;
 }

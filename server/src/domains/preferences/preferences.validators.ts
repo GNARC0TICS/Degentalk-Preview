@@ -5,17 +5,17 @@ import { z } from 'zod';
  * Used for updating user profile data
  */
 export const profileSettingsSchema = z.object({
-  bio: z.string().optional(),
-  signature: z.string().optional(),
-  avatarUrl: z.string().url().optional().nullable(),
-  profileBannerUrl: z.string().url().optional().nullable(),
-  discordHandle: z.string().optional().nullable(),
-  twitterHandle: z.string().optional().nullable(),
-  website: z.string().url().optional().nullable(),
-  telegramHandle: z.string().optional().nullable(),
-  activeTitleId: z.number().int().positive().optional().nullable(),
-  activeBadgeId: z.number().int().positive().optional().nullable(),
-  activeFrameId: z.number().int().positive().optional().nullable(),
+	bio: z.string().optional(),
+	signature: z.string().optional(),
+	avatarUrl: z.string().url().optional().nullable(),
+	profileBannerUrl: z.string().url().optional().nullable(),
+	discordHandle: z.string().optional().nullable(),
+	twitterHandle: z.string().optional().nullable(),
+	website: z.string().url().optional().nullable(),
+	telegramHandle: z.string().optional().nullable(),
+	activeTitleId: z.number().int().positive().optional().nullable(),
+	activeBadgeId: z.number().int().positive().optional().nullable(),
+	activeFrameId: z.number().int().positive().optional().nullable()
 });
 
 /**
@@ -23,12 +23,12 @@ export const profileSettingsSchema = z.object({
  * Used for updating user display and accessibility preferences
  */
 export const accountSettingsSchema = z.object({
-  theme: z.enum(['light', 'dark', 'auto']).optional(),
-  language: z.string().min(2).max(20).optional(),
-  timezone: z.string().optional(),
-  shoutboxPosition: z.enum(['sidebar-top', 'sidebar-bottom', 'floating']).optional(),
-  profileVisibility: z.enum(['public', 'friends', 'private']).optional(),
-  sidebarState: z.record(z.any()).optional(),
+	theme: z.enum(['light', 'dark', 'auto']).optional(),
+	language: z.string().min(2).max(20).optional(),
+	timezone: z.string().optional(),
+	shoutboxPosition: z.enum(['sidebar-top', 'sidebar-bottom', 'floating']).optional(),
+	profileVisibility: z.enum(['public', 'friends', 'private']).optional(),
+	sidebarState: z.record(z.any()).optional()
 });
 
 /**
@@ -36,20 +36,20 @@ export const accountSettingsSchema = z.object({
  * Used for updating user notification preferences
  */
 export const notificationSettingsSchema = z.object({
-  receiveEmailNotifications: z.boolean().optional(),
-  notifyOnMentions: z.boolean().optional(),
-  notifyOnNewReplies: z.boolean().optional(),
-  notifyOnLevelUp: z.boolean().optional(),
-  notifyOnMissionUpdates: z.boolean().optional(),
-  notifyOnWalletTransactions: z.boolean().optional(),
+	receiveEmailNotifications: z.boolean().optional(),
+	notifyOnMentions: z.boolean().optional(),
+	notifyOnNewReplies: z.boolean().optional(),
+	notifyOnLevelUp: z.boolean().optional(),
+	notifyOnMissionUpdates: z.boolean().optional(),
+	notifyOnWalletTransactions: z.boolean().optional()
 });
 
 /**
  * Password change validation schema
  */
 export const passwordChangeSchema = z.object({
-  currentPassword: z.string().min(1, "Current password is required"),
-  newPassword: z.string().min(8, "Password must be at least 8 characters"),
+	currentPassword: z.string().min(1, 'Current password is required'),
+	newPassword: z.string().min(8, 'Password must be at least 8 characters')
 });
 
 export type ProfileSettingsInput = z.infer<typeof profileSettingsSchema>;
@@ -61,13 +61,13 @@ export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>;
  * Display preferences validation schema
  */
 export const displayPreferencesSchema = z.object({
-  theme: z.enum(['light', 'dark', 'system']).optional(),
-  fontSize: z.enum(['small', 'medium', 'large', 'x-large']).optional(),
-  threadDisplayMode: z.enum(['card', 'list']).optional(),
-  reducedMotion: z.boolean().optional(),
-  hideNsfw: z.boolean().optional(),
-  showMatureContent: z.boolean().optional(),
-  showOfflineUsers: z.boolean().optional(),
+	theme: z.enum(['light', 'dark', 'system']).optional(),
+	fontSize: z.enum(['small', 'medium', 'large', 'x-large']).optional(),
+	threadDisplayMode: z.enum(['card', 'list']).optional(),
+	reducedMotion: z.boolean().optional(),
+	hideNsfw: z.boolean().optional(),
+	showMatureContent: z.boolean().optional(),
+	showOfflineUsers: z.boolean().optional()
 });
 
-export type DisplayPreferencesInput = z.infer<typeof displayPreferencesSchema>; 
+export type DisplayPreferencesInput = z.infer<typeof displayPreferencesSchema>;

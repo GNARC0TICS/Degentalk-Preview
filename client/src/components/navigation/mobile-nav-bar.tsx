@@ -6,86 +6,91 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth.tsx';
 
 export interface MobileNavBarProps {
-  /** Custom navigation items (optional - will use defaults if not provided) */
-  items?: NavItemProps[];
-  /** Optional class name for additional styling */
-  className?: string;
+	/** Custom navigation items (optional - will use defaults if not provided) */
+	items?: NavItemProps[];
+	/** Optional class name for additional styling */
+	className?: string;
 }
 
 export function MobileNavBar({ items, className }: MobileNavBarProps) {
-  const [location] = useLocation();
-  const { isAuthenticated, user } = useAuth();
-  
-  // Default navigation items if none provided
-  const defaultItems: NavItemProps[] = [
-    {
-      icon: <Home className="h-5 w-5" />,
-      label: 'Home',
-      href: '/',
-      isActive: location === '/',
-      show: true,
-    },
-    {
-      icon: <MessageSquare className="h-5 w-5" />,
-      label: 'Forum',
-      href: '/forum',
-      isActive: location.startsWith('/forum') || location.startsWith('/threads') || location.startsWith('/tags'),
-      show: true,
-    },
-    {
-      icon: <ShoppingBag className="h-5 w-5" />,
-      label: 'Shop',
-      href: '/shop',
-      isActive: location.startsWith('/shop'),
-      show: true,
-    },
-    {
-      icon: <BarChart2 className="h-5 w-5" />,
-      label: 'Leaders',
-      href: '/leaderboard',
-      isActive: location.startsWith('/leaderboard'),
-      show: true,
-    },
-    {
-      icon: <Wallet className="h-5 w-5" />,
-      label: 'Wallet',
-      href: '/wallet',
-      isActive: location.startsWith('/wallet'),
-      show: isAuthenticated,
-    },
-    {
-      icon: <Users className="h-5 w-5" />,
-      label: 'Profile',
-      href: isAuthenticated && user ? `/profile/${user.username}` : '/profile',
-      isActive: location.startsWith('/profile'),
-      show: isAuthenticated,
-    },
-  ];
-  
-  const navItems = (items || defaultItems).filter(item => item.show);
-  
-  return (
-    <div className={cn(
-      'fixed bottom-0 left-0 right-0 z-40 bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-800 md:hidden',
-      className
-    )}>
-      <div className="flex items-center justify-around px-1 py-1">
-        {navItems.map((item, index) => (
-          <div key={index} className="flex-1 flex justify-center py-1">
-            <NavItem
-              icon={item.icon}
-              label={item.label}
-              href={item.href}
-              isActive={item.isActive}
-              badge={item.badge}
-              variant="ghost"
-              size="sm"
-              isMobile={true}
-              onClick={item.onClick}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+	const [location] = useLocation();
+	const { isAuthenticated, user } = useAuth();
+
+	// Default navigation items if none provided
+	const defaultItems: NavItemProps[] = [
+		{
+			icon: <Home className="h-5 w-5" />,
+			label: 'Home',
+			href: '/',
+			isActive: location === '/',
+			show: true
+		},
+		{
+			icon: <MessageSquare className="h-5 w-5" />,
+			label: 'Forum',
+			href: '/forum',
+			isActive:
+				location.startsWith('/forum') ||
+				location.startsWith('/threads') ||
+				location.startsWith('/tags'),
+			show: true
+		},
+		{
+			icon: <ShoppingBag className="h-5 w-5" />,
+			label: 'Shop',
+			href: '/shop',
+			isActive: location.startsWith('/shop'),
+			show: true
+		},
+		{
+			icon: <BarChart2 className="h-5 w-5" />,
+			label: 'Leaders',
+			href: '/leaderboard',
+			isActive: location.startsWith('/leaderboard'),
+			show: true
+		},
+		{
+			icon: <Wallet className="h-5 w-5" />,
+			label: 'Wallet',
+			href: '/wallet',
+			isActive: location.startsWith('/wallet'),
+			show: isAuthenticated
+		},
+		{
+			icon: <Users className="h-5 w-5" />,
+			label: 'Profile',
+			href: isAuthenticated && user ? `/profile/${user.username}` : '/profile',
+			isActive: location.startsWith('/profile'),
+			show: isAuthenticated
+		}
+	];
+
+	const navItems = (items || defaultItems).filter((item) => item.show);
+
+	return (
+		<div
+			className={cn(
+				'fixed bottom-0 left-0 right-0 z-40 bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-800 md:hidden',
+				className
+			)}
+		>
+			<div className="flex items-center justify-around px-1 py-1">
+				{navItems.map((item, index) => (
+					<div key={index} className="flex-1 flex justify-center py-1">
+						<NavItem
+							icon={item.icon}
+							label={item.label}
+							href={item.href}
+							isActive={item.isActive}
+							badge={item.badge}
+							variant="ghost"
+							size="sm"
+							isMobile={true}
+							onClick={item.onClick}
+						/>
+					</div>
+				))}
+			</div>
+		</div>
+	);
 }

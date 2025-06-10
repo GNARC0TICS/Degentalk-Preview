@@ -2,4 +2,4 @@
 import { initializeMissionResetJobs } from './cron/mission-reset';
 
 // Initialize cron jobs
-initializeMissionResetJobs(); 
+initializeMissionResetJobs();

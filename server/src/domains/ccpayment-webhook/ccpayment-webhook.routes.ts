@@ -1,6 +1,6 @@
 /**
  * CCPayment Webhook Routes
- * 
+ *
  * This file defines routes for CCPayment webhook integration.
  * Unlike most API routes, webhook endpoints don't require auth.
  */
@@ -20,8 +20,8 @@ const router = Router();
  * @access Public (no auth - HMAC signature verification instead)
  */
 router.post(
-  '/ccpayment',
-  asyncHandler(ccPaymentWebhookController.handleWebhook.bind(ccPaymentWebhookController))
+	'/ccpayment',
+	asyncHandler(ccPaymentWebhookController.handleWebhook.bind(ccPaymentWebhookController))
 );
 
 export default router;

@@ -10,4 +10,4 @@ router.use('/forum', forumRoutes);
 // Mount shop routes
 router.use('/shop', shopRoutes);
 
-export default router; 
+export default router;

@@ -1,8 +1,8 @@
 /**
  * Tip Routes
- * 
+ *
  * This file registers all routes related to tipping functionality.
- * 
+ *
  * // [REFAC-TIP]
  */
 
@@ -21,17 +21,17 @@ router.use(requireAuth);
 
 // Define validation schemas
 const tipSchema = z.object({
-  toUserId: z.number().int().positive('Recipient ID must be a positive integer'),
-  amount: z.number().positive('Amount must be positive'),
-  reason: z.string().optional(),
-  source: z.string().default('forum')
+	toUserId: z.number().int().positive('Recipient ID must be a positive integer'),
+	amount: z.number().positive('Amount must be positive'),
+	reason: z.string().optional(),
+	source: z.string().default('forum')
 });
 
 const tipSettingsSchema = z.object({
-  minAmount: z.number().min(1).optional(),
-  maxAmount: z.number().positive().optional(),
-  cooldownMinutes: z.number().min(0).optional(),
-  burnPercentage: z.number().min(0).max(100).optional()
+	minAmount: z.number().min(1).optional(),
+	maxAmount: z.number().positive().optional(),
+	cooldownMinutes: z.number().min(0).optional(),
+	burnPercentage: z.number().min(0).max(100).optional()
 });
 
 // POST /api/engagement/tip - Send a tip to another user
@@ -47,6 +47,11 @@ router.get('/leaderboard', tipController.getTipLeaderboard);
 router.get('/settings', tipController.getTipSettings);
 
 // PATCH /api/engagement/tip/settings - Update tip settings (admin only)
-router.patch('/settings', requireAdmin, validateRequest(tipSettingsSchema), tipController.updateTipSettings);
+router.patch(
+	'/settings',
+	requireAdmin,
+	validateRequest(tipSettingsSchema),
+	tipController.updateTipSettings
+);
 
-export default router; 
+export default router;

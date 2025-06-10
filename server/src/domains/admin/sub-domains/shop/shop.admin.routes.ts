@@ -19,4 +19,4 @@ router.put('/items/:productId', asyncHandler(shopAdminController.updateProduct))
 // DELETE /api/admin/shop/items/:id - Soft delete product
 router.delete('/items/:productId', asyncHandler(shopAdminController.deleteProduct));
 
-export default router; 
+export default router;

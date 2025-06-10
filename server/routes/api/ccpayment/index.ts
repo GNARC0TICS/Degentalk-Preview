@@ -1,6 +1,6 @@
 /**
  * CCPayment API Routes
- * 
+ *
  * This module exports all CCPayment-related API routes
  */
 
@@ -16,4 +16,4 @@ router.use('/deposit', depositRoutes);
 router.use('/withdraw', withdrawRoutes);
 router.use('/webhook', webhookRoutes);
 
-export default router; 
+export default router;

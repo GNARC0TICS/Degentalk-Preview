@@ -18,7 +18,7 @@ export const MODE = import.meta.env.MODE || 'development';
 // Log the environment for easier debugging
 // DEV_MODE logging (optional, keep for debugging if needed)
 if (DEV_MODE) {
-  // console.log('🔧 Running in development mode');
+	// console.log('🔧 Running in development mode');
 } else {
-  // console.log('🚀 Running in production mode');
+	// console.log('🚀 Running in production mode');
 }

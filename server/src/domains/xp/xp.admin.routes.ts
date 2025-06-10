@@ -1,6 +1,6 @@
 /**
  * XP Admin Routes
- * 
+ *
  * API endpoints for admin-specific XP system management
  */
 
@@ -42,4 +42,4 @@ router.delete('/titles/:id', asyncHandler(adminXpController.deleteTitle));
 // Stats and metrics
 router.get('/stats', asyncHandler(adminXpController.getXpSystemStats));
 
-export default router; 
+export default router;

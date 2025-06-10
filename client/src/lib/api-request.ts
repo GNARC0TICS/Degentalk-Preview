@@ -3,8 +3,8 @@
  */
 
 export interface ApiError extends Error {
-  status?: number;
-  data?: any;
+	status?: number;
+	data?: any;
 }
 
 /**
@@ -14,39 +14,34 @@ export interface ApiError extends Error {
  * @returns The JSON response
  * @throws ApiError if the request fails
  */
-export async function apiRequest<T = any>(
-  url: string,
-  options: RequestInit = {}
-): Promise<T> {
-  try {
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-    });
+export async function apiRequest<T = any>(url: string, options: RequestInit = {}): Promise<T> {
+	try {
+		const response = await fetch(url, {
+			...options,
+			headers: {
+				'Content-Type': 'application/json',
+				...options.headers
+			}
+		});
 
-    const data = await response.json();
+		const data = await response.json();
 
-    if (!response.ok) {
-      const error = new Error(data.message || 'API request failed') as ApiError;
-      error.status = response.status;
-      error.data = data;
-      throw error;
-    }
+		if (!response.ok) {
+			const error = new Error(data.message || 'API request failed') as ApiError;
+			error.status = response.status;
+			error.data = data;
+			throw error;
+		}
 
-    return data;
-  } catch (error) {
-    if ((error as ApiError).status) {
-      throw error;
-    }
-    
-    const newError = new Error(
-      (error as Error).message || 'Network error'
-    ) as ApiError;
-    throw newError;
-  }
+		return data;
+	} catch (error) {
+		if ((error as ApiError).status) {
+			throw error;
+		}
+
+		const newError = new Error((error as Error).message || 'Network error') as ApiError;
+		throw newError;
+	}
 }
 
 /**
@@ -58,15 +53,15 @@ export async function apiRequest<T = any>(
  * @throws ApiError if the request fails
  */
 export async function apiPost<T = any, U = any>(
-  url: string,
-  body: U,
-  options: RequestInit = {}
+	url: string,
+	body: U,
+	options: RequestInit = {}
 ): Promise<T> {
-  return apiRequest<T>(url, {
-    ...options,
-    method: 'POST',
-    body: JSON.stringify(body),
-  });
+	return apiRequest<T>(url, {
+		...options,
+		method: 'POST',
+		body: JSON.stringify(body)
+	});
 }
 
 /**
@@ -78,15 +73,15 @@ export async function apiPost<T = any, U = any>(
  * @throws ApiError if the request fails
  */
 export async function apiPut<T = any, U = any>(
-  url: string,
-  body: U,
-  options: RequestInit = {}
+	url: string,
+	body: U,
+	options: RequestInit = {}
 ): Promise<T> {
-  return apiRequest<T>(url, {
-    ...options,
-    method: 'PUT',
-    body: JSON.stringify(body),
-  });
+	return apiRequest<T>(url, {
+		...options,
+		method: 'PUT',
+		body: JSON.stringify(body)
+	});
 }
 
 /**
@@ -98,15 +93,15 @@ export async function apiPut<T = any, U = any>(
  * @throws ApiError if the request fails
  */
 export async function apiPatch<T = any, U = any>(
-  url: string,
-  body: U,
-  options: RequestInit = {}
+	url: string,
+	body: U,
+	options: RequestInit = {}
 ): Promise<T> {
-  return apiRequest<T>(url, {
-    ...options,
-    method: 'PATCH',
-    body: JSON.stringify(body),
-  });
+	return apiRequest<T>(url, {
+		...options,
+		method: 'PATCH',
+		body: JSON.stringify(body)
+	});
 }
 
 /**
@@ -116,12 +111,9 @@ export async function apiPatch<T = any, U = any>(
  * @returns The JSON response
  * @throws ApiError if the request fails
  */
-export async function apiDelete<T = any>(
-  url: string,
-  options: RequestInit = {}
-): Promise<T> {
-  return apiRequest<T>(url, {
-    ...options,
-    method: 'DELETE',
-  });
+export async function apiDelete<T = any>(url: string, options: RequestInit = {}): Promise<T> {
+	return apiRequest<T>(url, {
+		...options,
+		method: 'DELETE'
+	});
 }

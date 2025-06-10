@@ -1,9 +1,9 @@
 // REFACTORED: Updated auth middleware imports to use canonical path
 /**
  * Wallet Routes
- * 
+ *
  * [REFAC-WALLET]
- * 
+ *
  * This file defines API routes for wallet functionality including:
  * - Balance checking
  * - DGT operations
@@ -16,10 +16,10 @@ import { WalletController } from './wallet.controller';
 import { validateRequest, WalletRequestSchemas } from './wallet.validators';
 import { isAuthenticated, isAdmin } from '../auth/middleware/auth.middleware'; // Removed isSelfOrAdmin
 import { asyncHandler } from '../../core/errors';
-import { 
-  validateTransferDgt, 
-  validateCreateDepositAddress,
-  validateDgtPurchase
+import {
+	validateTransferDgt,
+	validateCreateDepositAddress,
+	validateDgtPurchase
 } from './wallet.validators';
 
 // Instantiate controller
@@ -36,10 +36,7 @@ router.use(isAuthenticated);
  * @desc Get user's wallet balance (DGT and crypto)
  * @access Private
  */
-router.get(
-  '/balance',
-  asyncHandler(walletController.getBalance.bind(walletController))
-);
+router.get('/balance', asyncHandler(walletController.getBalance.bind(walletController)));
 
 /**
  * @route GET /api/wallet/transactions
@@ -47,8 +44,8 @@ router.get(
  * @access Private
  */
 router.get(
-  '/transactions',
-  asyncHandler(walletController.getTransactionHistory.bind(walletController))
+	'/transactions',
+	asyncHandler(walletController.getTransactionHistory.bind(walletController))
 );
 
 /**
@@ -57,9 +54,9 @@ router.get(
  * @access Private
  */
 router.post(
-  '/deposit-address',
-  validateCreateDepositAddress,
-  asyncHandler(walletController.createDepositAddress.bind(walletController))
+	'/deposit-address',
+	validateCreateDepositAddress,
+	asyncHandler(walletController.createDepositAddress.bind(walletController))
 );
 
 /**
@@ -68,9 +65,9 @@ router.post(
  * @access Private
  */
 router.post(
-  '/dgt-purchase',
-  validateDgtPurchase,
-  asyncHandler(walletController.createDgtPurchase.bind(walletController))
+	'/dgt-purchase',
+	validateDgtPurchase,
+	asyncHandler(walletController.createDgtPurchase.bind(walletController))
 );
 
 /**
@@ -79,8 +76,8 @@ router.post(
  * @access Private
  */
 router.get(
-  '/purchase/:orderId',
-  asyncHandler(walletController.getPurchaseOrderStatus.bind(walletController))
+	'/purchase/:orderId',
+	asyncHandler(walletController.getPurchaseOrderStatus.bind(walletController))
 );
 
 /**
@@ -89,9 +86,9 @@ router.get(
  * @access Private
  */
 router.post(
-  '/transfer',
-  validateTransferDgt,
-  asyncHandler(walletController.transferDgt.bind(walletController))
+	'/transfer',
+	validateTransferDgt,
+	asyncHandler(walletController.transferDgt.bind(walletController))
 );
 
 /**
@@ -100,8 +97,8 @@ router.post(
  * @access Private
  */
 router.get(
-  '/currencies',
-  asyncHandler(walletController.getSupportedCurrencies.bind(walletController))
+	'/currencies',
+	asyncHandler(walletController.getSupportedCurrencies.bind(walletController))
 );
 
 // --- DGT Rewards & Internal Transactions ---

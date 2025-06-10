@@ -4,25 +4,25 @@
 import { ReactNode } from 'react';
 
 type ToastProps = {
-  id?: string;
-  title?: string;
-  description?: string;
-  variant?: "default" | "destructive";
-  action?: ReactNode;
-  duration?: number;
+	id?: string;
+	title?: string;
+	description?: string;
+	variant?: 'default' | 'destructive';
+	action?: ReactNode;
+	duration?: number;
 };
 
 // Empty array of toasts for the initial state
 const toasts: ToastProps[] = [];
 
 export function useToast() {
-  const toast = (props: ToastProps) => {
-    // In a real implementation, this would add the toast to the toasts array
-    console.log('Toast:', props);
-  };
+	const toast = (props: ToastProps) => {
+		// In a real implementation, this would add the toast to the toasts array
+		console.log('Toast:', props);
+	};
 
-  return {
-    toast,
-    toasts, // Return empty array of toasts
-  };
+	return {
+		toast,
+		toasts // Return empty array of toasts
+	};
 }

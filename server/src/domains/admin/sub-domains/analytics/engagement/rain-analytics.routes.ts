@@ -1,6 +1,6 @@
 /**
  * Rain Analytics Routes
- * 
+ *
  * Defines endpoints for accessing rain analytics data in the admin dashboard
  */
 
@@ -16,4 +16,4 @@ router.use(isAdmin);
 // GET /api/admin/analytics/engagement/rain
 router.get('/', rainAnalyticsController.getRainAnalytics);
 
-export default router; 
+export default router;

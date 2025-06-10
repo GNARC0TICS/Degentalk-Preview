@@ -30,10 +30,10 @@ import { createDeposit } from '@payments/ccpayment';
 
 // Create a deposit payment link
 const deposit = await createDeposit({
-  userId: 123,
-  amount: 100,
-  currency: 'USDT',
-  productName: 'DGT Tokens'
+	userId: 123,
+	amount: 100,
+	currency: 'USDT',
+	productName: 'DGT Tokens'
 });
 
 // Redirect user to the payment link
@@ -48,17 +48,17 @@ import { createWithdrawal, validateWithdrawal } from '@payments/ccpayment';
 // Validate withdrawal before processing
 const validation = await validateWithdrawal(userId, amount, 'USDT');
 if (!validation.isValid) {
-  // Show error to user
-  console.error(validation.reason);
-  return;
+	// Show error to user
+	console.error(validation.reason);
+	return;
 }
 
 // Process withdrawal
 const withdrawal = await createWithdrawal({
-  userId,
-  amount,
-  currency: 'USDT',
-  address: walletAddress
+	userId,
+	amount,
+	currency: 'USDT',
+	address: walletAddress
 });
 
 // Show confirmation to user
@@ -73,13 +73,13 @@ import { checkDepositStatus, checkWithdrawalStatus } from '@payments/ccpayment';
 // Check deposit status
 const depositStatus = await checkDepositStatus(orderId);
 if (depositStatus.isComplete) {
-  console.log('Deposit completed!');
+	console.log('Deposit completed!');
 }
 
 // Check withdrawal status
 const withdrawalStatus = await checkWithdrawalStatus(orderId);
 if (withdrawalStatus.isComplete) {
-  console.log('Withdrawal completed!');
+	console.log('Withdrawal completed!');
 }
 ```
 
@@ -100,4 +100,4 @@ The schema doesn't require immediate changes since it already has the necessary 
 1. Configure your CCPayment account in the admin panel
 2. Set up the API credentials in your environment variables
 3. Test deposits with small amounts
-4. Deploy and monitor the integration 
+4. Deploy and monitor the integration
