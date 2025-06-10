@@ -1,35 +1,37 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'wouter';
-import { 
-  MessageSquare, 
-  ShoppingBag, 
-  User, 
-  Bell, 
-  ChevronDown, 
+import React, { useState } from "react";
+import { Link, useLocation } from "wouter";
+import {
+  MessageSquare,
+  ShoppingBag,
+  User,
+  Bell,
+  ChevronDown,
   X,
-  Search, 
+  Search,
   Wallet,
   LogOut,
   Shield,
-  Settings
-} from 'lucide-react';
-import { WalletSheet } from '@/components/economy/wallet/WalletSheet';
-import ChartMenu from '@/components/ui/candlestick-menu';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
-import { ROUTES } from '@/config/admin-routes';
-import { useAuthWrapper } from '@/hooks/wrappers/use-auth-wrapper';
+  Settings,
+} from "lucide-react";
+import { WalletSheet } from "@/components/economy/wallet/WalletSheet";
+import ChartMenu from "@/components/ui/candlestick-menu";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ROUTES } from "@/config/admin-routes";
+import { useAuthWrapper } from "@/hooks/wrappers/use-auth-wrapper";
 import { Separator } from "@/components/ui/separator";
+import { NotificationPanel } from "../notifications/NotificationPanel";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 // Check if we're in development mode
 const isDevelopment = import.meta.env.DEV;
@@ -46,31 +48,35 @@ type ExtendedUserData = {
 export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const [location] = useLocation();
-  
+
   const { user, logoutMutation } = useAuthWrapper() || {};
-  
+
   // State for wallet sheet
   const [isWalletOpen, setIsWalletOpen] = useState(false);
+  // State for notifications popover
+  const [isNotificationsPanel, setIsNotificationsPanelOpen] = useState(false);
 
   // For development, create a mock user
   const mockUser: ExtendedUserData = {
-    username: 'DevUser',
+    username: "DevUser",
     isAdmin: true,
     isModerator: true,
-    level: 99
+    level: 99,
   };
-  
+
   // Use real user in production, mock user in development
-  const displayUser = isDevelopment ? mockUser : (user as ExtendedUserData | null);
-  
+  const displayUser = isDevelopment
+    ? mockUser
+    : (user as ExtendedUserData | null);
+
   // In development we're always authenticated
   const isAuthenticated = isDevelopment ? true : !!user;
 
   const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'Forum', href: '/forum' },
-    { name: 'Shop', href: '/shop' },
-    { name: 'Leaderboard', href: '/leaderboard' },
+    { name: "Home", href: "/" },
+    { name: "Forum", href: "/forum" },
+    { name: "Shop", href: "/shop" },
+    { name: "Leaderboard", href: "/leaderboard" },
   ];
 
   // Handle logout
@@ -88,9 +94,7 @@ export function SiteHeader() {
           <div className="flex items-center">
             <Link href="/">
               <div className="flex items-center cursor-pointer">
-                <span className="text-xl font-bold text-white">
-                  Degentalk
-                </span>
+                <span className="text-xl font-bold text-white">Degentalk</span>
               </div>
             </Link>
           </div>
@@ -99,11 +103,15 @@ export function SiteHeader() {
           <nav className="hidden md:flex items-center space-x-1">
             {navigation.map((item) => (
               <Link key={item.name} href={item.href}>
-                <div className={`px-3 py-2 rounded-md text-sm font-medium cursor-pointer transition-all duration-200
-                  ${item.href === location 
-                    ? 'bg-zinc-800 text-white shadow-inner' 
-                    : 'text-zinc-300 hover:bg-zinc-800 hover:text-emerald-400 focus:text-emerald-400 focus:bg-zinc-800'}
-                `}>
+                <div
+                  className={`px-3 py-2 rounded-md text-sm font-medium cursor-pointer transition-all duration-200
+                  ${
+                    item.href === location
+                      ? "bg-zinc-800 text-white shadow-inner"
+                      : "text-zinc-300 hover:bg-zinc-800 hover:text-emerald-400 focus:text-emerald-400 focus:bg-zinc-800"
+                  }
+                `}
+                >
                   {item.name}
                 </div>
               </Link>
@@ -116,9 +124,9 @@ export function SiteHeader() {
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-zinc-500" />
               </div>
-              <Input 
-                type="text" 
-                placeholder="Search threads..." 
+              <Input
+                type="text"
+                placeholder="Search threads..."
                 className="pl-10 bg-zinc-800/50 border-zinc-700 text-sm w-full"
               />
             </div>
@@ -129,17 +137,35 @@ export function SiteHeader() {
             {isAuthenticated && displayUser ? (
               <div className="flex items-center space-x-4">
                 {/* Notification Icon */}
-                <Button variant="ghost" size="icon" className="relative text-zinc-400 hover:text-emerald-400 focus:text-emerald-400 transition-all duration-200">
-                  <Bell className="h-5 w-5" />
-                  <Badge className="absolute -top-1 -right-1 px-1.5 h-4 min-w-4 bg-red-500 flex items-center justify-center text-[10px]">
-                    3
-                  </Badge>
-                </Button>
+                <Popover
+                  open={isNotificationsPanel}
+                  onOpenChange={(isOpen) => {
+                    setIsNotificationsPanelOpen(isOpen);
+                  }}
+                >
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="relative text-zinc-400 hover:text-emerald-400 focus:text-emerald-400 transition-all duration-200"
+                      onClick={() => setIsNotificationsPanelOpen(true)}
+                    >
+                      <Bell className="h-5 w-5" />
+                      <Badge className="absolute -top-1 -right-1 px-1.5 h-4 min-w-4 bg-red-500 flex items-center justify-center text-[10px]">
+                        3
+                      </Badge>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent align="end" className="w-96 p-0">
+                    {/* Notifications Panel */}
+                    <NotificationPanel />
+                  </PopoverContent>
+                </Popover>
 
                 {/* Wallet Button - Opens Wallet Sheet */}
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
+                <Button
+                  variant="ghost"
+                  size="icon"
                   className="text-zinc-400 hover:text-emerald-400 focus:text-emerald-400 transition-all duration-200"
                   onClick={() => setIsWalletOpen(true)}
                 >
@@ -174,11 +200,15 @@ export function SiteHeader() {
                       <div className="flex items-center space-x-2">
                         <Avatar className="h-8 w-8">
                           <AvatarFallback className="bg-emerald-800 text-emerald-200">
-                            {displayUser?.username?.substring(0, 2)?.toUpperCase() || 'UN'}
+                            {displayUser?.username
+                              ?.substring(0, 2)
+                              ?.toUpperCase() || "UN"}
                           </AvatarFallback>
                         </Avatar>
                         <span className="hidden lg:flex items-center">
-                          <span className="text-zinc-300">{displayUser?.username || 'User'}</span>
+                          <span className="text-zinc-300">
+                            {displayUser?.username || "User"}
+                          </span>
                           <ChevronDown className="ml-1 h-4 w-4 text-zinc-500" />
                         </span>
                       </div>
@@ -241,7 +271,10 @@ export function SiteHeader() {
             ) : (
               <div className="flex items-center space-x-3">
                 <Link href="/auth">
-                  <Button variant="outline" className="border-zinc-700 bg-zinc-800/50 hover:bg-zinc-800">
+                  <Button
+                    variant="outline"
+                    className="border-zinc-700 bg-zinc-800/50 hover:bg-zinc-800"
+                  >
                     Log In
                   </Button>
                 </Link>
@@ -277,9 +310,9 @@ export function SiteHeader() {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Search className="h-4 w-4 text-zinc-500" />
                 </div>
-                <Input 
-                  type="text" 
-                  placeholder="Search threads..." 
+                <Input
+                  type="text"
+                  placeholder="Search threads..."
                   className="pl-10 bg-zinc-800/50 border-zinc-700 text-sm w-full"
                 />
               </div>
@@ -287,11 +320,11 @@ export function SiteHeader() {
 
             {navigation.map((item) => (
               <Link key={item.name} href={item.href}>
-                <div 
+                <div
                   className={`block px-3 py-2 rounded-md text-base font-medium cursor-pointer ${
-                    item.href === location 
-                      ? 'bg-zinc-800 text-white' 
-                      : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+                    item.href === location
+                      ? "bg-zinc-800 text-white"
+                      : "text-zinc-300 hover:bg-zinc-800 hover:text-white"
                   } transition-colors`}
                   onClick={() => setIsOpen(false)}
                 >
@@ -306,18 +339,24 @@ export function SiteHeader() {
                   <div className="flex-shrink-0">
                     <Avatar className="h-10 w-10">
                       <AvatarFallback className="bg-emerald-800 text-emerald-200">
-                        {displayUser?.username?.substring(0, 2)?.toUpperCase() || 'UN'}
+                        {displayUser?.username
+                          ?.substring(0, 2)
+                          ?.toUpperCase() || "UN"}
                       </AvatarFallback>
                     </Avatar>
                   </div>
                   <div className="ml-3">
-                    <div className="text-base font-medium text-white">{displayUser?.username || 'User'}</div>
-                    <div className="text-sm font-medium text-zinc-500">Level {displayUser?.level || '0'}</div>
+                    <div className="text-base font-medium text-white">
+                      {displayUser?.username || "User"}
+                    </div>
+                    <div className="text-sm font-medium text-zinc-500">
+                      Level {displayUser?.level || "0"}
+                    </div>
                   </div>
                 </div>
                 <div className="mt-3 px-2 space-y-1">
                   <Link href={`/profile/${displayUser.username}`}>
-                    <div 
+                    <div
                       className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
                       onClick={() => setIsOpen(false)}
                     >
@@ -325,7 +364,7 @@ export function SiteHeader() {
                       Profile
                     </div>
                   </Link>
-                  <div 
+                  <div
                     className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
                     onClick={() => {
                       setIsOpen(false);
@@ -335,19 +374,19 @@ export function SiteHeader() {
                     <Wallet className="h-5 w-5 inline mr-2" />
                     Wallet
                   </div>
-                      <Link href="/preferences">
-                        <div 
-                          className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          <Settings className="h-5 w-5 inline mr-2" />
-                          Settings
-                        </div>
-                      </Link>
+                  <Link href="/preferences">
+                    <div
+                      className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Settings className="h-5 w-5 inline mr-2" />
+                      Settings
+                    </div>
+                  </Link>
 
                   {displayUser.isAdmin && (
                     <Link href="/admin">
-                      <div 
+                      <div
                         className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
                         onClick={() => setIsOpen(false)}
                       >
@@ -359,7 +398,7 @@ export function SiteHeader() {
 
                   {displayUser.isModerator && (
                     <Link href="/mod">
-                      <div 
+                      <div
                         className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
                         onClick={() => setIsOpen(false)}
                       >
@@ -400,10 +439,7 @@ export function SiteHeader() {
       )}
 
       {/* Wallet Sheet */}
-      <WalletSheet 
-        isOpen={isWalletOpen}
-        onOpenChange={setIsWalletOpen}
-      />
+      <WalletSheet isOpen={isWalletOpen} onOpenChange={setIsWalletOpen} />
     </header>
   );
 }

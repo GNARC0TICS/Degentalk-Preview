@@ -1,9 +1,15 @@
-import { ShopItem } from '@/hooks/use-shop-items';
-import { ItemCategory } from '@/hooks/use-vault-items';
-import { Transaction, TransactionHistoryParams, DepositAddress, WalletBalances } from '@/types/wallet';
+import { ShopItem } from "@/hooks/use-shop-items";
+import { ItemCategory } from "@/hooks/use-vault-items";
+import { Notification, NotificationsParams } from "@/types/notifications";
+import {
+  Transaction,
+  TransactionHistoryParams,
+  DepositAddress,
+  WalletBalances,
+} from "@/types/wallet";
 
 // API endpoint base URL
-const API_BASE_URL = '/api';
+const API_BASE_URL = "/api";
 
 // Fetch JSON helper with error handling
 async function fetchJSON<T>(url: string, options?: RequestInit): Promise<T> {
@@ -11,7 +17,7 @@ async function fetchJSON<T>(url: string, options?: RequestInit): Promise<T> {
     const response = await fetch(url, {
       ...options,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...(options?.headers || {}),
       },
     });
@@ -20,16 +26,16 @@ async function fetchJSON<T>(url: string, options?: RequestInit): Promise<T> {
       const errorText = await response.text();
       try {
         const errorJson = JSON.parse(errorText);
-        throw new Error(errorJson.message || errorJson.error || 'API Error');
+        throw new Error(errorJson.message || errorJson.error || "API Error");
       } catch (e) {
-        throw new Error(errorText || response.statusText || 'API Error');
+        throw new Error(errorText || response.statusText || "API Error");
       }
     }
 
     const data = await response.json();
     return data as T;
   } catch (error) {
-    console.error('API Error:', error);
+    console.error("API Error:", error);
     throw error;
   }
 }
@@ -53,7 +59,7 @@ export interface DgtPurchaseOrder {
   dgtAmount: number;
   cryptoAmount: number;
   cryptoCurrency: string;
-  status: 'pending' | 'completed' | 'failed';
+  status: "pending" | "completed" | "failed";
   createdAt: string;
 }
 
@@ -68,30 +74,36 @@ export const api = {
 
     // [REFAC-CCPAYMENT]
     async createDepositAddress(currency: string): Promise<DepositAddress> {
-      return fetchJSON<DepositAddress>(`${API_BASE_URL}/wallet/deposit-address`, {
-        method: 'POST',
-        body: JSON.stringify({ currency }),
-      });
+      return fetchJSON<DepositAddress>(
+        `${API_BASE_URL}/wallet/deposit-address`,
+        {
+          method: "POST",
+          body: JSON.stringify({ currency }),
+        }
+      );
     },
 
     // [REFAC-DGT] [REFAC-CCPAYMENT]
-    async getTransactionHistory(params: TransactionHistoryParams = {}): Promise<{
+    async getTransactionHistory(
+      params: TransactionHistoryParams = {}
+    ): Promise<{
       transactions: Transaction[];
       total: number;
     }> {
       const queryParams = new URLSearchParams();
-      if (params.limit) queryParams.append('limit', params.limit.toString());
-      if (params.offset) queryParams.append('offset', params.offset.toString());
+      if (params.limit) queryParams.append("limit", params.limit.toString());
+      if (params.offset) queryParams.append("offset", params.offset.toString());
       if (params.type) {
         if (Array.isArray(params.type)) {
-          params.type.forEach(t => queryParams.append('type', t));
+          params.type.forEach((t) => queryParams.append("type", t));
         } else {
-          queryParams.append('type', params.type);
+          queryParams.append("type", params.type);
         }
       }
-      if (params.startDate) queryParams.append('startDate', params.startDate);
-      if (params.endDate) queryParams.append('endDate', params.endDate);
-      if (params.includeCrypto !== undefined) queryParams.append('includeCrypto', params.includeCrypto.toString());
+      if (params.startDate) queryParams.append("startDate", params.startDate);
+      if (params.endDate) queryParams.append("endDate", params.endDate);
+      if (params.includeCrypto !== undefined)
+        queryParams.append("includeCrypto", params.includeCrypto.toString());
 
       return fetchJSON<{ transactions: Transaction[]; total: number }>(
         `${API_BASE_URL}/wallet/transactions?${queryParams.toString()}`
@@ -99,7 +111,10 @@ export const api = {
     },
 
     // [REFAC-DGT]
-    async requestDgtPurchase(cryptoAmount: number, cryptoCurrency: string): Promise<{
+    async requestDgtPurchase(
+      cryptoAmount: number,
+      cryptoCurrency: string
+    ): Promise<{
       success: boolean;
       orderId: string;
       depositAddress: string;
@@ -107,17 +122,17 @@ export const api = {
       message: string;
     }> {
       return fetchJSON(`${API_BASE_URL}/wallet/purchase-dgt`, {
-        method: 'POST',
-        body: JSON.stringify({ 
+        method: "POST",
+        body: JSON.stringify({
           cryptoAmount,
-          cryptoCurrency
+          cryptoCurrency,
         }),
       });
     },
 
     // [REFAC-DGT]
     async checkPurchaseStatus(orderId: string): Promise<{
-      status: 'pending' | 'completed' | 'failed';
+      status: "pending" | "completed" | "failed";
       message: string;
       dgtAmount?: number;
       cryptoAmount?: number;
@@ -127,64 +142,102 @@ export const api = {
     },
 
     // [REFAC-DGT]
-    async transferDGT(toUserId: number, amount: number, reason: string): Promise<{
+    async transferDGT(
+      toUserId: number,
+      amount: number,
+      reason: string
+    ): Promise<{
       success: boolean;
       transactionId: number;
       message: string;
     }> {
       return fetchJSON(`${API_BASE_URL}/wallet/transfer`, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
           toUserId,
           amount,
-          reason
+          reason,
         }),
       });
-    }
+    },
   },
-  
+
+  notifications: {
+    // Dev only
+    async getNotifications(params: NotificationsParams = {}): Promise<{
+      notifications: Notification[];
+    }> {
+      const queryParams = new URLSearchParams();
+      if (params.pageOffset)
+        queryParams.append("pageOffset", params.pageOffset.toString());
+
+      return fetchJSON<{
+        notifications: Notification[];
+      }>(
+        `${API_BASE_URL}/notifications/getPaginatedNotifications?${queryParams.toString()}`
+      );
+    },
+  },
+
   // Engagement API (Tip, Rain, etc.)
   engagement: {
     // [REFAC-TIP]
-    async sendTip(toUserId: number, amount: number, currency: string, source: string, contextId?: string): Promise<{
+    async sendTip(
+      toUserId: number,
+      amount: number,
+      currency: string,
+      source: string,
+      contextId?: string
+    ): Promise<{
       success: boolean;
       tipId: number;
       message: string;
     }> {
       return fetchJSON(`${API_BASE_URL}/engagement/tip`, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
           toUserId,
           amount,
           currency,
           source,
-          contextId
+          contextId,
         }),
       });
     },
 
     // [REFAC-TIP]
-    async getTipHistory(type: 'sent' | 'received' | 'both' = 'both', limit: number = 20, offset: number = 0): Promise<{
+    async getTipHistory(
+      type: "sent" | "received" | "both" = "both",
+      limit: number = 20,
+      offset: number = 0
+    ): Promise<{
       tips: any[];
       total: number;
     }> {
-      return fetchJSON(`${API_BASE_URL}/engagement/tip/history?type=${type}&limit=${limit}&offset=${offset}`);
+      return fetchJSON(
+        `${API_BASE_URL}/engagement/tip/history?type=${type}&limit=${limit}&offset=${offset}`
+      );
     },
 
     // [REFAC-RAIN]
-    async sendRain(amount: number, currency: string, userCount: number, roomId?: number): Promise<{
+    async sendRain(
+      amount: number,
+      currency: string,
+      userCount: number,
+      roomId?: number
+    ): Promise<{
       success: boolean;
       transactionId: number;
       recipients: { id: number; username: string }[];
       message: string;
     }> {
       return fetchJSON(`${API_BASE_URL}/engagement/rain`, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
           amount,
           currency,
           userCount,
-          roomId
+          roomId,
         }),
       });
     },
@@ -192,13 +245,13 @@ export const api = {
     // [REFAC-RAIN]
     async getRecentRainEvents(limit: number = 10): Promise<any[]> {
       return fetchJSON(`${API_BASE_URL}/engagement/rain/recent?limit=${limit}`);
-    }
+    },
   },
 
   // Shop API methods
   shop: {
     async getItems(category?: ItemCategory): Promise<ShopItem[]> {
-      const query = category ? `?category=${category}` : '';
+      const query = category ? `?category=${category}` : "";
       return fetchJSON<ShopItem[]>(`${API_BASE_URL}/shop/items${query}`);
     },
 
@@ -206,33 +259,42 @@ export const api = {
       return fetchJSON<ShopItem>(`${API_BASE_URL}/shop/items/${itemId}`);
     },
 
-    async purchaseItem(itemId: string, paymentMethod: 'dgt' | 'usdt'): Promise<{ success: boolean; message: string }> {
+    async purchaseItem(
+      itemId: string,
+      paymentMethod: "dgt" | "usdt"
+    ): Promise<{ success: boolean; message: string }> {
       return fetchJSON(`${API_BASE_URL}/shop/purchase`, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({ itemId, paymentMethod }),
       });
     },
 
-    async checkBalance(itemId: string, paymentMethod: 'dgt' | 'usdt'): Promise<{ canAfford: boolean; currentBalance: number }> {
+    async checkBalance(
+      itemId: string,
+      paymentMethod: "dgt" | "usdt"
+    ): Promise<{ canAfford: boolean; currentBalance: number }> {
       return fetchJSON(`${API_BASE_URL}/shop/check-balance`, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({ itemId, paymentMethod }),
       });
-    }
+    },
   },
 
   // Vault API
   vault: {
-    async lockDGT(amount: number, unlockTime?: Date): Promise<{
+    async lockDGT(
+      amount: number,
+      unlockTime?: Date
+    ): Promise<{
       success: boolean;
       vaultId: number;
       message: string;
     }> {
       return fetchJSON(`${API_BASE_URL}/engagement/vault/lock`, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
           amount,
-          unlockTime: unlockTime?.toISOString()
+          unlockTime: unlockTime?.toISOString(),
         }),
       });
     },
@@ -247,10 +309,10 @@ export const api = {
       transactionId?: number;
     }> {
       return fetchJSON(`${API_BASE_URL}/engagement/vault/unlock/${vaultId}`, {
-        method: 'POST'
+        method: "POST",
       });
-    }
-  }
+    },
+  },
 };
 
 export default api;

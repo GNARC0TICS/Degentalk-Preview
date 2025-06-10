@@ -31,7 +31,7 @@
  * @last_reviewed 2025-06-02 by Cline
  * @owner Backend Team (TODO: Confirm owner)
  */
-import './config/loadEnv'; // Ensures environment variables are loaded first
+import "./config/loadEnv"; // Ensures environment variables are loaded first
 
 // All other imports follow
 import express, { type Request, Response, NextFunction } from "express";
@@ -48,12 +48,15 @@ import { createMissingTables } from "../scripts/db/create-missing-tables";
 import { seedCanonicalZones } from "../scripts/db/seed-canonical-zones";
 
 // Startup logging helper
-const startupLog = (message: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
+const startupLog = (
+  message: string,
+  type: "info" | "success" | "error" | "warning" = "info"
+) => {
   const prefix = {
-    info: '🔧',
-    success: '✅',
-    error: '❌',
-    warning: '⚠️'
+    info: "🔧",
+    success: "✅",
+    error: "❌",
+    warning: "⚠️",
   }[type];
   console.log(`[BACKEND] ${prefix} ${message}`);
 };
@@ -95,25 +98,35 @@ app.use((req, res, next) => {
 (async () => {
   try {
     startupLog(`Starting DegenTalk Backend Server...`);
-    startupLog(`Environment: ${process.env.NODE_ENV || 'development'}`);
-    startupLog(`Database: ${process.env.DATABASE_PROVIDER || 'sqlite'} (${process.env.DATABASE_URL || 'db/dev.db'})`);
-    
+    startupLog(`Environment: ${process.env.NODE_ENV || "development"}`);
+    startupLog(
+      `Database: ${process.env.DATABASE_PROVIDER || "sqlite"} (${
+        process.env.DATABASE_URL || "db/dev.db"
+      })`
+    );
+
     // Run Drizzle migrations for PostgreSQL
-    if (process.env.DATABASE_PROVIDER === 'postgresql' || process.env.DATABASE_PROVIDER === 'postgres') {
-      startupLog('Using PostgreSQL - skipping SQLite table creation script');
+    if (
+      process.env.DATABASE_PROVIDER === "postgresql" ||
+      process.env.DATABASE_PROVIDER === "postgres"
+    ) {
+      startupLog("Using PostgreSQL - skipping SQLite table creation script");
     } else {
-      startupLog('Running database migrations...');
+      startupLog("Running database migrations...");
       await createMissingTables();
-      startupLog('Database migrations complete.', 'success');
+      startupLog("Database migrations complete.", "success");
     }
 
-    if (process.env.NODE_ENV === 'development' && process.env.QUICK_MODE !== 'true') {
+    if (
+      process.env.NODE_ENV === "development" &&
+      process.env.QUICK_MODE !== "true"
+    ) {
       // Seed DevUser for development
-      startupLog('Seeding development user...');
+      startupLog("Seeding development user...");
       await seedDevUser();
 
       // Run all other seed scripts in development
-      startupLog('Running seed scripts in development mode...');
+      startupLog("Running seed scripts in development mode...");
       try {
         // await seedForumStructure();
         await seedXpActions();
@@ -121,13 +134,13 @@ app.use((req, res, next) => {
         await seedEconomySettings();
         // Temporarily disable seeding to fix startup issues
         await seedCanonicalZones();
-        startupLog('All seed scripts completed successfully.', 'success');
+        startupLog("All seed scripts completed successfully.", "success");
       } catch (seedError) {
-        startupLog(`Error during seeding: ${seedError}`, 'error');
+        startupLog(`Error during seeding: ${seedError}`, "error");
         // Log the error but continue server startup
       }
-    } else if (process.env.QUICK_MODE === 'true') {
-      startupLog('Quick mode enabled - skipping seed scripts', 'warning');
+    } else if (process.env.QUICK_MODE === "true") {
+      startupLog("Quick mode enabled - skipping seed scripts", "warning");
     }
 
     const server = await registerRoutes(app);
@@ -136,16 +149,16 @@ app.use((req, res, next) => {
       const status = err.status || err.statusCode || 500;
       const message = err.message || "Internal Server Error";
 
-      startupLog(`Express error handler caught: ${err.message}`, 'error');
+      startupLog(`Express error handler caught: ${err.message}`, "error");
       if (err.stack) {
         console.error(err.stack);
       }
-      
+
       res.status(status).json({ message });
     });
 
     // Setup vite or serve static files
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === "production") {
       await serveStatic(app);
     } else {
       await setupVite(app, server);
@@ -154,37 +167,40 @@ app.use((req, res, next) => {
     // Start the server
     const port = process.env.PORT ? parseInt(process.env.PORT) : 5001;
     startupLog(`Starting server on port ${port}...`);
-    
-    server.on('error', (error: any) => {
-      if (error.code === 'EADDRINUSE') {
-        startupLog(`Port ${port} is already in use. Another process might be running on this port.`, 'error');
+
+    server.on("error", (error: any) => {
+      if (error.code === "EADDRINUSE") {
+        startupLog(
+          `Port ${port} is already in use. Another process might be running on this port.`,
+          "error"
+        );
       } else {
-        startupLog(`Server error: ${error}`, 'error');
+        startupLog(`Server error: ${error}`, "error");
       }
       process.exit(1);
     });
 
-    server.on('listening', () => {
-      startupLog(`Backend API running on http://localhost:${port}`, 'success');
-      
+    server.on("listening", () => {
+      startupLog(`Backend API running on http://localhost:${port}`, "success");
+
       // Run scheduled tasks on server start and then every 5 minutes
-      startupLog('Initializing scheduled tasks...');
+      startupLog("Initializing scheduled tasks...");
       runScheduledTasks();
-      
+
       // Set up scheduled tasks to run every 5 minutes
       setInterval(() => {
         runScheduledTasks();
       }, 5 * 60 * 1000);
-      
-      startupLog('Server initialization complete!', 'success');
+
+      startupLog("Server initialization complete!", "success");
     });
-    
+
     server.listen({
       port,
       host: "0.0.0.0",
     });
   } catch (error) {
-    startupLog(`Failed to start server: ${error}`, 'error');
+    startupLog(`Failed to start server: ${error}`, "error");
     process.exit(1);
   }
 })();

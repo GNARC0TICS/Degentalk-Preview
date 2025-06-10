@@ -23,76 +23,92 @@
  */
 import express, { type Express, type Request, type Response } from "express";
 import { createServer, type Server } from "http";
-import { WebSocketServer, WebSocket } from 'ws';
+import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 // Import auth from the new domain location
 import { setupAuthPassport, authRoutes } from "./src/domains/auth";
-import { auditLogs } from '@schema';
+import { auditLogs } from "@schema";
 import { z } from "zod";
-import { registerAdminRoutes } from './src/domains/admin/admin.routes';
+import { registerAdminRoutes } from "./src/domains/admin/admin.routes";
 // Import domain-based wallet routes
-import walletRoutes from './src/domains/wallet/wallet.routes';
-import tipRoutes from './src/domains/engagement/tip/tip.routes';
-import rainRoutes from './src/domains/engagement/rain/rain.routes';
+import walletRoutes from "./src/domains/wallet/wallet.routes";
+import tipRoutes from "./src/domains/engagement/tip/tip.routes";
+import rainRoutes from "./src/domains/engagement/rain/rain.routes";
 // Import domain-based XP routes
-import xpRoutes from './src/domains/xp/xp.routes';
+import xpRoutes from "./src/domains/xp/xp.routes";
 // Import domain-based treasury and shoutbox routes
-import treasuryRoutes from './src/domains/treasury/treasury.routes';
-import shoutboxRoutes from './src/domains/shoutbox/shoutbox.routes';
+import treasuryRoutes from "./src/domains/treasury/treasury.routes";
+import shoutboxRoutes from "./src/domains/shoutbox/shoutbox.routes";
 // Import domain-based forum routes
-import forumRoutes from './src/domains/forum/forum.routes';
+import forumRoutes from "./src/domains/forum/forum.routes";
 // Import domain-based editor routes
-import editorRoutes from './src/domains/editor/editor.routes';
+import editorRoutes from "./src/domains/editor/editor.routes";
 // TODO: @routeDeprecation Investigate settings.routes.ts location or remove if deprecated.
 // import settingsRoutes from './src/domains/settings/settings.routes';
 // Import domain-based profile routes
-import profileRoutes from './src/domains/profile/profile.routes';
+import profileRoutes from "./src/domains/profile/profile.routes";
 // Import domain-based relationships routes
-import relationshipsRoutes from './src/domains/social/relationships.routes';
+import relationshipsRoutes from "./src/domains/social/relationships.routes";
 // Import domain-based messaging routes
-import messageRoutes from './src/domains/messaging/message.routes';
+import messageRoutes from "./src/domains/messaging/message.routes";
 // Import domain-based vault routes
-import vaultRoutes from './src/domains/engagement/vault/vault.routes';
+import vaultRoutes from "./src/domains/engagement/vault/vault.routes";
 // Import domain-based announcement routes
-import { registerAnnouncementRoutes } from './src/domains/admin/sub-domains/announcements';
-import featureGatesRoutes from './src/domains/feature-gates/feature-gates.routes';
+import { registerAnnouncementRoutes } from "./src/domains/admin/sub-domains/announcements";
+import featureGatesRoutes from "./src/domains/feature-gates/feature-gates.routes";
 // Import domain-based preferences routes
-import preferencesRoutes from './src/domains/preferences/preferences.routes';
+import preferencesRoutes from "./src/domains/preferences/preferences.routes";
+// Import domain-based notifications routes
+import notificationsRoutes from "./src/domains/notifications/notification.routes";
 
 // REFACTORED: Using the new centralized error handlers
-import { walletErrorHandler, adminErrorHandler, forumErrorHandler, globalErrorHandler } from "./src/core/errors";
+import {
+  walletErrorHandler,
+  adminErrorHandler,
+  forumErrorHandler,
+  globalErrorHandler,
+} from "./src/core/errors";
 // Legacy route imports (@pending-migration)
 import { registerPathRoutes } from "./src/domains/paths/paths.routes"; // @pending-migration → domains/paths/paths.routes.ts
 // TODO: @routeDeprecation Remove legacy dgt-purchase and ccpayment routes after migration to domain-driven routes is complete.
 import { awardPathXp } from "./utils/path-utils";
 import { xpRewards } from "@shared/path-config";
-import { 
-  getRecentPosts, 
-  getHotThreads, 
-  getFeaturedThreads, 
-  getPlatformStats, 
+import {
+  getRecentPosts,
+  getHotThreads,
+  getFeaturedThreads,
+  getPlatformStats,
   getLeaderboards,
   featureThread,
-  unfeatureThread
-} from './utils/platform-energy';
-import { shopItems, addOGDripColorItem } from './utils/shop-utils';
+  unfeatureThread,
+} from "./utils/platform-energy";
+import { shopItems, addOGDripColorItem } from "./utils/shop-utils";
 import { randomBytes } from "crypto";
 import { db } from "./src/core/db"; // Assuming db is now in src/core/db.ts
 // TODO: @cleanup Remove 'pool' if not used after db migration.
 // import { pool } from "./db";
 import { and, eq, sql } from "drizzle-orm";
 // Import auth middleware from the new domain location
-import { isAuthenticated, isAuthenticatedOptional, isAdminOrModerator, isAdmin } from "./src/domains/auth/middleware/auth.middleware";
+import {
+  isAuthenticated,
+  isAuthenticatedOptional,
+  isAdminOrModerator,
+  isAdmin,
+} from "./src/domains/auth/middleware/auth.middleware";
 import passport from "passport";
 import session from "express-session";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  
+  // Test
+  app.get("/", async (req, res) => {
+    res.json({ message: "Backend working!!!" }).status(200);
+  });
+
   // Add hot threads endpoint BEFORE authentication middleware
-  app.get('/api/hot-threads', async (req, res) => {
+  app.get("/api/hot-threads", async (req, res) => {
     try {
       const limit = parseInt(req.query.limit as string) || 5;
-      
+
       // Return the threads we know are in the database
       const hotThreads = [
         {
@@ -109,7 +125,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           avatar_url: null,
           category_name: "Alpha & Leaks",
           category_slug: "alpha-leaks",
-          like_count: 67
+          like_count: 67,
         },
         {
           thread_id: 27,
@@ -125,7 +141,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           avatar_url: null,
           category_name: "Free Stuff",
           category_slug: "free-stuff",
-          like_count: 156
+          like_count: 156,
         },
         {
           thread_id: 26,
@@ -141,7 +157,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           avatar_url: null,
           category_name: "Beginner's Portal",
           category_slug: "beginners-portal",
-          like_count: 67
+          like_count: 67,
         },
         {
           thread_id: 28,
@@ -157,7 +173,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           avatar_url: null,
           category_name: "Alpha & Leaks",
           category_slug: "alpha-leaks",
-          like_count: 47
+          like_count: 47,
         },
         {
           thread_id: 24,
@@ -173,14 +189,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           avatar_url: null,
           category_name: "Alpha & Leaks",
           category_slug: "alpha-leaks",
-          like_count: 28
-        }
+          like_count: 28,
+        },
       ];
-      
+
       res.json(hotThreads.slice(0, limit));
     } catch (error) {
-      console.error('Error fetching hot threads:', error);
-      res.status(500).json({ error: 'Failed to fetch hot threads' });
+      console.error("Error fetching hot threads:", error);
+      res.status(500).json({ error: "Failed to fetch hot threads" });
     }
   });
 
@@ -190,82 +206,82 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(session(sessionSettings));
   app.use(passport.initialize());
   app.use(passport.session());
-  
+
   // Use the domain-based auth routes
-  app.use('/api', authRoutes);
-  
+  app.use("/api", authRoutes);
+
   // Set up admin routes
   registerAdminRoutes(app);
-  
-  // Set up wallet routes with domain-based approach
-  app.use('/api/wallet', walletRoutes);
-  // Use the centralized wallet error handler
-  app.use('/api/wallet', walletErrorHandler);
-  
-  // Set up tip routes with domain-based approach
-  app.use('/api/engagement/tip', tipRoutes);
-  
-  // Set up rain routes with domain-based approach
-  app.use('/api/engagement/rain', rainRoutes);
-  
-  // Set up XP routes with domain-based approach
-  app.use('/api/xp', xpRoutes);
-  
-  // Set up treasury routes with domain-based approach
-  app.use('/api/treasury', treasuryRoutes);
-  
-  // Set up shoutbox routes with domain-based approach
-  app.use('/api/shoutbox', shoutboxRoutes);
-  app.use('/api/chat', shoutboxRoutes);
-  
-  // Set up forum routes with domain-based approach
-  app.use('/api/forum', forumRoutes);
-  // Use the centralized forum error handler
-  app.use('/api/forum', forumErrorHandler);
-  
 
-  
+  // Set up wallet routes with domain-based approach
+  app.use("/api/wallet", walletRoutes);
+  // Use the centralized wallet error handler
+  app.use("/api/wallet", walletErrorHandler);
+
+  // Set up tip routes with domain-based approach
+  app.use("/api/engagement/tip", tipRoutes);
+
+  // Set up rain routes with domain-based approach
+  app.use("/api/engagement/rain", rainRoutes);
+
+  // Set up XP routes with domain-based approach
+  app.use("/api/xp", xpRoutes);
+
+  // Set up treasury routes with domain-based approach
+  app.use("/api/treasury", treasuryRoutes);
+
+  // Set up shoutbox routes with domain-based approach
+  app.use("/api/shoutbox", shoutboxRoutes);
+  app.use("/api/chat", shoutboxRoutes);
+
+  // Set up forum routes with domain-based approach
+  app.use("/api/forum", forumRoutes);
+  // Use the centralized forum error handler
+  app.use("/api/forum", forumErrorHandler);
+
   // Set up editor routes with domain-based approach
-  app.use('/api/editor', editorRoutes);
+  app.use("/api/editor", editorRoutes);
   // Make storage available to editor routes
-  app.set('storage', storage);
-  
+  app.set("storage", storage);
+
   // Use the domain-based preferences routes
-  app.use('/api/users', preferencesRoutes);
+  app.use("/api/users", preferencesRoutes);
+  // Use the domain-based notificcations routes
+  app.use("/api/notifications", notificationsRoutes);
   // Use the centralized admin error handler
-  app.use('/api/admin', adminErrorHandler);
-  
+  app.use("/api/admin", adminErrorHandler);
+
   // Set up profile routes with domain-based approach
-  app.use('/api/profile', profileRoutes);
-  
+  app.use("/api/profile", profileRoutes);
+
   // Set up relationships routes with domain-based approach
-  app.use('/api/relationships', relationshipsRoutes);
-  
+  app.use("/api/relationships", relationshipsRoutes);
+
   // Set up messaging routes with domain-based approach
-  app.use('/api/messages', messageRoutes);
-  
+  app.use("/api/messages", messageRoutes);
+
   // Set up vault routes with domain-based approach
-  app.use('/api/vault', vaultRoutes);
-  
+  app.use("/api/vault", vaultRoutes);
+
   // Set up CCPayment routes
   // TODO: @routeDeprecation Remove legacy ccpayment routes after migration to domain-driven routes is complete.
   // app.use('/api/ccpayment', ccpaymentRoutes); // @pending-migration
-  
+
   // Set up announcement routes with domain-based approach
   registerAnnouncementRoutes(app); // Migrated to domains/admin/sub-domains/announcements
-  
+
   // Set up feature gate routes
-  app.use('/api/features', featureGatesRoutes);
-  
+  app.use("/api/features", featureGatesRoutes);
+
   // Set up path specialization routes
   registerPathRoutes(app); // @pending-migration
-  
+
   // Set up DGT purchase routes
   const dgtPurchaseRouter = express.Router();
   // TODO: @routeDeprecation Remove legacy dgt-purchase routes after migration to domain-driven routes is complete.
   // registerDgtPurchaseRoutes(dgtPurchaseRouter); // @pending-migration
-  app.use('/api', dgtPurchaseRouter);
-  
+  app.use("/api", dgtPurchaseRouter);
+
   // Removed legacy route registrations:
   // - registerSettingsRoutes(app) -> Migrated to domains/settings/settings.routes.ts
   // - registerEditorRoutes(app) -> Migrated to domains/editor/editor.routes.ts
@@ -276,52 +292,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // - registerForumRulesRoutes(app) -> Migrated to domains/forum/rules/rules.routes.ts
   // - setupAuth(app) -> Migrated to domains/auth/auth.routes.ts
   // - registerAnnouncementRoutes(app) -> Migrated to domains/admin/sub-domains/announcements
-  
+
   // Register the global error handler as the final middleware
   app.use(globalErrorHandler);
 
   const httpServer = createServer(app);
-  
+
   // Check if we're in development mode
-  const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
-  
+  const IS_DEVELOPMENT = process.env.NODE_ENV !== "production";
+
   // Default empty clients set
   const clients = new Set<WebSocket>();
-  
+
   // WebSocket server setup - only in production
   if (!IS_DEVELOPMENT) {
-    console.log('🚀 Setting up WebSocket server in production mode');
-    
+    console.log("🚀 Setting up WebSocket server in production mode");
+
     // Set up WebSocket server on the same HTTP server but with a distinct path
-    const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
-    
+    const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
+
     // Handle WebSocket connections
-    wss.on('connection', (ws) => {
-      console.log('WebSocket client connected');
+    wss.on("connection", (ws) => {
+      console.log("WebSocket client connected");
       clients.add(ws);
-      
+
       // Send initial message
-      ws.send(JSON.stringify({ type: 'connected', message: 'Connected to DegenTalk WebSocket' }));
-      
+      ws.send(
+        JSON.stringify({
+          type: "connected",
+          message: "Connected to DegenTalk WebSocket",
+        })
+      );
+
       // Handle incoming messages
-      ws.on('message', (message) => {
+      ws.on("message", (message) => {
         try {
-          console.log('Received message:', message.toString());
+          console.log("Received message:", message.toString());
           const data = JSON.parse(message.toString());
-          
+
           // Process different message types
-          if (data.type === 'chat_message') {
+          if (data.type === "chat_message") {
             // Broadcast chat message to all connected clients
             // This is just the broadcast mechanism
             // Actual database persistence is handled by the HTTP API
             const broadcastData = {
-              type: 'chat_update',
-              action: 'new_message',
+              type: "chat_update",
+              action: "new_message",
               message: data.message,
               roomId: data.roomId,
-              timestamp: new Date().toISOString()
+              timestamp: new Date().toISOString(),
             };
-            
+
             // Broadcast to all connected clients
             for (const client of clients) {
               if (client.readyState === WebSocket.OPEN) {
@@ -329,15 +350,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
               }
             }
           }
-          
+
           // Handle room change events to notify other users
-          if (data.type === 'room_change') {
+          if (data.type === "room_change") {
             const broadcastData = {
-              type: 'room_update',
+              type: "room_update",
               roomId: data.roomId,
-              timestamp: new Date().toISOString()
+              timestamp: new Date().toISOString(),
             };
-            
+
             // Broadcast room change to all connected clients
             for (const client of clients) {
               if (client.readyState === WebSocket.OPEN) {
@@ -346,24 +367,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           }
         } catch (error) {
-          console.error('Error processing WebSocket message:', error);
+          console.error("Error processing WebSocket message:", error);
         }
       });
-      
+
       // Handle disconnection
-      ws.on('close', () => {
-        console.log('WebSocket client disconnected');
+      ws.on("close", () => {
+        console.log("WebSocket client disconnected");
         clients.delete(ws);
       });
     });
   } else {
     // In development mode, log that WebSocket is disabled
-    console.log('⚠️ WebSocket server is DISABLED in development mode to prevent connection errors');
+    console.log(
+      "⚠️ WebSocket server is DISABLED in development mode to prevent connection errors"
+    );
   }
-  
+
   // Export the WebSocket clients set so other routes can access it
   // Even in development mode, we provide an empty set for compatibility
   (app as any).wss = { clients };
-  
+
   return httpServer;
 }
