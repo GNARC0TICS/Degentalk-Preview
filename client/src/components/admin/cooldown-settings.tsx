@@ -17,6 +17,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, AlertCircle, Save, CloudRain, Gift } from 'lucide-react';
+import { economyConfig } from '@/config/economy.config.ts';
+import { rolesConfig } from '@/config/roles.config.ts';
 
 interface CooldownSettings {
 	tipCooldownSeconds: number;
@@ -43,6 +45,7 @@ export function CooldownSettings() {
 		}
 	});
 
+<<<<<<< HEAD
 	// Form state
 	const [formData, setFormData] = React.useState<CooldownSettings>({
 		tipCooldownSeconds: 10,
@@ -50,6 +53,15 @@ export function CooldownSettings() {
 		moderatorBypassCooldown: true,
 		adminBypassCooldown: true
 	});
+=======
+  // Form state
+  const [formData, setFormData] = React.useState<CooldownSettings>({
+    tipCooldownSeconds: economyConfig.tipRain.tip.cooldownSeconds,
+    rainCooldownSeconds: economyConfig.tipRain.rain.cooldownSeconds,
+    moderatorBypassCooldown: rolesConfig.roles.mod?.bypassCooldowns || false,
+    adminBypassCooldown: rolesConfig.roles.admin?.bypassCooldowns || false,
+  });
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	// Update form when data loads
 	React.useEffect(() => {
@@ -178,8 +190,37 @@ export function CooldownSettings() {
 
 					<Separator className="my-4 bg-zinc-800" />
 
+<<<<<<< HEAD
 					<div className="space-y-4">
 						<h3 className="text-lg font-medium">Bypass Settings</h3>
+=======
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Bypass Settings</h3>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="mod-bypass"
+                checked={formData.moderatorBypassCooldown}
+                onChange={(e) => handleChange('moderatorBypassCooldown', e.target.checked)}
+                className="rounded border-zinc-700 bg-zinc-900 text-emerald-500 focus:ring-emerald-500"
+              />
+              <Label htmlFor="mod-bypass">Moderators bypass cooldowns</Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="admin-bypass"
+                checked={formData.adminBypassCooldown}
+                onChange={(e) => handleChange('adminBypassCooldown', e.target.checked)}
+                className="rounded border-zinc-700 bg-zinc-900 text-emerald-500 focus:ring-emerald-500"
+              />
+              <Label htmlFor="admin-bypass">Admins bypass cooldowns</Label>
+            </div>
+          </div>
+        </CardContent>
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 						<div className="flex items-center space-x-2">
 							<input

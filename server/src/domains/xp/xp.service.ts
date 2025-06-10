@@ -1,8 +1,14 @@
 /**
+<<<<<<< HEAD
  * Core XP Service
  *
  * Central service for managing user XP, levels, and related functionality.
  * This service is used by both admin and public-facing features.
+=======
+ * XP Service for Degentalk™
+ *
+ * Handles XP actions, awards, and level calculations for users.
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
  */
 
 import { users, levels, titles, badges, userBadges, userTitles, xpAdjustmentLogs } from '@schema';
@@ -14,6 +20,7 @@ import { getXpAction, XP_ACTION } from './xp-actions';
 import { LevelUpEvent, XpGainEvent, XpLossEvent } from './xp.events';
 import { xpActionLogs, xpActionLimits } from './xp-actions-schema';
 // Import the centralized event handlers
+<<<<<<< HEAD
 import { handleXpAward, handleXpLoss, handleLevelUp } from './events/xp.events';
 
 export class XpService {
@@ -39,6 +46,37 @@ export class XpService {
 		} = {}
 	) {
 		logger.info('Updating user XP', { userId, amount, adjustmentType, options });
+=======
+import {
+  handleXpAward,
+  handleXpLoss,
+  handleLevelUp
+} from './events/xp.events';
+
+export class XpService {
+  /**
+   * Update a user's XP and handle level recalculation
+   * 
+   * @param userId - User ID to update
+   * @param amount - Amount to add, subtract, or set
+   * @param adjustmentType - How to modify XP ('add', 'subtract', or 'set')
+   * @param options - Additional options
+   * @returns Object with old and new XP values and level information
+   */
+  async updateUserXp(
+    userId: number,
+    amount: number,
+    adjustmentType: 'add' | 'subtract' | 'set' = 'add',
+    options: {
+      reason?: string;
+      adminId?: number;
+      logAdjustment?: boolean;
+      skipLevelCheck?: boolean;
+      skipTriggers?: boolean;
+    } = {}
+  ) {
+    logger.info('Updating user XP', { userId, amount, adjustmentType, options });
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 		const {
 			reason = 'System adjustment',
@@ -48,6 +86,7 @@ export class XpService {
 			skipTriggers = false
 		} = options;
 
+<<<<<<< HEAD
 		// Use the dedicated handlers based on adjustment type
 		try {
 			let result;
@@ -80,6 +119,135 @@ export class XpService {
 
 					const user = userArray[0];
 					const oldXp = user.xp;
+=======
+    // Use the dedicated handlers based on adjustment type
+    try {
+      let result;
+
+      switch (adjustmentType) {
+        case 'add':
+          // Use handleXpAward for 'add' operations
+          result = await handleXpAward(userId, amount, 'ADMIN_ADJUSTMENT', reason);
+          break;
+        case 'subtract':
+          // Use handleXpLoss for 'subtract' operations
+          result = await handleXpLoss(userId, amount, reason);
+          break;
+        case 'set':
+          // For 'set' operations, we need to:
+          // 1. Get current XP
+          const userArray = await db
+            .select({
+              id: users.id,
+              xp: users.xp,
+              level: users.level
+            })
+            .from(users)
+            .where(eq(users.id, userId))
+            .limit(1);
+
+          if (userArray.length === 0) {
+            throw new Error(`User with ID ${userId} not found.`);
+          }
+
+          const user = userArray[0];
+          const oldXp = user.xp;
+
+          // 2. Determine if we should add or subtract
+          if (amount > oldXp) {
+            const addAmount = amount - oldXp;
+            result = await handleXpAward(userId, addAmount, 'ADMIN_ADJUSTMENT', `Set to ${amount}`);
+          } else if (amount < oldXp) {
+            const subtractAmount = oldXp - amount;
+            result = await handleXpLoss(userId, subtractAmount, `Set to ${amount}`);
+          } else {
+            // No change needed
+            result = {
+              oldXp,
+              newXp: oldXp,
+              oldLevel: user.level,
+              newLevel: user.level,
+              leveledUp: false,
+              levelChanged: false
+            };
+          }
+          break;
+        default:
+          throw new Error(`Invalid adjustment type: ${adjustmentType}`);
+      }
+
+      // If we have an admin ID and need to log separately
+      if (logAdjustment && adminId) {
+        await this.logXpAdjustment(
+          userId,
+          adminId,
+          adjustmentType,
+          amount,
+          reason,
+          result.oldXp,
+          result.newXp
+        );
+      }
+
+      return {
+        userId,
+        oldXp: result.oldXp,
+        newXp: result.newXp,
+        xpChange: result.newXp - result.oldXp,
+        oldLevel: result.oldLevel,
+        newLevel: result.newLevel,
+        levelChanged: result.leveledUp
+      };
+    } catch (error) {
+      logger.error('XP_SERVICE', 'Error in updateUserXp:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Log an XP adjustment for auditing purposes
+   */
+  private async logXpAdjustment(
+    userId: number,
+    adminId: number,
+    adjustmentType: string,
+    amount: number,
+    reason: string,
+    oldXp: number,
+    newXp: number
+  ) {
+    try {
+      await db.insert(xpAdjustmentLogs).values({
+        userId,
+        adminId,
+        adjustmentType,
+        amount,
+        reason,
+        oldXp,
+        newXp,
+        createdAt: new Date()
+      });
+
+      logger.info('XP_SERVICE', 'XP adjustment logged successfully', { userId, adminId, adjustmentType, amount });
+    } catch (error) {
+      logger.error('XP_SERVICE', 'Error logging XP adjustment:', error);
+      // Don't throw - just log the error and continue
+    }
+  }
+
+  /**
+   * Get level information for a specific level
+   */
+  async getLevel(levelNumber: number) {
+    const levelData = await db
+      .select()
+      .from(levels)
+      .where(eq(levels.level, levelNumber))
+      .limit(1);
+
+    return levelData[0] || null;
+  }
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 					// 2. Determine if we should add or subtract
 					if (amount > oldXp) {
@@ -117,6 +285,7 @@ export class XpService {
 				);
 			}
 
+<<<<<<< HEAD
 			return {
 				userId,
 				oldXp: result.oldXp,
@@ -167,6 +336,66 @@ export class XpService {
 			// Don't throw - just log the error and continue
 		}
 	}
+=======
+    if (userArray.length === 0) {
+      throw new Error(`User with ID ${userId} not found.`);
+    }
+
+    const user = userArray[0];
+
+    // Get current level details
+    const currentLevelData = await this.getLevel(user.level);
+
+    // Get next level details
+    const nextLevelData = await db
+      .select()
+      .from(levels)
+      .where(gt(levels.level, user.level))
+      .orderBy(asc(levels.level))
+      .limit(1);
+
+    const nextLevel = nextLevelData.length > 0 ? nextLevelData[0] : null;
+
+    // Calculate XP needed for next level
+    const xpForNextLevel = nextLevel ? nextLevel.minXp - user.xp : 0;
+
+    return {
+      userId: user.id,
+      username: user.username,
+      currentXp: user.xp,
+      currentLevel: user.level,
+      currentLevelData,
+      nextLevel: nextLevel?.level || null,
+      nextLevelData: nextLevel || null,
+      xpForNextLevel,
+      progress: nextLevel ? (user.xp - currentLevelData.minXp) / (nextLevel.minXp - currentLevelData.minXp) : 1
+    };
+  }
+
+  /**
+   * Award XP to a user for completing an action
+   * 
+   * @param userId User ID to award XP to
+   * @param action The action that grants XP
+   * @param metadata Optional metadata about the action
+   * @returns Result of the XP update operation
+   */
+  async awardXp(userId: number, action: XP_ACTION, metadata?: any) {
+    try {
+      const canReceive = await this.checkActionLimits(userId, action);
+
+      if (!canReceive) {
+        logger.info('XP_SERVICE', `XP not awarded due to limits: ${action}`, { userId, action });
+        return; // Do not award XP if limits are hit
+      }
+
+      const actionConfig = await getXpAction(action);
+
+      if (!actionConfig || !actionConfig.enabled) {
+        logger.warn('XP_SERVICE', `Unknown or disabled XP action attempted: ${action}`, { userId, action });
+        return; // Do not award for unknown or disabled actions
+      }
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	/**
 	 * Get level information for a specific level
@@ -174,6 +403,7 @@ export class XpService {
 	async getLevel(levelNumber: number) {
 		const levelData = await db.select().from(levels).where(eq(levels.level, levelNumber)).limit(1);
 
+<<<<<<< HEAD
 		return levelData[0] || null;
 	}
 
@@ -183,6 +413,27 @@ export class XpService {
 	async getAllLevels() {
 		return db.select().from(levels).orderBy(asc(levels.level));
 	}
+=======
+      // Update user XP
+      const result = await this.updateUserXp(
+        userId,
+        actionConfig.baseValue,
+        'add',
+        { reason: `Action: ${action}`, skipLevelCheck: false, skipTriggers: false }
+      );
+
+      // Update action limits after successful award
+      await this.updateActionLimits(userId, action);
+
+      logger.info('XP_SERVICE', `Awarding XP for action: ${action}`, { userId, action, xpAmount: actionConfig.baseValue, metadata });
+
+      return result;
+    } catch (error) {
+      logger.error('XP_SERVICE', `Error awarding XP for action ${action}:`, error);
+      throw error;
+    }
+  }
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	/**
 	 * Get user XP information
@@ -208,6 +459,7 @@ export class XpService {
 		// Get current level details
 		const currentLevelData = await this.getLevel(user.level);
 
+<<<<<<< HEAD
 		// Get next level details
 		const nextLevelData = await db
 			.select()
@@ -215,6 +467,22 @@ export class XpService {
 			.where(gt(levels.level, user.level))
 			.orderBy(asc(levels.level))
 			.limit(1);
+=======
+        const [dailyCountResult] = await db.select({ count: count() })
+          .from(xpActionLogs)
+          .where(and(
+            eq(xpActionLogs.userId, userId),
+            eq(xpActionLogs.action, action),
+            gte(xpActionLogs.createdAt, startOfDay),
+            lt(xpActionLogs.createdAt, endOfDay)
+          ));
+
+        if (dailyCountResult && dailyCountResult.count >= actionConfig.maxPerDay) {
+          logger.warn('XP_SERVICE', `Daily limit reached for XP action ${action} for user ${userId}`);
+          return false; // Daily limit reached
+        }
+      }
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 		const nextLevel = nextLevelData.length > 0 ? nextLevelData[0] : null;
 
@@ -248,10 +516,37 @@ export class XpService {
 		try {
 			const canReceive = await this.checkActionLimits(userId, action);
 
+<<<<<<< HEAD
 			if (!canReceive) {
 				logger.info('XP_SERVICE', `XP not awarded due to limits: ${action}`, { userId, action });
 				return; // Do not award XP if limits are hit
 			}
+=======
+  /**
+   * Log an XP action for auditing and limit tracking
+   */
+  private async logXpAction(
+    userId: number,
+    action: XP_ACTION,
+    amount: number,
+    metadata?: any
+  ): Promise<void> {
+    try {
+      await db.insert(xpActionLogs).values({
+        userId,
+        action,
+        amount,
+        metadata,
+        createdAt: new Date()
+      });
+
+      logger.info('XP_SERVICE', `XP Action Logged: ${action}`, { userId, action, amount });
+    } catch (error) {
+      logger.error('XP_SERVICE', 'Error logging XP action:', error);
+      // Don't throw - just log the error and continue
+    }
+  }
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 			const actionConfig = await getXpAction(action);
 
@@ -263,8 +558,21 @@ export class XpService {
 				return; // Do not award for unknown or disabled actions
 			}
 
+<<<<<<< HEAD
 			// Log the action
 			await this.logXpAction(userId, action, actionConfig.baseValue, metadata);
+=======
+      const now = new Date();
+      let dailyCount = 0;
+      let timeSinceLastAward = -1; // Use -1 to indicate no previous award
+      let onCooldown = false;
+      let cooldownRemaining = 0;
+
+      // Check daily count
+      if (actionConfig.maxPerDay !== undefined) {
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 			// Update user XP
 			const result = await this.updateUserXp(userId, actionConfig.baseValue, 'add', {
@@ -283,6 +591,7 @@ export class XpService {
 				metadata
 			});
 
+<<<<<<< HEAD
 			return result;
 		} catch (error) {
 			logger.error('XP_SERVICE', `Error awarding XP for action ${action}:`, error);
@@ -489,6 +798,29 @@ export class XpService {
 			return null; // Return null on error
 		}
 	}
+=======
+        if (lastAction) {
+          timeSinceLastAward = (now.getTime() - new Date(lastAction.createdAt).getTime()) / 1000;
+          onCooldown = timeSinceLastAward < actionConfig.cooldownSeconds;
+          cooldownRemaining = onCooldown ? Math.ceil(actionConfig.cooldownSeconds - timeSinceLastAward) : 0;
+        }
+      }
+
+      return {
+        dailyLimit: actionConfig.maxPerDay || null,
+        dailyCount,
+        isOnCooldown: onCooldown,
+        cooldownSeconds: actionConfig.cooldownSeconds || null,
+        cooldownRemaining,
+        timeSinceLastAward: timeSinceLastAward >= 0 ? timeSinceLastAward : null,
+        canReceive: !onCooldown && (actionConfig.maxPerDay === undefined || dailyCount < actionConfig.maxPerDay)
+      };
+    } catch (error) {
+      logger.error('XP_SERVICE', `Error getting action limits for user ${userId} action ${action}:`, error);
+      return null; // Return null on error
+    }
+  }
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }
 
 export const xpService = new XpService();

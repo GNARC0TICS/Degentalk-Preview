@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Send } from 'lucide-react';
+import { economyConfig, AirdroppableToken } from '@/config/economy.config.ts'; // [CONFIG-REFAC]
 
 // Types
 interface UserGroup {
@@ -32,6 +33,7 @@ interface UserGroup {
 }
 
 interface AirdropPayload {
+<<<<<<< HEAD
 	tokenType: 'XP' | 'DGT';
 	amount: number;
 	targetCriteria: {
@@ -47,6 +49,25 @@ const AdminAirdropPage: React.FC = () => {
 	const [amount, setAmount] = useState<number>(0);
 	const [targetGroupId, setTargetGroupId] = useState<string>(''); // Store as string for Select component
 	const [note, setNote] = useState<string>('');
+=======
+  tokenType: string; // [CONFIG-REFAC] Changed to string to store key from config
+  amount: number;
+  targetCriteria: {
+    type: 'group' | 'userIds' | 'role'; // Extend as needed
+    value: number | number[]; // Group ID or array of User IDs or Role ID
+  };
+  note?: string;
+}
+
+const AdminAirdropPage: React.FC = () => {
+  const { toast } = useToast();
+  // [CONFIG-REFAC] Default to the key of the first airdroppable token
+  const defaultTokenTypeKey = Object.keys(economyConfig.airdroppableTokens)[0] || 'xp';
+  const [tokenType, setTokenType] = useState<string>(defaultTokenTypeKey); // [CONFIG-REFAC]
+  const [amount, setAmount] = useState<number>(0);
+  const [targetGroupId, setTargetGroupId] = useState<string>(''); // Store as string for Select component
+  const [note, setNote] = useState<string>('');
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	// Fetch user groups for the dropdown
 	const { data: userGroups, isLoading: isLoadingGroups } = useQuery<UserGroup[]>({
@@ -54,6 +75,7 @@ const AdminAirdropPage: React.FC = () => {
 		queryFn: async () => apiRequest('/api/admin/users/groups') // TODO: Verify this API endpoint exists
 	});
 
+<<<<<<< HEAD
 	// Mutation for submitting the airdrop
 	const airdropMutation = useMutation({
 		mutationFn: async (payload: AirdropPayload) => {
@@ -82,6 +104,37 @@ const AdminAirdropPage: React.FC = () => {
 			});
 		}
 	});
+=======
+  // Mutation for submitting the airdrop
+  const airdropMutation = useMutation({
+    mutationFn: async (payload: AirdropPayload) => {
+      // TODO: Implement the actual API call to /api/admin/airdrop
+      return apiRequest('/api/admin/airdrop', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+    },
+    onSuccess: (data) => {
+      toast({
+        title: 'Airdrop Successful',
+        description: data?.message || 'The airdrop has been processed.',
+      });
+      // Optionally reset form or refetch related data
+      setAmount(0);
+      setTargetGroupId('');
+      setNote('');
+      setTokenType(defaultTokenTypeKey); // [CONFIG-REFAC] Reset to default config key
+      queryClient.invalidateQueries({ queryKey: ['adminAirdropHistory'] }); // TODO: For future history table
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Airdrop Failed',
+        description: error?.message || 'An unexpected error occurred.',
+        variant: 'destructive',
+      });
+    },
+  });
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -94,6 +147,7 @@ const AdminAirdropPage: React.FC = () => {
 			return;
 		}
 
+<<<<<<< HEAD
 		const payload: AirdropPayload = {
 			tokenType,
 			amount,
@@ -145,6 +199,62 @@ const AdminAirdropPage: React.FC = () => {
 									/>
 								</div>
 							</div>
+=======
+    const payload: AirdropPayload = {
+      tokenType, // This is now the key, e.g., 'xp' or 'dgt'
+      amount,
+      targetCriteria: {
+        type: 'group',
+        value: parseInt(targetGroupId, 10),
+      },
+      note,
+    };
+    airdropMutation.mutate(payload);
+  };
+
+  return (
+    <AdminLayout>
+      <div className="container mx-auto py-8 px-4 md:px-6">
+        <Card className="max-w-2xl mx-auto bg-black/40 backdrop-blur-sm border border-white/10 shadow-xl">
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold">Admin Airdrop</CardTitle>
+            <CardDescription>
+              Distribute XP or DGT to users based on groups.
+            </CardDescription>
+          </CardHeader>
+          <form onSubmit={handleSubmit}>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label htmlFor="tokenType">Token Type</Label>
+                  <Select onValueChange={(value) => setTokenType(value)} defaultValue={tokenType}>
+                    <SelectTrigger id="tokenType" className="mt-1">
+                      <SelectValue placeholder="Select token type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {/* [CONFIG-REFAC] Dynamically generate token type options */}
+                      {Object.values(economyConfig.airdroppableTokens).map((token: AirdroppableToken) => (
+                        <SelectItem key={token.key} value={token.key}>
+                          {token.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="amount">Amount</Label>
+                  <Input
+                    id="amount"
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(Math.max(0, parseInt(e.target.value, 10) || 0))}
+                    placeholder="e.g., 100"
+                    className="mt-1"
+                    min="1"
+                  />
+                </div>
+              </div>
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 							<div>
 								<Label htmlFor="targetGroup">Target Group</Label>

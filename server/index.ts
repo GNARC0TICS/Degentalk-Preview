@@ -1,6 +1,6 @@
 /**
  * @file server/index.ts
- * @description Main entry point for the Degentalk backend server.
+ * @description Main entry point for the Degentalk™ backend server.
  *
  * @purpose Initializes and starts the Express application, sets up middleware,
  *          registers API routes, handles database migrations/seeding (in dev),
@@ -93,6 +93,7 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+<<<<<<< HEAD
 	try {
 		startupLog(`Starting DegenTalk Backend Server...`);
 		startupLog(`Environment: ${process.env.NODE_ENV || 'development'}`);
@@ -101,6 +102,21 @@ app.use((req, res, next) => {
 				process.env.DATABASE_URL || 'db/dev.db'
 			})`
 		);
+=======
+  try {
+    startupLog(`Starting Degentalk™™ Backend Server...`);
+    startupLog(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    startupLog(`Database: ${process.env.DATABASE_PROVIDER || 'sqlite'} (${process.env.DATABASE_URL || 'db/dev.db'})`);
+
+    // Run Drizzle migrations for PostgreSQL
+    if (process.env.DATABASE_PROVIDER === 'postgresql' || process.env.DATABASE_PROVIDER === 'postgres') {
+      startupLog('Using PostgreSQL - skipping SQLite table creation script');
+    } else {
+      startupLog('Running database migrations...');
+      await createMissingTables();
+      startupLog('Database migrations complete.', 'success');
+    }
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 		// Run Drizzle migrations for PostgreSQL
 		if (
@@ -139,15 +155,26 @@ app.use((req, res, next) => {
 
 		const server = await registerRoutes(app);
 
+<<<<<<< HEAD
 		app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 			const status = err.status || err.statusCode || 500;
 			const message = err.message || 'Internal Server Error';
+=======
+      startupLog(`Express error handler caught: ${err.message}`, 'error');
+      if (err.stack) {
+        console.error(err.stack);
+      }
+
+      res.status(status).json({ message });
+    });
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 			startupLog(`Express error handler caught: ${err.message}`, 'error');
 			if (err.stack) {
 				console.error(err.stack);
 			}
 
+<<<<<<< HEAD
 			res.status(status).json({ message });
 		});
 
@@ -200,4 +227,49 @@ app.use((req, res, next) => {
 		startupLog(`Failed to start server: ${error}`, 'error');
 		process.exit(1);
 	}
+=======
+    // Start the server
+    const port = process.env.PORT ? parseInt(process.env.PORT) : 5001;
+    startupLog(`Starting server on port ${port}...`);
+
+    server.on('error', (error: any) => {
+      if (error.code === 'EADDRINUSE') {
+        startupLog(`Port ${port} is already in use. Another process might be running on this port.`, 'error');
+      } else {
+        startupLog(`Server error: ${error}`, 'error');
+      }
+      process.exit(1);
+    });
+
+    server.on('listening', () => {
+      startupLog(`Backend API running on http://localhost:${port}`, 'success');
+
+      // Run scheduled tasks on server start and then every 5 minutes
+      startupLog('Initializing scheduled tasks...');
+      runScheduledTasks();
+
+      // Set up scheduled tasks to run every 5 minutes
+      setInterval(() => {
+        runScheduledTasks();
+      }, 5 * 60 * 1000);
+
+      startupLog('Server initialization complete!', 'success');
+    });
+
+    server.listen({
+      port,
+      host: "0.0.0.0",
+    });
+  } catch (error) {
+    startupLog(`Failed to start server: ${error}`, 'error');
+    process.exit(1);
+  }
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 })();
+
+/**
+ * Degentalk™ Main Server Entry
+ *
+ * This is the main entry point for the Express backend server.
+ * Loads environment, sets up app, and starts listening.
+ */

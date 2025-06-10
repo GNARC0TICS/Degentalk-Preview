@@ -28,6 +28,7 @@ export interface ForumCategoryWithStats extends ForumCategory {
 
 // User plugin data structure
 export interface UserPluginData {
+<<<<<<< HEAD
 	// Paths XP and multipliers
 	paths?: Record<string, number>;
 	pathMultipliers?: Record<string, number>;
@@ -37,6 +38,19 @@ export interface UserPluginData {
 
 	// Other plugin data as needed for future extensions
 	[key: string]: any;
+=======
+  // Paths XP and multipliers
+  paths?: Record<string, number>;
+  pathMultipliers?: Record<string, number>;
+
+  // Emoji and sticker unlocks
+  unlockedEmojis?: string[]; // Array of unlocked emoji IDs (now strings to match config)
+  unlockedStickers?: string[]; // Array of unlocked sticker IDs
+  equippedFlairEmoji?: string; // Currently equipped flair emoji ID
+
+  // Other plugin data as needed for future extensions
+  [key: string]: any;
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }
 
 // Type for editor content with rich text

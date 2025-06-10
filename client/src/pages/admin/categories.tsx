@@ -69,6 +69,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Badge } from '@/components/ui/badge';
 import { useLocation } from 'wouter'; // Fixed import for useLocation
+import AdminLayout from "./admin-layout.tsx";
 // Remove Next.js Head component since we're not using Next.js
 
 const categorySchema = z.object({
@@ -119,6 +120,7 @@ export default function AdminCategoriesPage() {
 		}
 	});
 
+<<<<<<< HEAD
 	const {
 		data: categories,
 		isLoading,
@@ -133,6 +135,22 @@ export default function AdminCategoriesPage() {
 			return response.json();
 		}
 	});
+=======
+  const {
+    data: categories,
+    isLoading,
+    isError
+  } = useQuery({
+    queryKey: ['/admin/forum/categories'],
+    queryFn: async () => {
+      const response = await fetch('/admin/forum/categories');
+      if (!response.ok) {
+        throw new Error('Failed to fetch categories');
+      }
+      return response.json();
+    }
+  });
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	const createCategoryMutation = useMutation({
 		mutationFn: async (data: z.infer<typeof categorySchema>) => {
@@ -329,6 +347,7 @@ export default function AdminCategoriesPage() {
 
 	const organizedCategories = filterAndOrganizeCategories(categories, searchQuery);
 
+<<<<<<< HEAD
 	const renderCategoryRow = (category: Category, depth: number = 0) => {
 		return (
 			<TableRow key={category.id}>
@@ -423,6 +442,112 @@ export default function AdminCategoriesPage() {
 					Create Category
 				</Button>
 			</div>
+=======
+  const renderCategoryRow = (category: Category, depth: number = 0) => {
+    return (
+      <TableRow key={category.id}> {/* Added key prop here */}
+        <TableCell>
+          <div
+            className="flex items-center"
+            style={{ paddingLeft: `${depth * 1.5}rem` }}
+          >
+            {category.icon && (
+              <span className="mr-2">{category.icon}</span>
+            )}
+            <span className="font-medium">{category.name}</span>
+          </div>
+        </TableCell>
+        <TableCell className="hidden md:table-cell">
+          <div className="truncate max-w-[200px]">
+            {category.description || "—"}
+          </div>
+        </TableCell>
+        <TableCell>
+          <code className="text-xs bg-muted px-1 py-0.5 rounded">
+            {category.slug}
+          </code>
+        </TableCell>
+        <TableCell className="text-center">
+          <Badge variant="outline">{category.threadCount || 0}</Badge>
+        </TableCell>
+        <TableCell className="text-center">
+          {category.isVisible ? (
+            <Eye className="h-4 w-4 text-green-500 mx-auto" />
+          ) : (
+            <EyeOff className="h-4 w-4 text-red-500 mx-auto" />
+          )}
+        </TableCell>
+        <TableCell className="text-right">
+          <div className="flex justify-end items-center space-x-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleReorderCategory(category.id, 'up')}
+              disabled={reorderCategoryMutation.isPending}
+            >
+              <MoveUp className="h-4 w-4" />
+              <span className="sr-only">Move Up</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleReorderCategory(category.id, 'down')}
+              disabled={reorderCategoryMutation.isPending}
+            >
+              <MoveDown className="h-4 w-4" />
+              <span className="sr-only">Move Down</span>
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <MoreHorizontal className="h-4 w-4" />
+                  <span className="sr-only">Actions</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem
+                  onClick={() => handleEditCategory(category)}
+                >
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Edit Category
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setIsDeleteDialogOpen(true);
+                  }}
+                  className="text-red-600"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete Category
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => window.open(`/categories/${category.slug}`, '_blank')}
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  View Category
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </TableCell>
+      </TableRow>
+    );
+  };
+
+  return (
+    <AdminLayout>
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+          <h1 className="text-3xl font-bold">Forum Categories</h1>
+          <Button onClick={handleOpenCreateDialog}>
+            <Plus className="h-4 w-4 mr-2" />
+            Create Category
+          </Button>
+        </div>
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 			<Card>
 				<CardHeader>
@@ -523,6 +648,7 @@ export default function AdminCategoriesPage() {
 								)}
 							/>
 
+<<<<<<< HEAD
 							<FormField
 								control={form.control}
 								name="description"
@@ -541,6 +667,28 @@ export default function AdminCategoriesPage() {
 									</FormItem>
 								)}
 							/>
+=======
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Discuss general topics related to the community"
+                          {...field}
+                          rows={3}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        A brief description of the category
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 								<FormField
@@ -590,6 +738,7 @@ export default function AdminCategoriesPage() {
 								/>
 							</div>
 
+<<<<<<< HEAD
 							<FormField
 								control={form.control}
 								name="position"
@@ -610,6 +759,30 @@ export default function AdminCategoriesPage() {
 									</FormItem>
 								)}
 							/>
+=======
+                <FormField
+                  control={form.control}
+                  name="position"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Display Order</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="0"
+                          {...field}
+                          onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Categories with lower numbers appear first
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 							<FormField
 								control={form.control}
@@ -628,6 +801,7 @@ export default function AdminCategoriesPage() {
 								)}
 							/>
 
+<<<<<<< HEAD
 							<DialogFooter>
 								<Button
 									type="button"
@@ -644,6 +818,24 @@ export default function AdminCategoriesPage() {
 					</Form>
 				</DialogContent>
 			</Dialog>
+=======
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsCreateDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={createCategoryMutation.isPending}>
+                    {createCategoryMutation.isPending ? "Creating..." : "Create Category"}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 			<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
 				<DialogContent className="sm:max-w-[550px]">
@@ -686,6 +878,7 @@ export default function AdminCategoriesPage() {
 								)}
 							/>
 
+<<<<<<< HEAD
 							<FormField
 								control={form.control}
 								name="description"
@@ -741,6 +934,62 @@ export default function AdminCategoriesPage() {
 										</FormItem>
 									)}
 								/>
+=======
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Discuss general topics related to the community"
+                          {...field}
+                          rows={3}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        A brief description of the category
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="parentId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Parent Category</FormLabel>
+                        <FormControl>
+                          <select
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            value={field.value?.toString() || ""}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              field.onChange(value ? parseInt(value) : null);
+                            }}
+                          >
+                            <option value="">None (Top Level)</option>
+                            {categories?.filter((category: Category) =>
+                              selectedCategory && category.id !== selectedCategory.id
+                            ).map((category: Category) => (
+                              <option key={category.id} value={category.id}>
+                                {category.name}
+                              </option>
+                            ))}
+                          </select>
+                        </FormControl>
+                        <FormDescription>
+                          Move this category under another parent category
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 								<FormField
 									control={form.control}
@@ -760,6 +1009,7 @@ export default function AdminCategoriesPage() {
 								/>
 							</div>
 
+<<<<<<< HEAD
 							<FormField
 								control={form.control}
 								name="position"
@@ -780,6 +1030,30 @@ export default function AdminCategoriesPage() {
 									</FormItem>
 								)}
 							/>
+=======
+                <FormField
+                  control={form.control}
+                  name="position"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Display Order</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="0"
+                          {...field}
+                          onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Categories with lower numbers appear first
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 							<FormField
 								control={form.control}
@@ -798,6 +1072,7 @@ export default function AdminCategoriesPage() {
 								)}
 							/>
 
+<<<<<<< HEAD
 							<DialogFooter>
 								<Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
 									Cancel
@@ -862,3 +1137,71 @@ export default function AdminCategoriesPage() {
 		</div>
 	);
 }
+=======
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsEditDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={editCategoryMutation.isPending}>
+                    {editCategoryMutation.isPending ? "Updating..." : "Update Category"}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete Category</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete this category? This action cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              {selectedCategory && (
+                <div className="border rounded-md p-4">
+                  <h4 className="font-medium">{selectedCategory.name}</h4>
+                  <p className="text-sm text-muted-foreground mt-1">{selectedCategory.description || "No description"}</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <Badge variant="outline">{selectedCategory.threadCount || 0} threads</Badge>
+                    <Badge variant="outline">{selectedCategory.postCount || 0} posts</Badge>
+                  </div>
+                </div>
+              )}
+              {selectedCategory && selectedCategory.threadCount > 0 && (
+                <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 p-4 rounded-md">
+                  <p className="flex items-center text-sm">
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    <span>This category contains {selectedCategory.threadCount} threads with {selectedCategory.postCount} posts. Deleting it will orphan or delete this content.</span>
+                  </p>
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsDeleteDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleDeleteCategory}
+                disabled={deleteCategoryMutation.isPending}
+              >
+                {deleteCategoryMutation.isPending ? "Deleting..." : "Delete Category"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </AdminLayout>
+  );
+}
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a

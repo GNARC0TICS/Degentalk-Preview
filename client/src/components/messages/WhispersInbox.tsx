@@ -30,6 +30,7 @@ export function WhispersInbox({ className }: WhispersInboxProps) {
 	const [isRateLimited, setIsRateLimited] = useState(false);
 	const { toast } = useToast();
 
+<<<<<<< HEAD
 	// Get messages functionality
 	const {
 		useConversations,
@@ -223,6 +224,147 @@ export function WhispersInbox({ className }: WhispersInboxProps) {
 										<div
 											key={conversation.userId}
 											className={`
+=======
+  // Filtered conversations based on search term
+  const filteredConversations = React.useMemo(() => {
+    if (!conversations) return [];
+    if (!searchTerm.trim()) return conversations;
+    
+    return conversations.filter(conv => 
+      conv.username.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [conversations, searchTerm]);
+  
+  // Send message handler
+  const { handleClick: handleSendMessage, isLoading: isSending } = useAsyncButton(async () => {
+    if (!selectedConversation) return;
+    if (!messageText.trim()) {
+      toast({
+        title: 'Empty message',
+        description: 'Please enter a message to send',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    // Rate limiting check
+    if (isRateLimited) {
+      toast({
+        title: 'Please wait',
+        description: 'You\'re sending messages too quickly. Please wait a moment.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    // Set rate limiting
+    setIsRateLimited(true);
+    
+    // Reset rate limiting after 2 seconds
+    setTimeout(() => {
+      setIsRateLimited(false);
+    }, 2000);
+    
+    await new Promise<void>((resolve, reject) => {
+      sendMessage(
+        { recipientId: selectedConversation.userId, content: messageText.trim() },
+        {
+          onSuccess: () => {
+            setMessageText('');
+            refetchMessages();
+            refetchConversations();
+            toast({
+              title: 'Message sent',
+              description: `Your message was sent to ${selectedConversation.username}`,
+            });
+            resolve();
+          },
+          onError: (error) => {
+            toast({
+              title: 'Failed to send message',
+              description: error instanceof Error ? error.message : 'An unknown error occurred',
+              variant: 'destructive',
+            });
+            reject(error);
+          }
+        }
+      );
+    });
+  });
+  
+  // Delete conversation handler
+  const { handleClick: handleDeleteConversation, isLoading: isDeleting } = useAsyncButton(async () => {
+    if (!selectedConversation) return;
+    
+    await new Promise<void>((resolve, reject) => {
+      deleteConversation(
+        selectedConversation.userId,
+        {
+          onSuccess: () => {
+            toast({
+              title: 'Conversation deleted',
+              description: `Your conversation with ${selectedConversation.username} has been deleted.`,
+            });
+            setSelectedConversation(null);
+            refetchConversations();
+            resolve();
+          },
+          onError: (error) => {
+            toast({
+              title: 'Failed to delete conversation',
+              description: error instanceof Error ? error.message : 'An unknown error occurred',
+              variant: 'destructive',
+            });
+            reject(error);
+          }
+        }
+      );
+    });
+  });
+  
+  return (
+    <Card className={`bg-black/90 backdrop-blur-xl border border-purple-500/20 ${className}`}>
+      {!selectedConversation ? (
+        // Conversations List View
+        <>
+          <CardHeader>
+            <CardTitle className="text-xl text-white flex items-center justify-between">
+              <span>Your Whispers</span>
+              <span className="text-sm text-purple-400">{conversations?.length || 0} conversations</span>
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              Private messages with other Degentalk™™ users
+            </CardDescription>
+            <div className="relative mt-2">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Search conversations..."
+                className="pl-9 bg-gray-900/50 border-purple-500/30 focus:border-purple-500"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-[calc(70vh-10rem)] pr-4">
+              {isLoadingConversations ? (
+                <div className="flex justify-center py-10">
+                  <Loader2 className="h-8 w-8 animate-spin text-indigo-400" />
+                </div>
+              ) : filteredConversations.length === 0 ? (
+                <div className="text-center py-10 text-gray-400">
+                  {searchTerm ? 
+                    `No conversations found matching "${searchTerm}"` : 
+                    'No conversations yet. Start a whisper with someone!'
+                  }
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {filteredConversations.map((conversation) => (
+                    <div
+                      key={conversation.userId}
+                      className={`
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
                         flex items-center gap-3 p-3 rounded-lg cursor-pointer transition
                         ${
 													conversation.unreadCount > 0

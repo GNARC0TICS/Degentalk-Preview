@@ -1,5 +1,6 @@
 import { pgEnum } from 'drizzle-orm/pg-core';
 
+<<<<<<< HEAD
 export const shoutboxPositionEnum = pgEnum('shoutbox_position', [
 	'sidebar-top',
 	'sidebar-bottom',
@@ -21,6 +22,10 @@ export const transactionStatusEnum = pgEnum('transaction_status', [
 	'reversed',
 	'disputed'
 ]);
+=======
+export const shoutboxPositionEnum = pgEnum('shoutbox_position', ['sidebar-top', 'sidebar-bottom', 'main-top', 'main-bottom', 'floating']);
+export const ticketStatusEnum = pgEnum('ticket_status', ['open', 'pending', 'resolved', 'closed', 'archived']);
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 export const notificationTypeEnum = pgEnum('notification_type', [
 	'info',
 	'system',
@@ -34,6 +39,7 @@ export const notificationTypeEnum = pgEnum('notification_type', [
 	'badge_awarded'
 ]);
 export const reactionTypeEnum = pgEnum('reaction_type', ['like', 'helpful']);
+<<<<<<< HEAD
 export const transactionTypeEnum = pgEnum('transaction_type', [
 	'TIP',
 	'DEPOSIT',
@@ -60,3 +66,8 @@ export const contentEditStatusEnum = pgEnum('content_edit_status', [
 	'published',
 	'archived'
 ]);
+=======
+export const withdrawalStatusEnum = pgEnum('withdrawal_status', ['pending', 'approved', 'rejected']);
+export const vaultStatusEnum = pgEnum('vault_status', ['locked', 'unlocked', 'pending_unlock']);
+export const userRoleEnum = pgEnum('user_role', ['user', 'mod', 'admin']);
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a

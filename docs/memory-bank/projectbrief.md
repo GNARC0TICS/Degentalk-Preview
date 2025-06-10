@@ -1,8 +1,8 @@
-# DegenTalk Project Brief
+# Degentalk™™ Project Brief
 
 ## Project Overview
 
-DegenTalk is a crypto-native forum and social platform designed to create a vibrant community for cryptocurrency enthusiasts, traders, and developers. The platform integrates discussion forums with cryptocurrency wallet functionality, a digital goods marketplace, and gamified social features, including a comprehensive XP and DGT economy, to drive engagement and reward participation.
+Degentalk™™ is a crypto-native forum and social platform designed to create a vibrant community for cryptocurrency enthusiasts, traders, and developers. The platform integrates discussion forums with cryptocurrency wallet functionality, a digital goods marketplace, and gamified social features, including a comprehensive XP and DGT economy, to drive engagement and reward participation.
 
 ## Core Requirements
 
@@ -60,7 +60,7 @@ DegenTalk is a crypto-native forum and social platform designed to create a vibr
 
 1.  **User Growth**
     *   Build an active community of cryptocurrency enthusiasts
-    *   Establish DegenTalk as a premier destination for crypto discussions
+    *   Establish Degentalk™™ as a premier destination for crypto discussions
 
 2.  **Economic Sustainability**
     *   Create a self-sustaining token economy with real utility

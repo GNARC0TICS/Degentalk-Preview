@@ -1,8 +1,8 @@
-# DegenTalk v2 Frontend Design Workflow
+# Degentalk™™ v2 Frontend Design Workflow
 
 ## Project Overview
 
-DegenTalk v2 is a next-generation crypto-powered forum with advanced features:
+Degentalk™™ v2 is a next-generation crypto-powered forum with advanced features:
 - Wallet integration (TRON/TRC-20 USDT)
 - XP leveling system
 - Shop economy

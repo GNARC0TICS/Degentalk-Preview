@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
 	pgTable,
 	serial,
@@ -13,6 +14,14 @@ import { users } from '../user/users';
 import { contentEditStatusEnum } from '../core/enums';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
+=======
+import { pgTable, serial, varchar, text, integer, boolean, timestamp, index } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import { users } from "../user/users";
+import { contentEditStatusEnum } from "./posts"; // Updated import path
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 export const forumRules = pgTable(
 	'forum_rules',

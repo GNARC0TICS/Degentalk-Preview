@@ -1,6 +1,6 @@
 /**
  * @file db/schema/index.ts
- * @description Barrel file re-exporting all Drizzle ORM schema definitions for the Degentalk project.
+ * @description Barrel file re-exporting all Drizzle ORM schema definitions for the Degentalk™ project.
  *
  * @purpose Provides a single entry point for importing all database table schemas.
  *          Organized by domain (e.g., user, forum, economy) for clarity.
@@ -56,6 +56,7 @@ export * from './forum/threadBookmarks';
 export * from './forum/rules';
 export * from './forum/userRuleAgreements';
 export * from './forum/customEmojis';
+export * from './forum/stickers';
 export * from './forum/postLikes';
 export * from './forum/threadFeaturePermissions';
 
@@ -116,6 +117,7 @@ export * from './admin/featureFlags';
 export * from './admin/seoMetadata';
 export * from './admin/scheduledTasks';
 export * from './admin/mediaLibrary';
+export * from './admin/uiConfig';
 
 // Gamification domain exports
 export * from './gamification/achievements';

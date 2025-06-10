@@ -1,10 +1,10 @@
-# Degentalk Database (`db/`)
+# Degentalk™ Database (`db/`)
 
 ## Status: Reviewed – Awaiting Final Approval | 2025-06-02
 
 ## 1. Purpose & Role
 
-The `db/` directory is central to data persistence and management for the Degentalk platform. It contains:
+The `db/` directory is central to data persistence and management for the Degentalk™ platform. It contains:
 
 1.  **Schema Definitions:** The authoritative Drizzle ORM schemas that define the structure, relationships, and types for all database tables.
 2.  **Database-Specific Files:** Configuration related to the PostgreSQL database environment.

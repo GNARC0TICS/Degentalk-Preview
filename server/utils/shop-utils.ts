@@ -73,6 +73,7 @@ export async function addShopItem(item: {
 	featuredUntil?: Date | null;
 	promotionLabel?: string | null;
 }) {
+<<<<<<< HEAD
 	try {
 		// Store the item metadata as JSON in the plugin_reward field
 		const metadata = {
@@ -87,6 +88,22 @@ export async function addShopItem(item: {
 		// Insert the item with only the available columns
 		const result = await pool.query(
 			`INSERT INTO products (
+=======
+  try {
+    // Store the item metadata as JSON in the plugin_reward field
+    const metadata = {
+      name: item.name,
+      description: item.description,
+      price: item.price,
+      pointsPrice: item.pointsPrice,
+      category: item.category || 'other',
+      type: item.pluginReward || null
+    };
+
+    // Insert the item with only the available columns
+    const result = await pool.query(
+      `INSERT INTO products (
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
         plugin_reward, 
         stock_limit, 
         available_from, 
@@ -95,6 +112,7 @@ export async function addShopItem(item: {
         promotion_label
       ) VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING product_id`,
+<<<<<<< HEAD
 			[
 				JSON.stringify(metadata),
 				item.stockLimit || null,
@@ -110,12 +128,30 @@ export async function addShopItem(item: {
 		logger.error('SHOP', 'Error adding shop item', error);
 		throw error;
 	}
+=======
+      [
+        JSON.stringify(metadata),
+        item.stockLimit || null,
+        item.availableFrom || null,
+        item.availableUntil || null,
+        item.featuredUntil || null,
+        item.promotionLabel || null
+      ]
+    );
+
+    return result.rows[0]?.product_id;
+  } catch (error) {
+    logger.error("SHOP", "Error adding shop item", error);
+    throw error;
+  }
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }
 
 /**
  * Helper function to seed the shop with initial items
  */
 export async function seedShopItems() {
+<<<<<<< HEAD
 	try {
 		// Check if there are already items in the shop
 		const existingItems = await pool.query('SELECT COUNT(*) FROM products');
@@ -196,6 +232,172 @@ export async function seedShopItems() {
 	} catch (error) {
 		logger.error('SHOP', 'Error seeding shop items', error);
 	}
+=======
+  try {
+    // Check if there are already items in the shop
+    const existingItems = await pool.query('SELECT COUNT(*) FROM products');
+
+    if (existingItems.rows[0].count > 0) {
+      logger.info("SHOP", `Shop already has ${existingItems.rows[0].count} items. Skipping seeding.`);
+      return;
+    }
+
+    // Seed with initial items
+    const items = [
+      {
+        name: "Gold Frame",
+        description: "A luxurious gold frame for your avatar",
+        price: 29.99,
+        pointsPrice: 3000,
+        category: "frames",
+        pluginReward: "frame:gold",
+        stockLimit: 50,
+        promotionLabel: "NEW!"
+      },
+      {
+        name: "VIP Title",
+        description: "Show off your status with this exclusive title",
+        price: 49.99,
+        pointsPrice: 5000,
+        category: "titles",
+        pluginReward: "title:vip",
+        stockLimit: 25,
+        featuredUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // Featured for 30 days
+      },
+      {
+        name: "XP Boost (7 days)",
+        description: "Double your XP earnings for 7 days",
+        price: 19.99,
+        pointsPrice: 2000,
+        category: "boosts",
+        pluginReward: "boost:xp",
+        stockLimit: null // Unlimited stock
+      },
+      {
+        name: "Cyan Username",
+        description: "Make your username stand out with this unique color",
+        price: 15.99,
+        pointsPrice: 1500,
+        category: "colors",
+        pluginReward: "color:#00FFFF"
+      },
+      {
+        name: "OG Drip Username Color",
+        description: "Beta tester exclusive: a charcoal colored username with a slight red gradient",
+        price: 99.99,
+        pointsPrice: 10000,
+        category: "colors",
+        pluginReward: "color:gradient:#333333:#990000",
+        stockLimit: 100,
+        promotionLabel: "BETA EXCLUSIVE"
+      },
+      // Emoji & Sticker Items (config-based)
+      {
+        name: "Diamond Hands Emoji",
+        description: "Show your diamond hands with this animated Lottie emoji",
+        price: 100,
+        pointsPrice: 1000,
+        category: "emojis",
+        pluginReward: JSON.stringify({
+          type: 'individualEmoji',
+          emojiUnlocks: ['diamond_hands'],
+          name: 'Diamond Hands',
+          description: 'Unlocks the animated Diamond Hands emoji'
+        }),
+        stockLimit: null,
+        promotionLabel: "ANIMATED"
+      },
+      {
+        name: "Pepe Dance Emoji",
+        description: "Classic Pepe dance GIF emoji for maximum meme power",
+        price: 50,
+        pointsPrice: 500,
+        category: "emojis",
+        pluginReward: JSON.stringify({
+          type: 'individualEmoji',
+          emojiUnlocks: ['pepe_dance'],
+          name: 'Pepe Dance',
+          description: 'Unlocks the animated Pepe Dance emoji'
+        })
+      },
+      {
+        name: "Doge Wow Sticker",
+        description: "Such wow! Much sticker! Premium Doge meme sticker",
+        price: 75,
+        pointsPrice: 750,
+        category: "stickers",
+        pluginReward: JSON.stringify({
+          type: 'individualSticker',
+          stickerUnlocks: ['doge_wow'],
+          name: 'Doge Wow',
+          description: 'Unlocks the premium Doge Wow sticker'
+        })
+      },
+      {
+        name: "Moon Rocket Sticker",
+        description: "Animated rocket sticker for when you're going to the moon",
+        price: 150,
+        pointsPrice: 1500,
+        category: "stickers",
+        pluginReward: JSON.stringify({
+          type: 'individualSticker',
+          stickerUnlocks: ['moon_rocket'],
+          name: 'Moon Rocket',
+          description: 'Unlocks the animated Moon Rocket sticker'
+        }),
+        stockLimit: null,
+        promotionLabel: "ANIMATED"
+      },
+      {
+        name: "Crypto Emoji Pack",
+        description: "Essential crypto emojis for trading discussions",
+        price: 180,
+        pointsPrice: 1800,
+        category: "emoji-packs",
+        pluginReward: JSON.stringify({
+          type: 'emojiPack',
+          emojiUnlocks: ['diamond_hands'],
+          name: 'Crypto Emoji Pack',
+          description: 'Unlocks premium crypto-themed emojis'
+        }),
+        stockLimit: null,
+        promotionLabel: "PACK DEAL"
+      },
+      {
+        name: "Ultimate Expression Bundle",
+        description: "Complete emoji + sticker collection for maximum expression",
+        price: 450,
+        pointsPrice: 4500,
+        category: "bundles",
+        pluginReward: JSON.stringify({
+          type: 'emojiPack',
+          emojiUnlocks: ['diamond_hands', 'pepe_dance'],
+          stickerUnlocks: ['doge_wow', 'moon_rocket'],
+          name: 'Ultimate Expression Bundle',
+          description: 'Unlocks ALL premium emojis and stickers'
+        }),
+        stockLimit: 100,
+        promotionLabel: "BUNDLE DEAL"
+      },
+      {
+        name: "Mystery Box",
+        description: "Contains a random rare item",
+        price: 39.99,
+        pointsPrice: 4000,
+        category: "mystery",
+        stockLimit: 10
+      }
+    ];
+
+    for (const item of items) {
+      await addShopItem(item);
+    }
+
+    logger.info("SHOP", `✅ Successfully seeded shop with ${items.length} items`);
+  } catch (error) {
+    logger.error("SHOP", "Error seeding shop items", error);
+  }
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }
 
 /**
@@ -209,6 +411,7 @@ export async function addOGDripColorItem() {
 			`SELECT product_id FROM products 
        WHERE plugin_reward::text LIKE '%OG Drip Username Color%' 
        OR plugin_reward::text LIKE '%gradient:#333333:#990000%'`
+<<<<<<< HEAD
 		);
 
 		if (existingItem.rows.length > 0) {
@@ -236,4 +439,33 @@ export async function addOGDripColorItem() {
 		logger.error('SHOP', 'Error adding OG Drip Username Color', error);
 		throw error;
 	}
+=======
+    );
+
+    if (existingItem.rows.length > 0) {
+      logger.info("SHOP", 'OG Drip Username Color already exists in the shop. Skipping addition.');
+      return existingItem.rows[0].product_id;
+    }
+
+    // Add the OG Drip item
+    const ogDripItem = {
+      name: "OG Drip Username Color",
+      description: "Beta tester exclusive: a charcoal colored username with a slight red gradient",
+      price: 99.99,
+      pointsPrice: 10000,
+      category: "colors",
+      pluginReward: "color:gradient:#333333:#990000",
+      stockLimit: 100,
+      promotionLabel: "BETA EXCLUSIVE"
+    };
+
+    const productId = await addShopItem(ogDripItem);
+    logger.info("SHOP", `✅ Successfully added OG Drip Username Color to shop (ID: ${productId})`);
+
+    return productId;
+  } catch (error) {
+    logger.error("SHOP", "Error adding OG Drip Username Color", error);
+    throw error;
+  }
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }

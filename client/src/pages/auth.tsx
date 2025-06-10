@@ -94,6 +94,7 @@ export default function AuthPage() {
 		return <Redirect to="/" />;
 	}
 
+<<<<<<< HEAD
 	return (
 		<div className="min-h-screen bg-[url('/images/auth-bg.jpg')] bg-cover bg-center">
 			<div className="min-h-screen flex justify-center items-center backdrop-blur-sm backdrop-brightness-50 p-4">
@@ -111,6 +112,25 @@ export default function AuthPage() {
 							<li>Participate in exclusive events and airdrops</li>
 						</ul>
 					</div>
+=======
+  return (
+    <div className="min-h-screen bg-[url('/images/auth-bg.jpg')] bg-cover bg-center">
+      <div className="min-h-screen flex justify-center items-center backdrop-blur-sm backdrop-brightness-50 p-4">
+        <div className="container max-w-screen-xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          {/* Hero section */}
+          <div className="text-white space-y-4">
+            <h1 className="text-4xl md:text-6xl font-bold">Degentalk™™</h1>
+            <p className="text-xl md:text-2xl">
+              The premiere social commerce platform for blockchain enthusiasts
+            </p>
+            <ul className="list-disc list-inside space-y-2 ml-4">
+              <li>Join the fastest growing community</li>
+              <li>Earn rewards for quality content</li>
+              <li>Connect your crypto wallet for seamless transactions</li>
+              <li>Participate in exclusive events and airdrops</li>
+            </ul>
+          </div>
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 					{/* Auth forms */}
 					<div className="w-full max-w-md mx-auto">

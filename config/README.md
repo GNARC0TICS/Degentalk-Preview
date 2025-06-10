@@ -4,7 +4,7 @@
 
 ## 1. Purpose & Role
 
-The `config/` directory centralizes various configuration files that govern the behavior of development tools, build processes, and styling within the Degentalk project. Its purpose is to provide a single, organized location for project-wide settings, ensuring consistency and ease of management.
+The `config/` directory centralizes various configuration files that govern the behavior of development tools, build processes, and styling within the Degentalk™ project. Its purpose is to provide a single, organized location for project-wide settings, ensuring consistency and ease of management.
 
 ## 2. Structure & Key Components
 

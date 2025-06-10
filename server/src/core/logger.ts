@@ -1,12 +1,18 @@
 /**
+<<<<<<< HEAD
  * ForumFusion - Consolidated Logging System
  *
  * This is the centralized logging utility for the entire application.
  * It handles different log levels, formats, and outputs (console, file).
+=======
+ * Centralized Logger Utility for Degentalk™
+ *
+ * Use this logger for all server-side logging to ensure consistency.
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
  */
 
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import { createWriteStream, WriteStream } from 'fs';
 
 // Log levels
@@ -20,6 +26,7 @@ export enum LogLevel {
 
 // Log action categories for better filtering and analysis
 export enum LogAction {
+<<<<<<< HEAD
 	// System actions
 	SYSTEM_STARTUP = 'SYSTEM_STARTUP',
 	SYSTEM_SHUTDOWN = 'SYSTEM_SHUTDOWN',
@@ -60,6 +67,48 @@ export enum LogAction {
 
 	// Custom
 	CUSTOM = 'CUSTOM'
+=======
+  // System actions
+  SYSTEM_STARTUP = 'SYSTEM_STARTUP',
+  SYSTEM_SHUTDOWN = 'SYSTEM_SHUTDOWN',
+  SCHEDULED_TASK = 'SCHEDULED_TASK',
+
+  // User actions
+  USER_REGISTER = 'USER_REGISTER',
+  USER_LOGIN = 'USER_LOGIN',
+  USER_LOGOUT = 'USER_LOGOUT',
+  USER_UPDATE = 'USER_UPDATE',
+
+  // Wallet actions
+  WALLET_CREATE = 'WALLET_CREATE',
+  WALLET_IMPORT = 'WALLET_IMPORT',
+  WALLET_TRANSACTION = 'WALLET_TRANSACTION',
+  TRANSACTION_VERIFY = 'TRANSACTION_VERIFY',
+
+  // Vault actions
+  VAULT_CREATE = 'VAULT_CREATE',
+  VAULT_UNLOCK = 'VAULT_UNLOCK',
+  VAULT_AUTO_UNLOCK = 'VAULT_AUTO_UNLOCK',
+
+  // Forum actions
+  THREAD_CREATE = 'THREAD_CREATE',
+  POST_CREATE = 'POST_CREATE',
+  POST_EDIT = 'POST_EDIT',
+  POST_DELETE = 'POST_DELETE',
+
+  // XP actions
+  XP_AWARD = 'XP_AWARD',
+  XP_ADJUSTMENT = 'XP_ADJUSTMENT',
+  LEVEL_UP = 'LEVEL_UP',
+
+  // API actions
+  API_REQUEST = 'API_REQUEST',
+  API_RESPONSE = 'API_RESPONSE',
+  API_ERROR = 'API_ERROR',
+
+  // Custom
+  CUSTOM = 'CUSTOM'
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }
 
 // Default configuration
@@ -82,6 +131,7 @@ let logStream: WriteStream | null = null;
  * Initialize the logger with custom configuration
  */
 export function initLogger(customConfig = {}) {
+<<<<<<< HEAD
 	config = { ...DEFAULT_CONFIG, ...customConfig };
 
 	// Create log directory if it doesn't exist
@@ -115,15 +165,57 @@ export function initLogger(customConfig = {}) {
 			console.error('Failed to initialize file logging:', error);
 		}
 	}
+=======
+  config = { ...DEFAULT_CONFIG, ...customConfig };
+
+  // Create log directory if it doesn't exist
+  if (config.file) {
+    try {
+      if (!fs.existsSync(config.filePath)) {
+        fs.mkdirSync(config.filePath, { recursive: true });
+      }
+
+      const logFilePath = path.join(config.filePath, config.fileName);
+      logStream = createWriteStream(logFilePath, { flags: 'a' });
+
+      // Ensure logs are flushed on process exit
+      process.on('exit', () => {
+        if (logStream) {
+          logStream.end();
+        }
+      });
+
+      // Log initial startup message
+      log({
+        level: LogLevel.INFO,
+        action: LogAction.SYSTEM_STARTUP,
+        message: 'Logger initialized',
+        data: {
+          env: process.env.NODE_ENV,
+          logPath: logFilePath
+        }
+      });
+    } catch (error) {
+      console.error('Failed to initialize file logging:', error);
+    }
+  }
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }
 
 /**
  * Format a log message with timestamp, level, and namespace
  */
 function formatLogMessage(level: LogLevel, namespace: string, message: string): string {
+<<<<<<< HEAD
 	const timestamp = config.formatTimestamp ? `[${new Date().toISOString()}] ` : '';
 
 	return `${timestamp}[${level}] [${namespace}] ${message}`;
+=======
+  const timestamp = config.formatTimestamp ?
+    `[${new Date().toISOString()}] ` : '';
+
+  return `${timestamp}[${level}] [${namespace}] ${message}`;
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }
 
 /**
@@ -136,6 +228,7 @@ export function log(options: {
 	message: string;
 	data?: any;
 }) {
+<<<<<<< HEAD
 	const { level, action, namespace, message, data } = options;
 
 	// Skip if level is below minimum
@@ -188,6 +281,60 @@ export function log(options: {
 	if (config.file && logStream) {
 		logStream.write(formattedMessage + dataString + '\n');
 	}
+=======
+  const { level, action, namespace, message, data } = options;
+
+  // Skip if level is below minimum
+  const levels = Object.values(LogLevel);
+  if (levels.indexOf(level) < levels.indexOf(config.minLevel)) {
+    return;
+  }
+
+  // Use action as namespace if no namespace is provided
+  const logNamespace = namespace || (action ? action : 'APP');
+
+  const formattedMessage = formatLogMessage(level, logNamespace, message);
+
+  // Format data if present
+  let dataString = '';
+  if (data) {
+    try {
+      if (typeof data === 'object') {
+        dataString = '\n' + JSON.stringify(data, null, 2);
+      } else {
+        dataString = '\n' + String(data);
+      }
+    } catch (e) {
+      dataString = '\n[Error formatting data]';
+    }
+  }
+
+  // Log to console
+  if (config.console) {
+    switch (level) {
+      case LogLevel.DEBUG:
+        console.debug(formattedMessage, data);
+        break;
+      case LogLevel.INFO:
+        console.info(formattedMessage, data);
+        break;
+      case LogLevel.WARN:
+        console.warn(formattedMessage, data);
+        break;
+      case LogLevel.ERROR:
+      case LogLevel.CRITICAL:
+        console.error(formattedMessage, data);
+        break;
+      default:
+        console.log(formattedMessage, data);
+    }
+  }
+
+  // Log to file
+  if (config.file && logStream) {
+    logStream.write(formattedMessage + dataString + '\n');
+  }
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 }
 
 /**
@@ -255,10 +402,19 @@ initLogger();
 
 // Create and export a logger instance with convenient methods
 export const logger = {
+<<<<<<< HEAD
 	debug,
 	info,
 	warn,
 	error,
 	critical,
 	init: initLogger
+=======
+  debug,
+  info,
+  warn,
+  error,
+  critical,
+  init: initLogger
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 };

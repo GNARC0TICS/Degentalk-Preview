@@ -30,6 +30,7 @@ import {
 	tags,
 	threadTags
 } from '@schema';
+<<<<<<< HEAD
 import {
 	sql,
 	eq,
@@ -55,8 +56,17 @@ import {
 } from '../auth/middleware/auth.middleware';
 import { ThreadWithUserAndCategory, PostWithUser } from '@shared/types';
 import { slugify } from '@server/utils/slugify';
+=======
+import { sql, eq, and, desc, count, isNotNull, asc, ilike, or, gt, ne, inArray, isNull } from "drizzle-orm";
+import { awardPathXp } from "@server/utils/path-utils";
+import { xpRewards } from "@shared/path-config";
+import { xpCloutService } from '../xp/services/xp-clout-service';
+import { isAuthenticated as requireAuth, isAdmin, isAdminOrModerator } from '../auth/middleware/auth.middleware';
+import { ThreadWithUserAndCategory, PostWithUser } from "@shared/types";
+import { slugify } from "@server/utils/slugify";
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 import { XpService } from '../../../services/xp-service';
-import { xpLevelService, XP_ACTIONS } from '../../../services/xp-level-service';
+import { xpLevelService, XP_ACTIONS } from '../xp/services/xp-level-service';
 import rulesRoutes from './rules/rules.routes';
 import { forumController } from './forum.controller';
 import { forumService } from './forum.service';
@@ -1813,6 +1823,28 @@ router.get('/threads/:categoryId', async (req: Request, res: Response) => {
 		console.error('Error fetching threads by category:', error);
 		return res.status(500).json({ message: 'Error fetching threads' });
 	}
+});
+
+// GET /api/zone/:slug/metrics - Get metrics for a specific zone
+router.get('/zone/:slug/metrics', async (req: Request, res: Response) => {
+  try {
+    const { slug } = req.params;
+    if (!slug) {
+      return res.status(400).json({ message: "Zone slug is required" });
+    }
+
+    const metrics = await forumService.getZoneMetricsBySlug(slug);
+
+    if (!metrics) {
+      return res.status(404).json({ message: `Metrics not found for zone with slug '${slug}'` });
+    }
+
+    return res.status(200).json(metrics);
+
+  } catch (error) {
+    console.error(`Error fetching metrics for zone ${req.params.slug}:`, error);
+    res.status(500).json({ message: "An error occurred fetching zone metrics" });
+  }
 });
 
 export default router;

@@ -8,7 +8,7 @@ const SCRIPT_NAME = 'seed-badges';
 const DEFAULT_BADGES: InsertBadge[] = [
   {
     name: 'Early Adopter',
-    description: 'Joined Degentalk during the first month!',
+    description: 'Joined Degentalk™ during the first month!',
     iconUrl: '/images/badges/early_adopter.png',
   },
   {

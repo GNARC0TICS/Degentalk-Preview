@@ -411,6 +411,34 @@ This document tracks ongoing and planned refactoring tasks. New tasks are typica
 
 ---
 
+### [Forum System] Forum Architecture Audit and Refactor
+- **Identified:** 2025-06-07
+- **Source Rule(s):** User task audit, `schema-consistency.mdc`, `route-deprecation.mdc`
+- **Files Involved:**
+    - `client/src/config/roles.config.ts`
+    - `client/src/pages/forum/index.tsx`
+    - `client/src/features/forum/hooks/useForumStructure.ts`
+    - `client/src/features/forum/components/HierarchicalZoneNav.tsx`
+    - `client/src/pages/mission-control/index.tsx`
+    - `client/src/components/layout/PrimaryZoneLayout.tsx`
+    - `client/src/App.tsx`
+    - `docs/FORUM_README.md`
+- **Actions Completed:**
+    - [x] **Fixed Critical Build Error:** Resolved syntax error in `roles.config.ts` that was preventing compilation
+    - [x] **Implemented Dual Forum Architecture:** Created separation between Primary Zones (static data) and General Categories (API data)
+    - [x] **Updated Forum Main Page:** Created `/forum` route that displays both primary zones and general categories consistently
+    - [x] **Fixed Navigation Components:** Updated `HierarchicalZoneNav` to use static primary zone data and API general categories
+    - [x] **Enhanced Primary Zone Pages:** Updated individual zone pages to use static data and dynamic component rendering
+    - [x] **Fixed Routing Issues:** Corrected import paths and added all primary zone routes to App.tsx
+    - [x] **Updated Documentation:** Revised `FORUM_README.md` to reflect the new dual architecture
+    - [x] **Dynamic Component Support:** Implemented dynamic component rendering in `PrimaryZoneLayout` based on zone configuration
+- **Reasoning:** The forum system had inconsistent navigation between primary zones and general categories, missing routes, and build-breaking syntax errors. The audit revealed a need for clearer separation between featured zones (primary) and standard forum categories. This refactor improves maintainability and user experience.
+- **Status:** DONE
+- **Assigned to:** AI Agent
+- **Notes:** The forum system now has a clear dual architecture: Primary Zones use static data from constants for better performance and customization, while General Categories use API data for dynamic content. All primary zone pages can be navigated individually, and the main forum page displays both sections consistently with the home page design.
+
+---
+
 ## Authentication Middleware Cleanup (2023-05-13)
 
 **Status:** Completed

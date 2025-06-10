@@ -20,7 +20,7 @@ GET /api/admin/users?page=2&pageSize=3&search=alice
       "posts": 17,
       "threads": 2,
       "createdAt": "4/28/2025",
-      "bio": "I love DegenTalk!",
+      "bio": "I love Degentalk™™!",
       "avatarUrl": "https://cdn.degentalk.com/avatars/alice42.png",
       "profileBannerUrl": null,
       "groupId": 2,

@@ -1,12 +1,20 @@
-# DegenTalk Project Brief (MVP Edition)
+# Degentalk™™ Project Brief (MVP Edition)
 
 ## Project Name
 
+<<<<<<< HEAD
 **DegenTalk**
 
 ## Overview
 
 DegenTalk is a next-gen crypto-native forum and social platform for degens, traders, builders, and gamblers. It combines a feature-rich discussion board with real-time social mechanics, a platform-exclusive token (DGT), and a gamified XP economy that rewards engagement, not fluff.
+=======
+**Degentalk™™**
+
+## Overview
+
+Degentalk™™ is a next-gen crypto-native forum and social platform for degens, traders, builders, and gamblers. It combines a feature-rich discussion board with real-time social mechanics, a platform-exclusive token (DGT), and a gamified XP economy that rewards engagement, not fluff.
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 ## Core Problem Solved
 
@@ -16,7 +24,7 @@ Traditional platforms lack:
 - Reputation mechanics that _actually_ mean something.
 - A home for unfiltered, long-form, crypto-native chaos.
 
-DegenTalk fixes that by turning forum posting into a game, clout into currency, and the community into an engine.
+Degentalk™™ fixes that by turning forum posting into a game, clout into currency, and the community into an engine.
 
 ## Target Users
 
@@ -43,9 +51,9 @@ DegenTalk fixes that by turning forum posting into a game, clout into currency, 
 
 ---
 
-# DegenTalk Manifesto
+# Degentalk™™ Manifesto
 
-### “This isn’t for everyone. It’s for us.”
+### "This isn't for everyone. It's for us."
 
 A forum built like a casino.  
 An XP system forged in shitposts.  
@@ -109,6 +117,7 @@ No paid roles. No corporate filters. Just raw clout.
 
 ## Tipping & Rain (v1 Logic)
 
+<<<<<<< HEAD
 **/tip @user 10 dgt**
 
 - User gets tokens + 10 XP/DGT tipped
@@ -121,6 +130,20 @@ No paid roles. No corporate filters. Just raw clout.
 - Min: 5 DGT
 - Max 15 recipients
 - Eligible users = active in threads/shoutbox
+=======
+**/tip @user 10 dgt**  
+
+- User gets tokens + 10 XP/DGT tipped  
+- Min: 1 DGT  
+- XP Cap: 200 XP/day  
+- Optional: 1–5% fee to treasury
+
+**/rain 10 dgt**  
+
+- Min: 5 DGT  
+- Max 15 recipients  
+- Eligible users = active in threads/shoutbox  
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 - Cooldown: 1/hour per user
 
 ---
@@ -160,6 +183,12 @@ No paid roles. No corporate filters. Just raw clout.
 - DGT is **not a token** (yet). Internal only.
 - No plans for trading or bridging — this is about status, not speculation.
 - All values, rates, and shop prices stored in a **central config file**.
+
+---
+
+## Contributor Guidelines & Legal
+
+All contributions to Degentalk™ are subject to the [Degentalk Developer Agreement](contracts/degentalk_dev_agreement.md). Please review this document before contributing to the codebase. It outlines important terms regarding intellectual property ownership and your contributions to the project.
 
 This is our foundation.  
 Now we build chaos on top of it.

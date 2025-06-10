@@ -64,8 +64,25 @@ export function SiteHeader() {
 		level: 99
 	};
 
+<<<<<<< HEAD
 	// Use real user in production, mock user in development
 	const displayUser = isDevelopment ? mockUser : (user as ExtendedUserData | null);
+=======
+  return (
+    <header className="bg-zinc-900/80 backdrop-blur-sm border-b border-zinc-800 sticky top-0 z-50 shadow-md transition-all">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link href="/">
+              <div className="flex items-center cursor-pointer">
+                <span className="text-xl font-bold text-white">
+                  Degentalk<span style={{ fontSize: '0.65em', verticalAlign: 'super', marginLeft: '1px' }}>™</span>
+                </span>
+              </div>
+            </Link>
+          </div>
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 	// In development we're always authenticated
 	const isAuthenticated = isDevelopment ? true : !!user;

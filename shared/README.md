@@ -1,4 +1,4 @@
-# Degentalk Shared Code
+# Degentalk™ Shared Code
 
 ## Status: Reviewed – Awaiting Final Approval | 2025-06-02
 

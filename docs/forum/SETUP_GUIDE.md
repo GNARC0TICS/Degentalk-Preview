@@ -1,6 +1,6 @@
 # Forum Structure Setup Guide
 
-This guide provides step-by-step instructions for setting up the DegenTalk forum structure.
+This guide provides step-by-step instructions for setting up the Degentalk™™ forum structure.
 
 ## Prerequisites
 

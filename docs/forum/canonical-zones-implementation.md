@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the implementation of the canonical zone structure for the DegenTalk forum as defined in `docs/forum/implementation-plan-canon-v1.md`. The new structure organizes the forum into Primary Zones (single-forum destinations with distinct visual identities) and Expandable Zones (traditional categories with child forums).
+This document outlines the implementation of the canonical zone structure for the Degentalk™™ forum as defined in `docs/forum/implementation-plan-canon-v1.md`. The new structure organizes the forum into Primary Zones (single-forum destinations with distinct visual identities) and Expandable Zones (traditional categories with child forums).
 
 ## Database Schema Changes
 

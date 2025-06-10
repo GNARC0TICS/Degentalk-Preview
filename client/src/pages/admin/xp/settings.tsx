@@ -20,6 +20,7 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import AdminLayout from '../admin-layout';
 import { apiRequest } from '@/lib/queryClient';
+import { economyConfig } from '@/config/economy.config.ts';
 
 // XP Settings types
 interface XpSettings {
@@ -40,6 +41,7 @@ interface XpSettings {
 }
 
 // Default settings when creating a new configuration
+<<<<<<< HEAD
 const defaultXpSettings: XpSettings = {
 	generalXpPerAction: 5,
 	postCreateXp: 10,
@@ -56,6 +58,9 @@ const defaultXpSettings: XpSettings = {
 	xpBoostEnabled: true,
 	levelUpNotificationsEnabled: true
 };
+=======
+const defaultXpSettings: XpSettings = economyConfig.xp;
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 export default function XpSettingsPage() {
 	const { toast } = useToast();
@@ -158,6 +163,7 @@ export default function XpSettingsPage() {
 		}
 	};
 
+<<<<<<< HEAD
 	// Render setting input with tooltip
 	const SettingInput = ({
 		label,
@@ -460,3 +466,310 @@ export default function XpSettingsPage() {
 		</AdminLayout>
 	);
 }
+=======
+  // Render setting input with tooltip
+  const SettingInput = ({
+    label,
+    field,
+    tooltip,
+    min = 0,
+    max = 1000,
+    step = 1
+  }: {
+    label: string;
+    field: keyof XpSettings;
+    tooltip: string;
+    min?: number;
+    max?: number;
+    step?: number;
+  }) => (
+    <div className="space-y-2">
+      <div className="flex items-center">
+        <Label htmlFor={field} className="text-sm font-medium mr-2">
+          {label}
+        </Label>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Info className="h-4 w-4 text-muted-foreground" />
+            </TooltipTrigger>
+            <TooltipContent className="w-80">
+              <p>{tooltip}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+      <Input
+        id={field}
+        type="number"
+        min={min}
+        max={max}
+        step={step}
+        value={typeof settings[field] === 'number' ? settings[field] : ''}
+        onChange={(e) => handleInputChange(field, parseFloat(e.target.value))}
+        className="max-w-xs"
+      />
+    </div>
+  );
+
+  // Render toggle setting with tooltip
+  const ToggleSetting = ({
+    label,
+    field,
+    tooltip
+  }: {
+    label: string;
+    field: keyof XpSettings;
+    tooltip: string;
+  }) => (
+    <div className="flex items-center justify-between space-y-0 rounded-md border p-4 shadow-sm">
+      <div className="space-y-0.5">
+        <div className="flex items-center">
+          <Label htmlFor={field} className="text-sm font-medium mr-2">
+            {label}
+          </Label>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Info className="h-4 w-4 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent className="w-80">
+                <p>{tooltip}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      </div>
+      <Switch
+        id={field}
+        checked={!!settings[field]}
+        onCheckedChange={(checked) => handleInputChange(field, checked)}
+      />
+    </div>
+  );
+
+  return (
+    <AdminLayout>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-3xl font-bold tracking-tight">XP System Settings</h2>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            onClick={handleResetToDefaults}
+            disabled={resetToDefaultsMutation.isPending}
+          >
+            <RotateCcw className="mr-2 h-4 w-4" />
+            {resetToDefaultsMutation.isPending ? 'Resetting...' : 'Reset to Defaults'}
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={updateSettingsMutation.isPending || !hasChanges}
+          >
+            <Save className="mr-2 h-4 w-4" />
+            {updateSettingsMutation.isPending ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="space-y-2">
+          <Card className="animate-pulse">
+            <CardHeader className="bg-zinc-900 bg-opacity-50 h-24" />
+            <CardContent className="bg-zinc-900 bg-opacity-30 h-96" />
+          </Card>
+        </div>
+      ) : isError ? (
+        <Alert variant="destructive">
+          <AlertDescription>
+            Error loading XP settings: {error.message}. Please try refreshing the page.
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+            <TabsList>
+              <TabsTrigger value="basic">Basic Actions</TabsTrigger>
+              <TabsTrigger value="engagement">Engagement</TabsTrigger>
+              <TabsTrigger value="multipliers">Multipliers & Bonuses</TabsTrigger>
+              <TabsTrigger value="features">System Features</TabsTrigger>
+            </TabsList>
+
+            {/* Basic actions tab */}
+            <TabsContent value="basic" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Basic Action XP</CardTitle>
+                  <CardDescription>
+                    Configure XP awarded for basic user actions on the platform
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <SettingInput
+                    label="General XP Per Action"
+                    field="generalXpPerAction"
+                    tooltip="Base XP awarded for most general actions on the platform"
+                  />
+
+                  <SettingInput
+                    label="Thread Creation XP"
+                    field="threadCreateXp"
+                    tooltip="XP awarded when a user creates a new thread"
+                  />
+
+                  <SettingInput
+                    label="Post Creation XP"
+                    field="postCreateXp"
+                    tooltip="XP awarded when a user creates a new post in a thread"
+                  />
+
+                  <SettingInput
+                    label="Comment XP"
+                    field="commentXp"
+                    tooltip="XP awarded when a user leaves a comment"
+                  />
+
+                  <SettingInput
+                    label="Badge Award XP"
+                    field="badgeAwardXp"
+                    tooltip="Bonus XP awarded when a user earns a badge"
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Engagement tab */}
+            <TabsContent value="engagement" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Engagement & Reactions XP</CardTitle>
+                  <CardDescription>
+                    Configure XP awarded for engagement-related activities
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <SettingInput
+                    label="Reaction Received XP"
+                    field="reactionReceivedXp"
+                    tooltip="XP awarded when a user's content receives a reaction"
+                  />
+
+                  <SettingInput
+                    label="Post Liked XP"
+                    field="postLikedXp"
+                    tooltip="XP awarded when a user's post is liked"
+                  />
+
+                  <SettingInput
+                    label="Daily Login XP"
+                    field="dailyLoginXp"
+                    tooltip="XP awarded for logging in daily"
+                  />
+
+                  <SettingInput
+                    label="Weekly Bonus XP"
+                    field="weeklyBonusXp"
+                    tooltip="Bonus XP awarded for active users each week"
+                  />
+
+                  <SettingInput
+                    label="Referral XP"
+                    field="referralXp"
+                    tooltip="XP awarded when referring a new user who creates an account"
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Multipliers tab */}
+            <TabsContent value="multipliers" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>XP Multipliers & Bonuses</CardTitle>
+                  <CardDescription>
+                    Configure multipliers that affect XP calculations
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <SettingInput
+                    label="Path XP Multiplier"
+                    field="pathXpMultiplier"
+                    tooltip="Multiplier applied to XP when a user is active in their chosen path specialization"
+                    min={1}
+                    max={5}
+                    step={0.1}
+                  />
+
+                  <SettingInput
+                    label="Special Event Multiplier"
+                    field="specialEventMultiplier"
+                    tooltip="Multiplier applied during special events"
+                    min={1}
+                    max={10}
+                    step={0.1}
+                  />
+
+                  <Alert className="mt-6 bg-amber-900/20 text-amber-200 border-amber-900">
+                    <AlertDescription>
+                      <strong>Note:</strong> Changing multipliers affects all future XP calculations.
+                      Existing XP amounts will not be retroactively recalculated.
+                    </AlertDescription>
+                  </Alert>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Features tab */}
+            <TabsContent value="features" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>XP System Features</CardTitle>
+                  <CardDescription>
+                    Enable or disable specific XP system features
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <ToggleSetting
+                    label="XP Boost Feature"
+                    field="xpBoostEnabled"
+                    tooltip="Allow users to purchase and use XP boosts"
+                  />
+
+                  <ToggleSetting
+                    label="Level Up Notifications"
+                    field="levelUpNotificationsEnabled"
+                    tooltip="Show notifications to users when they level up"
+                  />
+
+                  <Separator className="my-4" />
+
+                  <Alert className="mt-2">
+                    <AlertDescription>
+                      Feature settings take effect immediately after saving.
+                    </AlertDescription>
+                  </Alert>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+
+          <Card>
+            <CardFooter className="border-t px-6 py-4">
+              <div className="flex justify-between items-center w-full">
+                <div className="text-sm text-muted-foreground">
+                  {hasChanges ? 'You have unsaved changes' : 'No changes to save'}
+                </div>
+                <Button
+                  type="submit"
+                  disabled={updateSettingsMutation.isPending || !hasChanges}
+                >
+                  {updateSettingsMutation.isPending ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </div>
+            </CardFooter>
+          </Card>
+        </form>
+      )}
+    </AdminLayout>
+  );
+} 
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a

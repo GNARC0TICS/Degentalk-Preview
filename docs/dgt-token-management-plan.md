@@ -1,10 +1,10 @@
 # DGT Token Management System
 
 ## Overview
-The DegenTalk Token (DGT) is a platform token with a hard cap of 1 billion tokens. This document outlines the implementation plan for managing the token supply, treasury, and related functionality.
+The Degentalk™™ Token (DGT) is a platform token with a hard cap of 1 billion tokens. This document outlines the implementation plan for managing the token supply, treasury, and related functionality.
 
 ## Token Specifications
-- **Token Name**: DegenTalk Token
+- **Token Name**: Degentalk™™ Token
 - **Ticker Symbol**: DGT
 - **Blockchain**: TRON or Polygon (cheap gas, fast)
 - **Decimals**: 6 (like USDC)

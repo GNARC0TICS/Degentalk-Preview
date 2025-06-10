@@ -3,6 +3,7 @@ import { sql } from 'drizzle-orm';
 import { userGroups } from '../user/userGroups'; // Placeholder for future import
 
 export const forumCategories = pgTable('forum_categories', {
+<<<<<<< HEAD
 	id: serial('category_id').primaryKey(),
 	name: text('name').notNull(),
 	slug: text('slug').notNull().unique(),
@@ -31,6 +32,35 @@ export const forumCategories = pgTable('forum_categories', {
 	updatedAt: timestamp('updated_at')
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`)
+=======
+  id: serial('category_id').primaryKey(),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  description: text('description'),
+  parentId: integer('parent_id').references((): AnyPgColumn => forumCategories.id, { onDelete: 'set null' }),
+  type: text('type').notNull().default('forum'), // 'zone', 'category', 'forum'
+  position: integer('position').notNull().default(0),
+  isVip: boolean('is_vip').notNull().default(false),
+  isLocked: boolean('is_locked').notNull().default(false),
+  minXp: integer('min_xp').notNull().default(0), // Renamed from minXpRequired in schema refactor plan for consistency with existing schema.ts
+  color: text('color').notNull().default('gray'),
+  icon: text('icon').notNull().default('hash'),
+  colorTheme: text('color_theme'),
+  isHidden: boolean('is_hidden').notNull().default(false),
+  isZone: boolean('is_zone').default(false).notNull(),
+  canonical: boolean('canonical').default(false).notNull(),
+  minGroupIdRequired: integer('min_group_id_required').references(() => userGroups.id, { onDelete: 'set null' }),
+  pluginData: jsonb('plugin_data').default('{}'),
+  createdAt: timestamp('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+  forumType: text('forum_type').notNull().default('general'), // 'primary', 'general', etc.
+  slugOverride: text('slug_override'),
+  components: jsonb('components').default('[]'),
+  threadRules: jsonb('thread_rules').default('{}'),
+  accessControl: jsonb('access_control').default('{}'),
+  displayPriority: integer('display_priority').notNull().default(0),
+  seo: jsonb('seo').default('{}'),
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 });
 
 // Placeholder for relations

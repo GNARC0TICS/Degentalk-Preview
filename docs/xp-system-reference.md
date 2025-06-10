@@ -1,6 +1,6 @@
 # XP System Reference Guide
 
-This document serves as the comprehensive reference for the Degentalk XP system architecture, implementation, and best practices. It consolidates information from multiple rule files and provides a single source of truth for XP system development.
+This document serves as the comprehensive reference for the Degentalk™ XP system architecture, implementation, and best practices. It consolidates information from multiple rule files and provides a single source of truth for XP system development.
 
 ## Table of Contents
 - [System Overview](#system-overview)

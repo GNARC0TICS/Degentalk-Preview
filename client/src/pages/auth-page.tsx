@@ -25,6 +25,7 @@ export default function AuthPage() {
 		<div className="flex flex-col min-h-screen">
 			<Header />
 
+<<<<<<< HEAD
 			<main className="flex-1 my-8">
 				<div className="container mx-auto px-4">
 					<div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -37,6 +38,20 @@ export default function AuthPage() {
 									Log in to your account or sign up to join our community
 								</p>
 							</div>
+=======
+      <main className="flex-1 my-8">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-3xl font-bold leading-tight text-gray-900">
+                  Welcome to Degentalk™™
+                </h1>
+                <p className="mt-2 text-base text-gray-600">
+                  Log in to your account or sign up to join our community
+                </p>
+              </div>
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 							<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
 								<TabsList className="grid grid-cols-2 w-full">
@@ -57,6 +72,7 @@ export default function AuthPage() {
 							</Tabs>
 						</div>
 
+<<<<<<< HEAD
 						<div className="bg-primary-50 rounded-lg p-8 flex items-center justify-center">
 							<div className="max-w-md text-center">
 								<svg
@@ -154,6 +170,57 @@ export default function AuthPage() {
 					</div>
 				</div>
 			</main>
+=======
+            <div className="bg-primary-50 rounded-lg p-8 flex items-center justify-center">
+              <div className="max-w-md text-center">
+                <svg className="h-16 w-16 text-primary mx-auto mb-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Join the Degentalk™™ Community</h2>
+                <p className="text-gray-600 mb-6">
+                  Connect with others, participate in discussions, and share your knowledge with our growing community.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 bg-primary-100 rounded-full p-2">
+                      <svg className="h-5 w-5 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div className="ml-3 text-left">
+                      <h3 className="text-sm font-medium text-gray-900">Join meaningful discussions</h3>
+                      <p className="text-xs text-gray-500">Engage with topics that matter to you</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 bg-primary-100 rounded-full p-2">
+                      <svg className="h-5 w-5 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div className="ml-3 text-left">
+                      <h3 className="text-sm font-medium text-gray-900">Earn clout and rewards</h3>
+                      <p className="text-xs text-gray-500">Get recognized for your valuable contributions</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 bg-primary-100 rounded-full p-2">
+                      <svg className="h-5 w-5 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div className="ml-3 text-left">
+                      <h3 className="text-sm font-medium text-gray-900">Customize your experience</h3>
+                      <p className="text-xs text-gray-500">Personalize your profile and notification preferences</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 
 			<SiteFooter />
 		</div>

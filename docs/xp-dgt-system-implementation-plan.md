@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the implementation plan for the XP and DGT token economy system in DegenTalk. The system is designed to be modular, with clear separation of concerns and well-defined interfaces between components.
+This document outlines the implementation plan for the XP and DGT token economy system in Degentalk™™. The system is designed to be modular, with clear separation of concerns and well-defined interfaces between components.
 
 ## Implementation Phases
 

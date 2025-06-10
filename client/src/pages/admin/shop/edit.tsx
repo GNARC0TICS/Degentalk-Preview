@@ -16,6 +16,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, Link, useLocation } from 'wouter';
 import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { cosmeticsConfig } from '@/config/cosmetics.config.ts';
+import { economyConfig } from '@/config/economy.config.ts';
 
 // Define Product type locally for now since we don't have the exact import path
 interface Product {
@@ -35,6 +37,7 @@ interface Product {
 
 // Helper function to get cosmetic type template
 const getCosmeticTemplate = (type: string) => {
+<<<<<<< HEAD
 	const templates: Record<string, any> = {
 		usernameColor: {
 			type: 'usernameColor',
@@ -72,6 +75,9 @@ const getCosmeticTemplate = (type: string) => {
 	};
 
 	return JSON.stringify(templates[type] || templates.usernameColor, null, 2);
+=======
+  return JSON.stringify(cosmeticsConfig.shopTemplates[type]?.template || cosmeticsConfig.shopTemplates['usernameColor'].template, null, 2);
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
 };
 
 export default function AdminShopItemEditPage() {

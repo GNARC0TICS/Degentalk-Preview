@@ -1,0 +1,42 @@
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 5px rgba(0, 255, 170, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(0, 255, 170, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(0, 255, 170, 0.5);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite ease-in-out;
+}
+
+@keyframes number-change {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  75% {
+    transform: translateY(10px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.number-changing {
+  animation: number-change 0.5s ease-out;
+}

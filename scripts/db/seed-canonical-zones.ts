@@ -396,6 +396,7 @@ const EXPANDABLE_ZONES_DATA = [
     position: 10,
     isCanonicalSidebar: true,
     forums: [
+<<<<<<< HEAD
       {
         id: 43,
         name: "Announcements",
@@ -420,6 +421,11 @@ const EXPANDABLE_ZONES_DATA = [
         position: 3,
         icon: "🐞",
       },
+=======
+      { id: 43, name: "Announcements", slug: "announcements", description: "Official Degentalk™™ news.", position: 1, icon: "📣" },
+      { id: 44, name: "Suggestions", slug: "suggestions", description: "How can we make this place better?", position: 2, icon: "📝" },
+      { id: 45, name: "Bug Reports", slug: "bug-reports", description: "Found a bug? Let us know.", position: 3, icon: "🐞" },
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
     ],
   },
 ];

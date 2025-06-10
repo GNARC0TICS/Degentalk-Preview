@@ -1,10 +1,10 @@
-# Degentalk Client
+# Degentalk™ Client
 
 ## Status: Reviewed – Awaiting Final Approval | 2025-06-02
 
 ## 1. Purpose & Role
 
-The `client/` directory contains the entire frontend application for the Degentalk platform. This includes all user interfaces, client-side logic, state management, and interactions with the backend API. It is built using React, TypeScript, and Vite, with styling managed by Tailwind CSS. Its primary role is to provide a rich, responsive, and intuitive user experience.
+The `client/` directory contains the entire frontend application for the Degentalk™ platform. This includes all user interfaces, client-side logic, state management, and interactions with the backend API. It is built using React, TypeScript, and Vite, with styling managed by Tailwind CSS. Its primary role is to provide a rich, responsive, and intuitive user experience.
 
 ## 2. Structure & Key Components
 

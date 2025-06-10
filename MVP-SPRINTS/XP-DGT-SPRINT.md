@@ -1,4 +1,4 @@
-# DegenTalk XP & DGT System Sprint Plan (Streamlined)
+# Degentalk™™ XP & DGT System Sprint Plan (Streamlined)
 
 ## Current Status Summary (May 2025)
 

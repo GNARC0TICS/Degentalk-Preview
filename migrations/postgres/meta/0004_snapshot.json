@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "id": "1f9a02bc-9a1f-4e84-9653-03f16a6f0756",
+=======
+  "id": "d9ed3df3-ae6f-4f68-83e3-43d7e698f952",
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
   "prevId": "f3e76a9b-2782-400d-b8e9-d6870683603f",
   "version": "7",
   "dialect": "postgresql",
@@ -1917,6 +1921,57 @@
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
+<<<<<<< HEAD
+=======
+        },
+        "forum_type": {
+          "name": "forum_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'general'"
+        },
+        "slug_override": {
+          "name": "slug_override",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "components": {
+          "name": "components",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'[]'"
+        },
+        "thread_rules": {
+          "name": "thread_rules",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'"
+        },
+        "access_control": {
+          "name": "access_control",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'"
+        },
+        "display_priority": {
+          "name": "display_priority",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "seo": {
+          "name": "seo",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'"
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
         }
       },
       "indexes": {},
@@ -11119,6 +11174,7 @@
       "schema": "public",
       "values": [
         "draft",
+<<<<<<< HEAD
         "published",
         "archived"
       ]
@@ -11166,6 +11222,11 @@
         "pending",
         "resolved",
         "closed",
+=======
+        "pending_review",
+        "published",
+        "rejected",
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
         "archived"
       ]
     },
@@ -11184,6 +11245,7 @@
       "name": "transaction_type",
       "schema": "public",
       "values": [
+<<<<<<< HEAD
         "TIP",
         "DEPOSIT",
         "WITHDRAWAL",
@@ -11223,6 +11285,19 @@
         "pending",
         "approved",
         "rejected"
+=======
+        "purchase",
+        "sale",
+        "transfer",
+        "deposit",
+        "withdrawal",
+        "admin_grant",
+        "tip",
+        "rain",
+        "fee",
+        "refund",
+        "other"
+>>>>>>> e9161f07a590654bde699619fdc9d26a47d0139a
       ]
     },
     "public.token_type_admin_airdrop": {
