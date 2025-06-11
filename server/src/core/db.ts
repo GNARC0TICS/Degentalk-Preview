@@ -2,11 +2,9 @@ import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle as drizzleNeon } from 'drizzle-orm/neon-serverless';
 import ws from 'ws';
 import * as schema from '@schema';
-// Removed: import { config } from 'dotenv'; // No longer needed here
 import { logger, LogLevel, LogAction } from './logger';
 
 // Environment variables should be loaded by the application entry point (e.g., server/index.ts)
-// Removed: config();
 
 neonConfig.webSocketConstructor = ws;
 
@@ -46,7 +44,6 @@ const withRetry = async <T>(operation: () => Promise<T>): Promise<T> => {
 			lastError = error;
 			// Specific error code for Neon/Postgres connection issues
 			if (error.code === '57P01') {
-				// Removed databaseProvider check
 				logger.warn('DATABASE', `Connection error (attempt ${i + 1}), retrying...`);
 				await new Promise((resolve) => setTimeout(resolve, 1000 * (i + 1)));
 				continue;

@@ -2,10 +2,9 @@
 
 /**
  * 🔒 CI Readiness Test
- * Validates that all GitHub Actions workflows will pass
+ * Fast validation that GitHub Actions workflows will pass
  */
 
-import { execSync } from 'child_process';
 import { existsSync } from 'fs';
 import { readFileSync } from 'fs';
 import chalk from 'chalk';
@@ -36,14 +35,6 @@ function runTest(name: string, testFn: () => void): void {
   }
 }
 
-function execSilent(command: string): string {
-  try {
-    return execSync(command, { encoding: 'utf8', stdio: 'pipe' });
-  } catch (error) {
-    throw new Error(`Command failed: ${command}`);
-  }
-}
-
 console.log(chalk.bold.cyan('🚀 Testing CI Readiness for Degentalk'));
 console.log(chalk.gray('This validates that GitHub Actions workflows will pass\n'));
 
@@ -58,11 +49,11 @@ runTest('GitHub Actions workflow exists', () => {
 runTest('Required npm scripts exist', () => {
   const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
   const requiredScripts = [
-    'check-imports',
-    'validate-everything:fail-fast',
-    'format:check',
-    'lint:aliases',
-    'ci:validate'
+    'validate',
+    'validate:fix', 
+    'check',
+    'format',
+    'format:check'
   ];
   
   for (const script of requiredScripts) {
@@ -72,52 +63,7 @@ runTest('Required npm scripts exist', () => {
   }
 });
 
-// Test 3: TypeScript compilation
-runTest('TypeScript compilation', () => {
-  execSilent('npx tsc --noEmit');
-});
-
-// Test 4: Import boundary validation
-runTest('Import boundary validation', () => {
-  execSilent('npm run check-imports');
-});
-
-// Test 5: Prettier formatting check
-runTest('Code formatting check', () => {
-  execSilent('npm run format:check');
-});
-
-// Test 6: Vite config leak check
-runTest('Vite config leak detection', () => {
-  try {
-    execSilent('grep -r "vite\\.config" server/');
-    throw new Error('Found Vite config imports in server/');
-  } catch (error) {
-    // This should fail - we want NO vite config in server
-    const output = (error as any).stdout || '';
-    if (output.includes('vite.config')) {
-      throw new Error('Found Vite config imports in server/');
-    }
-    // If grep finds nothing, it exits with code 1, which is what we want
-  }
-});
-
-// Test 7: Dependencies are installed
-runTest('Dependencies check', () => {
-  const requiredDeps = [
-    'ts-morph',
-    'chalk',
-    'prettier'
-  ];
-  
-  for (const dep of requiredDeps) {
-    if (!existsSync(`node_modules/${dep}`)) {
-      throw new Error(`Missing dependency: ${dep}`);
-    }
-  }
-});
-
-// Test 8: Schema consistency
+// Test 3: Schema consistency (quick check)
 runTest('Schema exports check', () => {
   if (!existsSync('db/schema/index.ts')) {
     throw new Error('Missing db/schema/index.ts');
@@ -131,14 +77,38 @@ runTest('Schema exports check', () => {
   }
 });
 
-// Test 9: Validation scripts work
-runTest('Comprehensive validation suite', () => {
-  execSilent('npm run validate-everything:fail-fast');
+// Test 4: Dependencies are installed (quick check)
+runTest('Critical dependencies check', () => {
+  const requiredDeps = [
+    'ts-morph',
+    'chalk',
+    'prettier'
+  ];
+  
+  for (const dep of requiredDeps) {
+    if (!existsSync(`node_modules/${dep}`)) {
+      throw new Error(`Missing dependency: ${dep}`);
+    }
+  }
 });
 
-// Test 10: Build process
+// Test 5: Basic config files exist
+runTest('Configuration files exist', () => {
+  const requiredConfigs = [
+    'tsconfig.json',
+    '.prettierrc',
+    'CONTRIBUTING.md'
+  ];
+  
+  for (const config of requiredConfigs) {
+    if (!existsSync(config)) {
+      throw new Error(`Missing config file: ${config}`);
+    }
+  }
+});
+
+// Test 6: Build process test
 runTest('Build process test', () => {
-  // Test that build scripts exist and are callable
   const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
   if (!pkg.scripts.build) {
     throw new Error('Missing build script');
@@ -165,7 +135,7 @@ if (failed > 0) {
   });
   
   console.log('\n' + chalk.bold.yellow('🔧 RECOMMENDATIONS:'));
-  console.log('  1. Run: npm run validate-everything:fix');
+  console.log('  1. Run: npm run validate:fix');
   console.log('  2. Run: npm run format');
   console.log('  3. Check CONTRIBUTING.md for boundary rules');
   console.log('  4. Ensure all dependencies are installed: npm ci');

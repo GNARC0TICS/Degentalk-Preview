@@ -11,3 +11,11 @@ logs/
 *.log
 .DS_Store
 coverage/
+
+# Validation artifacts
+.tmp/
+.test-artifacts/
+.cache/
+.validation-cache/
+*.test.js.map
+*.test.ts.map

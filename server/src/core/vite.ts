@@ -4,8 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createServer as createViteServer, createLogger } from 'vite';
 import { type Server } from 'http';
-// REMOVED: Vite config import violates shared-boundary rules
-// import viteConfig from '../../../config/vite.config';
+
 import { nanoid } from 'nanoid';
 import crypto from 'crypto';
 

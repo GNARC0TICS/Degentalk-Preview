@@ -25,8 +25,8 @@ jobs:
       - name: 🔧 Install dependencies
         run: npm ci
 
-      - name: 🔍 Run import boundary validation
-        run: npm run check-imports
+      - name: 🔍 Run validation suite
+        run: npm run validate
 
       - name: 🚨 Check for Vite config leaks
         run: |
@@ -69,7 +69,7 @@ jobs:
         run: npm ci
 
       - name: 🚀 Run comprehensive validation
-        run: npm run validate-everything:fail-fast
+        run: npm run check
 
       - name: 📋 Validation Summary
         if: always()
@@ -81,8 +81,8 @@ jobs:
             echo "❌ **VALIDATION FAILED!** Check logs above for details." >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### 🔧 Quick Fixes:" >> $GITHUB_STEP_SUMMARY
-            echo "- Run \`npm run check-imports:fix\` locally" >> $GITHUB_STEP_SUMMARY
-            echo "- Review CONTRIBUTING.md boundary rules" >> $GITHUB_STEP_SUMMARY
+            echo "- Run \`npm run validate:fix\` locally" >> $GITHUB_STEP_SUMMARY
+            echo "- Review CONTRIBUTING.md for boundary rules" >> $GITHUB_STEP_SUMMARY
             echo "- Ensure no Vite imports in server/" >> $GITHUB_STEP_SUMMARY
           fi
 
@@ -147,7 +147,7 @@ jobs:
           fi
 
       - name: 📋 Check for alias violations
-        run: npm run lint:aliases
+        run: npm run validate
 
   boundary-enforcement:
     name: 🚨 Boundary Enforcement
@@ -201,7 +201,7 @@ jobs:
             echo ""
             echo "🚨 $violations boundary violation(s) detected!"
             echo "📖 Please review CONTRIBUTING.md for boundary rules"
-            echo "🔧 Run 'npm run validate-everything:fix' locally"
+            echo "🔧 Run 'npm run validate:fix' locally"
             exit 1
           else
             echo "✅ No boundary violations detected in changed files"
