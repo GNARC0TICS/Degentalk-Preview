@@ -51,174 +51,180 @@ vi.mock('../../src/utils/logger', () => ({
 }));
 
 describe('DGT Service', () => {
-	beforeEach(() => {
-		vi.resetAllMocks();
-	});
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
-	describe('getUserBalance', () => {
-		it('should return the user balance', async () => {
-			const result = await dgtService.getUserBalance(1);
+  describe('getUserBalance', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+    it('should return the user balance', async () => {
+      const result = await dgtService.getUserBalance(1);
+      
+      expect(result).toBe(BigInt(1000));
+      expect(db.select).toHaveBeenCalled();
+    });
+    
+    it('should throw an error if user is not found', async () => {
+      // Mock user not found
+      vi.mocked(db.select).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi.fn().mockReturnValue([])
+          })
+        })
+      } as any);
+      
+      await expect(dgtService.getUserBalance(999)).rejects.toThrow(WalletError);
+    });
+  });
 
-			expect(result).toBe(BigInt(1000));
-			expect(db.select).toHaveBeenCalled();
-		});
+  describe('addDgt', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+    it('should add DGT to user balance', async () => {
+      const result = await dgtService.addDgt(1, BigInt(500), 'PURCHASE');
+      
+      expect(result).toBe(BigInt(500));
+      expect(db.transaction).toHaveBeenCalled();
+      expect(db.update).toHaveBeenCalled();
+      expect(db.insert).toHaveBeenCalled();
+    });
+    
+    it('should throw an error for negative amounts', async () => {
+      await expect(dgtService.addDgt(1, BigInt(-100), 'PURCHASE')).rejects.toThrow(WalletError);
+    });
+  });
 
-		it('should throw an error if user is not found', async () => {
-			// Mock user not found
-			vi.mocked(db.select).mockReturnValueOnce({
-				from: vi.fn().mockReturnValue({
-					where: vi.fn().mockReturnValue({
-						limit: vi.fn().mockReturnValue([])
-					})
-				})
-			} as any);
+  describe('deductDgt', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+    it('should deduct DGT from user balance', async () => {
+      const result = await dgtService.deductDgt(1, BigInt(500), 'WITHDRAW');
+      
+      expect(result).toBe(BigInt(500));
+      expect(db.transaction).toHaveBeenCalled();
+      expect(db.update).toHaveBeenCalled();
+      expect(db.insert).toHaveBeenCalled();
+    });
+    
+    it('should throw an error for insufficient funds', async () => {
+      // Mock insufficient balance
+      vi.mocked(db.select).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi.fn().mockReturnValue([{ dgtWalletBalance: '100' }])
+          })
+        })
+      } as any);
+      
+      await expect(dgtService.deductDgt(1, BigInt(500), 'WITHDRAW')).rejects.toThrow(WalletError);
+    });
+  });
 
-			await expect(dgtService.getUserBalance(999)).rejects.toThrow(WalletError);
-		});
-	});
+  describe('transferDgt', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+    it('should transfer DGT between users', async () => {
+      // Mock user lookups
+      vi.mocked(db.select).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi.fn().mockReturnValue([{ dgtWalletBalance: '1000' }])
+          })
+        })
+      } as any).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi.fn().mockReturnValue([{ id: 2 }])
+          })
+        })
+      } as any);
+      
+      // Mock balance updates
+      vi.mocked(db.update).mockReturnValueOnce({
+        set: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            returning: vi.fn().mockReturnValue([{ newBalance: '500' }])
+          })
+        })
+      } as any).mockReturnValueOnce({
+        set: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            returning: vi.fn().mockReturnValue([{ newBalance: '1500' }])
+          })
+        })
+      } as any);
+      
+      const result = await dgtService.transferDgt(1, 2, BigInt(500), 'TIP');
+      
+      expect(result).toEqual({
+        senderBalance: BigInt(500),
+        recipientBalance: BigInt(1500)
+      });
+      expect(db.transaction).toHaveBeenCalled();
+      expect(db.update).toHaveBeenCalledTimes(3); // Sender, recipient, and potentially treasury
+      expect(db.insert).toHaveBeenCalledTimes(3); // Sender tx, recipient tx, fee tx
+    });
+  });
 
-	describe('addDgt', () => {
-		it('should add DGT to user balance', async () => {
-			const result = await dgtService.addDgt(1, BigInt(500), 'PURCHASE');
-
-			expect(result).toBe(BigInt(500));
-			expect(db.transaction).toHaveBeenCalled();
-			expect(db.update).toHaveBeenCalled();
-			expect(db.insert).toHaveBeenCalled();
-		});
-
-		it('should throw an error for negative amounts', async () => {
-			await expect(dgtService.addDgt(1, BigInt(-100), 'PURCHASE')).rejects.toThrow(WalletError);
-		});
-	});
-
-	describe('deductDgt', () => {
-		it('should deduct DGT from user balance', async () => {
-			const result = await dgtService.deductDgt(1, BigInt(500), 'WITHDRAW');
-
-			expect(result).toBe(BigInt(500));
-			expect(db.transaction).toHaveBeenCalled();
-			expect(db.update).toHaveBeenCalled();
-			expect(db.insert).toHaveBeenCalled();
-		});
-
-		it('should throw an error for insufficient funds', async () => {
-			// Mock insufficient balance
-			vi.mocked(db.select).mockReturnValueOnce({
-				from: vi.fn().mockReturnValue({
-					where: vi.fn().mockReturnValue({
-						limit: vi.fn().mockReturnValue([{ dgtWalletBalance: '100' }])
-					})
-				})
-			} as any);
-
-			await expect(dgtService.deductDgt(1, BigInt(500), 'WITHDRAW')).rejects.toThrow(WalletError);
-		});
-	});
-
-	describe('transferDgt', () => {
-		it('should transfer DGT between users', async () => {
-			// Mock user lookups
-			vi.mocked(db.select)
-				.mockReturnValueOnce({
-					from: vi.fn().mockReturnValue({
-						where: vi.fn().mockReturnValue({
-							limit: vi.fn().mockReturnValue([{ dgtWalletBalance: '1000' }])
-						})
-					})
-				} as any)
-				.mockReturnValueOnce({
-					from: vi.fn().mockReturnValue({
-						where: vi.fn().mockReturnValue({
-							limit: vi.fn().mockReturnValue([{ id: 2 }])
-						})
-					})
-				} as any);
-
-			// Mock balance updates
-			vi.mocked(db.update)
-				.mockReturnValueOnce({
-					set: vi.fn().mockReturnValue({
-						where: vi.fn().mockReturnValue({
-							returning: vi.fn().mockReturnValue([{ newBalance: '500' }])
-						})
-					})
-				} as any)
-				.mockReturnValueOnce({
-					set: vi.fn().mockReturnValue({
-						where: vi.fn().mockReturnValue({
-							returning: vi.fn().mockReturnValue([{ newBalance: '1500' }])
-						})
-					})
-				} as any);
-
-			const result = await dgtService.transferDgt(1, 2, BigInt(500), 'TIP');
-
-			expect(result).toEqual({
-				senderBalance: BigInt(500),
-				recipientBalance: BigInt(1500)
-			});
-			expect(db.transaction).toHaveBeenCalled();
-			expect(db.update).toHaveBeenCalledTimes(3); // Sender, recipient, and potentially treasury
-			expect(db.insert).toHaveBeenCalledTimes(3); // Sender tx, recipient tx, fee tx
-		});
-	});
-
-	describe('fulfillDgtPurchase', () => {
-		it('should fulfill a DGT purchase', async () => {
-			// Mock purchase order lookup
-			vi.mocked(db.select)
-				.mockReturnValueOnce({
-					from: vi.fn().mockReturnValue({
-						where: vi.fn().mockReturnValue({
-							limit: vi.fn().mockReturnValue([
-								{
-									id: 1,
-									userId: 1,
-									dgtAmountRequested: '1000',
-									status: 'pending',
-									metadata: {}
-								}
-							])
-						})
-					})
-				} as any)
-				.mockReturnValueOnce({
-					from: vi.fn().mockReturnValue({
-						where: vi.fn().mockReturnValue({
-							limit: vi.fn().mockReturnValue([
-								{
-									dgtWalletBalance: '500'
-								}
-							])
-						})
-					})
-				} as any);
-
-			// Mock order update
-			vi.mocked(db.update).mockReturnValueOnce({
-				set: vi.fn().mockReturnValue({
-					where: vi.fn().mockReturnValue({
-						returning: vi.fn().mockReturnValue([
-							{
-								id: 1,
-								status: 'confirmed'
-							}
-						])
-					})
-				})
-			} as any);
-
-			const result = await dgtService.fulfillDgtPurchase(1, 'confirmed', {
-				transactionHash: '0x123'
-			});
-
-			expect(result).toEqual({
-				id: 1,
-				status: 'confirmed'
-			});
-			expect(db.transaction).toHaveBeenCalled();
-			expect(db.update).toHaveBeenCalledTimes(2); // Order update and balance update
-		});
-	});
-});
+  describe('fulfillDgtPurchase', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+    it('should fulfill a DGT purchase', async () => {
+      // Mock purchase order lookup
+      vi.mocked(db.select).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi.fn().mockReturnValue([{
+              id: 1,
+              userId: 1,
+              dgtAmountRequested: '1000',
+              status: 'pending',
+              metadata: {}
+            }])
+          })
+        })
+      } as any).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi.fn().mockReturnValue([{
+              dgtWalletBalance: '500'
+            }])
+          })
+        })
+      } as any);
+      
+      // Mock order update
+      vi.mocked(db.update).mockReturnValueOnce({
+        set: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            returning: vi.fn().mockReturnValue([{
+              id: 1,
+              status: 'confirmed'
+            }])
+          })
+        })
+      } as any);
+      
+      const result = await dgtService.fulfillDgtPurchase(1, 'confirmed', {
+        transactionHash: '0x123'
+      });
+      
+      expect(result).toEqual({
+        id: 1,
+        status: 'confirmed'
+      });
+      expect(db.transaction).toHaveBeenCalled();
+      expect(db.update).toHaveBeenCalledTimes(2); // Order update and balance update
+    });
+  });
+}); 

@@ -62,19 +62,25 @@ vi.mock('../../src/utils/logger', () => ({
 }));
 
 describe('Tip Service', () => {
-	beforeEach(() => {
-		vi.resetAllMocks();
-	});
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
-	describe('processTip', () => {
-		it('should process a successful tip', async () => {
-			const result = await tipService.processTip(
-				1, // fromUserId
-				2, // toUserId
-				BigInt(100), // amount
-				'Great post!', // reason
-				{ type: 'post', id: 123 } // contentReference
-			);
+  describe('processTip', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+    it('should process a successful tip', async () => {
+      const result = await tipService.processTip(
+        1, // fromUserId
+        2, // toUserId
+        BigInt(100), // amount
+        'Great post!', // reason
+        { type: 'post', id: 123 } // contentReference
+      );
 
 			expect(result).toBeDefined();
 			expect(dgtService.transferDgt).toHaveBeenCalledWith(
@@ -104,9 +110,12 @@ describe('Tip Service', () => {
 		});
 	});
 
-	describe('getUserTipStats', () => {
-		it('should return user tip statistics', async () => {
-			const stats = await tipService.getUserTipStats(1);
+  describe('getUserTipStats', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+    it('should return user tip statistics', async () => {
+      const stats = await tipService.getUserTipStats(1);
 
 			expect(stats).toEqual({
 				totalSent: 1000,
@@ -117,16 +126,17 @@ describe('Tip Service', () => {
 		});
 	});
 
-	describe('getContentTipStats', () => {
-		it('should return content tip statistics', async () => {
-			vi.mocked(db.execute).mockResolvedValueOnce({
-				rows: [
-					{
-						totalAmount: '500',
-						tipCount: 5
-					}
-				]
-			});
+  describe('getContentTipStats', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+    it('should return content tip statistics', async () => {
+      vi.mocked(db.execute).mockResolvedValueOnce({
+        rows: [{ 
+          totalAmount: '500', 
+          tipCount: 5
+        }]
+      });
 
 			const stats = await tipService.getContentTipStats('post', 123);
 
