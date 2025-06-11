@@ -1,3 +1,12 @@
+console.log(
+	'🚨 VITE CONFIG LOADED - If you see this during backend startup, you have a ghost import!'
+);
+
+// Safeguard against direct imports
+if (typeof require !== 'undefined' && require.main === module) {
+	throw new Error('vite.config.ts should not be imported directly by backend code.');
+}
+
 /**
  * @file config/vite.config.ts
  * @description Vite configuration file for the Degentalk frontend application.
@@ -29,37 +38,46 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); // This is /Users/gnarcotic/Degentalk/ForumFusion/config
 const projectRoot = path.resolve(__dirname, '..'); // This will be /Users/gnarcotic/Degentalk/ForumFusion
 
-export default defineConfig({
-	plugins: [
-		react(),
-		runtimeErrorOverlay(),
-		...(process.env.NODE_ENV !== 'production' && process.env.REPL_ID !== undefined
-			? [await import('@replit/vite-plugin-cartographer').then((m) => m.cartographer())]
-			: [])
-	],
-	resolve: {
-		alias: {
-			'@': path.resolve(projectRoot, 'client', 'src'),
-			'@shared': path.resolve(projectRoot, 'shared'),
-			'@assets': path.resolve(projectRoot, 'attached_assets')
+// Convert to async function to handle dynamic imports properly
+export default defineConfig(async () => {
+	const plugins = [react(), runtimeErrorOverlay()];
+
+	// Handle the cartographer plugin dynamically without top-level await
+	if (process.env.NODE_ENV !== 'production' && process.env.REPL_ID !== undefined) {
+		try {
+			const { cartographer } = await import('@replit/vite-plugin-cartographer');
+			plugins.push(cartographer());
+		} catch (e) {
+			console.warn('Failed to load cartographer plugin:', e);
 		}
-	},
-	root: path.resolve(projectRoot, 'client'),
-	server: {
-		port: 5173,
-		proxy: {
-			'/api': {
-				target: 'http://localhost:5001',
-				changeOrigin: true,
-				secure: false
-			}
-		}
-	},
-	build: {
-		outDir: path.resolve(projectRoot, 'dist/public'),
-		emptyOutDir: true
-	},
-	css: {
-		postcss: path.resolve(projectRoot, 'config/postcss.config.js')
 	}
+
+	return {
+		plugins,
+		resolve: {
+			alias: {
+				'@': path.resolve(projectRoot, 'client', 'src'),
+				'@shared': path.resolve(projectRoot, 'shared'),
+				'@assets': path.resolve(projectRoot, 'attached_assets')
+			}
+		},
+		root: path.resolve(projectRoot, 'client'),
+		server: {
+			port: 5173,
+			proxy: {
+				'/api': {
+					target: 'http://localhost:5001',
+					changeOrigin: true,
+					secure: false
+				}
+			}
+		},
+		build: {
+			outDir: path.resolve(projectRoot, 'dist/public'),
+			emptyOutDir: true
+		},
+		css: {
+			postcss: path.resolve(projectRoot, 'config/postcss.config.js')
+		}
+	};
 });

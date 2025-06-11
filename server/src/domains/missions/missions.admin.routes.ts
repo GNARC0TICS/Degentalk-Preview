@@ -7,7 +7,7 @@
 
 import { Router, Request, Response, NextFunction } from 'express';
 import * as missionsController from './missions.controller';
-import { isAuthenticated, isAdmin } from '../../auth/middleware/auth.middleware';
+import { isAuthenticated, isAdmin } from '../auth/middleware/auth.middleware';
 
 const router = Router();
 

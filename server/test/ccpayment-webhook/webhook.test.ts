@@ -68,12 +68,10 @@ describe('CCPayment Webhook Service', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
+
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
 
 	describe('processWebhookEvent', () => {
 		it('should process deposit_completed webhook events', async () => {
@@ -92,26 +90,6 @@ describe('CCPayment Webhook Service', () => {
 				createdAt: new Date().toISOString(),
 				updatedAt: new Date().toISOString()
 			} as any;
-  describe('processWebhookEvent', () => {
-    afterEach(() => {
-      vi.restoreAllMocks();
-    });
-    it('should process deposit_completed webhook events', async () => {
-      const event = {
-        eventType: 'deposit_completed',
-        orderId: 'webhook-event-id',
-        merchantOrderId: 'test-order-id',
-        status: 'completed',
-        amount: '100',
-        actualAmount: '99.5',
-        currency: 'USDT',
-        network: 'TRC20',
-        txHash: '0xabcdef1234567890',
-        fromAddress: '0xsender',
-        toAddress: '0xrecipient',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      } as any;
 
 			const result = await ccpaymentWebhookService.processWebhookEvent(event);
 

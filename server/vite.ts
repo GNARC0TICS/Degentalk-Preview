@@ -4,7 +4,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createServer as createViteServer, createLogger } from 'vite';
 import { type Server } from 'http';
-import viteConfig from '../config/vite.config';
+// REMOVED: Vite config import violates shared-boundary rules
+// import viteConfig from '../config/vite.config';
 import { nanoid } from 'nanoid';
 import crypto from 'crypto';
 
@@ -50,8 +51,9 @@ export async function setupVite(app: Express, server: Server) {
 		allowedHosts: true as const
 	};
 
+	// Safe inline config - no imports from client-side vite.config
 	const vite = await createViteServer({
-		...viteConfig,
+		root: path.resolve(__dirname, '..', 'client'),
 		configFile: false,
 		customLogger: {
 			...viteLogger,

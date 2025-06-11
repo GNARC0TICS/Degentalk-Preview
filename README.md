@@ -1,3 +1,23 @@
+# 🚀 Degentalk Platform
+
+[![🛡️ Boundary Validation](https://github.com/your-username/degentalk/actions/workflows/validate-codebase.yml/badge.svg)](https://github.com/your-username/degentalk/actions/workflows/validate-codebase.yml)
+
+## 🔒 **Bulletproof Architecture**
+
+This repository is protected by an **advanced boundary enforcement system** that prevents architectural violations:
+
+- ✅ **Import Boundaries**: Server cannot import from client/, client cannot import from server/
+- ✅ **Vite Config Protection**: Zero-tolerance for Vite config leaks into backend
+- ✅ **Schema Consistency**: All database fields must exist in both SQLite and PostgreSQL
+- ✅ **Path Alias Validation**: Automated checking of `@/` imports and TypeScript resolution
+- ✅ **CI/CD Integration**: Every PR is validated before merge
+
+### 🚨 **Breaking the Rules?**
+
+- **PRs will be automatically rejected** if they violate boundaries
+- Run `npm run validate-everything:fix` to fix issues locally
+- See `CONTRIBUTING.md` for the complete rule system
+
 # DegenTalk - Crypto Community Platform
 
 A crypto-native forum and social platform designed for cryptocurrency enthusiasts, traders, and developers. Features integrated wallet functionality, a digital goods marketplace, and gamified social features with XP/DGT economy.

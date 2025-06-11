@@ -55,8 +55,7 @@ import {
 } from '../auth/middleware/auth.middleware';
 import { ThreadWithUserAndCategory, PostWithUser } from '@shared/types';
 import { slugify } from '@server/utils/slugify';
-import { XpService } from '../../../services/xp-service';
-import { xpLevelService, XP_ACTIONS } from '../../../services/xp-level-service';
+import { XpLevelService, xpLevelService, XP_ACTIONS } from '../../../services/xp-level-service';
 import rulesRoutes from './rules/rules.routes';
 import { forumController } from './forum.controller';
 import { forumService } from './forum.service';

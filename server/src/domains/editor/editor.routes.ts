@@ -6,7 +6,7 @@
 
 import { Router, Request, Response } from 'express';
 import axios from 'axios';
-import { IStorage } from '../../../../storage';
+import { IStorage } from '../../../storage';
 
 /**
  * Initialize editor routes

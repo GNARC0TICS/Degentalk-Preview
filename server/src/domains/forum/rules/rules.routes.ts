@@ -18,7 +18,7 @@ import {
 import crypto from 'crypto';
 import { z } from 'zod';
 import { isAuthenticated } from '../../auth/middleware/auth.middleware';
-import { storage } from '@server/storage';
+import { storage } from '../../../../storage';
 import { asyncHandler } from '@server/src/core/errors'; // Assuming asyncHandler is in core errors
 
 // Helper function to get user ID from req.user, handling both id and user_id formats

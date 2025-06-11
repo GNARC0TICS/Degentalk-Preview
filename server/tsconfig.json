@@ -1,0 +1,17 @@
+{
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
+		"outDir": "./dist",
+		"baseUrl": "..",
+		"paths": {
+			"@/*": ["client/src/*"],
+			"@shared/*": ["shared/*"],
+			"@server/*": ["server/*"],
+			"@db": ["db/index.ts"],
+			"@schema": ["db/schema/index.ts"],
+			"@schema/*": ["db/schema/*"]
+		}
+	},
+	"include": ["./**/*.ts", "./**/*.tsx"],
+	"exclude": ["node_modules", "dist"]
+}

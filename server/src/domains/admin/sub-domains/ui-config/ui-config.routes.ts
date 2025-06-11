@@ -1,6 +1,6 @@
 /**
  * Admin UI Configuration Routes
- * 
+ *
  * Defines REST API endpoints for UI configuration management
  */
 
@@ -18,50 +18,35 @@ const router = Router();
  * @desc Get quotes with filtering and pagination
  * @access Admin
  */
-router.get(
-    '/quotes',
-    asyncHandler(uiConfigController.getQuotes.bind(uiConfigController))
-);
+router.get('/quotes', asyncHandler(uiConfigController.getQuotes.bind(uiConfigController)));
 
 /**
  * @route GET /api/admin/ui-config/quotes/:id
  * @desc Get a single quote by ID
  * @access Admin
  */
-router.get(
-    '/quotes/:id',
-    asyncHandler(uiConfigController.getQuoteById.bind(uiConfigController))
-);
+router.get('/quotes/:id', asyncHandler(uiConfigController.getQuoteById.bind(uiConfigController)));
 
 /**
  * @route POST /api/admin/ui-config/quotes
  * @desc Create a new quote
  * @access Admin
  */
-router.post(
-    '/quotes',
-    asyncHandler(uiConfigController.createQuote.bind(uiConfigController))
-);
+router.post('/quotes', asyncHandler(uiConfigController.createQuote.bind(uiConfigController)));
 
 /**
  * @route PUT /api/admin/ui-config/quotes/:id
  * @desc Update an existing quote
  * @access Admin
  */
-router.put(
-    '/quotes/:id',
-    asyncHandler(uiConfigController.updateQuote.bind(uiConfigController))
-);
+router.put('/quotes/:id', asyncHandler(uiConfigController.updateQuote.bind(uiConfigController)));
 
 /**
  * @route DELETE /api/admin/ui-config/quotes/:id
  * @desc Delete a quote
  * @access Admin
  */
-router.delete(
-    '/quotes/:id',
-    asyncHandler(uiConfigController.deleteQuote.bind(uiConfigController))
-);
+router.delete('/quotes/:id', asyncHandler(uiConfigController.deleteQuote.bind(uiConfigController)));
 
 /**
  * @route POST /api/admin/ui-config/quotes/reorder
@@ -69,8 +54,8 @@ router.delete(
  * @access Admin
  */
 router.post(
-    '/quotes/reorder',
-    asyncHandler(uiConfigController.reorderQuotes.bind(uiConfigController))
+	'/quotes/reorder',
+	asyncHandler(uiConfigController.reorderQuotes.bind(uiConfigController))
 );
 
 /**
@@ -79,8 +64,8 @@ router.post(
  * @access Admin
  */
 router.post(
-    '/quotes/bulk',
-    asyncHandler(uiConfigController.bulkUpdateQuotes.bind(uiConfigController))
+	'/quotes/bulk',
+	asyncHandler(uiConfigController.bulkUpdateQuotes.bind(uiConfigController))
 );
 
 /**
@@ -89,8 +74,8 @@ router.post(
  * @access Admin
  */
 router.post(
-    '/quotes/import',
-    asyncHandler(uiConfigController.importQuotes.bind(uiConfigController))
+	'/quotes/import',
+	asyncHandler(uiConfigController.importQuotes.bind(uiConfigController))
 );
 
 /**
@@ -99,8 +84,8 @@ router.post(
  * @access Admin
  */
 router.post(
-    '/quotes/export',
-    asyncHandler(uiConfigController.exportQuotes.bind(uiConfigController))
+	'/quotes/export',
+	asyncHandler(uiConfigController.exportQuotes.bind(uiConfigController))
 );
 
 // ==================== COLLECTION ROUTES ====================
@@ -111,8 +96,8 @@ router.post(
  * @access Admin
  */
 router.get(
-    '/collections',
-    asyncHandler(uiConfigController.getCollections.bind(uiConfigController))
+	'/collections',
+	asyncHandler(uiConfigController.getCollections.bind(uiConfigController))
 );
 
 /**
@@ -121,8 +106,8 @@ router.get(
  * @access Admin
  */
 router.post(
-    '/collections',
-    asyncHandler(uiConfigController.createCollection.bind(uiConfigController))
+	'/collections',
+	asyncHandler(uiConfigController.createCollection.bind(uiConfigController))
 );
 
 /**
@@ -131,8 +116,8 @@ router.post(
  * @access Admin
  */
 router.put(
-    '/collections/:id',
-    asyncHandler(uiConfigController.updateCollection.bind(uiConfigController))
+	'/collections/:id',
+	asyncHandler(uiConfigController.updateCollection.bind(uiConfigController))
 );
 
 /**
@@ -141,8 +126,8 @@ router.put(
  * @access Admin
  */
 router.delete(
-    '/collections/:id',
-    asyncHandler(uiConfigController.deleteCollection.bind(uiConfigController))
+	'/collections/:id',
+	asyncHandler(uiConfigController.deleteCollection.bind(uiConfigController))
 );
 
 // ==================== ANALYTICS ROUTES ====================
@@ -153,8 +138,8 @@ router.delete(
  * @access Admin
  */
 router.post(
-    '/analytics/track',
-    asyncHandler(uiConfigController.trackEvent.bind(uiConfigController))
+	'/analytics/track',
+	asyncHandler(uiConfigController.trackEvent.bind(uiConfigController))
 );
 
 /**
@@ -163,8 +148,8 @@ router.post(
  * @access Admin
  */
 router.get(
-    '/analytics/quotes/:quoteId',
-    asyncHandler(uiConfigController.getQuoteAnalytics.bind(uiConfigController))
+	'/analytics/quotes/:quoteId',
+	asyncHandler(uiConfigController.getQuoteAnalytics.bind(uiConfigController))
 );
 
 // ==================== HEALTH CHECK ====================
@@ -175,12 +160,12 @@ router.get(
  * @access Admin
  */
 router.get('/health', (req, res) => {
-    res.json({
-        service: 'ui-config',
-        status: 'healthy',
-        timestamp: new Date().toISOString()
-    });
+	res.json({
+		service: 'ui-config',
+		status: 'healthy',
+		timestamp: new Date().toISOString()
+	});
 });
 
 // Export the router
-export default router; 
+export default router;

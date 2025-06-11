@@ -1,4 +1,13 @@
-import { pgTable, serial, text, integer, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	text,
+	integer,
+	boolean,
+	timestamp,
+	jsonb,
+	AnyPgColumn
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { userGroups } from '../user/userGroups'; // Placeholder for future import
 
