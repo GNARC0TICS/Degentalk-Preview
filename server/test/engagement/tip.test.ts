@@ -63,8 +63,14 @@ describe('Tip Service', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   describe('processTip', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
     it('should process a successful tip', async () => {
       const result = await tipService.processTip(
         1, // fromUserId
@@ -107,6 +113,9 @@ describe('Tip Service', () => {
   });
 
   describe('getUserTipStats', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
     it('should return user tip statistics', async () => {
       const stats = await tipService.getUserTipStats(1);
 
@@ -120,6 +129,9 @@ describe('Tip Service', () => {
   });
 
   describe('getContentTipStats', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
     it('should return content tip statistics', async () => {
       vi.mocked(db.execute).mockResolvedValueOnce({
         rows: [{ 

@@ -54,8 +54,14 @@ describe('DGT Service', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   describe('getUserBalance', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
     it('should return the user balance', async () => {
       const result = await dgtService.getUserBalance(1);
       
@@ -78,6 +84,9 @@ describe('DGT Service', () => {
   });
 
   describe('addDgt', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
     it('should add DGT to user balance', async () => {
       const result = await dgtService.addDgt(1, BigInt(500), 'PURCHASE');
       
@@ -93,6 +102,9 @@ describe('DGT Service', () => {
   });
 
   describe('deductDgt', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
     it('should deduct DGT from user balance', async () => {
       const result = await dgtService.deductDgt(1, BigInt(500), 'WITHDRAW');
       
@@ -117,6 +129,9 @@ describe('DGT Service', () => {
   });
 
   describe('transferDgt', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
     it('should transfer DGT between users', async () => {
       // Mock user lookups
       vi.mocked(db.select).mockReturnValueOnce({
@@ -161,6 +176,9 @@ describe('DGT Service', () => {
   });
 
   describe('fulfillDgtPurchase', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
     it('should fulfill a DGT purchase', async () => {
       // Mock purchase order lookup
       vi.mocked(db.select).mockReturnValueOnce({

@@ -66,8 +66,14 @@ describe('CCPayment Webhook Service', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   describe('processWebhookEvent', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
     it('should process deposit_completed webhook events', async () => {
       const event = {
         eventType: 'deposit_completed',
