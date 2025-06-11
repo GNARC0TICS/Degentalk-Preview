@@ -22,7 +22,8 @@ import {
 	Sparkles,
 	Trophy,
 	BarChart3,
-	BadgeIcon
+	BadgeIcon,
+	Globe
 } from 'lucide-react';
 import AdminSidebar from '@/components/admin/admin-sidebar';
 import {
@@ -61,6 +62,21 @@ const adminLinks = [
 		icon: <Package className="h-4 w-4 mr-2" />
 	},
 	{ href: '/admin/emojis', label: 'Emojis', icon: <Smile className="h-4 w-4 mr-2" /> },
+	{
+		href: '/admin/config/tags',
+		label: 'Tag Config',
+		icon: <TagIcon className="h-4 w-4 mr-2" />
+	},
+	{
+		href: '/admin/config/xp',
+		label: 'XP Config',
+		icon: <Trophy className="h-4 w-4 mr-2" />
+	},
+	{
+		href: '/admin/config/zones',
+		label: 'Forum Zones',
+		icon: <Globe className="h-4 w-4 mr-2" />
+	},
 	{
 		href: '/admin/platform-settings',
 		label: 'Platform Settings',

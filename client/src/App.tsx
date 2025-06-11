@@ -11,9 +11,9 @@ import WalletPage from './pages/wallet';
 import HomePage from './pages/home';
 import ForumsPage from './pages/forums';
 // Import forum system pages
-import ForumBySlugPage from './pages/forums/[forum_slug]';
-import ThreadPage from './pages/threads/[thread_slug]';
-import CreateThreadPage from './pages/threads/create';
+import ForumBySlugPage from './pages/forums/[forum_slug].tsx';
+import ThreadPage from './pages/threads/[thread_slug].tsx';
+import CreateThreadPage from './pages/threads/create.tsx';
 import ShopPage from './pages/shop';
 import NotFoundPage from './pages/not-found';
 import LeaderboardPage from './pages/leaderboard';
@@ -21,27 +21,30 @@ import DegenIndexPage from './pages/degen-index';
 import AuthPage from './pages/auth';
 
 // Admin Pages
-import AdminDashboardPage from './pages/admin/index';
-import AdminUsersPage from './pages/admin/users';
-import AdminUserEdit from './pages/admin/edit-user'; // Added for Admin User Edit Page
-import UserXpAdjustmentPage from './pages/admin/xp/adjust'; // Added for Admin XP Adjust Page
-import BadgeManagementPage from './pages/admin/xp/badges'; // Added for Admin XP Badges Page
-import LevelManagementPage from './pages/admin/xp/levels'; // Added for Admin XP Levels Page
-import XpSettingsPage from './pages/admin/xp/settings'; // Added for Admin XP Settings Page
-import TitleManagementPage from './pages/admin/xp/titles'; // Added for Admin XP Titles Page
-import AdminThreadsPage from './pages/admin/threads';
-import AdminTreasuryPage from './pages/admin/treasury';
-import AdminWalletsPage from './pages/admin/wallets';
-import AdminTransactionsPage from './pages/admin/transactions';
-import AdminStatsPage from './pages/admin/stats';
-import AdminReportsPage from './pages/admin/reports';
-import AdminAnnouncementsPage from './pages/admin/announcements';
-import AdminCategoriesPage from './pages/admin/categories';
-import AdminPrefixesPage from './pages/admin/prefixes';
-import PlatformSettingsPage from './pages/admin/platform-settings';
-import AdminDgtPackagesPage from './pages/admin/dgt-packages';
-import TipRainSettingsPage from './pages/admin/tip-rain-settings';
-import CooldownSettingsPage from './pages/admin/cooldowns';
+import AdminDashboardPage from "./pages/admin/index.tsx";
+import AdminUsersPage from "./pages/admin/users.tsx";
+import AdminUserEdit from "./pages/admin/edit-user.tsx";
+import UserXpAdjustmentPage from "./pages/admin/xp/adjust.tsx";
+import BadgeManagementPage from "./pages/admin/xp/badges.tsx";
+import LevelManagementPage from "./pages/admin/xp/levels.tsx";
+import XpSettingsPage from "./pages/admin/xp/settings.tsx";
+import TitleManagementPage from "./pages/admin/xp/titles.tsx";
+import AdminThreadsPage from "./pages/admin/threads.tsx";
+import AdminTreasuryPage from "./pages/admin/treasury.tsx";
+import AdminWalletsPage from "./pages/admin/wallets/index.tsx";
+import AdminTransactionsPage from "./pages/admin/transactions/index.tsx";
+import AdminStatsPage from "./pages/admin/stats/index.tsx";
+import AdminReportsPage from "./pages/admin/reports.tsx";
+import AdminAnnouncementsPage from "./pages/admin/announcements/index.tsx";
+import AdminCategoriesPage from "./pages/admin/categories.tsx";
+import AdminPrefixesPage from "./pages/admin/prefixes.tsx";
+import PlatformSettingsPage from "./pages/admin/platform-settings.tsx";
+import TagConfigPage from "./pages/admin/config/tags.tsx";
+import XpConfigPage from "./pages/admin/config/xp.tsx";
+import ZoneConfigPage from "./pages/admin/config/zones.tsx";
+import AdminDgtPackagesPage from "./pages/admin/dgt-packages.tsx";
+import TipRainSettingsPage from "./pages/admin/tip-rain-settings.tsx";
+import CooldownSettingsPage from "./pages/admin/cooldowns.tsx";
 
 // Shop Pages
 import DgtPurchasePage from './pages/shop-management/dgt-purchase';
@@ -252,6 +255,18 @@ function App() {
 								<PlatformSettingsPage />
 							</AdminLayout>
 						)}
+					/>
+					<Route
+						path="/admin/config/tags"
+						component={TagConfigPage}
+					/>
+					<Route
+						path="/admin/config/xp"
+						component={XpConfigPage}
+					/>
+					<Route
+						path="/admin/config/zones"
+						component={ZoneConfigPage}
 					/>
 					<Route
 						path="/admin/dgt-packages"

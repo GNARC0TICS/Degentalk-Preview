@@ -1,0 +1,67 @@
+import React, { useEffect, useState } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
+import AdminLayout from '../admin-layout.tsx';
+import { Textarea } from '@/components/ui/textarea.tsx';
+import { Button } from '@/components/ui/button.tsx';
+import { useToast } from '@/hooks/use-toast.ts';
+import { apiRequest, queryClient } from '@/lib/queryClient.ts';
+
+export default function TagConfigPage() {
+  const { toast } = useToast();
+  const { data, isLoading } = useQuery<any>({
+    queryKey: ['/api/admin/config/tags'],
+    queryFn: () => apiRequest({ url: '/api/admin/config/tags' })
+  });
+
+  const [json, setJson] = useState('');
+
+  useEffect(() => {
+    if (data) setJson(JSON.stringify(data, null, 2));
+  }, [data]);
+
+  const saveMutation = useMutation({
+    mutationFn: async (body: string) => {
+      const parsed = JSON.parse(body);
+      await apiRequest({ url: '/api/admin/config/tags', method: 'PUT', data: parsed });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/config/tags'] });
+      toast({ title: 'Config saved', description: 'Tag configuration updated.' });
+    },
+    onError: (err: any) => {
+      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+    }
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    saveMutation.mutate(json);
+  };
+
+  if (isLoading) {
+    return (
+      <AdminLayout>
+        <div className="p-8 flex justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>
+      </AdminLayout>
+    );
+  }
+
+  return (
+    <AdminLayout>
+      <div className="space-y-4">
+        <h1 className="text-3xl font-bold">Tag Config</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Textarea
+            value={json}
+            onChange={(e) => setJson(e.target.value)}
+            className="font-mono min-h-[400px]"
+          />
+          <Button type="submit" disabled={saveMutation.isPending}>
+            {saveMutation.isPending ? 'Saving...' : 'Save Config'}
+          </Button>
+        </form>
+      </div>
+    </AdminLayout>
+  );
+}

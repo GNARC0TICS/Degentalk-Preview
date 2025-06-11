@@ -240,6 +240,35 @@ export const adminRouteGroups: AdminRouteGroup[] = [
 		]
 	},
 	{
+		id: 'config',
+		label: 'Config',
+		icon: 'database',
+		permissions: ['admin'],
+		routes: [
+			{
+				path: '/admin/config/tags',
+				label: 'Tag Config',
+				icon: 'tag',
+				permissions: ['admin'],
+				description: 'Edit forum tag styles'
+			},
+			{
+				path: '/admin/config/xp',
+				label: 'XP Config',
+				icon: 'trophy',
+				permissions: ['admin'],
+				description: 'Configure XP actions and titles'
+			},
+			{
+				path: '/admin/config/zones',
+				label: 'Forum Zones',
+				icon: 'globe',
+				permissions: ['admin'],
+				description: 'Manage forum zone registry'
+			}
+		]
+	},
+	{
 		id: 'system',
 		label: 'System',
 		icon: 'settings',
