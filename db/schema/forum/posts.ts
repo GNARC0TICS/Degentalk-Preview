@@ -1,3 +1,4 @@
+import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
 	serial,
@@ -8,7 +9,6 @@ import {
 	uuid,
 	bigint,
 	jsonb,
-	AnyPgColumn,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';

@@ -32,17 +32,16 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
+// import tsconfigPaths from 'vite-tsconfig-paths'; // Temporarily remove this plugin
 
-// Get the directory name from the URL
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename); // This is /Users/gnarcotic/Degentalk/ForumFusion/config
-const projectRoot = path.resolve(__dirname, '..'); // This will be /Users/gnarcotic/Degentalk/ForumFusion
+const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '..');
 
-// Convert to async function to handle dynamic imports properly
 export default defineConfig(async () => {
-	const plugins = [react(), runtimeErrorOverlay()];
+	// const plugins = [tsconfigPaths(), react(), runtimeErrorOverlay()]; // Old line
+	const plugins = [react(), runtimeErrorOverlay()]; // New line without tsconfigPaths
 
-	// Handle the cartographer plugin dynamically without top-level await
 	if (process.env.NODE_ENV !== 'production' && process.env.REPL_ID !== undefined) {
 		try {
 			const { cartographer } = await import('@replit/vite-plugin-cartographer');
@@ -55,11 +54,15 @@ export default defineConfig(async () => {
 	return {
 		plugins,
 		resolve: {
-			alias: {
-				'@': path.resolve(projectRoot, 'client', 'src'),
-				'@shared': path.resolve(projectRoot, 'shared'),
-				'@assets': path.resolve(projectRoot, 'attached_assets')
-			}
+			alias: [
+				{ find: '@', replacement: path.resolve(projectRoot, 'client/src') },
+				{ find: '@shared', replacement: path.resolve(projectRoot, 'shared') },
+				{ find: '@assets', replacement: path.resolve(projectRoot, 'attached_assets') },
+				{ find: '@db', replacement: path.resolve(projectRoot, 'db/index.ts') },
+				{ find: '@db_types', replacement: path.resolve(projectRoot, 'db/types') },
+				{ find: '@schema', replacement: path.resolve(projectRoot, 'db/schema/index.ts') },
+				{ find: /^@schema\/(.*)/, replacement: path.resolve(projectRoot, 'db/schema/$1') }
+			]
 		},
 		root: path.resolve(projectRoot, 'client'),
 		server: {

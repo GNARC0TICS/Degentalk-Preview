@@ -16,7 +16,7 @@ import { BookmarkButton } from '@/components/ui/bookmark-button';
 import LikeButton from '@/features/forum/components/LikeButton';
 import ShareButton from '@/components/forum/ShareButton';
 import { usePostUpdate } from '@/features/forum/hooks/useForumQueries';
-import { PostWithUser } from '@schema';
+import type { PostWithUser } from '@shared/types';
 
 const PAGE_SIZE = 20;
 

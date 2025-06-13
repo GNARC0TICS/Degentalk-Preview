@@ -19,7 +19,7 @@ import TipButton from './wallet/tip-button';
 import RainButton from './wallet/rain-button';
 import { BuyDgtButton } from './wallet/buy-dgt-button';
 import TransactionHistory from './wallet/transaction-history';
-import { WalletBalances } from '@/types/wallet';
+import type { WalletBalances } from '@/types/wallet';
 import '@/styles/wallet-animations.css';
 
 export interface WalletModalProps {

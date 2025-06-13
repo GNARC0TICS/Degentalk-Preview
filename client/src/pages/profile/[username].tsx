@@ -40,7 +40,7 @@ import { XPProfileSection } from '@/components/profile/XPProfileSection';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { CosmeticControlPanel } from '@/components/profile/CosmeticControlPanel';
 import { ProfileEditor } from '@/components/profile/ProfileEditor';
-import { UserInventoryWithProduct } from '@/types/inventory';
+import type { UserInventoryWithProduct } from '@/types/inventory';
 import { useUserInventory } from '@/hooks/useUserInventory';
 
 // Define profile data interface

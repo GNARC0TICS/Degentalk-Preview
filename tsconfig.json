@@ -26,7 +26,8 @@
 			"@server/*": ["server/*"],
 			"@db": ["db/index.ts"],
 			"@schema": ["db/schema/index.ts"],
-			"@schema/*": ["db/schema/*"]
+			"@schema/*": ["db/schema/*"],
+			"@db_types/*": ["db/types/*"]
 		},
 		"isolatedModules": true
 	}

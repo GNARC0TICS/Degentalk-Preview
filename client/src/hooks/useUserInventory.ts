@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
+import type { UserInventoryWithProduct } from '@/types/inventory';
 import { apiRequest } from '@/lib/queryClient';
-import { UserInventoryWithProduct } from '@/types/inventory';
 
 /**
  * Hook to fetch user inventory with product details

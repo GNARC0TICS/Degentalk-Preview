@@ -1,4 +1,4 @@
-import { User } from '@schema';
+import type { User } from '@schema';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 

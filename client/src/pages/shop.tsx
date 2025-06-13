@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useShopItems } from '@/hooks/use-shop-items';
-import { ItemCategory } from '@/hooks/use-vault-items';
-import { ShopItem } from '@/hooks/use-shop-items';
+import type { ItemCategory } from '@/hooks/use-vault-items';
+import type { ShopItem } from '@/hooks/use-shop-items';
 import { Link } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 

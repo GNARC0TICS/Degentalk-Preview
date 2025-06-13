@@ -1,3 +1,4 @@
+import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
 	serial,
@@ -6,7 +7,6 @@ import {
 	boolean,
 	timestamp,
 	jsonb,
-	AnyPgColumn
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { userGroups } from '../user/userGroups'; // Placeholder for future import

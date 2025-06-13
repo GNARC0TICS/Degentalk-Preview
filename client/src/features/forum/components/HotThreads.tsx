@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { ThreadCard } from '@/components/forum/thread-card';
-import { ThreadTag } from '@shared/types';
+import type { ThreadTag } from '@schema';
 import { Link } from 'wouter';
 import {
 	MessageSquare,

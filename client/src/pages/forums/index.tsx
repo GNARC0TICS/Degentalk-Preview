@@ -30,9 +30,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'wouter';
 import { Badge } from '@/components/ui/badge';
 import { getForumEntityUrl, isPrimaryZone } from '@/utils/forum-routing-helper';
-import { ActiveMembersWidget, ActiveUser } from '@/components/users';
+import { ActiveMembersWidget } from '@/components/users';
+import type { ActiveUser } from '@/components/users';
 import { useActiveUsers } from '@/features/users/hooks';
-import { ForumCategoryWithStats } from '@shared/types';
+import { ForumCard } from '@/components/forum/forum-card';
+import type { ForumCategoryWithStats } from '@db_types/forum.types';
 
 // Map theme keys to icon components and colors
 const THEME_ICONS = {

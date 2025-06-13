@@ -1,7 +1,7 @@
+import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
 	serial,
-	AnyPgColumn,
 	varchar,
 	text,
 	integer,

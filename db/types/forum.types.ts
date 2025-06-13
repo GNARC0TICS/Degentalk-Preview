@@ -1,7 +1,7 @@
-import { ForumCategory } from '@schema/forum/categories';
-import { Thread } from '@schema/forum/threads';
-import { Post } from '@schema/forum/posts';
-import { User } from '@schema/user/users';
+import type { ForumCategory } from "../schema/forum/categories";
+import type { Thread } from "../schema/forum/threads";
+import type { Post } from "../schema/forum/posts";
+import type { User } from "../schema/user/users";
 
 export interface ThreadWithUser extends Thread {
   user: User;

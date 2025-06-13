@@ -25,7 +25,7 @@ import {
 	TableRow
 } from '@/components/ui/table';
 import AdminLayout from './admin-layout';
-import { Transaction } from '@/types/wallet';
+import type { Transaction } from '@/types/wallet';
 
 type TreasurySetting = {
 	settingId: number;

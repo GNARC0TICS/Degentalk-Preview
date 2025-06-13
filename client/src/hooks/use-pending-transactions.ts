@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useWalletOperations } from '@/contexts/wallet-context';
-import { Transaction } from '@/types/wallet';
+import type { Transaction } from '@/types/wallet';
 
 // Extend the Transaction interface with pending-specific properties
 export interface PendingTransaction extends Omit<Transaction, 'status'> {

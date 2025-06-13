@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User } from '@schema';
+import type { User } from '@schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -8,10 +8,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { AlertCircle, Check, X } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { SettingsCard } from './SettingsCard';
-import { SettingsGroup } from './SettingsGroup';
-import { SettingsInput } from './SettingsInput';
-import { SettingsSelect } from './SettingsSelect';
 import { PreferencesCard } from './PreferencesCard';
 import { PreferencesGroup } from './PreferencesGroup';
 import { PreferencesInput } from './PreferencesInput';

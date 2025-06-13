@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User } from '@schema';
+import type { User } from '@schema';
 import { Button } from '@/components/ui/button';
 import {
 	Bell,

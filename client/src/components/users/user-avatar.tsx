@@ -1,4 +1,4 @@
-import { User } from '@schema';
+import type { User } from '@schema';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 

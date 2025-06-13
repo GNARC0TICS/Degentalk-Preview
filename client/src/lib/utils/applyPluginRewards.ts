@@ -1,4 +1,4 @@
-import { UserInventoryWithProduct } from '@/types/inventory'; // Assuming this type exists or will be created
+import type { UserInventoryWithProduct } from '@/types/inventory'; // Assuming this type exists or will be created
 
 // System role colors - these override any cosmetic colors
 const SYSTEM_ROLE_COLORS: Record<string, string> = {

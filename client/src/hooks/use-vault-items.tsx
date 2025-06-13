@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ShopItem } from './use-shop-items';
+import type { ShopItem } from './use-shop-items';
 
 export type ItemCategory =
 	| 'frames'

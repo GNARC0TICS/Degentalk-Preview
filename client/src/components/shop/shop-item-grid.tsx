@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShopItem } from '@/hooks/use-shop-items';
+import type { ShopItem } from '@/hooks/use-shop-items';
 import { ShopItemCard } from './shop-item-card';
 import { Loader } from 'lucide-react';
 

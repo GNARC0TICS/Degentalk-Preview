@@ -7,14 +7,14 @@
 
 // TODO: @syncSchema Update based on recent changes in schema.ts: ForumCategory now has 'color' and 'icon' fields.
 import { apiRequest } from '@/lib/queryClient';
-import {
-	ForumCategory,
+import type { ForumCategory } from '@schema';
+import type {
 	ForumCategoryWithStats,
 	ThreadWithUser,
 	PostWithUser,
 	ForumTag,
 	ThreadPrefix
-} from '../../../../db/types/forum.types.js';
+} from '@db_types/forum.types';
 
 // Define the nested category type extending ForumCategory
 export interface NestedForumCategory extends ForumCategory {

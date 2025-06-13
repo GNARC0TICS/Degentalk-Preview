@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import {
 	Folder,
 	MessageSquare,
@@ -17,8 +17,9 @@ import {
 import { useForumStructure } from '@/features/forum/hooks/useForumStructure';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { Badge } from '@/components/ui/badge';
-import { ForumCategoryWithStats } from '@shared/types';
+import type { ForumCategoryWithStats } from '@db_types/forum.types';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 // Enhanced theme configuration
 const ZONE_THEMES = {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {
-	useShoutbox,
+import { useShoutbox } from '@/contexts/shoutbox-context';
+import type {
 	ShoutboxPosition,
 	ShoutboxEffectivePosition,
 	ShoutboxExpansionLevel

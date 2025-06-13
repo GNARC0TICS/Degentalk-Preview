@@ -17,6 +17,5 @@ export const threadTags = pgTable(
 	})
 );
 
-// Add zod schema or relations as needed
-// export type ThreadTag = typeof threadTags.$inferSelect;
-// export type InsertThreadTag = typeof threadTags.$inferInsert;
+export type ThreadTag = typeof threadTags.$inferSelect;
+export type InsertThreadTag = typeof threadTags.$inferInsert;

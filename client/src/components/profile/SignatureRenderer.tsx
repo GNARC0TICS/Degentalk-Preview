@@ -2,7 +2,8 @@ import React from 'react';
 import DOMPurify from 'dompurify';
 import { SignatureTierLevel } from '@shared/signature/SignatureTierConfig';
 import { useUserCosmetics } from '@/hooks/useUserCosmetics';
-import { AppliedCosmetics } from '@/types/inventory';
+import { cn } from '@/lib/utils';
+import type { AppliedCosmetics } from '@/types/inventory';
 
 type SignatureRendererProps = {
 	signature: string;

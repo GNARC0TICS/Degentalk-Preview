@@ -1,3 +1,4 @@
+import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
 	serial,
@@ -10,7 +11,6 @@ import {
 	uuid,
 	jsonb,
 	unique,
-	AnyPgColumn
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { userRoleEnum } from '../core/enums';

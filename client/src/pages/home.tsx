@@ -38,10 +38,10 @@ import { AlertCircle, FolderOpen } from 'lucide-react';
 
 // Import types
 import { ThreadWithUser } from '@shared/types';
-import { User } from '@schema';
+import type { User } from '@schema';
 import { useAuth } from '@/hooks/use-auth';
 import { ForumEntityBase } from '@/utils/forum-routing-helper';
-import { getThreadTitle } from '@/utils/thread-utils';
+// import { getThreadTitle } from '@/utils/thread-utils';
 import {
 	ChevronRightIcon,
 	ChatBubbleBottomCenterTextIcon,

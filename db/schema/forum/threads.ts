@@ -1,3 +1,4 @@
+import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
 	serial,
@@ -9,7 +10,6 @@ import {
 	bigint,
 	real,
 	jsonb,
-	AnyPgColumn,
 	index,
 	unique
 } from 'drizzle-orm/pg-core';

@@ -1,7 +1,7 @@
-import { ShopItem } from '@/hooks/use-shop-items';
-import { ItemCategory } from '@/hooks/use-vault-items';
-import { Notification, NotificationsParams } from '@/types/notifications';
-import {
+import type { ShopItem } from '@/hooks/use-shop-items';
+import type { ItemCategory } from '@/hooks/use-vault-items';
+import type { Notification, NotificationsParams } from '@/types/notifications';
+import type {
 	Transaction,
 	TransactionHistoryParams,
 	DepositAddress,

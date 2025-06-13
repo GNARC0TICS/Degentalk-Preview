@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useRoute } from 'wouter';
-import { ForumCategoryWithStats } from '@shared/types';
+import type { ForumCategoryWithStats } from '@db_types/forum.types';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';

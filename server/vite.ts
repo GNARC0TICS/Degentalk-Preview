@@ -62,7 +62,18 @@ export async function setupVite(app: Express, server: Server) {
 			}
 		},
 		server: serverOptions,
-		appType: 'custom'
+		appType: 'custom',
+		resolve: {
+			alias: [
+				{ find: '@', replacement: path.resolve(__dirname, '..', 'client', 'src') },
+				{ find: '@shared', replacement: path.resolve(__dirname, '..', 'shared') },
+				{ find: '@assets', replacement: path.resolve(__dirname, '..', 'attached_assets') },
+				{ find: '@db', replacement: path.resolve(__dirname, '..', 'db', 'index.ts') },
+				{ find: '@schema', replacement: path.resolve(__dirname, '..', 'db', 'schema', 'index.ts') }, // For exact "@schema" import
+				{ find: /^@schema\/(.*)/, replacement: path.resolve(__dirname, '..', 'db', 'schema', '$1') }, // For "@schema/*"
+				{ find: '@db_types', replacement: path.resolve(__dirname, '..', 'db', 'types') }
+			]
+		}
 	});
 
 	app.use(vite.middlewares);

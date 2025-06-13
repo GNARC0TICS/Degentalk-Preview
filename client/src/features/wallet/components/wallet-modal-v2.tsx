@@ -20,7 +20,7 @@ import RainButton from '../../../components/economy/wallet/rain-button'; // Defa
 import { BuyDgtButton } from '../../../components/economy/wallet/buy-dgt-button';
 import TransactionHistory from '../../../components/economy/wallet/transaction-history'; // Default export
 import '@/styles/wallet-animations.css'; // Corrected path to global styles
-import { WalletBalances } from '@/types/wallet'; // Added this import
+import type { WalletBalances } from '@/types/wallet'; // Added this import
 
 export interface WalletModalProps {
 	open: boolean;

@@ -6,7 +6,7 @@ import { formatDate, formatCurrency } from '@/lib/formatters';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Transaction } from '@/types/wallet';
+import type { Transaction } from '@/types/wallet';
 
 /**
  * TransactionHistory Component

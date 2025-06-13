@@ -1,4 +1,4 @@
-import { QueryClient, QueryFunction } from '@tanstack/react-query';
+import type { QueryClient, QueryFunction } from '@tanstack/react-query';
 import axios from 'axios';
 
 // Create a custom axios instance

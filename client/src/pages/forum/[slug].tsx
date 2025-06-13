@@ -12,7 +12,9 @@ import { Link } from 'wouter';
 import { ActiveMembersWidget } from '@/components/users';
 import { useActiveUsers } from '@/features/users/hooks';
 import { ForumEntityBase } from '@/utils/forum-routing-helper';
-import { ForumCategoryWithStats } from '@shared/types'; // Import ForumCategoryWithStats type
+import { apiRequest } from '@/lib/queryClient';
+import type { ForumCategoryWithStats } from '@db_types/forum.types'; // Import ForumCategoryWithStats type
+import type { ThreadWithUser } from '@shared/types';
 
 interface Thread {
 	id: number;

@@ -12,7 +12,7 @@ import { FramedAvatar } from '@/components/users/framed-avatar';
 import { ShoppingBag, Sparkles, Palette, Frame, Crown, Edit } from 'lucide-react';
 import { Link } from 'wouter';
 import { applyPluginRewards } from '@/lib/utils/applyPluginRewards';
-import { UserInventoryWithProduct } from '@/types/inventory';
+import type { UserInventoryWithProduct } from '@/types/inventory';
 
 interface CosmeticControlPanelProps {
 	userId: number;
