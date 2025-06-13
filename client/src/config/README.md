@@ -28,6 +28,9 @@ client/src/config/
 ├── CONFIG_MIGRATION_LOG.md      # Detailed log of all migrations from hardcoded values
 ├── cosmetics.config.ts          # UI styling, colors, rarities, shop templates
 ├── economy.config.ts            # XP, DGT, shop pricing, tip/rain settings
+├── tags.config.ts               # Forum-wide tags and prefixes
+├── xp.config.ts                 # XP actions and title unlock thresholds
+├── zones.config.ts              # Zone-specific rules and multipliers
 ├── forumRules.config.ts         # Forum structure, zones, thread management
 ├── roles.config.ts              # User roles, permissions, access control
 ├── admin-routes.ts              # Admin panel navigation and route definitions
