@@ -165,14 +165,21 @@ class DegentalktValidator {
       
       // Check if vite config has safeguards
       const { stdout: viteContent } = await execAsync('cat config/vite.config.ts');
-      const hasSafeguard = viteContent.includes('require.main === module') || 
-                          viteContent.includes('should not be imported directly');
+      const hasESMSafeguard = viteContent.includes("process?.env?.VITE_CONFIG_CONTEXT === 'backend'");
+      // Retain check for explicit comment safeguard as a secondary measure if present
+      const hasCommentSafeguard = viteContent.includes('should not be imported directly');
       
-      if (!hasSafeguard) {
+      if (!hasESMSafeguard && !hasCommentSafeguard) { // If neither the primary ESM guard nor a comment safeguard is found
         return {
           status: 'warning',
           message: 'Vite config missing import safeguards',
-          details: ['Consider adding safeguards to prevent backend imports']
+          details: ['Expected ESM safeguard (process?.env?.VITE_CONFIG_CONTEXT === \'backend\') or explicit comment.']
+        };
+      } else if (!hasESMSafeguard && hasCommentSafeguard) {
+        return {
+            status: 'warning',
+            message: 'Vite config relies on comment safeguard. Consider updating to modern ESM guard.',
+            details: ['Found \'should not be imported directly\', but not \'process?.env?.VITE_CONFIG_CONTEXT === \\\'backend\\\'\'.']
         };
       }
       

@@ -8,87 +8,67 @@ on:
   workflow_dispatch: # Allow manual triggering
 
 jobs:
-  validate-boundaries:
-    name: 🛡️ Validate Import Boundaries
+  # Job 1: Quick CI Environment Sanity Check
+  ci-env-check: # Was 'validate-everything' job, but runs 'npm run check'
+    name: ⚙️ CI Environment Sanity Check
     runs-on: ubuntu-latest
-
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
-
       - name: 🔧 Install dependencies
         run: npm ci
+      - name: 🚀 Run CI readiness checks
+        run: npm run check # This is scripts/test-ci-readiness.ts
 
-      - name: 🔍 Run validation suite
-        run: npm run validate
-
-      - name: 🚨 Check for Vite config leaks
-        run: |
-          if grep -r "vite\.config" server/; then
-            echo "❌ CRITICAL: Server code imports Vite config!"
-            echo "This violates shared-boundary rules. See CONTRIBUTING.md"
-            exit 1
-          else
-            echo "✅ No Vite config leaks detected"
-          fi
-
-      - name: 🔒 Validate TypeScript compilation
-        run: npx tsc --noEmit
-
-      - name: 📊 Check schema consistency
-        run: |
-          export_count=$(grep -c "export" db/schema/index.ts || echo "0")
-          if [ "$export_count" -lt 10 ]; then
-            echo "⚠️ Warning: Only $export_count schema exports found"
-          else
-            echo "✅ Schema exports healthy ($export_count exports)"
-          fi
-
-  validate-everything:
-    name: 🚀 Full Validation Suite
+  # Job 2: Core Codebase Validations
+  core-validation: # Was 'validate-boundaries', but now more focused
+    name: 🛡️ Core Codebase Validation
     runs-on: ubuntu-latest
-    needs: validate-boundaries
-
+    needs: ci-env-check # Make sure env is okay first
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
-
       - name: 🔧 Install dependencies
         run: npm ci
+      - name: 🔍 Run comprehensive validation suite
+        run: npm run validate # This is scripts/validate-everything.ts
+      # The explicit 'tsc --noEmit', 'grep vite.config', and schema export count
+      # steps are removed from here as they are inside 'npm run validate'
 
-      - name: 🚀 Run comprehensive validation
-        run: npm run check
+  # Job 3: Formatting Check (Prettier)
+  formatting-check: # Was 'lint-and-format'
+    name: 🎨 Code Formatting Check
+    runs-on: ubuntu-latest
+    needs: ci-env-check # Depends on env being okay
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - name: 🔧 Install dependencies
+        run: npm ci
+      - name: 🎨 Check code formatting with Prettier
+        run: npx prettier --check .
+      # 'npm run validate' for alias violations is removed, as it's in core-validation
 
-      - name: 📋 Validation Summary
-        if: always()
-        run: |
-          echo "## 🚀 Degentalk Validation Results" >> $GITHUB_STEP_SUMMARY
-          if [ $? -eq 0 ]; then
-            echo "✅ **ALL CHECKS PASSED!** Codebase is healthy." >> $GITHUB_STEP_SUMMARY
-          else
-            echo "❌ **VALIDATION FAILED!** Check logs above for details." >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### 🔧 Quick Fixes:" >> $GITHUB_STEP_SUMMARY
-            echo "- Run \`npm run validate:fix\` locally" >> $GITHUB_STEP_SUMMARY
-            echo "- Review CONTRIBUTING.md for boundary rules" >> $GITHUB_STEP_SUMMARY
-            echo "- Ensure no Vite imports in server/" >> $GITHUB_STEP_SUMMARY
-          fi
-
+  # Job 4: Security Audit (No change needed here from current)
   security-audit:
     name: 🔐 Security Audit
     runs-on: ubuntu-latest
+    needs: ci-env-check # Added dependency
 
     steps:
       - name: 📥 Checkout code
@@ -118,41 +98,12 @@ jobs:
             echo "✅ No critical security vulnerabilities found"
           fi
 
-  lint-and-format:
-    name: 📝 Code Quality Check
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: 🔧 Install dependencies
-        run: npm ci
-
-      - name: 🎨 Check code formatting
-        run: |
-          echo "🎨 Checking code formatting..."
-          if ! npx prettier --check .; then
-            echo "❌ Code formatting issues found!"
-            echo "Run 'npm run format' to fix formatting"
-            exit 1
-          else
-            echo "✅ Code formatting is clean"
-          fi
-
-      - name: 📋 Check for alias violations
-        run: npm run validate
-
+  # Job 5: Boundary Enforcement for PRs (No change needed here from current)
   boundary-enforcement:
-    name: 🚨 Boundary Enforcement
+    name: 🚨 Boundary Enforcement (PRs) # Changed Name
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
+    needs: ci-env-check # Added dependency
 
     steps:
       - name: 📥 Checkout code
@@ -201,7 +152,8 @@ jobs:
             echo ""
             echo "🚨 $violations boundary violation(s) detected!"
             echo "📖 Please review CONTRIBUTING.md for boundary rules"
-            echo "🔧 Run 'npm run validate:fix' locally"
+            # It seems 'npm run validate:fix' is the command for fixing these based on validate-everything.ts
+            echo "🔧 Run 'npm run validate --fix' or relevant fix script locally"
             exit 1
           else
             echo "✅ No boundary violations detected in changed files"
@@ -210,7 +162,8 @@ jobs:
   deployment-readiness:
     name: 🚀 Deployment Readiness
     runs-on: ubuntu-latest
-    needs: [validate-everything, security-audit, lint-and-format]
+    # Depends on the primary validation jobs now
+    needs: [core-validation, formatting-check, security-audit]
     if: github.ref == 'refs/heads/main'
 
     steps:
@@ -238,9 +191,10 @@ jobs:
       - name: 📊 Generate deployment summary
         run: |
           echo "## 🚀 Deployment Readiness Report" >> $GITHUB_STEP_SUMMARY
-          echo "✅ **All validations passed**" >> $GITHUB_STEP_SUMMARY
-          echo "✅ **Security audit clean**" >> $GITHUB_STEP_SUMMARY  
-          echo "✅ **Code quality verified**" >> $GITHUB_STEP_SUMMARY
+          # Adjust messages based on new job names if needed
+          echo "✅ **Core validations passed**" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Formatting verified**" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Security audit clean**" >> $GITHUB_STEP_SUMMARY
           echo "✅ **Build process successful**" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "🎉 **READY FOR DEPLOYMENT!**" >> $GITHUB_STEP_SUMMARY
