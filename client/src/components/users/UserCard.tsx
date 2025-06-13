@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Users, MessageSquare, Calendar, Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { DegenUser } from '@/pages/degen-index';
+import type { DegenUser } from '@/pages/degen-index';
 
 interface UserCardProps {
 	user: DegenUser;

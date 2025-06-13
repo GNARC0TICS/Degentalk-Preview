@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Button, ButtonProps } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
+import type { ButtonProps } from '@/components/ui/button';
 import { MessageSquareWave } from '@/components/messages/icons/MessageSquareWave';
 import { WhisperModal } from './WhisperModal';
 import { Badge } from '@/components/ui/badge';

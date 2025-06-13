@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 import { ThumbsUp, CornerUpRight, Flag, Check, Coins } from 'lucide-react';
-import { PostWithUser } from '@shared/types';
+import type { PostWithUser } from '@db_types/forum.types';
 import LevelBadge from './LevelBadge';
 
 interface PostReplyProps {

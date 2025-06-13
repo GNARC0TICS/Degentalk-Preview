@@ -11,10 +11,10 @@ import { ForumGuidelines } from '@/components/forum/forum-guidelines';
 import { Link } from 'wouter';
 import { ActiveMembersWidget } from '@/components/users';
 import { useActiveUsers } from '@/features/users/hooks';
-import { ForumEntityBase } from '@/utils/forum-routing-helper';
+import type { ForumEntityBase } from '@/utils/forum-routing-helper';
 import { apiRequest } from '@/lib/queryClient';
 import type { ForumCategoryWithStats } from '@db_types/forum.types'; // Import ForumCategoryWithStats type
-import type { ThreadWithUser } from '@shared/types';
+import type { ThreadWithUser } from '@db_types/forum.types';
 
 interface Thread {
 	id: number;

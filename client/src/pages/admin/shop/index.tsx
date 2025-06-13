@@ -5,7 +5,7 @@ import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient'; // As per api-client-pattern.mdc
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'wouter';
-import { Product } from '@schema'; // Assuming Product type can be imported
+import type { Product } from '@schema'; // Assuming Product type can be imported
 
 // Helper to format pluginReward for display
 const formatPluginReward = (reward: any) => {

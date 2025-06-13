@@ -5,7 +5,7 @@ import { ThreadCard } from '@/components/forum/thread-card';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle } from 'lucide-react';
-import { ThreadWithUser } from '@shared/types';
+import type { ThreadWithUser } from '@db_types/forum.types';
 
 /**
  * Skeleton loader for thread list

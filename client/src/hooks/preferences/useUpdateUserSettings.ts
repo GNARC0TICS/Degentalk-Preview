@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { PreferenceSection } from '@/types/preferences.types';
+import type { PreferenceSection } from '@/types/preferences.types';
 
 /**
  * Hook to update user preferences

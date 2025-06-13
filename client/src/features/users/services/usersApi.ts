@@ -1,5 +1,5 @@
 import { apiRequest } from '@/lib/queryClient';
-import { ActiveUser } from '@/components/users/ActiveMembersWidget';
+import type { ActiveUser } from '@/components/users/ActiveMembersWidget';
 
 /**
  * Fetch active users from the API

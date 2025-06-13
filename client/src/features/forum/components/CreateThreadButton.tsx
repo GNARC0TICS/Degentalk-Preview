@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { Button, ButtonProps } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
+import type { ButtonProps } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { ROUTES } from '@/constants/routes';

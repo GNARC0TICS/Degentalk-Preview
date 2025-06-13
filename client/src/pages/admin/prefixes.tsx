@@ -42,7 +42,7 @@ import { MoreHorizontal, Plus, Pencil, Trash2, MoveUp, MoveDown, Tag, Search } f
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { ThreadPrefix } from '@shared/types';
+import type { ThreadPrefix } from '@db_types/forum.types';
 
 // Define validation schema for prefixes
 const prefixSchema = z.object({

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 import { MessageSquare, Heart, ThumbsUp, Reply, Trash, Flag, Edit, Share2 } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
-import { PostWithUser } from '@shared/types';
+import type { PostWithUser } from '@db_types/forum.types';
 import { SolveBadge } from './SolveBadge';
 
 interface PostCardProps {

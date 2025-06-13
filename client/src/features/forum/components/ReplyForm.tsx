@@ -7,7 +7,7 @@ import { LoadingSpinner } from '@/components/ui/loader';
 import { useAuth } from '@/hooks/use-auth';
 import { useLocation } from 'wouter';
 import { X, CornerDownRight } from 'lucide-react';
-import { PostWithUser } from '@shared/types';
+import type { PostWithUser } from '@db_types/forum.types';
 
 interface ReplyFormProps {
 	threadId: number;

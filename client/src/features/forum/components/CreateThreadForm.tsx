@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useLocation } from 'wouter';
-import { useMutation, useQuery, useQueryClient, UseQueryOptions } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { QueryObserverOptions } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import RichTextEditor from '@/components/editor/rich-text-editor';
@@ -121,7 +122,7 @@ export function CreateThreadForm({
 		enabled: isOpen && !!user
 	});
 
-	const queryOptions: UseQueryOptions<
+	const queryOptions: QueryObserverOptions<
 		DraftData, // TQueryFnData
 		Error, // TError
 		DraftData, // TData

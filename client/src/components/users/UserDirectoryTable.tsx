@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { MessageSquare, Calendar, Activity, Trophy, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { DegenUser } from '@/pages/degen-index';
+import type { DegenUser } from '@/pages/degen-index';
 
 interface UserDirectoryTableProps {
 	users: DegenUser[];

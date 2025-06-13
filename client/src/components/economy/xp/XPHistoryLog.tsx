@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { XPHistoryEntry } from '@/hooks/useXP';
+import type { XpAdjustmentEntry } from '@/hooks/useXP';
 import { formatDistanceToNow } from 'date-fns';
 import { Award, Calendar, MessageSquare, Plus, Settings, User, ZapIcon } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 type XPHistoryLogProps = {
-	xpHistory: XPHistoryEntry[];
+	xpHistory: XpAdjustmentEntry[];
 	isLoading?: boolean;
 	className?: string;
 	maxHeight?: string;
@@ -26,7 +26,7 @@ export function XPHistoryLog({
 	showEmptyState = true
 }: XPHistoryLogProps) {
 	// Get the icon for the source type
-	const getSourceIcon = (source: XPHistoryEntry['source']) => {
+	const getSourceIcon = (source: XpAdjustmentEntry['source']) => {
 		switch (source) {
 			case 'post':
 			case 'reply':
@@ -44,7 +44,7 @@ export function XPHistoryLog({
 	};
 
 	// Get appropriate color class based on source
-	const getSourceColorClass = (source: XPHistoryEntry['source']) => {
+	const getSourceColorClass = (source: XpAdjustmentEntry['source']) => {
 		switch (source) {
 			case 'post':
 			case 'thread':

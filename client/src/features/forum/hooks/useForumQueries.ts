@@ -6,7 +6,8 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { forumApi, NestedForumCategory, ThreadSearchParams } from '../services/forumApi';
+import { forumApi } from '../services/forumApi';
+import type { NestedForumCategory, ThreadSearchParams } from '../services/forumApi';
 import { toast } from 'sonner';
 import type { Tag, ThreadPrefix, ForumCategoryWithStats, ThreadWithUser } from '@/types/forum';
 import { useEffect } from 'react';

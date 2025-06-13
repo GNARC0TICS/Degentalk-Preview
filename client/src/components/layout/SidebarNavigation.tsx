@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Folder, MessageSquare, ChevronDown, ChevronRight } from 'lucide-react';
+import type { ForumEntityBase } from '@/utils/forum-routing-helper';
 import {
-	ForumEntityBase,
 	getForumEntityUrl,
 	isPrimaryZone,
 	isCategory,

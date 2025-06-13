@@ -20,11 +20,14 @@ import {
 } from '@/components/shoutbox/positioned-shoutbox';
 import { useShoutbox } from '@/contexts/shoutbox-context';
 import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
-import { CanonicalZoneGrid, ZoneCardData } from '@/components/forum/CanonicalZoneGrid';
+import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
+import type { ZoneCardData } from '@/components/forum/CanonicalZoneGrid';
 import { HotThreads } from '@/features/forum/components/HotThreads';
 import { useForumStructure } from '@/features/forum/hooks/useForumStructure';
-import { ActiveMembersWidget } from '@/components/users';
+import { ActiveMembersWidget } from '@/components/users/ActiveMembersWidget';
 import { useActiveUsers } from '@/features/users/hooks';
+// import { RecentActivityFeed } from '@/components/activity/RecentActivityFeed';
+// import { AnnouncementCard } from '@/components/platform-energy/announcements/AnnouncementCard';
 
 // Import UI components
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -37,10 +40,10 @@ import { ArrowRight } from 'lucide-react';
 import { AlertCircle, FolderOpen } from 'lucide-react';
 
 // Import types
-import { ThreadWithUser } from '@shared/types';
+import type { ThreadWithUser } from '@db_types/forum.types';
 import type { User } from '@schema';
 import { useAuth } from '@/hooks/use-auth';
-import { ForumEntityBase } from '@/utils/forum-routing-helper';
+import type { ForumEntityBase } from '@/utils/forum-routing-helper';
 // import { getThreadTitle } from '@/utils/thread-utils';
 import {
 	ChevronRightIcon,

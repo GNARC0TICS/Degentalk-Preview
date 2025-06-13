@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { UserTitle } from '@/hooks/useXP';
+import type { UserTitle } from '@/hooks/useXP';
 import { Check, ChevronDown, Crown, Info } from 'lucide-react';
 import {
 	DropdownMenu,

@@ -23,8 +23,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { SiteFooter } from '@/components/layout/site-footer';
 import { ForumGuidelines } from '@/components/forum/forum-guidelines';
 import { ForumSearch } from '@/components/forum/forum-search';
-import { useForumStructure, ForumStructure } from '@/features/forum/hooks/useForumStructure';
-import { ZoneCardData } from '@/components/forum/CanonicalZoneGrid';
+import type { ForumStructure } from '../../features/forum/hooks/useForumStructure.ts';
+import { useForumStructure } from '../../features/forum/hooks/useForumStructure.ts';
+import type { ZoneCardData } from '@/components/forum/CanonicalZoneGrid';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'wouter';
