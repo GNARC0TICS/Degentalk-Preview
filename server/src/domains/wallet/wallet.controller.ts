@@ -7,7 +7,7 @@
  * between DGT services and CCPayment services as needed.
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { logger } from '../../core/logger';
 import { dgtService } from './dgt.service';
 import { ccpaymentService, type CryptoBalance } from './ccpayment.service'; // Import instance and CryptoBalance type

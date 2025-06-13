@@ -6,7 +6,7 @@
  * // [REFAC-AIRDROP]
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { airdropService, AirdropOptions } from './airdrop.service';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../../core/errors';
 import { asyncHandler } from '../../../core/errors';

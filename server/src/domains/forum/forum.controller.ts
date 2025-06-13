@@ -1,5 +1,6 @@
-import { Request, Response } from 'express';
-import { forumService, ThreadSearchParams } from './forum.service';
+import type { Request, Response } from 'express';
+import { forumService } from './forum.service';
+import type { ThreadSearchParams } from './forum.service';
 // import { isAuthenticated } from "@server/src/domains/auth/middleware/auth.middleware"; // Removed as unused
 
 export const forumController = {

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { xpAdminService } from './xp.service';
 import { logger } from '../../../../core/logger';
 import { xpService } from '../../../xp/xp.service';

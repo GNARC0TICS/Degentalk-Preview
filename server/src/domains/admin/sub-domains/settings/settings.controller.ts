@@ -4,7 +4,7 @@
  * Handles API requests for platform settings management.
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { adminSettingsService } from './settings.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { adminController } from '../../admin.controller';

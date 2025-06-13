@@ -22,7 +22,8 @@ import {
 	changePassword,
 	updateDisplayPreferences
 } from './preferences.service';
-import { Request, Response, Router } from 'express';
+import { Router } from 'express';
+import type { Request, Response } from 'express';
 import { db } from '@db';
 import { users, userSettings as userPreferencesSchema } from '@schema';
 import { eq, and } from 'drizzle-orm';

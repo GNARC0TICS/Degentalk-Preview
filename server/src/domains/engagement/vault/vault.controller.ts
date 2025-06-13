@@ -6,7 +6,7 @@
  * // [REFAC-VAULT]
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { vaultService, VaultLockOptions } from './vault.service';
 import { WalletError, ErrorCodes } from '../../../core/errors'; // Changed WalletErrorCodes to ErrorCodes
 import { asyncHandler } from '@server/src/core/errors';

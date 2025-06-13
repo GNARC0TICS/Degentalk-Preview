@@ -7,7 +7,8 @@
 
 import express from 'express';
 import { authenticate } from '../../middleware/authenticate';
-import { Request, Response, Router } from 'express';
+import { Router } from 'express';
+import type { Request, Response } from 'express';
 import { logger, LogLevel, LogAction } from '../../../src/core/logger';
 import { getNotifications } from './notification.service';
 import { isAuthenticated } from '../auth';

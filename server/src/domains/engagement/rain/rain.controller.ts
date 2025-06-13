@@ -6,7 +6,7 @@
  * // [REFAC-RAIN]
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { RainService } from './rain.service';
 import { asyncHandler } from '../../../core/errors';
 import { z } from 'zod';

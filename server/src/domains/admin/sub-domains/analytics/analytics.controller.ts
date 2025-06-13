@@ -4,7 +4,7 @@
  * Handles API requests for platform analytics.
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { adminAnalyticsService } from './analytics.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { AnalyticsQuerySchema, AnalyticsPeriodSchema } from './analytics.validators';

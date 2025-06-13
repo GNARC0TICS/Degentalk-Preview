@@ -4,7 +4,8 @@
  * API endpoints for user signatures and signature shop items.
  */
 
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import type { Request, Response } from 'express';
 import { SignatureService } from './signature.service';
 import { z } from 'zod';
 import { validateRequest } from '../../middleware/validate-request';

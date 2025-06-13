@@ -8,7 +8,7 @@ import { db } from '@db';
 import { siteSettings } from '@schema';
 import { eq, and, sql, or, like, ilike, asc, desc } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import {
+import type {
 	UpdateSettingInput,
 	UpdateSettingsInput,
 	SettingGroupInput,

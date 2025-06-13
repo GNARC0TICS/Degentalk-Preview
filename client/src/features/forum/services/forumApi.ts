@@ -14,7 +14,7 @@ import {
 	PostWithUser,
 	ForumTag,
 	ThreadPrefix
-} from '@shared/types';
+} from '../../../../db/types/forum.types.js';
 
 // Define the nested category type extending ForumCategory
 export interface NestedForumCategory extends ForumCategory {

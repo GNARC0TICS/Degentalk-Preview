@@ -4,9 +4,12 @@
  * Defines API routes for editor functionality including Giphy integration.
  */
 
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import type { Request, Response } from 'express';
 import axios from 'axios';
-import { IStorage } from '../../../storage';
+import { z } from 'zod';
+import { isAuthenticated } from '../../domains/auth/middleware/auth.middleware.ts';
+import type { IStorage } from '../../../storage';
 
 /**
  * Initialize editor routes

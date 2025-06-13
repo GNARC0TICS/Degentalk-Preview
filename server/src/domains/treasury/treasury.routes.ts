@@ -5,7 +5,8 @@
  * adjustments, and settings.
  */
 
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import type { Request, Response } from 'express';
 import { db } from '@db';
 import { sql } from 'drizzle-orm';
 import { users, transactions } from '@schema';

@@ -5,7 +5,7 @@
  * It verifies the webhook signature and passes verified events to the service.
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { logger } from '../../core/logger';
 import { ccpaymentService } from '../wallet/ccpayment.service';
 import { ccpaymentWebhookService } from './ccpayment-webhook.service';

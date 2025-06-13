@@ -2,9 +2,9 @@ console.log(
 	'🚨 VITE CONFIG LOADED - If you see this during backend startup, you have a ghost import!'
 );
 
-// Safeguard against direct imports
-if (typeof require !== 'undefined' && require.main === module) {
-	throw new Error('vite.config.ts should not be imported directly by backend code.');
+// ESM-safe safeguard against backend imports
+if (typeof process !== 'undefined' && process?.env?.VITE_CONFIG_CONTEXT === 'backend') {
+	throw new Error('Vite config was imported in backend context.');
 }
 
 /**

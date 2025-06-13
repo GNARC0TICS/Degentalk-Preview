@@ -4,7 +4,8 @@
  * Defines API routes for user relationships including following, blocking, etc.
  */
 
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import type { Request, Response } from 'express';
 import { db } from '@db';
 import { users, userRelationships } from '@schema';
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';

@@ -10,7 +10,7 @@
  * - Balance inquiries
  */
 
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
 import crypto from 'crypto';
 import { logger } from '../../core/logger';
 import { db } from '@db';

@@ -4,7 +4,7 @@
  * Handles API requests for user group management.
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { adminUserGroupsService } from './user-groups.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { getUserId } from '../../admin.middleware';

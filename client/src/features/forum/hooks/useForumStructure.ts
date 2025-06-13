@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { getQueryFn } from '@/lib/queryClient';
 import { forumApi } from '@/features/forum/services/forumApi';
-import { ForumCategoryWithStats } from '@shared/types';
+import { ForumCategoryWithStats } from '../../../../db/types/forum.types.js';
 
 export interface ForumStructure {
 	primaryZones: ForumCategoryWithStats[];

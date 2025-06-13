@@ -8,7 +8,7 @@
 import { xpActionSettings, users } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { db } from '@db';
-import { getXpActionSettings, type XpActionSetting } from './xp-actions-schema';
+// Removed unused imports from xp-actions-schema
 import { logger } from '../../core/logger';
 
 /**

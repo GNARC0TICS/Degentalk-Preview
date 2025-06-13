@@ -4,7 +4,7 @@
  * Centralized middleware functions for admin routes
  */
 
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { users } from '@schema';
 import { eq } from 'drizzle-orm';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';

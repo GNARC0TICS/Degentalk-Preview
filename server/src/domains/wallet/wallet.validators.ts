@@ -8,7 +8,7 @@
  * before being processed by controller methods.
  */
 
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
 

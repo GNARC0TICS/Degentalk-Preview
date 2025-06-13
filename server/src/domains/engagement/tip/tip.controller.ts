@@ -6,7 +6,7 @@
  * // [REFAC-TIP]
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { TipService } from './tip.service';
 import { asyncHandler } from '../../../core/errors';
 import { z } from 'zod';

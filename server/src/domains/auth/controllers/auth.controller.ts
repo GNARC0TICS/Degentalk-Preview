@@ -1,11 +1,14 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { createHash, randomBytes } from 'crypto';
 import passport from 'passport';
-import { User, insertUserSchema } from '@schema';
+import { insertUserSchema } from '@schema';
+import { users } from '@schema';
 import { storage } from '../../../../storage'; // Will be refactored in a future step
 import { hashPassword, storeTempDevMetadata, verifyEmailToken } from '../services/auth.service';
 import { isDevMode } from '../../../utils/environment';
+
+type User = typeof users.$inferSelect;
 
 /**
  * Handle user registration

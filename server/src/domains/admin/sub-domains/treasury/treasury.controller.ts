@@ -4,7 +4,7 @@
  * Handles API requests for treasury-related admin operations.
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { adminTreasuryService } from './treasury.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { getUserId } from '../../admin.middleware';
@@ -14,10 +14,10 @@ import {
 	TreasuryWithdrawalSchema,
 	TreasurySettingsUpdateSchema,
 	MassAirdropSchema,
-	TreasuryDepositInput,
-	TreasuryWithdrawalInput,
-	TreasurySettingsUpdateInput,
-	MassAirdropInput
+	type TreasuryDepositInput,
+	type TreasuryWithdrawalInput,
+	type TreasurySettingsUpdateInput,
+	type MassAirdropInput
 } from './treasury.validators';
 
 export class AdminTreasuryController {
@@ -140,7 +140,7 @@ export class AdminTreasuryController {
 
 	async getTreasurySettings(req: Request, res: Response) {
 		try {
-			const settings = await adminTreasuryService.getTreasurySettings();
+			const settings = await adminTreasuryService.getDgtEconomyParameters();
 			if (!settings) {
 				throw new AdminError('Treasury settings not found.', 404, AdminErrorCodes.NOT_FOUND);
 			}
@@ -165,7 +165,7 @@ export class AdminTreasuryController {
 				);
 			}
 			const adminId = getUserId(req);
-			const result = await adminTreasuryService.updateTreasurySettings(validation.data, adminId);
+			const result = await adminTreasuryService.updateDgtEconomyParameters(validation.data, adminId);
 
 			await adminController.logAction(
 				req,

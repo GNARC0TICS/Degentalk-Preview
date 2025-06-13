@@ -4,7 +4,7 @@
  * Handles API endpoints for XP-related functionality
  */
 
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { xpService } from './xp.service'; // Changed from XpService to xpService instance
 // import { XpActionLogService } from './xp-action-log.service'; // Removed as not found and not used
 // import { xpAdjustmentLog } from '@schema'; // Removed as unused

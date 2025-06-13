@@ -1,9 +1,10 @@
 import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
-import { User, featureFlags, users } from '@schema';
+import { featureFlags, users } from '@schema';
 import { db } from '@db';
 import { eq, count } from 'drizzle-orm';
 import { isDevMode } from '../../../utils/environment';
+type User = typeof users.$inferSelect;
 
 // Promisify scrypt for async usage
 const scryptAsync = promisify(scrypt);

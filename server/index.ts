@@ -34,7 +34,7 @@
 import './config/loadEnv'; // Ensures environment variables are loaded first
 
 // All other imports follow
-import express, { type Request, Response, NextFunction } from 'express';
+import express, { type Request, type Response, type NextFunction } from 'express';
 import { registerRoutes } from './routes';
 import { setupVite, serveStatic, log } from './vite';
 import { runScheduledTasks } from './utils/task-scheduler';

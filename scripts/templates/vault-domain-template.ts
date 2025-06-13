@@ -83,7 +83,7 @@ export const vaultControllerTemplate = `/**
  * for time-locked token storage and release.
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { logger } from '../../../../core/logger';
 import { vaultService } from './vault.service';
 import { WalletError, WalletErrorCodes } from '../../../wallet/wallet.errors';
@@ -547,7 +547,7 @@ export const vaultValidatorsTemplate = `/**
  * This file contains request validation middleware for vault routes.
  */
 
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { WalletError, WalletErrorCodes } from '../../../wallet/wallet.errors';
 

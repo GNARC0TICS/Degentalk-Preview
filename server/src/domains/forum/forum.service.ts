@@ -10,7 +10,7 @@ import {
 	users as usersTable // Alias users
 } from '@schema';
 import { sql, desc, asc, and, eq, isNull, count, like, ilike, or, inArray, SQL } from 'drizzle-orm'; // Added inArray and SQL
-import { ForumCategoryWithStats, ThreadWithUser } from '@shared/types';
+import type { ForumCategoryWithStats, ThreadWithUser } from '../../../../db/types/forum.types.ts';
 import type { User } from '@schema'; // Import User type from schema
 // Import threadPrefixes table to infer type - already imported above
 

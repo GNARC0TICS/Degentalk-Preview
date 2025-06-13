@@ -14,21 +14,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Link } from 'wouter';
-
-type Announcement = {
-	id: number;
-	content: string;
-	icon?: string;
-	type: string;
-	createdAt: string;
-	expiresAt?: string;
-	priority: number;
-	visibleTo?: string[];
-	tickerMode?: boolean;
-	link?: string;
-	bgColor?: string;
-	textColor?: string;
-};
+import type { Announcement } from '@/../db/types/announcement.types';
 
 const getIconComponent = (iconName?: string, type: string = 'info', textColor?: string) => {
 	const baseIconClasses = 'w-4 h-4';

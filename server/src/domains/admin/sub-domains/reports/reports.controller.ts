@@ -4,7 +4,7 @@
  * Handles API requests for reports and content moderation.
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { adminReportsService } from './reports.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { getUserId } from '../../admin.middleware';

@@ -212,3 +212,49 @@ User report of "Failed to load forum structure" and "Error loading forums" on ho
 3. Restore full functionality to `getCategoriesWithStats()` with proper thread/post counts
 
 ---
+
+## 2025-01-27 23:32 Critical Fix: `npm-script-infinite-loop-and-esm-issues`
+
+**Change Type:** Critical Bug Fix
+
+**Context/Reason:**
+Fixed multiple critical development environment issues preventing `npm run dev` from working:
+1. **Infinite Loop**: `"dev:client": "cd client && npm run dev"` was calling non-existent package.json
+2. **Vite ESM Error**: CommonJS guard `require.main === module` caused "module is not defined in ES module scope"
+3. **Duplicate Scripts**: Multiple "check" scripts caused JSON warnings
+
+**Issues Resolved:**
+1. **NPM Script Recursion**: Changed `dev:client` to call `vite` directly instead of delegating to non-existent client/package.json
+2. **Vite Config ESM Safety**: Replaced CommonJS `require.main === module` check with ESM-safe `process?.env?.VITE_CONFIG_CONTEXT === 'backend'` guard
+3. **Script Duplication**: Removed duplicate `"check": "tsc"` script, kept `"check": "tsx scripts/test-ci-readiness.ts"`
+
+**Files Modified:**
+- `package.json` - Fixed `dev:client` script and removed duplicate `check` script
+- `config/vite.config.ts` - Replaced CommonJS guard with ESM-safe version
+- `.cursor/rules/npm-script-safety.mdc` - Created comprehensive rule to prevent future npm script recursion
+- `README.md` - Added emergency recovery documentation for npm script infinite loops
+
+**Technical Details:**
+- Root cause was `dev:client` trying to run `npm run dev` in client directory that has no package.json
+- Vite config used CommonJS constructs in ESM environment causing module reference errors
+- Multiple "check" scripts in same package.json caused JSON parsing warnings
+
+**Test Results:**
+- ✅ `npm run dev` now starts successfully without infinite recursion
+- ✅ Frontend (Vite) runs on port 5173 without ESM errors
+- ✅ Backend (TSX) runs without import/export errors
+- ✅ No JSON duplicate key warnings
+- ✅ Both services display proper startup logging with [backend]/[frontend] prefixes
+
+**Prevention Measures:**
+- Created `npm-script-safety.mdc` rule to detect and prevent script recursion
+- Added emergency recovery commands to README.md
+- Implemented ESM-safe guards in config files
+
+**Triggered By:**
+User report of npm script infinite loop causing system resource exhaustion and multiple development environment startup failures.
+
+**Impact:**
+Restored functional development environment, enabling normal development workflow to resume.
+
+---

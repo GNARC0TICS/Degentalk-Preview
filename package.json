@@ -5,7 +5,7 @@
 	"license": "MIT",
 	"scripts": {
 		"dev": "concurrently \"npm run dev:server\" \"npm run dev:client\" --names \"backend,frontend\" --prefix-colors \"cyan,yellow\"",
-		"dev:client": "cd client && npm run dev",
+		"dev:client": "vite --port 5173 --strictPort --config config/vite.config.ts",
 		"dev:server": "cd server && npm run dev",
 		"dev:seed": "npm run kill-ports && npm run seed:all && concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
 		"dev:quick": "npm run kill-ports && concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend:quick\" \"npm run dev:frontend\"",
@@ -20,7 +20,6 @@
 		"build:client": "cd client && npm run build",
 		"build:server": "cd server && npm run build",
 		"start": "cd server && npm start",
-		"check": "tsc",
 		"db:push": "drizzle-kit push",
 		"db:migrate": "npx dotenv-cli -e env.local -- drizzle-kit generate",
 		"db:migrate:apply": "npx dotenv-cli -e env.local -- drizzle-kit push",

@@ -4,7 +4,7 @@
  * Handles requests for tipping analytics data in the admin dashboard
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { tippingAnalyticsService } from './tipping-analytics.service';
 import { logger } from '../../../../../core/logger';
 

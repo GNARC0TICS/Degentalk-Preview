@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { airdropAdminService } from './airdrop.service';
 import { logger } from '../../../../core/logger';
 import { z } from 'zod';

@@ -4,7 +4,7 @@
  * Handle admin user management API requests
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { adminUsersService } from './users.service';
 import { AdminError } from '../../admin.errors';
 import { adminController } from '../../admin.controller';

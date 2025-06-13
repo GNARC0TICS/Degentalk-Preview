@@ -4,7 +4,8 @@ import { Users, MessageSquare, ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AnimatedLogo } from '@/components/ui/animated-logo';
 import { motion, AnimatePresence } from 'framer-motion';
-import { uiConfig, HeroQuote } from '@/config/ui.config';
+import { uiConfig } from '@/config/ui.config';
+import type { HeroQuote } from '@/config/ui.config';
 
 // Fisher-Yates shuffle
 function shuffleArray<T>(array: T[]): T[] {

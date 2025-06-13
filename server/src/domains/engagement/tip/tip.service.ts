@@ -7,7 +7,7 @@
  */
 
 import { db } from '@db';
-import { users, transactions, tips } from '@schema';
+import { users, transactions } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
 import { dgtService } from '../../wallet/dgt.service';

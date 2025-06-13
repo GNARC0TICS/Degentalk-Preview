@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { logger } from '../../core/logger';
 import { MissionsService } from './missions.service';
 import { xpService } from '../xp/xp.service';

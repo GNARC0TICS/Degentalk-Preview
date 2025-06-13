@@ -5,7 +5,8 @@
  * API endpoints for mission management in the admin panel
  */
 
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import * as missionsController from './missions.controller';
 import { isAuthenticated, isAdmin } from '../auth/middleware/auth.middleware';
 

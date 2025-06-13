@@ -4,7 +4,7 @@
  * Handles API endpoints for managing XP action settings
  */
 
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { db } from '@db';
 import { xpActionSettings } from '@schema';
 import { eq } from 'drizzle-orm';

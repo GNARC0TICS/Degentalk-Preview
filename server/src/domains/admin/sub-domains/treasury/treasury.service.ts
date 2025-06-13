@@ -8,7 +8,6 @@ import { db } from '@db';
 import {
 	users,
 	transactions,
-	adminAuditLogs,
 	dgtEconomyParameters,
 	siteSettings as platformSiteSettings
 } from '@schema';

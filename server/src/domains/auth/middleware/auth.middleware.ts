@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { shouldBypassAuth, isDevMode } from '../../../utils/environment';
 import { createMockUser } from '../services/auth.service';
 import { logger } from '@server/src/core/logger';

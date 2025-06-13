@@ -5,7 +5,8 @@
  * categories, and related operations.
  */
 
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import type { Request, Response } from 'express';
 import { db } from '@db';
 import { z } from 'zod';
 import {
@@ -14,7 +15,6 @@ import {
 	postReactions,
 	reactionTypeEnum,
 	transactions,
-	treasurySettings,
 	transactionTypeEnum,
 	transactionStatusEnum,
 	users,
@@ -53,7 +53,7 @@ import {
 	isAdmin,
 	isAdminOrModerator
 } from '../auth/middleware/auth.middleware';
-import { ThreadWithUserAndCategory, PostWithUser } from '@shared/types';
+import type { ThreadWithUserAndCategory, PostWithUser } from '../../../../db/types/forum.types.ts';
 import { slugify } from '@server/utils/slugify';
 import { XpLevelService, xpLevelService, XP_ACTIONS } from '../../../services/xp-level-service';
 import rulesRoutes from './rules/rules.routes';

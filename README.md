@@ -312,6 +312,43 @@ STRIPE_SECRET_KEY=your_stripe_key
    - TSX with `--watch` provides hot reload without needing nodemon
    - If issues persist, use `npm run dev:backend:quick` for faster startup
 
+### 🔥 **Critical: NPM Script Infinite Loop Recovery**
+
+If you encounter `npm run dev` spawning infinite processes or your system becomes unresponsive:
+
+#### **Emergency Stop:**
+```bash
+# Kill all npm processes immediately
+pkill -f "npm run dev"
+
+# Kill all node processes (CAUTION: This will kill ALL Node.js processes)
+killall node
+
+# Clear development ports specifically
+lsof -ti:5001 | xargs kill -9 2>/dev/null || echo "Port 5001 clear"
+lsof -ti:5173 | xargs kill -9 2>/dev/null || echo "Port 5173 clear"
+```
+
+#### **Check for Runaway Processes:**
+```bash
+# See all npm/node processes
+ps aux | grep npm
+ps aux | grep node
+
+# Kill specific process IDs if needed
+kill -9 <PID>
+```
+
+#### **Common Causes:**
+- Scripts that reference themselves: `"dev": "npm run dev"`
+- Missing package.json files in subdirectories
+- Circular script dependencies between parent/child packages
+
+#### **Prevention:**
+- Never create self-referencing npm scripts
+- Always use direct commands instead of script delegation when possible
+- Verify subdirectories have package.json files before delegating to them
+
 ### Development Environment
 
 - **No nodemon needed** - Using tsx with `--watch` for hot reload

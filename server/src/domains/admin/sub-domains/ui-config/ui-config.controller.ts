@@ -4,7 +4,7 @@
  * Handles API requests for UI configuration management (quotes, collections, analytics).
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { uiConfigService } from './ui-config.service.ts';
 import { AdminError, AdminErrorCodes } from '../../admin.errors.ts';
 import { getUserId } from '../../admin.middleware.ts';

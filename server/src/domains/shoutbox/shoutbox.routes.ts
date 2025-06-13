@@ -4,7 +4,8 @@
  * Defines API routes for the shoutbox messaging system.
  */
 
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import type { Request, Response } from 'express';
 import { db } from '@db';
 import {
 	shoutboxMessages,

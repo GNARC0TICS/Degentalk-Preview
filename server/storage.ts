@@ -55,13 +55,8 @@ import {
 } from '@schema';
 import { db, pool } from '@db';
 import { and, eq, desc, sql, count, isNull, not, inArray, ne, lte } from 'drizzle-orm';
-import {
-	ThreadWithUser,
-	PostWithUser,
-	ForumCategoryWithStats,
-	UserPluginData,
-	EmojiWithAvailability
-} from '@shared/types';
+import type { ForumCategoryWithStats, ThreadWithUser } from '../db/types/forum.types.ts';
+import type { UserPluginData } from '../db/types/user.types.ts';
 import session from 'express-session';
 import connectPGSink from 'connect-pg-simple';
 import { randomBytes, scrypt } from 'crypto';

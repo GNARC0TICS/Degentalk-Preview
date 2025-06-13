@@ -4,7 +4,8 @@
  * Defines API routes for vault functionality (locking and unlocking funds).
  */
 
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { db } from '@db';
 import { sql, eq } from 'drizzle-orm';

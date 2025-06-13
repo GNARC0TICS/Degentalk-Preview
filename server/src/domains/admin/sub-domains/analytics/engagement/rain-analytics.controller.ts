@@ -4,7 +4,7 @@
  * Handles requests for rain analytics data in the admin dashboard
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { rainAnalyticsService } from './rain-analytics.service';
 import { logger } from '../../../../../core/logger';
 

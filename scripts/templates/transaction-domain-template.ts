@@ -72,7 +72,7 @@ export const transactionControllerTemplate = `/**
  * providing a unified view of DGT and crypto transactions.
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { logger } from '../../core/logger';
 import { transactionService } from './transaction.service';
 import { WalletError, WalletErrorCodes } from '../wallet/wallet.errors';
@@ -701,7 +701,7 @@ export const transactionValidatorsTemplate = `/**
  * This file contains request validation middleware for transaction routes.
  */
 
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { WalletError, WalletErrorCodes } from '../wallet/wallet.errors';
 

@@ -4,7 +4,7 @@
  * Handle admin panel API requests
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { adminService } from './admin.service';
 import { getUserId } from './admin.middleware';
 import { AdminError } from './admin.errors';

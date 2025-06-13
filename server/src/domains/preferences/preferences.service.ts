@@ -12,7 +12,7 @@ import {
 } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { logger } from '../../../src/core/logger';
-import {
+import type {
 	ProfileSettingsInput,
 	AccountSettingsInput,
 	NotificationSettingsInput,

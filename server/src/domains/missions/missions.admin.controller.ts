@@ -4,7 +4,7 @@
  * Handles admin-specific mission management functionality
  */
 
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { MissionsService } from './missions.service';
 // import { MissionSchema, MissionUpdateSchema } from './missions.validators'; // Removed as file not found and schemas not used
 // import { MissionAlreadyExistsError } from './missions.errors'; // Removed as file not found and error not used
