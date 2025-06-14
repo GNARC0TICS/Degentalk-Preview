@@ -10,7 +10,9 @@
 			"@db": ["db/index.ts"],
 			"@schema": ["db/schema/index.ts"],
 			"@schema/*": ["db/schema/*"]
-		}
+		},
+		"skipLibCheck": true,
+		"noEmitOnError": false
 	},
 	"include": ["index.ts", "src/**/*.ts", "src/**/*.tsx"],
 	"exclude": [
