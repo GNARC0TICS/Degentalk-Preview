@@ -37,6 +37,7 @@ export * from './user/verificationTokens';
 export * from './user/passwordResetTokens';
 export * from './user/settingsHistory';
 export * from './user/avatarFrames';
+export * from './user/userGroups';
 
 // User domain - feature permissions
 export * from './user/featurePermissions';

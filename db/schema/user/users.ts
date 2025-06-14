@@ -89,7 +89,12 @@ export const users = pgTable(
 		pathXp: jsonb('path_xp').default('{}'),
 		pathMultipliers: jsonb('path_multipliers').default('{}'),
 		pluginData: jsonb('plugin_data').default('{}'),
-		updatedAt: timestamp('updated_at').defaultNow().notNull()
+		updatedAt: timestamp('updated_at').defaultNow().notNull(),
+		/**
+		 * DEPRECATED: Legacy group integer ID. Retained temporarily to keep code compiling
+		 * while we migrate services to the new role system. Do NOT use in new code.
+		 */
+		groupId: integer('group_id'),
 	},
 	(table) => ({
 		usernameUnique: unique('users_username_unique').on(table.username),
