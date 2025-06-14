@@ -14,7 +14,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { userRoleEnum } from '../core/enums';
-import { userGroups } from './userGroups';
+import { roles } from './roles';
 import { titles } from '../economy/titles';
 import { badges } from '../economy/badges';
 import { avatarFrames } from './avatarFrames';
@@ -40,7 +40,11 @@ export const users = pgTable(
 		avatarFrameId: integer('avatar_frame_id').references(() => avatarFrames.id, {
 			onDelete: 'set null'
 		}),
-		groupId: integer('group_id').references(() => userGroups.id, { onDelete: 'set null' }),
+		/**
+		 * Primary role for the user – replaces legacy groupId.
+		 * Nullable to support users without explicit role (falls back to default).
+		 */
+		primaryRoleId: uuid('primary_role_id').references(() => roles.id, { onDelete: 'set null' }),
 		discordHandle: varchar('discord_handle', { length: 255 }),
 		twitterHandle: varchar('twitter_handle', { length: 255 }),
 		website: varchar('website', { length: 255 }),

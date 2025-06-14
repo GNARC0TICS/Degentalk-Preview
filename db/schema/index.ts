@@ -25,7 +25,6 @@ export * from './core/enums'; // Removed as db/schema/core/ is deprecated.
 
 // User domain exports
 export * from './user/users';
-export * from './user/userGroups';
 export * from './user/sessions';
 export * from './user/preferences';
 export * from './user/permissions';
