@@ -42,7 +42,7 @@ class ImportValidator {
   private projectRoot: string;
 
   constructor() {
-    this.projectRoot = path.resolve(process.cwd(), '..');
+    this.projectRoot = path.resolve(process.cwd());
     this.project = new Project({
       tsConfigFilePath: path.join(this.projectRoot, 'tsconfig.json'),
     });

@@ -17,7 +17,7 @@
 		"kill-port:5001": "lsof -ti:5001 | xargs kill -9 2>/dev/null || echo \"Port 5001 clear\"",
 		"kill-port:5173": "lsof -ti:5173 | xargs kill -9 2>/dev/null || echo \"Port 5173 clear\"",
 		"build": "npm run build:client && npm run build:server",
-		"build:client": "cd client && npm run build",
+		"build:client": "vite build --config config/vite.config.ts",
 		"build:server": "cd server && npm run build",
 		"start": "cd server && npm start",
 		"db:push": "drizzle-kit push",
