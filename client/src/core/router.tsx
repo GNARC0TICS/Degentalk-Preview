@@ -3,7 +3,7 @@
 
 export const ROUTES = {
 	HOME: '/',
-	FORUM: '/forum',
+	FORUM: '/forums',
 	SHOP: '/shop',
 	SHOP_DGT_PURCHASE: '/shop/dgt-purchase',
 	ADMIN: '/admin',

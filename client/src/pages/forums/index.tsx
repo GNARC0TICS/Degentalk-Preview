@@ -298,8 +298,12 @@ function ForumPage() { // Changed to regular function
 			<div className="container max-w-7xl mx-auto px-4 py-6 flex-grow">
 				{/* Hero Section with Search */}
 				<div className="mb-12">
-					<div className="mb-6 text-center">
-						<h1 className="text-3xl font-bold mb-4 text-white">DegenTalk Forum</h1>
+					<div className="-mt-16 text-center">
+						<img
+							src="/images/ForumsGrafitti.PNG"
+							alt="DegenTalk Forum"
+							className="mx-auto -mb-12 w-auto max-h-64 object-contain"
+						/>
 						<p className="text-zinc-400 max-w-2xl mx-auto">
 							Join the conversation with fellow degens. Discuss crypto, share insights, and stay
 							ahead of the market.

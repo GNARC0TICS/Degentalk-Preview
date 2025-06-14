@@ -8,8 +8,8 @@ export const ROUTES = {
 	FORUM_DETAIL: (slug: string) => `/forums/${slug}`, // View a specific forum and its topics
 	THREAD_DETAIL: (slug: string) => `/threads/${slug}`, // View a specific thread and its posts
 
-	// Legacy routes - marked for deprecation but kept for backward compatibility
-	FORUM: '/forum', // Old forum index
+	// Legacy alias – redirects to '/forums'. Prefer using FORUMS.
+	FORUM: '/forums', // Alias for backward compatibility
 	FORUM_CATEGORY: (slug: string) => `/categories/${slug}`, // Old category view
 
 	// Shop routes

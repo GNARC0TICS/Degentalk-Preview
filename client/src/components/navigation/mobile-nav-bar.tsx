@@ -28,9 +28,9 @@ export function MobileNavBar({ items, className }: MobileNavBarProps) {
 		{
 			icon: <MessageSquare className="h-5 w-5" />,
 			label: 'Forum',
-			href: '/forum',
+			href: '/forums',
 			isActive:
-				location.startsWith('/forum') ||
+				location.startsWith('/forums') ||
 				location.startsWith('/threads') ||
 				location.startsWith('/tags'),
 			show: true

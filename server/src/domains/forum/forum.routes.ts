@@ -60,6 +60,7 @@ import rulesRoutes from './rules/rules.routes';
 import { forumController } from './forum.controller';
 import { forumService } from './forum.service';
 import { getUserIdFromRequest } from '@server/src/utils/auth'; // Import the centralized function
+import { logger } from '@server/src/core/logger';
 
 // Define validation schemas
 const tipPostSchema = z.object({
@@ -319,7 +320,7 @@ router.get('/threads', async (req: Request, res: Response) => {
 			});
 		}
 	} catch (error) {
-		console.error('Error fetching threads:', error);
+		logger.error('ForumRoutes', 'Error fetching threads', { err: error, query: req.query });
 		res.status(500).json({ message: 'An error occurred fetching threads' });
 	}
 });
@@ -352,7 +353,7 @@ router.get('/threads/:id', async (req: Request, res: Response) => {
 
 		res.json(result);
 	} catch (error) {
-		console.error('Error fetching thread by ID:', error);
+		logger.error('ForumRoutes', 'Error fetching thread by ID', { err: error, threadId: req.params.id });
 		res.status(500).json({ message: 'An error occurred fetching the thread' });
 	}
 });
@@ -384,7 +385,7 @@ router.get('/threads/slug/:slug', async (req: Request, res: Response) => {
 
 		res.json(result);
 	} catch (error) {
-		console.error('Error fetching thread by slug:', error);
+		logger.error('ForumRoutes', 'Error fetching thread by slug', { err: error, slug: req.params.slug });
 		res.status(500).json({ message: 'An error occurred fetching the thread by slug' });
 	}
 });
@@ -524,7 +525,7 @@ router.post('/threads', requireAuth, async (req: Request, res: Response) => {
 				// Thread creation awards additional XP beyond regular post
 				await xpLevelService.awardXp(userId, XP_ACTIONS.POST_CREATED);
 			} catch (xpError) {
-				console.error('Error awarding XP for new thread/post:', xpError);
+				logger.error('ForumRoutes', 'Error awarding XP for new thread/post', { err: xpError, userId });
 			}
 
 			const finalThreadDetailsArray = await tx
@@ -591,7 +592,7 @@ router.post('/threads', requireAuth, async (req: Request, res: Response) => {
 
 		res.status(201).json({ thread: newThreadData, firstPost });
 	} catch (error) {
-		console.error('Error creating thread:', error);
+		logger.error('ForumRoutes', 'Error creating thread', { err: error, body: req.body, userId: getUserIdFromRequest(req) });
 		if (error instanceof z.ZodError) {
 			return res.status(400).json({ message: 'Invalid thread data', errors: error.flatten() });
 		}
@@ -634,7 +635,7 @@ router.put('/threads/:threadId/solve', requireAuth, async (req, res, next) => {
 		// Note: The controller will handle the logic of solving (with postId) or unsolving (with postId = null)
 		return forumController.solveThread(req, res);
 	} catch (error) {
-		console.error('Error in PUT /threads/:threadId/solve route:', error);
+		logger.error('ForumRoutes', 'Error in PUT /threads/:threadId/solve route', { err: error, threadId: req.params.threadId, body: req.body });
 		next(error); // Pass to error handler
 	}
 });
@@ -700,7 +701,7 @@ router.post('/threads/:threadId/tags', requireAuth, async (req: Request, res: Re
 
 		res.status(result.added ? 201 : 200).json(result.tag);
 	} catch (error) {
-		console.error('Error adding tag to thread:', error);
+		logger.error('ForumRoutes', 'Error adding tag to thread', { err: error, threadId: req.params.threadId, body: req.body });
 		if (error instanceof z.ZodError) {
 			return res.status(400).json({
 				message: 'Invalid request data',
@@ -747,7 +748,7 @@ router.delete(
 
 			res.status(200).json({ message: 'Tag removed successfully' });
 		} catch (error) {
-			console.error('Error removing tag from thread:', error);
+			logger.error('ForumRoutes', 'Error removing tag from thread', { err: error, threadId: req.params.threadId, tagId: req.params.tagId });
 			res.status(500).json({ message: 'An error occurred while removing tag from thread' });
 		}
 	}
@@ -784,7 +785,7 @@ router.get('/threads/:threadId/tags', async (req: Request, res: Response) => {
 			count: tagsForThread.length
 		});
 	} catch (error) {
-		console.error('Error fetching thread tags:', error);
+		logger.error('ForumRoutes', 'Error fetching thread tags', { err: error, threadId: req.params.threadId });
 		res.status(500).json({
 			success: false,
 			message: 'An error occurred fetching thread tags',
@@ -871,7 +872,7 @@ router.post('/posts/:postId/react', requireAuth, async (req, res) => {
 
 		return res.status(200).json({ success: true });
 	} catch (error) {
-		console.error('Error handling post reaction:', error);
+		logger.error('ForumRoutes', 'Error handling post reaction', { err: error, postId: req.params.postId, body: req.body });
 		return res.status(500).json({ error: 'Internal server error' });
 	}
 });
@@ -908,7 +909,7 @@ router.post('/bookmarks', requireAuth, async (req, res) => {
 
 		return res.status(200).json({ success: true });
 	} catch (error) {
-		console.error('Error bookmarking thread:', error);
+		logger.error('ForumRoutes', 'Error bookmarking thread', { err: error, threadId: req.body.threadId, userId: getUserIdFromRequest(req) });
 		return res.status(500).json({ error: 'Internal server error' });
 	}
 });
@@ -930,7 +931,7 @@ router.delete('/bookmarks/:threadId', requireAuth, async (req, res) => {
 
 		return res.status(200).json({ success: true });
 	} catch (error) {
-		console.error('Error removing bookmark:', error);
+		logger.error('ForumRoutes', 'Error removing bookmark', { err: error, threadId: req.params.threadId, userId: getUserIdFromRequest(req) });
 		return res.status(500).json({ error: 'Internal server error' });
 	}
 });
@@ -997,7 +998,7 @@ router.post('/threads/:threadId/solve', requireAuth, async (req, res) => {
 			message: 'Thread marked as solved'
 		});
 	} catch (error) {
-		console.error('Error marking thread as solved:', error);
+		logger.error('ForumRoutes', 'Error marking thread as solved', { err: error, threadId: req.params.threadId, postId: req.body.postId });
 		return res.status(500).json({ error: 'Internal server error' });
 	}
 });
@@ -1050,7 +1051,7 @@ router.post('/threads/:threadId/unsolve', requireAuth, async (req, res) => {
 			message: 'Thread unmarked as solved'
 		});
 	} catch (error) {
-		console.error('Error unmarking thread as solved:', error);
+		logger.error('ForumRoutes', 'Error unmarking thread as solved', { err: error, threadId: req.params.threadId });
 		return res.status(500).json({ error: 'Internal server error' });
 	}
 });
@@ -1146,7 +1147,7 @@ router.put('/posts/:id', requireAuth, async (req: Request, res: Response) => {
 			post: updatedPost[0]
 		});
 	} catch (error) {
-		console.error('Error updating post:', error);
+		logger.error('ForumRoutes', 'Error updating post', { err: error, postId: req.params.id, body: req.body });
 		return res.status(500).json({ message: 'An error occurred updating the post' });
 	}
 });
@@ -1171,7 +1172,7 @@ router.get('/users/search', async (req: Request, res: Response) => {
 
 		return res.status(200).json({ users: results });
 	} catch (error) {
-		console.error('Error searching users:', error);
+		logger.error('ForumRoutes', 'Error searching users', { err: error, query: req.query.query });
 		return res.status(500).json({ message: 'An error occurred searching for users' });
 	}
 });
@@ -1228,7 +1229,7 @@ router.get('/hot-threads', async (req: Request, res: Response) => {
 
 		res.json(formattedThreads);
 	} catch (error) {
-		console.error('Error fetching hot threads:', error);
+		logger.error('ForumRoutes', 'Error fetching hot threads', { err: error, limit: req.query.limit });
 		res.status(500).json({ error: 'Failed to fetch hot threads' });
 	}
 });
@@ -1241,13 +1242,13 @@ router.get('/category/:id', forumController.getCategoryById); // Note: singular 
 router.get('/forums/:slug', forumController.getForumBySlug);
 router.get('/forums/:slug/topics', async (req, res) => {
 	const { slug } = req.params;
-	console.log(`[Forum Routes] Received request for /forums/${slug}/topics`);
+	logger.debug('ForumRoutes', `Received request for /forums/${slug}/topics`, { slug });
 	try {
 		// Call the controller function
 		await forumController.getForumBySlugWithTopics(req, res);
 		// Note: The controller handles sending the response, so no need to log result here
 	} catch (error) {
-		console.error(`[Forum Routes] Error in /forums/${slug}/topics route:`, error);
+		logger.error('ForumRoutes', `Error in /forums/${slug}/topics route:`, { err: error, slug });
 		// Ensure a response is sent if the controller didn't handle the error
 		if (!res.headersSent) {
 			res.status(500).json({ message: 'An error occurred fetching forum topics' });
@@ -1265,10 +1266,10 @@ router.get('/debug/forums-by-parent', async (req: Request, res: Response) => {
 	try {
 		const parentId = req.query.parentId ? parseInt(req.query.parentId as string) : undefined;
 
-		console.log('[DEBUG] /forums-by-parent called with parentId:', parentId);
+		logger.debug('ForumRoutes', '/forums-by-parent called', { parentId });
 
 		if (!parentId || isNaN(parentId)) {
-			console.log('[DEBUG] Invalid parentId parameter:', req.query.parentId);
+			logger.warn('ForumRoutes', 'Invalid parentId parameter for /forums-by-parent', { providedValue: req.query.parentId, parsed: parentId });
 			return res.status(400).json({
 				message: 'Valid parent ID is required',
 				debug: {
@@ -1279,21 +1280,18 @@ router.get('/debug/forums-by-parent', async (req: Request, res: Response) => {
 		}
 
 		const categories = await forumService.getCategoriesWithStats();
-		console.log('[DEBUG] Total categories found:', categories.length);
+		logger.debug('ForumRoutes', `Total categories found for /forums-by-parent: ${categories.length}`, { parentId });
 
 		const parentForum = categories.find((cat) => cat.id === parentId);
-		console.log('[DEBUG] Parent forum found:', parentForum ? parentForum.name : 'Not found');
+		logger.debug('ForumRoutes', `Parent forum for /forums-by-parent: ${parentForum ? parentForum.name : 'Not found'}`, { parentId, parentForumName: parentForum?.name });
 
 		const childForums = categories.filter((cat) => cat.parentId === parentId);
-		console.log('[DEBUG] Child forums found:', childForums.length);
+		logger.debug('ForumRoutes', `Child forums found for /forums-by-parent: ${childForums.length}`, { parentId, childCount: childForums.length });
 
 		if (childForums.length === 0) {
-			console.log('[DEBUG] No child forums found for parentId:', parentId);
+			logger.debug('ForumRoutes', 'No child forums found for parentId for /forums-by-parent', { parentId });
 		} else {
-			console.log(
-				'[DEBUG] Child forum names:',
-				childForums.map((f) => f.name)
-			);
+			logger.debug('ForumRoutes', 'Child forum names for /forums-by-parent', { parentId, childNames: childForums.map((f) => f.name) });
 		}
 
 		// Add canHaveThreads property and parent info to each child forum
@@ -1313,7 +1311,7 @@ router.get('/debug/forums-by-parent', async (req: Request, res: Response) => {
 			}
 		});
 	} catch (error) {
-		console.error('[DEBUG] Error in debug forums-by-parent:', error);
+		logger.error('ForumRoutes', 'Error in debug /forums-by-parent', { err: error, parentId: req.query.parentId });
 		return res.status(500).json({
 			message: 'Failed to fetch child forums',
 			error: error instanceof Error ? error.message : 'Unknown error'
@@ -1364,7 +1362,7 @@ router.get('/debug/structure', async (req: Request, res: Response) => {
 			message: 'This endpoint is for debugging purposes only'
 		});
 	} catch (error) {
-		console.error('Debug structure error:', error);
+		logger.error('ForumRoutes', 'Debug structure error', { err: error });
 		res.status(500).json({
 			error: 'Failed to fetch debug structure',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -1409,7 +1407,7 @@ router.get('/debug/forum-relationships', async (req: Request, res: Response) => 
 			categoryBreakdown
 		});
 	} catch (error) {
-		console.error('Debug forum relationships error:', error);
+		logger.error('ForumRoutes', 'Debug forum relationships error', { err: error });
 		res.status(500).json({
 			error: 'Failed to fetch forum relationships',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -1461,9 +1459,7 @@ router.get('/structure', async (req: Request, res: Response) => {
 			});
 
 		// Log what we're returning for debugging
-		console.log(
-			`[API /forum/structure] Returning ${primaryZones.length} primary zones and ${categories.length} categories`
-		);
+		logger.debug('ForumRoutes', `Returning forum structure`, { primaryZoneCount: primaryZones.length, categoryCount: categories.length });
 
 		// Return the structure in the format expected by useForumStructure
 		res.json({
@@ -1471,7 +1467,7 @@ router.get('/structure', async (req: Request, res: Response) => {
 			categories
 		});
 	} catch (error) {
-		console.error('Error fetching forum structure:', error);
+		logger.error('ForumRoutes', 'Error fetching forum structure', { err: error });
 		res.status(500).json({ error: 'Failed to fetch forum structure' });
 	}
 });
@@ -1480,10 +1476,10 @@ router.get('/structure', async (req: Request, res: Response) => {
 router.get('/threads/:categoryId', async (req: Request, res: Response) => {
 	try {
 		const categoryId = parseInt(req.params.categoryId);
-		console.log(`[Forum Routes] Received request for /threads/${categoryId}`);
+		logger.debug('ForumRoutes', `Received request for /threads/${categoryId}`, { categoryId });
 
 		if (isNaN(categoryId)) {
-			console.log(`[Forum Routes] Invalid category ID received: ${req.params.categoryId}`);
+			logger.warn('ForumRoutes', `Invalid category ID received: ${req.params.categoryId}`, { categoryIdParam: req.params.categoryId });
 			return res.status(400).json({ message: 'Invalid category ID' });
 		}
 
@@ -1519,12 +1515,10 @@ router.get('/threads/:categoryId', async (req: Request, res: Response) => {
 		}
 
 		// Return the threads
-		console.log(
-			`[Forum Routes] Returning ${categoryThreads.length} threads for category ID ${categoryId}`
-		);
+		logger.debug('ForumRoutes', `Returning ${categoryThreads.length} threads for category ID ${categoryId}`, { categoryId, threadCount: categoryThreads.length });
 		return res.json(categoryThreads);
 	} catch (error) {
-		console.error('Error fetching threads by category:', error);
+		logger.error('ForumRoutes', 'Error fetching threads by category', { err: error, categoryId: req.params.categoryId });
 		return res.status(500).json({ message: 'Error fetching threads' });
 	}
 });

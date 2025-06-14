@@ -9,6 +9,7 @@ import { users } from '@schema';
 import { eq } from 'drizzle-orm';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
 import { pool } from '@db';
+import { logger } from '@server/src/core/logger'; // Added logger import
 
 /**
  * Extract userId from request consistently
@@ -37,9 +38,7 @@ export async function isAdmin(req: Request, res: Response, next: NextFunction) {
 
 				// For admin routes, ensure the DevUser has admin privileges
 				if (devUser.role !== 'admin') {
-					console.warn(
-						'⚠️ [DEV MODE] DevUser exists but does not have admin role. Updating to admin role...'
-					);
+					logger.warn('AdminMiddleware', 'DevUser exists but does not have admin role. Updating to admin role.', { userId: devUser.id || devUser.user_id });
 					await pool.query(`
             UPDATE users SET role = 'admin' WHERE username = 'DevUser'
           `);
@@ -49,21 +48,19 @@ export async function isAdmin(req: Request, res: Response, next: NextFunction) {
 				// Mock an authenticated session with the DevUser
 				req.login(devUser, (err) => {
 					if (err) {
-						console.error('Error auto-authenticating as DevUser for admin route:', err);
+						logger.error('AdminMiddleware', 'Error auto-authenticating as DevUser for admin route', { err, userId: devUser.id || devUser.user_id });
 						return res.status(401).json({ message: 'Unauthorized' });
 					}
 
-					console.log(
-						`🔑 [DEV MODE] Auto-authenticated as DevUser admin (ID: ${devUser.user_id || devUser.id})`
-					);
+					logger.info('AdminMiddleware', `Auto-authenticated as DevUser admin (ID: ${devUser.user_id || devUser.id})`, { userId: devUser.id || devUser.user_id });
 					return next();
 				});
 			} else {
-				console.warn('⚠️ [DEV MODE] DevUser not found in database, admin auth failed');
+				logger.warn('AdminMiddleware', 'DevUser not found in database, admin auth failed');
 				return res.status(401).json({ message: 'Unauthorized' });
 			}
 		} catch (error) {
-			console.error('Error in dev mode admin authentication:', error);
+			logger.error('AdminMiddleware', 'Error in dev mode admin authentication', { err: error });
 			return res.status(401).json({ message: 'Unauthorized' });
 		}
 	} else if (req.isAuthenticated()) {
@@ -97,9 +94,7 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
 
 				// For admin routes, ensure the DevUser has admin or mod privileges
 				if (devUser.role !== 'admin' && devUser.role !== 'mod') {
-					console.warn(
-						'⚠️ [DEV MODE] DevUser exists but does not have admin/mod role. Updating to admin role...'
-					);
+					logger.warn('AdminMiddleware', 'DevUser exists but does not have admin/mod role. Updating to admin role.', { userId: devUser.id || devUser.user_id });
 					await pool.query(`
             UPDATE users SET role = 'admin' WHERE username = 'DevUser'
           `);
@@ -109,21 +104,19 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
 				// Mock an authenticated session with the DevUser
 				req.login(devUser, (err) => {
 					if (err) {
-						console.error('Error auto-authenticating as DevUser for admin/mod route:', err);
+						logger.error('AdminMiddleware', 'Error auto-authenticating as DevUser for admin/mod route', { err, userId: devUser.id || devUser.user_id });
 						return res.status(401).json({ message: 'Unauthorized' });
 					}
 
-					console.log(
-						`🔑 [DEV MODE] Auto-authenticated as DevUser admin/mod (ID: ${devUser.user_id || devUser.id})`
-					);
+					logger.info('AdminMiddleware', `Auto-authenticated as DevUser admin/mod (ID: ${devUser.user_id || devUser.id})`, { userId: devUser.id || devUser.user_id });
 					return next();
 				});
 			} else {
-				console.warn('⚠️ [DEV MODE] DevUser not found in database, admin/mod auth failed');
+				logger.warn('AdminMiddleware', 'DevUser not found in database, admin/mod auth failed');
 				return res.status(401).json({ message: 'Unauthorized' });
 			}
 		} catch (error) {
-			console.error('Error in dev mode admin/mod authentication:', error);
+			logger.error('AdminMiddleware', 'Error in dev mode admin/mod authentication', { err: error });
 			return res.status(401).json({ message: 'Unauthorized' });
 		}
 	} else if (req.isAuthenticated()) {
@@ -145,7 +138,7 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
  */
 export const asyncHandler = (fn: Function) => (req: Request, res: Response, next: NextFunction) => {
 	Promise.resolve(fn(req, res, next)).catch((error) => {
-		console.error('Admin route error:', error);
+		logger.error('AdminMiddleware', 'Admin route error in asyncHandler', { err: error, path: req.path, method: req.method });
 
 		if (error instanceof WalletError) {
 			return res.status(error.httpStatus).json({

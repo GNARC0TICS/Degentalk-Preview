@@ -73,7 +73,7 @@ export function SiteHeader() {
 
 	const navigation = [
 		{ name: 'Home', href: '/' },
-		{ name: 'Forum', href: '/forum' },
+		{ name: 'Forum', href: '/forums' },
 		{ name: 'Shop', href: '/shop' },
 		{ name: 'Leaderboard', href: '/leaderboard' }
 	];
@@ -93,7 +93,7 @@ export function SiteHeader() {
 					<div className="flex items-center">
 						<Link href="/">
 							<div className="flex items-center cursor-pointer">
-								<span className="text-xl font-bold text-white">Degentalk</span>
+								<span className="text-xl font-bold text-white">Degentalk<sup className="text-xs text-zinc-400 font-normal">™</sup></span>
 							</div>
 						</Link>
 					</div>
@@ -103,7 +103,7 @@ export function SiteHeader() {
 						{navigation.map((item) => (
 							<Link key={item.name} href={item.href}>
 								<div
-									className={`px-3 py-2 rounded-md text-sm font-medium cursor-pointer transition-all duration-200
+									className={`px-2 py-2 rounded-md text-sm font-medium cursor-pointer transition-all duration-200
                   ${
 										item.href === location
 											? 'bg-zinc-800 text-white shadow-inner'
@@ -281,7 +281,7 @@ export function SiteHeader() {
 										Log In
 									</Button>
 								</Link>
-								<Link href="/forum">
+								<Link href="/forums">
 									<Button className="bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500">
 										Sign Up
 									</Button>
@@ -432,7 +432,7 @@ export function SiteHeader() {
 							</div>
 						) : (
 							<div className="pt-4 pb-3 border-t border-zinc-800 px-3 space-y-2">
-								<Link href="/forum" onClick={() => setIsOpen(false)}>
+								<Link href="/forums" onClick={() => setIsOpen(false)}>
 									<Button className="w-full bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500">
 										Sign Up
 									</Button>

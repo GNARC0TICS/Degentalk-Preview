@@ -376,6 +376,10 @@ function App() {
 						)}
 					/>
 
+					{/* Legacy Forum Routes – temporary aliases for '/forum' */}
+					<ProtectedRoute path="/forum" component={ForumsPage} />
+					<ProtectedRoute path="/forum/:slug" component={ForumBySlugPage} />
+
 					{/* 404 Route - Render the custom NotFoundPage component */}
 					<Route component={NotFoundPage} />
 				</Switch>			</React.Suspense>

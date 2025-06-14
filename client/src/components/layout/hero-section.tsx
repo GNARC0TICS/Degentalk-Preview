@@ -113,7 +113,7 @@ export function HeroSection() {
 							<Button
 								size="lg"
 								className="bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300"
-								onClick={() => (window.location.href = '/forum')}
+								onClick={() => (window.location.href = '/forums')}
 							>
 								<Users className="w-5 h-5 mr-2" />
 								Join Community
@@ -127,7 +127,7 @@ export function HeroSection() {
 						animate={{ opacity: 1 }}
 						transition={{ delay: 0.9, duration: 0.8 }}
 					>
-						<Link href="/forum">
+						<Link href="/forums">
 							<motion.div
 								className="flex items-center text-emerald-400 hover:text-emerald-300 transition-colors text-sm group"
 								whileHover={{ x: 5 }}

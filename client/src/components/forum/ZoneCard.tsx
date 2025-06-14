@@ -1,9 +1,11 @@
 import React from 'react';
-import { Link } from 'wouter'; // Removed useNavigate
+import { Link } from 'wouter';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Eye, MessageSquare, Users, Clock, Flame } from 'lucide-react';
+// Badge is no longer directly used, XpBoostBadge handles its own Badge import
+import { Clock, Flame } from 'lucide-react'; // Eye, MessageSquare, Users moved to ZoneStats
 import { formatDistanceToNow } from 'date-fns';
+import XpBoostBadge from './XpBoostBadge'; // Import XpBoostBadge
+import ZoneStats from './ZoneStats'; // Import ZoneStats
 
 export interface ZoneCardProps {
 	// Core data
@@ -115,13 +117,7 @@ export function ZoneCard({
           `}
 				>
 					{/* XP Boost Indicator */}
-					{hasXpBoost && boostMultiplier && (
-						<div className="absolute top-2 right-2 z-10">
-							<Badge className="bg-purple-600 text-white font-bold">
-								XP Boost x{boostMultiplier} 🚀
-							</Badge>
-						</div>
-					)}
+					<XpBoostBadge boostMultiplier={boostMultiplier} />
 
 					{/* Event Indicator */}
 					{isEventActive && eventData && (
@@ -142,24 +138,11 @@ export function ZoneCard({
 
 						<p className="text-sm opacity-90 mb-4">{description}</p>
 
-						<div className="flex flex-wrap gap-4 text-xs text-zinc-300 font-semibold">
-							<div className="flex items-center bg-black/30 rounded-full px-2.5 py-1.5">
-								<MessageSquare className="h-3.5 w-3.5 mr-1.5 text-emerald-400" />
-								<span>{threadCount} threads</span>
-							</div>
-
-							<div className="flex items-center bg-black/30 rounded-full px-2.5 py-1.5">
-								<Eye className="h-3.5 w-3.5 mr-1.5 text-amber-400" />
-								<span>{postCount} posts</span>
-							</div>
-
-							{activeUsersCount > 0 && (
-								<div className="flex items-center bg-black/30 rounded-full px-2.5 py-1.5">
-									<Users className="h-3.5 w-3.5 mr-1.5 text-blue-400" />
-									<span>{activeUsersCount} active</span>
-								</div>
-							)}
-						</div>
+						<ZoneStats
+							threadCount={threadCount}
+							postCount={postCount}
+							activeUsersCount={activeUsersCount}
+						/>
 					</CardContent>
 
 					{lastActivityAt && (

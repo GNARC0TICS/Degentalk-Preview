@@ -2,6 +2,7 @@
 // TODO: @syncSchema posts
 // TODO: @syncSchema content_visibility_status_enum
 import { db } from '@db';
+import { logger } from '@server/src/core/logger';
 import {
 	forumCategories,
 	threads,
@@ -173,7 +174,7 @@ export const forumService = {
 			}
 			return categories;
 		} catch (error) {
-			console.error('Error in forumService.getCategoriesWithStats:', error);
+			logger.error('ForumService', 'Error in getCategoriesWithStats', { err: error, includeCounts });
 			throw error;
 		}
 	},
@@ -220,7 +221,7 @@ export const forumService = {
 			const childForums = categories.filter((cat) => cat.parentId === parentId); 
 			return childForums.map((forum) => ({ ...forum, canHaveThreads: true, parentSlug: parentForum?.slug || null, parentName: parentForum?.name || null })); 
 		} catch (error) { 
-			console.error('Error in getForumsByParentId:', error); 
+			logger.error('ForumService', 'Error in getForumsByParentId', { err: error, parentId });
 			throw error; 
 		} 
 	},
@@ -235,7 +236,7 @@ export const forumService = {
 			}); 
 			return { primaryZones, categories }; 
 		} catch (error) { 
-			console.error('Error in debugForumRelationships:', error); 
+			logger.error('ForumService', 'Error in debugForumRelationships', { err: error });
 			throw error; 
 		} 
 	},
@@ -425,7 +426,7 @@ export const forumService = {
 			};
 
 		} catch (error) {
-			console.error('Error in forumService.getThreadDetails:', error);
+			logger.error('ForumService', 'Error in getThreadDetails', { err: error, slugOrId, page, limit, currentUserId });
 			throw error;
 		}
 	},
@@ -460,7 +461,7 @@ export const forumService = {
 				});
 			return updatedThread || null;
 		} catch (error) {
-			console.error('Error in forumService.updateThreadSolvedStatus:', error);
+			logger.error('ForumService', 'Error in updateThreadSolvedStatus', { err: error, threadId, solvingPostId });
 			throw error;
 		}
 	}

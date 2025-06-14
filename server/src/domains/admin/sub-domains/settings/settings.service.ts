@@ -7,6 +7,7 @@
 import { db } from '@db';
 import { siteSettings } from '@schema';
 import { eq, and, sql, or, like, ilike, asc, desc } from 'drizzle-orm';
+import { logger } from '@server/src/core/logger';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type {
 	UpdateSettingInput,
@@ -61,7 +62,7 @@ export class AdminSettingsService {
 				group: setting.group || null
 			}));
 		} catch (error) {
-			console.error('Error fetching settings:', error);
+			logger.error('AdminSettingsService', 'Error fetching settings', { err: error, filters });
 			throw new AdminError('Failed to fetch settings', 500, AdminErrorCodes.DB_ERROR);
 		}
 	}
@@ -80,7 +81,7 @@ export class AdminSettingsService {
 			return setting;
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error fetching setting:', error);
+			logger.error('AdminSettingsService', 'Error fetching setting by key', { err: error, key });
 			throw new AdminError('Failed to fetch setting', 500, AdminErrorCodes.DB_ERROR);
 		}
 	}
@@ -125,7 +126,7 @@ export class AdminSettingsService {
 			return updatedSetting;
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error updating setting:', error);
+			logger.error('AdminSettingsService', 'Error updating setting', { err: error, key: data.key });
 			throw new AdminError('Failed to update setting', 500, AdminErrorCodes.DB_ERROR);
 		}
 	}
@@ -145,7 +146,7 @@ export class AdminSettingsService {
 			return results;
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error updating settings:', error);
+			logger.error('AdminSettingsService', 'Error updating multiple settings', { err: error });
 			throw new AdminError('Failed to update settings', 500, AdminErrorCodes.DB_ERROR);
 		}
 	}
@@ -172,7 +173,7 @@ export class AdminSettingsService {
 				sortOrder: 0
 			}));
 		} catch (error) {
-			console.error('Error fetching setting groups:', error);
+			logger.error('AdminSettingsService', 'Error fetching setting groups', { err: error });
 			throw new AdminError('Failed to fetch setting groups', 500, AdminErrorCodes.DB_ERROR);
 		}
 	}
@@ -221,7 +222,7 @@ export class AdminSettingsService {
 				updatedAt: new Date()
 			};
 		} catch (error) {
-			console.error('Error updating setting group:', error);
+			logger.error('AdminSettingsService', 'Error updating setting group', { err: error, key });
 			throw new AdminError('Failed to update setting group', 500, AdminErrorCodes.DB_ERROR);
 		}
 	}
@@ -264,7 +265,7 @@ export class AdminSettingsService {
 			};
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error deleting setting group:', error);
+			logger.error('AdminSettingsService', 'Error deleting setting group', { err: error, key, newGroupKey });
 			throw new AdminError('Failed to delete setting group', 500, AdminErrorCodes.DB_ERROR);
 		}
 	}
@@ -345,7 +346,7 @@ export class AdminSettingsService {
 			return newSetting;
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error creating setting:', error);
+			logger.error('AdminSettingsService', 'Error creating setting', { err: error, settingKey: data.key });
 			throw new AdminError('Failed to create setting', 500, AdminErrorCodes.DB_ERROR);
 		}
 	}
@@ -405,7 +406,7 @@ export class AdminSettingsService {
 			return updatedSetting;
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error updating setting metadata:', error);
+			logger.error('AdminSettingsService', 'Error updating setting metadata', { err: error, key });
 			throw new AdminError('Failed to update setting metadata', 500, AdminErrorCodes.DB_ERROR);
 		}
 	}
@@ -430,7 +431,7 @@ export class AdminSettingsService {
 			return { success: true, message: 'Setting deleted successfully' };
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error deleting setting:', error);
+			logger.error('AdminSettingsService', 'Error deleting setting', { err: error, key });
 			throw new AdminError('Failed to delete setting', 500, AdminErrorCodes.DB_ERROR);
 		}
 	}

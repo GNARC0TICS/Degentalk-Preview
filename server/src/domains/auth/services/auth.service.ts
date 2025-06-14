@@ -4,6 +4,7 @@ import { featureFlags, users } from '@schema';
 import { db } from '@db';
 import { eq, count } from 'drizzle-orm';
 import { isDevMode } from '../../../utils/environment';
+import { logger } from '@server/src/core/logger';
 type User = typeof users.$inferSelect;
 
 // Promisify scrypt for async usage
@@ -54,7 +55,7 @@ export async function storeTempDevMetadata(password: string): Promise<string | n
 		// Simple encoding - not for security, just for obfuscation
 		return Buffer.from(password).toString('base64');
 	} catch (error) {
-		console.error('Error in storeTempDevMetadata:', error);
+		logger.error('AuthService', 'Error in storeTempDevMetadata', { err: error });
 		return null;
 	}
 }
@@ -74,7 +75,7 @@ export async function verifyEmailToken(token: string): Promise<{ userId: number 
 		// In production, you would query the actual token from the database
 		return { userId: 1 }; // Return userId if token is valid
 	} catch (error) {
-		console.error('Error verifying token:', error);
+		logger.error('AuthService', 'Error verifying token', { err: error, token });
 		return false;
 	}
 }
@@ -87,7 +88,7 @@ export function createMockUser(
 	userId: number,
 	role: 'admin' | 'moderator' | 'user' = 'user'
 ): User {
-	console.log(`🔨 Creating mock ${role} user for ID ${userId} in development mode`);
+	logger.info('AuthService', `Creating mock ${role} user for ID ${userId} in development mode`, { userId, role });
 
 	return {
 		id: userId,

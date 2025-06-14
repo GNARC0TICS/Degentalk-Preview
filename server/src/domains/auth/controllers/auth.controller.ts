@@ -4,6 +4,7 @@ import { createHash, randomBytes } from 'crypto';
 import passport from 'passport';
 import { insertUserSchema } from '@schema';
 import { users } from '@schema';
+import { logger } from '@server/src/core/logger';
 import { storage } from '../../../../storage'; // Will be refactored in a future step
 import { hashPassword, storeTempDevMetadata, verifyEmailToken } from '../services/auth.service';
 import { isDevMode } from '../../../utils/environment';
@@ -47,11 +48,13 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 
 		// Create default settings for the new user
 		try {
+			// TODO: Implement or verify createDefaultSettings functionality
 			// Import the settings service
-			const { createDefaultSettings } = await import('../../../domains/settings/settings.service');
-			await createDefaultSettings(user.id);
+			// const { createDefaultSettings } = await import('../../admin/sub-domains/settings/settings.service');
+			// await createDefaultSettings(user.id);
+			logger.info('AuthController', 'Skipping default settings creation for new user - to be implemented/verified.', { userId: user.id });
 		} catch (settingsError) {
-			console.error('Error creating default user settings:', settingsError);
+			logger.error('AuthController', 'Error during (attempted) default user settings creation', { err: settingsError, userId: user.id });
 			// Continue with registration even if settings creation fails
 		}
 
@@ -69,7 +72,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 		await storage.storeVerificationToken(user.id, verificationToken);
 
 		// Send verification email (replace with actual email sending logic)
-		console.log(`Verification email sent to ${userData.email} with token: ${verificationToken}`);
+		logger.info('AuthController', `Verification email sent to ${userData.email}`, { email: userData.email, token: verificationToken });
 
 		res.status(201).json({
 			message: 'Registration successful. Please check your email to verify your account.'
@@ -197,7 +200,7 @@ export async function resendVerification(req: Request, res: Response, next: Next
 		await storage.storeVerificationToken(user.id, verificationToken);
 
 		// Send verification email (replace with actual email sending logic)
-		console.log(`Verification email re-sent to ${email} with token: ${verificationToken}`);
+		logger.info('AuthController', `Verification email re-sent to ${email}`, { email, token: verificationToken });
 
 		res.status(200).json({
 			message: 'If your email exists in our system, you will receive a verification email shortly.'

@@ -25,6 +25,7 @@ import {
 	devModeAuthHandler
 } from './middleware/auth.middleware';
 import { isDevMode } from '../../utils/environment';
+import { logger } from '@server/src/core/logger';
 
 const router = Router();
 
@@ -45,7 +46,7 @@ export function setupAuthPassport(sessionStore: any) {
 					}
 
 					// Skip password check in dev mode with bypass flag
-					console.log('🛠️ DEV MODE: Bypassing password check!');
+					logger.info('AuthRoutes', 'DEV MODE: Bypassing password check!', { username });
 
 					// Still check other user status fields
 					if (user.isBanned) {
@@ -60,7 +61,9 @@ export function setupAuthPassport(sessionStore: any) {
 						return done(null, false, { message: 'Your account has been deleted' });
 					}
 
-					return done(null, user);
+					// Ensure role is not null and groupId is undefined if null
+					const userWithRole = { ...user, role: user.role || 'user', groupId: user.groupId === null ? undefined : user.groupId };
+					return done(null, userWithRole);
 				}
 
 				// Normal authentication flow
@@ -81,7 +84,9 @@ export function setupAuthPassport(sessionStore: any) {
 					return done(null, false, { message: 'Your account has been deleted' });
 				}
 
-				return done(null, user);
+				// Ensure role is not null and groupId is undefined if null
+				const userWithRole = { ...user, role: user.role || 'user', groupId: user.groupId === null ? undefined : user.groupId };
+				return done(null, userWithRole);
 			} catch (err) {
 				return done(err);
 			}
@@ -105,10 +110,12 @@ export function setupAuthPassport(sessionStore: any) {
 			try {
 				const user = await storage.getUser(id);
 				if (user) {
-					return done(null, user);
+					// Ensure role is not null and groupId is undefined if null
+					const userWithRole = { ...user, role: user.role || 'user', groupId: user.groupId === null ? undefined : user.groupId };
+					return done(null, userWithRole);
 				}
 			} catch (storageErr) {
-				console.log('Storage getUser error:', storageErr);
+				logger.warn('AuthRoutes', 'Storage getUser error during deserialization, falling back.', { err: storageErr, userId: id });
 				// Fall through to direct SQL approach or mock user in dev mode
 			}
 
@@ -117,7 +124,9 @@ export function setupAuthPassport(sessionStore: any) {
 				// Check if there's a dev role stored in session
 				const role = (global as any).devRole || 'user';
 				const mockUser = createMockUser(id, role as any);
-				return done(null, mockUser);
+				// Ensure role is not null and groupId is undefined if null for mock user too
+				const mockUserWithRole = { ...mockUser, role: mockUser.role || 'user', groupId: mockUser.groupId === null ? undefined : mockUser.groupId };
+				return done(null, mockUserWithRole);
 			}
 
 			// If we get here, no approach worked

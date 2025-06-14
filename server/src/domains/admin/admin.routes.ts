@@ -4,9 +4,10 @@
  * Main router for admin panel API endpoints
  */
 
-import { Router } from 'express';
+import { Router, type Express } from 'express'; // Import Express as type
 import { adminController } from './admin.controller';
 import { isAdmin, asyncHandler } from './admin.middleware';
+import { logger } from '@server/src/core/logger';
 
 // Import sub-domain routes
 import userRoutes from './sub-domains/users/users.routes';
@@ -52,8 +53,7 @@ adminRouter.use('/roles', rolesRoutes);
 
 // DEBUG: Middleware to check if /emojis path is reached in adminRouter
 adminRouter.use('/emojis', (req, res, next) => {
-	console.log(`ADMIN ROUTER: Request received for /api/admin${req.url}`);
-	console.log(`ADMIN ROUTER: Method: ${req.method}`);
+	logger.debug('AdminRoutes', `Request received for /api/admin${req.url}`, { url: req.url, method: req.method });
 	next();
 });
 
@@ -63,7 +63,7 @@ adminRouter.use('/ui-config', uiConfigRoutes);
 // router.use('/economy', economyAdminRoutes); // Placeholder for future
 
 // Dashboard overview route
-adminRouter.get('/dashboard', asyncHandler(adminController.getDashboardOverview));
+adminRouter.get('/dashboard', asyncHandler(adminController.getDashboardStats)); // Corrected method name
 
 // Admin account validation
 adminRouter.get('/validate', (req, res) => res.json({ isAdmin: true }));
@@ -72,7 +72,7 @@ adminRouter.get('/validate', (req, res) => res.json({ isAdmin: true }));
  * Register admin routes with the Express application
  * @param app Express application or router
  */
-export function registerAdminRoutes(app) {
+export function registerAdminRoutes(app: Express) { // Added type for app
 	app.use('/api/admin', adminRouter);
 }
 

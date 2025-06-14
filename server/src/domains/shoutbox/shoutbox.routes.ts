@@ -23,6 +23,7 @@ import {
 } from '../auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
 import { canUser } from '../../../../lib/auth/canUser.ts';
+import { logger } from '@server/src/core/logger';
 
 // Rate limiting for shoutbox messages (10 seconds cooldown)
 const userLastMessageTime = new Map<number, number>();
@@ -79,7 +80,7 @@ async function userHasRoomAccess(userId: number, roomId: number): Promise<boolea
 
 		return true;
 	} catch (error) {
-		console.error('Error checking room access:', error);
+		logger.error('ShoutboxRoutes', 'Error checking room access', { err: error, roomId, userId });
 		return false;
 	}
 }
@@ -183,7 +184,7 @@ router.get('/rooms', async (req: Request, res: Response) => {
 
 		res.json(roomsWithAccess);
 	} catch (error) {
-		console.error('Error fetching chat rooms:', error);
+		logger.error('ShoutboxRoutes', 'Error fetching chat rooms', { err: error });
 		res.status(500).json({ error: 'Failed to fetch chat rooms' });
 	}
 });
@@ -220,7 +221,7 @@ router.delete('/messages/:id', isAdminOrModerator, async (req: Request, res: Res
 
 		// Log the moderation action
 		const moderatorId = getUserId(req);
-		console.log(`[MODERATION] User ${moderatorId} deleted shoutbox message ${messageId}`);
+		logger.info('ShoutboxRoutes', `User ${moderatorId} deleted shoutbox message ${messageId}`, { moderatorId, messageId, action: 'delete_shoutbox_message' });
 
 		const deletedMessage = result[0];
 
@@ -249,7 +250,9 @@ router.delete('/messages/:id', isAdminOrModerator, async (req: Request, res: Res
 			deletedMessage: deletedMessage
 		});
 	} catch (error) {
-		console.error('Error deleting shoutbox message:', error);
+		// console.error('Error deleting shoutbox message:', error); // Original console.error removed
+		const messageIdForLog = parseInt(req.params.id); // Ensure messageId is available for logging
+		logger.error('ShoutboxRoutes', 'Error deleting shoutbox message', { err: error, messageId: messageIdForLog });
 		res.status(500).json({ error: 'Failed to delete message' });
 	}
 });
@@ -299,7 +302,7 @@ router.get('/messages', async (req: Request, res: Response) => {
 					return res.json([]);
 				}
 			} catch (error) {
-				console.warn('Error fetching default room:', error);
+				logger.warn('ShoutboxRoutes', 'Error fetching default room', { err: error });
 				return res.status(500).json({ error: 'Failed to determine chat room' });
 			}
 		}
@@ -399,7 +402,9 @@ router.get('/messages', async (req: Request, res: Response) => {
 
 		res.json(messages);
 	} catch (error) {
-		console.error('Error fetching shoutbox messages:', error);
+		const roomIdForLog = req.query.roomId ? parseInt(req.query.roomId as string) : null;
+		const limitForLog = req.query.limit ? parseInt(req.query.limit as string) : 50;
+		logger.error('ShoutboxRoutes', 'Error fetching shoutbox messages', { err: error, roomId: roomIdForLog, limit: limitForLog });
 		res.status(500).json({ error: 'Failed to fetch shoutbox messages' });
 	}
 });
@@ -500,7 +505,9 @@ router.post('/messages', isAuthenticated, async (req: Request, res: Response) =>
 			});
 		}
 
-		console.error('Error creating shoutbox message:', error);
+		const userIdForLog = getUserId(req); // Ensure userId is available
+		const roomIdForLog = req.body.roomId; // Get roomId from request body for logging context
+		logger.error('ShoutboxRoutes', 'Error creating shoutbox message', { err: error, userId: userIdForLog, roomId: roomIdForLog });
 		res.status(500).json({ error: 'Failed to create shoutbox message' });
 	}
 });
@@ -545,10 +552,15 @@ router.patch('/messages/:id', isAdminOrModerator, async (req: Request, res: Resp
 
 		// Log the moderation action
 		const moderatorId = getUserId(req);
-		console.log(
-			`[MODERATION] User ${moderatorId} ${
-				isPinned ? 'pinned' : 'unpinned'
-			} shoutbox message ${messageId}`
+		logger.info(
+			'ShoutboxRoutes',
+			`User ${moderatorId} ${isPinned ? 'pinned' : 'unpinned'} shoutbox message ${messageId}`,
+			{
+				moderatorId,
+				messageId,
+				action: isPinned ? 'pin_shoutbox_message' : 'unpin_shoutbox_message',
+				isPinned
+			}
 		);
 
 		const updatedMessage = result[0];
@@ -578,7 +590,10 @@ router.patch('/messages/:id', isAdminOrModerator, async (req: Request, res: Resp
 			updatedMessage: updatedMessage
 		});
 	} catch (error) {
-		console.error('Error updating shoutbox message:', error);
+		// console.error('Error updating shoutbox message:', error); // Original console.error removed
+		const messageIdForLog = parseInt(req.params.id); // Ensure messageId is available
+		const isPinnedForLog = req.body.isPinned; // Ensure isPinned is available
+		logger.error('ShoutboxRoutes', 'Error updating shoutbox message', { err: error, messageId: messageIdForLog, isPinned: isPinnedForLog });
 		res.status(500).json({ error: 'Failed to update message' });
 	}
 });

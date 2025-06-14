@@ -84,7 +84,7 @@ export function SiteFooter() {
 							whileHover={{ scale: 1.05 }}
 							transition={{ type: 'spring', stiffness: 400 }}
 						>
-							Degentalk
+							Degentalk<sup className="text-xs text-zinc-400 font-normal">™</sup>
 						</motion.h3>
 						<p className="text-zinc-400 text-sm">
 							The premier crypto-native forum and social platform for enthusiasts, traders, and
