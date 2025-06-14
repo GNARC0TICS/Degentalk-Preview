@@ -22,6 +22,7 @@ import {
 	isAdminOrModerator
 } from '../auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
+import { canUser } from '@/lib/auth/canUser';
 
 // Rate limiting for shoutbox messages (10 seconds cooldown)
 const userLastMessageTime = new Map<number, number>();
@@ -89,7 +90,7 @@ const router = Router();
 router.get('/rooms', async (req: Request, res: Response) => {
 	try {
 		const userId = getUserId(req);
-		const isAdminOrMod = req.user?.groupId === 1 || req.user?.groupId === 2;
+		const isAdminOrMod = req.user ? await canUser(req.user as any, 'canModerateChat') : false;
 
 		// Base query - get non-deleted rooms
 		let query = db
