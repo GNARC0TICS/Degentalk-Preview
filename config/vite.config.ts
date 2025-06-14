@@ -34,7 +34,7 @@ const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
 
 export default defineConfig(async () => {
-	const plugins = [react(), runtimeErrorOverlay()]; // New line without tsconfigPaths
+	const plugins = [react(), runtimeErrorOverlay()];
 
 	if (process.env.NODE_ENV !== 'production' && process.env.REPL_ID !== undefined) {
 		try {

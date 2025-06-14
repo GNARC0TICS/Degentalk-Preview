@@ -1,7 +1,8 @@
 import { drizzle as drizzleNeon, NeonClient } from 'drizzle-orm/neon-serverless';
 import { Pool as PoolNeon, neonConfig } from '@neondatabase/serverless';
 import { drizzle as drizzleNode, NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { Pool as PoolNode } from 'pg';
+import pg from 'pg';
+const { Pool: PoolNode } = pg;
 import * as schema from './schema';
 import { config } from 'dotenv';
 import ws from 'ws';
@@ -15,7 +16,9 @@ if (!process.env.DATABASE_URL) {
 	throw new Error('DATABASE_URL must be set for PostgreSQL');
 }
 
-let pool: PoolNode | NeonClient;
+import type { Pool as PgPool } from 'pg';
+
+let pool: PgPool | NeonClient;
 let db: NodePgDatabase<typeof schema>;
 if (process.env.NEXT_PUBLIC_APP_ENV === 'development') {
 	pool = new PoolNode({

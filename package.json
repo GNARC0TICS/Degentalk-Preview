@@ -65,7 +65,6 @@
 		"mcp:neon": "npx @neondatabase/mcp-server-neon start napi_64010heeqqly1w5t5eg1dpjposfjcqpdg0lu4bc7yvnci0vh7qyivoo04i3j036x"
 	},
 	"dependencies": {
-		"@heroicons/react": "^2.2.0",
 		"@hookform/resolvers": "^3.10.0",
 		"@jridgewell/trace-mapping": "^0.3.25",
 		"@lottiefiles/dotlottie-react": "^0.13.5",
@@ -217,8 +216,7 @@
 		"ts-node": "^10.9.2",
 		"tsx": "^4.19.4",
 		"typescript": "5.6.3",
-		"vite": "^5.4.14",
-		"vite-tsconfig-paths": "^5.1.4"
+		"vite": "^5.4.14"
 	},
 	"optionalDependencies": {
 		"bufferutil": "^4.0.8"
