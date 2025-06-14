@@ -4,8 +4,8 @@
 	"type": "module",
 	"scripts": {
 		"dev": "tsx --tsconfig tsconfig.json --require tsconfig-paths/register index.ts",
-		"build": "tsx compile . --outDir dist --tsconfig tsconfig.json",
-		"start": "node dist/index.js",
+		"build": "echo \"skip build (tsx runtime)\"",
+		"start": "tsx --tsconfig tsconfig.json --require tsconfig-paths/register index.ts",
 		"lint": "eslint . --ext .ts,.tsx",
 		"test": "jest",
 		"lint:types": "tsc --noEmit"
