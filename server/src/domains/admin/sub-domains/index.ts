@@ -1,1 +1,2 @@
-export roles routes if index exists. 
+// Barrel file for admin sub-domains (currently unused)
+export {}; 
