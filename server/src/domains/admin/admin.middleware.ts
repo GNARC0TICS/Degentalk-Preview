@@ -69,7 +69,7 @@ export async function isAdmin(req: Request, res: Response, next: NextFunction) {
 	} else if (req.isAuthenticated()) {
 		// Normal authentication - use RBAC util
 		const user = req.user as any;
-		const { canUser } = await import('@/lib/auth/canUser');
+		const { canUser } = await import('../../../../lib/auth/canUser.ts');
 		if (user && (await canUser(user, 'canViewAdminPanel'))) {
 			return next();
 		}
@@ -128,7 +128,7 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
 		}
 	} else if (req.isAuthenticated()) {
 		const user = req.user as any;
-		const { canUser } = await import('@/lib/auth/canUser');
+		const { canUser } = await import('../../../../lib/auth/canUser.ts');
 		if (user && (await canUser(user, 'canManageUsers'))) {
 			return next();
 		}

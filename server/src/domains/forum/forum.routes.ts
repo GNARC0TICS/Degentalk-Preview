@@ -59,6 +59,7 @@ import { XpLevelService, xpLevelService, XP_ACTIONS } from '../../../services/xp
 import rulesRoutes from './rules/rules.routes';
 import { forumController } from './forum.controller';
 import { forumService } from './forum.service';
+import { getUserIdFromRequest } from '@server/src/utils/auth'; // Import the centralized function
 
 // Define validation schemas
 const tipPostSchema = z.object({
@@ -96,22 +97,14 @@ const postReactionSchema = z.object({
 	active: z.boolean()
 });
 
-// Helper function to get user ID from req.user
-function getUserId(req: Request): number {
-	if (req.user && typeof (req.user as any).id === 'number') {
-		return (req.user as any).id;
-	}
-	console.error('User ID not found in req.user');
-	return (req.user as any)?.user_id;
-}
-
 // Helper function to check user permissions (simplified)
 async function getUserPermissions(userId: number | undefined) {
 	if (!userId) return { isMod: false, isAdmin: false };
-	const [user] = await db.select({ role: users.role }).from(users).where(eq(users.id, userId));
-	// TODO: Enhance this with group checks if roles aren't sufficient
-	const isAdmin = user?.role === 'admin';
-	const isMod = isAdmin || user?.role === 'mod';
+	const [userRecord] = await db.select().from(users).where(eq(users.id, userId));
+	if (!userRecord) return { isMod: false, isAdmin: false };
+	const { canUser } = await import('../../../../lib/auth/canUser.ts'); 
+	const isAdmin = await canUser(userRecord as any, 'canViewAdminPanel');
+	const isMod = isAdmin || (await canUser(userRecord as any, 'canModerateThreads'));
 	return { isMod, isAdmin };
 }
 
@@ -174,7 +167,7 @@ router.get('/threads', async (req: Request, res: Response) => {
 		const sortBy = (req.query.sort as string) || 'latest'; // 'latest', 'hot', 'staked'
 		const searchQuery = req.query.q as string;
 
-		const userId = getUserId(req); // Get current user ID if logged in
+		const userId = getUserIdFromRequest(req); // Get current user ID if logged in
 		const { isMod, isAdmin } = await getUserPermissions(userId);
 
 		// Base query conditions
@@ -341,7 +334,7 @@ router.get('/threads/:id', async (req: Request, res: Response) => {
 
 		const page = parseInt(req.query.page as string) || 1;
 		const limit = parseInt(req.query.limit as string) || 50;
-		const currentUserId = getUserId(req); // Can be undefined if not logged in
+		const currentUserId = getUserIdFromRequest(req); // Can be undefined if not logged in
 
 		const result = await forumService.getThreadDetails(threadId, page, limit, currentUserId);
 
@@ -374,7 +367,7 @@ router.get('/threads/slug/:slug', async (req: Request, res: Response) => {
 
 		const page = parseInt(req.query.page as string) || 1;
 		const limit = parseInt(req.query.limit as string) || 50;
-		const currentUserId = getUserId(req); // Can be undefined
+		const currentUserId = getUserIdFromRequest(req); // Can be undefined
 
 		const result = await forumService.getThreadDetails(threadSlug, page, limit, currentUserId);
 
@@ -399,7 +392,10 @@ router.get('/threads/slug/:slug', async (req: Request, res: Response) => {
 router.post('/threads', requireAuth, async (req: Request, res: Response) => {
 	// Changed isAuthenticated to requireAuth
 	try {
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'User ID not found, authentication required.' });
+		}
 
 		const combinedSchema = insertThreadSchema
 			.extend({
@@ -607,8 +603,11 @@ router.post('/threads', requireAuth, async (req: Request, res: Response) => {
 router.put('/threads/:threadId/solve', requireAuth, async (req, res, next) => {
 	try {
 		const threadId = parseInt(req.params.threadId);
-		const currentUserId = getUserId(req);
+		const currentUserId = getUserIdFromRequest(req);
 
+		if (currentUserId === undefined) {
+			return res.status(401).json({ message: 'User ID not found, authentication required.' });
+		}
 		if (isNaN(threadId)) {
 			return res.status(400).json({ message: 'Invalid thread ID.' });
 		}
@@ -645,8 +644,11 @@ router.post('/threads/:threadId/tags', requireAuth, async (req: Request, res: Re
 	// Changed isAuthenticated to requireAuth
 	try {
 		const threadId = parseInt(req.params.threadId);
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
 
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'User ID not found, authentication required.' });
+		}
 		// Validate tag name from request body
 		const { tagName } = z.object({ tagName: z.string().min(1).max(50) }).parse(req.body);
 
@@ -718,8 +720,11 @@ router.delete(
 		try {
 			const threadId = parseInt(req.params.threadId);
 			const tagId = parseInt(req.params.tagId);
-			const userId = getUserId(req);
+			const userId = getUserIdFromRequest(req);
 
+			if (userId === undefined) {
+				return res.status(401).json({ message: 'User ID not found, authentication required.' });
+			}
 			if (isNaN(threadId) || isNaN(tagId)) {
 				return res.status(400).json({ message: 'Invalid thread ID or tag ID' });
 			}
@@ -794,8 +799,11 @@ router.post('/posts/:postId/react', requireAuth, async (req, res) => {
 		const { postId } = req.params;
 		const type = req.body.type;
 		const active = req.body.active;
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
 
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'User ID not found, authentication required.' });
+		}
 		// Get post to verify it exists
 		const postResult = await db
 			.select()
@@ -872,8 +880,11 @@ router.post('/posts/:postId/react', requireAuth, async (req, res) => {
 router.post('/bookmarks', requireAuth, async (req, res) => {
 	try {
 		const { threadId } = req.body;
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
 
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'User ID not found, authentication required.' });
+		}
 		// Verify thread exists
 		const threadResult = await db.select().from(threads).where(eq(threads.id, threadId));
 		if (threadResult.length === 0) {
@@ -906,8 +917,11 @@ router.post('/bookmarks', requireAuth, async (req, res) => {
 router.delete('/bookmarks/:threadId', requireAuth, async (req, res) => {
 	try {
 		const threadId = parseInt(req.params.threadId);
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
 
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'User ID not found, authentication required.' });
+		}
 		await db
 			.delete(userThreadBookmarks)
 			.where(
@@ -926,8 +940,11 @@ router.post('/threads/:threadId/solve', requireAuth, async (req, res) => {
 	try {
 		const threadId = parseInt(req.params.threadId);
 		const { postId } = req.body;
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
 
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'User ID not found, authentication required.' });
+		}
 		// Get thread details
 		const threadResult = await db
 			.select({
@@ -989,8 +1006,11 @@ router.post('/threads/:threadId/solve', requireAuth, async (req, res) => {
 router.post('/threads/:threadId/unsolve', requireAuth, async (req, res) => {
 	try {
 		const threadId = parseInt(req.params.threadId);
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
 
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'User ID not found, authentication required.' });
+		}
 		// Get thread details
 		const threadResult = await db
 			.select({
@@ -1043,7 +1063,15 @@ router.put('/posts/:id', requireAuth, async (req: Request, res: Response) => {
 			return res.status(400).json({ message: 'Invalid post ID' });
 		}
 
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
+		// It's okay if userId is undefined here for getUserPermissions,
+		// but if it's strictly required for editing, an earlier check might be needed.
+		// For now, assume getUserPermissions handles undefined userId.
+		// If an edit absolutely requires a logged-in user, the requireAuth middleware should handle it.
+		// If userId is needed for the .set({ editedBy: userId }), then a check is vital.
+		if (userId === undefined) { // Added check for editing
+			return res.status(401).json({ message: 'User ID not found, authentication required for editing.' });
+		}
 		const { isMod, isAdmin } = await getUserPermissions(userId);
 
 		// Validate request body

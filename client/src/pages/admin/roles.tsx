@@ -1,4 +1,5 @@
-import AdminUserGroupsPage from './user-groups';
+import React from 'react';
 
-// TODO: Refactor this page to use the new Role schema once UI logic is updated.
-export default AdminUserGroupsPage; 
+export default function RolesAdminPlaceholder() {
+  return <div className="p-4">Roles Admin UI coming soon</div>;
+} 

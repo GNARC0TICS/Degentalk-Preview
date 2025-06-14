@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { eventLogService } from "../services/event-log.service";
 import { z } from "zod";
 import { eventTypeEnum } from "@schema/system/event_logs";

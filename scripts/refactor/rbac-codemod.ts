@@ -62,7 +62,7 @@ async function run() {
       // Ensure canUser import exists
       const existing = sf.getImportDeclarations().find((d) => d.getModuleSpecifierValue().includes('canUser'));
       if (!existing) {
-        sf.addImportDeclaration({ namedImports: ['canUser'], moduleSpecifier: '@/lib/auth/canUser' });
+        sf.addImportDeclaration({ namedImports: ['canUser'], moduleSpecifier: '@lib/auth/canUser' });
       }
       await sf.save();
       console.log('💾 Updated', path.relative(ROOT, sf.getFilePath()));

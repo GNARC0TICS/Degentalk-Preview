@@ -27,7 +27,8 @@
 			"@db": ["db/index.ts"],
 			"@schema": ["db/schema/index.ts"],
 			"@schema/*": ["db/schema/*"],
-			"@db_types/*": ["db/types/*"]
+			"@db_types/*": ["db/types/*"],
+			"@lib/*": ["./lib/*"]
 		},
 		"isolatedModules": true
 	}

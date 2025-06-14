@@ -1,4 +1,5 @@
 import React from 'react';
+import DOMPurify from 'dompurify';
 import { Link } from 'wouter';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -84,7 +85,7 @@ export function PostCard({
 
 			<CardContent className="px-4 py-3">
 				<div className="prose prose-invert prose-zinc max-w-none">
-					<div dangerouslySetInnerHTML={{ __html: post.content }} />
+					{post.content && <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }} />}
 				</div>
 			</CardContent>
 

@@ -1,6 +1,6 @@
 import { db } from '@db';
 import { roles as rolesTable } from '@schema';
-import { CreateRoleInput, UpdateRoleInput } from './roles.validators';
+import type { CreateRoleInput, UpdateRoleInput } from './roles.validators';
 import { eq, desc } from 'drizzle-orm';
 
 export class AdminRolesService {

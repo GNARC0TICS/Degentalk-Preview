@@ -1,5 +1,4 @@
-import { roles as rolesTable } from '@/db/schema/user/roles';
-import { userRoles as userRolesTable } from '@/db/schema/user/userRoles';
+import { roles as rolesTable, userRoles as userRolesTable } from '@schema';
 import { db } from '@db';
 import { and, eq, inArray } from 'drizzle-orm';
 
@@ -13,6 +12,7 @@ export interface RBACUser {
   primaryRoleId?: string | null;
   // optional cache of secondary roles to avoid extra DB hits
   secondaryRoleIds?: string[];
+  isBanned?: boolean;
 }
 
 /**
@@ -53,6 +53,8 @@ async function getUserPermissions(user: RBACUser): Promise<string[]> {
  * Returns true if *any* of the user's roles includes the requested action.
  */
 export async function canUser(user: RBACUser, action: string): Promise<boolean> {
+  if (!user || user.isBanned) return false;
+
   const permissions = await getUserPermissions(user);
   if (permissions.includes('*')) return true;
   return permissions.includes(action);
@@ -63,6 +65,7 @@ export async function canUser(user: RBACUser, action: string): Promise<boolean> 
  * Defaults to 1.0.
  */
 export async function getXpMultiplier(user: RBACUser): Promise<number> {
+  if (!user || user.isBanned) return 0;
   const roleIds: string[] = [];
   if (user.primaryRoleId) roleIds.push(user.primaryRoleId);
   if (user.secondaryRoleIds && user.secondaryRoleIds.length) {
@@ -75,4 +78,13 @@ export async function getXpMultiplier(user: RBACUser): Promise<number> {
     .where(inArray(rolesTable.id, roleIds));
   const max = rows.reduce((acc, r) => Math.max(acc, r.xpMultiplier ?? 1), 1);
   return max || 1.0;
+}
+
+/*
+ * Convenience sync versions for callers that already have permissions cached.
+ */
+export function canUserSync(permissions: string[] | undefined, action: string): boolean {
+  if (!permissions) return false;
+  if (permissions.includes('*')) return true;
+  return permissions.includes(action);
 } 
