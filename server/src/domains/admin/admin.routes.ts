@@ -24,6 +24,7 @@ import shopAdminApiRoutes from './sub-domains/shop/shop.admin.routes';
 import userInventoryAdminApiRoutes from './sub-domains/users/inventory.admin.routes';
 import emojiRoutes from './sub-domains/emojis/emojis.routes';
 import uiConfigRoutes from './sub-domains/ui-config/ui-config.routes';
+import rolesRoutes from './sub-domains/roles/roles.routes';
 // import userAdminRoutes from './users/users.admin.routes'; // DEPRECATED
 // import economyAdminRoutes from './settings/economy.routes'; // Placeholder for future
 
@@ -47,6 +48,7 @@ adminRouter.use('/announcements', announcementRoutes);
 adminRouter.use('/airdrop', airdropRoutes);
 adminRouter.use('/shop-management', shopAdminApiRoutes);
 adminRouter.use('/user-inventory', userInventoryAdminApiRoutes);
+adminRouter.use('/roles', rolesRoutes);
 
 // DEBUG: Middleware to check if /emojis path is reached in adminRouter
 adminRouter.use('/emojis', (req, res, next) => {
