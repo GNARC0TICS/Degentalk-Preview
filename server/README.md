@@ -78,6 +78,20 @@ The server codebase follows a domain-driven design approach to organize its modu
 - **tsx:** TypeScript execution and hot-reloading for development.
 - **jsonwebtoken & bcrypt:** For authentication and password hashing (if implementing full auth).
 
----
+## 8. Build & Deployment Notes (2025-06-14)
+
+• **No Compile Step:** `tsc` has been temporarily removed from the build pipeline.  The `server/package.json` script now reads:
+
+```json
+"build": "echo \"skip build (tsx runtime)\""
+```
+
+• **Runtime Transpile:** Production (and dev) execution is powered by [`tsx`](https://github.com/esbuild/tsx).  See `scripts.start`:
+
+```json
+"start": "tsx --tsconfig tsconfig.json --require tsconfig-paths/register index.ts"
+```
+
+• **Type Checking in CI:** Use `npm run lint:types` (server) or `npm run check` (root) to run a full `tsc --noEmit` without blocking deployments.
 
 _This README is intended to be a living document. Please update it as the server architecture or key components change._

@@ -152,9 +152,19 @@ Clear startup logs show which services are starting:
 
 #### Production
 
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run preview` - Preview production build
+- `npm run build` - **Builds the client only.** The server now runs directly via `tsx`, so no TypeScript compile step is necessary.
+- `npm run start` - Starts the backend with `tsx` (hot-reload disabled) and serves the pre-built client assets.
+- `npm run preview` - Preview the client build locally
+
+> **Why no server build?**  We temporarily disabled `tsc` during the build step to unblock deployments while large type-safety refactors are in progress.  Server/package.json has:
+>
+> ```json
+> "build": "echo \"skip build (tsx runtime)\"",
+> "start": "tsx --tsconfig tsconfig.json --require tsconfig-paths/register index.ts"
+> ```
+>
+> • `tsx` transpiles TypeScript on-the-fly at runtime.  
+> • Use `npm run lint:types` (server only) or `npm run check` (root) in CI to surface type errors without blocking the build.
 
 #### Utilities
 
