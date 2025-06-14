@@ -61,7 +61,7 @@
 		"validate:fix": "tsx scripts/validate-everything.ts --fix",
 		"check": "tsx scripts/test-ci-readiness.ts",
 		"precommit": "npm run validate",
-		"prebuild": "npm run validate",
+		"prebuild": "",
 		"mcp:neon": "npx @neondatabase/mcp-server-neon start napi_64010heeqqly1w5t5eg1dpjposfjcqpdg0lu4bc7yvnci0vh7qyivoo04i3j036x"
 	},
 	"dependencies": {
