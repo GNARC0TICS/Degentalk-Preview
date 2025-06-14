@@ -67,14 +67,13 @@ export async function isAdmin(req: Request, res: Response, next: NextFunction) {
 			return res.status(401).json({ message: 'Unauthorized' });
 		}
 	} else if (req.isAuthenticated()) {
-		// Normal authentication check - user is already logged in
+		// Normal authentication - use RBAC util
 		const user = req.user as any;
-
-		if (user && user.role === 'admin') {
+		const { canUser } = await import('@/lib/auth/canUser');
+		if (user && (await canUser(user, 'canViewAdminPanel'))) {
 			return next();
-		} else {
-			return res.status(403).json({ message: 'Forbidden - Admin access required' });
 		}
+		return res.status(403).json({ message: 'Forbidden - Admin access required' });
 	} else {
 		// Not authenticated and not in dev mode
 		return res.status(401).json({ message: 'Unauthorized' });
@@ -128,14 +127,12 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
 			return res.status(401).json({ message: 'Unauthorized' });
 		}
 	} else if (req.isAuthenticated()) {
-		// Normal authentication check - user is already logged in
 		const user = req.user as any;
-
-		if (user && (user.role === 'admin' || user.role === 'mod')) {
+		const { canUser } = await import('@/lib/auth/canUser');
+		if (user && (await canUser(user, 'canManageUsers'))) {
 			return next();
-		} else {
-			return res.status(403).json({ message: 'Forbidden - Admin or moderator access required' });
 		}
+		return res.status(403).json({ message: 'Forbidden - Admin or moderator access required' });
 	} else {
 		// Not authenticated and not in dev mode
 		return res.status(401).json({ message: 'Unauthorized' });
