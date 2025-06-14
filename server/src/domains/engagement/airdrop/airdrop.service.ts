@@ -98,7 +98,8 @@ export class AirdropService {
 				}
 
 				// Check if user is actually an admin
-				if (admin.groupId !== 1) {
+				const { canUser } = await import('../../../../lib/auth/canUser.ts');
+				if (!(await canUser(admin as any, 'canViewAdminPanel'))) {
 					throw new WalletError(
 						'Only administrators can initiate airdrops',
 						403,

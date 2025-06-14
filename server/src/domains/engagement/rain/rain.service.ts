@@ -393,8 +393,9 @@ export class RainService {
 			}
 
 			// Check if user can bypass cooldowns
-			const isAdmin = user.groupId === 1;
-			const isModerator = user.groupId === 2;
+			const { canUser } = await import('../../../../lib/auth/canUser.ts');
+			const isAdmin = await canUser(user as any, 'canViewAdminPanel');
+			const isModerator = await canUser(user as any, 'canModerateChat');
 
 			if (
 				(isAdmin && cooldownSetting.adminBypassCooldown) ||
