@@ -32,14 +32,14 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
-import tsconfigPaths from 'vite-tsconfig-paths'; // Temporarily remove this plugin
+// import tsconfigPaths from 'vite-tsconfig-paths'; // Temporarily remove this plugin
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
 
 export default defineConfig(async () => {
-	const plugins = [tsconfigPaths(), react(), runtimeErrorOverlay()]; // New line without tsconfigPaths
+	const plugins = [react(), runtimeErrorOverlay()]; // New line without tsconfigPaths
 
 	if (process.env.NODE_ENV !== 'production' && process.env.REPL_ID !== undefined) {
 		try {
