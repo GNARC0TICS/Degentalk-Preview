@@ -22,41 +22,36 @@ import { useAuth } from '@/hooks/use-auth.tsx';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { ForumGuidelines } from '@/components/forum/forum-guidelines';
-import { ForumSearch } from '@/components/forum/forum-search';
-import type { ForumStructure } from '../../features/forum/hooks/useForumStructure.ts';
-import { useForumStructure } from '../../features/forum/hooks/useForumStructure.ts';
-import type { ZoneCardData } from '@/components/forum/CanonicalZoneGrid';
+// ForumSearch seems unused, can be removed if not needed.
+// import { ForumSearch } from '@/components/forum/forum-search'; 
+import { 
+	useForumStructure, 
+	ForumStructureProvider 
+} from '@/contexts/ForumStructureContext';
+import type { MergedZone, MergedForum, MergedTheme } from '@/contexts/ForumStructureContext';
+// ZoneCardData might not be directly needed if renderZoneCard adapts to MergedZone
+// import type { ZoneCardData } from '@/components/forum/CanonicalZoneGrid'; 
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'wouter';
 import { Badge } from '@/components/ui/badge';
-import { getForumEntityUrl, isPrimaryZone } from '@/utils/forum-routing-helper';
+// getForumEntityUrl and isPrimaryZone might need to be re-evaluated or adapted
+// import { getForumEntityUrl, isPrimaryZone } from '@/utils/forum-routing-helper'; 
 import { ActiveMembersWidget } from '@/components/users';
 import type { ActiveUser } from '@/components/users';
 import { useActiveUsers } from '@/features/users/hooks';
-import { ForumCard } from '@/components/forum/forum-card';
-import type { ForumCategoryWithStats } from '@db_types/forum.types';
+// ForumCard seems unused
+// import { ForumCard } from '@/components/forum/forum-card';
+// ForumCategoryWithStats is replaced by MergedZone/MergedForum
+// import type { ForumCategoryWithStats } from '@db_types/forum.types';
+import { 
+	THEME_ICONS, 
+	THEME_COLORS_BG, // Renamed from THEME_COLORS to THEME_COLORS_BG in themeConstants.ts
+	ZONE_THEMES // For icon color classes
+} from '@/config/themeConstants';
 
-// Map theme keys to icon components and colors
-const THEME_ICONS = {
-	pit: Flame,
-	mission: Target,
-	casino: Dices,
-	briefing: FileText,
-	archive: Archive,
-	default: Folder
-} as const;
 
-const THEME_COLORS = {
-	pit: 'from-orange-500/20 to-red-500/20 border-orange-500/30',
-	mission: 'from-blue-500/20 to-cyan-500/20 border-blue-500/30',
-	casino: 'from-purple-500/20 to-pink-500/20 border-purple-500/30',
-	briefing: 'from-emerald-500/20 to-green-500/20 border-emerald-500/30',
-	archive: 'from-gray-500/20 to-zinc-500/20 border-gray-500/30',
-	default: 'from-zinc-800/80 to-zinc-900/80 border-zinc-700/30'
-} as const;
-
-const CATEGORY_COLORS = [
+const CATEGORY_COLORS = [ // This can remain for generic category styling if no theme is matched
 	'border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-amber-700/10',
 	'border-blue-500/30 bg-gradient-to-br from-blue-500/10 to-blue-700/10',
 	'border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-emerald-700/10',
@@ -67,7 +62,7 @@ const CATEGORY_COLORS = [
 	'border-pink-500/30 bg-gradient-to-br from-pink-500/10 to-pink-700/10'
 ];
 
-export default function ForumPage() {
+function ForumPage() { // Changed to regular function
 	const { user } = useAuth();
 	const isLoggedIn = !!user;
 	const [location, setLocation] = useLocation();
@@ -79,30 +74,29 @@ export default function ForumPage() {
 	const [currentZoneIndex, setCurrentZoneIndex] = useState(0);
 	const carouselRef = useRef<HTMLDivElement>(null);
 
-	// Use centralized forum structure hook
-	const queryResult = useForumStructure();
-	const {
-		data: forumData,
-		isLoading: structureLoading,
-		error: structureErrorDetails
-	} = queryResult;
+	// Use centralized forum structure hook from context
+	const { 
+		zones: allZones, 
+		isLoading: structureLoading, 
+		error: structureErrorDetails 
+	} = useForumStructure();
 
-	// Extract data with defaults
-	const primaryZones: ForumCategoryWithStats[] = forumData?.primaryZones || [];
-	const categories: any[] = forumData?.categories || [];
+	// Extract primary zones and categories (non-primary zones)
+	const primaryZones: MergedZone[] = allZones.filter(zone => zone.canonical === true);
+	const categories: MergedZone[] = allZones.filter(zone => zone.canonical !== true && zone.forums && zone.forums.length > 0);
 
 	// Fetch active users
 	const { data: activeUsers, isLoading: activeUsersLoading } = useActiveUsers({ limit: 5 });
 
 	const breadcrumbs = [
 		{ label: 'Home', href: '/', icon: <Home className="h-4 w-4 mr-1" /> },
-		{ label: 'Forum', href: '/forum', icon: null }
+		{ label: 'Forum', href: '/forums', icon: null } // Changed from /forum to /forums
 	];
 
 	const handleSearch = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (searchText.trim()) {
-			setLocation(`/forum/search?q=${encodeURIComponent(searchText.trim())}`);
+			setLocation(`/forums/search?q=${encodeURIComponent(searchText.trim())}`); // Changed from /forum to /forums
 		}
 	};
 
@@ -129,30 +123,8 @@ export default function ForumPage() {
 		});
 	};
 
-	// Convert primary zones to the format expected by carousel
-	const zoneCardData: ZoneCardData[] = primaryZones.map((zone: ForumCategoryWithStats) => {
-		// Extract properties from ForumEntityBase
-		const { id, name, slug, description, icon, colorTheme, threadCount, postCount } = zone;
-
-		// Return the complete ZoneCardData object with additional properties
-		return {
-			id,
-			name,
-			slug,
-			description: description || '',
-			icon: icon || '📁',
-			colorTheme: colorTheme || 'default',
-			threadCount: threadCount || 0,
-			postCount: postCount || 0,
-			// Add properties required by ZoneCardData but not in ForumEntityBase
-			activeUsersCount: 0,
-			hasXpBoost: false,
-			boostMultiplier: 1
-		};
-	});
-
-	// Helper to render forum stats
-	const renderForumStats = (entity: ForumCategoryWithStats) => {
+	// Helper to render forum stats (can accept MergedForum or MergedZone)
+	const renderForumStats = (entity: MergedForum | MergedZone) => {
 		return (
 			<div className="flex items-center gap-3 text-xs text-zinc-400">
 				<div className="flex items-center">
@@ -164,30 +136,25 @@ export default function ForumPage() {
 		);
 	};
 
-	// Render a zone card for the carousel
-	const renderZoneCard = (zone: ForumCategoryWithStats, index: number) => {
-		const IconComponent =
-			zone.colorTheme && zone.colorTheme in THEME_ICONS
-				? THEME_ICONS[zone.colorTheme as keyof typeof THEME_ICONS]
-				: THEME_ICONS.default;
+	// Render a zone card for the carousel, now using MergedZone
+	const renderZoneCard = (zone: MergedZone, index: number) => {
+		const semanticThemeKey = zone.colorTheme || 'default';
+		const IconComponent = THEME_ICONS[semanticThemeKey as keyof typeof THEME_ICONS] || THEME_ICONS.default;
+		// Use THEME_COLORS_BG for background/border classes
+		const gradientClasses = THEME_COLORS_BG[semanticThemeKey as keyof typeof THEME_COLORS_BG] || THEME_COLORS_BG.default;
+		
+		// Determine icon color class from the imported ZONE_THEMES
+		const iconColorClass = ZONE_THEMES[semanticThemeKey as keyof typeof ZONE_THEMES]?.color || ZONE_THEMES.default.color;
 
-		const gradientClasses =
-			zone.colorTheme && zone.colorTheme in THEME_COLORS
-				? THEME_COLORS[zone.colorTheme as keyof typeof THEME_COLORS]
-				: THEME_COLORS.default;
-
-		// Only use canHaveThreads if it exists and id is a number
-		const canHaveThreads = typeof zone.canHaveThreads === 'boolean' ? zone.canHaveThreads : true;
-
-		return canHaveThreads ? (
+		return (
 			<Link
-				key={zone.id}
-				href={`/forum/${zone.slug}`}
+				key={zone.id.toString()} 
+				href={`/zones/${zone.slug}`} // Link to zone page
 				className={`flex-shrink-0 w-72 h-48 rounded-lg border ${gradientClasses} bg-gradient-to-br p-5 flex flex-col transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-emerald-900/10 overflow-hidden`}
 			>
 				<div className="flex items-center mb-3">
 					<IconComponent
-						className={`h-5 w-5 mr-2 ${zone.colorTheme ? `text-${zone.colorTheme}-400` : 'text-emerald-400'}`}
+						className={`h-5 w-5 mr-2 ${iconColorClass}`}
 					/>
 					<h3 className="text-lg font-bold text-white">{zone.name}</h3>
 				</div>
@@ -195,94 +162,72 @@ export default function ForumPage() {
 				{zone.description && (
 					<p className="text-sm text-zinc-300 mb-auto line-clamp-2">{zone.description}</p>
 				)}
-
-				<div className="mt-auto pt-3 flex items-center justify-between text-xs">
-					<div className="flex items-center gap-3 text-zinc-400">
-						<div className="flex items-center">
-							<MessageSquare className="h-3.5 w-3.5 mr-1 text-zinc-500" />
-							{zone.threadCount} threads
-						</div>
-						<div>{zone.postCount} posts</div>
-					</div>
+				{zone.hasXpBoost && (
+					<Badge className="mt-2" variant="destructive">XP Boost x{zone.boostMultiplier}</Badge>
+				)}
+				<div className="mt-auto pt-3">
+					{renderForumStats(zone)}
 				</div>
 			</Link>
-		) : (
-			<div
-				key={zone.id}
-				className={`flex-shrink-0 w-72 h-48 rounded-lg border ${gradientClasses} bg-gradient-to-br p-5 flex flex-col opacity-60 cursor-not-allowed`}
-				aria-label="This is a container and does not support threads."
-				title="This is a container and does not support threads."
-			>
-				<div className="flex items-center mb-3">
-					<IconComponent
-						className={`h-5 w-5 mr-2 ${zone.colorTheme ? `text-${zone.colorTheme}-400` : 'text-emerald-400'}`}
-					/>
-					<h3 className="text-lg font-bold text-white">{zone.name}</h3>
-				</div>
-
-				{zone.description && (
-					<p className="text-sm text-zinc-300 mb-auto line-clamp-2">{zone.description}</p>
-				)}
-
-				<div className="mt-auto pt-3 flex items-center justify-between text-xs">
-					<div className="flex items-center gap-3 text-zinc-400">
-						<div className="flex items-center">
-							<MessageSquare className="h-3.5 w-3.5 mr-1 text-zinc-500" />
-							{zone.threadCount} threads
-						</div>
-						<div>{zone.postCount} posts</div>
-					</div>
-				</div>
-			</div>
 		);
 	};
 
-	// Render a category with its child forums
-	const renderCategory = (category: any, index: number) => {
-		if (!category.childForums || category.childForums.length === 0) return null;
+	// Render a category (which is a MergedZone) with its child forums (MergedForum[])
+	const renderCategory = (categoryZone: MergedZone, index: number) => {
+		if (!categoryZone.forums || categoryZone.forums.length === 0) return null;
 
-		// Calculate aggregate counts
-		const threadCount = category.childForums.reduce(
-			(sum: number, forum: ForumCategoryWithStats) => sum + (forum.threadCount || 0),
-			0
-		);
-		const postCount = category.childForums.reduce(
-			(sum: number, forum: ForumCategoryWithStats) => sum + (forum.postCount || 0),
-			0
-		);
+		const totalChildThreadCount = categoryZone.forums.reduce((sum, forum) => sum + (forum.threadCount || 0), 0);
+		const totalChildPostCount = categoryZone.forums.reduce((sum, forum) => sum + (forum.postCount || 0), 0);
 
-		// Determine category color based on index or color property
-		const categoryColor =
-			category.colorTheme && category.colorTheme in THEME_COLORS
-				? THEME_COLORS[category.colorTheme as keyof typeof THEME_COLORS]
-				: CATEGORY_COLORS[index % CATEGORY_COLORS.length];
+		const categorySemanticThemeKey = categoryZone.colorTheme || 'default';
+		// Use THEME_COLORS_BG for background/border classes
+		const categoryColorClass = THEME_COLORS_BG[categorySemanticThemeKey as keyof typeof THEME_COLORS_BG] || CATEGORY_COLORS[index % CATEGORY_COLORS.length];
+		
+		// Determine IconComponent based on categoryZone.icon (direct emoji/char) or its semanticThemeKey
+		let CategoryIconComponent = Folder; // Default
+		if (categoryZone.icon && typeof categoryZone.icon === 'string' && THEME_ICONS[categoryZone.icon as keyof typeof THEME_ICONS]) {
+			CategoryIconComponent = THEME_ICONS[categoryZone.icon as keyof typeof THEME_ICONS];
+		} else if (categorySemanticThemeKey && THEME_ICONS[categorySemanticThemeKey as keyof typeof THEME_ICONS]) {
+			CategoryIconComponent = THEME_ICONS[categorySemanticThemeKey as keyof typeof THEME_ICONS];
+		}
+		// If categoryZone.icon is an emoji, it will be handled by the span rendering later.
+
+		const categoryIconColorClass = (categorySemanticThemeKey && ZONE_THEMES[categorySemanticThemeKey as keyof typeof ZONE_THEMES]?.color)
+			? ZONE_THEMES[categorySemanticThemeKey as keyof typeof ZONE_THEMES].color
+			: ZONE_THEMES.default.color;
+
 
 		return (
-			<Card key={category.id} className={`overflow-hidden border mb-8 ${categoryColor}`}>
+			<Card key={categoryZone.id.toString()} className={`overflow-hidden border mb-8 ${categoryColorClass}`}>
 				<CardHeader className="pb-3">
 					<div className="flex items-center justify-between">
 						<CardTitle className="text-lg font-semibold flex items-center">
-							<Folder className="h-5 w-5 mr-2 text-amber-400" />
-							{category.name}
+							{categoryZone.icon && !THEME_ICONS[categoryZone.icon as keyof typeof THEME_ICONS] ? ( // If icon is an emoji/char not in THEME_ICONS
+								<span className={`mr-2 text-xl ${categoryIconColorClass}`}>{categoryZone.icon}</span>
+							) : (
+								<CategoryIconComponent className={`h-5 w-5 mr-2 ${categoryIconColorClass}`} />
+							)}
+							{categoryZone.name}
 						</CardTitle>
 						<Badge variant="outline" className="bg-zinc-800/50 text-zinc-300 border-zinc-700/50">
-							{category.childForums.length} {category.childForums.length === 1 ? 'forum' : 'forums'}
+							{categoryZone.forums.length} {categoryZone.forums.length === 1 ? 'forum' : 'forums'}
 						</Badge>
 					</div>
-					{category.description && (
-						<CardDescription className="text-zinc-300">{category.description}</CardDescription>
+					{categoryZone.description && (
+						<CardDescription className="text-zinc-300">{categoryZone.description}</CardDescription>
 					)}
 					<div className="text-xs text-zinc-400">
-						{threadCount} threads • {postCount} posts
+						{categoryZone.threadCount} threads • {categoryZone.postCount} posts 
+						(Children: {totalChildThreadCount} threads • {totalChildPostCount} posts)
 					</div>
 				</CardHeader>
 				<CardContent className="p-0">
 					<div className="divide-y divide-zinc-800/50">
-						{category.childForums.map((forum: ForumCategoryWithStats) =>
-							forum.canHaveThreads ? (
+						{categoryZone.forums.map((forum: MergedForum) =>
+							forum.canHaveThreads ? ( 
 								<Link
-									key={forum.id}
-									href={`/forum/${forum.slug}`}
+									key={forum.id.toString()}
+									href={`/forums/${forum.slug}`} 
 									className="block p-4 hover:bg-black/20 transition-colors"
 								>
 									<div className="flex items-center justify-between">
@@ -293,12 +238,16 @@ export default function ForumPage() {
 											)}
 											{renderForumStats(forum)}
 										</div>
-										<MessageSquare className="h-5 w-5 text-zinc-600" />
+										{/* Use forum.icon (direct emoji/char) or a default icon */}
+										{forum.icon ? 
+											<span className="text-xl" style={{color: forum.color || categoryZone.color || undefined}}>{forum.icon}</span> : 
+											<MessageSquare className="h-5 w-5 text-zinc-600" />
+										}
 									</div>
 								</Link>
 							) : (
 								<div
-									key={forum.id}
+									key={forum.id.toString()}
 									className="block p-4 text-zinc-500 opacity-60 cursor-not-allowed"
 									aria-label="This is a container and does not support threads."
 									title="This is a container and does not support threads."
@@ -416,17 +365,7 @@ export default function ForumPage() {
 								className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar"
 								style={{ scrollbarWidth: 'none' }}
 							>
-								{primaryZones.map((zone: ForumCategoryWithStats, index: number) =>
-									renderZoneCard(zone, index)
-								)}
-							</div>
-						) : (primaryZones || []).length > 0 ? (
-							<div
-								ref={carouselRef}
-								className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar"
-								style={{ scrollbarWidth: 'none' }}
-							>
-								{primaryZones.map((zone: ForumCategoryWithStats, index: number) =>
+								{primaryZones.map((zone: MergedZone, index: number) => 
 									renderZoneCard(zone, index)
 								)}
 							</div>
@@ -451,9 +390,9 @@ export default function ForumPage() {
 								<Skeleton key={i} className="h-64 w-full" />
 							))}
 						</div>
-					) : categories.length > 0 ? (
+					) : categories.length > 0 ? ( 
 						<div className="max-w-4xl mx-auto">
-							{categories.map((category: any, index: number) => renderCategory(category, index))}
+							{categories.map((categoryZone: MergedZone, index: number) => renderCategory(categoryZone, index))}
 						</div>
 					) : (
 						<div className="text-center py-10 text-zinc-500 max-w-4xl mx-auto">
@@ -479,3 +418,12 @@ export default function ForumPage() {
 		</div>
 	);
 }
+
+// Wrap with Provider if not done at a higher level
+const ForumIndexPageWithProvider = () => (
+	<ForumStructureProvider>
+		<ForumPage />
+	</ForumStructureProvider>
+);
+
+export default ForumIndexPageWithProvider;

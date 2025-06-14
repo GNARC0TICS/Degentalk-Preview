@@ -23,6 +23,15 @@ import { getThemeClass, isPrimaryZone } from '@/utils/forum-routing-helper';
 // Import types
 import { ForumEntity } from '@/features/forum/hooks/useForumStructure';
 
+import {
+	Breadcrumb,
+	BreadcrumbList,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+
 export default function ForumPage() {
 	// Get the slug from the route
 	const [match, params] = useRoute<{ slug: string }>('/forums/:slug');
@@ -86,7 +95,24 @@ export default function ForumPage() {
 		<div className={`min-h-screen bg-black ${themeClass}`}>
 			<main className="container mx-auto px-4 py-8">
 				{/* Breadcrumbs */}
-				<Breadcrumbs items={breadcrumbItems} className="mb-4" />
+				<Breadcrumb className="mb-4">
+					<BreadcrumbList>
+						{breadcrumbItems.map((item, index) => (
+							<React.Fragment key={item.href || index}>
+								<BreadcrumbItem>
+									{index === breadcrumbItems.length - 1 ? (
+										<BreadcrumbPage>{item.label}</BreadcrumbPage>
+									) : (
+										<BreadcrumbLink asChild>
+											<a href={item.href}>{item.label}</a>
+										</BreadcrumbLink>
+									)}
+								</BreadcrumbItem>
+								{index < breadcrumbItems.length - 1 && <BreadcrumbSeparator />}
+							</React.Fragment>
+						))}
+					</BreadcrumbList>
+				</Breadcrumb>
 
 				{isLoading ? (
 					<div className="space-y-4">

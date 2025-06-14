@@ -7,11 +7,16 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { forumApi } from '../services/forumApi';
-import type { NestedForumCategory, ThreadSearchParams } from '../services/forumApi';
+import type { NestedForumCategory, ThreadSearchParams as OriginalThreadSearchParams } from '../services/forumApi';
 import { toast } from 'sonner';
 import type { Tag, ThreadPrefix, ForumCategoryWithStats, ThreadWithUser } from '@/types/forum';
 import { useEffect } from 'react';
 import { apiRequest, apiPost, apiPut, apiDelete } from '@/lib/api-request';
+
+// Extend ThreadSearchParams to explicitly include forumSlug for clarity in this hook
+export type ThreadSearchParams = OriginalThreadSearchParams & {
+	forumSlug?: string;
+};
 
 /**
  * Categories
@@ -62,7 +67,7 @@ export const useThreads = (params?: ThreadSearchParams, enabled: boolean = true)
 	return useQuery({
 		queryKey: ['/api/threads', params],
 		queryFn: async () => {
-			if (!enabled && params?.categoryId === undefined) {
+			if (!enabled && !params?.forumSlug && !params?.categoryId) {
 				return {
 					threads: [],
 					pagination: {
@@ -107,27 +112,50 @@ export const useThread = (slugOrId: string | number | undefined) => {
 	});
 };
 
+// NEW: Define ThreadCreateParams to include forumSlug
+export interface CreateThreadParams {
+	title: string;
+	content: string;
+	forumSlug: string; // NEW
+	prefixId?: string; // Assuming prefixId from form is string, convert to number if backend expects number
+	tags?: string[];
+	editorState?: any;
+	// Add any other parameters the API expects for thread creation
+}
+
 export const useCreateThread = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: (data: Parameters<typeof forumApi.createThread>[0]) => forumApi.createThread(data),
+		mutationFn: (data: CreateThreadParams) => forumApi.createThread(data), // forumApi.createThread needs to accept this new param type
 		onSuccess: async (createdThreadData: ThreadWithUser, variables) => {
-			queryClient.invalidateQueries({ queryKey: ['/api/threads'] });
-			queryClient.invalidateQueries({ queryKey: ['/api/categories'] });
+			// Invalidate queries that list threads, potentially per-forum if keys are specific
+			queryClient.invalidateQueries({ queryKey: ['/api/threads', { forumSlug: variables.forumSlug }] });
+			queryClient.invalidateQueries({ queryKey: ['/api/threads'] }); // General invalidation
+			
+			// Invalidate categories/forum structure if thread counts are displayed there
+			// This might need to be more specific if using forumMap on client, 
+			// but if any part relies on API for counts, invalidate it.
+			queryClient.invalidateQueries({ queryKey: ['forumCategoriesTree'] });
+			queryClient.invalidateQueries({ queryKey: ['/api/categories', 'with-stats'] });
+			if (variables.forumSlug) {
+				queryClient.invalidateQueries({ queryKey: [`/api/forums/${variables.forumSlug}`] }); // If there's a specific forum data query
+			}
 
 			toast.success('Thread created successfully!');
 
 			const threadId = createdThreadData.id;
 			const userId = createdThreadData.userId;
 
-			if (userId && threadId) {
+			if (userId && threadId && variables.forumSlug) {
 				// --- XP Award ---
+				// Pass forumSlug to XP award if rules are checked backend by forumSlug
 				try {
 					const xpResponse = await apiPost<{ xpAwarded: number }>('/api/xp/award-action', {
 						userId,
 						action: 'create_thread',
-						entityId: threadId
+						entityId: threadId,
+						contextData: { forumSlug: variables.forumSlug } // Pass forumSlug for context
 					});
 
 					if (xpResponse && xpResponse.xpAwarded > 0) {
@@ -137,15 +165,11 @@ export const useCreateThread = () => {
 					queryClient.invalidateQueries({ queryKey: ['/api/wallet'] });
 				} catch (error) {
 					console.error('Failed to award XP for thread creation:', error);
-					// Non-critical error, so don't show a blocking toast, but log it.
-					// toast.error("Error awarding XP", { description: "Your thread was created, but there was an issue awarding XP." });
 				}
 
 				// --- DGT Award ---
 				try {
-					// TODO: Fetch DGT_REWARD_CREATE_THREAD from env/config
-					const dgtAmountToAward = 5; // Placeholder DGT amount
-
+					const dgtAmountToAward = 5; // This should ideally come from forum rules in forumMap or backend config
 					if (dgtAmountToAward > 0) {
 						const dgtResponse = await apiPost<{ dgtAwarded: number }>(
 							'/api/economy/transactions/create',
@@ -156,10 +180,10 @@ export const useCreateThread = () => {
 								amount: dgtAmountToAward,
 								reason: 'Thread creation reward',
 								relatedEntityId: threadId,
-								context: 'create_thread' // Consistent with your backend plan
+								context: 'create_thread',
+								contextData: { forumSlug: variables.forumSlug } // Pass forumSlug for context
 							}
 						);
-
 						if (dgtResponse && dgtResponse.dgtAwarded > 0) {
 							setTimeout(() => toast.info(`+${dgtResponse.dgtAwarded} DGT awarded!`), 600);
 						}
@@ -167,8 +191,6 @@ export const useCreateThread = () => {
 					}
 				} catch (error) {
 					console.error('Failed to award DGT for thread creation:', error);
-					// Non-critical error
-					// toast.error("Error awarding DGT", { description: "Your thread was created, but there was an issue awarding DGT." });
 				}
 			}
 		},
@@ -513,27 +535,30 @@ export const useThreadsByTag = (
 /**
  * Prefixes -- NEW Hook
  */
-export const usePrefixesByCategory = (categoryId?: number) => {
+export const useForumPrefixes = (forumSlug?: string) => {
 	const queryClient = useQueryClient();
 
-	// Create a query key that depends on the categoryId
-	const queryKey = categoryId ? ['/api/forum/prefixes', { categoryId }] : ['/api/forum/prefixes'];
+	// Create a query key that depends on the forumSlug
+	const queryKey = forumSlug ? ['/api/forum/prefixes', { forumSlug }] : ['/api/forum/prefixes', 'all']; // 'all' or a different key if fetching all without a slug
 
 	// Use React Query to fetch prefixes
 	const result = useQuery<ThreadPrefix[], Error>({
 		queryKey,
-		queryFn: () => forumApi.getPrefixes(categoryId),
-		// Always ensure we have fresh prefix data when category changes
-		staleTime: 1000 * 60 * 5 // 5 minutes
+		queryFn: () => forumApi.getPrefixes(forumSlug), // forumApi.getPrefixes needs to accept forumSlug (string)
+		// Always ensure we have fresh prefix data when forumSlug changes
+		staleTime: 1000 * 60 * 5, // 5 minutes
+		enabled: !!forumSlug, // Only fetch if forumSlug is provided, or always fetch if handling 'all' case
 	});
 
-	// Whenever categoryId changes, invalidate the prefixes query
+	// Whenever forumSlug changes, invalidate the prefixes query to ensure fresh data for that specific forum
 	useEffect(() => {
-		if (categoryId !== undefined) {
-			// Invalidate any previous prefix queries to ensure fresh data
-			queryClient.invalidateQueries({ queryKey: ['/api/forum/prefixes'] });
+		if (forumSlug) {
+			queryClient.invalidateQueries({ queryKey: ['/api/forum/prefixes', { forumSlug }] });
+		} else {
+			// If forumSlug is not provided, you might want to invalidate a general prefix query if one exists
+			// queryClient.invalidateQueries({ queryKey: ['/api/forum/prefixes', 'all'] });
 		}
-	}, [categoryId, queryClient]);
+	}, [forumSlug, queryClient]);
 
 	return result;
 };
@@ -545,12 +570,12 @@ export const useForumCategories = useCategoriesWithStats;
 export const useForumCategory = useCategory;
 
 // Hook to fetch thread prefixes, optionally filtered by category
-export const useThreadPrefixes = (categoryId?: number) => {
+export const useThreadPrefixes = (forumSlug?: string) => {
 	return useQuery<ThreadPrefix[]>({
-		queryKey: ['threadPrefixes', categoryId],
-		queryFn: () => forumApi.getPrefixes(categoryId),
-		staleTime: 5 * 60 * 1000, // 5 minutes
-		enabled: categoryId !== undefined
+		queryKey: ['threadPrefixes', forumSlug],
+		queryFn: () => forumApi.getPrefixes(forumSlug),
+		staleTime: 5 * 60 * 1000,
+		enabled: !!forumSlug
 	});
 };
 
@@ -592,3 +617,5 @@ export const usePostUpdate = () => {
 		}
 	});
 };
+
+export type { CreateThreadParams };

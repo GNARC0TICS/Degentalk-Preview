@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Route, Redirect, useLocation, useParams } from 'wouter';
 import { Toaster } from '@/components/ui/toaster';
+import { ForumStructureProvider } from '@/contexts/ForumStructureContext';
 import AdminLayout from './pages/admin/admin-layout';
 import { ModLayout } from './components/mod/mod-layout';
 import { SiteHeader } from '@/components/layout/site-header';
@@ -12,6 +13,8 @@ import HomePage from './pages/home';
 import ForumsPage from './pages/forums';
 // Import forum system pages
 import ForumBySlugPage from './pages/forums/[forum_slug].tsx';
+import ForumSearchPage from './pages/forums/search.tsx'; // Import the new search page
+import ZoneBySlugPage from './pages/zones/[slug].tsx'; // Added import for Zone page
 import ThreadPage from './pages/threads/[thread_slug].tsx';
 import CreateThreadPage from './pages/threads/create.tsx';
 import ShopPage from './pages/shop';
@@ -84,13 +87,14 @@ function App() {
 	const isAuthRoute = location === '/auth';
 
 	return (
-		<div className="min-h-screen bg-black text-white flex flex-col">
-			{/* Only show SiteHeader on non-admin, non-mod, and non-auth routes */}
-			{!isAdminRoute && !isModRoute && !isAuthRoute && <SiteHeader />}
-			<React.Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
-				<Switch>
-					{/* Auth Routes */}
-					<Route path="/auth" component={AuthPage} />
+		<ForumStructureProvider>
+			<div className="min-h-screen bg-black text-white flex flex-col">
+				{/* Only show SiteHeader on non-admin, non-mod, and non-auth routes */}
+				{!isAdminRoute && !isModRoute && !isAuthRoute && <SiteHeader />}
+				<React.Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+					<Switch>
+						{/* Auth Routes */}
+						<Route path="/auth" component={AuthPage} />
 
 					{/* Protected Main Routes */}
 					<ProtectedRoute path="/" component={HomePage} />
@@ -101,11 +105,16 @@ function App() {
 					{/* Updated path to match singular '/forum/:slug' */}
 					<ProtectedRoute path="/forums/:slug" component={ForumBySlugPage} />
 					{/* The /forum route might be for a general forum listing page if needed */}
-					<ProtectedRoute path="/forum" component={ForumsPage} />
+					<ProtectedRoute path="/forums" component={ForumsPage} />
+					{/* Search Page Route */}
+					<ProtectedRoute path="/forums/search" component={ForumSearchPage} />
+					
+					{/* Zone Page Route */}
+					<ProtectedRoute path="/zones/:slug" component={ZoneBySlugPage} />
 
 					{/* Thread Routes */}
 					<ProtectedRoute path="/threads/create" component={CreateThreadPage} />
-					<ProtectedRoute path="/threads/:id" component={ThreadPage} />
+					<ProtectedRoute path="/threads/:thread_slug" component={ThreadPage} />
 
 					{/* Other Routes */}
 					<ProtectedRoute path="/shop" component={ShopPage} />
@@ -369,12 +378,12 @@ function App() {
 
 					{/* 404 Route - Render the custom NotFoundPage component */}
 					<Route component={NotFoundPage} />
-				</Switch>
-			</React.Suspense>
-			<Toaster />
-			{/* Conditionally render the DevRoleSwitcher */}
-			{import.meta.env.MODE === 'development' && <DevRoleSwitcher />}
-		</div>
+				</Switch>			</React.Suspense>
+				<Toaster />
+				{/* Conditionally render the DevRoleSwitcher */}
+				{import.meta.env.MODE === 'development' && <DevRoleSwitcher />}
+			</div>
+		</ForumStructureProvider>
 	);
 }
 

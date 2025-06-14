@@ -3,6 +3,10 @@ import { forumService } from './forum.service';
 import type { ThreadSearchParams } from './forum.service';
 // import { isAuthenticated } from "@server/src/domains/auth/middleware/auth.middleware"; // Removed as unused
 
+// TODO: @syncSchema threads
+// TODO: @syncSchema posts
+// TODO: @syncSchema content_visibility_status_enum
+
 export const forumController = {
 	// Get all categories with forum statistics
 	async getCategoriesWithStats(req: Request, res: Response) {

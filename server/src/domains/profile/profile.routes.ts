@@ -21,6 +21,9 @@ import {
 } from '@schema';
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';
 import signatureRoutes from './signature.routes'; // Import signature routes
+import { authenticate } from '../../middleware/authenticate';
+import { profileService } from './profile.service';
+import { referralsService } from './referrals.service';
 
 // Helper function to get user ID from req.user
 function getUserId(req: Request): number {
@@ -185,6 +188,66 @@ router.get('/:username', async (req: Request, res: Response) => {
 	} catch (error) {
 		console.error('Error fetching profile:', error);
 		return res.status(500).json({ message: 'Error fetching profile data' });
+	}
+});
+
+/**
+ * @route   GET /api/profile
+ * @desc    Get user profile
+ * @access  Private
+ */
+router.get('/', authenticate, async (req, res) => {
+	try {
+		const userId = req.user?.id;
+		if (!userId) {
+			return res.status(401).json({ success: false, message: 'User not authenticated' });
+		}
+
+		const profile = await profileService.getUserProfile(userId);
+		return res.json({ success: true, data: profile });
+	} catch (error) {
+		console.error('Error fetching profile:', error);
+		return res.status(500).json({ success: false, message: 'Failed to fetch profile' });
+	}
+});
+
+/**
+ * @route   GET /api/profile/referrals
+ * @desc    Get user referral stats
+ * @access  Private
+ */
+router.get('/referrals', authenticate, async (req, res) => {
+	try {
+		const userId = req.user?.id;
+		if (!userId) {
+			return res.status(401).json({ success: false, message: 'User not authenticated' });
+		}
+
+		const referrals = await referralsService.getUserReferrals(userId);
+		return res.json({ success: true, data: referrals });
+	} catch (error) {
+		console.error('Error fetching referrals:', error);
+		return res.status(500).json({ success: false, message: 'Failed to fetch referral data' });
+	}
+});
+
+/**
+ * @route   GET /api/profile/referrals/link
+ * @desc    Get user's referral link
+ * @access  Private
+ */
+router.get('/referrals/link', authenticate, async (req, res) => {
+	try {
+		const userId = req.user?.id;
+		if (!userId) {
+			return res.status(401).json({ success: false, message: 'User not authenticated' });
+		}
+
+		const referralLink = await referralsService.getUserReferralLink(userId);
+		return res.json({ success: true, data: { referralLink } });
+	} catch (error) {
+		console.error('Error generating referral link:', error);
+		return res.status(500).json({ success: false, message: 'Failed to generate referral link' });
 	}
 });
 

@@ -17,10 +17,11 @@ import { sql } from 'drizzle-orm';
 import { forumCategories } from './categories'; // Adjusted import path
 import { users } from '../user/users'; // Adjusted import path
 import { threadPrefixes } from './prefixes'; // Placeholder for future import
+import { contentVisibilityStatusEnum } from '../core/enums';
 // import { posts } from "./posts"; // Placeholder for self-reference with posts
 
 // Forward declare the post type for solvingPostId reference
-export type PostTable = { id: PgColumn<any, any, any> }; // More generic PgColumn
+export type PostTable = { id: AnyPgColumn }; // Corrected PgColumn to AnyPgColumn
 
 export const threads = pgTable(
 	'threads',
@@ -29,6 +30,7 @@ export const threads = pgTable(
 		uuid: uuid('uuid').notNull().defaultRandom(),
 		title: varchar('title', { length: 255 }).notNull(),
 		slug: varchar('slug', { length: 255 }).notNull(),
+		parentForumSlug: varchar('parent_forum_slug', { length: 128 }).notNull().default(''),
 		categoryId: integer('category_id')
 			.notNull()
 			.references(() => forumCategories.id, { onDelete: 'cascade' }),
@@ -66,9 +68,14 @@ export const threads = pgTable(
 		pollId: bigint('poll_id', { mode: 'number' }),
 		isSolved: boolean('is_solved').notNull().default(false),
 		solvingPostId: integer('solving_post_id'), // .references((): AnyPgColumn => posts.id, { onDelete: 'set null' }), // Placeholder
-		pluginData: jsonb('plugin_data').default('{}')
+		pluginData: jsonb('plugin_data').default('{}'),
+		visibilityStatus: contentVisibilityStatusEnum('visibility_status').notNull().default('published'),
+		moderationReason: varchar('moderation_reason', { length: 255 }),
+		xpMultiplier: real('xp_multiplier').notNull().default(1),
+		rewardRules: jsonb('reward_rules').default('{}')
 	},
 	(table) => ({
+		parentForumSlugIdx: index('idx_threads_parent_forum_slug').on(table.parentForumSlug), // Added index for parentForumSlug
 		categoryIdx: index('idx_threads_category_id').on(table.categoryId),
 		userIdx: index('idx_threads_user_id').on(table.userId),
 		createdAtIdx: index('idx_threads_created_at').on(table.createdAt),
@@ -124,7 +131,11 @@ export const insertThreadSchema = createInsertSchema(threads)
 		updatedAt: true,
 		isArchived: true,
 		pollId: true,
-		pluginData: true
+		pluginData: true,
+		visibilityStatus: true,
+		moderationReason: true,
+		xpMultiplier: true,
+		rewardRules: true
 	});
 
 export type Thread = typeof threads.$inferSelect;

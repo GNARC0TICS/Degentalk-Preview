@@ -1,7 +1,6 @@
 import {
 	pgTable,
-	serial,
-	integer,
+	uuid,
 	varchar,
 	text,
 	jsonb,
@@ -10,30 +9,34 @@ import {
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { users } from '../user/users'; // Adjusted path
-import { notificationTypeEnum } from '../core/enums'; // Adjusted path
+import { users } from '../user/users';
+import { eventLogs } from './event_logs';
+import { notificationTypeEnum } from '../core/enums';
 
 export const notifications = pgTable(
 	'notifications',
 	{
-		id: serial('notification_id').primaryKey(),
-		userId: integer('user_id')
+		id: uuid('id').defaultRandom().primaryKey(),
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		type: notificationTypeEnum('type').notNull(),
+		eventType: notificationTypeEnum('event_type').notNull(),
+		eventLogId: uuid('event_log_id').references(() => eventLogs.id),
 		title: varchar('title', { length: 255 }).notNull(),
 		body: text('body'),
 		data: jsonb('data'), // For storing context like threadId, postId, achievementId, etc.
 		isRead: boolean('is_read').notNull().default(false),
-		readAt: timestamp('read_at'),
 		createdAt: timestamp('created_at')
 			.notNull()
-			.default(sql`now()`) // Changed defaultNow() to sql`now()`
+			.default(sql`now()`)
 	},
 	(table) => ({
-		userIdx: index('idx_notifications_user_id').on(table.userId)
+		// Index on user_id and is_read for efficient unread notification queries
+		userReadIdx: index('idx_notifications_user_read').on(table.userId, table.isRead),
+		// Index on user_id and created_at for chronological notification feeds
+		userCreatedIdx: index('idx_notifications_user_created').on(table.userId, table.createdAt)
 	})
 );
 
 export type Notification = typeof notifications.$inferSelect;
-// Add InsertNotification if Zod schema is needed
+export type InsertNotification = typeof notifications.$inferInsert;

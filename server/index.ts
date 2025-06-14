@@ -45,7 +45,8 @@ import { seedXpActions } from '../scripts/db/seed-xp-actions';
 import { seedDefaultLevels } from '../scripts/db/seed-default-levels';
 import { seedEconomySettings } from '../scripts/db/seed-economy-settings';
 import { createMissingTables } from '../scripts/db/create-missing-tables';
-import { seedCanonicalZones } from '../scripts/db/seed-canonical-zones';
+import { seedForumsFromConfig } from '../scripts/seed/seedForumsFromConfig';
+import { initEventNotificationListener } from './src/domains/notifications/event-notification-listener';
 
 // Startup logging helper
 const startupLog = (message: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
@@ -126,8 +127,8 @@ app.use((req, res, next) => {
 				await seedXpActions();
 				await seedDefaultLevels();
 				await seedEconomySettings();
-				// Temporarily disable seeding to fix startup issues
-				await seedCanonicalZones();
+				// Seed zones & forums using config-driven seeder
+				await seedForumsFromConfig();
 				startupLog('All seed scripts completed successfully.', 'success');
 			} catch (seedError) {
 				startupLog(`Error during seeding: ${seedError}`, 'error');
@@ -157,6 +158,11 @@ app.use((req, res, next) => {
 		} else {
 			await setupVite(app, server);
 		}
+
+		// Initialize event notification listener
+		startupLog('Initializing event notification listener...');
+		initEventNotificationListener();
+		startupLog('Event notification listener initialized.', 'success');
 
 		// Start the server
 		const port = process.env.PORT ? parseInt(process.env.PORT) : 5001;

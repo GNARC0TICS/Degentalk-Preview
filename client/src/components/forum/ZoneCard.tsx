@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link } from 'wouter'; // Removed useNavigate
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Eye, MessageSquare, Users, Clock, Flame } from 'lucide-react';
@@ -54,40 +54,35 @@ export function ZoneCard({
 	activeUsersCount = 0,
 	lastActivityAt,
 	hasXpBoost = false,
-	boostMultiplier = 1,
+	boostMultiplier = 1, // Default to 1 if not provided
 	isEventActive = false,
 	eventData,
 	rarity = 'common',
 	className = '',
 	onClick
 }: ZoneCardProps) {
-	// Determine the URL
-	const zoneUrl = `/forums/${slug}`;
-	console.log('ZoneCard generated URL:', zoneUrl);
+	// const navigate = useNavigate(); // Removed useNavigate hook
+	const zoneUrl = `/zones/${slug}`;
 
-	// Custom class based on colorTheme
 	const themeClass = `zone-theme-${colorTheme}`;
 
-	// Handle click if provided
-	const handleClick = (e: React.MouseEvent) => {
+	// handleClick will be passed to Link's onClick.
+	// If props.onClick exists, it's called. Link will navigate unless e.preventDefault() is called in props.onClick.
+	const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
 		if (onClick) {
-			e.preventDefault();
-			onClick();
+			onClick(); // Call the passed onClick handler
+			// If the passed onClick handler calls e.preventDefault(), Link navigation will be stopped.
 		}
+		// No explicit navigation call here; Link component handles it.
 	};
 
-	// Render icon based on format (emoji or component)
 	const renderIcon = () => {
-		// If icon is an emoji (starts with a character that could be emoji)
 		if (icon && /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(icon)) {
 			return <span className="text-3xl mr-2">{icon}</span>;
 		}
-
-		// If icon is not provided, use a default flame icon
 		return <Flame className="h-6 w-6 mr-2" />;
 	};
 
-	// Rarity-based styles (for future implementation)
 	const rarityClasses = {
 		common: '',
 		uncommon: 'zone-card-uncommon',
@@ -98,8 +93,9 @@ export function ZoneCard({
 
 	return (
 		<Link href={zoneUrl} onClick={handleClick}>
-			<Card
+			<a // Wrap Card in an anchor for semantic correctness and to attach onClick
 				className={`
+          block 
           zone-card
           ${themeClass}
           ${rarityClasses[rarity]}
@@ -109,63 +105,75 @@ export function ZoneCard({
           relative
           overflow-hidden
           ${className}
-          ${hasXpBoost ? 'animate-pulse-glow' : ''}
+          ${hasXpBoost && boostMultiplier ? 'animate-pulse-glow' : ''}
         `}
 			>
-				{/* XP Boost Indicator */}
-				{hasXpBoost && (
-					<div className="absolute top-2 right-2 z-10">
-						<Badge className="bg-emerald-600 text-white font-bold">{boostMultiplier}x XP</Badge>
-					</div>
-				)}
+				<Card
+					className={`
+            w-full h-full 
+            bg-transparent border-none 
+          `}
+				>
+					{/* XP Boost Indicator */}
+					{hasXpBoost && boostMultiplier && (
+						<div className="absolute top-2 right-2 z-10">
+							<Badge className="bg-purple-600 text-white font-bold">
+								XP Boost x{boostMultiplier} 🚀
+							</Badge>
+						</div>
+					)}
 
-				{/* Event Indicator */}
-				{isEventActive && eventData && (
-					<div className="absolute top-0 right-0 left-0 bg-amber-600 text-xs py-1 px-2 text-center font-semibold text-white">
-						{eventData.name} • Ends{' '}
-						{formatDistanceToNow(new Date(eventData.endsAt), { addSuffix: true })}
-					</div>
-				)}
+					{/* Event Indicator */}
+					{isEventActive && eventData && (
+						<div className="absolute top-0 right-0 left-0 bg-amber-600 text-xs py-1 px-2 text-center font-semibold text-white">
+							{eventData.name} • Ends{' '}
+							{formatDistanceToNow(new Date(eventData.endsAt), { addSuffix: true })}
+						</div>
+					)}
 
-				<CardContent className={`p-6 ${isEventActive ? 'pt-8' : ''}`}>
-					<div className="flex items-center mb-3">
-						{renderIcon()}
-						<h3 className="text-xl font-bold">{name}</h3>
-					</div>
-
-					<p className="text-sm opacity-90 mb-4">{description}</p>
-
-					<div className="flex flex-wrap gap-4 text-xs text-zinc-300 font-semibold">
-						<div className="flex items-center bg-black/30 rounded-full px-2.5 py-1.5">
-							<MessageSquare className="h-3.5 w-3.5 mr-1.5 text-emerald-400" />
-							<span>{threadCount} threads</span>
+					<CardContent className={`p-6 ${isEventActive ? 'pt-8' : ''}`}>
+						<div className="flex items-center mb-3">
+							{renderIcon()}
+							<h3 className="text-xl font-bold">
+								{slug === 'the-pit' && <span className="mr-1">🔥</span>}
+								{name}
+							</h3>
 						</div>
 
-						<div className="flex items-center bg-black/30 rounded-full px-2.5 py-1.5">
-							<Eye className="h-3.5 w-3.5 mr-1.5 text-amber-400" />
-							<span>{postCount} posts</span>
-						</div>
+						<p className="text-sm opacity-90 mb-4">{description}</p>
 
-						{activeUsersCount > 0 && (
+						<div className="flex flex-wrap gap-4 text-xs text-zinc-300 font-semibold">
 							<div className="flex items-center bg-black/30 rounded-full px-2.5 py-1.5">
-								<Users className="h-3.5 w-3.5 mr-1.5 text-blue-400" />
-								<span>{activeUsersCount} active</span>
+								<MessageSquare className="h-3.5 w-3.5 mr-1.5 text-emerald-400" />
+								<span>{threadCount} threads</span>
 							</div>
-						)}
-					</div>
-				</CardContent>
 
-				{lastActivityAt && (
-					<CardFooter className="px-6 py-3 border-t border-white/10 text-xs">
-						<div className="flex items-center text-zinc-400">
-							<Clock className="h-3 w-3 mr-1" />
-							<span>
-								Last activity {formatDistanceToNow(new Date(lastActivityAt), { addSuffix: true })}
-							</span>
+							<div className="flex items-center bg-black/30 rounded-full px-2.5 py-1.5">
+								<Eye className="h-3.5 w-3.5 mr-1.5 text-amber-400" />
+								<span>{postCount} posts</span>
+							</div>
+
+							{activeUsersCount > 0 && (
+								<div className="flex items-center bg-black/30 rounded-full px-2.5 py-1.5">
+									<Users className="h-3.5 w-3.5 mr-1.5 text-blue-400" />
+									<span>{activeUsersCount} active</span>
+								</div>
+							)}
 						</div>
-					</CardFooter>
-				)}
-			</Card>
+					</CardContent>
+
+					{lastActivityAt && (
+						<CardFooter className="px-6 py-3 border-t border-white/10 text-xs">
+							<div className="flex items-center text-zinc-400">
+								<Clock className="h-3 w-3 mr-1" />
+								<span>
+									Last activity {formatDistanceToNow(new Date(lastActivityAt), { addSuffix: true })}
+								</span>
+							</div>
+						</CardFooter>
+					)}
+				</Card>
+			</a>
 		</Link>
 	);
 }

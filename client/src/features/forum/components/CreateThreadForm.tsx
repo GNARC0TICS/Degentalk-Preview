@@ -1,16 +1,19 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
+// Explicitly import hooks, though the combined import should work.
+// This is to try and resolve the "Cannot find name" errors.
+import { useState, useEffect, useCallback } from 'react'; 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useLocation } from 'wouter';
+import { useLocation, Link } from 'wouter';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { QueryObserverOptions } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import RichTextEditor from '@/components/editor/rich-text-editor';
 import { useAuth } from '@/hooks/use-auth.tsx';
-import { usePrefixesByCategory } from '@/features/forum/hooks/useForumQueries'; // Assuming this path is correct or will be adjusted
-import { PrefixBadge } from '@/components/forum/prefix-badge'; // Corrected path
+import { useForumPrefixes, useCreateThread } from '@/features/forum/hooks/useForumQueries';
+import type { CreateThreadParams } from '@/features/forum/hooks/useForumQueries';
+import { PrefixBadge } from '@/components/forum/prefix-badge';
 import {
 	Dialog,
 	DialogContent,
@@ -30,167 +33,168 @@ import {
 import {
 	Select,
 	SelectContent,
+	SelectGroup,
+	SelectLabel,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2 } from 'lucide-react';
+import { Loader2, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { TagInput } from '@/components/forum/tag-input'; // Corrected path and import style
-import type { Tag } from '@/types/forum'; // Import the actual Tag type
+import { TagInput } from '@/components/forum/tag-input';
+import type { Tag, ThreadPrefix as Prefix } from '@/types/forum';
+import { forumMap } from '@/config/forumMap.config'; // Reinstate for internal fallback & type usage
+import type { Forum, Zone, ForumRules } from '@/config/forumMap.config'; // Reinstate Forum, Zone and ensure ForumRules is here
+import NotFoundPage from '@/pages/not-found';
 
-// Define placeholder types for Prefix based on usage
-interface Prefix {
-	id: number | string;
-	name: string; // Assuming PrefixBadge uses name, adjust if needed
-	// other properties used by PrefixBadge...
-}
-
-// Define a type for the draft data for clarity
 interface DraftData {
 	id: number;
 	title?: string;
-	categoryId?: number;
-	prefixId?: string; // Or number, ensure consistency
+	forumSlug?: string;
+	prefixId?: string;
 	content?: string;
 	editorState?: any;
-	// Add other draft fields if necessary
+	tags?: string[];
 }
 
-// Form schema with validation
 const threadFormSchema = z.object({
-	title: z
-		.string()
-		.min(3, {
-			message: 'Title must be at least 3 characters.'
-		})
-		.max(255, {
-			message: 'Title cannot be more than 255 characters.'
-		}),
-	categoryId: z.string().min(1, {
-		message: 'Please select a category.'
-	}),
+	title: z.string().min(3, { message: 'Title must be at least 3 characters.' }).max(255, { message: 'Title cannot be more than 255 characters.' }),
+	forumSlug: z.string().min(1, { message: 'Please select a forum.' }),
 	prefixId: z.string().optional(),
-	content: z.string().min(10, {
-		message: 'Content must be at least 10 characters.'
-	}),
+	content: z.string().min(10, { message: 'Content must be at least 10 characters.' }),
 	editorState: z.any().optional(),
-	tags: z.array(z.string()).max(10).optional()
+	tags: z.array(z.string()).max(10).optional(),
 });
 
 type ThreadFormValues = z.infer<typeof threadFormSchema>;
 
 interface CreateThreadFormProps {
-	categoryId?: number;
-	isOpen: boolean;
-	onClose: () => void;
-	onSuccess?: () => void;
+	forumSlug?: string;
+	forumRules?: ForumRules;
+	isForumLocked?: boolean;
+	forumName?: string;
+	isOpen?: boolean;
+	onClose?: () => void;
+	onSuccess?: (newThreadSlug: string) => void;
 }
 
 export function CreateThreadForm({
-	categoryId,
-	isOpen,
+	forumSlug: passedForumSlug,
+	forumRules: passedForumRules,
+	isForumLocked: passedIsForumLocked,
+	forumName: passedForumName,
+	isOpen = true,
 	onClose,
-	onSuccess
+	onSuccess,
 }: CreateThreadFormProps) {
 	const { toast } = useToast();
 	const [, navigate] = useLocation();
 	const { user } = useAuth();
 	const [editorContent, setEditorContent] = useState('');
-	const [editorState, setEditorState] = useState(null);
+	const [editorState, setEditorState] = useState<any>(null);
 	const [hasActiveDraft, setHasActiveDraft] = useState(false);
 	const [draftId, setDraftId] = useState<number | null>(null);
-	const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(categoryId);
+	const [selectedForumSlugState, setSelectedForumSlugState] = useState<string | undefined>(passedForumSlug);
 	const queryClient = useQueryClient();
 
-	// Get categories for the select dropdown
-	const { data: categories, isLoading: loadingCategories } = useQuery({
-		queryKey: ['/api/categories'],
-		queryFn: () => apiRequest<any>({ method: 'GET', url: '/api/categories' }), // Updated
-		enabled: isOpen
-	});
+	const [targetForumConfig, setTargetForumConfig] = useState<Forum | undefined>(undefined); // Used if user selects a forum from dropdown
+	const [formDisabledReason, setFormDisabledReason] = useState<string | null>(null);
 
-	// Get thread prefixes based on selected category
-	const { data: prefixes, isLoading: loadingPrefixes } = usePrefixesByCategory(selectedCategoryId);
-
-	// Get feature permissions for the current user
-	const { data: featurePermissions, isLoading: loadingPermissions } = useQuery({
-		queryKey: ['/api/threads/permissions'],
-		queryFn: () => apiRequest<any>({ method: 'GET', url: '/api/threads/permissions' }), // Updated
-		enabled: isOpen && !!user
-	});
-
-	const queryOptions: QueryObserverOptions<
-		DraftData, // TQueryFnData
-		Error, // TError
-		DraftData, // TData
-		[string, { categoryId: string | undefined }] // TQueryKey
-	> = {
-		queryKey: ['/api/threads/drafts', { categoryId: categoryId?.toString() }],
-		queryFn: async () => {
-			const currentCategoryId = categoryId?.toString();
-			const queryParams: { categoryId?: string } = {};
-			if (currentCategoryId) {
-				queryParams.categoryId = currentCategoryId;
+	useEffect(() => {
+		// This effect primarily sets the disabled reason based on PROPS when a forum is PASSED IN
+		if (passedForumSlug) {
+			setSelectedForumSlugState(passedForumSlug); // Ensure internal state matches prop
+			if (passedIsForumLocked) {
+				setFormDisabledReason(`Posting is disabled in "${passedForumName || passedForumSlug}" because it is locked.`);
+			} else if (passedForumRules && !passedForumRules.allowPosting) {
+				setFormDisabledReason(`Posting is disabled in "${passedForumName || passedForumSlug}" by its rules.`);
+			} else {
+				setFormDisabledReason(null);
 			}
-			return apiRequest<DraftData>({
-				method: 'GET',
-				url: '/api/threads/drafts',
-				params: queryParams
-			});
-		},
-		enabled: isOpen && !!categoryId && !!user
-	};
+			// Also, find the static config for the passed forum slug to populate targetForumConfig
+			// This is mainly for consistency if other parts of the form rely on targetForumConfig
+			const staticForum = forumMap.zones.flatMap(z => z.forums).find(f => f.slug === passedForumSlug);
+			setTargetForumConfig(staticForum);
 
-	const {
-		// Ensure draftData and isDraftLoadSuccess are destructured
-		data: draftData,
-		isLoading: loadingDraft,
-		isSuccess: isDraftLoadSuccess
-	} = useQuery(queryOptions);
+		} else {
+			// If no forum is passed, reset disabled reason; it will be set by the forum selector logic below
+			setFormDisabledReason(null);
+			setTargetForumConfig(undefined);
+		}
+	}, [passedForumSlug, passedForumRules, passedIsForumLocked, passedForumName]);
+
+	useEffect(() => {
+		// This effect updates targetForumConfig and disabledReason when the USER SELECTS a new forum from the dropdown
+		// (i.e., when passedForumSlug is initially undefined, and selectedForumSlugState changes)
+		if (!passedForumSlug && selectedForumSlugState) {
+			const foundForum = forumMap.zones.flatMap(z => z.forums).find(f => f.slug === selectedForumSlugState);
+			setTargetForumConfig(foundForum);
+			if (foundForum) {
+				// For user-selected forums, rules come from static config, as MergedForum isn't available here directly
+				if (!foundForum.rules.allowPosting) {
+					setFormDisabledReason(`Posting is disabled in "${foundForum.name}" by its rules.`);
+				} else {
+					setFormDisabledReason(null);
+				}
+			} else {
+				setFormDisabledReason('Invalid forum selected.');
+			}
+		}
+	}, [selectedForumSlugState, passedForumSlug]); // Dependencies ensure this runs when selection changes
+
+	const activeForumSlugForPrefixes = passedForumSlug || selectedForumSlugState;
+	const { data: prefixes, isLoading: loadingPrefixes } = useForumPrefixes(activeForumSlugForPrefixes);
 
 	const form = useForm<ThreadFormValues>({
-		// Moved form declaration before titleValue
 		resolver: zodResolver(threadFormSchema),
 		defaultValues: {
 			title: '',
-			categoryId: categoryId ? categoryId.toString() : '',
+			forumSlug: passedForumSlug || '',
 			prefixId: '',
 			content: '',
-			tags: []
-		}
+			tags: [],
+		},
 	});
 
-	const titleValue = form.watch('title'); // Watch title for debouncedSaveDraft dependency - MOVED HERE
-
 	useEffect(() => {
-		if (categoryId) {
-			form.setValue('categoryId', categoryId.toString());
-			setSelectedCategoryId(categoryId);
+		if (passedForumSlug) {
+			form.setValue('forumSlug', passedForumSlug);
+			// setSelectedForumSlugState(passedForumSlug); // Already set or handled by passedForumSlug prop
 		}
-	}, [categoryId, form]);
+	}, [passedForumSlug, form]);
 
-	const userCanCreateThread = true;
+	const { data: draftData, isLoading: loadingDraft, isSuccess: isDraftLoadSuccess } = useQuery<DraftData>(
+		{
+			queryKey: ['threadDraft', { forumSlug: activeForumSlugForPrefixes }],
+			queryFn: async () => {
+				if (!activeForumSlugForPrefixes) return Promise.reject('No forum selected for draft.');
+				return apiRequest<DraftData>({
+					method: 'GET',
+					url: '/api/threads/drafts',
+					params: { forumSlug: activeForumSlugForPrefixes }
+				});
+			},
+			enabled: isOpen && !!activeForumSlugForPrefixes && !!user,
+		}
+	);
 
 	const saveDraftMutation = useMutation({
-		mutationFn: async (values: ThreadFormValues & { draftId?: number }) => {
-			const endpoint = values.draftId
-				? `/api/threads/drafts/${values.draftId}`
-				: '/api/threads/drafts';
+		mutationFn: async (values: ThreadFormValues & { draftId?: number; forumSlugToSave: string }) => {
+			const endpoint = values.draftId ? `/api/threads/drafts/${values.draftId}` : '/api/threads/drafts';
 			const method = values.draftId ? 'PUT' : 'POST';
-
-			return apiRequest<any>({
-				// Updated
+			return apiRequest<DraftData>({
 				method,
 				url: endpoint,
 				data: {
-					...values,
-					categoryId: parseInt(values.categoryId),
-					prefixId:
-						values.prefixId && values.prefixId.trim() !== '' ? parseInt(values.prefixId) : undefined
-				}
+					title: values.title,
+					content: values.content,
+					editorState: values.editorState,
+					forumSlug: values.forumSlugToSave,
+					prefixId: values.prefixId && values.prefixId.trim() !== '' ? values.prefixId : undefined,
+					tags: values.tags,
+				},
 			});
 		},
 		onSuccess: (data) => {
@@ -200,385 +204,326 @@ export function CreateThreadForm({
 			}
 			toast({
 				title: 'Draft saved',
-				description: 'Your thread draft has been saved.'
+				description: 'Your thread draft has been saved.',
 			});
 		},
 		onError: (error: Error) => {
-			toast({
-				title: 'Error',
-				description: `Failed to save draft: ${error.message}`,
-				variant: 'destructive'
-			});
-		}
+			toast({ title: 'Error', description: `Failed to save draft: ${error.message}`, variant: 'destructive' });
+		},
 	});
 
-	const createThreadMutation = useMutation({
-		mutationFn: async (values: ThreadFormValues) => {
-			return apiRequest<any>({
-				// Updated
-				method: 'POST',
-				url: '/api/threads/create',
-				data: {
-					...values,
-					categoryId: parseInt(values.categoryId),
-					prefixId:
-						values.prefixId && values.prefixId.trim() !== '' ? parseInt(values.prefixId) : undefined
-				}
-			});
-		},
-		onSuccess: (data) => {
-			if (draftId) {
-				apiRequest<any>({ method: 'PUT', url: `/api/threads/drafts/${draftId}/publish`, data: {} }); // Updated
-			}
-			queryClient.invalidateQueries({ queryKey: ['/api/threads'] });
-			queryClient.invalidateQueries({ queryKey: ['/api/categories'] });
-			toast({
-				title: 'Success',
-				description: 'Thread created successfully'
-			});
-			if (onSuccess) {
-				onSuccess();
-			} else if (data && data.slug) {
-				navigate(`/threads/${data.slug}`); // Corrected path
-			}
-			onClose();
-		},
-		onError: (error: Error) => {
-			toast({
-				title: 'Error',
-				description: error.message || 'Failed to create thread', // Added fallback error message
-				variant: 'destructive'
-			});
-		}
-	});
+	const createThreadMutation = useCreateThread();
 
+	useEffect(() => {
+		if (isDraftLoadSuccess && draftData && draftData.id) {
+			setHasActiveDraft(true);
+			setDraftId(draftData.id);
+			form.reset({
+				title: draftData.title || '',
+				forumSlug: draftData.forumSlug || passedForumSlug || '',
+				prefixId: draftData.prefixId || '',
+				content: draftData.content || '',
+				tags: draftData.tags || [],
+				editorState: draftData.editorState,
+			});
+			if (draftData.content) setEditorContent(draftData.content);
+			if (draftData.editorState) setEditorState(draftData.editorState);
+			if (draftData.forumSlug) setSelectedForumSlugState(draftData.forumSlug);
+		}
+	}, [isDraftLoadSuccess, draftData, form, passedForumSlug]);
+	
 	const handleSaveDraft = useCallback(
-		(html: string, json: any) => {
-			if (!form.getValues('title') && !html) return; // Don't save if title and content are empty
+		(html: string, jsonState: any) => {
 			const currentValues = form.getValues();
+			if (!currentValues.title && !html) return; 
+			if (!currentValues.forumSlug) {
+				toast({ title: 'Cannot Save Draft', description: 'Please select a forum first.', variant: 'destructive' });
+				return;
+			}
 			saveDraftMutation.mutate({
 				...currentValues,
 				content: html,
-				editorState: json,
-				draftId: draftId ?? undefined
+				editorState: jsonState,
+				draftId: draftId ?? undefined,
+				forumSlugToSave: currentValues.forumSlug, 
 			});
 		},
-		[form, saveDraftMutation, draftId]
+		[form, saveDraftMutation, draftId, toast]
 	);
 
 	const onSubmit = (values: ThreadFormValues) => {
 		if (!user) {
-			toast({
-				title: 'Authentication Error',
-				description: 'You must be logged in to create a thread.',
-				variant: 'destructive'
-			});
+			toast({ title: 'Authentication Error', description: 'You must be logged in.', variant: 'destructive' });
 			return;
 		}
-		if (!userCanCreateThread) {
-			toast({
-				title: 'Permission Denied',
-				description: 'You do not have permission to create a thread in this category.',
-				variant: 'destructive'
-			});
+		// Use props for rule check if a forum was passed in.
+		// Otherwise, rely on the internal targetForumConfig derived from user selection.
+		let canPost = true;
+		let reason = formDisabledReason;
+
+		if (passedForumSlug) {
+			if (passedIsForumLocked) {
+				canPost = false;
+				reason = `Posting is disabled in "${passedForumName || passedForumSlug}" because it is locked.`;
+			} else if (passedForumRules && !passedForumRules.allowPosting) {
+				canPost = false;
+				reason = `Posting is disabled in "${passedForumName || passedForumSlug}" by its rules.`;
+			}
+		} else if (targetForumConfig) { // User selected a forum from dropdown
+			if (!targetForumConfig.rules.allowPosting) {
+				canPost = false;
+				reason = `Posting is disabled in "${targetForumConfig.name}" by its rules.`;
+			}
+		} else if (!values.forumSlug) { // No forum selected at all
+            canPost = false;
+            reason = "Please select a forum to post in.";
+        }
+
+
+		if (!canPost) {
+			toast({ title: 'Permission Denied', description: reason || 'Posting is disabled in this forum.', variant: 'destructive' });
 			return;
 		}
-		createThreadMutation.mutate(values);
+
+		createThreadMutation.mutate(values as CreateThreadParams, {
+			onSuccess: (data) => {
+				if (draftId) {
+					apiRequest<any>({ method: 'DELETE', url: `/api/threads/drafts/${draftId}`});
+				}
+				queryClient.invalidateQueries({ queryKey: ['/api/threads', { forumSlug: values.forumSlug }] });
+				queryClient.invalidateQueries({ queryKey: ['/api/threads'] });
+				queryClient.invalidateQueries({ queryKey: ['forumCategoriesTree'] }); 
+				queryClient.invalidateQueries({ queryKey: ['/api/categories', 'with-stats'] });
+				toast({ title: 'Success', description: 'Thread created successfully' });
+				if (onSuccess) {
+					onSuccess(data.slug);
+				} else if (data && data.slug) {
+					navigate(`/threads/${data.slug}`);
+				}
+				if (onClose) onClose();
+			}
+		});
 	};
 
-	const handleEditorChange = (html: string, json: any) => {
+	const handleEditorChange = (html: string, jsonState: any) => {
 		setEditorContent(html);
-		setEditorState(json);
+		setEditorState(jsonState);
 		form.setValue('content', html, { shouldValidate: true });
-		form.setValue('editorState', json);
+		form.setValue('editorState', jsonState);
 	};
-
-	const handleCategoryChange = (value: string) => {
-		setSelectedCategoryId(parseInt(value));
-		form.setValue('categoryId', value);
-		form.setValue('prefixId', ''); // Reset prefix when category changes
+	
+	const handleForumChange = (value: string) => {
+		form.setValue('forumSlug', value, { shouldValidate: true });
+		form.setValue('prefixId', '');
+		setSelectedForumSlugState(value);
 	};
 
 	const debouncedSaveDraft = useCallback(
-		debounce(handleSaveDraft, 3000), // Save draft every 3 seconds
+		debounce(handleSaveDraft, 3000),
 		[handleSaveDraft]
 	);
 
 	useEffect(() => {
-		if (editorContent || titleValue) {
-			// Trigger debounce only if there's content or title
+		if (editorContent || form.getValues('title')) {
 			debouncedSaveDraft(editorContent, editorState);
 		}
 		return () => {
 			debouncedSaveDraft.cancel();
 		};
-	}, [editorContent, editorState, titleValue, debouncedSaveDraft]);
+	}, [editorContent, editorState, form, debouncedSaveDraft]);
 
-	// useEffect to handle draft data loading success
-	useEffect(() => {
-		if (isDraftLoadSuccess && draftData) {
-			if (draftData.id) {
-				setHasActiveDraft(true);
-				setDraftId(draftData.id);
+	if (!isOpen && onClose) return null;
 
-				if (draftData.title) {
-					form.setValue('title', draftData.title);
-				}
-				if (draftData.categoryId) {
-					form.setValue('categoryId', draftData.categoryId.toString());
-					setSelectedCategoryId(draftData.categoryId);
-				}
-				if (draftData.prefixId !== null && draftData.prefixId !== undefined) {
-					form.setValue('prefixId', String(draftData.prefixId));
-				}
-				if (draftData.content) {
-					form.setValue('content', draftData.content);
-					setEditorContent(draftData.content);
-				}
-				if (draftData.editorState) {
-					setEditorState(draftData.editorState);
-				}
-			}
-		}
-	}, [isDraftLoadSuccess, draftData, form]); // Dependencies for the effect
+	const renderFormContent = () => (
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
+				<FormField
+					control={form.control}
+					name="title"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Title</FormLabel>
+							<FormControl>
+								<Input placeholder="Enter thread title" {...field} disabled={!!formDisabledReason || createThreadMutation.isPending} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<FormField
+						control={form.control}
+						name="forumSlug"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Forum</FormLabel>
+								<Select
+									onValueChange={handleForumChange}
+									value={field.value}
+									disabled={!!passedForumSlug || !!formDisabledReason || createThreadMutation.isPending}
+								>
+									<FormControl>
+										<SelectTrigger>
+											<SelectValue placeholder="Select a forum to post in" />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										{/* If a forumSlug is passed, it's pre-selected and disabled */}
+										{passedForumSlug && passedForumName ? (
+											<SelectItem value={passedForumSlug} disabled={true}>
+												{passedForumName}
+											</SelectItem>
+										) : (
+										// If no forumSlug is passed, populate dropdown from forumMap
+											forumMap.zones.map((zone) => (
+												<SelectGroup key={zone.slug}>
+													<SelectLabel>{zone.name} ({zone.type})</SelectLabel>
+													{zone.forums.map((forumItem) => (
+														<SelectItem 
+															key={forumItem.slug} 
+															value={forumItem.slug} 
+															disabled={!forumItem.rules.allowPosting}
+														>
+															{forumItem.name} {!forumItem.rules.allowPosting && "(Posting Disabled)"}
+														</SelectItem>
+													))}
+												</SelectGroup>
+											))
+										)}
+									</SelectContent>
+								</Select>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="prefixId"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Prefix (Optional)</FormLabel>
+								<Select
+									onValueChange={field.onChange}
+									value={field.value}
+									disabled={loadingPrefixes || !activeForumSlugForPrefixes || !!formDisabledReason || createThreadMutation.isPending}
+								>
+									<FormControl>
+										<SelectTrigger>
+											{field.value && Array.isArray(prefixes) && prefixes.find(p => p.id.toString() === field.value) ? (
+												<PrefixBadge prefix={prefixes.find(p => p.id.toString() === field.value)!} />
+											) : (
+												<SelectValue placeholder="Select a prefix" />
+											)}
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										{loadingPrefixes && <SelectItem value="loading" disabled>Loading prefixes...</SelectItem>}
+										<SelectItem value="">No Prefix</SelectItem>
+										{Array.isArray(prefixes) &&
+											prefixes.map((prefix: Prefix) => (
+												<SelectItem key={prefix.id.toString()} value={prefix.id.toString()}>
+													<PrefixBadge prefix={prefix} />
+												</SelectItem>
+											))}
+									</SelectContent>
+								</Select>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
+				<FormField
+					control={form.control}
+					name="tags"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Tags (Max 10)</FormLabel>
+									<FormControl>
+										<TagInput
+											value={(field.value || []).map(tagName => ({ name: tagName, id: 0, slug: tagName.toLowerCase().replace(/\s+/g, '-') }))}
+											onChange={(tagsFromInput: Tag[]) => field.onChange(tagsFromInput.map(tag => tag.name))}
+											// The TagInput itself doesn't take a general disabled prop.
+											// Its internal input is disabled if maxTags is reached.
+											// General form disabling is handled by disabling the submit button and other fields.
+										/>
+									</FormControl>
+									<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="content"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Content</FormLabel>
+							<FormControl>
+								<RichTextEditor
+									content={editorContent}
+									onChange={handleEditorChange}
+									readOnly={!!formDisabledReason || createThreadMutation.isPending}
+									// initialEditorState is not a prop. Editor is initialized via `content` prop.
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				{formDisabledReason && (
+					<Alert variant="destructive">
+						<AlertTriangle className="h-4 w-4" />
+						<AlertDescription>{formDisabledReason}</AlertDescription>
+					</Alert>
+				)}
+				<DialogFooter className="gap-2 sm:justify-end pt-4">
+					{onClose && (
+						<Button type="button" variant="outline" onClick={onClose} disabled={createThreadMutation.isPending || saveDraftMutation.isPending}>
+							Cancel
+						</Button>
+					)}
+					<Button
+						type="button"
+						variant="ghost"
+						onClick={() => handleSaveDraft(editorContent, editorState)}
+						disabled={!!formDisabledReason || saveDraftMutation.isPending || createThreadMutation.isPending}
+					>
+						{saveDraftMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+						Save Draft
+					</Button>
+					<Button type="submit" disabled={!!formDisabledReason || createThreadMutation.isPending || saveDraftMutation.isPending}>
+						{(createThreadMutation.isPending || saveDraftMutation.isPending) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+						{hasActiveDraft ? 'Update & Publish' : 'Create Thread'}
+					</Button>
+				</DialogFooter>
+			</form>
+		</Form>
+	);
 
-	if (!isOpen) return null;
+	if (!onClose) {
+		return renderFormContent();
+	}
 
 	return (
-		<Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+		<Dialog open={isOpen} onOpenChange={(open) => !open && onClose && onClose()}>
 			<DialogContent className="sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1000px]">
 				<DialogHeader>
-					<DialogTitle>{hasActiveDraft ? 'Edit Draft' : 'Create New Thread'}</DialogTitle>
+					<DialogTitle>{hasActiveDraft ? 'Edit Draft' : 'Create New Thread'} {passedForumName ? `in ${passedForumName}` : (targetForumConfig ? `in ${targetForumConfig.name}` : '')}</DialogTitle>
 					<DialogDescription>
 						{hasActiveDraft
 							? 'Continue editing your saved draft or start fresh.'
 							: 'Fill in the details below to start a new discussion.'}
 					</DialogDescription>
 				</DialogHeader>
-				{loadingPermissions && <Loader2 className="h-8 w-8 animate-spin text-center" />}
-
-				{!loadingPermissions && !userCanCreateThread && (
-					<Alert variant="destructive">
-						<AlertDescription>
-							You do not have permission to create threads in this category. Please contact an
-							administrator if you believe this is an error.
-						</AlertDescription>
-					</Alert>
-				)}
-
-				{!loadingPermissions && userCanCreateThread && (
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
-							<FormField
-								control={form.control}
-								name="title"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Title</FormLabel>
-										<FormControl>
-											<Input placeholder="Enter thread title" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-								<FormField
-									control={form.control}
-									name="categoryId"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Category (Topic)</FormLabel>
-											<Select
-												onValueChange={(value) => {
-													field.onChange(value);
-													handleCategoryChange(value);
-												}}
-												value={field.value}
-												disabled={loadingCategories || !!categoryId} // Disable if categoryId prop is passed
-											>
-												<FormControl>
-													<SelectTrigger>
-														<SelectValue placeholder="Select a topic to post in" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{loadingCategories && (
-														<SelectItem value="loading" disabled>
-															Loading categories...
-														</SelectItem>
-													)}
-													{categories?.map(
-														(
-															cat: any // TODO: Type categories properly
-														) => (
-															<React.Fragment key={cat.id}>
-																<SelectItem
-																	value={cat.id.toString()}
-																	className="font-bold"
-																	disabled
-																>
-																	{cat.name} (Forum)
-																</SelectItem>
-																{cat.children?.map(
-																	(
-																		topic: any // TODO: Type topics properly
-																	) => (
-																		<SelectItem
-																			key={topic.id}
-																			value={topic.id.toString()}
-																			className="ml-4"
-																		>
-																			{topic.name}
-																		</SelectItem>
-																	)
-																)}
-															</React.Fragment>
-														)
-													)}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="prefixId"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Prefix (Optional)</FormLabel>
-											<Select
-												onValueChange={field.onChange}
-												value={field.value}
-												disabled={loadingPrefixes || !selectedCategoryId}
-											>
-												<FormControl>
-													<SelectTrigger>
-														{field.value &&
-														Array.isArray(prefixes) &&
-														(prefixes as Prefix[]).find(
-															(p: Prefix) => p.id.toString() === field.value
-														) ? (
-															<PrefixBadge
-																prefix={(prefixes as Prefix[]).find(
-																	(p: Prefix) => p.id.toString() === field.value
-																)}
-															/>
-														) : (
-															<SelectValue placeholder="Select a prefix" />
-														)}
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{loadingPrefixes && (
-														<SelectItem value="loading" disabled>
-															Loading prefixes...
-														</SelectItem>
-													)}
-													<SelectItem value="">No Prefix</SelectItem>
-													{Array.isArray(prefixes) &&
-														(prefixes as Prefix[]).map((prefix: Prefix) => (
-															<SelectItem key={prefix.id.toString()} value={prefix.id.toString()}>
-																<PrefixBadge prefix={prefix} />
-															</SelectItem>
-														))}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<FormField
-								control={form.control}
-								name="tags"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Tags</FormLabel>
-										<FormControl>
-											<TagInput
-												value={(field.value || []).map(
-													(tagName): Tag => ({
-														name: tagName,
-														id: 0, // Placeholder ID for new/unresolved tags
-														slug: tagName.toLowerCase().replace(/\s+/g, '-') // Placeholder slug
-													})
-												)}
-												onChange={(tagsFromInput: Tag[]) =>
-													field.onChange(tagsFromInput.map((tag) => tag.name))
-												}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="content"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Content</FormLabel>
-										<FormControl>
-											<RichTextEditor
-												content={editorContent}
-												onChange={handleEditorChange}
-												readOnly={createThreadMutation.isPending}
-												// initialEditorState={editorState}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<DialogFooter className="gap-2 sm:justify-end">
-								<Button
-									type="button"
-									variant="outline"
-									onClick={onClose}
-									disabled={createThreadMutation.isPending}
-								>
-									Cancel
-								</Button>
-								<Button
-									type="button"
-									variant="ghost"
-									onClick={() => handleSaveDraft(editorContent, editorState)}
-									disabled={saveDraftMutation.isPending || createThreadMutation.isPending}
-								>
-									{saveDraftMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-									Save Draft
-								</Button>
-								<Button
-									type="submit"
-									disabled={createThreadMutation.isPending || saveDraftMutation.isPending}
-								>
-									{(createThreadMutation.isPending || saveDraftMutation.isPending) && (
-										<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-									)}
-									{hasActiveDraft ? 'Update & Publish' : 'Create Thread'}
-								</Button>
-							</DialogFooter>
-						</form>
-					</Form>
-				)}
+				{renderFormContent()} 
 			</DialogContent>
 		</Dialog>
 	);
 }
 
-// Add default export
 export default CreateThreadForm;
 
-// Basic debounce function moved outside the component
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
 	let timeout: ReturnType<typeof setTimeout> | null = null;
-
 	const debounced = (...args: Parameters<F>) => {
 		if (timeout !== null) {
 			clearTimeout(timeout);
@@ -586,13 +531,11 @@ function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
 		}
 		timeout = setTimeout(() => func(...args), waitFor);
 	};
-
 	debounced.cancel = () => {
 		if (timeout !== null) {
 			clearTimeout(timeout);
 			timeout = null;
 		}
 	};
-
 	return debounced;
 }

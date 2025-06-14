@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon, MoreHorizontalIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface BasePaginationProps {
@@ -27,14 +27,17 @@ type PaginationProps = ItemBasedPaginationProps | PageBasedPaginationProps;
 export function Pagination(props: PaginationProps) {
 	const { currentPage, onPageChange, showSummary = false, className } = props;
 
-	// Calculate totalPages if not directly provided
-	const totalPages =
-		'totalPages' in props
+	// Calculate totalPages and ensure it's a number for the component's scope
+	const finalTotalPages: number =
+		'totalPages' in props && props.totalPages !== undefined
 			? props.totalPages
-			: Math.ceil((props.totalItems || 0) / (props.pageSize || 10));
-
+			: Math.ceil(
+					('totalItems' in props && props.totalItems !== undefined ? props.totalItems : 0) /
+					('pageSize' in props && props.pageSize !== undefined ? props.pageSize : 10)
+				);
+	
 	// Don't render pagination if there's only one page
-	if (totalPages <= 1) {
+	if (finalTotalPages <= 1) {
 		return null;
 	}
 
@@ -53,20 +56,20 @@ export function Pagination(props: PaginationProps) {
 		// Add pages around current page
 		for (
 			let i = Math.max(2, currentPage - 1);
-			i <= Math.min(totalPages - 1, currentPage + 1);
+			i <= Math.min(finalTotalPages - 1, currentPage + 1);
 			i++
 		) {
 			pages.push(i);
 		}
 
 		// Add ellipsis before last page if needed
-		if (currentPage < totalPages - 2) {
+		if (currentPage < finalTotalPages - 2) {
 			pages.push(-2); // -2 represents ellipsis (different key than first ellipsis)
 		}
 
 		// Always show last page if not already included
-		if (totalPages > 1) {
-			pages.push(totalPages);
+		if (finalTotalPages > 1) {
+			pages.push(finalTotalPages);
 		}
 
 		return pages;
@@ -74,16 +77,33 @@ export function Pagination(props: PaginationProps) {
 
 	const pageNumbers = getPageNumbers();
 
+	let summaryContent = null;
+	if (showSummary && 'totalItems' in props && props.totalItems !== undefined && 'pageSize' in props && props.pageSize !== undefined) {
+		// Type guard ensures props.totalItems and props.pageSize are numbers here
+		const { totalItems, pageSize } = props;
+		summaryContent = (
+			<div className="text-sm text-zinc-400 mr-4">
+				Showing {Math.min((currentPage - 1) * pageSize + 1, totalItems)}-
+				{Math.min(currentPage * pageSize, totalItems)} of {totalItems} items
+			</div>
+		);
+	}
+
 	return (
 		<div className={cn('flex flex-col sm:flex-row items-center justify-center gap-4', className)}>
-			{showSummary && 'totalItems' in props && 'pageSize' in props && (
-				<div className="text-sm text-zinc-400 mr-4">
-					Showing {Math.min((currentPage - 1) * props.pageSize + 1, props.totalItems)}-
-					{Math.min(currentPage * props.pageSize, props.totalItems)} of {props.totalItems} items
-				</div>
-			)}
+			{summaryContent}
 
 			<div className="flex items-center gap-1">
+				<Button
+					variant="outline"
+					size="icon"
+					className="h-8 w-8 p-0 bg-zinc-900 border-zinc-800"
+					onClick={() => onPageChange(1)}
+					disabled={currentPage === 1}
+				>
+					<ChevronsLeftIcon className="h-4 w-4" />
+					<span className="sr-only">First page</span>
+				</Button>
 				<Button
 					variant="outline"
 					size="icon"
@@ -122,7 +142,7 @@ export function Pagination(props: PaginationProps) {
 									? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-700'
 									: 'bg-zinc-900 border-zinc-800'
 							)}
-							onClick={() => onPageChange(pageNumber)}
+							onClick={() => onPageChange(pageNumber!)} // pageNumber from map is guaranteed
 						>
 							<span>{pageNumber}</span>
 							<span className="sr-only">Page {pageNumber}</span>
@@ -134,11 +154,21 @@ export function Pagination(props: PaginationProps) {
 					variant="outline"
 					size="icon"
 					className="h-8 w-8 p-0 bg-zinc-900 border-zinc-800"
-					onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-					disabled={currentPage === totalPages}
+					onClick={() => onPageChange(Math.min(finalTotalPages, currentPage + 1))}
+					disabled={currentPage === finalTotalPages}
 				>
 					<ChevronRightIcon className="h-4 w-4" />
 					<span className="sr-only">Next page</span>
+				</Button>
+				<Button
+					variant="outline"
+					size="icon"
+					className="h-8 w-8 p-0 bg-zinc-900 border-zinc-800"
+					onClick={() => onPageChange(finalTotalPages)}
+					disabled={currentPage === finalTotalPages}
+				>
+					<ChevronsRightIcon className="h-4 w-4" />
+					<span className="sr-only">Last page</span>
 				</Button>
 			</div>
 		</div>

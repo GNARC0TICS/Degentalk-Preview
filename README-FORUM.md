@@ -224,3 +224,169 @@ ForumFusion is built for:
 ---
 
 **For any changes, always update this README-FORUM.md to keep the team and future devs in sync.**
+
+🚨 **Important:** In ForumFusion, **Zones are visual only**. All posting, tipping, XP, and prefix logic is controlled at the **forum** level via `forumMap.config.ts`. Zones group forums and apply themes/UI — they do not define permissions or reward logic.
+
+## Rule Logic & Enforcement (forumMap.config.ts)
+
+All reward logic, XP, tipping, access control, and prefix behavior is configured in `client/src/config/forumMap.config.ts`.
+
+Each forum contains a `rules` object, which is consumed by backend and frontend logic via utility functions like:
+
+- `getForumRules(forumSlug)`
+- `canUserPost(forumSlug, user)`
+- `shouldAwardXP(forumSlug)`
+- `getAvailablePrefixes(forumSlug)`
+- `prefixEngine(forumSlug, threadStats)`
+
+All thread creation, XP awarding, tipping availability, and UI rendering is **driven by this config**, not hardcoded service logic.
+
+🚨 NEVER hardcode forum behavior. Always reference `forumMap.config.ts`.
+
+## Prefix Logic Engine
+
+Prefixes are forum-specific and cosmetic, used to highlight popular or important threads. Prefixes can be:
+
+- Manually selected by users (if available)
+- Assigned by mods
+- Auto-assigned based on engagement (e.g. `[HOT]` if thread hits 20 replies and 10 likes)
+
+Auto-assignment is defined per forum in `prefixGrantRules`, and handled by a utility function:
+```ts
+prefixEngine(forumSlug, threadStats) => string[]
+```
+
+## LLM & Developer Onboarding
+
+- Always start from `forumMap.config.ts`
+- Use `getForumRules()` and other helper functions for any forum-specific logic
+- NEVER hardcode reward or access logic in backend services or components
+- Zones are UI containers only — logic is defined per-forum
+
+### Common Anti-Patterns
+- ❌ Hardcoding XP logic in `forum.service.ts`
+- ❌ Creating new seed files for zones/forums manually
+- ❌ Relying on `zones` DB table (doesn't exist — config-driven)
+
+### Glossary
+- **Zone**: Themed visual grouping of forums
+- **Forum**: Logic container — defines rules
+- **Thread**: A discussion within a forum
+- **Reply**: A comment within a thread
+- **Prefix**: A cosmetic badge or label on a thread
+
+## Seeding & Syncing
+
+✅ All zones and forums are now seeded from `forumMap.config.ts` using the `syncForumsToDB.ts` script in `/scripts/dev/`. Do not manually define forums or zones.
+
+# DegenTalk Forum Zone System — Canonical Structure & Setup (2024)
+
+## 1. Forum Architecture Overview
+
+- **Zones**: Visual/thematic groupings of forums. They do **not** drive logic, but provide branding, navigation, and context.
+- **Forums**: Logical units where all posting, XP, tipping, and prefix logic lives. Forums are always children of a zone.
+- **Config-Driven**: The entire forum structure is defined in a single source of truth: `client/src/config/forumMap.config.ts`.
+
+---
+
+## 2. Canonical Zone & Forum Config
+
+### Zones
+
+- All zones are defined in the `forumMap.zones` array.
+- Each **primary zone** now has a canonical theme:
+  - `theme.color` (hex)
+  - `theme.icon` (emoji)
+  - `theme.bannerImage` (string)
+  - `theme.landingComponent` (string)
+  - `description` (string)
+- **Primary zones** (as of this setup):
+  - **The Pit**: Raw, unfiltered, and often unhinged. Welcome to the heart of degen discussion.
+  - **Mission Control**: Strategic discussions, alpha, and project deep dives. For the serious degen.
+  - **The Casino Floor**: Trading, gambling, and high-stakes plays. May the odds be ever in your favor.
+  - **The Briefing Room**: News, announcements, and official updates. Stay informed.
+  - **The Archive**: Historical records, past glories, and lessons learned. For the degen historian.
+
+- **General zones** (e.g., Market Moves, Airdrops & Quests) are also supported, but may not have full theming.
+
+### Forums
+
+- Each zone contains a `forums` array, with each forum having:
+  - `slug`, `name`
+  - `rules` (posting, XP, tipping, prefixes, etc.)
+  - Optional: `themeOverride` for per-forum theming
+
+---
+
+## 3. Theming & UI Consistency
+
+- **All theming is now canonical and DRY**: The frontend (`ForumZoneCard`, `CanonicalZoneGrid`) relies solely on `zone.theme` and `zone.description`.
+- **No more fallback UI**: Every primary zone is guaranteed to have a complete theme and description.
+- **Missing zones (e.g., Casino Floor, The Archive)** are auto-injected if not present, ensuring the UI is always complete.
+
+---
+
+## 4. Home Page & Navigation
+
+- The home page pulls all primary zones from `forumMap.zones` and passes their full theme and description to the grid.
+- Cards are styled according to their canonical theme (color, icon, etc.).
+- Navigation and links are standardized and always reference the config.
+
+---
+
+## 5. How to Add or Update Zones/Forums
+
+- **To add a new zone**: Add an object to the `zones` array in `forumMap.config.ts` and provide a canonical theme if it's primary.
+- **To add a new forum**: Add to the `forums` array of the appropriate zone.
+- **To update theming**: Edit the `PRIMARY_ZONE_THEMES` object or the zone's `theme` property.
+
+---
+
+## 6. Example: Canonical Zone Config
+
+```
+{
+  slug: 'the-pit',
+  name: 'The Pit',
+  type: 'primary',
+  description: 'Raw, unfiltered, and often unhinged. Welcome to the heart of degen discussion.',
+  theme: {
+    icon: '🔥',
+    color: '#FF3C3C',
+    bannerImage: '/banners/pit.jpg',
+    landingComponent: 'PitLanding',
+  },
+  forums: [
+    // ...forums here
+  ],
+}
+```
+
+---
+
+## 7. Key Principles
+
+- **Single Source of Truth**: All forum/zone logic and theming is centralized in `forumMap.config.ts`.
+- **No Logic in Zones**: Zones are for grouping and branding only; all logic is in forums.
+- **Type-Safe**: All config is strongly typed for safety and editor support.
+- **LLM/Automation Safe**: The config is structured for easy programmatic updates and audits.
+
+---
+
+## 8. Migration/Refactor Notes
+
+- All legacy fallback UI and hardcoded theming have been removed.
+- All pages/components now reference the config for zone/forum data and theming.
+- Any new zones or forums must be added to the config to appear in the UI.
+
+---
+
+## 9. Next Steps for Documentation
+
+- **Update all forum-related docs** to reference this canonical config structure.
+- **Onboard contributors** to use `forumMap.config.ts` for all forum/zone changes.
+- **Remove any old references** to hardcoded or scattered forum/zone logic.
+
+---
+
+*This document reflects the canonical, config-driven forum structure as of 2024. For further details, see `client/src/config/forumMap.config.ts` or contact the core team.*

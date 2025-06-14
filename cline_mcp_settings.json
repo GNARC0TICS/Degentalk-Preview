@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "github.com/neondatabase/mcp-server-neon": {
+      "command": "npx",
+      "args": ["-y", "@neondatabase/mcp-server-neon", "start", "${NEON_API_KEY}"],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+} 

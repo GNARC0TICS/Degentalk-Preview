@@ -2,13 +2,22 @@ import React from 'react';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
 import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
-import { useForumStructure } from '@/features/forum/hooks/useForumStructure';
+// Corrected import path for useForumStructure and MergedZone type
+import { useForumStructure, ForumStructureProvider } from '@/contexts/ForumStructureContext'; 
+import type { MergedZone } from '@/contexts/ForumStructureContext';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { Folder, LayoutGrid } from 'lucide-react';
 
-export default function ZonesPage() {
-	const { primaryZones, categories, isLoading, error } = useForumStructure();
+function ZonesPage() { // Changed to regular function for clarity with provider
+	// The hook now returns `zones` which contains all zones, and `forums` (a flat map).
+	const { zones: allZones, isLoading, error } = useForumStructure();
+
+	// Filter primary zones (canonical zones)
+	const primaryZones = allZones.filter(zone => zone.canonical === true);
+	// HierarchicalZoneNav should ideally consume the context directly or be passed allZones.
+	// For now, we pass allZones, assuming HierarchicalZoneNav can handle this or will be updated.
+	const categoriesForNav = allZones; 
 
 	if (isLoading) {
 		return (
@@ -48,20 +57,26 @@ export default function ZonesPage() {
 						</h2>
 						{primaryZones && primaryZones.length > 0 ? (
 							<CanonicalZoneGrid
-								zones={primaryZones.map((zone) => ({
-									id: zone.id,
+								zones={primaryZones.map((zone: MergedZone) => ({
+									id: zone.slug, // Using slug as ID, consistent with home.tsx
 									name: zone.name,
 									slug: zone.slug,
 									description: zone.description || '',
-									icon: zone.icon,
-									colorTheme: zone.colorTheme,
+									theme: { // Pass the MergedTheme object
+										icon: zone.theme?.icon ?? undefined,
+										color: zone.theme?.color ?? undefined,
+										bannerImage: zone.theme?.bannerImage ?? undefined,
+									},
+									// Pass direct properties from MergedZone if ZoneCardData expects them
+									icon: zone.theme?.icon ?? undefined, 
+									colorTheme: zone.colorTheme, // MergedZone has colorTheme directly
 									threadCount: zone.threadCount,
 									postCount: zone.postCount,
-									activeUsersCount: 0,
-									lastActivityAt: new Date(), // Provide a default value
-									hasXpBoost: false,
-									boostMultiplier: 1,
-									isEventActive: false,
+									activeUsersCount: 0, // Placeholder
+									lastActivityAt: new Date(), // Placeholder, should be dynamic
+									hasXpBoost: zone.hasXpBoost,
+									boostMultiplier: zone.boostMultiplier,
+									isEventActive: false, // Placeholder
 									eventData: {
 										name: '',
 										endsAt: new Date()
@@ -76,12 +91,13 @@ export default function ZonesPage() {
 					<div>
 						<h2 className="text-2xl font-bold text-white mb-4 flex items-center">
 							<Folder className="h-5 w-5 mr-2 text-amber-500" />
-							Categories
+							All Zones & Forums
 						</h2>
-						{categories && categories.length > 0 ? (
+						{/* HierarchicalZoneNav should consume useForumStructure internally */}
+						{categoriesForNav && categoriesForNav.length > 0 ? (
 							<HierarchicalZoneNav />
 						) : (
-							<div className="text-zinc-500">No categories available.</div>
+							<div className="text-zinc-500">No zones or categories available.</div>
 						)}
 					</div>
 				</div>
@@ -90,3 +106,12 @@ export default function ZonesPage() {
 		</div>
 	);
 }
+
+// Wrap with Provider as this page is likely directly rendered by the router
+const ZonesPageWithProvider = () => (
+	<ForumStructureProvider>
+		<ZonesPage />
+	</ForumStructureProvider>
+);
+
+export default ZonesPageWithProvider;

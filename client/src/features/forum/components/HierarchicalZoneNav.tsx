@@ -1,112 +1,101 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Link, useLocation } from 'wouter';
+import { Link, useLocation, useRoute } from 'wouter';
 import {
 	Folder,
-	MessageSquare,
 	ChevronRight,
 	ChevronDown,
-	Flame,
-	Target,
-	Archive,
-	Dices,
-	FileText,
+	// Flame, // Icons will come from ZONE_THEMES
+	// Target,
+	// Archive,
+	// Dices,
+	// FileText,
 	LayoutGrid,
-	Hash,
 	Users
 } from 'lucide-react';
-import { useForumStructure } from '@/features/forum/hooks/useForumStructure';
-import { LoadingSpinner } from '@/components/ui/loader';
+import { useForumStructure, type MergedZone, type MergedForum } from '@/contexts/ForumStructureContext';
 import { Badge } from '@/components/ui/badge';
-import type { ForumCategoryWithStats } from '@db_types/forum.types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { ZONE_THEMES } from '@/config/themeConstants'; // Import ZONE_THEMES
 
-// Enhanced theme configuration
-const ZONE_THEMES = {
-	'theme-pit': {
-		icon: Flame,
-		color: 'text-red-400',
-		bgColor: 'bg-red-900/20',
-		borderColor: 'border-red-500/30',
-		label: 'The Pit'
-	},
-	'theme-mission': {
-		icon: Target,
-		color: 'text-blue-400',
-		bgColor: 'bg-blue-900/20',
-		borderColor: 'border-blue-500/30',
-		label: 'Mission Control'
-	},
-	'theme-casino': {
-		icon: Dices,
-		color: 'text-purple-400',
-		bgColor: 'bg-purple-900/20',
-		borderColor: 'border-purple-500/30',
-		label: 'Casino Floor'
-	},
-	'theme-briefing': {
-		icon: FileText,
-		color: 'text-amber-400',
-		bgColor: 'bg-amber-900/20',
-		borderColor: 'border-amber-500/30',
-		label: 'Briefing Room'
-	},
-	'theme-archive': {
-		icon: Archive,
-		color: 'text-gray-400',
-		bgColor: 'bg-gray-900/20',
-		borderColor: 'border-gray-500/30',
-		label: 'Archive'
-	}
-} as const;
+// interface HierarchicalZoneNavProps { // Original props, keeping for reference if needed
+// className?: string;
+// showCounts?: boolean;
+// compact?: boolean;
+// }
 
+// Simplified props as showCounts and compact were not used in the final logic
 interface HierarchicalZoneNavProps {
 	className?: string;
-	currentZoneId?: number;
-	currentForumId?: number;
-	showCounts?: boolean;
-	compact?: boolean;
+	// showCounts?: boolean; // Confirmed unused in current logic
+	// compact?: boolean;  // Confirmed unused in current logic
 }
 
-// Separate component for navigation items to improve reusability
 const NavItem = ({
 	href,
 	isActive,
-	icon: Icon,
+	icon: IconComponent,
+	iconEmoji,
+	semanticThemeKey,
 	children,
-	theme,
 	counts,
 	disabled = false,
-	onClick
+	onClick,
+	isZoneType = false,
 }: {
 	href?: string;
 	isActive?: boolean;
-	icon: React.ElementType;
+	icon?: React.ElementType;
+	iconEmoji?: string | null; // Allow null
+	semanticThemeKey?: string | null; // Allow null
 	children: React.ReactNode;
-	theme?: keyof typeof ZONE_THEMES;
-	counts?: { threads?: number; posts?: number; forums?: number };
+	counts?: { forums?: number; threads?: number };
 	disabled?: boolean;
 	onClick?: () => void;
+	isZoneType?: boolean;
 }) => {
-	const themeConfig = theme ? ZONE_THEMES[theme] : null;
+	const baseActiveClasses = `font-medium border-l-2`;
+	// Default active class for non-zone types (forums within categories) or if no semanticThemeKey
+	let activeClassesConfig = 'bg-emerald-900/20 text-emerald-400 border-emerald-500/30';
+
+	if (isActive && semanticThemeKey) {
+		// This applies if it's a Zone with a theme OR a Forum with its own theme override for nav
+		activeClassesConfig = `zone-nav-theme-${semanticThemeKey} active`;
+	} else if (isActive) {
+		// Default active state if no specific theme key applies (e.g. "All Content" or a forum without specific nav theme)
+		activeClassesConfig = 'bg-emerald-900/20 text-emerald-400 border-emerald-500/30';
+	}
+	
+	const activeClasses = cn(baseActiveClasses, isActive ? activeClassesConfig : '');
+	const hoverClasses = `hover:bg-zinc-800/50 hover:text-white`;
+
+	const displayIcon = iconEmoji ? (
+		<span className={`mr-3 text-lg`} role="img" aria-hidden="true">
+			{iconEmoji}
+		</span>
+	) : IconComponent ? (
+		<IconComponent
+			className={cn(
+				'w-4 h-4 mr-3',
+				isActive ? '' : 'text-zinc-400 group-hover:text-zinc-300' // Color inherited from parent if active
+			)}
+		/>
+	) : (
+		<Folder className={cn("w-4 h-4 mr-3", isActive ? '' : 'text-zinc-400 group-hover:text-zinc-300')} />
+	);
 
 	const content = (
 		<div
-			className={`
-        flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-all duration-200 w-full group
-        ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}
-        ${
-					isActive
-						? `${themeConfig?.bgColor || 'bg-emerald-900/20'} ${themeConfig?.color || 'text-emerald-400'} font-medium ${themeConfig?.borderColor || 'border-emerald-500/30'} border-l-2`
-						: 'text-zinc-300 hover:bg-zinc-800/50 hover:text-white'
-				}
-      `}
+			className={cn(
+				'flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-all duration-200 w-full group',
+				disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer',
+				isActive ? activeClasses : 'text-zinc-300',
+				!isActive && !disabled ? hoverClasses : ''
+			)}
 			onClick={onClick}
 		>
 			<div className="flex items-center">
-				<Icon
-					className={`w-4 h-4 mr-3 ${isActive ? themeConfig?.color || 'text-emerald-400' : 'text-zinc-400 group-hover:text-zinc-300'}`}
-				/>
+				{displayIcon}
 				<span className="font-medium">{children}</span>
 			</div>
 			{counts && (
@@ -117,15 +106,6 @@ const NavItem = ({
 							className="text-xs bg-zinc-800/50 text-zinc-500 border-zinc-700/50 px-1.5 py-0.5"
 						>
 							{counts.forums}
-						</Badge>
-					)}
-					{counts.threads && counts.threads > 0 && (
-						<Badge
-							variant="outline"
-							className="text-xs bg-zinc-800/50 text-zinc-500 border-zinc-700/50 px-1.5 py-0.5"
-						>
-							<Hash className="w-3 h-3 mr-0.5" />
-							{counts.threads}
 						</Badge>
 					)}
 				</div>
@@ -139,43 +119,49 @@ const NavItem = ({
 
 	return (
 		<Link href={href}>
-			<div className="block">{content}</div>
+			<a className="block">{content}</a>
 		</Link>
 	);
 };
 
-// Category component for better organization
-const CategorySection = ({
-	category,
+const GeneralZoneSection = ({
+	zone,
 	isExpanded,
 	onToggle,
-	currentForumId
+	currentForumSlug,
+	currentZoneSlug
 }: {
-	category: ForumCategoryWithStats;
+	zone: MergedZone;
 	isExpanded: boolean;
 	onToggle: () => void;
-	currentForumId?: number;
+	currentForumSlug?: string;
+	currentZoneSlug?: string;
 }) => {
-	const stats = useMemo(() => {
-		if (!category.childForums?.length) return null;
-		return category.childForums.reduce(
-			(acc, forum) => ({
-				forums: acc.forums + 1,
-				threads: acc.threads + (forum.threadCount || 0),
-				posts: acc.posts + (forum.postCount || 0)
-			}),
-			{ forums: 0, threads: 0, posts: 0 }
-		);
-	}, [category.childForums]);
+	const isActiveZone = currentZoneSlug === zone.slug && !currentForumSlug;
+	let activeZoneSpecificClass = 'text-zinc-300'; // Default non-active class
+
+	if (isActiveZone) {
+		if (zone.colorTheme) {
+			activeZoneSpecificClass = `zone-nav-theme-${zone.colorTheme} active`;
+		} else {
+			activeZoneSpecificClass = 'bg-sky-900/20 text-sky-400 border-l-2 border-sky-500/30'; // Default active if no colorTheme
+		}
+	}
+	
+
+	const ZoneIconDisplay = zone.icon ? (
+		<span className="mr-3 text-lg" role="img" aria-hidden="true">{zone.icon}</span>
+	) : (
+		<Folder className="w-4 h-4 mr-3 text-amber-400" />
+	);
 
 	return (
 		<div className="space-y-1">
-			{/* Category Header */}
 			<div
-				className={`
-          flex items-center justify-between px-3 py-2.5 text-sm rounded-lg cursor-pointer transition-all duration-200 
-          hover:bg-zinc-800/50 group
-        `}
+				className={cn(
+					'flex items-center justify-between px-3 py-2.5 text-sm rounded-lg cursor-pointer transition-all duration-200 hover:bg-zinc-800/50 group',
+					activeZoneSpecificClass
+				)}
 				onClick={onToggle}
 				role="button"
 				tabIndex={0}
@@ -193,34 +179,19 @@ const CategorySection = ({
 					) : (
 						<ChevronRight className="w-4 h-4 mr-2 text-zinc-400 transition-transform" />
 					)}
-					<Folder className="w-4 h-4 mr-3 text-amber-400" />
-					<span className="font-medium text-zinc-300 group-hover:text-white">{category.name}</span>
+					{ZoneIconDisplay}
+					<span className="font-medium group-hover:text-white">{zone.name}</span>
 				</div>
-				{stats && (
-					<div className="flex items-center gap-2">
-						<Badge
-							variant="outline"
-							className="text-xs bg-zinc-800/50 text-zinc-500 border-zinc-700/50 px-1.5 py-0.5"
-						>
-							<Users className="w-3 h-3 mr-0.5" />
-							{stats.forums}
-						</Badge>
-						{stats.threads > 0 && (
-							<Badge
-								variant="outline"
-								className="text-xs bg-zinc-800/50 text-zinc-500 border-zinc-700/50 px-1.5 py-0.5"
-							>
-								<Hash className="w-3 h-3 mr-0.5" />
-								{stats.threads}
-							</Badge>
-						)}
-					</div>
+				{zone.forums && zone.forums.length > 0 && (
+					<Badge variant="outline" className="text-xs bg-zinc-800/50 text-zinc-500 border-zinc-700/50 px-1.5 py-0.5">
+						<Users className="w-3 h-3 mr-0.5" />
+						{zone.forums.length}
+					</Badge>
 				)}
 			</div>
 
-			{/* Child Forums */}
 			<AnimatePresence>
-				{isExpanded && category.childForums && (
+				{isExpanded && zone.forums && (
 					<motion.div
 						initial={{ opacity: 0, height: 0 }}
 						animate={{ opacity: 1, height: 'auto' }}
@@ -228,14 +199,14 @@ const CategorySection = ({
 						transition={{ duration: 0.2 }}
 						className="ml-6 space-y-1 border-l-2 border-zinc-800/50 pl-4"
 					>
-						{category.childForums.map((forum) => (
+						{zone.forums.map((forum: MergedForum) => (
 							<NavItem
-								key={forum.id}
-								href={forum.canHaveThreads ? `/forum/${forum.slug}` : undefined}
-								isActive={currentForumId === forum.id}
-								icon={MessageSquare}
-								disabled={!forum.canHaveThreads}
-								counts={{ threads: forum.threadCount, posts: forum.postCount }}
+								key={forum.slug}
+								href={`/forums/${forum.slug}`}
+								isActive={currentForumSlug === forum.slug}
+								iconEmoji={forum.icon}
+								semanticThemeKey={forum.colorTheme || undefined} 
+								isZoneType={false} 
 							>
 								{forum.name}
 							</NavItem>
@@ -249,41 +220,45 @@ const CategorySection = ({
 
 export function HierarchicalZoneNav({
 	className = '',
-	currentZoneId,
-	currentForumId,
-	showCounts = true,
-	compact = false
-}: HierarchicalZoneNavProps) {
-	const { data: forumStructure, isLoading, error } = useForumStructure();
-	const primaryZones = forumStructure?.primaryZones || [];
-	const categories = forumStructure?.categories || [];
-
-	// Optimized state management with localStorage persistence
-	const [expandedCategories, setExpandedCategories] = useState<Record<string | number, boolean>>(
-		{}
+}: HierarchicalZoneNavProps) { // Removed unused showCounts and compact props
+	const [location] = useLocation();
+	const [, zonePageParams] = useRoute<{ zone_slug?: string; forum_slug?: string; thread_slug?: string }>(
+		"/zones/:zone_slug/:forum_slug?/:thread_slug?"
 	);
+	const [, forumPageParams] = useRoute<{ slug?: string }>("/forums/:slug");
 
-	// Load state from localStorage on mount
+	const currentZoneSlug = zonePageParams?.zone_slug;
+	const currentForumSlug = zonePageParams?.forum_slug || forumPageParams?.slug;
+
+	const { zones, isLoading, error } = useForumStructure();
+
+	const primaryZones = useMemo(() => zones.filter(z => z.canonical === true), [zones]);
+	const generalZones = useMemo(() => zones.filter(z => z.canonical !== true && z.forums && z.forums.length > 0), [zones]);
+
+	const [expandedGeneralZones, setExpandedGeneralZones] = useState<Record<string, boolean>>({});
+
 	useEffect(() => {
-		const stored = localStorage.getItem('dt-expanded-forum-categories');
+		const stored = localStorage.getItem('dt-expanded-general-zones');
 		if (stored) {
 			try {
-				setExpandedCategories(JSON.parse(stored));
+				setExpandedGeneralZones(JSON.parse(stored));
 			} catch (e) {
-				console.error('Failed to parse stored expanded categories', e);
+				console.error('Failed to parse stored expanded general zones', e);
 			}
 		}
+		if (currentZoneSlug && generalZones.some(z => z.slug === currentZoneSlug) && !expandedGeneralZones[currentZoneSlug]) {
+			setExpandedGeneralZones(prev => ({ ...prev, [currentZoneSlug]: true }));
+		}
+	}, [currentZoneSlug, generalZones]);
+
+	const saveToStorage = useCallback((newState: Record<string, boolean>) => {
+		localStorage.setItem('dt-expanded-general-zones', JSON.stringify(newState));
 	}, []);
 
-	// Debounced localStorage save
-	const saveToStorage = useCallback((newState: Record<string | number, boolean>) => {
-		localStorage.setItem('dt-expanded-forum-categories', JSON.stringify(newState));
-	}, []);
-
-	const toggleCategory = useCallback(
-		(categoryId: string | number) => {
-			setExpandedCategories((prev) => {
-				const newState = { ...prev, [categoryId]: !prev[categoryId] };
+	const toggleGeneralZone = useCallback(
+		(zoneSlug: string) => {
+			setExpandedGeneralZones((prev) => {
+				const newState = { ...prev, [zoneSlug]: !prev[zoneSlug] };
 				saveToStorage(newState);
 				return newState;
 			});
@@ -291,96 +266,61 @@ export function HierarchicalZoneNav({
 		[saveToStorage]
 	);
 
-	// Memoized icon renderer
-	const renderZoneIcon = useCallback((zone: ForumCategoryWithStats) => {
-		// Handle emoji icons
-		if (zone.icon && /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(zone.icon)) {
-			return (
-				<span className="mr-3 text-lg" role="img" aria-label={`${zone.name} icon`}>
-					{zone.icon}
-				</span>
-			);
-		}
-
-		// Handle themed icons
-		const theme = zone.colorTheme as keyof typeof ZONE_THEMES;
-		const themeConfig = ZONE_THEMES[theme];
-		if (themeConfig) {
-			const IconComponent = themeConfig.icon;
-			return <IconComponent className={`w-4 h-4 mr-3 ${themeConfig.color}`} />;
-		}
-
-		return <Folder className="w-4 h-4 mr-3 text-zinc-400" />;
-	}, []);
-
-	// Loading state
 	if (isLoading) {
 		return (
-			<div className="flex justify-center p-6" role="status" aria-label="Loading forum navigation">
-				<LoadingSpinner size="sm" />
+			<div className={cn("p-4 space-y-2", className)}>
+				{Array.from({ length: 5 }).map((_, i) => (
+					<div key={i} className="h-8 bg-zinc-800 rounded animate-pulse" />
+				))}
 			</div>
 		);
 	}
 
-	// Error state
 	if (error) {
 		return (
-			<div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4" role="alert">
-				<p className="text-sm text-red-400 font-medium">Failed to load forum structure</p>
-				{error && <p className="text-xs text-red-300/70 mt-1">{error.message}</p>}
+			<div className={cn("p-4 text-red-400 text-sm", className)}>
+				Error loading navigation: {(error as Error).message}
 			</div>
 		);
 	}
-
-	// Empty state
-	if (!primaryZones.length && !categories.length) {
+	
+	if (!zones.length) {
 		return (
-			<div className="text-center p-6 bg-zinc-900/30 rounded-lg border border-zinc-800">
+			<div className={cn("text-center p-6 bg-zinc-900/30 rounded-lg border border-zinc-800", className)}>
 				<Folder className="w-8 h-8 mx-auto mb-2 text-zinc-600" />
-				<p className="text-sm text-zinc-500">No forums available</p>
+				<p className="text-sm text-zinc-500">No forums or zones available.</p>
 			</div>
 		);
 	}
 
 	return (
-		<nav className={`space-y-3 ${className}`} aria-label="Forum Navigation" role="navigation">
-			{/* Quick Navigation */}
+		<nav className={cn('space-y-3', className)} aria-label="Forum Navigation" role="navigation">
 			<div className="space-y-1">
 				<NavItem
 					href="/forums"
-					isActive={currentZoneId === undefined && currentForumId === undefined}
+					isActive={location === '/forums' && !currentZoneSlug && !currentForumSlug}
 					icon={LayoutGrid}
 				>
-					All Forums
+					All Content
 				</NavItem>
 			</div>
 
-			{/* Primary Zones */}
 			{primaryZones.length > 0 && (
 				<section className="space-y-2">
 					<div className="px-3 py-1">
 						<h3 className="text-xs font-semibold uppercase text-zinc-500 tracking-wider">
 							Primary Zones
 						</h3>
-						<p className="text-xs text-zinc-600 mt-0.5">{primaryZones.length} zones</p>
 					</div>
-
 					<div className="space-y-1">
 						{primaryZones.map((zone) => (
 							<NavItem
-								key={zone.id}
-								href={zone.canHaveThreads ? `/forum/${zone.slug}` : undefined}
-								isActive={currentZoneId === zone.id}
-								icon={
-									zone.colorTheme && ZONE_THEMES[zone.colorTheme as keyof typeof ZONE_THEMES]
-										? ZONE_THEMES[zone.colorTheme as keyof typeof ZONE_THEMES].icon
-										: Folder
-								}
-								theme={zone.colorTheme as keyof typeof ZONE_THEMES}
-								disabled={!zone.canHaveThreads}
-								counts={
-									showCounts ? { threads: zone.threadCount, posts: zone.postCount } : undefined
-								}
+								key={zone.slug}
+								href={`/zones/${zone.slug}`}
+								isActive={currentZoneSlug === zone.slug && !currentForumSlug}
+								iconEmoji={zone.icon}
+								semanticThemeKey={zone.colorTheme || 'default'}
+								isZoneType={true}
 							>
 								{zone.name}
 							</NavItem>
@@ -389,26 +329,23 @@ export function HierarchicalZoneNav({
 				</section>
 			)}
 
-			{/* Categories */}
-			{categories.length > 0 && (
+			{generalZones.length > 0 && (
 				<section className="space-y-2">
 					{primaryZones.length > 0 && <div className="h-px bg-zinc-800/50 my-4" />}
-
 					<div className="px-3 py-1">
 						<h3 className="text-xs font-semibold uppercase text-zinc-500 tracking-wider">
 							Categories
 						</h3>
-						<p className="text-xs text-zinc-600 mt-0.5">{categories.length} categories</p>
 					</div>
-
 					<div className="space-y-1">
-						{categories.map((category) => (
-							<CategorySection
-								key={category.id}
-								category={category}
-								isExpanded={!!expandedCategories[category.id]}
-								onToggle={() => toggleCategory(category.id)}
-								currentForumId={currentForumId}
+						{generalZones.map((zone) => (
+							<GeneralZoneSection
+								key={zone.slug}
+								zone={zone}
+								isExpanded={!!expandedGeneralZones[zone.slug]}
+								onToggle={() => toggleGeneralZone(zone.slug)}
+								currentForumSlug={currentForumSlug}
+								currentZoneSlug={currentZoneSlug}
 							/>
 						))}
 					</div>

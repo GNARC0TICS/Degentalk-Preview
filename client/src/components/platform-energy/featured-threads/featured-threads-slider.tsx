@@ -147,7 +147,7 @@ export function FeaturedThreadsSlider({
 									</Badge>
 									<CardTitle className="text-base line-clamp-2">{thread.title}</CardTitle>
 									<CardDescription className="line-clamp-1">
-										<Link href={`/categories/${thread.category_slug}`} className="hover:underline">
+										<Link href={`/forums/${thread.category_slug}`} className="hover:underline">
 											{thread.category_name}
 										</Link>
 									</CardDescription>

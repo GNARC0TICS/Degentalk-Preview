@@ -34,7 +34,7 @@ export const ProfileBackground: React.FC<ProfileBackgroundProps> = ({
 			</div>
 
 			{/* Debug indicator - bright colored element to verify the component is rendering */}
-			{process.env.NODE_ENV === 'development' && (
+			{import.meta.env.DEV && (
 				<div
 					className="fixed top-0 left-0 p-1 text-xs bg-green-500 text-black rounded-br"
 					style={{ zIndex: 9999 }}

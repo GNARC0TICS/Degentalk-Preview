@@ -7,6 +7,7 @@ import {
 	boolean,
 	timestamp,
 	jsonb,
+	real,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { userGroups } from '../user/userGroups'; // Placeholder for future import
@@ -16,6 +17,7 @@ export const forumCategories = pgTable('forum_categories', {
 	name: text('name').notNull(),
 	slug: text('slug').notNull().unique(),
 	description: text('description'),
+	parentForumSlug: text('parent_forum_slug'), // Added: Slug of the parent zone or forum from config
 	parentId: integer('parent_id').references((): AnyPgColumn => forumCategories.id, {
 		onDelete: 'set null'
 	}),
@@ -33,6 +35,8 @@ export const forumCategories = pgTable('forum_categories', {
 	minGroupIdRequired: integer('min_group_id_required').references(() => userGroups.id, {
 		onDelete: 'set null'
 	}),
+	tippingEnabled: boolean('tipping_enabled').notNull().default(false), // Added
+	xpMultiplier: real('xp_multiplier').notNull().default(1.0), // Added
 	pluginData: jsonb('plugin_data').default('{}'),
 	createdAt: timestamp('created_at')
 		.notNull()

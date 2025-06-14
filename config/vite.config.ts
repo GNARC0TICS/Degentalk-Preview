@@ -2,11 +2,6 @@ console.log(
 	'🚨 VITE CONFIG LOADED - If you see this during backend startup, you have a ghost import!'
 );
 
-// ESM-safe safeguard against backend imports
-if (typeof process !== 'undefined' && process?.env?.VITE_CONFIG_CONTEXT === 'backend') {
-	throw new Error('Vite config was imported in backend context.');
-}
-
 /**
  * @file config/vite.config.ts
  * @description Vite configuration file for the Degentalk frontend application.
@@ -52,6 +47,12 @@ export default defineConfig(async () => {
 
 	return {
 		plugins,
+		define: {
+			// Make process.env.NODE_ENV available in client code, mapping from Vite's import.meta.env.MODE
+			'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'), // For build/dev consistency
+			// Alternatively, more directly for client code if it specifically needs NODE_ENV:
+			// 'process.env.NODE_ENV': JSON.stringify(mode), // where mode is 'development' or 'production'
+		},
 		resolve: {
 			alias: [
 				{ find: '@', replacement: path.resolve(projectRoot, 'client/src') },

@@ -22,7 +22,7 @@
 		"start": "cd server && npm start",
 		"db:push": "drizzle-kit push",
 		"db:migrate": "npx dotenv-cli -e env.local -- drizzle-kit generate",
-		"db:migrate:apply": "npx dotenv-cli -e env.local -- drizzle-kit push",
+		"db:migrate:apply": "npx dotenv-cli -e env.local -- drizzle-kit push --force",
 		"db:drop": "drizzle-kit drop",
 		"db:studio": "drizzle-kit studio",
 		"db:create-tables": "npx dotenv-cli -e env.local -- npx tsx -r tsconfig-paths/register scripts/db/create-missing-tables.ts",
@@ -33,10 +33,12 @@
 		"seed:forum": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-canonical-zones.ts",
 		"seed:forum:setup": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/setup-forum-structure.ts",
 		"seed:threads": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-threads.ts",
+		"seed:dummy-threads": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/seed/seed-dummy-threads.ts",
 		"seed:xp": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-xp-actions.ts",
 		"seed:levels": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-default-levels.ts",
 		"seed:economy": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-economy-settings.ts",
 		"seed:shop": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-shop.ts",
+		"sync:check-forum-config": "npx dotenv-cli -e env.local -- tsx scripts/ops/check-forum-config-sync.ts",
 		"init:xp": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/initialize-xp-system.ts",
 		"test:xp": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/testing/test-xp-system.ts",
 		"generate:tree": "node scripts/tools/generate-tree.js > directory-tree.md",
@@ -59,7 +61,8 @@
 		"validate:fix": "tsx scripts/validate-everything.ts --fix",
 		"check": "tsx scripts/test-ci-readiness.ts",
 		"precommit": "npm run validate",
-		"prebuild": "npm run validate"
+		"prebuild": "npm run validate",
+		"mcp:neon": "npx @neondatabase/mcp-server-neon start napi_64010heeqqly1w5t5eg1dpjposfjcqpdg0lu4bc7yvnci0vh7qyivoo04i3j036x"
 	},
 	"dependencies": {
 		"@heroicons/react": "^2.2.0",
@@ -180,6 +183,7 @@
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^9.8.0",
+		"@neondatabase/mcp-server-neon": "^0.5.0",
 		"@replit/vite-plugin-cartographer": "^0.0.11",
 		"@replit/vite-plugin-runtime-error-modal": "^0.0.3",
 		"@tailwindcss/typography": "^0.5.15",

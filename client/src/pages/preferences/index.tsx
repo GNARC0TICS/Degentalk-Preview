@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SiteHeader } from '@/components/layout/site-header';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { useAuth } from '@/hooks/use-auth.tsx';
@@ -9,7 +9,8 @@ import { AccountPreferences } from '@/components/preferences/account-preferences
 import { NotificationPreferences } from '@/components/preferences/notification-preferences';
 import { DisplayPreferences } from '@/components/preferences/display-preferences';
 import { SessionPreferences } from '@/components/preferences/session-preferences';
-import { User, Shield, Bell, Monitor, Lock } from 'lucide-react';
+import { ReferralPreferences } from '@/components/preferences/referral-preferences';
+import { User, Shield, Bell, Monitor, Lock, Users, Share2 } from 'lucide-react';
 import { useProfile } from '@/contexts/profile-context';
 import { ProtectedRoute } from '@/lib/protected-route';
 
@@ -20,6 +21,25 @@ import { ProtectedRoute } from '@/lib/protected-route';
 function PreferencesPage() {
 	console.log('PreferencesPage component started rendering.');
 	const { user } = useAuth();
+	const [activeTab, setActiveTab] = useState('profile');
+
+	// Parse URL query parameters to get the active tab
+	useEffect(() => {
+		const params = new URLSearchParams(window.location.search);
+		const tabParam = params.get('tab');
+		if (tabParam && ['profile', 'account', 'notifications', 'display', 'sessions', 'referrals'].includes(tabParam)) {
+			setActiveTab(tabParam);
+		}
+	}, []);
+
+	// Update URL when tab changes
+	const handleTabChange = (value: string) => {
+		setActiveTab(value);
+		const url = new URL(window.location.href);
+		url.searchParams.set('tab', value);
+		window.history.pushState({}, '', url.toString());
+	};
+
 	console.log('User in PreferencesPage:', user);
 
 	if (!user) {
@@ -55,8 +75,8 @@ function PreferencesPage() {
 						<p className="text-zinc-400">Manage your account preferences and preferences</p>
 					</div>
 
-					<Tabs defaultValue="profile" className="w-full">
-						<TabsList className="w-full max-w-md grid grid-cols-5 mb-8">
+					<Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+						<TabsList className="w-full max-w-md grid grid-cols-6 mb-8">
 							<TabsTrigger
 								value="profile"
 								className="flex flex-col items-center py-3 gap-1 data-[state=active]:bg-zinc-800"
@@ -92,6 +112,13 @@ function PreferencesPage() {
 								<Lock className="h-5 w-5" />
 								<span className="text-xs">Sessions</span>
 							</TabsTrigger>
+							<TabsTrigger
+								value="referrals"
+								className="flex flex-col items-center py-3 gap-1 data-[state=active]:bg-zinc-800"
+							>
+								<Share2 className="h-5 w-5" />
+								<span className="text-xs">Referrals</span>
+							</TabsTrigger>
 						</TabsList>
 
 						<div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
@@ -113,6 +140,10 @@ function PreferencesPage() {
 
 							<TabsContent value="sessions">
 								<SessionPreferences user={user} />
+							</TabsContent>
+							
+							<TabsContent value="referrals">
+								<ReferralPreferences user={user} />
 							</TabsContent>
 						</div>
 					</Tabs>

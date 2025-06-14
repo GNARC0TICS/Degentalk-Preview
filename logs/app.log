@@ -17030,3 +17030,27 @@ User not found
     "code": "ETIMEDOUT"
   }
 }
+[2025-06-14T02:26:28.242Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-14T02:34:19.938Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-14T02:39:43.651Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-14T02:52:34.067Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-14T02:54:36.979Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-14T02:56:56.272Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}

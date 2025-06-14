@@ -19,6 +19,9 @@ interface PostCardProps {
 	onEdit?: (id: number) => void;
 	onDelete?: (id: number) => void;
 	onMarkAsSolution?: (id: number) => void;
+	isFirst?: boolean;
+	parentForumTheme?: string | null;
+	tippingEnabled?: boolean;
 }
 
 export function PostCard({
@@ -30,7 +33,10 @@ export function PostCard({
 	onReply,
 	onEdit,
 	onDelete,
-	onMarkAsSolution
+	onMarkAsSolution,
+	isFirst = false,
+	parentForumTheme = null,
+	tippingEnabled = false,
 }: PostCardProps) {
 	// Generate initials for avatar fallback
 	const initials = post.user.username ? post.user.username.substring(0, 2).toUpperCase() : 'U';
@@ -78,7 +84,7 @@ export function PostCard({
 
 			<CardContent className="px-4 py-3">
 				<div className="prose prose-invert prose-zinc max-w-none">
-					<div dangerouslySetInnerHTML={{ __html: post.contentHtml || post.content }} />
+					<div dangerouslySetInnerHTML={{ __html: post.content }} />
 				</div>
 			</CardContent>
 
@@ -91,7 +97,7 @@ export function PostCard({
 						onClick={() => onLike && onLike(post.id, !!post.hasLiked)}
 					>
 						<Heart className={`h-4 w-4 ${post.hasLiked ? 'fill-pink-400' : ''}`} />
-						<span>{post.likesCount || 0}</span>
+						<span>{post.likeCount || 0}</span>
 					</Button>
 
 					<Button

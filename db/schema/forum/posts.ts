@@ -9,11 +9,13 @@ import {
 	uuid,
 	bigint,
 	jsonb,
-	index
+	index,
+	varchar
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted import path
 import { threads } from './threads'; // Adjusted import path
+import { contentVisibilityStatusEnum } from '../core/enums';
 
 export const posts = pgTable(
 	'posts',
@@ -49,7 +51,10 @@ export const posts = pgTable(
 			.notNull()
 			.default(sql`CURRENT_TIMESTAMP`),
 		quarantineData: jsonb('quarantine_data'),
-		pluginData: jsonb('plugin_data').default('{}')
+		pluginData: jsonb('plugin_data').default('{}'),
+		visibilityStatus: contentVisibilityStatusEnum('visibility_status').notNull().default('published'),
+		moderationReason: varchar('moderation_reason', { length: 255 }),
+		depth: integer('depth').notNull().default(0)
 	},
 	(table) => ({
 		threadIdx: index('idx_posts_thread_id').on(table.threadId),
@@ -91,7 +96,10 @@ export const insertPostSchema = createInsertSchema(posts, {
 	createdAt: true,
 	updatedAt: true,
 	quarantineData: true,
-	pluginData: true
+	pluginData: true,
+	visibilityStatus: true,
+	moderationReason: true,
+	depth: true
 });
 
 export type Post = typeof posts.$inferSelect;

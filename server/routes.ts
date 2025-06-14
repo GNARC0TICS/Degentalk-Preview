@@ -56,10 +56,10 @@ import vaultRoutes from './src/domains/engagement/vault/vault.routes';
 // Import domain-based announcement routes
 import { registerAnnouncementRoutes } from './src/domains/admin/sub-domains/announcements';
 import featureGatesRoutes from './src/domains/feature-gates/feature-gates.routes';
+// Import domain-based notifications routes
+import notificationRoutes from './src/domains/notifications/notification.routes';
 // Import domain-based preferences routes
 import preferencesRoutes from './src/domains/preferences/preferences.routes';
-// Import domain-based notifications routes
-import notificationsRoutes from './src/domains/notifications/notification.routes';
 
 // REFACTORED: Using the new centralized error handlers
 import {
@@ -246,8 +246,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 	// Use the domain-based preferences routes
 	app.use('/api/users', preferencesRoutes);
-	// Use the domain-based notificcations routes
-	app.use('/api/notifications', notificationsRoutes);
+	// Use the domain-based notifications routes
+	app.use('/api/notifications', notificationRoutes);
 	// Use the centralized admin error handler
 	app.use('/api/admin', adminErrorHandler);
 

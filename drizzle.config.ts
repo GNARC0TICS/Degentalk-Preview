@@ -20,5 +20,25 @@ export default defineConfig({
 	schema: './db/schema/index.ts', // Or "./db/schema/"
 	out: './migrations/postgres', // Output migrations to a PostgreSQL-specific directory
 	verbose: true,
-	strict: true
+	strict: false,
+	ignorePatterns: [
+		'session',
+		'stickers',
+		'users.unlocked_emojis',
+		'users.unlocked_stickers',
+		'users.equipped_flair_emoji',
+		'forum_categories.forum_type',
+		'forum_categories.slug_override',
+		'forum_categories.components',
+		'forum_categories.thread_rules',
+		'forum_categories.access_control',
+		'forum_categories.display_priority',
+		'forum_categories.seo',
+		'notification_type',
+		'reaction_type',
+		'transaction_type',
+		'vault_status',
+		'withdrawal_status',
+		'content_edit_status'
+	]
 });

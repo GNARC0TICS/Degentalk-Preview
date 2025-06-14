@@ -50,6 +50,41 @@
       "when": 1749452912940,
       "tag": "0006_amazing_slyde",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1749856632437,
+      "tag": "0007_wooden_emma_frost",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1749857466636,
+      "tag": "0008_brief_dorian_gray",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1749857631986,
+      "tag": "0009_wandering_gambit",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1749859590532,
+      "tag": "0010_slow_hammerhead",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1749861471709,
+      "tag": "0011_robust_stephen_strange",
+      "breakpoints": true
     }
   ]
 }

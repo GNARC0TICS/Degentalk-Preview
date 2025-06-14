@@ -4,6 +4,13 @@ import '../styles/ticker.css';
 import '../styles/zone-themes.css';
 import { useQuery } from '@tanstack/react-query';
 import { getQueryFn } from '@/lib/queryClient';
+// import { forumMap } from '@/config/forumMap.config'; // REMOVED: Will use context
+// import type { Zone } from '@/config/forumMap.config'; // REMOVED: MergedZone from context will be used
+
+// Import context and hook
+import { ForumStructureProvider, useForumStructure } from '@/contexts/ForumStructureContext';
+import type { MergedZone } from '@/contexts/ForumStructureContext';
+
 
 // Import components
 import { HeroSection } from '@/components/layout/hero-section';
@@ -19,11 +26,11 @@ import {
 	PositionedShoutbox
 } from '@/components/shoutbox/positioned-shoutbox';
 import { useShoutbox } from '@/contexts/shoutbox-context';
-import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
+import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav'; // Will need update to use forumMap
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
-import type { ZoneCardData } from '@/components/forum/CanonicalZoneGrid';
-import { HotThreads } from '@/features/forum/components/HotThreads';
-import { useForumStructure } from '@/features/forum/hooks/useForumStructure';
+// import type { ZoneCardData } from '@/components/forum/CanonicalZoneGrid'; // ZoneCardData will be derived differently
+import { HotThreads } from '@/features/forum/components/HotThreads'; // Links inside need audit
+// import { useForumStructure } from '@/features/forum/hooks/useForumStructure'; // REMOVED: Using new context hook
 import { ActiveMembersWidget } from '@/components/users/ActiveMembersWidget';
 import { useActiveUsers } from '@/features/users/hooks';
 // import { RecentActivityFeed } from '@/components/activity/RecentActivityFeed';
@@ -32,12 +39,12 @@ import { useActiveUsers } from '@/features/users/hooks';
 // Import UI components
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+// import { Alert, AlertDescription } from '@/components/ui/alert'; // Not used directly after refactor
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, FolderOpen } from 'lucide-react';
 
 // Import icons
-import { AlertCircle, FolderOpen } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 // Import types
 import type { ThreadWithUser } from '@db_types/forum.types';
@@ -52,43 +59,32 @@ const API_PATHS = {
 	LEADERBOARD_XP: '/api/leaderboards/xp'
 };
 
-export default function HomePage() {
+function HomePage() { // Changed to a regular function
 	const { user } = useAuth();
 	const isLoggedIn = !!user;
 	const { position } = useShoutbox();
 
-	// Use centralized forum structure hook
-	const {
-		data: forumStructure,
-		isLoading: structureLoading,
-		error: forumStructureError
+	// Get forum structure from context
+	const { 
+		zones: mergedZones, 
+		isLoading: structureLoadingFromContext, 
+		error: forumStructureErrorFromContext 
 	} = useForumStructure();
 
-	const primaryZones = forumStructure?.primaryZones || [];
-	const categories = forumStructure?.categories || [];
+	const primaryZonesFromContext = mergedZones.filter((zone) => zone.canonical === true);
 
-	// Fetch hot threads
-	const {
-		data: threads,
-		isLoading: threadsLoading,
-		error: threadsError
-	} = useQuery<ThreadWithUser[]>({
-		queryKey: [API_PATHS.HOT_THREADS, { limit: 5 }],
-		queryFn: getQueryFn({ on401: 'returnNull' })
-	});
-
-	// Fetch top users for leaderboard
+	// Fetch top users for leaderboard (remains as API call)
 	const {
 		data: topUsers,
-		isLoading: usersLoading,
-		error: usersError
+		// isLoading: usersLoading,
+		// error: usersError,
 	} = useQuery<User[]>({
 		queryKey: [API_PATHS.LEADERBOARD_XP, { limit: 5, current: true }],
 		queryFn: getQueryFn({ on401: 'returnNull' }),
-		enabled: false // Temporarily disabled until we have this API route
+		enabled: false, // Still disabled as per original
 	});
 
-	// Fetch active users
+	// Fetch active users (remains as API call)
 	const { data: activeUsers, isLoading: activeUsersLoading } = useActiveUsers({ limit: 5 });
 
 	// Component to handle floating shoutbox position
@@ -97,27 +93,33 @@ export default function HomePage() {
 		return <PositionedShoutbox />;
 	};
 
-	// Convert primary zones to the format expected by CanonicalZoneGrid
-	const zoneCardData: ZoneCardData[] = primaryZones.map((zone) => {
-		// Extract properties from ForumEntityBase
-		const { id, name, slug, description, icon, colorTheme, threadCount, postCount } = zone;
-
-		// Return the complete ZoneCardData object with additional properties
-		return {
-			id,
-			name,
-			slug,
-			description: description || '',
-			icon: icon || '📁',
-			colorTheme: colorTheme || 'default',
-			threadCount: threadCount || 0,
-			postCount: postCount || 0,
-			// Add properties required by ZoneCardData but not in ForumEntityBase
-			activeUsersCount: 0,
-			hasXpBoost: false,
-			boostMultiplier: 1
-		};
-	});
+	// Data for CanonicalZoneGrid - now directly from forumMap
+	// Note: CanonicalZoneGrid might need adjustments if it expects all original ZoneCardData fields
+	const zoneCardDataForGrid = primaryZonesFromContext.map((zone: MergedZone) => ({
+		id: zone.slug, // Using slug as ID as per original comment. Consider if numeric zone.id is better.
+		name: zone.name,
+		slug: zone.slug,
+		description: zone.description || '',
+		icon: zone.icon, // Use the direct MergedZone.icon
+		colorTheme: zone.colorTheme || 'default', // Use MergedZone.colorTheme (semantic key), fallback to 'default'
+		// 'theme' object can be kept for other MergedTheme properties if ZoneCard uses them,
+		// or simplified if ZoneCard primarily relies on top-level props.
+		theme: {
+			icon: zone.theme?.icon, // Fallback/additional icon from MergedZone.theme
+			color: zone.theme?.color, // Fallback/additional color from MergedZone.theme
+			bannerImage: zone.theme?.bannerImage,
+		},
+		threadCount: zone.threadCount,
+		postCount: zone.postCount,
+		activeUsersCount: 0, // Placeholder - this would likely come from a separate API or calculation
+		hasXpBoost: zone.hasXpBoost, // Directly from MergedZone
+		boostMultiplier: zone.boostMultiplier, // Directly from MergedZone
+		// Ensure all other fields expected by CanonicalZoneGrid's ZoneCardData type are present
+		isEventActive: false, // Placeholder
+		eventData: { name: '', endsAt: new Date() }, // Placeholder
+		lastActivityAt: zone.updatedAt ? new Date(zone.updatedAt) : undefined, // Assuming updatedAt can be used for lastActivityAt
+		rarity: 'common', // Default rarity or derive if data exists in MergedZone
+	}));
 
 	return (
 		<div className="min-h-screen bg-black text-white flex flex-col">
@@ -137,8 +139,8 @@ export default function HomePage() {
 					{/* Shoutbox at main-top position */}
 					<ShoutboxMainTop />
 
-					{/* Hot Threads */}
-					<HotThreads className="mb-6" />
+					{/* Hot Threads - Fetches its own data */}
+					<HotThreads className="mb-6" limit={5} />
 
 					{/* Primary Zones Section */}
 					<section className="mb-16">
@@ -155,24 +157,21 @@ export default function HomePage() {
 							</Link>
 						</div>
 
-						{forumStructureError ? (
+						{forumStructureErrorFromContext ? (
 							<div className="text-center py-12">
-								<p className="text-red-400">Failed to load zones</p>
+								<AlertCircle className="mx-auto h-12 w-12 text-red-400" />
+								<p className="mt-4 text-red-400">Failed to load forum structure.</p>
+								<p className="text-sm text-zinc-500">{(forumStructureErrorFromContext as Error)?.message || 'Unknown error'}</p>
 							</div>
-						) : structureLoading ? (
+						) : structureLoadingFromContext ? (
 							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-								{Array.from({ length: 6 }).map((_, i) => (
-									<div key={i} className="bg-zinc-900 rounded-xl h-48 animate-pulse" />
+								{Array.from({ length: primaryZonesFromContext.length || 3 }).map((_, i) => (
+									<Skeleton key={i} className="bg-zinc-900 rounded-xl h-48" />
 								))}
 							</div>
 						) : (
 							<CanonicalZoneGrid
-								zones={forumStructure?.primaryZones || []}
-								includeShopCard={true}
-								shopCardData={{
-									name: 'Legendary Diamond Frame',
-									price: 2500
-								}}
+								zones={zoneCardDataForGrid}
 							/>
 						)}
 					</section>
@@ -195,27 +194,27 @@ export default function HomePage() {
 							</CardTitle>
 						</CardHeader>
 						<CardContent>
-							{structureLoading ? (
+							{structureLoadingFromContext ? (
 								<div className="space-y-2">
 									{Array.from({ length: 3 }).map((_, i) => (
 										<Skeleton key={i} className="h-8 w-full" />
 									))}
 								</div>
-							) : forumStructureError ? (
+							) : forumStructureErrorFromContext ? (
 								<div className="text-red-500 p-4" role="alert">
-									<p className="text-sm">Failed to load forum structure</p>
-									{forumStructureError && (
-										<p className="text-xs mt-1 opacity-75">{forumStructureError.message}</p>
-									)}
+									<AlertCircle className="inline h-5 w-5 mr-2" />
+									<p className="text-sm inline">Failed to load forum navigation.</p>
 								</div>
 							) : (
-								<HierarchicalZoneNav className="text-zinc-200" />
+								// HierarchicalZoneNav will need to be updated to use the context internally.
+								// Removing props for now, as it should consume from useForumStructure.
+								<HierarchicalZoneNav />
 							)}
 						</CardContent>
 					</Card>
 
 					{/* Leaderboard Widget */}
-					<LeaderboardWidget users={topUsers} />
+					<LeaderboardWidget users={topUsers || []} />
 
 					{/* Active Members Widget */}
 					<ActiveMembersWidget
@@ -241,3 +240,13 @@ export default function HomePage() {
 		</div>
 	);
 }
+
+// It's generally better to wrap at a higher level (e.g., _app.tsx or main.tsx)
+// But for this specific task, we wrap HomePage directly as per instructions.
+const HomePageWithProvider = () => (
+	<ForumStructureProvider>
+		<HomePage />
+	</ForumStructureProvider>
+);
+
+export default HomePageWithProvider;

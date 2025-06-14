@@ -216,6 +216,7 @@ router.get('/threads', async (req: Request, res: Response) => {
 					id: threads.id,
 					title: threads.title,
 					slug: threads.slug,
+					parentForumSlug: threads.parentForumSlug, // Added parentForumSlug
 					userId: threads.userId,
 					prefixId: threads.prefixId,
 					isSticky: threads.isSticky,
@@ -338,194 +339,27 @@ router.get('/threads/:id', async (req: Request, res: Response) => {
 			return res.status(400).json({ message: 'Invalid thread ID' });
 		}
 
-		const userId = getUserId(req); // Get current user ID if logged in
-		const { isMod, isAdmin } = await getUserPermissions(userId);
+		const page = parseInt(req.query.page as string) || 1;
+		const limit = parseInt(req.query.limit as string) || 50;
+		const currentUserId = getUserId(req); // Can be undefined if not logged in
 
-		// Fetch thread details
-		const threadResult = await db
-			.select({
-				// Select specific fields
-				id: threads.id,
-				title: threads.title,
-				slug: threads.slug,
-				userId: threads.userId,
-				prefixId: threads.prefixId,
-				isSticky: threads.isSticky,
-				isLocked: threads.isLocked,
-				isHidden: threads.isHidden,
-				viewCount: threads.viewCount,
-				postCount: threads.postCount,
-				firstPostLikeCount: threads.firstPostLikeCount,
-				dgtStaked: threads.dgtStaked,
-				createdAt: threads.createdAt,
-				updatedAt: threads.updatedAt,
-				isSolved: threads.isSolved,
-				solvingPostId: threads.solvingPostId,
-				// Include user info
-				user: {
-					id: users.id,
-					username: users.username,
-					avatarUrl: users.avatarUrl,
-					activeAvatarUrl: users.activeAvatarUrl,
-					role: users.role
-				},
-				// Include category info
-				category: {
-					id: forumCategories.id,
-					name: forumCategories.name,
-					slug: forumCategories.slug
-				}
-			})
-			.from(threads)
-			.innerJoin(users, eq(threads.userId, users.id))
-			.innerJoin(forumCategories, eq(threads.categoryId, forumCategories.id))
-			.where(eq(threads.id, threadId))
-			.limit(1);
+		const result = await forumService.getThreadDetails(threadId, page, limit, currentUserId);
 
-		if (threadResult.length === 0) {
+		if (!result) {
 			return res.status(404).json({ message: 'Thread not found' });
 		}
 
-		const threadDetails = threadResult[0];
-
-		// Check visibility permissions
-		if (threadDetails.isHidden && !(isMod || isAdmin)) {
+		// Perform visibility checks after fetching data
+		const { isMod, isAdmin } = await getUserPermissions(currentUserId);
+		if (result.thread.isHidden && !(isMod || isAdmin)) {
 			return res.status(403).json({ message: 'You do not have permission to view this thread' });
 		}
 		// TODO: Add checks for category visibility permissions if applicable (VIP, group restrictions)
+		// This might involve checking result.thread.category properties
 
-		// Fetch tags for this specific thread
-		const threadTagResults = await db
-			.select({
-				id: tags.id,
-				name: tags.name,
-				slug: tags.slug
-			})
-			.from(threadTags)
-			.innerJoin(tags, eq(threadTags.tagId, tags.id))
-			.where(eq(threadTags.threadId, threadId));
-
-		const threadWithTags = {
-			...threadDetails,
-			tags: threadTagResults || []
-		};
-
-		// Increment view count (consider debouncing or rate limiting this)
-		await db
-			.update(threads)
-			.set({ viewCount: sql`${threads.viewCount} + 1` })
-			.where(eq(threads.id, threadId));
-
-		// Check if the current user has bookmarked this thread
-		let hasBookmarked = false;
-		if (userId) {
-			const bookmarkCheck = await db
-				.select({ threadId: userThreadBookmarks.threadId })
-				.from(userThreadBookmarks)
-				.where(
-					and(eq(userThreadBookmarks.userId, userId), eq(userThreadBookmarks.threadId, threadId))
-				)
-				.limit(1);
-			hasBookmarked = bookmarkCheck.length > 0;
-		}
-
-		// Fetch posts for this thread (with pagination)
-		const page = parseInt(req.query.page as string) || 1;
-		const limit = parseInt(req.query.limit as string) || 50; // More posts per page for threads
-		const offset = (page - 1) * limit;
-
-		const postConditions = [
-			eq(posts.threadId, threadId),
-			eq(posts.isDeleted, false),
-			// Hide hidden posts unless user is mod/admin
-			...(isMod || isAdmin ? [] : [eq(posts.isHidden, false)])
-		];
-
-		const postList = await db
-			.select({
-				// Select post fields
-				id: posts.id,
-				userId: posts.userId,
-				content: posts.content,
-				editorState: posts.editorState, // Include if using rich text editor
-				likeCount: posts.likeCount,
-				tipCount: posts.tipCount,
-				totalTips: posts.totalTips,
-				isFirstPost: posts.isFirstPost,
-				isHidden: posts.isHidden,
-				isEdited: posts.isEdited,
-				editedAt: posts.editedAt,
-				createdAt: posts.createdAt,
-				updatedAt: posts.updatedAt,
-				replyToPostId: posts.replyToPostId,
-				// Include user info
-				user: {
-					id: users.id,
-					username: users.username,
-					avatarUrl: users.avatarUrl,
-					activeAvatarUrl: users.activeAvatarUrl,
-					role: users.role,
-					level: users.level,
-					clout: users.clout
-				}
-			})
-			.from(posts)
-			.innerJoin(users, eq(posts.userId, users.id))
-			.where(and(...postConditions))
-			.orderBy(asc(posts.createdAt)) // Posts usually ordered oldest to newest
-			.limit(limit)
-			.offset(offset);
-
-		// Get total post count for pagination
-		const totalPostsResult = await db
-			.select({ count: count() })
-			.from(posts)
-			.where(and(...postConditions));
-		const totalPosts = totalPostsResult[0]?.count || 0;
-		const totalPages = Math.ceil(totalPosts / limit);
-
-		// Add flags to posts (canEdit, canDelete, hasLiked, etc.)
-		// Fetch user's reactions (likes) for these posts in one go
-		const postIds = postList.map((p: any) => p.id);
-		let userLikes: Set<number> = new Set();
-		if (userId && postIds.length > 0) {
-			const likesResult = await db
-				.select({ postId: postReactions.postId })
-				.from(postReactions)
-				.where(
-					and(
-						eq(postReactions.userId, userId),
-						eq(postReactions.reactionType, 'like'),
-						sql`${postReactions.postId} IN ${postIds}`
-					)
-				);
-			userLikes = new Set(likesResult.map((l: any) => l.postId));
-		}
-
-		const postsWithFlags = postList.map((p: any) => ({
-			...p,
-			canEdit: userId === p.userId || isMod || isAdmin,
-			canDelete: userId === p.userId || isAdmin, // Or isMod?
-			hasLiked: userLikes.has(p.id)
-		}));
-
-		res.json({
-			thread: {
-				...threadWithTags,
-				canEdit: userId === threadWithTags.user?.id || isMod || isAdmin,
-				canDelete: userId === threadWithTags.user?.id || isAdmin,
-				hasBookmarked: hasBookmarked
-			},
-			posts: postsWithFlags,
-			pagination: {
-				page,
-				limit,
-				totalPosts,
-				totalPages
-			}
-		});
+		res.json(result);
 	} catch (error) {
-		console.error('Error fetching thread:', error);
+		console.error('Error fetching thread by ID:', error);
 		res.status(500).json({ message: 'An error occurred fetching the thread' });
 	}
 });
@@ -538,201 +372,29 @@ router.get('/threads/slug/:slug', async (req: Request, res: Response) => {
 			return res.status(400).json({ message: 'Thread slug is required' });
 		}
 
-		const userId = getUserId(req); // Get current user ID if logged in
-		const { isMod, isAdmin } = await getUserPermissions(userId);
+		const page = parseInt(req.query.page as string) || 1;
+		const limit = parseInt(req.query.limit as string) || 50;
+		const currentUserId = getUserId(req); // Can be undefined
 
-		// Fetch thread details by slug
-		const threadResult = await db
-			.select({
-				// Select specific fields
-				id: threads.id,
-				title: threads.title,
-				slug: threads.slug,
-				userId: threads.userId,
-				prefixId: threads.prefixId,
-				isSticky: threads.isSticky,
-				isLocked: threads.isLocked,
-				isHidden: threads.isHidden,
-				viewCount: threads.viewCount,
-				postCount: threads.postCount,
-				firstPostLikeCount: threads.firstPostLikeCount,
-				dgtStaked: threads.dgtStaked,
-				createdAt: threads.createdAt,
-				updatedAt: threads.updatedAt,
-				isSolved: threads.isSolved,
-				solvingPostId: threads.solvingPostId,
-				// Include user info
-				user: {
-					id: users.id,
-					username: users.username,
-					avatarUrl: users.avatarUrl,
-					activeAvatarUrl: users.activeAvatarUrl,
-					role: users.role
-				},
-				// Include category info
-				category: {
-					id: forumCategories.id,
-					name: forumCategories.name,
-					slug: forumCategories.slug
-				}
-			})
-			.from(threads)
-			.innerJoin(users, eq(threads.userId, users.id))
-			.innerJoin(forumCategories, eq(threads.categoryId, forumCategories.id))
-			.where(eq(threads.slug, threadSlug))
-			.limit(1);
+		const result = await forumService.getThreadDetails(threadSlug, page, limit, currentUserId);
 
-		if (threadResult.length === 0) {
+		if (!result) {
 			return res.status(404).json({ message: 'Thread not found' });
 		}
 
-		const threadDetails = threadResult[0];
-
-		// Check visibility permissions
-		if (threadDetails.isHidden && !(isMod || isAdmin)) {
+		// Perform visibility checks
+		const { isMod, isAdmin } = await getUserPermissions(currentUserId);
+		if (result.thread.isHidden && !(isMod || isAdmin)) {
 			return res.status(403).json({ message: 'You do not have permission to view this thread' });
 		}
-		// TODO: Add checks for category visibility permissions if applicable (VIP, group restrictions)
+		// TODO: Add checks for category visibility permissions
 
-		// Fetch tags for this specific thread
-		const threadTagResults = await db
-			.select({
-				id: tags.id,
-				name: tags.name,
-				slug: tags.slug
-			})
-			.from(threadTags)
-			.innerJoin(tags, eq(threadTags.tagId, tags.id))
-			.where(eq(threadTags.threadId, threadDetails.id));
-
-		const threadWithTags = {
-			...threadDetails,
-			tags: threadTagResults || []
-		};
-
-		// Increment view count (consider debouncing or rate limiting this)
-		await db
-			.update(threads)
-			.set({ viewCount: sql`${threads.viewCount} + 1` })
-			.where(eq(threads.id, threadDetails.id));
-
-		// Check if the current user has bookmarked this thread
-		let hasBookmarked = false;
-		if (userId) {
-			const bookmarkCheck = await db
-				.select({ threadId: userThreadBookmarks.threadId })
-				.from(userThreadBookmarks)
-				.where(
-					and(
-						eq(userThreadBookmarks.userId, userId),
-						eq(userThreadBookmarks.threadId, threadDetails.id)
-					)
-				)
-				.limit(1);
-			hasBookmarked = bookmarkCheck.length > 0;
-		}
-
-		// Fetch posts for this thread (with pagination)
-		const page = parseInt(req.query.page as string) || 1;
-		const limit = parseInt(req.query.limit as string) || 50; // More posts per page for threads
-		const offset = (page - 1) * limit;
-
-		const postConditions = [
-			eq(posts.threadId, threadDetails.id),
-			eq(posts.isDeleted, false),
-			// Hide hidden posts unless user is mod/admin
-			...(isMod || isAdmin ? [] : [eq(posts.isHidden, false)])
-		];
-
-		const postList = await db
-			.select({
-				// Select post fields
-				id: posts.id,
-				userId: posts.userId,
-				content: posts.content,
-				editorState: posts.editorState, // Include if using rich text editor
-				likeCount: posts.likeCount,
-				tipCount: posts.tipCount,
-				totalTips: posts.totalTips,
-				isFirstPost: posts.isFirstPost,
-				isHidden: posts.isHidden,
-				isEdited: posts.isEdited,
-				editedAt: posts.editedAt,
-				createdAt: posts.createdAt,
-				updatedAt: posts.updatedAt,
-				replyToPostId: posts.replyToPostId,
-				// Include user info
-				user: {
-					id: users.id,
-					username: users.username,
-					avatarUrl: users.avatarUrl,
-					activeAvatarUrl: users.activeAvatarUrl,
-					role: users.role,
-					level: users.level,
-					clout: users.clout
-				}
-			})
-			.from(posts)
-			.innerJoin(users, eq(posts.userId, users.id))
-			.where(and(...postConditions))
-			.orderBy(asc(posts.createdAt)) // Posts usually ordered oldest to newest
-			.limit(limit)
-			.offset(offset);
-
-		// Get total post count for pagination
-		const totalPostsResult = await db
-			.select({ count: count() })
-			.from(posts)
-			.where(and(...postConditions));
-		const totalPosts = totalPostsResult[0]?.count || 0;
-		const totalPages = Math.ceil(totalPosts / limit);
-
-		// Add flags to posts (canEdit, canDelete, hasLiked, etc.)
-		// Fetch user's reactions (likes) for these posts in one go
-		const postIds = postList.map((p: any) => p.id);
-		let userLikes: Set<number> = new Set();
-		if (userId && postIds.length > 0) {
-			const likesResult = await db
-				.select({ postId: postReactions.postId })
-				.from(postReactions)
-				.where(
-					and(
-						eq(postReactions.userId, userId),
-						eq(postReactions.reactionType, 'like'),
-						sql`${postReactions.postId} IN ${postIds}`
-					)
-				);
-			userLikes = new Set(likesResult.map((l: any) => l.postId));
-		}
-
-		const postsWithFlags = postList.map((p: any) => ({
-			...p,
-			canEdit: userId === p.userId || isMod || isAdmin,
-			canDelete: userId === p.userId || isAdmin, // Or isMod?
-			hasLiked: userLikes.has(p.id)
-		}));
-
-		res.json({
-			thread: {
-				...threadWithTags,
-				canEdit: userId === threadWithTags.user?.id || isMod || isAdmin,
-				canDelete: userId === threadWithTags.user?.id || isAdmin,
-				hasBookmarked: hasBookmarked
-			},
-			posts: postsWithFlags,
-			pagination: {
-				page,
-				limit,
-				totalPosts,
-				totalPages
-			}
-		});
+		res.json(result);
 	} catch (error) {
 		console.error('Error fetching thread by slug:', error);
 		res.status(500).json({ message: 'An error occurred fetching the thread by slug' });
 	}
 });
-
 // POST /threads - Create a new thread directly (not from draft)
 router.post('/threads', requireAuth, async (req: Request, res: Response) => {
 	// Changed isAuthenticated to requireAuth
@@ -779,11 +441,25 @@ router.post('/threads', requireAuth, async (req: Request, res: Response) => {
 		const { thread: newThreadData, firstPost } = await db.transaction(async (tx: typeof db) => {
 			const threadSlug = await slugify(String(validatedThreadData.title));
 
+			// Fetch the parent forum's slug using categoryId
+			const [parentForum] = await tx
+				.select({ slug: forumCategories.slug })
+				.from(forumCategories)
+				.where(eq(forumCategories.id, validatedThreadData.categoryId))
+				.limit(1);
+
+			if (!parentForum || !parentForum.slug) {
+				// This should ideally not happen if categoryId is validated, but as a safeguard:
+				throw new Error(`Parent forum not found or has no slug for categoryId: ${validatedThreadData.categoryId}`);
+			}
+			const parentForumSlugValue = parentForum.slug;
+
 			const [createdThread] = await tx
 				.insert(threads)
 				.values({
 					title: validatedThreadData.title,
 					slug: threadSlug,
+					parentForumSlug: parentForumSlugValue, // Provide parentForumSlug
 					categoryId: validatedThreadData.categoryId,
 					userId: userId,
 					prefixId: validatedThreadData.prefixId || null
@@ -1483,6 +1159,7 @@ router.get('/hot-threads', async (req: Request, res: Response) => {
 				id: threads.id,
 				title: threads.title,
 				slug: threads.slug,
+				parentForumSlug: threads.parentForumSlug, // Added parentForumSlug
 				postCount: threads.postCount,
 				viewCount: threads.viewCount,
 				hotScore: threads.hotScore,
@@ -1721,10 +1398,20 @@ router.get('/structure', async (req: Request, res: Response) => {
 		// Extract primary zones (isZone is true, canonical is true)
 		const primaryZones = allCategories
 			.filter((cat) => cat.isZone === true && cat.canonical === true)
-			.map((zone) => ({
-				...zone,
-				canHaveThreads: true
-			}));
+			.map((zone) => {
+				// Find child forums for this primary zone
+				const forums = allCategories
+					.filter((forum) => forum.parentId === zone.id)
+					.map((forum) => ({
+						...forum,
+						canHaveThreads: true // Forums can have threads
+					}));
+				return {
+					...zone,
+					canHaveThreads: false, // Zones contain forums, not threads directly
+					forums 
+				};
+			});
 
 		// Extract categories (not zones, parentId is null)
 		const categories = allCategories

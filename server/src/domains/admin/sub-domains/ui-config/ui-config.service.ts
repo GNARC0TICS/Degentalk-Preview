@@ -10,7 +10,7 @@ import {
 	type NewUiQuote,
 	type UiCollection,
 	type NewUiCollection
-} from '../../../../../../db/schema/admin/uiConfig.ts';
+} from '@schema/admin/uiConfig';
 import {
 	type CreateQuoteRequest,
 	type UpdateQuoteRequest,

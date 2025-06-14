@@ -37,6 +37,12 @@ async function main() {
     logSeed(SCRIPT_NAME, '🗑️ Dropped platform_treasury_settings (if exists)');
     await db.execute(sql`DROP TABLE IF EXISTS thread_feature_permissions CASCADE;`);
     logSeed(SCRIPT_NAME, '🗑️ Dropped thread_feature_permissions (if exists)');
+    await db.execute(sql`DROP TABLE IF EXISTS notifications CASCADE;`);
+    logSeed(SCRIPT_NAME, '🗑️ Dropped notifications (if exists)');
+    await db.execute(sql`DROP TABLE IF EXISTS post_reactions CASCADE;`);
+    logSeed(SCRIPT_NAME, '🗑️ Dropped post_reactions (if exists)');
+    await db.execute(sql`DROP TYPE IF EXISTS reaction_type CASCADE;`);
+    logSeed(SCRIPT_NAME, '🗑️ Dropped reaction_type enum (if exists)');
 
     // Existing DELETE statements for seeded tables (commented out as drops handle full reset)
     // await db.delete(schema.xpActionSettings);
@@ -51,38 +57,25 @@ async function main() {
 
     // Apply migrations after cleanup but before seeding
     logSeed(SCRIPT_NAME, 'Applying database migrations...');
-    const { exec } = await import('child_process');
+    const { spawn } = await import('child_process');
     await new Promise((resolve, reject) => {
-      // Increased timeout and removed '| yes' to simplify
-      const child = exec('npm run db:migrate:apply > /dev/null 2>&1', { timeout: 300000 }, (error: any, stdout: any, stderr: any) => {
-        console.log('exec callback invoked.');
-        if (error) {
-          console.error(`exec error: ${error}`);
-          logSeed(SCRIPT_NAME, `❌ Error applying migrations: ${error.message}`, true);
-          reject(error);
-          return;
-        }
-        if (stderr) {
-          console.error(`stderr: ${stderr}`);
-          logSeed(SCRIPT_NAME, `⚠️ Stderr during migrations: ${stderr}`, true);
-        }
-        logSeed(SCRIPT_NAME, `stdout: ${stdout}`);
-        logSeed(SCRIPT_NAME, '✅ Database migrations applied successfully within exec callback.');
-        resolve(null);
+      const child = spawn('npm', ['run', 'db:migrate:apply', '--silent'], {
+        stdio: 'inherit',
+        env: process.env,
       });
 
       child.on('close', (code: number) => {
-        console.log(`child process exited with code ${code}`);
-        if (code !== 0) {
-          reject(new Error(`Migration process exited with non-zero code ${code}`));
+        if (code === 0) {
+          logSeed(SCRIPT_NAME, '✅ Database migrations applied.');
+          resolve(null);
+        } else {
+          reject(new Error(`Migration process exited with code ${code}`));
         }
       });
 
       child.on('error', (err: Error) => {
-        console.error(`child process failed to start or encountered an error: ${err.message}`);
         reject(err);
       });
-
     });
     logSeed(SCRIPT_NAME, '✅ Database migrations promise successfully completed and resolved.');
 
@@ -90,6 +83,20 @@ async function main() {
     await seedBadges();
     await seedTreasurySettings();
     await seedVaults();
+    // Seed Zones & Forums using canonical config-driven seeder
+    logSeed(SCRIPT_NAME, 'Seeding forum zones & forums from forumMap.config...');
+    await new Promise((resolve, reject) => {
+      const child = spawn('tsx', ['scripts/seed/seedForumsFromConfig.ts'], {
+        stdio: 'inherit',
+        env: process.env,
+      });
+      child.on('close', (code: number) => {
+        if (code === 0) resolve(null);
+        else reject(new Error(`Forum seeder exited with code ${code}`));
+      });
+      child.on('error', reject);
+    });
+    logSeed(SCRIPT_NAME, '✅ Forum structure seeded via seedForumsFromConfig');
     // Add calls to other seed functions here
     // if (!quickMode) { await seedSomeLargeTestData(); }
 

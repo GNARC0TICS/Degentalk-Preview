@@ -48,12 +48,12 @@ export function ThreadCard({ thread, className = '' }: ThreadCardProps) {
 
 	// Handle optional fields that might not be present
 	const prefix = thread.prefix || null;
-	console.log('ThreadCard rendering for thread:', { id, title, slug, threadUrl: `/threads/${id}` });
+	console.log('ThreadCard rendering for thread:', { id, title, slug, threadUrl: `/threads/${slug}` });
 	const tags = thread.tags || [];
 	const category = thread.category || null;
 
-	// Link to the new thread details page using the thread ID
-	const threadUrl = `/threads/${id}`;
+	// Link to the new thread details page using the thread SLUG
+	const threadUrl = `/threads/${slug}`;
 	const isHot = hotScore && hotScore > 10;
 
 	return (

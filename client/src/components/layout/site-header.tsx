@@ -11,7 +11,8 @@ import {
 	Wallet,
 	LogOut,
 	Shield,
-	Settings
+	Settings,
+	Link2
 } from 'lucide-react';
 import { WalletSheet } from '@/components/economy/wallet/WalletSheet';
 import ChartMenu from '@/components/ui/candlestick-menu';
@@ -233,6 +234,14 @@ export function SiteHeader() {
 												</div>
 											</DropdownMenuItem>
 										</Link>
+										<Link href="/preferences?tab=referrals">
+											<DropdownMenuItem>
+												<div className="flex w-full items-center cursor-pointer">
+													<Link2 className="mr-2 h-4 w-4" />
+													<span>Referrals</span>
+												</div>
+											</DropdownMenuItem>
+										</Link>
 										<DropdownMenuSeparator />
 										{displayUser.isAdmin && (
 											<Link href="/admin">
@@ -373,6 +382,15 @@ export function SiteHeader() {
 										>
 											<Settings className="h-5 w-5 inline mr-2" />
 											Settings
+										</div>
+									</Link>
+									<Link href="/preferences?tab=referrals">
+										<div
+											className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
+											onClick={() => setIsOpen(false)}
+										>
+											<Link2 className="h-5 w-5 inline mr-2" />
+											Referrals
 										</div>
 									</Link>
 

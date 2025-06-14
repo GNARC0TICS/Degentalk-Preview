@@ -31,7 +31,14 @@ export const notificationTypeEnum = pgEnum('notification_type', [
 	'thread_reply',
 	'reaction',
 	'quest_complete',
-	'badge_awarded'
+	'badge_awarded',
+	'rain_received',
+	'level_up',
+	'tip_received',
+	'airdrop_received',
+	'referral_complete',
+	'cosmetic_unlocked',
+	'mission_complete'
 ]);
 export const reactionTypeEnum = pgEnum('reaction_type', ['like', 'helpful']);
 export const transactionTypeEnum = pgEnum('transaction_type', [
@@ -59,4 +66,17 @@ export const contentEditStatusEnum = pgEnum('content_edit_status', [
 	'draft',
 	'published',
 	'archived'
+]);
+export const contentVisibilityStatusEnum = pgEnum('content_visibility_status', [
+	'draft',
+	'published',
+	'hidden',
+	'shadowbanned',
+	'archived',
+	'deleted'
+]);
+export const mentionSourceTypeEnum = pgEnum('mention_source_type', [
+	'post',
+	'thread',
+	'chat'
 ]);

@@ -58,6 +58,12 @@ export * from './forum/userRuleAgreements';
 export * from './forum/customEmojis';
 export * from './forum/postLikes';
 export * from './forum/threadFeaturePermissions';
+export * from './forum/polls';
+export * from './forum/pollOptions';
+export * from './forum/pollVotes';
+export * from './forum/emojiPacks';
+export * from './forum/emojiPackItems';
+export * from './forum/userEmojiPacks';
 
 // Economy domain exports
 export * from './economy/wallets';
@@ -132,6 +138,12 @@ export * from './system/notifications';
 export * from './system/analyticsEvents';
 export * from './system/activityFeed';
 export * from './system/airdrop-records';
+export * from './system/userAbuseFlags';
+export * from './system/cooldownState';
+export * from './system/mentionsIndex';
+export * from './system/referralSources';
+export * from './system/userReferrals';
+export * from './system/event_logs';
 
 // Note: './forum/threadDrafts.ts' was commented out as it was empty in the previous steps.
 // Ensure all files listed for export actually exist and contain exports.

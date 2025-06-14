@@ -13,7 +13,8 @@ import type {
 	ThreadWithUser,
 	PostWithUser,
 	ForumTag,
-	ThreadPrefix
+	ThreadPrefix,
+	ThreadWithPostsAndUser // Added import
 } from '@db_types/forum.types';
 
 // Define the nested category type extending ForumCategory
@@ -154,13 +155,26 @@ export const forumApi = {
 		return directResult;
 	},
 
-	getThread: async (slugOrId: string | number): Promise<ThreadWithUser> => {
+	getThread: async (
+		slugOrId: string | number,
+		params?: { page?: number; limit?: number }
+	): Promise<ThreadWithPostsAndUser> => {
 		const isSlug = typeof slugOrId === 'string' && isNaN(Number(slugOrId));
 		const url = isSlug ? `/api/forum/threads/slug/${slugOrId}` : `/api/forum/threads/${slugOrId}`;
 
-		const directResult = await apiRequest<ThreadWithUser>({
+		// Convert params to string for apiRequest if they exist
+		const queryParams: Record<string, string> = {};
+		if (params?.page !== undefined) {
+			queryParams.page = String(params.page);
+		}
+		if (params?.limit !== undefined) {
+			queryParams.limit = String(params.limit);
+		}
+
+		const directResult = await apiRequest<ThreadWithPostsAndUser>({
 			url,
-			method: 'GET'
+			method: 'GET',
+			params: Object.keys(queryParams).length > 0 ? queryParams : undefined
 		});
 		return directResult;
 	},
