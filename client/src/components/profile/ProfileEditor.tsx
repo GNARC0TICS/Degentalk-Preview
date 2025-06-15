@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { Upload, Save, X, User, Image, Globe, MessageSquare } from 'lucide-react';
+import { FileDropZone } from '@/components/ui/FileDropZone';
 
 interface ProfileEditorProps {
 	profile: {
@@ -77,6 +78,44 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 		e.preventDefault();
 		updateProfileMutation.mutate(formData);
 	};
+
+	async function handleImageUpload(file: File, field: 'avatar' | 'banner') {
+		try {
+			toast({ title: 'Uploading…', description: `Uploading ${field}…`, variant: 'default' });
+			// 1. Request presigned URL
+			const presign = await apiRequest<{ uploadUrl: string; publicUrl: string }>({
+				method: 'POST',
+				url: `/api/uploads/presign`,
+				data: { field, fileName: file.name, fileType: file.type }
+			});
+
+			// 2. PUT file to storage
+			await fetch(presign.uploadUrl, {
+				method: 'PUT',
+				body: file,
+				headers: { 'Content-Type': file.type }
+			});
+
+			// 3. Update user profile with new URL
+			await apiRequest({
+				method: 'PUT',
+				url: '/api/profile/update',
+				data: field === 'avatar' ? { avatarUrl: presign.publicUrl } : { bannerUrl: presign.publicUrl }
+			});
+
+			queryClient.invalidateQueries({ queryKey: ['profile', profile.username] });
+			toast({
+				title: 'Success',
+				description: `${field === 'avatar' ? 'Avatar' : 'Banner'} updated`,
+				variant: 'default'
+			});
+		} catch (error: any) {
+			toast({ title: 'Upload failed', description: error.message, variant: 'destructive' });
+		}
+	}
+
+	const handleAvatarUpload = (file: File) => handleImageUpload(file, 'avatar');
+	const handleBannerUpload = (file: File) => handleImageUpload(file, 'banner');
 
 	return (
 		<div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
@@ -207,7 +246,7 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 							<TabsContent value="media" className="space-y-4">
 								<div className="space-y-2">
 									<Label className="text-amber-300">Profile Picture</Label>
-									<div className="flex items-center gap-4">
+									<div className="space-y-2">
 										<div className="w-20 h-20 rounded-full bg-zinc-800 overflow-hidden border border-amber-500/30">
 											{profile.avatarUrl ? (
 												<img
@@ -221,16 +260,15 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 												</div>
 											)}
 										</div>
-										<Button
-											variant="outline"
-											disabled
-											className="border-amber-500/30 text-amber-400"
-										>
-											<Upload className="mr-2 h-4 w-4" />
-											Upload Avatar
-										</Button>
+										<FileDropZone
+											onFileSelected={handleAvatarUpload}
+											className="mt-2"
+											accept={["image/jpeg", "image/png", "image/webp", "image/gif"]}
+											maxSize={5 * 1024 * 1024}
+											showPreview={false}
+										/>
 									</div>
-									<p className="text-xs text-zinc-500">Avatar upload coming soon</p>
+									<p className="text-xs text-zinc-500">Supported formats: JPG, PNG, GIF. Max 5 MB.</p>
 								</div>
 
 								<div className="space-y-2">
@@ -249,16 +287,15 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 												</div>
 											)}
 										</div>
-										<Button
-											variant="outline"
-											disabled
-											className="border-amber-500/30 text-amber-400"
-										>
-											<Upload className="mr-2 h-4 w-4" />
-											Upload Banner
-										</Button>
+										<FileDropZone
+											onFileSelected={handleBannerUpload}
+											className="mt-2"
+											accept={["image/jpeg", "image/png", "image/webp"]}
+											maxSize={8 * 1024 * 1024}
+											showPreview={false}
+										/>
 									</div>
-									<p className="text-xs text-zinc-500">Banner upload coming soon</p>
+									<p className="text-xs text-zinc-500">Supported formats: JPG, PNG, GIF. Max 8 MB.</p>
 								</div>
 							</TabsContent>
 						</Tabs>

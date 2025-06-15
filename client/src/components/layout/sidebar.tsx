@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { api } from '@/lib/api';
+// import { api } from '@/lib/api'; // Removed unused import
 import { useUser } from '@stackframe/stack';
 import { forumCategories } from '@schema'; // Adjusted path
 import type { ForumCategoryWithStats } from '@shared/types'; // Keep if used elsewhere, or combine if ForumCategoryWithStats extends ForumCategory

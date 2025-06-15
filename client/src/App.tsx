@@ -123,7 +123,7 @@ function App() {
 					<ProtectedRoute path="/leaderboard" component={LeaderboardPage} />
 					<ProtectedRoute path="/degen-index" component={DegenIndexPage} />
 					<ProtectedRoute path="/wallet" component={WalletPage} />
-					<ProtectedRoute path="/profile/:username?" component={ProfilePage} />
+					<ProtectedRoute path="/profile/:username" component={ProfilePage} />
 					<ProtectedRoute path="/whispers" component={WhispersPage} />
 					<ProtectedRoute path="/preferences" component={PreferencesPage} />
 

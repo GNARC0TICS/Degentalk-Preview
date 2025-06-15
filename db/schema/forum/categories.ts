@@ -30,8 +30,6 @@ export const forumCategories = pgTable('forum_categories', {
 	icon: text('icon').notNull().default('hash'),
 	colorTheme: text('color_theme'),
 	isHidden: boolean('is_hidden').notNull().default(false),
-	isZone: boolean('is_zone').default(false).notNull(),
-	canonical: boolean('canonical').default(false).notNull(),
 	minGroupIdRequired: integer('min_group_id_required').references(() => userGroups.id, {
 		onDelete: 'set null'
 	}),

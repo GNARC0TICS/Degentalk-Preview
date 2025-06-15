@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link as WouterLink } from 'wouter';
 import NextLink from 'next/link'; // Import NextLink
 import { formatDistanceToNow } from 'date-fns';
@@ -8,9 +8,8 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TagBadge } from '@/components/ui/tag-badge';
+import { ThreadStats } from './ThreadStats'; // Import the new component
 import {
-	MessageSquare,
-	Eye,
 	Clock,
 	Flame,
 	Lock,
@@ -19,7 +18,7 @@ import {
 } from 'lucide-react';
 
 // Use the new prop type from @/types/forum.ts
-export function ThreadCard({ thread, className = '', linkAs = 'wouter' }: ThreadCardComponentProps) { // Added linkAs prop with default
+const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter' }: ThreadCardComponentProps) => { // Added linkAs prop with default
 	const LinkComponent = linkAs === 'next' ? NextLink : WouterLink;
 
 	if (!thread) {
@@ -141,16 +140,7 @@ export function ThreadCard({ thread, className = '', linkAs = 'wouter' }: Thread
 					</div>
 
 					<div className="flex flex-col items-end justify-between text-xs text-zinc-500 ml-2">
-						<div className="flex flex-col items-end gap-1">
-							<div className="flex items-center">
-								<Eye className="h-3 w-3 mr-1" />
-								<span>{viewCount ?? 0}</span>
-							</div>
-							<div className="flex items-center">
-								<MessageSquare className="h-3 w-3 mr-1" />
-								<span>{(postCount ?? 1) - 1}</span>
-							</div>
-						</div>
+						<ThreadStats viewCount={viewCount} postCount={postCount} />
 
 						{lastPostAt && lastPostAt !== createdAt && (
 							<div className="text-xs text-zinc-500 mt-2">
@@ -183,4 +173,5 @@ const FolderIcon = (props: React.SVGProps<SVGSVGElement>) => (
 	</svg>
 );
 
+export const ThreadCard = memo(ThreadCardComponent);
 export default ThreadCard;

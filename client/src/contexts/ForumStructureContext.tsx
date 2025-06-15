@@ -31,8 +31,6 @@ export type ApiCategoryDataFromApi = {
   isVip?: boolean;
   isLocked?: boolean;
   isHidden?: boolean;
-  isZone?: boolean; // Specific to zones
-  canonical?: boolean; // Specific to zones/primary categories
   minXp?: number;
   color?: string | null;
   icon?: string | null;
@@ -113,8 +111,7 @@ export type MergedZone = Omit<Zone, 'forums' | 'theme' | 'name' | 'description' 
     | 'isVip'
     | 'isLocked'
     | 'isHidden'
-    | 'isZone'
-    | 'canonical'
+    // isZone and canonical will be derived
     | 'minXp'
     | 'color'
     | 'icon'
@@ -131,6 +128,8 @@ export type MergedZone = Omit<Zone, 'forums' | 'theme' | 'name' | 'description' 
   > & {
   forums: MergedForum[];
   theme: MergedTheme;
+  isZone: boolean; // Derived property
+  canonical: boolean; // Derived property
   // rules?: MergedRules; // Optional: if zones have their own distinct rules
   hasXpBoost: boolean;
   boostMultiplier: number;
@@ -204,8 +203,7 @@ const mergeStaticAndApiData = (
         isVip: false,
         isLocked: false,
         isHidden: false,
-        isZone: true,
-        canonical: false,
+        // isZone and canonical derived below
         minXp: 0,
         color: staticTheme.color,
         icon: staticTheme.icon,
@@ -214,6 +212,8 @@ const mergeStaticAndApiData = (
         tippingEnabled: false,
         xpMultiplier: 1,
         pluginData: null,
+        isZone: true, // Fallback zones are zones
+        canonical: true, // Static config zones are treated as canonical
         forums: zoneConfig.forums.map(forumConfig => {
           const forumStaticTheme: Partial<StaticForumTheme> = forumConfig.themeOverride || staticTheme;
           const forumMergedTheme: MergedTheme = {
@@ -304,8 +304,7 @@ const mergeStaticAndApiData = (
         isVip: false,
         isLocked: false,
         isHidden: false,
-        isZone: true,
-        canonical: false,
+        // isZone and canonical derived below
         minXp: 0,
         color: staticTheme.color,
         icon: staticTheme.icon,
@@ -314,6 +313,8 @@ const mergeStaticAndApiData = (
         tippingEnabled: false,
         xpMultiplier: 1,
         pluginData: null, // Fallback: no specific plugin data
+        isZone: true, // Fallback zones are zones
+        canonical: true, // Static config zones are treated as canonical
         createdAt: new Date().toISOString(), // Fallback: current time
         updatedAt: new Date().toISOString(), // Fallback: current time
         forums: staticZone.forums.map(sf => {
@@ -452,13 +453,13 @@ const mergeStaticAndApiData = (
       id: currentApiZoneTyped.id,
       name: currentApiZoneTyped.name,
       description: currentApiZoneTyped.description,
-      type: 'zone',
+      type: currentApiZoneTyped.type as 'zone' | 'category' | 'forum', // Ensure type is correctly passed
       position: currentApiZoneTyped.position,
       isVip: currentApiZoneTyped.isVip,
       isLocked: currentApiZoneTyped.isLocked,
       isHidden: currentApiZoneTyped.isHidden,
-      isZone: currentApiZoneTyped.isZone,
-      canonical: currentApiZoneTyped.canonical,
+      isZone: currentApiZoneTyped.type === 'zone', // Derive isZone
+      canonical: currentApiZoneTyped.type === 'zone' && !currentApiZoneTyped.parentId, // Derive canonical
       minXp: currentApiZoneTyped.minXp,
       color: currentApiZoneTyped.color,
       icon: currentApiZoneTyped.icon,
@@ -562,12 +563,13 @@ function flattenApiResponse(
   if (hierarchicalResponse.primaryZones) {
     hierarchicalResponse.primaryZones.forEach(zoneWithForums => {
       // Add the zone itself
-      const { forums, ...zoneData } = zoneWithForums; 
+      const { forums, ...zoneData } = zoneWithForums;
+      const zoneType = zoneData.type || 'zone';
       allEntities.push({
         ...(zoneData as ApiZoneEntry), // Cast to ensure base properties
-        type: zoneData.type || 'zone',
-        isZone: zoneData.isZone ?? true, // Default to true for primary zones
-        canonical: zoneData.canonical ?? true, // Default to true for primary zones
+        type: zoneType,
+        isZone: zoneType === 'zone', 
+        canonical: zoneType === 'zone' && !zoneData.parentId, 
         position: zoneData.position ?? 0,
         isVip: zoneData.isVip ?? false,
         isLocked: zoneData.isLocked ?? false,
@@ -592,8 +594,8 @@ function flattenApiResponse(
           allEntities.push({
             ...forum,
             type: forum.type || 'forum', // Default type
-            isZone: forum.isZone ?? false, // Forums are not zones by default
-            canonical: forum.canonical ?? false,
+            isZone: false, 
+            canonical: false, 
             parentId: forum.parentId ?? zoneData.id, // Ensure parentId is set
             position: forum.position ?? 0,
             isVip: forum.isVip ?? false,
@@ -621,12 +623,13 @@ function flattenApiResponse(
   if (hierarchicalResponse.categories) {
     hierarchicalResponse.categories.forEach(categoryWithForums => {
       // Add the category (zone-like group) itself
-      const { forums, ...categoryData } = categoryWithForums; 
+      const { forums, ...categoryData } = categoryWithForums;
+      const categoryType = categoryData.type || 'zone';
       allEntities.push({
         ...(categoryData as ApiZoneEntry), // Cast to ensure base properties
-        type: categoryData.type || 'zone', // Can be 'category' or 'zone' type from DB
-        isZone: categoryData.isZone ?? true, // Default to true if it's a grouping category/zone
-        canonical: categoryData.canonical ?? false, // Grouping categories are typically not canonical
+        type: categoryType, 
+        isZone: categoryType === 'zone' || categoryType === 'category', // Treat 'category' type as zone-like for grouping
+        canonical: categoryType === 'zone' && !categoryData.parentId, // Only true zones without parents are canonical
         position: categoryData.position ?? 0,
         isVip: categoryData.isVip ?? false,
         isLocked: categoryData.isLocked ?? false,
@@ -651,8 +654,8 @@ function flattenApiResponse(
           allEntities.push({
             ...forum,
             type: forum.type || 'forum',
-            isZone: forum.isZone ?? false,
-            canonical: forum.canonical ?? false,
+            isZone: false,
+            canonical: false,
             parentId: forum.parentId ?? categoryData.id, // Ensure parentId is set
             position: forum.position ?? 0,
             isVip: forum.isVip ?? false,

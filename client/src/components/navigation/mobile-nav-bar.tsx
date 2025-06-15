@@ -59,7 +59,7 @@ export function MobileNavBar({ items, className }: MobileNavBarProps) {
 		{
 			icon: <Users className="h-5 w-5" />,
 			label: 'Profile',
-			href: isAuthenticated && user ? `/profile/${user.username}` : '/profile',
+			href: isAuthenticated && user ? `/profile/${user.username}` : '/login?redirect=/profile',
 			isActive: location.startsWith('/profile'),
 			show: isAuthenticated
 		}

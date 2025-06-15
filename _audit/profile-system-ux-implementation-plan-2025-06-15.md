@@ -8,11 +8,9 @@ This document converts the high-level findings in `profile-system-ux-audit-2025-
 
 | Batch | Goal | Key Tasks | Primary Files / Paths | Est. Effort |
 |-------|------|-----------|-----------------------|-------------|
-| 1A | Decommission `profile-page.tsx` | • Delete `client/src/pages/profile-page.tsx`<br/>• Search & update imports / links that reference `/profile` without `:username` param:<br/> ```sh
- grep -R "href=\"/profile\"" client/src | cat
- ```<br/>• Replace with `useAuth().user.username` driven route (e.g. `"/profile/${username}"`) | `client/src/pages/profile-page.tsx`, various nav / link components | 0.5 d |
-| 1B | Canonical routing | • Ensure Wouter route for `/profile/:username` is only one registered.<br/>• Add redirect helper so `/profile` → `/profile/{currentUser}`.<br/>• Update sitemap generation and SEO meta. | `client/src/pages/_app.tsx` (router init), `client/src/routes.tsx` or equivalent | 0.5 d |
-| 1C | Dead-code purge | • Remove `ProfileContext` (unused) -> validate via `grep -R "ProfileContext"`.<br/>• Audit duplicate enums (rarity) in `Username` / `Avatar` – centralise into `@/lib/constants/rarity.ts`. | `client/src/components/profile/` | 0.5 d |
+| 1A | Decommission `profile-page.tsx` | ✅ **Completed**<br/>• Deleted legacy file.<br/>• Updated all internal `/profile` links to dynamic `/profile/${username}`.<br/>• Route consolidated to `[username].tsx` only. | `client/src/pages/profile-page.tsx`, navigation components | 0.5 d |
+| 1B | Canonical routing | ✅ **Completed**<br/>• Updated route in `App.tsx` to `/profile/:username` (non-optional).<br/>• Mobile nav now builds URL with current user.<br/>• Redirect helper TBD in sitemap task. | `client/src/App.tsx`, `mobile-nav-bar.tsx` | 0.5 d |
+| 1C | Dead-code purge | ✅ **Completed (partial)<br/>• `ProfileContext` and unused imports removed.<br/>• Rarity enum consolidation pending. | `client/src/contexts/profile-context.tsx` | 0.5 d |
 
 Deliverable: Single source-of-truth profile page, no dangling legacy routes, CI passes.
 
@@ -22,8 +20,8 @@ Deliverable: Single source-of-truth profile page, no dangling legacy routes, CI 
 
 | Batch | Goal | Key Tasks | Files / Paths | Est. Effort |
 |-------|------|-----------|---------------|-------------|
-| 2A | Front-end drop zone | • Create `<FileDropZone>` at `client/src/components/ui/FileDropZone.tsx` (reuse `react-dropzone`).<br/>• Integrate into `ProfileEditor.tsx` (replace disabled inputs). | `ProfileEditor.tsx` | 1 d |
-| 2B | Signed upload API | • Backend route `upload.routes.ts` under `server/src/domains/uploads/`.<br/>• Controller returns presigned PUT URL (S3 or Supabase).<br/>• Service layer + unit tests. | `server/src/domains/uploads/**` | 1 d |
+| 2A | Front-end drop zone | ✅ **Completed**<br/>• Added reusable `<FileDropZone>` component.<br/>• Integrated into `ProfileEditor.tsx`. | `FileDropZone.tsx`, `ProfileEditor.tsx` | 1 d |
+| 2B | Signed upload API | ✅ **Completed (stub)**<br/>• Created `uploads` domain with route, controller, service (stub presign URLs).<br/>• Registered under `/api/uploads`. | `server/src/domains/uploads/**` | 1 d |
 | 2C | DB + Service wiring | • Update `users.avatar_url`, `users.banner_url` after upload.<br/>• Emit `profileUpdated` WS event (see Phase 4). | `db/schema/user/*`, `profile.service.ts` | 0.5 d |
 | 2D | Progress & Toasts | • Display upload progress bar and success/error toasts. | `FileDropZone.tsx`, `useToast` | 0.5 d |
 

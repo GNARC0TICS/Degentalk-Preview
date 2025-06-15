@@ -11,7 +11,6 @@ import { DisplayPreferences } from '@/components/preferences/display-preferences
 import { SessionPreferences } from '@/components/preferences/session-preferences';
 import { ReferralPreferences } from '@/components/preferences/referral-preferences';
 import { User, Shield, Bell, Monitor, Lock, Users, Share2 } from 'lucide-react';
-import { useProfile } from '@/contexts/profile-context';
 import { ProtectedRoute } from '@/lib/protected-route';
 
 /**

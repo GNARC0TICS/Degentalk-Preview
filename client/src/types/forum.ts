@@ -36,9 +36,9 @@ export interface ThreadCardComponentProps {
   thread: ThreadCardPropsData;
   className?: string;
   linkAs?: 'wouter' | 'next'; // For choosing link component
-  // forumSlug?: string; // This was passed to ThreadCard in [thread_slug].tsx
-  // parentForumTheme?: string | null; // This was passed to ThreadCard in [thread_slug].tsx
-  // tippingEnabled?: boolean; // This was passed to ThreadCard in [thread_slug].tsx
+  forumSlug?: string; 
+  parentForumTheme?: string | null; 
+  tippingEnabled?: boolean; 
 }
 
 // Re-exporting Tag type if it's commonly used with ThreadCard or related components

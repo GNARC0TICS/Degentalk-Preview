@@ -42,8 +42,6 @@ type CategoryWithCountsResult = {
 	icon: string;
 	colorTheme: string | null;
 	isHidden: boolean;
-	isZone: boolean;
-	canonical: boolean;
 	minGroupIdRequired: number | null;
 	tippingEnabled: boolean; 
 	xpMultiplier: number;   
@@ -118,8 +116,6 @@ export const forumService = {
 						icon: forumCategories.icon,
 						colorTheme: forumCategories.colorTheme,
 						isHidden: forumCategories.isHidden,
-						isZone: forumCategories.isZone,
-						canonical: forumCategories.canonical,
 						minGroupIdRequired: forumCategories.minGroupIdRequired,
 						tippingEnabled: forumCategories.tippingEnabled,
 						xpMultiplier: forumCategories.xpMultiplier,
@@ -153,8 +149,6 @@ export const forumService = {
 						icon: forumCategories.icon,
 						colorTheme: forumCategories.colorTheme,
 						isHidden: forumCategories.isHidden,
-						isZone: forumCategories.isZone,
-						canonical: forumCategories.canonical,
 						minGroupIdRequired: forumCategories.minGroupIdRequired,
 						tippingEnabled: forumCategories.tippingEnabled,
 						xpMultiplier: forumCategories.xpMultiplier,
@@ -177,6 +171,8 @@ export const forumService = {
 					pluginData: c.pluginData || {},
 					threadCount: includeCounts ? Number(c.threadCount || 0) : 0, // Set to 0 if not included
 					postCount: includeCounts ? Number(c.postCount || 0) : 0,   // Set to 0 if not included
+					isZone: c.type === 'zone',
+					canonical: c.type === 'zone' && !c.parentId,
 					lastThread: undefined, 
 					canHaveThreads: c.type === 'forum', 
 					childForums: [], 
@@ -367,8 +363,8 @@ export const forumService = {
 				icon: rawThreadData.categoryRaw.icon,
 				colorTheme: rawThreadData.categoryRaw.colorTheme ?? null,
 				isHidden: rawThreadData.categoryRaw.isHidden,
-				isZone: rawThreadData.categoryRaw.isZone,
-				canonical: rawThreadData.categoryRaw.canonical,
+				isZone: rawThreadData.categoryRaw.type === 'zone',
+				canonical: rawThreadData.categoryRaw.type === 'zone' && !rawThreadData.categoryRaw.parentId,
 				minGroupIdRequired: rawThreadData.categoryRaw.minGroupIdRequired ?? null,
 				tippingEnabled: rawThreadData.categoryRaw.tippingEnabled,
 				xpMultiplier: rawThreadData.categoryRaw.xpMultiplier,
