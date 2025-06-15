@@ -1,196 +1,285 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'wouter';
-import { Folder, MessageSquare, ChevronDown, ChevronRight } from 'lucide-react';
-import type { ForumEntityBase } from '@/utils/forum-routing-helper';
-import {
-	getForumEntityUrl,
-	isPrimaryZone,
-	isCategory,
-	isEntityActive
-} from '@/utils/forum-routing-helper';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { Link, useLocation, useRoute } from 'wouter';
+import { Folder as DefaultFolderIcon, MessageSquare, ChevronDown, ChevronRight, LayoutGrid } from 'lucide-react';
+import { useForumStructure } from '@/contexts/ForumStructureContext';
+import { buildNavigationTree, type NavNode } from '@/navigation/forumNav';
 import { useLocalStorage } from '@/hooks/use-local-storage';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge'; // For potential count display
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Local type for user-pinned items
-interface PinnedItem extends ForumEntityBase {
-	type: 'zone' | 'category' | 'forum';
-}
+
+// interface PinnedItem extends ForumEntityBase { // Commenting out PinnedItem for now
+// 	type: 'zone' | 'category' | 'forum';
+// }
 
 interface SidebarNavigationProps {
-	entities: ForumEntityBase[];
 	className?: string;
-	userPinnedItems?: PinnedItem[];
+	// userPinnedItems?: PinnedItem[]; // Commenting out PinnedItem for now
 }
 
-/**
- * SidebarNavigation - Main navigation component for forum structure
- * Displays Primary Zones, Expandable Categories, and Child Forums
- */
-export function SidebarNavigation({
-	entities,
-	className = '',
-	userPinnedItems = []
-}: SidebarNavigationProps) {
-	const [location] = useLocation();
-	const [expandedCategories, setExpandedCategories] = useLocalStorage<
-		Record<string | number, boolean>
-	>('dt-expanded-categories', {});
+const SidebarNavItem = ({
+	node,
+	isActive,
+	onClick,
+	disabled = false,
+}: {
+	node: NavNode;
+	isActive?: boolean;
+	onClick?: () => void;
+	disabled?: boolean;
+}) => {
+	const baseActiveClasses = `font-medium`; // Simplified active style for this sidebar
+	let activeClassesConfig = '';
 
-	// Filter entities into primary zones and categories (with their child forums)
-	const primaryZones = entities.filter((entity) => isPrimaryZone(entity));
-	const categories = entities.filter((entity) => isCategory(entity));
-	const childForumsByParentId = entities
-		.filter((entity) => !isPrimaryZone(entity) && !isCategory(entity))
-		.reduce(
-			(acc, forum) => {
-				if (forum.parentId) {
-					if (!acc[forum.parentId]) {
-						acc[forum.parentId] = [];
-					}
-					acc[forum.parentId].push(forum);
-				}
-				return acc;
-			},
-			{} as Record<string | number, ForumEntityBase[]>
-		);
+	if (isActive && node.semanticThemeKey) {
+		activeClassesConfig = `zone-nav-theme-${node.semanticThemeKey} active text-white`; // Example active style
+	} else if (isActive) {
+		activeClassesConfig = 'bg-zinc-700 text-emerald-400'; // Default active
+	}
+	
+	const activeClasses = cn(baseActiveClasses, isActive ? activeClassesConfig : '');
+	const hoverClasses = `hover:bg-zinc-800/50 hover:text-white`;
+	const IconComponent = node.iconComponent;
 
-	// Toggle category expansion
-	const toggleCategory = (categoryId: string | number) => {
-		setExpandedCategories((prev) => ({
-			...prev,
-			[categoryId]: !prev[categoryId]
-		}));
-	};
+	const displayIcon = node.iconEmoji ? (
+		<span className={`mr-2 text-md`} role="img" aria-hidden="true"> {/* Adjusted margin/size */}
+			{node.iconEmoji}
+		</span>
+	) : IconComponent ? (
+		<IconComponent
+			className={cn(
+				'w-3.5 h-3.5 mr-2', // Adjusted size
+				isActive ? '' : 'text-zinc-400 group-hover:text-zinc-300'
+			)}
+		/>
+	) : (
+		<DefaultFolderIcon className={cn("w-3.5 h-3.5 mr-2", isActive ? '' : 'text-zinc-400 group-hover:text-zinc-300')} />
+	);
 
-	// Auto-expand category of active child forum
-	useEffect(() => {
-		if (location.startsWith('/forums/')) {
-			const activeEntity = entities.find(
-				(entity) => !isPrimaryZone(entity) && isEntityActive(entity, location)
-			);
+	const content = (
+		<div
+			className={cn(
+				'flex items-center px-3 py-1.5 text-sm rounded-md transition-all duration-150 w-full group', // Adjusted padding
+				disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
+				isActive ? activeClasses : 'text-zinc-300',
+				!isActive && !disabled ? hoverClasses : ''
+			)}
+			onClick={onClick}
+		>
+			{displayIcon}
+			<span className="flex-1">{node.name}</span>
+			{/* Optional: Add counts if needed, e.g., node.counts?.threads */}
+		</div>
+	);
 
-			if (activeEntity?.parentId && !expandedCategories[activeEntity.parentId]) {
-				setExpandedCategories((prev) => ({
-					...prev,
-					[activeEntity.parentId]: true
-				}));
-			}
-		}
-	}, [location, entities, expandedCategories, setExpandedCategories]);
+	if (disabled || !node.href) {
+		return content;
+	}
 
 	return (
-		<nav className={`space-y-6 ${className}`}>
-			{/* Pinned Items Section (if available) */}
-			{userPinnedItems.length > 0 && (
+		<Link href={node.href}>
+			<a className="block">{content}</a>
+		</Link>
+	);
+};
+
+
+const SidebarCategorySection = ({
+	categoryNode,
+	isExpanded,
+	onToggle,
+	currentPath,
+}: {
+	categoryNode: NavNode;
+	isExpanded: boolean;
+	onToggle: () => void;
+	currentPath: string;
+}) => {
+	const isActiveCategory = currentPath === categoryNode.href || currentPath.startsWith(`${categoryNode.href}/`);
+	let activeCategorySpecificClass = '';
+
+	if (isActiveCategory && categoryNode.type !== 'forum') { // Only apply direct active style if it's the category itself
+		if (categoryNode.semanticThemeKey) {
+			activeCategorySpecificClass = `zone-nav-theme-${categoryNode.semanticThemeKey} active text-white font-medium`;
+		} else {
+			activeCategorySpecificClass = 'bg-zinc-700 text-emerald-400 font-medium';
+		}
+	}
+
+	const CategoryIconComponent = categoryNode.iconComponent;
+	const CategoryIconDisplay = categoryNode.iconEmoji ? (
+		<span className="mr-2 text-md" role="img" aria-hidden="true">{categoryNode.iconEmoji}</span>
+	) : CategoryIconComponent ? (
+		<CategoryIconComponent className="w-3.5 h-3.5 mr-2 text-zinc-400" />
+	) : (
+		<DefaultFolderIcon className="w-3.5 h-3.5 mr-2 text-zinc-400" />
+	);
+
+	return (
+		<div>
+			<div
+				className={cn(
+					'flex items-center justify-between px-3 py-1.5 text-sm rounded-md cursor-pointer transition-all duration-150 hover:bg-zinc-800/50 group',
+					// Apply activeCategorySpecificClass if it's set (meaning category itself is active or themed)
+					// Otherwise, default to text-zinc-300 if not active in any way.
+					(isActiveCategory && categoryNode.children.length === 0) || (isActiveCategory && categoryNode.type !== 'forum') ? activeCategorySpecificClass : 
+					(categoryNode.children.length > 0 && isActiveCategory ? 'font-medium text-emerald-400' : 'text-zinc-300')
+				)}
+				onClick={onToggle}
+				role="button"
+				tabIndex={0}
+				onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(); }}}
+				aria-expanded={isExpanded}
+			>
+				<div className="flex items-center flex-1">
+					{categoryNode.children.length > 0 && (
+						isExpanded ? (
+							<ChevronDown className="w-3.5 h-3.5 mr-1.5 text-zinc-400 transition-transform" />
+						) : (
+							<ChevronRight className="w-3.5 h-3.5 mr-1.5 text-zinc-400 transition-transform" />
+						)
+					)}
+					{CategoryIconDisplay}
+					<span className="group-hover:text-white">{categoryNode.name}</span>
+				</div>
+				{/* Optional: Badge for forum count */}
+				{/* {categoryNode.counts?.forums && categoryNode.counts.forums > 0 && (
+					<Badge variant="secondary" className="text-xs">{categoryNode.counts.forums}</Badge>
+				)} */}
+			</div>
+
+			<AnimatePresence>
+				{isExpanded && categoryNode.children && categoryNode.children.length > 0 && (
+					<motion.div
+						initial={{ opacity: 0, height: 0 }}
+						animate={{ opacity: 1, height: 'auto' }}
+						exit={{ opacity: 0, height: 0 }}
+						transition={{ duration: 0.2 }}
+						className="ml-4 pl-3 mt-1 space-y-0.5 border-l border-zinc-700" // Adjusted spacing
+					>
+						{categoryNode.children.map((forumNode: NavNode) => (
+							<SidebarNavItem
+								key={forumNode.id}
+								node={forumNode}
+								isActive={currentPath === forumNode.href || currentPath.startsWith(`${forumNode.href}/`)}
+							/>
+						))}
+					</motion.div>
+				)}
+			</AnimatePresence>
+		</div>
+	);
+};
+
+
+export function SidebarNavigation({
+	className = '',
+	// userPinnedItems = [] // Commenting out for now
+}: SidebarNavigationProps) {
+	const [location] = useLocation();
+	const { zones, isLoading, error: forumStructureError } = useForumStructure();
+	
+	const navigationTree = useMemo(() => {
+    if (isLoading || forumStructureError || !zones) return [];
+    return buildNavigationTree(zones);
+  }, [zones, isLoading, forumStructureError]);
+
+	const [expandedCategories, setExpandedCategories] = useLocalStorage<
+		Record<string, boolean>
+	>('dt-sidebar-expanded-categories', {});
+
+	// Auto-expand category of active child forum or if category itself is active
+	useEffect(() => {
+		const activeNode = navigationTree.find(node => location === node.href || location.startsWith(`${node.href}/`));
+		
+		if (activeNode) {
+			// If active node is a forum, find its parent category
+			const parentCategory = activeNode.type === 'forum' ? navigationTree.find(
+				cat => cat.type === 'generalCategory' && cat.children.some(child => child.id === activeNode.id)
+			) : activeNode.type === 'generalCategory' ? activeNode : undefined;
+
+			if (parentCategory && !expandedCategories[parentCategory.id]) {
+				setExpandedCategories(prev => ({ ...prev, [parentCategory.id]: true }));
+			}
+		}
+	}, [location, navigationTree, expandedCategories, setExpandedCategories]);
+
+
+	const toggleCategoryExpansion = useCallback(
+		(categoryId: string) => {
+			setExpandedCategories((prev) => ({
+				...prev,
+				[categoryId]: !prev[categoryId]
+			}));
+		},
+		[setExpandedCategories]
+	);
+	
+	if (isLoading) return <div className={cn("p-3 text-sm text-zinc-400", className)}>Loading navigation...</div>;
+  if (forumStructureError) return <div className={cn("p-3 text-sm text-red-400", className)}>Error loading navigation.</div>;
+  if (!navigationTree.length) return <div className={cn("p-3 text-sm text-zinc-500", className)}>No navigation items.</div>;
+
+	const systemLinkNodes = navigationTree.filter(node => node.type === 'systemLink');
+	const primaryZoneNodes = navigationTree.filter(node => node.type === 'primaryZone');
+	const generalCategoryNodes = navigationTree.filter(node => node.type === 'generalCategory');
+
+	return (
+		<nav className={cn('space-y-4', className)}> {/* Adjusted main spacing */}
+			{/* Pinned Items Section (Placeholder) */}
+			{/* {userPinnedItems.length > 0 && ( ...pinned items logic... )} */}
+
+			{systemLinkNodes.length > 0 && (
 				<div>
-					<div className="px-3 py-2 text-xs font-semibold uppercase text-zinc-500">Pinned</div>
-					<div className="space-y-1 mt-1">
-						{userPinnedItems.map((item) => (
-							<Link
-								key={`${item.type}-${item.id}`}
-								href={getForumEntityUrl(item)}
-								className={`
-                  flex items-center px-3 py-1.5 rounded-md text-sm hover:bg-zinc-800/50
-                  ${isEntityActive(item, location) ? 'bg-zinc-800 font-medium text-emerald-400' : 'text-zinc-300'}
-                `}
-							>
-								<span className="text-zinc-400 mr-2">{item.icon || '•'}</span>
-								{item.name}
-							</Link>
+					{/* Optional: Header for system links */}
+					{/* <div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">Navigation</div> */}
+					<div className="space-y-0.5 mt-1"> {/* Adjusted spacing */}
+						{systemLinkNodes.map((node) => (
+							<SidebarNavItem
+								key={node.id}
+								node={node}
+								isActive={location === node.href}
+							/>
 						))}
 					</div>
 				</div>
 			)}
 
-			{/* Primary Zones Section */}
-			<div>
-				<div className="px-3 py-2 text-xs font-semibold uppercase text-zinc-500">Primary Zones</div>
-				<div className="space-y-1 mt-1">
-					{primaryZones.map((zone) => (
-						<Link
-							key={`zone-${zone.id}`}
-							href={getForumEntityUrl(zone)}
-							className={`
-                flex items-center px-3 py-2 rounded-md transition-colors
-                ${isEntityActive(zone, location) ? 'bg-zinc-800 font-medium' : 'hover:bg-zinc-800/50'}
-                ${zone.colorTheme ? `zone-nav-theme-${zone.colorTheme}` : 'text-zinc-300'}
-                ${isEntityActive(zone, location) && zone.colorTheme ? `active` : ''}
-              `}
-						>
-							{zone.icon && <span className="mr-2 text-lg">{zone.icon}</span>}
-							<span>{zone.name}</span>
-						</Link>
-					))}
+			{primaryZoneNodes.length > 0 && (
+				<div>
+					<div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">Primary Zones</div>
+					<div className="space-y-0.5 mt-1"> {/* Adjusted spacing */}
+						{primaryZoneNodes.map((node) => (
+							<SidebarNavItem
+								key={node.id}
+								node={node}
+								isActive={location === node.href || location.startsWith(`${node.href}/`)}
+							/>
+						))}
+					</div>
 				</div>
-			</div>
+			)}
 
-			{/* Divider */}
-			<div className="h-px bg-zinc-800 mx-2" />
+			{(systemLinkNodes.length > 0 || primaryZoneNodes.length > 0) && generalCategoryNodes.length > 0 && (
+				<div className="h-px bg-zinc-700/60 mx-2 my-3" /> // Adjusted divider
+			)}
 
-			{/* Categories Section */}
-			<div>
-				<div className="px-3 py-2 text-xs font-semibold uppercase text-zinc-500">Categories</div>
-				<div className="space-y-1 mt-1">
-					{categories.map((category) => {
-						const isExpanded = !!expandedCategories[category.id];
-						const childForums = childForumsByParentId[category.id] || [];
-						const hasChildren = childForums.length > 0;
-
-						return (
-							<div key={`category-${category.id}`}>
-								<div
-									className={`
-                    flex items-center justify-between px-3 py-2 cursor-pointer 
-                    hover:bg-zinc-800/50 rounded-md
-                    ${isEntityActive(category, location) ? 'bg-zinc-800 text-emerald-400 font-medium' : 'text-zinc-300'}
-                  `}
-									onClick={() => toggleCategory(category.id)}
-								>
-									<div className="flex items-center">
-										{hasChildren && (
-											<span className="mr-2">
-												{isExpanded ? (
-													<ChevronDown className="h-4 w-4" />
-												) : (
-													<ChevronRight className="h-4 w-4" />
-												)}
-											</span>
-										)}
-										<Link
-											href={getForumEntityUrl(category)}
-											onClick={(e) => e.stopPropagation()}
-											className="flex-1"
-										>
-											{category.name}
-										</Link>
-									</div>
-								</div>
-
-								{isExpanded && hasChildren && (
-									<div className="pl-6 mt-1 space-y-1 border-l border-zinc-700 ml-4">
-										{childForums.map((forum) => (
-											<Link
-												key={`forum-${forum.id}`}
-												href={getForumEntityUrl(forum)}
-												className={`
-                          block px-3 py-1.5 rounded-md text-sm
-                          ${
-														isEntityActive(forum, location)
-															? 'bg-zinc-800 text-emerald-400 font-medium'
-															: 'text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200'
-													}
-                        `}
-											>
-												<MessageSquare className="h-3.5 w-3.5 mr-1.5 inline-block" />
-												{forum.name}
-											</Link>
-										))}
-									</div>
-								)}
-							</div>
-						);
-					})}
+			{generalCategoryNodes.length > 0 && (
+				<div>
+					<div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">Categories</div>
+					<div className="space-y-0.5 mt-1"> {/* Adjusted spacing */}
+						{generalCategoryNodes.map((categoryNode) => (
+							<SidebarCategorySection
+								key={categoryNode.id}
+								categoryNode={categoryNode}
+								isExpanded={!!expandedCategories[categoryNode.id]}
+								onToggle={() => toggleCategoryExpansion(categoryNode.id)}
+								currentPath={location}
+							/>
+						))}
+					</div>
 				</div>
-			</div>
+			)}
 		</nav>
 	);
 }

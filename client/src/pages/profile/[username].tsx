@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'wouter';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { formatNumber, formatCurrency, formatRelativeTime, cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth.tsx';
@@ -20,7 +17,6 @@ import {
 	Award,
 	UserCheck,
 	UserPlus,
-	HomeIcon,
 	Trophy,
 	Sparkles
 } from 'lucide-react';
@@ -29,7 +25,6 @@ import { useToast } from '@/hooks/use-toast';
 import { SeoHead } from '@/components/ui/SeoHead';
 import { WhisperButton } from '@/components/messages/WhisperButton';
 import { WhisperModal } from '@/components/messages/WhisperModal';
-import { useAsyncButton } from '@/hooks/use-async-button';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { XPProgressBar } from '@/components/profile/XPProgressBar';
@@ -40,7 +35,6 @@ import { XPProfileSection } from '@/components/profile/XPProfileSection';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { CosmeticControlPanel } from '@/components/profile/CosmeticControlPanel';
 import { ProfileEditor } from '@/components/profile/ProfileEditor';
-import type { UserInventoryWithProduct } from '@/types/inventory';
 import { useUserInventory } from '@/hooks/useUserInventory';
 
 // Define profile data interface
@@ -133,7 +127,7 @@ const ProfileSidebar: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> 
 }) => {
 	const { toast } = useToast();
 	const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
-	const [messageText, setMessageText] = useState('');
+	// const [messageText, setMessageText] = useState(''); // messageText seems unused, WhisperModal handles its own state
 	const [isFollowing, setIsFollowing] = useState(false);
 	const queryClient = useQueryClient();
 
@@ -205,7 +199,7 @@ const ProfileSidebar: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> 
 	});
 
 	// Message mutation
-	const sendMessageMutation = useMutation({
+	const _sendMessageMutation = useMutation({ // Prefixed as unused
 		mutationFn: async (message: string) => {
 			return apiRequest({
 				url: `/api/messages/send/${profile.id}`,
@@ -219,7 +213,7 @@ const ProfileSidebar: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> 
 				description: `Your message has been sent to ${profile.username}`,
 				variant: 'default'
 			});
-			setMessageText('');
+			// setMessageText(''); // setMessageText is not defined as messageText state is commented out
 			setIsMessageModalOpen(false);
 		},
 		onError: (error) => {
@@ -243,18 +237,20 @@ const ProfileSidebar: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> 
 		setIsMessageModalOpen(true);
 	};
 
-	const handleSendMessage = (e: React.FormEvent) => {
-		e.preventDefault();
-		if (messageText.trim() === '') {
-			toast({
-				title: 'Error',
-				description: 'Message cannot be empty',
-				variant: 'destructive'
-			});
-			return;
-		}
-		sendMessageMutation.mutate(messageText);
-	};
+	// handleSendMessage seems unused as WhisperModal likely handles its own submission.
+	// If it were used, messageText state would also be needed.
+	// const handleSendMessage = (e: React.FormEvent) => {
+	// 	e.preventDefault();
+	// 	if (messageText.trim() === '') {
+	// 		toast({
+	// 			title: 'Error',
+	// 			description: 'Message cannot be empty',
+	// 			variant: 'destructive'
+	// 		});
+	// 		return;
+	// 	}
+	// 	sendMessageMutation.mutate(messageText);
+	// };
 
 	const frameRarityClass = profile.activeFrame
 		? getRarityBorderClass(profile.activeFrame.rarity)
@@ -537,8 +533,11 @@ const InventoryTab: React.FC<{ profile: ProfileData }> = ({ profile }) => (
 	</div>
 );
 
-// New Achievements tab
-const AchievementsTab: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> = ({
+// New Achievements tab - This component is defined but not used in the Tabs below.
+// XPProfileSection is used instead for the "achievements" tab.
+// If AchievementsTab is intended for future use or is an alternative, it can be kept.
+// For now, prefixing with _ to resolve unused variable, or it can be deleted if obsolete.
+const _AchievementsTab: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> = ({
 	profile,
 	isOwnProfile
 }) => {
@@ -672,19 +671,20 @@ const AchievementsTab: React.FC<{ profile: ProfileData; isOwnProfile: boolean }>
 // Friends and followers tab
 const FriendsTab: React.FC<{ profile: ProfileData }> = ({ profile }) => {
 	const [activeTab, setActiveTab] = useState('friends');
-	const [followers, setFollowers] = useState<
-		Array<{ id: number; username: string; avatarUrl: string | null }>
-	>([]);
-	const [following, setFollowing] = useState<
-		Array<{ id: number; username: string; avatarUrl: string | null }>
-	>([]);
+	// followers and following state seem unused as data is directly used from useQuery (followersData, followingData)
+	// const [followers, setFollowers] = useState<
+	// 	Array<{ id: number; username: string; avatarUrl: string | null }>
+	// >([]);
+	// const [following, setFollowing] = useState<
+	// 	Array<{ id: number; username: string; avatarUrl: string | null }>
+	// >([]);
 	const [isLoading, setIsLoading] = useState(false);
 
 	// Fetch followers
 	const {
 		data: followersData,
 		isLoading: isLoadingFollowers,
-		isError: isErrorFollowers,
+		isError: _isErrorFollowers, // Prefixed as unused
 		error: followersError,
 		refetch: refetchFollowers
 	} = useQuery({
@@ -697,7 +697,7 @@ const FriendsTab: React.FC<{ profile: ProfileData }> = ({ profile }) => {
 					throw new Error('Failed to fetch followers');
 				}
 				const data = await response.json();
-				setFollowers(data);
+				// setFollowers(data); // followers state is unused
 				return data;
 			} finally {
 				setIsLoading(false);
@@ -710,7 +710,7 @@ const FriendsTab: React.FC<{ profile: ProfileData }> = ({ profile }) => {
 	const {
 		data: followingData,
 		isLoading: isLoadingFollowing,
-		isError: isErrorFollowing,
+		isError: _isErrorFollowing, // Prefixed as unused
 		error: followingError,
 		refetch: refetchFollowing
 	} = useQuery({
@@ -723,7 +723,7 @@ const FriendsTab: React.FC<{ profile: ProfileData }> = ({ profile }) => {
 					throw new Error('Failed to fetch following');
 				}
 				const data = await response.json();
-				setFollowing(data);
+				// setFollowing(data); // following state is unused
 				return data;
 			} finally {
 				setIsLoading(false);
@@ -736,7 +736,7 @@ const FriendsTab: React.FC<{ profile: ProfileData }> = ({ profile }) => {
 	const renderUserCards = (
 		users: Array<{ id: number; username: string; avatarUrl: string | null }> | undefined,
 		loading: boolean,
-		error: any,
+		error: Error | null, // Changed 'any' to 'Error | null'
 		onRetry: () => void
 	) => {
 		if (loading) {
@@ -921,9 +921,9 @@ function getRarityColor(rarity: string): string {
 		case 'epic':
 			return 'bg-purple-800 text-purple-200';
 		case 'legendary':
-			return 'bg-amber-800 text-amber-200';
+			return 'bg-amber-800 text-amber-200'; // Contrast 6.08:1 - Good
 		case 'mythic':
-			return 'bg-red-800 text-red-200';
+			return 'bg-red-800 text-red-100';     // Contrast (text-red-100 on bg-red-800) is 6.67:1 - Improved
 		default:
 			return 'bg-slate-600 text-slate-200';
 	}

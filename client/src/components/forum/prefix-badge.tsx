@@ -13,27 +13,21 @@ export const PrefixBadge: React.FC<PrefixBadgeProps> = ({ prefix }) => {
 		return null; // Or some placeholder if prefix is undefined
 	}
 
-	const color = prefix.color || 'indigo'; // Default color if none provided
+	const themeColor = prefix.color || 'indigo'; // Default color if none provided
 
-	// Define base classes
+	// Define base classes that use the new CSS variable-driven Tailwind classes
 	const baseClasses = 'inline-flex items-center rounded px-2 py-0.5 text-sm font-medium';
-
-	// Dynamically generate Tailwind classes for background, text, and border
-	// This approach requires Tailwind JIT to pick up these generated classes.
-	// If not using JIT, or for more complex theming, consider a mapping object or CSS variables.
-	const badgeClasses = cn(
+	
+	// Static classes that will use the CSS variables defined by the theme class
+	const staticBadgeClasses = cn(
 		baseClasses,
-		`bg-${color}-100 dark:bg-${color}-900/60`,
-		`text-${color}-700 dark:text-${color}-300`,
-		`border border-${color}-300 dark:border-${color}-700/30`
+		'bg-badge-bg-light dark:bg-badge-bg-dark',
+		'text-badge-text-light dark:text-badge-text-dark',
+		'border border-badge-border-light dark:border-badge-border-dark'
 	);
 
-	// Fallback for truly dynamic colors if Tailwind JIT isn't sufficient or for arbitrary hex values:
-	// const style: React.CSSProperties = {};
-	// if (prefix.color && !isTailwindColor(prefix.color)) { // isTailwindColor would be a helper
-	//   style.backgroundColor = prefix.color; // Assuming prefix.color could be a hex
-	//   style.color = getContrastColor(prefix.color); // Helper to get good text contrast
-	// }
+	// The theme class itself will be dynamic
+	const themeClassName = `theme-badge-${themeColor}`;
 
-	return <span className={badgeClasses}>{prefix.name}</span>;
+	return <span className={cn(themeClassName, staticBadgeClasses)}>{prefix.name}</span>;
 };

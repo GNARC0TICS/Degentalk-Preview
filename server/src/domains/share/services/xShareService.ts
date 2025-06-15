@@ -1,7 +1,7 @@
 import { TwitterApi } from 'twitter-api-v2';
 import { db } from '@server/src/core/db';
-import { users } from '../../../../db/schema/user/users';
-import { xShares } from '../../../../db/schema/user/xShares';
+import { users } from '@schema/user/users';
+import { xShares } from '@schema/user/xShares';
 import { eq } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
 import { awardXShareReward } from '../../economy/services/rewardService';

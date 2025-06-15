@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { generatePresignedUrl } from './upload.service';
 
 export async function getPresignedUrlController(req: Request, res: Response) {

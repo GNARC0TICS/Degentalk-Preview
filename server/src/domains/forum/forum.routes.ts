@@ -43,7 +43,9 @@ import {
 	gt,
 	ne,
 	inArray,
-	isNull
+	isNull,
+	like,
+	SQL
 } from 'drizzle-orm';
 import { awardPathXp } from '@server/utils/path-utils';
 import { xpRewards } from '@shared/path-config';
@@ -203,14 +205,13 @@ router.get('/threads', async (req: Request, res: Response) => {
 		}
 
 		try {
-			// Fetch threads with user and category info using correct column names
 			const threadListRaw = await db
 				.select({
 					// Select specific fields to avoid over-fetching
 					id: threads.id,
 					title: threads.title,
 					slug: threads.slug,
-					parentForumSlug: threads.parentForumSlug, // Added parentForumSlug
+					parentForumSlug: forumCategories.slug,
 					userId: threads.userId,
 					prefixId: threads.prefixId,
 					isSticky: threads.isSticky,
@@ -307,7 +308,7 @@ router.get('/threads', async (req: Request, res: Response) => {
 				}
 			});
 		} catch (error) {
-			console.error('Error in threads query:', error);
+			logger.error('ForumRoutes', 'Error in threads query', { err: error, query: req.query });
 			// Return empty results instead of an error
 			res.json({
 				threads: [],
@@ -438,25 +439,11 @@ router.post('/threads', requireAuth, async (req: Request, res: Response) => {
 		const { thread: newThreadData, firstPost } = await db.transaction(async (tx: typeof db) => {
 			const threadSlug = await slugify(String(validatedThreadData.title));
 
-			// Fetch the parent forum's slug using categoryId
-			const [parentForum] = await tx
-				.select({ slug: forumCategories.slug })
-				.from(forumCategories)
-				.where(eq(forumCategories.id, validatedThreadData.categoryId))
-				.limit(1);
-
-			if (!parentForum || !parentForum.slug) {
-				// This should ideally not happen if categoryId is validated, but as a safeguard:
-				throw new Error(`Parent forum not found or has no slug for categoryId: ${validatedThreadData.categoryId}`);
-			}
-			const parentForumSlugValue = parentForum.slug;
-
 			const [createdThread] = await tx
 				.insert(threads)
 				.values({
 					title: validatedThreadData.title,
 					slug: threadSlug,
-					parentForumSlug: parentForumSlugValue, // Provide parentForumSlug
 					categoryId: validatedThreadData.categoryId,
 					userId: userId,
 					prefixId: validatedThreadData.prefixId || null
@@ -1188,7 +1175,7 @@ router.get('/hot-threads', async (req: Request, res: Response) => {
 				id: threads.id,
 				title: threads.title,
 				slug: threads.slug,
-				parentForumSlug: threads.parentForumSlug, // Added parentForumSlug
+				parentForumSlug: forumCategories.slug,
 				postCount: threads.postCount,
 				viewCount: threads.viewCount,
 				hotScore: threads.hotScore,

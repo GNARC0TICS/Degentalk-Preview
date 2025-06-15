@@ -269,9 +269,11 @@ export default function AdminPrefixesPage() {
 		: [];
 
 	// Generate a badge with the selected color for preview
-	const ColorPreview = ({ color }: { color: string }) => (
-		<Badge className={`bg-${color}-900/60 text-${color}-300 border-${color}-700/30`}>Preview</Badge>
-	);
+	const ColorPreview = ({ color }: { color: string }) => {
+		const themeClassName = `theme-badge-${color || 'zinc'}`; // Default to zinc if color is undefined
+		const staticBadgeClasses = 'bg-badge-bg-dark text-badge-text-dark border-badge-border-dark'; // Using dark variants for admin preview
+		return <Badge className={`${themeClassName} ${staticBadgeClasses}`}>Preview</Badge>;
+	};
 
 	return (
 		<div className="space-y-6">
@@ -338,7 +340,7 @@ export default function AdminPrefixesPage() {
 											<TableCell className="font-medium">{prefix.name}</TableCell>
 											<TableCell>
 												<Badge
-													className={`bg-${prefix.color}-900/60 text-${prefix.color}-300 border-${prefix.color}-700/30`}
+													className={`theme-badge-${prefix.color || 'zinc'} bg-badge-bg-dark text-badge-text-dark border-badge-border-dark`}
 												>
 													{prefix.name}
 												</Badge>
@@ -706,7 +708,7 @@ export default function AdminPrefixesPage() {
 						{selectedPrefix && (
 							<div className="flex items-center justify-center gap-4 p-4 border rounded-md">
 								<Badge
-									className={`bg-${selectedPrefix.color}-900/60 text-${selectedPrefix.color}-300 border-${selectedPrefix.color}-700/30`}
+									className={`theme-badge-${selectedPrefix.color || 'zinc'} bg-badge-bg-dark text-badge-text-dark border-badge-border-dark`}
 								>
 									{selectedPrefix.name}
 								</Badge>

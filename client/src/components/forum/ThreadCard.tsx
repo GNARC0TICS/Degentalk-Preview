@@ -67,11 +67,7 @@ const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter' }: Thre
 							<div className="flex gap-1">
 								{prefix && (
 									<Badge
-										className={`px-2 py-0.5 text-xs ${
-											prefix.color
-												? `bg-${prefix.color}-900/60 text-${prefix.color}-300 border-${prefix.color}-700/30`
-												: 'bg-zinc-800 text-zinc-300 border-zinc-700/30'
-										}`}
+										className={`px-2 py-0.5 text-xs theme-badge-${prefix.color || 'zinc'} bg-badge-bg-dark text-badge-text-dark border-badge-border-dark`}
 									>
 										{prefix.name}
 									</Badge>

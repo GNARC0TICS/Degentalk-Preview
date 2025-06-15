@@ -1,19 +1,24 @@
 -- Create event_type enum
-CREATE TYPE "event_type" AS ENUM (
-    'rain_claimed',
-    'thread_created',
-    'post_created',
-    'cosmetic_unlocked',
-    'level_up',
-    'badge_earned',
-    'tip_sent',
-    'tip_received',
-    'xp_earned',
-    'referral_completed',
-    'product_purchased',
-    'mission_completed',
-    'airdrop_claimed'
-);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'event_type') THEN
+        CREATE TYPE "event_type" AS ENUM (
+            'rain_claimed',
+            'thread_created',
+            'post_created',
+            'cosmetic_unlocked',
+            'level_up',
+            'badge_earned',
+            'tip_sent',
+            'tip_received',
+            'xp_earned',
+            'referral_completed',
+            'product_purchased',
+            'mission_completed',
+            'airdrop_claimed'
+        );
+    END IF;
+END$$;
 
 -- Create event_logs table
 CREATE TABLE IF NOT EXISTS "event_logs" (
@@ -30,4 +35,4 @@ CREATE INDEX IF NOT EXISTS "idx_event_logs_user_created" ON "event_logs" ("user_
 CREATE INDEX IF NOT EXISTS "idx_event_logs_type_created" ON "event_logs" ("event_type", "created_at" DESC);
 
 -- Add comment to table
-COMMENT ON TABLE "event_logs" IS 'Stores user activity and system events for activity feeds, notifications, and audit trails'; 
+COMMENT ON TABLE "event_logs" IS 'Stores user activity and system events for activity feeds, notifications, and audit trails';

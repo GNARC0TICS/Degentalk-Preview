@@ -12,8 +12,8 @@
 
 ##### ✅ Suggestions
 - [x] Consolidate into **one** canonical `ThreadCard` (top-level `components/forum`).
-- [ ] Move route navigation logic behind a prop (`as="next" | "wouter"`) or abstract via `@/lib/Link` wrapper so SSR/CSR libs can swap transparently.
-- [ ] Convert shared field subset into `ThreadCardProps` type in `@/types/forum`.
+- [x] Move route navigation logic behind a prop (`as="next" | "wouter"`) or abstract via `@/lib/Link` wrapper so SSR/CSR libs can swap transparently.
+- [x] Convert shared field subset into `ThreadCardProps` type in `@/types/forum`.
 
 ---
 
@@ -47,9 +47,9 @@
 - Duplicates type definitions already declared in `contexts/ForumStructureContext.tsx`.
 
 ##### ✅ Suggestions
-- [ ] Deprecate `useForumStructure` hook.
-- [ ] Export context selector hooks (`useZones`, `useForums`) from the context file.
-- [ ] Add ESLint rule to block imports from the legacy hook path.
+- [x] Deprecate `useForumStructure` hook.
+- [x] Export context selector hooks (`useZones`, `useForums`) from the context file.
+- [x] Add ESLint rule to block imports from the legacy hook path.
 
 ---
 
@@ -62,9 +62,9 @@
 - Complete category list is re-fetched **per request**, no caching.
 
 ##### ✅ Suggestions
-- [ ] Replace N+1 queries with single SQL using `LEFT JOIN LATERAL` aggregates or Drizzle `count(threads.id).over(partition)`.
-- [ ] Memoise result in in-memory cache (e.g. `node-cache`) for 30 s or expose via `/core/cache` util.
-- [ ] Expose opt-in `includeCounts` query param so lightweight clients can skip heavy counts when not needed (e.g. mobile nav).
+- [x] Replace N+1 queries with single SQL using `LEFT JOIN LATERAL` aggregates or Drizzle `count(threads.id).over(partition)`.
+- [x] Memoise result in in-memory cache (e.g. `node-cache`) for 30 s or expose via `/core/cache` util.
+- [x] Expose opt-in `includeCounts` query param so lightweight clients can skip heavy counts when not needed (e.g. mobile nav).
 
 ---
 
@@ -75,9 +75,9 @@
 - `parentForumSlug` duplicated in `threads` & `forum_categories`; can drift.
 
 ##### ✅ Suggestions
-- [ ] Normalise on single enum `type` in `forum_categories`; derive booleans in views/queries.
-- [ ] Remove `parentForumSlug` from `threads`; instead rely on FK join to category → zone.
-- [ ] Use **generated columns** if quick look-ups by slug are needed for `parentForumSlug` functionality.
+- [x] Normalise on single enum `type` in `forum_categories`; derive booleans in views/queries.
+- [x] Remove `parentForumSlug` from `threads`; instead rely on FK join to category → zone.
+- [x] Decided against generated columns; joins now provide `parentForumSlug`/`zoneSlug` directly. No column needed.
 
 ---
 
@@ -90,6 +90,6 @@
 - Uses anonymous arrow functions in props → re-render churn.
 
 ##### ✅ Suggestions
-- [ ] Wrap thread card list in `react-window` or `framer-motion` list virtualization.
-- [ ] Memoize `ThreadCard`.
-- [ ] Extract `ThreadStats` into a sub-component.
+- [x] Wrap thread card list in `react-window` or `framer-motion` list virtualization.
+- [x] Memoize `ThreadCard`.
+- [x] Extract `ThreadStats` into a sub-component.

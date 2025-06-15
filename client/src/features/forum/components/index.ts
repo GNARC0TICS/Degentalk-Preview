@@ -40,8 +40,7 @@ export * from './ForumListItem';
 
 export { default as ThreadCard } from './ThreadCard';
 export { default as ThreadList } from './ThreadList';
-export { CreateThreadButton } from './CreateThreadButton';
-export * from './CreateThreadButton';
+export { default as CreateThreadButton } from '@/components/forum/CreateThreadButton';
 export * from './ThreadCard';
 export * from './ThreadList';
 export * from './CreateThreadForm';

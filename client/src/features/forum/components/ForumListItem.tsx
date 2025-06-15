@@ -1,6 +1,6 @@
 import { Link } from 'wouter';
 import { MessageSquare } from 'lucide-react';
-import { ForumCategory } from '../hooks/useForumStructure';
+import type { MergedForum as ForumCategory } from '@/contexts/ForumStructureContext';
 
 interface ForumListItemProps {
 	forum: ForumCategory;

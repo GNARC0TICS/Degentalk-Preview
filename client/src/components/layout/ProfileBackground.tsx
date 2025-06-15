@@ -17,7 +17,7 @@ export const ProfileBackground: React.FC<ProfileBackgroundProps> = ({
 		<>
 			{/* Main background layer - using absolute instead of fixed positioning */}
 			<div
-				className="absolute inset-0"
+				className="absolute inset-0 h-60 md:h-[30vh]" // Default height for mobile, 30vh for desktop
 				style={{
 					backgroundImage: `url('${imagePath}')`,
 					backgroundSize: 'cover',

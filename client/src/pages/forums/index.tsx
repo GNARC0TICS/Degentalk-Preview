@@ -46,9 +46,9 @@ import { useActiveUsers } from '@/features/users/hooks';
 // import type { ForumCategoryWithStats } from '@db_types/forum.types';
 import { 
 	THEME_ICONS, 
-	THEME_COLORS_BG, // Renamed from THEME_COLORS to THEME_COLORS_BG in themeConstants.ts
-	ZONE_THEMES // For icon color classes
+	THEME_COLORS_BG // Renamed from THEME_COLORS to THEME_COLORS_BG in themeConstants.ts
 } from '@/config/themeConstants';
+import { useForumTheme } from '@/contexts/ForumThemeProvider';
 
 
 const CATEGORY_COLORS = [ // This can remain for generic category styling if no theme is matched
@@ -62,8 +62,9 @@ const CATEGORY_COLORS = [ // This can remain for generic category styling if no 
 	'border-pink-500/30 bg-gradient-to-br from-pink-500/10 to-pink-700/10'
 ];
 
-function ForumPage() { // Changed to regular function
+const ForumPage = () => {
 	const { user } = useAuth();
+	const { getTheme } = useForumTheme();
 	const isLoggedIn = !!user;
 	const [location, setLocation] = useLocation();
 
@@ -139,12 +140,14 @@ function ForumPage() { // Changed to regular function
 	// Render a zone card for the carousel, now using MergedZone
 	const renderZoneCard = (zone: MergedZone, index: number) => {
 		const semanticThemeKey = zone.colorTheme || 'default';
-		const IconComponent = THEME_ICONS[semanticThemeKey as keyof typeof THEME_ICONS] || THEME_ICONS.default;
-		// Use THEME_COLORS_BG for background/border classes
+		const theme = getTheme(semanticThemeKey);
+
+		// Background / border gradient classes remain from static mapping
 		const gradientClasses = THEME_COLORS_BG[semanticThemeKey as keyof typeof THEME_COLORS_BG] || THEME_COLORS_BG.default;
-		
-		// Determine icon color class from the imported ZONE_THEMES
-		const iconColorClass = ZONE_THEMES[semanticThemeKey as keyof typeof ZONE_THEMES]?.color || ZONE_THEMES.default.color;
+
+		// Icon component or emoji from runtime theme
+		const IconComponentOrEmoji = theme.icon ?? THEME_ICONS.default;
+		const iconColorClass = theme.color || 'text-emerald-400';
 
 		return (
 			<Link
@@ -153,9 +156,11 @@ function ForumPage() { // Changed to regular function
 				className={`flex-shrink-0 w-72 h-48 rounded-lg border ${gradientClasses} bg-gradient-to-br p-5 flex flex-col transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-emerald-900/10 overflow-hidden`}
 			>
 				<div className="flex items-center mb-3">
-					<IconComponent
-						className={`h-5 w-5 mr-2 ${iconColorClass}`}
-					/>
+					{typeof IconComponentOrEmoji === 'string' ? (
+						<span className={`mr-2 text-xl ${iconColorClass}`}>{IconComponentOrEmoji}</span>
+					) : (
+						<IconComponentOrEmoji className={`h-5 w-5 mr-2 ${iconColorClass}`} />
+					)}
 					<h3 className="text-lg font-bold text-white">{zone.name}</h3>
 				</div>
 
@@ -180,32 +185,21 @@ function ForumPage() { // Changed to regular function
 		const totalChildPostCount = categoryZone.forums.reduce((sum, forum) => sum + (forum.postCount || 0), 0);
 
 		const categorySemanticThemeKey = categoryZone.colorTheme || 'default';
-		// Use THEME_COLORS_BG for background/border classes
+		const theme = getTheme(categorySemanticThemeKey);
 		const categoryColorClass = THEME_COLORS_BG[categorySemanticThemeKey as keyof typeof THEME_COLORS_BG] || CATEGORY_COLORS[index % CATEGORY_COLORS.length];
-		
-		// Determine IconComponent based on categoryZone.icon (direct emoji/char) or its semanticThemeKey
-		let CategoryIconComponent = Folder; // Default
-		if (categoryZone.icon && typeof categoryZone.icon === 'string' && THEME_ICONS[categoryZone.icon as keyof typeof THEME_ICONS]) {
-			CategoryIconComponent = THEME_ICONS[categoryZone.icon as keyof typeof THEME_ICONS];
-		} else if (categorySemanticThemeKey && THEME_ICONS[categorySemanticThemeKey as keyof typeof THEME_ICONS]) {
-			CategoryIconComponent = THEME_ICONS[categorySemanticThemeKey as keyof typeof THEME_ICONS];
-		}
-		// If categoryZone.icon is an emoji, it will be handled by the span rendering later.
 
-		const categoryIconColorClass = (categorySemanticThemeKey && ZONE_THEMES[categorySemanticThemeKey as keyof typeof ZONE_THEMES]?.color)
-			? ZONE_THEMES[categorySemanticThemeKey as keyof typeof ZONE_THEMES].color
-			: ZONE_THEMES.default.color;
-
+		const IconFromThemeOrFallback = theme.icon ?? Folder;
+		const categoryIconColorClass = theme.color || 'text-emerald-400';
 
 		return (
 			<Card key={categoryZone.id.toString()} className={`overflow-hidden border mb-8 ${categoryColorClass}`}>
 				<CardHeader className="pb-3">
 					<div className="flex items-center justify-between">
 						<CardTitle className="text-lg font-semibold flex items-center">
-							{categoryZone.icon && !THEME_ICONS[categoryZone.icon as keyof typeof THEME_ICONS] ? ( // If icon is an emoji/char not in THEME_ICONS
-								<span className={`mr-2 text-xl ${categoryIconColorClass}`}>{categoryZone.icon}</span>
+							{typeof IconFromThemeOrFallback === 'string' ? (
+								<span className={`mr-2 text-xl ${categoryIconColorClass}`}>{IconFromThemeOrFallback}</span>
 							) : (
-								<CategoryIconComponent className={`h-5 w-5 mr-2 ${categoryIconColorClass}`} />
+								<IconFromThemeOrFallback className={`h-5 w-5 mr-2 ${categoryIconColorClass}`} />
 							)}
 							{categoryZone.name}
 						</CardTitle>

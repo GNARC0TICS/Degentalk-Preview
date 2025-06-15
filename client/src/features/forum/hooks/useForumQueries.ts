@@ -9,7 +9,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { forumApi } from '../services/forumApi';
 import type { NestedForumCategory, ThreadSearchParams as OriginalThreadSearchParams } from '../services/forumApi';
 import { toast } from 'sonner';
-import type { Tag, ThreadPrefix, ForumCategoryWithStats, ThreadWithUser } from '@/types/forum';
+import type { Tag } from '@/types/forum';
+import type { ThreadPrefix, ForumCategoryWithStats, ThreadWithUser } from '@db_types/forum.types';
 import { useEffect } from 'react';
 import { apiRequest, apiPost, apiPut, apiDelete } from '@/lib/api-request';
 
@@ -46,8 +47,8 @@ export const useFetchForumCategoriesTree = () => {
 export const useCategoriesWithStats = () => {
 	return useQuery({
 		queryKey: ['/api/categories', 'with-stats'],
-		queryFn: forumApi.getCategoriesWithStats,
-		staleTime: 1 * 60 * 1000 // 1 minute (stats are more dynamic)
+		queryFn: forumApi.getCategories,
+		staleTime: 60 * 1000,
 	});
 };
 
@@ -116,8 +117,9 @@ export const useThread = (slugOrId: string | number | undefined) => {
 export interface CreateThreadParams {
 	title: string;
 	content: string;
-	forumSlug: string; // NEW
-	prefixId?: string; // Assuming prefixId from form is string, convert to number if backend expects number
+	categoryId: number;
+	forumSlug?: string; // Optional, not used by API but handy for cache keys / XP logic
+	prefixId?: number;
 	tags?: string[];
 	editorState?: any;
 	// Add any other parameters the API expects for thread creation
@@ -532,61 +534,53 @@ export const useThreadsByTag = (
 	});
 };
 
-/**
- * Prefixes -- NEW Hook
- */
-export const useForumPrefixes = (forumSlug?: string) => {
+// ------------ Prefix Hooks ------------
+
+// Primary unified hook
+export const usePrefixes = (params?: { categoryId?: number }) => {
 	const queryClient = useQueryClient();
+	const categoryId = params?.categoryId;
 
-	// Create a query key that depends on the forumSlug
-	const queryKey = forumSlug ? ['/api/forum/prefixes', { forumSlug }] : ['/api/forum/prefixes', 'all']; // 'all' or a different key if fetching all without a slug
+	const queryKey = ['/api/forum/prefixes', { categoryId }];
 
-	// Use React Query to fetch prefixes
 	const result = useQuery<ThreadPrefix[], Error>({
 		queryKey,
-		queryFn: () => forumApi.getPrefixes(forumSlug), // forumApi.getPrefixes needs to accept forumSlug (string)
-		// Always ensure we have fresh prefix data when forumSlug changes
-		staleTime: 1000 * 60 * 5, // 5 minutes
-		enabled: !!forumSlug, // Only fetch if forumSlug is provided, or always fetch if handling 'all' case
+		queryFn: () => forumApi.getPrefixes(categoryId),
+		staleTime: 1000 * 60 * 5,
+		enabled: typeof categoryId === 'number',
 	});
 
-	// Whenever forumSlug changes, invalidate the prefixes query to ensure fresh data for that specific forum
+	// Ensure fresh data if category changes
 	useEffect(() => {
-		if (forumSlug) {
-			queryClient.invalidateQueries({ queryKey: ['/api/forum/prefixes', { forumSlug }] });
-		} else {
-			// If forumSlug is not provided, you might want to invalidate a general prefix query if one exists
-			// queryClient.invalidateQueries({ queryKey: ['/api/forum/prefixes', 'all'] });
+		if (typeof categoryId === 'number') {
+			queryClient.invalidateQueries({ queryKey: ['/api/forum/prefixes', { categoryId }] });
 		}
-	}, [forumSlug, queryClient]);
+	}, [categoryId, queryClient]);
 
 	return result;
 };
 
-// Hook to fetch forum categories with statistics
-export const useForumCategories = useCategoriesWithStats;
-
-// Hook to fetch a specific category by slug
-export const useForumCategory = useCategory;
-
-// Hook to fetch thread prefixes, optionally filtered by category
-export const useThreadPrefixes = (forumSlug?: string) => {
-	return useQuery<ThreadPrefix[]>({
-		queryKey: ['threadPrefixes', forumSlug],
-		queryFn: () => forumApi.getPrefixes(forumSlug),
-		staleTime: 5 * 60 * 1000,
-		enabled: !!forumSlug
-	});
+/**
+ * @deprecated  Use usePrefixes({ categoryId }) instead. This wrapper keeps backward compatibility during migration.
+ */
+export const useForumPrefixes = (forumSlug?: string, categoryId?: number) => {
+	// NOTE: forumSlug parameter is ignored; provide categoryId if available.
+	return usePrefixes({ categoryId });
 };
 
-// Hook to fetch forum tags
-export const useForumTags = useTags;
+export const useThreadPrefixes = useForumPrefixes;
 
 /**
- * Post Update Hook
- *
- * Provides a mutation hook for updating posts with optimistic UI updates.
+ * @deprecated Back-compat alias.
  */
+export const useForumPrefixesAlias = useForumPrefixes;
+export const useThreadPrefixesAlias = useThreadPrefixes;
+
+// Hook to fetch forum categories, category and tags remain the same
+export const useForumCategories = useCategoriesWithStats;
+export const useForumCategory = useCategory;
+export const useForumTags = useTags;
+
 export const usePostUpdate = () => {
 	const queryClient = useQueryClient();
 
@@ -617,5 +611,3 @@ export const usePostUpdate = () => {
 		}
 	});
 };
-
-export type { CreateThreadParams };

@@ -60,6 +60,8 @@ export interface ForumCategoryWithStats extends ForumCategory {
   isHidden: boolean;
   canHaveThreads: boolean;
   childForums?: ForumCategoryWithStats[];
+  isZone?: boolean; // Added to reflect usage in routes
+  canonical?: boolean; // Added to reflect usage in routes
 }
 
 // Define and export ThreadPrefix type

@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { TwitterApi } from 'twitter-api-v2';
 import { db } from '@server/src/core/db';
-import { users } from '../../../../db/schema/user/users';
+import { users } from '@schema/user/users';
 import { eq } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
 
@@ -12,19 +12,30 @@ const {
 	X_CALLBACK_URL
 } = process.env as Record<string, string>;
 
-if (!X_CLIENT_ID || !X_CLIENT_SECRET || !X_CALLBACK_URL) {
-	throw new Error('Missing X (Twitter) OAuth env vars: X_CLIENT_ID, X_CLIENT_SECRET, X_CALLBACK_URL');
+function ensureXEnv() {
+	if (!X_CLIENT_ID || !X_CLIENT_SECRET || !X_CALLBACK_URL) {
+		throw new Error('Missing X (Twitter) OAuth env vars: X_CLIENT_ID, X_CLIENT_SECRET, X_CALLBACK_URL');
+	}
 }
 
-// Twitter OAuth2 client (PKCE)
-const twitterClient = new TwitterApi({
-	clientId: X_CLIENT_ID,
-	clientSecret: X_CLIENT_SECRET,
-});
+// Twitter OAuth2 client (PKCE) – lazily initialised so dev builds without env vars don't crash
+let twitterClient: TwitterApi | null = null;
+
+function getTwitterClient() {
+	if (!twitterClient) {
+		ensureXEnv();
+		twitterClient = new TwitterApi({
+			clientId: X_CLIENT_ID!,
+			clientSecret: X_CLIENT_SECRET!,
+		});
+	}
+	return twitterClient;
+}
 
 export async function initiateXLogin(req: Request, res: Response, next: NextFunction) {
 	try {
-		const { url, codeVerifier, state } = twitterClient.generateOAuth2AuthLink(X_CALLBACK_URL, {
+		const client = getTwitterClient();
+		const { url, codeVerifier, state } = client.generateOAuth2AuthLink(X_CALLBACK_URL!, {
 			scope: ['tweet.read', 'tweet.write', 'users.read', 'offline.access'],
 		});
 
@@ -45,12 +56,13 @@ export async function handleXCallback(req: Request, res: Response, next: NextFun
 			return res.status(400).json({ message: 'Invalid OAuth state' });
 		}
 
+		const client = getTwitterClient();
 		const {
 			client: loggedClient,
 			accessToken,
 			refreshToken,
 			expiresIn,
-		} = await twitterClient.loginWithOAuth2({
+		} = await client.loginWithOAuth2({
 			code,
 			codeVerifier: sessionData.codeVerifier,
 			redirectUri: X_CALLBACK_URL,

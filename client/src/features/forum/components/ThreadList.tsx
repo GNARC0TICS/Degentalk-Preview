@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import ThreadCard from './ThreadCard'; 
-import { getQueryFn } from '@/lib/queryClient'; 
-import { Pagination } from '@/components/ui/pagination'; // Added import
+import ThreadCard from '@/components/forum/ThreadCard'; // Corrected import path
+import { getQueryFn } from '@/lib/queryClient';
+import { Pagination } from '@/components/ui/pagination';
 
 // Type for individual tag object
 export type ApiTag = {
@@ -17,7 +17,7 @@ export type ApiThreadUser = {
   username: string;
   avatarUrl?: string | null;
   activeAvatarUrl?: string | null;
-  role?: string | null;
+  role?: "user" | "mod" | "admin" | null;
 };
 
 // Type for category object nested in thread

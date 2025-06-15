@@ -11,6 +11,7 @@ import {
 	threadPrefixes,
 	tags,
 	threadTags,
+	postReactions, // Added import for postReactions
 	users as usersTable // Alias users
 } from '@schema';
 import { sql, desc, asc, and, eq, isNull, count, like, ilike, or, inArray, SQL } from 'drizzle-orm';
@@ -302,10 +303,13 @@ export const forumService = {
 	async getThreadDetails(
 		slugOrId: string | number,
 		page: number = 1,
-		limit: number = 50,
+		requestedLimit: number = 20, // Changed default to 20, matching typical frontend
 		currentUserId?: number
 	): Promise<ThreadWithPostsAndUser | null> {
 		try {
+			const MAX_LIMIT = 100;
+			const limit = Math.min(requestedLimit, MAX_LIMIT); // Cap the limit
+
 			let threadCondition: SQL<unknown>;
 
 			if (typeof slugOrId === 'string' && isNaN(Number(slugOrId))) {
@@ -347,38 +351,40 @@ export const forumService = {
 
 			let hasBookmarked = false; 
 
-			const categoryData: ForumCategorySchemaType = {
-				id: rawThreadData.categoryRaw.id,
-				name: rawThreadData.categoryRaw.name,
-				slug: rawThreadData.categoryRaw.slug,
-				description: rawThreadData.categoryRaw.description ?? null,
-				parentForumSlug: rawThreadData.categoryRaw.parentForumSlug ?? null,
-				parentId: rawThreadData.categoryRaw.parentId ?? null,
-				type: rawThreadData.categoryRaw.type,
-				position: rawThreadData.categoryRaw.position,
-				isVip: rawThreadData.categoryRaw.isVip,
-				isLocked: rawThreadData.categoryRaw.isLocked,
-				minXp: rawThreadData.categoryRaw.minXp,
-				color: rawThreadData.categoryRaw.color,
-				icon: rawThreadData.categoryRaw.icon,
-				colorTheme: rawThreadData.categoryRaw.colorTheme ?? null,
-				isHidden: rawThreadData.categoryRaw.isHidden,
-				isZone: rawThreadData.categoryRaw.type === 'zone',
-				canonical: rawThreadData.categoryRaw.type === 'zone' && !rawThreadData.categoryRaw.parentId,
-				minGroupIdRequired: rawThreadData.categoryRaw.minGroupIdRequired ?? null,
-				tippingEnabled: rawThreadData.categoryRaw.tippingEnabled,
-				xpMultiplier: rawThreadData.categoryRaw.xpMultiplier,
-				pluginData: rawThreadData.categoryRaw.pluginData || {},
-				createdAt: rawThreadData.categoryRaw.createdAt,
-				updatedAt: rawThreadData.categoryRaw.updatedAt,
+			const categoryDataFromDb = rawThreadData.categoryRaw;
+			
+			// Construct the category object for the response, ensuring it matches ForumCategorySchemaType
+			// The derived isZone and canonical are not part of the base schema type.
+			const categoryForResponse: ForumCategorySchemaType = {
+				id: categoryDataFromDb.id,
+				name: categoryDataFromDb.name,
+				slug: categoryDataFromDb.slug,
+				description: categoryDataFromDb.description ?? null,
+				parentForumSlug: categoryDataFromDb.parentForumSlug ?? null,
+				parentId: categoryDataFromDb.parentId ?? null,
+				type: categoryDataFromDb.type,
+				position: categoryDataFromDb.position,
+				isVip: categoryDataFromDb.isVip,
+				isLocked: categoryDataFromDb.isLocked,
+				minXp: categoryDataFromDb.minXp,
+				color: categoryDataFromDb.color,
+				icon: categoryDataFromDb.icon,
+				colorTheme: categoryDataFromDb.colorTheme ?? null,
+				isHidden: categoryDataFromDb.isHidden,
+				minGroupIdRequired: categoryDataFromDb.minGroupIdRequired ?? null,
+				tippingEnabled: categoryDataFromDb.tippingEnabled,
+				xpMultiplier: categoryDataFromDb.xpMultiplier,
+				pluginData: categoryDataFromDb.pluginData || {},
+				createdAt: categoryDataFromDb.createdAt,
+				updatedAt: categoryDataFromDb.updatedAt,
 			};
 			
-			const { thread, user } = rawThreadData; // categoryRaw is not needed here due to categoryData
+			const { thread, user } = rawThreadData;
 
 			const threadForResponse: ThreadWithUserAndCategory = {
 				...(thread as typeof threads.$inferSelect), 
 				user: user as User, 
-				category: categoryData,
+				category: categoryForResponse, // Use the schema-compliant category object
 				tags: threadTagResults.map(t => ({ 
 					...t,
 					description: t.description ?? null
@@ -388,8 +394,8 @@ export const forumService = {
 				// Explicitly set parentForumSlug from the category data
 				// If the category is a forum itself, its slug is the parentForumSlug for the thread.
 				// If the category is a sub-category (type='category') under a zone, then categoryData.parentForumSlug would be the zone's slug.
-				// The logic here assumes categoryData.slug is the direct forum the thread belongs to.
-				parentForumSlug: categoryData.slug, 
+				// The logic here assumes categoryForResponse.slug is the direct forum the thread belongs to.
+				parentForumSlug: categoryForResponse.slug, 
 			};
 
 			const offset = (page - 1) * limit;
@@ -398,7 +404,21 @@ export const forumService = {
 				eq(posts.isDeleted, false),
 			];
 
+			// Subquery to check if the current user has liked a post
+			const userReactionSubquery = db.$with('user_reactions').as(
+				db.select({
+					postId: postReactions.postId,
+					liked: sql<boolean>`true`.as('liked')
+				})
+				.from(postReactions)
+				.where(and(
+					eq(postReactions.userId, currentUserId || -1), // Use -1 if no user, so no matches
+					eq(postReactions.reactionType, 'like')
+				))
+			);
+			
 			const postListRaw = await db
+				.with(userReactionSubquery)
 				.select({ 
 					id: posts.id, uuid: posts.uuid, threadId: posts.threadId, userId: posts.userId, content: posts.content,
 					editorState: posts.editorState, likeCount: posts.likeCount, tipCount: posts.tipCount, totalTips: posts.totalTips,
@@ -406,10 +426,12 @@ export const forumService = {
 					createdAt: posts.createdAt, updatedAt: posts.updatedAt, replyToPostId: posts.replyToPostId, pluginData: posts.pluginData,
 					isDeleted: posts.isDeleted, deletedAt: posts.deletedAt, moderationReason: posts.moderationReason,
 					visibilityStatus: posts.visibilityStatus, editedBy: posts.editedBy,
-					user: usersTable 
+					user: usersTable,
+					hasLiked: userReactionSubquery.liked 
 				})
 				.from(posts)
 				.innerJoin(usersTable, eq(posts.userId, usersTable.id))
+				.leftJoin(userReactionSubquery, eq(posts.id, userReactionSubquery.postId))
 				.where(and(...postConditions))
 				.orderBy(asc(posts.createdAt))
 				.limit(limit)
@@ -418,11 +440,11 @@ export const forumService = {
 			const totalPostsResult = await db.select({ count: count() }).from(posts).where(and(...postConditions));
 			const totalPosts = totalPostsResult[0]?.count || 0;
 
-			const postIds = postListRaw.map(p => p.id);
-			let userLikesSet = new Set<number>(); 
+			// const postIds = postListRaw.map(p => p.id); // No longer needed for userLikesSet
+			// let userLikesSet = new Set<number>(); // No longer needed
 
 			const postsForResponse: PostWithUser[] = postListRaw.map(p => {
-				const { user: postUser, ...postDataFields } = p;
+				const { user: postUser, hasLiked, ...postDataFields } = p; // Destructure hasLiked
 				const finalPostData = {
 					...postDataFields,
 					pluginData: postDataFields.pluginData || {}, 
@@ -430,7 +452,7 @@ export const forumService = {
 				return {
 					...(finalPostData as PostSchemaType), 
 					user: postUser as User, 
-					hasLiked: userLikesSet.has(p.id),
+					hasLiked: !!hasLiked, // Ensure boolean, convert null to false
 				};
 			});
 
@@ -439,9 +461,9 @@ export const forumService = {
 				posts: postsForResponse,
 				pagination: {
 					page,
-					pageSize: limit,
+					pageSize: limit, // Use the capped limit variable
 					totalItems: totalPosts,
-					totalPages: Math.ceil(totalPosts / limit),
+					totalPages: Math.ceil(totalPosts / limit), // Use the capped limit variable
 				},
 			};
 

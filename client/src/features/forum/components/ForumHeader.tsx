@@ -32,10 +32,12 @@ export function ForumHeader({ forum, isPrimaryZone = false, className = '' }: Fo
 
 	// For Primary Zones, render a more distinct, themed header
 	if (isPrimaryZone) {
+		const dynamicThemeClass = `theme-header-${forum.colorTheme || 'zinc'}`;
 		return (
-			<div className={`forum-header primary-zone-header ${themeClass} mb-6 ${className}`}>
+			<div className={`forum-header primary-zone-header ${dynamicThemeClass} mb-6 ${className}`}>
 				<div
-					className={`rounded-2xl p-6 ${forum.colorTheme ? `bg-gradient-to-r from-${forum.colorTheme}-900/60 to-${forum.colorTheme}-800/40` : 'bg-zinc-900/80'} border-2 ${forum.colorTheme ? `border-${forum.colorTheme}-600/40` : 'border-zinc-700'}`}
+					// Apply static Tailwind classes that use CSS variables
+					className="rounded-2xl p-6 bg-gradient-to-r from-forum-header-gradient-from to-forum-header-gradient-to border-2 border-forum-header-border"
 				>
 					<div className="flex items-center mb-4">
 						{renderIcon()}
@@ -43,7 +45,8 @@ export function ForumHeader({ forum, isPrimaryZone = false, className = '' }: Fo
 							<h1 className="text-2xl font-bold text-white">{forum.name}</h1>
 							<div className="flex items-center mt-1">
 								<Badge
-									className={`mr-2 ${forum.colorTheme ? `bg-${forum.colorTheme}-700 hover:bg-${forum.colorTheme}-600` : 'bg-zinc-700 hover:bg-zinc-600'}`}
+									// Apply static Tailwind classes that use CSS variables
+									className="mr-2 bg-forum-header-badge-bg hover:bg-forum-header-badge-bg-hover"
 								>
 									Primary Zone
 								</Badge>

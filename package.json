@@ -180,6 +180,7 @@
 		"vaul": "^1.1.2",
 		"wouter": "^3.7.0",
 		"ws": "^8.18.0",
+		"twitter-api-v2": "^1.23.2",
 		"zod": "^3.24.2",
 		"zod-validation-error": "^3.4.0",
 		"zustand": "^5.0.3"
@@ -219,7 +220,10 @@
 		"ts-node": "^10.9.2",
 		"tsx": "^4.19.4",
 		"typescript": "5.6.3",
-		"vite": "^5.4.14"
+		"vite": "^5.4.14",
+		"eslint": "^8.57.0",
+		"@typescript-eslint/parser": "6.21.0",
+		"@typescript-eslint/eslint-plugin": "6.21.0"
 	},
 	"optionalDependencies": {
 		"bufferutil": "^4.0.8"

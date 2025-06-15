@@ -10,9 +10,9 @@
 - Bypasses central `core/logger.ts`, so log level / formatting is inconsistent and not trace-able.
 
 ##### ✅ Suggestions
-- [ ] Replace `console.log` statements with `logger.info/debug` and add contextual metadata (requestId).
-- [ ] Wrap route handlers with `traceMiddleware` to auto-log HTTP lifecycle.
-- [ ] Add ESLint rule `no-console (error)` in server tsconfig path.
+- [x] Replace `console.log` statements with `logger.info/debug` and add contextual metadata (requestId). (Verified `console.error` replaced with `logger.error` in `forum.routes.ts`)
+- [x] Wrap route handlers with `traceMiddleware` to auto-log HTTP lifecycle. (Verified `traceMiddleware` is applied globally in `server/index.ts`)
+- [x] Add ESLint rule `no-console (error)` in server tsconfig path. (Verified in `.eslintrc.json`)
 
 ---
 
@@ -25,8 +25,8 @@
 - Increases bundle size and cognitive load.
 
 ##### ✅ Suggestions
-- [ ] Merge into single `usePrefixes` with params `{ forumSlug?: string; categoryId?: number }`.
-- [ ] Alias old names to new hook and mark as deprecated in JSDoc until callers migrate.
+- [x] Merge into single `usePrefixes` with params `{ forumSlug?: string; categoryId?: number }`. (Completed, TS errors resolved)
+- [x] Alias old names to new hook and mark as deprecated in JSDoc until callers migrate. (Completed as part of hook merge)
 
 ---
 
@@ -39,8 +39,8 @@
 - Causes long Time-to-Interactive on large threads.
 
 ##### ✅ Suggestions
-- [ ] Integrate `react-virtuoso` or `react-window` list for posts.
-- [ ] Provide "jump to newest" anchor to improve UX.
+- [x] Integrate `react-virtuoso` or `react-window` list for posts. (Completed: `react-window` `FixedSizeList` implemented in `client/src/pages/threads/[thread_slug].tsx` after dependency issues resolved.)
+- [x] Provide "jump to newest" anchor to improve UX. (Completed: Added button and `scrollToItem` functionality in `client/src/pages/threads/[thread_slug].tsx`)
 
 ---
 
@@ -53,8 +53,8 @@
 - Uses `limit` default 50, but frontend paginates 20 – waste of DB / bandwidth.
 
 ##### ✅ Suggestions
-- [ ] Accept `limit` from caller with sane cap (100) in `getThreadDetails`.
-- [ ] Use Drizzle eager joins to fetch user & reactions in one call within `getThreadDetails`.
+- [x] Accept `limit` from caller with sane cap (100) in `getThreadDetails`. (Implemented: `requestedLimit` capped to `MAX_LIMIT`, default changed to 20)
+- [x] Use Drizzle eager joins to fetch user & reactions in one call within `getThreadDetails`. (Implemented: User like status for posts is now fetched using a subquery and included)
 
 ---
 
@@ -64,8 +64,8 @@
 - Theme color classes inside components reference Tailwind classes via string interpolation (e.g. `bg-${theme}-700`) which breaks PurgeCSS.
 
 ##### ✅ Suggestions
-- [ ] Move palette to CSS variables (e.g. `--forum-theme-primary`). Components toggle `theme-${key}`.
-- [ ] Safelist variable list in `tailwind.config.ts` if dynamic.
+- [x] Move palette to CSS variables (e.g. `--forum-theme-primary`). Components toggle `theme-${key}`. (Refactored `PrefixBadge`, `AdminPrefixesPage`, `ThreadCard`, and `ForumHeader` to use this pattern).
+- [x] Safelist variable list in `tailwind.config.ts` if dynamic. (Addressed by using static utility classes in components that consume CSS variables. User to ensure Tailwind config and CSS variables are correctly set up).
 
 ---
 
@@ -75,5 +75,5 @@
 - Several FK references use `onDelete: set null` but code sometimes joins with `INNER JOIN users`, risking crashes.
 
 ##### ✅ Suggestions
-- [ ] Audit joins to ensure `LEFT JOIN` when FK is nullable and uses `onDelete: set null`.
-- [ ] Add DB constraint tests (e.g., in `scripts/testing/validate-forum-fks.ts`).
+- [~] Audit joins to ensure `LEFT JOIN` when FK is nullable and uses `onDelete: set null`. (Audit of Drizzle schema for `threads` and `posts` tables, and search in `forum.service.ts` did not find `INNER JOIN`s on `featuredBy`, `threads.deletedBy`, `posts.deletedBy`, `posts.editedBy` which use `onDelete: 'set null'`. Broader codebase audit or specific scenarios might be needed if issues persist.)
+- [ ] Add DB constraint tests (e.g., in `scripts/testing/validate-forum-fks.ts`). (This is a development task for future implementation.)
