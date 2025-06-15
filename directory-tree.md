@@ -1,8 +1,24 @@
 # ForumFusion Directory Structure
   
-Generated on: 2025-06-14
+Generated on: 2025-06-15
 
 ```
+├─ _audit/
+│  ├─ forum/
+│  │  ├─ 00-overview.md
+│  │  ├─ 01-batch-1.md
+│  │  ├─ 02-batch-2.md
+│  │  ├─ 03-batch-3.md
+│  │  ├─ 04-batch-4.md
+│  │  ├─ 05-batch-5.md
+│  │  ├─ 06-integrity-plan.md
+│  │  ├─ 07-user-flow-audit.md
+│  │  └─ 08-consolidation-update.md
+│  ├─ codebase-audit.md
+│  ├─ codebase-tasks.md
+│  ├─ Degentalk-X-Integration-plan.md
+│  ├─ forum-audit.md
+│  └─ profile-system-ux-audit-2025-06-15.md
 ├─ .clinerules/
 │  ├─ available-rules.md
 │  ├─ cline-continuous-improvement-protocol.md
@@ -29,6 +45,8 @@ Generated on: 2025-06-14
 ├─ .github/
 │  └─ workflows/
 │     └─ validate-codebase.yml
+├─ .tscache/
+│  └─ .tsbuildinfo
 ├─ archive/
 │  └─ .DS_Store
 ├─ attached_assets/
@@ -45,6 +63,9 @@ Generated on: 2025-06-14
 │  ├─ public/
 │  │  └─ images/
 │  │     ├─ Dgen.PNG
+│  │     ├─ DGNSHOP.PNG
+│  │     ├─ DGNZONES.PNG
+│  │     ├─ ForumsGrafitti.PNG
 │  │     └─ profile-background.png
 │  ├─ src/
 │  │  ├─ components/
@@ -81,23 +102,21 @@ Generated on: 2025-06-14
 │  │  │  │  ├─ breadcrumb-nav.tsx
 │  │  │  │  ├─ CanonicalZoneGrid.tsx
 │  │  │  │  ├─ category-card.tsx
-│  │  │  │  ├─ create-thread-button.tsx
 │  │  │  │  ├─ forum-card.tsx
 │  │  │  │  ├─ forum-category-card.tsx
 │  │  │  │  ├─ forum-filters.tsx
 │  │  │  │  ├─ forum-guidelines.tsx
-│  │  │  │  ├─ forum-search.tsx
-│  │  │  │  ├─ post-card.tsx
 │  │  │  │  ├─ prefix-badge.tsx
 │  │  │  │  ├─ ShareButton.tsx
 │  │  │  │  ├─ ShopCard.tsx
 │  │  │  │  ├─ SolveBadge.tsx
 │  │  │  │  ├─ tag-input.tsx
-│  │  │  │  ├─ thread-card.tsx
 │  │  │  │  ├─ ThreadAuthor.tsx
 │  │  │  │  ├─ UserLevelDisplay.tsx
+│  │  │  │  ├─ XpBoostBadge.tsx
 │  │  │  │  ├─ zone-group.tsx
-│  │  │  │  └─ ZoneCard.tsx
+│  │  │  │  ├─ ZoneCard.tsx
+│  │  │  │  └─ ZoneStats.tsx
 │  │  │  ├─ identity/
 │  │  │  │  └─ path-progress.tsx
 │  │  │  ├─ layout/
@@ -272,9 +291,9 @@ Generated on: 2025-06-14
 │  │  │  ├─ forumMap.config.ts
 │  │  │  ├─ README.md
 │  │  │  ├─ tags.config.ts
+│  │  │  ├─ themeConstants.ts
 │  │  │  ├─ ui.config.ts
-│  │  │  ├─ xp.config.ts
-│  │  │  └─ zones.config.ts
+│  │  │  └─ xp.config.ts
 │  │  ├─ constants/
 │  │  │  ├─ env.ts
 │  │  │  ├─ routes.ts
@@ -423,6 +442,7 @@ Generated on: 2025-06-14
 │  │  │  │  ├─ platform-settings.tsx
 │  │  │  │  ├─ prefixes.tsx
 │  │  │  │  ├─ reports.tsx
+│  │  │  │  ├─ roles.tsx
 │  │  │  │  ├─ tags.tsx
 │  │  │  │  ├─ threads.tsx
 │  │  │  │  ├─ tip-rain-settings.tsx
@@ -432,11 +452,11 @@ Generated on: 2025-06-14
 │  │  │  │  ├─ user-inventory.tsx
 │  │  │  │  ├─ users.tsx
 │  │  │  │  └─ xp-settings.tsx
-│  │  │  ├─ forum/
 │  │  │  ├─ forums/
 │  │  │  │  ├─ [forum_slug].tsx
 │  │  │  │  ├─ [slug].tsx
-│  │  │  │  └─ index.tsx
+│  │  │  │  ├─ index.tsx
+│  │  │  │  └─ search.tsx
 │  │  │  ├─ missions/
 │  │  │  │  └─ index.tsx
 │  │  │  ├─ mod/
@@ -553,7 +573,8 @@ Generated on: 2025-06-14
 │  │  │  ├─ wallets.ts
 │  │  │  ├─ withdrawalRequests.ts
 │  │  │  ├─ xpActionSettings.ts
-│  │  │  └─ xpAdjustmentLogs.ts
+│  │  │  ├─ xpAdjustmentLogs.ts
+│  │  │  └─ xpLogs.ts
 │  │  ├─ forum/
 │  │  │  ├─ categories.ts
 │  │  │  ├─ customEmojis.ts
@@ -629,7 +650,8 @@ Generated on: 2025-06-14
 │  │  │  ├─ userGroups.ts
 │  │  │  ├─ userRoles.ts
 │  │  │  ├─ users.ts
-│  │  │  └─ verificationTokens.ts
+│  │  │  ├─ verificationTokens.ts
+│  │  │  └─ xShares.ts
 │  │  └─ index.ts
 │  ├─ types/
 │  │  ├─ announcement.types.ts
@@ -652,7 +674,6 @@ Generated on: 2025-06-14
 │  │  └─ admin-users-query.md
 │  ├─ forum/
 │  │  ├─ backend-setup-guide.md
-│  │  ├─ canonical-zones-implementation.md
 │  │  ├─ mentions-index.md
 │  │  └─ SETUP_GUIDE.md
 │  ├─ memory-bank/
@@ -681,7 +702,6 @@ Generated on: 2025-06-14
 │  ├─ component-tree.md
 │  ├─ designworkflow.md
 │  ├─ dgt-token-management-plan.md
-│  ├─ FORUM_README.md
 │  ├─ frontend-enhancement-plan.md
 │  ├─ launch-readiness-audit-may-2025.md
 │  ├─ README_API.md
@@ -695,9 +715,10 @@ Generated on: 2025-06-14
 │  ├─ wallet-api-integration-plan.md
 │  ├─ wallet-system.md
 │  ├─ xp-dgt-system-implementation-plan.md
-│  ├─ xp-system-reference.md
-│  └─ zones.source-of-truth.md
+│  └─ xp-system-reference.md
 ├─ lib/
+│  ├─ auth/
+│  │  └─ canUser.ts
 │  ├─ emoji/
 │  │  └─ unlockEmojiPack.ts
 │  ├─ forum/
@@ -716,6 +737,10 @@ Generated on: 2025-06-14
 ├─ logs/
 │  └─ app.log
 ├─ migrations/
+│  ├─ archive/
+│  │  ├─ 0007_romantic_colossus.sql
+│  │  ├─ 0007_smooth_sphinx.sql
+│  │  └─ canonical-zones-schema-update.ts
 │  ├─ meta/
 │  │  ├─ _journal.json
 │  │  ├─ 0000_snapshot.json
@@ -727,6 +752,16 @@ Generated on: 2025-06-14
 │  │  ├─ 0006_snapshot.json
 │  │  └─ 0007_snapshot.json
 │  ├─ postgres/
+│  │  ├─ archive/
+│  │  │  ├─ 0000_rapid_doctor_doom.sql
+│  │  │  ├─ 0001_orange_norrin_radd.sql
+│  │  │  ├─ 0002_broken_viper.sql
+│  │  │  ├─ 0003_faulty_blink.sql
+│  │  │  ├─ 0004_fixed_tempest.sql
+│  │  │  ├─ 0006_amazing_slyde.sql
+│  │  │  ├─ 0007_wooden_emma_frost.sql
+│  │  │  ├─ 0010_slow_hammerhead.sql
+│  │  │  └─ 0011_robust_stephen_strange.sql
 │  │  ├─ meta/
 │  │  │  ├─ _journal.json
 │  │  │  ├─ 0000_snapshot.json
@@ -740,20 +775,12 @@ Generated on: 2025-06-14
 │  │  │  ├─ 0009_snapshot.json
 │  │  │  ├─ 0010_snapshot.json
 │  │  │  └─ 0011_snapshot.json
-│  │  ├─ 0000_rapid_doctor_doom.sql
-│  │  ├─ 0001_orange_norrin_radd.sql
-│  │  ├─ 0002_broken_viper.sql
-│  │  ├─ 0003_faulty_blink.sql
-│  │  ├─ 0004_fixed_tempest.sql
-│  │  ├─ 0006_amazing_slyde.sql
-│  │  ├─ 0007_wooden_emma_frost.sql
-│  │  ├─ 0010_slow_hammerhead.sql
-│  │  ├─ 0011_robust_stephen_strange.sql
 │  │  └─ 0012_event_logs_table.sql
 │  ├─ .DS_Store
-│  ├─ 0007_romantic_colossus.sql
-│  ├─ 0007_smooth_sphinx.sql
-│  └─ canonical-zones-schema-update.ts
+│  ├─ 0008_add_users_profile_fields.sql
+│  ├─ 0009_create_xp_logs_table.sql
+│  ├─ 0010_add_x_account_fields.sql
+│  └─ 0011_create_x_shares_table.sql
 ├─ MVP-SPRINTS/
 │  ├─ adminlaunchplan.md
 │  ├─ projectlaunchplan.md
@@ -793,6 +820,7 @@ Generated on: 2025-06-14
 │  │  ├─ seed-shop.ts
 │  │  ├─ seed-treasury.ts
 │  │  ├─ seed-ui-config-quotes.ts
+│  │  ├─ seed-user-role-migration.ts
 │  │  ├─ seed-users.ts
 │  │  ├─ seed-vaults.ts
 │  │  ├─ seed-xp-actions.ts
@@ -800,14 +828,18 @@ Generated on: 2025-06-14
 │  │  ├─ update-levels-table.ts
 │  │  ├─ update-users-table.ts
 │  │  └─ verify-neon-connection.ts
+│  ├─ logs/
 │  ├─ ops/
 │  │  ├─ check-forum-config-sync.ts
 │  │  └─ setup-xp-system.sh
+│  ├─ refactor/
+│  │  └─ rbac-codemod.ts
 │  ├─ seed/
 │  │  ├─ shop/
 │  │  │  └─ username-colors.ts
 │  │  ├─ run-username-colors.ts
 │  │  ├─ seed-dummy-threads.ts
+│  │  ├─ seedDynamicContent.ts
 │  │  └─ seedForumsFromConfig.ts
 │  ├─ templates/
 │  │  ├─ transaction-domain-template.ts
@@ -897,6 +929,8 @@ Generated on: 2025-06-14
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ middleware/
 │  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ routes/
+│  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ services/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ auth.routes.ts
@@ -905,6 +939,9 @@ Generated on: 2025-06-14
 │  │  │  │  ├─ ccpayment-webhook.controller.ts
 │  │  │  │  ├─ ccpayment-webhook.routes.ts
 │  │  │  │  └─ ccpayment-webhook.service.ts
+│  │  │  ├─ economy/
+│  │  │  │  └─ services/
+│  │  │  │     ... (max depth reached)
 │  │  │  ├─ editor/
 │  │  │  │  └─ editor.routes.ts
 │  │  │  ├─ engagement/
@@ -952,6 +989,11 @@ Generated on: 2025-06-14
 │  │  │  │  ├─ referrals.service.ts
 │  │  │  │  ├─ signature.routes.ts
 │  │  │  │  └─ signature.service.ts
+│  │  │  ├─ share/
+│  │  │  │  ├─ routes/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  └─ services/
+│  │  │  │     ... (max depth reached)
 │  │  │  ├─ shop/
 │  │  │  │  └─ shop.routes.ts
 │  │  │  ├─ shoutbox/
@@ -992,6 +1034,7 @@ Generated on: 2025-06-14
 │  │  │  └─ api/
 │  │  │     └─ index.ts
 │  │  ├─ utils/
+│  │  │  ├─ auth.ts
 │  │  │  ├─ db-utils.ts
 │  │  │  └─ environment.ts
 │  │  └─ app.ts
@@ -1053,6 +1096,7 @@ Generated on: 2025-06-14
 ├─ projectBrief.md
 ├─ README-FORUM.md
 ├─ README.md
+├─ test-env.ts
 └─ tsconfig.json
 ```
 

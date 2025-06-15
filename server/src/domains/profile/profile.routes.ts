@@ -25,18 +25,6 @@ import { authenticate } from '../../middleware/authenticate';
 import { profileService } from './profile.service';
 import { referralsService } from './referrals.service';
 
-// Helper function to get user ID from req.user
-function getUserId(req: Request): number {
-	if (process.env.NODE_ENV === 'development' && (req.user as any)?.devId) {
-		return (req.user as any).devId;
-	}
-	if (req.user && typeof (req.user as any).id === 'number') {
-		return (req.user as any).id;
-	}
-	console.error('User ID not found in req.user');
-	return (req.user as any)?.user_id;
-}
-
 const router = Router();
 
 // Mount signature routes

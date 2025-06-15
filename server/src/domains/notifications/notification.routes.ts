@@ -12,15 +12,6 @@ import { logger, LogLevel, LogAction } from '../../../src/core/logger';
 import { getNotifications, markNotificationAsRead, markAllNotificationsAsRead, getUnreadNotificationCount } from './notification.service';
 import { isAuthenticated } from '../auth';
 
-// Helper function to get user ID from req.user, handling both id and user_id formats
-function getUserId(req: Request): number {
-	// In development, if a mock user is set, prioritize its ID
-	if (process.env.NODE_ENV === 'development' && (req.user as any)?.devId) {
-		return (req.user as any).devId;
-	}
-	return (req.user as any)?.id || (req.user as any)?.user_id || 0;
-}
-
 const router = express.Router();
 
 // Apply auth middleware to all notifications routes

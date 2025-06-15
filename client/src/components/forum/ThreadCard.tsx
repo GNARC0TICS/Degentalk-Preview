@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link as WouterLink } from 'wouter';
+import NextLink from 'next/link'; // Import NextLink
 import { formatDistanceToNow } from 'date-fns';
-import { type ThreadWithUserAndCategory } from '@db_types/forum.types';
-import type { Tag } from '@/types/forum';
+import type { ThreadCardComponentProps } from '@/types/forum';
+import type { Tag } from '@/types/forum'; // Tag is also in @/types/forum.ts
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -17,12 +18,10 @@ import {
 	Tag as TagIcon
 } from 'lucide-react';
 
-interface ThreadCardProps {
-	thread: ThreadWithUserAndCategory;
-	className?: string;
-}
+// Use the new prop type from @/types/forum.ts
+export function ThreadCard({ thread, className = '', linkAs = 'wouter' }: ThreadCardComponentProps) { // Added linkAs prop with default
+	const LinkComponent = linkAs === 'next' ? NextLink : WouterLink;
 
-export function ThreadCard({ thread, className = '' }: ThreadCardProps) {
 	if (!thread) {
 		return null;
 	}
@@ -40,9 +39,10 @@ export function ThreadCard({ thread, className = '' }: ThreadCardProps) {
 		hotScore
 	} = thread;
 
-	const prefix = (thread as any).prefix ?? null;
-	const tags: Tag[] = (thread as any).tags ?? [];
-	const category = (thread as any).category ?? null;
+	// Ensure these are correctly typed via ThreadCardPropsData
+	const prefix = thread.prefix ?? null;
+	const tags: Tag[] = (thread.tags as Tag[]) ?? []; // Cast if necessary, ensure Tag type matches
+	const category = thread.category ?? null;
 
 	const threadUrl = `/threads/${slug}`;
 	const isHot = hotScore !== undefined && hotScore > 10;
@@ -101,16 +101,16 @@ export function ThreadCard({ thread, className = '' }: ThreadCardProps) {
 							</div>
 						</div>
 
-						<Link href={threadUrl} className="block">
+						<LinkComponent href={threadUrl} className="block">
 							<h3 className="text-lg font-medium leading-tight hover:text-emerald-400 transition-colors">
 								{title}
 							</h3>
-						</Link>
+						</LinkComponent>
 
 						<div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-zinc-400">
-							<Link href={`/profile/${user?.id}`} className="hover:text-zinc-200 transition-colors">
+							<LinkComponent href={`/profile/${user?.id}`} className="hover:text-zinc-200 transition-colors">
 								{user?.username || 'Unknown'}
-							</Link>
+							</LinkComponent>
 
 							<span className="flex items-center">
 								<Clock className="h-3 w-3 mr-1" />
@@ -120,13 +120,13 @@ export function ThreadCard({ thread, className = '' }: ThreadCardProps) {
 							</span>
 
 							{category && (
-								<Link
+								<LinkComponent
 									href={`/forums/${category.slug}`}
 									className="hover:text-zinc-200 transition-colors flex items-center"
 								>
 									<FolderIcon className="h-3 w-3 mr-1" />
 									{category.name}
-								</Link>
+								</LinkComponent>
 							)}
 
 							{tags.length > 0 && (

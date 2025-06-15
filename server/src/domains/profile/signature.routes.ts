@@ -9,14 +9,7 @@ import type { Request, Response } from 'express';
 import { SignatureService } from './signature.service';
 import { z } from 'zod';
 import { validateRequest } from '../../middleware/validate-request';
-
-// Helper function to get user ID from req.user
-function getUserId(req: Request): number {
-	if (req.user && typeof (req.user as any).id === 'number') {
-		return (req.user as any).id;
-	}
-	return (req.user as any)?.user_id;
-}
+import { getUserIdFromRequest } from '@server/src/utils/auth';
 
 const router = Router();
 
@@ -38,9 +31,9 @@ const activateItemSchema = z.object({
  */
 router.get('/me', async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
 
-		if (!userId) {
+		if (userId === undefined) {
 			return res.status(401).json({ message: 'Unauthorized' });
 		}
 
@@ -86,9 +79,9 @@ router.get('/:userId', async (req: Request, res: Response) => {
  */
 router.put('/', validateRequest(updateSignatureSchema), async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
 
-		if (!userId) {
+		if (userId === undefined) {
 			return res.status(401).json({ message: 'Unauthorized' });
 		}
 
@@ -111,10 +104,10 @@ router.put('/', validateRequest(updateSignatureSchema), async (req: Request, res
  */
 router.get('/shop/items', async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
 		let userLevel = 1; // Default level
 
-		if (userId) {
+		if (userId !== undefined) {
 			const userData = await SignatureService.getUserSignature(userId);
 			if (userData) {
 				userLevel = userData.userLevel;
@@ -134,9 +127,9 @@ router.get('/shop/items', async (req: Request, res: Response) => {
  */
 router.get('/shop/my-items', async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
 
-		if (!userId) {
+		if (userId === undefined) {
 			return res.status(401).json({ message: 'Unauthorized' });
 		}
 
@@ -156,9 +149,9 @@ router.post(
 	validateRequest(purchaseItemSchema),
 	async (req: Request, res: Response) => {
 		try {
-			const userId = getUserId(req);
+			const userId = getUserIdFromRequest(req);
 
-			if (!userId) {
+			if (userId === undefined) {
 				return res.status(401).json({ message: 'Unauthorized' });
 			}
 
@@ -181,9 +174,9 @@ router.post(
 	validateRequest(activateItemSchema),
 	async (req: Request, res: Response) => {
 		try {
-			const userId = getUserId(req);
+			const userId = getUserIdFromRequest(req);
 
-			if (!userId) {
+			if (userId === undefined) {
 				return res.status(401).json({ message: 'Unauthorized' });
 			}
 

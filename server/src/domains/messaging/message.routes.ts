@@ -11,24 +11,18 @@ import { db } from '@db';
 import { randomUUID } from 'crypto';
 import { eq, and, or, desc, sql } from 'drizzle-orm';
 import { messages, users } from '@schema';
-
+import { getUserIdFromRequest } from '@server/src/utils/auth';
 import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware/auth.middleware';
-
-// Helper function to get user ID from req.user
-function getUserId(req: Request): number {
-	if (req.user && typeof (req.user as any).id === 'number') {
-		return (req.user as any).id;
-	}
-	console.error('User ID not found in req.user');
-	return (req.user as any)?.user_id;
-}
 
 const router = Router();
 
 // Get all conversations for the current user
 router.get('/conversations', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+		}
 
 		// Get unique conversations with last message and unread count
 		const conversations = await db.execute(sql`
@@ -75,7 +69,10 @@ router.get('/conversations', isAuthenticated, async (req: Request, res: Response
 // Get messages for a specific conversation
 router.get('/conversation/:userId', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const currentUserId = getUserId(req);
+		const currentUserId = getUserIdFromRequest(req);
+		if (currentUserId === undefined) {
+			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+		}
 		const otherUserId = parseInt(req.params.userId);
 
 		if (isNaN(otherUserId)) {
@@ -117,7 +114,11 @@ router.post('/send', isAuthenticated, async (req: Request, res: Response) => {
 		});
 
 		const { recipientId, content } = sendMessageSchema.parse(req.body);
-		const senderId = getUserId(req);
+		const senderId = getUserIdFromRequest(req);
+
+		if (senderId === undefined) {
+			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+		}
 
 		// Check if recipient exists
 		const recipientExists = await db
@@ -164,7 +165,10 @@ router.post('/send', isAuthenticated, async (req: Request, res: Response) => {
 // Mark messages as read
 router.post('/mark-read/:userId', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const currentUserId = getUserId(req);
+		const currentUserId = getUserIdFromRequest(req);
+		if (currentUserId === undefined) {
+			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+		}
 		const senderId = parseInt(req.params.userId);
 
 		if (isNaN(senderId)) {
@@ -196,7 +200,10 @@ router.post('/mark-read/:userId', isAuthenticated, async (req: Request, res: Res
 // Delete a conversation
 router.delete('/conversation/:userId', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const currentUserId = getUserId(req);
+		const currentUserId = getUserIdFromRequest(req);
+		if (currentUserId === undefined) {
+			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+		}
 		const otherUserId = parseInt(req.params.userId);
 
 		if (isNaN(otherUserId)) {
@@ -227,7 +234,10 @@ router.delete('/conversation/:userId', isAuthenticated, async (req: Request, res
 // Get unread message count
 router.get('/unread-count', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+		}
 
 		// Count unread messages for the current user
 		const result = await db

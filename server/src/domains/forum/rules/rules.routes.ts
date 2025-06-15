@@ -21,11 +21,7 @@ import { z } from 'zod';
 import { isAuthenticated } from '../../auth/middleware/auth.middleware';
 import { storage } from '../../../../storage';
 import { asyncHandler } from '@server/src/core/errors'; // Assuming asyncHandler is in core errors
-
-// Helper function to get user ID from req.user, handling both id and user_id formats
-function getUserId(req: Request): number {
-	return (req.user as any)?.id || (req.user as any)?.user_id || 0; // Keeping as any for now due to complex Express Request typing
-}
+import { getUserIdFromRequest } from '@server/src/utils/auth';
 
 const router = Router();
 
@@ -95,7 +91,12 @@ router.get('/user-agreements', async (req: Request, res: Response) => {
 	}
 
 	try {
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
+		if (userId === undefined) {
+			// This case should ideally be caught by !req.isAuthenticated() already,
+			// but as a safeguard if req.user exists but ID doesn't.
+			return res.status(401).json({ error: 'User ID not found after authentication' });
+		}
 
 		// Get all user rule agreements
 		const agreements = await db
@@ -156,7 +157,11 @@ router.post('/agree', async (req: Request, res: Response) => {
 	const { ruleIds } = parsed.data;
 
 	try {
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
+		if (userId === undefined) {
+			// This case should ideally be caught by !req.isAuthenticated() already.
+			return res.status(401).json({ error: 'User ID not found after authentication' });
+		}
 
 		// Get rules
 		const rules = await db

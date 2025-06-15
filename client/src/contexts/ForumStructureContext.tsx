@@ -540,6 +540,18 @@ export const useForumStructure = () => {
   return context;
 };
 
+// Selector hook for zones
+export const useZones = () => {
+  const { zones, isLoading, error } = useForumStructure();
+  return { zones, isLoading, error };
+};
+
+// Selector hook for all forums (flat record)
+export const useForums = () => {
+  const { forums, isLoading, error } = useForumStructure();
+  return { forums, isLoading, error };
+};
+
 // Shim function to flatten the hierarchical API response
 function flattenApiResponse(
   hierarchicalResponse: ForumStructureApiResponse

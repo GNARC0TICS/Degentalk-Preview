@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'wouter';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import forumApi from '@/features/forum/services/forumApi';
-import ThreadCard from '@/features/forum/components/ThreadCard'; // Corrected import path
+import ThreadCard from '@/components/forum/ThreadCard'; // Corrected import path
 import PostCard from '@/features/forum/components/PostCard';
 import ReplyForm from '@/features/forum/components/ReplyForm';
 import { Button } from '@/components/ui/button';
@@ -259,8 +259,8 @@ export default function ThreadPage() {
 						id: thread.id,
 						title: thread.title,
 						slug: thread.slug,
-						userId: thread.userId,
-						prefixId: thread.prefixId,
+						// userId: thread.userId, // Removed: userId is part of thread.user object
+						// prefixId: thread.prefixId, // Removed: ThreadCardPropsData expects a 'prefix' object, not prefixId directly
 						isSticky: thread.isSticky,
 						isLocked: thread.isLocked,
 						isHidden: thread.isHidden,

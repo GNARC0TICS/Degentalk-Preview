@@ -11,15 +11,7 @@ import { users, userRelationships } from '@schema';
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';
 
 import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware/auth.middleware';
-
-// Helper function to get user ID from req.user
-function getUserId(req: Request): number {
-	if (req.user && typeof (req.user as any).id === 'number') {
-		return (req.user as any).id;
-	}
-	console.error('User ID not found in req.user');
-	return (req.user as any)?.user_id;
-}
+import { getUserIdFromRequest } from '@server/src/utils/auth';
 
 const router = Router();
 
@@ -95,13 +87,13 @@ router.get('/:userId/following', async (req: Request, res: Response) => {
 router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Response) => {
 	try {
 		const { userId } = req.params;
-		const followerId = getUserId(req);
+		const followerId = getUserIdFromRequest(req);
 
 		if (!userId || isNaN(Number(userId))) {
 			return res.status(400).json({ message: 'Valid user ID is required' });
 		}
 
-		if (!followerId) {
+		if (followerId === undefined) {
 			return res.status(401).json({ message: 'You must be logged in to follow users' });
 		}
 
@@ -162,13 +154,13 @@ router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Respon
 router.delete('/unfollow/:userId', isAuthenticated, async (req: Request, res: Response) => {
 	try {
 		const { userId } = req.params;
-		const followerId = getUserId(req);
+		const followerId = getUserIdFromRequest(req);
 
 		if (!userId || isNaN(Number(userId))) {
 			return res.status(400).json({ message: 'Valid user ID is required' });
 		}
 
-		if (!followerId) {
+		if (followerId === undefined) {
 			return res.status(401).json({ message: 'You must be logged in to unfollow users' });
 		}
 
@@ -210,13 +202,13 @@ router.delete('/unfollow/:userId', isAuthenticated, async (req: Request, res: Re
 router.get('/is-following/:userId', isAuthenticated, async (req: Request, res: Response) => {
 	try {
 		const { userId } = req.params;
-		const followerId = getUserId(req);
+		const followerId = getUserIdFromRequest(req);
 
 		if (!userId || isNaN(Number(userId))) {
 			return res.status(400).json({ message: 'Valid user ID is required' });
 		}
 
-		if (!followerId) {
+		if (followerId === undefined) {
 			return res.status(401).json({ message: 'You must be logged in to check follow status' });
 		}
 

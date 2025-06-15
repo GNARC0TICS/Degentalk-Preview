@@ -11,9 +11,9 @@
 - Risk of developer confusion and inconsistent UX.
 
 ##### ✅ Suggestions
-- Consolidate into **one** canonical `ThreadCard` (top-level `components/forum`).
-- Move route navigation logic behind a prop (`as="next" | "wouter"`) or abstract via `@/lib/Link` wrapper so SSR/CSR libs can swap transparently.
-- Convert shared field subset into `ThreadCardProps` type in `@/types/forum`.
+- [x] Consolidate into **one** canonical `ThreadCard` (top-level `components/forum`).
+- [ ] Move route navigation logic behind a prop (`as="next" | "wouter"`) or abstract via `@/lib/Link` wrapper so SSR/CSR libs can swap transparently.
+- [ ] Convert shared field subset into `ThreadCardProps` type in `@/types/forum`.
 
 ---
 
@@ -25,7 +25,7 @@
 - Duplicates Lucide `Plus` import and auth redirect logic.
 
 ##### ✅ Suggestions
-- Extract common behaviour into a **configurable** `CreateThreadButton` with props:
+- [x] Extract common behaviour into a **configurable** `CreateThreadButton` with props:
   ```tsx
   type CreateThreadButtonProps = {
     forumSlug?: string;
@@ -33,8 +33,8 @@
     redirectAuth?: boolean; // default true
   } & ButtonProps;
   ```
-- Encapsulate auth-guard & URL-builder inside.
-- Delete feature-level copy.
+- [x] Encapsulate auth-guard & URL-builder inside the new `CreateThreadButton`.
+- [x] Delete feature-level copy of `CreateThreadButton`.
 
 ---
 
@@ -47,8 +47,9 @@
 - Duplicates type definitions already declared in `contexts/ForumStructureContext.tsx`.
 
 ##### ✅ Suggestions
-- Deprecate `useForumStructure` hook; export context selector hooks (`useZones`, `useForums`) from the context file.
-- Add ESLint rule to block imports from the legacy hook path.
+- [ ] Deprecate `useForumStructure` hook.
+- [ ] Export context selector hooks (`useZones`, `useForums`) from the context file.
+- [ ] Add ESLint rule to block imports from the legacy hook path.
 
 ---
 
@@ -61,9 +62,9 @@
 - Complete category list is re-fetched **per request**, no caching.
 
 ##### ✅ Suggestions
-- Replace with single SQL using `LEFT JOIN LATERAL` aggregates or Drizzle `count(threads.id).over(partition)`.
-- Memoise result in in-memory cache (e.g. `node-cache`) for 30 s or expose via `/core/cache` util.
-- Expose opt-in `includeCounts` query param so lightweight clients can skip heavy counts when not needed (e.g. mobile nav).
+- [ ] Replace N+1 queries with single SQL using `LEFT JOIN LATERAL` aggregates or Drizzle `count(threads.id).over(partition)`.
+- [ ] Memoise result in in-memory cache (e.g. `node-cache`) for 30 s or expose via `/core/cache` util.
+- [ ] Expose opt-in `includeCounts` query param so lightweight clients can skip heavy counts when not needed (e.g. mobile nav).
 
 ---
 
@@ -74,9 +75,9 @@
 - `parentForumSlug` duplicated in `threads` & `forum_categories`; can drift.
 
 ##### ✅ Suggestions
-- Normalise on single enum `type`; derive booleans in views/queries.
-- Remove `parentForumSlug` from `threads`; instead rely on FK join to category → zone.
-- Use **generated columns** if quick look-ups by slug are needed.
+- [ ] Normalise on single enum `type` in `forum_categories`; derive booleans in views/queries.
+- [ ] Remove `parentForumSlug` from `threads`; instead rely on FK join to category → zone.
+- [ ] Use **generated columns** if quick look-ups by slug are needed for `parentForumSlug` functionality.
 
 ---
 
@@ -89,5 +90,6 @@
 - Uses anonymous arrow functions in props → re-render churn.
 
 ##### ✅ Suggestions
-- Wrap thread card list in `react-window` or `framer-motion` list virtualization.
-- Memoize `ThreadCard` and extract `ThreadStats` sub-component. 
+- [ ] Wrap thread card list in `react-window` or `framer-motion` list virtualization.
+- [ ] Memoize `ThreadCard`.
+- [ ] Extract `ThreadStats` into a sub-component.

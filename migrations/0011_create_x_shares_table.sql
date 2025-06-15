@@ -1,0 +1,13 @@
+-- Migration to create xShares table for tracking X sharing activities
+CREATE TABLE IF NOT EXISTS x_shares (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    content_type VARCHAR(50) NOT NULL,
+    content_id INTEGER,
+    x_post_id VARCHAR(255),
+    shared_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_x_shares_user_id FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- Create index for analytics queries by user
+CREATE INDEX IF NOT EXISTS idx_x_shares_user ON x_shares (user_id, shared_at DESC); 

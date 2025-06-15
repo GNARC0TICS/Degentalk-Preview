@@ -18,15 +18,7 @@ import {
 	isAdminOrModerator,
 	isAdmin
 } from '../../auth/middleware/auth.middleware';
-
-// Helper function to get user ID from req.user
-function getUserId(req: Request): number {
-	if (req.user && typeof (req.user as any).id === 'number') {
-		return (req.user as any).id;
-	}
-	console.error('User ID not found in req.user');
-	return (req.user as any)?.user_id;
-}
+import { getUserIdFromRequest } from '@server/src/utils/auth';
 
 // Initialize the service
 const vaultService = new VaultService();
@@ -136,11 +128,12 @@ router.post('/admin/vaults/unlock/:vaultId', isAdmin, async (req: Request, res: 
 			.where(eq(vaults.id, vaultId));
 
 		// Log the admin unlock
+		const adminUserId = getUserIdFromRequest(req);
 		logger.info(
 			'VAULT',
-			`Admin user #${getUserId(req)} manually unlocked vault #${vaultId} with ${vault.amount} USDT`,
+			`Admin user #${adminUserId ?? 'UNKNOWN_ADMIN'} manually unlocked vault #${vaultId} with ${vault.amount} USDT`,
 			{
-				adminUserId: getUserId(req),
+				adminUserId: adminUserId ?? null, // Log null if undefined
 				vaultId,
 				userId: vault.userId,
 				amount: vault.amount,

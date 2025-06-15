@@ -14,6 +14,13 @@ import { logger } from '@server/src/core/logger'; // Using central logger
 export function getUserIdFromRequest(req: Request): number | undefined {
 	if (req.user) {
 		const user = req.user as any; // Cast to any to access potential id properties
+
+		// Prioritize devId in development environment
+		if (process.env.NODE_ENV === 'development' && typeof user.devId === 'number') {
+			logger.info('AuthUtil', 'User ID accessed via devId in development', { userId: user.devId });
+			return user.devId;
+		}
+
 		if (typeof user.id === 'number') {
 			return user.id;
 		}

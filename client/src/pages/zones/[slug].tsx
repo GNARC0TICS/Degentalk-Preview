@@ -3,7 +3,7 @@ import { useParams, Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query'; // Added useQuery
 import { ForumStructureProvider, useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedZone, MergedForum } from '@/contexts/ForumStructureContext';
-import ThreadCard from '@/features/forum/components/ThreadCard'; // Corrected import for ThreadCard
+import ThreadCard from '@/components/forum/ThreadCard'; // Corrected import for ThreadCard
 import { Pagination } from '@/components/ui/pagination'; // Added Pagination
 import { getQueryFn } from '@/lib/queryClient'; // Added getQueryFn
 import type { ThreadsApiResponse, ApiPagination, ApiThread } from '@/features/forum/components/ThreadList'; // Added ApiThread type from ThreadList
@@ -194,7 +194,23 @@ const PrimaryZonePage: React.FC = () => {
             {threads.map((thread: ApiThread) => (
               // Assuming ThreadCard needs forumSlug, we might need to adjust if threads can belong to multiple forums in a zone view
               // For now, let's pass the zone slug as a placeholder or consider if ThreadCard can adapt
-              <ThreadCard key={thread.id} thread={thread} forumSlug={thread.category.slug} />
+              <ThreadCard 
+                key={thread.id} 
+                thread={{
+                  ...thread,
+                  user: {
+                    ...thread.user,
+                    role: thread.user.role as "user" | "mod" | "admin" | null, // Cast role
+                  },
+                  // Ensure all other fields from ApiThread match or are compatible with ThreadCardPropsData
+                  // isFeatured is used for ThreadCardPropsData.isFeatured
+                  isFeatured: (thread as any).isFeatured, // ApiThread might not have isFeatured, cast if needed
+                  // category from ApiThread is ApiThreadCategory, compatible with ThreadCardPropsData.category
+                  // prefix from ApiThread is not directly available, ThreadCardPropsData.prefix is optional
+                  // tags from ApiThread is ApiTag[], compatible with ThreadCardPropsData.tags (Partial<ThreadTag>[])
+                }}
+                // forumSlug={thread.category.slug} // This prop is not on ThreadCardComponentProps
+              />
             ))}
             {threadPagination.totalThreads > 0 && threadPagination.totalPages > 1 && (
               <div className="mt-5 flex justify-center">

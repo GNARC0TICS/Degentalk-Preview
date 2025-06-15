@@ -72,85 +72,104 @@ interface CategoriesTreeOptions {
 export const forumService = {
 	async getCategoriesWithStats(includeCounts: boolean = true): Promise<ForumCategoryWithStats[]> {
 		try {
-			// Check cache first
-			if (categoriesCache && (Date.now() - categoriesCache.timestamp < CACHE_DURATION_MS)) {
-				// If includeCounts is false, we might need to strip counts or re-fetch if cache only has counted data
-				// For now, let's assume if cache exists, it's good enough.
-				// A more robust cache would store different versions or filter here.
-				// This simple cache will return counts if they are cached, regardless of includeCounts for now.
-				// Or, we can refine this to only use cache if includeCounts matches how it was cached.
-				// Let's keep it simple: if cached, return. If includeCounts=false is critical, we'd need to adjust.
-				// For this iteration, if includeCounts is false, we bypass cache to ensure no counts.
-				if (includeCounts && categoriesCache.data.length > 0) {
-					// console.log('Serving categories from cache');
-					return categoriesCache.data;
-				}
+			if (includeCounts && categoriesCache && (Date.now() - categoriesCache.timestamp < CACHE_DURATION_MS) && categoriesCache.data.length > 0) {
+				// console.log('Serving categories with counts from cache');
+				return categoriesCache.data;
 			}
 			// console.log(`Fetching categories from DB (includeCounts: ${includeCounts})`);
 
-			const selectFields: any = {
-				id: forumCategories.id,
-				name: forumCategories.name,
-				slug: forumCategories.slug,
-				description: forumCategories.description,
-				parentForumSlug: forumCategories.parentForumSlug,
-				parentId: forumCategories.parentId,
-				type: forumCategories.type,
-				position: forumCategories.position,
-				isVip: forumCategories.isVip,
-				isLocked: forumCategories.isLocked,
-				minXp: forumCategories.minXp,
-				color: forumCategories.color,
-				icon: forumCategories.icon,
-				colorTheme: forumCategories.colorTheme,
-				isHidden: forumCategories.isHidden,
-				isZone: forumCategories.isZone,
-				canonical: forumCategories.canonical,
-				minGroupIdRequired: forumCategories.minGroupIdRequired,
-				tippingEnabled: forumCategories.tippingEnabled,
-				xpMultiplier: forumCategories.xpMultiplier,
-				pluginData: forumCategories.pluginData,
-				createdAt: forumCategories.createdAt,
-				updatedAt: forumCategories.updatedAt,
-			};
+			let categoriesDataRaw: CategoryWithCountsResult[];
 
 			if (includeCounts) {
-				selectFields.threadCount = sql<number>`count(DISTINCT ${threads.id})`.as('threadCount');
-				selectFields.postCount = sql<number>`count(${posts.id})`.as('postCount');
-			}
+				const threadCountsSubquery = db.$with('thread_counts').as(
+					db.select({
+						categoryId: threads.categoryId,
+						count: sql<number>`count(DISTINCT ${threads.id})`.as('thread_count')
+					}).from(threads)
+						.where(eq(threads.isDeleted, false))
+						.groupBy(threads.categoryId)
+				);
 
-			let categoriesDataRaw: any[]; // Define with a broader type or the specific expected shapes
-
-			if (includeCounts) {
+				const postCountsSubquery = db.$with('post_counts').as(
+					db.select({
+						categoryId: threads.categoryId,
+						count: sql<number>`count(${posts.id})`.as('post_count')
+					}).from(posts)
+						.innerJoin(threads, eq(posts.threadId, threads.id))
+						.where(and(eq(posts.isDeleted, false), eq(threads.isDeleted, false)))
+						.groupBy(threads.categoryId)
+				);
+				
 				categoriesDataRaw = await db
-					.select(selectFields)
+					.with(threadCountsSubquery, postCountsSubquery)
+					.select({
+						id: forumCategories.id,
+						name: forumCategories.name,
+						slug: forumCategories.slug,
+						description: forumCategories.description,
+						parentForumSlug: forumCategories.parentForumSlug,
+						parentId: forumCategories.parentId,
+						type: forumCategories.type,
+						position: forumCategories.position,
+						isVip: forumCategories.isVip,
+						isLocked: forumCategories.isLocked,
+						minXp: forumCategories.minXp,
+						color: forumCategories.color,
+						icon: forumCategories.icon,
+						colorTheme: forumCategories.colorTheme,
+						isHidden: forumCategories.isHidden,
+						isZone: forumCategories.isZone,
+						canonical: forumCategories.canonical,
+						minGroupIdRequired: forumCategories.minGroupIdRequired,
+						tippingEnabled: forumCategories.tippingEnabled,
+						xpMultiplier: forumCategories.xpMultiplier,
+						pluginData: forumCategories.pluginData,
+						createdAt: forumCategories.createdAt,
+						updatedAt: forumCategories.updatedAt,
+						threadCount: threadCountsSubquery.count,
+						postCount: postCountsSubquery.count
+					})
 					.from(forumCategories)
-					.leftJoin(threads, eq(forumCategories.id, threads.categoryId))
-					.leftJoin(posts, eq(threads.id, posts.threadId))
-					.where(
-						and(
-							or(isNull(threads.id), eq(threads.isDeleted, false)),
-							or(isNull(posts.id), eq(posts.isDeleted, false))
-						)
-					)
-					.groupBy(
-						forumCategories.id, forumCategories.name, forumCategories.slug, forumCategories.description,
-						forumCategories.parentForumSlug, forumCategories.parentId, forumCategories.type, forumCategories.position,
-						forumCategories.isVip, forumCategories.isLocked, forumCategories.minXp, forumCategories.color,
-						forumCategories.icon, forumCategories.colorTheme, forumCategories.isHidden, forumCategories.isZone,
-						forumCategories.canonical, forumCategories.minGroupIdRequired, forumCategories.tippingEnabled,
-						forumCategories.xpMultiplier, forumCategories.pluginData, forumCategories.createdAt, forumCategories.updatedAt
-					)
+					.leftJoin(threadCountsSubquery, eq(forumCategories.id, threadCountsSubquery.categoryId))
+					.leftJoin(postCountsSubquery, eq(forumCategories.id, postCountsSubquery.categoryId))
 					.orderBy(asc(forumCategories.position));
+
 			} else {
+				// Fetch without counts
 				categoriesDataRaw = await db
-					.select(selectFields)
+					.select({
+						id: forumCategories.id,
+						name: forumCategories.name,
+						slug: forumCategories.slug,
+						description: forumCategories.description,
+						parentForumSlug: forumCategories.parentForumSlug,
+						parentId: forumCategories.parentId,
+						type: forumCategories.type,
+						position: forumCategories.position,
+						isVip: forumCategories.isVip,
+						isLocked: forumCategories.isLocked,
+						minXp: forumCategories.minXp,
+						color: forumCategories.color,
+						icon: forumCategories.icon,
+						colorTheme: forumCategories.colorTheme,
+						isHidden: forumCategories.isHidden,
+						isZone: forumCategories.isZone,
+						canonical: forumCategories.canonical,
+						minGroupIdRequired: forumCategories.minGroupIdRequired,
+						tippingEnabled: forumCategories.tippingEnabled,
+						xpMultiplier: forumCategories.xpMultiplier,
+						pluginData: forumCategories.pluginData,
+						createdAt: forumCategories.createdAt,
+						updatedAt: forumCategories.updatedAt,
+						threadCount: sql<null>`null`.as('threadCount'), // Explicitly null when not counting
+						postCount: sql<null>`null`.as('postCount')    // Explicitly null when not counting
+					})
 					.from(forumCategories)
 					.orderBy(asc(forumCategories.position));
 			}
 			
 			const categories: ForumCategoryWithStats[] = categoriesDataRaw.map(
-				(c: any): ForumCategoryWithStats => ({ 
+				(c: CategoryWithCountsResult): ForumCategoryWithStats => ({ 
 					...c, 
 					description: c.description ?? null,
 					parentForumSlug: c.parentForumSlug ?? null, 
@@ -369,7 +388,12 @@ export const forumService = {
 					description: t.description ?? null
 				})),
 				hasBookmarked,
-				lastPost: undefined, 
+				lastPost: undefined,
+				// Explicitly set parentForumSlug from the category data
+				// If the category is a forum itself, its slug is the parentForumSlug for the thread.
+				// If the category is a sub-category (type='category') under a zone, then categoryData.parentForumSlug would be the zone's slug.
+				// The logic here assumes categoryData.slug is the direct forum the thread belongs to.
+				parentForumSlug: categoryData.slug, 
 			};
 
 			const offset = (page - 1) * limit;

@@ -10,9 +10,9 @@
 - Bypasses central `core/logger.ts`, so log level / formatting is inconsistent and not trace-able.
 
 ##### ✅ Suggestions
-- Replace with `logger.info/debug` and add contextual metadata (requestId).
-- Wrap route handlers with `traceMiddleware` to auto-log HTTP lifecycle.
-- Add ESLint rule `no-console (error)` in server tsconfig path.
+- [ ] Replace `console.log` statements with `logger.info/debug` and add contextual metadata (requestId).
+- [ ] Wrap route handlers with `traceMiddleware` to auto-log HTTP lifecycle.
+- [ ] Add ESLint rule `no-console (error)` in server tsconfig path.
 
 ---
 
@@ -25,8 +25,8 @@
 - Increases bundle size and cognitive load.
 
 ##### ✅ Suggestions
-- Merge into single `usePrefixes` with params `{ forumSlug?: string; categoryId?: number }`.
-- Alias old names to new hook and mark as deprecated in JSDoc until callers migrate.
+- [ ] Merge into single `usePrefixes` with params `{ forumSlug?: string; categoryId?: number }`.
+- [ ] Alias old names to new hook and mark as deprecated in JSDoc until callers migrate.
 
 ---
 
@@ -39,8 +39,8 @@
 - Causes long Time-to-Interactive on large threads.
 
 ##### ✅ Suggestions
-- Integrate `react-virtuoso` or `react-window` list for posts.
-- Provide "jump to newest" anchor to improve UX.
+- [ ] Integrate `react-virtuoso` or `react-window` list for posts.
+- [ ] Provide "jump to newest" anchor to improve UX.
 
 ---
 
@@ -53,8 +53,8 @@
 - Uses `limit` default 50, but frontend paginates 20 – waste of DB / bandwidth.
 
 ##### ✅ Suggestions
-- Accept `limit` from caller with sane cap (100).
-- Use Drizzle eager joins to fetch user & reactions in one call.
+- [ ] Accept `limit` from caller with sane cap (100) in `getThreadDetails`.
+- [ ] Use Drizzle eager joins to fetch user & reactions in one call within `getThreadDetails`.
 
 ---
 
@@ -64,8 +64,8 @@
 - Theme color classes inside components reference Tailwind classes via string interpolation (e.g. `bg-${theme}-700`) which breaks PurgeCSS.
 
 ##### ✅ Suggestions
-- Move palette to CSS variables (e.g. `--forum-theme-primary`). Components toggle `theme-${key}`.
-- Safelist variable list in `tailwind.config.ts` if dynamic.
+- [ ] Move palette to CSS variables (e.g. `--forum-theme-primary`). Components toggle `theme-${key}`.
+- [ ] Safelist variable list in `tailwind.config.ts` if dynamic.
 
 ---
 
@@ -75,5 +75,5 @@
 - Several FK references use `onDelete: set null` but code sometimes joins with `INNER JOIN users`, risking crashes.
 
 ##### ✅ Suggestions
-- Audit joins to ensure `LEFT JOIN` when FK nullable.
-- Add DB constraint tests (`scripts/testing/validate-forum-fks.ts`). 
+- [ ] Audit joins to ensure `LEFT JOIN` when FK is nullable and uses `onDelete: set null`.
+- [ ] Add DB constraint tests (e.g., in `scripts/testing/validate-forum-fks.ts`).

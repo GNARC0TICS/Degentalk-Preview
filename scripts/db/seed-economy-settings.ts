@@ -10,6 +10,10 @@ const defaultSettings = [
   { key: 'clout_per_upvote', value: 1 }, 
   { key: 'clout_per_helpful', value: 2 },
   { key: 'clout_max_cap', value: 999 },
+  { key: 'X_SHARE_XP', value: 10 },
+  { key: 'X_SHARE_DGT', value: 0 },
+  { key: 'X_REFERRAL_XP', value: 50 },
+  { key: 'X_REFERRAL_DGT', value: 100 },
 ];
 
 export async function seedEconomySettings() {

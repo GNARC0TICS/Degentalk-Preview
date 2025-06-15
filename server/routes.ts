@@ -97,6 +97,9 @@ import {
 } from './src/domains/auth/middleware/auth.middleware';
 import passport from 'passport';
 import session from 'express-session';
+// X integration routes
+import xAuthRoutes from './src/domains/auth/routes/xAuthRoutes';
+import xShareRoutes from './src/domains/share/routes/xShareRoutes';
 
 export async function registerRoutes(app: Express): Promise<Server> {
 	// Test
@@ -209,6 +212,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 	// Use the domain-based auth routes
 	app.use('/api', authRoutes);
+	// X account OAuth routes
+	app.use('/api/auth/x', xAuthRoutes);
+	// X share routes
+	app.use('/api/share/x', xShareRoutes);
 
 	// Set up admin routes
 	registerAdminRoutes(app);

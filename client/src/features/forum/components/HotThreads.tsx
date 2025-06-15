@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { ThreadCard } from '@/features/forum/components/ThreadCard';
+import { ThreadCard } from '@/components/forum/ThreadCard';
 import type { ThreadTag } from '@schema';
 import { Link } from 'wouter';
 import {

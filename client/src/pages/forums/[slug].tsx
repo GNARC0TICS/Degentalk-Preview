@@ -5,9 +5,9 @@ import { formatDistanceToNow } from 'date-fns';
 import { getQueryFn } from '@/lib/queryClient';
 
 // Import components
-import { ThreadList } from '@/features/forum/components/ThreadList';
+import ThreadList from '@/features/forum/components/ThreadList'; // Changed to default import
 import { SiteFooter } from '@/components/layout/site-footer';
-import { Breadcrumbs } from '@/components/navigation/breadcrumbs';
+// import { Breadcrumbs } from '@/components/navigation/breadcrumbs'; // Removed incorrect import
 import { ForumHeader } from '@/features/forum/components/ForumHeader';
 
 // Import UI components
@@ -21,7 +21,8 @@ import { PlusCircle, AlertCircle } from 'lucide-react';
 import { getThemeClass, isPrimaryZone } from '@/utils/forum-routing-helper';
 
 // Import types
-import { ForumEntity } from '@/features/forum/hooks/useForumStructure';
+// import { ForumEntity } from '@/features/forum/hooks/useForumStructure'; // Old import
+import type { MergedForum } from '@/contexts/ForumStructureContext'; // New import
 
 import {
 	Breadcrumb,
@@ -43,14 +44,19 @@ export default function ForumPage() {
 		isLoading,
 		isError,
 		error
-	} = useQuery<ForumEntity>({
+	} = useQuery<MergedForum>({ // Use MergedForum type
 		queryKey: [`/api/forums/${slug}`],
 		queryFn: getQueryFn({ on401: 'returnNull' }),
 		enabled: !!slug
 	});
 
 	// Determine if this is a Primary Zone or a Child Forum
-	const isPrimary = forum ? isPrimaryZone(forum) : false;
+	const isPrimary = forum ? isPrimaryZone({ 
+		...forum, 
+		description: forum.description === null ? undefined : forum.description,
+		icon: forum.icon === null ? undefined : forum.icon,
+		colorTheme: forum.colorTheme === null ? undefined : forum.colorTheme
+	}) : false;
 
 	// Get the appropriate theme class
 	const themeClass = forum?.colorTheme ? `forum-theme-${forum.colorTheme}` : '';
@@ -139,7 +145,7 @@ export default function ForumPage() {
 						</div>
 
 						{/* Thread List */}
-						<ThreadList categoryId={forum.id} isPrimaryZone={isPrimary} />
+						<ThreadList forumId={forum.id} forumSlug={forum.slug} />
 					</>
 				) : (
 					<div className="text-center py-12">

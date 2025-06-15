@@ -30,7 +30,7 @@ export const threads = pgTable(
 		uuid: uuid('uuid').notNull().defaultRandom(),
 		title: varchar('title', { length: 255 }).notNull(),
 		slug: varchar('slug', { length: 255 }).notNull(),
-		parentForumSlug: varchar('parent_forum_slug', { length: 128 }).notNull().default(''),
+		// parentForumSlug: varchar('parent_forum_slug', { length: 128 }).notNull().default(''), // REMOVED
 		categoryId: integer('category_id')
 			.notNull()
 			.references(() => forumCategories.id, { onDelete: 'cascade' }),
@@ -75,7 +75,7 @@ export const threads = pgTable(
 		rewardRules: jsonb('reward_rules').default('{}')
 	},
 	(table) => ({
-		parentForumSlugIdx: index('idx_threads_parent_forum_slug').on(table.parentForumSlug), // Added index for parentForumSlug
+		// parentForumSlugIdx: index('idx_threads_parent_forum_slug').on(table.parentForumSlug), // REMOVED
 		categoryIdx: index('idx_threads_category_id').on(table.categoryId),
 		userIdx: index('idx_threads_user_id').on(table.userId),
 		createdAtIdx: index('idx_threads_created_at').on(table.createdAt),

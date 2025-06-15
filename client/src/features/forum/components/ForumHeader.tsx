@@ -2,11 +2,12 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Flame, Users, MessageSquare } from 'lucide-react';
-import { ForumEntity } from '@/features/forum/hooks/useForumStructure';
+// import { ForumEntity } from '@/features/forum/hooks/useForumStructure'; // Old import
+import type { MergedForum, MergedZone } from '@/contexts/ForumStructureContext'; // New import
 import { getThemeClass } from '@/utils/forum-routing-helper';
 
 interface ForumHeaderProps {
-	forum: ForumEntity;
+	forum: MergedForum | MergedZone; // Allow either type, or a common base if defined
 	isPrimaryZone?: boolean;
 	className?: string;
 }
@@ -46,9 +47,9 @@ export function ForumHeader({ forum, isPrimaryZone = false, className = '' }: Fo
 								>
 									Primary Zone
 								</Badge>
-								{forum.hasXpBoost && (
+								{(forum as MergedZone).hasXpBoost && ( // Type assertion for MergedZone specific prop
 									<Badge className="bg-emerald-600 hover:bg-emerald-500">
-										{forum.boostMultiplier || 2}x XP
+										{(forum as MergedZone).boostMultiplier || 2}x XP
 									</Badge>
 								)}
 							</div>

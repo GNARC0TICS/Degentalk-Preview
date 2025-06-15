@@ -22,7 +22,7 @@ import type { ForumCategoryWithStats } from '@shared/types'; // Keep if used els
 import { useLocation } from 'wouter';
 import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
 import { ROUTES } from '@/constants/routes';
-import { useForumStructure } from '@/features/forum/hooks/useForumStructure';
+// import { useForumStructure } from '@/features/forum/hooks/useForumStructure'; // Removed unused import
 
 // Define ForumCategory type from schema
 export type ForumCategory = typeof forumCategories.$inferSelect;

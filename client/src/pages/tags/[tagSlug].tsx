@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'wouter';
-import { ThreadCard } from '@/features/forum/components/ThreadCard';
+import { ThreadCard } from '@/components/forum/ThreadCard';
 import { useThreadsByTag, useTags } from '@/features/forum/hooks/useForumQueries';
 import { SiteHeader } from '@/components/layout/site-header';
 import { SiteFooter } from '@/components/layout/site-footer';
@@ -132,31 +132,29 @@ export default function TagPage() {
 							{threadsData.threads.map((thread) => (
 								<ThreadCard
 									key={thread.id}
-									id={thread.id}
-									title={thread.title}
-									preview={thread.preview || ''}
-									createdAt={thread.createdAt}
-									lastActivity={thread.lastPostAt}
-									viewCount={thread.viewCount}
-									replyCount={thread.postCount}
-									author={thread.user}
-									isPinned={thread.isSticky}
-									isLocked={thread.isLocked}
-									isAnnouncement={thread.isFeatured}
-									firstPostLikeCount={thread.firstPostLikeCount}
-									hasBookmarked={thread.hasBookmarked}
-									isSolved={thread.isSolved}
-									solvingPostId={thread.solvingPostId}
-									tags={thread.tags}
-									categorySlug={thread.category?.slug}
-									prefix={
-										thread.prefixId
-											? {
-													name: thread.prefix?.name || '',
-													color: thread.prefix?.color || null
-												}
-											: undefined
-									}
+									thread={{
+										id: thread.id,
+										title: thread.title,
+										slug: thread.slug, // Assuming thread object from useThreadsByTag has slug
+										createdAt: thread.createdAt,
+										lastPostAt: thread.lastPostAt,
+										viewCount: thread.viewCount,
+										postCount: thread.postCount,
+										user: thread.user, // Assuming thread.user matches Partial<User> & { username, id, avatarUrl?, activeAvatarUrl?, role? }
+										isSticky: thread.isSticky,
+										isLocked: thread.isLocked,
+										isFeatured: thread.isFeatured, // For isAnnouncement in ThreadCard
+										firstPostLikeCount: thread.firstPostLikeCount,
+										// Fields that might not be on thread object from useThreadsByTag, relying on ThreadCardPropsData optionals
+										hasBookmarked: (thread as any).hasBookmarked, // Cast to any if not on type, will be undefined if not present
+										isSolved: thread.isSolved,
+										solvingPostId: thread.solvingPostId,
+										tags: (thread as any).tags, // ThreadWithUser doesn't have tags directly
+										category: undefined, // ThreadWithUser only has categoryId, not the full object.
+										prefix: undefined, // ThreadWithUser only has prefixId, not the full object.
+										preview: (thread as any).preview || '', // ThreadWithUser doesn't have preview
+										// hotScore, isHidden, dgtStaked, updatedAt will be undefined
+									}}
 								/>
 							))}
 						</div>

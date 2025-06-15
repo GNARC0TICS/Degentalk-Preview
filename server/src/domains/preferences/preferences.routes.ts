@@ -33,15 +33,7 @@ import { WebSocket } from 'ws';
 import { isAuthenticated, isAuthenticatedOptional } from '../auth/middleware/auth.middleware';
 import { logger, LogLevel, LogAction } from '../../../src/core/logger';
 import { displayPreferencesSchema } from './preferences.validators';
-
-// Helper function to get user ID from req.user, handling both id and user_id formats
-function getUserId(req: Request): number {
-	// In development, if a mock user is set, prioritize its ID
-	if (process.env.NODE_ENV === 'development' && (req.user as any)?.devId) {
-		return (req.user as any).devId;
-	}
-	return (req.user as any)?.id || (req.user as any)?.user_id || 0;
-}
+import { getUserIdFromRequest } from '@server/src/utils/auth';
 
 // Define validation schema for the shoutbox position
 const updateShoutboxPositionSchema = z.object({
@@ -195,10 +187,10 @@ router.post(
 // Get user preferences
 router.get('/', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
+		const userId = getUserIdFromRequest(req);
 
-		// Ensure userId is valid, especially in dev mode for mock users
-		if (!userId || userId === 0) {
+		// Ensure userId is valid
+		if (userId === undefined) {
 			logger.error('PREFERENCES', 'Invalid or missing user ID in authenticated request', {
 				user: req.user,
 				derivedUserId: userId
@@ -207,7 +199,7 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
 			if (process.env.NODE_ENV === 'development') {
 				logger.info(
 					'PREFERENCES',
-					`🔧 Defaulting to mock user ID 1 for preferences fetch (dev mode only)`
+					`🔧 Defaulting to mock user ID 1 for preferences fetch (dev mode only) due to undefined userId`
 				);
 				const mockPreferences = {
 					userId: 1, // Default to mock user ID 1
@@ -269,10 +261,10 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
 			const userId = getUserId(req); // Re-derive userId for logging consistency
 			logger.info(
 				'PREFERENCES',
-				`🔧 Returning mock preferences for user ${userId} on error (dev mode only)`
+				`🔧 Returning mock preferences for user ${userIdForLog ?? 'UNKNOWN (error fallback)'} on error (dev mode only)`
 			);
 			const mockPreferences = {
-				userId,
+				userId: userIdForLog ?? 1, // Default to 1 if still undefined in dev error
 				theme: 'auto',
 				shoutboxPosition: 'sidebar-top',
 				sidebarState: {},
@@ -293,7 +285,10 @@ router.put(
 	isAuthenticated,
 	async (req: Request, res: Response) => {
 		try {
-			const userId = getUserId(req);
+			const userId = getUserIdFromRequest(req);
+			if (userId === undefined) {
+				return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+			}
 			const validation = updateShoutboxPositionSchema.safeParse(req.body);
 
 			if (!validation.success) {

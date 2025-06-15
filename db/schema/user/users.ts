@@ -1,3 +1,5 @@
+import type { AnyPgColumn } from 'drizzle-orm/pg-core';
+
 import {
 	pgTable,
 	serial,
@@ -68,7 +70,9 @@ export const users = pgTable(
 			.default(sql`CURRENT_TIMESTAMP`),
 		lastLogin: timestamp('last_login'),
 		// TODO: self-reference FK (referrerId → users.id) should be added via migration or pgTable foreignKey config once TypeScript circular reference issue is resolved
-		referrerId: integer('referrer_id'),
+		referrerId: integer('referrer_id').references((): AnyPgColumn => users.id as AnyPgColumn, {
+			onDelete: 'set null'
+		}),
 		referralLevel: integer('referral_level'),
 		xp: bigint('xp', { mode: 'number' }).notNull().default(0),
 		level: integer('level').notNull().default(1),
@@ -96,7 +100,7 @@ export const users = pgTable(
 		pathMultipliers: jsonb('path_multipliers').default('{}'),
 		pluginData: jsonb('plugin_data').default('{}'),
 		statusLine: text('status_line'),
-		pinnedPostId: integer('pinned_post_id').references(() => posts.id, { onDelete: 'set null' }),
+		pinnedPostId: integer('pinned_post_id').references((): AnyPgColumn => posts.id as AnyPgColumn, { onDelete: 'set null' }),
 		// Optional future enhancements
 		// profileThemeId: integer('profile_theme_id').references(() => uiThemes.id, { onDelete: 'set null' }),
 		// resumeSlug: text('resume_slug'),
