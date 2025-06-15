@@ -1,6 +1,8 @@
 > ⚠️ This document is currently outdated.
 > Refer to `_audit/forum-audit.md` for the most accurate forum architecture, config model, and open tasks.
 
+**Status: Up-to-date (2025-06-15)** – This README now reflects the completed Forum Audit (Batches 1-4) and acts as the single source of truth for the forum architecture, theming, and development workflow.  For granular changelogs see `_audit/forum/` files.
+
 # ForumFusion Forum System
 
 ## Table of Contents
@@ -393,3 +395,30 @@ prefixEngine(forumSlug, threadStats) => string[]
 ---
 
 *This document reflects the canonical, config-driven forum structure as of 2024. For further details, see `client/src/config/forumMap.config.ts` or contact the core team.*
+
+## Single Source of Types (Post-Batch 5)
+
+All DB entities are now generated via Drizzle code-gen and re-exported through `forum-sdk` so both backend and frontend share **one** canonical type definition.
+
+1. `npm run generate:types` – runs `drizzle-kit generate:pg` to emit TS definitions into `db/types/generated`.
+2. `npm run build:forum-sdk` – bundles those definitions under the `@forum-sdk/*` import alias.
+3. Use in code:
+   ```ts
+   import type { Thread, PostWithUser } from '@forum-sdk/forum';
+   ```
+
+CI runs both commands and fails if type drift is detected.
+
+### Config Service
+
+Runtime constants (XP gains, tipping limits, upload constraints, default themes) live in a **single source**:
+
+• Backend: `server/src/config/forum.config.ts` – canonical object
+• Access with `getConfigValue(path)` from `server/src/core/config.service.ts`  
+  ```ts
+  import { getConfigValue } from '@/core/config.service';
+  const dailyCap = getConfigValue<number>('xp.dailyCap');
+  ```
+• Frontend read-only subset: `client/src/config/publicConfig.ts`
+
+Future admin overrides will merge DB values via `mergeConfig()` at boot.

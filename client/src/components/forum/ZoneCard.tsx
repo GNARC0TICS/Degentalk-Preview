@@ -95,7 +95,7 @@ export function ZoneCard({
 
 	return (
 		<Link href={zoneUrl} onClick={handleClick}>
-			<a // Wrap Card in an anchor for semantic correctness and to attach onClick
+			<a data-testid="zone-card" // Wrap Card in an anchor for semantic correctness and to attach onClick
 				className={`
           block 
           zone-card

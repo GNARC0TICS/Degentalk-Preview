@@ -42,10 +42,15 @@
 		"init:xp": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/initialize-xp-system.ts",
 		"test:xp": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/testing/test-xp-system.ts",
 		"generate:tree": "node scripts/tools/generate-tree.js > directory-tree.md",
+		"generate:types": "drizzle-kit generate:pg --schema=./db/schema --out=./db/types/generated",
+		"build:forum-sdk": "tsx scripts/build-forum-sdk.ts",
 		"validate:routes": "node scripts/testing/validate-routes.js",
 		"test:routes:mock": "node --experimental-modules scripts/testing/test-mock-requests.js",
 		"test:domain-migration": "./scripts/testing/validate-domain-migration.sh",
 		"test:forum-endpoints": "node scripts/testing/test-forum-endpoints.js",
+		"test:forum-fks": "tsx scripts/testing/validate-forum-fks.ts",
+		"test:e2e": "playwright test",
+		"test:e2e:ui": "playwright test --ui",
 		"lint": "npm run lint:client && npm run lint:server",
 		"lint:client": "cd client && npm run lint",
 		"lint:server": "cd server && npm run lint",
@@ -223,7 +228,8 @@
 		"vite": "^5.4.14",
 		"eslint": "^8.57.0",
 		"@typescript-eslint/parser": "6.21.0",
-		"@typescript-eslint/eslint-plugin": "6.21.0"
+		"@typescript-eslint/eslint-plugin": "6.21.0",
+		"@playwright/test": "^1.44.0"
 	},
 	"optionalDependencies": {
 		"bufferutil": "^4.0.8"

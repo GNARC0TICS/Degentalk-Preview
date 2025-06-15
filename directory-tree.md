@@ -11,6 +11,7 @@ Generated on: 2025-06-15
 │  │  ├─ 03-batch-3.md
 │  │  ├─ 04-batch-4.md
 │  │  ├─ 05-batch-5.md
+│  │  ├─ 05-batch-5b-profile-polish.md
 │  │  ├─ 06-integrity-plan.md
 │  │  ├─ 07-user-flow-audit.md
 │  │  └─ 08-consolidation-update.md
@@ -18,7 +19,8 @@ Generated on: 2025-06-15
 │  ├─ codebase-tasks.md
 │  ├─ Degentalk-X-Integration-plan.md
 │  ├─ forum-audit.md
-│  └─ profile-system-ux-audit-2025-06-15.md
+│  ├─ profile-system-ux-audit-2025-06-15.md
+│  └─ profile-system-ux-implementation-plan-2025-06-15.md
 ├─ .clinerules/
 │  ├─ available-rules.md
 │  ├─ cline-continuous-improvement-protocol.md
@@ -102,6 +104,7 @@ Generated on: 2025-06-15
 │  │  │  │  ├─ breadcrumb-nav.tsx
 │  │  │  │  ├─ CanonicalZoneGrid.tsx
 │  │  │  │  ├─ category-card.tsx
+│  │  │  │  ├─ CreateThreadButton.tsx
 │  │  │  │  ├─ forum-card.tsx
 │  │  │  │  ├─ forum-category-card.tsx
 │  │  │  │  ├─ forum-filters.tsx
@@ -112,6 +115,8 @@ Generated on: 2025-06-15
 │  │  │  │  ├─ SolveBadge.tsx
 │  │  │  │  ├─ tag-input.tsx
 │  │  │  │  ├─ ThreadAuthor.tsx
+│  │  │  │  ├─ ThreadCard.tsx
+│  │  │  │  ├─ ThreadStats.tsx
 │  │  │  │  ├─ UserLevelDisplay.tsx
 │  │  │  │  ├─ XpBoostBadge.tsx
 │  │  │  │  ├─ zone-group.tsx
@@ -233,6 +238,7 @@ Generated on: 2025-06-15
 │  │  │  │  ├─ dropdown-menu.tsx
 │  │  │  │  ├─ error-display.tsx
 │  │  │  │  ├─ feature-gate.tsx
+│  │  │  │  ├─ FileDropZone.tsx
 │  │  │  │  ├─ form.tsx
 │  │  │  │  ├─ hamburger.tsx
 │  │  │  │  ├─ hover-card.tsx
@@ -292,6 +298,7 @@ Generated on: 2025-06-15
 │  │  │  ├─ README.md
 │  │  │  ├─ tags.config.ts
 │  │  │  ├─ themeConstants.ts
+│  │  │  ├─ themeFallbacks.ts
 │  │  │  ├─ ui.config.ts
 │  │  │  └─ xp.config.ts
 │  │  ├─ constants/
@@ -300,9 +307,9 @@ Generated on: 2025-06-15
 │  │  │  └─ websocket-disabled.ts
 │  │  ├─ contexts/
 │  │  │  ├─ ForumStructureContext.tsx
+│  │  │  ├─ ForumThemeProvider.tsx
 │  │  │  ├─ LevelUpContext.tsx
 │  │  │  ├─ mock-shoutbox-context.tsx
-│  │  │  ├─ profile-context.tsx
 │  │  │  ├─ safe-shoutbox-provider.tsx
 │  │  │  ├─ shoutbox-context.tsx
 │  │  │  ├─ wallet-context.tsx
@@ -403,6 +410,8 @@ Generated on: 2025-06-15
 │  │  │  ├─ safeWebSocket.ts
 │  │  │  ├─ utils.ts
 │  │  │  └─ wallet-service.ts
+│  │  ├─ navigation/
+│  │  │  └─ forumNav.ts
 │  │  ├─ pages/
 │  │  │  ├─ admin/
 │  │  │  │  ├─ activity/
@@ -490,7 +499,6 @@ Generated on: 2025-06-15
 │  │  │  ├─ home.tsx
 │  │  │  ├─ leaderboard.tsx
 │  │  │  ├─ not-found.tsx
-│  │  │  ├─ profile-page.tsx
 │  │  │  ├─ shop.tsx
 │  │  │  ├─ wallet.tsx
 │  │  │  └─ whispers.tsx
@@ -775,7 +783,8 @@ Generated on: 2025-06-15
 │  │  │  ├─ 0009_snapshot.json
 │  │  │  ├─ 0010_snapshot.json
 │  │  │  └─ 0011_snapshot.json
-│  │  └─ 0012_event_logs_table.sql
+│  │  ├─ 0012_event_logs_table.sql
+│  │  └─ 0013_forum_schema_cleanup.sql
 │  ├─ .DS_Store
 │  ├─ 0008_add_users_profile_fields.sql
 │  ├─ 0009_create_xp_logs_table.sql
@@ -867,7 +876,8 @@ Generated on: 2025-06-15
 │  └─ validate-imports.ts
 ├─ server/
 │  ├─ config/
-│  │  └─ loadEnv.ts
+│  │  ├─ loadEnv.ts
+│  │  └─ zoneThemes.config.ts
 │  ├─ logs/
 │  │  └─ app.log
 │  ├─ migrations/
@@ -1002,6 +1012,10 @@ Generated on: 2025-06-15
 │  │  │  │  └─ relationships.routes.ts
 │  │  │  ├─ treasury/
 │  │  │  │  └─ treasury.routes.ts
+│  │  │  ├─ uploads/
+│  │  │  │  ├─ upload.controller.ts
+│  │  │  │  ├─ upload.routes.ts
+│  │  │  │  └─ upload.service.ts
 │  │  │  ├─ wallet/
 │  │  │  │  ├─ ccpayment.service.ts
 │  │  │  │  ├─ dgt.service.ts
@@ -1028,11 +1042,13 @@ Generated on: 2025-06-15
 │  │  │  ├─ auth.ts
 │  │  │  ├─ authenticate.ts
 │  │  │  ├─ mission-progress.ts
+│  │  │  ├─ trace.middleware.ts
 │  │  │  ├─ validate-request.ts
 │  │  │  └─ validate.ts
 │  │  ├─ routes/
 │  │  │  └─ api/
-│  │  │     └─ index.ts
+│  │  │     ├─ index.ts
+│  │  │     └─ ui.routes.ts
 │  │  ├─ utils/
 │  │  │  ├─ auth.ts
 │  │  │  ├─ db-utils.ts
@@ -1077,6 +1093,7 @@ Generated on: 2025-06-15
 ├─ Wallet-Workspace/
 ├─ .DS_Store
 ├─ .env
+├─ .eslintrc.json
 ├─ .gitignore
 ├─ .neon-mcp-config.json
 ├─ .prettierignore
@@ -1090,13 +1107,12 @@ Generated on: 2025-06-15
 ├─ env.local
 ├─ FORUM_NAVIGATION_REFACTOR_SUMMARY.md
 ├─ MVP-NEEDS.md
-├─ OPTIMIZATION_SUMMARY.md
 ├─ package-lock.json
 ├─ package.json
+├─ pnpm-lock.yaml
 ├─ projectBrief.md
 ├─ README-FORUM.md
 ├─ README.md
-├─ test-env.ts
 └─ tsconfig.json
 ```
 

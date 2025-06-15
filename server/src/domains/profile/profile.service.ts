@@ -4,18 +4,27 @@
  * Service for handling user profile operations.
  */
 import { db } from '@db';
-import { users, userInventory, products, threads, posts, userBadges, userTitles } from '@schema';
-import { eq, and, sql, count } from 'drizzle-orm';
-import type { User } from '@schema';
+import { users, userInventory, threads, posts, userBadges, userTitles } from '@schema'; // Removed 'products'
+import { eq, sql, count } from 'drizzle-orm'; // Removed 'and' and 'InferModel'
+// type User = InferModel<typeof users, 'select'>; // Removed as ESLint flagged as unused, Drizzle types are inferred.
+
+// Placeholder for WebSocket event emission - this should be implemented in events.ts or similar
+// import { emitProfileUpdateEvent } from './events'; // e.g., server/src/domains/profile/events.ts
+
+export interface ProfileMediaUpdateParams {
+  userId: number; // User ID is a number in the database
+  mediaType: 'avatar' | 'banner';
+  relativePath: string; // Store relative path, not full URL
+}
 
 /**
  * Get a user's profile data
- * @param userId The user ID
+ * @param userId The user ID (number, as it is in the database)
  */
-export async function getUserProfile(userId: string) {
+export async function getUserProfile(userId: number) { // Changed userId to number
   // Fetch user data
   const user = await db.query.users.findFirst({
-    where: eq(users.id, userId),
+    where: eq(users.id, userId), // users.id is a number column
     with: {
       activeFrame: true,
       activeTitle: true,
@@ -146,5 +155,53 @@ export async function getUserProfile(userId: string) {
 }
 
 export const profileService = {
-  getUserProfile
-}; 
+  getUserProfile,
+
+  async updateMediaUrl(params: ProfileMediaUpdateParams): Promise<{ success: boolean; message: string }> {
+    const { userId, mediaType, relativePath } = params;
+
+    // relativePath can be an empty string if user is removing avatar/banner.
+    // null might be better for DB if a field is truly optional and cleared.
+    // For now, an empty string will be stored if provided.
+    if (!userId || !mediaType || relativePath === undefined) { 
+      throw new Error('Missing parameters for updating media URL. Requires userId, mediaType, and relativePath.');
+    }
+
+    let updateField;
+    if (mediaType === 'avatar') {
+      // Store the relative path. Full URL will be constructed on demand by storageService.getPublicUrl()
+      updateField = { avatarUrl: relativePath }; 
+    } else if (mediaType === 'banner') {
+      updateField = { profileBannerUrl: relativePath }; // Matches field name in getUserProfile
+    } else {
+      // This should ideally be a more specific error
+      throw new Error(`Invalid media type: ${mediaType}. Must be 'avatar' or 'banner'.`);
+    }
+
+    try {
+      const result = await db.update(users)
+        .set(updateField)
+        .where(eq(users.id, userId))
+        .returning({ updatedId: users.id }); // Ensure the update happened
+
+      if (result.length === 0) {
+        console.warn(`User with ID ${userId} not found for media URL update.`);
+        // Consider throwing a "User not found" error or returning a specific failure message
+        return { success: false, message: `User not found. Couldn't update ${mediaType}.` };
+      }
+      
+      // TODO: Implement WebSocket event emission
+      // This should ideally be in a separate event service or handled via a message queue
+      // For example: await emitProfileUpdateEvent(userId);
+      // console.log(`Profile ${mediaType} updated for user ${userId}. Emitting 'profileUpdated' event (placeholder).`); // Removed console.log
+
+
+      return { success: true, message: `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} updated successfully, you absolute legend!` };
+
+    } catch (error) {
+      console.error(`Error updating ${mediaType} URL for user ${userId}:`, error);
+      // This should ideally be a more specific error
+      throw new Error(`Failed to update ${mediaType} URL. The server gods are displeased.`);
+    }
+  }
+};

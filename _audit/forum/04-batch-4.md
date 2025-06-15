@@ -76,4 +76,4 @@
 
 ##### ✅ Suggestions
 - [~] Audit joins to ensure `LEFT JOIN` when FK is nullable and uses `onDelete: set null`. (Audit of Drizzle schema for `threads` and `posts` tables, and search in `forum.service.ts` did not find `INNER JOIN`s on `featuredBy`, `threads.deletedBy`, `posts.deletedBy`, `posts.editedBy` which use `onDelete: 'set null'`. Broader codebase audit or specific scenarios might be needed if issues persist.)
-- [ ] Add DB constraint tests (e.g., in `scripts/testing/validate-forum-fks.ts`). (This is a development task for future implementation.)
+- [x] Add DB constraint tests (`scripts/testing/validate-forum-fks.ts`). (Implemented script using Drizzle + PostgreSQL client; fails CI if orphaned FK rows found.)
