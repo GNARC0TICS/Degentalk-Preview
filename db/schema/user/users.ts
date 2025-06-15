@@ -18,10 +18,12 @@ import { roles } from './roles';
 import { titles } from '../economy/titles';
 import { badges } from '../economy/badges';
 import { avatarFrames } from './avatarFrames';
+import { posts } from '../forum/posts';
 // import { userGroups } from "./userGroups"; // Placeholder for future import
 // import { titles } from "../economy/titles"; // Placeholder for future import
 // import { badges } from "../economy/badges"; // Placeholder for future import
 // import { avatarFrames } from "./avatarFrames"; // Placeholder for future import
+// import { uiThemes } from '../admin/themes'; // For future profile theme support
 
 export const users = pgTable(
 	'users',
@@ -89,6 +91,11 @@ export const users = pgTable(
 		pathXp: jsonb('path_xp').default('{}'),
 		pathMultipliers: jsonb('path_multipliers').default('{}'),
 		pluginData: jsonb('plugin_data').default('{}'),
+		statusLine: text('status_line'),
+		pinnedPostId: integer('pinned_post_id').references(() => posts.id, { onDelete: 'set null' }),
+		// Optional future enhancements
+		// profileThemeId: integer('profile_theme_id').references(() => uiThemes.id, { onDelete: 'set null' }),
+		// resumeSlug: text('resume_slug'),
 		updatedAt: timestamp('updated_at').defaultNow().notNull(),
 		/**
 		 * DEPRECATED: Legacy group integer ID. Retained temporarily to keep code compiling

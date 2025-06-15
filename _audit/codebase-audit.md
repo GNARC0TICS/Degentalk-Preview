@@ -269,151 +269,91 @@ File: `client/src/hooks/useThreadZone.ts`
 
 ---
 
-### 2025-06-14 — Batch 5 (Utility Kitchens – "Gordon Ramsay" Edition)
+### 2025-06-14 — Batch 5 (Branding & Header Polish)
 
 ---
 
-#### Cosmetic Chaos – Two **applyPluginRewards** Implementations
-
-Files:
-- `client/src/lib/utils/applyPluginRewards.ts` (163 LOC, TypeScript)
-- `client/src/lib/utils/cosmeticsUtils.tsx` (174 LOC, TSX)
+#### client/src/components/layout/site-header.tsx
 
 ##### 🔍 Issues
-- You've cooked the **same damn recipe twice**! Two separate `applyPluginRewards` functions do 95 % identical work, but with subtly different shapes (`UserInventoryWithProduct` vs inline interface). This is a nightmare waiting to happen — one fix will inevitably miss the other.
-- The TSX version even re-exports an *identically named* function, guaranteeing import collisions.
-- One uses system-role colour override logic, the other doesn't — perfect recipe for inconsistent UI seasoning.
-
-##### ✅ Ramsay-Approved Fix
-- Throw both into a blender: create single source `cosmetics/applyPluginRewards.ts` and export typed helpers (`getSystemRoleColor`, `applyPluginRewards`).
-- Delete the duplicate, leave a re-export stub with deprecation comment so TS screams if anyone tries the old import.
-- Add unit tests: same input inventory must yield identical output across role permutations (admin, mod, pleb).
-
----
-
-#### Category Colour Factory – **getCategoryColor** If-Else Lasagna
-
-File: `client/src/lib/utils/category.ts`
-
-##### 🔍 Issues
-- 9-level if-else spaghetti. Every new category = another `if` layer. This is how scalability dies.
+- **Branding Duplication:** The "Degentalk" word-mark and trademark glyph are hard-coded here and in `site-footer.tsx`. Styling changes require editing multiple files.
+- **Navigation Button Padding:** Desktop nav buttons use static `px-3` which causes the active button outline to collide with the logo on some viewports.
+- **Magic Numbers:** Negative margins (`-mt-*`, `-mb-*`) for logo placement live in page components (e.g., `forums/index.tsx`) instead of a central brand component — increases risk of inconsistent spacing across pages.
 
 ##### ✅ Suggestions
-- Replace with **map-lookup table**: `{ keyRegex: /(trading|analysis)/, color: 'from-blue-500...' }`. Iterate once; O(n) maintainability drops to O(1).
-- Extract to `category-colors.ts` so design can tweak without code deploy.
+- Extract a reusable `<BrandLogo />` component (props: `variant = 'header' | 'footer' | 'page'`) that renders the word-mark and optional ™ with consistent styling. Import in header, footer, and any hero sections.
+- Replace hard-coded `px-3` with a Tailwind variable class (`px-2 md:px-3`) or max width clamp to prevent collision on small screens.
+- Replace negative margins around the graffiti banner with Flexbox/GAP or padding tokens defined in a design-tokens file (e.g., `styles/tokens/spacing.ts`).
+- Add unit test with `@testing-library/react` to assert logo renders exactly once per page and nav spacing is ≥ 4 px from logo at 1280 px width.
 
 ---
 
-#### Wallet Utils – 240 Lines of Swiss-Army Chaos
-
-File: `server/utils/wallet-utils.ts`
+#### client/src/components/layout/site-footer.tsx
 
 ##### 🔍 Issues
-- Mixes formatting helpers **and** high-stakes DB mutations. That's like storing raw chicken next to pastry — cross-contamination guaranteed.
-- Re-implements `calculateDgtFromUsdt`, `confirmDeposit`, `processWithdrawal` that are *also* present inside `walletEngine.ts` and domain services.
-- Uses manual SQL for treasury updates instead of Drizzle models — one typo and you're shouting "WHERE'S THE LAMB SAUCE" at prod data.
+- Duplicated trademark styling as in header (see above) with slightly different colour (`text-zinc-400`) creating subtle visual mis-match.
 
 ##### ✅ Suggestions
-- Carve into modules:
-  1. `wallet-format.ts` (pure functions, no DB)
-  2. `wallet-db.ts` (Drizzle powered, transactional)
-  3. `wallet-exchange.ts` (rate logic, cached)
-- Bolt transactional helpers onto WalletService domain, not global util dir.
-- Delete `walletEngine.ts` (776 LOC!) after migrating essential bits into typed services.
+- Use shared `<BrandLogo variant="footer" />` to guarantee typography & ™ alignment.
 
 ---
 
-#### `platform-energy.ts`, `shop-utils.ts`, `path-utils.ts` – Leftover Side-Dish Scripts
+#### client/src/pages/forums/index.tsx
 
-- These utils are imported directly by **server/routes.ts**, bypassing domain boundaries. That's like serving appetizers in the dessert station.
-- TODO comments from *January* still present — means nobody is cleaning the kitchen.
+##### 🔍 Issues
+- Multiple ad-hoc negative margins (`-mt-16`, `-mb-12`) applied to the graffiti image to fine-tune spacing. This is brittle and page-specific.
 
 ##### ✅ Suggestions
-- Promote each util into its respective domain (`engagement/platform-energy`, `shop/shop.utils.ts`, `paths/path.utils.ts`).
-- Drop imports from central router; controllers should own their condiments.
+- Refactor banner into new `<HeroBanner src alt height />` component with controlled props for spacing and responsive height (`max-h-[theme(spacing.64)]`).
+- Remove manual negative margins and rely on component props + Tailwind responsive classes.
 
 ---
 
-#### API Helpers – `ensureArray` / `ensureValue`
-
-File: `client/src/lib/utils/api-helpers.ts`
-
-##### 🔍 Issues
-- Tiny but fine — yet **unused** in  search across `client/src` (0 hits). Dead code = rotten ingredients.
-
-##### ✅ Suggestions
-- Either delete or actually roll into data-fetch hooks.
+### 2025-06-14 — Batch 6 (Home Page Modular Dashboard)
 
 ---
 
-### 2025-06-14 — Batch 6 (Middleware Mayhem)
+#### client/src/pages/home.tsx
 
----
+##### 🔍 Current State
+- Home page renders a mostly static two-column layout (main content + sidebar). Certain subsections (e.g., Shoutbox) can already be repositioned by reading `position` from `useShoutbox()` context, but the rest of the layout is hard-coded.
+- Planned new widgets: **User Note Pad**, **Degen Dictionary**, **Friends List**, **My Threads**, **Events**, and **AdSpace**. These will quickly overflow the current sidebar or push critical content below the fold.
+- No single source of truth for *which* widgets are available or *where* they live; adding new components requires hand-editing `home.tsx` and re-running Tailwind spacing whack-a-mole.
 
-#### Validation Middleware – **Two functions doing the same damn job**
+##### 👁  Risks & Limitations
+1. **Rigid JSX Order** – Widgets are rendered in a fixed sequence; user cannot reorder without code changes.
+2. **Two-Column Bottleneck** – Sidebar (`lg:w-1/3`) hard-codes width; more widgets will either balloon scroll length or demand a third column.
+3. **Preference Drift** – Shoutbox uses its own `ShoutboxContext` for placement, but future widgets have no equivalent; UX becomes inconsistent.
+4. **State Coupling** – Each widget fetches its own data (queries, hooks). If users hide a widget, its data will still load unless gated.
 
-Files:
-1. `server/src/middleware/validate.ts` (66 LOC)
-2. `server/src/middleware/validate-request.ts` (17 LOC)
+##### ✅ Recommendations
+1. **Widget Registry Pattern**
+   - Create `client/src/widgets/index.ts` exporting a `WidgetDescriptor` type `{ id, component, defaultRegion, minWidth, minHeight, fetchPolicy }`.
+   - Each feature registers itself (e.g., `registerWidget(UserNotepadWidget)`), enabling lazy import & tree-shaking.
 
-##### 🔍 Issues
-- Duplicate responsibility: both parse Zod schemas against request objects.
-- One validates body *only* (plus query/params individually), the other validates a composite object ⇒ inconsistent error formats.
-- Neither exports a consistent `ValidationError` type; controllers must pattern-match every snowflake.
+2. **Layout Manager Context**
+   - Provide `<DashboardLayoutProvider>` wrapping HomePage.  Maintain `{ regionId: WidgetId[] }` in context, persist to localStorage per user.
+   - Expose drag-and-drop or simple up/down controls to reorder widgets (use `@dnd-kit/sortable` or similar).
 
-##### 🔥 Ramsay-Style Verdict
-"Why have two dull knives when you can have ONE sharp chef's knife?"
+3. **Responsive Region Map**
+   - Define breakpoints: `main`, `sidebar`, `footer`.  On `lg+`, show two columns; on `xl+`, allow optional third column.  On mobile, stack widgets following user order.
+   - Use CSS Grid (`grid-template-areas`) rather than Flex to avoid negative margins & manual gaps.
 
-##### ✅ Refactor Recipe
-- Create a unified `validateRequest(schema, options)` util that supports selective segments via options `{ body?: true, query?: true, params?: true }`.
-- Deprecate both old files; leave re-export stubs yelling deprecation warnings.
-- Ensure consistent 422 status + JSON error envelope `{ message, errors: ZodIssue[] }`.
+4. **Widget Visibility & Data Loading**
+   - Pass `isVisible` prop to each widget; internally gate TanStack queries with `enabled: isVisible` to avoid unnecessary requests.
+   - Add "Add / Remove Widgets" modal that toggles `isVisible` in the layout state.
 
----
+5. **Migration Path**
+   - Phase 1: Extract current sidebar items (ShoutboxSidebarTop, WalletSummaryWidget, LeaderboardWidget, ActiveMembersWidget) into registry without changing visual order.
+   - Phase 2: Introduce new widgets via registry and surface simple reorder UI.
+   - Phase 3: Replace negative-margin graffiti banner hacks with `<HeroBanner>` that itself is a registered widget pinned to `main-top` region.
 
-#### Auth Middleware Salad – `authenticate.ts` vs `auth.ts`
+6. **Testing & Analytics**
+   - Add RTL tests to assert default region map renders expected widgets.
+   - Track widget add/remove/reorder events for product analytics (`ui_analytics` table already exists).
 
-Files:
-- `server/src/middleware/authenticate.ts` (76 LOC)
-- `server/src/middleware/auth.ts` (49 LOC wrapper)
-
-##### 🔍 Issues
-- `auth.ts` simply re-exports `authenticate` and adds *extra* role checks (`requireAdmin`, `requireModerator`). This wrapper then gets ignored by many domains that import `authenticate` *directly* – inconsistent role enforcement.
-- Callback hell: role check middlewares call `authenticate` **inside their own function each request**, causing double JWT verify on success routes.
-- Types missing – `any` req/res params in `requireAdmin` etc.
-
-##### ✅ Ramsay Fix
-- Promote a dedicated RBAC middleware factory: `requireRole('admin' | 'moderator' | ['admin','mod'])` returning an Express handler.
-- Export single entry `auth/index.ts` with `authenticate`, `requireRole`, `getUserId` helpers.
-- Remove duplicate wrapper file.
-
----
-
-#### Mission Progress Middleware – Sneaky Side-Effects
-
-File: `server/src/middleware/mission-progress.ts`
-
-##### 🔍 Issues
-- Monkey-patches `res.send` to insert side-effect after response; risks double-send if controller already mutated `res.send`.
-- Skips awaiting `updateMissionProgress` but swallows errors; silent mission tracking failures.
-- Relies on `missionsService` global singleton – no DI, hard to test.
-
-##### ✅ Suggestions
-- Swap to Express `on-finished` npm package to safely run post-response hooks without overriding `res.send`.
-- Return a Promise and attach `.catch(logger.error)` at call site; avoid hidden async.
-- Accept `missionsService` via closure param for testability.
-
----
-
-#### Inconsistent Error-Handling Strategy
-
-Observation:
-- Some middlewares return `res.status(400).json(error)` (raw Zod error), others wrap in `{ error: '...' }`.
-- Global error handler in `server/index.ts` standardises to `{ message }`, but many middlewares short-circuit before it.
-
-##### ✅ Action Plan
-- Enforce single `next(new HttpError(status, message, details))` pattern; let central handler craft response.
-- Add ESLint rule: "no direct res.status in middleware except 5xx fallback".
+7. **Performance Guardrails**
+   - Provide `fetchPolicy: 'onVisible' | 'eager'` in descriptor to optionally defer expensive queries until widget scrolls into view (IntersectionObserver).
 
 ---
 

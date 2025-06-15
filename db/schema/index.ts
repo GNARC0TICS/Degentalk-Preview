@@ -88,6 +88,7 @@ export * from './economy/treasurySettings';
 // Economy domain - airdrop
 export * from './economy/airdropSettings';
 export * from './economy/airdropRecords';
+export * from './economy/xpLogs';
 
 // Shop domain exports
 export * from './shop/products';
