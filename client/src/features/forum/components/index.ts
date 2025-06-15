@@ -59,7 +59,6 @@ export { default as ReplyForm } from './ReplyForm';
 export { default as CreatePostForm } from './CreatePostForm';
 export * from './PostCard';
 export * from './PostList';
-export * from './PostReply';
 export * from './ReplyForm';
 export * from './CreatePostForm';
 

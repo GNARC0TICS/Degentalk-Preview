@@ -98,39 +98,6 @@ export function getThreadUrl(thread: { id: number; slug?: string }): string {
 }
 
 /**
- * Hierarchical structure mapping
- */
-export function mapToHierarchicalStructure(entities: ForumEntityBase[]): {
-	primaryZones: ForumEntityBase[];
-	categories: Array<ForumEntityBase & { children: ForumEntityBase[] }>;
-} {
-	const primaryZones: ForumEntityBase[] = [];
-	const categoriesMap = new Map<number, ForumEntityBase & { children: ForumEntityBase[] }>();
-	const childForums: ForumEntityBase[] = [];
-	entities.forEach((entity) => {
-		if (isPrimaryZone(entity)) {
-			primaryZones.push(entity);
-		} else if (isCategory(entity)) {
-			categoriesMap.set(entity.id, { ...entity, children: [] });
-		} else {
-			childForums.push(entity);
-		}
-	});
-	childForums.forEach((forum) => {
-		if (forum.parentId && categoriesMap.has(forum.parentId)) {
-			const category = categoriesMap.get(forum.parentId);
-			if (category) {
-				category.children.push(forum);
-			}
-		}
-	});
-	return {
-		primaryZones,
-		categories: Array.from(categoriesMap.values())
-	};
-}
-
-/**
  * Entity sorting helper
  */
 export function sortEntities(entities: ForumEntityBase[]): ForumEntityBase[] {

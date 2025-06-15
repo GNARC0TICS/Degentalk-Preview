@@ -171,6 +171,19 @@ Keep SEO title updates via `react-helmet-async`. |
 | **CTA Logic** | If slot empty, show «Shop» button linking to `/shop?filter=frames`. |
 | **Accessibility** | On mobile, converts to bottom sheet (`Dialog`) to avoid finger reach issues. |
 
+#### 10. X Account Linking and Content Sharing
+
+| Aspect | Detail |
+|---|---|
+| **Problem** | Users cannot link their DegenTalk profiles to X accounts or share content directly to X, missing out on viral growth opportunities. |
+| **Solution** | Implement X OAuth 2.0 for account linking and creation, add UI for sharing posts, threads, and referral links to X, and integrate with DegenTalk economy for rewards. |
+| **DB Changes** | Extend `users` table with: `xAccountId VARCHAR(255)`, `xAccessToken VARCHAR(512)`, `xRefreshToken VARCHAR(512)`, `xTokenExpiresAt TIMESTAMP`, `xLinkedAt TIMESTAMP`. Create new `xShares` table to track sharing activities for analytics and rewards. |
+| **API Changes** | Add endpoints: `GET /api/auth/x/login` and `GET /api/auth/x/callback` for OAuth flow, `POST /api/profile/x/unlink` to unlink accounts, `POST /api/share/x/post` and `POST /api/share/x/referral` for content sharing. |
+| **Components** | `client/src/features/auth/components/XLoginButton.tsx` for sign-in, `client/src/features/profile/components/XLinkButton.tsx` for linking, `client/src/features/forum/components/XShareButton.tsx` for sharing content, `client/src/features/referral/components/XReferralShare.tsx` for referral links. |
+| **UX Notes** | Display X handle or badge on profiles if linked. Ensure mobile-friendly OAuth flow and compact share buttons. Incentivize sharing with XP/DGT rewards for viral growth. |
+| **Backend Hooks** | Update `profile.service.ts` to handle X account data, create `xAuthService.ts` for OAuth flow, and `xShareService.ts` for API interactions. Integrate with `rewardService.ts` for economy rewards. |
+| **Scalability** | Implement job queue for X API rate limits, automate token refresh, index database fields for performance, and cache X data to reduce API load. |
+
 #### Database Schema Updates (Applied 2025-06-15)
 
 > **Status:** ✅ *Completed & migrated locally*.  These columns/tables now exist in the source schema and the corresponding SQL migration files (`0008_add_users_profile_fields.sql`, `0009_create_xp_logs_table.sql`) are ready to be applied in staging/production.
@@ -198,6 +211,7 @@ Keep SEO title updates via `react-helmet-async`. |
 1. **Insert** FlexBar + Sub-Nav tasks into *Next Steps* as **Step 3A & 3B** before responsive polish.  
 2. **Recent Activity Tab** becomes **Step 4** (after Event Bus sync).  
 3. **Quick Loadout Bar** slots into **Step 5** alongside visual polish.
+4. **X Account Linking** slots into **Step 3C** after "Persistent Profile Sub-Navigation".
 
 ---
 
@@ -210,4 +224,4 @@ Keep SEO title updates via `react-helmet-async`. |
 
 ---
 
-*End of Report* 
+*End of Report*

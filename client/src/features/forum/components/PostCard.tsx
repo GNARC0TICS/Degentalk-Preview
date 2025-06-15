@@ -5,10 +5,9 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
-import { MessageSquare, Heart, ThumbsUp, Reply, Trash, Flag, Edit, Share2 } from 'lucide-react';
-import { ROUTES } from '@/constants/routes';
+import { Heart, ThumbsUp, Reply, Trash, Edit, Flag, Coins } from 'lucide-react';
 import type { PostWithUser } from '@db_types/forum.types';
-import { SolveBadge } from './SolveBadge';
+import { SolveBadge } from '@/components/forum/SolveBadge';
 
 interface PostCardProps {
 	post: PostWithUser;
@@ -20,6 +19,8 @@ interface PostCardProps {
 	onEdit?: (id: number) => void;
 	onDelete?: (id: number) => void;
 	onMarkAsSolution?: (id: number) => void;
+	onTip?: (id: number) => void; // New prop
+	onReport?: (id: number) => void; // New prop
 	isFirst?: boolean;
 	parentForumTheme?: string | null;
 	tippingEnabled?: boolean;
@@ -35,14 +36,14 @@ export function PostCard({
 	onEdit,
 	onDelete,
 	onMarkAsSolution,
+	onTip,
+	onReport,
 	isFirst = false,
 	parentForumTheme = null,
 	tippingEnabled = false,
 }: PostCardProps) {
-	// Generate initials for avatar fallback
 	const initials = post.user.username ? post.user.username.substring(0, 2).toUpperCase() : 'U';
 
-	// Format timestamps
 	const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
 	const editedTimeAgo =
 		post.isEdited && post.updatedAt
@@ -85,7 +86,9 @@ export function PostCard({
 
 			<CardContent className="px-4 py-3">
 				<div className="prose prose-invert prose-zinc max-w-none">
-					{post.content && <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }} />}
+					{post.content && (
+						<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }} />
+					)}
 				</div>
 			</CardContent>
 
@@ -110,6 +113,18 @@ export function PostCard({
 						<Reply className="h-4 w-4" />
 						<span>Reply</span>
 					</Button>
+
+					{tippingEnabled && (
+						<Button
+							size="sm"
+							variant="ghost"
+							className="text-xs h-8 px-3 text-zinc-400 flex items-center gap-1.5"
+							onClick={() => onTip && onTip(post.id)}
+						>
+							<Coins className="h-4 w-4" />
+							<span>Tip</span>
+						</Button>
+					)}
 				</div>
 
 				<div className="flex items-center space-x-1">
@@ -148,10 +163,20 @@ export function PostCard({
 							Mark as Solution
 						</Button>
 					)}
+
+					<Button
+						size="sm"
+						variant="ghost"
+						className="text-xs h-8 px-2 text-zinc-400"
+						onClick={() => onReport && onReport(post.id)}
+					>
+						<Flag className="h-3.5 w-3.5" />
+						<span className="sr-only">Report</span>
+					</Button>
 				</div>
 			</CardFooter>
 		</Card>
 	);
 }
 
-export default PostCard;
+export default PostCard; 

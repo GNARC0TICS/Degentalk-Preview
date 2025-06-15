@@ -141,9 +141,12 @@ export type ApiZoneEntry = ApiCategoryDataFromApi;
 export type ApiForumEntry = ApiCategoryDataFromApi;
 // --- End of Updated Types ---
 
+// Intermediate type for the hierarchical structure from API
+type HierarchicalApiEntry = ApiCategoryDataFromApi & { forums?: ApiForumEntry[] };
+
 export type ForumStructureApiResponse = {
-  primaryZones: ApiZoneEntry[]; // This seems unused if categories contains all zones/forums
-  categories: (ApiZoneEntry | ApiForumEntry)[];
+  primaryZones: HierarchicalApiEntry[];
+  categories: HierarchicalApiEntry[]; // Categories from API are also groupers with nested forums
 };
 
 interface ForumStructureContextType {
@@ -494,7 +497,10 @@ export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ chil
   }
 
   const mergedData = useMemo(() => {
-    const result = mergeStaticAndApiData(forumMap.zones, apiResponse?.categories, defaultMergedRules);
+    // Call the shim function to flatten the API response
+    const flatApiEntities = apiResponse ? flattenApiResponse(apiResponse) : undefined;
+    // The existing mergeStaticAndApiData function now receives the flattened list
+    const result = mergeStaticAndApiData(forumMap.zones, flatApiEntities, defaultMergedRules);
     return result;
   }, [apiResponse]); 
 
@@ -533,3 +539,129 @@ export const useForumStructure = () => {
   }
   return context;
 };
+
+// Shim function to flatten the hierarchical API response
+function flattenApiResponse(
+  hierarchicalResponse: ForumStructureApiResponse
+): (ApiZoneEntry | ApiForumEntry)[] {
+  const allEntities: (ApiZoneEntry | ApiForumEntry)[] = [];
+
+  // Process primaryZones
+  if (hierarchicalResponse.primaryZones) {
+    hierarchicalResponse.primaryZones.forEach(zoneWithForums => {
+      // Add the zone itself
+      const { forums, ...zoneData } = zoneWithForums; 
+      allEntities.push({
+        ...(zoneData as ApiZoneEntry), // Cast to ensure base properties
+        type: zoneData.type || 'zone',
+        isZone: zoneData.isZone ?? true, // Default to true for primary zones
+        canonical: zoneData.canonical ?? true, // Default to true for primary zones
+        position: zoneData.position ?? 0,
+        isVip: zoneData.isVip ?? false,
+        isLocked: zoneData.isLocked ?? false,
+        isHidden: zoneData.isHidden ?? false,
+        minXp: zoneData.minXp ?? 0,
+        color: zoneData.color ?? null,
+        icon: zoneData.icon ?? null,
+        colorTheme: zoneData.colorTheme ?? null,
+        minGroupIdRequired: zoneData.minGroupIdRequired ?? null,
+        tippingEnabled: zoneData.tippingEnabled ?? false,
+        xpMultiplier: zoneData.xpMultiplier ?? 1.0,
+        pluginData: zoneData.pluginData ?? {},
+        threadCount: zoneData.threadCount ?? 0,
+        postCount: zoneData.postCount ?? 0,
+        createdAt: zoneData.createdAt ?? new Date().toISOString(),
+        updatedAt: zoneData.updatedAt ?? new Date().toISOString(),
+      } as ApiZoneEntry);
+
+      // Add its forums
+      if (forums) {
+        forums.forEach((forum: ApiForumEntry) => { // Explicitly type forum
+          allEntities.push({
+            ...forum,
+            type: forum.type || 'forum', // Default type
+            isZone: forum.isZone ?? false, // Forums are not zones by default
+            canonical: forum.canonical ?? false,
+            parentId: forum.parentId ?? zoneData.id, // Ensure parentId is set
+            position: forum.position ?? 0,
+            isVip: forum.isVip ?? false,
+            isLocked: forum.isLocked ?? false,
+            isHidden: forum.isHidden ?? false,
+            minXp: forum.minXp ?? 0,
+            color: forum.color ?? null,
+            icon: forum.icon ?? null,
+            colorTheme: forum.colorTheme ?? null,
+            minGroupIdRequired: forum.minGroupIdRequired ?? null,
+            tippingEnabled: forum.tippingEnabled ?? false,
+            xpMultiplier: forum.xpMultiplier ?? 1.0,
+            pluginData: forum.pluginData ?? {},
+            threadCount: forum.threadCount ?? 0,
+            postCount: forum.postCount ?? 0,
+            createdAt: forum.createdAt ?? new Date().toISOString(),
+            updatedAt: forum.updatedAt ?? new Date().toISOString(),
+          } as ApiForumEntry);
+        });
+      }
+    });
+  }
+
+  // Process categories (which are zone-like entities grouping forums)
+  if (hierarchicalResponse.categories) {
+    hierarchicalResponse.categories.forEach(categoryWithForums => {
+      // Add the category (zone-like group) itself
+      const { forums, ...categoryData } = categoryWithForums; 
+      allEntities.push({
+        ...(categoryData as ApiZoneEntry), // Cast to ensure base properties
+        type: categoryData.type || 'zone', // Can be 'category' or 'zone' type from DB
+        isZone: categoryData.isZone ?? true, // Default to true if it's a grouping category/zone
+        canonical: categoryData.canonical ?? false, // Grouping categories are typically not canonical
+        position: categoryData.position ?? 0,
+        isVip: categoryData.isVip ?? false,
+        isLocked: categoryData.isLocked ?? false,
+        isHidden: categoryData.isHidden ?? false,
+        minXp: categoryData.minXp ?? 0,
+        color: categoryData.color ?? null,
+        icon: categoryData.icon ?? null,
+        colorTheme: categoryData.colorTheme ?? null,
+        minGroupIdRequired: categoryData.minGroupIdRequired ?? null,
+        tippingEnabled: categoryData.tippingEnabled ?? false,
+        xpMultiplier: categoryData.xpMultiplier ?? 1.0,
+        pluginData: categoryData.pluginData ?? {},
+        threadCount: categoryData.threadCount ?? 0,
+        postCount: categoryData.postCount ?? 0,
+        createdAt: categoryData.createdAt ?? new Date().toISOString(),
+        updatedAt: categoryData.updatedAt ?? new Date().toISOString(),
+      } as ApiZoneEntry);
+
+      // Add its forums
+      if (forums) {
+        forums.forEach((forum: ApiForumEntry) => { // Explicitly type forum
+          allEntities.push({
+            ...forum,
+            type: forum.type || 'forum',
+            isZone: forum.isZone ?? false,
+            canonical: forum.canonical ?? false,
+            parentId: forum.parentId ?? categoryData.id, // Ensure parentId is set
+            position: forum.position ?? 0,
+            isVip: forum.isVip ?? false,
+            isLocked: forum.isLocked ?? false,
+            isHidden: forum.isHidden ?? false,
+            minXp: forum.minXp ?? 0,
+            color: forum.color ?? null,
+            icon: forum.icon ?? null,
+            colorTheme: forum.colorTheme ?? null,
+            minGroupIdRequired: forum.minGroupIdRequired ?? null,
+            tippingEnabled: forum.tippingEnabled ?? false,
+            xpMultiplier: forum.xpMultiplier ?? 1.0,
+            pluginData: forum.pluginData ?? {},
+            threadCount: forum.threadCount ?? 0,
+            postCount: forum.postCount ?? 0,
+            createdAt: forum.createdAt ?? new Date().toISOString(),
+            updatedAt: forum.updatedAt ?? new Date().toISOString(),
+          } as ApiForumEntry);
+        });
+      }
+    });
+  }
+  return allEntities;
+}

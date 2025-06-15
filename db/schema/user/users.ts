@@ -1,4 +1,3 @@
-import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
 	serial,
@@ -51,6 +50,12 @@ export const users = pgTable(
 		twitterHandle: varchar('twitter_handle', { length: 255 }),
 		website: varchar('website', { length: 255 }),
 		telegramHandle: varchar('telegram_handle', { length: 255 }),
+		// X (Twitter) Integration Fields
+		xAccountId: varchar('x_account_id', { length: 255 }),
+		xAccessToken: text('x_access_token'),
+		xRefreshToken: text('x_refresh_token'),
+		xTokenExpiresAt: timestamp('x_token_expires_at'),
+		xLinkedAt: timestamp('x_linked_at'),
 		isActive: boolean('is_active').notNull().default(true),
 		isVerified: boolean('is_verified').notNull().default(false),
 		isDeleted: boolean('is_deleted').notNull().default(false),
@@ -62,9 +67,8 @@ export const users = pgTable(
 			.notNull()
 			.default(sql`CURRENT_TIMESTAMP`),
 		lastLogin: timestamp('last_login'),
-		referrerId: integer('referrer_id').references((): AnyPgColumn => users.id, {
-			onDelete: 'set null'
-		}),
+		// TODO: self-reference FK (referrerId → users.id) should be added via migration or pgTable foreignKey config once TypeScript circular reference issue is resolved
+		referrerId: integer('referrer_id'),
 		referralLevel: integer('referral_level'),
 		xp: bigint('xp', { mode: 'number' }).notNull().default(0),
 		level: integer('level').notNull().default(1),

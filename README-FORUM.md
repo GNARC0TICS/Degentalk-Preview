@@ -1,3 +1,6 @@
+> ⚠️ This document is currently outdated.
+> Refer to `_audit/forum-audit.md` for the most accurate forum architecture, config model, and open tasks.
+
 # ForumFusion Forum System
 
 ## Table of Contents
@@ -78,7 +81,7 @@ Traditional forum categories with sub-forums, e.g.:
 
 #### Forum Structure
 
-- `GET /api/forum/structure` — Flat array of all zones and forums (with all fields)
+- `GET /api/forum/structure` — Returns a hierarchical structure: `{ primaryZones: ZoneWithForums[], categories: CategoryGroupWithForums[] }`. The frontend uses a shim in `ForumStructureContext.tsx` to flatten this response before merging with `forumMap.config.ts`.
 - `GET /api/forum/categories` — Categories with thread/post stats
 - `GET /api/forum/zones` — All primary zones with stats
 - `GET /api/forum/zones/tree` — Hierarchical forum structure

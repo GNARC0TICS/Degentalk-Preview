@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'wouter';
-import { ThreadCard } from '@/components/forum/thread-card';
+import { ThreadCard } from '@/features/forum/components/ThreadCard';
 import { useThreadsByTag, useTags } from '@/features/forum/hooks/useForumQueries';
 import { SiteHeader } from '@/components/layout/site-header';
 import { SiteFooter } from '@/components/layout/site-footer';

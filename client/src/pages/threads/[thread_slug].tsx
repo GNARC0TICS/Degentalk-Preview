@@ -3,7 +3,7 @@ import { useParams, Link } from 'wouter';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import forumApi from '@/features/forum/services/forumApi';
 import ThreadCard from '@/features/forum/components/ThreadCard'; // Corrected import path
-import PostCard from '@/components/forum/post-card';
+import PostCard from '@/features/forum/components/PostCard';
 import ReplyForm from '@/features/forum/components/ReplyForm';
 import { Button } from '@/components/ui/button';
 import { useForumStructure } from '@/contexts/ForumStructureContext'; // Import useForumStructure

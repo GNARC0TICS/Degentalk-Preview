@@ -14,7 +14,7 @@ import { ProfilePageSkeleton } from '@/components/profile/ProfilePageSkeleton';
 import type { PostWithUser, ThreadWithUser } from '@db_types/forum.types';
 import type { UserProfileData } from '@/types/profile';
 import { ThreadList } from '@/components/forum/thread-list';
-import { PostCard } from '@/components/forum/post-card';
+import { PostCard } from '@/features/forum/components/PostCard';
 import { Progress } from '@/components/ui/progress';
 import { formatDistanceToNow } from 'date-fns';
 import {
