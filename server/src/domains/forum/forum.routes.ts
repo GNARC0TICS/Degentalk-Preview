@@ -163,8 +163,16 @@ router.get('/structure', async (req: Request, res: Response) => {
 		const structure = await forumService.getForumStructure();
 		res.json(structure);
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error fetching forum structure', { err: error });
-		res.status(500).json({ message: 'An error occurred fetching forum structure' });
+		logger.error('ForumRoutes', 'Error fetching forum structure', { 
+			err: error,
+			message: error instanceof Error ? error.message : 'Unknown error',
+			stack: error instanceof Error ? error.stack : undefined
+		});
+		console.error('Forum structure error:', error); // Add console log for immediate visibility
+		res.status(500).json({ 
+			message: 'An error occurred fetching forum structure',
+			error: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : undefined
+		});
 	}
 });
 
@@ -174,8 +182,16 @@ router.get('/categories', async (req: Request, res: Response) => {
 		const categories = await forumService.getCategoriesWithStats();
 		res.json(categories);
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error fetching categories', { err: error });
-		res.status(500).json({ message: 'An error occurred fetching categories' });
+		logger.error('ForumRoutes', 'Error fetching categories', { 
+			err: error,
+			message: error instanceof Error ? error.message : 'Unknown error',
+			stack: error instanceof Error ? error.stack : undefined
+		});
+		console.error('Forum categories error:', error); // Add console log for immediate visibility
+		res.status(500).json({ 
+			message: 'An error occurred fetching categories',
+			error: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : undefined
+		});
 	}
 });
 

@@ -15,6 +15,39 @@ interface ForumCategoryPluginData {
   originalTheme?: ForumTheme | Partial<ForumTheme> | null;
   configZoneType?: 'primary' | 'general';
   configDescription?: string | null;
+  
+  // Enhanced primary zone features
+  components?: string[];
+  accessControl?: {
+    canPost?: string[];
+    canModerate?: string[];
+    canCreateEvents?: string[];
+  };
+  threadRules?: {
+    requirePrefix?: boolean;
+    allowPolls?: boolean;
+    requireDGTEscrow?: boolean;
+    minDGTToPost?: number;
+  };
+  features?: {
+    xpChallenges?: boolean;
+    airdrops?: boolean;
+    zoneShop?: boolean;
+    staffBoard?: boolean;
+    analytics?: boolean;
+    customBadges?: boolean;
+  };
+  gamification?: {
+    xpBoostOnRedMarket?: boolean;
+    streakMultipliers?: boolean;
+    zoneSpecificBadges?: string[];
+  };
+  visualIdentity?: {
+    glitchEffects?: boolean;
+    hoverAnimations?: string;
+    gradientOverlays?: boolean;
+  };
+  
   [key: string]: any;
 }
 
@@ -53,16 +86,98 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
       configDescription: zoneConfig.description,
       rules: (zoneConfig as any).rules,
     };
-    const semanticColorTheme = zoneConfig.type === 'primary' ? zoneConfig.slug : undefined;
+    
+    // Add enhanced features for primary zones
+    if (zoneConfig.type === 'primary') {
+      // Extract components from theme if available
+      if (zoneConfig.theme?.landingComponent) {
+        pluginData.components = [zoneConfig.theme.landingComponent];
+      }
+      
+      // Add zone-specific features based on slug
+      switch (zoneConfig.slug) {
+        case 'the-pit':
+          pluginData.gamification = {
+            xpBoostOnRedMarket: true,
+            streakMultipliers: false,
+          };
+          pluginData.visualIdentity = {
+            glitchEffects: true,
+            hoverAnimations: 'shake',
+            gradientOverlays: true,
+          };
+          break;
+          
+        case 'mission-control':
+          pluginData.components = ['DailyTaskWidget', 'FlashChallengeBar'];
+          pluginData.features = {
+            xpChallenges: true,
+            analytics: true,
+            staffBoard: true,
+          };
+          pluginData.accessControl = {
+            canPost: ['registered'],
+            canCreateEvents: ['mod', 'admin'],
+          };
+          break;
+          
+        case 'casino-floor':
+          pluginData.components = ['LiveBetsWidget', 'IsItRiggedPoll'];
+          pluginData.gamification = {
+            streakMultipliers: true,
+            zoneSpecificBadges: ['highroller', 'lucky7', 'housealwayswins'],
+          };
+          pluginData.visualIdentity = {
+            hoverAnimations: 'sparkle',
+          };
+          break;
+          
+        case 'briefing-room':
+          pluginData.accessControl = {
+            canPost: ['admin'],
+            canModerate: ['mod', 'admin'],
+          };
+          pluginData.threadRules = {
+            allowPolls: false,
+          };
+          break;
+          
+        case 'the-archive':
+          pluginData.accessControl = {
+            canPost: [], // No one can post
+          };
+          pluginData.features = {
+            analytics: true,
+          };
+          break;
+          
+        case 'degenshop':
+          pluginData.components = ['ShopCard', 'HotItemsSlider', 'CosmeticsGrid'];
+          pluginData.features = {
+            zoneShop: true,
+            customBadges: true,
+          };
+          break;
+      }
+    }
+    
+    const semanticColorTheme = zoneConfig.type === 'primary' ? zoneConfig.theme?.colorTheme : undefined;
     const values: any = {
-      slug: zoneConfig.slug, name: zoneConfig.name, description: zoneConfig.description,
+      slug: zoneConfig.slug, 
+      name: zoneConfig.name, 
+      description: zoneConfig.description,
       type: "zone" as "zone" | "forum" | "category",
-      colorTheme: semanticColorTheme, icon: zoneConfig.theme?.icon, color: zoneConfig.theme?.color,
-      pluginData: pluginData, isLocked: (zoneConfig as any).isLocked ?? false,
-      minXp: (zoneConfig as any).minXp ?? 0, position: (zoneConfig as any).position ?? 0,
+      colorTheme: semanticColorTheme, 
+      icon: zoneConfig.theme?.icon, 
+      color: zoneConfig.theme?.color,
+      pluginData: pluginData, 
+      isLocked: (zoneConfig as any).isLocked ?? false,
+      minXp: (zoneConfig as any).minXp ?? 0, 
+      position: (zoneConfig as any).position ?? 0,
     };
+    
     await tx.insert(forumCategories).values(values).onConflictDoUpdate({ target: forumCategories.slug, set: values });
-    console.log(chalk.cyan(`[✓] Synced zone: ${zoneConfig.name} (slug: ${zoneConfig.slug})`));
+    console.log(chalk.cyan(`[✓] Synced zone: ${zoneConfig.name} (slug: ${zoneConfig.slug}, type: ${zoneConfig.type})`));
   }
 
   console.log(chalk.blue(`Seeding ${forumsFromConfig.length} forums...`));

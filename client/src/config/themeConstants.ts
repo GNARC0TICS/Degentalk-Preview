@@ -4,7 +4,8 @@ import {
 	Archive,
 	Dices,
 	FileText,
-	Folder
+	Folder,
+	Coins
 } from 'lucide-react';
 
 // Enhanced theme configuration for Zones
@@ -42,7 +43,14 @@ export const ZONE_THEMES = {
 		color: 'text-gray-400',
 		bgColor: 'bg-gray-900/20',
 		borderColor: 'border-gray-500/30',
-		label: 'Archive'
+		label: 'The Archive'
+	},
+	'shop': {
+		icon: Coins,
+		color: 'text-violet-400',
+		bgColor: 'bg-gradient-to-br from-violet-900/30 via-pink-900/20 to-blue-900/30',
+		borderColor: 'border-violet-500/30',
+		label: 'DegenShop™'
 	},
 	'default': { // Added a default theme entry
 		icon: Folder,
@@ -61,6 +69,7 @@ export const THEME_ICONS = {
 	casino: Dices,
 	briefing: FileText,
 	archive: Archive,
+	shop: Coins,
 	default: Folder
 } as const;
 
@@ -69,7 +78,8 @@ export const THEME_COLORS_BG = {
 	pit: 'from-orange-500/20 to-red-500/20 border-orange-500/30',
 	mission: 'from-blue-500/20 to-cyan-500/20 border-blue-500/30',
 	casino: 'from-purple-500/20 to-pink-500/20 border-purple-500/30',
-	briefing: 'from-emerald-500/20 to-green-500/20 border-emerald-500/30',
+	briefing: 'from-amber-500/20 to-yellow-500/20 border-amber-500/30',
 	archive: 'from-gray-500/20 to-zinc-500/20 border-gray-500/30',
+	shop: 'from-violet-500/20 via-pink-500/10 to-blue-500/20 border-violet-500/30',
 	default: 'from-zinc-800/80 to-zinc-900/80 border-zinc-700/30'
 } as const;

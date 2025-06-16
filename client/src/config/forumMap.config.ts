@@ -101,7 +101,7 @@ const THEME_PRESETS = {
     landingComponent: 'PitLanding',
   },
   mission: {
-    color: '#0088FF',
+    color: '#3B82F6',
     icon: '🎯',
     colorTheme: 'theme-mission',
     bannerImage: '/assets/banners/mission-control.webp',
@@ -109,7 +109,7 @@ const THEME_PRESETS = {
   },
   casino: {
     color: '#B950FF',
-    icon: '🎰',
+    icon: '🎲',
     colorTheme: 'theme-casino',
     bannerImage: '/assets/banners/casino-floor.webp',
     landingComponent: 'CasinoLanding',
@@ -122,11 +122,18 @@ const THEME_PRESETS = {
     landingComponent: 'BriefingLanding',
   },
   archive: {
-    color: '#999999',
-    icon: '🗄️',
+    color: '#6B7280',
+    icon: '📁',
     colorTheme: 'theme-archive',
     bannerImage: '/assets/banners/the-archive.webp',
     landingComponent: 'ArchiveLanding',
+  },
+  shop: {
+    color: 'holographic',
+    icon: '💰',
+    colorTheme: 'theme-shop',
+    bannerImage: '/assets/banners/degenshop.webp',
+    landingComponent: 'ShopCard',
   },
 } as const;
 
@@ -150,7 +157,7 @@ const PRIMARY_ZONES: Zone[] = [
   {
     slug: 'the-pit',
     name: 'The Pit',
-    description: 'Raw, unfiltered chaos. Home of the true degens.',
+    description: 'The daily war-zone for raw market chatter, meme combat, instant wins & public rekt logs.',
     type: 'primary',
     position: 1,
     theme: THEME_PRESETS.pit,
@@ -160,51 +167,43 @@ const PRIMARY_ZONES: Zone[] = [
     },
     forums: [
       {
-        slug: 'general-brawls',
-        name: 'General Brawls',
-        description: 'No holds barred discussion zone',
+        slug: 'live-trade-reacts',
+        name: 'Live-Trade Reacts',
+        description: 'Real-time trading reactions and market moves',
         position: 1,
         rules: {
           ...DEFAULT_FORUM_RULES,
           tippingEnabled: true,
-          xpMultiplier: 1.5,
-          availablePrefixes: ['[BRAWL]', '[DEBATE]', '[RAGE]', '[COPE]'],
-          prefixGrantRules: [
-            {
-              slug: '[HOT]',
-              autoAssign: true,
-              condition: { minReplies: 20, minLikes: 10 }
-            },
-            {
-              slug: '[NUCLEAR]',
-              autoAssign: true,
-              condition: { minReplies: 50, minLikes: 25 }
-            },
-          ],
+          xpMultiplier: 2,
+          availablePrefixes: ['[LIVE]', '[TRADE]', '[🔺UP]', '[🧂SALT]', '[🪦REKT]'],
+          customRules: {
+            noStyleLocks: true,
+            xpBoostOnRedMarket: true,
+          },
         },
       },
       {
-        slug: 'shitpost-central',
-        name: 'Shitpost Central',
-        description: 'Maximum chaos, minimum sense',
+        slug: 'shill-zone',
+        name: 'Shill Zone',
+        description: 'Pump your bags, shill your gems',
         position: 2,
         rules: {
           ...DEFAULT_FORUM_RULES,
-          xpEnabled: false, // No XP for shitposting
           tippingEnabled: true,
-          availablePrefixes: ['[MEME]', '[SHITPOST]', '[BASED]', '[CRINGE]'],
+          xpMultiplier: 1.5,
+          availablePrefixes: ['[SHILL]', '[GEM]', '[MOON]', '[PUMP]'],
           requiredPrefix: true,
         },
       },
       {
-        slug: 'cope-cage',
-        name: 'The Cope Cage',
-        description: 'For when your bags are heavy',
+        slug: 'rekt-histories',
+        name: 'REKT Histories',
+        description: 'Hall of shame for the biggest losses',
         position: 3,
         rules: {
           ...DEFAULT_FORUM_RULES,
           tippingEnabled: true,
-          availablePrefixes: ['[COPE]', '[HOPIUM]', '[REKT]', '[GUH]'],
+          availablePrefixes: ['[REKT]', '[GUH]', '[F]', '[LIQUIDATED]'],
         },
       },
     ],
@@ -212,19 +211,19 @@ const PRIMARY_ZONES: Zone[] = [
   {
     slug: 'mission-control',
     name: 'Mission Control',
-    description: 'Strategic planning and alpha hunting grounds.',
+    description: 'Serious strategy hub: alpha drops, trade plans, research dumps, daily missions & leaderboards.',
     type: 'primary',
     position: 2,
     theme: THEME_PRESETS.mission,
     defaultRules: {
       xpMultiplier: 2,
-      accessLevel: 'level_10+',
+      accessLevel: 'registered',
     },
     forums: [
       {
-        slug: 'alpha-leaks',
-        name: 'Alpha Leaks',
-        description: 'High-value intel only',
+        slug: 'alpha-channel',
+        name: 'Alpha Channel',
+        description: 'Premium alpha drops and insider intel',
         position: 1,
         rules: {
           ...DEFAULT_FORUM_RULES,
@@ -232,45 +231,42 @@ const PRIMARY_ZONES: Zone[] = [
           tippingEnabled: true,
           accessLevel: 'level_10+',
           availablePrefixes: ['[ALPHA]', '[LEAK]', '[INSIDER]', '[CONFIRMED]'],
-          prefixGrantRules: [
-            {
-              slug: '[VERIFIED]',
-              autoAssign: false,
-              condition: { role: 'mod' }
-            },
-          ],
+          customRules: {
+            threadCreationLocked: ['mod', 'admin'],
+          },
         },
-        tags: ['premium', 'verified-only'],
       },
       {
-        slug: 'research-lab',
-        name: 'Research Lab',
-        description: 'Deep dives and technical analysis',
+        slug: 'trade-logs',
+        name: 'Trade Logs',
+        description: 'Detailed trade journaling and performance tracking',
         position: 2,
         rules: {
           ...DEFAULT_FORUM_RULES,
           xpMultiplier: 2,
-          availablePrefixes: ['[RESEARCH]', '[ANALYSIS]', '[DD]', '[THESIS]'],
+          availablePrefixes: ['[LOG]', '[ENTRY]', '[EXIT]', '[ANALYSIS]'],
           allowAttachments: true,
         },
       },
       {
-        slug: 'strategy-room',
-        name: 'Strategy Room',
-        description: 'Plan your next moves',
+        slug: 'challenge-board',
+        name: 'Challenge Board',
+        description: 'Daily missions, flash challenges, and bounties',
         position: 3,
         rules: {
           ...DEFAULT_FORUM_RULES,
-          xpMultiplier: 1.5,
-          availablePrefixes: ['[STRATEGY]', '[PLAN]', '[PLAYBOOK]'],
+          xpMultiplier: 2.5,
+          tippingEnabled: true,
+          availablePrefixes: ['[DAILY]', '[CHALLENGE]', '[BOUNTY]', '[MISSION]'],
+          customComponent: 'DailyTaskWidget',
         },
       },
     ],
   },
   {
     slug: 'casino-floor',
-    name: 'The Casino Floor',
-    description: 'High stakes, higher dopamine. Gamble responsibly (or don\'t).',
+    name: 'Casino Floor',
+    description: 'All gambling content: dice, limbo, degen scripts, RTP leaks.',
     type: 'primary',
     position: 3,
     theme: THEME_PRESETS.casino,
@@ -280,101 +276,114 @@ const PRIMARY_ZONES: Zone[] = [
     },
     forums: [
       {
-        slug: 'degen-bets',
-        name: 'Degen Bets',
-        description: 'YOLO plays and moonshots',
+        slug: 'strategy-scripts',
+        name: 'Strategy & Scripts',
+        description: 'Betting strategies, auto-scripts, and systems',
         position: 1,
         rules: {
           ...DEFAULT_FORUM_RULES,
           tippingEnabled: true,
-          xpMultiplier: 2.5,
-          availablePrefixes: ['[YOLO]', '[BET]', '[LONG]', '[SHORT]', '[LEVERAGE]'],
-          prefixGrantRules: [
-            {
-              slug: '[LEGEND]',
-              autoAssign: true,
-              condition: { minXp: 10000 }
-            },
-          ],
+          xpMultiplier: 2,
+          availablePrefixes: ['[DICE]', '[LIMBO]', '[STRATEGY]', '[SCRIPT]'],
+          customRules: {
+            tagPrefixRequired: true,
+          },
         },
       },
       {
-        slug: 'prediction-markets',
-        name: 'Prediction Markets',
-        description: 'Put your money where your mouth is',
+        slug: 'live-bets-results',
+        name: 'Live Bets & Results',
+        description: 'Real-time betting results and session logs',
         position: 2,
         rules: {
           ...DEFAULT_FORUM_RULES,
           tippingEnabled: true,
-          xpMultiplier: 2,
-          availablePrefixes: ['[PREDICT]', '[ODDS]', '[MARKET]'],
-          customComponent: 'PredictionMarket',
+          xpMultiplier: 2.5,
+          availablePrefixes: ['[BET]', '[WIN]', '[LOSS]', '[SESSION]'],
+          customRules: {
+            streakXP: true,
+          },
         },
       },
       {
-        slug: 'gains-porn',
-        name: 'Gains Porn',
-        description: 'Flex your wins (proof required)',
+        slug: 'exploit-watch',
+        name: 'Exploit Watch',
+        description: 'RTP analysis, exploit reports, and rigged discussions',
         position: 3,
         rules: {
           ...DEFAULT_FORUM_RULES,
           tippingEnabled: true,
-          availablePrefixes: ['[GAINS]', '[PROOF]', '[MOON]'],
-          requiredPrefix: true,
-          customRules: {
-            requireProof: true,
-            minGainPercentage: 100,
-          },
+          availablePrefixes: ['[EXPLOIT]', '[RTP]', '[RIGGED]', '[ANALYSIS]'],
+          customComponent: 'IsItRiggedPoll',
         },
       },
     ],
   },
   {
     slug: 'briefing-room',
-    name: 'The Briefing Room',
-    description: 'Official announcements and platform updates.',
+    name: 'Briefing Room',
+    description: 'Official comms & community governance: announcements, patch notes, bug reports, suggestions.',
     type: 'primary',
     position: 4,
     theme: THEME_PRESETS.briefing,
     defaultRules: {
-      xpEnabled: false,
+      xpEnabled: true,
       tippingEnabled: false,
     },
     forums: [
       {
         slug: 'announcements',
-        name: 'Platform Announcements',
-        description: 'Official DegenTalk updates',
+        name: 'Announcements',
+        description: 'Official DegenTalk platform updates',
         position: 1,
         rules: {
-          allowPosting: false, // Admin only
+          allowPosting: false, // Staff only
           xpEnabled: false,
           tippingEnabled: false,
           accessLevel: 'admin',
           availablePrefixes: ['[ANNOUNCEMENT]', '[UPDATE]', '[CRITICAL]'],
+          customRules: {
+            upvoteOnly: true,
+          },
         },
       },
       {
-        slug: 'news-feed',
-        name: 'Crypto News Feed',
-        description: 'Breaking news and market updates',
+        slug: 'patch-notes',
+        name: 'Patch Notes',
+        description: 'Platform updates and feature releases',
         position: 2,
         rules: {
-          ...DEFAULT_FORUM_RULES,
-          xpEnabled: true,
-          availablePrefixes: ['[NEWS]', '[BREAKING]', '[RUMOR]', '[CONFIRMED]'],
+          allowPosting: false,
+          xpEnabled: false,
+          tippingEnabled: false,
+          accessLevel: 'admin',
+          availablePrefixes: ['[PATCH]', '[RELEASE]', '[HOTFIX]'],
         },
       },
       {
-        slug: 'ama-stage',
-        name: 'AMA Stage',
-        description: 'Ask Me Anything sessions',
+        slug: 'suggestions',
+        name: 'Suggestions',
+        description: 'Community suggestions and feature requests',
         position: 3,
         rules: {
           ...DEFAULT_FORUM_RULES,
-          tippingEnabled: true,
-          availablePrefixes: ['[AMA]', '[LIVE]', '[Q&A]'],
-          customComponent: 'AMAThread',
+          availablePrefixes: ['[SUGGESTION]', '[IDEA]', '[FEEDBACK]'],
+          requiredPrefix: true,
+          customRules: {
+            upvoteOnly: true,
+          },
+        },
+      },
+      {
+        slug: 'bug-reports',
+        name: 'Bug Reports',
+        description: 'Report bugs and technical issues',
+        position: 4,
+        rules: {
+          ...DEFAULT_FORUM_RULES,
+          availablePrefixes: ['[BUG]', '[ISSUE]', '[BROKEN]'],
+          requiredPrefix: true,
+          allowAttachments: true,
         },
       },
     ],
@@ -382,19 +391,19 @@ const PRIMARY_ZONES: Zone[] = [
   {
     slug: 'the-archive',
     name: 'The Archive',
-    description: 'Historical records and legendary threads.',
+    description: 'Read-only vault of legendary threads & historic market moments.',
     type: 'primary',
     position: 5,
     theme: THEME_PRESETS.archive,
     defaultRules: {
-      allowPosting: false, // Read-only by default
+      allowPosting: false, // All threads auto-locked
       xpEnabled: false,
     },
     forums: [
       {
-        slug: 'hall-of-fame',
-        name: 'Hall of Fame',
-        description: 'Legendary calls and epic wins',
+        slug: 'legendary-threads',
+        name: 'Legendary Threads',
+        description: 'The most epic calls and threads in DegenTalk history',
         position: 1,
         rules: {
           allowPosting: false,
@@ -402,18 +411,101 @@ const PRIMARY_ZONES: Zone[] = [
           tippingEnabled: false,
           accessLevel: 'public',
           availablePrefixes: ['[LEGEND]', '[CLASSIC]', '[HISTORIC]'],
+          customRules: {
+            searchOnly: true,
+            hallOfFameBadge: true,
+          },
         },
       },
       {
-        slug: 'rekt-museum',
-        name: 'REKT Museum',
-        description: 'Learn from the fallen',
+        slug: 'rugged-remembered',
+        name: 'Rugged & Remembered',
+        description: 'Never forget the biggest rugs and scams',
         position: 2,
         rules: {
           allowPosting: false,
           xpEnabled: false,
           tippingEnabled: false,
-          availablePrefixes: ['[REKT]', '[F]', '[CAUTIONARY]'],
+          availablePrefixes: ['[RUGGED]', '[SCAM]', '[EXIT]'],
+          customRules: {
+            searchOnly: true,
+          },
+        },
+      },
+      {
+        slug: 'cringe-museum',
+        name: 'Cringe Museum',
+        description: 'The worst takes and predictions preserved forever',
+        position: 3,
+        rules: {
+          allowPosting: false,
+          xpEnabled: false,
+          tippingEnabled: false,
+          availablePrefixes: ['[CRINGE]', '[AGED-POORLY]', '[WRONG]'],
+          customRules: {
+            searchOnly: true,
+          },
+        },
+      },
+    ],
+  },
+  {
+    slug: 'degenshop',
+    name: 'DegenShop™',
+    description: 'Cosmetic & utility marketplace: avatar frames, username glows, XP boosts, prefix unlocks.',
+    type: 'primary',
+    position: 6,
+    theme: THEME_PRESETS.shop,
+    defaultRules: {
+      allowPosting: false,
+      xpEnabled: false,
+      tippingEnabled: false,
+    },
+    forums: [
+      {
+        slug: 'hot-items',
+        name: 'Hot Items',
+        description: 'Featured and trending shop items',
+        position: 1,
+        rules: {
+          allowPosting: false,
+          xpEnabled: false,
+          tippingEnabled: false,
+          customComponent: 'HotItemsSlider',
+          customRules: {
+            purchaseEndpoint: '/api/shop/purchase',
+            itemType: 'shop',
+          },
+        },
+      },
+      {
+        slug: 'cosmetics-grid',
+        name: 'Cosmetics Grid',
+        description: 'All available cosmetic items and upgrades',
+        position: 2,
+        rules: {
+          allowPosting: false,
+          xpEnabled: false,
+          tippingEnabled: false,
+          customComponent: 'CosmeticsGrid',
+          customRules: {
+            categories: ['frames', 'glows', 'badges', 'titles'],
+            doubleXPWeekends: true,
+          },
+        },
+      },
+      {
+        slug: 'wishlist-queue',
+        name: 'Wishlist Queue',
+        description: 'Community requested items and upcoming releases',
+        position: 3,
+        rules: {
+          ...DEFAULT_FORUM_RULES,
+          xpEnabled: true,
+          availablePrefixes: ['[REQUEST]', '[WISHLIST]', '[COMING-SOON]'],
+          customRules: {
+            voteForItems: true,
+          },
         },
       },
     ],
