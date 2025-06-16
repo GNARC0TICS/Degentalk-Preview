@@ -1,4 +1,13 @@
-import { pgTable, serial, integer, varchar, timestamp, boolean, unique } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	integer,
+	varchar,
+	timestamp,
+	boolean,
+	unique,
+	uuid
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';
 
@@ -6,10 +15,10 @@ export const userRelationships = pgTable(
 	'user_relationships',
 	{
 		id: serial('relationship_id').primaryKey(),
-		followerId: integer('follower_id')
+		followerId: uuid('follower_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		followingId: integer('following_id')
+		followingId: uuid('following_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		relationshipType: varchar('relationship_type', { length: 50 }).notNull(), // e.g., 'follow', 'friend_request', 'friend'

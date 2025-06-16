@@ -62,21 +62,20 @@ function ZonesPage() { // Changed to regular function for clarity with provider
 									name: zone.name,
 									slug: zone.slug,
 									description: zone.description || '',
-									theme: { // Pass the MergedTheme object
-										icon: zone.theme?.icon ?? undefined,
-										color: zone.theme?.color ?? undefined,
-										bannerImage: zone.theme?.bannerImage ?? undefined,
+									icon: zone.icon, // Use the direct icon field from MergedZone
+									colorTheme: zone.colorTheme || zone.slug, // Use colorTheme directly from MergedZone, fallback to slug
+									theme: { // Pass the MergedTheme object for additional theme properties
+										icon: zone.theme?.icon,
+										color: zone.theme?.color,
+										bannerImage: zone.theme?.bannerImage,
 									},
-									// Pass direct properties from MergedZone if ZoneCardData expects them
-									icon: zone.theme?.icon ?? undefined, 
-									colorTheme: zone.colorTheme, // MergedZone has colorTheme directly
 									threadCount: zone.threadCount,
 									postCount: zone.postCount,
-									activeUsersCount: 0, // Placeholder
-									lastActivityAt: new Date(), // Placeholder, should be dynamic
+									activeUsersCount: 0, // Placeholder - would need separate API
+									lastActivityAt: zone.updatedAt ? new Date(zone.updatedAt) : undefined,
 									hasXpBoost: zone.hasXpBoost,
 									boostMultiplier: zone.boostMultiplier,
-									isEventActive: false, // Placeholder
+									isEventActive: false, // Placeholder - would need event system
 									eventData: {
 										name: '',
 										endsAt: new Date()

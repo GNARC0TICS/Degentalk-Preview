@@ -69,6 +69,41 @@ interface CategoriesTreeOptions {
 }
 
 export const forumService = {
+	async getForumStructure(): Promise<{
+		zones: ForumCategoryWithStats[];
+		categories: ForumCategoryWithStats[];
+		forums: ForumCategoryWithStats[];
+	}> {
+		try {
+			const allItems = await this.getCategoriesWithStats(true);
+			
+			// Separate into zones, categories, and forums
+			const zones = allItems.filter(item => item.type === 'zone');
+			const categories = allItems.filter(item => item.type === 'category');
+			const forums = allItems.filter(item => item.type === 'forum');
+			
+			// Add enhanced features for primary zones
+			const enhancedZones = zones.map(zone => ({
+				...zone,
+				// Check if it's a primary zone (canonical = no parent)
+				isPrimary: !zone.parentId,
+				// Parse plugin data for primary zone features
+				features: zone.pluginData?.features || [],
+				customComponents: zone.pluginData?.customComponents || [],
+				staffOnly: zone.pluginData?.staffOnly || false,
+			}));
+			
+			return {
+				zones: enhancedZones,
+				categories,
+				forums
+			};
+		} catch (error) {
+			logger.error('ForumService', 'Error in getForumStructure', { err: error });
+			throw error;
+		}
+	},
+
 	async getCategoriesWithStats(includeCounts: boolean = true): Promise<ForumCategoryWithStats[]> {
 		try {
 			if (includeCounts && categoriesCache && (Date.now() - categoriesCache.timestamp < CACHE_DURATION_MS) && categoriesCache.data.length > 0) {

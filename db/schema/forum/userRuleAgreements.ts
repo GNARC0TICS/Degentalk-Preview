@@ -1,4 +1,12 @@
-import { pgTable, /*integer,*/ varchar, timestamp, primaryKey, index, uuid, integer } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	varchar,
+	timestamp,
+	primaryKey,
+	index,
+	uuid,
+	integer
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { forumRules } from './rules';

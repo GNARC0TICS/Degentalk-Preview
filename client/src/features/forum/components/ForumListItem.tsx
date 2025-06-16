@@ -5,9 +5,24 @@ import type { MergedForum as ForumCategory } from '@/contexts/ForumStructureCont
 interface ForumListItemProps {
 	forum: ForumCategory;
 	href: string;
+	parentZoneColor?: string; // Optional parent zone color for fallback
 }
 
-export function ForumListItem({ forum, href }: ForumListItemProps) {
+export function ForumListItem({ forum, href, parentZoneColor }: ForumListItemProps) {
+	const renderIcon = () => {
+		if (forum.icon) {
+			return (
+				<span 
+					className="text-xl" 
+					style={{ color: forum.color || parentZoneColor || undefined }}
+				>
+					{forum.icon}
+				</span>
+			);
+		}
+		return <MessageSquare className="h-5 w-5 text-zinc-600" />;
+	};
+
 	if (forum.canHaveThreads) {
 		return (
 			<Link href={href} className="block p-4 hover:bg-black/20 transition-colors">
@@ -23,7 +38,7 @@ export function ForumListItem({ forum, href }: ForumListItemProps) {
 							<div>{forum.postCount || 0} posts</div>
 						</div>
 					</div>
-					<MessageSquare className="h-5 w-5 text-zinc-600" />
+					{renderIcon()}
 				</div>
 			</Link>
 		);
@@ -46,7 +61,7 @@ export function ForumListItem({ forum, href }: ForumListItemProps) {
 						<div>{forum.postCount || 0} posts</div>
 					</div>
 				</div>
-				<MessageSquare className="h-5 w-5 text-zinc-600" />
+				{renderIcon()}
 			</div>
 		</div>
 	);

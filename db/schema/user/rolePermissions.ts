@@ -1,4 +1,4 @@
-import { pgTable, integer, timestamp, primaryKey } from 'drizzle-orm/pg-core';
+import { pgTable, integer, timestamp, primaryKey, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';
 import { roles } from './roles';
@@ -16,7 +16,7 @@ export const rolePermissions = pgTable(
 		grantedAt: timestamp('granted_at')
 			.notNull()
 			.default(sql`now()`),
-		grantedBy: integer('granted_by').references(() => users.id, { onDelete: 'set null' })
+		grantedBy: uuid('granted_by').references(() => users.id, { onDelete: 'set null' })
 	},
 	(table) => ({
 		pk: primaryKey({ columns: [table.roleId, table.permId] })

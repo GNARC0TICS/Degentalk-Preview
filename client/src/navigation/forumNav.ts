@@ -44,7 +44,7 @@ export function buildNavigationTree(
 
   // 2. Process Primary Zones
   primaryZones.forEach(zone => {
-    navigationTree.push({
+    const zoneNode: NavNode = {
       id: zone.slug,
       name: zone.name,
       slug: zone.slug,
@@ -55,11 +55,33 @@ export function buildNavigationTree(
       iconComponent: undefined,
       theme: zone.theme,
       semanticThemeKey: zone.colorTheme,
-      children: [], // Primary zones in HierarchicalZoneNav are direct links, no children shown in that style
+      children: [], // Will populate with forums
       entityData: zone,
       counts: { threads: zone.threadCount, posts: zone.postCount },
       isCanonical: true,
-    });
+    };
+
+    // Add forums as children of primary zones
+    if (zone.forums && zone.forums.length > 0) {
+      zone.forums.forEach(forum => {
+        zoneNode.children.push({
+          id: forum.slug,
+          name: forum.name,
+          slug: forum.slug,
+          href: getForumEntityUrl(forum),
+          type: 'forum',
+          iconEmoji: forum.icon,
+          iconComponent: undefined,
+          theme: forum.theme,
+          semanticThemeKey: forum.colorTheme,
+          children: [],
+          entityData: forum,
+          counts: { threads: forum.threadCount, posts: forum.postCount },
+        });
+      });
+    }
+
+    navigationTree.push(zoneNode);
   });
 
   // 3. Process General Categories and their Forums

@@ -1,4 +1,11 @@
-import { pgTable, /*integer,*/ timestamp, primaryKey, index, uuid, integer } from 'drizzle-orm/pg-core'; // Added uuid, ensured integer for postId
+import {
+	pgTable,
+	timestamp,
+	primaryKey,
+	index,
+	uuid,
+	integer
+} from 'drizzle-orm/pg-core'; // Added uuid, ensured integer for postId
 import { users } from '../user/users'; // Adjusted import
 import { posts } from './posts'; // Adjusted import
 import { reactionTypeEnum } from '../core/enums'; // Adjusted import

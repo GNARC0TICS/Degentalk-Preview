@@ -1,10 +1,18 @@
-import { pgTable, serial, integer, varchar, text, timestamp } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	integer,
+	varchar,
+	text,
+	timestamp,
+	uuid
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';
 
 export const userSettingsHistory = pgTable('user_settings_history', {
 	id: serial('history_id').primaryKey(),
-	userId: integer('user_id')
+	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	changedField: varchar('changed_field', { length: 100 }).notNull(),

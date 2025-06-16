@@ -1,10 +1,17 @@
-import { pgTable, serial, integer, varchar, timestamp } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	integer,
+	varchar,
+	timestamp,
+	uuid
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';
 
 export const verificationTokens = pgTable('verification_tokens', {
 	id: serial('id').primaryKey(),
-	userId: integer('user_id')
+	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	token: varchar('token', { length: 64 }).notNull(), // Assuming token length

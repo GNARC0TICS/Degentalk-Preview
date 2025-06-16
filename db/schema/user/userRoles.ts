@@ -1,4 +1,10 @@
-import { pgTable, integer, timestamp, primaryKey } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	integer,
+	timestamp,
+	primaryKey,
+	uuid
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';
 import { roles } from './roles';
@@ -6,7 +12,7 @@ import { roles } from './roles';
 export const userRoles = pgTable(
 	'user_roles',
 	{
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		roleId: integer('role_id')
@@ -15,7 +21,7 @@ export const userRoles = pgTable(
 		grantedAt: timestamp('granted_at')
 			.notNull()
 			.default(sql`now()`),
-		grantedBy: integer('granted_by').references(() => users.id, { onDelete: 'set null' }),
+		grantedBy: uuid('granted_by').references(() => users.id, { onDelete: 'set null' }),
 		expiresAt: timestamp('expires_at')
 	},
 	(table) => ({

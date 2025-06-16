@@ -1,118 +1,104 @@
-import React, { useState } from 'react'; // Added useState
+import React, { useState } from 'react';
 import { useParams, Link } from 'wouter';
-import { useQuery } from '@tanstack/react-query'; // Added useQuery
+import { useQuery } from '@tanstack/react-query';
 import { ForumStructureProvider, useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedZone, MergedForum } from '@/contexts/ForumStructureContext';
-import ThreadCard from '@/components/forum/ThreadCard'; // Corrected import for ThreadCard
-import { Pagination } from '@/components/ui/pagination'; // Added Pagination
-import { getQueryFn } from '@/lib/queryClient'; // Added getQueryFn
-import type { ThreadsApiResponse, ApiPagination, ApiThread } from '@/features/forum/components/ThreadList'; // Added ApiThread type from ThreadList
+import ThreadCard from '@/components/forum/ThreadCard';
+import { Pagination } from '@/components/ui/pagination';
+import { getQueryFn } from '@/lib/queryClient';
+import type { ThreadsApiResponse, ApiThread } from '@/features/forum/components/ThreadList';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
+import { 
+  MessageSquare, 
+  FileText, 
+  ChevronRight, 
+  Home,
+  AlertCircle,
+  Plus,
+  TrendingUp,
+  Users
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { ForumListItem } from '@/features/forum/components/ForumListItem';
 
-// Placeholder for a proper NotFoundPage component
-const NotFoundPage: React.FC = () => {
-  return (
-    <div style={{ textAlign: 'center', padding: '50px' }}>
-      <h1>404 - Zone Not Found</h1>
-      <p>The zone you are looking for does not exist or could not be found.</p>
-      <Link href="/">
-        <span style={{ color: '#007bff', textDecoration: 'underline', cursor: 'pointer' }}>Go back to Home</span>
-      </Link>
-    </div>
-  );
-};
-
-// Placeholder for Breadcrumbs component
-const BreadcrumbsStub: React.FC<{ zoneName?: string }> = ({ zoneName }) => {
-  return (
-    <div style={{ padding: '10px 20px', backgroundColor: '#f8f9fa', borderBottom: '1px solid #dee2e6', marginBottom: '20px' }}>
-      <Link href="/"><span style={{cursor: 'pointer'}}>Home</span></Link>
-      {zoneName && (
-        <>
-          <span> {'>'} </span>
-          <span>{zoneName}</span>
-        </>
-      )}
-      {/* Future: Add more levels for forums and threads */}
-    </div>
-  );
-};
-
-const PrimaryZonePage: React.FC = () => {
+const ZonePage: React.FC = () => {
   const params = useParams<{ slug: string }>();
   const slug = params?.slug;
-  const { getZone, isLoading, error: contextError } = useForumStructure();
+  const { getZone, zones, isLoading, error: contextError } = useForumStructure();
+  const [currentPage, setCurrentPage] = useState(1);
+  const threadsPerPage = 20;
 
-  if (typeof slug !== 'string' || slug.trim() === '') {
-    return <NotFoundPage />;
+  if (!slug) {
+    return <NotFound />;
   }
-  
-  const currentZoneSlug = slug;
-  
+
   if (isLoading) {
-    return (
-      <div>
-        <BreadcrumbsStub />
-        <div style={{ textAlign: 'center', padding: '50px' }}>Loading zone data...</div>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (contextError) {
-    return (
-      <div>
-        <BreadcrumbsStub />
-        <div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>
-          Error loading zone data: {contextError.message}
-        </div>
-      </div>
-    );
+    return <ErrorState error={contextError} />;
   }
+
+  const zone = getZone(slug);
   
-  const zone: MergedZone | undefined = currentZoneSlug ? getZone(currentZoneSlug) : undefined;
+  // Also check if this is actually a category (not a zone)
+  const isCategory = !zone && zones.some(z => 
+    z.forums.some(f => f.slug === slug)
+  );
 
-  if (!zone) {
-    return (
-      <div>
-        <BreadcrumbsStub />
-        <NotFoundPage />
-      </div>
-    );
+  if (!zone && !isCategory) {
+    return <NotFound />;
   }
 
-  const theme = zone.theme;
-  const [currentPage, setCurrentPage] = useState(1);
-  const threadsPerPage = 10; // Or make this configurable
+  // If it's a category, get all forums with this parent
+  const categoryForums = isCategory ? 
+    zones.flatMap(z => z.forums).filter(f => f.parentForumSlug === slug) : 
+    zone?.forums || [];
 
-  // API endpoint for fetching threads in a zone
-  const ZONE_THREADS_API_BASE_PATH = `/api/zones/${currentZoneSlug}/threads`;
+  const displayName = zone?.name || slug;
+  const displayDescription = zone?.description;
+  const theme = zone?.theme;
 
-  const zoneThreadsQueryKey = [ZONE_THREADS_API_BASE_PATH, currentPage, threadsPerPage];
+  // For categories, we need to aggregate threads from all child forums
+  const forumIds = isCategory ? 
+    categoryForums.map(f => f.id).filter(id => id > 0) :
+    zone?.forums.map(f => f.id).filter(id => id > 0) || [];
 
+  // Fetch threads - for now just use the first forum ID since backend doesn't support multiple
+  // TODO: Update backend to support multiple categoryIds or create zone-specific endpoint
+  const primaryForumId = forumIds[0];
+  
   const {
     data: threadsResponse,
     isLoading: isLoadingThreads,
     error: threadsError,
-    isPlaceholderData: isThreadsPlaceholderData,
   } = useQuery<ThreadsApiResponse | null, Error>({
-    queryKey: zoneThreadsQueryKey,
+    queryKey: [`/api/forum/threads`, primaryForumId, currentPage, threadsPerPage],
     queryFn: async () => {
-      if (!currentZoneSlug) return null;
-      const url = `${ZONE_THREADS_API_BASE_PATH}?page=${currentPage}&limit=${threadsPerPage}&sortBy=latest`;
+      if (!primaryForumId) return null;
+      
+      // Use single categoryId for now
+      const url = `/api/forum/threads?categoryId=${primaryForumId}&page=${currentPage}&limit=${threadsPerPage}&sortBy=latest`;
+      
       const fetcher = getQueryFn<ThreadsApiResponse>({ on401: 'returnNull' });
       try {
         const response = await fetcher({ queryKey: [url], meta: undefined } as any);
         return response;
       } catch (e) {
-        console.error(`[ZoneBySlugPage] Error fetching threads for zone ${currentZoneSlug}:`, e);
+        console.error(`Error fetching threads for zone/category ${slug}:`, e);
         throw e;
       }
     },
-    enabled: !!currentZoneSlug,
-    staleTime: 1 * 60 * 1000, // 1 minute
+    enabled: primaryForumId > 0,
+    staleTime: 1 * 60 * 1000,
   });
 
   const threads = threadsResponse?.threads || [];
-  const threadPagination: ApiPagination = threadsResponse?.pagination || {
+  const pagination = threadsResponse?.pagination || {
     page: 1,
     limit: threadsPerPage,
     totalThreads: 0,
@@ -120,123 +106,276 @@ const PrimaryZonePage: React.FC = () => {
   };
 
   return (
-    <div>
-      <BreadcrumbsStub zoneName={zone.name} />
-      {/* Zone Header */}
-      {theme?.bannerImage && (
-        <img 
-          src={theme.bannerImage} 
-          alt={`${zone.name} banner`} 
-          style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }} 
-        />
-      )}
-      <div style={{ 
-        backgroundColor: theme?.color || '#f0f0f0',
-        padding: '20px', 
-        color: (theme?.color ? (parseInt(theme.color.replace('#', ''), 16) > 0xffffff / 2 ? '#000' : '#fff') : '#000'),
-        borderBottom: '1px solid #ddd'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-          {theme?.icon && (
-            theme.icon.startsWith('/') || theme.icon.startsWith('http') ? (
-              <img 
-                src={theme.icon} 
-                alt={`${zone.name} icon`} 
-                style={{ width: '50px', height: '50px', marginRight: '15px', borderRadius: '8px' }}
-              />
-            ) : (
-              <span style={{ fontSize: '2.5em', marginRight: '15px' }}>{theme.icon}</span>
-            )
-          )}
-          <h1 style={{ margin: 0 }}>{zone.name}</h1>
-        </div>
-        <p style={{ margin: '5px 0 10px 0' }}>{zone.description || 'No description available.'}</p>
-        <p style={{ margin: 0, fontSize: '0.9em' }}>Total Threads: {zone.threadCount} | Total Posts: {zone.postCount}</p>
-      </div>
-
-      {/* List of Forums */}
-      <section style={{ marginTop: '20px', padding: '0 20px' }}>
-        <h2 style={{ marginBottom: '15px' }}>Forums in {zone.name}</h2>
-        {zone.forums && zone.forums.length > 0 ? (
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {zone.forums.map((forum: MergedForum) => (
-              <li key={forum.slug} style={{ border: '1px solid #e0e0e0', marginBottom: '10px', padding: '15px', borderRadius: '5px', backgroundColor: '#fff' }}>
-                <Link href={`/forums/${forum.slug}`}>
-                  <span style={{ textDecoration: 'none', color: 'inherit', display: 'block', cursor: 'pointer' }}>
-                    <h3 style={{ marginTop: 0, color: theme?.color || '#007bff' }}>{forum.name}</h3>
-                    {/* forum.description does not exist on MergedForum type */}
-                    {/* <p style={{ fontSize: '0.95em', color: '#555' }}>{forum.description || 'No description.'}</p> */}
-                    <p style={{ fontSize: '0.85em', color: '#777' }}>Threads: {forum.threadCount} | Posts: {forum.postCount}</p>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No forums found in this zone.</p>
-        )}
-      </section>
-
-      {/* List of Threads in the Zone */}
-      <section style={{ marginTop: '30px', padding: '0 20px' }}>
-        <h2 style={{ marginBottom: '15px' }}>Threads in {zone.name}</h2>
-        {isLoadingThreads && <div style={{ textAlign: 'center', padding: '20px' }}>Loading threads...</div>}
-        {threadsError && (
-          <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>
-            Error loading threads: {threadsError.message}
+    <div className="min-h-screen bg-black">
+      {/* Hero Section with Theme */}
+      <div 
+        className="relative overflow-hidden"
+        style={{
+          backgroundColor: theme?.color ? `${theme.color}20` : undefined,
+        }}
+      >
+        {theme?.bannerImage && (
+          <div className="absolute inset-0 z-0">
+            <img 
+              src={theme.bannerImage} 
+              alt={`${displayName} banner`}
+              className="w-full h-full object-cover opacity-20"
+            />
           </div>
         )}
-        {!isLoadingThreads && !threadsError && threads.length === 0 && (
-          <p>No threads found in this zone.</p>
-        )}
-        {!isLoadingThreads && !threadsError && threads.length > 0 && (
-          <>
-            {threads.map((thread: ApiThread) => (
-              // Assuming ThreadCard needs forumSlug, we might need to adjust if threads can belong to multiple forums in a zone view
-              // For now, let's pass the zone slug as a placeholder or consider if ThreadCard can adapt
-              <ThreadCard 
-                key={thread.id} 
-                thread={{
-                  ...thread,
-                  user: {
-                    ...thread.user,
-                    role: thread.user.role as "user" | "mod" | "admin" | null, // Cast role
-                  },
-                  // Ensure all other fields from ApiThread match or are compatible with ThreadCardPropsData
-                  // isFeatured is used for ThreadCardPropsData.isFeatured
-                  isFeatured: (thread as any).isFeatured, // ApiThread might not have isFeatured, cast if needed
-                  // category from ApiThread is ApiThreadCategory, compatible with ThreadCardPropsData.category
-                  // prefix from ApiThread is not directly available, ThreadCardPropsData.prefix is optional
-                  // tags from ApiThread is ApiTag[], compatible with ThreadCardPropsData.tags (Partial<ThreadTag>[])
-                }}
-                // forumSlug={thread.category.slug} // This prop is not on ThreadCardComponentProps
-              />
-            ))}
-            {threadPagination.totalThreads > 0 && threadPagination.totalPages > 1 && (
-              <div className="mt-5 flex justify-center">
-                <Pagination
-                  currentPage={threadPagination.page}
-                  totalPages={threadPagination.totalPages}
-                  onPageChange={(newPage) => {
-                    if (!isThreadsPlaceholderData) {
-                      setCurrentPage(newPage);
-                    }
-                  }}
-                  showSummary={false}
-                />
+        
+        <div className="relative z-10 container mx-auto px-4 py-8">
+          {/* Breadcrumbs */}
+          <nav className="flex items-center space-x-2 text-sm text-zinc-400 mb-6">
+            <Link href="/">
+              <a className="flex items-center hover:text-white transition-colors">
+                <Home className="w-4 h-4 mr-1" />
+                Home
+              </a>
+            </Link>
+            <ChevronRight className="w-4 h-4" />
+            <span className="text-white font-medium">{displayName}</span>
+          </nav>
+
+          {/* Zone Header */}
+          <div className="flex items-start gap-6">
+            {theme?.icon && (
+              <div className="flex-shrink-0">
+                {theme.icon.startsWith('/') || theme.icon.startsWith('http') ? (
+                  <img 
+                    src={theme.icon} 
+                    alt={`${displayName} icon`}
+                    className="w-20 h-20 rounded-xl shadow-lg"
+                  />
+                ) : (
+                  <div 
+                    className="w-20 h-20 rounded-xl shadow-lg flex items-center justify-center text-4xl"
+                    style={{ backgroundColor: theme?.color || '#1f2937' }}
+                  >
+                    {theme.icon}
+                  </div>
+                )}
               </div>
             )}
-          </>
-        )}
-      </section>
+            
+            <div className="flex-1">
+              <h1 className="text-4xl font-bold text-white mb-2">{displayName}</h1>
+              {displayDescription && (
+                <p className="text-lg text-zinc-300 mb-4">{displayDescription}</p>
+              )}
+              
+              <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="w-4 h-4 text-emerald-500" />
+                  <span className="text-zinc-400">
+                    <span className="font-semibold text-white">{zone?.threadCount || 0}</span> threads
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-blue-500" />
+                  <span className="text-zinc-400">
+                    <span className="font-semibold text-white">{zone?.postCount || 0}</span> posts
+                  </span>
+                </div>
+                {zone?.hasXpBoost && (
+                  <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-500 border-yellow-500/50">
+                    <TrendingUp className="w-3 h-3 mr-1" />
+                    {zone.boostMultiplier}x XP Boost
+                  </Badge>
+                )}
+              </div>
+            </div>
+
+            <Link href="/threads/create">
+              <Button 
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                size="lg"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                New Thread
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Forums Section */}
+            {(zone?.forums || categoryForums).length > 0 && (
+              <Card className="bg-zinc-900 border-zinc-800">
+                <CardHeader>
+                  <CardTitle className="text-xl text-white flex items-center gap-2">
+                    <Users className="w-5 h-5 text-emerald-500" />
+                    Forums
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {(zone?.forums || categoryForums).map((forum: MergedForum) => (
+                    <div key={forum.slug} className="bg-zinc-800/50 rounded-lg overflow-hidden">
+                      <ForumListItem 
+                        forum={forum}
+                        href={`/forums/${forum.slug}`}
+                        parentZoneColor={zone?.color}
+                      />
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Threads Section */}
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                <MessageSquare className="w-6 h-6 text-emerald-500" />
+                Recent Threads
+              </h2>
+
+              {isLoadingThreads ? (
+                <div className="space-y-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Skeleton key={i} className="h-24 bg-zinc-900" />
+                  ))}
+                </div>
+              ) : threadsError ? (
+                <Card className="bg-red-900/20 border-red-800">
+                  <CardContent className="p-6 text-center">
+                    <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
+                    <p className="text-red-400">Failed to load threads</p>
+                    <p className="text-sm text-zinc-500 mt-1">{threadsError.message}</p>
+                  </CardContent>
+                </Card>
+              ) : threads.length === 0 ? (
+                <Card className="bg-zinc-900 border-zinc-800">
+                  <CardContent className="p-12 text-center">
+                    <MessageSquare className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
+                    <p className="text-zinc-400 text-lg mb-4">No threads yet</p>
+                    <Link href="/threads/create">
+                      <Button variant="outline" className="border-emerald-600 text-emerald-500 hover:bg-emerald-600/10">
+                        Create the first thread
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="space-y-4">
+                  {threads.map((thread: ApiThread) => (
+                    <ThreadCard key={thread.id} thread={thread} />
+                  ))}
+                </div>
+              )}
+
+              {pagination.totalPages > 1 && (
+                <div className="mt-8">
+                  <Pagination
+                    currentPage={pagination.page}
+                    totalPages={pagination.totalPages}
+                    onPageChange={setCurrentPage}
+                    showSummary={true}
+                    totalItems={pagination.totalThreads}
+                    pageSize={threadsPerPage}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Zone Stats */}
+            <Card className="bg-zinc-900 border-zinc-800">
+              <CardHeader>
+                <CardTitle className="text-lg text-white">Zone Statistics</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-zinc-400">Total Forums</span>
+                  <span className="font-semibold text-white">{(zone?.forums || categoryForums).length}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-zinc-400">Total Threads</span>
+                  <span className="font-semibold text-white">{zone?.threadCount || 0}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-zinc-400">Total Posts</span>
+                  <span className="font-semibold text-white">{zone?.postCount || 0}</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Quick Actions */}
+            <Card className="bg-zinc-900 border-zinc-800">
+              <CardHeader>
+                <CardTitle className="text-lg text-white">Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Link href="/threads/create">
+                  <Button className="w-full justify-start" variant="outline">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Thread
+                  </Button>
+                </Link>
+                <Link href="/zones">
+                  <Button className="w-full justify-start" variant="outline">
+                    <Users className="w-4 h-4 mr-2" />
+                    Browse All Zones
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-const PrimaryZonePageWithProvider: React.FC = () => (
+// Helper Components
+const NotFound: React.FC = () => (
+  <div className="min-h-screen bg-black flex items-center justify-center">
+    <div className="text-center">
+      <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+      <h1 className="text-3xl font-bold text-white mb-2">Zone Not Found</h1>
+      <p className="text-zinc-400 mb-6">The zone you're looking for doesn't exist.</p>
+      <Link href="/">
+        <Button variant="outline">Return Home</Button>
+      </Link>
+    </div>
+  </div>
+);
+
+const LoadingState: React.FC = () => (
+  <div className="min-h-screen bg-black">
+    <div className="container mx-auto px-4 py-8">
+      <Skeleton className="h-8 w-48 mb-6 bg-zinc-900" />
+      <Skeleton className="h-64 w-full mb-8 bg-zinc-900" />
+      <div className="space-y-4">
+        {[...Array(5)].map((_, i) => (
+          <Skeleton key={i} className="h-24 bg-zinc-900" />
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const ErrorState: React.FC<{ error: Error }> = ({ error }) => (
+  <div className="min-h-screen bg-black flex items-center justify-center">
+    <Card className="bg-red-900/20 border-red-800 max-w-md">
+      <CardContent className="p-8 text-center">
+        <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+        <h2 className="text-2xl font-bold text-white mb-2">Error Loading Zone</h2>
+        <p className="text-red-400">{error.message}</p>
+      </CardContent>
+    </Card>
+  </div>
+);
+
+const ZonePageWithProvider: React.FC = () => (
   <ForumStructureProvider>
-    <PrimaryZonePage />
+    <ZonePage />
   </ForumStructureProvider>
 );
 
-export default PrimaryZonePageWithProvider;
+export default ZonePageWithProvider;

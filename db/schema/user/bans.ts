@@ -1,13 +1,22 @@
-import { pgTable, serial, integer, text, varchar, timestamp, boolean } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	integer,
+	text,
+	varchar,
+	timestamp,
+	boolean,
+	uuid
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';
 
 export const userBans = pgTable('user_bans', {
 	id: serial('ban_id').primaryKey(),
-	userId: integer('user_id')
+	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	bannedBy: integer('banned_by')
+	bannedBy: uuid('banned_by')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }), // Assuming bannedBy is also a user
 	reason: text('reason').notNull(),
@@ -18,7 +27,7 @@ export const userBans = pgTable('user_bans', {
 	expiresAt: timestamp('expires_at'),
 	isActive: boolean('is_active').notNull().default(true),
 	liftedAt: timestamp('lifted_at'),
-	liftedBy: integer('lifted_by').references(() => users.id, { onDelete: 'set null' }),
+	liftedBy: uuid('lifted_by').references(() => users.id, { onDelete: 'set null' }),
 	liftingReason: text('lifting_reason')
 });
 

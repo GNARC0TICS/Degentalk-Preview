@@ -101,7 +101,7 @@ function HomePage() { // Changed to a regular function
 		slug: zone.slug,
 		description: zone.description || '',
 		icon: zone.icon, // Use the direct MergedZone.icon
-		colorTheme: zone.colorTheme || 'default', // Use MergedZone.colorTheme (semantic key), fallback to 'default'
+		colorTheme: zone.theme?.colorTheme || zone.slug, // Use colorTheme from theme object, fallback to slug
 		// 'theme' object can be kept for other MergedTheme properties if ZoneCard uses them,
 		// or simplified if ZoneCard primarily relies on top-level props.
 		theme: {
@@ -118,7 +118,7 @@ function HomePage() { // Changed to a regular function
 		isEventActive: false, // Placeholder
 		eventData: { name: '', endsAt: new Date() }, // Placeholder
 		lastActivityAt: zone.updatedAt ? new Date(zone.updatedAt) : undefined, // Assuming updatedAt can be used for lastActivityAt
-		rarity: 'common', // Default rarity or derive if data exists in MergedZone
+		// rarity field removed - not part of ZoneCardData interface
 	}));
 
 	return (

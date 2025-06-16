@@ -1,424 +1,349 @@
-> ⚠️ This document is currently outdated.
-> Refer to `_audit/forum-audit.md` for the most accurate forum architecture, config model, and open tasks.
+# DegenTalk Forum – Canonical Architecture & Developer Guide
 
-**Status: Up-to-date (2025-06-15)** – This README now reflects the completed Forum Audit (Batches 1-4) and acts as the single source of truth for the forum architecture, theming, and development workflow.  For granular changelogs see `_audit/forum/` files.
-
-# ForumFusion Forum System
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Primary Zones & Forum Structure](#primary-zones--forum-structure)
-- [Backend Logic & API Endpoints](#backend-logic--api-endpoints)
-- [Frontend Logic & Components](#frontend-logic--components)
-- [Development Environment & Scripts](#development-environment--scripts)
-- [Data Flow & Integration](#data-flow--integration)
-- [Troubleshooting & Tips](#troubleshooting--tips)
-- [Extending the Forum](#extending-the-forum)
-- [Current Status & Roadmap](#current-status--roadmap)
-- [Vibes & Philosophy](#vibes--philosophy)
+> **Status – 2025-06-16**  
+> This document is the single source of truth for anything related to the forum
+> structure, navigation, business rules, and developer/admin workflows.  
+> • If something in code diverges from this README, the code is **wrong**.  
+> • If you extend the structure (add zones / categories / forums) you **must**
+>   update this file in the same pull-request.
 
 ---
 
-## Overview
+## 0. TL;DR (For the Impatient 🏃‍♂️)
 
-ForumFusion powers a modern, hierarchical forum system for DegenTalk, designed for high engagement, clarity, and extensibility. The forum is organized as:
+1. The hierarchy is **exactly three levels**:
+   `Zone → Category → Forum` → (threads & replies live **only** inside forums).
+2. **forumMap.config.ts** (frontend) & **forum_categories** table (backend) are
+   generated from the **same data** – never diverge, never hand-edit SQL.
+3. **All business logic** (posting, tipping, XP, permissions, prefixes…)
+   is attached to the forum. Zones & categories are _purely organisational_.
+4. Navigation components (`CanonicalZoneGrid`, `HierarchicalZoneNav`, etc.) read
+   the config → no hard-coded slugs anywhere else.
+5. Admins create / rename items via the **Config Service** or DB → the UI & API
+   update instantly – no redeploy required.
 
-- **Zones**: Top-level destinations (singular site featured branded forums) (e.g., "The Pit", "Mission Control")
-- **Forums**: Sub-containers within Zones (e.g., "Signals & TA" in "Market Moves")
-- **Threads**: Individual discussions within Forums
-- **Replies**: Messages within Threads
-
-All logic, endpoints, and UI are built around this hierarchy.
-
----
-
-## Primary Zones & Forum Structure
-
-### Canonical Zones
-
-Primary Zones are the main branded destinations, each with a unique theme and icon:
-
-| Name              | Slug              | Theme          | Description                      |
-| ----------------- | ----------------- | -------------- | -------------------------------- |
-| The Pit           | the-pit           | theme-pit      | Raw, unfiltered discussions      |
-| Mission Control   | mission-control   | theme-mission  | Strategic/alpha/project analysis |
-| The Casino Floor  | the-casino-floor  | theme-casino   | Trading, gambling, high-stakes   |
-| The Briefing Room | the-briefing-room | theme-briefing | News, announcements, updates     |
-| The Archive       | the-archive       | theme-archive  | Historical records, past glories |
-
-### Expandable Categories
-
-Traditional forum categories with sub-forums, e.g.:
-
-- Market Moves
-- Alpha & Leaks
-- Casino & DeGen
-- Builder's Terminal
-- Airdrops & Quests
-- Web3 Culture & News
-- Beginner's Portal
-- Shill & Promote
-- Marketplace
-- Forum HQ
-
-### Data Model
-
-- **Zone**: `isZone: true`, `canonical: true`
-- **Forum**: `isZone: false`, may have `parentId`
-- **Thread**: Belongs to a forum
-- **Reply**: Belongs to a thread
+Keep reading for the long version.
 
 ---
 
-## Backend Logic & API Endpoints
+## 1. Anatomy of the Forum System
 
-### Key Files
+| Level      | Purpose                                         | Holds Threads? |
+| ---------- | ----------------------------------------------- | -------------- |
+| **Zone**   | Top-level visual context & branding             | ❌             |
+| **Category** | Thematic group of forums (optional per zone)    | ❌             |
+| **Forum**  | Atomic unit for rules, posting & XP             | ✅             |
+| Thread     | Discussion container (belongs to one forum)     | —              |
+| Reply      | Message inside a thread                         | —              |
 
-- `/server/src/domains/forum/forum.routes.ts` — All forum API endpoints
-- `/server/src/domains/forum/forum.controller.ts` — Route handlers
-- `/server/src/domains/forum/forum.service.ts` — Business logic
+Important notes:
 
-### Core Endpoints
-
-#### Forum Structure
-
-- `GET /api/forum/structure` — Returns a hierarchical structure: `{ primaryZones: ZoneWithForums[], categories: CategoryGroupWithForums[] }`. The frontend uses a shim in `ForumStructureContext.tsx` to flatten this response before merging with `forumMap.config.ts`.
-- `GET /api/forum/categories` — Categories with thread/post stats
-- `GET /api/forum/zones` — All primary zones with stats
-- `GET /api/forum/zones/tree` — Hierarchical forum structure
-
-#### Threads & Posts
-
-- `GET /api/forum/threads` — Paginated thread listings (filter/sort/search)
-- `GET /api/forum/threads/:id` — Single thread with replies
-- `POST /api/forum/threads` — Create a new thread
-- `GET /api/forum/threads/:threadId/posts` — Replies for a thread
-- `POST /api/forum/posts` — Create a new reply
-
-#### Tags, Prefixes, Bookmarks, Reactions
-
-- `POST /api/forum/threads/:threadId/tags` — Add tag to thread
-- `DELETE /api/forum/threads/:threadId/tags/:tagId` — Remove tag
-- `GET /api/forum/threads/:threadId/tags` — Get all tags for a thread
-- `POST /api/forum/posts/:postId/react` — React to a post (like/helpful)
-- `POST /api/forum/bookmarks` — Bookmark a thread
-- `DELETE /api/forum/bookmarks/:threadId` — Remove bookmark
-
-#### Solved Threads
-
-- `PUT /api/forum/threads/:threadId/solve` — Mark/unmark thread as solved
-
-### Schema
-
-- All forum entities are defined in `shared/schema.ts`
-- Canonical fields: `id`, `name`, `slug`, `isZone`, `canonical`, `colorTheme`, `icon`, `parentId`, `threadsCount`, `postsCount`, `lastThreadId`, etc.
+• You can nest forums only _one_ level deep under a category.  
+• Categories can live **inside a zone** or be **stand-alone** ("General
+  Categories").  
+• Zones **never** contain threads directly – even if a zone skips the category
+  layer it must still host at least one forum.
 
 ---
 
-## Frontend Logic & Components
+## 2. Canonical Structure (2025-06-16)
 
-### Directory Structure
+### 2.1 Primary Zones (visual top carousel & `/zones/[slug]`)
 
-- `/client/src/features/forum/`
-  - `components/` — All forum UI components
-  - `hooks/` — Custom React hooks (e.g., `useForumStructure`, `useForumQueries`)
-  - `services/` — API service (`forumApi.ts`)
+| Slug            | Name               | Quick Description                              |
+| --------------- | ------------------ | --------------------------------------------- |
+| `the-pit`       | The Pit            | Raw, unfiltered, often unhinged discussion.   |
+| `mission-control` | Mission Control     | Alpha, research & strategic deep dives.       |
+| `briefing-room` | The Briefing Room  | Official news & announcements.                |
+| `casino-floor`  | The Casino Floor   | Trading, gambling & high-stakes plays.        |
+| `the-archive`   | The Archive        | Historical records & past glories.            |
 
-### Key Components
+Every primary zone owns **0-n categories** (currently 0) or directly hosts
+forums. Each carries immutable theming (colour, icon, banner, landing
+component) defined in `PRIMARY_ZONE_THEMES` inside
+`client/src/config/forumMap.config.ts`.
 
-- **ZoneGroup** — Displays a zone and its forums
-- **ForumListItem** — Single forum in a list
-- **ThreadCard** — Thread summary card
-- **PostCard** — Individual reply card
-- **ThreadList** — List of threads (with pagination)
-- **PostList** — List of replies (with pagination)
-- **CreateThreadButton** — Button to create threads
-- **CreateThreadForm** — Form for new threads
-- **CreatePostForm** — Form for new replies
-- **TagInput** — Add/manage tags
-- **PrefixBadge**, **SolvedBadge**, **LevelBadge** — Visual indicators
+### 2.2 General Categories (outside any zone)
 
-### Hooks
+These appear directly beneath the zone grid on **Home** and in their own
+section in **HierarchicalZoneNav**.
 
-- `useForumStructure` — Fetches and organizes forum data (zones, forums, categories)
-- `useForumQueries` — Centralized data fetching for threads, posts, etc.
+| Slug             | Name            | Forums (initial set)                        |
+| ---------------- | --------------- | ------------------------------------------- |
+| `market-moves`   | Market Moves    | `signals-ta`, `trade-journals`              |
+| `airdrops-quests`| Airdrops & Quests | `bounty-board`                              |
 
-### Pages
+### 2.3 Forums (selected examples)
 
-- `/forums/[forum_slug].tsx` — Forum page (threads list)
-- `/zones/[zone_slug].tsx` — Zone page (forums list)
-- `/threads/[thread_slug].tsx` — Thread page (replies)
-- `/home.tsx` — Main landing, shows zones and hot threads
+| Forum Slug        | Parent (Zone / Category) | Key Rules (excerpt)                    |
+| ----------------- | ------------------------ | -------------------------------------- |
+| `general-brawls`  | the-pit                  | posting ✅ · tipping ✅ · XP ✅          |
+| `pit-memes`       | the-pit                  | XP ❌ · tipping ✅                      |
+| `alpha-leaks`     | mission-control          | access `level_10+` · XP ×2             |
+| `announcements`   | briefing-room            | posting ❌ (mods only)                  |
+| `signals-ta`      | market-moves             | posting ✅ · prefixes `[SIGNAL]` `[TA]` |
 
-### Data Flow
-
-- All data fetched via `forumApi.ts` using the standardized `apiRequest` pattern
-- React Query is used for caching, loading, and error states
-
----
-
-## Development Environment & Scripts
-
-### Key Commands
-
-- `npm run dev` — Start both frontend and backend
-- `npm run dev:quick` — Fast start, skips seeding
-- `npm run dev:with-seed` — Full seed and start
-- `npm run dev:frontend` — Frontend only
-- `npm run dev:backend` — Backend only
-
-### Database
-
-- SQLite for local dev, PostgreSQL for production
-- Migrations managed via Drizzle ORM
-- Seeding scripts: `seed-canonical-zones.ts`, `seed-threads.ts`, etc.
-
-### Environment
-
-- `.env.local` for local config
-- Hot reload for both frontend and backend
-- Role switcher for dev (User/Mod/Admin)
+_Never rely on this table in code – the full, authoritative list lives in
+`forumMap.config.ts`._
 
 ---
 
-## Data Flow & Integration
+## 3. Single-Source-of-Truth Workflow
 
-- **Backend**: All forum data is served via RESTful endpoints, with strong typing and schema validation.
-- **Frontend**: Data is consumed via hooks and services, with React Query for state management.
-- **Canonical data shape**: Always Zone > Forum > Thread > Reply. No legacy "categories" or "sections" in code or UI.
+1. **Edit** `client/src/config/forumMap.config.ts` (or use the forthcoming
+   admin UI which writes to the DB).
+2. **Run** `npm run sync:forums` (wrapper for
+   `/scripts/dev/syncForumsToDB.ts`).
+3. Drizzle migrates/patches rows inside `forum_categories` & cascades to any
+   FK relations.
+4. Types are regenerated via `drizzle-kit`, then re-exported through
+   **forum-sdk** so both backend (`@schema`) & frontend (`@db_types`) share the
+   identical shapes.
 
----
-
-## Troubleshooting & Tips
-
-- **"Failed to load forum structure"**: Check backend logs, ensure `/api/forum/structure` returns JSON.
-- **"Unexpected token '<'"**: Usually means HTML is returned instead of JSON (check Vite proxy, backend startup order).
-- **Database errors**: Re-run seeding scripts, check for schema mismatches.
-- **Adding new zones/forums**: Update seeding scripts and re-run, update frontend navigation/components as needed.
-
----
-
-## Extending the Forum
-
-- **Add new zones**: Update `seed-canonical-zones.ts` and frontend theme files.
-- **Add new endpoints**: Define in `forum.routes.ts`, implement in controller/service, update `forumApi.ts` and hooks.
-- **Add new UI features**: Create new components in `features/forum/components/`, export via `index.ts`.
+Result: 
+• No drift between environments.  
+• Zero manual SQL.  
+• CI fails if the generated types differ from the committed ones.
 
 ---
 
-## Current Status & Roadmap
+## 4. Navigation & User Experience
 
-- **Core structure, endpoints, and UI are live and canonical.**
-- **All legacy files and docs have been archived or deleted.**
-- **Next up:** Advanced UX (unread indicators, enhanced search, admin tools), reply management, and analytics.
+### 4.1 First Visit (Unauthenticated)
 
----
+1. **Home (`/`)** shows:
+   - **Hero** & **Announcement Ticker**.
+   - **Primary Zone Grid** (`CanonicalZoneGrid`) → large branded cards.
+   - **General Categories** listed just below if present.
+   - **Hot Threads**, **Leaderboard**, **Active Users** widgets.
+2. Clicking a **Zone card** goes to `/zones/[zone]` → shows child categories or
+   forums with full theme applied.
+3. Clicking a **General Category** goes to `/zones/[categorySlug]` (same page
+   template, different breadcrumb colour).
+4. Finally a **Forum** click navigates to `/forums/[forumSlug]`, the only place
+   threads can be created.
 
-## Vibes & Philosophy
+### 4.2 Returning / Power Users
 
-ForumFusion is built for:
+• `HierarchicalZoneNav` in the sidebar persists expanded state per user via
+  `localStorage` (key: `dt-expanded-general-categories`).  
+• Deep links (`/threads/[threadSlug]`) hydrate breadcrumbs using
+  `ForumStructureContext` so navigation never breaks even on page refresh.
 
-- **Clarity**: One canonical structure, no legacy confusion
-- **Speed**: Fast dev environment, hot reload, clear scripts
-- **Extensibility**: Easy to add new zones, forums, features
-- **Community**: Designed for high engagement, fun, and growth
+### 4.3 Thread / Post Creation Flow
 
-**If you're building or maintaining the forum, this is your home base.**
+`CreateThreadForm` / `CreatePostForm` take the current `forumSlug` from route
+params → fetch **rules** → gate on permissions (`accessLevel`) & features
+(XP, tipping, prefixes, etc.).
 
----
+### 4.4 Configurable Zone Card & Zone Page Design
 
-**For any changes, always update this README-FORUM.md to keep the team and future devs in sync.**
+#### Components & File Map
+| UI Piece | Path | Responsibility |
+| -------- | ---- | -------------- |
+| **CanonicalZoneGrid** | `client/src/components/forum/CanonicalZoneGrid.tsx` | Renders a responsive grid of `ZoneCard`s on **Home** and `/zones` index. |
+| **ZoneCard** | `client/src/components/forum/ZoneCard.tsx` | Single card with banner, emoji/icon, name & stats. |
+| **ZoneLanding** *(per-zone)* | `client/src/features/forum/pages/ZoneLanding/[zoneSlug].tsx` (code-split via `landingComponent`) | Hero section, banner overlay, category/forum listing, custom sections. |
+| **useZoneTheme()** | `contexts/ForumThemeProvider.tsx` | Exposes the merged theme (`zone.theme` → `PRIMARY_ZONE_THEMES` fallback → dev overrides). |
 
-🚨 **Important:** In ForumFusion, **Zones are visual only**. All posting, tipping, XP, and prefix logic is controlled at the **forum** level via `forumMap.config.ts`. Zones group forums and apply themes/UI — they do not define permissions or reward logic.
-
-## Rule Logic & Enforcement (forumMap.config.ts)
-
-All reward logic, XP, tipping, access control, and prefix behavior is configured in `client/src/config/forumMap.config.ts`.
-
-Each forum contains a `rules` object, which is consumed by backend and frontend logic via utility functions like:
-
-- `getForumRules(forumSlug)`
-- `canUserPost(forumSlug, user)`
-- `shouldAwardXP(forumSlug)`
-- `getAvailablePrefixes(forumSlug)`
-- `prefixEngine(forumSlug, threadStats)`
-
-All thread creation, XP awarding, tipping availability, and UI rendering is **driven by this config**, not hardcoded service logic.
-
-🚨 NEVER hardcode forum behavior. Always reference `forumMap.config.ts`.
-
-## Prefix Logic Engine
-
-Prefixes are forum-specific and cosmetic, used to highlight popular or important threads. Prefixes can be:
-
-- Manually selected by users (if available)
-- Assigned by mods
-- Auto-assigned based on engagement (e.g. `[HOT]` if thread hits 20 replies and 10 likes)
-
-Auto-assignment is defined per forum in `prefixGrantRules`, and handled by a utility function:
-```ts
-prefixEngine(forumSlug, threadStats) => string[]
-```
-
-## LLM & Developer Onboarding
-
-- Always start from `forumMap.config.ts`
-- Use `getForumRules()` and other helper functions for any forum-specific logic
-- NEVER hardcode reward or access logic in backend services or components
-- Zones are UI containers only — logic is defined per-forum
-
-### Common Anti-Patterns
-- ❌ Hardcoding XP logic in `forum.service.ts`
-- ❌ Creating new seed files for zones/forums manually
-- ❌ Relying on `zones` DB table (doesn't exist — config-driven)
-
-### Glossary
-- **Zone**: Themed visual grouping of forums
-- **Forum**: Logic container — defines rules
-- **Thread**: A discussion within a forum
-- **Reply**: A comment within a thread
-- **Prefix**: A cosmetic badge or label on a thread
-
-## Seeding & Syncing
-
-✅ All zones and forums are now seeded from `forumMap.config.ts` using the `syncForumsToDB.ts` script in `/scripts/dev/`. Do not manually define forums or zones.
-
-# DegenTalk Forum Zone System — Canonical Structure & Setup (2024)
-
-## 1. Forum Architecture Overview
-
-- **Zones**: Visual/thematic groupings of forums. They do **not** drive logic, but provide branding, navigation, and context.
-- **Forums**: Logical units where all posting, XP, tipping, and prefix logic lives. Forums are always children of a zone.
-- **Config-Driven**: The entire forum structure is defined in a single source of truth: `client/src/config/forumMap.config.ts`.
-
----
-
-## 2. Canonical Zone & Forum Config
-
-### Zones
-
-- All zones are defined in the `forumMap.zones` array.
-- Each **primary zone** now has a canonical theme:
-  - `theme.color` (hex)
-  - `theme.icon` (emoji)
-  - `theme.bannerImage` (string)
-  - `theme.landingComponent` (string)
-  - `description` (string)
-- **Primary zones** (as of this setup):
-  - **The Pit**: Raw, unfiltered, and often unhinged. Welcome to the heart of degen discussion.
-  - **Mission Control**: Strategic discussions, alpha, and project deep dives. For the serious degen.
-  - **The Casino Floor**: Trading, gambling, and high-stakes plays. May the odds be ever in your favor.
-  - **The Briefing Room**: News, announcements, and official updates. Stay informed.
-  - **The Archive**: Historical records, past glories, and lessons learned. For the degen historian.
-
-- **General zones** (e.g., Market Moves, Airdrops & Quests) are also supported, but may not have full theming.
-
-### Forums
-
-- Each zone contains a `forums` array, with each forum having:
-  - `slug`, `name`
-  - `rules` (posting, XP, tipping, prefixes, etc.)
-  - Optional: `themeOverride` for per-forum theming
-
----
-
-## 3. Theming & UI Consistency
-
-- **All theming is now canonical and DRY**: The frontend (`ForumZoneCard`, `CanonicalZoneGrid`) relies solely on `zone.theme` and `zone.description`.
-- **No more fallback UI**: Every primary zone is guaranteed to have a complete theme and description.
-- **Missing zones (e.g., Casino Floor, The Archive)** are auto-injected if not present, ensuring the UI is always complete.
-
----
-
-## 4. Home Page & Navigation
-
-- The home page pulls all primary zones from `forumMap.zones` and passes their full theme and description to the grid.
-- Cards are styled according to their canonical theme (color, icon, etc.).
-- Navigation and links are standardized and always reference the config.
-
----
-
-## 5. How to Add or Update Zones/Forums
-
-- **To add a new zone**: Add an object to the `zones` array in `forumMap.config.ts` and provide a canonical theme if it's primary.
-- **To add a new forum**: Add to the `forums` array of the appropriate zone.
-- **To update theming**: Edit the `PRIMARY_ZONE_THEMES` object or the zone's `theme` property.
-
----
-
-## 6. Example: Canonical Zone Config
-
+#### Theme Object (single source)
+Each **zone** entry in `forumMap.config.ts` owns a `theme` object:
 ```
 {
-  slug: 'the-pit',
-  name: 'The Pit',
-  type: 'primary',
-  description: 'Raw, unfiltered, and often unhinged. Welcome to the heart of degen discussion.',
-  theme: {
-    icon: '🔥',
-    color: '#FF3C3C',
-    bannerImage: '/banners/pit.jpg',
-    landingComponent: 'PitLanding',
-  },
-  forums: [
-    // ...forums here
-  ],
+  color: "#FF4D00",   // Primary accent – used for gradients & text highlights
+  icon: "🔥",          // Emoji or Lucide icon name (string → emoji, component → Lucide)
+  bannerImage: "/banners/the-pit.jpg", // 1440×480 hero image
+  landingComponent: "PitLanding"        // Dynamic import path (code-split)
 }
 ```
+*Optional per-zone overrides*: Pass `themeOverride` when you need seasonal or event skins.
+
+#### Design Tokens in CSS
+• `--zone-accent` (→ `theme.color`)  
+• `--zone-banner` (→ `bannerImage`)  
+• `--zone-icon`   (emoji fallback string)
+
+`CanonicalZoneGrid` injects these tokens as inline CSS variables so Tailwind can reference them inside `.zone-card` classes without extra CSS files.
+
+#### Dev-Mode Tweaks (Hot-Reload)
+1. **Local Overrides** – create `forumMap.dev.json` at project root with the same shape as `forumMap.config.ts`; when `VITE_ENV === 'dev'` the Provider merges this on top so you can live-edit colours, images, even swap `landingComponent` without touching TS files.
+2. **Query-String Override** – append `?zoneSkin=<slug>` while on a zone page; the ThemeProvider will temporarily load `/public/dev-skins/<slug>.json` for quick demos.
+3. **Storybook** – run `npm run storybook` to open isolated knobs for `ZoneCard` props (accent colour, banner, icon, rarity badge). Save the chosen JSON back into `forumMap.config.ts` once signed off.
+
+#### Production Admin Overrides
+The upcoming **Admin UI → UI Config** surface writes to `ui_themes` DB table. At boot the backend merges DB rows into the config via `mergeConfig()` so prod hot-updates without redeploy. Fields map 1-to-1 with the theme object above.
+
+#### UX Guidelines
+• Accent colour must meet WCAG AA contrast against card background.  
+• Banner images should be ~150 KB max (lazy-loaded + blur-up placeholder).  
+• Keep icon to two glyphs max – emojis render faster than SVG.
+
+> *Reminder:* Never put permissions or XP logic in a zone or category; themes are **visual only**.
 
 ---
 
-## 7. Key Principles
+## 5. Business Logic – Forums or Bust 🎯
 
-- **Single Source of Truth**: All forum/zone logic and theming is centralized in `forumMap.config.ts`.
-- **No Logic in Zones**: Zones are for grouping and branding only; all logic is in forums.
-- **Type-Safe**: All config is strongly typed for safety and editor support.
-- **LLM/Automation Safe**: The config is structured for easy programmatic updates and audits.
+| Feature            | Controlled At | Notes |
+| ------------------ | ------------- | ----- |
+| Posting Allowed    | forum.rules.allowPosting | Zone/category never override |
+| XP Multiplier      | forum.rules.xpMultiplier  | Defaults to `1` |
+| Tipping Enabled    | forum.rules.tippingEnabled| — |
+| Prefixes           | forum.rules.availablePrefixes / prefixGrantRules | Auto-assign engine in `/utils/prefixEngine.ts` |
+| Access Level       | forum.rules.accessLevel   | `public`/`registered`/`level_X+`/`mod`/`admin` |
 
----
-
-## 8. Migration/Refactor Notes
-
-- All legacy fallback UI and hardcoded theming have been removed.
-- All pages/components now reference the config for zone/forum data and theming.
-- Any new zones or forums must be added to the config to appear in the UI.
+If you need a new rule → extend the **ForumRules** TS type → update the seed &
+backend validator schemas in one PR.
 
 ---
 
-## 9. Next Steps for Documentation
+## 6. Admin & Ops Cheatsheet
 
-- **Update all forum-related docs** to reference this canonical config structure.
-- **Onboard contributors** to use `forumMap.config.ts` for all forum/zone changes.
-- **Remove any old references** to hardcoded or scattered forum/zone logic.
+• **Add Zone**   → config `zones.push(...)` → run sync script → add banner
+  image in `public/banners/`.  
+• **Add Category** → zones[x].categories.push(...) (or push to top-level array
+  for General Category).  
+• **Lock Forum**  → set `rules.allowPosting = false`.
+• **VIP-only Forum** → `accessLevel: 'level_10+'` or `'mod'` etc.
+• **Rename Slug** → _don't_ – create a new item & migrate threads via script
+  (slug changes break SEO & bookmarks).
 
 ---
 
-*This document reflects the canonical, config-driven forum structure as of 2024. For further details, see `client/src/config/forumMap.config.ts` or contact the core team.*
+## 7. Edge-Cases & Gotchas ⚠️
 
-## Single Source of Types (Post-Batch 5)
+1. **Zone without categories** → valid, but it still needs ≥1 forum or the page
+   looks empty (CI warns).
+2. **Forum orphaned from config** → sync script marks it `is_hidden = true`
+   instead of deleting (safety net).
+3. **Category slug collision** with zone slug → prohibited; lint rule
+   `forum-slug-unique` enforces.
+4. **Frontend stale after config change** → Hot-reload covers it, but prod cache
+   purge happens via `config.version` bump.
+5. **Icon Mismatch** – If the emoji/icon differs between `PRIMARY_ZONE_THEMES`
+   and the zone's `theme`, the theme wins (single source rule).
 
-All DB entities are now generated via Drizzle code-gen and re-exported through `forum-sdk` so both backend and frontend share **one** canonical type definition.
+---
 
-1. `npm run generate:types` – runs `drizzle-kit generate:pg` to emit TS definitions into `db/types/generated`.
-2. `npm run build:forum-sdk` – bundles those definitions under the `@forum-sdk/*` import alias.
-3. Use in code:
-   ```ts
-   import type { Thread, PostWithUser } from '@forum-sdk/forum';
-   ```
+## 8. Developer On-Boarding Checklist
 
-CI runs both commands and fails if type drift is detected.
+1. `npm run dev` ➜ should start backend & Vite with clear prefixed logs.  
+2. Confirm `/api/forum/structure` returns **200** with canonical JSON.  
+3. Skim `forumMap.config.ts` – you'll touch this file often.  
+4. Follow **import rules** (see `.cursor/naming-rules.mdc`).  
+5. Remove unused imports; run `npm run lint` before commit.
 
-### Config Service
+Welcome to the colosseum – now ship something legendary. 🏴‍☠️
 
-Runtime constants (XP gains, tipping limits, upload constraints, default themes) live in a **single source**:
+---
 
-• Backend: `server/src/config/forum.config.ts` – canonical object
-• Access with `getConfigValue(path)` from `server/src/core/config.service.ts`  
-  ```ts
-  import { getConfigValue } from '@/core/config.service';
-  const dailyCap = getConfigValue<number>('xp.dailyCap');
-  ```
-• Frontend read-only subset: `client/src/config/publicConfig.ts`
+## 9. Database Guide (Schema & Migrations)
 
-Future admin overrides will merge DB values via `mergeConfig()` at boot.
+### 9.1 Core Tables
+| Table | Purpose | Relation Keys |
+|-------|---------|---------------|
+| `forum_categories` | Single table for **zones**, **categories**, **forums** (distinguished by `type` = `zone` \| `category` \| `forum`). | self-FK `parent_id` (category → zone or forum → category) |
+| `threads` | Stores threads. | `category_id` → `forum_categories.id` (must point to a **forum** row) |
+| `posts` | Stores replies. | `thread_id`, `reply_to_post_id` (self-referencing) |
+| `prefixes` / `thread_prefixes` | Lookup + FK for visual thread tags. | — |
+| `tags`, `thread_tags` | User-generated labels. | — |
+| `post_reactions`, `post_likes`, `polls`, `poll_options`, … | Engagement primitives; all FK back to `posts`/`threads`. |
+
+_All tables live under `db/schema/forum/` (Drizzle).  Migrations are auto-generated via `npm run db:migrate` and live in `migrations/postgres/*`._
+
+### 9.2 Entity Lifecycle
+1. **Config Sync** – `scripts/dev/syncForumsToDB.ts` upserts rows into `forum_categories` based on `forumMap.config.ts`.
+2. **Seeding** – Example seeds (`seed-canonical-zones.ts`, `seed-threads.ts`) populate starter content.
+3. **Cascade Rules** – `ON DELETE SET NULL` for parent–child to prevent accidental purges; `ON DELETE CASCADE` for content (threads/posts).
+4. **Type Generation** – `drizzle-kit` produces TypeScript types into `db/types/generated` used by `forum-sdk`.
+
+### 9.3 Writing a Migration Manually
+```bash
+npm run db:generate --name add-casino-floor-event-column
+# Edit generated .sql if needed
+npm run db:push   # applies to local dev DB
+```
+> **Remember:** If a column touches business rules (tipping/xp) add it to **ForumRules** or a dedicated service instead of sprinkling literals.
+
+---
+
+## 10. Front-End Scope Guide
+
+### 10.1 Feature Domains
+| Path | Description |
+|------|-------------|
+| `client/src/features/forum` | All data-heavy logic (hooks/services/components) specific to forum. |
+| `client/src/components/forum` | Re-usable, presentational UI atoms/molecules (ZoneCard, ThreadCard…). |
+| `client/src/contexts` | `ForumStructureContext`, `ForumThemeProvider`, global state. |
+| `client/src/pages` | Next.js page routes (`/forums/[slug].tsx`, `/zones/[slug].tsx`). |
+
+### 10.2 Data Flow
+```mermaid
+graph TD;
+  forumMap.config.ts --> ForumStructureContext
+  ForumStructureContext -->{zones, categories, forums}
+  {zones, categories, forums} --> HierarchicalZoneNav
+  {zones, categories, forums} --> CanonicalZoneGrid
+  forumApi.ts --> ReactQueryCache
+  ReactQueryCache --> ThreadList
+  ThreadList --> ThreadCard --> ThreadPage
+  ThreadPage --> PostList --> PostCard
+```
+
+### 10.3 State & Caching
+• **React Query** caches remote calls (`forumApi.ts`).  
+• **Context** caches the relatively static structure JSON (revalidated on focus).
+
+### 10.4 Styling & Theming
+• Tailwind with CSS variables injected by `ForumThemeProvider`.  
+• Zone accent colour controls buttons, progress bars, link hovers within its page via `[data-zone]` attribute.
+
+---
+
+## 11. Deprecation & Dead Code Plan 🧹
+
+1. **Run Audit:** `npm run refactor:find-dead` (script scans for unreferenced TS/TSX & styles using `ts-prune` + custom logic).
+2. **Analyse Report:** Results dumped to `_audit/dead-code-report.json`.
+3. **Patch or Purge:**
+   - _Patch imports_ if the file is still relevant (often renamed after refactor).
+   - _Delete_ if truly dead → follow up with barrel-export / index cleanup.
+4. **Track in CLEANUP_SUMMARY.md:** Log each deletion with reason & PR link for posterity.
+5. **CI Enforcement:** A GitHub action blocks merge if `dead-code-report.json` grows >0 new lines.
+
+> **Next step:** Trigger the audit now; expect a list of duplicate `AnnouncementCard` variants and legacy `/client/src/features/forum/old/*` components to purge.
+
+---
+
++## 12. Thread Creation Implementation Details
++
++### 12.1 Database Schema
++Threads are created in the `threads` table with a foreign key `categoryId` that references `forum_categories.id` where `type = 'forum'`.
++
++### 12.2 Frontend Implementation
++The `CreateThreadForm` component:
++- Uses `useForumStructure()` hook to get forum data with database IDs
++- Maps forum slugs to IDs when creating threads
++- Sends `categoryId` (numeric ID) in the API payload
++- Validates forum permissions (locked, minXp requirements)
++
++### 12.3 API Endpoint
++`POST /api/forum/threads` expects:
++```json
++{
++  "title": "Thread Title",
++  "categoryId": 123,  // Numeric ID from forum_categories table
++  "content": "<p>HTML content</p>",
++  "prefixId": 1,      // Optional
++  "tagNames": ["tag1", "tag2"],  // Optional
++  "editorState": {}   // Optional editor state
++}
++```
++
++### 12.4 Common Issues
++- **"Forum not found"** - Ensure categoryId exists and has `type = 'forum'`
++- **403 Locked** - Forum has `isLocked = true` and user isn't mod/admin
++- **Missing IDs** - Forums from static config may have ID = -1 until synced to DB
++
++---
+
+_End of canonical guide – hack responsibly._

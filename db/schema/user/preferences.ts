@@ -1,11 +1,20 @@
-import { pgTable, integer, varchar, jsonb, index, boolean, timestamp } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	integer,
+	varchar,
+	jsonb,
+	index,
+	boolean,
+	timestamp,
+	uuid
+} from 'drizzle-orm/pg-core';
 import { users } from './users'; // Adjusted import
 import { sql } from 'drizzle-orm';
 
 export const userSettings = pgTable(
 	'user_settings',
 	{
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.primaryKey()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		theme: varchar('theme', { length: 40 }).default('auto'),
@@ -22,7 +31,7 @@ export const userSettings = pgTable(
 );
 
 export const notificationSettings = pgTable('notification_settings', {
-	userId: integer('user_id')
+	userId: uuid('user_id')
 		.primaryKey()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	receiveMentionNotifications: boolean('receive_mention_notifications').notNull().default(true),
@@ -44,7 +53,7 @@ export const notificationSettings = pgTable('notification_settings', {
 export const displayPreferences = pgTable(
 	'display_preferences',
 	{
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.primaryKey()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		theme: varchar('theme', { length: 40 }).notNull().default('system'),

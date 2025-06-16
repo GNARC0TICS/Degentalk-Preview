@@ -1,4 +1,10 @@
-import { pgTable, /*integer,*/ timestamp, primaryKey, uuid, integer } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	timestamp,
+	primaryKey,
+	uuid,
+	integer
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { badges } from './badges';
@@ -6,7 +12,7 @@ import { badges } from './badges';
 export const userBadges = pgTable(
 	'user_badges',
 	{
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		badgeId: integer('badge_id')

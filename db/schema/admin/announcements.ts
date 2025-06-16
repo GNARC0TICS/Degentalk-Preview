@@ -7,7 +7,8 @@ import {
 	timestamp,
 	jsonb,
 	index,
-	uuid
+	uuid,
+	integer
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path

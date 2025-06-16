@@ -1,4 +1,3 @@
-// TODO: @syncSchema Update based on recent changes in schema.ts: ForumCategory now has 'color' and 'icon' fields.
 import React, { useState, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
@@ -49,6 +48,7 @@ import {
 	THEME_COLORS_BG // Renamed from THEME_COLORS to THEME_COLORS_BG in themeConstants.ts
 } from '@/config/themeConstants';
 import { useForumTheme } from '@/contexts/ForumThemeProvider';
+import { ForumListItem } from '@/features/forum/components/ForumListItem';
 
 
 const CATEGORY_COLORS = [ // This can remain for generic category styling if no theme is matched
@@ -217,48 +217,14 @@ const ForumPage = () => {
 				</CardHeader>
 				<CardContent className="p-0">
 					<div className="divide-y divide-zinc-800/50">
-						{categoryZone.forums.map((forum: MergedForum) =>
-							forum.canHaveThreads ? ( 
-								<Link
-									key={forum.id.toString()}
-									href={`/forums/${forum.slug}`} 
-									className="block p-4 hover:bg-black/20 transition-colors"
-								>
-									<div className="flex items-center justify-between">
-										<div>
-											<h3 className="text-white font-medium mb-1">{forum.name}</h3>
-											{forum.description && (
-												<p className="text-sm text-zinc-400 mb-2">{forum.description}</p>
-											)}
-											{renderForumStats(forum)}
-										</div>
-										{/* Use forum.icon (direct emoji/char) or a default icon */}
-										{forum.icon ? 
-											<span className="text-xl" style={{color: forum.color || categoryZone.color || undefined}}>{forum.icon}</span> : 
-											<MessageSquare className="h-5 w-5 text-zinc-600" />
-										}
-									</div>
-								</Link>
-							) : (
-								<div
-									key={forum.id.toString()}
-									className="block p-4 text-zinc-500 opacity-60 cursor-not-allowed"
-									aria-label="This is a container and does not support threads."
-									title="This is a container and does not support threads."
-								>
-									<div className="flex items-center justify-between">
-										<div>
-											<h3 className="text-white font-medium mb-1">{forum.name}</h3>
-											{forum.description && (
-												<p className="text-sm text-zinc-400 mb-2">{forum.description}</p>
-											)}
-											{renderForumStats(forum)}
-										</div>
-										<MessageSquare className="h-5 w-5 text-zinc-600" />
-									</div>
-								</div>
-							)
-						)}
+						{categoryZone.forums.map((forum: MergedForum) => (
+							<ForumListItem 
+								key={forum.id.toString()}
+								forum={forum}
+								href={`/forums/${forum.slug}`}
+								parentZoneColor={categoryZone.color}
+							/>
+						))}
 					</div>
 				</CardContent>
 			</Card>

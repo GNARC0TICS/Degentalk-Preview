@@ -155,6 +155,30 @@ const router = Router();
 // Use the rules sub-router
 router.use('/rules', rulesRoutes);
 
+// --- FORUM STRUCTURE ---
+
+// GET /structure - Get the complete forum structure (zones, categories, forums)
+router.get('/structure', async (req: Request, res: Response) => {
+	try {
+		const structure = await forumService.getForumStructure();
+		res.json(structure);
+	} catch (error) {
+		logger.error('ForumRoutes', 'Error fetching forum structure', { err: error });
+		res.status(500).json({ message: 'An error occurred fetching forum structure' });
+	}
+});
+
+// GET /categories - Get all forum categories with stats
+router.get('/categories', async (req: Request, res: Response) => {
+	try {
+		const categories = await forumService.getCategoriesWithStats();
+		res.json(categories);
+	} catch (error) {
+		logger.error('ForumRoutes', 'Error fetching categories', { err: error });
+		res.status(500).json({ message: 'An error occurred fetching categories' });
+	}
+});
+
 // --- THREAD CRUD ---
 
 // Specific routes like '/search' should come BEFORE dynamic routes like '/:id' or '/:slug'

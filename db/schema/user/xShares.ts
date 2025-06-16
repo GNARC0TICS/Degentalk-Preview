@@ -5,6 +5,7 @@ import {
 	integer,
 	varchar,
 	timestamp,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { users } from './users';
 
@@ -12,7 +13,7 @@ export const xShares = pgTable(
 	'x_shares',
 	{
 		id: serial('id').primaryKey(),
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references((): AnyPgColumn => users.id as AnyPgColumn, { onDelete: 'cascade' }),
 		contentType: varchar('content_type', { length: 50 }).notNull(),

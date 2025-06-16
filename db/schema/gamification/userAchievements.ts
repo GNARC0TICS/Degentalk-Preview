@@ -1,4 +1,11 @@
-import { pgTable, /*integer,*/ timestamp, jsonb, primaryKey, uuid, integer } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	timestamp,
+	jsonb,
+	primaryKey,
+	uuid,
+	integer
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { achievements } from './achievements'; // Adjusted path

@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useLocation, Link } from 'wouter';
+import { useLocation } from 'wouter';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
@@ -45,9 +45,8 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { TagInput } from '@/components/forum/tag-input';
 import type { Tag, ThreadPrefix as Prefix } from '@/types/forum';
-import { forumMap } from '@/config/forumMap.config'; // Reinstate for internal fallback & type usage
-import type { Forum, Zone, ForumRules } from '@/config/forumMap.config'; // Reinstate Forum, Zone and ensure ForumRules is here
-import NotFoundPage from '@/pages/not-found';
+import { useForumStructure } from '@/contexts/ForumStructureContext';
+import type { ForumRules } from '@/config/forumMap.config';
 
 interface DraftData {
 	id: number;
@@ -99,8 +98,10 @@ export function CreateThreadForm({
 	const [selectedForumSlugState, setSelectedForumSlugState] = useState<string | undefined>(passedForumSlug);
 	const queryClient = useQueryClient();
 
-	const [targetForumConfig, setTargetForumConfig] = useState<Forum | undefined>(undefined); // Used if user selects a forum from dropdown
+	const [targetForumConfig, setTargetForumConfig] = useState<any | undefined>(undefined); // Merged forum data from context
 	const [formDisabledReason, setFormDisabledReason] = useState<string | null>(null);
+
+	const { zones, getForum } = useForumStructure();
 
 	useEffect(() => {
 		// This effect primarily sets the disabled reason based on PROPS when a forum is PASSED IN
@@ -115,7 +116,7 @@ export function CreateThreadForm({
 			}
 			// Also, find the static config for the passed forum slug to populate targetForumConfig
 			// This is mainly for consistency if other parts of the form rely on targetForumConfig
-			const staticForum = forumMap.zones.flatMap(z => z.forums).find(f => f.slug === passedForumSlug);
+			const staticForum = passedForumSlug ? getForum(passedForumSlug) : undefined;
 			setTargetForumConfig(staticForum);
 
 		} else {
@@ -129,7 +130,7 @@ export function CreateThreadForm({
 		// This effect updates targetForumConfig and disabledReason when the USER SELECTS a new forum from the dropdown
 		// (i.e., when passedForumSlug is initially undefined, and selectedForumSlugState changes)
 		if (!passedForumSlug && selectedForumSlugState) {
-			const foundForum = forumMap.zones.flatMap(z => z.forums).find(f => f.slug === selectedForumSlugState);
+			const foundForum = selectedForumSlugState ? getForum(selectedForumSlugState) : undefined;
 			setTargetForumConfig(foundForum);
 			if (foundForum) {
 				// For user-selected forums, rules come from static config, as MergedForum isn't available here directly
@@ -144,8 +145,9 @@ export function CreateThreadForm({
 		}
 	}, [selectedForumSlugState, passedForumSlug]); // Dependencies ensure this runs when selection changes
 
-	const activeForumSlugForPrefixes = passedForumSlug || selectedForumSlugState;
-	const { data: prefixes, isLoading: loadingPrefixes } = useForumPrefixes(activeForumSlugForPrefixes);
+	const activeForumSlug = passedForumSlug || selectedForumSlugState;
+	const activeForumData = activeForumSlug ? getForum(activeForumSlug) : undefined;
+	const { data: prefixes, isLoading: loadingPrefixes } = useForumPrefixes(undefined, activeForumData?.id);
 
 	const form = useForm<ThreadFormValues>({
 		resolver: zodResolver(threadFormSchema),
@@ -167,16 +169,16 @@ export function CreateThreadForm({
 
 	const { data: draftData, isLoading: loadingDraft, isSuccess: isDraftLoadSuccess } = useQuery<DraftData>(
 		{
-			queryKey: ['threadDraft', { forumSlug: activeForumSlugForPrefixes }],
+			queryKey: ['threadDraft', { forumSlug: activeForumSlug }],
 			queryFn: async () => {
-				if (!activeForumSlugForPrefixes) return Promise.reject('No forum selected for draft.');
+				if (!activeForumSlug) return Promise.reject('No forum selected for draft.');
 				return apiRequest<DraftData>({
 					method: 'GET',
 					url: '/api/threads/drafts',
-					params: { forumSlug: activeForumSlugForPrefixes }
+					params: { forumSlug: activeForumSlug }
 				});
 			},
-			enabled: isOpen && !!activeForumSlugForPrefixes && !!user,
+			enabled: isOpen && !!activeForumSlug && !!user,
 		}
 	);
 
@@ -192,7 +194,7 @@ export function CreateThreadForm({
 					content: values.content,
 					editorState: values.editorState,
 					forumSlug: values.forumSlugToSave,
-					prefixId: values.prefixId && values.prefixId.trim() !== '' ? values.prefixId : undefined,
+					prefixId: values.prefixId && values.prefixId.trim() !== '' && values.prefixId !== 'none' ? values.prefixId : undefined,
 					tags: values.tags,
 				},
 			});
@@ -285,7 +287,22 @@ export function CreateThreadForm({
 			return;
 		}
 
-		createThreadMutation.mutate(values as CreateThreadParams, {
+		if (!activeForumData || activeForumData.id <= 0) {
+			toast({ title: 'Error', description: 'Unable to determine target forum. Please try again.', variant: 'destructive' });
+			return;
+		}
+
+		const newThreadPayload: CreateThreadParams = {
+			title: values.title,
+			content: values.content,
+			categoryId: activeForumData.id,
+			forumSlug: activeForumData.slug,
+			prefixId: values.prefixId && values.prefixId.trim() !== '' && values.prefixId !== 'none' ? parseInt(values.prefixId) : undefined,
+			tags: values.tags,
+			editorState: values.editorState,
+		};
+
+		createThreadMutation.mutate(newThreadPayload, {
 			onSuccess: (data) => {
 				if (draftId) {
 					apiRequest<any>({ method: 'DELETE', url: `/api/threads/drafts/${draftId}`});
@@ -374,8 +391,8 @@ export function CreateThreadForm({
 												{passedForumName}
 											</SelectItem>
 										) : (
-										// If no forumSlug is passed, populate dropdown from forumMap
-											forumMap.zones.map((zone) => (
+										// If no forumSlug is passed, populate dropdown from merged zones (includes DB IDs)
+											zones.map((zone) => (
 												<SelectGroup key={zone.slug}>
 													<SelectLabel>{zone.name} ({zone.type})</SelectLabel>
 													{zone.forums.map((forumItem) => (
@@ -405,7 +422,7 @@ export function CreateThreadForm({
 								<Select
 									onValueChange={field.onChange}
 									value={field.value}
-									disabled={loadingPrefixes || !activeForumSlugForPrefixes || !!formDisabledReason || createThreadMutation.isPending}
+									disabled={loadingPrefixes || !activeForumData?.id || !!formDisabledReason || createThreadMutation.isPending}
 								>
 									<FormControl>
 										<SelectTrigger>
@@ -418,7 +435,7 @@ export function CreateThreadForm({
 									</FormControl>
 									<SelectContent>
 										{loadingPrefixes && <SelectItem value="loading" disabled>Loading prefixes...</SelectItem>}
-										<SelectItem value="">No Prefix</SelectItem>
+										<SelectItem value="none">No Prefix</SelectItem>
 										{Array.isArray(prefixes) &&
 											prefixes.map((prefix: Prefix) => (
 												<SelectItem key={prefix.id.toString()} value={prefix.id.toString()}>
