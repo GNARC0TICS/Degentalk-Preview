@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import React, { useState, useEffect } from 'react'; // Added useEffect, disabled lint for now as it's for future use
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import { Upload, Save, X, User, Image, Globe, MessageSquare } from 'lucide-react';
+import { Save, X, User, Image, Globe, MessageSquare } from 'lucide-react'; // Removed Upload icon
 import { FileDropZone } from '@/components/ui/FileDropZone';
 
 interface ProfileEditorProps {
@@ -40,6 +41,17 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 		twitter: profile.twitter || '',
 		location: profile.location || ''
 	});
+
+	// Add these state variables to your ProfileEditor component state
+	const [uploadProgress, setUploadProgress] = useState<{
+		avatar: number;
+		banner: number;
+	}>({ avatar: 0, banner: 0 });
+
+	const [isUploading, setIsUploading] = useState<{
+		avatar: boolean;
+		banner: boolean;
+	}>({ avatar: false, banner: false });
 
 	// Update profile mutation
 	const updateProfileMutation = useMutation({
@@ -79,43 +91,191 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 		updateProfileMutation.mutate(formData);
 	};
 
-	async function handleImageUpload(file: File, field: 'avatar' | 'banner') {
+	// Real-time profile synchronization
+	// TODO: Implement WebSocket integration for cross-tab profile updates
+	// This will be added in Phase 2 of the upload system implementation
+	/*
+	useEffect(() => {
+	  const handleProfileUpdate = (eventData: {
+	    userId: string;
+	    updates: { avatarUrl?: string; profileBannerUrl?: string; };
+	    timestamp: string;
+	  }) => {
+	    if (eventData.userId === profile.id.toString()) {
+	      queryClient.invalidateQueries({ queryKey: ['profile', profile.username] });
+	      toast({
+	        title: 'Profile Updated',
+	        description: 'Your profile was updated from another device',
+	        variant: 'default'
+	      });
+	    }
+	  };
+
+	  // WebSocket subscription will be implemented here
+	  // const unsubscribe = webSocketService.subscribe('profile_updated_event', handleProfileUpdate);
+	  
+	  return () => {
+	    // Cleanup will be implemented here
+	    // unsubscribe?.();
+	  };
+	}, [profile.id, profile.username, queryClient, toast]);
+	*/
+
+	// Helper function for XMLHttpRequest-based upload with progress tracking
+	function uploadWithProgress(file: File, uploadUrl: string, onProgress: (progress: number) => void): Promise<void> {
+		return new Promise((resolve, reject) => {
+			const xhr = new XMLHttpRequest();
+
+			// Track upload progress
+			xhr.upload.addEventListener('progress', (event) => {
+				if (event.lengthComputable) {
+					const progress = (event.loaded / event.total) * 100;
+					onProgress(progress);
+				}
+			});
+
+			// Handle completion
+			xhr.addEventListener('load', () => {
+				if (xhr.status >= 200 && xhr.status < 300) {
+					resolve();
+				} else {
+					reject(new Error(`Upload failed with status ${xhr.status}: ${xhr.statusText}`));
+				}
+			});
+
+			// Handle errors
+			xhr.addEventListener('error', () => {
+				reject(new Error('Network error during upload'));
+			});
+
+			// Handle timeouts
+			xhr.addEventListener('timeout', () => {
+				reject(new Error('Upload timed out'));
+			});
+
+			// Configure and send request
+			xhr.open('PUT', uploadUrl);
+			xhr.setRequestHeader('Content-Type', file.type);
+			xhr.timeout = 60000; // 60 second timeout
+			xhr.send(file);
+		});
+	}
+
+	// Enhanced upload handler with progress tracking
+	async function handleImageUpload(file: File, uploadType: 'avatar' | 'banner', onProgress?: (progress: number) => void) {
 		try {
-			toast({ title: 'Uploading…', description: `Uploading ${field}…`, variant: 'default' });
-			// 1. Request presigned URL
-			const presign = await apiRequest<{ uploadUrl: string; publicUrl: string }>({
+			// Set uploading state for this specific upload type
+			setIsUploading(prev => ({ ...prev, [uploadType]: true }));
+			setUploadProgress(prev => ({ ...prev, [uploadType]: 0 }));
+
+			// Show initial upload toast with degen energy
+			toast({ 
+				title: 'Uploading…', 
+				description: `Uploading ${uploadType === 'avatar' ? 'pfp' : 'banner'} to the blockchain...`, 
+				variant: 'default' 
+			});
+
+			// Progress helper that updates both local state and callback
+			const updateProgress = (progress: number) => {
+				setUploadProgress(prev => ({ ...prev, [uploadType]: Math.min(progress, 100) })); // Ensure progress doesn't exceed 100
+				onProgress?.(Math.min(progress, 100));
+			};
+
+			// Step 1: Request presigned URL (10% progress)
+			updateProgress(10);
+			const presignResponse = await apiRequest<{
+				uploadUrl: string;
+				publicUrl: string;
+				relativePath: string;
+			}>({
 				method: 'POST',
-				url: `/api/uploads/presign`,
-				data: { field, fileName: file.name, fileType: file.type }
+				url: `/api/uploads/presigned-url`, 
+				data: { 
+					fileName: file.name, 
+					fileType: file.type, 
+					uploadType: uploadType 
+				}
 			});
 
-			// 2. PUT file to storage
-			await fetch(presign.uploadUrl, {
-				method: 'PUT',
-				body: file,
-				headers: { 'Content-Type': file.type }
+			// Step 2: Upload to storage with XMLHttpRequest for progress tracking (10% -> 80%)
+			updateProgress(20); // Set progress to 20% before starting actual file transfer
+			await uploadWithProgress(file, presignResponse.uploadUrl, (progress) => {
+				// Map file upload progress from 20% to 80% of total progress
+				const adjustedProgress = 20 + (progress * 0.6); // User's specified mapping
+				updateProgress(adjustedProgress);
 			});
 
-			// 3. Update user profile with new URL
-			await apiRequest({
-				method: 'PUT',
-				url: '/api/profile/update',
-				data: field === 'avatar' ? { avatarUrl: presign.publicUrl } : { bannerUrl: presign.publicUrl }
+			// Step 3: Confirm upload with backend (80% -> 90%)
+			updateProgress(80);
+			const confirmResponse = await apiRequest<{
+				success: boolean;
+				publicUrl: string; 
+			}>({
+				method: 'POST',
+				url: '/api/uploads/confirm',
+				data: {
+					relativePath: presignResponse.relativePath,
+					uploadType: uploadType 
+				}
 			});
 
+			if (!confirmResponse.success) {
+				throw new Error('Backend failed to confirm the upload. Please try again.');
+			}
+
+			// Step 4: Update UI and show success (90% -> 100%)
+			updateProgress(90);
 			queryClient.invalidateQueries({ queryKey: ['profile', profile.username] });
+			updateProgress(100);
+			
 			toast({
-				title: 'Success',
-				description: `${field === 'avatar' ? 'Avatar' : 'Banner'} updated`,
+				title: 'Success!',
+				description: `${uploadType === 'avatar' ? 'Avatar' : 'Banner'} updated, you absolute legend!`,
 				variant: 'default'
 			});
-		} catch (error: any) {
-			toast({ title: 'Upload failed', description: error.message, variant: 'destructive' });
+
+			// Reset progress after brief success display in FileDropZone
+			// setTimeout(() => {
+			// 	setUploadProgress(prev => ({ ...prev, [uploadType]: 0 }));
+			// }, 2000); // This reset is now handled by FileDropZone
+
+		} catch (error: unknown) { // Changed type from any to unknown
+			console.error('Upload failed:', error);
+			
+			// Reset progress on error
+			setUploadProgress(prev => ({ ...prev, [uploadType]: 0 }));
+			onProgress?.(0); // Also update FileDropZone's progress
+			
+			// Enhanced error handling with degen-friendly messages
+			let errorMessage = 'Upload failed';
+			const errorWithMessage = error as { message?: string }; // Type assertion
+
+			if (errorWithMessage.message?.includes('too large')) {
+				errorMessage = 'File too chunky for the blockchain, anon';
+			} else if (errorWithMessage.message?.includes('network') || errorWithMessage.message?.includes('timed out') || errorWithMessage.message?.includes('status') || errorWithMessage.message?.includes('Upload failed')) {
+				errorMessage = 'Network went full bear market, try again';
+			} else if (errorWithMessage.message?.includes('type')) {
+				errorMessage = 'Wrong file type, we need images not your portfolio screenshots';
+			} else {
+				errorMessage = errorWithMessage.message || 'Something went wrong, probably user error';
+			}
+
+			toast({ 
+				title: 'Upload failed', 
+				description: errorMessage, 
+				variant: 'destructive' 
+			});
+		} finally {
+			setIsUploading(prev => ({ ...prev, [uploadType]: false }));
 		}
 	}
 
-	const handleAvatarUpload = (file: File) => handleImageUpload(file, 'avatar');
-	const handleBannerUpload = (file: File) => handleImageUpload(file, 'banner');
+	// Updated file handlers that pass progress callbacks
+	const handleAvatarUpload = (file: File, onProgress?: (progress: number) => void) => 
+		handleImageUpload(file, 'avatar', onProgress);
+
+	const handleBannerUpload = (file: File, onProgress?: (progress: number) => void) => 
+		handleImageUpload(file, 'banner', onProgress);
 
 	return (
 		<div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
@@ -264,9 +424,24 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 											onFileSelected={handleAvatarUpload}
 											className="mt-2"
 											accept={["image/jpeg", "image/png", "image/webp", "image/gif"]}
-											maxSize={5 * 1024 * 1024}
-											showPreview={false}
+											maxSize={5 * 1024 * 1024} 
+											showPreview={false} 
+											disabled={isUploading.avatar}
 										/>
+										{isUploading.avatar && (
+											<div className="mt-2 space-y-1">
+												<div className="flex justify-between text-xs text-zinc-400">
+													<span>Uploading avatar...</span>
+													<span>{uploadProgress.avatar.toFixed(0)}%</span>
+												</div>
+												<div className="w-full h-1 bg-zinc-700 rounded-full overflow-hidden">
+													<div 
+														className="h-full bg-emerald-500 transition-all duration-300"
+														style={{ width: `${uploadProgress.avatar}%` }}
+													/>
+												</div>
+											</div>
+										)}
 									</div>
 									<p className="text-xs text-zinc-500">Supported formats: JPG, PNG, GIF. Max 5 MB.</p>
 								</div>
@@ -290,10 +465,25 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 										<FileDropZone
 											onFileSelected={handleBannerUpload}
 											className="mt-2"
-											accept={["image/jpeg", "image/png", "image/webp"]}
-											maxSize={8 * 1024 * 1024}
-											showPreview={false}
+											accept={["image/jpeg", "image/png", "image/webp", "image/gif"]} 
+											maxSize={8 * 1024 * 1024} 
+											showPreview={false} 
+											disabled={isUploading.banner}
 										/>
+										{isUploading.banner && (
+											<div className="mt-2 space-y-1">
+												<div className="flex justify-between text-xs text-zinc-400">
+													<span>Uploading banner...</span>
+													<span>{uploadProgress.banner.toFixed(0)}%</span>
+												</div>
+												<div className="w-full h-1 bg-zinc-700 rounded-full overflow-hidden">
+													<div 
+														className="h-full bg-emerald-500 transition-all duration-300"
+														style={{ width: `${uploadProgress.banner}%` }}
+													/>
+												</div>
+											</div>
+										)}
 									</div>
 									<p className="text-xs text-zinc-500">Supported formats: JPG, PNG, GIF. Max 8 MB.</p>
 								</div>

@@ -8,8 +8,11 @@ import { users, userInventory, threads, posts, userBadges, userTitles } from '@s
 import { eq, sql, count } from 'drizzle-orm'; // Removed 'and' and 'InferModel'
 // type User = InferModel<typeof users, 'select'>; // Removed as ESLint flagged as unused, Drizzle types are inferred.
 
-// Placeholder for WebSocket event emission - this should be implemented in events.ts or similar
-// import { emitProfileUpdateEvent } from './events'; // e.g., server/src/domains/profile/events.ts
+import { eventEmitter } from '../notifications/event-notification-listener'; // Import eventEmitter
+import { logger } from '@server/src/core/logger'; // For logging event emission errors
+
+// Event name constant for profile updates
+export const PROFILE_UPDATED_EVENT = 'profile_updated_event';
 
 export interface ProfileMediaUpdateParams {
   userId: number; // User ID is a number in the database
@@ -131,15 +134,32 @@ export async function getUserProfile(userId: number) { // Changed userId to numb
     activeBadge: user.activeBadge,
     badges: badges.map((b) => b.badge),
     titles: titles.map((t) => t.title),
-    inventory: inventory.map((item) => ({
-      id: item.id,
-      productId: item.productId,
-      isEquipped: item.equipped,
-      productName: item.product.name,
-      productType: item.product.category || 'unknown',
-      imageUrl: item.product.imageUrl || '',
-      rarity: item.product.pluginReward?.rarity || 'common'
-    })),
+    inventory: inventory.map((item) => {
+      // Define a more specific type for pluginReward to avoid 'any'
+      interface PluginRewardData {
+        rarity?: string;
+        [key: string]: unknown; // Use unknown for better type safety than any
+      }
+      // Assuming pluginReward is an object like { rarity: 'epic', ... }
+      // Need to cast pluginReward to access its properties safely if it's JSONB
+      const pluginRewardData = item.product.pluginReward as PluginRewardData | null;
+      const rarity = pluginRewardData?.rarity || 'common';
+
+      // product.category does not exist, use categoryId or fetch category name
+      // product.imageUrl does not exist, use featuredImageId or fetch image URL
+      // For now, using placeholders or available IDs. A full fix might involve joins.
+      return {
+        id: item.id,
+        productId: item.product.id, // productId from userInventory links to product.id
+        isEquipped: item.equipped,
+        productName: item.product.name,
+        // productType: item.product.category || 'unknown', // Error: 'category' does not exist
+        productType: item.product.categoryId ? `category_${item.product.categoryId}` : 'unknown', // Placeholder
+        // imageUrl: item.product.imageUrl || '', // Error: 'imageUrl' does not exist
+        imageUrl: item.product.featuredImageId ? `/media/${item.product.featuredImageId}` : '', // Placeholder
+        rarity: rarity
+      };
+    }),
     relationships: {
       friends: [], // TODO: Implement friend relationships
       friendRequestsSent: 0,
@@ -189,19 +209,50 @@ export const profileService = {
         // Consider throwing a "User not found" error or returning a specific failure message
         return { success: false, message: `User not found. Couldn't update ${mediaType}.` };
       }
-      
-      // TODO: Implement WebSocket event emission
-      // This should ideally be in a separate event service or handled via a message queue
-      // For example: await emitProfileUpdateEvent(userId);
-      // console.log(`Profile ${mediaType} updated for user ${userId}. Emitting 'profileUpdated' event (placeholder).`); // Removed console.log
 
+      // Emit profileUpdated event
+      try {
+        const updatesPayload: { avatarUrl?: string; profileBannerUrl?: string } = {};
+        if (mediaType === 'avatar') {
+          updatesPayload.avatarUrl = relativePath;
+        } else if (mediaType === 'banner') {
+          updatesPayload.profileBannerUrl = relativePath;
+        }
+
+        const eventPayload = {
+          type: 'profileUpdated',
+          userId: String(userId), // Convert userId to string as per requirement
+          updates: updatesPayload,
+          timestamp: new Date().toISOString(),
+        };
+        eventEmitter.emit(PROFILE_UPDATED_EVENT, eventPayload);
+        logger.info('PROFILE_SERVICE', `Emitted ${PROFILE_UPDATED_EVENT} for user ${userId}`);
+      } catch (eventError) {
+        logger.error('PROFILE_SERVICE', `Error emitting ${PROFILE_UPDATED_EVENT} for user ${userId}:`, eventError);
+        // Do not re-throw; allow the main operation to succeed even if event emission fails.
+      }
 
       return { success: true, message: `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} updated successfully, you absolute legend!` };
 
     } catch (error) {
-      console.error(`Error updating ${mediaType} URL for user ${userId}:`, error);
+      // console.error has been replaced by logger.error for consistency
+      logger.error('PROFILE_SERVICE', `Error updating ${mediaType} URL for user ${userId}:`, error);
       // This should ideally be a more specific error
       throw new Error(`Failed to update ${mediaType} URL. The server gods are displeased.`);
     }
   }
 };
+
+// Example of how a listener might be set up elsewhere (e.g., in a WebSocket service)
+// This is for illustrative purposes and would not be in this file.
+/*
+import { PROFILE_UPDATED_EVENT } from './profile.service'; // Adjust path as needed
+import { eventEmitter } from '../notifications/event-notification-listener'; // Adjust path as needed
+
+eventEmitter.on(PROFILE_UPDATED_EVENT, (payload) => {
+  console.log('Received profileUpdated event:', payload);
+  // Here, you would typically send this payload over a WebSocket connection
+  // to the relevant clients.
+  // e.g., webSocketService.sendToUser(payload.userId, payload);
+});
+*/

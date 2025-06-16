@@ -28,9 +28,10 @@ Backend controllers, DB schema, and frontend TypeScript models drift quickly; mi
 |---------------------|-----------------------|-----------------------------------------------------------------------------------------------------------------|
 | Zone/forum themes   | Hard-coded Tailwind   | - [ ] Implement DB-backed `ui_themes`. <br> - [ ] Allow override in Admin UI.                                   |
 | XP multipliers      | Column on categories  | - [ ] Surface in Admin Panel. <br> - [ ] Cache in Redis.                                                          |
-| Tipping flag        | Boolean on categories | - [ ] Respect in UI. <br> - [ ] Respect in validators.                                                            |
+| Tipping flag        | Boolean on categories | - [x] Respect in UI (front-end `useConfig` hook added). <br> - [ ] Respect in validators.                                                            |
 | Prefix list         | DB table              | - [ ] Implement CRUD via Admin UI (including color picker).                                                       |
 
+- [x] Front-end hook `useConfig()` returns **publicConfig** for easy access in components.
 - [ ] All new settings flow through **Config Service** (`server/src/core/config.ts`).
 - [ ] Cache settings.
 - [ ] Publish settings via WebSocket for live re-theming.
@@ -39,7 +40,7 @@ Backend controllers, DB schema, and frontend TypeScript models drift quickly; mi
 
 ### Bundling / DX Enhancements
 
-1.  - [ ] Treeshake Lucide icons (`lucide-react/Plus` imports or `vite-plugin-optimize-persist`).
+1.  - [x] Treeshake Lucide icons (`lucide-react/Plus` imports or `vite-plugin-optimize-persist`).
 2.  - [ ] Standardise React-Query cache keys in `forum-sdk`.
 3.  - [ ] Create Storybook docs for ZoneCard, ThreadCard, PostCard.
 
