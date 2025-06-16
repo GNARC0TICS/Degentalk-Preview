@@ -112,8 +112,8 @@ export async function seedForumsFromConfig() {
   }
 }
 
-// Allows the script to be run directly
-if (require.main === module || (import.meta.url && import.meta.url === `file://${process.argv[1]}`)) {
+// Allows the script to be run directly (ESM-safe)
+if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
     try {
       await seedForumsFromConfig();
