@@ -1,13 +1,13 @@
-import { pgTable, serial, integer, text, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 
 export const xpAdjustmentLogs = pgTable('xp_adjustment_logs', {
 	id: serial('id').primaryKey(),
-	userId: integer('user_id')
+	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	adminId: integer('admin_id')
+	adminId: uuid('admin_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'set null' }), // Assuming admin is also a user
 	adjustmentType: text('adjustment_type').notNull(), // 'add', 'subtract', 'set'

@@ -10,13 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue
-} from '@/components/ui/select';
+// Select components were unused
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useMessages } from '@/hooks/use-messages';
 import { useAsyncButton } from '@/hooks/use-async-button';
@@ -26,7 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 import { getInitials } from '@/lib/utils';
 
 interface User {
-	id: number;
+	id: string;
 	username: string;
 	avatarUrl?: string;
 }
@@ -71,7 +65,7 @@ export function WhisperModal({ isOpen, onClose, initialUser }: WhisperModalProps
 
 	// Get messaging functionality
 	const { useSendMessage } = useMessages();
-	const { mutate: sendMessage, isPending: isSendingMessage } = useSendMessage();
+	const { mutate: sendMessage } = useSendMessage(); // isSendingMessage was unused
 
 	// Use async button for the send action
 	const { handleClick: handleSend, isLoading: isSending } = useAsyncButton(async () => {

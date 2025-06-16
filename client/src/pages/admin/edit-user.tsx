@@ -31,7 +31,7 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
+// import { Separator } from '@/components/ui/separator'; // Unused
 import { ROUTES } from '@/config/admin-routes';
 
 // User edit form validation schema
@@ -44,7 +44,7 @@ const userEditSchema = z.object({
 	bio: z.string().max(1000, 'Bio must be 1000 characters or less').nullable().optional(),
 	avatarUrl: z.string().url('Please enter a valid URL').nullable().optional(),
 	profileBannerUrl: z.string().url('Please enter a valid URL').nullable().optional(),
-	groupId: z.string().nullable().optional(),
+	groupId: z.number().nullable().optional(),
 	isActive: z.boolean().default(true),
 	isVerified: z.boolean().default(false),
 	isBanned: z.boolean().default(false),
@@ -53,9 +53,33 @@ const userEditSchema = z.object({
 
 type UserEditFormValues = z.infer<typeof userEditSchema>;
 
+// Define a more specific type for the user object in API responses
+interface UserApiResponse {
+	id: string;
+	username: string;
+	email: string;
+	bio?: string | null;
+	avatarUrl?: string | null;
+	profileBannerUrl?: string | null;
+	groupId?: number | null;
+	isActive: boolean;
+	isVerified: boolean;
+	isBanned: boolean;
+	pluginData?: Record<string, unknown> | null;
+	createdAt: string;
+	// Add other fields if known
+}
+
+interface UpdateUserResponse {
+	user: UserApiResponse;
+	// Potentially other fields in the response
+}
+
+
 export default function AdminUserEdit() {
 	const params = useParams<{ id: string }>();
-	const [_, navigate] = useLocation();
+	// const [_, navigate] = useLocation(); // navigate was unused
+	useLocation(); // Call useLocation if it has side effects or is needed by other hooks
 	const { toast } = useToast();
 	const [tab, setTab] = useState('basic');
 
@@ -80,7 +104,7 @@ export default function AdminUserEdit() {
 			bio: '',
 			avatarUrl: '',
 			profileBannerUrl: '',
-			groupId: '',
+			groupId: null,
 			isActive: true,
 			isVerified: false,
 			isBanned: false,
@@ -98,7 +122,7 @@ export default function AdminUserEdit() {
 				bio: user.bio || '',
 				avatarUrl: user.avatarUrl || '',
 				profileBannerUrl: user.profileBannerUrl || '',
-				groupId: user.groupId ? String(user.groupId) : '',
+				groupId: user.groupId ?? null, // groupId is now number | null
 				isActive: user.isActive,
 				isVerified: user.isVerified,
 				isBanned: user.isBanned,
@@ -125,12 +149,12 @@ export default function AdminUserEdit() {
 				pluginData: parsedPluginData
 			};
 
-			const res = await apiRequest('PUT', `/api/admin/users/${params.id}`, updatedData);
-			if (!res.ok) {
-				const errorData = await res.json();
-				throw new Error(errorData.error || 'Failed to update user');
-			}
-			return res.json();
+			// Assuming apiRequest returns the parsed JSON response directly or throws on error
+			return apiRequest<UpdateUserResponse>({
+				method: 'PUT',
+				url: `/api/admin/users/${params.id}`,
+				data: updatedData
+			});
 		},
 		onSuccess: () => {
 			toast({
@@ -256,9 +280,9 @@ export default function AdminUserEdit() {
 												<FormItem>
 													<FormLabel>User Group</FormLabel>
 													<Select
-														onValueChange={field.onChange}
-														defaultValue={field.value || ''}
-														value={field.value || ''}
+														onValueChange={(value) => field.onChange(value ? parseInt(value) : null)}
+														defaultValue={field.value ? String(field.value) : ''}
+														value={field.value ? String(field.value) : ''}
 													>
 														<FormControl>
 															<SelectTrigger>
@@ -267,7 +291,7 @@ export default function AdminUserEdit() {
 														</FormControl>
 														<SelectContent>
 															<SelectItem value="">None</SelectItem>
-															{data.allGroups?.map((group) => (
+															{data.allGroups?.map((group: { id: number; name: string }) => (
 																<SelectItem key={group.id} value={String(group.id)}>
 																	{group.name}
 																</SelectItem>

@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, text, boolean, bigint, integer, timestamp, index } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, boolean, bigint, timestamp, index, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 
@@ -11,7 +11,7 @@ export const emojiPacks = pgTable(
     iconUrl: varchar('icon_url', { length: 255 }),
     priceDgt: bigint('price_dgt', { mode: 'number' }),
     isFeatured: boolean('is_featured').notNull().default(false),
-    createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' }),
+    createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
     createdAt: timestamp('created_at').notNull().default(sql`now()`),
     updatedAt: timestamp('updated_at').notNull().default(sql`now()`)
   },
@@ -21,4 +21,4 @@ export const emojiPacks = pgTable(
   })
 );
 
-export type EmojiPack = typeof emojiPacks.$inferSelect; 
+export type EmojiPack = typeof emojiPacks.$inferSelect;

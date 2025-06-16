@@ -1,4 +1,4 @@
-import { pgTable, integer, varchar, timestamp, primaryKey, index } from 'drizzle-orm/pg-core';
+import { pgTable, /*integer,*/ varchar, timestamp, primaryKey, index, uuid, integer } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { forumRules } from './rules';
@@ -6,7 +6,7 @@ import { forumRules } from './rules';
 export const userRulesAgreements = pgTable(
 	'user_rules_agreements',
 	{
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		ruleId: integer('rule_id')

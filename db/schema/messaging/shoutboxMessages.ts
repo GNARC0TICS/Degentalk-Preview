@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, text, timestamp, boolean, index } from 'drizzle-orm/pg-core';
+import { pgTable, serial, /*integer,*/ text, timestamp, boolean, index, uuid, integer } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { chatRooms } from './chatRooms'; // Adjusted path
@@ -9,10 +9,10 @@ export const shoutboxMessages = pgTable(
 	'shoutbox_messages',
 	{
 		id: serial('message_id').primaryKey(),
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		roomId: integer('room_id').references(() => chatRooms.id, { onDelete: 'cascade' }), // Nullable in schema.ts, but seems like it should be required if it's a shoutbox message for a room
+		roomId: integer('room_id').references(() => chatRooms.id, { onDelete: 'cascade' }), // Nullable in schema.ts, but seems like it should be required if it's a shoutbox message for a room. Kept as integer.
 		content: text('content').notNull(),
 		createdAt: timestamp('created_at')
 			.notNull()
@@ -20,7 +20,7 @@ export const shoutboxMessages = pgTable(
 		editedAt: timestamp('edited_at'),
 		isDeleted: boolean('is_deleted').notNull().default(false),
 		isPinned: boolean('is_pinned').notNull().default(false),
-		tipAmount: integer('tip_amount')
+		tipAmount: integer('tip_amount') // Kept as integer
 	},
 	(table) => ({
 		userIdx: index('idx_shoutbox_messages_user_id').on(table.userId),

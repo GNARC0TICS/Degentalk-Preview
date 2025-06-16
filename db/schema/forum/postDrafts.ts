@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, text, jsonb, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, serial, /*integer,*/ text, jsonb, timestamp, uuid, integer } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { threads } from './threads'; // Adjusted import
 import { users } from '../user/users'; // Adjusted import
@@ -7,7 +7,7 @@ export const postDrafts = pgTable('post_drafts', {
 	id: serial('draft_id').primaryKey(),
 	uuid: uuid('uuid').notNull().defaultRandom(),
 	threadId: integer('thread_id').references(() => threads.id, { onDelete: 'cascade' }),
-	userId: integer('user_id')
+	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	content: text('content'),

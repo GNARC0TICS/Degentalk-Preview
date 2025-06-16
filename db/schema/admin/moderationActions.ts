@@ -1,10 +1,10 @@
-import { pgTable, serial, integer, varchar, text, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, varchar, text, timestamp, jsonb, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 
 export const contentModerationActions = pgTable('content_moderation_actions', {
 	id: serial('action_id').primaryKey(),
-	moderatorId: integer('moderator_id')
+	moderatorId: uuid('moderator_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	contentType: varchar('content_type', { length: 50 }).notNull(),

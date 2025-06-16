@@ -4,9 +4,10 @@ import {
 	varchar,
 	text,
 	boolean,
-	integer,
+	// integer, // No longer using integer for createdBy/updatedBy
 	timestamp,
-	jsonb
+	jsonb,
+	uuid // Added uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
@@ -27,8 +28,8 @@ export const featureFlags = pgTable('feature_flags', {
 	updatedAt: timestamp('updated_at')
 		.notNull()
 		.default(sql`now()`), // Changed defaultNow() to sql`now()`
-	createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' }),
-	updatedBy: integer('updated_by').references(() => users.id, { onDelete: 'set null' })
+	createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }), // Changed to uuid
+	updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }) // Changed to uuid
 });
 
 export type FeatureFlag = typeof featureFlags.$inferSelect;

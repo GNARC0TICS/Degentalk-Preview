@@ -13,7 +13,8 @@ const ProfileXpPage: React.FC = () => {
 	const username = params.username;
 
 	// Fetch user XP info using the new hook
-	const { data: xpInfo, isLoading } = useUserXP(username ? parseInt(username, 10) : undefined);
+	// Reverting to destructuring xpData and aliasing to xpInfo
+	const { xpData: xpInfo, isLoading } = useUserXP(username ? username : undefined); 
 
 	return (
 		<div className="container max-w-5xl mx-auto py-6 px-4">
@@ -74,7 +75,7 @@ const ProfileXpPage: React.FC = () => {
 								</motion.div>
 								<p className="text-sm opacity-80">
 									{xpInfo?.nextLevel
-										? `${xpInfo.xpForNextLevel.toLocaleString()} XP until level ${xpInfo.nextLevel}`
+										? `${xpInfo.xpForNextLevel?.toLocaleString()} XP until level ${xpInfo.nextLevel}`
 										: 'Max level reached'}
 								</p>
 							</div>
@@ -114,7 +115,7 @@ const ProfileXpPage: React.FC = () => {
 
 			{/* XP Log Section */}
 			<div className="mb-8">
-				<XpLogView userId={username ? parseInt(username, 10) : undefined} />
+				<XpLogView userId={username ? username : undefined} /> 
 			</div>
 		</div>
 	);

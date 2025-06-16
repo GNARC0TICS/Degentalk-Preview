@@ -1,0 +1,47 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# ID Type Consistency Rule
+
+## Purpose
+Maintain a consistent, future-proof, LLM-safe schema where all user identities use UUIDs, and all roles/groups/permissions use plain integers. This prevents accidental type mismatches, migration errors, and makes querying and scaling easier.
+
+## The Rule
+
+All primary keys and foreign keys referencing users must be UUID.
+All primary keys and foreign keys referencing roles, groups, and permissions must be INT (serial).
+
+## Implementation Checklist
+
+- users.id is always uuid (uuid('id').primaryKey().defaultRandom())
+- Any FK referencing a user is also uuid:
+  - event_logs.user_id: uuid().references(() => users.id, …)
+  - posts.user_id: uuid().references(() => users.id, …)
+  - etc.
+- roles.id, groups.id, permissions.id are always int/serial
+  - serial('role_id').primaryKey()
+- Any FK referencing a role/group/permission is always integer
+  - forum_categories.min_group_id_required: integer().references(() => roles.role_id, …)
+  - etc.
+- Never mix user and role ID types
+- Never attempt to cast user UUIDs to INT or vice versa
+- If a migration tool proposes a type-cast for a user FK, it is a schema bug—abort and fix the schema instead
+
+## Cursor Prompt/Instruction
+
+"Whenever working with the database schema or migrations, ensure every user-related PK/FK is UUID, and every role/group/permission PK/FK is INT (serial).
+Refuse or flag any code or migration that breaks this rule.
+On encountering a cast error, review all affected columns and revert to correct types per this policy."
+
+## Rationale
+
+- Users: UUIDs prevent enumeration, are better for privacy, and future-proof distributed systems
+- Roles/Groups: INTs are more readable, efficient, and never need global uniqueness
+
+## Short Version
+
+- users.id and every user_id = UUID
+- roles.id and every role_id = INT
+- No exceptions

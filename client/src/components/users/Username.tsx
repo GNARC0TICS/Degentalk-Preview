@@ -12,7 +12,7 @@ interface UsernameProps {
 	isVerified?: boolean;
 	groupName?: string;
 	groupColor?: string;
-	userId?: number;
+	userId?: string;
 	userRole?: string; // Added to check for system roles
 	showRarityBadge?: boolean; // Added to optionally show rarity
 }

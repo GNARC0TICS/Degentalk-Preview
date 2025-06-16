@@ -19,7 +19,7 @@ export const orders = pgTable(
 	{
 		id: serial('order_id').primaryKey(),
 		uuid: uuid('uuid').notNull().defaultRandom(),
-		userId: integer('user_id').references(() => users.id, { onDelete: 'set null' }),
+		userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
 		status: varchar('status', { length: 50 }).notNull().default('pending'),
 		total: doublePrecision('total').notNull().default(0),
 		subtotal: doublePrecision('subtotal').notNull().default(0),

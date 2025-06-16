@@ -3,11 +3,11 @@ import {
 	serial,
 	text,
 	varchar,
-	integer,
 	doublePrecision,
 	boolean,
 	timestamp,
-	numeric
+	numeric,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
 import { sql } from 'drizzle-orm';
@@ -29,7 +29,7 @@ export const platformTreasurySettings = pgTable('platform_treasury_settings', {
 	isEnabled: boolean('is_enabled').default(true).notNull(),
 	notes: text('notes'),
 	lastAuditedAt: timestamp('last_audited_at', { withTimezone: true }),
-	updatedBy: integer('updated_by').references(() => users.id, { onDelete: 'set null' }),
+	updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }),
 	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 	updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
 });

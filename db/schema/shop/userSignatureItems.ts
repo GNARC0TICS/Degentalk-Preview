@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, boolean, timestamp, unique } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, boolean, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { signatureShopItems } from './signatureItems';
@@ -7,7 +7,7 @@ export const userSignatureItems = pgTable(
 	'user_signature_items',
 	{
 		id: serial('id').primaryKey(),
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		signatureItemId: integer('signature_item_id')

@@ -2,15 +2,15 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export interface Message {
 	id: number;
-	senderId: number;
-	recipientId: number;
+	senderId: string;
+	recipientId: string;
 	content: string;
 	timestamp: string;
 	isRead: boolean;
 }
 
 export interface Conversation {
-	userId: number;
+	userId: string;
 	username: string;
 	avatarUrl: string | null;
 	lastMessage: string;
@@ -19,7 +19,7 @@ export interface Conversation {
 }
 
 export interface SendMessagePayload {
-	recipientId: number;
+	recipientId: string;
 	content: string;
 }
 
@@ -35,7 +35,7 @@ export function useMessages() {
 	};
 
 	// Get messages for a specific conversation
-	const useConversation = (userId: number) => {
+	const useConversation = (userId: string) => {
 		return useQuery({
 			queryKey: ['/api/messages/conversation', userId],
 			queryFn: async () => {
@@ -81,7 +81,7 @@ export function useMessages() {
 	// Mark messages as read
 	const useMarkAsRead = () => {
 		return useMutation({
-			mutationFn: async (senderId: number) => {
+			mutationFn: async (senderId: string) => {
 				const response = await fetch(`/api/messages/mark-read/${senderId}`, {
 					method: 'POST'
 				});
@@ -111,7 +111,7 @@ export function useMessages() {
 	// Delete a conversation
 	const useDeleteConversation = () => {
 		return useMutation({
-			mutationFn: async (userId: number) => {
+			mutationFn: async (userId: string) => {
 				const response = await fetch(`/api/messages/conversation/${userId}`, {
 					method: 'DELETE'
 				});

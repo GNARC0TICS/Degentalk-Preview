@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, text, integer, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 
@@ -14,7 +14,7 @@ export const seoMetadata = pgTable('seo_metadata', {
 	updatedAt: timestamp('updated_at')
 		.notNull()
 		.default(sql`now()`), // Changed defaultNow() to sql`now()`
-	updatedBy: integer('updated_by').references(() => users.id, { onDelete: 'set null' })
+	updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }) // Changed to uuid
 });
 
 export type SeoMetadata = typeof seoMetadata.$inferSelect;

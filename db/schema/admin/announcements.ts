@@ -4,10 +4,10 @@ import {
 	text,
 	varchar,
 	boolean,
-	integer,
 	timestamp,
 	jsonb,
-	index
+	index,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
@@ -22,7 +22,7 @@ export const announcements = pgTable(
 		icon: varchar('icon', { length: 50 }),
 		type: varchar('type', { length: 30 }).default('info'), // e.g., info, warning, success, critical
 		isActive: boolean('is_active').notNull().default(true),
-		createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' }),
+		createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
 		createdAt: timestamp('created_at')
 			.notNull()
 			.default(sql`now()`), // Changed defaultNow() to sql`now()`

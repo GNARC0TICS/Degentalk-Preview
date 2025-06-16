@@ -2,13 +2,14 @@ import {
 	pgTable,
 	serial,
 	uuid,
-	integer,
+	// integer, // No longer using integer for senderId
 	text,
 	varchar,
 	boolean,
 	timestamp,
 	jsonb,
-	index
+	index,
+	integer // Ensured integer is imported for conversationId
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
@@ -18,11 +19,11 @@ export const messages = pgTable(
 	'messages',
 	{
 		id: serial('message_id').primaryKey(),
-		uuid: uuid('uuid').notNull().defaultRandom(),
-		conversationId: integer('conversation_id')
+		uuid: uuid('uuid').notNull().defaultRandom(), // Separate uuid field
+		conversationId: integer('conversation_id') // Kept as integer
 			.notNull()
 			.references(() => conversations.id, { onDelete: 'cascade' }),
-		senderId: integer('sender_id')
+		senderId: uuid('sender_id') // Changed to uuid
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		content: text('content').notNull(),

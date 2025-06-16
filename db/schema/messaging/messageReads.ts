@@ -1,4 +1,4 @@
-import { pgTable, integer, timestamp, primaryKey, index } from 'drizzle-orm/pg-core';
+import { pgTable, /*integer,*/ timestamp, primaryKey, index, uuid, integer } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { messages } from './messages'; // Adjusted path
@@ -9,7 +9,7 @@ export const messageReads = pgTable(
 		messageId: integer('message_id')
 			.notNull()
 			.references(() => messages.id, { onDelete: 'cascade' }),
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		readAt: timestamp('read_at')

@@ -5,8 +5,8 @@ import {
 	text,
 	jsonb,
 	boolean,
-	integer,
-	timestamp
+	timestamp,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
@@ -24,7 +24,7 @@ export const adminThemes = pgTable('admin_themes', {
 	updatedAt: timestamp('updated_at')
 		.notNull()
 		.default(sql`now()`), // Changed defaultNow() to sql`now()`
-	createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' })
+	createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' })
 });
 
 export type AdminTheme = typeof adminThemes.$inferSelect;

@@ -15,14 +15,14 @@ import { applyPluginRewards } from '@/lib/utils/applyPluginRewards';
 import type { UserInventoryWithProduct } from '@/types/inventory';
 
 interface CosmeticControlPanelProps {
-	userId: number;
+	userId: string; // Changed to string
 	username: string;
 	avatarUrl: string | null;
 	inventory: UserInventoryWithProduct[];
-	activeFrame?: { id: number; name: string; imageUrl: string; rarity: string } | null;
-	activeTitle?: { id: number; name: string; description: string | null; rarity: string } | null;
+	activeFrame?: { id: number; name: string; imageUrl: string; rarity: string } | null; // IDs for frame, title, badge are numbers
+	activeTitle?: { id: number; name: string; description: string | null; rarity: string } | null; // IDs for frame, title, badge are numbers
 	activeBadge?: {
-		id: number;
+		id: number; // IDs for frame, title, badge are numbers
 		name: string;
 		description: string | null;
 		iconUrl: string;

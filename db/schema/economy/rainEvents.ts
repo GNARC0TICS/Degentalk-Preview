@@ -1,11 +1,11 @@
-import { pgTable, serial, integer, bigint, varchar, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, serial, bigint, varchar, timestamp, jsonb, uuid, integer } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { transactions } from './transactions';
 
 export const rainEvents = pgTable('rain_events', {
 	id: serial('id').primaryKey(),
-	userId: integer('user_id')
+	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	amount: bigint('amount', { mode: 'number' }).notNull(),

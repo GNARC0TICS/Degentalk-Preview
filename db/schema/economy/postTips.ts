@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, bigint, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, bigint, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { posts } from '../forum/posts';
 import { users } from '../user/users';
@@ -9,7 +9,7 @@ export const postTips = pgTable('post_tips', {
 	postId: integer('post_id')
 		.notNull()
 		.references(() => posts.id, { onDelete: 'cascade' }),
-	userId: integer('user_id')
+	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	amount: bigint('amount', { mode: 'number' }).notNull().default(0),

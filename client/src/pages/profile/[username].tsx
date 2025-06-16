@@ -39,7 +39,7 @@ import { useUserInventory } from '@/hooks/useUserInventory';
 
 // Define profile data interface
 interface ProfileData {
-	id: number;
+	id: string;
 	username: string;
 	avatarUrl: string | null;
 	role: string;
@@ -57,45 +57,46 @@ interface ProfileData {
 	xp: number;
 	nextLevelXp: number;
 	bannerUrl: string | null;
-	activeFrameId: number | null;
+	activeFrameId: number | null; // Reverted to number
 	activeFrame: {
-		id: number;
+		id: number; // Reverted to number
 		name: string;
-		imageUrl: string;
+		imageUrl: string; 
 		rarity: string;
 	} | null;
-	activeTitleId: number | null;
+	activeTitleId: number | null; // Reverted to number
 	activeTitle: {
-		id: number;
+		id: number; // Reverted to number
 		name: string;
 		description: string | null;
 		iconUrl: string | null;
 		rarity: string;
 	} | null;
-	activeBadgeId: number | null;
+	activeBadgeId: number | null; // Reverted to number
 	activeBadge: {
-		id: number;
+		id: number; // Reverted to number
 		name: string;
 		description: string | null;
 		iconUrl: string;
 		rarity: string;
 	} | null;
 	badges: {
-		id: number;
+		id: number; // Reverted to number
 		name: string;
 		description: string | null;
 		iconUrl: string;
 		rarity: string;
 	}[];
 	titles: {
-		id: number;
+		id: number; // Reverted to number
 		name: string;
 		description: string | null;
 		iconUrl: string | null;
 		rarity: string;
 	}[];
 	inventory: {
-		id: number;
+		id: number; // Inventory item's own ID, should be number
+		userId: string; // User ID associated with this inventory item
 		productId: number;
 		isEquipped: boolean;
 		productName: string;
@@ -105,7 +106,7 @@ interface ProfileData {
 	}[];
 	relationships: {
 		friends: {
-			id: number;
+			id: string; // User ID, should be string
 			username: string;
 			avatarUrl: string | null;
 		}[];
@@ -351,7 +352,7 @@ const ProfileSidebar: React.FC<{ profile: ProfileData; isOwnProfile: boolean }> 
 						isOpen={isMessageModalOpen}
 						onClose={() => setIsMessageModalOpen(false)}
 						initialUser={{
-							id: profile.id,
+							id: profile.id, // This is now string, ensure WhisperModal expects string
 							username: profile.username,
 							avatarUrl: profile.avatarUrl || undefined
 						}}
@@ -547,7 +548,7 @@ const _AchievementsTab: React.FC<{ profile: ProfileData; isOwnProfile: boolean }
 
 	// Mutation to update active badge
 	const updateActiveBadgeMutation = useMutation({
-		mutationFn: async (badgeId: number) => {
+		mutationFn: async (badgeId: number) => { // Reverted to number
 			setIsPending(true);
 			try {
 				return await apiRequest({
@@ -578,7 +579,7 @@ const _AchievementsTab: React.FC<{ profile: ProfileData; isOwnProfile: boolean }
 
 	// Mutation to update active title
 	const updateActiveTitleMutation = useMutation({
-		mutationFn: async (titleId: number) => {
+		mutationFn: async (titleId: number) => { // Reverted to number
 			setIsPending(true);
 			try {
 				return await apiRequest({
@@ -640,8 +641,8 @@ const _AchievementsTab: React.FC<{ profile: ProfileData; isOwnProfile: boolean }
 
 				<UserBadges
 					badges={profile.badges || []}
-					activeBadgeId={profile.activeBadgeId}
-					onSelectBadge={(badgeId) => updateActiveBadgeMutation.mutate(badgeId)}
+					activeBadgeId={profile.activeBadgeId} // This is now number
+					onSelectBadge={(badgeId: number) => updateActiveBadgeMutation.mutate(badgeId)} // Expect number
 					editable={isOwnProfile}
 				/>
 			</div>
@@ -659,8 +660,8 @@ const _AchievementsTab: React.FC<{ profile: ProfileData; isOwnProfile: boolean }
 
 				<UserTitles
 					titles={profile.titles || []}
-					activeTitleId={profile.activeTitleId}
-					onSelectTitle={(titleId) => updateActiveTitleMutation.mutate(titleId)}
+					activeTitleId={profile.activeTitleId} // This is now number
+					onSelectTitle={(titleId: number) => updateActiveTitleMutation.mutate(titleId)} // Expect number
 					editable={isOwnProfile}
 				/>
 			</div>
@@ -734,7 +735,7 @@ const FriendsTab: React.FC<{ profile: ProfileData }> = ({ profile }) => {
 
 	// Function to render user cards
 	const renderUserCards = (
-		users: Array<{ id: number; username: string; avatarUrl: string | null }> | undefined,
+		users: Array<{ id: string; username: string; avatarUrl: string | null }> | undefined, // Changed id to string
 		loading: boolean,
 		error: Error | null, // Changed 'any' to 'Error | null'
 		onRetry: () => void
@@ -952,7 +953,7 @@ function getRarityBorderClass(rarity: string): string {
 // Mock data for development purposes
 function getMockProfileData(username: string): ProfileData {
 	return {
-		id: 1,
+		id: 'mock-user-uuid-f3d4-4f8c-a2a8-8d3c0e5b7e1a', // Changed to mock string UUID
 		username: username || 'DevUser',
 		avatarUrl: 'https://i.pravatar.cc/300',
 		role: 'Developer',
@@ -970,24 +971,24 @@ function getMockProfileData(username: string): ProfileData {
 		xp: 5750,
 		nextLevelXp: 6500,
 		bannerUrl: null,
-		activeFrameId: 1,
+		activeFrameId: 1, // Reverted to mock number
 		activeFrame: {
-			id: 1,
+			id: 1, // Reverted to mock number
 			name: 'Developer Frame',
 			imageUrl: 'https://via.placeholder.com/500/4f46e5/ffffff?text=DEV',
 			rarity: 'rare'
 		},
-		activeTitleId: 1,
+		activeTitleId: 1, // Reverted to mock number
 		activeTitle: {
-			id: 1,
+			id: 1, // Reverted to mock number
 			name: 'Early Adopter',
 			description: 'Joined during development phase',
 			iconUrl: null,
 			rarity: 'rare'
 		},
-		activeBadgeId: 2,
+		activeBadgeId: 2, // Reverted to mock number
 		activeBadge: {
-			id: 2,
+			id: 2, // Reverted to mock number
 			name: 'Developer',
 			description: 'Contributed to the platform',
 			iconUrl: 'https://via.placeholder.com/100/5046e5/ffffff?text=DEV',
@@ -995,21 +996,21 @@ function getMockProfileData(username: string): ProfileData {
 		},
 		badges: [
 			{
-				id: 1,
+				id: 1, // Reverted to mock number
 				name: 'Early Bird',
 				description: 'One of the first users',
 				iconUrl: 'https://via.placeholder.com/100/4299e1/ffffff?text=EARLY',
 				rarity: 'rare'
 			},
 			{
-				id: 2,
+				id: 2, // Reverted to mock number
 				name: 'Developer',
 				description: 'Contributed to the platform',
 				iconUrl: 'https://via.placeholder.com/100/5046e5/ffffff?text=DEV',
 				rarity: 'epic'
 			},
 			{
-				id: 3,
+				id: 3, // Reverted to mock number
 				name: 'Bug Hunter',
 				description: 'Reported critical bugs',
 				iconUrl: 'https://via.placeholder.com/100/9f7aea/ffffff?text=BUG',
@@ -1018,14 +1019,14 @@ function getMockProfileData(username: string): ProfileData {
 		],
 		titles: [
 			{
-				id: 1,
+				id: 1, // Reverted to mock number
 				name: 'Early Adopter',
 				description: 'Joined during development phase',
 				iconUrl: null,
 				rarity: 'rare'
 			},
 			{
-				id: 2,
+				id: 2, // Reverted to mock number
 				name: 'Crypto Enthusiast',
 				description: 'Shown deep knowledge of crypto',
 				iconUrl: null,
@@ -1034,7 +1035,8 @@ function getMockProfileData(username: string): ProfileData {
 		],
 		inventory: [
 			{
-				id: 1,
+				id: 1, // Inventory item ID
+				userId: 'mock-user-uuid-f3d4-4f8c-a2a8-8d3c0e5b7e1a', // User ID
 				productId: 101,
 				isEquipped: true,
 				productName: 'Developer Frame',
@@ -1043,7 +1045,8 @@ function getMockProfileData(username: string): ProfileData {
 				rarity: 'rare'
 			},
 			{
-				id: 2,
+				id: 2, // Inventory item ID
+				userId: 'mock-user-uuid-f3d4-4f8c-a2a8-8d3c0e5b7e1a', // User ID
 				productId: 102,
 				isEquipped: false,
 				productName: 'Gold Username',
@@ -1055,12 +1058,12 @@ function getMockProfileData(username: string): ProfileData {
 		relationships: {
 			friends: [
 				{
-					id: 2,
+					id: 'mock-friend1-uuid-b3c2-4a7d-b1e9-2f6a9d0c4e8b', // Changed to mock string UUID
 					username: 'TestUser1',
 					avatarUrl: 'https://i.pravatar.cc/300?u=1'
 				},
 				{
-					id: 3,
+					id: 'mock-friend2-uuid-c7e8-4b1f-a0d9-1e5b8c3d7f2a', // Changed to mock string UUID
 					username: 'TestUser2',
 					avatarUrl: 'https://i.pravatar.cc/300?u=2'
 				}
@@ -1121,7 +1124,7 @@ export default function ProfilePage() {
 
 	// Fetch user inventory if viewing own profile
 	const { data: userInventory = [], isLoading: inventoryLoading } = useUserInventory(
-		isOwnProfile ? profile?.id : undefined
+		isOwnProfile ? profile?.id : undefined // Removed 'as any' cast
 	);
 
 	if (isLoading) {
@@ -1241,7 +1244,7 @@ export default function ProfilePage() {
 
 									<TabsContent value="achievements">
 										<div className="space-y-6">
-											<XPProfileSection userId={String(profile.id)} />
+											<XPProfileSection userId={profile.id} />
 										</div>
 									</TabsContent>
 
@@ -1261,12 +1264,12 @@ export default function ProfilePage() {
 												</div>
 											) : (
 												<CosmeticControlPanel
-													userId={profile.id}
+													userId={profile.id} // This is now string, ensure CosmeticControlPanel expects string
 													username={profile.username}
 													avatarUrl={profile.avatarUrl}
 													inventory={userInventory.map((item) => ({
-														id: item.id,
-														userId: item.userId,
+														id: item.id, // This is UserInventoryWithProduct.id, should be number
+														userId: item.userId, // This is UserInventoryWithProduct.userId, now string
 														productId: item.productId,
 														equipped: item.equipped,
 														purchasedAt: item.purchasedAt,
@@ -1302,7 +1305,7 @@ export default function ProfilePage() {
 			{isEditMode && (
 				<ProfileEditor
 					profile={{
-						id: profile.id,
+						id: profile.id, // This is now string, ensure ProfileEditor expects string
 						username: profile.username,
 						bio: profile.bio,
 						signature: profile.signature,

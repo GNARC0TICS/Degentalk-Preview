@@ -7,7 +7,8 @@ import {
 	text,
 	boolean,
 	timestamp,
-	index
+	index,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
@@ -20,7 +21,7 @@ export const withdrawalRequests = pgTable(
 	'withdrawal_requests',
 	{
 		id: serial('request_id').primaryKey(),
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		amount: bigint('amount', { mode: 'number' }).notNull(),
@@ -37,7 +38,7 @@ export const withdrawalRequests = pgTable(
 			.notNull()
 			.default(sql`now()`),
 		fulfilledAt: timestamp('fulfilled_at'),
-		processedBy: integer('processed_by').references(() => users.id, { onDelete: 'set null' })
+		processedBy: uuid('processed_by').references(() => users.id, { onDelete: 'set null' })
 	},
 	(table) => ({
 		userIdx: index('idx_withdrawal_requests_user_id').on(table.userId),

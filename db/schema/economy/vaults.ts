@@ -1,13 +1,15 @@
 import {
 	pgTable,
 	serial,
-	integer,
+	// integer, // No longer using integer for userId
 	varchar,
 	doublePrecision,
 	timestamp,
 	jsonb,
 	text,
-	index
+	index,
+	uuid, // Added uuid
+	integer // Ensured integer is imported for transaction IDs
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
@@ -20,7 +22,7 @@ export const vaults = pgTable(
 	'vaults',
 	{
 		id: serial('vault_id').primaryKey(),
-		userId: integer('user_id')
+		userId: uuid('user_id') // Changed to uuid
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		walletAddress: varchar('wallet_address', { length: 255 }).notNull(),
@@ -32,10 +34,10 @@ export const vaults = pgTable(
 		unlockTime: timestamp('unlock_time'),
 		status: vaultStatusEnum('status').notNull().default('locked'),
 		unlockedAt: timestamp('unlocked_at'),
-		lockTransactionId: integer('lock_transaction_id').references(() => transactions.id, {
+		lockTransactionId: integer('lock_transaction_id').references(() => transactions.id, { // Kept as integer
 			onDelete: 'set null'
 		}),
-		unlockTransactionId: integer('unlock_transaction_id').references(() => transactions.id, {
+		unlockTransactionId: integer('unlock_transaction_id').references(() => transactions.id, { // Kept as integer
 			onDelete: 'set null'
 		}),
 		blockchainTxId: varchar('blockchain_tx_id', { length: 255 }),

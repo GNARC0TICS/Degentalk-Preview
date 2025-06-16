@@ -8,7 +8,8 @@ import {
 	uniqueIndex,
 	primaryKey,
 	boolean,
-	jsonb
+	jsonb,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
 import { products } from './products';
@@ -18,7 +19,7 @@ export const userInventory = pgTable(
 	'user_inventory',
 	{
 		id: serial('id').primaryKey(),
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		productId: integer('product_id')

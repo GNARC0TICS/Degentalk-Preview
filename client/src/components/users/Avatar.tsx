@@ -11,7 +11,7 @@ interface AvatarProps {
 	className?: string;
 	frameClassName?: string;
 	showFrame?: boolean;
-	userId?: number;
+	userId?: string;
 }
 
 /**

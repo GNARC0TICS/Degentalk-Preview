@@ -34,7 +34,7 @@ export const threads = pgTable(
 		categoryId: integer('category_id')
 			.notNull()
 			.references(() => forumCategories.id, { onDelete: 'cascade' }),
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		prefixId: integer('prefix_id').references(() => threadPrefixes.id, { onDelete: 'set null' }),
@@ -43,11 +43,11 @@ export const threads = pgTable(
 		isHidden: boolean('is_hidden').notNull().default(false),
 		isFeatured: boolean('is_featured').notNull().default(false),
 		featuredAt: timestamp('featured_at'),
-		featuredBy: integer('featured_by').references(() => users.id, { onDelete: 'set null' }),
+		featuredBy: uuid('featured_by').references(() => users.id, { onDelete: 'set null' }),
 		featuredExpiresAt: timestamp('featured_expires_at'),
 		isDeleted: boolean('is_deleted').notNull().default(false),
 		deletedAt: timestamp('deleted_at'),
-		deletedBy: integer('deleted_by').references(() => users.id, { onDelete: 'set null' }),
+		deletedBy: uuid('deleted_by').references(() => users.id, { onDelete: 'set null' }),
 		viewCount: integer('view_count').notNull().default(0),
 		postCount: integer('post_count').notNull().default(0),
 		firstPostLikeCount: integer('first_post_like_count').notNull().default(0),

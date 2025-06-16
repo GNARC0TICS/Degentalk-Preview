@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, timestamp, boolean, unique, index } from 'drizzle-orm/pg-core';
+import { pgTable, serial, /*integer,*/ timestamp, boolean, unique, index, uuid, integer } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { conversations } from './conversations'; // Adjusted path
@@ -10,7 +10,7 @@ export const conversationParticipants = pgTable(
 		conversationId: integer('conversation_id')
 			.notNull()
 			.references(() => conversations.id, { onDelete: 'cascade' }),
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		joinedAt: timestamp('joined_at')

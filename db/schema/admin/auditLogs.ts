@@ -1,12 +1,13 @@
 import {
 	pgTable,
 	serial,
-	integer,
+	// integer, // No longer using integer for userId
 	varchar,
 	jsonb,
 	text,
 	timestamp,
-	index
+	index,
+	uuid // Added uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
@@ -16,7 +17,7 @@ export const auditLogs = pgTable(
 	'audit_logs',
 	{
 		id: serial('log_id').primaryKey(),
-		userId: integer('user_id').references(() => users.id, { onDelete: 'set null' }), // Nullable if action can be system-initiated
+		userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }), // Nullable if action can be system-initiated. Changed to uuid
 		action: varchar('action', { length: 100 }).notNull(),
 		entityType: varchar('entity_type', { length: 100 }).notNull(), // Changed from 50 to 100 for consistency
 		entityId: varchar('entity_id', { length: 100 }),

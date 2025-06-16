@@ -1,10 +1,10 @@
-import { pgTable, serial, integer, timestamp, text } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, timestamp, text, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 
 export const userAbuseFlags = pgTable('user_abuse_flags', {
     id: serial('id').primaryKey(),
-    userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
     strikeCount: integer('strike_count').notNull().default(0),
     lastStrikeAt: timestamp('last_strike_at'),
     reason: text('reason'),

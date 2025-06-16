@@ -1,4 +1,4 @@
-import { pgTable, integer, timestamp, primaryKey, index } from 'drizzle-orm/pg-core';
+import { pgTable, /*integer,*/ timestamp, primaryKey, index, uuid, integer } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { threads } from './threads';
@@ -6,7 +6,7 @@ import { threads } from './threads';
 export const userThreadBookmarks = pgTable(
 	'user_thread_bookmarks',
 	{
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		threadId: integer('thread_id')

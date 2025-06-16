@@ -1,4 +1,4 @@
-import { pgTable, integer, timestamp, jsonb, primaryKey } from 'drizzle-orm/pg-core';
+import { pgTable, /*integer,*/ timestamp, jsonb, primaryKey, uuid, integer } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { achievements } from './achievements'; // Adjusted path
@@ -6,7 +6,7 @@ import { achievements } from './achievements'; // Adjusted path
 export const userAchievements = pgTable(
 	'user_achievements',
 	{
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		achievementId: integer('achievement_id')

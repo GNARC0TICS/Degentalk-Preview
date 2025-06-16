@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, text, boolean, integer, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, boolean, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 
@@ -15,7 +15,7 @@ export const siteTemplates = pgTable('site_templates', {
 	updatedAt: timestamp('updated_at')
 		.notNull()
 		.default(sql`now()`), // Changed defaultNow() to sql`now()`
-	createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' })
+	createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' })
 });
 
 export type SiteTemplate = typeof siteTemplates.$inferSelect;

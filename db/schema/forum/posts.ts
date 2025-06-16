@@ -25,7 +25,7 @@ export const posts = pgTable(
 		threadId: integer('thread_id')
 			.notNull()
 			.references(() => threads.id, { onDelete: 'cascade' }),
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		replyToPostId: integer('reply_to_post_id').references((): AnyPgColumn => posts.id, {
@@ -40,10 +40,10 @@ export const posts = pgTable(
 		isHidden: boolean('is_hidden').notNull().default(false),
 		isDeleted: boolean('is_deleted').notNull().default(false),
 		deletedAt: timestamp('deleted_at'),
-		deletedBy: integer('deleted_by').references(() => users.id, { onDelete: 'set null' }),
+		deletedBy: uuid('deleted_by').references(() => users.id, { onDelete: 'set null' }),
 		isEdited: boolean('is_edited').notNull().default(false),
 		editedAt: timestamp('edited_at'),
-		editedBy: integer('edited_by').references(() => users.id, { onDelete: 'set null' }),
+		editedBy: uuid('edited_by').references(() => users.id, { onDelete: 'set null' }),
 		createdAt: timestamp('created_at')
 			.notNull()
 			.default(sql`CURRENT_TIMESTAMP`),

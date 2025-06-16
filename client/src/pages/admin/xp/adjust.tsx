@@ -29,20 +29,14 @@ import {
 	DialogHeader,
 	DialogTitle
 } from '@/components/ui/dialog';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue
-} from '@/components/ui/select';
+// Select components were unused
 import {
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
-	CardTitle,
-	CardFooter
+	CardTitle
+	// CardFooter was unused
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
@@ -55,7 +49,7 @@ import { apiRequest } from '@/lib/queryClient';
 
 // Types
 interface User {
-	id: number;
+	id: string;
 	username: string;
 	avatarUrl: string | null;
 	level: number;
@@ -66,7 +60,7 @@ interface User {
 
 interface XpAdjustment {
 	id: number;
-	userId: number;
+	userId: string;
 	username: string;
 	adjustmentType: 'add' | 'subtract' | 'set';
 	amount: number;
@@ -96,8 +90,8 @@ export default function UserXpAdjustmentPage() {
 		data: users,
 		isLoading,
 		isError,
-		error,
-		refetch: refetchUsers
+		error
+		// refetchUsers was unused
 	} = useQuery({
 		queryKey: ['/api/admin/users/search', debouncedSearchTerm],
 		queryFn: async () => {
@@ -113,17 +107,10 @@ export default function UserXpAdjustmentPage() {
 		enabled: debouncedSearchTerm.length >= 3
 	});
 
-	// Get user XP info
-	const fetchUserXpInfo = async (userId: number) => {
-		const response = await fetch(`/api/admin/users/${userId}/xp`);
-		if (!response.ok) {
-			throw new Error('Failed to fetch user XP info');
-		}
-		return response.json();
-	};
+	// fetchUserXpInfo was unused
 
 	// Get XP adjustment logs for a user
-	const fetchUserXpAdjustmentLogs = async (userId: number) => {
+	const fetchUserXpAdjustmentLogs = async (userId: string) => {
 		const response = await fetch(`/api/admin/xp/adjustment-logs?userId=${userId}`);
 		if (!response.ok) {
 			throw new Error('Failed to fetch XP adjustment logs');
@@ -134,14 +121,14 @@ export default function UserXpAdjustmentPage() {
 	// Mutations
 	const adjustXpMutation = useMutation({
 		mutationFn: async (data: {
-			userId: number;
+			userId: string;
 			amount: number;
 			adjustmentType: 'add' | 'subtract' | 'set';
 			reason: string;
 		}) => {
-			return apiRequest('POST', '/api/admin/xp/adjust', data);
+			return apiRequest<{ user: User }>({ method: 'POST', url: '/api/admin/xp/adjust', data });
 		},
-		onSuccess: (data) => {
+		onSuccess: (data: { user: User }) => {
 			toast({
 				title: 'XP adjusted successfully',
 				description: `${data.user.username}'s XP has been updated`,
@@ -150,7 +137,7 @@ export default function UserXpAdjustmentPage() {
 			setIsAdjustDialogOpen(false);
 			// Update the local state with the new XP
 			if (users?.users) {
-				const updatedUsers = users.users.map((user) =>
+				const updatedUsers = users.users.map((user: User) =>
 					user.id === data.user.id ? { ...user, xp: data.user.xp, level: data.user.level } : user
 				);
 				queryClient.setQueryData(['/api/admin/users/search', debouncedSearchTerm], {
@@ -676,7 +663,7 @@ function RecentAdjustmentsTable() {
 }
 
 // XP History Table Component
-function XpHistoryTable({ userId }: { userId?: number }) {
+function XpHistoryTable({ userId }: { userId?: string }) {
 	const {
 		data: adjustments,
 		isLoading,

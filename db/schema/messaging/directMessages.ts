@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, text, timestamp, boolean, index } from 'drizzle-orm/pg-core';
+import { pgTable, serial, /*integer,*/ text, timestamp, boolean, index, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { createInsertSchema } from 'drizzle-zod';
@@ -8,10 +8,10 @@ export const directMessages = pgTable(
 	'direct_messages',
 	{
 		id: serial('message_id').primaryKey(),
-		senderId: integer('sender_id')
+		senderId: uuid('sender_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		recipientId: integer('recipient_id')
+		recipientId: uuid('recipient_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		content: text('content').notNull(),

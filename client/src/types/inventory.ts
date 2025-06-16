@@ -16,8 +16,8 @@ export interface Product {
 }
 
 export interface UserInventory {
-	id: number;
-	userId: number;
+	id: number; // This is the inventory item's own ID, should be number
+	userId: string; // User ID should be string
 	productId: number;
 	quantity: number;
 	equipped: boolean;
@@ -28,8 +28,8 @@ export interface UserInventory {
 }
 
 export interface UserInventoryWithProduct {
-	id: number;
-	userId: number;
+	id: number; // This is the inventory item's own ID, should be number
+	userId: string; // User ID should be string
 	productId: number;
 	equipped: boolean;
 	purchasedAt: string;

@@ -2,7 +2,6 @@ import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 
 import {
 	pgTable,
-	serial,
 	text,
 	varchar,
 	boolean,
@@ -29,8 +28,7 @@ import { posts } from '../forum/posts';
 export const users = pgTable(
 	'users',
 	{
-		id: serial('user_id').primaryKey(),
-		uuid: uuid('uuid').notNull().defaultRandom(),
+		id: uuid('user_id').primaryKey().defaultRandom(),
 		username: text('username').notNull(),
 		email: text('email').notNull(),
 		password: text('password_hash').notNull(),
@@ -47,7 +45,7 @@ export const users = pgTable(
 		 * Primary role for the user – replaces legacy groupId.
 		 * Nullable to support users without explicit role (falls back to default).
 		 */
-		primaryRoleId: uuid('primary_role_id').references(() => roles.id, { onDelete: 'set null' }),
+		primaryRoleId: integer('primary_role_id').references(() => roles.id, { onDelete: 'set null' }),
 		discordHandle: varchar('discord_handle', { length: 255 }),
 		twitterHandle: varchar('twitter_handle', { length: 255 }),
 		website: varchar('website', { length: 255 }),
@@ -70,7 +68,7 @@ export const users = pgTable(
 			.default(sql`CURRENT_TIMESTAMP`),
 		lastLogin: timestamp('last_login'),
 		// TODO: self-reference FK (referrerId → users.id) should be added via migration or pgTable foreignKey config once TypeScript circular reference issue is resolved
-		referrerId: integer('referrer_id').references((): AnyPgColumn => users.id as AnyPgColumn, {
+		referrerId: uuid('referrer_id').references((): AnyPgColumn => users.id as AnyPgColumn, {
 			onDelete: 'set null'
 		}),
 		referralLevel: integer('referral_level'),
@@ -143,7 +141,6 @@ export const insertUserSchema = createInsertSchema(users, {
 	privacyAgreedAt: z.date().optional()
 }).omit({
 	id: true,
-	uuid: true,
 	isActive: true,
 	isVerified: true,
 	isDeleted: true,

@@ -6,10 +6,10 @@ export const tokenTypeEnumAirdrop = pgEnum('token_type_admin_airdrop', ['XP', 'D
 
 export const adminManualAirdropLogs = pgTable('admin_manual_airdrop_logs', {
 	id: serial('id').primaryKey(),
-	adminId: integer('admin_id')
+	adminId: uuid('admin_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'set null' }), // Keep record even if admin is deleted
-	userId: integer('user_id')
+	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }), // If user is deleted, their airdrop records go
 	tokenType: tokenTypeEnumAirdrop('token_type').notNull(),

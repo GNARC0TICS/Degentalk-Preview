@@ -1,10 +1,10 @@
-import { pgTable, serial, integer, varchar, text, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, varchar, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 
 export const reportedContent = pgTable('reported_content', {
 	id: serial('report_id').primaryKey(),
-	reporterId: integer('reporter_id')
+	reporterId: uuid('reporter_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	contentType: varchar('content_type', { length: 50 }).notNull(),
@@ -16,7 +16,7 @@ export const reportedContent = pgTable('reported_content', {
 		.notNull()
 		.default(sql`now()`), // Changed defaultNow() to sql`now()`
 	resolvedAt: timestamp('resolved_at'),
-	resolvedBy: integer('resolved_by').references(() => users.id, { onDelete: 'set null' }),
+	resolvedBy: uuid('resolved_by').references(() => users.id, { onDelete: 'set null' }),
 	resolutionNotes: text('resolution_notes')
 });
 

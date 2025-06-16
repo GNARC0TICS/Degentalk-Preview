@@ -1,4 +1,4 @@
-import { pgTable, integer, timestamp, primaryKey } from 'drizzle-orm/pg-core';
+import { pgTable, /*integer,*/ timestamp, primaryKey, uuid, integer } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { titles } from './titles';
@@ -6,7 +6,7 @@ import { titles } from './titles';
 export const userTitles = pgTable(
 	'user_titles',
 	{
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		titleId: integer('title_id')

@@ -1,10 +1,10 @@
-import { pgTable, serial, integer, text, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, timestamp, jsonb, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 
 export const userCommands = pgTable('user_commands', {
 	id: serial('id').primaryKey(),
-	userId: integer('user_id')
+	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	commandType: text('command_type').notNull(), // 'tip', 'rain', etc.

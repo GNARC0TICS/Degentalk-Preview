@@ -1,12 +1,13 @@
 import {
 	pgTable,
 	serial,
-	integer,
+	// integer, // No longer using integer for userId
 	varchar,
 	text,
 	jsonb,
 	timestamp,
-	uuid
+	uuid, // Added uuid
+	integer // Ensured integer is imported for categoryId and prefixId
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
@@ -16,12 +17,12 @@ import { threadPrefixes } from './prefixes'; // Assuming you have threadPrefixes
 
 export const threadDrafts = pgTable('thread_drafts', {
 	id: serial('draft_id').primaryKey(),
-	uuid: uuid('uuid').notNull().defaultRandom(), // For potential public access before login? Or just unique ID.
-	userId: integer('user_id')
+	uuid: uuid('uuid').notNull().defaultRandom(), // This is a separate uuid field
+	userId: uuid('user_id') // Changed to uuid
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	categoryId: integer('category_id').references(() => forumCategories.id, { onDelete: 'set null' }),
-	prefixId: integer('prefix_id').references(() => threadPrefixes.id, { onDelete: 'set null' }),
+	categoryId: integer('category_id').references(() => forumCategories.id, { onDelete: 'set null' }), // Kept as integer
+	prefixId: integer('prefix_id').references(() => threadPrefixes.id, { onDelete: 'set null' }), // Kept as integer
 	title: varchar('title', { length: 255 }),
 	content: text('content'),
 	editorState: jsonb('editor_state'), // To store Tiptap's JSON state

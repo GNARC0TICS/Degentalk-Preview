@@ -1,4 +1,4 @@
-import { pgTable, integer, timestamp, primaryKey } from 'drizzle-orm/pg-core';
+import { pgTable, /*integer,*/ timestamp, primaryKey, uuid, integer } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { badges } from './badges';

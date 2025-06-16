@@ -12,7 +12,7 @@ export interface Level {
 }
 
 export interface UserXP {
-	userId: number;
+	userId: string; // Changed to string
 	username: string;
 	currentXp: number;
 	currentLevel: number;
@@ -44,8 +44,8 @@ export interface UserBadge {
 
 export interface XpAdjustmentEntry {
 	id: number;
-	userId: number;
-	adminId: number;
+	userId: string; // Changed to string
+	adminId: string; // Changed to string, as it's a user ID
 	adminUsername?: string;
 	adjustmentType: string;
 	amount: number;
@@ -61,7 +61,15 @@ export interface XpAdjustmentEntry {
  *
  * @param userId - User ID to fetch XP data for (optional, defaults to current user)
  */
-export function useXP(userId?: number) {
+export function useXP(userId?: string): {
+	xpData: UserXP | undefined;
+	titles: UserTitle[];
+	badges: UserBadge[];
+	xpHistory: XpAdjustmentEntry[];
+	isLoading: boolean;
+	error: Error | null;
+	equipTitle: (titleId: number) => void;
+} { // Changed to string
 	const queryClient = useQueryClient();
 
 	// Fetch user XP data
@@ -74,7 +82,7 @@ export function useXP(userId?: number) {
 		queryFn: async (): Promise<UserXP> => {
 			const endpoint = userId ? `/api/xp/users/${userId}/info` : '/api/xp/me/info';
 
-			return apiRequest(endpoint);
+			return apiRequest({ url: endpoint });
 		}
 	});
 
@@ -84,7 +92,7 @@ export function useXP(userId?: number) {
 		queryFn: async (): Promise<UserTitle[]> => {
 			const endpoint = userId ? `/api/xp/users/${userId}/titles` : '/api/xp/me/titles';
 
-			return apiRequest(endpoint);
+			return apiRequest({ url: endpoint });
 		},
 		enabled: !!xpData
 	});
@@ -95,7 +103,7 @@ export function useXP(userId?: number) {
 		queryFn: async (): Promise<UserBadge[]> => {
 			const endpoint = userId ? `/api/xp/users/${userId}/badges` : '/api/xp/me/badges';
 
-			return apiRequest(endpoint);
+			return apiRequest({ url: endpoint });
 		},
 		enabled: !!xpData
 	});
@@ -108,7 +116,7 @@ export function useXP(userId?: number) {
 				? `/api/xp/adjustments/history/${userId}`
 				: '/api/xp/me/adjustments/history';
 
-			return apiRequest(endpoint);
+			return apiRequest({ url: endpoint });
 		},
 		enabled: !!xpData
 	});
@@ -116,14 +124,14 @@ export function useXP(userId?: number) {
 	// Equip a title mutation
 	const equipTitle = useMutation({
 		mutationFn: async (titleId: number) => {
-			return apiRequest('POST', '/api/xp/me/titles/equip', { titleId });
+			return apiRequest({ method: 'POST', url: '/api/xp/me/titles/equip', data: { titleId } });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['xp', userId] });
 			queryClient.invalidateQueries({ queryKey: ['xp-titles', userId] });
 			toast.success('Title equipped successfully');
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast.error('Failed to equip title: ' + (error.message || 'Unknown error'));
 		}
 	});

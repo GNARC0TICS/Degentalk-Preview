@@ -53,7 +53,7 @@ interface WalletStats {
 }
 
 interface TopUser {
-	id: number;
+	id: string;
 	username: string;
 	dgtBalance: number;
 	lastActive: string;
@@ -69,7 +69,7 @@ interface Transaction {
 	type: string;
 	amount: number;
 	currency: string;
-	userId: number;
+	userId: string;
 	username: string;
 	timestamp: string;
 	status: string;
@@ -158,7 +158,7 @@ export default function AdminWalletsPage() {
 	// Manually adjust user DGT balance
 	const manualAdjustMutation = useMutation({
 		mutationFn: async (params: {
-			userId: number;
+			userId: string;
 			amount: number;
 			reason: string;
 			type: 'grant' | 'deduct';
@@ -187,7 +187,7 @@ export default function AdminWalletsPage() {
 			queryClient.invalidateQueries({ queryKey: ['/api/admin/wallet/recent-transactions'] });
 
 			toast({
-				variant: 'success',
+				variant: 'default', // Changed 'success' to 'default'
 				title: 'Balance Updated',
 				description: `User DGT balance ${transactionType === 'grant' ? 'increased' : 'decreased'} successfully.`
 			});
@@ -198,7 +198,7 @@ export default function AdminWalletsPage() {
 			setReason('');
 			setIsManualDialogOpen(false);
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => { // Typed error as Error
 			toast({
 				variant: 'destructive',
 				title: 'Error Updating Balance',
@@ -218,20 +218,20 @@ export default function AdminWalletsPage() {
 			return;
 		}
 
-		const parsedUserId = parseInt(userId);
+		// userId is already a string, no need to parse if it's a UUID
 		const parsedAmount = parseFloat(dgtAmount);
 
-		if (isNaN(parsedUserId) || isNaN(parsedAmount) || parsedAmount <= 0) {
+		if (!userId.trim() || isNaN(parsedAmount) || parsedAmount <= 0) {
 			toast({
 				variant: 'destructive',
 				title: 'Invalid Input',
-				description: 'Please enter valid numeric values.'
+				description: 'User ID must not be empty, and amount must be a valid positive number.'
 			});
 			return;
 		}
 
 		manualAdjustMutation.mutate({
-			userId: parsedUserId,
+			userId: userId.trim(),
 			amount: parsedAmount,
 			reason: reason || `Admin ${transactionType}`,
 			type: transactionType
@@ -276,10 +276,11 @@ export default function AdminWalletsPage() {
 								<div className="grid grid-cols-4 items-center gap-4">
 									<label className="text-right">User ID</label>
 									<Input
-										type="number"
+										type="text"
 										value={userId}
 										onChange={(e) => setUserId(e.target.value)}
 										className="col-span-3"
+										placeholder="Enter User ID (UUID)"
 									/>
 								</div>
 
@@ -410,7 +411,7 @@ export default function AdminWalletsPage() {
 															variant="outline"
 															size="sm"
 															onClick={() => {
-																setUserId(user.id.toString());
+																setUserId(user.id); // user.id is now a string
 																setTransactionType('grant');
 																setIsManualDialogOpen(true);
 															}}

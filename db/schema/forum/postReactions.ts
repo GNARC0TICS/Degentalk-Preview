@@ -1,4 +1,4 @@
-import { pgTable, integer, timestamp, primaryKey, index } from 'drizzle-orm/pg-core';
+import { pgTable, /*integer,*/ timestamp, primaryKey, index, uuid, integer } from 'drizzle-orm/pg-core'; // Added uuid, ensured integer for postId
 import { users } from '../user/users'; // Adjusted import
 import { posts } from './posts'; // Adjusted import
 import { reactionTypeEnum } from '../core/enums'; // Adjusted import
@@ -7,10 +7,10 @@ import { sql } from 'drizzle-orm';
 export const postReactions = pgTable(
 	'post_reactions',
 	{
-		userId: integer('user_id')
+		userId: uuid('user_id') // Changed to uuid
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		postId: integer('post_id')
+		postId: integer('post_id') // Kept as integer
 			.notNull()
 			.references(() => posts.id, { onDelete: 'cascade' }),
 		reactionType: reactionTypeEnum('reaction_type').notNull(),

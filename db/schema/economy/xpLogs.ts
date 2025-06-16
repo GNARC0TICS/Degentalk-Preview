@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, date, timestamp, unique, index } from 'drizzle-orm/pg-core';
+import { pgTable, serial, /*integer,*/ date, timestamp, unique, index, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 
@@ -6,7 +6,7 @@ export const xpLogs = pgTable(
 	'xp_logs',
 	{
 		id: serial('id').primaryKey(),
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		date: date('date').notNull(),

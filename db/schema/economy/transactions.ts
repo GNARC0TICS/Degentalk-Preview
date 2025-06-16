@@ -8,7 +8,8 @@ import {
 	boolean,
 	jsonb,
 	timestamp,
-	index
+	index,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
@@ -19,10 +20,10 @@ export const transactions = pgTable(
 	'transactions',
 	{
 		id: serial('transaction_id').primaryKey(),
-		userId: integer('user_id').references(() => users.id, { onDelete: 'set null' }),
+		userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
 		walletId: integer('wallet_id').references(() => wallets.id, { onDelete: 'cascade' }), // DGT wallet
-		fromUserId: integer('from_user_id').references(() => users.id, { onDelete: 'set null' }),
-		toUserId: integer('to_user_id').references(() => users.id, { onDelete: 'set null' }),
+		fromUserId: uuid('from_user_id').references(() => users.id, { onDelete: 'set null' }),
+		toUserId: uuid('to_user_id').references(() => users.id, { onDelete: 'set null' }),
 		amount: bigint('amount', { mode: 'number' }).notNull(),
 		type: transactionTypeEnum('type').notNull(),
 		status: transactionStatusEnum('status').notNull().default('pending'),

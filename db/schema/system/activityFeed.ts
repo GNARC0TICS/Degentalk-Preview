@@ -1,10 +1,10 @@
-import { pgTable, serial, integer, varchar, jsonb, boolean, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, varchar, jsonb, boolean, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 
 export const activityFeed = pgTable('activity_feed', {
 	id: serial('activity_id').primaryKey(),
-	userId: integer('user_id')
+	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	activityType: varchar('activity_type', { length: 50 }).notNull(), // e.g., 'created_thread', 'replied_post', 'earned_badge'

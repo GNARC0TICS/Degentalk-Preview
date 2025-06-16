@@ -3,7 +3,7 @@ import { forumCategories, threads, posts } from "../../db/schema"; // Ensure pos
 import { forumMap } from "../../client/src/config/forumMap.config";
 import { eq } from "drizzle-orm";
 import chalk from "chalk";
-import type { ForumTheme, ForumRules as ConfigForumRules, Zone as ConfigZone, Forum as ConfigForum } from "../../client/src/config/forumMap.config";
+import type { ForumTheme, ForumRules as ConfigForumRules, Zone as ConfigZone } from "../../client/src/config/forumMap.config";
 import { parseArgs } from 'node:util';
 
 // Define a type for the transaction client that Drizzle uses
@@ -16,6 +16,17 @@ interface ForumCategoryPluginData {
   configZoneType?: 'primary' | 'general';
   configDescription?: string | null;
   [key: string]: any;
+}
+
+// Utility: resolve a forum_categories.id by slug.  Returns null if not found.
+async function resolveParentIdBySlug(slug: string, tx: TransactionClient): Promise<number | null> {
+  const result = await tx
+    .select({ id: forumCategories.id })
+    .from(forumCategories)
+    .where(eq(forumCategories.slug, slug))
+    .limit(1);
+
+  return result.length > 0 ? result[0].id : null;
 }
 
 // Internal function to perform seeding, designed to be called within a transaction
@@ -43,9 +54,9 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
       rules: (zoneConfig as any).rules,
     };
     const semanticColorTheme = zoneConfig.type === 'primary' ? zoneConfig.slug : undefined;
-    const values = {
+    const values: any = {
       slug: zoneConfig.slug, name: zoneConfig.name, description: zoneConfig.description,
-      type: "zone" as "zone" | "forum" | "category", canonical: zoneConfig.type === 'primary',
+      type: "zone" as "zone" | "forum" | "category",
       colorTheme: semanticColorTheme, icon: zoneConfig.theme?.icon, color: zoneConfig.theme?.color,
       pluginData: pluginData, isLocked: (zoneConfig as any).isLocked ?? false,
       minXp: (zoneConfig as any).minXp ?? 0, position: (zoneConfig as any).position ?? 0,
@@ -54,32 +65,32 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
     console.log(chalk.cyan(`[✓] Synced zone: ${zoneConfig.name} (slug: ${zoneConfig.slug})`));
   }
 
-  const dbZones = await tx.select({
-    id: forumCategories.id, slug: forumCategories.slug, color: forumCategories.color,
-    icon: forumCategories.icon, colorTheme: forumCategories.colorTheme, pluginData: forumCategories.pluginData
-  }).from(forumCategories).where(eq(forumCategories.type, "zone"));
-  const dbZoneMap = new Map(dbZones.map(z => [z.slug, z]));
-
   console.log(chalk.blue(`Seeding ${forumsFromConfig.length} forums...`));
   for (const forumConfig of forumsFromConfig) {
-    const parentZoneDataFromConfig = zonesFromConfig.find(z => z.slug === forumConfig.parentZoneSlug);
-    const parentDbZone = dbZoneMap.get(forumConfig.parentZoneSlug);
-    if (!parentDbZone) {
-      console.warn(chalk.red(`⚠️ Could not find parent zone DB record for forum: ${forumConfig.slug}`));
+    // Determine the slug we expect to be the parent – either explicit parentForumSlug or the zoneSlug
+    const intendedParentSlug = forumConfig.parentForumSlug || forumConfig.parentZoneSlug;
+
+    const parentId = await resolveParentIdBySlug(intendedParentSlug, tx);
+    if (!parentId) {
+      console.error(
+        chalk.red(`❌ Parent slug not found for forum '${forumConfig.slug}'. Intended parent: '${intendedParentSlug}'. Skipping insert.`)
+      );
       continue;
     }
-    const dbParentForumSlug = forumConfig.parentForumSlug || forumConfig.parentZoneSlug;
+
+    const parentZoneDataFromConfig = zonesFromConfig.find(z => z.slug === forumConfig.parentZoneSlug);
     const forumPluginData: ForumCategoryPluginData = {
       rules: forumConfig.rules,
       bannerImage: forumConfig.themeOverride?.bannerImage || parentZoneDataFromConfig?.theme?.bannerImage,
       originalTheme: forumConfig.themeOverride || parentZoneDataFromConfig?.theme,
       configDescription: (forumConfig as any).description,
     };
-    const forumSemanticColorTheme = (forumConfig as any).colorTheme || parentDbZone.colorTheme;
-    const values = {
+    // Fallback to zone's color when a specific color theme override is not provided
+    const forumSemanticColorTheme = (forumConfig as any).colorTheme || (parentZoneDataFromConfig?.theme as any)?.colorTheme;
+    const values: any = {
       slug: forumConfig.slug, name: forumConfig.name, description: (forumConfig as any).description,
-      type: "forum" as "zone" | "forum" | "category", parentId: parentDbZone.id, parentForumSlug: dbParentForumSlug,
-      canonical: false, colorTheme: forumSemanticColorTheme,
+      type: "forum" as "zone" | "forum" | "category", parentId,
+      colorTheme: forumSemanticColorTheme,
       icon: forumConfig.themeOverride?.icon || parentZoneDataFromConfig?.theme?.icon,
       color: forumConfig.themeOverride?.color || parentZoneDataFromConfig?.theme?.color,
       pluginData: forumPluginData, tippingEnabled: forumConfig.rules.tippingEnabled,
@@ -89,7 +100,7 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
       position: (forumConfig as any).position ?? 0,
     };
     await tx.insert(forumCategories).values(values).onConflictDoUpdate({ target: forumCategories.slug, set: values });
-    console.log(chalk.cyan(`[✓] Synced forum: ${forumConfig.name} (slug: ${forumConfig.slug}) → Parent Slug in DB: ${dbParentForumSlug}`));
+    console.log(chalk.cyan(`[✓] Synced forum: ${forumConfig.name} (slug: ${forumConfig.slug}) → parentId ${parentId}`));
   }
   console.log(chalk.green("✅ Forum structure and static themes seeded successfully within transaction."));
 }

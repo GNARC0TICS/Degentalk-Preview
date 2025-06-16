@@ -7,7 +7,8 @@ import {
 	bigint,
 	integer,
 	timestamp,
-	index
+	index,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
@@ -35,7 +36,7 @@ export const customEmojis = pgTable(
 		updatedAt: timestamp('updated_at')
 			.notNull()
 			.default(sql`now()`),
-		createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' }),
+		createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
 		isDeleted: boolean('is_deleted').notNull().default(false),
 		deletedAt: timestamp('deleted_at')
 	},

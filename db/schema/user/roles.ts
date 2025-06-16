@@ -1,4 +1,4 @@
-import { pgTable, uuid, integer, varchar, text, boolean, jsonb, doublePrecision, timestamp, unique } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, varchar, text, boolean, jsonb, doublePrecision, timestamp, unique } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 /**
@@ -10,7 +10,7 @@ export const roles = pgTable(
 	'roles',
 	{
 		// Primary key – use UUIDs for easier merges between environments
-		id: uuid('role_id').primaryKey().defaultRandom(),
+		id: serial('role_id').primaryKey(),
 
 		// Human-readable name and URL-safe slug
 		name: varchar('name', { length: 100 }).notNull(),

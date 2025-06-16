@@ -7,7 +7,8 @@ import {
 	doublePrecision,
 	boolean,
 	timestamp,
-	text
+	text,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
@@ -37,7 +38,7 @@ export const dgtEconomyParameters = pgTable('dgt_economy_parameters', {
 	updatedAt: timestamp('updated_at')
 		.notNull()
 		.default(sql`now()`),
-	updatedBy: integer('updated_by').references(() => users.id, { onDelete: 'set null' })
+	updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' })
 });
 
 export type DgtEconomyParameter = typeof dgtEconomyParameters.$inferSelect;

@@ -4,9 +4,10 @@ import {
 	varchar,
 	text,
 	boolean,
-	integer,
 	timestamp,
-	index
+	index,
+	uuid,
+	integer
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
@@ -25,7 +26,7 @@ export const chatRooms = pgTable(
 			onDelete: 'set null'
 		}),
 		minXpRequired: integer('min_xp_required').default(0),
-		createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' }),
+		createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
 		createdAt: timestamp('created_at')
 			.notNull()
 			.default(sql`now()`), // Changed defaultNow() to sql`now()`

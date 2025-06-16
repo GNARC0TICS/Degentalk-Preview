@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 
 interface UserInventoryItem {
 	id: number;
-	userId: number;
+	userId: string; // Changed to string
 	productId: number;
 	quantity: number;
 	equipped: boolean;
@@ -40,7 +40,7 @@ interface Product {
 
 export default function AdminUserInventoryPage() {
 	const params = useParams<{ userId: string }>();
-	const userId = parseInt(params.userId);
+	const userId = params.userId; // userId is already a string
 	const queryClient = useQueryClient();
 	const { toast } = useToast();
 	const [selectedProductId, setSelectedProductId] = useState<string>('');
@@ -88,7 +88,7 @@ export default function AdminUserInventoryPage() {
 			});
 			setSelectedProductId('');
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Failed to grant item',
 				description: error.message || 'An error occurred',
@@ -111,7 +111,7 @@ export default function AdminUserInventoryPage() {
 				description: 'The item has been equipped successfully.'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Failed to equip item',
 				description: error.message || 'An error occurred',
@@ -134,7 +134,7 @@ export default function AdminUserInventoryPage() {
 				description: 'The item has been unequipped successfully.'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Failed to unequip item',
 				description: error.message || 'An error occurred',

@@ -1,13 +1,15 @@
 import {
 	pgTable,
 	serial,
-	integer,
+	// integer, // No longer using integer for userId
 	timestamp,
 	varchar,
 	text,
 	jsonb,
 	index,
-	unique
+	unique,
+	uuid, // Added uuid
+	integer // Ensured integer is imported for roomId
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
@@ -17,10 +19,10 @@ export const onlineUsers = pgTable(
 	'online_users',
 	{
 		id: serial('id').primaryKey(),
-		userId: integer('user_id')
+		userId: uuid('user_id') // Changed to uuid
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		roomId: integer('room_id').references(() => chatRooms.id, { onDelete: 'set null' }),
+		roomId: integer('room_id').references(() => chatRooms.id, { onDelete: 'set null' }), // Kept as integer
 		lastActive: timestamp('last_active')
 			.notNull()
 			.default(sql`now()`), // Changed defaultNow() to sql`now()`

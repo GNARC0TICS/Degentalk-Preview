@@ -1,11 +1,13 @@
 import {
 	pgTable,
 	serial,
-	integer,
+	// integer, // No longer using integer for userId/deletedBy
 	doublePrecision,
 	timestamp,
 	boolean,
-	index
+	index,
+	uuid, // Added uuid
+	integer // Ensured integer is imported just in case, though not directly used in this snippet for FKs that become uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
@@ -15,14 +17,14 @@ export const wallets = pgTable(
 	'wallets',
 	{
 		id: serial('wallet_id').primaryKey(),
-		userId: integer('user_id')
+		userId: uuid('user_id') // Changed to uuid
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		balance: doublePrecision('balance').notNull().default(0), // This is the DGT balance
 		lastTransaction: timestamp('last_transaction'), // Renamed in refactor plan to lastTransactionAt for clarity
 		isDeleted: boolean('is_deleted').notNull().default(false),
 		deletedAt: timestamp('deleted_at'),
-		deletedBy: integer('deleted_by').references(() => users.id, { onDelete: 'set null' }),
+		deletedBy: uuid('deleted_by').references(() => users.id, { onDelete: 'set null' }), // Changed to uuid
 		createdAt: timestamp('created_at')
 			.notNull()
 			.default(sql`now()`),

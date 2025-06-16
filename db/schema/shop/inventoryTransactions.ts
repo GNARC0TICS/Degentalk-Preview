@@ -6,7 +6,8 @@ import {
 	doublePrecision,
 	jsonb,
 	timestamp,
-	index
+	index,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
@@ -16,7 +17,7 @@ export const inventoryTransactions = pgTable(
 	'inventory_transactions',
 	{
 		id: serial('transaction_id').primaryKey(),
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		productId: integer('product_id')
@@ -28,7 +29,7 @@ export const inventoryTransactions = pgTable(
 		currencyAmount: doublePrecision('currency_amount').notNull(), // Amount in currency
 		status: varchar('status', { length: 20 }).notNull().default('completed'),
 		metadata: jsonb('metadata').default('{}'),
-		createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' }), // If admin granted
+		createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }), // If admin granted
 		createdAt: timestamp('created_at')
 			.notNull()
 			.default(sql`now()`)

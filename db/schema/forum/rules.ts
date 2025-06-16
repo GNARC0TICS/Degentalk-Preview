@@ -6,7 +6,8 @@ import {
 	integer,
 	boolean,
 	timestamp,
-	index
+	index,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
@@ -32,8 +33,8 @@ export const forumRules = pgTable(
 		updatedAt: timestamp('updated_at')
 			.notNull()
 			.default(sql`now()`),
-		createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' }),
-		updatedBy: integer('updated_by').references(() => users.id, { onDelete: 'set null' })
+		createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
+		updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' })
 	},
 	(table) => ({
 		sectionIdx: index('idx_forum_rules_section').on(table.section),

@@ -29,13 +29,37 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 // Types
+/**
+ * Flexible metadata map for XP log entries.
+ * Typical keys include:
+ * - postId (number)
+ * - threadId (number)
+ * - badgeId/titleId/frameId (number)
+ * - referrerId/referredUserId/adminId (string, UUID)
+ * - productId/orderId (number)
+ * More can be added as needed.
+ */
+export interface XpLogMetadata {
+	postId?: number;
+	threadId?: number;
+	badgeId?: number;
+	titleId?: number;
+	frameId?: number;
+	referrerId?: string;
+	referredUserId?: string;
+	productId?: number;
+	orderId?: number;
+	adminId?: string;
+	[key: string]: string | number | boolean | undefined;
+}
+
 interface XpLogEntry {
 	id: number;
-	userId: number;
-	action: string;
-	amount: number;
-	metadata: any;
-	createdAt: string;
+	userId: string; // UUID
+	eventType: string;
+	delta: number;
+	metadata?: XpLogMetadata;
+	timestamp: string;
 }
 
 interface XpLogResponse {
@@ -59,6 +83,10 @@ interface XpActionDefinition {
 	description: string;
 	baseValue: number;
 	enabled: boolean;
+}
+
+interface XpActionsResponse {
+	actions: XpActionDefinition[];
 }
 
 // Icon mapping for different XP actions
@@ -88,7 +116,7 @@ const getXpColor = (amount: number) => {
 	return 'text-gradient-gold';
 };
 
-const XpLogView: React.FC<{ userId?: number }> = ({ userId }) => {
+const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => { // Changed userId to string
 	// State for filters and pagination
 	const [period, setPeriod] = useState<string>('all');
 	const [selectedAction, setSelectedAction] = useState<string | null>(null);
@@ -101,11 +129,11 @@ const XpLogView: React.FC<{ userId?: number }> = ({ userId }) => {
 	}, [period, selectedAction]);
 
 	// Fetch XP logs with current filters
-	const { data, isLoading, error, refetch } = useQuery({
+	const { data: xpLogQueryData, isLoading, error, refetch } = useQuery<XpLogResponse, Error>({
 		queryKey: ['xpLogs', userId, period, selectedAction, page],
 		queryFn: async () => {
 			// Use domain-based endpoints
-			let url = userId ? `/api/xp/users/${userId}/logs` : `/api/xp/me/logs`;
+			const url = userId ? `/api/xp/users/${userId}/logs` : `/api/xp/me/logs`;
 
 			// Build query parameters
 			const params = new URLSearchParams();
@@ -120,16 +148,15 @@ const XpLogView: React.FC<{ userId?: number }> = ({ userId }) => {
 				params.append('action', selectedAction);
 			}
 
-			return apiRequest(`${url}?${params.toString()}`);
-		},
-		keepPreviousData: true
+			return apiRequest<XpLogResponse>({ url: `${url}?${params.toString()}` });
+		}
 	});
 
 	// Fetch actions for the dropdown filter
-	const { data: actionsData } = useQuery({
+	const { data: xpActionsQueryData } = useQuery<XpActionsResponse, Error>({
 		queryKey: ['xpActions'],
 		queryFn: async () => {
-			return apiRequest('/api/xp/actions');
+			return apiRequest<XpActionsResponse>({ url: '/api/xp/actions' });
 		}
 	});
 
@@ -145,8 +172,8 @@ const XpLogView: React.FC<{ userId?: number }> = ({ userId }) => {
 	};
 
 	// Format the XP log entry timestamp
-	const formatTimestamp = (timestamp: string) => {
-		const date = new Date(timestamp);
+	const formatTimestamp = (logTimestamp: string) => {
+		const date = new Date(logTimestamp);
 		const isToday = new Date().toDateString() === date.toDateString();
 
 		if (isToday) {
@@ -190,7 +217,7 @@ const XpLogView: React.FC<{ userId?: number }> = ({ userId }) => {
 									All Actions
 								</DropdownMenuCheckboxItem>
 								<div className="max-h-[200px] overflow-y-auto py-1">
-									{actionsData?.actions?.map((action) => (
+									{xpActionsQueryData?.actions?.map((action) => (
 										<DropdownMenuCheckboxItem
 											key={action.action}
 											checked={selectedAction === action.action}
@@ -250,7 +277,7 @@ const XpLogView: React.FC<{ userId?: number }> = ({ userId }) => {
 									Retry
 								</Button>
 							</div>
-						) : data?.logs.length === 0 ? (
+						) : xpLogQueryData?.logs.length === 0 ? (
 							<div className="text-center py-12 text-gray-400">
 								<p className="text-lg mb-2">No XP activity found</p>
 								<p className="text-sm opacity-70">
@@ -262,7 +289,7 @@ const XpLogView: React.FC<{ userId?: number }> = ({ userId }) => {
 						) : (
 							<>
 								<AnimatePresence>
-									{data?.logs.map((log, index) => (
+									{xpLogQueryData?.logs.map((log, index) => (
 										<motion.div
 											key={log.id}
 											initial={{ opacity: 0, y: 10 }}
@@ -272,23 +299,23 @@ const XpLogView: React.FC<{ userId?: number }> = ({ userId }) => {
 											className="flex items-start py-3 border-b border-white/5 hover:bg-white/5 px-2 rounded-lg transition-colors"
 										>
 											<div className="flex-shrink-0 w-12 h-12 bg-black/40 backdrop-filter backdrop-blur-sm rounded-full flex items-center justify-center border border-white/10">
-												{getActionIcon(log.action)}
+												{getActionIcon(log.eventType)}
 											</div>
 
 											<div className="ml-3 flex-grow">
 												<div className="flex justify-between items-center">
-													<span className={`font-bold text-lg ${getXpColor(log.amount)}`}>
-														+{log.amount} XP
+													<span className={`font-bold text-lg ${getXpColor(log.delta)}`}>
+														+{log.delta} XP
 													</span>
 													<span className="text-xs text-gray-400 flex items-center">
 														<Clock className="h-3 w-3 mr-1" />
-														{formatTimestamp(log.createdAt)}
+														{formatTimestamp(log.timestamp)}
 													</span>
 												</div>
 
 												<p className="text-sm opacity-80 mt-0.5">
-													{actionsData?.actions?.find((a) => a.action === log.action)
-														?.description || log.action}
+													{xpActionsQueryData?.actions?.find((a) => a.action === log.eventType)
+														?.description || log.eventType}
 												</p>
 
 												{log.metadata && (
@@ -310,7 +337,7 @@ const XpLogView: React.FC<{ userId?: number }> = ({ userId }) => {
 									))}
 								</AnimatePresence>
 
-								{data?.pagination.hasMore && (
+								{xpLogQueryData?.pagination.hasMore && (
 									<Button
 										variant="ghost"
 										className="w-full mt-4 border border-white/10 hover:bg-white/10"
@@ -321,7 +348,7 @@ const XpLogView: React.FC<{ userId?: number }> = ({ userId }) => {
 								)}
 
 								<div className="text-center text-xs text-gray-500 mt-3">
-									Showing {data?.logs.length} of {data?.pagination.total} activities
+									Showing {xpLogQueryData?.logs.length} of {xpLogQueryData?.pagination.total} activities
 								</div>
 							</>
 						)}

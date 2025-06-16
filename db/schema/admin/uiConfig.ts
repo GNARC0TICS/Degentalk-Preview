@@ -1,4 +1,5 @@
 import { pgTable, text, uuid, integer, timestamp, boolean, jsonb } from 'drizzle-orm/pg-core';
+import { users } from '../user/users'; // Added import for users table
 
 /**
  * UI Quotes table - stores all dynamic UI text content
@@ -34,7 +35,7 @@ export const uiQuotes = pgTable('ui_quotes', {
 
 	// Metadata
 	metadata: jsonb('metadata').default({}), // flexible data: colors, animations, etc.
-	createdBy: uuid('created_by'), // admin user ID
+	createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }), // admin user ID, ensured reference
 
 	// Timestamps
 	createdAt: timestamp('created_at').defaultNow(),
@@ -60,7 +61,7 @@ export const uiCollections = pgTable('ui_collections', {
 
 	// Metadata
 	config: jsonb('config').default({}), // collection-specific settings
-	createdBy: uuid('created_by'),
+	createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }), // ensured reference
 
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at').defaultNow()
@@ -96,7 +97,7 @@ export const uiAnalytics = pgTable('ui_analytics', {
 		.references(() => uiQuotes.id, { onDelete: 'cascade' }),
 
 	eventType: text('event_type').notNull(), // 'impression' | 'click' | 'share' | 'favorite'
-	userId: uuid('user_id'), // nullable for anonymous tracking
+	userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }), // nullable for anonymous tracking, ensured reference
 	sessionId: text('session_id'),
 
 	// Context

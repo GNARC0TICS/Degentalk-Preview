@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, jsonb, integer, timestamp, index, unique } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, jsonb, integer, timestamp, index, unique, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 
@@ -9,7 +9,7 @@ export const referralSources = pgTable(
     name: varchar('name', { length: 100 }).notNull(),
     slug: varchar('slug', { length: 100 }).notNull(),
     metadata: jsonb('metadata').default('{}'),
-    createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' }),
+    createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }),
     createdAt: timestamp('created_at').notNull().default(sql`now()`),
     updatedAt: timestamp('updated_at').notNull().default(sql`now()`)
   },

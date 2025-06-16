@@ -114,7 +114,7 @@ export function formatTransactionStatus(status: string): {
  * @param prefix - Optional prefix (default: "DGT")
  * @returns Unique order ID string
  */
-export function generateOrderId(userId: number, prefix = 'DGT'): string {
+export function generateOrderId(userId: string, prefix = 'DGT'): string {
 	const timestamp = Date.now();
 	const random = Math.floor(Math.random() * 10000)
 		.toString()

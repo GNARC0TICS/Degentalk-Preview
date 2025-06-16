@@ -1,13 +1,13 @@
 import {
 	pgTable,
 	serial,
-	integer,
 	bigint,
 	decimal,
 	varchar,
 	jsonb,
 	timestamp,
-	index
+	index,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
@@ -18,7 +18,7 @@ export const dgtPurchaseOrders = pgTable(
 	'dgt_purchase_orders',
 	{
 		id: serial('id').primaryKey(),
-		userId: integer('user_id')
+		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		dgtAmountRequested: bigint('dgt_amount_requested', { mode: 'number' }).notNull(),

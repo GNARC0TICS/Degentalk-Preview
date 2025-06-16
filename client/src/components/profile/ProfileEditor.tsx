@@ -14,7 +14,7 @@ import { FileDropZone } from '@/components/ui/FileDropZone';
 
 interface ProfileEditorProps {
 	profile: {
-		id: number;
+		id: string; // Changed to string
 		username: string;
 		bio: string | null;
 		signature: string | null;
@@ -101,7 +101,7 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 	    updates: { avatarUrl?: string; profileBannerUrl?: string; };
 	    timestamp: string;
 	  }) => {
-	    if (eventData.userId === profile.id.toString()) {
+	    if (eventData.userId === profile.id) { // .toString() removed as profile.id is now string
 	      queryClient.invalidateQueries({ queryKey: ['profile', profile.username] });
 	      toast({
 	        title: 'Profile Updated',

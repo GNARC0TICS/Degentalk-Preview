@@ -7,7 +7,8 @@ import {
 	timestamp,
 	jsonb,
 	index,
-	unique
+	unique,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
@@ -16,7 +17,7 @@ export const mediaLibrary = pgTable(
 	'media_library',
 	{
 		id: serial('media_id').primaryKey(),
-		userId: integer('user_id').references(() => users.id, { onDelete: 'set null' }), // User who uploaded
+		userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }), // User who uploaded
 		type: varchar('type', { length: 50 }).notNull(), // e.g., image, video, document, avatar, banner
 		fileName: varchar('file_name', { length: 255 }).notNull(),
 		fileSize: integer('file_size').notNull(), // In bytes
@@ -28,7 +29,7 @@ export const mediaLibrary = pgTable(
 		metadata: jsonb('metadata').default('{}'), // e.g., dimensions for images, duration for videos
 		isDeleted: boolean('is_deleted').notNull().default(false),
 		deletedAt: timestamp('deleted_at'),
-		deletedBy: integer('deleted_by').references(() => users.id, { onDelete: 'set null' }),
+		deletedBy: uuid('deleted_by').references(() => users.id, { onDelete: 'set null' }),
 		createdAt: timestamp('created_at')
 			.notNull()
 			.default(sql`CURRENT_TIMESTAMP`),

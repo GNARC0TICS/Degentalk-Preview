@@ -5,7 +5,6 @@ import {
 	varchar,
 	boolean,
 	timestamp,
-	integer,
 	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
@@ -27,7 +26,7 @@ export const conversations = pgTable(
 		lastMessageAt: timestamp('last_message_at')
 			.notNull()
 			.default(sql`now()`), // Changed defaultNow() to sql`now()`
-		createdBy: integer('created_by')
+		createdBy: uuid('created_by')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		isArchived: boolean('is_archived').notNull().default(false)

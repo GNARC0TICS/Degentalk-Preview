@@ -7,7 +7,7 @@ import { apiRequest } from '@/lib/queryClient';
  * @param userId - User ID to fetch inventory for
  * @returns User inventory data with product details
  */
-export function useUserInventory(userId?: number) {
+export function useUserInventory(userId?: string) { // Changed to string
 	return useQuery<UserInventoryWithProduct[]>({
 		queryKey: ['user-inventory', userId],
 		queryFn: async () => {
@@ -15,7 +15,7 @@ export function useUserInventory(userId?: number) {
 				throw new Error('User ID is required');
 			}
 
-			const response = await apiRequest({
+			const response = await apiRequest<{ data: UserInventoryWithProduct[] }>({
 				url: `/api/admin/user-inventory/${userId}`,
 				method: 'GET'
 			});
