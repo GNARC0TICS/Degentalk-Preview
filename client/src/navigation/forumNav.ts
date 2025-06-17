@@ -1,8 +1,11 @@
-import type { LucideIcon } from 'lucide-react';
+import type { LucideProps } from 'lucide-react';
 import { LayoutGrid } from 'lucide-react'; // For "All Content"
 import type { MergedZone, MergedForum, MergedTheme } from '@/contexts/ForumStructureContext';
 // NOTE: Removed direct import of ZONE_THEMES. Icons will be resolved at render time via useForumTheme.
 import { getForumEntityUrl } from '@/utils/forum-routing-helper'; // Assuming this helper provides correct URLs
+import type { ComponentType } from 'react';
+
+type LucideIcon = ComponentType<LucideProps>;
 
 export interface NavNode {
   id: string; // Using slug as a unique ID

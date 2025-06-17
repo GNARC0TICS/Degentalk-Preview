@@ -71,6 +71,10 @@ import { DevRoleSwitcher } from '@/components/dev/dev-role-switcher';
 // Import Preferences Page
 import PreferencesPage from './pages/preferences/index';
 
+// Import UIPlayground page and DevPlaygroundShortcut component
+import UIPlaygroundPage from './pages/ui-playground';
+import { DevPlaygroundShortcut } from '@/components/dev/dev-playground-shortcut';
+
 // Permission wrapper for mod routes
 function RequireMod({ children }: { children: React.ReactNode }) {
 	// Always allow access without permission checks
@@ -377,6 +381,11 @@ return (
 						<ProtectedRoute path="/forum" component={ForumsPage} />
 						<ProtectedRoute path="/forum/:slug" component={ForumBySlugPage} />
 
+						{/* UI Playground (dev only) */}
+						{import.meta.env.MODE === 'development' && (
+							<ProtectedRoute path="/ui-playground" component={UIPlaygroundPage} />
+						)}
+
 						{/* 404 Route - Render the custom NotFoundPage component */}
 						<Route component={NotFoundPage} />
 					</Switch>
@@ -384,6 +393,7 @@ return (
 				<Toaster />
 				{/* Conditionally render the DevRoleSwitcher */}
 				{import.meta.env.MODE === 'development' && <DevRoleSwitcher />}
+				{import.meta.env.MODE === 'development' && <DevPlaygroundShortcut />}
 			</div>
 		</ForumThemeProvider>
 	</ForumStructureProvider>

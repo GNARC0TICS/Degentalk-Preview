@@ -64,7 +64,7 @@ const CATEGORY_COLORS = [ // This can remain for generic category styling if no 
 
 const ForumPage = () => {
 	// const { user } = useAuth(); // user is unused
-	const { getTheme } = useForumTheme();
+	const { getTheme, setActiveTheme } = useForumTheme();
 	// const isLoggedIn = !!user; // Unused
 	const [, setLocation] = useLocation(); // location is unused, only setLocation
 
@@ -154,6 +154,7 @@ const ForumPage = () => {
 				key={zone.id.toString()} 
 				href={`/zones/${zone.slug}`} // Link to zone page
 				className={`flex-shrink-0 w-72 h-48 rounded-lg border ${gradientClasses} bg-gradient-to-br p-5 flex flex-col transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-emerald-900/10 overflow-hidden`}
+				onClick={() => zone.colorTheme && setActiveTheme(zone.colorTheme)}
 			>
 				<div className="flex items-center mb-3">
 					{typeof IconComponentOrEmoji === 'string' ? (
@@ -190,9 +191,14 @@ const ForumPage = () => {
 
 		const IconFromThemeOrFallback = theme.icon ?? Folder;
 		const zoneIconColorClass = theme.color || 'text-emerald-400';
+		
+		// Set CSS variables for this zone once on render
+		if (zoneData.colorTheme) {
+			setActiveTheme(zoneData.colorTheme);
+		}
 
 		return (
-			<Card key={zoneData.id.toString()} className={`overflow-hidden border mb-8 ${zoneColorClass}`}>
+			<Card key={zoneData.id.toString()} className={`overflow-hidden border mb-8 ${zoneColorClass} hover-scale`}>
 				<CardHeader className="pb-3">
 					<div className="flex items-center justify-between">
 						<CardTitle className="text-lg font-semibold flex items-center">
