@@ -10,6 +10,7 @@ import { SiteLayoutWrapper } from '@/components/layout/site-layout-wrapper';
 
 import '@/styles/globals.css';
 import '@/styles/zone-themes.css'; // Import zone theme styling
+import '@/styles/underline-links.css'; // Animated underline for nav links
 
 // Create a client
 const queryClient = new QueryClient({

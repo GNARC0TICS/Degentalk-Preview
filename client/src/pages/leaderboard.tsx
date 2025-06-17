@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { cn } from '@/lib/utils';
-import { useToast } from '@/hooks/use-toast';
+// import { useToast } from '@/hooks/use-toast'; // Unused toast
 import {
 	Table,
 	TableBody,
@@ -13,8 +13,10 @@ import {
 	TableRow
 } from '@/components/ui/table';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Trophy, TrendingUp, CircleDollarSign, Diamond } from 'lucide-react';
+import { Trophy } from 'lucide-react'; // Removed TrendingUp, CircleDollarSign, Diamond
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { motion } from 'framer-motion';
+import BackToHomeButton from '@/components/common/BackToHomeButton';
 
 // Mock data structure - replace with actual API response type
 interface LeaderboardUser {
@@ -27,7 +29,17 @@ interface LeaderboardUser {
 }
 
 export default function LeaderboardPage() {
-	const { toast } = useToast();
+	// const { toast } = useToast(); // Unused toast
+
+	// Animation variants
+	const sectionVariants = {
+		hidden: { opacity: 0, y: 20 },
+		visible: (delay = 0) => ({
+			opacity: 1,
+			y: 0,
+			transition: { duration: 0.5, delay }
+		})
+	};
 
 	// TODO: Replace with actual API call
 	const { data, isLoading, isError, error, refetch } = useQuery<LeaderboardUser[]>({
@@ -120,86 +132,112 @@ export default function LeaderboardPage() {
 	);
 
 	const renderLeaderboardTable = () => (
-		<Card className="border-zinc-800 bg-zinc-950/50">
-			<CardHeader>
-				<CardTitle className="flex items-center text-xl text-emerald-400">
-					<Trophy className="mr-2 h-5 w-5" />
-					Top Degens
-				</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<div className="overflow-x-auto">
-					<Table className="min-w-full">
-						<TableHeader>
-							<TableRow className="border-zinc-800 hover:bg-transparent">
-								<TableHead className="w-[50px] text-center text-zinc-400">#</TableHead>
-								<TableHead className="text-zinc-400">User</TableHead>
-								<TableHead className="text-right text-zinc-400">XP</TableHead>
-								<TableHead className="text-right text-zinc-400">Clout</TableHead>
-								<TableHead className="text-right text-zinc-400">DGT</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{data?.map((user, i) => (
-								<TableRow
-									key={user.id}
-									className={cn(
-										'border-zinc-800',
-										i === 0 &&
-											'bg-gradient-to-r from-amber-950/30 via-zinc-950/50 to-zinc-950/50 border-l-2 border-l-amber-500',
-										i === 1 &&
-											'bg-gradient-to-r from-slate-800/30 via-zinc-950/50 to-zinc-950/50 border-l-2 border-l-slate-500',
-										i === 2 &&
-											'bg-gradient-to-r from-orange-950/30 via-zinc-950/50 to-zinc-950/50 border-l-2 border-l-orange-700'
-									)}
-								>
-									<TableCell className="text-center font-medium text-zinc-300">
-										{i === 0 && <Trophy className="h-4 w-4 inline-block text-amber-400" />}
-										{i === 1 && <Trophy className="h-4 w-4 inline-block text-slate-400" />}
-										{i === 2 && <Trophy className="h-4 w-4 inline-block text-orange-500" />}
-										{i > 2 && i + 1}
-									</TableCell>
-									<TableCell>
-										<div className="flex items-center gap-3">
-											<Avatar className="h-8 w-8">
-												<AvatarImage src={user.avatarUrl || undefined} alt={user.username} />
-												<AvatarFallback className="bg-zinc-700 text-xs">
-													{user.username.slice(0, 2).toUpperCase()}
-												</AvatarFallback>
-											</Avatar>
-											<span className="font-medium text-white hover:text-emerald-400 transition-colors cursor-pointer">
-												{user.username}
-											</span>
-										</div>
-									</TableCell>
-									<TableCell className="text-right font-mono text-emerald-400">
-										{user.xp.toLocaleString()}
-									</TableCell>
-									<TableCell className="text-right font-mono text-cyan-400">
-										{user.clout.toLocaleString()}
-									</TableCell>
-									<TableCell className="text-right font-mono text-purple-400">
-										{user.dgtBalance.toLocaleString()}
-									</TableCell>
+		<motion.div
+			variants={sectionVariants}
+			initial="hidden"
+			animate="visible"
+			custom={0.1}
+		>
+			<Card className="border-zinc-800 bg-zinc-950/50">
+				<CardHeader>
+					<CardTitle className="flex items-center text-xl text-emerald-400">
+						<Trophy className="mr-2 h-5 w-5" />
+						Top Degens
+					</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<div className="overflow-x-auto">
+						<Table className="min-w-full">
+							<TableHeader>
+								<TableRow className="border-zinc-800 hover:bg-transparent">
+									<TableHead className="w-[50px] text-center text-zinc-400">#</TableHead>
+									<TableHead className="text-zinc-400">User</TableHead>
+									<TableHead className="text-right text-zinc-400">XP</TableHead>
+									<TableHead className="text-right text-zinc-400">Clout</TableHead>
+									<TableHead className="text-right text-zinc-400">DGT</TableHead>
 								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-				</div>
-				{data?.length === 0 && (
-					<p className="text-center text-zinc-500 py-8">Leaderboard is currently empty.</p>
-				)}
-			</CardContent>
-		</Card>
+							</TableHeader>
+							<TableBody>
+								{data?.map((user, i) => (
+									<TableRow
+										key={user.id}
+										className={cn(
+											'border-zinc-800',
+											i === 0 &&
+												'bg-gradient-to-r from-amber-950/30 via-zinc-950/50 to-zinc-950/50 border-l-2 border-l-amber-500',
+											i === 1 &&
+												'bg-gradient-to-r from-slate-800/30 via-zinc-950/50 to-zinc-950/50 border-l-2 border-l-slate-500',
+											i === 2 &&
+												'bg-gradient-to-r from-orange-950/30 via-zinc-950/50 to-zinc-950/50 border-l-2 border-l-orange-700'
+										)}
+									>
+										<TableCell className="text-center font-medium text-zinc-300">
+											{i === 0 && <Trophy className="h-4 w-4 inline-block text-amber-400" />}
+											{i === 1 && <Trophy className="h-4 w-4 inline-block text-slate-400" />}
+											{i === 2 && <Trophy className="h-4 w-4 inline-block text-orange-500" />}
+											{i > 2 && i + 1}
+										</TableCell>
+										<TableCell>
+											<div className="flex items-center gap-3">
+												<Avatar className="h-8 w-8">
+													<AvatarImage src={user.avatarUrl || undefined} alt={user.username} />
+													<AvatarFallback className="bg-zinc-700 text-xs">
+														{user.username.slice(0, 2).toUpperCase()}
+													</AvatarFallback>
+												</Avatar>
+												<span className="font-medium text-white hover:text-emerald-400 transition-colors cursor-pointer">
+													{user.username}
+												</span>
+											</div>
+										</TableCell>
+										<TableCell className="text-right font-mono text-emerald-400">
+											{user.xp.toLocaleString()}
+										</TableCell>
+										<TableCell className="text-right font-mono text-cyan-400">
+											{user.clout.toLocaleString()}
+										</TableCell>
+										<TableCell className="text-right font-mono text-purple-400">
+											{user.dgtBalance.toLocaleString()}
+										</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</div>
+					{data?.length === 0 && (
+						<p className="text-center text-zinc-500 py-8">Leaderboard is currently empty.</p>
+					)}
+				</CardContent>
+			</Card>
+		</motion.div>
 	);
 
 	return (
-		<div className="max-w-5xl mx-auto px-4 py-8">
-			<h1 className="text-3xl font-bold mb-8 text-center text-white">DegenTalk Leaderboards</h1>
+		<div className="max-w-5xl mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black">
+			<BackToHomeButton />
+			<motion.h1 
+				className="text-3xl font-bold mb-8 text-center text-white"
+				variants={sectionVariants}
+				initial="hidden"
+				animate="visible"
+				custom={0}
+			>
+				DegenTalk Leaderboards
+			</motion.h1>
 
 			{/* Add Tabs for different leaderboards (XP, Clout, DGT) here later */}
 
-			{isLoading ? renderLoadingState() : isError ? renderErrorState() : renderLeaderboardTable()}
+			{isLoading ? (
+				<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.1}>
+					{renderLoadingState()}
+				</motion.div>
+			) : isError ? (
+				<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.1}>
+					{renderErrorState()}
+				</motion.div>
+			) : (
+				renderLeaderboardTable()
+			)}
 		</div>
 	);
 }

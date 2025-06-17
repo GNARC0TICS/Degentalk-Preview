@@ -1,4 +1,4 @@
-import { db } from './schema'; // Assuming db might be needed from the re-exported schema
+import { db } from '../../../db';
 import { PgTransaction } from 'drizzle-orm/pg-core';
 
 export function logSeed(scriptName: string, message: string, error?: boolean) {

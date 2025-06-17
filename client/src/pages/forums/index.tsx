@@ -6,7 +6,6 @@ import { ErrorDisplay } from '@/components/ui/error-display';
 import {
 	// Home, // Keep one Home import - Unused
 	Search,
-	LayoutGrid,
 	Folder,
 	MessageSquare,
 	ChevronLeft,
@@ -31,7 +30,6 @@ import type { MergedZone, MergedForum } from '@/contexts/ForumStructureContext';
 // ZoneCardData might not be directly needed if renderZoneCard adapts to MergedZone
 // import type { ZoneCardData } from '@/components/forum/CanonicalZoneGrid'; 
 import { Input } from '@/components/ui/input';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'wouter';
 import { Badge } from '@/components/ui/badge';
 // getForumEntityUrl and isPrimaryZone might need to be re-evaluated or adapted
@@ -49,6 +47,8 @@ import {
 } from '@/config/themeConstants';
 import { useForumTheme } from '@/contexts/ForumThemeProvider';
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
+import { motion } from 'framer-motion'; // Added Framer Motion import
+import BackToHomeButton from '@/components/common/BackToHomeButton';
 
 
 const CATEGORY_COLORS = [ // This can remain for generic category styling if no theme is matched
@@ -237,6 +237,16 @@ const ForumPage = () => {
 		);
 	};
 
+	// Animation variants for sections
+	const sectionVariants = {
+		hidden: { opacity: 0, y: 20 },
+		visible: (delay = 0) => ({
+			opacity: 1,
+			y: 0,
+			transition: { duration: 0.5, delay }
+		})
+	};
+
 	if (structureLoading) {
 		return (
 			<div className="flex flex-col min-h-screen">
@@ -260,132 +270,112 @@ const ForumPage = () => {
 	}
 
 	return (
-		<div className="flex flex-col min-h-screen">
-			<div className="container max-w-7xl mx-auto px-4 py-6 flex-grow">
-				{/* Hero Section with Search */}
-				<div className="mb-12">
-					<div className="-mt-16 text-center">
-						<img
-							src="/images/ForumsGrafitti.PNG"
-							alt="DegenTalk Forum"
-							className="mx-auto -mb-12 w-auto max-h-64 object-contain"
-						/>
-						<p className="text-zinc-400 max-w-2xl mx-auto">
-							Join the conversation with fellow degens. Discuss crypto, share insights, and stay
-							ahead of the market.
-						</p>
-					</div>
-
-					{/* Search Bar */}
-					<div className="max-w-2xl mx-auto mb-10">
-						<form onSubmit={handleSearch} className="flex gap-2">
-							<div className="relative flex-1">
-								<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-zinc-500" />
-								<Input
-									type="search"
-									placeholder="Search topics, posts, or users..."
-									value={searchText}
-									onChange={(e) => setSearchText(e.target.value)}
-									className="pl-9 bg-zinc-800 border-zinc-700 w-full"
-								/>
-							</div>
-							<Button type="submit">Search</Button>
-						</form>
-					</div>
-
-					{/* Primary Zones Carousel */}
-					<section className="relative mb-14">
-						<div className="flex items-center justify-between mb-6">
-							<h2 className="text-2xl font-bold text-white flex items-center">
-								<LayoutGrid className="h-6 w-6 mr-2 text-emerald-500" />
-								Primary Zones
-							</h2>
-
-							<div className="flex space-x-2">
-								<Button
-									variant="outline"
-									size="icon"
-									onClick={prevZone}
-									disabled={(primaryZones || []).length <= 1}
-									className="h-8 w-8 rounded-full"
-								>
-									<ChevronLeft className="h-4 w-4" />
-								</Button>
-								<Button
-									variant="outline"
-									size="icon"
-									onClick={nextZone}
-									disabled={(primaryZones || []).length <= 1}
-									className="h-8 w-8 rounded-full"
-								>
-									<ChevronRight className="h-4 w-4" />
-								</Button>
-							</div>
-						</div>
-
-						{structureLoading ? (
-							<div className="flex gap-4 overflow-x-auto pb-4">
-								{Array.from({ length: 3 }).map((_, i) => (
-									<Skeleton key={i} className="h-48 w-72 flex-shrink-0" />
-								))}
-							</div>
-						) : primaryZones.length > 0 ? (
-							<div
-								ref={carouselRef}
-								className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar"
-								style={{ scrollbarWidth: 'none' }}
+		<ForumStructureProvider>
+			<div className="flex flex-col min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black">
+				<div className="container max-w-7xl mx-auto px-4 py-6 flex-grow">
+					<BackToHomeButton />
+					<div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+						{/* Main Content Area */}
+						<div className="lg:col-span-9 space-y-8">
+							{/* Forum Header & Search */}
+							<motion.section
+								variants={sectionVariants}
+								initial="hidden"
+								animate="visible"
+								custom={0}
 							>
-								{primaryZones.map((zone: MergedZone) => // Removed unused index from map
-									renderZoneCard(zone)
-								)}
-							</div>
-						) : (
-							<div className="text-center py-10 text-zinc-500">
-								<p>No primary zones available</p>
-							</div>
-						)}
-					</section>
-				</div>
+								<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+									<h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 text-transparent bg-clip-text mb-4 sm:mb-0">
+										Community Forums
+									</h1>
+									{/* ... existing breadcrumbs or other elements ... */}
+								</div>
+								<form onSubmit={handleSearch} className="flex gap-2">
+									<Input
+										type="text"
+										value={searchText}
+										onChange={(e) => setSearchText(e.target.value)}
+										placeholder="Search forums..."
+										className="flex-grow bg-zinc-800/50 border-zinc-700 placeholder-zinc-500"
+									/>
+									<Button type="submit" variant="outline" className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-700">
+										<Search className="h-4 w-4 mr-2" />
+										Search
+									</Button>
+								</form>
+							</motion.section>
 
-				{/* Categories Section - Centered */}
-				<div className="mb-14">
-					<h2 className="text-2xl font-bold mb-8 text-white flex items-center justify-center">
-						<Folder className="h-6 w-6 mr-2 text-amber-500" />
-						General Forums
-					</h2>
+							{/* Primary Zones Carousel */}
+							{primaryZones.length > 0 && (
+								<motion.section
+									variants={sectionVariants}
+									initial="hidden"
+									animate="visible"
+									custom={0.1} // Stagger delay
+								>
+									<div className="flex justify-between items-center mb-3">
+										<h2 className="text-xl font-semibold text-white">Primary Zones</h2>
+										<div className="flex gap-2">
+											<Button variant="ghost" size="icon" onClick={prevZone} className="text-zinc-400 hover:text-white">
+												<ChevronLeft className="h-5 w-5" />
+											</Button>
+											<Button variant="ghost" size="icon" onClick={nextZone} className="text-zinc-400 hover:text-white">
+												<ChevronRight className="h-5 w-5" />
+											</Button>
+										</div>
+									</div>
+									<div className="no-scrollbar flex overflow-x-auto gap-4 pb-2" ref={carouselRef}>
+										{primaryZones.map((zone, idx) => (
+											<motion.div
+												key={zone.id.toString()}
+												initial={{ opacity: 0, x: 20 }}
+												animate={{ opacity: 1, x: 0 }}
+												transition={{ duration: 0.4, delay: idx * 0.1 }}
+											>
+												{renderZoneCard(zone)}
+											</motion.div>
+										))}
+									</div>
+								</motion.section>
+							)}
 
-					{structureLoading ? (
-						<div className="space-y-8 max-w-4xl mx-auto">
-							{Array.from({ length: 3 }).map((_, i) => (
-								<Skeleton key={i} className="h-64 w-full" />
-							))}
+							{/* General Forum Zones List */}
+							<motion.section
+								variants={sectionVariants}
+								initial="hidden"
+								animate="visible"
+								custom={0.2} // Stagger delay
+							>
+								<h2 className="text-xl font-semibold text-white mb-4">
+									{generalForumZones.length > 0 ? 'All Forums' : 'No forum categories found.'}
+								</h2>
+								{generalForumZones.map((zoneData, index) => (
+									<motion.div
+										key={zoneData.id.toString()}
+										initial={{ opacity: 0, y: 20 }}
+										animate={{ opacity: 1, y: 0 }}
+										transition={{ duration: 0.5, delay: index * 0.1 }} // Stagger children
+									>
+										{renderGeneralZone(zoneData, index)}
+									</motion.div>
+								))}
+							</motion.section>
 						</div>
-					) : generalForumZones.length > 0 ? ( 
-						<div className="max-w-4xl mx-auto">
-							{generalForumZones.map((zone: MergedZone, index: number) => renderGeneralZone(zone, index))}
-						</div>
-					) : (
-						<div className="text-center py-10 text-zinc-500 max-w-4xl mx-auto">
-							<p>No general forums available</p>
-						</div>
-					)}
-				</div>
 
-				{/* Forum Guidelines and Active Members at the bottom */}
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 max-w-4xl mx-auto">
-					<ForumGuidelines className="h-full" />
-
-					<ActiveMembersWidget
-						users={activeUsers || []}
-						isLoading={activeUsersLoading}
-						description="Members active in the last 30 minutes"
-						viewAllLink="/users"
-						className="h-full"
-					/>
+						{/* Sidebar */}
+						<aside className="lg:col-span-3 space-y-6">
+							<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.3}>
+								<ActiveMembersWidget users={activeUsers || []} isLoading={activeUsersLoading} />
+							</motion.div>
+							<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.4}>
+								<ForumGuidelines />
+							</motion.div>
+						</aside>
+					</div>
 				</div>
+				<SiteFooter />
 			</div>
-			<SiteFooter />
-		</div>
+		</ForumStructureProvider>
 	);
 }
 

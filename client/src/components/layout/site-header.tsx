@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'wouter';
 import {
 	MessageSquare,
@@ -32,6 +32,50 @@ import { useAuthWrapper } from '@/hooks/wrappers/use-auth-wrapper';
 import { Separator } from '@/components/ui/separator';
 import { NotificationPanel } from '../notifications/NotificationPanel';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import gsap from 'gsap';
+
+// Function to generate random underline paths
+const generateRandomPath = () => {
+	// Width of the SVG viewbox
+	const width = 100; // Using percentage-based width
+	// Generate random control points
+	const startX = 5 + Math.random() * 5;
+	const startY = 30 + Math.random() * 5;
+	
+	// Create random points along the path
+	const points = [];
+	let currentX = startX;
+	
+	// Generate 3-5 random points
+	const numPoints = 3 + Math.floor(Math.random() * 3);
+	
+	for (let i = 0; i < numPoints; i++) {
+		const x = currentX + (width / numPoints) * 0.8 + Math.random() * (width / numPoints) * 0.4;
+		const y = 25 + Math.random() * 10;
+		points.push({ x, y });
+		currentX = x;
+	}
+	
+	// Ensure the last point is near the right edge
+	points.push({ x: width - 5, y: 30 + Math.random() * 5 });
+	
+	// Create path with random variations
+	let path = `M${startX} ${startY}`;
+	
+	points.forEach((point, i) => {
+		// Add some randomized curves
+		if (i % 2 === 0 && i > 0) {
+			const prevPoint = points[i-1];
+			const controlX1 = prevPoint.x + (point.x - prevPoint.x) * 0.5 + Math.random() * 5 - 2.5;
+			const controlY1 = prevPoint.y + Math.random() * 10 - 5;
+			path += ` C${controlX1} ${controlY1}, ${point.x - 10} ${point.y}, ${point.x} ${point.y}`;
+		} else {
+			path += ` L${point.x} ${point.y}`;
+		}
+	});
+	
+	return path;
+};
 
 // Check if we're in development mode
 const isDevelopment = import.meta.env.DEV;
@@ -64,6 +108,8 @@ const MegaphoneIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export function SiteHeader() {
 	const [isOpen, setIsOpen] = useState(false);
 	const [location] = useLocation();
+	const [navPaths, setNavPaths] = useState<string[]>([]);
+	const navRefs = useRef<(SVGPathElement | null)[]>([]);
 
 	const { user, logoutMutation } = useAuthWrapper() || {};
 
@@ -93,6 +139,88 @@ export function SiteHeader() {
 		{ name: 'Leaderboard', href: '/leaderboard' }
 	];
 
+	// Generate random paths on component mount and set up GSAP animations
+	useEffect(() => {
+		const paths = navigation.map(() => generateRandomPath());
+		setNavPaths(paths);
+		
+		navRefs.current = navRefs.current.slice(0, navigation.length);
+		
+		setTimeout(() => {
+			navRefs.current.forEach((path, index) => {
+				if (path) {
+					const pathLength = path.getTotalLength();
+					const isActive = navigation[index].href === location;
+					gsap.set(path, { 
+						strokeDasharray: pathLength,
+						strokeDashoffset: isActive ? 0 : pathLength,
+						opacity: isActive ? 1 : 0 // Set initial opacity
+					});
+				}
+			});
+		}, 100); 
+	}, []);
+
+	const handleLocationChange = (currentLocation: string, isInitialSetup = false) => {
+		navRefs.current.forEach((path, index) => {
+			if (path) {
+				const pathLength = path.getTotalLength();
+				const isActive = navigation[index].href === currentLocation;
+
+				gsap.killTweensOf(path); 
+
+				if (isActive) {
+					gsap.to(path, { 
+						strokeDashoffset: 0,
+						opacity: 1,
+						duration: isInitialSetup ? 0.01 : 0.3, // Virtually instant on initial setup
+						ease: "power2.out"
+					});
+				} else {
+					gsap.to(path, { 
+						strokeDashoffset: pathLength,
+						opacity: 0,
+						duration: 0.2, 
+						ease: "power1.in"
+					});
+				}
+			}
+		});
+	};
+
+	// Update active path when location changes
+	useEffect(() => {
+        handleLocationChange(location);
+	}, [location]);
+
+	// Setup hover animations
+	const handleMouseEnter = (index: number) => {
+		const path = navRefs.current[index];
+		if (path && navigation[index].href !== location) {
+			gsap.killTweensOf(path); 
+			gsap.to(path, { 
+				strokeDashoffset: 0,
+				opacity: 1,
+				duration: 0.3, 
+				ease: "power2.out"
+			});
+		}
+	};
+
+	const handleMouseLeave = (index: number) => {
+		const path = navRefs.current[index];
+		if (path && navigation[index].href !== location) {
+			const pathLength = path.getTotalLength();
+			gsap.killTweensOf(path); 
+			gsap.to(path, { 
+				strokeDashoffset: pathLength,
+				opacity: 0,
+				duration: 0.2, 
+				ease: "power1.in"
+			});
+		}
+	};
+
 	// Handle logout
 	const handleLogout = () => {
 		if (!isDevelopment && logoutMutation?.mutate) {
@@ -113,23 +241,43 @@ export function SiteHeader() {
 						</Link>
 					</div>
 
-					{/* Desktop Navigation */}
+					{/* Desktop Navigation with animated underline */}
 					<nav className="hidden md:flex items-center space-x-1">
-						{navigation.map((item) => (
-							<Link key={item.name} href={item.href}>
-								<div
-									className={`px-2 py-2 rounded-md text-sm font-medium cursor-pointer transition-all duration-200
-                  ${
-										item.href === location
-											? 'bg-zinc-800 text-white shadow-inner'
-											: 'text-zinc-300 hover:bg-zinc-800 hover:text-emerald-400 focus:text-emerald-400 focus:bg-zinc-800'
-									}
-                `}
-								>
-									{item.name}
-								</div>
-							</Link>
-						))}
+						{navigation.map((item, index) => {
+							const isActive = item.href === location;
+							return (
+								<Link key={item.name} href={item.href}>
+									<div
+										className={`nav-item group px-3 py-2 rounded-md text-sm font-medium cursor-pointer transition-all duration-200 ${
+											isActive
+												? 'text-white nav-active'
+												: 'text-zinc-300 hover:text-emerald-400'
+										}`}
+										onMouseEnter={() => handleMouseEnter(index)}
+										onMouseLeave={() => handleMouseLeave(index)}
+									>
+										<span className="relative z-10">{item.name}</span>
+										{/* SVG underline with randomized path */}
+										<svg
+											className="w-full h-2"
+											viewBox="0 0 100 41"
+											fill="none"
+											preserveAspectRatio="none"
+											style={{ overflow: 'visible' }}
+										>
+											<path
+												ref={el => navRefs.current[index] = el}
+												className="nav-underline"
+												d={navPaths[index] || "M5 30L25 32S50 34 75 31L95 30"}
+												stroke={isActive ? "#e55050" : "#10b981"}
+												strokeWidth="5.5"
+												strokeLinecap="round"
+											/>
+										</svg>
+									</div>
+								</Link>
+							);
+						})}
 					</nav>
 
 					{/* Search Box */}

@@ -11,12 +11,11 @@
 
 ## 0. TL;DR (For the Impatient 🏃‍♂️)
 
-1. The hierarchy is **exactly three levels**:
-   `Zone → Category → Forum` → (threads & replies live **only** inside forums).
+1. The primary hierarchy is **`Zone → Forum`**. Forums can optionally contain one level of **`SubForums`** (i.e., `Zone → Forum → SubForum`). Threads & replies live **only** inside forums or subforums.
 2. **forumMap.config.ts** (frontend) & **forum_categories** table (backend) are
    generated from the **same data** – never diverge, never hand-edit SQL.
 3. **All business logic** (posting, tipping, XP, permissions, prefixes…)
-   is attached to the forum. Zones & categories are _purely organisational_.
+   is attached at the **forum or subforum level**. Zones are _purely organisational_.
 4. Navigation components (`CanonicalZoneGrid`, `HierarchicalZoneNav`, etc.) read
    the config → no hard-coded slugs anywhere else.
 5. Admins create / rename items via the **Config Service** or DB → the UI & API
@@ -28,19 +27,20 @@ Keep reading for the long version.
 
 ## 1. Anatomy of the Forum System
 
-| Level      | Purpose                                         | Holds Threads? |
-| ---------- | ----------------------------------------------- | -------------- |
-| **Zone**   | Top-level visual context & branding (Primary or General) | ❌             |
-| **Forum**  | Atomic unit for rules, posting & XP (child of a Zone) | ✅             |
-| Thread     | Discussion container (belongs to one forum)     | —              |
-| Reply      | Message inside a thread                         | —              |
+| Level        | Purpose                                                     | Holds Threads? |
+| ------------ | ----------------------------------------------------------- | -------------- |
+| **Zone**     | Top-level visual context & branding (Primary or General)    | ❌             |
+| **Forum**    | Primary unit for rules, posting & XP (child of a Zone, or child of another Forum as a SubForum) | ✅             |
+| (SubForum)   | (A Forum that is a child of another Forum)                  | ✅             |
+| Thread       | Discussion container (belongs to one forum or subforum)     | —              |
+| Reply        | Message inside a thread                                     | —              |
 
 Important notes:
 
-• The `forum_categories` table stores entities with `type = 'zone'` or `type = 'forum'`.
+• The `forum_categories` table stores entities with `type = 'zone'` or `type = 'forum'`. SubForums are also of `type = 'forum'` but have a `parentId` pointing to another forum.
 • Zones are distinguished as 'Primary' or 'General' based on `pluginData.configZoneType` (from `forumMap.config.ts`), which translates to an `isPrimary` flag in API/frontend contexts.
 • Zones **never** contain threads directly; they host one or more 'Forum' entities.
-• The concept of a separate 'Category' entity between Zone and Forum is not currently implemented in the seeded structure; Forums are direct children of Zones.
+• Forums are direct children of Zones. Additionally, a Forum can itself contain child Forums (referred to as SubForums), allowing for a `Zone → Forum → SubForum` structure. The concept of a separate 'Category' entity as a distinct mandatory layer between Zone and Forum is not the primary structure implemented by the current `forumMap.config.ts` and sync process, although the database schema and frontend context could potentially support it if the API provided such data.
 
 ---
 
@@ -60,6 +60,7 @@ Every primary zone owns **0-n categories** (currently 0) or directly hosts
 forums. Each carries immutable theming (colour, icon, banner, landing
   component) defined in `THEME_PRESETS` inside
   `client/src/config/forumMap.config.ts`.
+  Primary Zones are designed to be feature-rich, staff-driven areas, often incorporating custom UI components, unique gamification rules (like special XP challenges or badges), and enhanced content curation capabilities. These extended features are typically configured via the `pluginData` field for the respective zone in `forumMap.config.ts` and utilized by both frontend and backend services.
 
 ### 2.2 General Zones
 
@@ -183,16 +184,22 @@ The upcoming **Admin UI → UI Config** surface writes to `ui_themes` DB table. 
 
 ## 5. Business Logic – Forums or Bust 🎯
 
-| Feature            | Controlled At | Notes |
-| ------------------ | ------------- | ----- |
-| Posting Allowed    | forum.rules.allowPosting | Zone/category never override |
-| XP Multiplier      | forum.rules.xpMultiplier  | Defaults to `1` |
-| Tipping Enabled    | forum.rules.tippingEnabled| — |
-| Prefixes           | forum.rules.availablePrefixes / prefixGrantRules | Auto-assign engine in `/utils/prefixEngine.ts` |
-| Access Level       | forum.rules.accessLevel   | `public`/`registered`/`level_X+`/`mod`/`admin` |
+Business logic is primarily attached at the Forum (or SubForum) level. While the `ForumRules` TypeScript type (defined in `forumMap.config.ts` and stored within the `pluginData.rules` field in the database) is the conceptual container for many rules, some core and frequently accessed rules are also available as direct columns on the `forum_categories` database table for performance and easier querying.
 
-If you need a new rule → extend the **ForumRules** TS type → update the seed &
-backend validator schemas in one PR.
+| Feature            | Controlled At (Examples) | Notes |
+| ------------------ | ------------------------ | ----- |
+| Posting Allowed    | `forum_categories.isLocked` (derived from `rules.accessLevel` or direct set), `pluginData.rules.allowPosting` | Zone/category never override |
+| XP Multiplier      | `forum_categories.xpMultiplier`, `pluginData.rules.xpMultiplier`  | Defaults to `1` |
+| Tipping Enabled    | `forum_categories.tippingEnabled`, `pluginData.rules.tippingEnabled`| — |
+| Prefixes           | `pluginData.rules.availablePrefixes` / `pluginData.rules.prefixGrantRules` | Auto-assign engine in `/utils/prefixEngine.ts` |
+| Access Level       | `pluginData.rules.accessLevel` (influences `isLocked`, `minXp` etc.)   | `public`/`registered`/`level_X+`/`mod`/`admin` |
+| Min XP Required    | `forum_categories.minXp`, `pluginData.rules.minXpRequired` | Governs access |
+
+**General Guideline:**
+*   When adding a new rule, extend the `ForumRules` TS type in `forumMap.config.ts`.
+*   The sync script (`scripts/seed/seedForumsFromConfig.ts`) will populate this into `pluginData.rules`.
+*   If the rule is core and frequently accessed, consider also adding a direct column to `forum_categories` and ensure the sync script populates it from the `ForumRules` object.
+*   Update backend validator schemas and services to utilize the new rule from the most appropriate source (direct column or `pluginData.rules`).
 
 ---
 
@@ -279,15 +286,42 @@ npm run db:push   # applies to local dev DB
 ### 10.2 Data Flow
 ```mermaid
 graph TD;
-  forumMap.config.ts --> ForumStructureContext
-  ForumStructureContext -->{zones, categories, forums}
-  {zones, categories, forums} --> HierarchicalZoneNav
-  {zones, categories, forums} --> CanonicalZoneGrid
-  forumApi.ts --> ReactQueryCache
-  ReactQueryCache --> ThreadList
-  ThreadList --> ThreadCard --> ThreadPage
-  ThreadPage --> PostList --> PostCard
+  subgraph "Data Sources"
+    A1["/api/forum/structure (Backend API)"]
+    A2["forumMap.config.ts (Static Fallback)"]
+  end
+
+  subgraph "Client-Side Context"
+    B[ForumStructureContext]
+  end
+
+  subgraph "Navigation Components"
+    C[HierarchicalZoneNav]
+    D[CanonicalZoneGrid]
+  end
+
+  subgraph "Content Display"
+    E["forumApi.ts (React Query)"]
+    F[ReactQueryCache]
+    G[ThreadList]
+    H[ThreadCard]
+    I[ThreadPage]
+    J[PostList]
+    K[PostCard]
+  end
+
+  A1 --> B
+  A2 -.-> B
+  B --> C
+  B --> D
+  E --> F
+  F --> G
+  G --> H
+  H --> I
+  I --> J
+  J --> K
 ```
+*Note: `ForumStructureContext` primarily fetches from `/api/forum/structure`. `forumMap.config.ts` is used as a fallback if the API call fails or during initial static rendering.*
 
 ### 10.3 State & Caching
 • **React Query** caches remote calls (`forumApi.ts`).  

@@ -1,0 +1,30 @@
+/* Animated underline effect for navigation links in SiteHeader */
+
+.nav-item {
+  position: relative;
+  overflow: visible;
+}
+
+/* Position the SVG underline */
+.nav-item svg {
+  position: absolute;
+  bottom: -4px; /* Position closer to text */
+  left: 0;
+  width: 100%;
+  height: 12px; /* Reduced height */
+  pointer-events: none;
+  overflow: visible !important;
+  z-index: 1;
+}
+
+/* Base styles for the underline path */
+.nav-underline {
+  /* GSAP will handle the animation properties */
+  opacity: 1;
+  vector-effect: non-scaling-stroke; /* Prevents stroke width distortion */
+}
+
+/* Active state is handled by GSAP in the component */
+.nav-active .nav-underline {
+  opacity: 1;
+} 
