@@ -44,6 +44,7 @@ const adminLinks = [
 	{ href: '/admin', label: 'Dashboard', icon: <HomeIcon className="h-4 w-4" /> },
 	{ href: '/admin/users', label: 'Users', icon: <Users className="h-4 w-4" /> },
 	{ href: '/admin/threads', label: 'Threads', icon: <MessageSquare className="h-4 w-4" /> },
+	{ href: '/admin/forum-structure', label: 'Forum Structure', icon: <Globe className="h-4 w-4" /> },
 	{ href: '/admin/categories', label: 'Categories', icon: <FolderIcon className="h-4 w-4" /> },
 	{ href: '/admin/prefixes', label: 'Prefixes', icon: <TagIcon className="h-4 w-4" /> },
 	{ href: '/admin/treasury', label: 'Treasury', icon: <CoinsIcon className="h-4 w-4" /> },

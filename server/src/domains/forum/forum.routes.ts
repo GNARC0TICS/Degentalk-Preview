@@ -160,19 +160,19 @@ router.use('/rules', rulesRoutes);
 // GET /structure - Get the complete forum structure (zones, categories, forums)
 router.get('/structure', async (req: Request, res: Response) => {
 	try {
-		const structure = await forumService.getForumStructure();
-		res.json(structure);
+		// Fetch all forum categories with stats
+		const allCategories = await forumService.getCategoriesWithStats();
+
+		// Split into flat arrays based on the "type" column that the service preserves
+		const zones = allCategories.filter((cat) => cat.type === 'zone');
+		const categories = allCategories.filter((cat) => cat.type === 'category');
+		const forums = allCategories.filter((cat) => cat.type === 'forum');
+
+		// Respond in the format expected by the frontend ForumStructureContext
+		return res.json({ zones, categories, forums });
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error fetching forum structure', { 
-			err: error,
-			message: error instanceof Error ? error.message : 'Unknown error',
-			stack: error instanceof Error ? error.stack : undefined
-		});
-		console.error('Forum structure error:', error); // Add console log for immediate visibility
-		res.status(500).json({ 
-			message: 'An error occurred fetching forum structure',
-			error: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : undefined
-		});
+		logger.error('ForumRoutes', 'Error fetching forum structure', { err: error });
+		return res.status(500).json({ error: 'Failed to fetch forum structure' });
 	}
 });
 
@@ -1439,63 +1439,6 @@ router.get('/debug/forum-relationships', async (req: Request, res: Response) => 
 			error: 'Failed to fetch forum relationships',
 			message: error instanceof Error ? error.message : 'Unknown error'
 		});
-	}
-});
-
-// Get forum structure (zones and categories) - needed by frontend
-router.get('/structure', async (req: Request, res: Response) => {
-	try {
-		// Get forum categories with stats (threadCount, postCount, and pluginData are already handled by the service)
-		const allCategories = await forumService.getCategoriesWithStats();
-
-		// Extract primary zones (isZone is true, canonical is true)
-		const primaryZones = allCategories
-			.filter((cat) => cat.isZone === true && cat.canonical === true)
-			.map((zone) => {
-				// Find child forums for this primary zone
-				const forums = allCategories
-					.filter((forum) => forum.parentId === zone.id)
-					.map((forum) => ({
-						...forum,
-						canHaveThreads: true // Forums can have threads
-					}));
-				return {
-					...zone,
-					canHaveThreads: false, // Zones contain forums, not threads directly
-					forums 
-				};
-			});
-
-		// Extract categories (not zones, parentId is null)
-		const categories = allCategories
-			.filter((cat) => !cat.isZone && cat.parentId === null)
-			.map((category) => {
-				// Find child forums for this category
-				const forums = allCategories
-					.filter((forum) => forum.parentId === category.id)
-					.map((forum) => ({
-						...forum,
-						canHaveThreads: true
-					}));
-
-				return {
-					...category,
-					canHaveThreads: false,
-					forums
-				};
-			});
-
-		// Log what we're returning for debugging
-		logger.debug('ForumRoutes', `Returning forum structure`, { primaryZoneCount: primaryZones.length, categoryCount: categories.length });
-
-		// Return the structure in the format expected by useForumStructure
-		res.json({
-			primaryZones,
-			categories
-		});
-	} catch (error) {
-		logger.error('ForumRoutes', 'Error fetching forum structure', { err: error });
-		res.status(500).json({ error: 'Failed to fetch forum structure' });
 	}
 });
 

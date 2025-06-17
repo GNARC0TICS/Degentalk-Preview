@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Trash2, Edit, FilterX, Eye } from 'lucide-react';
+import { Trash2, Edit, FilterX, Eye, Lock, Unlock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
@@ -16,6 +16,7 @@ import type { FilterConfig, FilterValue } from '@/components/admin/layout/Entity
 // Assuming a shared Pagination component might be created or used later
 // import { Pagination } from '@/components/ui/pagination'; // Or a custom one
 import { isLightColor, formatDate } from '@/lib/utils';
+import { useQueryClient } from '@tanstack/react-query';
 
 // Define Thread type for type safety
 export interface AdminThread {
@@ -204,6 +205,18 @@ export default function AdminThreadsPage() {
     // TODO: Implement delete thread logic, likely with a confirmation dialog
   };
 
+  const queryClient = useQueryClient();
+
+  const toggleLockThread = (thread: AdminThread) => {
+    fetch(`/admin/forum/threads/${thread.id}/moderate`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isLocked: !thread.isLocked }),
+    }).then(() => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/threads'] });
+    });
+  };
+
   const columns: ColumnDef<AdminThread>[] = [
     { key: 'id', header: 'ID', render: (thread) => <span className="font-mono">{thread.id}</span> },
     {
@@ -252,17 +265,20 @@ export default function AdminThreadsPage() {
   ];
 
   const renderThreadActions = (thread: AdminThread) => (
-    <div className="space-x-1 text-right"> {/* Ensure actions are right-aligned */}
-      <Button variant="ghost" size="icon" onClick={() => viewThread(thread.slug)} title="View Thread">
-        <Eye className="h-4 w-4" /> <span className="sr-only">View</span>
+    <>
+      <Button size="sm" variant="outline" onClick={() => viewThread(thread.slug)}>
+        <Eye className="h-4 w-4" />
       </Button>
-      <Button variant="ghost" size="icon" onClick={() => editThread(thread.id)} title="Edit Thread">
-        <Edit className="h-4 w-4" /> <span className="sr-only">Edit</span>
+      <Button size="sm" variant="outline" onClick={() => editThread(thread.id)} className="ml-2">
+        <Edit className="h-4 w-4" />
       </Button>
-      <Button variant="ghost" size="icon" onClick={() => deleteThread(thread.id)} title="Delete Thread" className="text-red-600 hover:text-red-500">
-        <Trash2 className="h-4 w-4" /> <span className="sr-only">Delete</span>
+      <Button size="sm" variant="outline" onClick={() => toggleLockThread(thread)} className="ml-2">
+        {thread.isLocked ? <Unlock className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
       </Button>
-    </div>
+      <Button size="sm" variant="destructive" onClick={() => deleteThread(thread.id)} className="ml-2">
+        <Trash2 className="h-4 w-4" />
+      </Button>
+    </>
   );
 
 	return (

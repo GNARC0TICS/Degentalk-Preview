@@ -1,6 +1,7 @@
 import React from 'react';
 import { Helmet as Head } from 'react-helmet'; // Changed from next/head
 import { DailyMissions } from '@/components/missions/DailyMissions';
+import DailyTasksWidget from '@/components/dashboard/DailyTasksWidget';
 import { Sparkles, Trophy, Gift, Calendar } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth'; // Changed path
 import { useMissions } from '@/hooks/useMissions';
@@ -69,6 +70,11 @@ export default function MissionsPage() {
 			<Head>
 				<title>Daily Missions | DegenTalk</title>
 			</Head>
+
+			{/* Quick progress overview using the same widget */}
+			<div className="container py-4 max-w-3xl">
+				<DailyTasksWidget />
+			</div>
 
 			<div className="container py-6 max-w-6xl">
 				<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">

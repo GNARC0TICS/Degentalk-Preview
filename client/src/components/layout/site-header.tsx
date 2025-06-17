@@ -10,6 +10,7 @@ import {
 	Shield,
 	Settings,
 	Link2,
+	MessageSquare,
 } from 'lucide-react';
 import { WalletSheet } from '@/components/economy/wallet/WalletSheet';
 import ChartMenu from '@/components/ui/candlestick-menu';
@@ -32,44 +33,39 @@ import gsap from 'gsap';
 
 // Function to generate random underline paths
 const generateRandomPath = () => {
-	// Width of the SVG viewbox
-	const width = 100; // Using percentage-based width
-	// Generate random control points
-	const startX = 5 + Math.random() * 5;
-	const startY = 30 + Math.random() * 5;
-	
-	// Create random points along the path
+	// Width & height of the SVG viewbox
+	const width = 100;
+
+	// Start exactly at x = 0 so the underline touches the left edge
+	const startX = 0;
+	const startY = 28 + Math.random() * 4; // between 28-32
+
+	// Decide how many interior points (creates the squiggle)
+	const numPoints = 3 + Math.floor(Math.random() * 3); // 3-5 points
+
+	const section = width / (numPoints + 1);
 	const points: { x: number; y: number }[] = [];
-	let currentX = startX;
-	
-	// Generate 3-5 random points
-	const numPoints = 3 + Math.floor(Math.random() * 3);
-	
-	for (let i = 0; i < numPoints; i++) {
-		const x = currentX + (width / numPoints) * 0.8 + Math.random() * (width / numPoints) * 0.4;
-		const y = 25 + Math.random() * 10;
+
+	// Evenly spread interior points but jitter them a bit
+	for (let i = 1; i <= numPoints; i++) {
+		const x = section * i + (Math.random() - 0.5) * section * 0.4; // ±20% jitter
+		const y = 25 + Math.random() * 10; // 25-35 px vertical range
 		points.push({ x, y });
-		currentX = x;
 	}
-	
-	// Ensure the last point is near the right edge
-	points.push({ x: width - 5, y: 30 + Math.random() * 5 });
-	
-	// Create path with random variations
+
+	// End exactly at the right edge
+	points.push({ x: width, y: 28 + Math.random() * 4 });
+
+	// Build the path string
 	let path = `M${startX} ${startY}`;
-	
 	points.forEach((point, i) => {
-		// Add some randomized curves
-		if (i % 2 === 0 && i > 0) {
-			const prevPoint = points[i-1];
-			const controlX1 = prevPoint.x + (point.x - prevPoint.x) * 0.5 + Math.random() * 5 - 2.5;
-			const controlY1 = prevPoint.y + Math.random() * 10 - 5;
-			path += ` C${controlX1} ${controlY1}, ${point.x - 10} ${point.y}, ${point.x} ${point.y}`;
-		} else {
-			path += ` L${point.x} ${point.y}`;
-		}
+		const prev = i === 0 ? { x: startX, y: startY } : points[i - 1];
+		// Quadratic curve for smoothness
+		const controlX = prev.x + (point.x - prev.x) / 2;
+		const controlY = prev.y + (Math.random() - 0.5) * 10; // slight vertical variation
+		path += ` Q${controlX} ${controlY}, ${point.x} ${point.y}`;
 	});
-	
+
 	return path;
 };
 
@@ -211,6 +207,7 @@ export function SiteHeader() {
 	const navigation = [
 		{ name: 'Home', href: '/' },
 		{ name: 'Forum', href: '/forums' },
+		{ name: 'Missions', href: '/missions' },
 		{ name: 'Shop', href: '/shop' },
 		{ name: 'Leaderboard', href: '/leaderboard' }
 	];
@@ -335,7 +332,7 @@ export function SiteHeader() {
 										<span className="relative z-10">{item.name}</span>
 										{/* SVG underline with randomized path */}
 										<svg
-											className="w-full h-2"
+											className="w-full h-[8px] underline-svg"
 											viewBox="0 0 100 41"
 											fill="none"
 											preserveAspectRatio="none"
@@ -350,7 +347,7 @@ export function SiteHeader() {
 												className="nav-underline"
 												d={navPaths[index] || "M5 30L25 32S50 34 75 31L95 30"}
 												stroke={isActive ? "#e55050" : "#10b981"}
-												strokeWidth="5.5"
+												strokeWidth="6"
 												strokeLinecap="round"
 											/>
 										</svg>
@@ -523,9 +520,25 @@ export function SiteHeader() {
 														</div>
 													</DropdownMenuItem>
 												</motion.div>
-												<Link href="/preferences">
+												<Link href="/whispers">
 													<motion.div
 														custom={2}
+														variants={dropdownItemVariants}
+														initial="hidden"
+														animate="visible"
+														whileHover="hover"
+													>
+														<DropdownMenuItem>
+															<div className="flex w-full items-center cursor-pointer">
+																<MessageSquare className="mr-2 h-4 w-4" />
+																<span>Whispers (DMs)</span>
+															</div>
+														</DropdownMenuItem>
+													</motion.div>
+												</Link>
+												<Link href="/preferences">
+													<motion.div
+														custom={3}
 														variants={dropdownItemVariants}
 														initial="hidden"
 														animate="visible"
@@ -541,7 +554,7 @@ export function SiteHeader() {
 												</Link>
 												<Link href="/preferences?tab=referrals">
 													<motion.div
-														custom={3}
+														custom={4}
 														variants={dropdownItemVariants}
 														initial="hidden"
 														animate="visible"
@@ -559,7 +572,7 @@ export function SiteHeader() {
 												{displayUser.isAdmin && (
 													<Link href="/admin">
 														<motion.div
-															custom={4}
+															custom={5}
 															variants={dropdownItemVariants}
 															initial="hidden"
 															animate="visible"
@@ -577,7 +590,7 @@ export function SiteHeader() {
 												{displayUser.isModerator && (
 													<Link href="/mod">
 														<motion.div
-															custom={5}
+															custom={6}
 															variants={dropdownItemVariants}
 															initial="hidden"
 															animate="visible"
@@ -594,7 +607,7 @@ export function SiteHeader() {
 												)}
 												<DropdownMenuSeparator />
 												<motion.div
-													custom={6}
+													custom={7}
 													variants={dropdownItemVariants}
 													initial="hidden"
 													animate="visible"
@@ -714,6 +727,15 @@ export function SiteHeader() {
 										<Wallet className="h-5 w-5 inline mr-2" />
 										Wallet
 									</div>
+									<Link href="/whispers">
+										<div
+											className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
+											onClick={() => setIsOpen(false)}
+										>
+											<MessageSquare className="h-5 w-5 inline mr-2" />
+											Whispers (DMs)
+										</div>
+									</Link>
 									<Link href="/preferences">
 										<div
 											className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"

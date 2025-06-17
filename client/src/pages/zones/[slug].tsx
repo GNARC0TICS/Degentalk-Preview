@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react'; // Removed useState
 import { useParams, Link } from 'wouter';
-import { useQuery } from '@tanstack/react-query';
+// import { useQuery } from '@tanstack/react-query'; // Removed
 import { ForumStructureProvider, useForumStructure } from '@/contexts/ForumStructureContext';
-import type { MergedZone, MergedForum } from '@/contexts/ForumStructureContext';
-import ThreadCard from '@/components/forum/ThreadCard';
-import { Pagination } from '@/components/ui/pagination';
-import { getQueryFn } from '@/lib/queryClient';
-import type { ThreadsApiResponse, ApiThread } from '@/features/forum/components/ThreadList';
+import type { MergedForum } from '@/contexts/ForumStructureContext'; // Removed MergedZone as it's inferred from useForumStructure or not directly typed here
+// import ThreadCard from '@/components/forum/ThreadCard'; // Removed
+// import { Pagination } from '@/components/ui/pagination'; // Removed
+// import { getQueryFn } from '@/lib/queryClient'; // Removed
+// import type { ThreadsApiResponse, ApiThread } from '@/features/forum/components/ThreadList'; // Removed
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -21,15 +21,15 @@ import {
   TrendingUp,
   Users
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+// import { cn } from '@/lib/utils'; // Removed
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
 
 const ZonePage: React.FC = () => {
   const params = useParams<{ slug: string }>();
   const slug = params?.slug;
   const { getZone, zones, isLoading, error: contextError } = useForumStructure();
-  const [currentPage, setCurrentPage] = useState(1);
-  const threadsPerPage = 20;
+  // const [currentPage, setCurrentPage] = useState(1); // Removed
+  // const threadsPerPage = 20; // Removed
 
   if (!slug) {
     return <NotFound />;
@@ -44,37 +44,37 @@ const ZonePage: React.FC = () => {
     ? zones.flatMap(z => z.forums).filter(f => f.parentForumSlug === slug)
     : zone?.forums || [];
 
-  const forumIds = isCategory
-    ? categoryForums.map(f => f.id).filter(id => id > 0)
-    : zone?.forums?.map(f => f.id).filter(id => id > 0) || [];
+  // const forumIds = isCategory // Removed
+  //   ? categoryForums.map(f => f.id).filter(id => id > 0)
+  //   : zone?.forums?.map(f => f.id).filter(id => id > 0) || [];
 
-  const primaryForumId = forumIds[0] ?? 0;
+  // const primaryForumId = forumIds[0] ?? 0; // Removed, related to thread fetching
 
   // Always call useQuery so the hook count stays the same; use `enabled` to control fetch.
-  const {
-    data: threadsResponse,
-    isLoading: isLoadingThreads,
-    error: threadsError,
-  } = useQuery<ThreadsApiResponse | null, Error>({
-    queryKey: [`/api/forum/threads`, primaryForumId, currentPage, threadsPerPage],
-    queryFn: async () => {
-      if (!primaryForumId) return null;
+  // const { // Removed thread fetching query
+  //   data: threadsResponse,
+  //   isLoading: isLoadingThreads,
+  //   error: threadsError,
+  // } = useQuery<ThreadsApiResponse | null, Error>({
+  //   queryKey: [`/api/forum/threads`, primaryForumId, currentPage, threadsPerPage],
+  //   queryFn: async () => {
+  //     if (!primaryForumId) return null;
       
-      // Use single categoryId for now
-      const url = `/api/forum/threads?categoryId=${primaryForumId}&page=${currentPage}&limit=${threadsPerPage}&sortBy=latest`;
+  //     // Use single categoryId for now
+  //     const url = `/api/forum/threads?categoryId=${primaryForumId}&page=${currentPage}&limit=${threadsPerPage}&sortBy=latest`;
       
-      const fetcher = getQueryFn<ThreadsApiResponse>({ on401: 'returnNull' });
-      try {
-        const response = await fetcher({ queryKey: [url], meta: undefined } as any);
-        return response;
-      } catch (e) {
-        console.error(`Error fetching threads for zone/category ${slug}:`, e);
-        throw e;
-      }
-    },
-    enabled: primaryForumId > 0,
-    staleTime: 1 * 60 * 1000,
-  });
+  //     const fetcher = getQueryFn<ThreadsApiResponse>({ on401: 'returnNull' });
+  //     try {
+  //       const response = await fetcher({ queryKey: [url], meta: undefined } as any);
+  //       return response;
+  //     } catch (e) {
+  //       console.error(`Error fetching threads for zone/category ${slug}:`, e);
+  //       throw e;
+  //     }
+  //   },
+  //   enabled: primaryForumId > 0,
+  //   staleTime: 1 * 60 * 1000,
+  // });
 
   // Handle loading/error states AFTER hooks
   if (isLoading) {
@@ -93,13 +93,13 @@ const ZonePage: React.FC = () => {
   const displayDescription = zone?.description;
   const theme = zone?.theme;
 
-  const threads = threadsResponse?.threads || [];
-  const pagination = threadsResponse?.pagination || {
-    page: 1,
-    limit: threadsPerPage,
-    totalThreads: 0,
-    totalPages: 0,
-  };
+  // const threads = threadsResponse?.threads || []; // Removed
+  // const pagination = threadsResponse?.pagination || { // Removed
+  //   page: 1,
+  //   limit: threadsPerPage,
+  //   totalThreads: 0,
+  //   totalPages: 0,
+  // };
 
   return (
     <div className="min-h-screen bg-black">
@@ -200,82 +200,60 @@ const ZonePage: React.FC = () => {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Forums Section */}
-            {(zone?.forums || categoryForums).length > 0 && (
+            {(zone?.forums && zone.forums.length > 0) || (zone?.categories && zone.categories.some(cat => cat.forums.length > 0)) ? (
               <Card className="bg-zinc-900 border-zinc-800">
                 <CardHeader>
                   <CardTitle className="text-xl text-white flex items-center gap-2">
                     <Users className="w-5 h-5 text-emerald-500" />
-                    Forums
+                    Forums in {displayName}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {(zone?.forums || categoryForums).map((forum: MergedForum) => (
-                    <div key={forum.slug} className="bg-zinc-800/50 rounded-lg overflow-hidden">
+                  {/* Display forums directly under the zone */}
+                  {zone?.forums?.map((forum: MergedForum) => (
+                    <div key={`direct-${forum.slug}`} className="bg-zinc-800/50 rounded-lg overflow-hidden">
                       <ForumListItem 
                         forum={forum}
                         href={`/forums/${forum.slug}`}
-                        parentZoneColor={zone?.color}
+                        parentZoneColor={zone?.color ?? undefined}
                       />
                     </div>
                   ))}
+                  {/* Display forums under categories within the zone */}
+                  {zone?.categories?.map(category => (
+                    category.forums.map((forum: MergedForum) => (
+                      <div key={`${category.slug}-${forum.slug}`} className="bg-zinc-800/50 rounded-lg overflow-hidden">
+                        <ForumListItem 
+                          forum={forum}
+                          href={`/forums/${forum.slug}`}
+                          parentZoneColor={zone?.color ?? undefined}
+                          // Optionally, you could pass category info here if ForumListItem can use it
+                        />
+                      </div>
+                    ))
+                  ))}
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="bg-zinc-900 border-zinc-800">
+                <CardContent className="p-12 text-center">
+                  <Users className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
+                  <p className="text-zinc-400 text-lg">No forums found in this zone.</p>
+                  {/* Optionally, add a link to create a forum if applicable for admins */}
                 </CardContent>
               </Card>
             )}
 
-            {/* Threads Section */}
+            {/* Threads Section - REMOVED */}
+            {/* 
             <div>
               <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <MessageSquare className="w-6 h-6 text-emerald-500" />
                 Recent Threads
               </h2>
-
-              {isLoadingThreads ? (
-                <div className="space-y-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Skeleton key={i} className="h-24 bg-zinc-900" />
-                  ))}
-                </div>
-              ) : threadsError ? (
-                <Card className="bg-red-900/20 border-red-800">
-                  <CardContent className="p-6 text-center">
-                    <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
-                    <p className="text-red-400">Failed to load threads</p>
-                    <p className="text-sm text-zinc-500 mt-1">{threadsError.message}</p>
-                  </CardContent>
-                </Card>
-              ) : threads.length === 0 ? (
-                <Card className="bg-zinc-900 border-zinc-800">
-                  <CardContent className="p-12 text-center">
-                    <MessageSquare className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                    <p className="text-zinc-400 text-lg mb-4">No threads yet</p>
-                    <Link href="/threads/create">
-                      <Button variant="outline" className="border-emerald-600 text-emerald-500 hover:bg-emerald-600/10">
-                        Create the first thread
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-4">
-                  {threads.map((thread: ApiThread) => (
-                    <ThreadCard key={thread.id} thread={thread} />
-                  ))}
-                </div>
-              )}
-
-              {pagination.totalPages > 1 && (
-                <div className="mt-8">
-                  <Pagination
-                    currentPage={pagination.page}
-                    totalPages={pagination.totalPages}
-                    onPageChange={setCurrentPage}
-                    showSummary={true}
-                    totalItems={pagination.totalThreads}
-                    pageSize={threadsPerPage}
-                  />
-                </div>
-              )}
+              ... (entire thread listing logic removed) ...
             </div>
+            */}
           </div>
 
           {/* Sidebar */}

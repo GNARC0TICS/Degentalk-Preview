@@ -23,6 +23,9 @@ import NotFoundPage from './pages/not-found';
 import LeaderboardPage from './pages/leaderboard';
 import DegenIndexPage from './pages/degen-index';
 import AuthPage from './pages/auth';
+import MissionsPage from './pages/missions';
+import AnnouncementsPage from './pages/announcements';
+import SearchPage from './pages/search';
 
 // Admin Pages
 import AdminDashboardPage from "./pages/admin/index.tsx";
@@ -48,6 +51,7 @@ import ZoneConfigPage from "./pages/admin/config/zones.tsx";
 import AdminDgtPackagesPage from "./pages/admin/dgt-packages.tsx";
 import TipRainSettingsPage from "./pages/admin/tip-rain-settings.tsx";
 import AdminDevSeedingPage from "./pages/admin/dev/seeding.tsx";
+import ForumStructureAdminPage from "./pages/admin/forum-structure.tsx";
 
 // Shop Pages
 import DgtPurchasePage from './pages/shop-management/dgt-purchase';
@@ -124,6 +128,9 @@ return (
 						<ProtectedRoute path="/shop/dgt-purchase" component={DgtPurchasePage} />
 						<ProtectedRoute path="/shop/purchase-success" component={PurchaseSuccessPage} />
 						<ProtectedRoute path="/leaderboard" component={LeaderboardPage} />
+						<ProtectedRoute path="/missions" component={MissionsPage} />
+						<ProtectedRoute path="/announcements" component={AnnouncementsPage} />
+						<ProtectedRoute path="/search" component={SearchPage} />
 						<ProtectedRoute path="/degen-index" component={DegenIndexPage} />
 						<ProtectedRoute path="/wallet" component={WalletPage} />
 						<ProtectedRoute path="/profile/:username" component={ProfilePage} />
@@ -356,6 +363,14 @@ return (
 								)}
 							/>
 						)}
+						<Route
+							path="/admin/forum-structure"
+							component={() => (
+								<AdminLayout>
+									<ForumStructureAdminPage />
+								</AdminLayout>
+							)}
+						/>
 
 						{/* Moderator Routes */}
 						<Route

@@ -18,6 +18,7 @@ import { AnnouncementTicker } from '@/components/layout/announcement-ticker';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { LeaderboardWidget } from '@/components/sidebar/leaderboard-widget';
 import { WalletSummaryWidget } from '@/components/sidebar/wallet-summary-widget';
+import DailyTasksWidget from '@/components/dashboard/DailyTasksWidget';
 import {
 	ShoutboxSidebarTop,
 	ShoutboxSidebarBottom,
@@ -182,6 +183,9 @@ function HomePage() { // Changed to a regular function
 
 					{/* Wallet Summary */}
 					<WalletSummaryWidget isLoggedIn={isLoggedIn} />
+
+					{/* Daily Tasks Widget */}
+					<DailyTasksWidget />
 
 					{/* Forum Navigation */}
 					<Card className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden">

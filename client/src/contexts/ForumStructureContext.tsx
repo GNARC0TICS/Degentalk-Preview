@@ -563,7 +563,7 @@ const ForumStructureContext = createContext<ForumStructureContextType | undefine
 export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { data: rawApiResponse, isLoading, error: queryError } = useQuery<unknown | null, Error>({ // Fetch as unknown first
     queryKey: [FORUM_STRUCTURE_API_PATH],
-    queryFn: getQueryFn({ on401: 'returnNull' }),
+    queryFn: getQueryFn({ on401: 'returnNull' }), // Reverted to original
     staleTime: 5 * 60 * 1000,
   });
 

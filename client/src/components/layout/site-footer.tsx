@@ -95,19 +95,25 @@ export function SiteFooter() {
 					<div>
 						<h4 className="font-medium mb-3 text-zinc-300">Navigation</h4>
 						<ul className="space-y-2 text-sm">
-							{['Home', 'Forum', 'Shop', 'Leaderboard'].map((item, index) => (
+							{[
+								{ label: 'Home', href: '/' },
+								{ label: 'Forum', href: '/forums' },
+								{ label: 'Missions', href: '/missions' },
+								{ label: 'Shop', href: '/shop' },
+								{ label: 'Leaderboard', href: '/leaderboard' },
+							].map((item, index) => (
 								<motion.li
-									key={item}
+									key={item.label}
 									initial={{ opacity: 0, x: -10 }}
 									animate={{ opacity: 1, x: 0 }}
 									transition={{ delay: index * 0.1 }}
 								>
-									<Link href={item === 'Home' ? '/' : `/${item.toLowerCase()}`}>
+									<Link href={item.href}>
 										<motion.span
 											className="text-zinc-400 hover:text-emerald-400 transition-colors cursor-pointer inline-block"
 											whileHover={{ x: 5 }}
 										>
-											{item}
+											{item.label}
 										</motion.span>
 									</Link>
 								</motion.li>
@@ -118,48 +124,53 @@ export function SiteFooter() {
 					<div>
 						<h4 className="font-medium mb-3 text-zinc-300">Resources</h4>
 						<ul className="space-y-2 text-sm">
-							{['Documentation', 'API References', 'Token Economics', 'Platform FAQ'].map(
-								(item, index) => (
-									<motion.li
-										key={item}
-										initial={{ opacity: 0, x: -10 }}
-										animate={{ opacity: 1, x: 0 }}
-										transition={{ delay: index * 0.1 + 0.2 }}
-									>
-										<motion.a
-											href="#"
+							{[
+								{ label: 'Docs', href: '/docs' },
+								{ label: 'FAQ', href: '/help/faq' },
+							].map((item, index) => (
+								<motion.li
+									key={item.label}
+									initial={{ opacity: 0, x: -10 }}
+									animate={{ opacity: 1, x: 0 }}
+									transition={{ delay: index * 0.1 + 0.2 }}
+								>
+									<Link href={item.href}>
+										<motion.span
 											className="text-zinc-400 hover:text-emerald-400 transition-colors inline-block"
 											whileHover={{ x: 5 }}
 										>
-											{item}
-										</motion.a>
-									</motion.li>
-								)
-							)}
+											{item.label}
+										</motion.span>
+									</Link>
+								</motion.li>
+							))}
 						</ul>
 					</div>
 
 					<div>
 						<h4 className="font-medium mb-3 text-zinc-300">Legal</h4>
 						<ul className="space-y-2 text-sm">
-							{['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'Disclaimer'].map(
-								(item, index) => (
-									<motion.li
-										key={item}
-										initial={{ opacity: 0, x: -10 }}
-										animate={{ opacity: 1, x: 0 }}
-										transition={{ delay: index * 0.1 + 0.4 }}
-									>
-										<motion.a
-											href="#"
+							{[
+								{ label: 'Forum Rules', href: '/forum-rules' },
+								{ label: 'Privacy Policy', href: '/legal/privacy' },
+								{ label: 'Terms of Use', href: '/legal/terms' },
+							].map((item, index) => (
+								<motion.li
+									key={item.label}
+									initial={{ opacity: 0, x: -10 }}
+									animate={{ opacity: 1, x: 0 }}
+									transition={{ delay: index * 0.1 + 0.4 }}
+								>
+									<Link href={item.href}>
+										<motion.span
 											className="text-zinc-400 hover:text-emerald-400 transition-colors inline-block"
 											whileHover={{ x: 5 }}
 										>
-											{item}
-										</motion.a>
-									</motion.li>
-								)
-							)}
+											{item.label}
+										</motion.span>
+									</Link>
+								</motion.li>
+							))}
 						</ul>
 					</div>
 				</div>

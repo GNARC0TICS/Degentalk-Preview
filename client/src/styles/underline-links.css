@@ -10,8 +10,8 @@
   position: absolute;
   bottom: -4px; /* Position closer to text */
   left: 0;
-  width: 100%;
-  height: 12px; /* Reduced height */
+  /* width will follow nav item automatically */
+  height: 10px; /* Match Tailwind class h-[10px] */
   pointer-events: none;
   overflow: visible !important;
   z-index: 1;
