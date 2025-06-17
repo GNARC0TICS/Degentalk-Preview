@@ -49,6 +49,7 @@ import { useForumTheme } from '@/contexts/ForumThemeProvider';
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
 import { motion } from 'framer-motion'; // Added Framer Motion import
 import BackToHomeButton from '@/components/common/BackToHomeButton';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 
 
 const CATEGORY_COLORS = [ // This can remain for generic category styling if no theme is matched
@@ -358,16 +359,24 @@ const ForumPage = () => {
 							<h2 className="text-xl font-semibold text-white mb-4">
 								{generalForumZones.length > 0 ? 'All Forums' : 'No forum categories found.'}
 							</h2>
-							{generalForumZones.map((zoneData, index) => (
-								<motion.div
-									key={zoneData.id.toString()}
-									initial={{ opacity: 0, y: 20 }}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{ duration: 0.5, delay: index * 0.1 }} // Stagger children
-								>
-									{renderGeneralZone(zoneData, index)}
-								</motion.div>
-							))}
+							<Accordion type="multiple" className="space-y-4">
+								{generalForumZones.map((zoneData, index) => (
+									<AccordionItem value={zoneData.slug} key={zoneData.id.toString()}>
+										<AccordionTrigger className="focus:outline-none">
+											{zoneData.name}
+										</AccordionTrigger>
+										<AccordionContent asChild>
+											<motion.div
+												initial={{ opacity: 0, y: 20 }}
+												animate={{ opacity: 1, y: 0 }}
+												transition={{ duration: 0.4 }}
+											>
+												{renderGeneralZone(zoneData, index)}
+											</motion.div>
+										</AccordionContent>
+									</AccordionItem>
+								))}
+							</Accordion>
 						</motion.section>
 					</div>
 

@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'wouter';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-	MessageSquare,
-	ShoppingBag,
 	User,
 	ChevronDown,
-	X,
 	Search,
 	Wallet,
 	LogOut,
@@ -16,7 +14,7 @@ import {
 import { WalletSheet } from '@/components/economy/wallet/WalletSheet';
 import ChartMenu from '@/components/ui/candlestick-menu';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import {
@@ -27,9 +25,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { ROUTES } from '@/config/admin-routes';
 import { useAuthWrapper } from '@/hooks/wrappers/use-auth-wrapper';
-import { Separator } from '@/components/ui/separator';
 import { NotificationPanel } from '../notifications/NotificationPanel';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import gsap from 'gsap';
@@ -43,7 +39,7 @@ const generateRandomPath = () => {
 	const startY = 30 + Math.random() * 5;
 	
 	// Create random points along the path
-	const points = [];
+	const points: { x: number; y: number }[] = [];
 	let currentX = startX;
 	
 	// Generate 3-5 random points
@@ -104,6 +100,86 @@ const MegaphoneIcon = (props: React.SVGProps<SVGSVGElement>) => (
 		<path d="M246 120a46.05 46.05 0 0 0-46-46h-39.85c-2.58-.15-54.1-3.57-103.15-44.71A14 14 0 0 0 34 40v160a13.85 13.85 0 0 0 8.07 12.68A14.2 14.2 0 0 0 48 214a13.9 13.9 0 0 0 9-3.3c40-33.52 81.57-42 97-44.07v34a14 14 0 0 0 6.23 11.65l11 7.33a14 14 0 0 0 21.32-8.17l12.13-45.71A46.07 46.07 0 0 0 246 120M49.29 201.52A2 2 0 0 1 46 200V40a1.9 1.9 0 0 1 1.15-1.8A2.1 2.1 0 0 1 48 38a1.9 1.9 0 0 1 1.26.48c44 36.92 89 45.19 104.71 47v69c-15.68 1.85-60.67 10.13-104.68 47.04m131.64 7a2 2 0 0 1-3.05 1.18l-11-7.33a2 2 0 0 1-.89-1.67V166h26.2ZM200 154h-34V86h34a34 34 0 1 1 0 68" />
 	</svg>
 );
+
+// Framer Motion variants for notification button
+const notificationButtonVariants = {
+	rest: { scale: 1 },
+	hover: { 
+		scale: 1.05,
+		transition: {
+			duration: 0.2,
+			ease: "easeOut"
+		}
+	},
+	tap: { scale: 0.95 }
+};
+
+const notificationBadgeVariants = {
+	initial: { scale: 0, opacity: 0 },
+	animate: { 
+		scale: 1, 
+		opacity: 1,
+		transition: {
+			type: "spring",
+			stiffness: 500,
+			damping: 15
+		}
+	},
+	pulse: {
+		scale: [1, 1.2, 1],
+		transition: {
+			duration: 0.6,
+			repeat: Infinity,
+			repeatDelay: 3
+		}
+	}
+};
+
+// Framer Motion variants for dropdown
+const dropdownVariants = {
+	hidden: { 
+		opacity: 0, 
+		scale: 0.95,
+		y: -10
+	},
+	visible: { 
+		opacity: 1, 
+		scale: 1,
+		y: 0,
+		transition: {
+			duration: 0.2,
+			ease: [0.16, 1, 0.3, 1]
+		}
+	},
+	exit: {
+		opacity: 0,
+		scale: 0.95,
+		y: -10,
+		transition: {
+			duration: 0.15,
+			ease: "easeIn"
+		}
+	}
+};
+
+const dropdownItemVariants = {
+	hidden: { opacity: 0, x: -10 },
+	visible: (i: number) => ({
+		opacity: 1,
+		x: 0,
+		transition: {
+			delay: i * 0.03,
+			duration: 0.2,
+			ease: "easeOut"
+		}
+	}),
+	hover: {
+		x: 5,
+		transition: {
+			duration: 0.2
+		}
+	}
+};
 
 export function SiteHeader() {
 	const [isOpen, setIsOpen] = useState(false);
@@ -266,7 +342,11 @@ export function SiteHeader() {
 											style={{ overflow: 'visible' }}
 										>
 											<path
-												ref={el => navRefs.current[index] = el}
+												ref={el => {
+													if (navRefs.current) {
+														navRefs.current[index] = el;
+													}
+												}}
 												className="nav-underline"
 												d={navPaths[index] || "M5 30L25 32S50 34 75 31L95 30"}
 												stroke={isActive ? "#e55050" : "#10b981"}
@@ -298,7 +378,7 @@ export function SiteHeader() {
 					<div className="hidden md:flex items-center">
 						{isAuthenticated && displayUser ? (
 							<div className="flex items-center space-x-4">
-								{/* Notification Icon */}
+								{/* Enhanced Notification Icon with Framer Motion */}
 								<Popover
 									open={isNotificationsPanel}
 									onOpenChange={(isOpen) => {
@@ -306,21 +386,41 @@ export function SiteHeader() {
 									}}
 								>
 									<PopoverTrigger asChild>
-										<Button
-											variant="ghost"
-											size="icon"
-											className="relative text-zinc-400 hover:text-emerald-400 focus:text-emerald-400 transition-all duration-200"
-											onClick={() => setIsNotificationsPanelOpen(true)}
+										<motion.div
+											variants={notificationButtonVariants}
+											initial="rest"
+											whileHover="hover"
+											whileTap="tap"
 										>
-											<MegaphoneIcon className="h-5 w-5" />
-											<Badge className="absolute -top-1 -right-1 px-1.5 h-4 min-w-4 bg-red-500 flex items-center justify-center text-[10px]">
-												3
-											</Badge>
-										</Button>
+											<Button
+												variant="ghost"
+												size="icon"
+												className="relative text-zinc-400 hover:text-emerald-400 focus:text-emerald-400 transition-all duration-200"
+												onClick={() => setIsNotificationsPanelOpen(true)}
+											>
+												<MegaphoneIcon className="h-5 w-5" />
+												<motion.div
+													className="absolute -top-1 -right-1"
+													variants={notificationBadgeVariants}
+													initial="initial"
+													animate={["animate", "pulse"]}
+												>
+													<Badge className="px-1.5 h-4 min-w-4 bg-red-500 flex items-center justify-center text-[10px]">
+														3
+													</Badge>
+												</motion.div>
+											</Button>
+										</motion.div>
 									</PopoverTrigger>
 									<PopoverContent align="end" className="w-96 p-0">
-										{/* Notifications Panel */}
-										<NotificationPanel />
+										<motion.div
+											initial={{ opacity: 0, y: -10 }}
+											animate={{ opacity: 1, y: 0 }}
+											exit={{ opacity: 0, y: -10 }}
+											transition={{ duration: 0.2 }}
+										>
+											<NotificationPanel />
+										</motion.div>
 									</PopoverContent>
 								</Popover>
 
@@ -355,82 +455,158 @@ export function SiteHeader() {
 									</Link>
 								)}
 
-								{/* User Dropdown */}
+								{/* Enhanced User Dropdown with Framer Motion */}
 								<DropdownMenu>
 									<DropdownMenuTrigger asChild>
-										<Button variant="ghost" className="p-1">
-											<div className="flex items-center space-x-2">
-												<Avatar className="h-8 w-8">
-													<AvatarFallback className="bg-emerald-800 text-emerald-200">
-														{displayUser?.username?.substring(0, 2)?.toUpperCase() || 'UN'}
-													</AvatarFallback>
-												</Avatar>
-												<span className="hidden lg:flex items-center">
-													<span className="text-zinc-300">{displayUser?.username || 'User'}</span>
-													<ChevronDown className="ml-1 h-4 w-4 text-zinc-500" />
-												</span>
-											</div>
-										</Button>
+										<motion.div
+											whileHover={{ scale: 1.05 }}
+											whileTap={{ scale: 0.95 }}
+											transition={{ duration: 0.2 }}
+										>
+											<Button variant="ghost" className="p-1">
+												<div className="flex items-center space-x-2">
+													<Avatar className="h-8 w-8">
+														<AvatarFallback className="bg-emerald-800 text-emerald-200">
+															{displayUser?.username?.substring(0, 2)?.toUpperCase() || 'UN'}
+														</AvatarFallback>
+													</Avatar>
+													<span className="hidden lg:flex items-center">
+														<span className="text-zinc-300">{displayUser?.username || 'User'}</span>
+														<motion.div
+															animate={{ rotate: isNotificationsPanel ? 180 : 0 }}
+															transition={{ duration: 0.3 }}
+														>
+															<ChevronDown className="ml-1 h-4 w-4 text-zinc-500" />
+														</motion.div>
+													</span>
+												</div>
+											</Button>
+										</motion.div>
 									</DropdownMenuTrigger>
-									<DropdownMenuContent align="end" className="w-56">
-										<DropdownMenuLabel>My Account</DropdownMenuLabel>
-										<DropdownMenuSeparator />
-										<Link href={`/profile/${displayUser.username}`}>
-											<DropdownMenuItem>
-												<div className="flex w-full items-center cursor-pointer">
-													<User className="mr-2 h-4 w-4" />
-													<span>Profile</span>
-												</div>
-											</DropdownMenuItem>
-										</Link>
-										<DropdownMenuItem onClick={() => setIsWalletOpen(true)}>
-											<div className="flex w-full items-center cursor-pointer">
-												<Wallet className="mr-2 h-4 w-4" />
-												<span>Wallet</span>
-											</div>
-										</DropdownMenuItem>
-										<Link href="/preferences">
-											<DropdownMenuItem>
-												<div className="flex w-full items-center cursor-pointer">
-													<Settings className="mr-2 h-4 w-4" />
-													<span>Settings</span>
-												</div>
-											</DropdownMenuItem>
-										</Link>
-										<Link href="/preferences?tab=referrals">
-											<DropdownMenuItem>
-												<div className="flex w-full items-center cursor-pointer">
-													<Link2 className="mr-2 h-4 w-4" />
-													<span>Referrals</span>
-												</div>
-											</DropdownMenuItem>
-										</Link>
-										<DropdownMenuSeparator />
-										{displayUser.isAdmin && (
-											<Link href="/admin">
-												<DropdownMenuItem>
-													<div className="flex w-full items-center cursor-pointer">
-														<Shield className="mr-2 h-4 w-4" />
-														<span>Admin Panel</span>
-													</div>
-												</DropdownMenuItem>
-											</Link>
-										)}
-										{displayUser.isModerator && (
-											<Link href="/mod">
-												<DropdownMenuItem>
-													<div className="flex w-full items-center cursor-pointer">
-														<Shield className="mr-2 h-4 w-4" />
-														<span>Moderator Panel</span>
-													</div>
-												</DropdownMenuItem>
-											</Link>
-										)}
-										<DropdownMenuSeparator />
-										<DropdownMenuItem onClick={handleLogout}>
-											<LogOut className="mr-2 h-4 w-4" />
-											<span>Log out</span>
-										</DropdownMenuItem>
+									<DropdownMenuContent align="end" className="w-56 overflow-hidden">
+										<AnimatePresence>
+											<motion.div
+												variants={dropdownVariants}
+												initial="hidden"
+												animate="visible"
+												exit="exit"
+											>
+												<DropdownMenuLabel>My Account</DropdownMenuLabel>
+												<DropdownMenuSeparator />
+												<Link href={`/profile/${displayUser.username}`}>
+													<motion.div
+														custom={0}
+														variants={dropdownItemVariants}
+														initial="hidden"
+														animate="visible"
+														whileHover="hover"
+													>
+														<DropdownMenuItem>
+															<div className="flex w-full items-center cursor-pointer">
+																<User className="mr-2 h-4 w-4" />
+																<span>Profile</span>
+															</div>
+														</DropdownMenuItem>
+													</motion.div>
+												</Link>
+												<motion.div
+													custom={1}
+													variants={dropdownItemVariants}
+													initial="hidden"
+													animate="visible"
+													whileHover="hover"
+												>
+													<DropdownMenuItem onClick={() => setIsWalletOpen(true)}>
+														<div className="flex w-full items-center cursor-pointer">
+															<Wallet className="mr-2 h-4 w-4" />
+															<span>Wallet</span>
+														</div>
+													</DropdownMenuItem>
+												</motion.div>
+												<Link href="/preferences">
+													<motion.div
+														custom={2}
+														variants={dropdownItemVariants}
+														initial="hidden"
+														animate="visible"
+														whileHover="hover"
+													>
+														<DropdownMenuItem>
+															<div className="flex w-full items-center cursor-pointer">
+																<Settings className="mr-2 h-4 w-4" />
+																<span>Settings</span>
+															</div>
+														</DropdownMenuItem>
+													</motion.div>
+												</Link>
+												<Link href="/preferences?tab=referrals">
+													<motion.div
+														custom={3}
+														variants={dropdownItemVariants}
+														initial="hidden"
+														animate="visible"
+														whileHover="hover"
+													>
+														<DropdownMenuItem>
+															<div className="flex w-full items-center cursor-pointer">
+																<Link2 className="mr-2 h-4 w-4" />
+																<span>Referrals</span>
+															</div>
+														</DropdownMenuItem>
+													</motion.div>
+												</Link>
+												<DropdownMenuSeparator />
+												{displayUser.isAdmin && (
+													<Link href="/admin">
+														<motion.div
+															custom={4}
+															variants={dropdownItemVariants}
+															initial="hidden"
+															animate="visible"
+															whileHover="hover"
+														>
+															<DropdownMenuItem>
+																<div className="flex w-full items-center cursor-pointer">
+																	<Shield className="mr-2 h-4 w-4" />
+																	<span>Admin Panel</span>
+																</div>
+															</DropdownMenuItem>
+														</motion.div>
+													</Link>
+												)}
+												{displayUser.isModerator && (
+													<Link href="/mod">
+														<motion.div
+															custom={5}
+															variants={dropdownItemVariants}
+															initial="hidden"
+															animate="visible"
+															whileHover="hover"
+														>
+															<DropdownMenuItem>
+																<div className="flex w-full items-center cursor-pointer">
+																	<Shield className="mr-2 h-4 w-4" />
+																	<span>Moderator Panel</span>
+																</div>
+															</DropdownMenuItem>
+														</motion.div>
+													</Link>
+												)}
+												<DropdownMenuSeparator />
+												<motion.div
+													custom={6}
+													variants={dropdownItemVariants}
+													initial="hidden"
+													animate="visible"
+													whileHover="hover"
+												>
+													<DropdownMenuItem onClick={handleLogout}>
+														<LogOut className="mr-2 h-4 w-4" />
+														<span>Log out</span>
+													</DropdownMenuItem>
+												</motion.div>
+											</motion.div>
+										</AnimatePresence>
 									</DropdownMenuContent>
 								</DropdownMenu>
 							</div>

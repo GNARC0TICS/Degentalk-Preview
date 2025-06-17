@@ -47,6 +47,7 @@ import XpConfigPage from "./pages/admin/config/xp.tsx";
 import ZoneConfigPage from "./pages/admin/config/zones.tsx";
 import AdminDgtPackagesPage from "./pages/admin/dgt-packages.tsx";
 import TipRainSettingsPage from "./pages/admin/tip-rain-settings.tsx";
+import AdminDevSeedingPage from "./pages/admin/dev/seeding.tsx";
 
 // Shop Pages
 import DgtPurchasePage from './pages/shop-management/dgt-purchase';
@@ -344,6 +345,17 @@ return (
 								</AdminLayout>
 							)}
 						/>
+						{/* Insert the dev seeding route only in development builds */}
+						{import.meta.env.MODE === 'development' && (
+							<Route
+								path="/admin/dev/seeding"
+								component={() => (
+									<AdminLayout>
+										<AdminDevSeedingPage />
+									</AdminLayout>
+								)}
+							/>
+						)}
 
 						{/* Moderator Routes */}
 						<Route

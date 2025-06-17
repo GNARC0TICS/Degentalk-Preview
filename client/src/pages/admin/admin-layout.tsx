@@ -24,7 +24,8 @@ import {
 	Trophy,
 	BarChart3,
 	BadgeIcon,
-	Globe
+	Globe,
+	Database
 } from 'lucide-react';
 import AdminSidebar from '@/components/admin/admin-sidebar';
 import { AdminSidebarProvider, useAdminSidebar } from '@/contexts/AdminSidebarContext';
@@ -64,6 +65,9 @@ const adminLinks = [
 	{ href: '/admin/cooldowns', label: 'Cooldowns', icon: <Clock className="h-4 w-4" /> }
 ];
 
+if (import.meta.env.MODE === 'development') {
+	adminLinks.push({ href: '/admin/dev/seeding', label: 'Seeding', icon: <Database className="h-4 w-4" /> });
+}
 
 function AdminLayoutContent({ children }: AdminLayoutProps) {
 	const { toggleSidebar, openMobileDrawer, isMobileDrawerOpen, closeMobileDrawer, isCollapsed, setIsCollapsed } = useAdminSidebar();
