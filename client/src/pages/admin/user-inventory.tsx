@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'wouter';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import AdminLayout from './admin-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
@@ -178,15 +177,12 @@ export default function AdminUserInventoryPage() {
 
 	if (loadingInventory || loadingProducts) {
 		return (
-			<AdminLayout>
-				<div className="p-4">Loading...</div>
-			</AdminLayout>
+			<div className="p-4">Loading...</div>
 		);
 	}
 
 	return (
-		<AdminLayout>
-			<div className="p-6">
+		<div className="p-6">
 				<div className="flex items-center justify-between mb-6">
 					<div className="flex items-center gap-3">
 						<Link href="/admin/users" className="text-zinc-400 hover:text-white">
@@ -318,6 +314,5 @@ export default function AdminUserInventoryPage() {
 					</CardContent>
 				</Card>
 			</div>
-		</AdminLayout>
 	);
 }

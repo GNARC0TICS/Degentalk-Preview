@@ -1,11 +1,9 @@
 import React from 'react';
-import AdminLayout from '../admin-layout';
 // import ComingSoon from "@/components/admin/coming-soon";
 
 export default function ReportsPage() {
 	return (
-		<AdminLayout>
-			<div className="mb-8">
+		<div className="mb-8">
 				<h1 className="text-2xl font-bold mb-2">Reports</h1>
 				<p className="text-muted-foreground">
 					Manage and respond to reported content across the platform.
@@ -17,6 +15,5 @@ export default function ReportsPage() {
         subtitle="This section will allow you to review and take action on reported content from users."
       /> */}
 			<div>Reports feature coming soon.</div>
-		</AdminLayout>
 	);
 }

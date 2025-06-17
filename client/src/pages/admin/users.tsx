@@ -3,326 +3,372 @@
 // - Added/confirmed <Head> title
 // - Applied DEV_MODE gating (if applicable)
 
-// Remove Next.js Head component since we're not using Next.js
 import { useState } from 'react';
-import { Link, useLocation } from 'wouter';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow
-} from '@/components/ui/table';
-import {
-	Pagination,
-	PaginationContent,
-	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious
-} from '@/components/ui/pagination';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import {
-	User,
-	MoreHorizontal,
-	Search,
-	UserPlus,
-	Filter,
-	Pencil,
-	Trash2,
-	Ban,
-	CheckCircle,
-	ShieldAlert,
-	Shield,
-	Package
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  User,
+  MoreHorizontal,
+  UserPlus,
+  Pencil,
+  Trash2,
+  Ban,
+  CheckCircle,
+  ShieldAlert,
+  Shield,
+  Package,
 } from 'lucide-react';
+
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { EntityTable } from '@/components/admin/layout/EntityTable';
+import type { ColumnDef } from '@/components/admin/layout/EntityTable'; // Type-only import
+import { EntityFilters } from '@/components/admin/layout/EntityFilters';
+import type { FilterConfig, FilterValue } from '@/components/admin/layout/EntityFilters'; // Type-only imports
+import UserFormDialog from '@/components/admin/forms/users/UserFormDialog';
+import {
+  BanUserDialog,
+  UnbanUserDialog,
+  DeleteUserDialog,
+  ChangeUserRoleDialog,
+} from '@/components/admin/forms/users/UserActionDialogs';
 import { ROUTES } from '@/config/admin-routes';
+// import { PaginationState } from '@tanstack/react-table'; // For EntityTable pagination - EntityTable does not use this directly
 
 // Define user type for type safety
-interface AdminUser {
-	id: number;
-	username: string;
-	email: string;
-	role: string;
-	status: string;
-	posts: number;
-	threads: number;
-	createdAt: string;
+// Ensure this matches the actual structure from your API and EntityTable needs
+export interface AdminUser {
+  id: string; // Changed to string to align with typical DB IDs, adjust if number
+  username: string;
+  email: string;
+  role: string;
+  status: string;
+  posts: number;
+  threads: number;
+  createdAt: string; // Consider Date object if you do transformations
+  // Add any other fields that might be returned or needed
 }
 
 interface UsersResponse {
-	users: AdminUser[];
-	total: number;
+  users: AdminUser[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+// Available roles for filtering and dialogs
+const ROLES_OPTIONS = [
+  { value: 'all', label: 'All Roles' },
+  { value: 'admin', label: 'Admin' },
+  { value: 'moderator', label: 'Moderator' },
+  { value: 'user', label: 'User' },
+];
+
+// Available statuses for filtering
+const STATUS_OPTIONS = [
+  { value: 'all', label: 'All Statuses' },
+  { value: 'active', label: 'Active' },
+  { value: 'banned', label: 'Banned' },
+  { value: 'pending', label: 'Pending' },
+];
+
+// Define a simple pagination state for now, until a proper pagination component is integrated
+interface SimplePaginationState {
+  pageIndex: number;
+  pageSize: number;
 }
 
 export default function AdminUsersPage() {
-	const [page, setPage] = useState(1);
-	const [searchQuery, setSearchQuery] = useState('');
+  const [pagination, setPagination] = useState<SimplePaginationState>({
+    pageIndex: 0, // API might be 1-indexed, adjust queryFn
+    pageSize: 10,
+  });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<Record<string, FilterValue>>({});
 
-	// Fetch users data from the backend API
-	const { data: usersData, isLoading } = useQuery<UsersResponse>({
-		queryKey: ['/api/admin/users', page, searchQuery],
-		queryFn: async () => {
-			// Build the query parameters for pagination and search
-			const params = new URLSearchParams();
-			params.append('page', page.toString());
-			params.append('limit', '10');
+  // Dialog states
+  const [isUserFormOpen, setIsUserFormOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
+  const [userToBan, setUserToBan] = useState<AdminUser | null>(null);
+  const [userToUnban, setUserToUnban] = useState<AdminUser | null>(null);
+  const [userToDelete, setUserToDelete] = useState<AdminUser | null>(null);
+  const [userToChangeRole, setUserToChangeRole] = useState<AdminUser | null>(null);
 
-			if (searchQuery) {
-				params.append('search', searchQuery);
-			}
+  const { data: usersData, isLoading, error } = useQuery<UsersResponse>({
+    queryKey: ['/api/admin/users', pagination.pageIndex, pagination.pageSize, searchQuery, filters],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      params.append('page', (pagination.pageIndex + 1).toString()); // API is 1-indexed
+      params.append('limit', pagination.pageSize.toString());
+      if (searchQuery) params.append('search', searchQuery);
+      if (filters.role && filters.role !== 'all') params.append('role', filters.role as string);
+      if (filters.status && filters.status !== 'all') params.append('status', filters.status as string);
 
-			const response = await fetch(`/api/admin/users?${params.toString()}`);
+      const response = await fetch(`/api/admin/users?${params.toString()}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch users: ${response.statusText}`);
+      }
+      return response.json();
+    },
+    placeholderData: (previousData) => previousData, // Keep previous data while loading
+  });
+  
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    setPagination((prev: SimplePaginationState) => ({ ...prev, pageIndex: 0 })); // Reset to first page on search
+  };
 
-			if (!response.ok) {
-				throw new Error(`Failed to fetch users: ${response.statusText}`);
-			}
+  const handleFilterChange = (filterKey: string, value: FilterValue) => {
+    setFilters((prev: Record<string, FilterValue>) => ({ ...prev, [filterKey]: value }));
+    setPagination((prev: SimplePaginationState) => ({ ...prev, pageIndex: 0 })); // Reset to first page on filter change
+  };
 
-			return await response.json();
-		}
-	});
+  const filtersConfig: FilterConfig[] = [
+    {
+      id: 'role',
+      label: 'Role',
+      type: 'select',
+      options: ROLES_OPTIONS,
+      placeholder: 'Filter by Role',
+    },
+    {
+      id: 'status',
+      label: 'Status',
+      type: 'select',
+      options: STATUS_OPTIONS,
+      placeholder: 'Filter by Status',
+    },
+    // Date range filter can be added here once DatePickerWithRange is available
+  ];
 
-	// Determine status badge styling
-	const getStatusBadge = (status: string) => {
-		switch (status) {
-			case 'active':
-				return <Badge className="bg-green-500">Active</Badge>;
-			case 'banned':
-				return <Badge variant="destructive">Banned</Badge>;
-			case 'pending':
-				return (
-					<Badge variant="outline" className="text-amber-600 border-amber-600">
-						Pending
-					</Badge>
-				);
-			default:
-				return <Badge variant="outline">{status}</Badge>;
-		}
-	};
+  // Badge renderers (can be memoized or moved to utils if complex)
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'active': return <Badge className="bg-green-500 hover:bg-green-600">Active</Badge>;
+      case 'banned': return <Badge variant="destructive">Banned</Badge>;
+      case 'pending': return <Badge variant="outline" className="text-amber-600 border-amber-600">Pending</Badge>;
+      default: return <Badge variant="outline">{status}</Badge>;
+    }
+  };
 
-	// Determine role badge styling
-	const getRoleBadge = (role: string) => {
-		switch (role) {
-			case 'admin':
-				return (
-					<Badge className="bg-purple-600">
-						<Shield className="h-3 w-3 mr-1" /> Admin
-					</Badge>
-				);
-			case 'moderator':
-				return (
-					<Badge className="bg-blue-600">
-						<ShieldAlert className="h-3 w-3 mr-1" /> Moderator
-					</Badge>
-				);
-			case 'user':
-				return (
-					<Badge variant="outline">
-						<User className="h-3 w-3 mr-1" /> User
-					</Badge>
-				);
-			default:
-				return <Badge variant="outline">{role}</Badge>;
-		}
-	};
+  const getRoleBadge = (role: string) => {
+    switch (role) {
+      case 'admin': return <Badge className="bg-purple-600 hover:bg-purple-700"><Shield className="h-3 w-3 mr-1" /> Admin</Badge>;
+      case 'moderator': return <Badge className="bg-blue-600 hover:bg-blue-700"><ShieldAlert className="h-3 w-3 mr-1" /> Moderator</Badge>;
+      case 'user': return <Badge variant="outline"><User className="h-3 w-3 mr-1" /> User</Badge>;
+      default: return <Badge variant="outline">{role}</Badge>;
+    }
+  };
+  
+  // Define columns for EntityTable
+  const columns: ColumnDef<AdminUser>[] = [
+    {
+      key: 'username',
+      header: 'Username',
+      render: (user: AdminUser) => (
+        <Link href={`${ROUTES.ADMIN_USERS}/${user.id}`} className="font-medium text-primary hover:underline">
+          {user.username}
+        </Link>
+      ),
+    },
+    { key: 'email', header: 'Email', render: (user: AdminUser) => user.email },
+    { 
+      key: 'role', 
+      header: 'Role',
+      render: (user: AdminUser) => getRoleBadge(user.role),
+    },
+    { 
+      key: 'status', 
+      header: 'Status',
+      render: (user: AdminUser) => getStatusBadge(user.status),
+    },
+    { key: 'posts', header: 'Posts', render: (user: AdminUser) => <div className="text-right">{user.posts}</div> },
+    { key: 'threads', header: 'Threads', render: (user: AdminUser) => <div className="text-right">{user.threads}</div> },
+    { 
+      key: 'createdAt', 
+      header: 'Joined',
+      render: (user: AdminUser) => new Date(user.createdAt).toLocaleDateString(),
+    },
+  ];
 
-	return (
-		<div className="space-y-6">
-			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-				<h1 className="text-3xl font-bold">Users Management</h1>
-				<Button>
-					<UserPlus className="h-4 w-4 mr-2" />
-					Add New User
-				</Button>
-			</div>
+  const renderUserActions = (user: AdminUser) => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon">
+          <MoreHorizontal className="h-4 w-4" />
+          <span className="sr-only">Open menu for {user.username}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem onClick={() => { setEditingUser(user); setIsUserFormOpen(true); }}>
+          <Pencil className="h-4 w-4 mr-2" /> Edit User
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href={`/admin/user-inventory/${user.id}`}> {/* Assuming this route exists */}
+            <Package className="h-4 w-4 mr-2" /> View Inventory
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setUserToChangeRole(user)}>
+          <Shield className="h-4 w-4 mr-2" /> Change Role
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        {user.status === 'banned' ? (
+          <DropdownMenuItem onClick={() => setUserToUnban(user)}>
+            <CheckCircle className="h-4 w-4 mr-2" /> Unban User
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem onClick={() => setUserToBan(user)}>
+            <Ban className="h-4 w-4 mr-2" /> Ban User
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="text-red-600 hover:!text-red-600 hover:!bg-red-100" onClick={() => setUserToDelete(user)}>
+          <Trash2 className="h-4 w-4 mr-2" /> Delete User
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 
-			<Card>
-				<CardHeader>
-					<CardTitle>Users</CardTitle>
-					<CardDescription>Manage user accounts, roles, and permissions.</CardDescription>
-				</CardHeader>
-				<CardContent>
-					{/* Search and filters */}
-					<div className="flex flex-col sm:flex-row gap-4 mb-6">
-						<div className="relative flex-1">
-							<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-							<Input
-								type="search"
-								placeholder="Search users..."
-								className="pl-8"
-								value={searchQuery}
-								onChange={(e) => setSearchQuery(e.target.value)}
-							/>
-						</div>
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button variant="outline">
-									<Filter className="h-4 w-4 mr-2" />
-									Filter
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent>
-								<DropdownMenuLabel>Filter by</DropdownMenuLabel>
-								<DropdownMenuSeparator />
-								<DropdownMenuItem>Role: Admin</DropdownMenuItem>
-								<DropdownMenuItem>Role: Moderator</DropdownMenuItem>
-								<DropdownMenuItem>Role: User</DropdownMenuItem>
-								<DropdownMenuSeparator />
-								<DropdownMenuItem>Status: Active</DropdownMenuItem>
-								<DropdownMenuItem>Status: Banned</DropdownMenuItem>
-								<DropdownMenuItem>Status: Pending</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</div>
 
-					{/* Users table */}
-					<div className="rounded-md border">
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Username</TableHead>
-									<TableHead>Email</TableHead>
-									<TableHead>Role</TableHead>
-									<TableHead>Status</TableHead>
-									<TableHead className="text-right">Posts</TableHead>
-									<TableHead className="text-right">Threads</TableHead>
-									<TableHead>Joined</TableHead>
-									<TableHead className="text-right">Actions</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{isLoading ? (
-									<TableRow>
-										<TableCell colSpan={8} className="text-center py-10">
-											Loading users...
-										</TableCell>
-									</TableRow>
-								) : (
-									usersData?.users.map((user: AdminUser) => (
-										<TableRow key={user.id}>
-											<TableCell className="font-medium">
-												<Link
-													href={`/admin/users/${user.id}`}
-													className="text-primary hover:underline"
-												>
-													{user.username}
-												</Link>
-											</TableCell>
-											<TableCell>{user.email}</TableCell>
-											<TableCell>{getRoleBadge(user.role)}</TableCell>
-											<TableCell>{getStatusBadge(user.status)}</TableCell>
-											<TableCell className="text-right">{user.posts}</TableCell>
-											<TableCell className="text-right">{user.threads}</TableCell>
-											<TableCell>{user.createdAt}</TableCell>
-											<TableCell className="text-right">
-												<DropdownMenu>
-													<DropdownMenuTrigger asChild>
-														<Button variant="ghost" size="icon">
-															<MoreHorizontal className="h-4 w-4" />
-															<span className="sr-only">Open menu</span>
-														</Button>
-													</DropdownMenuTrigger>
-													<DropdownMenuContent align="end">
-														<DropdownMenuLabel>Actions</DropdownMenuLabel>
-														<DropdownMenuItem asChild>
-															<Link href={`${ROUTES.ADMIN_USERS}/${user.id}`}>
-																<Pencil className="h-4 w-4 mr-2" />
-																Edit User
-															</Link>
-														</DropdownMenuItem>
-														<DropdownMenuItem asChild>
-															<Link href={`/admin/user-inventory/${user.id}`}>
-																<Package className="h-4 w-4 mr-2" />
-																View Inventory
-															</Link>
-														</DropdownMenuItem>
-														<DropdownMenuItem>
-															<Shield className="h-4 w-4 mr-2" />
-															Change Role
-														</DropdownMenuItem>
-														<DropdownMenuSeparator />
-														{user.status === 'banned' ? (
-															<DropdownMenuItem>
-																<CheckCircle className="h-4 w-4 mr-2" />
-																Unban User
-															</DropdownMenuItem>
-														) : (
-															<DropdownMenuItem>
-																<Ban className="h-4 w-4 mr-2" />
-																Ban User
-															</DropdownMenuItem>
-														)}
-														<DropdownMenuSeparator />
-														<DropdownMenuItem className="text-red-600">
-															<Trash2 className="h-4 w-4 mr-2" />
-															Delete User
-														</DropdownMenuItem>
-													</DropdownMenuContent>
-												</DropdownMenu>
-											</TableCell>
-										</TableRow>
-									))
-								)}
-							</TableBody>
-						</Table>
-					</div>
+  // Define a type for the user form data
+interface UserFormData {
+  username?: string;
+  email?: string;
+  // Add other fields as they are defined in UserFormDialog
+  // e.g., password?: string; role?: string;
+}
 
-					{/* Pagination */}
-					<div className="mt-4 flex items-center justify-end space-x-2">
-						<div className="text-sm text-muted-foreground">
-							Showing <span className="font-medium">1</span> to{' '}
-							<span className="font-medium">10</span> of{' '}
-							<span className="font-medium">{usersData?.total || '—'}</span> users
-						</div>
-						<Pagination>
-							<PaginationContent>
-								<PaginationItem>
-									<PaginationPrevious
-										href="#"
-										onClick={(e) => {
-											e.preventDefault();
-											setPage((p) => Math.max(1, p - 1));
-										}}
-									/>
-								</PaginationItem>
-								<PaginationItem>
-									<PaginationLink href="#" isActive>
-										1
-									</PaginationLink>
-								</PaginationItem>
-								<PaginationItem>
-									<PaginationLink href="#">2</PaginationLink>
-								</PaginationItem>
-								<PaginationItem>
-									<PaginationLink href="#">3</PaginationLink>
-								</PaginationItem>
-								<PaginationItem>
-									<PaginationNext
-										href="#"
-										onClick={(e) => {
-											e.preventDefault();
-											setPage((p) => p + 1);
-										}}
-									/>
-								</PaginationItem>
-							</PaginationContent>
-						</Pagination>
-					</div>
-				</CardContent>
-			</Card>
-		</div>
-	);
+// Placeholder submit handlers for dialogs
+  const handleUserFormSubmit = async (data: UserFormData) => { 
+    console.log('User form submitted:', data, editingUser);
+    // TODO: Implement actual API call for create/update
+    // useCrudMutation will be used here later
+    setIsUserFormOpen(false);
+    setEditingUser(null);
+    // queryClient.invalidateQueries(['/api/admin/users']);
+  };
+
+  const handleBanUser = async (userId: string | number) => {
+    console.log('Banning user:', userId);
+    // TODO: Implement ban user API call
+    setUserToBan(null);
+    // queryClient.invalidateQueries(['/api/admin/users']);
+  };
+
+  const handleUnbanUser = async (userId: string | number) => {
+    console.log('Unbanning user:', userId);
+    // TODO: Implement unban user API call
+    setUserToUnban(null);
+    // queryClient.invalidateQueries(['/api/admin/users']);
+  };
+
+  const handleDeleteUser = async (userId: string | number) => {
+    console.log('Deleting user:', userId);
+    // TODO: Implement delete user API call
+    setUserToDelete(null);
+    // queryClient.invalidateQueries(['/api/admin/users']);
+  };
+
+  const handleChangeUserRole = async (userId: string | number, newRole: string) => {
+    console.log('Changing role for user:', userId, 'to', newRole);
+    // TODO: Implement change role API call
+    setUserToChangeRole(null);
+    // queryClient.invalidateQueries(['/api/admin/users']);
+  };
+  
+  // const pageCount = usersData?.totalPages ?? -1; // For EntityTable pagination - to be handled by a separate pagination component
+
+  // TODO: Implement a proper pagination component here that works with the API and updates `pagination` state.
+  // For now, EntityTable itself does not handle pagination state.
+
+  return (
+    <AdminPageShell
+      title="Users Management"
+      // description="Manage user accounts, roles, and permissions." // AdminPageShell does not have description prop
+      pageActions={
+        <Button onClick={() => { setEditingUser(null); setIsUserFormOpen(true); }}>
+          <UserPlus className="h-4 w-4 mr-2" />
+          Add New User
+        </Button>
+      }
+    >
+      <div className="space-y-4"> {/* Added a wrapper for spacing */}
+        <EntityFilters
+          filtersConfig={filtersConfig}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onClearFilters={() => {
+            setFilters({});
+            setSearchQuery(''); // Also clear search query if desired
+            setPagination((prev: SimplePaginationState) => ({ ...prev, pageIndex: 0 }));
+          }}
+          // Pass searchQuery and onSearchChange if EntityFilters is updated to handle a main search input
+        />
+
+        <EntityTable
+          columns={columns}
+          data={usersData?.users || []}
+          isLoading={isLoading}
+          error={error as Error | null} // Cast error if needed
+          renderActions={renderUserActions}
+          searchPlaceholder="Search users by name/email..." // Example if EntityTable's internal search is used
+          searchTerm={searchQuery}
+          onSearchChange={handleSearch} // Connects to EntityTable's internal search
+        />
+
+        {/* TODO: Add a separate pagination component here */}
+        {/* Example:
+        <CustomPagination
+          currentPage={pagination.pageIndex + 1}
+          totalPages={usersData?.totalPages || 1}
+          onPageChange={(newPage) => setPagination(prev => ({ ...prev, pageIndex: newPage - 1}))}
+        />
+        */}
+      </div>
+
+      {/* Dialogs */}
+      <UserFormDialog
+        isOpen={isUserFormOpen}
+        onClose={() => { setIsUserFormOpen(false); setEditingUser(null); }}
+        user={editingUser}
+        onSubmit={handleUserFormSubmit}
+      />
+      <BanUserDialog
+        isOpen={!!userToBan}
+        onClose={() => setUserToBan(null)}
+        user={userToBan}
+        onConfirm={handleBanUser}
+      />
+      <UnbanUserDialog
+        isOpen={!!userToUnban}
+        onClose={() => setUserToUnban(null)}
+        user={userToUnban}
+        onConfirm={handleUnbanUser}
+      />
+      <DeleteUserDialog
+        isOpen={!!userToDelete}
+        onClose={() => setUserToDelete(null)}
+        user={userToDelete}
+        onConfirm={handleDeleteUser}
+      />
+      <ChangeUserRoleDialog
+        isOpen={!!userToChangeRole}
+        onClose={() => setUserToChangeRole(null)}
+        user={userToChangeRole}
+        roles={ROLES_OPTIONS.filter(r => r.value !== 'all').map(r => r.value)} // Pass actual roles
+        onConfirm={handleChangeUserRole}
+      />
+    </AdminPageShell>
+  );
 }

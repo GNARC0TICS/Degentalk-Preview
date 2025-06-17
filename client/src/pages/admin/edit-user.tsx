@@ -8,7 +8,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import AdminLayout from './admin-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -74,7 +73,6 @@ interface UpdateUserResponse {
 	user: UserApiResponse;
 	// Potentially other fields in the response
 }
-
 
 export default function AdminUserEdit() {
 	const params = useParams<{ id: string }>();
@@ -180,18 +178,15 @@ export default function AdminUserEdit() {
 
 	if (isLoading) {
 		return (
-			<AdminLayout>
-				<div className="flex items-center justify-center min-h-screen">
+			<div className="flex items-center justify-center min-h-screen">
 					<Loader2 className="h-8 w-8 animate-spin text-primary" />
 				</div>
-			</AdminLayout>
 		);
 	}
 
 	if (error || !data) {
 		return (
-			<AdminLayout>
-				<div className="flex flex-col items-center justify-center min-h-screen">
+			<div className="flex flex-col items-center justify-center min-h-screen">
 					<h1 className="text-2xl font-bold mb-4">Error loading user</h1>
 					<p className="text-destructive mb-4">
 						{error instanceof Error ? error.message : 'Unknown error'}
@@ -200,13 +195,11 @@ export default function AdminUserEdit() {
 						<Link href={ROUTES.ADMIN_USERS}>Back to Users</Link>
 					</Button>
 				</div>
-			</AdminLayout>
 		);
 	}
 
 	return (
-		<AdminLayout>
-			<div className="container py-6">
+		<div className="container py-6">
 				<div className="flex justify-between items-center mb-6">
 					<div className="flex items-center gap-2">
 						<Button variant="outline" size="icon" asChild>
@@ -522,6 +515,5 @@ export default function AdminUserEdit() {
 					</form>
 				</Form>
 			</div>
-		</AdminLayout>
 	);
 }

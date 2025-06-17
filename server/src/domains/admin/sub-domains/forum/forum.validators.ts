@@ -53,6 +53,28 @@ export const PaginationSchema = z.object({
 	limit: z.coerce.number().min(1).max(100).default(20)
 });
 
+// Forum entity schemas
+export const createEntitySchema = z.object({
+	name: z.string().min(1).max(100),
+	slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+	description: z.string().max(500).optional().nullable(),
+	type: z.enum(['zone', 'category', 'forum']),
+	parentId: z.number().int().positive().optional().nullable(),
+	position: z.number().int().min(0).default(0),
+	isVip: z.boolean().default(false),
+	isLocked: z.boolean().default(false),
+	isHidden: z.boolean().default(false),
+	minXp: z.number().int().min(0).default(0),
+	color: z.string().optional().nullable(),
+	icon: z.string().optional().nullable(),
+	colorTheme: z.string().optional().nullable(),
+	tippingEnabled: z.boolean().default(false),
+	xpMultiplier: z.number().min(0).default(1),
+	pluginData: z.record(z.any()).optional().nullable(),
+});
+
+export const updateEntitySchema = createEntitySchema.partial();
+
 export type CategoryInput = z.infer<typeof CategorySchema>;
 export type PrefixInput = z.infer<typeof PrefixSchema>;
 export type ModerateThreadInput = z.infer<typeof ModerateThreadSchema>;

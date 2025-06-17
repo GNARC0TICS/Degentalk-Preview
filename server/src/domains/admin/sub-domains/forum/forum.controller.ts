@@ -13,8 +13,12 @@ import {
 	CategorySchema,
 	PrefixSchema,
 	ModerateThreadSchema,
-	PaginationSchema
+	PaginationSchema,
+	createEntitySchema,
+	updateEntitySchema,
+	type ModerateThreadInput
 } from './forum.validators';
+import { logger } from '@server/src/core/logger';
 
 export class AdminForumController {
 	async getAllCategories(req: Request, res: Response) {
@@ -224,6 +228,100 @@ export class AdminForumController {
 		if (data.prefixId) return 'UPDATE_PREFIX';
 
 		return 'MODERATE_THREAD';
+	}
+
+	// Forum entity management methods
+	async getAllEntities(req: Request, res: Response) {
+		try {
+			const entities = await adminForumService.getAllEntities();
+			res.json(entities);
+		} catch (error) {
+			logger.error('AdminForumController', 'Error getting all entities', { err: error });
+			res.status(500).json({ message: 'Failed to get forum entities' });
+		}
+	}
+
+	async getEntityById(req: Request, res: Response) {
+		try {
+			const entityId = parseInt(req.params.id);
+			if (isNaN(entityId)) {
+				return res.status(400).json({ message: 'Invalid entity ID' });
+			}
+
+			const entity = await adminForumService.getEntityById(entityId);
+			if (!entity) {
+				return res.status(404).json({ message: 'Entity not found' });
+			}
+
+			res.json(entity);
+		} catch (error) {
+			logger.error('AdminForumController', 'Error getting entity by ID', { err: error });
+			res.status(500).json({ message: 'Failed to get entity' });
+		}
+	}
+
+	async createEntity(req: Request, res: Response) {
+		try {
+			const validation = createEntitySchema.safeParse(req.body);
+			if (!validation.success) {
+				return res.status(400).json({
+					message: 'Invalid entity data',
+					errors: validation.error.flatten()
+				});
+			}
+
+			const entity = await adminForumService.createEntity(validation.data);
+			res.status(201).json(entity);
+		} catch (error) {
+			logger.error('AdminForumController', 'Error creating entity', { err: error });
+			res.status(500).json({ message: 'Failed to create entity' });
+		}
+	}
+
+	async updateEntity(req: Request, res: Response) {
+		try {
+			const entityId = parseInt(req.params.id);
+			if (isNaN(entityId)) {
+				return res.status(400).json({ message: 'Invalid entity ID' });
+			}
+
+			const validation = updateEntitySchema.safeParse(req.body);
+			if (!validation.success) {
+				return res.status(400).json({
+					message: 'Invalid entity data',
+					errors: validation.error.flatten()
+				});
+			}
+
+			const entity = await adminForumService.updateEntity(entityId, validation.data);
+			if (!entity) {
+				return res.status(404).json({ message: 'Entity not found' });
+			}
+
+			res.json(entity);
+		} catch (error) {
+			logger.error('AdminForumController', 'Error updating entity', { err: error });
+			res.status(500).json({ message: 'Failed to update entity' });
+		}
+	}
+
+	async deleteEntity(req: Request, res: Response) {
+		try {
+			const entityId = parseInt(req.params.id);
+			if (isNaN(entityId)) {
+				return res.status(400).json({ message: 'Invalid entity ID' });
+			}
+
+			const result = await adminForumService.deleteEntity(entityId);
+			if (!result) {
+				return res.status(404).json({ message: 'Entity not found' });
+			}
+
+			res.json({ message: 'Entity deleted successfully' });
+		} catch (error) {
+			logger.error('AdminForumController', 'Error deleting entity', { err: error });
+			res.status(500).json({ message: 'Failed to delete entity' });
+		}
 	}
 }
 

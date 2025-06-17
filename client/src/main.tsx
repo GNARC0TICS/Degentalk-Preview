@@ -22,6 +22,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 import './styles/animations.css';
+import './styles/admin-theme.css'; // Import admin theme
 import { RootProvider } from './providers/root-provider';
 import { Router } from 'wouter';
 import { BASE_URL } from '@/core/constants';

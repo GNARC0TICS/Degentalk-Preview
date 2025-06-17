@@ -109,6 +109,14 @@ export const adminRouteGroups: AdminRouteGroup[] = [
 				description: 'Manage user roles and permissions'
 			},
 			{
+				path: '/admin/forum-management',
+				label: 'Forum Structure',
+				icon: 'globe',
+				permissions: ['admin'],
+				description: 'Manage zones, categories, and forums',
+				badge: 'new'
+			},
+			{
 				path: '/admin/categories',
 				label: 'Categories',
 				icon: 'tag',

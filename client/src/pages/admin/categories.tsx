@@ -69,7 +69,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Badge } from '@/components/ui/badge';
 import { useLocation } from 'wouter'; // Fixed import for useLocation
-// Remove Next.js Head component since we're not using Next.js
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 const categorySchema = z.object({
 	name: z
@@ -414,159 +414,91 @@ export default function AdminCategoriesPage() {
 		);
 	};
 
+	const pageActions = (
+		<Button onClick={handleOpenCreateDialog}>
+			<Plus className="h-4 w-4 mr-2" /> Create Category
+		</Button>
+	);
+
 	return (
-		<div className="space-y-6">
-			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-				<h1 className="text-3xl font-bold">Forum Categories</h1>
-				<Button onClick={handleOpenCreateDialog}>
-					<Plus className="h-4 w-4 mr-2" />
-					Create Category
-				</Button>
-			</div>
-
-			<Card>
-				<CardHeader>
-					<CardTitle>Manage Categories</CardTitle>
-					<CardDescription>Create and organize forum categories</CardDescription>
-				</CardHeader>
-				<CardContent className="space-y-4">
-					<div className="flex flex-wrap gap-2">
-						<div className="flex-1">
-							<div className="relative">
-								<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-								<Input
-									type="search"
-									placeholder="Search categories..."
-									className="pl-8"
-									value={searchQuery}
-									onChange={(e) => setSearchQuery(e.target.value)}
-								/>
+		<AdminPageShell title="Forum Categories" pageActions={pageActions}>
+			<div className="space-y-6">
+				<Card>
+					<CardHeader>
+						<CardTitle>Manage Categories</CardTitle>
+						<CardDescription>Create and organize forum categories</CardDescription>
+					</CardHeader>
+					<CardContent className="space-y-4">
+						<div className="flex flex-wrap gap-2">
+							<div className="flex-1">
+								<div className="relative">
+									<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+									<Input
+										type="search"
+										placeholder="Search categories..."
+										className="pl-8"
+										value={searchQuery}
+										onChange={(e) => setSearchQuery(e.target.value)}
+									/>
+								</div>
 							</div>
 						</div>
-					</div>
 
-					{isLoading ? (
-						<div className="flex justify-center items-center h-40">
-							<p>Loading categories...</p>
-						</div>
-					) : isError ? (
-						<div className="flex justify-center items-center h-40">
-							<p className="text-red-500">Failed to load categories</p>
-						</div>
-					) : organizedCategories.length === 0 ? (
-						<div className="flex justify-center items-center h-40">
-							<p>No categories found</p>
-						</div>
-					) : (
-						<div className="overflow-x-auto">
-							<Table>
-								<TableHeader>
-									<TableRow>
-										<TableHead>Name</TableHead>
-										<TableHead className="hidden md:table-cell">Description</TableHead>
-										<TableHead>Slug</TableHead>
-										<TableHead className="text-center">Threads</TableHead>
-										<TableHead className="text-center">Visible</TableHead>
-										<TableHead className="text-right">Actions</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{organizedCategories.map((category) => renderCategoryRow(category))}
-								</TableBody>
-							</Table>
-						</div>
-					)}
-				</CardContent>
-			</Card>
+						{isLoading ? (
+							<div className="flex justify-center items-center h-40">
+								<p>Loading categories...</p>
+							</div>
+						) : isError ? (
+							<div className="flex justify-center items-center h-40">
+								<p className="text-red-500">Failed to load categories</p>
+							</div>
+						) : organizedCategories.length === 0 ? (
+							<div className="flex justify-center items-center h-40">
+								<p>No categories found</p>
+							</div>
+						) : (
+							<div className="overflow-x-auto">
+								<Table>
+									<TableHeader>
+										<TableRow>
+											<TableHead>Name</TableHead>
+											<TableHead className="hidden md:table-cell">Description</TableHead>
+											<TableHead>Slug</TableHead>
+											<TableHead className="text-center">Threads</TableHead>
+											<TableHead className="text-center">Visible</TableHead>
+											<TableHead className="text-right">Actions</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
+										{organizedCategories.map((category) => renderCategoryRow(category))}
+									</TableBody>
+								</Table>
+							</div>
+						)}
+					</CardContent>
+				</Card>
 
-			<Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-				<DialogContent className="sm:max-w-[550px]">
-					<DialogHeader>
-						<DialogTitle>Create New Category</DialogTitle>
-						<DialogDescription>
-							Create a new forum category. Categories can be organized hierarchically.
-						</DialogDescription>
-					</DialogHeader>
+				<Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+					<DialogContent className="sm:max-w-[550px]">
+						<DialogHeader>
+							<DialogTitle>Create New Category</DialogTitle>
+							<DialogDescription>
+								Create a new forum category. Categories can be organized hierarchically.
+							</DialogDescription>
+						</DialogHeader>
 
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onCreateSubmit)} className="space-y-6">
-							<FormField
-								control={form.control}
-								name="name"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Category Name</FormLabel>
-										<FormControl>
-											<Input placeholder="General Discussion" {...field} />
-										</FormControl>
-										<FormDescription>The name displayed to users</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="slug"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>URL Slug</FormLabel>
-										<FormControl>
-											<Input placeholder="general-discussion" {...field} />
-										</FormControl>
-										<FormDescription>
-											Used in the URL (e.g., /categories/general-discussion). Leave blank to
-											generate automatically.
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="description"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Description</FormLabel>
-										<FormControl>
-											<Textarea
-												placeholder="Discuss general topics related to the community"
-												{...field}
-												rows={3}
-											/>
-										</FormControl>
-										<FormDescription>A brief description of the category</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<Form {...form}>
+							<form onSubmit={form.handleSubmit(onCreateSubmit)} className="space-y-6">
 								<FormField
 									control={form.control}
-									name="parentId"
+									name="name"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Parent Category</FormLabel>
+											<FormLabel>Category Name</FormLabel>
 											<FormControl>
-												<select
-													className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-													value={field.value?.toString() || ''}
-													onChange={(e) => {
-														const value = e.target.value;
-														field.onChange(value ? parseInt(value) : null);
-													}}
-												>
-													<option value="">None (Top Level)</option>
-													{categories?.map((category: Category) => (
-														<option key={category.id} value={category.id}>
-															{category.name}
-														</option>
-													))}
-												</select>
+												<Input placeholder="General Discussion" {...field} />
 											</FormControl>
-											<FormDescription>Create a subcategory by selecting a parent</FormDescription>
+											<FormDescription>The name displayed to users</FormDescription>
 											<FormMessage />
 										</FormItem>
 									)}
@@ -574,168 +506,16 @@ export default function AdminCategoriesPage() {
 
 								<FormField
 									control={form.control}
-									name="isVisible"
-									render={({ field }) => (
-										<FormItem className="flex flex-row items-center justify-between p-4 border rounded-md">
-											<div className="space-y-0.5">
-												<FormLabel>Visibility</FormLabel>
-												<FormDescription>Show this category to all users</FormDescription>
-											</div>
-											<FormControl>
-												<Switch checked={field.value} onCheckedChange={field.onChange} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<FormField
-								control={form.control}
-								name="position"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Display Order</FormLabel>
-										<FormControl>
-											<Input
-												type="number"
-												min="0"
-												placeholder="0"
-												{...field}
-												onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-											/>
-										</FormControl>
-										<FormDescription>Categories with lower numbers appear first</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="icon"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Icon (Optional)</FormLabel>
-										<FormControl>
-											<Input placeholder="📚" {...field} />
-										</FormControl>
-										<FormDescription>
-											Emoji or icon code to display next to the category name
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<DialogFooter>
-								<Button
-									type="button"
-									variant="outline"
-									onClick={() => setIsCreateDialogOpen(false)}
-								>
-									Cancel
-								</Button>
-								<Button type="submit" disabled={createCategoryMutation.isPending}>
-									{createCategoryMutation.isPending ? 'Creating...' : 'Create Category'}
-								</Button>
-							</DialogFooter>
-						</form>
-					</Form>
-				</DialogContent>
-			</Dialog>
-
-			<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-				<DialogContent className="sm:max-w-[550px]">
-					<DialogHeader>
-						<DialogTitle>Edit Category</DialogTitle>
-						<DialogDescription>Update category information and settings.</DialogDescription>
-					</DialogHeader>
-
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onEditSubmit)} className="space-y-6">
-							<FormField
-								control={form.control}
-								name="name"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Category Name</FormLabel>
-										<FormControl>
-											<Input placeholder="General Discussion" {...field} />
-										</FormControl>
-										<FormDescription>The name displayed to users</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="slug"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>URL Slug</FormLabel>
-										<FormControl>
-											<Input placeholder="general-discussion" {...field} />
-										</FormControl>
-										<FormDescription>
-											Used in the URL (e.g., /categories/general-discussion)
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="description"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Description</FormLabel>
-										<FormControl>
-											<Textarea
-												placeholder="Discuss general topics related to the community"
-												{...field}
-												rows={3}
-											/>
-										</FormControl>
-										<FormDescription>A brief description of the category</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-								<FormField
-									control={form.control}
-									name="parentId"
+									name="slug"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Parent Category</FormLabel>
+											<FormLabel>URL Slug</FormLabel>
 											<FormControl>
-												<select
-													className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-													value={field.value?.toString() || ''}
-													onChange={(e) => {
-														const value = e.target.value;
-														field.onChange(value ? parseInt(value) : null);
-													}}
-												>
-													<option value="">None (Top Level)</option>
-													{categories
-														?.filter(
-															(category: Category) =>
-																selectedCategory && category.id !== selectedCategory.id
-														)
-														.map((category: Category) => (
-															<option key={category.id} value={category.id}>
-																{category.name}
-															</option>
-														))}
-												</select>
+												<Input placeholder="general-discussion" {...field} />
 											</FormControl>
 											<FormDescription>
-												Move this category under another parent category
+												Used in the URL (e.g., /categories/general-discussion). Leave blank to
+												generate automatically.
 											</FormDescription>
 											<FormMessage />
 										</FormItem>
@@ -744,121 +524,341 @@ export default function AdminCategoriesPage() {
 
 								<FormField
 									control={form.control}
-									name="isVisible"
+									name="description"
 									render={({ field }) => (
-										<FormItem className="flex flex-row items-center justify-between p-4 border rounded-md">
-											<div className="space-y-0.5">
-												<FormLabel>Visibility</FormLabel>
-												<FormDescription>Show this category to all users</FormDescription>
-											</div>
+										<FormItem>
+											<FormLabel>Description</FormLabel>
 											<FormControl>
-												<Switch checked={field.value} onCheckedChange={field.onChange} />
+												<Textarea
+													placeholder="Discuss general topics related to the community"
+													{...field}
+													rows={3}
+												/>
 											</FormControl>
+											<FormDescription>A brief description of the category</FormDescription>
 											<FormMessage />
 										</FormItem>
 									)}
 								/>
-							</div>
 
-							<FormField
-								control={form.control}
-								name="position"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Display Order</FormLabel>
-										<FormControl>
-											<Input
-												type="number"
-												min="0"
-												placeholder="0"
-												{...field}
-												onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-											/>
-										</FormControl>
-										<FormDescription>Categories with lower numbers appear first</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+									<FormField
+										control={form.control}
+										name="parentId"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Parent Category</FormLabel>
+												<FormControl>
+													<select
+														className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+														value={field.value?.toString() || ''}
+														onChange={(e) => {
+															const value = e.target.value;
+															field.onChange(value ? parseInt(value) : null);
+														}}
+													>
+														<option value="">None (Top Level)</option>
+														{categories?.map((category: Category) => (
+															<option key={category.id} value={category.id}>
+																{category.name}
+															</option>
+														))}
+													</select>
+												</FormControl>
+												<FormDescription>Create a subcategory by selecting a parent</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
 
-							<FormField
-								control={form.control}
-								name="icon"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Icon (Optional)</FormLabel>
-										<FormControl>
-											<Input placeholder="📚" {...field} />
-										</FormControl>
-										<FormDescription>
-											Emoji or icon code to display next to the category name
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<DialogFooter>
-								<Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-									Cancel
-								</Button>
-								<Button type="submit" disabled={editCategoryMutation.isPending}>
-									{editCategoryMutation.isPending ? 'Updating...' : 'Update Category'}
-								</Button>
-							</DialogFooter>
-						</form>
-					</Form>
-				</DialogContent>
-			</Dialog>
-
-			<Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>Delete Category</DialogTitle>
-						<DialogDescription>
-							Are you sure you want to delete this category? This action cannot be undone.
-						</DialogDescription>
-					</DialogHeader>
-					<div className="space-y-4 py-4">
-						{selectedCategory && (
-							<div className="border rounded-md p-4">
-								<h4 className="font-medium">{selectedCategory.name}</h4>
-								<p className="text-sm text-muted-foreground mt-1">
-									{selectedCategory.description || 'No description'}
-								</p>
-								<div className="flex items-center gap-2 mt-2">
-									<Badge variant="outline">{selectedCategory.threadCount || 0} threads</Badge>
-									<Badge variant="outline">{selectedCategory.postCount || 0} posts</Badge>
+									<FormField
+										control={form.control}
+										name="isVisible"
+										render={({ field }) => (
+											<FormItem className="flex flex-row items-center justify-between p-4 border rounded-md">
+												<div className="space-y-0.5">
+													<FormLabel>Visibility</FormLabel>
+													<FormDescription>Show this category to all users</FormDescription>
+												</div>
+												<FormControl>
+													<Switch checked={field.value} onCheckedChange={field.onChange} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
 								</div>
-							</div>
-						)}
-						{selectedCategory && selectedCategory.threadCount > 0 && (
-							<div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 p-4 rounded-md">
-								<p className="flex items-center text-sm">
-									<MessageSquare className="h-4 w-4 mr-2" />
-									<span>
-										This category contains {selectedCategory.threadCount} threads with{' '}
-										{selectedCategory.postCount} posts. Deleting it will orphan or delete this
-										content.
-									</span>
-								</p>
-							</div>
-						)}
-					</div>
-					<DialogFooter>
-						<Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-							Cancel
-						</Button>
-						<Button
-							variant="destructive"
-							onClick={handleDeleteCategory}
-							disabled={deleteCategoryMutation.isPending}
-						>
-							{deleteCategoryMutation.isPending ? 'Deleting...' : 'Delete Category'}
-						</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
-		</div>
+
+								<FormField
+									control={form.control}
+									name="position"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Display Order</FormLabel>
+											<FormControl>
+												<Input
+													type="number"
+													min="0"
+													placeholder="0"
+													{...field}
+													onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+												/>
+											</FormControl>
+											<FormDescription>Categories with lower numbers appear first</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name="icon"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Icon (Optional)</FormLabel>
+											<FormControl>
+												<Input placeholder="📚" {...field} />
+											</FormControl>
+											<FormDescription>
+												Emoji or icon code to display next to the category name
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<DialogFooter>
+									<Button
+										type="button"
+										variant="outline"
+										onClick={() => setIsCreateDialogOpen(false)}
+									>
+										Cancel
+									</Button>
+									<Button type="submit" disabled={createCategoryMutation.isPending}>
+										{createCategoryMutation.isPending ? 'Creating...' : 'Create Category'}
+									</Button>
+								</DialogFooter>
+							</form>
+						</Form>
+					</DialogContent>
+				</Dialog>
+
+				<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+					<DialogContent className="sm:max-w-[550px]">
+						<DialogHeader>
+							<DialogTitle>Edit Category</DialogTitle>
+							<DialogDescription>Update category information and settings.</DialogDescription>
+						</DialogHeader>
+
+						<Form {...form}>
+							<form onSubmit={form.handleSubmit(onEditSubmit)} className="space-y-6">
+								<FormField
+									control={form.control}
+									name="name"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Category Name</FormLabel>
+											<FormControl>
+												<Input placeholder="General Discussion" {...field} />
+											</FormControl>
+											<FormDescription>The name displayed to users</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name="slug"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>URL Slug</FormLabel>
+											<FormControl>
+												<Input placeholder="general-discussion" {...field} />
+											</FormControl>
+											<FormDescription>
+												Used in the URL (e.g., /categories/general-discussion)
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name="description"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Description</FormLabel>
+											<FormControl>
+												<Textarea
+													placeholder="Discuss general topics related to the community"
+													{...field}
+													rows={3}
+												/>
+											</FormControl>
+											<FormDescription>A brief description of the category</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+									<FormField
+										control={form.control}
+										name="parentId"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Parent Category</FormLabel>
+												<FormControl>
+													<select
+														className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+														value={field.value?.toString() || ''}
+														onChange={(e) => {
+															const value = e.target.value;
+															field.onChange(value ? parseInt(value) : null);
+														}}
+													>
+														<option value="">None (Top Level)</option>
+														{categories
+															?.filter(
+																(category: Category) =>
+																	selectedCategory && category.id !== selectedCategory.id
+															)
+															.map((category: Category) => (
+																<option key={category.id} value={category.id}>
+																	{category.name}
+																</option>
+															))}
+													</select>
+												</FormControl>
+												<FormDescription>
+													Move this category under another parent category
+												</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="isVisible"
+										render={({ field }) => (
+											<FormItem className="flex flex-row items-center justify-between p-4 border rounded-md">
+												<div className="space-y-0.5">
+													<FormLabel>Visibility</FormLabel>
+													<FormDescription>Show this category to all users</FormDescription>
+												</div>
+												<FormControl>
+													<Switch checked={field.value} onCheckedChange={field.onChange} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<FormField
+									control={form.control}
+									name="position"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Display Order</FormLabel>
+											<FormControl>
+												<Input
+													type="number"
+													min="0"
+													placeholder="0"
+													{...field}
+													onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+												/>
+											</FormControl>
+											<FormDescription>Categories with lower numbers appear first</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name="icon"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Icon (Optional)</FormLabel>
+											<FormControl>
+												<Input placeholder="📚" {...field} />
+											</FormControl>
+											<FormDescription>
+												Emoji or icon code to display next to the category name
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<DialogFooter>
+									<Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+										Cancel
+									</Button>
+									<Button type="submit" disabled={editCategoryMutation.isPending}>
+										{editCategoryMutation.isPending ? 'Updating...' : 'Update Category'}
+									</Button>
+								</DialogFooter>
+							</form>
+						</Form>
+					</DialogContent>
+				</Dialog>
+
+				<Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Delete Category</DialogTitle>
+							<DialogDescription>
+								Are you sure you want to delete this category? This action cannot be undone.
+							</DialogDescription>
+						</DialogHeader>
+						<div className="space-y-4 py-4">
+							{selectedCategory && (
+								<div className="border rounded-md p-4">
+									<h4 className="font-medium">{selectedCategory.name}</h4>
+									<p className="text-sm text-muted-foreground mt-1">
+										{selectedCategory.description || 'No description'}
+									</p>
+									<div className="flex items-center gap-2 mt-2">
+										<Badge variant="outline">{selectedCategory.threadCount || 0} threads</Badge>
+										<Badge variant="outline">{selectedCategory.postCount || 0} posts</Badge>
+									</div>
+								</div>
+							)}
+							{selectedCategory && selectedCategory.threadCount > 0 && (
+								<div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 p-4 rounded-md">
+									<p className="flex items-center text-sm">
+										<MessageSquare className="h-4 w-4 mr-2" />
+										<span>
+											This category contains {selectedCategory.threadCount} threads with{' '}
+											{selectedCategory.postCount} posts. Deleting it will orphan or delete this
+											content.
+										</span>
+									</p>
+								</div>
+							)}
+						</div>
+						<DialogFooter>
+							<Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+								Cancel
+							</Button>
+							<Button
+								variant="destructive"
+								onClick={handleDeleteCategory}
+								disabled={deleteCategoryMutation.isPending}
+							>
+								{deleteCategoryMutation.isPending ? 'Deleting...' : 'Delete Category'}
+							</Button>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
+			</div>
+		</AdminPageShell>
 	);
 }

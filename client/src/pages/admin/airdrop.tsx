@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 import { queryClient, apiRequest } from '@/lib/queryClient';
-import AdminLayout from './admin-layout'; // Assuming you have this
+ // Assuming you have this
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -107,8 +107,7 @@ const AdminAirdropPage: React.FC = () => {
 	};
 
 	return (
-		<AdminLayout>
-			<div className="container mx-auto py-8 px-4 md:px-6">
+		<div className="container mx-auto py-8 px-4 md:px-6">
 				<Card className="max-w-2xl mx-auto bg-black/40 backdrop-blur-sm border border-white/10 shadow-xl">
 					<CardHeader>
 						<CardTitle className="text-2xl font-semibold">Admin Airdrop</CardTitle>
@@ -210,7 +209,6 @@ const AdminAirdropPage: React.FC = () => {
 				</Card>
 				{/* TODO: Add Airdrop History Table here later */}
 			</div>
-		</AdminLayout>
 	);
 };
 

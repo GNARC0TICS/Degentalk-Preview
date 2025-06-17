@@ -20,9 +20,10 @@ interface AdminSidebarProps {
 		}[];
 	}[];
 	collapsed: boolean;
+	onLinkClick?: () => void; // Optional callback for when a link is clicked
 }
 
-export default function AdminSidebar({ links, collapsed }: AdminSidebarProps) {
+export default function AdminSidebar({ links, collapsed, onLinkClick }: AdminSidebarProps) {
 	const [location] = useLocation();
 	const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
 
@@ -62,7 +63,13 @@ export default function AdminSidebar({ links, collapsed }: AdminSidebarProps) {
 									{/* Main menu item */}
 									<Link
 										href={hasSubmenu ? '#' : link.href}
-										onClick={hasSubmenu ? () => toggleCategory(link.label) : undefined}
+										onClick={() => {
+											if (hasSubmenu) {
+												toggleCategory(link.label);
+											} else if (onLinkClick) {
+												onLinkClick();
+											}
+										}}
 										className={cn(
 											'flex items-center px-2 py-2 text-sm font-medium rounded-md group',
 											isActive
@@ -94,6 +101,7 @@ export default function AdminSidebar({ links, collapsed }: AdminSidebarProps) {
 												<Link
 													key={subitem.href}
 													href={subitem.href}
+													onClick={onLinkClick} // Close drawer on submenu item click
 													className={cn(
 														'block px-3 py-2 text-sm rounded-md',
 														location === subitem.href

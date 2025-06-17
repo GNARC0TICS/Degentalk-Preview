@@ -43,6 +43,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { ThreadPrefix } from '@db_types/forum.types';
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 // Define validation schema for prefixes
 const prefixSchema = z.object({
@@ -275,461 +276,461 @@ export default function AdminPrefixesPage() {
 		return <Badge className={`${themeClassName} ${staticBadgeClasses}`}>Preview</Badge>;
 	};
 
+	const pageActions = (
+		<Button onClick={handleOpenCreateDialog}>
+			<Plus className="h-4 w-4 mr-2" /> Create Prefix
+		</Button>
+	);
+
 	return (
-		<div className="space-y-6">
-			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-				<h1 className="text-3xl font-bold">Thread Prefixes</h1>
-				<Button onClick={handleOpenCreateDialog}>
-					<Plus className="h-4 w-4 mr-2" />
-					Create Prefix
-				</Button>
-			</div>
-
-			<Card>
-				<CardHeader>
-					<CardTitle>Manage Prefixes</CardTitle>
-					<CardDescription>
-						Create and organize thread prefixes to categorize forum threads
-					</CardDescription>
-				</CardHeader>
-				<CardContent className="space-y-4">
-					<div className="flex flex-wrap gap-2">
-						<div className="flex-1">
-							<div className="relative">
-								<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-								<Input
-									type="search"
-									placeholder="Search prefixes..."
-									className="pl-8"
-									value={searchQuery}
-									onChange={(e) => setSearchQuery(e.target.value)}
-								/>
+		<AdminPageShell title="Thread Prefixes" pageActions={pageActions}>
+			<div className="space-y-6">
+				<Card>
+					<CardHeader>
+						<CardTitle>Manage Prefixes</CardTitle>
+						<CardDescription>
+							Create and organize thread prefixes to categorize forum threads
+						</CardDescription>
+					</CardHeader>
+					<CardContent className="space-y-4">
+						<div className="flex flex-wrap gap-2">
+							<div className="flex-1">
+								<div className="relative">
+									<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+									<Input
+										type="search"
+										placeholder="Search prefixes..."
+										className="pl-8"
+										value={searchQuery}
+										onChange={(e) => setSearchQuery(e.target.value)}
+									/>
+								</div>
 							</div>
 						</div>
-					</div>
 
-					{isLoading ? (
-						<div className="flex justify-center items-center h-40">
-							<p>Loading prefixes...</p>
-						</div>
-					) : isError ? (
-						<div className="flex justify-center items-center h-40">
-							<p className="text-red-500">Failed to load prefixes</p>
-						</div>
-					) : filteredPrefixes.length === 0 ? (
-						<div className="flex justify-center items-center h-40">
-							<p>No prefixes found</p>
-						</div>
-					) : (
-						<div className="overflow-x-auto">
-							<Table>
-								<TableHeader>
-									<TableRow>
-										<TableHead>Name</TableHead>
-										<TableHead>Preview</TableHead>
-										<TableHead>Color</TableHead>
-										<TableHead className="text-center">Status</TableHead>
-										<TableHead>Position</TableHead>
-										<TableHead>Category</TableHead>
-										<TableHead className="text-right">Actions</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{filteredPrefixes.map((prefix: ThreadPrefix) => (
-										<TableRow key={prefix.id}>
-											<TableCell className="font-medium">{prefix.name}</TableCell>
-											<TableCell>
-												<Badge
-													className={`theme-badge-${prefix.color || 'zinc'} bg-badge-bg-dark text-badge-text-dark border-badge-border-dark`}
-												>
-													{prefix.name}
-												</Badge>
-											</TableCell>
-											<TableCell>{prefix.color}</TableCell>
-											<TableCell className="text-center">
-												{prefix.isActive ? (
-													<Badge variant="outline" className="bg-green-900/20 text-green-300">
-														Active
-													</Badge>
-												) : (
-													<Badge variant="outline" className="bg-red-900/20 text-red-300">
-														Inactive
-													</Badge>
-												)}
-											</TableCell>
-											<TableCell>{prefix.position}</TableCell>
-											<TableCell>
-												{prefix.categoryId
-													? categories?.find((cat: any) => cat.id === prefix.categoryId)?.name ||
-														'Unknown'
-													: 'Global'}
-											</TableCell>
-											<TableCell className="text-right">
-												<div className="flex justify-end items-center space-x-1">
-													<Button
-														variant="ghost"
-														size="sm"
-														onClick={() => handleReorderPrefix(prefix.id, 'up')}
-														disabled={reorderPrefixMutation.isPending}
-													>
-														<MoveUp className="h-4 w-4" />
-														<span className="sr-only">Move Up</span>
-													</Button>
-													<Button
-														variant="ghost"
-														size="sm"
-														onClick={() => handleReorderPrefix(prefix.id, 'down')}
-														disabled={reorderPrefixMutation.isPending}
-													>
-														<MoveDown className="h-4 w-4" />
-														<span className="sr-only">Move Down</span>
-													</Button>
-													<DropdownMenu>
-														<DropdownMenuTrigger asChild>
-															<Button variant="ghost" size="sm">
-																<MoreHorizontal className="h-4 w-4" />
-																<span className="sr-only">Actions</span>
-															</Button>
-														</DropdownMenuTrigger>
-														<DropdownMenuContent align="end">
-															<DropdownMenuLabel>Actions</DropdownMenuLabel>
-															<DropdownMenuItem onClick={() => handleEditPrefix(prefix)}>
-																<Pencil className="h-4 w-4 mr-2" />
-																Edit Prefix
-															</DropdownMenuItem>
-															<DropdownMenuItem
-																onClick={() => {
-																	setSelectedPrefix(prefix);
-																	setIsDeleteDialogOpen(true);
-																}}
-																className="text-red-600"
-															>
-																<Trash2 className="h-4 w-4 mr-2" />
-																Delete Prefix
-															</DropdownMenuItem>
-														</DropdownMenuContent>
-													</DropdownMenu>
-												</div>
-											</TableCell>
+						{isLoading ? (
+							<div className="flex justify-center items-center h-40">
+								<p>Loading prefixes...</p>
+							</div>
+						) : isError ? (
+							<div className="flex justify-center items-center h-40">
+								<p className="text-red-500">Failed to load prefixes</p>
+							</div>
+						) : filteredPrefixes.length === 0 ? (
+							<div className="flex justify-center items-center h-40">
+								<p>No prefixes found</p>
+							</div>
+						) : (
+							<div className="overflow-x-auto">
+								<Table>
+									<TableHeader>
+										<TableRow>
+											<TableHead>Name</TableHead>
+											<TableHead>Preview</TableHead>
+											<TableHead>Color</TableHead>
+											<TableHead className="text-center">Status</TableHead>
+											<TableHead>Position</TableHead>
+											<TableHead>Category</TableHead>
+											<TableHead className="text-right">Actions</TableHead>
 										</TableRow>
-									))}
-								</TableBody>
-							</Table>
-						</div>
-					)}
-				</CardContent>
-			</Card>
-
-			{/* Create Prefix Dialog */}
-			<Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-				<DialogContent className="sm:max-w-[550px]">
-					<DialogHeader>
-						<DialogTitle>Create New Prefix</DialogTitle>
-						<DialogDescription>
-							Create a new thread prefix for categorizing forum threads.
-						</DialogDescription>
-					</DialogHeader>
-
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onCreateSubmit)} className="space-y-6">
-							<FormField
-								control={form.control}
-								name="name"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Prefix Name</FormLabel>
-										<FormControl>
-											<Input placeholder="Hot" {...field} />
-										</FormControl>
-										<FormDescription>The name displayed to users</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="color"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Color</FormLabel>
-										<FormControl>
-											<select
-												className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-												value={field.value}
-												onChange={field.onChange}
-											>
-												{availableColors.map((color) => (
-													<option key={color.value} value={color.value}>
-														{color.name}
-													</option>
-												))}
-											</select>
-										</FormControl>
-										<FormDescription className="flex items-center gap-2">
-											<span>Preview:</span>
-											<ColorPreview color={field.value} />
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="categoryId"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Category (Optional)</FormLabel>
-										<FormControl>
-											<select
-												className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-												value={field.value?.toString() || ''}
-												onChange={(e) => {
-													const value = e.target.value;
-													field.onChange(value ? parseInt(value) : null);
-												}}
-											>
-												<option value="">Global (All Categories)</option>
-												{categories?.map((category: any) => (
-													<option key={category.id} value={category.id}>
-														{category.name}
-													</option>
-												))}
-											</select>
-										</FormControl>
-										<FormDescription>Limit this prefix to a specific category</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-								<FormField
-									control={form.control}
-									name="position"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Display Order</FormLabel>
-											<FormControl>
-												<Input
-													type="number"
-													min="0"
-													placeholder="0"
-													{...field}
-													onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-												/>
-											</FormControl>
-											<FormDescription>Prefixes with lower numbers appear first</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
-									name="isActive"
-									render={({ field }) => (
-										<FormItem className="flex flex-row items-center justify-between p-4 border rounded-md">
-											<div className="space-y-0.5">
-												<FormLabel>Active</FormLabel>
-												<FormDescription>Allow this prefix to be used</FormDescription>
-											</div>
-											<FormControl>
-												<Switch checked={field.value} onCheckedChange={field.onChange} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<DialogFooter>
-								<Button
-									type="button"
-									variant="outline"
-									onClick={() => setIsCreateDialogOpen(false)}
-								>
-									Cancel
-								</Button>
-								<Button type="submit" disabled={createPrefixMutation.isPending}>
-									{createPrefixMutation.isPending ? 'Creating...' : 'Create Prefix'}
-								</Button>
-							</DialogFooter>
-						</form>
-					</Form>
-				</DialogContent>
-			</Dialog>
-
-			{/* Edit Prefix Dialog */}
-			<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-				<DialogContent className="sm:max-w-[550px]">
-					<DialogHeader>
-						<DialogTitle>Edit Prefix</DialogTitle>
-						<DialogDescription>Update prefix information and settings.</DialogDescription>
-					</DialogHeader>
-
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onEditSubmit)} className="space-y-6">
-							{/* Same form fields as create dialog */}
-							<FormField
-								control={form.control}
-								name="name"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Prefix Name</FormLabel>
-										<FormControl>
-											<Input placeholder="Hot" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="color"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Color</FormLabel>
-										<FormControl>
-											<select
-												className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-												value={field.value}
-												onChange={field.onChange}
-											>
-												{availableColors.map((color) => (
-													<option key={color.value} value={color.value}>
-														{color.name}
-													</option>
-												))}
-											</select>
-										</FormControl>
-										<FormDescription className="flex items-center gap-2">
-											<span>Preview:</span>
-											<ColorPreview color={field.value} />
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="categoryId"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Category (Optional)</FormLabel>
-										<FormControl>
-											<select
-												className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-												value={field.value?.toString() || ''}
-												onChange={(e) => {
-													const value = e.target.value;
-													field.onChange(value ? parseInt(value) : null);
-												}}
-											>
-												<option value="">Global (All Categories)</option>
-												{categories?.map((category: any) => (
-													<option key={category.id} value={category.id}>
-														{category.name}
-													</option>
-												))}
-											</select>
-										</FormControl>
-										<FormDescription>Limit this prefix to a specific category</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-								<FormField
-									control={form.control}
-									name="position"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Display Order</FormLabel>
-											<FormControl>
-												<Input
-													type="number"
-													min="0"
-													placeholder="0"
-													{...field}
-													onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
-									name="isActive"
-									render={({ field }) => (
-										<FormItem className="flex flex-row items-center justify-between p-4 border rounded-md">
-											<div className="space-y-0.5">
-												<FormLabel>Active</FormLabel>
-												<FormDescription>Allow this prefix to be used</FormDescription>
-											</div>
-											<FormControl>
-												<Switch checked={field.value} onCheckedChange={field.onChange} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<DialogFooter>
-								<Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-									Cancel
-								</Button>
-								<Button type="submit" disabled={editPrefixMutation.isPending}>
-									{editPrefixMutation.isPending ? 'Updating...' : 'Update Prefix'}
-								</Button>
-							</DialogFooter>
-						</form>
-					</Form>
-				</DialogContent>
-			</Dialog>
-
-			{/* Delete Prefix Dialog */}
-			<Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>Delete Prefix</DialogTitle>
-						<DialogDescription>
-							Are you sure you want to delete this prefix? This action cannot be undone.
-						</DialogDescription>
-					</DialogHeader>
-					<div className="py-4">
-						{selectedPrefix && (
-							<div className="flex items-center justify-center gap-4 p-4 border rounded-md">
-								<Badge
-									className={`theme-badge-${selectedPrefix.color || 'zinc'} bg-badge-bg-dark text-badge-text-dark border-badge-border-dark`}
-								>
-									{selectedPrefix.name}
-								</Badge>
-								<span className="text-sm">{selectedPrefix.name}</span>
+									</TableHeader>
+									<TableBody>
+										{filteredPrefixes.map((prefix: ThreadPrefix) => (
+											<TableRow key={prefix.id}>
+												<TableCell className="font-medium">{prefix.name}</TableCell>
+												<TableCell>
+													<Badge
+														className={`theme-badge-${prefix.color || 'zinc'} bg-badge-bg-dark text-badge-text-dark border-badge-border-dark`}
+													>
+														{prefix.name}
+													</Badge>
+												</TableCell>
+												<TableCell>{prefix.color}</TableCell>
+												<TableCell className="text-center">
+													{prefix.isActive ? (
+														<Badge variant="outline" className="bg-green-900/20 text-green-300">
+															Active
+														</Badge>
+													) : (
+														<Badge variant="outline" className="bg-red-900/20 text-red-300">
+															Inactive
+														</Badge>
+													)}
+												</TableCell>
+												<TableCell>{prefix.position}</TableCell>
+												<TableCell>
+													{prefix.categoryId
+														? categories?.find((cat: any) => cat.id === prefix.categoryId)?.name ||
+															'Unknown'
+														: 'Global'}
+												</TableCell>
+												<TableCell className="text-right">
+													<div className="flex justify-end items-center space-x-1">
+														<Button
+															variant="ghost"
+															size="sm"
+															onClick={() => handleReorderPrefix(prefix.id, 'up')}
+															disabled={reorderPrefixMutation.isPending}
+														>
+															<MoveUp className="h-4 w-4" />
+															<span className="sr-only">Move Up</span>
+														</Button>
+														<Button
+															variant="ghost"
+															size="sm"
+															onClick={() => handleReorderPrefix(prefix.id, 'down')}
+															disabled={reorderPrefixMutation.isPending}
+														>
+															<MoveDown className="h-4 w-4" />
+															<span className="sr-only">Move Down</span>
+														</Button>
+														<DropdownMenu>
+															<DropdownMenuTrigger asChild>
+																<Button variant="ghost" size="sm">
+																	<MoreHorizontal className="h-4 w-4" />
+																	<span className="sr-only">Actions</span>
+																</Button>
+															</DropdownMenuTrigger>
+															<DropdownMenuContent align="end">
+																<DropdownMenuLabel>Actions</DropdownMenuLabel>
+																<DropdownMenuItem onClick={() => handleEditPrefix(prefix)}>
+																	<Pencil className="h-4 w-4 mr-2" />
+																	Edit Prefix
+																</DropdownMenuItem>
+																<DropdownMenuItem
+																	onClick={() => {
+																		setSelectedPrefix(prefix);
+																		setIsDeleteDialogOpen(true);
+																	}}
+																	className="text-red-600"
+																>
+																	<Trash2 className="h-4 w-4 mr-2" />
+																	Delete Prefix
+																</DropdownMenuItem>
+															</DropdownMenuContent>
+														</DropdownMenu>
+													</div>
+												</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+								</Table>
 							</div>
 						)}
-					</div>
-					<DialogFooter>
-						<Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-							Cancel
-						</Button>
-						<Button
-							variant="destructive"
-							onClick={handleDeletePrefix}
-							disabled={deletePrefixMutation.isPending}
-						>
-							{deletePrefixMutation.isPending ? 'Deleting...' : 'Delete Prefix'}
-						</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
-		</div>
+					</CardContent>
+				</Card>
+
+				{/* Create Prefix Dialog */}
+				<Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+					<DialogContent className="sm:max-w-[550px]">
+						<DialogHeader>
+							<DialogTitle>Create New Prefix</DialogTitle>
+							<DialogDescription>
+								Create a new thread prefix for categorizing forum threads.
+							</DialogDescription>
+						</DialogHeader>
+
+						<Form {...form}>
+							<form onSubmit={form.handleSubmit(onCreateSubmit)} className="space-y-6">
+								<FormField
+									control={form.control}
+									name="name"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Prefix Name</FormLabel>
+											<FormControl>
+												<Input placeholder="Hot" {...field} />
+											</FormControl>
+											<FormDescription>The name displayed to users</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name="color"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Color</FormLabel>
+											<FormControl>
+												<select
+													className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+													value={field.value}
+													onChange={field.onChange}
+												>
+													{availableColors.map((color) => (
+														<option key={color.value} value={color.value}>
+															{color.name}
+														</option>
+													))}
+												</select>
+											</FormControl>
+											<FormDescription className="flex items-center gap-2">
+												<span>Preview:</span>
+												<ColorPreview color={field.value} />
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name="categoryId"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Category (Optional)</FormLabel>
+											<FormControl>
+												<select
+													className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+													value={field.value?.toString() || ''}
+													onChange={(e) => {
+														const value = e.target.value;
+														field.onChange(value ? parseInt(value) : null);
+													}}
+												>
+													<option value="">Global (All Categories)</option>
+													{categories?.map((category: any) => (
+														<option key={category.id} value={category.id}>
+															{category.name}
+														</option>
+													))}
+												</select>
+											</FormControl>
+											<FormDescription>Limit this prefix to a specific category</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+									<FormField
+										control={form.control}
+										name="position"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Display Order</FormLabel>
+												<FormControl>
+													<Input
+														type="number"
+														min="0"
+														placeholder="0"
+														{...field}
+														onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+													/>
+												</FormControl>
+												<FormDescription>Prefixes with lower numbers appear first</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="isActive"
+										render={({ field }) => (
+											<FormItem className="flex flex-row items-center justify-between p-4 border rounded-md">
+												<div className="space-y-0.5">
+													<FormLabel>Active</FormLabel>
+													<FormDescription>Allow this prefix to be used</FormDescription>
+												</div>
+												<FormControl>
+													<Switch checked={field.value} onCheckedChange={field.onChange} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<DialogFooter>
+									<Button
+										type="button"
+										variant="outline"
+										onClick={() => setIsCreateDialogOpen(false)}
+									>
+										Cancel
+									</Button>
+									<Button type="submit" disabled={createPrefixMutation.isPending}>
+										{createPrefixMutation.isPending ? 'Creating...' : 'Create Prefix'}
+									</Button>
+								</DialogFooter>
+							</form>
+						</Form>
+					</DialogContent>
+				</Dialog>
+
+				{/* Edit Prefix Dialog */}
+				<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+					<DialogContent className="sm:max-w-[550px]">
+						<DialogHeader>
+							<DialogTitle>Edit Prefix</DialogTitle>
+							<DialogDescription>Update prefix information and settings.</DialogDescription>
+						</DialogHeader>
+
+						<Form {...form}>
+							<form onSubmit={form.handleSubmit(onEditSubmit)} className="space-y-6">
+								{/* Same form fields as create dialog */}
+								<FormField
+									control={form.control}
+									name="name"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Prefix Name</FormLabel>
+											<FormControl>
+												<Input placeholder="Hot" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name="color"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Color</FormLabel>
+											<FormControl>
+												<select
+													className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+													value={field.value}
+													onChange={field.onChange}
+												>
+													{availableColors.map((color) => (
+														<option key={color.value} value={color.value}>
+															{color.name}
+														</option>
+													))}
+												</select>
+											</FormControl>
+											<FormDescription className="flex items-center gap-2">
+												<span>Preview:</span>
+												<ColorPreview color={field.value} />
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name="categoryId"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Category (Optional)</FormLabel>
+											<FormControl>
+												<select
+													className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+													value={field.value?.toString() || ''}
+													onChange={(e) => {
+														const value = e.target.value;
+														field.onChange(value ? parseInt(value) : null);
+													}}
+												>
+													<option value="">Global (All Categories)</option>
+													{categories?.map((category: any) => (
+														<option key={category.id} value={category.id}>
+															{category.name}
+														</option>
+													))}
+												</select>
+											</FormControl>
+											<FormDescription>Limit this prefix to a specific category</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+									<FormField
+										control={form.control}
+										name="position"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Display Order</FormLabel>
+												<FormControl>
+													<Input
+														type="number"
+														min="0"
+														placeholder="0"
+														{...field}
+														onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="isActive"
+										render={({ field }) => (
+											<FormItem className="flex flex-row items-center justify-between p-4 border rounded-md">
+												<div className="space-y-0.5">
+													<FormLabel>Active</FormLabel>
+													<FormDescription>Allow this prefix to be used</FormDescription>
+												</div>
+												<FormControl>
+													<Switch checked={field.value} onCheckedChange={field.onChange} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<DialogFooter>
+									<Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+										Cancel
+									</Button>
+									<Button type="submit" disabled={editPrefixMutation.isPending}>
+										{editPrefixMutation.isPending ? 'Updating...' : 'Update Prefix'}
+									</Button>
+								</DialogFooter>
+							</form>
+						</Form>
+					</DialogContent>
+				</Dialog>
+
+				{/* Delete Prefix Dialog */}
+				<Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Delete Prefix</DialogTitle>
+							<DialogDescription>
+								Are you sure you want to delete this prefix? This action cannot be undone.
+							</DialogDescription>
+						</DialogHeader>
+						<div className="py-4">
+							{selectedPrefix && (
+								<div className="flex items-center justify-center gap-4 p-4 border rounded-md">
+									<Badge
+										className={`theme-badge-${selectedPrefix.color || 'zinc'} bg-badge-bg-dark text-badge-text-dark border-badge-border-dark`}
+									>
+										{selectedPrefix.name}
+									</Badge>
+									<span className="text-sm">{selectedPrefix.name}</span>
+								</div>
+							)}
+						</div>
+						<DialogFooter>
+							<Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+								Cancel
+							</Button>
+							<Button
+								variant="destructive"
+								onClick={handleDeletePrefix}
+								disabled={deletePrefixMutation.isPending}
+							>
+								{deletePrefixMutation.isPending ? 'Deleting...' : 'Delete Prefix'}
+							</Button>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
+			</div>
+		</AdminPageShell>
 	);
 }

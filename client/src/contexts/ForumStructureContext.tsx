@@ -36,23 +36,40 @@ export interface PluginDataPrimaryZone {
     requirement: string;
   }>;
 }
-export interface PluginDataPrimaryZone {
-  features?: string[]; // ['quests', 'airdrop', 'zoneShop', 'leaderboard']
-  customComponents?: string[]; // ['LiveOddsWidget', 'CasinoLeaderboard']
-  staffOnly?: boolean;
-  xpChallenges?: Array<{
-    id: string;
-    name: string;
-    description: string;
-    xpReward: number;
-  }>;
-  zoneBadges?: Array<{
-    id: string;
-    name: string;
-    icon: string;
-    requirement: string;
-  }>;
-}
+/* Duplicate PluginDataPrimaryZone interface removed */
+// export interface PluginDataPrimaryZone {
+// features?: string[]; // ['quests', 'airdrop', 'zoneShop', 'leaderboard']
+// customComponents?: string[]; // ['LiveOddsWidget', 'CasinoLeaderboard']
+// staffOnly?: boolean;
+// xpChallenges?: Array<{
+// id: string;
+// name: string;
+// description: string;
+// xpReward: number;
+// }>;
+// zoneBadges?: Array<{
+// id: string;
+// name: string;
+// icon: string;
+// requirement: string;
+// }>;
+// }
+
+// API response type matching backend schema
+// --- The following lines were part of the duplicate interface and should be removed or fully commented ---
+// xpChallenges?: Array<{
+// id: string;
+// name: string;
+// description: string;
+// xpReward: number;
+// }>;
+// zoneBadges?: Array<{
+// id: string;
+// name: string;
+// icon: string;
+// requirement: string;
+// }>;
+// } // This closing brace was also part of the duplicate
 
 // API response type matching backend schema
 export interface ApiCategoryData {

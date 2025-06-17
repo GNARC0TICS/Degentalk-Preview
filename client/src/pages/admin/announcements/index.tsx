@@ -20,13 +20,11 @@ import {
 	CheckCircle,
 	XCircle,
 	Calendar,
-	Clock,
 	Eye,
 	EyeOff,
 	Link2,
 	Info
 } from 'lucide-react';
-import AdminLayout from '../admin-layout';
 import { Button } from '@/components/ui/button';
 import {
 	Dialog,
@@ -69,15 +67,31 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
+
+// Define the Announcement type
+interface Announcement {
+	id: number;
+	content: string;
+	icon?: string;
+	type: string;
+	isActive: boolean;
+	expiresAt?: string | null;
+	priority: number;
+	visibleTo: string[];
+	tickerMode: boolean;
+	link?: string | null;
+	bgColor?: string | null;
+	textColor?: string | null;
+	createdAt: string;
+	updatedAt?: string; // Assuming there might be an updatedAt field
+}
 
 // Create a schema for announcement form
 const announcementFormSchema = z.object({
@@ -144,7 +158,7 @@ export default function AnnouncementsPage() {
 	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-	const [selectedAnnouncement, setSelectedAnnouncement] = useState<any>(null);
+	const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
 	const [activeTab, setActiveTab] = useState('all');
 
 	// Create form for new announcements
@@ -187,7 +201,8 @@ export default function AnnouncementsPage() {
 	const { data: announcements = [], isLoading } = useQuery({
 		queryKey: ['/api/admin/announcements'],
 		queryFn: async () => {
-			const data = await apiRequest<any[]>('/api/admin/announcements', {
+			const data = await apiRequest<Announcement[]>({
+				url: '/api/admin/announcements',
 				method: 'GET'
 			});
 			return data;
@@ -205,9 +220,10 @@ export default function AnnouncementsPage() {
 	// Create mutation
 	const createMutation = useMutation({
 		mutationFn: async (values: AnnouncementFormValues) => {
-			return await apiRequest('/api/admin/announcements', {
+			return await apiRequest({
+				url: '/api/admin/announcements',
 				method: 'POST',
-				body: JSON.stringify(values)
+				data: values
 			});
 		},
 		onSuccess: () => {
@@ -220,7 +236,7 @@ export default function AnnouncementsPage() {
 			setIsCreateDialogOpen(false);
 			form.reset();
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Error',
 				description: error.message || 'Failed to create announcement',
@@ -232,9 +248,10 @@ export default function AnnouncementsPage() {
 	// Update mutation
 	const updateMutation = useMutation({
 		mutationFn: async ({ id, values }: { id: number; values: AnnouncementFormValues }) => {
-			return await apiRequest(`/api/admin/announcements/${id}`, {
+			return await apiRequest({
+				url: `/api/admin/announcements/${id}`,
 				method: 'PUT',
-				body: JSON.stringify(values)
+				data: values
 			});
 		},
 		onSuccess: () => {
@@ -247,7 +264,7 @@ export default function AnnouncementsPage() {
 			setIsEditDialogOpen(false);
 			editForm.reset();
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Error',
 				description: error.message || 'Failed to update announcement',
@@ -259,7 +276,8 @@ export default function AnnouncementsPage() {
 	// Delete mutation
 	const deleteMutation = useMutation({
 		mutationFn: async (id: number) => {
-			return await apiRequest(`/api/admin/announcements/${id}`, {
+			return await apiRequest({
+				url: `/api/admin/announcements/${id}`,
 				method: 'DELETE'
 			});
 		},
@@ -272,7 +290,7 @@ export default function AnnouncementsPage() {
 			});
 			setIsDeleteDialogOpen(false);
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Error',
 				description: error.message || 'Failed to delete announcement',
@@ -294,7 +312,7 @@ export default function AnnouncementsPage() {
 	};
 
 	// Open edit dialog and populate form
-	const handleEditClick = (announcement: any) => {
+	const handleEditClick = (announcement: Announcement) => {
 		setSelectedAnnouncement(announcement);
 		editForm.reset({
 			content: announcement.content,
@@ -313,16 +331,29 @@ export default function AnnouncementsPage() {
 	};
 
 	// Open delete dialog
-	const handleDeleteClick = (announcement: any) => {
+	const handleDeleteClick = (announcement: Announcement) => {
 		setSelectedAnnouncement(announcement);
 		setIsDeleteDialogOpen(true);
 	};
 
 	// Toggle announcement active status
-	const toggleActive = (announcement: any) => {
+	const toggleActive = (announcement: Announcement) => {
+		const valuesForUpdate: AnnouncementFormValues = {
+			content: announcement.content,
+			icon: announcement.icon,
+			type: announcement.type,
+			isActive: !announcement.isActive, // The toggled value
+			expiresAt: announcement.expiresAt ? new Date(announcement.expiresAt) : null,
+			priority: announcement.priority,
+			visibleTo: announcement.visibleTo,
+			tickerMode: announcement.tickerMode,
+			link: announcement.link,
+			bgColor: announcement.bgColor,
+			textColor: announcement.textColor,
+		};
 		updateMutation.mutate({
 			id: announcement.id,
-			values: { ...announcement, isActive: !announcement.isActive }
+			values: valuesForUpdate
 		});
 	};
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Pencil, Trash2, ArrowUpDown, Search, Badge as BadgeIcon } from 'lucide-react';
+import { Plus, Pencil, Trash2, ArrowUpDown, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -33,7 +33,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useDebounce } from '@/hooks/use-debounce';
-import AdminLayout from '../admin-layout';
 import { apiRequest } from '@/lib/queryClient';
 
 // Title types
@@ -145,7 +144,7 @@ export default function TitleManagementPage() {
 	// Mutations
 	const createTitleMutation = useMutation({
 		mutationFn: async (data: TitleFormData) => {
-			return apiRequest('POST', '/api/admin/titles', data);
+			return apiRequest({ method: 'POST', url: '/api/admin/titles', data });
 		},
 		onSuccess: () => {
 			toast({
@@ -168,7 +167,7 @@ export default function TitleManagementPage() {
 
 	const updateTitleMutation = useMutation({
 		mutationFn: async ({ id, data }: { id: number; data: TitleFormData }) => {
-			return apiRequest('PUT', `/api/admin/titles/${id}`, data);
+			return apiRequest({ method: 'PUT', url: `/api/admin/titles/${id}`, data });
 		},
 		onSuccess: () => {
 			toast({
@@ -190,7 +189,7 @@ export default function TitleManagementPage() {
 
 	const deleteTitleMutation = useMutation({
 		mutationFn: async (id: number) => {
-			return apiRequest('DELETE', `/api/admin/titles/${id}`);
+			return apiRequest({ method: 'DELETE', url: `/api/admin/titles/${id}` });
 		},
 		onSuccess: () => {
 			toast({
@@ -675,10 +674,10 @@ export default function TitleManagementPage() {
 
 	// Main render
 	return (
-		<AdminLayout>
+		<>
 			<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-				<div className="flex items-center justify-between">
-					<h2 className="text-3xl font-bold tracking-tight">Title Management</h2>
+					<div className="flex items-center justify-between">
+						<h2 className="text-3xl font-bold tracking-tight">Title Management</h2>
 					<Button onClick={() => setIsCreateDialogOpen(true)}>
 						<Plus className="mr-2 h-4 w-4" />
 						Create Title
@@ -799,6 +798,6 @@ export default function TitleManagementPage() {
 			/>
 			<TitleFormDialog isOpen={isEditDialogOpen} setIsOpen={setIsEditDialogOpen} isEdit={true} />
 			<DeleteConfirmationDialog />
-		</AdminLayout>
+		</>
 	);
 }

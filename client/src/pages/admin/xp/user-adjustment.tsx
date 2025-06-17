@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Plus, Minus, Search, RefreshCw, History, User } from 'lucide-react';
-import AdminLayout from '../admin-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -243,8 +242,7 @@ export default function UserXPAdjustmentPage() {
 	};
 
 	return (
-		<AdminLayout>
-			<div className="container mx-auto py-6">
+		<div className="container mx-auto py-6">
 				<div className="flex items-center justify-between mb-6">
 					<div>
 						<h1 className="text-3xl font-bold tracking-tight">User XP Adjustment</h1>
@@ -569,6 +567,5 @@ export default function UserXPAdjustmentPage() {
 					</CardFooter>
 				</Card>
 			</div>
-		</AdminLayout>
 	);
 }

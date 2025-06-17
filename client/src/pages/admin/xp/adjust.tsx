@@ -44,7 +44,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useDebounce } from '@/hooks/use-debounce';
-import AdminLayout from '../admin-layout';
 import { apiRequest } from '@/lib/queryClient';
 
 // Types
@@ -237,8 +236,7 @@ export default function UserXpAdjustmentPage() {
 	};
 
 	return (
-		<AdminLayout>
-			<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+		<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
 				<div className="flex items-center justify-between">
 					<h2 className="text-3xl font-bold tracking-tight">User XP Adjustment</h2>
 				</div>
@@ -562,7 +560,6 @@ export default function UserXpAdjustmentPage() {
 					</DialogContent>
 				</Dialog>
 			</div>
-		</AdminLayout>
 	);
 }
 

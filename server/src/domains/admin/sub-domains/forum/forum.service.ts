@@ -365,6 +365,80 @@ export class AdminForumService {
 			throw AdminError.database('Failed to moderate thread');
 		}
 	}
+
+	// Forum entity management methods
+	async getAllEntities() {
+		const entities = await db
+			.select()
+			.from(forumCategories)
+			.orderBy(forumCategories.position, forumCategories.name);
+		
+		return entities;
+	}
+
+	async getEntityById(id: number) {
+		const [entity] = await db
+			.select()
+			.from(forumCategories)
+			.where(eq(forumCategories.id, id))
+			.limit(1);
+		
+		return entity;
+	}
+
+	async createEntity(data: any) {
+		const [entity] = await db
+			.insert(forumCategories)
+			.values(data)
+			.returning();
+		
+		return entity;
+	}
+
+	async updateEntity(id: number, data: any) {
+		const [entity] = await db
+			.update(forumCategories)
+			.set({
+				...data,
+				updatedAt: new Date()
+			})
+			.where(eq(forumCategories.id, id))
+			.returning();
+		
+		return entity;
+	}
+
+	async deleteEntity(id: number) {
+		// Check if entity has children
+		const children = await db
+			.select({ id: forumCategories.id })
+			.from(forumCategories)
+			.where(eq(forumCategories.parentId, id))
+			.limit(1);
+		
+		if (children.length > 0) {
+			throw new Error('Cannot delete entity with children');
+		}
+		
+		// Check if entity has threads (only for forums)
+		const entity = await this.getEntityById(id);
+		if (entity && entity.type === 'forum') {
+			const threadCount = await db
+				.select({ count: sql<number>`count(*)` })
+				.from(threads)
+				.where(eq(threads.categoryId, id));
+			
+			if (threadCount[0].count > 0) {
+				throw new Error('Cannot delete forum with threads');
+			}
+		}
+		
+		const result = await db
+			.delete(forumCategories)
+			.where(eq(forumCategories.id, id));
+		
+		return result.rowCount > 0;
+	}
 }
 
 export const adminForumService = new AdminForumService();

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
-import AdminLayout from '../admin-layout.tsx';
 import { Textarea } from '@/components/ui/textarea.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { useToast } from '@/hooks/use-toast.ts';
@@ -41,27 +40,23 @@ export default function TagConfigPage() {
 
   if (isLoading) {
     return (
-      <AdminLayout>
-        <div className="p-8 flex justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>
-      </AdminLayout>
+      <div className="p-8 flex justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>
     );
   }
 
   return (
-    <AdminLayout>
-      <div className="space-y-4">
-        <h1 className="text-3xl font-bold">Tag Config</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Textarea
-            value={json}
-            onChange={(e) => setJson(e.target.value)}
-            className="font-mono min-h-[400px]"
-          />
-          <Button type="submit" disabled={saveMutation.isPending}>
-            {saveMutation.isPending ? 'Saving...' : 'Save Config'}
-          </Button>
-        </form>
-      </div>
-    </AdminLayout>
+    <div className="space-y-4">
+      <h1 className="text-3xl font-bold">Tag Config</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Textarea
+          value={json}
+          onChange={(e) => setJson(e.target.value)}
+          className="font-mono min-h-[400px]"
+        />
+        <Button type="submit" disabled={saveMutation.isPending}>
+          {saveMutation.isPending ? 'Saving...' : 'Save Config'}
+        </Button>
+      </form>
+    </div>
   );
 }

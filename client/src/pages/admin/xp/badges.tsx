@@ -1,626 +1,328 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Pencil, Trash2, ArrowUpDown, Search, Upload } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useQuery } from '@tanstack/react-query';
+import { Plus, Pencil, Trash2, Search } from 'lucide-react'; // Removed ArrowUpDown
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow
-} from '@/components/ui/table';
-import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger
-} from '@/components/ui/dialog';
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue
-} from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge as UiBadge } from '@/components/ui/badge'; // Renamed to avoid conflict
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+// Tabs components are now handled by AdminPageShell
 import { useDebounce } from '@/hooks/use-debounce';
-import AdminLayout from '../admin-layout';
 import { apiRequest } from '@/lib/queryClient';
+import { useCrudMutation } from '@/hooks/useCrudMutation';
 
-// Badge types
-interface Badge {
-	id: number;
-	name: string;
-	description: string | null;
-	iconUrl: string;
-	rarity: string;
-	createdAt: string;
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { EntityTable } from '@/components/admin/layout/EntityTable';
+import { 
+  BadgeFormDialogComponent, 
+  DeleteBadgeConfirmationDialog,
+  getBadgeRarityDisplay,
+} from '@/components/admin/forms/xp/BadgeFormDialogs';
+import type { Badge, BadgeFormData } from '@/components/admin/forms/xp/BadgeFormDialogs';
+
+// Extended Badge type for this page, including createdAt
+interface PageBadge extends Badge {
+  createdAt: string;
 }
 
-interface BadgeFormData {
-	name: string;
-	description: string;
-	iconUrl: string;
-	rarity: string;
+// API response structure (assuming pagination)
+interface BadgesApiResponse {
+  badges: PageBadge[];
+  totalPages: number;
+  currentPage: number;
+  totalBadges: number;
+  // For stats tab
+  badgesAwarded?: number;
+  mostCommonBadge?: { name: string };
+  rarestBadge?: { name: string };
 }
 
-// Badge rarity options
-const RARITIES = [
-	{ value: 'common', label: 'Common', color: 'bg-slate-500' },
-	{ value: 'uncommon', label: 'Uncommon', color: 'bg-green-500' },
-	{ value: 'rare', label: 'Rare', color: 'bg-blue-500' },
-	{ value: 'epic', label: 'Epic', color: 'bg-purple-500' },
-	{ value: 'legendary', label: 'Legendary', color: 'bg-amber-500' },
-	{ value: 'mythic', label: 'Mythic', color: 'bg-red-500' }
-];
 
 export default function BadgeManagementPage() {
-	const { toast } = useToast();
-	const queryClient = useQueryClient();
-	const [searchTerm, setSearchTerm] = useState('');
-	const debouncedSearchTerm = useDebounce(searchTerm, 300);
-	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-	const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
-	const [formData, setFormData] = useState<BadgeFormData>({
-		name: '',
-		description: '',
-		iconUrl: '',
-		rarity: 'common'
-	});
-	const [sortField, setSortField] = useState<'name' | 'rarity' | 'createdAt'>('createdAt');
-	const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-	const [page, setPage] = useState(1);
-	const pageSize = 10;
+  const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  
+  const [selectedBadge, setSelectedBadge] = useState<PageBadge | null>(null);
+  const [formData, setFormData] = useState<BadgeFormData>({
+    name: '',
+    description: '',
+    iconUrl: '',
+    rarity: 'common',
+  });
 
-	// Fetch badges
-	const {
-		data: badgesData,
-		isLoading,
-		isError,
-		error
-	} = useQuery({
-		queryKey: [
-			'/api/admin/badges',
-			{ search: debouncedSearchTerm, sort: sortField, direction: sortDirection, page, pageSize }
-		],
-		queryFn: async () => {
-			const response = await fetch(
-				`/api/admin/badges?search=${debouncedSearchTerm}&sort=${sortField}&direction=${sortDirection}&page=${page}&pageSize=${pageSize}`
-			);
-			if (!response.ok) {
-				throw new Error('Failed to fetch badges');
-			}
-			return response.json();
-		}
-	});
+  const [sortField] = useState<'name' | 'rarity' | 'createdAt'>('createdAt'); // setSortField removed
+  const [sortDirection] = useState<'asc' | 'desc'>('desc'); // setSortDirection removed
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
-	// Mutations
-	const createBadgeMutation = useMutation({
-		mutationFn: async (data: BadgeFormData) => {
-			return apiRequest('POST', '/api/admin/badges', data);
-		},
-		onSuccess: () => {
-			toast({
-				title: 'Badge created',
-				description: 'The badge has been created successfully',
-				variant: 'default'
-			});
-			setIsCreateDialogOpen(false);
-			queryClient.invalidateQueries({ queryKey: ['/api/admin/badges'] });
-			resetForm();
-		},
-		onError: (error) => {
-			toast({
-				title: 'Error',
-				description: `Failed to create badge: ${error.message}`,
-				variant: 'destructive'
-			});
-		}
-	});
+  const {
+    data: badgesApiResponse,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<BadgesApiResponse>({
+    queryKey: ['/api/admin/badges', { search: debouncedSearchTerm, sort: sortField, direction: sortDirection, page, pageSize }],
+    queryFn: async () => {
+      // Ensure apiRequest can handle query params or construct URL manually
+      const params = new URLSearchParams({
+        search: debouncedSearchTerm,
+        sort: sortField,
+        direction: sortDirection,
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+      });
+      return apiRequest({ url: `/api/admin/badges?${params.toString()}`, method: 'GET' });
+    },
+  });
+  
+  const badges = badgesApiResponse?.badges || [];
 
-	const updateBadgeMutation = useMutation({
-		mutationFn: async ({ id, data }: { id: number; data: BadgeFormData }) => {
-			return apiRequest('PUT', `/api/admin/badges/${id}`, data);
-		},
-		onSuccess: () => {
-			toast({
-				title: 'Badge updated',
-				description: 'The badge has been updated successfully',
-				variant: 'default'
-			});
-			setIsEditDialogOpen(false);
-			queryClient.invalidateQueries({ queryKey: ['/api/admin/badges'] });
-		},
-		onError: (error) => {
-			toast({
-				title: 'Error',
-				description: `Failed to update badge: ${error.message}`,
-				variant: 'destructive'
-			});
-		}
-	});
+  const resetFormAndCloseDialogs = () => {
+    setFormData({ name: '', description: '', iconUrl: '', rarity: 'common' });
+    setSelectedBadge(null);
+    setIsCreateDialogOpen(false);
+    setIsEditDialogOpen(false);
+  };
 
-	const deleteBadgeMutation = useMutation({
-		mutationFn: async (id: number) => {
-			return apiRequest('DELETE', `/api/admin/badges/${id}`);
-		},
-		onSuccess: () => {
-			toast({
-				title: 'Badge deleted',
-				description: 'The badge has been deleted successfully',
-				variant: 'default'
-			});
-			setIsDeleteDialogOpen(false);
-			queryClient.invalidateQueries({ queryKey: ['/api/admin/badges'] });
-		},
-		onError: (error) => {
-			toast({
-				title: 'Error',
-				description: `Failed to delete badge: ${error.message}`,
-				variant: 'destructive'
-			});
-		}
-	});
+  const createBadgeMutation = useCrudMutation<unknown, Error, BadgeFormData>({
+    mutationFn: (data) => apiRequest({ url: '/api/admin/badges', method: 'POST', data }),
+    queryKeyToInvalidate: ['/api/admin/badges'],
+    successMessage: 'Badge created',
+    errorMessage: 'Failed to create badge.',
+    onSuccessCallback: () => {
+      resetFormAndCloseDialogs();
+    },
+  });
 
-	// Handlers
-	const handleSort = (field: 'name' | 'rarity' | 'createdAt') => {
-		if (sortField === field) {
-			setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-		} else {
-			setSortField(field);
-			setSortDirection('asc');
-		}
-	};
+  const updateBadgeMutation = useCrudMutation<unknown, Error, { id: number; data: BadgeFormData }>({
+    mutationFn: ({ id, data }) => apiRequest({ url: `/api/admin/badges/${id}`, method: 'PUT', data }),
+    queryKeyToInvalidate: ['/api/admin/badges'],
+    successMessage: 'Badge updated',
+    errorMessage: 'Failed to update badge.',
+    onSuccessCallback: () => {
+      resetFormAndCloseDialogs();
+    },
+  });
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-		if (isEditDialogOpen && selectedBadge) {
-			updateBadgeMutation.mutate({ id: selectedBadge.id, data: formData });
-		} else {
-			createBadgeMutation.mutate(formData);
-		}
-	};
+  const deleteBadgeMutation = useCrudMutation<unknown, Error, number>({
+    mutationFn: (id) => apiRequest({ url: `/api/admin/badges/${id}`, method: 'DELETE' }),
+    queryKeyToInvalidate: ['/api/admin/badges'],
+    successMessage: 'Badge deleted',
+    errorMessage: 'Failed to delete badge.',
+    onSuccessCallback: () => {
+      setIsDeleteDialogOpen(false);
+      setSelectedBadge(null);
+    },
+  });
 
-	const handleEditClick = (badge: Badge) => {
-		setSelectedBadge(badge);
-		setFormData({
-			name: badge.name,
-			description: badge.description || '',
-			iconUrl: badge.iconUrl,
-			rarity: badge.rarity
-		});
-		setIsEditDialogOpen(true);
-	};
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isEditDialogOpen && selectedBadge) {
+      updateBadgeMutation.mutate({ id: selectedBadge.id, data: formData });
+    } else {
+      createBadgeMutation.mutate(formData);
+    }
+  };
 
-	const handleDeleteClick = (badge: Badge) => {
-		setSelectedBadge(badge);
-		setIsDeleteDialogOpen(true);
-	};
+  const handleOpenCreateDialog = () => {
+    resetFormAndCloseDialogs(); // Ensure form is clean
+    setIsCreateDialogOpen(true);
+  };
 
-	const resetForm = () => {
-		setFormData({
-			name: '',
-			description: '',
-			iconUrl: '',
-			rarity: 'common'
-		});
-		setSelectedBadge(null);
-	};
+  const handleOpenEditDialog = (badge: PageBadge) => {
+    setSelectedBadge(badge);
+    setFormData({
+      name: badge.name,
+      description: badge.description || '',
+      iconUrl: badge.iconUrl,
+      rarity: badge.rarity,
+    });
+    setIsEditDialogOpen(true);
+  };
 
-	// Render badge dialog form
-	const BadgeFormDialog = ({
-		isOpen,
-		setIsOpen,
-		isEdit
-	}: {
-		isOpen: boolean;
-		setIsOpen: (open: boolean) => void;
-		isEdit: boolean;
-	}) => (
-		<Dialog
-			open={isOpen}
-			onOpenChange={(open) => {
-				setIsOpen(open);
-				if (!open) resetForm();
-			}}
-		>
-			<DialogContent className="sm:max-w-[500px]">
-				<form onSubmit={handleSubmit}>
-					<DialogHeader>
-						<DialogTitle>{isEdit ? 'Edit Badge' : 'Create New Badge'}</DialogTitle>
-						<DialogDescription>
-							{isEdit ? 'Update the badge details below.' : 'Add a new badge to reward users.'}
-						</DialogDescription>
-					</DialogHeader>
+  const handleOpenDeleteDialog = (badge: PageBadge) => {
+    setSelectedBadge(badge);
+    setIsDeleteDialogOpen(true);
+  };
+  
+  const confirmDelete = () => {
+    if (selectedBadge) {
+      deleteBadgeMutation.mutate(selectedBadge.id);
+    }
+  };
 
-					<div className="grid gap-4 py-4">
-						<div className="grid gap-2">
-							<Label htmlFor="name">Badge Name</Label>
-							<Input
-								id="name"
-								value={formData.name}
-								onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-								required
-							/>
-						</div>
+  // const handleSort = (field: 'name' | 'rarity' | 'createdAt') => { // Sorting handled by backend/API query params
+  //   if (sortField === field) {
+  //     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+  //   } else {
+  //     setSortField(field);
+  //     setSortDirection('asc');
+  //   }
+  //   setPage(1); // Reset to first page on sort change
+  // };
+  
+  const columns = [
+    {
+      key: 'iconUrl',
+      header: 'Icon',
+      render: (badge: PageBadge) => (
+        <img
+          src={badge.iconUrl}
+          alt={badge.name}
+          className="w-10 h-10 object-contain border border-slate-700 rounded"
+          onError={(e) => ((e.target as HTMLImageElement).src = 'https://placehold.co/40x40?text=Err')}
+        />
+      ),
+    },
+    { key: 'name', header: 'Name' },
+    { key: 'description', header: 'Description', render: (badge: PageBadge) => <span className="block max-w-[300px] truncate">{badge.description}</span> },
+    {
+      key: 'rarity',
+      header: 'Rarity',
+      render: (badge: PageBadge) => {
+        const rarityDisplay = getBadgeRarityDisplay(badge.rarity);
+        return <UiBadge className={`${rarityDisplay.colorClass} hover:${rarityDisplay.colorClass}`}>{rarityDisplay.label}</UiBadge>;
+      },
+    },
+    { key: 'createdAt', header: 'Created', render: (badge: PageBadge) => new Date(badge.createdAt).toLocaleDateString() },
+  ];
 
-						<div className="grid gap-2">
-							<Label htmlFor="description">Description</Label>
-							<Textarea
-								id="description"
-								value={formData.description}
-								onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-								placeholder="Describe what this badge is for..."
-							/>
-						</div>
+  const pageActions = (
+    <Button onClick={handleOpenCreateDialog}>
+      <Plus className="mr-2 h-4 w-4" /> Create Badge
+    </Button>
+  );
 
-						<div className="grid gap-2">
-							<Label htmlFor="iconUrl">Icon URL</Label>
-							<div className="flex gap-2">
-								<Input
-									id="iconUrl"
-									value={formData.iconUrl}
-									onChange={(e) => setFormData({ ...formData, iconUrl: e.target.value })}
-									placeholder="https://example.com/badge-icon.png"
-									required
-									className="flex-1"
-								/>
-								<Button type="button" variant="outline" size="icon">
-									<Upload className="h-4 w-4" />
-								</Button>
-							</div>
-							{formData.iconUrl && (
-								<div className="mt-2 flex items-center gap-2">
-									<img
-										src={formData.iconUrl}
-										alt="Badge Preview"
-										className="w-10 h-10 object-contain border border-slate-700 rounded"
-										onError={(e) =>
-											((e.target as HTMLImageElement).src =
-												'https://placehold.co/100x100?text=Error')
-										}
-									/>
-									<span className="text-xs text-muted-foreground">Preview</span>
-								</div>
-							)}
-						</div>
+  const allBadgesTabContent = (
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+          <CardTitle>All Badges</CardTitle>
+          <div className="relative w-full sm:w-72">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search badges..."
+              className="pl-8 bg-admin-input-bg border-admin-input-border"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="p-0">
+        <EntityTable<PageBadge>
+          columns={columns}
+          data={badges}
+          isLoading={isLoading}
+          isError={isError}
+          error={error}
+          emptyStateMessage="No badges found. Click 'Create Badge' to add one."
+          renderActions={(badge) => (
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" size="sm" onClick={() => handleOpenEditDialog(badge)}>
+                <Pencil className="h-4 w-4 mr-1" /> Edit
+              </Button>
+              <Button variant="destructive" size="sm" onClick={() => handleOpenDeleteDialog(badge)}>
+                <Trash2 className="h-4 w-4 mr-1" /> Delete
+              </Button>
+            </div>
+          )}
+        />
+        {badgesApiResponse?.totalPages && badgesApiResponse.totalPages > 1 && (
+          <div className="flex items-center justify-end gap-2 p-4 border-t border-admin-border-subtle">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1 || isLoading}
+            >
+              Previous
+            </Button>
+            <span className="text-sm text-admin-text-secondary">
+              Page {badgesApiResponse.currentPage || page} of {badgesApiResponse.totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => Math.min(badgesApiResponse.totalPages, p + 1))}
+              disabled={page === badgesApiResponse.totalPages || isLoading}
+            >
+              Next
+            </Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
 
-						<div className="grid gap-2">
-							<Label htmlFor="rarity">Rarity</Label>
-							<Select
-								value={formData.rarity}
-								onValueChange={(value) => setFormData({ ...formData, rarity: value })}
-							>
-								<SelectTrigger>
-									<SelectValue placeholder="Select rarity" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectGroup>
-										<SelectLabel>Badge Rarity</SelectLabel>
-										{RARITIES.map((rarity) => (
-											<SelectItem key={rarity.value} value={rarity.value}>
-												<div className="flex items-center gap-2">
-													<div className={`w-3 h-3 rounded-full ${rarity.color}`} />
-													<span>{rarity.label}</span>
-												</div>
-											</SelectItem>
-										))}
-									</SelectGroup>
-								</SelectContent>
-							</Select>
-						</div>
-					</div>
+  const statisticsTabContent = (
+    <Card>
+      <CardHeader>
+        <CardTitle>Badge Statistics</CardTitle>
+        <CardDescription>Overview of badge distribution and usage.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {isLoading && <p>Loading statistics...</p>}
+        {isError && <p className="text-destructive">Error loading statistics.</p>}
+        {!isLoading && !isError && badgesApiResponse && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="p-4">
+                <div className="text-sm font-medium text-admin-text-secondary">Total Badges</div>
+                <div className="text-2xl font-bold mt-1">{badgesApiResponse.totalBadges || 0}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="text-sm font-medium text-admin-text-secondary">Badges Awarded</div>
+                <div className="text-2xl font-bold mt-1">{badgesApiResponse.badgesAwarded || 0}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="text-sm font-medium text-admin-text-secondary">Most Common</div>
+                <div className="text-2xl font-bold mt-1">{badgesApiResponse.mostCommonBadge?.name || 'N/A'}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="text-sm font-medium text-admin-text-secondary">Rarest</div>
+                <div className="text-2xl font-bold mt-1">{badgesApiResponse.rarestBadge?.name || 'N/A'}</div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+  
+  const tabsConfig = [
+    { value: 'all-badges', label: 'All Badges', content: allBadgesTabContent },
+    { value: 'statistics', label: 'Statistics', content: statisticsTabContent },
+  ];
 
-					<DialogFooter>
-						<Button
-							type="submit"
-							disabled={createBadgeMutation.isPending || updateBadgeMutation.isPending}
-						>
-							{createBadgeMutation.isPending || updateBadgeMutation.isPending
-								? 'Saving...'
-								: isEdit
-									? 'Update Badge'
-									: 'Create Badge'}
-						</Button>
-					</DialogFooter>
-				</form>
-			</DialogContent>
-		</Dialog>
-	);
-
-	// Delete confirmation dialog
-	const DeleteConfirmationDialog = () => (
-		<Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-			<DialogContent className="sm:max-w-[400px]">
-				<DialogHeader>
-					<DialogTitle>Delete Badge</DialogTitle>
-					<DialogDescription>
-						Are you sure you want to delete this badge? This action cannot be undone.
-					</DialogDescription>
-				</DialogHeader>
-
-				{selectedBadge && (
-					<div className="flex items-center gap-3 py-4">
-						<img
-							src={selectedBadge.iconUrl}
-							alt={selectedBadge.name}
-							className="w-12 h-12 object-contain border border-slate-700 rounded"
-							onError={(e) =>
-								((e.target as HTMLImageElement).src = 'https://placehold.co/100x100?text=Error')
-							}
-						/>
-						<div>
-							<h4 className="font-medium">{selectedBadge.name}</h4>
-							<p className="text-sm text-muted-foreground">{selectedBadge.description}</p>
-						</div>
-					</div>
-				)}
-
-				<DialogFooter>
-					<Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-						Cancel
-					</Button>
-					<Button
-						variant="destructive"
-						onClick={() => selectedBadge && deleteBadgeMutation.mutate(selectedBadge.id)}
-						disabled={deleteBadgeMutation.isPending}
-					>
-						{deleteBadgeMutation.isPending ? 'Deleting...' : 'Delete Badge'}
-					</Button>
-				</DialogFooter>
-			</DialogContent>
-		</Dialog>
-	);
-
-	// Render badge table
-	const BadgeTable = () => (
-		<Table>
-			<TableHeader>
-				<TableRow>
-					<TableHead className="w-[80px]">Icon</TableHead>
-					<TableHead>
-						<div className="flex items-center cursor-pointer" onClick={() => handleSort('name')}>
-							Name
-							<ArrowUpDown className="ml-2 h-4 w-4" />
-						</div>
-					</TableHead>
-					<TableHead>Description</TableHead>
-					<TableHead>
-						<div className="flex items-center cursor-pointer" onClick={() => handleSort('rarity')}>
-							Rarity
-							<ArrowUpDown className="ml-2 h-4 w-4" />
-						</div>
-					</TableHead>
-					<TableHead>
-						<div
-							className="flex items-center cursor-pointer"
-							onClick={() => handleSort('createdAt')}
-						>
-							Created
-							<ArrowUpDown className="ml-2 h-4 w-4" />
-						</div>
-					</TableHead>
-					<TableHead className="text-right">Actions</TableHead>
-				</TableRow>
-			</TableHeader>
-			<TableBody>
-				{isLoading ? (
-					Array.from({ length: 5 }).map((_, i) => (
-						<TableRow key={i}>
-							<TableCell colSpan={6} className="h-16 text-center text-muted-foreground">
-								Loading badges...
-							</TableCell>
-						</TableRow>
-					))
-				) : isError ? (
-					<TableRow>
-						<TableCell colSpan={6} className="h-16 text-center text-destructive">
-							Error loading badges: {error.message}
-						</TableCell>
-					</TableRow>
-				) : badgesData?.badges?.length === 0 ? (
-					<TableRow>
-						<TableCell colSpan={6} className="h-16 text-center text-muted-foreground">
-							No badges found. Create your first badge to get started.
-						</TableCell>
-					</TableRow>
-				) : (
-					badgesData?.badges?.map((badge: Badge) => (
-						<TableRow key={badge.id}>
-							<TableCell>
-								<img
-									src={badge.iconUrl}
-									alt={badge.name}
-									className="w-10 h-10 object-contain border border-slate-700 rounded"
-									onError={(e) =>
-										((e.target as HTMLImageElement).src = 'https://placehold.co/100x100?text=Error')
-									}
-								/>
-							</TableCell>
-							<TableCell className="font-medium">{badge.name}</TableCell>
-							<TableCell className="max-w-[300px] truncate">{badge.description}</TableCell>
-							<TableCell>
-								<Badge className={getBadgeColor(badge.rarity)}>
-									{badge.rarity.charAt(0).toUpperCase() + badge.rarity.slice(1)}
-								</Badge>
-							</TableCell>
-							<TableCell>{new Date(badge.createdAt).toLocaleDateString()}</TableCell>
-							<TableCell className="text-right">
-								<div className="flex justify-end gap-2">
-									<Button variant="outline" size="icon" onClick={() => handleEditClick(badge)}>
-										<Pencil className="h-4 w-4" />
-									</Button>
-									<Button
-										variant="outline"
-										size="icon"
-										className="text-destructive"
-										onClick={() => handleDeleteClick(badge)}
-									>
-										<Trash2 className="h-4 w-4" />
-									</Button>
-								</div>
-							</TableCell>
-						</TableRow>
-					))
-				)}
-			</TableBody>
-		</Table>
-	);
-
-	// Get badge color based on rarity
-	const getBadgeColor = (rarity: string) => {
-		switch (rarity) {
-			case 'common':
-				return 'bg-slate-700 hover:bg-slate-800';
-			case 'uncommon':
-				return 'bg-green-700 hover:bg-green-800';
-			case 'rare':
-				return 'bg-blue-700 hover:bg-blue-800';
-			case 'epic':
-				return 'bg-purple-700 hover:bg-purple-800';
-			case 'legendary':
-				return 'bg-amber-700 hover:bg-amber-800';
-			case 'mythic':
-				return 'bg-red-700 hover:bg-red-800';
-			default:
-				return 'bg-slate-700 hover:bg-slate-800';
-		}
-	};
-
-	// Main render
-	return (
-		<AdminLayout>
-			<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-				<div className="flex items-center justify-between">
-					<h2 className="text-3xl font-bold tracking-tight">Badge Management</h2>
-					<Button onClick={() => setIsCreateDialogOpen(true)}>
-						<Plus className="mr-2 h-4 w-4" />
-						Create Badge
-					</Button>
-				</div>
-
-				<Tabs defaultValue="all-badges" className="space-y-4">
-					<TabsList>
-						<TabsTrigger value="all-badges">All Badges</TabsTrigger>
-						<TabsTrigger value="statistics">Statistics</TabsTrigger>
-					</TabsList>
-
-					<TabsContent value="all-badges" className="space-y-4">
-						<Card>
-							<CardHeader className="pb-3">
-								<div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-									<CardTitle>Badges</CardTitle>
-									<div className="relative w-full sm:w-72">
-										<Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-										<Input
-											placeholder="Search badges..."
-											className="pl-8"
-											value={searchTerm}
-											onChange={(e) => setSearchTerm(e.target.value)}
-										/>
-									</div>
-								</div>
-							</CardHeader>
-							<CardContent className="p-0">
-								<BadgeTable />
-
-								{/* Pagination */}
-								{badgesData?.totalPages > 1 && (
-									<div className="flex items-center justify-end gap-2 p-4">
-										<Button
-											variant="outline"
-											size="sm"
-											onClick={() => setPage((p) => Math.max(1, p - 1))}
-											disabled={page === 1}
-										>
-											Previous
-										</Button>
-										<span className="text-sm">
-											Page {page} of {badgesData.totalPages}
-										</span>
-										<Button
-											variant="outline"
-											size="sm"
-											onClick={() => setPage((p) => Math.min(badgesData.totalPages, p + 1))}
-											disabled={page === badgesData.totalPages}
-										>
-											Next
-										</Button>
-									</div>
-								)}
-							</CardContent>
-						</Card>
-					</TabsContent>
-
-					<TabsContent value="statistics" className="space-y-4">
-						<Card>
-							<CardHeader>
-								<CardTitle>Badge Statistics</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-									<Card>
-										<CardContent className="p-4">
-											<div className="text-sm font-medium text-muted-foreground">Total Badges</div>
-											<div className="text-2xl font-bold mt-1">{badgesData?.totalBadges || 0}</div>
-										</CardContent>
-									</Card>
-									<Card>
-										<CardContent className="p-4">
-											<div className="text-sm font-medium text-muted-foreground">
-												Badges Awarded
-											</div>
-											<div className="text-2xl font-bold mt-1">
-												{badgesData?.badgesAwarded || 0}
-											</div>
-										</CardContent>
-									</Card>
-									<Card>
-										<CardContent className="p-4">
-											<div className="text-sm font-medium text-muted-foreground">Most Common</div>
-											<div className="text-2xl font-bold mt-1">
-												{badgesData?.mostCommonBadge?.name || 'N/A'}
-											</div>
-										</CardContent>
-									</Card>
-									<Card>
-										<CardContent className="p-4">
-											<div className="text-sm font-medium text-muted-foreground">Rarest</div>
-											<div className="text-2xl font-bold mt-1">
-												{badgesData?.rarestBadge?.name || 'N/A'}
-											</div>
-										</CardContent>
-									</Card>
-								</div>
-							</CardContent>
-						</Card>
-					</TabsContent>
-				</Tabs>
-			</div>
-
-			{/* Dialogs */}
-			<BadgeFormDialog
-				isOpen={isCreateDialogOpen}
-				setIsOpen={setIsCreateDialogOpen}
-				isEdit={false}
-			/>
-			<BadgeFormDialog isOpen={isEditDialogOpen} setIsOpen={setIsEditDialogOpen} isEdit={true} />
-			<DeleteConfirmationDialog />
-		</AdminLayout>
-	);
+  return (
+    <AdminPageShell title="Badge Management" pageActions={pageActions} tabsConfig={tabsConfig}>
+      {/* Content is now handled by tabsConfig. If no tabs, direct children would go here. */}
+      <BadgeFormDialogComponent
+        isOpen={isCreateDialogOpen || isEditDialogOpen}
+        setIsOpen={isEditDialogOpen ? setIsEditDialogOpen : setIsCreateDialogOpen}
+        isEdit={!!selectedBadge}
+        formData={formData}
+        setFormData={setFormData}
+        handleSubmit={handleFormSubmit}
+        isSubmitting={createBadgeMutation.isPending || updateBadgeMutation.isPending}
+      />
+      <DeleteBadgeConfirmationDialog
+        isOpen={isDeleteDialogOpen}
+        setIsOpen={setIsDeleteDialogOpen}
+        badge={selectedBadge}
+        onConfirmDelete={confirmDelete}
+        isDeleting={deleteBadgeMutation.isPending}
+      />
+    </AdminPageShell>
+  );
 }

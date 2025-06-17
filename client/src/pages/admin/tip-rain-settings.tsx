@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import AdminLayout from './admin-layout';
 import {
 	Card,
 	CardContent,
@@ -183,18 +182,15 @@ export default function TipRainSettings() {
 
 	if (isLoadingTipSettings || isLoadingRainSettings) {
 		return (
-			<AdminLayout>
-				<div className="flex items-center justify-center min-h-[600px]">
+			<div className="flex items-center justify-center min-h-[600px]">
 					<Loader2 className="h-10 w-10 text-cyan-500 animate-spin" />
 					<p className="ml-3 text-lg text-gray-300">Loading settings...</p>
 				</div>
-			</AdminLayout>
 		);
 	}
 
 	return (
-		<AdminLayout>
-			<div className="container px-4 mx-auto py-6">
+		<div className="container px-4 mx-auto py-6">
 				<header className="mb-8">
 					<h2 className="text-3xl font-bold tracking-tight text-white mb-2">Tip & Rain Settings</h2>
 					<p className="text-gray-400">Configure tip and rain settings for the platform.</p>
@@ -528,6 +524,5 @@ export default function TipRainSettings() {
 					</TabsContent>
 				</Tabs>
 			</div>
-		</AdminLayout>
 	);
 }

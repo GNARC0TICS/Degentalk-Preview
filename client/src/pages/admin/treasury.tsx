@@ -24,8 +24,8 @@ import {
 	TableHeader,
 	TableRow
 } from '@/components/ui/table';
-import AdminLayout from './admin-layout';
 import type { Transaction } from '@/types/wallet';
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 type TreasurySetting = {
 	settingId: number;
@@ -278,15 +278,14 @@ export default function TreasuryManagement() {
 
 	if (isLoadingSettings && tab === 'settings') {
 		return (
-			<AdminLayout>
-				<div className="flex items-center justify-center h-full p-8">
+			<div className="flex items-center justify-center h-full p-8">
 					<Loader2 className="h-8 w-8 animate-spin text-primary" />
 				</div>
-			</AdminLayout>
 		);
 	}
 
 	return (
+		<AdminPageShell title="Treasury Management">
 		<div className="space-y-6">
 			<Tabs defaultValue="settings" value={tab} onValueChange={setTab} className="space-y-4">
 				<TabsList>
@@ -664,5 +663,6 @@ export default function TreasuryManagement() {
 				</TabsContent>
 			</Tabs>
 		</div>
+		</AdminPageShell>
 	);
 }

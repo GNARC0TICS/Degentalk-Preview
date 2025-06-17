@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import AdminLayout from '../admin-layout';
 import { useParams, Link } from 'wouter';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
@@ -110,15 +109,12 @@ export default function AdminUserInventoryPage() {
 
 	if (!userId) {
 		return (
-			<AdminLayout>
-				<div className="p-4 text-red-500">User ID is missing.</div>
-			</AdminLayout>
+			<div className="p-4 text-red-500">User ID is missing.</div>
 		);
 	}
 
 	return (
-		<AdminLayout>
-			<div className="p-6">
+		<div className="p-6">
 				<Link
 					href="/admin/users"
 					className="inline-flex items-center text-sm text-zinc-400 hover:text-white mb-4"
@@ -228,6 +224,5 @@ export default function AdminUserInventoryPage() {
 					</Button>
 				</div>
 			</div>
-		</AdminLayout>
 	);
 }

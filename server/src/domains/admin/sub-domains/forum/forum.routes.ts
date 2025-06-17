@@ -10,7 +10,29 @@ import { asyncHandler } from '../../admin.middleware';
 
 const router = Router();
 
-// Category management routes
+// Forum entity management routes (zones, categories, forums)
+router.get(
+	'/entities',
+	asyncHandler(adminForumController.getAllEntities.bind(adminForumController))
+);
+router.get(
+	'/entities/:id',
+	asyncHandler(adminForumController.getEntityById.bind(adminForumController))
+);
+router.post(
+	'/entities',
+	asyncHandler(adminForumController.createEntity.bind(adminForumController))
+);
+router.put(
+	'/entities/:id',
+	asyncHandler(adminForumController.updateEntity.bind(adminForumController))
+);
+router.delete(
+	'/entities/:id',
+	asyncHandler(adminForumController.deleteEntity.bind(adminForumController))
+);
+
+// Category management routes (legacy - kept for compatibility)
 router.get(
 	'/categories',
 	asyncHandler(adminForumController.getAllCategories.bind(adminForumController))

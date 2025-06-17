@@ -18,7 +18,6 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import AdminLayout from '../admin-layout';
 import { apiRequest } from '@/lib/queryClient';
 
 // XP Settings types
@@ -240,8 +239,7 @@ export default function XpSettingsPage() {
 	);
 
 	return (
-		<AdminLayout>
-			<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+		<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
 				<div className="flex items-center justify-between">
 					<h2 className="text-3xl font-bold tracking-tight">XP System Settings</h2>
 					<div className="flex items-center space-x-2">
@@ -457,6 +455,5 @@ export default function XpSettingsPage() {
 					</form>
 				)}
 			</div>
-		</AdminLayout>
 	);
 }

@@ -1,607 +1,298 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Pencil, Trash2, ArrowUpDown, Search, ChevronUp, ChevronDown } from 'lucide-react';
+import { Plus, Pencil, Trash2 } from 'lucide-react'; // Removed ArrowUpDown, Search, Chevrons
 import { useToast } from '@/hooks/use-toast';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow
-} from '@/components/ui/table';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useDebounce } from '@/hooks/use-debounce';
-import AdminLayout from '../admin-layout';
+import { Badge as UiBadge } from '@/components/ui/badge'; // Renamed to avoid conflict
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'; // Handled by AdminPageShell
+// import { useDebounce } from '@/hooks/use-debounce'; // Not used for levels page search
 import { apiRequest } from '@/lib/queryClient';
 
-// Level types
-interface Level {
-	id: number;
-	level: number;
-	xpRequired: number;
-	rewardDgt: number;
-	rewardTitle: string | null;
-	description: string | null;
-	createdAt: string;
-}
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { EntityTable } from '@/components/admin/layout/EntityTable';
+import { 
+  LevelFormDialogComponent, 
+  DeleteLevelConfirmationDialog,
+} from '@/components/admin/forms/xp/LevelFormDialogs';
+import type { Level, LevelFormData } from '@/components/admin/forms/xp/LevelFormDialogs';
 
-interface LevelFormData {
-	level: number;
-	xpRequired: number;
-	rewardDgt: number;
-	rewardTitle: string;
-	description: string;
+// API response structure (assuming pagination or full list)
+interface LevelsApiResponse {
+  levels: Level[];
+  // Stats for the stats tab
+  totalLevels?: number;
+  highestLevel?: number;
+  maxXpRequired?: number;
+  totalDgtRewards?: number;
 }
 
 export default function LevelManagementPage() {
-	const { toast } = useToast();
-	const queryClient = useQueryClient();
-	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-	const [selectedLevel, setSelectedLevel] = useState<Level | null>(null);
-	const [formData, setFormData] = useState<LevelFormData>({
-		level: 1,
-		xpRequired: 100,
-		rewardDgt: 0,
-		rewardTitle: '',
-		description: ''
-	});
-	const [sortField, setSortField] = useState<'level' | 'xpRequired' | 'rewardDgt'>('level');
-	const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  
+  const [selectedLevel, setSelectedLevel] = useState<Level | null>(null);
+  const [formData, setFormData] = useState<LevelFormData>({
+    level: 1,
+    xpRequired: 100,
+    rewardDgt: 0,
+    rewardTitle: '',
+    description: '',
+  });
 
-	// Fetch levels
-	const {
-		data: levelsData,
-		isLoading,
-		isError,
-		error
-	} = useQuery({
-		queryKey: ['/api/admin/levels', { sort: sortField, direction: sortDirection }],
-		queryFn: async () => {
-			const response = await fetch(
-				`/api/admin/levels?sort=${sortField}&direction=${sortDirection}`
-			);
-			if (!response.ok) {
-				throw new Error('Failed to fetch levels');
-			}
-			return response.json();
-		}
-	});
+  // For now, assuming sorting is handled by backend or not critical for this view
+  // const [sortField, setSortField] = useState<'level' | 'xpRequired' | 'rewardDgt'>('level');
+  // const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
-	// Mutations
-	const createLevelMutation = useMutation({
-		mutationFn: async (data: LevelFormData) => {
-			return apiRequest('POST', '/api/admin/levels', data);
+  const {
+    data: levelsApiResponse,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<LevelsApiResponse>({
+    // queryKey: ['/api/admin/levels', { sort: sortField, direction: sortDirection }],
+    queryKey: ['/api/admin/levels'], // Simplified query key if no client-side sort params sent
+    queryFn: async () => {
+      // const params = new URLSearchParams({ sort: sortField, direction: sortDirection });
+      // return apiRequest({ url: `/api/admin/levels?${params.toString()}`, method: 'GET' });
+      return apiRequest({ url: `/api/admin/levels`, method: 'GET' });
+    },
+  });
+  
+  const levels = levelsApiResponse?.levels || [];
+
+  const resetFormAndCloseDialogs = () => {
+    setFormData({ level: 1, xpRequired: 100, rewardDgt: 0, rewardTitle: '', description: '' });
+    setSelectedLevel(null);
+    setIsCreateDialogOpen(false);
+    setIsEditDialogOpen(false);
+  };
+
+  const createLevelMutation = useMutation({
+    mutationFn: (data: LevelFormData) => apiRequest({ url: '/api/admin/levels', method: 'POST', data }),
+    onSuccess: () => {
+      toast({ title: 'Level created', description: 'The level has been created successfully.' });
+      resetFormAndCloseDialogs();
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/levels'] });
+    },
+    onError: (err: unknown) => {
+      const message = err instanceof Error ? err.message : 'Failed to create level.';
+      toast({ title: 'Error', description: message, variant: 'destructive' });
+    },
+  });
+
+  const updateLevelMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: LevelFormData }) => apiRequest({ url: `/api/admin/levels/${id}`, method: 'PUT', data }),
+    onSuccess: () => {
+      toast({ title: 'Level updated', description: 'The level has been updated successfully.' });
+      resetFormAndCloseDialogs();
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/levels'] });
+    },
+    onError: (err: unknown) => {
+      const message = err instanceof Error ? err.message : 'Failed to update level.';
+      toast({ title: 'Error', description: message, variant: 'destructive' });
+    },
+  });
+
+  const deleteLevelMutation = useMutation({
+    mutationFn: (id: number) => apiRequest({ url: `/api/admin/levels/${id}`, method: 'DELETE' }),
+    onSuccess: () => {
+      toast({ title: 'Level deleted', description: 'The level has been deleted successfully.' });
+      setIsDeleteDialogOpen(false);
+      setSelectedLevel(null);
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/levels'] });
+    },
+    onError: (err: unknown) => {
+      const message = err instanceof Error ? err.message : 'Failed to delete level.';
+      toast({ title: 'Error', description: message, variant: 'destructive' });
+    },
+  });
+  
+  const generateLevelsMutation = useMutation({
+		mutationFn: async (data: { startLevel: number; endLevel: number; baseXp: number; multiplier: number; }) => {
+			return apiRequest({url: '/api/admin/levels/generate', method: 'POST', data});
 		},
 		onSuccess: () => {
-			toast({
-				title: 'Level created',
-				description: 'The level has been created successfully',
-				variant: 'default'
-			});
-			setIsCreateDialogOpen(false);
+			toast({ title: 'Levels generated', description: 'Multiple levels have been generated successfully' });
 			queryClient.invalidateQueries({ queryKey: ['/api/admin/levels'] });
-			resetForm();
 		},
-		onError: (error) => {
-			toast({
-				title: 'Error',
-				description: `Failed to create level: ${error.message}`,
-				variant: 'destructive'
-			});
+		onError: (err: unknown) => {
+      const message = err instanceof Error ? err.message : 'Failed to generate levels.';
+			toast({ title: 'Error', description: message, variant: 'destructive' });
 		}
 	});
 
-	const updateLevelMutation = useMutation({
-		mutationFn: async ({ id, data }: { id: number; data: LevelFormData }) => {
-			return apiRequest('PUT', `/api/admin/levels/${id}`, data);
-		},
-		onSuccess: () => {
-			toast({
-				title: 'Level updated',
-				description: 'The level has been updated successfully',
-				variant: 'default'
-			});
-			setIsEditDialogOpen(false);
-			queryClient.invalidateQueries({ queryKey: ['/api/admin/levels'] });
-		},
-		onError: (error) => {
-			toast({
-				title: 'Error',
-				description: `Failed to update level: ${error.message}`,
-				variant: 'destructive'
-			});
-		}
-	});
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isEditDialogOpen && selectedLevel) {
+      updateLevelMutation.mutate({ id: selectedLevel.id, data: formData });
+    } else {
+      createLevelMutation.mutate(formData);
+    }
+  };
 
-	const deleteLevelMutation = useMutation({
-		mutationFn: async (id: number) => {
-			return apiRequest('DELETE', `/api/admin/levels/${id}`);
-		},
-		onSuccess: () => {
-			toast({
-				title: 'Level deleted',
-				description: 'The level has been deleted successfully',
-				variant: 'default'
-			});
-			setIsDeleteDialogOpen(false);
-			queryClient.invalidateQueries({ queryKey: ['/api/admin/levels'] });
-		},
-		onError: (error) => {
-			toast({
-				title: 'Error',
-				description: `Failed to delete level: ${error.message}`,
-				variant: 'destructive'
-			});
-		}
-	});
+  const handleOpenCreateDialog = () => {
+    resetFormAndCloseDialogs();
+    setIsCreateDialogOpen(true);
+  };
 
-	// Generate levels automatically
-	const generateLevelsMutation = useMutation({
-		mutationFn: async (data: {
-			startLevel: number;
-			endLevel: number;
-			baseXp: number;
-			multiplier: number;
-		}) => {
-			return apiRequest('POST', '/api/admin/levels/generate', data);
-		},
-		onSuccess: () => {
-			toast({
-				title: 'Levels generated',
-				description: 'Multiple levels have been generated successfully',
-				variant: 'default'
-			});
-			queryClient.invalidateQueries({ queryKey: ['/api/admin/levels'] });
-		},
-		onError: (error) => {
-			toast({
-				title: 'Error',
-				description: `Failed to generate levels: ${error.message}`,
-				variant: 'destructive'
-			});
-		}
-	});
+  const handleOpenEditDialog = (level: Level) => {
+    setSelectedLevel(level);
+    setFormData({
+      level: level.level,
+      xpRequired: level.xpRequired,
+      rewardDgt: level.rewardDgt,
+      rewardTitle: level.rewardTitle || '',
+      description: level.description || '',
+    });
+    setIsEditDialogOpen(true);
+  };
 
-	// Handlers
-	const handleSort = (field: 'level' | 'xpRequired' | 'rewardDgt') => {
-		if (sortField === field) {
-			setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-		} else {
-			setSortField(field);
-			setSortDirection('asc');
-		}
+  const handleOpenDeleteDialog = (level: Level) => {
+    setSelectedLevel(level);
+    setIsDeleteDialogOpen(true);
+  };
+  
+  const confirmDelete = () => {
+    if (selectedLevel) {
+      deleteLevelMutation.mutate(selectedLevel.id);
+    }
+  };
+
+  const handleGenerateLevels = () => {
+		// These values could come from a form in the future
+		generateLevelsMutation.mutate({ startLevel: 1, endLevel: 100, baseXp: 100, multiplier: 1.1 });
 	};
+  
+  const columns = [
+    { key: 'level', header: 'Level', render: (level: Level) => <UiBadge variant="outline">{level.level}</UiBadge> },
+    { key: 'xpRequired', header: 'XP Required', render: (level: Level) => level.xpRequired.toLocaleString() },
+    { key: 'description', header: 'Description', render: (level: Level) => <span className="block max-w-[300px] truncate">{level.description || '-'}</span> },
+    { key: 'rewardDgt', header: 'DGT Reward', render: (level: Level) => level.rewardDgt > 0 ? <UiBadge className="bg-emerald-700 hover:bg-emerald-800">{level.rewardDgt} DGT</UiBadge> : '-' },
+    { key: 'rewardTitle', header: 'Title Reward', render: (level: Level) => level.rewardTitle ? <UiBadge variant="secondary">{level.rewardTitle}</UiBadge> : '-' },
+  ];
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-		if (isEditDialogOpen && selectedLevel) {
-			updateLevelMutation.mutate({ id: selectedLevel.id, data: formData });
-		} else {
-			createLevelMutation.mutate(formData);
-		}
-	};
+  const pageActions = (
+    <div className="flex gap-2">
+      <Button onClick={handleOpenCreateDialog}>
+        <Plus className="mr-2 h-4 w-4" /> Create Level
+      </Button>
+      <Button variant="outline" onClick={handleGenerateLevels} disabled={generateLevelsMutation.isPending}>
+        {generateLevelsMutation.isPending ? 'Generating...' : 'Generate Levels (1-100)'}
+      </Button>
+    </div>
+  );
 
-	const handleEditClick = (level: Level) => {
-		setSelectedLevel(level);
-		setFormData({
-			level: level.level,
-			xpRequired: level.xpRequired,
-			rewardDgt: level.rewardDgt,
-			rewardTitle: level.rewardTitle || '',
-			description: level.description || ''
-		});
-		setIsEditDialogOpen(true);
-	};
+  const allLevelsTabContent = (
+    <Card>
+      <CardHeader>
+        <CardTitle>XP Levels Configuration</CardTitle>
+        <CardDescription>Define the XP thresholds and rewards for each user level.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <EntityTable<Level>
+          columns={columns}
+          data={levels.sort((a,b) => a.level - b.level)} // Ensure client-side sort by level for display
+          isLoading={isLoading}
+          isError={isError}
+          error={error}
+          emptyStateMessage="No levels found. Click 'Create Level' or 'Generate Levels'."
+          renderActions={(level) => (
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" size="sm" onClick={() => handleOpenEditDialog(level)}>
+                <Pencil className="h-4 w-4 mr-1" /> Edit
+              </Button>
+              <Button variant="destructive" size="sm" onClick={() => handleOpenDeleteDialog(level)}>
+                <Trash2 className="h-4 w-4 mr-1" /> Delete
+              </Button>
+            </div>
+          )}
+        />
+      </CardContent>
+    </Card>
+  );
 
-	const handleDeleteClick = (level: Level) => {
-		setSelectedLevel(level);
-		setIsDeleteDialogOpen(true);
-	};
+  const statisticsTabContent = (
+    <Card>
+      <CardHeader>
+        <CardTitle>Level Statistics</CardTitle>
+        <CardDescription>Overview of level configuration.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {isLoading && <p>Loading statistics...</p>}
+        {isError && <p className="text-destructive">Error loading statistics.</p>}
+        {!isLoading && !isError && levelsApiResponse && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="p-4">
+                <div className="text-sm font-medium text-admin-text-secondary">Total Levels</div>
+                <div className="text-2xl font-bold mt-1">{levelsApiResponse.totalLevels || levels.length}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="text-sm font-medium text-admin-text-secondary">Highest Level</div>
+                <div className="text-2xl font-bold mt-1">{levelsApiResponse.highestLevel || (levels.length > 0 ? Math.max(...levels.map(l => l.level)) : 0)}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="text-sm font-medium text-admin-text-secondary">Max XP Required</div>
+                <div className="text-2xl font-bold mt-1">
+                  {(levelsApiResponse.maxXpRequired || (levels.length > 0 ? Math.max(...levels.map(l => l.xpRequired)) : 0)).toLocaleString()}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="text-sm font-medium text-admin-text-secondary">Total DGT Rewards</div>
+                <div className="text-2xl font-bold mt-1">
+                  {(levelsApiResponse.totalDgtRewards || levels.reduce((sum, l) => sum + l.rewardDgt, 0)).toLocaleString()}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+         <div className="mt-6">
+            <h3 className="text-lg font-medium mb-4">XP Progression Chart</h3>
+            <div className="h-64 bg-admin-bg-element rounded-md flex items-center justify-center">
+                <span className="text-admin-text-secondary">
+                    XP progression chart will be displayed here (Placeholder)
+                </span>
+            </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+  
+  const tabsConfig = [
+    { value: 'all-levels', label: 'All Levels', content: allLevelsTabContent },
+    { value: 'statistics', label: 'Level Stats', content: statisticsTabContent },
+  ];
 
-	const resetForm = () => {
-		setFormData({
-			level: 1,
-			xpRequired: 100,
-			rewardDgt: 0,
-			rewardTitle: '',
-			description: ''
-		});
-		setSelectedLevel(null);
-	};
-
-	const handleGenerateLevels = () => {
-		const startLevel = 1;
-		const endLevel = 100;
-		const baseXp = 100;
-		const multiplier = 1.1;
-
-		generateLevelsMutation.mutate({ startLevel, endLevel, baseXp, multiplier });
-	};
-
-	// Render level dialog form
-	const LevelFormDialog = ({
-		isOpen,
-		setIsOpen,
-		isEdit
-	}: {
-		isOpen: boolean;
-		setIsOpen: (open: boolean) => void;
-		isEdit: boolean;
-	}) => (
-		<Dialog
-			open={isOpen}
-			onOpenChange={(open) => {
-				setIsOpen(open);
-				if (!open) resetForm();
-			}}
-		>
-			<DialogContent className="sm:max-w-[500px]">
-				<form onSubmit={handleSubmit}>
-					<DialogHeader>
-						<DialogTitle>{isEdit ? 'Edit Level' : 'Create New Level'}</DialogTitle>
-						<DialogDescription>
-							{isEdit
-								? 'Update the level details below.'
-								: 'Define a new XP level with its requirements and rewards.'}
-						</DialogDescription>
-					</DialogHeader>
-
-					<div className="grid gap-4 py-4">
-						<div className="grid grid-cols-2 gap-2">
-							<div>
-								<Label htmlFor="level">Level Number</Label>
-								<Input
-									id="level"
-									type="number"
-									min="1"
-									value={formData.level}
-									onChange={(e) => setFormData({ ...formData, level: parseInt(e.target.value) })}
-									required
-								/>
-							</div>
-							<div>
-								<Label htmlFor="xpRequired">XP Required</Label>
-								<Input
-									id="xpRequired"
-									type="number"
-									min="0"
-									value={formData.xpRequired}
-									onChange={(e) =>
-										setFormData({ ...formData, xpRequired: parseInt(e.target.value) })
-									}
-									required
-								/>
-							</div>
-						</div>
-
-						<div>
-							<Label htmlFor="description">Description</Label>
-							<Input
-								id="description"
-								value={formData.description}
-								onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-								placeholder="Level up description (optional)"
-							/>
-						</div>
-
-						<div className="grid grid-cols-2 gap-2">
-							<div>
-								<Label htmlFor="rewardDgt">DGT Reward</Label>
-								<Input
-									id="rewardDgt"
-									type="number"
-									min="0"
-									value={formData.rewardDgt}
-									onChange={(e) =>
-										setFormData({ ...formData, rewardDgt: parseInt(e.target.value) })
-									}
-									required
-								/>
-							</div>
-							<div>
-								<Label htmlFor="rewardTitle">Title Reward</Label>
-								<Input
-									id="rewardTitle"
-									value={formData.rewardTitle}
-									onChange={(e) => setFormData({ ...formData, rewardTitle: e.target.value })}
-									placeholder="Optional title reward"
-								/>
-							</div>
-						</div>
-
-						<div className="text-sm text-muted-foreground">
-							<p>
-								Level {formData.level} will require {formData.xpRequired} XP
-							</p>
-							{formData.level > 1 && levelsData?.levels && (
-								<p className="mt-1">
-									{(() => {
-										const prevLevel = levelsData.levels.find((l) => l.level === formData.level - 1);
-										if (prevLevel) {
-											const diff = formData.xpRequired - prevLevel.xpRequired;
-											return `Difference from level ${prevLevel.level}: +${diff} XP`;
-										}
-										return null;
-									})()}
-								</p>
-							)}
-						</div>
-					</div>
-
-					<DialogFooter>
-						<Button
-							type="submit"
-							disabled={createLevelMutation.isPending || updateLevelMutation.isPending}
-						>
-							{createLevelMutation.isPending || updateLevelMutation.isPending
-								? 'Saving...'
-								: isEdit
-									? 'Update Level'
-									: 'Create Level'}
-						</Button>
-					</DialogFooter>
-				</form>
-			</DialogContent>
-		</Dialog>
-	);
-
-	// Delete confirmation dialog
-	const DeleteConfirmationDialog = () => (
-		<Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-			<DialogContent className="sm:max-w-[400px]">
-				<DialogHeader>
-					<DialogTitle>Delete Level</DialogTitle>
-					<DialogDescription>
-						Are you sure you want to delete this level? This action cannot be undone.
-					</DialogDescription>
-				</DialogHeader>
-
-				{selectedLevel && (
-					<div className="py-4">
-						<p className="font-medium">Level {selectedLevel.level}</p>
-						<p className="text-sm text-muted-foreground">Required XP: {selectedLevel.xpRequired}</p>
-						{selectedLevel.description && (
-							<p className="text-sm mt-2">{selectedLevel.description}</p>
-						)}
-					</div>
-				)}
-
-				<DialogFooter>
-					<Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-						Cancel
-					</Button>
-					<Button
-						variant="destructive"
-						onClick={() => selectedLevel && deleteLevelMutation.mutate(selectedLevel.id)}
-						disabled={deleteLevelMutation.isPending}
-					>
-						{deleteLevelMutation.isPending ? 'Deleting...' : 'Delete Level'}
-					</Button>
-				</DialogFooter>
-			</DialogContent>
-		</Dialog>
-	);
-
-	// Render level table
-	const LevelTable = () => (
-		<Table>
-			<TableHeader>
-				<TableRow>
-					<TableHead>
-						<div className="flex items-center cursor-pointer" onClick={() => handleSort('level')}>
-							Level
-							<ArrowUpDown className="ml-2 h-4 w-4" />
-						</div>
-					</TableHead>
-					<TableHead>
-						<div
-							className="flex items-center cursor-pointer"
-							onClick={() => handleSort('xpRequired')}
-						>
-							XP Required
-							<ArrowUpDown className="ml-2 h-4 w-4" />
-						</div>
-					</TableHead>
-					<TableHead>Description</TableHead>
-					<TableHead>
-						<div
-							className="flex items-center cursor-pointer"
-							onClick={() => handleSort('rewardDgt')}
-						>
-							DGT Reward
-							<ArrowUpDown className="ml-2 h-4 w-4" />
-						</div>
-					</TableHead>
-					<TableHead>Title Reward</TableHead>
-					<TableHead className="text-right">Actions</TableHead>
-				</TableRow>
-			</TableHeader>
-			<TableBody>
-				{isLoading ? (
-					Array.from({ length: 5 }).map((_, i) => (
-						<TableRow key={i}>
-							<TableCell colSpan={6} className="h-16 text-center text-muted-foreground">
-								Loading levels...
-							</TableCell>
-						</TableRow>
-					))
-				) : isError ? (
-					<TableRow>
-						<TableCell colSpan={6} className="h-16 text-center text-destructive">
-							Error loading levels: {error.message}
-						</TableCell>
-					</TableRow>
-				) : levelsData?.levels?.length === 0 ? (
-					<TableRow>
-						<TableCell colSpan={6} className="h-16 text-center text-muted-foreground">
-							No levels found. Create your first level to get started.
-						</TableCell>
-					</TableRow>
-				) : (
-					levelsData?.levels?.map((level: Level) => (
-						<TableRow key={level.id}>
-							<TableCell className="font-medium">
-								<Badge variant="outline" className="bg-zinc-800 border-zinc-700">
-									{level.level}
-								</Badge>
-							</TableCell>
-							<TableCell>{level.xpRequired.toLocaleString()}</TableCell>
-							<TableCell className="max-w-[300px] truncate">{level.description || '-'}</TableCell>
-							<TableCell>
-								{level.rewardDgt > 0 ? (
-									<Badge className="bg-emerald-900 text-emerald-300">{level.rewardDgt} DGT</Badge>
-								) : (
-									'-'
-								)}
-							</TableCell>
-							<TableCell>
-								{level.rewardTitle ? (
-									<Badge variant="outline" className="bg-zinc-800 border-amber-700 text-amber-300">
-										{level.rewardTitle}
-									</Badge>
-								) : (
-									'-'
-								)}
-							</TableCell>
-							<TableCell className="text-right">
-								<div className="flex justify-end gap-2">
-									<Button variant="outline" size="icon" onClick={() => handleEditClick(level)}>
-										<Pencil className="h-4 w-4" />
-									</Button>
-									<Button
-										variant="outline"
-										size="icon"
-										className="text-destructive"
-										onClick={() => handleDeleteClick(level)}
-									>
-										<Trash2 className="h-4 w-4" />
-									</Button>
-								</div>
-							</TableCell>
-						</TableRow>
-					))
-				)}
-			</TableBody>
-		</Table>
-	);
-
-	// Main render
-	return (
-		<AdminLayout>
-			<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-				<div className="flex items-center justify-between">
-					<h2 className="text-3xl font-bold tracking-tight">Level Management</h2>
-					<div className="flex gap-2">
-						<Button onClick={() => setIsCreateDialogOpen(true)}>
-							<Plus className="mr-2 h-4 w-4" />
-							Create Level
-						</Button>
-						<Button
-							variant="outline"
-							onClick={handleGenerateLevels}
-							disabled={generateLevelsMutation.isPending}
-						>
-							{generateLevelsMutation.isPending ? 'Generating...' : 'Generate Levels'}
-						</Button>
-					</div>
-				</div>
-
-				<Tabs defaultValue="all-levels" className="space-y-4">
-					<TabsList>
-						<TabsTrigger value="all-levels">All Levels</TabsTrigger>
-						<TabsTrigger value="statistics">Level Stats</TabsTrigger>
-					</TabsList>
-
-					<TabsContent value="all-levels" className="space-y-4">
-						<Card>
-							<CardHeader className="pb-3">
-								<CardTitle>XP Levels</CardTitle>
-							</CardHeader>
-							<CardContent className="p-0">
-								<LevelTable />
-							</CardContent>
-						</Card>
-					</TabsContent>
-
-					<TabsContent value="statistics" className="space-y-4">
-						<Card>
-							<CardHeader>
-								<CardTitle>Level Statistics</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-									<Card>
-										<CardContent className="p-4">
-											<div className="text-sm font-medium text-muted-foreground">Total Levels</div>
-											<div className="text-2xl font-bold mt-1">{levelsData?.totalLevels || 0}</div>
-										</CardContent>
-									</Card>
-									<Card>
-										<CardContent className="p-4">
-											<div className="text-sm font-medium text-muted-foreground">Highest Level</div>
-											<div className="text-2xl font-bold mt-1">{levelsData?.highestLevel || 0}</div>
-										</CardContent>
-									</Card>
-									<Card>
-										<CardContent className="p-4">
-											<div className="text-sm font-medium text-muted-foreground">
-												Max XP Required
-											</div>
-											<div className="text-2xl font-bold mt-1">
-												{(levelsData?.maxXpRequired || 0).toLocaleString()}
-											</div>
-										</CardContent>
-									</Card>
-									<Card>
-										<CardContent className="p-4">
-											<div className="text-sm font-medium text-muted-foreground">
-												Total DGT Rewards
-											</div>
-											<div className="text-2xl font-bold mt-1">
-												{(levelsData?.totalDgtRewards || 0).toLocaleString()}
-											</div>
-										</CardContent>
-									</Card>
-								</div>
-
-								<div className="mt-6">
-									<h3 className="text-lg font-medium mb-4">XP Progression Chart</h3>
-									<div className="h-64 bg-zinc-800 rounded-md flex items-center justify-center">
-										<span className="text-muted-foreground">
-											XP progression chart will be displayed here
-										</span>
-									</div>
-								</div>
-							</CardContent>
-						</Card>
-					</TabsContent>
-				</Tabs>
-			</div>
-
-			{/* Dialogs */}
-			<LevelFormDialog
-				isOpen={isCreateDialogOpen}
-				setIsOpen={setIsCreateDialogOpen}
-				isEdit={false}
-			/>
-			<LevelFormDialog isOpen={isEditDialogOpen} setIsOpen={setIsEditDialogOpen} isEdit={true} />
-			<DeleteConfirmationDialog />
-		</AdminLayout>
-	);
+  return (
+    <AdminPageShell title="Level Management" pageActions={pageActions} tabsConfig={tabsConfig}>
+      <LevelFormDialogComponent
+        isOpen={isCreateDialogOpen || isEditDialogOpen}
+        setIsOpen={isEditDialogOpen ? setIsEditDialogOpen : setIsCreateDialogOpen}
+        isEdit={!!selectedLevel}
+        formData={formData}
+        setFormData={setFormData}
+        handleSubmit={handleFormSubmit}
+        isSubmitting={createLevelMutation.isPending || updateLevelMutation.isPending}
+        levelsData={{ levels: levels.map(l => ({ level: l.level, xpRequired: l.xpRequired })) }}
+      />
+      <DeleteLevelConfirmationDialog
+        isOpen={isDeleteDialogOpen}
+        setIsOpen={setIsDeleteDialogOpen}
+        level={selectedLevel ? { level: selectedLevel.level, xpRequired: selectedLevel.xpRequired, description: selectedLevel.description || '' } : null}
+        onConfirmDelete={confirmDelete}
+        isDeleting={deleteLevelMutation.isPending}
+      />
+    </AdminPageShell>
+  );
 }

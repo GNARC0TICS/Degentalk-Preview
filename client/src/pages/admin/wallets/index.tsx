@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { formatCurrency } from '@/lib/formatters';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { formatCurrency } from '@/lib/formatters'; // Assuming this exists and works
+// Removed unused Tabs, TabsContent, TabsList, TabsTrigger from '@/components/ui/tabs'
 import {
 	Card,
 	CardContent,
@@ -14,36 +13,17 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow
-} from '@/components/ui/table';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue
-} from '@/components/ui/select';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger
-} from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import AdminLayout from '../admin-layout';
-import { MockWebhookTrigger } from '@/components/admin/wallet/mock-webhook-trigger';
 
-// Type definitions for API responses
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell'; // Import TabConfig
+import type { TabConfig } from '@/components/admin/layout/AdminPageShell'; // Type-only import
+import { EntityTable } from '@/components/admin/layout/EntityTable';
+import type { ColumnDef } from '@/components/admin/layout/EntityTable'; // Type-only import
+import ManualDgtAdjustmentDialog from '@/components/admin/forms/wallets/ManualDgtAdjustmentDialog';
+import { MockWebhookTrigger } from '@/components/admin/wallet/mock-webhook-trigger'; // Assuming this path is correct
+
+// Type definitions
 interface WalletStats {
 	totalDgtCirculation: number;
 	activeWalletCount: number;
@@ -52,7 +32,7 @@ interface WalletStats {
 	dgtTradingVolume24h?: number;
 }
 
-interface TopUser {
+export interface TopUser { // Export for potential use in dialog or other components
 	id: string;
 	username: string;
 	dgtBalance: number;
@@ -61,10 +41,10 @@ interface TopUser {
 
 interface TopUsersResponse {
 	users: TopUser[];
-	total: number;
+	total: number; // Assuming API provides total for pagination if needed
 }
 
-interface Transaction {
+export interface Transaction { // Export for potential use
 	id: string;
 	type: string;
 	amount: number;
@@ -77,7 +57,7 @@ interface Transaction {
 
 interface TransactionsResponse {
 	transactions: Transaction[];
-	total: number;
+	total: number; // Assuming API provides total for pagination if needed
 }
 
 interface CCPaymentStatus {
@@ -89,509 +69,240 @@ interface CCPaymentStatus {
 
 interface DgtAdjustmentResponse {
 	success: boolean;
-	transactionId: string;
-	newBalance: number;
+	transactionId?: string; // Made optional as it might not always be present on error
+	newBalance?: number; // Made optional
+	message?: string; // For error messages
 }
 
-/**
- * Admin Wallet Management Page
- *
- * Provides administrative tools for wallet management including:
- * - User DGT balance management
- * - Bulk DGT grants/deductions
- * - Transaction reporting
- * - CCPayment status monitoring
- * - Mock webhook testing
- *
- * // [REFAC-DGT] [REFAC-CCPAYMENT]
- */
 export default function AdminWalletsPage() {
 	const queryClient = useQueryClient();
 	const { toast } = useToast();
-	const [activeTab, setActiveTab] = useState('users');
-	const [userId, setUserId] = useState('');
-	const [dgtAmount, setDgtAmount] = useState('');
-	const [reason, setReason] = useState('');
+	const [activeTab, setActiveTab] = useState('overview'); // Default to overview or users
+	
+	// Dialog states
 	const [isManualDialogOpen, setIsManualDialogOpen] = useState(false);
-	const [transactionType, setTransactionType] = useState<'grant' | 'deduct'>('grant');
+	const [selectedUserForAdjustment, setSelectedUserForAdjustment] = useState<TopUser | null>(null);
+  const [adjustmentType, setAdjustmentType] = useState<'grant' | 'deduct'>('grant');
 
-	// Get wallet statistics
-	const { data: stats, isLoading: isLoadingStats } = useQuery({
+	// API Queries
+	const { data: stats, isLoading: isLoadingStats } = useQuery<WalletStats>({
 		queryKey: ['/api/admin/wallet/stats'],
-		queryFn: () =>
-			apiRequest<WalletStats>({
-				url: '/api/admin/wallet/stats',
-				method: 'GET'
-			})
+		queryFn: () => apiRequest({ url: '/api/admin/wallet/stats', method: 'GET' })
 	});
 
-	// Get top wallet users
-	const { data: topUsers, isLoading: isLoadingTopUsers } = useQuery({
+	const { data: topUsersData, isLoading: isLoadingTopUsers } = useQuery<TopUsersResponse>({
 		queryKey: ['/api/admin/wallet/top-users'],
-		queryFn: () =>
-			apiRequest<TopUsersResponse>({
-				url: '/api/admin/wallet/top-users',
-				method: 'GET'
-			})
+		queryFn: () => apiRequest({ url: '/api/admin/wallet/top-users', method: 'GET' })
 	});
 
-	// Get recent transactions
-	const { data: recentTransactions, isLoading: isLoadingTransactions } = useQuery({
+	const { data: recentTransactionsData, isLoading: isLoadingTransactions } = useQuery<TransactionsResponse>({
 		queryKey: ['/api/admin/wallet/recent-transactions'],
-		queryFn: () =>
-			apiRequest<TransactionsResponse>({
-				url: '/api/admin/wallet/recent-transactions',
-				method: 'GET'
-			})
+		queryFn: () => apiRequest({ url: '/api/admin/wallet/recent-transactions', method: 'GET' })
 	});
 
-	// Get CCPayment status
-	const { data: ccpaymentStatus, isLoading: isLoadingCCPayment } = useQuery({
+	const { data: ccpaymentStatus, isLoading: isLoadingCCPayment } = useQuery<CCPaymentStatus>({
 		queryKey: ['/api/admin/wallet/ccpayment-status'],
-		queryFn: () =>
-			apiRequest<CCPaymentStatus>({
-				url: '/api/admin/wallet/ccpayment-status',
-				method: 'GET'
-			})
+		queryFn: () => apiRequest({ url: '/api/admin/wallet/ccpayment-status', method: 'GET' })
 	});
 
-	// Manually adjust user DGT balance
-	const manualAdjustMutation = useMutation({
-		mutationFn: async (params: {
-			userId: string;
-			amount: number;
-			reason: string;
-			type: 'grant' | 'deduct';
-		}) => {
-			try {
-				const endpoint =
-					params.type === 'grant' ? '/api/admin/wallet/grant-dgt' : '/api/admin/wallet/deduct-dgt';
-
-				return await apiRequest<DgtAdjustmentResponse>({
-					url: endpoint,
-					method: 'POST',
-					data: {
-						userId: params.userId,
-						amount: params.amount,
-						reason: params.reason
-					}
-				});
-			} catch (error) {
-				console.error('Error adjusting DGT balance:', error);
-				throw error;
-			}
+	// Mutation for DGT adjustment
+	const manualAdjustMutation = useMutation<
+    DgtAdjustmentResponse,
+    Error, // Explicitly type error
+    { userId: string; amount: number; reason: string; type: 'grant' | 'deduct' }
+  >({
+		mutationFn: async (params) => {
+			const endpoint = params.type === 'grant' ? '/api/admin/wallet/grant-dgt' : '/api/admin/wallet/deduct-dgt';
+			return apiRequest({ url: endpoint, method: 'POST', data: params });
 		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['/api/admin/wallet/stats'] });
-			queryClient.invalidateQueries({ queryKey: ['/api/admin/wallet/top-users'] });
-			queryClient.invalidateQueries({ queryKey: ['/api/admin/wallet/recent-transactions'] });
-
-			toast({
-				variant: 'default', // Changed 'success' to 'default'
-				title: 'Balance Updated',
-				description: `User DGT balance ${transactionType === 'grant' ? 'increased' : 'decreased'} successfully.`
-			});
-
-			// Reset form
-			setUserId('');
-			setDgtAmount('');
-			setReason('');
-			setIsManualDialogOpen(false);
+		onSuccess: (data) => {
+      if (data.success) {
+        queryClient.invalidateQueries({ queryKey: ['/api/admin/wallet/stats'] });
+        queryClient.invalidateQueries({ queryKey: ['/api/admin/wallet/top-users'] });
+        queryClient.invalidateQueries({ queryKey: ['/api/admin/wallet/recent-transactions'] });
+        toast({
+          title: 'Balance Updated',
+          description: `User DGT balance ${adjustmentType === 'grant' ? 'increased' : 'decreased'} successfully. New balance: ${formatCurrency(data.newBalance || 0, 'DGT')}`,
+        });
+        setIsManualDialogOpen(false);
+        setSelectedUserForAdjustment(null);
+      } else {
+        // Handle cases where API returns success:false with a message
+        toast({
+          variant: 'destructive',
+          title: 'Update Failed',
+          description: data.message || 'Failed to update DGT balance.',
+        });
+      }
 		},
-		onError: (error: Error) => { // Typed error as Error
+		onError: (error) => {
 			toast({
 				variant: 'destructive',
 				title: 'Error Updating Balance',
-				description: error?.message || 'Failed to update DGT balance. Please try again.'
+				description: error.message || 'An unexpected error occurred. Please try again.',
 			});
 		}
 	});
 
-	// Handle form submission
-	const handleManualAdjust = () => {
-		if (!userId || !dgtAmount) {
-			toast({
-				variant: 'destructive',
-				title: 'Missing Information',
-				description: 'Please enter both a User ID and an amount.'
-			});
-			return;
-		}
+  const handleOpenAdjustmentDialog = (user?: TopUser, type: 'grant' | 'deduct' = 'grant') => {
+    setSelectedUserForAdjustment(user || null);
+    setAdjustmentType(type);
+    setIsManualDialogOpen(true);
+  };
 
-		// userId is already a string, no need to parse if it's a UUID
-		const parsedAmount = parseFloat(dgtAmount);
+	// Columns for Top Users Table
+	const topUsersColumns: ColumnDef<TopUser>[] = [
+		{ key: 'id', header: 'User ID' },
+		{ key: 'username', header: 'Username' },
+		{ key: 'dgtBalance', header: 'DGT Balance', render: (user) => formatCurrency(user.dgtBalance, 'DGT') },
+		{ key: 'lastActive', header: 'Last Active', render: (user) => new Date(user.lastActive).toLocaleDateString() },
+	];
 
-		if (!userId.trim() || isNaN(parsedAmount) || parsedAmount <= 0) {
-			toast({
-				variant: 'destructive',
-				title: 'Invalid Input',
-				description: 'User ID must not be empty, and amount must be a valid positive number.'
-			});
-			return;
-		}
+  const renderTopUserActions = (user: TopUser) => (
+    <Button variant="outline" size="sm" onClick={() => handleOpenAdjustmentDialog(user, 'grant')}>
+      Adjust Balance
+    </Button>
+  );
 
-		manualAdjustMutation.mutate({
-			userId: userId.trim(),
-			amount: parsedAmount,
-			reason: reason || `Admin ${transactionType}`,
-			type: transactionType
-		});
-	};
+	// Columns for Recent Transactions Table
+	const transactionsColumns: ColumnDef<Transaction>[] = [
+		{ key: 'id', header: 'ID' },
+		{ key: 'type', header: 'Type', render: (tx) => <Badge variant={tx.type === 'grant' || tx.type === 'deposit' ? 'default' : 'secondary'}>{tx.type}</Badge> },
+		{ key: 'amount', header: 'Amount', render: (tx) => formatCurrency(tx.amount, tx.currency) },
+		{ key: 'username', header: 'User', render: (tx) => `${tx.username} (ID: ${tx.userId})` },
+		{ key: 'timestamp', header: 'Timestamp', render: (tx) => new Date(tx.timestamp).toLocaleString() },
+		{ key: 'status', header: 'Status', render: (tx) => <Badge variant={tx.status === 'completed' ? 'success' : tx.status === 'failed' ? 'destructive' : 'outline'}>{tx.status}</Badge> },
+	];
+
+  // Tab Content Components
+  const OverviewTabContent = () => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"> {/* Adjusted lg:grid-cols-3 as there are 3 cards */}
+      <Card>
+        <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Total DGT In Circulation</CardTitle></CardHeader>
+        <CardContent>{isLoadingStats ? <Skeleton className="h-8 w-24" /> : <div className="text-2xl font-bold">{formatCurrency(stats?.totalDgtCirculation || 0, 'DGT')}</div>}</CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Active Wallets</CardTitle></CardHeader>
+        <CardContent>{isLoadingStats ? <Skeleton className="h-8 w-24" /> : <div className="text-2xl font-bold">{stats?.activeWalletCount?.toLocaleString() || 0}</div>}</CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">DGT Transactions (24h)</CardTitle></CardHeader>
+        <CardContent>{isLoadingStats ? <Skeleton className="h-8 w-24" /> : <div className="text-2xl font-bold">{stats?.transactionsLast24h?.toLocaleString() || 0}</div>}</CardContent>
+      </Card>
+    </div>
+  );
+
+  const UserBalancesTabContent = () => (
+    <Card>
+      <CardHeader>
+        <CardTitle>Top User Balances</CardTitle>
+        <CardDescription>Users with the highest DGT balances. Click "Adjust Balance" to modify.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <EntityTable
+          columns={topUsersColumns}
+          data={topUsersData?.users || []}
+          isLoading={isLoadingTopUsers}
+          renderActions={renderTopUserActions}
+          emptyStateMessage="No user balances found."
+        />
+      </CardContent>
+    </Card>
+  );
+
+  const RecentTransactionsTabContent = () => (
+    <Card>
+      <CardHeader>
+        <CardTitle>Recent Transactions</CardTitle>
+        <CardDescription>Last 20 DGT transactions across the platform.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <EntityTable
+          columns={transactionsColumns}
+          data={recentTransactionsData?.transactions || []}
+          isLoading={isLoadingTransactions}
+          emptyStateMessage="No recent transactions found."
+        />
+      </CardContent>
+      <CardFooter className="justify-end">
+        <Button variant="outline">Export Transactions</Button>
+      </CardFooter>
+    </Card>
+  );
+
+  const CCPaymentTabContent = () => (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>CCPayment Integration Status</CardTitle>
+          <CardDescription>Monitor the status of the CCPayment integration.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoadingCCPayment ? (
+            <div className="space-y-2">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}</div>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex justify-between items-center p-4 border rounded-md">
+                <div><h3 className="font-medium">API Connection</h3><p className="text-sm text-muted-foreground">Status of the CCPayment API connection</p></div>
+                <Badge variant={ccpaymentStatus?.apiStatus === 'connected' ? 'success' : 'destructive'}>{ccpaymentStatus?.apiStatus === 'connected' ? 'Connected' : 'Disconnected'}</Badge>
+              </div>
+              <div className="flex justify-between items-center p-4 border rounded-md">
+                <div><h3 className="font-medium">Webhook Status</h3><p className="text-sm text-muted-foreground">Last webhook received</p></div>
+                <div className="text-right">
+                  <Badge variant={ccpaymentStatus?.lastWebhookReceived ? 'success' : 'destructive'}>{ccpaymentStatus?.lastWebhookReceived ? 'Active' : 'Not Received'}</Badge>
+                  {ccpaymentStatus?.lastWebhookReceived && <p className="text-xs text-muted-foreground mt-1">{new Date(ccpaymentStatus.lastWebhookReceived).toLocaleString()}</p>}
+                </div>
+              </div>
+              <div className="flex justify-between items-center p-4 border rounded-md">
+                <div><h3 className="font-medium">Pending Transactions</h3><p className="text-sm text-muted-foreground">CCPayment transactions awaiting confirmation</p></div>
+                <div className="text-right"><p className="text-lg font-bold">{ccpaymentStatus?.pendingTransactionCount || 0}</p></div>
+              </div>
+            </div>
+          )}
+        </CardContent>
+        <CardFooter className="justify-between">
+          <div className="text-sm text-muted-foreground">Last API check: {ccpaymentStatus?.lastCheck ? new Date(ccpaymentStatus.lastCheck).toLocaleString() : 'Never'}</div>
+          <Button variant="outline" onClick={() => queryClient.invalidateQueries({ queryKey: ['/api/admin/wallet/ccpayment-status'] })}>Refresh Status</Button>
+        </CardFooter>
+      </Card>
+      <MockWebhookTrigger />
+    </div>
+  );
+
+	const tabsConfig: TabConfig[] = [
+    { value: 'overview', label: 'Overview', content: <OverviewTabContent /> },
+		{ value: 'users', label: 'User Balances', content: <UserBalancesTabContent /> },
+		{ value: 'transactions', label: 'Recent Transactions', content: <RecentTransactionsTabContent /> },
+		{ value: 'ccpayment', label: 'CCPayment Status', content: <CCPaymentTabContent /> },
+	];
 
 	return (
-		<AdminLayout>
-			<div className="container mx-auto py-6">
-				<div className="flex justify-between items-center mb-6">
-					<h1 className="text-3xl font-bold">Wallet Management</h1>
-
-					<Dialog open={isManualDialogOpen} onOpenChange={setIsManualDialogOpen}>
-						<DialogTrigger asChild>
-							<Button>Manual DGT Adjustment</Button>
-						</DialogTrigger>
-						<DialogContent>
-							<DialogHeader>
-								<DialogTitle>Adjust User DGT Balance</DialogTitle>
-								<DialogDescription>
-									Manually grant or deduct DGT from a user account.
-								</DialogDescription>
-							</DialogHeader>
-
-							<div className="grid gap-4 py-4">
-								<div className="grid grid-cols-4 items-center gap-4">
-									<label className="text-right">Transaction Type</label>
-									<Select
-										value={transactionType}
-										onValueChange={(value) => setTransactionType(value as 'grant' | 'deduct')}
-									>
-										<SelectTrigger className="col-span-3">
-											<SelectValue />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value="grant">Grant DGT</SelectItem>
-											<SelectItem value="deduct">Deduct DGT</SelectItem>
-										</SelectContent>
-									</Select>
-								</div>
-
-								<div className="grid grid-cols-4 items-center gap-4">
-									<label className="text-right">User ID</label>
-									<Input
-										type="text"
-										value={userId}
-										onChange={(e) => setUserId(e.target.value)}
-										className="col-span-3"
-										placeholder="Enter User ID (UUID)"
-									/>
-								</div>
-
-								<div className="grid grid-cols-4 items-center gap-4">
-									<label className="text-right">Amount (DGT)</label>
-									<Input
-										type="number"
-										value={dgtAmount}
-										onChange={(e) => setDgtAmount(e.target.value)}
-										className="col-span-3"
-										min="1"
-									/>
-								</div>
-
-								<div className="grid grid-cols-4 items-center gap-4">
-									<label className="text-right">Reason</label>
-									<Input
-										value={reason}
-										onChange={(e) => setReason(e.target.value)}
-										className="col-span-3"
-										placeholder="Optional reason"
-									/>
-								</div>
-							</div>
-
-							<DialogFooter>
-								<Button variant="outline" onClick={() => setIsManualDialogOpen(false)}>
-									Cancel
-								</Button>
-								<Button onClick={handleManualAdjust} disabled={manualAdjustMutation.isPending}>
-									{manualAdjustMutation.isPending ? 'Processing...' : 'Submit'}
-								</Button>
-							</DialogFooter>
-						</DialogContent>
-					</Dialog>
-				</div>
-
-				{/* Stats Cards */}
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-					<Card>
-						<CardHeader className="pb-2">
-							<CardTitle className="text-sm font-medium">Total DGT In Circulation</CardTitle>
-						</CardHeader>
-						<CardContent>
-							{isLoadingStats ? (
-								<Skeleton className="h-8 w-24" />
-							) : (
-								<div className="text-2xl font-bold">
-									{formatCurrency(stats?.totalDgtCirculation || 0, 'DGT')}
-								</div>
-							)}
-						</CardContent>
-					</Card>
-
-					<Card>
-						<CardHeader className="pb-2">
-							<CardTitle className="text-sm font-medium">Active Wallets</CardTitle>
-						</CardHeader>
-						<CardContent>
-							{isLoadingStats ? (
-								<Skeleton className="h-8 w-24" />
-							) : (
-								<div className="text-2xl font-bold">
-									{stats?.activeWalletCount?.toLocaleString() || 0}
-								</div>
-							)}
-						</CardContent>
-					</Card>
-
-					<Card>
-						<CardHeader className="pb-2">
-							<CardTitle className="text-sm font-medium">DGT Transactions (24h)</CardTitle>
-						</CardHeader>
-						<CardContent>
-							{isLoadingStats ? (
-								<Skeleton className="h-8 w-24" />
-							) : (
-								<div className="text-2xl font-bold">
-									{stats?.transactionsLast24h?.toLocaleString() || 0}
-								</div>
-							)}
-						</CardContent>
-					</Card>
-				</div>
-
-				{/* Tabs */}
-				<Tabs defaultValue="users" value={activeTab} onValueChange={setActiveTab} className="mt-6">
-					<TabsList className="grid w-full grid-cols-3">
-						<TabsTrigger value="users">User Balances</TabsTrigger>
-						<TabsTrigger value="transactions">Recent Transactions</TabsTrigger>
-						<TabsTrigger value="ccpayment">CCPayment Status</TabsTrigger>
-					</TabsList>
-
-					{/* Users Tab */}
-					<TabsContent value="users">
-						<Card>
-							<CardHeader>
-								<CardTitle>Top User Balances</CardTitle>
-								<CardDescription>Users with the highest DGT balances</CardDescription>
-							</CardHeader>
-							<CardContent>
-								{isLoadingTopUsers ? (
-									<div className="space-y-2">
-										{Array.from({ length: 5 }).map((_, i) => (
-											<Skeleton key={i} className="h-12 w-full" />
-										))}
-									</div>
-								) : (
-									<Table>
-										<TableHeader>
-											<TableRow>
-												<TableHead>User ID</TableHead>
-												<TableHead>Username</TableHead>
-												<TableHead>DGT Balance</TableHead>
-												<TableHead>Last Active</TableHead>
-												<TableHead className="text-right">Actions</TableHead>
-											</TableRow>
-										</TableHeader>
-										<TableBody>
-											{topUsers?.users.map((user) => (
-												<TableRow key={user.id}>
-													<TableCell>{user.id}</TableCell>
-													<TableCell>{user.username}</TableCell>
-													<TableCell>{formatCurrency(user.dgtBalance, 'DGT')}</TableCell>
-													<TableCell>{new Date(user.lastActive).toLocaleDateString()}</TableCell>
-													<TableCell className="text-right">
-														<Button
-															variant="outline"
-															size="sm"
-															onClick={() => {
-																setUserId(user.id); // user.id is now a string
-																setTransactionType('grant');
-																setIsManualDialogOpen(true);
-															}}
-														>
-															Adjust
-														</Button>
-													</TableCell>
-												</TableRow>
-											))}
-										</TableBody>
-									</Table>
-								)}
-							</CardContent>
-						</Card>
-					</TabsContent>
-
-					{/* Transactions Tab */}
-					<TabsContent value="transactions">
-						<Card>
-							<CardHeader>
-								<CardTitle>Recent Transactions</CardTitle>
-								<CardDescription>Last 20 DGT transactions across the platform</CardDescription>
-							</CardHeader>
-							<CardContent>
-								{isLoadingTransactions ? (
-									<div className="space-y-2">
-										{Array.from({ length: 5 }).map((_, i) => (
-											<Skeleton key={i} className="h-12 w-full" />
-										))}
-									</div>
-								) : (
-									<Table>
-										<TableHeader>
-											<TableRow>
-												<TableHead>ID</TableHead>
-												<TableHead>Type</TableHead>
-												<TableHead>Amount</TableHead>
-												<TableHead>User</TableHead>
-												<TableHead>Timestamp</TableHead>
-												<TableHead>Status</TableHead>
-											</TableRow>
-										</TableHeader>
-										<TableBody>
-											{recentTransactions?.transactions.map((tx) => (
-												<TableRow key={tx.id}>
-													<TableCell>{tx.id}</TableCell>
-													<TableCell>
-														<Badge variant={tx.type === 'grant' ? 'default' : 'secondary'}>
-															{tx.type}
-														</Badge>
-													</TableCell>
-													<TableCell>{formatCurrency(tx.amount, tx.currency)}</TableCell>
-													<TableCell>
-														{tx.username} (ID: {tx.userId})
-													</TableCell>
-													<TableCell>{new Date(tx.timestamp).toLocaleString()}</TableCell>
-													<TableCell>
-														<Badge
-															variant={
-																tx.status === 'completed'
-																	? 'success'
-																	: tx.status === 'failed'
-																		? 'destructive'
-																		: 'outline'
-															}
-														>
-															{tx.status}
-														</Badge>
-													</TableCell>
-												</TableRow>
-											))}
-										</TableBody>
-									</Table>
-								)}
-							</CardContent>
-							<CardFooter className="justify-end">
-								<Button variant="outline">Export Transactions</Button>
-							</CardFooter>
-						</Card>
-					</TabsContent>
-
-					{/* CCPayment Tab */}
-					<TabsContent value="ccpayment">
-						<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-							{/* CCPayment Status Card */}
-							<Card>
-								<CardHeader>
-									<CardTitle>CCPayment Integration Status</CardTitle>
-									<CardDescription>Monitor the status of the CCPayment integration</CardDescription>
-								</CardHeader>
-								<CardContent>
-									{isLoadingCCPayment ? (
-										<div className="space-y-2">
-											{Array.from({ length: 3 }).map((_, i) => (
-												<Skeleton key={i} className="h-12 w-full" />
-											))}
-										</div>
-									) : (
-										<div className="space-y-4">
-											<div className="flex justify-between items-center p-4 border rounded-md">
-												<div>
-													<h3 className="font-medium">API Connection</h3>
-													<p className="text-sm text-muted-foreground">
-														Status of the CCPayment API connection
-													</p>
-												</div>
-												<Badge
-													variant={
-														ccpaymentStatus?.apiStatus === 'connected' ? 'success' : 'destructive'
-													}
-												>
-													{ccpaymentStatus?.apiStatus === 'connected'
-														? 'Connected'
-														: 'Disconnected'}
-												</Badge>
-											</div>
-
-											<div className="flex justify-between items-center p-4 border rounded-md">
-												<div>
-													<h3 className="font-medium">Webhook Status</h3>
-													<p className="text-sm text-muted-foreground">Last webhook received</p>
-												</div>
-												<div className="text-right">
-													<Badge
-														variant={
-															ccpaymentStatus?.lastWebhookReceived ? 'success' : 'destructive'
-														}
-													>
-														{ccpaymentStatus?.lastWebhookReceived ? 'Active' : 'Not Received'}
-													</Badge>
-													{ccpaymentStatus?.lastWebhookReceived && (
-														<p className="text-xs text-muted-foreground mt-1">
-															{new Date(ccpaymentStatus.lastWebhookReceived).toLocaleString()}
-														</p>
-													)}
-												</div>
-											</div>
-
-											<div className="flex justify-between items-center p-4 border rounded-md">
-												<div>
-													<h3 className="font-medium">Pending Transactions</h3>
-													<p className="text-sm text-muted-foreground">
-														CCPayment transactions awaiting confirmation
-													</p>
-												</div>
-												<div className="text-right">
-													<p className="text-lg font-bold">
-														{ccpaymentStatus?.pendingTransactionCount || 0}
-													</p>
-												</div>
-											</div>
-										</div>
-									)}
-								</CardContent>
-								<CardFooter className="justify-between">
-									<div className="text-sm text-muted-foreground">
-										Last API check:{' '}
-										{ccpaymentStatus?.lastCheck
-											? new Date(ccpaymentStatus.lastCheck).toLocaleString()
-											: 'Never'}
-									</div>
-									<Button
-										variant="outline"
-										onClick={() =>
-											queryClient.invalidateQueries({
-												queryKey: ['/api/admin/wallet/ccpayment-status']
-											})
-										}
-									>
-										Refresh Status
-									</Button>
-								</CardFooter>
-							</Card>
-
-							{/* Mock Webhook Trigger Card */}
-							<MockWebhookTrigger />
-						</div>
-					</TabsContent>
-				</Tabs>
-			</div>
-		</AdminLayout>
+    <React.Fragment>
+      <AdminPageShell
+        title="Wallet Management"
+        pageActions={
+          <Button onClick={() => handleOpenAdjustmentDialog(undefined, 'grant')}>
+            Manual DGT Adjustment
+          </Button>
+        }
+        tabsConfig={tabsConfig}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      >
+        {/* Fallback content if no tabs or specific layout needed outside tabs */}
+      </AdminPageShell>
+      {/* Dialog for manual DGT adjustment */}
+      <ManualDgtAdjustmentDialog
+        isOpen={isManualDialogOpen}
+        onClose={() => {
+        setIsManualDialogOpen(false);
+        setSelectedUserForAdjustment(null);
+      }}
+      onSubmit={async (data) => manualAdjustMutation.mutate(data)}
+      isSubmitting={manualAdjustMutation.isPending}
+      initialUserId={selectedUserForAdjustment?.id || ''}
+      initialTransactionType={adjustmentType}
+    />
+    </React.Fragment>
 	);
 }

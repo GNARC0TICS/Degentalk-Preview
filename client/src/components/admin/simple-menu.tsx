@@ -1,96 +1,47 @@
 import React from 'react';
 import { Link, useLocation } from 'wouter';
-import {
-	LayoutDashboard,
-	Users,
-	Wallet,
-	MessageSquare,
-	FileText,
-	ShoppingCart,
-	Flag,
-	Settings
-} from 'lucide-react';
-
-type SimpleMenuItem = {
-	path: string;
-	label: string;
-	icon: React.ReactNode;
-	badge?: string | number;
-};
-
-const menuItems: SimpleMenuItem[] = [
-	{
-		path: '/admin',
-		label: 'Dashboard',
-		icon: <LayoutDashboard className="w-5 h-5 mr-3" />
-	},
-	{
-		path: '/admin/users',
-		label: 'Users',
-		icon: <Users className="w-5 h-5 mr-3" />
-	},
-	{
-		path: '/admin/wallets',
-		label: 'Wallets',
-		icon: <Wallet className="w-5 h-5 mr-3" />
-	},
-	{
-		path: '/admin/forum',
-		label: 'Forum',
-		icon: <MessageSquare className="w-5 h-5 mr-3" />
-	},
-	{
-		path: '/admin/threads',
-		label: 'Content',
-		icon: <FileText className="w-5 h-5 mr-3" />
-	},
-	{
-		path: '/admin/store',
-		label: 'Shop',
-		icon: <ShoppingCart className="w-5 h-5 mr-3" />
-	},
-	{
-		path: '/admin/reports',
-		label: 'Reports',
-		icon: <Flag className="w-5 h-5 mr-3" />,
-		badge: 2
-	},
-	{
-		path: '/admin/platform-settings',
-		label: 'Settings',
-		icon: <Settings className="w-5 h-5 mr-3" />
-	}
-];
+import { adminLinks } from '@/config/admin-navigation';
 
 interface SimpleMenuProps {
 	onItemClick?: () => void;
 }
 
+type NavItem = (typeof adminLinks)[number] & { depth?: number };
+
 export default function SimpleMenu({ onItemClick }: SimpleMenuProps) {
 	const [location] = useLocation();
 
-	return (
-		<nav className="space-y-0.5">
-			{menuItems.map((item) => (
-				<Link
-					key={item.path}
-					href={item.path}
-					onClick={onItemClick}
-					className={`flex items-center px-4 py-3 text-sm ${
-						location === item.path || (item.path !== '/admin' && location.startsWith(item.path))
-							? 'bg-emerald-500 text-white'
-							: 'hover:bg-gray-800'
-					}`}
-				>
-					{item.icon}
-					{item.label}
-					{item.badge && (
-						<span className="ml-auto bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
-							{item.badge}
-						</span>
-					)}
-				</Link>
-			))}
-		</nav>
-	);
+	const renderLink = (item: NavItem) => {
+		const isActive = location === item.href || (item.href && location.startsWith(item.href));
+
+		return (
+			<Link
+				key={item.href}
+				href={item.href!}
+				onClick={onItemClick}
+				className={`flex items-center px-4 py-3 text-sm rounded transition-colors ${
+					isActive ? 'bg-emerald-500 text-white' : 'hover:bg-gray-800'
+				} ${item.depth && item.depth > 0 ? 'pl-6' : ''}`}
+			>
+				{item.label}
+			</Link>
+		);
+	};
+
+	const buildLinks = (items: typeof adminLinks, depth = 0): React.ReactNode => {
+		return items.map((item) => {
+			if ('children' in item && item.children) {
+				return (
+					<React.Fragment key={item.label}>
+						<div className={`px-4 py-2 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-400`}>{item.label}</div>
+						{buildLinks(item.children as any, depth + 1)}
+					</React.Fragment>
+				);
+			}
+
+			return renderLink({ ...item, depth });
+		});
+	};
+
+	return <nav className="space-y-0.5">{buildLinks(adminLinks)}</nav>;
 }

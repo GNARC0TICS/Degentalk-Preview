@@ -7,7 +7,9 @@ import {
 	userBadges,
 	titles,
 	badges,
-	xpCloutSettings
+	xpCloutSettings,
+	userRoles,
+	roles as rolesTable
 } from '@schema';
 import { eq, sql, lte, desc, and, isNull } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
@@ -72,6 +74,10 @@ export class XpLevelService {
 					baseXp = Math.min(baseXp, maxTipXp);
 				}
 			}
+
+			// Apply role-based XP multiplier
+			const xpMultiplier = await this.getUserXpMultiplier(userId);
+			baseXp = Math.floor(baseXp * xpMultiplier);
 
 			// If no XP to award, return early
 			if (baseXp <= 0) {
@@ -474,6 +480,32 @@ export class XpLevelService {
 		} catch (error) {
 			logger.error('XpLevelService', `Error getting XP info for user ${userId}:`, error);
 			throw error;
+		}
+	}
+
+	/**
+	 * Get the effective XP multiplier for a user based on their roles.
+	 * If the user has multiple roles, the highest multiplier is applied.
+	 * If the user has no roles with a multiplier > 0, a default of 1 is returned.
+	 */
+	private async getUserXpMultiplier(userId: number): Promise<number> {
+		try {
+			const roleMultipliers = await this.db
+				.select({ multiplier: rolesTable.xpMultiplier })
+				.from(userRoles)
+				.innerJoin(rolesTable, eq(userRoles.roleId, rolesTable.id))
+				.where(eq(userRoles.userId, userId));
+
+			if (roleMultipliers.length === 0) return 1;
+
+			// Return the highest multiplier the user has
+			const maxMultiplier = Math.max(
+				...roleMultipliers.map((r) => (r.multiplier ?? 1))
+			);
+			return maxMultiplier > 0 ? maxMultiplier : 1;
+		} catch (error) {
+			logger.error('XpLevelService', `Error fetching XP multiplier for user ${userId}:`, error);
+			return 1;
 		}
 	}
 }

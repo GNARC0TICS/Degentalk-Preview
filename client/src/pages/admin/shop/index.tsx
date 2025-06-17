@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import AdminLayout from '../../admin-layout'; // Assuming admin-layout.tsx is in pages/admin/
+ // Assuming admin-layout.tsx is in pages/admin/
 import { Button } from '@/components/ui/button';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient'; // As per api-client-pattern.mdc
@@ -57,20 +57,15 @@ export default function AdminShopItemsPage() {
 
 	if (isLoading)
 		return (
-			<AdminLayout>
-				<div className="p-4">Loading shop items...</div>
-			</AdminLayout>
+			<div className="p-4">Loading shop items...</div>
 		);
 	if (isError)
 		return (
-			<AdminLayout>
-				<div className="p-4 text-red-500">Error loading items: {error?.message}</div>
-			</AdminLayout>
+			<div className="p-4 text-red-500">Error loading items: {error?.message}</div>
 		);
 
 	return (
-		<AdminLayout>
-			<div className="p-6">
+		<div className="p-6">
 				<div className="flex justify-between items-center mb-6">
 					<h1 className="text-2xl font-semibold text-white">Shop Items Management</h1>
 					<Link href="/admin/shop/edit/new">
@@ -190,6 +185,5 @@ export default function AdminShopItemsPage() {
 					</table>
 				</div>
 			</div>
-		</AdminLayout>
 	);
 }

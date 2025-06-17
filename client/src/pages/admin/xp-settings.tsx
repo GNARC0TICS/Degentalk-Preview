@@ -24,7 +24,6 @@ import {
 	TableHeader,
 	TableRow
 } from '@/components/ui/table';
-import AdminLayout from './admin-layout';
 import { Badge } from '@/components/ui/badge';
 
 // Define types
@@ -171,31 +170,26 @@ export default function XpSettings() {
 
 	if (isLoading) {
 		return (
-			<AdminLayout>
-				<div className="flex justify-center items-center h-[400px]">
+			<div className="flex justify-center items-center h-[400px]">
 					<Loader2 className="h-8 w-8 animate-spin text-primary" />
 				</div>
-			</AdminLayout>
 		);
 	}
 
 	if (error) {
 		return (
-			<AdminLayout>
-				<div className="p-4 text-center">
+			<div className="p-4 text-center">
 					<p className="text-destructive">Failed to load settings: {error.message}</p>
 					<Button variant="outline" onClick={() => refetch()} className="mt-4">
 						<RefreshCw className="h-4 w-4 mr-2" />
 						Try Again
 					</Button>
 				</div>
-			</AdminLayout>
 		);
 	}
 
 	return (
-		<AdminLayout>
-			<div className="container mx-auto py-6">
+		<div className="container mx-auto py-6">
 				<div className="flex items-center justify-between mb-6">
 					<div>
 						<h1 className="text-3xl font-bold tracking-tight">XP & Economy Settings</h1>
@@ -405,6 +399,5 @@ export default function XpSettings() {
 					</TabsContent>
 				</Tabs>
 			</div>
-		</AdminLayout>
 	);
 }

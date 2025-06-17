@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Background Colors */
+    --admin-bg-page: theme('colors.zinc.950'); /* e.g., #09090b */
+    --admin-bg-surface: theme('colors.zinc.900'); /* e.g., #18181b - for cards, primary surfaces */
+    --admin-bg-surface-hover: theme('colors.zinc.800'); /* e.g., #27272a - for hover states */
+    --admin-bg-element: theme('colors.zinc.800'); /* e.g., #27272a - for inputs, distinct elements */
+    --admin-bg-element-hover: theme('colors.zinc.700'); /* e.g., #3f3f46 */
+
+    /* Border Colors */
+    --admin-border-strong: theme('colors.zinc.700'); /* e.g., #3f3f46 - for distinct separations */
+    --admin-border-subtle: theme('colors.zinc.800'); /* e.g., #27272a - for card borders, less prominent */
+    --admin-border-interactive: theme('colors.sky.500'); /* e.g., #0ea5e9 - for focus rings */
+
+    /* Text Colors */
+    --admin-text-primary: theme('colors.zinc.50');    /* e.g., #fafafa - for main text */
+    --admin-text-secondary: theme('colors.zinc.400'); /* e.g., #a1a1aa - for descriptions, muted text */
+    --admin-text-accent: theme('colors.sky.400');     /* e.g., #38bdf8 - for links, interactive elements */
+    --admin-text-destructive: theme('colors.red.500'); /* e.g., #ef4444 */
+
+    /* UI Element Specifics */
+    --admin-input-bg: theme('colors.zinc.800');
+    --admin-input-border: theme('colors.zinc.700');
+    --admin-input-focus-border: theme('colors.sky.500');
+
+    --admin-button-primary-bg: theme('colors.sky.600');
+    --admin-button-primary-hover-bg: theme('colors.sky.500');
+    --admin-button-primary-text: theme('colors.white');
+
+    --admin-button-secondary-bg: theme('colors.zinc.700');
+    --admin-button-secondary-hover-bg: theme('colors.zinc.600');
+    --admin-button-secondary-text: theme('colors.zinc.50');
+  }
+}
+
+/* Example utility classes (optional, can also use Tailwind's arbitrary value support) */
+.bg-admin-page { background-color: var(--admin-bg-page); }
+.bg-admin-surface { background-color: var(--admin-bg-surface); }
+.text-admin-primary { color: var(--admin-text-primary); }
+.text-admin-secondary { color: var(--admin-text-secondary); }
+.border-admin-subtle { border-color: var(--admin-border-subtle); }

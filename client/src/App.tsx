@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, Redirect, useLocation, useParams } from 'wouter';
+import { Switch, Route, useLocation } from 'wouter'; // Removed Redirect, useParams
 import { Toaster } from '@/components/ui/toaster';
 import { ForumStructureProvider } from '@/contexts/ForumStructureContext';
 import { ForumThemeProvider } from '@/contexts/ForumThemeProvider'; // Import ForumThemeProvider
@@ -27,6 +27,7 @@ import AuthPage from './pages/auth';
 // Admin Pages
 import AdminDashboardPage from "./pages/admin/index.tsx";
 import AdminUsersPage from "./pages/admin/users.tsx";
+import AdminRolesPage from "./pages/admin/roles.tsx"; // Import AdminRolesPage
 import AdminUserEdit from "./pages/admin/edit-user.tsx";
 import UserXpAdjustmentPage from "./pages/admin/xp/adjust.tsx";
 import BadgeManagementPage from "./pages/admin/xp/badges.tsx";
@@ -65,7 +66,7 @@ import WhispersPage from './pages/whispers';
 
 // Define admin pages using lazy loading
 const AdminEmojisPage = React.lazy(() => import('./pages/admin/emojis'));
-const AdminUserGroupsPage = React.lazy(() => import('./pages/admin/user-groups'));
+// const AdminUserGroupsPage = React.lazy(() => import('./pages/admin/user-groups')); // Removed as page was deleted
 
 // Import Dev Role Switcher
 import { DevRoleSwitcher } from '@/components/dev/dev-role-switcher';
@@ -191,11 +192,12 @@ return (
 								</AdminLayout>
 							)}
 						/>
+						{/* Route for /admin/user-groups removed as page was deleted */}
 						<Route
-							path="/admin/user-groups"
+							path="/admin/roles"
 							component={() => (
 								<AdminLayout>
-									<AdminUserGroupsPage />
+									<AdminRolesPage />
 								</AdminLayout>
 							)}
 						/>
@@ -267,15 +269,27 @@ return (
 						/>
 						<Route
 							path="/admin/config/tags"
-							component={TagConfigPage}
+							component={() => (
+								<AdminLayout>
+									<TagConfigPage />
+								</AdminLayout>
+							)}
 						/>
 						<Route
 							path="/admin/config/xp"
-							component={XpConfigPage}
+							component={() => (
+								<AdminLayout>
+									<XpConfigPage />
+								</AdminLayout>
+							)}
 						/>
 						<Route
 							path="/admin/config/zones"
-							component={ZoneConfigPage}
+							component={() => (
+								<AdminLayout>
+									<ZoneConfigPage />
+								</AdminLayout>
+							)}
 						/>
 						<Route
 							path="/admin/dgt-packages"

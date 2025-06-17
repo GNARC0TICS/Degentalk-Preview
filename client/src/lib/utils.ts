@@ -49,3 +49,65 @@ export function getInitials(name: string): string {
   const initials = parts.slice(0, 2).map((part) => part[0]?.toUpperCase() ?? '').join('');
   return initials;
 }
+
+// Helper function to determine if a color is light
+export function isLightColor(color: string): boolean {
+  // Default for undefined or invalid colors
+  if (!color || typeof color !== 'string') return false;
+
+  // Convert hex to RGB
+  let r, g, b;
+
+  if (color.startsWith('#')) {
+    const hex = color.slice(1);
+    // Handle both 3-char and 6-char hex
+    if (hex.length === 3) {
+      r = parseInt(hex[0] + hex[0], 16);
+      g = parseInt(hex[1] + hex[1], 16);
+      b = parseInt(hex[2] + hex[2], 16);
+    } else if (hex.length === 6) {
+      r = parseInt(hex.slice(0, 2), 16);
+      g = parseInt(hex.slice(2, 4), 16);
+      b = parseInt(hex.slice(4, 6), 16);
+    } else {
+      return false; // Invalid hex
+    }
+  } else {
+    // Basic support for rgb/rgba - could be expanded
+    const match = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)$/);
+    if (match) {
+      r = parseInt(match[1]);
+      g = parseInt(match[2]);
+      b = parseInt(match[3]);
+    } else {
+      return false; // Unsupported color format
+    }
+  }
+
+  // Calculate perceived brightness
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+  // Consider colors with brightness > 155 as light
+  return brightness > 155;
+}
+
+// Format date nicely
+export function formatDate(dateString: string): string {
+  if (!dateString) return '—';
+
+  try {
+    const date = new Date(dateString);
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return 'Invalid Date';
+    }
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }).format(date);
+  } catch (e) {
+    console.error("Error formatting date:", dateString, e);
+    return 'Invalid Date';
+  }
+}

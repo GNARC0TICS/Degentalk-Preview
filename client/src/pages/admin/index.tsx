@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 export default function AdminDashboardPage() {
 	// Fetch dashboard statistics from the backend
@@ -82,11 +83,8 @@ export default function AdminDashboardPage() {
 	};
 
 	return (
-		<div className="space-y-6">
-			<div>
-				<h1 className="text-3xl font-bold">Dashboard</h1>
-				<p className="text-muted-foreground">Overview of your community platform.</p>
-			</div>
+		<AdminPageShell title="Dashboard">
+			<p className="text-muted-foreground">Overview of your community platform.</p>
 
 			<Tabs defaultValue="overview" className="space-y-4">
 				<TabsList className="flex w-full sm:w-auto overflow-x-auto no-scrollbar">
@@ -386,6 +384,6 @@ export default function AdminDashboardPage() {
 					</Card>
 				</TabsContent>
 			</Tabs>
-		</div>
+		</AdminPageShell>
 	);
 }

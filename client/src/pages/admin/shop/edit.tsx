@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import AdminLayout from '../admin-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -217,14 +216,11 @@ export default function AdminShopItemEditPage() {
 
 	if (isLoadingItem && itemId)
 		return (
-			<AdminLayout>
-				<div className="p-4">Loading item details...</div>
-			</AdminLayout>
+			<div className="p-4">Loading item details...</div>
 		);
 
 	return (
-		<AdminLayout>
-			<div className="p-6">
+		<div className="p-6">
 				<Link
 					href="/admin/shop"
 					className="inline-flex items-center text-sm text-zinc-400 hover:text-white mb-4"
@@ -378,6 +374,5 @@ export default function AdminShopItemEditPage() {
 					</div>
 				</form>
 			</div>
-		</AdminLayout>
 	);
 }

@@ -39,11 +39,12 @@ import { Switch } from '@/components/ui/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { Pencil, Trash, Plus, LucideIcon, Image, Play } from 'lucide-react';
+import { Pencil, Trash, Plus, Image, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import Lottie from 'lottie-react';
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 // Type for emoji schema validation
 const emojiFormSchema = z.object({
@@ -294,15 +295,14 @@ export default function AdminEmojisPage() {
 		);
 	};
 
-	return (
-		<div className="container mx-auto py-8">
-			<div className="flex justify-between items-center mb-6">
-				<h1 className="text-3xl font-bold">Emoji Management</h1>
-				<Button onClick={handleNewEmoji}>
-					<Plus className="mr-2 h-4 w-4" /> Add New Emoji
-				</Button>
-			</div>
+	const pageActions = (
+		<Button onClick={handleNewEmoji}>
+			<Plus className="mr-2 h-4 w-4" /> Add New Emoji
+		</Button>
+	);
 
+	return (
+		<AdminPageShell title="Emoji Management" pageActions={pageActions}>
 			<div className="space-y-6">
 				{isLoading ? (
 					<div className="text-center p-8">Loading emojis...</div>
@@ -826,6 +826,6 @@ export default function AdminEmojisPage() {
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
-		</div>
+		</AdminPageShell>
 	);
 }

@@ -1,11 +1,9 @@
 import React from 'react';
-import AdminLayout from './admin-layout';
 import { CooldownSettings } from '@/components/admin/cooldown-settings';
 
 export default function CooldownSettingsPage() {
 	return (
-		<AdminLayout>
-			<div className="container px-4 mx-auto py-6">
+		<div className="container px-4 mx-auto py-6">
 				<header className="mb-8">
 					<h2 className="text-3xl font-bold tracking-tight text-white mb-2">Command Cooldowns</h2>
 					<p className="text-gray-400">
@@ -17,6 +15,5 @@ export default function CooldownSettingsPage() {
 					<CooldownSettings />
 				</div>
 			</div>
-		</AdminLayout>
 	);
 }
