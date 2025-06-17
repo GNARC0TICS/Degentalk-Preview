@@ -33,7 +33,7 @@
 		"seed:forum": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-canonical-zones.ts",
 		"seed:forum:new": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/seed/seedForumsFromConfig.ts",
 		"seed:forum:setup": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/setup-forum-structure.ts",
-		"seed:threads": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-threads.ts",
+		"seed:threads": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/seed/seed-realistic-threads.ts",
 		"seed:dummy-threads": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/seed/seed-dummy-threads.ts",
 		"seed:xp": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-xp-actions.ts",
 		"seed:levels": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-default-levels.ts",

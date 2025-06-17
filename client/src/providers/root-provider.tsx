@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/hooks/use-auth';
 import { PurchaseModalProvider } from '@/hooks/use-purchase-modal';
 import { ShoutboxProvider } from '@/contexts/shoutbox-context';
+import { ForumStructureProvider } from '@/contexts/ForumStructureContext';
+import { ForumThemeProvider } from '@/contexts/ForumThemeProvider';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { getQueryFn } from '@/lib/queryClient';
 
@@ -32,7 +34,11 @@ export function RootProvider({ children }: { children: React.ReactNode }) {
 				<AuthProvider>
 					<PurchaseModalProvider>
 						<ShoutboxProvider>
-							<TooltipProvider>{children}</TooltipProvider>
+							<ForumStructureProvider>
+								<ForumThemeProvider>
+									<TooltipProvider>{children}</TooltipProvider>
+								</ForumThemeProvider>
+							</ForumStructureProvider>
 						</ShoutboxProvider>
 					</PurchaseModalProvider>
 				</AuthProvider>

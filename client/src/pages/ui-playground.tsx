@@ -535,6 +535,31 @@ export default function UIPlayground() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Forum Prefix Badges */}
+            <div>
+              <h2 className="text-3xl font-bold mb-2">Forum Prefix Badges</h2>
+              <p className="text-zinc-400">Variants used in Hot Threads / Thread cards</p>
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+              {[
+                { name: 'Question', color: 'blue-500' },
+                { name: 'Discussion', color: 'green-500' },
+                { name: 'Guide', color: 'purple-500' },
+                { name: 'Feedback', color: 'yellow-500' },
+                { name: 'Bug Report', color: 'red-500' },
+                { name: 'Alpha', color: 'orange-500' },
+                { name: 'Shill', color: 'pink-500' }
+              ].map((p) => (
+                <Badge
+                  key={p.name}
+                  className={`px-3 py-1 text-sm theme-badge-${p.color} bg-badge-bg-dark text-badge-text-dark border-badge-border-dark`}
+                >
+                  {p.name}
+                </Badge>
+              ))}
+            </div>
           </section>
 
           {/* Animations Section */}

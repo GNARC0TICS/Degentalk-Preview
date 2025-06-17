@@ -16,9 +16,10 @@ import {
 	Pin,
 	Tag as TagIcon
 } from 'lucide-react';
+import OriginForumPill from './OriginForumPill';
 
 // Use the new prop type from @/types/forum.ts
-const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter' }: ThreadCardComponentProps) => { // Added linkAs prop with default
+const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter', forumSlug }: ThreadCardComponentProps) => { // Added linkAs prop with default, plus forumSlug
 	const LinkComponent = linkAs === 'next' ? NextLink : WouterLink;
 
 	if (!thread) {
@@ -46,10 +47,18 @@ const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter' }: Thre
 	const threadUrl = `/threads/${slug}`;
 	const isHot = hotScore !== undefined && hotScore > 10;
 
+	// Determine if we need to show the origin forum pill (roll-up view)
+	const showOriginPill = forumSlug && thread.category && thread.category.slug !== forumSlug;
+	const originForum = showOriginPill ? thread.category : null;
+
 	return (
 		<Card
-			className={`bg-zinc-900/60 border border-zinc-800 hover:bg-zinc-900 hover:border-zinc-700 transition-all duration-200 ${className}`}
+			className={`group relative bg-zinc-900/60 border border-zinc-800 hover:bg-zinc-900/80 hover:border-zinc-700 hover:shadow-lg transition-all duration-200 ${className}`}
 		>
+			{/* XP on hover */}
+			<div className="absolute right-4 top-4 opacity-0 group-hover:opacity-100 transition-opacity text-accent-xp text-xs font-semibold pointer-events-none select-none">
+				+25 XP
+			</div>
 			<div className="p-4">
 				<div className="flex gap-3">
 					<Avatar className="h-10 w-10 border border-zinc-700">
@@ -96,11 +105,16 @@ const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter' }: Thre
 							</div>
 						</div>
 
-						<LinkComponent href={threadUrl} className="block">
-							<h3 className="text-lg font-medium leading-tight hover:text-emerald-400 transition-colors">
-								{title}
-							</h3>
-						</LinkComponent>
+						<div className="flex items-center gap-2">
+							<LinkComponent href={threadUrl} className="block">
+								<h3 className="text-lg font-headline leading-tight hover:text-emerald-400 transition-colors">
+									{title}
+								</h3>
+							</LinkComponent>
+
+							{/* Origin forum pill */}
+							{originForum && <OriginForumPill forum={originForum} />}
+						</div>
 
 						<div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-zinc-400">
 							<LinkComponent href={`/profile/${user?.id}`} className="hover:text-zinc-200 transition-colors">

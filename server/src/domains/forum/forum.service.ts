@@ -21,26 +21,24 @@ import type { InferSelectModel } from 'drizzle-orm'; // For inferring types
 
 // Helper to parse configZoneType from pluginData
 const parseZoneType = (pluginData: unknown): 'primary' | 'general' => {
-  if (pluginData && typeof pluginData === 'object' && pluginData !== null && 'configZoneType' in pluginData) {
-    const t = (pluginData as { configZoneType?: string }).configZoneType;
-    if (t === 'primary') {
-      return 'primary';
-    } else if (t === 'general') {
-      return 'general';
-    }
-    logger.warn('ForumService', 'Malformed configZoneType in pluginData', { pluginDataValue: t, defaultingTo: 'general' });
-    return 'general'; // Default for malformed but existing type
-  }
-  // Log missing configZoneType or entirely missing pluginData
-  if (pluginData && typeof pluginData === 'object' && pluginData !== null && !('configZoneType' in pluginData)) {
-    logger.warn('ForumService', 'Missing configZoneType in pluginData', { pluginDataKeys: Object.keys(pluginData), defaultingTo: 'general' });
-  } else if (!pluginData || (typeof pluginData === 'object' && pluginData === null)) { // Check for null explicitly
-    logger.warn('ForumService', 'Missing or null pluginData for zone', { defaultingTo: 'general' });
-  }
-  return 'general'; // Default to 'general' if missing or malformed
+	if (pluginData && typeof pluginData === 'object' && pluginData !== null && 'configZoneType' in pluginData) {
+		const t = (pluginData as { configZoneType?: string }).configZoneType;
+		if (t === 'primary') {
+			return 'primary';
+		} else if (t === 'general') {
+			return 'general';
+		}
+		logger.warn('ForumService', 'Malformed configZoneType in pluginData', { pluginDataValue: t, defaultingTo: 'general' });
+		return 'general'; // Default for malformed but existing type
+	}
+	// Log missing configZoneType or entirely missing pluginData
+	if (pluginData && typeof pluginData === 'object' && pluginData !== null && !('configZoneType' in pluginData)) {
+		logger.warn('ForumService', 'Missing configZoneType in pluginData', { pluginDataKeys: Object.keys(pluginData), defaultingTo: 'general' });
+	} else if (!pluginData || (typeof pluginData === 'object' && pluginData === null)) { // Check for null explicitly
+		logger.warn('ForumService', 'Missing or null pluginData for zone', { defaultingTo: 'general' });
+	}
+	return 'general'; // Default to 'general' if missing or malformed
 };
-
-// type ThreadPrefixType = InferSelectModel<typeof threadPrefixes>; // This was duplicated, removing one instance
 
 // Simple in-memory cache
 const CACHE_DURATION_MS = 30 * 1000; // 30 seconds
@@ -51,13 +49,12 @@ let categoriesCache: {
 
 type ThreadPrefixType = InferSelectModel<typeof threadPrefixes>;
 
-
 type CategoryWithCountsResult = {
 	id: number;
 	name: string;
 	slug: string;
 	description: string | null;
-	parentForumSlug: string | null; 
+	parentForumSlug: string | null;
 	parentId: number | null;
 	type: string;
 	position: number;
@@ -69,13 +66,13 @@ type CategoryWithCountsResult = {
 	colorTheme: string | null;
 	isHidden: boolean;
 	minGroupIdRequired: number | null;
-	tippingEnabled: boolean; 
-	xpMultiplier: number;   
+	tippingEnabled: boolean;
+	xpMultiplier: number;
 	pluginData: unknown; // Changed to unknown to match Drizzle's jsonb inference
-	createdAt: Date; 
-	updatedAt: Date; 
-	threadCount: number | null; 
-	postCount: number | null;   
+	createdAt: Date;
+	updatedAt: Date;
+	threadCount: number | null;
+	postCount: number | null;
 };
 
 export interface ThreadSearchParams {
@@ -93,48 +90,89 @@ interface CategoriesTreeOptions {
 	includeHidden?: boolean;
 }
 
+// Helper function to get all descendant leaf forum IDs for a given category ID
+async function getAllDescendantLeafForumIds(startCategoryId: number): Promise<number[]> {
+	const allCategories = await db.select({
+		id: forumCategories.id,
+		parentId: forumCategories.parentId,
+		type: forumCategories.type
+	}).from(forumCategories);
+
+	const categoryMap = new Map<number, { id: number; parentId: number | null; type: string; children: number[] }>();
+	allCategories.forEach(c => {
+		categoryMap.set(c.id, { ...c, children: [] });
+	});
+	allCategories.forEach(c => {
+		if (c.parentId && categoryMap.has(c.parentId)) {
+			categoryMap.get(c.parentId)?.children.push(c.id);
+		}
+	});
+
+	const leafForumIds: number[] = [];
+	const queue: number[] = [startCategoryId];
+	const visited = new Set<number>();
+
+	while (queue.length > 0) {
+		const currentId = queue.shift()!;
+		if (visited.has(currentId)) continue;
+		visited.add(currentId);
+
+		const categoryNode = categoryMap.get(currentId);
+		if (!categoryNode) continue;
+
+		const isLeafForum = categoryNode.type === 'forum' &&
+			!categoryNode.children.some(childId => categoryMap.get(childId)?.type === 'forum');
+
+		if (isLeafForum) {
+			leafForumIds.push(currentId);
+		} else {
+			categoryNode.children.forEach(childId => {
+				if (!visited.has(childId)) {
+					queue.push(childId);
+				}
+			});
+		}
+	}
+	const startCategoryNode = categoryMap.get(startCategoryId);
+	if (startCategoryNode && startCategoryNode.type === 'forum' && startCategoryNode.children.length === 0 && !leafForumIds.includes(startCategoryId)) {
+		leafForumIds.push(startCategoryId);
+	}
+
+	return [...new Set(leafForumIds)]; // Ensure unique IDs
+}
+
+
 export const forumService = {
 	async getForumStructure(): Promise<{
 		zones: ForumCategoryWithStats[];
-		// categories and forums flat lists might be removed or adapted based on frontend needs
 	}> {
 		try {
 			const allItemsFlat: ForumCategoryWithStats[] = await this.getCategoriesWithStats(true);
-			
+
 			const zoneEntities = allItemsFlat.filter(item => item.type === 'zone');
-			// All non-zone items are potential forums (parents or subforums)
-			// Since type 'category' is deprecated, we treat them as 'forum'.
-			// The sync script should ensure only 'zone' or 'forum' types are in DB from config.
 			const allForumLikeEntities = allItemsFlat.filter(item => item.type === 'forum');
 
-			// Create a map for all forum-like entities to handle nesting and stat aggregation
-			// Store original counts before aggregation
-			// ForumCategoryWithStats already has childForums: ForumCategoryWithStats[]
-			type MappedForum = ForumCategoryWithStats & { 
-				// forums?: MappedForum[]; // Use existing childForums
-				ownThreadCount?: number; 
+			type MappedForum = ForumCategoryWithStats & {
+				ownThreadCount?: number;
 				ownPostCount?: number;
 			};
 			const forumMap = new Map<number, MappedForum>();
 
 			allForumLikeEntities.forEach(f => {
-				forumMap.set(f.id, { 
-					...f, 
-					childForums: [], // Initialize childForums for potential subforums
-					ownThreadCount: f.threadCount, // Store direct counts
-					ownPostCount: f.postCount    // Store direct counts
+				forumMap.set(f.id, {
+					...f,
+					childForums: [],
+					ownThreadCount: f.threadCount,
+					ownPostCount: f.postCount
 				});
 			});
 
-			// Populate subforums (nesting) - Max 1 level as per decision
 			allForumLikeEntities.forEach(potentialSubForum => {
 				if (potentialSubForum.parentId) {
 					const parentForumFromMap = forumMap.get(potentialSubForum.parentId);
-					// Ensure parent is actually a forum (not a zone)
 					const parentEntityInFlatList = allItemsFlat.find(item => item.id === potentialSubForum.parentId);
 
 					if (parentForumFromMap && parentEntityInFlatList && parentEntityInFlatList.type === 'forum') {
-						// Ensure childForums is initialized
 						if (!parentForumFromMap.childForums) {
 							parentForumFromMap.childForums = [];
 						}
@@ -143,36 +181,33 @@ export const forumService = {
 				}
 			});
 
-			// Aggregate stats (roll-up from subforums to parent forums)
 			Array.from(forumMap.values()).forEach(parentForum => {
 				if (parentForum.childForums && parentForum.childForums.length > 0) {
 					let aggregatedThreadCount = parentForum.ownThreadCount || 0;
 					let aggregatedPostCount = parentForum.ownPostCount || 0;
 
 					parentForum.childForums.forEach(subForum => {
-						aggregatedThreadCount += subForum.threadCount || 0; // Subforum stats are their own direct counts
+						aggregatedThreadCount += subForum.threadCount || 0;
 						aggregatedPostCount += subForum.postCount || 0;
 					});
 					parentForum.threadCount = aggregatedThreadCount;
 					parentForum.postCount = aggregatedPostCount;
 				}
 			});
-			
+
 			const structuredZones = zoneEntities.map(zone => {
 				const determinedType = parseZoneType(zone.pluginData);
 				const isActuallyPrimary = determinedType === 'primary';
-				
+
 				const pd = zone.pluginData && typeof zone.pluginData === 'object' ? zone.pluginData : {};
 				const features = Array.isArray(pd.features) ? pd.features : [];
 				const customComponents = Array.isArray(pd.customComponents) ? pd.customComponents : [];
 				const staffOnly = typeof pd.staffOnly === 'boolean' ? pd.staffOnly : false;
 
-				// Get top-level forums for this zone from our populated and aggregated forumMap
 				const topLevelForumsForZone = Array.from(forumMap.values()).filter(
 					forumInMap => forumInMap.parentId === zone.id
 				);
 
-				// Aggregate zone stats from its top-level forums (which already include subforum stats)
 				let zoneThreadCount = 0;
 				let zonePostCount = 0;
 				topLevelForumsForZone.forEach(forum => {
@@ -186,13 +221,13 @@ export const forumService = {
 					features,
 					customComponents,
 					staffOnly,
-					forums: topLevelForumsForZone, // These are parent forums, with populated subforums and aggregated stats
-					childForums: topLevelForumsForZone, // Keep for compatibility if needed, but 'forums' is the target
-					threadCount: zoneThreadCount, // Zone's aggregated thread count
-					postCount: zonePostCount,   // Zone's aggregated post count
+					forums: topLevelForumsForZone,
+					childForums: topLevelForumsForZone,
+					threadCount: zoneThreadCount,
+					postCount: zonePostCount,
 				};
 			});
-			
+
 			return {
 				zones: structuredZones,
 			};
@@ -205,10 +240,8 @@ export const forumService = {
 	async getCategoriesWithStats(includeCounts: boolean = true): Promise<ForumCategoryWithStats[]> {
 		try {
 			if (includeCounts && categoriesCache && (Date.now() - categoriesCache.timestamp < CACHE_DURATION_MS) && categoriesCache.data.length > 0) {
-				// console.log('Serving categories with counts from cache');
 				return categoriesCache.data;
 			}
-			// console.log(`Fetching categories from DB (includeCounts: ${includeCounts})`);
 
 			let categoriesDataRaw: CategoryWithCountsResult[];
 
@@ -231,7 +264,7 @@ export const forumService = {
 						.where(and(eq(posts.isDeleted, false), eq(threads.isDeleted, false)))
 						.groupBy(threads.categoryId)
 				);
-				
+
 				categoriesDataRaw = await db
 					.with(threadCountsSubquery, postCountsSubquery)
 					.select({
@@ -265,7 +298,6 @@ export const forumService = {
 					.orderBy(asc(forumCategories.position));
 
 			} else {
-				// Fetch without counts
 				categoriesDataRaw = await db
 					.select({
 						id: forumCategories.id,
@@ -289,33 +321,31 @@ export const forumService = {
 						pluginData: forumCategories.pluginData,
 						createdAt: forumCategories.createdAt,
 						updatedAt: forumCategories.updatedAt,
-						threadCount: sql<null>`null`.as('threadCount'), // Explicitly null when not counting
-						postCount: sql<null>`null`.as('postCount')    // Explicitly null when not counting
+						threadCount: sql<null>`null`.as('threadCount'),
+						postCount: sql<null>`null`.as('postCount')
 					})
 					.from(forumCategories)
 					.orderBy(asc(forumCategories.position));
 			}
-			
+
 			const categories: ForumCategoryWithStats[] = categoriesDataRaw.map(
-				(c: CategoryWithCountsResult): ForumCategoryWithStats => ({ 
-					...c, 
+				(c: CategoryWithCountsResult): ForumCategoryWithStats => ({
+					...c,
 					description: c.description ?? null,
-					parentForumSlug: c.parentForumSlug ?? null, 
+					parentForumSlug: c.parentForumSlug ?? null,
 					colorTheme: c.colorTheme ?? null,
-					pluginData: (c.pluginData && typeof c.pluginData === 'object' ? c.pluginData : {}) as Record<string, unknown>, // Process unknown to object
+					pluginData: (c.pluginData && typeof c.pluginData === 'object' ? c.pluginData : {}) as Record<string, unknown>,
 					threadCount: includeCounts ? Number(c.threadCount || 0) : 0,
 					postCount: includeCounts ? Number(c.postCount || 0) : 0,
 					isZone: c.type === 'zone',
 					canonical: c.type === 'zone' && !c.parentId,
-					lastThread: undefined, 
-					canHaveThreads: c.type === 'forum', 
-					childForums: [], 
+					lastThread: undefined,
+					canHaveThreads: c.type === 'forum',
+					childForums: [],
 				})
 			);
 
-			// Update cache only if we included counts, as that's the "full" data
 			if (includeCounts && categories.length > 0) {
-				// console.log('Updating categories cache');
 				categoriesCache = {
 					timestamp: Date.now(),
 					data: categories,
@@ -328,21 +358,19 @@ export const forumService = {
 		}
 	},
 
-	// REMOVED EXTRA "}," here which was causing syntax errors
-
 	async getCategoriesTree(options: CategoriesTreeOptions = {}): Promise<Array<ForumCategoryWithStats & { children: Array<ForumCategoryWithStats & { children: unknown[] }> }>> {
-		const { includeEmptyStats = false, includeHidden = false } = options; 
+		const { includeEmptyStats = false, includeHidden = false } = options;
 		const allCategories = await this.getCategoriesWithStats(true);
 		if (!allCategories || !Array.isArray(allCategories)) { return []; }
-		
+
 		let processedCategories = allCategories.filter(cat => cat && typeof cat === 'object' && cat.id !== undefined);
 
 		if (!includeHidden) {
 			processedCategories = processedCategories.filter(cat => !cat.isHidden);
 		}
-		
-		const categoriesWithStats = includeEmptyStats 
-			? processedCategories.map(cat => ({...cat, threadCount: Number(cat.threadCount || 0), postCount: Number(cat.postCount || 0)})) 
+
+		const categoriesWithStats = includeEmptyStats
+			? processedCategories.map(cat => ({ ...cat, threadCount: Number(cat.threadCount || 0), postCount: Number(cat.postCount || 0) }))
 			: processedCategories;
 
 		const categoryMap = new Map<number, ForumCategoryWithStats & { children: Array<ForumCategoryWithStats & { children: unknown[] }> }>();
@@ -358,7 +386,7 @@ export const forumService = {
 
 			if (category.parentId && categoryMap.has(category.parentId)) {
 				const parent = categoryMap.get(category.parentId);
-				if (parent) { 
+				if (parent) {
 					parent.children.push(mappedCategory);
 				}
 			} else if (!category.parentId) {
@@ -368,18 +396,17 @@ export const forumService = {
 		return tree;
 	},
 
-	// Renamed from getCategoryBySlug, and adapted for new structure
-	async getForumBySlug(slug: string): Promise<ForumCategoryWithStats | null> { // Return type is ForumCategoryWithStats, childForums is part of it
-		const { zones } = await this.getForumStructure(); // Get the full structured data
+	async getForumBySlug(slug: string): Promise<ForumCategoryWithStats | null> {
+		const { zones } = await this.getForumStructure();
 		for (const zone of zones) {
-			for (const parentForum of zone.childForums || []) { // Use childForums as per type
+			for (const parentForum of zone.childForums || []) {
 				if (parentForum.slug === slug) {
-					return parentForum; // Found a parent forum
+					return parentForum;
 				}
-				if (parentForum.childForums) { // Check subforums on childForums
+				if (parentForum.childForums) {
 					const subForum = parentForum.childForums.find(sf => sf.slug === slug);
 					if (subForum) {
-						return subForum; // Found a subforum
+						return subForum;
 					}
 				}
 			}
@@ -387,23 +414,21 @@ export const forumService = {
 		return null;
 	},
 
-	async getForumAndItsSubForumsBySlug(slug: string): Promise<{ 
-		forum: ForumCategoryWithStats | null; 
+	async getForumAndItsSubForumsBySlug(slug: string): Promise<{
+		forum: ForumCategoryWithStats | null;
 	}> {
 		const forum = await this.getForumBySlug(slug);
-		// Subforums are already on forum.childForums if it's a parent
 		return { forum };
 	},
 
-	// Renamed from getCategoryById
-	async getForumById(id: number): Promise<ForumCategoryWithStats | null> { // Return type is ForumCategoryWithStats
+	async getForumById(id: number): Promise<ForumCategoryWithStats | null> {
 		const { zones } = await this.getForumStructure();
 		for (const zone of zones) {
-			for (const parentForum of zone.childForums || []) { // Use childForums
+			for (const parentForum of zone.childForums || []) {
 				if (parentForum.id === id) {
 					return parentForum;
 				}
-				if (parentForum.childForums) { // Check subforums on childForums
+				if (parentForum.childForums) {
 					const subForum = parentForum.childForums.find(sf => sf.id === id);
 					if (subForum) {
 						return subForum;
@@ -414,19 +439,18 @@ export const forumService = {
 		return null;
 	},
 
-	// This method now specifically gets subforums for a given parent forum ID
 	async getSubForumsByParentForumId(parentForumId: number): Promise<ForumCategoryWithStats[]> {
 		const parentForum = await this.getForumById(parentForumId);
-		return parentForum?.childForums || []; // Access subforums via childForums
+		return parentForum?.childForums || [];
 	},
 
 	async debugForumRelationships(): Promise<{
-		zones: Array<{ 
+		zones: Array<{
 			id: number; name: string; slug: string; isPrimary: boolean;
-			forums: Array<{ 
+			forums: Array<{
 				id: number; name: string; slug: string; parentId: number | null;
 				subForums: Array<{ id: number; name: string; slug: string; parentId: number | null; }>
-			}> 
+			}>
 		}>;
 	}> {
 		try {
@@ -435,17 +459,17 @@ export const forumService = {
 				id: zone.id,
 				name: zone.name,
 				slug: zone.slug,
-				isPrimary: zone.isPrimary || false, // zone.isPrimary should exist from getForumStructure
-				forums: (zone.childForums || []).map(parentForum => ({ // Use childForums
+				isPrimary: zone.isPrimary || false,
+				forums: (zone.childForums || []).map(parentForum => ({
 					id: parentForum.id,
 					name: parentForum.name,
 					slug: parentForum.slug,
-					parentId: parentForum.parentId, 
-					subForums: (parentForum.childForums || []).map(subForum => ({ // Use childForums
+					parentId: parentForum.parentId,
+					subForums: (parentForum.childForums || []).map(subForum => ({
 						id: subForum.id,
 						name: subForum.name,
 						slug: subForum.slug,
-						parentId: subForum.parentId, 
+						parentId: subForum.parentId,
 					})),
 				})),
 			}));
@@ -456,9 +480,8 @@ export const forumService = {
 		}
 	},
 
-	async getPrefixes(forumId?: number): Promise<ThreadPrefixType[]> { // Changed categoryId to forumId
+	async getPrefixes(forumId?: number): Promise<ThreadPrefixType[]> {
 		if (forumId) {
-			// Logic might need to check rules from forumConfig in pluginData if prefixes are per-forum
 			return db.select().from(threadPrefixes).where(and(eq(threadPrefixes.isActive, true), or(isNull(threadPrefixes.categoryId), eq(threadPrefixes.categoryId, forumId)))).orderBy(asc(threadPrefixes.position));
 		} else {
 			return db.select().from(threadPrefixes).where(eq(threadPrefixes.isActive, true)).orderBy(asc(threadPrefixes.position));
@@ -466,28 +489,34 @@ export const forumService = {
 	},
 	async getTags(): Promise<Array<typeof tags.$inferSelect>> { return db.select().from(tags).orderBy(asc(tags.name)); },
 
-	// searchThreads needs to be aware of the new structure if categoryId refers to a parent forum,
-	// it should potentially search its subforums too, or client needs to make separate calls.
-	// For now, assuming categoryId is the direct forum ID where threads live.
 	async searchThreads(params: ThreadSearchParams): Promise<{
 		threads: ThreadWithUser[];
 		pagination: { page: number; limit: number; totalThreads: number; totalPages: number };
 	}> {
-		const { categoryId, prefix, tag, page = 1, limit: requestedLimitParam = 10, sortBy = 'latest', search } = params; // Renamed limit to avoid conflict
-		const currentThreadLimit = requestedLimitParam; // Use a different name for the local limit variable
+		const { categoryId, prefix, tag, page = 1, limit: requestedLimitParam = 10, sortBy = 'latest', search } = params;
+		const currentThreadLimit = requestedLimitParam;
 		const offset = (page - 1) * currentThreadLimit;
 		const conditions: (SQL<unknown> | undefined)[] = [eq(threads.isDeleted, false), eq(threads.isHidden, false)];
-		if (categoryId) conditions.push(eq(threads.categoryId, categoryId));
+
+		if (categoryId) {
+			const descendantLeafForumIds = await getAllDescendantLeafForumIds(categoryId);
+			if (descendantLeafForumIds.length > 0) {
+				conditions.push(inArray(threads.categoryId, descendantLeafForumIds));
+			} else {
+				conditions.push(sql`1 = 0`); // No threads if no leaf forums
+			}
+		}
+
 		if (prefix) { const prefixResult = await db.select({ id: threadPrefixes.id }).from(threadPrefixes).where(eq(threadPrefixes.name, prefix)).limit(1); if (prefixResult.length > 0) conditions.push(eq(threads.prefixId, prefixResult[0].id)); }
 		let tagIdNum: number | undefined;
 		if (tag) { const tagResult = await db.select({ id: tags.id }).from(tags).where(eq(tags.name, tag)).limit(1); if (tagResult.length > 0) tagIdNum = tagResult[0].id; }
 		if (search) conditions.push(or(ilike(threads.title, `%${search}%`)));
 		let orderByClause: (SQL<unknown> | SQL.Aliased<unknown>)[] = [desc(threads.isSticky), desc(threads.createdAt)];
 		switch (sortBy) { case 'hot': orderByClause = [desc(threads.isSticky), desc(threads.hotScore), desc(threads.lastPostAt)]; break; case 'staked': orderByClause = [desc(threads.isSticky), desc(threads.dgtStaked), desc(threads.lastPostAt)]; break; case 'popular': orderByClause = [desc(threads.isSticky), desc(threads.postCount), desc(threads.lastPostAt)]; break; case 'recent': orderByClause = [desc(threads.isSticky), desc(threads.lastPostAt)]; break; case 'latest': orderByClause = [desc(threads.isSticky), desc(threads.createdAt)]; break; }
-		
+
 		const selectFields = { threadData: threads, userData: usersTable };
 		const validConditions = conditions.filter((c) => c !== undefined) as SQL<unknown>[];
-		
+
 		let rawResults: Array<{ threadData: typeof threads.$inferSelect; userData: User }>;
 		if (tagIdNum) {
 			rawResults = await db.select(selectFields).from(threads).innerJoin(usersTable, eq(threads.userId, usersTable.id)).innerJoin(threadTags, and(eq(threadTags.threadId, threads.id), eq(threadTags.tagId, tagIdNum))).where(and(...validConditions)).orderBy(...orderByClause).limit(currentThreadLimit).offset(offset);
@@ -497,17 +526,17 @@ export const forumService = {
 
 		const processedThreads = rawResults.map(r => ({ ...r.threadData, user: r.userData, postCount: r.threadData.postCount || 0 }));
 
-		let totalThreads = 0; 
+		let totalThreads = 0;
 		const countQueryBase = db.select({ count: count() }).from(threads);
 		if (tagIdNum) { const countResult = await countQueryBase.innerJoin(threadTags, and(eq(threadTags.threadId, threads.id), eq(threadTags.tagId, tagIdNum))).where(and(...validConditions)); totalThreads = countResult[0]?.count || 0; }
 		else { const countResult = await countQueryBase.where(and(...validConditions)); totalThreads = countResult[0]?.count || 0; }
-		
+
 		const prefixIds = processedThreads.map((t) => t.prefixId).filter(id => id != null) as number[];
 		const prefixesMap: Record<number, ThreadPrefixType> = {};
 		if (prefixIds.length > 0) { const prefixResults = await db.select().from(threadPrefixes).where(inArray(threadPrefixes.id, prefixIds)); prefixResults.forEach((p: ThreadPrefixType) => { prefixesMap[p.id] = p; }); }
-		
+
 		const threadsWithPrefixAndUser = processedThreads.map((thread) => ({ ...thread, prefix: thread.prefixId ? prefixesMap[thread.prefixId] : null })) as ThreadWithUser[];
-		
+
 		return { threads: threadsWithPrefixAndUser, pagination: { page, limit: currentThreadLimit, totalThreads, totalPages: Math.ceil(totalThreads / currentThreadLimit) } };
 	},
 
@@ -515,11 +544,11 @@ export const forumService = {
 		slugOrId: string | number,
 		page: number = 1,
 		requestedLimit: number = 20,
-		currentUserId?: string 
+		currentUserId?: string
 	): Promise<ThreadWithPostsAndUser | null> {
 		try {
 			const MAX_LIMIT = 100;
-			const currentLimit = Math.min(requestedLimit, MAX_LIMIT); 
+			const currentLimit = Math.min(requestedLimit, MAX_LIMIT);
 
 			let threadCondition: SQL<unknown>;
 
@@ -528,12 +557,12 @@ export const forumService = {
 			} else {
 				threadCondition = eq(threads.id, Number(slugOrId));
 			}
-			
+
 			const threadResult = await db
 				.select({
-					thread: threads, 
-					user: usersTable, 
-					categoryRaw: forumCategories, 
+					thread: threads,
+					user: usersTable,
+					categoryRaw: forumCategories,
 				})
 				.from(threads)
 				.innerJoin(usersTable, eq(threads.userId, usersTable.id))
@@ -544,28 +573,26 @@ export const forumService = {
 			if (threadResult.length === 0) return null;
 
 			const rawThreadData = threadResult[0];
-			const actualThreadId = rawThreadData.thread.id; 
+			const actualThreadId = rawThreadData.thread.id;
 
 			const threadTagResults = await db
-				.select({ 
-					id: tags.id, 
-					name: tags.name, 
+				.select({
+					id: tags.id,
+					name: tags.name,
 					slug: tags.slug,
-					description: tags.description, 
-					createdAt: tags.createdAt    
+					description: tags.description,
+					createdAt: tags.createdAt
 				})
 				.from(threadTags)
 				.innerJoin(tags, eq(threadTags.tagId, tags.id))
-				.where(eq(threadTags.threadId, actualThreadId)); 
+				.where(eq(threadTags.threadId, actualThreadId));
 
-			await db.update(threads).set({ viewCount: sql`${threads.viewCount} + 1` }).where(eq(threads.id, actualThreadId)); 
+			await db.update(threads).set({ viewCount: sql`${threads.viewCount} + 1` }).where(eq(threads.id, actualThreadId));
 
-			const hasBookmarked = false; // This should be fetched if needed, for now const is fine
+			const hasBookmarked = false; 
 
 			const categoryDataFromDb = rawThreadData.categoryRaw;
-			
-			// Construct the category object for the response, ensuring it matches ForumCategorySchemaType
-			// The derived isZone and canonical are not part of the base schema type.
+
 			const categoryForResponse: ForumCategorySchemaType = {
 				id: categoryDataFromDb.id,
 				name: categoryDataFromDb.name,
@@ -589,33 +616,62 @@ export const forumService = {
 				createdAt: categoryDataFromDb.createdAt,
 				updatedAt: categoryDataFromDb.updatedAt,
 			};
-			
+
 			const { thread, user } = rawThreadData;
 
 			const threadForResponse: ThreadWithUserAndCategory = {
-				...(thread as typeof threads.$inferSelect), 
-				user: user as User, 
-				category: categoryForResponse, // Use the schema-compliant category object
-				tags: threadTagResults.map(t => ({ 
+				...(thread as typeof threads.$inferSelect),
+				user: user as User,
+				category: categoryForResponse,
+				tags: threadTagResults.map(t => ({
 					...t,
 					description: t.description ?? null
 				})),
 				hasBookmarked,
 				lastPost: undefined,
-				// Explicitly set parentForumSlug from the category data
-				// If the category is a forum itself, its slug is the parentForumSlug for the thread.
-				// If the category is a sub-category (type='category') under a zone, then categoryData.parentForumSlug would be the zone's slug.
-				// The logic here assumes categoryForResponse.slug is the direct forum the thread belongs to.
-				parentForumSlug: categoryForResponse.slug, 
+				parentForumSlug: categoryForResponse.slug, // Immediate parent's slug
+				zoneSlug: null, // Placeholder, will be populated below
 			};
+			
+			// Determine zoneSlug by traversing up from the thread's direct category
+			let currentCategoryForZoneLookup: ForumCategorySchemaType | null = categoryForResponse;
+			let determinedZoneSlug: string | null = null;
+			const visitedCategoryIds = new Set<number>();
 
-			const offset = (page - 1) * currentLimit; // Corrected: Use currentLimit instead of undefined 'limit'
+			while (currentCategoryForZoneLookup && !visitedCategoryIds.has(currentCategoryForZoneLookup.id)) {
+				visitedCategoryIds.add(currentCategoryForZoneLookup.id);
+				if (currentCategoryForZoneLookup.type === 'zone') {
+					determinedZoneSlug = currentCategoryForZoneLookup.slug;
+					break;
+				}
+				if (!currentCategoryForZoneLookup.parentId) {
+					// This is a top-level category but not a zone, or bad data.
+					// If it's supposed to be a zone, use its slug. Otherwise, log warning.
+					if (currentCategoryForZoneLookup.type !== 'zone') {
+						logger.warn('ForumService', 'getThreadDetails: Top-level category is not type="zone"', { category: currentCategoryForZoneLookup });
+					}
+					determinedZoneSlug = currentCategoryForZoneLookup.slug; // Fallback
+					break;
+				}
+
+				const parentCategoryData = await db
+					.select()
+					.from(forumCategories)
+					.where(eq(forumCategories.id, currentCategoryForZoneLookup.parentId))
+					.limit(1);
+				
+				currentCategoryForZoneLookup = parentCategoryData.length > 0 ? parentCategoryData[0] as ForumCategorySchemaType : null;
+			}
+			
+			threadForResponse.zoneSlug = determinedZoneSlug;
+
+
+			const offset = (page - 1) * currentLimit;
 			const postConditions = [
-				eq(posts.threadId, actualThreadId), 
+				eq(posts.threadId, actualThreadId),
 				eq(posts.isDeleted, false),
 			];
 
-			// Subquery to check if the current user has liked a post
 			const userReactionSubquery = db.$with('user_reactions').as(
 				db.select({
 					postId: postReactions.postId,
@@ -623,14 +679,14 @@ export const forumService = {
 				})
 				.from(postReactions)
 				.where(and(
-					eq(postReactions.userId, currentUserId || '00000000-0000-0000-0000-000000000000'), // Use a non-matching UUID for non-logged-in users
+					eq(postReactions.userId, currentUserId || '00000000-0000-0000-0000-000000000000'),
 					eq(postReactions.reactionType, 'like')
 				))
 			);
-			
+
 			const postListRaw = await db
 				.with(userReactionSubquery)
-				.select({ 
+				.select({
 					id: posts.id, uuid: posts.uuid, threadId: posts.threadId, userId: posts.userId, content: posts.content,
 					editorState: posts.editorState, likeCount: posts.likeCount, tipCount: posts.tipCount, totalTips: posts.totalTips,
 					isFirstPost: posts.isFirstPost, isHidden: posts.isHidden, isEdited: posts.isEdited, editedAt: posts.editedAt,
@@ -638,32 +694,29 @@ export const forumService = {
 					isDeleted: posts.isDeleted, deletedAt: posts.deletedAt, moderationReason: posts.moderationReason,
 					visibilityStatus: posts.visibilityStatus, editedBy: posts.editedBy,
 					user: usersTable,
-					hasLiked: userReactionSubquery.liked 
+					hasLiked: userReactionSubquery.liked
 				})
 				.from(posts)
 				.innerJoin(usersTable, eq(posts.userId, usersTable.id))
 				.leftJoin(userReactionSubquery, eq(posts.id, userReactionSubquery.postId))
 				.where(and(...postConditions))
 				.orderBy(asc(posts.createdAt))
-				.limit(currentLimit) // Use renamed currentLimit
+				.limit(currentLimit)
 				.offset(offset);
 
 			const totalPostsResult = await db.select({ count: count() }).from(posts).where(and(...postConditions));
 			const totalPosts = totalPostsResult[0]?.count || 0;
 
-			// const postIds = postListRaw.map(p => p.id); // No longer needed for userLikesSet
-			// let userLikesSet = new Set<number>(); // No longer needed
-
 			const postsForResponse: PostWithUser[] = postListRaw.map(p => {
-				const { user: postUser, hasLiked, ...postDataFields } = p; // Destructure hasLiked
+				const { user: postUser, hasLiked, ...postDataFields } = p;
 				const finalPostData = {
 					...postDataFields,
-					pluginData: postDataFields.pluginData || {}, 
+					pluginData: postDataFields.pluginData || {},
 				};
 				return {
-					...(finalPostData as PostSchemaType), 
-					user: postUser as User, 
-					hasLiked: !!hasLiked, // Ensure boolean, convert null to false
+					...(finalPostData as PostSchemaType),
+					user: postUser as User,
+					hasLiked: !!hasLiked,
 				};
 			});
 
@@ -672,14 +725,14 @@ export const forumService = {
 				posts: postsForResponse,
 				pagination: {
 					page,
-					pageSize: currentLimit, // Use the capped currentLimit variable
+					pageSize: currentLimit,
 					totalItems: totalPosts,
-					totalPages: Math.ceil(totalPosts / currentLimit), // Use the capped currentLimit variable
+					totalPages: Math.ceil(totalPosts / currentLimit),
 				},
 			};
 
 		} catch (error) {
-			logger.error('ForumService', 'Error in getThreadDetails', { err: error, slugOrId, page, requestedLimit, currentUserId }); // Use requestedLimit for logging if needed
+			logger.error('ForumService', 'Error in getThreadDetails', { err: error, slugOrId, page, requestedLimit, currentUserId });
 			throw error;
 		}
 	},
@@ -690,7 +743,7 @@ export const forumService = {
 	}: {
 		threadId: number;
 		solvingPostId?: number | null;
-	}): Promise<{ id: number; title: string; isSolved: boolean; solvingPostId: number | null; updatedAt: Date; } | null> { // More specific return type
+	}): Promise<{ id: number; title: string; isSolved: boolean; solvingPostId: number | null; updatedAt: Date; } | null> {
 		try {
 			if (solvingPostId !== null && solvingPostId !== undefined) {
 				const [postCheck] = await db.select({ id: posts.id }).from(posts)

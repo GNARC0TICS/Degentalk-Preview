@@ -9,7 +9,7 @@ import {
   threadTags
 } from '../../db/schema'; // Adjust paths
 import { faker } from '@faker-js/faker';
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray, isNotNull } from 'drizzle-orm'; // Removed sql, Added isNotNull
 import { slugify } from '../db/utils/seedUtils'; // Assuming this utility exists and works
 import { parseArgs } from 'node:util';
 import chalk from 'chalk'; // For better console output
@@ -71,14 +71,30 @@ async function seedRealisticThreads() {
       queryTargetForums = queryTargetForums.where(inArray(forumCategories.slug, targetForumSlugs));
       console.log(chalk.gray(`  Targeting specific forums: ${targetForumSlugs.join(', ')}`));
     }
-    const targetForums = await queryTargetForums;
+    const allPotentialTargetForums = await queryTargetForums;
 
-    if (targetForums.length === 0) {
-      console.error(chalk.red('❌ No target forums found (type="forum"). Please seed forum structure first or check slugs.'));
+    if (allPotentialTargetForums.length === 0) {
+      console.error(chalk.red('❌ No forums of type="forum" found. Please seed forum structure first or check slugs.'));
       process.exit(1);
     }
-    console.log(chalk.gray(`  Fetched ${targetForums.length} target forums/subforums.`));
+    console.log(chalk.gray(`  Fetched ${allPotentialTargetForums.length} potential target forums/subforums.`));
 
+    // Filter for "leaf" forums (forums that are not parents to other forums)
+    const allParentIds = (await db
+      .selectDistinct({ parentId: forumCategories.parentId })
+      .from(forumCategories)
+      .where(isNotNull(forumCategories.parentId)))
+      .map(r => r.parentId)
+      .filter(id => id !== null) as number[]; // Ensure we have a clean number array
+
+    const targetForums = allPotentialTargetForums.filter(forum => !allParentIds.includes(forum.id));
+    
+    if (targetForums.length === 0) {
+      console.error(chalk.red('❌ No "leaf" forums found to seed threads into. Check your forum structure and ensure some forums do not act as parents.'));
+      process.exit(1);
+    }
+    console.log(chalk.green(`  Identified ${targetForums.length} leaf forums for thread seeding.`));
+    
     // 2. Ensure Default Prefixes & Tags Exist
     const seededPrefixes = await ensureDefaultPrefixes();
     const seededTags = await ensureDefaultTags();

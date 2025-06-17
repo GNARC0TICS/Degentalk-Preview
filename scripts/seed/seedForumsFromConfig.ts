@@ -56,6 +56,7 @@ interface ForumCategoryPluginData {
 async function seedForumLevel(
   forumsToProcess: ConfigZone['forums'][number][], // Type for forums from config (can include nested forums)
   currentParentIdInDB: number,
+  parentConfigSlug: string, // ADDED: Slug of the parent (zone or forum) from config
   parentConfigTheme: ForumTheme | Partial<ForumTheme> | undefined, // Theme from parent zone or parent forum
   tx: TransactionClient
 ) {
@@ -77,6 +78,7 @@ async function seedForumLevel(
       description: forumConfig.description,
       type: "forum" as const,
       parentId: currentParentIdInDB,
+      parentForumSlug: parentConfigSlug, // ADDED
       colorTheme: forumSemanticColorTheme,
       icon: forumIcon,
       color: forumColor,
@@ -107,7 +109,8 @@ async function seedForumLevel(
       console.log(chalk.blue(`  ↳ Seeding ${forumConfig.forums.length} subforums for '${forumConfig.name}'...`));
       // Pass the current forum's theme (override or inherited) as parent theme for subforums
       const currentForumEffectiveTheme = forumConfig.themeOverride || parentConfigTheme;
-      await seedForumLevel(forumConfig.forums, newForumDbId, currentForumEffectiveTheme, tx);
+      // Pass current forum's slug as parentConfigSlug for its children
+      await seedForumLevel(forumConfig.forums, newForumDbId, forumConfig.slug, currentForumEffectiveTheme, tx);
     }
   }
 }
@@ -138,38 +141,38 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
       } as ConfigForumRules,
     };
     
-    if (zoneConfig.type === 'primary') {
-      if (zoneConfig.theme?.landingComponent) {
-        pluginData.components = [zoneConfig.theme.landingComponent];
-      }
-      switch (zoneConfig.slug) {
-        case 'the-pit':
-          pluginData.gamification = { xpBoostOnRedMarket: true, streakMultipliers: false };
-          pluginData.visualIdentity = { glitchEffects: true, hoverAnimations: 'shake', gradientOverlays: true };
-          break;
-        case 'mission-control':
-          pluginData.components = ['DailyTaskWidget', 'FlashChallengeBar'];
-          pluginData.features = { xpChallenges: true, analytics: true, staffBoard: true };
-          pluginData.accessControl = { canPost: ['registered'], canCreateEvents: ['mod', 'admin'] };
-          break;
-        case 'casino-floor':
-          pluginData.components = ['LiveBetsWidget', 'IsItRiggedPoll'];
-          pluginData.gamification = { streakMultipliers: true, zoneSpecificBadges: ['highroller', 'lucky7', 'housealwayswins'] };
-          pluginData.visualIdentity = { hoverAnimations: 'sparkle' };
-          break;
-        case 'briefing-room':
-          pluginData.accessControl = { canPost: ['admin'], canModerate: ['mod', 'admin'] };
-          pluginData.threadRules = { allowPolls: false };
-          break;
-        case 'the-archive':
-          pluginData.accessControl = { canPost: [] };
-          pluginData.features = { analytics: true };
-          break;
-        case 'degenshop':
-          pluginData.components = ['ShopCard', 'HotItemsSlider', 'CosmeticsGrid'];
-          pluginData.features = { zoneShop: true, customBadges: true };
-          break;
-      }
+    if (zoneConfig.theme?.landingComponent && zoneConfig.type === 'primary') {
+      pluginData.components = [zoneConfig.theme.landingComponent];
+    }
+
+    // Apply slug-specific pluginData, regardless of zone type
+    switch (zoneConfig.slug) {
+      case 'the-pit':
+        pluginData.gamification = { xpBoostOnRedMarket: true, streakMultipliers: false };
+        pluginData.visualIdentity = { glitchEffects: true, hoverAnimations: 'shake', gradientOverlays: true };
+        break;
+      case 'mission-control':
+        pluginData.components = ['DailyTaskWidget', 'FlashChallengeBar'];
+        pluginData.features = { xpChallenges: true, analytics: true, staffBoard: true };
+        pluginData.accessControl = { canPost: ['registered'], canCreateEvents: ['mod', 'admin'] };
+        break;
+      case 'casino-floor':
+        pluginData.components = ['LiveBetsWidget', 'IsItRiggedPoll'];
+        pluginData.gamification = { streakMultipliers: true, zoneSpecificBadges: ['highroller', 'lucky7', 'housealwayswins'] };
+        pluginData.visualIdentity = { hoverAnimations: 'sparkle' };
+        break;
+      case 'briefing-room':
+        pluginData.accessControl = { canPost: ['admin'], canModerate: ['mod', 'admin'] };
+        pluginData.threadRules = { allowPolls: false };
+        break;
+      case 'the-archive':
+        pluginData.accessControl = { canPost: [] };
+        pluginData.features = { analytics: true };
+        break;
+      case 'degenshop':
+        pluginData.components = ['ShopCard', 'HotItemsSlider', 'CosmeticsGrid'];
+        pluginData.features = { zoneShop: true, customBadges: true };
+        break;
     }
     
     const semanticColorTheme = zoneConfig.type === 'primary' ? zoneConfig.theme?.colorTheme : undefined;
@@ -179,6 +182,7 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
       description: zoneConfig.description,
       type: "zone" as const,
       parentId: null, // Zones have no parent
+      parentForumSlug: null, // ADDED: Zones have no parent slug
       colorTheme: semanticColorTheme, 
       icon: zoneConfig.theme?.icon, 
       color: zoneConfig.theme?.color,
@@ -204,7 +208,8 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
     // Seed top-level forums for this zone
     if (zoneConfig.forums && zoneConfig.forums.length > 0) {
       console.log(chalk.blue(`  ↳ Seeding ${zoneConfig.forums.length} top-level forums for zone '${zoneConfig.name}'...`));
-      await seedForumLevel(zoneConfig.forums, zoneDbId, zoneConfig.theme, tx);
+      // Pass zone's slug as parentConfigSlug for its direct child forums
+      await seedForumLevel(zoneConfig.forums, zoneDbId, zoneConfig.slug, zoneConfig.theme, tx);
     }
   }
   console.log(chalk.green("✅ Forum structure and static themes seeded successfully within transaction."));

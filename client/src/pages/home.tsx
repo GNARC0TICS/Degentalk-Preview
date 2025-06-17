@@ -47,10 +47,8 @@ import { ArrowRight, FolderOpen } from 'lucide-react';
 import { AlertCircle } from 'lucide-react';
 
 // Import types
-import type { ThreadWithUser } from '@db_types/forum.types';
 import type { User } from '@schema';
 import { useAuth } from '@/hooks/use-auth';
-import type { ForumEntityBase } from '@/utils/forum-routing-helper';
 // import { getThreadTitle } from '@/utils/thread-utils';
 
 // Define API Path Constants
@@ -71,7 +69,7 @@ function HomePage() { // Changed to a regular function
 		error: forumStructureErrorFromContext 
 	} = useForumStructure();
 
-	const primaryZonesFromContext = mergedZones.filter((zone) => zone.canonical === true);
+	const primaryZonesFromContext = mergedZones.filter((zone) => zone.isPrimary === true);
 
 	// Fetch top users for leaderboard (remains as API call)
 	const {
@@ -105,9 +103,9 @@ function HomePage() { // Changed to a regular function
 		// 'theme' object can be kept for other MergedTheme properties if ZoneCard uses them,
 		// or simplified if ZoneCard primarily relies on top-level props.
 		theme: {
-			icon: zone.theme?.icon, // Fallback/additional icon from MergedZone.theme
-			color: zone.theme?.color, // Fallback/additional color from MergedZone.theme
-			bannerImage: zone.theme?.bannerImage,
+			icon: zone.theme?.icon ?? undefined, // Fallback/additional icon from MergedZone.theme, ensuring no null
+			color: zone.theme?.color ?? undefined, // Fallback/additional color from MergedZone.theme, ensuring no null
+			bannerImage: zone.theme?.bannerImage ?? undefined, // Fallback/additional banner image, ensuring no null
 		},
 		threadCount: zone.threadCount,
 		postCount: zone.postCount,

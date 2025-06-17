@@ -384,7 +384,7 @@ function createFallbackZone(staticZone: Zone): MergedZone {
       createFallbackForum(f, -1, staticZone.slug, theme)
     ),
     // Primary Zone features (defaults for fallback)
-    isPrimary: true, // Fallback zones are considered primary
+    isPrimary: staticZone.type === 'primary',
     features: [],
     customComponents: [],
     staffOnly: false,
@@ -423,6 +423,7 @@ function processApiData(apiData: ApiCategoryData[]): {
   const zones: MergedZone[] = [];
   const categories: Record<string, MergedCategory> = {};
   const forums: Record<string, MergedForum> = {};
+  const forumById = new Map<number, MergedForum>();
   
   // First pass: Create all entities
   const zoneMap = new Map<number, MergedZone>();
@@ -445,8 +446,9 @@ function processApiData(apiData: ApiCategoryData[]): {
       canonical: !apiZone.parentId, // Canonical zones have no parent
       hasXpBoost: (apiZone.xpMultiplier ?? 1) > 1,
       boostMultiplier: apiZone.xpMultiplier ?? 1,
-      // Primary Zone features
-      isPrimary: apiZone.isPrimary ?? !apiZone.parentId,
+      // Primary Zone features: rely on explicit isPrimary flag from API.
+      // If backend omits this flag, default to false (treat as general zone).
+      isPrimary: apiZone.isPrimary ?? false,
       features: apiZone.features ?? apiZone.pluginData?.features ?? [],
       customComponents: apiZone.customComponents ?? apiZone.pluginData?.customComponents ?? [],
       staffOnly: apiZone.staffOnly ?? apiZone.pluginData?.staffOnly ?? false,
@@ -503,8 +505,9 @@ function processApiData(apiData: ApiCategoryData[]): {
       parentCategoryId: apiForum.parentId,
     };
     forums[forum.slug] = forum;
+    forumById.set(forum.id, forum);
     
-    // Add to parent category or zone
+    // Add to parent container based on parentId
     if (apiForum.parentId) {
       if (categoryMap.has(apiForum.parentId)) {
         // Forum belongs to a category
@@ -512,6 +515,12 @@ function processApiData(apiData: ApiCategoryData[]): {
       } else if (zoneMap.has(apiForum.parentId)) {
         // Forum belongs directly to a zone
         zoneMap.get(apiForum.parentId)!.forums.push(forum);
+      } else if (forumById.has(apiForum.parentId)) {
+        // Forum is a subforum of another forum
+        const parentForum = forumById.get(apiForum.parentId)!;
+        if (!parentForum.forums) parentForum.forums = [];
+        parentForum.canHaveThreads = parentForum.canHaveThreads && false; // parent forum becomes container only
+        parentForum.forums.push(forum);
       }
     }
   });

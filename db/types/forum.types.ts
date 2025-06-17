@@ -29,7 +29,8 @@ export interface ThreadWithUserAndCategory extends Thread {
   hasBookmarked?: boolean; // Added
   postCount: number;
   lastPost?: Post;
-  parentForumSlug: string; // Added
+  parentForumSlug: string | null; // Corrected to allow null, and it's the immediate parent forum's slug
+  zoneSlug?: string | null; // ADDED: Slug of the top-level zone
   tags?: ForumTag[]; // Added tags property
 }
 
@@ -42,7 +43,7 @@ export interface PaginationInfo {
 }
 
 export interface ThreadWithPostsAndUser {
-  thread: ThreadWithUserAndCategory;
+  thread: ThreadWithUserAndCategory; // This will now include zoneSlug
   posts: PostWithUser[];
   pagination: PaginationInfo;
 }

@@ -18,6 +18,17 @@ module.exports = {
 					xp: '#8B5CF6'
 				}
 			},
+			fontFamily: {
+				sans: [
+					'Inter',
+					'sans-serif'
+				],
+				headline: [
+					'"Space Grotesk"',
+					'Inter',
+					'sans-serif'
+				]
+			},
 			animation: {
 				'gradient-shift': 'gradient-shift 8s ease infinite',
 				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',

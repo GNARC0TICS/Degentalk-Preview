@@ -35,43 +35,22 @@ const ZonePage: React.FC = () => {
     return <NotFound />;
   }
 
-  if (isLoading) {
-    return <LoadingState />;
-  }
-
-  if (contextError) {
-    return <ErrorState error={contextError} />;
-  }
-
+  // Figure out zone (even while structure loading) so we can compute primaryForumId consistently
   const zone = getZone(slug);
-  
-  // Also check if this is actually a category (not a zone)
-  const isCategory = !zone && zones.some(z => 
-    z.forums.some(f => f.slug === slug)
-  );
+  const isCategory = !zone && zones.some(z => z.forums.some(f => f.slug === slug));
 
-  if (!zone && !isCategory) {
-    return <NotFound />;
-  }
+  // Decide candidate forums (may be empty while loading)
+  const categoryForums = isCategory
+    ? zones.flatMap(z => z.forums).filter(f => f.parentForumSlug === slug)
+    : zone?.forums || [];
 
-  // If it's a category, get all forums with this parent
-  const categoryForums = isCategory ? 
-    zones.flatMap(z => z.forums).filter(f => f.parentForumSlug === slug) : 
-    zone?.forums || [];
+  const forumIds = isCategory
+    ? categoryForums.map(f => f.id).filter(id => id > 0)
+    : zone?.forums?.map(f => f.id).filter(id => id > 0) || [];
 
-  const displayName = zone?.name || slug;
-  const displayDescription = zone?.description;
-  const theme = zone?.theme;
+  const primaryForumId = forumIds[0] ?? 0;
 
-  // For categories, we need to aggregate threads from all child forums
-  const forumIds = isCategory ? 
-    categoryForums.map(f => f.id).filter(id => id > 0) :
-    zone?.forums.map(f => f.id).filter(id => id > 0) || [];
-
-  // Fetch threads - for now just use the first forum ID since backend doesn't support multiple
-  // TODO: Update backend to support multiple categoryIds or create zone-specific endpoint
-  const primaryForumId = forumIds[0];
-  
+  // Always call useQuery so the hook count stays the same; use `enabled` to control fetch.
   const {
     data: threadsResponse,
     isLoading: isLoadingThreads,
@@ -96,6 +75,23 @@ const ZonePage: React.FC = () => {
     enabled: primaryForumId > 0,
     staleTime: 1 * 60 * 1000,
   });
+
+  // Handle loading/error states AFTER hooks
+  if (isLoading) {
+    return <LoadingState />;
+  }
+
+  if (contextError) {
+    return <ErrorState error={contextError} />;
+  }
+
+  if (!zone && !isCategory) {
+    return <NotFound />;
+  }
+
+  const displayName = zone?.name || slug;
+  const displayDescription = zone?.description;
+  const theme = zone?.theme;
 
   const threads = threadsResponse?.threads || [];
   const pagination = threadsResponse?.pagination || {

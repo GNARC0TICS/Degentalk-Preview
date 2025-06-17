@@ -460,8 +460,8 @@ const PRIMARY_ZONES: Zone[] = [
     slug: 'degenshop',
     name: 'DegenShop™',
     description: 'Cosmetic & utility marketplace: avatar frames, username glows, XP boosts, prefix unlocks.',
-    type: 'primary',
-    position: 6,
+    type: 'general',
+    position: 13,
     theme: THEME_PRESETS.shop,
     defaultRules: {
       allowPosting: false,
