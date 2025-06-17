@@ -3,6 +3,9 @@
 
 // --- Type Definitions ---
 
+export const ZONE_TYPES = ['primary', 'general'] as const;
+export type ZoneType = (typeof ZONE_TYPES)[number];
+
 export interface PrefixGrantRule {
   slug: string;
   autoAssign: boolean;
@@ -79,7 +82,7 @@ export interface Zone {
   description: string;
   
   // Type & hierarchy
-  type: 'primary' | 'general';
+  type: ZoneType;
   position?: number;
   
   // Configuration
@@ -139,7 +142,7 @@ const THEME_PRESETS = {
 
 // --- Default Rules ---
 
-const DEFAULT_FORUM_RULES: ForumRules = {
+export const DEFAULT_FORUM_RULES: ForumRules = { // Added export
   allowPosting: true,
   xpEnabled: true,
   tippingEnabled: false,

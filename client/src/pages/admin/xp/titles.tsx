@@ -34,6 +34,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useDebounce } from '@/hooks/use-debounce';
 import { apiRequest } from '@/lib/queryClient';
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 // Title types
 interface Title {
@@ -675,120 +676,122 @@ export default function TitleManagementPage() {
 	// Main render
 	return (
 		<>
-			<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+			<AdminPageShell title="Title Management">
+				<div className="space-y-4">
 					<div className="flex items-center justify-between">
 						<h2 className="text-3xl font-bold tracking-tight">Title Management</h2>
-					<Button onClick={() => setIsCreateDialogOpen(true)}>
-						<Plus className="mr-2 h-4 w-4" />
-						Create Title
-					</Button>
+						<Button onClick={() => setIsCreateDialogOpen(true)}>
+							<Plus className="mr-2 h-4 w-4" />
+							Create Title
+						</Button>
+					</div>
+
+					<Tabs defaultValue="all-titles" className="space-y-4">
+						<TabsList>
+							<TabsTrigger value="all-titles">All Titles</TabsTrigger>
+							<TabsTrigger value="statistics">Statistics</TabsTrigger>
+						</TabsList>
+
+						<TabsContent value="all-titles" className="space-y-4">
+							<Card>
+								<CardHeader className="pb-3">
+									<div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+										<CardTitle>Title Library</CardTitle>
+										<div className="relative w-full sm:w-72">
+											<Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+											<Input
+												placeholder="Search titles..."
+												className="pl-8"
+												value={searchTerm}
+												onChange={(e) => setSearchTerm(e.target.value)}
+											/>
+										</div>
+									</div>
+								</CardHeader>
+								<CardContent className="p-0">
+									<TitleTable />
+
+									{/* Pagination */}
+									{titlesData?.totalPages > 1 && (
+										<div className="flex items-center justify-end gap-2 p-4">
+											<Button
+												variant="outline"
+												size="sm"
+												onClick={() => setPage((p) => Math.max(1, p - 1))}
+												disabled={page === 1}
+											>
+												Previous
+											</Button>
+											<span className="text-sm">
+												Page {page} of {titlesData.totalPages}
+											</span>
+											<Button
+												variant="outline"
+												size="sm"
+												onClick={() => setPage((p) => Math.min(titlesData.totalPages, p + 1))}
+												disabled={page === titlesData.totalPages}
+											>
+												Next
+											</Button>
+										</div>
+									)}
+								</CardContent>
+							</Card>
+						</TabsContent>
+
+						<TabsContent value="statistics" className="space-y-4">
+							<Card>
+								<CardHeader>
+									<CardTitle>Title Statistics</CardTitle>
+								</CardHeader>
+								<CardContent>
+									<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+										<Card>
+											<CardContent className="p-4">
+												<div className="text-sm font-medium text-muted-foreground">Total Titles</div>
+												<div className="text-2xl font-bold mt-1">{titlesData?.totalTitles || 0}</div>
+											</CardContent>
+										</Card>
+										<Card>
+											<CardContent className="p-4">
+												<div className="text-sm font-medium text-muted-foreground">Path Titles</div>
+												<div className="text-2xl font-bold mt-1">{titlesData?.pathTitles || 0}</div>
+											</CardContent>
+										</Card>
+										<Card>
+											<CardContent className="p-4">
+												<div className="text-sm font-medium text-muted-foreground">
+													Achievement Titles
+												</div>
+												<div className="text-2xl font-bold mt-1">
+													{titlesData?.achievementTitles || 0}
+												</div>
+											</CardContent>
+										</Card>
+										<Card>
+											<CardContent className="p-4">
+												<div className="text-sm font-medium text-muted-foreground">Rarest Title</div>
+												<div className="text-2xl font-bold mt-1 truncate">
+													{titlesData?.rarestTitle?.name || 'N/A'}
+												</div>
+											</CardContent>
+										</Card>
+									</div>
+
+									<div className="mt-6">
+										<h3 className="text-lg font-medium mb-4">Title Distribution</h3>
+										<div className="h-64 bg-zinc-800 rounded-md flex items-center justify-center">
+											<span className="text-muted-foreground">
+												Title distribution chart will be displayed here
+											</span>
+										</div>
+									</div>
+								</CardContent>
+							</Card>
+						</TabsContent>
+					</Tabs>
 				</div>
-
-				<Tabs defaultValue="all-titles" className="space-y-4">
-					<TabsList>
-						<TabsTrigger value="all-titles">All Titles</TabsTrigger>
-						<TabsTrigger value="statistics">Statistics</TabsTrigger>
-					</TabsList>
-
-					<TabsContent value="all-titles" className="space-y-4">
-						<Card>
-							<CardHeader className="pb-3">
-								<div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-									<CardTitle>Title Library</CardTitle>
-									<div className="relative w-full sm:w-72">
-										<Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-										<Input
-											placeholder="Search titles..."
-											className="pl-8"
-											value={searchTerm}
-											onChange={(e) => setSearchTerm(e.target.value)}
-										/>
-									</div>
-								</div>
-							</CardHeader>
-							<CardContent className="p-0">
-								<TitleTable />
-
-								{/* Pagination */}
-								{titlesData?.totalPages > 1 && (
-									<div className="flex items-center justify-end gap-2 p-4">
-										<Button
-											variant="outline"
-											size="sm"
-											onClick={() => setPage((p) => Math.max(1, p - 1))}
-											disabled={page === 1}
-										>
-											Previous
-										</Button>
-										<span className="text-sm">
-											Page {page} of {titlesData.totalPages}
-										</span>
-										<Button
-											variant="outline"
-											size="sm"
-											onClick={() => setPage((p) => Math.min(titlesData.totalPages, p + 1))}
-											disabled={page === titlesData.totalPages}
-										>
-											Next
-										</Button>
-									</div>
-								)}
-							</CardContent>
-						</Card>
-					</TabsContent>
-
-					<TabsContent value="statistics" className="space-y-4">
-						<Card>
-							<CardHeader>
-								<CardTitle>Title Statistics</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-									<Card>
-										<CardContent className="p-4">
-											<div className="text-sm font-medium text-muted-foreground">Total Titles</div>
-											<div className="text-2xl font-bold mt-1">{titlesData?.totalTitles || 0}</div>
-										</CardContent>
-									</Card>
-									<Card>
-										<CardContent className="p-4">
-											<div className="text-sm font-medium text-muted-foreground">Path Titles</div>
-											<div className="text-2xl font-bold mt-1">{titlesData?.pathTitles || 0}</div>
-										</CardContent>
-									</Card>
-									<Card>
-										<CardContent className="p-4">
-											<div className="text-sm font-medium text-muted-foreground">
-												Achievement Titles
-											</div>
-											<div className="text-2xl font-bold mt-1">
-												{titlesData?.achievementTitles || 0}
-											</div>
-										</CardContent>
-									</Card>
-									<Card>
-										<CardContent className="p-4">
-											<div className="text-sm font-medium text-muted-foreground">Rarest Title</div>
-											<div className="text-2xl font-bold mt-1 truncate">
-												{titlesData?.rarestTitle?.name || 'N/A'}
-											</div>
-										</CardContent>
-									</Card>
-								</div>
-
-								<div className="mt-6">
-									<h3 className="text-lg font-medium mb-4">Title Distribution</h3>
-									<div className="h-64 bg-zinc-800 rounded-md flex items-center justify-center">
-										<span className="text-muted-foreground">
-											Title distribution chart will be displayed here
-										</span>
-									</div>
-								</div>
-							</CardContent>
-						</Card>
-					</TabsContent>
-				</Tabs>
-			</div>
+			</AdminPageShell>
 
 			{/* Dialogs */}
 			<TitleFormDialog

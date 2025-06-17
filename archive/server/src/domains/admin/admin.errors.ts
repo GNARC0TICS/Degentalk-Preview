@@ -1,0 +1,1 @@
+// ARCHIVED: Deprecated admin errors moved from server/src/domains/admin/admin.errors.ts on 2025-06-17. 

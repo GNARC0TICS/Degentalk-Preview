@@ -5,6 +5,7 @@ import { EventLogFilters } from '@/features/activity/services/activityApi';
 import { format } from 'date-fns';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 /**
  * Admin page for viewing a specific user's activities
@@ -110,17 +111,11 @@ const UserActivityPage: React.FC = () => {
   const username = activityFeed?.items[0]?.user?.username || 'User';
   
   return (
-    <div className="container mx-auto px-4 py-8">
+    <AdminPageShell
+      title={`Activity Logs: ${activityFeed?.items[0]?.user?.displayName || username}`}
+      breadcrumb={<Link href="/admin/activity" className="text-blue-500 hover:underline">All Activities</Link>}
+    >
       <div className="flex justify-between items-center mb-6">
-        <div>
-          <Link href="/admin/activity" className="text-blue-500 hover:underline mb-2 inline-block">
-            ← Back to All Activities
-          </Link>
-          <h1 className="text-2xl font-bold">
-            Activity Logs: {activityFeed?.items[0]?.user?.displayName || username}
-          </h1>
-        </div>
-        
         <div className="flex space-x-4">
           <select
             value={selectedEventType}
@@ -234,7 +229,7 @@ const UserActivityPage: React.FC = () => {
           )}
         </>
       )}
-    </div>
+    </AdminPageShell>
   );
 };
 

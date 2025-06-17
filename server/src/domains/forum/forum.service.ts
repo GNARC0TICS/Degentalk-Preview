@@ -7,16 +7,40 @@ import {
 	forumCategories,
 	threads,
 	posts,
-	users,
+	users as usersTable, // Alias users
 	threadPrefixes,
 	tags,
 	threadTags,
 	postReactions, // Added import for postReactions
-	users as usersTable // Alias users
+	// Removed 'users' as it's covered by usersTable alias
 } from '@schema';
-import { sql, desc, asc, and, eq, isNull, count, like, ilike, or, inArray, SQL } from 'drizzle-orm';
-import type { ForumCategoryWithStats, ThreadWithUser, ThreadWithPostsAndUser, PostWithUser, ThreadWithUserAndCategory, ForumTag } from '../../../../db/types/forum.types.ts';
+import { sql, desc, asc, and, eq, isNull, count, ilike, or, inArray, SQL } from 'drizzle-orm';
+import type { ForumCategoryWithStats, ThreadWithUser, ThreadWithPostsAndUser, PostWithUser, ThreadWithUserAndCategory } from '../../../../db/types/forum.types.ts';
 import type { User, ForumCategory as ForumCategorySchemaType, Post as PostSchemaType } from '@schema';
+import type { InferSelectModel } from 'drizzle-orm'; // For inferring types
+
+// Helper to parse configZoneType from pluginData
+const parseZoneType = (pluginData: unknown): 'primary' | 'general' => {
+  if (pluginData && typeof pluginData === 'object' && pluginData !== null && 'configZoneType' in pluginData) {
+    const t = (pluginData as { configZoneType?: string }).configZoneType;
+    if (t === 'primary') {
+      return 'primary';
+    } else if (t === 'general') {
+      return 'general';
+    }
+    logger.warn('ForumService', 'Malformed configZoneType in pluginData', { pluginDataValue: t, defaultingTo: 'general' });
+    return 'general'; // Default for malformed but existing type
+  }
+  // Log missing configZoneType or entirely missing pluginData
+  if (pluginData && typeof pluginData === 'object' && pluginData !== null && !('configZoneType' in pluginData)) {
+    logger.warn('ForumService', 'Missing configZoneType in pluginData', { pluginDataKeys: Object.keys(pluginData), defaultingTo: 'general' });
+  } else if (!pluginData || (typeof pluginData === 'object' && pluginData === null)) { // Check for null explicitly
+    logger.warn('ForumService', 'Missing or null pluginData for zone', { defaultingTo: 'general' });
+  }
+  return 'general'; // Default to 'general' if missing or malformed
+};
+
+// type ThreadPrefixType = InferSelectModel<typeof threadPrefixes>; // This was duplicated, removing one instance
 
 // Simple in-memory cache
 const CACHE_DURATION_MS = 30 * 1000; // 30 seconds
@@ -25,7 +49,8 @@ let categoriesCache: {
 	data: ForumCategoryWithStats[];
 } | null = null;
 
-type ThreadPrefixType = typeof threadPrefixes.$inferSelect;
+type ThreadPrefixType = InferSelectModel<typeof threadPrefixes>;
+
 
 type CategoryWithCountsResult = {
 	id: number;
@@ -46,7 +71,7 @@ type CategoryWithCountsResult = {
 	minGroupIdRequired: number | null;
 	tippingEnabled: boolean; 
 	xpMultiplier: number;   
-	pluginData: any; 
+	pluginData: unknown; // Changed to unknown to match Drizzle's jsonb inference
 	createdAt: Date; 
 	updatedAt: Date; 
 	threadCount: number | null; 
@@ -83,15 +108,24 @@ export const forumService = {
 			const forums = allItems.filter(item => item.type === 'forum');
 			
 			// Add enhanced features for primary zones
-			const enhancedZones = zones.map(zone => ({
-				...zone,
-				// Check if it's a primary zone (canonical = no parent)
-				isPrimary: !zone.parentId,
-				// Parse plugin data for primary zone features
-				features: zone.pluginData?.features || [],
-				customComponents: zone.pluginData?.customComponents || [],
-				staffOnly: zone.pluginData?.staffOnly || false,
-			}));
+			const enhancedZones = zones.map(zone => {
+				const determinedType = parseZoneType(zone.pluginData);
+				const isActuallyPrimary = determinedType === 'primary';
+
+				// Safe access to pluginData properties
+				const pd = zone.pluginData && typeof zone.pluginData === 'object' ? zone.pluginData : {};
+				const features = Array.isArray(pd.features) ? pd.features : [];
+				const customComponents = Array.isArray(pd.customComponents) ? pd.customComponents : [];
+				const staffOnly = typeof pd.staffOnly === 'boolean' ? pd.staffOnly : false;
+
+				return {
+					...zone,
+					isPrimary: isActuallyPrimary,
+					features,
+					customComponents,
+					staffOnly,
+				};
+			});
 			
 			return {
 				zones: enhancedZones,
@@ -204,9 +238,9 @@ export const forumService = {
 					description: c.description ?? null,
 					parentForumSlug: c.parentForumSlug ?? null, 
 					colorTheme: c.colorTheme ?? null,
-					pluginData: c.pluginData || {},
-					threadCount: includeCounts ? Number(c.threadCount || 0) : 0, // Set to 0 if not included
-					postCount: includeCounts ? Number(c.postCount || 0) : 0,   // Set to 0 if not included
+					pluginData: (c.pluginData && typeof c.pluginData === 'object' ? c.pluginData : {}) as Record<string, unknown>, // Process unknown to object
+					threadCount: includeCounts ? Number(c.threadCount || 0) : 0,
+					postCount: includeCounts ? Number(c.postCount || 0) : 0,
 					isZone: c.type === 'zone',
 					canonical: c.type === 'zone' && !c.parentId,
 					lastThread: undefined, 
@@ -230,18 +264,43 @@ export const forumService = {
 		}
 	},
 
-	async getCategoriesTree(options: CategoriesTreeOptions = {}): Promise<any[]> {
-		const { includeEmptyStats = false, includeHidden = false } = options;
-		// Pass includeCounts=true to getCategoriesWithStats for tree construction,
-		// as counts are often relevant for display in trees.
+	// REMOVED EXTRA "}," here which was causing syntax errors
+
+	async getCategoriesTree(options: CategoriesTreeOptions = {}): Promise<Array<ForumCategoryWithStats & { children: Array<ForumCategoryWithStats & { children: unknown[] }> }>> {
+		const { includeEmptyStats = false, includeHidden = false } = options; 
 		const allCategories = await this.getCategoriesWithStats(true);
 		if (!allCategories || !Array.isArray(allCategories)) { return []; }
-		const visibleCategories = allCategories.filter((cat) => cat);
-		const categoriesWithStats = includeEmptyStats ? visibleCategories.map((cat) => ({...(cat || {}), threadCount: Number(cat?.threadCount || 0), postCount: Number(cat?.postCount || 0)})) : visibleCategories;
-		const categoryMap = new Map<number, ForumCategoryWithStats & { children: any[] }>();
-		const tree: any[] = [];
-		categoriesWithStats.forEach((category) => { if (!category || typeof category !== 'object' || category.id === undefined) return; categoryMap.set(category.id, { ...category, children: [] }); });
-		categoriesWithStats.forEach((category) => { if (!category || typeof category !== 'object' || category.id === undefined) return; const mappedCategory = categoryMap.get(category.id); if (!mappedCategory) return; if (category.parentId && categoryMap.has(category.parentId)) { const parent = categoryMap.get(category.parentId); if (parent && parent.children) { parent.children.push(mappedCategory); } } else if (!category.parentId) { tree.push(mappedCategory); } });
+		
+		let processedCategories = allCategories.filter(cat => cat && typeof cat === 'object' && cat.id !== undefined);
+
+		if (!includeHidden) {
+			processedCategories = processedCategories.filter(cat => !cat.isHidden);
+		}
+		
+		const categoriesWithStats = includeEmptyStats 
+			? processedCategories.map(cat => ({...cat, threadCount: Number(cat.threadCount || 0), postCount: Number(cat.postCount || 0)})) 
+			: processedCategories;
+
+		const categoryMap = new Map<number, ForumCategoryWithStats & { children: Array<ForumCategoryWithStats & { children: unknown[] }> }>();
+		const tree: Array<ForumCategoryWithStats & { children: Array<ForumCategoryWithStats & { children: unknown[] }> }> = [];
+
+		categoriesWithStats.forEach(category => {
+			categoryMap.set(category.id, { ...category, children: [] });
+		});
+
+		categoriesWithStats.forEach(category => {
+			const mappedCategory = categoryMap.get(category.id);
+			if (!mappedCategory) return;
+
+			if (category.parentId && categoryMap.has(category.parentId)) {
+				const parent = categoryMap.get(category.parentId);
+				if (parent) { 
+					parent.children.push(mappedCategory);
+				}
+			} else if (!category.parentId) {
+				tree.push(mappedCategory);
+			}
+		});
 		return tree;
 	},
 
@@ -260,13 +319,11 @@ export const forumService = {
 		return { forum, topics }; 
 	},
 	async getCategoryById(id: number): Promise<ForumCategoryWithStats | null> { 
-		// Assuming counts are desired
 		const categories = await this.getCategoriesWithStats(true); 
 		return categories.find((cat) => cat.id === id) || null; 
 	},
 	async getForumsByParentId(parentId: number): Promise<ForumCategoryWithStats[]> { 
 		try { 
-			// Assuming counts are desired
 			const categories = await this.getCategoriesWithStats(true); 
 			const parentForum = categories.find((cat) => cat.id === parentId); 
 			const childForums = categories.filter((cat) => cat.parentId === parentId); 
@@ -276,13 +333,20 @@ export const forumService = {
 			throw error; 
 		} 
 	},
-	async debugForumRelationships(): Promise<{ primaryZones: Array<{ id: number; name: string; slug: string }>; categories: Array<{ id: number; name: string; slug: string; childForums: Array<{ id: number; name: string; slug: string; parentId: number; }>; }>; }> { 
+	async debugForumRelationships(): Promise<{ 
+		primaryZones: Array<{ id: number; name: string; slug: string }>; 
+		categories: Array<{ 
+			id: number; name: string; slug: string; 
+			childForums: Array<{ id: number; name: string; slug: string; parentId: number | null; }>; // parentId can be null
+		}>; 
+	}> { 
 		try { 
-			// Assuming counts are not critical for debugging relationships
 			const allCategories = await this.getCategoriesWithStats(false); 
 			const primaryZones = allCategories.filter((cat) => cat.type === 'zone').map((zone) => ({ id: zone.id, name: zone.name, slug: zone.slug })); 
 			const categories = allCategories.filter((cat) => cat.type === 'category' && cat.parentId !== null).map((category) => { 
-				const childForums = allCategories.filter((forum) => forum.parentId === category.id && forum.type === 'forum').map((forum) => ({ id: forum.id, name: forum.name, slug: forum.slug, parentId: forum.parentId || 0 })); 
+				const childForums = allCategories
+					.filter((forum) => forum.parentId === category.id && forum.type === 'forum')
+					.map((forum) => ({ id: forum.id, name: forum.name, slug: forum.slug, parentId: forum.parentId })); // Use parentId as is
 				return { id: category.id, name: category.name, slug: category.slug, childForums }; 
 			}); 
 			return { primaryZones, categories }; 
@@ -291,15 +355,22 @@ export const forumService = {
 			throw error; 
 		} 
 	},
-	async getPrefixes(categoryId?: number): Promise<any[]> { if (categoryId) { return db.select().from(threadPrefixes).where(and(eq(threadPrefixes.isActive, true), or(isNull(threadPrefixes.categoryId), eq(threadPrefixes.categoryId, categoryId)))).orderBy(asc(threadPrefixes.position)); } else { return db.select().from(threadPrefixes).where(eq(threadPrefixes.isActive, true)).orderBy(asc(threadPrefixes.position)); } },
-	async getTags(): Promise<any[]> { return db.select().from(tags).orderBy(asc(tags.name)); },
+	async getPrefixes(categoryId?: number): Promise<ThreadPrefixType[]> { 
+		if (categoryId) { 
+			return db.select().from(threadPrefixes).where(and(eq(threadPrefixes.isActive, true), or(isNull(threadPrefixes.categoryId), eq(threadPrefixes.categoryId, categoryId)))).orderBy(asc(threadPrefixes.position)); 
+		} else { 
+			return db.select().from(threadPrefixes).where(eq(threadPrefixes.isActive, true)).orderBy(asc(threadPrefixes.position)); 
+		} 
+	},
+	async getTags(): Promise<Array<typeof tags.$inferSelect>> { return db.select().from(tags).orderBy(asc(tags.name)); },
 
 	async searchThreads(params: ThreadSearchParams): Promise<{
 		threads: ThreadWithUser[];
 		pagination: { page: number; limit: number; totalThreads: number; totalPages: number };
 	}> {
-		const { categoryId, prefix, tag, page = 1, limit = 10, sortBy = 'latest', search } = params;
-		const offset = (page - 1) * limit;
+		const { categoryId, prefix, tag, page = 1, limit: requestedLimitParam = 10, sortBy = 'latest', search } = params; // Renamed limit to avoid conflict
+		const currentThreadLimit = requestedLimitParam; // Use a different name for the local limit variable
+		const offset = (page - 1) * currentThreadLimit;
 		const conditions: (SQL<unknown> | undefined)[] = [eq(threads.isDeleted, false), eq(threads.isHidden, false)];
 		if (categoryId) conditions.push(eq(threads.categoryId, categoryId));
 		if (prefix) { const prefixResult = await db.select({ id: threadPrefixes.id }).from(threadPrefixes).where(eq(threadPrefixes.name, prefix)).limit(1); if (prefixResult.length > 0) conditions.push(eq(threads.prefixId, prefixResult[0].id)); }
@@ -314,9 +385,9 @@ export const forumService = {
 		
 		let rawResults: Array<{ threadData: typeof threads.$inferSelect; userData: User }>;
 		if (tagIdNum) {
-			rawResults = await db.select(selectFields).from(threads).innerJoin(usersTable, eq(threads.userId, usersTable.id)).innerJoin(threadTags, and(eq(threadTags.threadId, threads.id), eq(threadTags.tagId, tagIdNum))).where(and(...validConditions)).orderBy(...orderByClause).limit(limit).offset(offset);
+			rawResults = await db.select(selectFields).from(threads).innerJoin(usersTable, eq(threads.userId, usersTable.id)).innerJoin(threadTags, and(eq(threadTags.threadId, threads.id), eq(threadTags.tagId, tagIdNum))).where(and(...validConditions)).orderBy(...orderByClause).limit(currentThreadLimit).offset(offset);
 		} else {
-			rawResults = await db.select(selectFields).from(threads).innerJoin(usersTable, eq(threads.userId, usersTable.id)).where(and(...validConditions)).orderBy(...orderByClause).limit(limit).offset(offset);
+			rawResults = await db.select(selectFields).from(threads).innerJoin(usersTable, eq(threads.userId, usersTable.id)).where(and(...validConditions)).orderBy(...orderByClause).limit(currentThreadLimit).offset(offset);
 		}
 
 		const processedThreads = rawResults.map(r => ({ ...r.threadData, user: r.userData, postCount: r.threadData.postCount || 0 }));
@@ -332,18 +403,18 @@ export const forumService = {
 		
 		const threadsWithPrefixAndUser = processedThreads.map((thread) => ({ ...thread, prefix: thread.prefixId ? prefixesMap[thread.prefixId] : null })) as ThreadWithUser[];
 		
-		return { threads: threadsWithPrefixAndUser, pagination: { page, limit, totalThreads, totalPages: Math.ceil(totalThreads / limit) } };
+		return { threads: threadsWithPrefixAndUser, pagination: { page, limit: currentThreadLimit, totalThreads, totalPages: Math.ceil(totalThreads / currentThreadLimit) } };
 	},
 
 	async getThreadDetails(
 		slugOrId: string | number,
 		page: number = 1,
-		requestedLimit: number = 20, // Changed default to 20, matching typical frontend
-		currentUserId?: number
+		requestedLimit: number = 20,
+		currentUserId?: string 
 	): Promise<ThreadWithPostsAndUser | null> {
 		try {
 			const MAX_LIMIT = 100;
-			const limit = Math.min(requestedLimit, MAX_LIMIT); // Cap the limit
+			const currentLimit = Math.min(requestedLimit, MAX_LIMIT); 
 
 			let threadCondition: SQL<unknown>;
 
@@ -384,7 +455,7 @@ export const forumService = {
 
 			await db.update(threads).set({ viewCount: sql`${threads.viewCount} + 1` }).where(eq(threads.id, actualThreadId)); 
 
-			let hasBookmarked = false; 
+			const hasBookmarked = false; // This should be fetched if needed, for now const is fine
 
 			const categoryDataFromDb = rawThreadData.categoryRaw;
 			
@@ -433,7 +504,7 @@ export const forumService = {
 				parentForumSlug: categoryForResponse.slug, 
 			};
 
-			const offset = (page - 1) * limit;
+			const offset = (page - 1) * currentLimit; // Corrected: Use currentLimit instead of undefined 'limit'
 			const postConditions = [
 				eq(posts.threadId, actualThreadId), 
 				eq(posts.isDeleted, false),
@@ -447,7 +518,7 @@ export const forumService = {
 				})
 				.from(postReactions)
 				.where(and(
-					eq(postReactions.userId, currentUserId || -1), // Use -1 if no user, so no matches
+					eq(postReactions.userId, currentUserId || '00000000-0000-0000-0000-000000000000'), // Use a non-matching UUID for non-logged-in users
 					eq(postReactions.reactionType, 'like')
 				))
 			);
@@ -469,7 +540,7 @@ export const forumService = {
 				.leftJoin(userReactionSubquery, eq(posts.id, userReactionSubquery.postId))
 				.where(and(...postConditions))
 				.orderBy(asc(posts.createdAt))
-				.limit(limit)
+				.limit(currentLimit) // Use renamed currentLimit
 				.offset(offset);
 
 			const totalPostsResult = await db.select({ count: count() }).from(posts).where(and(...postConditions));
@@ -496,14 +567,14 @@ export const forumService = {
 				posts: postsForResponse,
 				pagination: {
 					page,
-					pageSize: limit, // Use the capped limit variable
+					pageSize: currentLimit, // Use the capped currentLimit variable
 					totalItems: totalPosts,
-					totalPages: Math.ceil(totalPosts / limit), // Use the capped limit variable
+					totalPages: Math.ceil(totalPosts / currentLimit), // Use the capped currentLimit variable
 				},
 			};
 
 		} catch (error) {
-			logger.error('ForumService', 'Error in getThreadDetails', { err: error, slugOrId, page, limit, currentUserId });
+			logger.error('ForumService', 'Error in getThreadDetails', { err: error, slugOrId, page, requestedLimit, currentUserId }); // Use requestedLimit for logging if needed
 			throw error;
 		}
 	},
@@ -514,7 +585,7 @@ export const forumService = {
 	}: {
 		threadId: number;
 		solvingPostId?: number | null;
-	}): Promise<any | null> {
+	}): Promise<{ id: number; title: string; isSolved: boolean; solvingPostId: number | null; updatedAt: Date; } | null> { // More specific return type
 		try {
 			if (solvingPostId !== null && solvingPostId !== undefined) {
 				const [postCheck] = await db.select({ id: posts.id }).from(posts)

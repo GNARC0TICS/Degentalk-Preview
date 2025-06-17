@@ -74,6 +74,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 // Define the Announcement type
 interface Announcement {
@@ -369,840 +370,844 @@ export default function AnnouncementsPage() {
 		return typeOption?.color || 'bg-emerald-500';
 	};
 
+	const pageActions = (
+		<Button onClick={() => { setIsCreateDialogOpen(true); }}>
+			<Plus className="h-4 w-4 mr-2" /> Create Announcement
+		</Button>
+	);
+
 	return (
-		<div>
-			<div className="flex items-center justify-between mb-8">
-				<div>
-					<h1 className="text-2xl font-bold mb-2">Announcements</h1>
-					<p className="text-muted-foreground">
-						Create and manage platform-wide announcements for your users.
-					</p>
-				</div>
-				<Button onClick={() => setIsCreateDialogOpen(true)}>
-					<Plus className="w-4 h-4 mr-2" />
-					New Announcement
-				</Button>
-			</div>
-
-			<Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-				<TabsList>
-					<TabsTrigger value="all">All</TabsTrigger>
-					<TabsTrigger value="active">Active</TabsTrigger>
-					<TabsTrigger value="inactive">Inactive</TabsTrigger>
-				</TabsList>
-			</Tabs>
-
-			{isLoading ? (
-				<div className="flex justify-center items-center h-64">
-					<div className="text-muted-foreground">Loading announcements...</div>
-				</div>
-			) : filteredAnnouncements.length === 0 ? (
-				<div className="flex flex-col items-center justify-center h-64 border rounded-lg">
-					<Megaphone className="w-12 h-12 text-muted-foreground mb-4" />
-					<h3 className="text-lg font-medium">No announcements found</h3>
-					<p className="text-muted-foreground mt-1">
-						Create your first announcement to start communicating with your users.
-					</p>
-					<Button className="mt-4" onClick={() => setIsCreateDialogOpen(true)}>
-						Create Announcement
-					</Button>
-				</div>
-			) : (
-				<Card>
-					<CardHeader>
-						<CardTitle>Announcement Management</CardTitle>
-						<CardDescription>
-							Manage your platform announcements. {filteredAnnouncements.length} announcement(s)
-							found.
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Content</TableHead>
-									<TableHead>Type</TableHead>
-									<TableHead>Visibility</TableHead>
-									<TableHead>Created</TableHead>
-									<TableHead>Status</TableHead>
-									<TableHead>Actions</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{filteredAnnouncements.map((announcement) => (
-									<TableRow key={announcement.id}>
-										<TableCell>
-											<div className="flex items-center space-x-2">
-												<span className="text-primary">{getIconByName(announcement.icon)}</span>
-												<span className="font-medium truncate max-w-[250px]">
-													{announcement.content}
-												</span>
-											</div>
-											{announcement.priority > 0 && (
-												<Badge variant="outline" className="mt-1">
-													Priority: {announcement.priority}
-												</Badge>
-											)}
-											{announcement.tickerMode === false && (
-												<Badge variant="outline" className="mt-1 ml-1">
-													Not in ticker
-												</Badge>
-											)}
-										</TableCell>
-										<TableCell>
-											<Badge className={`${getTypeColor(announcement.type)} text-white`}>
-												{announcement.type || 'info'}
-											</Badge>
-										</TableCell>
-										<TableCell>
-											<div className="flex flex-col">
-												{announcement.visibleTo &&
-													(announcement.visibleTo.includes('all') ? (
-														<Badge variant="outline">Everyone</Badge>
-													) : (
-														<div className="flex flex-wrap gap-1">
-															{announcement.visibleTo.map((role: string) => (
-																<Badge key={role} variant="outline">
-																	{role}
-																</Badge>
-															))}
-														</div>
-													))}
-											</div>
-										</TableCell>
-										<TableCell>
-											<div className="flex flex-col text-sm">
-												<span>{formatDate(announcement.createdAt)}</span>
-												{announcement.expiresAt && (
-													<span className="text-xs text-muted-foreground flex items-center mt-1">
-														<Calendar className="w-3 h-3 mr-1" />
-														Expires: {formatDate(announcement.expiresAt)}
-													</span>
-												)}
-											</div>
-										</TableCell>
-										<TableCell>
-											<div className="flex items-center">
-												<Button
-													variant="ghost"
-													size="sm"
-													onClick={() => toggleActive(announcement)}
-												>
-													{announcement.isActive ? (
-														<Badge variant="default" className="bg-green-500">
-															<CheckCircle className="w-3 h-3 mr-1" />
-															Active
-														</Badge>
-													) : (
-														<Badge variant="outline" className="text-muted-foreground">
-															<XCircle className="w-3 h-3 mr-1" />
-															Inactive
-														</Badge>
-													)}
-												</Button>
-											</div>
-										</TableCell>
-										<TableCell>
-											<div className="flex items-center space-x-2">
-												<Button
-													variant="ghost"
-													size="icon"
-													onClick={() => handleEditClick(announcement)}
-												>
-													<Pencil className="w-4 h-4" />
-												</Button>
-												<Button
-													variant="ghost"
-													size="icon"
-													onClick={() => handleDeleteClick(announcement)}
-												>
-													<Trash2 className="w-4 h-4" />
-												</Button>
-											</div>
-										</TableCell>
-									</TableRow>
-								))}
-							</TableBody>
-						</Table>
-					</CardContent>
-				</Card>
-			)}
-
-			{/* Create Announcement Dialog */}
-			<Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-				<DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-					<DialogHeader>
-						<DialogTitle>Create New Announcement</DialogTitle>
-						<DialogDescription>
-							Create a new announcement to display to users on the platform
-						</DialogDescription>
-					</DialogHeader>
-
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onCreateSubmit)} className="space-y-4">
-							<FormField
-								control={form.control}
-								name="content"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Announcement Text</FormLabel>
-										<FormControl>
-											<Textarea placeholder="Enter your announcement message" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<div className="grid grid-cols-2 gap-4">
-								<FormField
-									control={form.control}
-									name="icon"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Icon</FormLabel>
-											<Select value={field.value} onValueChange={field.onChange}>
-												<FormControl>
-													<SelectTrigger>
-														<SelectValue placeholder="Select an icon" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{iconOptions.map((icon) => (
-														<SelectItem key={icon.value} value={icon.value}>
-															<div className="flex items-center">
-																{icon.icon}
-																<span className="ml-2">{icon.label}</span>
-															</div>
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
-									name="type"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Type</FormLabel>
-											<Select value={field.value} onValueChange={field.onChange}>
-												<FormControl>
-													<SelectTrigger>
-														<SelectValue placeholder="Select a type" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{typeOptions.map((type) => (
-														<SelectItem key={type.value} value={type.value}>
-															<div className="flex items-center">
-																<div className={`w-3 h-3 rounded-full ${type.color} mr-2`} />
-																<span>{type.label}</span>
-															</div>
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<div className="grid grid-cols-2 gap-4">
-								<FormField
-									control={form.control}
-									name="priority"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Priority</FormLabel>
-											<FormControl>
-												<Input
-													type="number"
-													{...field}
-													onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-												/>
-											</FormControl>
-											<FormDescription>Higher priority announcements appear first</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
-									name="expiresAt"
-									render={({ field }) => (
-										<FormItem className="flex flex-col">
-											<FormLabel>Expiration Date (Optional)</FormLabel>
-											<Popover>
-												<PopoverTrigger asChild>
-													<FormControl>
-														<Button
-															variant="outline"
-															className={`w-full pl-3 text-left font-normal ${
-																!field.value && 'text-muted-foreground'
-															}`}
-														>
-															{field.value ? (
-																format(field.value, 'PPP')
-															) : (
-																<span>No expiration date</span>
-															)}
-															<Calendar className="ml-auto h-4 w-4 opacity-50" />
-														</Button>
-													</FormControl>
-												</PopoverTrigger>
-												<PopoverContent className="w-auto p-0" align="start">
-													<CalendarComponent
-														mode="single"
-														selected={field.value || undefined}
-														onSelect={(date) => field.onChange(date)}
-														initialFocus
-													/>
-													<div className="p-2 border-t border-border">
-														<Button
-															variant="ghost"
-															className="w-full"
-															onClick={() => field.onChange(null)}
-														>
-															Clear
-														</Button>
-													</div>
-												</PopoverContent>
-											</Popover>
-											<FormDescription>Announcement will be hidden after this date</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<FormField
-								control={form.control}
-								name="visibleTo"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Visibility</FormLabel>
-										<div className="flex flex-wrap gap-2 mt-2">
-											{visibilityOptions.map((option) => (
-												<Badge
-													key={option.value}
-													variant={field.value?.includes(option.value) ? 'default' : 'outline'}
-													className="cursor-pointer"
-													onClick={() => {
-														if (option.value === 'all') {
-															field.onChange(['all']);
-														} else {
-															const currentValues = field.value || [];
-															// Remove "all" if it's there
-															const filteredValues = currentValues.filter((v) => v !== 'all');
-
-															if (currentValues.includes(option.value)) {
-																// If this value exists, remove it
-																field.onChange(filteredValues.filter((v) => v !== option.value));
-															} else {
-																// If this value doesn't exist, add it
-																field.onChange([...filteredValues, option.value]);
-															}
-														}
-													}}
-												>
-													{field.value?.includes(option.value) ? (
-														<Eye className="w-3 h-3 mr-1" />
-													) : (
-														<EyeOff className="w-3 h-3 mr-1" />
-													)}
-													{option.label}
-												</Badge>
-											))}
-										</div>
-										<FormDescription>
-											Select who should be able to see this announcement
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<div className="grid grid-cols-2 gap-4">
-								<FormField
-									control={form.control}
-									name="tickerMode"
-									render={({ field }) => (
-										<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-											<FormControl>
-												<Switch checked={field.value} onCheckedChange={field.onChange} />
-											</FormControl>
-											<div className="space-y-1 leading-none">
-												<FormLabel>Show in Ticker</FormLabel>
-												<FormDescription>
-													Display this announcement in the scrolling ticker
-												</FormDescription>
-											</div>
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
-									name="isActive"
-									render={({ field }) => (
-										<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-											<FormControl>
-												<Switch checked={field.value} onCheckedChange={field.onChange} />
-											</FormControl>
-											<div className="space-y-1 leading-none">
-												<FormLabel>Active</FormLabel>
-												<FormDescription>Make this announcement active immediately</FormDescription>
-											</div>
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<FormField
-								control={form.control}
-								name="link"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Link (Optional)</FormLabel>
-										<FormControl>
-											<div className="flex items-center space-x-2">
-												<Link2 className="w-4 h-4 text-muted-foreground" />
-												<Input
-													placeholder="e.g., /forum/thread/123 or https://example.com"
-													{...field}
-													value={field.value || ''}
-													onChange={(e) => field.onChange(e.target.value || null)}
-												/>
-											</div>
-										</FormControl>
-										<FormDescription>Add a clickable link to the announcement</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<div className="grid grid-cols-2 gap-4">
-								<FormField
-									control={form.control}
-									name="bgColor"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Background Color (Optional)</FormLabel>
-											<FormControl>
-												<Input
-													type="text"
-													placeholder="#000000 or rgba(0,0,0,0.5)"
-													{...field}
-													value={field.value || ''}
-													onChange={(e) => field.onChange(e.target.value || null)}
-												/>
-											</FormControl>
-											<FormDescription>
-												Custom background color for the announcement
-											</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
-									name="textColor"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Text Color (Optional)</FormLabel>
-											<FormControl>
-												<Input
-													type="text"
-													placeholder="#ffffff or rgba(255,255,255,1)"
-													{...field}
-													value={field.value || ''}
-													onChange={(e) => field.onChange(e.target.value || null)}
-												/>
-											</FormControl>
-											<FormDescription>Custom text color for the announcement</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<DialogFooter>
-								<Button
-									type="button"
-									variant="outline"
-									onClick={() => setIsCreateDialogOpen(false)}
-								>
-									Cancel
-								</Button>
-								<Button type="submit" disabled={createMutation.isPending}>
-									{createMutation.isPending ? 'Creating...' : 'Create Announcement'}
-								</Button>
-							</DialogFooter>
-						</form>
-					</Form>
-				</DialogContent>
-			</Dialog>
-
-			{/* Edit Announcement Dialog */}
-			<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-				<DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-					<DialogHeader>
-						<DialogTitle>Edit Announcement</DialogTitle>
-						<DialogDescription>Update this announcement's details</DialogDescription>
-					</DialogHeader>
-
-					<Form {...editForm}>
-						<form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-4">
-							<FormField
-								control={editForm.control}
-								name="content"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Announcement Text</FormLabel>
-										<FormControl>
-											<Textarea placeholder="Enter your announcement message" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<div className="grid grid-cols-2 gap-4">
-								<FormField
-									control={editForm.control}
-									name="icon"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Icon</FormLabel>
-											<Select value={field.value} onValueChange={field.onChange}>
-												<FormControl>
-													<SelectTrigger>
-														<SelectValue placeholder="Select an icon" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{iconOptions.map((icon) => (
-														<SelectItem key={icon.value} value={icon.value}>
-															<div className="flex items-center">
-																{icon.icon}
-																<span className="ml-2">{icon.label}</span>
-															</div>
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={editForm.control}
-									name="type"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Type</FormLabel>
-											<Select value={field.value} onValueChange={field.onChange}>
-												<FormControl>
-													<SelectTrigger>
-														<SelectValue placeholder="Select a type" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{typeOptions.map((type) => (
-														<SelectItem key={type.value} value={type.value}>
-															<div className="flex items-center">
-																<div className={`w-3 h-3 rounded-full ${type.color} mr-2`} />
-																<span>{type.label}</span>
-															</div>
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<div className="grid grid-cols-2 gap-4">
-								<FormField
-									control={editForm.control}
-									name="priority"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Priority</FormLabel>
-											<FormControl>
-												<Input
-													type="number"
-													{...field}
-													onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-												/>
-											</FormControl>
-											<FormDescription>Higher priority announcements appear first</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={editForm.control}
-									name="expiresAt"
-									render={({ field }) => (
-										<FormItem className="flex flex-col">
-											<FormLabel>Expiration Date (Optional)</FormLabel>
-											<Popover>
-												<PopoverTrigger asChild>
-													<FormControl>
-														<Button
-															variant="outline"
-															className={`w-full pl-3 text-left font-normal ${
-																!field.value && 'text-muted-foreground'
-															}`}
-														>
-															{field.value ? (
-																format(field.value, 'PPP')
-															) : (
-																<span>No expiration date</span>
-															)}
-															<Calendar className="ml-auto h-4 w-4 opacity-50" />
-														</Button>
-													</FormControl>
-												</PopoverTrigger>
-												<PopoverContent className="w-auto p-0" align="start">
-													<CalendarComponent
-														mode="single"
-														selected={field.value || undefined}
-														onSelect={(date) => field.onChange(date)}
-														initialFocus
-													/>
-													<div className="p-2 border-t border-border">
-														<Button
-															variant="ghost"
-															className="w-full"
-															onClick={() => field.onChange(null)}
-														>
-															Clear
-														</Button>
-													</div>
-												</PopoverContent>
-											</Popover>
-											<FormDescription>Announcement will be hidden after this date</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<FormField
-								control={editForm.control}
-								name="visibleTo"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Visibility</FormLabel>
-										<div className="flex flex-wrap gap-2 mt-2">
-											{visibilityOptions.map((option) => (
-												<Badge
-													key={option.value}
-													variant={field.value?.includes(option.value) ? 'default' : 'outline'}
-													className="cursor-pointer"
-													onClick={() => {
-														if (option.value === 'all') {
-															field.onChange(['all']);
-														} else {
-															const currentValues = field.value || [];
-															// Remove "all" if it's there
-															const filteredValues = currentValues.filter((v) => v !== 'all');
-
-															if (currentValues.includes(option.value)) {
-																// If this value exists, remove it
-																field.onChange(filteredValues.filter((v) => v !== option.value));
-															} else {
-																// If this value doesn't exist, add it
-																field.onChange([...filteredValues, option.value]);
-															}
-														}
-													}}
-												>
-													{field.value?.includes(option.value) ? (
-														<Eye className="w-3 h-3 mr-1" />
-													) : (
-														<EyeOff className="w-3 h-3 mr-1" />
-													)}
-													{option.label}
-												</Badge>
-											))}
-										</div>
-										<FormDescription>
-											Select who should be able to see this announcement
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<div className="grid grid-cols-2 gap-4">
-								<FormField
-									control={editForm.control}
-									name="tickerMode"
-									render={({ field }) => (
-										<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-											<FormControl>
-												<Switch checked={field.value} onCheckedChange={field.onChange} />
-											</FormControl>
-											<div className="space-y-1 leading-none">
-												<FormLabel>Show in Ticker</FormLabel>
-												<FormDescription>
-													Display this announcement in the scrolling ticker
-												</FormDescription>
-											</div>
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={editForm.control}
-									name="isActive"
-									render={({ field }) => (
-										<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-											<FormControl>
-												<Switch checked={field.value} onCheckedChange={field.onChange} />
-											</FormControl>
-											<div className="space-y-1 leading-none">
-												<FormLabel>Active</FormLabel>
-												<FormDescription>Make this announcement active immediately</FormDescription>
-											</div>
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<FormField
-								control={editForm.control}
-								name="link"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Link (Optional)</FormLabel>
-										<FormControl>
-											<div className="flex items-center space-x-2">
-												<Link2 className="w-4 h-4 text-muted-foreground" />
-												<Input
-													placeholder="e.g., /forum/thread/123 or https://example.com"
-													{...field}
-													value={field.value || ''}
-													onChange={(e) => field.onChange(e.target.value || null)}
-												/>
-											</div>
-										</FormControl>
-										<FormDescription>Add a clickable link to the announcement</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<div className="grid grid-cols-2 gap-4">
-								<FormField
-									control={editForm.control}
-									name="bgColor"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Background Color (Optional)</FormLabel>
-											<FormControl>
-												<Input
-													type="text"
-													placeholder="#000000 or rgba(0,0,0,0.5)"
-													{...field}
-													value={field.value || ''}
-													onChange={(e) => field.onChange(e.target.value || null)}
-												/>
-											</FormControl>
-											<FormDescription>
-												Custom background color for the announcement
-											</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={editForm.control}
-									name="textColor"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Text Color (Optional)</FormLabel>
-											<FormControl>
-												<Input
-													type="text"
-													placeholder="#ffffff or rgba(255,255,255,1)"
-													{...field}
-													value={field.value || ''}
-													onChange={(e) => field.onChange(e.target.value || null)}
-												/>
-											</FormControl>
-											<FormDescription>Custom text color for the announcement</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<DialogFooter>
-								<Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-									Cancel
-								</Button>
-								<Button type="submit" disabled={updateMutation.isPending}>
-									{updateMutation.isPending ? 'Saving...' : 'Save Changes'}
-								</Button>
-							</DialogFooter>
-						</form>
-					</Form>
-				</DialogContent>
-			</Dialog>
-
-			{/* Delete Confirmation Dialog */}
-			<Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>Delete Announcement</DialogTitle>
-						<DialogDescription>
-							Are you sure you want to delete this announcement? This action cannot be undone.
-						</DialogDescription>
-					</DialogHeader>
-					<div className="border rounded-md p-4 my-4">
-						<div className="flex items-center space-x-2">
-							{selectedAnnouncement && (
-								<>
-									{getIconByName(selectedAnnouncement.icon)}
-									<span className="font-medium">{selectedAnnouncement?.content}</span>
-								</>
-							)}
-						</div>
+		<AdminPageShell title="Announcements" pageActions={pageActions}>
+			<div className="space-y-6">
+				<div className="flex items-center justify-between mb-8">
+					<div>
+						<h1 className="text-2xl font-bold mb-2">Announcements</h1>
+						<p className="text-muted-foreground">
+							Create and manage platform-wide announcements for your users.
+						</p>
 					</div>
-					<DialogFooter>
-						<Button type="button" variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-							Cancel
+				</div>
+
+				<Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
+					<TabsList>
+						<TabsTrigger value="all">All</TabsTrigger>
+						<TabsTrigger value="active">Active</TabsTrigger>
+						<TabsTrigger value="inactive">Inactive</TabsTrigger>
+					</TabsList>
+				</Tabs>
+
+				{isLoading ? (
+					<div className="flex justify-center items-center h-64">
+						<div className="text-muted-foreground">Loading announcements...</div>
+					</div>
+				) : filteredAnnouncements.length === 0 ? (
+					<div className="flex flex-col items-center justify-center h-64 border rounded-lg">
+						<Megaphone className="w-12 h-12 text-muted-foreground mb-4" />
+						<h3 className="text-lg font-medium">No announcements found</h3>
+						<p className="text-muted-foreground mt-1">
+							Create your first announcement to start communicating with your users.
+						</p>
+						<Button className="mt-4" onClick={() => setIsCreateDialogOpen(true)}>
+							Create Announcement
 						</Button>
-						<Button
-							variant="destructive"
-							onClick={() => {
-								if (selectedAnnouncement) {
-									deleteMutation.mutate(selectedAnnouncement.id);
-								}
-							}}
-							disabled={deleteMutation.isPending}
-						>
-							{deleteMutation.isPending ? 'Deleting...' : 'Delete'}
-						</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
-		</div>
+					</div>
+				) : (
+					<Card>
+						<CardHeader>
+							<CardTitle>Announcement Management</CardTitle>
+							<CardDescription>
+								Manage your platform announcements. {filteredAnnouncements.length} announcement(s)
+								found.
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<Table>
+								<TableHeader>
+									<TableRow>
+										<TableHead>Content</TableHead>
+										<TableHead>Type</TableHead>
+										<TableHead>Visibility</TableHead>
+										<TableHead>Created</TableHead>
+										<TableHead>Status</TableHead>
+										<TableHead>Actions</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									{filteredAnnouncements.map((announcement) => (
+										<TableRow key={announcement.id}>
+											<TableCell>
+												<div className="flex items-center space-x-2">
+													<span className="text-primary">{getIconByName(announcement.icon)}</span>
+													<span className="font-medium truncate max-w-[250px]">
+														{announcement.content}
+													</span>
+												</div>
+												{announcement.priority > 0 && (
+													<Badge variant="outline" className="mt-1">
+														Priority: {announcement.priority}
+													</Badge>
+												)}
+												{announcement.tickerMode === false && (
+													<Badge variant="outline" className="mt-1 ml-1">
+														Not in ticker
+													</Badge>
+												)}
+											</TableCell>
+											<TableCell>
+												<Badge className={`${getTypeColor(announcement.type)} text-white`}>
+													{announcement.type || 'info'}
+												</Badge>
+											</TableCell>
+											<TableCell>
+												<div className="flex flex-col">
+													{announcement.visibleTo &&
+														(announcement.visibleTo.includes('all') ? (
+															<Badge variant="outline">Everyone</Badge>
+														) : (
+															<div className="flex flex-wrap gap-1">
+																{announcement.visibleTo.map((role: string) => (
+																	<Badge key={role} variant="outline">
+																		{role}
+																	</Badge>
+																))}
+															</div>
+														))}
+												</div>
+											</TableCell>
+											<TableCell>
+												<div className="flex flex-col text-sm">
+													<span>{formatDate(announcement.createdAt)}</span>
+													{announcement.expiresAt && (
+														<span className="text-xs text-muted-foreground flex items-center mt-1">
+															<Calendar className="w-3 h-3 mr-1" />
+															Expires: {formatDate(announcement.expiresAt)}
+														</span>
+													)}
+												</div>
+											</TableCell>
+											<TableCell>
+												<div className="flex items-center">
+													<Button
+														variant="ghost"
+														size="sm"
+														onClick={() => toggleActive(announcement)}
+													>
+														{announcement.isActive ? (
+															<Badge variant="default" className="bg-green-500">
+																<CheckCircle className="w-3 h-3 mr-1" />
+																Active
+															</Badge>
+														) : (
+															<Badge variant="outline" className="text-muted-foreground">
+																<XCircle className="w-3 h-3 mr-1" />
+																Inactive
+															</Badge>
+														)}
+													</Button>
+												</div>
+											</TableCell>
+											<TableCell>
+												<div className="flex items-center space-x-2">
+													<Button
+														variant="ghost"
+														size="icon"
+														onClick={() => handleEditClick(announcement)}
+													>
+														<Pencil className="w-4 h-4" />
+													</Button>
+													<Button
+														variant="ghost"
+														size="icon"
+														onClick={() => handleDeleteClick(announcement)}
+													>
+														<Trash2 className="w-4 h-4" />
+													</Button>
+												</div>
+											</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						</CardContent>
+					</Card>
+				)}
+
+				{/* Create Announcement Dialog */}
+				<Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+					<DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+						<DialogHeader>
+							<DialogTitle>Create New Announcement</DialogTitle>
+							<DialogDescription>
+								Create a new announcement to display to users on the platform
+							</DialogDescription>
+						</DialogHeader>
+
+						<Form {...form}>
+							<form onSubmit={form.handleSubmit(onCreateSubmit)} className="space-y-4">
+								<FormField
+									control={form.control}
+									name="content"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Announcement Text</FormLabel>
+											<FormControl>
+												<Textarea placeholder="Enter your announcement message" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<div className="grid grid-cols-2 gap-4">
+									<FormField
+										control={form.control}
+										name="icon"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Icon</FormLabel>
+												<Select value={field.value} onValueChange={field.onChange}>
+													<FormControl>
+														<SelectTrigger>
+															<SelectValue placeholder="Select an icon" />
+														</SelectTrigger>
+													</FormControl>
+													<SelectContent>
+														{iconOptions.map((icon) => (
+															<SelectItem key={icon.value} value={icon.value}>
+																<div className="flex items-center">
+																	{icon.icon}
+																	<span className="ml-2">{icon.label}</span>
+																</div>
+															</SelectItem>
+														))}
+													</SelectContent>
+												</Select>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="type"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Type</FormLabel>
+												<Select value={field.value} onValueChange={field.onChange}>
+													<FormControl>
+														<SelectTrigger>
+															<SelectValue placeholder="Select a type" />
+														</SelectTrigger>
+													</FormControl>
+													<SelectContent>
+														{typeOptions.map((type) => (
+															<SelectItem key={type.value} value={type.value}>
+																<div className="flex items-center">
+																	<div className={`w-3 h-3 rounded-full ${type.color} mr-2`} />
+																	<span>{type.label}</span>
+																</div>
+															</SelectItem>
+														))}
+													</SelectContent>
+												</Select>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<div className="grid grid-cols-2 gap-4">
+									<FormField
+										control={form.control}
+										name="priority"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Priority</FormLabel>
+												<FormControl>
+													<Input
+														type="number"
+														{...field}
+														onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+													/>
+												</FormControl>
+												<FormDescription>Higher priority announcements appear first</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="expiresAt"
+										render={({ field }) => (
+											<FormItem className="flex flex-col">
+												<FormLabel>Expiration Date (Optional)</FormLabel>
+												<Popover>
+													<PopoverTrigger asChild>
+														<FormControl>
+															<Button
+																variant="outline"
+																className={`w-full pl-3 text-left font-normal ${
+																	!field.value && 'text-muted-foreground'
+																}`}
+															>
+																{field.value ? (
+																	format(field.value, 'PPP')
+																) : (
+																	<span>No expiration date</span>
+																)}
+																<Calendar className="ml-auto h-4 w-4 opacity-50" />
+															</Button>
+														</FormControl>
+													</PopoverTrigger>
+													<PopoverContent className="w-auto p-0" align="start">
+														<CalendarComponent
+															mode="single"
+															selected={field.value || undefined}
+															onSelect={(date) => field.onChange(date)}
+															initialFocus
+														/>
+														<div className="p-2 border-t border-border">
+															<Button
+																variant="ghost"
+																className="w-full"
+																onClick={() => field.onChange(null)}
+															>
+																Clear
+															</Button>
+														</div>
+													</PopoverContent>
+												</Popover>
+												<FormDescription>Announcement will be hidden after this date</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<FormField
+									control={form.control}
+									name="visibleTo"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Visibility</FormLabel>
+											<div className="flex flex-wrap gap-2 mt-2">
+												{visibilityOptions.map((option) => (
+													<Badge
+														key={option.value}
+														variant={field.value?.includes(option.value) ? 'default' : 'outline'}
+														className="cursor-pointer"
+														onClick={() => {
+															if (option.value === 'all') {
+																field.onChange(['all']);
+															} else {
+																const currentValues = field.value || [];
+																// Remove "all" if it's there
+																const filteredValues = currentValues.filter((v) => v !== 'all');
+
+																if (currentValues.includes(option.value)) {
+																	// If this value exists, remove it
+																	field.onChange(filteredValues.filter((v) => v !== option.value));
+																} else {
+																	// If this value doesn't exist, add it
+																	field.onChange([...filteredValues, option.value]);
+																}
+															}
+														}}
+													>
+														{field.value?.includes(option.value) ? (
+															<Eye className="w-3 h-3 mr-1" />
+														) : (
+															<EyeOff className="w-3 h-3 mr-1" />
+														)}
+														{option.label}
+													</Badge>
+												))}
+											</div>
+											<FormDescription>
+												Select who should be able to see this announcement
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<div className="grid grid-cols-2 gap-4">
+									<FormField
+										control={form.control}
+										name="tickerMode"
+										render={({ field }) => (
+											<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+												<FormControl>
+													<Switch checked={field.value} onCheckedChange={field.onChange} />
+												</FormControl>
+												<div className="space-y-1 leading-none">
+													<FormLabel>Show in Ticker</FormLabel>
+													<FormDescription>
+														Display this announcement in the scrolling ticker
+													</FormDescription>
+												</div>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="isActive"
+										render={({ field }) => (
+											<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+												<FormControl>
+													<Switch checked={field.value} onCheckedChange={field.onChange} />
+												</FormControl>
+												<div className="space-y-1 leading-none">
+													<FormLabel>Active</FormLabel>
+													<FormDescription>Make this announcement active immediately</FormDescription>
+												</div>
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<FormField
+									control={form.control}
+									name="link"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Link (Optional)</FormLabel>
+											<FormControl>
+												<div className="flex items-center space-x-2">
+													<Link2 className="w-4 h-4 text-muted-foreground" />
+													<Input
+														placeholder="e.g., /forum/thread/123 or https://example.com"
+														{...field}
+														value={field.value || ''}
+														onChange={(e) => field.onChange(e.target.value || null)}
+													/>
+												</div>
+											</FormControl>
+											<FormDescription>Add a clickable link to the announcement</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<div className="grid grid-cols-2 gap-4">
+									<FormField
+										control={form.control}
+										name="bgColor"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Background Color (Optional)</FormLabel>
+												<FormControl>
+													<Input
+														type="text"
+														placeholder="#000000 or rgba(0,0,0,0.5)"
+														{...field}
+														value={field.value || ''}
+														onChange={(e) => field.onChange(e.target.value || null)}
+													/>
+												</FormControl>
+												<FormDescription>
+													Custom background color for the announcement
+												</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="textColor"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Text Color (Optional)</FormLabel>
+												<FormControl>
+													<Input
+														type="text"
+														placeholder="#ffffff or rgba(255,255,255,1)"
+														{...field}
+														value={field.value || ''}
+														onChange={(e) => field.onChange(e.target.value || null)}
+													/>
+												</FormControl>
+												<FormDescription>Custom text color for the announcement</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<DialogFooter>
+									<Button
+										type="button"
+										variant="outline"
+										onClick={() => setIsCreateDialogOpen(false)}
+									>
+										Cancel
+									</Button>
+									<Button type="submit" disabled={createMutation.isPending}>
+										{createMutation.isPending ? 'Creating...' : 'Create Announcement'}
+									</Button>
+								</DialogFooter>
+							</form>
+						</Form>
+					</DialogContent>
+				</Dialog>
+
+				{/* Edit Announcement Dialog */}
+				<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+					<DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+						<DialogHeader>
+							<DialogTitle>Edit Announcement</DialogTitle>
+							<DialogDescription>Update this announcement's details</DialogDescription>
+						</DialogHeader>
+
+						<Form {...editForm}>
+							<form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-4">
+								<FormField
+									control={editForm.control}
+									name="content"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Announcement Text</FormLabel>
+											<FormControl>
+												<Textarea placeholder="Enter your announcement message" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<div className="grid grid-cols-2 gap-4">
+									<FormField
+										control={editForm.control}
+										name="icon"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Icon</FormLabel>
+												<Select value={field.value} onValueChange={field.onChange}>
+													<FormControl>
+														<SelectTrigger>
+															<SelectValue placeholder="Select an icon" />
+														</SelectTrigger>
+													</FormControl>
+													<SelectContent>
+														{iconOptions.map((icon) => (
+															<SelectItem key={icon.value} value={icon.value}>
+																<div className="flex items-center">
+																	{icon.icon}
+																	<span className="ml-2">{icon.label}</span>
+																</div>
+															</SelectItem>
+														))}
+													</SelectContent>
+												</Select>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={editForm.control}
+										name="type"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Type</FormLabel>
+												<Select value={field.value} onValueChange={field.onChange}>
+													<FormControl>
+														<SelectTrigger>
+															<SelectValue placeholder="Select a type" />
+														</SelectTrigger>
+													</FormControl>
+													<SelectContent>
+														{typeOptions.map((type) => (
+															<SelectItem key={type.value} value={type.value}>
+																<div className="flex items-center">
+																	<div className={`w-3 h-3 rounded-full ${type.color} mr-2`} />
+																	<span>{type.label}</span>
+																</div>
+															</SelectItem>
+														))}
+													</SelectContent>
+												</Select>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<div className="grid grid-cols-2 gap-4">
+									<FormField
+										control={editForm.control}
+										name="priority"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Priority</FormLabel>
+												<FormControl>
+													<Input
+														type="number"
+														{...field}
+														onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+													/>
+												</FormControl>
+												<FormDescription>Higher priority announcements appear first</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={editForm.control}
+										name="expiresAt"
+										render={({ field }) => (
+											<FormItem className="flex flex-col">
+												<FormLabel>Expiration Date (Optional)</FormLabel>
+												<Popover>
+													<PopoverTrigger asChild>
+														<FormControl>
+															<Button
+																variant="outline"
+																className={`w-full pl-3 text-left font-normal ${
+																	!field.value && 'text-muted-foreground'
+																}`}
+															>
+																{field.value ? (
+																	format(field.value, 'PPP')
+																) : (
+																	<span>No expiration date</span>
+																)}
+																<Calendar className="ml-auto h-4 w-4 opacity-50" />
+															</Button>
+														</FormControl>
+													</PopoverTrigger>
+													<PopoverContent className="w-auto p-0" align="start">
+														<CalendarComponent
+															mode="single"
+															selected={field.value || undefined}
+															onSelect={(date) => field.onChange(date)}
+															initialFocus
+														/>
+														<div className="p-2 border-t border-border">
+															<Button
+																variant="ghost"
+																className="w-full"
+																onClick={() => field.onChange(null)}
+															>
+																Clear
+															</Button>
+														</div>
+													</PopoverContent>
+												</Popover>
+												<FormDescription>Announcement will be hidden after this date</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<FormField
+									control={editForm.control}
+									name="visibleTo"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Visibility</FormLabel>
+											<div className="flex flex-wrap gap-2 mt-2">
+												{visibilityOptions.map((option) => (
+													<Badge
+														key={option.value}
+														variant={field.value?.includes(option.value) ? 'default' : 'outline'}
+														className="cursor-pointer"
+														onClick={() => {
+															if (option.value === 'all') {
+																field.onChange(['all']);
+															} else {
+																const currentValues = field.value || [];
+																// Remove "all" if it's there
+																const filteredValues = currentValues.filter((v) => v !== 'all');
+
+																if (currentValues.includes(option.value)) {
+																	// If this value exists, remove it
+																	field.onChange(filteredValues.filter((v) => v !== option.value));
+																} else {
+																	// If this value doesn't exist, add it
+																	field.onChange([...filteredValues, option.value]);
+																}
+															}
+														}}
+													>
+														{field.value?.includes(option.value) ? (
+															<Eye className="w-3 h-3 mr-1" />
+														) : (
+															<EyeOff className="w-3 h-3 mr-1" />
+														)}
+														{option.label}
+													</Badge>
+												))}
+											</div>
+											<FormDescription>
+												Select who should be able to see this announcement
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<div className="grid grid-cols-2 gap-4">
+									<FormField
+										control={editForm.control}
+										name="tickerMode"
+										render={({ field }) => (
+											<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+												<FormControl>
+													<Switch checked={field.value} onCheckedChange={field.onChange} />
+												</FormControl>
+												<div className="space-y-1 leading-none">
+													<FormLabel>Show in Ticker</FormLabel>
+													<FormDescription>
+														Display this announcement in the scrolling ticker
+													</FormDescription>
+												</div>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={editForm.control}
+										name="isActive"
+										render={({ field }) => (
+											<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+												<FormControl>
+													<Switch checked={field.value} onCheckedChange={field.onChange} />
+												</FormControl>
+												<div className="space-y-1 leading-none">
+													<FormLabel>Active</FormLabel>
+													<FormDescription>Make this announcement active immediately</FormDescription>
+												</div>
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<FormField
+									control={editForm.control}
+									name="link"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Link (Optional)</FormLabel>
+											<FormControl>
+												<div className="flex items-center space-x-2">
+													<Link2 className="w-4 h-4 text-muted-foreground" />
+													<Input
+														placeholder="e.g., /forum/thread/123 or https://example.com"
+														{...field}
+														value={field.value || ''}
+														onChange={(e) => field.onChange(e.target.value || null)}
+													/>
+												</div>
+											</FormControl>
+											<FormDescription>Add a clickable link to the announcement</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<div className="grid grid-cols-2 gap-4">
+									<FormField
+										control={editForm.control}
+										name="bgColor"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Background Color (Optional)</FormLabel>
+												<FormControl>
+													<Input
+														type="text"
+														placeholder="#000000 or rgba(0,0,0,0.5)"
+														{...field}
+														value={field.value || ''}
+														onChange={(e) => field.onChange(e.target.value || null)}
+													/>
+												</FormControl>
+												<FormDescription>
+													Custom background color for the announcement
+												</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={editForm.control}
+										name="textColor"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Text Color (Optional)</FormLabel>
+												<FormControl>
+													<Input
+														type="text"
+														placeholder="#ffffff or rgba(255,255,255,1)"
+														{...field}
+														value={field.value || ''}
+														onChange={(e) => field.onChange(e.target.value || null)}
+													/>
+												</FormControl>
+												<FormDescription>Custom text color for the announcement</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<DialogFooter>
+									<Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+										Cancel
+									</Button>
+									<Button type="submit" disabled={updateMutation.isPending}>
+										{updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+									</Button>
+								</DialogFooter>
+							</form>
+						</Form>
+					</DialogContent>
+				</Dialog>
+
+				{/* Delete Confirmation Dialog */}
+				<Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Delete Announcement</DialogTitle>
+							<DialogDescription>
+								Are you sure you want to delete this announcement? This action cannot be undone.
+							</DialogDescription>
+						</DialogHeader>
+						<div className="border rounded-md p-4 my-4">
+							<div className="flex items-center space-x-2">
+								{selectedAnnouncement && (
+									<>
+										{getIconByName(selectedAnnouncement.icon)}
+										<span className="font-medium">{selectedAnnouncement?.content}</span>
+									</>
+								)}
+							</div>
+						</div>
+						<DialogFooter>
+							<Button type="button" variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+								Cancel
+							</Button>
+							<Button
+								variant="destructive"
+								onClick={() => {
+									if (selectedAnnouncement) {
+										deleteMutation.mutate(selectedAnnouncement.id);
+									}
+								}}
+								disabled={deleteMutation.isPending}
+							>
+								{deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+							</Button>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
+			</div>
+		</AdminPageShell>
 	);
 }

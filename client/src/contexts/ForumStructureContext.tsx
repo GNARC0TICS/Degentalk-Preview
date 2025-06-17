@@ -1,9 +1,49 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { z } from 'zod'; // Import Zod
 import { forumMap } from '@/config/forumMap.config';
 import type { Zone, Forum, ForumTheme as StaticForumTheme } from '@/config/forumMap.config';
 import { getQueryFn } from '@/lib/queryClient';
+// Removed logger import, will use console.error
+
+// --- Zod Schemas for API Validation ---
+const ApiCategoryDataSchema = z.object({
+  id: z.number(),
+  slug: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string().nullish(),
+  parentId: z.number().nullish(),
+  type: z.enum(['zone', 'category', 'forum']),
+  position: z.number().optional(),
+  isVip: z.boolean().optional(),
+  isLocked: z.boolean().optional(),
+  isHidden: z.boolean().optional(),
+  minXp: z.number().optional(),
+  minGroupIdRequired: z.number().nullish(),
+  color: z.string().nullish(),
+  icon: z.string().nullish(),
+  colorTheme: z.string().nullish(),
+  tippingEnabled: z.boolean().optional(),
+  xpMultiplier: z.number().optional(),
+  pluginData: z.record(z.string(), z.any()).nullish(), // Basic check for pluginData as object
+  threadCount: z.number(),
+  postCount: z.number(),
+  parentForumSlug: z.string().nullish(),
+  createdAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional(),
+  isPrimary: z.boolean().optional(), // Crucial for zones
+  features: z.array(z.string()).optional(),
+  customComponents: z.array(z.string()).optional(),
+  staffOnly: z.boolean().optional(),
+});
+
+const ForumStructureApiResponseSchema = z.object({
+  zones: z.array(ApiCategoryDataSchema),
+  categories: z.array(ApiCategoryDataSchema),
+  forums: z.array(ApiCategoryDataSchema),
+});
+
 
 // --- Core Types ---
 
@@ -507,16 +547,34 @@ function mergeStaticAndApiData(
 const ForumStructureContext = createContext<ForumStructureContextType | undefined>(undefined);
 
 export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { data: apiResponse, isLoading, error } = useQuery<ForumStructureApiResponse | null, Error>({
+  const { data: rawApiResponse, isLoading, error: queryError } = useQuery<unknown | null, Error>({ // Fetch as unknown first
     queryKey: [FORUM_STRUCTURE_API_PATH],
     queryFn: getQueryFn({ on401: 'returnNull' }),
     staleTime: 5 * 60 * 1000,
   });
+
+  const [parsingError, setParsingError] = React.useState<Error | null>(null);
+
+  const apiResponse = useMemo(() => {
+    if (!rawApiResponse) return null;
+    try {
+      const parsed = ForumStructureApiResponseSchema.parse(rawApiResponse);
+      setParsingError(null); // Clear previous errors
+      return parsed as ForumStructureApiResponse; // Cast after successful parsing
+    } catch (e) {
+      console.error('[ForumStructureContext] API response validation failed:', e, 'Raw data:', rawApiResponse);
+      setParsingError(e instanceof Error ? e : new Error('API response validation failed'));
+      return null; // Or handle fallback more gracefully
+    }
+  }, [rawApiResponse]);
   
   const { zones, categories, forums } = useMemo(() => {
+    // If API response is null (due to fetch error or parsing error), flatData will be undefined
     const flatData = apiResponse ? flattenApiResponse(apiResponse) : undefined;
     return mergeStaticAndApiData(forumMap.zones, flatData);
   }, [apiResponse]);
+
+  const error = queryError || parsingError; // Combine fetch and parsing errors
   
   const contextValue = useMemo(() => ({
     zones,

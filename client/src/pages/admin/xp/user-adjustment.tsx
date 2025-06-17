@@ -43,6 +43,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 // Form schema for user search
 const searchFormSchema = z.object({
@@ -242,16 +243,8 @@ export default function UserXPAdjustmentPage() {
 	};
 
 	return (
-		<div className="container mx-auto py-6">
-				<div className="flex items-center justify-between mb-6">
-					<div>
-						<h1 className="text-3xl font-bold tracking-tight">User XP Adjustment</h1>
-						<p className="text-muted-foreground">
-							Manually adjust user XP levels and view adjustment history
-						</p>
-					</div>
-				</div>
-
+		<AdminPageShell title="User XP Adjustment">
+			<div className="space-y-6">
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 					{/* User Search */}
 					<Card className="md:col-span-1">
@@ -567,5 +560,6 @@ export default function UserXPAdjustmentPage() {
 					</CardFooter>
 				</Card>
 			</div>
+		</AdminPageShell>
 	);
 }

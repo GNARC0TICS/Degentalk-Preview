@@ -27,7 +27,7 @@ export const adminLinks = [
   {
     label: 'Settings',
     children: [
-      { label: 'Platform Settings', href: '/admin/platform-settings' },
+      //      { label: 'Platform Settings', href: '/admin/platform-settings' },
     ],
   },
 ] as const; 

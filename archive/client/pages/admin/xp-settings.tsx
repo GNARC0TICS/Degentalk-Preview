@@ -1,0 +1,1 @@
+// ARCHIVED: Moved from client/src/pages/admin/xp-settings.tsx on 2025-06-17. Original content available in git history. 

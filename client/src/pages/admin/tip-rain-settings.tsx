@@ -18,6 +18,7 @@ import { AlertCircle, Loader2, Settings, CloudRain, Gift, Save } from 'lucide-re
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 type TipSettings = {
 	enabled: boolean;
@@ -190,12 +191,8 @@ export default function TipRainSettings() {
 	}
 
 	return (
-		<div className="container px-4 mx-auto py-6">
-				<header className="mb-8">
-					<h2 className="text-3xl font-bold tracking-tight text-white mb-2">Tip & Rain Settings</h2>
-					<p className="text-gray-400">Configure tip and rain settings for the platform.</p>
-				</header>
-
+		<AdminPageShell title="Tip & Rain Settings">
+			<div className="space-y-8">
 				{(isTipSettingsError || isRainSettingsError) && (
 					<Alert variant="destructive" className="mb-6">
 						<AlertCircle className="h-4 w-4" />
@@ -524,5 +521,6 @@ export default function TipRainSettings() {
 					</TabsContent>
 				</Tabs>
 			</div>
+		</AdminPageShell>
 	);
 }

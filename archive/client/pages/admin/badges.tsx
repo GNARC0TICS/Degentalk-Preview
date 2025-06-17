@@ -1,0 +1,1 @@
+// ARCHIVED: Moved from client/src/pages/admin/badges.tsx on 2025-06-17. 

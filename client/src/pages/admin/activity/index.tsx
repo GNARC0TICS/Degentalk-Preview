@@ -3,6 +3,7 @@ import { useAdminActivityFeed } from '@/features/activity/hooks/useActivityFeed'
 import { EventLog, EventLogFilters } from '@/features/activity/services/activityApi';
 import { format } from 'date-fns';
 import { useAuth } from '@/hooks/useAuth';
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 /**
  * Admin page for viewing all user activities
@@ -85,9 +86,7 @@ const AdminActivityPage: React.FC = () => {
   };
   
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Activity Logs</h1>
-      
+    <AdminPageShell title="Activity Logs">
       <div className="mb-6 flex justify-between items-center">
         <p className="text-gray-600">
           View all user activities across the platform.
@@ -220,7 +219,7 @@ const AdminActivityPage: React.FC = () => {
           )}
         </>
       )}
-    </div>
+    </AdminPageShell>
   );
 };
 

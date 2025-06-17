@@ -1,0 +1,1 @@
+// ARCHIVED: Legacy CCPayment webhook route moved from server/routes/api/ccpayment/webhook.ts on 2025-06-17. 

@@ -52,7 +52,7 @@ export interface ForumCategoryWithStats extends ForumCategory {
   postCount: number;
   lastThread?: ThreadWithUser;
   parentId: number | null;
-  pluginData: Record<string, any>;
+  pluginData: Record<string, unknown>;
   minXp: number;
   type: string;
   colorTheme: string | null;
@@ -62,6 +62,11 @@ export interface ForumCategoryWithStats extends ForumCategory {
   childForums?: ForumCategoryWithStats[];
   isZone?: boolean; // Added to reflect usage in routes
   canonical?: boolean; // Added to reflect usage in routes
+  // Fields added by forumService.getForumStructure for zones
+  isPrimary?: boolean;
+  features?: string[];
+  customComponents?: string[];
+  staffOnly?: boolean;
 }
 
 // Define and export ThreadPrefix type

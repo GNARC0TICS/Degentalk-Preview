@@ -30,19 +30,17 @@ Keep reading for the long version.
 
 | Level      | Purpose                                         | Holds Threads? |
 | ---------- | ----------------------------------------------- | -------------- |
-| **Zone**   | Top-level visual context & branding             | ❌             |
-| **Category** | Thematic group of forums (optional per zone)    | ❌             |
-| **Forum**  | Atomic unit for rules, posting & XP             | ✅             |
+| **Zone**   | Top-level visual context & branding (Primary or General) | ❌             |
+| **Forum**  | Atomic unit for rules, posting & XP (child of a Zone) | ✅             |
 | Thread     | Discussion container (belongs to one forum)     | —              |
 | Reply      | Message inside a thread                         | —              |
 
 Important notes:
 
-• You can nest forums only _one_ level deep under a category.  
-• Categories can live **inside a zone** or be **stand-alone** ("General
-  Categories").  
-• Zones **never** contain threads directly – even if a zone skips the category
-  layer it must still host at least one forum.
+• The `forum_categories` table stores entities with `type = 'zone'` or `type = 'forum'`.
+• Zones are distinguished as 'Primary' or 'General' based on `pluginData.configZoneType` (from `forumMap.config.ts`), which translates to an `isPrimary` flag in API/frontend contexts.
+• Zones **never** contain threads directly; they host one or more 'Forum' entities.
+• The concept of a separate 'Category' entity between Zone and Forum is not currently implemented in the seeded structure; Forums are direct children of Zones.
 
 ---
 
@@ -60,18 +58,19 @@ Important notes:
 
 Every primary zone owns **0-n categories** (currently 0) or directly hosts
 forums. Each carries immutable theming (colour, icon, banner, landing
-component) defined in `PRIMARY_ZONE_THEMES` inside
-`client/src/config/forumMap.config.ts`.
+  component) defined in `THEME_PRESETS` inside
+  `client/src/config/forumMap.config.ts`.
 
-### 2.2 General Categories (outside any zone)
+### 2.2 General Zones
 
-These appear directly beneath the zone grid on **Home** and in their own
-section in **HierarchicalZoneNav**.
+These appear directly beneath the Primary Zones carousel on the `/forums` page (and potentially on **Home** and in **HierarchicalZoneNav** in future). They are also of `type: 'zone'` in the database but are distinguished by `pluginData.configZoneType = 'general'` (leading to `isPrimary: false` in frontend contexts).
 
 | Slug             | Name            | Forums (initial set)                        |
 | ---------------- | --------------- | ------------------------------------------- |
-| `market-moves`   | Market Moves    | `signals-ta`, `trade-journals`              |
-| `airdrops-quests`| Airdrops & Quests | `bounty-board`                              |
+| `market-analysis`| Market Analysis | `btc-analysis`, `altcoin-analysis`          |
+| `defi-lab`       | DeFi Laboratory | `yield-farming`, `protocol-discussion`      |
+| `nft-district`   | NFT District    | `nft-calls`, `art-gallery`                  |
+*(This list is based on `GENERAL_ZONES` in `forumMap.config.ts`)*
 
 ### 2.3 Forums (selected examples)
 
@@ -242,8 +241,8 @@ Welcome to the colosseum – now ship something legendary. 🏴‍☠️
 ### 9.1 Core Tables
 | Table | Purpose | Relation Keys |
 |-------|---------|---------------|
-| `forum_categories` | Single table for **zones**, **categories**, **forums** (distinguished by `type` = `zone` \| `category` \| `forum`). | self-FK `parent_id` (category → zone or forum → category) |
-| `threads` | Stores threads. | `category_id` → `forum_categories.id` (must point to a **forum** row) |
+| `forum_categories` | Single table for **Zones** and **Forums** (distinguished by `type = 'zone'` or `type = 'forum'`). Zones are further distinguished as 'Primary' or 'General' by `pluginData.configZoneType`. | self-FK `parent_id` (forum → zone) |
+| `threads` | Stores threads. | `category_id` → `forum_categories.id` (must point to a row where `type = 'forum'`) |
 | `posts` | Stores replies. | `thread_id`, `reply_to_post_id` (self-referencing) |
 | `prefixes` / `thread_prefixes` | Lookup + FK for visual thread tags. | — |
 | `tags`, `thread_tags` | User-generated labels. | — |

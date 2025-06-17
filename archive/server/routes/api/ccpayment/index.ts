@@ -1,0 +1,1 @@
+// ARCHIVED: Legacy CCPayment route aggregator moved from server/routes/api/ccpayment/index.ts on 2025-06-17. 

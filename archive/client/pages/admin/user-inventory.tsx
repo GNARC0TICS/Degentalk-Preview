@@ -1,0 +1,1 @@
+// ARCHIVED: Moved from client/src/pages/admin/user-inventory.tsx on 2025-06-17. 

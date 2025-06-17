@@ -4,20 +4,20 @@ import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import {
-	Home,
+	// Home, // Keep one Home import - Unused
 	Search,
 	LayoutGrid,
 	Folder,
 	MessageSquare,
 	ChevronLeft,
 	ChevronRight,
-	Flame,
-	Target,
-	Archive,
-	Dices,
-	FileText
+	// Flame, // Unused
+	// Target, // Unused
+	// Archive, // Unused
+	// Dices, // Unused
+	// FileText // Unused
 } from 'lucide-react';
-import { useAuth } from '@/hooks/use-auth.tsx';
+// import { useAuth } from '@/hooks/use-auth.tsx'; // Unused
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { ForumGuidelines } from '@/components/forum/forum-guidelines';
@@ -27,7 +27,7 @@ import {
 	useForumStructure, 
 	ForumStructureProvider 
 } from '@/contexts/ForumStructureContext';
-import type { MergedZone, MergedForum, MergedTheme } from '@/contexts/ForumStructureContext';
+import type { MergedZone, MergedForum } from '@/contexts/ForumStructureContext'; // MergedTheme unused
 // ZoneCardData might not be directly needed if renderZoneCard adapts to MergedZone
 // import type { ZoneCardData } from '@/components/forum/CanonicalZoneGrid'; 
 import { Input } from '@/components/ui/input';
@@ -37,7 +37,7 @@ import { Badge } from '@/components/ui/badge';
 // getForumEntityUrl and isPrimaryZone might need to be re-evaluated or adapted
 // import { getForumEntityUrl, isPrimaryZone } from '@/utils/forum-routing-helper'; 
 import { ActiveMembersWidget } from '@/components/users';
-import type { ActiveUser } from '@/components/users';
+// import type { ActiveUser } from '@/components/users'; // ActiveUser type unused
 import { useActiveUsers } from '@/features/users/hooks';
 // ForumCard seems unused
 // import { ForumCard } from '@/components/forum/forum-card';
@@ -63,16 +63,16 @@ const CATEGORY_COLORS = [ // This can remain for generic category styling if no 
 ];
 
 const ForumPage = () => {
-	const { user } = useAuth();
+	// const { user } = useAuth(); // user is unused
 	const { getTheme } = useForumTheme();
-	const isLoggedIn = !!user;
-	const [location, setLocation] = useLocation();
+	// const isLoggedIn = !!user; // Unused
+	const [, setLocation] = useLocation(); // location is unused, only setLocation
 
-	const queryParams = new URLSearchParams(location.includes('?') ? location.split('?')[1] : '');
+	const queryParams = new URLSearchParams(typeof window !== 'undefined' && window.location.search ? window.location.search : ''); // Safer access to location
 	const searchQuery = queryParams.get('q') || '';
 
 	const [searchText, setSearchText] = useState(searchQuery);
-	const [currentZoneIndex, setCurrentZoneIndex] = useState(0);
+	// const [currentZoneIndex, setCurrentZoneIndex] = useState(0); // Unused
 	const carouselRef = useRef<HTMLDivElement>(null);
 
 	// Use centralized forum structure hook from context
@@ -83,16 +83,16 @@ const ForumPage = () => {
 	} = useForumStructure();
 
 	// Extract primary zones and categories (non-primary zones)
-	const primaryZones: MergedZone[] = allZones.filter(zone => zone.canonical === true);
-	const categories: MergedZone[] = allZones.filter(zone => zone.canonical !== true && zone.forums && zone.forums.length > 0);
+	const primaryZones: MergedZone[] = allZones.filter(zone => zone.isPrimary === true);
+	const generalForumZones: MergedZone[] = allZones.filter(zone => zone.isPrimary === false && zone.forums && zone.forums.length > 0);
 
 	// Fetch active users
 	const { data: activeUsers, isLoading: activeUsersLoading } = useActiveUsers({ limit: 5 });
 
-	const breadcrumbs = [
-		{ label: 'Home', href: '/', icon: <Home className="h-4 w-4 mr-1" /> },
-		{ label: 'Forum', href: '/forums', icon: null } // Changed from /forum to /forums
-	];
+	// const breadcrumbs = [ // Unused
+	// 	{ label: 'Home', href: '/', icon: <Home className="h-4 w-4 mr-1" /> },
+	// 	{ label: 'Forum', href: '/forums', icon: null }
+	// ];
 
 	const handleSearch = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -104,13 +104,13 @@ const ForumPage = () => {
 	// Carousel navigation
 	const nextZone = () => {
 		if (primaryZones.length === 0) return;
-		setCurrentZoneIndex((prev) => (prev + 1) % primaryZones.length);
+		// setCurrentZoneIndex((prev) => (prev + 1) % primaryZones.length); // currentZoneIndex is unused
 		scrollCarousel(1);
 	};
 
 	const prevZone = () => {
 		if (primaryZones.length === 0) return;
-		setCurrentZoneIndex((prev) => (prev - 1 + primaryZones.length) % primaryZones.length);
+		// setCurrentZoneIndex((prev) => (prev - 1 + primaryZones.length) % primaryZones.length); // currentZoneIndex is unused
 		scrollCarousel(-1);
 	};
 
@@ -138,7 +138,7 @@ const ForumPage = () => {
 	};
 
 	// Render a zone card for the carousel, now using MergedZone
-	const renderZoneCard = (zone: MergedZone, index: number) => {
+	const renderZoneCard = (zone: MergedZone) => { // index parameter unused
 		const semanticThemeKey = zone.colorTheme || 'default';
 		const theme = getTheme(semanticThemeKey);
 
@@ -177,52 +177,52 @@ const ForumPage = () => {
 		);
 	};
 
-	// Render a category (which is a MergedZone) with its child forums (MergedForum[])
-	const renderCategory = (categoryZone: MergedZone, index: number) => {
-		if (!categoryZone.forums || categoryZone.forums.length === 0) return null;
+	// Render a general zone (which is a MergedZone) with its child forums (MergedForum[])
+	const renderGeneralZone = (zoneData: MergedZone, index: number) => {
+		if (!zoneData.forums || zoneData.forums.length === 0) return null;
 
-		const totalChildThreadCount = categoryZone.forums.reduce((sum, forum) => sum + (forum.threadCount || 0), 0);
-		const totalChildPostCount = categoryZone.forums.reduce((sum, forum) => sum + (forum.postCount || 0), 0);
+		const totalChildThreadCount = zoneData.forums.reduce((sum, forum) => sum + (forum.threadCount || 0), 0);
+		const totalChildPostCount = zoneData.forums.reduce((sum, forum) => sum + (forum.postCount || 0), 0);
 
-		const categorySemanticThemeKey = categoryZone.colorTheme || 'default';
-		const theme = getTheme(categorySemanticThemeKey);
-		const categoryColorClass = THEME_COLORS_BG[categorySemanticThemeKey as keyof typeof THEME_COLORS_BG] || CATEGORY_COLORS[index % CATEGORY_COLORS.length];
+		const zoneSemanticThemeKey = zoneData.colorTheme || 'default';
+		const theme = getTheme(zoneSemanticThemeKey);
+		const zoneColorClass = THEME_COLORS_BG[zoneSemanticThemeKey as keyof typeof THEME_COLORS_BG] || CATEGORY_COLORS[index % CATEGORY_COLORS.length];
 
 		const IconFromThemeOrFallback = theme.icon ?? Folder;
-		const categoryIconColorClass = theme.color || 'text-emerald-400';
+		const zoneIconColorClass = theme.color || 'text-emerald-400';
 
 		return (
-			<Card key={categoryZone.id.toString()} className={`overflow-hidden border mb-8 ${categoryColorClass}`}>
+			<Card key={zoneData.id.toString()} className={`overflow-hidden border mb-8 ${zoneColorClass}`}>
 				<CardHeader className="pb-3">
 					<div className="flex items-center justify-between">
 						<CardTitle className="text-lg font-semibold flex items-center">
 							{typeof IconFromThemeOrFallback === 'string' ? (
-								<span className={`mr-2 text-xl ${categoryIconColorClass}`}>{IconFromThemeOrFallback}</span>
+								<span className={`mr-2 text-xl ${zoneIconColorClass}`}>{IconFromThemeOrFallback}</span>
 							) : (
-								<IconFromThemeOrFallback className={`h-5 w-5 mr-2 ${categoryIconColorClass}`} />
+								<IconFromThemeOrFallback className={`h-5 w-5 mr-2 ${zoneIconColorClass}`} />
 							)}
-							{categoryZone.name}
+							{zoneData.name}
 						</CardTitle>
 						<Badge variant="outline" className="bg-zinc-800/50 text-zinc-300 border-zinc-700/50">
-							{categoryZone.forums.length} {categoryZone.forums.length === 1 ? 'forum' : 'forums'}
+							{zoneData.forums.length} {zoneData.forums.length === 1 ? 'forum' : 'forums'}
 						</Badge>
 					</div>
-					{categoryZone.description && (
-						<CardDescription className="text-zinc-300">{categoryZone.description}</CardDescription>
+					{zoneData.description && (
+						<CardDescription className="text-zinc-300">{zoneData.description}</CardDescription>
 					)}
 					<div className="text-xs text-zinc-400">
-						{categoryZone.threadCount} threads • {categoryZone.postCount} posts 
+						{zoneData.threadCount} threads • {zoneData.postCount} posts 
 						(Children: {totalChildThreadCount} threads • {totalChildPostCount} posts)
 					</div>
 				</CardHeader>
 				<CardContent className="p-0">
 					<div className="divide-y divide-zinc-800/50">
-						{categoryZone.forums.map((forum: MergedForum) => (
+						{zoneData.forums.map((forum: MergedForum) => (
 							<ForumListItem 
 								key={forum.id.toString()}
 								forum={forum}
 								href={`/forums/${forum.slug}`}
-								parentZoneColor={categoryZone.color}
+								parentZoneColor={zoneData.color ?? undefined} 
 							/>
 						))}
 					</div>
@@ -329,8 +329,8 @@ const ForumPage = () => {
 								className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar"
 								style={{ scrollbarWidth: 'none' }}
 							>
-								{primaryZones.map((zone: MergedZone, index: number) => 
-									renderZoneCard(zone, index)
+								{primaryZones.map((zone: MergedZone) => // Removed unused index from map
+									renderZoneCard(zone)
 								)}
 							</div>
 						) : (
@@ -345,7 +345,7 @@ const ForumPage = () => {
 				<div className="mb-14">
 					<h2 className="text-2xl font-bold mb-8 text-white flex items-center justify-center">
 						<Folder className="h-6 w-6 mr-2 text-amber-500" />
-						Forums & Categories
+						General Forums
 					</h2>
 
 					{structureLoading ? (
@@ -354,13 +354,13 @@ const ForumPage = () => {
 								<Skeleton key={i} className="h-64 w-full" />
 							))}
 						</div>
-					) : categories.length > 0 ? ( 
+					) : generalForumZones.length > 0 ? ( 
 						<div className="max-w-4xl mx-auto">
-							{categories.map((categoryZone: MergedZone, index: number) => renderCategory(categoryZone, index))}
+							{generalForumZones.map((zone: MergedZone, index: number) => renderGeneralZone(zone, index))}
 						</div>
 					) : (
 						<div className="text-center py-10 text-zinc-500 max-w-4xl mx-auto">
-							<p>No categories available</p>
+							<p>No general forums available</p>
 						</div>
 					)}
 				</div>
