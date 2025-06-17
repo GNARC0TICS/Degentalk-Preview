@@ -40,8 +40,8 @@ const ApiCategoryDataSchema = z.object({
 
 const ForumStructureApiResponseSchema = z.object({
   zones: z.array(ApiCategoryDataSchema),
-  categories: z.array(ApiCategoryDataSchema),
-  forums: z.array(ApiCategoryDataSchema),
+  categories: z.array(ApiCategoryDataSchema).optional().default([]),
+  forums: z.array(ApiCategoryDataSchema).optional().default([]),
 });
 
 
@@ -183,7 +183,12 @@ export interface MergedForum extends Omit<ApiCategoryData, 'type'> {
   theme: MergedTheme;
   rules: MergedRules;
   canHaveThreads: boolean;
-  parentCategoryId?: number | null;
+  parentCategoryId?: number | null; // This will effectively become parentForumId if parent is a forum, or parentZoneId if parent is a zone.
+                                   // The 'processApiData' logic will need to handle this distinction.
+  
+  // ADDED: Represents child subforums.
+  // Only one level of subforum nesting is supported.
+  forums?: MergedForum[];
 }
 
 // Merged category type (categories organize forums)

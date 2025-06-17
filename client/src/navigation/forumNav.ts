@@ -39,91 +39,110 @@ export function buildNavigationTree(
     counts: {}, // Could aggregate total counts if available
   });
 
-  const primaryZones = zones.filter(z => z.canonical === true);
-  const generalCategories = zones.filter(z => z.canonical !== true && z.forums && z.forums.length > 0);
+  const primaryZonesFromFilter = zones.filter(z => z.isPrimary === true); // Renamed to avoid conflict
+  const generalZonesFromFilter = zones.filter(z => z.isPrimary === false); // Renamed to avoid conflict
+
+// Helper function to process a forum and its potential subforums recursively
+function processForumRecursive(
+  forum: MergedForum, 
+  parentTheme?: MergedTheme, // Theme from parent zone or parent forum
+  parentSemanticThemeKey?: string | null
+): NavNode {
+  const forumNode: NavNode = {
+    id: forum.slug, // Use slug as ID for NavNode
+    name: forum.name,
+    slug: forum.slug,
+    href: getForumEntityUrl(forum), // Flat URL: /forums/[slug]
+    type: 'forum', // Type remains 'forum' for both parent forums and subforums
+    iconEmoji: forum.theme?.icon || parentTheme?.icon, // Prioritize forum's own theme icon
+    iconComponent: undefined, // Resolved at render time by NavItem using theme context
+    theme: forum.theme || parentTheme, // Forum's merged theme, fallback to parent's
+    semanticThemeKey: forum.theme?.colorTheme || parentSemanticThemeKey,
+    children: [], // Initialize children for subforums
+    entityData: forum,
+    // Stats: parent forums will have rolled-up stats from service, subforums their direct stats
+    counts: { threads: forum.threadCount, posts: forum.postCount },
+  };
+
+  // Recursively process subforums (only one level deep as per decision)
+  if (forum.forums && forum.forums.length > 0) { // forum.forums is the subForums array from MergedForum
+    forum.forums.forEach(subForum => {
+      // Pass down the current forum's effective theme as a fallback for the subforum
+      const currentForumEffectiveTheme = forum.theme || parentTheme;
+      const currentForumEffectiveSemanticKey = forum.theme?.colorTheme || parentSemanticThemeKey;
+      // For subforums, their 'parentTheme' is the theme of the 'forum' they are under.
+      forumNode.children.push(processForumRecursive(subForum, currentForumEffectiveTheme, currentForumEffectiveSemanticKey));
+    });
+  }
+  return forumNode;
+}
+
+// Original buildNavigationTree starts here, ensure no duplication
+// The previous export function buildNavigationTree was duplicated. This is the correct start.
+// Note: The filter for primaryZones and generalCategories was outside this function in the erroneous version.
+// It should use the 'zones' parameter passed to this function.
+
+  // isPrimary flag should be available on MergedZone from ForumStructureContext
+  // const primaryZones = zones.filter(z => z.isPrimary === true); // This was part of the duplicated block
+  // const generalZones = zones.filter(z => z.isPrimary === false); // This was part of the duplicated block
 
   // 2. Process Primary Zones
-  primaryZones.forEach(zone => {
+  primaryZonesFromFilter.forEach(zone => { // Use renamed variable
     const zoneNode: NavNode = {
       id: zone.slug,
       name: zone.name,
       slug: zone.slug,
-      href: `/zones/${zone.slug}`, // Assuming URL structure
-      type: 'primaryZone',
-      iconEmoji: zone.icon,
-      // iconComponent will now be resolved in NavItem via useForumTheme;
+      href: `/zones/${zone.slug}`, 
+      type: 'primaryZone', // Keep distinct type for now, or use 'zone' with isPrimary flag
+      iconEmoji: zone.theme?.icon,
       iconComponent: undefined,
       theme: zone.theme,
-      semanticThemeKey: zone.colorTheme,
-      children: [], // Will populate with forums
+      semanticThemeKey: zone.theme?.colorTheme,
+      children: [], 
       entityData: zone,
-      counts: { threads: zone.threadCount, posts: zone.postCount },
-      isCanonical: true,
+      counts: { threads: zone.threadCount, posts: zone.postCount }, // Aggregated counts from service
+      isCanonical: zone.canonical, // Use canonical from MergedZone if available, or isPrimary
     };
 
-    // Add forums as children of primary zones
-    if (zone.forums && zone.forums.length > 0) {
-      zone.forums.forEach(forum => {
-        zoneNode.children.push({
-          id: forum.slug,
-          name: forum.name,
-          slug: forum.slug,
-          href: getForumEntityUrl(forum),
-          type: 'forum',
-          iconEmoji: forum.icon,
-          iconComponent: undefined,
-          theme: forum.theme,
-          semanticThemeKey: forum.colorTheme,
-          children: [],
-          entityData: forum,
-          counts: { threads: forum.threadCount, posts: forum.postCount },
-        });
+    if (zone.forums && zone.forums.length > 0) { // These are top-level/parent forums
+      zone.forums.forEach(parentForum => {
+        zoneNode.children.push(processForumRecursive(parentForum, zone.theme, zone.theme?.colorTheme));
       });
     }
-
     navigationTree.push(zoneNode);
   });
 
-  // 3. Process General Categories and their Forums
-  generalCategories.forEach(category => {
-    const categoryNode: NavNode = {
-      id: category.slug,
-      name: category.name,
-      slug: category.slug,
-      href: `/zones/${category.slug}`, // URL for the category itself
-      type: 'generalCategory',
-      iconEmoji: category.icon,
-      // iconComponent resolved in NavItem
+  // 3. Process General Zones (previously generalCategories)
+  generalZonesFromFilter.forEach(zone => { // Use renamed variable and ensure 'zone' is the correct term
+    const zoneNode: NavNode = {
+      id: zone.slug,
+      name: zone.name,
+      slug: zone.slug,
+      href: `/zones/${zone.slug}`, 
+      type: 'generalCategory', // This type distinguishes rendering in HierarchicalZoneNav. Consider if 'zone' with a flag is better.
+      iconEmoji: zone.theme?.icon,
       iconComponent: undefined,
-      theme: category.theme,
-      semanticThemeKey: category.colorTheme,
+      theme: zone.theme,
+      semanticThemeKey: zone.theme?.colorTheme,
       children: [],
-      entityData: category,
-      counts: { forums: category.forums?.length, threads: category.threadCount, posts: category.postCount },
-      isCanonical: false,
+      entityData: zone,
+      counts: { forums: zone.forums?.length, threads: zone.threadCount, posts: zone.postCount }, // Aggregated counts
+      isCanonical: zone.canonical, // Use canonical from MergedZone
     };
 
-    if (category.forums) {
-      category.forums.forEach(forum => {
-        categoryNode.children.push({
-          id: forum.slug,
-          name: forum.name,
-          slug: forum.slug,
-          href: getForumEntityUrl(forum), // Use helper for forum URLs
-          type: 'forum',
-          iconEmoji: forum.icon,
-          // iconComponent resolved in NavItem
-          iconComponent: undefined,
-          theme: forum.theme,
-          semanticThemeKey: forum.colorTheme,
-          children: [],
-          entityData: forum,
-          counts: { threads: forum.threadCount, posts: forum.postCount },
-        });
+    if (zone.forums && zone.forums.length > 0) { // These are top-level/parent forums
+      zone.forums.forEach(parentForum => {
+        zoneNode.children.push(processForumRecursive(parentForum, zone.theme, zone.theme?.colorTheme));
       });
     }
-    navigationTree.push(categoryNode);
+    navigationTree.push(zoneNode);
   });
 
   return navigationTree;
 }
+// The duplicated export function buildNavigationTree and its content below this line should be removed.
+// The error "A function whose declared type is neither 'undefined', 'void', nor 'any' must return a value."
+// was likely due to the processForumRecursive being defined *after* the first buildNavigationTree
+// and the second buildNavigationTree (the duplicate) not having its filters (primaryZones, generalZones) defined correctly.
+// By ensuring processForumRecursive is defined first, and only one buildNavigationTree exists, this should be resolved.
+// The '}' expected error was due to the malformed structure from the duplication.

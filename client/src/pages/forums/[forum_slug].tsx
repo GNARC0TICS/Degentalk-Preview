@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useParams } from 'wouter';
 import { ForumStructureProvider, useForumStructure } from '@/contexts/ForumStructureContext';
-import type { MergedForum, MergedZone } from '@/contexts/ForumStructureContext';
-import type { ForumRules } from '@/config/forumMap.config';
+import type { MergedForum, MergedZone, MergedRules } from '@/contexts/ForumStructureContext'; // Added MergedRules
+// import type { ForumRules } from '@/config/forumMap.config'; // Removed unused ForumRules
 
 // Placeholder for a proper NotFoundPage component
 const NotFoundPage: React.FC = () => {
@@ -41,6 +41,8 @@ const BreadcrumbsStub: React.FC<{ zoneName?: string; zoneSlug?: string; forumNam
 
 // Importing the actual ThreadList component
 import ThreadList from '@/features/forum/components/ThreadList';
+// Import ForumListItem to display subforums
+import { ForumListItem } from '@/features/forum/components/ForumListItem';
 
 // Placeholder for CreateThreadButton component
 const CreateThreadButtonStub: React.FC<{ forumSlugOrId: string }> = ({ forumSlugOrId }) => {
@@ -69,7 +71,7 @@ const ForumPage: React.FC = () => {
   const params = useParams<{ slug?: string }>(); // Changed to slug
   const forum_slug = params?.slug; // Changed to params?.slug
   console.log(`[ForumPage] forum_slug from useParams (now 'slug'): '${forum_slug}'`); // Updated log message
-  const { getForum, getZone, zones, isLoading, error: contextError } = useForumStructure();
+  const { getForum, zones, isLoading, error: contextError } = useForumStructure(); // Removed unused getZone
   console.log(`[ForumPage] From useForumStructure - isLoading: ${isLoading}, contextError:`, contextError);
 
   // Strict slug validation
@@ -126,12 +128,12 @@ const ForumPage: React.FC = () => {
     }
   }
   
-  // Use zone's theme or forum's themeOverride if available
+  // Use zone's theme and forum's merged theme.
+  // MergedForum.theme is already the result of merging static config (including overrides) and API data.
   const zoneTheme = parentZone?.theme;
-  const forumThemeOverride = forum.themeOverride;
-  const displayTheme = { ...zoneTheme, ...forumThemeOverride };
+  const displayTheme = { ...zoneTheme, ...forum.theme }; // forum.theme is MergedTheme
 
-  const renderRules = (rules: ForumRules) => {
+  const renderRules = (rules: MergedRules) => { // Changed type to MergedRules
     return (
       <ul style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
         {Object.entries(rules).map(([key, value]) => {
@@ -139,10 +141,11 @@ const ForumPage: React.FC = () => {
           let displayValue = '';
           if (typeof value === 'boolean') {
             displayValue = value ? 'Yes' : 'No';
-          } else if (Array.isArray(value)) {
+          } else if (Array.isArray(value)) { // This will handle availablePrefixes if it's an array
             displayValue = value.join(', ');
           } else if (typeof value === 'object' && value !== null) {
-            displayValue = JSON.stringify(value); // Simple display for nested objects like prefixGrantRules
+            // For prefixGrantRules (Record<string, unknown>) and customRules (Record<string, unknown>)
+            displayValue = JSON.stringify(value); 
           } else {
             displayValue = String(value);
           }
@@ -204,8 +207,30 @@ const ForumPage: React.FC = () => {
         <CreateThreadButtonStub forumSlugOrId={forum.slug} />
       </section>
 
+      {/* Subforums List */}
+      {forum.forums && forum.forums.length > 0 && (
+        <section style={{ marginTop: '30px', padding: '0 20px' }}>
+          <h2 style={{ marginBottom: '15px', fontSize: '1.25em', fontWeight: 'bold' }}>Subforums</h2>
+          <div style={{ border: '1px solid #333', borderRadius: '8px', overflow: 'hidden' }}>
+            {forum.forums.map(subForum => (
+              <ForumListItem // Using the updated ForumListItem
+                key={subForum.slug}
+                forum={subForum}
+                href={`/forums/${subForum.slug}`}
+                // parentZoneColor can be inherited from parent forum's theme if desired
+                parentZoneColor={displayTheme?.color ?? undefined} 
+                depthLevel={0} // Subforums listed here are effectively at depth 0 relative to this page's list
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Thread List */}
-      <section style={{ marginTop: '20px', padding: '0 20px 20px 20px' }}>
+      <section style={{ marginTop: '30px', padding: '0 20px 20px 20px' }}>
+        <h2 style={{ marginBottom: '15px', fontSize: '1.25em', fontWeight: 'bold' }}>
+          Threads in {forum.name}
+        </h2>
         <ThreadList forumId={forum.id} forumSlug={forum.slug} />
       </section>
     </div>

@@ -110,11 +110,50 @@
     *   The displayed `threadCount` and `postCount` for the parent forum should be the rolled-up stats. Optionally, display "Direct threads: X, Direct posts: Y" if needed.
 
 ### 2.4. Navigation Components
-*   **Breadcrumbs (`BreadcrumbsStub` and its real implementation):**
-    *   Update logic to handle paths like `Home > Zone Name > Parent Forum Name > SubForum Name`. This requires access to the full hierarchy when on a subforum page or a thread within a subforum.
-*   **Hierarchical Zone Navigation (`HierarchicalZoneNav` - if present/planned):**
-    *   Update to display three levels: Zones -> Parent Forums -> SubForums.
-    *   Links will be flat: `/zones/[zoneSlug]`, `/forums/[parentForumSlug]`, `/forums/[subForumSlug]`.
+
+#### A. `client/src/navigation/forumNav.ts` (Function: `buildNavigationTree`)
+*   **Task:** Modify `buildNavigationTree` to recursively process `MergedForum` objects to include their subforums in the `NavNode` tree.
+*   **Detailed Change:**
+    *   Introduce an internal helper function, e.g., `processForumRecursive(forum: MergedForum, parentThemeDetails...): NavNode`.
+    *   This helper creates a `NavNode` for the input `forum`.
+    *   It checks if `forum.forums` (subforums array from `MergedForum` type) exists.
+    *   If subforums exist, it iterates and recursively calls `processForumRecursive` for each subforum, adding results to the parent `NavNode.children` array.
+    *   The main `buildNavigationTree` function calls this helper for top-level forums under Zones.
+    *   `NavNode.type` remains `'forum'` for both parent forums and subforums.
+    *   URL generation via `getForumEntityUrl` (from `utils/forum-routing-helper.ts`) should continue to return flat `/forums/[slug]`.
+
+#### B. `client/src/features/forum/components/HierarchicalZoneNav.tsx`
+*   **Task:** Modify this component to render the three-level navigation tree (Zone -> Parent Forum -> SubForum).
+*   **Detailed Changes:**
+    1.  **New Sub-Component (e.g., `ExpandableForumNavItem.tsx` within or imported by `HierarchicalZoneNav.tsx`):**
+        *   **Purpose:** Renders a "Parent Forum" item that can be expanded to show its "SubForums".
+        *   **Props:** `node: NavNode` (for the Parent Forum), `currentActiveSlug: string`, `depth: number`.
+        *   **Rendering:**
+            *   Displays Parent Forum details (name, link, icon, rolled-up stats).
+            *   If `node.children && node.children.length > 0` (SubForum NavNodes):
+                *   Renders an expand/collapse indicator.
+                *   When expanded, maps `node.children` (SubForums) and renders each using the existing `NavItem` component (as SubForums are leaf nodes in this 1-level subforum structure). Apply indentation.
+        *   Manages its own `isExpanded` state or takes it as a prop.
+    2.  **Modify `GeneralCategorySection` (renders General Zones):**
+        *   It currently maps `categoryNode.children` (Parent Forums) to `NavItem`.
+        *   Change this to map `categoryNode.children` to the new `ExpandableForumNavItem`.
+    3.  **Modify Primary Zone Rendering:**
+        *   Currently maps `primaryZoneNodes` directly to `NavItem`.
+        *   Consider refactoring to use a `PrimaryZoneSection` component, similar to `GeneralCategorySection`, which would then use `ExpandableForumNavItem` for its child Parent Forums. This promotes consistency.
+    4.  **Active State Logic:** Update to correctly highlight the active path (Zone > Parent Forum > SubForum) based on the current flat URL slug.
+    5.  **Expand/Collapse State (`expandedCategories`):** Adapt or extend to manage expansion state for Parent Forums if they become expandable to show SubForums.
+
+#### C. Breadcrumbs (`client/src/components/forum/breadcrumb-nav.tsx` or equivalent)
+*   **Task:** Update components that display breadcrumbs (e.g., `client/src/pages/forums/[forum_slug].tsx`, `client/src/pages/threads/[thread_slug].tsx`, and potentially a dedicated breadcrumb building hook/service) to correctly build the `BreadcrumbItem[]` array reflecting the `Home > Zone Name > Parent Forum Name > SubForum Name > Thread Name` hierarchy.
+*   **Detailed Change:**
+    *   The presentational component `client/src/components/forum/breadcrumb-nav.tsx` itself likely needs no changes.
+    *   The logic for constructing the `items` prop for `BreadcrumbNav` needs to:
+        *   Identify the current entity (Zone, Parent Forum, SubForum, or Thread).
+        *   Use `ForumStructureContext` to trace back parentage:
+            *   A SubForum's parent is a Parent Forum.
+            *   A Parent Forum's parent is a Zone.
+        *   Construct `BreadcrumbItem` objects with correct labels and flat HREFs (`/`, `/zones/[zoneSlug]`, `/forums/[parentForumSlug]`, `/forums/[subForumSlug]`, `/threads/[threadSlug]`).
+        *   Consider adding a helper function to `ForumStructureContext` like `getForumPath(slug: string): BreadcrumbItem[]` to encapsulate this complex lookup logic, making it easier for page components to generate breadcrumbs.
 
 ---
 
@@ -167,3 +206,30 @@
 4.  **"Category" Entity:** **Decision: Deprecate `type: 'category'`. All are `type: 'forum'`.** A forum that acts as a non-postable container will have `rules.allowPosting = false` (or a new, more specific `rules.allowUserPosts = false` if preferred for clarity). The database sync script and service logic must handle this (e.g., migrate existing 'category' types or treat them as forums with posting disabled).
 
 This detailed plan, incorporating the above decisions, should serve as a good foundation for the `forum-sprint-subforums.md` document.
+
+---
+
+## Appendix A: Deprecation of `type: 'category'`
+
+The decision to deprecate the `type: 'category'` entity has the following implications:
+
+*   **`client/src/config/forumMap.config.ts`**:
+    *   No longer define entities with `type: 'category'`.
+    *   "Parent Forums" (which are `type: 'forum'`) will serve the organizational role previously envisioned for categories. They can contain threads directly and/or subforums.
+    *   A forum intended as a non-postable container should be `type: 'forum'` with `rules.allowPosting = false` (or a more specific `rules.allowUserPosts = false` if that rule is introduced).
+*   **`scripts/seed/seedForumsFromConfig.ts` (and any other seeding/sync scripts):**
+    *   The script must no longer attempt to create or specifically handle `type: 'category'` entities.
+    *   All non-zone entities defined in `forumMap.config.ts` (parent forums, subforums) will be seeded into the `forum_categories` table with `type = 'forum'`.
+    *   If there's any logic to migrate existing `type: 'category'` entries in the database, it should convert them to `type: 'forum'` and potentially set `rules.allowPosting = false` in their `pluginData` or a dedicated column if schema changes.
+*   **`server/src/domains/forum/forum.service.ts`**:
+    *   Logic within `getForumStructure` and any helper functions should treat all non-zone entities from the `forum_categories` table as `type: 'forum'`.
+    *   Any specific code paths or type checks for `type: 'category'` should be removed or refactored. For example, the `categories` array in the old return type of `getForumStructure` is no longer relevant.
+*   **`client/src/contexts/ForumStructureContext.tsx`**:
+    *   The `MergedCategory` type and the `categories: Record<string, MergedCategory>` field in `ForumStructureContextType` will likely be removed or significantly refactored.
+    *   The `processApiData` function, which currently separates API data into zones, categories, and forums, will need to be updated. It will primarily deal with `zones` and a hierarchical structure of `forums` (where some forums are parents containing other forums).
+    *   Helper functions like `getCategory()` and parts of `getParentZone()` that rely on a distinct category type will need to be adapted or removed.
+*   **Frontend Components:**
+    *   Any component that specifically rendered or handled "Categories" as distinct from "Forums" will need to be updated to work with the concept of "Parent Forums."
+    *   The `type` property in `NavNode` (in `client/src/navigation/forumNav.ts`) might simplify; `generalCategory` might just become `zone` with `isPrimary: false`.
+
+This deprecation simplifies the overall entity model, making "forum" the primary organizational unit under "zone".

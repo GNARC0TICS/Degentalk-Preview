@@ -1,7 +1,7 @@
 import { db } from "../../db";
 import { forumCategories, threads, posts } from "../../db/schema"; // Ensure posts and threads are imported
 import { forumMap, DEFAULT_FORUM_RULES } from "../../client/src/config/forumMap.config"; // Import DEFAULT_FORUM_RULES
-import { eq } from "drizzle-orm";
+// import { eq } from "drizzle-orm"; // No longer used directly
 import chalk from "chalk";
 import type { ForumTheme, ForumRules as ConfigForumRules, Zone as ConfigZone, ZoneType } from "../../client/src/config/forumMap.config"; // Added ZoneType
 import { parseArgs } from 'node:util';
@@ -52,21 +52,71 @@ interface ForumCategoryPluginData {
   [key: string]: unknown; 
 }
 
-// Utility: resolve a forum_categories.id by slug.  Returns null if not found.
-async function resolveParentIdBySlug(slug: string, tx: TransactionClient): Promise<number | null> {
-  const result = await tx
-    .select({ id: forumCategories.id })
-    .from(forumCategories)
-    .where(eq(forumCategories.slug, slug))
-    .limit(1);
+// Recursive function to seed forums and their subforums
+async function seedForumLevel(
+  forumsToProcess: ConfigZone['forums'][number][], // Type for forums from config (can include nested forums)
+  currentParentIdInDB: number,
+  parentConfigTheme: ForumTheme | Partial<ForumTheme> | undefined, // Theme from parent zone or parent forum
+  tx: TransactionClient
+) {
+  for (const forumConfig of forumsToProcess) {
+    const forumPluginData: ForumCategoryPluginData = {
+      rules: forumConfig.rules,
+      bannerImage: forumConfig.themeOverride?.bannerImage || parentConfigTheme?.bannerImage,
+      originalTheme: forumConfig.themeOverride || parentConfigTheme,
+      configDescription: forumConfig.description,
+    };
 
-  return result.length > 0 ? result[0].id : null;
+    const forumSemanticColorTheme = forumConfig.themeOverride?.colorTheme || parentConfigTheme?.colorTheme;
+    const forumIcon = forumConfig.themeOverride?.icon || parentConfigTheme?.icon;
+    const forumColor = forumConfig.themeOverride?.color || parentConfigTheme?.color;
+
+    const forumValues = {
+      slug: forumConfig.slug,
+      name: forumConfig.name,
+      description: forumConfig.description,
+      type: "forum" as const,
+      parentId: currentParentIdInDB,
+      colorTheme: forumSemanticColorTheme,
+      icon: forumIcon,
+      color: forumColor,
+      pluginData: forumPluginData,
+      tippingEnabled: forumConfig.rules.tippingEnabled,
+      xpMultiplier: forumConfig.rules.xpMultiplier ?? 1.0,
+      isLocked: forumConfig.rules.accessLevel === 'mod' || forumConfig.rules.accessLevel === 'admin',
+      minXp: forumConfig.rules.minXpRequired ?? 0,
+      position: forumConfig.position ?? 0,
+    };
+
+    const result = await tx
+      .insert(forumCategories)
+      .values(forumValues)
+      .onConflictDoUpdate({ target: forumCategories.slug, set: forumValues })
+      .returning({ id: forumCategories.id });
+    
+    const newForumDbId = result[0]?.id;
+
+    if (!newForumDbId) {
+      console.error(chalk.red(`❌ Failed to insert or get ID for forum '${forumConfig.slug}'. Skipping its subforums.`));
+      continue;
+    }
+    console.log(chalk.cyan(`[✓] Synced forum: ${forumConfig.name} (slug: ${forumConfig.slug}) → parentId ${currentParentIdInDB}`));
+
+    // Recursively process subforums, if any
+    if (forumConfig.forums && forumConfig.forums.length > 0) {
+      console.log(chalk.blue(`  ↳ Seeding ${forumConfig.forums.length} subforums for '${forumConfig.name}'...`));
+      // Pass the current forum's theme (override or inherited) as parent theme for subforums
+      const currentForumEffectiveTheme = forumConfig.themeOverride || parentConfigTheme;
+      await seedForumLevel(forumConfig.forums, newForumDbId, currentForumEffectiveTheme, tx);
+    }
+  }
 }
 
 // Internal function to perform seeding, designed to be called within a transaction
 async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boolean) {
   if (wipeFlag) {
     console.log(chalk.yellow("Wipe flag detected. Truncating forum_categories, threads, and posts tables..."));
+    // Order matters for foreign key constraints if they exist and are enforced during delete
     await tx.delete(posts);
     await tx.delete(threads);
     await tx.delete(forumCategories);
@@ -74,12 +124,6 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
   }
 
   const zonesFromConfig: ConfigZone[] = forumMap.zones;
-  // Define a more specific type for forums with parentZoneSlug
-  type ForumWithParentZoneSlug = ConfigZone['forums'][number] & { parentZoneSlug: string };
-
-  const forumsFromConfig: ForumWithParentZoneSlug[] = zonesFromConfig.flatMap(zone =>
-    zone.forums.map(forum => ({ ...forum, parentZoneSlug: zone.slug }))
-  );
 
   console.log(chalk.blue(`Seeding ${zonesFromConfig.length} zones...`));
   for (const zoneConfig of zonesFromConfig) {
@@ -88,83 +132,42 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
       originalTheme: zoneConfig.theme,
       configZoneType: zoneConfig.type,
       configDescription: zoneConfig.description,
-      // Merge default rules with zone-specific partial rules if they exist
       rules: { 
-        ...DEFAULT_FORUM_RULES, // Defined in forumMap.config.ts, but we need it here or pass it
+        ...DEFAULT_FORUM_RULES,
         ...(zoneConfig.defaultRules || {}) 
-      } as ConfigForumRules, // Assert as ConfigForumRules after merging
+      } as ConfigForumRules,
     };
     
-    // Add enhanced features for primary zones
     if (zoneConfig.type === 'primary') {
-      // Extract components from theme if available
       if (zoneConfig.theme?.landingComponent) {
         pluginData.components = [zoneConfig.theme.landingComponent];
       }
-      
-      // Add zone-specific features based on slug
       switch (zoneConfig.slug) {
         case 'the-pit':
-          pluginData.gamification = {
-            xpBoostOnRedMarket: true,
-            streakMultipliers: false,
-          };
-          pluginData.visualIdentity = {
-            glitchEffects: true,
-            hoverAnimations: 'shake',
-            gradientOverlays: true,
-          };
+          pluginData.gamification = { xpBoostOnRedMarket: true, streakMultipliers: false };
+          pluginData.visualIdentity = { glitchEffects: true, hoverAnimations: 'shake', gradientOverlays: true };
           break;
-          
         case 'mission-control':
           pluginData.components = ['DailyTaskWidget', 'FlashChallengeBar'];
-          pluginData.features = {
-            xpChallenges: true,
-            analytics: true,
-            staffBoard: true,
-          };
-          pluginData.accessControl = {
-            canPost: ['registered'],
-            canCreateEvents: ['mod', 'admin'],
-          };
+          pluginData.features = { xpChallenges: true, analytics: true, staffBoard: true };
+          pluginData.accessControl = { canPost: ['registered'], canCreateEvents: ['mod', 'admin'] };
           break;
-          
         case 'casino-floor':
           pluginData.components = ['LiveBetsWidget', 'IsItRiggedPoll'];
-          pluginData.gamification = {
-            streakMultipliers: true,
-            zoneSpecificBadges: ['highroller', 'lucky7', 'housealwayswins'],
-          };
-          pluginData.visualIdentity = {
-            hoverAnimations: 'sparkle',
-          };
+          pluginData.gamification = { streakMultipliers: true, zoneSpecificBadges: ['highroller', 'lucky7', 'housealwayswins'] };
+          pluginData.visualIdentity = { hoverAnimations: 'sparkle' };
           break;
-          
         case 'briefing-room':
-          pluginData.accessControl = {
-            canPost: ['admin'],
-            canModerate: ['mod', 'admin'],
-          };
-          pluginData.threadRules = {
-            allowPolls: false,
-          };
+          pluginData.accessControl = { canPost: ['admin'], canModerate: ['mod', 'admin'] };
+          pluginData.threadRules = { allowPolls: false };
           break;
-          
         case 'the-archive':
-          pluginData.accessControl = {
-            canPost: [], // No one can post
-          };
-          pluginData.features = {
-            analytics: true,
-          };
+          pluginData.accessControl = { canPost: [] };
+          pluginData.features = { analytics: true };
           break;
-          
         case 'degenshop':
           pluginData.components = ['ShopCard', 'HotItemsSlider', 'CosmeticsGrid'];
-          pluginData.features = {
-            zoneShop: true,
-            customBadges: true,
-          };
+          pluginData.features = { zoneShop: true, customBadges: true };
           break;
       }
     }
@@ -174,58 +177,35 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
       slug: zoneConfig.slug, 
       name: zoneConfig.name, 
       description: zoneConfig.description,
-      type: "zone" as const, // Use "zone" as const for type safety
+      type: "zone" as const,
+      parentId: null, // Zones have no parent
       colorTheme: semanticColorTheme, 
       icon: zoneConfig.theme?.icon, 
       color: zoneConfig.theme?.color,
       pluginData: pluginData, 
-      isLocked: zoneConfig.defaultRules?.accessLevel === 'mod' || zoneConfig.defaultRules?.accessLevel === 'admin', // Example derivation
+      isLocked: zoneConfig.defaultRules?.accessLevel === 'mod' || zoneConfig.defaultRules?.accessLevel === 'admin',
       minXp: zoneConfig.defaultRules?.minXpRequired ?? 0, 
       position: zoneConfig.position ?? 0,
     };
     
-    await tx.insert(forumCategories).values(zoneValues).onConflictDoUpdate({ target: forumCategories.slug, set: zoneValues });
-    console.log(chalk.cyan(`[✓] Synced zone: ${zoneConfig.name} (slug: ${zoneConfig.slug}, type: ${zoneConfig.type})`));
-  }
+    const result = await tx
+      .insert(forumCategories)
+      .values(zoneValues)
+      .onConflictDoUpdate({ target: forumCategories.slug, set: zoneValues })
+      .returning({ id: forumCategories.id });
 
-  console.log(chalk.blue(`Seeding ${forumsFromConfig.length} forums...`));
-  for (const forumConfig of forumsFromConfig) {
-    // Use parentZoneSlug which is guaranteed by ForumWithParentZoneSlug type
-    const intendedParentSlug = forumConfig.parentZoneSlug;
-
-    const parentId = await resolveParentIdBySlug(intendedParentSlug, tx);
-    if (!parentId) {
-      console.error(
-        chalk.red(`❌ Parent slug not found for forum '${forumConfig.slug}'. Intended parent: '${intendedParentSlug}'. Skipping insert.`)
-      );
+    const zoneDbId = result[0]?.id;
+    if (!zoneDbId) {
+      console.error(chalk.red(`❌ Failed to insert or get ID for zone '${zoneConfig.slug}'. Skipping its forums.`));
       continue;
     }
+    console.log(chalk.cyan(`[✓] Synced zone: ${zoneConfig.name} (slug: ${zoneConfig.slug}, type: ${zoneConfig.type}) - DB ID: ${zoneDbId}`));
 
-    const parentZoneDataFromConfig = zonesFromConfig.find(z => z.slug === forumConfig.parentZoneSlug);
-    const forumPluginData: ForumCategoryPluginData = {
-      rules: forumConfig.rules,
-      bannerImage: forumConfig.themeOverride?.bannerImage || parentZoneDataFromConfig?.theme?.bannerImage,
-      originalTheme: forumConfig.themeOverride || parentZoneDataFromConfig?.theme,
-      configDescription: forumConfig.description, // Access directly
-    };
-    // Fallback to zone's color when a specific color theme override is not provided
-    const forumSemanticColorTheme = forumConfig.themeOverride?.colorTheme || parentZoneDataFromConfig?.theme?.colorTheme;
-    const forumValues = {
-      slug: forumConfig.slug, name: forumConfig.name, description: forumConfig.description,
-      type: "forum" as const, // Use "forum" as const
-      parentId,
-      colorTheme: forumSemanticColorTheme,
-      icon: forumConfig.themeOverride?.icon || parentZoneDataFromConfig?.theme?.icon,
-      color: forumConfig.themeOverride?.color || parentZoneDataFromConfig?.theme?.color,
-      pluginData: forumPluginData, 
-      tippingEnabled: forumConfig.rules.tippingEnabled,
-      xpMultiplier: forumConfig.rules.xpMultiplier ?? 1.0,
-      isLocked: forumConfig.rules.accessLevel === 'mod' || forumConfig.rules.accessLevel === 'admin', // Example derivation
-      minXp: forumConfig.rules.minXpRequired ?? 0,
-      position: forumConfig.position ?? 0,
-    };
-    await tx.insert(forumCategories).values(forumValues).onConflictDoUpdate({ target: forumCategories.slug, set: forumValues });
-    console.log(chalk.cyan(`[✓] Synced forum: ${forumConfig.name} (slug: ${forumConfig.slug}) → parentId ${parentId}`));
+    // Seed top-level forums for this zone
+    if (zoneConfig.forums && zoneConfig.forums.length > 0) {
+      console.log(chalk.blue(`  ↳ Seeding ${zoneConfig.forums.length} top-level forums for zone '${zoneConfig.name}'...`));
+      await seedForumLevel(zoneConfig.forums, zoneDbId, zoneConfig.theme, tx);
+    }
   }
   console.log(chalk.green("✅ Forum structure and static themes seeded successfully within transaction."));
 }

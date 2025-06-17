@@ -28,7 +28,6 @@ import AuthPage from './pages/auth';
 import AdminDashboardPage from "./pages/admin/index.tsx";
 import AdminUsersPage from "./pages/admin/users.tsx";
 import AdminRolesPage from "./pages/admin/roles.tsx"; // Import AdminRolesPage
-import AdminUserEdit from "./pages/admin/edit-user.tsx";
 import UserXpAdjustmentPage from "./pages/admin/xp/adjust.tsx";
 import BadgeManagementPage from "./pages/admin/xp/badges.tsx";
 import LevelManagementPage from "./pages/admin/xp/levels.tsx";
@@ -43,13 +42,11 @@ import AdminReportsPage from "./pages/admin/reports.tsx";
 import AdminAnnouncementsPage from "./pages/admin/announcements/index.tsx";
 import AdminCategoriesPage from "./pages/admin/categories.tsx";
 import AdminPrefixesPage from "./pages/admin/prefixes.tsx";
-import PlatformSettingsPage from "./pages/admin/platform-settings.tsx";
 import TagConfigPage from "./pages/admin/config/tags.tsx";
 import XpConfigPage from "./pages/admin/config/xp.tsx";
 import ZoneConfigPage from "./pages/admin/config/zones.tsx";
 import AdminDgtPackagesPage from "./pages/admin/dgt-packages.tsx";
 import TipRainSettingsPage from "./pages/admin/tip-rain-settings.tsx";
-import CooldownSettingsPage from "./pages/admin/cooldowns.tsx";
 
 // Shop Pages
 import DgtPurchasePage from './pages/shop-management/dgt-purchase';
@@ -155,10 +152,12 @@ return (
 						/>
 						{/* Added route for Admin User Edit Page */}
 						<Route
-							path="/admin/users/:id"
+							path="/admin/users/:userId"
 							component={() => (
 								<AdminLayout>
-									<AdminUserEdit />
+									<React.Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+										<AdminUserEdit />
+									</React.Suspense>
 								</AdminLayout>
 							)}
 						/>
@@ -260,14 +259,6 @@ return (
 							)}
 						/>
 						<Route
-							path="/admin/platform-settings"
-							component={() => (
-								<AdminLayout>
-									<PlatformSettingsPage />
-								</AdminLayout>
-							)}
-						/>
-						<Route
 							path="/admin/config/tags"
 							component={() => (
 								<AdminLayout>
@@ -304,14 +295,6 @@ return (
 							component={() => (
 								<AdminLayout>
 									<TipRainSettingsPage />
-								</AdminLayout>
-							)}
-						/>
-						<Route
-							path="/admin/cooldowns"
-							component={() => (
-								<AdminLayout>
-									<CooldownSettingsPage />
 								</AdminLayout>
 							)}
 						/>

@@ -1,3 +1,9 @@
-// DEPRECATED STUB: Original implementation archived at archive/server/src/domains/admin/admin.errors.ts
-// This stub re-exports the new core AdminError to avoid breaking imports during cleanup.
-export { AdminError, AdminErrorCodes } from '../../core/errors'; 
+// Temporary compatibility layer for legacy AdminError codes.
+// The canonical exports now live in `server/src/core/errors.ts` where `ErrorCodes` is defined.
+// We re-export `AdminError` directly and alias `ErrorCodes` → `AdminErrorCodes` so that
+// existing imports `import { AdminError, AdminErrorCodes } from './admin.errors'` keep working.
+
+import { AdminError, ErrorCodes } from '../../core/errors';
+
+export { AdminError };
+export const AdminErrorCodes = ErrorCodes; 

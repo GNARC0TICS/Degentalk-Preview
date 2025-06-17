@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useLocation, useRoute } from 'wouter';
 import {
-	Folder,
+	// Folder, // No longer directly used, DefaultFolderIcon is used
 	ChevronRight,
 	ChevronDown,
+	CornerDownRight, // Added import
 	// Flame, // Icons will come from ZONE_THEMES
 	// Target,
 	// Archive,
 	// Dices,
 	// FileText,
-	LayoutGrid,
+	// LayoutGrid, // No longer directly used by NavItem, systemLinkNodes uses LayoutGrid from forumNav.ts
 	Users,
 	Folder as DefaultFolderIcon, // Renaming Folder to avoid conflict if NavNode uses 'Folder'
 	ChevronRight as DefaultChevronRight,
@@ -40,11 +41,13 @@ const NavItem = ({
 	isActive,
 	disabled = false,
 	onClick,
+	isSubItem = false, // Added to props destructuring with default
 }: {
 	node: NavNode;
 	isActive?: boolean;
 	disabled?: boolean;
 	onClick?: () => void;
+	isSubItem?: boolean; // Added to interface
 }) => {
 	const { getTheme } = useForumTheme();
 	const theme = getTheme(node.semanticThemeKey);
@@ -82,31 +85,37 @@ const NavItem = ({
 		displayIcon = <DefaultFolderIcon className={cn("w-4 h-4 mr-3", isActive ? '' : 'text-zinc-400 group-hover:text-zinc-300')} />;
 	}
 
+	const itemPaddingClass = isSubItem ? 'pl-7 pr-3' : 'px-3'; // Indent sub-items more
+
 	const content = (
 		<div
 			className={cn(
-				'flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-all duration-200 w-full group',
+				'flex items-center justify-between py-2.5 text-sm rounded-lg transition-all duration-200 w-full group',
+				itemPaddingClass, // Apply dynamic padding
 				disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer',
 				isActive ? activeClasses : 'text-zinc-300',
 				!isActive && !disabled ? hoverClasses : ''
 			)}
 			onClick={onClick}
 		>
-			<div className="flex items-center">
+			<div className="flex items-center min-w-0"> {/* Added min-w-0 for better truncation */}
+				{isSubItem && <CornerDownRight className="w-3.5 h-3.5 mr-1.5 text-zinc-500 flex-shrink-0" />}
 				{displayIcon}
-				<span className="font-medium">{node.name}</span> {/* Use node.name for children */}
+				<span className="font-medium truncate">{node.name}</span> {/* Added truncate */}
 			</div>
-			{node.counts && ( // Use node.counts
-				<div className="flex items-center gap-2">
-					{node.counts.forums && node.counts.forums > 0 && (
-						<Badge
-							variant="outline"
-							className="text-xs bg-zinc-800/50 text-zinc-500 border-zinc-700/50 px-1.5 py-0.5"
-						>
-							{node.counts.forums}
-						</Badge>
-					)}
-				</div>
+			{/* Display thread/post counts for forums, forum count for categories/zones */}
+			{node.type === 'forum' && node.counts && (node.counts.threads !== undefined || node.counts.posts !== undefined) && (
+				<Badge variant="outline" className="text-xs bg-zinc-800/50 text-zinc-500 border-zinc-700/50 px-1.5 py-0.5 ml-2 flex-shrink-0">
+					{node.counts.threads || 0}t / {node.counts.posts || 0}p
+				</Badge>
+			)}
+			{node.type !== 'forum' && node.counts?.forums && node.counts.forums > 0 && (
+				<Badge
+					variant="outline"
+					className="text-xs bg-zinc-800/50 text-zinc-500 border-zinc-700/50 px-1.5 py-0.5 ml-2 flex-shrink-0"
+				>
+					{node.counts.forums}
+				</Badge>
 			)}
 		</div>
 	);
@@ -212,11 +221,13 @@ const GeneralCategorySection = ({ // Renamed from GeneralZoneSection to GeneralC
 						transition={{ duration: 0.2 }}
 						className="ml-6 space-y-1 border-l-2 border-zinc-800/50 pl-4"
 					>
-						{categoryNode.children.map((forumNode: NavNode) => ( // Iterate over NavNode children
-							<NavItem
-								key={forumNode.id}
-								node={forumNode} // Pass the full forumNode
-								isActive={currentForumSlug === forumNode.slug}
+						{categoryNode.children.map((parentForumNode: NavNode) => (
+							<ExpandableForumItem
+								key={parentForumNode.id}
+								forumNode={parentForumNode}
+								currentActiveSlug={currentForumSlug} // Pass currentForumSlug to determine active subforum
+								depth={1} // Parent forums under a category are at depth 1
+								// Pass any other necessary props like onToggle for sub-expansion if needed
 							/>
 						))}
 					</motion.div>
@@ -225,6 +236,80 @@ const GeneralCategorySection = ({ // Renamed from GeneralZoneSection to GeneralC
 		</div>
 	);
 };
+
+// New component to render Parent Forums and their SubForums
+const ExpandableForumItem = ({
+	forumNode, // This is a Parent Forum NavNode
+	currentActiveSlug,
+	depth,
+	// onToggle, // If sub-expansion state is managed here
+}: {
+	forumNode: NavNode;
+	currentActiveSlug?: string;
+	depth: number;
+	// onToggle?: (nodeId: string) => void; 
+}) => {
+	const [isSubforumsExpanded, setIsSubforumsExpanded] = useState(false);
+	// TODO: Persist subforum expansion state similar to categories, if desired.
+	// For now, local state.
+
+	const toggleSubforums = (e: React.MouseEvent) => {
+		e.stopPropagation(); // Prevent link navigation if clicking on expander
+		setIsSubforumsExpanded(!isSubforumsExpanded);
+	};
+
+	const hasSubforums = forumNode.children && forumNode.children.length > 0;
+
+	return (
+		<div className="space-y-0.5">
+			{/* Render the Parent Forum item itself */}
+			<div className="flex items-center group">
+				<NavItem
+					node={forumNode}
+					isActive={currentActiveSlug === forumNode.slug && !forumNode.children.some(sf => sf.slug === currentActiveSlug)} // Active if it's the direct target and not one of its children
+					// onClick={!hasSubforums ? undefined : (e) => { e.preventDefault(); toggleSubforums(); }} // Make clickable to expand if it has children
+				/>
+				{hasSubforums && (
+					<button
+						onClick={toggleSubforums}
+						aria-expanded={isSubforumsExpanded}
+						className="p-1 -ml-7 text-zinc-400 hover:text-white z-10" // Adjust margin if NavItem padding changes
+						aria-label={isSubforumsExpanded ? `Collapse ${forumNode.name}` : `Expand ${forumNode.name}`}
+					>
+						{isSubforumsExpanded ? (
+							<ChevronDown className="w-3.5 h-3.5" />
+						) : (
+							<ChevronRight className="w-3.5 h-3.5" />
+						)}
+					</button>
+				)}
+			</div>
+
+			{/* Render Subforums if they exist and are expanded */}
+			<AnimatePresence>
+				{isSubforumsExpanded && hasSubforums && (
+					<motion.div
+						initial={{ opacity: 0, height: 0 }}
+						animate={{ opacity: 1, height: 'auto' }}
+						exit={{ opacity: 0, height: 0 }}
+						transition={{ duration: 0.2 }}
+						className={`ml-${depth * 2 + 2} space-y-0.5 border-l-2 border-zinc-800/30 pl-2`} // Indentation for subforums
+					>
+						{forumNode.children.map((subForumNode: NavNode) => (
+							<NavItem
+								key={subForumNode.id}
+								node={subForumNode}
+								isActive={currentActiveSlug === subForumNode.slug}
+								isSubItem={true} // Indicate it's a sub-item for styling
+							/>
+						))}
+					</motion.div>
+				)}
+			</AnimatePresence>
+		</div>
+	);
+};
+
 
 export function HierarchicalZoneNav({
 	className = '',
@@ -330,12 +415,27 @@ export function HierarchicalZoneNav({
 						</h3>
 					</div>
 					<div className="space-y-1">
-						{primaryZoneNodes.map((node) => (
-							<NavItem
-								key={node.id}
-								node={node}
-								isActive={currentZoneSlug === node.slug && !currentForumSlug}
+						{primaryZoneNodes.map((zoneNode) => (
+							// If Primary Zones can also have expandable forums/subforums:
+							// Option 1: Create a PrimaryZoneSection similar to GeneralCategorySection
+							// Option 2: Directly use ExpandableForumItem if zoneNode.children are forums
+							// For now, assuming Primary Zones in nav are direct links, sub-content on their page.
+							// If they need to expand to show forums, this needs to be like GeneralCategorySection.
+							// Based on current plan, let's make them expandable too for consistency.
+							<GeneralCategorySection // Reusing GeneralCategorySection logic for Primary Zones too
+								key={zoneNode.id}
+								categoryNode={zoneNode} // Pass zoneNode as categoryNode
+								isExpanded={!!expandedCategories[zoneNode.id]} // Manage expansion for primary zones too
+								onToggle={() => toggleCategoryExpansion(zoneNode.id)}
+								currentForumSlug={currentForumSlug}
+								currentZoneSlug={currentZoneSlug} // Pass currentZoneSlug
 							/>
+							// Original simple NavItem for Primary Zones (if not expandable):
+							// <NavItem
+							// 	key={zoneNode.id}
+							// 	node={zoneNode}
+							// 	isActive={currentZoneSlug === zoneNode.slug && !currentForumSlug}
+							// />
 						))}
 					</div>
 				</section>

@@ -39,7 +39,7 @@
 		"seed:levels": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-default-levels.ts",
 		"seed:economy": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-economy-settings.ts",
 		"seed:shop": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-shop.ts",
-		"sync:forums": "npm run seed:forum:new",
+		"sync:forums": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/dev/syncForumsToDB.ts",
 		"sync:check-forum-config": "npx dotenv-cli -e env.local -- tsx scripts/ops/check-forum-config-sync.ts",
 		"init:xp": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/initialize-xp-system.ts",
 		"test:xp": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/testing/test-xp-system.ts",

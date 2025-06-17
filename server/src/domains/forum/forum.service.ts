@@ -96,27 +96,89 @@ interface CategoriesTreeOptions {
 export const forumService = {
 	async getForumStructure(): Promise<{
 		zones: ForumCategoryWithStats[];
-		categories: ForumCategoryWithStats[];
-		forums: ForumCategoryWithStats[];
+		// categories and forums flat lists might be removed or adapted based on frontend needs
 	}> {
 		try {
-			const allItems = await this.getCategoriesWithStats(true);
+			const allItemsFlat: ForumCategoryWithStats[] = await this.getCategoriesWithStats(true);
 			
-			// Separate into zones, categories, and forums
-			const zones = allItems.filter(item => item.type === 'zone');
-			const categories = allItems.filter(item => item.type === 'category');
-			const forums = allItems.filter(item => item.type === 'forum');
+			const zoneEntities = allItemsFlat.filter(item => item.type === 'zone');
+			// All non-zone items are potential forums (parents or subforums)
+			// Since type 'category' is deprecated, we treat them as 'forum'.
+			// The sync script should ensure only 'zone' or 'forum' types are in DB from config.
+			const allForumLikeEntities = allItemsFlat.filter(item => item.type === 'forum');
+
+			// Create a map for all forum-like entities to handle nesting and stat aggregation
+			// Store original counts before aggregation
+			// ForumCategoryWithStats already has childForums: ForumCategoryWithStats[]
+			type MappedForum = ForumCategoryWithStats & { 
+				// forums?: MappedForum[]; // Use existing childForums
+				ownThreadCount?: number; 
+				ownPostCount?: number;
+			};
+			const forumMap = new Map<number, MappedForum>();
+
+			allForumLikeEntities.forEach(f => {
+				forumMap.set(f.id, { 
+					...f, 
+					childForums: [], // Initialize childForums for potential subforums
+					ownThreadCount: f.threadCount, // Store direct counts
+					ownPostCount: f.postCount    // Store direct counts
+				});
+			});
+
+			// Populate subforums (nesting) - Max 1 level as per decision
+			allForumLikeEntities.forEach(potentialSubForum => {
+				if (potentialSubForum.parentId) {
+					const parentForumFromMap = forumMap.get(potentialSubForum.parentId);
+					// Ensure parent is actually a forum (not a zone)
+					const parentEntityInFlatList = allItemsFlat.find(item => item.id === potentialSubForum.parentId);
+
+					if (parentForumFromMap && parentEntityInFlatList && parentEntityInFlatList.type === 'forum') {
+						// Ensure childForums is initialized
+						if (!parentForumFromMap.childForums) {
+							parentForumFromMap.childForums = [];
+						}
+						parentForumFromMap.childForums.push(forumMap.get(potentialSubForum.id)! as ForumCategoryWithStats);
+					}
+				}
+			});
+
+			// Aggregate stats (roll-up from subforums to parent forums)
+			Array.from(forumMap.values()).forEach(parentForum => {
+				if (parentForum.childForums && parentForum.childForums.length > 0) {
+					let aggregatedThreadCount = parentForum.ownThreadCount || 0;
+					let aggregatedPostCount = parentForum.ownPostCount || 0;
+
+					parentForum.childForums.forEach(subForum => {
+						aggregatedThreadCount += subForum.threadCount || 0; // Subforum stats are their own direct counts
+						aggregatedPostCount += subForum.postCount || 0;
+					});
+					parentForum.threadCount = aggregatedThreadCount;
+					parentForum.postCount = aggregatedPostCount;
+				}
+			});
 			
-			// Add enhanced features for primary zones
-			const enhancedZones = zones.map(zone => {
+			const structuredZones = zoneEntities.map(zone => {
 				const determinedType = parseZoneType(zone.pluginData);
 				const isActuallyPrimary = determinedType === 'primary';
-
-				// Safe access to pluginData properties
+				
 				const pd = zone.pluginData && typeof zone.pluginData === 'object' ? zone.pluginData : {};
 				const features = Array.isArray(pd.features) ? pd.features : [];
 				const customComponents = Array.isArray(pd.customComponents) ? pd.customComponents : [];
 				const staffOnly = typeof pd.staffOnly === 'boolean' ? pd.staffOnly : false;
+
+				// Get top-level forums for this zone from our populated and aggregated forumMap
+				const topLevelForumsForZone = Array.from(forumMap.values()).filter(
+					forumInMap => forumInMap.parentId === zone.id
+				);
+
+				// Aggregate zone stats from its top-level forums (which already include subforum stats)
+				let zoneThreadCount = 0;
+				let zonePostCount = 0;
+				topLevelForumsForZone.forEach(forum => {
+					zoneThreadCount += forum.threadCount || 0;
+					zonePostCount += forum.postCount || 0;
+				});
 
 				return {
 					...zone,
@@ -124,13 +186,15 @@ export const forumService = {
 					features,
 					customComponents,
 					staffOnly,
+					forums: topLevelForumsForZone, // These are parent forums, with populated subforums and aggregated stats
+					childForums: topLevelForumsForZone, // Keep for compatibility if needed, but 'forums' is the target
+					threadCount: zoneThreadCount, // Zone's aggregated thread count
+					postCount: zonePostCount,   // Zone's aggregated post count
 				};
 			});
 			
 			return {
-				zones: enhancedZones,
-				categories,
-				forums
+				zones: structuredZones,
 			};
 		} catch (error) {
 			logger.error('ForumService', 'Error in getForumStructure', { err: error });
@@ -304,66 +368,107 @@ export const forumService = {
 		return tree;
 	},
 
-	async getCategoryBySlug(slug: string): Promise<ForumCategoryWithStats | null> { 
-		// Assuming counts are usually desired when fetching a single category by slug
-		const categories = await this.getCategoriesWithStats(true); 
-		return categories.find((cat) => cat.slug === slug) || null; 
+	// Renamed from getCategoryBySlug, and adapted for new structure
+	async getForumBySlug(slug: string): Promise<ForumCategoryWithStats | null> { // Return type is ForumCategoryWithStats, childForums is part of it
+		const { zones } = await this.getForumStructure(); // Get the full structured data
+		for (const zone of zones) {
+			for (const parentForum of zone.childForums || []) { // Use childForums as per type
+				if (parentForum.slug === slug) {
+					return parentForum; // Found a parent forum
+				}
+				if (parentForum.childForums) { // Check subforums on childForums
+					const subForum = parentForum.childForums.find(sf => sf.slug === slug);
+					if (subForum) {
+						return subForum; // Found a subforum
+					}
+				}
+			}
+		}
+		return null;
 	},
-	async getForumBySlugWithTopics(slug: string): Promise<{ forum: ForumCategoryWithStats | null; topics: ForumCategoryWithStats[]; }> { 
-		// Assuming counts are desired for forum and its topics
-		const categories = await this.getCategoriesWithStats(true); 
-		const forum = categories.find((cat) => cat.slug === slug) || null; 
-		if (!forum) { return { forum: null, topics: [] }; } 
-		const topics = categories.filter((cat) => cat.parentId === forum.id); 
-		topics.sort((a, b) => a.position - b.position); 
-		return { forum, topics }; 
+
+	async getForumAndItsSubForumsBySlug(slug: string): Promise<{ 
+		forum: ForumCategoryWithStats | null; 
+	}> {
+		const forum = await this.getForumBySlug(slug);
+		// Subforums are already on forum.childForums if it's a parent
+		return { forum };
 	},
-	async getCategoryById(id: number): Promise<ForumCategoryWithStats | null> { 
-		const categories = await this.getCategoriesWithStats(true); 
-		return categories.find((cat) => cat.id === id) || null; 
+
+	// Renamed from getCategoryById
+	async getForumById(id: number): Promise<ForumCategoryWithStats | null> { // Return type is ForumCategoryWithStats
+		const { zones } = await this.getForumStructure();
+		for (const zone of zones) {
+			for (const parentForum of zone.childForums || []) { // Use childForums
+				if (parentForum.id === id) {
+					return parentForum;
+				}
+				if (parentForum.childForums) { // Check subforums on childForums
+					const subForum = parentForum.childForums.find(sf => sf.id === id);
+					if (subForum) {
+						return subForum;
+					}
+				}
+			}
+		}
+		return null;
 	},
-	async getForumsByParentId(parentId: number): Promise<ForumCategoryWithStats[]> { 
-		try { 
-			const categories = await this.getCategoriesWithStats(true); 
-			const parentForum = categories.find((cat) => cat.id === parentId); 
-			const childForums = categories.filter((cat) => cat.parentId === parentId); 
-			return childForums.map((forum) => ({ ...forum, canHaveThreads: true, parentSlug: parentForum?.slug || null, parentName: parentForum?.name || null })); 
-		} catch (error) { 
-			logger.error('ForumService', 'Error in getForumsByParentId', { err: error, parentId });
-			throw error; 
-		} 
+
+	// This method now specifically gets subforums for a given parent forum ID
+	async getSubForumsByParentForumId(parentForumId: number): Promise<ForumCategoryWithStats[]> {
+		const parentForum = await this.getForumById(parentForumId);
+		return parentForum?.childForums || []; // Access subforums via childForums
 	},
-	async debugForumRelationships(): Promise<{ 
-		primaryZones: Array<{ id: number; name: string; slug: string }>; 
-		categories: Array<{ 
-			id: number; name: string; slug: string; 
-			childForums: Array<{ id: number; name: string; slug: string; parentId: number | null; }>; // parentId can be null
-		}>; 
-	}> { 
-		try { 
-			const allCategories = await this.getCategoriesWithStats(false); 
-			const primaryZones = allCategories.filter((cat) => cat.type === 'zone').map((zone) => ({ id: zone.id, name: zone.name, slug: zone.slug })); 
-			const categories = allCategories.filter((cat) => cat.type === 'category' && cat.parentId !== null).map((category) => { 
-				const childForums = allCategories
-					.filter((forum) => forum.parentId === category.id && forum.type === 'forum')
-					.map((forum) => ({ id: forum.id, name: forum.name, slug: forum.slug, parentId: forum.parentId })); // Use parentId as is
-				return { id: category.id, name: category.name, slug: category.slug, childForums }; 
-			}); 
-			return { primaryZones, categories }; 
-		} catch (error) { 
+
+	async debugForumRelationships(): Promise<{
+		zones: Array<{ 
+			id: number; name: string; slug: string; isPrimary: boolean;
+			forums: Array<{ 
+				id: number; name: string; slug: string; parentId: number | null;
+				subForums: Array<{ id: number; name: string; slug: string; parentId: number | null; }>
+			}> 
+		}>;
+	}> {
+		try {
+			const { zones: structuredZones } = await this.getForumStructure();
+			const result = structuredZones.map(zone => ({
+				id: zone.id,
+				name: zone.name,
+				slug: zone.slug,
+				isPrimary: zone.isPrimary || false, // zone.isPrimary should exist from getForumStructure
+				forums: (zone.childForums || []).map(parentForum => ({ // Use childForums
+					id: parentForum.id,
+					name: parentForum.name,
+					slug: parentForum.slug,
+					parentId: parentForum.parentId, 
+					subForums: (parentForum.childForums || []).map(subForum => ({ // Use childForums
+						id: subForum.id,
+						name: subForum.name,
+						slug: subForum.slug,
+						parentId: subForum.parentId, 
+					})),
+				})),
+			}));
+			return { zones: result };
+		} catch (error) {
 			logger.error('ForumService', 'Error in debugForumRelationships', { err: error });
-			throw error; 
-		} 
+			throw error;
+		}
 	},
-	async getPrefixes(categoryId?: number): Promise<ThreadPrefixType[]> { 
-		if (categoryId) { 
-			return db.select().from(threadPrefixes).where(and(eq(threadPrefixes.isActive, true), or(isNull(threadPrefixes.categoryId), eq(threadPrefixes.categoryId, categoryId)))).orderBy(asc(threadPrefixes.position)); 
-		} else { 
-			return db.select().from(threadPrefixes).where(eq(threadPrefixes.isActive, true)).orderBy(asc(threadPrefixes.position)); 
-		} 
+
+	async getPrefixes(forumId?: number): Promise<ThreadPrefixType[]> { // Changed categoryId to forumId
+		if (forumId) {
+			// Logic might need to check rules from forumConfig in pluginData if prefixes are per-forum
+			return db.select().from(threadPrefixes).where(and(eq(threadPrefixes.isActive, true), or(isNull(threadPrefixes.categoryId), eq(threadPrefixes.categoryId, forumId)))).orderBy(asc(threadPrefixes.position));
+		} else {
+			return db.select().from(threadPrefixes).where(eq(threadPrefixes.isActive, true)).orderBy(asc(threadPrefixes.position));
+		}
 	},
 	async getTags(): Promise<Array<typeof tags.$inferSelect>> { return db.select().from(tags).orderBy(asc(tags.name)); },
 
+	// searchThreads needs to be aware of the new structure if categoryId refers to a parent forum,
+	// it should potentially search its subforums too, or client needs to make separate calls.
+	// For now, assuming categoryId is the direct forum ID where threads live.
 	async searchThreads(params: ThreadSearchParams): Promise<{
 		threads: ThreadWithUser[];
 		pagination: { page: number; limit: number; totalThreads: number; totalPages: number };

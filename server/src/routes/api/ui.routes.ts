@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import zoneThemes from '../../../config/zoneThemes.config';
+import { uiThemesService } from '../../domains/admin/sub-domains/ui-config/uiThemes.service';
 
 const router = Router();
 
@@ -8,7 +8,13 @@ const router = Router();
  * Returns the zone theme configuration used by the frontend for navigation styling.
  */
 router.get('/themes', async (_req, res) => {
-  res.json(zoneThemes);
+  try {
+    const themes = await uiThemesService.getAll();
+    res.json(themes);
+  } catch (err) {
+    console.error('Failed to fetch ui themes', err);
+    res.status(500).json({ message: 'Failed to fetch themes' });
+  }
 });
 
 export default router; 

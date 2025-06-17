@@ -73,6 +73,10 @@ export interface Forum {
   // Metadata
   position?: number;
   tags?: string[];
+
+  // ADDED: Represents child forums (subforums)
+  // Only one level of subforum nesting is supported. No sub-sub-forums.
+  forums?: Forum[];
 }
 
 export interface Zone {
@@ -542,11 +546,28 @@ const GENERAL_ZONES: Zone[] = [
       {
         slug: 'altcoin-analysis',
         name: 'Altcoin Analysis',
+        description: 'Discussions about various altcoins.', // Added description for parent
         position: 2,
         rules: {
           ...DEFAULT_FORUM_RULES,
           availablePrefixes: ['[ALT]', '[GEM]', '[ANALYSIS]'],
         },
+        forums: [ // Subforums for Altcoin Analysis
+          {
+            slug: 'large-cap-alts',
+            name: 'Large Cap Alts',
+            description: 'Focus on established large-cap altcoins.',
+            position: 1,
+            rules: { ...DEFAULT_FORUM_RULES },
+          },
+          {
+            slug: 'small-cap-gems',
+            name: 'Small Cap Gems',
+            description: 'Exploring high-potential small-cap altcoins.',
+            position: 2,
+            rules: { ...DEFAULT_FORUM_RULES, xpMultiplier: 1.2 },
+          },
+        ],
       },
     ],
   },
@@ -651,16 +672,30 @@ export const forumMap = {
 
 // Ensure unique slugs
 const allSlugs = new Set<string>();
+
+function validateForumSlugs(forums: Forum[], parentPath: string) {
+  forums.forEach(forum => {
+    const currentPath = `${parentPath} > ${forum.name} (${forum.slug})`;
+    if (allSlugs.has(forum.slug)) {
+      throw new Error(`Duplicate forum slug detected: '${forum.slug}' at path: ${currentPath}. Slugs must be globally unique.`);
+    }
+    allSlugs.add(forum.slug);
+
+    // Recursively validate subforums if they exist
+    if (forum.forums && forum.forums.length > 0) {
+      validateForumSlugs(forum.forums, currentPath);
+    }
+  });
+}
+
 forumMap.zones.forEach(zone => {
+  const zonePath = `Zone: ${zone.name} (${zone.slug})`;
   if (allSlugs.has(zone.slug)) {
     throw new Error(`Duplicate zone slug: ${zone.slug}`);
   }
   allSlugs.add(zone.slug);
   
-  zone.forums.forEach(forum => {
-    if (allSlugs.has(forum.slug)) {
-      throw new Error(`Duplicate forum slug: ${forum.slug}`);
-    }
-    allSlugs.add(forum.slug);
-  });
+  if (zone.forums && zone.forums.length > 0) {
+    validateForumSlugs(zone.forums, zonePath);
+  }
 });
