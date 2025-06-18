@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { useUserCosmetics } from '@/hooks/useUserCosmetics';
 import { SYSTEM_ROLE_COLORS } from '@/lib/utils/applyPluginRewards';
+import { useProfileCard } from '@/contexts/ProfileCardContext';
 
 interface UsernameProps {
 	username: string;
@@ -52,6 +53,8 @@ export function Username({
 }: UsernameProps) {
 	// Use the new hook to get cosmetics for the user
 	const { cosmetics, isLoading: isLoadingCosmetics } = useUserCosmetics();
+	// Profile card context for quick swap on click
+	const { setCurrentUsername } = useProfileCard();
 
 	// Handle loading state for cosmetics
 	if (isLoadingCosmetics) {
@@ -91,7 +94,10 @@ export function Username({
 	}
 
 	return (
-		<div className={cn('inline-flex items-center gap-1.5', className)}>
+		<div
+			className={cn('inline-flex items-center gap-1.5 cursor-pointer', className)}
+			onClick={() => setCurrentUsername(username)}
+		>
 			{/* Rarity indicator (optional) */}
 			{showRarityBadge && colorRarity && RARITY_INDICATORS[colorRarity] && (
 				<span className="text-xs">{RARITY_INDICATORS[colorRarity]}</span>

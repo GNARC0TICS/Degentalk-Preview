@@ -10,7 +10,8 @@ import { getQueryFn } from '@/lib/queryClient';
 // Import context and hook
 import { ForumStructureProvider, useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedZone } from '@/contexts/ForumStructureContext';
-
+import { ProfileCardProvider, useProfileCard } from '@/contexts/ProfileCardContext';
+import { ProfileCard } from '@/components/profile/ProfileCard';
 
 // Import components
 import { HeroSection } from '@/components/layout/hero-section';
@@ -62,6 +63,7 @@ function HomePage() { // Changed to a regular function
 	const { user } = useAuth();
 	const isLoggedIn = !!user;
 	const { position } = useShoutbox();
+	const { currentUsername } = useProfileCard();
 
 	// Get forum structure from context
 	const { 
@@ -133,13 +135,15 @@ function HomePage() { // Changed to a regular function
 
 			{/* Main Content */}
 			<main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 md:py-12 flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8">
-				{/* Main Content Area (2/3 width) */}
-				<div className="w-full lg:w-2/3 space-y-6">
+				{/* Left Sidebar */}
+				<aside className="hidden lg:block w-full lg:w-1/4 xl:w-1/4 space-y-4">
+					{currentUsername && <ProfileCard username={currentUsername} />}
+				</aside>
+
+				{/* Main Content Area */}
+				<div className="w-full lg:w-1/2 xl:w-1/2 space-y-6">
 					{/* Shoutbox at main-top position */}
 					<ShoutboxMainTop />
-
-					{/* Hot Threads - Fetches its own data */}
-					<HotThreads className="mb-6" limit={5} />
 
 					{/* Primary Zones Section */}
 					<section className="mb-16">
@@ -171,13 +175,14 @@ function HomePage() { // Changed to a regular function
 						) : (
 							<CanonicalZoneGrid
 								zones={zoneCardDataForGrid}
+								className="lg:grid-cols-2 xl:grid-cols-3"
 							/>
 						)}
 					</section>
 				</div>
 
-				{/* Sidebar (1/3 width) */}
-				<aside className="w-full lg:w-1/3 space-y-4 sm:space-y-6 md:space-y-8">
+				{/* Right Sidebar */}
+				<aside className="w-full lg:w-1/4 xl:w-1/4 space-y-4 sm:space-y-6 md:space-y-8">
 					{/* Shoutbox at sidebar-top */}
 					<ShoutboxSidebarTop />
 
@@ -186,6 +191,9 @@ function HomePage() { // Changed to a regular function
 
 					{/* Daily Tasks Widget */}
 					<DailyTasksWidget />
+
+					{/* Hot Threads Widget */}
+					<HotThreads className="mb-6" limit={3} />
 
 					{/* Forum Navigation */}
 					<Card className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden">
@@ -247,7 +255,9 @@ function HomePage() { // Changed to a regular function
 // But for this specific task, we wrap HomePage directly as per instructions.
 const HomePageWithProvider = () => (
 	<ForumStructureProvider>
-		<HomePage />
+		<ProfileCardProvider>
+			<HomePage />
+		</ProfileCardProvider>
 	</ForumStructureProvider>
 );
 

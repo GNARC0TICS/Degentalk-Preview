@@ -42,11 +42,11 @@ export function applyPluginRewards(
 		effects.usernameColor = SYSTEM_ROLE_COLORS[userRole];
 	}
 
-	if (!inventory) {
+	if (!Array.isArray(inventory) || inventory.length === 0) {
 		return effects;
 	}
 
-	const equippedItems = inventory.filter(
+	const equippedItems = (inventory as UserInventoryWithProduct[]).filter(
 		(item) => item.equipped && item.product && item.product.pluginReward
 	);
 
