@@ -22,7 +22,7 @@ interface LeaderboardWidgetProps {
 	isLoading?: boolean;
 }
 
-export function LeaderboardWidget({ users, isLoading = false }: LeaderboardWidgetProps) {
+export default function LeaderboardWidget({ users, isLoading = false }: LeaderboardWidgetProps) {
 	// Format users from API if available, or use predefined sample data if not
 	const formattedUsers: FormattedUser[] = React.useMemo(() => {
 		if (isLoading || !users) {

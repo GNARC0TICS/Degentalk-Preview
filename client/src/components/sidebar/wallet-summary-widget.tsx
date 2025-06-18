@@ -17,7 +17,7 @@ interface WalletSummaryWidgetProps {
 	};
 }
 
-export function WalletSummaryWidget({
+export default function WalletSummaryWidget({
 	isLoggedIn = false,
 	walletData = { dgtBalance: 0, usdtBalance: 0 }
 }: WalletSummaryWidgetProps) {

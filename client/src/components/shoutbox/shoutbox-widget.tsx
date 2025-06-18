@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { UserName } from '@/components/identity/UserName';
 import { LevelBadge } from '@/components/identity/LevelBadge';
-import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
 	DropdownMenu,
@@ -45,9 +44,6 @@ import {
 	Smile,
 	Pin,
 	PinOff,
-	Heart,
-	DollarSign,
-	X,
 	MinusCircle,
 	Lock
 } from 'lucide-react';
@@ -112,15 +108,15 @@ const FALLBACK_EMOJI_LIST = [
 	'✨'
 ];
 
-export function ShoutboxWidget() {
+export default function ShoutboxWidget() {
 	const [message, setMessage] = useState<string>('');
 	const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
-	const [emojiCategory, setEmojiCategory] = useState<string>('all');
+	const [, setEmojiCategory] = useState<string>('all');
 	const [lockedEmojiInfo, setLockedEmojiInfo] = useState<CustomEmoji | null>(null);
 	const messageContainerRef = useRef<HTMLDivElement>(null);
 	const { toast } = useToast();
 	const queryClient = useQueryClient();
-	const { position, expansionLevel, cycleExpansionLevel, updateExpansionLevel, isMobile } =
+	const { position, expansionLevel, cycleExpansionLevel, updateExpansionLevel } =
 		useShoutbox();
 
 	// TODO: Replace with actual auth check from user context
@@ -144,7 +140,6 @@ export function ShoutboxWidget() {
 		data: customEmojis = [],
 		isLoading: isLoadingEmojis,
 		isError: isErrorEmojis,
-		error: emojiError,
 		refetch: refetchEmojis
 	} = useQuery({
 		queryKey: ['/api/chat/emojis'],
@@ -161,7 +156,6 @@ export function ShoutboxWidget() {
 		data: messages = [],
 		isLoading,
 		isError,
-		error,
 		refetch
 	} = useQuery({
 		queryKey: ['/api/shoutbox/messages'],
@@ -184,10 +178,10 @@ export function ShoutboxWidget() {
 			setShowEmojiPicker(false);
 			queryClient.invalidateQueries({ queryKey: ['/api/shoutbox/messages'] });
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Error sending message',
-				description: error.response?.data?.error || 'Unable to send message at this time',
+				description: error.message || 'Unable to send message at this time',
 				variant: 'destructive'
 			});
 		}
@@ -206,10 +200,10 @@ export function ShoutboxWidget() {
 				description: 'The message has been removed from the shoutbox'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Error deleting message',
-				description: error.response?.data?.error || 'Unable to delete the message',
+				description: error.message || 'Unable to delete the message',
 				variant: 'destructive'
 			});
 		}
@@ -232,10 +226,10 @@ export function ShoutboxWidget() {
 					: 'The message has been unpinned from the shoutbox'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Error updating message',
-				description: error.response?.data?.error || 'Unable to update the message',
+				description: error.message || 'Unable to update the message',
 				variant: 'destructive'
 			});
 		}
@@ -293,7 +287,7 @@ export function ShoutboxWidget() {
 	};
 
 	const MessageItem: React.FC<{ msg: ShoutboxMessage }> = ({ msg }) => {
-		const identity = useIdentityDisplay(msg.user as any);
+		const identity = useIdentityDisplay(msg.user);
 		const messageTime = formatMessageTime(msg.createdAt);
 
 		return (
@@ -310,7 +304,7 @@ export function ShoutboxWidget() {
 				<div className="flex-1">
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-1.5">
-							<UserName user={msg.user as any} className="text-sm" />
+							<UserName user={msg.user} className="text-sm" />
 							{identity?.level && <LevelBadge level={identity.level} className="text-xs px-1 py-0" />}
 							<TooltipProvider>
 								<Tooltip>

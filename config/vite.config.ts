@@ -62,7 +62,8 @@ export default defineConfig(async () => {
 				{ find: '@db_types', replacement: path.resolve(projectRoot, 'db/types') },
 				{ find: '@schema', replacement: path.resolve(projectRoot, 'db/schema/index.ts') },
 				{ find: /^@schema\/(.*)/, replacement: path.resolve(projectRoot, 'db/schema/$1') }
-			]
+			],
+			dedupe: ['react', 'react-dom']
 		},
 		root: path.resolve(projectRoot, 'client'),
 		server: {

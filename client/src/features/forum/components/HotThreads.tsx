@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { FixedSizeList as List } from 'react-window'; // Added react-window
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { ThreadCard } from '@/components/forum/ThreadCard';
 import type { ThreadTag } from '@schema';
 import { Link } from 'wouter';
 import {
@@ -12,9 +11,7 @@ import {
 	ThumbsUp,
 	ArrowRight,
 	Clock,
-	TrendingUp,
-	ChevronLeft,
-	ChevronRight
+	TrendingUp
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
@@ -55,7 +52,7 @@ interface HotThreadsProps {
 	limit?: number;
 }
 
-export function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
+function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 	const {
 		data: threads,
 		isLoading,

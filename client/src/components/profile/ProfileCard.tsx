@@ -48,7 +48,7 @@ function createMockProfile(username: string): ProfileData {
   };
 }
 
-export const ProfileCard: React.FC<ProfileCardProps> = ({ username, className }) => {
+export default function ProfileCard({ username, className }: ProfileCardProps) {
   const { user: currentUser } = useAuth();
   const {
     data: profile,
@@ -94,4 +94,4 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ username, className })
       </motion.div>
     </AnimatePresence>
   );
-}; 
+}

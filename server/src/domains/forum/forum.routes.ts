@@ -1444,52 +1444,27 @@ router.get('/debug/forum-relationships', async (req: Request, res: Response) => 
 
 // Get threads by category ID
 router.get('/threads/:categoryId', async (req: Request, res: Response) => {
+	return res.status(410).json({
+		message: 'Endpoint deprecated: use /forums/:slug/threads instead of /threads/:categoryId',
+		migrationGuide: 'Replace categoryId with forum slug as per forumMap.config.ts',
+	});
+});
+
+// NEW: List threads within a leaf forum by slug (config-first enforcement)
+// GET /forums/:forumSlug/threads
+router.get('/forums/:forumSlug/threads', async (req: Request, res: Response) => {
+	const { forumSlug } = req.params;
+
+	if (!forumSlug) {
+		return res.status(400).json({ message: 'Forum slug is required' });
+	}
+
 	try {
-		const categoryId = parseInt(req.params.categoryId);
-		logger.debug('ForumRoutes', `Received request for /threads/${categoryId}`, { categoryId });
-
-		if (isNaN(categoryId)) {
-			logger.warn('ForumRoutes', `Invalid category ID received: ${req.params.categoryId}`, { categoryIdParam: req.params.categoryId });
-			return res.status(400).json({ message: 'Invalid category ID' });
-		}
-
-		const limit = parseInt(req.query.limit as string) || 20;
-		const page = parseInt(req.query.page as string) || 1;
-		const offset = (page - 1) * limit;
-
-		// Use the regular db instance
-		const categoryThreads = await db
-			.select({
-				id: threads.id,
-				title: threads.title,
-				slug: threads.slug,
-				postCount: threads.postCount,
-				viewCount: threads.viewCount,
-				hotScore: threads.hotScore,
-				createdAt: threads.createdAt,
-				lastPostAt: threads.lastPostAt,
-				userId: threads.userId,
-				username: users.username,
-				avatarUrl: users.avatarUrl,
-				categoryId: threads.categoryId
-			})
-			.from(threads)
-			.leftJoin(users, eq(threads.userId, users.id))
-			.where(eq(threads.categoryId, categoryId))
-			.orderBy(desc(threads.lastPostAt))
-			.limit(limit)
-			.offset(offset);
-
-		if (categoryThreads.length === 0) {
-			return res.status(404).json({ message: 'No threads found for this category' });
-		}
-
-		// Return the threads
-		logger.debug('ForumRoutes', `Returning ${categoryThreads.length} threads for category ID ${categoryId}`, { categoryId, threadCount: categoryThreads.length });
-		return res.json(categoryThreads);
+		const threadsInForum = await forumService.getThreadsInForum(forumSlug);
+		return res.status(200).json({ threads: threadsInForum });
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error fetching threads by category', { err: error, categoryId: req.params.categoryId });
-		return res.status(500).json({ message: 'Error fetching threads' });
+		logger.error('ForumRoutes', 'Error fetching threads by forum slug', { err: error, forumSlug });
+		return res.status(400).json({ message: error instanceof Error ? error.message : 'Failed to fetch threads' });
 	}
 });
 

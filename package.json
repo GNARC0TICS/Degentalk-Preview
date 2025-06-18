@@ -54,6 +54,7 @@
 		"test:forum-fks": "tsx scripts/testing/validate-forum-fks.ts",
 		"test:e2e": "playwright test",
 		"test:e2e:ui": "playwright test --ui",
+		"test:unit": "vitest --config client/vitest.config.ts",
 		"lint": "npm run lint:client && npm run lint:server",
 		"lint:client": "eslint client --ext .ts,.tsx --max-warnings 0",
 		"lint:server": "cd server && npm run lint",
@@ -155,6 +156,7 @@
 		"express-session": "^1.18.1",
 		"framer-motion": "^11.18.2",
 		"gsap": "^3.13.0",
+		"immer": "^10.1.1",
 		"input-otp": "^1.4.2",
 		"js-sha256": "^0.11.0",
 		"jsonwebtoken": "^9.0.2",
@@ -173,6 +175,7 @@
 		"react-day-picker": "^8.10.1",
 		"react-dom": "^18.3.1",
 		"react-dropzone": "^14.2.3",
+		"react-error-boundary": "^6.0.0",
 		"react-helmet": "^6.1.0",
 		"react-hook-form": "^7.55.0",
 		"react-icons": "^5.4.0",
@@ -203,6 +206,7 @@
 		"@replit/vite-plugin-cartographer": "^0.0.11",
 		"@replit/vite-plugin-runtime-error-modal": "^0.0.3",
 		"@tailwindcss/typography": "^0.5.15",
+		"@testing-library/react": "^16.3.0",
 		"@types/bcryptjs": "^3.0.0",
 		"@types/connect-pg-simple": "^7.0.3",
 		"@types/cors": "^2.8.18",
@@ -219,6 +223,7 @@
 		"@typescript-eslint/eslint-plugin": "6.21.0",
 		"@typescript-eslint/parser": "6.21.0",
 		"@vitejs/plugin-react": "^4.3.2",
+		"@vitest/ui": "^3.2.4",
 		"autoprefixer": "^10.4.20",
 		"chalk": "^5.4.1",
 		"concurrently": "^8.2.2",
@@ -228,6 +233,7 @@
 		"eslint": "^8.57.0",
 		"fetch-cookie": "^3.1.0",
 		"glob": "^11.0.3",
+		"jsdom": "^26.1.0",
 		"node-fetch": "^2.7.0",
 		"postcss": "^8.4.47",
 		"tailwindcss": "^3.4.17",
@@ -236,7 +242,8 @@
 		"ts-node": "^10.9.2",
 		"tsx": "^4.19.4",
 		"typescript": "5.6.3",
-		"vite": "^5.4.14"
+		"vite": "^5.4.14",
+		"vitest": "^3.2.4"
 	},
 	"optionalDependencies": {
 		"bufferutil": "^4.0.8"

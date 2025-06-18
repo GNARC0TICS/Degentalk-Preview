@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useShoutbox } from '@/contexts/shoutbox-context';
 import type {
-	ShoutboxPosition,
-	ShoutboxEffectivePosition,
-	ShoutboxExpansionLevel
+	ShoutboxEffectivePosition
 } from '@/contexts/shoutbox-context';
-import { ShoutboxWidget } from './shoutbox-widget';
+import ShoutboxWidget from './shoutbox-widget';
 import { createPortal } from 'react-dom';
-import { MessageSquare, MinusIcon, Minus } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 /**
  * PositionedShoutbox - Wrapper component that handles the positioning of the Shoutbox
@@ -15,7 +13,7 @@ import { MessageSquare, MinusIcon, Minus } from 'lucide-react';
  * Includes smooth transitions between positions and responsive behavior
  */
 export function PositionedShoutbox() {
-	const { position, effectivePosition, expansionLevel, updateExpansionLevel, isMobile, isLoading } =
+	const { effectivePosition, expansionLevel, updateExpansionLevel, isMobile, isLoading } =
 		useShoutbox();
 
 	const [activePosition, setActivePosition] = useState<ShoutboxEffectivePosition>('sidebar-top');
@@ -169,51 +167,4 @@ export function PositionedShoutbox() {
 
 	// Otherwise render in-place
 	return createShoutboxContent();
-}
-
-/**
- * Special container components to render the Shoutbox in different positions
- */
-export function ShoutboxSidebarTop() {
-	const { position } = useShoutbox();
-	if (position !== 'sidebar-top') return null;
-
-	return (
-		<div className="shoutbox-container-sidebar">
-			<PositionedShoutbox />
-		</div>
-	);
-}
-
-export function ShoutboxSidebarBottom() {
-	const { position } = useShoutbox();
-	if (position !== 'sidebar-bottom') return null;
-
-	return (
-		<div className="shoutbox-container-sidebar">
-			<PositionedShoutbox />
-		</div>
-	);
-}
-
-export function ShoutboxMainTop() {
-	const { position } = useShoutbox();
-	if (position !== 'main-top') return null;
-
-	return (
-		<div className="shoutbox-container-main">
-			<PositionedShoutbox />
-		</div>
-	);
-}
-
-export function ShoutboxMainBottom() {
-	const { position } = useShoutbox();
-	if (position !== 'main-bottom') return null;
-
-	return (
-		<div className="shoutbox-container-main">
-			<PositionedShoutbox />
-		</div>
-	);
 }

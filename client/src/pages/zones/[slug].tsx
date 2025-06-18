@@ -10,24 +10,15 @@ import type { MergedForum } from '@/contexts/ForumStructureContext'; // Removed 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
-import { 
-  MessageSquare, 
-  FileText, 
-  ChevronRight, 
-  Home,
-  AlertCircle,
-  Plus,
-  TrendingUp,
-  Users
-} from 'lucide-react';
+// import { Badge } from '@/components/ui/badge';
+import { MessageSquare, FileText, ChevronRight, Home, AlertCircle, Plus, Users } from 'lucide-react';
 // import { cn } from '@/lib/utils'; // Removed
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
 
 const ZonePage: React.FC = () => {
   const params = useParams<{ slug: string }>();
   const slug = params?.slug;
-  const { getZone, zones, isLoading, error: contextError } = useForumStructure();
+  const { getZone, isLoading, error: contextError } = useForumStructure();
   // const [currentPage, setCurrentPage] = useState(1); // Removed
   // const threadsPerPage = 20; // Removed
 
@@ -35,46 +26,7 @@ const ZonePage: React.FC = () => {
     return <NotFound />;
   }
 
-  // Figure out zone (even while structure loading) so we can compute primaryForumId consistently
   const zone = getZone(slug);
-  const isCategory = !zone && zones.some(z => z.forums.some(f => f.slug === slug));
-
-  // Decide candidate forums (may be empty while loading)
-  const categoryForums = isCategory
-    ? zones.flatMap(z => z.forums).filter(f => f.parentForumSlug === slug)
-    : zone?.forums || [];
-
-  // const forumIds = isCategory // Removed
-  //   ? categoryForums.map(f => f.id).filter(id => id > 0)
-  //   : zone?.forums?.map(f => f.id).filter(id => id > 0) || [];
-
-  // const primaryForumId = forumIds[0] ?? 0; // Removed, related to thread fetching
-
-  // Always call useQuery so the hook count stays the same; use `enabled` to control fetch.
-  // const { // Removed thread fetching query
-  //   data: threadsResponse,
-  //   isLoading: isLoadingThreads,
-  //   error: threadsError,
-  // } = useQuery<ThreadsApiResponse | null, Error>({
-  //   queryKey: [`/api/forum/threads`, primaryForumId, currentPage, threadsPerPage],
-  //   queryFn: async () => {
-  //     if (!primaryForumId) return null;
-      
-  //     // Use single categoryId for now
-  //     const url = `/api/forum/threads?categoryId=${primaryForumId}&page=${currentPage}&limit=${threadsPerPage}&sortBy=latest`;
-      
-  //     const fetcher = getQueryFn<ThreadsApiResponse>({ on401: 'returnNull' });
-  //     try {
-  //       const response = await fetcher({ queryKey: [url], meta: undefined } as any);
-  //       return response;
-  //     } catch (e) {
-  //       console.error(`Error fetching threads for zone/category ${slug}:`, e);
-  //       throw e;
-  //     }
-  //   },
-  //   enabled: primaryForumId > 0,
-  //   staleTime: 1 * 60 * 1000,
-  // });
 
   // Handle loading/error states AFTER hooks
   if (isLoading) {
@@ -85,21 +37,20 @@ const ZonePage: React.FC = () => {
     return <ErrorState error={contextError} />;
   }
 
-  if (!zone && !isCategory) {
+  if (!zone) {
     return <NotFound />;
   }
 
-  const displayName = zone?.name || slug;
-  const displayDescription = zone?.description;
-  const theme = zone?.theme;
+  const displayName = zone.name;
+  const displayDescription = zone.description;
+  const theme = zone.theme;
 
-  // const threads = threadsResponse?.threads || []; // Removed
-  // const pagination = threadsResponse?.pagination || { // Removed
-  //   page: 1,
-  //   limit: threadsPerPage,
-  //   totalThreads: 0,
-  //   totalPages: 0,
-  // };
+  // --- SEO: set document title ---
+  React.useEffect(() => {
+    if (displayName) {
+      document.title = `${displayName} | Zones | Degentalk`;
+    }
+  }, [displayName]);
 
   return (
     <div className="min-h-screen bg-black">
@@ -164,21 +115,15 @@ const ZonePage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <MessageSquare className="w-4 h-4 text-emerald-500" />
                   <span className="text-zinc-400">
-                    <span className="font-semibold text-white">{zone?.threadCount || 0}</span> threads
+                    <span className="font-semibold text-white">{zone.threadCount}</span> threads
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <FileText className="w-4 h-4 text-blue-500" />
                   <span className="text-zinc-400">
-                    <span className="font-semibold text-white">{zone?.postCount || 0}</span> posts
+                    <span className="font-semibold text-white">{zone.postCount}</span> posts
                   </span>
                 </div>
-                {zone?.hasXpBoost && (
-                  <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-500 border-yellow-500/50">
-                    <TrendingUp className="w-3 h-3 mr-1" />
-                    {zone.boostMultiplier}x XP Boost
-                  </Badge>
-                )}
               </div>
             </div>
 
@@ -200,7 +145,7 @@ const ZonePage: React.FC = () => {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Forums Section */}
-            {(zone?.forums && zone.forums.length > 0) || (zone?.categories && zone.categories.some(cat => cat.forums.length > 0)) ? (
+            {zone.forums && zone.forums.length > 0 ? (
               <Card className="bg-zinc-900 border-zinc-800">
                 <CardHeader>
                   <CardTitle className="text-xl text-white flex items-center gap-2">
@@ -210,27 +155,14 @@ const ZonePage: React.FC = () => {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {/* Display forums directly under the zone */}
-                  {zone?.forums?.map((forum: MergedForum) => (
+                  {zone.forums.map((forum: MergedForum) => (
                     <div key={`direct-${forum.slug}`} className="bg-zinc-800/50 rounded-lg overflow-hidden">
                       <ForumListItem 
                         forum={forum}
                         href={`/forums/${forum.slug}`}
-                        parentZoneColor={zone?.color ?? undefined}
+                        parentZoneColor={theme?.color ?? undefined}
                       />
                     </div>
-                  ))}
-                  {/* Display forums under categories within the zone */}
-                  {zone?.categories?.map(category => (
-                    category.forums.map((forum: MergedForum) => (
-                      <div key={`${category.slug}-${forum.slug}`} className="bg-zinc-800/50 rounded-lg overflow-hidden">
-                        <ForumListItem 
-                          forum={forum}
-                          href={`/forums/${forum.slug}`}
-                          parentZoneColor={zone?.color ?? undefined}
-                          // Optionally, you could pass category info here if ForumListItem can use it
-                        />
-                      </div>
-                    ))
                   ))}
                 </CardContent>
               </Card>
@@ -266,15 +198,15 @@ const ZonePage: React.FC = () => {
               <CardContent className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-zinc-400">Total Forums</span>
-                  <span className="font-semibold text-white">{(zone?.forums || categoryForums).length}</span>
+                  <span className="font-semibold text-white">{zone.forums.length}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-zinc-400">Total Threads</span>
-                  <span className="font-semibold text-white">{zone?.threadCount || 0}</span>
+                  <span className="font-semibold text-white">{zone.threadCount}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-zinc-400">Total Posts</span>
-                  <span className="font-semibold text-white">{zone?.postCount || 0}</span>
+                  <span className="font-semibold text-white">{zone.postCount}</span>
                 </div>
               </CardContent>
             </Card>

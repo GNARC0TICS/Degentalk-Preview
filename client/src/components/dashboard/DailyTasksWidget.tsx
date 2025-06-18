@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDailyTasks } from '@/hooks/useDailyTasks';
 import { CheckCircle, Lock, Flame } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 
@@ -48,4 +47,4 @@ export default function DailyTasksWidget() {
       </CardContent>
     </Card>
   );
-} 
+}

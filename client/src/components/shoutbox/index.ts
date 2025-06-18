@@ -1,5 +1,5 @@
 // Main components
-export { ShoutboxWidget } from './shoutbox-widget';
+export { default as ShoutboxWidget } from './shoutbox-widget';
 export { PositionedShoutbox } from './positioned-shoutbox';
 export { ShoutboxPositionSelector } from './shoutbox-position-selector';
 

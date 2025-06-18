@@ -311,7 +311,7 @@ const ExpandableForumItem = ({
 };
 
 
-export function HierarchicalZoneNav({
+function HierarchicalZoneNav({
 	className = '',
 }: HierarchicalZoneNavProps) {
 	const [location] = useLocation();
@@ -467,5 +467,4 @@ export function HierarchicalZoneNav({
 	);
 }
 
-export { HierarchicalZoneNav as HierarchicalForumNav };
 export default HierarchicalZoneNav;

@@ -18,6 +18,7 @@ import { sql, desc, asc, and, eq, isNull, count, ilike, or, inArray, SQL } from 
 import type { ForumCategoryWithStats, ThreadWithUser, ThreadWithPostsAndUser, PostWithUser, ThreadWithUserAndCategory } from '../../../../db/types/forum.types.ts';
 import type { User, ForumCategory as ForumCategorySchemaType, Post as PostSchemaType } from '@schema';
 import type { InferSelectModel } from 'drizzle-orm'; // For inferring types
+import { forumMap, type Forum as ConfigForum, type Zone as ConfigZone } from '@/config/forumMap.config';
 
 // Helper to parse configZoneType from pluginData
 const parseZoneType = (pluginData: unknown): 'primary' | 'general' => {
@@ -397,21 +398,47 @@ export const forumService = {
 	},
 
 	async getForumBySlug(slug: string): Promise<ForumCategoryWithStats | null> {
-		const { zones } = await this.getForumStructure();
-		for (const zone of zones) {
-			for (const parentForum of zone.childForums || []) {
-				if (parentForum.slug === slug) {
-					return parentForum;
-				}
-				if (parentForum.childForums) {
-					const subForum = parentForum.childForums.find(sf => sf.slug === slug);
-					if (subForum) {
-						return subForum;
-					}
-				}
-			}
+		// --- CONFIG-FIRST ENFORCEMENT ----------------------------------
+		const entry = forumMap.getForumBySlug?.(slug);
+		if (!entry) {
+			return null;
 		}
-		return null;
+		const { forum, zone } = entry as { forum: ConfigForum; zone: ConfigZone };
+		// Map minimal fields expected by legacy consumers. Values not present in
+		// the static config are filled with sensible defaults so downstream DB-heavy
+		// code continues to compile while we migrate.
+		const baseColor = forum.themeOverride?.color || zone.theme.color;
+		const baseIcon = zone.theme.icon;
+		const baseColorTheme = forum.themeOverride?.colorTheme || zone.theme.colorTheme;
+
+		const mapForum = (f: ConfigForum, parentId: number | null = null): ForumCategoryWithStats => ({
+			id: 0, // 0 indicates config-only entity (no DB row)
+			name: f.name,
+			slug: f.slug,
+			description: f.description ?? null,
+			parentForumSlug: parentId ? (forum.slug) : null,
+			parentId,
+			type: 'forum',
+			position: f.position ?? 0,
+			isVip: false,
+			isLocked: false,
+			minXp: f.rules.minXpRequired ?? 0,
+			color: f.themeOverride?.color || baseColor,
+			icon: baseIcon,
+			colorTheme: f.themeOverride?.colorTheme || baseColorTheme,
+			isHidden: false,
+			minGroupIdRequired: null,
+			tippingEnabled: f.rules.tippingEnabled,
+			xpMultiplier: f.rules.xpMultiplier ?? 1,
+			pluginData: f.rules,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+			threadCount: 0,
+			postCount: 0,
+			childForums: Array.isArray(f.forums) ? f.forums.map(sf => mapForum(sf, 0)) : [],
+		});
+
+		return mapForum(forum);
 	},
 
 	async getForumAndItsSubForumsBySlug(slug: string): Promise<{
@@ -770,6 +797,30 @@ export const forumService = {
 			logger.error('ForumService', 'Error in updateThreadSolvedStatus', { err: error, threadId, solvingPostId });
 			throw error;
 		}
+	},
+
+	// Validate slug against static config and ensure it's a leaf forum (no sub-forums)
+	ensureValidLeafForum(slug: string) {
+		const entry = forumMap.getForumBySlug?.(slug);
+		if (!entry) {
+			throw new Error(`Invalid forum slug: ${slug}`);
+		}
+		const { forum } = entry;
+		if (forum.forums && forum.forums.length > 0) {
+			throw new Error(`Cannot fetch threads from a parent forum: ${slug}`);
+		}
+		return forum;
+	},
+
+	// New: Thread list retrieval using slug with config enforcement
+	async getThreadsInForum(slug: string) {
+		// Will throw if invalid or parent
+		this.ensureValidLeafForum(slug);
+		return db
+			.select()
+			.from(threads)
+			.where(eq(threads.forumSlug, slug))
+			.orderBy(desc(threads.createdAt));
 	}
 };
 
