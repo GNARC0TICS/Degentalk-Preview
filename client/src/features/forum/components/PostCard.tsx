@@ -2,7 +2,10 @@ import React from 'react';
 import DOMPurify from 'dompurify';
 import { Link } from 'wouter';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AvatarFrame } from '@/components/identity/AvatarFrame';
+import { UserName } from '@/components/identity/UserName';
+import { LevelBadge } from '@/components/identity/LevelBadge';
+import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 import { Heart, ThumbsUp, Reply, Trash, Edit, Flag, Coins } from 'lucide-react';
@@ -42,7 +45,7 @@ export function PostCard({
 	parentForumTheme = null,
 	tippingEnabled = false,
 }: PostCardProps) {
-	const initials = post.user.username ? post.user.username.substring(0, 2).toUpperCase() : 'U';
+	const identity = useIdentityDisplay(post.user);
 
 	const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
 	const editedTimeAgo =
@@ -56,15 +59,10 @@ export function PostCard({
 		>
 			<CardHeader className="p-4 pb-2 flex flex-row items-start justify-between">
 				<div className="flex items-center space-x-4">
-					<Avatar className="h-10 w-10 border border-zinc-700">
-						<AvatarImage src={post.user.avatarUrl || undefined} alt={post.user.username} />
-						<AvatarFallback className="bg-zinc-800 text-zinc-300">{initials}</AvatarFallback>
-					</Avatar>
+					<AvatarFrame avatarUrl={post.user.avatarUrl || ''} frame={identity?.avatarFrame} size={40} />
 					<div>
 						<Link href={`/profile/${post.user.id}`}>
-							<span className="font-medium text-zinc-200 hover:text-emerald-400 transition-colors cursor-pointer">
-								{post.user.username}
-							</span>
+							<UserName user={post.user} className="hover:text-emerald-400 transition-colors" />
 						</Link>
 						<p className="text-xs text-zinc-400">
 							{timeAgo}

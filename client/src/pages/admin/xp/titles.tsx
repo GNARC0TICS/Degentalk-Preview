@@ -90,7 +90,7 @@ const PATHS = [
 	{ value: 'analyst', label: 'Analyst' },
 	{ value: 'educator', label: 'Educator' },
 	{ value: 'community', label: 'Community Builder' },
-	{ value: '', label: 'None' }
+	{ value: 'none', label: 'None' }
 ];
 
 export default function TitleManagementPage() {
@@ -109,7 +109,7 @@ export default function TitleManagementPage() {
 		icon: '',
 		rarity: 'common',
 		category: 'other',
-		requiredPath: '',
+		requiredPath: 'none',
 		requiredLevel: null,
 		isHidden: false
 	});
@@ -238,7 +238,7 @@ export default function TitleManagementPage() {
 			icon: title.icon || '',
 			rarity: title.rarity,
 			category: title.category,
-			requiredPath: title.requiredPath || '',
+			requiredPath: title.requiredPath && title.requiredPath !== '' ? title.requiredPath : 'none',
 			requiredLevel: title.requiredLevel,
 			isHidden: title.isHidden
 		});
@@ -250,7 +250,7 @@ export default function TitleManagementPage() {
 		setIsDeleteDialogOpen(true);
 	};
 
-	const resetForm = () => {
+		const resetForm = () => {
 		setFormData({
 			name: '',
 			description: '',
@@ -258,7 +258,7 @@ export default function TitleManagementPage() {
 			icon: '',
 			rarity: 'common',
 			category: 'other',
-			requiredPath: '',
+			requiredPath: 'none',
 			requiredLevel: null,
 			isHidden: false
 		});
@@ -679,7 +679,7 @@ export default function TitleManagementPage() {
 			<AdminPageShell title="Title Management">
 				<div className="space-y-4">
 					<div className="flex items-center justify-between">
-						<h2 className="text-3xl font-bold tracking-tight">Title Management</h2>
+						<div />
 						<Button onClick={() => setIsCreateDialogOpen(true)}>
 							<Plus className="mr-2 h-4 w-4" />
 							Create Title

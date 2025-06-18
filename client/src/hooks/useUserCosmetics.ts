@@ -33,28 +33,30 @@ const useUser = (): UserContextType => {
  * to return a consolidated object of applied cosmetic effects.
  * System roles (admin, mod, dev) will override cosmetic username colors.
  */
-export function useUserCosmetics(): {
+export function useUserCosmetics(targetUserId?: string | number): {
 	cosmetics: AppliedCosmetics;
 	isLoading: boolean;
 	isError: boolean;
 } {
 	const { user, isLoading: isLoadingUser } = useUser();
 
+	const effectiveUserId = targetUserId ?? user?.id;
+
 	const {
 		data: inventory,
 		isLoading: isLoadingInventory,
 		isError
 	} = useQuery<UserInventoryWithProduct[], Error>({
-		queryKey: ['userCosmeticsInventory', user?.id],
+		queryKey: ['userCosmeticsInventory', effectiveUserId],
 		queryFn: () => {
-			if (!user?.id) {
+			if (!effectiveUserId) {
 				return Promise.reject(new Error('User ID is required to fetch inventory.'));
 			}
 			// Assuming an API endpoint to fetch a user's inventory with product details
 			// This endpoint should join userInventory with products to get pluginReward
-			return apiRequest<UserInventoryWithProduct[]>({ url: `/api/user/${user.id}/inventory` });
+			return apiRequest<UserInventoryWithProduct[]>({ url: `/api/user/${effectiveUserId}/inventory` });
 		},
-		enabled: !!user?.id, // Only fetch if user ID is available
+		enabled: !!effectiveUserId, // Only fetch if user ID is available
 		staleTime: 5 * 60 * 1000, // Data considered fresh for 5 minutes
 		cacheTime: 10 * 60 * 1000 // Data remains in cache for 10 minutes
 	});

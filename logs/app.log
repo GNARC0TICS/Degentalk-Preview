@@ -17066,3 +17066,7 @@ User not found
 {
   "logPath": "logs/app.log"
 }
+[2025-06-18T05:07:52.951Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}

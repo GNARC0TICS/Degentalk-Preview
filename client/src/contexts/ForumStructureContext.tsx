@@ -429,7 +429,8 @@ function processApiData(apiData: ApiCategoryData[]): {
   const zoneMap = new Map<number, MergedZone>();
   const categoryMap = new Map<number, MergedCategory>();
   
-  // Process zones
+    // Process zones
+  const PRIMARY_ZONE_SLUGS = ['the-pit', 'mission-control', 'briefing-room', 'casino-floor', 'the-archive'];
   apiData.filter(item => item.type === 'zone').forEach(apiZone => {
     const zone: MergedZone = {
       ...apiZone,
@@ -446,9 +447,8 @@ function processApiData(apiData: ApiCategoryData[]): {
       canonical: !apiZone.parentId, // Canonical zones have no parent
       hasXpBoost: (apiZone.xpMultiplier ?? 1) > 1,
       boostMultiplier: apiZone.xpMultiplier ?? 1,
-      // Primary Zone features: rely on explicit isPrimary flag from API.
-      // If backend omits this flag, default to false (treat as general zone).
-      isPrimary: apiZone.isPrimary ?? false,
+      // Primary Zone features: if API explicitly sets isPrimary, use it; otherwise, mark as primary if slug matches known primary zone slugs.
+      isPrimary: (apiZone.isPrimary === true) || PRIMARY_ZONE_SLUGS.includes(apiZone.slug),
       features: apiZone.features ?? apiZone.pluginData?.features ?? [],
       customComponents: apiZone.customComponents ?? apiZone.pluginData?.customComponents ?? [],
       staffOnly: apiZone.staffOnly ?? apiZone.pluginData?.staffOnly ?? false,

@@ -4,7 +4,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loader';
-import { FramedAvatar } from '@/components/users/framed-avatar';
 import { WhisperButton } from '@/components/messages/WhisperButton';
 import { WhisperModal } from '@/components/messages/WhisperModal';
 import { Settings, UserCheck, UserPlus } from 'lucide-react';
@@ -12,8 +11,11 @@ import { cn, formatNumber, formatCurrency, formatRelativeTime } from '@/lib/util
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { useAuth } from '@/hooks/use-auth.tsx';
-import { getRarityBorderClass } from './rarityUtils';
 import type { ProfileData } from '@/types/profile';
+import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
+import { AvatarFrame } from '@/components/identity/AvatarFrame';
+import { UserName } from '@/components/identity/UserName';
+import { LevelBadge } from '@/components/identity/LevelBadge';
 
 interface Props {
   profile: ProfileData;
@@ -23,33 +25,42 @@ interface Props {
 const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
   const { toast } = useToast();
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(false);
   const queryClient = useQueryClient();
   const { user } = useAuth();
+
+  // Get identity display information
+  const identity = useIdentityDisplay(profile);
 
   // Check follow status
   const { data: followStatus } = useQuery({
     queryKey: ['/api/relationships/is-following', profile.id],
     queryFn: async () => {
       if (isOwnProfile) return { isFollowing: false };
-      const res = await fetch(`/api/relationships/is-following/${profile.id}`);
-      if (!res.ok) throw new Error('Failed to fetch follow status');
-      return res.json() as Promise<{ isFollowing: boolean }>;
+      // Ensure user is defined before trying to fetch follow status
+      if (!user) return { isFollowing: false }; 
+      const res = await apiRequest<{ isFollowing: boolean }>({ url: `/api/relationships/is-following/${profile.id}` });
+      return res;
     },
-    enabled: !isOwnProfile,
+    enabled: !isOwnProfile && !!user, // Only run if not own profile and user is logged in
   });
 
+  const isFollowing = followStatus?.isFollowing || false;
+
   useEffect(() => {
-    if (followStatus) setIsFollowing(followStatus.isFollowing);
+    // This effect is not strictly needed anymore as isFollowing is derived from followStatus directly
+    // but keeping it in case of future direct manipulations of isFollowing state, though unlikely.
+    if (followStatus) {
+      // setIsFollowing(followStatus.isFollowing); // No longer have setIsFollowing state hook
+    }
   }, [followStatus]);
 
   // Follow / Unfollow
   const followMutation = useMutation({
     mutationFn: () => apiRequest({ url: `/api/relationships/follow/${profile.id}`, method: 'POST' }),
     onSuccess: () => {
-      setIsFollowing(true);
       toast({ title: 'Success', description: `You are now following ${profile.username}` });
       queryClient.invalidateQueries({ queryKey: ['/api/relationships/is-following', profile.id] });
+      queryClient.invalidateQueries({ queryKey: ['profile', profile.username] }); // Invalidate profile to update follower count potentially
     },
     onError: (err: any) => toast({ title: 'Error', description: err.message, variant: 'destructive' }),
   });
@@ -57,46 +68,42 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
   const unfollowMutation = useMutation({
     mutationFn: () => apiRequest({ url: `/api/relationships/unfollow/${profile.id}`, method: 'DELETE' }),
     onSuccess: () => {
-      setIsFollowing(false);
       toast({ title: 'Success', description: `You have unfollowed ${profile.username}` });
       queryClient.invalidateQueries({ queryKey: ['/api/relationships/is-following', profile.id] });
+      queryClient.invalidateQueries({ queryKey: ['profile', profile.username] });
     },
     onError: (err: any) => toast({ title: 'Error', description: err.message, variant: 'destructive' }),
   });
-
-  const frameRarityClass = profile.activeFrame ? getRarityBorderClass(profile.activeFrame.rarity) : '';
-  const isPro = profile.level >= 10;
 
   return (
     <div
       className={cn(
         'bg-gradient-to-b from-zinc-800/80 to-zinc-900/85 backdrop-blur-sm rounded-lg overflow-hidden shadow-xl relative border',
-        frameRarityClass || 'border-zinc-700/50'
+        identity?.avatarFrame?.rarityColor ? 'border-transparent' : 'border-zinc-700/50' // Make border transparent if glow exists
       )}
+      style={identity?.avatarFrame?.rarityColor ? { boxShadow: `0 0 15px -3px ${identity.avatarFrame.rarityColor}, 0 0 5px -2px ${identity.avatarFrame.rarityColor}` } : {}}
     >
       <div className="p-6 flex flex-col items-center">
         {/* Avatar */}
         <div className="relative mb-4">
-          <FramedAvatar
-            avatarUrl={profile.avatarUrl}
-            frameUrl={profile.activeFrame?.imageUrl || null}
+          <AvatarFrame
+            avatarUrl={profile.avatarUrl || ''} // Ensure fallback for avatarUrl
+            frame={identity?.avatarFrame}
             username={profile.username}
             size="xl"
-            shape="circle"
             className="mb-2"
           />
         </div>
 
-        {/* Username & Title */}
-        <h1 className="text-2xl font-bold text-center text-white mb-1">{profile.username}</h1>
-        {profile.activeTitle && (
-          <div className="text-sm font-medium mb-2 px-3 py-0.5 rounded-full text-center bg-slate-800 text-white">
-            {profile.activeTitle.name}
-          </div>
+        {/* Username, Title, Role, Level */}
+        <UserName user={profile} className="text-2xl font-bold text-center mb-1" />
+
+        {identity?.primaryRole && (
+           <Badge className="mb-2 uppercase bg-gradient-to-r from-purple-600 to-violet-600 text-white border-0" style={{ backgroundColor: identity.primaryRole.color || undefined }}>
+            {identity.primaryRole.name}
+          </Badge>
         )}
-        <Badge className="mb-4 uppercase bg-gradient-to-r from-purple-600 to-violet-600 text-white border-0">
-          {profile.role || 'User'}
-        </Badge>
+        {identity?.level && <LevelBadge level={identity.level} className="mb-4 text-sm" />}
 
         {/* Actions */}
         <div className="flex gap-2 w-full mb-6">

@@ -7,7 +7,9 @@ import { format, formatDistanceToNow } from 'date-fns';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AvatarFrame } from '@/components/identity/AvatarFrame';
+import { UserName } from '@/components/identity/UserName';
+import { LevelBadge } from '@/components/identity/LevelBadge';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
@@ -28,6 +30,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useShoutbox } from '@/contexts/shoutbox-context';
 import { ShoutboxPositionSelector } from './shoutbox-position-selector';
+import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 
 // Import icons
 import {
@@ -289,19 +292,96 @@ export function ShoutboxWidget() {
 		}
 	};
 
-	// Render avatar for a user
-	const renderAvatar = (user: ShoutboxUser) => {
-		const avatarUrl = user.activeAvatarUrl || user.avatarUrl;
-		const initials = user.username.slice(0, 2).toUpperCase();
+	const MessageItem: React.FC<{ msg: ShoutboxMessage }> = ({ msg }) => {
+		const identity = useIdentityDisplay(msg.user as any);
+		const messageTime = formatMessageTime(msg.createdAt);
 
 		return (
-			<Avatar className="h-6 w-6 mr-2">
-				{avatarUrl ? (
-					<AvatarImage src={avatarUrl} alt={user.username} />
-				) : (
-					<AvatarFallback className="bg-zinc-700 text-zinc-300 text-xs">{initials}</AvatarFallback>
-				)}
-			</Avatar>
+			<div
+				key={msg.id}
+				className={`flex items-start p-2 hover:bg-zinc-800/50 rounded-md transition-colors duration-150 ${msg.isDeleted ? 'opacity-50' : ''}`}
+			>
+				<AvatarFrame
+					avatarUrl={msg.user.activeAvatarUrl || msg.user.avatarUrl || ''}
+					frame={identity?.avatarFrame}
+					size={24}
+					className="mr-2"
+				/>
+				<div className="flex-1">
+					<div className="flex items-center justify-between">
+						<div className="flex items-center gap-1.5">
+							<UserName user={msg.user as any} className="text-sm" />
+							{identity?.level && <LevelBadge level={identity.level} className="text-xs px-1 py-0" />}
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<div className="text-xs text-zinc-500 flex items-center">
+											<Clock className="h-3 w-3 mr-1" />
+											{messageTime}
+										</div>
+									</TooltipTrigger>
+									<TooltipContent>
+										<p>{format(new Date(msg.createdAt), 'PPP p')}</p>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
+						</div>
+						{isModOrAdmin && !msg.isDeleted && (
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<Button
+										variant="ghost"
+										size="sm"
+										className="h-auto p-1 ml-2 text-zinc-400 hover:text-zinc-300"
+									>
+										<MoreVertical className="h-3 w-3" />
+									</Button>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent align="end" className="bg-zinc-900 border-zinc-800">
+									{msg.isPinned ? (
+										<DropdownMenuItem
+											className="text-zinc-300 cursor-pointer focus:text-zinc-100 focus:bg-zinc-800"
+											onClick={() =>
+												pinMessage.mutate({ messageId: msg.id, isPinned: false })
+											}
+										>
+											<PinOff className="mr-2 h-4 w-4" />
+											<span>Unpin Message</span>
+										</DropdownMenuItem>
+									) : (
+										<DropdownMenuItem
+											className="text-emerald-400 cursor-pointer focus:text-emerald-300 focus:bg-emerald-950/30"
+											onClick={() =>
+												pinMessage.mutate({ messageId: msg.id, isPinned: true })
+											}
+										>
+											<Pin className="mr-2 h-4 w-4" />
+											<span>Pin Message</span>
+										</DropdownMenuItem>
+									)}
+									<DropdownMenuItem
+										className="text-red-400 cursor-pointer focus:text-red-300 focus:bg-red-950/30"
+										onClick={() => deleteMessage.mutate(msg.id)}
+									>
+										<Trash2 className="mr-2 h-4 w-4" />
+										<span>Delete Message</span>
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
+						)}
+					</div>
+					<div className="ml-8 text-zinc-300">
+						{msg.isDeleted ? (
+							<span className="italic text-zinc-500">Message deleted</span>
+						) : (
+							msg.content
+						)}
+						{msg.editedAt && (
+							<span className="ml-1 text-xs italic text-zinc-500">(edited)</span>
+						)}
+					</div>
+				</div>
+			</div>
 		);
 	};
 
@@ -387,128 +467,7 @@ export function ShoutboxWidget() {
 						</div>
 					) : Array.isArray(messages) ? (
 						messages.map((msg: ShoutboxMessage) => (
-							<div
-								key={msg.id}
-								className={`rounded-lg p-2 text-sm ${
-									msg.isPinned ? 'bg-emerald-950/30 border border-emerald-800/50' : 'bg-zinc-800/50'
-								}`}
-							>
-								{msg.isPinned && (
-									<div className="flex items-center mb-1 text-xs text-emerald-400">
-										<Pin className="h-3 w-3 mr-1" />
-										<span>Pinned message</span>
-									</div>
-								)}
-								<div className="flex justify-between items-start mb-1">
-									<div className="flex items-center">
-										{renderAvatar(msg.user)}
-										<div className="flex items-center">
-											<span className="font-medium text-emerald-400">{msg.user.username}</span>
-											<Badge
-												variant="outline"
-												className="ml-2 text-[10px] px-1 h-4 bg-zinc-700 border-zinc-600"
-											>
-												Lvl {msg.user.level}
-											</Badge>
-											{msg.user.groupId === 1 && (
-												<Badge
-													variant="outline"
-													className="ml-1 text-[10px] px-1 h-4 bg-red-900/40 text-red-400 border-red-900"
-												>
-													Admin
-												</Badge>
-											)}
-											{msg.user.groupId === 2 && (
-												<Badge
-													variant="outline"
-													className="ml-1 text-[10px] px-1 h-4 bg-blue-900/40 text-blue-400 border-blue-900"
-												>
-													Mod
-												</Badge>
-											)}
-										</div>
-									</div>
-									<div className="flex items-center">
-										{msg.tipAmount && msg.tipAmount > 0 && (
-											<Badge
-												variant="outline"
-												className="mr-2 text-[10px] px-1 h-5 bg-amber-950/40 text-amber-400 border-amber-900 flex items-center"
-											>
-												<DollarSign className="h-3 w-3 mr-1" />
-												{msg.tipAmount}
-											</Badge>
-										)}
-
-										<TooltipProvider>
-											<Tooltip>
-												<TooltipTrigger asChild>
-													<div className="text-xs text-zinc-500 flex items-center">
-														<Clock className="h-3 w-3 mr-1" />
-														{formatMessageTime(msg.createdAt)}
-													</div>
-												</TooltipTrigger>
-												<TooltipContent>
-													<p>{format(new Date(msg.createdAt), 'PPP p')}</p>
-												</TooltipContent>
-											</Tooltip>
-										</TooltipProvider>
-
-										{isModOrAdmin && !msg.isDeleted && (
-											<DropdownMenu>
-												<DropdownMenuTrigger asChild>
-													<Button
-														variant="ghost"
-														size="sm"
-														className="h-auto p-1 ml-2 text-zinc-400 hover:text-zinc-300"
-													>
-														<MoreVertical className="h-3 w-3" />
-													</Button>
-												</DropdownMenuTrigger>
-												<DropdownMenuContent align="end" className="bg-zinc-900 border-zinc-800">
-													{msg.isPinned ? (
-														<DropdownMenuItem
-															className="text-zinc-300 cursor-pointer focus:text-zinc-100 focus:bg-zinc-800"
-															onClick={() =>
-																pinMessage.mutate({ messageId: msg.id, isPinned: false })
-															}
-														>
-															<PinOff className="mr-2 h-4 w-4" />
-															<span>Unpin Message</span>
-														</DropdownMenuItem>
-													) : (
-														<DropdownMenuItem
-															className="text-emerald-400 cursor-pointer focus:text-emerald-300 focus:bg-emerald-950/30"
-															onClick={() =>
-																pinMessage.mutate({ messageId: msg.id, isPinned: true })
-															}
-														>
-															<Pin className="mr-2 h-4 w-4" />
-															<span>Pin Message</span>
-														</DropdownMenuItem>
-													)}
-													<DropdownMenuItem
-														className="text-red-400 cursor-pointer focus:text-red-300 focus:bg-red-950/30"
-														onClick={() => deleteMessage.mutate(msg.id)}
-													>
-														<Trash2 className="mr-2 h-4 w-4" />
-														<span>Delete Message</span>
-													</DropdownMenuItem>
-												</DropdownMenuContent>
-											</DropdownMenu>
-										)}
-									</div>
-								</div>
-								<div className="ml-8 text-zinc-300">
-									{msg.isDeleted ? (
-										<span className="italic text-zinc-500">Message deleted</span>
-									) : (
-										msg.content
-									)}
-									{msg.editedAt && (
-										<span className="ml-1 text-xs italic text-zinc-500">(edited)</span>
-									)}
-								</div>
-							</div>
+							<MessageItem key={msg.id} msg={msg} />
 						))
 					) : null}
 				</div>
