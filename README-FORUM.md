@@ -57,7 +57,7 @@ Important notes:
 | `the-archive`   | The Archive        | Historical records & past glories.            |
 
 Every primary zone owns **0-n categories** (currently 0) or directly hosts
-forums. Each carries immutable theming (colour, icon, banner, landing
+forums. Each carries immutable theming (colour, icon, banners, landing
   component) defined in `THEME_PRESETS` inside
   `client/src/config/forumMap.config.ts`.
   Primary Zones are designed to be feature-rich, staff-driven areas, often incorporating custom UI components, unique gamification rules (like special XP challenges or badges), and enhanced content curation capabilities. These extended features are typically configured via the `pluginData` field for the respective zone in `forumMap.config.ts` and utilized by both frontend and backend services.
