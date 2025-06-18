@@ -84,6 +84,8 @@ export * from './economy/dgtPackages';
 export * from './economy/dgtPurchaseOrders';
 export * from './economy/settings';
 export * from './economy/treasurySettings';
+export * from './economy/cloutAchievements';
+export * from './economy/userCloutLog';
 
 // Economy domain - airdrop
 export * from './economy/airdropSettings';

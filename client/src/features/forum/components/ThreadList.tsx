@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import ThreadCard from '@/components/forum/ThreadCard'; // Corrected import path
 import { getQueryFn } from '@/lib/queryClient';
@@ -75,7 +75,7 @@ interface ThreadListProps {
 
 const THREADS_API_BASE_PATH = '/api/forum/threads';
 
-const ThreadList: React.FC<ThreadListProps> = ({ forumId, forumSlug }) => {
+const ThreadListComponent: React.FC<ThreadListProps> = ({ forumId, forumSlug }) => {
   const [page, setPage] = useState(1);
   const threadsPerPage = 10; 
 
@@ -164,4 +164,6 @@ const ThreadList: React.FC<ThreadListProps> = ({ forumId, forumSlug }) => {
   );
 };
 
+// Memoize to prevent unnecessary re-renders when forumId and forumSlug haven't changed
+const ThreadList = memo(ThreadListComponent);
 export default ThreadList;

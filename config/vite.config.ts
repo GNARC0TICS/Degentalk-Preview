@@ -77,7 +77,11 @@ export default defineConfig(async () => {
 		},
 		build: {
 			outDir: path.resolve(projectRoot, 'dist/public'),
-			emptyOutDir: true
+			emptyOutDir: true,
+			// Drop all console.* and debugger statements in production builds for smaller bundle & less runtime overhead
+			esbuild: {
+				drop: ['console', 'debugger']
+			}
 		},
 		css: {
 			postcss: path.resolve(projectRoot, 'config/postcss.config.js')

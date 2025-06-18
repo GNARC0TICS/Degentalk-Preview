@@ -5,7 +5,7 @@
  */
 
 import { db } from '@db';
-import { siteSettings } from '@schema';
+import { siteSettings, featureFlags } from '@schema';
 import { eq, and, sql, or, like, ilike, asc, desc } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
@@ -17,6 +17,10 @@ import type {
 	UpdateSettingMetadataInput,
 	FilterSettingsInput
 } from './settings.validators';
+import type { ToggleFeatureFlagSchema } from '@shared/validators/admin';
+import { z } from 'zod';
+
+export type ToggleFeatureFlagInput = z.infer<typeof ToggleFeatureFlagSchema> & { key: string };
 
 export class AdminSettingsService {
 	/**
@@ -497,6 +501,51 @@ export class AdminSettingsService {
 				break;
 		}
 		return true;
+	}
+
+	/**
+	 * Get all feature flags
+	 */
+	async getAllFeatureFlags() {
+		try {
+			return await db
+				.select()
+				.from(featureFlags)
+				.orderBy(asc(featureFlags.key));
+		} catch (error) {
+			logger.error('AdminSettingsService', 'Error fetching feature flags', { err: error });
+			throw new AdminError('Failed to fetch feature flags', 500, AdminErrorCodes.DB_ERROR);
+		}
+	}
+
+	/**
+	 * Update a feature flag (enabled state and/or rollout percentage)
+	 */
+	async updateFeatureFlag({ key, enabled, rolloutPercentage }: ToggleFeatureFlagInput) {
+		try {
+			const [existing] = await db.select().from(featureFlags).where(eq(featureFlags.key, key));
+			if (!existing) {
+				throw new AdminError(`Feature flag ${key} not found`, 404, AdminErrorCodes.NOT_FOUND);
+			}
+
+			const updateData: any = {
+				updatedAt: new Date()
+			};
+			if (enabled !== undefined) updateData.isEnabled = enabled;
+			if (rolloutPercentage !== undefined) updateData.rolloutPercentage = rolloutPercentage;
+
+			const [updated] = await db
+				.update(featureFlags)
+				.set(updateData)
+				.where(eq(featureFlags.key, key))
+				.returning();
+
+			return updated;
+		} catch (error) {
+			if (error instanceof AdminError) throw error;
+			logger.error('AdminSettingsService', 'Error updating feature flag', { err: error, key });
+			throw new AdminError('Failed to update feature flag', 500, AdminErrorCodes.DB_ERROR);
+		}
 	}
 }
 

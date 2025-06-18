@@ -1,5 +1,6 @@
-import { pgTable, serial, varchar, text, boolean, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, boolean, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
+import { users } from '../user/users';
 
 export const siteSettings = pgTable('site_settings', {
 	id: serial('setting_id').primaryKey(), // schema.ts had this, useful for direct edits if needed
@@ -14,7 +15,8 @@ export const siteSettings = pgTable('site_settings', {
 		.default(sql`CURRENT_TIMESTAMP`),
 	updatedAt: timestamp('updated_at')
 		.notNull()
-		.default(sql`CURRENT_TIMESTAMP`)
+		.default(sql`CURRENT_TIMESTAMP`),
+	updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }), // TODO: @syncSchema added column
 });
 
 export type SiteSetting = typeof siteSettings.$inferSelect;

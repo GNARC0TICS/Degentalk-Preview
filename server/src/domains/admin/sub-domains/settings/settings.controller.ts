@@ -16,6 +16,7 @@ import {
 	UpdateSettingMetadataSchema,
 	FilterSettingsSchema
 } from './settings.validators';
+import { ToggleFeatureFlagSchema } from '@shared/validators/admin';
 
 export class AdminSettingsController {
 	async getAllSettings(req: Request, res: Response) {
@@ -272,6 +273,44 @@ export class AdminSettingsController {
 					.status(error.httpStatus)
 					.json({ error: error.message, code: error.code, details: error.details });
 			res.status(500).json({ error: 'Failed to delete setting' });
+		}
+	}
+
+	async getFeatureFlags(req: Request, res: Response) {
+		try {
+			const flags = await adminSettingsService.getAllFeatureFlags();
+			res.json(flags);
+		} catch (error) {
+			if (error instanceof AdminError)
+				return res
+					.status(error.httpStatus)
+					.json({ error: error.message, code: error.code, details: error.details });
+			res.status(500).json({ error: 'Failed to fetch feature flags' });
+		}
+	}
+
+	async updateFeatureFlag(req: Request, res: Response) {
+		try {
+			const key = req.params.key;
+			const validation = ToggleFeatureFlagSchema.safeParse(req.body);
+			if (!validation.success) {
+				throw new AdminError(
+					'Invalid feature flag data',
+					400,
+					AdminErrorCodes.VALIDATION_ERROR,
+					validation.error.format()
+				);
+			}
+
+			const updated = await adminSettingsService.updateFeatureFlag({ key, ...validation.data });
+			await adminController.logAction(req, 'UPDATE_FEATURE_FLAG', 'feature_flag', key, validation.data);
+			res.json(updated);
+		} catch (error) {
+			if (error instanceof AdminError)
+				return res
+					.status(error.httpStatus)
+					.json({ error: error.message, code: error.code, details: error.details });
+			res.status(500).json({ error: 'Failed to update feature flag' });
 		}
 	}
 }

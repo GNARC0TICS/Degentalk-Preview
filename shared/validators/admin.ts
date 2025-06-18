@@ -61,7 +61,12 @@ export const AdminFeatureFlagUpdateSchema = z.object({
 	enabled: z.boolean().optional(),
 	name: z.string().min(1).max(100).optional(),
 	description: z.string().optional(),
-	expiresAt: z.date().optional().nullable()
+	expiresAt: z.date().optional().nullable(),
+	rolloutPercentage: z
+		.number()
+		.min(0, 'Must be between 0 and 100')
+		.max(100, 'Must be between 0 and 100')
+		.optional(),
 });
 
 // User schema for admin create/update
@@ -90,3 +95,5 @@ export const AdminPaginatedResponse = <T extends z.ZodTypeAny>(item: T) =>
 	});
 
 // Usage: AdminPaginatedResponse(AdminUserBody)
+
+export const ToggleFeatureFlagSchema = AdminFeatureFlagUpdateSchema;

@@ -49,4 +49,7 @@ router.delete(
 	asyncHandler(adminSettingsController.deleteSettingGroup.bind(adminSettingsController))
 );
 
+router.get('/feature-flags', asyncHandler(adminSettingsController.getFeatureFlags.bind(adminSettingsController)));
+router.put('/feature-flags/:key', asyncHandler(adminSettingsController.updateFeatureFlag.bind(adminSettingsController)));
+
 export default router;

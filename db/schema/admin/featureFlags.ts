@@ -7,7 +7,8 @@ import {
 	// integer, // No longer using integer for createdBy/updatedBy
 	timestamp,
 	jsonb,
-	uuid // Added uuid
+	uuid, // Added uuid
+	numeric
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
@@ -29,7 +30,10 @@ export const featureFlags = pgTable('feature_flags', {
 		.notNull()
 		.default(sql`now()`), // Changed defaultNow() to sql`now()`
 	createdBy: uuid('created_by').references(() => users.id, { onDelete: 'set null' }), // Changed to uuid
-	updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }) // Changed to uuid
+	updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }), // Changed to uuid
+	rolloutPercentage: numeric('rollout_percentage', { precision: 5, scale: 2 })
+		.notNull()
+		.default(100) // TODO: @syncSchema added column for gradual rollout support
 });
 
 export type FeatureFlag = typeof featureFlags.$inferSelect;
