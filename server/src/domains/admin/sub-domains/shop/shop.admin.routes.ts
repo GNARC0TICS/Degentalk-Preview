@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { shopAdminController } from './shop.admin.controller';
 import { asyncHandler } from '../../admin.middleware'; // Adjust path if admin.middleware is elsewhere
+import categoryRoutes from './shopCategory.routes';
+import rarityRoutes from './rarity.routes';
 
 const router = Router();
 
@@ -18,5 +20,9 @@ router.put('/items/:productId', asyncHandler(shopAdminController.updateProduct))
 
 // DELETE /api/admin/shop/items/:id - Soft delete product
 router.delete('/items/:productId', asyncHandler(shopAdminController.deleteProduct));
+
+// Nested routers
+router.use('/categories', categoryRoutes);
+router.use('/rarities', rarityRoutes);
 
 export default router;

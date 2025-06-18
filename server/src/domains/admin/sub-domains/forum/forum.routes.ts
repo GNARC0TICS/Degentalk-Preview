@@ -7,6 +7,7 @@
 import { Router } from 'express';
 import { adminForumController } from './forum.controller';
 import { asyncHandler } from '../../admin.middleware';
+import { forumPrefixService } from '../forumPrefix/forumPrefix.service';
 
 const router = Router();
 
@@ -62,6 +63,35 @@ router.get(
 router.post(
 	'/prefixes',
 	asyncHandler(adminForumController.createPrefix.bind(adminForumController))
+);
+
+router.put(
+	'/prefixes/:id',
+	asyncHandler(async (req, res) => {
+		const id = parseInt(req.params.id);
+		const updated = await forumPrefixService.updatePrefix(id, req.body);
+		res.json(updated);
+	})
+);
+
+router.delete(
+	'/prefixes/:id',
+	asyncHandler(async (req, res) => {
+		const id = parseInt(req.params.id);
+		const result = await forumPrefixService.deletePrefix(id);
+		res.json(result);
+	})
+);
+
+// Reorder prefixes – expects array of IDs in body
+router.post(
+	'/prefixes/reorder',
+	asyncHandler(async (req, res) => {
+		const { order } = req.body as { order: number[] };
+		if (!Array.isArray(order)) return res.status(400).json({ message: 'order must be array' });
+		const result = await forumPrefixService.reorderPrefixes(order);
+		res.json(result);
+	})
 );
 
 // Thread moderation routes

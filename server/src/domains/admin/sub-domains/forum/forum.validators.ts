@@ -16,7 +16,7 @@ export const CategorySchema = z.object({
 		.max(100)
 		.regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
 	parentId: z.number().int().nullable().optional(),
-	sortOrder: z.number().int().min(0).default(0),
+	position: z.number().int().min(0).default(0),
 	icon: z.string().optional().nullable(),
 	isHidden: z.boolean().default(false).optional(),
 	allowThreads: z.boolean().default(true).optional(),
@@ -34,7 +34,7 @@ export const PrefixSchema = z.object({
 	icon: z.string().optional().nullable(),
 	categoryId: z.number().int().nullable().optional(), // Null if global
 	isHidden: z.boolean().default(false).optional(),
-	sortOrder: z.number().int().min(0).default(0)
+	position: z.number().int().min(0).default(0)
 });
 
 // Schema for thread moderation

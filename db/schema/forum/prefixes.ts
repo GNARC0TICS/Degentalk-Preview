@@ -11,6 +11,9 @@ export const threadPrefixes = pgTable('thread_prefixes', {
 	categoryId: integer('category_id').references(() => forumCategories.id, { onDelete: 'set null' }),
 	createdAt: timestamp('created_at')
 		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+	updatedAt: timestamp('updated_at')
+		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`)
 });
 

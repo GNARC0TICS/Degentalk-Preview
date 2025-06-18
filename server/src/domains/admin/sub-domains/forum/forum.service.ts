@@ -109,7 +109,7 @@ export class AdminForumService {
 					description: data.description,
 					slug: data.slug,
 					parentId: data.parentId,
-					position: data.sortOrder,
+					position: data.position ?? 0,
 					icon: data.icon,
 					isHidden: data.isHidden,
 					allowThreads: data.allowThreads,
@@ -174,7 +174,7 @@ export class AdminForumService {
 					description: data.description,
 					slug: data.slug,
 					parentId: data.parentId,
-					position: data.sortOrder,
+					position: data.position ?? 0,
 					icon: data.icon,
 					isHidden: data.isHidden,
 					allowThreads: data.allowThreads,
@@ -243,7 +243,7 @@ export class AdminForumService {
 			const prefixes = await db
 				.select()
 				.from(threadPrefixes)
-				.orderBy(asc(threadPrefixes.sortOrder), asc(threadPrefixes.name));
+				.orderBy(asc(threadPrefixes.position), asc(threadPrefixes.name));
 
 			return prefixes;
 		} catch (error) {
@@ -294,7 +294,7 @@ export class AdminForumService {
 					icon: data.icon,
 					categoryId: data.categoryId,
 					isHidden: data.isHidden,
-					sortOrder: data.sortOrder
+					position: data.position ?? 0
 				})
 				.returning();
 
