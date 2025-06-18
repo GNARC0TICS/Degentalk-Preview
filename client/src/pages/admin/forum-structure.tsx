@@ -11,6 +11,8 @@ import type { ColumnDef } from '@/components/admin/layout/EntityTable';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AdminAccessSelector } from '@/components/admin/inputs/AdminAccessSelector';
+import { AdminToggle } from '@/components/admin/inputs/AdminToggle';
 
 const EntitySchema = z.object({
   id: z.number().optional(),
@@ -28,6 +30,12 @@ export default function ForumStructureAdminPage() {
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingEntity, setEditingEntity] = useState<Entity | null>(null);
+  const [accessControl, setAccessControl] = useState<{ canView: number[]; canPost: number[]; canTip: number[] }>({
+    canView: [],
+    canPost: [],
+    canTip: [],
+  });
+  const [unlockedStyling, setUnlockedStyling] = useState(false);
 
   const { data: entities = [], isLoading } = useQuery<Entity[]>({
     queryKey: ['/admin/forum/entities'],
@@ -81,10 +89,24 @@ export default function ForumStructureAdminPage() {
 
   const openCreateDialog = () => {
     setEditingEntity(null);
+    setAccessControl({ canView: [], canPost: [], canTip: [] });
+    setUnlockedStyling(false);
     setIsDialogOpen(true);
   };
   const openEditDialog = (entity: Entity) => {
     setEditingEntity(entity);
+    try {
+      const pluginData: any = (entity as any).pluginData ?? {};
+      setAccessControl({
+        canView: pluginData.accessControl?.canView || [],
+        canPost: pluginData.accessControl?.canPost || [],
+        canTip: pluginData.accessControl?.canTip || [],
+      });
+      setUnlockedStyling(!!pluginData.unlockedStyling);
+    } catch {
+      setAccessControl({ canView: [], canPost: [], canTip: [] });
+      setUnlockedStyling(false);
+    }
     setIsDialogOpen(true);
   };
   const closeDialog = () => {
@@ -109,10 +131,22 @@ export default function ForumStructureAdminPage() {
   }
 
   const onSubmit = form.handleSubmit((data) => {
+    // Merge pluginData if entity is forum
+    const pluginData = data.type === 'forum' ? {
+      accessControl,
+      unlockedStyling,
+    } : undefined;
+
+    const payload: any = {
+      ...editingEntity,
+      ...data,
+      ...(pluginData ? { pluginData } : {}),
+    };
+
     if (editingEntity) {
-      updateMutation.mutate({ ...editingEntity, ...data });
+      updateMutation.mutate(payload);
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(payload);
     }
   });
 
@@ -167,6 +201,34 @@ export default function ForumStructureAdminPage() {
             </Select>
             <Input type="number" placeholder="Parent ID (optional)" {...form.register('parentId', { valueAsNumber: true })} />
             <Input type="number" placeholder="Position" {...form.register('position', { valueAsNumber: true })} />
+            {form.watch('type') === 'forum' && (
+              <div className="space-y-4 mt-4">
+                <h4 className="text-sm font-semibold">Access Control</h4>
+                <AdminAccessSelector
+                  label="Can View"
+                  selectedIds={accessControl.canView}
+                  onChange={(ids) => setAccessControl((prev) => ({ ...prev, canView: ids }))}
+                />
+                <AdminAccessSelector
+                  label="Can Post"
+                  selectedIds={accessControl.canPost}
+                  onChange={(ids) => setAccessControl((prev) => ({ ...prev, canPost: ids }))}
+                />
+                <AdminAccessSelector
+                  label="Can Tip"
+                  selectedIds={accessControl.canTip}
+                  onChange={(ids) => setAccessControl((prev) => ({ ...prev, canTip: ids }))}
+                />
+
+                <h4 className="text-sm font-semibold pt-2">Styling</h4>
+                <AdminToggle
+                  label="Unlocked Styling"
+                  description="Allow custom fonts, embeds, and visuals in this forum"
+                  checked={unlockedStyling}
+                  onChange={setUnlockedStyling}
+                />
+              </div>
+            )}
             <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
               {editingEntity ? 'Save' : 'Create'}
             </Button>
