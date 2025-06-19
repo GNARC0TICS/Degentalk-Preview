@@ -1,4 +1,14 @@
-import { pgTable, serial, varchar, text, boolean, timestamp, jsonb, integer, index } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	varchar,
+	text,
+	boolean,
+	timestamp,
+	jsonb,
+	integer,
+	index
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 /**
@@ -43,4 +53,4 @@ export const cosmeticCategories = pgTable(
 );
 
 export type CosmeticCategory = typeof cosmeticCategories.$inferSelect;
-export type InsertCosmeticCategory = typeof cosmeticCategories.$inferInsert; 
+export type InsertCosmeticCategory = typeof cosmeticCategories.$inferInsert;

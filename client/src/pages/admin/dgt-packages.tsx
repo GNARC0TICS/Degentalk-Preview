@@ -274,8 +274,8 @@ export default function AdminDgtPackagesPage() {
 	);
 
 	return (
-        <AdminPageShell title="DGT Packages" pageActions={pageActions}>
-            <div className="space-y-6">
+		<AdminPageShell title="DGT Packages" pageActions={pageActions}>
+			<div className="space-y-6">
 				{/* Editor Card */}
 				{editingPackage && (
 					<Card className="border-primary/50">
@@ -296,7 +296,9 @@ export default function AdminDgtPackagesPage() {
 										<Input
 											id="name"
 											value={editingPackage.name || ''}
-											onChange={(e) => setEditingPackage({ ...editingPackage, name: e.target.value })}
+											onChange={(e) =>
+												setEditingPackage({ ...editingPackage, name: e.target.value })
+											}
 											placeholder="e.g. Standard Pack"
 										/>
 									</div>
@@ -591,12 +593,14 @@ export default function AdminDgtPackagesPage() {
 						<AlertDialogHeader>
 							<AlertDialogTitle>Are you sure?</AlertDialogTitle>
 							<AlertDialogDescription>
-								This action cannot be undone. This will permanently delete the DGT package and remove
-								it from our servers.
+								This action cannot be undone. This will permanently delete the DGT package and
+								remove it from our servers.
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
-							<AlertDialogCancel disabled={deletePackageMutation.isPending}>Cancel</AlertDialogCancel>
+							<AlertDialogCancel disabled={deletePackageMutation.isPending}>
+								Cancel
+							</AlertDialogCancel>
 							<AlertDialogAction
 								onClick={executeDelete}
 								disabled={deletePackageMutation.isPending}
@@ -634,6 +638,6 @@ export default function AdminDgtPackagesPage() {
 					</AlertDialogContent>
 				</AlertDialog>
 			</div>
-        </AdminPageShell>
-    );
+		</AdminPageShell>
+	);
 }

@@ -69,7 +69,9 @@ export const threads = pgTable(
 		isSolved: boolean('is_solved').notNull().default(false),
 		solvingPostId: integer('solving_post_id'), // .references((): AnyPgColumn => posts.id, { onDelete: 'set null' }), // Placeholder
 		pluginData: jsonb('plugin_data').default('{}'),
-		visibilityStatus: contentVisibilityStatusEnum('visibility_status').notNull().default('published'),
+		visibilityStatus: contentVisibilityStatusEnum('visibility_status')
+			.notNull()
+			.default('published'),
 		moderationReason: varchar('moderation_reason', { length: 255 }),
 		xpMultiplier: real('xp_multiplier').notNull().default(1),
 		rewardRules: jsonb('reward_rules').default('{}')

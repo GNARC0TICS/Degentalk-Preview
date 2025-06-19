@@ -156,7 +156,7 @@ Clear startup logs show which services are starting:
 - `npm run start` - Starts the backend with `tsx` (hot-reload disabled) and serves the pre-built client assets.
 - `npm run preview` - Preview the client build locally
 
-> **Why no server build?**  We temporarily disabled `tsc` during the build step to unblock deployments while large type-safety refactors are in progress.  Server/package.json has:
+> **Why no server build?** We temporarily disabled `tsc` during the build step to unblock deployments while large type-safety refactors are in progress. Server/package.json has:
 >
 > ```json
 > "build": "echo \"skip build (tsx runtime)\"",
@@ -327,6 +327,7 @@ STRIPE_SECRET_KEY=your_stripe_key
 If you encounter `npm run dev` spawning infinite processes or your system becomes unresponsive:
 
 #### **Emergency Stop:**
+
 ```bash
 # Kill all npm processes immediately
 pkill -f "npm run dev"
@@ -340,6 +341,7 @@ lsof -ti:5173 | xargs kill -9 2>/dev/null || echo "Port 5173 clear"
 ```
 
 #### **Check for Runaway Processes:**
+
 ```bash
 # See all npm/node processes
 ps aux | grep npm
@@ -350,11 +352,13 @@ kill -9 <PID>
 ```
 
 #### **Common Causes:**
+
 - Scripts that reference themselves: `"dev": "npm run dev"`
 - Missing package.json files in subdirectories
 - Circular script dependencies between parent/child packages
 
 #### **Prevention:**
+
 - Never create self-referencing npm scripts
 - Always use direct commands instead of script delegation when possible
 - Verify subdirectories have package.json files before delegating to them

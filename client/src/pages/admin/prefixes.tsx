@@ -683,7 +683,11 @@ export default function AdminPrefixesPage() {
 								</div>
 
 								<DialogFooter>
-									<Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+									<Button
+										type="button"
+										variant="outline"
+										onClick={() => setIsEditDialogOpen(false)}
+									>
 										Cancel
 									</Button>
 									<Button type="submit" disabled={editPrefixMutation.isPending}>

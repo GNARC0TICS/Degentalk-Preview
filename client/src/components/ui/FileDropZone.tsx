@@ -4,29 +4,29 @@ import { cn } from '@/lib/utils';
 import { UploadCloud, Image as ImageIcon, CheckCircle } from 'lucide-react';
 
 export interface FileDropZoneProps {
-	/** 
+	/**
 	 * Callback invoked after a file is selected (either via drop or click).
 	 * Can now receive progress updates through the onProgress parameter
 	 */
 	onFileSelected: (file: File, onProgress?: (progress: number) => void) => Promise<void> | void;
-	/** 
-	 * Allowed mime types. Example: ['image/jpeg', 'image/png'] 
+	/**
+	 * Allowed mime types. Example: ['image/jpeg', 'image/png']
 	 */
 	accept?: string[];
-	/** 
-	 * Maximum file size in bytes. Defaults to 10 MB. 
+	/**
+	 * Maximum file size in bytes. Defaults to 10 MB.
 	 */
 	maxSize?: number;
-	/** 
-	 * Optional class name for styling overrides. 
+	/**
+	 * Optional class name for styling overrides.
 	 */
 	className?: string;
-	/** 
+	/**
 	 * Whether to show a preview thumbnail after a file is selected.
-	 * Only works for images. 
+	 * Only works for images.
 	 */
 	showPreview?: boolean;
-	/** 
+	/**
 	 * Whether the component is currently disabled (e.g., during upload)
 	 */
 	disabled?: boolean;
@@ -50,7 +50,7 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 			if (!acceptedFiles || acceptedFiles.length === 0 || disabled) {
 				return;
 			}
-			
+
 			const file = acceptedFiles[0];
 			if (file.size > maxSize) {
 				// Using alert for now, ProfileEditor will handle toast for more complex errors
@@ -62,7 +62,7 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 				setIsUploading(true);
 				setUploadProgress(0);
 				setUploadComplete(false);
-				
+
 				if (showPreview && file.type.startsWith('image/')) {
 					if (previewUrl) URL.revokeObjectURL(previewUrl); // Revoke old preview URL
 					setPreviewUrl(URL.createObjectURL(file));
@@ -73,17 +73,16 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 				};
 
 				await onFileSelected(file, handleProgress);
-				
+
 				setUploadProgress(100);
 				setUploadComplete(true);
-				
+
 				setTimeout(() => {
 					setUploadComplete(false);
 					setUploadProgress(0);
 					// Optionally clear previewUrl here if desired after successful upload
-					// if (showPreview) setPreviewUrl(null); 
+					// if (showPreview) setPreviewUrl(null);
 				}, 2000);
-
 			} catch (error) {
 				console.error('FileDropZone upload error:', error);
 				// Error display (e.g., toast) should be handled by the parent (ProfileEditor)
@@ -116,7 +115,7 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 	const dropzoneState = getDropzoneState();
 
 	return (
-        <div
+		<div
 			{...getRootProps()}
 			className={cn(
 				'flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-4 text-center transition-all duration-200',
@@ -125,14 +124,18 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 					'border-zinc-700 hover:bg-zinc-800/40 cursor-pointer': dropzoneState === 'idle',
 					'border-amber-500 bg-amber-500/10': dropzoneState === 'uploading',
 					'border-green-500 bg-green-500/10': dropzoneState === 'complete',
-					'border-zinc-600 bg-zinc-800/20 cursor-not-allowed opacity-60': dropzoneState === 'disabled'
+					'border-zinc-600 bg-zinc-800/20 cursor-not-allowed opacity-60':
+						dropzoneState === 'disabled'
 				},
 				className
 			)}
 		>
-            <input {...getInputProps()} />
-            {previewUrl && showPreview && dropzoneState !== 'uploading' && dropzoneState !== 'complete' ? ( // Hide preview during active upload/complete if progress overlay is used
-				(<img src={previewUrl} alt="Preview" className="max-h-32 object-contain rounded-md" />)
+			<input {...getInputProps()} />
+			{previewUrl &&
+			showPreview &&
+			dropzoneState !== 'uploading' &&
+			dropzoneState !== 'complete' ? ( // Hide preview during active upload/complete if progress overlay is used
+				<img src={previewUrl} alt="Preview" className="max-h-32 object-contain rounded-md" />
 			) : (
 				<div className="flex flex-col items-center gap-2">
 					{uploadComplete ? (
@@ -141,7 +144,7 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 						<div className="flex flex-col items-center gap-2">
 							<UploadCloud className="h-6 w-6 animate-bounce text-emerald-400" />
 							<div className="w-24 h-1 bg-zinc-700 rounded-full overflow-hidden">
-								<div 
+								<div
 									className="h-full bg-emerald-500 transition-all duration-300"
 									style={{ width: `${uploadProgress}%` }}
 								/>
@@ -151,18 +154,17 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 					) : (
 						<ImageIcon className="h-6 w-6 text-zinc-400" />
 					)}
-					
+
 					<p className="text-sm text-zinc-400">
-						{uploadComplete 
-							? 'Upload complete!' 
-							: isUploading 
-								? 'Uploading...' 
-								: isDragActive 
-									? 'Drop the file here' 
-									: 'Drag & drop or click to upload'
-						}
+						{uploadComplete
+							? 'Upload complete!'
+							: isUploading
+								? 'Uploading...'
+								: isDragActive
+									? 'Drop the file here'
+									: 'Drag & drop or click to upload'}
 					</p>
-					
+
 					{!isUploading && !uploadComplete && (
 						<p className="text-xs text-zinc-500">
 							Max size {(maxSize / (1024 * 1024)).toFixed(0)} MB
@@ -170,12 +172,12 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 					)}
 				</div>
 			)}
-            {/* Progress overlay for image preview, shown when preview is active and uploading */}
-            {previewUrl && showPreview && isUploading && (
+			{/* Progress overlay for image preview, shown when preview is active and uploading */}
+			{previewUrl && showPreview && isUploading && (
 				<div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-md">
 					<div className="text-center">
 						<div className="w-16 h-1 bg-zinc-700 rounded-full overflow-hidden mb-2">
-							<div 
+							<div
 								className="h-full bg-emerald-500 transition-all duration-300"
 								style={{ width: `${uploadProgress}%` }}
 							/>
@@ -184,6 +186,6 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 					</div>
 				</div>
 			)}
-        </div>
-    );
+		</div>
+	);
 };

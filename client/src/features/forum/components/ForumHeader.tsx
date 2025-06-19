@@ -34,8 +34,8 @@ export function ForumHeader({ forum, isPrimaryZone = false, className = '' }: Fo
 	if (isPrimaryZone) {
 		const dynamicThemeClass = `theme-header-${forum.colorTheme || 'zinc'}`;
 		return (
-            <div className={`forum-header primary-zone-header ${dynamicThemeClass} mb-6 ${className}`}>
-                <div
+			<div className={`forum-header primary-zone-header ${dynamicThemeClass} mb-6 ${className}`}>
+				<div
 					// Apply static Tailwind classes that use CSS variables
 					className="rounded-2xl p-6 bg-gradient-to-r from-forum-header-gradient-from to-forum-header-gradient-to border-2 border-forum-header-border"
 				>
@@ -51,9 +51,9 @@ export function ForumHeader({ forum, isPrimaryZone = false, className = '' }: Fo
 									Primary Zone
 								</Badge>
 								{(forum as MergedZone).hasXpBoost && ( // Type assertion for MergedZone specific prop
-									(<Badge className="bg-emerald-600 hover:bg-emerald-500">
-                                        {(forum as MergedZone).boostMultiplier || 2}x XP
-                                                                            </Badge>)
+									<Badge className="bg-emerald-600 hover:bg-emerald-500">
+										{(forum as MergedZone).boostMultiplier || 2}x XP
+									</Badge>
 								)}
 							</div>
 						</div>
@@ -72,8 +72,8 @@ export function ForumHeader({ forum, isPrimaryZone = false, className = '' }: Fo
 						</div>
 					</div>
 				</div>
-            </div>
-        );
+			</div>
+		);
 	}
 
 	// For regular forums, render a simpler header

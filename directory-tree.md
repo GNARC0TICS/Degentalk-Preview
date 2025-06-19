@@ -1,5 +1,5 @@
 # ForumFusion Directory Structure
-  
+
 Generated on: 2025-06-19
 
 ```

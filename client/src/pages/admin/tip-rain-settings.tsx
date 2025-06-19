@@ -184,9 +184,9 @@ export default function TipRainSettings() {
 	if (isLoadingTipSettings || isLoadingRainSettings) {
 		return (
 			<div className="flex items-center justify-center min-h-[600px]">
-					<Loader2 className="h-10 w-10 text-cyan-500 animate-spin" />
-					<p className="ml-3 text-lg text-gray-300">Loading settings...</p>
-				</div>
+				<Loader2 className="h-10 w-10 text-cyan-500 animate-spin" />
+				<p className="ml-3 text-lg text-gray-300">Loading settings...</p>
+			</div>
 		);
 	}
 

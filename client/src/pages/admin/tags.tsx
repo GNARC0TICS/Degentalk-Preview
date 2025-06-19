@@ -334,7 +334,9 @@ export default function AdminTagsPage() {
 					<DialogContent className="sm:max-w-[550px]">
 						<DialogHeader>
 							<DialogTitle>Create New Tag</DialogTitle>
-							<DialogDescription>Create a new forum tag for thread categorization.</DialogDescription>
+							<DialogDescription>
+								Create a new forum tag for thread categorization.
+							</DialogDescription>
 						</DialogHeader>
 
 						<Form {...form}>
@@ -394,7 +396,9 @@ export default function AdminTagsPage() {
 													{...field}
 												/>
 											</FormControl>
-											<FormDescription>Brief description of what this tag represents</FormDescription>
+											<FormDescription>
+												Brief description of what this tag represents
+											</FormDescription>
 											<FormMessage />
 										</FormItem>
 									)}
@@ -483,7 +487,11 @@ export default function AdminTagsPage() {
 								/>
 
 								<DialogFooter>
-									<Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+									<Button
+										type="button"
+										variant="outline"
+										onClick={() => setIsEditDialogOpen(false)}
+									>
 										Cancel
 									</Button>
 									<Button type="submit" disabled={editTagMutation.isPending}>
@@ -525,8 +533,8 @@ export default function AdminTagsPage() {
 									<AlertTriangle className="h-4 w-4" />
 									<AlertTitle>Warning</AlertTitle>
 									<AlertDescription>
-										This tag is currently used by {(selectedTag as any).threadCount} threads. Deleting
-										it will remove the tag from all threads.
+										This tag is currently used by {(selectedTag as any).threadCount} threads.
+										Deleting it will remove the tag from all threads.
 									</AlertDescription>
 								</Alert>
 							)}

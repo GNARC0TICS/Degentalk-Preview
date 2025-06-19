@@ -9,7 +9,7 @@ import {
 	Folder,
 	MessageSquare,
 	ChevronLeft,
-	ChevronRight,
+	ChevronRight
 	// Flame, // Unused
 	// Target, // Unused
 	// Archive, // Unused
@@ -21,19 +21,16 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { SiteFooter } from '@/components/layout/site-footer';
 import { ForumGuidelines } from '@/components/forum/forum-guidelines';
 // ForumSearch seems unused, can be removed if not needed.
-// import { ForumSearch } from '@/components/forum/forum-search'; 
-import { 
-	useForumStructure, 
-	ForumStructureProvider 
-} from '@/contexts/ForumStructureContext';
+// import { ForumSearch } from '@/components/forum/forum-search';
+import { useForumStructure, ForumStructureProvider } from '@/contexts/ForumStructureContext';
 import type { MergedZone, MergedForum } from '@/contexts/ForumStructureContext'; // MergedTheme unused
 // ZoneCardData might not be directly needed if renderZoneCard adapts to MergedZone
-// import type { ZoneCardData } from '@/components/forum/CanonicalZoneGrid'; 
+// import type { ZoneCardData } from '@/components/forum/CanonicalZoneGrid';
 import { Input } from '@/components/ui/input';
 import { Link } from 'wouter';
 import { Badge } from '@/components/ui/badge';
 // getForumEntityUrl and isPrimaryZone might need to be re-evaluated or adapted
-// import { getForumEntityUrl, isPrimaryZone } from '@/utils/forum-routing-helper'; 
+// import { getForumEntityUrl, isPrimaryZone } from '@/utils/forum-routing-helper';
 import { ActiveMembersWidget } from '@/components/users';
 // import type { ActiveUser } from '@/components/users'; // ActiveUser type unused
 import { useActiveUsers } from '@/features/users/hooks';
@@ -41,19 +38,24 @@ import { useActiveUsers } from '@/features/users/hooks';
 // import { ForumCard } from '@/components/forum/forum-card';
 // ForumCategoryWithStats is replaced by MergedZone/MergedForum
 // import type { ForumCategoryWithStats } from '@db_types/forum.types';
-import { 
-	THEME_ICONS, 
+import {
+	THEME_ICONS,
 	THEME_COLORS_BG // Renamed from THEME_COLORS to THEME_COLORS_BG in themeConstants.ts
 } from '@/config/themeConstants';
 import { useForumTheme } from '@/contexts/ForumThemeProvider';
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
 import { motion } from 'framer-motion'; // Added Framer Motion import
 import BackToHomeButton from '@/components/common/BackToHomeButton';
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import {
+	Accordion,
+	AccordionItem,
+	AccordionTrigger,
+	AccordionContent
+} from '@/components/ui/accordion';
 import { Wide } from '@/layout/primitives';
 
-
-const CATEGORY_COLORS = [ // This can remain for generic category styling if no theme is matched
+const CATEGORY_COLORS = [
+	// This can remain for generic category styling if no theme is matched
 	'border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-amber-700/10',
 	'border-blue-500/30 bg-gradient-to-br from-blue-500/10 to-blue-700/10',
 	'border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-emerald-700/10',
@@ -70,7 +72,9 @@ const ForumPage = () => {
 	// const isLoggedIn = !!user; // Unused
 	const [, setLocation] = useLocation(); // location is unused, only setLocation
 
-	const queryParams = new URLSearchParams(typeof window !== 'undefined' && window.location.search ? window.location.search : ''); // Safer access to location
+	const queryParams = new URLSearchParams(
+		typeof window !== 'undefined' && window.location.search ? window.location.search : ''
+	); // Safer access to location
 	const searchQuery = queryParams.get('q') || '';
 
 	const [searchText, setSearchText] = useState(searchQuery);
@@ -78,18 +82,20 @@ const ForumPage = () => {
 	const carouselRef = useRef<HTMLDivElement>(null);
 
 	// Use centralized forum structure hook from context
-	const { 
-		zones: allZones, 
-		isLoading: structureLoading, 
-		error: structureErrorDetails 
+	const {
+		zones: allZones,
+		isLoading: structureLoading,
+		error: structureErrorDetails
 	} = useForumStructure();
 
 	// Extract primary zones and categories (non-primary zones)
-	const primaryZones: MergedZone[] = allZones.filter(zone => zone.isPrimary === true);
-	const generalForumZones: MergedZone[] = allZones.filter(zone => {
+	const primaryZones: MergedZone[] = allZones.filter((zone) => zone.isPrimary === true);
+	const generalForumZones: MergedZone[] = allZones.filter((zone) => {
 		if (zone.isPrimary) return false;
 		const hasDirectForums = Array.isArray(zone.forums) && zone.forums.length > 0;
-		const hasCategorisedForums = Array.isArray(zone.categories) && zone.categories.some(cat => cat.forums && cat.forums.length > 0);
+		const hasCategorisedForums =
+			Array.isArray(zone.categories) &&
+			zone.categories.some((cat) => cat.forums && cat.forums.length > 0);
 		return hasDirectForums || hasCategorisedForums;
 	});
 
@@ -145,12 +151,14 @@ const ForumPage = () => {
 	};
 
 	// Render a zone card for the carousel, now using MergedZone
-	const renderZoneCard = (zone: MergedZone) => { // index parameter unused
+	const renderZoneCard = (zone: MergedZone) => {
+		// index parameter unused
 		const semanticThemeKey = zone.colorTheme || 'default';
 		const theme = getTheme(semanticThemeKey);
 
 		// Background / border gradient classes remain from static mapping
-		const gradientClasses = THEME_COLORS_BG[semanticThemeKey as keyof typeof THEME_COLORS_BG] || THEME_COLORS_BG.default;
+		const gradientClasses =
+			THEME_COLORS_BG[semanticThemeKey as keyof typeof THEME_COLORS_BG] || THEME_COLORS_BG.default;
 
 		// Icon component or emoji from runtime theme
 		const IconComponentOrEmoji = theme.icon ?? THEME_ICONS.default;
@@ -158,7 +166,7 @@ const ForumPage = () => {
 
 		return (
 			<Link
-				key={zone.id.toString()} 
+				key={zone.id.toString()}
 				href={`/zones/${zone.slug}`} // Link to zone page
 				className={`flex-shrink-0 w-72 h-48 rounded-lg border ${gradientClasses} bg-gradient-to-br p-5 flex flex-col transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-emerald-900/10 overflow-hidden`}
 				onClick={() => zone.colorTheme && setActiveTheme(zone.colorTheme)}
@@ -176,11 +184,11 @@ const ForumPage = () => {
 					<p className="text-sm text-zinc-300 mb-auto line-clamp-2">{zone.description}</p>
 				)}
 				{zone.hasXpBoost && (
-					<Badge className="mt-2" variant="destructive">XP Boost x{zone.boostMultiplier}</Badge>
+					<Badge className="mt-2" variant="destructive">
+						XP Boost x{zone.boostMultiplier}
+					</Badge>
 				)}
-				<div className="mt-auto pt-3">
-					{renderForumStats(zone)}
-				</div>
+				<div className="mt-auto pt-3">{renderForumStats(zone)}</div>
 			</Link>
 		);
 	};
@@ -189,33 +197,43 @@ const ForumPage = () => {
 	const renderGeneralZone = (zoneData: MergedZone, index: number) => {
 		const directForums = zoneData.forums ?? [];
 		// Flatten forums from categories
-		const categorisedForums = (zoneData.categories ?? []).flatMap(cat => cat.forums ?? []);
+		const categorisedForums = (zoneData.categories ?? []).flatMap((cat) => cat.forums ?? []);
 		const allForums = [...directForums, ...categorisedForums];
 
 		if (allForums.length === 0) return null; // Nothing to show
 
-		const totalChildThreadCount = allForums.reduce((sum, forum) => sum + (forum.threadCount || 0), 0);
+		const totalChildThreadCount = allForums.reduce(
+			(sum, forum) => sum + (forum.threadCount || 0),
+			0
+		);
 		const totalChildPostCount = allForums.reduce((sum, forum) => sum + (forum.postCount || 0), 0);
 
 		const zoneSemanticThemeKey = zoneData.colorTheme || 'default';
 		const theme = getTheme(zoneSemanticThemeKey);
-		const zoneColorClass = THEME_COLORS_BG[zoneSemanticThemeKey as keyof typeof THEME_COLORS_BG] || CATEGORY_COLORS[index % CATEGORY_COLORS.length];
+		const zoneColorClass =
+			THEME_COLORS_BG[zoneSemanticThemeKey as keyof typeof THEME_COLORS_BG] ||
+			CATEGORY_COLORS[index % CATEGORY_COLORS.length];
 
 		const IconFromThemeOrFallback = theme.icon ?? Folder;
 		const zoneIconColorClass = theme.color || 'text-emerald-400';
-		
+
 		// Set CSS variables for this zone once on render
 		if (zoneData.colorTheme) {
 			setActiveTheme(zoneData.colorTheme);
 		}
 
 		return (
-			<Card key={zoneData.id.toString()} className={`overflow-hidden border mb-8 ${zoneColorClass} hover-scale`}>
+			<Card
+				key={zoneData.id.toString()}
+				className={`overflow-hidden border mb-8 ${zoneColorClass} hover-scale`}
+			>
 				<CardHeader className="pb-3">
 					<div className="flex items-center justify-between">
 						<CardTitle className="text-lg font-semibold flex items-center">
 							{typeof IconFromThemeOrFallback === 'string' ? (
-								<span className={`mr-2 text-xl ${zoneIconColorClass}`}>{IconFromThemeOrFallback}</span>
+								<span className={`mr-2 text-xl ${zoneIconColorClass}`}>
+									{IconFromThemeOrFallback}
+								</span>
 							) : (
 								<IconFromThemeOrFallback className={`h-5 w-5 mr-2 ${zoneIconColorClass}`} />
 							)}
@@ -229,18 +247,18 @@ const ForumPage = () => {
 						<CardDescription className="text-zinc-300">{zoneData.description}</CardDescription>
 					)}
 					<div className="text-xs text-zinc-400">
-						{zoneData.threadCount} threads • {zoneData.postCount} posts 
-						(Children: {totalChildThreadCount} threads • {totalChildPostCount} posts)
+						{zoneData.threadCount} threads • {zoneData.postCount} posts (Children:{' '}
+						{totalChildThreadCount} threads • {totalChildPostCount} posts)
 					</div>
 				</CardHeader>
 				<CardContent className="p-0">
 					<div className="divide-y divide-zinc-800/50">
 						{allForums.map((forum: MergedForum) => (
-							<ForumListItem 
+							<ForumListItem
 								key={forum.id.toString()}
 								forum={forum}
 								href={`/forums/${forum.slug}`}
-								parentZoneColor={zoneData.color ?? undefined} 
+								parentZoneColor={zoneData.color ?? undefined}
 							/>
 						))}
 					</div>
@@ -309,7 +327,11 @@ const ForumPage = () => {
 									placeholder="Search forums..."
 									className="flex-grow bg-zinc-800/50 border-zinc-700 placeholder-zinc-500"
 								/>
-								<Button type="submit" variant="outline" className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-700">
+								<Button
+									type="submit"
+									variant="outline"
+									className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-700"
+								>
 									<Search className="h-4 w-4 mr-2" />
 									Search
 								</Button>
@@ -327,10 +349,20 @@ const ForumPage = () => {
 								<div className="flex justify-between items-center mb-3">
 									<h2 className="text-xl font-semibold text-white">Primary Zones</h2>
 									<div className="flex gap-2">
-										<Button variant="ghost" size="icon" onClick={prevZone} className="text-zinc-400 hover:text-white">
+										<Button
+											variant="ghost"
+											size="icon"
+											onClick={prevZone}
+											className="text-zinc-400 hover:text-white"
+										>
 											<ChevronLeft className="h-5 w-5" />
 										</Button>
-										<Button variant="ghost" size="icon" onClick={nextZone} className="text-zinc-400 hover:text-white">
+										<Button
+											variant="ghost"
+											size="icon"
+											onClick={nextZone}
+											className="text-zinc-400 hover:text-white"
+										>
 											<ChevronRight className="h-5 w-5" />
 										</Button>
 									</div>
@@ -395,7 +427,7 @@ const ForumPage = () => {
 			<SiteFooter />
 		</div>
 	);
-}
+};
 
 // Wrap with Provider if not done at a higher level
 const ForumIndexPageWithProvider = () => (

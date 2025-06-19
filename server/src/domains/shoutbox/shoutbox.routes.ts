@@ -91,11 +91,16 @@ const router = Router();
 router.get('/rooms', async (req: Request, res: Response) => {
 	try {
 		const userId = getUserId(req);
-		const isAdminOrMod = req.user ? await canUser({
-			id: (req.user as any).id,
-			primaryRoleId: (req.user as any).primaryRoleId,
-			secondaryRoleIds: (req.user as any).secondaryRoleIds
-		}, 'canModerateChat') : false;
+		const isAdminOrMod = req.user
+			? await canUser(
+					{
+						id: (req.user as any).id,
+						primaryRoleId: (req.user as any).primaryRoleId,
+						secondaryRoleIds: (req.user as any).secondaryRoleIds
+					},
+					'canModerateChat'
+				)
+			: false;
 
 		// Base query - get non-deleted rooms
 		let query = db
@@ -221,7 +226,11 @@ router.delete('/messages/:id', isAdminOrModerator, async (req: Request, res: Res
 
 		// Log the moderation action
 		const moderatorId = getUserId(req);
-		logger.info('ShoutboxRoutes', `User ${moderatorId} deleted shoutbox message ${messageId}`, { moderatorId, messageId, action: 'delete_shoutbox_message' });
+		logger.info('ShoutboxRoutes', `User ${moderatorId} deleted shoutbox message ${messageId}`, {
+			moderatorId,
+			messageId,
+			action: 'delete_shoutbox_message'
+		});
 
 		const deletedMessage = result[0];
 
@@ -252,7 +261,10 @@ router.delete('/messages/:id', isAdminOrModerator, async (req: Request, res: Res
 	} catch (error) {
 		// console.error('Error deleting shoutbox message:', error); // Original console.error removed
 		const messageIdForLog = parseInt(req.params.id); // Ensure messageId is available for logging
-		logger.error('ShoutboxRoutes', 'Error deleting shoutbox message', { err: error, messageId: messageIdForLog });
+		logger.error('ShoutboxRoutes', 'Error deleting shoutbox message', {
+			err: error,
+			messageId: messageIdForLog
+		});
 		res.status(500).json({ error: 'Failed to delete message' });
 	}
 });
@@ -404,7 +416,11 @@ router.get('/messages', async (req: Request, res: Response) => {
 	} catch (error) {
 		const roomIdForLog = req.query.roomId ? parseInt(req.query.roomId as string) : null;
 		const limitForLog = req.query.limit ? parseInt(req.query.limit as string) : 50;
-		logger.error('ShoutboxRoutes', 'Error fetching shoutbox messages', { err: error, roomId: roomIdForLog, limit: limitForLog });
+		logger.error('ShoutboxRoutes', 'Error fetching shoutbox messages', {
+			err: error,
+			roomId: roomIdForLog,
+			limit: limitForLog
+		});
 		res.status(500).json({ error: 'Failed to fetch shoutbox messages' });
 	}
 });
@@ -507,7 +523,11 @@ router.post('/messages', isAuthenticated, async (req: Request, res: Response) =>
 
 		const userIdForLog = getUserId(req); // Ensure userId is available
 		const roomIdForLog = req.body.roomId; // Get roomId from request body for logging context
-		logger.error('ShoutboxRoutes', 'Error creating shoutbox message', { err: error, userId: userIdForLog, roomId: roomIdForLog });
+		logger.error('ShoutboxRoutes', 'Error creating shoutbox message', {
+			err: error,
+			userId: userIdForLog,
+			roomId: roomIdForLog
+		});
 		res.status(500).json({ error: 'Failed to create shoutbox message' });
 	}
 });
@@ -593,7 +613,11 @@ router.patch('/messages/:id', isAdminOrModerator, async (req: Request, res: Resp
 		// console.error('Error updating shoutbox message:', error); // Original console.error removed
 		const messageIdForLog = parseInt(req.params.id); // Ensure messageId is available
 		const isPinnedForLog = req.body.isPinned; // Ensure isPinned is available
-		logger.error('ShoutboxRoutes', 'Error updating shoutbox message', { err: error, messageId: messageIdForLog, isPinned: isPinnedForLog });
+		logger.error('ShoutboxRoutes', 'Error updating shoutbox message', {
+			err: error,
+			messageId: messageIdForLog,
+			isPinned: isPinnedForLog
+		});
 		res.status(500).json({ error: 'Failed to update message' });
 	}
 });

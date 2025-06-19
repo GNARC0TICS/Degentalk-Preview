@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link, useLocation, useRoute } from 'wouter';
-import { Folder as DefaultFolderIcon, MessageSquare, ChevronDown, ChevronRight, LayoutGrid } from 'lucide-react';
+import {
+	Folder as DefaultFolderIcon,
+	MessageSquare,
+	ChevronDown,
+	ChevronRight,
+	LayoutGrid
+} from 'lucide-react';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import { buildNavigationTree, type NavNode } from '@/navigation/forumNav';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge'; // For potential count display
 import { motion, AnimatePresence } from 'framer-motion';
-
 
 // interface PinnedItem extends ForumEntityBase { // Commenting out PinnedItem for now
 // 	type: 'zone' | 'category' | 'forum';
@@ -22,7 +27,7 @@ const SidebarNavItem = ({
 	node,
 	isActive,
 	onClick,
-	disabled = false,
+	disabled = false
 }: {
 	node: NavNode;
 	isActive?: boolean;
@@ -37,13 +42,15 @@ const SidebarNavItem = ({
 	} else if (isActive) {
 		activeClassesConfig = 'bg-zinc-700 text-emerald-400'; // Default active
 	}
-	
+
 	const activeClasses = cn(baseActiveClasses, isActive ? activeClassesConfig : '');
 	const hoverClasses = `hover:bg-zinc-800/50 hover:text-white`;
 	const IconComponent = node.iconComponent;
 
 	const displayIcon = node.iconEmoji ? (
-		<span className={`mr-2 text-md`} role="img" aria-hidden="true"> {/* Adjusted margin/size */}
+		<span className={`mr-2 text-md`} role="img" aria-hidden="true">
+			{' '}
+			{/* Adjusted margin/size */}
 			{node.iconEmoji}
 		</span>
 	) : IconComponent ? (
@@ -54,7 +61,9 @@ const SidebarNavItem = ({
 			)}
 		/>
 	) : (
-		<DefaultFolderIcon className={cn("w-3.5 h-3.5 mr-2", isActive ? '' : 'text-zinc-400 group-hover:text-zinc-300')} />
+		<DefaultFolderIcon
+			className={cn('w-3.5 h-3.5 mr-2', isActive ? '' : 'text-zinc-400 group-hover:text-zinc-300')}
+		/>
 	);
 
 	const content = (
@@ -84,22 +93,23 @@ const SidebarNavItem = ({
 	);
 };
 
-
 const SidebarCategorySection = ({
 	categoryNode,
 	isExpanded,
 	onToggle,
-	currentPath,
+	currentPath
 }: {
 	categoryNode: NavNode;
 	isExpanded: boolean;
 	onToggle: () => void;
 	currentPath: string;
 }) => {
-	const isActiveCategory = currentPath === categoryNode.href || currentPath.startsWith(`${categoryNode.href}/`);
+	const isActiveCategory =
+		currentPath === categoryNode.href || currentPath.startsWith(`${categoryNode.href}/`);
 	let activeCategorySpecificClass = '';
 
-	if (isActiveCategory && categoryNode.type !== 'forum') { // Only apply direct active style if it's the category itself
+	if (isActiveCategory && categoryNode.type !== 'forum') {
+		// Only apply direct active style if it's the category itself
 		if (categoryNode.semanticThemeKey) {
 			activeCategorySpecificClass = `zone-nav-theme-${categoryNode.semanticThemeKey} active text-white font-medium`;
 		} else {
@@ -109,7 +119,9 @@ const SidebarCategorySection = ({
 
 	const CategoryIconComponent = categoryNode.iconComponent;
 	const CategoryIconDisplay = categoryNode.iconEmoji ? (
-		<span className="mr-2 text-md" role="img" aria-hidden="true">{categoryNode.iconEmoji}</span>
+		<span className="mr-2 text-md" role="img" aria-hidden="true">
+			{categoryNode.iconEmoji}
+		</span>
 	) : CategoryIconComponent ? (
 		<CategoryIconComponent className="w-3.5 h-3.5 mr-2 text-zinc-400" />
 	) : (
@@ -123,23 +135,31 @@ const SidebarCategorySection = ({
 					'flex items-center justify-between px-3 py-1.5 text-sm rounded-md cursor-pointer transition-all duration-150 hover:bg-zinc-800/50 group',
 					// Apply activeCategorySpecificClass if it's set (meaning category itself is active or themed)
 					// Otherwise, default to text-zinc-300 if not active in any way.
-					(isActiveCategory && categoryNode.children.length === 0) || (isActiveCategory && categoryNode.type !== 'forum') ? activeCategorySpecificClass : 
-					(categoryNode.children.length > 0 && isActiveCategory ? 'font-medium text-emerald-400' : 'text-zinc-300')
+					(isActiveCategory && categoryNode.children.length === 0) ||
+						(isActiveCategory && categoryNode.type !== 'forum')
+						? activeCategorySpecificClass
+						: categoryNode.children.length > 0 && isActiveCategory
+							? 'font-medium text-emerald-400'
+							: 'text-zinc-300'
 				)}
 				onClick={onToggle}
 				role="button"
 				tabIndex={0}
-				onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(); }}}
+				onKeyDown={(e) => {
+					if (e.key === 'Enter' || e.key === ' ') {
+						e.preventDefault();
+						onToggle();
+					}
+				}}
 				aria-expanded={isExpanded}
 			>
 				<div className="flex items-center flex-1">
-					{categoryNode.children.length > 0 && (
-						isExpanded ? (
+					{categoryNode.children.length > 0 &&
+						(isExpanded ? (
 							<ChevronDown className="w-3.5 h-3.5 mr-1.5 text-zinc-400 transition-transform" />
 						) : (
 							<ChevronRight className="w-3.5 h-3.5 mr-1.5 text-zinc-400 transition-transform" />
-						)
-					)}
+						))}
 					{CategoryIconDisplay}
 					<span className="group-hover:text-white">{categoryNode.name}</span>
 				</div>
@@ -162,7 +182,9 @@ const SidebarCategorySection = ({
 							<SidebarNavItem
 								key={forumNode.id}
 								node={forumNode}
-								isActive={currentPath === forumNode.href || currentPath.startsWith(`${forumNode.href}/`)}
+								isActive={
+									currentPath === forumNode.href || currentPath.startsWith(`${forumNode.href}/`)
+								}
 							/>
 						))}
 					</motion.div>
@@ -172,39 +194,47 @@ const SidebarCategorySection = ({
 	);
 };
 
-
 export function SidebarNavigation({
-	className = '',
+	className = ''
 	// userPinnedItems = [] // Commenting out for now
 }: SidebarNavigationProps) {
 	const [location] = useLocation();
 	const { zones, isLoading, error: forumStructureError } = useForumStructure();
-	
-	const navigationTree = useMemo(() => {
-    if (isLoading || forumStructureError || !zones) return [];
-    return buildNavigationTree(zones);
-  }, [zones, isLoading, forumStructureError]);
 
-	const [expandedCategories, setExpandedCategories] = useLocalStorage<
-		Record<string, boolean>
-	>('dt-sidebar-expanded-categories', {});
+	const navigationTree = useMemo(() => {
+		if (isLoading || forumStructureError || !zones) return [];
+		return buildNavigationTree(zones);
+	}, [zones, isLoading, forumStructureError]);
+
+	const [expandedCategories, setExpandedCategories] = useLocalStorage<Record<string, boolean>>(
+		'dt-sidebar-expanded-categories',
+		{}
+	);
 
 	// Auto-expand category of active child forum or if category itself is active
 	useEffect(() => {
-		const activeNode = navigationTree.find(node => location === node.href || location.startsWith(`${node.href}/`));
-		
+		const activeNode = navigationTree.find(
+			(node) => location === node.href || location.startsWith(`${node.href}/`)
+		);
+
 		if (activeNode) {
 			// If active node is a forum, find its parent category
-			const parentCategory = activeNode.type === 'forum' ? navigationTree.find(
-				cat => cat.type === 'generalCategory' && cat.children.some(child => child.id === activeNode.id)
-			) : activeNode.type === 'generalCategory' ? activeNode : undefined;
+			const parentCategory =
+				activeNode.type === 'forum'
+					? navigationTree.find(
+							(cat) =>
+								cat.type === 'generalCategory' &&
+								cat.children.some((child) => child.id === activeNode.id)
+						)
+					: activeNode.type === 'generalCategory'
+						? activeNode
+						: undefined;
 
 			if (parentCategory && !expandedCategories[parentCategory.id]) {
-				setExpandedCategories(prev => ({ ...prev, [parentCategory.id]: true }));
+				setExpandedCategories((prev) => ({ ...prev, [parentCategory.id]: true }));
 			}
 		}
 	}, [location, navigationTree, expandedCategories, setExpandedCategories]);
-
 
 	const toggleCategoryExpansion = useCallback(
 		(categoryId: string) => {
@@ -215,38 +245,47 @@ export function SidebarNavigation({
 		},
 		[setExpandedCategories]
 	);
-	
-	if (isLoading) return <div className={cn("p-3 text-sm text-zinc-400", className)}>Loading navigation...</div>;
-  if (forumStructureError) return <div className={cn("p-3 text-sm text-red-400", className)}>Error loading navigation.</div>;
-  if (!navigationTree.length) return <div className={cn("p-3 text-sm text-zinc-500", className)}>No navigation items.</div>;
 
-	const systemLinkNodes = navigationTree.filter(node => node.type === 'systemLink');
-	const primaryZoneNodes = navigationTree.filter(node => node.type === 'primaryZone');
-	const generalCategoryNodes = navigationTree.filter(node => node.type === 'generalCategory');
+	if (isLoading)
+		return <div className={cn('p-3 text-sm text-zinc-400', className)}>Loading navigation...</div>;
+	if (forumStructureError)
+		return (
+			<div className={cn('p-3 text-sm text-red-400', className)}>Error loading navigation.</div>
+		);
+	if (!navigationTree.length)
+		return <div className={cn('p-3 text-sm text-zinc-500', className)}>No navigation items.</div>;
+
+	const systemLinkNodes = navigationTree.filter((node) => node.type === 'systemLink');
+	const primaryZoneNodes = navigationTree.filter((node) => node.type === 'primaryZone');
+	const generalCategoryNodes = navigationTree.filter((node) => node.type === 'generalCategory');
 
 	return (
-        <nav className={cn('space-y-4', className)}> {/* Adjusted main spacing */}
-            {/* Pinned Items Section (Placeholder) */}
-            {/* {userPinnedItems.length > 0 && ( ...pinned items logic... )} */}
-            {systemLinkNodes.length > 0 && (
+		<nav className={cn('space-y-4', className)}>
+			{' '}
+			{/* Adjusted main spacing */}
+			{/* Pinned Items Section (Placeholder) */}
+			{/* {userPinnedItems.length > 0 && ( ...pinned items logic... )} */}
+			{systemLinkNodes.length > 0 && (
 				<div>
 					{/* Optional: Header for system links */}
 					{/* <div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">Navigation</div> */}
-					<div className="space-y-0.5 mt-1"> {/* Adjusted spacing */}
+					<div className="space-y-0.5 mt-1">
+						{' '}
+						{/* Adjusted spacing */}
 						{systemLinkNodes.map((node) => (
-							<SidebarNavItem
-								key={node.id}
-								node={node}
-								isActive={location === node.href}
-							/>
+							<SidebarNavItem key={node.id} node={node} isActive={location === node.href} />
 						))}
 					</div>
 				</div>
 			)}
-            {primaryZoneNodes.length > 0 && (
+			{primaryZoneNodes.length > 0 && (
 				<div>
-					<div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">Primary Zones</div>
-					<div className="space-y-0.5 mt-1"> {/* Adjusted spacing */}
+					<div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">
+						Primary Zones
+					</div>
+					<div className="space-y-0.5 mt-1">
+						{' '}
+						{/* Adjusted spacing */}
 						{primaryZoneNodes.map((node) => (
 							<SidebarNavItem
 								key={node.id}
@@ -257,13 +296,18 @@ export function SidebarNavigation({
 					</div>
 				</div>
 			)}
-            {(systemLinkNodes.length > 0 || primaryZoneNodes.length > 0) && generalCategoryNodes.length > 0 && (
-				(<div className="h-px bg-zinc-700/60 mx-2 my-3" />) // Adjusted divider
-			)}
-            {generalCategoryNodes.length > 0 && (
+			{(systemLinkNodes.length > 0 || primaryZoneNodes.length > 0) &&
+				generalCategoryNodes.length > 0 && (
+					<div className="h-px bg-zinc-700/60 mx-2 my-3" /> // Adjusted divider
+				)}
+			{generalCategoryNodes.length > 0 && (
 				<div>
-					<div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">Categories</div>
-					<div className="space-y-0.5 mt-1"> {/* Adjusted spacing */}
+					<div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">
+						Categories
+					</div>
+					<div className="space-y-0.5 mt-1">
+						{' '}
+						{/* Adjusted spacing */}
 						{generalCategoryNodes.map((categoryNode) => (
 							<SidebarCategorySection
 								key={categoryNode.id}
@@ -276,8 +320,8 @@ export function SidebarNavigation({
 					</div>
 				</div>
 			)}
-        </nav>
-    );
+		</nav>
+	);
 }
 
 export default SidebarNavigation;

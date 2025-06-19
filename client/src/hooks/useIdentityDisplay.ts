@@ -2,25 +2,25 @@ import { useUserCosmetics } from '@/hooks/useUserCosmetics';
 import { useUserXP } from '@/hooks/useUserXP';
 
 interface BaseUser {
-  id: string;
-  username: string;
-  roles?: Array<{ id: number; name: string; hexColor?: string | null }>;
-  level?: number;
+	id: string;
+	username: string;
+	roles?: Array<{ id: number; name: string; hexColor?: string | null }>;
+	level?: number;
 }
 
 export interface IdentityDisplay {
-  displayName: string;
-  usernameColor?: string;
-  primaryRole?: {
-    name: string;
-    color?: string | null;
-  };
-  title?: string | null;
-  level?: number;
-  avatarFrame?: {
-    imageUrl: string;
-    rarityColor?: string;
-  } | null;
+	displayName: string;
+	usernameColor?: string;
+	primaryRole?: {
+		name: string;
+		color?: string | null;
+	};
+	title?: string | null;
+	level?: number;
+	avatarFrame?: {
+		imageUrl: string;
+		rarityColor?: string;
+	} | null;
 }
 
 /**
@@ -30,19 +30,19 @@ export interface IdentityDisplay {
  * a small object ready for UI components. Falls back gracefully when data missing.
  */
 export function useIdentityDisplay(user: BaseUser | null | undefined): IdentityDisplay | null {
-  const { cosmetics } = useUserCosmetics(user?.id);
-  const { data: xpData } = useUserXP(typeof user?.id === 'string' ? parseInt(user.id) : user?.id);
+	const { cosmetics } = useUserCosmetics(user?.id);
+	const { data: xpData } = useUserXP(typeof user?.id === 'string' ? parseInt(user.id) : user?.id);
 
-  if (!user) return null;
+	if (!user) return null;
 
-  const primaryRole = user.roles?.[0];
+	const primaryRole = user.roles?.[0];
 
-  return {
-    displayName: user.username,
-    usernameColor: primaryRole?.hexColor || cosmetics?.usernameColor || undefined,
-    primaryRole: primaryRole ? { name: primaryRole.name, color: primaryRole.hexColor } : undefined,
-    title: cosmetics?.userTitle ?? null,
-    level: xpData?.currentLevel ?? user.level ?? undefined,
-    avatarFrame: cosmetics?.avatarFrame ?? null,
-  };
-} 
+	return {
+		displayName: user.username,
+		usernameColor: primaryRole?.hexColor || cosmetics?.usernameColor || undefined,
+		primaryRole: primaryRole ? { name: primaryRole.name, color: primaryRole.hexColor } : undefined,
+		title: cosmetics?.userTitle ?? null,
+		level: xpData?.currentLevel ?? user.level ?? undefined,
+		avatarFrame: cosmetics?.avatarFrame ?? null
+	};
+}

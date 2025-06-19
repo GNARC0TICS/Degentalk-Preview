@@ -7,7 +7,8 @@ import { apiRequest } from '@/lib/queryClient';
  * @param userId - User ID to fetch inventory for
  * @returns User inventory data with product details
  */
-export function useUserInventory(userId?: string) { // Changed to string
+export function useUserInventory(userId?: string) {
+	// Changed to string
 	return useQuery<UserInventoryWithProduct[]>({
 		queryKey: ['user-inventory', userId],
 		queryFn: async () => {

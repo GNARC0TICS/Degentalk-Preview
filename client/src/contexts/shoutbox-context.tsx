@@ -217,7 +217,14 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 
 	// Helper to validate position
 	function isValidPosition(pos: string): pos is ShoutboxPosition {
-		return ['sidebar-top', 'sidebar-bottom', 'main-top', 'main-bottom', 'floating', 'sticky'].includes(pos);
+		return [
+			'sidebar-top',
+			'sidebar-bottom',
+			'main-top',
+			'main-bottom',
+			'floating',
+			'sticky'
+		].includes(pos);
 	}
 
 	// Load expansion level from localStorage on initial render

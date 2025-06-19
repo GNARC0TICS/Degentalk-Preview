@@ -56,7 +56,11 @@ export const PaginationSchema = z.object({
 // Forum entity schemas
 export const createEntitySchema = z.object({
 	name: z.string().min(1).max(100),
-	slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+	slug: z
+		.string()
+		.min(1)
+		.max(100)
+		.regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
 	description: z.string().max(500).optional().nullable(),
 	type: z.enum(['zone', 'category', 'forum']),
 	parentId: z.number().int().positive().optional().nullable(),
@@ -70,7 +74,7 @@ export const createEntitySchema = z.object({
 	colorTheme: z.string().optional().nullable(),
 	tippingEnabled: z.boolean().default(false),
 	xpMultiplier: z.number().min(0).default(1),
-	pluginData: z.record(z.any()).optional().nullable(),
+	pluginData: z.record(z.any()).optional().nullable()
 });
 
 export const updateEntitySchema = createEntitySchema.partial();

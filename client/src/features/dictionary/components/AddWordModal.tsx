@@ -68,7 +68,12 @@ export const AddWordModal: React.FC<Props> = ({ open, onClose }) => {
 			return;
 		}
 		setErrors({});
-		const tagsArr = form.tags ? form.tags.split(',').map((t) => t.trim()).filter(Boolean) : [];
+		const tagsArr = form.tags
+			? form.tags
+					.split(',')
+					.map((t) => t.trim())
+					.filter(Boolean)
+			: [];
 		mutation.mutate({
 			...result.data,
 			tags: tagsArr,
@@ -102,9 +107,7 @@ export const AddWordModal: React.FC<Props> = ({ open, onClose }) => {
 								onChange={handleChange}
 								rows={6}
 							/>
-							{errors.definition && (
-								<p className="text-sm text-red-500">{errors.definition}</p>
-							)}
+							{errors.definition && <p className="text-sm text-red-500">{errors.definition}</p>}
 						</div>
 						<div className="space-y-2">
 							<Label htmlFor="usageExample">Usage Example (optional)</Label>

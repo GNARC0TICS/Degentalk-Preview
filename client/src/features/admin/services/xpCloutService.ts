@@ -14,8 +14,7 @@ export function useXpCloutSettings() {
 export function useUpdateXpCloutSettings() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: (data: Partial<InsertXpCloutSettings>) =>
-			adminApi.put('/xp/clout-settings', data),
+		mutationFn: (data: Partial<InsertXpCloutSettings>) => adminApi.put('/xp/clout-settings', data),
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: XP_CLOUT_KEY });
 		}

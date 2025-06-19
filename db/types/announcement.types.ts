@@ -11,4 +11,4 @@ export type Announcement = {
 	link?: string;
 	bgColor?: string;
 	textColor?: string;
-}; 
+};

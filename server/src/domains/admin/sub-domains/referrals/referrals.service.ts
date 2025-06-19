@@ -8,94 +8,101 @@ import { users } from '@schema/user/users';
  * Service for managing referral sources and user referrals
  */
 export class ReferralsService {
-  /**
-   * Create a new referral source
-   * 
-   * @param name Display name of the referral source
-   * @param slug Unique slug for the referral source
-   * @param metadata Optional metadata for the referral source
-   * @param createdBy User ID of the admin who created the source
-   * @returns The created referral source
-   */
-  async createReferralSource(name: string, slug: string, metadata: Record<string, any> = {}, createdBy?: number) {
-    try {
-      const [source] = await db.insert(referralSources)
-        .values({
-          name,
-          slug,
-          metadata,
-          createdBy
-        })
-        .returning();
-      
-      return source;
-    } catch (error) {
-      if (error.message?.includes('unique constraint')) {
-        if (error.message.includes('referral_sources_slug_unique')) {
-          throw new Error(`Referral source with slug "${slug}" already exists`);
-        } else if (error.message.includes('referral_sources_name_unique')) {
-          throw new Error(`Referral source with name "${name}" already exists`);
-        }
-      }
-      throw error;
-    }
-  }
+	/**
+	 * Create a new referral source
+	 *
+	 * @param name Display name of the referral source
+	 * @param slug Unique slug for the referral source
+	 * @param metadata Optional metadata for the referral source
+	 * @param createdBy User ID of the admin who created the source
+	 * @returns The created referral source
+	 */
+	async createReferralSource(
+		name: string,
+		slug: string,
+		metadata: Record<string, any> = {},
+		createdBy?: number
+	) {
+		try {
+			const [source] = await db
+				.insert(referralSources)
+				.values({
+					name,
+					slug,
+					metadata,
+					createdBy
+				})
+				.returning();
 
-  /**
-   * Record a user referral
-   * 
-   * @param params Parameters for recording a user referral
-   * @returns The created user referral or null if already exists
-   */
-  async recordUserReferral(params: {
-    userId: number;
-    referredByUserId?: number;
-    sourceSlug: string;
-  }) {
-    const { userId, referredByUserId, sourceSlug } = params;
+			return source;
+		} catch (error) {
+			if (error.message?.includes('unique constraint')) {
+				if (error.message.includes('referral_sources_slug_unique')) {
+					throw new Error(`Referral source with slug "${slug}" already exists`);
+				} else if (error.message.includes('referral_sources_name_unique')) {
+					throw new Error(`Referral source with name "${name}" already exists`);
+				}
+			}
+			throw error;
+		}
+	}
 
-    // First, find the referral source by slug
-    const source = await db.query.referralSources.findFirst({
-      where: eq(referralSources.slug, sourceSlug)
-    });
+	/**
+	 * Record a user referral
+	 *
+	 * @param params Parameters for recording a user referral
+	 * @returns The created user referral or null if already exists
+	 */
+	async recordUserReferral(params: {
+		userId: number;
+		referredByUserId?: number;
+		sourceSlug: string;
+	}) {
+		const { userId, referredByUserId, sourceSlug } = params;
 
-    if (!source) {
-      throw new Error(`Referral source with slug "${sourceSlug}" not found`);
-    }
+		// First, find the referral source by slug
+		const source = await db.query.referralSources.findFirst({
+			where: eq(referralSources.slug, sourceSlug)
+		});
 
-    try {
-      // Insert with ON CONFLICT DO NOTHING
-      const result = await db.insert(userReferrals)
-        .values({
-          userId,
-          referredByUserId,
-          referralSourceId: source.id
-        })
-        .onConflictDoNothing({ target: [userReferrals.userId] })
-        .returning();
-      
-      return result[0] || null;
-    } catch (error) {
-      // Log error but don't throw, as we want to silently handle duplicates
-      console.error('Error recording user referral:', error);
-      return null;
-    }
-  }
+		if (!source) {
+			throw new Error(`Referral source with slug "${sourceSlug}" not found`);
+		}
 
-  /**
-   * Get all referral sources
-   */
-  async getAllReferralSources() {
-    return db.query.referralSources.findMany({
-      orderBy: (sources) => [sources.name]
-    });
-  }
+		try {
+			// Insert with ON CONFLICT DO NOTHING
+			const result = await db
+				.insert(userReferrals)
+				.values({
+					userId,
+					referredByUserId,
+					referralSourceId: source.id
+				})
+				.onConflictDoNothing({ target: [userReferrals.userId] })
+				.returning();
 
-  /**
-   * Get referral source statistics
-   */
-  async getReferralSourceStats() {
-    const stats = await db.execute(sql`
+			return result[0] || null;
+		} catch (error) {
+			// Log error but don't throw, as we want to silently handle duplicates
+			console.error('Error recording user referral:', error);
+			return null;
+		}
+	}
+
+	/**
+	 * Get all referral sources
+	 */
+	async getAllReferralSources() {
+		return db.query.referralSources.findMany({
+			orderBy: (sources) => [sources.name]
+		});
+	}
+
+	/**
+	 * Get referral source statistics
+	 */
+	async getReferralSourceStats() {
+		const stats = await db.execute(sql`
       SELECT 
         rs.name AS source_name, 
         rs.slug AS source_slug,
@@ -109,15 +116,15 @@ export class ReferralsService {
       ORDER BY 
         referral_count DESC
     `);
-    
-    return stats.rows;
-  }
 
-  /**
-   * Get user-to-user referral statistics
-   */
-  async getUserReferralStats() {
-    const stats = await db.execute(sql`
+		return stats.rows;
+	}
+
+	/**
+	 * Get user-to-user referral statistics
+	 */
+	async getUserReferralStats() {
+		const stats = await db.execute(sql`
       SELECT 
         u.username AS user_username,
         u.id AS user_id,
@@ -137,15 +144,15 @@ export class ReferralsService {
       ORDER BY 
         ur.created_at DESC
     `);
-    
-    return stats.rows;
-  }
 
-  /**
-   * Get referral count by user
-   */
-  async getReferralCountByUser() {
-    const stats = await db.execute(sql`
+		return stats.rows;
+	}
+
+	/**
+	 * Get referral count by user
+	 */
+	async getReferralCountByUser() {
+		const stats = await db.execute(sql`
       SELECT 
         u.username AS referrer_username,
         u.id AS referrer_id,
@@ -160,9 +167,9 @@ export class ReferralsService {
         referral_count DESC
       LIMIT 50
     `);
-    
-    return stats.rows;
-  }
+
+		return stats.rows;
+	}
 }
 
-export const referralsService = new ReferralsService(); 
+export const referralsService = new ReferralsService();

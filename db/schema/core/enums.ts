@@ -75,8 +75,4 @@ export const contentVisibilityStatusEnum = pgEnum('content_visibility_status', [
 	'archived',
 	'deleted'
 ]);
-export const mentionSourceTypeEnum = pgEnum('mention_source_type', [
-	'post',
-	'thread',
-	'chat'
-]);
+export const mentionSourceTypeEnum = pgEnum('mention_source_type', ['post', 'thread', 'chat']);

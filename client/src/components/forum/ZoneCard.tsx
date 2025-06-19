@@ -106,9 +106,7 @@ export function ZoneCard({
           ${hasXpBoost && boostMultiplier ? 'animate-pulse-glow' : ''}
         `}
 		>
-			<Card
-				className="w-full h-full bg-transparent border-none"
-			>
+			<Card className="w-full h-full bg-transparent border-none">
 				{/* XP Boost Indicator */}
 				<XpBoostBadge boostMultiplier={boostMultiplier} />
 

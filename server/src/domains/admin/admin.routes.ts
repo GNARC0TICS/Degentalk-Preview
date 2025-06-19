@@ -57,7 +57,10 @@ adminRouter.use('/clout', cloutRoutes);
 
 // DEBUG: Middleware to check if /emojis path is reached in adminRouter
 adminRouter.use('/emojis', (req, res, next) => {
-	logger.debug('AdminRoutes', `Request received for /api/admin${req.url}`, { url: req.url, method: req.method });
+	logger.debug('AdminRoutes', `Request received for /api/admin${req.url}`, {
+		url: req.url,
+		method: req.method
+	});
 	next();
 });
 
@@ -76,7 +79,8 @@ adminRouter.get('/validate', (req, res) => res.json({ isAdmin: true }));
  * Register admin routes with the Express application
  * @param app Express application or router
  */
-export function registerAdminRoutes(app: Express) { // Added type for app
+export function registerAdminRoutes(app: Express) {
+	// Added type for app
 	app.use('/api/admin', adminRouter);
 }
 

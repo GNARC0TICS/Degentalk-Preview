@@ -6,7 +6,7 @@ import {
 	jsonb,
 	boolean,
 	timestamp,
-	index,
+	index
 	// integer // No longer importing integer as userId will be uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';

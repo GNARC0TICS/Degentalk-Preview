@@ -10,7 +10,7 @@ import {
 	Shield,
 	Settings,
 	Link2,
-	MessageSquare,
+	MessageSquare
 } from 'lucide-react';
 import { WalletSheet } from '@/components/economy/wallet/WalletSheet';
 import ChartMenu from '@/components/ui/candlestick-menu';
@@ -100,11 +100,11 @@ const MegaphoneIcon = (props: React.SVGProps<SVGSVGElement>) => (
 // Framer Motion variants for notification button
 const notificationButtonVariants = {
 	rest: { scale: 1 },
-	hover: { 
+	hover: {
 		scale: 1.05,
 		transition: {
 			duration: 0.2,
-			ease: "easeOut"
+			ease: 'easeOut'
 		}
 	},
 	tap: { scale: 0.95 }
@@ -112,11 +112,11 @@ const notificationButtonVariants = {
 
 const notificationBadgeVariants = {
 	initial: { scale: 0, opacity: 0 },
-	animate: { 
-		scale: 1, 
+	animate: {
+		scale: 1,
 		opacity: 1,
 		transition: {
-			type: "spring",
+			type: 'spring',
 			stiffness: 500,
 			damping: 15
 		}
@@ -133,13 +133,13 @@ const notificationBadgeVariants = {
 
 // Framer Motion variants for dropdown
 const dropdownVariants = {
-	hidden: { 
-		opacity: 0, 
+	hidden: {
+		opacity: 0,
 		scale: 0.95,
 		y: -10
 	},
-	visible: { 
-		opacity: 1, 
+	visible: {
+		opacity: 1,
 		scale: 1,
 		y: 0,
 		transition: {
@@ -153,7 +153,7 @@ const dropdownVariants = {
 		y: -10,
 		transition: {
 			duration: 0.15,
-			ease: "easeIn"
+			ease: 'easeIn'
 		}
 	}
 };
@@ -166,7 +166,7 @@ const dropdownItemVariants = {
 		transition: {
 			delay: i * 0.03,
 			duration: 0.2,
-			ease: "easeOut"
+			ease: 'easeOut'
 		}
 	}),
 	hover: {
@@ -216,22 +216,22 @@ export function SiteHeader() {
 	useEffect(() => {
 		const paths = navigation.map(() => generateRandomPath());
 		setNavPaths(paths);
-		
+
 		navRefs.current = navRefs.current.slice(0, navigation.length);
-		
+
 		setTimeout(() => {
 			navRefs.current.forEach((path, index) => {
 				if (path) {
 					const pathLength = path.getTotalLength();
 					const isActive = navigation[index].href === location;
-					gsap.set(path, { 
+					gsap.set(path, {
 						strokeDasharray: pathLength,
 						strokeDashoffset: isActive ? 0 : pathLength,
 						opacity: isActive ? 1 : 0 // Set initial opacity
 					});
 				}
 			});
-		}, 100); 
+		}, 100);
 	}, []);
 
 	const handleLocationChange = (currentLocation: string, isInitialSetup = false) => {
@@ -240,21 +240,21 @@ export function SiteHeader() {
 				const pathLength = path.getTotalLength();
 				const isActive = navigation[index].href === currentLocation;
 
-				gsap.killTweensOf(path); 
+				gsap.killTweensOf(path);
 
 				if (isActive) {
-					gsap.to(path, { 
+					gsap.to(path, {
 						strokeDashoffset: 0,
 						opacity: 1,
 						duration: isInitialSetup ? 0.01 : 0.3, // Virtually instant on initial setup
-						ease: "power2.out"
+						ease: 'power2.out'
 					});
 				} else {
-					gsap.to(path, { 
+					gsap.to(path, {
 						strokeDashoffset: pathLength,
 						opacity: 0,
-						duration: 0.2, 
-						ease: "power1.in"
+						duration: 0.2,
+						ease: 'power1.in'
 					});
 				}
 			}
@@ -263,19 +263,19 @@ export function SiteHeader() {
 
 	// Update active path when location changes
 	useEffect(() => {
-        handleLocationChange(location);
+		handleLocationChange(location);
 	}, [location]);
 
 	// Setup hover animations
 	const handleMouseEnter = (index: number) => {
 		const path = navRefs.current[index];
 		if (path && navigation[index].href !== location) {
-			gsap.killTweensOf(path); 
-			gsap.to(path, { 
+			gsap.killTweensOf(path);
+			gsap.to(path, {
 				strokeDashoffset: 0,
 				opacity: 1,
-				duration: 0.3, 
-				ease: "power2.out"
+				duration: 0.3,
+				ease: 'power2.out'
 			});
 		}
 	};
@@ -284,12 +284,12 @@ export function SiteHeader() {
 		const path = navRefs.current[index];
 		if (path && navigation[index].href !== location) {
 			const pathLength = path.getTotalLength();
-			gsap.killTweensOf(path); 
-			gsap.to(path, { 
+			gsap.killTweensOf(path);
+			gsap.to(path, {
 				strokeDashoffset: pathLength,
 				opacity: 0,
-				duration: 0.2, 
-				ease: "power1.in"
+				duration: 0.2,
+				ease: 'power1.in'
 			});
 		}
 	};
@@ -309,7 +309,9 @@ export function SiteHeader() {
 					<div className="flex items-center">
 						<Link href="/">
 							<div className="flex items-center cursor-pointer">
-								<span className="text-xl font-bold text-white">Degentalk<sup className="text-xs text-zinc-400 font-normal">™</sup></span>
+								<span className="text-xl font-bold text-white">
+									Degentalk<sup className="text-xs text-zinc-400 font-normal">™</sup>
+								</span>
 							</div>
 						</Link>
 					</div>
@@ -322,9 +324,7 @@ export function SiteHeader() {
 								<Link key={item.name} href={item.href}>
 									<div
 										className={`nav-item group px-3 py-2 rounded-md text-sm font-medium cursor-pointer transition-all duration-200 ${
-											isActive
-												? 'text-white nav-active'
-												: 'text-zinc-300 hover:text-emerald-400'
+											isActive ? 'text-white nav-active' : 'text-zinc-300 hover:text-emerald-400'
 										}`}
 										onMouseEnter={() => handleMouseEnter(index)}
 										onMouseLeave={() => handleMouseLeave(index)}
@@ -339,14 +339,14 @@ export function SiteHeader() {
 											style={{ overflow: 'visible' }}
 										>
 											<path
-												ref={el => {
+												ref={(el) => {
 													if (navRefs.current) {
 														navRefs.current[index] = el;
 													}
 												}}
 												className="nav-underline"
-												d={navPaths[index] || "M5 30L25 32S50 34 75 31L95 30"}
-												stroke={isActive ? "#e55050" : "#10b981"}
+												d={navPaths[index] || 'M5 30L25 32S50 34 75 31L95 30'}
+												stroke={isActive ? '#e55050' : '#10b981'}
 												strokeWidth="6"
 												strokeLinecap="round"
 											/>
@@ -400,7 +400,7 @@ export function SiteHeader() {
 													className="absolute -top-1 -right-1"
 													variants={notificationBadgeVariants}
 													initial="initial"
-													animate={["animate", "pulse"]}
+													animate={['animate', 'pulse']}
 												>
 													<Badge className="px-1.5 h-4 min-w-4 bg-red-500 flex items-center justify-center text-[10px]">
 														3

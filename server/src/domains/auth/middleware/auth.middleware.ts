@@ -22,7 +22,9 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
 
 	// Check if we should bypass auth in development mode
 	if (shouldBypassAuth()) {
-		logger.info('AuthMiddleware', 'Bypassing authentication in development mode', { path: req.path });
+		logger.info('AuthMiddleware', 'Bypassing authentication in development mode', {
+			path: req.path
+		});
 		// Get the dev mode role from headers or default to 'user'
 		const devRole = (req.headers['x-dev-role'] as string) || 'user';
 		const roleId = req.headers['x-dev-role-id']
@@ -51,7 +53,9 @@ export function isAuthenticatedOptional(req: Request, res: Response, next: NextF
 
 	// Check if we should bypass auth in development mode
 	if (shouldBypassAuth()) {
-		logger.info('AuthMiddleware', 'Bypassing optional authentication in development mode', { path: req.path });
+		logger.info('AuthMiddleware', 'Bypassing optional authentication in development mode', {
+			path: req.path
+		});
 		// Get the dev mode role from headers or default to 'user'
 		const devRole = (req.headers['x-dev-role'] as string) || 'user';
 		const roleId = req.headers['x-dev-role-id']
@@ -80,7 +84,9 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
 
 	// Check if we should bypass auth in development mode with admin role
 	if (shouldBypassAuth() && req.headers['x-dev-role'] === 'admin') {
-		logger.info('AuthMiddleware', 'Bypassing admin authentication in development mode', { path: req.path });
+		logger.info('AuthMiddleware', 'Bypassing admin authentication in development mode', {
+			path: req.path
+		});
 		const roleId = req.headers['x-dev-role-id']
 			? parseInt(req.headers['x-dev-role-id'] as string, 10)
 			: 1;
@@ -105,7 +111,10 @@ export function isModerator(req: Request, res: Response, next: NextFunction) {
 		shouldBypassAuth() &&
 		(req.headers['x-dev-role'] === 'moderator' || req.headers['x-dev-role'] === 'admin')
 	) {
-		logger.info('AuthMiddleware', 'Bypassing moderator authentication in development mode', { path: req.path, devRoleHeader: req.headers['x-dev-role'] });
+		logger.info('AuthMiddleware', 'Bypassing moderator authentication in development mode', {
+			path: req.path,
+			devRoleHeader: req.headers['x-dev-role']
+		});
 		const devRole = req.headers['x-dev-role'] as 'moderator' | 'admin';
 		const roleId = req.headers['x-dev-role-id']
 			? parseInt(req.headers['x-dev-role-id'] as string, 10)

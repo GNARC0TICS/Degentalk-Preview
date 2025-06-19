@@ -250,7 +250,7 @@ export default function TitleManagementPage() {
 		setIsDeleteDialogOpen(true);
 	};
 
-		const resetForm = () => {
+	const resetForm = () => {
 		setFormData({
 			name: '',
 			description: '',
@@ -748,8 +748,12 @@ export default function TitleManagementPage() {
 									<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 										<Card>
 											<CardContent className="p-4">
-												<div className="text-sm font-medium text-muted-foreground">Total Titles</div>
-												<div className="text-2xl font-bold mt-1">{titlesData?.totalTitles || 0}</div>
+												<div className="text-sm font-medium text-muted-foreground">
+													Total Titles
+												</div>
+												<div className="text-2xl font-bold mt-1">
+													{titlesData?.totalTitles || 0}
+												</div>
 											</CardContent>
 										</Card>
 										<Card>
@@ -770,7 +774,9 @@ export default function TitleManagementPage() {
 										</Card>
 										<Card>
 											<CardContent className="p-4">
-												<div className="text-sm font-medium text-muted-foreground">Rarest Title</div>
+												<div className="text-sm font-medium text-muted-foreground">
+													Rarest Title
+												</div>
 												<div className="text-2xl font-bold mt-1 truncate">
 													{titlesData?.rarestTitle?.name || 'N/A'}
 												</div>

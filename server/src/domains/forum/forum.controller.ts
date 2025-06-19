@@ -36,7 +36,10 @@ export const forumController = {
 
 			return res.status(200).json(categories);
 		} catch (error) {
-			logger.error('ForumController', 'Error fetching forum category tree', { err: error, query: req.query });
+			logger.error('ForumController', 'Error fetching forum category tree', {
+				err: error,
+				query: req.query
+			});
 			return res.status(500).json({ message: 'Failed to fetch forum category tree' });
 		}
 	},
@@ -58,7 +61,10 @@ export const forumController = {
 
 			return res.status(200).json(category);
 		} catch (error) {
-			logger.error('ForumController', 'Error fetching category by slug', { err: error, slug: req.params.slug });
+			logger.error('ForumController', 'Error fetching category by slug', {
+				err: error,
+				slug: req.params.slug
+			});
 			return res.status(500).json({ message: 'Failed to fetch category' });
 		}
 	},
@@ -80,7 +86,10 @@ export const forumController = {
 
 			return res.status(200).json(result);
 		} catch (error) {
-			logger.error('ForumController', 'Error fetching forum with topics by slug', { err: error, slug: req.params.slug });
+			logger.error('ForumController', 'Error fetching forum with topics by slug', {
+				err: error,
+				slug: req.params.slug
+			});
 			return res.status(500).json({ message: 'Failed to fetch forum with topics' });
 		}
 	},
@@ -102,7 +111,10 @@ export const forumController = {
 
 			return res.status(200).json(category);
 		} catch (error) {
-			logger.error('ForumController', 'Error fetching category by ID', { err: error, categoryId: req.params.id });
+			logger.error('ForumController', 'Error fetching category by ID', {
+				err: error,
+				categoryId: req.params.id
+			});
 			return res.status(500).json({ message: 'Failed to fetch category' });
 		}
 	},
@@ -117,7 +129,10 @@ export const forumController = {
 			const prefixes = await forumService.getPrefixes(categoryId);
 			return res.status(200).json(prefixes);
 		} catch (error) {
-			logger.error('ForumController', 'Error fetching thread prefixes', { err: error, categoryId: req.query.categoryId });
+			logger.error('ForumController', 'Error fetching thread prefixes', {
+				err: error,
+				categoryId: req.query.categoryId
+			});
 			return res.status(500).json({ message: 'Failed to fetch thread prefixes' });
 		}
 	},
@@ -179,7 +194,11 @@ export const forumController = {
 			// Send success response
 			return res.status(200).json({ success: true, thread: updatedThread });
 		} catch (error) {
-			logger.error('ForumController', 'Error in solveThread', { err: error, threadId: req.params.threadId, body: req.body });
+			logger.error('ForumController', 'Error in solveThread', {
+				err: error,
+				threadId: req.params.threadId,
+				body: req.body
+			});
 			// Pass the error to the next middleware (global error handler)
 			throw error; // Re-throw the error to be caught by the error handler
 		}
@@ -207,7 +226,10 @@ export const forumController = {
 
 			return res.status(200).json({ forum });
 		} catch (error) {
-			logger.error('ForumController', 'Error fetching forum by slug', { err: error, slug: req.params.slug });
+			logger.error('ForumController', 'Error fetching forum by slug', {
+				err: error,
+				slug: req.params.slug
+			});
 			return res.status(500).json({ message: 'Failed to fetch forum' });
 		}
 	},
@@ -225,7 +247,10 @@ export const forumController = {
 
 			return res.status(200).json({ forums });
 		} catch (error) {
-			logger.error('ForumController', 'Error fetching forums by parent ID', { err: error, parentId: req.query.parentId });
+			logger.error('ForumController', 'Error fetching forums by parent ID', {
+				err: error,
+				parentId: req.query.parentId
+			});
 			return res.status(500).json({ message: 'Failed to fetch child forums' });
 		}
 	}

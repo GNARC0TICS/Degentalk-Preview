@@ -52,7 +52,9 @@ export const posts = pgTable(
 			.default(sql`CURRENT_TIMESTAMP`),
 		quarantineData: jsonb('quarantine_data'),
 		pluginData: jsonb('plugin_data').default('{}'),
-		visibilityStatus: contentVisibilityStatusEnum('visibility_status').notNull().default('published'),
+		visibilityStatus: contentVisibilityStatusEnum('visibility_status')
+			.notNull()
+			.default('published'),
 		moderationReason: varchar('moderation_reason', { length: 255 }),
 		depth: integer('depth').notNull().default(0)
 	},

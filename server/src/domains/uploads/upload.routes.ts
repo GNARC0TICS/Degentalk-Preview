@@ -1,8 +1,5 @@
 import { Router } from 'express';
-import { 
-    createPresignedUploadUrlController,
-    confirmUploadController 
-} from './upload.controller';
+import { createPresignedUploadUrlController, confirmUploadController } from './upload.controller';
 import { requireAuth } from '../../middleware/auth'; // Adjusted path
 
 const router = Router();

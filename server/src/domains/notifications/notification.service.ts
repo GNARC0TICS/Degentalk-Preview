@@ -17,7 +17,7 @@ export const getNotifications = async (userId: string, pageSize: number, pageOff
 		where: eq(notifications.userId, userId),
 		limit: pageSize,
 		offset: pageOffset,
-		orderBy: desc(notifications.createdAt),
+		orderBy: desc(notifications.createdAt)
 	});
 
 	return fetchedNotifications;
@@ -36,32 +36,35 @@ export const createNotificationFromEvent = async (
 ): Promise<{ id: string }> => {
 	// Map event type to notification type
 	const eventTypeToNotificationType: Record<string, InsertNotification['eventType']> = {
-		'rain_claimed': 'rain_received',
-		'level_up': 'level_up',
-		'badge_earned': 'badge_awarded',
-		'tip_received': 'tip_received',
-		'airdrop_claimed': 'airdrop_received',
-		'referral_completed': 'referral_complete',
-		'cosmetic_unlocked': 'cosmetic_unlocked',
-		'mission_completed': 'mission_complete',
-		'thread_created': 'system',
-		'post_created': 'thread_reply',
-		'xp_earned': 'system',
-		'product_purchased': 'transaction'
+		rain_claimed: 'rain_received',
+		level_up: 'level_up',
+		badge_earned: 'badge_awarded',
+		tip_received: 'tip_received',
+		airdrop_claimed: 'airdrop_received',
+		referral_completed: 'referral_complete',
+		cosmetic_unlocked: 'cosmetic_unlocked',
+		mission_completed: 'mission_complete',
+		thread_created: 'system',
+		post_created: 'thread_reply',
+		xp_earned: 'system',
+		product_purchased: 'transaction'
 	};
 
 	const notificationType = eventTypeToNotificationType[eventLog.eventType] || 'system';
 
 	// Create the notification
-	const [result] = await db.insert(notifications).values({
-		userId: eventLog.userId,
-		eventType: notificationType,
-		eventLogId: eventLog.id,
-		title,
-		body,
-		data: eventLog.meta,
-		isRead: false,
-	}).returning({ id: notifications.id });
+	const [result] = await db
+		.insert(notifications)
+		.values({
+			userId: eventLog.userId,
+			eventType: notificationType,
+			eventLogId: eventLog.id,
+			title,
+			body,
+			data: eventLog.meta,
+			isRead: false
+		})
+		.returning({ id: notifications.id });
 
 	return { id: result.id };
 };
@@ -71,7 +74,10 @@ export const createNotificationFromEvent = async (
  * @param notificationId The notification ID
  * @param userId The user ID (for security check)
  */
-export const markNotificationAsRead = async (notificationId: string, userId: string): Promise<boolean> => {
+export const markNotificationAsRead = async (
+	notificationId: string,
+	userId: string
+): Promise<boolean> => {
 	const result = await db
 		.update(notifications)
 		.set({ isRead: true })

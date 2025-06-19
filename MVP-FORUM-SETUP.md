@@ -26,31 +26,41 @@ npm run dev
 ## Troubleshooting
 
 ### "users_username_unique" Error
+
 This means you have duplicate usernames. Solutions:
+
 1. Drop and recreate database: `npm run db:drop && npm run db:push`
 2. Or manually fix in database studio: `npm run db:studio`
 
 ### "sync:forums" Script Not Found
+
 The script was just added. Run:
+
 ```bash
 npm run seed:forum:new
 ```
 
 ### Forums Have ID = -1
+
 This means forums aren't synced to database. Run:
+
 ```bash
 npm run sync:forums
 ```
 
 ### "Forum not found" When Creating Thread
+
 Ensure the forum exists in database with proper ID:
+
 ```bash
 npm run db:studio
 # Check forum_categories table for your forum
 ```
 
 ### Zone Page Shows "Error loading threads"
+
 The zone page is trying to load threads but:
+
 1. No threads exist yet - create some via UI or seed
 2. Forum IDs aren't synced - run `npm run sync:forums`
 
@@ -67,12 +77,14 @@ The zone page is trying to load threads but:
 ## Database Schema Reference
 
 ### forum_categories Table
+
 - `id`: Numeric ID (used for thread creation)
 - `slug`: URL-friendly identifier
 - `type`: 'zone' | 'category' | 'forum'
 - `parent_id`: References parent zone/category
 
 ### threads Table
+
 - `category_id`: References forum_categories.id (must be type='forum')
 - `user_id`: References users.id
 - `title`, `slug`, `content`, etc.
@@ -97,4 +109,4 @@ The zone page is trying to load threads but:
 2. **Create admin UI** for forum management
 3. **Add moderation tools**
 4. **Implement thread features** (sticky, lock, solve)
-5. **Add real-time updates** with WebSockets 
+5. **Add real-time updates** with WebSockets

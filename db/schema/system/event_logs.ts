@@ -1,12 +1,4 @@
-import {
-	pgTable,
-	pgEnum,
-	uuid,
-	varchar,
-	jsonb,
-	timestamp,
-	index
-} from 'drizzle-orm/pg-core';
+import { pgTable, pgEnum, uuid, varchar, jsonb, timestamp, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 
@@ -43,13 +35,11 @@ export const eventLogs = pgTable(
 	},
 	(table) => ({
 		// Index on user_id and created_at for efficient user activity feeds
-		userActivityIdx: index('idx_event_logs_user_created')
-			.on(table.userId, table.createdAt),
+		userActivityIdx: index('idx_event_logs_user_created').on(table.userId, table.createdAt),
 		// Index on event_type and created_at for filtering events by type
-		eventTypeIdx: index('idx_event_logs_type_created')
-			.on(table.eventType, table.createdAt)
+		eventTypeIdx: index('idx_event_logs_type_created').on(table.eventType, table.createdAt)
 	})
 );
 
 export type EventLog = typeof eventLogs.$inferSelect;
-export type InsertEventLog = typeof eventLogs.$inferInsert; 
+export type InsertEventLog = typeof eventLogs.$inferInsert;

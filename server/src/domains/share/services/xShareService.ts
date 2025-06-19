@@ -21,17 +21,18 @@ export async function shareToX(opts: {
 		clientId: process.env.X_CLIENT_ID!,
 		clientSecret: process.env.X_CLIENT_SECRET!,
 		accessToken: user.xAccessToken,
-		refreshToken: user.xRefreshToken,
+		refreshToken: user.xRefreshToken
 	});
 
 	// Automatically refresh token if needed
 	const refreshed = await client.refreshOAuth2Token(user.xRefreshToken);
 	if (refreshed.accessToken !== user.xAccessToken) {
-		await db.update(users)
+		await db
+			.update(users)
 			.set({
 				xAccessToken: refreshed.accessToken,
 				xRefreshToken: refreshed.refreshToken,
-				xTokenExpiresAt: new Date(Date.now() + refreshed.expiresIn * 1000),
+				xTokenExpiresAt: new Date(Date.now() + refreshed.expiresIn * 1000)
 			})
 			.where(eq(users.id, opts.userId));
 	}
@@ -42,7 +43,7 @@ export async function shareToX(opts: {
 		userId: opts.userId,
 		contentType: opts.contentType,
 		contentId: opts.contentId ?? null,
-		xPostId: data.id,
+		xPostId: data.id
 	});
 
 	// Award rewards (XP/DGT) for sharing
@@ -51,4 +52,4 @@ export async function shareToX(opts: {
 	logger.info('XShareService', 'Shared content to X', { userId: opts.userId, tweetId: data.id });
 
 	return { tweetUrl: `https://x.com/${data.id}` };
-} 
+}

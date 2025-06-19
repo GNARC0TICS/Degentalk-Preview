@@ -7,7 +7,7 @@ import {
 	boolean,
 	timestamp,
 	jsonb,
-	real,
+	real
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { userGroups } from '../user/userGroups'; // Placeholder for future import

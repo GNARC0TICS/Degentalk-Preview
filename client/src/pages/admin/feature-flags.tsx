@@ -37,4 +37,4 @@ export default function AdminFeatureFlagsPage() {
 			</Card>
 		</div>
 	);
-} 
+}

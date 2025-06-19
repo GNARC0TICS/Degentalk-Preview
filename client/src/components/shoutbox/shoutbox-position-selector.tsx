@@ -123,7 +123,9 @@ export function ShoutboxPositionSelector({ instanceId }: ShoutboxPositionSelecto
 	};
 
 	// UI selections
-	const [columnSelection, setColumnSelection] = React.useState<'sidebar-left' | 'sidebar-right' | 'main'>(
+	const [columnSelection, setColumnSelection] = React.useState<
+		'sidebar-left' | 'sidebar-right' | 'main'
+	>(
 		currentSlot?.startsWith('sidebar/left')
 			? 'sidebar-left'
 			: currentSlot?.startsWith('sidebar/right')
@@ -131,13 +133,15 @@ export function ShoutboxPositionSelector({ instanceId }: ShoutboxPositionSelecto
 				: 'main'
 	);
 
-	const [positionSelection, setPositionSelection] = React.useState<'top' | 'bottom' | 'floating' | 'sticky'>(
-		position.includes('bottom') ? 'bottom' : position.includes('top') ? 'top' : position as any
-	);
+	const [positionSelection, setPositionSelection] = React.useState<
+		'top' | 'bottom' | 'floating' | 'sticky'
+	>(position.includes('bottom') ? 'bottom' : position.includes('top') ? 'top' : (position as any));
 
 	// Keep column selection in sync if widget is moved externally (e.g., gear-menu)
 	React.useEffect(() => {
-		const updatedColumn: 'sidebar-left' | 'sidebar-right' | 'main' = currentSlot?.startsWith('sidebar/left')
+		const updatedColumn: 'sidebar-left' | 'sidebar-right' | 'main' = currentSlot?.startsWith(
+			'sidebar/left'
+		)
 			? 'sidebar-left'
 			: currentSlot?.startsWith('sidebar/right')
 				? 'sidebar-right'
@@ -157,10 +161,7 @@ export function ShoutboxPositionSelector({ instanceId }: ShoutboxPositionSelecto
 		setPositionSelection((prev) => (prev !== updatedPos ? updatedPos : prev));
 	}, [position]);
 
-	const applySelections = async (
-		col: typeof columnSelection,
-		pos: typeof positionSelection
-	) => {
+	const applySelections = async (col: typeof columnSelection, pos: typeof positionSelection) => {
 		if (pos === 'floating' || pos === 'sticky') {
 			// Only preference needs changing; widget stays where it is visually (floating handled by PositionedShoutbox)
 			await updatePosition(pos as ShoutboxPosition);
@@ -211,13 +212,21 @@ export function ShoutboxPositionSelector({ instanceId }: ShoutboxPositionSelecto
 					{/* Column Selector */}
 					<div>
 						<h4 className="font-medium mb-2">@column</h4>
-						<RadioGroup value={columnSelection} onValueChange={(v)=>setColumnSelection(v as any)} className="gap-2">
+						<RadioGroup
+							value={columnSelection}
+							onValueChange={(v) => setColumnSelection(v as any)}
+							className="gap-2"
+						>
 							{[
 								{ value: 'sidebar-left', label: 'Sidebar Left' },
 								{ value: 'sidebar-right', label: 'Sidebar Right' },
 								{ value: 'main', label: 'Main' }
-							].map((opt)=>(
-								<div key={opt.value} className="flex items-center space-x-2 p-1 hover:bg-muted rounded cursor-pointer" onClick={()=>setColumnSelection(opt.value as any)}>
+							].map((opt) => (
+								<div
+									key={opt.value}
+									className="flex items-center space-x-2 p-1 hover:bg-muted rounded cursor-pointer"
+									onClick={() => setColumnSelection(opt.value as any)}
+								>
 									<RadioGroupItem value={opt.value} id={opt.value} />
 									<Label htmlFor={opt.value}>{opt.label}</Label>
 								</div>
@@ -228,14 +237,22 @@ export function ShoutboxPositionSelector({ instanceId }: ShoutboxPositionSelecto
 					{/* Position Selector */}
 					<div>
 						<h4 className="font-medium mb-2">Position</h4>
-						<RadioGroup value={positionSelection} onValueChange={(v)=>setPositionSelection(v as any)} className="gap-2">
+						<RadioGroup
+							value={positionSelection}
+							onValueChange={(v) => setPositionSelection(v as any)}
+							className="gap-2"
+						>
 							{[
 								{ value: 'top', label: 'Top' },
 								{ value: 'bottom', label: 'Bottom' },
 								{ value: 'floating', label: 'Floating' },
 								{ value: 'sticky', label: 'Sticky' }
-							].map((opt)=>(
-								<div key={opt.value} className="flex items-center space-x-2 p-1 hover:bg-muted rounded cursor-pointer" onClick={()=>setPositionSelection(opt.value as any)}>
+							].map((opt) => (
+								<div
+									key={opt.value}
+									className="flex items-center space-x-2 p-1 hover:bg-muted rounded cursor-pointer"
+									onClick={() => setPositionSelection(opt.value as any)}
+								>
 									<RadioGroupItem value={opt.value} id={opt.value} />
 									<Label htmlFor={opt.value}>{opt.label}</Label>
 								</div>

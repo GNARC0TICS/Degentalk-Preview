@@ -57,9 +57,7 @@ export function ThreadAuthor({
 				<div className="flex flex-col">
 					<div className="flex items-center gap-1.5">
 						<UserName user={user} className={getUsernameSizeClass()} />
-						{showLevelBadge && identity?.level && (
-							<LevelBadge level={identity.level} />
-						)}
+						{showLevelBadge && identity?.level && <LevelBadge level={identity.level} />}
 					</div>
 				</div>
 			</Link>

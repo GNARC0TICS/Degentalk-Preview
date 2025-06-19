@@ -17,7 +17,7 @@ export const PrefixBadge: React.FC<PrefixBadgeProps> = ({ prefix }) => {
 
 	// Define base classes that use the new CSS variable-driven Tailwind classes
 	const baseClasses = 'inline-flex items-center rounded px-2 py-0.5 text-sm font-medium';
-	
+
 	// Static classes that will use the CSS variables defined by the theme class
 	const staticBadgeClasses = cn(
 		baseClasses,

@@ -5,14 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import type { ThreadTag } from '@schema';
 import { Link } from 'wouter';
-import {
-	MessageSquare,
-	Eye,
-	ThumbsUp,
-	ArrowRight,
-	Clock,
-	TrendingUp
-} from 'lucide-react';
+import { MessageSquare, Eye, ThumbsUp, ArrowRight, Clock, TrendingUp } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -102,7 +95,9 @@ function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 		if (!threads || !threads[index]) return null;
 		const thread = threads[index];
 		return (
-			<div style={style} className="group px-1 py-1.5"> {/* Added padding to style for item spacing */}
+			<div style={style} className="group px-1 py-1.5">
+				{' '}
+				{/* Added padding to style for item spacing */}
 				<Link href={`/threads/${thread.thread_id}`}>
 					<div className="relative p-3 md:p-4 rounded-lg bg-gradient-to-r from-zinc-800/50 to-zinc-800/30 border border-zinc-700/50 hover:border-orange-500/30 transition-all duration-300 cursor-pointer h-full flex flex-col justify-between">
 						<div className="relative z-10">

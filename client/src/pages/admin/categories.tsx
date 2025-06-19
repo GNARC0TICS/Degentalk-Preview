@@ -565,7 +565,9 @@ export default function AdminCategoriesPage() {
 														))}
 													</select>
 												</FormControl>
-												<FormDescription>Create a subcategory by selecting a parent</FormDescription>
+												<FormDescription>
+													Create a subcategory by selecting a parent
+												</FormDescription>
 												<FormMessage />
 											</FormItem>
 										)}
@@ -798,7 +800,11 @@ export default function AdminCategoriesPage() {
 								/>
 
 								<DialogFooter>
-									<Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+									<Button
+										type="button"
+										variant="outline"
+										onClick={() => setIsEditDialogOpen(false)}
+									>
 										Cancel
 									</Button>
 									<Button type="submit" disabled={editCategoryMutation.isPending}>

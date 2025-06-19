@@ -4,11 +4,11 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
 interface AdminToggleProps {
-  label: string;
-  description?: string;
-  checked: boolean;
-  onChange: (value: boolean) => void;
-  className?: string;
+	label: string;
+	description?: string;
+	checked: boolean;
+	onChange: (value: boolean) => void;
+	className?: string;
 }
 
 /**
@@ -18,19 +18,19 @@ interface AdminToggleProps {
  * Keeps admin forms consistent.
  */
 export const AdminToggle: React.FC<AdminToggleProps> = ({
-  label,
-  description,
-  checked,
-  onChange,
-  className,
+	label,
+	description,
+	checked,
+	onChange,
+	className
 }) => {
-  return (
-    <div className={cn('flex items-start gap-3', className)}>
-      <div className="space-y-0.5 flex-1">
-        <Label className="text-sm font-medium">{label}</Label>
-        {description && <p className="text-xs text-muted-foreground">{description}</p>}
-      </div>
-      <Switch checked={checked} onCheckedChange={onChange} />
-    </div>
-  );
-}; 
+	return (
+		<div className={cn('flex items-start gap-3', className)}>
+			<div className="space-y-0.5 flex-1">
+				<Label className="text-sm font-medium">{label}</Label>
+				{description && <p className="text-xs text-muted-foreground">{description}</p>}
+			</div>
+			<Switch checked={checked} onCheckedChange={onChange} />
+		</div>
+	);
+};

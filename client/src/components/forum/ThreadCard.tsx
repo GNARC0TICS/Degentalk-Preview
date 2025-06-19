@@ -9,17 +9,17 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TagBadge } from '@/components/ui/tag-badge';
 import { ThreadStats } from './ThreadStats'; // Import the new component
-import {
-	Clock,
-	Flame,
-	Lock,
-	Pin,
-	Tag as TagIcon
-} from 'lucide-react';
+import { Clock, Flame, Lock, Pin, Tag as TagIcon } from 'lucide-react';
 import OriginForumPill from './OriginForumPill';
 
 // Use the new prop type from @/types/forum.ts
-const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter', forumSlug }: ThreadCardComponentProps) => { // Added linkAs prop with default, plus forumSlug
+const ThreadCardComponent = ({
+	thread,
+	className = '',
+	linkAs = 'wouter',
+	forumSlug
+}: ThreadCardComponentProps) => {
+	// Added linkAs prop with default, plus forumSlug
 	const LinkComponent = linkAs === 'next' ? NextLink : WouterLink;
 
 	if (!thread) {
@@ -117,7 +117,10 @@ const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter', forumS
 						</div>
 
 						<div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-zinc-400">
-							<LinkComponent href={`/profile/${user?.id}`} className="hover:text-zinc-200 transition-colors">
+							<LinkComponent
+								href={`/profile/${user?.id}`}
+								className="hover:text-zinc-200 transition-colors"
+							>
 								{user?.username || 'Unknown'}
 							</LinkComponent>
 
@@ -164,7 +167,7 @@ const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter', forumS
 			</div>
 		</Card>
 	);
-}
+};
 
 const FolderIcon = (props: React.SVGProps<SVGSVGElement>) => (
 	<svg

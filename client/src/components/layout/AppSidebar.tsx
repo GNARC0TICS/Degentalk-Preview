@@ -133,4 +133,4 @@ export function Sidebar({ categories, activeCategoryId, forumId }: SidebarProps)
 			</Card>
 		</div>
 	);
-} 
+}

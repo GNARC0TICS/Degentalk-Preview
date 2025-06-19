@@ -116,7 +116,8 @@ const getXpColor = (amount: number) => {
 	return 'text-gradient-gold';
 };
 
-const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => { // Changed userId to string
+const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => {
+	// Changed userId to string
 	// State for filters and pagination
 	const [period, setPeriod] = useState<string>('all');
 	const [selectedAction, setSelectedAction] = useState<string | null>(null);
@@ -129,7 +130,12 @@ const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => { // Changed us
 	}, [period, selectedAction]);
 
 	// Fetch XP logs with current filters
-	const { data: xpLogQueryData, isLoading, error, refetch } = useQuery<XpLogResponse, Error>({
+	const {
+		data: xpLogQueryData,
+		isLoading,
+		error,
+		refetch
+	} = useQuery<XpLogResponse, Error>({
 		queryKey: ['xpLogs', userId, period, selectedAction, page],
 		queryFn: async () => {
 			// Use domain-based endpoints
@@ -184,8 +190,8 @@ const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => { // Changed us
 	};
 
 	return (
-        <div className="w-full rounded-2xl bg-black/40 backdrop-blur-sm border border-white/10 shadow-xl p-4 md:p-6 overflow-hidden">
-            <div className="flex flex-col space-y-4">
+		<div className="w-full rounded-2xl bg-black/40 backdrop-blur-sm border border-white/10 shadow-xl p-4 md:p-6 overflow-hidden">
+			<div className="flex flex-col space-y-4">
 				<div className="flex items-center justify-between">
 					<h2 className="text-xl font-bold flex items-center">
 						<XPIcon className="mr-2 h-5 w-5 text-green-400" />
@@ -261,7 +267,7 @@ const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => { // Changed us
 					<TabsContent value={period} className="mt-0">
 						{isLoading ? (
 							// Loading skeleton
-							(Array.from({ length: 5 }).map((_, index) => (
+							Array.from({ length: 5 }).map((_, index) => (
 								<div key={index} className="flex items-center py-3 border-b border-white/5">
 									<Skeleton className="h-10 w-10 rounded-full" />
 									<div className="ml-4 space-y-2 w-full">
@@ -269,7 +275,7 @@ const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => { // Changed us
 										<Skeleton className="h-3 w-2/3" />
 									</div>
 								</div>
-							)))
+							))
 						) : error ? (
 							<div className="text-center py-8 text-gray-400">
 								<p>Error loading XP logs. Please try again.</p>
@@ -348,15 +354,16 @@ const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => { // Changed us
 								)}
 
 								<div className="text-center text-xs text-gray-500 mt-3">
-									Showing {xpLogQueryData?.logs.length} of {xpLogQueryData?.pagination.total} activities
+									Showing {xpLogQueryData?.logs.length} of {xpLogQueryData?.pagination.total}{' '}
+									activities
 								</div>
 							</>
 						)}
 					</TabsContent>
 				</Tabs>
 			</div>
-        </div>
-    );
+		</div>
+	);
 };
 
 export default XpLogView;

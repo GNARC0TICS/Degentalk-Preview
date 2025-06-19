@@ -3,12 +3,14 @@
 **Objective:** Resolve the hierarchical-vs-flat data mismatch and perform an integrity sweep of forum code.
 
 #### Phase 1 – `flattenApiResponse` Shim
+
 1.  - [ ] Implement `flattenApiResponse` shim in `client/src/contexts/ForumStructureContext.tsx`.
 2.  - [ ] Flatten `primaryZones` / `categories` into a flat list within the shim.
 3.  - [ ] Ensure defaults for missing fields in the flattened list.
 4.  - [ ] Pipe the result of the shim into `mergeStaticAndApiData`.
 
 #### Phase 2 – Integrity Sweep
+
 1.  - [ ] Scan for unused forum files.
 2.  - [ ] Delete identified dead code.
 3.  - [ ] Align routing helpers and type usage across the forum feature.

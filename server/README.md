@@ -80,13 +80,13 @@ The server codebase follows a domain-driven design approach to organize its modu
 
 ## 8. Build & Deployment Notes (2025-06-14)
 
-• **No Compile Step:** `tsc` has been temporarily removed from the build pipeline.  The `server/package.json` script now reads:
+• **No Compile Step:** `tsc` has been temporarily removed from the build pipeline. The `server/package.json` script now reads:
 
 ```json
 "build": "echo \"skip build (tsx runtime)\""
 ```
 
-• **Runtime Transpile:** Production (and dev) execution is powered by [`tsx`](https://github.com/esbuild/tsx).  See `scripts.start`:
+• **Runtime Transpile:** Production (and dev) execution is powered by [`tsx`](https://github.com/esbuild/tsx). See `scripts.start`:
 
 ```json
 "start": "tsx --tsconfig tsconfig.json --require tsconfig-paths/register index.ts"

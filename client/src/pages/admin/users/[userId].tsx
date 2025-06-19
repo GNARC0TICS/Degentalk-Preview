@@ -108,121 +108,118 @@ export default function AdminUserInventoryPage() {
 	};
 
 	if (!userId) {
-		return (
-			<div className="p-4 text-red-500">User ID is missing.</div>
-		);
+		return <div className="p-4 text-red-500">User ID is missing.</div>;
 	}
 
 	return (
 		<div className="p-6">
-				<Link
-					href="/admin/users"
-					className="inline-flex items-center text-sm text-zinc-400 hover:text-white mb-4"
-				>
-					<ArrowLeft className="mr-2 h-4 w-4" /> Back to User List (assuming /admin/users exists)
-				</Link>
-				<h1 className="text-2xl font-semibold text-white mb-6">
-					Manage Inventory for User ID: {userId}
-				</h1>
+			<Link
+				href="/admin/users"
+				className="inline-flex items-center text-sm text-zinc-400 hover:text-white mb-4"
+			>
+				<ArrowLeft className="mr-2 h-4 w-4" /> Back to User List (assuming /admin/users exists)
+			</Link>
+			<h1 className="text-2xl font-semibold text-white mb-6">
+				Manage Inventory for User ID: {userId}
+			</h1>
 
-				<div className="mb-8 p-6 bg-zinc-900 border border-zinc-800 rounded-lg">
-					<h2 className="text-xl font-semibold text-white mb-4">Grant New Item</h2>
-					{isLoadingShopItems ? (
-						<p>Loading shop items...</p>
-					) : shopItems && shopItems.length > 0 ? (
-						<div className="flex items-center space-x-2">
-							<Select value={selectedItemToGrant} onValueChange={setSelectedItemToGrant}>
-								<SelectTrigger className="bg-zinc-800 border-zinc-700 text-white w-full md:w-1/2">
-									<SelectValue placeholder="Select an item to grant..." />
-								</SelectTrigger>
-								<SelectContent>
-									{shopItems.map((item) => (
-										<SelectItem key={item.id} value={String(item.id)}>
-											{item.name} (ID: {item.id})
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<Button
-								onClick={handleGrantItem}
-								disabled={!selectedItemToGrant || grantItemMutation.isPending}
-								className="bg-emerald-600 hover:bg-emerald-500"
-							>
-								{grantItemMutation.isPending ? 'Granting...' : <Gift className="mr-2 h-4 w-4" />}
-								{grantItemMutation.isPending ? '' : 'Grant Item'}
-							</Button>
-						</div>
-					) : (
-						<p>No shop items available to grant or failed to load.</p>
-					)}
-				</div>
-
-				<div className="p-6 bg-zinc-900 border border-zinc-800 rounded-lg">
-					<h2 className="text-xl font-semibold text-white mb-4">User's Current Inventory</h2>
-					{isLoadingInventory ? (
-						<p>Loading inventory...</p>
-					) : inventory && inventory.length > 0 ? (
-						<ul className="space-y-3">
-							{inventory.map((item) => (
-								<li
-									key={item.id}
-									className={`p-4 rounded-md flex justify-between items-center ${item.equipped ? 'bg-green-900/50 border border-green-700' : 'bg-zinc-800 border border-zinc-700'}`}
-								>
-									<div>
-										<span className="font-semibold text-white">
-											{item.product?.name || 'Unknown Item'}
-										</span>
-										<span className="text-xs text-zinc-400 ml-2">
-											(Inv. ID: {item.id}, Prod. ID: {item.productId})
-										</span>
-										{item.equipped && (
-											<CheckCircle className="inline-block ml-2 h-5 w-5 text-green-400" />
-										)}
-									</div>
-									<div>
-										{item.equipped ? (
-											<Button
-												variant="outline"
-												size="sm"
-												onClick={() => unequipMutation.mutate({ inventoryId: item.id })}
-												disabled={
-													unequipMutation.isPending &&
-													unequipMutation.variables?.inventoryId === item.id
-												}
-												className="border-red-500 text-red-400 hover:bg-red-600 hover:text-white"
-											>
-												{unequipMutation.isPending &&
-												unequipMutation.variables?.inventoryId === item.id
-													? 'Unequipping...'
-													: 'Unequip'}
-											</Button>
-										) : (
-											<Button
-												variant="outline"
-												size="sm"
-												onClick={() => equipMutation.mutate({ inventoryId: item.id })}
-												disabled={
-													equipMutation.isPending &&
-													equipMutation.variables?.inventoryId === item.id
-												}
-												className="border-sky-500 text-sky-400 hover:bg-sky-600 hover:text-white"
-											>
-												{equipMutation.isPending && equipMutation.variables?.inventoryId === item.id
-													? 'Equipping...'
-													: 'Equip'}
-											</Button>
-										)}
-									</div>
-								</li>
-							))}
-						</ul>
-					) : (
-						<p className="text-zinc-400">This user currently has no items in their inventory.</p>
-					)}
-					<Button onClick={() => refetchInventory()} className="mt-4">
-						Refresh Inventory
-					</Button>
-				</div>
+			<div className="mb-8 p-6 bg-zinc-900 border border-zinc-800 rounded-lg">
+				<h2 className="text-xl font-semibold text-white mb-4">Grant New Item</h2>
+				{isLoadingShopItems ? (
+					<p>Loading shop items...</p>
+				) : shopItems && shopItems.length > 0 ? (
+					<div className="flex items-center space-x-2">
+						<Select value={selectedItemToGrant} onValueChange={setSelectedItemToGrant}>
+							<SelectTrigger className="bg-zinc-800 border-zinc-700 text-white w-full md:w-1/2">
+								<SelectValue placeholder="Select an item to grant..." />
+							</SelectTrigger>
+							<SelectContent>
+								{shopItems.map((item) => (
+									<SelectItem key={item.id} value={String(item.id)}>
+										{item.name} (ID: {item.id})
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+						<Button
+							onClick={handleGrantItem}
+							disabled={!selectedItemToGrant || grantItemMutation.isPending}
+							className="bg-emerald-600 hover:bg-emerald-500"
+						>
+							{grantItemMutation.isPending ? 'Granting...' : <Gift className="mr-2 h-4 w-4" />}
+							{grantItemMutation.isPending ? '' : 'Grant Item'}
+						</Button>
+					</div>
+				) : (
+					<p>No shop items available to grant or failed to load.</p>
+				)}
 			</div>
+
+			<div className="p-6 bg-zinc-900 border border-zinc-800 rounded-lg">
+				<h2 className="text-xl font-semibold text-white mb-4">User's Current Inventory</h2>
+				{isLoadingInventory ? (
+					<p>Loading inventory...</p>
+				) : inventory && inventory.length > 0 ? (
+					<ul className="space-y-3">
+						{inventory.map((item) => (
+							<li
+								key={item.id}
+								className={`p-4 rounded-md flex justify-between items-center ${item.equipped ? 'bg-green-900/50 border border-green-700' : 'bg-zinc-800 border border-zinc-700'}`}
+							>
+								<div>
+									<span className="font-semibold text-white">
+										{item.product?.name || 'Unknown Item'}
+									</span>
+									<span className="text-xs text-zinc-400 ml-2">
+										(Inv. ID: {item.id}, Prod. ID: {item.productId})
+									</span>
+									{item.equipped && (
+										<CheckCircle className="inline-block ml-2 h-5 w-5 text-green-400" />
+									)}
+								</div>
+								<div>
+									{item.equipped ? (
+										<Button
+											variant="outline"
+											size="sm"
+											onClick={() => unequipMutation.mutate({ inventoryId: item.id })}
+											disabled={
+												unequipMutation.isPending &&
+												unequipMutation.variables?.inventoryId === item.id
+											}
+											className="border-red-500 text-red-400 hover:bg-red-600 hover:text-white"
+										>
+											{unequipMutation.isPending &&
+											unequipMutation.variables?.inventoryId === item.id
+												? 'Unequipping...'
+												: 'Unequip'}
+										</Button>
+									) : (
+										<Button
+											variant="outline"
+											size="sm"
+											onClick={() => equipMutation.mutate({ inventoryId: item.id })}
+											disabled={
+												equipMutation.isPending && equipMutation.variables?.inventoryId === item.id
+											}
+											className="border-sky-500 text-sky-400 hover:bg-sky-600 hover:text-white"
+										>
+											{equipMutation.isPending && equipMutation.variables?.inventoryId === item.id
+												? 'Equipping...'
+												: 'Equip'}
+										</Button>
+									)}
+								</div>
+							</li>
+						))}
+					</ul>
+				) : (
+					<p className="text-zinc-400">This user currently has no items in their inventory.</p>
+				)}
+				<Button onClick={() => refetchInventory()} className="mt-4">
+					Refresh Inventory
+				</Button>
+			</div>
+		</div>
 	);
 }

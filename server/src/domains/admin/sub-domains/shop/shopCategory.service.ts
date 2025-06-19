@@ -56,4 +56,4 @@ export class ShopCategoryService {
 	}
 }
 
-export const shopCategoryService = new ShopCategoryService(); 
+export const shopCategoryService = new ShopCategoryService();

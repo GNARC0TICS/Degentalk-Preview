@@ -46,4 +46,4 @@ export async function awardXReferralReward(userId: number) {
 	}
 
 	logger.info('RewardService', 'Issued X referral reward', { userId, xpReward, dgtReward });
-} 
+}

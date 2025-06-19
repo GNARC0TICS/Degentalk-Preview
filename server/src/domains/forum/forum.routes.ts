@@ -105,7 +105,7 @@ async function getUserPermissions(userId: number | undefined) {
 	if (!userId) return { isMod: false, isAdmin: false };
 	const [userRecord] = await db.select().from(users).where(eq(users.id, userId));
 	if (!userRecord) return { isMod: false, isAdmin: false };
-	const { canUser } = await import('../../../../lib/auth/canUser.ts'); 
+	const { canUser } = await import('../../../../lib/auth/canUser.ts');
 	const isAdmin = await canUser(userRecord as any, 'canViewAdminPanel');
 	const isMod = isAdmin || (await canUser(userRecord as any, 'canModerateThreads'));
 	return { isMod, isAdmin };
@@ -164,7 +164,28 @@ router.get('/structure', async (req: Request, res: Response) => {
 
 		function sanitize(entity: any) {
 			const allowedKeys = [
-				'id','slug','name','description','parentId','type','position','isVip','isLocked','isHidden','minXp','minGroupIdRequired','color','icon','colorTheme','tippingEnabled','xpMultiplier','threadCount','postCount','pluginData','createdAt','updatedAt'
+				'id',
+				'slug',
+				'name',
+				'description',
+				'parentId',
+				'type',
+				'position',
+				'isVip',
+				'isLocked',
+				'isHidden',
+				'minXp',
+				'minGroupIdRequired',
+				'color',
+				'icon',
+				'colorTheme',
+				'tippingEnabled',
+				'xpMultiplier',
+				'threadCount',
+				'postCount',
+				'pluginData',
+				'createdAt',
+				'updatedAt'
 			] as const;
 			const sanitized: Record<string, unknown> = {};
 			for (const k of allowedKeys) {
@@ -198,15 +219,20 @@ router.get('/categories', async (req: Request, res: Response) => {
 		const categories = await forumService.getCategoriesWithStats();
 		res.json(categories);
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error fetching categories', { 
+		logger.error('ForumRoutes', 'Error fetching categories', {
 			err: error,
 			message: error instanceof Error ? error.message : 'Unknown error',
 			stack: error instanceof Error ? error.stack : undefined
 		});
 		console.error('Forum categories error:', error); // Add console log for immediate visibility
-		res.status(500).json({ 
+		res.status(500).json({
 			message: 'An error occurred fetching categories',
-			error: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : undefined
+			error:
+				process.env.NODE_ENV === 'development'
+					? error instanceof Error
+						? error.message
+						: String(error)
+					: undefined
 		});
 	}
 });
@@ -410,7 +436,10 @@ router.get('/threads/:id', async (req: Request, res: Response) => {
 
 		res.json(result);
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error fetching thread by ID', { err: error, threadId: req.params.id });
+		logger.error('ForumRoutes', 'Error fetching thread by ID', {
+			err: error,
+			threadId: req.params.id
+		});
 		res.status(500).json({ message: 'An error occurred fetching the thread' });
 	}
 });
@@ -442,7 +471,10 @@ router.get('/threads/slug/:slug', async (req: Request, res: Response) => {
 
 		res.json(result);
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error fetching thread by slug', { err: error, slug: req.params.slug });
+		logger.error('ForumRoutes', 'Error fetching thread by slug', {
+			err: error,
+			slug: req.params.slug
+		});
 		res.status(500).json({ message: 'An error occurred fetching the thread by slug' });
 	}
 });
@@ -568,7 +600,10 @@ router.post('/threads', requireAuth, async (req: Request, res: Response) => {
 				// Thread creation awards additional XP beyond regular post
 				await xpLevelService.awardXp(userId, XP_ACTIONS.POST_CREATED);
 			} catch (xpError) {
-				logger.error('ForumRoutes', 'Error awarding XP for new thread/post', { err: xpError, userId });
+				logger.error('ForumRoutes', 'Error awarding XP for new thread/post', {
+					err: xpError,
+					userId
+				});
 			}
 
 			const finalThreadDetailsArray = await tx
@@ -635,7 +670,11 @@ router.post('/threads', requireAuth, async (req: Request, res: Response) => {
 
 		res.status(201).json({ thread: newThreadData, firstPost });
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error creating thread', { err: error, body: req.body, userId: getUserIdFromRequest(req) });
+		logger.error('ForumRoutes', 'Error creating thread', {
+			err: error,
+			body: req.body,
+			userId: getUserIdFromRequest(req)
+		});
 		if (error instanceof z.ZodError) {
 			return res.status(400).json({ message: 'Invalid thread data', errors: error.flatten() });
 		}
@@ -678,7 +717,11 @@ router.put('/threads/:threadId/solve', requireAuth, async (req, res, next) => {
 		// Note: The controller will handle the logic of solving (with postId) or unsolving (with postId = null)
 		return forumController.solveThread(req, res);
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error in PUT /threads/:threadId/solve route', { err: error, threadId: req.params.threadId, body: req.body });
+		logger.error('ForumRoutes', 'Error in PUT /threads/:threadId/solve route', {
+			err: error,
+			threadId: req.params.threadId,
+			body: req.body
+		});
 		next(error); // Pass to error handler
 	}
 });
@@ -744,7 +787,11 @@ router.post('/threads/:threadId/tags', requireAuth, async (req: Request, res: Re
 
 		res.status(result.added ? 201 : 200).json(result.tag);
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error adding tag to thread', { err: error, threadId: req.params.threadId, body: req.body });
+		logger.error('ForumRoutes', 'Error adding tag to thread', {
+			err: error,
+			threadId: req.params.threadId,
+			body: req.body
+		});
 		if (error instanceof z.ZodError) {
 			return res.status(400).json({
 				message: 'Invalid request data',
@@ -791,7 +838,11 @@ router.delete(
 
 			res.status(200).json({ message: 'Tag removed successfully' });
 		} catch (error) {
-			logger.error('ForumRoutes', 'Error removing tag from thread', { err: error, threadId: req.params.threadId, tagId: req.params.tagId });
+			logger.error('ForumRoutes', 'Error removing tag from thread', {
+				err: error,
+				threadId: req.params.threadId,
+				tagId: req.params.tagId
+			});
 			res.status(500).json({ message: 'An error occurred while removing tag from thread' });
 		}
 	}
@@ -828,7 +879,10 @@ router.get('/threads/:threadId/tags', async (req: Request, res: Response) => {
 			count: tagsForThread.length
 		});
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error fetching thread tags', { err: error, threadId: req.params.threadId });
+		logger.error('ForumRoutes', 'Error fetching thread tags', {
+			err: error,
+			threadId: req.params.threadId
+		});
 		res.status(500).json({
 			success: false,
 			message: 'An error occurred fetching thread tags',
@@ -915,7 +969,11 @@ router.post('/posts/:postId/react', requireAuth, async (req, res) => {
 
 		return res.status(200).json({ success: true });
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error handling post reaction', { err: error, postId: req.params.postId, body: req.body });
+		logger.error('ForumRoutes', 'Error handling post reaction', {
+			err: error,
+			postId: req.params.postId,
+			body: req.body
+		});
 		return res.status(500).json({ error: 'Internal server error' });
 	}
 });
@@ -952,7 +1010,11 @@ router.post('/bookmarks', requireAuth, async (req, res) => {
 
 		return res.status(200).json({ success: true });
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error bookmarking thread', { err: error, threadId: req.body.threadId, userId: getUserIdFromRequest(req) });
+		logger.error('ForumRoutes', 'Error bookmarking thread', {
+			err: error,
+			threadId: req.body.threadId,
+			userId: getUserIdFromRequest(req)
+		});
 		return res.status(500).json({ error: 'Internal server error' });
 	}
 });
@@ -974,7 +1036,11 @@ router.delete('/bookmarks/:threadId', requireAuth, async (req, res) => {
 
 		return res.status(200).json({ success: true });
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error removing bookmark', { err: error, threadId: req.params.threadId, userId: getUserIdFromRequest(req) });
+		logger.error('ForumRoutes', 'Error removing bookmark', {
+			err: error,
+			threadId: req.params.threadId,
+			userId: getUserIdFromRequest(req)
+		});
 		return res.status(500).json({ error: 'Internal server error' });
 	}
 });
@@ -1041,7 +1107,11 @@ router.post('/threads/:threadId/solve', requireAuth, async (req, res) => {
 			message: 'Thread marked as solved'
 		});
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error marking thread as solved', { err: error, threadId: req.params.threadId, postId: req.body.postId });
+		logger.error('ForumRoutes', 'Error marking thread as solved', {
+			err: error,
+			threadId: req.params.threadId,
+			postId: req.body.postId
+		});
 		return res.status(500).json({ error: 'Internal server error' });
 	}
 });
@@ -1094,7 +1164,10 @@ router.post('/threads/:threadId/unsolve', requireAuth, async (req, res) => {
 			message: 'Thread unmarked as solved'
 		});
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error unmarking thread as solved', { err: error, threadId: req.params.threadId });
+		logger.error('ForumRoutes', 'Error unmarking thread as solved', {
+			err: error,
+			threadId: req.params.threadId
+		});
 		return res.status(500).json({ error: 'Internal server error' });
 	}
 });
@@ -1113,8 +1186,11 @@ router.put('/posts/:id', requireAuth, async (req: Request, res: Response) => {
 		// For now, assume getUserPermissions handles undefined userId.
 		// If an edit absolutely requires a logged-in user, the requireAuth middleware should handle it.
 		// If userId is needed for the .set({ editedBy: userId }), then a check is vital.
-		if (userId === undefined) { // Added check for editing
-			return res.status(401).json({ message: 'User ID not found, authentication required for editing.' });
+		if (userId === undefined) {
+			// Added check for editing
+			return res
+				.status(401)
+				.json({ message: 'User ID not found, authentication required for editing.' });
 		}
 		const { isMod, isAdmin } = await getUserPermissions(userId);
 
@@ -1190,7 +1266,11 @@ router.put('/posts/:id', requireAuth, async (req: Request, res: Response) => {
 			post: updatedPost[0]
 		});
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error updating post', { err: error, postId: req.params.id, body: req.body });
+		logger.error('ForumRoutes', 'Error updating post', {
+			err: error,
+			postId: req.params.id,
+			body: req.body
+		});
 		return res.status(500).json({ message: 'An error occurred updating the post' });
 	}
 });
@@ -1272,7 +1352,10 @@ router.get('/hot-threads', async (req: Request, res: Response) => {
 
 		res.json(formattedThreads);
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error fetching hot threads', { err: error, limit: req.query.limit });
+		logger.error('ForumRoutes', 'Error fetching hot threads', {
+			err: error,
+			limit: req.query.limit
+		});
 		res.status(500).json({ error: 'Failed to fetch hot threads' });
 	}
 });
@@ -1312,7 +1395,10 @@ router.get('/debug/forums-by-parent', async (req: Request, res: Response) => {
 		logger.debug('ForumRoutes', '/forums-by-parent called', { parentId });
 
 		if (!parentId || isNaN(parentId)) {
-			logger.warn('ForumRoutes', 'Invalid parentId parameter for /forums-by-parent', { providedValue: req.query.parentId, parsed: parentId });
+			logger.warn('ForumRoutes', 'Invalid parentId parameter for /forums-by-parent', {
+				providedValue: req.query.parentId,
+				parsed: parentId
+			});
 			return res.status(400).json({
 				message: 'Valid parent ID is required',
 				debug: {
@@ -1323,18 +1409,34 @@ router.get('/debug/forums-by-parent', async (req: Request, res: Response) => {
 		}
 
 		const categories = await forumService.getCategoriesWithStats();
-		logger.debug('ForumRoutes', `Total categories found for /forums-by-parent: ${categories.length}`, { parentId });
+		logger.debug(
+			'ForumRoutes',
+			`Total categories found for /forums-by-parent: ${categories.length}`,
+			{ parentId }
+		);
 
 		const parentForum = categories.find((cat) => cat.id === parentId);
-		logger.debug('ForumRoutes', `Parent forum for /forums-by-parent: ${parentForum ? parentForum.name : 'Not found'}`, { parentId, parentForumName: parentForum?.name });
+		logger.debug(
+			'ForumRoutes',
+			`Parent forum for /forums-by-parent: ${parentForum ? parentForum.name : 'Not found'}`,
+			{ parentId, parentForumName: parentForum?.name }
+		);
 
 		const childForums = categories.filter((cat) => cat.parentId === parentId);
-		logger.debug('ForumRoutes', `Child forums found for /forums-by-parent: ${childForums.length}`, { parentId, childCount: childForums.length });
+		logger.debug('ForumRoutes', `Child forums found for /forums-by-parent: ${childForums.length}`, {
+			parentId,
+			childCount: childForums.length
+		});
 
 		if (childForums.length === 0) {
-			logger.debug('ForumRoutes', 'No child forums found for parentId for /forums-by-parent', { parentId });
+			logger.debug('ForumRoutes', 'No child forums found for parentId for /forums-by-parent', {
+				parentId
+			});
 		} else {
-			logger.debug('ForumRoutes', 'Child forum names for /forums-by-parent', { parentId, childNames: childForums.map((f) => f.name) });
+			logger.debug('ForumRoutes', 'Child forum names for /forums-by-parent', {
+				parentId,
+				childNames: childForums.map((f) => f.name)
+			});
 		}
 
 		// Add canHaveThreads property and parent info to each child forum
@@ -1354,7 +1456,10 @@ router.get('/debug/forums-by-parent', async (req: Request, res: Response) => {
 			}
 		});
 	} catch (error) {
-		logger.error('ForumRoutes', 'Error in debug /forums-by-parent', { err: error, parentId: req.query.parentId });
+		logger.error('ForumRoutes', 'Error in debug /forums-by-parent', {
+			err: error,
+			parentId: req.query.parentId
+		});
 		return res.status(500).json({
 			message: 'Failed to fetch child forums',
 			error: error instanceof Error ? error.message : 'Unknown error'
@@ -1462,7 +1567,7 @@ router.get('/debug/forum-relationships', async (req: Request, res: Response) => 
 router.get('/threads/:categoryId', async (req: Request, res: Response) => {
 	return res.status(410).json({
 		message: 'Endpoint deprecated: use /forums/:slug/threads instead of /threads/:categoryId',
-		migrationGuide: 'Replace categoryId with forum slug as per forumMap.config.ts',
+		migrationGuide: 'Replace categoryId with forum slug as per forumMap.config.ts'
 	});
 });
 
@@ -1480,7 +1585,9 @@ router.get('/forums/:forumSlug/threads', async (req: Request, res: Response) => 
 		return res.status(200).json({ threads: threadsInForum });
 	} catch (error) {
 		logger.error('ForumRoutes', 'Error fetching threads by forum slug', { err: error, forumSlug });
-		return res.status(400).json({ message: error instanceof Error ? error.message : 'Failed to fetch threads' });
+		return res
+			.status(400)
+			.json({ message: error instanceof Error ? error.message : 'Failed to fetch threads' });
 	}
 });
 

@@ -1,4 +1,15 @@
-import { pgTable, serial, integer, varchar, text, boolean, jsonb, doublePrecision, timestamp, unique } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	integer,
+	varchar,
+	text,
+	boolean,
+	jsonb,
+	doublePrecision,
+	timestamp,
+	unique
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 /**
@@ -39,15 +50,19 @@ export const roles = pgTable(
 		xpMultiplier: doublePrecision('xp_multiplier').notNull().default(1.0),
 
 		// Meta
-		createdAt: timestamp('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
-		updatedAt: timestamp('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+		createdAt: timestamp('created_at')
+			.notNull()
+			.default(sql`CURRENT_TIMESTAMP`),
+		updatedAt: timestamp('updated_at')
+			.notNull()
+			.default(sql`CURRENT_TIMESTAMP`),
 
 		// Plugin extensibility
-		pluginData: jsonb('plugin_data').default('{}'),
+		pluginData: jsonb('plugin_data').default('{}')
 	},
 	(table) => ({
 		nameUnique: unique('roles_name_unique').on(table.name),
-		slugUnique: unique('roles_slug_unique').on(table.slug),
+		slugUnique: unique('roles_slug_unique').on(table.slug)
 	})
 );
 

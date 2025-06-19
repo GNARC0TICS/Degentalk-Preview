@@ -138,7 +138,8 @@ export default function LeaderboardWidget({ users, isLoading = false }: Leaderbo
 									</div>
 
 									<div className="text-sm text-emerald-400 font-mono min-w-max pl-2 text-right whitespace-nowrap truncate">
-										{user.xp.toLocaleString()} <span className="inline-block ms-1 font-normal opacity-60">XP</span>
+										{user.xp.toLocaleString()}{' '}
+										<span className="inline-block ms-1 font-normal opacity-60">XP</span>
 									</div>
 								</div>
 							))}

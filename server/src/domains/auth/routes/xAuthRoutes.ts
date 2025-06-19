@@ -13,4 +13,4 @@ router.get('/callback', handleXCallback);
 // POST /api/auth/x/unlink – unlink X account
 router.post('/unlink', isAuthenticated, unlinkXAccount);
 
-export default router; 
+export default router;

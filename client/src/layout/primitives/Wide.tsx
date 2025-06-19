@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface WideProps extends React.HTMLAttributes<HTMLDivElement> {
-  as?: keyof JSX.IntrinsicElements;
+	as?: keyof JSX.IntrinsicElements;
 }
 
 /**
@@ -15,7 +15,5 @@ interface WideProps extends React.HTMLAttributes<HTMLDivElement> {
  *   </Wide>
  */
 export const Wide: React.FC<WideProps> = ({ as: Component = 'div', className = '', ...props }) => {
-  return (
-    <Component {...props} className={cn('container w-full', className)} />
-  );
-}; 
+	return <Component {...props} className={cn('container w-full', className)} />;
+};

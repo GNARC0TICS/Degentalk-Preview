@@ -27,10 +27,10 @@ import { AlertCircle } from 'lucide-react';
 
 function HomePage() {
 	// Get forum structure from context
-	const { 
-		zones: mergedZones, 
-		isLoading: structureLoadingFromContext, 
-		error: forumStructureErrorFromContext 
+	const {
+		zones: mergedZones,
+		isLoading: structureLoadingFromContext,
+		error: forumStructureErrorFromContext
 	} = useForumStructure();
 
 	const primaryZonesFromContext = mergedZones.filter((zone) => zone.isPrimary === true);
@@ -45,7 +45,7 @@ function HomePage() {
 		theme: {
 			icon: zone.theme?.icon ?? undefined,
 			color: zone.theme?.color ?? undefined,
-			bannerImage: zone.theme?.bannerImage ?? undefined,
+			bannerImage: zone.theme?.bannerImage ?? undefined
 		},
 		threadCount: zone.threadCount,
 		postCount: zone.postCount,
@@ -54,7 +54,7 @@ function HomePage() {
 		boostMultiplier: zone.boostMultiplier,
 		isEventActive: false,
 		eventData: { name: '', endsAt: new Date() },
-		lastActivityAt: zone.updatedAt ? new Date(zone.updatedAt) : undefined,
+		lastActivityAt: zone.updatedAt ? new Date(zone.updatedAt) : undefined
 	}));
 
 	return (
@@ -63,8 +63,10 @@ function HomePage() {
 			<AnnouncementTicker />
 			{/* Shoutbox now fully managed by the dynamic layout system */}
 
-			<Wide as="main" className="px-2 sm:px-4 py-6 sm:py-8 md:py-12 flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8">
-				
+			<Wide
+				as="main"
+				className="px-2 sm:px-4 py-6 sm:py-8 md:py-12 flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8"
+			>
 				{/* Main Content Area */}
 				<div className="w-full lg:w-1/2 xl:w-1/2 space-y-6 order-2">
 					{/* MAIN TOP WIDGETS */}
@@ -88,7 +90,9 @@ function HomePage() {
 							<div className="text-center py-12">
 								<AlertCircle className="mx-auto h-12 w-12 text-red-400" />
 								<p className="mt-4 text-red-400">Failed to load forum structure.</p>
-								<p className="text-sm text-zinc-500">{(forumStructureErrorFromContext as Error)?.message || 'Unknown error'}</p>
+								<p className="text-sm text-zinc-500">
+									{(forumStructureErrorFromContext as Error)?.message || 'Unknown error'}
+								</p>
 							</div>
 						) : structureLoadingFromContext ? (
 							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -108,8 +112,7 @@ function HomePage() {
 					<SlotRenderer slotId="main/bottom" />
 				</div>
 
-                <LayoutRenderer page="home" />
-
+				<LayoutRenderer page="home" />
 			</Wide>
 
 			<SiteFooter />

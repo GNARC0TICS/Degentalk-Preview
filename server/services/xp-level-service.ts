@@ -504,9 +504,7 @@ export class XpLevelService {
 			if (roleMultipliers.length === 0) return 1;
 
 			// Return the highest multiplier the user has
-			const maxMultiplier = Math.max(
-				...roleMultipliers.map((r) => (r.multiplier ?? 1))
-			);
+			const maxMultiplier = Math.max(...roleMultipliers.map((r) => r.multiplier ?? 1));
 			return maxMultiplier > 0 ? maxMultiplier : 1;
 		} catch (error) {
 			logger.error('XpLevelService', `Error fetching XP multiplier for user ${userId}:`, error);

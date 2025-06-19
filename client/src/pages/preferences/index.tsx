@@ -26,7 +26,10 @@ function PreferencesPage() {
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
 		const tabParam = params.get('tab');
-		if (tabParam && ['profile', 'account', 'notifications', 'display', 'sessions', 'referrals'].includes(tabParam)) {
+		if (
+			tabParam &&
+			['profile', 'account', 'notifications', 'display', 'sessions', 'referrals'].includes(tabParam)
+		) {
 			setActiveTab(tabParam);
 		}
 	}, []);
@@ -140,7 +143,7 @@ function PreferencesPage() {
 							<TabsContent value="sessions">
 								<SessionPreferences user={user} />
 							</TabsContent>
-							
+
 							<TabsContent value="referrals">
 								<ReferralPreferences user={user} />
 							</TabsContent>

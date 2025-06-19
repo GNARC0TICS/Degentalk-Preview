@@ -150,12 +150,7 @@
 	left: -50%;
 	width: 200%;
 	height: 200%;
-	background: linear-gradient(
-		45deg,
-		transparent,
-		rgba(255, 255, 255, 0.1),
-		transparent
-	);
+	background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
 	transform: rotate(45deg);
 	animation: holographic-sweep 3s infinite;
 }
@@ -171,7 +166,7 @@
 
 .zone-theme-shop:hover {
 	border-color: rgba(139, 92, 246, 0.9);
-	box-shadow: 
+	box-shadow:
 		0 8px 25px -5px rgba(139, 92, 246, 0.3),
 		0 0 20px rgba(236, 72, 153, 0.2),
 		0 0 40px rgba(59, 130, 246, 0.1);
@@ -187,7 +182,8 @@
 }
 
 @keyframes holographic-text {
-	0%, 100% {
+	0%,
+	100% {
 		background-position: 0% 50%;
 	}
 	50% {
@@ -260,7 +256,7 @@
 
 .forum-theme-shop {
 	--thread-accent: rgba(139, 92, 246, 0.3);
-	background: 
+	background:
 		radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
 		radial-gradient(circle at 80% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
 		radial-gradient(circle at 50% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
@@ -459,7 +455,8 @@
 }
 
 @keyframes holographic-bg {
-	0%, 100% {
+	0%,
+	100% {
 		background-position: 0% 50%;
 	}
 	50% {
@@ -469,7 +466,7 @@
 
 .zone-theme-shop:hover {
 	@apply border-violet-500/70 shadow-lg;
-	box-shadow: 
+	box-shadow:
 		0 10px 25px -5px rgba(139, 92, 246, 0.3),
 		0 0 20px rgba(236, 72, 153, 0.2);
 }

@@ -152,7 +152,7 @@ export default function TagPage() {
 										tags: (thread as any).tags, // ThreadWithUser doesn't have tags directly
 										category: undefined, // ThreadWithUser only has categoryId, not the full object.
 										prefix: undefined, // ThreadWithUser only has prefixId, not the full object.
-										preview: (thread as any).preview || '', // ThreadWithUser doesn't have preview
+										preview: (thread as any).preview || '' // ThreadWithUser doesn't have preview
 										// hotScore, isHidden, dgtStaked, updatedAt will be undefined
 									}}
 								/>

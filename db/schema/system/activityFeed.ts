@@ -1,4 +1,13 @@
-import { pgTable, serial, integer, varchar, jsonb, boolean, timestamp, uuid } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	integer,
+	varchar,
+	jsonb,
+	boolean,
+	timestamp,
+	uuid
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 

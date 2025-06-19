@@ -1,6 +1,12 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon, MoreHorizontalIcon } from 'lucide-react';
+import {
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	ChevronsLeftIcon,
+	ChevronsRightIcon,
+	MoreHorizontalIcon
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface BasePaginationProps {
@@ -33,9 +39,9 @@ export function Pagination(props: PaginationProps) {
 			? props.totalPages
 			: Math.ceil(
 					('totalItems' in props && props.totalItems !== undefined ? props.totalItems : 0) /
-					('pageSize' in props && props.pageSize !== undefined ? props.pageSize : 10)
+						('pageSize' in props && props.pageSize !== undefined ? props.pageSize : 10)
 				);
-	
+
 	// Don't render pagination if there's only one page
 	if (finalTotalPages <= 1) {
 		return null;
@@ -78,7 +84,13 @@ export function Pagination(props: PaginationProps) {
 	const pageNumbers = getPageNumbers();
 
 	let summaryContent = null;
-	if (showSummary && 'totalItems' in props && props.totalItems !== undefined && 'pageSize' in props && props.pageSize !== undefined) {
+	if (
+		showSummary &&
+		'totalItems' in props &&
+		props.totalItems !== undefined &&
+		'pageSize' in props &&
+		props.pageSize !== undefined
+	) {
 		// Type guard ensures props.totalItems and props.pageSize are numbers here
 		const { totalItems, pageSize } = props;
 		summaryContent = (

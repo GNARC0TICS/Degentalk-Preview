@@ -52,9 +52,16 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 			// Import the settings service
 			// const { createDefaultSettings } = await import('../../admin/sub-domains/settings/settings.service');
 			// await createDefaultSettings(user.id);
-			logger.info('AuthController', 'Skipping default settings creation for new user - to be implemented/verified.', { userId: user.id });
+			logger.info(
+				'AuthController',
+				'Skipping default settings creation for new user - to be implemented/verified.',
+				{ userId: user.id }
+			);
 		} catch (settingsError) {
-			logger.error('AuthController', 'Error during (attempted) default user settings creation', { err: settingsError, userId: user.id });
+			logger.error('AuthController', 'Error during (attempted) default user settings creation', {
+				err: settingsError,
+				userId: user.id
+			});
 			// Continue with registration even if settings creation fails
 		}
 
@@ -72,7 +79,10 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 		await storage.storeVerificationToken(user.id, verificationToken);
 
 		// Send verification email (replace with actual email sending logic)
-		logger.info('AuthController', `Verification email sent to ${userData.email}`, { email: userData.email, token: verificationToken });
+		logger.info('AuthController', `Verification email sent to ${userData.email}`, {
+			email: userData.email,
+			token: verificationToken
+		});
 
 		res.status(201).json({
 			message: 'Registration successful. Please check your email to verify your account.'
@@ -200,7 +210,10 @@ export async function resendVerification(req: Request, res: Response, next: Next
 		await storage.storeVerificationToken(user.id, verificationToken);
 
 		// Send verification email (replace with actual email sending logic)
-		logger.info('AuthController', `Verification email re-sent to ${email}`, { email, token: verificationToken });
+		logger.info('AuthController', `Verification email re-sent to ${email}`, {
+			email,
+			token: verificationToken
+		});
 
 		res.status(200).json({
 			message: 'If your email exists in our system, you will receive a verification email shortly.'

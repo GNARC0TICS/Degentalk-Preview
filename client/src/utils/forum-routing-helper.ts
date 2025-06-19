@@ -37,16 +37,18 @@ export type ForumEntityType = 'primary-zone' | 'category' | 'child-forum';
  */
 export function getForumEntityType(entity: ForumEntityBase): ForumEntityType {
 	// Derive isZone and canonical if not provided, based on type and parentId
-	const isZoneDerived = entity.isZone ?? (entity.type === 'zone');
-	const canonicalDerived = entity.canonical ?? (entity.type === 'zone' && (entity.parentId === null || entity.parentId === undefined));
+	const isZoneDerived = entity.isZone ?? entity.type === 'zone';
+	const canonicalDerived =
+		entity.canonical ??
+		(entity.type === 'zone' && (entity.parentId === null || entity.parentId === undefined));
 
 	if (isZoneDerived && canonicalDerived) return 'primary-zone';
 	// A 'category' type is a top-level grouper if it has no parent or its parent is a zone (but not a forum itself)
 	// The original logic for category was: !entity.isZone && (entity.parentId === null || entity.parentId === undefined)
 	// This translates to: entity.type === 'category' (assuming categories are top-level or parented by zones)
-	if (entity.type === 'category') return 'category'; 
+	if (entity.type === 'category') return 'category';
 	if (entity.type === 'forum') return 'child-forum'; // type 'forum' are always child-forums
-	
+
 	// Fallback for older structures or if type is ambiguous, try to infer
 	if (isZoneDerived) return 'primary-zone'; // If it's a zone, assume primary if not specified otherwise
 	return 'child-forum'; // Default to child-forum if type is not 'category' or 'zone'

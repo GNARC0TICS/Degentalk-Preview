@@ -63,13 +63,7 @@ import {
 	TableHeader,
 	TableRow
 } from '@/components/ui/table';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
@@ -350,7 +344,7 @@ export default function AnnouncementsPage() {
 			tickerMode: announcement.tickerMode,
 			link: announcement.link,
 			bgColor: announcement.bgColor,
-			textColor: announcement.textColor,
+			textColor: announcement.textColor
 		};
 		updateMutation.mutate({
 			id: announcement.id,
@@ -371,7 +365,11 @@ export default function AnnouncementsPage() {
 	};
 
 	const pageActions = (
-		<Button onClick={() => { setIsCreateDialogOpen(true); }}>
+		<Button
+			onClick={() => {
+				setIsCreateDialogOpen(true);
+			}}
+		>
 			<Plus className="h-4 w-4 mr-2" /> Create Announcement
 		</Button>
 	);
@@ -630,7 +628,9 @@ export default function AnnouncementsPage() {
 														onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
 													/>
 												</FormControl>
-												<FormDescription>Higher priority announcements appear first</FormDescription>
+												<FormDescription>
+													Higher priority announcements appear first
+												</FormDescription>
 												<FormMessage />
 											</FormItem>
 										)}
@@ -678,7 +678,9 @@ export default function AnnouncementsPage() {
 														</div>
 													</PopoverContent>
 												</Popover>
-												<FormDescription>Announcement will be hidden after this date</FormDescription>
+												<FormDescription>
+													Announcement will be hidden after this date
+												</FormDescription>
 												<FormMessage />
 											</FormItem>
 										)}
@@ -761,7 +763,9 @@ export default function AnnouncementsPage() {
 												</FormControl>
 												<div className="space-y-1 leading-none">
 													<FormLabel>Active</FormLabel>
-													<FormDescription>Make this announcement active immediately</FormDescription>
+													<FormDescription>
+														Make this announcement active immediately
+													</FormDescription>
 												</div>
 											</FormItem>
 										)}
@@ -950,7 +954,9 @@ export default function AnnouncementsPage() {
 														onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
 													/>
 												</FormControl>
-												<FormDescription>Higher priority announcements appear first</FormDescription>
+												<FormDescription>
+													Higher priority announcements appear first
+												</FormDescription>
 												<FormMessage />
 											</FormItem>
 										)}
@@ -998,7 +1004,9 @@ export default function AnnouncementsPage() {
 														</div>
 													</PopoverContent>
 												</Popover>
-												<FormDescription>Announcement will be hidden after this date</FormDescription>
+												<FormDescription>
+													Announcement will be hidden after this date
+												</FormDescription>
 												<FormMessage />
 											</FormItem>
 										)}
@@ -1081,7 +1089,9 @@ export default function AnnouncementsPage() {
 												</FormControl>
 												<div className="space-y-1 leading-none">
 													<FormLabel>Active</FormLabel>
-													<FormDescription>Make this announcement active immediately</FormDescription>
+													<FormDescription>
+														Make this announcement active immediately
+													</FormDescription>
 												</div>
 											</FormItem>
 										)}
@@ -1158,7 +1168,11 @@ export default function AnnouncementsPage() {
 								</div>
 
 								<DialogFooter>
-									<Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+									<Button
+										type="button"
+										variant="outline"
+										onClick={() => setIsEditDialogOpen(false)}
+									>
 										Cancel
 									</Button>
 									<Button type="submit" disabled={updateMutation.isPending}>

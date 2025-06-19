@@ -90,6 +90,18 @@ This checks:
 - ✅ No Vite config leaks into server/
 - ✅ All path aliases resolve correctly
 
+### Prettier formatting hook
+
+In addition to the script above, Husky runs a **pre-commit hook** that blocks the commit if any file fails Prettier-style formatting (`npm run format:check`).
+
+• To auto-fix formatting issues, run:
+
+```bash
+npm run format   # prettier --write .
+```
+
+• Need to bypass temporarily? use `git commit --no-verify` (avoid on shared branches).
+
 ## 🚨 Emergency Recovery
 
 If you accidentally break imports:

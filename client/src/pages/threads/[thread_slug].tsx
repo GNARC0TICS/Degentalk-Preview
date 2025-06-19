@@ -6,7 +6,14 @@ import { AlertCircle, ArrowDownCircle } from 'lucide-react';
 import { useThread, usePosts } from '@/features/forum/hooks/useForumQueries';
 import PostCard from '@/features/forum/components/PostCard';
 import { SiteFooter } from '@/components/layout/site-footer';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator
+} from '@/components/ui/breadcrumb';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Wide } from '@/layout/primitives';
 
@@ -20,11 +27,7 @@ export default function ThreadPage() {
 	const listRef = useRef<List>(null);
 
 	// Fetch thread meta & posts
-	const {
-		data: threadData,
-		isLoading: isThreadLoading,
-		isError: isThreadError
-	} = useThread(slug);
+	const { data: threadData, isLoading: isThreadLoading, isError: isThreadError } = useThread(slug);
 
 	const thread = threadData?.thread as ThreadWithPostsAndUser['thread'] | undefined;
 
@@ -77,7 +80,9 @@ export default function ThreadPage() {
 	const Row = ({ index, style }: ListChildComponentProps) => {
 		const post = posts[index];
 		return (
-			<div style={style} className="px-4" id={`post-${post.id}`}> {/* Add ID to post container */}
+			<div style={style} className="px-4" id={`post-${post.id}`}>
+				{' '}
+				{/* Add ID to post container */}
 				<PostCard
 					post={post}
 					isFirst={index === 0}

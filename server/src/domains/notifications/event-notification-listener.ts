@@ -1,6 +1,6 @@
 /**
  * Event Notification Listener
- * 
+ *
  * This module listens for events from the event logger and generates notifications.
  */
 import { EventEmitter } from 'events';
@@ -19,21 +19,24 @@ export const EVENT_LOG_CREATED = 'event_log_created';
  * This should be called when the server starts
  */
 export function initEventNotificationListener() {
-  // Listen for new event logs
-  eventEmitter.on(EVENT_LOG_CREATED, async (eventLog: EventLog) => {
-    try {
-      // Generate notification from event
-      const notification = await generateNotificationFromEvent(eventLog);
-      
-      if (notification) {
-        logger.info('NOTIFICATIONS', `Created notification ${notification.id} from event ${eventLog.id}`);
-      }
-    } catch (error) {
-      logger.error('NOTIFICATIONS', 'Error generating notification from event', error);
-    }
-  });
+	// Listen for new event logs
+	eventEmitter.on(EVENT_LOG_CREATED, async (eventLog: EventLog) => {
+		try {
+			// Generate notification from event
+			const notification = await generateNotificationFromEvent(eventLog);
 
-  logger.info('NOTIFICATIONS', 'Event notification listener initialized');
+			if (notification) {
+				logger.info(
+					'NOTIFICATIONS',
+					`Created notification ${notification.id} from event ${eventLog.id}`
+				);
+			}
+		} catch (error) {
+			logger.error('NOTIFICATIONS', 'Error generating notification from event', error);
+		}
+	});
+
+	logger.info('NOTIFICATIONS', 'Event notification listener initialized');
 }
 
 /**
@@ -41,5 +44,5 @@ export function initEventNotificationListener() {
  * This should be called whenever a new event log is created
  */
 export function emitEventLogCreated(eventLog: EventLog) {
-  eventEmitter.emit(EVENT_LOG_CREATED, eventLog);
-} 
+	eventEmitter.emit(EVENT_LOG_CREATED, eventLog);
+}

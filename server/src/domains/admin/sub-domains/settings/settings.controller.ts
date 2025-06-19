@@ -303,7 +303,13 @@ export class AdminSettingsController {
 			}
 
 			const updated = await adminSettingsService.updateFeatureFlag({ key, ...validation.data });
-			await adminController.logAction(req, 'UPDATE_FEATURE_FLAG', 'feature_flag', key, validation.data);
+			await adminController.logAction(
+				req,
+				'UPDATE_FEATURE_FLAG',
+				'feature_flag',
+				key,
+				validation.data
+			);
 			res.json(updated);
 		} catch (error) {
 			if (error instanceof AdminError)

@@ -35,4 +35,4 @@ export function UserAvatar({ user, size = 'md', className }: UserAvatarProps) {
 			<AvatarFallback className={fallbackSize[size]}>{getInitials(user.username)}</AvatarFallback>
 		</Avatar>
 	);
-} 
+}

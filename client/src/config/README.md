@@ -48,7 +48,7 @@ client/src/config/
 Each configuration file follows this pattern:
 
 1. **Zod Schemas**: Define the structure and validation rules
-2. **TypeScript Types**: Auto-generated from schemas for IDE support  
+2. **TypeScript Types**: Auto-generated from schemas for IDE support
 3. **Default Configuration**: Production-ready values with TODO comments for uncertain values
 4. **Runtime Validation**: Automatic validation on application startup
 
@@ -59,12 +59,12 @@ import { z } from 'zod';
 
 // 1. Define Schema
 export const ExampleConfigSchema = z.object({
-  feature: z.string(),
-  enabled: z.boolean(),
-  settings: z.object({
-    threshold: z.number().min(0),
-    options: z.array(z.string())
-  })
+	feature: z.string(),
+	enabled: z.boolean(),
+	settings: z.object({
+		threshold: z.number().min(0),
+		options: z.array(z.string())
+	})
 });
 
 // 2. Generate Type
@@ -72,12 +72,12 @@ export type ExampleConfig = z.infer<typeof ExampleConfigSchema>;
 
 // 3. Default Configuration
 export const exampleConfig: ExampleConfig = {
-  feature: "example-feature",
-  enabled: true,
-  settings: {
-    threshold: 100,
-    options: ["option1", "option2"]
-  }
+	feature: 'example-feature',
+	enabled: true,
+	settings: {
+		threshold: 100,
+		options: ['option1', 'option2']
+	}
 };
 ```
 
@@ -177,17 +177,17 @@ Replace hardcoded values with config lookups:
 ```typescript
 // ❌ Before (hardcoded)
 const rarityOptions = [
-  { value: 'common', label: 'Common', color: '#A0AEC0' },
-  { value: 'rare', label: 'Rare', color: '#4299E1' }
+	{ value: 'common', label: 'Common', color: '#A0AEC0' },
+	{ value: 'rare', label: 'Rare', color: '#4299E1' }
 ];
 
 // ✅ After (config-driven)
 import { cosmeticsConfig } from '@/config/cosmetics.config.ts';
 
-const rarityOptions = Object.values(cosmeticsConfig.rarities).map(rarity => ({
-  value: rarity.key,
-  label: rarity.label,
-  color: rarity.color
+const rarityOptions = Object.values(cosmeticsConfig.rarities).map((rarity) => ({
+	value: rarity.key,
+	label: rarity.label,
+	color: rarity.color
 }));
 ```
 
@@ -253,7 +253,7 @@ grep -r "\[CONFIG-REFAC\]" client/src/
 ### Common Integration Points
 
 - **Admin Forms**: Dynamic dropdown options and validation
-- **UI Components**: Styling classes and color schemes  
+- **UI Components**: Styling classes and color schemes
 - **Business Logic**: Reward calculations and limits
 - **Content Rendering**: Forum structure and categorization
 
@@ -348,13 +348,13 @@ Error: [
 ```typescript
 // Check the config object has all required fields
 export const cosmeticsConfig = {
-  rarities: {
-    common: {
-      key: 'common',
-      label: 'Common', // ← This was missing
-      color: '#A0AEC0'
-    }
-  }
+	rarities: {
+		common: {
+			key: 'common',
+			label: 'Common', // ← This was missing
+			color: '#A0AEC0'
+		}
+	}
 };
 ```
 
@@ -381,10 +381,10 @@ const className = rarity?.tailwindClass || 'default-class';
 ```typescript
 import { cosmeticsConfigSchema, cosmeticsConfig } from '@/config/cosmetics.config.ts';
 try {
-  cosmeticsConfigSchema.parse(cosmeticsConfig);
-  console.log('✅ Config validates successfully');
+	cosmeticsConfigSchema.parse(cosmeticsConfig);
+	console.log('✅ Config validates successfully');
 } catch (error) {
-  console.error('❌ Config validation failed:', error.issues);
+	console.error('❌ Config validation failed:', error.issues);
 }
 ```
 
@@ -426,7 +426,8 @@ Contact the team when:
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/) - Type system reference
 
 ---
-*Keep this troubleshooting guide updated with new issues as they arise!*
+
+_Keep this troubleshooting guide updated with new issues as they arise!_
 
 ## 📈 **Future Enhancements**
 
@@ -438,4 +439,4 @@ Contact the team when:
 
 ---
 
-*This documentation is maintained alongside the configuration system. When adding new configs or changing existing ones, please update this README accordingly.*
+_This documentation is maintained alongside the configuration system. When adding new configs or changing existing ones, please update this README accordingly._

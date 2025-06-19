@@ -22,4 +22,4 @@ import { ROUTES } from '@/constants/routes';
 
 export type ForumCategory = typeof forumCategories.$inferSelect;
 
-// ... (full content preserved) 
+// ... (full content preserved)

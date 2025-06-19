@@ -3,21 +3,22 @@ import { SiteFooter } from '@/components/layout/site-footer';
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
 import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
 // Corrected import path for useForumStructure and MergedZone type
-import { useForumStructure, ForumStructureProvider } from '@/contexts/ForumStructureContext'; 
+import { useForumStructure, ForumStructureProvider } from '@/contexts/ForumStructureContext';
 import type { MergedZone } from '@/contexts/ForumStructureContext';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { Folder, LayoutGrid } from 'lucide-react';
 
-function ZonesPage() { // Changed to regular function for clarity with provider
+function ZonesPage() {
+	// Changed to regular function for clarity with provider
 	// The hook now returns `zones` which contains all zones, and `forums` (a flat map).
 	const { zones: allZones, isLoading, error } = useForumStructure();
 
 	// Filter primary zones (canonical zones)
-	const primaryZones = allZones.filter(zone => zone.canonical === true);
+	const primaryZones = allZones.filter((zone) => zone.canonical === true);
 	// HierarchicalZoneNav should ideally consume the context directly or be passed allZones.
 	// For now, we pass allZones, assuming HierarchicalZoneNav can handle this or will be updated.
-	const categoriesForNav = allZones; 
+	const categoriesForNav = allZones;
 
 	if (isLoading) {
 		return (
@@ -64,10 +65,11 @@ function ZonesPage() { // Changed to regular function for clarity with provider
 									description: zone.description || '',
 									icon: zone.icon, // Use the direct icon field from MergedZone
 									colorTheme: zone.colorTheme || zone.slug, // Use colorTheme directly from MergedZone, fallback to slug
-									theme: { // Pass the MergedTheme object for additional theme properties
+									theme: {
+										// Pass the MergedTheme object for additional theme properties
 										icon: zone.theme?.icon,
 										color: zone.theme?.color,
-										bannerImage: zone.theme?.bannerImage,
+										bannerImage: zone.theme?.bannerImage
 									},
 									threadCount: zone.threadCount,
 									postCount: zone.postCount,

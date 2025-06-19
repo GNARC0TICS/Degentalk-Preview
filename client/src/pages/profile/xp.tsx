@@ -14,7 +14,7 @@ const ProfileXpPage: React.FC = () => {
 
 	// Fetch user XP info using the new hook
 	// Reverting to destructuring xpData and aliasing to xpInfo
-	const { xpData: xpInfo, isLoading } = useUserXP(username ? username : undefined); 
+	const { xpData: xpInfo, isLoading } = useUserXP(username ? username : undefined);
 
 	return (
 		<div className="container max-w-5xl mx-auto py-6 px-4">
@@ -115,7 +115,7 @@ const ProfileXpPage: React.FC = () => {
 
 			{/* XP Log Section */}
 			<div className="mb-8">
-				<XpLogView userId={username ? username : undefined} /> 
+				<XpLogView userId={username ? username : undefined} />
 			</div>
 		</div>
 	);

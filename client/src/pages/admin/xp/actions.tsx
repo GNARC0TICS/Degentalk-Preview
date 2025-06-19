@@ -37,4 +37,4 @@ export default function XpActionsAdminPage() {
 			</Card>
 		</div>
 	);
-} 
+}

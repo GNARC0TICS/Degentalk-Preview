@@ -2,8 +2,8 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface FullBleedSectionProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** optional class applied to the background container */
-  backgroundClassName?: string;
+	/** optional class applied to the background container */
+	backgroundClassName?: string;
 }
 
 /**
@@ -16,22 +16,22 @@ interface FullBleedSectionProps extends React.HTMLAttributes<HTMLDivElement> {
  *   2. A child `.container` that holds actual content.
  */
 export const FullBleedSection: React.FC<FullBleedSectionProps> = ({
-  children,
-  className = '',
-  backgroundClassName = '',
-  ...props
+	children,
+	className = '',
+	backgroundClassName = '',
+	...props
 }) => {
-  return (
-    <section {...props} className={cn('relative w-full', className)}>
-      <div
-        className={cn(
-          // Use calc so it always matches container side padding (1rem)
-          'w-screen relative left-[calc(-50vw+50%)]',
-          backgroundClassName
-        )}
-      >
-        <div className="container mx-auto">{children}</div>
-      </div>
-    </section>
-  );
-}; 
+	return (
+		<section {...props} className={cn('relative w-full', className)}>
+			<div
+				className={cn(
+					// Use calc so it always matches container side padding (1rem)
+					'w-screen relative left-[calc(-50vw+50%)]',
+					backgroundClassName
+				)}
+			>
+				<div className="container mx-auto">{children}</div>
+			</div>
+		</section>
+	);
+};

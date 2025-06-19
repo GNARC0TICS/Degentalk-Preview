@@ -44,4 +44,4 @@ export class RarityService {
 	}
 }
 
-export const rarityService = new RarityService(); 
+export const rarityService = new RarityService();

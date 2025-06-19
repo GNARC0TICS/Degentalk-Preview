@@ -6,15 +6,13 @@ import { eq } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
 
 // Environment variables required
-const {
-	X_CLIENT_ID,
-	X_CLIENT_SECRET,
-	X_CALLBACK_URL
-} = process.env as Record<string, string>;
+const { X_CLIENT_ID, X_CLIENT_SECRET, X_CALLBACK_URL } = process.env as Record<string, string>;
 
 function ensureXEnv() {
 	if (!X_CLIENT_ID || !X_CLIENT_SECRET || !X_CALLBACK_URL) {
-		throw new Error('Missing X (Twitter) OAuth env vars: X_CLIENT_ID, X_CLIENT_SECRET, X_CALLBACK_URL');
+		throw new Error(
+			'Missing X (Twitter) OAuth env vars: X_CLIENT_ID, X_CLIENT_SECRET, X_CALLBACK_URL'
+		);
 	}
 }
 
@@ -26,7 +24,7 @@ function getTwitterClient() {
 		ensureXEnv();
 		twitterClient = new TwitterApi({
 			clientId: X_CLIENT_ID!,
-			clientSecret: X_CLIENT_SECRET!,
+			clientSecret: X_CLIENT_SECRET!
 		});
 	}
 	return twitterClient;
@@ -36,7 +34,7 @@ export async function initiateXLogin(req: Request, res: Response, next: NextFunc
 	try {
 		const client = getTwitterClient();
 		const { url, codeVerifier, state } = client.generateOAuth2AuthLink(X_CALLBACK_URL!, {
-			scope: ['tweet.read', 'tweet.write', 'users.read', 'offline.access'],
+			scope: ['tweet.read', 'tweet.write', 'users.read', 'offline.access']
 		});
 
 		// Store verifier & state in session to verify later
@@ -61,11 +59,11 @@ export async function handleXCallback(req: Request, res: Response, next: NextFun
 			client: loggedClient,
 			accessToken,
 			refreshToken,
-			expiresIn,
+			expiresIn
 		} = await client.loginWithOAuth2({
 			code,
 			codeVerifier: sessionData.codeVerifier,
-			redirectUri: X_CALLBACK_URL,
+			redirectUri: X_CALLBACK_URL
 		});
 
 		const twitterUser = await loggedClient.v2.me();
@@ -82,7 +80,7 @@ export async function handleXCallback(req: Request, res: Response, next: NextFun
 					xAccessToken: accessToken,
 					xRefreshToken: refreshToken,
 					xTokenExpiresAt,
-					xLinkedAt,
+					xLinkedAt
 				})
 				.where(eq(users.id, (req.user as any).id));
 
@@ -113,7 +111,7 @@ export async function handleXCallback(req: Request, res: Response, next: NextFun
 				xLinkedAt,
 				username: newUsername,
 				email: `${newUsername}@example.com`,
-				password: '<oauth>', // placeholder; oauth users login via X
+				password: '<oauth>' // placeholder; oauth users login via X
 			})
 			.returning();
 
@@ -138,7 +136,7 @@ export async function unlinkXAccount(req: Request, res: Response, next: NextFunc
 				xAccessToken: null,
 				xRefreshToken: null,
 				xTokenExpiresAt: null,
-				xLinkedAt: null,
+				xLinkedAt: null
 			})
 			.where(eq(users.id, (req.user as any).id));
 
@@ -146,4 +144,4 @@ export async function unlinkXAccount(req: Request, res: Response, next: NextFunc
 	} catch (err) {
 		return next(err);
 	}
-} 
+}

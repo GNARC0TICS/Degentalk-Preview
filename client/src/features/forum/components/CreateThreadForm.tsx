@@ -1,7 +1,7 @@
 import React from 'react';
 // Explicitly import hooks, though the combined import should work.
 // This is to try and resolve the "Cannot find name" errors.
-import { useState, useEffect, useCallback } from 'react'; 
+import { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -59,12 +59,15 @@ interface DraftData {
 }
 
 const threadFormSchema = z.object({
-	title: z.string().min(3, { message: 'Title must be at least 3 characters.' }).max(255, { message: 'Title cannot be more than 255 characters.' }),
+	title: z
+		.string()
+		.min(3, { message: 'Title must be at least 3 characters.' })
+		.max(255, { message: 'Title cannot be more than 255 characters.' }),
 	forumSlug: z.string().min(1, { message: 'Please select a forum.' }),
 	prefixId: z.string().optional(),
 	content: z.string().min(10, { message: 'Content must be at least 10 characters.' }),
 	editorState: z.any().optional(),
-	tags: z.array(z.string()).max(10).optional(),
+	tags: z.array(z.string()).max(10).optional()
 });
 
 type ThreadFormValues = z.infer<typeof threadFormSchema>;
@@ -86,7 +89,7 @@ export function CreateThreadForm({
 	forumName: passedForumName,
 	isOpen = true,
 	onClose,
-	onSuccess,
+	onSuccess
 }: CreateThreadFormProps) {
 	const { toast } = useToast();
 	const [, navigate] = useLocation();
@@ -95,7 +98,9 @@ export function CreateThreadForm({
 	const [editorState, setEditorState] = useState<any>(null);
 	const [hasActiveDraft, setHasActiveDraft] = useState(false);
 	const [draftId, setDraftId] = useState<number | null>(null);
-	const [selectedForumSlugState, setSelectedForumSlugState] = useState<string | undefined>(passedForumSlug);
+	const [selectedForumSlugState, setSelectedForumSlugState] = useState<string | undefined>(
+		passedForumSlug
+	);
 	const queryClient = useQueryClient();
 
 	const [targetForumConfig, setTargetForumConfig] = useState<any | undefined>(undefined); // Merged forum data from context
@@ -108,9 +113,13 @@ export function CreateThreadForm({
 		if (passedForumSlug) {
 			setSelectedForumSlugState(passedForumSlug); // Ensure internal state matches prop
 			if (passedIsForumLocked) {
-				setFormDisabledReason(`Posting is disabled in "${passedForumName || passedForumSlug}" because it is locked.`);
+				setFormDisabledReason(
+					`Posting is disabled in "${passedForumName || passedForumSlug}" because it is locked.`
+				);
 			} else if (passedForumRules && !passedForumRules.allowPosting) {
-				setFormDisabledReason(`Posting is disabled in "${passedForumName || passedForumSlug}" by its rules.`);
+				setFormDisabledReason(
+					`Posting is disabled in "${passedForumName || passedForumSlug}" by its rules.`
+				);
 			} else {
 				setFormDisabledReason(null);
 			}
@@ -118,7 +127,6 @@ export function CreateThreadForm({
 			// This is mainly for consistency if other parts of the form rely on targetForumConfig
 			const staticForum = passedForumSlug ? getForum(passedForumSlug) : undefined;
 			setTargetForumConfig(staticForum);
-
 		} else {
 			// If no forum is passed, reset disabled reason; it will be set by the forum selector logic below
 			setFormDisabledReason(null);
@@ -147,7 +155,10 @@ export function CreateThreadForm({
 
 	const activeForumSlug = passedForumSlug || selectedForumSlugState;
 	const activeForumData = activeForumSlug ? getForum(activeForumSlug) : undefined;
-	const { data: prefixes, isLoading: loadingPrefixes } = useForumPrefixes(undefined, activeForumData?.id);
+	const { data: prefixes, isLoading: loadingPrefixes } = useForumPrefixes(
+		undefined,
+		activeForumData?.id
+	);
 
 	const form = useForm<ThreadFormValues>({
 		resolver: zodResolver(threadFormSchema),
@@ -156,8 +167,8 @@ export function CreateThreadForm({
 			forumSlug: passedForumSlug || '',
 			prefixId: '',
 			content: '',
-			tags: [],
-		},
+			tags: []
+		}
 	});
 
 	useEffect(() => {
@@ -167,24 +178,30 @@ export function CreateThreadForm({
 		}
 	}, [passedForumSlug, form]);
 
-	const { data: draftData, isLoading: loadingDraft, isSuccess: isDraftLoadSuccess } = useQuery<DraftData>(
-		{
-			queryKey: ['threadDraft', { forumSlug: activeForumSlug }],
-			queryFn: async () => {
-				if (!activeForumSlug) return Promise.reject('No forum selected for draft.');
-				return apiRequest<DraftData>({
-					method: 'GET',
-					url: '/api/threads/drafts',
-					params: { forumSlug: activeForumSlug }
-				});
-			},
-			enabled: isOpen && !!activeForumSlug && !!user,
-		}
-	);
+	const {
+		data: draftData,
+		isLoading: loadingDraft,
+		isSuccess: isDraftLoadSuccess
+	} = useQuery<DraftData>({
+		queryKey: ['threadDraft', { forumSlug: activeForumSlug }],
+		queryFn: async () => {
+			if (!activeForumSlug) return Promise.reject('No forum selected for draft.');
+			return apiRequest<DraftData>({
+				method: 'GET',
+				url: '/api/threads/drafts',
+				params: { forumSlug: activeForumSlug }
+			});
+		},
+		enabled: isOpen && !!activeForumSlug && !!user
+	});
 
 	const saveDraftMutation = useMutation({
-		mutationFn: async (values: ThreadFormValues & { draftId?: number; forumSlugToSave: string }) => {
-			const endpoint = values.draftId ? `/api/threads/drafts/${values.draftId}` : '/api/threads/drafts';
+		mutationFn: async (
+			values: ThreadFormValues & { draftId?: number; forumSlugToSave: string }
+		) => {
+			const endpoint = values.draftId
+				? `/api/threads/drafts/${values.draftId}`
+				: '/api/threads/drafts';
 			const method = values.draftId ? 'PUT' : 'POST';
 			return apiRequest<DraftData>({
 				method,
@@ -194,9 +211,12 @@ export function CreateThreadForm({
 					content: values.content,
 					editorState: values.editorState,
 					forumSlug: values.forumSlugToSave,
-					prefixId: values.prefixId && values.prefixId.trim() !== '' && values.prefixId !== 'none' ? values.prefixId : undefined,
-					tags: values.tags,
-				},
+					prefixId:
+						values.prefixId && values.prefixId.trim() !== '' && values.prefixId !== 'none'
+							? values.prefixId
+							: undefined,
+					tags: values.tags
+				}
 			});
 		},
 		onSuccess: (data) => {
@@ -206,12 +226,16 @@ export function CreateThreadForm({
 			}
 			toast({
 				title: 'Draft saved',
-				description: 'Your thread draft has been saved.',
+				description: 'Your thread draft has been saved.'
 			});
 		},
 		onError: (error: Error) => {
-			toast({ title: 'Error', description: `Failed to save draft: ${error.message}`, variant: 'destructive' });
-		},
+			toast({
+				title: 'Error',
+				description: `Failed to save draft: ${error.message}`,
+				variant: 'destructive'
+			});
+		}
 	});
 
 	const createThreadMutation = useCreateThread();
@@ -226,20 +250,24 @@ export function CreateThreadForm({
 				prefixId: draftData.prefixId || '',
 				content: draftData.content || '',
 				tags: draftData.tags || [],
-				editorState: draftData.editorState,
+				editorState: draftData.editorState
 			});
 			if (draftData.content) setEditorContent(draftData.content);
 			if (draftData.editorState) setEditorState(draftData.editorState);
 			if (draftData.forumSlug) setSelectedForumSlugState(draftData.forumSlug);
 		}
 	}, [isDraftLoadSuccess, draftData, form, passedForumSlug]);
-	
+
 	const handleSaveDraft = useCallback(
 		(html: string, jsonState: any) => {
 			const currentValues = form.getValues();
-			if (!currentValues.title && !html) return; 
+			if (!currentValues.title && !html) return;
 			if (!currentValues.forumSlug) {
-				toast({ title: 'Cannot Save Draft', description: 'Please select a forum first.', variant: 'destructive' });
+				toast({
+					title: 'Cannot Save Draft',
+					description: 'Please select a forum first.',
+					variant: 'destructive'
+				});
 				return;
 			}
 			saveDraftMutation.mutate({
@@ -247,7 +275,7 @@ export function CreateThreadForm({
 				content: html,
 				editorState: jsonState,
 				draftId: draftId ?? undefined,
-				forumSlugToSave: currentValues.forumSlug, 
+				forumSlugToSave: currentValues.forumSlug
 			});
 		},
 		[form, saveDraftMutation, draftId, toast]
@@ -255,7 +283,11 @@ export function CreateThreadForm({
 
 	const onSubmit = (values: ThreadFormValues) => {
 		if (!user) {
-			toast({ title: 'Authentication Error', description: 'You must be logged in.', variant: 'destructive' });
+			toast({
+				title: 'Authentication Error',
+				description: 'You must be logged in.',
+				variant: 'destructive'
+			});
 			return;
 		}
 		// Use props for rule check if a forum was passed in.
@@ -271,24 +303,33 @@ export function CreateThreadForm({
 				canPost = false;
 				reason = `Posting is disabled in "${passedForumName || passedForumSlug}" by its rules.`;
 			}
-		} else if (targetForumConfig) { // User selected a forum from dropdown
+		} else if (targetForumConfig) {
+			// User selected a forum from dropdown
 			if (!targetForumConfig.rules.allowPosting) {
 				canPost = false;
 				reason = `Posting is disabled in "${targetForumConfig.name}" by its rules.`;
 			}
-		} else if (!values.forumSlug) { // No forum selected at all
-            canPost = false;
-            reason = "Please select a forum to post in.";
-        }
-
+		} else if (!values.forumSlug) {
+			// No forum selected at all
+			canPost = false;
+			reason = 'Please select a forum to post in.';
+		}
 
 		if (!canPost) {
-			toast({ title: 'Permission Denied', description: reason || 'Posting is disabled in this forum.', variant: 'destructive' });
+			toast({
+				title: 'Permission Denied',
+				description: reason || 'Posting is disabled in this forum.',
+				variant: 'destructive'
+			});
 			return;
 		}
 
 		if (!activeForumData || activeForumData.id <= 0) {
-			toast({ title: 'Error', description: 'Unable to determine target forum. Please try again.', variant: 'destructive' });
+			toast({
+				title: 'Error',
+				description: 'Unable to determine target forum. Please try again.',
+				variant: 'destructive'
+			});
 			return;
 		}
 
@@ -297,19 +338,24 @@ export function CreateThreadForm({
 			content: values.content,
 			categoryId: activeForumData.id,
 			forumSlug: activeForumData.slug,
-			prefixId: values.prefixId && values.prefixId.trim() !== '' && values.prefixId !== 'none' ? parseInt(values.prefixId) : undefined,
+			prefixId:
+				values.prefixId && values.prefixId.trim() !== '' && values.prefixId !== 'none'
+					? parseInt(values.prefixId)
+					: undefined,
 			tags: values.tags,
-			editorState: values.editorState,
+			editorState: values.editorState
 		};
 
 		createThreadMutation.mutate(newThreadPayload, {
 			onSuccess: (data) => {
 				if (draftId) {
-					apiRequest<any>({ method: 'DELETE', url: `/api/threads/drafts/${draftId}`});
+					apiRequest<any>({ method: 'DELETE', url: `/api/threads/drafts/${draftId}` });
 				}
-				queryClient.invalidateQueries({ queryKey: ['/api/threads', { forumSlug: values.forumSlug }] });
+				queryClient.invalidateQueries({
+					queryKey: ['/api/threads', { forumSlug: values.forumSlug }]
+				});
 				queryClient.invalidateQueries({ queryKey: ['/api/threads'] });
-				queryClient.invalidateQueries({ queryKey: ['forumCategoriesTree'] }); 
+				queryClient.invalidateQueries({ queryKey: ['forumCategoriesTree'] });
 				queryClient.invalidateQueries({ queryKey: ['/api/categories', 'with-stats'] });
 				toast({ title: 'Success', description: 'Thread created successfully' });
 				if (onSuccess) {
@@ -328,17 +374,14 @@ export function CreateThreadForm({
 		form.setValue('content', html, { shouldValidate: true });
 		form.setValue('editorState', jsonState);
 	};
-	
+
 	const handleForumChange = (value: string) => {
 		form.setValue('forumSlug', value, { shouldValidate: true });
 		form.setValue('prefixId', '');
 		setSelectedForumSlugState(value);
 	};
 
-	const debouncedSaveDraft = useCallback(
-		debounce(handleSaveDraft, 3000),
-		[handleSaveDraft]
-	);
+	const debouncedSaveDraft = useCallback(debounce(handleSaveDraft, 3000), [handleSaveDraft]);
 
 	useEffect(() => {
 		if (editorContent || form.getValues('title')) {
@@ -361,7 +404,11 @@ export function CreateThreadForm({
 						<FormItem>
 							<FormLabel>Title</FormLabel>
 							<FormControl>
-								<Input placeholder="Enter thread title" {...field} disabled={!!formDisabledReason || createThreadMutation.isPending} />
+								<Input
+									placeholder="Enter thread title"
+									{...field}
+									disabled={!!formDisabledReason || createThreadMutation.isPending}
+								/>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -377,7 +424,9 @@ export function CreateThreadForm({
 								<Select
 									onValueChange={handleForumChange}
 									value={field.value}
-									disabled={!!passedForumSlug || !!formDisabledReason || createThreadMutation.isPending}
+									disabled={
+										!!passedForumSlug || !!formDisabledReason || createThreadMutation.isPending
+									}
 								>
 									<FormControl>
 										<SelectTrigger>
@@ -391,21 +440,24 @@ export function CreateThreadForm({
 												{passedForumName}
 											</SelectItem>
 										) : (
-										// If no forumSlug is passed, populate dropdown from merged zones (includes DB IDs)
-											(zones.map((zone) => (
+											// If no forumSlug is passed, populate dropdown from merged zones (includes DB IDs)
+											zones.map((zone) => (
 												<SelectGroup key={zone.slug}>
-													<SelectLabel>{zone.name} ({zone.type})</SelectLabel>
+													<SelectLabel>
+														{zone.name} ({zone.type})
+													</SelectLabel>
 													{zone.forums.map((forumItem) => (
-														<SelectItem 
-															key={forumItem.slug} 
-															value={forumItem.slug} 
+														<SelectItem
+															key={forumItem.slug}
+															value={forumItem.slug}
 															disabled={!forumItem.rules.allowPosting}
 														>
-															{forumItem.name} {!forumItem.rules.allowPosting && "(Posting Disabled)"}
+															{forumItem.name}{' '}
+															{!forumItem.rules.allowPosting && '(Posting Disabled)'}
 														</SelectItem>
 													))}
 												</SelectGroup>
-											)))
+											))
 										)}
 									</SelectContent>
 								</Select>
@@ -422,19 +474,32 @@ export function CreateThreadForm({
 								<Select
 									onValueChange={field.onChange}
 									value={field.value}
-									disabled={loadingPrefixes || !activeForumData?.id || !!formDisabledReason || createThreadMutation.isPending}
+									disabled={
+										loadingPrefixes ||
+										!activeForumData?.id ||
+										!!formDisabledReason ||
+										createThreadMutation.isPending
+									}
 								>
 									<FormControl>
 										<SelectTrigger>
-											{field.value && Array.isArray(prefixes) && prefixes.find(p => p.id.toString() === field.value) ? (
-												<PrefixBadge prefix={prefixes.find(p => p.id.toString() === field.value)!} />
+											{field.value &&
+											Array.isArray(prefixes) &&
+											prefixes.find((p) => p.id.toString() === field.value) ? (
+												<PrefixBadge
+													prefix={prefixes.find((p) => p.id.toString() === field.value)!}
+												/>
 											) : (
 												<SelectValue placeholder="Select a prefix" />
 											)}
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										{loadingPrefixes && <SelectItem value="loading" disabled>Loading prefixes...</SelectItem>}
+										{loadingPrefixes && (
+											<SelectItem value="loading" disabled>
+												Loading prefixes...
+											</SelectItem>
+										)}
 										<SelectItem value="none">No Prefix</SelectItem>
 										{Array.isArray(prefixes) &&
 											prefixes.map((prefix: Prefix) => (
@@ -455,16 +520,22 @@ export function CreateThreadForm({
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>Tags (Max 10)</FormLabel>
-									<FormControl>
-										<TagInput
-											value={(field.value || []).map(tagName => ({ name: tagName, id: 0, slug: tagName.toLowerCase().replace(/\s+/g, '-') }))}
-											onChange={(tagsFromInput: Tag[]) => field.onChange(tagsFromInput.map(tag => tag.name))}
-											// The TagInput itself doesn't take a general disabled prop.
-											// Its internal input is disabled if maxTags is reached.
-											// General form disabling is handled by disabling the submit button and other fields.
-										/>
-									</FormControl>
-									<FormMessage />
+							<FormControl>
+								<TagInput
+									value={(field.value || []).map((tagName) => ({
+										name: tagName,
+										id: 0,
+										slug: tagName.toLowerCase().replace(/\s+/g, '-')
+									}))}
+									onChange={(tagsFromInput: Tag[]) =>
+										field.onChange(tagsFromInput.map((tag) => tag.name))
+									}
+									// The TagInput itself doesn't take a general disabled prop.
+									// Its internal input is disabled if maxTags is reached.
+									// General form disabling is handled by disabling the submit button and other fields.
+								/>
+							</FormControl>
+							<FormMessage />
 						</FormItem>
 					)}
 				/>
@@ -494,7 +565,12 @@ export function CreateThreadForm({
 				)}
 				<DialogFooter className="gap-2 sm:justify-end pt-4">
 					{onClose && (
-						<Button type="button" variant="outline" onClick={onClose} disabled={createThreadMutation.isPending || saveDraftMutation.isPending}>
+						<Button
+							type="button"
+							variant="outline"
+							onClick={onClose}
+							disabled={createThreadMutation.isPending || saveDraftMutation.isPending}
+						>
 							Cancel
 						</Button>
 					)}
@@ -502,13 +578,22 @@ export function CreateThreadForm({
 						type="button"
 						variant="ghost"
 						onClick={() => handleSaveDraft(editorContent, editorState)}
-						disabled={!!formDisabledReason || saveDraftMutation.isPending || createThreadMutation.isPending}
+						disabled={
+							!!formDisabledReason || saveDraftMutation.isPending || createThreadMutation.isPending
+						}
 					>
 						{saveDraftMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
 						Save Draft
 					</Button>
-					<Button type="submit" disabled={!!formDisabledReason || createThreadMutation.isPending || saveDraftMutation.isPending}>
-						{(createThreadMutation.isPending || saveDraftMutation.isPending) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+					<Button
+						type="submit"
+						disabled={
+							!!formDisabledReason || createThreadMutation.isPending || saveDraftMutation.isPending
+						}
+					>
+						{(createThreadMutation.isPending || saveDraftMutation.isPending) && (
+							<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+						)}
 						{hasActiveDraft ? 'Update & Publish' : 'Create Thread'}
 					</Button>
 				</DialogFooter>
@@ -524,14 +609,21 @@ export function CreateThreadForm({
 		<Dialog open={isOpen} onOpenChange={(open) => !open && onClose && onClose()}>
 			<DialogContent className="sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1000px]">
 				<DialogHeader>
-					<DialogTitle>{hasActiveDraft ? 'Edit Draft' : 'Create New Thread'} {passedForumName ? `in ${passedForumName}` : (targetForumConfig ? `in ${targetForumConfig.name}` : '')}</DialogTitle>
+					<DialogTitle>
+						{hasActiveDraft ? 'Edit Draft' : 'Create New Thread'}{' '}
+						{passedForumName
+							? `in ${passedForumName}`
+							: targetForumConfig
+								? `in ${targetForumConfig.name}`
+								: ''}
+					</DialogTitle>
 					<DialogDescription>
 						{hasActiveDraft
 							? 'Continue editing your saved draft or start fresh.'
 							: 'Fill in the details below to start a new discussion.'}
 					</DialogDescription>
 				</DialogHeader>
-				{renderFormContent()} 
+				{renderFormContent()}
 			</DialogContent>
 		</Dialog>
 	);

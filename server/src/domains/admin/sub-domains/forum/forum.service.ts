@@ -372,7 +372,7 @@ export class AdminForumService {
 			.select()
 			.from(forumCategories)
 			.orderBy(forumCategories.position, forumCategories.name);
-		
+
 		return entities;
 	}
 
@@ -382,16 +382,13 @@ export class AdminForumService {
 			.from(forumCategories)
 			.where(eq(forumCategories.id, id))
 			.limit(1);
-		
+
 		return entity;
 	}
 
 	async createEntity(data: any) {
-		const [entity] = await db
-			.insert(forumCategories)
-			.values(data)
-			.returning();
-		
+		const [entity] = await db.insert(forumCategories).values(data).returning();
+
 		return entity;
 	}
 
@@ -404,7 +401,7 @@ export class AdminForumService {
 			})
 			.where(eq(forumCategories.id, id))
 			.returning();
-		
+
 		return entity;
 	}
 
@@ -415,11 +412,11 @@ export class AdminForumService {
 			.from(forumCategories)
 			.where(eq(forumCategories.parentId, id))
 			.limit(1);
-		
+
 		if (children.length > 0) {
 			throw new Error('Cannot delete entity with children');
 		}
-		
+
 		// Check if entity has threads (only for forums)
 		const entity = await this.getEntityById(id);
 		if (entity && entity.type === 'forum') {
@@ -427,16 +424,14 @@ export class AdminForumService {
 				.select({ count: sql<number>`count(*)` })
 				.from(threads)
 				.where(eq(threads.categoryId, id));
-			
+
 			if (threadCount[0].count > 0) {
 				throw new Error('Cannot delete forum with threads');
 			}
 		}
-		
-		const result = await db
-			.delete(forumCategories)
-			.where(eq(forumCategories.id, id));
-		
+
+		const result = await db.delete(forumCategories).where(eq(forumCategories.id, id));
+
 		return result.rowCount > 0;
 	}
 }

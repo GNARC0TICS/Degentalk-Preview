@@ -1,12 +1,4 @@
-import {
-  pgTable,
-  serial,
-  varchar,
-  text,
-  integer,
-  boolean,
-  timestamp
-} from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, integer, boolean, timestamp } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 /**
@@ -16,19 +8,19 @@ import { sql } from 'drizzle-orm';
  * These milestones are criterion-based (e.g., likes received, popular threads, shop purchases).
  */
 export const cloutAchievements = pgTable('clout_achievements', {
-  id: serial('id').primaryKey(),
-  achievementKey: varchar('achievement_key', { length: 100 }).notNull().unique(),
-  name: varchar('name', { length: 255 }).notNull(),
-  description: text('description'),
-  cloutReward: integer('clout_reward').notNull().default(0),
-  criteriaType: varchar('criteria_type', { length: 50 }),
-  criteriaValue: integer('criteria_value'),
-  enabled: boolean('enabled').notNull().default(true),
-  iconUrl: varchar('icon_url', { length: 500 }),
-  createdAt: timestamp('created_at')
-    .notNull()
-    .default(sql`now()`)
+	id: serial('id').primaryKey(),
+	achievementKey: varchar('achievement_key', { length: 100 }).notNull().unique(),
+	name: varchar('name', { length: 255 }).notNull(),
+	description: text('description'),
+	cloutReward: integer('clout_reward').notNull().default(0),
+	criteriaType: varchar('criteria_type', { length: 50 }),
+	criteriaValue: integer('criteria_value'),
+	enabled: boolean('enabled').notNull().default(true),
+	iconUrl: varchar('icon_url', { length: 500 }),
+	createdAt: timestamp('created_at')
+		.notNull()
+		.default(sql`now()`)
 });
 
 export type CloutAchievement = typeof cloutAchievements.$inferSelect;
-export type InsertCloutAchievement = typeof cloutAchievements.$inferInsert; 
+export type InsertCloutAchievement = typeof cloutAchievements.$inferInsert;

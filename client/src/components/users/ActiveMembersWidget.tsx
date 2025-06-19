@@ -41,14 +41,13 @@ function ActiveMembersWidget({
 	description = 'Members active in the last 30 minutes',
 	className = '',
 	limit = 5,
-	viewAllLink = '/degen-index',
+	viewAllLink = '/degen-index'
 }: ActiveMembersWidgetProps) {
 	const { data: users = [], isLoading } = useQuery<ActiveUser[]>({
-    queryKey: createWidgetQueryKey('active-members'),
-    queryFn: () =>
-      fetch('/api/forum/active-members').then(r => r.json()),
-    staleTime: 30_000,
-  });
+		queryKey: createWidgetQueryKey('active-members'),
+		queryFn: () => fetch('/api/forum/active-members').then((r) => r.json()),
+		staleTime: 30_000
+	});
 
 	// Limit the number of users displayed
 	const displayedUsers = users.slice(0, limit);

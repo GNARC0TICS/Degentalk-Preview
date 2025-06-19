@@ -16,4 +16,4 @@ router.post('/achievements/:id/toggle', isAdmin, cloutController.toggleAchieveme
 router.post('/grants', isAdmin, cloutController.grantClout);
 router.get('/logs', isAdmin, cloutController.getCloutLogs);
 
-export default router; 
+export default router;

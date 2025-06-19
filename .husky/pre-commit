@@ -1,5 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npm run tokens
-npm run format:check 
+npm run format:check || exit 1 

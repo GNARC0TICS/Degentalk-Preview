@@ -1,13 +1,13 @@
 import React from 'react';
 import { useLocation } from 'wouter';
 import { SiteFooter } from '@/components/layout/site-footer';
-import { 
+import {
 	Breadcrumb,
 	BreadcrumbList,
 	BreadcrumbItem,
 	BreadcrumbLink,
 	BreadcrumbPage,
-	BreadcrumbSeparator 
+	BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'; // Corrected import path
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -41,11 +41,23 @@ const ForumSearchPage = () => {
 		setIsLoading(true);
 		// TODO: Implement actual API call to fetch search results
 		// For now, simulate API call
-		await new Promise(resolve => setTimeout(resolve, 1000));
+		await new Promise((resolve) => setTimeout(resolve, 1000));
 		setResults([
 			// Example results
-			{ id: '1', title: `Result for "${currentSearch}" 1`, link: '#', type: 'thread', snippet: 'This is a sample thread snippet...' },
-			{ id: '2', title: `Another result for "${currentSearch}"`, link: '#', type: 'post', snippet: 'This is a sample post snippet...' },
+			{
+				id: '1',
+				title: `Result for "${currentSearch}" 1`,
+				link: '#',
+				type: 'thread',
+				snippet: 'This is a sample thread snippet...'
+			},
+			{
+				id: '2',
+				title: `Another result for "${currentSearch}"`,
+				link: '#',
+				type: 'post',
+				snippet: 'This is a sample post snippet...'
+			}
 		]);
 		setIsLoading(false);
 	};
@@ -53,16 +65,18 @@ const ForumSearchPage = () => {
 	const breadcrumbItems = [
 		{ label: 'Home', href: '/' },
 		{ label: 'Forums', href: '/forums' },
-		{ label: 'Search', href: `/forums/search?q=${searchQuery}` },
+		{ label: 'Search', href: `/forums/search?q=${searchQuery}` }
 	];
 	if (searchQuery) {
-		breadcrumbItems.push({ label: `Results for "${searchQuery}"`, href: `/forums/search?q=${searchQuery}` });
+		breadcrumbItems.push({
+			label: `Results for "${searchQuery}"`,
+			href: `/forums/search?q=${searchQuery}`
+		});
 	}
 
-
 	return (
-        <div className="flex flex-col min-h-screen bg-black text-white">
-            <main className="flex-grow">
+		<div className="flex flex-col min-h-screen bg-black text-white">
+			<main className="flex-grow">
 				<Wide className="px-4 py-8">
 					<Breadcrumb className="mb-6">
 						<BreadcrumbList>
@@ -70,11 +84,10 @@ const ForumSearchPage = () => {
 								<React.Fragment key={item.href || index}>
 									<BreadcrumbItem>
 										{index === breadcrumbItems.length - 1 && !searchQuery ? ( // Last item if no search query yet
-											(<BreadcrumbPage>{item.label}</BreadcrumbPage>)
-										) : (index === breadcrumbItems.length -1 && searchQuery) ? ( // Last item if there is a search query
-											(<BreadcrumbPage>{item.label}</BreadcrumbPage>)
-										)
-										: (
+											<BreadcrumbPage>{item.label}</BreadcrumbPage>
+										) : index === breadcrumbItems.length - 1 && searchQuery ? ( // Last item if there is a search query
+											<BreadcrumbPage>{item.label}</BreadcrumbPage>
+										) : (
 											<BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
 										)}
 									</BreadcrumbItem>
@@ -109,16 +122,16 @@ const ForumSearchPage = () => {
 
 					{!isLoading && results.length > 0 && (
 						<div>
-							<h2 className="text-2xl font-semibold mb-4">
-								Results for "{searchQuery}"
-							</h2>
+							<h2 className="text-2xl font-semibold mb-4">Results for "{searchQuery}"</h2>
 							<ul className="space-y-4">
 								{results.map((result) => (
 									<li key={result.id} className="p-4 border border-zinc-700 rounded-lg">
 										<a href={result.link} className="text-lg text-emerald-400 hover:underline">
 											{result.title}
 										</a>
-										{result.snippet && <p className="text-sm text-zinc-400 mt-1">{result.snippet}</p>}
+										{result.snippet && (
+											<p className="text-sm text-zinc-400 mt-1">{result.snippet}</p>
+										)}
 										<p className="text-xs text-zinc-500 mt-1">Type: {result.type}</p>
 									</li>
 								))}
@@ -127,9 +140,9 @@ const ForumSearchPage = () => {
 					)}
 				</Wide>
 			</main>
-            <SiteFooter />
-        </div>
-    );
+			<SiteFooter />
+		</div>
+	);
 };
 
 export default ForumSearchPage;

@@ -123,8 +123,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 	const messageContainerRef = useRef<HTMLDivElement>(null);
 	const { toast } = useToast();
 	const queryClient = useQueryClient();
-	const { position, expansionLevel, cycleExpansionLevel, updateExpansionLevel } =
-		useShoutbox();
+	const { position, expansionLevel, cycleExpansionLevel, updateExpansionLevel } = useShoutbox();
 
 	// TODO: Replace with actual auth check from user context
 	// Temporarily set to true for testing purposes
@@ -297,7 +296,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 		const identity = useIdentityDisplay({
 			id: String(msg.user.id),
 			username: msg.user.username,
-			level: msg.user.level,
+			level: msg.user.level
 		});
 		const messageTime = formatMessageTime(msg.createdAt);
 
@@ -316,7 +315,9 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-1.5">
 							<UserName user={msg.user} className="text-sm" />
-							{identity?.level && <LevelBadge level={identity.level} className="text-xs px-1 py-0" />}
+							{identity?.level && (
+								<LevelBadge level={identity.level} className="text-xs px-1 py-0" />
+							)}
 							<TooltipProvider>
 								<Tooltip>
 									<TooltipTrigger asChild>
@@ -346,9 +347,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 									{msg.isPinned ? (
 										<DropdownMenuItem
 											className="text-zinc-300 cursor-pointer focus:text-zinc-100 focus:bg-zinc-800"
-											onClick={() =>
-												pinMessage.mutate({ messageId: msg.id, isPinned: false })
-											}
+											onClick={() => pinMessage.mutate({ messageId: msg.id, isPinned: false })}
 										>
 											<PinOff className="mr-2 h-4 w-4" />
 											<span>Unpin Message</span>
@@ -356,9 +355,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 									) : (
 										<DropdownMenuItem
 											className="text-emerald-400 cursor-pointer focus:text-emerald-300 focus:bg-emerald-950/30"
-											onClick={() =>
-												pinMessage.mutate({ messageId: msg.id, isPinned: true })
-											}
+											onClick={() => pinMessage.mutate({ messageId: msg.id, isPinned: true })}
 										>
 											<Pin className="mr-2 h-4 w-4" />
 											<span>Pin Message</span>
@@ -381,9 +378,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 						) : (
 							msg.content
 						)}
-						{msg.editedAt && (
-							<span className="ml-1 text-xs italic text-zinc-500">(edited)</span>
-						)}
+						{msg.editedAt && <span className="ml-1 text-xs italic text-zinc-500">(edited)</span>}
 					</div>
 				</div>
 			</div>
@@ -400,9 +395,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 						: 'h-[200px]'
 			}`}
 		>
-			<CardHeader
-				className="pb-2 space-y-2 sm:space-y-0 flex flex-col sm:flex-row sm:items-center sm:justify-between"
-			>
+			<CardHeader className="pb-2 space-y-2 sm:space-y-0 flex flex-col sm:flex-row sm:items-center sm:justify-between">
 				<CardTitle className="text-lg flex items-center">
 					<MessageSquare className="h-5 w-5 text-emerald-500 mr-2" />
 					Shoutbox
@@ -424,7 +417,13 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 						size="sm"
 						className="text-zinc-400 hover:text-emerald-400 p-1 h-auto"
 						onClick={toggleExpanded}
-						title={expansionLevel === 'expanded' ? 'Collapse' : expansionLevel === 'collapsed' ? 'Expand' : 'Full View'}
+						title={
+							expansionLevel === 'expanded'
+								? 'Collapse'
+								: expansionLevel === 'collapsed'
+									? 'Expand'
+									: 'Full View'
+						}
 					>
 						{expansionLevel === 'expanded' ? (
 							<Minus className="h-4 w-4" />
@@ -476,9 +475,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 							<span className="text-xs mt-1">Be the first to say something!</span>
 						</div>
 					) : Array.isArray(messages) ? (
-						messages.map((msg: ShoutboxMessage) => (
-							<MessageItem key={msg.id} msg={msg} />
-						))
+						messages.map((msg: ShoutboxMessage) => <MessageItem key={msg.id} msg={msg} />)
 					) : null}
 				</div>
 			</CardContent>

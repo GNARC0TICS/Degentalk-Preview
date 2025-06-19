@@ -46,4 +46,4 @@ export const rarities = pgTable(
 );
 
 export type Rarity = typeof rarities.$inferSelect;
-export type InsertRarity = typeof rarities.$inferInsert; 
+export type InsertRarity = typeof rarities.$inferInsert;

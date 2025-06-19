@@ -49,7 +49,7 @@ export default defineConfig(async () => {
 		plugins,
 		define: {
 			// Make process.env.NODE_ENV available in client code, mapping from Vite's import.meta.env.MODE
-			'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'), // For build/dev consistency
+			'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development') // For build/dev consistency
 			// Alternatively, more directly for client code if it specifically needs NODE_ENV:
 			// 'process.env.NODE_ENV': JSON.stringify(mode), // where mode is 'development' or 'production'
 		},

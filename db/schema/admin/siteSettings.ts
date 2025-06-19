@@ -16,7 +16,7 @@ export const siteSettings = pgTable('site_settings', {
 	updatedAt: timestamp('updated_at')
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`),
-	updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }), // TODO: @syncSchema added column
+	updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }) // TODO: @syncSchema added column
 });
 
 export type SiteSetting = typeof siteSettings.$inferSelect;

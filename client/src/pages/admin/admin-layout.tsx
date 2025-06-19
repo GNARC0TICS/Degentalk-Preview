@@ -53,39 +53,63 @@ const adminLinks = [
 	{ href: '/admin/xp/levels', label: 'User Levels', icon: <BarChart3 className="h-4 w-4" /> },
 	{ href: '/admin/xp/badges', label: 'Badges', icon: <Trophy className="h-4 w-4" /> },
 	{ href: '/admin/xp/titles', label: 'Titles', icon: <BadgeIcon className="h-4 w-4" /> },
-	{ href: '/admin/clout/achievements', label: 'Clout Achievements', icon: <Trophy className="h-4 w-4" /> },
+	{
+		href: '/admin/clout/achievements',
+		label: 'Clout Achievements',
+		icon: <Trophy className="h-4 w-4" />
+	},
 	{ href: '/admin/clout/grants', label: 'Clout Grants', icon: <Sparkles className="h-4 w-4" /> },
 	{ href: '/admin/dgt-packages', label: 'DGT Packages', icon: <Package className="h-4 w-4" /> },
 	{ href: '/admin/emojis', label: 'Emojis', icon: <Smile className="h-4 w-4" /> },
 	{ href: '/admin/config/tags', label: 'Tag Config', icon: <TagIcon className="h-4 w-4" /> },
 	{ href: '/admin/config/xp', label: 'XP Config', icon: <Trophy className="h-4 w-4" /> },
 	{ href: '/admin/config/zones', label: 'Forum Zones', icon: <Globe className="h-4 w-4" /> },
-	{ href: '/admin/platform-settings', label: 'Platform Settings', icon: <Settings className="h-4 w-4" /> },
+	{
+		href: '/admin/platform-settings',
+		label: 'Platform Settings',
+		icon: <Settings className="h-4 w-4" />
+	},
 	{ href: '/admin/reports', label: 'Reports', icon: <Flag className="h-4 w-4" /> },
 	// { href: '/admin/user-groups', label: 'User Groups', icon: <Users2 className="h-4 w-4" /> }, // Deprecated
 	{ href: '/admin/announcements', label: 'Announcements', icon: <Megaphone className="h-4 w-4" /> },
-	{ href: '/admin/tip-rain-settings', label: 'Tip & Rain', icon: <CloudRain className="h-4 w-4" /> },
+	{
+		href: '/admin/tip-rain-settings',
+		label: 'Tip & Rain',
+		icon: <CloudRain className="h-4 w-4" />
+	},
 	{ href: '/admin/cooldowns', label: 'Cooldowns', icon: <Clock className="h-4 w-4" /> }
 ];
 
 if (import.meta.env.MODE === 'development') {
-	adminLinks.push({ href: '/admin/dev/seeding', label: 'Seeding', icon: <Database className="h-4 w-4" /> });
+	adminLinks.push({
+		href: '/admin/dev/seeding',
+		label: 'Seeding',
+		icon: <Database className="h-4 w-4" />
+	});
 }
 
 function AdminLayoutContent({ children }: AdminLayoutProps) {
-	const { toggleSidebar, openMobileDrawer, isMobileDrawerOpen, closeMobileDrawer, isCollapsed, setIsCollapsed } = useAdminSidebar();
+	const {
+		toggleSidebar,
+		openMobileDrawer,
+		isMobileDrawerOpen,
+		closeMobileDrawer,
+		isCollapsed,
+		setIsCollapsed
+	} = useAdminSidebar();
 	const isSmallScreen = useMediaQuery('(max-width: 640px)'); // sm breakpoint
-  const isMediumScreen = useMediaQuery('(max-width: 768px)'); // md breakpoint
+	const isMediumScreen = useMediaQuery('(max-width: 768px)'); // md breakpoint
 
-  // Effect to handle automatic collapsing on medium screens
-  useEffect(() => {
-    if (isMediumScreen && !isSmallScreen) { // Only on medium screens, not small (where drawer is used)
-      setIsCollapsed(true);
-    } else if (!isMediumScreen && !isSmallScreen) {
-      // Optionally, uncollapse on larger screens if it was auto-collapsed
-      // setIsCollapsed(false); // Or maintain user preference
-    }
-  }, [isMediumScreen, isSmallScreen, setIsCollapsed]);
+	// Effect to handle automatic collapsing on medium screens
+	useEffect(() => {
+		if (isMediumScreen && !isSmallScreen) {
+			// Only on medium screens, not small (where drawer is used)
+			setIsCollapsed(true);
+		} else if (!isMediumScreen && !isSmallScreen) {
+			// Optionally, uncollapse on larger screens if it was auto-collapsed
+			// setIsCollapsed(false); // Or maintain user preference
+		}
+	}, [isMediumScreen, isSmallScreen, setIsCollapsed]);
 
 	// Mocked admin permissions - in a real app, these would come from auth context
 	// const userPermissions = useMemo<AdminRoutePermission[]>(() => Object.values(AdminRoutePermission), []);
@@ -132,7 +156,10 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
 						</span>
 					</button>
 
-					<Link href="/" className="flex items-center text-sm text-admin-text-secondary hover:text-admin-text-primary">
+					<Link
+						href="/"
+						className="flex items-center text-sm text-admin-text-secondary hover:text-admin-text-primary"
+					>
 						<ExternalLink className="h-4 w-4 mr-1" />
 						<span className="hidden md:inline">View Site</span>
 					</Link>
@@ -142,15 +169,21 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
 			{/* Main layout with sidebar and content */}
 			<div className="flex flex-1 overflow-hidden">
 				{isSmallScreen ? (
-          <Sheet open={isMobileDrawerOpen} onOpenChange={(open) => open ? openMobileDrawer() : closeMobileDrawer()}>
-            <SheetContent side="left" className="p-0 w-64 bg-admin-surface border-r-admin-border-subtle">
-              <AdminSidebar links={adminLinks} collapsed={false} onLinkClick={closeMobileDrawer} />
-            </SheetContent>
-          </Sheet>
+					<Sheet
+						open={isMobileDrawerOpen}
+						onOpenChange={(open) => (open ? openMobileDrawer() : closeMobileDrawer())}
+					>
+						<SheetContent
+							side="left"
+							className="p-0 w-64 bg-admin-surface border-r-admin-border-subtle"
+						>
+							<AdminSidebar links={adminLinks} collapsed={false} onLinkClick={closeMobileDrawer} />
+						</SheetContent>
+					</Sheet>
 				) : (
-          <AdminSidebar links={adminLinks} collapsed={isCollapsed} />
-        )}
-				
+					<AdminSidebar links={adminLinks} collapsed={isCollapsed} />
+				)}
+
 				<main className="flex-1 overflow-auto bg-gradient-to-b from-admin-bg-surface to-admin-bg-page">
 					{children}
 				</main>
@@ -160,9 +193,9 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
 }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-  return (
-    <AdminSidebarProvider>
-      <AdminLayoutContent>{children}</AdminLayoutContent>
-    </AdminSidebarProvider>
-  )
+	return (
+		<AdminSidebarProvider>
+			<AdminLayoutContent>{children}</AdminLayoutContent>
+		</AdminSidebarProvider>
+	);
 }

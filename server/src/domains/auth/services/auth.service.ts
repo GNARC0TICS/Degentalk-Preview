@@ -90,7 +90,10 @@ export function createMockUser(
 	userId: number,
 	role: 'admin' | 'moderator' | 'user' = 'user'
 ): User {
-	logger.info('AuthService', `Creating mock ${role} user for ID ${userId} in development mode`, { userId, role });
+	logger.info('AuthService', `Creating mock ${role} user for ID ${userId} in development mode`, {
+		userId,
+		role
+	});
 
 	const mockUuid = uuidv4();
 

@@ -30,8 +30,8 @@ export function ModLayout({ children, title = 'Dashboard' }: ModLayoutProps) {
 
 		// Create breadcrumb items
 		return (
-            <BreadcrumbList>
-                <BreadcrumbItem>
+			<BreadcrumbList>
+				<BreadcrumbItem>
 					<BreadcrumbLink asChild>
 						<Link href="/mod" className="flex items-center">
 							<Home className="h-3 w-3 mr-1" />
@@ -39,7 +39,7 @@ export function ModLayout({ children, title = 'Dashboard' }: ModLayoutProps) {
 						</Link>
 					</BreadcrumbLink>
 				</BreadcrumbItem>
-                {pathSegments.slice(1).map((segment, index) => {
+				{pathSegments.slice(1).map((segment, index) => {
 					// Create the path up to this segment
 					const path = `/${pathSegments.slice(0, index + 2).join('/')}`;
 					// Format segment name (capitalize first letter, replace hyphens with spaces)
@@ -66,8 +66,8 @@ export function ModLayout({ children, title = 'Dashboard' }: ModLayoutProps) {
 						</Fragment>
 					);
 				})}
-            </BreadcrumbList>
-        );
+			</BreadcrumbList>
+		);
 	};
 
 	return (

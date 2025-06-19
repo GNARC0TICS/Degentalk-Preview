@@ -9,16 +9,11 @@ import type { SlotId } from '@/stores/useLayoutStore';
  * 'profile', etc., in the future.
  */
 export const pageSlotMap: Record<'home' | 'forum' | 'profile', SlotId[]> = {
-  home: [
-    'sidebar/left',
-    'main/top',
-    'main/bottom',
-    'sidebar/right'
-  ],
-  forum: [
-    // Future implementation
-  ],
-  profile: [
-    // Future implementation
-  ],
+	home: ['sidebar/left', 'main/top', 'main/bottom', 'sidebar/right'],
+	forum: [
+		// Future implementation
+	],
+	profile: [
+		// Future implementation
+	]
 };

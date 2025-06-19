@@ -34,10 +34,12 @@ export const vaults = pgTable(
 		unlockTime: timestamp('unlock_time'),
 		status: vaultStatusEnum('status').notNull().default('locked'),
 		unlockedAt: timestamp('unlocked_at'),
-		lockTransactionId: integer('lock_transaction_id').references(() => transactions.id, { // Kept as integer
+		lockTransactionId: integer('lock_transaction_id').references(() => transactions.id, {
+			// Kept as integer
 			onDelete: 'set null'
 		}),
-		unlockTransactionId: integer('unlock_transaction_id').references(() => transactions.id, { // Kept as integer
+		unlockTransactionId: integer('unlock_transaction_id').references(() => transactions.id, {
+			// Kept as integer
 			onDelete: 'set null'
 		}),
 		blockchainTxId: varchar('blockchain_tx_id', { length: 255 }),

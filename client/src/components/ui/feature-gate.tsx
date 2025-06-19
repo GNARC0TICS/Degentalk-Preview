@@ -86,7 +86,9 @@ export const FeatureGate: React.FC<FeatureGateProps> = ({
 							<h3 className="text-xl font-bold mb-2">Login Required</h3>
 							<p className="text-zinc-400 mb-4">You need to be logged in to access this feature.</p>
 							<Button
-								onClick={() => navigate(`/login?redirect=${redirectLoginTo || window.location.pathname}`)}
+								onClick={() =>
+									navigate(`/login?redirect=${redirectLoginTo || window.location.pathname}`)
+								}
 								className="bg-gradient-to-r from-amber-600 to-amber-500"
 							>
 								Login to Continue

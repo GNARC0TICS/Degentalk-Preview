@@ -7,7 +7,10 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { forumApi } from '../services/forumApi';
-import type { NestedForumCategory, ThreadSearchParams as OriginalThreadSearchParams } from '../services/forumApi';
+import type {
+	NestedForumCategory,
+	ThreadSearchParams as OriginalThreadSearchParams
+} from '../services/forumApi';
 import { toast } from 'sonner';
 import type { Tag } from '@/types/forum';
 import type { ThreadPrefix, ForumCategoryWithStats, ThreadWithUser } from '@db_types/forum.types';
@@ -48,7 +51,7 @@ export const useCategoriesWithStats = () => {
 	return useQuery({
 		queryKey: ['/api/categories', 'with-stats'],
 		queryFn: forumApi.getCategories,
-		staleTime: 60 * 1000,
+		staleTime: 60 * 1000
 	});
 };
 
@@ -132,11 +135,13 @@ export const useCreateThread = () => {
 		mutationFn: (data: CreateThreadParams) => forumApi.createThread(data), // forumApi.createThread needs to accept this new param type
 		onSuccess: async (createdThreadData: ThreadWithUser, variables) => {
 			// Invalidate queries that list threads, potentially per-forum if keys are specific
-			queryClient.invalidateQueries({ queryKey: ['/api/threads', { forumSlug: variables.forumSlug }] });
+			queryClient.invalidateQueries({
+				queryKey: ['/api/threads', { forumSlug: variables.forumSlug }]
+			});
 			queryClient.invalidateQueries({ queryKey: ['/api/threads'] }); // General invalidation
-			
+
 			// Invalidate categories/forum structure if thread counts are displayed there
-			// This might need to be more specific if using forumMap on client, 
+			// This might need to be more specific if using forumMap on client,
 			// but if any part relies on API for counts, invalidate it.
 			queryClient.invalidateQueries({ queryKey: ['forumCategoriesTree'] });
 			queryClient.invalidateQueries({ queryKey: ['/api/categories', 'with-stats'] });
@@ -547,7 +552,7 @@ export const usePrefixes = (params?: { categoryId?: number }) => {
 		queryKey,
 		queryFn: () => forumApi.getPrefixes(categoryId),
 		staleTime: 1000 * 60 * 5,
-		enabled: typeof categoryId === 'number',
+		enabled: typeof categoryId === 'number'
 	});
 
 	// Ensure fresh data if category changes
