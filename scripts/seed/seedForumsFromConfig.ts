@@ -10,6 +10,87 @@ import { parseArgs } from 'node:util';
 // Define a type for the transaction client that Drizzle uses
 type TransactionClient = typeof db | (typeof db & { transaction: (tx: unknown) => Promise<void> }); // More specific transaction type
 
+// Generate forum-specific welcome content
+function getWelcomeContent(forumSlug: string, forumName: string): { title: string; content: string } {
+  const welcomeMessages: Record<string, { title: string; content: string }> = {
+    'live-trade-reacts': {
+      title: '🚀 Welcome to Live Trade Reacts!',
+      content: `Welcome to the most intense trading forum on DegenTalk! 
+
+This is where we share our live reactions to market moves, celebrate our wins, and commiserate our losses. 
+
+**Guidelines:**
+• Share your real-time trading thoughts and reactions
+• Use prefixes like [LIVE], [TRADE], [🔺UP], [🧂SALT], [🪦REKT]
+• Screenshots of positions are encouraged (blur sensitive info)
+• No financial advice - just raw reactions!
+
+Let's make some money! 💎🙌`
+    },
+    'shill-zone': {
+      title: '💎 Welcome to the Shill Zone!',
+      content: `Welcome to the official shill headquarters! 
+
+This is where you can promote your favorite gems, share moonshot predictions, and pump your bags to fellow degens.
+
+**Rules:**
+• Use required prefixes: [SHILL], [GEM], [MOON], [PUMP]
+• DYOR always applies - we're just having fun
+• No rugpull coins or obvious scams
+• Back up your shills with reasoning
+
+Ready to find the next 100x? Let's go! 🚀`
+    },
+    'alpha-channel': {
+      title: '🎯 Welcome to Alpha Channel',
+      content: `Welcome to the exclusive Alpha Channel! 
+
+This is where premium alpha drops and insider intel are shared. Access is restricted to level 10+ members only.
+
+**What you'll find here:**
+• Confirmed alpha leaks and insider information
+• Early project announcements
+• Whale movement analysis
+• Institutional adoption news
+
+Remember: Alpha shared here is time-sensitive. Act fast! ⚡`
+    },
+    'strategy-scripts': {
+      title: '🎲 Welcome to Strategy & Scripts!',
+      content: `Welcome to the gambling strategy hub!
+
+Share your betting strategies, automation scripts, and mathematical analysis for casino games.
+
+**Topics include:**
+• Dice and Limbo strategies
+• Bankroll management systems
+• Script development and sharing
+• RTP analysis and discussions
+
+Gamble responsibly and may the odds be in your favor! 🍀`
+    },
+    'announcements': {
+      title: '📢 Official DegenTalk Announcements',
+      content: `Welcome to the official announcements forum.
+
+This forum is reserved for official platform updates, feature releases, and important community notices from the DegenTalk team.
+
+All posts here are from verified staff members. Stay tuned for the latest updates! 
+
+For discussions about announcements, please use the appropriate discussion forums.`
+    }
+  };
+
+  return welcomeMessages[forumSlug] || {
+    title: `Welcome to ${forumName}!`,
+    content: `Welcome to ${forumName}!
+
+This forum is part of the DegenTalk community. Feel free to start discussions, ask questions, and engage with fellow community members.
+
+Please follow the community guidelines and enjoy your time here! 🎉`
+  };
+}
+
 interface ForumCategoryPluginData {
   rules?: ConfigForumRules;
   bannerImage?: string | null;
@@ -115,12 +196,26 @@ async function seedForumLevel(
         .limit(1);
       if (existingThreads.length === 0) {
         const threadSlug = `${forumConfig.slug}-welcome`;
-        await tx.insert(threads).values({
-          title: `Welcome to ${forumConfig.name}`,
+        const welcomeContent = getWelcomeContent(forumConfig.slug, forumConfig.name);
+        
+        const [welcomeThread] = await tx.insert(threads).values({
+          title: welcomeContent.title,
           slug: threadSlug,
           categoryId: newForumDbId,
           userId: defaultUserId,
-        }).onConflictDoNothing();
+          isSticky: true
+        }).onConflictDoNothing().returning();
+
+        // Add a welcome post
+        if (welcomeThread) {
+          await tx.insert(posts).values({
+            threadId: welcomeThread.id,
+            userId: defaultUserId,
+            content: welcomeContent.content,
+            isFirstPost: true
+          }).onConflictDoNothing();
+        }
+        
         console.log(chalk.gray(`    └─ Added welcome thread to ${forumConfig.slug}`));
       }
     }

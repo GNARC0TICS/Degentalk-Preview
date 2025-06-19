@@ -16,7 +16,7 @@ import ForumsPage from './pages/forums';
 import ForumBySlugPage from './pages/forums/[forum_slug].tsx';
 import ForumSearchPage from './pages/forums/search.tsx'; // Import the new search page
 import ZoneBySlugPage from './pages/zones/[slug].tsx'; // Added import for Zone page
-import ThreadPage from './pages/threads/[thread_slug].tsx';
+import ThreadPage from './pages/threads/BBCodeThreadPage.tsx';
 import CreateThreadPage from './pages/threads/create.tsx';
 import ShopPage from './pages/shop';
 import NotFoundPage from './pages/not-found';

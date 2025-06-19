@@ -13,6 +13,7 @@ import {
 } from '@schema';
 import { eq, sql, lte, desc, and, isNull } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
+import { getLevelForXp, getXpForLevel } from '@shared/economy/reward-calculator';
 
 /**
  * XP Action types used in economySettings

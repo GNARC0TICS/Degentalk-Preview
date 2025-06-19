@@ -15,6 +15,9 @@ import { LevelUpEvent, XpGainEvent, XpLossEvent } from './xp.events';
 import { xpActionLogs, xpActionLimits } from './xp-actions-schema';
 // Import the centralized event handlers
 import { handleXpAward, handleXpLoss, handleLevelUp } from './events/xp.events';
+import { economyConfig } from '@shared/economy/economy.config';
+
+const { MAX_XP_PER_DAY, MAX_TIP_XP_PER_DAY } = economyConfig;
 
 export class XpService {
 	/**

@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './styles/animations.css';
+
 @layer base {
 	:root {
 		--background: 0 0% 0%;
@@ -605,5 +607,3 @@ button {
 	opacity: 0;
 	transform: scale(0);
 }
-
-@import './styles/animations.css';

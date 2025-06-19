@@ -53,6 +53,9 @@ import {
 	AccordionContent
 } from '@/components/ui/accordion';
 import { Wide } from '@/layout/primitives';
+import { QuickStats } from '@/components/forum/QuickStats';
+import { HotTopics } from '@/components/forum/HotTopics';
+import { RecentActivity } from '@/components/forum/RecentActivity';
 
 const CATEGORY_COLORS = [
 	// This can remain for generic category styling if no theme is matched
@@ -416,9 +419,32 @@ const ForumPage = () => {
 					{/* Sidebar */}
 					<aside className="lg:col-span-3 space-y-6">
 						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.3}>
-							<ActiveMembersWidget users={activeUsers || []} isLoading={activeUsersLoading} />
+							<QuickStats 
+								totalThreads={allZones.reduce((sum, zone) => sum + (zone.threadCount || 0), 0)}
+								totalPosts={allZones.reduce((sum, zone) => sum + (zone.postCount || 0), 0)}
+								onlineUsers={activeUsers?.length || 0}
+								todaysActivity={42}
+								isLoading={structureLoading || activeUsersLoading}
+							/>
+						</motion.div>
+						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.35}>
+							<HotTopics 
+								threads={[]}
+								isLoading={structureLoading}
+								limit={5}
+							/>
 						</motion.div>
 						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.4}>
+							<RecentActivity 
+								activities={[]}
+								isLoading={structureLoading}
+								limit={8}
+							/>
+						</motion.div>
+						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.45}>
+							<ActiveMembersWidget users={activeUsers || []} isLoading={activeUsersLoading} />
+						</motion.div>
+						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.5}>
 							<ForumGuidelines />
 						</motion.div>
 					</aside>

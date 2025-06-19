@@ -1,6 +1,6 @@
 import React from 'react';
-import { xpConfig, XPConfig } from './xpConfig';
 import XPBarTrack from './XPBarTrack';
+import { xpTracks } from './tracks';
 // import LevelUpModal from './LevelUpModal'; // Stub for future
 
 export type UserXP = {
@@ -9,14 +9,13 @@ export type UserXP = {
 
 export type XPBarsContainerProps = {
 	userXP: UserXP;
-	onLevelUp?: (trackId: string, newLevel: number) => void;
 };
 
-const XPBarsContainer: React.FC<XPBarsContainerProps> = ({ userXP, onLevelUp }) => {
+const XPBarsContainer: React.FC<XPBarsContainerProps> = ({ userXP }) => {
 	return (
 		<div className="xp-bars-container flex flex-col gap-4 w-full max-w-xl mx-auto">
-			{xpConfig.tracks.map((track) => (
-				<XPBarTrack key={track.id} track={track} xp={userXP[track.id] || 0} onLevelUp={onLevelUp} />
+			{xpTracks.map((track) => (
+				<XPBarTrack key={track.id} track={track} xp={userXP[track.id] || 0} />
 			))}
 			{/* <LevelUpOverlay /> */}
 		</div>
