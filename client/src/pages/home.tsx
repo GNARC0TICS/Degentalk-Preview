@@ -13,13 +13,8 @@ import { HeroSection } from '@/components/layout/hero-section';
 import { AnnouncementTicker } from '@/components/layout/announcement-ticker';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { LayoutRenderer } from '@/components/layout/LayoutRenderer';
-import {
-	PositionedShoutbox
-} from '@/components/shoutbox/positioned-shoutbox';
-import { useShoutbox } from '@/contexts/shoutbox-context';
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
-import { WidgetFrame } from '@/components/layout/WidgetFrame';
-import { useLayoutStore } from '@/stores/useLayoutStore';
+import { SlotRenderer } from '@/components/layout/SlotRenderer';
 
 // Import UI components
 import { Skeleton } from '@/components/ui/skeleton';
@@ -30,9 +25,6 @@ import { ArrowRight } from 'lucide-react';
 import { AlertCircle } from 'lucide-react';
 
 function HomePage() {
-	const { position } = useShoutbox();
-	const order = useLayoutStore(s => s.order);
-
 	// Get forum structure from context
 	const { 
 		zones: mergedZones, 
@@ -41,12 +33,6 @@ function HomePage() {
 	} = useForumStructure();
 
 	const primaryZonesFromContext = mergedZones.filter((zone) => zone.isPrimary === true);
-
-	// Component to handle floating shoutbox position
-	const FloatingShoutboxPositioner = () => {
-		if (position !== 'floating') return null;
-		return <PositionedShoutbox />;
-	};
 
 	const zoneCardDataForGrid = primaryZonesFromContext.map((zone: MergedZone) => ({
 		id: zone.slug,
@@ -74,16 +60,14 @@ function HomePage() {
 		<div className="min-h-screen bg-black text-white flex flex-col">
 			<HeroSection />
 			<AnnouncementTicker />
-			<FloatingShoutboxPositioner />
+			{/* Shoutbox now fully managed by the dynamic layout system */}
 
 			<main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 md:py-12 flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8">
 				
 				{/* Main Content Area */}
 				<div className="w-full lg:w-1/2 xl:w-1/2 space-y-6 order-2">
 					{/* MAIN TOP WIDGETS */}
-					{order['main/top']?.map(instanceId => (
-						<WidgetFrame key={instanceId} instanceId={instanceId} />
-					))}
+					<SlotRenderer slotId="main/top" />
 
 					<section className="mb-16">
 						<div className="flex items-center justify-between mb-8">
@@ -114,15 +98,13 @@ function HomePage() {
 						) : (
 							<CanonicalZoneGrid
 								zones={zoneCardDataForGrid}
-								className="lg:grid-cols-2 xl:grid-cols-3"
+								className="sm:grid-cols-2 lg:grid-cols-2"
 							/>
 						)}
 					</section>
 
 					{/* MAIN BOTTOM WIDGETS */}
-					{order['main/bottom']?.map(instanceId => (
-						<WidgetFrame key={instanceId} instanceId={instanceId} />
-					))}
+					<SlotRenderer slotId="main/bottom" />
 				</div>
 
                 <LayoutRenderer page="home" />

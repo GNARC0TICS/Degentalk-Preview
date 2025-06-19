@@ -816,10 +816,22 @@ export const forumService = {
 	async getThreadsInForum(slug: string) {
 		// Will throw if invalid or parent
 		this.ensureValidLeafForum(slug);
+
+		// Resolve the corresponding category ID in the database
+		const [categoryRow] = await db
+			.select({ id: forumCategories.id })
+			.from(forumCategories)
+			.where(eq(forumCategories.slug, slug))
+			.limit(1);
+
+		if (!categoryRow) {
+			throw new Error(`Forum with slug '${slug}' not found in database after validation. Did you run sync:forums?`);
+		}
+
 		return db
 			.select()
 			.from(threads)
-			.where(eq(threads.forumSlug, slug))
+			.where(eq(threads.categoryId, categoryRow.id))
 			.orderBy(desc(threads.createdAt));
 	}
 };

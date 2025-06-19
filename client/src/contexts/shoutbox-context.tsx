@@ -9,7 +9,8 @@ export type ShoutboxPosition =
 	| 'sidebar-bottom'
 	| 'main-top'
 	| 'main-bottom'
-	| 'floating';
+	| 'floating'
+	| 'sticky';
 export type ShoutboxEffectivePosition = ShoutboxPosition | 'mobile-top' | 'mobile-bottom';
 export type ShoutboxExpansionLevel = 'collapsed' | 'preview' | 'expanded';
 
@@ -132,7 +133,8 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 			'sidebar-bottom': 'Sidebar Bottom',
 			'main-top': 'Main Top',
 			'main-bottom': 'Main Bottom',
-			floating: 'Floating Mode'
+			floating: 'Floating Mode',
+			sticky: 'Sticky'
 		};
 		return labels[pos] || 'Custom';
 	};
@@ -215,7 +217,7 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 
 	// Helper to validate position
 	function isValidPosition(pos: string): pos is ShoutboxPosition {
-		return ['sidebar-top', 'sidebar-bottom', 'main-top', 'main-bottom', 'floating'].includes(pos);
+		return ['sidebar-top', 'sidebar-bottom', 'main-top', 'main-bottom', 'floating', 'sticky'].includes(pos);
 	}
 
 	// Load expansion level from localStorage on initial render
@@ -255,8 +257,8 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 
 	// Calculate effective position based on mobile vs desktop
 	const getEffectivePosition = (): ShoutboxEffectivePosition => {
-		// If not mobile or position is 'floating', return the actual position
-		if (!isMobile || position === 'floating') {
+		// If not mobile or position is 'floating' or 'sticky', return the actual position
+		if (!isMobile || position === 'floating' || position === 'sticky') {
 			return position;
 		}
 
@@ -267,6 +269,8 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 				return 'mobile-top';
 			case 'sidebar-bottom':
 			case 'main-bottom':
+				return 'mobile-bottom';
+			case 'sticky':
 				return 'mobile-bottom';
 			default:
 				return position;
@@ -282,7 +286,8 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 				'sidebar-bottom': 'Footer Area',
 				'main-top': 'Content Top',
 				'main-bottom': 'Content Bottom',
-				floating: 'Floating Bubble'
+				floating: 'Floating Bubble',
+				sticky: 'Sticky'
 			};
 			return mobileLabels[pos] || 'Custom';
 		} else {

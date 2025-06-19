@@ -45,7 +45,10 @@ import {
 	Pin,
 	PinOff,
 	MinusCircle,
-	Lock
+	Minus,
+	Plus,
+	Maximize2,
+	Lock as LockIcon
 } from 'lucide-react';
 
 // Types for shoutbox messages
@@ -108,7 +111,11 @@ const FALLBACK_EMOJI_LIST = [
 	'✨'
 ];
 
-export default function ShoutboxWidget() {
+interface ShoutboxWidgetProps {
+	instanceId?: string;
+}
+
+export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 	const [message, setMessage] = useState<string>('');
 	const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
 	const [, setEmojiCategory] = useState<string>('all');
@@ -287,7 +294,11 @@ export default function ShoutboxWidget() {
 	};
 
 	const MessageItem: React.FC<{ msg: ShoutboxMessage }> = ({ msg }) => {
-		const identity = useIdentityDisplay(msg.user);
+		const identity = useIdentityDisplay({
+			id: String(msg.user.id),
+			username: msg.user.username,
+			level: msg.user.level,
+		});
 		const messageTime = formatMessageTime(msg.createdAt);
 
 		return (
@@ -389,12 +400,14 @@ export default function ShoutboxWidget() {
 						: 'h-[200px]'
 			}`}
 		>
-			<CardHeader className="pb-2 flex flex-row items-center justify-between">
+			<CardHeader
+				className="pb-2 space-y-2 sm:space-y-0 flex flex-col sm:flex-row sm:items-center sm:justify-between"
+			>
 				<CardTitle className="text-lg flex items-center">
 					<MessageSquare className="h-5 w-5 text-emerald-500 mr-2" />
 					Shoutbox
 				</CardTitle>
-				<div className="flex space-x-2">
+				<div className="flex items-center space-x-1">
 					{/* Hide button for floating view (both mobile and desktop) */}
 					{position === 'floating' && (
 						<Button
@@ -411,12 +424,15 @@ export default function ShoutboxWidget() {
 						size="sm"
 						className="text-zinc-400 hover:text-emerald-400 p-1 h-auto"
 						onClick={toggleExpanded}
+						title={expansionLevel === 'expanded' ? 'Collapse' : expansionLevel === 'collapsed' ? 'Expand' : 'Full View'}
 					>
-						{expansionLevel === 'expanded'
-							? 'Collapse'
-							: expansionLevel === 'collapsed'
-								? 'Expand'
-								: 'Full View'}
+						{expansionLevel === 'expanded' ? (
+							<Minus className="h-4 w-4" />
+						) : expansionLevel === 'collapsed' ? (
+							<Plus className="h-4 w-4" />
+						) : (
+							<Maximize2 className="h-4 w-4" />
+						)}
 					</Button>
 					<Button
 						variant="ghost"
@@ -427,7 +443,7 @@ export default function ShoutboxWidget() {
 					>
 						<RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
 					</Button>
-					<ShoutboxPositionSelector />
+					<ShoutboxPositionSelector instanceId={instanceId} />
 				</div>
 			</CardHeader>
 
@@ -610,7 +626,7 @@ export default function ShoutboxWidget() {
 																</Button>
 																{emoji.locked && (
 																	<div className="absolute top-0 right-0 bg-zinc-900 rounded-full">
-																		<Lock className="h-3 w-3 text-zinc-400" />
+																		<LockIcon className="h-3 w-3 text-zinc-400" />
 																	</div>
 																)}
 															</div>
@@ -689,7 +705,7 @@ export default function ShoutboxWidget() {
 																		</Button>
 																		{emoji.locked && (
 																			<div className="absolute top-0 right-0 bg-zinc-900 rounded-full">
-																				<Lock className="h-3 w-3 text-zinc-400" />
+																				<LockIcon className="h-3 w-3 text-zinc-400" />
 																			</div>
 																		)}
 																	</div>
@@ -766,7 +782,7 @@ export default function ShoutboxWidget() {
 				<DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-200 max-w-md">
 					<DialogHeader>
 						<DialogTitle className="text-lg font-bold flex items-center">
-							<Lock className="h-5 w-5 mr-2 text-amber-500" />
+							<LockIcon className="h-5 w-5 mr-2 text-amber-500" />
 							Locked Emoji
 						</DialogTitle>
 						<DialogDescription className="text-zinc-400">
@@ -785,7 +801,7 @@ export default function ShoutboxWidget() {
 									/>
 								</div>
 								<div className="absolute -top-2 -right-2 bg-zinc-900 rounded-full p-1 border border-zinc-700">
-									<Lock className="h-5 w-5 text-amber-500" />
+									<LockIcon className="h-5 w-5 text-amber-500" />
 								</div>
 							</div>
 

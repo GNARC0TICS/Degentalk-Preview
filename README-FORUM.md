@@ -56,11 +56,12 @@ Important notes:
 | `casino-floor`  | The Casino Floor   | Trading, gambling & high-stakes plays.        |
 | `the-archive`   | The Archive        | Historical records & past glories.            |
 
-Every primary zone owns **0-n categories** (currently 0) or directly hosts
-forums. Each carries immutable theming (colour, icon, banners, landing
-  component) defined in `THEME_PRESETS` inside
-  `client/src/config/forumMap.config.ts`.
-  Primary Zones are designed to be feature-rich, staff-driven areas, often incorporating custom UI components, unique gamification rules (like special XP challenges or badges), and enhanced content curation capabilities. These extended features are typically configured via the `pluginData` field for the respective zone in `forumMap.config.ts` and utilized by both frontend and backend services.
+Every primary zone directly hosts **0-n forums**. Categories are no longer a
+required middle layer; if you need extra nesting, create a **sub-forum**
+under the parent forum instead. Each zone carries immutable theming (colour,
+icon, banners, landing component) defined in `THEME_PRESETS` inside
+`client/src/config/forumMap.config.ts`.
+Primary Zones are designed to be feature-rich, staff-driven areas, often incorporating custom UI components, unique gamification rules (like special XP challenges or badges), and enhanced content curation capabilities. These extended features are typically configured via the `pluginData` field for the respective zone in `forumMap.config.ts` and utilized by both frontend and backend services.
 
 ### 2.2 General Zones
 
@@ -114,11 +115,11 @@ Result:
 1. **Home (`/`)** shows:
    - **Hero** & **Announcement Ticker**.
    - **Primary Zone Grid** (`CanonicalZoneGrid`) → large branded cards.
-   - **General Categories** listed just below if present.
+   - **General Zones** listed just below if present.
    - **Hot Threads**, **Leaderboard**, **Active Users** widgets.
-2. Clicking a **Zone card** goes to `/zones/[zone]` → shows child categories or
-   forums with full theme applied.
-3. Clicking a **General Category** goes to `/zones/[categorySlug]` (same page
+2. Clicking a **Zone card** goes to `/zones/[zone]` → shows its child forums
+    (and sub-forums, if any) with full theme applied.
+3. Clicking a **General Zone** goes to `/zones/[categorySlug]` (same page
    template, different breadcrumb colour).
 4. Finally a **Forum** click navigates to `/forums/[forumSlug]`, the only place
    threads can be created.
@@ -126,7 +127,7 @@ Result:
 ### 4.2 Returning / Power Users
 
 • `HierarchicalZoneNav` in the sidebar persists expanded state per user via
-  `localStorage` (key: `dt-expanded-general-categories`).  
+  `localStorage` (key: `dt-expanded-general-zones`).  
 • Deep links (`/threads/[threadSlug]`) hydrate breadcrumbs using
   `ForumStructureContext` so navigation never breaks even on page refresh.
 
@@ -207,8 +208,8 @@ Business logic is primarily attached at the Forum (or SubForum) level. While the
 
 • **Add Zone**   → config `zones.push(...)` → run sync script → add banner
   image in `public/banners/`.  
-• **Add Category** → zones[x].categories.push(...) (or push to top-level array
-  for General Category).  
+• **Add General Zone** → `zones.push(...)` with `type: 'general'` & run the
+  sync script.  
 • **Lock Forum**  → set `rules.allowPosting = false`.
 • **VIP-only Forum** → `accessLevel: 'level_10+'` or `'mod'` etc.
 • **Rename Slug** → _don't_ – create a new item & migrate threads via script
@@ -218,7 +219,7 @@ Business logic is primarily attached at the Forum (or SubForum) level. While the
 
 ## 7. Edge-Cases & Gotchas ⚠️
 
-1. **Zone without categories** → valid, but it still needs ≥1 forum or the page
+1. **Zone without forums** → valid, but it still needs ≥1 forum or the page
    looks empty (CI warns).
 2. **Forum orphaned from config** → sync script marks it `is_hidden = true`
    instead of deleting (safety net).
@@ -281,102 +282,4 @@ npm run db:push   # applies to local dev DB
 | `client/src/features/forum` | All data-heavy logic (hooks/services/components) specific to forum. |
 | `client/src/components/forum` | Re-usable, presentational UI atoms/molecules (ZoneCard, ThreadCard…). |
 | `client/src/contexts` | `ForumStructureContext`, `ForumThemeProvider`, global state. |
-| `client/src/pages` | Next.js page routes (`/forums/[slug].tsx`, `/zones/[slug].tsx`). |
-
-### 10.2 Data Flow
-```mermaid
-graph TD;
-  subgraph "Data Sources"
-    A1["/api/forum/structure (Backend API)"]
-    A2["forumMap.config.ts (Static Fallback)"]
-  end
-
-  subgraph "Client-Side Context"
-    B[ForumStructureContext]
-  end
-
-  subgraph "Navigation Components"
-    C[HierarchicalZoneNav]
-    D[CanonicalZoneGrid]
-  end
-
-  subgraph "Content Display"
-    E["forumApi.ts (React Query)"]
-    F[ReactQueryCache]
-    G[ThreadList]
-    H[ThreadCard]
-    I[ThreadPage]
-    J[PostList]
-    K[PostCard]
-  end
-
-  A1 --> B
-  A2 -.-> B
-  B --> C
-  B --> D
-  E --> F
-  F --> G
-  G --> H
-  H --> I
-  I --> J
-  J --> K
-```
-*Note: `ForumStructureContext` primarily fetches from `/api/forum/structure`. `forumMap.config.ts` is used as a fallback if the API call fails or during initial static rendering.*
-
-### 10.3 State & Caching
-• **React Query** caches remote calls (`forumApi.ts`).  
-• **Context** caches the relatively static structure JSON (revalidated on focus).
-
-### 10.4 Styling & Theming
-• Tailwind with CSS variables injected by `ForumThemeProvider`.  
-• Zone accent colour controls buttons, progress bars, link hovers within its page via `[data-zone]` attribute.
-
----
-
-## 11. Deprecation & Dead Code Plan 🧹
-
-1. **Run Audit:** `npm run refactor:find-dead` (script scans for unreferenced TS/TSX & styles using `ts-prune` + custom logic).
-2. **Analyse Report:** Results dumped to `_audit/dead-code-report.json`.
-3. **Patch or Purge:**
-   - _Patch imports_ if the file is still relevant (often renamed after refactor).
-   - _Delete_ if truly dead → follow up with barrel-export / index cleanup.
-4. **Track in CLEANUP_SUMMARY.md:** Log each deletion with reason & PR link for posterity.
-5. **CI Enforcement:** A GitHub action blocks merge if `dead-code-report.json` grows >0 new lines.
-
-> **Next step:** Trigger the audit now; expect a list of duplicate `AnnouncementCard` variants and legacy `/client/src/features/forum/old/*` components to purge.
-
----
-
-+## 12. Thread Creation Implementation Details
-+
-+### 12.1 Database Schema
-+Threads are created in the `threads` table with a foreign key `categoryId` that references `forum_categories.id` where `type = 'forum'`.
-+
-+### 12.2 Frontend Implementation
-+The `CreateThreadForm` component:
-+- Uses `useForumStructure()` hook to get forum data with database IDs
-+- Maps forum slugs to IDs when creating threads
-+- Sends `categoryId` (numeric ID) in the API payload
-+- Validates forum permissions (locked, minXp requirements)
-+
-+### 12.3 API Endpoint
-+`POST /api/forum/threads` expects:
-+```json
-+{
-+  "title": "Thread Title",
-+  "categoryId": 123,  // Numeric ID from forum_categories table
-+  "content": "<p>HTML content</p>",
-+  "prefixId": 1,      // Optional
-+  "tagNames": ["tag1", "tag2"],  // Optional
-+  "editorState": {}   // Optional editor state
-+}
-+```
-+
-+### 12.4 Common Issues
-+- **"Forum not found"** - Ensure categoryId exists and has `type = 'forum'`
-+- **403 Locked** - Forum has `isLocked = true` and user isn't mod/admin
-+- **Missing IDs** - Forums from static config may have ID = -1 until synced to DB
-+
-+---
-
-_End of canonical guide – hack responsibly._
+| `client/src/pages` | Next.js page routes (`/forums/[slug].tsx`, `/zones/[slug].tsx`

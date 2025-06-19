@@ -27,7 +27,9 @@ const PluginDataSchema = z
   .object({
     bannerImage: z.string().nullish(),
     configZoneType: z.enum(['primary', 'general']).nullish(),
-    features: z.array(z.string()).optional(),
+    features: z
+      .union([z.array(z.string()), z.record(z.unknown())])
+      .optional(),
     customComponents: z.array(z.string()).optional(),
     staffOnly: z.boolean().optional(),
     xpChallenges: z
@@ -64,21 +66,32 @@ const ApiEntitySchema = z.object({
   name: z.string().min(1),
   description: z.string().nullish(),
   parentId: z.number().nullish(),
-  type: z.enum(['zone', 'forum']),
-  position: z.number().default(0),
+  type: z.enum(['zone', 'forum', 'category']),
+  position: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()),
   isVip: z.boolean().default(false),
   isLocked: z.boolean().default(false),
   isHidden: z.boolean().default(false),
-  minXp: z.number().default(0),
+  minXp: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()),
   minGroupIdRequired: z.number().nullish(),
   color: z.string().nullish(),
   icon: z.string().nullish(),
   colorTheme: z.string().nullish(),
   tippingEnabled: z.boolean().default(false),
-  xpMultiplier: z.number().default(1),
-  threadCount: z.number().default(0),
-  postCount: z.number().default(0),
-  pluginData: PluginDataSchema.nullish(),
+  xpMultiplier: z.preprocess((v) => (v === null || v === undefined ? 1 : v), z.number()),
+  threadCount: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()),
+  postCount: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()),
+  pluginData: z
+    .preprocess((v) => {
+      if (typeof v === 'string') {
+        try {
+          return JSON.parse(v as string);
+        } catch {
+          return {};
+        }
+      }
+      return v;
+    }, PluginDataSchema)
+    .nullish(),
   createdAt: z.string().datetime().optional(),
   updatedAt: z.string().datetime().optional(),
 });

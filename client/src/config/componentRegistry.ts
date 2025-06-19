@@ -9,7 +9,7 @@ import React from 'react';
  */
 export const componentRegistry = {
   profileCard: () => import('@/components/profile/ProfileCard').then(module => ({ default: module.default })),
-  shoutbox: () => import('@/components/shoutbox/shoutbox-widget').then(module => ({ default: module.default })),
+  shoutbox: () => import('@/components/shoutbox/positioned-shoutbox').then(module => ({ default: module.PositionedShoutbox })),
   walletSummary: () => import('@/components/sidebar/wallet-summary-widget').then(module => ({ default: module.default })),
   dailyTasks: () => import('@/components/dashboard/DailyTasksWidget').then(module => ({ default: module.default })),
   hotThreads: () => import('@/features/forum/components/HotThreads').then(module => ({ default: module.default })),

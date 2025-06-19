@@ -12,7 +12,12 @@ import { MessageSquare } from 'lucide-react';
  * Uses the position from ShoutboxContext to determine how to position and style the shoutbox
  * Includes smooth transitions between positions and responsive behavior
  */
-export function PositionedShoutbox() {
+
+interface PositionedShoutboxProps {
+	instanceId?: string;
+}
+
+export function PositionedShoutbox({ instanceId }: PositionedShoutboxProps) {
 	const { effectivePosition, expansionLevel, updateExpansionLevel, isMobile, isLoading } =
 		useShoutbox();
 
@@ -78,6 +83,9 @@ export function PositionedShoutbox() {
 				positionStyles =
 					'fixed bottom-4 right-4 w-[calc(100%-32px)] md:w-96 z-50 shadow-lg bg-zinc-900 border border-zinc-800 ';
 				break;
+			case 'sticky':
+				positionStyles = 'sticky bottom-4 w-full z-40 ';
+				break;
 			default:
 				positionStyles = 'mb-4 ';
 		}
@@ -128,8 +136,12 @@ export function PositionedShoutbox() {
 
 		// Normal shoutbox display
 		return (
-			<div className={getContainerStyle()} key={`shoutbox-${activePosition}`}>
-				<ShoutboxWidget />
+			<div
+				className={getContainerStyle()}
+				key={`shoutbox-${activePosition}`}
+				style={activePosition === 'floating' ? { maxHeight: 'calc(100vh - 96px)' } : undefined}
+			>
+				<ShoutboxWidget instanceId={instanceId} />
 			</div>
 		);
 	};

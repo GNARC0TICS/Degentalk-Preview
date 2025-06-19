@@ -1,6 +1,6 @@
 # ForumFusion Directory Structure
   
-Generated on: 2025-06-18
+Generated on: 2025-06-19
 
 ```
 ├─ _audit/
@@ -95,13 +95,18 @@ Generated on: 2025-06-18
 │  │  │  ├─ admin/
 │  │  │  │  ├─ forms/
 │  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ inputs/
+│  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ layout/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ wallet/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ admin-sidebar.tsx
 │  │  │  │  ├─ cooldown-settings.tsx
-│  │  │  │  └─ simple-menu.tsx
+│  │  │  │  ├─ FeatureFlagRow.tsx
+│  │  │  │  ├─ README.md
+│  │  │  │  ├─ simple-menu.tsx
+│  │  │  │  └─ XpActionRow.tsx
 │  │  │  ├─ auth/
 │  │  │  │  ├─ login-form.tsx
 │  │  │  │  ├─ protected-route.tsx
@@ -153,17 +158,25 @@ Generated on: 2025-06-18
 │  │  │  │  ├─ ZoneCard.tsx
 │  │  │  │  └─ ZoneStats.tsx
 │  │  │  ├─ identity/
-│  │  │  │  └─ path-progress.tsx
+│  │  │  │  ├─ AvatarFrame.tsx
+│  │  │  │  ├─ index.ts
+│  │  │  │  ├─ LevelBadge.tsx
+│  │  │  │  ├─ path-progress.tsx
+│  │  │  │  ├─ README.md
+│  │  │  │  ├─ RoleBadge.tsx
+│  │  │  │  └─ UserName.tsx
 │  │  │  ├─ layout/
 │  │  │  │  ├─ announcement-ticker.css
 │  │  │  │  ├─ announcement-ticker.tsx
 │  │  │  │  ├─ hero-section.tsx
+│  │  │  │  ├─ LayoutRenderer.tsx
 │  │  │  │  ├─ ProfileBackground.tsx
 │  │  │  │  ├─ sidebar.tsx
 │  │  │  │  ├─ SidebarNavigation.tsx
 │  │  │  │  ├─ site-footer.tsx
 │  │  │  │  ├─ site-header.tsx
-│  │  │  │  └─ site-layout-wrapper.tsx
+│  │  │  │  ├─ site-layout-wrapper.tsx
+│  │  │  │  └─ WidgetFrame.tsx
 │  │  │  ├─ messages/
 │  │  │  │  ├─ icons/
 │  │  │  │  │  ... (max depth reached)
@@ -218,6 +231,7 @@ Generated on: 2025-06-18
 │  │  │  │  ├─ index.ts
 │  │  │  │  ├─ InventoryTab.tsx
 │  │  │  │  ├─ OverviewTab.tsx
+│  │  │  │  ├─ ProfileCard.tsx
 │  │  │  │  ├─ ProfileEditor.tsx
 │  │  │  │  ├─ ProfileSidebar.tsx
 │  │  │  │  ├─ ProfileSkeleton.tsx
@@ -246,6 +260,7 @@ Generated on: 2025-06-18
 │  │  │  │  ├─ shoutbox-position-selector.tsx
 │  │  │  │  ├─ shoutbox-rain-notification.tsx
 │  │  │  │  ├─ shoutbox-widget.tsx
+│  │  │  │  ├─ shoutbox.spec.tsx
 │  │  │  │  └─ ShoutboxContainer.tsx
 │  │  │  ├─ sidebar/
 │  │  │  │  ├─ leaderboard-widget.tsx
@@ -312,7 +327,8 @@ Generated on: 2025-06-18
 │  │  │  │  ├─ toggle.tsx
 │  │  │  │  ├─ tooltip-utils.tsx
 │  │  │  │  ├─ tooltip.tsx
-│  │  │  │  └─ user-badge.tsx
+│  │  │  │  ├─ user-badge.tsx
+│  │  │  │  └─ widget-skeleton.tsx
 │  │  │  ├─ users/
 │  │  │  │  ├─ ActiveMembersWidget.tsx
 │  │  │  │  ├─ Avatar.tsx
@@ -333,7 +349,9 @@ Generated on: 2025-06-18
 │  │  ├─ config/
 │  │  │  ├─ admin-navigation.ts
 │  │  │  ├─ admin-routes.ts
+│  │  │  ├─ componentRegistry.ts
 │  │  │  ├─ forumMap.config.ts
+│  │  │  ├─ pageSlotMap.ts
 │  │  │  ├─ publicConfig.ts
 │  │  │  ├─ README.md
 │  │  │  ├─ tags.config.ts
@@ -351,6 +369,7 @@ Generated on: 2025-06-18
 │  │  │  ├─ ForumThemeProvider.tsx
 │  │  │  ├─ LevelUpContext.tsx
 │  │  │  ├─ mock-shoutbox-context.tsx
+│  │  │  ├─ ProfileCardContext.tsx
 │  │  │  ├─ safe-shoutbox-provider.tsx
 │  │  │  ├─ shoutbox-context.tsx
 │  │  │  ├─ wallet-context.tsx
@@ -406,6 +425,7 @@ Generated on: 2025-06-18
 │  │  │  ├─ wrappers/
 │  │  │  │  └─ use-auth-wrapper.ts
 │  │  │  ├─ index.ts
+│  │  │  ├─ README.md
 │  │  │  ├─ use-async-button.tsx
 │  │  │  ├─ use-auth.tsx
 │  │  │  ├─ use-debounce.ts
@@ -430,12 +450,14 @@ Generated on: 2025-06-18
 │  │  │  ├─ useDailyTasks.ts
 │  │  │  ├─ useDgtPurchase.ts
 │  │  │  ├─ useFeatureGates.ts
+│  │  │  ├─ useIdentityDisplay.ts
 │  │  │  ├─ useMissions.ts
 │  │  │  ├─ useThreadZone.ts
 │  │  │  ├─ useUserCosmetics.ts
 │  │  │  ├─ useUserInventory.ts
 │  │  │  ├─ useUserXP.ts
-│  │  │  └─ useXP.ts
+│  │  │  ├─ useXP.ts
+│  │  │  └─ widgetData.ts
 │  │  ├─ lib/
 │  │  │  ├─ utils/
 │  │  │  │  ├─ animateNumber.ts
@@ -445,6 +467,7 @@ Generated on: 2025-06-18
 │  │  │  │  └─ cosmeticsUtils.tsx
 │  │  │  ├─ admin-route.tsx
 │  │  │  ├─ admin-vault-service.ts
+│  │  │  ├─ adminApi.ts
 │  │  │  ├─ api-request.ts
 │  │  │  ├─ api.ts
 │  │  │  ├─ format-date.ts
@@ -462,6 +485,8 @@ Generated on: 2025-06-18
 │  │  │  │  ├─ activity/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ announcements/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ clout/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ config/
 │  │  │  │  │  ... (max depth reached)
@@ -490,6 +515,7 @@ Generated on: 2025-06-18
 │  │  │  │  ├─ categories.tsx
 │  │  │  │  ├─ dgt-packages.tsx
 │  │  │  │  ├─ emojis.tsx
+│  │  │  │  ├─ feature-flags.tsx
 │  │  │  │  ├─ forum-structure.tsx
 │  │  │  │  ├─ index.tsx
 │  │  │  │  ├─ prefixes.tsx
@@ -505,6 +531,7 @@ Generated on: 2025-06-18
 │  │  │  │  └─ index.tsx
 │  │  │  ├─ forums/
 │  │  │  │  ├─ [forum_slug].tsx
+│  │  │  │  ├─ [slug].tsx
 │  │  │  │  ├─ index.tsx
 │  │  │  │  └─ search.tsx
 │  │  │  ├─ missions/
@@ -564,6 +591,8 @@ Generated on: 2025-06-18
 │  │  │  ├─ app-provider.tsx
 │  │  │  ├─ app-providers.tsx
 │  │  │  └─ root-provider.tsx
+│  │  ├─ stores/
+│  │  │  └─ useLayoutStore.ts
 │  │  ├─ styles/
 │  │  │  ├─ admin-theme.css
 │  │  │  ├─ animations.css
@@ -574,6 +603,8 @@ Generated on: 2025-06-18
 │  │  │  ├─ utilities.css
 │  │  │  ├─ wallet-animations.css
 │  │  │  └─ zone-themes.css
+│  │  ├─ test/
+│  │  │  └─ setup.ts
 │  │  ├─ types/
 │  │  │  ├─ forum.ts
 │  │  │  ├─ inventory.ts
@@ -588,7 +619,8 @@ Generated on: 2025-06-18
 │  │  ├─ main.tsx
 │  ├─ index.html
 │  ├─ README.md
-│  └─ tailwind.config.js
+│  ├─ tailwind.config.js
+│  └─ vitest.config.ts
 ├─ config/
 │  ├─ postcss.config.js
 │  ├─ README.md
@@ -616,6 +648,7 @@ Generated on: 2025-06-18
 │  │  │  ├─ airdropRecords.ts
 │  │  │  ├─ airdropSettings.ts
 │  │  │  ├─ badges.ts
+│  │  │  ├─ cloutAchievements.ts
 │  │  │  ├─ dgtPackages.ts
 │  │  │  ├─ dgtPurchaseOrders.ts
 │  │  │  ├─ levels.ts
@@ -626,6 +659,7 @@ Generated on: 2025-06-18
 │  │  │  ├─ transactions.ts
 │  │  │  ├─ treasurySettings.ts
 │  │  │  ├─ userBadges.ts
+│  │  │  ├─ userCloutLog.ts
 │  │  │  ├─ userCommands.ts
 │  │  │  ├─ userTitles.ts
 │  │  │  ├─ vaults.ts
@@ -633,6 +667,7 @@ Generated on: 2025-06-18
 │  │  │  ├─ withdrawalRequests.ts
 │  │  │  ├─ xpActionSettings.ts
 │  │  │  ├─ xpAdjustmentLogs.ts
+│  │  │  ├─ xpCloutSettings.ts
 │  │  │  └─ xpLogs.ts
 │  │  ├─ forum/
 │  │  │  ├─ categories.ts
@@ -673,12 +708,14 @@ Generated on: 2025-06-18
 │  │  │  ├─ onlineUsers.ts
 │  │  │  └─ shoutboxMessages.ts
 │  │  ├─ shop/
+│  │  │  ├─ cosmeticCategories.ts
 │  │  │  ├─ inventoryTransactions.ts
 │  │  │  ├─ orderItems.ts
 │  │  │  ├─ orders.ts
 │  │  │  ├─ productCategories.ts
 │  │  │  ├─ productMedia.ts
 │  │  │  ├─ products.ts
+│  │  │  ├─ rarities.ts
 │  │  │  ├─ signatureItems.ts
 │  │  │  ├─ userInventory.ts
 │  │  │  └─ userSignatureItems.ts
@@ -759,6 +796,7 @@ Generated on: 2025-06-18
 │  ├─ component-tree.md
 │  ├─ designworkflow.md
 │  ├─ dgt-token-management-plan.md
+│  ├─ DynamicLayout.md
 │  ├─ frontend-enhancement-plan.md
 │  ├─ launch-readiness-audit-may-2025.md
 │  ├─ README_API.md
@@ -960,6 +998,10 @@ Generated on: 2025-06-18
 │  │  ├─ 20250510_create_xp_adjustment_logs.ts
 │  │  ├─ 20250512_create_xp_action_logs.ts
 │  │  ├─ 20250513_create_xp_action_settings.ts
+│  │  ├─ 20250618_add_clout_achievements.ts
+│  │  ├─ 20250618_add_rollout_percentage_to_feature_flags.ts
+│  │  ├─ 20250618_add_updated_by_to_site_settings.ts
+│  │  ├─ 20250618_create_xp_clout_settings.ts
 │  │  ├─ add-daily-xp-tracking.ts
 │  │  ├─ add-dgt-packages-table.ts
 │  │  ├─ add-dgt-purchase-orders-table.ts
@@ -1167,6 +1209,7 @@ Generated on: 2025-06-18
 │  └─ types.ts
 ├─ tests/
 │  └─ e2e/
+│     ├─ admin-settings.spec.ts
 │     └─ forum-home.spec.ts
 ├─ Wallet-Workspace/
 ├─ .DS_Store

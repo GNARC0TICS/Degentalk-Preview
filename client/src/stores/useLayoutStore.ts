@@ -35,7 +35,7 @@ export interface LayoutStateV1 {
 // Default layout configuration for SSR and new users.
 const defaultLayout: Omit<LayoutStateV1, 'version'> = {
     sidebars: {
-        left: { isVisible: true, width: 'thin' },
+        left: { isVisible: true, width: 'normal' },
         right: { isVisible: true, width: 'normal' },
         position: 'left-right',
     },
@@ -61,13 +61,26 @@ const defaultLayout: Omit<LayoutStateV1, 'version'> = {
     }
 };
 
+// Augmented Zustand store type including hydration metadata and actions.
+export interface LayoutStoreState extends LayoutStateV1 {
+  _hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
+  // existing actions
+  toggleSidebar: (side: 'left' | 'right') => void;
+  swapSidebars: () => void;
+  moveWidget: (sourceSlot: SlotId, destSlot: SlotId, sourceIndex: number, destIndex: number) => void;
+  removeWidget: (instanceId: string) => void;
+  reorderWidget: (slot: SlotId, oldIndex: number, newIndex: number) => void;
+}
 
-export const useLayoutStore = create<LayoutStateV1>()(
+export const useLayoutStore = create<LayoutStoreState>()(
   subscribeWithSelector(
     persist(
-      (set) => ({
+      (set, get) => ({
         version: 1,
         ...defaultLayout,
+        _hasHydrated: true,
+        setHasHydrated: (state: boolean) => set({ _hasHydrated: state }),
 
         // ACTIONS
         toggleSidebar: (side: 'left' | 'right') => {
@@ -94,6 +107,9 @@ export const useLayoutStore = create<LayoutStateV1>()(
                 const [movedItem] = sourceList.splice(sourceIndex, 1);
 
                 if (sourceSlot === destSlot) {
+                    // When moving downward within the same list, the removal shifts the subsequent indices
+                    // so we need to account for the offset to keep the final position correct.
+                    if (sourceIndex < destIndex) destIndex -= 1;
                     sourceList.splice(destIndex, 0, movedItem);
                 } else {
                     const destList = draft.order[destSlot];
@@ -125,7 +141,12 @@ export const useLayoutStore = create<LayoutStateV1>()(
       }),
       {
         name: 'dgt-layout-preferences', // Key for localStorage
-        // Future: Add logic to sync with a backend API via a storage adapter.
+        onRehydrateStorage: () => {
+          return () => {
+            // Mark hydration complete after persistence rehydrated
+            useLayoutStore.setState({ _hasHydrated: true });
+          };
+        },
       }
     )
   )

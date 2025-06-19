@@ -104,7 +104,7 @@ function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 		return (
 			<div style={style} className="group px-1 py-1.5"> {/* Added padding to style for item spacing */}
 				<Link href={`/threads/${thread.thread_id}`}>
-					<div className="relative p-4 rounded-lg bg-gradient-to-r from-zinc-800/50 to-zinc-800/30 border border-zinc-700/50 hover:border-orange-500/30 transition-all duration-300 cursor-pointer h-full flex flex-col justify-between">
+					<div className="relative p-3 md:p-4 rounded-lg bg-gradient-to-r from-zinc-800/50 to-zinc-800/30 border border-zinc-700/50 hover:border-orange-500/30 transition-all duration-300 cursor-pointer h-full flex flex-col justify-between">
 						<div className="relative z-10">
 							{/* Header with badge */}
 							<div className="flex items-start justify-between mb-3">
@@ -192,7 +192,7 @@ function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 
 	return (
 		<Card
-			className={`bg-gradient-to-br from-zinc-900/90 to-zinc-900/60 border border-zinc-800/60 shadow-xl backdrop-blur-sm ${className}`}
+			className={`w-full overflow-hidden bg-gradient-to-br from-zinc-900/90 to-zinc-900/60 border border-zinc-800/60 shadow-xl backdrop-blur-sm ${className}`}
 		>
 			<CardHeader className="pb-3">
 				<div className="flex items-center justify-between">

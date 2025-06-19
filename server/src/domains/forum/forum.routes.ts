@@ -160,16 +160,32 @@ router.use('/rules', rulesRoutes);
 // GET /structure - Get the complete forum structure (zones, categories, forums)
 router.get('/structure', async (req: Request, res: Response) => {
 	try {
-		// Fetch all forum categories with stats
-		const allCategories = await forumService.getCategoriesWithStats();
+		const { zones: structuredZones } = await forumService.getForumStructure();
 
-		// Split into flat arrays based on the "type" column that the service preserves
-		const zones = allCategories.filter((cat) => cat.type === 'zone');
-		const categories = allCategories.filter((cat) => cat.type === 'category');
-		const forums = allCategories.filter((cat) => cat.type === 'forum');
+		function sanitize(entity: any) {
+			const allowedKeys = [
+				'id','slug','name','description','parentId','type','position','isVip','isLocked','isHidden','minXp','minGroupIdRequired','color','icon','colorTheme','tippingEnabled','xpMultiplier','threadCount','postCount','pluginData','createdAt','updatedAt'
+			] as const;
+			const sanitized: Record<string, unknown> = {};
+			for (const k of allowedKeys) {
+				if (k in entity) sanitized[k] = entity[k];
+			}
+			return sanitized;
+		}
 
-		// Respond in the format expected by the frontend ForumStructureContext
-		return res.json({ zones, categories, forums });
+		const sanitizedZones = structuredZones.map(sanitize);
+
+		const flatForums: any[] = [];
+		for (const z of structuredZones) {
+			for (const pf of (z as any).forums || []) {
+				flatForums.push(sanitize(pf));
+				if (pf.childForums && pf.childForums.length > 0) {
+					flatForums.push(...pf.childForums.map(sanitize));
+				}
+			}
+		}
+
+		return res.json({ zones: sanitizedZones, forums: flatForums });
 	} catch (error) {
 		logger.error('ForumRoutes', 'Error fetching forum structure', { err: error });
 		return res.status(500).json({ error: 'Failed to fetch forum structure' });

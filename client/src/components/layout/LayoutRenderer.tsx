@@ -1,10 +1,9 @@
 import React from 'react';
 import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
 import { pageSlotMap } from '@/config/pageSlotMap';
-import { WidgetFrame } from './WidgetFrame';
+import { SlotRenderer } from './SlotRenderer';
 
 export const LayoutRenderer: React.FC<{ page: 'home' | 'forum' | 'profile' }> = ({ page }) => {
-  const order = useLayoutStore((s) => s.order);
   const sidebars = useLayoutStore((s) => s.sidebars);
   const slotsForPage = pageSlotMap[page];
 
@@ -17,23 +16,21 @@ export const LayoutRenderer: React.FC<{ page: 'home' | 'forum' | 'profile' }> = 
   const leftSidebarOrder = sidebars.position === 'left-right' ? 'order-1' : 'order-3';
   const rightSidebarOrder = sidebars.position === 'left-right' ? 'order-3' : 'order-1';
 
-  const renderSlot = (slotId: SlotId, className: string) => {
+  const renderSidebarSlot = (slotId: SlotId, className: string) => {
     if (!slotsForPage.includes(slotId)) return null;
 
     return (
-      <aside className={className} data-slot={slotId}>
-        {order[slotId]?.map((instanceId) => (
-          <WidgetFrame key={instanceId} instanceId={instanceId} />
-        ))}
+      <aside className={className}>
+        <SlotRenderer slotId={slotId} />
       </aside>
     );
   };
 
   return (
     <>
-      {renderSlot('sidebar/left', `${getSidebarClass('left')} ${leftSidebarOrder}`)}
+      {renderSidebarSlot('sidebar/left', `${getSidebarClass('left')} ${leftSidebarOrder}`)}
       {/* Main content injected between sidebars */}
-      {renderSlot('sidebar/right', `${getSidebarClass('right')} ${rightSidebarOrder}`)}
+      {renderSidebarSlot('sidebar/right', `${getSidebarClass('right')} ${rightSidebarOrder}`)}
     </>
   );
 };

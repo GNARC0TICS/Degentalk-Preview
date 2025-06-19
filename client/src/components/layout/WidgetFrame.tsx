@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { useShoutbox } from '@/contexts/shoutbox-context';
 
 interface WidgetFrameProps {
   instanceId: string;
@@ -21,6 +22,7 @@ export const WidgetFrame: React.FC<WidgetFrameProps> = ({ instanceId }) => {
   const order = useLayoutStore((s) => s.order);
   const moveWidget = useLayoutStore((s) => s.moveWidget);
   const removeWidget = useLayoutStore((s) => s.removeWidget);
+  const { updatePosition } = useShoutbox();
 
   if (!instance) return null;
 
@@ -45,6 +47,25 @@ export const WidgetFrame: React.FC<WidgetFrameProps> = ({ instanceId }) => {
     if (!currentSlot) return;
     const sourceIndex = order[currentSlot].indexOf(instanceId);
     moveWidget(currentSlot, destSlot, sourceIndex, 0);
+
+    // Keep shoutbox position preference in sync when it is moved via the gear menu
+    if (instanceId === 'shoutbox') {
+      let newPref: string;
+      if (destSlot.startsWith('sidebar')) {
+        // Default to top when moving between sidebars
+        newPref = destSlot.startsWith('sidebar') ? 'sidebar-top' : 'sidebar-top';
+      } else if (destSlot === 'main/top') {
+        newPref = 'main-top';
+      } else if (destSlot === 'main/bottom') {
+        newPref = 'main-bottom';
+      } else {
+        newPref = 'floating';
+      }
+
+      // Fire and forget – context handles optimistic update
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      updatePosition(newPref as any);
+    }
   };
 
   const componentId = instance.componentId as keyof typeof componentRegistry;
@@ -63,38 +84,46 @@ export const WidgetFrame: React.FC<WidgetFrameProps> = ({ instanceId }) => {
     </div>
   );
 
+  const shouldShowFrameMenu = instanceId !== 'shoutbox';
+
+  const gearClass = currentSlot?.startsWith('sidebar/left')
+    ? 'absolute top-1 right-1 h-6 w-6 z-20'
+    : 'absolute top-1 right-1 h-6 w-6 z-20 opacity-0 group-hover:opacity-100 transition-opacity';
+
   return (
     <div className="widget-wrapper relative group mb-4">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-          >
-            <Settings className="h-4 w-4" />
-            <span className="sr-only">Widget options</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48">
-          {availableDestinations.map((slot) => (
-            <DropdownMenuItem key={slot} onClick={() => handleMove(slot)}>
-              Move to {slotLabels[slot]}
+      {shouldShowFrameMenu && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              size="icon"
+              variant="ghost"
+              className={gearClass}
+            >
+              <Settings className="h-4 w-4" />
+              <span className="sr-only">Widget options</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            {availableDestinations.map((slot) => (
+              <DropdownMenuItem key={slot} onClick={() => handleMove(slot)}>
+                Move to {slotLabels[slot]}
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuItem
+              onClick={() => removeWidget(instanceId)}
+              className="text-red-500 focus:text-red-600"
+            >
+              Remove
             </DropdownMenuItem>
-          ))}
-          <DropdownMenuItem
-            onClick={() => removeWidget(instanceId)}
-            className="text-red-500 focus:text-red-600"
-          >
-            Remove
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
 
       <Suspense fallback={<Skeleton className="h-32 w-full bg-zinc-800" />}>
         <ErrorBoundary FallbackComponent={WidgetError}>
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          <WidgetComponent {...(instance as any).props} />
+          <WidgetComponent instanceId={instanceId} {...(instance as any).props} />
         </ErrorBoundary>
       </Suspense>
     </div>

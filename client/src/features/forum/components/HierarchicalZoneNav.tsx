@@ -14,7 +14,8 @@ import {
 	Users,
 	Folder as DefaultFolderIcon, // Renaming Folder to avoid conflict if NavNode uses 'Folder'
 	ChevronRight as DefaultChevronRight,
-	ChevronDown as DefaultChevronDown
+	ChevronDown as DefaultChevronDown,
+	MessageCircle
 } from 'lucide-react';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import { Badge } from '@/components/ui/badge';
@@ -104,17 +105,24 @@ const NavItem = ({
 				<span className="font-medium truncate">{node.name}</span> {/* Added truncate */}
 			</div>
 			{/* Display thread/post counts for forums, forum count for categories/zones */}
-			{node.type === 'forum' && node.counts && (node.counts.threads !== undefined || node.counts.posts !== undefined) && (
-				<Badge variant="outline" className="text-xs bg-zinc-800/50 text-zinc-500 border-zinc-700/50 px-1.5 py-0.5 ml-2 flex-shrink-0">
-					{node.counts.threads || 0}t / {node.counts.posts || 0}p
+			{node.type === 'forum' && node.counts && node.counts.threads !== undefined && (
+				<Badge
+					variant="outline"
+					className="text-xs bg-zinc-800/50 border-zinc-700/50 px-1.5 py-0.5 ml-2 flex-shrink-0 inline-flex items-center space-x-1"
+					aria-label={`${node.counts.threads} threads`}
+				>
+					<MessageCircle className="w-3 h-3" />
+					<span>{node.counts.threads}</span>
 				</Badge>
 			)}
 			{node.type !== 'forum' && node.counts?.forums && node.counts.forums > 0 && (
 				<Badge
 					variant="outline"
-					className="text-xs bg-zinc-800/50 text-zinc-500 border-zinc-700/50 px-1.5 py-0.5 ml-2 flex-shrink-0"
+					className="text-xs bg-zinc-800/50 border-zinc-700/50 px-1.5 py-0.5 ml-2 flex-shrink-0 inline-flex items-center space-x-1"
+					aria-label={`${node.counts.forums} forums`}
 				>
-					{node.counts.forums}
+					<Users className="w-3 h-3" />
+					<span>{node.counts.forums}</span>
 				</Badge>
 			)}
 		</div>
@@ -166,15 +174,15 @@ const GeneralCategorySection = ({ // Renamed from GeneralZoneSection to GeneralC
 			CategoryIconDisplay = <span className="mr-3 text-lg" role="img" aria-hidden="true">{theme.icon}</span>;
 		} else {
 			const IconFromTheme = theme.icon;
-			CategoryIconDisplay = <IconFromTheme className="w-4 h-4 mr-3 text-amber-400" />;
+			CategoryIconDisplay = <IconFromTheme className={`w-4 h-4 mr-3 ${theme.color ?? 'text-amber-400'}`} />;
 		}
 	} else if (categoryNode.iconEmoji) {
 		CategoryIconDisplay = <span className="mr-3 text-lg" role="img" aria-hidden="true">{categoryNode.iconEmoji}</span>;
 	} else if (categoryNode.iconComponent) {
 		const IconFromNode = categoryNode.iconComponent;
-		CategoryIconDisplay = <IconFromNode className="w-4 h-4 mr-3 text-amber-400" />;
+		CategoryIconDisplay = <IconFromNode className={cn('w-4 h-4 mr-3', isActiveCategory ? '' : 'text-zinc-400 group-hover:text-zinc-300')} />;
 	} else {
-		CategoryIconDisplay = <DefaultFolderIcon className="w-4 h-4 mr-3 text-amber-400" />;
+		CategoryIconDisplay = <DefaultFolderIcon className={`w-4 h-4 mr-3 ${theme.color ?? 'text-amber-400'}`} />;
 	}
 
 	return (
@@ -394,76 +402,82 @@ function HierarchicalZoneNav({
 	const generalCategoryNodes = navigationTree.filter(node => node.type === 'generalCategory');
 
 	return (
-		<nav className={cn('space-y-3', className)} aria-label="Forum Navigation" role="navigation">
-			{systemLinkNodes.length > 0 && (
-				<div className="space-y-1">
-					{systemLinkNodes.map(node => (
-						<NavItem
-							key={node.id}
-							node={node}
-							isActive={location === node.href && !currentZoneSlug && !currentForumSlug}
-						/>
-					))}
-				</div>
-			)}
-
-			{primaryZoneNodes.length > 0 && (
-				<section className="space-y-2">
-					<div className="px-3 py-1">
-						<h3 className="text-xs font-semibold uppercase text-zinc-500 tracking-wider">
-							Primary Zones
-						</h3>
-					</div>
+		<aside
+			dir="rtl"
+			className={cn('max-h-[100dvh] overflow-y-auto overflow-x-hidden pr-1', className)}
+			aria-expanded="true"
+		>
+			<nav dir="ltr" className="space-y-3" aria-label="Forum Navigation" role="navigation">
+				{systemLinkNodes.length > 0 && (
 					<div className="space-y-1">
-						{primaryZoneNodes.map((zoneNode) => (
-							// If Primary Zones can also have expandable forums/subforums:
-							// Option 1: Create a PrimaryZoneSection similar to GeneralCategorySection
-							// Option 2: Directly use ExpandableForumItem if zoneNode.children are forums
-							// For now, assuming Primary Zones in nav are direct links, sub-content on their page.
-							// If they need to expand to show forums, this needs to be like GeneralCategorySection.
-							// Based on current plan, let's make them expandable too for consistency.
-							<GeneralCategorySection // Reusing GeneralCategorySection logic for Primary Zones too
-								key={zoneNode.id}
-								categoryNode={zoneNode} // Pass zoneNode as categoryNode
-								isExpanded={!!expandedCategories[zoneNode.id]} // Manage expansion for primary zones too
-								onToggle={() => toggleCategoryExpansion(zoneNode.id)}
-								currentForumSlug={currentForumSlug}
-								currentZoneSlug={currentZoneSlug} // Pass currentZoneSlug
-							/>
-							// Original simple NavItem for Primary Zones (if not expandable):
-							// <NavItem
-							// 	key={zoneNode.id}
-							// 	node={zoneNode}
-							// 	isActive={currentZoneSlug === zoneNode.slug && !currentForumSlug}
-							// />
-						))}
-					</div>
-				</section>
-			)}
-
-			{generalCategoryNodes.length > 0 && (
-				<section className="space-y-2">
-					{primaryZoneNodes.length > 0 && <div className="h-px bg-zinc-800/50 my-4" />}
-					<div className="px-3 py-1">
-						<h3 className="text-xs font-semibold uppercase text-zinc-500 tracking-wider">
-							Categories
-						</h3>
-					</div>
-					<div className="space-y-1">
-						{generalCategoryNodes.map((categoryNode) => (
-							<GeneralCategorySection // Use renamed component
-								key={categoryNode.id}
-								categoryNode={categoryNode} // Pass categoryNode
-								isExpanded={!!expandedCategories[categoryNode.id]}
-								onToggle={() => toggleCategoryExpansion(categoryNode.id)} // Use renamed toggle function
-								currentForumSlug={currentForumSlug}
-								currentZoneSlug={currentZoneSlug}
+						{systemLinkNodes.map(node => (
+							<NavItem
+								key={node.id}
+								node={node}
+								isActive={location === node.href && !currentZoneSlug && !currentForumSlug}
 							/>
 						))}
 					</div>
-				</section>
-			)}
-		</nav>
+				)}
+
+				{primaryZoneNodes.length > 0 && (
+					<section className="space-y-2">
+						<div className="px-3 py-1">
+							<h3 className="text-xs font-semibold uppercase text-zinc-500 tracking-wider">
+								Primary Zones
+							</h3>
+						</div>
+						<div className="space-y-1">
+							{primaryZoneNodes.map((zoneNode) => (
+								// If Primary Zones can also have expandable forums/subforums:
+								// Option 1: Create a PrimaryZoneSection similar to GeneralCategorySection
+								// Option 2: Directly use ExpandableForumItem if zoneNode.children are forums
+								// For now, assuming Primary Zones in nav are direct links, sub-content on their page.
+								// If they need to expand to show forums, this needs to be like GeneralCategorySection.
+								// Based on current plan, let's make them expandable too for consistency.
+								<GeneralCategorySection // Reusing GeneralCategorySection logic for Primary Zones too
+									key={zoneNode.id}
+									categoryNode={zoneNode} // Pass zoneNode as categoryNode
+									isExpanded={!!expandedCategories[zoneNode.id]} // Manage expansion for primary zones too
+									onToggle={() => toggleCategoryExpansion(zoneNode.id)}
+									currentForumSlug={currentForumSlug}
+									currentZoneSlug={currentZoneSlug} // Pass currentZoneSlug
+								/>
+								// Original simple NavItem for Primary Zones (if not expandable):
+								// <NavItem
+								// 	key={zoneNode.id}
+								// 	node={zoneNode}
+								// 	isActive={currentZoneSlug === zoneNode.slug && !currentForumSlug}
+								// />
+							))}
+						</div>
+					</section>
+				)}
+
+				{generalCategoryNodes.length > 0 && (
+					<section className="space-y-2">
+						{primaryZoneNodes.length > 0 && <div className="h-px bg-zinc-800/50 my-4" />}
+						<div className="px-3 py-1">
+							<h3 className="text-xs font-semibold uppercase text-zinc-500 tracking-wider">
+								General Forums
+							</h3>
+						</div>
+						<div className="space-y-1">
+							{generalCategoryNodes.map((categoryNode) => (
+								<GeneralCategorySection // Use renamed component
+									key={categoryNode.id}
+									categoryNode={categoryNode} // Pass categoryNode
+									isExpanded={!!expandedCategories[categoryNode.id]}
+									onToggle={() => toggleCategoryExpansion(categoryNode.id)} // Use renamed toggle function
+									currentForumSlug={currentForumSlug}
+									currentZoneSlug={currentZoneSlug}
+								/>
+							))}
+						</div>
+					</section>
+				)}
+			</nav>
+		</aside>
 	);
 }
 
