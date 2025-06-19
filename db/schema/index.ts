@@ -151,5 +151,9 @@ export * from './system/referralSources';
 export * from './system/userReferrals';
 export * from './system/event_logs';
 
+// Dictionary domain exports
+export * from './dictionary/entries';
+export * from './dictionary/upvotes';
+
 // Note: './forum/threadDrafts.ts' was commented out as it was empty in the previous steps.
 // Ensure all files listed for export actually exist and contain exports.

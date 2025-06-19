@@ -15,6 +15,7 @@ import { SiteFooter } from '@/components/layout/site-footer';
 import { LayoutRenderer } from '@/components/layout/LayoutRenderer';
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
 import { SlotRenderer } from '@/components/layout/SlotRenderer';
+import { Wide } from '@/layout/primitives';
 
 // Import UI components
 import { Skeleton } from '@/components/ui/skeleton';
@@ -62,7 +63,7 @@ function HomePage() {
 			<AnnouncementTicker />
 			{/* Shoutbox now fully managed by the dynamic layout system */}
 
-			<main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 md:py-12 flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8">
+			<Wide as="main" className="px-2 sm:px-4 py-6 sm:py-8 md:py-12 flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8">
 				
 				{/* Main Content Area */}
 				<div className="w-full lg:w-1/2 xl:w-1/2 space-y-6 order-2">
@@ -109,7 +110,7 @@ function HomePage() {
 
                 <LayoutRenderer page="home" />
 
-			</main>
+			</Wide>
 
 			<SiteFooter />
 		</div>

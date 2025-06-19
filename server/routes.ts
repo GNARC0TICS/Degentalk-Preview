@@ -41,6 +41,7 @@ import treasuryRoutes from './src/domains/treasury/treasury.routes';
 import shoutboxRoutes from './src/domains/shoutbox/shoutbox.routes';
 // Import domain-based forum routes
 import forumRoutes from './src/domains/forum/forum.routes';
+import dictionaryRoutes from './src/domains/dictionary/dictionary.routes';
 // Import domain-based editor routes
 import editorRoutes from './src/domains/editor/editor.routes';
 // TODO: @routeDeprecation Investigate settings.routes.ts location or remove if deprecated.
@@ -288,6 +289,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	// TODO: @routeDeprecation Remove legacy dgt-purchase routes after migration to domain-driven routes is complete.
 	// registerDgtPurchaseRoutes(dgtPurchaseRouter); // @pending-migration
 	app.use('/api', dgtPurchaseRouter);
+
+	// Set up dictionary routes
+	app.use('/api/dictionary', dictionaryRoutes);
 
 	// Removed legacy route registrations:
 	// - registerSettingsRoutes(app) -> Migrated to domains/settings/settings.routes.ts

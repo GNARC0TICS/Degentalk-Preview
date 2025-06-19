@@ -100,6 +100,7 @@ export function SiteFooter() {
 								{ label: 'Forum', href: '/forums' },
 								{ label: 'Missions', href: '/missions' },
 								{ label: 'Shop', href: '/shop' },
+								{ label: 'Dictionary', href: '/dictionary' },
 								{ label: 'Leaderboard', href: '/leaderboard' },
 							].map((item, index) => (
 								<motion.li
