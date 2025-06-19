@@ -8,7 +8,7 @@ This repository is protected by an **advanced boundary enforcement system** that
 
 - ✅ **Import Boundaries**: Server cannot import from client/, client cannot import from server/
 - ✅ **Vite Config Protection**: Zero-tolerance for Vite config leaks into backend
-- ✅ **Schema Consistency**: All database fields must exist in both SQLite and PostgreSQL
+- ✅ **Schema Consistency**: All database fields must exist in the PostgreSQL schema across all environments (dev & prod)
 - ✅ **Path Alias Validation**: Automated checking of `@/` imports and TypeScript resolution
 - ✅ **CI/CD Integration**: Every PR is validated before merge
 
@@ -28,7 +28,8 @@ A crypto-native forum and social platform designed for cryptocurrency enthusiast
 
 - Node.js 18+
 - npm
-- PostgreSQL (for local development)
+- PostgreSQL (development & production)  
+> **Note:** Degentalk now exclusively supports **PostgreSQL** across all environments. Legacy SQLite support has been fully removed.
 
 ### Environment Setup
 

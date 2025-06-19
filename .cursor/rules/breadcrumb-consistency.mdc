@@ -1,0 +1,31 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Breadcrumb Consistency Rule
+
+## Objective
+Provide a single UX pattern for all page breadcrumbs so navigation remains predictable and maintainable.
+
+## Requirements
+1. All pages that display breadcrumb navigation **MUST** import and use the shared component
+   ```typescript
+   import Breadcrumbs from '@/components/common/Breadcrumbs';
+   ```
+2. Ad-hoc breadcrumb markup (manual `<nav>` with `>` separators) is **FORBIDDEN**.
+3. The shared component consumes `ForumStructureContext` when a forum or zone slug is present and auto-builds
+   Home → Zone → Forum → Thread trails.
+4. If a page needs a special trail (e.g. admin area), extend the shared component via props instead of copy-pasting markup.
+5. ESLint rule `no-manual-breadcrumb` will be introduced; temporary exceptions must be commented `// TODO: use <Breadcrumbs>`.
+
+## Migration Plan
+- Replace stubbed breadcrumb implementations in:
+  • `client/src/pages/forums/[forum_slug].tsx`
+  • `client/src/pages/threads/[thread_slug].tsx`
+  • `client/src/pages/zones/[slug].tsx`
+- Create `Breadcrumbs` component under `components/common` that wraps `@/components/ui/breadcrumb` primitives.
+
+## Success Indicators
+- Zero occurrences of `BreadcrumbPage>` hard-coded outside the shared component.
+- Navigation updates automatically when forum/zone names change in config.

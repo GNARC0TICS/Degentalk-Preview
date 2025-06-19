@@ -569,7 +569,7 @@ The following areas remain **unfinished** and should be prioritised in subsequen
    • `.github/workflows/validate-codebase.yml` – incorporate lint steps proposed in batches 5-8.
 6. **Environment & Build Config**  
    • Re-audit `vite.config.ts`, `tailwind.config.ts`, `tsconfig.json` after alias/path changes.
-7. **Seed & Migration Scripts (SQLite)**  
+7. **Seed & Migration Scripts (PostgreSQL)**  
    • `scripts/db/*` seeding utilities – ensure they sync with newer schema after Drizzle migrations.
 8. **Documentation Sync**  
    • Update README, onboarding docs once code changes are applied to avoid phantom references.

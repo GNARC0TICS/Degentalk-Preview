@@ -75,7 +75,8 @@
 		"typecheck": "echo \"Skipping typecheck until types cleanup\"",
 		"tokens": "style-dictionary build",
 		"prepare": "",
-		"codemod:dry-run": "bash scripts/refactor/component-merge/run-dry-run.sh"
+		"codemod:dry-run": "bash scripts/refactor/component-merge/run-dry-run.sh",
+		"generate:scope": "tsx scripts/dev/generate-scope-guide.ts"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.10.0",

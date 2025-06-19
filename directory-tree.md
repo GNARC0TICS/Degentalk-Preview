@@ -945,7 +945,6 @@ Generated on: 2025-06-19
 │  │  ├─ fix-forum-relationships.ts
 │  │  ├─ initialize-giphy-settings.ts
 │  │  ├─ initialize-xp-system.ts
-│  │  ├─ neon-to-sqlite.js
 │  │  ├─ read-forum-categories.ts
 │  │  ├─ read-thread.ts
 │  │  ├─ README-UI-CONFIG.md
@@ -1253,7 +1252,6 @@ Generated on: 2025-06-19
 ├─ .DS_Store
 ├─ .env
 ├─ .eslintrc.json
-├─ .gitignore
 ├─ .prettierignore
 ├─ .prettierrc
 ├─ CLEANUP_SUMMARY.md

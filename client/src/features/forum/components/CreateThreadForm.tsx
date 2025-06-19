@@ -47,6 +47,7 @@ import { TagInput } from '@/components/forum/tag-input';
 import type { Tag, ThreadPrefix as Prefix } from '@/types/forum';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { ForumRules } from '@/config/forumMap.config';
+import { usePermission } from '@/hooks/usePermission';
 
 interface DraftData {
 	id: number;
@@ -108,6 +109,25 @@ export function CreateThreadForm({
 
 	const { zones, getForum } = useForumStructure();
 
+	const activeForumSlug = passedForumSlug || selectedForumSlugState;
+	const activeForumData = activeForumSlug ? getForum(activeForumSlug) : undefined;
+	const categoryIdForPrefixes = activeForumData ? activeForumData.id : undefined;
+	const { data: prefixes, isLoading: loadingPrefixes } = useForumPrefixes(
+		undefined,
+		categoryIdForPrefixes
+	);
+
+	const { canPost, reason: permissionReason } = usePermission(activeForumData);
+
+	useEffect(() => {
+		if (permissionReason) {
+			setFormDisabledReason(permissionReason);
+		} else {
+			setFormDisabledReason(null);
+		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [permissionReason]);
+
 	useEffect(() => {
 		// This effect primarily sets the disabled reason based on PROPS when a forum is PASSED IN
 		if (passedForumSlug) {
@@ -153,36 +173,7 @@ export function CreateThreadForm({
 		}
 	}, [selectedForumSlugState, passedForumSlug]); // Dependencies ensure this runs when selection changes
 
-	const activeForumSlug = passedForumSlug || selectedForumSlugState;
-	const activeForumData = activeForumSlug ? getForum(activeForumSlug) : undefined;
-	const { data: prefixes, isLoading: loadingPrefixes } = useForumPrefixes(
-		undefined,
-		activeForumData?.id
-	);
-
-	const form = useForm<ThreadFormValues>({
-		resolver: zodResolver(threadFormSchema),
-		defaultValues: {
-			title: '',
-			forumSlug: passedForumSlug || '',
-			prefixId: '',
-			content: '',
-			tags: []
-		}
-	});
-
-	useEffect(() => {
-		if (passedForumSlug) {
-			form.setValue('forumSlug', passedForumSlug);
-			// setSelectedForumSlugState(passedForumSlug); // Already set or handled by passedForumSlug prop
-		}
-	}, [passedForumSlug, form]);
-
-	const {
-		data: draftData,
-		isLoading: loadingDraft,
-		isSuccess: isDraftLoadSuccess
-	} = useQuery<DraftData>({
+	const { data: draftData, isLoading: loadingDraft, isSuccess: isDraftLoadSuccess } = useQuery<DraftData>({
 		queryKey: ['threadDraft', { forumSlug: activeForumSlug }],
 		queryFn: async () => {
 			if (!activeForumSlug) return Promise.reject('No forum selected for draft.');
@@ -600,6 +591,18 @@ export function CreateThreadForm({
 			</form>
 		</Form>
 	);
+
+	// Block entire UI if user lacks permission. (Placed after all hooks to preserve hook order.)
+	if (!canPost) {
+		return (
+			<Alert variant="destructive" className="my-6">
+				<AlertTriangle className="w-4 h-4 mr-2" />
+				<AlertDescription>
+					{permissionReason ?? 'You do not have permission to post in this forum.'}
+				</AlertDescription>
+			</Alert>
+		);
+	}
 
 	if (!onClose) {
 		return renderFormContent();

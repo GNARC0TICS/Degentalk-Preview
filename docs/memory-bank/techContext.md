@@ -27,7 +27,7 @@ DegenTalk uses a modern full-stack JavaScript/TypeScript architecture:
 
 ### Shared
 *   **Type Validation**: Zod for runtime validation
-*   **Schema**: Database schema is managed via Drizzle ORM and migration files. The `shared/schema.ts` file **IS** the current source of truth for Drizzle schema definitions. Migration files are stored in `migrations/sqlite` or `migrations/postgres` depending on the `DATABASE_PROVIDER`.
+*   **Schema**: Database schema is managed via Drizzle ORM and migration files. The `shared/schema.ts` file **IS** the current source of truth for Drizzle schema definitions. Migration files are stored in `migrations/postgres`.
 *   **API Client**: Standardizing on `apiRequest` from `@/lib/queryClient.ts` for client-side API calls, as per `.cursor/rules/api-client-pattern.mdc`.
 
 ## Development Environment
@@ -44,7 +44,7 @@ DegenTalk uses a modern full-stack JavaScript/TypeScript architecture:
 
 The database schema is comprehensive and covers all major application domains, defined in `shared/schema.ts` and managed through Drizzle ORM migration files.
 
-**NOTE:** `server/src/core/db.ts` dynamically connects to either SQLite or Neon/Postgres based on the `DATABASE_PROVIDER` environment variable. It correctly imports the schema from `shared/schema.ts`.
+**NOTE:** `server/src/core/db.ts` connects to PostgreSQL (Neon) using the `DATABASE_URL` environment variable and imports the schema from `shared/schema.ts`.
 
 1.  **User System**
     ```typescript

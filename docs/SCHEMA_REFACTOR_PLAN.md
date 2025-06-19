@@ -508,7 +508,7 @@ As part of this refactoring effort, existing database-related documentation has 
 
 **Actions Taken:**
 
-*   **SQLite References Removed:** All references to SQLite, its specific migration paths, and SQLite-specific development practices have been removed from this document.
+*   **Legacy Database References Removed:** All content now exclusively targets PostgreSQL (dev & prod) and its associated development practices.
 *   **`db/schema.sql`**: DELETED. This raw SQL snapshot is superseded by Drizzle schema and migrations.
 *   **`docs/PHASE_1_DATABASE_FOUNDATION_CHECKLIST.md`**: DELETED. Its relevant initial setup and design considerations are now covered or superseded by this comprehensive plan.
 *   **`db/schema-analysis-2025-05-21.json`**: DELETED. This was an outdated JSON snapshot of a previous schema state.
@@ -516,9 +516,9 @@ As part of this refactoring effort, existing database-related documentation has 
 
 **For Future Review:**
 
-*   **`scripts/db/update-database-cheatsheet.js`**: This script was designed to analyze an SQLite database.
+*   **`scripts/db/update-database-cheatsheet.js`**: This script targeted the old local database setup and is now obsolete.
 *   **`docs/database-cheatsheet.mdc`** (if it exists):
-    *   **Action:** Since SQLite is no longer in use, this script and any associated cheatsheet are likely obsolete. Mark them for **deletion**. If a PostgreSQL schema overview tool is desired in the future, a new solution would be needed.
+    *   **Action:** Mark this script and any associated cheatsheet for **deletion**. If a PostgreSQL schema overview tool is desired in the future, a new solution will be required.
 
 ## 8. Next Steps & Action Plan
 

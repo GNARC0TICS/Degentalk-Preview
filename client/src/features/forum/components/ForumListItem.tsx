@@ -1,8 +1,9 @@
 import { Link } from 'wouter';
-import { MessageSquare, CornerDownRight } from 'lucide-react';
+import { MessageSquare, CornerDownRight, Lock } from 'lucide-react';
 import type { MergedForum } from '@/contexts/ForumStructureContext';
 import { useState, useEffect } from 'react';
 import { StatChip } from '@/components/ui/StatChip';
+import { usePermission } from '@/hooks/usePermission';
 
 interface ForumListItemProps {
 	forum: MergedForum;
@@ -21,6 +22,8 @@ export function ForumListItem({
 	const [prevPostCount, setPrevPostCount] = useState(forum.postCount || 0);
 	const [isAnimating, setIsAnimating] = useState(false);
 
+	const { canPost } = usePermission(forum);
+
 	// Check if counts have changed to trigger animations
 	useEffect(() => {
 		if (forum.threadCount !== prevThreadCount || forum.postCount !== prevPostCount) {
@@ -34,9 +37,10 @@ export function ForumListItem({
 		}
 	}, [forum.threadCount, forum.postCount, prevThreadCount, prevPostCount]);
 
-	const canHaveThreads = forum.canHaveThreads !== false; // Default to true if property is undefined
-
 	const renderIcon = () => {
+		if (!canPost) {
+			return <Lock className="h-5 w-5 text-zinc-600" title="Posting disabled" />;
+		}
 		if (forum.icon) {
 			return (
 				<span className="text-xl" style={{ color: forum.color || parentZoneColor || undefined }}>
@@ -59,7 +63,7 @@ export function ForumListItem({
 		<div
 			className={`block transition-all duration-300 hover:scale-[1.02] ${
 				isParentForum ? 'p-4 bg-zinc-900/60 backdrop-blur-md' : 'p-3 bg-zinc-900/40'
-			} ${canHaveThreads ? 'hover:bg-zinc-900/80' : 'opacity-75 cursor-not-allowed'}`}
+			} ${canPost ? 'hover:bg-zinc-900/80' : 'opacity-75 cursor-not-allowed'}`}
 			style={{
 				borderLeft: isParentForum ? `3px solid ${accentColor}` : 'none',
 				boxShadow: isParentForum ? `0 4px 6px -1px ${accentColorWithOpacity}` : 'none'
@@ -110,6 +114,9 @@ export function ForumListItem({
 			</div>
 		</div>
 	);
+
+	// Replace canHaveThreads check with permission
+	const canHaveThreads = canPost && forum.canHaveThreads !== false;
 
 	return (
 		<div className={`${isParentForum ? 'mb-2' : ''}`}>

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link, useParams } from 'wouter';
 import { ForumStructureProvider, useForumStructure } from '@/contexts/ForumStructureContext';
-import type { MergedForum, MergedZone, MergedRules } from '@/contexts/ForumStructureContext'; // Added MergedRules
+import type { MergedForum, MergedZone, MergedRules } from '@/contexts/ForumStructureContext';
+import Breadcrumb from '@/components/common/Breadcrumb';
 // import type { ForumRules } from '@/config/forumMap.config'; // Removed unused ForumRules
 
 // Placeholder for a proper NotFoundPage component
@@ -13,39 +14,6 @@ const NotFoundPage: React.FC = () => {
 			<Link href="/" style={{ color: '#007bff', textDecoration: 'underline' }}>
 				Go back to Home
 			</Link>
-		</div>
-	);
-};
-
-// Placeholder for Breadcrumbs component
-const BreadcrumbsStub: React.FC<{ zoneName?: string; zoneSlug?: string; forumName?: string }> = ({
-	zoneName,
-	zoneSlug,
-	forumName
-}) => {
-	return (
-		<div
-			style={{
-				padding: '10px 20px',
-				backgroundColor: '#f8f9fa',
-				borderBottom: '1px solid #dee2e6',
-				marginBottom: '20px'
-			}}
-		>
-			<Link href="/">Home</Link>
-			{zoneName && zoneSlug && (
-				<>
-					<span> {'>'} </span>
-					<Link href={`/zones/${zoneSlug}`}>{zoneName}</Link>
-				</>
-			)}
-			{forumName && (
-				<>
-					<span> {'>'} </span>
-					<span>{forumName}</span>
-				</>
-			)}
-			{/* Future: Add more levels for threads */}
 		</div>
 	);
 };
@@ -101,7 +69,11 @@ const ForumPage: React.FC = () => {
 		console.log(`[ForumPage] isLoading is true. Rendering loading state.`);
 		return (
 			<div>
-				<BreadcrumbsStub />
+				<Breadcrumb
+					zone={parentZone ? { name: parentZone.name, slug: parentZone.slug } : undefined}
+					forum={{ name: forum.name, slug: forum.slug }}
+					className="mb-6"
+				/>
 				<div style={{ textAlign: 'center', padding: '50px' }}>Loading forum data...</div>
 			</div>
 		);
@@ -114,7 +86,11 @@ const ForumPage: React.FC = () => {
 		);
 		return (
 			<div>
-				<BreadcrumbsStub />
+				<Breadcrumb
+					zone={parentZone ? { name: parentZone.name, slug: parentZone.slug } : undefined}
+					forum={{ name: forum.name, slug: forum.slug }}
+					className="mb-6"
+				/>
 				<div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>
 					Error loading forum data: {contextError.message}
 				</div>
@@ -138,7 +114,11 @@ const ForumPage: React.FC = () => {
 		);
 		return (
 			<div>
-				<BreadcrumbsStub />
+				<Breadcrumb
+					zone={parentZone ? { name: parentZone.name, slug: parentZone.slug } : undefined}
+					forum={{ name: forum.name, slug: forum.slug }}
+					className="mb-6"
+				/>
 				<NotFoundPage />
 			</div>
 		);
@@ -198,10 +178,10 @@ const ForumPage: React.FC = () => {
 	);
 	return (
 		<div>
-			<BreadcrumbsStub
-				zoneName={parentZone?.name}
-				zoneSlug={parentZone?.slug}
-				forumName={forum.name}
+			<Breadcrumb
+				zone={parentZone ? { name: parentZone.name, slug: parentZone.slug } : undefined}
+				forum={{ name: forum.name, slug: forum.slug }}
+				className="mb-6"
 			/>
 
 			{/* Forum Header */}

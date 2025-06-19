@@ -5,7 +5,7 @@ This guide provides step-by-step instructions for setting up the DegenTalk forum
 ## Prerequisites
 
 - Node.js installed
-- SQLite database configured
+- PostgreSQL database configured
 - Environment variables set up (.env file)
 
 ## Quick Setup
@@ -119,7 +119,7 @@ This usually means the API is returning HTML instead of JSON:
 
 If you get database-related errors:
 
-1. Delete the SQLite database file: `rm sqlite:db/forum.db`
+1. Drop existing forum tables (if needed): `npm run db:drop`
 2. Re-run the setup: `npm run seed:forum:setup`
 
 ## Development Tips
@@ -134,7 +134,7 @@ If you get database-related errors:
 
 1. Update `shared/schema.ts`
 2. Create a migration script in `scripts/db/`
-3. Update `create-missing-tables.ts` for SQLite
+3. Update `create-missing-tables.ts` if database schema has changed
 4. Re-run setup
 
 ### Testing Changes
@@ -146,7 +146,7 @@ Always test your changes:
 tsx scripts/test-forum-api.ts
 
 # Check database content
-sqlite3 sqlite:db/forum.db "SELECT name, slug, is_zone, canonical, color_theme FROM forum_categories WHERE is_zone = 1;"
+psql "$DATABASE_URL" -c "SELECT name, slug, is_zone, canonical, color_theme FROM forum_categories WHERE is_zone = TRUE;"
 ```
 
 ## API Endpoints
@@ -205,7 +205,7 @@ function MyComponent() {
 ### Regular Tasks
 
 1. **Monitor Performance**: Check query performance as data grows
-2. **Backup Database**: Regular SQLite backups
+2. **Backup Database**: Regular PostgreSQL backups
 3. **Update Seeds**: Keep seed data relevant and fresh
 4. **Clean Old Data**: Archive old threads periodically
 
