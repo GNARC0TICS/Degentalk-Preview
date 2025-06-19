@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { ControlsDrawer } from './ControlsDrawer';
+import { usePlaygroundControls } from '@/stores/usePlaygroundControls';
 
 interface DevPlaygroundLayoutProps {
   children: React.ReactNode;
@@ -42,7 +44,7 @@ export const DevPlaygroundLayout: React.FC<DevPlaygroundLayoutProps> = ({ childr
         <header className="sticky top-0 z-20 bg-zinc-900/70 backdrop-blur border-b border-zinc-800">
           <div className="flex items-center justify-between px-4 h-12">
             <h1 className="font-semibold text-sm">UI Playground</h1>
-            <div className="flex gap-2 text-xs">
+            <div className="flex gap-2 text-xs items-center">
               {VIEWPORTS.map(v => (
                 <button
                   key={v.label}
@@ -55,6 +57,13 @@ export const DevPlaygroundLayout: React.FC<DevPlaygroundLayoutProps> = ({ childr
                   {v.label}
                 </button>
               ))}
+              {/* Controls toggle */}
+              <button
+                onClick={() => usePlaygroundControls.getState().toggleDrawer()}
+                className="ml-4 px-2 py-1 rounded border border-zinc-700 hover:bg-zinc-800"
+              >
+                Controls
+              </button>
             </div>
           </div>
         </header>
@@ -66,6 +75,7 @@ export const DevPlaygroundLayout: React.FC<DevPlaygroundLayoutProps> = ({ childr
           </div>
         </main>
       </div>
+      <ControlsDrawer />
     </div>
   );
 };

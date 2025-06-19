@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { DictionaryService, DictionaryStatus } from './dictionary.service';
 import { isAuthenticated as requireAuth, isAdminOrModerator } from '../auth/middleware/auth.middleware';
 import { insertDictionaryEntrySchema } from '@schema';
+import rateLimit from 'express-rate-limit';
 
 const router = Router();
 
@@ -40,7 +41,11 @@ router.get('/:slug', async (req, res) => {
 });
 
 // POST /api/dictionary (requires auth)
-router.post('/', requireAuth, async (req: any, res) => {
+router.post(
+    '/',
+    rateLimit({ windowMs: 5 * 60 * 1000, max: 3 }), // TODO: add CAPTCHA / wallet-age check
+    requireAuth,
+    async (req: any, res) => {
     try {
         const data = insertDictionaryEntrySchema.parse(req.body);
         const created = await DictionaryService.create({ ...data, authorId: req.user.id });

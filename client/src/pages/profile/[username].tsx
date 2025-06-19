@@ -19,6 +19,7 @@ import { useUserInventory } from '@/hooks/useUserInventory';
 import { Home, Trophy, ShoppingBag, Users, Sparkles } from 'lucide-react';
 import type { ProfileData } from '@/types/profile';
 import { ProfileEditor } from '@/components/profile/ProfileEditor';
+import { Wide } from '@/layout/primitives';
 
 // TEMP: mock data helper for dev mode
 function getMockProfileData(username: string): ProfileData {
@@ -94,9 +95,9 @@ export default function ProfilePage() {
   if (isError || !profile) {
     return (
       <div className="flex flex-col min-h-screen bg-gradient-to-b from-zinc-900 to-black">
-        <div className="container max-w-screen-xl mx-auto p-4 flex-1">
+        <Wide className="p-4 flex-1">
           <ErrorDisplay title="Profile Error" error={error} variant="card" />
-        </div>
+        </Wide>
         <SiteFooter />
       </div>
     );
@@ -111,7 +112,7 @@ export default function ProfilePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/80 to-black/90" />
         </div>
 
-        <div className="container max-w-screen-xl mx-auto px-4">
+        <Wide className="px-4">
           <BackToHomeButton />
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div className="col-span-1">
@@ -179,7 +180,7 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
-        </div>
+        </Wide>
       </main>
 
       <SiteFooter />

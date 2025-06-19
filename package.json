@@ -72,7 +72,10 @@
 		"precommit": "npm run validate",
 		"prebuild": "",
 		"mcp:neon": "npx @neondatabase/mcp-server-neon start napi_64010heeqqly1w5t5eg1dpjposfjcqpdg0lu4bc7yvnci0vh7qyivoo04i3j036x",
-		"typecheck": "echo \"Skipping typecheck until types cleanup\""
+		"typecheck": "echo \"Skipping typecheck until types cleanup\"",
+		"tokens": "style-dictionary build",
+		"prepare": "husky install",
+		"codemod:dry-run": "bash scripts/refactor/component-merge/run-dry-run.sh"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.10.0",
@@ -237,6 +240,7 @@
 		"jsdom": "^26.1.0",
 		"node-fetch": "^2.7.0",
 		"postcss": "^8.4.47",
+		"style-dictionary": "^5.0.0",
 		"tailwindcss": "^3.4.17",
 		"tough-cookie": "^5.1.2",
 		"ts-morph": "^26.0.0",
@@ -244,7 +248,8 @@
 		"tsx": "^4.19.4",
 		"typescript": "5.6.3",
 		"vite": "^5.4.14",
-		"vitest": "^3.2.4"
+		"vitest": "^3.2.4",
+		"jscodeshift": "^0.15.0"
 	},
 	"optionalDependencies": {
 		"bufferutil": "^4.0.8"

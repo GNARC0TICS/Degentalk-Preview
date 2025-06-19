@@ -52,6 +52,7 @@ import AdminDgtPackagesPage from "./pages/admin/dgt-packages.tsx";
 import TipRainSettingsPage from "./pages/admin/tip-rain-settings.tsx";
 import AdminDevSeedingPage from "./pages/admin/dev/seeding.tsx";
 import ForumStructureAdminPage from "./pages/admin/forum-structure.tsx";
+import AdminDictionaryQueuePage from './pages/admin/dictionary';
 
 // Shop Pages
 import DgtPurchasePage from './pages/shop-management/dgt-purchase';
@@ -368,6 +369,14 @@ return (
 							component={() => (
 								<AdminLayout>
 									<ForumStructureAdminPage />
+								</AdminLayout>
+							)}
+						/>
+						<Route
+							path="/admin/dictionary"
+							component={() => (
+								<AdminLayout>
+									<AdminDictionaryQueuePage />
 								</AdminLayout>
 							)}
 						/>

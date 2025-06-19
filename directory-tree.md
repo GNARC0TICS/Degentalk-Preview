@@ -176,6 +176,7 @@ Generated on: 2025-06-19
 │  │  │  │  ├─ site-footer.tsx
 │  │  │  │  ├─ site-header.tsx
 │  │  │  │  ├─ site-layout-wrapper.tsx
+│  │  │  │  ├─ SlotRenderer.tsx
 │  │  │  │  └─ WidgetFrame.tsx
 │  │  │  ├─ messages/
 │  │  │  │  ├─ icons/
@@ -394,6 +395,11 @@ Generated on: 2025-06-19
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  └─ services/
 │  │  │  │     ... (max depth reached)
+│  │  │  ├─ dictionary/
+│  │  │  │  ├─ components/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  └─ services/
+│  │  │  │     ... (max depth reached)
 │  │  │  ├─ forum/
 │  │  │  │  ├─ components/
 │  │  │  │  │  ... (max depth reached)
@@ -458,13 +464,22 @@ Generated on: 2025-06-19
 │  │  │  ├─ useUserXP.ts
 │  │  │  ├─ useXP.ts
 │  │  │  └─ widgetData.ts
+│  │  ├─ layout/
+│  │  │  └─ primitives/
+│  │  │     ├─ ClampPadding.tsx
+│  │  │     ├─ FullBleedSection.tsx
+│  │  │     ├─ index.ts
+│  │  │     ├─ Prose.tsx
+│  │  │     ├─ StickyRegion.tsx
+│  │  │     └─ Wide.tsx
 │  │  ├─ lib/
 │  │  │  ├─ utils/
 │  │  │  │  ├─ animateNumber.ts
 │  │  │  │  ├─ api-helpers.ts
 │  │  │  │  ├─ applyPluginRewards.ts
 │  │  │  │  ├─ category.ts
-│  │  │  │  └─ cosmeticsUtils.tsx
+│  │  │  │  ├─ cosmeticsUtils.tsx
+│  │  │  │  └─ generateSlug.ts
 │  │  │  ├─ admin-route.tsx
 │  │  │  ├─ admin-vault-service.ts
 │  │  │  ├─ adminApi.ts
@@ -529,6 +544,12 @@ Generated on: 2025-06-19
 │  │  │  │  └─ users.tsx
 │  │  │  ├─ announcements/
 │  │  │  │  └─ index.tsx
+│  │  │  ├─ dev/
+│  │  │  │  ├─ DevPlaygroundLayout.tsx
+│  │  │  │  └─ index.ts
+│  │  │  ├─ dictionary/
+│  │  │  │  ├─ %5Bslug%5D.tsx
+│  │  │  │  └─ index.tsx
 │  │  │  ├─ forums/
 │  │  │  │  ├─ [forum_slug].tsx
 │  │  │  │  ├─ [slug].tsx
@@ -558,6 +579,10 @@ Generated on: 2025-06-19
 │  │  │  │  ├─ [thread_slug].tsx
 │  │  │  │  └─ create.tsx
 │  │  │  ├─ ui-playground/
+│  │  │  │  ├─ animations/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ sections/
+│  │  │  │  │  ... (max depth reached)
 │  │  │  │  └─ demo-data.ts
 │  │  │  ├─ zones/
 │  │  │  │  ├─ [slug].tsx
@@ -599,6 +624,7 @@ Generated on: 2025-06-19
 │  │  │  ├─ cssVariables.ts
 │  │  │  ├─ globals.css
 │  │  │  ├─ ticker.css
+│  │  │  ├─ tokens.css
 │  │  │  ├─ underline-links.css
 │  │  │  ├─ utilities.css
 │  │  │  ├─ wallet-animations.css
@@ -644,6 +670,9 @@ Generated on: 2025-06-19
 │  │  │  └─ uiThemes.ts
 │  │  ├─ core/
 │  │  │  └─ enums.ts
+│  │  ├─ dictionary/
+│  │  │  ├─ entries.ts
+│  │  │  └─ upvotes.ts
 │  │  ├─ economy/
 │  │  │  ├─ airdropRecords.ts
 │  │  │  ├─ airdropSettings.ts
@@ -811,6 +840,11 @@ Generated on: 2025-06-19
 │  ├─ wallet-system.md
 │  ├─ xp-dgt-system-implementation-plan.md
 │  └─ xp-system-reference.md
+├─ eslint-plugins/
+│  └─ degen/
+│     ├─ rules/
+│     │  └─ no-raw-container-auto.js
+│     └─ index.js
 ├─ lib/
 │  ├─ auth/
 │  │  └─ canUser.ts
@@ -946,6 +980,7 @@ Generated on: 2025-06-19
 │  ├─ seed/
 │  │  ├─ shop/
 │  │  │  └─ username-colors.ts
+│  │  ├─ dictionary.ts
 │  │  ├─ run-username-colors.ts
 │  │  ├─ seed-dummy-threads.ts
 │  │  ├─ seed-realistic-threads.ts
@@ -1064,6 +1099,9 @@ Generated on: 2025-06-19
 │  │  │  │  ├─ ccpayment-webhook.controller.ts
 │  │  │  │  ├─ ccpayment-webhook.routes.ts
 │  │  │  │  └─ ccpayment-webhook.service.ts
+│  │  │  ├─ dictionary/
+│  │  │  │  ├─ dictionary.routes.ts
+│  │  │  │  └─ dictionary.service.ts
 │  │  │  ├─ economy/
 │  │  │  │  └─ services/
 │  │  │  │     ... (max depth reached)

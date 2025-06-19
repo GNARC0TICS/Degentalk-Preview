@@ -7,6 +7,7 @@ import { ButtonsSection } from '@/pages/ui-playground/sections/ButtonsSection';
 import { CardsSection } from '@/pages/ui-playground/sections/CardsSection';
 import { ColorsSection } from '@/pages/ui-playground/sections/ColorsSection';
 import { AvatarBadgesSection } from '@/pages/ui-playground/sections/AvatarBadgesSection';
+import { AnimationsSection } from '@/pages/ui-playground/sections/AnimationsSection';
 
 // Auto-import UI components in client/src/components/ui
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -81,6 +82,7 @@ const UIPlaygroundPage: React.FC = () => {
       <CardsSection />
       <ColorsSection />
       <AvatarBadgesSection />
+      <AnimationsSection />
     </DevPlaygroundLayout>
   );
 };

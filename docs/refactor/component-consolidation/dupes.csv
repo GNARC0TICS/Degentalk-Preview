@@ -1,0 +1,5 @@
+"Path A","Path B","Suspected Domain","LOC (A)","LOC (B)","Imports (A)","Imports (B)"
+"client/src/components/identity/UserName.tsx","client/src/components/users/Username.tsx","User / Identity",100,50,15,2
+"client/src/components/users/Avatar.tsx","client/src/components/users/user-avatar.tsx","User / Identity",120,60,25,3
+"client/src/components/layout/sidebar.tsx","client/src/components/ui/sidebar.tsx","Layout",150,200,12,10
+"client/src/components/identity/path-progress.tsx","client/src/components/paths/path-progress.tsx","Gamification",80,90,5,8

@@ -50,6 +50,7 @@ import { ForumListItem } from '@/features/forum/components/ForumListItem';
 import { motion } from 'framer-motion'; // Added Framer Motion import
 import BackToHomeButton from '@/components/common/BackToHomeButton';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import { Wide } from '@/layout/primitives';
 
 
 const CATEGORY_COLORS = [ // This can remain for generic category styling if no theme is matched
@@ -261,9 +262,9 @@ const ForumPage = () => {
 	if (structureLoading) {
 		return (
 			<div className="flex flex-col min-h-screen">
-				<div className="container max-w-7xl mx-auto px-4 py-6 flex-grow">
+				<Wide className="px-4 py-6 flex-grow">
 					<LoadingSpinner text="Loading Forums..." />
-				</div>
+				</Wide>
 				<SiteFooter />
 			</div>
 		);
@@ -272,9 +273,9 @@ const ForumPage = () => {
 	if (structureErrorDetails) {
 		return (
 			<div className="flex flex-col min-h-screen">
-				<div className="container max-w-7xl mx-auto px-4 py-6 flex-grow">
+				<Wide className="px-4 py-6 flex-grow">
 					<ErrorDisplay title="Error loading forums" error={structureErrorDetails} />
-				</div>
+				</Wide>
 				<SiteFooter />
 			</div>
 		);
@@ -282,7 +283,7 @@ const ForumPage = () => {
 
 	return (
 		<div className="flex flex-col min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black">
-			<div className="container max-w-7xl mx-auto px-4 py-6 flex-grow">
+			<Wide className="px-4 py-6 flex-grow">
 				<BackToHomeButton />
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 					{/* Main Content Area */}
@@ -390,7 +391,7 @@ const ForumPage = () => {
 						</motion.div>
 					</aside>
 				</div>
-			</div>
+			</Wide>
 			<SiteFooter />
 		</div>
 	);

@@ -5,6 +5,8 @@ import { apiRequest } from '@/lib/queryClient';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { Button } from '@/components/ui/button';
+import { Tooltip } from '@/components/ui/tooltip';
+import { dictionaryApi } from '@/features/dictionary/services/dictionaryApi';
 
 interface DictionaryEntry {
     id: number;
@@ -29,11 +31,19 @@ export default function DictionaryDetailPage() {
         }
     });
 
-    const upvoteMutation = useMutation({
-        mutationFn: async () => {
-            await apiRequest({ url: `/api/dictionary/${data?.id}/upvote`, method: 'POST' });
+    const upvoteMutation = useMutation((id: number) => dictionaryApi.upvote(id), {
+        onMutate: async () => {
+            if (!data) return;
+            queryClient.setQueryData(['dictionary', slug], (old: any) => {
+                if (!old) return old;
+                return {
+                    ...old,
+                    upvoteCount: old.upvoteCount + (old.hasUpvoted ? -1 : 1),
+                    hasUpvoted: !old.hasUpvoted
+                };
+            });
         },
-        onSuccess: () => {
+        onError: () => {
             queryClient.invalidateQueries(['dictionary', slug]);
         }
     });
@@ -50,9 +60,14 @@ export default function DictionaryDetailPage() {
             )}
 
             <div className="flex items-center gap-4 mb-10">
-                <Button onClick={() => upvoteMutation.mutate()} disabled={upvoteMutation.isLoading}>
-                    👍 {data.upvoteCount}
-                </Button>
+                <Tooltip content={data.hasUpvoted ? 'You already upvoted this word.' : 'Upvote this word'}>
+                    <Button
+                        onClick={() => upvoteMutation.mutate(data.id)}
+                        disabled={upvoteMutation.isLoading || data.hasUpvoted}
+                    >
+                        👍 {data.upvoteCount}
+                    </Button>
+                </Tooltip>
                 {data.status === 'pending' && <span className="text-amber-400">Awaiting approval</span>}
             </div>
 
