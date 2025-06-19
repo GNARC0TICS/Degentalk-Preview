@@ -83,6 +83,7 @@ npm run test:forum-endpoints  # Forum API validation
 ### Critical Architecture Patterns
 
 #### 1. Forum System - Single Source of Truth
+
 The forum structure follows a strict canonical pattern:
 
 - **`client/src/config/forumMap.config.ts`** - Master configuration file
@@ -91,6 +92,7 @@ The forum structure follows a strict canonical pattern:
 - **Never manually edit forum_categories table**
 
 #### 2. Domain-Driven Backend
+
 ```
 server/src/domains/
 ├── forum/          # Forum, threads, posts
@@ -102,6 +104,7 @@ server/src/domains/
 ```
 
 #### 3. Database Schema Organization
+
 ```
 db/schema/
 ├── user/           # Users, roles, permissions
@@ -121,9 +124,9 @@ db/schema/
 import { apiRequest } from '@/lib/queryClient';
 
 const data = await apiRequest<ResponseType>({
-  url: '/api/endpoint',
-  method: 'POST',
-  data: { key: 'value' }
+	url: '/api/endpoint',
+	method: 'POST',
+	data: { key: 'value' }
 });
 
 // ❌ Legacy (migrate from)
@@ -142,11 +145,13 @@ import { api } from '@/lib/api';
 ## Development Environment
 
 ### Prerequisites
+
 - Node.js 18+
 - PostgreSQL (local or remote)
 - Environment file: `env.local` (not `.env`)
 
 ### Key Environment Variables
+
 ```bash
 DATABASE_URL=postgresql://...    # Required PostgreSQL connection
 NODE_ENV=development
@@ -155,6 +160,7 @@ VITE_PORT=5173                  # Frontend port
 ```
 
 ### Development Features
+
 - **No authentication required** in development
 - **Role switcher** - Test admin/mod/user permissions (bottom-right corner)
 - **Hot reload** on both frontend and backend
@@ -163,12 +169,14 @@ VITE_PORT=5173                  # Frontend port
 ## Forum Business Logic
 
 ### Core Business Rules (README-FORUM.md compliance)
+
 1. **Zone Types**: Primary zones (featured carousel) vs General zones
 2. **Access Levels**: `public` | `registered` | `level_10+` | `mod` | `admin`
 3. **XP System**: Forum-specific multipliers, posting requirements
 4. **Permissions**: Forum-level posting, tipping, XP rules
 
 ### Critical Components
+
 - **`ForumStructureContext`** - Global forum data management
 - **`forumMap.config.ts`** - Single source of truth for structure
 - **Business logic utilities** in `lib/forum/`:
@@ -177,6 +185,7 @@ VITE_PORT=5173                  # Frontend port
   - `shouldAwardXP.ts` - XP eligibility
 
 ### Theme System
+
 - **CSS variables**: `--zone-accent`, `--zone-banner`, `--zone-icon`
 - **Theme inheritance**: Zone → Forum → Component
 - **Dynamic theming**: API-driven overrides
@@ -184,12 +193,14 @@ VITE_PORT=5173                  # Frontend port
 ## XP & Economy Integration
 
 ### XP Rewards Flow
+
 1. User performs action (create thread, post reply)
 2. `POST /api/xp/award-action` - Awards XP based on `xpActionSettings`
 3. `POST /api/wallet/transactions/create` - Awards DGT tokens
 4. Frontend displays toast notifications
 
 ### Key Services
+
 - **XP**: `server/src/domains/xp/xp.service.ts`
 - **DGT**: `server/src/domains/wallet/dgt.service.ts`
 - **Rewards**: Configured in `xpActionSettings` table
@@ -197,17 +208,21 @@ VITE_PORT=5173                  # Frontend port
 ## Critical Patterns & Rules
 
 ### Schema Consistency (.cursor/rules/schema-consistency.mdc)
+
 - **All database fields** must exist in the PostgreSQL schema for both development and production environments
 - **No undefined field references** in queries
 - **Explicit null handling** for all fields
 
 ### Permission Enforcement
+
 - **Frontend forms** must integrate with `lib/forum/` utilities
 - **Route protection** required for admin/mod features
 - **Access level enforcement** in thread creation
 
 ### Emergency Recovery
+
 If `npm run dev` creates infinite loops:
+
 ```bash
 # Emergency stop
 pkill -f "npm run dev"
@@ -218,12 +233,14 @@ npm run kill-ports
 ## Common Development Tasks
 
 ### Adding New Forum Zone/Forum
+
 1. Edit `client/src/config/forumMap.config.ts`
 2. Run `npm run sync:forums`
 3. Add banner image to `public/banners/`
 4. Test navigation components
 
 ### Creating New Domain
+
 1. Create `server/src/domains/newdomain/`
 2. Add routes, controllers, services
 3. Create schema in `db/schema/newdomain/`
@@ -231,6 +248,7 @@ npm run kill-ports
 5. Add migration script if needed
 
 ### Database Schema Changes
+
 1. Update schema files in `db/schema/`
 2. Run `npm run db:migrate` to generate migration
 3. Update `scripts/db/create-missing-tables.ts` for dev compatibility
@@ -239,7 +257,7 @@ npm run kill-ports
 ## Testing Strategy
 
 - **E2E**: Playwright tests in `tests/e2e/`
-- **Unit**: Vitest tests in `client/` 
+- **Unit**: Vitest tests in `client/`
 - **API**: Domain-specific test scripts in `scripts/testing/`
 - **XP System**: `npm run test:xp` validates reward calculations
 
@@ -261,16 +279,20 @@ npm run kill-ports
 ## Common Issues & Solutions
 
 ### Port Conflicts
+
 Run `npm run kill-ports` before starting development
 
 ### Database Sync Issues
+
 ```bash
 npm run sync:check-forum-config  # Check sync status
 npm run sync:forums              # Force resync
 ```
 
 ### Type Errors
+
 TypeScript checking is temporarily disabled during major refactor. Use `npm run lint` for code quality.
 
 ### Forum Configuration Changes
+
 Always run `npm run sync:forums` after editing `forumMap.config.ts`

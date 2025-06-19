@@ -125,7 +125,7 @@ export function CreateThreadForm({
 		} else {
 			setFormDisabledReason(null);
 		}
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [permissionReason]);
 
 	useEffect(() => {
@@ -173,7 +173,11 @@ export function CreateThreadForm({
 		}
 	}, [selectedForumSlugState, passedForumSlug]); // Dependencies ensure this runs when selection changes
 
-	const { data: draftData, isLoading: loadingDraft, isSuccess: isDraftLoadSuccess } = useQuery<DraftData>({
+	const {
+		data: draftData,
+		isLoading: loadingDraft,
+		isSuccess: isDraftLoadSuccess
+	} = useQuery<DraftData>({
 		queryKey: ['threadDraft', { forumSlug: activeForumSlug }],
 		queryFn: async () => {
 			if (!activeForumSlug) return Promise.reject('No forum selected for draft.');

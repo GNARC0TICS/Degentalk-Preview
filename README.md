@@ -28,8 +28,8 @@ A crypto-native forum and social platform designed for cryptocurrency enthusiast
 
 - Node.js 18+
 - npm
-- PostgreSQL (development & production)  
-> **Note:** Degentalk now exclusively supports **PostgreSQL** across all environments. Legacy SQLite support has been fully removed.
+- PostgreSQL (development & production)
+  > **Note:** Degentalk now exclusively supports **PostgreSQL** across all environments. Legacy SQLite support has been fully removed.
 
 ### Environment Setup
 
