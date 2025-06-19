@@ -61,8 +61,8 @@ const ForumSearchPage = () => {
 
 
 	return (
-		<div className="flex flex-col min-h-screen bg-black text-white">
-			<main className="flex-grow">
+        <div className="flex flex-col min-h-screen bg-black text-white">
+            <main className="flex-grow">
 				<Wide className="px-4 py-8">
 					<Breadcrumb className="mb-6">
 						<BreadcrumbList>
@@ -70,9 +70,9 @@ const ForumSearchPage = () => {
 								<React.Fragment key={item.href || index}>
 									<BreadcrumbItem>
 										{index === breadcrumbItems.length - 1 && !searchQuery ? ( // Last item if no search query yet
-											<BreadcrumbPage>{item.label}</BreadcrumbPage>
+											(<BreadcrumbPage>{item.label}</BreadcrumbPage>)
 										) : (index === breadcrumbItems.length -1 && searchQuery) ? ( // Last item if there is a search query
-											<BreadcrumbPage>{item.label}</BreadcrumbPage>
+											(<BreadcrumbPage>{item.label}</BreadcrumbPage>)
 										)
 										: (
 											<BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
@@ -127,9 +127,9 @@ const ForumSearchPage = () => {
 					)}
 				</Wide>
 			</main>
-			<SiteFooter />
-		</div>
-	);
+            <SiteFooter />
+        </div>
+    );
 };
 
 export default ForumSearchPage;

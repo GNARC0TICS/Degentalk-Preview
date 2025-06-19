@@ -402,12 +402,12 @@ function HierarchicalZoneNav({
 	const generalCategoryNodes = navigationTree.filter(node => node.type === 'generalCategory');
 
 	return (
-		<aside
+        <aside
 			dir="rtl"
 			className={cn('max-h-[100dvh] overflow-y-auto overflow-x-hidden pr-1', className)}
 			aria-expanded="true"
 		>
-			<nav dir="ltr" className="space-y-3" aria-label="Forum Navigation" role="navigation">
+            <nav dir="ltr" className="space-y-3" aria-label="Forum Navigation" role="navigation">
 				{systemLinkNodes.length > 0 && (
 					<div className="space-y-1">
 						{systemLinkNodes.map(node => (
@@ -435,14 +435,14 @@ function HierarchicalZoneNav({
 								// For now, assuming Primary Zones in nav are direct links, sub-content on their page.
 								// If they need to expand to show forums, this needs to be like GeneralCategorySection.
 								// Based on current plan, let's make them expandable too for consistency.
-								<GeneralCategorySection // Reusing GeneralCategorySection logic for Primary Zones too
+								(<GeneralCategorySection // Reusing GeneralCategorySection logic for Primary Zones too
 									key={zoneNode.id}
 									categoryNode={zoneNode} // Pass zoneNode as categoryNode
 									isExpanded={!!expandedCategories[zoneNode.id]} // Manage expansion for primary zones too
 									onToggle={() => toggleCategoryExpansion(zoneNode.id)}
 									currentForumSlug={currentForumSlug}
 									currentZoneSlug={currentZoneSlug} // Pass currentZoneSlug
-								/>
+								/>)
 								// Original simple NavItem for Primary Zones (if not expandable):
 								// <NavItem
 								// 	key={zoneNode.id}
@@ -477,8 +477,8 @@ function HierarchicalZoneNav({
 					</section>
 				)}
 			</nav>
-		</aside>
-	);
+        </aside>
+    );
 }
 
 export default HierarchicalZoneNav;

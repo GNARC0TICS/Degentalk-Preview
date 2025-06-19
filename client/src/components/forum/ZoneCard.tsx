@@ -19,6 +19,7 @@ export interface ZoneCardProps {
 	colorTheme?: string;
 
 	// Stats and metadata
+	forumCount?: number;
 	threadCount?: number;
 	postCount?: number;
 	activeUsersCount?: number;
@@ -51,8 +52,8 @@ export function ZoneCard({
 	description,
 	icon,
 	colorTheme = 'default',
+	forumCount = 0,
 	threadCount = 0,
-	postCount = 0,
 	activeUsersCount = 0,
 	lastActivityAt,
 	hasXpBoost = false,
@@ -128,8 +129,8 @@ export function ZoneCard({
 					<p className="text-sm opacity-90 mb-4">{description}</p>
 
 					<ZoneStats
+						forumCount={forumCount}
 						threadCount={threadCount}
-						postCount={postCount}
 						activeUsersCount={activeUsersCount}
 					/>
 				</CardContent>

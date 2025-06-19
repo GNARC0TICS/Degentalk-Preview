@@ -392,7 +392,7 @@ export function CreateThreadForm({
 											</SelectItem>
 										) : (
 										// If no forumSlug is passed, populate dropdown from merged zones (includes DB IDs)
-											zones.map((zone) => (
+											(zones.map((zone) => (
 												<SelectGroup key={zone.slug}>
 													<SelectLabel>{zone.name} ({zone.type})</SelectLabel>
 													{zone.forums.map((forumItem) => (
@@ -405,7 +405,7 @@ export function CreateThreadForm({
 														</SelectItem>
 													))}
 												</SelectGroup>
-											))
+											)))
 										)}
 									</SelectContent>
 								</Select>

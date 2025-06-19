@@ -116,7 +116,7 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 	const dropzoneState = getDropzoneState();
 
 	return (
-		<div
+        <div
 			{...getRootProps()}
 			className={cn(
 				'flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-4 text-center transition-all duration-200',
@@ -130,10 +130,9 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 				className
 			)}
 		>
-			<input {...getInputProps()} />
-			
-			{previewUrl && showPreview && dropzoneState !== 'uploading' && dropzoneState !== 'complete' ? ( // Hide preview during active upload/complete if progress overlay is used
-				<img src={previewUrl} alt="Preview" className="max-h-32 object-contain rounded-md" />
+            <input {...getInputProps()} />
+            {previewUrl && showPreview && dropzoneState !== 'uploading' && dropzoneState !== 'complete' ? ( // Hide preview during active upload/complete if progress overlay is used
+				(<img src={previewUrl} alt="Preview" className="max-h-32 object-contain rounded-md" />)
 			) : (
 				<div className="flex flex-col items-center gap-2">
 					{uploadComplete ? (
@@ -171,8 +170,8 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 					)}
 				</div>
 			)}
-			{/* Progress overlay for image preview, shown when preview is active and uploading */}
-			{previewUrl && showPreview && isUploading && (
+            {/* Progress overlay for image preview, shown when preview is active and uploading */}
+            {previewUrl && showPreview && isUploading && (
 				<div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-md">
 					<div className="text-center">
 						<div className="w-16 h-1 bg-zinc-700 rounded-full overflow-hidden mb-2">
@@ -185,6 +184,6 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 					</div>
 				</div>
 			)}
-		</div>
-	);
+        </div>
+    );
 };

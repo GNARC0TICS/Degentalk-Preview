@@ -120,7 +120,6 @@ const AdminActivityPage: React.FC = () => {
           </button>
         </div>
       </div>
-      
       {isLoading ? (
         <div className="text-center p-8">
           <p className="text-gray-600">Loading activity logs...</p>

@@ -274,8 +274,8 @@ export default function AdminDgtPackagesPage() {
 	);
 
 	return (
-		<AdminPageShell title="DGT Packages" pageActions={pageActions}>
-			<div className="space-y-6">
+        <AdminPageShell title="DGT Packages" pageActions={pageActions}>
+            <div className="space-y-6">
 				{/* Editor Card */}
 				{editingPackage && (
 					<Card className="border-primary/50">
@@ -634,6 +634,6 @@ export default function AdminDgtPackagesPage() {
 					</AlertDialogContent>
 				</AlertDialog>
 			</div>
-		</AdminPageShell>
-	);
+        </AdminPageShell>
+    );
 }

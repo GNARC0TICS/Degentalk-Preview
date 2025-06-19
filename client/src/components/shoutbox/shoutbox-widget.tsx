@@ -8,7 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
-import { UserName } from '@/components/identity/UserName';
+import { UserName } from '@/components/users/Username';
 import { LevelBadge } from '@/components/identity/LevelBadge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {

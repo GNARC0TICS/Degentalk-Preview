@@ -9,4 +9,5 @@ export const xpCloutSettings = pgTable('xp_clout_settings', {
 	updatedAt: timestamp('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`)
 });
 
-export type XpCloutSettings = typeof xpCloutSettings.$inferSelect; 
+export type XpCloutSettings = typeof xpCloutSettings.$inferSelect;
+export type InsertXpCloutSettings = typeof xpCloutSettings.$inferInsert;

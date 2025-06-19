@@ -124,7 +124,7 @@ export const LevelFormDialogComponent: React.FC<LevelFormDialogProps> = ({
           </div>
 
           {formData.level > 0 && ( // Show XP diff info if level is set
-            <div className="text-sm text-muted-foreground">
+            (<div className="text-sm text-muted-foreground">
               <p>
                 Level {formData.level} will require {formData.xpRequired.toLocaleString()} XP.
               </p>
@@ -140,7 +140,7 @@ export const LevelFormDialogComponent: React.FC<LevelFormDialogProps> = ({
                   })()}
                 </p>
               )}
-            </div>
+            </div>)
           )}
         </div>
 

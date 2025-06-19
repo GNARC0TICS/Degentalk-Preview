@@ -29,6 +29,8 @@ export function ForumListItem({ forum, href, parentZoneColor, depthLevel = 0 }: 
 		}
 	}, [forum.threadCount, forum.postCount, prevThreadCount, prevPostCount]);
 
+	const canHaveThreads = forum.canHaveThreads !== false; // Default to true if property is undefined
+
 	const renderIcon = () => {
 		if (forum.icon) {
 			return (
@@ -55,7 +57,7 @@ export function ForumListItem({ forum, href, parentZoneColor, depthLevel = 0 }: 
 		<div 
 			className={`block transition-all duration-300 hover:scale-[1.02] ${
 				isParentForum ? 'p-4 bg-zinc-900/60 backdrop-blur-md' : 'p-3 bg-zinc-900/40'
-			} ${forum.canHaveThreads ? 'hover:bg-zinc-900/80' : 'opacity-75 cursor-not-allowed'}`}
+			} ${canHaveThreads ? 'hover:bg-zinc-900/80' : 'opacity-75 cursor-not-allowed'}`}
 			style={{
 				borderLeft: isParentForum ? `3px solid ${accentColor}` : 'none',
 				boxShadow: isParentForum ? `0 4px 6px -1px ${accentColorWithOpacity}` : 'none'
@@ -111,7 +113,7 @@ export function ForumListItem({ forum, href, parentZoneColor, depthLevel = 0 }: 
 
 	return (
 		<div className={`${isParentForum ? 'mb-2' : ''}`}>
-			{forum.canHaveThreads ? (
+			{canHaveThreads ? (
 				<Link href={href}>
 					<a className="block">{forumItemContent}</a>
 				</Link>

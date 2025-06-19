@@ -100,21 +100,20 @@ const ShoutboxContainer: React.FC = () => {
 	);
 
 	return (
-		<Card className="w-full bg-zinc-900 border-zinc-800">
-			<CardHeader className="pb-2">
+        <Card className="w-full bg-zinc-900 border-zinc-800">
+            <CardHeader className="pb-2">
 				<CardTitle className="text-lg flex items-center">
 					<MessageSquare className="h-5 w-5 mr-2 text-blue-400" />
 					Global Shoutbox
 				</CardTitle>
 				<CardDescription>Chat with other forum members in real-time</CardDescription>
 			</CardHeader>
-
-			<FeatureGate featureId="shoutbox" fallback={lockedContent}>
+            <FeatureGate featureId="shoutbox" fallback={lockedContent}>
 				<CardContent className="p-0">
 					<div className="h-64 overflow-y-auto p-4 space-y-3 border-y border-zinc-800">
 						{messagesLoading ? (
 							// Loading skeletons
-							Array.from({ length: 5 }).map((_, i) => (
+							(Array.from({ length: 5 }).map((_, i) => (
 								<div key={i} className="flex items-start space-x-2">
 									<Skeleton className="h-8 w-8 rounded-full" />
 									<div className="space-y-2 flex-grow">
@@ -122,10 +121,10 @@ const ShoutboxContainer: React.FC = () => {
 										<Skeleton className="h-3 w-full" />
 									</div>
 								</div>
-							))
+							)))
 						) : Array.isArray(messages) && messages.length > 0 ? (
 							// Message list
-							messages.map((msg: ShoutMessage) => (
+							(messages.map((msg: ShoutMessage) => (
 								<div key={msg.id} className="flex items-start space-x-2">
 									<Avatar className="h-8 w-8">
 										<AvatarImage src={msg.avatarUrl} alt={msg.username} />
@@ -146,12 +145,12 @@ const ShoutboxContainer: React.FC = () => {
 										<p className="text-sm mt-0.5">{msg.message}</p>
 									</div>
 								</div>
-							))
+							)))
 						) : (
 							// Empty state
-							<div className="flex items-center justify-center h-full text-zinc-500">
-								<p>No messages yet. Be the first to chat!</p>
-							</div>
+							(<div className="flex items-center justify-center h-full text-zinc-500">
+                                <p>No messages yet. Be the first to chat!</p>
+                            </div>)
 						)}
 					</div>
 				</CardContent>
@@ -175,8 +174,8 @@ const ShoutboxContainer: React.FC = () => {
 					</div>
 				</CardFooter>
 			</FeatureGate>
-		</Card>
-	);
+        </Card>
+    );
 };
 
 export default ShoutboxContainer;

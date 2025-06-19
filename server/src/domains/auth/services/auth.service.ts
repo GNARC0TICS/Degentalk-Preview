@@ -5,6 +5,8 @@ import { db } from '@db';
 import { eq, count } from 'drizzle-orm';
 import { isDevMode } from '../../../utils/environment';
 import { logger } from '@server/src/core/logger';
+import { v4 as uuidv4 } from 'uuid';
+
 type User = typeof users.$inferSelect;
 
 // Promisify scrypt for async usage
@@ -90,9 +92,11 @@ export function createMockUser(
 ): User {
 	logger.info('AuthService', `Creating mock ${role} user for ID ${userId} in development mode`, { userId, role });
 
+	const mockUuid = uuidv4();
+
 	return {
-		id: userId,
-		uuid: 'dev-uuid',
+		id: mockUuid,
+		uuid: mockUuid,
 		username: `Dev${role.charAt(0).toUpperCase() + role.slice(1)}`,
 		email: `dev-${role}@degen.io`,
 		password: 'mock-password-hash',

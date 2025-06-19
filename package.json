@@ -74,7 +74,7 @@
 		"mcp:neon": "npx @neondatabase/mcp-server-neon start napi_64010heeqqly1w5t5eg1dpjposfjcqpdg0lu4bc7yvnci0vh7qyivoo04i3j036x",
 		"typecheck": "echo \"Skipping typecheck until types cleanup\"",
 		"tokens": "style-dictionary build",
-		"prepare": "husky install",
+		"prepare": "",
 		"codemod:dry-run": "bash scripts/refactor/component-merge/run-dry-run.sh"
 	},
 	"dependencies": {
@@ -249,7 +249,9 @@
 		"typescript": "5.6.3",
 		"vite": "^5.4.14",
 		"vitest": "^3.2.4",
-		"jscodeshift": "^0.15.0"
+		"jscodeshift": "^0.15.0",
+		"eslint-plugin-degen": "file:eslint-plugins/degen",
+		"eslint-plugin-react-hooks": "^4.6.0"
 	},
 	"optionalDependencies": {
 		"bufferutil": "^4.0.8"

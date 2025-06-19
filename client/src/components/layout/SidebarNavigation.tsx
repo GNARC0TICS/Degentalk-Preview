@@ -225,11 +225,10 @@ export function SidebarNavigation({
 	const generalCategoryNodes = navigationTree.filter(node => node.type === 'generalCategory');
 
 	return (
-		<nav className={cn('space-y-4', className)}> {/* Adjusted main spacing */}
-			{/* Pinned Items Section (Placeholder) */}
-			{/* {userPinnedItems.length > 0 && ( ...pinned items logic... )} */}
-
-			{systemLinkNodes.length > 0 && (
+        <nav className={cn('space-y-4', className)}> {/* Adjusted main spacing */}
+            {/* Pinned Items Section (Placeholder) */}
+            {/* {userPinnedItems.length > 0 && ( ...pinned items logic... )} */}
+            {systemLinkNodes.length > 0 && (
 				<div>
 					{/* Optional: Header for system links */}
 					{/* <div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">Navigation</div> */}
@@ -244,8 +243,7 @@ export function SidebarNavigation({
 					</div>
 				</div>
 			)}
-
-			{primaryZoneNodes.length > 0 && (
+            {primaryZoneNodes.length > 0 && (
 				<div>
 					<div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">Primary Zones</div>
 					<div className="space-y-0.5 mt-1"> {/* Adjusted spacing */}
@@ -259,12 +257,10 @@ export function SidebarNavigation({
 					</div>
 				</div>
 			)}
-
-			{(systemLinkNodes.length > 0 || primaryZoneNodes.length > 0) && generalCategoryNodes.length > 0 && (
-				<div className="h-px bg-zinc-700/60 mx-2 my-3" /> // Adjusted divider
+            {(systemLinkNodes.length > 0 || primaryZoneNodes.length > 0) && generalCategoryNodes.length > 0 && (
+				(<div className="h-px bg-zinc-700/60 mx-2 my-3" />) // Adjusted divider
 			)}
-
-			{generalCategoryNodes.length > 0 && (
+            {generalCategoryNodes.length > 0 && (
 				<div>
 					<div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">Categories</div>
 					<div className="space-y-0.5 mt-1"> {/* Adjusted spacing */}
@@ -280,8 +276,8 @@ export function SidebarNavigation({
 					</div>
 				</div>
 			)}
-		</nav>
-	);
+        </nav>
+    );
 }
 
 export default SidebarNavigation;

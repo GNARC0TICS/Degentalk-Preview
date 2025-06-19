@@ -14,7 +14,7 @@ import { useAuth } from '@/hooks/use-auth.tsx';
 import type { ProfileData } from '@/types/profile';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
-import { UserName } from '@/components/identity/UserName';
+import { UserName } from '@/components/users/Username';
 import { LevelBadge } from '@/components/identity/LevelBadge';
 
 interface Props {

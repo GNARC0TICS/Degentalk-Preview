@@ -3,7 +3,7 @@ import DOMPurify from 'dompurify';
 import { Link } from 'wouter';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
-import { UserName } from '@/components/identity/UserName';
+import { UserName } from '@/components/users/Username';
 import { LevelBadge } from '@/components/identity/LevelBadge';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import { Button } from '@/components/ui/button';

@@ -144,6 +144,7 @@ export interface MergedForum {
   threadCount: number;
   postCount: number;
   parentCategoryId?: number | null;
+  canHaveThreads?: boolean;
 }
 
 export interface MergedZone {
@@ -157,7 +158,7 @@ export interface MergedZone {
   forums: MergedForum[];
   theme: MergedTheme;
   icon?: string | null;
-  features: string[];
+  features: string[] | Record<string, unknown>;
   customComponents: string[];
   staffOnly: boolean;
   hasXpBoost?: boolean;
@@ -229,6 +230,7 @@ function makeMergedForum(api: ApiEntity, parentZoneId: number): MergedForum {
     threadCount: api.threadCount,
     postCount: api.postCount,
     parentCategoryId: null,
+    canHaveThreads: true,
   };
 }
 
@@ -355,6 +357,7 @@ function fallbackStructure(staticZones: Zone[]) {
         threadCount: 0,
         postCount: 0,
         parentCategoryId: null,
+        canHaveThreads: true,
       };
       forums[mf.slug] = mf;
       mz.forums.push(mf);

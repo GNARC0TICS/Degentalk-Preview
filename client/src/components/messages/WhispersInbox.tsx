@@ -181,11 +181,11 @@ export function WhispersInbox({ className }: WhispersInboxProps) {
 	);
 
 	return (
-		<Card className={`bg-black/90 backdrop-blur-xl border border-purple-500/20 ${className}`}>
-			{!selectedConversation ? (
+        <Card className={`bg-black/90 backdrop-blur-xl border border-purple-500/20 ${className}`}>
+            {!selectedConversation ? (
 				// Conversations List View
-				<>
-					<CardHeader>
+				(<>
+                    <CardHeader>
 						<CardTitle className="text-xl text-white flex items-center justify-between">
 							<span>Your Whispers</span>
 							<span className="text-sm text-purple-400">
@@ -205,7 +205,7 @@ export function WhispersInbox({ className }: WhispersInboxProps) {
 							/>
 						</div>
 					</CardHeader>
-					<CardContent>
+                    <CardContent>
 						<ScrollArea className="h-[calc(70vh-10rem)] pr-4">
 							{isLoadingConversations ? (
 								<div className="flex justify-center py-10">
@@ -260,11 +260,11 @@ export function WhispersInbox({ className }: WhispersInboxProps) {
 							)}
 						</ScrollArea>
 					</CardContent>
-				</>
+                </>)
 			) : (
 				// Conversation Detail View
-				<>
-					<CardHeader className="pb-3">
+				(<>
+                    <CardHeader className="pb-3">
 						<div className="flex items-center">
 							<Button
 								variant="ghost"
@@ -303,7 +303,7 @@ export function WhispersInbox({ className }: WhispersInboxProps) {
 							</Button>
 						</div>
 					</CardHeader>
-					<CardContent className="pt-0">
+                    <CardContent className="pt-0">
 						<ScrollArea className="messages-scroll-area h-[calc(70vh-14rem)] pr-4">
 							{isLoadingMessages ? (
 								<div className="flex justify-center py-10">
@@ -355,7 +355,7 @@ export function WhispersInbox({ className }: WhispersInboxProps) {
 							)}
 						</ScrollArea>
 					</CardContent>
-					<CardFooter className="border-t border-purple-500/10 pt-4">
+                    <CardFooter className="border-t border-purple-500/10 pt-4">
 						<div className="flex w-full space-x-2 items-start">
 							<Textarea
 								placeholder="Type your message..."
@@ -385,8 +385,8 @@ export function WhispersInbox({ className }: WhispersInboxProps) {
 							</Button>
 						</div>
 					</CardFooter>
-				</>
+                </>)
 			)}
-		</Card>
-	);
+        </Card>
+    );
 }

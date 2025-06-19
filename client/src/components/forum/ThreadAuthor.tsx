@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'wouter';
 import { cn } from '@/lib/utils';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
-import { UserName } from '@/components/identity/UserName';
+import { UserName } from '@/components/users/Username';
 import { LevelBadge } from '@/components/identity/LevelBadge';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 

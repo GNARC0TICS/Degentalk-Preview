@@ -45,7 +45,4 @@ export const insertDictionaryEntrySchema = createInsertSchema(dictionaryEntries,
 });
 
 export type DictionaryEntry = typeof dictionaryEntries.$inferSelect;
-export type NewDictionaryEntry = z.infer<typeof insertDictionaryEntrySchema>;
-
-// Re-export schema for external usage
-export { insertDictionaryEntrySchema }; 
+export type NewDictionaryEntry = z.infer<typeof insertDictionaryEntrySchema>; 

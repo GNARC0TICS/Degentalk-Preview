@@ -34,6 +34,7 @@ export interface ZoneCardData {
 		name: string;
 		endsAt: Date;
 	};
+	forumCount?: number;
 }
 
 export interface CardData extends ZoneCardData {
@@ -76,7 +77,15 @@ export function CanonicalZoneGrid({
 	}
 
 	const gridData: GridCardData[] = [
-		...zones.map((zone) => ({ ...zone, type: 'zone' as const, isStatic: false })),
+		...zones.map((zone) => {
+			// Calculate total forums including subforums
+			const directForums = zone.forums ? zone.forums.length : 0;
+			const subForums = zone.forums
+				? zone.forums.reduce((sum, f) => sum + (f.subforums ? f.subforums.length : 0), 0)
+				: 0;
+			const forumCount = directForums + subForums;
+			return { ...zone, forumCount, type: 'zone' as const, isStatic: false };
+		}),
 		...(includeShopCard
 			? [
 					{
@@ -90,8 +99,8 @@ export function CanonicalZoneGrid({
 	];
 
 	return (
-		<div data-testid="zone-grid" className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 ${className}`}>
-			{gridData.map((cardData, index) => (
+        <div data-testid="zone-grid" className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 ${className}`}>
+            {gridData.map((cardData, index) => (
 				<motion.div
 					key={cardData.id}
 					initial={{ opacity: 0, y: 20 }}
@@ -102,7 +111,7 @@ export function CanonicalZoneGrid({
 						<ShopCard featuredItem={(cardData as ShopCardData).featuredItem} />
 					) : (
 						// Use the imported ZoneCard component
-						<ZoneCard
+						(<ZoneCard
 							id={cardData.id}
 							name={cardData.name}
 							slug={cardData.slug}
@@ -117,14 +126,15 @@ export function CanonicalZoneGrid({
 							boostMultiplier={cardData.boostMultiplier}
 							isEventActive={cardData.isEventActive}
 							eventData={cardData.eventData}
+							forumCount={(cardData as any).forumCount}
 							// rarity is not in ZoneCardData, ZoneCard will use its default
 							// className can be passed if needed, or ZoneCard handles its own styling
-						/>
+						/>)
 					)}
 				</motion.div>
 			))}
-		</div>
-	);
+        </div>
+    );
 }
 
 // Removed internal ForumZoneCard component as it's replaced by the external ZoneCard

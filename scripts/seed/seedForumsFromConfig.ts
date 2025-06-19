@@ -1,5 +1,6 @@
 import { db } from "../../db";
-import { forumCategories, threads, posts } from "../../db/schema"; // Ensure posts and threads are imported
+import { forumCategories, threads, posts, users } from "../../db/schema"; // Ensure posts, threads, users imported
+import { eq } from "drizzle-orm";
 import { forumMap, DEFAULT_FORUM_RULES } from "../../client/src/config/forumMap.config"; // Import DEFAULT_FORUM_RULES
 // import { eq } from "drizzle-orm"; // No longer used directly
 import chalk from "chalk";
@@ -58,7 +59,8 @@ async function seedForumLevel(
   currentParentIdInDB: number,
   parentConfigSlug: string, // ADDED: Slug of the parent (zone or forum) from config
   parentConfigTheme: ForumTheme | Partial<ForumTheme> | undefined, // Theme from parent zone or parent forum
-  tx: TransactionClient
+  tx: TransactionClient,
+  defaultUserId: string | null | undefined
 ) {
   for (const forumConfig of forumsToProcess) {
     const forumPluginData: ForumCategoryPluginData = {
@@ -104,13 +106,32 @@ async function seedForumLevel(
     }
     console.log(chalk.cyan(`[✓] Synced forum: ${forumConfig.name} (slug: ${forumConfig.slug}) → parentId ${currentParentIdInDB}`));
 
+    // Seed a simple welcome thread if a default user exists and no threads yet
+    if (defaultUserId) {
+      const existingThreads = await tx
+        .select({ id: threads.id })
+        .from(threads)
+        .where(eq(threads.categoryId, newForumDbId))
+        .limit(1);
+      if (existingThreads.length === 0) {
+        const threadSlug = `${forumConfig.slug}-welcome`;
+        await tx.insert(threads).values({
+          title: `Welcome to ${forumConfig.name}`,
+          slug: threadSlug,
+          categoryId: newForumDbId,
+          userId: defaultUserId,
+        }).onConflictDoNothing();
+        console.log(chalk.gray(`    └─ Added welcome thread to ${forumConfig.slug}`));
+      }
+    }
+
     // Recursively process subforums, if any
     if (forumConfig.forums && forumConfig.forums.length > 0) {
       console.log(chalk.blue(`  ↳ Seeding ${forumConfig.forums.length} subforums for '${forumConfig.name}'...`));
       // Pass the current forum's theme (override or inherited) as parent theme for subforums
       const currentForumEffectiveTheme = forumConfig.themeOverride || parentConfigTheme;
       // Pass current forum's slug as parentConfigSlug for its children
-      await seedForumLevel(forumConfig.forums, newForumDbId, forumConfig.slug, currentForumEffectiveTheme, tx);
+      await seedForumLevel(forumConfig.forums, newForumDbId, forumConfig.slug, currentForumEffectiveTheme, tx, defaultUserId);
     }
   }
 }
@@ -127,6 +148,13 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
   }
 
   const zonesFromConfig: ConfigZone[] = forumMap.zones;
+
+  // Fetch a default user to use as author for welcome threads
+  const [defaultUser] = await tx.select({ id: users.id }).from(users).limit(1);
+  const defaultUserId = defaultUser?.id;
+  if (!defaultUserId) {
+    console.warn(chalk.yellow("⚠️  No users found in DB – welcome threads will not be created."));
+  }
 
   console.log(chalk.blue(`Seeding ${zonesFromConfig.length} zones...`));
   for (const zoneConfig of zonesFromConfig) {
@@ -209,7 +237,7 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
     if (zoneConfig.forums && zoneConfig.forums.length > 0) {
       console.log(chalk.blue(`  ↳ Seeding ${zoneConfig.forums.length} top-level forums for zone '${zoneConfig.name}'...`));
       // Pass zone's slug as parentConfigSlug for its direct child forums
-      await seedForumLevel(zoneConfig.forums, zoneDbId, zoneConfig.slug, zoneConfig.theme, tx);
+      await seedForumLevel(zoneConfig.forums, zoneDbId, zoneConfig.slug, zoneConfig.theme, tx, defaultUserId);
     }
   }
   console.log(chalk.green("✅ Forum structure and static themes seeded successfully within transaction."));
