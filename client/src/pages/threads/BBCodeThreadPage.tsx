@@ -25,11 +25,11 @@ export default function BBCodeThreadPage() {
 	// Get slug param from route
 	const [match, params] = useRoute<{ thread_slug: string }>('/threads/:thread_slug');
 	const slug = params?.thread_slug;
-	
+
 	// Pagination state
 	const [currentPage, setCurrentPage] = useState(1);
 	const [postsPerPage] = useState(20);
-	
+
 	// Scroll state for back-to-top button
 	const [showBackToTop, setShowBackToTop] = useState(false);
 	const [showSidebar, setShowSidebar] = useState(true);
@@ -63,7 +63,7 @@ export default function BBCodeThreadPage() {
 	const handlePageChange = useCallback((page: number) => {
 		setCurrentPage(page);
 		window.scrollTo({ top: 0, behavior: 'smooth' });
-		
+
 		// Update URL with page parameter (optional)
 		const url = new URL(window.location.href);
 		if (page > 1) {
@@ -79,14 +79,14 @@ export default function BBCodeThreadPage() {
 		const hash = window.location.hash;
 		if (hash.startsWith('#post-')) {
 			const postId = parseInt(hash.replace('#post-', ''));
-			const postIndex = allPosts.findIndex(p => p.id === postId);
-			
+			const postIndex = allPosts.findIndex((p) => p.id === postId);
+
 			if (postIndex !== -1) {
 				const pageForPost = Math.floor(postIndex / postsPerPage) + 1;
 				if (pageForPost !== currentPage) {
 					setCurrentPage(pageForPost);
 				}
-				
+
 				// Scroll to post after render
 				setTimeout(() => {
 					const element = document.getElementById(`post-${postId}`);
@@ -255,7 +255,7 @@ export default function BBCodeThreadPage() {
 								<h1 className="text-2xl lg:text-3xl font-bold text-zinc-100 mb-3 leading-tight">
 									{thread.title}
 								</h1>
-								
+
 								{/* Thread metadata */}
 								<div className="flex flex-wrap items-center gap-3 text-sm text-zinc-400">
 									<div className="flex items-center">
@@ -293,7 +293,7 @@ export default function BBCodeThreadPage() {
 									<Plus className="h-4 w-4 mr-2" />
 									Reply
 								</Button>
-								
+
 								{!showSidebar && (
 									<Button
 										variant="ghost"
@@ -315,9 +315,7 @@ export default function BBCodeThreadPage() {
 								</Badge>
 							)}
 							{thread.isLocked && (
-								<Badge className="bg-red-500/20 text-red-400 border-red-500/30">
-									🔒 Locked
-								</Badge>
+								<Badge className="bg-red-500/20 text-red-400 border-red-500/30">🔒 Locked</Badge>
 							)}
 							{thread.isSolved && (
 								<Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">

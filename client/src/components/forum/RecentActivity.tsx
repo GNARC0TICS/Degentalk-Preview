@@ -27,7 +27,11 @@ interface RecentActivityProps {
 	limit?: number;
 }
 
-export function RecentActivity({ activities = [], isLoading = false, limit = 10 }: RecentActivityProps) {
+export function RecentActivity({
+	activities = [],
+	isLoading = false,
+	limit = 10
+}: RecentActivityProps) {
 	if (isLoading) {
 		return (
 			<Card className="bg-gradient-to-br from-zinc-900/90 to-zinc-800/90 border-zinc-700/50">
@@ -75,14 +79,20 @@ export function RecentActivity({ activities = [], isLoading = false, limit = 10 
 				return (
 					<span>
 						created thread{' '}
-						<Link href={`/threads/${activity.threadSlug}`} className="text-emerald-400 hover:underline">
+						<Link
+							href={`/threads/${activity.threadSlug}`}
+							className="text-emerald-400 hover:underline"
+						>
 							{activity.title}
 						</Link>
 						{activity.forumName && (
 							<span>
 								{' '}
 								in{' '}
-								<Link href={`/forums/${activity.forumSlug}`} className="text-cyan-400 hover:underline">
+								<Link
+									href={`/forums/${activity.forumSlug}`}
+									className="text-cyan-400 hover:underline"
+								>
 									{activity.forumName}
 								</Link>
 							</span>
@@ -93,7 +103,10 @@ export function RecentActivity({ activities = [], isLoading = false, limit = 10 
 				return (
 					<span>
 						replied to{' '}
-						<Link href={`/threads/${activity.threadSlug}`} className="text-emerald-400 hover:underline">
+						<Link
+							href={`/threads/${activity.threadSlug}`}
+							className="text-emerald-400 hover:underline"
+						>
 							{activity.title}
 						</Link>
 					</span>

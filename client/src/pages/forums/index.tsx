@@ -419,7 +419,7 @@ const ForumPage = () => {
 					{/* Sidebar */}
 					<aside className="lg:col-span-3 space-y-6">
 						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.3}>
-							<QuickStats 
+							<QuickStats
 								totalThreads={allZones.reduce((sum, zone) => sum + (zone.threadCount || 0), 0)}
 								totalPosts={allZones.reduce((sum, zone) => sum + (zone.postCount || 0), 0)}
 								onlineUsers={activeUsers?.length || 0}
@@ -428,18 +428,10 @@ const ForumPage = () => {
 							/>
 						</motion.div>
 						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.35}>
-							<HotTopics 
-								threads={[]}
-								isLoading={structureLoading}
-								limit={5}
-							/>
+							<HotTopics threads={[]} isLoading={structureLoading} limit={5} />
 						</motion.div>
 						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.4}>
-							<RecentActivity 
-								activities={[]}
-								isLoading={structureLoading}
-								limit={8}
-							/>
+							<RecentActivity activities={[]} isLoading={structureLoading} limit={8} />
 						</motion.div>
 						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.45}>
 							<ActiveMembersWidget users={activeUsers || []} isLoading={activeUsersLoading} />

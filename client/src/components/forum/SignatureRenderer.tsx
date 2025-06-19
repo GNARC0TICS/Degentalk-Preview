@@ -24,17 +24,30 @@ export function SignatureRenderer({
 	// Sanitize the signature content
 	const sanitizedSignature = DOMPurify.sanitize(signature, {
 		ALLOWED_TAGS: [
-			'p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'strike', 'del',
-			'a', 'img', 'span', 'div', 'blockquote', 'code', 'pre'
+			'p',
+			'br',
+			'strong',
+			'b',
+			'em',
+			'i',
+			'u',
+			's',
+			'strike',
+			'del',
+			'a',
+			'img',
+			'span',
+			'div',
+			'blockquote',
+			'code',
+			'pre'
 		],
-		ALLOWED_ATTR: [
-			'href', 'src', 'alt', 'title', 'class', 'style', 'target', 'rel'
-		],
+		ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'style', 'target', 'rel'],
 		ALLOW_DATA_ATTR: false,
 		ADD_ATTR: ['target'],
 		// Force external links to open in new tab
 		HOOK_ATTRIBUTES: {
-			a: function(node) {
+			a: function (node) {
 				const href = node.getAttribute('href');
 				if (href && (href.startsWith('http') || href.startsWith('//'))) {
 					node.setAttribute('target', '_blank');
@@ -51,17 +64,15 @@ export function SignatureRenderer({
 				style={{ maxHeight: `${maxHeight}px` }}
 			>
 				{/* Signature content */}
-				<div 
+				<div
 					className="signature-content text-xs text-zinc-400 leading-relaxed"
 					dangerouslySetInnerHTML={{ __html: sanitizedSignature }}
 				/>
 			</div>
-			
+
 			{/* Optional signature attribution */}
-			<div className="text-[10px] text-zinc-600 mt-1 italic">
-				— {username}
-			</div>
-			
+			<div className="text-[10px] text-zinc-600 mt-1 italic">— {username}</div>
+
 			<style jsx>{`
 				.signature-content {
 					/* Ensure images don't break layout */
@@ -89,7 +100,7 @@ export function SignatureRenderer({
 					margin-bottom: 0;
 				}
 				/* BBCode-style formatting */
-				.signature-content [style*="color"] {
+				.signature-content [style*='color'] {
 					/* Allow color styling but with reduced opacity */
 					opacity: 0.8;
 				}

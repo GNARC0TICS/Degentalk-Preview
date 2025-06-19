@@ -7,4 +7,4 @@ const router = Router();
 router.get('/config', isAdmin, getEconomyConfig);
 router.put('/config', isAdmin, updateEconomyConfig);
 
-export default router; 
+export default router;

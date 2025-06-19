@@ -72,11 +72,14 @@ export function ThreadPagination({
 	const pageNumbers = getPageNumbers();
 
 	return (
-		<div className={`flex flex-col sm:flex-row items-center justify-between gap-4 py-4 ${className}`}>
+		<div
+			className={`flex flex-col sm:flex-row items-center justify-between gap-4 py-4 ${className}`}
+		>
 			{/* Post count info */}
 			{showPostCount && (
 				<div className="text-sm text-zinc-400">
-					Showing posts {startPost.toLocaleString()} - {endPost.toLocaleString()} of {totalPosts.toLocaleString()}
+					Showing posts {startPost.toLocaleString()} - {endPost.toLocaleString()} of{' '}
+					{totalPosts.toLocaleString()}
 				</div>
 			)}
 
@@ -110,13 +113,13 @@ export function ThreadPagination({
 						return (
 							<Button
 								key={page}
-								variant={isCurrentPage ? "default" : "outline"}
+								variant={isCurrentPage ? 'default' : 'outline'}
 								size="sm"
 								onClick={() => onPageChange(page)}
 								className={
 									isCurrentPage
-										? "bg-emerald-600 hover:bg-emerald-700 text-white"
-										: "border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+										? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+										: 'border-zinc-700 text-zinc-300 hover:bg-zinc-800'
 								}
 							>
 								{page}

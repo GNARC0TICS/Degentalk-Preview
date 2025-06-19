@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { 
-	Heart, 
-	ThumbsUp, 
-	Reply, 
-	Quote, 
-	Share, 
+import {
+	Heart,
+	ThumbsUp,
+	Reply,
+	Quote,
+	Share,
 	Bookmark,
 	MoreHorizontal,
 	Edit,
@@ -80,7 +80,9 @@ export function ReactionBar({
 	const [isBookmarked, setIsBookmarked] = useState(false);
 
 	const timeAgo = createdAt ? formatDistanceToNow(new Date(createdAt), { addSuffix: true }) : '';
-	const editedTimeAgo = editedAt ? formatDistanceToNow(new Date(editedAt), { addSuffix: true }) : '';
+	const editedTimeAgo = editedAt
+		? formatDistanceToNow(new Date(editedAt), { addSuffix: true })
+		: '';
 
 	const handleBookmark = () => {
 		setIsBookmarked(!isBookmarked);
@@ -99,7 +101,9 @@ export function ReactionBar({
 	};
 
 	return (
-		<div className={`flex items-center justify-between py-3 px-4 border-t border-zinc-800/50 bg-zinc-900/30 ${className}`}>
+		<div
+			className={`flex items-center justify-between py-3 px-4 border-t border-zinc-800/50 bg-zinc-900/30 ${className}`}
+		>
 			{/* Left side - Main reactions */}
 			<div className="flex items-center space-x-1">
 				{/* Like button */}
@@ -107,8 +111,8 @@ export function ReactionBar({
 					size="sm"
 					variant="ghost"
 					className={`h-8 px-3 transition-all ${
-						hasLiked 
-							? 'text-pink-400 hover:text-pink-300 bg-pink-500/10 hover:bg-pink-500/20' 
+						hasLiked
+							? 'text-pink-400 hover:text-pink-300 bg-pink-500/10 hover:bg-pink-500/20'
 							: 'text-zinc-400 hover:text-zinc-300 hover:bg-zinc-800'
 					}`}
 					onClick={() => onLike?.(postId, hasLiked)}
@@ -172,9 +176,7 @@ export function ReactionBar({
 				<div className="text-xs text-zinc-500">
 					<span>{timeAgo}</span>
 					{isEdited && editedTimeAgo && (
-						<span className="ml-2 italic">
-							(edited {editedTimeAgo})
-						</span>
+						<span className="ml-2 italic">(edited {editedTimeAgo})</span>
 					)}
 				</div>
 
@@ -191,23 +193,25 @@ export function ReactionBar({
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end" className="bg-zinc-900 border-zinc-700">
-						<DropdownMenuItem 
+						<DropdownMenuItem
 							onClick={handleCopyLink}
 							className="text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800"
 						>
 							<Link2 className="h-4 w-4 mr-2" />
 							Copy Link
 						</DropdownMenuItem>
-						
-						<DropdownMenuItem 
+
+						<DropdownMenuItem
 							onClick={handleBookmark}
 							className="text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800"
 						>
-							<Bookmark className={`h-4 w-4 mr-2 ${isBookmarked ? 'fill-amber-400 text-amber-400' : ''}`} />
+							<Bookmark
+								className={`h-4 w-4 mr-2 ${isBookmarked ? 'fill-amber-400 text-amber-400' : ''}`}
+							/>
 							{isBookmarked ? 'Remove Bookmark' : 'Bookmark'}
 						</DropdownMenuItem>
-						
-						<DropdownMenuItem 
+
+						<DropdownMenuItem
 							onClick={() => onShare?.(postId)}
 							className="text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800"
 						>
@@ -216,9 +220,9 @@ export function ReactionBar({
 						</DropdownMenuItem>
 
 						{(canEdit || canDelete) && <DropdownMenuSeparator className="bg-zinc-700" />}
-						
+
 						{canEdit && (
-							<DropdownMenuItem 
+							<DropdownMenuItem
 								onClick={() => onEdit?.(postId)}
 								className="text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800"
 							>
@@ -226,9 +230,9 @@ export function ReactionBar({
 								Edit Post
 							</DropdownMenuItem>
 						)}
-						
+
 						{canDelete && (
-							<DropdownMenuItem 
+							<DropdownMenuItem
 								onClick={() => onDelete?.(postId)}
 								className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
 							>
@@ -238,8 +242,8 @@ export function ReactionBar({
 						)}
 
 						<DropdownMenuSeparator className="bg-zinc-700" />
-						
-						<DropdownMenuItem 
+
+						<DropdownMenuItem
 							onClick={() => onReport?.(postId)}
 							className="text-orange-400 hover:text-orange-300 hover:bg-orange-500/10"
 						>

@@ -32,25 +32,23 @@ export function ProfileCard({
 	showTitle = true
 }: ProfileCardProps) {
 	const identity = useIdentityDisplay(user);
-	const joinedAgo = user.createdAt ? formatDistanceToNow(new Date(user.createdAt), { addSuffix: true }) : null;
+	const joinedAgo = user.createdAt
+		? formatDistanceToNow(new Date(user.createdAt), { addSuffix: true })
+		: null;
 
 	if (compact) {
 		// Mobile/horizontal layout
 		return (
-			<div className={`flex items-center space-x-3 p-3 bg-zinc-900/60 border border-zinc-800 rounded-lg ${className}`}>
-				<AvatarFrame
-					avatarUrl={user.avatarUrl || ''}
-					frame={identity?.avatarFrame}
-					size={40}
-				/>
+			<div
+				className={`flex items-center space-x-3 p-3 bg-zinc-900/60 border border-zinc-800 rounded-lg ${className}`}
+			>
+				<AvatarFrame avatarUrl={user.avatarUrl || ''} frame={identity?.avatarFrame} size={40} />
 				<div className="flex-grow min-w-0">
 					<div className="flex items-center space-x-2 mb-1">
 						<Link href={`/profile/${user.id}`} className="flex-shrink-0">
 							<UserName user={user} className="hover:text-emerald-400 transition-colors" />
 						</Link>
-						{showLevel && user.level && (
-							<LevelBadge level={user.level} compact />
-						)}
+						{showLevel && user.level && <LevelBadge level={user.level} compact />}
 					</div>
 					{showTitle && user.title && (
 						<p className="text-xs text-zinc-400 truncate">{user.title}</p>
@@ -81,22 +79,26 @@ export function ProfileCard({
 						/>
 					</Link>
 					<Link href={`/profile/${user.id}`}>
-						<UserName user={user} className="hover:text-emerald-400 transition-colors font-medium" />
+						<UserName
+							user={user}
+							className="hover:text-emerald-400 transition-colors font-medium"
+						/>
 					</Link>
-					
+
 					{/* User title/role */}
-					{showTitle && user.title && (
-						<p className="text-sm text-zinc-400 mt-1">{user.title}</p>
-					)}
-					
+					{showTitle && user.title && <p className="text-sm text-zinc-400 mt-1">{user.title}</p>}
+
 					{/* Moderator badge */}
 					{user.role === 'moderator' && (
-						<Badge variant="outline" className="mt-2 bg-blue-500/20 text-blue-400 border-blue-500/30">
+						<Badge
+							variant="outline"
+							className="mt-2 bg-blue-500/20 text-blue-400 border-blue-500/30"
+						>
 							<Shield className="h-3 w-3 mr-1" />
 							Moderator
 						</Badge>
 					)}
-					
+
 					{/* Admin badge */}
 					{user.role === 'admin' && (
 						<Badge variant="outline" className="mt-2 bg-red-500/20 text-red-400 border-red-500/30">
@@ -111,9 +113,7 @@ export function ProfileCard({
 					<div className="space-y-2">
 						<LevelBadge level={user.level} showProgress />
 						{user.xp !== undefined && (
-							<div className="text-xs text-zinc-500 text-center">
-								{user.xp.toLocaleString()} XP
-							</div>
+							<div className="text-xs text-zinc-500 text-center">{user.xp.toLocaleString()} XP</div>
 						)}
 					</div>
 				)}
@@ -126,10 +126,12 @@ export function ProfileCard({
 								<MessageSquare className="h-3.5 w-3.5 mr-1.5" />
 								Posts
 							</span>
-							<span className="text-zinc-300 font-medium">{(user.postCount || 0).toLocaleString()}</span>
+							<span className="text-zinc-300 font-medium">
+								{(user.postCount || 0).toLocaleString()}
+							</span>
 						</div>
 					)}
-					
+
 					{showJoinDate && joinedAgo && (
 						<div className="flex items-center justify-between text-sm">
 							<span className="text-zinc-400 flex items-center">

@@ -2,14 +2,14 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-	Eye, 
-	MessageSquare, 
-	Clock, 
-	Share2, 
-	Link2, 
-	Pin, 
-	Lock, 
+import {
+	Eye,
+	MessageSquare,
+	Clock,
+	Share2,
+	Link2,
+	Pin,
+	Lock,
 	Move,
 	Trash,
 	Edit,
@@ -50,7 +50,7 @@ export function ThreadSidebar({
 	onShare,
 	className = ''
 }: ThreadSidebarProps) {
-	const lastActivityTime = thread.lastActivityAt 
+	const lastActivityTime = thread.lastActivityAt
 		? formatDistanceToNow(new Date(thread.lastActivityAt), { addSuffix: true })
 		: 'Never';
 
@@ -81,9 +81,11 @@ export function ThreadSidebar({
 							<Eye className="h-4 w-4 mr-2" />
 							<span className="text-sm">Views</span>
 						</div>
-						<span className="text-zinc-300 font-medium">{(thread.viewCount || 0).toLocaleString()}</span>
+						<span className="text-zinc-300 font-medium">
+							{(thread.viewCount || 0).toLocaleString()}
+						</span>
 					</div>
-					
+
 					<div className="flex items-center justify-between">
 						<div className="flex items-center text-zinc-400">
 							<MessageSquare className="h-4 w-4 mr-2" />
@@ -91,7 +93,7 @@ export function ThreadSidebar({
 						</div>
 						<span className="text-zinc-300 font-medium">{Math.max(0, postCount - 1)}</span>
 					</div>
-					
+
 					<div className="flex items-center justify-between">
 						<div className="flex items-center text-zinc-400">
 							<Users className="h-4 w-4 mr-2" />
@@ -99,13 +101,13 @@ export function ThreadSidebar({
 						</div>
 						<span className="text-zinc-300 font-medium">{thread.participantCount || 1}</span>
 					</div>
-					
+
 					<div className="border-t border-zinc-800/50 pt-3 space-y-2">
 						<div className="flex items-center justify-between text-sm">
 							<span className="text-zinc-400">Created</span>
 							<span className="text-zinc-300">{createdTime}</span>
 						</div>
-						
+
 						<div className="flex items-center justify-between text-sm">
 							<span className="text-zinc-400">Last activity</span>
 							<span className="text-zinc-300">{lastActivityTime}</span>
@@ -132,7 +134,7 @@ export function ThreadSidebar({
 						<Link2 className="h-4 w-4 mr-2" />
 						Copy Thread Link
 					</Button>
-					
+
 					<Button
 						variant="outline"
 						size="sm"
@@ -146,21 +148,27 @@ export function ThreadSidebar({
 					{/* Thread status badges */}
 					<div className="pt-2 space-y-2">
 						{thread.isPinned && (
-							<Badge variant="outline" className="bg-amber-500/20 text-amber-400 border-amber-500/30">
+							<Badge
+								variant="outline"
+								className="bg-amber-500/20 text-amber-400 border-amber-500/30"
+							>
 								<Pin className="h-3 w-3 mr-1" />
 								Pinned
 							</Badge>
 						)}
-						
+
 						{thread.isLocked && (
 							<Badge variant="outline" className="bg-red-500/20 text-red-400 border-red-500/30">
 								<Lock className="h-3 w-3 mr-1" />
 								Locked
 							</Badge>
 						)}
-						
+
 						{thread.isSolved && (
-							<Badge variant="outline" className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+							<Badge
+								variant="outline"
+								className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+							>
 								<BookOpen className="h-3 w-3 mr-1" />
 								Solved
 							</Badge>
@@ -190,7 +198,7 @@ export function ThreadSidebar({
 								Edit Thread
 							</Button>
 						)}
-						
+
 						{canModerate && (
 							<>
 								<Button
@@ -202,7 +210,7 @@ export function ThreadSidebar({
 									<Pin className="h-4 w-4 mr-2" />
 									{thread.isPinned ? 'Unpin' : 'Pin'} Thread
 								</Button>
-								
+
 								<Button
 									variant="outline"
 									size="sm"
@@ -212,7 +220,7 @@ export function ThreadSidebar({
 									<Lock className="h-4 w-4 mr-2" />
 									{thread.isLocked ? 'Unlock' : 'Lock'} Thread
 								</Button>
-								
+
 								<Button
 									variant="outline"
 									size="sm"
@@ -224,7 +232,7 @@ export function ThreadSidebar({
 								</Button>
 							</>
 						)}
-						
+
 						{canDelete && (
 							<Button
 								variant="outline"

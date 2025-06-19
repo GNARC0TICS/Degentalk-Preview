@@ -55,7 +55,7 @@ export function BBCodePostCard({
 	className = ''
 }: BBCodePostCardProps) {
 	return (
-		<div 
+		<div
 			id={`post-${post.id}`}
 			className={`grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-0 mb-6 ${className}`}
 		>
@@ -74,16 +74,13 @@ export function BBCodePostCard({
 
 			{/* Mobile: Compact Author Profile (horizontal) */}
 			<div className="lg:hidden mb-4">
-				<ProfileCard
-					user={post.user}
-					compact={true}
-					showPostCount={true}
-					showLevel={true}
-				/>
+				<ProfileCard user={post.user} compact={true} showPostCount={true} showLevel={true} />
 			</div>
 
 			{/* Main Post Content */}
-			<Card className={`bg-zinc-900/60 border-zinc-800 ${isSolution ? 'ring-1 ring-emerald-500/30 border-emerald-700/50' : ''} lg:col-start-2`}>
+			<Card
+				className={`bg-zinc-900/60 border-zinc-800 ${isSolution ? 'ring-1 ring-emerald-500/30 border-emerald-700/50' : ''} lg:col-start-2`}
+			>
 				{/* Post Header with Solution Badge */}
 				{isSolution && (
 					<div className="flex items-center justify-between p-3 border-b border-zinc-800/50 bg-emerald-900/20">
@@ -103,11 +100,9 @@ export function BBCodePostCard({
 										Original Post
 									</span>
 								)}
-								<span className="text-xs text-zinc-500">
-									#{post.id}
-								</span>
+								<span className="text-xs text-zinc-500">#{post.id}</span>
 							</div>
-							<a 
+							<a
 								href={`#post-${post.id}`}
 								className="text-xs text-zinc-500 hover:text-emerald-400 transition-colors"
 								title="Permalink to this post"
@@ -119,24 +114,60 @@ export function BBCodePostCard({
 						{/* Post Content */}
 						<div className="prose prose-invert prose-zinc max-w-none mb-4">
 							{post.content && (
-								<div 
+								<div
 									className="post-content"
-									dangerouslySetInnerHTML={{ 
+									dangerouslySetInnerHTML={{
 										__html: DOMPurify.sanitize(post.content, {
 											ALLOWED_TAGS: [
-												'p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'strike', 'del',
-												'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-												'ul', 'ol', 'li', 'blockquote', 'code', 'pre',
-												'table', 'thead', 'tbody', 'tr', 'th', 'td',
-												'span', 'div', 'hr'
+												'p',
+												'br',
+												'strong',
+												'b',
+												'em',
+												'i',
+												'u',
+												's',
+												'strike',
+												'del',
+												'a',
+												'img',
+												'h1',
+												'h2',
+												'h3',
+												'h4',
+												'h5',
+												'h6',
+												'ul',
+												'ol',
+												'li',
+												'blockquote',
+												'code',
+												'pre',
+												'table',
+												'thead',
+												'tbody',
+												'tr',
+												'th',
+												'td',
+												'span',
+												'div',
+												'hr'
 											],
 											ALLOWED_ATTR: [
-												'href', 'src', 'alt', 'title', 'class', 'style', 
-												'target', 'rel', 'width', 'height'
+												'href',
+												'src',
+												'alt',
+												'title',
+												'class',
+												'style',
+												'target',
+												'rel',
+												'width',
+												'height'
 											],
 											ADD_ATTR: ['target'],
 											HOOK_ATTRIBUTES: {
-												a: function(node) {
+												a: function (node) {
 													const href = node.getAttribute('href');
 													if (href && (href.startsWith('http') || href.startsWith('//'))) {
 														node.setAttribute('target', '_blank');
@@ -145,7 +176,7 @@ export function BBCodePostCard({
 												}
 											}
 										})
-									}} 
+									}}
 								/>
 							)}
 						</div>
