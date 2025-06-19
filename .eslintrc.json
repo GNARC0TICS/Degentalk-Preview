@@ -14,7 +14,8 @@
     ]
   },
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "degen"
   ],
   "extends": [
     "eslint:recommended",
@@ -60,5 +61,8 @@
         ]
       }
     }
-  ]
+  ],
+  "rules": {
+    "degen/no-raw-container-auto": "error"
+  }
 }

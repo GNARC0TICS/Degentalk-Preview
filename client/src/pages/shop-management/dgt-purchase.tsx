@@ -10,6 +10,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'wouter';
+import { Wide } from '@/layout/primitives';
 
 // Define the package type for DGT purchases
 interface Package {
@@ -279,7 +280,7 @@ export default function DgtPurchasePage() {
 	};
 
 	return (
-		<div className="container mx-auto px-4 py-8">
+		<Wide className="px-4 py-8">
 			{/* Navigation */}
 			<div className="mb-6">
 				<Link href="/shop">
@@ -291,7 +292,7 @@ export default function DgtPurchasePage() {
 			</div>
 
 			{renderContent()}
-		</div>
+		</Wide>
 	);
 }
 

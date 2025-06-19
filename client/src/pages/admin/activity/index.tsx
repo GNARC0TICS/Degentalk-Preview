@@ -4,6 +4,7 @@ import { EventLog, EventLogFilters } from '@/features/activity/services/activity
 import { format } from 'date-fns';
 import { useAuth } from '@/hooks/useAuth';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { Wide } from '@/layout/primitives';
 
 /**
  * Admin page for viewing all user activities
@@ -25,12 +26,12 @@ const AdminActivityPage: React.FC = () => {
   // Redirect if not admin
   if (user?.role !== 'admin') {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <Wide className="px-4 py-8">
         <div className="text-center p-8 bg-red-100 rounded-lg">
           <h2 className="text-xl font-semibold mb-2 text-red-800">Access Denied</h2>
           <p className="text-red-600">You do not have permission to view this page.</p>
         </div>
-      </div>
+      </Wide>
     );
   }
   

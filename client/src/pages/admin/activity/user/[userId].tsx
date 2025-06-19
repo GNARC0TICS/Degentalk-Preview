@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { Wide } from '@/layout/primitives';
 
 /**
  * Admin page for viewing a specific user's activities
@@ -33,19 +34,19 @@ const UserActivityPage: React.FC = () => {
   // Redirect if not admin
   if (user?.role !== 'admin') {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <Wide className="px-4 py-8">
         <div className="text-center p-8 bg-red-100 rounded-lg">
           <h2 className="text-xl font-semibold mb-2 text-red-800">Access Denied</h2>
           <p className="text-red-600">You do not have permission to view this page.</p>
         </div>
-      </div>
+      </Wide>
     );
   }
   
   // Handle if userId is not provided or invalid
   if (!userId || Array.isArray(userId)) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <Wide className="px-4 py-8">
         <div className="text-center p-8 bg-yellow-100 rounded-lg">
           <h2 className="text-xl font-semibold mb-2 text-yellow-800">Invalid User ID</h2>
           <p className="text-yellow-600">Please provide a valid user ID.</p>
@@ -53,7 +54,7 @@ const UserActivityPage: React.FC = () => {
             Back to All Activities
           </Link>
         </div>
-      </div>
+      </Wide>
     );
   }
   

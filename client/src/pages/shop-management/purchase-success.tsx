@@ -4,6 +4,7 @@ import { Check, Home, ChevronLeft, Wallet, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
 import confetti from 'canvas-confetti';
+import { Wide } from '@/layout/primitives';
 
 export default function PurchaseSuccessPage() {
 	const [, setLocation] = useLocation();
@@ -69,7 +70,7 @@ export default function PurchaseSuccessPage() {
 	};
 
 	return (
-		<div className="container mx-auto px-4 py-8">
+		<Wide className="px-4 py-8">
 			{/* Navigation */}
 			<div className="mb-6">
 				<Link href="/shop">
@@ -130,6 +131,6 @@ export default function PurchaseSuccessPage() {
 					Return to Home
 				</Button>
 			</div>
-		</div>
+		</Wide>
 	);
 }

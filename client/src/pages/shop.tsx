@@ -4,6 +4,7 @@ import type { ItemCategory } from '@/hooks/use-vault-items';
 import type { ShopItem } from '@/hooks/use-shop-items';
 import { Link } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Wide } from '@/layout/primitives';
 
 // Import components
 import { ShopItemCard } from '@/components/shop/shop-item-card';
@@ -88,7 +89,7 @@ export default function ShopPage() {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black">
-			<div className="container mx-auto px-4 py-8">
+			<Wide className="px-4 py-8">
 				{/* Navigation */}
 				<motion.div
 					className="mb-6"
@@ -325,7 +326,7 @@ export default function ShopPage() {
 						</AnimatePresence>
 					</motion.div>
 				)}
-			</div>
+			</Wide>
 		</div>
 	);
 }
