@@ -79,7 +79,7 @@ import PreferencesPage from './pages/preferences/index';
 
 // Import Dictionary Pages
 import DictionaryIndexPage from './pages/dictionary/index';
-import DictionarySlugPage from './pages/dictionary/%5Bslug%5D';
+import DictionarySlugPage from './pages/dictionary/[slug].tsx';
 
 // Import Referrals Page
 import ReferralsPage from './pages/referrals/index';

@@ -27,7 +27,7 @@ export default function DictionaryDetailPage() {
 		queryKey: ['dictionary', slug],
 		queryFn: async () => {
 			const res = await apiRequest({ url: `/api/dictionary/${slug}`, method: 'GET' });
-			return res.json();
+			return res;
 		}
 	});
 
@@ -76,4 +76,4 @@ export default function DictionaryDetailPage() {
 			</Link>
 		</div>
 	);
-}
+} 
