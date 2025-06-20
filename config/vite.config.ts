@@ -46,6 +46,7 @@ export default defineConfig(async () => {
 	}
 
 	return {
+		base: '/',
 		plugins,
 		define: {
 			// Make process.env.NODE_ENV available in client code, mapping from Vite's import.meta.env.MODE

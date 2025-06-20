@@ -131,7 +131,7 @@ export function renderTextWithCustomEmojis(
 	text: string,
 	emojiMap: Record<string, string>
 ): (string | JSX.Element)[] {
-	const emojiRegex = /:([a-zA-Z0-9_\-]+):/g;
+	const emojiRegex = /:([a-zA-Z0-9_-]+):/g;
 	const parts: (string | JSX.Element)[] = [];
 	let lastIndex = 0;
 	let match;

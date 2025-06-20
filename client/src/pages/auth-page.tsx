@@ -6,6 +6,7 @@ import { SiteHeader as Header } from '@/components/layout/site-header';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { LoginForm } from '@/components/auth/login-form';
 import { RegisterForm } from '@/components/auth/register-form';
+import { Wide } from '@/layout/primitives';
 
 export default function AuthPage() {
 	const [activeTab, setActiveTab] = useState<string>('login');
@@ -26,7 +27,7 @@ export default function AuthPage() {
 			<Header />
 
 			<main className="flex-1 my-8">
-				<div className="container mx-auto px-4">
+				<Wide className="px-4">
 					<div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
 						<div className="space-y-6">
 							<div>
@@ -152,7 +153,7 @@ export default function AuthPage() {
 							</div>
 						</div>
 					</div>
-				</div>
+				</Wide>
 			</main>
 
 			<SiteFooter />

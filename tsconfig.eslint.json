@@ -6,6 +6,7 @@
 		"shared/**/*",
 		"scripts/**/*",
 		"db/**/*",
+		"config/**/*",
 		"client/**/*.test.ts",
 		"client/**/*.test.tsx",
 		"client/**/*.spec.ts",

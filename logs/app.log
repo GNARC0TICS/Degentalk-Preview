@@ -17082,3 +17082,143 @@ User not found
 {
   "logPath": "logs/app.log"
 }
+[2025-06-20T12:28:44.993Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-20T12:28:44.996Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-20T12:28:45.067Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-20T12:28:45.309Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-20T12:28:45.312Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-20T12:28:45.312Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-20T12:28:45.312Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-20T12:28:45.312Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-20T12:29:17.302Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-20T12:29:17.307Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-20T12:29:17.395Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-20T12:29:17.696Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-20T12:29:17.701Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-20T12:29:17.702Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-20T12:29:17.702Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-20T12:29:17.703Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-20T12:45:23.847Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-20T12:45:23.855Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-20T12:45:24.078Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-20T12:45:24.728Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-20T12:45:24.731Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-20T12:45:24.731Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-20T12:45:24.732Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-20T12:45:24.734Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-20T12:47:59.181Z] [INFO] [RequestStart] --> GET /api/wallet
+{
+  "requestId": "f53d53e6-0b76-4537-9400-0485602f8c77",
+  "method": "GET",
+  "url": "/api/wallet",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-20T12:47:59.187Z] [INFO] [AuthMiddleware] Bypassing authentication in development mode
+{
+  "path": "/"
+}
+[2025-06-20T12:47:59.187Z] [INFO] [AuthService] Creating mock user user for ID 3 in development mode
+{
+  "userId": 3,
+  "role": "user"
+}
+[2025-06-20T12:47:59.412Z] [INFO] [RequestEnd] <-- GET /api/wallet 200 231.365ms
+{
+  "requestId": "f53d53e6-0b76-4537-9400-0485602f8c77",
+  "method": "GET",
+  "url": "/api/wallet",
+  "statusCode": 200,
+  "durationMs": 231.365
+}
+[2025-06-20T12:49:36.570Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-20T12:49:36.576Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-20T12:49:37.199Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-20T12:49:38.062Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-20T12:49:38.089Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-20T12:49:38.090Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-20T12:49:38.090Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-20T12:49:38.090Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-20T12:51:24.443Z] [INFO] [RequestStart] --> GET /api/xp/actions
+{
+  "requestId": "6098f344-1cff-4fb7-b4aa-37f31fe5980b",
+  "method": "GET",
+  "url": "/api/xp/actions",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-20T12:51:24.447Z] [INFO] [AuthMiddleware] Bypassing authentication in development mode
+{
+  "path": "/actions"
+}
+[2025-06-20T12:51:24.448Z] [INFO] [AuthService] Creating mock user user for ID 3 in development mode
+{
+  "userId": 3,
+  "role": "user"
+}
+[2025-06-20T12:51:24.454Z] [INFO] [RequestEnd] <-- GET /api/xp/actions 200 11.880ms
+{
+  "requestId": "6098f344-1cff-4fb7-b4aa-37f31fe5980b",
+  "method": "GET",
+  "url": "/api/xp/actions",
+  "statusCode": 200,
+  "durationMs": 11.88
+}
+[2025-06-20T12:51:33.081Z] [INFO] [RequestStart] --> GET /api/wallet/balance
+{
+  "requestId": "d7658a8b-bb5a-4021-ad3b-b1248e0b5574",
+  "method": "GET",
+  "url": "/api/wallet/balance",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-20T12:51:33.085Z] [INFO] [AuthMiddleware] Bypassing authentication in development mode
+{
+  "path": "/balance"
+}
+[2025-06-20T12:51:33.085Z] [INFO] [AuthService] Creating mock user user for ID 3 in development mode
+{
+  "userId": 3,
+  "role": "user"
+}
+[2025-06-20T12:51:33.086Z] [INFO] [WALLET_CONTROLLER] Getting DGT balance for user ID: 1bdb8a49-57b3-4d77-8513-b60ae21303d3
+[2025-06-20T12:51:33.087Z] [INFO] [DGT_SERVICE] DgtService.getUserBalance called with userId: 1bdb8a49-57b3-4d77-8513-b60ae21303d3
+[2025-06-20T12:51:34.596Z] [INFO] [DGT_SERVICE] DgtService.getUserBalance query result:
+[2025-06-20T12:51:34.597Z] [WARN] [DGT_SERVICE] User not found for userId: 1bdb8a49-57b3-4d77-8513-b60ae21303d3
+[2025-06-20T12:51:34.598Z] [ERROR] [DGT_SERVICE] Error getting DGT balance:
+User not found
+[2025-06-20T12:51:34.606Z] [ERROR] [WALLET_CONTROLLER] Error getting wallet balance: Failed to get DGT balance. Details: WalletError: Failed to get DGT balance
+    at DgtService.getUserBalance (/Users/gnarcotic/Degentalk/server/src/domains/wallet/dgt.service.ts:86:10)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at WalletController.getBalance (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:39:23)
+{
+  "stack": "WalletError: Failed to get DGT balance\n    at DgtService.getUserBalance (/Users/gnarcotic/Degentalk/server/src/domains/wallet/dgt.service.ts:86:10)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at WalletController.getBalance (/Users/gnarcotic/Degentalk/server/src/domains/wallet/wallet.controller.ts:39:23)",
+  "errorObj": {
+    "httpStatus": 500,
+    "code": "DB_ERROR",
+    "details": {
+      "originalError": "User not found"
+    },
+    "name": "WalletError"
+  }
+}
+[2025-06-20T12:51:34.608Z] [INFO] [RequestEnd] <-- GET /api/wallet/balance 500 1527.006ms
+{
+  "requestId": "d7658a8b-bb5a-4021-ad3b-b1248e0b5574",
+  "method": "GET",
+  "url": "/api/wallet/balance",
+  "statusCode": 500,
+  "durationMs": 1527.006
+}

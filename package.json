@@ -4,8 +4,8 @@
 	"type": "module",
 	"license": "MIT",
 	"scripts": {
-		"dev": "concurrently \"npm run dev:server\" \"npm run dev:client\" --names \"backend,frontend\" --prefix-colors \"cyan,yellow\"",
-		"dev:client": "vite --force --port 5173 --strictPort --config config/vite.config.ts",
+		"dev": "npm run kill-ports && concurrently \"npm run dev:server\" \"npm run dev:client\" --names \"backend,frontend\" --prefix-colors \"cyan,yellow\"",
+		"dev:client": "vite --force --port 5173 --config config/vite.config.ts",
 		"dev:server": "cd server && npm run dev",
 		"dev:seed": "npm run kill-ports && npm run seed:all && concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend\" \"npm run dev:client\"",
 		"dev:quick": "npm run kill-ports && concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend:quick\" \"npm run dev:client\"",

@@ -1,7 +1,7 @@
 {
 	"name": "eslint-plugin-degen",
 	"version": "0.0.1",
-	"main": "index.js",
+	"main": "index.cjs",
 	"peerDependencies": {
 		"eslint": "^8"
 	}
