@@ -112,7 +112,7 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
 			if (link.href === '/admin/config/economy' && economyData?.hasOverrides) {
 				return {
 					...link,
-					label: link.label + ' •',
+					label: link.label + ' •'
 				};
 			}
 			return link;
@@ -196,7 +196,11 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
 							side="left"
 							className="p-0 w-64 bg-admin-surface border-r-admin-border-subtle"
 						>
-							<AdminSidebar links={sidebarLinks} collapsed={false} onLinkClick={closeMobileDrawer} />
+							<AdminSidebar
+								links={sidebarLinks}
+								collapsed={false}
+								onLinkClick={closeMobileDrawer}
+							/>
 						</SheetContent>
 					</Sheet>
 				) : (

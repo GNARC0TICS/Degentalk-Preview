@@ -67,9 +67,7 @@ const ForumPage: React.FC = () => {
 	if (isLoading) {
 		// isLoading from context is the primary loading state
 		console.log(`[ForumPage] isLoading is true. Rendering loading state.`);
-		return (
-			<div style={{ textAlign: 'center', padding: '50px' }}>Loading forum data...</div>
-		);
+		return <div style={{ textAlign: 'center', padding: '50px' }}>Loading forum data...</div>;
 	}
 
 	if (contextError) {

@@ -13,4 +13,4 @@ export const economyConfigOverrides = pgTable('economy_config_overrides', {
 });
 
 export type EconomyConfigOverride = typeof economyConfigOverrides.$inferSelect;
-export type NewEconomyConfigOverride = typeof economyConfigOverrides.$inferInsert; 
+export type NewEconomyConfigOverride = typeof economyConfigOverrides.$inferInsert;

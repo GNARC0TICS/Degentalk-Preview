@@ -29,4 +29,4 @@ export async function saveEconomyOverrides(newConfig: Record<string, unknown> | 
 			await trx.insert(economyConfigOverrides).values({ config: newConfig });
 		}
 	});
-} 
+}

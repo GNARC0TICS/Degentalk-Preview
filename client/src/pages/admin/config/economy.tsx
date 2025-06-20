@@ -58,7 +58,9 @@ export default function EconomyConfigPage() {
 		<div className="space-y-4">
 			<h1 className="text-3xl font-bold flex items-center gap-2">
 				Economy Configuration
-				{hasOverrides && <CheckCircle2 className="h-5 w-5 text-yellow-400" title="Overrides active" />}
+				{hasOverrides && (
+					<CheckCircle2 className="h-5 w-5 text-yellow-400" title="Overrides active" />
+				)}
 			</h1>
 			<form onSubmit={handleSubmit} className="space-y-4">
 				<Textarea
