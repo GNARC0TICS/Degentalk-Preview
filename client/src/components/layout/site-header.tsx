@@ -30,6 +30,8 @@ import { useAuthWrapper } from '@/hooks/wrappers/use-auth-wrapper';
 import { NotificationPanel } from '../notifications/NotificationPanel';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import gsap from 'gsap';
+import { XPProgressBar } from '@/components/economy/xp/XPProgressBar';
+import { useXP } from '@/hooks/useXP';
 
 // Function to generate random underline paths
 const generateRandomPath = () => {
@@ -189,6 +191,9 @@ export function SiteHeader() {
 	const [isWalletOpen, setIsWalletOpen] = useState(false);
 	// State for notifications popover
 	const [isNotificationsPanel, setIsNotificationsPanelOpen] = useState(false);
+
+	// Fetch XP data for current user (will be undefined if not authenticated)
+	const { xpData } = useXP();
 
 	// For development, create a mock user
 	const mockUser: ExtendedUserData = {
@@ -492,6 +497,18 @@ export function SiteHeader() {
 												animate="visible"
 												exit="exit"
 											>
+												{xpData && (
+													<div className="px-4 pt-3 pb-2 w-56">
+														<XPProgressBar
+															level={xpData.currentLevel}
+															currentXP={xpData.currentXp}
+															nextLevelXP={xpData.xpForNextLevel}
+															progressPercent={xpData.progress}
+															variant="compact"
+															className="w-full"
+														/>
+													</div>
+												)}
 												<DropdownMenuLabel>My Account</DropdownMenuLabel>
 												<DropdownMenuSeparator />
 												<Link href={`/profile/${displayUser.username}`}>

@@ -10,7 +10,7 @@ export const api = axios.create({
 	}
 });
 
-async function throwIfResNotOk(res: Response): Promise<void> {
+async function throwIfResNotOk(res: Response) {
 	if (!res.ok) {
 		const text = (await res.text()) || res.statusText;
 		throw new Error(`${res.status}: ${text}`);
@@ -66,20 +66,6 @@ export const queryClient = new QueryClient({
 });
 
 // Type for XP gain response
-interface XpToastData {
-	action: string;
-	amount: number;
-	description: string;
-	isLevelUp?: boolean;
-	newLevel?: number;
-}
-
-interface LevelUpData {
-	level: number;
-	title?: string;
-	rewards?: unknown[];
-}
-
 interface XpGainResponse {
 	xpGained?: boolean;
 	xpAmount?: number;
@@ -177,9 +163,9 @@ export const apiRequest = async <T>(requestConfig: {
 			// For non-JSON responses (like 204 No Content)
 			return {} as T;
 		}
-	} catch (error: unknown) {
+	} catch (error: any) {
 		console.error(`API request error for ${url}:`, error);
-		if (error instanceof Error && error.name === 'AbortError') {
+		if (error.name === 'AbortError') {
 			throw new Error('Request was cancelled');
 		}
 		throw error;
@@ -187,7 +173,7 @@ export const apiRequest = async <T>(requestConfig: {
 };
 
 // Function to check for XP gain in API responses and trigger toast
-function checkForXpGain(data: Record<string, unknown>) {
+function checkForXpGain(data: any) {
 	// Check if the response indicates XP was gained
 	if (data && data.xpGained === true) {
 		// We need to get the XP toast context to show the toast
@@ -224,7 +210,7 @@ function checkForXpGain(data: Record<string, unknown>) {
 }
 
 // Listen for the XP gain event (this should be called in a React component)
-export function setupXpGainListener(showXpToast: (data: XpToastData) => void) {
+export function setupXpGainListener(showXpToast: Function) {
 	const handleXpGain = (event: CustomEvent<XpGainResponse>) => {
 		const { xpAmount, xpAction, xpDescription, levelUp, newLevel } = event.detail;
 
@@ -249,10 +235,14 @@ export function setupXpGainListener(showXpToast: (data: XpToastData) => void) {
 }
 
 // Listen for level up events
-export function setupLevelUpListener(
-	showLevelUp: (level: number, title?: string, rewards?: unknown[]) => void
-) {
-	const handleLevelUp = (event: CustomEvent<LevelUpData>) => {
+export function setupLevelUpListener(showLevelUp: Function) {
+	const handleLevelUp = (
+		event: CustomEvent<{
+			level: number;
+			title?: string;
+			rewards?: any[];
+		}>
+	) => {
 		const { level, title, rewards } = event.detail;
 		showLevelUp(level, title, rewards);
 	};

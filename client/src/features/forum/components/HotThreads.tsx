@@ -165,15 +165,17 @@ function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 									</div>
 								</div>
 
-								{/* Category tag */}
-								<Link href={`/forums/${thread.category_slug}`}>
-									<Badge
-										variant="outline"
-										className="bg-zinc-800/50 text-zinc-400 border-zinc-600 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs"
-									>
-										{thread.category_name}
-									</Badge>
-								</Link>
+								{/* Category tag (stop nested anchor) */}
+								<span
+									role="link"
+									className="bg-zinc-800/50 text-zinc-400 border border-zinc-600 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs cursor-pointer rounded px-2 py-0.5"
+									onClick={(e) => {
+										e.stopPropagation();
+										window.location.href = `/forums/${thread.category_slug}`;
+									}}
+								>
+									{thread.category_name}
+								</span>
 							</div>
 						</div>
 					</div>
