@@ -11,9 +11,8 @@ import type { MergedZone } from '@/contexts/ForumStructureContext';
 import { HeroSection } from '@/components/layout/hero-section';
 import { AnnouncementTicker } from '@/components/layout/announcement-ticker';
 import { SiteFooter } from '@/components/layout/site-footer';
-import { LayoutRenderer } from '@/components/layout/LayoutRenderer';
+import { ResponsiveLayoutWrapper } from '@/components/layout/ResponsiveLayoutWrapper';
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
-import { SlotRenderer } from '@/components/layout/SlotRenderer';
 import { Wide } from '@/layout/primitives';
 
 // Import UI components
@@ -57,20 +56,11 @@ function HomePage() {
 	}));
 
 	return (
-		<div className="min-h-screen bg-black text-white flex flex-col">
+		<>
 			<HeroSection />
 			<AnnouncementTicker />
-			{/* Shoutbox now fully managed by the dynamic layout system */}
-
-			<Wide
-				as="main"
-				className="px-2 sm:px-4 py-6 sm:py-8 md:py-12 flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8"
-			>
-				{/* Main Content Area */}
-				<div className="w-full lg:w-1/2 xl:w-1/2 space-y-6 order-2">
-					{/* MAIN TOP WIDGETS */}
-					<SlotRenderer slotId="main/top" />
-
+			<ResponsiveLayoutWrapper page="home">
+				<Wide as="div" className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
 					<section className="mb-16">
 						<div className="flex items-center justify-between mb-8">
 							<div>
@@ -100,22 +90,13 @@ function HomePage() {
 								))}
 							</div>
 						) : (
-							<CanonicalZoneGrid
-								zones={zoneCardDataForGrid}
-								className="sm:grid-cols-2 lg:grid-cols-2"
-							/>
+							<CanonicalZoneGrid zones={zoneCardDataForGrid} />
 						)}
 					</section>
-
-					{/* MAIN BOTTOM WIDGETS */}
-					<SlotRenderer slotId="main/bottom" />
-				</div>
-
-				<LayoutRenderer page="home" />
-			</Wide>
-
+				</Wide>
+			</ResponsiveLayoutWrapper>
 			<SiteFooter />
-		</div>
+		</>
 	);
 }
 

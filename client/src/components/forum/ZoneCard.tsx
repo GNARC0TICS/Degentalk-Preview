@@ -38,6 +38,7 @@ export interface ZoneCardProps {
 	// Component behavior
 	className?: string;
 	onClick?: () => void;
+	layout?: 'vertical' | 'horizontal';
 }
 
 /**
@@ -62,7 +63,8 @@ export function ZoneCard({
 	eventData,
 	rarity = 'common',
 	className = '',
-	onClick
+	onClick,
+	layout = 'vertical'
 }: ZoneCardProps) {
 	// const navigate = useNavigate(); // Removed useNavigate hook
 	const zoneUrl = `/zones/${slug}`;
@@ -118,19 +120,27 @@ export function ZoneCard({
 					</div>
 				)}
 
-				<CardContent className={`p-6 ${isEventActive ? 'pt-8' : ''}`}>
-					<div className="flex items-center mb-3">
+				<CardContent
+					className={`p-6 ${isEventActive ? 'pt-8' : ''} ${
+						layout === 'horizontal' ? 'md:flex md:items-start md:gap-6' : ''
+					}`}
+				>
+					{/* Icon and title */}
+					<div className="flex items-center mb-3 flex-shrink-0">
 						{renderIcon()}
 						<h3 className="text-xl font-bold">{name}</h3>
 					</div>
 
-					<p className="text-sm opacity-90 mb-4">{description}</p>
+					{/* description and stats wrap */}
+					<div className={layout === 'horizontal' ? 'flex-1' : ''}>
+						<p className="text-sm opacity-90 mb-4">{description}</p>
 
-					<ZoneStats
-						forumCount={forumCount}
-						threadCount={threadCount}
-						activeUsersCount={activeUsersCount}
-					/>
+						<ZoneStats
+							forumCount={forumCount}
+							threadCount={threadCount}
+							activeUsersCount={activeUsersCount}
+						/>
+					</div>
 				</CardContent>
 
 				{lastActivityAt && (

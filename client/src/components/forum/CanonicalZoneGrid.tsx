@@ -101,7 +101,7 @@ export function CanonicalZoneGrid({
 	return (
 		<div
 			data-testid="zone-grid"
-			className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 ${className}`}
+			className={`grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-6 ${className}`}
 		>
 			{gridData.map((cardData, index) => (
 				<motion.div
@@ -130,6 +130,7 @@ export function CanonicalZoneGrid({
 							isEventActive={cardData.isEventActive}
 							eventData={cardData.eventData}
 							forumCount={(cardData as any).forumCount}
+							layout="horizontal"
 							// rarity is not in ZoneCardData, ZoneCard will use its default
 							// className can be passed if needed, or ZoneCard handles its own styling
 						/>
