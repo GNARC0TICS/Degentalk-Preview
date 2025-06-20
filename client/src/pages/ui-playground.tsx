@@ -69,27 +69,29 @@ const UIPlaygroundPage: React.FC = () => {
 
 	return (
 		<DevPlaygroundLayout>
-			<PlaygroundSection id="primitives" title="Primitives">
+			{/* <PlaygroundSection id="primitives" title="Primitives">
 				<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{Object.entries(Primitives).map(([name, Comp]) => (
 						<ComponentCard key={name} name={name} Component={Comp as any} />
 					))}
 				</div>
-			</PlaygroundSection>
+			</PlaygroundSection> */}
+			<div>Primitives section temporarily disabled for debugging.</div>
 
 			<PlaygroundSection id="ui" title="UI Components">
-				<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+				{/* <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{Object.entries(uiComponents).map(([name, Comp]) => (
 						<ComponentCard key={name} name={name} Component={Comp as any} />
 					))}
-				</div>
+				</div> */}
+				<div>UI Components temporarily disabled for debugging.</div>
 			</PlaygroundSection>
 
 			<ButtonsSection />
 			<CardsSection />
 			<ColorsSection />
 			<AvatarBadgesSection />
-			<AnimationsSection />
+			{/* <AnimationsSection /> */}
 		</DevPlaygroundLayout>
 	);
 };

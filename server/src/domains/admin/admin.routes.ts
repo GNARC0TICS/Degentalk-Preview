@@ -28,6 +28,7 @@ import uiConfigRoutes from './sub-domains/ui-config/ui-config.routes';
 import rolesRoutes from './sub-domains/roles/roles.routes';
 import devSeedingRoutes from './sub-domains/dev/seeding.routes';
 import cloutRoutes from './sub-domains/clout/clout.routes';
+import economyRoutes from './sub-domains/economy/economy.routes';
 // import userAdminRoutes from './users/users.admin.routes'; // DEPRECATED
 // import economyAdminRoutes from './settings/economy.routes'; // Placeholder for future
 
@@ -54,6 +55,7 @@ adminRouter.use('/user-inventory', userInventoryAdminApiRoutes);
 adminRouter.use('/roles', rolesRoutes);
 adminRouter.use('/dev', devSeedingRoutes);
 adminRouter.use('/clout', cloutRoutes);
+adminRouter.use('/economy', economyRoutes);
 
 // DEBUG: Middleware to check if /emojis path is reached in adminRouter
 adminRouter.use('/emojis', (req, res, next) => {
@@ -67,7 +69,7 @@ adminRouter.use('/emojis', (req, res, next) => {
 adminRouter.use('/emojis', emojiRoutes);
 adminRouter.use('/ui-config', uiConfigRoutes);
 // adminRouter.use('/users', userAdminRoutes); // DEPRECATED - Handled by userRoutes
-// router.use('/economy', economyAdminRoutes); // Placeholder for future
+// economy routes registered above
 
 // Dashboard overview route
 adminRouter.get('/dashboard', asyncHandler(adminController.getDashboardStats)); // Corrected method name

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useParams } from 'wouter';
-import { ForumStructureProvider, useForumStructure } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedForum, MergedZone, MergedRules } from '@/contexts/ForumStructureContext';
 import Breadcrumb from '@/components/common/Breadcrumb';
 // import type { ForumRules } from '@/config/forumMap.config'; // Removed unused ForumRules
@@ -68,14 +68,7 @@ const ForumPage: React.FC = () => {
 		// isLoading from context is the primary loading state
 		console.log(`[ForumPage] isLoading is true. Rendering loading state.`);
 		return (
-			<div>
-				<Breadcrumb
-					zone={parentZone ? { name: parentZone.name, slug: parentZone.slug } : undefined}
-					forum={{ name: forum.name, slug: forum.slug }}
-					className="mb-6"
-				/>
-				<div style={{ textAlign: 'center', padding: '50px' }}>Loading forum data...</div>
-			</div>
+			<div style={{ textAlign: 'center', padding: '50px' }}>Loading forum data...</div>
 		);
 	}
 
@@ -85,15 +78,8 @@ const ForumPage: React.FC = () => {
 			contextError.message
 		);
 		return (
-			<div>
-				<Breadcrumb
-					zone={parentZone ? { name: parentZone.name, slug: parentZone.slug } : undefined}
-					forum={{ name: forum.name, slug: forum.slug }}
-					className="mb-6"
-				/>
-				<div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>
-					Error loading forum data: {contextError.message}
-				</div>
+			<div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>
+				Error loading forum data: {contextError.message}
 			</div>
 		);
 	}
@@ -112,16 +98,7 @@ const ForumPage: React.FC = () => {
 		console.log(
 			`[ForumPage] Forum with slug '${forum_slug}' not found in context. Rendering NotFoundPage.`
 		);
-		return (
-			<div>
-				<Breadcrumb
-					zone={parentZone ? { name: parentZone.name, slug: parentZone.slug } : undefined}
-					forum={{ name: forum.name, slug: forum.slug }}
-					className="mb-6"
-				/>
-				<NotFoundPage />
-			</div>
-		);
+		return <NotFoundPage />;
 	}
 
 	// Find parent zone for breadcrumbs
@@ -270,10 +247,4 @@ const ForumPage: React.FC = () => {
 	);
 };
 
-const ForumPageWithProvider: React.FC = () => (
-	<ForumStructureProvider>
-		<ForumPage />
-	</ForumStructureProvider>
-);
-
-export default ForumPageWithProvider;
+export default ForumPage;

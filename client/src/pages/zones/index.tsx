@@ -3,7 +3,7 @@ import { SiteFooter } from '@/components/layout/site-footer';
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
 import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
 // Corrected import path for useForumStructure and MergedZone type
-import { useForumStructure, ForumStructureProvider } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedZone } from '@/contexts/ForumStructureContext';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
@@ -108,11 +108,4 @@ function ZonesPage() {
 	);
 }
 
-// Wrap with Provider as this page is likely directly rendered by the router
-const ZonesPageWithProvider = () => (
-	<ForumStructureProvider>
-		<ZonesPage />
-	</ForumStructureProvider>
-);
-
-export default ZonesPageWithProvider;
+export default ZonesPage;

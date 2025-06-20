@@ -22,7 +22,7 @@ import { SiteFooter } from '@/components/layout/site-footer';
 import { ForumGuidelines } from '@/components/forum/forum-guidelines';
 // ForumSearch seems unused, can be removed if not needed.
 // import { ForumSearch } from '@/components/forum/forum-search';
-import { useForumStructure, ForumStructureProvider } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedZone, MergedForum } from '@/contexts/ForumStructureContext'; // MergedTheme unused
 // ZoneCardData might not be directly needed if renderZoneCard adapts to MergedZone
 // import type { ZoneCardData } from '@/components/forum/CanonicalZoneGrid';
@@ -447,11 +447,4 @@ const ForumPage = () => {
 	);
 };
 
-// Wrap with Provider if not done at a higher level
-const ForumIndexPageWithProvider = () => (
-	<ForumStructureProvider>
-		<ForumPage />
-	</ForumStructureProvider>
-);
-
-export default ForumIndexPageWithProvider;
+export default ForumPage;

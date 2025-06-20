@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useParams } from 'wouter';
-import { ForumStructureProvider, useForumStructure } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedForum, MergedZone, MergedRules } from '@/contexts/ForumStructureContext';
 
 // Placeholder NotFound component
@@ -116,10 +116,4 @@ const ForumPageInner: React.FC = () => {
 	);
 };
 
-const ForumPage: React.FC = () => (
-	<ForumStructureProvider>
-		<ForumPageInner />
-	</ForumStructureProvider>
-);
-
-export default ForumPage;
+export default ForumPageInner;

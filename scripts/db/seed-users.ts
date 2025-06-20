@@ -78,11 +78,14 @@ export async function seedUsers() {
       isVerified: true
     });
   }
+  // Deduplicate by username to avoid multiple rows targeting same conflict key in one statement (Postgres ERROR 21000)
+  const uniqueUsers = Array.from(new Map(mockUsers.map((u) => [u.username, u])).values());
+
   // await db.insert(users).values(mockUsers);
   // console.log(`✅ Seeded ${mockUsers.length} users.`);
   // Using onConflictDoUpdate to handle potential duplicate usernames (e.g., cryptoadmin)
   // This will insert new users or update existing ones if a username conflict occurs.
-  await db.insert(users).values(mockUsers).onConflictDoUpdate({
+  await db.insert(users).values(uniqueUsers).onConflictDoUpdate({
     target: users.username, // conflict on username
     set: {
       // Keys here are the JS/TS property names from the Drizzle schema (users object)
@@ -102,7 +105,7 @@ export async function seedUsers() {
       updatedAt: sql`CURRENT_TIMESTAMP`, // Explicitly update updatedAt
     }
   });
-  console.log(`✅ Upserted ${mockUsers.length} users (inserted or updated).`);
+  console.log(`✅ Upserted ${uniqueUsers.length} users (inserted or updated).`);
 }
 
 seedUsers().then(() => process.exit(0));

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { Link } from 'wouter';
 import {
@@ -35,12 +35,15 @@ import { Sheet, SheetContent } from '@/components/ui/sheet';
 // import { Badge } from '@/components/ui/badge'; // Not used
 // import { AdminRoutePermission, adminRouteGroups, moderatorRouteGroups, ROUTES } from '@/config/admin-routes'; // Not used
 
+// New: economy overrides flag
+import { useEconomyConfig } from '@/features/admin/services/economyConfigService';
+
 interface AdminLayoutProps {
 	children: ReactNode;
 }
 
 // This could be moved to a config file if it grows larger
-const adminLinks = [
+const BASE_ADMIN_LINKS = [
 	{ href: '/admin', label: 'Dashboard', icon: <HomeIcon className="h-4 w-4" /> },
 	{ href: '/admin/users', label: 'Users', icon: <Users className="h-4 w-4" /> },
 	{ href: '/admin/threads', label: 'Threads', icon: <MessageSquare className="h-4 w-4" /> },
@@ -63,6 +66,7 @@ const adminLinks = [
 	{ href: '/admin/emojis', label: 'Emojis', icon: <Smile className="h-4 w-4" /> },
 	{ href: '/admin/config/tags', label: 'Tag Config', icon: <TagIcon className="h-4 w-4" /> },
 	{ href: '/admin/config/xp', label: 'XP Config', icon: <Trophy className="h-4 w-4" /> },
+	{ href: '/admin/config/economy', label: 'Economy', icon: <CoinsIcon className="h-4 w-4" /> },
 	{ href: '/admin/config/zones', label: 'Forum Zones', icon: <Globe className="h-4 w-4" /> },
 	{
 		href: '/admin/platform-settings',
@@ -81,7 +85,7 @@ const adminLinks = [
 ];
 
 if (import.meta.env.MODE === 'development') {
-	adminLinks.push({
+	BASE_ADMIN_LINKS.push({
 		href: '/admin/dev/seeding',
 		label: 'Seeding',
 		icon: <Database className="h-4 w-4" />
@@ -99,6 +103,21 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
 	} = useAdminSidebar();
 	const isSmallScreen = useMediaQuery('(max-width: 640px)'); // sm breakpoint
 	const isMediumScreen = useMediaQuery('(max-width: 768px)'); // md breakpoint
+
+	// Fetch economy override flag
+	const { data: economyData } = useEconomyConfig();
+
+	const sidebarLinks = useMemo(() => {
+		return BASE_ADMIN_LINKS.map((link) => {
+			if (link.href === '/admin/config/economy' && economyData?.hasOverrides) {
+				return {
+					...link,
+					label: link.label + ' •',
+				};
+			}
+			return link;
+		});
+	}, [economyData]);
 
 	// Effect to handle automatic collapsing on medium screens
 	useEffect(() => {
@@ -177,11 +196,11 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
 							side="left"
 							className="p-0 w-64 bg-admin-surface border-r-admin-border-subtle"
 						>
-							<AdminSidebar links={adminLinks} collapsed={false} onLinkClick={closeMobileDrawer} />
+							<AdminSidebar links={sidebarLinks} collapsed={false} onLinkClick={closeMobileDrawer} />
 						</SheetContent>
 					</Sheet>
 				) : (
-					<AdminSidebar links={adminLinks} collapsed={isCollapsed} />
+					<AdminSidebar links={sidebarLinks} collapsed={isCollapsed} />
 				)}
 
 				<main className="flex-1 overflow-auto bg-gradient-to-b from-admin-bg-surface to-admin-bg-page">

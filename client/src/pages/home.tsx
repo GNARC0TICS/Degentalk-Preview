@@ -4,9 +4,8 @@ import '../styles/ticker.css';
 import '../styles/zone-themes.css';
 
 // Import context and hook
-import { ForumStructureProvider, useForumStructure } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedZone } from '@/contexts/ForumStructureContext';
-import { ProfileCardProvider } from '@/contexts/ProfileCardContext';
 
 // Import components
 import { HeroSection } from '@/components/layout/hero-section';
@@ -120,12 +119,4 @@ function HomePage() {
 	);
 }
 
-const HomePageWithProvider = () => (
-	<ForumStructureProvider>
-		<ProfileCardProvider>
-			<HomePage />
-		</ProfileCardProvider>
-	</ForumStructureProvider>
-);
-
-export default HomePageWithProvider;
+export default HomePage;

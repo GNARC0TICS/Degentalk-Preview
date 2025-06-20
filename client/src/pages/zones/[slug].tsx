@@ -1,7 +1,7 @@
 import React from 'react'; // Removed useState
 import { useParams, Link } from 'wouter';
 // import { useQuery } from '@tanstack/react-query'; // Removed
-import { ForumStructureProvider, useForumStructure } from '@/contexts/ForumStructureContext';
+import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedForum } from '@/contexts/ForumStructureContext'; // Removed MergedZone as it's inferred from useForumStructure or not directly typed here
 // import ThreadCard from '@/components/forum/ThreadCard'; // Removed
 // import { Pagination } from '@/components/ui/pagination'; // Removed
@@ -286,10 +286,4 @@ const ErrorState: React.FC<{ error: Error }> = ({ error }) => (
 	</div>
 );
 
-const ZonePageWithProvider: React.FC = () => (
-	<ForumStructureProvider>
-		<ZonePage />
-	</ForumStructureProvider>
-);
-
-export default ZonePageWithProvider;
+export default ZonePage;

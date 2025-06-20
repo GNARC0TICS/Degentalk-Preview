@@ -251,17 +251,24 @@ async function seedUsers() {
     });
   }
 
-  // Upsert users
-  if (users_to_insert.length > 0) {
-    await db.insert(users).values(users_to_insert)
-      .onConflictDoUpdate({
-        target: users.username,
-        set: {
-          email: faker.internet.email(), // Update with new email if conflict
-          xp: faker.number.int({ min: 100, max: 1000 })
-        }
-      });
+  // Deduplicate by username and email to avoid unique constraint violations
+  const dedupByUsername = new Map<string, typeof users_to_insert[number]>();
+  const dedupByEmail = new Map<string, typeof users_to_insert[number]>();
+
+  for (const u of users_to_insert) {
+    if (!dedupByUsername.has(u.username) && !dedupByEmail.has(u.email)) {
+      dedupByUsername.set(u.username, u);
+      dedupByEmail.set(u.email, u);
+    }
   }
+
+  const uniqueUsers = Array.from(dedupByUsername.values());
+
+  // Insert, skipping any user that would conflict on username OR email
+  await db
+    .insert(users)
+    .values(uniqueUsers)
+    .onConflictDoNothing();
 
   console.log(chalk.green(`✅ Seeded ${users_to_insert.length} users`));
   return users_to_insert.length;
@@ -410,7 +417,7 @@ async function seedThreadsAndPosts() {
             for (const liker of likers) {
               await tx.insert(postLikes).values({
                 postId: new_post.id,
-                userId: liker.id
+                likedByUserId: liker.id
               }).onConflictDoNothing();
             }
           }

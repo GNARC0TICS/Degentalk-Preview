@@ -150,6 +150,7 @@ export * from './system/mentionsIndex';
 export * from './system/referralSources';
 export * from './system/userReferrals';
 export * from './system/event_logs';
+export * from './system/economyConfigOverrides';
 
 // Dictionary domain exports
 export * from './dictionary/entries';
