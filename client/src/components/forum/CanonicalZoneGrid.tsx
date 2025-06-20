@@ -121,6 +121,7 @@ export function CanonicalZoneGrid({
 							description={cardData.description}
 							icon={cardData.icon === null ? undefined : cardData.icon} // Handle null icon
 							colorTheme={cardData.colorTheme || 'default'} // Use the direct semantic colorTheme from cardData
+							themeColor={cardData.theme?.color} // Pass actual theme color for dynamic styling
 							threadCount={cardData.threadCount}
 							postCount={cardData.postCount}
 							activeUsersCount={cardData.activeUsersCount}

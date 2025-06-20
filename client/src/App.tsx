@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import AdminLayout from './pages/admin/admin-layout';
 import { ModLayout } from './components/mod/mod-layout';
 import { SiteHeader } from '@/components/layout/site-header';
+// import { SiteHeader, HeaderProvider } from '@/components/header';
 import { ProtectedRoute } from '@/components/auth/protected-route';
 import WalletPage from './pages/wallet';
 
@@ -76,6 +77,16 @@ import { DevRoleSwitcher } from '@/components/dev/dev-role-switcher';
 // Import Preferences Page
 import PreferencesPage from './pages/preferences/index';
 
+// Import Dictionary Pages
+import DictionaryIndexPage from './pages/dictionary/index';
+import DictionarySlugPage from './pages/dictionary/%5Bslug%5D';
+
+// Import Referrals Page
+import ReferralsPage from './pages/referrals/index';
+
+// Import Invite Page
+import InvitePage from './pages/invite/[code]';
+
 // Import UIPlayground page and DevPlaygroundShortcut component
 import UIPlaygroundPage from './pages/ui-playground';
 import { DevPlaygroundShortcut } from '@/components/dev/dev-playground-shortcut';
@@ -134,6 +145,16 @@ function App() {
 					<ProtectedRoute path="/profile/:username" component={ProfilePage} />
 					<ProtectedRoute path="/whispers" component={WhispersPage} />
 					<ProtectedRoute path="/preferences" component={PreferencesPage} />
+
+					{/* Dictionary Routes */}
+					<ProtectedRoute path="/dictionary" component={DictionaryIndexPage} />
+					<ProtectedRoute path="/dictionary/:slug" component={DictionarySlugPage} />
+
+					{/* Referrals Route */}
+					<ProtectedRoute path="/referrals" component={ReferralsPage} />
+
+					{/* Invite Route - Public route for referral codes */}
+					<Route path="/invite/:code" component={InvitePage} />
 
 					{/* Admin Routes */}
 					<Route

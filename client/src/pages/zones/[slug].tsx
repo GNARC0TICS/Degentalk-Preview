@@ -1,16 +1,10 @@
-import React from 'react'; // Removed useState
+import React from 'react';
 import { useParams, Link } from 'wouter';
-// import { useQuery } from '@tanstack/react-query'; // Removed
 import { useForumStructure } from '@/contexts/ForumStructureContext';
-import type { MergedForum } from '@/contexts/ForumStructureContext'; // Removed MergedZone as it's inferred from useForumStructure or not directly typed here
-// import ThreadCard from '@/components/forum/ThreadCard'; // Removed
-// import { Pagination } from '@/components/ui/pagination'; // Removed
-// import { getQueryFn } from '@/lib/queryClient'; // Removed
-// import type { ThreadsApiResponse, ApiThread } from '@/features/forum/components/ThreadList'; // Removed
+import type { MergedForum } from '@/contexts/ForumStructureContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-// import { Badge } from '@/components/ui/badge';
 import {
 	MessageSquare,
 	FileText,
@@ -20,8 +14,8 @@ import {
 	Plus,
 	Users
 } from 'lucide-react';
-// import { cn } from '@/lib/utils'; // Removed
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
+import { Wide } from '@/layout/primitives/Wide';
 
 const ZonePage: React.FC = () => {
 	const params = useParams<{ slug: string }>();
@@ -30,11 +24,21 @@ const ZonePage: React.FC = () => {
 	// const [currentPage, setCurrentPage] = useState(1); // Removed
 	// const threadsPerPage = 20; // Removed
 
+	const zone = slug ? getZone(slug) : null;
+	const displayName = zone?.name;
+	const displayDescription = zone?.description;
+	const theme = zone?.theme;
+
+	// --- SEO: set document title ---
+	React.useEffect(() => {
+		if (displayName) {
+			document.title = `${displayName} | Zones | Degentalk`;
+		}
+	}, [displayName]);
+
 	if (!slug) {
 		return <NotFound />;
 	}
-
-	const zone = getZone(slug);
 
 	// Handle loading/error states AFTER hooks
 	if (isLoading) {
@@ -48,17 +52,6 @@ const ZonePage: React.FC = () => {
 	if (!zone) {
 		return <NotFound />;
 	}
-
-	const displayName = zone.name;
-	const displayDescription = zone.description;
-	const theme = zone.theme;
-
-	// --- SEO: set document title ---
-	React.useEffect(() => {
-		if (displayName) {
-			document.title = `${displayName} | Zones | Degentalk`;
-		}
-	}, [displayName]);
 
 	return (
 		<div className="min-h-screen bg-black">
@@ -79,7 +72,7 @@ const ZonePage: React.FC = () => {
 					</div>
 				)}
 
-				<div className="relative z-10 container mx-auto px-4 py-8">
+				<Wide className="relative z-10 px-2 sm:px-4 py-6 sm:py-8 md:py-12">
 					{/* Breadcrumbs */}
 					<nav className="flex items-center space-x-2 text-sm text-zinc-400 mb-6">
 						<Link href="/">
@@ -93,59 +86,66 @@ const ZonePage: React.FC = () => {
 					</nav>
 
 					{/* Zone Header */}
-					<div className="flex items-start gap-6">
-						{theme?.icon && (
-							<div className="flex-shrink-0">
-								{theme.icon.startsWith('/') || theme.icon.startsWith('http') ? (
-									<img
-										src={theme.icon}
-										alt={`${displayName} icon`}
-										className="w-20 h-20 rounded-xl shadow-lg"
-									/>
-								) : (
-									<div
-										className="w-20 h-20 rounded-xl shadow-lg flex items-center justify-center text-4xl"
-										style={{ backgroundColor: theme?.color || '#1f2937' }}
-									>
-										{theme.icon}
-									</div>
-								)}
-							</div>
-						)}
-
-						<div className="flex-1">
-							<h1 className="text-4xl font-bold text-white mb-2">{displayName}</h1>
-							{displayDescription && (
-								<p className="text-lg text-zinc-300 mb-4">{displayDescription}</p>
+					<div className="flex flex-col sm:flex-row sm:items-start gap-6">
+						<div className="flex items-start gap-4 flex-1">
+							{theme?.icon && (
+								<div className="flex-shrink-0">
+									{theme.icon.startsWith('/') || theme.icon.startsWith('http') ? (
+										<img
+											src={theme.icon}
+											alt={`${displayName} icon`}
+											className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl shadow-lg"
+										/>
+									) : (
+										<div
+											className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl shadow-lg flex items-center justify-center text-3xl sm:text-4xl"
+											style={{ backgroundColor: theme?.color || '#1f2937' }}
+										>
+											{theme.icon}
+										</div>
+									)}
+								</div>
 							)}
 
-							<div className="flex items-center gap-6 text-sm">
-								<div className="flex items-center gap-2">
-									<MessageSquare className="w-4 h-4 text-emerald-500" />
-									<span className="text-zinc-400">
-										<span className="font-semibold text-white">{zone.threadCount}</span> threads
-									</span>
-								</div>
-								<div className="flex items-center gap-2">
-									<FileText className="w-4 h-4 text-blue-500" />
-									<span className="text-zinc-400">
-										<span className="font-semibold text-white">{zone.postCount}</span> posts
-									</span>
+							<div className="flex-1">
+								<h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
+									{displayName}
+								</h1>
+								{displayDescription && (
+									<p className="text-base sm:text-lg text-zinc-300 mb-4">{displayDescription}</p>
+								)}
+
+								<div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm">
+									<div className="flex items-center gap-2">
+										<MessageSquare className="w-4 h-4 text-emerald-500" />
+										<span className="text-zinc-400">
+											<span className="font-semibold text-white">{zone.threadCount}</span> threads
+										</span>
+									</div>
+									<div className="flex items-center gap-2">
+										<FileText className="w-4 h-4 text-blue-500" />
+										<span className="text-zinc-400">
+											<span className="font-semibold text-white">{zone.postCount}</span> posts
+										</span>
+									</div>
 								</div>
 							</div>
 						</div>
 
 						<Link href="/threads/create">
-							<Button className="bg-emerald-600 hover:bg-emerald-700 text-white" size="lg">
+							<Button
+								className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
+								size="lg"
+							>
 								<Plus className="w-4 h-4 mr-2" />
 								New Thread
 							</Button>
 						</Link>
 					</div>
-				</div>
+				</Wide>
 			</div>
 
-			<div className="container mx-auto px-4 py-8">
+			<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 					{/* Main Content */}
 					<div className="lg:col-span-2 space-y-6">
@@ -241,7 +241,7 @@ const ZonePage: React.FC = () => {
 						</Card>
 					</div>
 				</div>
-			</div>
+			</Wide>
 		</div>
 	);
 };
@@ -249,40 +249,49 @@ const ZonePage: React.FC = () => {
 // Helper Components
 const NotFound: React.FC = () => (
 	<div className="min-h-screen bg-black flex items-center justify-center">
-		<div className="text-center">
-			<AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-			<h1 className="text-3xl font-bold text-white mb-2">Zone Not Found</h1>
-			<p className="text-zinc-400 mb-6">The zone you're looking for doesn't exist.</p>
-			<Link href="/">
-				<Button variant="outline">Return Home</Button>
-			</Link>
-		</div>
+		<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+			<div className="text-center">
+				<AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+				<h1 className="text-3xl font-bold text-white mb-2">Zone Not Found</h1>
+				<p className="text-zinc-400 mb-6">The zone you're looking for doesn't exist.</p>
+				<Link href="/">
+					<Button variant="outline">Return Home</Button>
+				</Link>
+			</div>
+		</Wide>
 	</div>
 );
 
 const LoadingState: React.FC = () => (
 	<div className="min-h-screen bg-black">
-		<div className="container mx-auto px-4 py-8">
-			<Skeleton className="h-8 w-48 mb-6 bg-zinc-900" />
-			<Skeleton className="h-64 w-full mb-8 bg-zinc-900" />
-			<div className="space-y-4">
-				{[...Array(5)].map((_, i) => (
-					<Skeleton key={i} className="h-24 bg-zinc-900" />
-				))}
+		<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+			<div className="animate-pulse">
+				<Skeleton className="h-8 w-48 mb-6 bg-zinc-900" />
+				<Skeleton className="h-40 sm:h-64 w-full mb-8 bg-zinc-900" />
+				<div className="space-y-4">
+					{[...Array(5)].map((_, i) => (
+						<Skeleton key={i} className="h-24 bg-zinc-900" />
+					))}
+				</div>
 			</div>
-		</div>
+		</Wide>
 	</div>
 );
 
 const ErrorState: React.FC<{ error: Error }> = ({ error }) => (
 	<div className="min-h-screen bg-black flex items-center justify-center">
-		<Card className="bg-red-900/20 border-red-800 max-w-md">
-			<CardContent className="p-8 text-center">
-				<AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-				<h2 className="text-2xl font-bold text-white mb-2">Error Loading Zone</h2>
-				<p className="text-red-400">{error.message}</p>
-			</CardContent>
-		</Card>
+		<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+			<Card className="bg-red-900/20 border-red-800 max-w-md mx-auto">
+				<CardContent className="p-6 sm:p-8 text-center">
+					<AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+					<h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Error Loading Zone</h2>
+					<p className="text-red-400 text-sm sm:text-base">{error.message}</p>
+					<Button asChild variant="outline" className="mt-4">
+						<Link href="/zones">Browse Zones</Link>
+					</Button>
+				</CardContent>
+			</Card>
+		</Wide>
 	</div>
 );
 

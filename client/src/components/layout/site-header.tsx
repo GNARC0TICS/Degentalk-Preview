@@ -33,11 +33,11 @@ import gsap from 'gsap';
 
 // Function to generate random underline paths
 const generateRandomPath = () => {
-	// Width & height of the SVG viewbox
-	const width = 100;
+	// Width & height of the SVG viewbox - extended for longer underlines
+	const width = 120;
 
-	// Start exactly at x = 0 so the underline touches the left edge
-	const startX = 0;
+	// Start slightly before x = 0 for better coverage
+	const startX = -10;
 	const startY = 28 + Math.random() * 4; // between 28-32
 
 	// Decide how many interior points (creates the squiggle)
@@ -53,8 +53,8 @@ const generateRandomPath = () => {
 		points.push({ x, y });
 	}
 
-	// End exactly at the right edge
-	points.push({ x: width, y: 28 + Math.random() * 4 });
+	// End slightly past the right edge for better coverage
+	points.push({ x: width + 10, y: 28 + Math.random() * 4 });
 
 	// Build the path string
 	let path = `M${startX} ${startY}`;
@@ -303,10 +303,11 @@ export function SiteHeader() {
 
 	return (
 		<header className="bg-zinc-900/80 backdrop-blur-sm border-b border-zinc-800 sticky top-0 z-50 shadow-md transition-all">
-			<div className="container mx-auto px-4">
+			<div className="px-4">
 				<div className="flex items-center justify-between h-16">
-					{/* Logo */}
-					<div className="flex items-center">
+					{/* Left Section: Logo + Navigation */}
+					<div className="flex items-center space-x-8">
+						{/* Logo */}
 						<Link href="/">
 							<div className="flex items-center cursor-pointer">
 								<span className="text-xl font-bold text-white">
@@ -314,51 +315,54 @@ export function SiteHeader() {
 								</span>
 							</div>
 						</Link>
+
+						{/* Desktop Navigation with animated underline - fixed width container */}
+						<nav className="hidden md:flex items-center space-x-1">
+							{navigation.map((item, index) => {
+								const isActive = item.href === location;
+								return (
+									<Link key={item.name} href={item.href}>
+										<div
+											className={`nav-item group relative px-3 py-2 rounded-md text-sm font-medium cursor-pointer transition-all duration-200 ${
+												isActive ? 'text-white nav-active' : 'text-zinc-300 hover:text-emerald-400'
+											}`}
+											onMouseEnter={() => handleMouseEnter(index)}
+											onMouseLeave={() => handleMouseLeave(index)}
+										>
+											<span className="relative z-10">{item.name}</span>
+											{/* SVG underline with randomized path */}
+											<svg
+												className="absolute bottom-0 left-0 w-full h-[8px] underline-svg"
+												viewBox="-10 0 140 41"
+												fill="none"
+												preserveAspectRatio="xMidYMid meet"
+												style={{ overflow: 'visible' }}
+											>
+												<path
+													ref={(el) => {
+														if (navRefs.current) {
+															navRefs.current[index] = el;
+														}
+													}}
+													className="nav-underline"
+													d={navPaths[index] || 'M-5 30L15 32S50 34 85 31L125 30'}
+													stroke={isActive ? '#e55050' : '#10b981'}
+													strokeWidth="6"
+													strokeLinecap="round"
+												/>
+											</svg>
+										</div>
+									</Link>
+								);
+							})}
+						</nav>
 					</div>
 
-					{/* Desktop Navigation with animated underline */}
-					<nav className="hidden md:flex items-center space-x-1">
-						{navigation.map((item, index) => {
-							const isActive = item.href === location;
-							return (
-								<Link key={item.name} href={item.href}>
-									<div
-										className={`nav-item group px-3 py-2 rounded-md text-sm font-medium cursor-pointer transition-all duration-200 ${
-											isActive ? 'text-white nav-active' : 'text-zinc-300 hover:text-emerald-400'
-										}`}
-										onMouseEnter={() => handleMouseEnter(index)}
-										onMouseLeave={() => handleMouseLeave(index)}
-									>
-										<span className="relative z-10">{item.name}</span>
-										{/* SVG underline with randomized path */}
-										<svg
-											className="w-full h-[8px] underline-svg"
-											viewBox="0 0 100 41"
-											fill="none"
-											preserveAspectRatio="none"
-											style={{ overflow: 'visible' }}
-										>
-											<path
-												ref={(el) => {
-													if (navRefs.current) {
-														navRefs.current[index] = el;
-													}
-												}}
-												className="nav-underline"
-												d={navPaths[index] || 'M5 30L25 32S50 34 75 31L95 30'}
-												stroke={isActive ? '#e55050' : '#10b981'}
-												strokeWidth="6"
-												strokeLinecap="round"
-											/>
-										</svg>
-									</div>
-								</Link>
-							);
-						})}
-					</nav>
-
-					{/* Search Box */}
-					<div className="hidden md:flex flex-1 max-w-md mx-4">
+					{/* Search Box - grows to fill available space */}
+					<div
+						className="hidden md:flex flex-1 min-w-0 mx-4"
+						style={{ maxWidth: 'min(480px, 35vw)' }}
+					>
 						<div className="relative w-full">
 							<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 								<Search className="h-4 w-4 text-zinc-500" />
@@ -547,7 +551,7 @@ export function SiteHeader() {
 														<DropdownMenuItem>
 															<div className="flex w-full items-center cursor-pointer">
 																<Settings className="mr-2 h-4 w-4" />
-																<span>Settings</span>
+																<span>Preferences</span>
 															</div>
 														</DropdownMenuItem>
 													</motion.div>
@@ -742,7 +746,7 @@ export function SiteHeader() {
 											onClick={() => setIsOpen(false)}
 										>
 											<Settings className="h-5 w-5 inline mr-2" />
-											Settings
+											Preferences
 										</div>
 									</Link>
 									<Link href="/preferences?tab=referrals">

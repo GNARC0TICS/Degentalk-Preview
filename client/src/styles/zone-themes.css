@@ -496,3 +496,26 @@
 .zone-theme-default:hover {
 	@apply border-zinc-600/70 shadow-lg shadow-zinc-900/25;
 }
+
+/* Dynamic Zone Card Theming - Uses CSS custom properties for live theme colors */
+.zone-card-themed {
+	border-color: var(--zone-border, rgba(63, 63, 70, 0.5));
+	box-shadow:
+		0 4px 6px -1px rgba(0, 0, 0, 0.1),
+		0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	transition:
+		transform 0.2s ease,
+		box-shadow 0.2s ease,
+		border-color 0.2s ease;
+}
+
+.zone-card-themed:hover {
+	border-color: var(--zone-color, #10b981);
+	box-shadow:
+		0 10px 25px -5px rgba(0, 0, 0, 0.2),
+		0 0 20px var(--zone-glow, rgba(16, 185, 129, 0.3));
+}
+
+.zone-card-themed:active {
+	transform: scale(0.98);
+}

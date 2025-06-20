@@ -10,7 +10,7 @@ import type { MergedZone } from '@/contexts/ForumStructureContext';
 // Import components
 import { HeroSection } from '@/components/layout/hero-section';
 import { AnnouncementTicker } from '@/components/layout/announcement-ticker';
-import { SiteFooter } from '@/components/layout/site-footer';
+import { SiteFooter } from '@/components/footer';
 import { ResponsiveLayoutWrapper } from '@/components/layout/ResponsiveLayoutWrapper';
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
 import { Wide } from '@/layout/primitives';

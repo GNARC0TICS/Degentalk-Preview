@@ -1,5 +1,5 @@
 import React from 'react';
-import { SiteFooter } from '@/components/layout/site-footer';
+import { SiteFooter } from '@/components/footer';
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
 import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
 // Corrected import path for useForumStructure and MergedZone type
@@ -23,7 +23,7 @@ function ZonesPage() {
 	if (isLoading) {
 		return (
 			<div className="flex flex-col min-h-screen">
-				<div className="container max-w-7xl mx-auto px-4 py-6 flex-grow">
+				<div className="max-w-7xl mx-auto px-4 py-6 flex-grow">
 					<LoadingSpinner text="Loading Zones..." />
 				</div>
 				<SiteFooter />
@@ -34,7 +34,7 @@ function ZonesPage() {
 	if (error) {
 		return (
 			<div className="flex flex-col min-h-screen">
-				<div className="container max-w-7xl mx-auto px-4 py-6 flex-grow">
+				<div className="max-w-7xl mx-auto px-4 py-6 flex-grow">
 					<ErrorDisplay title="Error loading zones" error={error} />
 				</div>
 				<SiteFooter />
@@ -44,7 +44,7 @@ function ZonesPage() {
 
 	return (
 		<div className="flex flex-col min-h-screen">
-			<div className="container max-w-7xl mx-auto px-4 py-6 flex-grow">
+			<div className="max-w-7xl mx-auto px-4 py-6 flex-grow">
 				<div className="mb-8">
 					<h1 className="text-3xl font-bold text-white mb-4">Zones & Categories</h1>
 					<p className="text-zinc-400">Explore our community's zones and categories.</p>

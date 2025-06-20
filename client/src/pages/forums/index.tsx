@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 // import { useAuth } from '@/hooks/use-auth.tsx'; // Unused
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { SiteFooter } from '@/components/layout/site-footer';
+import { SiteFooter } from '@/components/footer';
 import { ForumGuidelines } from '@/components/forum/forum-guidelines';
 // ForumSearch seems unused, can be removed if not needed.
 // import { ForumSearch } from '@/components/forum/forum-search';

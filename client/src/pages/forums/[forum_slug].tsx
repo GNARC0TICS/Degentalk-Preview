@@ -3,18 +3,24 @@ import { Link, useParams } from 'wouter';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedForum, MergedZone, MergedRules } from '@/contexts/ForumStructureContext';
 import Breadcrumb from '@/components/common/Breadcrumb';
-// import type { ForumRules } from '@/config/forumMap.config'; // Removed unused ForumRules
+import { Wide } from '@/layout/primitives/Wide';
+import { Button } from '@/components/ui/button';
+import { PlusCircle } from 'lucide-react';
 
 // Placeholder for a proper NotFoundPage component
 const NotFoundPage: React.FC = () => {
 	return (
-		<div style={{ textAlign: 'center', padding: '50px' }}>
-			<h1>404 - Forum Not Found</h1>
-			<p>The forum you are looking for does not exist or could not be found.</p>
-			<Link href="/" style={{ color: '#007bff', textDecoration: 'underline' }}>
-				Go back to Home
-			</Link>
-		</div>
+		<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+			<div className="text-center">
+				<h1 className="text-2xl font-bold mb-4">404 - Forum Not Found</h1>
+				<p className="text-zinc-400 mb-6">
+					The forum you are looking for does not exist or could not be found.
+				</p>
+				<Link href="/">
+					<Button variant="default">Go back to Home</Button>
+				</Link>
+			</div>
+		</Wide>
 	);
 };
 
@@ -24,23 +30,13 @@ import ThreadList from '@/features/forum/components/ThreadList';
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
 
 // Placeholder for CreateThreadButton component
-const CreateThreadButtonStub: React.FC<{ forumSlugOrId: string }> = ({ forumSlugOrId }) => {
-	// TODO: Implement actual CreateThreadButton
-	// Link to /threads/create?forumId={forumSlugOrId}
+const CreateThreadButton: React.FC<{ forumSlugOrId: string }> = ({ forumSlugOrId }) => {
 	return (
-		<Link
-			href={`/threads/create?forumId=${forumSlugOrId}`}
-			style={{
-				display: 'inline-block',
-				padding: '10px 15px',
-				backgroundColor: '#007bff',
-				color: 'white',
-				textDecoration: 'none',
-				borderRadius: '5px',
-				marginTop: '20px'
-			}}
-		>
-			Create New Thread (Placeholder)
+		<Link href={`/threads/create?forumId=${forumSlugOrId}`}>
+			<Button className="inline-flex items-center gap-2">
+				<PlusCircle className="h-4 w-4" />
+				Create New Thread
+			</Button>
 		</Link>
 	);
 };
@@ -67,7 +63,14 @@ const ForumPage: React.FC = () => {
 	if (isLoading) {
 		// isLoading from context is the primary loading state
 		console.log(`[ForumPage] isLoading is true. Rendering loading state.`);
-		return <div style={{ textAlign: 'center', padding: '50px' }}>Loading forum data...</div>;
+		return (
+			<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+				<div className="text-center">
+					<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500 mx-auto mb-4"></div>
+					<p className="text-zinc-400">Loading forum data...</p>
+				</div>
+			</Wide>
+		);
 	}
 
 	if (contextError) {
@@ -76,9 +79,14 @@ const ForumPage: React.FC = () => {
 			contextError.message
 		);
 		return (
-			<div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>
-				Error loading forum data: {contextError.message}
-			</div>
+			<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+				<div className="text-center">
+					<div className="text-red-500 mb-4">
+						<h2 className="text-xl font-semibold mb-2">Error</h2>
+						<p>Error loading forum data: {contextError.message}</p>
+					</div>
+				</div>
+			</Wide>
 		);
 	}
 
@@ -118,29 +126,26 @@ const ForumPage: React.FC = () => {
 	const displayTheme = { ...zoneTheme, ...forum.theme }; // forum.theme is MergedTheme
 
 	const renderRules = (rules: MergedRules) => {
-		// Changed type to MergedRules
 		return (
-			<ul style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
+			<ul className="list-disc pl-5 space-y-2">
 				{Object.entries(rules).map(([key, value]) => {
 					if (value === undefined) return null;
 					let displayValue = '';
 					if (typeof value === 'boolean') {
 						displayValue = value ? 'Yes' : 'No';
 					} else if (Array.isArray(value)) {
-						// This will handle availablePrefixes if it's an array
 						displayValue = value.join(', ');
 					} else if (typeof value === 'object' && value !== null) {
-						// For prefixGrantRules (Record<string, unknown>) and customRules (Record<string, unknown>)
 						displayValue = JSON.stringify(value);
 					} else {
 						displayValue = String(value);
 					}
 					return (
-						<li key={key}>
-							<strong>
+						<li key={key} className="text-sm">
+							<span className="font-semibold text-zinc-300">
 								{key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}:
-							</strong>{' '}
-							{displayValue}
+							</span>{' '}
+							<span className="text-zinc-400">{displayValue}</span>
 						</li>
 					);
 				})}
@@ -152,7 +157,7 @@ const ForumPage: React.FC = () => {
 		`[ForumPage] Rendering ThreadList with forumId: ${forum?.id} and forumSlug: ${forum?.slug}`
 	);
 	return (
-		<div>
+		<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
 			<Breadcrumb
 				zone={parentZone ? { name: parentZone.name, slug: parentZone.slug } : undefined}
 				forum={{ name: forum.name, slug: forum.slug }}
@@ -161,73 +166,77 @@ const ForumPage: React.FC = () => {
 
 			{/* Forum Header */}
 			{displayTheme?.bannerImage && (
-				<img
-					src={displayTheme.bannerImage}
-					alt={`${forum.name} banner`}
-					style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }}
-				/>
+				<div className="w-full max-h-[200px] sm:max-h-[300px] overflow-hidden rounded-lg mb-6">
+					<img
+						src={displayTheme.bannerImage}
+						alt={`${forum.name} banner`}
+						className="w-full h-full object-cover"
+					/>
+				</div>
 			)}
+
 			<div
+				className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4 sm:p-6 mb-6"
 				style={{
-					backgroundColor: displayTheme?.color || '#f0f0f0',
-					padding: '20px',
-					color: displayTheme?.color
-						? parseInt(displayTheme.color.replace('#', ''), 16) > 0xffffff / 2
-							? '#000'
-							: '#fff'
-						: '#000',
-					borderBottom: '1px solid #ddd'
+					borderColor: displayTheme?.color ? `${displayTheme.color}40` : undefined,
+					backgroundImage: displayTheme?.color
+						? `linear-gradient(135deg, ${displayTheme.color}15 0%, transparent 50%, ${displayTheme.color}08 100%)`
+						: undefined
 				}}
 			>
-				<div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+				<div className="flex items-center gap-4 mb-4">
 					{displayTheme?.icon &&
 						(displayTheme.icon.startsWith('/') || displayTheme.icon.startsWith('http') ? (
 							<img
 								src={displayTheme.icon}
 								alt={`${forum.name} icon`}
-								style={{ width: '50px', height: '50px', marginRight: '15px', borderRadius: '8px' }}
+								className="w-12 h-12 rounded-lg object-cover"
 							/>
 						) : (
-							<span style={{ fontSize: '2.5em', marginRight: '15px' }}>{displayTheme.icon}</span>
+							<span className="text-4xl">{displayTheme.icon}</span>
 						))}
-					<h1 style={{ margin: 0 }}>{forum.name}</h1>
+					<h1 className="text-2xl sm:text-3xl font-bold">{forum.name}</h1>
 				</div>
-				{/* Forum description is not directly available on MergedForum. 
-            It might be part of zone.description or a new field in Forum type.
-            For now, omitting. A general description could be: "Threads and discussions for {forum.name}." 
-        */}
-				{/* <p style={{ margin: '5px 0 10px 0' }}>{forum.description || 'Welcome to ' + forum.name}</p> */}
-				<p style={{ margin: 0, fontSize: '0.9em' }}>
-					Total Threads: {forum.threadCount} | Total Posts: {forum.postCount}
-				</p>
+				<div className="flex flex-wrap gap-4 text-sm text-zinc-400">
+					<span>
+						Total Threads: <span className="text-zinc-300 font-medium">{forum.threadCount}</span>
+					</span>
+					<span>•</span>
+					<span>
+						Total Posts: <span className="text-zinc-300 font-medium">{forum.postCount}</span>
+					</span>
+				</div>
 			</div>
 
 			{/* Forum Rules */}
-			<section style={{ marginTop: '20px', padding: '0 20px' }}>
-				<h2 style={{ marginBottom: '10px' }}>Forum Rules</h2>
-				{forum.rules ? renderRules(forum.rules) : <p>No specific rules defined for this forum.</p>}
+			<section className="mb-8">
+				<h2 className="text-xl font-semibold mb-4 text-zinc-100">Forum Rules</h2>
+				<div className="bg-zinc-800/30 border border-zinc-700 rounded-lg p-4">
+					{forum.rules ? (
+						renderRules(forum.rules)
+					) : (
+						<p className="text-zinc-400 text-sm">No specific rules defined for this forum.</p>
+					)}
+				</div>
 			</section>
 
 			{/* Create Thread Button */}
-			<section style={{ marginTop: '20px', padding: '0 20px' }}>
-				<CreateThreadButtonStub forumSlugOrId={forum.slug} />
+			<section className="mb-8">
+				<CreateThreadButton forumSlugOrId={forum.slug} />
 			</section>
 
 			{/* Subforums List */}
 			{forum.forums && forum.forums.length > 0 && (
-				<section style={{ marginTop: '30px', padding: '0 20px' }}>
-					<h2 style={{ marginBottom: '15px', fontSize: '1.25em', fontWeight: 'bold' }}>
-						Subforums
-					</h2>
-					<div style={{ border: '1px solid #333', borderRadius: '8px', overflow: 'hidden' }}>
+				<section className="mb-8">
+					<h2 className="text-xl font-semibold mb-4 text-zinc-100">Subforums</h2>
+					<div className="border border-zinc-700 rounded-lg overflow-hidden bg-zinc-800/30">
 						{forum.forums.map((subForum) => (
-							<ForumListItem // Using the updated ForumListItem
+							<ForumListItem
 								key={subForum.slug}
 								forum={subForum}
 								href={`/forums/${subForum.slug}`}
-								// parentZoneColor can be inherited from parent forum's theme if desired
 								parentZoneColor={displayTheme?.color ?? undefined}
-								depthLevel={0} // Subforums listed here are effectively at depth 0 relative to this page's list
+								depthLevel={0}
 							/>
 						))}
 					</div>
@@ -235,13 +244,11 @@ const ForumPage: React.FC = () => {
 			)}
 
 			{/* Thread List */}
-			<section style={{ marginTop: '30px', padding: '0 20px 20px 20px' }}>
-				<h2 style={{ marginBottom: '15px', fontSize: '1.25em', fontWeight: 'bold' }}>
-					Threads in {forum.name}
-				</h2>
+			<section>
+				<h2 className="text-xl font-semibold mb-6 text-zinc-100">Threads in {forum.name}</h2>
 				<ThreadList forumId={forum.id} forumSlug={forum.slug} />
 			</section>
-		</div>
+		</Wide>
 	);
 };
 

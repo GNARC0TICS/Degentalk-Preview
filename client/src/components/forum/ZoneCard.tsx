@@ -17,6 +17,7 @@ export interface ZoneCardProps {
 	// Visual customization
 	icon?: string;
 	colorTheme?: string;
+	themeColor?: string; // Actual hex color for dynamic styling
 
 	// Stats and metadata
 	forumCount?: number;
@@ -53,6 +54,7 @@ export function ZoneCard({
 	description,
 	icon,
 	colorTheme = 'default',
+	themeColor,
 	forumCount = 0,
 	threadCount = 0,
 	activeUsersCount = 0,
@@ -70,6 +72,20 @@ export function ZoneCard({
 	const zoneUrl = `/zones/${slug}`;
 
 	const themeClass = `zone-theme-${colorTheme}`;
+
+	// Generate dynamic styles based on themeColor
+	const getDynamicStyles = (): React.CSSProperties => {
+		if (!themeColor || themeColor === 'holographic') {
+			return {};
+		}
+
+		return {
+			'--zone-color': themeColor,
+			'--zone-glow': `${themeColor}40`, // 25% opacity
+			'--zone-border': `${themeColor}60`, // 37.5% opacity
+			'--zone-gradient': `linear-gradient(135deg, ${themeColor}15 0%, transparent 50%, ${themeColor}08 100%)`
+		} as React.CSSProperties;
+	};
 
 	// handleClick will be passed to Link's onClick.
 	// If props.onClick exists, it's called. Link will navigate unless e.preventDefault() is called in props.onClick.
@@ -101,11 +117,13 @@ export function ZoneCard({
 			href={zoneUrl}
 			onClick={handleClick}
 			data-testid="zone-card"
+			style={getDynamicStyles()}
 			className={`
           block zone-card ${themeClass} ${rarityClasses[rarity]} rounded-lg
           transition-all duration-200 hover:scale-[1.03]
           border-2 relative overflow-hidden ${className}
           ${hasXpBoost && boostMultiplier ? 'animate-pulse-glow' : ''}
+          ${themeColor && themeColor !== 'holographic' ? 'zone-card-themed' : ''}
         `}
 		>
 			<Card className="w-full h-full bg-transparent border-none">
@@ -144,8 +162,17 @@ export function ZoneCard({
 				</CardContent>
 
 				{lastActivityAt && (
-					<CardFooter className="px-6 py-3 border-t border-white/10 text-xs">
-						<div className="flex items-center text-zinc-400">
+					<CardFooter
+						className="px-6 py-3 border-t border-white/10 text-xs relative"
+						style={
+							themeColor && themeColor !== 'holographic'
+								? {
+										backgroundImage: `var(--zone-gradient)`
+									}
+								: {}
+						}
+					>
+						<div className="flex items-center text-zinc-400 relative z-10">
 							<Clock className="h-3 w-3 mr-1" />
 							<span>
 								Last activity {formatDistanceToNow(new Date(lastActivityAt), { addSuffix: true })}
