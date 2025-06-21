@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield } from 'lucide-react';
+import { IconRenderer } from '@/components/icons/iconRenderer';
 import { Button } from '@/components/ui/button';
 import { NavLink } from './NavLink';
 import { useHeader } from './HeaderContext';
@@ -22,7 +22,7 @@ export function AdminButton({ className }: AdminButtonProps) {
 		<NavLink href={href} analyticsLabel={user.isAdmin ? 'nav_admin' : 'nav_mod'}>
 			<div className={`text-zinc-400 hover:text-white ${className}`}>
 				<Button variant="ghost" size="icon" aria-label={label}>
-					<Shield className="h-5 w-5" />
+					<IconRenderer icon="admin" className="h-5 w-5" />
 				</Button>
 			</div>
 		</NavLink>

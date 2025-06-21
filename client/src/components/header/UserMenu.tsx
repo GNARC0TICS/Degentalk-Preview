@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { IconRenderer } from '@/components/icons/iconRenderer';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -108,7 +108,11 @@ export function UserMenu({ className, onLogout }: UserMenuProps) {
 							<span className="hidden lg:flex items-center">
 								<span className="text-zinc-300">{user.username}</span>
 								<motion.div animate={{ rotate: 0 }} transition={{ duration: 0.3 }}>
-									<ChevronDown className="ml-1 h-4 w-4 text-zinc-500" />
+									<IconRenderer
+										icon="chevronDown"
+										size={16}
+										className="ml-1 h-4 w-4 text-zinc-500"
+									/>
 								</motion.div>
 							</span>
 						</div>

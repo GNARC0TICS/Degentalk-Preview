@@ -5,22 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { NotificationPanel } from '@/components/notifications/NotificationPanel';
 import { useHeader } from './HeaderContext';
-
-// Custom Megaphone icon (from original header)
-const MegaphoneIcon = (props: React.SVGProps<SVGSVGElement>) => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		viewBox="0 0 256 256"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth={12}
-		strokeLinecap="round"
-		strokeLinejoin="round"
-		{...props}
-	>
-		<path d="M246 120a46.05 46.05 0 0 0-46-46h-39.85c-2.58-.15-54.1-3.57-103.15-44.71A14 14 0 0 0 34 40v160a13.85 13.85 0 0 0 8.07 12.68A14.2 14.2 0 0 0 48 214a13.9 13.9 0 0 0 9-3.3c40-33.52 81.57-42 97-44.07v34a14 14 0 0 0 6.23 11.65l11 7.33a14 14 0 0 0 21.32-8.17l12.13-45.71A46.07 46.07 0 0 0 246 120M49.29 201.52A2 2 0 0 1 46 200V40a1.9 1.9 0 0 1 1.15-1.8A2.1 2.1 0 0 1 48 38a1.9 1.9 0 0 1 1.26.48c44 36.92 89 45.19 104.71 47v69c-15.68 1.85-60.67 10.13-104.68 47.04m131.64 7a2 2 0 0 1-3.05 1.18l-11-7.33a2 2 0 0 1-.89-1.67V166h26.2ZM200 154h-34V86h34a34 34 0 1 1 0 68" />
-	</svg>
-);
+import { IconRenderer } from '@/components/icons/iconRenderer';
 
 // Framer Motion variants
 const notificationButtonVariants = {
@@ -84,7 +69,7 @@ export function NotificationButton({ className }: NotificationButtonProps) {
 						className="relative text-zinc-400 hover:text-emerald-400 focus:text-emerald-400 transition-all duration-200"
 						onClick={() => setIsOpen(true)}
 					>
-						<MegaphoneIcon className="h-5 w-5" />
+						<IconRenderer icon="megaphone" size={20} className="h-5 w-5" />
 						{unreadNotifications > 0 && (
 							<motion.div
 								className="absolute -top-1 -right-1"

@@ -80,3 +80,37 @@ export function formatForumDate(date: string | Date) {
 export function formatThreadTimestamp(date: string | Date) {
 	return formatDate(date, { includeTime: true });
 }
+
+/**
+ * Formats a timestamp as "time ago" (e.g., "2 hours ago")
+ *
+ * @param date The date to format
+ * @returns A relative time string
+ */
+export function formatTimeAgo(date: string | Date) {
+	return formatDate(date, { relative: true });
+}
+
+/**
+ * Formats a timestamp for display in tables and lists
+ *
+ * @param date The date to format
+ * @returns A short formatted date string
+ */
+export function formatTimestamp(date: string | Date) {
+	return formatDate(date, { short: true, includeTime: true });
+}
+
+/**
+ * Formats just the time portion of a date
+ *
+ * @param date The date to format
+ * @returns A time string (e.g., "2:30 PM")
+ */
+export function formatTime(date: string | Date) {
+	const dateObj = typeof date === 'string' ? new Date(date) : date;
+	if (isNaN(dateObj.getTime())) {
+		return '';
+	}
+	return format(dateObj, 'h:mm a');
+}

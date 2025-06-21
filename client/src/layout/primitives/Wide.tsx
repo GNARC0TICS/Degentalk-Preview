@@ -1,7 +1,7 @@
-import React from 'react';
+import { HTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
-interface WideProps extends React.HTMLAttributes<HTMLDivElement> {
+interface WideProps extends HTMLAttributes<HTMLDivElement> {
 	as?: keyof JSX.IntrinsicElements;
 }
 
@@ -14,6 +14,6 @@ interface WideProps extends React.HTMLAttributes<HTMLDivElement> {
  *     <CardGrid />
  *   </Wide>
  */
-export const Wide: React.FC<WideProps> = ({ as: Component = 'div', className = '', ...props }) => {
+export function Wide({ as: Component = 'div', className = '', ...props }: WideProps) {
 	return <Component {...props} className={cn('container w-full', className)} />;
-};
+}

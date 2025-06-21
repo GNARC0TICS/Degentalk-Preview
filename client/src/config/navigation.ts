@@ -1,17 +1,5 @@
 import React from 'react';
-import {
-	Home,
-	MessageSquare,
-	Target,
-	ShoppingCart,
-	Trophy,
-	User,
-	Shield,
-	Settings,
-	Link2,
-	Wallet,
-	LogOut
-} from 'lucide-react';
+import { IconRenderer } from '@/components/icons/iconRenderer';
 
 // Navigation item configuration interface
 export interface NavItemConfig {
@@ -41,34 +29,38 @@ export const primaryNavigation: NavItemConfig[] = [
 	{
 		label: 'Home',
 		href: '/',
-		icon: React.createElement(Home, { className: 'h-4 w-4' }),
+		icon: React.createElement(IconRenderer, { icon: 'home', size: 16, className: 'h-4 w-4' }),
 		prefetch: true,
 		analyticsLabel: 'nav_home'
 	},
 	{
 		label: 'Forum',
 		href: '/forums',
-		icon: React.createElement(MessageSquare, { className: 'h-4 w-4' }),
+		icon: React.createElement(IconRenderer, { icon: 'forum', size: 16, className: 'h-4 w-4' }),
 		prefetch: true,
 		analyticsLabel: 'nav_forum'
 	},
 	{
 		label: 'Missions',
 		href: '/missions',
-		icon: React.createElement(Target, { className: 'h-4 w-4' }),
+		icon: React.createElement(IconRenderer, { icon: 'missions', size: 16, className: 'h-4 w-4' }),
 		requiresAuth: true,
 		analyticsLabel: 'nav_missions'
 	},
 	{
 		label: 'Shop',
 		href: '/shop',
-		icon: React.createElement(ShoppingCart, { className: 'h-4 w-4' }),
+		icon: React.createElement(IconRenderer, { icon: 'cart', size: 16, className: 'h-4 w-4' }),
 		analyticsLabel: 'nav_shop'
 	},
 	{
 		label: 'Leaderboard',
 		href: '/leaderboard',
-		icon: React.createElement(Trophy, { className: 'h-4 w-4' }),
+		icon: React.createElement(IconRenderer, {
+			icon: 'leaderboard',
+			size: 16,
+			className: 'h-4 w-4'
+		}),
 		analyticsLabel: 'nav_leaderboard'
 	}
 ];
@@ -84,31 +76,47 @@ export const createUserMenuItems = (
 	{
 		label: 'Profile',
 		href: `/profile/${username}`,
-		icon: React.createElement(User, { className: 'mr-2 h-4 w-4' }),
+		icon: React.createElement(IconRenderer, {
+			icon: 'profile',
+			size: 16,
+			className: 'mr-2 h-4 w-4'
+		}),
 		requiresAuth: true
 	},
 	{
 		label: 'Wallet',
-		icon: React.createElement(Wallet, { className: 'mr-2 h-4 w-4' }),
+		icon: React.createElement(IconRenderer, {
+			icon: 'wallet',
+			size: 16,
+			className: 'mr-2 h-4 w-4'
+		}),
 		onClick: onWalletClick,
 		requiresAuth: true
 	},
 	{
 		label: 'Whispers (DMs)',
 		href: '/whispers',
-		icon: React.createElement(MessageSquare, { className: 'mr-2 h-4 w-4' }),
+		icon: React.createElement(IconRenderer, {
+			icon: 'message',
+			size: 16,
+			className: 'mr-2 h-4 w-4'
+		}),
 		requiresAuth: true
 	},
 	{
 		label: 'Settings',
 		href: '/preferences',
-		icon: React.createElement(Settings, { className: 'mr-2 h-4 w-4' }),
+		icon: React.createElement(IconRenderer, {
+			icon: 'settings',
+			size: 16,
+			className: 'mr-2 h-4 w-4'
+		}),
 		requiresAuth: true
 	},
 	{
 		label: 'Referrals',
 		href: '/preferences?tab=referrals',
-		icon: React.createElement(Link2, { className: 'mr-2 h-4 w-4' }),
+		icon: React.createElement(IconRenderer, { icon: 'link', size: 16, className: 'mr-2 h-4 w-4' }),
 		requiresAuth: true
 	},
 	{
@@ -122,7 +130,11 @@ export const createUserMenuItems = (
 				{
 					label: 'Admin Panel',
 					href: '/admin',
-					icon: React.createElement(Shield, { className: 'mr-2 h-4 w-4' }),
+					icon: React.createElement(IconRenderer, {
+						icon: 'admin',
+						size: 16,
+						className: 'mr-2 h-4 w-4'
+					}),
 					roles: ['admin' as const],
 					requiresAuth: true
 				}
@@ -133,7 +145,11 @@ export const createUserMenuItems = (
 				{
 					label: 'Moderator Panel',
 					href: '/mod',
-					icon: React.createElement(Shield, { className: 'mr-2 h-4 w-4' }),
+					icon: React.createElement(IconRenderer, {
+						icon: 'admin',
+						size: 16,
+						className: 'mr-2 h-4 w-4'
+					}),
 					roles: ['mod' as const],
 					requiresAuth: true
 				}
@@ -147,7 +163,11 @@ export const createUserMenuItems = (
 	},
 	{
 		label: 'Log out',
-		icon: React.createElement(LogOut, { className: 'mr-2 h-4 w-4' }),
+		icon: React.createElement(IconRenderer, {
+			icon: 'logout',
+			size: 16,
+			className: 'mr-2 h-4 w-4'
+		}),
 		onClick: onLogout,
 		requiresAuth: true
 	}

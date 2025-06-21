@@ -4,6 +4,7 @@
 // - Applied DEV_MODE gating (if applicable)
 
 import { useState } from 'react';
+import { formatTimestamp } from '@/lib/format-date';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
 	Card,
@@ -280,11 +281,6 @@ export default function AdminCategoriesPage() {
 			icon: ''
 		});
 		setIsCreateDialogOpen(true);
-	};
-
-	const formatDate = (dateString: string) => {
-		const date = new Date(dateString);
-		return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
 	};
 
 	const filterAndOrganizeCategories = (categories: Category[], query: string) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'wouter';
-import { User, Wallet, MessageSquare, Settings, Link2, Shield, LogOut } from 'lucide-react';
+import { IconRenderer } from '@/components/icons/iconRenderer';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { NavLink } from './NavLink';
@@ -76,7 +76,7 @@ export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
 									className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
 									onClick={onClose}
 								>
-									<User className="h-5 w-5 inline mr-2" />
+									<IconRenderer icon="profile" size={20} className="h-5 w-5 inline mr-2" />
 									Profile
 								</div>
 							</NavLink>
@@ -88,7 +88,7 @@ export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
 									toggleWallet();
 								}}
 							>
-								<Wallet className="h-5 w-5 inline mr-2" />
+								<IconRenderer icon="wallet" size={20} className="h-5 w-5 inline mr-2" />
 								Wallet
 							</div>
 
@@ -97,7 +97,7 @@ export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
 									className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
 									onClick={onClose}
 								>
-									<MessageSquare className="h-5 w-5 inline mr-2" />
+									<IconRenderer icon="message" size={20} className="h-5 w-5 inline mr-2" />
 									Whispers (DMs)
 								</div>
 							</NavLink>
@@ -107,7 +107,7 @@ export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
 									className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
 									onClick={onClose}
 								>
-									<Settings className="h-5 w-5 inline mr-2" />
+									<IconRenderer icon="settings" size={20} className="h-5 w-5 inline mr-2" />
 									Settings
 								</div>
 							</NavLink>
@@ -117,7 +117,7 @@ export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
 									className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
 									onClick={onClose}
 								>
-									<Link2 className="h-5 w-5 inline mr-2" />
+									<IconRenderer icon="link" size={20} className="h-5 w-5 inline mr-2" />
 									Referrals
 								</div>
 							</NavLink>
@@ -128,7 +128,7 @@ export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
 										className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
 										onClick={onClose}
 									>
-										<Shield className="h-5 w-5 inline mr-2" />
+										<IconRenderer icon="admin" size={20} className="h-5 w-5 inline mr-2" />
 										Admin Panel
 									</div>
 								</NavLink>
@@ -140,7 +140,7 @@ export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
 										className="block px-3 py-2 rounded-md text-base font-medium text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
 										onClick={onClose}
 									>
-										<Shield className="h-5 w-5 inline mr-2" />
+										<IconRenderer icon="admin" size={20} className="h-5 w-5 inline mr-2" />
 										Moderator Panel
 									</div>
 								</NavLink>
@@ -153,7 +153,7 @@ export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
 									onClose();
 								}}
 							>
-								<LogOut className="h-5 w-5 inline mr-2" />
+								<IconRenderer icon="logout" size={20} className="h-5 w-5 inline mr-2" />
 								Log Out
 							</div>
 						</div>

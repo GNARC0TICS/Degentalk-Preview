@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wallet } from 'lucide-react';
+import { IconRenderer } from '@/components/icons/iconRenderer';
 import { Button } from '@/components/ui/button';
 import { useHeader } from './HeaderContext';
 
@@ -18,7 +18,7 @@ export function WalletButton({ className }: WalletButtonProps) {
 			onClick={toggleWallet}
 			aria-label="Open wallet"
 		>
-			<Wallet className="h-5 w-5" />
+			<IconRenderer icon="wallet" className="h-5 w-5" />
 		</Button>
 	);
 }

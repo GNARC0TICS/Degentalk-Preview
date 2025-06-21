@@ -1,4 +1,3 @@
-import React from 'react';
 import { cn } from '@/lib/utils'; // Assuming you have a cn utility for class names
 
 interface PrefixBadgeProps {
@@ -8,7 +7,7 @@ interface PrefixBadgeProps {
 	};
 }
 
-export const PrefixBadge: React.FC<PrefixBadgeProps> = ({ prefix }) => {
+export function PrefixBadge({ prefix }: PrefixBadgeProps) {
 	if (!prefix) {
 		return null; // Or some placeholder if prefix is undefined
 	}
@@ -30,4 +29,4 @@ export const PrefixBadge: React.FC<PrefixBadgeProps> = ({ prefix }) => {
 	const themeClassName = `theme-badge-${themeColor}`;
 
 	return <span className={cn(themeClassName, staticBadgeClasses)}>{prefix.name}</span>;
-};
+}

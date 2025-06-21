@@ -55,46 +55,12 @@ Generated on: 2025-06-21
 ├─ .husky/
 │  ├─ _/
 │  │  ├─ .gitignore
-│  │  ├─ applypatch-msg
-│  │  ├─ commit-msg
 │  │  ├─ h
 │  │  ├─ husky.sh
-│  │  ├─ post-applypatch
-│  │  ├─ post-checkout
-│  │  ├─ post-commit
-│  │  ├─ post-merge
-│  │  ├─ post-rewrite
-│  │  ├─ pre-applypatch
-│  │  ├─ pre-auto-gc
-│  │  ├─ pre-commit
-│  │  ├─ pre-merge-commit
-│  │  ├─ pre-push
-│  │  ├─ pre-rebase
-│  │  └─ prepare-commit-msg
+│  │  └─ pre-commit
 │  └─ pre-commit
 ├─ .tscache/
 │  └─ .tsbuildinfo
-├─ archive/
-│  ├─ client/
-│  │  └─ pages/
-│  │     └─ admin/
-│  │        ├─ badges.tsx
-│  │        ├─ cooldowns.tsx
-│  │        ├─ edit-user.tsx
-│  │        ├─ forum-management.tsx
-│  │        ├─ levels.tsx
-│  │        ├─ platform-settings.tsx
-│  │        └─ user-inventory.tsx
-│  ├─ server/
-│  │  ├─ routes/
-│  │  │  └─ api/
-│  │  │     └─ ccpayment/
-│  │  │        ... (max depth reached)
-│  │  └─ src/
-│  │     └─ domains/
-│  │        └─ admin/
-│  │           ... (max depth reached)
-│  └─ .DS_Store
 ├─ attached_assets/
 │  ├─ generated-icon.png
 │  ├─ IMG_5701.png
@@ -160,8 +126,7 @@ Generated on: 2025-06-21
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ xp/
 │  │  │  │  │  ... (max depth reached)
-│  │  │  │  ├─ wallet-display.tsx
-│  │  │  │  └─ wallet-modal-v2.tsx
+│  │  │  │  └─ wallet-display.tsx
 │  │  │  ├─ editor/
 │  │  │  │  ├─ enhanced-gif-picker.tsx
 │  │  │  │  ├─ gif-picker.tsx
@@ -241,7 +206,6 @@ Generated on: 2025-06-21
 │  │  │  │  ├─ sidebar.tsx
 │  │  │  │  ├─ SidebarNavigation.tsx
 │  │  │  │  ├─ site-footer.tsx
-│  │  │  │  ├─ site-header.tsx
 │  │  │  │  ├─ site-layout-wrapper.tsx
 │  │  │  │  ├─ SlotRenderer.tsx
 │  │  │  │  ├─ WidgetFrame.tsx
@@ -420,7 +384,6 @@ Generated on: 2025-06-21
 │  │  ├─ config/
 │  │  │  ├─ admin-navigation.ts
 │  │  │  ├─ admin-routes.ts
-│  │  │  ├─ componentRegistry.ts
 │  │  │  ├─ easter-eggs.config.ts
 │  │  │  ├─ featureFlags.ts
 │  │  │  ├─ footer-navigation.ts
@@ -524,7 +487,6 @@ Generated on: 2025-06-21
 │  │  │  ├─ use-tip.ts
 │  │  │  ├─ use-toast.ts
 │  │  │  ├─ use-vault-items.tsx
-│  │  │  ├─ use-wallet-modal.ts
 │  │  │  ├─ use-wallet.ts
 │  │  │  ├─ useConfig.ts
 │  │  │  ├─ useCrudMutation.ts
@@ -889,11 +851,10 @@ Generated on: 2025-06-21
 │  │  ├─ FORUM_PRIMARY_ZONES_REFACTOR_PLAN.md
 │  │  └─ placeholder.txt
 │  ├─ CCPAYMENT/
-│  │  ├─ apimethods-2.md
-│  │  ├─ apimethods-3.md
-│  │  ├─ apimethods-4.md
-│  │  ├─ apimethods.md
-│  │  └─ CCPAYMENT.md
+│  │  ├─ DEVELOPMENT_SETUP.md
+│  │  ├─ PRODUCTION_DEPLOYMENT.md
+│  │  ├─ SCALING_STRATEGY.md
+│  │  └─ WALLET_INTEGRATION_GUIDE.md
 │  ├─ engagement/
 │  │  ├─ rain-analytics.md
 │  │  └─ tipping-analytics.md
@@ -1310,12 +1271,15 @@ Generated on: 2025-06-21
 │  │  │  ├─ wallet/
 │  │  │  │  ├─ ccpayment.service.ts
 │  │  │  │  ├─ dgt.service.ts
+│  │  │  │  ├─ treasury.controller.ts
 │  │  │  │  ├─ wallet-api-tests.ts
 │  │  │  │  ├─ wallet.constants.ts
 │  │  │  │  ├─ wallet.controller.ts
+│  │  │  │  ├─ wallet.dev.controller.ts
 │  │  │  │  ├─ wallet.routes.ts
 │  │  │  │  ├─ wallet.service.ts
-│  │  │  │  └─ wallet.validators.ts
+│  │  │  │  ├─ wallet.validators.ts
+│  │  │  │  └─ withdrawal.controller.ts
 │  │  │  └─ xp/
 │  │  │     ├─ events/
 │  │  │     │  ... (max depth reached)
@@ -1389,7 +1353,9 @@ Generated on: 2025-06-21
 │  ├─ path-config.ts
 │  ├─ paths.config.ts
 │  ├─ README.md
-│  └─ types.ts
+│  ├─ types.ts
+│  ├─ wallet-features.config.ts
+│  └─ wallet.config.ts
 ├─ tests/
 │  └─ e2e/
 │     ├─ admin-settings.spec.ts

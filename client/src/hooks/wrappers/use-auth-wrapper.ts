@@ -1,13 +1,10 @@
 import { useAuth } from '@/hooks/use-auth';
 
 /**
- * A wrapper around useAuth to handle TypeScript errors
- * This is needed because the useAuth hook expects arguments in TypeScript,
- * but works fine without them at runtime.
+ * A simple wrapper around useAuth for potential future customization
+ * Currently just re-exports the useAuth hook as-is.
  */
 export function useAuthWrapper() {
-	// TypeScript expects arguments for useAuth, but it works fine without them
-	// The default argument true seems to satisfy useAuth's type requirements
-	// @ts-ignore
-	return useAuth(true);
+	// useAuth doesn't take any parameters - previous comment was incorrect
+	return useAuth();
 }
