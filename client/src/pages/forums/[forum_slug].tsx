@@ -42,19 +42,12 @@ const CreateThreadButton: React.FC<{ forumSlugOrId: string }> = ({ forumSlugOrId
 };
 
 const ForumPage: React.FC = () => {
-	console.log('[ForumPage] Component mounted.');
 	const params = useParams<{ slug?: string }>(); // Changed to slug
 	const forum_slug = params?.slug; // Changed to params?.slug
-	console.log(`[ForumPage] forum_slug from useParams (now 'slug'): '${forum_slug}'`); // Updated log message
 	const { getForum, zones, isLoading, error: contextError } = useForumStructure(); // Removed unused getZone
-	console.log(
-		`[ForumPage] From useForumStructure - isLoading: ${isLoading}, contextError:`,
-		contextError
-	);
 
 	// Strict slug validation
 	if (typeof forum_slug !== 'string' || forum_slug.trim() === '') {
-		console.log(`[ForumPage] Invalid forum_slug ('${forum_slug}'). Rendering NotFoundPage.`);
 		return <NotFoundPage />;
 	}
 
@@ -62,7 +55,6 @@ const ForumPage: React.FC = () => {
 
 	if (isLoading) {
 		// isLoading from context is the primary loading state
-		console.log(`[ForumPage] isLoading is true. Rendering loading state.`);
 		return (
 			<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
 				<div className="text-center">
@@ -74,10 +66,6 @@ const ForumPage: React.FC = () => {
 	}
 
 	if (contextError) {
-		console.log(
-			`[ForumPage] contextError is present. Rendering error state:`,
-			contextError.message
-		);
 		return (
 			<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
 				<div className="text-center">
@@ -91,19 +79,8 @@ const ForumPage: React.FC = () => {
 	}
 
 	const forum: MergedForum | undefined = getForum(forum_slug); // Use forum_slug directly
-	console.log(
-		`[ForumPage] Attempting to get forum for slug: '${forum_slug}'. Found:`,
-		forum ? forum.name : 'NOT FOUND',
-		'isLoading:',
-		isLoading,
-		'contextError:',
-		contextError
-	);
 
 	if (!forum) {
-		console.log(
-			`[ForumPage] Forum with slug '${forum_slug}' not found in context. Rendering NotFoundPage.`
-		);
 		return <NotFoundPage />;
 	}
 
@@ -153,9 +130,6 @@ const ForumPage: React.FC = () => {
 		);
 	};
 
-	console.log(
-		`[ForumPage] Rendering ThreadList with forumId: ${forum?.id} and forumSlug: ${forum?.slug}`
-	);
 	return (
 		<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
 			<Breadcrumb

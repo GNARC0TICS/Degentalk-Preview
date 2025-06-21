@@ -13,11 +13,6 @@
 export { default as HierarchicalZoneNav, HierarchicalForumNav } from './HierarchicalZoneNav';
 export * from './HierarchicalZoneNav';
 
-// Legacy navigation component (deprecated)
-/**
- * @deprecated Use HierarchicalZoneNav instead for consistent forum navigation
- */
-
 // ==============================================================================
 // PRIMARY ZONE COMPONENTS
 // ==============================================================================
@@ -45,8 +40,6 @@ export * from './ThreadCard';
 export * from './ThreadList';
 export * from './CreateThreadForm';
 
-// ThreadPost component export removed (file missing)
-
 // ==============================================================================
 // POST & REPLY COMPONENTS
 // ==============================================================================
@@ -63,8 +56,6 @@ export * from './CreatePostForm';
 // ==============================================================================
 // UTILITY & UI COMPONENTS
 // ==============================================================================
-
-// TagList component removed (file missing). If needed, implement later.
 
 // Tags and badges
 export { PrefixBadge } from '@/components/forum/prefix-badge';

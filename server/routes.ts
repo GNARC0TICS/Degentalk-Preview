@@ -54,6 +54,8 @@ import relationshipsRoutes from './src/domains/social/relationships.routes';
 import messageRoutes from './src/domains/messaging/message.routes';
 // Import domain-based vault routes
 import vaultRoutes from './src/domains/engagement/vault/vault.routes';
+// Import webhook routes
+import ccpaymentWebhookRoutes from './src/domains/ccpayment-webhook/ccpayment-webhook.routes';
 // Import domain-based announcement routes
 import { registerAnnouncementRoutes } from './src/domains/admin/sub-domains/announcements';
 import featureGatesRoutes from './src/domains/feature-gates/feature-gates.routes';
@@ -271,9 +273,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	// Set up vault routes with domain-based approach
 	app.use('/api/vault', vaultRoutes);
 
-	// Set up CCPayment routes
-	// TODO: @routeDeprecation Remove legacy ccpayment routes after migration to domain-driven routes is complete.
-	// app.use('/api/ccpayment', ccpaymentRoutes); // @pending-migration
+	// Set up webhook routes (no auth required)
+	app.use('/api/webhook', ccpaymentWebhookRoutes);
 
 	// Set up announcement routes with domain-based approach
 	registerAnnouncementRoutes(app); // Migrated to domains/admin/sub-domains/announcements

@@ -1,1 +1,0 @@
-// ARCHIVED: Moved from client/src/pages/admin/cooldowns.tsx on 2025-06-17. 

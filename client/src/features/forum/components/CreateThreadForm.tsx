@@ -11,7 +11,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import RichTextEditor from '@/components/editor/rich-text-editor';
 import { useAuth } from '@/hooks/use-auth.tsx';
-import { useForumPrefixes, useCreateThread } from '@/features/forum/hooks/useForumQueries';
+import { usePrefixes, useCreateThread } from '@/features/forum/hooks/useForumQueries';
 import type { CreateThreadParams } from '@/features/forum/hooks/useForumQueries';
 import { PrefixBadge } from '@/components/forum/prefix-badge';
 import {
@@ -112,10 +112,9 @@ export function CreateThreadForm({
 	const activeForumSlug = passedForumSlug || selectedForumSlugState;
 	const activeForumData = activeForumSlug ? getForum(activeForumSlug) : undefined;
 	const categoryIdForPrefixes = activeForumData ? activeForumData.id : undefined;
-	const { data: prefixes, isLoading: loadingPrefixes } = useForumPrefixes(
-		undefined,
-		categoryIdForPrefixes
-	);
+	const { data: prefixes, isLoading: loadingPrefixes } = usePrefixes({
+		categoryId: categoryIdForPrefixes
+	});
 
 	const { canPost, reason: permissionReason } = usePermission(activeForumData);
 

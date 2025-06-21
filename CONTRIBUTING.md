@@ -92,15 +92,19 @@ This checks:
 
 ### Prettier formatting hook
 
-In addition to the script above, Husky runs a **pre-commit hook** that blocks the commit if any file fails Prettier-style formatting (`npm run format:check`).
+Our pre-commit Git hook automatically runs `npm run format` (Prettier) and restages any modified files. This guarantees consistent code style on every commit.
 
-• To auto-fix formatting issues, run:
+• To run the formatter manually:
 
 ```bash
 npm run format   # prettier --write .
 ```
 
-• Need to bypass temporarily? use `git commit --no-verify` (avoid on shared branches).
+• To bypass the hook temporarily (avoid on shared branches):
+
+```bash
+git commit --no-verify
+```
 
 ## 🚨 Emergency Recovery
 

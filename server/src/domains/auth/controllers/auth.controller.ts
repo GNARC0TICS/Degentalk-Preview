@@ -8,6 +8,9 @@ import { logger } from '@server/src/core/logger';
 import { storage } from '../../../../storage'; // Will be refactored in a future step
 import { hashPassword, storeTempDevMetadata, verifyEmailToken } from '../services/auth.service';
 import { isDevMode } from '../../../utils/environment';
+import { walletService } from '../../wallet/wallet.service';
+import { dgtService } from '../../wallet/dgt.service';
+import { walletConfig } from '@shared/wallet.config';
 
 type User = typeof users.$inferSelect;
 
@@ -45,6 +48,28 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 			tempDevMeta: tempDevMetadata,
 			isActive: isDevMode() ? true : false // Automatically active in dev mode
 		});
+
+		// Initialize wallet for new user
+		if (walletConfig.WALLET_ENABLED) {
+			try {
+				// Initialize DGT wallet
+				await dgtService.initializeUserWallet(user.id);
+				logger.info('AuthController', 'DGT wallet initialized for new user', { userId: user.id });
+
+				// Initialize CCPayment wallet
+				const ccpaymentId = await walletService.ensureCcPaymentWallet(user.id);
+				logger.info('AuthController', 'CCPayment wallet initialized for new user', {
+					userId: user.id,
+					ccpaymentId
+				});
+			} catch (walletError) {
+				logger.error('AuthController', 'Error initializing wallet for new user', {
+					err: walletError,
+					userId: user.id
+				});
+				// Continue with registration even if wallet creation fails
+			}
+		}
 
 		// Create default settings for the new user
 		try {
@@ -108,8 +133,25 @@ export function login(req: Request, res: Response, next: NextFunction) {
 			return res.status(401).json({ message: info?.message || 'Authentication failed' });
 		}
 
-		req.login(user, (err) => {
+		req.login(user, async (err) => {
 			if (err) return next(err);
+
+			// Ensure wallet is initialized for existing users
+			if (walletConfig.WALLET_ENABLED && user.id) {
+				try {
+					// Initialize DGT wallet if needed
+					await dgtService.initializeUserWallet(user.id);
+
+					// Initialize CCPayment wallet if needed
+					await walletService.ensureCcPaymentWallet(user.id);
+				} catch (walletError) {
+					logger.error('AuthController', 'Error ensuring wallet for user login', {
+						err: walletError,
+						userId: user.id
+					});
+					// Continue with login even if wallet check fails
+				}
+			}
 
 			// Remove password from response
 			const userResponse = { ...user };

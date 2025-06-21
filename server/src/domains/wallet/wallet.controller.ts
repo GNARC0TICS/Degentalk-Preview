@@ -20,6 +20,8 @@ import crypto from 'crypto';
 import { z } from 'zod';
 // import { validateRequest } from '../../middleware/validate'; // Ensure this is commented or removed
 import { DGT_CURRENCY, DEFAULT_DGT_REWARD_CREATE_THREAD } from './wallet.constants';
+import { walletService } from './wallet.service';
+import { walletConfig } from '@shared/wallet.config';
 
 /**
  * Wallet controller for handling wallet-related requests
@@ -206,31 +208,31 @@ export class WalletController {
 				});
 				return;
 			}
-			// WALLET FINALIZATION ON HOLD: CCPayment integration temporarily disabled.
-			// const [user] = await db
-			//   .select({ ccpaymentAccountId: users.ccpaymentAccountId })
-			//   .from(users)
-			//   .where(eq(users.id, userId))
-			//   .execute();
+			// Check if deposits are enabled
+			if (!walletConfig.DEPOSITS_ENABLED) {
+				res.status(501).json({
+					message: 'Crypto deposits are temporarily disabled.',
+					code: 'SERVICE_UNAVAILABLE'
+				});
+				return;
+			}
 
-			// let ccpaymentAccountId = user?.ccpaymentAccountId;
+			// Ensure user has CCPayment wallet
+			const ccpaymentAccountId = await walletService.ensureCcPaymentWallet(userId);
 
-			// if (!ccpaymentAccountId) {
-			//   ccpaymentAccountId = await ccpaymentService.createCcPaymentWalletForUser(userId);
-			//   await db
-			//     .update(users)
-			//     .set({ ccpaymentAccountId })
-			//     .where(eq(users.id, userId))
-			//     .execute();
-			// }
+			// Create deposit address
+			const depositAddress = await ccpaymentService.createDepositAddress(
+				ccpaymentAccountId,
+				currency
+			);
 
-			// const depositAddress = await ccpaymentService.createDepositAddress(ccpaymentAccountId, currency);
-			// res.json(depositAddress);
-			res.status(501).json({
-				message: 'Crypto deposits are temporarily disabled.',
-				code: 'SERVICE_UNAVAILABLE'
+			logger.info('WALLET_CONTROLLER', 'Created deposit address', {
+				userId,
+				currency,
+				address: depositAddress.address
 			});
-			return;
+
+			res.json(depositAddress);
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : String(error);
 			logger.error(
@@ -280,17 +282,52 @@ export class WalletController {
 				return;
 			}
 
-			// Calculate crypto amount (in production, would call a price API or CCPayment API)
-			const dgtRate = 0.01; // Example: 1 DGT = 0.01 USDT
-			const cryptoAmount = parseFloat(dgtAmount) * dgtRate;
+			// Calculate crypto amount based on configured DGT price in USD
+			const cryptoAmount = parseFloat(dgtAmount) * walletConfig.DGT.PRICE_USD;
 
-			// WALLET FINALIZATION ON HOLD: CCPayment integration temporarily disabled.
-			// Code related to ccpaymentReference, creating CCPayment deposit request, etc., should be commented out or stubbed.
-			res.status(501).json({
-				message: 'DGT purchases via crypto are temporarily disabled.',
-				code: 'SERVICE_UNAVAILABLE'
+			// Generate order reference
+			const orderId = `dgt_${userId}_${Date.now()}`;
+
+			// Create purchase order in database
+			const [purchaseOrder] = await db
+				.insert(dgtPurchaseOrders)
+				.values({
+					userId,
+					dgtAmount: BigInt(Math.floor(parseFloat(dgtAmount) * 100000000)), // Convert to smallest unit
+					cryptoAmount: cryptoAmount.toString(),
+					cryptoCurrency,
+					ccpaymentReference: orderId,
+					status: 'pending',
+					createdAt: new Date(),
+					updatedAt: new Date()
+				})
+				.returning();
+
+			// Create deposit link via CCPayment
+			const depositUrl = await ccpaymentService.createDepositLink({
+				amount: cryptoAmount,
+				currency: cryptoCurrency,
+				orderId: orderId,
+				productName: `${dgtAmount} DGT Tokens`,
+				redirectUrl: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/wallet/purchase-success?orderId=${purchaseOrder.id}`,
+				notifyUrl: `${process.env.API_URL || 'http://localhost:5001'}/api/webhook/ccpayment`
 			});
-			return;
+
+			logger.info('WALLET_CONTROLLER', 'Created DGT purchase order', {
+				userId,
+				orderId: purchaseOrder.id,
+				dgtAmount,
+				cryptoAmount
+			});
+
+			res.json({
+				orderId: purchaseOrder.id,
+				depositUrl,
+				dgtAmount,
+				cryptoAmount,
+				cryptoCurrency,
+				status: 'pending'
+			});
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : String(error);
 			logger.error('WALLET_CONTROLLER', `Error creating DGT purchase order: ${errorMessage}`, {

@@ -1,6 +1,6 @@
 # ForumFusion Directory Structure
 
-Generated on: 2025-06-20
+Generated on: 2025-06-21
 
 ```
 ├─ _audit/
@@ -116,11 +116,19 @@ Generated on: 2025-06-20
 │  ├─ src/
 │  │  ├─ components/
 │  │  │  ├─ admin/
+│  │  │  │  ├─ clout/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ effects/
+│  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ forms/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ inputs/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ layout/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ media/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ roles/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ wallet/
 │  │  │  │  │  ... (max depth reached)
@@ -238,6 +246,8 @@ Generated on: 2025-06-20
 │  │  │  │  ├─ SlotRenderer.tsx
 │  │  │  │  ├─ WidgetFrame.tsx
 │  │  │  │  └─ WidgetGallery.tsx
+│  │  │  ├─ media/
+│  │  │  │  └─ MediaAsset.tsx
 │  │  │  ├─ messages/
 │  │  │  │  ├─ icons/
 │  │  │  │  │  ... (max depth reached)
@@ -411,6 +421,7 @@ Generated on: 2025-06-20
 │  │  │  ├─ admin-navigation.ts
 │  │  │  ├─ admin-routes.ts
 │  │  │  ├─ componentRegistry.ts
+│  │  │  ├─ easter-eggs.config.ts
 │  │  │  ├─ featureFlags.ts
 │  │  │  ├─ footer-navigation.ts
 │  │  │  ├─ forumMap.config.ts
@@ -498,6 +509,7 @@ Generated on: 2025-06-20
 │  │  │  ├─ use-async-button.tsx
 │  │  │  ├─ use-auth.tsx
 │  │  │  ├─ use-debounce.ts
+│  │  │  ├─ use-dgt-packages.ts
 │  │  │  ├─ use-local-storage.ts
 │  │  │  ├─ use-media-query.ts
 │  │  │  ├─ use-messages.tsx
@@ -585,6 +597,8 @@ Generated on: 2025-06-20
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ transactions/
 │  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ ui/
+│  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ users/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ wallets/
@@ -600,14 +614,14 @@ Generated on: 2025-06-20
 │  │  │  │  ├─ forum-structure.tsx
 │  │  │  │  ├─ index.tsx
 │  │  │  │  ├─ prefixes.tsx
-│  │  │  │  ├─ reports.tsx
+│  │  │  │  ├─ roles-titles.tsx
 │  │  │  │  ├─ roles.tsx
 │  │  │  │  ├─ tags.tsx
-│  │  │  │  ├─ threads.tsx
 │  │  │  │  ├─ tip-rain-settings.tsx
 │  │  │  │  ├─ treasury.tsx
 │  │  │  │  ├─ ui-config.tsx
-│  │  │  │  └─ users.tsx
+│  │  │  │  ├─ users.tsx
+│  │  │  │  └─ xp-system.tsx
 │  │  │  ├─ announcements/
 │  │  │  │  └─ index.tsx
 │  │  │  ├─ dev/
@@ -811,6 +825,8 @@ Generated on: 2025-06-20
 │  │  │  ├─ onlineUsers.ts
 │  │  │  └─ shoutboxMessages.ts
 │  │  ├─ shop/
+│  │  │  ├─ animationPackItems.ts
+│  │  │  ├─ animationPacks.ts
 │  │  │  ├─ cosmeticCategories.ts
 │  │  │  ├─ inventoryTransactions.ts
 │  │  │  ├─ orderItems.ts
@@ -873,6 +889,10 @@ Generated on: 2025-06-20
 │  │  ├─ FORUM_PRIMARY_ZONES_REFACTOR_PLAN.md
 │  │  └─ placeholder.txt
 │  ├─ CCPAYMENT/
+│  │  ├─ apimethods-2.md
+│  │  ├─ apimethods-3.md
+│  │  ├─ apimethods-4.md
+│  │  ├─ apimethods.md
 │  │  └─ CCPAYMENT.md
 │  ├─ engagement/
 │  │  ├─ rain-analytics.md
@@ -902,8 +922,10 @@ Generated on: 2025-06-20
 │  │  └─ README.md
 │  ├─ system/
 │  ├─ ui/
+│  │  ├─ lottie-integration.md
 │  │  ├─ routing-logic.md
 │  │  └─ zone-card-design-guidelines.md
+│  ├─ .DS_Store
 │  ├─ activity-feed-system.md
 │  ├─ admin-panel-audit-2025-06-17.md
 │  ├─ admin-panel-refactoring-plan.md
@@ -1012,6 +1034,7 @@ Generated on: 2025-06-20
 │  │  ├─ 0012_event_logs_table.sql
 │  │  ├─ 0013_forum_schema_cleanup.sql
 │  │  ├─ 0013_gray_harrier.sql
+│  │  ├─ 0014_backfill_media_type.sql
 │  │  ├─ 0014_forum_schema_refactor.sql
 │  │  ├─ 0014_futuristic_archangel.sql
 │  │  ├─ 0015_archive_legacy_forum_columns.sql
@@ -1352,6 +1375,7 @@ Generated on: 2025-06-20
 │  └─ vite.ts
 ├─ shared/
 │  ├─ economy/
+│  │  ├─ clout-calculator.ts
 │  │  ├─ economy.config.ts
 │  │  ├─ rain-tip-config.ts
 │  │  ├─ README.md
@@ -1370,7 +1394,6 @@ Generated on: 2025-06-20
 │  └─ e2e/
 │     ├─ admin-settings.spec.ts
 │     └─ forum-home.spec.ts
-├─ Wallet-Workspace/
 ├─ .DS_Store
 ├─ .env
 ├─ .eslintrc.json

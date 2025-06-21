@@ -141,37 +141,37 @@ export default function BBCodeThreadPage() {
 
 	// Mock handlers - these should be connected to actual API calls
 	const handleLike = (postId: number, hasLiked: boolean) => {
-		console.log('Like post:', postId, !hasLiked);
+		// TODO: Implement like functionality
 	};
 
 	const handleReply = (postId: number) => {
-		console.log('Reply to post:', postId);
+		// TODO: Implement reply functionality
 		// Could scroll to reply form or open modal
 	};
 
 	const handleQuote = (postId: number) => {
-		console.log('Quote post:', postId);
+		// TODO: Implement quote functionality
 		// Could populate reply form with quoted content
 	};
 
 	const handleEdit = (postId: number) => {
-		console.log('Edit post:', postId);
+		// TODO: Implement edit functionality
 	};
 
 	const handleDelete = (postId: number) => {
-		console.log('Delete post:', postId);
+		// TODO: Implement delete functionality
 	};
 
 	const handleMarkSolution = (postId: number) => {
-		console.log('Mark as solution:', postId);
+		// TODO: Implement mark as solution functionality
 	};
 
 	const handleTip = (postId: number) => {
-		console.log('Tip post:', postId);
+		// TODO: Implement tip functionality
 	};
 
 	const handleReport = (postId: number) => {
-		console.log('Report post:', postId);
+		// TODO: Implement report functionality
 	};
 
 	if (!match) {

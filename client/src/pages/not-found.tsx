@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'wouter';
 import { AlertTriangle, HomeIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SiteHeader } from '@/components/layout/site-header'; // Assuming a shared header
+import { SiteHeader } from '@/components/header'; // Assuming a shared header
 
 export default function NotFoundPage() {
 	return (

@@ -565,22 +565,6 @@ export const usePrefixes = (params?: { categoryId?: number }) => {
 	return result;
 };
 
-/**
- * @deprecated  Use usePrefixes({ categoryId }) instead. This wrapper keeps backward compatibility during migration.
- */
-export const useForumPrefixes = (forumSlug?: string, categoryId?: number) => {
-	// NOTE: forumSlug parameter is ignored; provide categoryId if available.
-	return usePrefixes({ categoryId });
-};
-
-export const useThreadPrefixes = useForumPrefixes;
-
-/**
- * @deprecated Back-compat alias.
- */
-export const useForumPrefixesAlias = useForumPrefixes;
-export const useThreadPrefixesAlias = useThreadPrefixes;
-
 // Hook to fetch forum categories, category and tags remain the same
 export const useForumCategories = useCategoriesWithStats;
 export const useForumCategory = useCategory;

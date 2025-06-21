@@ -1,8 +1,13 @@
 import { Router } from 'express';
 import { shopItems } from '../../../utils/shop-utils';
 import { db } from '@db';
-import { products } from '@schema';
+import { products, userInventory, transactions } from '@schema';
 import { eq, isNull, or, and, gte, lte } from 'drizzle-orm';
+import { dgtService } from '../wallet/dgt.service';
+import { isAuthenticated } from '../auth/middleware/auth.middleware';
+import { walletConfig } from '@shared/wallet.config';
+import { logger } from '../../core/logger';
+import { z } from 'zod';
 
 const router = Router();
 
@@ -111,7 +116,167 @@ router.get('/items/:id', async (req, res) => {
 	}
 });
 
-// TODO: Add purchase endpoint
+// Purchase validation schema
+const purchaseSchema = z.object({
+	itemId: z.string(),
+	paymentMethod: z.enum(['DGT', 'USDT'])
+});
+
 // POST /api/shop/purchase
+router.post('/purchase', isAuthenticated, async (req, res) => {
+	try {
+		if (!req.user) {
+			return res.status(401).json({ error: 'User not authenticated' });
+		}
+
+		const userId = (req.user as { id: number }).id;
+		const { itemId, paymentMethod } = purchaseSchema.parse(req.body);
+
+		// Find the item in mock data (TODO: replace with database query)
+		const item = shopItems.find((item) => item.id === itemId);
+		if (!item) {
+			return res.status(404).json({ error: 'Item not found' });
+		}
+
+		// Check if user already owns this item
+		const existingItem = await db
+			.select()
+			.from(userInventory)
+			.where(and(eq(userInventory.userId, userId), eq(userInventory.itemId, itemId)))
+			.limit(1);
+
+		if (existingItem.length > 0) {
+			return res.status(400).json({ error: 'You already own this item' });
+		}
+
+		// Get price based on payment method
+		let price: number;
+		let currency: string;
+
+		if (paymentMethod === 'DGT') {
+			if (!item.priceDGT) {
+				return res.status(400).json({ error: 'Item not available for DGT purchase' });
+			}
+			price = item.priceDGT;
+			currency = 'DGT';
+		} else {
+			if (!item.priceUSDT) {
+				return res.status(400).json({ error: 'Item not available for USDT purchase' });
+			}
+			price = item.priceUSDT;
+			currency = 'USDT';
+		}
+
+		// For DGT payments, check balance and process
+		if (paymentMethod === 'DGT') {
+			const dgtAmountRequired = BigInt(Math.floor(price * 100000000)); // Convert to smallest unit
+			const userBalance = await dgtService.getUserBalance(userId);
+
+			if (userBalance < dgtAmountRequired) {
+				return res.status(400).json({
+					error: 'Insufficient DGT balance',
+					required: price,
+					available: Number(userBalance) / 100000000
+				});
+			}
+
+			// Deduct DGT
+			await dgtService.deductDGT(
+				userId,
+				dgtAmountRequired,
+				'SHOP_PURCHASE',
+				`Purchased ${item.name}`,
+				{ itemId, itemName: item.name, price }
+			);
+
+			// Add item to user's inventory
+			const [inventoryItem] = await db
+				.insert(userInventory)
+				.values({
+					userId,
+					itemId,
+					itemType: item.category,
+					quantity: 1,
+					acquiredAt: new Date(),
+					purchasePrice: Math.floor(price * 100), // Store in cents
+					purchaseCurrency: currency
+				})
+				.returning();
+
+			logger.info('ShopController', 'Item purchased with DGT', {
+				userId,
+				itemId,
+				itemName: item.name,
+				price,
+				currency
+			});
+
+			res.json({
+				success: true,
+				message: `Successfully purchased ${item.name}`,
+				item: {
+					id: item.id,
+					name: item.name,
+					category: item.category,
+					price,
+					currency
+				},
+				inventoryId: inventoryItem.id
+			});
+		} else {
+			// TODO: Implement USDT payments via CCPayment
+			return res.status(501).json({
+				error: 'USDT payments not yet implemented',
+				message: 'Please use DGT for now'
+			});
+		}
+	} catch (error) {
+		if (error instanceof z.ZodError) {
+			return res.status(400).json({ error: 'Invalid request', details: error.errors });
+		}
+		logger.error('ShopController', 'Error processing purchase', {
+			error: error instanceof Error ? error.message : String(error),
+			userId: req.user?.id
+		});
+		res.status(500).json({ error: 'Failed to process purchase' });
+	}
+});
+
+// GET /api/shop/inventory - Get user's purchased items
+router.get('/inventory', isAuthenticated, async (req, res) => {
+	try {
+		if (!req.user) {
+			return res.status(401).json({ error: 'User not authenticated' });
+		}
+
+		const userId = (req.user as { id: number }).id;
+
+		// Get user's inventory
+		const inventory = await db.select().from(userInventory).where(eq(userInventory.userId, userId));
+
+		// Enrich with item details from mock data
+		const enrichedInventory = inventory
+			.map((inv) => {
+				const item = shopItems.find((item) => item.id === inv.itemId);
+				return {
+					...inv,
+					item: item || null,
+					purchasePrice: inv.purchasePrice / 100 // Convert from cents
+				};
+			})
+			.filter((inv) => inv.item !== null); // Filter out items that no longer exist
+
+		res.json({
+			inventory: enrichedInventory,
+			totalItems: enrichedInventory.length
+		});
+	} catch (error) {
+		logger.error('ShopController', 'Error getting inventory', {
+			error: error instanceof Error ? error.message : String(error),
+			userId: req.user?.id
+		});
+		res.status(500).json({ error: 'Failed to get inventory' });
+	}
+});
 
 export default router;

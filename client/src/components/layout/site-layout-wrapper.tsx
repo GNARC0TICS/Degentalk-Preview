@@ -1,5 +1,5 @@
 import React from 'react';
-import { SiteHeader } from '@/components/layout/site-header';
+import { SiteHeader } from '@/components/header';
 import { SiteFooter } from '@/components/layout/site-footer';
 
 interface SiteLayoutWrapperProps {

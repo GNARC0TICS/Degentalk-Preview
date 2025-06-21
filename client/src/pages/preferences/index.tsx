@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SiteHeader } from '@/components/layout/site-header';
+import { SiteHeader } from '@/components/header';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { useAuth } from '@/hooks/use-auth.tsx';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
