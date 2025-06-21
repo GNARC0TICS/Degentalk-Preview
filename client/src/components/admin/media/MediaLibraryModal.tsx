@@ -10,7 +10,11 @@ import { Button } from '@/components/ui/button';
 import { useDropzone } from 'react-dropzone';
 import { MediaAsset } from '@/components/media/MediaAsset';
 import { useToast } from '@/hooks/use-toast';
-import { mediaApiService, MediaItem, MediaType } from '@/features/admin/services/media-api.service';
+import {
+	mediaApiService,
+	type MediaItem,
+	type MediaType
+} from '@/features/admin/services/media-api.service';
 
 interface Props {
 	open: boolean;

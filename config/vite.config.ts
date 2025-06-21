@@ -71,7 +71,8 @@ export default defineConfig(async () => {
 			dedupe: ['react', 'react-dom']
 		},
 		optimizeDeps: {
-			exclude: ['@lottiefiles/dotlottie-react']
+			exclude: ['@lottiefiles/dotlottie-react'],
+			include: ['react-lottie-player']
 		},
 		root: path.resolve(projectRoot, 'client'),
 		server: {

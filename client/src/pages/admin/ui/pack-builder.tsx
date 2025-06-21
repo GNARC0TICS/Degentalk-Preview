@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { mediaApiService, MediaItem } from '@/features/admin/services/media-api.service';
+import { mediaApiService, type MediaItem } from '@/features/admin/services/media-api.service';
 import {
 	animationPackApiService,
-	PackPayload
+	type PackPayload
 } from '@/features/admin/services/animation-pack-api.service';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';

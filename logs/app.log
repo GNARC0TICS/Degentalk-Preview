@@ -17222,3 +17222,7 @@ User not found
   "statusCode": 500,
   "durationMs": 1527.006
 }
+[2025-06-21T12:49:56.209Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}

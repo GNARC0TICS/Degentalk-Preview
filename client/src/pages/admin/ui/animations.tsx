@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { mediaApiService, MediaItem } from '@/features/admin/services/media-api.service';
+import { mediaApiService, type MediaItem } from '@/features/admin/services/media-api.service';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { MediaAsset } from '@/components/media/MediaAsset';
 import { Button } from '@/components/ui/button';
