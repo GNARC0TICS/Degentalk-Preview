@@ -156,3 +156,160 @@ export const getCloutLogs = async (req: Request, res: Response, next: NextFuncti
 		next(err);
 	}
 };
+
+/** ---------------------------- CLOUT ADJUSTMENTS (New Enhanced Tool) --------------------------- */
+export const adjustClout = async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const {
+			userId,
+			amount,
+			adjustmentType,
+			reason,
+			notify = false
+		} = req.body as {
+			userId: string;
+			amount: number;
+			adjustmentType: 'add' | 'subtract' | 'set';
+			reason: string;
+			notify?: boolean;
+		};
+
+		if (!userId || !amount || !adjustmentType || !reason) {
+			return res.status(400).json({
+				message: 'userId, amount, adjustmentType, and reason are required'
+			});
+		}
+
+		// Validate user exists and get current clout
+		const userRows = await db
+			.select({ id: users.id, clout: users.clout })
+			.from(users)
+			.where(eq(users.id, userId))
+			.limit(1);
+
+		if (!userRows.length) {
+			return res.status(404).json({ message: 'User not found' });
+		}
+
+		const user = userRows[0];
+		const oldClout = user.clout || 0;
+		let newClout = oldClout;
+
+		// Calculate new clout based on adjustment type
+		switch (adjustmentType) {
+			case 'add':
+				newClout = oldClout + amount;
+				break;
+			case 'subtract':
+				newClout = Math.max(0, oldClout - amount);
+				break;
+			case 'set':
+				newClout = Math.max(0, amount);
+				break;
+			default:
+				return res.status(400).json({ message: 'Invalid adjustmentType' });
+		}
+
+		const cloutChange = newClout - oldClout;
+
+		// Apply the clout adjustment using our service
+		if (cloutChange !== 0) {
+			await cloutService.grantClout(userId, cloutChange, `Admin Adjustment: ${reason}`);
+		}
+
+		// Get updated user data
+		const updatedUserRows = await db
+			.select({ id: users.id, username: users.username, clout: users.clout })
+			.from(users)
+			.where(eq(users.id, userId))
+			.limit(1);
+
+		const updatedUser = updatedUserRows[0];
+
+		// TODO: Handle user notification if notify=true
+		// This could integrate with a notification service
+
+		logger.info(
+			'CloutAdmin',
+			`Clout adjusted: ${user.id} | ${oldClout} → ${updatedUser.clout} | Reason: ${reason}`
+		);
+
+		res.json({
+			message: `Clout adjustment applied`,
+			user: {
+				id: updatedUser.id,
+				username: updatedUser.username,
+				clout: updatedUser.clout
+			},
+			adjustment: {
+				type: adjustmentType,
+				amount,
+				oldClout,
+				newClout: updatedUser.clout,
+				reason
+			}
+		});
+	} catch (err) {
+		logger.error('CloutAdmin', 'Error adjusting clout', err);
+		next(err);
+	}
+};
+
+export const getCloutAdjustmentLogs = async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const { userId, limit = 50 } = req.query as { userId?: string; limit?: string };
+
+		// Get clout logs with user data joined
+		const baseQuery = db
+			.select({
+				id: userCloutLog.id,
+				userId: userCloutLog.userId,
+				username: users.username,
+				cloutEarned: userCloutLog.cloutEarned,
+				reason: userCloutLog.reason,
+				createdAt: userCloutLog.createdAt
+			})
+			.from(userCloutLog)
+			.leftJoin(users, eq(userCloutLog.userId, users.id));
+
+		const filtered = userId ? baseQuery.where(eq(userCloutLog.userId, userId)) : baseQuery;
+		const logs = await filtered.orderBy(desc(userCloutLog.createdAt)).limit(Number(limit));
+
+		// Transform logs to match the frontend interface
+		const adjustmentLogs = logs.map((log) => {
+			// Parse admin adjustment reasons to extract admin info
+			const isAdminAdjustment = log.reason?.startsWith('Admin Adjustment:');
+			const adjustmentReason = isAdminAdjustment
+				? log.reason.replace('Admin Adjustment: ', '')
+				: log.reason;
+
+			// Determine adjustment type and amount from cloutEarned
+			let adjustmentType: 'add' | 'subtract' | 'set' = 'add';
+			let amount = Math.abs(log.cloutEarned);
+
+			if (log.cloutEarned > 0) {
+				adjustmentType = 'add';
+			} else if (log.cloutEarned < 0) {
+				adjustmentType = 'subtract';
+			}
+
+			return {
+				id: log.id,
+				userId: log.userId,
+				username: log.username || 'Unknown',
+				adjustmentType,
+				amount,
+				reason: adjustmentReason,
+				oldClout: 0, // TODO: Calculate from previous state if needed for detailed view
+				newClout: 0, // TODO: Calculate from previous state if needed for detailed view
+				adminUsername: 'Admin', // TODO: Extract from request context or log metadata
+				timestamp: log.createdAt
+			};
+		});
+
+		res.json(adjustmentLogs);
+	} catch (err) {
+		logger.error('CloutAdmin', 'Error fetching clout adjustment logs', err);
+		next(err);
+	}
+};

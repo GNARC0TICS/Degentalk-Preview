@@ -16,4 +16,8 @@ router.post('/achievements/:id/toggle', isAdmin, cloutController.toggleAchieveme
 router.post('/grants', isAdmin, cloutController.grantClout);
 router.get('/logs', isAdmin, cloutController.getCloutLogs);
 
+// ----------------- Enhanced Clout Adjustments -----------------
+router.post('/adjust', isAdmin, cloutController.adjustClout);
+router.get('/adjustment-logs', isAdmin, cloutController.getCloutAdjustmentLogs);
+
 export default router;

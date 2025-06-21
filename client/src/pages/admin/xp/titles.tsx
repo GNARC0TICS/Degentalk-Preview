@@ -35,6 +35,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useDebounce } from '@/hooks/use-debounce';
 import { apiRequest } from '@/lib/queryClient';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { TitleMediaInput } from '@/components/admin/forms/xp/TitleMediaInput';
+import { MediaAsset } from '@/components/media/MediaAsset';
 
 // Title types
 interface Title {
@@ -56,6 +58,7 @@ interface TitleFormData {
 	description: string;
 	color: string;
 	icon: string;
+	mediaId?: number | null;
 	rarity: string;
 	category: string;
 	requiredPath: string;
@@ -107,6 +110,7 @@ export default function TitleManagementPage() {
 		description: '',
 		color: '#ffffff',
 		icon: '',
+		mediaId: null,
 		rarity: 'common',
 		category: 'other',
 		requiredPath: 'none',
@@ -236,6 +240,7 @@ export default function TitleManagementPage() {
 			description: title.description || '',
 			color: title.color,
 			icon: title.icon || '',
+			mediaId: title.mediaId,
 			rarity: title.rarity,
 			category: title.category,
 			requiredPath: title.requiredPath && title.requiredPath !== '' ? title.requiredPath : 'none',
@@ -256,6 +261,7 @@ export default function TitleManagementPage() {
 			description: '',
 			color: '#ffffff',
 			icon: '',
+			mediaId: null,
 			rarity: 'common',
 			category: 'other',
 			requiredPath: 'none',
@@ -350,11 +356,9 @@ export default function TitleManagementPage() {
 
 							<div className="grid gap-2">
 								<Label htmlFor="icon">Icon (Emoji)</Label>
-								<Input
-									id="icon"
+								<TitleMediaInput
 									value={formData.icon}
-									onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-									placeholder="e.g. 🏆 or 🚀"
+									onChange={(value) => setFormData({ ...formData, icon: value })}
 								/>
 							</div>
 						</div>

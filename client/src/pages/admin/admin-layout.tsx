@@ -77,7 +77,8 @@ const BASE_ADMIN_LINKS = [
 			{ href: '/admin/config/economy', label: 'Economy Config' },
 			{ href: '/admin/treasury', label: 'Treasury' },
 			{ href: '/admin/dgt-packages', label: 'DGT Packages' },
-			{ href: '/admin/xp/adjust', label: 'XP Adjustments' }
+			{ href: '/admin/xp/adjust', label: 'XP Adjustments' },
+			{ href: '/admin/clout/grants', label: 'Clout Grants' }
 		]
 	},
 
