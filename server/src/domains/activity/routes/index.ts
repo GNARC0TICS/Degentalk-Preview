@@ -1,8 +1,8 @@
-import express from "express";
-import eventLogRoutes from "./event-log.routes";
+import express from 'express';
+import eventLogRoutes from './event-log.routes';
 
 const router = express.Router();
 
-router.use("/event-logs", eventLogRoutes);
+router.use('/event-logs', eventLogRoutes);
 
-export default router; 
+export default router;

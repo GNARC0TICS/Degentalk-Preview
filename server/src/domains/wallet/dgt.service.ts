@@ -31,6 +31,9 @@ import {
 } from './wallet.constants';
 // import { calculateTransactionFee } from './wallet.utils'; // Removed as file not found and function not used
 import { WalletError, ErrorCodes } from '../../core/errors';
+import { economyConfig } from '@shared/economy/economy.config';
+
+const { MIN_TIP_DGT, TIP_FEE_PERCENTAGE } = economyConfig;
 
 // Transaction types specific to DGT
 type DgtTransactionType =

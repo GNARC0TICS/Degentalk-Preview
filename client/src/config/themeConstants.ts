@@ -1,58 +1,52 @@
-import {
-	Flame,
-	Target,
-	Archive,
-	Dices,
-	FileText,
-	Folder,
-	Coins
-} from 'lucide-react';
+import { Flame, Target, Archive, Dices, FileText, Folder, Coins } from 'lucide-react';
 
 // Enhanced theme configuration for Zones
 export const ZONE_THEMES = {
-	'pit': { // Keys should be simple strings for easier lookup
+	pit: {
+		// Keys should be simple strings for easier lookup
 		icon: Flame,
 		color: 'text-red-400', // Tailwind text color class
 		bgColor: 'bg-red-900/20',
 		borderColor: 'border-red-500/30',
 		label: 'The Pit'
 	},
-	'mission': {
+	mission: {
 		icon: Target,
 		color: 'text-blue-400',
 		bgColor: 'bg-blue-900/20',
 		borderColor: 'border-blue-500/30',
 		label: 'Mission Control'
 	},
-	'casino': {
+	casino: {
 		icon: Dices,
 		color: 'text-purple-400',
 		bgColor: 'bg-purple-900/20',
 		borderColor: 'border-purple-500/30',
 		label: 'Casino Floor'
 	},
-	'briefing': {
+	briefing: {
 		icon: FileText,
 		color: 'text-amber-400',
 		bgColor: 'bg-amber-900/20',
 		borderColor: 'border-amber-500/30',
 		label: 'Briefing Room'
 	},
-	'archive': {
+	archive: {
 		icon: Archive,
 		color: 'text-gray-400',
 		bgColor: 'bg-gray-900/20',
 		borderColor: 'border-gray-500/30',
 		label: 'The Archive'
 	},
-	'shop': {
+	shop: {
 		icon: Coins,
 		color: 'text-violet-400',
 		bgColor: 'bg-gradient-to-br from-violet-900/30 via-pink-900/20 to-blue-900/30',
 		borderColor: 'border-violet-500/30',
 		label: 'DegenShop™'
 	},
-	'default': { // Added a default theme entry
+	default: {
+		// Added a default theme entry
 		icon: Folder,
 		color: 'text-emerald-400',
 		bgColor: 'bg-zinc-900/80',

@@ -1,6 +1,6 @@
 import React from 'react';
 // Link is not used directly in CanonicalZoneGrid if ZoneCard handles its own linking.
-// import { Link } from 'wouter'; 
+// import { Link } from 'wouter';
 import { ShopCard } from '@/components/forum/ShopCard';
 import { motion } from 'framer-motion';
 // Icons previously used by internal ForumZoneCard might not be needed directly here
@@ -34,6 +34,7 @@ export interface ZoneCardData {
 		name: string;
 		endsAt: Date;
 	};
+	forumCount?: number;
 }
 
 export interface CardData extends ZoneCardData {
@@ -76,7 +77,15 @@ export function CanonicalZoneGrid({
 	}
 
 	const gridData: GridCardData[] = [
-		...zones.map((zone) => ({ ...zone, type: 'zone' as const, isStatic: false })),
+		...zones.map((zone) => {
+			// Calculate total forums including subforums
+			const directForums = zone.forums ? zone.forums.length : 0;
+			const subForums = zone.forums
+				? zone.forums.reduce((sum, f) => sum + (f.subforums ? f.subforums.length : 0), 0)
+				: 0;
+			const forumCount = directForums + subForums;
+			return { ...zone, forumCount, type: 'zone' as const, isStatic: false };
+		}),
 		...(includeShopCard
 			? [
 					{
@@ -90,7 +99,10 @@ export function CanonicalZoneGrid({
 	];
 
 	return (
-		<div data-testid="zone-grid" className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${className}`}>
+		<div
+			data-testid="zone-grid"
+			className={`grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-6 ${className}`}
+		>
 			{gridData.map((cardData, index) => (
 				<motion.div
 					key={cardData.id}
@@ -109,6 +121,7 @@ export function CanonicalZoneGrid({
 							description={cardData.description}
 							icon={cardData.icon === null ? undefined : cardData.icon} // Handle null icon
 							colorTheme={cardData.colorTheme || 'default'} // Use the direct semantic colorTheme from cardData
+							themeColor={cardData.theme?.color} // Pass actual theme color for dynamic styling
 							threadCount={cardData.threadCount}
 							postCount={cardData.postCount}
 							activeUsersCount={cardData.activeUsersCount}
@@ -117,6 +130,8 @@ export function CanonicalZoneGrid({
 							boostMultiplier={cardData.boostMultiplier}
 							isEventActive={cardData.isEventActive}
 							eventData={cardData.eventData}
+							forumCount={(cardData as any).forumCount}
+							layout="horizontal"
 							// rarity is not in ZoneCardData, ZoneCard will use its default
 							// className can be passed if needed, or ZoneCard handles its own styling
 						/>

@@ -3,10 +3,10 @@ import { userEmojiPacks } from '@schema';
 import { eq, and } from 'drizzle-orm';
 
 interface UnlockEmojiPackParams {
-  userId: number;
-  emojiPackId: number;
-  unlockType: 'shop' | 'admin' | 'xp_reward';
-  pricePaid?: number;
+	userId: number;
+	emojiPackId: number;
+	unlockType: 'shop' | 'admin' | 'xp_reward';
+	pricePaid?: number;
 }
 
 /**
@@ -14,31 +14,31 @@ interface UnlockEmojiPackParams {
  * the function returns `{ success: true, alreadyUnlocked: true }`.
  */
 export async function unlockEmojiPackForUser({
-  userId,
-  emojiPackId,
-  unlockType,
-  pricePaid
+	userId,
+	emojiPackId,
+	unlockType,
+	pricePaid
 }: UnlockEmojiPackParams): Promise<{ success: boolean; alreadyUnlocked?: boolean }> {
-  // Check if user already owns the pack
-  const existing = await db
-    .select({ id: userEmojiPacks.id })
-    .from(userEmojiPacks)
-    .where(and(eq(userEmojiPacks.userId, userId), eq(userEmojiPacks.emojiPackId, emojiPackId)))
-    .limit(1);
+	// Check if user already owns the pack
+	const existing = await db
+		.select({ id: userEmojiPacks.id })
+		.from(userEmojiPacks)
+		.where(and(eq(userEmojiPacks.userId, userId), eq(userEmojiPacks.emojiPackId, emojiPackId)))
+		.limit(1);
 
-  if (existing.length > 0) {
-    return { success: true, alreadyUnlocked: true };
-  }
+	if (existing.length > 0) {
+		return { success: true, alreadyUnlocked: true };
+	}
 
-  // Insert new ownership row
-  await db.insert(userEmojiPacks).values({
-    userId,
-    emojiPackId,
-    unlockType,
-    pricePaid
-  });
+	// Insert new ownership row
+	await db.insert(userEmojiPacks).values({
+		userId,
+		emojiPackId,
+		unlockType,
+		pricePaid
+	});
 
-  // TODO: emit event / log if needed (e.g., analytics_events)
+	// TODO: emit event / log if needed (e.g., analytics_events)
 
-  return { success: true };
-} 
+	return { success: true };
+}

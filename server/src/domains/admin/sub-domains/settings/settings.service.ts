@@ -269,7 +269,11 @@ export class AdminSettingsService {
 			};
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			logger.error('AdminSettingsService', 'Error deleting setting group', { err: error, key, newGroupKey });
+			logger.error('AdminSettingsService', 'Error deleting setting group', {
+				err: error,
+				key,
+				newGroupKey
+			});
 			throw new AdminError('Failed to delete setting group', 500, AdminErrorCodes.DB_ERROR);
 		}
 	}
@@ -350,7 +354,10 @@ export class AdminSettingsService {
 			return newSetting;
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			logger.error('AdminSettingsService', 'Error creating setting', { err: error, settingKey: data.key });
+			logger.error('AdminSettingsService', 'Error creating setting', {
+				err: error,
+				settingKey: data.key
+			});
 			throw new AdminError('Failed to create setting', 500, AdminErrorCodes.DB_ERROR);
 		}
 	}
@@ -508,10 +515,7 @@ export class AdminSettingsService {
 	 */
 	async getAllFeatureFlags() {
 		try {
-			return await db
-				.select()
-				.from(featureFlags)
-				.orderBy(asc(featureFlags.key));
+			return await db.select().from(featureFlags).orderBy(asc(featureFlags.key));
 		} catch (error) {
 			logger.error('AdminSettingsService', 'Error fetching feature flags', { err: error });
 			throw new AdminError('Failed to fetch feature flags', 500, AdminErrorCodes.DB_ERROR);

@@ -104,6 +104,8 @@ export * from './shop/signatureItems';
 export * from './shop/userSignatureItems';
 export * from './shop/cosmeticCategories';
 export * from './shop/rarities';
+export * from './shop/animationPacks';
+export * from './shop/animationPackItems';
 
 // Messaging domain exports
 export * from './messaging/conversations';
@@ -150,6 +152,11 @@ export * from './system/mentionsIndex';
 export * from './system/referralSources';
 export * from './system/userReferrals';
 export * from './system/event_logs';
+export * from './system/economyConfigOverrides';
+
+// Dictionary domain exports
+export * from './dictionary/entries';
+export * from './dictionary/upvotes';
 
 // Note: './forum/threadDrafts.ts' was commented out as it was empty in the previous steps.
 // Ensure all files listed for export actually exist and contain exports.

@@ -13,4 +13,4 @@ export * from './UserBadges';
 export * from './SignatureRenderer';
 export * from './XPProgressBar';
 export * from './StatCard';
-export * from './rarityUtils'; 
+export * from './rarityUtils';

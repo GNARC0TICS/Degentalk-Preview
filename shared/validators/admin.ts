@@ -66,7 +66,7 @@ export const AdminFeatureFlagUpdateSchema = z.object({
 		.number()
 		.min(0, 'Must be between 0 and 100')
 		.max(100, 'Must be between 0 and 100')
-		.optional(),
+		.optional()
 });
 
 // User schema for admin create/update

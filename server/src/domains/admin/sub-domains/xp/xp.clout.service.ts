@@ -21,4 +21,4 @@ export class XpCloutService {
 	}
 }
 
-export const xpCloutService = new XpCloutService(); 
+export const xpCloutService = new XpCloutService();

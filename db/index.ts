@@ -1,6 +1,6 @@
-import { drizzle as drizzleNeon, NeonClient } from 'drizzle-orm/neon-serverless';
-import { Pool as PoolNeon, neonConfig } from '@neondatabase/serverless';
-import { drizzle as drizzleNode, NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { drizzle as drizzleNeon } from 'drizzle-orm/neon-http';
+import { neon, neonConfig } from '@neondatabase/serverless';
+import { drizzle as drizzleNode } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
 const { Pool: PoolNode } = pg;
 import * as schema from './schema';
@@ -18,18 +18,18 @@ if (!process.env.DATABASE_URL) {
 
 import type { Pool as PgPool } from 'pg';
 
-let pool: PgPool | NeonClient;
-let db: NodePgDatabase<typeof schema>;
+let pool: PgPool | undefined;
+// Use `any` here because the returned database type differs between node-postgres and neon-http drivers.
+// Consumers should import a typed instance directly if they need stricter types.
+let db: any;
 if (process.env.NEXT_PUBLIC_APP_ENV === 'development') {
 	pool = new PoolNode({
 		connectionString: process.env.DATABASE_URL
 	});
 	db = drizzleNode(pool, { schema });
 } else {
-	pool = new PoolNeon({
-		connectionString: process.env.DATABASE_URL
-	});
-	db = drizzleNeon(pool as NeonClient, { schema });
+	const sql = neon(process.env.DATABASE_URL!);
+	db = drizzleNeon(sql, { schema });
 }
 export { pool, db };
 export * from './schema'; // optional: re-export schema for convenience

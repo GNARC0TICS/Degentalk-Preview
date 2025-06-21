@@ -94,6 +94,12 @@ router.post(
 	})
 );
 
+// Tag management routes
+router.get('/tags', asyncHandler(adminForumController.getAllTags.bind(adminForumController)));
+router.post('/tags', asyncHandler(adminForumController.createTag.bind(adminForumController)));
+router.put('/tags/:id', asyncHandler(adminForumController.updateTag.bind(adminForumController)));
+router.delete('/tags/:id', asyncHandler(adminForumController.deleteTag.bind(adminForumController)));
+
 // Thread moderation routes
 router.put(
 	'/threads/:id/moderate',

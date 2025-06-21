@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { useWallet } from '../hooks/use-wallet';
-import { WalletBalanceDisplay } from '../components/wallet-balance-display';
+import { WalletBalanceDisplay } from '@/components/economy/wallet/wallet-balance-display';
 import TransactionHistory from '../components/transaction-history';
 import { DepositButton } from '../components/deposit-button';
 import { WithdrawButton } from '../components/withdraw-button';

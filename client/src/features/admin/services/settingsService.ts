@@ -39,4 +39,4 @@ export function useToggleFeatureFlag() {
 			qc.invalidateQueries({ queryKey: FEATURE_FLAGS_KEY });
 		}
 	});
-} 
+}

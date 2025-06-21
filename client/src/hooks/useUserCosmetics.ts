@@ -54,7 +54,9 @@ export function useUserCosmetics(targetUserId?: string | number): {
 			}
 			// Assuming an API endpoint to fetch a user's inventory with product details
 			// This endpoint should join userInventory with products to get pluginReward
-			return apiRequest<UserInventoryWithProduct[]>({ url: `/api/user/${effectiveUserId}/inventory` });
+			return apiRequest<UserInventoryWithProduct[]>({
+				url: `/api/user/${effectiveUserId}/inventory`
+			});
 		},
 		enabled: !!effectiveUserId, // Only fetch if user ID is available
 		staleTime: 5 * 60 * 1000, // Data considered fresh for 5 minutes

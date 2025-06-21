@@ -1,19 +1,14 @@
-import React, { useMemo } from 'react';
-import type { XPTrackConfig } from './xpConfig';
+import React from 'react';
+import { getProgressWithinLevel } from '@/shared/economy/reward-calculator';
+import type { XPTrack } from './tracks';
 
 export type XPBarTrackProps = {
-	track: XPTrackConfig;
+	track: XPTrack;
 	xp: number;
-	onLevelUp?: (trackId: string, newLevel: number) => void;
 };
 
-const XPBarTrack: React.FC<XPBarTrackProps> = ({ track, xp, onLevelUp }) => {
-	const level = useMemo(() => track.getLevel(xp), [xp, track]);
-	const xpForCurrent = useMemo(() => track.getXPForLevel(level), [level, track]);
-	const xpForNext = useMemo(() => track.getXPForLevel(level + 1), [level, track]);
-	const progress = Math.min(1, (xp - xpForCurrent) / (xpForNext - xpForCurrent));
-
-	// Optionally call onLevelUp if xp crosses threshold (stub for now)
+const XPBarTrack: React.FC<XPBarTrackProps> = ({ track, xp }) => {
+	const { level, progress, nextLevelXp } = getProgressWithinLevel(xp);
 
 	return (
 		<div
@@ -52,7 +47,7 @@ const XPBarTrack: React.FC<XPBarTrackProps> = ({ track, xp, onLevelUp }) => {
 				/>
 				<div className="relative z-10 flex items-center h-full px-3">
 					<span className="text-xs text-white font-mono">
-						{xp - xpForCurrent} / {xpForNext - xpForCurrent} XP to next level
+						{xp} / {nextLevelXp} XP to next level
 					</span>
 				</div>
 			</div>

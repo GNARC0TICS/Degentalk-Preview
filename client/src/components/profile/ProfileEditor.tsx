@@ -122,7 +122,11 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 	*/
 
 	// Helper function for XMLHttpRequest-based upload with progress tracking
-	function uploadWithProgress(file: File, uploadUrl: string, onProgress: (progress: number) => void): Promise<void> {
+	function uploadWithProgress(
+		file: File,
+		uploadUrl: string,
+		onProgress: (progress: number) => void
+	): Promise<void> {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
 
@@ -162,22 +166,26 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 	}
 
 	// Enhanced upload handler with progress tracking
-	async function handleImageUpload(file: File, uploadType: 'avatar' | 'banner', onProgress?: (progress: number) => void) {
+	async function handleImageUpload(
+		file: File,
+		uploadType: 'avatar' | 'banner',
+		onProgress?: (progress: number) => void
+	) {
 		try {
 			// Set uploading state for this specific upload type
-			setIsUploading(prev => ({ ...prev, [uploadType]: true }));
-			setUploadProgress(prev => ({ ...prev, [uploadType]: 0 }));
+			setIsUploading((prev) => ({ ...prev, [uploadType]: true }));
+			setUploadProgress((prev) => ({ ...prev, [uploadType]: 0 }));
 
 			// Show initial upload toast with degen energy
-			toast({ 
-				title: 'Uploading…', 
-				description: `Uploading ${uploadType === 'avatar' ? 'pfp' : 'banner'} to the blockchain...`, 
-				variant: 'default' 
+			toast({
+				title: 'Uploading…',
+				description: `Uploading ${uploadType === 'avatar' ? 'pfp' : 'banner'} to the blockchain...`,
+				variant: 'default'
 			});
 
 			// Progress helper that updates both local state and callback
 			const updateProgress = (progress: number) => {
-				setUploadProgress(prev => ({ ...prev, [uploadType]: Math.min(progress, 100) })); // Ensure progress doesn't exceed 100
+				setUploadProgress((prev) => ({ ...prev, [uploadType]: Math.min(progress, 100) })); // Ensure progress doesn't exceed 100
 				onProgress?.(Math.min(progress, 100));
 			};
 
@@ -189,11 +197,11 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 				relativePath: string;
 			}>({
 				method: 'POST',
-				url: `/api/uploads/presigned-url`, 
-				data: { 
-					fileName: file.name, 
-					fileType: file.type, 
-					uploadType: uploadType 
+				url: `/api/uploads/presigned-url`,
+				data: {
+					fileName: file.name,
+					fileType: file.type,
+					uploadType: uploadType
 				}
 			});
 
@@ -201,7 +209,7 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 			updateProgress(20); // Set progress to 20% before starting actual file transfer
 			await uploadWithProgress(file, presignResponse.uploadUrl, (progress) => {
 				// Map file upload progress from 20% to 80% of total progress
-				const adjustedProgress = 20 + (progress * 0.6); // User's specified mapping
+				const adjustedProgress = 20 + progress * 0.6; // User's specified mapping
 				updateProgress(adjustedProgress);
 			});
 
@@ -209,13 +217,13 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 			updateProgress(80);
 			const confirmResponse = await apiRequest<{
 				success: boolean;
-				publicUrl: string; 
+				publicUrl: string;
 			}>({
 				method: 'POST',
 				url: '/api/uploads/confirm',
 				data: {
 					relativePath: presignResponse.relativePath,
-					uploadType: uploadType 
+					uploadType: uploadType
 				}
 			});
 
@@ -227,7 +235,7 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 			updateProgress(90);
 			queryClient.invalidateQueries({ queryKey: ['profile', profile.username] });
 			updateProgress(100);
-			
+
 			toast({
 				title: 'Success!',
 				description: `${uploadType === 'avatar' ? 'Avatar' : 'Banner'} updated, you absolute legend!`,
@@ -238,21 +246,26 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 			// setTimeout(() => {
 			// 	setUploadProgress(prev => ({ ...prev, [uploadType]: 0 }));
 			// }, 2000); // This reset is now handled by FileDropZone
-
-		} catch (error: unknown) { // Changed type from any to unknown
+		} catch (error: unknown) {
+			// Changed type from any to unknown
 			console.error('Upload failed:', error);
-			
+
 			// Reset progress on error
-			setUploadProgress(prev => ({ ...prev, [uploadType]: 0 }));
+			setUploadProgress((prev) => ({ ...prev, [uploadType]: 0 }));
 			onProgress?.(0); // Also update FileDropZone's progress
-			
+
 			// Enhanced error handling with degen-friendly messages
 			let errorMessage = 'Upload failed';
 			const errorWithMessage = error as { message?: string }; // Type assertion
 
 			if (errorWithMessage.message?.includes('too large')) {
 				errorMessage = 'File too chunky for the blockchain, anon';
-			} else if (errorWithMessage.message?.includes('network') || errorWithMessage.message?.includes('timed out') || errorWithMessage.message?.includes('status') || errorWithMessage.message?.includes('Upload failed')) {
+			} else if (
+				errorWithMessage.message?.includes('network') ||
+				errorWithMessage.message?.includes('timed out') ||
+				errorWithMessage.message?.includes('status') ||
+				errorWithMessage.message?.includes('Upload failed')
+			) {
 				errorMessage = 'Network went full bear market, try again';
 			} else if (errorWithMessage.message?.includes('type')) {
 				errorMessage = 'Wrong file type, we need images not your portfolio screenshots';
@@ -260,21 +273,21 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 				errorMessage = errorWithMessage.message || 'Something went wrong, probably user error';
 			}
 
-			toast({ 
-				title: 'Upload failed', 
-				description: errorMessage, 
-				variant: 'destructive' 
+			toast({
+				title: 'Upload failed',
+				description: errorMessage,
+				variant: 'destructive'
 			});
 		} finally {
-			setIsUploading(prev => ({ ...prev, [uploadType]: false }));
+			setIsUploading((prev) => ({ ...prev, [uploadType]: false }));
 		}
 	}
 
 	// Updated file handlers that pass progress callbacks
-	const handleAvatarUpload = (file: File, onProgress?: (progress: number) => void) => 
+	const handleAvatarUpload = (file: File, onProgress?: (progress: number) => void) =>
 		handleImageUpload(file, 'avatar', onProgress);
 
-	const handleBannerUpload = (file: File, onProgress?: (progress: number) => void) => 
+	const handleBannerUpload = (file: File, onProgress?: (progress: number) => void) =>
 		handleImageUpload(file, 'banner', onProgress);
 
 	return (
@@ -423,9 +436,9 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 										<FileDropZone
 											onFileSelected={handleAvatarUpload}
 											className="mt-2"
-											accept={["image/jpeg", "image/png", "image/webp", "image/gif"]}
-											maxSize={5 * 1024 * 1024} 
-											showPreview={false} 
+											accept={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+											maxSize={5 * 1024 * 1024}
+											showPreview={false}
 											disabled={isUploading.avatar}
 										/>
 										{isUploading.avatar && (
@@ -435,7 +448,7 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 													<span>{uploadProgress.avatar.toFixed(0)}%</span>
 												</div>
 												<div className="w-full h-1 bg-zinc-700 rounded-full overflow-hidden">
-													<div 
+													<div
 														className="h-full bg-emerald-500 transition-all duration-300"
 														style={{ width: `${uploadProgress.avatar}%` }}
 													/>
@@ -443,7 +456,9 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 											</div>
 										)}
 									</div>
-									<p className="text-xs text-zinc-500">Supported formats: JPG, PNG, GIF. Max 5 MB.</p>
+									<p className="text-xs text-zinc-500">
+										Supported formats: JPG, PNG, GIF. Max 5 MB.
+									</p>
 								</div>
 
 								<div className="space-y-2">
@@ -465,9 +480,9 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 										<FileDropZone
 											onFileSelected={handleBannerUpload}
 											className="mt-2"
-											accept={["image/jpeg", "image/png", "image/webp", "image/gif"]} 
-											maxSize={8 * 1024 * 1024} 
-											showPreview={false} 
+											accept={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+											maxSize={8 * 1024 * 1024}
+											showPreview={false}
 											disabled={isUploading.banner}
 										/>
 										{isUploading.banner && (
@@ -477,7 +492,7 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 													<span>{uploadProgress.banner.toFixed(0)}%</span>
 												</div>
 												<div className="w-full h-1 bg-zinc-700 rounded-full overflow-hidden">
-													<div 
+													<div
 														className="h-full bg-emerald-500 transition-all duration-300"
 														style={{ width: `${uploadProgress.banner}%` }}
 													/>
@@ -485,7 +500,9 @@ export function ProfileEditor({ profile, onClose }: ProfileEditorProps) {
 											</div>
 										)}
 									</div>
-									<p className="text-xs text-zinc-500">Supported formats: JPG, PNG, GIF. Max 8 MB.</p>
+									<p className="text-xs text-zinc-500">
+										Supported formats: JPG, PNG, GIF. Max 8 MB.
+									</p>
 								</div>
 							</TabsContent>
 						</Tabs>

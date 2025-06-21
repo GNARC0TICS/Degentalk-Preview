@@ -20,7 +20,7 @@ router.post('/post', isAuthenticated, async (req, res, next) => {
 			userId: (req.user as any).id,
 			text,
 			contentType,
-			contentId,
+			contentId
 		});
 
 		return res.json(result);
@@ -36,7 +36,7 @@ router.post('/referral', isAuthenticated, async (req, res, next) => {
 		const result = await shareToX({
 			userId: (req.user as any).id,
 			text,
-			contentType: 'referral',
+			contentType: 'referral'
 		});
 		return res.json(result);
 	} catch (err) {
@@ -44,4 +44,4 @@ router.post('/referral', isAuthenticated, async (req, res, next) => {
 	}
 });
 
-export default router; 
+export default router;

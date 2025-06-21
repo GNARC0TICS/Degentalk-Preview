@@ -28,9 +28,7 @@ export function FeatureFlagRow({ flag }: Props) {
 	return (
 		<tr data-testid={`flag-${flag.key}`} className="border-b">
 			<td className="p-2 font-medium">{flag.name || flag.key}</td>
-			<td className="p-2 max-w-lg text-sm text-muted-foreground">
-				{flag.description}
-			</td>
+			<td className="p-2 max-w-lg text-sm text-muted-foreground">{flag.description}</td>
 			<td className="p-2 text-center">
 				<Switch checked={enabled} onCheckedChange={setEnabled} onBlur={saveChanges} />
 			</td>
@@ -54,4 +52,4 @@ export function FeatureFlagRow({ flag }: Props) {
 			</td>
 		</tr>
 	);
-} 
+}

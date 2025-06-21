@@ -8,9 +8,8 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
-import { UserName } from '@/components/identity/UserName';
+import { UserName } from '@/components/users/Username';
 import { LevelBadge } from '@/components/identity/LevelBadge';
-import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
 	DropdownMenu,
@@ -45,11 +44,11 @@ import {
 	Smile,
 	Pin,
 	PinOff,
-	Heart,
-	DollarSign,
-	X,
 	MinusCircle,
-	Lock
+	Minus,
+	Plus,
+	Maximize2,
+	Lock as LockIcon
 } from 'lucide-react';
 
 // Types for shoutbox messages
@@ -112,16 +111,19 @@ const FALLBACK_EMOJI_LIST = [
 	'✨'
 ];
 
-export function ShoutboxWidget() {
+interface ShoutboxWidgetProps {
+	instanceId?: string;
+}
+
+export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 	const [message, setMessage] = useState<string>('');
 	const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
-	const [emojiCategory, setEmojiCategory] = useState<string>('all');
+	const [, setEmojiCategory] = useState<string>('all');
 	const [lockedEmojiInfo, setLockedEmojiInfo] = useState<CustomEmoji | null>(null);
 	const messageContainerRef = useRef<HTMLDivElement>(null);
 	const { toast } = useToast();
 	const queryClient = useQueryClient();
-	const { position, expansionLevel, cycleExpansionLevel, updateExpansionLevel, isMobile } =
-		useShoutbox();
+	const { position, expansionLevel, cycleExpansionLevel, updateExpansionLevel } = useShoutbox();
 
 	// TODO: Replace with actual auth check from user context
 	// Temporarily set to true for testing purposes
@@ -144,7 +146,6 @@ export function ShoutboxWidget() {
 		data: customEmojis = [],
 		isLoading: isLoadingEmojis,
 		isError: isErrorEmojis,
-		error: emojiError,
 		refetch: refetchEmojis
 	} = useQuery({
 		queryKey: ['/api/chat/emojis'],
@@ -161,7 +162,6 @@ export function ShoutboxWidget() {
 		data: messages = [],
 		isLoading,
 		isError,
-		error,
 		refetch
 	} = useQuery({
 		queryKey: ['/api/shoutbox/messages'],
@@ -184,10 +184,10 @@ export function ShoutboxWidget() {
 			setShowEmojiPicker(false);
 			queryClient.invalidateQueries({ queryKey: ['/api/shoutbox/messages'] });
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Error sending message',
-				description: error.response?.data?.error || 'Unable to send message at this time',
+				description: error.message || 'Unable to send message at this time',
 				variant: 'destructive'
 			});
 		}
@@ -206,10 +206,10 @@ export function ShoutboxWidget() {
 				description: 'The message has been removed from the shoutbox'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Error deleting message',
-				description: error.response?.data?.error || 'Unable to delete the message',
+				description: error.message || 'Unable to delete the message',
 				variant: 'destructive'
 			});
 		}
@@ -232,10 +232,10 @@ export function ShoutboxWidget() {
 					: 'The message has been unpinned from the shoutbox'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Error updating message',
-				description: error.response?.data?.error || 'Unable to update the message',
+				description: error.message || 'Unable to update the message',
 				variant: 'destructive'
 			});
 		}
@@ -293,7 +293,11 @@ export function ShoutboxWidget() {
 	};
 
 	const MessageItem: React.FC<{ msg: ShoutboxMessage }> = ({ msg }) => {
-		const identity = useIdentityDisplay(msg.user as any);
+		const identity = useIdentityDisplay({
+			id: String(msg.user.id),
+			username: msg.user.username,
+			level: msg.user.level
+		});
 		const messageTime = formatMessageTime(msg.createdAt);
 
 		return (
@@ -310,8 +314,10 @@ export function ShoutboxWidget() {
 				<div className="flex-1">
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-1.5">
-							<UserName user={msg.user as any} className="text-sm" />
-							{identity?.level && <LevelBadge level={identity.level} className="text-xs px-1 py-0" />}
+							<UserName user={msg.user} className="text-sm" />
+							{identity?.level && (
+								<LevelBadge level={identity.level} className="text-xs px-1 py-0" />
+							)}
 							<TooltipProvider>
 								<Tooltip>
 									<TooltipTrigger asChild>
@@ -341,9 +347,7 @@ export function ShoutboxWidget() {
 									{msg.isPinned ? (
 										<DropdownMenuItem
 											className="text-zinc-300 cursor-pointer focus:text-zinc-100 focus:bg-zinc-800"
-											onClick={() =>
-												pinMessage.mutate({ messageId: msg.id, isPinned: false })
-											}
+											onClick={() => pinMessage.mutate({ messageId: msg.id, isPinned: false })}
 										>
 											<PinOff className="mr-2 h-4 w-4" />
 											<span>Unpin Message</span>
@@ -351,9 +355,7 @@ export function ShoutboxWidget() {
 									) : (
 										<DropdownMenuItem
 											className="text-emerald-400 cursor-pointer focus:text-emerald-300 focus:bg-emerald-950/30"
-											onClick={() =>
-												pinMessage.mutate({ messageId: msg.id, isPinned: true })
-											}
+											onClick={() => pinMessage.mutate({ messageId: msg.id, isPinned: true })}
 										>
 											<Pin className="mr-2 h-4 w-4" />
 											<span>Pin Message</span>
@@ -376,9 +378,7 @@ export function ShoutboxWidget() {
 						) : (
 							msg.content
 						)}
-						{msg.editedAt && (
-							<span className="ml-1 text-xs italic text-zinc-500">(edited)</span>
-						)}
+						{msg.editedAt && <span className="ml-1 text-xs italic text-zinc-500">(edited)</span>}
 					</div>
 				</div>
 			</div>
@@ -395,12 +395,12 @@ export function ShoutboxWidget() {
 						: 'h-[200px]'
 			}`}
 		>
-			<CardHeader className="pb-2 flex flex-row items-center justify-between">
+			<CardHeader className="pb-2 space-y-2 sm:space-y-0 flex flex-col sm:flex-row sm:items-center sm:justify-between">
 				<CardTitle className="text-lg flex items-center">
 					<MessageSquare className="h-5 w-5 text-emerald-500 mr-2" />
 					Shoutbox
 				</CardTitle>
-				<div className="flex space-x-2">
+				<div className="flex items-center space-x-1">
 					{/* Hide button for floating view (both mobile and desktop) */}
 					{position === 'floating' && (
 						<Button
@@ -417,12 +417,21 @@ export function ShoutboxWidget() {
 						size="sm"
 						className="text-zinc-400 hover:text-emerald-400 p-1 h-auto"
 						onClick={toggleExpanded}
+						title={
+							expansionLevel === 'expanded'
+								? 'Collapse'
+								: expansionLevel === 'collapsed'
+									? 'Expand'
+									: 'Full View'
+						}
 					>
-						{expansionLevel === 'expanded'
-							? 'Collapse'
-							: expansionLevel === 'collapsed'
-								? 'Expand'
-								: 'Full View'}
+						{expansionLevel === 'expanded' ? (
+							<Minus className="h-4 w-4" />
+						) : expansionLevel === 'collapsed' ? (
+							<Plus className="h-4 w-4" />
+						) : (
+							<Maximize2 className="h-4 w-4" />
+						)}
 					</Button>
 					<Button
 						variant="ghost"
@@ -433,7 +442,7 @@ export function ShoutboxWidget() {
 					>
 						<RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
 					</Button>
-					<ShoutboxPositionSelector />
+					<ShoutboxPositionSelector instanceId={instanceId} />
 				</div>
 			</CardHeader>
 
@@ -466,9 +475,7 @@ export function ShoutboxWidget() {
 							<span className="text-xs mt-1">Be the first to say something!</span>
 						</div>
 					) : Array.isArray(messages) ? (
-						messages.map((msg: ShoutboxMessage) => (
-							<MessageItem key={msg.id} msg={msg} />
-						))
+						messages.map((msg: ShoutboxMessage) => <MessageItem key={msg.id} msg={msg} />)
 					) : null}
 				</div>
 			</CardContent>
@@ -616,7 +623,7 @@ export function ShoutboxWidget() {
 																</Button>
 																{emoji.locked && (
 																	<div className="absolute top-0 right-0 bg-zinc-900 rounded-full">
-																		<Lock className="h-3 w-3 text-zinc-400" />
+																		<LockIcon className="h-3 w-3 text-zinc-400" />
 																	</div>
 																)}
 															</div>
@@ -695,7 +702,7 @@ export function ShoutboxWidget() {
 																		</Button>
 																		{emoji.locked && (
 																			<div className="absolute top-0 right-0 bg-zinc-900 rounded-full">
-																				<Lock className="h-3 w-3 text-zinc-400" />
+																				<LockIcon className="h-3 w-3 text-zinc-400" />
 																			</div>
 																		)}
 																	</div>
@@ -772,7 +779,7 @@ export function ShoutboxWidget() {
 				<DialogContent className="bg-zinc-900 border-zinc-800 text-zinc-200 max-w-md">
 					<DialogHeader>
 						<DialogTitle className="text-lg font-bold flex items-center">
-							<Lock className="h-5 w-5 mr-2 text-amber-500" />
+							<LockIcon className="h-5 w-5 mr-2 text-amber-500" />
 							Locked Emoji
 						</DialogTitle>
 						<DialogDescription className="text-zinc-400">
@@ -791,7 +798,7 @@ export function ShoutboxWidget() {
 									/>
 								</div>
 								<div className="absolute -top-2 -right-2 bg-zinc-900 rounded-full p-1 border border-zinc-700">
-									<Lock className="h-5 w-5 text-amber-500" />
+									<LockIcon className="h-5 w-5 text-amber-500" />
 								</div>
 							</div>
 

@@ -133,8 +133,27 @@ export default {
 			},
 			backgroundSize: {
 				grid: '40px 40px'
+			},
+			maxWidth: {
+				container: 'var(--container-max-width, 100%)'
+			}
+		},
+		container: {
+			center: true,
+			padding: '1rem',
+			screens: {
+				xs: '480px',
+				md: '768px',
+				lg: '1024px',
+				xl: '1440px',
+				'2xl': '1660px',
+				'3xl': '1920px'
 			}
 		}
 	},
-	plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')]
-} satisfies Config;
+	plugins: [
+		require('tailwindcss-animate'),
+		require('@tailwindcss/typography'),
+		require('@tailwindcss/container-queries')
+	]
+};

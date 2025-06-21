@@ -90,6 +90,22 @@ This checks:
 - ✅ No Vite config leaks into server/
 - ✅ All path aliases resolve correctly
 
+### Prettier formatting hook
+
+Our pre-commit Git hook automatically runs `npm run format` (Prettier) and restages any modified files. This guarantees consistent code style on every commit.
+
+• To run the formatter manually:
+
+```bash
+npm run format   # prettier --write .
+```
+
+• To bypass the hook temporarily (avoid on shared branches):
+
+```bash
+git commit --no-verify
+```
+
 ## 🚨 Emergency Recovery
 
 If you accidentally break imports:

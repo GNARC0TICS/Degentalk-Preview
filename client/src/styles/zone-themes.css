@@ -30,6 +30,9 @@
 
 /* The Pit - Raw, unfiltered discussions */
 .zone-theme-pit {
+	/* Banner & icon vars for dynamic theming */
+	--zone-banner: url('/assets/banners/the-pit.webp');
+	--zone-icon: '🔥';
 	background: linear-gradient(135deg, rgba(42, 1, 1, 0.8) 0%, rgba(80, 1, 1, 0.8) 100%);
 	border-color: rgba(255, 81, 81, 0.5);
 }
@@ -50,6 +53,9 @@
 
 /* Mission Control - Strategic discussions */
 .zone-theme-mission {
+	/* Banner & icon vars for dynamic theming */
+	--zone-banner: url('/assets/banners/mission-control.webp');
+	--zone-icon: '🚀';
 	background: linear-gradient(135deg, rgba(1, 42, 28, 0.8) 0%, rgba(1, 80, 54, 0.8) 100%);
 	border-color: rgba(81, 255, 176, 0.5);
 }
@@ -70,6 +76,9 @@
 
 /* Casino Floor - Trading and gambling */
 .zone-theme-casino {
+	/* Banner & icon vars for dynamic theming */
+	--zone-banner: url('/assets/banners/casino-floor.webp');
+	--zone-icon: '🎰';
 	background: linear-gradient(135deg, rgba(42, 1, 39, 0.8) 0%, rgba(80, 1, 66, 0.8) 100%);
 	border-color: rgba(255, 81, 235, 0.5);
 }
@@ -90,6 +99,9 @@
 
 /* Briefing Room - News and updates */
 .zone-theme-briefing {
+	/* Banner & icon vars for dynamic theming */
+	--zone-banner: url('/assets/banners/briefing-room.webp');
+	--zone-icon: '📰';
 	background: linear-gradient(135deg, rgba(1, 24, 42, 0.8) 0%, rgba(1, 44, 80, 0.8) 100%);
 	border-color: rgba(81, 162, 255, 0.5);
 }
@@ -110,6 +122,9 @@
 
 /* Archive - Historical records */
 .zone-theme-archive {
+	/* Banner & icon vars for dynamic theming */
+	--zone-banner: url('/assets/banners/archive.webp');
+	--zone-icon: '📜';
 	background: linear-gradient(135deg, rgba(39, 42, 1, 0.8) 0%, rgba(80, 73, 1, 0.8) 100%);
 	border-color: rgba(255, 235, 81, 0.5);
 }
@@ -130,6 +145,9 @@
 
 /* DegenShop - Marketplace */
 .zone-theme-shop {
+	/* Banner & icon vars for dynamic theming */
+	--zone-banner: url('/assets/banners/degen-shop.webp');
+	--zone-icon: '🛒';
 	background: linear-gradient(
 		135deg,
 		rgba(139, 92, 246, 0.2) 0%,
@@ -150,12 +168,7 @@
 	left: -50%;
 	width: 200%;
 	height: 200%;
-	background: linear-gradient(
-		45deg,
-		transparent,
-		rgba(255, 255, 255, 0.1),
-		transparent
-	);
+	background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
 	transform: rotate(45deg);
 	animation: holographic-sweep 3s infinite;
 }
@@ -171,7 +184,7 @@
 
 .zone-theme-shop:hover {
 	border-color: rgba(139, 92, 246, 0.9);
-	box-shadow: 
+	box-shadow:
 		0 8px 25px -5px rgba(139, 92, 246, 0.3),
 		0 0 20px rgba(236, 72, 153, 0.2),
 		0 0 40px rgba(59, 130, 246, 0.1);
@@ -187,7 +200,8 @@
 }
 
 @keyframes holographic-text {
-	0%, 100% {
+	0%,
+	100% {
 		background-position: 0% 50%;
 	}
 	50% {
@@ -260,7 +274,7 @@
 
 .forum-theme-shop {
 	--thread-accent: rgba(139, 92, 246, 0.3);
-	background: 
+	background:
 		radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
 		radial-gradient(circle at 80% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
 		radial-gradient(circle at 50% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
@@ -459,7 +473,8 @@
 }
 
 @keyframes holographic-bg {
-	0%, 100% {
+	0%,
+	100% {
 		background-position: 0% 50%;
 	}
 	50% {
@@ -469,7 +484,7 @@
 
 .zone-theme-shop:hover {
 	@apply border-violet-500/70 shadow-lg;
-	box-shadow: 
+	box-shadow:
 		0 10px 25px -5px rgba(139, 92, 246, 0.3),
 		0 0 20px rgba(236, 72, 153, 0.2);
 }
@@ -480,4 +495,27 @@
 
 .zone-theme-default:hover {
 	@apply border-zinc-600/70 shadow-lg shadow-zinc-900/25;
+}
+
+/* Dynamic Zone Card Theming - Uses CSS custom properties for live theme colors */
+.zone-card-themed {
+	border-color: var(--zone-border, rgba(63, 63, 70, 0.5));
+	box-shadow:
+		0 4px 6px -1px rgba(0, 0, 0, 0.1),
+		0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	transition:
+		transform 0.2s ease,
+		box-shadow 0.2s ease,
+		border-color 0.2s ease;
+}
+
+.zone-card-themed:hover {
+	border-color: var(--zone-color, #10b981);
+	box-shadow:
+		0 10px 25px -5px rgba(0, 0, 0, 0.2),
+		0 0 20px var(--zone-glow, rgba(16, 185, 129, 0.3));
+}
+
+.zone-card-themed:active {
+	transform: scale(0.98);
 }

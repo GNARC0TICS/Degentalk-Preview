@@ -108,7 +108,6 @@ const ShoutboxContainer: React.FC = () => {
 				</CardTitle>
 				<CardDescription>Chat with other forum members in real-time</CardDescription>
 			</CardHeader>
-
 			<FeatureGate featureId="shoutbox" fallback={lockedContent}>
 				<CardContent className="p-0">
 					<div className="h-64 overflow-y-auto p-4 space-y-3 border-y border-zinc-800">

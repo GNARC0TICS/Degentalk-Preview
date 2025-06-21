@@ -1,0 +1,252 @@
+// Auto-generated on 2025-06-21T11:07:04.725Z. Do not edit manually.
+
+// 	Activity
+// 	Folder
+//
+// 	Hash
+// 	MessageCircle
+// 	Zap
+// Added import
+	// Flame
+// Archive
+// Dices
+// FileText
+// Folder
+// Home
+// Icons will come from ZONE_THEMES
+	// Target
+// Keep one Home import - Unused
+	Search
+// LayoutGrid
+// No longer directly used
+// No longer directly used by NavItem
+// Renaming Folder to avoid conflict if NavNode uses 'Folder'
+	ChevronRight
+// Unused
+	// Archive
+// Unused
+	// Dices
+// Unused
+	// FileText // Unused
+// Unused
+	// Target
+Activity
+AlertCircle
+AlertOctagon
+AlertTriangle
+AlignCenter
+AlignLeft
+AlignRight
+Archive
+ArrowDown
+ArrowDownCircle
+ArrowDownLeft
+ArrowDownRight
+ArrowDownToLine
+ArrowLeft
+ArrowRight
+ArrowUp
+ArrowUpCircle
+ArrowUpDown
+ArrowUpRight
+ArrowUpToLine
+AtSign
+Award
+BadgeCheck
+BadgeIcon
+BadgeInfo
+Ban
+BarChart
+BarChart2
+BarChart3
+Beaker
+Bell
+BellOff
+BellRing
+Bold
+BookOpen
+Bookmark
+BookmarkIcon
+Calendar
+CalendarClock
+Check
+CheckCheck
+CheckCircle
+CheckCircle2
+CheckSquare
+ChevronDown
+ChevronLeft
+ChevronLeftIcon
+ChevronRight
+ChevronRight
+	// Flame
+ChevronRightIcon
+ChevronUp
+ChevronsLeftIcon
+ChevronsRightIcon
+Circle
+CircleDollarSign
+CirclePlus
+Clipboard
+Clock
+CloudRain
+Code
+Code2
+Coins
+CoinsIcon
+Command
+Copy
+CornerDownRight
+CreditCard
+Crown
+Database
+DefaultFolderIcon is used
+	ChevronRight
+Dice5
+Dices
+DollarSign
+Dot
+Download
+Edit
+ExternalLink
+Eye
+EyeOff
+File
+FileText
+Film
+Filter
+Flag
+Flame
+FlameIcon
+Folder
+FolderIcon
+FolderOpen
+Frame
+Frown
+Gift
+Globe
+GripVertical
+Hash
+Heading1
+Heading2
+Heading3
+Heart
+HelpCircle
+History
+Home
+HomeIcon
+Image
+Inbox
+Info
+Italic
+Laptop
+Laugh
+Layers
+LayoutGrid
+LayoutList
+Lightbulb
+Link
+Link2
+List
+ListOrdered
+Loader
+Loader2
+Lock
+LogIn
+LogOut
+Mail
+Maximize2
+Megaphone
+Menu
+MessageCircle
+MessageCircleReply
+MessageSquare
+MessageSquareOff
+MessagesSquare
+Minimize2
+Minus
+MinusCircle
+Monitor
+Moon
+MoreHorizontal
+MoreHorizontalIcon
+MoreVertical
+Move
+MoveDown
+MoveUp
+Navigation
+Package
+Palette
+PanelLeft
+PanelRight
+PanelsTopLeft
+Pencil
+Pin
+PinOff
+Play
+Plus
+PlusCircle
+Power
+PowerOff
+QrCode
+Quote
+RefreshCw
+Reply
+Rocket
+RotateCcw
+RotateCw
+Save
+ScrollText
+Search
+Send
+Settings
+Settings2
+Share
+Share2
+Shield
+ShieldAlert
+ShieldCheck
+ShoppingBag
+ShoppingCart
+Sidebar
+SidebarClose
+Skull
+Smartphone
+Smile
+SortAsc
+SortDesc
+Sparkles
+Star
+Sticker
+Sun
+Tablet
+Tag
+TagIcon
+Target
+Terminal
+ThumbsUp
+Timer
+Trash
+Trash2
+TrendingDown
+TrendingUp
+Trophy
+Underline
+Upload
+UploadCloud
+User
+UserCheck
+UserCog
+UserPlus
+UserRound
+UserX
+Users
+Wallet
+Wind
+X
+XCircle
+Zap
+ZapIcon
+systemLinkNodes uses LayoutGrid from forumNav.ts
+	Users
+type LucideIcon

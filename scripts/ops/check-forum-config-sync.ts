@@ -1,6 +1,6 @@
 import { db } from "../../db";
 import { forumCategories } from "../../db/schema/forum/categories";
-import { forumMap, Zone as ConfigZone, Forum as ConfigForum, ForumTheme, ForumRules } from "../../client/src/config/forumMap.config";
+import { forumMap, type Zone as ConfigZone, type Forum as ConfigForum } from "../../client/src/config/forumMap.config";
 import { eq, isNull, or } from "drizzle-orm";
 import chalk from "chalk";
 

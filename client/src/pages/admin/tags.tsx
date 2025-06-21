@@ -42,7 +42,7 @@ import { MoreHorizontal, Plus, Pencil, Trash2, Tag, Search, AlertTriangle } from
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { ForumTag } from '@shared/types';
+import type { ForumTag } from '@db/types/forum.types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
@@ -83,9 +83,9 @@ export default function AdminTagsPage() {
 		isLoading,
 		isError
 	} = useQuery({
-		queryKey: ['/admin/forum/tags'],
+		queryKey: ['/api/admin/forum/tags'],
 		queryFn: async () => {
-			const response = await fetch('/admin/forum/tags');
+			const response = await fetch('/api/admin/forum/tags');
 			if (!response.ok) {
 				throw new Error('Failed to fetch tags');
 			}
@@ -96,7 +96,7 @@ export default function AdminTagsPage() {
 	// Create tag mutation
 	const createTagMutation = useMutation({
 		mutationFn: async (data: z.infer<typeof tagSchema>) => {
-			const response = await fetch('/admin/forum/tags', {
+			const response = await fetch('/api/admin/forum/tags', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -111,7 +111,7 @@ export default function AdminTagsPage() {
 			return response.json();
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['/admin/forum/tags'] });
+			queryClient.invalidateQueries({ queryKey: ['/api/admin/forum/tags'] });
 			setIsCreateDialogOpen(false);
 			form.reset();
 		}
@@ -121,7 +121,7 @@ export default function AdminTagsPage() {
 	const editTagMutation = useMutation({
 		mutationFn: async (data: z.infer<typeof tagSchema> & { id: number }) => {
 			const { id, ...tagData } = data;
-			const response = await fetch(`/admin/forum/tags/${id}`, {
+			const response = await fetch(`/api/admin/forum/tags/${id}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json'
@@ -136,7 +136,7 @@ export default function AdminTagsPage() {
 			return response.json();
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['/admin/forum/tags'] });
+			queryClient.invalidateQueries({ queryKey: ['/api/admin/forum/tags'] });
 			setIsEditDialogOpen(false);
 			setSelectedTag(null);
 		}
@@ -145,7 +145,7 @@ export default function AdminTagsPage() {
 	// Delete tag mutation
 	const deleteTagMutation = useMutation({
 		mutationFn: async (id: number) => {
-			const response = await fetch(`/admin/forum/tags/${id}`, {
+			const response = await fetch(`/api/admin/forum/tags/${id}`, {
 				method: 'DELETE'
 			});
 
@@ -156,7 +156,7 @@ export default function AdminTagsPage() {
 			return response.json();
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['/admin/forum/tags'] });
+			queryClient.invalidateQueries({ queryKey: ['/api/admin/forum/tags'] });
 			setIsDeleteDialogOpen(false);
 			setSelectedTag(null);
 		}
@@ -334,7 +334,9 @@ export default function AdminTagsPage() {
 					<DialogContent className="sm:max-w-[550px]">
 						<DialogHeader>
 							<DialogTitle>Create New Tag</DialogTitle>
-							<DialogDescription>Create a new forum tag for thread categorization.</DialogDescription>
+							<DialogDescription>
+								Create a new forum tag for thread categorization.
+							</DialogDescription>
 						</DialogHeader>
 
 						<Form {...form}>
@@ -394,7 +396,9 @@ export default function AdminTagsPage() {
 													{...field}
 												/>
 											</FormControl>
-											<FormDescription>Brief description of what this tag represents</FormDescription>
+											<FormDescription>
+												Brief description of what this tag represents
+											</FormDescription>
 											<FormMessage />
 										</FormItem>
 									)}
@@ -483,7 +487,11 @@ export default function AdminTagsPage() {
 								/>
 
 								<DialogFooter>
-									<Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+									<Button
+										type="button"
+										variant="outline"
+										onClick={() => setIsEditDialogOpen(false)}
+									>
 										Cancel
 									</Button>
 									<Button type="submit" disabled={editTagMutation.isPending}>
@@ -525,8 +533,8 @@ export default function AdminTagsPage() {
 									<AlertTriangle className="h-4 w-4" />
 									<AlertTitle>Warning</AlertTitle>
 									<AlertDescription>
-										This tag is currently used by {(selectedTag as any).threadCount} threads. Deleting
-										it will remove the tag from all threads.
+										This tag is currently used by {(selectedTag as any).threadCount} threads.
+										Deleting it will remove the tag from all threads.
 									</AlertDescription>
 								</Alert>
 							)}

@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useShoutbox } from '@/contexts/shoutbox-context';
-import type {
-	ShoutboxPosition,
-	ShoutboxEffectivePosition,
-	ShoutboxExpansionLevel
-} from '@/contexts/shoutbox-context';
-import { ShoutboxWidget } from './shoutbox-widget';
+import type { ShoutboxEffectivePosition } from '@/contexts/shoutbox-context';
+import ShoutboxWidget from './shoutbox-widget';
 import { createPortal } from 'react-dom';
-import { MessageSquare, MinusIcon, Minus } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 /**
  * PositionedShoutbox - Wrapper component that handles the positioning of the Shoutbox
  * Uses the position from ShoutboxContext to determine how to position and style the shoutbox
  * Includes smooth transitions between positions and responsive behavior
  */
-export function PositionedShoutbox() {
-	const { position, effectivePosition, expansionLevel, updateExpansionLevel, isMobile, isLoading } =
+
+interface PositionedShoutboxProps {
+	instanceId?: string;
+}
+
+export function PositionedShoutbox({ instanceId }: PositionedShoutboxProps) {
+	const { effectivePosition, expansionLevel, updateExpansionLevel, isMobile, isLoading } =
 		useShoutbox();
 
 	const [activePosition, setActivePosition] = useState<ShoutboxEffectivePosition>('sidebar-top');
@@ -80,6 +81,9 @@ export function PositionedShoutbox() {
 				positionStyles =
 					'fixed bottom-4 right-4 w-[calc(100%-32px)] md:w-96 z-50 shadow-lg bg-zinc-900 border border-zinc-800 ';
 				break;
+			case 'sticky':
+				positionStyles = 'sticky bottom-4 w-full z-40 ';
+				break;
 			default:
 				positionStyles = 'mb-4 ';
 		}
@@ -130,8 +134,12 @@ export function PositionedShoutbox() {
 
 		// Normal shoutbox display
 		return (
-			<div className={getContainerStyle()} key={`shoutbox-${activePosition}`}>
-				<ShoutboxWidget />
+			<div
+				className={getContainerStyle()}
+				key={`shoutbox-${activePosition}`}
+				style={activePosition === 'floating' ? { maxHeight: 'calc(100vh - 96px)' } : undefined}
+			>
+				<ShoutboxWidget instanceId={instanceId} />
 			</div>
 		);
 	};
@@ -169,51 +177,4 @@ export function PositionedShoutbox() {
 
 	// Otherwise render in-place
 	return createShoutboxContent();
-}
-
-/**
- * Special container components to render the Shoutbox in different positions
- */
-export function ShoutboxSidebarTop() {
-	const { position } = useShoutbox();
-	if (position !== 'sidebar-top') return null;
-
-	return (
-		<div className="shoutbox-container-sidebar">
-			<PositionedShoutbox />
-		</div>
-	);
-}
-
-export function ShoutboxSidebarBottom() {
-	const { position } = useShoutbox();
-	if (position !== 'sidebar-bottom') return null;
-
-	return (
-		<div className="shoutbox-container-sidebar">
-			<PositionedShoutbox />
-		</div>
-	);
-}
-
-export function ShoutboxMainTop() {
-	const { position } = useShoutbox();
-	if (position !== 'main-top') return null;
-
-	return (
-		<div className="shoutbox-container-main">
-			<PositionedShoutbox />
-		</div>
-	);
-}
-
-export function ShoutboxMainBottom() {
-	const { position } = useShoutbox();
-	if (position !== 'main-bottom') return null;
-
-	return (
-		<div className="shoutbox-container-main">
-			<PositionedShoutbox />
-		</div>
-	);
 }

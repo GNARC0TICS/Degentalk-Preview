@@ -154,7 +154,7 @@ DegenTalk is a next-gen crypto-native forum and social platform designed for cry
 
 - [ ] **Migrations & Consistency:**
   - [ ] All schema changes reflected in Drizzle migrations and applied successfully.
-  - [ ] Parity between SQLite (dev) and PostgreSQL (prod) schemas confirmed (`schema-consistency.mdc`).
+  - [ ] PostgreSQL schema consistency confirmed across all environments (`schema-consistency.mdc`).
 - [ ] **Schema Audit (Reflecting Manifesto & User's MVP list):**
   - [ ] **Users (`users.ts`):**
     - Fields: `xp`, `level`, `dgtWalletBalance` (or link to `wallets` table), `dailyXpGained`, `lastXpGainDate`, `role`, `groupId`, `activeTitleId`, `activeBadgeId`, `referrerId`.

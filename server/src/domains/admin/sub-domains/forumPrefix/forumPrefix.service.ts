@@ -13,10 +13,7 @@ interface UpdatePrefixInput {
 
 export class ForumPrefixService {
 	async updatePrefix(id: number, data: UpdatePrefixInput) {
-		const [existing] = await db
-			.select()
-			.from(threadPrefixes)
-			.where(eq(threadPrefixes.id, id));
+		const [existing] = await db.select().from(threadPrefixes).where(eq(threadPrefixes.id, id));
 
 		if (!existing) throw AdminError.notFound('Thread Prefix', id);
 
@@ -30,7 +27,7 @@ export class ForumPrefixService {
 						eq(threadPrefixes.name, data.name),
 						data.categoryId
 							? eq(threadPrefixes.categoryId, data.categoryId)
-						: not(threadPrefixes.categoryId.isNotNull())
+							: not(threadPrefixes.categoryId.isNotNull())
 					)
 				);
 			if (dupe) throw AdminError.duplicate('Thread Prefix', 'name', data.name);
@@ -46,10 +43,7 @@ export class ForumPrefixService {
 	}
 
 	async deletePrefix(id: number) {
-		const [deleted] = await db
-			.delete(threadPrefixes)
-			.where(eq(threadPrefixes.id, id))
-			.returning();
+		const [deleted] = await db.delete(threadPrefixes).where(eq(threadPrefixes.id, id)).returning();
 
 		if (!deleted) throw AdminError.notFound('Thread Prefix', id);
 		return { success: true };
@@ -63,10 +57,7 @@ export class ForumPrefixService {
 		if (!prefixIds.length) return { success: true };
 
 		// Fetch all prefixes involved to ensure same scope
-		const records = await db
-			.select()
-			.from(threadPrefixes)
-			.where(threadPrefixes.id.in(prefixIds));
+		const records = await db.select().from(threadPrefixes).where(threadPrefixes.id.in(prefixIds));
 
 		if (records.length !== prefixIds.length)
 			throw AdminError.validation('One or more prefixes not found');
@@ -84,4 +75,4 @@ export class ForumPrefixService {
 	}
 }
 
-export const forumPrefixService = new ForumPrefixService(); 
+export const forumPrefixService = new ForumPrefixService();

@@ -13,6 +13,7 @@ import {
 } from '@schema';
 import { eq, sql, lte, desc, and, isNull } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
+import { getLevelForXp, getXpForLevel } from '@shared/economy/reward-calculator';
 
 /**
  * XP Action types used in economySettings
@@ -26,7 +27,12 @@ export const XP_ACTIONS = {
 	MOD_MARK_RECEIVED: 'MOD_MARK_RECEIVED',
 	DAILY_XP_CAP: 'DAILY_XP_CAP',
 	TIP_XP_PER_UNIT: 'TIP_XP_PER_UNIT',
-	TIP_XP_MAX_PER_EVENT: 'TIP_XP_MAX_PER_EVENT'
+	TIP_XP_MAX_PER_EVENT: 'TIP_XP_MAX_PER_EVENT',
+	// Dictionary feature actions
+	DICTIONARY_ENTRY_SUBMITTED: 'DICTIONARY_ENTRY_SUBMITTED',
+	DICTIONARY_ENTRY_APPROVED: 'DICTIONARY_ENTRY_APPROVED',
+	DICTIONARY_ENTRY_UPVOTED: 'DICTIONARY_ENTRY_UPVOTED',
+	DICTIONARY_ENTRY_APPROVAL: 'DICTIONARY_ENTRY_APPROVAL'
 };
 
 /**
@@ -499,9 +505,7 @@ export class XpLevelService {
 			if (roleMultipliers.length === 0) return 1;
 
 			// Return the highest multiplier the user has
-			const maxMultiplier = Math.max(
-				...roleMultipliers.map((r) => (r.multiplier ?? 1))
-			);
+			const maxMultiplier = Math.max(...roleMultipliers.map((r) => r.multiplier ?? 1));
 			return maxMultiplier > 0 ? maxMultiplier : 1;
 		} catch (error) {
 			logger.error('XpLevelService', `Error fetching XP multiplier for user ${userId}:`, error);

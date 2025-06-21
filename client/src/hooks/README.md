@@ -9,14 +9,17 @@ This directory contains custom React hooks used throughout the Degentalk client 
 This hook is central to the user identity rendering system. It consolidates all necessary data and logic to determine a user's visual identity, including their display name, username color, primary role (name and color), equipped title, level, and avatar frame (image URL and rarity color).
 
 **Purpose:**
+
 - To provide a single source of truth for a user's displayable identity attributes.
 - To abstract the complexity of fetching and combining user data, active cosmetics, roles, and XP/level information.
 - To ensure consistency in how user identity is presented across different parts of the application.
 
 **Input:**
+
 - `userOrId: User | string | null | undefined`: Can be a full user object, a user ID (string), or null/undefined. If a user ID is provided, the hook will attempt to fetch the user data.
 
 **Returns (Object):**
+
 - `user: User | null`: The full user object (fetched or passed in).
 - `displayName: string`: The name to be displayed (username or a cosmetic display name if available and prioritized).
 - `nameColor: string | null`: The CSS color string for the username (e.g., based on primary role or cosmetic).
@@ -28,6 +31,7 @@ This hook is central to the user identity rendering system. It consolidates all 
 - `error: Error | null`: Any error encountered during data fetching.
 
 **Internal Logic:**
+
 1.  Fetches the base user data if only an ID is provided (using `useUser`).
 2.  Fetches the user's equipped cosmetics using `useUserCosmetics`.
 3.  Fetches the user's XP and level information using `useUserXP`.
@@ -44,24 +48,26 @@ import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import { AvatarFrame, UserName, RoleBadge, LevelBadge } from '@/components/identity';
 
 const UserProfileCard = ({ userId }) => {
-  const { user, ...identityProps } = useIdentityDisplay(userId);
+	const { user, ...identityProps } = useIdentityDisplay(userId);
 
-  if (identityProps.isLoading) return <p>Loading identity...</p>;
-  if (identityProps.error || !user) return <p>Error loading user.</p>;
+	if (identityProps.isLoading) return <p>Loading identity...</p>;
+	if (identityProps.error || !user) return <p>Error loading user.</p>;
 
-  return (
-    <div style={{ border: `2px solid ${identityProps.nameColor || 'transparent'}` }}>
-      <AvatarFrame
-        avatarUrl={user.avatarUrl}
-        frame={identityProps.avatarFrame}
-        username={user.username}
-      />
-      <UserName user={{...user, ...identityProps}} />
-      {identityProps.primaryRole && <RoleBadge role={identityProps.primaryRole} />}
-      {identityProps.level && <LevelBadge level={identityProps.level} />}
-      {identityProps.title && <p style={{ color: identityProps.title.color || 'inherit' }}>{identityProps.title.name}</p>}
-    </div>
-  );
+	return (
+		<div style={{ border: `2px solid ${identityProps.nameColor || 'transparent'}` }}>
+			<AvatarFrame
+				avatarUrl={user.avatarUrl}
+				frame={identityProps.avatarFrame}
+				username={user.username}
+			/>
+			<UserName user={{ ...user, ...identityProps }} />
+			{identityProps.primaryRole && <RoleBadge role={identityProps.primaryRole} />}
+			{identityProps.level && <LevelBadge level={identityProps.level} />}
+			{identityProps.title && (
+				<p style={{ color: identityProps.title.color || 'inherit' }}>{identityProps.title.name}</p>
+			)}
+		</div>
+	);
 };
 ```
 
@@ -73,4 +79,4 @@ const UserProfileCard = ({ userId }) => {
 - **`useUserXP.ts`**: Fetches and manages a user's XP, level, and related progression data.
 - **`useUserPreferences.ts`**: Manages user-specific application preferences.
 
-Refer to individual hook files for more detailed explanations of their specific functionalities and APIs. 
+Refer to individual hook files for more detailed explanations of their specific functionalities and APIs.

@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, Link } from 'wouter';
 import { ThreadCard } from '@/components/forum/ThreadCard';
 import { useThreadsByTag, useTags } from '@/features/forum/hooks/useForumQueries';
-import { SiteHeader } from '@/components/layout/site-header';
+import { SiteHeader } from '@/components/header';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -152,7 +152,7 @@ export default function TagPage() {
 										tags: (thread as any).tags, // ThreadWithUser doesn't have tags directly
 										category: undefined, // ThreadWithUser only has categoryId, not the full object.
 										prefix: undefined, // ThreadWithUser only has prefixId, not the full object.
-										preview: (thread as any).preview || '', // ThreadWithUser doesn't have preview
+										preview: (thread as any).preview || '' // ThreadWithUser doesn't have preview
 										// hotScore, isHidden, dgtStaked, updatedAt will be undefined
 									}}
 								/>

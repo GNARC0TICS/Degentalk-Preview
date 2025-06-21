@@ -1,4 +1,3 @@
-import React from 'react';
 import { cn } from '@/lib/utils'; // Assuming you have a cn utility for class names
 
 interface PrefixBadgeProps {
@@ -8,7 +7,7 @@ interface PrefixBadgeProps {
 	};
 }
 
-export const PrefixBadge: React.FC<PrefixBadgeProps> = ({ prefix }) => {
+export function PrefixBadge({ prefix }: PrefixBadgeProps) {
 	if (!prefix) {
 		return null; // Or some placeholder if prefix is undefined
 	}
@@ -17,7 +16,7 @@ export const PrefixBadge: React.FC<PrefixBadgeProps> = ({ prefix }) => {
 
 	// Define base classes that use the new CSS variable-driven Tailwind classes
 	const baseClasses = 'inline-flex items-center rounded px-2 py-0.5 text-sm font-medium';
-	
+
 	// Static classes that will use the CSS variables defined by the theme class
 	const staticBadgeClasses = cn(
 		baseClasses,
@@ -30,4 +29,4 @@ export const PrefixBadge: React.FC<PrefixBadgeProps> = ({ prefix }) => {
 	const themeClassName = `theme-badge-${themeColor}`;
 
 	return <span className={cn(themeClassName, staticBadgeClasses)}>{prefix.name}</span>;
-};
+}

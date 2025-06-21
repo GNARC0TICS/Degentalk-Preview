@@ -12,10 +12,10 @@ const router = Router();
  * @access  Admin
  */
 router.post(
-  '/sources',
-  adminMiddleware,
-  validateRequest({ body: createReferralSourceSchema }),
-  referralsController.createReferralSource.bind(referralsController)
+	'/sources',
+	adminMiddleware,
+	validateRequest({ body: createReferralSourceSchema }),
+	referralsController.createReferralSource.bind(referralsController)
 );
 
 /**
@@ -24,9 +24,9 @@ router.post(
  * @access  Admin
  */
 router.get(
-  '/sources',
-  adminMiddleware,
-  referralsController.getAllReferralSources.bind(referralsController)
+	'/sources',
+	adminMiddleware,
+	referralsController.getAllReferralSources.bind(referralsController)
 );
 
 /**
@@ -35,9 +35,9 @@ router.get(
  * @access  Admin
  */
 router.get(
-  '/stats/sources',
-  adminMiddleware,
-  referralsController.getReferralSourceStats.bind(referralsController)
+	'/stats/sources',
+	adminMiddleware,
+	referralsController.getReferralSourceStats.bind(referralsController)
 );
 
 /**
@@ -46,9 +46,9 @@ router.get(
  * @access  Admin
  */
 router.get(
-  '/stats/users',
-  adminMiddleware,
-  referralsController.getUserReferralStats.bind(referralsController)
+	'/stats/users',
+	adminMiddleware,
+	referralsController.getUserReferralStats.bind(referralsController)
 );
 
 /**
@@ -57,9 +57,9 @@ router.get(
  * @access  Admin
  */
 router.get(
-  '/stats/top-referrers',
-  adminMiddleware,
-  referralsController.getReferralCountByUser.bind(referralsController)
+	'/stats/top-referrers',
+	adminMiddleware,
+	referralsController.getReferralCountByUser.bind(referralsController)
 );
 
-export default router; 
+export default router;

@@ -1,1 +1,0 @@
-// ARCHIVED: Moved from client/src/pages/admin/levels.tsx on 2025-06-17. Refer to repository history for original implementation. 

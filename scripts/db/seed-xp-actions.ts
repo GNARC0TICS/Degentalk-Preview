@@ -62,6 +62,27 @@ const DEFAULT_XP_ACTIONS = [
     maxPerDay: 1,
     cooldownSec: 604800, // One week
   },
+  {
+    action: 'DICTIONARY_ENTRY_SUBMITTED',
+    baseValue: 5,
+    description: 'XP for submitting dictionary entry',
+    maxPerDay: 20,
+    cooldownSec: 10
+  },
+  {
+    action: 'DICTIONARY_ENTRY_APPROVED',
+    baseValue: 15,
+    description: 'XP for dictionary entry approval',
+    maxPerDay: 100,
+    cooldownSec: null
+  },
+  {
+    action: 'DICTIONARY_ENTRY_UPVOTED',
+    baseValue: 1,
+    description: 'XP when your dictionary entry is upvoted',
+    maxPerDay: 200,
+    cooldownSec: null
+  },
 ];
 
 export async function seedXpActions() {

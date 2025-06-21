@@ -69,7 +69,8 @@ export function useXP(userId?: string): {
 	isLoading: boolean;
 	error: Error | null;
 	equipTitle: (titleId: number) => void;
-} { // Changed to string
+} {
+	// Changed to string
 	const queryClient = useQueryClient();
 
 	// Fetch user XP data

@@ -33,7 +33,11 @@ export default function SimpleMenu({ onItemClick }: SimpleMenuProps) {
 			if ('children' in item && item.children) {
 				return (
 					<React.Fragment key={item.label}>
-						<div className={`px-4 py-2 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-400`}>{item.label}</div>
+						<div
+							className={`px-4 py-2 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-400`}
+						>
+							{item.label}
+						</div>
 						{buildLinks(item.children as any, depth + 1)}
 					</React.Fragment>
 				);

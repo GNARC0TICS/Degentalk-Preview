@@ -4,6 +4,7 @@
 // - Applied DEV_MODE gating (if applicable)
 
 import { useState } from 'react';
+import { formatTimestamp } from '@/lib/format-date';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
 	Card,
@@ -282,11 +283,6 @@ export default function AdminCategoriesPage() {
 		setIsCreateDialogOpen(true);
 	};
 
-	const formatDate = (dateString: string) => {
-		const date = new Date(dateString);
-		return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
-	};
-
 	const filterAndOrganizeCategories = (categories: Category[], query: string) => {
 		if (!categories) return [];
 
@@ -423,7 +419,7 @@ export default function AdminCategoriesPage() {
 	return (
 		<AdminPageShell title="Forum Categories" pageActions={pageActions}>
 			<div className="space-y-6">
-				<Card>
+				<Card className="bg-admin-bg-element border-admin-border-subtle">
 					<CardHeader>
 						<CardTitle>Manage Categories</CardTitle>
 						<CardDescription>Create and organize forum categories</CardDescription>
@@ -432,11 +428,11 @@ export default function AdminCategoriesPage() {
 						<div className="flex flex-wrap gap-2">
 							<div className="flex-1">
 								<div className="relative">
-									<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+									<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-admin-text-secondary" />
 									<Input
 										type="search"
 										placeholder="Search categories..."
-										className="pl-8"
+										className="pl-8 bg-admin-bg-surface border-admin-border-subtle focus:border-admin-text-accent focus:ring-0 text-admin-text-primary placeholder:text-admin-text-secondary"
 										value={searchQuery}
 										onChange={(e) => setSearchQuery(e.target.value)}
 									/>
@@ -565,7 +561,9 @@ export default function AdminCategoriesPage() {
 														))}
 													</select>
 												</FormControl>
-												<FormDescription>Create a subcategory by selecting a parent</FormDescription>
+												<FormDescription>
+													Create a subcategory by selecting a parent
+												</FormDescription>
 												<FormMessage />
 											</FormItem>
 										)}
@@ -798,7 +796,11 @@ export default function AdminCategoriesPage() {
 								/>
 
 								<DialogFooter>
-									<Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+									<Button
+										type="button"
+										variant="outline"
+										onClick={() => setIsEditDialogOpen(false)}
+									>
 										Cancel
 									</Button>
 									<Button type="submit" disabled={editCategoryMutation.isPending}>

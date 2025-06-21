@@ -1,251 +1,191 @@
-import React from 'react'; // Removed useState
+import React from 'react';
 import { useParams, Link } from 'wouter';
-// import { useQuery } from '@tanstack/react-query'; // Removed
-import { ForumStructureProvider, useForumStructure } from '@/contexts/ForumStructureContext';
-import type { MergedForum } from '@/contexts/ForumStructureContext'; // Removed MergedZone as it's inferred from useForumStructure or not directly typed here
-// import ThreadCard from '@/components/forum/ThreadCard'; // Removed
-// import { Pagination } from '@/components/ui/pagination'; // Removed
-// import { getQueryFn } from '@/lib/queryClient'; // Removed
-// import type { ThreadsApiResponse, ApiThread } from '@/features/forum/components/ThreadList'; // Removed
+import { useForumStructure } from '@/contexts/ForumStructureContext';
+import type { MergedForum } from '@/contexts/ForumStructureContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
-import { 
-  MessageSquare, 
-  FileText, 
-  ChevronRight, 
-  Home,
-  AlertCircle,
-  Plus,
-  TrendingUp,
-  Users
+import {
+	MessageSquare,
+	FileText,
+	ChevronRight,
+	Home,
+	AlertCircle,
+	Plus,
+	Users
 } from 'lucide-react';
-// import { cn } from '@/lib/utils'; // Removed
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
+import { Wide } from '@/layout/primitives/Wide';
 
 const ZonePage: React.FC = () => {
-  const params = useParams<{ slug: string }>();
-  const slug = params?.slug;
-  const { getZone, zones, isLoading, error: contextError } = useForumStructure();
-  // const [currentPage, setCurrentPage] = useState(1); // Removed
-  // const threadsPerPage = 20; // Removed
+	const params = useParams<{ slug: string }>();
+	const slug = params?.slug;
+	const { getZone, isLoading, error: contextError } = useForumStructure();
+	// const [currentPage, setCurrentPage] = useState(1); // Removed
+	// const threadsPerPage = 20; // Removed
 
-  if (!slug) {
-    return <NotFound />;
-  }
+	const zone = slug ? getZone(slug) : null;
+	const displayName = zone?.name;
+	const displayDescription = zone?.description;
+	const theme = zone?.theme;
 
-  // Figure out zone (even while structure loading) so we can compute primaryForumId consistently
-  const zone = getZone(slug);
-  const isCategory = !zone && zones.some(z => z.forums.some(f => f.slug === slug));
+	// --- SEO: set document title ---
+	React.useEffect(() => {
+		if (displayName) {
+			document.title = `${displayName} | Zones | Degentalk`;
+		}
+	}, [displayName]);
 
-  // Decide candidate forums (may be empty while loading)
-  const categoryForums = isCategory
-    ? zones.flatMap(z => z.forums).filter(f => f.parentForumSlug === slug)
-    : zone?.forums || [];
+	if (!slug) {
+		return <NotFound />;
+	}
 
-  // const forumIds = isCategory // Removed
-  //   ? categoryForums.map(f => f.id).filter(id => id > 0)
-  //   : zone?.forums?.map(f => f.id).filter(id => id > 0) || [];
+	// Handle loading/error states AFTER hooks
+	if (isLoading) {
+		return <LoadingState />;
+	}
 
-  // const primaryForumId = forumIds[0] ?? 0; // Removed, related to thread fetching
+	if (contextError) {
+		return <ErrorState error={contextError} />;
+	}
 
-  // Always call useQuery so the hook count stays the same; use `enabled` to control fetch.
-  // const { // Removed thread fetching query
-  //   data: threadsResponse,
-  //   isLoading: isLoadingThreads,
-  //   error: threadsError,
-  // } = useQuery<ThreadsApiResponse | null, Error>({
-  //   queryKey: [`/api/forum/threads`, primaryForumId, currentPage, threadsPerPage],
-  //   queryFn: async () => {
-  //     if (!primaryForumId) return null;
-      
-  //     // Use single categoryId for now
-  //     const url = `/api/forum/threads?categoryId=${primaryForumId}&page=${currentPage}&limit=${threadsPerPage}&sortBy=latest`;
-      
-  //     const fetcher = getQueryFn<ThreadsApiResponse>({ on401: 'returnNull' });
-  //     try {
-  //       const response = await fetcher({ queryKey: [url], meta: undefined } as any);
-  //       return response;
-  //     } catch (e) {
-  //       console.error(`Error fetching threads for zone/category ${slug}:`, e);
-  //       throw e;
-  //     }
-  //   },
-  //   enabled: primaryForumId > 0,
-  //   staleTime: 1 * 60 * 1000,
-  // });
+	if (!zone) {
+		return <NotFound />;
+	}
 
-  // Handle loading/error states AFTER hooks
-  if (isLoading) {
-    return <LoadingState />;
-  }
+	return (
+		<div className="min-h-screen bg-black">
+			{/* Hero Section with Theme */}
+			<div
+				className="relative overflow-hidden"
+				style={{
+					backgroundColor: theme?.color ? `${theme.color}20` : undefined
+				}}
+			>
+				{theme?.bannerImage && (
+					<div className="absolute inset-0 z-0">
+						<img
+							src={theme.bannerImage}
+							alt={`${displayName} banner`}
+							className="w-full h-full object-cover opacity-20"
+						/>
+					</div>
+				)}
 
-  if (contextError) {
-    return <ErrorState error={contextError} />;
-  }
+				<Wide className="relative z-10 px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+					{/* Breadcrumbs */}
+					<nav className="flex items-center space-x-2 text-sm text-zinc-400 mb-6">
+						<Link href="/">
+							<a className="flex items-center hover:text-white transition-colors">
+								<Home className="w-4 h-4 mr-1" />
+								Home
+							</a>
+						</Link>
+						<ChevronRight className="w-4 h-4" />
+						<span className="text-white font-medium">{displayName}</span>
+					</nav>
 
-  if (!zone && !isCategory) {
-    return <NotFound />;
-  }
+					{/* Zone Header */}
+					<div className="flex flex-col sm:flex-row sm:items-start gap-6">
+						<div className="flex items-start gap-4 flex-1">
+							{theme?.icon && (
+								<div className="flex-shrink-0">
+									{theme.icon.startsWith('/') || theme.icon.startsWith('http') ? (
+										<img
+											src={theme.icon}
+											alt={`${displayName} icon`}
+											className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl shadow-lg"
+										/>
+									) : (
+										<div
+											className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl shadow-lg flex items-center justify-center text-3xl sm:text-4xl"
+											style={{ backgroundColor: theme?.color || '#1f2937' }}
+										>
+											{theme.icon}
+										</div>
+									)}
+								</div>
+							)}
 
-  const displayName = zone?.name || slug;
-  const displayDescription = zone?.description;
-  const theme = zone?.theme;
+							<div className="flex-1">
+								<h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
+									{displayName}
+								</h1>
+								{displayDescription && (
+									<p className="text-base sm:text-lg text-zinc-300 mb-4">{displayDescription}</p>
+								)}
 
-  // const threads = threadsResponse?.threads || []; // Removed
-  // const pagination = threadsResponse?.pagination || { // Removed
-  //   page: 1,
-  //   limit: threadsPerPage,
-  //   totalThreads: 0,
-  //   totalPages: 0,
-  // };
+								<div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm">
+									<div className="flex items-center gap-2">
+										<MessageSquare className="w-4 h-4 text-emerald-500" />
+										<span className="text-zinc-400">
+											<span className="font-semibold text-white">{zone.threadCount}</span> threads
+										</span>
+									</div>
+									<div className="flex items-center gap-2">
+										<FileText className="w-4 h-4 text-blue-500" />
+										<span className="text-zinc-400">
+											<span className="font-semibold text-white">{zone.postCount}</span> posts
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
 
-  return (
-    <div className="min-h-screen bg-black">
-      {/* Hero Section with Theme */}
-      <div 
-        className="relative overflow-hidden"
-        style={{
-          backgroundColor: theme?.color ? `${theme.color}20` : undefined,
-        }}
-      >
-        {theme?.bannerImage && (
-          <div className="absolute inset-0 z-0">
-            <img 
-              src={theme.bannerImage} 
-              alt={`${displayName} banner`}
-              className="w-full h-full object-cover opacity-20"
-            />
-          </div>
-        )}
-        
-        <div className="relative z-10 container mx-auto px-4 py-8">
-          {/* Breadcrumbs */}
-          <nav className="flex items-center space-x-2 text-sm text-zinc-400 mb-6">
-            <Link href="/">
-              <a className="flex items-center hover:text-white transition-colors">
-                <Home className="w-4 h-4 mr-1" />
-                Home
-              </a>
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-white font-medium">{displayName}</span>
-          </nav>
+						<Link href="/threads/create">
+							<Button
+								className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
+								size="lg"
+							>
+								<Plus className="w-4 h-4 mr-2" />
+								New Thread
+							</Button>
+						</Link>
+					</div>
+				</Wide>
+			</div>
 
-          {/* Zone Header */}
-          <div className="flex items-start gap-6">
-            {theme?.icon && (
-              <div className="flex-shrink-0">
-                {theme.icon.startsWith('/') || theme.icon.startsWith('http') ? (
-                  <img 
-                    src={theme.icon} 
-                    alt={`${displayName} icon`}
-                    className="w-20 h-20 rounded-xl shadow-lg"
-                  />
-                ) : (
-                  <div 
-                    className="w-20 h-20 rounded-xl shadow-lg flex items-center justify-center text-4xl"
-                    style={{ backgroundColor: theme?.color || '#1f2937' }}
-                  >
-                    {theme.icon}
-                  </div>
-                )}
-              </div>
-            )}
-            
-            <div className="flex-1">
-              <h1 className="text-4xl font-bold text-white mb-2">{displayName}</h1>
-              {displayDescription && (
-                <p className="text-lg text-zinc-300 mb-4">{displayDescription}</p>
-              )}
-              
-              <div className="flex items-center gap-6 text-sm">
-                <div className="flex items-center gap-2">
-                  <MessageSquare className="w-4 h-4 text-emerald-500" />
-                  <span className="text-zinc-400">
-                    <span className="font-semibold text-white">{zone?.threadCount || 0}</span> threads
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-blue-500" />
-                  <span className="text-zinc-400">
-                    <span className="font-semibold text-white">{zone?.postCount || 0}</span> posts
-                  </span>
-                </div>
-                {zone?.hasXpBoost && (
-                  <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-500 border-yellow-500/50">
-                    <TrendingUp className="w-3 h-3 mr-1" />
-                    {zone.boostMultiplier}x XP Boost
-                  </Badge>
-                )}
-              </div>
-            </div>
+			<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+					{/* Main Content */}
+					<div className="lg:col-span-2 space-y-6">
+						{/* Forums Section */}
+						{zone.forums && zone.forums.length > 0 ? (
+							<Card className="bg-zinc-900 border-zinc-800">
+								<CardHeader>
+									<CardTitle className="text-xl text-white flex items-center gap-2">
+										<Users className="w-5 h-5 text-emerald-500" />
+										Forums in {displayName}
+									</CardTitle>
+								</CardHeader>
+								<CardContent className="space-y-3">
+									{/* Display forums directly under the zone */}
+									{zone.forums.map((forum: MergedForum) => (
+										<div
+											key={`direct-${forum.slug}`}
+											className="bg-zinc-800/50 rounded-lg overflow-hidden"
+										>
+											<ForumListItem
+												forum={forum}
+												href={`/forums/${forum.slug}`}
+												parentZoneColor={theme?.color ?? undefined}
+											/>
+										</div>
+									))}
+								</CardContent>
+							</Card>
+						) : (
+							<Card className="bg-zinc-900 border-zinc-800">
+								<CardContent className="p-12 text-center">
+									<Users className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
+									<p className="text-zinc-400 text-lg">No forums found in this zone.</p>
+									{/* Optionally, add a link to create a forum if applicable for admins */}
+								</CardContent>
+							</Card>
+						)}
 
-            <Link href="/threads/create">
-              <Button 
-                className="bg-emerald-600 hover:bg-emerald-700 text-white"
-                size="lg"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                New Thread
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Forums Section */}
-            {(zone?.forums && zone.forums.length > 0) || (zone?.categories && zone.categories.some(cat => cat.forums.length > 0)) ? (
-              <Card className="bg-zinc-900 border-zinc-800">
-                <CardHeader>
-                  <CardTitle className="text-xl text-white flex items-center gap-2">
-                    <Users className="w-5 h-5 text-emerald-500" />
-                    Forums in {displayName}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {/* Display forums directly under the zone */}
-                  {zone?.forums?.map((forum: MergedForum) => (
-                    <div key={`direct-${forum.slug}`} className="bg-zinc-800/50 rounded-lg overflow-hidden">
-                      <ForumListItem 
-                        forum={forum}
-                        href={`/forums/${forum.slug}`}
-                        parentZoneColor={zone?.color ?? undefined}
-                      />
-                    </div>
-                  ))}
-                  {/* Display forums under categories within the zone */}
-                  {zone?.categories?.map(category => (
-                    category.forums.map((forum: MergedForum) => (
-                      <div key={`${category.slug}-${forum.slug}`} className="bg-zinc-800/50 rounded-lg overflow-hidden">
-                        <ForumListItem 
-                          forum={forum}
-                          href={`/forums/${forum.slug}`}
-                          parentZoneColor={zone?.color ?? undefined}
-                          // Optionally, you could pass category info here if ForumListItem can use it
-                        />
-                      </div>
-                    ))
-                  ))}
-                </CardContent>
-              </Card>
-            ) : (
-              <Card className="bg-zinc-900 border-zinc-800">
-                <CardContent className="p-12 text-center">
-                  <Users className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                  <p className="text-zinc-400 text-lg">No forums found in this zone.</p>
-                  {/* Optionally, add a link to create a forum if applicable for admins */}
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Threads Section - REMOVED */}
-            {/* 
+						{/* Threads Section - REMOVED */}
+						{/* 
             <div>
               <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <MessageSquare className="w-6 h-6 text-emerald-500" />
@@ -254,102 +194,105 @@ const ZonePage: React.FC = () => {
               ... (entire thread listing logic removed) ...
             </div>
             */}
-          </div>
+					</div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Zone Stats */}
-            <Card className="bg-zinc-900 border-zinc-800">
-              <CardHeader>
-                <CardTitle className="text-lg text-white">Zone Statistics</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-zinc-400">Total Forums</span>
-                  <span className="font-semibold text-white">{(zone?.forums || categoryForums).length}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-zinc-400">Total Threads</span>
-                  <span className="font-semibold text-white">{zone?.threadCount || 0}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-zinc-400">Total Posts</span>
-                  <span className="font-semibold text-white">{zone?.postCount || 0}</span>
-                </div>
-              </CardContent>
-            </Card>
+					{/* Sidebar */}
+					<div className="space-y-6">
+						{/* Zone Stats */}
+						<Card className="bg-zinc-900 border-zinc-800">
+							<CardHeader>
+								<CardTitle className="text-lg text-white">Zone Statistics</CardTitle>
+							</CardHeader>
+							<CardContent className="space-y-3">
+								<div className="flex justify-between items-center">
+									<span className="text-zinc-400">Total Forums</span>
+									<span className="font-semibold text-white">{zone.forums.length}</span>
+								</div>
+								<div className="flex justify-between items-center">
+									<span className="text-zinc-400">Total Threads</span>
+									<span className="font-semibold text-white">{zone.threadCount}</span>
+								</div>
+								<div className="flex justify-between items-center">
+									<span className="text-zinc-400">Total Posts</span>
+									<span className="font-semibold text-white">{zone.postCount}</span>
+								</div>
+							</CardContent>
+						</Card>
 
-            {/* Quick Actions */}
-            <Card className="bg-zinc-900 border-zinc-800">
-              <CardHeader>
-                <CardTitle className="text-lg text-white">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <Link href="/threads/create">
-                  <Button className="w-full justify-start" variant="outline">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Create Thread
-                  </Button>
-                </Link>
-                <Link href="/zones">
-                  <Button className="w-full justify-start" variant="outline">
-                    <Users className="w-4 h-4 mr-2" />
-                    Browse All Zones
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+						{/* Quick Actions */}
+						<Card className="bg-zinc-900 border-zinc-800">
+							<CardHeader>
+								<CardTitle className="text-lg text-white">Quick Actions</CardTitle>
+							</CardHeader>
+							<CardContent className="space-y-2">
+								<Link href="/threads/create">
+									<Button className="w-full justify-start" variant="outline">
+										<Plus className="w-4 h-4 mr-2" />
+										Create Thread
+									</Button>
+								</Link>
+								<Link href="/zones">
+									<Button className="w-full justify-start" variant="outline">
+										<Users className="w-4 h-4 mr-2" />
+										Browse All Zones
+									</Button>
+								</Link>
+							</CardContent>
+						</Card>
+					</div>
+				</div>
+			</Wide>
+		</div>
+	);
 };
 
 // Helper Components
 const NotFound: React.FC = () => (
-  <div className="min-h-screen bg-black flex items-center justify-center">
-    <div className="text-center">
-      <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-      <h1 className="text-3xl font-bold text-white mb-2">Zone Not Found</h1>
-      <p className="text-zinc-400 mb-6">The zone you're looking for doesn't exist.</p>
-      <Link href="/">
-        <Button variant="outline">Return Home</Button>
-      </Link>
-    </div>
-  </div>
+	<div className="min-h-screen bg-black flex items-center justify-center">
+		<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+			<div className="text-center">
+				<AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+				<h1 className="text-3xl font-bold text-white mb-2">Zone Not Found</h1>
+				<p className="text-zinc-400 mb-6">The zone you're looking for doesn't exist.</p>
+				<Link href="/">
+					<Button variant="outline">Return Home</Button>
+				</Link>
+			</div>
+		</Wide>
+	</div>
 );
 
 const LoadingState: React.FC = () => (
-  <div className="min-h-screen bg-black">
-    <div className="container mx-auto px-4 py-8">
-      <Skeleton className="h-8 w-48 mb-6 bg-zinc-900" />
-      <Skeleton className="h-64 w-full mb-8 bg-zinc-900" />
-      <div className="space-y-4">
-        {[...Array(5)].map((_, i) => (
-          <Skeleton key={i} className="h-24 bg-zinc-900" />
-        ))}
-      </div>
-    </div>
-  </div>
+	<div className="min-h-screen bg-black">
+		<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+			<div className="animate-pulse">
+				<Skeleton className="h-8 w-48 mb-6 bg-zinc-900" />
+				<Skeleton className="h-40 sm:h-64 w-full mb-8 bg-zinc-900" />
+				<div className="space-y-4">
+					{[...Array(5)].map((_, i) => (
+						<Skeleton key={i} className="h-24 bg-zinc-900" />
+					))}
+				</div>
+			</div>
+		</Wide>
+	</div>
 );
 
 const ErrorState: React.FC<{ error: Error }> = ({ error }) => (
-  <div className="min-h-screen bg-black flex items-center justify-center">
-    <Card className="bg-red-900/20 border-red-800 max-w-md">
-      <CardContent className="p-8 text-center">
-        <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-white mb-2">Error Loading Zone</h2>
-        <p className="text-red-400">{error.message}</p>
-      </CardContent>
-    </Card>
-  </div>
+	<div className="min-h-screen bg-black flex items-center justify-center">
+		<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+			<Card className="bg-red-900/20 border-red-800 max-w-md mx-auto">
+				<CardContent className="p-6 sm:p-8 text-center">
+					<AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+					<h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Error Loading Zone</h2>
+					<p className="text-red-400 text-sm sm:text-base">{error.message}</p>
+					<Button asChild variant="outline" className="mt-4">
+						<Link href="/zones">Browse Zones</Link>
+					</Button>
+				</CardContent>
+			</Card>
+		</Wide>
+	</div>
 );
 
-const ZonePageWithProvider: React.FC = () => (
-  <ForumStructureProvider>
-    <ZonePage />
-  </ForumStructureProvider>
-);
-
-export default ZonePageWithProvider;
+export default ZonePage;

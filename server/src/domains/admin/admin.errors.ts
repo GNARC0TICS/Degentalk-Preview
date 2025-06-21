@@ -6,4 +6,4 @@
 import { AdminError, ErrorCodes } from '../../core/errors';
 
 export { AdminError };
-export const AdminErrorCodes = ErrorCodes; 
+export const AdminErrorCodes = ErrorCodes;

@@ -4,12 +4,11 @@
 	"type": "module",
 	"license": "MIT",
 	"scripts": {
-		"dev": "concurrently \"npm run dev:server\" \"npm run dev:client\" --names \"backend,frontend\" --prefix-colors \"cyan,yellow\"",
-		"dev:client": "vite --force --port 5173 --strictPort --config config/vite.config.ts",
+		"dev": "npm run kill-ports && concurrently \"npm run dev:server\" \"npm run dev:client\" --names \"backend,frontend\" --prefix-colors \"cyan,yellow\"",
+		"dev:client": "vite --force --port 5173 --config config/vite.config.ts",
 		"dev:server": "cd server && npm run dev",
-		"dev:seed": "npm run kill-ports && npm run seed:all && concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
-		"dev:quick": "npm run kill-ports && concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend:quick\" \"npm run dev:frontend\"",
-		"dev:frontend": "vite --port 5173 --strictPort --config config/vite.config.ts",
+		"dev:seed": "npm run kill-ports && npm run seed:all && concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend\" \"npm run dev:client\"",
+		"dev:quick": "npm run kill-ports && concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend:quick\" \"npm run dev:client\"",
 		"dev:backend": "tsx --tsconfig tsconfig.json --require tsconfig-paths/register server/index.ts",
 		"dev:backend:seed": "npm run seed:all && tsx --watch -r tsconfig-paths/register server/index.ts",
 		"dev:backend:quick": "QUICK_MODE=true tsx --watch -r tsconfig-paths/register server/index.ts",
@@ -27,7 +26,7 @@
 		"db:studio": "drizzle-kit studio",
 		"db:create-tables": "npx dotenv-cli -e env.local -- npx tsx -r tsconfig-paths/register scripts/db/create-missing-tables.ts",
 		"db:seed-chat": "npx dotenv-cli -e env.local -- npx tsx -r tsconfig-paths/register scripts/db/seed-chat.ts",
-		"seed:all": "npm run db:migrate:Apply && npm run seed:users && npm run seed:forum:new && npm run seed:threads && npm run seed:xp && npm run seed:levels && npm run seed:economy && npm run seed:shop",
+		"seed:all": "npm run db:migrate:Apply && npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/seed/seed-all-comprehensive.ts",
 		"reset-and-seed": "npx dotenv-cli -e env.local -- npx tsx scripts/db/reset-and-seed.ts",
 		"seed:users": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-users.ts",
 		"seed:forum": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-canonical-zones.ts",
@@ -54,6 +53,7 @@
 		"test:forum-fks": "tsx scripts/testing/validate-forum-fks.ts",
 		"test:e2e": "playwright test",
 		"test:e2e:ui": "playwright test --ui",
+		"test:unit": "vitest --config client/vitest.config.ts",
 		"lint": "npm run lint:client && npm run lint:server",
 		"lint:client": "eslint client --ext .ts,.tsx --max-warnings 0",
 		"lint:server": "cd server && npm run lint",
@@ -71,7 +71,12 @@
 		"precommit": "npm run validate",
 		"prebuild": "",
 		"mcp:neon": "npx @neondatabase/mcp-server-neon start napi_64010heeqqly1w5t5eg1dpjposfjcqpdg0lu4bc7yvnci0vh7qyivoo04i3j036x",
-		"typecheck": "echo \"Skipping typecheck until types cleanup\""
+		"typecheck": "echo \"Skipping typecheck until types cleanup\"",
+		"tokens": "style-dictionary build",
+		"prepare": "simple-git-hooks",
+		"codemod:dry-run": "bash scripts/refactor/component-merge/run-dry-run.sh",
+		"generate:scope": "tsx scripts/dev/generate-scope-guide.ts",
+		"scan:icons": "tsx scripts/tools/icon-scan.ts"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.10.0",
@@ -155,6 +160,7 @@
 		"express-session": "^1.18.1",
 		"framer-motion": "^11.18.2",
 		"gsap": "^3.13.0",
+		"immer": "^10.1.1",
 		"input-otp": "^1.4.2",
 		"js-sha256": "^0.11.0",
 		"jsonwebtoken": "^9.0.2",
@@ -173,6 +179,7 @@
 		"react-day-picker": "^8.10.1",
 		"react-dom": "^18.3.1",
 		"react-dropzone": "^14.2.3",
+		"react-error-boundary": "^6.0.0",
 		"react-helmet": "^6.1.0",
 		"react-hook-form": "^7.55.0",
 		"react-icons": "^5.4.0",
@@ -180,6 +187,7 @@
 		"react-router-dom": "^7.5.2",
 		"react-window": "^1.8.11",
 		"recharts": "^2.15.2",
+		"slugify": "^1.6.6",
 		"sonner": "^2.0.3",
 		"stripe": "^18.1.0",
 		"tailwind-merge": "^2.6.0",
@@ -194,7 +202,8 @@
 		"ws": "^8.18.0",
 		"zod": "^3.24.2",
 		"zod-validation-error": "^3.4.0",
-		"zustand": "^5.0.3"
+		"zustand": "^5.0.3",
+		"react-lottie-player": "^2.1.0"
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^9.8.0",
@@ -202,7 +211,9 @@
 		"@playwright/test": "^1.44.0",
 		"@replit/vite-plugin-cartographer": "^0.0.11",
 		"@replit/vite-plugin-runtime-error-modal": "^0.0.3",
+		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/typography": "^0.5.15",
+		"@testing-library/react": "^16.3.0",
 		"@types/bcryptjs": "^3.0.0",
 		"@types/connect-pg-simple": "^7.0.3",
 		"@types/cors": "^2.8.18",
@@ -219,6 +230,7 @@
 		"@typescript-eslint/eslint-plugin": "6.21.0",
 		"@typescript-eslint/parser": "6.21.0",
 		"@vitejs/plugin-react": "^4.3.2",
+		"@vitest/ui": "^3.2.4",
 		"autoprefixer": "^10.4.20",
 		"chalk": "^5.4.1",
 		"concurrently": "^8.2.2",
@@ -226,19 +238,29 @@
 		"drizzle-kit": "^0.31.1",
 		"esbuild": "^0.25.0",
 		"eslint": "^8.57.0",
+		"eslint-plugin-degen": "file:eslint-plugins/degen",
+		"eslint-plugin-react-hooks": "^4.6.0",
 		"fetch-cookie": "^3.1.0",
 		"glob": "^11.0.3",
+		"jscodeshift": "^0.15.0",
+		"jsdom": "^26.1.0",
 		"node-fetch": "^2.7.0",
 		"postcss": "^8.4.47",
+		"simple-git-hooks": "^2.12.0",
+		"style-dictionary": "^5.0.0",
 		"tailwindcss": "^3.4.17",
 		"tough-cookie": "^5.1.2",
 		"ts-morph": "^26.0.0",
 		"ts-node": "^10.9.2",
 		"tsx": "^4.19.4",
 		"typescript": "5.6.3",
-		"vite": "^5.4.14"
+		"vite": "^5.4.14",
+		"vitest": "^3.2.4"
 	},
 	"optionalDependencies": {
 		"bufferutil": "^4.0.8"
+	},
+	"simple-git-hooks": {
+		"pre-commit": "npm run format && git add -A"
 	}
 }

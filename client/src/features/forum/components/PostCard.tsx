@@ -3,7 +3,7 @@ import DOMPurify from 'dompurify';
 import { Link } from 'wouter';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
-import { UserName } from '@/components/identity/UserName';
+import { UserName } from '@/components/users/Username';
 import { LevelBadge } from '@/components/identity/LevelBadge';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import { Button } from '@/components/ui/button';
@@ -43,7 +43,7 @@ export function PostCard({
 	onReport,
 	isFirst = false,
 	parentForumTheme = null,
-	tippingEnabled = false,
+	tippingEnabled = false
 }: PostCardProps) {
 	const identity = useIdentityDisplay(post.user);
 
@@ -59,7 +59,11 @@ export function PostCard({
 		>
 			<CardHeader className="p-4 pb-2 flex flex-row items-start justify-between">
 				<div className="flex items-center space-x-4">
-					<AvatarFrame avatarUrl={post.user.avatarUrl || ''} frame={identity?.avatarFrame} size={40} />
+					<AvatarFrame
+						avatarUrl={post.user.avatarUrl || ''}
+						frame={identity?.avatarFrame}
+						size={40}
+					/>
 					<div>
 						<Link href={`/profile/${post.user.id}`}>
 							<UserName user={post.user} className="hover:text-emerald-400 transition-colors" />
@@ -177,4 +181,4 @@ export function PostCard({
 	);
 }
 
-export default PostCard; 
+export default PostCard;

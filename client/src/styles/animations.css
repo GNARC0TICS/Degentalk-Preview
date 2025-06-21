@@ -1,3 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Animation tokens */
+:root {
+	--anim-fast: 0.2s;
+	--anim-normal: 0.5s;
+	--anim-slow: 1s;
+}
+
+@keyframes pulse-scale {
+	0%,
+	100% {
+		transform: scale(1);
+		filter: brightness(1);
+	}
+	50% {
+		transform: scale(1.05);
+		filter: brightness(1.15);
+	}
+}
+
+@keyframes fade-in-up {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
 /* Custom animations for Degentalk gamified experience */
 
 /* Glitch effect for text */

@@ -1,5 +1,6 @@
 import { db } from "../../db";
-import { forumCategories, threads, posts } from "../../db/schema"; // Ensure posts and threads are imported
+import { forumCategories, threads, posts, users } from "../../db/schema"; // Ensure posts, threads, users imported
+import { eq } from "drizzle-orm";
 import { forumMap, DEFAULT_FORUM_RULES } from "../../client/src/config/forumMap.config"; // Import DEFAULT_FORUM_RULES
 // import { eq } from "drizzle-orm"; // No longer used directly
 import chalk from "chalk";
@@ -8,6 +9,87 @@ import { parseArgs } from 'node:util';
 
 // Define a type for the transaction client that Drizzle uses
 type TransactionClient = typeof db | (typeof db & { transaction: (tx: unknown) => Promise<void> }); // More specific transaction type
+
+// Generate forum-specific welcome content
+function getWelcomeContent(forumSlug: string, forumName: string): { title: string; content: string } {
+  const welcomeMessages: Record<string, { title: string; content: string }> = {
+    'live-trade-reacts': {
+      title: '🚀 Welcome to Live Trade Reacts!',
+      content: `Welcome to the most intense trading forum on DegenTalk! 
+
+This is where we share our live reactions to market moves, celebrate our wins, and commiserate our losses. 
+
+**Guidelines:**
+• Share your real-time trading thoughts and reactions
+• Use prefixes like [LIVE], [TRADE], [🔺UP], [🧂SALT], [🪦REKT]
+• Screenshots of positions are encouraged (blur sensitive info)
+• No financial advice - just raw reactions!
+
+Let's make some money! 💎🙌`
+    },
+    'shill-zone': {
+      title: '💎 Welcome to the Shill Zone!',
+      content: `Welcome to the official shill headquarters! 
+
+This is where you can promote your favorite gems, share moonshot predictions, and pump your bags to fellow degens.
+
+**Rules:**
+• Use required prefixes: [SHILL], [GEM], [MOON], [PUMP]
+• DYOR always applies - we're just having fun
+• No rugpull coins or obvious scams
+• Back up your shills with reasoning
+
+Ready to find the next 100x? Let's go! 🚀`
+    },
+    'alpha-channel': {
+      title: '🎯 Welcome to Alpha Channel',
+      content: `Welcome to the exclusive Alpha Channel! 
+
+This is where premium alpha drops and insider intel are shared. Access is restricted to level 10+ members only.
+
+**What you'll find here:**
+• Confirmed alpha leaks and insider information
+• Early project announcements
+• Whale movement analysis
+• Institutional adoption news
+
+Remember: Alpha shared here is time-sensitive. Act fast! ⚡`
+    },
+    'strategy-scripts': {
+      title: '🎲 Welcome to Strategy & Scripts!',
+      content: `Welcome to the gambling strategy hub!
+
+Share your betting strategies, automation scripts, and mathematical analysis for casino games.
+
+**Topics include:**
+• Dice and Limbo strategies
+• Bankroll management systems
+• Script development and sharing
+• RTP analysis and discussions
+
+Gamble responsibly and may the odds be in your favor! 🍀`
+    },
+    'announcements': {
+      title: '📢 Official DegenTalk Announcements',
+      content: `Welcome to the official announcements forum.
+
+This forum is reserved for official platform updates, feature releases, and important community notices from the DegenTalk team.
+
+All posts here are from verified staff members. Stay tuned for the latest updates! 
+
+For discussions about announcements, please use the appropriate discussion forums.`
+    }
+  };
+
+  return welcomeMessages[forumSlug] || {
+    title: `Welcome to ${forumName}!`,
+    content: `Welcome to ${forumName}!
+
+This forum is part of the DegenTalk community. Feel free to start discussions, ask questions, and engage with fellow community members.
+
+Please follow the community guidelines and enjoy your time here! 🎉`
+  };
+}
 
 interface ForumCategoryPluginData {
   rules?: ConfigForumRules;
@@ -58,7 +140,8 @@ async function seedForumLevel(
   currentParentIdInDB: number,
   parentConfigSlug: string, // ADDED: Slug of the parent (zone or forum) from config
   parentConfigTheme: ForumTheme | Partial<ForumTheme> | undefined, // Theme from parent zone or parent forum
-  tx: TransactionClient
+  tx: TransactionClient,
+  defaultUserId: string | null | undefined
 ) {
   for (const forumConfig of forumsToProcess) {
     const forumPluginData: ForumCategoryPluginData = {
@@ -104,13 +187,46 @@ async function seedForumLevel(
     }
     console.log(chalk.cyan(`[✓] Synced forum: ${forumConfig.name} (slug: ${forumConfig.slug}) → parentId ${currentParentIdInDB}`));
 
+    // Seed a simple welcome thread if a default user exists and no threads yet
+    if (defaultUserId) {
+      const existingThreads = await tx
+        .select({ id: threads.id })
+        .from(threads)
+        .where(eq(threads.categoryId, newForumDbId))
+        .limit(1);
+      if (existingThreads.length === 0) {
+        const threadSlug = `${forumConfig.slug}-welcome`;
+        const welcomeContent = getWelcomeContent(forumConfig.slug, forumConfig.name);
+        
+        const [welcomeThread] = await tx.insert(threads).values({
+          title: welcomeContent.title,
+          slug: threadSlug,
+          categoryId: newForumDbId,
+          userId: defaultUserId,
+          isSticky: true
+        }).onConflictDoNothing().returning();
+
+        // Add a welcome post
+        if (welcomeThread) {
+          await tx.insert(posts).values({
+            threadId: welcomeThread.id,
+            userId: defaultUserId,
+            content: welcomeContent.content,
+            isFirstPost: true
+          }).onConflictDoNothing();
+        }
+        
+        console.log(chalk.gray(`    └─ Added welcome thread to ${forumConfig.slug}`));
+      }
+    }
+
     // Recursively process subforums, if any
     if (forumConfig.forums && forumConfig.forums.length > 0) {
       console.log(chalk.blue(`  ↳ Seeding ${forumConfig.forums.length} subforums for '${forumConfig.name}'...`));
       // Pass the current forum's theme (override or inherited) as parent theme for subforums
       const currentForumEffectiveTheme = forumConfig.themeOverride || parentConfigTheme;
       // Pass current forum's slug as parentConfigSlug for its children
-      await seedForumLevel(forumConfig.forums, newForumDbId, forumConfig.slug, currentForumEffectiveTheme, tx);
+      await seedForumLevel(forumConfig.forums, newForumDbId, forumConfig.slug, currentForumEffectiveTheme, tx, defaultUserId);
     }
   }
 }
@@ -127,6 +243,13 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
   }
 
   const zonesFromConfig: ConfigZone[] = forumMap.zones;
+
+  // Fetch a default user to use as author for welcome threads
+  const [defaultUser] = await tx.select({ id: users.id }).from(users).limit(1);
+  const defaultUserId = defaultUser?.id;
+  if (!defaultUserId) {
+    console.warn(chalk.yellow("⚠️  No users found in DB – welcome threads will not be created."));
+  }
 
   console.log(chalk.blue(`Seeding ${zonesFromConfig.length} zones...`));
   for (const zoneConfig of zonesFromConfig) {
@@ -209,7 +332,7 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
     if (zoneConfig.forums && zoneConfig.forums.length > 0) {
       console.log(chalk.blue(`  ↳ Seeding ${zoneConfig.forums.length} top-level forums for zone '${zoneConfig.name}'...`));
       // Pass zone's slug as parentConfigSlug for its direct child forums
-      await seedForumLevel(zoneConfig.forums, zoneDbId, zoneConfig.slug, zoneConfig.theme, tx);
+      await seedForumLevel(zoneConfig.forums, zoneDbId, zoneConfig.slug, zoneConfig.theme, tx, defaultUserId);
     }
   }
   console.log(chalk.green("✅ Forum structure and static themes seeded successfully within transaction."));

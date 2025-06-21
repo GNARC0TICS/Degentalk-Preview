@@ -18,6 +18,7 @@ import { transactions, users, dgtPurchaseOrders } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { WalletError, ErrorCodes } from '../../core/errors';
 import { SUPPORTED_CRYPTO_CURRENCIES } from './wallet.constants';
+import { walletConfig } from '@shared/wallet.config';
 
 // Configuration
 const CCPAYMENT_API_URL = process.env.CCPAYMENT_API_URL || 'https://api.ccpayment.com';
@@ -265,22 +266,24 @@ export class CCPaymentService {
 				throw new WalletError('User not found', 404, ErrorCodes.USER_NOT_FOUND);
 			}
 
-			// In production, we'd make a real API call:
-			// const response = await this.makeRequest<{ userId: string }>('/api/v1/user/create', 'POST', {
-			//   name: user.username,
-			//   email: user.email || `user-${internalUserId}@degentalk.com`,
-			//   merchantUserId: `dgt-${internalUserId}`,
-			//   notificationUrl: this.notificationUrl
-			// });
-			// return response.userId;
+			// Check if we should use mock data
+			if (walletConfig.DEV_MODE.MOCK_CCPAYMENT) {
+				logger.info(
+					'CCPaymentService',
+					`[MOCK] Created CCPayment wallet for user ${internalUserId}`
+				);
+				const ccpaymentUserId = `ccpay-${internalUserId}-${Date.now()}`;
+				return ccpaymentUserId;
+			}
 
-			// For development/testing, return a mock CCPayment user ID
-			logger.info('CCPaymentService', `[MOCK] Created CCPayment wallet for user ${internalUserId}`);
-
-			// Generate a predictable but unique ID for testing
-			const ccpaymentUserId = `ccpay-${internalUserId}-${Date.now()}`;
-
-			return ccpaymentUserId;
+			// Make real API call
+			const response = await this.makeRequest<{ userId: string }>('/api/v1/user/create', 'POST', {
+				name: user.username,
+				email: user.email || `user-${internalUserId}@degentalk.com`,
+				merchantUserId: `dgt-${internalUserId}`,
+				notificationUrl: this.notificationUrl
+			});
+			return response.userId;
 		} catch (error) {
 			logger.error(
 				'CCPaymentService',
@@ -307,30 +310,29 @@ export class CCPaymentService {
 			// Normalize currency and network
 			const { currency, network } = this.normalizeCurrency(coin);
 
-			// In production, we'd make a real API call:
-			// const response = await this.makeRequest<DepositAddress>('/api/v1/address/create', 'POST', {
-			//   userId: ccPaymentUserId,
-			//   currency,
-			//   network
-			// });
-			// return response;
+			// Check if we should use mock data
+			if (walletConfig.DEV_MODE.MOCK_CCPAYMENT) {
+				logger.info(
+					'CCPaymentService',
+					`[MOCK] Created ${coin} deposit address for CCPayment user ${ccPaymentUserId}`
+				);
+				const mockAddress = this.generateMockAddress(currency, network);
+				return {
+					address: mockAddress,
+					currency,
+					network,
+					qrCodeUrl: `https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${mockAddress}`,
+					expireAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+				};
+			}
 
-			// For development/testing, return a mock deposit address
-			logger.info(
-				'CCPaymentService',
-				`[MOCK] Created ${coin} deposit address for CCPayment user ${ccPaymentUserId}`
-			);
-
-			// Generate mock address based on inputs (for consistency in testing)
-			const mockAddress = this.generateMockAddress(currency, network);
-
-			return {
-				address: mockAddress,
+			// Make real API call
+			const response = await this.makeRequest<DepositAddress>('/api/v1/address/create', 'POST', {
+				userId: ccPaymentUserId,
 				currency,
-				network,
-				qrCodeUrl: `https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${mockAddress}`,
-				expireAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
-			};
+				network
+			});
+			return response;
 		} catch (error) {
 			logger.error(
 				'CCPaymentService',
@@ -536,16 +538,21 @@ export class CCPaymentService {
 	 */
 	async createDepositLink(request: DepositRequest): Promise<string> {
 		try {
-			// In production, we'd make a real API call:
-			// const response = await this.makeRequest<{ depositUrl: string }>('/api/v1/deposit/create', 'POST', {
-			//   ...request
-			// });
-			// return response.depositUrl;
+			// Check if we should use mock data
+			if (walletConfig.DEV_MODE.MOCK_CCPAYMENT) {
+				logger.info('CCPaymentService', `[MOCK] Created deposit link for order ${request.orderId}`);
+				return `https://pay.ccpayment.com/deposit/${request.orderId}?amount=${request.amount}&currency=${request.currency}`;
+			}
 
-			// For development/testing, return a mock deposit link
-			logger.info('CCPaymentService', `[MOCK] Created deposit link for order ${request.orderId}`);
-
-			return `https://pay.ccpayment.com/deposit/${request.orderId}?amount=${request.amount}&currency=${request.currency}`;
+			// Make real API call
+			const response = await this.makeRequest<{ depositUrl: string }>(
+				'/api/v1/deposit/create',
+				'POST',
+				{
+					...request
+				}
+			);
+			return response.depositUrl;
 		} catch (error) {
 			logger.error(
 				'CCPaymentService',

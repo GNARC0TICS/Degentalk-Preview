@@ -100,7 +100,8 @@ export function SiteFooter() {
 								{ label: 'Forum', href: '/forums' },
 								{ label: 'Missions', href: '/missions' },
 								{ label: 'Shop', href: '/shop' },
-								{ label: 'Leaderboard', href: '/leaderboard' },
+								{ label: 'Dictionary', href: '/dictionary' },
+								{ label: 'Leaderboard', href: '/leaderboard' }
 							].map((item, index) => (
 								<motion.li
 									key={item.label}
@@ -126,7 +127,7 @@ export function SiteFooter() {
 						<ul className="space-y-2 text-sm">
 							{[
 								{ label: 'Docs', href: '/docs' },
-								{ label: 'FAQ', href: '/help/faq' },
+								{ label: 'FAQ', href: '/help/faq' }
 							].map((item, index) => (
 								<motion.li
 									key={item.label}
@@ -153,7 +154,7 @@ export function SiteFooter() {
 							{[
 								{ label: 'Forum Rules', href: '/forum-rules' },
 								{ label: 'Privacy Policy', href: '/legal/privacy' },
-								{ label: 'Terms of Use', href: '/legal/terms' },
+								{ label: 'Terms of Use', href: '/legal/terms' }
 							].map((item, index) => (
 								<motion.li
 									key={item.label}

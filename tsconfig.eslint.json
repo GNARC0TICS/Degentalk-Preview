@@ -1,0 +1,17 @@
+{
+	"extends": "./tsconfig.json",
+	"include": [
+		"client/src/**/*",
+		"server/**/*",
+		"shared/**/*",
+		"scripts/**/*",
+		"db/**/*",
+		"config/**/*",
+		"client/**/*.test.ts",
+		"client/**/*.test.tsx",
+		"client/**/*.spec.ts",
+		"client/**/*.spec.tsx",
+		"client/vitest.config.ts"
+	],
+	"exclude": ["node_modules"]
+}

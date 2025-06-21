@@ -43,8 +43,10 @@ import { Pencil, Trash, Plus, Image, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import Lottie from 'lottie-react';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { MediaLibraryModal } from '@/components/admin/media/MediaLibraryModal';
+import { mediaApiService } from '@/features/admin/services/media-api.service';
+import { MediaAsset } from '@/components/media/MediaAsset';
 
 // Type for emoji schema validation
 const emojiFormSchema = z.object({
@@ -82,6 +84,7 @@ export default function AdminEmojisPage() {
 	const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 	const [currentEmoji, setCurrentEmoji] = useState<Emoji | null>(null);
 	const [activeTab, setActiveTab] = useState('all');
+	const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
 	const { toast } = useToast();
 	const queryClient = useQueryClient();
 
@@ -280,25 +283,22 @@ export default function AdminEmojisPage() {
 
 	// Component to preview emoji
 	const EmojiPreview = ({ emoji }: { emoji: Emoji }) => {
-		if (emoji.type === 'lottie' && emoji.previewUrl) {
-			return (
-				<div className="w-10 h-10 flex items-center justify-center">
-					<Lottie animationData={emoji.previewUrl} loop={true} style={{ width: 32, height: 32 }} />
-				</div>
-			);
-		}
-
 		return (
 			<div className="w-10 h-10 flex items-center justify-center">
-				<img src={emoji.imageUrl} alt={emoji.name} className="max-w-full max-h-full" />
+				<MediaAsset url={emoji.previewUrl || emoji.imageUrl} mediaType={emoji.type} size={32} />
 			</div>
 		);
 	};
 
 	const pageActions = (
-		<Button onClick={handleNewEmoji}>
-			<Plus className="mr-2 h-4 w-4" /> Add New Emoji
-		</Button>
+		<div className="flex gap-2">
+			<Button onClick={handleNewEmoji}>
+				<Plus className="mr-2 h-4 w-4" /> Add New Emoji
+			</Button>
+			<Button variant="secondary" onClick={() => setIsMediaModalOpen(true)}>
+				<Image className="mr-2 h-4 w-4" /> Upload .lottie
+			</Button>
+		</div>
 	);
 
 	return (
@@ -826,6 +826,15 @@ export default function AdminEmojisPage() {
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
+
+			<MediaLibraryModal
+				open={isMediaModalOpen}
+				onClose={() => setIsMediaModalOpen(false)}
+				onUploaded={(media) => {
+					// optimistically push into emoji grid as static name; user can edit later
+					queryClient.invalidateQueries({ queryKey: ['/api/admin/emojis'] });
+				}}
+			/>
 		</AdminPageShell>
 	);
 }

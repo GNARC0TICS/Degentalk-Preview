@@ -1,1 +1,0 @@
-// ARCHIVED: Legacy CCPayment withdraw route moved from server/routes/api/ccpayment/withdraw.ts on 2025-06-17. 

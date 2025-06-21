@@ -10,7 +10,7 @@ import {
 	bigint,
 	uuid,
 	jsonb,
-	unique,
+	unique
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { userRoleEnum } from '../core/enums';
@@ -98,7 +98,9 @@ export const users = pgTable(
 		pathMultipliers: jsonb('path_multipliers').default('{}'),
 		pluginData: jsonb('plugin_data').default('{}'),
 		statusLine: text('status_line'),
-		pinnedPostId: integer('pinned_post_id').references((): AnyPgColumn => posts.id as AnyPgColumn, { onDelete: 'set null' }),
+		pinnedPostId: integer('pinned_post_id').references((): AnyPgColumn => posts.id as AnyPgColumn, {
+			onDelete: 'set null'
+		}),
 		// Optional future enhancements
 		// profileThemeId: integer('profile_theme_id').references(() => uiThemes.id, { onDelete: 'set null' }),
 		// resumeSlug: text('resume_slug'),
@@ -107,7 +109,7 @@ export const users = pgTable(
 		 * DEPRECATED: Legacy group integer ID. Retained temporarily to keep code compiling
 		 * while we migrate services to the new role system. Do NOT use in new code.
 		 */
-		groupId: integer('group_id'),
+		groupId: integer('group_id')
 	},
 	(table) => ({
 		usernameUnique: unique('users_username_unique').on(table.username),

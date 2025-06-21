@@ -9,7 +9,12 @@ import { authenticate } from '../../middleware/authenticate';
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { logger, LogLevel, LogAction } from '../../../src/core/logger';
-import { getNotifications, markNotificationAsRead, markAllNotificationsAsRead, getUnreadNotificationCount } from './notification.service';
+import {
+	getNotifications,
+	markNotificationAsRead,
+	markAllNotificationsAsRead,
+	getUnreadNotificationCount
+} from './notification.service';
 import { isAuthenticated } from '../auth';
 
 const router = express.Router();
@@ -38,7 +43,7 @@ router.get('/getPaginatedNotifications', async (req, res) => {
 	} catch (error) {
 		logger.error('NOTIFICATIONS', 'Error getting notifications', error);
 		res.status(500).json({
-			error: 'Failed to retrieve user notifications',
+			error: 'Failed to retrieve user notifications'
 		});
 	}
 });
@@ -60,7 +65,7 @@ router.get('/unread/count', async (req, res) => {
 	} catch (error) {
 		logger.error('NOTIFICATIONS', 'Error getting unread notification count', error);
 		res.status(500).json({
-			error: 'Failed to retrieve unread notification count',
+			error: 'Failed to retrieve unread notification count'
 		});
 	}
 });
@@ -87,7 +92,7 @@ router.put('/:id/read', async (req, res) => {
 	} catch (error) {
 		logger.error('NOTIFICATIONS', 'Error marking notification as read', error);
 		res.status(500).json({
-			error: 'Failed to mark notification as read',
+			error: 'Failed to mark notification as read'
 		});
 	}
 });
@@ -109,7 +114,7 @@ router.put('/read-all', async (req, res) => {
 	} catch (error) {
 		logger.error('NOTIFICATIONS', 'Error marking all notifications as read', error);
 		res.status(500).json({
-			error: 'Failed to mark all notifications as read',
+			error: 'Failed to mark all notifications as read'
 		});
 	}
 });

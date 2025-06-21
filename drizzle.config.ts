@@ -6,7 +6,7 @@ const dbUrl = process.env.DATABASE_URL;
 
 if (!dbUrl) {
 	// Throw an error if the variable is not found, providing guidance
-	throw new Error("DATABASE_URL environment variable is not set.");
+	throw new Error('DATABASE_URL environment variable is not set.');
 }
 
 // Debug logging
@@ -42,5 +42,5 @@ export default defineConfig({
 	// 	'content_edit_status'
 	// ]
 	// Add connection timeout
-	connectionTimeout: 30000, // 30 seconds
+	connectionTimeout: 30000 // 30 seconds
 });

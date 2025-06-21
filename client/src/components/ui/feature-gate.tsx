@@ -2,8 +2,9 @@ import React from 'react';
 import { useFeatureAccess } from '@/hooks/useFeatureGates';
 import { Lock, AlertCircle, BadgeInfo, ArrowUpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/router';
+import { useLocation } from 'wouter';
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
 
 interface FeatureGateProps {
 	featureId: string;
@@ -26,9 +27,15 @@ export const FeatureGate: React.FC<FeatureGateProps> = ({
 	showGradientBorder = false,
 	redirectLoginTo
 }) => {
-	const router = useRouter();
+	const [, navigate] = useLocation();
 	const { hasAccess, isLoading, reason, unlocksAtLevel, missingBadge } =
 		useFeatureAccess(featureId);
+
+	useEffect(() => {
+		if (!isLoading && !hasAccess && reason === 'login_required') {
+			navigate(`/login?redirect=${redirectLoginTo || window.location.pathname}`);
+		}
+	}, [isLoading, hasAccess, reason, navigate, redirectLoginTo]);
 
 	// If loading, show a placeholder
 	if (isLoading) {
@@ -79,9 +86,9 @@ export const FeatureGate: React.FC<FeatureGateProps> = ({
 							<h3 className="text-xl font-bold mb-2">Login Required</h3>
 							<p className="text-zinc-400 mb-4">You need to be logged in to access this feature.</p>
 							<Button
-								onClick={() => {
-									router.push(`/login?redirect=${redirectLoginTo || router.asPath}`);
-								}}
+								onClick={() =>
+									navigate(`/login?redirect=${redirectLoginTo || window.location.pathname}`)
+								}
 								className="bg-gradient-to-r from-amber-600 to-amber-500"
 							>
 								Login to Continue
@@ -95,7 +102,7 @@ export const FeatureGate: React.FC<FeatureGateProps> = ({
 								This feature unlocks at Level {unlocksAtLevel}. Keep participating to earn more XP!
 							</p>
 							<Button
-								onClick={() => router.push('/profile/xp')}
+								onClick={() => navigate('/profile/xp')}
 								variant="outline"
 								className="border-emerald-700 text-emerald-500 hover:bg-emerald-950"
 							>
@@ -110,7 +117,7 @@ export const FeatureGate: React.FC<FeatureGateProps> = ({
 								You need the "{missingBadge}" badge to access this feature.
 							</p>
 							<Button
-								onClick={() => router.push('/badges')}
+								onClick={() => navigate('/badges')}
 								variant="outline"
 								className="border-blue-700 text-blue-500 hover:bg-blue-950"
 							>

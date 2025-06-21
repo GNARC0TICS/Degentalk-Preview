@@ -205,3 +205,7 @@ When migrating a component that uses the legacy API client:
 1. Identify the specific API methods used
 2. Either use `apiRequest` directly or create/use feature-specific API functions
 3. Update imports accordingly
+
+## Migration Status
+
+The migration from `api` to `apiRequest` is in progress. The deadline for completing the migration is set for the end of the current quarter.

@@ -70,7 +70,10 @@ export async function setupVite(app: Express, server: Server) {
 				{ find: '@assets', replacement: path.resolve(__dirname, '..', 'attached_assets') },
 				{ find: '@db', replacement: path.resolve(__dirname, '..', 'db', 'index.ts') },
 				{ find: '@schema', replacement: path.resolve(__dirname, '..', 'db', 'schema', 'index.ts') }, // For exact "@schema" import
-				{ find: /^@schema\/(.*)/, replacement: path.resolve(__dirname, '..', 'db', 'schema', '$1') }, // For "@schema/*"
+				{
+					find: /^@schema\/(.*)/,
+					replacement: path.resolve(__dirname, '..', 'db', 'schema', '$1')
+				}, // For "@schema/*"
 				{ find: '@db_types', replacement: path.resolve(__dirname, '..', 'db', 'types') }
 			]
 		}

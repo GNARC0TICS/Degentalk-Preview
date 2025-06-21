@@ -41,6 +41,7 @@ import treasuryRoutes from './src/domains/treasury/treasury.routes';
 import shoutboxRoutes from './src/domains/shoutbox/shoutbox.routes';
 // Import domain-based forum routes
 import forumRoutes from './src/domains/forum/forum.routes';
+import dictionaryRoutes from './src/domains/dictionary/dictionary.routes';
 // Import domain-based editor routes
 import editorRoutes from './src/domains/editor/editor.routes';
 // TODO: @routeDeprecation Investigate settings.routes.ts location or remove if deprecated.
@@ -53,6 +54,8 @@ import relationshipsRoutes from './src/domains/social/relationships.routes';
 import messageRoutes from './src/domains/messaging/message.routes';
 // Import domain-based vault routes
 import vaultRoutes from './src/domains/engagement/vault/vault.routes';
+// Import webhook routes
+import ccpaymentWebhookRoutes from './src/domains/ccpayment-webhook/ccpayment-webhook.routes';
 // Import domain-based announcement routes
 import { registerAnnouncementRoutes } from './src/domains/admin/sub-domains/announcements';
 import featureGatesRoutes from './src/domains/feature-gates/feature-gates.routes';
@@ -270,9 +273,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	// Set up vault routes with domain-based approach
 	app.use('/api/vault', vaultRoutes);
 
-	// Set up CCPayment routes
-	// TODO: @routeDeprecation Remove legacy ccpayment routes after migration to domain-driven routes is complete.
-	// app.use('/api/ccpayment', ccpaymentRoutes); // @pending-migration
+	// Set up webhook routes (no auth required)
+	app.use('/api/webhook', ccpaymentWebhookRoutes);
 
 	// Set up announcement routes with domain-based approach
 	registerAnnouncementRoutes(app); // Migrated to domains/admin/sub-domains/announcements
@@ -288,6 +290,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	// TODO: @routeDeprecation Remove legacy dgt-purchase routes after migration to domain-driven routes is complete.
 	// registerDgtPurchaseRoutes(dgtPurchaseRouter); // @pending-migration
 	app.use('/api', dgtPurchaseRouter);
+
+	// Set up dictionary routes
+	app.use('/api/dictionary', dictionaryRoutes);
 
 	// Removed legacy route registrations:
 	// - registerSettingsRoutes(app) -> Migrated to domains/settings/settings.routes.ts

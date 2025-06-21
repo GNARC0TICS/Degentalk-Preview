@@ -2,20 +2,9 @@ import React from 'react'; // Removed useState
 import { useQuery } from '@tanstack/react-query';
 import { FixedSizeList as List } from 'react-window'; // Added react-window
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { ThreadCard } from '@/components/forum/ThreadCard';
-import type { ThreadTag } from '@schema';
+// Temporarily remove heavy lottie dependency until build issues resolved
 import { Link } from 'wouter';
-import {
-	MessageSquare,
-	Eye,
-	ThumbsUp,
-	ArrowRight,
-	Clock,
-	TrendingUp,
-	ChevronLeft,
-	ChevronRight
-} from 'lucide-react';
+import { MessageSquare, Eye, ThumbsUp, ArrowRight, Clock, TrendingUp } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -55,7 +44,7 @@ interface HotThreadsProps {
 	limit?: number;
 }
 
-export function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
+function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 	const {
 		data: threads,
 		isLoading,
@@ -105,9 +94,11 @@ export function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 		if (!threads || !threads[index]) return null;
 		const thread = threads[index];
 		return (
-			<div style={style} className="group px-1 py-1.5"> {/* Added padding to style for item spacing */}
+			<div style={style} className="group px-1 py-1.5">
+				{' '}
+				{/* Added padding to style for item spacing */}
 				<Link href={`/threads/${thread.thread_id}`}>
-					<div className="relative p-4 rounded-lg bg-gradient-to-r from-zinc-800/50 to-zinc-800/30 border border-zinc-700/50 hover:border-orange-500/30 transition-all duration-300 cursor-pointer h-full flex flex-col justify-between">
+					<div className="relative p-3 md:p-4 rounded-lg bg-gradient-to-r from-zinc-800/50 to-zinc-800/30 border border-zinc-700/50 hover:border-orange-500/30 transition-all duration-300 cursor-pointer h-full flex flex-col justify-between">
 						<div className="relative z-10">
 							{/* Header with badge */}
 							<div className="flex items-start justify-between mb-3">
@@ -121,12 +112,7 @@ export function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 								{/* Simple flame for very hot threads */}
 								{thread.hot_score > 75 && (
 									<div className="text-orange-500">
-										<DotLottieReact
-											src="https://lottie.host/abeba818-d877-4e4d-8d8a-7f7f9099411c/6Pqbh2E87a.lottie"
-											loop
-											autoplay
-											style={{ height: '16px', width: '16px' }}
-										/>
+										<FlameIcon />
 									</div>
 								)}
 							</div>
@@ -173,15 +159,17 @@ export function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 									</div>
 								</div>
 
-								{/* Category tag */}
-								<Link href={`/forums/${thread.category_slug}`}>
-									<Badge
-										variant="outline"
-										className="bg-zinc-800/50 text-zinc-400 border-zinc-600 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs"
-									>
-										{thread.category_name}
-									</Badge>
-								</Link>
+								{/* Category tag (stop nested anchor) */}
+								<span
+									role="link"
+									className="bg-zinc-800/50 text-zinc-400 border border-zinc-600 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs cursor-pointer rounded px-2 py-0.5"
+									onClick={(e) => {
+										e.stopPropagation();
+										window.location.href = `/forums/${thread.category_slug}`;
+									}}
+								>
+									{thread.category_name}
+								</span>
 							</div>
 						</div>
 					</div>
@@ -195,18 +183,13 @@ export function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 
 	return (
 		<Card
-			className={`bg-gradient-to-br from-zinc-900/90 to-zinc-900/60 border border-zinc-800/60 shadow-xl backdrop-blur-sm ${className}`}
+			className={`w-full overflow-hidden bg-gradient-to-br from-zinc-900/90 to-zinc-900/60 border border-zinc-800/60 shadow-xl backdrop-blur-sm ${className}`}
 		>
 			<CardHeader className="pb-3">
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-3">
 						<div className="h-8 w-8 flex items-center justify-center">
-							<DotLottieReact
-								src="https://lottie.host/abeba818-d877-4e4d-8d8a-7f7f9099411c/6Pqbh2E87a.lottie"
-								loop
-								autoplay
-								style={{ height: '32px', width: '32px' }}
-							/>
+							{/* Temporarily remove heavy lottie dependency until build issues resolved */}
 						</div>
 						<div>
 							<CardTitle className="text-xl font-bold bg-gradient-to-r from-orange-400 to-red-400 text-transparent bg-clip-text">
@@ -245,12 +228,7 @@ export function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 				) : (
 					<div className="text-center py-8 text-zinc-400">
 						<div className="flex justify-center mb-2">
-							<DotLottieReact
-								src="https://lottie.host/abeba818-d877-4e4d-8d8a-7f7f9099411c/6Pqbh2E87a.lottie"
-								loop
-								autoplay
-								style={{ height: '32px', width: '32px', opacity: 0.6 }}
-							/>
+							{/* Temporarily remove heavy lottie dependency until build issues resolved */}
 						</div>
 						<p>No hot threads right now</p>
 						<p className="text-xs text-zinc-500">Check back later for trending discussions</p>
@@ -272,5 +250,11 @@ export function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 		</Card>
 	);
 }
+
+const FlameIcon = () => (
+	<span role="img" aria-label="flame" className="text-orange-500 mr-1">
+		🔥
+	</span>
+);
 
 export default HotThreads;

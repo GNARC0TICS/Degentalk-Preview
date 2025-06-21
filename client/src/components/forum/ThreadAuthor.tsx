@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'wouter';
 import { cn } from '@/lib/utils';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
-import { UserName } from '@/components/identity/UserName';
+import { UserName } from '@/components/users/Username';
 import { LevelBadge } from '@/components/identity/LevelBadge';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 
@@ -57,9 +57,7 @@ export function ThreadAuthor({
 				<div className="flex flex-col">
 					<div className="flex items-center gap-1.5">
 						<UserName user={user} className={getUsernameSizeClass()} />
-						{showLevelBadge && identity?.level && (
-							<LevelBadge level={identity.level} />
-						)}
+						{showLevelBadge && identity?.level && <LevelBadge level={identity.level} />}
 					</div>
 				</div>
 			</Link>

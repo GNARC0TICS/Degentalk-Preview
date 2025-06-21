@@ -45,4 +45,4 @@ export function XpActionRow({ action }: Props) {
 			</td>
 		</tr>
 	);
-} 
+}

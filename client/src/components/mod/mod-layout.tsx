@@ -39,7 +39,6 @@ export function ModLayout({ children, title = 'Dashboard' }: ModLayoutProps) {
 						</Link>
 					</BreadcrumbLink>
 				</BreadcrumbItem>
-
 				{pathSegments.slice(1).map((segment, index) => {
 					// Create the path up to this segment
 					const path = `/${pathSegments.slice(0, index + 2).join('/')}`;

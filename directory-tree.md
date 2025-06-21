@@ -1,6 +1,6 @@
 # ForumFusion Directory Structure
-  
-Generated on: 2025-06-18
+
+Generated on: 2025-06-21
 
 ```
 ├─ _audit/
@@ -21,6 +21,8 @@ Generated on: 2025-06-18
 │  ├─ forum-audit.md
 │  ├─ profile-system-ux-audit-2025-06-15.md
 │  └─ profile-system-ux-implementation-plan-2025-06-15.md
+├─ .claude/
+│  └─ settings.local.json
 ├─ .clinerules/
 │  ├─ available-rules.md
 │  ├─ cline-continuous-improvement-protocol.md
@@ -32,8 +34,10 @@ Generated on: 2025-06-18
 │  └─ rules/
 │     ├─ admin-structure.mdc
 │     ├─ api-client-pattern.mdc
+│     ├─ breadcrumb-consistency.mdc
 │     ├─ cheat-codes.mdc
 │     ├─ context-mup-protocol.mdc
+│     ├─ forum-permission-enforcement.mdc
 │     ├─ id-type-consistency.mdc
 │     ├─ import-patterns.mdc
 │     ├─ naming-rules.mdc
@@ -48,30 +52,15 @@ Generated on: 2025-06-18
 ├─ .github/
 │  └─ workflows/
 │     └─ validate-codebase.yml
+├─ .husky/
+│  ├─ _/
+│  │  ├─ .gitignore
+│  │  ├─ h
+│  │  ├─ husky.sh
+│  │  └─ pre-commit
+│  └─ pre-commit
 ├─ .tscache/
 │  └─ .tsbuildinfo
-├─ archive/
-│  ├─ client/
-│  │  └─ pages/
-│  │     └─ admin/
-│  │        ├─ badges.tsx
-│  │        ├─ cooldowns.tsx
-│  │        ├─ edit-user.tsx
-│  │        ├─ forum-management.tsx
-│  │        ├─ levels.tsx
-│  │        ├─ platform-settings.tsx
-│  │        ├─ user-inventory.tsx
-│  │        └─ xp-settings.tsx
-│  ├─ server/
-│  │  ├─ routes/
-│  │  │  └─ api/
-│  │  │     └─ ccpayment/
-│  │  │        ... (max depth reached)
-│  │  └─ src/
-│  │     └─ domains/
-│  │        └─ admin/
-│  │           ... (max depth reached)
-│  └─ .DS_Store
 ├─ attached_assets/
 │  ├─ generated-icon.png
 │  ├─ IMG_5701.png
@@ -93,23 +82,38 @@ Generated on: 2025-06-18
 │  ├─ src/
 │  │  ├─ components/
 │  │  │  ├─ admin/
+│  │  │  │  ├─ clout/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ effects/
+│  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ forms/
 │  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ inputs/
+│  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ layout/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ media/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ roles/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ wallet/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ admin-sidebar.tsx
 │  │  │  │  ├─ cooldown-settings.tsx
-│  │  │  │  └─ simple-menu.tsx
+│  │  │  │  ├─ FeatureFlagRow.tsx
+│  │  │  │  ├─ README.md
+│  │  │  │  ├─ simple-menu.tsx
+│  │  │  │  └─ XpActionRow.tsx
 │  │  │  ├─ auth/
 │  │  │  │  ├─ login-form.tsx
 │  │  │  │  ├─ protected-route.tsx
 │  │  │  │  └─ register-form.tsx
 │  │  │  ├─ common/
-│  │  │  │  └─ BackToHomeButton.tsx
+│  │  │  │  ├─ BackToHomeButton.tsx
+│  │  │  │  └─ Breadcrumb.tsx
 │  │  │  ├─ dashboard/
-│  │  │  │  └─ DailyTasksWidget.tsx
+│  │  │  │  ├─ DailyTasksWidget.tsx
+│  │  │  │  └─ UpcomingEventsWidget.tsx
 │  │  │  ├─ dev/
 │  │  │  │  ├─ dev-playground-shortcut.tsx
 │  │  │  │  └─ dev-role-switcher.tsx
@@ -122,14 +126,21 @@ Generated on: 2025-06-18
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ xp/
 │  │  │  │  │  ... (max depth reached)
-│  │  │  │  ├─ wallet-display.tsx
-│  │  │  │  └─ wallet-modal-v2.tsx
+│  │  │  │  └─ wallet-display.tsx
 │  │  │  ├─ editor/
 │  │  │  │  ├─ enhanced-gif-picker.tsx
 │  │  │  │  ├─ gif-picker.tsx
 │  │  │  │  ├─ rich-text-editor.tsx
 │  │  │  │  └─ suggestion.ts
+│  │  │  ├─ footer/
+│  │  │  │  ├─ FooterBrand.tsx
+│  │  │  │  ├─ FooterSection.tsx
+│  │  │  │  ├─ index.ts
+│  │  │  │  ├─ LiveStats.tsx
+│  │  │  │  ├─ RandomTagline.tsx
+│  │  │  │  └─ SiteFooter.tsx
 │  │  │  ├─ forum/
+│  │  │  │  ├─ BBCodePostCard.tsx
 │  │  │  │  ├─ breadcrumb-nav.tsx
 │  │  │  │  ├─ CanonicalZoneGrid.tsx
 │  │  │  │  ├─ category-card.tsx
@@ -138,32 +149,69 @@ Generated on: 2025-06-18
 │  │  │  │  ├─ forum-category-card.tsx
 │  │  │  │  ├─ forum-filters.tsx
 │  │  │  │  ├─ forum-guidelines.tsx
+│  │  │  │  ├─ HotTopics.tsx
 │  │  │  │  ├─ OriginForumPill.tsx
 │  │  │  │  ├─ prefix-badge.tsx
+│  │  │  │  ├─ ProfileCard.tsx
+│  │  │  │  ├─ QuickStats.tsx
+│  │  │  │  ├─ ReactionBar.tsx
+│  │  │  │  ├─ RecentActivity.tsx
 │  │  │  │  ├─ ShareButton.tsx
 │  │  │  │  ├─ ShopCard.tsx
+│  │  │  │  ├─ SignatureRenderer.tsx
 │  │  │  │  ├─ SolveBadge.tsx
 │  │  │  │  ├─ tag-input.tsx
 │  │  │  │  ├─ ThreadAuthor.tsx
 │  │  │  │  ├─ ThreadCard.tsx
+│  │  │  │  ├─ ThreadPagination.tsx
+│  │  │  │  ├─ ThreadSidebar.tsx
 │  │  │  │  ├─ ThreadStats.tsx
 │  │  │  │  ├─ UserLevelDisplay.tsx
 │  │  │  │  ├─ XpBoostBadge.tsx
 │  │  │  │  ├─ zone-group.tsx
 │  │  │  │  ├─ ZoneCard.tsx
 │  │  │  │  └─ ZoneStats.tsx
+│  │  │  ├─ header/
+│  │  │  │  ├─ AdminButton.tsx
+│  │  │  │  ├─ AuthButtons.tsx
+│  │  │  │  ├─ HeaderContext.tsx
+│  │  │  │  ├─ HeaderPluginSlot.tsx
+│  │  │  │  ├─ HeaderThemeWrapper.tsx
+│  │  │  │  ├─ index.ts
+│  │  │  │  ├─ Logo.tsx
+│  │  │  │  ├─ MobileNav.tsx
+│  │  │  │  ├─ NavLink.tsx
+│  │  │  │  ├─ NotificationButton.tsx
+│  │  │  │  ├─ PrimaryNav.tsx
+│  │  │  │  ├─ SearchBox.tsx
+│  │  │  │  ├─ SiteHeader.tsx
+│  │  │  │  ├─ UserMenu.tsx
+│  │  │  │  └─ WalletButton.tsx
 │  │  │  ├─ identity/
-│  │  │  │  └─ path-progress.tsx
+│  │  │  │  ├─ AvatarFrame.tsx
+│  │  │  │  ├─ index.ts
+│  │  │  │  ├─ LevelBadge.tsx
+│  │  │  │  ├─ path-progress.tsx
+│  │  │  │  ├─ README.md
+│  │  │  │  ├─ RoleBadge.tsx
+│  │  │  │  └─ UserName.tsx
 │  │  │  ├─ layout/
 │  │  │  │  ├─ announcement-ticker.css
 │  │  │  │  ├─ announcement-ticker.tsx
+│  │  │  │  ├─ AppSidebar.tsx
 │  │  │  │  ├─ hero-section.tsx
+│  │  │  │  ├─ LayoutRenderer.tsx
 │  │  │  │  ├─ ProfileBackground.tsx
+│  │  │  │  ├─ ResponsiveLayoutWrapper.tsx
 │  │  │  │  ├─ sidebar.tsx
 │  │  │  │  ├─ SidebarNavigation.tsx
 │  │  │  │  ├─ site-footer.tsx
-│  │  │  │  ├─ site-header.tsx
-│  │  │  │  └─ site-layout-wrapper.tsx
+│  │  │  │  ├─ site-layout-wrapper.tsx
+│  │  │  │  ├─ SlotRenderer.tsx
+│  │  │  │  ├─ WidgetFrame.tsx
+│  │  │  │  └─ WidgetGallery.tsx
+│  │  │  ├─ media/
+│  │  │  │  └─ MediaAsset.tsx
 │  │  │  ├─ messages/
 │  │  │  │  ├─ icons/
 │  │  │  │  │  ... (max depth reached)
@@ -218,6 +266,7 @@ Generated on: 2025-06-18
 │  │  │  │  ├─ index.ts
 │  │  │  │  ├─ InventoryTab.tsx
 │  │  │  │  ├─ OverviewTab.tsx
+│  │  │  │  ├─ ProfileCard.tsx
 │  │  │  │  ├─ ProfileEditor.tsx
 │  │  │  │  ├─ ProfileSidebar.tsx
 │  │  │  │  ├─ ProfileSkeleton.tsx
@@ -246,6 +295,7 @@ Generated on: 2025-06-18
 │  │  │  │  ├─ shoutbox-position-selector.tsx
 │  │  │  │  ├─ shoutbox-rain-notification.tsx
 │  │  │  │  ├─ shoutbox-widget.tsx
+│  │  │  │  ├─ shoutbox.spec.tsx
 │  │  │  │  └─ ShoutboxContainer.tsx
 │  │  │  ├─ sidebar/
 │  │  │  │  ├─ leaderboard-widget.tsx
@@ -312,7 +362,8 @@ Generated on: 2025-06-18
 │  │  │  │  ├─ toggle.tsx
 │  │  │  │  ├─ tooltip-utils.tsx
 │  │  │  │  ├─ tooltip.tsx
-│  │  │  │  └─ user-badge.tsx
+│  │  │  │  ├─ user-badge.tsx
+│  │  │  │  └─ widget-skeleton.tsx
 │  │  │  ├─ users/
 │  │  │  │  ├─ ActiveMembersWidget.tsx
 │  │  │  │  ├─ Avatar.tsx
@@ -325,22 +376,27 @@ Generated on: 2025-06-18
 │  │  │  │  └─ Username.tsx
 │  │  │  ├─ xp/
 │  │  │  │  ├─ LevelUpModal.tsx
+│  │  │  │  ├─ tracks.ts
 │  │  │  │  ├─ XPBarsContainer.tsx
 │  │  │  │  ├─ XPBarTrack.tsx
-│  │  │  │  ├─ xpConfig.ts
 │  │  │  │  └─ XpToast.tsx
 │  │  │  └─ ErrorBoundary.tsx
 │  │  ├─ config/
 │  │  │  ├─ admin-navigation.ts
 │  │  │  ├─ admin-routes.ts
+│  │  │  ├─ easter-eggs.config.ts
+│  │  │  ├─ featureFlags.ts
+│  │  │  ├─ footer-navigation.ts
 │  │  │  ├─ forumMap.config.ts
+│  │  │  ├─ navigation.ts
+│  │  │  ├─ pageSlotMap.ts
 │  │  │  ├─ publicConfig.ts
 │  │  │  ├─ README.md
 │  │  │  ├─ tags.config.ts
 │  │  │  ├─ themeConstants.ts
 │  │  │  ├─ themeFallbacks.ts
 │  │  │  ├─ ui.config.ts
-│  │  │  └─ xp.config.ts
+│  │  │  └─ widgetRegistry.ts
 │  │  ├─ constants/
 │  │  │  ├─ env.ts
 │  │  │  ├─ routes.ts
@@ -351,6 +407,7 @@ Generated on: 2025-06-18
 │  │  │  ├─ ForumThemeProvider.tsx
 │  │  │  ├─ LevelUpContext.tsx
 │  │  │  ├─ mock-shoutbox-context.tsx
+│  │  │  ├─ ProfileCardContext.tsx
 │  │  │  ├─ safe-shoutbox-provider.tsx
 │  │  │  ├─ shoutbox-context.tsx
 │  │  │  ├─ wallet-context.tsx
@@ -371,6 +428,11 @@ Generated on: 2025-06-18
 │  │  │  │  └─ services/
 │  │  │  │     ... (max depth reached)
 │  │  │  ├─ admin/
+│  │  │  │  ├─ components/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  └─ services/
+│  │  │  │     ... (max depth reached)
+│  │  │  ├─ dictionary/
 │  │  │  │  ├─ components/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  └─ services/
@@ -406,9 +468,11 @@ Generated on: 2025-06-18
 │  │  │  ├─ wrappers/
 │  │  │  │  └─ use-auth-wrapper.ts
 │  │  │  ├─ index.ts
+│  │  │  ├─ README.md
 │  │  │  ├─ use-async-button.tsx
 │  │  │  ├─ use-auth.tsx
 │  │  │  ├─ use-debounce.ts
+│  │  │  ├─ use-dgt-packages.ts
 │  │  │  ├─ use-local-storage.ts
 │  │  │  ├─ use-media-query.ts
 │  │  │  ├─ use-messages.tsx
@@ -423,28 +487,40 @@ Generated on: 2025-06-18
 │  │  │  ├─ use-tip.ts
 │  │  │  ├─ use-toast.ts
 │  │  │  ├─ use-vault-items.tsx
-│  │  │  ├─ use-wallet-modal.ts
 │  │  │  ├─ use-wallet.ts
 │  │  │  ├─ useConfig.ts
 │  │  │  ├─ useCrudMutation.ts
 │  │  │  ├─ useDailyTasks.ts
 │  │  │  ├─ useDgtPurchase.ts
 │  │  │  ├─ useFeatureGates.ts
+│  │  │  ├─ useIdentityDisplay.ts
 │  │  │  ├─ useMissions.ts
+│  │  │  ├─ usePermission.ts
 │  │  │  ├─ useThreadZone.ts
 │  │  │  ├─ useUserCosmetics.ts
 │  │  │  ├─ useUserInventory.ts
 │  │  │  ├─ useUserXP.ts
-│  │  │  └─ useXP.ts
+│  │  │  ├─ useXP.ts
+│  │  │  └─ widgetData.ts
+│  │  ├─ layout/
+│  │  │  └─ primitives/
+│  │  │     ├─ ClampPadding.tsx
+│  │  │     ├─ FullBleedSection.tsx
+│  │  │     ├─ index.ts
+│  │  │     ├─ Prose.tsx
+│  │  │     ├─ StickyRegion.tsx
+│  │  │     └─ Wide.tsx
 │  │  ├─ lib/
 │  │  │  ├─ utils/
 │  │  │  │  ├─ animateNumber.ts
 │  │  │  │  ├─ api-helpers.ts
 │  │  │  │  ├─ applyPluginRewards.ts
 │  │  │  │  ├─ category.ts
-│  │  │  │  └─ cosmeticsUtils.tsx
+│  │  │  │  ├─ cosmeticsUtils.tsx
+│  │  │  │  └─ generateSlug.ts
 │  │  │  ├─ admin-route.tsx
 │  │  │  ├─ admin-vault-service.ts
+│  │  │  ├─ adminApi.ts
 │  │  │  ├─ api-request.ts
 │  │  │  ├─ api.ts
 │  │  │  ├─ format-date.ts
@@ -463,9 +539,13 @@ Generated on: 2025-06-18
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ announcements/
 │  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ clout/
+│  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ config/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ dev/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ dictionary/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ features/
 │  │  │  │  │  ... (max depth reached)
@@ -479,6 +559,8 @@ Generated on: 2025-06-18
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ transactions/
 │  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ ui/
+│  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ users/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ wallets/
@@ -490,23 +572,35 @@ Generated on: 2025-06-18
 │  │  │  │  ├─ categories.tsx
 │  │  │  │  ├─ dgt-packages.tsx
 │  │  │  │  ├─ emojis.tsx
+│  │  │  │  ├─ feature-flags.tsx
 │  │  │  │  ├─ forum-structure.tsx
 │  │  │  │  ├─ index.tsx
 │  │  │  │  ├─ prefixes.tsx
-│  │  │  │  ├─ reports.tsx
+│  │  │  │  ├─ roles-titles.tsx
 │  │  │  │  ├─ roles.tsx
 │  │  │  │  ├─ tags.tsx
-│  │  │  │  ├─ threads.tsx
 │  │  │  │  ├─ tip-rain-settings.tsx
 │  │  │  │  ├─ treasury.tsx
 │  │  │  │  ├─ ui-config.tsx
-│  │  │  │  └─ users.tsx
+│  │  │  │  ├─ users.tsx
+│  │  │  │  └─ xp-system.tsx
 │  │  │  ├─ announcements/
+│  │  │  │  └─ index.tsx
+│  │  │  ├─ dev/
+│  │  │  │  ├─ ControlsDrawer.tsx
+│  │  │  │  ├─ DemoCard.tsx
+│  │  │  │  ├─ DevPlaygroundLayout.tsx
+│  │  │  │  └─ index.ts
+│  │  │  ├─ dictionary/
+│  │  │  │  ├─ [slug].tsx
 │  │  │  │  └─ index.tsx
 │  │  │  ├─ forums/
 │  │  │  │  ├─ [forum_slug].tsx
+│  │  │  │  ├─ [slug].tsx
 │  │  │  │  ├─ index.tsx
 │  │  │  │  └─ search.tsx
+│  │  │  ├─ invite/
+│  │  │  │  └─ [code].tsx
 │  │  │  ├─ missions/
 │  │  │  │  └─ index.tsx
 │  │  │  ├─ mod/
@@ -520,6 +614,8 @@ Generated on: 2025-06-18
 │  │  │  │  ├─ activity.tsx
 │  │  │  │  ├─ xp-demo.tsx
 │  │  │  │  └─ xp.tsx
+│  │  │  ├─ referrals/
+│  │  │  │  └─ index.tsx
 │  │  │  ├─ search/
 │  │  │  │  └─ index.tsx
 │  │  │  ├─ shop-management/
@@ -529,13 +625,17 @@ Generated on: 2025-06-18
 │  │  │  │  └─ [tagSlug].tsx
 │  │  │  ├─ threads/
 │  │  │  │  ├─ [thread_slug].tsx
+│  │  │  │  ├─ BBCodeThreadPage.tsx
 │  │  │  │  └─ create.tsx
 │  │  │  ├─ ui-playground/
+│  │  │  │  ├─ animations/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ sections/
+│  │  │  │  │  ... (max depth reached)
 │  │  │  │  └─ demo-data.ts
 │  │  │  ├─ zones/
 │  │  │  │  ├─ [slug].tsx
 │  │  │  │  └─ index.tsx
-│  │  │  ├─ _app.tsx
 │  │  │  ├─ auth-page.tsx
 │  │  │  ├─ auth.tsx
 │  │  │  ├─ degen-index.tsx
@@ -564,16 +664,22 @@ Generated on: 2025-06-18
 │  │  │  ├─ app-provider.tsx
 │  │  │  ├─ app-providers.tsx
 │  │  │  └─ root-provider.tsx
+│  │  ├─ stores/
+│  │  │  ├─ useLayoutStore.ts
+│  │  │  └─ usePlaygroundControls.ts
 │  │  ├─ styles/
 │  │  │  ├─ admin-theme.css
 │  │  │  ├─ animations.css
 │  │  │  ├─ cssVariables.ts
 │  │  │  ├─ globals.css
 │  │  │  ├─ ticker.css
+│  │  │  ├─ tokens.css
 │  │  │  ├─ underline-links.css
 │  │  │  ├─ utilities.css
 │  │  │  ├─ wallet-animations.css
 │  │  │  └─ zone-themes.css
+│  │  ├─ test/
+│  │  │  └─ setup.ts
 │  │  ├─ types/
 │  │  │  ├─ forum.ts
 │  │  │  ├─ inventory.ts
@@ -587,8 +693,10 @@ Generated on: 2025-06-18
 │  │  ├─ index.css
 │  │  ├─ main.tsx
 │  ├─ index.html
+│  ├─ README-WIDGETS.md
 │  ├─ README.md
-│  └─ tailwind.config.js
+│  ├─ tailwind.config.js
+│  └─ vitest.config.ts
 ├─ config/
 │  ├─ postcss.config.js
 │  ├─ README.md
@@ -612,10 +720,14 @@ Generated on: 2025-06-18
 │  │  │  └─ uiThemes.ts
 │  │  ├─ core/
 │  │  │  └─ enums.ts
+│  │  ├─ dictionary/
+│  │  │  ├─ entries.ts
+│  │  │  └─ upvotes.ts
 │  │  ├─ economy/
 │  │  │  ├─ airdropRecords.ts
 │  │  │  ├─ airdropSettings.ts
 │  │  │  ├─ badges.ts
+│  │  │  ├─ cloutAchievements.ts
 │  │  │  ├─ dgtPackages.ts
 │  │  │  ├─ dgtPurchaseOrders.ts
 │  │  │  ├─ levels.ts
@@ -626,6 +738,7 @@ Generated on: 2025-06-18
 │  │  │  ├─ transactions.ts
 │  │  │  ├─ treasurySettings.ts
 │  │  │  ├─ userBadges.ts
+│  │  │  ├─ userCloutLog.ts
 │  │  │  ├─ userCommands.ts
 │  │  │  ├─ userTitles.ts
 │  │  │  ├─ vaults.ts
@@ -633,6 +746,7 @@ Generated on: 2025-06-18
 │  │  │  ├─ withdrawalRequests.ts
 │  │  │  ├─ xpActionSettings.ts
 │  │  │  ├─ xpAdjustmentLogs.ts
+│  │  │  ├─ xpCloutSettings.ts
 │  │  │  └─ xpLogs.ts
 │  │  ├─ forum/
 │  │  │  ├─ categories.ts
@@ -673,12 +787,16 @@ Generated on: 2025-06-18
 │  │  │  ├─ onlineUsers.ts
 │  │  │  └─ shoutboxMessages.ts
 │  │  ├─ shop/
+│  │  │  ├─ animationPackItems.ts
+│  │  │  ├─ animationPacks.ts
+│  │  │  ├─ cosmeticCategories.ts
 │  │  │  ├─ inventoryTransactions.ts
 │  │  │  ├─ orderItems.ts
 │  │  │  ├─ orders.ts
 │  │  │  ├─ productCategories.ts
 │  │  │  ├─ productMedia.ts
 │  │  │  ├─ products.ts
+│  │  │  ├─ rarities.ts
 │  │  │  ├─ signatureItems.ts
 │  │  │  ├─ userInventory.ts
 │  │  │  └─ userSignatureItems.ts
@@ -687,6 +805,7 @@ Generated on: 2025-06-18
 │  │  │  ├─ airdrop-records.ts
 │  │  │  ├─ analyticsEvents.ts
 │  │  │  ├─ cooldownState.ts
+│  │  │  ├─ economyConfigOverrides.ts
 │  │  │  ├─ event_logs.ts
 │  │  │  ├─ mentionsIndex.ts
 │  │  │  ├─ notifications.ts
@@ -722,10 +841,20 @@ Generated on: 2025-06-18
 │  ├─ forum.db
 │  ├─ index.ts
 │  └─ README.md
+├─ design/
+│  └─ tokens/
+│     ├─ colors.json
+│     ├─ spacing.json
+│     └─ typography.json
 ├─ docs/
 │  ├─ archive/
 │  │  ├─ FORUM_PRIMARY_ZONES_REFACTOR_PLAN.md
 │  │  └─ placeholder.txt
+│  ├─ CCPAYMENT/
+│  │  ├─ DEVELOPMENT_SETUP.md
+│  │  ├─ PRODUCTION_DEPLOYMENT.md
+│  │  ├─ SCALING_STRATEGY.md
+│  │  └─ WALLET_INTEGRATION_GUIDE.md
 │  ├─ engagement/
 │  │  ├─ rain-analytics.md
 │  │  └─ tipping-analytics.md
@@ -739,40 +868,67 @@ Generated on: 2025-06-18
 │  │  ├─ activeContext.md
 │  │  ├─ consolidated_learnings.md
 │  │  ├─ productContext.md
-│  │  ├─ progress.md
 │  │  ├─ projectbrief.md
 │  │  ├─ raw_reflection_log.md
 │  │  ├─ systemPatterns.md
 │  │  └─ techContext.md
+│  ├─ refactor/
+│  │  └─ component-consolidation/
+│  │     ├─ dupes.csv
+│  │     ├─ import-stats.json
+│  │     ├─ landscape.md
+│  │     ├─ migration-plan.md
+│  │     └─ target-structure.md
 │  ├─ shop/
 │  │  └─ README.md
 │  ├─ system/
 │  ├─ ui/
+│  │  ├─ lottie-integration.md
 │  │  ├─ routing-logic.md
 │  │  └─ zone-card-design-guidelines.md
+│  ├─ .DS_Store
 │  ├─ activity-feed-system.md
 │  ├─ admin-panel-audit-2025-06-17.md
 │  ├─ admin-panel-refactoring-plan.md
 │  ├─ audit-findings.md
-│  ├─ CCPAYMENT.md
 │  ├─ codebase-overview.md
 │  ├─ component-tree.md
 │  ├─ designworkflow.md
 │  ├─ dgt-token-management-plan.md
+│  ├─ DynamicLayout.md
+│  ├─ feature-scope-guide.md
 │  ├─ frontend-enhancement-plan.md
 │  ├─ launch-readiness-audit-may-2025.md
+│  ├─ mybb-deep-dive-evolution-matrix-2.md
 │  ├─ README_API.md
 │  ├─ README.md
 │  ├─ refactor-tracker.md
 │  ├─ RESTRUCTURE.md
 │  ├─ REWRITE_IMPORTS.md
 │  ├─ SCHEMA_REFACTOR_PLAN.md
+│  ├─ site-header-refactor-plan.md
 │  ├─ stripecustoms.md
 │  ├─ stripeelements.md
 │  ├─ wallet-api-integration-plan.md
 │  ├─ wallet-system.md
 │  ├─ xp-dgt-system-implementation-plan.md
 │  └─ xp-system-reference.md
+├─ eslint-plugins/
+│  └─ degen/
+│     ├─ rules/
+│     │  └─ no-raw-container-auto.js
+│     ├─ index.cjs
+│     └─ package.json
+├─ legacy/
+│  └─ client/
+│     └─ src/
+│        └─ components/
+│           ├─ identity/
+│           │  ... (max depth reached)
+│           ├─ layout/
+│           │  ... (max depth reached)
+│           └─ users/
+│              ... (max depth reached)
 ├─ lib/
 │  ├─ auth/
 │  │  └─ canUser.ts
@@ -833,14 +989,20 @@ Generated on: 2025-06-18
 │  │  │  ├─ 0010_snapshot.json
 │  │  │  ├─ 0011_snapshot.json
 │  │  │  ├─ 0012_snapshot.json
-│  │  │  └─ 0013_snapshot.json
+│  │  │  ├─ 0013_snapshot.json
+│  │  │  ├─ 0014_snapshot.json
+│  │  │  └─ 0015_snapshot.json
 │  │  ├─ 0012_event_logs_table.sql
 │  │  ├─ 0013_forum_schema_cleanup.sql
 │  │  ├─ 0013_gray_harrier.sql
+│  │  ├─ 0014_backfill_media_type.sql
 │  │  ├─ 0014_forum_schema_refactor.sql
+│  │  ├─ 0014_futuristic_archangel.sql
 │  │  ├─ 0015_archive_legacy_forum_columns.sql
+│  │  ├─ 0015_happy_mentor.sql
 │  │  ├─ 0016_roles_uuid_to_int.sql
-│  │  └─ 0017_auto_tables_and_defaults.sql
+│  │  ├─ 0017_auto_tables_and_defaults.sql
+│  │  └─ 0020_economy_overrides.sql
 │  ├─ .DS_Store
 │  ├─ 0008_add_users_profile_fields.sql
 │  ├─ 0009_create_xp_logs_table.sql
@@ -873,7 +1035,6 @@ Generated on: 2025-06-18
 │  │  ├─ fix-forum-relationships.ts
 │  │  ├─ initialize-giphy-settings.ts
 │  │  ├─ initialize-xp-system.ts
-│  │  ├─ neon-to-sqlite.js
 │  │  ├─ read-forum-categories.ts
 │  │  ├─ read-thread.ts
 │  │  ├─ README-UI-CONFIG.md
@@ -893,22 +1054,33 @@ Generated on: 2025-06-18
 │  │  ├─ test-forum-query.ts
 │  │  ├─ test-forum-runtime.ts
 │  │  ├─ update-forum-slugs.ts
-│  │  ├─ update-levels-table.ts
 │  │  ├─ update-users-table.ts
 │  │  └─ verify-neon-connection.ts
 │  ├─ dev/
+│  │  ├─ generate-scope-guide.ts
 │  │  └─ syncForumsToDB.ts
 │  ├─ logs/
 │  ├─ ops/
 │  │  ├─ check-forum-config-sync.ts
 │  │  └─ setup-xp-system.sh
 │  ├─ refactor/
+│  │  ├─ component-merge/
+│  │  │  ├─ app-sidebar-path.js
+│  │  │  ├─ dry-run.log
+│  │  │  ├─ package.json
+│  │  │  ├─ path-progress.js
+│  │  │  ├─ run-dry-run.sh
+│  │  │  ├─ user-avatar.js
+│  │  │  └─ username.js
 │  │  ├─ fix-admin-double-layout.ts
 │  │  └─ rbac-codemod.ts
 │  ├─ seed/
 │  │  ├─ shop/
 │  │  │  └─ username-colors.ts
+│  │  ├─ dictionary.ts
+│  │  ├─ README.md
 │  │  ├─ run-username-colors.ts
+│  │  ├─ seed-all-comprehensive.ts
 │  │  ├─ seed-dummy-threads.ts
 │  │  ├─ seed-realistic-threads.ts
 │  │  ├─ seedDynamicContent.ts
@@ -960,6 +1132,10 @@ Generated on: 2025-06-18
 │  │  ├─ 20250510_create_xp_adjustment_logs.ts
 │  │  ├─ 20250512_create_xp_action_logs.ts
 │  │  ├─ 20250513_create_xp_action_settings.ts
+│  │  ├─ 20250618_add_clout_achievements.ts
+│  │  ├─ 20250618_add_rollout_percentage_to_feature_flags.ts
+│  │  ├─ 20250618_add_updated_by_to_site_settings.ts
+│  │  ├─ 20250618_create_xp_clout_settings.ts
 │  │  ├─ add-daily-xp-tracking.ts
 │  │  ├─ add-dgt-packages-table.ts
 │  │  ├─ add-dgt-purchase-orders-table.ts
@@ -987,7 +1163,6 @@ Generated on: 2025-06-18
 │  │  │  ├─ middleware.ts
 │  │  │  ├─ rate-limiter.ts
 │  │  │  ├─ storage.service.ts
-│  │  │  ├─ vite.ts
 │  │  │  └─ wallet-validators.ts
 │  │  ├─ cron/
 │  │  │  └─ mission-reset.ts
@@ -1022,6 +1197,9 @@ Generated on: 2025-06-18
 │  │  │  │  ├─ ccpayment-webhook.controller.ts
 │  │  │  │  ├─ ccpayment-webhook.routes.ts
 │  │  │  │  └─ ccpayment-webhook.service.ts
+│  │  │  ├─ dictionary/
+│  │  │  │  ├─ dictionary.routes.ts
+│  │  │  │  └─ dictionary.service.ts
 │  │  │  ├─ economy/
 │  │  │  │  └─ services/
 │  │  │  │     ... (max depth reached)
@@ -1093,12 +1271,15 @@ Generated on: 2025-06-18
 │  │  │  ├─ wallet/
 │  │  │  │  ├─ ccpayment.service.ts
 │  │  │  │  ├─ dgt.service.ts
+│  │  │  │  ├─ treasury.controller.ts
 │  │  │  │  ├─ wallet-api-tests.ts
 │  │  │  │  ├─ wallet.constants.ts
 │  │  │  │  ├─ wallet.controller.ts
+│  │  │  │  ├─ wallet.dev.controller.ts
 │  │  │  │  ├─ wallet.routes.ts
 │  │  │  │  ├─ wallet.service.ts
-│  │  │  │  └─ wallet.validators.ts
+│  │  │  │  ├─ wallet.validators.ts
+│  │  │  │  └─ withdrawal.controller.ts
 │  │  │  └─ xp/
 │  │  │     ├─ events/
 │  │  │     │  ... (max depth reached)
@@ -1126,6 +1307,7 @@ Generated on: 2025-06-18
 │  │  ├─ utils/
 │  │  │  ├─ auth.ts
 │  │  │  ├─ db-utils.ts
+│  │  │  ├─ economy-loader.ts
 │  │  │  └─ environment.ts
 │  │  └─ app.ts
 │  ├─ test/
@@ -1156,6 +1338,13 @@ Generated on: 2025-06-18
 │  ├─ tsconfig.json
 │  └─ vite.ts
 ├─ shared/
+│  ├─ economy/
+│  │  ├─ clout-calculator.ts
+│  │  ├─ economy.config.ts
+│  │  ├─ rain-tip-config.ts
+│  │  ├─ README.md
+│  │  ├─ reward-calculator.ts
+│  │  └─ shop-items.ts
 │  ├─ signature/
 │  │  └─ SignatureTierConfig.ts
 │  ├─ validators/
@@ -1164,17 +1353,21 @@ Generated on: 2025-06-18
 │  ├─ path-config.ts
 │  ├─ paths.config.ts
 │  ├─ README.md
-│  └─ types.ts
+│  ├─ types.ts
+│  ├─ wallet-features.config.ts
+│  └─ wallet.config.ts
 ├─ tests/
 │  └─ e2e/
+│     ├─ admin-settings.spec.ts
 │     └─ forum-home.spec.ts
-├─ Wallet-Workspace/
 ├─ .DS_Store
 ├─ .env
 ├─ .eslintrc.json
 ├─ .gitignore
+├─ .jscodeshift.json
 ├─ .prettierignore
 ├─ .prettierrc
+├─ CLAUDE.md
 ├─ CLEANUP_SUMMARY.md
 ├─ cline_mcp_settings.json
 ├─ components.json
@@ -1189,13 +1382,15 @@ Generated on: 2025-06-18
 ├─ MVP-NEEDS.md
 ├─ package-lock.json
 ├─ package.json
-├─ playwright.config.ts
 ├─ PRIMARY-ZONES-IMPLEMENTATION.md
 ├─ projectBrief.md
 ├─ README-FORUM.md
 ├─ README.md
+├─ style-dictionary.config.js
 ├─ tsconfig.client.json
-└─ tsconfig.json
+├─ tsconfig.eslint.json
+├─ tsconfig.json
+└─ XP-DGT-SOURCE-OF-TRUTH.md
 ```
 
 ## Structure Notes

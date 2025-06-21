@@ -47,6 +47,17 @@ export const ModerateThreadSchema = z.object({
 	moderationReason: z.string().max(255).optional()
 });
 
+// Schema for tag management
+export const TagSchema = z.object({
+	name: z.string().min(1, 'Name must be at least 1 character').max(50),
+	slug: z
+		.string()
+		.min(1)
+		.max(50)
+		.regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+	description: z.string().max(255).optional().nullable()
+});
+
 // Schema for pagination
 export const PaginationSchema = z.object({
 	page: z.coerce.number().min(1).default(1),
@@ -56,7 +67,11 @@ export const PaginationSchema = z.object({
 // Forum entity schemas
 export const createEntitySchema = z.object({
 	name: z.string().min(1).max(100),
-	slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+	slug: z
+		.string()
+		.min(1)
+		.max(100)
+		.regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
 	description: z.string().max(500).optional().nullable(),
 	type: z.enum(['zone', 'category', 'forum']),
 	parentId: z.number().int().positive().optional().nullable(),
@@ -70,12 +85,13 @@ export const createEntitySchema = z.object({
 	colorTheme: z.string().optional().nullable(),
 	tippingEnabled: z.boolean().default(false),
 	xpMultiplier: z.number().min(0).default(1),
-	pluginData: z.record(z.any()).optional().nullable(),
+	pluginData: z.record(z.any()).optional().nullable()
 });
 
 export const updateEntitySchema = createEntitySchema.partial();
 
 export type CategoryInput = z.infer<typeof CategorySchema>;
 export type PrefixInput = z.infer<typeof PrefixSchema>;
+export type TagInput = z.infer<typeof TagSchema>;
 export type ModerateThreadInput = z.infer<typeof ModerateThreadSchema>;
 export type PaginationInput = z.infer<typeof PaginationSchema>;

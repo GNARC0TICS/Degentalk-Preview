@@ -214,165 +214,162 @@ export default function AdminShopItemEditPage() {
 		setPluginReward(getCosmeticTemplate(type));
 	};
 
-	if (isLoadingItem && itemId)
-		return (
-			<div className="p-4">Loading item details...</div>
-		);
+	if (isLoadingItem && itemId) return <div className="p-4">Loading item details...</div>;
 
 	return (
 		<div className="p-6">
-				<Link
-					href="/admin/shop"
-					className="inline-flex items-center text-sm text-zinc-400 hover:text-white mb-4"
-				>
-					<ArrowLeft className="mr-2 h-4 w-4" /> Back to Shop Items
-				</Link>
-				<h1 className="text-2xl font-semibold text-white mb-6">
-					{itemId ? 'Edit Shop Item' : 'Add New Shop Item'}
-				</h1>
-				<form
-					onSubmit={handleSubmit}
-					className="space-y-6 bg-zinc-900 border border-zinc-800 p-6 rounded-lg"
-				>
+			<Link
+				href="/admin/shop"
+				className="inline-flex items-center text-sm text-zinc-400 hover:text-white mb-4"
+			>
+				<ArrowLeft className="mr-2 h-4 w-4" /> Back to Shop Items
+			</Link>
+			<h1 className="text-2xl font-semibold text-white mb-6">
+				{itemId ? 'Edit Shop Item' : 'Add New Shop Item'}
+			</h1>
+			<form
+				onSubmit={handleSubmit}
+				className="space-y-6 bg-zinc-900 border border-zinc-800 p-6 rounded-lg"
+			>
+				<div>
+					<Label htmlFor="name" className="text-zinc-300">
+						Item Name
+					</Label>
+					<Input
+						id="name"
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+						required
+						className="bg-zinc-800 border-zinc-700 text-white"
+					/>
+				</div>
+				<div>
+					<Label htmlFor="description" className="text-zinc-300">
+						Description
+					</Label>
+					<Textarea
+						id="description"
+						value={description}
+						onChange={(e) => setDescription(e.target.value)}
+						className="bg-zinc-800 border-zinc-700 text-white"
+					/>
+				</div>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<div>
-						<Label htmlFor="name" className="text-zinc-300">
-							Item Name
+						<Label htmlFor="priceDGT" className="text-zinc-300">
+							Price (DGT)
 						</Label>
 						<Input
-							id="name"
-							value={name}
-							onChange={(e) => setName(e.target.value)}
+							id="priceDGT"
+							type="number"
+							value={priceDGT}
+							onChange={(e) => setPriceDGT(e.target.value)}
 							required
 							className="bg-zinc-800 border-zinc-700 text-white"
 						/>
 					</div>
 					<div>
-						<Label htmlFor="description" className="text-zinc-300">
-							Description
+						<Label htmlFor="pointsPrice" className="text-zinc-300">
+							Points Price (optional)
 						</Label>
-						<Textarea
-							id="description"
-							value={description}
-							onChange={(e) => setDescription(e.target.value)}
+						<Input
+							id="pointsPrice"
+							type="number"
+							value={pointsPrice}
+							onChange={(e) => setPointsPrice(e.target.value)}
 							className="bg-zinc-800 border-zinc-700 text-white"
 						/>
 					</div>
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<div>
-							<Label htmlFor="priceDGT" className="text-zinc-300">
-								Price (DGT)
-							</Label>
-							<Input
-								id="priceDGT"
-								type="number"
-								value={priceDGT}
-								onChange={(e) => setPriceDGT(e.target.value)}
-								required
-								className="bg-zinc-800 border-zinc-700 text-white"
-							/>
-						</div>
-						<div>
-							<Label htmlFor="pointsPrice" className="text-zinc-300">
-								Points Price (optional)
-							</Label>
-							<Input
-								id="pointsPrice"
-								type="number"
-								value={pointsPrice}
-								onChange={(e) => setPointsPrice(e.target.value)}
-								className="bg-zinc-800 border-zinc-700 text-white"
-							/>
-						</div>
-					</div>
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<div>
-							<Label htmlFor="stockLimit" className="text-zinc-300">
-								Stock Limit (leave blank for unlimited)
-							</Label>
-							<Input
-								id="stockLimit"
-								type="number"
-								value={stockLimit === null ? '' : stockLimit}
-								onChange={(e) => setStockLimit(e.target.value === '' ? null : e.target.value)}
-								className="bg-zinc-800 border-zinc-700 text-white"
-							/>
-						</div>
-						<div>
-							<Label htmlFor="rarity" className="text-zinc-300">
-								Rarity
-							</Label>
-							<Select value={rarity} onValueChange={setRarity}>
-								<SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
-									<SelectValue />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="cope">🟫 Cope</SelectItem>
-									<SelectItem value="normie">🟨 Normie</SelectItem>
-									<SelectItem value="bagholder">🟪 Bagholder</SelectItem>
-									<SelectItem value="max_bidder">🔵 Max Bidder</SelectItem>
-									<SelectItem value="high_roller">🟧 High Roller</SelectItem>
-									<SelectItem value="exit_liquidity">🟥 Exit Liquidity (Mythic)</SelectItem>
-								</SelectContent>
-							</Select>
-						</div>
+				</div>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div>
+						<Label htmlFor="stockLimit" className="text-zinc-300">
+							Stock Limit (leave blank for unlimited)
+						</Label>
+						<Input
+							id="stockLimit"
+							type="number"
+							value={stockLimit === null ? '' : stockLimit}
+							onChange={(e) => setStockLimit(e.target.value === '' ? null : e.target.value)}
+							className="bg-zinc-800 border-zinc-700 text-white"
+						/>
 					</div>
 					<div>
-						<Label htmlFor="status" className="text-zinc-300">
-							Status
+						<Label htmlFor="rarity" className="text-zinc-300">
+							Rarity
 						</Label>
-						<Select value={status} onValueChange={setStatus}>
+						<Select value={rarity} onValueChange={setRarity}>
 							<SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
 								<SelectValue />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="published">Published</SelectItem>
-								<SelectItem value="draft">Draft</SelectItem>
-								<SelectItem value="archived">Archived</SelectItem>
+								<SelectItem value="cope">🟫 Cope</SelectItem>
+								<SelectItem value="normie">🟨 Normie</SelectItem>
+								<SelectItem value="bagholder">🟪 Bagholder</SelectItem>
+								<SelectItem value="max_bidder">🔵 Max Bidder</SelectItem>
+								<SelectItem value="high_roller">🟧 High Roller</SelectItem>
+								<SelectItem value="exit_liquidity">🟥 Exit Liquidity (Mythic)</SelectItem>
 							</SelectContent>
 						</Select>
 					</div>
-					<div>
-						<Label htmlFor="cosmeticType" className="text-zinc-300 mb-2">
-							Cosmetic Type (Quick Template)
-						</Label>
-						<Select value={cosmeticType} onValueChange={handleCosmeticTypeChange}>
-							<SelectTrigger className="bg-zinc-800 border-zinc-700 text-white mb-2">
-								<SelectValue />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="usernameColor">Username Color</SelectItem>
-								<SelectItem value="userTitle">User Title</SelectItem>
-								<SelectItem value="avatarFrame">Avatar Frame</SelectItem>
-								<SelectItem value="emojiPack">Emoji Pack</SelectItem>
-								<SelectItem value="featureUnlock">Feature Unlock</SelectItem>
-							</SelectContent>
-						</Select>
-					</div>
-					<div>
-						<Label htmlFor="pluginReward" className="text-zinc-300">
-							Plugin Reward (JSON)
-						</Label>
-						<Textarea
-							id="pluginReward"
-							value={pluginReward}
-							onChange={(e) => setPluginReward(e.target.value)}
-							rows={12}
-							className="bg-zinc-800 border-zinc-700 text-white font-mono text-sm"
-						/>
-						<p className="text-xs text-zinc-500 mt-1">
-							Define the cosmetic effect here. Use the template selector above for examples.
-						</p>
-					</div>
-					<div className="flex justify-end">
-						<Button
-							type="submit"
-							className="bg-emerald-600 hover:bg-emerald-500"
-							disabled={mutation.isPending}
-						>
-							{mutation.isPending ? 'Saving...' : itemId ? 'Save Changes' : 'Create Item'}
-						</Button>
-					</div>
-				</form>
-			</div>
+				</div>
+				<div>
+					<Label htmlFor="status" className="text-zinc-300">
+						Status
+					</Label>
+					<Select value={status} onValueChange={setStatus}>
+						<SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="published">Published</SelectItem>
+							<SelectItem value="draft">Draft</SelectItem>
+							<SelectItem value="archived">Archived</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+				<div>
+					<Label htmlFor="cosmeticType" className="text-zinc-300 mb-2">
+						Cosmetic Type (Quick Template)
+					</Label>
+					<Select value={cosmeticType} onValueChange={handleCosmeticTypeChange}>
+						<SelectTrigger className="bg-zinc-800 border-zinc-700 text-white mb-2">
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="usernameColor">Username Color</SelectItem>
+							<SelectItem value="userTitle">User Title</SelectItem>
+							<SelectItem value="avatarFrame">Avatar Frame</SelectItem>
+							<SelectItem value="emojiPack">Emoji Pack</SelectItem>
+							<SelectItem value="featureUnlock">Feature Unlock</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+				<div>
+					<Label htmlFor="pluginReward" className="text-zinc-300">
+						Plugin Reward (JSON)
+					</Label>
+					<Textarea
+						id="pluginReward"
+						value={pluginReward}
+						onChange={(e) => setPluginReward(e.target.value)}
+						rows={12}
+						className="bg-zinc-800 border-zinc-700 text-white font-mono text-sm"
+					/>
+					<p className="text-xs text-zinc-500 mt-1">
+						Define the cosmetic effect here. Use the template selector above for examples.
+					</p>
+				</div>
+				<div className="flex justify-end">
+					<Button
+						type="submit"
+						className="bg-emerald-600 hover:bg-emerald-500"
+						disabled={mutation.isPending}
+					>
+						{mutation.isPending ? 'Saving...' : itemId ? 'Save Changes' : 'Create Item'}
+					</Button>
+				</div>
+			</form>
+		</div>
 	);
 }

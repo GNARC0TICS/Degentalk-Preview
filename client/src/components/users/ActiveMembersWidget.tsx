@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'wouter';
+import { useQuery } from '@tanstack/react-query';
 import {
 	Card,
 	CardContent,
@@ -11,6 +12,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Users, Activity, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { createWidgetQueryKey } from '@/hooks/widgetData';
+import { WidgetSkeleton } from '@/components/ui/widget-skeleton';
 
 export interface ActiveUser {
 	id: number | string;
@@ -20,13 +23,11 @@ export interface ActiveUser {
 }
 
 export interface ActiveMembersWidgetProps {
-	users: ActiveUser[];
 	title?: string;
 	description?: string;
 	className?: string;
 	limit?: number;
 	viewAllLink?: string;
-	isLoading?: boolean;
 }
 
 /**
@@ -35,15 +36,19 @@ export interface ActiveMembersWidgetProps {
  * A reusable component that shows users who are active on the platform
  * with their avatars, names and last active status
  */
-export function ActiveMembersWidget({
-	users,
+function ActiveMembersWidget({
 	title = 'Active Members',
 	description = 'Members active in the last 30 minutes',
 	className = '',
 	limit = 5,
-	viewAllLink = '/degen-index',
-	isLoading = false
+	viewAllLink = '/degen-index'
 }: ActiveMembersWidgetProps) {
+	const { data: users = [], isLoading } = useQuery<ActiveUser[]>({
+		queryKey: createWidgetQueryKey('active-members'),
+		queryFn: () => fetch('/api/forum/active-members').then((r) => r.json()),
+		staleTime: 30_000
+	});
+
 	// Limit the number of users displayed
 	const displayedUsers = users.slice(0, limit);
 
@@ -58,7 +63,7 @@ export function ActiveMembersWidget({
 			</CardHeader>
 			<CardContent className="p-0">
 				{isLoading ? (
-					<div className="p-4 text-center text-zinc-500">Loading active members...</div>
+					<WidgetSkeleton />
 				) : displayedUsers.length > 0 ? (
 					<div className="divide-y divide-zinc-800/70">
 						{displayedUsers.map((user, index) => (

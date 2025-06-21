@@ -59,12 +59,6 @@ export class CCPaymentClient {
 	 */
 	async createDepositLink(request: DepositRequest): Promise<string> {
 		try {
-			console.info('CCPaymentClient: Creating deposit link', {
-				amount: request.amount,
-				currency: request.currency,
-				orderId: request.orderId
-			});
-
 			const data = {
 				amount: request.amount.toString(),
 				currency: request.currency,
@@ -93,12 +87,6 @@ export class CCPaymentClient {
 	 */
 	async requestWithdrawal(request: WithdrawalRequest): Promise<string> {
 		try {
-			console.info('CCPaymentClient: Requesting withdrawal', {
-				amount: request.amount,
-				currency: request.currency,
-				orderId: request.orderId
-			});
-
 			const data = {
 				amount: request.amount.toString(),
 				currency: request.currency,
@@ -126,8 +114,6 @@ export class CCPaymentClient {
 	 */
 	async getTransactionStatus(orderId: string): Promise<TransactionStatus> {
 		try {
-			console.info('CCPaymentClient: Checking transaction status', { orderId });
-
 			const data = { order_id: orderId };
 
 			const http = this.createAxiosInstance(data);

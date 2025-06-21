@@ -1,11 +1,9 @@
 import React from 'react';
-import { Switch, Route, useLocation } from 'wouter'; // Removed Redirect, useParams
+import { Switch, Route, useLocation, Redirect } from 'wouter';
 import { Toaster } from '@/components/ui/toaster';
-import { ForumStructureProvider } from '@/contexts/ForumStructureContext';
-import { ForumThemeProvider } from '@/contexts/ForumThemeProvider'; // Import ForumThemeProvider
 import AdminLayout from './pages/admin/admin-layout';
 import { ModLayout } from './components/mod/mod-layout';
-import { SiteHeader } from '@/components/layout/site-header';
+import { SiteHeader, HeaderProvider } from '@/components/header';
 import { ProtectedRoute } from '@/components/auth/protected-route';
 import WalletPage from './pages/wallet';
 
@@ -16,7 +14,7 @@ import ForumsPage from './pages/forums';
 import ForumBySlugPage from './pages/forums/[forum_slug].tsx';
 import ForumSearchPage from './pages/forums/search.tsx'; // Import the new search page
 import ZoneBySlugPage from './pages/zones/[slug].tsx'; // Added import for Zone page
-import ThreadPage from './pages/threads/[thread_slug].tsx';
+import ThreadPage from './pages/threads/BBCodeThreadPage.tsx';
 import CreateThreadPage from './pages/threads/create.tsx';
 import ShopPage from './pages/shop';
 import NotFoundPage from './pages/not-found';
@@ -28,30 +26,35 @@ import AnnouncementsPage from './pages/announcements';
 import SearchPage from './pages/search';
 
 // Admin Pages
-import AdminDashboardPage from "./pages/admin/index.tsx";
-import AdminUsersPage from "./pages/admin/users.tsx";
-import AdminRolesPage from "./pages/admin/roles.tsx"; // Import AdminRolesPage
-import UserXpAdjustmentPage from "./pages/admin/xp/adjust.tsx";
-import BadgeManagementPage from "./pages/admin/xp/badges.tsx";
-import LevelManagementPage from "./pages/admin/xp/levels.tsx";
-import XpSettingsPage from "./pages/admin/xp/settings.tsx";
-import TitleManagementPage from "./pages/admin/xp/titles.tsx";
-import AdminThreadsPage from "./pages/admin/threads.tsx";
-import AdminTreasuryPage from "./pages/admin/treasury.tsx";
-import AdminWalletsPage from "./pages/admin/wallets/index.tsx";
-import AdminTransactionsPage from "./pages/admin/transactions/index.tsx";
-import AdminStatsPage from "./pages/admin/stats/index.tsx";
-import AdminReportsPage from "./pages/admin/reports.tsx";
-import AdminAnnouncementsPage from "./pages/admin/announcements/index.tsx";
-import AdminCategoriesPage from "./pages/admin/categories.tsx";
-import AdminPrefixesPage from "./pages/admin/prefixes.tsx";
-import TagConfigPage from "./pages/admin/config/tags.tsx";
-import XpConfigPage from "./pages/admin/config/xp.tsx";
-import ZoneConfigPage from "./pages/admin/config/zones.tsx";
-import AdminDgtPackagesPage from "./pages/admin/dgt-packages.tsx";
-import TipRainSettingsPage from "./pages/admin/tip-rain-settings.tsx";
-import AdminDevSeedingPage from "./pages/admin/dev/seeding.tsx";
-import ForumStructureAdminPage from "./pages/admin/forum-structure.tsx";
+import AdminDashboardPage from './pages/admin/index.tsx';
+import AdminUsersPage from './pages/admin/users.tsx';
+import AdminUserEdit from './pages/admin/users/[userId].tsx';
+import AdminRolesPage from './pages/admin/roles.tsx'; // Import AdminRolesPage
+import RolesTitlesPage from './pages/admin/roles-titles.tsx';
+import CloutSystemPage from './pages/admin/clout/index.tsx';
+import UserXpAdjustmentPage from './pages/admin/xp/adjust.tsx';
+import BadgeManagementPage from './pages/admin/xp/badges.tsx';
+import XPSystemPage from './pages/admin/xp-system.tsx';
+import XpSettingsPage from './pages/admin/xp/settings.tsx';
+import TitleManagementPage from './pages/admin/xp/titles.tsx';
+import AdminTreasuryPage from './pages/admin/treasury.tsx';
+import AdminWalletsPage from './pages/admin/wallets/index.tsx';
+import AdminTransactionsPage from './pages/admin/transactions/index.tsx';
+import AdminStatsPage from './pages/admin/stats/index.tsx';
+import AdminAnnouncementsPage from './pages/admin/announcements/index.tsx';
+import AdminCategoriesPage from './pages/admin/categories.tsx';
+import AdminPrefixesPage from './pages/admin/prefixes.tsx';
+import TagConfigPage from './pages/admin/config/tags.tsx';
+import XpConfigPage from './pages/admin/config/xp.tsx';
+import ZoneConfigPage from './pages/admin/config/zones.tsx';
+import AdminDgtPackagesPage from './pages/admin/dgt-packages.tsx';
+import TipRainSettingsPage from './pages/admin/tip-rain-settings.tsx';
+import AdminDevSeedingPage from './pages/admin/dev/seeding.tsx';
+import ForumStructureAdminPage from './pages/admin/forum-structure.tsx';
+import AdminDictionaryQueuePage from './pages/admin/dictionary';
+import AdminReportsPage from './pages/admin/reports/index.tsx';
+import AdminAnimationsPage from './pages/admin/ui/animations.tsx';
+import AdminPackBuilderPage from './pages/admin/ui/pack-builder.tsx';
 
 // Shop Pages
 import DgtPurchasePage from './pages/shop-management/dgt-purchase';
@@ -76,6 +79,16 @@ import { DevRoleSwitcher } from '@/components/dev/dev-role-switcher';
 // Import Preferences Page
 import PreferencesPage from './pages/preferences/index';
 
+// Import Dictionary Pages
+import DictionaryIndexPage from './pages/dictionary/index';
+import DictionarySlugPage from './pages/dictionary/[slug].tsx';
+
+// Import Referrals Page
+import ReferralsPage from './pages/referrals/index';
+
+// Import Invite Page
+import InvitePage from './pages/invite/[code]';
+
 // Import UIPlayground page and DevPlaygroundShortcut component
 import UIPlaygroundPage from './pages/ui-playground';
 import { DevPlaygroundShortcut } from '@/components/dev/dev-playground-shortcut';
@@ -94,12 +107,12 @@ function App() {
 	const isModRoute = location.startsWith('/mod');
 	const isAuthRoute = location === '/auth';
 
-return (
-	<ForumStructureProvider>
-		<ForumThemeProvider> {/* ForumThemeProvider now wraps the main content div */}
+	return (
+		<HeaderProvider>
 			<div className="min-h-screen bg-black text-white flex flex-col">
 				{/* Only show SiteHeader on non-admin, non-mod, and non-auth routes */}
 				{!isAdminRoute && !isModRoute && !isAuthRoute && <SiteHeader />}
+
 				<React.Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
 					<Switch>
 						{/* Auth Routes */}
@@ -115,7 +128,7 @@ return (
 						<ProtectedRoute path="/forums" component={ForumsPage} />
 						{/* Search Page Route */}
 						<ProtectedRoute path="/forums/search" component={ForumSearchPage} />
-						
+
 						{/* Zone Page Route */}
 						<ProtectedRoute path="/zones/:slug" component={ZoneBySlugPage} />
 
@@ -136,6 +149,16 @@ return (
 						<ProtectedRoute path="/profile/:username" component={ProfilePage} />
 						<ProtectedRoute path="/whispers" component={WhispersPage} />
 						<ProtectedRoute path="/preferences" component={PreferencesPage} />
+
+						{/* Dictionary Routes */}
+						<ProtectedRoute path="/dictionary" component={DictionaryIndexPage} />
+						<ProtectedRoute path="/dictionary/:slug" component={DictionarySlugPage} />
+
+						{/* Referrals Route */}
+						<ProtectedRoute path="/referrals" component={ReferralsPage} />
+
+						{/* Invite Route - Public route for referral codes */}
+						<Route path="/invite/:code" component={InvitePage} />
 
 						{/* Admin Routes */}
 						<Route
@@ -174,18 +197,6 @@ return (
 							)}
 						/>
 						<Route
-							path="/admin/threads"
-							component={() => {
-								return (
-									<AdminLayout>
-										<div>
-											<AdminThreadsPage />
-										</div>
-									</AdminLayout>
-								);
-							}}
-						/>
-						<Route
 							path="/admin/treasury"
 							component={() => (
 								<AdminLayout>
@@ -209,6 +220,22 @@ return (
 							component={() => (
 								<AdminLayout>
 									<AdminRolesPage />
+								</AdminLayout>
+							)}
+						/>
+						<Route
+							path="/admin/roles-titles"
+							component={() => (
+								<AdminLayout>
+									<RolesTitlesPage />
+								</AdminLayout>
+							)}
+						/>
+						<Route
+							path="/admin/clout"
+							component={() => (
+								<AdminLayout>
+									<CloutSystemPage />
 								</AdminLayout>
 							)}
 						/>
@@ -328,11 +355,15 @@ return (
 								</AdminLayout>
 							)}
 						/>
+						{/* Redirect old XP levels route to new XP System route */}
+						<Route path="/admin/xp/levels">
+							<Redirect to="/admin/xp-system" />
+						</Route>
 						<Route
-							path="/admin/xp/levels"
+							path="/admin/xp-system"
 							component={() => (
 								<AdminLayout>
-									<LevelManagementPage />
+									<XPSystemPage />
 								</AdminLayout>
 							)}
 						/>
@@ -368,6 +399,34 @@ return (
 							component={() => (
 								<AdminLayout>
 									<ForumStructureAdminPage />
+								</AdminLayout>
+							)}
+						/>
+						<Route
+							path="/admin/dictionary"
+							component={() => (
+								<AdminLayout>
+									<AdminDictionaryQueuePage />
+								</AdminLayout>
+							)}
+						/>
+						<Route
+							path="/admin/ui/animations"
+							component={() => (
+								<AdminLayout>
+									<React.Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+										<AdminAnimationsPage />
+									</React.Suspense>
+								</AdminLayout>
+							)}
+						/>
+						<Route
+							path="/admin/ui/pack-builder"
+							component={() => (
+								<AdminLayout>
+									<React.Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+										<AdminPackBuilderPage />
+									</React.Suspense>
 								</AdminLayout>
 							)}
 						/>
@@ -422,8 +481,7 @@ return (
 				{import.meta.env.MODE === 'development' && <DevRoleSwitcher />}
 				{import.meta.env.MODE === 'development' && <DevPlaygroundShortcut />}
 			</div>
-		</ForumThemeProvider>
-	</ForumStructureProvider>
+		</HeaderProvider>
 	);
 }
 

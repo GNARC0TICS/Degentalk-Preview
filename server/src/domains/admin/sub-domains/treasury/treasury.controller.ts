@@ -165,7 +165,10 @@ export class AdminTreasuryController {
 				);
 			}
 			const adminId = getUserId(req);
-			const result = await adminTreasuryService.updateDgtEconomyParameters(validation.data, adminId);
+			const result = await adminTreasuryService.updateDgtEconomyParameters(
+				validation.data,
+				adminId
+			);
 
 			await adminController.logAction(
 				req,

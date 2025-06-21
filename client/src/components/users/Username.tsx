@@ -189,3 +189,5 @@ export function SimpleUsername({
 		</span>
 	);
 }
+
+export { Username as UserName };

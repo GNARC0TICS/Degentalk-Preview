@@ -19,15 +19,8 @@ module.exports = {
 				}
 			},
 			fontFamily: {
-				sans: [
-					'Inter',
-					'sans-serif'
-				],
-				headline: [
-					'"Space Grotesk"',
-					'Inter',
-					'sans-serif'
-				]
+				sans: ['Inter', 'sans-serif'],
+				headline: ['"Space Grotesk"', 'Inter', 'sans-serif']
 			},
 			animation: {
 				'gradient-shift': 'gradient-shift 8s ease infinite',

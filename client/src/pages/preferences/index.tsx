@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SiteHeader } from '@/components/layout/site-header';
+import { SiteHeader } from '@/components/header';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { useAuth } from '@/hooks/use-auth.tsx';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -26,7 +26,10 @@ function PreferencesPage() {
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
 		const tabParam = params.get('tab');
-		if (tabParam && ['profile', 'account', 'notifications', 'display', 'sessions', 'referrals'].includes(tabParam)) {
+		if (
+			tabParam &&
+			['profile', 'account', 'notifications', 'display', 'sessions', 'referrals'].includes(tabParam)
+		) {
 			setActiveTab(tabParam);
 		}
 	}, []);
@@ -140,7 +143,7 @@ function PreferencesPage() {
 							<TabsContent value="sessions">
 								<SessionPreferences user={user} />
 							</TabsContent>
-							
+
 							<TabsContent value="referrals">
 								<ReferralPreferences user={user} />
 							</TabsContent>

@@ -6,6 +6,7 @@ import { ShoutboxProvider } from '@/contexts/shoutbox-context';
 import { ForumStructureProvider } from '@/contexts/ForumStructureContext';
 import { ForumThemeProvider } from '@/contexts/ForumThemeProvider';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { ProfileCardProvider } from '@/contexts/ProfileCardContext';
 import { getQueryFn } from '@/lib/queryClient';
 
 // Initialize React Query client
@@ -36,7 +37,9 @@ export function RootProvider({ children }: { children: React.ReactNode }) {
 						<ShoutboxProvider>
 							<ForumStructureProvider>
 								<ForumThemeProvider>
-									<TooltipProvider>{children}</TooltipProvider>
+									<ProfileCardProvider>
+										<TooltipProvider>{children}</TooltipProvider>
+									</ProfileCardProvider>
 								</ForumThemeProvider>
 							</ForumStructureProvider>
 						</ShoutboxProvider>

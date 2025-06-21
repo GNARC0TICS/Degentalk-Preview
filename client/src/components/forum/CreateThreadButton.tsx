@@ -38,7 +38,7 @@ export function CreateThreadButton({
 			// For simplicity, we'll still use a general forum redirect or the specific forumSlug if available
 			// This part might need adjustment based on how category pages are structured if forumSlug is absent
 		}
-		
+
 		return (
 			<Button variant="outline" size={size} asChild className={className} {...props}>
 				<Link href={`/auth?redirect_to=${encodeURIComponent(redirectPath)}`}>
@@ -48,7 +48,7 @@ export function CreateThreadButton({
 			</Button>
 		);
 	}
-	
+
 	if (!isLoggedIn && !redirectAuth) {
 		// If not logged in and redirectAuth is false, perhaps disable the button or show a different message
 		// For now, let's disable it.

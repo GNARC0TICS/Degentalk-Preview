@@ -132,12 +132,7 @@ export default function LeaderboardPage() {
 	);
 
 	const renderLeaderboardTable = () => (
-		<motion.div
-			variants={sectionVariants}
-			initial="hidden"
-			animate="visible"
-			custom={0.1}
-		>
+		<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.1}>
 			<Card className="border-zinc-800 bg-zinc-950/50">
 				<CardHeader>
 					<CardTitle className="flex items-center text-xl text-emerald-400">
@@ -215,7 +210,7 @@ export default function LeaderboardPage() {
 	return (
 		<div className="max-w-5xl mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black">
 			<BackToHomeButton />
-			<motion.h1 
+			<motion.h1
 				className="text-3xl font-bold mb-8 text-center text-white"
 				variants={sectionVariants}
 				initial="hidden"

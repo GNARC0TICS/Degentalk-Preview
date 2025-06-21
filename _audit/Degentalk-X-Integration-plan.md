@@ -1,16 +1,20 @@
 # DegenTalk X Integration Plan
-*Date: 2025-06-15*
+
+_Date: 2025-06-15_
 
 ---
 
 ## Objective
+
 Enable users to:
+
 - Link their DegenTalk profiles to X accounts for seamless content sharing.
 - Create DegenTalk accounts using X OAuth authentication.
 - Share posts, threads, and DegenTalk material directly to X from our app.
 - Leverage X integration for viral growth through the referral system and DegenTalk economy.
 
 ## Scope
+
 - **Authentication**: Implement X OAuth 2.0 for account creation and linking.
 - **Profile Linking**: Store X account data and tokens in user profiles.
 - **Content Sharing**: Enable sharing of posts, threads, and referral links to X.
@@ -19,6 +23,7 @@ Enable users to:
 - **Viral Mechanics**: Integrate with referral system to incentivize X-based invites and content sharing.
 
 ## Dependencies
+
 - **X Developer Account**: Obtain API keys and OAuth credentials for X API access.
 - **OAuth Library**: Use a library like `passport.js` with `passport-twitter` strategy or a similar OAuth 2.0 client for X.
 - **Database**: Update user schema to store X account data and tokens.
@@ -29,6 +34,7 @@ Enable users to:
 ## Implementation Steps
 
 ### 1. Database Schema Updates
+
 - [x] **Table: users (Extend Existing)**
   - [x] Add fields for X integration:
     - [x] `xAccountId`: `varchar('x_account_id', { length: 255 })` - Store X user ID.
@@ -49,6 +55,7 @@ Enable users to:
   - [x] Create migration script for `xShares` table.
 
 ### 2. Backend Implementation
+
 - [x] **OAuth Authentication Service**:
   - [x] Define Location: `server/src/domains/auth/services/xAuthService.ts`
   - [x] Implement X OAuth 2.0 flow using `passport-twitter` or a similar library.
@@ -76,6 +83,7 @@ Enable users to:
   - [ ] Use database indexing on `xShares` for efficient analytics.
 
 ### 3. Frontend Implementation
+
 - [ ] **Authentication UI**:
   - [ ] Define Location: `client/src/features/auth/components/XLoginButton.tsx`
   - [ ] Add "Sign in with X" button on login/registration pages.
@@ -99,6 +107,7 @@ Enable users to:
   - [ ] Use compact share buttons on mobile views.
 
 ### 4. Integration with DegenTalk Economy and Referral System
+
 - [ ] **Referral System**:
   - [ ] Extend `users/services/referralsApi.ts` to track referrals originating from X shares.
   - [ ] Reward users with DGT or XP for successful referrals (e.g., 100 DGT per new user signup from X link).
@@ -111,6 +120,7 @@ Enable users to:
   - [ ] Display notifications for rewards earned via X activities.
 
 ### 5. Plan for Scale
+
 - [ ] **API Rate Limits**: Implement a job queue (e.g., BullMQ with Redis) to manage X API calls, retrying on rate limit errors.
 - [ ] **Token Refresh**: Automate token refresh for X OAuth tokens to prevent expired token issues.
 - [ ] **Database Performance**: Index `users.xAccountId` and `xShares.userId` for fast lookups.
@@ -118,15 +128,18 @@ Enable users to:
 - [ ] **Monitoring**: Add analytics to track X integration usage and errors for proactive scaling.
 
 ### 6. Security Considerations
+
 - [ ] Encrypt X tokens in the database using a secure method (e.g., server-side encryption).
 - [ ] Implement strict OAuth scopes to limit access to necessary X account features.
 - [ ] Provide clear UI feedback when X permissions are requested during linking.
 
 ## Roadmap Integration
+
 - [ ] **Insert** X Account Linking as **Step 3C** after "Persistent Profile Sub-Navigation" in the audit's "Next Steps" section.
 - [ ] **Timeline**: Estimate 3-5 dev-days for MVP implementation, including OAuth setup, UI integration, and economy rewards.
 
 ## Mermaid Diagram for Implementation Flow
+
 ```mermaid
 graph TD
     A[User Initiates X Linking] --> B[X OAuth Flow]

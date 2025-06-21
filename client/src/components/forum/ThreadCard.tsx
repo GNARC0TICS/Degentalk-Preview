@@ -9,17 +9,17 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TagBadge } from '@/components/ui/tag-badge';
 import { ThreadStats } from './ThreadStats'; // Import the new component
-import {
-	Clock,
-	Flame,
-	Lock,
-	Pin,
-	Tag as TagIcon
-} from 'lucide-react';
+import { IconRenderer } from '@/components/icons/iconRenderer';
 import OriginForumPill from './OriginForumPill';
 
 // Use the new prop type from @/types/forum.ts
-const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter', forumSlug }: ThreadCardComponentProps) => { // Added linkAs prop with default, plus forumSlug
+const ThreadCardComponent = ({
+	thread,
+	className = '',
+	linkAs = 'wouter',
+	forumSlug
+}: ThreadCardComponentProps) => {
+	// Added linkAs prop with default, plus forumSlug
 	const LinkComponent = linkAs === 'next' ? NextLink : WouterLink;
 
 	if (!thread) {
@@ -84,21 +84,21 @@ const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter', forumS
 
 								{isSticky && (
 									<Badge className="bg-cyan-900/60 text-cyan-300 border-cyan-700/30 px-1.5 py-0.5 text-xs">
-										<Pin className="h-3 w-3 mr-1" />
+										<IconRenderer icon="pinned" size={12} className="h-3 w-3 mr-1" />
 										Pinned
 									</Badge>
 								)}
 
 								{isLocked && (
 									<Badge className="bg-red-900/60 text-red-300 border-red-700/30 px-1.5 py-0.5 text-xs">
-										<Lock className="h-3 w-3 mr-1" />
+										<IconRenderer icon="locked" size={12} className="h-3 w-3 mr-1" />
 										Locked
 									</Badge>
 								)}
 
 								{isHot && (
 									<Badge className="bg-gradient-to-r from-orange-600 to-red-600 border-orange-700/30 text-white px-1.5 py-0.5 text-xs">
-										<Flame className="h-3 w-3 mr-1" />
+										<IconRenderer icon="hot" size={12} className="h-3 w-3 mr-1" />
 										Hot
 									</Badge>
 								)}
@@ -117,12 +117,15 @@ const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter', forumS
 						</div>
 
 						<div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-zinc-400">
-							<LinkComponent href={`/profile/${user?.id}`} className="hover:text-zinc-200 transition-colors">
+							<LinkComponent
+								href={`/profile/${user?.id}`}
+								className="hover:text-zinc-200 transition-colors"
+							>
 								{user?.username || 'Unknown'}
 							</LinkComponent>
 
 							<span className="flex items-center">
-								<Clock className="h-3 w-3 mr-1" />
+								<IconRenderer icon="time" size={12} className="h-3 w-3 mr-1" />
 								{createdAt && !isNaN(new Date(createdAt).getTime())
 									? formatDistanceToNow(new Date(createdAt), { addSuffix: true })
 									: 'unknown time'}
@@ -133,14 +136,14 @@ const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter', forumS
 									href={`/forums/${category.slug}`}
 									className="hover:text-zinc-200 transition-colors flex items-center"
 								>
-									<FolderIcon className="h-3 w-3 mr-1" />
+									<IconRenderer icon="category" size={12} className="h-3 w-3 mr-1" />
 									{category.name}
 								</LinkComponent>
 							)}
 
 							{tags.length > 0 && (
 								<div className="flex items-center flex-wrap gap-1">
-									<TagIcon className="h-3 w-3 text-zinc-500" />
+									<IconRenderer icon="tag" size={12} className="h-3 w-3 text-zinc-500" />
 									{tags.map((tag: Tag) => (
 										<TagBadge key={tag.id} tag={tag} />
 									))}
@@ -164,24 +167,7 @@ const ThreadCardComponent = ({ thread, className = '', linkAs = 'wouter', forumS
 			</div>
 		</Card>
 	);
-}
-
-const FolderIcon = (props: React.SVGProps<SVGSVGElement>) => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="24"
-		height="24"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth="2"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-		{...props}
-	>
-		<path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" />
-	</svg>
-);
+};
 
 export const ThreadCard = memo(ThreadCardComponent);
 export default ThreadCard;

@@ -1,8 +1,9 @@
 import { Link } from 'wouter';
-import { MessageSquare, CornerDownRight } from 'lucide-react';
+import { MessageSquare, CornerDownRight, Lock } from 'lucide-react';
 import type { MergedForum } from '@/contexts/ForumStructureContext';
 import { useState, useEffect } from 'react';
 import { StatChip } from '@/components/ui/StatChip';
+import { usePermission } from '@/hooks/usePermission';
 
 interface ForumListItemProps {
 	forum: MergedForum;
@@ -11,11 +12,18 @@ interface ForumListItemProps {
 	depthLevel?: number;
 }
 
-export function ForumListItem({ forum, href, parentZoneColor, depthLevel = 0 }: ForumListItemProps) {
+export function ForumListItem({
+	forum,
+	href,
+	parentZoneColor,
+	depthLevel = 0
+}: ForumListItemProps) {
 	const [prevThreadCount, setPrevThreadCount] = useState(forum.threadCount || 0);
 	const [prevPostCount, setPrevPostCount] = useState(forum.postCount || 0);
 	const [isAnimating, setIsAnimating] = useState(false);
-	
+
+	const { canPost } = usePermission(forum);
+
 	// Check if counts have changed to trigger animations
 	useEffect(() => {
 		if (forum.threadCount !== prevThreadCount || forum.postCount !== prevPostCount) {
@@ -30,12 +38,12 @@ export function ForumListItem({ forum, href, parentZoneColor, depthLevel = 0 }: 
 	}, [forum.threadCount, forum.postCount, prevThreadCount, prevPostCount]);
 
 	const renderIcon = () => {
+		if (!canPost) {
+			return <Lock className="h-5 w-5 text-zinc-600" title="Posting disabled" />;
+		}
 		if (forum.icon) {
 			return (
-				<span 
-					className="text-xl" 
-					style={{ color: forum.color || parentZoneColor || undefined }}
-				>
+				<span className="text-xl" style={{ color: forum.color || parentZoneColor || undefined }}>
 					{forum.icon}
 				</span>
 			);
@@ -44,18 +52,18 @@ export function ForumListItem({ forum, href, parentZoneColor, depthLevel = 0 }: 
 	};
 
 	// Accent color for borders, hover effects, etc.
-	const accentColor = forum.color || parentZoneColor || "#10b981"; // Emerald default if no color
+	const accentColor = forum.color || parentZoneColor || '#10b981'; // Emerald default if no color
 	const accentColorWithOpacity = `${accentColor}40`; // 25% opacity
 
 	// Different styling based on depth level
 	const isParentForum = depthLevel === 0;
-	
+
 	// Main content for the forum item (parent or subforum)
 	const forumItemContent = (
-		<div 
+		<div
 			className={`block transition-all duration-300 hover:scale-[1.02] ${
 				isParentForum ? 'p-4 bg-zinc-900/60 backdrop-blur-md' : 'p-3 bg-zinc-900/40'
-			} ${forum.canHaveThreads ? 'hover:bg-zinc-900/80' : 'opacity-75 cursor-not-allowed'}`}
+			} ${canPost ? 'hover:bg-zinc-900/80' : 'opacity-75 cursor-not-allowed'}`}
 			style={{
 				borderLeft: isParentForum ? `3px solid ${accentColor}` : 'none',
 				boxShadow: isParentForum ? `0 4px 6px -1px ${accentColorWithOpacity}` : 'none'
@@ -67,13 +75,13 @@ export function ForumListItem({ forum, href, parentZoneColor, depthLevel = 0 }: 
 						{depthLevel > 0 && (
 							<div className="relative">
 								<CornerDownRight className="h-4 w-4 text-zinc-500 flex-shrink-0" />
-								<div 
-									className="absolute left-0 -top-[16px] w-[2px] h-[16px]" 
-									style={{ backgroundColor: 'rgba(113, 113, 122, 0.3)' }} 
+								<div
+									className="absolute left-0 -top-[16px] w-[2px] h-[16px]"
+									style={{ backgroundColor: 'rgba(113, 113, 122, 0.3)' }}
 								/>
 							</div>
 						)}
-						<h3 
+						<h3
 							className="text-white font-medium mb-0.5"
 							style={depthLevel === 0 ? { color: accentColor } : undefined}
 						>
@@ -93,7 +101,7 @@ export function ForumListItem({ forum, href, parentZoneColor, depthLevel = 0 }: 
 							accent={accentColor}
 							isAnimating={isAnimating}
 						/>
-						
+
 						<StatChip
 							value={forum.postCount || 0}
 							label="posts"
@@ -102,16 +110,17 @@ export function ForumListItem({ forum, href, parentZoneColor, depthLevel = 0 }: 
 						/>
 					</div>
 				</div>
-				<div className="ml-4 flex-shrink-0">
-					{renderIcon()}
-				</div>
+				<div className="ml-4 flex-shrink-0">{renderIcon()}</div>
 			</div>
 		</div>
 	);
 
+	// Replace canHaveThreads check with permission
+	const canHaveThreads = canPost && forum.canHaveThreads !== false;
+
 	return (
 		<div className={`${isParentForum ? 'mb-2' : ''}`}>
-			{forum.canHaveThreads ? (
+			{canHaveThreads ? (
 				<Link href={href}>
 					<a className="block">{forumItemContent}</a>
 				</Link>
@@ -126,17 +135,13 @@ export function ForumListItem({ forum, href, parentZoneColor, depthLevel = 0 }: 
 
 			{/* Render Subforums if they exist */}
 			{forum.forums && forum.forums.length > 0 && (
-				<div 
-					className={`subforums-list ${
-						depthLevel === 0 
-							? 'border-l-2 ml-6' 
-							: 'ml-5 border-l'
-					}`} 
+				<div
+					className={`subforums-list ${depthLevel === 0 ? 'border-l-2 ml-6' : 'ml-5 border-l'}`}
 					style={{
 						borderColor: 'rgba(113, 113, 122, 0.3)'
 					}}
 				>
-					{forum.forums.map(subForum => (
+					{forum.forums.map((subForum) => (
 						<ForumListItem
 							key={subForum.slug}
 							forum={subForum}

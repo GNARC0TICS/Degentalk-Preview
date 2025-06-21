@@ -17,7 +17,11 @@ interface StatsData {
 
 export default function StatsPage() {
 	// Fetch stats via React Query
-	const { data: statsData, isLoading, error } = useQuery<StatsData>({
+	const {
+		data: statsData,
+		isLoading,
+		error
+	} = useQuery<StatsData>({
 		queryKey: ['/api/admin/stats'],
 		queryFn: async () => {
 			// Backend should return a JSON object with numeric metrics
@@ -33,7 +37,9 @@ export default function StatsPage() {
 			</div>
 
 			{isLoading ? (
-				<div className="flex justify-center py-32"><Loader2 className="h-6 w-6 animate-spin" /></div>
+				<div className="flex justify-center py-32">
+					<Loader2 className="h-6 w-6 animate-spin" />
+				</div>
 			) : error ? (
 				<div className="text-red-500 text-center py-32">Failed to load stats.</div>
 			) : statsData ? (

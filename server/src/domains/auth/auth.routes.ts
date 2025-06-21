@@ -62,7 +62,11 @@ export function setupAuthPassport(sessionStore: any) {
 					}
 
 					// Ensure role is not null and groupId is undefined if null
-					const userWithRole = { ...user, role: user.role || 'user', groupId: user.groupId === null ? undefined : user.groupId };
+					const userWithRole = {
+						...user,
+						role: user.role || 'user',
+						groupId: user.groupId === null ? undefined : user.groupId
+					};
 					return done(null, userWithRole);
 				}
 
@@ -85,7 +89,11 @@ export function setupAuthPassport(sessionStore: any) {
 				}
 
 				// Ensure role is not null and groupId is undefined if null
-				const userWithRole = { ...user, role: user.role || 'user', groupId: user.groupId === null ? undefined : user.groupId };
+				const userWithRole = {
+					...user,
+					role: user.role || 'user',
+					groupId: user.groupId === null ? undefined : user.groupId
+				};
 				return done(null, userWithRole);
 			} catch (err) {
 				return done(err);
@@ -111,11 +119,18 @@ export function setupAuthPassport(sessionStore: any) {
 				const user = await storage.getUser(id);
 				if (user) {
 					// Ensure role is not null and groupId is undefined if null
-					const userWithRole = { ...user, role: user.role || 'user', groupId: user.groupId === null ? undefined : user.groupId };
+					const userWithRole = {
+						...user,
+						role: user.role || 'user',
+						groupId: user.groupId === null ? undefined : user.groupId
+					};
 					return done(null, userWithRole);
 				}
 			} catch (storageErr) {
-				logger.warn('AuthRoutes', 'Storage getUser error during deserialization, falling back.', { err: storageErr, userId: id });
+				logger.warn('AuthRoutes', 'Storage getUser error during deserialization, falling back.', {
+					err: storageErr,
+					userId: id
+				});
 				// Fall through to direct SQL approach or mock user in dev mode
 			}
 
@@ -125,7 +140,11 @@ export function setupAuthPassport(sessionStore: any) {
 				const role = (global as any).devRole || 'user';
 				const mockUser = createMockUser(id, role as any);
 				// Ensure role is not null and groupId is undefined if null for mock user too
-				const mockUserWithRole = { ...mockUser, role: mockUser.role || 'user', groupId: mockUser.groupId === null ? undefined : mockUser.groupId };
+				const mockUserWithRole = {
+					...mockUser,
+					role: mockUser.role || 'user',
+					groupId: mockUser.groupId === null ? undefined : mockUser.groupId
+				};
 				return done(null, mockUserWithRole);
 			}
 

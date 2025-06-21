@@ -3,7 +3,6 @@ description:
 globs: 
 alwaysApply: true
 ---
-```markdown
 ## Cursor Navigation Rules
 
 ### Manifest Requirement
@@ -12,9 +11,9 @@ For every future plan or code task, begin your reply with a known or reasoned as
 ```
 
 SCOPE:
-admin.routes.ts   – consolidate admin endpoints
-admin-treasury.ts – treasury service logic
-schema.ts         – request/response validators
+server/src/domains/admin/admin.routes.ts   – consolidate admin endpoints
+server/src/domains/treasury/treasury.service.ts – treasury service logic
+db/schema/forum/threads.ts                – request/response validators
 ...
 
 ```

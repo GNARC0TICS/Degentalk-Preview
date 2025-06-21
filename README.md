@@ -8,7 +8,7 @@ This repository is protected by an **advanced boundary enforcement system** that
 
 - ✅ **Import Boundaries**: Server cannot import from client/, client cannot import from server/
 - ✅ **Vite Config Protection**: Zero-tolerance for Vite config leaks into backend
-- ✅ **Schema Consistency**: All database fields must exist in both SQLite and PostgreSQL
+- ✅ **Schema Consistency**: All database fields must exist in the PostgreSQL schema across all environments (dev & prod)
 - ✅ **Path Alias Validation**: Automated checking of `@/` imports and TypeScript resolution
 - ✅ **CI/CD Integration**: Every PR is validated before merge
 
@@ -28,7 +28,8 @@ A crypto-native forum and social platform designed for cryptocurrency enthusiast
 
 - Node.js 18+
 - npm
-- PostgreSQL (for local development)
+- PostgreSQL (development & production)
+  > **Note:** Degentalk now exclusively supports **PostgreSQL** across all environments. Legacy SQLite support has been fully removed.
 
 ### Environment Setup
 
@@ -156,7 +157,7 @@ Clear startup logs show which services are starting:
 - `npm run start` - Starts the backend with `tsx` (hot-reload disabled) and serves the pre-built client assets.
 - `npm run preview` - Preview the client build locally
 
-> **Why no server build?**  We temporarily disabled `tsc` during the build step to unblock deployments while large type-safety refactors are in progress.  Server/package.json has:
+> **Why no server build?** We temporarily disabled `tsc` during the build step to unblock deployments while large type-safety refactors are in progress. Server/package.json has:
 >
 > ```json
 > "build": "echo \"skip build (tsx runtime)\"",
@@ -327,6 +328,7 @@ STRIPE_SECRET_KEY=your_stripe_key
 If you encounter `npm run dev` spawning infinite processes or your system becomes unresponsive:
 
 #### **Emergency Stop:**
+
 ```bash
 # Kill all npm processes immediately
 pkill -f "npm run dev"
@@ -340,6 +342,7 @@ lsof -ti:5173 | xargs kill -9 2>/dev/null || echo "Port 5173 clear"
 ```
 
 #### **Check for Runaway Processes:**
+
 ```bash
 # See all npm/node processes
 ps aux | grep npm
@@ -350,11 +353,13 @@ kill -9 <PID>
 ```
 
 #### **Common Causes:**
+
 - Scripts that reference themselves: `"dev": "npm run dev"`
 - Missing package.json files in subdirectories
 - Circular script dependencies between parent/child packages
 
 #### **Prevention:**
+
 - Never create self-referencing npm scripts
 - Always use direct commands instead of script delegation when possible
 - Verify subdirectories have package.json files before delegating to them

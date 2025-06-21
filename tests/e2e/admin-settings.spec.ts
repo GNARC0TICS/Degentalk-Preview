@@ -23,4 +23,4 @@ test.describe('Admin Settings & Feature Flags', () => {
 
 		await expect(page.getByText('Flag updated')).toBeVisible();
 	});
-}); 
+});

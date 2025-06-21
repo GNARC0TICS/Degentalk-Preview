@@ -32,4 +32,11 @@ router.get('/:id', asyncHandler(adminUsersController.getUserById.bind(adminUsers
  */
 router.put('/:id', asyncHandler(adminUsersController.updateUser.bind(adminUsersController)));
 
+/**
+ * @route GET /api/admin/users/search
+ * @desc Search users for admin tools (includes clout/tier data)
+ * @access Admin
+ */
+router.get('/search', asyncHandler(adminUsersController.searchUsers.bind(adminUsersController)));
+
 export default router;

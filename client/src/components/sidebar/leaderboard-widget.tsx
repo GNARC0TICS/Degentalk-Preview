@@ -22,7 +22,7 @@ interface LeaderboardWidgetProps {
 	isLoading?: boolean;
 }
 
-export function LeaderboardWidget({ users, isLoading = false }: LeaderboardWidgetProps) {
+export default function LeaderboardWidget({ users, isLoading = false }: LeaderboardWidgetProps) {
 	// Format users from API if available, or use predefined sample data if not
 	const formattedUsers: FormattedUser[] = React.useMemo(() => {
 		if (isLoading || !users) {
@@ -63,7 +63,7 @@ export function LeaderboardWidget({ users, isLoading = false }: LeaderboardWidge
 	const displayUsers = formattedUsers.length > 0 ? formattedUsers : sampleUsers;
 
 	return (
-		<Card className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden">
+		<Card className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden text-[clamp(0.75rem,0.9vw,0.95rem)]">
 			<CardHeader className="pb-3">
 				<CardTitle className="text-lg flex items-center">
 					<Award className="h-5 w-5 text-emerald-500 mr-2" />
@@ -78,10 +78,10 @@ export function LeaderboardWidget({ users, isLoading = false }: LeaderboardWidge
 							Array.from({ length: 5 }).map((_, i) => (
 								<div
 									key={i}
-									className="flex items-center justify-between p-2 rounded-md bg-zinc-800/50"
+									className="grid grid-cols-[max-content_minmax(0,1fr)_max-content] items-center gap-3 p-2 rounded-md bg-zinc-800/50 overflow-hidden"
 								>
 									<div className="flex items-center gap-3">
-										<Skeleton className="w-7 h-7 rounded-full" />
+										<Skeleton className="w-[clamp(20px,3.5vw,28px)] h-[clamp(20px,3.5vw,28px)] rounded-full" />
 										<div className="flex items-center gap-2">
 											<Skeleton className="h-7 w-7 rounded-full" />
 											<div className="flex flex-col">
@@ -90,22 +90,22 @@ export function LeaderboardWidget({ users, isLoading = false }: LeaderboardWidge
 											</div>
 										</div>
 									</div>
-									<Skeleton className="h-4 w-12" />
+									<Skeleton className="h-4 w-14" />
 								</div>
 							))
 						: // Actual users
 							displayUsers.map((user) => (
 								<div
 									key={user.id}
-									className={`flex items-center justify-between p-2 rounded-md transition-colors ${
+									className={`grid grid-cols-[max-content_minmax(0,1fr)_max-content] items-center gap-3 p-2 rounded-md transition-colors min-w-0 overflow-hidden ${
 										user.rank === 1
 											? 'bg-gradient-to-r from-yellow-500/10 to-amber-500/10 border border-yellow-500/20'
 											: 'hover:bg-zinc-800 bg-zinc-800/50'
 									}`}
 								>
-									<div className="flex items-center gap-3">
+									<div className="flex items-center gap-3 min-w-0">
 										<div
-											className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${
+											className={`rounded-full flex items-center justify-center font-bold w-[clamp(20px,3.5vw,28px)] h-[clamp(20px,3.5vw,28px)] ${
 												user.rank === 1
 													? 'bg-yellow-500 text-yellow-900'
 													: user.rank === 2
@@ -118,7 +118,7 @@ export function LeaderboardWidget({ users, isLoading = false }: LeaderboardWidge
 											{user.rank}
 										</div>
 
-										<div className="flex items-center gap-2">
+										<div className="flex items-center gap-2 min-w-0">
 											<Avatar className="h-7 w-7">
 												<AvatarFallback className="bg-zinc-700 text-zinc-300 text-xs">
 													{user.username.slice(0, 2).toUpperCase()}
@@ -128,7 +128,7 @@ export function LeaderboardWidget({ users, isLoading = false }: LeaderboardWidge
 											<div className="flex flex-col">
 												<Link
 													href={`/profile/${user.username}`}
-													className="text-sm font-medium hover:text-emerald-400 transition-colors"
+													className="text-sm font-medium hover:text-emerald-400 transition-colors truncate max-w-[40vw]"
 												>
 													{user.username}
 												</Link>
@@ -137,8 +137,9 @@ export function LeaderboardWidget({ users, isLoading = false }: LeaderboardWidge
 										</div>
 									</div>
 
-									<div className="text-sm text-emerald-400 font-mono">
-										{user.xp.toLocaleString()}
+									<div className="text-sm text-emerald-400 font-mono min-w-max pl-2 text-right whitespace-nowrap truncate">
+										{user.xp.toLocaleString()}{' '}
+										<span className="inline-block ms-1 font-normal opacity-60">XP</span>
 									</div>
 								</div>
 							))}

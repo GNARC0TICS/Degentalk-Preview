@@ -116,7 +116,8 @@ const getXpColor = (amount: number) => {
 	return 'text-gradient-gold';
 };
 
-const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => { // Changed userId to string
+const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => {
+	// Changed userId to string
 	// State for filters and pagination
 	const [period, setPeriod] = useState<string>('all');
 	const [selectedAction, setSelectedAction] = useState<string | null>(null);
@@ -129,7 +130,12 @@ const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => { // Changed us
 	}, [period, selectedAction]);
 
 	// Fetch XP logs with current filters
-	const { data: xpLogQueryData, isLoading, error, refetch } = useQuery<XpLogResponse, Error>({
+	const {
+		data: xpLogQueryData,
+		isLoading,
+		error,
+		refetch
+	} = useQuery<XpLogResponse, Error>({
 		queryKey: ['xpLogs', userId, period, selectedAction, page],
 		queryFn: async () => {
 			// Use domain-based endpoints
@@ -348,7 +354,8 @@ const XpLogView: React.FC<{ userId?: string }> = ({ userId }) => { // Changed us
 								)}
 
 								<div className="text-center text-xs text-gray-500 mt-3">
-									Showing {xpLogQueryData?.logs.length} of {xpLogQueryData?.pagination.total} activities
+									Showing {xpLogQueryData?.logs.length} of {xpLogQueryData?.pagination.total}{' '}
+									activities
 								</div>
 							</>
 						)}

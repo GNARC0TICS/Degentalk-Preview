@@ -1,4 +1,13 @@
-import { pgTable, serial, bigint, varchar, timestamp, jsonb, uuid, integer } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	bigint,
+	varchar,
+	timestamp,
+	jsonb,
+	uuid,
+	integer
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { transactions } from './transactions';
