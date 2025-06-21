@@ -1,6 +1,6 @@
 # Feature Scope Guide
 
-Generated on: 2025-06-19T12:31:51.444Z
+Generated on: 2025-06-20T21:51:19.224Z
 
 > NOTE: This file is auto-generated. Do not edit manually.
 
@@ -39,6 +39,7 @@ Generated on: 2025-06-19T12:31:51.444Z
 - client/src/pages/admin/categories.tsx
 - client/src/pages/admin/clout/achievements.tsx
 - client/src/pages/admin/clout/grants.tsx
+- client/src/pages/admin/config/economy.tsx
 - client/src/pages/admin/config/tags.tsx
 - client/src/pages/admin/config/xp.tsx
 - client/src/pages/admin/config/zones.tsx
@@ -103,6 +104,7 @@ Generated on: 2025-06-19T12:31:51.444Z
 - client/src/features/admin/components/dashboard/index.ts
 - client/src/features/admin/services/cloutAchievementsService.ts
 - client/src/features/admin/services/cloutGrantsService.ts
+- client/src/features/admin/services/economyConfigService.ts
 - client/src/features/admin/services/featureFlagsService.ts
 - client/src/features/admin/services/settingsService.ts
 - client/src/features/admin/services/uiConfigApi.ts
@@ -137,6 +139,8 @@ Generated on: 2025-06-19T12:31:51.444Z
 - server/src/domains/admin/sub-domains/clout/clout.controller.ts
 - server/src/domains/admin/sub-domains/clout/clout.routes.ts
 - server/src/domains/admin/sub-domains/dev/seeding.routes.ts
+- server/src/domains/admin/sub-domains/economy/economy.controller.ts
+- server/src/domains/admin/sub-domains/economy/economy.routes.ts
 - server/src/domains/admin/sub-domains/emojis/emojis.controller.ts
 - server/src/domains/admin/sub-domains/emojis/emojis.routes.ts
 - server/src/domains/admin/sub-domains/emojis/emojis.service.ts
@@ -285,7 +289,7 @@ Generated on: 2025-06-19T12:31:51.444Z
 
 ### Frontend Pages
 - client/src/pages/admin/dictionary/index.tsx
-- client/src/pages/dictionary/%5Bslug%5D.tsx
+- client/src/pages/dictionary/[slug].tsx
 - client/src/pages/dictionary/index.tsx
 
 ### Frontend Components / Hooks / Services
@@ -304,6 +308,9 @@ Generated on: 2025-06-19T12:31:51.444Z
 - scripts/seed/dictionary.ts
 
 ## Economy
+
+### Frontend Pages
+- client/src/pages/admin/config/economy.tsx
 
 ### Frontend Components / Hooks / Services
 - client/src/components/economy/badges/BadgeShowcase.tsx
@@ -330,8 +337,11 @@ Generated on: 2025-06-19T12:31:51.444Z
 - client/src/components/economy/xp/XPProgressBar.tsx
 
 ### Backend
+- server/src/domains/admin/sub-domains/economy/economy.controller.ts
+- server/src/domains/admin/sub-domains/economy/economy.routes.ts
 - server/src/domains/economy/services/cloutService.ts
 - server/src/domains/economy/services/rewardService.ts
+- server/src/utils/economy-loader.ts
 
 ### Database Schema
 - db/schema/economy/airdropRecords.ts
@@ -400,14 +410,23 @@ Generated on: 2025-06-19T12:31:51.444Z
 ## Forum
 
 ### Frontend Components / Hooks / Services
+- client/src/components/forum/BBCodePostCard.tsx
 - client/src/components/forum/CanonicalZoneGrid.tsx
 - client/src/components/forum/CreateThreadButton.tsx
+- client/src/components/forum/HotTopics.tsx
 - client/src/components/forum/OriginForumPill.tsx
+- client/src/components/forum/ProfileCard.tsx
+- client/src/components/forum/QuickStats.tsx
+- client/src/components/forum/ReactionBar.tsx
+- client/src/components/forum/RecentActivity.tsx
 - client/src/components/forum/ShareButton.tsx
 - client/src/components/forum/ShopCard.tsx
+- client/src/components/forum/SignatureRenderer.tsx
 - client/src/components/forum/SolveBadge.tsx
 - client/src/components/forum/ThreadAuthor.tsx
 - client/src/components/forum/ThreadCard.tsx
+- client/src/components/forum/ThreadPagination.tsx
+- client/src/components/forum/ThreadSidebar.tsx
 - client/src/components/forum/ThreadStats.tsx
 - client/src/components/forum/UserLevelDisplay.tsx
 - client/src/components/forum/XpBoostBadge.tsx
@@ -726,6 +745,7 @@ Generated on: 2025-06-19T12:31:51.444Z
 - db/schema/system/airdrop-records.ts
 - db/schema/system/analyticsEvents.ts
 - db/schema/system/cooldownState.ts
+- db/schema/system/economyConfigOverrides.ts
 - db/schema/system/event_logs.ts
 - db/schema/system/mentionsIndex.ts
 - db/schema/system/notifications.ts
@@ -961,7 +981,7 @@ Generated on: 2025-06-19T12:31:51.444Z
 - client/src/components/xp/XPBarTrack.tsx
 - client/src/components/xp/XPBarsContainer.tsx
 - client/src/components/xp/XpToast.tsx
-- client/src/components/xp/xpConfig.ts
+- client/src/components/xp/tracks.ts
 - client/src/hooks/useUserXP.ts
 - client/src/hooks/useXP.ts
 

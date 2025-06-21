@@ -13,8 +13,8 @@ import { dgtService } from './dgt.service';
 import { ccpaymentService, type CryptoBalance } from './ccpayment.service'; // Import instance and CryptoBalance type
 // import { TransactionService } from '../transactions/transaction.service'; // Ensure this is commented or removed
 import { db } from '@db';
-import { users, dgtPurchaseOrders, transactions, transactionTypeEnum } from '@schema';
-import { eq, desc, and, sql, SQL } from 'drizzle-orm';
+import { users, dgtPurchaseOrders, transactions, transactionTypeEnum, dgtPackages } from '@schema';
+import { eq, desc, and, sql, SQL, asc } from 'drizzle-orm';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
 import crypto from 'crypto';
 import { z } from 'zod';
@@ -551,6 +551,67 @@ export class WalletController {
 				err
 			);
 			res.status(500).json({ error: err.message || 'Server error creating DGT transaction.' });
+		}
+	}
+
+	async listPackages(_req: Request, res: Response): Promise<void> {
+		try {
+			const packages = await db
+				.select()
+				.from(dgtPackages)
+				.where(eq(dgtPackages.isActive, true))
+				.orderBy(asc(dgtPackages.sortOrder), asc(dgtPackages.id));
+			res.json(packages);
+		} catch (error) {
+			logger.error('WALLET_CONTROLLER', 'Error listing DGT packages', error);
+			res.status(500).json({ error: 'Failed to list packages' });
+		}
+	}
+
+	async createPurchaseOrder(req: Request, res: Response): Promise<void> {
+		try {
+			if (!req.user) return res.status(401).json({ error: 'Unauthenticated' });
+			const userId = (req.user as { id: number }).id;
+			const { packageId, cryptoCurrency = 'USDT' } = req.body;
+
+			if (!packageId) return res.status(400).json({ error: 'packageId is required' });
+
+			const [pkg] = await db
+				.select()
+				.from(dgtPackages)
+				.where(eq(dgtPackages.id, Number(packageId)));
+			if (!pkg || !pkg.isActive) return res.status(404).json({ error: 'Package not found' });
+
+			// Generate merchant order id
+			const merchantOrderId = `pkg_${pkg.id}_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
+
+			// Create CCPayment deposit link
+			const depositUrl = await ccpaymentService.createDepositLink({
+				amount: Number(pkg.usdPrice),
+				currency: cryptoCurrency,
+				orderId: merchantOrderId,
+				productName: pkg.name,
+				redirectUrl: process.env.CCPAYMENT_REDIRECT_URL || 'https://degentalk.com/wallet',
+				notifyUrl: process.env.CCPAYMENT_NOTIFY_URL || 'https://degentalk.com/api/ccpayment/webhook'
+			});
+
+			// Insert purchase order
+			const [order] = await db
+				.insert(dgtPurchaseOrders)
+				.values({
+					userId,
+					dgtAmountRequested: pkg.dgtAmount,
+					cryptoAmountExpected: pkg.usdPrice,
+					cryptoCurrencyExpected: cryptoCurrency,
+					ccpaymentReference: merchantOrderId,
+					status: 'pending'
+				})
+				.returning();
+
+			res.status(201).json({ order, depositUrl });
+		} catch (error) {
+			logger.error('WALLET_CONTROLLER', 'Error creating purchase order', error);
+			res.status(500).json({ error: 'Failed to create purchase order' });
 		}
 	}
 }

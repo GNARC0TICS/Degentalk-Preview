@@ -104,6 +104,8 @@ export * from './shop/signatureItems';
 export * from './shop/userSignatureItems';
 export * from './shop/cosmeticCategories';
 export * from './shop/rarities';
+export * from './shop/animationPacks';
+export * from './shop/animationPackItems';
 
 // Messaging domain exports
 export * from './messaging/conversations';

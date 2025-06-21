@@ -7,7 +7,12 @@ import {
 	MinusCircle,
 	RotateCcw,
 	History,
-	UserRound
+	UserRound,
+	TrendingUp,
+	TrendingDown,
+	Bell,
+	BellOff,
+	Target
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
@@ -42,9 +47,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useDebounce } from '@/hooks/use-debounce';
 import { apiRequest } from '@/lib/queryClient';
+import { getLevelForXp, getXpForLevel } from '@shared/economy/reward-calculator';
+import { XP_EASTER_EGGS } from '@/config/easter-eggs.config';
+import { BankruptcyEffect } from '@/components/admin/effects/BankruptcyEffect';
 
 // Types
 interface User {
@@ -81,6 +90,8 @@ export default function UserXpAdjustmentPage() {
 	const [adjustmentType, setAdjustmentType] = useState<'add' | 'subtract' | 'set'>('add');
 	const [adjustmentAmount, setAdjustmentAmount] = useState<number>(100);
 	const [adjustmentReason, setAdjustmentReason] = useState<string>('');
+	const [notifyUser, setNotifyUser] = useState<boolean>(false);
+	const [showBankruptcyEffect, setShowBankruptcyEffect] = useState<boolean>(false);
 	const [sortField, setSortField] = useState<'username' | 'level' | 'xp'>('xp');
 	const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
@@ -124,15 +135,40 @@ export default function UserXpAdjustmentPage() {
 			amount: number;
 			adjustmentType: 'add' | 'subtract' | 'set';
 			reason: string;
+			notify?: boolean;
 		}) => {
 			return apiRequest<{ user: User }>({ method: 'POST', url: '/api/admin/xp/adjust', data });
 		},
 		onSuccess: (data: { user: User }) => {
-			toast({
-				title: 'XP adjusted successfully',
-				description: `${data.user.username}'s XP has been updated`,
-				variant: 'default'
-			});
+			const levelImpact = calculateLevelImpact();
+			let description = `${data.user.username}'s XP has been updated`;
+
+			if (levelImpact && levelImpact.levelChange > 0) {
+				description += ` (Level ${levelImpact.currentLevel} → ${levelImpact.newLevel})`;
+			} else if (levelImpact && levelImpact.levelChange < 0) {
+				description += ` (Level ${levelImpact.currentLevel} → ${levelImpact.newLevel})`;
+			}
+
+			// Check for bankruptcy easter egg
+			if (
+				(XP_EASTER_EGGS.enableBankruptcy &&
+					adjustmentType === 'subtract' &&
+					adjustmentAmount >= Math.abs(XP_EASTER_EGGS.bankruptcyThreshold)) ||
+				(adjustmentType === 'set' &&
+					adjustmentAmount === 0 &&
+					selectedUser &&
+					selectedUser.xp > 1000)
+			) {
+				setShowBankruptcyEffect(true);
+				// Don't show normal toast for bankruptcy - the effect is the notification
+			} else {
+				toast({
+					title: 'XP adjusted successfully',
+					description,
+					variant: 'default'
+				});
+			}
+
 			setIsAdjustDialogOpen(false);
 			// Update the local state with the new XP
 			if (users?.users) {
@@ -193,7 +229,8 @@ export default function UserXpAdjustmentPage() {
 			userId: selectedUser.id,
 			amount: adjustmentAmount,
 			adjustmentType,
-			reason: adjustmentReason
+			reason: adjustmentReason,
+			notify: notifyUser
 		});
 	};
 
@@ -201,6 +238,7 @@ export default function UserXpAdjustmentPage() {
 		setAdjustmentType('add');
 		setAdjustmentAmount(100);
 		setAdjustmentReason('');
+		setNotifyUser(false);
 		setSelectedUser(null);
 	};
 
@@ -233,6 +271,32 @@ export default function UserXpAdjustmentPage() {
 			default:
 				return selectedUser.xp;
 		}
+	};
+
+	// Calculate level impact
+	const calculateLevelImpact = () => {
+		if (!selectedUser) return null;
+
+		const currentXp = selectedUser.xp;
+		const newXp = calculateAdjustedXp();
+		const currentLevel = getLevelForXp(currentXp);
+		const newLevel = getLevelForXp(newXp);
+
+		const currentLevelXp = getXpForLevel(currentLevel);
+		const nextLevelXp = getXpForLevel(currentLevel + 1);
+		const newLevelStartXp = getXpForLevel(newLevel);
+		const newNextLevelXp = getXpForLevel(newLevel + 1);
+
+		return {
+			currentXp,
+			newXp,
+			currentLevel,
+			newLevel,
+			levelChange: newLevel - currentLevel,
+			currentProgress: ((currentXp - currentLevelXp) / (nextLevelXp - currentLevelXp)) * 100,
+			newProgress: ((newXp - newLevelStartXp) / (newNextLevelXp - newLevelStartXp)) * 100,
+			xpToNextLevel: newNextLevelXp - newXp
+		};
 	};
 
 	return (
@@ -492,31 +556,101 @@ export default function UserXpAdjustmentPage() {
 								/>
 							</div>
 
-							{selectedUser && (
-								<div className="rounded-md bg-muted p-4">
-									<div className="text-sm font-medium">Adjustment Preview</div>
-									<div className="mt-2 grid grid-cols-3 gap-2 text-sm">
-										<div>
-											<div className="text-muted-foreground">Current XP</div>
-											<div className="font-medium">{selectedUser.xp.toLocaleString()}</div>
-										</div>
-										<div>
-											<div className="text-muted-foreground">
-												{adjustmentType === 'add'
-													? 'Adding'
-													: adjustmentType === 'subtract'
-														? 'Subtracting'
-														: 'Setting to'}
+							<div className="flex items-center space-x-2">
+								<Checkbox
+									id="notify"
+									checked={notifyUser}
+									onCheckedChange={(checked) => setNotifyUser(checked as boolean)}
+								/>
+								<Label htmlFor="notify" className="flex items-center text-sm">
+									{notifyUser ? (
+										<Bell className="h-4 w-4 mr-1" />
+									) : (
+										<BellOff className="h-4 w-4 mr-1" />
+									)}
+									Notify user of XP adjustment
+								</Label>
+							</div>
+
+							{selectedUser &&
+								(() => {
+									const levelImpact = calculateLevelImpact();
+									if (!levelImpact) return null;
+
+									return (
+										<div className="rounded-md bg-muted p-4 space-y-4">
+											<div className="flex items-center gap-2">
+												<Target className="h-4 w-4" />
+												<div className="text-sm font-medium">Level Impact Preview</div>
 											</div>
-											<div className="font-medium">{adjustmentAmount.toLocaleString()}</div>
+
+											{/* XP Summary */}
+											<div className="grid grid-cols-3 gap-4 text-sm">
+												<div>
+													<div className="text-muted-foreground">Current XP</div>
+													<div className="font-medium">
+														{levelImpact.currentXp.toLocaleString()}
+													</div>
+												</div>
+												<div>
+													<div className="text-muted-foreground">
+														{adjustmentType === 'add'
+															? 'Adding'
+															: adjustmentType === 'subtract'
+																? 'Subtracting'
+																: 'Setting to'}
+													</div>
+													<div className="font-medium">{adjustmentAmount.toLocaleString()}</div>
+												</div>
+												<div>
+													<div className="text-muted-foreground">New XP</div>
+													<div className="font-medium">{levelImpact.newXp.toLocaleString()}</div>
+												</div>
+											</div>
+
+											{/* Level Change */}
+											<div className="border-t pt-3">
+												<div className="flex items-center justify-between">
+													<div className="flex items-center gap-2">
+														<div className="text-sm font-medium">Level Impact:</div>
+														{levelImpact.levelChange > 0 && (
+															<Badge className="bg-emerald-700 hover:bg-emerald-800 text-emerald-100">
+																<TrendingUp className="h-3 w-3 mr-1" />+{levelImpact.levelChange}{' '}
+																Level{levelImpact.levelChange > 1 ? 's' : ''}
+															</Badge>
+														)}
+														{levelImpact.levelChange < 0 && (
+															<Badge className="bg-red-700 hover:bg-red-800 text-red-100">
+																<TrendingDown className="h-3 w-3 mr-1" />
+																{levelImpact.levelChange} Level
+																{Math.abs(levelImpact.levelChange) > 1 ? 's' : ''}
+															</Badge>
+														)}
+														{levelImpact.levelChange === 0 && (
+															<Badge variant="outline">No Level Change</Badge>
+														)}
+													</div>
+													<div className="text-sm text-muted-foreground">
+														Level {levelImpact.currentLevel} → {levelImpact.newLevel}
+													</div>
+												</div>
+
+												{levelImpact.newLevel > levelImpact.currentLevel && (
+													<div className="mt-2 text-xs text-emerald-600">
+														🎉 User will level up {levelImpact.levelChange} time
+														{levelImpact.levelChange > 1 ? 's' : ''}!
+													</div>
+												)}
+
+												{levelImpact.xpToNextLevel > 0 && (
+													<div className="mt-2 text-xs text-muted-foreground">
+														{levelImpact.xpToNextLevel.toLocaleString()} XP to next level
+													</div>
+												)}
+											</div>
 										</div>
-										<div>
-											<div className="text-muted-foreground">New XP</div>
-											<div className="font-medium">{calculateAdjustedXp().toLocaleString()}</div>
-										</div>
-									</div>
-								</div>
-							)}
+									);
+								})()}
 						</div>
 
 						<DialogFooter>
@@ -553,6 +687,13 @@ export default function UserXpAdjustmentPage() {
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
+
+			{/* Bankruptcy Easter Egg Effect */}
+			<BankruptcyEffect
+				isOpen={showBankruptcyEffect}
+				username={selectedUser?.username || ''}
+				onClose={() => setShowBankruptcyEffect(false)}
+			/>
 		</div>
 	);
 }

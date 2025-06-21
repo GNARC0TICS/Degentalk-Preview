@@ -2,8 +2,7 @@ import React from 'react'; // Removed useState
 import { useQuery } from '@tanstack/react-query';
 import { FixedSizeList as List } from 'react-window'; // Added react-window
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import type { ThreadTag } from '@schema';
+// Temporarily remove heavy lottie dependency until build issues resolved
 import { Link } from 'wouter';
 import { MessageSquare, Eye, ThumbsUp, ArrowRight, Clock, TrendingUp } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
@@ -113,12 +112,7 @@ function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 								{/* Simple flame for very hot threads */}
 								{thread.hot_score > 75 && (
 									<div className="text-orange-500">
-										<DotLottieReact
-											src="https://lottie.host/abeba818-d877-4e4d-8d8a-7f7f9099411c/6Pqbh2E87a.lottie"
-											loop
-											autoplay
-											style={{ height: '16px', width: '16px' }}
-										/>
+										<FlameIcon />
 									</div>
 								)}
 							</div>
@@ -195,12 +189,7 @@ function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-3">
 						<div className="h-8 w-8 flex items-center justify-center">
-							<DotLottieReact
-								src="https://lottie.host/abeba818-d877-4e4d-8d8a-7f7f9099411c/6Pqbh2E87a.lottie"
-								loop
-								autoplay
-								style={{ height: '32px', width: '32px' }}
-							/>
+							{/* Temporarily remove heavy lottie dependency until build issues resolved */}
 						</div>
 						<div>
 							<CardTitle className="text-xl font-bold bg-gradient-to-r from-orange-400 to-red-400 text-transparent bg-clip-text">
@@ -239,12 +228,7 @@ function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 				) : (
 					<div className="text-center py-8 text-zinc-400">
 						<div className="flex justify-center mb-2">
-							<DotLottieReact
-								src="https://lottie.host/abeba818-d877-4e4d-8d8a-7f7f9099411c/6Pqbh2E87a.lottie"
-								loop
-								autoplay
-								style={{ height: '32px', width: '32px', opacity: 0.6 }}
-							/>
+							{/* Temporarily remove heavy lottie dependency until build issues resolved */}
 						</div>
 						<p>No hot threads right now</p>
 						<p className="text-xs text-zinc-500">Check back later for trending discussions</p>
@@ -266,5 +250,11 @@ function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 		</Card>
 	);
 }
+
+const FlameIcon = () => (
+	<span role="img" aria-label="flame" className="text-orange-500 mr-1">
+		🔥
+	</span>
+);
 
 export default HotThreads;

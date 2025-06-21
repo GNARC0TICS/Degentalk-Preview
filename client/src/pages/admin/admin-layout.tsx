@@ -16,7 +16,6 @@ import {
 	Smile,
 	Settings,
 	Flag,
-	// Users2, // For deprecated user-groups
 	Megaphone,
 	CloudRain,
 	Clock,
@@ -25,7 +24,15 @@ import {
 	BarChart3,
 	BadgeIcon,
 	Globe,
-	Database
+	Database,
+	Film,
+	Gift,
+	TrendingUp,
+	Shield,
+	Zap,
+	Star,
+	UserCog,
+	Crown
 } from 'lucide-react';
 import AdminSidebar from '@/components/admin/admin-sidebar';
 import { AdminSidebarProvider, useAdminSidebar } from '@/contexts/AdminSidebarContext';
@@ -42,53 +49,68 @@ interface AdminLayoutProps {
 	children: ReactNode;
 }
 
-// This could be moved to a config file if it grows larger
+// Organized Admin Navigation - Core Config Pages (MUST SHIP)
 const BASE_ADMIN_LINKS = [
 	{ href: '/admin', label: 'Dashboard', icon: <HomeIcon className="h-4 w-4" /> },
-	{ href: '/admin/users', label: 'Users', icon: <Users className="h-4 w-4" /> },
-	{ href: '/admin/threads', label: 'Threads', icon: <MessageSquare className="h-4 w-4" /> },
-	{ href: '/admin/forum-structure', label: 'Forum Structure', icon: <Globe className="h-4 w-4" /> },
-	{ href: '/admin/categories', label: 'Categories', icon: <FolderIcon className="h-4 w-4" /> },
-	{ href: '/admin/prefixes', label: 'Prefixes', icon: <TagIcon className="h-4 w-4" /> },
-	{ href: '/admin/treasury', label: 'Treasury', icon: <CoinsIcon className="h-4 w-4" /> },
-	{ href: '/admin/xp/adjust', label: 'Adjust User XP', icon: <Sparkles className="h-4 w-4" /> },
-	{ href: '/admin/xp/settings', label: 'XP Settings', icon: <Settings className="h-4 w-4" /> },
-	{ href: '/admin/xp/levels', label: 'User Levels', icon: <BarChart3 className="h-4 w-4" /> },
-	{ href: '/admin/xp/badges', label: 'Badges', icon: <Trophy className="h-4 w-4" /> },
-	{ href: '/admin/xp/titles', label: 'Titles', icon: <BadgeIcon className="h-4 w-4" /> },
+
+	// Core Config (Primary Priority)
 	{
-		href: '/admin/clout/achievements',
-		label: 'Clout Achievements',
-		icon: <Trophy className="h-4 w-4" />
+		href: '#',
+		label: 'Core Config',
+		icon: <Settings className="h-4 w-4" />,
+		submenu: [
+			{ href: '/admin/forum-structure', label: 'Forum Structure' },
+			{ href: '/admin/config/tags', label: 'Tags & Prefixes' },
+			{ href: '/admin/users', label: 'Users' },
+			{ href: '/admin/roles-titles', label: 'Roles & Titles' },
+			{ href: '/admin/xp-system', label: 'XP System' },
+			{ href: '/admin/clout', label: 'Clout System' }
+		]
 	},
-	{ href: '/admin/clout/grants', label: 'Clout Grants', icon: <Sparkles className="h-4 w-4" /> },
-	{ href: '/admin/dgt-packages', label: 'DGT Packages', icon: <Package className="h-4 w-4" /> },
-	{ href: '/admin/emojis', label: 'Emojis', icon: <Smile className="h-4 w-4" /> },
-	{ href: '/admin/config/tags', label: 'Tag Config', icon: <TagIcon className="h-4 w-4" /> },
-	{ href: '/admin/config/xp', label: 'XP Config', icon: <Trophy className="h-4 w-4" /> },
-	{ href: '/admin/config/economy', label: 'Economy', icon: <CoinsIcon className="h-4 w-4" /> },
-	{ href: '/admin/config/zones', label: 'Forum Zones', icon: <Globe className="h-4 w-4" /> },
+
+	// Economy (Secondary Priority)
 	{
-		href: '/admin/platform-settings',
-		label: 'Platform Settings',
-		icon: <Settings className="h-4 w-4" />
+		href: '#',
+		label: 'Economy',
+		icon: <CoinsIcon className="h-4 w-4" />,
+		submenu: [
+			{ href: '/admin/config/economy', label: 'Economy Config' },
+			{ href: '/admin/treasury', label: 'Treasury' },
+			{ href: '/admin/dgt-packages', label: 'DGT Packages' },
+			{ href: '/admin/xp/adjust', label: 'XP Adjustments' }
+		]
 	},
-	{ href: '/admin/reports', label: 'Reports', icon: <Flag className="h-4 w-4" /> },
-	// { href: '/admin/user-groups', label: 'User Groups', icon: <Users2 className="h-4 w-4" /> }, // Deprecated
-	{ href: '/admin/announcements', label: 'Announcements', icon: <Megaphone className="h-4 w-4" /> },
+
+	// Shop & Items (Secondary Priority)
 	{
-		href: '/admin/tip-rain-settings',
-		label: 'Tip & Rain',
-		icon: <CloudRain className="h-4 w-4" />
+		href: '#',
+		label: 'Shop',
+		icon: <Package className="h-4 w-4" />,
+		submenu: [
+			{ href: '/admin/emojis', label: 'Emojis' },
+			{ href: '/admin/ui/animations', label: 'Animation Packs' }
+		]
 	},
-	{ href: '/admin/cooldowns', label: 'Cooldowns', icon: <Clock className="h-4 w-4" /> }
+
+	// Moderation (Secondary Priority)
+	{
+		href: '#',
+		label: 'Moderation',
+		icon: <Shield className="h-4 w-4" />,
+		submenu: [
+			{ href: '/admin/reports', label: 'Reports' },
+			{ href: '/admin/announcements', label: 'Announcements' }
+		]
+	}
 ];
 
+// Development Tools (Dev Mode Only)
 if (import.meta.env.MODE === 'development') {
 	BASE_ADMIN_LINKS.push({
-		href: '/admin/dev/seeding',
-		label: 'Seeding',
-		icon: <Database className="h-4 w-4" />
+		href: '#',
+		label: 'Dev Tools',
+		icon: <Database className="h-4 w-4" />,
+		submenu: [{ href: '/admin/dev/seeding', label: 'Database Seeding' }]
 	});
 }
 

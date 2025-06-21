@@ -12,6 +12,7 @@ import { adminController } from '../../admin.controller';
 import {
 	CategorySchema,
 	PrefixSchema,
+	TagSchema,
 	ModerateThreadSchema,
 	PaginationSchema,
 	createEntitySchema,
@@ -179,6 +180,91 @@ export class AdminForumController {
 					.status(error.httpStatus)
 					.json({ error: error.message, code: error.code, details: error.details });
 			res.status(500).json({ error: 'Failed to create thread prefix' });
+		}
+	}
+
+	// Tag Management
+
+	async getAllTags(req: Request, res: Response) {
+		try {
+			const tags = await adminForumService.getAllTags();
+			res.json(tags);
+		} catch (error) {
+			if (error instanceof AdminError)
+				return res
+					.status(error.httpStatus)
+					.json({ error: error.message, code: error.code, details: error.details });
+			res.status(500).json({ error: 'Failed to fetch tags' });
+		}
+	}
+
+	async createTag(req: Request, res: Response) {
+		try {
+			const validation = TagSchema.safeParse(req.body);
+			if (!validation.success) {
+				throw new AdminError(
+					'Invalid tag data',
+					400,
+					AdminErrorCodes.VALIDATION_ERROR,
+					validation.error.format()
+				);
+			}
+
+			const tag = await adminForumService.createTag(validation.data);
+			await adminController.logAction(req, 'CREATE_TAG', 'tag', tag.id.toString(), validation.data);
+			res.status(201).json(tag);
+		} catch (error) {
+			if (error instanceof AdminError)
+				return res
+					.status(error.httpStatus)
+					.json({ error: error.message, code: error.code, details: error.details });
+			res.status(500).json({ error: 'Failed to create tag' });
+		}
+	}
+
+	async updateTag(req: Request, res: Response) {
+		try {
+			const tagId = parseInt(req.params.id);
+			if (isNaN(tagId))
+				throw new AdminError('Invalid tag ID', 400, AdminErrorCodes.INVALID_REQUEST);
+
+			const validation = TagSchema.safeParse(req.body);
+			if (!validation.success) {
+				throw new AdminError(
+					'Invalid tag data',
+					400,
+					AdminErrorCodes.VALIDATION_ERROR,
+					validation.error.format()
+				);
+			}
+
+			const tag = await adminForumService.updateTag(tagId, validation.data);
+			await adminController.logAction(req, 'UPDATE_TAG', 'tag', tagId.toString(), validation.data);
+			res.json(tag);
+		} catch (error) {
+			if (error instanceof AdminError)
+				return res
+					.status(error.httpStatus)
+					.json({ error: error.message, code: error.code, details: error.details });
+			res.status(500).json({ error: 'Failed to update tag' });
+		}
+	}
+
+	async deleteTag(req: Request, res: Response) {
+		try {
+			const tagId = parseInt(req.params.id);
+			if (isNaN(tagId))
+				throw new AdminError('Invalid tag ID', 400, AdminErrorCodes.INVALID_REQUEST);
+
+			const result = await adminForumService.deleteTag(tagId);
+			await adminController.logAction(req, 'DELETE_TAG', 'tag', tagId.toString(), {});
+			res.json(result);
+		} catch (error) {
+			if (error instanceof AdminError)
+				return res
+					.status(error.httpStatus)
+					.json({ error: error.message, code: error.code, details: error.details });
+			res.status(500).json({ error: 'Failed to delete tag' });
 		}
 	}
 

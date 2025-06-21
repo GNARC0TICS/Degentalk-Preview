@@ -19,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { apiRequest } from '@/lib/queryClient';
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 // XP Settings types
 interface XpSettings {
@@ -238,31 +239,30 @@ export default function XpSettingsPage() {
 		</div>
 	);
 
-	return (
-		<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-			<div className="flex items-center justify-between">
-				<h2 className="text-3xl font-bold tracking-tight">XP System Settings</h2>
-				<div className="flex items-center space-x-2">
-					<Button
-						variant="outline"
-						onClick={handleResetToDefaults}
-						disabled={resetToDefaultsMutation.isPending}
-					>
-						<RotateCcw className="mr-2 h-4 w-4" />
-						{resetToDefaultsMutation.isPending ? 'Resetting...' : 'Reset to Defaults'}
-					</Button>
-					<Button onClick={handleSubmit} disabled={updateSettingsMutation.isPending || !hasChanges}>
-						<Save className="mr-2 h-4 w-4" />
-						{updateSettingsMutation.isPending ? 'Saving...' : 'Save Changes'}
-					</Button>
-				</div>
-			</div>
+	const pageActions = (
+		<div className="flex items-center space-x-2">
+			<Button
+				variant="outline"
+				onClick={handleResetToDefaults}
+				disabled={resetToDefaultsMutation.isPending}
+			>
+				<RotateCcw className="mr-2 h-4 w-4" />
+				{resetToDefaultsMutation.isPending ? 'Resetting...' : 'Reset to Defaults'}
+			</Button>
+			<Button onClick={handleSubmit} disabled={updateSettingsMutation.isPending || !hasChanges}>
+				<Save className="mr-2 h-4 w-4" />
+				{updateSettingsMutation.isPending ? 'Saving...' : 'Save Changes'}
+			</Button>
+		</div>
+	);
 
+	return (
+		<AdminPageShell title="XP System Settings" pageActions={pageActions}>
 			{isLoading ? (
 				<div className="space-y-2">
 					<Card className="animate-pulse">
-						<CardHeader className="bg-zinc-900 bg-opacity-50 h-24" />
-						<CardContent className="bg-zinc-900 bg-opacity-30 h-96" />
+						<CardHeader className="bg-admin-surface h-24" />
+						<CardContent className="bg-admin-bg-surface h-96" />
 					</Card>
 				</div>
 			) : isError ? (
@@ -395,7 +395,7 @@ export default function XpSettingsPage() {
 										step={0.1}
 									/>
 
-									<Alert className="mt-6 bg-amber-900/20 text-amber-200 border-amber-900">
+									<Alert className="mt-6 bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400">
 										<AlertDescription>
 											<strong>Note:</strong> Changing multipliers affects all future XP
 											calculations. Existing XP amounts will not be retroactively recalculated.
@@ -451,6 +451,6 @@ export default function XpSettingsPage() {
 					</Card>
 				</form>
 			)}
-		</div>
+		</AdminPageShell>
 	);
 }

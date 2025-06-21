@@ -104,4 +104,13 @@ router.get(
 // --- DGT Rewards & Internal Transactions ---
 router.post('/transactions/create', walletController.createDgtRewardTransaction);
 
+// Public packages list (no auth required)
+router.get('/packages', asyncHandler(walletController.listPackages.bind(walletController)));
+
+// Create purchase order for a DGT package
+router.post(
+	'/purchase-orders',
+	asyncHandler(walletController.createPurchaseOrder.bind(walletController))
+);
+
 export default router;

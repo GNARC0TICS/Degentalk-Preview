@@ -41,9 +41,14 @@ export const updateXpSettings = async (req: Request, res: Response, next: NextFu
 // --- Level Management ---
 export const getLevels = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		// const levels = await xpAdminService.getLevels();
-		// res.json(levels);
-		res.status(501).json({ message: 'Get Levels not implemented' });
+		const levels = await xpAdminService.getLevels();
+		res.json({
+			levels,
+			totalLevels: levels.length,
+			highestLevel: levels.length > 0 ? Math.max(...levels.map((l) => l.level)) : 0,
+			maxXpRequired: levels.length > 0 ? Math.max(...levels.map((l) => l.xpRequired)) : 0,
+			totalDgtRewards: levels.reduce((sum, l) => sum + (l.rewardDgt || 0), 0)
+		});
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',

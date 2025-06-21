@@ -47,6 +47,17 @@ export const ModerateThreadSchema = z.object({
 	moderationReason: z.string().max(255).optional()
 });
 
+// Schema for tag management
+export const TagSchema = z.object({
+	name: z.string().min(1, 'Name must be at least 1 character').max(50),
+	slug: z
+		.string()
+		.min(1)
+		.max(50)
+		.regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+	description: z.string().max(255).optional().nullable()
+});
+
 // Schema for pagination
 export const PaginationSchema = z.object({
 	page: z.coerce.number().min(1).default(1),
@@ -81,5 +92,6 @@ export const updateEntitySchema = createEntitySchema.partial();
 
 export type CategoryInput = z.infer<typeof CategorySchema>;
 export type PrefixInput = z.infer<typeof PrefixSchema>;
+export type TagInput = z.infer<typeof TagSchema>;
 export type ModerateThreadInput = z.infer<typeof ModerateThreadSchema>;
 export type PaginationInput = z.infer<typeof PaginationSchema>;

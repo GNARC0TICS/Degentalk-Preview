@@ -26,9 +26,13 @@ import userInventoryAdminApiRoutes from './sub-domains/users/inventory.admin.rou
 import emojiRoutes from './sub-domains/emojis/emojis.routes';
 import uiConfigRoutes from './sub-domains/ui-config/ui-config.routes';
 import rolesRoutes from './sub-domains/roles/roles.routes';
+import titlesRoutes from './sub-domains/titles/titles.routes';
+import permissionsRoutes from './sub-domains/permissions/permissions.routes';
 import devSeedingRoutes from './sub-domains/dev/seeding.routes';
 import cloutRoutes from './sub-domains/clout/clout.routes';
 import economyRoutes from './sub-domains/economy/economy.routes';
+import dgtPackageRoutes from './sub-domains/dgt-packages/dgt-packages.routes';
+import animationPackRoutes from './sub-domains/animation-packs/animation-packs.routes';
 // import userAdminRoutes from './users/users.admin.routes'; // DEPRECATED
 // import economyAdminRoutes from './settings/economy.routes'; // Placeholder for future
 
@@ -53,9 +57,13 @@ adminRouter.use('/airdrop', airdropRoutes);
 adminRouter.use('/shop-management', shopAdminApiRoutes);
 adminRouter.use('/user-inventory', userInventoryAdminApiRoutes);
 adminRouter.use('/roles', rolesRoutes);
+adminRouter.use('/titles', titlesRoutes);
+adminRouter.use('/permissions', permissionsRoutes);
 adminRouter.use('/dev', devSeedingRoutes);
 adminRouter.use('/clout', cloutRoutes);
 adminRouter.use('/economy', economyRoutes);
+adminRouter.use('/dgt-packages', dgtPackageRoutes);
+adminRouter.use('/animation-packs', animationPackRoutes);
 
 // DEBUG: Middleware to check if /emojis path is reached in adminRouter
 adminRouter.use('/emojis', (req, res, next) => {

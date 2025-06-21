@@ -234,7 +234,24 @@ class WalletApiService {
 			url: '/api/wallet/currencies'
 		});
 	}
+
+	/**
+	 * Create purchase order from a DGT package (new flow)
+	 */
+	async createPurchaseOrder(
+		packageId: number,
+		cryptoCurrency: string = 'USDT'
+	): Promise<{ order: any; depositUrl: string }> {
+		return apiRequest<{ order: any; depositUrl: string }>({
+			url: '/api/wallet/purchase-orders',
+			method: 'POST',
+			data: { packageId, cryptoCurrency }
+		});
+	}
 }
 
 // Export a singleton instance
 export const walletApiService = new WalletApiService();
+
+// Also export the class for cases where components want to instantiate their own instance
+export { WalletApiService };

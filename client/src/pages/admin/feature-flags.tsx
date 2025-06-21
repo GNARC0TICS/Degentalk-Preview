@@ -2,13 +2,13 @@ import { useFeatureFlags } from '@/features/admin/services/featureFlagsService';
 import { FeatureFlagRow } from '@/components/admin/FeatureFlagRow';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 export default function AdminFeatureFlagsPage() {
 	const { data: flags, isLoading, error } = useFeatureFlags();
 
 	return (
-		<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-			<h2 className="text-3xl font-bold tracking-tight">Feature Flags</h2>
+		<AdminPageShell title="Feature Flags">
 			<Card>
 				<CardHeader>
 					<CardTitle>Rollout Control</CardTitle>
@@ -35,6 +35,6 @@ export default function AdminFeatureFlagsPage() {
 					)}
 				</CardContent>
 			</Card>
-		</div>
+		</AdminPageShell>
 	);
 }

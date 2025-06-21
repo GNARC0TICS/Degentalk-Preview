@@ -54,7 +54,7 @@ export function EntityTable<T extends { id: string | number }>({
 	const numColumns = columns.length + (renderActions ? 1 : 0);
 
 	return (
-		<div className={cn('space-y-4', className)}>
+		<div className={cn('space-y-3 md:space-y-4', className)}>
 			{searchPlaceholder && onSearchChange && (
 				<div className="flex justify-start">
 					<Input
@@ -62,36 +62,53 @@ export function EntityTable<T extends { id: string | number }>({
 						placeholder={searchPlaceholder}
 						value={searchTerm || ''}
 						onChange={(e) => onSearchChange(e.target.value)}
-						className="max-w-xs bg-admin-input-bg border-admin-input-border focus:border-admin-input-focus-border"
+						className="w-full sm:max-w-xs bg-admin-bg-element border-admin-border-subtle focus:border-admin-text-accent focus:ring-0 text-admin-text-primary placeholder:text-admin-text-secondary"
 					/>
 				</div>
 			)}
-			<div className="overflow-x-auto rounded-md border border-admin-subtle">
-				<Table className={cn('min-w-[840px]', tableClassName)}>
+			<div className="overflow-x-auto rounded-lg bg-admin-bg-element">
+				<Table className={cn('min-w-[600px] md:min-w-[840px] bg-transparent', tableClassName)}>
 					<TableHeader>
-						<TableRow className="hover:bg-admin-surface-hover">
-							{columns.map((col) => (
-								<TableHead key={col.key} className="text-admin-text-secondary">
+						<TableRow className="hover:bg-admin-bg-surface border-b border-admin-border-subtle/30">
+							{columns.map((col, index) => (
+								<TableHead
+									key={col.key}
+									className={cn(
+										'text-admin-text-secondary font-medium px-3 md:px-4 py-3 bg-transparent',
+										index > 2 && 'hidden lg:table-cell'
+									)}
+								>
 									{col.header}
 								</TableHead>
 							))}
 							{renderActions && (
-								<TableHead className="text-right text-admin-text-secondary">Actions</TableHead>
+								<TableHead className="text-right text-admin-text-secondary font-medium px-3 md:px-4 py-3 bg-transparent">
+									Actions
+								</TableHead>
 							)}
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{isLoading ? (
 							Array.from({ length: 5 }).map((_, rowIndex) => (
-								<TableRow key={`skeleton-${rowIndex}`} className="hover:bg-admin-surface-hover">
-									{columns.map((col) => (
-										<TableCell key={`${col.key}-skeleton-${rowIndex}`}>
+								<TableRow
+									key={`skeleton-${rowIndex}`}
+									className="hover:bg-admin-bg-surface border-b border-admin-border-subtle/20"
+								>
+									{columns.map((col, index) => (
+										<TableCell
+											key={`${col.key}-skeleton-${rowIndex}`}
+											className={cn(
+												'px-3 md:px-4 py-3 bg-transparent',
+												index > 2 && 'hidden lg:table-cell'
+											)}
+										>
 											<Skeleton className="h-5 w-full bg-admin-bg-element" />
 										</TableCell>
 									))}
 									{renderActions && (
-										<TableCell className="text-right">
-											<Skeleton className="h-8 w-20 bg-admin-bg-element inline-block" />
+										<TableCell className="text-right px-3 md:px-4 py-3 bg-transparent">
+											<Skeleton className="h-8 w-16 md:w-20 bg-admin-bg-element inline-block" />
 										</TableCell>
 									)}
 								</TableRow>
@@ -119,14 +136,27 @@ export function EntityTable<T extends { id: string | number }>({
 							data.map((row) => renderRow(row, columns))
 						) : (
 							data.map((row) => (
-								<TableRow key={row.id} className="hover:bg-admin-surface-hover">
-									{columns.map((col) => (
-										<TableCell key={`${row.id}-${col.key}`} className="text-admin-text-primary">
+								<TableRow
+									key={row.id}
+									className="hover:bg-admin-bg-surface border-b border-admin-border-subtle/20"
+								>
+									{columns.map((col, index) => (
+										<TableCell
+											key={`${row.id}-${col.key}`}
+											className={cn(
+												'text-admin-text-primary px-3 md:px-4 py-3 bg-transparent',
+												index > 2 && 'hidden lg:table-cell'
+											)}
+										>
 											{col.render ? col.render(row) : String(row[col.key as keyof T] ?? '')}
 										</TableCell>
 									))}
 									{renderActions && (
-										<TableCell className="text-right space-x-2">{renderActions(row)}</TableCell>
+										<TableCell className="text-right px-3 md:px-4 py-3 bg-transparent">
+											<div className="flex justify-end items-center gap-1 md:gap-2">
+												{renderActions(row)}
+											</div>
+										</TableCell>
 									)}
 								</TableRow>
 							))

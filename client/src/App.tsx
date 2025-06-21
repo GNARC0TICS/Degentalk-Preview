@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, useLocation } from 'wouter'; // Removed Redirect, useParams
+import { Switch, Route, useLocation, Redirect } from 'wouter';
 import { Toaster } from '@/components/ui/toaster';
 import AdminLayout from './pages/admin/admin-layout';
 import { ModLayout } from './components/mod/mod-layout';
@@ -30,17 +30,17 @@ import AdminDashboardPage from './pages/admin/index.tsx';
 import AdminUsersPage from './pages/admin/users.tsx';
 import AdminUserEdit from './pages/admin/users/[userId].tsx';
 import AdminRolesPage from './pages/admin/roles.tsx'; // Import AdminRolesPage
+import RolesTitlesPage from './pages/admin/roles-titles.tsx';
+import CloutSystemPage from './pages/admin/clout/index.tsx';
 import UserXpAdjustmentPage from './pages/admin/xp/adjust.tsx';
 import BadgeManagementPage from './pages/admin/xp/badges.tsx';
-import LevelManagementPage from './pages/admin/xp/levels.tsx';
+import XPSystemPage from './pages/admin/xp-system.tsx';
 import XpSettingsPage from './pages/admin/xp/settings.tsx';
 import TitleManagementPage from './pages/admin/xp/titles.tsx';
-import AdminThreadsPage from './pages/admin/threads.tsx';
 import AdminTreasuryPage from './pages/admin/treasury.tsx';
 import AdminWalletsPage from './pages/admin/wallets/index.tsx';
 import AdminTransactionsPage from './pages/admin/transactions/index.tsx';
 import AdminStatsPage from './pages/admin/stats/index.tsx';
-import AdminReportsPage from './pages/admin/reports.tsx';
 import AdminAnnouncementsPage from './pages/admin/announcements/index.tsx';
 import AdminCategoriesPage from './pages/admin/categories.tsx';
 import AdminPrefixesPage from './pages/admin/prefixes.tsx';
@@ -52,6 +52,9 @@ import TipRainSettingsPage from './pages/admin/tip-rain-settings.tsx';
 import AdminDevSeedingPage from './pages/admin/dev/seeding.tsx';
 import ForumStructureAdminPage from './pages/admin/forum-structure.tsx';
 import AdminDictionaryQueuePage from './pages/admin/dictionary';
+import AdminReportsPage from './pages/admin/reports/index.tsx';
+import AdminAnimationsPage from './pages/admin/ui/animations.tsx';
+import AdminPackBuilderPage from './pages/admin/ui/pack-builder.tsx';
 
 // Shop Pages
 import DgtPurchasePage from './pages/shop-management/dgt-purchase';
@@ -194,18 +197,6 @@ function App() {
 							)}
 						/>
 						<Route
-							path="/admin/threads"
-							component={() => {
-								return (
-									<AdminLayout>
-										<div>
-											<AdminThreadsPage />
-										</div>
-									</AdminLayout>
-								);
-							}}
-						/>
-						<Route
 							path="/admin/treasury"
 							component={() => (
 								<AdminLayout>
@@ -229,6 +220,22 @@ function App() {
 							component={() => (
 								<AdminLayout>
 									<AdminRolesPage />
+								</AdminLayout>
+							)}
+						/>
+						<Route
+							path="/admin/roles-titles"
+							component={() => (
+								<AdminLayout>
+									<RolesTitlesPage />
+								</AdminLayout>
+							)}
+						/>
+						<Route
+							path="/admin/clout"
+							component={() => (
+								<AdminLayout>
+									<CloutSystemPage />
 								</AdminLayout>
 							)}
 						/>
@@ -348,11 +355,15 @@ function App() {
 								</AdminLayout>
 							)}
 						/>
+						{/* Redirect old XP levels route to new XP System route */}
+						<Route path="/admin/xp/levels">
+							<Redirect to="/admin/xp-system" />
+						</Route>
 						<Route
-							path="/admin/xp/levels"
+							path="/admin/xp-system"
 							component={() => (
 								<AdminLayout>
-									<LevelManagementPage />
+									<XPSystemPage />
 								</AdminLayout>
 							)}
 						/>
@@ -396,6 +407,26 @@ function App() {
 							component={() => (
 								<AdminLayout>
 									<AdminDictionaryQueuePage />
+								</AdminLayout>
+							)}
+						/>
+						<Route
+							path="/admin/ui/animations"
+							component={() => (
+								<AdminLayout>
+									<React.Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+										<AdminAnimationsPage />
+									</React.Suspense>
+								</AdminLayout>
+							)}
+						/>
+						<Route
+							path="/admin/ui/pack-builder"
+							component={() => (
+								<AdminLayout>
+									<React.Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+										<AdminPackBuilderPage />
+									</React.Suspense>
 								</AdminLayout>
 							)}
 						/>

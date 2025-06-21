@@ -21,12 +21,15 @@ import {
 	SelectValue
 } from '@/components/ui/select';
 import { Upload } from 'lucide-react';
+import { MediaPickerModal } from '@/components/admin/media/MediaPickerModal';
+import { MediaAsset } from '@/components/media/MediaAsset';
 
 // Badge types (can be shared from a types file if available)
 export interface BadgeFormData {
 	name: string;
 	description: string;
 	iconUrl: string;
+	mediaId?: number | null;
 	rarity: string;
 }
 
@@ -71,117 +74,114 @@ export const BadgeFormDialogComponent: React.FC<BadgeFormDialogProps> = ({
 	setFormData,
 	handleSubmit,
 	isSubmitting
-}) => (
-	<Dialog
-		open={isOpen}
-		onOpenChange={(open) => {
-			setIsOpen(open);
-			// Consider if resetForm logic should be here or passed in
-		}}
-	>
-		<DialogContent className="sm:max-w-[500px]">
-			<form onSubmit={handleSubmit}>
-				<DialogHeader>
-					<DialogTitle>{isEdit ? 'Edit Badge' : 'Create New Badge'}</DialogTitle>
-					<DialogDescription>
-						{isEdit ? 'Update the badge details below.' : 'Add a new badge to reward users.'}
-					</DialogDescription>
-				</DialogHeader>
+}) => {
+	const [isPickerOpen, setIsPickerOpen] = React.useState(false);
 
-				<div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-2">
-					<div className="grid gap-2">
-						<Label htmlFor="name">Badge Name</Label>
-						<Input
-							id="name"
-							value={formData.name}
-							onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-							required
-						/>
-					</div>
+	return (
+		<Dialog
+			open={isOpen}
+			onOpenChange={(open) => {
+				setIsOpen(open);
+				// Consider if resetForm logic should be here or passed in
+			}}
+		>
+			<DialogContent className="sm:max-w-[500px]">
+				<form onSubmit={handleSubmit}>
+					<DialogHeader>
+						<DialogTitle>{isEdit ? 'Edit Badge' : 'Create New Badge'}</DialogTitle>
+						<DialogDescription>
+							{isEdit ? 'Update the badge details below.' : 'Add a new badge to reward users.'}
+						</DialogDescription>
+					</DialogHeader>
 
-					<div className="grid gap-2">
-						<Label htmlFor="description">Description</Label>
-						<Textarea
-							id="description"
-							value={formData.description}
-							onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-							placeholder="Describe what this badge is for..."
-						/>
-					</div>
-
-					<div className="grid gap-2">
-						<Label htmlFor="iconUrl">Icon URL</Label>
-						<div className="flex gap-2">
+					<div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-2">
+						<div className="grid gap-2">
+							<Label htmlFor="name">Badge Name</Label>
 							<Input
-								id="iconUrl"
-								value={formData.iconUrl}
-								onChange={(e) => setFormData({ ...formData, iconUrl: e.target.value })}
-								placeholder="https://example.com/badge-icon.png"
+								id="name"
+								value={formData.name}
+								onChange={(e) => setFormData({ ...formData, name: e.target.value })}
 								required
-								className="flex-1"
 							/>
-							<Button
-								type="button"
-								variant="outline"
-								size="icon"
-								aria-label="Upload Icon (Placeholder)"
-							>
-								<Upload className="h-4 w-4" />
-							</Button>
 						</div>
-						{formData.iconUrl && (
-							<div className="mt-2 flex items-center gap-2">
-								<img
-									src={formData.iconUrl}
-									alt="Badge Preview"
-									className="w-10 h-10 object-contain border border-slate-700 rounded"
-									onError={(e) =>
-										((e.target as HTMLImageElement).src = 'https://placehold.co/40x40?text=Err')
-									}
-								/>
-								<span className="text-xs text-muted-foreground">Preview</span>
+
+						<div className="grid gap-2">
+							<Label htmlFor="description">Description</Label>
+							<Textarea
+								id="description"
+								value={formData.description}
+								onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+								placeholder="Describe what this badge is for..."
+							/>
+						</div>
+
+						<div className="grid gap-2">
+							<Label>Badge Icon</Label>
+							<div className="flex gap-2 items-center">
+								{formData.iconUrl ? (
+									<MediaAsset url={formData.iconUrl} mediaType="badge" size={40} />
+								) : (
+									<span className="text-sm text-muted-foreground">No icon selected</span>
+								)}
+								<Button
+									type="button"
+									variant="outline"
+									size="icon"
+									onClick={() => setIsPickerOpen(true)}
+								>
+									<Upload className="h-4 w-4" />
+								</Button>
 							</div>
-						)}
+						</div>
+
+						<MediaPickerModal
+							type="badge"
+							open={isPickerOpen}
+							onClose={() => setIsPickerOpen(false)}
+							onSelect={(media) => {
+								setFormData({ ...formData, iconUrl: media.url, mediaId: media.id });
+							}}
+						/>
+
+						<div className="grid gap-2">
+							<Label htmlFor="rarity">Rarity</Label>
+							<Select
+								value={formData.rarity}
+								onValueChange={(value) => setFormData({ ...formData, rarity: value })}
+							>
+								<SelectTrigger>
+									<SelectValue placeholder="Select rarity" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectGroup>
+										<SelectLabel>Badge Rarity</SelectLabel>
+										{RARITIES.map((rarity) => (
+											<SelectItem key={rarity.value} value={rarity.value}>
+												<div className="flex items-center gap-2">
+													<div className={`w-3 h-3 rounded-full ${rarity.color}`} />
+													<span>{rarity.label}</span>
+												</div>
+											</SelectItem>
+										))}
+									</SelectGroup>
+								</SelectContent>
+							</Select>
+						</div>
 					</div>
 
-					<div className="grid gap-2">
-						<Label htmlFor="rarity">Rarity</Label>
-						<Select
-							value={formData.rarity}
-							onValueChange={(value) => setFormData({ ...formData, rarity: value })}
-						>
-							<SelectTrigger>
-								<SelectValue placeholder="Select rarity" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectGroup>
-									<SelectLabel>Badge Rarity</SelectLabel>
-									{RARITIES.map((rarity) => (
-										<SelectItem key={rarity.value} value={rarity.value}>
-											<div className="flex items-center gap-2">
-												<div className={`w-3 h-3 rounded-full ${rarity.color}`} />
-												<span>{rarity.label}</span>
-											</div>
-										</SelectItem>
-									))}
-								</SelectGroup>
-							</SelectContent>
-						</Select>
-					</div>
-				</div>
-
-				<DialogFooter className="sticky bottom-0 bg-background py-4 border-t flex-wrap gap-2 sm:justify-end">
-					<Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-						Cancel
-					</Button>
-					<Button type="submit" disabled={isSubmitting}>
-						{isSubmitting ? 'Saving...' : isEdit ? 'Update Badge' : 'Create Badge'}
-					</Button>
-				</DialogFooter>
-			</form>
-		</DialogContent>
-	</Dialog>
-);
+					<DialogFooter className="sticky bottom-0 bg-background py-4 border-t flex-wrap gap-2 sm:justify-end">
+						<Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+							Cancel
+						</Button>
+						<Button type="submit" disabled={isSubmitting}>
+							{isSubmitting ? 'Saving...' : isEdit ? 'Update Badge' : 'Create Badge'}
+						</Button>
+					</DialogFooter>
+				</form>
+			</DialogContent>
+		</Dialog>
+	);
+};
 
 interface DeleteBadgeConfirmationDialogProps {
 	isOpen: boolean;

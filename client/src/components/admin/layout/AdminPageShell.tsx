@@ -37,35 +37,40 @@ export function AdminPageShell({
 	const currentActiveTab = activeTab || defaultActiveTab;
 
 	return (
-		<div className={cn('px-4 md:px-8 py-6 space-y-6', className)}>
+		<div className={cn('px-4 sm:px-6 md:px-8 py-4 md:py-6 space-y-4 md:space-y-6', className)}>
 			{/* Header Section */}
-			<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-				<div>
+			<div className="flex flex-col sm:flex-row sm:items-start md:items-center md:justify-between gap-3 md:gap-4">
+				<div className="min-w-0 flex-1">
 					{breadcrumb && <div className="mb-1 text-sm text-admin-text-secondary">{breadcrumb}</div>}
-					<h1 className="text-2xl md:text-3xl font-bold text-admin-text-primary">{title}</h1>
+					<h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-admin-text-primary truncate">
+						{title}
+					</h1>
 				</div>
 				{pageActions && (
-					<div className="flex flex-wrap gap-2 justify-start md:justify-end">{pageActions}</div>
+					<div className="flex flex-wrap gap-2 justify-start sm:justify-end shrink-0">
+						{pageActions}
+					</div>
 				)}
 			</div>
 
 			{/* Tabs Section or Direct Children */}
 			{tabsConfig && tabsConfig.length > 0 && currentActiveTab ? (
 				<Tabs value={currentActiveTab} onValueChange={onTabChange} className="w-full">
-					<TabsList className="bg-admin-surface border border-admin-border-subtle">
+					<TabsList className="bg-admin-surface border border-admin-border-subtle w-full justify-start overflow-x-auto">
 						{tabsConfig.map((tab) => (
 							<TabsTrigger
 								key={tab.value}
 								value={tab.value}
-								className="data-[state=active]:bg-admin-bg-element data-[state=active]:text-admin-text-accent"
+								className="data-[state=active]:bg-admin-bg-element data-[state=active]:text-admin-text-accent whitespace-nowrap"
 							>
-								{tab.icon && <span className="mr-2 h-4 w-4">{tab.icon}</span>}
-								{tab.label}
+								{tab.icon && <span className="mr-1 sm:mr-2 h-4 w-4 shrink-0">{tab.icon}</span>}
+								<span className="hidden sm:inline">{tab.label}</span>
+								<span className="sm:hidden">{tab.label.split(' ')[0]}</span>
 							</TabsTrigger>
 						))}
 					</TabsList>
 					{tabsConfig.map((tab) => (
-						<TabsContent key={tab.value} value={tab.value} className="mt-6">
+						<TabsContent key={tab.value} value={tab.value} className="mt-4 md:mt-6">
 							{tab.content}
 						</TabsContent>
 					))}

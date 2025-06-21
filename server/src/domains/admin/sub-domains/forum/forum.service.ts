@@ -5,12 +5,13 @@
  */
 
 import { db } from '@db';
-import { forumCategories, threads, posts, threadPrefixes } from '@schema';
+import { forumCategories, threads, posts, threadPrefixes, tags } from '@schema';
 import { eq, and, sql, count, desc, asc, isNull, not, ne } from 'drizzle-orm';
-import { AdminError } from '../../../../core/errors';
+import { AdminError } from '../../admin.errors';
 import type {
 	CategoryInput,
 	PrefixInput,
+	TagInput,
 	ModerateThreadInput,
 	PaginationInput
 } from './forum.validators';
@@ -303,6 +304,129 @@ export class AdminForumService {
 			if (error instanceof AdminError) throw error;
 			console.error('Error creating thread prefix:', error);
 			throw AdminError.database('Failed to create thread prefix');
+		}
+	}
+
+	// Tag Management
+
+	async getAllTags() {
+		try {
+			const allTags = await db.select().from(tags).orderBy(asc(tags.name));
+
+			return allTags;
+		} catch (error) {
+			console.error('Error fetching tags:', error);
+			throw AdminError.database('Failed to fetch tags');
+		}
+	}
+
+	async createTag(data: TagInput) {
+		try {
+			// Check for duplicate name
+			const [existingName] = await db
+				.select({ id: tags.id })
+				.from(tags)
+				.where(eq(tags.name, data.name));
+
+			if (existingName) {
+				throw AdminError.duplicate('Tag', 'name', data.name);
+			}
+
+			// Check for duplicate slug
+			const [existingSlug] = await db
+				.select({ id: tags.id })
+				.from(tags)
+				.where(eq(tags.slug, data.slug));
+
+			if (existingSlug) {
+				throw AdminError.duplicate('Tag', 'slug', data.slug);
+			}
+
+			const [newTag] = await db
+				.insert(tags)
+				.values({
+					name: data.name,
+					slug: data.slug,
+					description: data.description
+				})
+				.returning();
+
+			return newTag;
+		} catch (error) {
+			if (error instanceof AdminError) throw error;
+			console.error('Error creating tag:', error);
+			throw AdminError.database('Failed to create tag');
+		}
+	}
+
+	async updateTag(id: number, data: TagInput) {
+		try {
+			// Check tag exists
+			const [existingTag] = await db.select().from(tags).where(eq(tags.id, id));
+
+			if (!existingTag) {
+				throw AdminError.notFound('Tag', id);
+			}
+
+			// Check for name conflicts
+			if (data.name && data.name !== existingTag.name) {
+				const [nameConflict] = await db
+					.select({ id: tags.id })
+					.from(tags)
+					.where(and(eq(tags.name, data.name), ne(tags.id, id)));
+
+				if (nameConflict) {
+					throw AdminError.duplicate('Tag', 'name', data.name);
+				}
+			}
+
+			// Check for slug conflicts
+			if (data.slug && data.slug !== existingTag.slug) {
+				const [slugConflict] = await db
+					.select({ id: tags.id })
+					.from(tags)
+					.where(and(eq(tags.slug, data.slug), ne(tags.id, id)));
+
+				if (slugConflict) {
+					throw AdminError.duplicate('Tag', 'slug', data.slug);
+				}
+			}
+
+			const [updatedTag] = await db
+				.update(tags)
+				.set({
+					name: data.name,
+					slug: data.slug,
+					description: data.description
+				})
+				.where(eq(tags.id, id))
+				.returning();
+
+			return updatedTag;
+		} catch (error) {
+			if (error instanceof AdminError) throw error;
+			console.error('Error updating tag:', error);
+			throw AdminError.database('Failed to update tag');
+		}
+	}
+
+	async deleteTag(id: number) {
+		try {
+			// Check tag exists
+			const [existingTag] = await db.select().from(tags).where(eq(tags.id, id));
+
+			if (!existingTag) {
+				throw AdminError.notFound('Tag', id);
+			}
+
+			// Delete the tag
+			await db.delete(tags).where(eq(tags.id, id));
+
+			return { success: true, message: 'Tag deleted successfully' };
+		} catch (error) {
+			if (error instanceof AdminError) throw error;
+			console.error('Error deleting tag:', error);
+			throw AdminError.database('Failed to delete tag');
 		}
 	}
 

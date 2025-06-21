@@ -17,12 +17,12 @@ export * from './HierarchicalZoneNav';
 /**
  * @deprecated Use HierarchicalZoneNav instead for consistent forum navigation
  */
-export * from './HierarchicalCategoryNav';
 
 // ==============================================================================
 // PRIMARY ZONE COMPONENTS
 // ==============================================================================
 
+// Primary Zone Components (if files missing, ensure paths correct)
 export { default as CanonicalZoneGrid } from './CanonicalZoneGrid';
 export { default as ZoneCard } from './ZoneCard';
 export { default as ZoneGroup } from './ZoneGroup';
@@ -45,8 +45,7 @@ export * from './ThreadCard';
 export * from './ThreadList';
 export * from './CreateThreadForm';
 
-// Thread page components
-export * from './ThreadPost';
+// ThreadPost component export removed (file missing)
 
 // ==============================================================================
 // POST & REPLY COMPONENTS
@@ -65,15 +64,14 @@ export * from './CreatePostForm';
 // UTILITY & UI COMPONENTS
 // ==============================================================================
 
+// TagList component removed (file missing). If needed, implement later.
+
 // Tags and badges
-export { default as TagList } from './TagList';
-export { default as PrefixBadge } from './PrefixBadge';
-export { default as SolvedBadge } from './SolvedBadge';
-export { default as LevelBadge } from './LevelBadge';
-export * from './TagList';
-export * from './PrefixBadge';
-export * from './SolveBadge';
-export * from './LevelBadge';
+export { PrefixBadge } from '@/components/forum/prefix-badge';
+export { LevelBadge } from '@/components/identity/LevelBadge';
+export { SolveBadge } from '@/components/forum/SolveBadge';
+export * from '@/components/forum/prefix-badge';
+export * from '@/components/forum/SolveBadge';
 
 // Navigation and search
 export { default as ForumBreadcrumbs } from './ForumBreadcrumbs';
