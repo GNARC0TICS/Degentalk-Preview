@@ -9,7 +9,7 @@ import {
 	ArrowUpFromLine,
 	Award,
 	Send,
-	Receive,
+	Download as Receive,
 	ShoppingCart,
 	Zap,
 	RefreshCw,
