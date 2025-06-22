@@ -42,10 +42,7 @@ export function UserProfileRenderer({
 
 	const UserNameComponent = linkToProfile ? (
 		<Link href={`/profile/${user.id}`}>
-			<UserName 
-				user={user} 
-				className="hover:text-emerald-400 transition-colors" 
-			/>
+			<UserName user={user} className="hover:text-emerald-400 transition-colors" />
 		</Link>
 	) : (
 		<UserName user={user} />
@@ -102,9 +99,7 @@ export function UserProfileRenderer({
 						{UserNameComponent}
 						{showLevel && user.level && <LevelBadge level={user.level} size="sm" />}
 					</div>
-					{showRole && identity?.primaryRole && (
-						<RoleBadge role={identity.primaryRole} size="sm" />
-					)}
+					{showRole && identity?.primaryRole && <RoleBadge role={identity.primaryRole} size="sm" />}
 				</div>
 				{showStats && (
 					<div className="text-xs text-zinc-500 flex items-center">
@@ -119,7 +114,12 @@ export function UserProfileRenderer({
 	// Card compact variant - traditional forum card
 	if (variant === 'card-compact') {
 		return (
-			<div className={cn('bg-zinc-900/60 border border-zinc-800 rounded-lg p-4 text-center', className)}>
+			<div
+				className={cn(
+					'bg-zinc-900/60 border border-zinc-800 rounded-lg p-4 text-center',
+					className
+				)}
+			>
 				<div className="relative mb-3">
 					{AvatarComponent}
 					{showVerifiedBadge && user.isVerified && (
@@ -128,12 +128,8 @@ export function UserProfileRenderer({
 				</div>
 				<div className="space-y-2">
 					{UserNameComponent}
-					{showRole && identity?.primaryRole && (
-						<RoleBadge role={identity.primaryRole} size="sm" />
-					)}
-					{showLevel && user.level && (
-						<LevelBadge level={user.level} size="sm" />
-					)}
+					{showRole && identity?.primaryRole && <RoleBadge role={identity.primaryRole} size="sm" />}
+					{showLevel && user.level && <LevelBadge level={user.level} size="sm" />}
 				</div>
 				{showOnlineStatus && (
 					<Badge variant="outline" className="text-[10px] px-2 py-0.5 mt-2">
@@ -157,7 +153,9 @@ export function UserProfileRenderer({
 	// Card full variant - comprehensive profile card
 	if (variant === 'card-full') {
 		return (
-			<div className={cn('bg-zinc-900/60 border border-zinc-800 rounded-lg p-4 space-y-4', className)}>
+			<div
+				className={cn('bg-zinc-900/60 border border-zinc-800 rounded-lg p-4 space-y-4', className)}
+			>
 				{/* Header with avatar and basic info */}
 				<div className="text-center">
 					<div className="relative mb-3">
@@ -171,9 +169,7 @@ export function UserProfileRenderer({
 						{showRole && identity?.primaryRole && (
 							<RoleBadge role={identity.primaryRole} size="sm" />
 						)}
-						{showLevel && user.level && (
-							<LevelBadge level={user.level} showProgress />
-						)}
+						{showLevel && user.level && <LevelBadge level={user.level} showProgress />}
 					</div>
 				</div>
 
@@ -195,9 +191,7 @@ export function UserProfileRenderer({
 									<Zap className="h-3.5 w-3.5 mr-1.5" />
 									XP
 								</span>
-								<span className="text-zinc-300 font-medium">
-									{user.xp.toLocaleString()}
-								</span>
+								<span className="text-zinc-300 font-medium">{user.xp.toLocaleString()}</span>
 							</div>
 						)}
 					</div>
@@ -248,7 +242,12 @@ export function UserProfileRenderer({
 	// Post sidebar variant - comprehensive inline profile for posts
 	if (variant === 'post-sidebar') {
 		return (
-			<div className={cn('sm:w-64 bg-zinc-800/40 border-b sm:border-b-0 sm:border-r border-zinc-700/50 p-4', className)}>
+			<div
+				className={cn(
+					'sm:w-64 bg-zinc-800/40 border-b sm:border-b-0 sm:border-r border-zinc-700/50 p-4',
+					className
+				)}
+			>
 				<div className="flex flex-col items-center text-center space-y-3">
 					{/* Avatar and Frame */}
 					<div className="relative">
@@ -260,9 +259,7 @@ export function UserProfileRenderer({
 
 					{/* Username and Role */}
 					<div className="space-y-1">
-						<div className="font-semibold text-sm">
-							{UserNameComponent}
-						</div>
+						<div className="font-semibold text-sm">{UserNameComponent}</div>
 						{showRole && identity?.primaryRole && (
 							<RoleBadge role={identity.primaryRole} size="sm" />
 						)}

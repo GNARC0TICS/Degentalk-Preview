@@ -10,7 +10,7 @@ interface WhaleWatchTabProps {
 export default function WhaleWatchTab({ profile, isOwnProfile }: WhaleWatchTabProps) {
 	return (
 		<div className="space-y-6">
-			<WhaleWatchDisplay 
+			<WhaleWatchDisplay
 				userId={profile.id}
 				username={profile.username}
 				isCurrentUser={isOwnProfile}

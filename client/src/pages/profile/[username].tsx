@@ -135,44 +135,56 @@ export default function ProfilePage() {
 							<div className="rounded-lg overflow-hidden bg-zinc-800/70 backdrop-blur-sm shadow-xl border border-zinc-700/50 p-6">
 								<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
 									<TabsList
-										className={`grid ${isOwnProfile ? 'grid-cols-6' : 'grid-cols-5'} mb-6 bg-black/40 backdrop-blur-sm`}
+										className={`grid grid-cols-2 md:grid-cols-3 lg:${isOwnProfile ? 'grid-cols-6' : 'grid-cols-5'} mb-6 bg-black/40 backdrop-blur-sm gap-1`}
 									>
 										<TabsTrigger
 											value="overview"
-											className="flex items-center data-[state=active]:bg-emerald-600/20 data-[state=active]:text-emerald-400"
+											className="flex items-center justify-center text-xs sm:text-sm data-[state=active]:bg-emerald-600/20 data-[state=active]:text-emerald-400 px-2 py-3"
 										>
-											<Home className="mr-2 h-4 w-4" /> Overview
+											<Home className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+											<span className="hidden sm:inline">Overview</span>
+											<span className="sm:hidden">Home</span>
 										</TabsTrigger>
 										<TabsTrigger
 											value="achievements"
-											className="flex items-center data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-400"
+											className="flex items-center justify-center text-xs sm:text-sm data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-400 px-2 py-3"
 										>
-											<Trophy className="mr-2 h-4 w-4" /> Achievements
+											<Trophy className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+											<span className="hidden sm:inline">Achievements</span>
+											<span className="sm:hidden">XP</span>
 										</TabsTrigger>
 										<TabsTrigger
 											value="inventory"
-											className="flex items-center data-[state=active]:bg-zinc-600/20 data-[state=active]:text-zinc-300"
+											className="flex items-center justify-center text-xs sm:text-sm data-[state=active]:bg-zinc-600/20 data-[state=active]:text-zinc-300 px-2 py-3"
 										>
-											<ShoppingBag className="mr-2 h-4 w-4" /> Inventory
+											<ShoppingBag className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+											<span className="hidden sm:inline">Inventory</span>
+											<span className="sm:hidden">Items</span>
 										</TabsTrigger>
 										<TabsTrigger
 											value="friends"
-											className="flex items-center data-[state=active]:bg-zinc-600/20 data-[state=active]:text-zinc-300"
+											className="flex items-center justify-center text-xs sm:text-sm data-[state=active]:bg-zinc-600/20 data-[state=active]:text-zinc-300 px-2 py-3"
 										>
-											<Users className="mr-2 h-4 w-4" /> Friends
+											<Users className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+											<span className="hidden sm:inline">Friends</span>
+											<span className="sm:hidden">Friends</span>
 										</TabsTrigger>
 										<TabsTrigger
 											value="whale-watch"
-											className="flex items-center data-[state=active]:bg-emerald-600/20 data-[state=active]:text-emerald-400"
+											className="flex items-center justify-center text-xs sm:text-sm data-[state=active]:bg-emerald-600/20 data-[state=active]:text-emerald-400 px-2 py-3"
 										>
-											<Eye className="mr-2 h-4 w-4" /> Whale Watch
+											<Eye className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+											<span className="hidden sm:inline">Whale Watch</span>
+											<span className="sm:hidden">Watch</span>
 										</TabsTrigger>
 										{isOwnProfile && (
 											<TabsTrigger
 												value="cosmetics"
-												className="flex items-center data-[state=active]:bg-purple-600/20 data-[state=active]:text-purple-400"
+												className="flex items-center justify-center text-xs sm:text-sm data-[state=active]:bg-purple-600/20 data-[state=active]:text-purple-400 px-2 py-3"
 											>
-												<Sparkles className="mr-2 h-4 w-4" /> Cosmetics
+												<Sparkles className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+												<span className="hidden sm:inline">Cosmetics</span>
+												<span className="sm:hidden">Style</span>
 											</TabsTrigger>
 										)}
 									</TabsList>

@@ -26,7 +26,7 @@ interface MentionState {
 export function useMentions(options: UseMentionsOptions = {}) {
 	const { onMentionSelect, mentionTrigger = '@' } = options;
 	const queryClient = useQueryClient();
-	
+
 	const [mentionState, setMentionState] = useState<MentionState>({
 		isOpen: false,
 		query: '',
@@ -81,105 +81,117 @@ export function useMentions(options: UseMentionsOptions = {}) {
 	});
 
 	// Process content for mentions (to be called when submitting posts/threads)
-	const processMentions = useCallback(async (content: string, type: 'thread' | 'post' | 'shoutbox', metadata?: any) => {
-		// Extract mentions from content
-		const mentionRegex = /@([a-zA-Z0-9_-]+)/g;
-		const matches = content.match(mentionRegex);
-		
-		if (!matches || matches.length === 0) return;
+	const processMentions = useCallback(
+		async (content: string, type: 'thread' | 'post' | 'shoutbox', metadata?: any) => {
+			// Extract mentions from content
+			const mentionRegex = /@([a-zA-Z0-9_-]+)/g;
+			const matches = content.match(mentionRegex);
 
-		// This would typically be handled by the backend when creating posts/threads
-		// The frontend just needs to ensure the content includes the mentions
-		console.log('Processing mentions:', matches, 'in', type, 'content');
-	}, []);
+			if (!matches || matches.length === 0) return;
+
+			// This would typically be handled by the backend when creating posts/threads
+			// The frontend just needs to ensure the content includes the mentions
+			console.log('Processing mentions:', matches, 'in', type, 'content');
+		},
+		[]
+	);
 
 	// Handle text input to detect mention triggers
-	const handleTextChange = useCallback((
-		event: React.ChangeEvent<HTMLTextAreaElement> | React.FormEvent<HTMLDivElement>,
-		value?: string
-	) => {
-		const target = event.target as HTMLTextAreaElement | HTMLDivElement;
-		const currentValue = value || target.textContent || (target as HTMLTextAreaElement).value || '';
-		
-		// Store editor reference
-		if (target.tagName === 'TEXTAREA') {
-			editorRef.current = target as HTMLTextAreaElement;
-		}
+	const handleTextChange = useCallback(
+		(
+			event: React.ChangeEvent<HTMLTextAreaElement> | React.FormEvent<HTMLDivElement>,
+			value?: string
+		) => {
+			const target = event.target as HTMLTextAreaElement | HTMLDivElement;
+			const currentValue =
+				value || target.textContent || (target as HTMLTextAreaElement).value || '';
 
-		// Get cursor position
-		let cursorPos = 0;
-		if (target.tagName === 'TEXTAREA') {
-			cursorPos = (target as HTMLTextAreaElement).selectionStart || 0;
-		} else {
-			// For contenteditable divs, get cursor position
-			const selection = window.getSelection();
-			if (selection && selection.rangeCount > 0) {
-				const range = selection.getRangeAt(0);
-				cursorPos = range.startOffset;
+			// Store editor reference
+			if (target.tagName === 'TEXTAREA') {
+				editorRef.current = target as HTMLTextAreaElement;
 			}
-		}
 
-		// Find mention trigger before cursor
-		const textBeforeCursor = currentValue.slice(0, cursorPos);
-		const mentionMatch = textBeforeCursor.match(new RegExp(`(^|\\s)${mentionTrigger}([a-zA-Z0-9_-]*)$`));
+			// Get cursor position
+			let cursorPos = 0;
+			if (target.tagName === 'TEXTAREA') {
+				cursorPos = (target as HTMLTextAreaElement).selectionStart || 0;
+			} else {
+				// For contenteditable divs, get cursor position
+				const selection = window.getSelection();
+				if (selection && selection.rangeCount > 0) {
+					const range = selection.getRangeAt(0);
+					cursorPos = range.startOffset;
+				}
+			}
 
-		if (mentionMatch) {
-			const mentionStart = textBeforeCursor.lastIndexOf(mentionTrigger);
-			const query = mentionMatch[2]; // Everything after the @
+			// Find mention trigger before cursor
+			const textBeforeCursor = currentValue.slice(0, cursorPos);
+			const mentionMatch = textBeforeCursor.match(
+				new RegExp(`(^|\\s)${mentionTrigger}([a-zA-Z0-9_-]*)$`)
+			);
 
-			// Calculate position for autocomplete dropdown
-			const rect = target.getBoundingClientRect();
-			const lineHeight = 20; // Approximate line height
-			
-			setMentionState({
-				isOpen: true,
-				query,
-				position: {
-					top: rect.bottom + 4,
-					left: rect.left + 8
-				},
-				startIndex: mentionStart
-			});
-		} else {
-			setMentionState(prev => ({ ...prev, isOpen: false, query: '', startIndex: -1 }));
-		}
-	}, [mentionTrigger]);
+			if (mentionMatch) {
+				const mentionStart = textBeforeCursor.lastIndexOf(mentionTrigger);
+				const query = mentionMatch[2]; // Everything after the @
+
+				// Calculate position for autocomplete dropdown
+				const rect = target.getBoundingClientRect();
+				const lineHeight = 20; // Approximate line height
+
+				setMentionState({
+					isOpen: true,
+					query,
+					position: {
+						top: rect.bottom + 4,
+						left: rect.left + 8
+					},
+					startIndex: mentionStart
+				});
+			} else {
+				setMentionState((prev) => ({ ...prev, isOpen: false, query: '', startIndex: -1 }));
+			}
+		},
+		[mentionTrigger]
+	);
 
 	// Handle mention selection
-	const handleMentionSelect = useCallback((user: MentionUser) => {
-		if (!editorRef.current || mentionState.startIndex === -1) return;
+	const handleMentionSelect = useCallback(
+		(user: MentionUser) => {
+			if (!editorRef.current || mentionState.startIndex === -1) return;
 
-		const textarea = editorRef.current;
-		const currentValue = textarea.value;
-		const endIndex = mentionState.startIndex + mentionTrigger.length + mentionState.query.length;
-		
-		// Replace the mention with the selected username
-		const newValue = 
-			currentValue.slice(0, mentionState.startIndex) +
-			`@${user.username} ` +
-			currentValue.slice(endIndex);
+			const textarea = editorRef.current;
+			const currentValue = textarea.value;
+			const endIndex = mentionState.startIndex + mentionTrigger.length + mentionState.query.length;
 
-		// Update textarea value
-		textarea.value = newValue;
-		
-		// Set cursor position after the mention
-		const newCursorPos = mentionState.startIndex + `@${user.username} `.length;
-		textarea.setSelectionRange(newCursorPos, newCursorPos);
-		
-		// Trigger change event
-		const event = new Event('input', { bubbles: true });
-		textarea.dispatchEvent(event);
+			// Replace the mention with the selected username
+			const newValue =
+				currentValue.slice(0, mentionState.startIndex) +
+				`@${user.username} ` +
+				currentValue.slice(endIndex);
 
-		// Close autocomplete
-		setMentionState(prev => ({ ...prev, isOpen: false, query: '', startIndex: -1 }));
+			// Update textarea value
+			textarea.value = newValue;
 
-		// Call optional callback
-		onMentionSelect?.(user);
-	}, [mentionState, mentionTrigger, onMentionSelect]);
+			// Set cursor position after the mention
+			const newCursorPos = mentionState.startIndex + `@${user.username} `.length;
+			textarea.setSelectionRange(newCursorPos, newCursorPos);
+
+			// Trigger change event
+			const event = new Event('input', { bubbles: true });
+			textarea.dispatchEvent(event);
+
+			// Close autocomplete
+			setMentionState((prev) => ({ ...prev, isOpen: false, query: '', startIndex: -1 }));
+
+			// Call optional callback
+			onMentionSelect?.(user);
+		},
+		[mentionState, mentionTrigger, onMentionSelect]
+	);
 
 	// Close mention autocomplete
 	const closeMentions = useCallback(() => {
-		setMentionState(prev => ({ ...prev, isOpen: false }));
+		setMentionState((prev) => ({ ...prev, isOpen: false }));
 	}, []);
 
 	// Mark all mentions as read
@@ -188,9 +200,12 @@ export function useMentions(options: UseMentionsOptions = {}) {
 	}, [markAsReadMutation]);
 
 	// Mark specific mentions as read
-	const markMentionsAsRead = useCallback((mentionIds: number[]) => {
-		markAsReadMutation.mutate(mentionIds);
-	}, [markAsReadMutation]);
+	const markMentionsAsRead = useCallback(
+		(mentionIds: number[]) => {
+			markAsReadMutation.mutate(mentionIds);
+		},
+		[markAsReadMutation]
+	);
 
 	return {
 		// Mention autocomplete state
@@ -198,17 +213,17 @@ export function useMentions(options: UseMentionsOptions = {}) {
 		handleTextChange,
 		handleMentionSelect,
 		closeMentions,
-		
+
 		// Mentions data
 		unreadCount,
 		mentions: mentionsData?.mentions || [],
 		refetchMentions,
-		
+
 		// Actions
 		markAllAsRead,
 		markMentionsAsRead,
 		processMentions,
-		
+
 		// Loading states
 		isMarkingAsRead: markAsReadMutation.isPending
 	};

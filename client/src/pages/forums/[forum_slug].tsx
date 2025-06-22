@@ -53,9 +53,17 @@ const buildFiltersFromUrl = (): ThreadFiltersState => {
 	const params = new URLSearchParams(window.location.search);
 	return {
 		sortBy: (params.get('sort') as any) || 'latest',
-		tags: params.getAll('tags[]').map((t) => Number(t)).filter(Boolean),
+		tags: params
+			.getAll('tags[]')
+			.map((t) => Number(t))
+			.filter(Boolean),
 		prefixId: params.get('prefixId') ? Number(params.get('prefixId')) : undefined,
-		solved: params.get('solved') === null ? undefined : params.get('solved') === 'true' ? 'solved' : 'unsolved',
+		solved:
+			params.get('solved') === null
+				? undefined
+				: params.get('solved') === 'true'
+					? 'solved'
+					: 'unsolved',
 		bookmarked: params.get('bookmarked') === 'true',
 		mine: params.get('mine') === 'true',
 		replied: params.get('replied') === 'true',
@@ -67,7 +75,7 @@ const ForumPage: React.FC = () => {
 	const params = useParams<{ slug?: string }>(); // Changed to slug
 	const forum_slug = params?.slug; // Changed to params?.slug
 	const { getForum, zones, isLoading, error: contextError } = useForumStructure(); // Removed unused getZone
-	
+
 	// Fetch available tags
 	const { data: availableTags = [] } = useQuery({
 		queryKey: ['/api/forum/tags'],

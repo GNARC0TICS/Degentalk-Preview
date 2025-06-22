@@ -52,21 +52,21 @@ const socialPreferencesSchema = z.object({
 	mentionPermissions: z.enum(['everyone', 'friends', 'followers', 'none']).optional(),
 	mentionNotifications: z.boolean().optional(),
 	mentionEmailNotifications: z.boolean().optional(),
-	
-	// Following preferences  
+
+	// Following preferences
 	allowFollowers: z.boolean().optional(),
 	followerApprovalRequired: z.boolean().optional(),
 	hideFollowerCount: z.boolean().optional(),
 	hideFollowingCount: z.boolean().optional(),
 	allowWhaleDesignation: z.boolean().optional(),
-	
+
 	// Friends preferences
 	allowFriendRequests: z.boolean().optional(),
 	friendRequestPermissions: z.enum(['everyone', 'mutuals', 'followers', 'none']).optional(),
 	autoAcceptMutualFollows: z.boolean().optional(),
 	hideOnlineStatus: z.boolean().optional(),
 	hideFriendsList: z.boolean().optional(),
-	
+
 	// General privacy
 	showSocialActivity: z.boolean().optional(),
 	allowDirectMessages: z.enum(['friends', 'followers', 'everyone', 'none']).optional(),
@@ -288,13 +288,13 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
 
 		// For development mode, return mock preferences consistently if any error occurs
 		if (process.env.NODE_ENV === 'development') {
-			const userId = getUserId(req); // Re-derive userId for logging consistency
+			const userId = getUserIdFromRequest(req); // Re-derive userId for logging consistency
 			logger.info(
 				'PREFERENCES',
-				`🔧 Returning mock preferences for user ${userIdForLog ?? 'UNKNOWN (error fallback)'} on error (dev mode only)`
+				`🔧 Returning mock preferences for user ${userId ?? 'UNKNOWN (error fallback)'} on error (dev mode only)`
 			);
 			const mockPreferences = {
-				userId: userIdForLog ?? 1, // Default to 1 if still undefined in dev error
+				userId: userId ?? 1, // Default to 1 if still undefined in dev error
 				theme: 'auto',
 				shoutboxPosition: 'sidebar-top',
 				sidebarState: {},
@@ -413,7 +413,7 @@ router.get('/social-preferences', isAuthenticated, async (req, res) => {
 		res.json(preferences);
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error fetching social preferences', error);
-		res.status(500).json({ 
+		res.status(500).json({
 			error: 'Failed to fetch social preferences',
 			details: error instanceof Error ? error.message : 'Unknown error'
 		});
@@ -433,21 +433,21 @@ router.put('/social-preferences', isAuthenticated, async (req, res) => {
 
 		const validation = socialPreferencesSchema.safeParse(req.body);
 		if (!validation.success) {
-			return res.status(400).json({ 
+			return res.status(400).json({
 				error: 'Invalid preferences data',
 				details: validation.error.errors
 			});
 		}
-		
+
 		const updatedPreferences = await UserPreferencesService.updateSocialPreferences(
-			userId, 
+			userId,
 			validation.data
 		);
-		
+
 		res.json(updatedPreferences);
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error updating social preferences', error);
-		res.status(500).json({ 
+		res.status(500).json({
 			error: 'Failed to update social preferences',
 			details: error instanceof Error ? error.message : 'Unknown error'
 		});
@@ -469,7 +469,7 @@ router.get('/privacy-summary', isAuthenticated, async (req, res) => {
 		res.json(summary);
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error fetching privacy summary', error);
-		res.status(500).json({ 
+		res.status(500).json({
 			error: 'Failed to fetch privacy summary',
 			details: error instanceof Error ? error.message : 'Unknown error'
 		});
@@ -491,7 +491,7 @@ router.post('/reset-social-preferences', isAuthenticated, async (req, res) => {
 		res.json(defaultPreferences);
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error resetting social preferences', error);
-		res.status(500).json({ 
+		res.status(500).json({
 			error: 'Failed to reset social preferences',
 			details: error instanceof Error ? error.message : 'Unknown error'
 		});

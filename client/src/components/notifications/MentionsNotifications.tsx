@@ -7,16 +7,16 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-	Bell, 
-	BellOff, 
-	MessageSquare, 
-	FileText, 
-	Hash, 
-	MessageCircle, 
-	Check, 
+import {
+	Bell,
+	BellOff,
+	MessageSquare,
+	FileText,
+	Hash,
+	MessageCircle,
+	Check,
 	CheckCheck,
-	Settings 
+	Settings
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Link } from 'wouter';
@@ -46,23 +46,27 @@ interface MentionsNotificationsProps {
 	className?: string;
 }
 
-export function MentionsNotifications({ 
-	showUnreadOnly = false, 
+export function MentionsNotifications({
+	showUnreadOnly = false,
 	limit = 20,
-	className 
+	className
 }: MentionsNotificationsProps) {
 	const queryClient = useQueryClient();
 	const [selectedMentions, setSelectedMentions] = useState<number[]>([]);
 
 	// Fetch mentions
-	const { data: mentionsData, isLoading, refetch } = useQuery({
+	const {
+		data: mentionsData,
+		isLoading,
+		refetch
+	} = useQuery({
 		queryKey: ['/api/social/mentions', { showUnreadOnly, limit }],
 		queryFn: async () => {
 			const params = new URLSearchParams({
 				page: '1',
 				limit: limit.toString()
 			});
-			
+
 			return await apiRequest<{
 				mentions: MentionNotification[];
 				unreadCount: number;
@@ -113,7 +117,9 @@ export function MentionsNotifications({
 		switch (mention.type) {
 			case 'thread':
 			case 'post':
-				return mention.threadId ? `/threads/${mention.threadId}${mention.postId ? `#post-${mention.postId}` : ''}` : '#';
+				return mention.threadId
+					? `/threads/${mention.threadId}${mention.postId ? `#post-${mention.postId}` : ''}`
+					: '#';
 			case 'shoutbox':
 				return '/'; // Navigate to main page with shoutbox
 			case 'whisper':
@@ -131,7 +137,7 @@ export function MentionsNotifications({
 	};
 
 	const handleMarkAllAsRead = () => {
-		const unreadMentionIds = mentions.filter(m => !m.isRead).map(m => m.id);
+		const unreadMentionIds = mentions.filter((m) => !m.isRead).map((m) => m.id);
 		if (unreadMentionIds.length > 0) {
 			markAsReadMutation.mutate(unreadMentionIds);
 		}
@@ -144,10 +150,8 @@ export function MentionsNotifications({
 	};
 
 	const toggleMentionSelection = (mentionId: number) => {
-		setSelectedMentions(prev => 
-			prev.includes(mentionId) 
-				? prev.filter(id => id !== mentionId)
-				: [...prev, mentionId]
+		setSelectedMentions((prev) =>
+			prev.includes(mentionId) ? prev.filter((id) => id !== mentionId) : [...prev, mentionId]
 		);
 	};
 
@@ -177,7 +181,7 @@ export function MentionsNotifications({
 		);
 	}
 
-	const filteredMentions = showUnreadOnly ? mentions.filter(m => !m.isRead) : mentions;
+	const filteredMentions = showUnreadOnly ? mentions.filter((m) => !m.isRead) : mentions;
 
 	return (
 		<Card className={className}>
@@ -231,9 +235,80 @@ export function MentionsNotifications({
 					</div>
 				) : (
 					<ScrollArea className="h-96">
-						<div className="px-6 pb-6">
+						<div className="px-6 pb-6 space-y-2">
 							{filteredMentions.map((mention) => (
 								<div
 									key={mention.id}
 									className={cn(
-										\"flex items-start gap-3 p-3 border-b border-zinc-800 last:border-b-0\",\n\t\t\t\t\t\t\t\t\"hover:bg-zinc-900/50 transition-colors cursor-pointer\",\n\t\t\t\t\t\t\t\t!mention.isRead && \"bg-emerald-900/10 border-l-2 border-l-emerald-500\"\n\t\t\t\t\t\t\t)}\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<div className=\"flex items-center gap-2\">\n\t\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\t\ttype=\"checkbox\"\n\t\t\t\t\t\t\t\t\tchecked={selectedMentions.includes(mention.id)}\n\t\t\t\t\t\t\t\t\tonChange={() => toggleMentionSelection(mention.id)}\n\t\t\t\t\t\t\t\t\tclassName=\"w-4 h-4 text-emerald-600 bg-zinc-800 border-zinc-600 rounded focus:ring-emerald-500\"\n\t\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t\t<Avatar className=\"h-10 w-10 border border-zinc-700\">\n\t\t\t\t\t\t\t\t\t<AvatarImage\n\t\t\t\t\t\t\t\t\t\tsrc={mention.mentioningUser.activeAvatarUrl || mention.mentioningUser.avatarUrl || ''}\n\t\t\t\t\t\t\t\t\t\talt={mention.mentioningUser.username}\n\t\t\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t\t\t<AvatarFallback className=\"bg-zinc-800 text-zinc-300\">\n\t\t\t\t\t\t\t\t\t\t{mention.mentioningUser.username.slice(0, 2).toUpperCase()}\n\t\t\t\t\t\t\t\t\t</AvatarFallback>\n\t\t\t\t\t\t\t\t</Avatar>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t<div className=\"flex-1 min-w-0\">\n\t\t\t\t\t\t\t\t<Link\n\t\t\t\t\t\t\t\t\thref={getMentionUrl(mention)}\n\t\t\t\t\t\t\t\t\tonClick={() => handleMentionClick(mention)}\n\t\t\t\t\t\t\t\t\tclassName=\"block\"\n\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t<div className=\"flex items-center gap-2 mb-1\">\n\t\t\t\t\t\t\t\t\t\t<span className=\"font-medium text-zinc-200\">\n\t\t\t\t\t\t\t\t\t\t\t{mention.mentioningUser.username}\n\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t<span className=\"text-zinc-400\">mentioned you in</span>\n\t\t\t\t\t\t\t\t\t\t<div className=\"flex items-center gap-1 text-zinc-500\">\n\t\t\t\t\t\t\t\t\t\t\t{getMentionIcon(mention.type)}\n\t\t\t\t\t\t\t\t\t\t\t<span className=\"text-xs capitalize\">{mention.type}</span>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t<p className=\"text-sm text-zinc-400 truncate mb-2\">\n\t\t\t\t\t\t\t\t\t\t{mention.context}\n\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t<div className=\"flex items-center justify-between\">\n\t\t\t\t\t\t\t\t\t\t<span className=\"text-xs text-zinc-500\">\n\t\t\t\t\t\t\t\t\t\t\t{formatDistanceToNow(new Date(mention.createdAt), { addSuffix: true })}\n\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t{!mention.isRead && (\n\t\t\t\t\t\t\t\t\t\t\t<Badge variant=\"secondary\" className=\"bg-emerald-900/60 text-emerald-300 text-xs\">\n\t\t\t\t\t\t\t\t\t\t\t\tNew\n\t\t\t\t\t\t\t\t\t\t\t</Badge>\n\t\t\t\t\t\t\t\t\t\t)}\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</Link>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t))}\n\t\t\t\t</div>\n\t\t\t</ScrollArea>\n\t\t)}\n\t</CardContent>\n</Card>\n);\n}
+										'flex items-start gap-3 p-3 border-b border-zinc-800 last:border-b-0',
+										'hover:bg-zinc-900/50 transition-colors cursor-pointer',
+										!mention.isRead && 'bg-emerald-900/10 border-l-2 border-l-emerald-500'
+									)}
+								>
+									<div className="flex items-center gap-2">
+										<input
+											type="checkbox"
+											checked={selectedMentions.includes(mention.id)}
+											onChange={() => toggleMentionSelection(mention.id)}
+											className="w-4 h-4 text-emerald-600 bg-zinc-800 border-zinc-600 rounded focus:ring-emerald-500"
+										/>
+										<Avatar className="h-10 w-10 border border-zinc-700">
+											<AvatarImage
+												src={
+													mention.mentioningUser.activeAvatarUrl ||
+													mention.mentioningUser.avatarUrl ||
+													''
+												}
+												alt={mention.mentioningUser.username}
+											/>
+											<AvatarFallback className="bg-zinc-800 text-zinc-300">
+												{mention.mentioningUser.username.slice(0, 2).toUpperCase()}
+											</AvatarFallback>
+										</Avatar>
+									</div>
+
+									<div className="flex-1 min-w-0">
+										<Link
+											href={getMentionUrl(mention)}
+											onClick={() => handleMentionClick(mention)}
+											className="block"
+										>
+											<div className="flex items-center gap-2 mb-1">
+												<span className="font-medium text-zinc-200">
+													{mention.mentioningUser.username}
+												</span>
+												<span className="text-zinc-400">mentioned you in</span>
+												<div className="flex items-center gap-1 text-zinc-500">
+													{getMentionIcon(mention.type)}
+													<span className="text-xs capitalize">{mention.type}</span>
+												</div>
+											</div>
+
+											<p className="text-sm text-zinc-400 truncate mb-2">{mention.context}</p>
+
+											<div className="flex items-center justify-between">
+												<span className="text-xs text-zinc-500">
+													{formatDistanceToNow(new Date(mention.createdAt), {
+														addSuffix: true
+													})}
+												</span>
+												{!mention.isRead && (
+													<Badge
+														variant="secondary"
+														className="bg-emerald-900/60 text-emerald-300 text-xs"
+													>
+														New
+													</Badge>
+												)}
+											</div>
+										</Link>
+									</div>
+								</div>
+							))}
+						</div>
+					</ScrollArea>
+				)}
+			</CardContent>
+		</Card>
+	);
+}

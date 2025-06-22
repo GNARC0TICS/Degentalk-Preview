@@ -71,7 +71,7 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 			description: 'Real-time chat with other users',
 			icon: MessageSquare,
 			category: 'social',
-			defaultSlots: ['sidebar/right', 'main/top'],
+			defaultSlots: ['sidebar/right', 'main/top', 'mobile/widgets'],
 			minWidth: 300,
 			responsive: true
 		}
@@ -89,7 +89,7 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 			description: 'Quick overview of your digital assets',
 			icon: Wallet,
 			category: 'economy',
-			defaultSlots: ['sidebar/right'],
+			defaultSlots: ['sidebar/right', 'mobile/widgets'],
 			minWidth: 250,
 			responsive: true,
 			requiresAuth: true
@@ -181,7 +181,7 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 			description: 'Top performers and rankings',
 			icon: Trophy,
 			category: 'data',
-			defaultSlots: ['sidebar/right', 'main/bottom'],
+			defaultSlots: ['sidebar/right', 'main/bottom', 'mobile/widgets'],
 			minWidth: 280,
 			responsive: true
 		}

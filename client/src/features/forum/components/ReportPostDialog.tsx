@@ -4,7 +4,7 @@ import {
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
-	DialogFooter,
+	DialogFooter
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -14,7 +14,7 @@ import {
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
-	SelectValue,
+	SelectValue
 } from '@/components/ui/select';
 import { useReportPost } from '../hooks/useForumQueries';
 import { Loader2, AlertTriangle } from 'lucide-react';
@@ -37,7 +37,7 @@ const REPORT_REASONS = [
 	{ value: 'off_topic', label: 'Off-topic or irrelevant' },
 	{ value: 'low_quality', label: 'Low quality or unhelpful' },
 	{ value: 'duplicate', label: 'Duplicate content' },
-	{ value: 'other', label: 'Other (please specify)' },
+	{ value: 'other', label: 'Other (please specify)' }
 ];
 
 export function ReportPostDialog({ post, isOpen, onClose }: ReportPostDialogProps) {
@@ -71,7 +71,7 @@ export function ReportPostDialog({ post, isOpen, onClose }: ReportPostDialogProp
 
 	if (!post) return null;
 
-	const selectedReason = REPORT_REASONS.find(r => r.value === reason);
+	const selectedReason = REPORT_REASONS.find((r) => r.value === reason);
 	const isOtherReason = reason === 'other';
 	const canSubmit = reason && (!isOtherReason || details.trim());
 
@@ -120,31 +120,25 @@ export function ReportPostDialog({ post, isOpen, onClose }: ReportPostDialogProp
 							placeholder={
 								isOtherReason
 									? "Please explain why you're reporting this post..."
-									: "Optional: Provide additional context about this report..."
+									: 'Optional: Provide additional context about this report...'
 							}
 							className="mt-2 min-h-[80px]"
 							maxLength={500}
 						/>
-						<div className="text-xs text-zinc-500 mt-1">
-							{details.length}/500 characters
-						</div>
+						<div className="text-xs text-zinc-500 mt-1">{details.length}/500 characters</div>
 					</div>
 
 					{reason && (
 						<div className="text-xs text-zinc-400 bg-zinc-800/50 rounded p-3">
-							<strong>What happens next:</strong> Our moderation team will review this report. 
-							If the content violates our community guidelines, appropriate action will be taken. 
-							All reports are handled confidentially.
+							<strong>What happens next:</strong> Our moderation team will review this report. If
+							the content violates our community guidelines, appropriate action will be taken. All
+							reports are handled confidentially.
 						</div>
 					)}
 				</div>
 
 				<DialogFooter className="flex justify-end space-x-2 pt-4">
-					<Button
-						variant="outline"
-						onClick={handleCancel}
-						disabled={reportPost.isPending}
-					>
+					<Button variant="outline" onClick={handleCancel} disabled={reportPost.isPending}>
 						Cancel
 					</Button>
 					<Button

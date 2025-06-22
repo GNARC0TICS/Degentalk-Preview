@@ -61,7 +61,7 @@ export function PostCard({
 		>
 			<div className="flex flex-col sm:flex-row">
 				{/* Enhanced Author Profile Sidebar */}
-				<UserProfileRenderer 
+				<UserProfileRenderer
 					user={post.user}
 					variant="post-sidebar"
 					showStats={true}
@@ -87,7 +87,10 @@ export function PostCard({
 								)}
 							</p>
 							{isFirst && (
-								<Badge variant="outline" className="text-[10px] px-2 py-0.5 border-emerald-600 text-emerald-400">
+								<Badge
+									variant="outline"
+									className="text-[10px] px-2 py-0.5 border-emerald-600 text-emerald-400"
+								>
 									OP
 								</Badge>
 							)}
@@ -110,8 +113,8 @@ export function PostCard({
 						{/* User Signature */}
 						{post.user.signature && (
 							<div className="mt-4 pt-3 border-t border-zinc-800/50">
-								<SignatureRenderer 
-									signature={post.user.signature} 
+								<SignatureRenderer
+									signature={post.user.signature}
 									username={post.user.username}
 									maxHeight={80}
 									className="text-xs"
@@ -121,141 +124,141 @@ export function PostCard({
 					</CardContent>
 
 					<CardFooter className="px-4 py-2 border-t border-zinc-800/70 flex flex-wrap items-center justify-between gap-2">
-				<div className="flex items-center space-x-2">
-					{/* Like Button */}
-					{currentUser ? (
-						<ButtonTooltip content={post.hasLiked ? "Unlike this post" : "Like this post"}>
-							<Button
-								size="sm"
-								variant="ghost"
-								className={`text-xs h-8 px-3 flex items-center gap-1.5 ${post.hasLiked ? 'text-pink-400' : 'text-zinc-400'}`}
-								onClick={() => onLike && onLike(post.id, !!post.hasLiked)}
-							>
-								<Heart className={`h-4 w-4 ${post.hasLiked ? 'fill-pink-400' : ''}`} />
-								<span>{post.likeCount || 0}</span>
-							</Button>
-						</ButtonTooltip>
-					) : (
-						<Button
-							size="sm"
-							variant="ghost"
-							className="text-xs h-8 px-3 flex items-center gap-1.5 text-zinc-500 cursor-not-allowed"
-							title="Sign in to like posts"
-							disabled
-						>
-							<Heart className="h-4 w-4" />
-							<span>{post.likeCount || 0}</span>
-						</Button>
-					)}
+						<div className="flex items-center space-x-2">
+							{/* Like Button */}
+							{currentUser ? (
+								<ButtonTooltip content={post.hasLiked ? 'Unlike this post' : 'Like this post'}>
+									<Button
+										size="sm"
+										variant="ghost"
+										className={`text-xs h-8 px-3 flex items-center gap-1.5 ${post.hasLiked ? 'text-pink-400' : 'text-zinc-400'}`}
+										onClick={() => onLike && onLike(post.id, !!post.hasLiked)}
+									>
+										<Heart className={`h-4 w-4 ${post.hasLiked ? 'fill-pink-400' : ''}`} />
+										<span>{post.likeCount || 0}</span>
+									</Button>
+								</ButtonTooltip>
+							) : (
+								<Button
+									size="sm"
+									variant="ghost"
+									className="text-xs h-8 px-3 flex items-center gap-1.5 text-zinc-500 cursor-not-allowed"
+									title="Sign in to like posts"
+									disabled
+								>
+									<Heart className="h-4 w-4" />
+									<span>{post.likeCount || 0}</span>
+								</Button>
+							)}
 
-					{/* Reply Button */}
-					{currentUser ? (
-						<ButtonTooltip content="Reply to this post">
-							<Button
-								size="sm"
-								variant="ghost"
-								className="text-xs h-8 px-3 text-zinc-400 flex items-center gap-1.5"
-								onClick={() => onReply && onReply(post.id)}
-							>
-								<Reply className="h-4 w-4" />
-								<span>Reply</span>
-							</Button>
-						</ButtonTooltip>
-					) : (
-						<Link href="/auth">
-							<Button
-								size="sm"
-								variant="ghost"
-								className="text-xs h-8 px-3 text-amber-400 flex items-center gap-1.5 hover:text-amber-300"
-							>
-								<LogIn className="h-4 w-4" />
-								<span>Sign in to Reply</span>
-							</Button>
-						</Link>
-					)}
+							{/* Reply Button */}
+							{currentUser ? (
+								<ButtonTooltip content="Reply to this post">
+									<Button
+										size="sm"
+										variant="ghost"
+										className="text-xs h-8 px-3 text-zinc-400 flex items-center gap-1.5"
+										onClick={() => onReply && onReply(post.id)}
+									>
+										<Reply className="h-4 w-4" />
+										<span>Reply</span>
+									</Button>
+								</ButtonTooltip>
+							) : (
+								<Link href="/auth">
+									<Button
+										size="sm"
+										variant="ghost"
+										className="text-xs h-8 px-3 text-amber-400 flex items-center gap-1.5 hover:text-amber-300"
+									>
+										<LogIn className="h-4 w-4" />
+										<span>Sign in to Reply</span>
+									</Button>
+								</Link>
+							)}
 
-					{/* Tip Button */}
-					{tippingEnabled && currentUser && (
-						<ButtonTooltip content="Send DGT tip to the author">
-							<Button
-								size="sm"
-								variant="ghost"
-								className="text-xs h-8 px-3 text-zinc-400 flex items-center gap-1.5"
-								onClick={() => onTip && onTip(post.id)}
-							>
-								<Coins className="h-4 w-4" />
-								<span>Tip</span>
-							</Button>
-						</ButtonTooltip>
-					)}
-				</div>
+							{/* Tip Button */}
+							{tippingEnabled && currentUser && (
+								<ButtonTooltip content="Send DGT tip to the author">
+									<Button
+										size="sm"
+										variant="ghost"
+										className="text-xs h-8 px-3 text-zinc-400 flex items-center gap-1.5"
+										onClick={() => onTip && onTip(post.id)}
+									>
+										<Coins className="h-4 w-4" />
+										<span>Tip</span>
+									</Button>
+								</ButtonTooltip>
+							)}
+						</div>
 
-				<div className="flex items-center space-x-1">
-					{isEditable && (
-						<>
-							<ButtonTooltip content="Edit this post">
+						<div className="flex items-center space-x-1">
+							{isEditable && (
+								<>
+									<ButtonTooltip content="Edit this post">
+										<Button
+											size="sm"
+											variant="ghost"
+											className="text-xs h-8 px-2 text-zinc-400"
+											onClick={() => onEdit && onEdit(post.id)}
+										>
+											<Edit className="h-3.5 w-3.5" />
+											<span className="sr-only">Edit</span>
+										</Button>
+									</ButtonTooltip>
+
+									<ButtonTooltip content="Delete this post">
+										<Button
+											size="sm"
+											variant="ghost"
+											className="text-xs h-8 px-2 text-zinc-400 hover:text-red-400"
+											onClick={() => onDelete && onDelete(post.id)}
+										>
+											<Trash className="h-3.5 w-3.5" />
+											<span className="sr-only">Delete</span>
+										</Button>
+									</ButtonTooltip>
+								</>
+							)}
+
+							{!isThreadSolved && !isSolution && onMarkAsSolution && (
+								<ButtonTooltip content="Mark this post as the solution to the thread">
+									<Button
+										size="sm"
+										variant="outline"
+										className="text-xs h-8 px-3 border-emerald-800/50 text-emerald-400 hover:bg-emerald-900/30"
+										onClick={() => onMarkAsSolution(post.id)}
+									>
+										<ThumbsUp className="h-3.5 w-3.5 mr-1" />
+										Mark as Solution
+									</Button>
+								</ButtonTooltip>
+							)}
+
+							<ButtonTooltip content="Report this post to moderators">
 								<Button
 									size="sm"
 									variant="ghost"
 									className="text-xs h-8 px-2 text-zinc-400"
-									onClick={() => onEdit && onEdit(post.id)}
+									onClick={() => onReport && onReport(post.id)}
 								>
-									<Edit className="h-3.5 w-3.5" />
-									<span className="sr-only">Edit</span>
+									<Flag className="h-3.5 w-3.5" />
+									<span className="sr-only">Report</span>
 								</Button>
 							</ButtonTooltip>
 
-							<ButtonTooltip content="Delete this post">
-								<Button
-									size="sm"
-									variant="ghost"
-									className="text-xs h-8 px-2 text-zinc-400 hover:text-red-400"
-									onClick={() => onDelete && onDelete(post.id)}
-								>
-									<Trash className="h-3.5 w-3.5" />
-									<span className="sr-only">Delete</span>
-								</Button>
-							</ButtonTooltip>
-						</>
-					)}
-
-					{!isThreadSolved && !isSolution && onMarkAsSolution && (
-						<ButtonTooltip content="Mark this post as the solution to the thread">
-							<Button
-								size="sm"
-								variant="outline"
-								className="text-xs h-8 px-3 border-emerald-800/50 text-emerald-400 hover:bg-emerald-900/30"
-								onClick={() => onMarkAsSolution(post.id)}
-							>
-								<ThumbsUp className="h-3.5 w-3.5 mr-1" />
-								Mark as Solution
-							</Button>
-						</ButtonTooltip>
-					)}
-
-					<ButtonTooltip content="Report this post to moderators">
-						<Button
-							size="sm"
-							variant="ghost"
-							className="text-xs h-8 px-2 text-zinc-400"
-							onClick={() => onReport && onReport(post.id)}
-						>
-							<Flag className="h-3.5 w-3.5" />
-							<span className="sr-only">Report</span>
-						</Button>
-					</ButtonTooltip>
-
-					{/* Moderator Actions */}
-					<ModeratorActions
-						type="post"
-						itemId={post.id}
-						itemData={{
-							isHidden: post.isHidden,
-							userId: post.user.id.toString(),
-							username: post.user.username
-						}}
-					/>
-				</div>
+							{/* Moderator Actions */}
+							<ModeratorActions
+								type="post"
+								itemId={post.id}
+								itemData={{
+									isHidden: post.isHidden,
+									userId: post.user.id.toString(),
+									username: post.user.username
+								}}
+							/>
+						</div>
 					</CardFooter>
 				</div>
 			</div>

@@ -17,14 +17,17 @@ export interface CreateReportData {
 
 export class ReportsService {
 	async createReport(data: CreateReportData) {
-		const [report] = await db.insert(reportedContent).values({
-			contentType: data.contentType,
-			contentId: data.contentId,
-			reason: data.reason,
-			details: data.details,
-			reporterId: data.reporterId,
-			status: 'pending'
-		}).returning();
+		const [report] = await db
+			.insert(reportedContent)
+			.values({
+				contentType: data.contentType,
+				contentId: data.contentId,
+				reason: data.reason,
+				details: data.details,
+				reporterId: data.reporterId,
+				status: 'pending'
+			})
+			.returning();
 
 		return report;
 	}

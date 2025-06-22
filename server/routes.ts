@@ -269,7 +269,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	// Set up relationships routes with domain-based approach
 	app.use('/api/relationships', relationshipsRoutes);
 
-	// Set up whale watch routes with domain-based approach  
+	// Set up whale watch routes with domain-based approach
 	app.use('/api', whaleWatchRoutes);
 
 	// Set up messaging routes with domain-based approach

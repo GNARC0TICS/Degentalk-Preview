@@ -11,6 +11,7 @@ The Community Engagement sprint delivers a comprehensive social layer for DegenT
 **Purpose**: Enable users to mention each other using @username syntax across the platform
 
 **Components**:
+
 - **Database Schema**: `db/schema/social/mentions.ts`
   - `mentions` table: Tracks all mention instances
   - `userMentionPreferences` table: User notification preferences
@@ -24,12 +25,14 @@ The Community Engagement sprint delivers a comprehensive social layer for DegenT
   - `client/src/hooks/use-mentions.ts`: React hook for mention functionality
 
 **Integration Points**:
+
 - **Rich Text Editor**: TipTap extension with enhanced mention suggestions
 - **Thread/Post Creation**: Automatic mention processing on content submission
 - **Shoutbox**: Real-time mention detection and autocomplete
 - **Notifications**: Activity feed integration for mention alerts
 
 **Key Features**:
+
 - Real-time autocomplete with user search
 - Role-based mention permissions
 - Privacy controls (friends-only, followers-only)
@@ -41,6 +44,7 @@ The Community Engagement sprint delivers a comprehensive social layer for DegenT
 **Purpose**: Enable users to follow high-value community members and track their activity
 
 **Components**:
+
 - **Database Schema**: `db/schema/social/user-follows.ts`
   - `userFollows` table: Follow relationships with notification preferences
   - `userFollowPreferences` table: Privacy and notification settings
@@ -55,6 +59,7 @@ The Community Engagement sprint delivers a comprehensive social layer for DegenT
   - User search and follow functionality
 
 **Key Features**:
+
 - **Whale Detection**: Automatic identification based on level, clout, and activity
 - **Privacy Controls**: Follow approval requirements, hidden follower counts
 - **Notification Preferences**: Granular settings per followed user
@@ -66,6 +71,7 @@ The Community Engagement sprint delivers a comprehensive social layer for DegenT
 **Purpose**: Mutual friendship system that controls direct messaging permissions
 
 **Components**:
+
 - **Database Schema**: `db/schema/social/friends.ts`
   - `friendships` table: Mutual friend relationships
   - `userFriendPreferences` table: Friend request settings
@@ -73,6 +79,7 @@ The Community Engagement sprint delivers a comprehensive social layer for DegenT
 - **Backend Foundation**: Complete schema and type definitions ready for API implementation
 
 **Planned Features**:
+
 - Friend request send/accept/decline workflow
 - Mutual DM permissions through existing whispers system
 - Friend groups for organization
@@ -84,6 +91,7 @@ The Community Engagement sprint delivers a comprehensive social layer for DegenT
 **Purpose**: Centralized configuration system for all social features
 
 **Components**:
+
 - **Configuration File**: `client/src/config/social.config.ts`
   - Feature toggles and permissions
   - Rate limiting configurations
@@ -91,6 +99,7 @@ The Community Engagement sprint delivers a comprehensive social layer for DegenT
   - Default privacy settings
 
 **Key Features**:
+
 - **Feature Gates**: Level and role-based access control
 - **Rate Limiting**: Prevents spam and abuse
 - **Whale Thresholds**: Configurable criteria for whale status
@@ -166,16 +175,19 @@ client/src/components/
 ### For Developers
 
 **Adding Mention Support to New Content Types**:
+
 1. Add mention processing in content creation/update endpoints
 2. Use `MentionsService.processMentions()` after content insertion
 3. Include mention rendering in display components
 
 **Implementing Whale Detection**:
+
 1. Configure thresholds in `social.config.ts`
 2. Use `SocialConfigHelper.isWhale()` for detection
 3. Apply whale-specific UI elements (crown badges, etc.)
 
 **Follow System Integration**:
+
 1. Add follow buttons to user profiles and cards
 2. Use `FollowsService` for follow operations
 3. Implement activity feeds using follow relationships
@@ -183,11 +195,13 @@ client/src/components/
 ### For Administrators
 
 **Social Feature Configuration**:
+
 - Modify `social.config.ts` for platform-wide settings
 - Adjust whale detection thresholds based on platform metrics
 - Configure rate limits to prevent abuse
 
 **Privacy and Moderation**:
+
 - Monitor mention abuse through admin dashboard
 - Review follow request patterns for spam detection
 - Manage whale status manually if needed
@@ -195,11 +209,13 @@ client/src/components/
 ### for Users
 
 **Mention Usage**:
+
 - Type `@username` to mention users in posts, threads, and chat
 - Configure notification preferences in user settings
 - Use privacy controls to limit who can mention you
 
 **Following Whales**:
+
 - Discover whales through the WhaleWatch dashboard
 - Customize notification preferences per followed user
 - Use search to find specific users to follow

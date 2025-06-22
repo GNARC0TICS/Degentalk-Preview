@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 // Badge is no longer directly used, XpBoostBadge handles its own Badge import
 import { Clock, Flame } from 'lucide-react'; // Eye, MessageSquare, Users moved to ZoneStats
 import { formatDistanceToNow } from 'date-fns';
@@ -25,6 +26,22 @@ export interface ZoneCardProps {
 	postCount?: number;
 	activeUsersCount?: number;
 	lastActivityAt?: Date;
+	lastActivityUser?: {
+		id: number;
+		username: string;
+		avatarUrl?: string | null;
+		activeAvatarUrl?: string | null;
+	};
+
+	// Forum previews
+	forums?: Array<{
+		id: number;
+		slug: string;
+		name: string;
+		description?: string | null;
+		threadCount: number;
+		postCount: number;
+	}>;
 
 	// Special states
 	hasXpBoost?: boolean;
@@ -40,6 +57,7 @@ export interface ZoneCardProps {
 	className?: string;
 	onClick?: () => void;
 	layout?: 'vertical' | 'horizontal';
+	showForumPreviews?: boolean; // New prop to control forum preview display
 }
 
 /**
@@ -59,6 +77,8 @@ export function ZoneCard({
 	threadCount = 0,
 	activeUsersCount = 0,
 	lastActivityAt,
+	lastActivityUser,
+	forums = [],
 	hasXpBoost = false,
 	boostMultiplier = 1, // Default to 1 if not provided
 	isEventActive = false,
@@ -66,7 +86,8 @@ export function ZoneCard({
 	rarity = 'common',
 	className = '',
 	onClick,
-	layout = 'vertical'
+	layout = 'vertical',
+	showForumPreviews = false
 }: ZoneCardProps) {
 	// const navigate = useNavigate(); // Removed useNavigate hook
 	const zoneUrl = `/zones/${slug}`;
@@ -158,6 +179,41 @@ export function ZoneCard({
 							threadCount={threadCount}
 							activeUsersCount={activeUsersCount}
 						/>
+
+						{/* Forum Previews */}
+						{showForumPreviews && forums.length > 0 && (
+							<div className="mt-4 pt-4 border-t border-white/10">
+								<h4 className="text-xs font-semibold text-zinc-300 mb-2 uppercase tracking-wide">
+									Forums in this zone
+								</h4>
+								<div className="space-y-2 max-h-32 overflow-y-auto">
+									{forums.slice(0, 4).map((forum) => (
+										<div
+											key={forum.id}
+											className="flex items-center justify-between text-xs p-2 rounded bg-black/20 hover:bg-black/30 transition-colors"
+										>
+											<div className="flex-1 min-w-0">
+												<div className="font-medium text-zinc-200 truncate">{forum.name}</div>
+												{forum.description && (
+													<div className="text-zinc-400 text-xs truncate mt-0.5">
+														{forum.description}
+													</div>
+												)}
+											</div>
+											<div className="flex items-center gap-2 text-zinc-400 ml-2">
+												<span>{forum.threadCount}</span>
+												<span className="text-xs">threads</span>
+											</div>
+										</div>
+									))}
+									{forums.length > 4 && (
+										<div className="text-xs text-zinc-400 text-center py-1">
+											+{forums.length - 4} more forums
+										</div>
+									)}
+								</div>
+							</div>
+						)}
 					</div>
 				</CardContent>
 
@@ -172,11 +228,30 @@ export function ZoneCard({
 								: {}
 						}
 					>
-						<div className="flex items-center text-zinc-400 relative z-10">
-							<Clock className="h-3 w-3 mr-1" />
-							<span>
-								Last activity {formatDistanceToNow(new Date(lastActivityAt), { addSuffix: true })}
-							</span>
+						<div className="flex items-center justify-between w-full relative z-10">
+							<div className="flex items-center text-zinc-400">
+								<Clock className="h-3 w-3 mr-1" />
+								<span>
+									Last activity {formatDistanceToNow(new Date(lastActivityAt), { addSuffix: true })}
+								</span>
+							</div>
+							{lastActivityUser && (
+								<div className="flex items-center gap-2 text-zinc-300">
+									<span className="text-xs">by</span>
+									<Avatar className="h-5 w-5">
+										<AvatarImage
+											src={
+												lastActivityUser.activeAvatarUrl || lastActivityUser.avatarUrl || undefined
+											}
+											alt={lastActivityUser.username}
+										/>
+										<AvatarFallback className="text-xs">
+											{lastActivityUser.username.substring(0, 2).toUpperCase()}
+										</AvatarFallback>
+									</Avatar>
+									<span className="text-xs font-medium">{lastActivityUser.username}</span>
+								</div>
+							)}
 						</div>
 					</CardFooter>
 				)}

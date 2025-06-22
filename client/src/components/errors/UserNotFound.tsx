@@ -30,7 +30,7 @@ export function UserNotFound({ username, userId, onBack }: UserNotFoundProps) {
 				url: '/api/users/active?limit=6',
 				method: 'GET'
 			});
-			
+
 			return response?.users || [];
 		}
 	});
@@ -50,9 +50,8 @@ export function UserNotFound({ username, userId, onBack }: UserNotFoundProps) {
 					</CardTitle>
 					<p className="text-zinc-400 mt-2">
 						{isPrivateProfile
-							? 'This user profile is set to private or you don\'t have permission to view it.'
-							: 'The user you\'re looking for doesn\'t exist, may have changed their username, or their account has been deactivated.'
-						}
+							? "This user profile is set to private or you don't have permission to view it."
+							: "The user you're looking for doesn't exist, may have changed their username, or their account has been deactivated."}
 					</p>
 					{identifier && (
 						<p className="text-xs text-zinc-500 mt-1">
@@ -65,11 +64,7 @@ export function UserNotFound({ username, userId, onBack }: UserNotFoundProps) {
 					{/* Quick Actions */}
 					<div className="flex flex-wrap gap-3 justify-center">
 						{onBack && (
-							<Button
-								variant="outline"
-								onClick={onBack}
-								className="gap-2"
-							>
+							<Button variant="outline" onClick={onBack} className="gap-2">
 								<ArrowLeft className="h-4 w-4" />
 								Go Back
 							</Button>
@@ -105,17 +100,13 @@ export function UserNotFound({ username, userId, onBack }: UserNotFoundProps) {
 							</h3>
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 								{activeUsers.map((user) => (
-									<Link 
-										key={user.id} 
-										href={`/profile/${user.username}`}
-										className="block"
-									>
+									<Link key={user.id} href={`/profile/${user.username}`} className="block">
 										<div className="p-4 bg-zinc-800/50 hover:bg-zinc-800/70 rounded-lg border border-zinc-700/50 hover:border-zinc-600 transition-all cursor-pointer">
 											<div className="flex items-center gap-3">
 												<div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center overflow-hidden">
 													{user.avatarUrl ? (
-														<img 
-															src={user.avatarUrl} 
+														<img
+															src={user.avatarUrl}
 															alt={user.username}
 															className="w-full h-full object-cover"
 														/>
@@ -126,13 +117,9 @@ export function UserNotFound({ username, userId, onBack }: UserNotFoundProps) {
 													)}
 												</div>
 												<div className="flex-1 min-w-0">
-													<h4 className="font-medium text-white text-sm mb-1">
-														{user.username}
-													</h4>
+													<h4 className="font-medium text-white text-sm mb-1">{user.username}</h4>
 													<div className="flex items-center gap-2 text-xs text-zinc-400">
-														{user.role && (
-															<span className="capitalize">{user.role}</span>
-														)}
+														{user.role && <span className="capitalize">{user.role}</span>}
 														{user.xpLevel && (
 															<>
 																<span>•</span>
@@ -164,7 +151,10 @@ export function UserNotFound({ username, userId, onBack }: UserNotFoundProps) {
 
 					{/* Help Text */}
 					<div className="text-center text-sm text-zinc-500 pt-4 border-t border-zinc-800">
-						<p>Looking to connect with someone? Try browsing our member directory or joining discussions.</p>
+						<p>
+							Looking to connect with someone? Try browsing our member directory or joining
+							discussions.
+						</p>
 					</div>
 				</CardContent>
 			</Card>

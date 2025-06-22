@@ -153,24 +153,28 @@ export function ThreadForm({
 					Thread Content
 				</Label>
 
-				<Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'write' | 'preview')} className="w-full">
+				<Tabs
+					value={activeTab}
+					onValueChange={(v) => setActiveTab(v as 'write' | 'preview')}
+					className="w-full"
+				>
 					<TabsList className="grid w-full grid-cols-2 bg-zinc-800/50 border border-zinc-700">
-						<TabsTrigger 
-							value="write" 
+						<TabsTrigger
+							value="write"
 							className="flex items-center gap-2 data-[state=active]:bg-zinc-700 data-[state=active]:text-white"
 						>
 							<Edit3 className="h-4 w-4" />
 							Write
 						</TabsTrigger>
-						<TabsTrigger 
-							value="preview" 
+						<TabsTrigger
+							value="preview"
 							className="flex items-center gap-2 data-[state=active]:bg-zinc-700 data-[state=active]:text-white"
 						>
 							<Eye className="h-4 w-4" />
 							Preview
 						</TabsTrigger>
 					</TabsList>
-					
+
 					<TabsContent value="write" className="mt-2">
 						<RichTextEditor
 							content={form.watch('content')}
@@ -180,27 +184,15 @@ export function ThreadForm({
 							readOnly={createThreadMutation.isPending}
 						/>
 					</TabsContent>
-					
+
 					<TabsContent value="preview" className="mt-2">
-						<Card className="bg-zinc-900/50 border-zinc-700">
-							<CardHeader className="pb-3">
-								<CardTitle className="text-lg">Preview</CardTitle>
-							</CardHeader>
-							<CardContent>
-								{form.watch('content') ? (
-									<div 
-										className="prose prose-invert prose-zinc max-w-none min-h-[250px]"
-										dangerouslySetInnerHTML={{ 
-											__html: DOMPurify.sanitize(form.watch('content')) 
-										}}
-									/>
-								) : (
-									<div className="min-h-[250px] flex items-center justify-center text-zinc-500 text-sm">
-										Nothing to preview yet. Switch to "Write" tab to add content.
-									</div>
-								)}
-							</CardContent>
-						</Card>
+						<RichTextEditor
+							content={form.watch('content')}
+							onChange={() => {}} // No-op in preview mode
+							placeholder="Preview will appear here..."
+							editorClass="min-h-[300px]"
+							readOnly={true} // Make editor read-only in preview mode
+						/>
 					</TabsContent>
 				</Tabs>
 

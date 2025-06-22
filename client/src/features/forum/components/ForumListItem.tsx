@@ -66,17 +66,17 @@ export function ForumListItem({
 		const accessLevel = forum.rules?.allowPosting ? 'public' : null; // Simplified for now
 		// You could implement more detailed access level detection here
 		if (!canPost && user) {
-			return { 
-				icon: Shield, 
-				label: 'Restricted Access', 
+			return {
+				icon: Shield,
+				label: 'Restricted Access',
 				color: 'text-amber-400',
 				description: 'Higher level required'
 			};
 		}
 		if (!user) {
-			return { 
-				icon: Lock, 
-				label: 'Sign in Required', 
+			return {
+				icon: Lock,
+				label: 'Sign in Required',
 				color: 'text-zinc-500',
 				description: 'Sign in to access'
 			};
@@ -139,8 +139,8 @@ export function ForumListItem({
 
 						{/* Access Level Badge */}
 						{accessInfo && (
-							<Badge 
-								variant="outline" 
+							<Badge
+								variant="outline"
 								className={`text-[10px] px-2 py-0.5 ${accessInfo.color} border-current`}
 								title={accessInfo.description}
 							>

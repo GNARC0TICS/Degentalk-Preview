@@ -8,13 +8,15 @@ const router = Router();
 // Validation schemas
 const followUserSchema = z.object({
 	userId: z.string().uuid(),
-	notificationSettings: z.object({
-		notifyOnPosts: z.boolean().optional(),
-		notifyOnThreads: z.boolean().optional(),
-		notifyOnTrades: z.boolean().optional(),
-		notifyOnLargeStakes: z.boolean().optional(),
-		minStakeNotification: z.number().optional()
-	}).optional()
+	notificationSettings: z
+		.object({
+			notifyOnPosts: z.boolean().optional(),
+			notifyOnThreads: z.boolean().optional(),
+			notifyOnTrades: z.boolean().optional(),
+			notifyOnLargeStakes: z.boolean().optional(),
+			minStakeNotification: z.number().optional()
+		})
+		.optional()
 });
 
 const unfollowUserSchema = z.object({
@@ -91,7 +93,7 @@ router.delete('/', requireAuth, async (req, res) => {
 		const followerId = req.user!.id;
 
 		await FollowsService.unfollowUser(followerId, followedId);
-		
+
 		res.json({ success: true });
 	} catch (error) {
 		console.error('Error unfollowing user:', error);
@@ -113,7 +115,7 @@ router.get('/following', requireAuth, async (req, res) => {
 		const userId = req.user!.id;
 
 		const following = await FollowsService.getUserFollowing(userId, page, limit);
-		
+
 		res.json({
 			following,
 			pagination: {
@@ -138,7 +140,7 @@ router.get('/followers', requireAuth, async (req, res) => {
 		const userId = req.user!.id;
 
 		const followers = await FollowsService.getUserFollowers(userId, page, limit);
-		
+
 		res.json({
 			followers,
 			pagination: {
@@ -161,7 +163,7 @@ router.get('/counts', requireAuth, async (req, res) => {
 	try {
 		const userId = req.user!.id;
 		const counts = await FollowsService.getUserFollowCounts(userId);
-		
+
 		res.json(counts);
 	} catch (error) {
 		console.error('Error fetching follow counts:', error);
@@ -179,7 +181,7 @@ router.get('/check/:userId', requireAuth, async (req, res) => {
 		const followerId = req.user!.id;
 
 		const isFollowing = await FollowsService.isFollowing(followerId, followedId);
-		
+
 		res.json({ isFollowing });
 	} catch (error) {
 		console.error('Error checking follow status:', error);
@@ -195,7 +197,7 @@ router.get('/requests', requireAuth, async (req, res) => {
 	try {
 		const userId = req.user!.id;
 		const requests = await FollowsService.getFollowRequests(userId);
-		
+
 		res.json({ requests });
 	} catch (error) {
 		console.error('Error fetching follow requests:', error);
@@ -217,7 +219,7 @@ router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
 		}
 
 		const result = await FollowsService.respondToFollowRequest(requestId, approve);
-		
+
 		res.json(result);
 	} catch (error) {
 		console.error('Error responding to follow request:', error);
@@ -235,12 +237,14 @@ router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
  */
 router.get('/whales', requireAuth, async (req, res) => {
 	try {
-		const { limit } = z.object({
-			limit: z.string().optional().default('20').transform(Number)
-		}).parse(req.query);
+		const { limit } = z
+			.object({
+				limit: z.string().optional().default('20').transform(Number)
+			})
+			.parse(req.query);
 
 		const whales = await FollowsService.getWhaleCandidates(limit);
-		
+
 		res.json({ whales });
 	} catch (error) {
 		console.error('Error fetching whale candidates:', error);
@@ -258,7 +262,7 @@ router.get('/activity', requireAuth, async (req, res) => {
 		const userId = req.user!.id;
 
 		const activity = await FollowsService.getFollowingActivity(userId, page, limit);
-		
+
 		res.json(activity);
 	} catch (error) {
 		console.error('Error fetching following activity:', error);
@@ -276,7 +280,7 @@ router.get('/search', requireAuth, async (req, res) => {
 		const currentUserId = req.user!.id;
 
 		const users = await FollowsService.searchUsersToFollow(q, currentUserId, limit);
-		
+
 		res.json({ users });
 	} catch (error) {
 		console.error('Error searching users to follow:', error);
@@ -292,7 +296,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 	try {
 		const userId = req.user!.id;
 		const preferences = await FollowsService.getUserFollowPreferences(userId);
-		
+
 		res.json(preferences);
 	} catch (error) {
 		console.error('Error fetching follow preferences:', error);
@@ -310,7 +314,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
 		const userId = req.user!.id;
 
 		const updatedPrefs = await FollowsService.updateUserFollowPreferences(userId, preferences);
-		
+
 		res.json(updatedPrefs[0]);
 	} catch (error) {
 		console.error('Error updating follow preferences:', error);
@@ -333,7 +337,7 @@ router.put('/:userId/notifications', requireAuth, async (req, res) => {
 			followedId,
 			settings
 		);
-		
+
 		res.json(result);
 	} catch (error) {
 		console.error('Error updating follow notification settings:', error);

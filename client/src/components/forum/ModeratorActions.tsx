@@ -40,7 +40,11 @@ import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
-import { useSolveThread, useUnsolveThread, useFetchForumCategoriesTree } from '@/features/forum/hooks/useForumQueries';
+import {
+	useSolveThread,
+	useUnsolveThread,
+	useFetchForumCategoriesTree
+} from '@/features/forum/hooks/useForumQueries';
 
 interface ModeratorActionsProps {
 	type: 'thread' | 'post';
@@ -195,11 +199,7 @@ export function ModeratorActions({
 		<>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Button
-						variant="ghost"
-						size="sm"
-						className={cn("h-8 w-8 p-0", className)}
-					>
+					<Button variant="ghost" size="sm" className={cn('h-8 w-8 p-0', className)}>
 						<MoreVertical className="h-4 w-4" />
 						<span className="sr-only">Moderator actions</span>
 					</Button>

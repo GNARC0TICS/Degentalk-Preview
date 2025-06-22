@@ -11,9 +11,9 @@ export class MentionsService {
 		const mentionRegex = /@([a-zA-Z0-9_-]+)/g;
 		const matches = content.match(mentionRegex);
 		if (!matches) return [];
-		
+
 		// Remove @ symbol and return unique usernames
-		return [...new Set(matches.map(match => match.slice(1)))];
+		return [...new Set(matches.map((match) => match.slice(1)))];
 	}
 
 	/**
@@ -44,7 +44,12 @@ export class MentionsService {
 			const mentionedUsers = await db
 				.select({ id: users.id, username: users.username })
 				.from(users)
-				.where(inArray(sql`LOWER(${users.username})`, mentionedUsernames.map(u => u.toLowerCase())));
+				.where(
+					inArray(
+						sql`LOWER(${users.username})`,
+						mentionedUsernames.map((u) => u.toLowerCase())
+					)
+				);
 
 			if (mentionedUsers.length === 0) return [];
 
@@ -52,33 +57,36 @@ export class MentionsService {
 			const mentionRecords = [];
 			for (const user of mentionedUsers) {
 				const preferences = await this.getUserMentionPreferences(user.id);
-				
+
 				// Check if this type of mention is allowed
 				if (!this.isMentionAllowed(type, preferences)) continue;
-				
+
 				// Check privacy settings (implement friend/follower checks here)
 				if (preferences.onlyFriendsMention || preferences.onlyFollowersMention) {
 					const hasPermission = await this.checkMentionPermissions(
-						mentioningUserId, 
-						user.id, 
+						mentioningUserId,
+						user.id,
 						preferences
 					);
 					if (!hasPermission) continue;
 				}
 
 				// Create mention record
-				const mentionRecord = await db.insert(mentions).values({
-					mentionedUserId: user.id,
-					mentioningUserId,
-					type,
-					threadId,
-					postId,
-					messageId,
-					mentionText: `@${user.username}`,
-					context: context || content.slice(0, 200),
-					isRead: false,
-					isNotified: false
-				}).returning();
+				const mentionRecord = await db
+					.insert(mentions)
+					.values({
+						mentionedUserId: user.id,
+						mentioningUserId,
+						type,
+						threadId,
+						postId,
+						messageId,
+						mentionText: `@${user.username}`,
+						context: context || content.slice(0, 200),
+						isRead: false,
+						isNotified: false
+					})
+					.returning();
 
 				mentionRecords.push(mentionRecord[0]);
 			}
@@ -139,8 +147,8 @@ export class MentionsService {
 	 * Check mention permissions based on privacy settings
 	 */
 	static async checkMentionPermissions(
-		mentioningUserId: string, 
-		mentionedUserId: string, 
+		mentioningUserId: string,
+		mentionedUserId: string,
 		preferences: any
 	): Promise<boolean> {
 		// Don't allow self-mentions
@@ -208,12 +216,7 @@ export class MentionsService {
 			await db
 				.update(mentions)
 				.set({ isRead: true, readAt: sql`NOW()` })
-				.where(
-					and(
-						eq(mentions.mentionedUserId, userId),
-						inArray(mentions.id, mentionIds)
-					)
-				);
+				.where(and(eq(mentions.mentionedUserId, userId), inArray(mentions.id, mentionIds)));
 		} else {
 			// Mark all mentions as read
 			await db
@@ -230,12 +233,7 @@ export class MentionsService {
 		const result = await db
 			.select({ count: sql<number>`COUNT(*)` })
 			.from(mentions)
-			.where(
-				and(
-					eq(mentions.mentionedUserId, userId),
-					eq(mentions.isRead, false)
-				)
-			);
+			.where(and(eq(mentions.mentionedUserId, userId), eq(mentions.isRead, false)));
 
 		return result[0]?.count || 0;
 	}
@@ -275,10 +273,13 @@ export class MentionsService {
 
 		if (existingPrefs.length === 0) {
 			// Create new preferences
-			return await db.insert(userMentionPreferences).values({
-				userId,
-				...preferences
-			}).returning();
+			return await db
+				.insert(userMentionPreferences)
+				.values({
+					userId,
+					...preferences
+				})
+				.returning();
 		} else {
 			// Update existing preferences
 			return await db

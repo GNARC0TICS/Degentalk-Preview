@@ -4,141 +4,158 @@ import { logger } from '../../../../core/logger';
 import { z } from 'zod';
 
 const createFrameSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(255, 'Name must be less than 255 characters'),
-  imageUrl: z.string().min(1, 'Image URL is required').max(255, 'Image URL must be less than 255 characters'),
-  rarity: z.enum(['common', 'rare', 'epic', 'legendary']),
-  animated: z.boolean().default(false)
+	name: z.string().min(1, 'Name is required').max(255, 'Name must be less than 255 characters'),
+	imageUrl: z
+		.string()
+		.min(1, 'Image URL is required')
+		.max(255, 'Image URL must be less than 255 characters'),
+	rarity: z.enum(['common', 'rare', 'epic', 'legendary']),
+	animated: z.boolean().default(false)
 });
 
 const updateFrameSchema = createFrameSchema.partial();
 
 class AvatarFrameController {
-  async getAllFrames(req: Request, res: Response) {
-    try {
-      const frames = await avatarFrameService.getAllFrames();
-      return res.json(frames);
-    } catch (error) {
-      logger.error('AvatarFrameController', 'Failed to get all frames', { error });
-      return res.status(500).json({ 
-        error: 'Failed to fetch avatar frames',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      });
-    }
-  }
+	async getAllFrames(req: Request, res: Response) {
+		try {
+			const frames = await avatarFrameService.getAllFrames();
+			return res.json(frames);
+		} catch (error) {
+			logger.error('AvatarFrameController', 'Failed to get all frames', { error });
+			return res.status(500).json({
+				error: 'Failed to fetch avatar frames',
+				message: error instanceof Error ? error.message : 'Unknown error'
+			});
+		}
+	}
 
-  async getFrame(req: Request, res: Response) {
-    try {
-      const frameId = parseInt(req.params.id);
-      if (isNaN(frameId)) {
-        return res.status(400).json({ error: 'Invalid frame ID' });
-      }
+	async getFrame(req: Request, res: Response) {
+		try {
+			const frameId = parseInt(req.params.id);
+			if (isNaN(frameId)) {
+				return res.status(400).json({ error: 'Invalid frame ID' });
+			}
 
-      const frame = await avatarFrameService.getFrameById(frameId);
-      if (!frame) {
-        return res.status(404).json({ error: 'Avatar frame not found' });
-      }
+			const frame = await avatarFrameService.getFrameById(frameId);
+			if (!frame) {
+				return res.status(404).json({ error: 'Avatar frame not found' });
+			}
 
-      return res.json(frame);
-    } catch (error) {
-      logger.error('AvatarFrameController', 'Failed to get frame', { error, frameId: req.params.id });
-      return res.status(500).json({ 
-        error: 'Failed to fetch avatar frame',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      });
-    }
-  }
+			return res.json(frame);
+		} catch (error) {
+			logger.error('AvatarFrameController', 'Failed to get frame', {
+				error,
+				frameId: req.params.id
+			});
+			return res.status(500).json({
+				error: 'Failed to fetch avatar frame',
+				message: error instanceof Error ? error.message : 'Unknown error'
+			});
+		}
+	}
 
-  async createFrame(req: Request, res: Response) {
-    try {
-      const validatedData = createFrameSchema.parse(req.body);
-      
-      const frame = await avatarFrameService.createFrame(validatedData);
-      
-      logger.info('AvatarFrameController', 'Frame created', { 
-        frameId: frame.id, 
-        name: frame.name,
-        createdBy: req.user?.id 
-      });
-      
-      return res.status(201).json(frame);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ 
-          error: 'Validation failed',
-          details: error.errors
-        });
-      }
-      
-      logger.error('AvatarFrameController', 'Failed to create frame', { error, userId: req.user?.id });
-      return res.status(500).json({ 
-        error: 'Failed to create avatar frame',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      });
-    }
-  }
+	async createFrame(req: Request, res: Response) {
+		try {
+			const validatedData = createFrameSchema.parse(req.body);
 
-  async updateFrame(req: Request, res: Response) {
-    try {
-      const frameId = parseInt(req.params.id);
-      if (isNaN(frameId)) {
-        return res.status(400).json({ error: 'Invalid frame ID' });
-      }
+			const frame = await avatarFrameService.createFrame(validatedData);
 
-      const validatedData = updateFrameSchema.parse(req.body);
-      
-      const frame = await avatarFrameService.updateFrame(frameId, validatedData);
-      if (!frame) {
-        return res.status(404).json({ error: 'Avatar frame not found' });
-      }
-      
-      logger.info('AvatarFrameController', 'Frame updated', { 
-        frameId, 
-        updatedBy: req.user?.id 
-      });
-      
-      return res.json(frame);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ 
-          error: 'Validation failed',
-          details: error.errors
-        });
-      }
-      
-      logger.error('AvatarFrameController', 'Failed to update frame', { error, frameId: req.params.id, userId: req.user?.id });
-      return res.status(500).json({ 
-        error: 'Failed to update avatar frame',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      });
-    }
-  }
+			logger.info('AvatarFrameController', 'Frame created', {
+				frameId: frame.id,
+				name: frame.name,
+				createdBy: req.user?.id
+			});
 
-  async deleteFrame(req: Request, res: Response) {
-    try {
-      const frameId = parseInt(req.params.id);
-      if (isNaN(frameId)) {
-        return res.status(400).json({ error: 'Invalid frame ID' });
-      }
+			return res.status(201).json(frame);
+		} catch (error) {
+			if (error instanceof z.ZodError) {
+				return res.status(400).json({
+					error: 'Validation failed',
+					details: error.errors
+				});
+			}
 
-      const deleted = await avatarFrameService.deleteFrame(frameId);
-      if (!deleted) {
-        return res.status(404).json({ error: 'Avatar frame not found' });
-      }
-      
-      logger.info('AvatarFrameController', 'Frame deleted', { 
-        frameId, 
-        deletedBy: req.user?.id 
-      });
-      
-      return res.status(204).send();
-    } catch (error) {
-      logger.error('AvatarFrameController', 'Failed to delete frame', { error, frameId: req.params.id, userId: req.user?.id });
-      return res.status(500).json({ 
-        error: 'Failed to delete avatar frame',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      });
-    }
-  }
+			logger.error('AvatarFrameController', 'Failed to create frame', {
+				error,
+				userId: req.user?.id
+			});
+			return res.status(500).json({
+				error: 'Failed to create avatar frame',
+				message: error instanceof Error ? error.message : 'Unknown error'
+			});
+		}
+	}
+
+	async updateFrame(req: Request, res: Response) {
+		try {
+			const frameId = parseInt(req.params.id);
+			if (isNaN(frameId)) {
+				return res.status(400).json({ error: 'Invalid frame ID' });
+			}
+
+			const validatedData = updateFrameSchema.parse(req.body);
+
+			const frame = await avatarFrameService.updateFrame(frameId, validatedData);
+			if (!frame) {
+				return res.status(404).json({ error: 'Avatar frame not found' });
+			}
+
+			logger.info('AvatarFrameController', 'Frame updated', {
+				frameId,
+				updatedBy: req.user?.id
+			});
+
+			return res.json(frame);
+		} catch (error) {
+			if (error instanceof z.ZodError) {
+				return res.status(400).json({
+					error: 'Validation failed',
+					details: error.errors
+				});
+			}
+
+			logger.error('AvatarFrameController', 'Failed to update frame', {
+				error,
+				frameId: req.params.id,
+				userId: req.user?.id
+			});
+			return res.status(500).json({
+				error: 'Failed to update avatar frame',
+				message: error instanceof Error ? error.message : 'Unknown error'
+			});
+		}
+	}
+
+	async deleteFrame(req: Request, res: Response) {
+		try {
+			const frameId = parseInt(req.params.id);
+			if (isNaN(frameId)) {
+				return res.status(400).json({ error: 'Invalid frame ID' });
+			}
+
+			const deleted = await avatarFrameService.deleteFrame(frameId);
+			if (!deleted) {
+				return res.status(404).json({ error: 'Avatar frame not found' });
+			}
+
+			logger.info('AvatarFrameController', 'Frame deleted', {
+				frameId,
+				deletedBy: req.user?.id
+			});
+
+			return res.status(204).send();
+		} catch (error) {
+			logger.error('AvatarFrameController', 'Failed to delete frame', {
+				error,
+				frameId: req.params.id,
+				userId: req.user?.id
+			});
+			return res.status(500).json({
+				error: 'Failed to delete avatar frame',
+				message: error instanceof Error ? error.message : 'Unknown error'
+			});
+		}
+	}
 }
 
 export const avatarFrameController = new AvatarFrameController();

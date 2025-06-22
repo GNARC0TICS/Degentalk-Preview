@@ -52,7 +52,7 @@ export function useDraft({
 		},
 		onSuccess: (response) => {
 			if (response?.id) {
-				setLocalDraft(prev => ({ ...prev, id: response.id }));
+				setLocalDraft((prev) => ({ ...prev, id: response.id }));
 			}
 			lastSavedRef.current = new Date();
 			setIsDirty(false);
@@ -104,10 +104,10 @@ export function useDraft({
 	const debouncedSave = useCallback(
 		debounce((data: DraftData) => {
 			setIsSaving(true);
-			
+
 			// Save to localStorage immediately
 			setLocalDraft(data);
-			
+
 			// Save to cloud if enabled
 			if (enableCloudSync && user) {
 				saveDraftToCloud.mutate(data);
@@ -115,7 +115,7 @@ export function useDraft({
 				lastSavedRef.current = new Date();
 				setIsDirty(false);
 			}
-			
+
 			setIsSaving(false);
 			onAutoSave?.();
 		}, 2000),
@@ -123,12 +123,15 @@ export function useDraft({
 	);
 
 	// Update draft
-	const updateDraft = useCallback((updates: Partial<DraftData>) => {
-		const newDraft = { ...localDraft, ...updates };
-		setLocalDraft(newDraft);
-		setIsDirty(true);
-		debouncedSave(newDraft);
-	}, [localDraft, debouncedSave]);
+	const updateDraft = useCallback(
+		(updates: Partial<DraftData>) => {
+			const newDraft = { ...localDraft, ...updates };
+			setLocalDraft(newDraft);
+			setIsDirty(true);
+			debouncedSave(newDraft);
+		},
+		[localDraft, debouncedSave]
+	);
 
 	// Clear draft
 	const clearDraft = useCallback(async () => {

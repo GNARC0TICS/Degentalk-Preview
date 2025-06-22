@@ -29,7 +29,15 @@ function PreferencesPage() {
 		const tabParam = params.get('tab');
 		if (
 			tabParam &&
-			['profile', 'account', 'notifications', 'display', 'sessions', 'referrals', 'social'].includes(tabParam)
+			[
+				'profile',
+				'account',
+				'notifications',
+				'display',
+				'sessions',
+				'referrals',
+				'social'
+			].includes(tabParam)
 		) {
 			setActiveTab(tabParam);
 		}

@@ -54,7 +54,6 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 		}
 	});
 
-
 	return (
 		<div
 			className={cn(
@@ -110,11 +109,7 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 						</Link>
 					) : (
 						<>
-							<FollowButton 
-								userId={profile.id} 
-								username={profile.username}
-								className="flex-1"
-							/>
+							<FollowButton userId={profile.id} username={profile.username} className="flex-1" />
 							<WhisperButton onClick={() => setIsMessageModalOpen(true)} className="flex-1" />
 						</>
 					)}
@@ -165,9 +160,7 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 							<span className="text-lg font-bold text-zinc-200">
 								{followCounts?.followers || 0}
 							</span>
-							{whaleStatus?.isWhale && (
-								<Crown className="h-4 w-4 text-yellow-400" />
-							)}
+							{whaleStatus?.isWhale && <Crown className="h-4 w-4 text-yellow-400" />}
 						</div>
 						<span className="text-sm text-zinc-400">Watchers</span>
 					</div>

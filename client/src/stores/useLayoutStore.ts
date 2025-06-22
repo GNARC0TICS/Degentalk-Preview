@@ -3,7 +3,8 @@ import { persist, subscribeWithSelector } from 'zustand/middleware';
 import { produce } from 'immer';
 
 // A semantic type for slot identifiers.
-export type SlotId = `${'sidebar' | 'main'}/${'left' | 'right' | 'top' | 'bottom'}`;
+export type SlotId =
+	`${'sidebar' | 'main' | 'mobile'}/${'left' | 'right' | 'top' | 'bottom' | 'widgets'}`;
 
 // Represents a specific instance of a component in the layout.
 export interface LayoutComponentInstance {
@@ -50,12 +51,9 @@ const defaultLayout: Omit<LayoutStateV1, 'version'> = {
 			'leaderboard',
 			'active-members'
 		], // Example default
-		'sidebar/top': [],
-		'sidebar/bottom': [],
-		'main/left': [],
-		'main/right': [],
 		'main/top': [],
-		'main/bottom': []
+		'main/bottom': [],
+		'mobile/widgets': ['mobile-shoutbox', 'mobile-wallet', 'mobile-leaderboard'] // Mobile-specific widgets
 	},
 	instances: {
 		'profile-card': { instanceId: 'profile-card', componentId: 'profileCard' },
@@ -65,7 +63,11 @@ const defaultLayout: Omit<LayoutStateV1, 'version'> = {
 		'hot-threads': { instanceId: 'hot-threads', componentId: 'hotThreads' },
 		'forum-nav': { instanceId: 'forum-nav', componentId: 'forumNav' },
 		leaderboard: { instanceId: 'leaderboard', componentId: 'leaderboard' },
-		'active-members': { instanceId: 'active-members', componentId: 'activeMembers' }
+		'active-members': { instanceId: 'active-members', componentId: 'activeMembers' },
+		// Mobile-specific widget instances
+		'mobile-shoutbox': { instanceId: 'mobile-shoutbox', componentId: 'shoutbox' },
+		'mobile-wallet': { instanceId: 'mobile-wallet', componentId: 'walletSummary' },
+		'mobile-leaderboard': { instanceId: 'mobile-leaderboard', componentId: 'leaderboard' }
 	}
 };
 

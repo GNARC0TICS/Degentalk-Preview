@@ -8,9 +8,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
-import { 
-	Eye, 
-	Users, 
+import {
+	Eye,
+	Users,
 	Crown,
 	ExternalLink,
 	TrendingUp,
@@ -46,7 +46,12 @@ interface WhaleWatchDisplayProps {
 	compact?: boolean;
 }
 
-export function WhaleWatchDisplay({ userId, username, isCurrentUser = false, compact = false }: WhaleWatchDisplayProps) {
+export function WhaleWatchDisplay({
+	userId,
+	username,
+	isCurrentUser = false,
+	compact = false
+}: WhaleWatchDisplayProps) {
 	const [activeTab, setActiveTab] = useState('following');
 
 	// Fetch follow counts
@@ -111,19 +116,22 @@ export function WhaleWatchDisplay({ userId, username, isCurrentUser = false, com
 		}
 	};
 
-	const UserCard = ({ user, showFollowDate = true }: { user: FollowUser; showFollowDate?: boolean }) => (
+	const UserCard = ({
+		user,
+		showFollowDate = true
+	}: {
+		user: FollowUser;
+		showFollowDate?: boolean;
+	}) => (
 		<div className="flex items-center justify-between p-3 border border-zinc-800 rounded-lg hover:bg-zinc-900/50 transition-colors">
 			<div className="flex items-center gap-3 flex-1 min-w-0">
 				<Avatar className="h-10 w-10 border border-zinc-700">
-					<AvatarImage
-						src={user.activeAvatarUrl || user.avatarUrl || ''}
-						alt={user.username}
-					/>
+					<AvatarImage src={user.activeAvatarUrl || user.avatarUrl || ''} alt={user.username} />
 					<AvatarFallback className="bg-zinc-800 text-zinc-300">
 						{user.username.slice(0, 2).toUpperCase()}
 					</AvatarFallback>
 				</Avatar>
-				
+
 				<div className="flex-1 min-w-0">
 					<div className="flex items-center gap-2 mb-1">
 						<Link
@@ -132,34 +140,30 @@ export function WhaleWatchDisplay({ userId, username, isCurrentUser = false, com
 						>
 							{user.username}
 						</Link>
-						
+
 						{user.role && user.role !== 'user' && (
-							<Badge className={cn("text-xs px-1.5 py-0", getRoleColor(user.role))}>
+							<Badge className={cn('text-xs px-1.5 py-0', getRoleColor(user.role))}>
 								{user.role === 'admin' ? 'Admin' : 'Mod'}
 							</Badge>
 						)}
 
-						{whaleStatus?.isWhale && user.followerCount && user.followerCount >= whaleStatus.threshold && (
-							<Crown className="h-4 w-4 text-yellow-400" title="Whale" />
-						)}
+						{whaleStatus?.isWhale &&
+							user.followerCount &&
+							user.followerCount >= whaleStatus.threshold && (
+								<Crown className="h-4 w-4 text-yellow-400" title="Whale" />
+							)}
 					</div>
-					
+
 					<div className="flex items-center gap-3 text-xs text-zinc-500">
-						{user.level && (
-							<span>Level {user.level}</span>
-						)}
-						{user.followerCount !== undefined && (
-							<span>{user.followerCount} followers</span>
-						)}
+						{user.level && <span>Level {user.level}</span>}
+						{user.followerCount !== undefined && <span>{user.followerCount} followers</span>}
 						{showFollowDate && (
-							<span>
-								{formatDistanceToNow(new Date(user.followedAt), { addSuffix: true })}
-							</span>
+							<span>{formatDistanceToNow(new Date(user.followedAt), { addSuffix: true })}</span>
 						)}
 					</div>
 				</div>
 			</div>
-			
+
 			<Button variant="ghost" size="sm" asChild>
 				<Link href={`/profile/${user.username}`}>
 					<ExternalLink className="h-4 w-4" />
@@ -182,18 +186,26 @@ export function WhaleWatchDisplay({ userId, username, isCurrentUser = false, com
 					<div className="grid grid-cols-2 gap-4 mb-4">
 						<div className="text-center">
 							<div className="text-2xl font-bold text-zinc-200">
-								{countsLoading ? <Skeleton className="h-6 w-8 mx-auto" /> : followCounts?.following || 0}
+								{countsLoading ? (
+									<Skeleton className="h-6 w-8 mx-auto" />
+								) : (
+									followCounts?.following || 0
+								)}
 							</div>
 							<div className="text-xs text-zinc-400">Watching</div>
 						</div>
 						<div className="text-center">
 							<div className="text-2xl font-bold text-zinc-200">
-								{countsLoading ? <Skeleton className="h-6 w-8 mx-auto" /> : followCounts?.followers || 0}
+								{countsLoading ? (
+									<Skeleton className="h-6 w-8 mx-auto" />
+								) : (
+									followCounts?.followers || 0
+								)}
 							</div>
 							<div className="text-xs text-zinc-400">Watchers</div>
 						</div>
 					</div>
-					
+
 					{followingData?.following && followingData.following.length > 0 ? (
 						<div className="space-y-2">
 							<h4 className="text-sm font-medium text-zinc-300">Recently Watching</h4>
@@ -213,7 +225,9 @@ export function WhaleWatchDisplay({ userId, username, isCurrentUser = false, com
 						<div className="text-center py-4 text-zinc-400">
 							<Eye className="h-8 w-8 mx-auto mb-2 text-zinc-600" />
 							<p className="text-sm">
-								{isCurrentUser ? "You're not watching anyone yet" : `${username} isn't watching anyone yet`}
+								{isCurrentUser
+									? "You're not watching anyone yet"
+									: `${username} isn't watching anyone yet`}
 							</p>
 						</div>
 					)}
@@ -236,10 +250,10 @@ export function WhaleWatchDisplay({ userId, username, isCurrentUser = false, com
 							)}
 						</CardTitle>
 						<CardDescription>
-							{isCurrentUser ? 'Users you\'re watching' : `Users ${username} is watching`}
+							{isCurrentUser ? "Users you're watching" : `Users ${username} is watching`}
 						</CardDescription>
 					</div>
-					
+
 					{/* Follow counts */}
 					<div className="flex items-center gap-6">
 						<div className="text-center">
@@ -257,7 +271,7 @@ export function WhaleWatchDisplay({ userId, username, isCurrentUser = false, com
 					</div>
 				</div>
 			</CardHeader>
-			
+
 			<CardContent>
 				<Tabs value={activeTab} onValueChange={setActiveTab}>
 					<TabsList className="grid w-full grid-cols-2">
@@ -275,7 +289,10 @@ export function WhaleWatchDisplay({ userId, username, isCurrentUser = false, com
 						{followingLoading ? (
 							<div className="space-y-3">
 								{Array.from({ length: 3 }).map((_, i) => (
-									<div key={i} className="flex items-center gap-3 p-3 border border-zinc-800 rounded-lg">
+									<div
+										key={i}
+										className="flex items-center gap-3 p-3 border border-zinc-800 rounded-lg"
+									>
 										<Skeleton className="h-10 w-10 rounded-full" />
 										<div className="flex-1 space-y-2">
 											<Skeleton className="h-4 w-32" />
@@ -296,10 +313,14 @@ export function WhaleWatchDisplay({ userId, username, isCurrentUser = false, com
 							<div className="text-center py-8 text-zinc-400">
 								<Eye className="h-12 w-12 mx-auto mb-4 text-zinc-600" />
 								<p className="mb-2">
-									{isCurrentUser ? "You're not watching anyone yet" : `${username} isn't watching anyone yet`}
+									{isCurrentUser
+										? "You're not watching anyone yet"
+										: `${username} isn't watching anyone yet`}
 								</p>
 								<p className="text-sm">
-									{isCurrentUser ? 'Find some whales to follow!' : 'Maybe they\'ll start following some whales soon.'}
+									{isCurrentUser
+										? 'Find some whales to follow!'
+										: "Maybe they'll start following some whales soon."}
 								</p>
 							</div>
 						)}
@@ -309,7 +330,10 @@ export function WhaleWatchDisplay({ userId, username, isCurrentUser = false, com
 						{followersLoading ? (
 							<div className="space-y-3">
 								{Array.from({ length: 3 }).map((_, i) => (
-									<div key={i} className="flex items-center gap-3 p-3 border border-zinc-800 rounded-lg">
+									<div
+										key={i}
+										className="flex items-center gap-3 p-3 border border-zinc-800 rounded-lg"
+									>
 										<Skeleton className="h-10 w-10 rounded-full" />
 										<div className="flex-1 space-y-2">
 											<Skeleton className="h-4 w-32" />
@@ -330,10 +354,14 @@ export function WhaleWatchDisplay({ userId, username, isCurrentUser = false, com
 							<div className="text-center py-8 text-zinc-400">
 								<Users className="h-12 w-12 mx-auto mb-4 text-zinc-600" />
 								<p className="mb-2">
-									{isCurrentUser ? "Nobody's watching you yet" : `Nobody's watching ${username} yet`}
+									{isCurrentUser
+										? "Nobody's watching you yet"
+										: `Nobody's watching ${username} yet`}
 								</p>
 								<p className="text-sm">
-									{isCurrentUser ? 'Build your reputation to gain watchers!' : 'Give them time to build their reputation.'}
+									{isCurrentUser
+										? 'Build your reputation to gain watchers!'
+										: 'Give them time to build their reputation.'}
 								</p>
 							</div>
 						)}

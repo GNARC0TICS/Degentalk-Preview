@@ -48,6 +48,14 @@ function HomePage() {
 		},
 		threadCount: zone.threadCount,
 		postCount: zone.postCount,
+		forums: zone.forums.map((forum) => ({
+			id: forum.id,
+			slug: forum.slug,
+			name: forum.name,
+			description: forum.description,
+			threadCount: forum.threadCount,
+			postCount: forum.postCount
+		})),
 		activeUsersCount: 0,
 		hasXpBoost: zone.hasXpBoost,
 		boostMultiplier: zone.boostMultiplier,

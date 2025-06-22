@@ -25,12 +25,7 @@ export class FollowsService {
 		const existingFollow = await db
 			.select()
 			.from(userFollows)
-			.where(
-				and(
-					eq(userFollows.followerId, followerId),
-					eq(userFollows.followedId, followedId)
-				)
-			)
+			.where(and(eq(userFollows.followerId, followerId), eq(userFollows.followedId, followedId)))
 			.limit(1);
 
 		if (existingFollow.length > 0) {
@@ -39,31 +34,37 @@ export class FollowsService {
 
 		// Check if follow approval is required
 		const followedUserPrefs = await this.getUserFollowPreferences(followedId);
-		
+
 		if (followedUserPrefs.requireFollowApproval) {
 			// Create follow request instead of direct follow
-			const request = await db.insert(followRequests).values({
-				requesterId: followerId,
-				targetId: followedId,
-				message: '', // Could be extended to include a message
-				isPending: true,
-				isApproved: false,
-				isRejected: false
-			}).returning();
+			const request = await db
+				.insert(followRequests)
+				.values({
+					requesterId: followerId,
+					targetId: followedId,
+					message: '', // Could be extended to include a message
+					isPending: true,
+					isApproved: false,
+					isRejected: false
+				})
+				.returning();
 
 			return { type: 'request', data: request[0] };
 		}
 
 		// Create direct follow
-		const follow = await db.insert(userFollows).values({
-			followerId,
-			followedId,
-			notifyOnPosts: notificationSettings.notifyOnPosts ?? true,
-			notifyOnThreads: notificationSettings.notifyOnThreads ?? true,
-			notifyOnTrades: notificationSettings.notifyOnTrades ?? false,
-			notifyOnLargeStakes: notificationSettings.notifyOnLargeStakes ?? true,
-			minStakeNotification: notificationSettings.minStakeNotification ?? 1000
-		}).returning();
+		const follow = await db
+			.insert(userFollows)
+			.values({
+				followerId,
+				followedId,
+				notifyOnPosts: notificationSettings.notifyOnPosts ?? true,
+				notifyOnThreads: notificationSettings.notifyOnThreads ?? true,
+				notifyOnTrades: notificationSettings.notifyOnTrades ?? false,
+				notifyOnLargeStakes: notificationSettings.notifyOnLargeStakes ?? true,
+				minStakeNotification: notificationSettings.minStakeNotification ?? 1000
+			})
+			.returning();
 
 		return { type: 'follow', data: follow[0] };
 	}
@@ -74,12 +75,7 @@ export class FollowsService {
 	static async unfollowUser(followerId: string, followedId: string) {
 		const result = await db
 			.delete(userFollows)
-			.where(
-				and(
-					eq(userFollows.followerId, followerId),
-					eq(userFollows.followedId, followedId)
-				)
-			)
+			.where(and(eq(userFollows.followerId, followerId), eq(userFollows.followedId, followedId)))
 			.returning();
 
 		if (result.length === 0) {
@@ -96,12 +92,7 @@ export class FollowsService {
 		const result = await db
 			.select({ id: userFollows.id })
 			.from(userFollows)
-			.where(
-				and(
-					eq(userFollows.followerId, followerId),
-					eq(userFollows.followedId, followedId)
-				)
-			)
+			.where(and(eq(userFollows.followerId, followerId), eq(userFollows.followedId, followedId)))
 			.limit(1);
 
 		return result.length > 0;
@@ -234,10 +225,13 @@ export class FollowsService {
 
 		if (existingPrefs.length === 0) {
 			// Create new preferences
-			return await db.insert(userFollowPreferences).values({
-				userId,
-				...preferences
-			}).returning();
+			return await db
+				.insert(userFollowPreferences)
+				.values({
+					userId,
+					...preferences
+				})
+				.returning();
 		} else {
 			// Update existing preferences
 			return await db
@@ -271,12 +265,7 @@ export class FollowsService {
 			})
 			.from(followRequests)
 			.leftJoin(users, eq(followRequests.requesterId, users.id))
-			.where(
-				and(
-					eq(followRequests.targetId, targetUserId),
-					eq(followRequests.isPending, true)
-				)
-			)
+			.where(and(eq(followRequests.targetId, targetUserId), eq(followRequests.isPending, true)))
 			.orderBy(desc(followRequests.createdAt));
 
 		return requests;
@@ -348,9 +337,7 @@ export class FollowsService {
 				createdAt: users.createdAt
 			})
 			.from(users)
-			.where(
-				sql`${users.level} >= 25 OR ${users.clout} >= 10000`
-			)
+			.where(sql`${users.level} >= 25 OR ${users.clout} >= 10000`)
 			.orderBy(desc(users.clout), desc(users.level))
 			.limit(limit);
 
@@ -407,8 +394,8 @@ export class FollowsService {
 	 * Update follow notification preferences
 	 */
 	static async updateFollowNotificationSettings(
-		followerId: string, 
-		followedId: string, 
+		followerId: string,
+		followedId: string,
 		settings: Partial<FollowNotificationSettings>
 	) {
 		const result = await db
@@ -417,12 +404,7 @@ export class FollowsService {
 				...settings,
 				updatedAt: sql`NOW()`
 			})
-			.where(
-				and(
-					eq(userFollows.followerId, followerId),
-					eq(userFollows.followedId, followedId)
-				)
-			)
+			.where(and(eq(userFollows.followerId, followerId), eq(userFollows.followedId, followedId)))
 			.returning();
 
 		if (result.length === 0) {

@@ -21,7 +21,10 @@ export class SocialService {
 	 * Update social configuration in database
 	 * TODO: Temporarily disabled until schema imports are fixed
 	 */
-	static async updateSocialConfig(updates: Partial<SocialConfig>, adminUserId: string): Promise<SocialConfig> {
+	static async updateSocialConfig(
+		updates: Partial<SocialConfig>,
+		adminUserId: string
+	): Promise<SocialConfig> {
 		const currentConfig = await this.getSocialConfig();
 		const newConfig = this.deepMerge(currentConfig, updates);
 
@@ -30,7 +33,7 @@ export class SocialService {
 
 		// TODO: Implement database storage once schema imports are fixed
 		console.log('Social config update attempted (disabled):', newConfig);
-		
+
 		return newConfig;
 	}
 
@@ -86,7 +89,10 @@ export class SocialService {
 				healthStatus: this.getHealthStatus('friends', config, stats)
 			},
 			overall: {
-				status: config.mentions.enabled || config.whaleWatch.enabled || config.friends.enabled ? 'active' : 'disabled',
+				status:
+					config.mentions.enabled || config.whaleWatch.enabled || config.friends.enabled
+						? 'active'
+						: 'disabled',
 				lastChecked: new Date().toISOString()
 			}
 		};
@@ -97,7 +103,7 @@ export class SocialService {
 	 */
 	static async emergencyDisable(adminUserId: string) {
 		const emergencyConfig = await this.getSocialConfig();
-		
+
 		// Disable all features
 		emergencyConfig.mentions.enabled = false;
 		emergencyConfig.whaleWatch.enabled = false;
@@ -119,7 +125,7 @@ export class SocialService {
 	 */
 	private static deepMerge(target: any, source: any): any {
 		const result = { ...target };
-		
+
 		for (const key in source) {
 			if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
 				result[key] = this.deepMerge(target[key] || {}, source[key]);
@@ -127,7 +133,7 @@ export class SocialService {
 				result[key] = source[key];
 			}
 		}
-		
+
 		return result;
 	}
 

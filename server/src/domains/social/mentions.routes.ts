@@ -66,7 +66,7 @@ router.get('/unread-count', requireAuth, async (req, res) => {
 	try {
 		const userId = req.user!.id;
 		const count = await MentionsService.getUnreadMentionCount(userId);
-		
+
 		res.json({ unreadCount: count });
 	} catch (error) {
 		console.error('Error fetching unread mention count:', error);
@@ -84,7 +84,7 @@ router.post('/mark-read', requireAuth, async (req, res) => {
 		const userId = req.user!.id;
 
 		await MentionsService.markMentionsAsRead(userId, mentionIds);
-		
+
 		res.json({ success: true });
 	} catch (error) {
 		console.error('Error marking mentions as read:', error);
@@ -100,7 +100,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 	try {
 		const userId = req.user!.id;
 		const preferences = await MentionsService.getUserMentionPreferences(userId);
-		
+
 		res.json(preferences);
 	} catch (error) {
 		console.error('Error fetching mention preferences:', error);
@@ -118,7 +118,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
 		const userId = req.user!.id;
 
 		const updatedPrefs = await MentionsService.updateUserMentionPreferences(userId, preferences);
-		
+
 		res.json(updatedPrefs[0]);
 	} catch (error) {
 		console.error('Error updating mention preferences:', error);
@@ -133,9 +133,9 @@ router.put('/preferences', requireAuth, async (req, res) => {
 router.get('/search-users', requireAuth, async (req, res) => {
 	try {
 		const { q, limit } = searchUsersSchema.parse(req.query);
-		
+
 		const users = await MentionsService.searchUsersForMention(q, limit);
-		
+
 		res.json({ users });
 	} catch (error) {
 		console.error('Error searching users for mentions:', error);

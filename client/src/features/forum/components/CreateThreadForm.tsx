@@ -235,17 +235,9 @@ export function CreateThreadForm({
 	});
 
 	const createThreadMutation = useCreateThread();
-	
+
 	// Draft management
-	const {
-		draft,
-		updateDraft,
-		clearDraft,
-		isDirty,
-		isSaving,
-		lastSaved,
-		hasDraft
-	} = useDraft({
+	const { draft, updateDraft, clearDraft, isDirty, isSaving, lastSaved, hasDraft } = useDraft({
 		key: `thread-${activeForumSlug || 'default'}`,
 		autoSaveInterval: 30000, // 30 seconds
 		enableCloudSync: true,
@@ -428,7 +420,7 @@ export function CreateThreadForm({
 							<span>Draft saved {lastSaved.toLocaleTimeString()}</span>
 						</>
 					) : null}
-					
+
 					{hasDraft && (
 						<Button
 							type="button"

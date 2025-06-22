@@ -1,5 +1,11 @@
 import { db } from '@db';
-import { friendships, userFriendPreferences, friendGroups, friendGroupMembers, users } from '@schema';
+import {
+	friendships,
+	userFriendPreferences,
+	friendGroups,
+	friendGroupMembers,
+	users
+} from '@schema';
 import { eq, and, desc, sql, count, inArray, or } from 'drizzle-orm';
 
 export class FriendsService {
@@ -26,14 +32,8 @@ export class FriendsService {
 			.from(friendships)
 			.where(
 				or(
-					and(
-						eq(friendships.requesterId, requesterId),
-						eq(friendships.addresseeId, addresseeId)
-					),
-					and(
-						eq(friendships.requesterId, addresseeId),
-						eq(friendships.addresseeId, requesterId)
-					)
+					and(eq(friendships.requesterId, requesterId), eq(friendships.addresseeId, addresseeId)),
+					and(eq(friendships.requesterId, addresseeId), eq(friendships.addresseeId, requesterId))
 				)
 			)
 			.limit(1);
@@ -51,7 +51,7 @@ export class FriendsService {
 
 		// Check addressee's friend preferences
 		const addresseePrefs = await this.getUserFriendPreferences(addresseeId);
-		
+
 		if (!addresseePrefs.allowAllFriendRequests) {
 			if (addresseePrefs.onlyMutualsCanRequest) {
 				// Check if they follow each other (implement when follows service is available)
@@ -61,15 +61,18 @@ export class FriendsService {
 		}
 
 		// Create friend request
-		const request = await db.insert(friendships).values({
-			requesterId,
-			addresseeId,
-			status: 'pending',
-			requestMessage: message,
-			allowWhispers: addresseePrefs.defaultAllowWhispers,
-			allowProfileView: addresseePrefs.defaultAllowProfileView,
-			allowActivityView: addresseePrefs.defaultAllowActivityView
-		}).returning();
+		const request = await db
+			.insert(friendships)
+			.values({
+				requesterId,
+				addresseeId,
+				status: 'pending',
+				requestMessage: message,
+				allowWhispers: addresseePrefs.defaultAllowWhispers,
+				allowProfileView: addresseePrefs.defaultAllowProfileView,
+				allowActivityView: addresseePrefs.defaultAllowActivityView
+			})
+			.returning();
 
 		return request[0];
 	}
@@ -77,10 +80,7 @@ export class FriendsService {
 	/**
 	 * Respond to a friend request
 	 */
-	static async respondToFriendRequest(
-		requestId: number, 
-		response: 'accept' | 'decline' | 'block'
-	) {
+	static async respondToFriendRequest(requestId: number, response: 'accept' | 'decline' | 'block') {
 		// Get the request
 		const request = await db
 			.select()
@@ -162,14 +162,8 @@ export class FriendsService {
 			.where(
 				and(
 					or(
-						and(
-							eq(friendships.requesterId, userId1),
-							eq(friendships.addresseeId, userId2)
-						),
-						and(
-							eq(friendships.requesterId, userId2),
-							eq(friendships.addresseeId, userId1)
-						)
+						and(eq(friendships.requesterId, userId1), eq(friendships.addresseeId, userId2)),
+						and(eq(friendships.requesterId, userId2), eq(friendships.addresseeId, userId1))
 					),
 					eq(friendships.status, 'accepted')
 				)
@@ -208,22 +202,13 @@ export class FriendsService {
 			.leftJoin(
 				users,
 				or(
-					and(
-						eq(friendships.requesterId, userId),
-						eq(users.id, friendships.addresseeId)
-					),
-					and(
-						eq(friendships.addresseeId, userId),
-						eq(users.id, friendships.requesterId)
-					)
+					and(eq(friendships.requesterId, userId), eq(users.id, friendships.addresseeId)),
+					and(eq(friendships.addresseeId, userId), eq(users.id, friendships.requesterId))
 				)
 			)
 			.where(
 				and(
-					or(
-						eq(friendships.requesterId, userId),
-						eq(friendships.addresseeId, userId)
-					),
+					or(eq(friendships.requesterId, userId), eq(friendships.addresseeId, userId)),
 					eq(friendships.status, 'accepted')
 				)
 			)
@@ -254,12 +239,7 @@ export class FriendsService {
 			})
 			.from(friendships)
 			.leftJoin(users, eq(friendships.requesterId, users.id))
-			.where(
-				and(
-					eq(friendships.addresseeId, userId),
-					eq(friendships.status, 'pending')
-				)
-			)
+			.where(and(eq(friendships.addresseeId, userId), eq(friendships.status, 'pending')))
 			.orderBy(desc(friendships.createdAt));
 
 		return requests;
@@ -285,12 +265,7 @@ export class FriendsService {
 			})
 			.from(friendships)
 			.leftJoin(users, eq(friendships.addresseeId, users.id))
-			.where(
-				and(
-					eq(friendships.requesterId, userId),
-					eq(friendships.status, 'pending')
-				)
-			)
+			.where(and(eq(friendships.requesterId, userId), eq(friendships.status, 'pending')))
 			.orderBy(desc(friendships.createdAt));
 
 		return requests;
@@ -305,10 +280,7 @@ export class FriendsService {
 			.from(friendships)
 			.where(
 				and(
-					or(
-						eq(friendships.requesterId, userId),
-						eq(friendships.addresseeId, userId)
-					),
+					or(eq(friendships.requesterId, userId), eq(friendships.addresseeId, userId)),
 					eq(friendships.status, 'accepted')
 				)
 			);
@@ -316,12 +288,7 @@ export class FriendsService {
 		const incomingRequestCount = await db
 			.select({ count: count() })
 			.from(friendships)
-			.where(
-				and(
-					eq(friendships.addresseeId, userId),
-					eq(friendships.status, 'pending')
-				)
-			);
+			.where(and(eq(friendships.addresseeId, userId), eq(friendships.status, 'pending')));
 
 		return {
 			friends: friendCount[0]?.count || 0,
@@ -375,10 +342,13 @@ export class FriendsService {
 
 		if (existingPrefs.length === 0) {
 			// Create new preferences
-			return await db.insert(userFriendPreferences).values({
-				userId,
-				...preferences
-			}).returning();
+			return await db
+				.insert(userFriendPreferences)
+				.values({
+					userId,
+					...preferences
+				})
+				.returning();
 		} else {
 			// Update existing preferences
 			return await db
@@ -412,14 +382,8 @@ export class FriendsService {
 			})
 			.where(
 				or(
-					and(
-						eq(friendships.requesterId, userId),
-						eq(friendships.addresseeId, friendId)
-					),
-					and(
-						eq(friendships.requesterId, friendId),
-						eq(friendships.addresseeId, userId)
-					)
+					and(eq(friendships.requesterId, userId), eq(friendships.addresseeId, friendId)),
+					and(eq(friendships.requesterId, friendId), eq(friendships.addresseeId, userId))
 				)
 			)
 			.returning();
@@ -444,14 +408,8 @@ export class FriendsService {
 			.where(
 				and(
 					or(
-						and(
-							eq(friendships.requesterId, senderId),
-							eq(friendships.addresseeId, recipientId)
-						),
-						and(
-							eq(friendships.requesterId, recipientId),
-							eq(friendships.addresseeId, senderId)
-						)
+						and(eq(friendships.requesterId, senderId), eq(friendships.addresseeId, recipientId)),
+						and(eq(friendships.requesterId, recipientId), eq(friendships.addresseeId, senderId))
 					),
 					eq(friendships.status, 'accepted')
 				)
@@ -465,7 +423,7 @@ export class FriendsService {
 
 		// If not friends, check recipient's preferences
 		const recipientPrefs = await this.getUserFriendPreferences(recipientId);
-		
+
 		// For now, allow whispers from non-friends
 		// This can be changed to enforce friends-only whispers
 		return true;
@@ -500,14 +458,8 @@ export class FriendsService {
 			.leftJoin(
 				friendships,
 				or(
-					and(
-						eq(friendships.requesterId, currentUserId),
-						eq(friendships.addresseeId, users.id)
-					),
-					and(
-						eq(friendships.requesterId, users.id),
-						eq(friendships.addresseeId, currentUserId)
-					)
+					and(eq(friendships.requesterId, currentUserId), eq(friendships.addresseeId, users.id)),
+					and(eq(friendships.requesterId, users.id), eq(friendships.addresseeId, currentUserId))
 				)
 			)
 			.where(

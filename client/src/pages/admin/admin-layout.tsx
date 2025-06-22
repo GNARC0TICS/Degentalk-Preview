@@ -99,9 +99,7 @@ const BASE_ADMIN_LINKS = [
 		href: '#',
 		label: 'Social',
 		icon: <Users className="h-4 w-4" />,
-		submenu: [
-			{ href: '/admin/social-config', label: 'Social Configuration' }
-		]
+		submenu: [{ href: '/admin/social-config', label: 'Social Configuration' }]
 	},
 
 	// Moderation (Secondary Priority)

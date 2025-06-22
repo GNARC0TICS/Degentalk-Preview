@@ -256,7 +256,12 @@ router.get('/threads', async (req: Request, res: Response) => {
 		const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
 		const sortBy = (req.query.sortBy as string) || 'latest'; // 'latest', 'hot', 'staked', 'most-liked', 'most-replied', 'oldest'
 		const searchQuery = req.query.q as string;
-		const tagIds = req.query.tags ? (req.query.tags as string).split(',').map(id => parseInt(id)).filter(id => !isNaN(id)) : [];
+		const tagIds = req.query.tags
+			? (req.query.tags as string)
+					.split(',')
+					.map((id) => parseInt(id))
+					.filter((id) => !isNaN(id))
+			: [];
 		const prefixId = req.query.prefixId ? parseInt(req.query.prefixId as string) : undefined;
 
 		const userId = getUserIdFromRequest(req); // Get current user ID if logged in
@@ -277,7 +282,7 @@ router.get('/threads', async (req: Request, res: Response) => {
 		if (searchQuery) {
 			conditions.push(ilike(threads.title, `%${searchQuery}%`));
 		}
-		
+
 		// Add prefix filter
 		if (prefixId) {
 			conditions.push(eq(threads.prefixId, prefixId));
@@ -293,7 +298,11 @@ router.get('/threads', async (req: Request, res: Response) => {
 				orderByClause = [desc(threads.isSticky), desc(threads.dgtStaked), desc(threads.lastPostAt)];
 				break;
 			case 'most-liked':
-				orderByClause = [desc(threads.isSticky), desc(threads.firstPostLikeCount), desc(threads.lastPostAt)];
+				orderByClause = [
+					desc(threads.isSticky),
+					desc(threads.firstPostLikeCount),
+					desc(threads.lastPostAt)
+				];
 				break;
 			case 'most-replied':
 				orderByClause = [desc(threads.isSticky), desc(threads.postCount), desc(threads.lastPostAt)];
@@ -310,7 +319,7 @@ router.get('/threads', async (req: Request, res: Response) => {
 		try {
 			// If filtering by tags, we need to get thread IDs first
 			let threadIdsToFilter: number[] | null = null;
-			
+
 			if (tagIds.length > 0) {
 				// Get threads that have ALL the specified tags
 				const threadsWithTags = await db
@@ -319,9 +328,9 @@ router.get('/threads', async (req: Request, res: Response) => {
 					.where(inArray(threadTags.tagId, tagIds))
 					.groupBy(threadTags.threadId)
 					.having(sql`COUNT(DISTINCT ${threadTags.tagId}) = ${tagIds.length}`);
-				
-				threadIdsToFilter = threadsWithTags.map(t => t.threadId);
-				
+
+				threadIdsToFilter = threadsWithTags.map((t) => t.threadId);
+
 				// If no threads have all the required tags, return empty result
 				if (threadIdsToFilter.length === 0) {
 					return res.json({
@@ -335,12 +344,12 @@ router.get('/threads', async (req: Request, res: Response) => {
 					});
 				}
 			}
-			
+
 			// Add thread ID filter if we filtered by tags
 			if (threadIdsToFilter !== null) {
 				conditions.push(inArray(threads.id, threadIdsToFilter));
 			}
-			
+
 			// Build the base query
 			const threadListRaw = await db
 				.select({

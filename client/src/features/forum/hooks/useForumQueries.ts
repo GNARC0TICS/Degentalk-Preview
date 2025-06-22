@@ -616,7 +616,9 @@ export const useReportPost = () => {
 			details?: string;
 		}) => forumApi.reportPost(data),
 		onSuccess: () => {
-			toast.success('Report submitted successfully. Thank you for helping keep our community safe!');
+			toast.success(
+				'Report submitted successfully. Thank you for helping keep our community safe!'
+			);
 		},
 		onError: (error) => {
 			toast.error('Failed to submit report', {

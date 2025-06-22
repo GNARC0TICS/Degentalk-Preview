@@ -13,21 +13,9 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
 import crypto from 'crypto';
 import { logger } from '../../core/logger';
-import { db } from '@db';
-import { transactions, users, dgtPurchaseOrders } from '@schema';
-import { eq, and } from 'drizzle-orm';
+// Database imports removed for now - will be added back when we implement database integration
 import { WalletError, ErrorCodes } from '../../core/errors';
-import { SUPPORTED_CRYPTO_CURRENCIES } from './wallet.constants';
 import { walletConfig } from '@shared/wallet.config';
-
-// Configuration
-const CCPAYMENT_API_URL = process.env.CCPAYMENT_API_URL || 'https://api.ccpayment.com';
-const CCPAYMENT_APP_ID = process.env.CCPAYMENT_APP_ID;
-const CCPAYMENT_APP_SECRET = process.env.CCPAYMENT_APP_SECRET;
-const CCPAYMENT_NOTIFICATION_URL =
-	process.env.CCPAYMENT_NOTIFICATION_URL || 'https://api.degentalk.com/api/wallet/webhook';
-const CCPAYMENT_WEBHOOK_URL =
-	process.env.CCPAYMENT_WEBHOOK_URL || 'https://yourdomain.com/api/ccpayment/webhook';
 
 // Interfaces
 export interface CCPaymentConfig {
@@ -134,7 +122,7 @@ export interface CCPaymentWebhookEvent {
 
 /**
  * Create signature for CCPayment API requests
- * [MOVED-FROM: server/services/ccpayment-client.ts]
+ * CCPayment v2 API signature algorithm: appId + timestamp + JSON.stringify(requestBody)
  */
 function createSignature(
 	appId: string,
@@ -142,21 +130,9 @@ function createSignature(
 	data: Record<string, any>,
 	timestamp: number
 ): string {
-	// Sort keys alphabetically
-	const keys = Object.keys(data).sort();
-
-	// Create string to sign
-	let stringToSign = `${appId}${timestamp}`;
-
-	// Add sorted parameters
-	for (const key of keys) {
-		if (data[key] !== undefined && data[key] !== null) {
-			stringToSign += `${key}=${data[key]}`;
-		}
-	}
-
-	// Add app secret
-	stringToSign += appSecret;
+	// CCPayment v2 signature algorithm
+	const dataString = Object.keys(data).length > 0 ? JSON.stringify(data) : '';
+	const stringToSign = appId + timestamp + dataString;
 
 	// Create HMAC SHA256 hash
 	return crypto.createHmac('sha256', appSecret).update(stringToSign).digest('hex');
@@ -173,7 +149,8 @@ export class CCPaymentService {
 	private notificationUrl: string;
 
 	constructor(config: CCPaymentConfig = {}) {
-		this.apiUrl = config.apiUrl || process.env.CCPAYMENT_API_URL || 'https://api.ccpayment.com';
+		this.apiUrl =
+			config.apiUrl || process.env.CCPAYMENT_API_URL || 'https://ccpayment.com/ccpayment/v2';
 		this.appId = config.appId || process.env.CCPAYMENT_APP_ID || '';
 		this.appSecret = config.appSecret || process.env.CCPAYMENT_APP_SECRET || '';
 		this.notificationUrl = config.notificationUrl || process.env.CCPAYMENT_NOTIFICATION_URL || '';
@@ -194,9 +171,9 @@ export class CCPaymentService {
 			baseURL: this.apiUrl,
 			headers: {
 				'Content-Type': 'application/json',
-				'X-App-Id': this.appId,
-				'X-Timestamp': timestamp.toString(),
-				'X-Signature': signature
+				Appid: this.appId,
+				Timestamp: timestamp.toString(),
+				Sign: signature
 			}
 		});
 	}
@@ -221,8 +198,8 @@ export class CCPaymentService {
 
 			const response = await axiosInstance(config);
 
-			if (response.data.code !== 200) {
-				throw new Error(`CCPayment API Error: ${response.data.message || 'Unknown error'}`);
+			if (response.data.code !== 10000) {
+				throw new Error(`CCPayment API Error: ${response.data.msg || 'Unknown error'}`);
 			}
 
 			return response.data.data as T;
@@ -242,59 +219,9 @@ export class CCPaymentService {
 	}
 
 	/**
-	 * Create a CCPayment wallet for a user
-	 *
-	 * @param internalUserId - User ID in our system
-	 * @returns CCPayment user ID
-	 *
-	 * Endpoint: POST /api/v1/user/create
+	 * Create CCPayment user mapping (will be implemented later with database integration)
+	 * For now, CCPayment users will be created through their system directly
 	 */
-	async createCcPaymentWalletForUser(internalUserId: number): Promise<string> {
-		try {
-			// Get user information from our database
-			const [user] = await db
-				.select({
-					id: users.id,
-					username: users.username,
-					email: users.email
-				})
-				.from(users)
-				.where(eq(users.id, internalUserId))
-				.limit(1);
-
-			if (!user) {
-				throw new WalletError('User not found', 404, ErrorCodes.USER_NOT_FOUND);
-			}
-
-			// Check if we should use mock data
-			if (walletConfig.DEV_MODE.MOCK_CCPAYMENT) {
-				logger.info(
-					'CCPaymentService',
-					`[MOCK] Created CCPayment wallet for user ${internalUserId}`
-				);
-				const ccpaymentUserId = `ccpay-${internalUserId}-${Date.now()}`;
-				return ccpaymentUserId;
-			}
-
-			// Make real API call
-			const response = await this.makeRequest<{ userId: string }>('/api/v1/user/create', 'POST', {
-				name: user.username,
-				email: user.email || `user-${internalUserId}@degentalk.com`,
-				merchantUserId: `dgt-${internalUserId}`,
-				notificationUrl: this.notificationUrl
-			});
-			return response.userId;
-		} catch (error) {
-			logger.error(
-				'CCPaymentService',
-				'Error creating CCPayment wallet:',
-				error instanceof Error ? error.message : String(error)
-			);
-			throw new WalletError('Failed to create CCPayment wallet', 500, ErrorCodes.OPERATION_FAILED, {
-				originalError: error instanceof Error ? error.message : String(error)
-			});
-		}
-	}
 
 	/**
 	 * Create a deposit address for a user

@@ -79,10 +79,20 @@ interface ThreadListProps {
 
 const THREADS_API_BASE_PATH = '/api/forum/threads';
 
-const ThreadListComponent: React.FC<ThreadListProps> = ({ forumId, forumSlug, availableTags = [], filters }) => {
+const ThreadListComponent: React.FC<ThreadListProps> = ({
+	forumId,
+	forumSlug,
+	availableTags = [],
+	filters
+}) => {
 	const [page, setPage] = useState(1);
 	const threadsPerPage = 10;
-	
+
+	// whenever filters prop changes reset to page 1
+	useEffect(() => {
+		setPage(1);
+	}, [filters]);
+
 	const queryKey = [
 		`${THREADS_API_BASE_PATH}?categoryId=${forumId}`,
 		page,
@@ -110,15 +120,16 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({ forumId, forumSlug, av
 				limit: threadsPerPage.toString(),
 				sort: filters.sortBy
 			});
-			
-			if (filters.tags?.length) filters.tags.forEach((id) => params.append('tags[]', id.toString()));
+
+			if (filters.tags?.length)
+				filters.tags.forEach((id) => params.append('tags[]', id.toString()));
 			if (filters.prefixId) params.append('prefixId', filters.prefixId.toString());
 			if (filters.solved) params.append('solved', filters.solved === 'solved' ? 'true' : 'false');
 			if (filters.bookmarked) params.append('bookmarked', 'true');
 			if (filters.mine) params.append('mine', 'true');
 			if (filters.replied) params.append('replied', 'true');
 			if (filters.q) params.append('q', filters.q);
-			
+
 			const url = `${THREADS_API_BASE_PATH}?${params.toString()}`;
 
 			// Use getQueryFn for the API call
@@ -188,11 +199,6 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({ forumId, forumSlug, av
 			</div>
 		);
 	}
-
-	// whenever filters prop changes reset to page 1
-	useEffect(() => {
-		setPage(1);
-	}, [filters]);
 
 	return (
 		<div>

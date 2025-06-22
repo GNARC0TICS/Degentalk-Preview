@@ -8,6 +8,7 @@ import { CardsSection } from '@/pages/ui-playground/sections/CardsSection';
 import { ColorsSection } from '@/pages/ui-playground/sections/ColorsSection';
 import { AvatarBadgesSection } from '@/pages/ui-playground/sections/AvatarBadgesSection';
 import { AnimationsSection } from '@/pages/ui-playground/sections/AnimationsSection';
+import { FontsSection } from '@/pages/ui-playground/sections/FontsSection';
 
 // Auto-import UI components in client/src/components/ui
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -87,6 +88,7 @@ const UIPlaygroundPage: React.FC = () => {
 				<div>UI Components temporarily disabled for debugging.</div>
 			</PlaygroundSection>
 
+			<FontsSection />
 			<ButtonsSection />
 			<CardsSection />
 			<ColorsSection />

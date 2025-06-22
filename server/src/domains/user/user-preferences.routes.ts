@@ -12,21 +12,21 @@ const socialPreferencesSchema = z.object({
 	mentionPermissions: z.enum(['everyone', 'friends', 'followers', 'none']).optional(),
 	mentionNotifications: z.boolean().optional(),
 	mentionEmailNotifications: z.boolean().optional(),
-	
-	// Following preferences  
+
+	// Following preferences
 	allowFollowers: z.boolean().optional(),
 	followerApprovalRequired: z.boolean().optional(),
 	hideFollowerCount: z.boolean().optional(),
 	hideFollowingCount: z.boolean().optional(),
 	allowWhaleDesignation: z.boolean().optional(),
-	
+
 	// Friends preferences
 	allowFriendRequests: z.boolean().optional(),
 	friendRequestPermissions: z.enum(['everyone', 'mutuals', 'followers', 'none']).optional(),
 	autoAcceptMutualFollows: z.boolean().optional(),
 	hideOnlineStatus: z.boolean().optional(),
 	hideFriendsList: z.boolean().optional(),
-	
+
 	// General privacy
 	showSocialActivity: z.boolean().optional(),
 	allowDirectMessages: z.enum(['friends', 'followers', 'everyone', 'none']).optional(),
@@ -45,7 +45,7 @@ router.get('/social-preferences', requireAuth, async (req, res) => {
 		res.json(preferences);
 	} catch (error) {
 		console.error('Error fetching social preferences:', error);
-		res.status(500).json({ 
+		res.status(500).json({
 			error: 'Failed to fetch social preferences',
 			details: error instanceof Error ? error.message : 'Unknown error'
 		});
@@ -60,22 +60,22 @@ router.put('/social-preferences', requireAuth, async (req, res) => {
 	try {
 		const userId = req.user!.id;
 		const validatedData = socialPreferencesSchema.parse(req.body);
-		
+
 		const updatedPreferences = await UserPreferencesService.updateSocialPreferences(
-			userId, 
+			userId,
 			validatedData
 		);
-		
+
 		res.json(updatedPreferences);
 	} catch (error) {
 		console.error('Error updating social preferences:', error);
 		if (error instanceof z.ZodError) {
-			res.status(400).json({ 
+			res.status(400).json({
 				error: 'Invalid preferences data',
 				details: error.errors
 			});
 		} else {
-			res.status(500).json({ 
+			res.status(500).json({
 				error: 'Failed to update social preferences',
 				details: error instanceof Error ? error.message : 'Unknown error'
 			});
@@ -94,7 +94,7 @@ router.get('/privacy-summary', requireAuth, async (req, res) => {
 		res.json(summary);
 	} catch (error) {
 		console.error('Error fetching privacy summary:', error);
-		res.status(500).json({ 
+		res.status(500).json({
 			error: 'Failed to fetch privacy summary',
 			details: error instanceof Error ? error.message : 'Unknown error'
 		});
@@ -112,7 +112,7 @@ router.post('/reset-social-preferences', requireAuth, async (req, res) => {
 		res.json(defaultPreferences);
 	} catch (error) {
 		console.error('Error resetting social preferences:', error);
-		res.status(500).json({ 
+		res.status(500).json({
 			error: 'Failed to reset social preferences',
 			details: error instanceof Error ? error.message : 'Unknown error'
 		});

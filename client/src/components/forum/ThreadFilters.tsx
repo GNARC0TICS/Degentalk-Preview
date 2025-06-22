@@ -20,13 +20,25 @@ import {
 } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
+import {
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem
+} from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { cn } from '@/lib/utils';
 import type { Tag } from '@/types/forum';
 
-export type ThreadSortOption = 'latest' | 'hot' | 'staked' | 'most-liked' | 'most-replied' | 'oldest';
+export type ThreadSortOption =
+	| 'latest'
+	| 'hot'
+	| 'staked'
+	| 'most-liked'
+	| 'most-replied'
+	| 'oldest';
 
 export interface ThreadFiltersState {
 	sortBy: ThreadSortOption;
@@ -65,7 +77,7 @@ export function ThreadFilters({
 }: ThreadFiltersProps) {
 	// Unique key for localStorage based on forum
 	const storageKey = `thread-filters-${forumSlug}`;
-	
+
 	// Load saved filters from localStorage
 	const [savedFilters, setSavedFilters] = useLocalStorage<ThreadFiltersState>(storageKey, {
 		sortBy: 'latest',
@@ -138,7 +150,7 @@ export function ThreadFilters({
 
 	// Desktop filters
 	const DesktopFilters = () => (
-		<div className={cn("flex items-center gap-3", className)}>
+		<div className={cn('flex items-center gap-3', className)}>
 			{/* Sort Dropdown */}
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
@@ -155,10 +167,7 @@ export function ThreadFilters({
 						<DropdownMenuItem
 							key={option.value}
 							onClick={() => updateFilter('sortBy', option.value)}
-							className={cn(
-								"gap-2",
-								filters.sortBy === option.value && "bg-zinc-800"
-							)}
+							className={cn('gap-2', filters.sortBy === option.value && 'bg-zinc-800')}
 						>
 							<span>{option.icon}</span>
 							<span>{option.label}</span>
@@ -191,17 +200,13 @@ export function ThreadFilters({
 							<CommandEmpty>No tags found.</CommandEmpty>
 							<CommandGroup className="max-h-64 overflow-auto">
 								{availableTags.map((tag) => (
-									<CommandItem
-										key={tag.id}
-										onSelect={() => toggleTag(tag.id)}
-										className="gap-2"
-									>
+									<CommandItem key={tag.id} onSelect={() => toggleTag(tag.id)} className="gap-2">
 										<div
 											className={cn(
-												"h-4 w-4 rounded border",
+												'h-4 w-4 rounded border',
 												filters.tags.includes(tag.id)
-													? "bg-emerald-500 border-emerald-500"
-													: "border-zinc-600"
+													? 'bg-emerald-500 border-emerald-500'
+													: 'border-zinc-600'
 											)}
 										/>
 										<span>{tag.name}</span>
@@ -244,10 +249,7 @@ export function ThreadFilters({
 								onClick={() => updateFilter('prefixId', prefix.id)}
 								className="gap-2"
 							>
-								<div
-									className="h-3 w-3 rounded-full"
-									style={{ backgroundColor: prefix.color }}
-								/>
+								<div className="h-3 w-3 rounded-full" style={{ backgroundColor: prefix.color }} />
 								{prefix.name}
 							</DropdownMenuItem>
 						))}
@@ -284,14 +286,22 @@ export function ThreadFilters({
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="outline" className="gap-2">
-						{filters.solved === 'solved' ? 'Solved' : filters.solved === 'unsolved' ? 'Unsolved' : 'Solved?'}
+						{filters.solved === 'solved'
+							? 'Solved'
+							: filters.solved === 'unsolved'
+								? 'Unsolved'
+								: 'Solved?'}
 						<ChevronDown className="h-4 w-4" />
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="start" className="w-40">
 					<DropdownMenuItem onClick={() => updateFilter('solved', undefined)}>Any</DropdownMenuItem>
-					<DropdownMenuItem onClick={() => updateFilter('solved', 'solved')}>Solved</DropdownMenuItem>
-					<DropdownMenuItem onClick={() => updateFilter('solved', 'unsolved')}>Unsolved</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => updateFilter('solved', 'solved')}>
+						Solved
+					</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => updateFilter('solved', 'unsolved')}>
+						Unsolved
+					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
 
@@ -321,22 +331,12 @@ export function ThreadFilters({
 			{/* Action Buttons */}
 			<div className="flex items-center gap-2 ml-auto">
 				{hasActiveFilters && (
-					<Button
-						variant="ghost"
-						size="sm"
-						onClick={resetFilters}
-						className="gap-1 text-xs"
-					>
+					<Button variant="ghost" size="sm" onClick={resetFilters} className="gap-1 text-xs">
 						<RotateCcw className="h-3 w-3" />
 						Reset
 					</Button>
 				)}
-				<Button
-					variant="ghost"
-					size="sm"
-					onClick={saveFilters}
-					className="gap-1 text-xs"
-				>
+				<Button variant="ghost" size="sm" onClick={saveFilters} className="gap-1 text-xs">
 					<Save className="h-3 w-3" />
 					Save
 				</Button>
@@ -361,9 +361,7 @@ export function ThreadFilters({
 			<SheetContent side="bottom" className="h-[85vh]">
 				<SheetHeader>
 					<SheetTitle>Filter Threads</SheetTitle>
-					<SheetDescription>
-						Customize how threads are displayed
-					</SheetDescription>
+					<SheetDescription>Customize how threads are displayed</SheetDescription>
 				</SheetHeader>
 
 				<div className="mt-6 space-y-6">
@@ -374,7 +372,7 @@ export function ThreadFilters({
 							{sortOptions.map((option) => (
 								<Button
 									key={option.value}
-									variant={filters.sortBy === option.value ? "default" : "outline"}
+									variant={filters.sortBy === option.value ? 'default' : 'outline'}
 									className="justify-start gap-2"
 									onClick={() => updateFilter('sortBy', option.value)}
 								>
@@ -397,9 +395,7 @@ export function ThreadFilters({
 							/>
 							<div className="space-y-1 max-h-48 overflow-y-auto">
 								{availableTags
-									.filter((tag) =>
-										tag.name.toLowerCase().includes(tagSearch.toLowerCase())
-									)
+									.filter((tag) => tag.name.toLowerCase().includes(tagSearch.toLowerCase()))
 									.map((tag) => (
 										<Button
 											key={tag.id}
@@ -409,10 +405,10 @@ export function ThreadFilters({
 										>
 											<div
 												className={cn(
-													"h-4 w-4 rounded border",
+													'h-4 w-4 rounded border',
 													filters.tags.includes(tag.id)
-														? "bg-emerald-500 border-emerald-500"
-														: "border-zinc-600"
+														? 'bg-emerald-500 border-emerald-500'
+														: 'border-zinc-600'
 												)}
 											/>
 											{tag.name}
@@ -428,7 +424,7 @@ export function ThreadFilters({
 							<h3 className="text-sm font-semibold mb-3">Prefix</h3>
 							<div className="space-y-1">
 								<Button
-									variant={filters.prefixId === undefined ? "default" : "outline"}
+									variant={filters.prefixId === undefined ? 'default' : 'outline'}
 									className="w-full justify-start"
 									onClick={() => updateFilter('prefixId', undefined)}
 								>
@@ -437,7 +433,7 @@ export function ThreadFilters({
 								{availablePrefixes.map((prefix) => (
 									<Button
 										key={prefix.id}
-										variant={filters.prefixId === prefix.id ? "default" : "outline"}
+										variant={filters.prefixId === prefix.id ? 'default' : 'outline'}
 										className="w-full justify-start gap-2"
 										onClick={() => updateFilter('prefixId', prefix.id)}
 									>
@@ -454,11 +450,7 @@ export function ThreadFilters({
 				</div>
 
 				<SheetFooter className="absolute bottom-0 left-0 right-0 p-4 bg-zinc-900 border-t">
-					<Button
-						variant="outline"
-						onClick={resetFilters}
-						className="flex-1"
-					>
+					<Button variant="outline" onClick={resetFilters} className="flex-1">
 						Reset
 					</Button>
 					<Button

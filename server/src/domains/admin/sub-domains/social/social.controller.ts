@@ -12,7 +12,7 @@ export class SocialController {
 			res.json(config);
 		} catch (error) {
 			logger.error('SocialController', 'Error fetching social config', { error });
-			res.status(500).json({ 
+			res.status(500).json({
 				error: 'Failed to fetch social configuration',
 				details: error instanceof Error ? error.message : 'Unknown error'
 			});
@@ -26,7 +26,7 @@ export class SocialController {
 		try {
 			const adminUserId = req.user!.id;
 			const updatedConfig = await SocialService.updateSocialConfig(validatedData, adminUserId);
-			
+
 			logger.info('SocialController', 'Social configuration updated', {
 				adminUserId,
 				changes: Object.keys(validatedData)
@@ -35,7 +35,7 @@ export class SocialController {
 			res.json(updatedConfig);
 		} catch (error) {
 			logger.error('SocialController', 'Error updating social config', { error });
-			res.status(500).json({ 
+			res.status(500).json({
 				error: 'Failed to update social configuration',
 				details: error instanceof Error ? error.message : 'Unknown error'
 			});
@@ -51,7 +51,7 @@ export class SocialController {
 			res.json(stats);
 		} catch (error) {
 			logger.error('SocialController', 'Error fetching social stats', { error });
-			res.status(500).json({ 
+			res.status(500).json({
 				error: 'Failed to fetch social statistics',
 				details: error instanceof Error ? error.message : 'Unknown error'
 			});
@@ -65,7 +65,7 @@ export class SocialController {
 		try {
 			const adminUserId = req.user!.id;
 			const defaultConfig = await SocialService.resetToDefaults(adminUserId);
-			
+
 			logger.warn('SocialController', 'Social configuration reset to defaults', {
 				adminUserId
 			});
@@ -73,7 +73,7 @@ export class SocialController {
 			res.json(defaultConfig);
 		} catch (error) {
 			logger.error('SocialController', 'Error resetting social config', { error });
-			res.status(500).json({ 
+			res.status(500).json({
 				error: 'Failed to reset social configuration',
 				details: error instanceof Error ? error.message : 'Unknown error'
 			});
@@ -89,7 +89,7 @@ export class SocialController {
 			res.json(status);
 		} catch (error) {
 			logger.error('SocialController', 'Error fetching feature status', { error });
-			res.status(500).json({ 
+			res.status(500).json({
 				error: 'Failed to fetch feature status',
 				details: error instanceof Error ? error.message : 'Unknown error'
 			});
@@ -103,7 +103,7 @@ export class SocialController {
 		try {
 			const adminUserId = req.user!.id;
 			const result = await SocialService.emergencyDisable(adminUserId);
-			
+
 			logger.warn('SocialController', 'Emergency social disable triggered', {
 				adminUserId
 			});
@@ -111,7 +111,7 @@ export class SocialController {
 			res.json(result);
 		} catch (error) {
 			logger.error('SocialController', 'Error during emergency disable', { error });
-			res.status(500).json({ 
+			res.status(500).json({
 				error: 'Failed to emergency disable social features',
 				details: error instanceof Error ? error.message : 'Unknown error'
 			});

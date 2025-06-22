@@ -25,6 +25,8 @@ export function XPHistoryLog({
 	maxHeight = '350px',
 	showEmptyState = true
 }: XPHistoryLogProps) {
+	// Ensure xpHistory is always an array
+	const safeXpHistory = Array.isArray(xpHistory) ? xpHistory : [];
 	// Get the icon for the source type
 	const getSourceIcon = (source: XpAdjustmentEntry['source']) => {
 		switch (source) {
@@ -85,7 +87,7 @@ export function XPHistoryLog({
 		);
 	}
 
-	if (xpHistory.length === 0 && showEmptyState) {
+	if (safeXpHistory.length === 0 && showEmptyState) {
 		return (
 			<Card className={cn('relative overflow-hidden', className)}>
 				<CardHeader className="pb-2">
@@ -110,7 +112,7 @@ export function XPHistoryLog({
 			<CardContent className="p-0">
 				<ScrollArea className={cn('pr-4', maxHeight && `max-h-[${maxHeight}]`)}>
 					<div className="space-y-4 p-6">
-						{xpHistory.map((entry) => (
+						{safeXpHistory.map((entry) => (
 							<div key={entry.id} className="flex items-start gap-3 group">
 								<div
 									className={cn(

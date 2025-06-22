@@ -93,7 +93,7 @@ router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
 		}
 
 		const result = await FriendsService.respondToFriendRequest(requestId, response);
-		
+
 		res.json(result);
 	} catch (error) {
 		console.error('Error responding to friend request:', error);
@@ -115,7 +115,7 @@ router.delete('/', requireAuth, async (req, res) => {
 		const userId = req.user!.id;
 
 		await FriendsService.removeFriend(userId, friendId);
-		
+
 		res.json({ success: true });
 	} catch (error) {
 		console.error('Error removing friend:', error);
@@ -137,7 +137,7 @@ router.get('/', requireAuth, async (req, res) => {
 		const userId = req.user!.id;
 
 		const friends = await FriendsService.getUserFriends(userId, page, limit);
-		
+
 		res.json({
 			friends,
 			pagination: {
@@ -160,7 +160,7 @@ router.get('/requests/incoming', requireAuth, async (req, res) => {
 	try {
 		const userId = req.user!.id;
 		const requests = await FriendsService.getIncomingFriendRequests(userId);
-		
+
 		res.json({ requests });
 	} catch (error) {
 		console.error('Error fetching incoming friend requests:', error);
@@ -176,7 +176,7 @@ router.get('/requests/outgoing', requireAuth, async (req, res) => {
 	try {
 		const userId = req.user!.id;
 		const requests = await FriendsService.getOutgoingFriendRequests(userId);
-		
+
 		res.json({ requests });
 	} catch (error) {
 		console.error('Error fetching outgoing friend requests:', error);
@@ -192,7 +192,7 @@ router.get('/counts', requireAuth, async (req, res) => {
 	try {
 		const userId = req.user!.id;
 		const counts = await FriendsService.getFriendCounts(userId);
-		
+
 		res.json(counts);
 	} catch (error) {
 		console.error('Error fetching friend counts:', error);
@@ -210,7 +210,7 @@ router.get('/check/:userId', requireAuth, async (req, res) => {
 		const userId = req.user!.id;
 
 		const areFriends = await FriendsService.areFriends(userId, friendId);
-		
+
 		res.json({ areFriends });
 	} catch (error) {
 		console.error('Error checking friendship status:', error);
@@ -228,7 +228,7 @@ router.get('/mutual/:userId', requireAuth, async (req, res) => {
 		const userId = req.user!.id;
 
 		const mutualFriends = await FriendsService.getMutualFriends(userId, otherUserId);
-		
+
 		res.json({ mutualFriends });
 	} catch (error) {
 		console.error('Error fetching mutual friends:', error);
@@ -246,7 +246,7 @@ router.get('/search', requireAuth, async (req, res) => {
 		const currentUserId = req.user!.id;
 
 		const users = await FriendsService.searchUsersForFriends(q, currentUserId, limit);
-		
+
 		res.json({ users });
 	} catch (error) {
 		console.error('Error searching users for friends:', error);
@@ -262,7 +262,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 	try {
 		const userId = req.user!.id;
 		const preferences = await FriendsService.getUserFriendPreferences(userId);
-		
+
 		res.json(preferences);
 	} catch (error) {
 		console.error('Error fetching friend preferences:', error);
@@ -280,7 +280,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
 		const userId = req.user!.id;
 
 		const updatedPrefs = await FriendsService.updateUserFriendPreferences(userId, preferences);
-		
+
 		res.json(updatedPrefs[0]);
 	} catch (error) {
 		console.error('Error updating friend preferences:', error);
@@ -298,12 +298,8 @@ router.put('/:userId/permissions', requireAuth, async (req, res) => {
 		const userId = req.user!.id;
 		const permissions = updatePermissionsSchema.parse(req.body);
 
-		const result = await FriendsService.updateFriendshipPermissions(
-			userId,
-			friendId,
-			permissions
-		);
-		
+		const result = await FriendsService.updateFriendshipPermissions(userId, friendId, permissions);
+
 		res.json(result);
 	} catch (error) {
 		console.error('Error updating friendship permissions:', error);
@@ -325,7 +321,7 @@ router.get('/whisper-permission/:userId', requireAuth, async (req, res) => {
 		const senderId = req.user!.id;
 
 		const canSendWhisper = await FriendsService.canSendWhisper(senderId, recipientId);
-		
+
 		res.json({ canSendWhisper });
 	} catch (error) {
 		console.error('Error checking whisper permission:', error);

@@ -12,65 +12,66 @@ interface ShoutboxInputProps {
 	maxLength?: number;
 }
 
-export function ShoutboxInput({ 
-	onSendMessage, 
-	isLoading = false, 
-	placeholder = "Type a message...",
-	maxLength = 300 
+export function ShoutboxInput({
+	onSendMessage,
+	isLoading = false,
+	placeholder = 'Type a message...',
+	maxLength = 300
 }: ShoutboxInputProps) {
 	const [message, setMessage] = useState('');
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	const {
-		mentionState,
-		handleTextChange,
-		handleMentionSelect,
-		closeMentions,
-		processMentions
-	} = useMentions({
-		onMentionSelect: (user) => {
-			// Update the message with the selected mention
-			if (inputRef.current && mentionState.startIndex !== -1) {
-				const input = inputRef.current;
-				const currentValue = input.value;
-				const endIndex = mentionState.startIndex + 1 + mentionState.query.length; // +1 for @
-				
-				const newValue = 
-					currentValue.slice(0, mentionState.startIndex) +
-					`@${user.username} ` +
-					currentValue.slice(endIndex);
+	const { mentionState, handleTextChange, handleMentionSelect, closeMentions, processMentions } =
+		useMentions({
+			onMentionSelect: (user) => {
+				// Update the message with the selected mention
+				if (inputRef.current && mentionState.startIndex !== -1) {
+					const input = inputRef.current;
+					const currentValue = input.value;
+					const endIndex = mentionState.startIndex + 1 + mentionState.query.length; // +1 for @
 
-				setMessage(newValue);
-				
-				// Set cursor position after the mention
-				setTimeout(() => {
-					const newCursorPos = mentionState.startIndex + `@${user.username} `.length;
-					input.setSelectionRange(newCursorPos, newCursorPos);
-					input.focus();
-				}, 0);
+					const newValue =
+						currentValue.slice(0, mentionState.startIndex) +
+						`@${user.username} ` +
+						currentValue.slice(endIndex);
+
+					setMessage(newValue);
+
+					// Set cursor position after the mention
+					setTimeout(() => {
+						const newCursorPos = mentionState.startIndex + `@${user.username} `.length;
+						input.setSelectionRange(newCursorPos, newCursorPos);
+						input.focus();
+					}, 0);
+				}
 			}
-		}
-	});
+		});
 
-	const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value;
-		setMessage(value);
-		handleTextChange(e);
-	}, [handleTextChange]);
+	const handleInputChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			const value = e.target.value;
+			setMessage(value);
+			handleTextChange(e);
+		},
+		[handleTextChange]
+	);
 
-	const handleKeyPress = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter' && !e.shiftKey && !mentionState.isOpen) {
-			e.preventDefault();
-			handleSend();
-		}
-	}, [mentionState.isOpen]);
+	const handleKeyPress = useCallback(
+		(e: React.KeyboardEvent<HTMLInputElement>) => {
+			if (e.key === 'Enter' && !e.shiftKey && !mentionState.isOpen) {
+				e.preventDefault();
+				handleSend();
+			}
+		},
+		[mentionState.isOpen]
+	);
 
 	const handleSend = useCallback(async () => {
 		if (!message.trim() || isLoading) return;
 
 		// Process mentions before sending
 		await processMentions(message, 'shoutbox');
-		
+
 		// Send the message
 		onSendMessage(message.trim());
 		setMessage('');
@@ -100,7 +101,7 @@ export function ShoutboxInput({
 						disabled={isLoading}
 						className="pr-12"
 					/>
-					
+
 					{/* Character count */}
 					{message.length > maxLength * 0.8 && (
 						<div className="absolute right-12 top-1/2 -translate-y-1/2 text-xs text-zinc-500">
@@ -108,8 +109,8 @@ export function ShoutboxInput({
 						</div>
 					)}
 				</div>
-				
-				<Button 
+
+				<Button
 					onClick={handleSend}
 					disabled={!message.trim() || isLoading}
 					size="icon"

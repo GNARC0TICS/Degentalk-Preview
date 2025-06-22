@@ -15,9 +15,9 @@ export function ForumNotFound({ forumSlug, onBack }: ForumNotFoundProps) {
 
 	// Get popular zones to suggest
 	const popularZones = zones
-		.filter(zone => zone.isPrimary)
+		.filter((zone) => zone.isPrimary)
 		.slice(0, 4)
-		.map(zone => ({
+		.map((zone) => ({
 			name: zone.name,
 			slug: zone.slug,
 			description: zone.description,
@@ -34,24 +34,17 @@ export function ForumNotFound({ forumSlug, onBack }: ForumNotFoundProps) {
 					</div>
 					<CardTitle className="text-2xl text-white">Forum Not Found</CardTitle>
 					<p className="text-zinc-400 mt-2">
-						The forum you're looking for doesn't exist, may have been moved, or you don't have permission to access it.
+						The forum you're looking for doesn't exist, may have been moved, or you don't have
+						permission to access it.
 					</p>
-					{forumSlug && (
-						<p className="text-xs text-zinc-500 mt-1">
-							Forum slug: {forumSlug}
-						</p>
-					)}
+					{forumSlug && <p className="text-xs text-zinc-500 mt-1">Forum slug: {forumSlug}</p>}
 				</CardHeader>
 
 				<CardContent className="space-y-6">
 					{/* Quick Actions */}
 					<div className="flex flex-wrap gap-3 justify-center">
 						{onBack && (
-							<Button
-								variant="outline"
-								onClick={onBack}
-								className="gap-2"
-							>
+							<Button variant="outline" onClick={onBack} className="gap-2">
 								<ArrowLeft className="h-4 w-4" />
 								Go Back
 							</Button>
@@ -87,30 +80,18 @@ export function ForumNotFound({ forumSlug, onBack }: ForumNotFoundProps) {
 							</h3>
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 								{popularZones.map((zone) => (
-									<Link 
-										key={zone.slug} 
-										href={`/zones/${zone.slug}`}
-										className="block"
-									>
+									<Link key={zone.slug} href={`/zones/${zone.slug}`} className="block">
 										<div className="p-4 bg-zinc-800/50 hover:bg-zinc-800/70 rounded-lg border border-zinc-700/50 hover:border-zinc-600 transition-all cursor-pointer">
 											<div className="flex items-start gap-3">
-												{zone.icon && (
-													<div className="text-2xl flex-shrink-0">
-														{zone.icon}
-													</div>
-												)}
+												{zone.icon && <div className="text-2xl flex-shrink-0">{zone.icon}</div>}
 												<div className="flex-1 min-w-0">
-													<h4 className="font-medium text-white text-sm mb-1">
-														{zone.name}
-													</h4>
+													<h4 className="font-medium text-white text-sm mb-1">{zone.name}</h4>
 													{zone.description && (
 														<p className="text-xs text-zinc-400 line-clamp-2 mb-1">
 															{zone.description}
 														</p>
 													)}
-													<div className="text-xs text-zinc-500">
-														{zone.threadCount} threads
-													</div>
+													<div className="text-xs text-zinc-500">{zone.threadCount} threads</div>
 												</div>
 											</div>
 										</div>
@@ -133,7 +114,10 @@ export function ForumNotFound({ forumSlug, onBack }: ForumNotFoundProps) {
 
 					{/* Help Text */}
 					<div className="text-center text-sm text-zinc-500 pt-4 border-t border-zinc-800">
-						<p>Can't find what you're looking for? Our community is always growing with new discussions.</p>
+						<p>
+							Can't find what you're looking for? Our community is always growing with new
+							discussions.
+						</p>
 					</div>
 				</CardContent>
 			</Card>

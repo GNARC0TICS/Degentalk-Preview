@@ -20,7 +20,18 @@ module.exports = {
 			},
 			fontFamily: {
 				sans: ['Inter', 'sans-serif'],
-				headline: ['"Space Grotesk"', 'Inter', 'sans-serif']
+				headline: ['"Space Grotesk"', 'Inter', 'sans-serif'],
+				// Font playground additions
+				orbitron: ['Orbitron', 'monospace'],
+				audiowide: ['Audiowide', 'cursive'],
+				'black-ops': ['"Black Ops One"', 'cursive'],
+				jetbrains: ['"JetBrains Mono"', 'monospace'],
+				'space-mono': ['"Space Mono"', 'monospace'],
+				'press-start': ['"Press Start 2P"', 'cursive'],
+				bungee: ['"Bungee Inline"', 'cursive'],
+				monoton: ['Monoton', 'cursive'],
+				jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
+				manrope: ['Manrope', 'sans-serif']
 			},
 			animation: {
 				'gradient-shift': 'gradient-shift 8s ease infinite',

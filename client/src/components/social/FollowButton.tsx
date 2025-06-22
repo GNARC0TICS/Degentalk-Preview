@@ -173,7 +173,11 @@ export function FollowButton({
 				isFollowing && isHovered && 'border-red-700 text-red-400',
 				className
 			)}
-			title={isFollowing ? `Remove @${username} from your Whale Watch` : `Add @${username} to your Whale Watch`}
+			title={
+				isFollowing
+					? `Remove @${username} from your Whale Watch`
+					: `Add @${username} to your Whale Watch`
+			}
 		>
 			{getButtonContent()}
 		</Button>

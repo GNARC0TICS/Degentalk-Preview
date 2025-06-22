@@ -380,10 +380,10 @@ const ForumPage = () => {
 							<h2 className="text-xl font-semibold text-white mb-4">
 								{generalForumZones.length > 0 ? 'All Forums' : 'No forum categories found.'}
 							</h2>
-							<Accordion 
-								type="multiple" 
+							<Accordion
+								type="multiple"
 								className="space-y-4"
-								defaultValue={generalForumZones.map(zone => zone.slug)} // Open all by default
+								defaultValue={generalForumZones.map((zone) => zone.slug)} // Open all by default
 							>
 								{generalForumZones.map((zoneData, index) => (
 									<AccordionItem value={zoneData.slug} key={zoneData.id.toString()}>

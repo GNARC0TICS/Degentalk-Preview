@@ -29,13 +29,14 @@ let `WidgetFrame` decide which value to pass:
 
 ```tsx
 export default function HotThreads({ variant = 'widget' }: { variant: 'widget' | 'feed' }) {
-  return variant === 'feed' ? <CompactList /> : <CardLayout />;
+	return variant === 'feed' ? <CompactList /> : <CardLayout />;
 }
 ```
 
 `WidgetFrame` currently sets:
-* `variant="feed"` for any widget located in an **`main/*`** slot.
-* `variant="widget"` in sidebars.
+
+- `variant="feed"` for any widget located in an **`main/*`** slot.
+- `variant="widget"` in sidebars.
 
 No additional wiring is needed—moving the widget triggers the correct variant.
 

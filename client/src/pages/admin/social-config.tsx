@@ -9,10 +9,10 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { 
-	MessageSquare, 
-	Users, 
-	UserPlus, 
+import {
+	MessageSquare,
+	Users,
+	UserPlus,
 	Settings,
 	Shield,
 	AlertTriangle,
@@ -27,7 +27,13 @@ import {
 	XCircle
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+} from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import type { SocialConfig } from '@/config/social.config';
 
@@ -40,9 +46,20 @@ interface SocialStats {
 }
 
 interface FeatureStatus {
-	mentions: { enabled: boolean; activeUsers: number; totalMentions: number; unreadMentions: number; healthStatus: string };
+	mentions: {
+		enabled: boolean;
+		activeUsers: number;
+		totalMentions: number;
+		unreadMentions: number;
+		healthStatus: string;
+	};
 	whaleWatch: { enabled: boolean; totalFollows: number; healthStatus: string };
-	friends: { enabled: boolean; totalFriendships: number; pendingRequests: number; healthStatus: string };
+	friends: {
+		enabled: boolean;
+		totalFriendships: number;
+		pendingRequests: number;
+		healthStatus: string;
+	};
 	overall: { status: string; lastChecked: string };
 }
 
@@ -163,7 +180,7 @@ export default function SocialConfigPage() {
 		if (!config) return;
 		const featureConfig = { ...config[feature] };
 		const pathParts = settingPath.split('.');
-		
+
 		let current = featureConfig;
 		for (let i = 0; i < pathParts.length - 1; i++) {
 			current = current[pathParts[i]];
@@ -178,11 +195,26 @@ export default function SocialConfigPage() {
 	const getHealthBadge = (status: string) => {
 		switch (status) {
 			case 'healthy':
-				return <Badge className="bg-green-900/60 text-green-300 border-green-700/30"><CheckCircle className="h-3 w-3 mr-1" />Healthy</Badge>;
+				return (
+					<Badge className="bg-green-900/60 text-green-300 border-green-700/30">
+						<CheckCircle className="h-3 w-3 mr-1" />
+						Healthy
+					</Badge>
+				);
 			case 'inactive':
-				return <Badge className="bg-yellow-900/60 text-yellow-300 border-yellow-700/30"><Clock className="h-3 w-3 mr-1" />Inactive</Badge>;
+				return (
+					<Badge className="bg-yellow-900/60 text-yellow-300 border-yellow-700/30">
+						<Clock className="h-3 w-3 mr-1" />
+						Inactive
+					</Badge>
+				);
 			case 'disabled':
-				return <Badge className="bg-red-900/60 text-red-300 border-red-700/30"><XCircle className="h-3 w-3 mr-1" />Disabled</Badge>;
+				return (
+					<Badge className="bg-red-900/60 text-red-300 border-red-700/30">
+						<XCircle className="h-3 w-3 mr-1" />
+						Disabled
+					</Badge>
+				);
 			default:
 				return <Badge variant="secondary">Unknown</Badge>;
 		}
@@ -202,9 +234,7 @@ export default function SocialConfigPage() {
 	if (!config || !stats || !status) {
 		return (
 			<div className="p-6">
-				<div className="text-center text-zinc-400">
-					Failed to load social configuration data
-				</div>
+				<div className="text-center text-zinc-400">Failed to load social configuration data</div>
 			</div>
 		);
 	}
@@ -247,7 +277,8 @@ export default function SocialConfigPage() {
 							Emergency Disable Confirmation
 						</CardTitle>
 						<CardDescription>
-							This will immediately disable ALL social features across the platform. Users will lose access to mentions, following, and friends functionality.
+							This will immediately disable ALL social features across the platform. Users will lose
+							access to mentions, following, and friends functionality.
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
@@ -259,10 +290,7 @@ export default function SocialConfigPage() {
 							>
 								Confirm Emergency Disable
 							</Button>
-							<Button
-								variant="outline"
-								onClick={() => setShowEmergencyConfirm(false)}
-							>
+							<Button variant="outline" onClick={() => setShowEmergencyConfirm(false)}>
 								Cancel
 							</Button>
 						</div>
@@ -297,22 +325,28 @@ export default function SocialConfigPage() {
 								<div className="space-y-2">
 									<div className="flex items-center justify-between">
 										<span className="text-sm text-zinc-400">Status</span>
-										<Switch 
+										<Switch
 											checked={config.mentions.enabled}
 											onCheckedChange={(enabled) => updateFeatureToggle('mentions', enabled)}
 										/>
 									</div>
 									<div className="flex items-center justify-between">
 										<span className="text-sm text-zinc-400">Total Mentions</span>
-										<span className="text-sm font-medium">{status.mentions.totalMentions.toLocaleString()}</span>
+										<span className="text-sm font-medium">
+											{status.mentions.totalMentions.toLocaleString()}
+										</span>
 									</div>
 									<div className="flex items-center justify-between">
 										<span className="text-sm text-zinc-400">Unread</span>
-										<span className="text-sm font-medium">{status.mentions.unreadMentions.toLocaleString()}</span>
+										<span className="text-sm font-medium">
+											{status.mentions.unreadMentions.toLocaleString()}
+										</span>
 									</div>
 									<div className="flex items-center justify-between">
 										<span className="text-sm text-zinc-400">Active Users (24h)</span>
-										<span className="text-sm font-medium">{status.mentions.activeUsers.toLocaleString()}</span>
+										<span className="text-sm font-medium">
+											{status.mentions.activeUsers.toLocaleString()}
+										</span>
 									</div>
 								</div>
 							</CardContent>
@@ -332,14 +366,16 @@ export default function SocialConfigPage() {
 								<div className="space-y-2">
 									<div className="flex items-center justify-between">
 										<span className="text-sm text-zinc-400">Status</span>
-										<Switch 
+										<Switch
 											checked={config.whaleWatch.enabled}
 											onCheckedChange={(enabled) => updateFeatureToggle('whaleWatch', enabled)}
 										/>
 									</div>
 									<div className="flex items-center justify-between">
 										<span className="text-sm text-zinc-400">Total Follows</span>
-										<span className="text-sm font-medium">{status.whaleWatch.totalFollows.toLocaleString()}</span>
+										<span className="text-sm font-medium">
+											{status.whaleWatch.totalFollows.toLocaleString()}
+										</span>
 									</div>
 								</div>
 							</CardContent>
@@ -359,18 +395,22 @@ export default function SocialConfigPage() {
 								<div className="space-y-2">
 									<div className="flex items-center justify-between">
 										<span className="text-sm text-zinc-400">Status</span>
-										<Switch 
+										<Switch
 											checked={config.friends.enabled}
 											onCheckedChange={(enabled) => updateFeatureToggle('friends', enabled)}
 										/>
 									</div>
 									<div className="flex items-center justify-between">
 										<span className="text-sm text-zinc-400">Total Friendships</span>
-										<span className="text-sm font-medium">{status.friends.totalFriendships.toLocaleString()}</span>
+										<span className="text-sm font-medium">
+											{status.friends.totalFriendships.toLocaleString()}
+										</span>
 									</div>
 									<div className="flex items-center justify-between">
 										<span className="text-sm text-zinc-400">Pending Requests</span>
-										<span className="text-sm font-medium">{status.friends.pendingRequests.toLocaleString()}</span>
+										<span className="text-sm font-medium">
+											{status.friends.pendingRequests.toLocaleString()}
+										</span>
 									</div>
 								</div>
 							</CardContent>
@@ -388,19 +428,27 @@ export default function SocialConfigPage() {
 						<CardContent>
 							<div className="grid grid-cols-2 md:grid-cols-4 gap-6">
 								<div className="text-center">
-									<div className="text-2xl font-bold text-blue-400">{stats.mentions.total.toLocaleString()}</div>
+									<div className="text-2xl font-bold text-blue-400">
+										{stats.mentions.total.toLocaleString()}
+									</div>
 									<div className="text-sm text-zinc-400">Total Mentions</div>
 								</div>
 								<div className="text-center">
-									<div className="text-2xl font-bold text-yellow-400">{stats.follows.total.toLocaleString()}</div>
+									<div className="text-2xl font-bold text-yellow-400">
+										{stats.follows.total.toLocaleString()}
+									</div>
 									<div className="text-sm text-zinc-400">Follow Relationships</div>
 								</div>
 								<div className="text-center">
-									<div className="text-2xl font-bold text-green-400">{stats.friendships.accepted.toLocaleString()}</div>
+									<div className="text-2xl font-bold text-green-400">
+										{stats.friendships.accepted.toLocaleString()}
+									</div>
 									<div className="text-sm text-zinc-400">Active Friendships</div>
 								</div>
 								<div className="text-center">
-									<div className="text-2xl font-bold text-purple-400">{stats.activeUsers.last24h.toLocaleString()}</div>
+									<div className="text-2xl font-bold text-purple-400">
+										{stats.activeUsers.last24h.toLocaleString()}
+									</div>
 									<div className="text-sm text-zinc-400">Active Users (24h)</div>
 								</div>
 							</div>
@@ -426,9 +474,11 @@ export default function SocialConfigPage() {
 								<div className="flex items-center justify-between">
 									<div>
 										<Label htmlFor="mentions-enabled">Enable Mentions</Label>
-										<p className="text-sm text-zinc-400">Allow users to mention others using @username</p>
+										<p className="text-sm text-zinc-400">
+											Allow users to mention others using @username
+										</p>
 									</div>
-									<Switch 
+									<Switch
 										id="mentions-enabled"
 										checked={config.mentions.enabled}
 										onCheckedChange={(enabled) => updateFeatureToggle('mentions', enabled)}
@@ -446,7 +496,9 @@ export default function SocialConfigPage() {
 											min="1"
 											max="100"
 											value={config.mentions.minLevel}
-											onChange={(e) => updateFeatureSetting('mentions', 'minLevel', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting('mentions', 'minLevel', parseInt(e.target.value))
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -459,7 +511,13 @@ export default function SocialConfigPage() {
 											min="1"
 											max="50"
 											value={config.mentions.settings.maxMentionsPerPost}
-											onChange={(e) => updateFeatureSetting('mentions', 'settings.maxMentionsPerPost', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting(
+													'mentions',
+													'settings.maxMentionsPerPost',
+													parseInt(e.target.value)
+												)
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -472,7 +530,13 @@ export default function SocialConfigPage() {
 											min="1"
 											max="1000"
 											value={config.mentions.settings.maxMentionsPerHour}
-											onChange={(e) => updateFeatureSetting('mentions', 'settings.maxMentionsPerHour', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting(
+													'mentions',
+													'settings.maxMentionsPerHour',
+													parseInt(e.target.value)
+												)
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -485,7 +549,13 @@ export default function SocialConfigPage() {
 											min="0"
 											max="3600"
 											value={config.mentions.settings.mentionCooldownSeconds}
-											onChange={(e) => updateFeatureSetting('mentions', 'settings.mentionCooldownSeconds', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting(
+													'mentions',
+													'settings.mentionCooldownSeconds',
+													parseInt(e.target.value)
+												)
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -497,22 +567,28 @@ export default function SocialConfigPage() {
 							{/* Permission Settings */}
 							<div className="space-y-4">
 								<h4 className="font-medium">Permission Settings</h4>
-								
+
 								<div className="space-y-3">
 									<div className="flex items-center space-x-2">
 										<Checkbox
 											id="mentions-require-level"
 											checked={config.mentions.settings.requireMinLevel}
-											onCheckedChange={(checked) => updateFeatureSetting('mentions', 'settings.requireMinLevel', checked)}
+											onCheckedChange={(checked) =>
+												updateFeatureSetting('mentions', 'settings.requireMinLevel', checked)
+											}
 										/>
-										<Label htmlFor="mentions-require-level">Require minimum level to mention others</Label>
+										<Label htmlFor="mentions-require-level">
+											Require minimum level to mention others
+										</Label>
 									</div>
 
 									<div className="flex items-center space-x-2">
 										<Checkbox
 											id="mentions-friends-only"
 											checked={config.mentions.settings.allowFromFriendsOnly}
-											onCheckedChange={(checked) => updateFeatureSetting('mentions', 'settings.allowFromFriendsOnly', checked)}
+											onCheckedChange={(checked) =>
+												updateFeatureSetting('mentions', 'settings.allowFromFriendsOnly', checked)
+											}
 										/>
 										<Label htmlFor="mentions-friends-only">Only allow mentions from friends</Label>
 									</div>
@@ -521,16 +597,22 @@ export default function SocialConfigPage() {
 										<Checkbox
 											id="mentions-followers-only"
 											checked={config.mentions.settings.allowFromFollowersOnly}
-											onCheckedChange={(checked) => updateFeatureSetting('mentions', 'settings.allowFromFollowersOnly', checked)}
+											onCheckedChange={(checked) =>
+												updateFeatureSetting('mentions', 'settings.allowFromFollowersOnly', checked)
+											}
 										/>
-										<Label htmlFor="mentions-followers-only">Only allow mentions from followers</Label>
+										<Label htmlFor="mentions-followers-only">
+											Only allow mentions from followers
+										</Label>
 									</div>
 
 									<div className="flex items-center space-x-2">
 										<Checkbox
 											id="mentions-priority-mods"
 											checked={config.mentions.settings.priorityMentionForMods}
-											onCheckedChange={(checked) => updateFeatureSetting('mentions', 'settings.priorityMentionForMods', checked)}
+											onCheckedChange={(checked) =>
+												updateFeatureSetting('mentions', 'settings.priorityMentionForMods', checked)
+											}
 										/>
 										<Label htmlFor="mentions-priority-mods">Priority mentions for moderators</Label>
 									</div>
@@ -539,7 +621,9 @@ export default function SocialConfigPage() {
 										<Checkbox
 											id="mentions-cross-forum"
 											checked={config.mentions.settings.crossForumMentions}
-											onCheckedChange={(checked) => updateFeatureSetting('mentions', 'settings.crossForumMentions', checked)}
+											onCheckedChange={(checked) =>
+												updateFeatureSetting('mentions', 'settings.crossForumMentions', checked)
+											}
 										/>
 										<Label htmlFor="mentions-cross-forum">Allow cross-forum mentions</Label>
 									</div>
@@ -567,9 +651,11 @@ export default function SocialConfigPage() {
 								<div className="flex items-center justify-between">
 									<div>
 										<Label htmlFor="whale-enabled">Enable Whale Watch</Label>
-										<p className="text-sm text-zinc-400">Allow users to follow other users and detect whales</p>
+										<p className="text-sm text-zinc-400">
+											Allow users to follow other users and detect whales
+										</p>
 									</div>
-									<Switch 
+									<Switch
 										id="whale-enabled"
 										checked={config.whaleWatch.enabled}
 										onCheckedChange={(enabled) => updateFeatureToggle('whaleWatch', enabled)}
@@ -587,7 +673,9 @@ export default function SocialConfigPage() {
 											min="1"
 											max="100"
 											value={config.whaleWatch.minLevel}
-											onChange={(e) => updateFeatureSetting('whaleWatch', 'minLevel', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting('whaleWatch', 'minLevel', parseInt(e.target.value))
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -600,7 +688,13 @@ export default function SocialConfigPage() {
 											min="1"
 											max="10000"
 											value={config.whaleWatch.settings.maxFollowsPerUser}
-											onChange={(e) => updateFeatureSetting('whaleWatch', 'settings.maxFollowsPerUser', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting(
+													'whaleWatch',
+													'settings.maxFollowsPerUser',
+													parseInt(e.target.value)
+												)
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -613,7 +707,13 @@ export default function SocialConfigPage() {
 											min="1"
 											max="500"
 											value={config.whaleWatch.settings.maxFollowsPerHour}
-											onChange={(e) => updateFeatureSetting('whaleWatch', 'settings.maxFollowsPerHour', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting(
+													'whaleWatch',
+													'settings.maxFollowsPerHour',
+													parseInt(e.target.value)
+												)
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -625,7 +725,7 @@ export default function SocialConfigPage() {
 							{/* Whale Detection Criteria */}
 							<div className="space-y-4">
 								<h4 className="font-medium">Whale Detection Criteria</h4>
-								
+
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 									<div>
 										<Label htmlFor="whale-detect-level">Minimum Level</Label>
@@ -635,7 +735,13 @@ export default function SocialConfigPage() {
 											min="1"
 											max="100"
 											value={config.whaleWatch.settings.whaleDetection.minLevel}
-											onChange={(e) => updateFeatureSetting('whaleWatch', 'settings.whaleDetection.minLevel', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting(
+													'whaleWatch',
+													'settings.whaleDetection.minLevel',
+													parseInt(e.target.value)
+												)
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -647,7 +753,13 @@ export default function SocialConfigPage() {
 											type="number"
 											min="0"
 											value={config.whaleWatch.settings.whaleDetection.minClout}
-											onChange={(e) => updateFeatureSetting('whaleWatch', 'settings.whaleDetection.minClout', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting(
+													'whaleWatch',
+													'settings.whaleDetection.minClout',
+													parseInt(e.target.value)
+												)
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -659,7 +771,13 @@ export default function SocialConfigPage() {
 											type="number"
 											min="0"
 											value={config.whaleWatch.settings.whaleDetection.minFollowers}
-											onChange={(e) => updateFeatureSetting('whaleWatch', 'settings.whaleDetection.minFollowers', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting(
+													'whaleWatch',
+													'settings.whaleDetection.minFollowers',
+													parseInt(e.target.value)
+												)
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -671,7 +789,13 @@ export default function SocialConfigPage() {
 											type="number"
 											min="0"
 											value={config.whaleWatch.settings.whaleDetection.minThreadsCreated}
-											onChange={(e) => updateFeatureSetting('whaleWatch', 'settings.whaleDetection.minThreadsCreated', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting(
+													'whaleWatch',
+													'settings.whaleDetection.minThreadsCreated',
+													parseInt(e.target.value)
+												)
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -699,9 +823,11 @@ export default function SocialConfigPage() {
 								<div className="flex items-center justify-between">
 									<div>
 										<Label htmlFor="friends-enabled">Enable Friends System</Label>
-										<p className="text-sm text-zinc-400">Allow users to send friend requests and form mutual connections</p>
+										<p className="text-sm text-zinc-400">
+											Allow users to send friend requests and form mutual connections
+										</p>
 									</div>
-									<Switch 
+									<Switch
 										id="friends-enabled"
 										checked={config.friends.enabled}
 										onCheckedChange={(enabled) => updateFeatureToggle('friends', enabled)}
@@ -719,7 +845,9 @@ export default function SocialConfigPage() {
 											min="1"
 											max="100"
 											value={config.friends.minLevel}
-											onChange={(e) => updateFeatureSetting('friends', 'minLevel', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting('friends', 'minLevel', parseInt(e.target.value))
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -732,7 +860,13 @@ export default function SocialConfigPage() {
 											min="1"
 											max="5000"
 											value={config.friends.settings.maxFriendsPerUser}
-											onChange={(e) => updateFeatureSetting('friends', 'settings.maxFriendsPerUser', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting(
+													'friends',
+													'settings.maxFriendsPerUser',
+													parseInt(e.target.value)
+												)
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -745,7 +879,13 @@ export default function SocialConfigPage() {
 											min="1"
 											max="100"
 											value={config.friends.settings.maxRequestsPerDay}
-											onChange={(e) => updateFeatureSetting('friends', 'settings.maxRequestsPerDay', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting(
+													'friends',
+													'settings.maxRequestsPerDay',
+													parseInt(e.target.value)
+												)
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -758,7 +898,13 @@ export default function SocialConfigPage() {
 											min="1"
 											max="365"
 											value={config.friends.settings.friendRequestExpireDays}
-											onChange={(e) => updateFeatureSetting('friends', 'settings.friendRequestExpireDays', parseInt(e.target.value))}
+											onChange={(e) =>
+												updateFeatureSetting(
+													'friends',
+													'settings.friendRequestExpireDays',
+													parseInt(e.target.value)
+												)
+											}
 											className="mt-1"
 										/>
 									</div>
@@ -770,13 +916,15 @@ export default function SocialConfigPage() {
 							{/* Feature Settings */}
 							<div className="space-y-4">
 								<h4 className="font-medium">Feature Settings</h4>
-								
+
 								<div className="space-y-3">
 									<div className="flex items-center space-x-2">
 										<Checkbox
 											id="friends-groups"
 											checked={config.friends.settings.enableFriendGroups}
-											onCheckedChange={(checked) => updateFeatureSetting('friends', 'settings.enableFriendGroups', checked)}
+											onCheckedChange={(checked) =>
+												updateFeatureSetting('friends', 'settings.enableFriendGroups', checked)
+											}
 										/>
 										<Label htmlFor="friends-groups">Enable friend groups</Label>
 									</div>
@@ -785,7 +933,13 @@ export default function SocialConfigPage() {
 										<Checkbox
 											id="friends-suggestions"
 											checked={config.friends.settings.enableMutualFriendSuggestions}
-											onCheckedChange={(checked) => updateFeatureSetting('friends', 'settings.enableMutualFriendSuggestions', checked)}
+											onCheckedChange={(checked) =>
+												updateFeatureSetting(
+													'friends',
+													'settings.enableMutualFriendSuggestions',
+													checked
+												)
+											}
 										/>
 										<Label htmlFor="friends-suggestions">Enable mutual friend suggestions</Label>
 									</div>
@@ -794,7 +948,13 @@ export default function SocialConfigPage() {
 										<Checkbox
 											id="friends-activity-feed"
 											checked={config.friends.settings.enableFriendActivityFeed}
-											onCheckedChange={(checked) => updateFeatureSetting('friends', 'settings.enableFriendActivityFeed', checked)}
+											onCheckedChange={(checked) =>
+												updateFeatureSetting(
+													'friends',
+													'settings.enableFriendActivityFeed',
+													checked
+												)
+											}
 										/>
 										<Label htmlFor="friends-activity-feed">Enable friend activity feed</Label>
 									</div>
@@ -803,7 +963,9 @@ export default function SocialConfigPage() {
 										<Checkbox
 											id="friends-online-status"
 											checked={config.friends.settings.enableOnlineStatus}
-											onCheckedChange={(checked) => updateFeatureSetting('friends', 'settings.enableOnlineStatus', checked)}
+											onCheckedChange={(checked) =>
+												updateFeatureSetting('friends', 'settings.enableOnlineStatus', checked)
+											}
 										/>
 										<Label htmlFor="friends-online-status">Enable online status indicators</Label>
 									</div>
@@ -812,9 +974,13 @@ export default function SocialConfigPage() {
 										<Checkbox
 											id="friends-auto-accept"
 											checked={config.friends.settings.autoAcceptMutualFollows}
-											onCheckedChange={(checked) => updateFeatureSetting('friends', 'settings.autoAcceptMutualFollows', checked)}
+											onCheckedChange={(checked) =>
+												updateFeatureSetting('friends', 'settings.autoAcceptMutualFollows', checked)
+											}
 										/>
-										<Label htmlFor="friends-auto-accept">Auto-accept requests from mutual follows</Label>
+										<Label htmlFor="friends-auto-accept">
+											Auto-accept requests from mutual follows
+										</Label>
 									</div>
 								</div>
 							</div>
@@ -840,25 +1006,35 @@ export default function SocialConfigPage() {
 									<Checkbox
 										id="admin-bypass-rate-limits"
 										checked={config.adminOverrides.bypassAllRateLimits}
-										onCheckedChange={(checked) => updateFeatureSetting('adminOverrides', 'bypassAllRateLimits', checked)}
+										onCheckedChange={(checked) =>
+											updateFeatureSetting('adminOverrides', 'bypassAllRateLimits', checked)
+										}
 									/>
-									<Label htmlFor="admin-bypass-rate-limits">Bypass all rate limits for admins</Label>
+									<Label htmlFor="admin-bypass-rate-limits">
+										Bypass all rate limits for admins
+									</Label>
 								</div>
 
 								<div className="flex items-center space-x-2">
 									<Checkbox
 										id="admin-bypass-level-req"
 										checked={config.adminOverrides.bypassLevelRequirements}
-										onCheckedChange={(checked) => updateFeatureSetting('adminOverrides', 'bypassLevelRequirements', checked)}
+										onCheckedChange={(checked) =>
+											updateFeatureSetting('adminOverrides', 'bypassLevelRequirements', checked)
+										}
 									/>
-									<Label htmlFor="admin-bypass-level-req">Bypass level requirements for admins</Label>
+									<Label htmlFor="admin-bypass-level-req">
+										Bypass level requirements for admins
+									</Label>
 								</div>
 
 								<div className="flex items-center space-x-2">
 									<Checkbox
 										id="admin-debug-mode"
 										checked={config.adminOverrides.enableDebugMode}
-										onCheckedChange={(checked) => updateFeatureSetting('adminOverrides', 'enableDebugMode', checked)}
+										onCheckedChange={(checked) =>
+											updateFeatureSetting('adminOverrides', 'enableDebugMode', checked)
+										}
 									/>
 									<Label htmlFor="admin-debug-mode">Enable debug mode</Label>
 								</div>
@@ -867,7 +1043,9 @@ export default function SocialConfigPage() {
 									<Checkbox
 										id="admin-force-enable"
 										checked={config.adminOverrides.forceEnableAllFeatures}
-										onCheckedChange={(checked) => updateFeatureSetting('adminOverrides', 'forceEnableAllFeatures', checked)}
+										onCheckedChange={(checked) =>
+											updateFeatureSetting('adminOverrides', 'forceEnableAllFeatures', checked)
+										}
 									/>
 									<Label htmlFor="admin-force-enable">Force enable all features</Label>
 								</div>
@@ -876,7 +1054,9 @@ export default function SocialConfigPage() {
 									<Checkbox
 										id="admin-log-actions"
 										checked={config.adminOverrides.logAllSocialActions}
-										onCheckedChange={(checked) => updateFeatureSetting('adminOverrides', 'logAllSocialActions', checked)}
+										onCheckedChange={(checked) =>
+											updateFeatureSetting('adminOverrides', 'logAllSocialActions', checked)
+										}
 									/>
 									<Label htmlFor="admin-log-actions">Log all social actions</Label>
 								</div>
@@ -896,9 +1076,13 @@ export default function SocialConfigPage() {
 									<Checkbox
 										id="admin-emergency-disable"
 										checked={config.adminOverrides.enableEmergencyDisable}
-										onCheckedChange={(checked) => updateFeatureSetting('adminOverrides', 'enableEmergencyDisable', checked)}
+										onCheckedChange={(checked) =>
+											updateFeatureSetting('adminOverrides', 'enableEmergencyDisable', checked)
+										}
 									/>
-									<Label htmlFor="admin-emergency-disable">Enable emergency disable functionality</Label>
+									<Label htmlFor="admin-emergency-disable">
+										Enable emergency disable functionality
+									</Label>
 								</div>
 							</div>
 						</CardContent>

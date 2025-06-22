@@ -165,5 +165,15 @@ export * from './social/mentions';
 export * from './social/user-follows';
 export * from './social/friends';
 
+// Wallet domain exports - CCPayment integration
+export * from './wallet/ccpayment-users';
+export * from './wallet/crypto-wallets';
+export * from './wallet/deposit-records';
+export * from './wallet/withdrawal-records';
+export * from './wallet/internal-transfers';
+export * from './wallet/swap-records';
+export * from './wallet/webhook-events';
+export * from './wallet/supported-tokens';
+
 // Note: './forum/threadDrafts.ts' was commented out as it was empty in the previous steps.
 // Ensure all files listed for export actually exist and contain exports.

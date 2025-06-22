@@ -4,7 +4,7 @@ import {
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
-	DialogFooter,
+	DialogFooter
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { RichTextEditor } from '@/components/editor/rich-text-editor';
@@ -74,9 +74,7 @@ export function EditPostDialog({ post, isOpen, onClose }: EditPostDialogProps) {
 
 				<div className="space-y-4">
 					<div>
-						<label className="block text-sm font-medium text-zinc-200 mb-2">
-							Content
-						</label>
+						<label className="block text-sm font-medium text-zinc-200 mb-2">Content</label>
 						<RichTextEditor
 							content={content}
 							onChange={setContent}
@@ -89,17 +87,10 @@ export function EditPostDialog({ post, isOpen, onClose }: EditPostDialogProps) {
 				</div>
 
 				<DialogFooter className="flex justify-end space-x-2 pt-4">
-					<Button
-						variant="outline"
-						onClick={handleCancel}
-						disabled={updatePost.isPending}
-					>
+					<Button variant="outline" onClick={handleCancel} disabled={updatePost.isPending}>
 						Cancel
 					</Button>
-					<Button
-						onClick={handleSave}
-						disabled={updatePost.isPending || !content.trim()}
-					>
+					<Button onClick={handleSave} disabled={updatePost.isPending || !content.trim()}>
 						{updatePost.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
 						Save Changes
 					</Button>

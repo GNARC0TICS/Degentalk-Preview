@@ -213,6 +213,12 @@ export const ResponsiveLayoutWrapper: React.FC<ResponsiveLayoutWrapperProps> = (
 				{/* Main Content */}
 				<main className={cn(mainContentClasses, 'order-2')}>
 					<SlotRenderer slotId="main/top" className="mb-6" />
+					{/* Mobile-specific widgets - show essential widgets on mobile when sidebars are hidden */}
+					{isMobile && (
+						<div className="space-y-6 mb-6">
+							<SlotRenderer slotId="mobile/widgets" className="grid grid-cols-1 gap-4" />
+						</div>
+					)}
 					{children}
 					<SlotRenderer slotId="main/bottom" className="mt-6" />
 				</main>

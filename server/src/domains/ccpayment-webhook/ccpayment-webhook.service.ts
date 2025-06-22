@@ -6,6 +6,7 @@
  */
 
 import { WalletService } from '../wallet/wallet.service';
+import { WebhookService } from '../wallet/webhook.service';
 import { dgtPurchaseOrders, users, transactions } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { db } from '@db'; // Corrected path
@@ -17,6 +18,11 @@ import { dgtService } from '../wallet/dgt.service';
  * CCPayment webhook service for processing webhook events
  */
 export class CCPaymentWebhookService {
+	private walletWebhookService: WebhookService;
+
+	constructor() {
+		this.walletWebhookService = new WebhookService();
+	}
 	/**
 	 * Process a webhook event from CCPayment
 	 * @param event Webhook event data
@@ -34,6 +40,18 @@ export class CCPaymentWebhookService {
 				currency: event.currency
 			});
 
+			// First try processing with the enhanced wallet webhook service
+			const walletResult = await this.walletWebhookService.processWebhookEvent(
+				event,
+				'signature_placeholder' // The signature is verified in the controller
+			);
+
+			// If wallet service handles it successfully, return
+			if (walletResult.success) {
+				return walletResult;
+			}
+
+			// Fallback to legacy DGT purchase processing
 			switch (event.eventType) {
 				case 'deposit_completed':
 					return await this.handleDepositCompleted(event);

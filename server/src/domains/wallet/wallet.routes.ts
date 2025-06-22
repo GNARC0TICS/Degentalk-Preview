@@ -1,193 +1,301 @@
-// REFACTORED: Updated auth middleware imports to use canonical path
-/**
- * Wallet Routes
- *
- * [REFAC-WALLET]
- *
- * This file defines API routes for wallet functionality including:
- * - Balance checking
- * - DGT operations
- * - CCPayment integration
- * - Transaction history
- */
-
 import { Router } from 'express';
-import { WalletController } from './wallet.controller';
-import { validateRequest, WalletRequestSchemas } from './wallet.validators';
-import { isAuthenticated, isAdmin } from '../auth/middleware/auth.middleware'; // Removed isSelfOrAdmin
-import { asyncHandler } from '../../core/errors';
-import {
-	validateTransferDgt,
-	validateCreateDepositAddress,
-	validateDgtPurchase
-} from './wallet.validators';
-import { isDevMode } from '../../utils/environment';
-import * as walletDevController from './wallet.dev.controller';
-import { withdrawalController } from './withdrawal.controller';
-import { treasuryController } from './treasury.controller';
+import { WalletService } from './wallet.service';
+import { UserManagementService } from './user-management.service';
 
-// Instantiate controller
-const walletController = new WalletController();
-
-// Create router
 const router = Router();
-
-// Apply auth middleware to all wallet routes
-router.use(isAuthenticated);
-
-/**
- * @route GET /api/wallet/balance
- * @desc Get user's wallet balance (DGT and crypto)
- * @access Private
- */
-router.get('/balance', asyncHandler(walletController.getBalance.bind(walletController)));
+const walletService = new WalletService();
+const userManagementService = new UserManagementService();
 
 /**
- * @route GET /api/wallet/transactions
- * @desc Get user's transaction history
- * @access Private
+ * Wallet API Routes
+ *
+ * Provides endpoints for cryptocurrency wallet operations via CCPayment integration.
  */
-router.get(
-	'/transactions',
-	asyncHandler(walletController.getTransactionHistory.bind(walletController))
-);
 
 /**
- * @route POST /api/wallet/deposit-address
- * @desc Create a deposit address for crypto
- * @access Private
+ * Initialize user wallet
+ * POST /api/wallet/initialize
  */
-router.post(
-	'/deposit-address',
-	validateCreateDepositAddress,
-	asyncHandler(walletController.createDepositAddress.bind(walletController))
-);
+router.post('/initialize', async (req, res) => {
+	try {
+		// In production, get userId from authenticated session
+		// For development, accept it from request body
+		const userId = req.body.userId || req.user?.id;
+
+		if (!userId) {
+			return res.status(401).json({ error: 'User not authenticated' });
+		}
+
+		const result = await userManagementService.initializeUserWallet(userId);
+
+		res.json({
+			success: true,
+			data: result
+		});
+	} catch (error) {
+		console.error('Error initializing wallet:', error);
+		res.status(500).json({
+			error: 'Failed to initialize wallet',
+			message: error instanceof Error ? error.message : 'Unknown error'
+		});
+	}
+});
 
 /**
- * @route POST /api/wallet/dgt-purchase
- * @desc Create a DGT purchase order
- * @access Private
+ * Get user wallet balances
+ * GET /api/wallet/balances
  */
-router.post(
-	'/dgt-purchase',
-	validateDgtPurchase,
-	asyncHandler(walletController.createDgtPurchase.bind(walletController))
-);
+router.get('/balances', async (req, res) => {
+	try {
+		const userId = (req.query.userId as string) || req.user?.id;
+
+		if (!userId) {
+			return res.status(401).json({ error: 'User not authenticated' });
+		}
+
+		const balances = await walletService.getUserBalances(userId);
+
+		res.json({
+			success: true,
+			data: balances
+		});
+	} catch (error) {
+		console.error('Error getting balances:', error);
+		res.status(500).json({
+			error: 'Failed to retrieve balances',
+			message: error instanceof Error ? error.message : 'Unknown error'
+		});
+	}
+});
 
 /**
- * @route GET /api/wallet/purchase/:orderId
- * @desc Get DGT purchase order status
- * @access Private
+ * Get user deposit addresses
+ * GET /api/wallet/deposit-addresses
  */
-router.get(
-	'/purchase/:orderId',
-	asyncHandler(walletController.getPurchaseOrderStatus.bind(walletController))
-);
+router.get('/deposit-addresses', async (req, res) => {
+	try {
+		const userId = (req.query.userId as string) || req.user?.id;
+
+		if (!userId) {
+			return res.status(401).json({ error: 'User not authenticated' });
+		}
+
+		const addresses = await walletService.getUserDepositAddresses(userId);
+
+		res.json({
+			success: true,
+			data: addresses
+		});
+	} catch (error) {
+		console.error('Error getting deposit addresses:', error);
+		res.status(500).json({
+			error: 'Failed to retrieve deposit addresses',
+			message: error instanceof Error ? error.message : 'Unknown error'
+		});
+	}
+});
 
 /**
- * @route POST /api/wallet/transfer
- * @desc Transfer DGT to another user
- * @access Private
+ * Withdraw to blockchain
+ * POST /api/wallet/withdraw
  */
-router.post(
-	'/transfer',
-	validateTransferDgt,
-	asyncHandler(walletController.transferDgt.bind(walletController))
-);
+router.post('/withdraw', async (req, res) => {
+	try {
+		const userId = req.body.userId || req.user?.id;
+		const { coinId, amount, toAddress, memo } = req.body;
+
+		if (!userId) {
+			return res.status(401).json({ error: 'User not authenticated' });
+		}
+
+		if (!coinId || !amount || !toAddress) {
+			return res.status(400).json({
+				error: 'Missing required fields: coinId, amount, toAddress'
+			});
+		}
+
+		const recordId = await walletService.withdrawToBlockchain(userId, {
+			coinId: parseInt(coinId),
+			amount,
+			toAddress,
+			memo
+		});
+
+		res.json({
+			success: true,
+			data: { recordId }
+		});
+	} catch (error) {
+		console.error('Error processing withdrawal:', error);
+		res.status(500).json({
+			error: 'Failed to process withdrawal',
+			message: error instanceof Error ? error.message : 'Unknown error'
+		});
+	}
+});
 
 /**
- * @route GET /api/wallet/currencies
- * @desc Get supported cryptocurrencies
- * @access Private
+ * Transfer to another user
+ * POST /api/wallet/transfer
  */
-router.get(
-	'/currencies',
-	asyncHandler(walletController.getSupportedCurrencies.bind(walletController))
-);
+router.post('/transfer', async (req, res) => {
+	try {
+		const fromUserId = req.body.fromUserId || req.user?.id;
+		const { toUserId, coinId, amount, note } = req.body;
 
-// --- DGT Rewards & Internal Transactions ---
-router.post('/transactions/create', walletController.createDgtRewardTransaction);
+		if (!fromUserId) {
+			return res.status(401).json({ error: 'User not authenticated' });
+		}
 
-// Public packages list (no auth required)
-router.get('/packages', asyncHandler(walletController.listPackages.bind(walletController)));
+		if (!toUserId || !coinId || !amount) {
+			return res.status(400).json({
+				error: 'Missing required fields: toUserId, coinId, amount'
+			});
+		}
 
-// Create purchase order for a DGT package
-router.post(
-	'/purchase-orders',
-	asyncHandler(walletController.createPurchaseOrder.bind(walletController))
-);
+		const recordId = await walletService.transferToUser(fromUserId, {
+			toUserId,
+			coinId: parseInt(coinId),
+			amount,
+			note
+		});
 
-// Withdrawal routes
-router.post(
-	'/withdraw',
-	asyncHandler(withdrawalController.createWithdrawalRequest.bind(withdrawalController))
-);
+		res.json({
+			success: true,
+			data: { recordId }
+		});
+	} catch (error) {
+		console.error('Error processing transfer:', error);
+		res.status(500).json({
+			error: 'Failed to process transfer',
+			message: error instanceof Error ? error.message : 'Unknown error'
+		});
+	}
+});
 
-router.get(
-	'/withdrawals',
-	asyncHandler(withdrawalController.getWithdrawalHistory.bind(withdrawalController))
-);
+/**
+ * Swap cryptocurrencies
+ * POST /api/wallet/swap
+ */
+router.post('/swap', async (req, res) => {
+	try {
+		const userId = req.body.userId || req.user?.id;
+		const { fromCoinId, toCoinId, fromAmount } = req.body;
 
-// Admin withdrawal routes
-router.get(
-	'/admin/withdrawals',
-	isAdmin,
-	asyncHandler(withdrawalController.getAllWithdrawalRequests.bind(withdrawalController))
-);
+		if (!userId) {
+			return res.status(401).json({ error: 'User not authenticated' });
+		}
 
-router.put(
-	'/admin/withdrawals/:requestId',
-	isAdmin,
-	asyncHandler(withdrawalController.processWithdrawalRequest.bind(withdrawalController))
-);
+		if (!fromCoinId || !toCoinId || !fromAmount) {
+			return res.status(400).json({
+				error: 'Missing required fields: fromCoinId, toCoinId, fromAmount'
+			});
+		}
 
-// Treasury management routes (admin only)
-router.get(
-	'/admin/treasury',
-	isAdmin,
-	asyncHandler(treasuryController.getTreasuryOverview.bind(treasuryController))
-);
+		const recordId = await walletService.swapCrypto(userId, {
+			fromCoinId: parseInt(fromCoinId),
+			toCoinId: parseInt(toCoinId),
+			fromAmount
+		});
 
-router.get(
-	'/admin/treasury/user/:userId',
-	isAdmin,
-	asyncHandler(treasuryController.getUserBalanceDetails.bind(treasuryController))
-);
+		res.json({
+			success: true,
+			data: { recordId }
+		});
+	} catch (error) {
+		console.error('Error processing swap:', error);
+		res.status(500).json({
+			error: 'Failed to process swap',
+			message: error instanceof Error ? error.message : 'Unknown error'
+		});
+	}
+});
 
-router.post(
-	'/admin/treasury/adjust',
-	isAdmin,
-	asyncHandler(treasuryController.adjustUserBalance.bind(treasuryController))
-);
+/**
+ * Get transaction history
+ * GET /api/wallet/history
+ */
+router.get('/history', async (req, res) => {
+	try {
+		const userId = (req.query.userId as string) || req.user?.id;
+		const type = req.query.type as 'deposit' | 'withdrawal' | 'transfer' | 'swap' | undefined;
+		const limit = parseInt(req.query.limit as string) || 50;
+		const offset = parseInt(req.query.offset as string) || 0;
 
-router.post(
-	'/admin/treasury/airdrop',
-	isAdmin,
-	asyncHandler(treasuryController.executeBulkAirdrop.bind(treasuryController))
-);
+		if (!userId) {
+			return res.status(401).json({ error: 'User not authenticated' });
+		}
 
-router.get(
-	'/admin/treasury/analytics',
-	isAdmin,
-	asyncHandler(treasuryController.getTransactionAnalytics.bind(treasuryController))
-);
+		const history = await walletService.getUserTransactionHistory(userId, {
+			type,
+			limit,
+			offset
+		});
 
-// Development-only routes
-if (isDevMode()) {
-	// Initialize wallet for current user
-	router.post('/dev/init', asyncHandler(walletDevController.initializeWallet));
+		res.json({
+			success: true,
+			data: history
+		});
+	} catch (error) {
+		console.error('Error getting transaction history:', error);
+		res.status(500).json({
+			error: 'Failed to retrieve transaction history',
+			message: error instanceof Error ? error.message : 'Unknown error'
+		});
+	}
+});
 
-	// Top up wallet balance (dev only)
-	router.post('/dev/topup', asyncHandler(walletDevController.devTopUp));
+/**
+ * Get supported cryptocurrencies
+ * GET /api/wallet/supported-coins
+ */
+router.get('/supported-coins', async (req, res) => {
+	try {
+		const coins = await walletService.getSupportedCryptocurrencies();
 
-	// Get detailed wallet info (dev only)
-	router.get('/dev/info', asyncHandler(walletDevController.getDevWalletInfo));
+		res.json({
+			success: true,
+			data: coins
+		});
+	} catch (error) {
+		console.error('Error getting supported coins:', error);
+		res.status(500).json({
+			error: 'Failed to retrieve supported coins',
+			message: error instanceof Error ? error.message : 'Unknown error'
+		});
+	}
+});
 
-	// Simulate webhook (dev only)
-	router.post('/dev/simulate-webhook', asyncHandler(walletDevController.simulateWebhook));
+/**
+ * Check if user has wallet
+ * GET /api/wallet/status
+ */
+router.get('/status', async (req, res) => {
+	try {
+		const userId = (req.query.userId as string) || req.user?.id;
 
-	// Reset wallet (dev only) - disabled by default
-	router.post('/dev/reset', asyncHandler(walletDevController.resetWallet));
-}
+		if (!userId) {
+			return res.status(401).json({ error: 'User not authenticated' });
+		}
+
+		const hasWallet = await userManagementService.hasCCPaymentAccount(userId);
+		const ccpaymentUserId = await userManagementService.getCCPaymentUserId(userId);
+
+		res.json({
+			success: true,
+			data: {
+				hasWallet,
+				ccpaymentUserId,
+				isInitialized: !!ccpaymentUserId
+			}
+		});
+	} catch (error) {
+		console.error('Error checking wallet status:', error);
+		res.status(500).json({
+			error: 'Failed to check wallet status',
+			message: error instanceof Error ? error.message : 'Unknown error'
+		});
+	}
+});
 
 export default router;

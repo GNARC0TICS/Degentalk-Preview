@@ -1,6 +1,5 @@
 import React from 'react'; // Removed useState
 import { useQuery } from '@tanstack/react-query';
-import { FixedSizeList as List } from 'react-window'; // Added react-window
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 // Temporarily remove heavy lottie dependency until build issues resolved
 import { Link } from 'wouter';
@@ -141,7 +140,9 @@ function HotThreads({ className = '', limit = 5, variant = 'widget' }: HotThread
 										</Avatar>
 									</Link>
 									<Link href={`/profile/${thread.user_id}`}>
-										<span className="text-zinc-300 font-medium hover:text-orange-300 transition-colors cursor-pointer">{thread.username}</span>
+										<span className="text-zinc-300 font-medium hover:text-orange-300 transition-colors cursor-pointer">
+											{thread.username}
+										</span>
 									</Link>
 								</div>
 
@@ -189,16 +190,9 @@ function HotThreads({ className = '', limit = 5, variant = 'widget' }: HotThread
 		);
 	};
 
-	// Adjust sizing based on variant – the feed variant is a bit more compact.
-	const ITEM_HEIGHT = variant === 'feed' ? 160 : 200;
-	const maxVisibleItems = variant === 'feed' ? 2 : 3;
-	const listHeight = Math.min(threads?.length || 0, maxVisibleItems) * ITEM_HEIGHT;
-
 	// Choose a slightly different background for the feed variant (less flashy)
 	const cardBackground =
-		variant === 'feed'
-			? 'bg-zinc-900/70'
-			: 'bg-gradient-to-br from-zinc-900/90 to-zinc-900/60';
+		variant === 'feed' ? 'bg-zinc-900/70' : 'bg-gradient-to-br from-zinc-900/90 to-zinc-900/60';
 
 	const mergedClassName = `w-full overflow-hidden ${cardBackground} border border-zinc-800/60 shadow-xl backdrop-blur-sm ${className}`;
 
@@ -232,15 +226,85 @@ function HotThreads({ className = '', limit = 5, variant = 'widget' }: HotThread
 						</div>
 					</div>
 				) : threads && threads.length > 0 ? (
-					<List
-						height={listHeight > 0 ? listHeight : ITEM_HEIGHT} // Ensure height is at least ITEM_HEIGHT
-						itemCount={threads.length}
-						itemSize={ITEM_HEIGHT}
-						width="100%"
-						className="custom-scrollbar" // Optional: for custom scrollbar styling
-					>
-						{Row}
-					</List>
+					<div className="space-y-0">
+						{threads.map((thread, index) => (
+							<div key={thread.thread_id}>
+								<Link href={`/threads/${thread.slug}`}>
+									<div className="border-b border-zinc-800/60 last:border-b-0 p-4 hover:bg-zinc-800/40 transition-all duration-200 cursor-pointer group">
+										<div className="space-y-3">
+											{/* Thread title */}
+											<div className="flex items-start gap-3">
+												<TrendingUp className="h-5 w-5 text-orange-400 mt-0.5 flex-shrink-0" />
+												<div className="flex-1 min-w-0">
+													<h3 className="font-semibold text-zinc-100 group-hover:text-orange-300 transition-colors line-clamp-2 leading-snug">
+														{thread.title}
+													</h3>
+												</div>
+												{thread.hot_score && (
+													<Badge
+														variant="outline"
+														className="border-orange-500/30 text-orange-300 text-xs"
+													>
+														{Math.round(thread.hot_score)}
+													</Badge>
+												)}
+											</div>
+
+											{/* User and timestamp */}
+											<div className="flex items-center gap-3 text-xs text-zinc-400">
+												<div className="flex items-center gap-2">
+													<Avatar className="h-5 w-5">
+														<AvatarImage src={thread.avatar_url} alt={thread.username} />
+														<AvatarFallback className="text-xs bg-zinc-700">
+															{thread.username.substring(0, 2).toUpperCase()}
+														</AvatarFallback>
+													</Avatar>
+													<span className="font-medium text-zinc-300">{thread.username}</span>
+												</div>
+
+												<span className="text-zinc-600">•</span>
+
+												<div className="flex items-center gap-1">
+													<Clock className="h-3.5 w-3.5" />
+													<span>{formatTimeAgo(thread.last_post_at)}</span>
+												</div>
+											</div>
+
+											{/* Stats */}
+											<div className="flex items-center justify-between">
+												<div className="flex items-center gap-6 text-xs">
+													<div className="flex items-center gap-1.5 text-zinc-400">
+														<MessageSquare className="h-4 w-4" />
+														<span className="font-medium">{thread.post_count}</span>
+													</div>
+													<div className="flex items-center gap-1.5 text-zinc-400">
+														<Eye className="h-4 w-4" />
+														<span className="font-medium">{thread.view_count}</span>
+													</div>
+													<div className="flex items-center gap-1.5 text-zinc-400">
+														<ThumbsUp className="h-4 w-4" />
+														<span className="font-medium">{thread.like_count}</span>
+													</div>
+												</div>
+
+												{/* Category tag */}
+												<Link href={`/forums/${thread.category_slug}`}>
+													<span
+														className="bg-zinc-800/50 text-zinc-400 border border-zinc-600 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs cursor-pointer rounded px-2 py-0.5"
+														onClick={(e) => {
+															e.stopPropagation();
+														}}
+													>
+														{thread.category_name}
+													</span>
+												</Link>
+											</div>
+										</div>
+									</div>
+								</Link>
+							</div>
+						))}
+					</div>
 				) : (
 					<div className="text-center py-8 text-zinc-400">
 						<div className="flex justify-center mb-2">

@@ -12,12 +12,12 @@ interface NetworkErrorProps {
 	retryDelay?: number;
 }
 
-export function NetworkError({ 
-	onRetry, 
-	error, 
-	autoRetry = true, 
+export function NetworkError({
+	onRetry,
+	error,
+	autoRetry = true,
 	maxRetries = 3,
-	retryDelay = 5000 
+	retryDelay = 5000
 }: NetworkErrorProps) {
 	const [isRetrying, setIsRetrying] = useState(false);
 	const [retryCount, setRetryCount] = useState(0);
@@ -55,7 +55,7 @@ export function NetworkError({
 
 		setCountdown(Math.ceil(retryDelay / 1000));
 		const interval = setInterval(() => {
-			setCountdown(prev => {
+			setCountdown((prev) => {
 				if (prev <= 1) {
 					clearInterval(interval);
 					return 0;
@@ -69,8 +69,8 @@ export function NetworkError({
 
 	const handleRetry = async () => {
 		setIsRetrying(true);
-		setRetryCount(prev => prev + 1);
-		
+		setRetryCount((prev) => prev + 1);
+
 		try {
 			await onRetry();
 		} catch (err) {
@@ -86,19 +86,19 @@ export function NetworkError({
 		}
 
 		if (error?.message?.includes('Failed to fetch')) {
-			return "Unable to connect to the server. This might be a temporary issue.";
+			return 'Unable to connect to the server. This might be a temporary issue.';
 		}
 
 		if (error?.message?.includes('timeout')) {
-			return "The request timed out. The server might be busy or your connection is slow.";
+			return 'The request timed out. The server might be busy or your connection is slow.';
 		}
 
-		return error?.message || "An unexpected network error occurred.";
+		return error?.message || 'An unexpected network error occurred.';
 	};
 
 	const getRetryMessage = () => {
 		if (!isOnline) {
-			return "Waiting for internet connection...";
+			return 'Waiting for internet connection...';
 		}
 
 		if (retryCount >= maxRetries) {
@@ -124,7 +124,7 @@ export function NetworkError({
 						)}
 					</div>
 					<CardTitle className="text-xl text-white">
-						{isOnline ? 'Connection Problem' : 'You\'re Offline'}
+						{isOnline ? 'Connection Problem' : "You're Offline"}
 					</CardTitle>
 				</CardHeader>
 
@@ -147,25 +147,21 @@ export function NetworkError({
 					{/* Error Message */}
 					<Alert>
 						<AlertCircle className="h-4 w-4" />
-						<AlertDescription className="text-sm">
-							{getErrorMessage()}
-						</AlertDescription>
+						<AlertDescription className="text-sm">{getErrorMessage()}</AlertDescription>
 					</Alert>
 
 					{/* Retry Information */}
 					{getRetryMessage() && (
-						<div className="text-center text-sm text-zinc-400">
-							{getRetryMessage()}
-						</div>
+						<div className="text-center text-sm text-zinc-400">{getRetryMessage()}</div>
 					)}
 
 					{/* Progress indicator for auto-retry */}
 					{autoRetry && isOnline && retryCount < maxRetries && countdown > 0 && (
 						<div className="w-full bg-zinc-800 rounded-full h-2">
-							<div 
+							<div
 								className="bg-blue-500 h-2 rounded-full transition-all duration-1000"
-								style={{ 
-									width: `${((retryDelay / 1000 - countdown) / (retryDelay / 1000)) * 100}%` 
+								style={{
+									width: `${((retryDelay / 1000 - countdown) / (retryDelay / 1000)) * 100}%`
 								}}
 							/>
 						</div>
@@ -177,7 +173,7 @@ export function NetworkError({
 							onClick={handleRetry}
 							disabled={isRetrying || (!isOnline && retryCount < maxRetries)}
 							className="w-full gap-2"
-							variant={isOnline ? "default" : "outline"}
+							variant={isOnline ? 'default' : 'outline'}
 						>
 							<RefreshCw className={`h-4 w-4 ${isRetrying ? 'animate-spin' : ''}`} />
 							{isRetrying ? 'Retrying...' : 'Try Again'}
@@ -207,7 +203,8 @@ export function NetworkError({
 						<div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
 							<h4 className="text-sm font-medium text-amber-400 mb-2">Still having trouble?</h4>
 							<p className="text-xs text-amber-300/80">
-								The issue might be on our end. Please try again in a few minutes or contact support if the problem persists.
+								The issue might be on our end. Please try again in a few minutes or contact support
+								if the problem persists.
 							</p>
 						</div>
 					)}

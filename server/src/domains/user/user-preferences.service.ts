@@ -8,21 +8,21 @@ export interface SocialPreferences {
 	mentionPermissions: 'everyone' | 'friends' | 'followers' | 'none';
 	mentionNotifications: boolean;
 	mentionEmailNotifications: boolean;
-	
-	// Following preferences  
+
+	// Following preferences
 	allowFollowers: boolean;
 	followerApprovalRequired: boolean;
 	hideFollowerCount: boolean;
 	hideFollowingCount: boolean;
 	allowWhaleDesignation: boolean;
-	
+
 	// Friends preferences
 	allowFriendRequests: boolean;
 	friendRequestPermissions: 'everyone' | 'mutuals' | 'followers' | 'none';
 	autoAcceptMutualFollows: boolean;
 	hideOnlineStatus: boolean;
 	hideFriendsList: boolean;
-	
+
 	// General privacy
 	showSocialActivity: boolean;
 	allowDirectMessages: 'friends' | 'followers' | 'everyone' | 'none';
@@ -83,7 +83,8 @@ export class UserPreferencesService {
 				hideFollowingCount: prefs.hideFollowingCount,
 				allowWhaleDesignation: prefs.allowWhaleDesignation,
 				allowFriendRequests: prefs.allowFriendRequests,
-				friendRequestPermissions: prefs.friendRequestPermissions as SocialPreferences['friendRequestPermissions'],
+				friendRequestPermissions:
+					prefs.friendRequestPermissions as SocialPreferences['friendRequestPermissions'],
 				autoAcceptMutualFollows: prefs.autoAcceptMutualFollows,
 				hideOnlineStatus: prefs.hideOnlineStatus,
 				hideFriendsList: prefs.hideFriendsList,
@@ -102,13 +103,13 @@ export class UserPreferencesService {
 	 * Update user's social preferences
 	 */
 	static async updateSocialPreferences(
-		userId: string, 
+		userId: string,
 		updates: Partial<SocialPreferences>
 	): Promise<SocialPreferences> {
 		try {
 			// Get current preferences
 			const currentPrefs = await this.getSocialPreferences(userId);
-			
+
 			// Merge with updates
 			const newPrefs = { ...currentPrefs, ...updates };
 
@@ -180,7 +181,7 @@ export class UserPreferencesService {
 	 */
 	static async getPrivacySummary(userId: string) {
 		const prefs = await this.getSocialPreferences(userId);
-		
+
 		return {
 			privacyLevel: this.calculatePrivacyLevel(prefs),
 			restrictedFeatures: this.getRestrictedFeatures(prefs),
@@ -194,27 +195,27 @@ export class UserPreferencesService {
 	 * Check if a user allows a specific social interaction
 	 */
 	static async checkSocialPermission(
-		userId: string, 
+		userId: string,
 		permission: 'mentions' | 'follows' | 'friends' | 'messages',
 		fromUserId?: string
 	): Promise<boolean> {
 		const prefs = await this.getSocialPreferences(userId);
-		
+
 		switch (permission) {
 			case 'mentions':
 				if (!prefs.allowMentions) return false;
 				return this.checkPermissionLevel(prefs.mentionPermissions, userId, fromUserId);
-			
+
 			case 'follows':
 				return prefs.allowFollowers;
-			
+
 			case 'friends':
 				if (!prefs.allowFriendRequests) return false;
 				return this.checkPermissionLevel(prefs.friendRequestPermissions, userId, fromUserId);
-			
+
 			case 'messages':
 				return this.checkPermissionLevel(prefs.allowDirectMessages, userId, fromUserId);
-			
+
 			default:
 				return false;
 		}
@@ -225,16 +226,17 @@ export class UserPreferencesService {
 	 */
 	private static calculatePrivacyLevel(prefs: SocialPreferences): 'low' | 'medium' | 'high' {
 		let privacyScore = 0;
-		
+
 		// Check restrictive settings
 		if (!prefs.allowMentions || prefs.mentionPermissions === 'none') privacyScore += 2;
 		if (!prefs.allowFollowers || prefs.followerApprovalRequired) privacyScore += 2;
 		if (!prefs.allowFriendRequests || prefs.friendRequestPermissions === 'none') privacyScore += 2;
-		if (prefs.allowDirectMessages === 'none' || prefs.allowDirectMessages === 'friends') privacyScore += 1;
+		if (prefs.allowDirectMessages === 'none' || prefs.allowDirectMessages === 'friends')
+			privacyScore += 1;
 		if (prefs.hideFollowerCount || prefs.hideFollowingCount) privacyScore += 1;
 		if (!prefs.showProfileToPublic || !prefs.allowSocialDiscovery) privacyScore += 2;
 		if (prefs.hideOnlineStatus || prefs.hideFriendsList) privacyScore += 1;
-		
+
 		if (privacyScore >= 7) return 'high';
 		if (privacyScore >= 3) return 'medium';
 		return 'low';
@@ -245,14 +247,14 @@ export class UserPreferencesService {
 	 */
 	private static getRestrictedFeatures(prefs: SocialPreferences): string[] {
 		const restricted: string[] = [];
-		
+
 		if (!prefs.allowMentions) restricted.push('Mentions disabled');
 		if (!prefs.allowFollowers) restricted.push('Following disabled');
 		if (!prefs.allowFriendRequests) restricted.push('Friend requests disabled');
 		if (prefs.allowDirectMessages === 'none') restricted.push('Direct messages disabled');
 		if (!prefs.showProfileToPublic) restricted.push('Private profile');
 		if (!prefs.allowSocialDiscovery) restricted.push('Hidden from search');
-		
+
 		return restricted;
 	}
 

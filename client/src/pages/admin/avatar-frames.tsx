@@ -192,7 +192,8 @@ export default function AdminAvatarFramesPage() {
 		}
 	};
 
-	const isSubmitting = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
+	const isSubmitting =
+		createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
 	return (
 		<div className="container mx-auto py-6">
@@ -211,9 +212,7 @@ export default function AdminAvatarFramesPage() {
 					<DialogContent>
 						<DialogHeader>
 							<DialogTitle>Create Avatar Frame</DialogTitle>
-							<DialogDescription>
-								Add a new avatar frame to the shop.
-							</DialogDescription>
+							<DialogDescription>Add a new avatar frame to the shop.</DialogDescription>
 						</DialogHeader>
 						<form onSubmit={handleSubmit}>
 							<div className="grid gap-4 py-4">
@@ -278,9 +277,7 @@ export default function AdminAvatarFramesPage() {
 			<Card>
 				<CardHeader>
 					<CardTitle>Avatar Frames ({frames.length})</CardTitle>
-					<CardDescription>
-						Manage all avatar frames available in the shop
-					</CardDescription>
+					<CardDescription>Manage all avatar frames available in the shop</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<Table>
@@ -316,30 +313,16 @@ export default function AdminAvatarFramesPage() {
 											{frame.animated ? 'Animated' : 'Static'}
 										</Badge>
 									</TableCell>
-									<TableCell>
-										{new Date(frame.createdAt).toLocaleDateString()}
-									</TableCell>
+									<TableCell>{new Date(frame.createdAt).toLocaleDateString()}</TableCell>
 									<TableCell className="text-right">
 										<div className="flex justify-end space-x-2">
-											<Button
-												variant="outline"
-												size="sm"
-												onClick={() => setPreviewFrame(frame)}
-											>
+											<Button variant="outline" size="sm" onClick={() => setPreviewFrame(frame)}>
 												<Eye className="h-4 w-4" />
 											</Button>
-											<Button
-												variant="outline"
-												size="sm"
-												onClick={() => handleEdit(frame)}
-											>
+											<Button variant="outline" size="sm" onClick={() => handleEdit(frame)}>
 												<Edit className="h-4 w-4" />
 											</Button>
-											<Button
-												variant="destructive"
-												size="sm"
-												onClick={() => handleDelete(frame)}
-											>
+											<Button variant="destructive" size="sm" onClick={() => handleDelete(frame)}>
 												<Trash2 className="h-4 w-4" />
 											</Button>
 										</div>
@@ -356,9 +339,7 @@ export default function AdminAvatarFramesPage() {
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>Edit Avatar Frame</DialogTitle>
-						<DialogDescription>
-							Update the avatar frame details.
-						</DialogDescription>
+						<DialogDescription>Update the avatar frame details.</DialogDescription>
 					</DialogHeader>
 					<form onSubmit={handleSubmit}>
 						<div className="grid gap-4 py-4">

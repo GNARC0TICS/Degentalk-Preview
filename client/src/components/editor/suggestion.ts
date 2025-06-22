@@ -43,7 +43,8 @@ class MentionList {
 				avatarContainer.appendChild(avatar);
 			} else {
 				const avatar = document.createElement('div');
-				avatar.className = 'w-8 h-8 flex items-center justify-center rounded-full bg-emerald-800 text-white text-xs border border-zinc-700';
+				avatar.className =
+					'w-8 h-8 flex items-center justify-center rounded-full bg-emerald-800 text-white text-xs border border-zinc-700';
 				avatar.textContent = item.label.substring(0, 2).toUpperCase();
 				avatarContainer.appendChild(avatar);
 			}
@@ -65,8 +66,9 @@ class MentionList {
 			if (item.role && item.role !== 'user') {
 				const roleBadge = document.createElement('span');
 				roleBadge.className = 'px-1.5 py-0 text-xs rounded border';
-				roleBadge.textContent = item.role === 'admin' ? 'Admin' : item.role === 'mod' ? 'Mod' : item.role;
-				
+				roleBadge.textContent =
+					item.role === 'admin' ? 'Admin' : item.role === 'mod' ? 'Mod' : item.role;
+
 				if (item.role === 'admin') {
 					roleBadge.className += ' bg-red-900/60 text-red-300 border-red-700/30';
 				} else if (item.role === 'mod') {
@@ -74,7 +76,7 @@ class MentionList {
 				} else {
 					roleBadge.className += ' bg-zinc-700/60 text-zinc-300 border-zinc-600/30';
 				}
-				
+
 				nameContainer.appendChild(roleBadge);
 			}
 
@@ -147,27 +149,29 @@ const fetchUsers = async (query: string) => {
 	}
 
 	try {
-		const response = await apiRequest<{ 
-			users: { 
-				id: string; 
-				username: string; 
-				avatarUrl?: string | null; 
+		const response = await apiRequest<{
+			users: {
+				id: string;
+				username: string;
+				avatarUrl?: string | null;
 				activeAvatarUrl?: string | null;
 				role?: string | null;
 				level?: number | null;
-			}[] 
+			}[];
 		}>({
 			url: `/api/social/mentions/search-users?q=${encodeURIComponent(query)}&limit=10`,
 			method: 'GET'
 		});
 
-		return response?.users?.map((user) => ({
-			id: user.username,
-			label: user.username,
-			avatarUrl: user.activeAvatarUrl || user.avatarUrl,
-			role: user.role,
-			level: user.level
-		})) || [];
+		return (
+			response?.users?.map((user) => ({
+				id: user.username,
+				label: user.username,
+				avatarUrl: user.activeAvatarUrl || user.avatarUrl,
+				role: user.role,
+				level: user.level
+			})) || []
+		);
 	} catch (error) {
 		console.error('Error fetching users for mention:', error);
 		return []; // Return empty array on error

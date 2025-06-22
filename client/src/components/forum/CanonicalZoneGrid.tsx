@@ -35,6 +35,14 @@ export interface ZoneCardData {
 		endsAt: Date;
 	};
 	forumCount?: number;
+	forums?: Array<{
+		id: number;
+		slug: string;
+		name: string;
+		description?: string | null;
+		threadCount: number;
+		postCount: number;
+	}>;
 }
 
 export interface CardData extends ZoneCardData {
@@ -131,6 +139,8 @@ export function CanonicalZoneGrid({
 							isEventActive={cardData.isEventActive}
 							eventData={cardData.eventData}
 							forumCount={(cardData as any).forumCount}
+							forums={cardData.forums}
+							showForumPreviews={true}
 							layout="horizontal"
 							// rarity is not in ZoneCardData, ZoneCard will use its default
 							// className can be passed if needed, or ZoneCard handles its own styling

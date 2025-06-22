@@ -34,12 +34,12 @@ export function ThreadNotFound({ threadId, forumSlug, onBack }: ThreadNotFoundPr
 		queryKey: ['/api/forum/threads', 'related', forumSlug],
 		queryFn: async () => {
 			if (!forumSlug) return [];
-			
+
 			const response = await apiRequest<{ threads: RelatedThread[] }>({
 				url: `/api/forum/threads?categorySlug=${forumSlug}&limit=5&sortBy=hot`,
 				method: 'GET'
 			});
-			
+
 			return response?.threads || [];
 		},
 		enabled: !!forumSlug
@@ -54,29 +54,22 @@ export function ThreadNotFound({ threadId, forumSlug, onBack }: ThreadNotFoundPr
 					</div>
 					<CardTitle className="text-2xl text-white">Thread Not Found</CardTitle>
 					<p className="text-zinc-400 mt-2">
-						The thread you're looking for doesn't exist, may have been deleted, or you don't have permission to view it.
+						The thread you're looking for doesn't exist, may have been deleted, or you don't have
+						permission to view it.
 					</p>
-					{threadId && (
-						<p className="text-xs text-zinc-500 mt-1">
-							Thread ID: {threadId}
-						</p>
-					)}
+					{threadId && <p className="text-xs text-zinc-500 mt-1">Thread ID: {threadId}</p>}
 				</CardHeader>
 
 				<CardContent className="space-y-6">
 					{/* Quick Actions */}
 					<div className="flex flex-wrap gap-3 justify-center">
 						{onBack && (
-							<Button
-								variant="outline"
-								onClick={onBack}
-								className="gap-2"
-							>
+							<Button variant="outline" onClick={onBack} className="gap-2">
 								<ArrowLeft className="h-4 w-4" />
 								Go Back
 							</Button>
 						)}
-						
+
 						{forumSlug && (
 							<Link href={`/forums/${forumSlug}`}>
 								<Button variant="outline" className="gap-2">
@@ -109,11 +102,7 @@ export function ThreadNotFound({ threadId, forumSlug, onBack }: ThreadNotFoundPr
 							</h3>
 							<div className="space-y-3">
 								{relatedThreads.map((thread) => (
-									<Link 
-										key={thread.id} 
-										href={`/threads/${thread.slug}`}
-										className="block"
-									>
+									<Link key={thread.id} href={`/threads/${thread.slug}`} className="block">
 										<div className="p-4 bg-zinc-800/50 hover:bg-zinc-800/70 rounded-lg border border-zinc-700/50 hover:border-zinc-600 transition-all cursor-pointer">
 											<div className="flex items-start justify-between gap-4">
 												<div className="flex-1 min-w-0">
@@ -141,7 +130,9 @@ export function ThreadNotFound({ threadId, forumSlug, onBack }: ThreadNotFoundPr
 
 					{/* Help Text */}
 					<div className="text-center text-sm text-zinc-500 pt-4 border-t border-zinc-800">
-						<p>Need help? Try searching for similar topics or check out our most popular discussions.</p>
+						<p>
+							Need help? Try searching for similar topics or check out our most popular discussions.
+						</p>
 					</div>
 				</CardContent>
 			</Card>

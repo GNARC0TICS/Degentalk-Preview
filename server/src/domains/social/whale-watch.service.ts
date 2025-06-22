@@ -32,12 +32,7 @@ export class WhaleWatchService {
 		const existingFollow = await db
 			.select()
 			.from(userFollows)
-			.where(
-				and(
-					eq(userFollows.followerId, followerId),
-					eq(userFollows.followeeId, followeeId)
-				)
-			)
+			.where(and(eq(userFollows.followerId, followerId), eq(userFollows.followeeId, followeeId)))
 			.limit(1);
 
 		if (existingFollow.length > 0) {
@@ -68,12 +63,7 @@ export class WhaleWatchService {
 	static async unfollowUser(followerId: string, followeeId: string): Promise<void> {
 		const result = await db
 			.delete(userFollows)
-			.where(
-				and(
-					eq(userFollows.followerId, followerId),
-					eq(userFollows.followeeId, followeeId)
-				)
-			)
+			.where(and(eq(userFollows.followerId, followerId), eq(userFollows.followeeId, followeeId)))
 			.returning();
 
 		if (result.length === 0) {
@@ -88,12 +78,7 @@ export class WhaleWatchService {
 		const result = await db
 			.select({ id: userFollows.id })
 			.from(userFollows)
-			.where(
-				and(
-					eq(userFollows.followerId, followerId),
-					eq(userFollows.followeeId, followeeId)
-				)
-			)
+			.where(and(eq(userFollows.followerId, followerId), eq(userFollows.followeeId, followeeId)))
 			.limit(1);
 
 		return result.length > 0;
@@ -123,7 +108,7 @@ export class WhaleWatchService {
 			.limit(limit)
 			.offset(offset);
 
-		return following.map(follow => ({
+		return following.map((follow) => ({
 			id: follow.id!,
 			username: follow.username!,
 			avatarUrl: follow.avatarUrl,
@@ -159,7 +144,7 @@ export class WhaleWatchService {
 			.limit(limit)
 			.offset(offset);
 
-		return followers.map(follower => ({
+		return followers.map((follower) => ({
 			id: follower.id!,
 			username: follower.username!,
 			avatarUrl: follower.avatarUrl,
@@ -177,16 +162,10 @@ export class WhaleWatchService {
 	static async getFollowCounts(userId: string): Promise<FollowCounts> {
 		const [followingCount, followersCount] = await Promise.all([
 			// Count users this user is following
-			db
-				.select({ count: count() })
-				.from(userFollows)
-				.where(eq(userFollows.followerId, userId)),
-			
+			db.select({ count: count() }).from(userFollows).where(eq(userFollows.followerId, userId)),
+
 			// Count users following this user
-			db
-				.select({ count: count() })
-				.from(userFollows)
-				.where(eq(userFollows.followeeId, userId))
+			db.select({ count: count() }).from(userFollows).where(eq(userFollows.followeeId, userId))
 		]);
 
 		return {
@@ -212,12 +191,20 @@ export class WhaleWatchService {
 			})
 			.from(users)
 			.leftJoin(userFollows, eq(users.id, userFollows.followeeId))
-			.groupBy(users.id, users.username, users.avatarUrl, users.activeAvatarUrl, users.level, users.role, users.clout)
+			.groupBy(
+				users.id,
+				users.username,
+				users.avatarUrl,
+				users.activeAvatarUrl,
+				users.level,
+				users.role,
+				users.clout
+			)
 			.having(drizzleSql`COUNT(${userFollows.id}) > 0`)
 			.orderBy(drizzleSql`COUNT(${userFollows.id}) DESC`)
 			.limit(limit);
 
-		return whales.map(whale => ({
+		return whales.map((whale) => ({
 			id: whale.id,
 			username: whale.username,
 			avatarUrl: whale.avatarUrl,
@@ -233,7 +220,11 @@ export class WhaleWatchService {
 	/**
 	 * Search users to follow
 	 */
-	static async searchUsers(query: string, currentUserId: string, limit = 10): Promise<Array<FollowUser & { isFollowing: boolean; followerCount: number }>> {
+	static async searchUsers(
+		query: string,
+		currentUserId: string,
+		limit = 10
+	): Promise<Array<FollowUser & { isFollowing: boolean; followerCount: number }>> {
 		if (query.length < 1) return [];
 
 		const searchResults = await db
@@ -260,11 +251,19 @@ export class WhaleWatchService {
 					drizzleSql`${users.id} != ${currentUserId}` // Exclude current user
 				)
 			)
-			.groupBy(users.id, users.username, users.avatarUrl, users.activeAvatarUrl, users.level, users.role, users.clout)
+			.groupBy(
+				users.id,
+				users.username,
+				users.avatarUrl,
+				users.activeAvatarUrl,
+				users.level,
+				users.role,
+				users.clout
+			)
 			.orderBy(users.username)
 			.limit(limit);
 
-		return searchResults.map(user => ({
+		return searchResults.map((user) => ({
 			id: user.id,
 			username: user.username,
 			avatarUrl: user.avatarUrl,
@@ -283,20 +282,22 @@ export class WhaleWatchService {
 	 */
 	static async isWhale(userId: string): Promise<boolean> {
 		const { followers } = await this.getFollowCounts(userId);
-		
+
 		// Configure whale threshold (could be made configurable via admin)
 		const WHALE_THRESHOLD = 50; // Users with 50+ followers are whales
-		
+
 		return followers >= WHALE_THRESHOLD;
 	}
 
 	/**
 	 * Get whale status with threshold info
 	 */
-	static async getWhaleStatus(userId: string): Promise<{ isWhale: boolean; followerCount: number; threshold: number }> {
+	static async getWhaleStatus(
+		userId: string
+	): Promise<{ isWhale: boolean; followerCount: number; threshold: number }> {
 		const { followers } = await this.getFollowCounts(userId);
 		const WHALE_THRESHOLD = 50;
-		
+
 		return {
 			isWhale: followers >= WHALE_THRESHOLD,
 			followerCount: followers,

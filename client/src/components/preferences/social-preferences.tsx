@@ -7,11 +7,17 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-	MessageSquare, 
-	Users, 
-	UserPlus, 
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+} from '@/components/ui/select';
+import {
+	MessageSquare,
+	Users,
+	UserPlus,
 	Crown,
 	Eye,
 	EyeOff,
@@ -44,21 +50,21 @@ interface SocialPrivacyPreferences {
 	mentionPermissions: 'everyone' | 'friends' | 'followers' | 'none';
 	mentionNotifications: boolean;
 	mentionEmailNotifications: boolean;
-	
-	// Following preferences  
+
+	// Following preferences
 	allowFollowers: boolean;
 	followerApprovalRequired: boolean;
 	hideFollowerCount: boolean;
 	hideFollowingCount: boolean;
 	allowWhaleDesignation: boolean;
-	
+
 	// Friends preferences
 	allowFriendRequests: boolean;
 	friendRequestPermissions: 'everyone' | 'mutuals' | 'followers' | 'none';
 	autoAcceptMutualFollows: boolean;
 	hideOnlineStatus: boolean;
 	hideFriendsList: boolean;
-	
+
 	// General privacy
 	showSocialActivity: boolean;
 	allowDirectMessages: 'friends' | 'followers' | 'everyone' | 'none';
@@ -157,7 +163,8 @@ export function SocialPreferences({ user }: SocialPreferencesProps) {
 			<div>
 				<h2 className="text-2xl font-bold mb-2">Social Privacy</h2>
 				<p className="text-zinc-400">
-					Control how others can interact with you and what information is visible in social features.
+					Control how others can interact with you and what information is visible in social
+					features.
 				</p>
 			</div>
 
@@ -239,7 +246,9 @@ export function SocialPreferences({ user }: SocialPreferencesProps) {
 								label="Email Notifications"
 								description="Receive email notifications for mentions"
 								checked={preferences.mentionEmailNotifications}
-								onCheckedChange={(checked) => updatePreference('mentionEmailNotifications', checked)}
+								onCheckedChange={(checked) =>
+									updatePreference('mentionEmailNotifications', checked)
+								}
 								disabled={isSaving}
 							/>
 						</>
@@ -283,7 +292,7 @@ export function SocialPreferences({ user }: SocialPreferencesProps) {
 
 							<div className="space-y-3">
 								<h4 className="font-medium text-sm">Visibility Settings</h4>
-								
+
 								<PreferencesToggle
 									id="hide-follower-count"
 									label="Hide Follower Count"
@@ -323,9 +332,7 @@ export function SocialPreferences({ user }: SocialPreferencesProps) {
 						<UserPlus className="h-5 w-5 text-green-400" />
 						Friends
 					</CardTitle>
-					<CardDescription>
-						Manage friend requests and friendship privacy settings
-					</CardDescription>
+					<CardDescription>Manage friend requests and friendship privacy settings</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
 					<PreferencesToggle
@@ -422,9 +429,7 @@ export function SocialPreferences({ user }: SocialPreferencesProps) {
 						<Shield className="h-5 w-5 text-purple-400" />
 						General Privacy
 					</CardTitle>
-					<CardDescription>
-						Overall social visibility and interaction settings
-					</CardDescription>
+					<CardDescription>Overall social visibility and interaction settings</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
 					<PreferencesToggle

@@ -52,17 +52,17 @@ export const getAllPreferences = async (userId: number) => {
 	}
 
 	// Fetch the user's preferences (account settings)
-	const preferences = await db.query.userPreferencesSchema.findFirst({
+	const preferences = await db.query.userSettings.findFirst({
 		where: eq(userPreferencesSchema.userId, userId)
 	});
 
 	// Fetch the user's notification preferences
-	const notifPreferences = await db.query.notificationPreferencesSchema.findFirst({
+	const notifPreferences = await db.query.notificationSettings.findFirst({
 		where: eq(notificationPreferencesSchema.userId, userId)
 	});
 
 	// Fetch the user's display preferences
-	const displayPreferences = await db.query.displayPreferencesSchema.findFirst({
+	const displayPreferences = await db.query.displayPreferences.findFirst({
 		where: eq(displayPreferencesSchema.userId, userId)
 	});
 
