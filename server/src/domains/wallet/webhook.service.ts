@@ -1,4 +1,4 @@
-import { db } from '@/db';
+import { db } from '@db';
 import {
 	webhookEvents,
 	depositRecords,
@@ -6,9 +6,11 @@ import {
 	internalTransfers,
 	swapRecords,
 	ccpaymentUsers
-} from '@/db/schema';
+} from '@schema';
 import { eq, and } from 'drizzle-orm';
 import crypto from 'crypto';
+import { walletConfigService } from './wallet-config.service';
+import { dgtService } from './dgt.service';
 
 /**
  * Enhanced Webhook Service for CCPayment Integration
@@ -192,6 +194,11 @@ export class WebhookService {
 					isFlaggedRisky: isFlaggedRisky || false,
 					arrivedAt: status === 'Success' ? new Date() : null
 				});
+			}
+
+			// Handle DGT conversion for successful deposits
+			if (status === 'Success') {
+				await this.processDGTConversion(userId, recordId, amount, coinSymbol, coinUSDPrice);
 			}
 
 			// Update webhook event with related record info
@@ -502,6 +509,81 @@ export class WebhookService {
 				success: false,
 				message: `Retry error: ${error instanceof Error ? error.message : 'Unknown error'}`
 			};
+		}
+	}
+
+	/**
+	 * Process DGT conversion for successful deposits
+	 */
+	private async processDGTConversion(
+		userId: string,
+		recordId: string,
+		depositAmount: string,
+		originalToken: string,
+		coinUSDPrice: string
+	): Promise<void> {
+		try {
+			const config = await walletConfigService.getConfig();
+
+			// Check if auto-conversion is enabled
+			if (!config.ccpayment.autoSwapEnabled) {
+				console.log(`DGT auto-conversion disabled for deposit ${recordId}`);
+				return;
+			}
+
+			// Calculate USDT amount from deposit
+			// CCPayment automatically swaps to USDT, so we use the USD value
+			const usdValue = parseFloat(depositAmount) * parseFloat(coinUSDPrice);
+			const usdtAmount = usdValue; // USDT is pegged 1:1 to USD
+
+			// Check minimum deposit threshold
+			if (usdtAmount < config.dgt.minDepositUSD) {
+				console.log(
+					`Deposit ${recordId} below minimum threshold: $${usdtAmount} < $${config.dgt.minDepositUSD}`
+				);
+				return;
+			}
+
+			// Calculate DGT amount using configured rate
+			const dgtAmount = usdtAmount * config.dgt.usdToDGTRate;
+
+			// Update deposit record with DGT conversion details
+			await db
+				.update(depositRecords)
+				.set({
+					usdtAmount: usdtAmount.toString(),
+					dgtAmount: dgtAmount.toString(),
+					conversionRate: config.dgt.usdToDGTRate.toString(),
+					originalToken: originalToken
+				})
+				.where(eq(depositRecords.recordId, recordId));
+
+			// Credit DGT to user's account
+			await dgtService.creditDGT(userId, dgtAmount, {
+				source: 'crypto_deposit',
+				originalToken: originalToken,
+				usdtAmount: usdtAmount.toString(),
+				depositRecordId: recordId,
+				reason: `Crypto deposit conversion: ${depositAmount} ${originalToken} → ${dgtAmount} DGT`
+			});
+
+			console.log(
+				`DGT conversion completed: ${depositAmount} ${originalToken} → ${dgtAmount} DGT for user ${userId}`
+			);
+		} catch (error) {
+			console.error(`Error processing DGT conversion for deposit ${recordId}:`, error);
+
+			// Update deposit record with conversion error
+			await db
+				.update(depositRecords)
+				.set({
+					originalToken: originalToken
+					// Mark conversion as failed in a way that can be retried later
+				})
+				.where(eq(depositRecords.recordId, recordId));
+
+			// Don't throw error - deposit should still be marked as successful
+			// Conversion can be retried manually by admin if needed
 		}
 	}
 }

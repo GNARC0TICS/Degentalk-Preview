@@ -246,11 +246,12 @@ Database schema is managed through Drizzle ORM:
 
 ### Core Features
 
-- **Forum System** - Hierarchical categories, threads, posts
-- **User Progression** - XP levels, achievements, reputation
-- **Digital Economy** - DGT token, wallet integration, shop
-- **Real-time Chat** - Shoutbox with live updates
-- **Administration** - Comprehensive admin panel
+- **Forum System** - Hierarchical categories, threads, posts with zone-based theming
+- **User Progression** - XP levels, achievements, reputation system
+- **Integrated Wallet System** - Complete DGT token economy with crypto deposits, transfers, and CCPayment integration
+- **Real-time Features** - Live shoutbox, instant balance updates, transaction notifications
+- **Digital Marketplace** - Shop system with DGT-based purchases
+- **Administration** - Comprehensive admin panel with wallet configuration and feature gates
 
 ### Development Features
 
@@ -411,15 +412,21 @@ To incentivize user participation, the platform awards Experience Points (XP) an
 **Key Backend Components & Endpoints:**
 
 - **XP Service & Rewards:**
+
   - Controller: `server/src/domains/xp/xp.controller.ts` (function: `awardActionXp`)
   - Route: `POST /api/xp/award-action` (defined in `server/src/domains/xp/xp.routes.ts`)
   - Core Logic: `server/src/domains/xp/xp.service.ts` (e.g., `handleXpTrigger`, `processXpAction`) and `server/src/domains/xp/events/xp.events.ts`
   - Relevant Schemas: `db/schema/economy/xpActionSettings.ts`, `db/schema/economy/xpAdjustmentLogs.ts`, `db/schema/economy/levels.ts`, `db/schema/user/users.ts`.
-- **DGT & Wallet Service Rewards:**
-  - Controller: `server/src/domains/wallet/wallet.controller.ts` (e.g., `createDgtTransaction` or similar for rewards)
-  - Route: e.g., `POST /api/wallet/dgt/reward` (defined in `server/src/domains/wallet/wallet.routes.ts`)
-  - Core Logic: `server/src/domains/wallet/dgt.service.ts` (e.g., `addDgtToUserWallet`)
-  - Relevant Schemas: `db/schema/user/users.ts` (for `dgtWalletBalance`), `db/schema/economy/transactions.ts`.
+
+- **DGT Wallet System (Complete Integration):**
+  - **Balances**: `GET /api/wallet/balances` - Real-time DGT and crypto balances
+  - **Deposits**: `GET /api/wallet/deposit-addresses` - Live CCPayment crypto addresses with automatic DGT conversion
+  - **Transfers**: `POST /api/wallet/transfer-dgt` - User-to-user DGT transfers with validation
+  - **Transactions**: `GET /api/wallet/transactions` - Complete transaction history with DGT-specific types
+  - **Configuration**: `GET /api/wallet/config` - Admin-configurable feature gates and limits
+  - **Withdrawals**: `POST /api/wallet/withdraw` - Crypto withdrawal requests (feature-gated)
+  - Core Logic: `server/src/domains/wallet/` with CCPayment v2 integration, automatic deposit processing, and comprehensive transaction management
+  - Frontend: `client/src/features/wallet/` with real-time updates, pending state management, and feature gate integration
 
 **Configuration:**
 

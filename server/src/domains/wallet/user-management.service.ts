@@ -1,5 +1,5 @@
-import { db } from '@/db';
-import { ccpaymentUsers, users, cryptoWallets } from '@/db/schema';
+import { db } from '@db';
+import { ccpaymentUsers, users, cryptoWallets } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { CCPaymentService } from './ccpayment.service';
 

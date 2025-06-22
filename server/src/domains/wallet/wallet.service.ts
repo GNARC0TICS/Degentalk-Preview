@@ -1,15 +1,18 @@
-import { db } from '@/db';
+import { db } from '@db';
 import {
 	cryptoWallets,
 	depositRecords,
 	withdrawalRecords,
 	internalTransfers,
 	swapRecords,
-	supportedTokens
-} from '@/db/schema';
+	supportedTokens,
+	wallets
+} from '@schema';
 import { eq, and, desc, or } from 'drizzle-orm';
 import { CCPaymentService } from './ccpayment.service';
 import { UserManagementService } from './user-management.service';
+import { walletConfigService } from './wallet-config.service';
+import { dgtService } from './dgt.service';
 
 /**
  * High-level Wallet Service
@@ -26,59 +29,75 @@ export class WalletService {
 	}
 
 	/**
-	 * Get user's wallet balances
+	 * Get user's wallet balances (includes DGT and crypto)
 	 */
-	async getUserBalances(userId: string): Promise<
-		Array<{
+	async getUserBalances(userId: string): Promise<{
+		dgt: {
+			balance: number;
+			lastTransactionAt: Date | null;
+		};
+		crypto: Array<{
 			coinId: number;
 			coinSymbol: string;
 			chain: string;
 			balance: string;
 			frozenBalance: string;
 			address: string;
-		}>
-	> {
+		}>;
+	}> {
 		try {
+			// Get DGT balance (always available)
+			const dgtBalance = await dgtService.getDGTBalance(userId);
+
+			// Get crypto balances (if user has CCPayment account)
+			let cryptoBalances = [];
 			const ccpaymentUserId = await this.userManagementService.getCCPaymentUserId(userId);
-			if (!ccpaymentUserId) {
-				throw new Error('User wallet not initialized');
-			}
 
-			// Get user's wallets from database
-			const wallets = await db.select().from(cryptoWallets).where(eq(cryptoWallets.userId, userId));
+			if (ccpaymentUserId) {
+				// Get user's wallets from database
+				const userWallets = await db
+					.select()
+					.from(cryptoWallets)
+					.where(eq(cryptoWallets.userId, userId));
 
-			// Get balances from CCPayment for each wallet
-			const balances = [];
-			for (const wallet of wallets) {
-				try {
-					const balance = await this.ccpaymentService.getBalance({
-						uid: ccpaymentUserId,
-						coinId: wallet.coinId
-					});
+				// Get balances from CCPayment for each wallet
+				for (const wallet of userWallets) {
+					try {
+						const balance = await this.ccpaymentService.getBalance({
+							uid: ccpaymentUserId,
+							coinId: wallet.coinId
+						});
 
-					balances.push({
-						coinId: wallet.coinId,
-						coinSymbol: wallet.coinSymbol,
-						chain: wallet.chain,
-						balance: balance.balance,
-						frozenBalance: balance.frozenBalance,
-						address: wallet.address
-					});
-				} catch (error) {
-					console.error(`Error getting balance for ${wallet.coinSymbol}:`, error);
-					// Include wallet with zero balance if API call fails
-					balances.push({
-						coinId: wallet.coinId,
-						coinSymbol: wallet.coinSymbol,
-						chain: wallet.chain,
-						balance: '0',
-						frozenBalance: '0',
-						address: wallet.address
-					});
+						cryptoBalances.push({
+							coinId: wallet.coinId,
+							coinSymbol: wallet.coinSymbol,
+							chain: wallet.chain,
+							balance: balance.balance,
+							frozenBalance: balance.frozenBalance,
+							address: wallet.address
+						});
+					} catch (error) {
+						console.error(`Error getting balance for ${wallet.coinSymbol}:`, error);
+						// Include wallet with zero balance if API call fails
+						cryptoBalances.push({
+							coinId: wallet.coinId,
+							coinSymbol: wallet.coinSymbol,
+							chain: wallet.chain,
+							balance: '0',
+							frozenBalance: '0',
+							address: wallet.address
+						});
+					}
 				}
 			}
 
-			return balances;
+			return {
+				dgt: {
+					balance: dgtBalance.balance,
+					lastTransactionAt: dgtBalance.lastTransactionAt
+				},
+				crypto: cryptoBalances
+			};
 		} catch (error) {
 			console.error('Error getting user balances:', error);
 			throw new Error('Failed to retrieve wallet balances');
@@ -128,6 +147,14 @@ export class WalletService {
 		}
 	): Promise<string> {
 		try {
+			// Check if crypto withdrawals are allowed
+			const config = await walletConfigService.getConfig();
+			if (!config.features.allowCryptoWithdrawals) {
+				throw new Error(
+					'Crypto withdrawals are currently disabled. Please use DGT for transactions.'
+				);
+			}
+
 			const ccpaymentUserId = await this.userManagementService.getOrCreateCCPaymentUser(userId);
 
 			const recordId = await this.ccpaymentService.withdrawToBlockchain({
@@ -172,6 +199,12 @@ export class WalletService {
 		}
 	): Promise<string> {
 		try {
+			// Check if internal transfers are allowed
+			const config = await walletConfigService.getConfig();
+			if (!config.features.allowInternalTransfers) {
+				throw new Error('Internal transfers are currently disabled.');
+			}
+
 			const fromCCPaymentUserId =
 				await this.userManagementService.getOrCreateCCPaymentUser(fromUserId);
 			const toCCPaymentUserId = await this.userManagementService.getOrCreateCCPaymentUser(
@@ -216,6 +249,14 @@ export class WalletService {
 		}
 	): Promise<string> {
 		try {
+			// Check if crypto swaps are allowed
+			const config = await walletConfigService.getConfig();
+			if (!config.features.allowCryptoSwaps) {
+				throw new Error(
+					'Crypto swaps are currently disabled. All deposits are automatically converted to DGT.'
+				);
+			}
+
 			const ccpaymentUserId = await this.userManagementService.getOrCreateCCPaymentUser(userId);
 
 			const recordId = await this.ccpaymentService.swap({
@@ -326,6 +367,100 @@ export class WalletService {
 	}
 
 	/**
+	 * Transfer DGT between users
+	 */
+	async transferDGT(
+		fromUserId: string,
+		params: {
+			toUserId: string;
+			amount: number;
+			note?: string;
+		}
+	): Promise<{
+		transactionId: number;
+		fromBalance: number;
+		toBalance: number;
+		transferId: string;
+	}> {
+		try {
+			// Check if DGT transfers are allowed
+			const config = await walletConfigService.getConfig();
+			if (!config.features.allowInternalTransfers) {
+				throw new Error('DGT transfers are currently disabled.');
+			}
+
+			return await dgtService.transferDGT(fromUserId, params.toUserId, params.amount, params.note);
+		} catch (error) {
+			console.error('Error transferring DGT:', error);
+			throw new Error(`Failed to transfer DGT: ${error.message}`);
+		}
+	}
+
+	/**
+	 * Get DGT transaction history
+	 */
+	async getDGTHistory(
+		userId: string,
+		options?: {
+			limit?: number;
+			offset?: number;
+			type?: string;
+		}
+	): Promise<any[]> {
+		try {
+			return await dgtService.getDGTHistory(userId, options);
+		} catch (error) {
+			console.error('Error getting DGT history:', error);
+			throw new Error('Failed to retrieve DGT transaction history');
+		}
+	}
+
+	/**
+	 * Get wallet configuration (for frontend feature gates)
+	 */
+	async getWalletConfig(): Promise<{
+		features: {
+			allowCryptoWithdrawals: boolean;
+			allowCryptoSwaps: boolean;
+			allowDGTSpending: boolean;
+			allowInternalTransfers: boolean;
+		};
+		dgt: {
+			usdPrice: number;
+			minDepositUSD: number;
+			maxDGTBalance: number;
+		};
+		limits: {
+			maxDGTTransfer: number;
+		};
+	}> {
+		try {
+			const config = await walletConfigService.getConfig();
+
+			// Return only public configuration (hide sensitive settings)
+			return {
+				features: {
+					allowCryptoWithdrawals: config.features.allowCryptoWithdrawals,
+					allowCryptoSwaps: config.features.allowCryptoSwaps,
+					allowDGTSpending: config.features.allowDGTSpending,
+					allowInternalTransfers: config.features.allowInternalTransfers
+				},
+				dgt: {
+					usdPrice: config.dgt.usdPrice,
+					minDepositUSD: config.dgt.minDepositUSD,
+					maxDGTBalance: config.dgt.maxDGTBalance
+				},
+				limits: {
+					maxDGTTransfer: config.limits.maxDGTTransfer
+				}
+			};
+		} catch (error) {
+			console.error('Error getting wallet config:', error);
+			throw new Error('Failed to retrieve wallet configuration');
+		}
+	}
+
+	/**
 	 * Get supported cryptocurrencies
 	 */
 	async getSupportedCryptocurrencies(): Promise<
@@ -388,4 +523,19 @@ export class WalletService {
 			throw new Error('Failed to retrieve supported cryptocurrencies');
 		}
 	}
+
+	/**
+	 * Ensure CCPayment wallet exists for user (used by auth controller)
+	 */
+	async ensureCcPaymentWallet(userId: string): Promise<string> {
+		try {
+			return await this.userManagementService.getOrCreateCCPaymentUser(userId);
+		} catch (error) {
+			console.error('Error ensuring CCPayment wallet:', error);
+			throw new Error('Failed to ensure CCPayment wallet');
+		}
+	}
 }
+
+// Export singleton instance
+export const walletService = new WalletService();

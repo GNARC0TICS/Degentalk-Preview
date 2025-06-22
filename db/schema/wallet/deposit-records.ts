@@ -30,6 +30,13 @@ export const depositRecords = pgTable(
 		amount: decimal('amount', { precision: 36, scale: 18 }).notNull(),
 		serviceFee: decimal('service_fee', { precision: 36, scale: 18 }),
 		coinUSDPrice: decimal('coin_usd_price', { precision: 18, scale: 8 }),
+
+		// DGT Conversion Fields (CCPayment auto-swaps to USDT)
+		usdtAmount: decimal('usdt_amount', { precision: 36, scale: 18 }),
+		dgtAmount: decimal('dgt_amount', { precision: 36, scale: 18 }),
+		conversionRate: decimal('conversion_rate', { precision: 10, scale: 4 }),
+		originalToken: varchar('original_token', { length: 20 }),
+
 		fromAddress: varchar('from_address', { length: 255 }),
 		toAddress: varchar('to_address', { length: 255 }).notNull(),
 		toMemo: varchar('to_memo', { length: 255 }),

@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowDownToLine, Copy, CheckCircle2 } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ArrowDownToLine, Copy, CheckCircle2, RefreshCw, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+} from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { useWallet } from '@/hooks/use-wallet';
 
 export interface DepositButtonProps {
 	variant?: 'default' | 'small';
@@ -12,48 +19,42 @@ export interface DepositButtonProps {
 }
 
 export function DepositButton({ variant = 'default', className, onClick }: DepositButtonProps) {
-	const [depositAddress, setDepositAddress] = useState('');
+	const [selectedCrypto, setSelectedCrypto] = useState<string>('');
 	const [copiedAddress, setCopiedAddress] = useState(false);
 	const [depositAmount, setDepositAmount] = useState('');
 	const [depositMemo, setDepositMemo] = useState('');
 	const [showGlow, setShowGlow] = useState(false);
-	const queryClient = useQueryClient();
 	const { toast } = useToast();
+	const {
+		depositAddresses,
+		isLoadingDepositAddresses,
+		refreshDepositAddresses,
+		isRefreshingAddresses,
+		walletConfig
+	} = useWallet();
 
-	const depositMutation = useMutation({
-		mutationFn: async () => {
-			// This simulates fetching a deposit address - in a real implementation
-			// this would come from the server
-			const response = await fetch('/api/wallet/deposit-address', {
-				method: 'GET',
-				headers: { 'Content-Type': 'application/json' }
-			});
+	// Feature gates
+	const canDeposit = depositAddresses.length > 0 && walletConfig?.features;
 
-			if (!response.ok) throw new Error('Failed to get deposit address');
-			return response.json();
-		},
-		onSuccess: (data) => {
-			setDepositAddress(data.address || 'TUVx8ossL9LVgmKa5wFCrPbPyv1SYzCqjE');
-			// Show success toast
-			toast({
-				title: 'Deposit Address Generated',
-				description: 'Your deposit address has been generated. Send USDT (TRC-20) to this address.',
-				variant: 'default'
-			});
-		},
-		onError: (error) => {
-			toast({
-				title: 'Failed to Generate Address',
-				description: error instanceof Error ? error.message : 'Please try again later.',
-				variant: 'destructive'
-			});
+	// Get the selected deposit address
+	const selectedAddress = depositAddresses.find(
+		(addr) => selectedCrypto === `${addr.coinSymbol}_${addr.chain}`
+	);
+
+	// Set default crypto selection when addresses load
+	useEffect(() => {
+		if (depositAddresses.length > 0 && !selectedCrypto) {
+			// Default to ETH if available, otherwise first option
+			const ethAddress = depositAddresses.find((addr) => addr.coinSymbol === 'ETH');
+			const defaultAddress = ethAddress || depositAddresses[0];
+			setSelectedCrypto(`${defaultAddress.coinSymbol}_${defaultAddress.chain}`);
 		}
-	});
+	}, [depositAddresses, selectedCrypto]);
 
 	const copyToClipboard = () => {
-		if (depositAddress) {
+		if (selectedAddress?.address) {
 			navigator.clipboard
-				.writeText(depositAddress)
+				.writeText(selectedAddress.address)
 				.then(() => {
 					setCopiedAddress(true);
 					setTimeout(() => setCopiedAddress(false), 3000);
@@ -74,31 +75,7 @@ export function DepositButton({ variant = 'default', className, onClick }: Depos
 		}
 	};
 
-	const triggerDepositSuccess = (amount: number) => {
-		// In a real implementation, you would check for deposit confirmation
-		// from the blockchain. This is just a simulation for the UI.
-		setShowGlow(true);
-
-		toast({
-			title: 'Deposit Detected!',
-			description: `Your deposit of $${amount.toFixed(2)} USDT has been detected and is being processed.`,
-			variant: 'default'
-		});
-
-		// Reset the glow effect after the animation completes
-		setTimeout(() => {
-			setShowGlow(false);
-
-			// Reset the form
-			setDepositAmount('');
-			setDepositMemo('');
-
-			// Invalidate the balance query to show the updated balance
-			queryClient.invalidateQueries({ queryKey: ['/api/wallet'] });
-		}, 1500);
-	};
-
-	const handleSubmitDeposit = () => {
+	const handleSubmitTracking = () => {
 		const amount = parseFloat(depositAmount);
 		if (isNaN(amount) || amount <= 0) {
 			toast({
@@ -109,22 +86,34 @@ export function DepositButton({ variant = 'default', className, onClick }: Depos
 			return;
 		}
 
-		// Simulate deposit success - in a real implementation this would be handled
-		// by blockchain transaction monitoring
-		triggerDepositSuccess(amount);
+		// Show tracking confirmation
+		toast({
+			title: 'Deposit Tracking Started',
+			description: `We'll monitor for your ${selectedAddress?.coinSymbol} deposit. You'll be notified when it's received and converted to DGT.`,
+			variant: 'default'
+		});
+
+		// Reset the form
+		setDepositAmount('');
+		setDepositMemo('');
 	};
 
 	// Small variant for compact displays
 	if (variant === 'small') {
+		const isDisabled = isLoadingDepositAddresses || !canDeposit;
 		return (
 			<Button
 				variant="wallet"
 				size="sm"
-				leftIcon={<ArrowDownToLine className="h-4 w-4" />}
+				leftIcon={
+					isDisabled ? <Lock className="h-4 w-4" /> : <ArrowDownToLine className="h-4 w-4" />
+				}
 				className={className}
 				onClick={onClick}
+				disabled={isDisabled}
+				title={!canDeposit ? 'Deposits are currently unavailable' : undefined}
 			>
-				Deposit USDT
+				{isDisabled ? 'Unavailable' : 'Deposit Crypto'}
 			</Button>
 		);
 	}
@@ -133,28 +122,79 @@ export function DepositButton({ variant = 'default', className, onClick }: Depos
 		<div
 			className={`bg-black/30 rounded-lg p-4 border border-zinc-800 shadow-lg space-y-4 ${className} ${showGlow ? 'deposit-glow' : ''}`}
 		>
-			<h3 className="text-lg font-medium text-white mb-2">Deposit USDT</h3>
+			<div className="flex items-center justify-between">
+				<h3 className="text-lg font-medium text-white mb-2">Deposit Crypto</h3>
+				<Button
+					variant="outline"
+					size="sm"
+					onClick={() => refreshDepositAddresses()}
+					disabled={isRefreshingAddresses || !canDeposit}
+					className="flex items-center gap-2"
+				>
+					<RefreshCw className={`h-4 w-4 ${isRefreshingAddresses ? 'animate-spin' : ''}`} />
+					Refresh
+				</Button>
+			</div>
+
 			<p className="text-zinc-400 text-sm mb-4">
-				Deposit USDT (TRC-20) to your DegenTalk wallet to start tipping, making it rain, or
-				purchasing items.
+				{!canDeposit ? (
+					<span className="text-red-400 flex items-center">
+						<Lock className="h-4 w-4 mr-1" />
+						Crypto deposits are currently unavailable
+					</span>
+				) : (
+					`Deposit cryptocurrency to your DegenTalk wallet. All deposits are automatically converted to DGT at $${walletConfig?.dgt?.usdPrice || 0.1} per token.`
+				)}
 			</p>
 
+			{/* Crypto Selection */}
 			<div>
-				<h4 className="text-sm text-zinc-400 mb-2">Your Deposit Address (TRC-20)</h4>
-				{!depositAddress ? (
-					<Button
-						variant="gradient"
-						onClick={() => depositMutation.mutate()}
-						isLoading={depositMutation.isPending}
-						className="w-full"
-					>
-						Generate Deposit Address
-					</Button>
+				<h4 className="text-sm text-zinc-400 mb-2">Select Cryptocurrency</h4>
+				{isLoadingDepositAddresses ? (
+					<div className="flex items-center justify-center py-8">
+						<RefreshCw className="h-6 w-6 animate-spin text-zinc-400" />
+						<span className="ml-2 text-zinc-400">Loading deposit addresses...</span>
+					</div>
+				) : depositAddresses.length === 0 ? (
+					<div className="text-center py-8">
+						<p className="text-zinc-400 mb-4">No deposit addresses available</p>
+						<Button
+							variant="outline"
+							onClick={() => refreshDepositAddresses()}
+							disabled={isRefreshingAddresses}
+						>
+							Retry Loading
+						</Button>
+					</div>
 				) : (
+					<Select value={selectedCrypto} onValueChange={setSelectedCrypto}>
+						<SelectTrigger className="w-full">
+							<SelectValue placeholder="Choose cryptocurrency" />
+						</SelectTrigger>
+						<SelectContent>
+							{depositAddresses.map((addr) => (
+								<SelectItem
+									key={`${addr.coinSymbol}_${addr.chain}`}
+									value={`${addr.coinSymbol}_${addr.chain}`}
+								>
+									{addr.coinSymbol} ({addr.chain})
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				)}
+			</div>
+
+			{/* Deposit Address Display */}
+			{selectedAddress && (
+				<div>
+					<h4 className="text-sm text-zinc-400 mb-2">
+						Your Deposit Address ({selectedAddress.coinSymbol} - {selectedAddress.chain})
+					</h4>
 					<div className="space-y-2">
 						<div className="flex items-center space-x-2">
 							<div className="bg-black rounded-lg border border-zinc-800 py-2 px-3 font-mono text-sm text-zinc-300 flex-1 truncate">
-								{depositAddress}
+								{selectedAddress.address}
 							</div>
 							<Button
 								variant="outline"
@@ -169,8 +209,16 @@ export function DepositButton({ variant = 'default', className, onClick }: Depos
 								)}
 							</Button>
 						</div>
+						{selectedAddress.memo && (
+							<div className="mt-2 p-2 bg-yellow-900/20 border border-yellow-800/50 rounded">
+								<p className="text-xs text-yellow-300">
+									<strong>Memo Required:</strong> {selectedAddress.memo}
+								</p>
+							</div>
+						)}
 						<p className="text-xs text-zinc-500">
-							Only send USDT (TRC-20) to this address. Other tokens may be lost.
+							Only send {selectedAddress.coinSymbol} on the {selectedAddress.chain} network to this
+							address. Other tokens may be lost.
 						</p>
 
 						<div className="mt-6">
@@ -184,7 +232,9 @@ export function DepositButton({ variant = 'default', className, onClick }: Depos
 								min={0}
 								className="transition-all focus:border-emerald-800/70"
 							/>
-							<p className="text-xs text-zinc-500 mt-1">Minimum deposit: 10.00 USDT</p>
+							<p className="text-xs text-zinc-500 mt-1">
+								Minimum deposit: ${walletConfig?.dgt?.minDepositUSD || 1.0} USD value
+							</p>
 						</div>
 
 						<div className="mt-4">
@@ -204,7 +254,7 @@ export function DepositButton({ variant = 'default', className, onClick }: Depos
 						<div className="flex justify-end pt-4">
 							<Button
 								variant="gradient"
-								onClick={handleSubmitDeposit}
+								onClick={handleSubmitTracking}
 								disabled={
 									!depositAmount ||
 									isNaN(parseFloat(depositAmount)) ||
@@ -216,16 +266,20 @@ export function DepositButton({ variant = 'default', className, onClick }: Depos
 							</Button>
 						</div>
 					</div>
-				)}
-			</div>
+				</div>
+			)}
 
 			<div className="bg-black/50 rounded-lg p-4 text-xs border border-zinc-800 mt-4">
 				<h4 className="text-zinc-400 font-medium mb-2">Deposit Information</h4>
 				<ul className="list-disc pl-5 space-y-1 text-zinc-500">
 					<li>Deposits are typically credited within 5-30 minutes after network confirmation.</li>
-					<li>Minimum deposit amount is 10.00 USDT.</li>
-					<li>Only send USDT on the Tron network (TRC-20) to this address.</li>
-					<li>Do not send any other tokens or coins to this address.</li>
+					<li>
+						All deposits are automatically converted to DGT at ${walletConfig?.dgt?.usdPrice || 0.1}{' '}
+						per token.
+					</li>
+					<li>Minimum deposit amount is ${walletConfig?.dgt?.minDepositUSD || 1.0} USD value.</li>
+					<li>Only send the selected cryptocurrency on the correct network.</li>
+					<li>Deposits to wrong networks or addresses may be permanently lost.</li>
 				</ul>
 			</div>
 		</div>

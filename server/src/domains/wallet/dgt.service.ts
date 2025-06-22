@@ -1,566 +1,528 @@
 /**
- * DGT Service for Internal Token Ledger Management
+ * DGT Service
  *
- * [REFAC-DGT]
- *
- * This service manages the off-chain DGT token ledger, handling:
- * - DGT balance queries and updates
- * - Grant/deduct operations
- * - Purchase fulfillment
- * - DGT transfers between users
- * - Integration with engagement features (tip, rain, etc.)
+ * Handles all DGT (DegenTalk Token) operations including crediting, debiting,
+ * transfers, and balance management. Integrates with existing economy system.
  */
 
-import { v4 as uuidv4 } from 'uuid';
-import {
-	users,
-	dgtPurchaseOrders,
-	transactions,
-	transactionTypeEnum,
-	transactionStatusEnum
-} from '@schema';
 import { db } from '@db';
-import { logger } from '../../core/logger';
-import { eq, sql } from 'drizzle-orm';
-import {
-	DGT_CURRENCY,
-	TRANSACTION_FEE_PERCENT,
-	MIN_TRANSACTION_AMOUNT,
-	MAX_USER_BALANCE,
-	DGT_TREASURY_USER_ID
-} from './wallet.constants';
-// import { calculateTransactionFee } from './wallet.utils'; // Removed as file not found and function not used
-import { WalletError, ErrorCodes } from '../../core/errors';
-import { economyConfig } from '@shared/economy/economy.config';
+import { wallets, transactions, users } from '@schema';
+import { eq, and, sql, desc } from 'drizzle-orm';
+import { walletConfigService } from './wallet-config.service';
 
-const { MIN_TIP_DGT, TIP_FEE_PERCENTAGE } = economyConfig;
+export interface DGTTransactionMetadata {
+	source:
+		| 'crypto_deposit'
+		| 'shop_purchase'
+		| 'tip_send'
+		| 'tip_receive'
+		| 'rain_send'
+		| 'rain_receive'
+		| 'admin_credit'
+		| 'admin_debit'
+		| 'internal_transfer_send'
+		| 'internal_transfer_receive'
+		| 'xp_boost'
+		| 'manual_credit';
+	originalToken?: string;
+	usdtAmount?: string;
+	depositRecordId?: string;
+	tipId?: string;
+	rainId?: string;
+	shopItemId?: string;
+	transferId?: string;
+	adminUserId?: string;
+	reason?: string;
+	metadata?: Record<string, any>;
+}
 
-// Transaction types specific to DGT
-type DgtTransactionType =
-	| 'PURCHASE'
-	| 'TIP'
-	| 'RAIN'
-	| 'AIRDROP'
-	| 'WITHDRAW'
-	| 'ADMIN_ADJUST'
-	| 'REWARD'
-	| 'FEE';
+export interface DGTBalance {
+	userId: string;
+	balance: number;
+	lastTransactionAt: Date | null;
+	walletId: number;
+}
+
+export interface DGTTransaction {
+	id: number;
+	userId: string;
+	amount: number;
+	type: string;
+	balanceAfter: number;
+	metadata: DGTTransactionMetadata;
+	createdAt: Date;
+}
+
+export interface DGTTransferResult {
+	transactionId: number;
+	fromBalance: number;
+	toBalance: number;
+	transferId: string;
+}
 
 /**
- * DGT service for internal token ledger management
+ * DGT Service Class
  */
-export class DgtService {
+export class DGTService {
 	/**
 	 * Get user's DGT balance
-	 * @param userId User ID
-	 * @returns Current DGT balance
 	 */
-	async getUserBalance(userId: number): Promise<bigint> {
+	async getDGTBalance(userId: string): Promise<DGTBalance> {
 		try {
-			logger.info('DGT_SERVICE', `DgtService.getUserBalance called with userId: ${userId}`);
+			// Get user's DGT wallet
+			const wallet = await db.select().from(wallets).where(eq(wallets.userId, userId)).limit(1);
 
-			const [userResult] = await db
-				.select({ dgtWalletBalance: users.dgtWalletBalance })
-				.from(users)
-				.where(eq(users.id, userId))
-				.limit(1);
-
-			logger.info('DGT_SERVICE', `DgtService.getUserBalance query result:`, userResult);
-
-			if (!userResult) {
-				logger.warn('DGT_SERVICE', `User not found for userId: ${userId}`);
-				throw new WalletError('User not found', 404, ErrorCodes.USER_NOT_FOUND);
+			if (wallet.length === 0) {
+				// Create wallet if it doesn't exist
+				await this.createDGTWallet(userId);
+				return {
+					userId,
+					balance: 0,
+					lastTransactionAt: null,
+					walletId: 0
+				};
 			}
 
-			logger.info(
-				'DGT_SERVICE',
-				`DgtService.getUserBalance returning balance: ${userResult.dgtWalletBalance} for userId: ${userId}`
-			);
-			return BigInt(userResult.dgtWalletBalance);
+			const userWallet = wallet[0];
+			return {
+				userId,
+				balance: userWallet.balance,
+				lastTransactionAt: userWallet.lastTransaction,
+				walletId: userWallet.id
+			};
 		} catch (error) {
-			logger.error(
-				'DGT_SERVICE',
-				'Error getting DGT balance:',
-				error instanceof Error ? error.message : String(error)
-			);
-			throw new WalletError('Failed to get DGT balance', 500, ErrorCodes.DB_ERROR, {
-				originalError: error instanceof Error ? error.message : String(error)
-			});
+			console.error('Error getting DGT balance:', error);
+			throw new Error('Failed to retrieve DGT balance');
 		}
 	}
 
 	/**
-	 * Add DGT to user's balance
-	 * @param userId User ID
-	 * @param amount Amount to add (positive integer)
-	 * @param type Transaction type
-	 * @param metadata Additional transaction metadata
-	 * @returns New balance
+	 * Credit DGT to user's account
 	 */
-	async addDgt(
-		userId: number,
-		amount: bigint,
-		type: DgtTransactionType,
-		metadata: Record<string, any> = {}
-	): Promise<bigint> {
+	async creditDGT(
+		userId: string,
+		amount: number,
+		metadata: DGTTransactionMetadata
+	): Promise<DGTTransaction> {
+		if (amount <= 0) {
+			throw new Error('Credit amount must be positive');
+		}
+
 		try {
-			// Validate inputs
-			if (amount <= BigInt(0)) {
-				throw new WalletError('Amount must be positive', 400, ErrorCodes.WALLET_INVALID_OPERATION);
+			const config = await walletConfigService.getConfig();
+
+			// Get or create user wallet
+			await this.ensureDGTWallet(userId);
+			const walletData = await this.getDGTBalance(userId);
+
+			// Check max balance limit
+			const newBalance = walletData.balance + amount;
+			if (newBalance > config.dgt.maxDGTBalance) {
+				throw new Error(
+					`Transaction would exceed maximum DGT balance limit of ${config.dgt.maxDGTBalance}`
+				);
 			}
 
-			// Begin transaction
-			return await db.transaction(async (tx) => {
-				// Update user balance
-				const [result] = await tx
-					.update(users)
+			// Start transaction
+			const result = await db.transaction(async (tx) => {
+				// Update wallet balance
+				await tx
+					.update(wallets)
 					.set({
-						dgtWalletBalance: sql`LEAST(COALESCE(${users.dgtWalletBalance}, 0) + ${Number(amount)}, ${MAX_USER_BALANCE})`
+						balance: newBalance,
+						lastTransaction: new Date()
 					})
-					.where(eq(users.id, userId))
-					.returning({ newBalance: users.dgtWalletBalance });
+					.where(eq(wallets.userId, userId));
 
-				if (!result) {
-					throw new WalletError('User not found', 404, ErrorCodes.USER_NOT_FOUND);
-				}
+				// Create transaction record
+				const [transaction] = await tx
+					.insert(transactions)
+					.values({
+						userId: userId,
+						walletId: walletData.walletId,
+						amount: Math.round(amount * 100), // Store in cents for precision
+						type: this.getTransactionType(metadata.source),
+						status: 'confirmed',
+						description: this.getTransactionDescription(metadata),
+						metadata: metadata as any,
+						createdAt: new Date(),
+						updatedAt: new Date()
+					})
+					.returning();
 
-				// Record transaction
-				await tx.insert(transactions).values({
-					userId,
-					amount: Number(amount),
-					type: this.mapToTransactionType(type),
-					status: 'confirmed',
-					description: `${type} transaction - Added ${amount} DGT`,
-					metadata: metadata || {},
-					isTreasuryTransaction: type === 'ADMIN_ADJUST' || type === 'REWARD'
-				});
-
-				// Return new balance
-				return BigInt(result.newBalance);
+				return transaction;
 			});
+
+			console.log(`DGT credited: ${amount} DGT to user ${userId} (${metadata.source})`);
+
+			return {
+				id: result.id,
+				userId,
+				amount,
+				type: result.type,
+				balanceAfter: newBalance,
+				metadata,
+				createdAt: result.createdAt
+			};
 		} catch (error) {
-			logger.error(
-				'DGT_SERVICE',
-				'Error adding DGT:',
-				error instanceof Error ? error.message : String(error)
-			);
-			throw new WalletError('Failed to add DGT to balance', 500, ErrorCodes.DB_ERROR, {
-				originalError: error instanceof Error ? error.message : String(error)
-			});
+			console.error('Error crediting DGT:', error);
+			throw new Error(`Failed to credit DGT: ${error.message}`);
 		}
 	}
 
 	/**
-	 * Remove DGT from user's balance
-	 * @param userId User ID
-	 * @param amount Amount to deduct (positive integer)
-	 * @param type Transaction type
-	 * @param metadata Additional transaction metadata
-	 * @returns New balance
+	 * Debit DGT from user's account
 	 */
-	async deductDgt(
-		userId: number,
-		amount: bigint,
-		type: DgtTransactionType,
-		metadata: Record<string, any> = {}
-	): Promise<bigint> {
+	async debitDGT(
+		userId: string,
+		amount: number,
+		metadata: DGTTransactionMetadata
+	): Promise<DGTTransaction> {
+		if (amount <= 0) {
+			throw new Error('Debit amount must be positive');
+		}
+
 		try {
-			// Validate inputs
-			if (amount <= BigInt(0)) {
-				throw new WalletError('Amount must be positive', 400, ErrorCodes.WALLET_INVALID_OPERATION);
+			// Get user balance
+			const walletData = await this.getDGTBalance(userId);
+
+			// Check sufficient balance
+			if (walletData.balance < amount) {
+				throw new Error(
+					`Insufficient DGT balance. Available: ${walletData.balance}, Required: ${amount}`
+				);
 			}
 
-			// Begin transaction
-			return await db.transaction(async (tx) => {
-				// Check if user has sufficient balance
-				const [user] = await tx
-					.select({ dgtWalletBalance: users.dgtWalletBalance })
-					.from(users)
-					.where(eq(users.id, userId))
-					.limit(1);
+			const newBalance = walletData.balance - amount;
 
-				if (!user) {
-					throw new WalletError('User not found', 404, ErrorCodes.USER_NOT_FOUND);
-				}
-
-				const currentBalance = BigInt(user.dgtWalletBalance);
-
-				if (currentBalance < amount) {
-					throw new WalletError(
-						'Insufficient DGT balance',
-						400,
-						ErrorCodes.WALLET_INSUFFICIENT_FUNDS,
-						{
-							currentBalance: currentBalance.toString(),
-							requiredAmount: amount.toString()
-						}
-					);
-				}
-
-				// Update user balance
-				const [result] = await tx
-					.update(users)
+			// Start transaction
+			const result = await db.transaction(async (tx) => {
+				// Update wallet balance
+				await tx
+					.update(wallets)
 					.set({
-						dgtWalletBalance: sql`COALESCE(${users.dgtWalletBalance}, 0) - ${Number(amount)}`
+						balance: newBalance,
+						lastTransaction: new Date()
 					})
-					.where(eq(users.id, userId))
-					.returning({ newBalance: users.dgtWalletBalance });
+					.where(eq(wallets.userId, userId));
 
-				// Record transaction
-				await tx.insert(transactions).values({
-					userId,
-					amount: -Number(amount),
-					type: this.mapToTransactionType(type),
-					status: 'confirmed',
-					description: `${type} transaction - Deducted ${amount} DGT`,
-					metadata: metadata || {},
-					isTreasuryTransaction: type === 'ADMIN_ADJUST'
-				});
+				// Create transaction record
+				const [transaction] = await tx
+					.insert(transactions)
+					.values({
+						userId: userId,
+						walletId: walletData.walletId,
+						amount: -Math.round(amount * 100), // Negative for debit, store in cents
+						type: this.getTransactionType(metadata.source),
+						status: 'confirmed',
+						description: this.getTransactionDescription(metadata),
+						metadata: metadata as any,
+						createdAt: new Date(),
+						updatedAt: new Date()
+					})
+					.returning();
 
-				// Return new balance
-				return BigInt(result.newBalance);
+				return transaction;
 			});
+
+			console.log(`DGT debited: ${amount} DGT from user ${userId} (${metadata.source})`);
+
+			return {
+				id: result.id,
+				userId,
+				amount: -amount, // Return negative for debit
+				type: result.type,
+				balanceAfter: newBalance,
+				metadata,
+				createdAt: result.createdAt
+			};
 		} catch (error) {
-			logger.error(
-				'DGT_SERVICE',
-				'Error deducting DGT:',
-				error instanceof Error ? error.message : String(error)
-			);
-
-			if (error instanceof WalletError && error.code === ErrorCodes.WALLET_INSUFFICIENT_FUNDS) {
-				throw error;
-			}
-
-			throw new WalletError('Failed to deduct DGT from balance', 500, ErrorCodes.DB_ERROR, {
-				originalError: error instanceof Error ? error.message : String(error)
-			});
+			console.error('Error debiting DGT:', error);
+			throw new Error(`Failed to debit DGT: ${error.message}`);
 		}
 	}
 
 	/**
 	 * Transfer DGT between users
-	 * @param fromUserId Sender user ID
-	 * @param toUserId Recipient user ID
-	 * @param amount Amount to transfer (positive integer)
-	 * @param type Transaction type (TIP, RAIN, etc.)
-	 * @param metadata Additional transaction metadata
-	 * @returns Object with new balances for both users
 	 */
-	async transferDgt(
-		fromUserId: number,
-		toUserId: number,
-		amount: bigint,
-		type: DgtTransactionType,
-		metadata: Record<string, any> = {}
-	): Promise<{ senderBalance: bigint; recipientBalance: bigint }> {
-		logger.info(
-			'DGT_SERVICE',
-			`Transferring ${amount} DGT from user ${fromUserId} to ${toUserId} for type ${type}`
-		);
+	async transferDGT(
+		fromUserId: string,
+		toUserId: string,
+		amount: number,
+		note?: string
+	): Promise<DGTTransferResult> {
+		if (amount <= 0) {
+			throw new Error('Transfer amount must be positive');
+		}
+
+		if (fromUserId === toUserId) {
+			throw new Error('Cannot transfer DGT to yourself');
+		}
+
 		try {
-			// Validate inputs
-			if (amount <= BigInt(0)) {
-				throw new WalletError('Amount must be positive', 400, ErrorCodes.WALLET_INVALID_OPERATION);
+			const config = await walletConfigService.getConfig();
+
+			// Check if transfers are allowed
+			if (!config.features.allowInternalTransfers) {
+				throw new Error('DGT transfers are currently disabled');
 			}
 
-			if (fromUserId === toUserId) {
-				throw new WalletError('Cannot transfer to self', 400, ErrorCodes.WALLET_INVALID_OPERATION);
-			}
-
-			if (amount < BigInt(MIN_TRANSACTION_AMOUNT)) {
-				throw new WalletError(
-					`Amount must be at least ${MIN_TRANSACTION_AMOUNT} DGT`,
-					400,
-					ErrorCodes.WALLET_INVALID_OPERATION
+			// Check transfer limits
+			if (amount > config.limits.maxDGTTransfer) {
+				throw new Error(
+					`Transfer amount exceeds maximum limit of ${config.limits.maxDGTTransfer} DGT`
 				);
 			}
 
-			// Begin transaction
-			return await db.transaction(async (tx) => {
-				// Check if sender has sufficient balance
-				const [sender] = await tx
-					.select({ dgtWalletBalance: users.dgtWalletBalance })
-					.from(users)
-					.where(eq(users.id, fromUserId))
-					.limit(1);
+			// Verify users exist
+			const usersData = await db
+				.select()
+				.from(users)
+				.where(sql`${users.id} IN (${fromUserId}, ${toUserId})`);
 
-				if (!sender) {
-					throw new WalletError('Sender not found', 404, ErrorCodes.USER_NOT_FOUND);
-				}
+			if (usersData.length !== 2) {
+				throw new Error('Invalid user(s) for transfer');
+			}
 
-				const currentBalance = BigInt(sender.dgtWalletBalance);
+			// Generate transfer ID
+			const transferId = `dgt_transfer_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-				if (currentBalance < amount) {
-					throw new WalletError(
-						'Insufficient DGT balance',
-						400,
-						ErrorCodes.WALLET_INSUFFICIENT_FUNDS,
-						{
-							currentBalance: currentBalance.toString(),
-							requiredAmount: amount.toString()
-						}
-					);
-				}
-
-				// Check if recipient exists
-				const [recipient] = await tx
-					.select({ id: users.id })
-					.from(users)
-					.where(eq(users.id, toUserId))
-					.limit(1);
-
-				if (!recipient) {
-					throw new WalletError('Recipient not found', 404, ErrorCodes.USER_NOT_FOUND, {
-						userId: toUserId
-					});
-				}
-
-				// Calculate fee if applicable
-				const feePercent = TRANSACTION_FEE_PERCENT / 100;
-				const feeAmount = BigInt(Math.floor(Number(amount) * feePercent));
-				const recipientAmount = amount - feeAmount;
-
-				// Update sender balance
-				const [senderResult] = await tx
-					.update(users)
-					.set({
-						dgtWalletBalance: sql`COALESCE(${users.dgtWalletBalance}, 0) - ${Number(amount)}`
-					})
-					.where(eq(users.id, fromUserId))
-					.returning({ newBalance: users.dgtWalletBalance });
-
-				// Update recipient balance
-				const [recipientResult] = await tx
-					.update(users)
-					.set({
-						dgtWalletBalance: sql`LEAST(COALESCE(${users.dgtWalletBalance}, 0) + ${Number(recipientAmount)}, ${MAX_USER_BALANCE})`
-					})
-					.where(eq(users.id, toUserId))
-					.returning({ newBalance: users.dgtWalletBalance });
-
-				// Record sender transaction
-				await tx.insert(transactions).values({
-					userId: fromUserId,
-					fromUserId,
-					toUserId,
-					amount: -Number(amount),
-					type: this.mapToTransactionType(type),
-					status: 'confirmed',
-					description: `${type} transaction - Sent ${amount} DGT to user #${toUserId}`,
-					metadata: {
-						...metadata,
-						feeAmount: feeAmount.toString(),
-						recipientAmount: recipientAmount.toString()
-					}
+			// Start transaction
+			const result = await db.transaction(async (tx) => {
+				// Debit from sender
+				const debitTransaction = await this.debitDGT(fromUserId, amount, {
+					source: 'internal_transfer_send',
+					transferId,
+					reason: note,
+					metadata: { toUserId, transferId }
 				});
 
-				// Record recipient transaction
-				await tx.insert(transactions).values({
-					userId: toUserId,
-					fromUserId,
-					toUserId,
-					amount: Number(recipientAmount),
-					type: this.mapToTransactionType(type),
-					status: 'confirmed',
-					description: `${type} transaction - Received ${recipientAmount} DGT from user #${fromUserId}`,
-					metadata: {
-						...metadata,
-						originalAmount: amount.toString(),
-						feeAmount: feeAmount.toString()
-					}
+				// Credit to receiver
+				const creditTransaction = await this.creditDGT(toUserId, amount, {
+					source: 'internal_transfer_receive',
+					transferId,
+					reason: note,
+					metadata: { fromUserId, transferId }
 				});
 
-				// Record fee transaction if applicable
-				if (feeAmount > BigInt(0)) {
-					// Update treasury balance (platform fee account)
-					await tx
-						.update(users)
-						.set({
-							dgtWalletBalance: sql`COALESCE(${users.dgtWalletBalance}, 0) + ${Number(feeAmount)}`
-						})
-						.where(eq(users.id, DGT_TREASURY_USER_ID));
-
-					// Record fee transaction
-					await tx.insert(transactions).values({
-						userId: DGT_TREASURY_USER_ID,
-						fromUserId, // Keep fromUserId to trace original sender of the fee-generating transaction
-						amount: Number(feeAmount),
-						type: 'FEE',
-						status: 'confirmed',
-						description: `Transaction fee from ${type} - User #${fromUserId} to #${toUserId}`,
-						metadata: {
-							originalTransactionType: type,
-							originalAmount: amount.toString(),
-							feePercent: TRANSACTION_FEE_PERCENT
-						},
-						isTreasuryTransaction: true
-					});
-				}
-
-				// Return new balances
 				return {
-					senderBalance: BigInt(senderResult.newBalance),
-					recipientBalance: BigInt(recipientResult.newBalance)
+					debit: debitTransaction,
+					credit: creditTransaction
 				};
 			});
+
+			console.log(`DGT transfer: ${amount} DGT from ${fromUserId} to ${toUserId} (${transferId})`);
+
+			return {
+				transactionId: result.debit.id,
+				fromBalance: result.debit.balanceAfter,
+				toBalance: result.credit.balanceAfter,
+				transferId
+			};
 		} catch (error) {
-			logger.error(
-				'DGT_SERVICE',
-				'Error transferring DGT:',
-				error instanceof Error ? error.message : String(error)
-			);
-
-			if (error instanceof WalletError) {
-				throw error;
-			}
-
-			throw new WalletError('Failed to transfer DGT', 500, ErrorCodes.DB_ERROR, {
-				originalError: error instanceof Error ? error.message : String(error)
-			});
+			console.error('Error transferring DGT:', error);
+			throw new Error(`Failed to transfer DGT: ${error.message}`);
 		}
 	}
 
 	/**
-	 * Fulfill a DGT purchase from CCPayment
-	 * @param purchaseOrderId ID of the purchase order
-	 * @param status New status (confirmed, failed)
-	 * @param metadata Additional transaction metadata
-	 * @returns Purchase order with updated status
+	 * Get user's DGT transaction history
 	 */
-	async fulfillDgtPurchase(
-		purchaseOrderId: number,
-		status: 'confirmed' | 'failed',
-		metadata: Record<string, any> = {}
-	): Promise<any> {
-		logger.info(
-			'DGT_SERVICE',
-			`Attempting to fulfill DGT purchase order ${purchaseOrderId} with status ${status}`
-		);
+	async getDGTHistory(
+		userId: string,
+		options?: {
+			limit?: number;
+			offset?: number;
+			type?: string;
+		}
+	): Promise<DGTTransaction[]> {
 		try {
-			// Begin transaction
-			return await db.transaction(async (tx) => {
-				// Get purchase order
-				const [purchaseOrder] = await tx
-					.select()
-					.from(dgtPurchaseOrders)
-					.where(eq(dgtPurchaseOrders.id, purchaseOrderId))
-					.limit(1);
+			const limit = options?.limit || 50;
+			const offset = options?.offset || 0;
 
-				if (!purchaseOrder) {
-					throw new WalletError('Purchase order not found', 404, ErrorCodes.NOT_FOUND);
-				}
+			const userWallet = await this.getDGTBalance(userId);
 
-				// If already processed, return early
-				if (purchaseOrder.status !== 'pending') {
-					return purchaseOrder;
-				}
+			let query = db
+				.select()
+				.from(transactions)
+				.where(eq(transactions.walletId, userWallet.walletId))
+				.orderBy(desc(transactions.createdAt))
+				.limit(limit)
+				.offset(offset);
 
-				// Update purchase order status
-				const [updatedOrder] = await tx
-					.update(dgtPurchaseOrders)
-					.set({
-						status,
-						metadata: {
-							...(purchaseOrder.metadata || {}),
-							...metadata,
-							processedAt: new Date().toISOString()
-						},
-						updatedAt: new Date()
-					})
-					.where(eq(dgtPurchaseOrders.id, purchaseOrderId))
-					.returning();
-
-				// If confirmed, credit user's DGT balance
-				if (status === 'confirmed') {
-					// Get current user balance
-					const [user] = await tx
-						.select({ dgtWalletBalance: users.dgtWalletBalance })
-						.from(users)
-						.where(eq(users.id, purchaseOrder.userId))
-						.limit(1);
-
-					if (!user) {
-						throw new WalletError('User not found', 404, ErrorCodes.USER_NOT_FOUND);
-					}
-
-					// Calculate new balance
-					const currentBalance = BigInt(user.dgtWalletBalance);
-					const purchaseAmount = BigInt(purchaseOrder.dgtAmountRequested);
-					const newBalance = currentBalance + purchaseAmount;
-
-					// Update user balance (with maximum cap)
-					await tx
-						.update(users)
-						.set({
-							dgtWalletBalance: sql`LEAST(COALESCE(${users.dgtWalletBalance}, 0) + ${Number(purchaseAmount)}, ${MAX_USER_BALANCE})`
-						})
-						.where(eq(users.id, purchaseOrder.userId));
-
-					// Record purchase transaction
-					await tx.insert(transactions).values({
-						userId: purchaseOrder.userId,
-						amount: Number(purchaseAmount),
-						type: 'DEPOSIT', // Standard type for purchases
-						status: 'confirmed',
-						description: `DGT Purchase - ${purchaseAmount} DGT with ${purchaseOrder.cryptoCurrencyExpected}`,
-						metadata: {
-							purchaseOrderId: purchaseOrder.id,
-							cryptoAmount: purchaseOrder.cryptoAmountExpected.toString(),
-							cryptoCurrency: purchaseOrder.cryptoCurrencyExpected,
-							ccpaymentReference: purchaseOrder.ccpaymentReference,
-							...metadata
-						}
-					});
-				}
-
-				return updatedOrder;
-			});
-		} catch (error) {
-			logger.error(
-				'DGT_SERVICE',
-				`Error fulfilling DGT purchase order ${purchaseOrderId}:`,
-				error instanceof Error ? error.message : String(error)
-			);
-
-			if (error instanceof WalletError) {
-				throw error;
+			if (options?.type) {
+				query = query.where(
+					and(eq(transactions.walletId, userWallet.walletId), eq(transactions.type, options.type))
+				);
 			}
 
-			throw new WalletError('Failed to fulfill DGT purchase', 500, ErrorCodes.DB_ERROR, {
-				originalError: error instanceof Error ? error.message : String(error)
-			});
+			const results = await query;
+
+			return results.map((tx) => ({
+				id: tx.id,
+				userId,
+				amount: tx.amount / 100, // Convert back from cents
+				type: tx.type,
+				balanceAfter: 0, // Would need to calculate or store separately
+				metadata: tx.metadata as DGTTransactionMetadata,
+				createdAt: tx.createdAt
+			}));
+		} catch (error) {
+			console.error('Error getting DGT history:', error);
+			throw new Error('Failed to retrieve DGT transaction history');
 		}
 	}
 
 	/**
-	 * Map internal DGT transaction types to schema transaction types
+	 * Get DGT analytics for admin
 	 */
-	private mapToTransactionType(
-		type: DgtTransactionType
-	): (typeof transactionTypeEnum.enumValues)[number] {
-		logger.info('DGT_SERVICE', `Mapping DgtTransactionType ${type} to TransactionType`);
-		switch (type) {
-			case 'PURCHASE':
-				return 'DEPOSIT';
-			case 'TIP':
-				return 'TIP';
-			case 'RAIN':
-				return 'RAIN';
-			case 'AIRDROP':
-				return 'AIRDROP';
-			case 'WITHDRAW':
-				return 'WITHDRAWAL';
-			case 'ADMIN_ADJUST':
-				return 'ADMIN_ADJUST';
-			case 'REWARD':
-				return 'REWARD';
-			case 'FEE':
-				return 'FEE';
+	async getDGTAnalytics(): Promise<{
+		totalSupply: number;
+		totalUsers: number;
+		totalTransactions: number;
+		dailyVolume: number;
+		averageBalance: number;
+	}> {
+		try {
+			const [totalSupplyResult, totalUsersResult, totalTransactionsResult] = await Promise.all([
+				// Total DGT in circulation
+				db
+					.select({
+						total: sql<number>`SUM(${wallets.balance})`
+					})
+					.from(wallets),
+
+				// Total users with DGT
+				db
+					.select({
+						count: sql<number>`COUNT(*)`
+					})
+					.from(wallets)
+					.where(sql`${wallets.balance} > 0`),
+
+				// Total transactions
+				db
+					.select({
+						count: sql<number>`COUNT(*)`
+					})
+					.from(transactions)
+			]);
+
+			// Daily volume (last 24 hours)
+			const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+			const [dailyVolumeResult] = await db
+				.select({
+					volume: sql<number>`SUM(ABS(${transactions.amount}))`
+				})
+				.from(transactions)
+				.where(sql`${transactions.createdAt} >= ${oneDayAgo}`);
+
+			const totalSupply = totalSupplyResult[0]?.total || 0;
+			const totalUsers = totalUsersResult[0]?.count || 0;
+			const totalTransactions = totalTransactionsResult[0]?.count || 0;
+			const dailyVolume = (dailyVolumeResult?.volume || 0) / 100; // Convert from cents
+			const averageBalance = totalUsers > 0 ? totalSupply / totalUsers : 0;
+
+			return {
+				totalSupply,
+				totalUsers,
+				totalTransactions,
+				dailyVolume,
+				averageBalance
+			};
+		} catch (error) {
+			console.error('Error getting DGT analytics:', error);
+			throw new Error('Failed to retrieve DGT analytics');
+		}
+	}
+
+	/**
+	 * Ensure user has a DGT wallet
+	 */
+	private async ensureDGTWallet(userId: string): Promise<void> {
+		const existing = await db.select().from(wallets).where(eq(wallets.userId, userId)).limit(1);
+
+		if (existing.length === 0) {
+			await this.createDGTWallet(userId);
+		}
+	}
+
+	/**
+	 * Create DGT wallet for user
+	 */
+	private async createDGTWallet(userId: string): Promise<void> {
+		try {
+			await db.insert(wallets).values({
+				userId: userId,
+				balance: 0,
+				isDeleted: false,
+				createdAt: new Date(),
+				updatedAt: new Date()
+			});
+
+			console.log(`DGT wallet created for user: ${userId}`);
+		} catch (error) {
+			console.error('Error creating DGT wallet:', error);
+			throw new Error('Failed to create DGT wallet');
+		}
+	}
+
+	/**
+	 * Get transaction type from source
+	 */
+	private getTransactionType(source: DGTTransactionMetadata['source']): string {
+		const typeMap: Record<DGTTransactionMetadata['source'], string> = {
+			crypto_deposit: 'DEPOSIT_CREDIT',
+			shop_purchase: 'SHOP_SPEND',
+			tip_send: 'TIP_SEND',
+			tip_receive: 'TIP_RECEIVE',
+			rain_send: 'RAIN_SEND',
+			rain_receive: 'RAIN_RECEIVE',
+			admin_credit: 'ADMIN_CREDIT',
+			admin_debit: 'ADMIN_DEBIT',
+			internal_transfer_send: 'INTERNAL_TRANSFER_SEND',
+			internal_transfer_receive: 'INTERNAL_TRANSFER_RECEIVE',
+			xp_boost: 'XP_BOOST',
+			manual_credit: 'MANUAL_CREDIT'
+		};
+
+		return typeMap[source] || 'OTHER';
+	}
+
+	/**
+	 * Get transaction description from metadata
+	 */
+	private getTransactionDescription(metadata: DGTTransactionMetadata): string {
+		switch (metadata.source) {
+			case 'crypto_deposit':
+				return `DGT credit from ${metadata.originalToken} deposit (${metadata.usdtAmount} USDT)`;
+			case 'shop_purchase':
+				return `Shop purchase: ${metadata.shopItemId}`;
+			case 'tip_send':
+				return `Tip sent: ${metadata.reason || 'No message'}`;
+			case 'tip_receive':
+				return `Tip received: ${metadata.reason || 'No message'}`;
+			case 'rain_send':
+				return `Rain event participation`;
+			case 'rain_receive':
+				return `Rain reward received`;
+			case 'admin_credit':
+				return `Admin credit: ${metadata.reason || 'Manual adjustment'}`;
+			case 'admin_debit':
+				return `Admin debit: ${metadata.reason || 'Manual adjustment'}`;
+			case 'internal_transfer_send':
+				return `Transfer sent: ${metadata.reason || 'No note'}`;
+			case 'internal_transfer_receive':
+				return `Transfer received: ${metadata.reason || 'No note'}`;
+			case 'xp_boost':
+				return `XP boost purchase`;
+			case 'manual_credit':
+				return `Manual credit: ${metadata.reason || 'Administrator action'}`;
 			default:
-				return 'DEPOSIT'; // Should not happen with DgtTransactionType
+				return 'DGT transaction';
 		}
 	}
 }
 
-// Export a singleton instance
-export const dgtService = new DgtService();
+// Export singleton instance
+export const dgtService = new DGTService();

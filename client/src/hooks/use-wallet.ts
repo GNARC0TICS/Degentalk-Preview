@@ -1,95 +1,68 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { walletApiService } from '@/features/wallet/services/wallet-api.service';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 
-// Define types for API responses
-interface WalletBalance {
-	dgtPoints: number;
-	walletAddress: string;
-	walletBalanceUSDT: number;
-	cryptoBalances: CryptoBalance[];
-}
-
-interface CryptoBalance {
-	currency: string;
-	balance: number;
-	available: number;
-	frozen: number;
-}
-
-interface Transaction {
-	id: number;
-	userId: number;
-	amount: number;
-	type: string;
-	status: string;
-	description: string;
-	currency: string;
-	createdAt: string;
-	updatedAt: string;
-}
-
-interface DepositAddress {
-	address: string;
-	currency: string;
-	network: string;
-	qrCodeUrl?: string;
-}
+// Import types from wallet API service
+import type {
+	WalletBalance,
+	CryptoBalance,
+	Transaction,
+	DepositAddress
+} from '@/features/wallet/services/wallet-api.service';
 
 export function useWallet() {
 	const queryClient = useQueryClient();
 	const { toast } = useToast();
 	const [isDepositing, setIsDepositing] = useState(false);
 
-	// Query transaction history
-	const transactionHistoryQuery = useQuery({
-		queryKey: ['/api/wallet/transactions'],
-		queryFn: async () => {
-			try {
-				return await apiRequest<{
-					transactions: Transaction[];
-					total: number;
-				}>({
-					url: '/api/wallet/transactions'
-				});
-			} catch (error) {
-				console.error('Error fetching transaction history:', error);
-				throw error;
-			}
-		},
+	// Query wallet balance
+	const balanceQuery = useQuery({
+		queryKey: ['/api/wallet/balances'],
+		queryFn: () => walletApiService.getBalance(),
 		staleTime: 30 * 1000 // 30 seconds before refetching
 	});
 
-	// Create deposit address mutation
-	const createDepositAddressMutation = useMutation({
-		mutationFn: async (currency: string) => {
-			setIsDepositing(true);
-			try {
-				return await apiRequest<DepositAddress>({
-					url: '/api/wallet/deposit-address',
-					method: 'POST',
-					data: { currency }
-				});
-			} catch (error) {
-				console.error('Error creating deposit address:', error);
-				throw error;
-			} finally {
-				setIsDepositing(false);
-			}
+	// Query transaction history
+	const transactionHistoryQuery = useQuery({
+		queryKey: ['/api/wallet/transactions'],
+		queryFn: () => walletApiService.getTransactionHistory(),
+		staleTime: 30 * 1000 // 30 seconds before refetching
+	});
+
+	// Query deposit addresses
+	const depositAddressesQuery = useQuery({
+		queryKey: ['/api/wallet/deposit-addresses'],
+		queryFn: () => walletApiService.getDepositAddresses(),
+		staleTime: 5 * 60 * 1000 // 5 minutes before refetching
+	});
+
+	// Query wallet configuration
+	const walletConfigQuery = useQuery({
+		queryKey: ['/api/wallet/config'],
+		queryFn: () => walletApiService.getWalletConfig(),
+		staleTime: 60 * 1000 // 1 minute before refetching
+	});
+
+	// Refresh deposit addresses mutation (they're auto-generated)
+	const refreshDepositAddressesMutation = useMutation({
+		mutationFn: async () => {
+			return walletApiService.getDepositAddresses();
 		},
 		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['/api/wallet/deposit-addresses'] });
 			toast({
 				variant: 'success',
-				title: 'Deposit Address Created',
-				description: 'Your deposit address was created successfully.'
+				title: 'Addresses Refreshed',
+				description: 'Your deposit addresses have been refreshed.'
 			});
 		},
 		onError: (error: any) => {
 			toast({
 				variant: 'error',
-				title: 'Error Creating Deposit Address',
-				description: error?.message || 'Failed to create deposit address. Please try again.'
+				title: 'Error Refreshing Addresses',
+				description: error?.message || 'Failed to refresh deposit addresses. Please try again.'
 			});
 		}
 	});
@@ -137,28 +110,11 @@ export function useWallet() {
 
 	// Transfer DGT mutation
 	const transferDgtMutation = useMutation({
-		mutationFn: async (params: { toUserId: number; amount: number; reason: string }) => {
-			try {
-				return await apiRequest<{
-					success: boolean;
-					transactionId: number;
-					message: string;
-				}>({
-					url: '/api/wallet/transfer',
-					method: 'POST',
-					data: {
-						toUserId: params.toUserId,
-						amount: params.amount,
-						reason: params.reason
-					}
-				});
-			} catch (error) {
-				console.error('Error transferring DGT:', error);
-				throw error;
-			}
+		mutationFn: async (params: { toUserId: string; amount: number; note?: string }) => {
+			return walletApiService.transferDgt(params.toUserId, params.amount, params.note);
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['/api/wallet/balance'] });
+			queryClient.invalidateQueries({ queryKey: ['/api/wallet/balances'] });
 			queryClient.invalidateQueries({ queryKey: ['/api/wallet/transactions'] });
 			toast({
 				variant: 'success',
@@ -177,24 +133,35 @@ export function useWallet() {
 
 	return {
 		// Data
+		balance: balanceQuery.data,
 		transactions: transactionHistoryQuery.data?.transactions || [],
 		transactionCount: transactionHistoryQuery.data?.total || 0,
+		depositAddresses: depositAddressesQuery.data || [],
+		walletConfig: walletConfigQuery.data,
 
 		// Status
+		isLoadingBalance: balanceQuery.isLoading,
 		isLoadingTransactions: transactionHistoryQuery.isLoading,
+		isLoadingDepositAddresses: depositAddressesQuery.isLoading,
+		isLoadingConfig: walletConfigQuery.isLoading,
 		isDepositing,
-		isCreatingAddress: createDepositAddressMutation.isPending,
+		isRefreshingAddresses: refreshDepositAddressesMutation.isPending,
 		isPurchasingDgt: purchaseDgtMutation.isPending,
 		isTransferringDgt: transferDgtMutation.isPending,
 
 		// Error states
+		balanceError: balanceQuery.error,
 		transactionsError: transactionHistoryQuery.error,
+		depositAddressesError: depositAddressesQuery.error,
+		configError: walletConfigQuery.error,
 
 		// Methods
-		createDepositAddress: createDepositAddressMutation.mutate,
+		refreshDepositAddresses: refreshDepositAddressesMutation.mutate,
 		purchaseDgt: purchaseDgtMutation.mutate,
 		transferDgt: transferDgtMutation.mutate,
+		refreshBalance: () => queryClient.invalidateQueries({ queryKey: ['/api/wallet/balances'] }),
 		refreshTransactions: () =>
-			queryClient.invalidateQueries({ queryKey: ['/api/wallet/transactions'] })
+			queryClient.invalidateQueries({ queryKey: ['/api/wallet/transactions'] }),
+		refreshConfig: () => queryClient.invalidateQueries({ queryKey: ['/api/wallet/config'] })
 	};
 }

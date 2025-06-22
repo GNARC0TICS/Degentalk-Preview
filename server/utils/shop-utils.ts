@@ -2,6 +2,7 @@ import { users, products, userInventory } from '@schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
 import { pool } from '@db';
 import { logger, LogLevel, LogAction } from '../src/core/logger';
+import slugify from 'slugify';
 
 // Mock shop items for when database items can't be fetched
 export const shopItems = [
@@ -74,7 +75,6 @@ export async function addShopItem(item: {
 	promotionLabel?: string | null;
 }) {
 	try {
-		// Store the item metadata as JSON in the plugin_reward field
 		const metadata = {
 			name: item.name,
 			description: item.description,
@@ -84,18 +84,31 @@ export async function addShopItem(item: {
 			type: item.pluginReward || null
 		};
 
-		// Insert the item with only the available columns
+		const slug = slugify(item.name, { lower: true, strict: true });
+
 		const result = await pool.query(
 			`INSERT INTO products (
-        plugin_reward, 
-        stock_limit, 
-        available_from, 
+        name,
+        slug,
+        description,
+        price,
+        points_price,
+        plugin_reward,
+        stock_limit,
+        available_from,
         available_until,
         featured_until,
         promotion_label
-      ) VALUES ($1, $2, $3, $4, $5, $6)
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+      )
       RETURNING product_id`,
 			[
+				item.name,
+				slug,
+				item.description,
+				item.price,
+				item.pointsPrice,
 				JSON.stringify(metadata),
 				item.stockLimit || null,
 				item.availableFrom || null,

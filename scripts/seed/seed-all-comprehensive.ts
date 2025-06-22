@@ -503,7 +503,9 @@ async function seedThreadPrefixes() {
 }
 
 async function seedTags() {
-  const tags = [
+  // Local dataset of tags to seed. Named `tagSeedData` to avoid
+  // shadowing the `tags` table imported from the schema.
+  const tagSeedData = [
     { name: 'bitcoin', slug: 'bitcoin' },
     { name: 'ethereum', slug: 'ethereum' },
     { name: 'defi', slug: 'defi' },
@@ -516,7 +518,7 @@ async function seedTags() {
     { name: 'memecoin', slug: 'memecoin' }
   ];
 
-  await db.insert(tags).values(tags).onConflictDoNothing();
+  await db.insert(tags).values(tagSeedData).onConflictDoNothing();
 }
 
 /**

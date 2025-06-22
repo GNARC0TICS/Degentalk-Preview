@@ -1,66 +1,163 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useWallet } from '@/hooks/use-wallet';
 import { Skeleton } from '@/components/ui/skeleton';
-import { formatDate, formatCurrency } from '@/lib/formatters';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import type { Transaction } from '@/types/wallet';
+import {
+	ArrowDownToLine,
+	ArrowUpFromLine,
+	Award,
+	Send,
+	Receive,
+	ShoppingCart,
+	Zap,
+	RefreshCw,
+	TrendingUp,
+	UserPlus,
+	Coins
+} from 'lucide-react';
+import type { Transaction } from '@/features/wallet/services/wallet-api.service';
+
+interface TransactionHistoryProps {
+	history: Transaction[];
+	isLoading: boolean;
+	error?: any;
+	onRefresh?: () => void;
+}
 
 /**
  * TransactionHistory Component
  *
- * Displays a list of wallet transactions with filtering options
- * Uses the new wallet hook to fetch transaction history
- *
- * // [REFAC-DGT] [REFAC-CCPAYMENT]
+ * Displays a list of wallet transactions with DGT-focused filtering
  */
-export default function TransactionHistory() {
-	const { transactions, transactionCount, isLoadingTransactions, refreshTransactions } =
-		useWallet();
+export default function TransactionHistory({
+	history,
+	isLoading,
+	error,
+	onRefresh
+}: TransactionHistoryProps) {
 	const [filter, setFilter] = useState<string | null>(null);
 
 	const filteredTransactions = filter
-		? transactions.filter((tx) => tx.type === filter)
-		: transactions;
+		? history.filter((tx) => {
+				// Group similar transaction types for filtering
+				if (filter === 'dgt') {
+					return tx.type.includes('DGT') || tx.type.includes('CREDIT') || tx.type.includes('DEBIT');
+				}
+				if (filter === 'crypto') {
+					return tx.type.includes('DEPOSIT') && tx.currency !== 'DGT';
+				}
+				if (filter === 'transfer') {
+					return (
+						tx.type.includes('TRANSFER') || tx.type.includes('TIP') || tx.type.includes('RAIN')
+					);
+				}
+				if (filter === 'pending') {
+					return tx.status.toLowerCase() === 'pending' || tx.status.toLowerCase() === 'processing';
+				}
+				return tx.type === filter;
+			})
+		: history;
 
-	const handleRefresh = () => {
-		refreshTransactions();
-	};
+	// Separate pending transactions for priority display
+	const pendingTransactions = history.filter(
+		(tx) => tx.status.toLowerCase() === 'pending' || tx.status.toLowerCase() === 'processing'
+	);
+	const hasPendingTransactions = pendingTransactions.length > 0;
 
-	const getTransactionIcon = (type: string) => {
-		switch (type) {
-			case 'deposit':
-				return <IconDeposit />;
-			case 'withdrawal':
-				return <IconWithdrawal />;
-			case 'purchase':
-				return <IconPurchase />;
-			case 'transfer':
-				return <IconTransfer />;
-			case 'tip':
-				return <IconTip />;
-			case 'rain':
-				return <IconRain />;
-			case 'airdrop':
-				return <IconAirdrop />;
-			default:
-				return <IconDefault />;
+	const getTransactionIcon = (type: string, amount: number) => {
+		const iconClass = 'h-5 w-5';
+		const isPositive = amount > 0;
+
+		// DGT-specific transactions
+		if (type.includes('DEPOSIT_CREDIT')) {
+			return <TrendingUp className={`${iconClass} text-emerald-400`} />;
+		}
+		if (type.includes('ADMIN_CREDIT')) {
+			return <UserPlus className={`${iconClass} text-blue-400`} />;
+		}
+		if (type.includes('ADMIN_DEBIT')) {
+			return <UserPlus className={`${iconClass} text-red-400`} />;
+		}
+		if (type.includes('TRANSFER')) {
+			return isPositive ? (
+				<Receive className={`${iconClass} text-emerald-400`} />
+			) : (
+				<Send className={`${iconClass} text-orange-400`} />
+			);
+		}
+		if (type.includes('TIP')) {
+			return isPositive ? (
+				<Receive className={`${iconClass} text-purple-400`} />
+			) : (
+				<Send className={`${iconClass} text-purple-400`} />
+			);
+		}
+		if (type.includes('RAIN')) {
+			return <Zap className={`${iconClass} text-yellow-400`} />;
+		}
+		if (type.includes('SHOP')) {
+			return <ShoppingCart className={`${iconClass} text-cyan-400`} />;
+		}
+		if (type.includes('XP_BOOST')) {
+			return <Award className={`${iconClass} text-amber-400`} />;
+		}
+
+		// Generic fallbacks
+		if (isPositive) {
+			return <ArrowDownToLine className={`${iconClass} text-emerald-400`} />;
+		} else {
+			return <ArrowUpFromLine className={`${iconClass} text-red-400`} />;
 		}
 	};
 
 	const getStatusColor = (status: string) => {
-		switch (status) {
+		switch (status?.toLowerCase()) {
+			case 'confirmed':
 			case 'completed':
-				return 'bg-green-500';
+			case 'success':
+				return 'bg-emerald-500 text-emerald-100';
 			case 'pending':
-				return 'bg-amber-500';
+			case 'processing':
+				return 'bg-amber-500 text-amber-100';
 			case 'failed':
-				return 'bg-red-500';
+			case 'cancelled':
+				return 'bg-red-500 text-red-100';
 			default:
-				return 'bg-gray-500';
+				return 'bg-zinc-500 text-zinc-100';
 		}
+	};
+
+	const formatAmount = (amount: number, currency: string) => {
+		const absAmount = Math.abs(amount);
+		if (currency === 'DGT') {
+			return `${amount > 0 ? '+' : '-'}${absAmount.toFixed(2)} DGT`;
+		}
+		return `${amount > 0 ? '+' : '-'}$${absAmount.toFixed(2)}`;
+	};
+
+	const formatTransactionDescription = (tx: Transaction) => {
+		// Enhanced descriptions for DGT transactions
+		if (tx.type.includes('DEPOSIT_CREDIT')) {
+			const originalToken = tx.metadata?.originalToken || 'Crypto';
+			const usdtAmount = tx.metadata?.usdtAmount || 'Unknown';
+			return `${originalToken} deposit converted to DGT (${usdtAmount} USDT)`;
+		}
+		if (tx.type.includes('ADMIN_CREDIT')) {
+			return tx.metadata?.reason || 'Admin credit';
+		}
+		if (tx.type.includes('ADMIN_DEBIT')) {
+			return tx.metadata?.reason || 'Admin debit';
+		}
+		if (tx.type.includes('TRANSFER')) {
+			const isReceived = tx.amount > 0;
+			const note = tx.metadata?.reason || tx.metadata?.note;
+			return `DGT ${isReceived ? 'received' : 'sent'}${note ? ` - ${note}` : ''}`;
+		}
+
+		// Fallback to description or generate one
+		return tx.description || `${tx.type} transaction`;
 	};
 
 	return (
@@ -80,269 +177,128 @@ export default function TransactionHistory() {
 						<Button
 							variant="ghost"
 							size="sm"
-							className={filter === 'deposit' ? 'bg-accent' : ''}
-							onClick={() => setFilter('deposit')}
+							className={filter === 'dgt' ? 'bg-accent' : ''}
+							onClick={() => setFilter('dgt')}
 						>
-							Deposits
+							DGT
 						</Button>
 						<Button
 							variant="ghost"
 							size="sm"
-							className={filter === 'withdrawal' ? 'bg-accent' : ''}
-							onClick={() => setFilter('withdrawal')}
+							className={filter === 'crypto' ? 'bg-accent' : ''}
+							onClick={() => setFilter('crypto')}
 						>
-							Withdrawals
+							Crypto
 						</Button>
 						<Button
 							variant="ghost"
 							size="sm"
-							className={filter === 'tip' || filter === 'rain' ? 'bg-accent' : ''}
-							onClick={() => setFilter(filter === 'tip' ? 'rain' : 'tip')}
+							className={filter === 'transfer' ? 'bg-accent' : ''}
+							onClick={() => setFilter('transfer')}
 						>
-							{filter === 'tip' ? 'Rain' : 'Tips'}
+							Transfers
 						</Button>
+						{hasPendingTransactions && (
+							<Button
+								variant="ghost"
+								size="sm"
+								className={`${filter === 'pending' ? 'bg-accent' : ''} text-amber-400 border-amber-600/30`}
+								onClick={() => setFilter('pending')}
+							>
+								<Clock className="h-3 w-3 mr-1" />
+								Pending ({pendingTransactions.length})
+							</Button>
+						)}
 					</div>
-					<button
-						onClick={handleRefresh}
-						className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background hover:bg-accent hover:text-accent-foreground h-8 w-8"
-						title="Refresh transactions"
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="18"
-							height="18"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-						>
-							<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-							<path d="M3 3v5h5" />
-						</svg>
-						<span className="sr-only">Refresh</span>
-					</button>
+					{onRefresh && (
+						<Button variant="ghost" size="sm" onClick={onRefresh} title="Refresh transactions">
+							<RefreshCw className="h-4 w-4" />
+						</Button>
+					)}
 				</div>
 			</CardHeader>
 			<CardContent>
-				{isLoadingTransactions ? (
+				{isLoading ? (
 					<div className="space-y-4">
 						<Skeleton className="h-16 w-full" />
 						<Skeleton className="h-16 w-full" />
 						<Skeleton className="h-16 w-full" />
 					</div>
-				) : transactions.length === 0 ? (
-					<div className="text-center py-8 text-muted-foreground">No transactions found</div>
+				) : error ? (
+					<div className="text-center py-8">
+						<p className="text-red-400 mb-4">Failed to load transactions</p>
+						{onRefresh && (
+							<Button variant="outline" onClick={onRefresh} size="sm">
+								<RefreshCw className="w-4 h-4 mr-2" />
+								Retry
+							</Button>
+						)}
+					</div>
+				) : history.length === 0 ? (
+					<div className="text-center py-8 text-muted-foreground">
+						<Coins className="h-12 w-12 mx-auto mb-4 text-zinc-400" />
+						<p>No transactions found</p>
+						<p className="text-sm text-zinc-500 mt-1">Your transaction history will appear here</p>
+					</div>
 				) : (
 					<ScrollArea className="h-[420px] pr-4">
 						<div className="space-y-4">
-							{filteredTransactions.map((transaction) => (
-								<div
-									key={transaction.id}
-									className="flex items-start space-x-4 rounded-md border p-3"
-								>
-									<div className="mt-px">{getTransactionIcon(transaction.type)}</div>
-									<div className="flex-1 space-y-1">
-										<div className="flex items-center justify-between">
-											<p className="text-sm font-medium">{transaction.description}</p>
-											<div className="flex items-center space-x-2">
-												<span
-													className={`h-2 w-2 rounded-full ${getStatusColor(transaction.status)}`}
-												/>
-												<Badge variant="outline">{transaction.status}</Badge>
-											</div>
+							{filteredTransactions.map((transaction) => {
+								const isPending =
+									transaction.status.toLowerCase() === 'pending' ||
+									transaction.status.toLowerCase() === 'processing';
+								return (
+									<div
+										key={transaction.id}
+										className={`flex items-start space-x-4 rounded-md border p-3 transition-colors ${
+											isPending
+												? 'border-amber-600/50 bg-amber-900/20 hover:bg-amber-800/30 animate-pulse'
+												: 'border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800/30'
+										}`}
+									>
+										<div className="mt-px">
+											{getTransactionIcon(transaction.type, transaction.amount)}
 										</div>
-										<div className="flex items-center justify-between text-sm">
-											<div>
-												{transaction.to && (
-													<p className="text-xs text-muted-foreground">
-														To: {transaction.to.username}
-													</p>
-												)}
-												{transaction.from && (
-													<p className="text-xs text-muted-foreground">
-														From: {transaction.from.username}
-													</p>
-												)}
+										<div className="flex-1 space-y-1">
+											<div className="flex items-center justify-between">
+												<p className="text-sm font-medium text-zinc-200">
+													{formatTransactionDescription(transaction)}
+												</p>
+												<div className="flex items-center space-x-2">
+													<Badge
+														variant="outline"
+														className={`text-xs ${getStatusColor(transaction.status)}`}
+													>
+														{transaction.status}
+													</Badge>
+												</div>
 											</div>
-											<div className="flex flex-col items-end">
-												<span className="font-medium">
-													{transaction.type === 'withdrawal' ||
-													transaction.type === 'transfer' ||
-													transaction.type === 'tip' ||
-													transaction.type === 'rain'
-														? '-'
-														: '+'}
-													{formatCurrency(transaction.amount, transaction.currency)}
-												</span>
-												<span className="text-xs text-muted-foreground">
-													{formatDate(new Date(transaction.timestamp))}
-												</span>
+											<div className="flex items-center justify-between text-sm">
+												<div className="text-xs text-zinc-400">
+													{new Date(transaction.createdAt).toLocaleDateString()} at{' '}
+													{new Date(transaction.createdAt).toLocaleTimeString()}
+												</div>
+												<div className="flex flex-col items-end">
+													<span
+														className={`font-medium ${transaction.amount > 0 ? 'text-emerald-400' : 'text-red-400'}`}
+													>
+														{formatAmount(transaction.amount, transaction.currency)}
+													</span>
+													{transaction.metadata && (
+														<span className="text-xs text-zinc-500">
+															{transaction.type.replace(/_/g, ' ').toLowerCase()}
+														</span>
+													)}
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-							))}
+								);
+							})}
 						</div>
 					</ScrollArea>
 				)}
 			</CardContent>
 		</Card>
-	);
-}
-
-// Icons
-function IconDeposit() {
-	return (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			className="text-green-500"
-		>
-			<path d="M12 2L12 22M12 22L2 12M12 22L22 12" />
-		</svg>
-	);
-}
-
-function IconWithdrawal() {
-	return (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			className="text-red-500"
-		>
-			<path d="M12 22L12 2M12 2L2 12M12 2L22 12" />
-		</svg>
-	);
-}
-
-function IconPurchase() {
-	return (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			className="text-blue-500"
-		>
-			<path d="M6 2L10 6M14 18L18 22M9 6h11l-4 10H4L9 6z" />
-		</svg>
-	);
-}
-
-function IconTransfer() {
-	return (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			className="text-purple-500"
-		>
-			<path d="M22 5H2M2 10H10M2 15H8M22 19H2" />
-			<path d="M18 14l4-4-4-4" />
-		</svg>
-	);
-}
-
-function IconTip() {
-	return (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			className="text-amber-500"
-		>
-			<path d="M8 10V8c0-2.21 1.79-4 4-4v0c2.21 0 4 1.79 4 4v2M8 10h8M8 10v7a1 1 0 001 1h6a1 1 0 001-1v-7M15 2v3M9 2v3M9 18v3M15 18v3" />
-		</svg>
-	);
-}
-
-function IconRain() {
-	return (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			className="text-cyan-500"
-		>
-			<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242M8 19v1M8 14v1M16 19v1M16 14v1M12 21v1M12 16v1" />
-		</svg>
-	);
-}
-
-function IconAirdrop() {
-	return (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			className="text-indigo-500"
-		>
-			<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-		</svg>
-	);
-}
-
-function IconDefault() {
-	return (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			className="text-gray-500"
-		>
-			<circle cx="12" cy="12" r="10" />
-			<path d="M12 16v-4M12 8h.01" />
-		</svg>
 	);
 }

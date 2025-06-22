@@ -11,17 +11,20 @@
 import { apiRequest } from '@/lib/queryClient';
 
 export interface WalletBalance {
-	dgt: number;
+	dgt: {
+		balance: number;
+		lastTransactionAt: Date | null;
+	};
 	crypto: CryptoBalance[];
 }
 
 export interface CryptoBalance {
-	currency: string;
-	balance: number;
-	available: number;
-	frozen: number;
-	network?: string;
-	usdValue?: number;
+	coinId: number;
+	coinSymbol: string;
+	chain: string;
+	balance: string;
+	frozenBalance: string;
+	address: string;
 }
 
 export interface Transaction {
@@ -53,10 +56,11 @@ export interface DgtPurchaseOrder {
 }
 
 export interface DepositAddress {
+	coinId: number;
+	coinSymbol: string;
+	chain: string;
 	address: string;
-	currency: string;
-	network: string;
-	qrCodeUrl?: string;
+	memo?: string;
 }
 
 /**
@@ -69,7 +73,7 @@ class WalletApiService {
 	 */
 	async getBalance(): Promise<WalletBalance> {
 		return apiRequest<WalletBalance>({
-			url: '/api/wallet/balance'
+			url: '/api/wallet/balances'
 		});
 	}
 
@@ -96,15 +100,12 @@ class WalletApiService {
 	}
 
 	/**
-	 * Create a deposit address for a specific cryptocurrency
-	 * @param currency Currency code (BTC, ETH, USDT_TRC20, etc.)
-	 * @returns Deposit address details
+	 * Get user's deposit addresses for all supported cryptocurrencies
+	 * @returns Array of deposit addresses
 	 */
-	async createDepositAddress(currency: string): Promise<DepositAddress> {
-		return apiRequest<DepositAddress>({
-			url: '/api/wallet/deposit-address',
-			method: 'POST',
-			data: { currency }
+	async getDepositAddresses(): Promise<DepositAddress[]> {
+		return apiRequest<DepositAddress[]>({
+			url: '/api/wallet/deposit-addresses'
 		});
 	}
 
@@ -184,29 +185,31 @@ class WalletApiService {
 	 * Send DGT to another user
 	 * @param recipientId Recipient user ID
 	 * @param amount Amount of DGT to send
-	 * @param reason Reason for the transfer
+	 * @param note Optional note for the transfer
 	 * @returns Transfer result
 	 */
 	async transferDgt(
-		recipientId: number,
+		recipientId: string,
 		amount: number,
-		reason: string
+		note?: string
 	): Promise<{
 		transactionId: number;
-		senderNewBalance: number;
-		recipientNewBalance: number;
+		fromBalance: number;
+		toBalance: number;
+		transferId: string;
 	}> {
 		return apiRequest<{
 			transactionId: number;
-			senderNewBalance: number;
-			recipientNewBalance: number;
+			fromBalance: number;
+			toBalance: number;
+			transferId: string;
 		}>({
-			url: '/api/wallet/transfer',
+			url: '/api/wallet/transfer-dgt',
 			method: 'POST',
 			data: {
 				toUserId: recipientId,
 				amount,
-				reason
+				note
 			}
 		});
 	}
@@ -217,21 +220,79 @@ class WalletApiService {
 	 */
 	async getSupportedCurrencies(): Promise<
 		{
-			code: string;
-			name: string;
-			networks: string[];
-			isEnabled: boolean;
+			coinId: number;
+			coinSymbol: string;
+			coinName: string;
+			chain: string;
+			contract?: string;
+			decimals: number;
+			minDepositAmount?: string;
+			minWithdrawAmount?: string;
+			withdrawFee?: string;
+			supportsDeposit: boolean;
+			supportsWithdraw: boolean;
+			supportsSwap: boolean;
+			iconUrl?: string;
 		}[]
 	> {
 		return apiRequest<
 			{
-				code: string;
-				name: string;
-				networks: string[];
-				isEnabled: boolean;
+				coinId: number;
+				coinSymbol: string;
+				coinName: string;
+				chain: string;
+				contract?: string;
+				decimals: number;
+				minDepositAmount?: string;
+				minWithdrawAmount?: string;
+				withdrawFee?: string;
+				supportsDeposit: boolean;
+				supportsWithdraw: boolean;
+				supportsSwap: boolean;
+				iconUrl?: string;
 			}[]
 		>({
-			url: '/api/wallet/currencies'
+			url: '/api/wallet/supported-cryptocurrencies'
+		});
+	}
+
+	/**
+	 * Get wallet configuration (for feature gates and limits)
+	 * @returns Wallet configuration
+	 */
+	async getWalletConfig(): Promise<{
+		features: {
+			allowCryptoWithdrawals: boolean;
+			allowCryptoSwaps: boolean;
+			allowDGTSpending: boolean;
+			allowInternalTransfers: boolean;
+		};
+		dgt: {
+			usdPrice: number;
+			minDepositUSD: number;
+			maxDGTBalance: number;
+		};
+		limits: {
+			maxDGTTransfer: number;
+		};
+	}> {
+		return apiRequest<{
+			features: {
+				allowCryptoWithdrawals: boolean;
+				allowCryptoSwaps: boolean;
+				allowDGTSpending: boolean;
+				allowInternalTransfers: boolean;
+			};
+			dgt: {
+				usdPrice: number;
+				minDepositUSD: number;
+				maxDGTBalance: number;
+			};
+			limits: {
+				maxDGTTransfer: number;
+			};
+		}>({
+			url: '/api/wallet/config'
 		});
 	}
 

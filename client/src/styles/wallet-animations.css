@@ -156,6 +156,95 @@
 	opacity: 0.3;
 }
 
+/* Floating Animation for Pending Transactions */
+@keyframes float {
+	0% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-3px);
+	}
+	100% {
+		transform: translateY(0px);
+	}
+}
+
+.animate-float {
+	animation: float 2s ease-in-out infinite;
+}
+
+/* Shimmer Loading Effect */
+@keyframes shimmer {
+	0% {
+		background-position: -200px 0;
+	}
+	100% {
+		background-position: calc(200px + 100%) 0;
+	}
+}
+
+.shimmer {
+	background: linear-gradient(
+		90deg,
+		rgba(255, 255, 255, 0) 0%,
+		rgba(255, 255, 255, 0.1) 20%,
+		rgba(255, 255, 255, 0.2) 60%,
+		rgba(255, 255, 255, 0)
+	);
+	background-size: 200px 100%;
+	animation: shimmer 2s infinite;
+}
+
+/* Transfer Animation */
+@keyframes transferPulse {
+	0% {
+		box-shadow: 0 0 0px rgba(168, 85, 247, 0);
+	}
+	50% {
+		box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+	}
+	100% {
+		box-shadow: 0 0 0px rgba(168, 85, 247, 0);
+	}
+}
+
+.transfer-pulse {
+	animation: transferPulse 1.5s ease-in-out;
+}
+
+/* Button Click Animation */
+@keyframes buttonPress {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(0.95);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+.button-press {
+	animation: buttonPress 0.1s ease-out;
+}
+
+/* Smooth Fade In */
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.fade-in-up {
+	animation: fadeInUp 0.5s ease-out;
+}
+
 /* Media Queries for Responsive Design */
 @media (max-width: 640px) {
 	.wallet-grid {
