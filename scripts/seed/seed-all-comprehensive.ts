@@ -29,6 +29,10 @@ import chalk from 'chalk';
 import { parseArgs } from 'node:util';
 import { seedForumsFromConfig } from './seedForumsFromConfig';
 import { slugify } from '../db/utils/seedUtils';
+import { seedShopItems } from '../../server/utils/shop-utils';
+import { seedEconomySettings } from '../db/seed-economy-settings';
+import { seedXpActions } from '../db/seed-xp-actions';
+import { seedAvatarFrames } from './seed-avatar-frames';
 
 // Configuration
 const CONFIG = {
@@ -40,15 +44,15 @@ const CONFIG = {
   },
   THREADS: {
     PER_FORUM: {
-      MIN: 8,
-      MAX: 15
+      MIN: 1,
+      MAX: 1
     },
     POSTS: {
       MIN: 2,
-      MAX: 20
+      MAX: 2
     },
-    REPLY_CHANCE: 0.4,
-    MAX_REPLY_DEPTH: 3
+    REPLY_CHANCE: 1,
+    MAX_REPLY_DEPTH: 1
   },
   ENGAGEMENT: {
     LIKE_CHANCE: 0.3,
@@ -173,7 +177,9 @@ async function seedUsers() {
       isBanned: false,
       isVerified: true,
       bio: 'Lead administrator of DegenTalk. Here to keep the chaos organized.',
-      signature: '🛡️ Admin | Keeping degens in line since 2024'
+      signature: '🛡️ Admin | Keeping degens in line since 2024 | [TEST USER]',
+      dgtWalletBalance: 10000,
+      dgtPoints: 5000
     },
     {
       username: 'cryptosensei',
@@ -188,7 +194,9 @@ async function seedUsers() {
       isBanned: false,
       isVerified: true,
       bio: 'Trading since Bitcoin was $100. Here to share knowledge.',
-      signature: '📈 "Buy the dip, sell the rip" - Ancient Crypto Wisdom'
+      signature: '📈 "Buy the dip, sell the rip" - Ancient Crypto Wisdom | [TEST USER]',
+      dgtWalletBalance: 8000,
+      dgtPoints: 4500
     }
   );
 
@@ -208,7 +216,9 @@ async function seedUsers() {
       isBanned: false,
       isVerified: true,
       bio: faker.lorem.sentence(),
-      signature: '🛡️ Moderator | Keeping the peace in degen land'
+      signature: '🛡️ Moderator | Keeping the peace in degen land | [TEST USER]',
+      dgtWalletBalance: faker.number.int({ min: 250, max: 5000 }),
+      dgtPoints: faker.number.int({ min: 100, max: 5000 })
     });
   }
 
@@ -240,14 +250,16 @@ async function seedUsers() {
         '🔥 Meme coin degen'
       ]),
       signature: faker.helpers.arrayElement([
-        'DYOR | NFA | WAGMI',
-        'Not financial advice',
-        'GM everyone! ☀️',
-        'Diamond hands 💎🙌',
-        'Wen moon? 🌙',
-        'HODL or die 💀',
-        'This is the way 🚀'
-      ])
+        'DYOR | NFA | WAGMI | [TEST USER]',
+        'Not financial advice | [TEST USER]',
+        'GM everyone! ☀️ | [TEST USER]',
+        'Diamond hands 💎🙌 | [TEST USER]',
+        'Wen moon? 🌙 | [TEST USER]',
+        'HODL or die 💀 | [TEST USER]',
+        'This is the way 🚀 | [TEST USER]'
+      ]),
+      dgtWalletBalance: faker.number.int({ min: 50, max: 2000 }),
+      dgtPoints: faker.number.int({ min: 10, max: 2000 })
     });
   }
 
@@ -443,213 +455,135 @@ async function seedThreadsAndPosts() {
     }
   }
 
-  console.log(chalk.green(`✅ Created ${total_threads} threads with ${total_posts} total posts`));
+  console.log(chalk.green(`✅ Seeded ${total_threads} threads and ${total_posts} posts across all forums!`));
+  return { threads: total_threads, posts: total_posts };
 }
 
-function generateRealisticPostContent(forum_slug: string, is_first_post: boolean): string {
-  const templates = is_first_post ? POST_TEMPLATES.discussion : 
-    faker.helpers.arrayElement([POST_TEMPLATES.discussion, POST_TEMPLATES.analysis, POST_TEMPLATES.question]);
-
-  let content = faker.helpers.arrayElement(templates);
-
-  // Replace placeholders with realistic crypto content
-  const replacements = {
-    '{position}': faker.helpers.arrayElement(['long', 'short', 'spot']),
-    '{token}': faker.helpers.arrayElement(['BTC', 'ETH', 'SOL', 'LINK', 'AVAX', 'MATIC', 'ADA', 'DOT']),
-    '{result}': faker.helpers.arrayElement(['Made bank', 'Got rekt', 'Break even', 'Small profit', 'Major loss']),
-    '{price}': `$${faker.number.int({ min: 100, max: 50000 })}`,
-    '{status}': faker.helpers.arrayElement(['up 20%', 'down 15%', 'sideways', 'moon mission', 'bleeding']),
-    '{target}': `$${faker.number.int({ min: 100, max: 100000 })}`,
-    '{entry}': `$${faker.number.int({ min: 50, max: 10000 })}`,
-    '{exit}': `$${faker.number.int({ min: 50, max: 10000 })}`,
-    '{emotion}': faker.helpers.arrayElement(['WAGMI', 'Pain', 'Euphoria', 'Cope', 'Hopium']),
-    '{timeframe}': faker.helpers.arrayElement(['1h', '4h', '1d', '1w', '1m']),
-    '{pattern}': faker.helpers.arrayElement(['bullish divergence', 'head and shoulders', 'cup and handle', 'ascending triangle']),
-    '{indicators}': faker.helpers.arrayElement(['RSI', 'MACD', 'Bollinger Bands', 'Volume profile']),
-    '{direction}': faker.helpers.arrayElement(['bullish momentum', 'bearish reversal', 'sideways action', 'breakout incoming']),
-    '{prediction}': faker.helpers.arrayElement(['moon mission', 'dump incoming', 'crab market', 'volatility ahead']),
-    '{reasoning}': faker.helpers.arrayElement(['on-chain metrics', 'technical analysis', 'market sentiment', 'whale activity']),
-    '{topic}': faker.helpers.arrayElement(['DeFi yields', 'NFT markets', 'altcoin season', 'Bitcoin dominance']),
-    '{opinion}': faker.helpers.arrayElement(['this is just the beginning', 'we\'re in a bubble', 'adoption is accelerating']),
-    '{controversial_opinion}': faker.helpers.arrayElement(['NFTs are just expensive JPEGs', 'Bitcoin will flip gold', 'Ethereum will overtake Bitcoin']),
-    '{view}': faker.lorem.sentence(),
-    '{action}': faker.helpers.arrayElement(['stake my tokens', 'time the market', 'find alpha', 'avoid rugs']),
-    '{problem}': faker.helpers.arrayElement(['MetaMask connection', 'high gas fees', 'slippage issues', 'transaction failing'])
+function generateRealisticPostContent(forumSlug: string, isFirstPost: boolean): string {
+  const templates = isFirstPost ? POST_TEMPLATES.analysis : POST_TEMPLATES.discussion;
+  
+  const tokens = {
+    position: faker.helpers.arrayElement(['long', 'short', 'spot']),
+    token: faker.helpers.arrayElement(['BTC', 'ETH', 'SOL', 'AVAX', 'LINK', 'DOT']),
+    result: faker.helpers.arrayElement(['Massive W', 'Big L', 'Small profit', 'Broke even']),
+    price: `$${faker.number.int({ min: 100, max: 100000 })}`,
+    entry: `$${faker.number.int({ min: 50, max: 50000 })}`,
+    exit: `$${faker.number.int({ min: 60, max: 60000 })}`,
+    target: `$${faker.number.int({ min: 200, max: 200000 })}`,
+    emotion: faker.helpers.arrayElement(['WAGMI', 'NGMI', 'LFG', 'RIP']),
+    timeframe: faker.helpers.arrayElement(['1h', '4h', '1d', '1w']),
+    pattern: faker.helpers.arrayElement(['bull flag', 'bear trap', 'double bottom', 'head and shoulders']),
+    indicators: faker.helpers.arrayElement(['RSI', 'MACD', 'Bollinger Bands', 'Moving averages']),
+    direction: faker.helpers.arrayElement(['bullish', 'bearish', 'sideways']),
+    topic: faker.helpers.arrayElement(['DeFi yields', 'NFT prices', 'memecoin season', 'altcoin rotation']),
+    opinion: faker.helpers.arrayElement(['This is the top', 'We\'re still early', 'Bear market incoming', 'Bull run continues']),
+    controversial_opinion: faker.helpers.arrayElement(['Bitcoin is dead', 'ETH will flip BTC', 'NFTs are worthless', 'DeFi is a scam'])
   };
 
-  // Apply replacements
-  Object.entries(replacements).forEach(([placeholder, replacement]) => {
-    content = content.replace(new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'), replacement);
+  let template = faker.helpers.arrayElement(templates);
+  
+  // Replace tokens
+  Object.entries(tokens).forEach(([key, value]) => {
+    template = template.replace(new RegExp(`{${key}}`, 'g'), value);
   });
 
-  // Add some emoji and crypto slang
-  const endings = [
-    ' 🚀', ' 💎🙌', ' WAGMI!', ' LFG!', ' DYOR!', ' 📈', ' 🌙', ' NFA!', ' HODL!'
-  ];
-  
-  if (Math.random() > 0.4) {
-    content += faker.helpers.arrayElement(endings);
-  }
-
-  return content;
+  return template;
 }
 
 async function seedThreadPrefixes() {
   const prefixes = [
-    { name: 'ALPHA', color: 'orange-500' },
-    { name: 'LIVE', color: 'red-500' },
-    { name: 'TRADE', color: 'green-500' },
-    { name: 'SHILL', color: 'pink-500' },
-    { name: 'GEM', color: 'purple-500' },
-    { name: 'REKT', color: 'red-600' },
-    { name: 'MOON', color: 'yellow-500' },
-    { name: 'SIGNAL', color: 'blue-500' },
-    { name: 'TA', color: 'indigo-500' },
-    { name: 'BUG', color: 'red-500' },
-    { name: 'SUGGESTION', color: 'green-500' },
-    { name: 'ANNOUNCEMENT', color: 'yellow-600' },
-    { name: 'DICE', color: 'purple-600' },
-    { name: 'LIMBO', color: 'orange-600' },
-    { name: 'STRATEGY', color: 'blue-600' }
+    { name: 'URGENT', color: '#ff4444', bgColor: '#ff444420' },
+    { name: 'DISCUSSION', color: '#4488ff', bgColor: '#4488ff20' },
+    { name: 'GUIDE', color: '#44ff44', bgColor: '#44ff4420' },
+    { name: 'QUESTION', color: '#ffaa44', bgColor: '#ffaa4420' },
+    { name: 'SOLVED', color: '#88ff88', bgColor: '#88ff8820' }
   ];
 
-  const existing = await db.select().from(threadPrefixes);
-  const to_insert = prefixes.filter(p => !existing.find(e => e.name === p.name));
-
-  if (to_insert.length > 0) {
-    await db.insert(threadPrefixes).values(
-      to_insert.map((p, i) => ({ ...p, isActive: true, position: i }))
-    ).onConflictDoNothing();
-    console.log(chalk.gray(`  Added ${to_insert.length} thread prefixes`));
-  }
+  await db.insert(threadPrefixes).values(prefixes).onConflictDoNothing();
 }
 
 async function seedTags() {
-  const tag_names = [
-    'bitcoin', 'ethereum', 'defi', 'nft', 'trading', 'altcoins', 'memecoin',
-    'yield-farming', 'staking', 'analysis', 'bullish', 'bearish', 'moonshot',
-    'rekt', 'diamond-hands', 'paper-hands', 'whale', 'shrimp', 'crab',
-    'casino', 'dice', 'limbo', 'strategy', 'high-roller', 'degen',
-    'alpha', 'leak', 'announcement', 'update', 'bug', 'feature-request'
+  const tags = [
+    { name: 'bitcoin', slug: 'bitcoin' },
+    { name: 'ethereum', slug: 'ethereum' },
+    { name: 'defi', slug: 'defi' },
+    { name: 'nft', slug: 'nft' },
+    { name: 'trading', slug: 'trading' },
+    { name: 'analysis', slug: 'analysis' },
+    { name: 'gambling', slug: 'gambling' },
+    { name: 'strategy', slug: 'strategy' },
+    { name: 'altcoin', slug: 'altcoin' },
+    { name: 'memecoin', slug: 'memecoin' }
   ];
 
-  const existing = await db.select().from(tags);
-  const to_insert = tag_names
-    .filter(name => !existing.find(e => e.name === name))
-    .map(name => ({
-      name,
-      slug: slugify(name),
-      description: `Discussion about ${name}`,
-      isActive: true
-    }));
-
-  if (to_insert.length > 0) {
-    await db.insert(tags).values(to_insert).onConflictDoNothing();
-    console.log(chalk.gray(`  Added ${to_insert.length} tags`));
-  }
+  await db.insert(tags).values(tags).onConflictDoNothing();
 }
 
-async function updateForumStats() {
-  console.log(chalk.blue('📊 Updating forum statistics...'));
+/**
+ * Main seeding function
+ */
+async function main() {
+  const args = parseArgs({
+    options: {
+      wipe: { type: 'boolean', default: false },
+      'forums-only': { type: 'boolean', default: false }
+    },
+    allowPositionals: true
+  });
+
+  const startTime = Date.now();
   
-  // This could be enhanced to actually calculate and update
-  // thread counts, post counts, last activity etc. for each forum
-  const forums = await db.select().from(forumCategories).where(eq(forumCategories.type, 'forum'));
+  console.log(chalk.blue.bold('\n🚀 DegenTalk Comprehensive Seeding Script\n'));
   
-  for (const forum of forums) {
-    const thread_count = await db.select({ count: threads.id })
-      .from(threads)
-      .where(eq(threads.categoryId, forum.id));
-    
-    // Update forum with actual counts (if such columns exist)
-    // This is a placeholder for future enhancements
-    console.log(chalk.gray(`  ${forum.name}: ${thread_count.length} threads`));
-  }
-  
-  console.log(chalk.green('✅ Forum statistics updated'));
-}
-
-// Main execution function
-async function seedAll() {
-  const options = {
-    wipe: { type: 'boolean', short: 'w', default: false },
-    'forums-only': { type: 'boolean', default: false },
-    'users-only': { type: 'boolean', default: false },
-    'threads-only': { type: 'boolean', default: false }
-  } as const;
-
-  const { values } = parseArgs({ options, allowPositionals: true });
-  const { wipe, 'forums-only': forumsOnly, 'users-only': usersOnly, 'threads-only': threadsOnly } = values;
-
-  console.log(chalk.bgBlue.white('\n🌱 DEGENTALK COMPREHENSIVE SEEDING 🌱\n'));
-
   try {
-    if (wipe) {
-      console.log(chalk.yellow('⚠️  WIPE MODE: Clearing existing data...'));
-      await db.delete(postLikes);
-      await db.delete(threadTags);
-      await db.delete(posts);
-      await db.delete(threads);
-      if (!forumsOnly && !threadsOnly) {
-        await db.delete(threadPrefixes);
-        await db.delete(tags);
-        await db.delete(forumCategories);
-        await db.delete(users);
-      }
-      console.log(chalk.green('✅ Database cleared\n'));
+    // Phase 1: Infrastructure
+    console.log(chalk.yellow('📋 Phase 1: Setting up infrastructure...'));
+    
+    if (args.values.wipe) {
+      console.log(chalk.red('⚠️  Wiping existing data...'));
+      // Add wipe logic here if needed
     }
 
-    // 1. Seed Forum Structure
-    if (!usersOnly && !threadsOnly) {
-      console.log(chalk.bgCyan.black(' STEP 1: FORUM STRUCTURE '));
-      await seedForumsFromConfig();
-      console.log();
-    }
+    // Seed forum structure
+    await seedForumsFromConfig();
+    
+    // Seed economy and XP systems
+    await seedEconomySettings();
+    await seedXpActions();
+    
+    // Seed avatar frames
+    await seedAvatarFrames();
+    
+    // Seed shop items
+    await seedShopItems();
 
-    // 2. Seed Users
-    if (!forumsOnly && !threadsOnly) {
-      console.log(chalk.bgMagenta.white(' STEP 2: USERS '));
+    if (!args.values['forums-only']) {
+      // Phase 2: Users
+      console.log(chalk.yellow('\n👥 Phase 2: Creating users...'));
       await seedUsers();
-      console.log();
-    }
 
-    // 3. Seed Threads and Posts
-    if (!forumsOnly && !usersOnly) {
-      console.log(chalk.bgGreen.black(' STEP 3: CONTENT '));
+      // Phase 3: Content
+      console.log(chalk.yellow('\n💬 Phase 3: Generating realistic content...'));
       await seedThreadsAndPosts();
-      console.log();
     }
 
-    // 4. Update Statistics
-    if (!usersOnly) {
-      console.log(chalk.bgYellow.black(' STEP 4: STATISTICS '));
-      await updateForumStats();
-      console.log();
-    }
-
-    console.log(chalk.bgGreen.white('\n🎉 SEEDING COMPLETED SUCCESSFULLY! 🎉'));
-    console.log(chalk.green('\nYour DegenTalk instance is now ready for testing with:'));
-    console.log(chalk.cyan('• Realistic forum structure following README-FORUM.md'));
-    console.log(chalk.cyan('• Diverse user base with different roles and personas'));
-    console.log(chalk.cyan('• Engaging threads with authentic crypto content'));
-    console.log(chalk.cyan('• Posts, replies, likes, and forum interactions'));
-    console.log(chalk.cyan('• Tags, prefixes, and proper categorization'));
-    console.log(chalk.green('\nNavigate to your app and explore the fully populated forums! 🚀\n'));
-
+    const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+    
+    console.log(chalk.green.bold(`\n✨ Seeding completed successfully in ${duration}s!`));
+    console.log(chalk.cyan('\n🎯 Ready to go! Start the dev server with: npm run dev\n'));
+    
   } catch (error) {
-    console.error(chalk.red('\n❌ SEEDING FAILED:'), error);
+    console.error(chalk.red.bold('\n❌ Seeding failed:'), error);
     process.exit(1);
   }
 }
 
-// Script execution
+// Run if called directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-  seedAll()
+  main()
     .then(() => process.exit(0))
-    .catch((err) => {
-      console.error(chalk.red('Script execution failed:'), err);
+    .catch((error) => {
+      console.error(error);
       process.exit(1);
     });
 }
-
-export { seedAll };

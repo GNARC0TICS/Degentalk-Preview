@@ -11,6 +11,7 @@ import { TagBadge } from '@/components/ui/tag-badge';
 import { ThreadStats } from './ThreadStats'; // Import the new component
 import { IconRenderer } from '@/components/icons/iconRenderer';
 import OriginForumPill from './OriginForumPill';
+import { ModeratorActions } from './ModeratorActions';
 
 // Use the new prop type from @/types/forum.ts
 const ThreadCardComponent = ({
@@ -31,6 +32,7 @@ const ThreadCardComponent = ({
 		slug,
 		isSticky,
 		isLocked,
+		isHidden,
 		viewCount,
 		postCount,
 		lastPostAt,
@@ -153,7 +155,21 @@ const ThreadCardComponent = ({
 					</div>
 
 					<div className="flex flex-col items-end justify-between text-xs text-zinc-500 ml-2">
-						<ThreadStats viewCount={viewCount} postCount={postCount} />
+						<div className="flex items-center gap-2">
+							<ThreadStats viewCount={viewCount} postCount={postCount} />
+							<ModeratorActions
+								type="thread"
+								itemId={thread.id}
+								itemData={{
+									isLocked,
+									isSticky,
+									isHidden,
+									isSolved: thread.isSolved,
+									userId: user?.id,
+									username: user?.username
+								}}
+							/>
+						</div>
 
 						{lastPostAt && lastPostAt !== createdAt && (
 							<div className="text-xs text-zinc-500 mt-2">

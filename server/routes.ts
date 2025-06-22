@@ -50,6 +50,8 @@ import editorRoutes from './src/domains/editor/editor.routes';
 import profileRoutes from './src/domains/profile/profile.routes';
 // Import domain-based relationships routes
 import relationshipsRoutes from './src/domains/social/relationships.routes';
+// Import domain-based whale watch routes
+import whaleWatchRoutes from './src/domains/social/whale-watch.routes';
 // Import domain-based messaging routes
 import messageRoutes from './src/domains/messaging/message.routes';
 // Import domain-based vault routes
@@ -266,6 +268,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 	// Set up relationships routes with domain-based approach
 	app.use('/api/relationships', relationshipsRoutes);
+
+	// Set up whale watch routes with domain-based approach  
+	app.use('/api', whaleWatchRoutes);
 
 	// Set up messaging routes with domain-based approach
 	app.use('/api/messages', messageRoutes);

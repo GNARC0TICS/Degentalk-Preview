@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -6,7 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { RichTextEditor } from '@/components/editor/rich-text-editor';
 import { Label } from '@/components/ui/label';
-import { AlertCircle, Loader2, Hash } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AlertCircle, Loader2, Hash, Eye, Edit3 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { useMutation } from '@tanstack/react-query';
@@ -14,6 +16,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
 import type { MergedRules } from '@/contexts/ForumStructureContext';
+import DOMPurify from 'dompurify';
 
 // Form validation schema
 const threadFormSchema = z.object({
@@ -43,6 +46,7 @@ export function ThreadForm({
 }: ThreadFormProps) {
 	const [, setLocation] = useLocation();
 	const { toast } = useToast();
+	const [activeTab, setActiveTab] = useState<'write' | 'preview'>('write');
 
 	const form = useForm<ThreadFormData>({
 		resolver: zodResolver(threadFormSchema),
@@ -143,19 +147,62 @@ export function ThreadForm({
 				</select>
 			</div>
 
-			{/* Content RichTextEditor */}
-			<div className="space-y-2">
+			{/* Content Editor with Live Preview */}
+			<div className="space-y-3">
 				<Label htmlFor="content" className="text-sm font-medium text-zinc-300">
 					Thread Content
 				</Label>
 
-				<RichTextEditor
-					content={form.watch('content')}
-					onChange={(html) => form.setValue('content', html, { shouldValidate: true })}
-					placeholder="Share your thoughts, questions, or insights..."
-					editorClass="min-h-[200px]"
-					readOnly={createThreadMutation.isPending}
-				/>
+				<Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'write' | 'preview')} className="w-full">
+					<TabsList className="grid w-full grid-cols-2 bg-zinc-800/50 border border-zinc-700">
+						<TabsTrigger 
+							value="write" 
+							className="flex items-center gap-2 data-[state=active]:bg-zinc-700 data-[state=active]:text-white"
+						>
+							<Edit3 className="h-4 w-4" />
+							Write
+						</TabsTrigger>
+						<TabsTrigger 
+							value="preview" 
+							className="flex items-center gap-2 data-[state=active]:bg-zinc-700 data-[state=active]:text-white"
+						>
+							<Eye className="h-4 w-4" />
+							Preview
+						</TabsTrigger>
+					</TabsList>
+					
+					<TabsContent value="write" className="mt-2">
+						<RichTextEditor
+							content={form.watch('content')}
+							onChange={(html) => form.setValue('content', html, { shouldValidate: true })}
+							placeholder="Share your thoughts, questions, or insights..."
+							editorClass="min-h-[300px]"
+							readOnly={createThreadMutation.isPending}
+						/>
+					</TabsContent>
+					
+					<TabsContent value="preview" className="mt-2">
+						<Card className="bg-zinc-900/50 border-zinc-700">
+							<CardHeader className="pb-3">
+								<CardTitle className="text-lg">Preview</CardTitle>
+							</CardHeader>
+							<CardContent>
+								{form.watch('content') ? (
+									<div 
+										className="prose prose-invert prose-zinc max-w-none min-h-[250px]"
+										dangerouslySetInnerHTML={{ 
+											__html: DOMPurify.sanitize(form.watch('content')) 
+										}}
+									/>
+								) : (
+									<div className="min-h-[250px] flex items-center justify-center text-zinc-500 text-sm">
+										Nothing to preview yet. Switch to "Write" tab to add content.
+									</div>
+								)}
+							</CardContent>
+						</Card>
+					</TabsContent>
+				</Tabs>
 
 				{form.formState.errors.content && (
 					<p className="text-sm text-red-400 flex items-center gap-1">

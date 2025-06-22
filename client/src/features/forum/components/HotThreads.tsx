@@ -8,6 +8,7 @@ import { MessageSquare, Eye, ThumbsUp, ArrowRight, Clock, TrendingUp } from 'luc
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { HotThreadsSkeleton } from '@/components/ui/thread-skeleton';
 // Removed motion, AnimatePresence
 
 interface ThreadResponse {
@@ -42,9 +43,15 @@ interface ThreadResponse {
 interface HotThreadsProps {
 	className?: string;
 	limit?: number;
+	/**
+	 * Variant controls overall styling / sizing.
+	 * "widget" (default) – bigger card intended for sidebars / widgets
+	 * "feed" – compact version used inline in main content feed
+	 */
+	variant?: 'widget' | 'feed';
 }
 
-function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
+function HotThreads({ className = '', limit = 5, variant = 'widget' }: HotThreadsProps) {
 	const {
 		data: threads,
 		isLoading,
@@ -125,13 +132,17 @@ function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 							{/* Author and meta info */}
 							<div className="flex items-center gap-3 text-sm text-zinc-400 mb-3">
 								<div className="flex items-center gap-2">
-									<Avatar className="h-6 w-6">
-										<AvatarImage src={thread.avatar_url} alt={thread.username} />
-										<AvatarFallback className="text-xs bg-zinc-800 text-zinc-300">
-											{getInitials(thread.username)}
-										</AvatarFallback>
-									</Avatar>
-									<span className="text-zinc-300 font-medium">{thread.username}</span>
+									<Link href={`/profile/${thread.user_id}`}>
+										<Avatar className="h-6 w-6 cursor-pointer hover:ring-2 hover:ring-orange-500/50 transition-all">
+											<AvatarImage src={thread.avatar_url} alt={thread.username} />
+											<AvatarFallback className="text-xs bg-zinc-800 text-zinc-300">
+												{getInitials(thread.username)}
+											</AvatarFallback>
+										</Avatar>
+									</Link>
+									<Link href={`/profile/${thread.user_id}`}>
+										<span className="text-zinc-300 font-medium hover:text-orange-300 transition-colors cursor-pointer">{thread.username}</span>
+									</Link>
 								</div>
 
 								<span className="text-zinc-600">•</span>
@@ -159,17 +170,17 @@ function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 									</div>
 								</div>
 
-								{/* Category tag (stop nested anchor) */}
-								<span
-									role="link"
-									className="bg-zinc-800/50 text-zinc-400 border border-zinc-600 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs cursor-pointer rounded px-2 py-0.5"
-									onClick={(e) => {
-										e.stopPropagation();
-										window.location.href = `/forums/${thread.category_slug}`;
-									}}
-								>
-									{thread.category_name}
-								</span>
+								{/* Category tag */}
+								<Link href={`/forums/${thread.category_slug}`}>
+									<span
+										className="bg-zinc-800/50 text-zinc-400 border border-zinc-600 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs cursor-pointer rounded px-2 py-0.5"
+										onClick={(e) => {
+											e.stopPropagation();
+										}}
+									>
+										{thread.category_name}
+									</span>
+								</Link>
 							</div>
 						</div>
 					</div>
@@ -178,13 +189,21 @@ function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 		);
 	};
 
-	const ITEM_HEIGHT = 200; // Estimated height for each thread item card
-	const listHeight = Math.min(threads?.length || 0, 3) * ITEM_HEIGHT; // Show up to 3 items, or fewer if less than 3 threads
+	// Adjust sizing based on variant – the feed variant is a bit more compact.
+	const ITEM_HEIGHT = variant === 'feed' ? 160 : 200;
+	const maxVisibleItems = variant === 'feed' ? 2 : 3;
+	const listHeight = Math.min(threads?.length || 0, maxVisibleItems) * ITEM_HEIGHT;
+
+	// Choose a slightly different background for the feed variant (less flashy)
+	const cardBackground =
+		variant === 'feed'
+			? 'bg-zinc-900/70'
+			: 'bg-gradient-to-br from-zinc-900/90 to-zinc-900/60';
+
+	const mergedClassName = `w-full overflow-hidden ${cardBackground} border border-zinc-800/60 shadow-xl backdrop-blur-sm ${className}`;
 
 	return (
-		<Card
-			className={`w-full overflow-hidden bg-gradient-to-br from-zinc-900/90 to-zinc-900/60 border border-zinc-800/60 shadow-xl backdrop-blur-sm ${className}`}
-		>
+		<Card className={mergedClassName}>
 			<CardHeader className="pb-3">
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-3">
@@ -205,10 +224,7 @@ function HotThreads({ className = '', limit = 5 }: HotThreadsProps) {
 
 			<CardContent className="space-y-0">
 				{isLoading ? (
-					<div className="flex items-center justify-center py-8">
-						<div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
-						<span className="ml-3 text-zinc-400">Loading hot threads...</span>
-					</div>
+					<HotThreadsSkeleton count={limit} />
 				) : error ? (
 					<div className="text-center py-8">
 						<div className="text-red-400 flex items-center justify-center gap-2">

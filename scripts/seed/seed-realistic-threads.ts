@@ -15,11 +15,12 @@ import { parseArgs } from 'node:util';
 import chalk from 'chalk'; // For better console output
 
 // --- Configuration ---
-const THREADS_PER_FORUM = 5;       // Number of threads to create in each target forum
-const MIN_POSTS_PER_THREAD = 3;
-const MAX_POSTS_PER_THREAD = 15;
-const REPLY_CHANCE_PERCENT = 60; // Chance a post (after the first) is a reply
-const MAX_REPLY_DEPTH = 3;       // Maximum nesting level for replies
+// Phase 2 lightweight seeding
+const THREADS_PER_FORUM = 1;       // Exactly one thread per forum
+const MIN_POSTS_PER_THREAD = 2;    // First post + one reply
+const MAX_POSTS_PER_THREAD = 2;
+const REPLY_CHANCE_PERCENT = 100; // Guarantee the second post is a reply
+const MAX_REPLY_DEPTH = 1;       // No deep nesting
 const TAGS_PER_THREAD_MAX = 3;
 const DEFAULT_PREFIXES = [ // Prefixes to ensure exist globally
   { name: 'Question', color: 'blue-500' },

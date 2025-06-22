@@ -14,6 +14,8 @@ import { useAuth } from '@/hooks/use-auth.tsx';
 import { usePrefixes, useCreateThread } from '@/features/forum/hooks/useForumQueries';
 import type { CreateThreadParams } from '@/features/forum/hooks/useForumQueries';
 import { PrefixBadge } from '@/components/forum/prefix-badge';
+import { useDraft } from '@/hooks/use-draft';
+import { Clock, Save } from 'lucide-react';
 import {
 	Dialog,
 	DialogContent,
@@ -233,6 +235,28 @@ export function CreateThreadForm({
 	});
 
 	const createThreadMutation = useCreateThread();
+	
+	// Draft management
+	const {
+		draft,
+		updateDraft,
+		clearDraft,
+		isDirty,
+		isSaving,
+		lastSaved,
+		hasDraft
+	} = useDraft({
+		key: `thread-${activeForumSlug || 'default'}`,
+		autoSaveInterval: 30000, // 30 seconds
+		enableCloudSync: true,
+		onAutoSave: () => {
+			toast({
+				title: 'Draft saved',
+				description: 'Your work has been automatically saved.',
+				variant: 'default'
+			});
+		}
+	});
 
 	useEffect(() => {
 		if (isDraftLoadSuccess && draftData && draftData.id) {
@@ -390,6 +414,45 @@ export function CreateThreadForm({
 
 	const renderFormContent = () => (
 		<Form {...form}>
+			{/* Draft Status Indicator */}
+			{(hasDraft || lastSaved || isSaving) && (
+				<div className="flex items-center gap-2 text-sm text-zinc-400 pb-4 border-b border-zinc-800">
+					{isSaving ? (
+						<>
+							<Save className="h-4 w-4 animate-pulse" />
+							<span>Saving draft...</span>
+						</>
+					) : lastSaved ? (
+						<>
+							<Clock className="h-4 w-4" />
+							<span>Draft saved {lastSaved.toLocaleTimeString()}</span>
+						</>
+					) : null}
+					
+					{hasDraft && (
+						<Button
+							type="button"
+							variant="ghost"
+							size="sm"
+							onClick={() => {
+								form.setValue('title', draft.title || '');
+								if (draft.prefixId) {
+									form.setValue('prefixId', draft.prefixId);
+								}
+								toast({
+									title: 'Draft restored',
+									description: 'Your previous work has been restored.',
+									variant: 'default'
+								});
+							}}
+							className="ml-auto"
+						>
+							Restore Draft
+						</Button>
+					)}
+				</div>
+			)}
+
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
 				<FormField
 					control={form.control}

@@ -38,6 +38,7 @@
 		"seed:levels": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-default-levels.ts",
 		"seed:economy": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-economy-settings.ts",
 		"seed:shop": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-shop.ts",
+		"seed:avatar-frames": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/seed/seed-avatar-frames.ts",
 		"seed:realistic-threads": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/seed/seed-realistic-threads.ts",
 		"sync:forums": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/dev/syncForumsToDB.ts",
 		"sync:check-forum-config": "npx dotenv-cli -e env.local -- tsx scripts/ops/check-forum-config-sync.ts",

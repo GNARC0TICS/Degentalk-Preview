@@ -481,6 +481,23 @@ export const forumApi = {
 			data: { ruleIds }
 		});
 		return directResponse;
+	},
+
+	/**
+	 * Reports
+	 */
+	reportPost: async (data: {
+		contentType: 'post' | 'thread' | 'message';
+		contentId: number;
+		reason: string;
+		details?: string;
+	}): Promise<{ success: true; message: string; reportId: number }> => {
+		const directResult = await apiRequest<{ success: true; message: string; reportId: number }>({
+			url: '/api/forum/reports',
+			method: 'POST',
+			data
+		});
+		return directResult;
 	}
 };
 

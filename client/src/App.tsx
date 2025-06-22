@@ -55,6 +55,8 @@ import AdminDictionaryQueuePage from './pages/admin/dictionary';
 import AdminReportsPage from './pages/admin/reports/index.tsx';
 import AdminAnimationsPage from './pages/admin/ui/animations.tsx';
 import AdminPackBuilderPage from './pages/admin/ui/pack-builder.tsx';
+import AdminAvatarFramesPage from './pages/admin/avatar-frames.tsx';
+import AdminSocialConfigPage from './pages/admin/social-config.tsx';
 
 // Shop Pages
 import DgtPurchasePage from './pages/shop-management/dgt-purchase';
@@ -278,6 +280,22 @@ function App() {
 									<React.Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
 										<AdminEmojisPage />
 									</React.Suspense>
+								</AdminLayout>
+							)}
+						/>
+						<Route
+							path="/admin/avatar-frames"
+							component={() => (
+								<AdminLayout>
+									<AdminAvatarFramesPage />
+								</AdminLayout>
+							)}
+						/>
+						<Route
+							path="/admin/social-config"
+							component={() => (
+								<AdminLayout>
+									<AdminSocialConfigPage />
 								</AdminLayout>
 							)}
 						/>

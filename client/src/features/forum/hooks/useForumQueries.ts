@@ -20,6 +20,12 @@ import { apiRequest, apiPost, apiPut, apiDelete } from '@/lib/api-request';
 // Extend ThreadSearchParams to explicitly include forumSlug for clarity in this hook
 export type ThreadSearchParams = OriginalThreadSearchParams & {
 	forumSlug?: string;
+	solved?: boolean;
+	bookmarked?: boolean;
+	mine?: boolean;
+	replied?: boolean;
+	q?: string;
+	tags?: number[];
 };
 
 /**
@@ -597,6 +603,25 @@ export const usePostUpdate = () => {
 		onError: (error) => {
 			console.error('Error updating post:', error);
 			toast.error('Failed to update post. Please try again.');
+		}
+	});
+};
+
+export const useReportPost = () => {
+	return useMutation({
+		mutationFn: (data: {
+			contentType: 'post' | 'thread' | 'message';
+			contentId: number;
+			reason: string;
+			details?: string;
+		}) => forumApi.reportPost(data),
+		onSuccess: () => {
+			toast.success('Report submitted successfully. Thank you for helping keep our community safe!');
+		},
+		onError: (error) => {
+			toast.error('Failed to submit report', {
+				description: error instanceof Error ? error.message : 'Please try again later'
+			});
 		}
 	});
 };

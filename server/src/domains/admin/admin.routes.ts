@@ -33,6 +33,9 @@ import cloutRoutes from './sub-domains/clout/clout.routes';
 import economyRoutes from './sub-domains/economy/economy.routes';
 import dgtPackageRoutes from './sub-domains/dgt-packages/dgt-packages.routes';
 import animationPackRoutes from './sub-domains/animation-packs/animation-packs.routes';
+import avatarFramesRoutes from './sub-domains/avatar-frames/avatar-frames.routes';
+import moderatorNotesRoutes from './sub-domains/moderator-notes/moderator-notes.routes';
+import socialRoutes from './sub-domains/social/social.routes';
 // import userAdminRoutes from './users/users.admin.routes'; // DEPRECATED
 // import economyAdminRoutes from './settings/economy.routes'; // Placeholder for future
 
@@ -64,6 +67,9 @@ adminRouter.use('/clout', cloutRoutes);
 adminRouter.use('/economy', economyRoutes);
 adminRouter.use('/dgt-packages', dgtPackageRoutes);
 adminRouter.use('/animation-packs', animationPackRoutes);
+adminRouter.use('/avatar-frames', avatarFramesRoutes);
+adminRouter.use('/moderator-notes', moderatorNotesRoutes);
+adminRouter.use('/social', socialRoutes);
 
 // DEBUG: Middleware to check if /emojis path is reached in adminRouter
 adminRouter.use('/emojis', (req, res, next) => {

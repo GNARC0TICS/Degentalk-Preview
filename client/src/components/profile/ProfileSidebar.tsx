@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { WhisperButton } from '@/components/messages/WhisperButton';
 import { WhisperModal } from '@/components/messages/WhisperModal';
-import { Settings, UserCheck, UserPlus } from 'lucide-react';
+import { Settings, UserCheck, UserPlus, Crown, Eye } from 'lucide-react';
 import { cn, formatNumber, formatCurrency, formatRelativeTime } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -16,6 +16,7 @@ import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { UserName } from '@/components/users/Username';
 import { LevelBadge } from '@/components/identity/LevelBadge';
+import { FollowButton } from '@/components/social/FollowButton';
 
 interface Props {
 	profile: ProfileData;
@@ -31,55 +32,28 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 	// Get identity display information
 	const identity = useIdentityDisplay(profile);
 
-	// Check follow status
-	const { data: followStatus } = useQuery({
-		queryKey: ['/api/relationships/is-following', profile.id],
+	// Fetch follow counts for Whale Watch
+	const { data: followCounts } = useQuery({
+		queryKey: [`/api/users/${profile.id}/follow-counts`],
 		queryFn: async () => {
-			if (isOwnProfile) return { isFollowing: false };
-			// Ensure user is defined before trying to fetch follow status
-			if (!user) return { isFollowing: false };
-			const res = await apiRequest<{ isFollowing: boolean }>({
-				url: `/api/relationships/is-following/${profile.id}`
+			return await apiRequest<{ following: number; followers: number }>({
+				url: `/api/users/${profile.id}/follow-counts`,
+				method: 'GET'
 			});
-			return res;
-		},
-		enabled: !isOwnProfile && !!user // Only run if not own profile and user is logged in
-	});
-
-	const isFollowing = followStatus?.isFollowing || false;
-
-	useEffect(() => {
-		// This effect is not strictly needed anymore as isFollowing is derived from followStatus directly
-		// but keeping it in case of future direct manipulations of isFollowing state, though unlikely.
-		if (followStatus) {
-			// setIsFollowing(followStatus.isFollowing); // No longer have setIsFollowing state hook
 		}
-	}, [followStatus]);
-
-	// Follow / Unfollow
-	const followMutation = useMutation({
-		mutationFn: () =>
-			apiRequest({ url: `/api/relationships/follow/${profile.id}`, method: 'POST' }),
-		onSuccess: () => {
-			toast({ title: 'Success', description: `You are now following ${profile.username}` });
-			queryClient.invalidateQueries({ queryKey: ['/api/relationships/is-following', profile.id] });
-			queryClient.invalidateQueries({ queryKey: ['profile', profile.username] }); // Invalidate profile to update follower count potentially
-		},
-		onError: (err: any) =>
-			toast({ title: 'Error', description: err.message, variant: 'destructive' })
 	});
 
-	const unfollowMutation = useMutation({
-		mutationFn: () =>
-			apiRequest({ url: `/api/relationships/unfollow/${profile.id}`, method: 'DELETE' }),
-		onSuccess: () => {
-			toast({ title: 'Success', description: `You have unfollowed ${profile.username}` });
-			queryClient.invalidateQueries({ queryKey: ['/api/relationships/is-following', profile.id] });
-			queryClient.invalidateQueries({ queryKey: ['profile', profile.username] });
-		},
-		onError: (err: any) =>
-			toast({ title: 'Error', description: err.message, variant: 'destructive' })
+	// Fetch whale status
+	const { data: whaleStatus } = useQuery({
+		queryKey: [`/api/whale-status/${profile.id}`],
+		queryFn: async () => {
+			return await apiRequest<{ isWhale: boolean; followerCount: number; threshold: number }>({
+				url: `/api/whale-status/${profile.id}`,
+				method: 'GET'
+			});
+		}
 	});
+
 
 	return (
 		<div
@@ -108,7 +82,12 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 				</div>
 
 				{/* Username, Title, Role, Level */}
-				<UserName user={profile} className="text-2xl font-bold text-center mb-1" />
+				<div className="flex items-center justify-center gap-2 mb-1">
+					<UserName user={profile} className="text-2xl font-bold text-center" />
+					{whaleStatus?.isWhale && (
+						<Crown className="h-6 w-6 text-yellow-400" title="Whale - High Follower Count" />
+					)}
+				</div>
 
 				{identity?.primaryRole && (
 					<Badge
@@ -131,24 +110,11 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 						</Link>
 					) : (
 						<>
-							<Button
-								className={`flex-1 ${
-									isFollowing
-										? 'bg-gradient-to-r from-zinc-600 to-zinc-700'
-										: 'bg-gradient-to-r from-emerald-600 to-green-600'
-								} text-white`}
-								onClick={() => (isFollowing ? unfollowMutation.mutate() : followMutation.mutate())}
-								disabled={followMutation.isPending || unfollowMutation.isPending}
-							>
-								{followMutation.isPending || unfollowMutation.isPending ? (
-									<LoadingSpinner size="sm" color="zinc" className="mr-2" />
-								) : isFollowing ? (
-									<UserCheck className="mr-2 h-4 w-4" />
-								) : (
-									<UserPlus className="mr-2 h-4 w-4" />
-								)}
-								{isFollowing ? 'Unfollow' : 'Follow'}
-							</Button>
+							<FollowButton 
+								userId={profile.id} 
+								username={profile.username}
+								className="flex-1"
+							/>
 							<WhisperButton onClick={() => setIsMessageModalOpen(true)} className="flex-1" />
 						</>
 					)}
@@ -167,7 +133,7 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 				)}
 
 				{/* Stats */}
-				<div className="grid grid-cols-3 gap-4 w-full text-center mb-6 bg-gradient-to-r from-zinc-800/40 to-zinc-900/40 p-4 rounded-lg border border-zinc-700/30 backdrop-blur-sm">
+				<div className="grid grid-cols-2 gap-4 w-full text-center mb-4 bg-gradient-to-r from-zinc-800/40 to-zinc-900/40 p-4 rounded-lg border border-zinc-700/30 backdrop-blur-sm">
 					<div className="flex flex-col">
 						<span className="text-xl font-bold text-zinc-200">
 							{formatNumber(profile.totalThreads)}
@@ -180,11 +146,30 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 						</span>
 						<span className="text-sm text-zinc-400">Posts</span>
 					</div>
+				</div>
+
+				{/* Whale Watch Stats */}
+				<div className="grid grid-cols-2 gap-4 w-full text-center mb-6 bg-gradient-to-r from-emerald-800/20 to-green-800/20 p-4 rounded-lg border border-emerald-700/30 backdrop-blur-sm">
 					<div className="flex flex-col">
-						<span className="text-xl font-bold text-zinc-200">
-							{formatNumber(profile.totalLikes)}
-						</span>
-						<span className="text-sm text-zinc-400">Likes</span>
+						<div className="flex items-center justify-center gap-1 mb-1">
+							<Eye className="h-4 w-4 text-emerald-400" />
+							<span className="text-lg font-bold text-zinc-200">
+								{followCounts?.following || 0}
+							</span>
+						</div>
+						<span className="text-sm text-zinc-400">Watching</span>
+					</div>
+					<div className="flex flex-col">
+						<div className="flex items-center justify-center gap-1 mb-1">
+							<Eye className="h-4 w-4 text-emerald-400" />
+							<span className="text-lg font-bold text-zinc-200">
+								{followCounts?.followers || 0}
+							</span>
+							{whaleStatus?.isWhale && (
+								<Crown className="h-4 w-4 text-yellow-400" />
+							)}
+						</div>
+						<span className="text-sm text-zinc-400">Watchers</span>
 					</div>
 				</div>
 

@@ -17226,3 +17226,46 @@ User not found
 {
   "logPath": "logs/app.log"
 }
+[2025-06-21T22:16:12.267Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-21T22:34:25.079Z] [ERROR] [SHOP] Error adding shop item
+{
+  "length": 501,
+  "name": "error",
+  "severity": "ERROR",
+  "code": "23502",
+  "detail": "Failing row contains (1, 5d7d76bf-4709-4036-a3ae-c2dbad75884e, null, null, null, null, 0, null, null, null, null, 0, null, {}, null, null, draft, {\"name\": \"Gold Frame\", \"type\": \"frame:gold\", \"price\": 29.99, \"ca..., f, null, null, null, null, null, 50, null, NEW!, f, null, 2025-06-21 22:34:25.042774, 2025-06-21 22:34:25.042774, {}).",
+  "schema": "public",
+  "table": "products",
+  "column": "name",
+  "file": "execMain.c",
+  "line": "1982",
+  "routine": "ExecConstraints"
+}
+[2025-06-21T22:34:25.091Z] [ERROR] [SHOP] Error seeding shop items
+{
+  "length": 501,
+  "name": "error",
+  "severity": "ERROR",
+  "code": "23502",
+  "detail": "Failing row contains (1, 5d7d76bf-4709-4036-a3ae-c2dbad75884e, null, null, null, null, 0, null, null, null, null, 0, null, {}, null, null, draft, {\"name\": \"Gold Frame\", \"type\": \"frame:gold\", \"price\": 29.99, \"ca..., f, null, null, null, null, null, 50, null, NEW!, f, null, 2025-06-21 22:34:25.042774, 2025-06-21 22:34:25.042774, {}).",
+  "schema": "public",
+  "table": "products",
+  "column": "name",
+  "file": "execMain.c",
+  "line": "1982",
+  "routine": "ExecConstraints"
+}
+[2025-06-22T06:18:30.649Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-22T06:18:30.654Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-22T06:18:30.790Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-22T06:18:31.246Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-22T06:18:31.249Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-22T06:18:31.249Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-22T06:18:31.249Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-22T06:18:31.249Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed

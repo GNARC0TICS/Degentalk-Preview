@@ -1,9 +1,11 @@
 import { Link } from 'wouter';
-import { MessageSquare, CornerDownRight, Lock } from 'lucide-react';
+import { MessageSquare, CornerDownRight, Lock, Shield, Star, Crown } from 'lucide-react';
 import type { MergedForum } from '@/contexts/ForumStructureContext';
 import { useState, useEffect } from 'react';
 import { StatChip } from '@/components/ui/StatChip';
+import { Badge } from '@/components/ui/badge';
 import { usePermission } from '@/hooks/usePermission';
+import { useAuth } from '@/hooks/use-auth';
 
 interface ForumListItemProps {
 	forum: MergedForum;
@@ -22,6 +24,7 @@ export function ForumListItem({
 	const [prevPostCount, setPrevPostCount] = useState(forum.postCount || 0);
 	const [isAnimating, setIsAnimating] = useState(false);
 
+	const { user } = useAuth();
 	const { canPost } = usePermission(forum);
 
 	// Check if counts have changed to trigger animations
@@ -57,6 +60,31 @@ export function ForumListItem({
 
 	// Different styling based on depth level
 	const isParentForum = depthLevel === 0;
+
+	// Get access level info
+	const getAccessLevelInfo = () => {
+		const accessLevel = forum.rules?.allowPosting ? 'public' : null; // Simplified for now
+		// You could implement more detailed access level detection here
+		if (!canPost && user) {
+			return { 
+				icon: Shield, 
+				label: 'Restricted Access', 
+				color: 'text-amber-400',
+				description: 'Higher level required'
+			};
+		}
+		if (!user) {
+			return { 
+				icon: Lock, 
+				label: 'Sign in Required', 
+				color: 'text-zinc-500',
+				description: 'Sign in to access'
+			};
+		}
+		return null;
+	};
+
+	const accessInfo = getAccessLevelInfo();
 
 	// Main content for the forum item (parent or subforum)
 	const forumItemContent = (
@@ -108,6 +136,18 @@ export function ForumListItem({
 							accent={accentColor}
 							isAnimating={isAnimating}
 						/>
+
+						{/* Access Level Badge */}
+						{accessInfo && (
+							<Badge 
+								variant="outline" 
+								className={`text-[10px] px-2 py-0.5 ${accessInfo.color} border-current`}
+								title={accessInfo.description}
+							>
+								<accessInfo.icon className="h-3 w-3 mr-1" />
+								{accessInfo.label}
+							</Badge>
+						)}
 					</div>
 				</div>
 				<div className="ml-4 flex-shrink-0">{renderIcon()}</div>

@@ -4,6 +4,9 @@ export { default as OverviewTab } from './OverviewTab';
 export { default as ProfileSidebar } from './ProfileSidebar';
 export { default as XpLogView } from './XpLogView';
 
+// Modular Profile Components
+export { UserProfileRenderer } from './UserProfileRenderer';
+
 export * from './XPProfileSection';
 export * from './CosmeticControlPanel';
 export * from './ProfileSkeleton';

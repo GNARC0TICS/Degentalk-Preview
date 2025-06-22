@@ -6,6 +6,13 @@ import Breadcrumb from '@/components/common/Breadcrumb';
 import { Wide } from '@/layout/primitives/Wide';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/queryClient';
+import { ThreadFilters, type ThreadFiltersState } from '@/components/forum/ThreadFilters';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Filter as FilterIcon } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { usePrefixes } from '@/features/forum/hooks/useForumQueries';
 
 // Placeholder for a proper NotFoundPage component
 const NotFoundPage: React.FC = () => {
@@ -41,10 +48,58 @@ const CreateThreadButton: React.FC<{ forumSlugOrId: string }> = ({ forumSlugOrId
 	);
 };
 
+// Helper to build initial filters from current URL
+const buildFiltersFromUrl = (): ThreadFiltersState => {
+	const params = new URLSearchParams(window.location.search);
+	return {
+		sortBy: (params.get('sort') as any) || 'latest',
+		tags: params.getAll('tags[]').map((t) => Number(t)).filter(Boolean),
+		prefixId: params.get('prefixId') ? Number(params.get('prefixId')) : undefined,
+		solved: params.get('solved') === null ? undefined : params.get('solved') === 'true' ? 'solved' : 'unsolved',
+		bookmarked: params.get('bookmarked') === 'true',
+		mine: params.get('mine') === 'true',
+		replied: params.get('replied') === 'true',
+		q: params.get('q') || ''
+	};
+};
+
 const ForumPage: React.FC = () => {
 	const params = useParams<{ slug?: string }>(); // Changed to slug
 	const forum_slug = params?.slug; // Changed to params?.slug
 	const { getForum, zones, isLoading, error: contextError } = useForumStructure(); // Removed unused getZone
+	
+	// Fetch available tags
+	const { data: availableTags = [] } = useQuery({
+		queryKey: ['/api/forum/tags'],
+		queryFn: async () => {
+			const response = await apiRequest<{ id: number; name: string; slug: string }[]>({
+				url: '/api/forum/tags',
+				method: 'GET'
+			});
+			return response || [];
+		}
+	});
+
+	// Fetch prefixes for filters
+	const { data: prefixes = [] } = usePrefixes();
+
+	const [filters, setFilters] = useState<ThreadFiltersState>(() => buildFiltersFromUrl());
+	const [drawerOpen, setDrawerOpen] = useState(false);
+
+	// Sync URL when filters change
+	useEffect(() => {
+		const p = new URLSearchParams();
+		p.set('sort', filters.sortBy);
+		filters.tags.forEach((id) => p.append('tags[]', id.toString()));
+		if (filters.prefixId) p.set('prefixId', filters.prefixId.toString());
+		if (filters.solved) p.set('solved', filters.solved === 'solved' ? 'true' : 'false');
+		if (filters.bookmarked) p.set('bookmarked', 'true');
+		if (filters.mine) p.set('mine', 'true');
+		if (filters.replied) p.set('replied', 'true');
+		if (filters.q) p.set('q', filters.q);
+		p.set('page', '1'); // reset page when filters change
+		window.history.replaceState(null, '', `${window.location.pathname}?${p.toString()}`);
+	}, [filters]);
 
 	// Strict slug validation
 	if (typeof forum_slug !== 'string' || forum_slug.trim() === '') {
@@ -220,8 +275,34 @@ const ForumPage: React.FC = () => {
 			{/* Thread List */}
 			<section>
 				<h2 className="text-xl font-semibold mb-6 text-zinc-100">Threads in {forum.name}</h2>
-				<ThreadList forumId={forum.id} forumSlug={forum.slug} />
+				<ThreadList
+					forumId={forum.id}
+					forumSlug={forum.slug}
+					availableTags={availableTags}
+					filters={filters}
+				/>
 			</section>
+
+			{/* Floating Filter Button + Drawer */}
+			<Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
+				<SheetTrigger asChild>
+					<Button
+						variant="default"
+						size="icon"
+						className="fixed bottom-6 right-6 z-50 bg-zinc-900/80 backdrop-blur-md hover:bg-zinc-800"
+					>
+						<FilterIcon className="h-5 w-5" />
+					</Button>
+				</SheetTrigger>
+				<SheetContent side="right" className="w-[320px] sm:w-[380px] overflow-y-auto pt-8">
+					<ThreadFilters
+						forumSlug={forum.slug}
+						availableTags={availableTags}
+						availablePrefixes={prefixes}
+						onFiltersChange={(f) => setFilters(f)}
+					/>
+				</SheetContent>
+			</Sheet>
 		</Wide>
 	);
 };

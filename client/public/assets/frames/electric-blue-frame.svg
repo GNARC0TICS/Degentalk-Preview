@@ -1,0 +1,14 @@
+<svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Electric blue frame with glow effect -->
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <circle cx="40" cy="40" r="38" fill="none" stroke="#00bfff" stroke-width="3" filter="url(#glow)" opacity="0.9"/>
+  <circle cx="40" cy="40" r="36" fill="none" stroke="#87ceeb" stroke-width="1" opacity="0.6"/>
+</svg>

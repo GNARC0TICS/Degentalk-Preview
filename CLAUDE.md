@@ -80,6 +80,16 @@ npm run test:forum-endpoints  # Forum API validation
 - **`shared/`** - Shared types and validators
 - **`scripts/`** - Build, seed, and utility scripts
 
+### Advanced Forum Features
+
+The forum system includes sophisticated power features documented in `FORUM-POWER-FEATURES.md`:
+
+- **Enhanced Thread Management** - Advanced filtering, sorting, saved preferences
+- **Moderator Power Tools** - Comprehensive moderation interface with quick actions
+- **Draft System** - Auto-save functionality with cloud sync and recovery
+- **Contextual Error Pages** - User-friendly error handling with smart suggestions
+- **Network Resilience** - Auto-retry mechanisms with offline detection
+
 ### Critical Architecture Patterns
 
 #### 1. Forum System - Single Source of Truth
@@ -271,10 +281,11 @@ npm run kill-ports
 ## Critical Files to Understand
 
 1. **`README-FORUM.md`** - Forum system canonical specification
-2. **`client/src/config/forumMap.config.ts`** - Forum structure master config
-3. **`package.json`** - Essential npm scripts and dependencies
-4. **`.cursor/rules/`** - Development rules and patterns
-5. **`db/schema/index.ts`** - Complete database schema exports
+2. **`FORUM-POWER-FEATURES.md`** - Advanced forum features documentation
+3. **`client/src/config/forumMap.config.ts`** - Forum structure master config
+4. **`package.json`** - Essential npm scripts and dependencies
+5. **`.cursor/rules/`** - Development rules and patterns
+6. **`db/schema/index.ts`** - Complete database schema exports
 
 ## Common Issues & Solutions
 

@@ -24,6 +24,7 @@ import {
 import { getUserId } from '../auth/services/auth.service';
 import { canUser } from '../../../../lib/auth/canUser.ts';
 import { logger } from '@server/src/core/logger';
+import { MentionsService } from '../social/mentions.service';
 
 // Rate limiting for shoutbox messages (10 seconds cooldown)
 const userLastMessageTime = new Map<number, number>();
@@ -473,6 +474,24 @@ router.post('/messages', isAuthenticated, async (req: Request, res: Response) =>
 
 		// Update rate limit tracking
 		userLastMessageTime.set(userId, now);
+
+		// Process mentions in the shoutbox message
+		try {
+			await MentionsService.processMentions({
+				content: messageData.content,
+				mentioningUserId: userId.toString(),
+				type: 'shoutbox',
+				messageId: newMessage.id.toString(),
+				context: `Shoutbox message in room ${newMessage.roomId}`
+			});
+		} catch (mentionError) {
+			logger.error('ShoutboxRoutes', 'Error processing mentions for shoutbox message', {
+				err: mentionError,
+				messageId: newMessage.id,
+				userId
+			});
+			// Don't fail the message creation if mentions fail
+		}
 
 		// Get user data to return with the message
 		const userData = await db

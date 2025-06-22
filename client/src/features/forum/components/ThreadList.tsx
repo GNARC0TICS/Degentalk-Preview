@@ -1,8 +1,10 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import ThreadCard from '@/components/forum/ThreadCard'; // Corrected import path
 import { getQueryFn } from '@/lib/queryClient';
 import { Pagination } from '@/components/ui/pagination';
+import { ThreadListSkeleton } from '@/components/ui/thread-skeleton';
+import type { ThreadFiltersState } from '@/components/forum/ThreadFilters';
 
 // Type for individual tag object
 export type ApiTag = {
@@ -71,15 +73,22 @@ export type ThreadsApiResponse = {
 interface ThreadListProps {
 	forumId: number;
 	forumSlug: string;
+	availableTags?: ApiTag[];
+	filters: ThreadFiltersState;
 }
 
 const THREADS_API_BASE_PATH = '/api/forum/threads';
 
-const ThreadListComponent: React.FC<ThreadListProps> = ({ forumId, forumSlug }) => {
+const ThreadListComponent: React.FC<ThreadListProps> = ({ forumId, forumSlug, availableTags = [], filters }) => {
 	const [page, setPage] = useState(1);
 	const threadsPerPage = 10;
-
-	const queryKey = [`${THREADS_API_BASE_PATH}?categoryId=${forumId}`, page, threadsPerPage];
+	
+	const queryKey = [
+		`${THREADS_API_BASE_PATH}?categoryId=${forumId}`,
+		page,
+		threadsPerPage,
+		filters
+	];
 
 	const {
 		data: apiResponse,
@@ -94,8 +103,23 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({ forumId, forumSlug }) 
 				console.log(`[ThreadList] Invalid forumId (${forumId}), skipping API call.`);
 				return null; // Return null if forumId is invalid
 			}
-			// Construct the URL for fetching threads
-			const url = `${THREADS_API_BASE_PATH}?categoryId=${forumId}&page=${page}&limit=${threadsPerPage}&sortBy=latest`;
+			// Construct the URL for fetching threads with filters
+			const params = new URLSearchParams({
+				categoryId: forumId.toString(),
+				page: page.toString(),
+				limit: threadsPerPage.toString(),
+				sort: filters.sortBy
+			});
+			
+			if (filters.tags?.length) filters.tags.forEach((id) => params.append('tags[]', id.toString()));
+			if (filters.prefixId) params.append('prefixId', filters.prefixId.toString());
+			if (filters.solved) params.append('solved', filters.solved === 'solved' ? 'true' : 'false');
+			if (filters.bookmarked) params.append('bookmarked', 'true');
+			if (filters.mine) params.append('mine', 'true');
+			if (filters.replied) params.append('replied', 'true');
+			if (filters.q) params.append('q', filters.q);
+			
+			const url = `${THREADS_API_BASE_PATH}?${params.toString()}`;
 
 			// Use getQueryFn for the API call
 			// getQueryFn returns a function that expects a QueryFunctionContext
@@ -122,7 +146,7 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({ forumId, forumSlug }) 
 	);
 
 	if (isLoading && forumId > 0) {
-		return <div style={{ textAlign: 'center', padding: '20px' }}>Loading threads...</div>;
+		return <ThreadListSkeleton count={5} />;
 	}
 
 	if (error) {
@@ -165,8 +189,14 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({ forumId, forumSlug }) 
 		);
 	}
 
+	// whenever filters prop changes reset to page 1
+	useEffect(() => {
+		setPage(1);
+	}, [filters]);
+
 	return (
 		<div>
+			{/* Thread List */}
 			{threads.map((thread: ApiThread) => (
 				<ThreadCard key={thread.id} thread={thread} forumSlug={forumSlug} />
 			))}

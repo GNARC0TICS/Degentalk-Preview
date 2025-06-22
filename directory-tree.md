@@ -1,5 +1,5 @@
 # ForumFusion Directory Structure
-
+  
 Generated on: 2025-06-21
 
 ```
@@ -94,7 +94,11 @@ Generated on: 2025-06-21
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ media/
 │  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ permissions/
+│  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ roles/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ titles/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ wallet/
 │  │  │  │  │  ... (max depth reached)
@@ -187,6 +191,15 @@ Generated on: 2025-06-21
 │  │  │  │  ├─ SiteHeader.tsx
 │  │  │  │  ├─ UserMenu.tsx
 │  │  │  │  └─ WalletButton.tsx
+│  │  │  ├─ icons/
+│  │  │  │  ├─ custom/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ icon-usage-snapshot.txt
+│  │  │  │  ├─ iconLoader.ts
+│  │  │  │  ├─ iconMap.config.ts
+│  │  │  │  ├─ iconRenderer.tsx
+│  │  │  │  ├─ README.md
+│  │  │  │  └─ types.ts
 │  │  │  ├─ identity/
 │  │  │  │  ├─ AvatarFrame.tsx
 │  │  │  │  ├─ index.ts
@@ -1098,7 +1111,8 @@ Generated on: 2025-06-21
 │  │  ├─ validate-forum-fks.ts
 │  │  └─ validate-routes.js
 │  ├─ tools/
-│  │  └─ generate-tree.js
+│  │  ├─ generate-tree.js
+│  │  └─ icon-scan.ts
 │  ├─ wallet/
 │  │  ├─ migrate-wallet-components.ts
 │  │  ├─ migrate-wallet-imports.ts

@@ -34,6 +34,7 @@ import { isAuthenticated, isAuthenticatedOptional } from '../auth/middleware/aut
 import { logger, LogLevel, LogAction } from '../../../src/core/logger';
 import { displayPreferencesSchema } from './preferences.validators';
 import { getUserIdFromRequest } from '@server/src/utils/auth';
+import { UserPreferencesService } from '../user/user-preferences.service';
 
 // Define validation schema for the shoutbox position
 const updateShoutboxPositionSchema = z.object({
@@ -42,6 +43,35 @@ const updateShoutboxPositionSchema = z.object({
 		.refine((val) => ['sidebar-top', 'sidebar-bottom', 'floating', 'hidden'].includes(val), {
 			message: 'Position must be one of: sidebar-top, sidebar-bottom, floating, hidden'
 		})
+});
+
+// Social privacy preferences schema
+const socialPreferencesSchema = z.object({
+	// Mentions preferences
+	allowMentions: z.boolean().optional(),
+	mentionPermissions: z.enum(['everyone', 'friends', 'followers', 'none']).optional(),
+	mentionNotifications: z.boolean().optional(),
+	mentionEmailNotifications: z.boolean().optional(),
+	
+	// Following preferences  
+	allowFollowers: z.boolean().optional(),
+	followerApprovalRequired: z.boolean().optional(),
+	hideFollowerCount: z.boolean().optional(),
+	hideFollowingCount: z.boolean().optional(),
+	allowWhaleDesignation: z.boolean().optional(),
+	
+	// Friends preferences
+	allowFriendRequests: z.boolean().optional(),
+	friendRequestPermissions: z.enum(['everyone', 'mutuals', 'followers', 'none']).optional(),
+	autoAcceptMutualFollows: z.boolean().optional(),
+	hideOnlineStatus: z.boolean().optional(),
+	hideFriendsList: z.boolean().optional(),
+	
+	// General privacy
+	showSocialActivity: z.boolean().optional(),
+	allowDirectMessages: z.enum(['friends', 'followers', 'everyone', 'none']).optional(),
+	showProfileToPublic: z.boolean().optional(),
+	allowSocialDiscovery: z.boolean().optional()
 });
 
 const router = express.Router();
@@ -367,5 +397,105 @@ router.put(
 		}
 	}
 );
+
+/**
+ * GET /api/users/social-preferences
+ * Get user's social privacy preferences
+ */
+router.get('/social-preferences', isAuthenticated, async (req, res) => {
+	try {
+		const userId = getUserIdFromRequest(req);
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+		}
+
+		const preferences = await UserPreferencesService.getSocialPreferences(userId);
+		res.json(preferences);
+	} catch (error) {
+		logger.error('PREFERENCES', 'Error fetching social preferences', error);
+		res.status(500).json({ 
+			error: 'Failed to fetch social preferences',
+			details: error instanceof Error ? error.message : 'Unknown error'
+		});
+	}
+});
+
+/**
+ * PUT /api/users/social-preferences
+ * Update user's social privacy preferences
+ */
+router.put('/social-preferences', isAuthenticated, async (req, res) => {
+	try {
+		const userId = getUserIdFromRequest(req);
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+		}
+
+		const validation = socialPreferencesSchema.safeParse(req.body);
+		if (!validation.success) {
+			return res.status(400).json({ 
+				error: 'Invalid preferences data',
+				details: validation.error.errors
+			});
+		}
+		
+		const updatedPreferences = await UserPreferencesService.updateSocialPreferences(
+			userId, 
+			validation.data
+		);
+		
+		res.json(updatedPreferences);
+	} catch (error) {
+		logger.error('PREFERENCES', 'Error updating social preferences', error);
+		res.status(500).json({ 
+			error: 'Failed to update social preferences',
+			details: error instanceof Error ? error.message : 'Unknown error'
+		});
+	}
+});
+
+/**
+ * GET /api/users/privacy-summary
+ * Get a summary of user's privacy settings for quick overview
+ */
+router.get('/privacy-summary', isAuthenticated, async (req, res) => {
+	try {
+		const userId = getUserIdFromRequest(req);
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+		}
+
+		const summary = await UserPreferencesService.getPrivacySummary(userId);
+		res.json(summary);
+	} catch (error) {
+		logger.error('PREFERENCES', 'Error fetching privacy summary', error);
+		res.status(500).json({ 
+			error: 'Failed to fetch privacy summary',
+			details: error instanceof Error ? error.message : 'Unknown error'
+		});
+	}
+});
+
+/**
+ * POST /api/users/reset-social-preferences
+ * Reset social preferences to defaults
+ */
+router.post('/reset-social-preferences', isAuthenticated, async (req, res) => {
+	try {
+		const userId = getUserIdFromRequest(req);
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+		}
+
+		const defaultPreferences = await UserPreferencesService.resetSocialPreferences(userId);
+		res.json(defaultPreferences);
+	} catch (error) {
+		logger.error('PREFERENCES', 'Error resetting social preferences', error);
+		res.status(500).json({ 
+			error: 'Failed to reset social preferences',
+			details: error instanceof Error ? error.message : 'Unknown error'
+		});
+	}
+});
 
 export default router;

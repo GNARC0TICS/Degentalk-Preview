@@ -3,7 +3,7 @@ import { useParams, Link } from 'wouter';
 import { ThreadCard } from '@/components/forum/ThreadCard';
 import { useThreadsByTag, useTags } from '@/features/forum/hooks/useForumQueries';
 import { SiteHeader } from '@/components/header';
-import { SiteFooter } from '@/components/layout/site-footer';
+import { SiteFooter } from '@/components/footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';

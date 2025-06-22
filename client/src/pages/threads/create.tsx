@@ -217,10 +217,38 @@ export default function CreateThreadPage() {
 					</Breadcrumb>
 				</div>
 
+				{/* Mobile Rules Box - Collapsible */}
+				<div className="lg:hidden mb-6">
+					<details className="group">
+						<summary className="flex items-center justify-between p-4 bg-zinc-900/60 border border-zinc-800 rounded-lg cursor-pointer hover:bg-zinc-900/80 transition-colors">
+							<span className="flex items-center gap-2 font-medium text-white">
+								<BookOpen className="h-4 w-4" style={{ color: zoneAccentColor }} />
+								Posting Guidelines
+							</span>
+							<div className="transition-transform group-open:rotate-180">
+								<svg className="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+								</svg>
+							</div>
+						</summary>
+						<div className="mt-2 p-4 bg-zinc-800/40 border border-zinc-700/50 rounded-lg space-y-2">
+							{tips.map((tip, index) => (
+								<div key={index} className="flex gap-2 items-start">
+									<div className="flex-shrink-0 mt-0.5">{tip.icon}</div>
+									<div>
+										<h4 className="font-medium text-white text-xs">{tip.title}</h4>
+										<p className="text-[10px] text-zinc-400">{tip.description}</p>
+									</div>
+								</div>
+							))}
+						</div>
+					</details>
+				</div>
+
 				{/* Main content grid */}
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-					{/* Sidebar - Guidelines */}
-					<div className="lg:col-span-4 xl:col-span-3">
+					{/* Desktop Sidebar - Guidelines */}
+					<div className="hidden lg:block lg:col-span-4 xl:col-span-3">
 						<div className="sticky top-24 space-y-6">
 							<Card className="bg-zinc-900/60 border-zinc-800 backdrop-blur-md">
 								<CardHeader className="pb-4">

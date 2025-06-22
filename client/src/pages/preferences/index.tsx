@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SiteHeader } from '@/components/header';
-import { SiteFooter } from '@/components/layout/site-footer';
+import { SiteFooter } from '@/components/footer';
 import { useAuth } from '@/hooks/use-auth.tsx';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +10,8 @@ import { NotificationPreferences } from '@/components/preferences/notification-p
 import { DisplayPreferences } from '@/components/preferences/display-preferences';
 import { SessionPreferences } from '@/components/preferences/session-preferences';
 import { ReferralPreferences } from '@/components/preferences/referral-preferences';
-import { User, Shield, Bell, Monitor, Lock, Users, Share2 } from 'lucide-react';
+import { SocialPreferences } from '@/components/preferences/social-preferences';
+import { User, Shield, Bell, Monitor, Lock, Users, Share2, UserCheck } from 'lucide-react';
 import { ProtectedRoute } from '@/lib/protected-route';
 
 /**
@@ -28,7 +29,7 @@ function PreferencesPage() {
 		const tabParam = params.get('tab');
 		if (
 			tabParam &&
-			['profile', 'account', 'notifications', 'display', 'sessions', 'referrals'].includes(tabParam)
+			['profile', 'account', 'notifications', 'display', 'sessions', 'referrals', 'social'].includes(tabParam)
 		) {
 			setActiveTab(tabParam);
 		}
@@ -78,7 +79,7 @@ function PreferencesPage() {
 					</div>
 
 					<Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-						<TabsList className="w-full max-w-md grid grid-cols-6 mb-8">
+						<TabsList className="w-full max-w-4xl grid grid-cols-7 mb-8">
 							<TabsTrigger
 								value="profile"
 								className="flex flex-col items-center py-3 gap-1 data-[state=active]:bg-zinc-800"
@@ -121,6 +122,13 @@ function PreferencesPage() {
 								<Share2 className="h-5 w-5" />
 								<span className="text-xs">Referrals</span>
 							</TabsTrigger>
+							<TabsTrigger
+								value="social"
+								className="flex flex-col items-center py-3 gap-1 data-[state=active]:bg-zinc-800"
+							>
+								<UserCheck className="h-5 w-5" />
+								<span className="text-xs">Social</span>
+							</TabsTrigger>
 						</TabsList>
 
 						<div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
@@ -146,6 +154,10 @@ function PreferencesPage() {
 
 							<TabsContent value="referrals">
 								<ReferralPreferences user={user} />
+							</TabsContent>
+
+							<TabsContent value="social">
+								<SocialPreferences user={user} />
 							</TabsContent>
 						</div>
 					</Tabs>

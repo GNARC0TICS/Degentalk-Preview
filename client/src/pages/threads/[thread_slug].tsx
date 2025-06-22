@@ -3,7 +3,7 @@ import { useRoute } from 'wouter';
 import { AlertCircle, ArrowDownCircle } from 'lucide-react';
 import { useThread, usePosts } from '@/features/forum/hooks/useForumQueries';
 import PostCard from '@/features/forum/components/PostCard';
-import { SiteFooter } from '@/components/layout/site-footer';
+import { SiteFooter } from '@/components/footer';
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -17,6 +17,19 @@ import { Wide } from '@/layout/primitives';
 
 import type { PostWithUser, ThreadWithPostsAndUser } from '@db_types/forum.types';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/use-auth';
+import { ReplyForm } from '@/features/forum/components/ReplyForm';
+import { EditPostDialog } from '@/features/forum/components/EditPostDialog';
+import { ReportPostDialog } from '@/features/forum/components/ReportPostDialog';
+import {
+	useLikePost,
+	useUnlikePost,
+	useCreatePost,
+	useDeletePost,
+	useSolveThread,
+	useTipPost
+} from '@/features/forum/hooks/useForumQueries';
+import { toast } from 'sonner';
 
 export default function ThreadPage() {
 	// Get slug param from route
@@ -42,6 +55,87 @@ export default function ThreadPage() {
 		if (threadData?.posts) return threadData.posts;
 		return [];
 	}, [postResponse, threadData]);
+
+	// Auth context
+	const { user: currentUser } = useAuth();
+
+	// ----- Mutations -----
+	const likePost = useLikePost();
+	const unlikePost = useUnlikePost();
+	const createPost = useCreatePost();
+	const deletePost = useDeletePost();
+	const solveThread = useSolveThread();
+	const tipPost = useTipPost();
+
+	// ----- Local State -----
+	const [replyToPost, setReplyToPost] = React.useState<PostWithUser | null>(null);
+	const [editingPost, setEditingPost] = React.useState<PostWithUser | null>(null);
+	const [reportingPost, setReportingPost] = React.useState<PostWithUser | null>(null);
+
+	// Handlers
+	const handleLike = React.useCallback(
+		(postId: number, hasLiked: boolean) => {
+			if (hasLiked) {
+				unlikePost.mutate(postId);
+			} else {
+				likePost.mutate(postId);
+			}
+		},
+		[likePost, unlikePost]
+	);
+
+	const handleReply = (postId: number) => {
+		const post = posts.find((p) => p.id === postId) || null;
+		setReplyToPost(post);
+		// Scroll to reply form after short delay to ensure it is in DOM
+		setTimeout(() => {
+			const replyFormElem = document.getElementById('reply-form');
+			replyFormElem?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}, 100);
+	};
+
+	const handleDelete = (postId: number) => {
+		if (confirm('Delete this post?')) {
+			deletePost.mutate(postId);
+		}
+	};
+
+	const handleEdit = (postId: number) => {
+		const post = posts.find((p) => p.id === postId);
+		if (post) {
+			setEditingPost(post);
+		}
+	};
+
+	const handleMarkSolution = (postId: number) => {
+		if (!thread) return;
+		solveThread.mutate({ threadId: thread.id, postId });
+	};
+
+	const handleTip = (postId: number) => {
+		const amount = parseFloat(prompt('Enter amount to tip') || '0');
+		if (amount > 0) {
+			tipPost.mutate({ postId, amount });
+		}
+	};
+
+	const handleReport = (postId: number) => {
+		const post = posts.find((p) => p.id === postId);
+		if (post) {
+			setReportingPost(post);
+		}
+	};
+
+	const submitReply = async (content: string, editorState?: any) => {
+		if (!thread) return;
+		await createPost.mutateAsync({
+			threadId: thread.id,
+			content,
+			replyToPostId: replyToPost?.id,
+			editorState
+		});
+		setReplyToPost(null);
+	};
 
 	if (!match) {
 		return (
@@ -167,21 +261,60 @@ export default function ThreadPage() {
 						</div>
 					) : (
 						<div className="space-y-4">
-							{posts.map((post, index) => (
-								<div key={post.id} id={`post-${post.id}`} className="scroll-mt-6">
-									<PostCard
-										post={post}
-										isFirst={index === 0}
-										isThreadSolved={!!thread.isSolved}
-										parentForumTheme={null}
-										tippingEnabled={false}
-									/>
-								</div>
-							))}
+							{posts.map((post, index) => {
+								const canEdit = !!currentUser && currentUser.id === post.user.id;
+								return (
+									<div key={post.id} id={`post-${post.id}`} className="scroll-mt-6">
+										<PostCard
+											post={post}
+											isFirst={index === 0}
+											isThreadSolved={!!thread.isSolved}
+											parentForumTheme={null}
+											tippingEnabled={false}
+											onLike={handleLike}
+											onReply={handleReply}
+											onEdit={handleEdit}
+											onDelete={handleDelete}
+											onMarkAsSolution={handleMarkSolution}
+											onTip={handleTip}
+											onReport={handleReport}
+											isEditable={canEdit}
+										/>
+									</div>
+								);
+							})}
 						</div>
 					)}
+
+					{/* Reply Form */}
+					<div id="reply-form" className="mt-8">
+						<ReplyForm
+							threadId={thread.id}
+							replyToId={replyToPost?.id || null}
+							replyToPost={replyToPost}
+							onSubmit={submitReply}
+							onCancel={() => setReplyToPost(null)}
+							isReplying={!!replyToPost}
+							showRichEditor
+						/>
+					</div>
 				</Wide>
 			</main>
+
+			{/* Edit Post Dialog */}
+			<EditPostDialog
+				post={editingPost}
+				isOpen={!!editingPost}
+				onClose={() => setEditingPost(null)}
+			/>
+
+			{/* Report Post Dialog */}
+			<ReportPostDialog
+				post={reportingPost}
+				isOpen={!!reportingPost}
+				onClose={() => setReportingPost(null)}
+			/>
+
 			<SiteFooter />
 		</div>
 	);

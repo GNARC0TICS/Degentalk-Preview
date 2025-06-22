@@ -14,6 +14,7 @@ import { SiteFooter } from '@/components/footer';
 import { ResponsiveLayoutWrapper } from '@/components/layout/ResponsiveLayoutWrapper';
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
 import { Wide } from '@/layout/primitives';
+import HotThreads from '@/features/forum/components/HotThreads';
 
 // Import UI components
 import { Skeleton } from '@/components/ui/skeleton';
@@ -61,6 +62,9 @@ function HomePage() {
 			<AnnouncementTicker />
 			<ResponsiveLayoutWrapper page="home">
 				<Wide as="div" className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+					{/* Hot Threads feed */}
+					<HotThreads variant="feed" limit={5} className="mb-16" />
+
 					<section className="mb-16">
 						<div className="flex items-center justify-between mb-8">
 							<div>

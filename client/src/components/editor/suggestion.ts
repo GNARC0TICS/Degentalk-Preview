@@ -29,20 +29,68 @@ class MentionList {
 		this.items.forEach((item, index) => {
 			const button = document.createElement('button');
 			button.className =
-				'mention-list-item flex items-center w-full px-3 py-1.5 text-sm text-left hover:bg-zinc-800 text-zinc-200';
+				'mention-list-item flex items-center w-full px-3 py-2 text-sm text-left hover:bg-zinc-800 text-zinc-200 border-l-2 border-transparent hover:border-emerald-500 transition-colors';
 
-			// Create avatar element
-			const avatar = document.createElement('div');
-			avatar.className =
-				'w-6 h-6 flex items-center justify-center rounded-full bg-emerald-800 text-white text-xs mr-2 flex-shrink-0';
-			avatar.textContent = item.label.substring(0, 2).toUpperCase();
+			// Create avatar container
+			const avatarContainer = document.createElement('div');
+			avatarContainer.className = 'w-8 h-8 mr-3 flex-shrink-0';
+
+			if (item.avatarUrl) {
+				const avatar = document.createElement('img');
+				avatar.src = item.avatarUrl;
+				avatar.alt = item.label;
+				avatar.className = 'w-8 h-8 rounded-full object-cover border border-zinc-700';
+				avatarContainer.appendChild(avatar);
+			} else {
+				const avatar = document.createElement('div');
+				avatar.className = 'w-8 h-8 flex items-center justify-center rounded-full bg-emerald-800 text-white text-xs border border-zinc-700';
+				avatar.textContent = item.label.substring(0, 2).toUpperCase();
+				avatarContainer.appendChild(avatar);
+			}
+
+			// Create content container
+			const content = document.createElement('div');
+			content.className = 'flex-1 min-w-0';
+
+			// Create name and role container
+			const nameContainer = document.createElement('div');
+			nameContainer.className = 'flex items-center gap-2';
 
 			// Create name element
 			const name = document.createElement('span');
-			name.textContent = item.label;
+			name.className = 'font-medium text-zinc-200 truncate';
+			name.textContent = `@${item.label}`;
 
-			button.appendChild(avatar);
-			button.appendChild(name);
+			// Create role badge if role exists
+			if (item.role && item.role !== 'user') {
+				const roleBadge = document.createElement('span');
+				roleBadge.className = 'px-1.5 py-0 text-xs rounded border';
+				roleBadge.textContent = item.role === 'admin' ? 'Admin' : item.role === 'mod' ? 'Mod' : item.role;
+				
+				if (item.role === 'admin') {
+					roleBadge.className += ' bg-red-900/60 text-red-300 border-red-700/30';
+				} else if (item.role === 'mod') {
+					roleBadge.className += ' bg-blue-900/60 text-blue-300 border-blue-700/30';
+				} else {
+					roleBadge.className += ' bg-zinc-700/60 text-zinc-300 border-zinc-600/30';
+				}
+				
+				nameContainer.appendChild(roleBadge);
+			}
+
+			nameContainer.appendChild(name);
+			content.appendChild(nameContainer);
+
+			// Create level display if level exists
+			if (item.level) {
+				const level = document.createElement('div');
+				level.className = 'text-xs text-zinc-500 mt-0.5';
+				level.textContent = `Level ${item.level}`;
+				content.appendChild(level);
+			}
+
+			button.appendChild(avatarContainer);
+			button.appendChild(content);
 
 			button.addEventListener('click', () => {
 				this.command({ id: item.id, label: item.label });
@@ -94,21 +142,32 @@ class MentionList {
 
 // Fetch users matching the query
 const fetchUsers = async (query: string) => {
-	if (!query || query.length < 2) {
+	if (!query || query.length < 1) {
 		return [];
 	}
 
 	try {
-		const response = await apiRequest<{ users: { id: number; username: string }[] }>({
-			url: '/api/users/search',
-			method: 'GET',
-			params: { query }
+		const response = await apiRequest<{ 
+			users: { 
+				id: string; 
+				username: string; 
+				avatarUrl?: string | null; 
+				activeAvatarUrl?: string | null;
+				role?: string | null;
+				level?: number | null;
+			}[] 
+		}>({
+			url: `/api/social/mentions/search-users?q=${encodeURIComponent(query)}&limit=10`,
+			method: 'GET'
 		});
 
-		return response.users.map((user) => ({
+		return response?.users?.map((user) => ({
 			id: user.username,
-			label: user.username
-		}));
+			label: user.username,
+			avatarUrl: user.activeAvatarUrl || user.avatarUrl,
+			role: user.role,
+			level: user.level
+		})) || [];
 	} catch (error) {
 		console.error('Error fetching users for mention:', error);
 		return []; // Return empty array on error

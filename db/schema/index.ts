@@ -38,6 +38,7 @@ export * from './user/passwordResetTokens';
 export * from './user/settingsHistory';
 export * from './user/avatarFrames';
 export * from './user/userGroups';
+export * from './user/user-social-preferences';
 
 // User domain - feature permissions
 export * from './user/featurePermissions';
@@ -131,6 +132,7 @@ export * from './admin/scheduledTasks';
 export * from './admin/mediaLibrary';
 export * from './admin/uiConfig';
 export * from './admin/uiThemes';
+export * from './admin/moderator-notes';
 
 // Gamification domain exports
 export * from './gamification/achievements';
@@ -157,6 +159,11 @@ export * from './system/economyConfigOverrides';
 // Dictionary domain exports
 export * from './dictionary/entries';
 export * from './dictionary/upvotes';
+
+// Social domain exports
+export * from './social/mentions';
+export * from './social/user-follows';
+export * from './social/friends';
 
 // Note: './forum/threadDrafts.ts' was commented out as it was empty in the previous steps.
 // Ensure all files listed for export actually exist and contain exports.

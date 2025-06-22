@@ -33,6 +33,7 @@ const BreadcrumbsStub: React.FC<{ zoneName?: string; zoneSlug?: string; forumNam
 
 // ThreadList + ForumListItem are heavy; keep as dynamic imports or stubs for now
 import ThreadList from '@/features/forum/components/ThreadList';
+import type { ThreadFiltersState } from '@/components/forum/ThreadFilters';
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
 
 // Simple Create Thread button stub
@@ -106,7 +107,11 @@ const ForumPageInner: React.FC = () => {
 				{forum.threadCount === 0 ? (
 					<p>Nothing here yet.</p>
 				) : (
-					<ThreadList forumId={forum.id} forumSlug={forum.slug} />
+					<ThreadList
+						forumId={forum.id}
+						forumSlug={forum.slug}
+						filters={{ sortBy: 'latest', tags: [] } as ThreadFiltersState}
+					/>
 				)}
 				<div style={{ marginTop: 20 }}>
 					<CreateThreadButton forumSlug={forum.slug} />

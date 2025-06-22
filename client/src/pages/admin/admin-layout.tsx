@@ -89,7 +89,18 @@ const BASE_ADMIN_LINKS = [
 		icon: <Package className="h-4 w-4" />,
 		submenu: [
 			{ href: '/admin/emojis', label: 'Emojis' },
+			{ href: '/admin/avatar-frames', label: 'Avatar Frames' },
 			{ href: '/admin/ui/animations', label: 'Animation Packs' }
+		]
+	},
+
+	// Social Features (Secondary Priority)
+	{
+		href: '#',
+		label: 'Social',
+		icon: <Users className="h-4 w-4" />,
+		submenu: [
+			{ href: '/admin/social-config', label: 'Social Configuration' }
 		]
 	},
 

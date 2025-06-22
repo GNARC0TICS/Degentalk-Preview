@@ -46,6 +46,7 @@ import { useForumTheme } from '@/contexts/ForumThemeProvider';
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
 import { motion } from 'framer-motion'; // Added Framer Motion import
 import BackToHomeButton from '@/components/common/BackToHomeButton';
+import { ZoneCard } from '@/components/forum/ZoneCard'; // Import ZoneCard
 import {
 	Accordion,
 	AccordionItem,
@@ -153,46 +154,29 @@ const ForumPage = () => {
 		);
 	};
 
-	// Render a zone card for the carousel, now using MergedZone
+	// Render a zone card using the consistent ZoneCard component
 	const renderZoneCard = (zone: MergedZone) => {
-		// index parameter unused
-		const semanticThemeKey = zone.colorTheme || 'default';
-		const theme = getTheme(semanticThemeKey);
-
-		// Background / border gradient classes remain from static mapping
-		const gradientClasses =
-			THEME_COLORS_BG[semanticThemeKey as keyof typeof THEME_COLORS_BG] || THEME_COLORS_BG.default;
-
-		// Icon component or emoji from runtime theme
-		const IconComponentOrEmoji = theme.icon ?? THEME_ICONS.default;
-		const iconColorClass = theme.color || 'text-emerald-400';
-
 		return (
-			<Link
+			<ZoneCard
 				key={zone.id.toString()}
-				href={`/zones/${zone.slug}`} // Link to zone page
-				className={`flex-shrink-0 w-72 h-48 rounded-lg border ${gradientClasses} bg-gradient-to-br p-5 flex flex-col transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-emerald-900/10 overflow-hidden`}
+				id={zone.id}
+				name={zone.name}
+				slug={zone.slug}
+				description={zone.description || ''}
+				icon={zone.icon}
+				colorTheme={zone.colorTheme || 'default'}
+				themeColor={zone.color}
+				threadCount={zone.threadCount}
+				postCount={zone.postCount}
+				activeUsersCount={0} // Could be populated if available
+				lastActivityAt={zone.updatedAt ? new Date(zone.updatedAt) : undefined}
+				hasXpBoost={zone.hasXpBoost}
+				boostMultiplier={zone.boostMultiplier}
+				isEventActive={false} // Could be populated if available
+				layout="horizontal"
+				className="flex-shrink-0 w-full max-w-md"
 				onClick={() => zone.colorTheme && setActiveTheme(zone.colorTheme)}
-			>
-				<div className="flex items-center mb-3">
-					{typeof IconComponentOrEmoji === 'string' ? (
-						<span className={`mr-2 text-xl ${iconColorClass}`}>{IconComponentOrEmoji}</span>
-					) : (
-						<IconComponentOrEmoji className={`h-5 w-5 mr-2 ${iconColorClass}`} />
-					)}
-					<h3 className="text-lg font-bold text-white">{zone.name}</h3>
-				</div>
-
-				{zone.description && (
-					<p className="text-sm text-zinc-300 mb-auto line-clamp-2">{zone.description}</p>
-				)}
-				{zone.hasXpBoost && (
-					<Badge className="mt-2" variant="destructive">
-						XP Boost x{zone.boostMultiplier}
-					</Badge>
-				)}
-				<div className="mt-auto pt-3">{renderForumStats(zone)}</div>
-			</Link>
+			/>
 		);
 	};
 
@@ -377,6 +361,7 @@ const ForumPage = () => {
 											initial={{ opacity: 0, x: 20 }}
 											animate={{ opacity: 1, x: 0 }}
 											transition={{ duration: 0.4, delay: idx * 0.1 }}
+											className="flex-shrink-0 w-full max-w-md"
 										>
 											{renderZoneCard(zone)}
 										</motion.div>
@@ -395,7 +380,11 @@ const ForumPage = () => {
 							<h2 className="text-xl font-semibold text-white mb-4">
 								{generalForumZones.length > 0 ? 'All Forums' : 'No forum categories found.'}
 							</h2>
-							<Accordion type="multiple" className="space-y-4">
+							<Accordion 
+								type="multiple" 
+								className="space-y-4"
+								defaultValue={generalForumZones.map(zone => zone.slug)} // Open all by default
+							>
 								{generalForumZones.map((zoneData, index) => (
 									<AccordionItem value={zoneData.slug} key={zoneData.id.toString()}>
 										<AccordionTrigger className="focus:outline-none">

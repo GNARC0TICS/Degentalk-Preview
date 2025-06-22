@@ -5,7 +5,7 @@ import { useThread, usePosts } from '@/features/forum/hooks/useForumQueries';
 import { BBCodePostCard } from '@/components/forum/BBCodePostCard';
 import { ThreadSidebar } from '@/components/forum/ThreadSidebar';
 import { ThreadPagination } from '@/components/forum/ThreadPagination';
-import { SiteFooter } from '@/components/layout/site-footer';
+import { SiteFooter } from '@/components/footer';
 import {
 	Breadcrumb,
 	BreadcrumbItem,

@@ -680,7 +680,10 @@ export function RichTextEditor({
 			<EditorContent
 				editor={editor}
 				className={cn(
-					'prose max-w-none p-4 focus:outline-none focus:ring-0 min-h-[200px] bg-gray-50 text-black rounded-b-md',
+					'prose prose-invert max-w-none p-4 focus:outline-none focus:ring-0 min-h-[200px] bg-zinc-900/50 text-white border border-zinc-700 rounded-b-md',
+					'[&_.ProseMirror]:bg-transparent [&_.ProseMirror]:text-white [&_.ProseMirror]:outline-none',
+					'[&_.ProseMirror_p]:text-white [&_.ProseMirror_h1]:text-white [&_.ProseMirror_h2]:text-white',
+					'[&_.ProseMirror_strong]:text-white [&_.ProseMirror_em]:text-white',
 					editorClass
 				)}
 			/>

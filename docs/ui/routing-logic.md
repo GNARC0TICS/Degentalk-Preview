@@ -329,3 +329,51 @@ function isChildForum(entity: { isZone?: boolean; parentId?: string | number | n
 2. **Nested Categories**: If future development adds nested categories, additional routing logic will be needed
 3. **Redirects**: Consider implementing redirects for legacy URLs from older forum structures
 4. **Zone/Forum with Same Slug**: Prevent Primary Zones and Child Forums from having identical slugs 
+
+## Widget Slot Awareness & Variants
+
+The **Widget System** pipes layout/context information down to each widget.  
+Starting **2025-06-22** every widget loaded by `WidgetFrame` receives:
+
+```ts
+interface WidgetProps {
+  instanceId: string;
+  /**
+   * ID of the slot the widget is rendered in, e.g. 'sidebar/right' or 'main/top'.
+   */
+  slotId?: SlotId;
+}
+```
+
+### Variant Convention
+
+Certain widgets support a `variant` prop that tweaks their presentation depending on the
+slot:
+
+* **`'widget'`** — larger card style intended for sidebars or extended layouts.
+* **`'feed'`** — compact feed-item style intended for inline placement in the main content column.
+
+`WidgetFrame` now injects this prop automatically:
+
+```tsx
+const extraProps = useMemo(() => {
+  if (componentId === 'hotThreads') {
+    return {
+      variant: currentSlot?.startsWith('sidebar/') ? 'widget' : 'feed'
+    };
+  }
+  return {};
+}, [componentId, currentSlot]);
+```
+
+Any widget can adopt the same pattern—if it wishes to render differently based on
+location, expose a `variant` prop and let `WidgetFrame` (or future helper) set a
+default based on `slotId`.
+
+### Admin UX
+
+Administrators can move widgets between slots in real-time via the gear ⚙️ menu.  
+Because the variant is driven by `slotId`, the visual style updates immediately when
+a widget swaps from sidebar → main or vice-versa—no manual configuration required.
+
+--- 

@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useParams } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { SiteFooter } from '@/components/layout/site-footer';
+import { SiteFooter } from '@/components/footer';
 import ProfileSidebar from '@/components/profile/ProfileSidebar';
 import OverviewTab from '@/components/profile/OverviewTab';
 import InventoryTab from '@/components/profile/InventoryTab';
 import FriendsTab from '@/components/profile/FriendsTab';
+import WhaleWatchTab from '@/components/profile/WhaleWatchTab';
 import { XPProfileSection } from '@/components/profile/XPProfileSection';
 import { CosmeticControlPanel } from '@/components/profile/CosmeticControlPanel';
 import { ProfileSkeleton } from '@/components/profile/ProfileSkeleton';
@@ -16,7 +17,7 @@ import { LoadingSpinner } from '@/components/ui/loader';
 import BackToHomeButton from '@/components/common/BackToHomeButton';
 import { useAuth } from '@/hooks/use-auth.tsx';
 import { useUserInventory } from '@/hooks/useUserInventory';
-import { Home, Trophy, ShoppingBag, Users, Sparkles } from 'lucide-react';
+import { Home, Trophy, ShoppingBag, Users, Sparkles, Eye } from 'lucide-react';
 import type { ProfileData } from '@/types/profile';
 import { ProfileEditor } from '@/components/profile/ProfileEditor';
 import { Wide } from '@/layout/primitives';
@@ -134,7 +135,7 @@ export default function ProfilePage() {
 							<div className="rounded-lg overflow-hidden bg-zinc-800/70 backdrop-blur-sm shadow-xl border border-zinc-700/50 p-6">
 								<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
 									<TabsList
-										className={`grid ${isOwnProfile ? 'grid-cols-5' : 'grid-cols-4'} mb-6 bg-black/40 backdrop-blur-sm`}
+										className={`grid ${isOwnProfile ? 'grid-cols-6' : 'grid-cols-5'} mb-6 bg-black/40 backdrop-blur-sm`}
 									>
 										<TabsTrigger
 											value="overview"
@@ -160,6 +161,12 @@ export default function ProfilePage() {
 										>
 											<Users className="mr-2 h-4 w-4" /> Friends
 										</TabsTrigger>
+										<TabsTrigger
+											value="whale-watch"
+											className="flex items-center data-[state=active]:bg-emerald-600/20 data-[state=active]:text-emerald-400"
+										>
+											<Eye className="mr-2 h-4 w-4" /> Whale Watch
+										</TabsTrigger>
 										{isOwnProfile && (
 											<TabsTrigger
 												value="cosmetics"
@@ -181,6 +188,9 @@ export default function ProfilePage() {
 									</TabsContent>
 									<TabsContent value="friends">
 										<FriendsTab profile={profile} />
+									</TabsContent>
+									<TabsContent value="whale-watch">
+										<WhaleWatchTab profile={profile} isOwnProfile={isOwnProfile} />
 									</TabsContent>
 									{isOwnProfile && (
 										<TabsContent value="cosmetics">

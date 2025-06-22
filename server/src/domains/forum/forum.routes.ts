@@ -59,10 +59,12 @@ import type { ThreadWithUserAndCategory, PostWithUser } from '../../../../db/typ
 import { slugify } from '@server/utils/slugify';
 import { XpLevelService, xpLevelService, XP_ACTIONS } from '../../../services/xp-level-service';
 import rulesRoutes from './rules/rules.routes';
+import reportsRoutes from './sub-domains/reports/reports.routes';
 import { forumController } from './forum.controller';
 import { forumService } from './forum.service';
 import { getUserIdFromRequest } from '@server/src/utils/auth'; // Import the centralized function
 import { logger } from '@server/src/core/logger';
+import { MentionsService } from '../social/mentions.service';
 
 // Define validation schemas
 const tipPostSchema = z.object({
@@ -154,6 +156,9 @@ const router = Router();
 
 // Use the rules sub-router
 router.use('/rules', rulesRoutes);
+
+// Use the reports sub-router
+router.use('/reports', reportsRoutes);
 
 // --- FORUM STRUCTURE ---
 
@@ -249,8 +254,10 @@ router.get('/threads', async (req: Request, res: Response) => {
 		const limit = parseInt(req.query.limit as string) || 25;
 		const offset = (page - 1) * limit;
 		const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
-		const sortBy = (req.query.sort as string) || 'latest'; // 'latest', 'hot', 'staked'
+		const sortBy = (req.query.sortBy as string) || 'latest'; // 'latest', 'hot', 'staked', 'most-liked', 'most-replied', 'oldest'
 		const searchQuery = req.query.q as string;
+		const tagIds = req.query.tags ? (req.query.tags as string).split(',').map(id => parseInt(id)).filter(id => !isNaN(id)) : [];
+		const prefixId = req.query.prefixId ? parseInt(req.query.prefixId as string) : undefined;
 
 		const userId = getUserIdFromRequest(req); // Get current user ID if logged in
 		const { isMod, isAdmin } = await getUserPermissions(userId);
@@ -270,6 +277,11 @@ router.get('/threads', async (req: Request, res: Response) => {
 		if (searchQuery) {
 			conditions.push(ilike(threads.title, `%${searchQuery}%`));
 		}
+		
+		// Add prefix filter
+		if (prefixId) {
+			conditions.push(eq(threads.prefixId, prefixId));
+		}
 
 		// Determine sorting order
 		let orderByClause;
@@ -280,6 +292,15 @@ router.get('/threads', async (req: Request, res: Response) => {
 			case 'staked':
 				orderByClause = [desc(threads.isSticky), desc(threads.dgtStaked), desc(threads.lastPostAt)];
 				break;
+			case 'most-liked':
+				orderByClause = [desc(threads.isSticky), desc(threads.firstPostLikeCount), desc(threads.lastPostAt)];
+				break;
+			case 'most-replied':
+				orderByClause = [desc(threads.isSticky), desc(threads.postCount), desc(threads.lastPostAt)];
+				break;
+			case 'oldest':
+				orderByClause = [desc(threads.isSticky), asc(threads.createdAt)];
+				break;
 			case 'latest': // Default
 			default:
 				orderByClause = [desc(threads.isSticky), desc(threads.lastPostAt)];
@@ -287,6 +308,40 @@ router.get('/threads', async (req: Request, res: Response) => {
 		}
 
 		try {
+			// If filtering by tags, we need to get thread IDs first
+			let threadIdsToFilter: number[] | null = null;
+			
+			if (tagIds.length > 0) {
+				// Get threads that have ALL the specified tags
+				const threadsWithTags = await db
+					.select({ threadId: threadTags.threadId })
+					.from(threadTags)
+					.where(inArray(threadTags.tagId, tagIds))
+					.groupBy(threadTags.threadId)
+					.having(sql`COUNT(DISTINCT ${threadTags.tagId}) = ${tagIds.length}`);
+				
+				threadIdsToFilter = threadsWithTags.map(t => t.threadId);
+				
+				// If no threads have all the required tags, return empty result
+				if (threadIdsToFilter.length === 0) {
+					return res.json({
+						threads: [],
+						pagination: {
+							page,
+							limit,
+							totalThreads: 0,
+							totalPages: 0
+						}
+					});
+				}
+			}
+			
+			// Add thread ID filter if we filtered by tags
+			if (threadIdsToFilter !== null) {
+				conditions.push(inArray(threads.id, threadIdsToFilter));
+			}
+			
+			// Build the base query
 			const threadListRaw = await db
 				.select({
 					// Select specific fields to avoid over-fetching
@@ -604,6 +659,25 @@ router.post('/threads', requireAuth, async (req: Request, res: Response) => {
 					err: xpError,
 					userId
 				});
+			}
+
+			// Process mentions in the thread content
+			try {
+				await MentionsService.processMentions({
+					content: validatedPostData.content,
+					mentioningUserId: userId,
+					type: 'thread',
+					threadId: createdThread.id.toString(),
+					postId: createdPost.id.toString(),
+					context: `Thread: ${validatedThreadData.title}`
+				});
+			} catch (mentionError) {
+				logger.error('ForumRoutes', 'Error processing mentions for new thread', {
+					err: mentionError,
+					threadId: createdThread.id,
+					userId
+				});
+				// Don't fail the thread creation if mentions fail
 			}
 
 			const finalThreadDetailsArray = await tx

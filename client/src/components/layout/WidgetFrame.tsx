@@ -85,6 +85,18 @@ export const WidgetFrame: React.FC<WidgetFrameProps> = ({ instanceId, className 
 	};
 
 	const componentId = instance.componentId as keyof typeof widgetRegistry;
+
+	// Provide slot-aware default props for certain widgets
+	const extraProps = React.useMemo(() => {
+		if (componentId === 'hotThreads') {
+			return {
+				variant: currentSlot?.startsWith('sidebar/') ? 'widget' : 'feed'
+			} as Record<string, unknown>;
+		}
+		return {} as Record<string, unknown>;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [componentId, currentSlot]);
+
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const WidgetComponent = React.lazy(
 		widgetConfig.component as () => Promise<{ default: React.ComponentType<any> }>
@@ -227,8 +239,12 @@ export const WidgetFrame: React.FC<WidgetFrameProps> = ({ instanceId, className 
 			>
 				<Suspense fallback={<LoadingSkeleton />}>
 					<ErrorBoundary FallbackComponent={WidgetError}>
-						{/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-						<WidgetComponent instanceId={instanceId} {...(instance as any).props} />
+						<WidgetComponent
+							instanceId={instanceId}
+							slotId={currentSlot}
+							{...extraProps}
+							{...(instance as any).props}
+						/>
 					</ErrorBoundary>
 				</Suspense>
 			</div>
