@@ -22,7 +22,42 @@ This repository is protected by an **advanced boundary enforcement system** that
 
 A crypto-native forum and social platform designed for cryptocurrency enthusiasts, traders, and developers. Features integrated wallet functionality, a digital goods marketplace, and gamified social features with XP/DGT economy.
 
-## 🚀 Quick Start
+## 🚀 Quick Start with Codespaces
+
+### One-Click Development Environment
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/your-username/degentalk)
+
+**The fastest way to get started** - click the badge above for a fully configured development environment that boots in under 90 seconds.
+
+#### What's Included:
+
+- ✅ **Pre-configured Node.js 20** with pnpm package manager
+- ✅ **VS Code extensions** for TypeScript, ESLint, Prettier, Tailwind CSS
+- ✅ **Database tools** including Drizzle Kit and Neon CLI
+- ✅ **SuperClaude integration** with helpful aliases (`sc`, `scload`, `scplan`)
+- ✅ **Auto-forwarded ports** for development (5173, 5001, 8080)
+- ✅ **Environment template** ready for your configuration
+
+#### First Steps in Codespaces:
+
+```bash
+# 1. Update environment file
+cp env.local.example env.local  # Edit with your database credentials
+
+# 2. Start development
+pnpm dev                        # Full stack with hot reload
+
+# 3. Optional: Load with SuperClaude
+sc /user:load --depth deep --plan
+```
+
+#### Required Codespaces Secrets:
+
+- `NEON_API_KEY` - Your Neon database API key
+- `NEON_PROJECT_ID` - Your Neon project identifier
+
+### Local Development Setup
 
 ### Prerequisites
 

@@ -5,6 +5,8 @@
 	"license": "MIT",
 	"scripts": {
 		"dev": "npm run kill-ports && concurrently \"npm run dev:server\" \"npm run dev:client\" --names \"backend,frontend\" --prefix-colors \"cyan,yellow\"",
+		"test:repo": "vitest -c server/vitest.config.ts",
+		"sc": "superclaude",
 		"dev:client": "vite --force --port 5173 --config config/vite.config.ts",
 		"dev:server": "cd server && npm run dev",
 		"dev:seed": "npm run kill-ports && npm run seed:all && concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend\" \"npm run dev:client\"",
