@@ -1,3 +1,14 @@
+# Database Migration CI/CD Pipeline
+#
+# This workflow validates database migrations and applies them to staging.
+# Production deployments are handled separately via promote-to-prod.yml
+#
+# Safety features:
+# - Enforces *_safe.sql naming for production migrations
+# - Blocks destructive operations (DROP, DELETE, TRUNCATE)
+# - Runs comprehensive validation before applying
+# - Automatic rollback on failure
+
 name: Database Migration CI
 
 on:

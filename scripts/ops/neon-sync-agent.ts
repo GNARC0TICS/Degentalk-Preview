@@ -1,5 +1,23 @@
 #!/usr/bin/env node
 
+/**
+ * Neon Sync Agent - Real-time database synchronization tool
+ * 
+ * Features:
+ * - Watches for file changes in db/schema, server/src/domains, and env.local
+ * - Automatically triggers forum configuration sync
+ * - Includes memory monitoring and crash recovery
+ * - Configurable for dev/staging/prod environments
+ * 
+ * Usage:
+ *   npm run spawn -- --task neon-sync-agent --env dev --watch
+ * 
+ * Options:
+ *   --env [dev|staging|prod] - Target environment
+ *   --watch - Enable file watching
+ *   --task <name> - Task identifier
+ */
+
 import { spawn } from 'child_process';
 import { watch } from 'fs';
 import path from 'path';

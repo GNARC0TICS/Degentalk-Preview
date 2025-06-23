@@ -1,5 +1,24 @@
 #!/usr/bin/env node
 
+/**
+ * Safe Migration Validator - Enforces production migration safety rules
+ * 
+ * Safety rules:
+ * - Production migrations must end with _safe.sql
+ * - No destructive operations (DROP, DELETE, TRUNCATE) in safe files
+ * - Warns about risky operations (ALTER TYPE, NOT NULL, UNIQUE)
+ * - Checks for proper documentation and rollback instructions
+ * 
+ * Usage:
+ *   npm run migration:validate [env]    - Validate migrations
+ *   npm run migration:template <name>   - Generate safe template
+ * 
+ * Environments:
+ *   dev - Relaxed rules, warnings only
+ *   staging - Standard validation
+ *   prod - Strict validation, enforces _safe.sql naming
+ */
+
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
 import { fileURLToPath } from 'url';

@@ -1,3 +1,21 @@
+# Production Deployment Workflow with Approval Gates
+#
+# This workflow handles production database deployments with multiple safety checks:
+# - Manual trigger only (no automatic production deployments)
+# - Required approvals from designated reviewers
+# - Automatic Neon database backup before deployment
+# - Migration safety validation
+# - Comprehensive audit trail
+#
+# To use:
+# 1. Go to Actions → Promote to Production
+# 2. Enter staging commit SHA to deploy
+# 3. Select migration type
+# 4. Wait for approvals
+# 5. Monitor deployment progress
+#
+# Emergency deployments can bypass some checks but still require approval
+
 name: Promote to Production
 
 on:
