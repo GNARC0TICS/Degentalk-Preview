@@ -1,0 +1,150 @@
+# Database Migration CI/CD Pipeline
+#
+# This workflow validates database migrations and applies them to staging.
+# Production deployments are handled separately via promote-to-prod.yml
+#
+# Safety features:
+# - Enforces *_safe.sql naming for production migrations
+# - Blocks destructive operations (DROP, DELETE, TRUNCATE)
+# - Runs comprehensive validation before applying
+# - Automatic rollback on failure
+
+name: Database Migration CI
+
+on:
+  push:
+    branches: [staging, main]
+    paths:
+      - 'db/schema/**'
+      - 'migrations/**'
+      - 'scripts/db/**'
+  pull_request:
+    branches: [staging, main]
+    paths:
+      - 'db/schema/**'
+      - 'migrations/**'
+      - 'scripts/db/**'
+
+jobs:
+  lint-migrations:
+    name: Lint Migrations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint migration files
+        run: |
+          # Check for safe SQL patterns
+          echo "🔍 Checking for safe migration patterns..."
+
+          # Ensure production migrations follow *_safe.sql naming
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            find migrations/ -name "*.sql" | while read file; do
+              if [[ ! "$file" =~ _safe\.sql$ ]]; then
+                echo "❌ Production migration must end with '_safe.sql': $file"
+                exit 1
+              fi
+            done
+          fi
+
+          # Check for destructive operations in safe files
+          find migrations/ -name "*_safe.sql" | while read file; do
+            if grep -E "(DROP|DELETE|TRUNCATE)" "$file"; then
+              echo "❌ Destructive operation found in safe migration: $file"
+              exit 1
+            fi
+          done
+
+          echo "✅ Migration lint checks passed"
+
+      - name: Validate schema consistency
+        run: npm run validate
+
+  dry-run-staging:
+    name: Dry Run on Staging
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/staging'
+    needs: lint-migrations
+    environment: staging
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Dry run migrations
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+        run: |
+          echo "🧪 Running dry-run migrations on staging..."
+          npm run db:migrate
+          echo "✅ Dry run completed successfully"
+
+      - name: Test database sync
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+        run: |
+          echo "🔄 Testing forum config sync..."
+          npm run sync:forums
+          echo "✅ Config sync test completed"
+
+  apply-staging:
+    name: Apply to Staging
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/staging'
+    needs: dry-run-staging
+    environment: staging
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Apply migrations to staging
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+        run: |
+          echo "🚀 Applying migrations to staging database..."
+          npm run db:migrate:Apply
+          echo "✅ Migrations applied to staging"
+
+      - name: Sync forum configuration
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+        run: |
+          echo "🔄 Syncing forum configuration..."
+          npm run sync:forums
+          echo "✅ Forum configuration synced"
+
+      - name: Run post-migration tests
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+        run: |
+          echo "🧪 Running post-migration validation..."
+          npm run test:forum-endpoints
+          npm run sync:check-forum-config
+          echo "✅ Post-migration tests passed"

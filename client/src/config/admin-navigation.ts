@@ -27,6 +27,7 @@ export const adminLinks = [
 	{
 		label: 'Settings',
 		children: [
+			{ label: 'Database Config', href: '/admin/database-config' }
 			//      { label: 'Platform Settings', href: '/admin/platform-settings' },
 		]
 	}

@@ -290,6 +290,13 @@ export const adminRouteGroups: AdminRouteGroup[] = [
 				description: 'Platform configuration'
 			},
 			{
+				path: '/admin/database-config',
+				label: 'Database Config',
+				icon: 'database',
+				permissions: ['admin'],
+				description: 'Database configuration and migration management'
+			},
+			{
 				path: '/admin/themes',
 				label: 'Themes',
 				icon: 'panel-left',

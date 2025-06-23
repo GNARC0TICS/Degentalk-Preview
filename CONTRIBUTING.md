@@ -158,4 +158,91 @@ import { CustomEmoji } from '@schema'; // 💀 Schema not exported properly
 
 ---
 
+## 🗄️ Database Migration Guidelines
+
+### Creating Migrations
+
+**For Development:**
+
+```bash
+# Generate migration from schema changes
+npm run db:migrate
+
+# Apply to development database
+npm run db:migrate:apply
+```
+
+**For Production:**
+
+```bash
+# Use the safe migration template
+npm run migration:template your_migration_name
+
+# Output will be a template following all safety rules
+```
+
+### Migration Safety Rules
+
+#### ✅ **Safe Operations** (Allowed in Production)
+
+- `ALTER TABLE ADD COLUMN` with defaults
+- `CREATE INDEX CONCURRENTLY`
+- `INSERT ... ON CONFLICT DO NOTHING`
+- Configuration value updates
+- Adding new tables
+
+#### ❌ **Destructive Operations** (Blocked in Production)
+
+- `DROP TABLE` or `DROP COLUMN`
+- `DELETE FROM` or `TRUNCATE`
+- `ALTER COLUMN TYPE` (data loss risk)
+- Removing NOT NULL without default
+- Any operation that could fail on existing data
+
+### Production Migration Workflow
+
+1. **Name your migration with `_safe.sql` suffix**
+
+   ```
+   20240101120000_add_user_preferences_safe.sql
+   ```
+
+2. **Include required metadata**
+
+   ```sql
+   -- Description: Add user preferences table
+   -- Created: 2024-01-01T12:00:00Z
+   -- Type: SAFE (No destructive operations)
+   -- Rollback: See instructions below
+   ```
+
+3. **Validate before commit**
+
+   ```bash
+   npm run migration:validate prod
+   ```
+
+4. **Push to staging first**
+   - Migrations auto-deploy to staging
+   - Monitor for issues
+   - Then promote to production
+
+### Neon Sync Agent
+
+For real-time development synchronization:
+
+```bash
+# Start the sync agent
+npm run spawn -- --task neon-sync-agent --env dev --watch
+
+# Monitors:
+# - db/schema/ (schema changes)
+# - server/src/domains/ (domain logic)
+# - env.local (configuration)
+```
+
+See `NEON-SYNC.md` for complete documentation.
+
+---
+
 **Remember:** When in doubt, keep it separate. Frontend is frontend, backend is backend, and shared is truly shared (no tooling dependencies).
