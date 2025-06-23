@@ -18,6 +18,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import FeatureGate from '@/components/ui/feature-gate';
+import { Username } from '@/components/users/Username';
+import RainButton from '@/components/economy/wallet/rain-button';
 
 // ShoutMessage type definition
 interface ShoutMessage {
@@ -132,7 +134,10 @@ const ShoutboxContainer: React.FC = () => {
 									</Avatar>
 									<div className="flex-grow">
 										<div className="flex items-center">
-											<span className="font-semibold text-sm">{msg.username}</span>
+											<Username
+												username={msg.username}
+												className="font-semibold text-sm cursor-pointer hover:underline"
+											/>
 											{msg.userLevel && (
 												<Badge variant="outline" className="ml-2 text-xs">
 													LVL {msg.userLevel}
@@ -163,6 +168,13 @@ const ShoutboxContainer: React.FC = () => {
 							onChange={(e) => setMessage(e.target.value)}
 							onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
 							className="flex-grow"
+						/>
+						<RainButton
+							buttonText="Rain"
+							buttonVariant="outline"
+							buttonSize="sm"
+							defaultChannel="general"
+							className="bg-gradient-to-r from-emerald-600/10 to-cyan-600/10 border-emerald-500/30 hover:border-emerald-400 text-emerald-400"
 						/>
 						<Button
 							onClick={handleSendMessage}

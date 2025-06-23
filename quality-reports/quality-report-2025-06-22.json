@@ -1,0 +1,40 @@
+{
+	"timestamp": "2025-06-22T23:34:49.668Z",
+	"metrics": {
+		"typeSafety": 96,
+		"testCoverage": 1,
+		"codeComplexity": 0,
+		"consistency": 0,
+		"productionReadiness": 0,
+		"overall": 24
+	},
+	"details": {
+		"typeErrors": 7,
+		"anyTypes": 335,
+		"testFiles": 7,
+		"godObjects": [
+			"total",
+			"./server/storage.ts",
+			"./client/src/pages/admin/announcements/index.tsx",
+			"./client/src/pages/admin/social-config.tsx",
+			"./scripts/templates/transaction-domain-template.ts",
+			"./scripts/templates/vault-domain-template.ts",
+			"./client/src/pages/admin/xp/adjust.tsx",
+			"./client/src/pages/admin/clout/grants.tsx",
+			"./client/src/pages/admin/categories.tsx"
+		],
+		"consoleStatements": 1284,
+		"directDbAccess": 69
+	},
+	"recommendations": [
+		"🔴 CRITICAL: Implement comprehensive testing framework",
+		"📊 Current: 7 test files, need 50+ for good coverage",
+		"🟡 HIGH: Decompose god objects for better maintainability",
+		"📊 God objects found: total, ./server/storage.ts, ./client/src/pages/admin/announcements/index.tsx, ./client/src/pages/admin/social-config.tsx, ./scripts/templates/transaction-domain-template.ts, ./scripts/templates/vault-domain-template.ts, ./client/src/pages/admin/xp/adjust.tsx, ./client/src/pages/admin/clout/grants.tsx, ./client/src/pages/admin/categories.tsx",
+		"🟡 MEDIUM: Implement repository pattern for data access",
+		"📊 69 files with direct database access",
+		"🟡 MEDIUM: Replace console logging with structured logging",
+		"📊 1284 console statements found",
+		"🔴 POOR: Critical quality issues. Immediate intervention required."
+	]
+}

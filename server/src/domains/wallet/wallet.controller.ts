@@ -8,6 +8,8 @@
  */
 
 import type { Request, Response } from 'express';
+import { BaseController, ValidationError, NotFoundError } from '../../core/base-controller';
+import type { TypedRequest, ApiResponse } from '@shared/types/api.types';
 import { logger } from '../../core/logger';
 import { dgtService } from './dgt.service';
 import { ccpaymentService, type CryptoBalance } from './ccpayment.service'; // Import instance and CryptoBalance type
@@ -26,15 +28,14 @@ import { walletConfig } from '@shared/wallet.config';
 /**
  * Wallet controller for handling wallet-related requests
  */
-export class WalletController {
+export class WalletController extends BaseController {
 	/**
 	 * Get user's combined wallet balance (DGT and crypto)
 	 */
 	async getBalance(req: Request, res: Response): Promise<void> {
 		try {
-			// Use authenticated user ID if available, otherwise default to dev user ID 2 (based on seed logs)
-			const authUserId = (req.user as any)?.id;
-			const userId = authUserId || 2; // Default to user ID 2 if no authenticated user
+			// Get authenticated user ID with type safety
+			const userId = this.getUserId(req);
 
 			logger.info('WALLET_CONTROLLER', `Getting DGT balance for user ID: ${userId}`);
 
@@ -66,10 +67,14 @@ export class WalletController {
 			//   cryptoBalances = await ccpaymentService.getUserCryptoBalances(ccpaymentAccountId);
 			// }
 
-			res.json({
-				dgt: Number(dgtBalance),
-				crypto: cryptoBalances
-			});
+			return this.success(
+				res,
+				{
+					dgt: Number(dgtBalance),
+					crypto: cryptoBalances
+				},
+				'Balance retrieved successfully'
+			);
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : String(error);
 			logger.error(

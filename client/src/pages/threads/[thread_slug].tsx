@@ -26,8 +26,7 @@ import {
 	useUnlikePost,
 	useCreatePost,
 	useDeletePost,
-	useSolveThread,
-	useTipPost
+	useSolveThread
 } from '@/features/forum/hooks/useForumQueries';
 import { toast } from 'sonner';
 
@@ -65,7 +64,6 @@ export default function ThreadPage() {
 	const createPost = useCreatePost();
 	const deletePost = useDeletePost();
 	const solveThread = useSolveThread();
-	const tipPost = useTipPost();
 
 	// ----- Local State -----
 	const [replyToPost, setReplyToPost] = React.useState<PostWithUser | null>(null);
@@ -110,13 +108,6 @@ export default function ThreadPage() {
 	const handleMarkSolution = (postId: number) => {
 		if (!thread) return;
 		solveThread.mutate({ threadId: thread.id, postId });
-	};
-
-	const handleTip = (postId: number) => {
-		const amount = parseFloat(prompt('Enter amount to tip') || '0');
-		if (amount > 0) {
-			tipPost.mutate({ postId, amount });
-		}
 	};
 
 	const handleReport = (postId: number) => {
@@ -270,13 +261,12 @@ export default function ThreadPage() {
 											isFirst={index === 0}
 											isThreadSolved={!!thread.isSolved}
 											parentForumTheme={null}
-											tippingEnabled={false}
+											tippingEnabled={true}
 											onLike={handleLike}
 											onReply={handleReply}
 											onEdit={handleEdit}
 											onDelete={handleDelete}
 											onMarkAsSolution={handleMarkSolution}
-											onTip={handleTip}
 											onReport={handleReport}
 											isEditable={canEdit}
 										/>

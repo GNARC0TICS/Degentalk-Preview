@@ -17317,3 +17317,53 @@ User not found
 [2025-06-22T11:51:57.524Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
 [2025-06-22T11:51:57.524Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
 [2025-06-22T11:51:57.524Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-22T22:09:42.236Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-22T22:09:42.241Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-22T22:09:42.368Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-22T22:09:42.824Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-22T22:09:42.827Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-22T22:09:42.828Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-22T22:09:42.828Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-22T22:09:42.828Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-22T22:14:42.833Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-22T22:14:42.835Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-22T22:14:42.835Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-22T22:14:42.835Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-22T22:19:42.837Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-22T23:50:45.476Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-22T23:50:45.482Z] [INFO] [RepositoryFactory] Initialized with config
+{
+  "config": {
+    "enableCaching": false,
+    "cacheTimeout": 300,
+    "enableQueryLogging": false,
+    "enablePerformanceMonitoring": true,
+    "defaultPageSize": 20,
+    "maxPageSize": 100
+  }
+}
+[2025-06-22T23:50:45.484Z] [DEBUG] [RepositoryFactory] Created UserRepository instance
+[2025-06-22T23:50:46.889Z] [DEBUG] [RepositoryFactory] Created TransactionRepository instance
+[2025-06-22T23:50:47.304Z] [ERROR] [UserRepository] Error in create
+{
+  "data": {},
+  "error": {
+    "length": 578,
+    "name": "error",
+    "severity": "ERROR",
+    "code": "23502",
+    "detail": "Failing row contains (94022a09-9129-4393-84e9-d7996242466c, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, t, f, f, f, f, f, null, 2025-06-22 23:50:47.193, null, null, null, 0, 1, 0, null, null, 0, 0, 1, 0, null, user, null, null, 0, [], null, null, null, null, null, null, null, {}, {}, {}, null, null, 2025-06-22 23:50:47.193, null).",
+    "schema": "public",
+    "table": "users",
+    "column": "username",
+    "file": "execMain.c",
+    "line": "1982",
+    "routine": "ExecConstraints"
+  }
+}

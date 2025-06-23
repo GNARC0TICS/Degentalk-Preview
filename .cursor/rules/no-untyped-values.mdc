@@ -1,0 +1,83 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# No Untyped Values Rule (`no-any`)
+
+## Objective
+Eliminate all untyped values from the Degentalk codebase. The `any` type is **forbidden** unless explicitly justified and tracked.
+
+---
+
+## Enforcement
+1. **Compiler Strictness**
+   - `noImplicitAny` and `strict` **must remain enabled** in every `tsconfig.*.json`.
+2. **Banned Type**
+   - `any` is outlawed across the entire repository.
+   - Prefer `unknown` with proper type-guards over `any`.
+3. **Temporary Escape Hatch**
+   - Use a trailing comment of the form `// TODO-remove-any:<JIRA-ID>` **immediately after** the offending `any`.
+   - CI **fails** if a diff introduces an `any` **without** this TODO tag.
+4. **Legacy Debt Burn-down**
+   - All existing TODO tags must be removed by the end of the current sprint.
+   - Closing the corresponding tracker issue is required for each removal.
+
+---
+
+## Trigger (@noAny)
+- Triggered on every commit diff or PR when the linter detects the keyword `any`.
+- Also triggered when `tsc --noEmit` introduces new implicit `any` errors.
+
+## Actions
+1. **Automated Lint Check**
+   - ESLint rule `@typescript-eslint/no-explicit-any: error` is enforced, with an allow pattern only for lines ending in `TODO-remove-any:`.
+2. **CI Gate**
+   - CI step scans the diff: `git diff -U0 HEAD~1 | grep -n "\bany\b"`.
+   - If found without the TODO tag, the build fails.
+3. **Reporting**
+   - Offending files are listed in CI output with line numbers.
+   - Links to tracker issues are printed for existing TODOs.
+
+---
+
+## Cursor Agent Checklist
+1. **Search Existing Types** before authoring new ones.
+2. **Generate explicit types** for every parameter, return value, and object literal.
+3. **Dynamic JSON**: create a Zod schema and `infer` the TypeScript type.
+4. **Compile** with `tsc --noEmit` and ensure **zero** new `any` occurrences.
+5. **Unavoidable Coercion**: wrap in `assertNever()` and tag with an approved `// TODO-remove-any:<JIRA-ID>`.
+
+---
+
+## Examples
+```ts
+// ❌ Bad
+function parseData(data: any) {
+  return JSON.parse(data);
+}
+
+// ✅ Good
+import { z } from 'zod';
+
+const DataSchema = z.object({
+  id: z.string(),
+  payload: z.unknown(),
+});
+
+type Data = z.infer<typeof DataSchema>;
+
+function parseData(raw: unknown): Data {
+  return DataSchema.parse(JSON.parse(String(raw)));
+}
+```
+
+---
+
+## Related Rules
+- `schema-consistency.mdc` (type safety alignment)
+- `naming-rules.mdc` (clarity of type and interface names)
+
+---
+
+**Status:** Active as of 2025-06-22

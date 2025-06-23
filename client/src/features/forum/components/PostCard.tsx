@@ -13,6 +13,7 @@ import { SignatureRenderer } from '@/components/forum/SignatureRenderer';
 import { useAuth } from '@/hooks/use-auth';
 import { ButtonTooltip } from '@/components/ui/tooltip-utils';
 import { ModeratorActions } from '@/components/forum/ModeratorActions';
+import TipButton from '@/components/economy/wallet/tip-button';
 
 interface PostCardProps {
 	post: PostWithUser;
@@ -24,7 +25,6 @@ interface PostCardProps {
 	onEdit?: (id: number) => void;
 	onDelete?: (id: number) => void;
 	onMarkAsSolution?: (id: number) => void;
-	onTip?: (id: number) => void; // New prop
 	onReport?: (id: number) => void; // New prop
 	isFirst?: boolean;
 	parentForumTheme?: string | null;
@@ -41,7 +41,6 @@ export function PostCard({
 	onEdit,
 	onDelete,
 	onMarkAsSolution,
-	onTip,
 	onReport,
 	isFirst = false,
 	parentForumTheme = null,
@@ -178,18 +177,16 @@ export function PostCard({
 							)}
 
 							{/* Tip Button */}
-							{tippingEnabled && currentUser && (
-								<ButtonTooltip content="Send DGT tip to the author">
-									<Button
-										size="sm"
-										variant="ghost"
-										className="text-xs h-8 px-3 text-zinc-400 flex items-center gap-1.5"
-										onClick={() => onTip && onTip(post.id)}
-									>
-										<Coins className="h-4 w-4" />
-										<span>Tip</span>
-									</Button>
-								</ButtonTooltip>
+							{tippingEnabled && currentUser && post.user.id !== currentUser.id && (
+								<TipButton
+									recipientId={post.user.id}
+									recipientName={post.user.username}
+									buttonText="Tip"
+									buttonVariant="ghost"
+									buttonSize="sm"
+									className="text-xs h-8 px-3 text-zinc-400 flex items-center gap-1.5"
+									source="forum_post"
+								/>
 							)}
 						</div>
 

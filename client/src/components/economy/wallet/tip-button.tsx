@@ -26,6 +26,7 @@ import { useTip } from '@/hooks/use-tip';
 import { useWallet } from '@/hooks/use-wallet';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { Coins } from 'lucide-react';
 import * as z from 'zod';
 
 const tipFormSchema = z.object({
@@ -109,7 +110,8 @@ export default function TipButton({
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
 				<Button variant={buttonVariant} size={buttonSize} className={className}>
-					{buttonText}
+					<Coins className="h-4 w-4" />
+					{buttonText && <span>{buttonText}</span>}
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">

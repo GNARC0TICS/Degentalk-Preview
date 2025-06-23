@@ -1053,7 +1053,8 @@ Generated on: 2025-06-22
 │  │  │  ├─ 0014_snapshot.json
 │  │  │  ├─ 0015_snapshot.json
 │  │  │  ├─ 0016_snapshot.json
-│  │  │  └─ 0017_snapshot.json
+│  │  │  ├─ 0017_snapshot.json
+│  │  │  └─ 0018_snapshot.json
 │  │  ├─ 0012_event_logs_table.sql
 │  │  ├─ 0013_forum_schema_cleanup.sql
 │  │  ├─ 0013_gray_harrier.sql
@@ -1065,6 +1066,7 @@ Generated on: 2025-06-22
 │  │  ├─ 0016_roles_uuid_to_int.sql
 │  │  ├─ 0016_yellow_patriot.sql
 │  │  ├─ 0017_auto_tables_and_defaults.sql
+│  │  ├─ 0018_misty_chat.sql
 │  │  ├─ 0020_economy_overrides.sql
 │  │  └─ 0021_drop_mentions.sql
 │  ├─ .DS_Store
