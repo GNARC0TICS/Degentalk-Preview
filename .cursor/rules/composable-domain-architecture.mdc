@@ -1,0 +1,331 @@
+---
+description: Composable Domain Architecture for Maximum Reusability and Clean Boundaries
+globs: 
+alwaysApply: true
+---
+# Composable Domain Architecture Cheat Code
+
+## 🎯 Objective
+Build DegenTalk components as composable, domain-aware building blocks that can be mixed, matched, and reused while maintaining strict domain boundaries and maximum flexibility.
+
+## 🧩 The Composable Pattern
+Every component should be designed as a composable building block that can work independently or combine with others, following strict domain interfaces.
+
+## ⚡ Instant Win Rules
+
+### 1. Component Slot Architecture (@slotPattern)
+**Trigger:** Creating any component that might need different content or layouts
+
+**Action:** Use the slot pattern for maximum composability
+
+```typescript
+// ✅ EXCELLENT - Composable with slots
+interface ForumCardProps {
+  forum: Forum;
+  slots?: {
+    header?: React.ReactNode;
+    actions?: React.ReactNode;
+    footer?: React.ReactNode;
+    sidebar?: React.ReactNode;
+  };
+  variant?: 'compact' | 'detailed' | 'minimal';
+}
+
+const ForumCard = ({ forum, slots, variant = 'detailed' }: ForumCardProps) => (
+  <Card variant={variant}>
+    {slots?.header || <DefaultForumHeader forum={forum} />}
+    <ForumContent forum={forum} />
+    {slots?.actions || <DefaultForumActions forum={forum} />}
+    {slots?.sidebar && <Sidebar>{slots.sidebar}</Sidebar>}
+    {slots?.footer || <DefaultForumFooter forum={forum} />}
+  </Card>
+);
+
+// Usage - Infinite flexibility
+<ForumCard 
+  forum={tradingForum}
+  slots={{
+    header: <CustomTradingHeader />,
+    actions: <TipButton />,
+    sidebar: <LivePriceWidget />
+  }}
+  variant="compact"
+/>
+```
+
+### 2. Domain Boundary Interfaces (@domainInterface)
+**Trigger:** Creating components that cross domain boundaries
+
+**Action:** Use strict interfaces that prevent tight coupling
+
+```typescript
+// ✅ EXCELLENT - Clean domain interfaces
+// shared/interfaces/economy.interface.ts
+export interface EconomyProvider {
+  getUserBalance(userId: string): Promise<WalletBalance>;
+  transferDGT(from: string, to: string, amount: number): Promise<TransferResult>;
+  awardXP(userId: string, action: string, amount: number): Promise<XPResult>;
+}
+
+// shared/interfaces/forum.interface.ts  
+export interface ForumProvider {
+  getThreads(forumId: string): Promise<Thread[]>;
+  createPost(threadId: string, content: string): Promise<Post>;
+  checkPermissions(userId: string, forumId: string): Promise<Permissions>;
+}
+
+// Components depend on interfaces, not implementations
+interface ThreadCardProps {
+  thread: Thread;
+  economyProvider: EconomyProvider;
+  forumProvider: ForumProvider;
+}
+
+const ThreadCard = ({ thread, economyProvider, forumProvider }: ThreadCardProps) => {
+  // Can tip, award XP, check permissions without knowing implementation details
+  const handleTip = () => economyProvider.transferDGT(userId, thread.authorId, amount);
+  const handleReply = () => forumProvider.createPost(thread.id, content);
+};
+```
+
+### 3. Compound Components (@compoundComponents)
+**Trigger:** Building complex UI patterns that have multiple related parts
+
+**Action:** Create compound components that work together seamlessly
+
+```typescript
+// ✅ EXCELLENT - Compound component pattern
+// components/economy/wallet/WalletDashboard.tsx
+const WalletDashboard = ({ children }: { children: React.ReactNode }) => (
+  <div className="wallet-dashboard">{children}</div>
+);
+
+const Balance = ({ variant }: { variant?: 'compact' | 'detailed' }) => {
+  // Balance implementation
+};
+
+const TransactionHistory = ({ limit }: { limit?: number }) => {
+  // Transaction history implementation
+};
+
+const QuickActions = ({ actions }: { actions: string[] }) => {
+  // Quick actions implementation
+};
+
+// Compound API
+WalletDashboard.Balance = Balance;
+WalletDashboard.TransactionHistory = TransactionHistory;
+WalletDashboard.QuickActions = QuickActions;
+
+// Usage - Perfect composability
+<WalletDashboard>
+  <WalletDashboard.Balance variant="compact" />
+  <WalletDashboard.QuickActions actions={['tip', 'transfer', 'rain']} />
+  <WalletDashboard.TransactionHistory limit={5} />
+</WalletDashboard>
+
+// Or different composition
+<WalletDashboard>
+  <WalletDashboard.Balance variant="detailed" />
+  <CustomChart />
+  <WalletDashboard.TransactionHistory limit={10} />
+</WalletDashboard>
+```
+
+### 4. Provider Pattern for Cross-Domain Logic (@providerPattern)
+**Trigger:** Sharing state or logic across multiple components in different domains
+
+**Action:** Use context providers with clean interfaces
+
+```typescript
+// ✅ EXCELLENT - Domain-aware providers
+// contexts/PlatformProvider.tsx
+interface PlatformContextValue {
+  user: User | null;
+  economy: EconomyProvider;
+  forum: ForumProvider;
+  permissions: PermissionProvider;
+  notifications: NotificationProvider;
+}
+
+const PlatformProvider = ({ children }: { children: React.ReactNode }) => {
+  const economy = useEconomyService();
+  const forum = useForumService();
+  const permissions = usePermissionService();
+  const notifications = useNotificationService();
+  
+  return (
+    <PlatformContext.Provider value={{ economy, forum, permissions, notifications }}>
+      {children}
+    </PlatformContext.Provider>
+  );
+};
+
+// Any component can access any domain service through clean interfaces
+const TipButton = ({ recipientId, amount }: TipButtonProps) => {
+  const { economy, notifications } = usePlatform();
+  
+  const handleTip = async () => {
+    const result = await economy.transferDGT(userId, recipientId, amount);
+    notifications.show(`Tipped ${amount} DGT!`);
+  };
+};
+```
+
+## 🚀 Advanced Composition Patterns
+
+### 5. Render Props for Maximum Flexibility (@renderProps)
+```typescript
+// ✅ EXCELLENT - Render props for complex logic sharing
+interface ThreadListProps {
+  forumId: string;
+  children: (data: {
+    threads: Thread[];
+    loading: boolean;
+    error: Error | null;
+    refetch: () => void;
+  }) => React.ReactNode;
+}
+
+const ThreadList = ({ forumId, children }: ThreadListProps) => {
+  const { threads, loading, error, refetch } = useThreads(forumId);
+  return children({ threads, loading, error, refetch });
+};
+
+// Usage - Complete flexibility over rendering
+<ThreadList forumId={forum.id}>
+  {({ threads, loading, error, refetch }) => (
+    <>
+      {loading && <ThreadSkeleton />}
+      {error && <ErrorDisplay error={error} onRetry={refetch} />}
+      {threads.map(thread => (
+        <ThreadCard key={thread.id} thread={thread} />
+      ))}
+    </>
+  )}
+</ThreadList>
+```
+
+### 6. Composable Hooks (@composableHooks)
+```typescript
+// ✅ EXCELLENT - Composable hook pattern
+// hooks/useForumInteraction.ts
+export const useForumInteraction = (threadId: string) => {
+  const { economy } = usePlatform();
+  const { forum } = usePlatform();
+  const { permissions } = usePlatform();
+  
+  const canPost = useQuery(['permissions', threadId], () => 
+    permissions.checkThreadAccess(threadId)
+  );
+  
+  const createPost = useMutation(
+    (content: string) => forum.createPost(threadId, content),
+    {
+      onSuccess: () => {
+        economy.awardXP(userId, 'create_post', 10);
+      }
+    }
+  );
+  
+  const tipAuthor = useMutation(
+    ({ authorId, amount }: { authorId: string; amount: number }) =>
+      economy.transferDGT(userId, authorId, amount)
+  );
+  
+  return {
+    canPost: canPost.data,
+    createPost: createPost.mutate,
+    tipAuthor: tipAuthor.mutate,
+    isLoading: createPost.isLoading || tipAuthor.isLoading,
+  };
+};
+
+// Usage in any component
+const ReplyForm = ({ threadId }: { threadId: string }) => {
+  const { canPost, createPost, isLoading } = useForumInteraction(threadId);
+  
+  if (!canPost) return <RequirePermissions />;
+  
+  return (
+    <form onSubmit={e => createPost(content)}>
+      {/* form fields */}
+    </form>
+  );
+};
+```
+
+## 🎨 Real-World Applications
+
+### Forum Components
+```typescript
+// Completely composable forum experience
+<ForumLayout>
+  <ForumLayout.Header>
+    <BreadcrumbNav forum={forum} />
+    <ForumActions forum={forum} />
+  </ForumLayout.Header>
+  
+  <ForumLayout.Content>
+    <ThreadList forumId={forum.id}>
+      {({ threads }) => (
+        threads.map(thread => (
+          <ThreadCard key={thread.id} thread={thread}>
+            <ThreadCard.Actions>
+              <TipButton recipientId={thread.authorId} />
+              <BookmarkButton threadId={thread.id} />
+            </ThreadCard.Actions>
+          </ThreadCard>
+        ))
+      )}
+    </ThreadList>
+  </ForumLayout.Content>
+  
+  <ForumLayout.Sidebar>
+    <ForumStats forumId={forum.id} />
+    <OnlineUsers forumId={forum.id} />
+  </ForumLayout.Sidebar>
+</ForumLayout>
+```
+
+### Economy Integration
+```typescript
+// Economy components that work anywhere
+<EconomyProvider>
+  <WalletSummary variant="compact" />
+  
+  <ThreadCard thread={thread}>
+    <EconomyActions threadId={thread.id}>
+      <TipButton />
+      <RainButton />
+      <XPBoost />
+    </EconomyActions>
+  </ThreadCard>
+  
+  <UserProfile userId={user.id}>
+    <WalletBalance />
+    <XPProgress />
+    <RecentTransactions limit={3} />
+  </UserProfile>
+</EconomyProvider>
+```
+
+## ⚡ Instant Benefits
+
+1. **Infinite Reusability** - Components work in any context
+2. **Clean Domain Boundaries** - No tight coupling between domains
+3. **Easy Testing** - Each component can be tested in isolation
+4. **Rapid Development** - Mix and match existing components
+5. **Consistent UX** - Same patterns everywhere
+6. **Easy Customization** - Swap out any part without breaking others
+
+## 🏆 Success Metrics
+
+- **Zero tightly coupled components** across domain boundaries
+- **Compound components** for all complex UI patterns
+- **Provider patterns** for all cross-domain state
+- **Render props** for all complex logic sharing
+- **Interface-driven** component communication
+- **100% composable** - any component works with any other
+
+This pattern makes DegenTalk components infinitely flexible and maintainable! 🧩

@@ -7,7 +7,7 @@
 
 ### Essential Secrets
 
-```bash
+````bash
 # Database Configuration
 DATABASE_URL=postgresql://neondb_owner:npg_eZTUNmt3h5YE@ep-steep-field-a4mgmi29-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
 
@@ -21,10 +21,6 @@ STRIPE_SECRET_KEY=sk_live_51RK94EJwX0uJflSOEbCkRwMN4ul2LNTa1V5Hh3jtHglPv3xSj7NNf
 CCPAYMENT_APP_ID=isoZpLGWgTHrdY1
 CCPAYMENT_APP_SECRET=f3bb9be4cc138840bb806cdbe7797b9d
 
-# Test Database
-TEST_DATABASE_URL=postgresql://walletdb_owner:npg_F4rahqG6tpNd@ep-dawn-math-a83x4bti-pooler.eastus2.azure.neon.tech/walletdb?sslmode=require
-```
-
 ### Public Environment Variables
 
 These will be set automatically in Codespaces via env.local:
@@ -35,7 +31,7 @@ NEXT_PUBLIC_APP_ENV=development
 NEXT_PUBLIC_FEATURE_WALLET=true
 NODE_ENV=development
 FORCE_COLOR=1
-```
+````
 
 ## Setup Instructions
 

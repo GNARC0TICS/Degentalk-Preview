@@ -1,0 +1,39 @@
+{
+	"typescript.preferences.useAliasesForRenames": false,
+	"typescript.preferences.includePackageJsonAutoImports": "off",
+	"typescript.updateImportsOnFileMove.enabled": "always",
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit"
+	},
+	"cursor.ai.enabled": true,
+	"cursor.ai.model": "claude-3.5-sonnet",
+	"cursor.ai.maxTokens": 8192,
+	"files.exclude": {
+		"**/.pnpm-store": true,
+		"**/node_modules/.pnpm": true,
+		"**/.vite": true,
+		"**/dist": true,
+		"**/build": true
+	},
+	"search.exclude": {
+		"**/.pnpm-store": true,
+		"**/node_modules": true,
+		"**/.vite": true,
+		"**/dist": true,
+		"**/build": true
+	},
+	"emmet.includeLanguages": {
+		"typescript": "javascript",
+		"typescriptreact": "javascriptreact"
+	},
+	"tailwindCSS.includeLanguages": {
+		"typescript": "javascript",
+		"typescriptreact": "javascriptreact"
+	},
+	"typescript.suggest.autoImports": true,
+	"typescript.suggest.paths": true,
+	"javascript.suggest.autoImports": true,
+	"typescript.workspaceSymbols.scope": "currentProject"
+}
