@@ -1,6 +1,6 @@
 /**
  * Email Template Service
- * 
+ *
  * Manages email templates with Markdown support, variable interpolation,
  * and version control for the admin panel
  */
@@ -24,10 +24,16 @@ const templateVariableSchema = z.object({
 
 // Create/Update template schema
 export const emailTemplateSchema = z.object({
-	key: z.string().min(1).max(100).regex(/^[a-z0-9_]+$/, 'Key must be lowercase alphanumeric with underscores'),
+	key: z
+		.string()
+		.min(1)
+		.max(100)
+		.regex(/^[a-z0-9_]+$/, 'Key must be lowercase alphanumeric with underscores'),
 	name: z.string().min(1).max(255),
 	description: z.string().optional(),
-	category: z.enum(['auth', 'notification', 'marketing', 'transactional', 'general']).default('general'),
+	category: z
+		.enum(['auth', 'notification', 'marketing', 'transactional', 'general'])
+		.default('general'),
 	subject: z.string().min(1),
 	bodyMarkdown: z.string().min(1),
 	variables: z.array(templateVariableSchema).default([]),
@@ -43,11 +49,7 @@ export class EmailTemplateService {
 	/**
 	 * Get all email templates with filtering
 	 */
-	async getAllTemplates(filters?: {
-		category?: string;
-		isActive?: boolean;
-		search?: string;
-	}) {
+	async getAllTemplates(filters?: { category?: string; isActive?: boolean; search?: string }) {
 		try {
 			let query = db.select().from(emailTemplates);
 
@@ -93,15 +95,11 @@ export class EmailTemplateService {
 	async getTemplate(idOrKey: number | string) {
 		try {
 			const isId = typeof idOrKey === 'number';
-			
+
 			const [template] = await db
 				.select()
 				.from(emailTemplates)
-				.where(
-					isId 
-						? eq(emailTemplates.id, idOrKey)
-						: eq(emailTemplates.key, idOrKey as string)
-				);
+				.where(isId ? eq(emailTemplates.id, idOrKey) : eq(emailTemplates.key, idOrKey as string));
 
 			if (!template) {
 				throw new AdminError(
@@ -114,7 +112,7 @@ export class EmailTemplateService {
 			return template;
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			
+
 			throw new AdminError('Failed to fetch email template', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});
@@ -173,8 +171,8 @@ export class EmailTemplateService {
 	 * Update an email template with version control
 	 */
 	async updateTemplate(
-		id: number, 
-		data: UpdateEmailTemplateInput, 
+		id: number,
+		data: UpdateEmailTemplateInput,
 		adminId: string,
 		changeDescription?: string
 	) {
@@ -185,7 +183,7 @@ export class EmailTemplateService {
 			// If body changed, regenerate HTML
 			let bodyHtml = currentTemplate.bodyHtml;
 			let bodyPlainText = currentTemplate.bodyPlainText;
-			
+
 			if (data.bodyMarkdown) {
 				bodyHtml = await this.renderMarkdown(data.bodyMarkdown);
 				bodyPlainText = this.stripHtml(bodyHtml);
@@ -193,9 +191,10 @@ export class EmailTemplateService {
 
 			// Create version history if content changed
 			if (
-				data.subject && data.subject !== currentTemplate.subject ||
-				data.bodyMarkdown && data.bodyMarkdown !== currentTemplate.bodyMarkdown ||
-				data.variables && JSON.stringify(data.variables) !== JSON.stringify(currentTemplate.variables)
+				(data.subject && data.subject !== currentTemplate.subject) ||
+				(data.bodyMarkdown && data.bodyMarkdown !== currentTemplate.bodyMarkdown) ||
+				(data.variables &&
+					JSON.stringify(data.variables) !== JSON.stringify(currentTemplate.variables))
 			) {
 				await db.insert(emailTemplateVersions).values({
 					templateId: id,
@@ -268,13 +267,10 @@ export class EmailTemplateService {
 	/**
 	 * Preview template with sample data
 	 */
-	async previewTemplate(
-		idOrKey: number | string,
-		sampleData: Record<string, any> = {}
-	) {
+	async previewTemplate(idOrKey: number | string, sampleData: Record<string, any> = {}) {
 		try {
 			const template = await this.getTemplate(idOrKey);
-			
+
 			// Merge with default values
 			const variables = {
 				...template.defaultValues,
@@ -383,11 +379,11 @@ export class EmailTemplateService {
 
 			const stats = {
 				totalSent: logs.length,
-				successful: logs.filter(l => l.status === 'sent').length,
-				failed: logs.filter(l => l.status === 'failed').length,
-				bounced: logs.filter(l => l.status === 'bounced').length,
-				opened: logs.filter(l => l.openedAt).length,
-				clicked: logs.filter(l => l.clickedAt).length,
+				successful: logs.filter((l) => l.status === 'sent').length,
+				failed: logs.filter((l) => l.status === 'failed').length,
+				bounced: logs.filter((l) => l.status === 'bounced').length,
+				opened: logs.filter((l) => l.openedAt).length,
+				clicked: logs.filter((l) => l.clickedAt).length,
 				openRate: 0,
 				clickRate: 0
 			};

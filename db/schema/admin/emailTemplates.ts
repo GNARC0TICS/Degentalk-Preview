@@ -44,7 +44,7 @@ export const emailTemplates = pgTable('email_templates', {
 
 	// Version control
 	version: serial('version').notNull().default(1),
-	previousVersionId: serial('previous_version_id').references(() => emailTemplates.id)
+	previousVersionId: serial('previous_version_id')
 });
 
 export const emailTemplateVersions = pgTable('email_template_versions', {

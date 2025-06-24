@@ -134,6 +134,7 @@ export * from './admin/mediaLibrary';
 export * from './admin/uiConfig';
 export * from './admin/uiThemes';
 export * from './admin/moderator-notes';
+export * from './admin/emailTemplates';
 
 // Gamification domain exports
 export * from './gamification/achievements';
