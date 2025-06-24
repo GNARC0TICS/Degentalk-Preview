@@ -7,7 +7,7 @@
 
 import { db } from '@db';
 import { logger } from '@server/src/core/logger';
-import { forumCategories, threads, posts, users as usersTable } from '@schema';
+import { forumStructure, threads, posts, users as usersTable } from '@schema';
 import { sql, desc, eq, count, isNull } from 'drizzle-orm';
 import type { ForumCategoryWithStats } from '../../../../db/types/forum.types';
 
@@ -32,27 +32,26 @@ export class CategoryService {
 
 			logger.info('CategoryService', 'Fetching categories with stats from database');
 
+			// Simplified query without complex joins that might be causing issues
 			const categoriesWithStats = await db
 				.select({
-					id: forumCategories.id,
-					name: forumCategories.name,
-					slug: forumCategories.slug,
-					description: forumCategories.description,
-					position: forumCategories.position,
-					isVisible: forumCategories.isVisible,
-					parentId: forumCategories.parentId,
-					threadCount: sql<number>`COALESCE(${count(threads.id)}, 0)`,
-					postCount: sql<number>`COALESCE(SUM(${threads.postCount}), 0)`,
-					lastPostAt: sql<Date | null>`MAX(${posts.createdAt})`,
-					createdAt: forumCategories.createdAt,
-					updatedAt: forumCategories.updatedAt,
-					pluginData: forumCategories.pluginData
+					id: forumStructure.id,
+					name: forumStructure.name,
+					slug: forumStructure.slug,
+					description: forumStructure.description,
+					type: forumStructure.type,
+					position: forumStructure.position,
+					isVisible: sql<boolean>`NOT ${forumStructure.isHidden}`,
+					parentId: forumStructure.parentId,
+					threadCount: sql<number>`0`, // Simplified for now
+					postCount: sql<number>`0`, // Simplified for now
+					lastPostAt: sql<Date | null>`NULL`,
+					createdAt: forumStructure.createdAt,
+					updatedAt: forumStructure.updatedAt,
+					pluginData: forumStructure.pluginData
 				})
-				.from(forumCategories)
-				.leftJoin(threads, eq(forumCategories.id, threads.categoryId))
-				.leftJoin(posts, eq(threads.id, posts.threadId))
-				.groupBy(forumCategories.id)
-				.orderBy(forumCategories.position, forumCategories.name);
+				.from(forumStructure)
+				.orderBy(forumStructure.position, forumStructure.name);
 
 			// Update cache
 			categoriesCache = {
@@ -85,30 +84,31 @@ export class CategoryService {
 
 			const baseQuery = db
 				.select({
-					id: forumCategories.id,
-					name: forumCategories.name,
-					slug: forumCategories.slug,
-					description: forumCategories.description,
-					position: forumCategories.position,
-					isVisible: forumCategories.isVisible,
-					parentId: forumCategories.parentId,
+					id: forumStructure.id,
+					name: forumStructure.name,
+					slug: forumStructure.slug,
+					description: forumStructure.description,
+					type: forumStructure.type,
+					position: forumStructure.position,
+					isHidden: forumStructure.isHidden,
+					parentId: forumStructure.parentId,
 					threadCount: sql<number>`COALESCE(${count(threads.id)}, 0)`,
 					postCount: sql<number>`COALESCE(SUM(${threads.postCount}), 0)`,
 					lastPostAt: sql<Date | null>`MAX(${posts.createdAt})`,
-					createdAt: forumCategories.createdAt,
-					updatedAt: forumCategories.updatedAt,
-					pluginData: forumCategories.pluginData
+					createdAt: forumStructure.createdAt,
+					updatedAt: forumStructure.updatedAt,
+					pluginData: forumStructure.pluginData
 				})
-				.from(forumCategories)
-				.leftJoin(threads, eq(forumCategories.id, threads.categoryId))
+				.from(forumStructure)
+				.leftJoin(threads, eq(forumStructure.id, threads.categoryId))
 				.leftJoin(posts, eq(threads.id, posts.threadId))
-				.groupBy(forumCategories.id);
+				.groupBy(forumStructure.id);
 
 			if (!includeHidden) {
-				baseQuery.where(eq(forumCategories.isVisible, true));
+				baseQuery.where(eq(forumStructure.isVisible, true));
 			}
 
-			const categories = await baseQuery.orderBy(forumCategories.position, forumCategories.name);
+			const categories = await baseQuery.orderBy(forumStructure.position, forumStructure.name);
 
 			// Build tree structure
 			const rootCategories = categories.filter((cat) => cat.parentId === null);
@@ -136,25 +136,26 @@ export class CategoryService {
 		try {
 			const [category] = await db
 				.select({
-					id: forumCategories.id,
-					name: forumCategories.name,
-					slug: forumCategories.slug,
-					description: forumCategories.description,
-					position: forumCategories.position,
-					isVisible: forumCategories.isVisible,
-					parentId: forumCategories.parentId,
+					id: forumStructure.id,
+					name: forumStructure.name,
+					slug: forumStructure.slug,
+					description: forumStructure.description,
+					type: forumStructure.type,
+					position: forumStructure.position,
+					isHidden: forumStructure.isHidden,
+					parentId: forumStructure.parentId,
 					threadCount: sql<number>`COALESCE(${count(threads.id)}, 0)`,
 					postCount: sql<number>`COALESCE(SUM(${threads.postCount}), 0)`,
 					lastPostAt: sql<Date | null>`MAX(${posts.createdAt})`,
-					createdAt: forumCategories.createdAt,
-					updatedAt: forumCategories.updatedAt,
-					pluginData: forumCategories.pluginData
+					createdAt: forumStructure.createdAt,
+					updatedAt: forumStructure.updatedAt,
+					pluginData: forumStructure.pluginData
 				})
-				.from(forumCategories)
-				.leftJoin(threads, eq(forumCategories.id, threads.categoryId))
+				.from(forumStructure)
+				.leftJoin(threads, eq(forumStructure.id, threads.categoryId))
 				.leftJoin(posts, eq(threads.id, posts.threadId))
-				.where(eq(forumCategories.slug, slug))
-				.groupBy(forumCategories.id);
+				.where(eq(forumStructure.slug, slug))
+				.groupBy(forumStructure.id);
 
 			return category || null;
 		} catch (error) {
@@ -186,11 +187,11 @@ export class CategoryService {
 					postCount: sql<number>`COALESCE(SUM(${threads.postCount}), 0)`,
 					lastPostAt: sql<Date | null>`MAX(${posts.createdAt})`
 				})
-				.from(forumCategories)
-				.leftJoin(threads, eq(forumCategories.id, threads.categoryId))
+				.from(forumStructure)
+				.leftJoin(threads, eq(forumStructure.id, threads.categoryId))
 				.leftJoin(posts, eq(threads.id, posts.threadId))
-				.where(eq(forumCategories.id, categoryId))
-				.groupBy(forumCategories.id);
+				.where(eq(forumStructure.id, categoryId))
+				.groupBy(forumStructure.id);
 
 			return stats || { threadCount: 0, postCount: 0, lastPostAt: null };
 		} catch (error) {

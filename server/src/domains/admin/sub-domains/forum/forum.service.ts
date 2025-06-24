@@ -5,7 +5,7 @@
  */
 
 import { db } from '@db';
-import { forumCategories, threads, posts, threadPrefixes, tags } from '@schema';
+import { forumStructure, threads, posts, threadPrefixes, tags } from '@schema';
 import { eq, and, sql, count, desc, asc, isNull, not, ne } from 'drizzle-orm';
 import { AdminError } from '../../admin.errors';
 import type {
@@ -21,11 +21,11 @@ export class AdminForumService {
 		try {
 			const allCategories = await db
 				.select()
-				.from(forumCategories)
+				.from(forumStructure)
 				.orderBy(
-					asc(forumCategories.parentId),
-					asc(forumCategories.position),
-					asc(forumCategories.name)
+					asc(forumStructure.parentId),
+					asc(forumStructure.position),
+					asc(forumStructure.name)
 				);
 
 			// Get thread counts for each category
@@ -56,7 +56,7 @@ export class AdminForumService {
 
 	async getCategoryById(id: number) {
 		try {
-			const [category] = await db.select().from(forumCategories).where(eq(forumCategories.id, id));
+			const [category] = await db.select().from(forumStructure).where(eq(forumStructure.id, id));
 
 			if (!category) {
 				throw AdminError.notFound('Category', id);
@@ -83,9 +83,9 @@ export class AdminForumService {
 		try {
 			// Check for duplicate slug
 			const [existingCategory] = await db
-				.select({ id: forumCategories.id })
-				.from(forumCategories)
-				.where(eq(forumCategories.slug, data.slug));
+				.select({ id: forumStructure.id })
+				.from(forumStructure)
+				.where(eq(forumStructure.slug, data.slug));
 
 			if (existingCategory) {
 				throw AdminError.duplicate('Category', 'slug', data.slug);
@@ -94,9 +94,9 @@ export class AdminForumService {
 			// If this has a parent, verify parent exists
 			if (data.parentId) {
 				const [parentCategory] = await db
-					.select({ id: forumCategories.id })
-					.from(forumCategories)
-					.where(eq(forumCategories.id, data.parentId));
+					.select({ id: forumStructure.id })
+					.from(forumStructure)
+					.where(eq(forumStructure.id, data.parentId));
 
 				if (!parentCategory) {
 					throw AdminError.notFound('Parent category', data.parentId);
@@ -104,7 +104,7 @@ export class AdminForumService {
 			}
 
 			const [newCategory] = await db
-				.insert(forumCategories)
+				.insert(forumStructure)
 				.values({
 					name: data.name,
 					description: data.description,
@@ -132,8 +132,8 @@ export class AdminForumService {
 			// Check category exists
 			const [existingCategory] = await db
 				.select()
-				.from(forumCategories)
-				.where(eq(forumCategories.id, id));
+				.from(forumStructure)
+				.where(eq(forumStructure.id, id));
 
 			if (!existingCategory) {
 				throw AdminError.notFound('Category', id);
@@ -142,9 +142,9 @@ export class AdminForumService {
 			// Check for slug conflicts
 			if (data.slug && data.slug !== existingCategory.slug) {
 				const [slugConflict] = await db
-					.select({ id: forumCategories.id })
-					.from(forumCategories)
-					.where(and(eq(forumCategories.slug, data.slug), ne(forumCategories.id, id)));
+					.select({ id: forumStructure.id })
+					.from(forumStructure)
+					.where(and(eq(forumStructure.slug, data.slug), ne(forumStructure.id, id)));
 
 				if (slugConflict) {
 					throw AdminError.duplicate('Category', 'slug', data.slug);
@@ -159,9 +159,9 @@ export class AdminForumService {
 			// If updating parent, verify parent exists
 			if (data.parentId && data.parentId !== existingCategory.parentId) {
 				const [parentCategory] = await db
-					.select({ id: forumCategories.id })
-					.from(forumCategories)
-					.where(eq(forumCategories.id, data.parentId));
+					.select({ id: forumStructure.id })
+					.from(forumStructure)
+					.where(eq(forumStructure.id, data.parentId));
 
 				if (!parentCategory) {
 					throw AdminError.notFound('Parent category', data.parentId);
@@ -169,7 +169,7 @@ export class AdminForumService {
 			}
 
 			const [updatedCategory] = await db
-				.update(forumCategories)
+				.update(forumStructure)
 				.set({
 					name: data.name,
 					description: data.description,
@@ -183,7 +183,7 @@ export class AdminForumService {
 					postPermission: data.postPermission,
 					updatedAt: new Date()
 				})
-				.where(eq(forumCategories.id, id))
+				.where(eq(forumStructure.id, id))
 				.returning();
 
 			return updatedCategory;
@@ -199,8 +199,8 @@ export class AdminForumService {
 			// Check category exists
 			const [existingCategory] = await db
 				.select()
-				.from(forumCategories)
-				.where(eq(forumCategories.id, id));
+				.from(forumStructure)
+				.where(eq(forumStructure.id, id));
 
 			if (!existingCategory) {
 				throw AdminError.notFound('Category', id);
@@ -209,8 +209,8 @@ export class AdminForumService {
 			// Check for child categories
 			const [childCount] = await db
 				.select({ count: count() })
-				.from(forumCategories)
-				.where(eq(forumCategories.parentId, id));
+				.from(forumStructure)
+				.where(eq(forumStructure.parentId, id));
 
 			if (Number(childCount?.count) > 0) {
 				throw AdminError.validation('Cannot delete category with child categories');
@@ -227,7 +227,7 @@ export class AdminForumService {
 			}
 
 			// Delete the category
-			await db.delete(forumCategories).where(eq(forumCategories.id, id));
+			await db.delete(forumStructure).where(eq(forumStructure.id, id));
 
 			return { success: true, message: 'Category deleted successfully' };
 		} catch (error) {
@@ -278,9 +278,9 @@ export class AdminForumService {
 			// If category-specific, verify category exists
 			if (data.categoryId) {
 				const [category] = await db
-					.select({ id: forumCategories.id })
-					.from(forumCategories)
-					.where(eq(forumCategories.id, data.categoryId));
+					.select({ id: forumStructure.id })
+					.from(forumStructure)
+					.where(eq(forumStructure.id, data.categoryId));
 
 				if (!category) {
 					throw AdminError.notFound('Category', data.categoryId);
@@ -444,9 +444,9 @@ export class AdminForumService {
 			// If changing category, verify category exists and allows threads
 			if (data.categoryId && data.categoryId !== existingThread.categoryId) {
 				const [category] = await db
-					.select({ id: forumCategories.id, allowThreads: forumCategories.allowThreads })
-					.from(forumCategories)
-					.where(eq(forumCategories.id, data.categoryId));
+					.select({ id: forumStructure.id, allowThreads: forumStructure.allowThreads })
+					.from(forumStructure)
+					.where(eq(forumStructure.id, data.categoryId));
 
 				if (!category) {
 					throw AdminError.notFound('Target category', data.categoryId);
@@ -494,8 +494,8 @@ export class AdminForumService {
 	async getAllEntities() {
 		const entities = await db
 			.select()
-			.from(forumCategories)
-			.orderBy(forumCategories.position, forumCategories.name);
+			.from(forumStructure)
+			.orderBy(forumStructure.position, forumStructure.name);
 
 		return entities;
 	}
@@ -503,27 +503,27 @@ export class AdminForumService {
 	async getEntityById(id: number) {
 		const [entity] = await db
 			.select()
-			.from(forumCategories)
-			.where(eq(forumCategories.id, id))
+			.from(forumStructure)
+			.where(eq(forumStructure.id, id))
 			.limit(1);
 
 		return entity;
 	}
 
 	async createEntity(data: any) {
-		const [entity] = await db.insert(forumCategories).values(data).returning();
+		const [entity] = await db.insert(forumStructure).values(data).returning();
 
 		return entity;
 	}
 
 	async updateEntity(id: number, data: any) {
 		const [entity] = await db
-			.update(forumCategories)
+			.update(forumStructure)
 			.set({
 				...data,
 				updatedAt: new Date()
 			})
-			.where(eq(forumCategories.id, id))
+			.where(eq(forumStructure.id, id))
 			.returning();
 
 		return entity;
@@ -532,9 +532,9 @@ export class AdminForumService {
 	async deleteEntity(id: number) {
 		// Check if entity has children
 		const children = await db
-			.select({ id: forumCategories.id })
-			.from(forumCategories)
-			.where(eq(forumCategories.parentId, id))
+			.select({ id: forumStructure.id })
+			.from(forumStructure)
+			.where(eq(forumStructure.parentId, id))
 			.limit(1);
 
 		if (children.length > 0) {
@@ -554,7 +554,7 @@ export class AdminForumService {
 			}
 		}
 
-		const result = await db.delete(forumCategories).where(eq(forumCategories.id, id));
+		const result = await db.delete(forumStructure).where(eq(forumStructure.id, id));
 
 		return result.rowCount > 0;
 	}

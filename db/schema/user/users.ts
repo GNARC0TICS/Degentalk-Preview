@@ -37,7 +37,9 @@ export const users = pgTable(
 		avatarUrl: varchar('avatar_url', { length: 255 }),
 		activeAvatarUrl: varchar('active_avatar_url', { length: 255 }),
 		profileBannerUrl: varchar('profile_banner_url', { length: 255 }),
-		activeFrameId: integer('active_frame_id'),
+		activeFrameId: integer('active_frame_id').references(() => avatarFrames.id, {
+			onDelete: 'set null'
+		}),
 		avatarFrameId: integer('avatar_frame_id').references(() => avatarFrames.id, {
 			onDelete: 'set null'
 		}),

@@ -14,6 +14,7 @@ import {
 import { sql } from 'drizzle-orm';
 import { productCategories } from './productCategories'; // Placeholder
 import { mediaLibrary } from '../admin/mediaLibrary'; // Placeholder, path might change based on final admin structure
+import { avatarFrames } from '../user/avatarFrames';
 
 export const products = pgTable(
 	'products',
@@ -59,7 +60,12 @@ export const products = pgTable(
 		updatedAt: timestamp('updated_at')
 			.notNull()
 			.default(sql`now()`),
-		metadata: jsonb('metadata').default('{}')
+		metadata: jsonb('metadata').default('{}'),
+		/**
+		 * When this product represents an avatar frame, we store a foreign key to the frame
+		 * so price, rarity and preview can be resolved quickly in joins.
+		 */
+		frameId: integer('frame_id').references(() => avatarFrames.id, { onDelete: 'set null' })
 	},
 	(table) => ({
 		categoryIdx: index('idx_products_category_id').on(table.categoryId),

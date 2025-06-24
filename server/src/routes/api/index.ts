@@ -4,6 +4,8 @@ import shopRoutes from '../../domains/shop/shop.routes';
 import activityRoutes from '../../domains/activity/routes';
 import uploadRoutes from '../../domains/uploads/upload.routes';
 import uiRoutes from './ui.routes';
+import storeAvatarFrameRoutes from './store/avatar-frames';
+import userFramesRoutes from './user/frames';
 
 const router = Router();
 
@@ -21,5 +23,10 @@ router.use('/uploads', uploadRoutes);
 
 // Mount UI routes
 router.use('/ui', uiRoutes);
+
+// Avatar frame store
+router.use('/store/avatar-frames', storeAvatarFrameRoutes);
+
+router.use('/users/me/frames', userFramesRoutes);
 
 export default router;

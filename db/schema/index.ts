@@ -37,6 +37,7 @@ export * from './user/verificationTokens';
 export * from './user/passwordResetTokens';
 export * from './user/settingsHistory';
 export * from './user/avatarFrames';
+export * from './user/userOwnedFrames';
 export * from './user/userGroups';
 export * from './user/user-social-preferences';
 
@@ -44,7 +45,7 @@ export * from './user/user-social-preferences';
 export * from './user/featurePermissions';
 
 // Forum domain exports
-export * from './forum/categories';
+export * from './forum/structure'; // Forum structure schema (replaces categories)
 export * from './forum/threads';
 export * from './forum/posts';
 export * from './forum/prefixes';

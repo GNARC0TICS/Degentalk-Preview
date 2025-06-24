@@ -8,6 +8,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { HotThreadsSkeleton } from '@/components/ui/thread-skeleton';
+import { API_ROUTES } from '@/constants/apiRoutes';
 // Removed motion, AnimatePresence
 
 interface ThreadResponse {
@@ -56,9 +57,9 @@ function HotThreads({ className = '', limit = 5, variant = 'widget' }: HotThread
 		isLoading,
 		error
 	} = useQuery<ThreadResponse[]>({
-		queryKey: ['/api/forum/hot-threads', { limit }],
+		queryKey: [API_ROUTES.threads.hot, { limit }],
 		queryFn: async () => {
-			const res = await fetch(`/api/forum/hot-threads?limit=${limit}`);
+			const res = await fetch(`${API_ROUTES.threads.hot}?limit=${limit}`);
 			if (!res.ok) throw new Error('Failed to fetch hot threads');
 			return res.json();
 		}

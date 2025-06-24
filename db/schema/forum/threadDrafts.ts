@@ -12,7 +12,7 @@ import {
 import { sql } from 'drizzle-orm';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { users } from '../user/users';
-import { forumCategories } from './categories'; // Assuming you have forumCategories schema
+import { forumStructure } from './structure'; // Updated to use forum structure
 import { threadPrefixes } from './prefixes'; // Assuming you have threadPrefixes schema
 
 export const threadDrafts = pgTable('thread_drafts', {
@@ -21,7 +21,9 @@ export const threadDrafts = pgTable('thread_drafts', {
 	userId: uuid('user_id') // Changed to uuid
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	categoryId: integer('category_id').references(() => forumCategories.id, { onDelete: 'set null' }), // Kept as integer
+	structureId: integer('structure_id').references(() => forumStructure.id, {
+		onDelete: 'set null'
+	}), // Updated to use forum structure
 	prefixId: integer('prefix_id').references(() => threadPrefixes.id, { onDelete: 'set null' }), // Kept as integer
 	title: varchar('title', { length: 255 }),
 	content: text('content'),

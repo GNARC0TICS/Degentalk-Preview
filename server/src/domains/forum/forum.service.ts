@@ -7,19 +7,22 @@
 
 import { db } from '@db';
 import { logger } from '@server/src/core/logger';
-import { forumCategories, threads, threadPrefixes, tags } from '@schema';
+import { forumStructure, threads, threadPrefixes, tags } from '@schema';
 import { sql, desc, asc, and, eq, inArray } from 'drizzle-orm';
-import type { ForumCategoryWithStats, ThreadWithPostsAndUser } from '../../../db/types/forum.types';
+import type {
+	ForumStructureWithStats,
+	ThreadWithPostsAndUser
+} from '../../../db/types/forum.types';
 
 // Import specialized services
-import { categoryService } from './services/category.service';
+import { forumStructureService } from './services/structure.service';
 import { threadService } from './services/thread.service';
 import { postService } from './services/post.service';
 import { configService } from './services/config.service';
 import { cacheService } from './services/cache.service';
 
 export interface ThreadSearchParams {
-	categoryId?: number;
+	structureId?: number;
 	prefix?: string;
 	tag?: string;
 	page?: number;
@@ -28,40 +31,40 @@ export interface ThreadSearchParams {
 	search?: string;
 }
 
-interface CategoriesTreeOptions {
+interface StructureTreeOptions {
 	includeEmptyStats?: boolean;
 	includeHidden?: boolean;
 }
 
 /**
- * Helper function to get all descendant leaf forum IDs for a given category ID
+ * Helper function to get all descendant leaf forum IDs for a given structure ID
  */
-async function getAllDescendantLeafForumIds(startCategoryId: number): Promise<number[]> {
-	const allCategories = await db
+async function getAllDescendantLeafForumIds(startStructureId: number): Promise<number[]> {
+	const allStructures = await db
 		.select({
-			id: forumCategories.id,
-			parentId: forumCategories.parentId,
-			type: forumCategories.type
+			id: forumStructure.id,
+			parentId: forumStructure.parentId,
+			type: forumStructure.type
 		})
-		.from(forumCategories);
+		.from(forumStructure);
 
-	const categoryMap = new Map<
+	const structureMap = new Map<
 		number,
 		{ id: number; parentId: number | null; type: string; children: number[] }
 	>();
 
-	allCategories.forEach((c) => {
-		categoryMap.set(c.id, { ...c, children: [] });
+	allStructures.forEach((s) => {
+		structureMap.set(s.id, { ...s, children: [] });
 	});
 
-	allCategories.forEach((c) => {
-		if (c.parentId && categoryMap.has(c.parentId)) {
-			categoryMap.get(c.parentId)?.children.push(c.id);
+	allStructures.forEach((s) => {
+		if (s.parentId && structureMap.has(s.parentId)) {
+			structureMap.get(s.parentId)?.children.push(s.id);
 		}
 	});
 
 	const leafForumIds: number[] = [];
-	const queue: number[] = [startCategoryId];
+	const queue: number[] = [startStructureId];
 	const visited = new Set<number>();
 
 	while (queue.length > 0) {
@@ -69,17 +72,17 @@ async function getAllDescendantLeafForumIds(startCategoryId: number): Promise<nu
 		if (visited.has(currentId)) continue;
 		visited.add(currentId);
 
-		const categoryNode = categoryMap.get(currentId);
-		if (!categoryNode) continue;
+		const structureNode = structureMap.get(currentId);
+		if (!structureNode) continue;
 
 		const isLeafForum =
-			categoryNode.type === 'forum' &&
-			!categoryNode.children.some((childId) => categoryMap.get(childId)?.type === 'forum');
+			structureNode.type === 'forum' &&
+			!structureNode.children.some((childId) => structureMap.get(childId)?.type === 'forum');
 
 		if (isLeafForum) {
 			leafForumIds.push(currentId);
 		} else {
-			categoryNode.children.forEach((childId) => {
+			structureNode.children.forEach((childId) => {
 				if (!visited.has(childId)) {
 					queue.push(childId);
 				}
@@ -87,14 +90,14 @@ async function getAllDescendantLeafForumIds(startCategoryId: number): Promise<nu
 		}
 	}
 
-	const startCategoryNode = categoryMap.get(startCategoryId);
+	const startStructureNode = structureMap.get(startStructureId);
 	if (
-		startCategoryNode &&
-		startCategoryNode.type === 'forum' &&
-		startCategoryNode.children.length === 0 &&
-		!leafForumIds.includes(startCategoryId)
+		startStructureNode &&
+		startStructureNode.type === 'forum' &&
+		startStructureNode.children.length === 0 &&
+		!leafForumIds.includes(startStructureId)
 	) {
-		leafForumIds.push(startCategoryId);
+		leafForumIds.push(startStructureId);
 	}
 
 	return [...new Set(leafForumIds)]; // Ensure unique IDs
@@ -104,96 +107,16 @@ export const forumService = {
 	/**
 	 * Get complete forum structure with zones and forums
 	 */
-	async getForumStructure(): Promise<{ zones: ForumCategoryWithStats[] }> {
+	async getForumStructure(): Promise<{
+		zones: ForumStructureWithStats[];
+		forums: ForumStructureWithStats[];
+	}> {
 		try {
-			const allItemsFlat: ForumCategoryWithStats[] = await categoryService.getCategoriesWithStats();
-			const zoneEntities = allItemsFlat.filter((item) => item.type === 'zone');
-			const allForumLikeEntities = allItemsFlat.filter((item) => item.type === 'forum');
-
-			type MappedForum = ForumCategoryWithStats & {
-				ownThreadCount?: number;
-				ownPostCount?: number;
+			// Delegate to the new structure service
+			return {
+				zones: await forumStructureService.getForumHierarchy(),
+				forums: await forumStructureService.getStructuresWithStats()
 			};
-			const forumMap = new Map<number, MappedForum>();
-
-			// Build forum hierarchy
-			allForumLikeEntities.forEach((f) => {
-				forumMap.set(f.id, {
-					...f,
-					childForums: [],
-					ownThreadCount: f.threadCount,
-					ownPostCount: f.postCount
-				});
-			});
-
-			// Link parent-child relationships
-			allForumLikeEntities.forEach((potentialSubForum) => {
-				if (potentialSubForum.parentId) {
-					const parentForumFromMap = forumMap.get(potentialSubForum.parentId);
-					const parentEntityInFlatList = allItemsFlat.find(
-						(item) => item.id === potentialSubForum.parentId
-					);
-
-					if (
-						parentForumFromMap &&
-						parentEntityInFlatList &&
-						parentEntityInFlatList.type === 'forum'
-					) {
-						if (!parentForumFromMap.childForums) {
-							parentForumFromMap.childForums = [];
-						}
-						parentForumFromMap.childForums.push(
-							forumMap.get(potentialSubForum.id)! as ForumCategoryWithStats
-						);
-					}
-				}
-			});
-
-			// Aggregate stats for parent forums
-			Array.from(forumMap.values()).forEach((parentForum) => {
-				if (parentForum.childForums && parentForum.childForums.length > 0) {
-					let aggregatedThreadCount = parentForum.ownThreadCount || 0;
-					let aggregatedPostCount = parentForum.ownPostCount || 0;
-
-					parentForum.childForums.forEach((subForum) => {
-						aggregatedThreadCount += subForum.threadCount || 0;
-						aggregatedPostCount += subForum.postCount || 0;
-					});
-					parentForum.threadCount = aggregatedThreadCount;
-					parentForum.postCount = aggregatedPostCount;
-				}
-			});
-
-			// Structure zones with their forums
-			const structuredZones = zoneEntities.map((zone) => {
-				const { features, customComponents, staffOnly, isPrimary } =
-					configService.processZoneFeatures(zone.pluginData);
-
-				const topLevelForumsForZone = Array.from(forumMap.values()).filter(
-					(forumInMap) => forumInMap.parentId === zone.id
-				);
-
-				let zoneThreadCount = 0;
-				let zonePostCount = 0;
-				topLevelForumsForZone.forEach((forum) => {
-					zoneThreadCount += forum.threadCount || 0;
-					zonePostCount += forum.postCount || 0;
-				});
-
-				return {
-					...zone,
-					isPrimary,
-					features,
-					customComponents,
-					staffOnly,
-					forums: topLevelForumsForZone,
-					childForums: topLevelForumsForZone,
-					threadCount: zoneThreadCount,
-					postCount: zonePostCount
-				};
-			});
-
-			return { zones: structuredZones };
 		} catch (error) {
 			logger.error('ForumService', 'Error in getForumStructure', { err: error });
 			throw error;
@@ -201,36 +124,31 @@ export const forumService = {
 	},
 
 	/**
-	 * Get categories with statistics - delegates to CategoryService
+	 * Get structures with statistics - delegates to StructureService
 	 */
-	async getCategoriesWithStats(includeCounts: boolean = true): Promise<ForumCategoryWithStats[]> {
-		return categoryService.getCategoriesWithStats();
+	async getStructuresWithStats(includeCounts: boolean = true): Promise<ForumStructureWithStats[]> {
+		return forumStructureService.getStructuresWithStats();
 	},
 
 	/**
-	 * Get categories tree structure - delegates to CategoryService
+	 * Get structure tree - delegates to StructureService
 	 */
-	async getCategoriesTree(options: CategoriesTreeOptions = {}) {
-		return categoryService.getCategoriesTree(options);
+	async getStructureTree(options: StructureTreeOptions = {}) {
+		return forumStructureService.getStructureTree(options);
 	},
 
 	/**
-	 * Get forum by slug - delegates to ConfigService
+	 * Get forum by slug - delegates to StructureService
 	 */
-	async getForumBySlug(slug: string): Promise<ForumCategoryWithStats | null> {
-		const entry = configService.getForumBySlug(slug);
-		if (!entry) {
-			return null;
-		}
-		const { forum, zone } = entry;
-		return configService.mapConfigForumToCategory(forum, zone);
+	async getForumBySlug(slug: string): Promise<ForumStructureWithStats | null> {
+		return forumStructureService.getStructureBySlug(slug);
 	},
 
 	/**
 	 * Get forum and sub-forums by slug
 	 */
 	async getForumAndItsSubForumsBySlug(slug: string): Promise<{
-		forum: ForumCategoryWithStats | null;
+		forum: ForumStructureWithStats | null;
 	}> {
 		const forum = await this.getForumBySlug(slug);
 		return { forum };
@@ -239,7 +157,7 @@ export const forumService = {
 	/**
 	 * Get forum by ID from structure
 	 */
-	async getForumById(id: number): Promise<ForumCategoryWithStats | null> {
+	async getForumById(id: number): Promise<ForumStructureWithStats | null> {
 		const { zones } = await this.getForumStructure();
 		for (const zone of zones) {
 			for (const parentForum of zone.childForums || []) {
@@ -260,7 +178,7 @@ export const forumService = {
 	/**
 	 * Get sub-forums by parent forum ID
 	 */
-	async getSubForumsByParentForumId(parentForumId: number): Promise<ForumCategoryWithStats[]> {
+	async getSubForumsByParentForumId(parentForumId: number): Promise<ForumStructureWithStats[]> {
 		const parentForum = await this.getForumById(parentForumId);
 		return parentForum?.childForums || [];
 	},
@@ -307,7 +225,7 @@ export const forumService = {
 				.where(
 					and(
 						eq(threadPrefixes.isActive, true),
-						sql`${threadPrefixes.categoryId} IS NULL OR ${threadPrefixes.categoryId} = ${forumId}`
+						sql`${threadPrefixes.structureId} IS NULL OR ${threadPrefixes.structureId} = ${forumId}`
 					)
 				)
 				.orderBy(asc(threadPrefixes.position));
@@ -428,14 +346,14 @@ export const forumService = {
 		// Validate against config
 		configService.ensureValidLeafForum(slug);
 
-		// Resolve the corresponding category ID in the database
-		const [categoryRow] = await db
-			.select({ id: forumCategories.id })
-			.from(forumCategories)
-			.where(eq(forumCategories.slug, slug))
+		// Resolve the corresponding structure ID in the database
+		const [structureRow] = await db
+			.select({ id: forumStructure.id })
+			.from(forumStructure)
+			.where(eq(forumStructure.slug, slug))
 			.limit(1);
 
-		if (!categoryRow) {
+		if (!structureRow) {
 			throw new Error(
 				`Forum with slug '${slug}' not found in database after validation. Did you run sync:forums?`
 			);
@@ -444,7 +362,7 @@ export const forumService = {
 		return db
 			.select()
 			.from(threads)
-			.where(eq(threads.categoryId, categoryRow.id))
+			.where(eq(threads.structureId, structureRow.id))
 			.orderBy(desc(threads.createdAt));
 	},
 

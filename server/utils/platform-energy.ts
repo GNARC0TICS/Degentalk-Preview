@@ -3,7 +3,7 @@
 
 import { sql } from 'drizzle-orm';
 import { db } from '@db';
-import { threads, posts, users, forumCategories } from '@schema';
+import { threads, posts, users, forumStructure } from '@schema';
 import { eq, desc, and, count } from 'drizzle-orm';
 
 /**

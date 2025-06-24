@@ -44,11 +44,21 @@ async function checkForumConfigSync() {
   const dbForums = dbCategories.filter(cat => cat.type === 'forum');
 
   const configZones = forumMap.zones;
-  const configForums: (ConfigForum & { parentZoneSlug: string })[] = [];
-  configZones.forEach(zone => {
-    zone.forums.forEach(forum => {
-      configForums.push({ ...forum, parentZoneSlug: zone.slug });
+  const configForums: (ConfigForum & { parentZoneSlug: string, parentForumSlug?: string })[] = [];
+  
+  // Recursively flatten forums including subforums
+  function flattenForums(forums: any[], parentZoneSlug: string, parentForumSlug?: string) {
+    forums.forEach(forum => {
+      configForums.push({ ...forum, parentZoneSlug, parentForumSlug });
+      // Check for subforums
+      if (forum.forums && forum.forums.length > 0) {
+        flattenForums(forum.forums, parentZoneSlug, forum.slug);
+      }
     });
+  }
+  
+  configZones.forEach(zone => {
+    flattenForums(zone.forums, zone.slug);
   });
 
   // 1. Check zones
@@ -117,15 +127,28 @@ async function checkForumConfigSync() {
       discrepancies.push({ type: 'property_mismatch', entityType: 'forum', slug: cf.slug, property: 'name', expected: cf.name, actual: df.name });
     }
 
-    // Parent check
+    // Parent check - handle both direct zone children and subforums
     const expectedDbParentForumSlug = cf.parentForumSlug || cf.parentZoneSlug;
     if (expectedDbParentForumSlug !== df.parentForumSlug) {
         discrepancies.push({ type: 'property_mismatch', entityType: 'forum', slug: cf.slug, property: 'parentForumSlug', expected: expectedDbParentForumSlug, actual: df.parentForumSlug });
     }
-    // Also check parentId linkage
-    const parentDbZone = dbZones.find(dbz => dbz.slug === cf.parentZoneSlug);
-    if (parentDbZone?.id !== df.parentId) {
-        discrepancies.push({ type: 'property_mismatch', entityType: 'forum', slug: cf.slug, property: 'parentId', expected: parentDbZone?.id, actual: df.parentId, message: `Expected parent zone '${cf.parentZoneSlug}' ID.` });
+    
+    // Check parentId linkage - could be zone or parent forum
+    let expectedParentId: number | undefined;
+    if (cf.parentForumSlug) {
+      // This is a subforum, parent should be another forum
+      const parentDbForum = dbForums.find(dbf => dbf.slug === cf.parentForumSlug);
+      expectedParentId = parentDbForum?.id;
+    } else {
+      // This is a top-level forum, parent should be the zone
+      const parentDbZone = dbZones.find(dbz => dbz.slug === cf.parentZoneSlug);
+      expectedParentId = parentDbZone?.id;
+    }
+    
+    if (expectedParentId !== df.parentId) {
+        const parentType = cf.parentForumSlug ? 'forum' : 'zone';
+        const parentSlug = cf.parentForumSlug || cf.parentZoneSlug;
+        discrepancies.push({ type: 'property_mismatch', entityType: 'forum', slug: cf.slug, property: 'parentId', expected: expectedParentId, actual: df.parentId, message: `Expected parent ${parentType} '${parentSlug}' ID.` });
     }
 
 

@@ -7,7 +7,7 @@
 
 import { db } from '@db';
 import { logger } from '@server/src/core/logger';
-import { threads, posts, forumCategories, users as usersTable, threadTags, tags } from '@schema';
+import { threads, posts, forumStructure, users as usersTable, threadTags, tags } from '@schema';
 import { sql, desc, asc, eq, and, or, ilike, inArray, count } from 'drizzle-orm';
 import type {
 	ThreadWithUser,
@@ -135,12 +135,12 @@ export class ThreadService {
 					authorRole: usersTable.role,
 
 					// Category fields
-					categoryName: forumCategories.name,
-					categorySlug: forumCategories.slug
+					categoryName: forumStructure.name,
+					categorySlug: forumStructure.slug
 				})
 				.from(threads)
 				.leftJoin(usersTable, eq(threads.authorId, usersTable.id))
-				.leftJoin(forumCategories, eq(threads.categoryId, forumCategories.id));
+				.leftJoin(forumStructure, eq(threads.categoryId, forumStructure.id));
 
 			// Apply where conditions
 			if (whereConditions.length > 0) {
@@ -158,7 +158,7 @@ export class ThreadService {
 							inArray(tags.name, tagFilters)
 						)
 					)
-					.groupBy(threads.id, usersTable.id, forumCategories.id);
+					.groupBy(threads.id, usersTable.id, forumStructure.id);
 			}
 
 			// Get total count
@@ -215,12 +215,12 @@ export class ThreadService {
 					authorRole: usersTable.role,
 
 					// Category fields
-					categoryName: forumCategories.name,
-					categorySlug: forumCategories.slug
+					categoryName: forumStructure.name,
+					categorySlug: forumStructure.slug
 				})
 				.from(threads)
 				.leftJoin(usersTable, eq(threads.authorId, usersTable.id))
-				.leftJoin(forumCategories, eq(threads.categoryId, forumCategories.id))
+				.leftJoin(forumStructure, eq(threads.categoryId, forumStructure.id))
 				.where(eq(threads.id, threadId));
 
 			return thread || null;
@@ -259,12 +259,12 @@ export class ThreadService {
 					authorRole: usersTable.role,
 
 					// Category fields
-					categoryName: forumCategories.name,
-					categorySlug: forumCategories.slug
+					categoryName: forumStructure.name,
+					categorySlug: forumStructure.slug
 				})
 				.from(threads)
 				.leftJoin(usersTable, eq(threads.authorId, usersTable.id))
-				.leftJoin(forumCategories, eq(threads.categoryId, forumCategories.id))
+				.leftJoin(forumStructure, eq(threads.categoryId, forumStructure.id))
 				.where(eq(threads.slug, slug));
 
 			return thread || null;

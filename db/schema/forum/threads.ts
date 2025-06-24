@@ -14,7 +14,7 @@ import {
 	unique
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { forumCategories } from './categories'; // Adjusted import path
+import { forumStructure } from './structure'; // Updated to use forum structure
 import { users } from '../user/users'; // Adjusted import path
 import { threadPrefixes } from './prefixes'; // Placeholder for future import
 import { contentVisibilityStatusEnum } from '../core/enums';
@@ -31,9 +31,9 @@ export const threads = pgTable(
 		title: varchar('title', { length: 255 }).notNull(),
 		slug: varchar('slug', { length: 255 }).notNull(),
 		// parentForumSlug: varchar('parent_forum_slug', { length: 128 }).notNull().default(''), // REMOVED
-		categoryId: integer('category_id')
+		structureId: integer('structure_id')
 			.notNull()
-			.references(() => forumCategories.id, { onDelete: 'cascade' }),
+			.references(() => forumStructure.id, { onDelete: 'cascade' }),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
@@ -78,7 +78,7 @@ export const threads = pgTable(
 	},
 	(table) => ({
 		// parentForumSlugIdx: index('idx_threads_parent_forum_slug').on(table.parentForumSlug), // REMOVED
-		categoryIdx: index('idx_threads_category_id').on(table.categoryId),
+		structureIdx: index('idx_threads_structure_id').on(table.structureId),
 		userIdx: index('idx_threads_user_id').on(table.userId),
 		createdAtIdx: index('idx_threads_created_at').on(table.createdAt),
 		slugUnique: unique('threads_slug_visible_unique').on(table.slug),
@@ -90,7 +90,7 @@ export const threads = pgTable(
 // Placeholder for relations
 // import { relations } from "drizzle-orm";
 // export const threadsRelations = relations(threads, ({ one, many }) => ({
-//   category: one(forumCategories, { fields: [threads.categoryId], references: [forumCategories.id] }),
+//   structure: one(forumStructure, { fields: [threads.structureId], references: [forumStructure.id] }),
 //   user: one(users, { fields: [threads.userId], references: [users.id] }),
 //   prefix: one(threadPrefixes, { fields: [threads.prefixId], references: [threadPrefixes.id] }),
 //   posts: many(posts), // Assuming posts table is defined in forum/posts.ts

@@ -1,187 +1,90 @@
 import React, { memo } from 'react';
-import { Link as WouterLink } from 'wouter';
-import NextLink from 'next/link'; // Import NextLink
-import { formatDistanceToNow } from 'date-fns';
+import { ThreadCardPure } from '@/components/forum/enhanced';
 import type { ThreadCardComponentProps } from '@/types/forum';
-import type { Tag } from '@/types/forum'; // Tag is also in @/types/forum.ts
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { TagBadge } from '@/components/ui/tag-badge';
-import { ThreadStats } from './ThreadStats'; // Import the new component
-import { IconRenderer } from '@/components/icons/iconRenderer';
-import OriginForumPill from './OriginForumPill';
-import { ModeratorActions } from './ModeratorActions';
+import type { Tag } from '@/types/forum';
+import { useForumStructure } from '@/contexts/ForumStructureContext';
 
-// Use the new prop type from @/types/forum.ts
+// Enhanced ThreadCard wrapper that maps legacy interface to EnhancedThreadCard
 const ThreadCardComponent = ({
 	thread,
 	className = '',
-	linkAs = 'wouter',
+	linkAs = 'wouter', // Preserved for compatibility but not used in enhanced version
 	forumSlug
 }: ThreadCardComponentProps) => {
-	// Added linkAs prop with default, plus forumSlug
-	const LinkComponent = linkAs === 'next' ? NextLink : WouterLink;
+	const { zones } = useForumStructure();
 
 	if (!thread) {
 		return null;
 	}
 
-	const {
-		title,
-		slug,
-		isSticky,
-		isLocked,
-		isHidden,
-		viewCount,
-		postCount,
-		lastPostAt,
-		createdAt,
-		user,
-		hotScore
-	} = thread;
+	// Find the zone for this thread's category
+	const parentZone = zones?.find((zone) => zone.forums.some((f) => f.id === thread.category?.id));
 
-	// Ensure these are correctly typed via ThreadCardPropsData
-	const prefix = thread.prefix ?? null;
-	const tags: Tag[] = (thread.tags as Tag[]) ?? []; // Cast if necessary, ensure Tag type matches
-	const category = thread.category ?? null;
+	// Map legacy thread data to enhanced interface
+	const enhancedThread = {
+		id: String(thread.id),
+		title: thread.title,
+		slug: thread.slug,
+		excerpt: (thread as any).preview || '', // Optional preview text
+		createdAt: thread.createdAt,
+		lastPostAt: thread.lastPostAt || undefined,
+		viewCount: thread.viewCount,
+		postCount: thread.postCount,
+		isSticky: thread.isSticky,
+		isLocked: thread.isLocked,
+		isHot: thread.hotScore !== undefined && thread.hotScore > 10,
+		hotScore: thread.hotScore,
+		user: {
+			id: String(thread.user?.id || ''),
+			username: thread.user?.username || 'Unknown',
+			avatarUrl: thread.user?.activeAvatarUrl || thread.user?.avatarUrl,
+			reputation: (thread.user as any)?.reputation || 0,
+			isVerified: (thread.user as any)?.isVerified || false
+		},
+		zone: {
+			name: parentZone?.name || thread.category?.name || 'General',
+			slug: parentZone?.slug || thread.category?.slug || 'general',
+			colorTheme: parentZone?.slug || 'general'
+		},
+		tags:
+			(thread.tags as Tag[])?.map((tag) => ({
+				id: tag.id,
+				name: tag.name,
+				color: (tag as any).color || undefined
+			})) || [],
+		prefix: thread.prefix
+			? {
+					name: thread.prefix.name,
+					color: thread.prefix.color || 'zinc'
+				}
+			: undefined,
+		engagement: {
+			totalTips: (thread as any).totalTips || 0,
+			uniqueTippers: (thread as any).uniqueTippers || 0,
+			bookmarks: (thread as any).bookmarks || 0,
+			momentum: 'neutral' as const // Default momentum
+		}
+	};
 
-	const threadUrl = `/threads/${slug}`;
-	const isHot = hotScore !== undefined && hotScore > 10;
+	// Tip and bookmark handlers (placeholder implementation)
+	const handleTip = (threadId: string, amount: number) => {
+		console.log('Tip thread:', threadId, amount);
+		// TODO: Implement tipping functionality
+	};
 
-	// Determine if we need to show the origin forum pill (roll-up view)
-	const showOriginPill = forumSlug && thread.category && thread.category.slug !== forumSlug;
-	const originForum = showOriginPill ? thread.category : null;
+	const handleBookmark = (threadId: string) => {
+		console.log('Bookmark thread:', threadId);
+		// TODO: Implement bookmarking functionality
+	};
 
 	return (
-		<Card
-			className={`group relative bg-zinc-900/60 border border-zinc-800 hover:bg-zinc-900/80 hover:border-zinc-700 hover:shadow-lg transition-all duration-200 ${className}`}
-		>
-			{/* XP on hover */}
-			<div className="absolute right-4 top-4 opacity-0 group-hover:opacity-100 transition-opacity text-accent-xp text-xs font-semibold pointer-events-none select-none">
-				+25 XP
-			</div>
-			<div className="p-4">
-				<div className="flex gap-3">
-					<Avatar className="h-10 w-10 border border-zinc-700">
-						<AvatarImage
-							src={user?.activeAvatarUrl || user?.avatarUrl || ''}
-							alt={user?.username || 'User'}
-						/>
-						<AvatarFallback className="bg-zinc-800 text-zinc-300">
-							{user?.username?.slice(0, 2).toUpperCase() || 'UN'}
-						</AvatarFallback>
-					</Avatar>
-
-					<div className="flex-1 min-w-0">
-						<div className="flex items-center flex-wrap gap-2 mb-1">
-							<div className="flex gap-1">
-								{prefix && (
-									<Badge
-										className={`px-2 py-0.5 text-xs theme-badge-${prefix.color || 'zinc'} bg-badge-bg-dark text-badge-text-dark border-badge-border-dark`}
-									>
-										{prefix.name}
-									</Badge>
-								)}
-
-								{isSticky && (
-									<Badge className="bg-cyan-900/60 text-cyan-300 border-cyan-700/30 px-1.5 py-0.5 text-xs">
-										<IconRenderer icon="pinned" size={12} className="h-3 w-3 mr-1" />
-										Pinned
-									</Badge>
-								)}
-
-								{isLocked && (
-									<Badge className="bg-red-900/60 text-red-300 border-red-700/30 px-1.5 py-0.5 text-xs">
-										<IconRenderer icon="locked" size={12} className="h-3 w-3 mr-1" />
-										Locked
-									</Badge>
-								)}
-
-								{isHot && (
-									<Badge className="bg-gradient-to-r from-orange-600 to-red-600 border-orange-700/30 text-white px-1.5 py-0.5 text-xs">
-										<IconRenderer icon="hot" size={12} className="h-3 w-3 mr-1" />
-										Hot
-									</Badge>
-								)}
-							</div>
-						</div>
-
-						<div className="flex items-center gap-2">
-							<LinkComponent href={threadUrl} className="block">
-								<h3 className="text-lg font-headline leading-tight hover:text-emerald-400 transition-colors">
-									{title}
-								</h3>
-							</LinkComponent>
-
-							{/* Origin forum pill */}
-							{originForum && <OriginForumPill forum={originForum} />}
-						</div>
-
-						<div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-zinc-400">
-							<LinkComponent
-								href={`/profile/${user?.id}`}
-								className="hover:text-zinc-200 transition-colors"
-							>
-								{user?.username || 'Unknown'}
-							</LinkComponent>
-
-							<span className="flex items-center">
-								<IconRenderer icon="time" size={12} className="h-3 w-3 mr-1" />
-								{createdAt && !isNaN(new Date(createdAt).getTime())
-									? formatDistanceToNow(new Date(createdAt), { addSuffix: true })
-									: 'unknown time'}
-							</span>
-
-							{category && (
-								<LinkComponent
-									href={`/forums/${category.slug}`}
-									className="hover:text-zinc-200 transition-colors flex items-center"
-								>
-									<IconRenderer icon="category" size={12} className="h-3 w-3 mr-1" />
-									{category.name}
-								</LinkComponent>
-							)}
-
-							{tags.length > 0 && (
-								<div className="flex items-center flex-wrap gap-1">
-									<IconRenderer icon="tag" size={12} className="h-3 w-3 text-zinc-500" />
-									{tags.map((tag: Tag) => (
-										<TagBadge key={tag.id} tag={tag} />
-									))}
-								</div>
-							)}
-						</div>
-					</div>
-
-					<div className="flex flex-col items-end justify-between text-xs text-zinc-500 ml-2">
-						<div className="flex items-center gap-2">
-							<ThreadStats viewCount={viewCount} postCount={postCount} />
-							<ModeratorActions
-								type="thread"
-								itemId={thread.id}
-								itemData={{
-									isLocked,
-									isSticky,
-									isHidden,
-									isSolved: thread.isSolved,
-									userId: user?.id,
-									username: user?.username
-								}}
-							/>
-						</div>
-
-						{lastPostAt && lastPostAt !== createdAt && (
-							<div className="text-xs text-zinc-500 mt-2">
-								{lastPostAt && !isNaN(new Date(lastPostAt).getTime())
-									? formatDistanceToNow(new Date(lastPostAt), { addSuffix: true })
-									: 'unknown time'}
-							</div>
-						)}
-					</div>
-				</div>
-			</div>
-		</Card>
+		<ThreadCardPure
+			thread={enhancedThread}
+			variant="default"
+			onTip={handleTip}
+			onBookmark={handleBookmark}
+			className={className}
+		/>
 	);
 };
 

@@ -1,6 +1,6 @@
 import { pgTable, serial, varchar, boolean, integer, timestamp } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { forumCategories } from './categories'; // Adjusted import
+import { forumStructure } from './structure'; // Updated to use forum structure
 
 export const threadPrefixes = pgTable('thread_prefixes', {
 	id: serial('prefix_id').primaryKey(),
@@ -8,7 +8,9 @@ export const threadPrefixes = pgTable('thread_prefixes', {
 	color: varchar('color', { length: 20 }),
 	isActive: boolean('is_active').notNull().default(true),
 	position: integer('position').notNull().default(0),
-	categoryId: integer('category_id').references(() => forumCategories.id, { onDelete: 'set null' }),
+	structureId: integer('structure_id').references(() => forumStructure.id, {
+		onDelete: 'set null'
+	}),
 	createdAt: timestamp('created_at')
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`),

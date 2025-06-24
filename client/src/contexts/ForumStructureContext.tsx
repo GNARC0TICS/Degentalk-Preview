@@ -18,6 +18,7 @@ import { getQueryFn } from '@/lib/queryClient';
 // ===========================================================
 
 // ---------------- Constants ----------------
+// Flat forum structure endpoint (zones + forums)
 const FORUM_STRUCTURE_API_PATH = '/api/forum/structure';
 const FALLBACK_ZONE_ID = -1;
 const FALLBACK_FORUM_ID = -1;
@@ -58,41 +59,51 @@ const PluginDataSchema = z
 	})
 	.passthrough();
 
-const ApiEntitySchema = z.object({
-	id: z.number(),
-	slug: z.string().min(1),
-	name: z.string().min(1),
-	description: z.string().nullish(),
-	parentId: z.number().nullish(),
-	type: z.enum(['zone', 'forum', 'category']),
-	position: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()),
-	isVip: z.boolean().default(false),
-	isLocked: z.boolean().default(false),
-	isHidden: z.boolean().default(false),
-	minXp: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()),
-	minGroupIdRequired: z.number().nullish(),
-	color: z.string().nullish(),
-	icon: z.string().nullish(),
-	colorTheme: z.string().nullish(),
-	tippingEnabled: z.boolean().default(false),
-	xpMultiplier: z.preprocess((v) => (v === null || v === undefined ? 1 : v), z.number()),
-	threadCount: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()),
-	postCount: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()),
-	pluginData: z
-		.preprocess((v) => {
-			if (typeof v === 'string') {
-				try {
-					return JSON.parse(v as string);
-				} catch {
-					return {};
-				}
-			}
+const ApiEntitySchema = z
+	.object({
+		id: z.number(),
+		slug: z.string().min(1),
+		name: z.string().min(1),
+		description: z.string().nullish(),
+		parentId: z.number().nullish(),
+		type: z.enum(['zone', 'forum', 'category']),
+		position: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()),
+		isVip: z.boolean().default(false),
+		isLocked: z.boolean().default(false),
+		isHidden: z.boolean().default(false),
+		minXp: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()),
+		minGroupIdRequired: z.number().nullish(),
+		color: z.string().nullish(),
+		icon: z.string().nullish(),
+		colorTheme: z.string().nullish(),
+		tippingEnabled: z.boolean().default(false),
+		xpMultiplier: z.preprocess((v) => (v === null || v === undefined ? 1 : v), z.number()),
+		threadCount: z.preprocess((v) => {
+			if (v === null || v === undefined) return 0;
+			if (typeof v === 'string') return parseInt(v, 10);
 			return v;
-		}, PluginDataSchema)
-		.nullish(),
-	createdAt: z.string().datetime().optional(),
-	updatedAt: z.string().datetime().optional()
-});
+		}, z.number()),
+		postCount: z.preprocess((v) => {
+			if (v === null || v === undefined) return 0;
+			if (typeof v === 'string') return parseInt(v, 10);
+			return v;
+		}, z.number()),
+		pluginData: z
+			.preprocess((v) => {
+				if (typeof v === 'string') {
+					try {
+						return JSON.parse(v as string);
+					} catch {
+						return {};
+					}
+				}
+				return v;
+			}, PluginDataSchema)
+			.nullish(),
+		createdAt: z.union([z.string(), z.date()]).optional().nullable(),
+		updatedAt: z.union([z.string(), z.date()]).optional().nullable()
+	})
+	.passthrough();
 
 const ForumStructureApiResponseSchema = z.object({
 	zones: z.array(ApiEntitySchema),
@@ -369,25 +380,35 @@ function fallbackStructure(staticZones: Zone[]) {
 const ForumStructureContext = createContext<ForumStructureContextType | undefined>(undefined);
 
 export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-	const {
-		data: raw,
-		isLoading,
-		error: netErr
-	} = useQuery({
-		queryKey: [FORUM_STRUCTURE_API_PATH],
-		queryFn: getQueryFn({ on401: 'returnNull' }),
-		staleTime: 5 * 60 * 1000,
-		retry: 2
-	});
+	// forumMap.config.ts is the single source of truth – skip remote fetch
+	const raw = undefined;
+	const isLoading = false;
+	const netErr: Error | null = null;
 
 	const { zones, forums, isUsingFallback, parseError } = useMemo(() => {
 		if (raw) {
+			// If backend already returns the flat object shape
 			try {
 				const parsed = ForumStructureApiResponseSchema.parse(raw);
 				const processed = processApiData(parsed);
 				return { ...processed, isUsingFallback: false, parseError: null };
 			} catch (e) {
-				console.error('[ForumStructureContext] invalid API payload', e);
+				// Fallback: some environments may still send an *array* of structures
+				// (mixing zones & forums).  We coerce that into the expected object.
+				if (Array.isArray(raw)) {
+					const zones = raw.filter((s: any) => s.type === 'zone');
+					const forums = raw.filter((s: any) => s.type === 'forum');
+					const coerced = { zones, forums };
+					try {
+						const parsed = ForumStructureApiResponseSchema.parse(coerced);
+						const processed = processApiData(parsed);
+						return { ...processed, isUsingFallback: false, parseError: null };
+					} catch (inner) {
+						console.error('[ForumStructureContext] still invalid after coercion', inner);
+					}
+				} else {
+					console.error('[ForumStructureContext] invalid API payload', e);
+				}
 			}
 		}
 		const fb = fallbackStructure(forumMap.zones);

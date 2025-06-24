@@ -1,0 +1,24 @@
+{
+	"mcpServers": {
+		"Neon": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@neondatabase/mcp-server-neon",
+				"start",
+				"napi_64010heeqqly1w5t5eg1dpjposfjcqpdg0lu4bc7yvnci0vh7qyivoo04i3j036x"
+			]
+		},
+		"PostgreSQL": {
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-postgres"],
+			"env": {
+				"POSTGRES_CONNECTION_STRING": "postgresql://neondb_owner:npg_eZTUNmt3h5YE@ep-steep-field-a4mgmi29-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require"
+			}
+		},
+		"BraveSearch": {
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-brave-search"]
+		}
+	}
+}

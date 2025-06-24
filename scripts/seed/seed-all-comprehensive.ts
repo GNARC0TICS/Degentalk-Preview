@@ -14,7 +14,7 @@
 import { db } from '../../db';
 import {
   users,
-  forumCategories,
+  forumStructure,
   threads,
   posts,
   threadPrefixes,
@@ -291,9 +291,9 @@ async function seedThreadsAndPosts() {
 
   // Get all users and forums
   const all_users = await db.select().from(users).where(eq(users.isActive, true));
-  const all_forums = await db.select().from(forumCategories)
-    .where(eq(forumCategories.type, 'forum'))
-    .orderBy(asc(forumCategories.position));
+  const all_forums = await db.select().from(forumStructure)
+    .where(eq(forumStructure.type, 'forum'))
+    .orderBy(asc(forumStructure.position));
 
   if (all_users.length === 0) {
     throw new Error('No users found. Please seed users first.');
@@ -301,9 +301,9 @@ async function seedThreadsAndPosts() {
 
   // Filter to leaf forums (not parent to other forums)
   const all_parent_ids = (await db
-    .selectDistinct({ parentId: forumCategories.parentId })
-    .from(forumCategories)
-    .where(isNotNull(forumCategories.parentId)))
+    .selectDistinct({ parentId: forumStructure.parentId })
+    .from(forumStructure)
+    .where(isNotNull(forumStructure.parentId)))
     .map(r => r.parentId)
     .filter(Boolean) as number[];
 
@@ -363,7 +363,7 @@ async function seedThreadsAndPosts() {
         const [new_thread] = await tx.insert(threads).values({
           title,
           slug,
-          categoryId: forum.id,
+          structureId: forum.id,
           userId: author.id,
           prefixId: prefix_id,
           isSticky: Math.random() < CONFIG.ENGAGEMENT.STICKY_CHANCE,

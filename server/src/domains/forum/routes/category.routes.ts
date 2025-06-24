@@ -1,29 +1,40 @@
 /**
- * Category Routes
+ * Forum Structure Routes
  *
- * QUALITY IMPROVEMENT: Extracted from forum.routes.ts god object
- * Handles category-specific API endpoints with proper separation of concerns
+ * Modern API endpoints for forum structure operations.
+ * Replaces the old category routes with clearer terminology.
  */
 
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import { categoryService } from '../services/category.service';
+import { forumStructureService } from '../services/structure.service';
 import { forumService } from '../forum.service';
 import { logger } from '@server/src/core/logger';
 
 const router = Router();
 
-// Get forum structure
+// -------------------------------------------------------------
+// FLAT STRUCTURE ENDPOINT  ✨
+//
+// `categories` layer has been deprecated.  The frontend now expects a
+// flat payload of the form `{ zones: ZoneEntity[], forums: ForumEntity[] }`.
+// We derive this directly from `getStructuresWithStats()` and split on the
+// `type` field.  The previous nested hierarchy response is still available
+// via `/hierarchy` for legacy consumers.
+// -------------------------------------------------------------
+
 router.get('/structure', async (req: Request, res: Response) => {
 	try {
-		const structure = await forumService.getForumStructure();
+		// Fetch all structures with statistics in a single query
+		const allStructures = await forumStructureService.getStructuresWithStats();
 
-		res.json({
-			success: true,
-			data: structure
-		});
+		// Separate into zones and forums for the flat client payload
+		const zones = allStructures.filter((s) => s.type === 'zone');
+		const forums = allStructures.filter((s) => s.type === 'forum');
+
+		res.json({ zones, forums });
 	} catch (error) {
-		logger.error('CategoryRoutes', 'Error in GET /structure', { error });
+		logger.error('StructureRoutes', 'Error in GET /structure', { error });
 		res.status(500).json({
 			success: false,
 			error: 'Failed to fetch forum structure'
@@ -31,32 +42,46 @@ router.get('/structure', async (req: Request, res: Response) => {
 	}
 });
 
-// Get categories list
-router.get('/', async (req: Request, res: Response) => {
+// Alternative endpoint name for clarity
+router.get('/hierarchy', async (req: Request, res: Response) => {
 	try {
-		const includeStats = req.query.includeStats !== 'false';
-		const categories = await categoryService.getCategoriesWithStats();
-
-		res.json({
-			success: true,
-			data: categories
-		});
+		const hierarchy = await forumStructureService.getForumHierarchy();
+		res.json(hierarchy);
 	} catch (error) {
-		logger.error('CategoryRoutes', 'Error in GET /categories', { error });
+		logger.error('StructureRoutes', 'Error in GET /hierarchy', { error });
 		res.status(500).json({
 			success: false,
-			error: 'Failed to fetch categories'
+			error: 'Failed to fetch forum hierarchy'
 		});
 	}
 });
 
-// Get categories tree
+// Get structures list
+router.get('/', async (req: Request, res: Response) => {
+	try {
+		const includeStats = req.query.includeStats !== 'false';
+		const structures = await forumStructureService.getStructuresWithStats();
+
+		res.json({
+			success: true,
+			data: structures
+		});
+	} catch (error) {
+		logger.error('StructureRoutes', 'Error in GET /structures', { error });
+		res.status(500).json({
+			success: false,
+			error: 'Failed to fetch forum structures'
+		});
+	}
+});
+
+// Get structure tree
 router.get('/tree', async (req: Request, res: Response) => {
 	try {
 		const includeHidden = req.query.includeHidden === 'true';
 		const includeEmptyStats = req.query.includeEmptyStats === 'true';
 
-		const tree = await categoryService.getCategoriesTree({
+		const tree = await forumStructureService.getStructureTree({
 			includeHidden,
 			includeEmptyStats
 		});
@@ -66,55 +91,55 @@ router.get('/tree', async (req: Request, res: Response) => {
 			data: tree
 		});
 	} catch (error) {
-		logger.error('CategoryRoutes', 'Error in GET /categories/tree', { error });
+		logger.error('StructureRoutes', 'Error in GET /structure/tree', { error });
 		res.status(500).json({
 			success: false,
-			error: 'Failed to fetch categories tree'
+			error: 'Failed to fetch structure tree'
 		});
 	}
 });
 
-// Get category by slug
+// Get structure by slug
 router.get('/slug/:slug', async (req: Request, res: Response) => {
 	try {
 		const slug = req.params.slug;
-		const category = await categoryService.getCategoryBySlug(slug);
+		const structure = await forumStructureService.getStructureBySlug(slug);
 
-		if (!category) {
+		if (!structure) {
 			return res.status(404).json({
 				success: false,
-				error: 'Category not found'
+				error: 'Forum structure not found'
 			});
 		}
 
 		res.json({
 			success: true,
-			data: category
+			data: structure
 		});
 	} catch (error) {
-		logger.error('CategoryRoutes', 'Error in GET /categories/slug/:slug', { error });
+		logger.error('StructureRoutes', 'Error in GET /structure/slug/:slug', { error });
 		res.status(500).json({
 			success: false,
-			error: 'Failed to fetch category'
+			error: 'Failed to fetch forum structure'
 		});
 	}
 });
 
-// Get category statistics
+// Get structure statistics
 router.get('/:id/stats', async (req: Request, res: Response) => {
 	try {
-		const categoryId = parseInt(req.params.id);
-		const stats = await categoryService.getCategoryStats(categoryId);
+		const structureId = parseInt(req.params.id);
+		const stats = await forumStructureService.getStructureStats(structureId);
 
 		res.json({
 			success: true,
 			data: stats
 		});
 	} catch (error) {
-		logger.error('CategoryRoutes', 'Error in GET /categories/:id/stats', { error });
+		logger.error('StructureRoutes', 'Error in GET /structure/:id/stats', { error });
 		res.status(500).json({
 			success: false,
-			error: 'Failed to fetch category statistics'
+			error: 'Failed to fetch structure statistics'
 		});
 	}
 });

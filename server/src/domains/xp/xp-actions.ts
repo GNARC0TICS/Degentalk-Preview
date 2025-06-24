@@ -21,7 +21,8 @@ export enum XP_ACTION {
 	DAILY_LOGIN = 'daily_login',
 	USER_MENTIONED = 'user_mentioned',
 	REPLY_RECEIVED = 'reply_received',
-	PROFILE_COMPLETED = 'profile_completed'
+	PROFILE_COMPLETED = 'profile_completed',
+	FRAME_EQUIPPED = 'frame_equipped'
 }
 
 /**
@@ -83,6 +84,11 @@ export const DEFAULT_XP_ACTIONS: Record<XP_ACTION, XpActionConfig> = {
 		baseValue: 50,
 		description: 'Completed user profile',
 		cooldownSeconds: 604800 // One-time bonus (1 week cooldown as safety)
+	},
+	[XP_ACTION.FRAME_EQUIPPED]: {
+		key: XP_ACTION.FRAME_EQUIPPED,
+		baseValue: 5,
+		description: 'Equipped an avatar frame'
 	}
 };
 

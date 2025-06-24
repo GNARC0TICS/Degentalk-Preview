@@ -11,7 +11,7 @@ import {
 	users,
 	userInventory,
 	products,
-	forumCategories,
+	forumStructure,
 	threads,
 	posts,
 	userRelationships,

@@ -31,17 +31,10 @@ import {
 	TableRow
 } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
-import { Trash2, Edit, Plus, Eye } from 'lucide-react';
+import { Trash2, Edit, Plus, Eye, Users as UsersIcon } from 'lucide-react';
 import { FramedAvatar } from '@/components/users/framed-avatar';
-
-interface AvatarFrame {
-	id: number;
-	name: string;
-	imageUrl: string;
-	rarity: string;
-	animated: boolean;
-	createdAt: string;
-}
+import { GrantFrameModal } from '@/components/admin/GrantFrameModal';
+import type { AvatarFrame } from '@db_schema/user/avatarFrames';
 
 interface CreateFrameData {
 	name: string;
@@ -63,6 +56,7 @@ export default function AdminAvatarFramesPage() {
 	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 	const [editingFrame, setEditingFrame] = useState<AvatarFrame | null>(null);
 	const [previewFrame, setPreviewFrame] = useState<AvatarFrame | null>(null);
+	const [grantFrame, setGrantFrame] = useState<AvatarFrame | null>(null);
 
 	// Form state
 	const [formData, setFormData] = useState<CreateFrameData>({
@@ -322,6 +316,9 @@ export default function AdminAvatarFramesPage() {
 											<Button variant="outline" size="sm" onClick={() => handleEdit(frame)}>
 												<Edit className="h-4 w-4" />
 											</Button>
+											<Button variant="outline" size="sm" onClick={() => setGrantFrame(frame)}>
+												<UsersIcon className="h-4 w-4" />
+											</Button>
 											<Button variant="destructive" size="sm" onClick={() => handleDelete(frame)}>
 												<Trash2 className="h-4 w-4" />
 											</Button>
@@ -457,6 +454,14 @@ export default function AdminAvatarFramesPage() {
 					</div>
 				</DialogContent>
 			</Dialog>
+
+			{/* Grant Modal */}
+			<GrantFrameModal
+				frame={grantFrame}
+				open={!!grantFrame}
+				onClose={() => setGrantFrame(null)}
+				onSuccess={() => queryClient.invalidateQueries({ queryKey: ['admin', 'avatar-frames'] })}
+			/>
 		</div>
 	);
 }

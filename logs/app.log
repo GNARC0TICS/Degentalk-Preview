@@ -18098,3 +18098,886 @@ User not found
   "statusCode": 200,
   "durationMs": 8.987
 }
+[2025-06-23T06:23:07.030Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T06:25:55.450Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T06:26:05.903Z] [INFO] [SHOP] Shop already has 6 items. Skipping seeding.
+[2025-06-23T06:43:55.910Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T06:44:04.208Z] [INFO] [SHOP] Shop already has 6 items. Skipping seeding.
+[2025-06-23T06:48:01.425Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T06:48:11.441Z] [INFO] [SHOP] Shop already has 6 items. Skipping seeding.
+[2025-06-23T06:49:39.301Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T06:49:39.311Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T06:49:39.449Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T06:49:39.914Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T06:54:00.628Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T06:54:00.640Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T06:54:00.922Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T06:54:02.410Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T06:54:02.424Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-23T06:54:02.425Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-23T06:54:02.425Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-23T06:54:02.425Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-23T06:57:24.001Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T06:57:24.013Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T06:57:24.319Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T06:57:25.426Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T06:57:25.432Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-23T06:57:25.432Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-23T06:57:25.432Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-23T06:57:25.432Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-23T06:59:06.874Z] [INFO] [RequestStart] --> GET /api/forum/categories/structure
+{
+  "requestId": "e9c3ef6e-e318-4f0c-b752-450cf5984b9e",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T06:59:06.880Z] [INFO] [CategoryService] Fetching categories with stats from database
+[2025-06-23T06:59:06.885Z] [ERROR] [CategoryService] Error fetching categories with stats
+{
+  "error": {}
+}
+[2025-06-23T06:59:06.896Z] [ERROR] [ForumService] Error in getForumStructure
+{
+  "err": {}
+}
+[2025-06-23T06:59:06.896Z] [ERROR] [CategoryRoutes] Error in GET /structure
+{
+  "error": {}
+}
+[2025-06-23T06:59:06.908Z] [INFO] [RequestEnd] <-- GET /api/forum/categories/structure 500 35.671ms
+{
+  "requestId": "e9c3ef6e-e318-4f0c-b752-450cf5984b9e",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "statusCode": 500,
+  "durationMs": 35.671
+}
+[2025-06-23T06:59:18.139Z] [INFO] [RequestStart] --> GET /api/forum/categories/structure
+{
+  "requestId": "9d600638-f039-4b7e-b519-b2e0cafe9e4b",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T06:59:18.146Z] [INFO] [CategoryService] Fetching categories with stats from database
+[2025-06-23T06:59:18.147Z] [ERROR] [CategoryService] Error fetching categories with stats
+{
+  "error": {}
+}
+[2025-06-23T06:59:18.148Z] [ERROR] [ForumService] Error in getForumStructure
+{
+  "err": {}
+}
+[2025-06-23T06:59:18.149Z] [ERROR] [CategoryRoutes] Error in GET /structure
+{
+  "error": {}
+}
+[2025-06-23T06:59:18.151Z] [INFO] [RequestEnd] <-- GET /api/forum/categories/structure 500 14.435ms
+{
+  "requestId": "9d600638-f039-4b7e-b519-b2e0cafe9e4b",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "statusCode": 500,
+  "durationMs": 14.435
+}
+[2025-06-23T06:59:23.336Z] [INFO] [RequestStart] --> GET /api/forum/categories/structure
+{
+  "requestId": "1c32790f-7c92-4ada-994c-0930b4d0554d",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T06:59:23.339Z] [INFO] [CategoryService] Fetching categories with stats from database
+[2025-06-23T06:59:23.340Z] [ERROR] [CategoryService] Error fetching categories with stats
+{
+  "error": {}
+}
+[2025-06-23T06:59:23.341Z] [ERROR] [ForumService] Error in getForumStructure
+{
+  "err": {}
+}
+[2025-06-23T06:59:23.344Z] [ERROR] [CategoryRoutes] Error in GET /structure
+{
+  "error": {}
+}
+[2025-06-23T06:59:23.349Z] [INFO] [RequestEnd] <-- GET /api/forum/categories/structure 500 12.272ms
+{
+  "requestId": "1c32790f-7c92-4ada-994c-0930b4d0554d",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "statusCode": 500,
+  "durationMs": 12.272
+}
+[2025-06-23T07:02:40.749Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T07:02:40.761Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T07:02:40.972Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T07:02:41.613Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T07:02:41.620Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-23T07:02:41.620Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-23T07:02:41.620Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-23T07:02:41.621Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-23T07:02:49.472Z] [INFO] [RequestStart] --> GET /
+{
+  "requestId": "4c98e768-a9a8-436b-8e97-b98b2944c44b",
+  "method": "GET",
+  "url": "/",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T07:02:49.487Z] [INFO] [RequestEnd] <-- GET / 200 16.124ms
+{
+  "requestId": "4c98e768-a9a8-436b-8e97-b98b2944c44b",
+  "method": "GET",
+  "url": "/",
+  "statusCode": 200,
+  "durationMs": 16.124
+}
+[2025-06-23T07:02:56.624Z] [INFO] [RequestStart] --> GET /
+{
+  "requestId": "19d4aa3f-0603-4792-8683-ad8e5af9993a",
+  "method": "GET",
+  "url": "/",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T07:02:56.629Z] [INFO] [RequestEnd] <-- GET / 200 5.196ms
+{
+  "requestId": "19d4aa3f-0603-4792-8683-ad8e5af9993a",
+  "method": "GET",
+  "url": "/",
+  "statusCode": 200,
+  "durationMs": 5.196
+}
+[2025-06-23T07:03:02.238Z] [INFO] [RequestStart] --> GET /api/forum/categories/structure
+{
+  "requestId": "f01186aa-9ee1-434e-8028-e266e7b74682",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T07:03:02.261Z] [INFO] [CategoryService] Fetching categories with stats from database
+[2025-06-23T07:03:02.271Z] [ERROR] [CategoryService] Error fetching categories with stats
+{
+  "error": {}
+}
+[2025-06-23T07:03:02.286Z] [ERROR] [ForumService] Error in getForumStructure
+{
+  "err": {}
+}
+[2025-06-23T07:03:02.287Z] [ERROR] [CategoryRoutes] Error in GET /structure
+{
+  "error": {}
+}
+[2025-06-23T07:03:02.290Z] [INFO] [RequestEnd] <-- GET /api/forum/categories/structure 500 52.359ms
+{
+  "requestId": "f01186aa-9ee1-434e-8028-e266e7b74682",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "statusCode": 500,
+  "durationMs": 52.359
+}
+[2025-06-23T07:03:34.197Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T07:03:34.210Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T07:03:34.489Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T07:03:35.206Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T07:03:35.211Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-23T07:03:35.211Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-23T07:03:35.211Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-23T07:03:35.212Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-23T07:16:59.640Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T07:16:59.653Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T07:17:00.094Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T07:17:01.626Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T07:17:01.637Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-23T07:17:01.637Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-23T07:17:01.637Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-23T07:17:01.638Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-23T07:18:29.285Z] [INFO] [RequestStart] --> GET /api/forum/categories/structure
+{
+  "requestId": "5fb7f82d-8529-4263-a3c6-d22cb53794d8",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T07:18:29.289Z] [INFO] [CategoryService] Fetching categories with stats from database
+[2025-06-23T07:18:29.291Z] [ERROR] [CategoryService] Error fetching categories with stats
+{
+  "error": {}
+}
+[2025-06-23T07:18:29.297Z] [ERROR] [ForumService] Error in getForumStructure
+{
+  "err": {}
+}
+[2025-06-23T07:18:29.297Z] [ERROR] [CategoryRoutes] Error in GET /structure
+{
+  "error": {}
+}
+[2025-06-23T07:18:29.302Z] [INFO] [RequestEnd] <-- GET /api/forum/categories/structure 500 17.988ms
+{
+  "requestId": "5fb7f82d-8529-4263-a3c6-d22cb53794d8",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "statusCode": 500,
+  "durationMs": 17.988
+}
+[2025-06-23T07:18:34.770Z] [INFO] [RequestStart] --> GET /
+{
+  "requestId": "f86c587c-44a2-459a-adec-3b7bbeb70948",
+  "method": "GET",
+  "url": "/",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T07:18:34.771Z] [INFO] [RequestEnd] <-- GET / 200 1.515ms
+{
+  "requestId": "f86c587c-44a2-459a-adec-3b7bbeb70948",
+  "method": "GET",
+  "url": "/",
+  "statusCode": 200,
+  "durationMs": 1.515
+}
+[2025-06-23T07:19:08.853Z] [INFO] [RequestStart] --> GET /api/forum/categories
+{
+  "requestId": "ea63ea9c-8f19-4754-9d26-d8fb40064e67",
+  "method": "GET",
+  "url": "/api/forum/categories",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T07:19:08.856Z] [INFO] [CategoryService] Fetching categories with stats from database
+[2025-06-23T07:19:08.856Z] [ERROR] [CategoryService] Error fetching categories with stats
+{
+  "error": {}
+}
+[2025-06-23T07:19:08.857Z] [ERROR] [CategoryRoutes] Error in GET /categories
+{
+  "error": {}
+}
+[2025-06-23T07:19:08.858Z] [INFO] [RequestEnd] <-- GET /api/forum/categories 500 5.048ms
+{
+  "requestId": "ea63ea9c-8f19-4754-9d26-d8fb40064e67",
+  "method": "GET",
+  "url": "/api/forum/categories",
+  "statusCode": 500,
+  "durationMs": 5.048
+}
+[2025-06-23T07:19:13.479Z] [INFO] [RequestStart] --> GET /api/forum/categories
+{
+  "requestId": "5e8a828c-ee3c-48d0-9fb5-80406b13a5ee",
+  "method": "GET",
+  "url": "/api/forum/categories",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T07:19:13.480Z] [INFO] [CategoryService] Fetching categories with stats from database
+[2025-06-23T07:19:13.480Z] [ERROR] [CategoryService] Error fetching categories with stats
+{
+  "error": {}
+}
+[2025-06-23T07:19:13.481Z] [ERROR] [CategoryRoutes] Error in GET /categories
+{
+  "error": {}
+}
+[2025-06-23T07:19:13.483Z] [INFO] [RequestEnd] <-- GET /api/forum/categories 500 3.961ms
+{
+  "requestId": "5e8a828c-ee3c-48d0-9fb5-80406b13a5ee",
+  "method": "GET",
+  "url": "/api/forum/categories",
+  "statusCode": 500,
+  "durationMs": 3.961
+}
+[2025-06-23T07:22:01.648Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-23T07:22:01.649Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-23T07:22:01.649Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-23T07:22:01.649Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-23T07:26:06.611Z] [INFO] [RequestStart] --> GET /api/forum/categories/structure
+{
+  "requestId": "c685e14b-39cc-4613-8dac-7e3771d9d823",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T07:26:06.612Z] [INFO] [CategoryService] Fetching categories with stats from database
+[2025-06-23T07:26:06.612Z] [ERROR] [CategoryService] Error fetching categories with stats
+{
+  "error": {}
+}
+[2025-06-23T07:26:06.613Z] [ERROR] [ForumService] Error in getForumStructure
+{
+  "err": {}
+}
+[2025-06-23T07:26:06.613Z] [ERROR] [CategoryRoutes] Error in GET /structure
+{
+  "error": {}
+}
+[2025-06-23T07:26:06.614Z] [INFO] [RequestEnd] <-- GET /api/forum/categories/structure 500 3.205ms
+{
+  "requestId": "c685e14b-39cc-4613-8dac-7e3771d9d823",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "statusCode": 500,
+  "durationMs": 3.205
+}
+[2025-06-23T07:26:12.713Z] [INFO] [RequestStart] --> GET /api/forum/categories
+{
+  "requestId": "26a895c4-2e4e-4fd1-aa1d-c7239e38a6d7",
+  "method": "GET",
+  "url": "/api/forum/categories",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T07:26:12.714Z] [INFO] [CategoryService] Fetching categories with stats from database
+[2025-06-23T07:26:12.714Z] [ERROR] [CategoryService] Error fetching categories with stats
+{
+  "error": {}
+}
+[2025-06-23T07:26:12.715Z] [ERROR] [CategoryRoutes] Error in GET /categories
+{
+  "error": {}
+}
+[2025-06-23T07:26:12.716Z] [INFO] [RequestEnd] <-- GET /api/forum/categories 500 2.447ms
+{
+  "requestId": "26a895c4-2e4e-4fd1-aa1d-c7239e38a6d7",
+  "method": "GET",
+  "url": "/api/forum/categories",
+  "statusCode": 500,
+  "durationMs": 2.447
+}
+[2025-06-23T07:26:41.098Z] [INFO] [RequestStart] --> GET /api/forum/categories
+{
+  "requestId": "a1f399a6-a2f6-4d23-8d96-5588e9157f11",
+  "method": "GET",
+  "url": "/api/forum/categories",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T07:26:41.099Z] [INFO] [CategoryService] Fetching categories with stats from database
+[2025-06-23T07:26:41.099Z] [ERROR] [CategoryService] Error fetching categories with stats
+{
+  "error": {}
+}
+[2025-06-23T07:26:41.100Z] [ERROR] [CategoryRoutes] Error in GET /categories
+{
+  "error": {}
+}
+[2025-06-23T07:26:41.101Z] [INFO] [RequestEnd] <-- GET /api/forum/categories 500 3.225ms
+{
+  "requestId": "a1f399a6-a2f6-4d23-8d96-5588e9157f11",
+  "method": "GET",
+  "url": "/api/forum/categories",
+  "statusCode": 500,
+  "durationMs": 3.225
+}
+[2025-06-23T07:26:47.175Z] [INFO] [RequestStart] --> GET /
+{
+  "requestId": "556ed9d9-40a2-42b3-935c-3679f52bf8d0",
+  "method": "GET",
+  "url": "/",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T07:26:47.176Z] [INFO] [RequestEnd] <-- GET / 200 0.996ms
+{
+  "requestId": "556ed9d9-40a2-42b3-935c-3679f52bf8d0",
+  "method": "GET",
+  "url": "/",
+  "statusCode": 200,
+  "durationMs": 0.996
+}
+[2025-06-23T07:27:01.657Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-23T07:27:01.658Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-23T07:27:01.658Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-23T07:27:01.658Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-23T07:43:22.470Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T07:43:22.475Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T07:43:22.594Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T07:43:23.011Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T07:43:23.014Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-23T07:43:23.015Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-23T07:43:23.015Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-23T07:43:23.015Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-23T07:43:24.905Z] [INFO] [RequestStart] --> GET /
+{
+  "requestId": "21e3c813-1ca1-4527-a217-28971dac65f0",
+  "method": "GET",
+  "url": "/",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T07:43:24.960Z] [INFO] [RequestEnd] <-- GET / 200 55.202ms
+{
+  "requestId": "21e3c813-1ca1-4527-a217-28971dac65f0",
+  "method": "GET",
+  "url": "/",
+  "statusCode": 200,
+  "durationMs": 55.202
+}
+[2025-06-23T07:43:30.943Z] [INFO] [RequestStart] --> GET /api/forum/categories/structure
+{
+  "requestId": "32eb18b5-caf9-4b85-bcb4-fe49d8d96bdd",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T07:43:30.949Z] [INFO] [CategoryService] Fetching categories with stats from database
+[2025-06-23T07:43:32.387Z] [INFO] [CategoryService] Successfully fetched 36 categories
+[2025-06-23T07:43:32.391Z] [INFO] [RequestEnd] <-- GET /api/forum/categories/structure 200 1447.951ms
+{
+  "requestId": "32eb18b5-caf9-4b85-bcb4-fe49d8d96bdd",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "statusCode": 200,
+  "durationMs": 1447.951
+}
+[2025-06-23T07:45:28.370Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T07:45:28.375Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T07:45:28.482Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T07:45:28.841Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T07:45:28.844Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-23T07:45:28.845Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-23T07:45:28.845Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-23T07:45:28.857Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-23T07:46:34.122Z] [INFO] [RequestStart] --> GET /api/wallet/deposit-addresses
+{
+  "requestId": "01f18439-e275-4e68-9563-88e0b6d58c50",
+  "method": "GET",
+  "url": "/api/wallet/deposit-addresses",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:46:34.135Z] [INFO] [RequestEnd] <-- GET /api/wallet/deposit-addresses 401 13.602ms
+{
+  "requestId": "01f18439-e275-4e68-9563-88e0b6d58c50",
+  "method": "GET",
+  "url": "/api/wallet/deposit-addresses",
+  "statusCode": 401,
+  "durationMs": 13.602
+}
+[2025-06-23T07:46:34.140Z] [INFO] [RequestStart] --> GET /api/ui/themes
+{
+  "requestId": "c82d1a8d-5393-474b-a5b6-7bea555a7f23",
+  "method": "GET",
+  "url": "/api/ui/themes",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:46:34.164Z] [INFO] [RequestStart] --> GET /api/forum/categories/structure
+{
+  "requestId": "c2e7f5b8-b68e-41c6-b218-4914380382b6",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:46:34.168Z] [INFO] [CategoryService] Fetching categories with stats from database
+[2025-06-23T07:46:34.188Z] [INFO] [RequestStart] --> GET /api/preferences
+{
+  "requestId": "329953ad-9ca8-4826-b0c4-ded867b0b7cb",
+  "method": "GET",
+  "url": "/api/preferences",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:46:34.312Z] [INFO] [RequestEnd] <-- GET /api/ui/themes 200 166.220ms
+{
+  "requestId": "c82d1a8d-5393-474b-a5b6-7bea555a7f23",
+  "method": "GET",
+  "url": "/api/ui/themes",
+  "statusCode": 200,
+  "durationMs": 166.22
+}
+[2025-06-23T07:46:34.312Z] [INFO] [RequestEnd] <-- GET /api/preferences 200 124.263ms
+{
+  "requestId": "329953ad-9ca8-4826-b0c4-ded867b0b7cb",
+  "method": "GET",
+  "url": "/api/preferences",
+  "statusCode": 200,
+  "durationMs": 124.263
+}
+[2025-06-23T07:46:34.333Z] [INFO] [RequestStart] --> GET /api/ui/themes
+{
+  "requestId": "52fa6bf8-0b0c-4a66-b8a4-6b0dc29d135d",
+  "method": "GET",
+  "url": "/api/ui/themes",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:46:34.416Z] [INFO] [RequestEnd] <-- GET /api/ui/themes 200 82.873ms
+{
+  "requestId": "52fa6bf8-0b0c-4a66-b8a4-6b0dc29d135d",
+  "method": "GET",
+  "url": "/api/ui/themes",
+  "statusCode": 200,
+  "durationMs": 82.873
+}
+[2025-06-23T07:46:35.622Z] [INFO] [RequestStart] --> GET /api/announcements?ticker=true
+{
+  "requestId": "98e1c8c5-06af-4670-b6bd-da4db588d797",
+  "method": "GET",
+  "url": "/api/announcements?ticker=true",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:46:35.642Z] [INFO] [RequestStart] --> GET /api/forum/hot-threads?limit=5
+{
+  "requestId": "96654936-3c13-474d-a149-659b0a1ea43e",
+  "method": "GET",
+  "url": "/api/forum/hot-threads?limit=5",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:46:35.704Z] [INFO] [RequestEnd] <-- GET /api/forum/hot-threads?limit=5 200 62.259ms
+{
+  "requestId": "96654936-3c13-474d-a149-659b0a1ea43e",
+  "method": "GET",
+  "url": "/api/forum/hot-threads?limit=5",
+  "statusCode": 200,
+  "durationMs": 62.259
+}
+[2025-06-23T07:46:35.989Z] [INFO] [CategoryService] Successfully fetched 36 categories
+[2025-06-23T07:46:36.000Z] [INFO] [RequestEnd] <-- GET /api/forum/categories/structure 200 1835.920ms
+{
+  "requestId": "c2e7f5b8-b68e-41c6-b218-4914380382b6",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "statusCode": 200,
+  "durationMs": 1835.92
+}
+[2025-06-23T07:46:36.907Z] [INFO] [RequestEnd] <-- GET /api/announcements?ticker=true 304 1284.785ms
+{
+  "requestId": "98e1c8c5-06af-4670-b6bd-da4db588d797",
+  "method": "GET",
+  "url": "/api/announcements?ticker=true",
+  "statusCode": 304,
+  "durationMs": 1284.785
+}
+[2025-06-23T07:46:37.803Z] [INFO] [RequestStart] --> GET /api/chat/emojis
+{
+  "requestId": "31d9db45-d5b1-474b-8276-4e5278e0d400",
+  "method": "GET",
+  "url": "/api/chat/emojis",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:46:37.851Z] [INFO] [RequestStart] --> GET /api/shoutbox/messages
+{
+  "requestId": "13a345f3-32b9-4a74-9ab7-5c580b4d819b",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:46:37.935Z] [INFO] [RequestEnd] <-- GET /api/chat/emojis 200 131.761ms
+{
+  "requestId": "31d9db45-d5b1-474b-8276-4e5278e0d400",
+  "method": "GET",
+  "url": "/api/chat/emojis",
+  "statusCode": 200,
+  "durationMs": 131.761
+}
+[2025-06-23T07:46:37.938Z] [INFO] [RequestStart] --> GET /api/wallet/deposit-addresses
+{
+  "requestId": "b001c96a-e9cb-4b35-8835-e1953947eb1a",
+  "method": "GET",
+  "url": "/api/wallet/deposit-addresses",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:46:37.990Z] [INFO] [RequestEnd] <-- GET /api/wallet/deposit-addresses 401 52.005ms
+{
+  "requestId": "b001c96a-e9cb-4b35-8835-e1953947eb1a",
+  "method": "GET",
+  "url": "/api/wallet/deposit-addresses",
+  "statusCode": 401,
+  "durationMs": 52.005
+}
+[2025-06-23T07:46:38.001Z] [INFO] [RequestEnd] <-- GET /api/shoutbox/messages 304 150.198ms
+{
+  "requestId": "13a345f3-32b9-4a74-9ab7-5c580b4d819b",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "statusCode": 304,
+  "durationMs": 150.198
+}
+[2025-06-23T07:46:38.211Z] [INFO] [RequestStart] --> GET /api/forum/hot-threads?limit=5
+{
+  "requestId": "74884b35-192e-4a53-8bfa-a6a692b5bb65",
+  "method": "GET",
+  "url": "/api/forum/hot-threads?limit=5",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:46:38.284Z] [INFO] [RequestEnd] <-- GET /api/forum/hot-threads?limit=5 200 72.882ms
+{
+  "requestId": "74884b35-192e-4a53-8bfa-a6a692b5bb65",
+  "method": "GET",
+  "url": "/api/forum/hot-threads?limit=5",
+  "statusCode": 200,
+  "durationMs": 72.882
+}
+[2025-06-23T07:46:38.675Z] [INFO] [RequestStart] --> GET /api/shoutbox/messages
+{
+  "requestId": "6e303cc2-7a20-4bf8-9a8a-6ee4e856790e",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:46:38.815Z] [INFO] [RequestEnd] <-- GET /api/shoutbox/messages 304 140.811ms
+{
+  "requestId": "6e303cc2-7a20-4bf8-9a8a-6ee4e856790e",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "statusCode": 304,
+  "durationMs": 140.811
+}
+[2025-06-23T07:46:48.837Z] [INFO] [RequestStart] --> GET /api/shoutbox/messages
+{
+  "requestId": "bdf6012e-81d4-458c-9599-453a780e74fe",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:46:49.531Z] [INFO] [RequestEnd] <-- GET /api/shoutbox/messages 304 694.092ms
+{
+  "requestId": "bdf6012e-81d4-458c-9599-453a780e74fe",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "statusCode": 304,
+  "durationMs": 694.092
+}
+[2025-06-23T07:46:59.568Z] [INFO] [RequestStart] --> GET /api/shoutbox/messages
+{
+  "requestId": "32b5072c-9188-470f-a82c-207d1f39f97e",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:47:00.339Z] [INFO] [RequestEnd] <-- GET /api/shoutbox/messages 304 770.449ms
+{
+  "requestId": "32b5072c-9188-470f-a82c-207d1f39f97e",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "statusCode": 304,
+  "durationMs": 770.449
+}
+[2025-06-23T07:47:10.363Z] [INFO] [RequestStart] --> GET /api/shoutbox/messages
+{
+  "requestId": "e62fce3b-0b5a-4461-a274-7a9f7b8b3544",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:47:11.092Z] [INFO] [RequestEnd] <-- GET /api/shoutbox/messages 304 728.817ms
+{
+  "requestId": "e62fce3b-0b5a-4461-a274-7a9f7b8b3544",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "statusCode": 304,
+  "durationMs": 728.817
+}
+[2025-06-23T07:47:21.116Z] [INFO] [RequestStart] --> GET /api/shoutbox/messages
+{
+  "requestId": "c9e9ec94-2c06-4a1a-8317-8d053ddb16a1",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:47:21.738Z] [INFO] [RequestEnd] <-- GET /api/shoutbox/messages 304 622.331ms
+{
+  "requestId": "c9e9ec94-2c06-4a1a-8317-8d053ddb16a1",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "statusCode": 304,
+  "durationMs": 622.331
+}
+[2025-06-23T07:47:31.759Z] [INFO] [RequestStart] --> GET /api/shoutbox/messages
+{
+  "requestId": "ef738ce1-e6df-4593-a92a-4946a5eda04e",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:47:32.379Z] [INFO] [RequestEnd] <-- GET /api/shoutbox/messages 304 620.156ms
+{
+  "requestId": "ef738ce1-e6df-4593-a92a-4946a5eda04e",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "statusCode": 304,
+  "durationMs": 620.156
+}
+[2025-06-23T07:47:42.407Z] [INFO] [RequestStart] --> GET /api/shoutbox/messages
+{
+  "requestId": "4967c288-430e-4a54-b8c8-b98d4c5f4e15",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:47:43.112Z] [INFO] [RequestEnd] <-- GET /api/shoutbox/messages 304 705.517ms
+{
+  "requestId": "4967c288-430e-4a54-b8c8-b98d4c5f4e15",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "statusCode": 304,
+  "durationMs": 705.517
+}
+[2025-06-23T07:47:52.457Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T07:47:52.465Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T07:47:52.645Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T07:47:53.100Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T07:47:53.102Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-23T07:47:53.102Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-23T07:47:53.102Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-23T07:47:53.103Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-23T07:47:53.162Z] [INFO] [RequestStart] --> GET /api/shoutbox/messages
+{
+  "requestId": "d5e4bc85-841e-47e9-a6ad-68773347578a",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/1.1.5 Chrome/132.0.6834.210 Electron/34.5.1 Safari/537.36"
+}
+[2025-06-23T07:47:53.994Z] [INFO] [RequestEnd] <-- GET /api/shoutbox/messages 304 831.883ms
+{
+  "requestId": "d5e4bc85-841e-47e9-a6ad-68773347578a",
+  "method": "GET",
+  "url": "/api/shoutbox/messages",
+  "statusCode": 304,
+  "durationMs": 831.883
+}
+[2025-06-23T07:48:36.020Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T07:48:36.024Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T07:48:36.098Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T07:48:36.317Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T07:48:37.101Z] [INFO] [RequestStart] --> GET /api/forum/categories/structure
+{
+  "requestId": "9a78c822-ff94-4933-8011-5a39c8b44da2",
+  "method": "GET",
+  "url": "/api/forum/categories/structure",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-23T08:10:39.537Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T08:10:49.015Z] [INFO] [SHOP] Shop already has 6 items. Skipping seeding.
+[2025-06-23T23:03:34.071Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T23:03:34.076Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T23:03:34.186Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T23:03:34.649Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T23:03:34.651Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-23T23:03:34.651Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-23T23:03:34.651Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-23T23:03:34.651Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-23T23:16:22.282Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T23:16:22.287Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T23:16:22.481Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T23:16:23.434Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T23:16:47.292Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T23:16:47.317Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T23:16:47.773Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T23:16:49.325Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T23:39:48.717Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T23:39:48.722Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-23T23:39:48.850Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-23T23:39:49.225Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-23T23:39:49.227Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-23T23:39:49.228Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-23T23:39:49.228Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-23T23:39:49.228Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-23T23:42:04.688Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T23:42:14.557Z] [INFO] [SHOP] Shop already has 6 items. Skipping seeding.
+[2025-06-23T23:50:43.679Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-23T23:50:52.326Z] [INFO] [SHOP] Shop already has 6 items. Skipping seeding.
+[2025-06-24T00:15:31.164Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-24T00:15:31.168Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-24T00:15:31.292Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-24T00:15:31.723Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-24T00:22:30.032Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-24T00:22:40.525Z] [INFO] [SHOP] Shop already has 6 items. Skipping seeding.
+[2025-06-24T01:04:15.601Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-24T01:04:25.065Z] [INFO] [SHOP] Shop already has 6 items. Skipping seeding.

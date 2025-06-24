@@ -1,5 +1,5 @@
 import { db } from "../../db";
-import { forumCategories, threads, posts, users } from "../../db/schema"; // Ensure posts, threads, users imported
+import { forumStructure, threads, posts, users } from "../../db/schema"; // Ensure posts, threads, users imported
 import { eq } from "drizzle-orm";
 import { forumMap, DEFAULT_FORUM_RULES } from "../../client/src/config/forumMap.config"; // Import DEFAULT_FORUM_RULES
 // import { eq } from "drizzle-orm"; // No longer used directly
@@ -174,10 +174,10 @@ async function seedForumLevel(
     };
 
     const result = await tx
-      .insert(forumCategories)
+      .insert(forumStructure)
       .values(forumValues)
-      .onConflictDoUpdate({ target: forumCategories.slug, set: forumValues })
-      .returning({ id: forumCategories.id });
+      .onConflictDoUpdate({ target: forumStructure.slug, set: forumValues })
+      .returning({ id: forumStructure.id });
     
     const newForumDbId = result[0]?.id;
 
@@ -192,7 +192,7 @@ async function seedForumLevel(
       const existingThreads = await tx
         .select({ id: threads.id })
         .from(threads)
-        .where(eq(threads.categoryId, newForumDbId))
+        .where(eq(threads.structureId, newForumDbId))
         .limit(1);
       if (existingThreads.length === 0) {
         const threadSlug = `${forumConfig.slug}-welcome`;
@@ -201,7 +201,7 @@ async function seedForumLevel(
         const [welcomeThread] = await tx.insert(threads).values({
           title: welcomeContent.title,
           slug: threadSlug,
-          categoryId: newForumDbId,
+          structureId: newForumDbId,
           userId: defaultUserId,
           isSticky: true
         }).onConflictDoNothing().returning();
@@ -238,7 +238,7 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
     // Order matters for foreign key constraints if they exist and are enforced during delete
     await tx.delete(posts);
     await tx.delete(threads);
-    await tx.delete(forumCategories);
+    await tx.delete(forumStructure);
     console.log(chalk.green("Tables truncated within transaction."));
   }
 
@@ -316,10 +316,10 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
     };
     
     const result = await tx
-      .insert(forumCategories)
+      .insert(forumStructure)
       .values(zoneValues)
-      .onConflictDoUpdate({ target: forumCategories.slug, set: zoneValues })
-      .returning({ id: forumCategories.id });
+      .onConflictDoUpdate({ target: forumStructure.slug, set: zoneValues })
+      .returning({ id: forumStructure.id });
 
     const zoneDbId = result[0]?.id;
     if (!zoneDbId) {

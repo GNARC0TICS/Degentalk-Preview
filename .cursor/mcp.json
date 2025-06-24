@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "Neon": {
+      "command": "npx",
+      "args": ["-y", "@neondatabase/mcp-server-neon", "start", "napi_64010heeqqly1w5t5eg1dpjposfjcqpdg0lu4bc7yvnci0vh7qyivoo04i3j036x"]
+    },
+    "BraveSearch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-brave-search"]
+    }
+  }
+}

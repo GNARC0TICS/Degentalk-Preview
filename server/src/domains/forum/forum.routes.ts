@@ -13,6 +13,7 @@ import { users, threadPrefixes, tags } from '@schema';
 import { eq, ilike, asc } from 'drizzle-orm';
 import { isAuthenticated as requireAuth } from '../auth/middleware/auth.middleware';
 import { logger } from '@server/src/core/logger';
+import { forumStructureService } from './services/structure.service';
 
 // Import specialized route modules
 import threadRoutes from './routes/thread.routes';
@@ -31,6 +32,28 @@ router.use('/bookmarks', bookmarkRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/rules', rulesRoutes);
 router.use('/reports', reportsRoutes);
+
+// ------------------------------------------------------------------
+// FLAT FORUM STRUCTURE ENDPOINT  ✨
+//
+// Returns `{ zones, forums }` without any deprecated "categories" path so
+// the client can call `/api/forum/structure` directly.
+// ------------------------------------------------------------------
+
+router.get('/structure', async (req: Request, res: Response) => {
+	try {
+		const structures = await forumStructureService.getStructuresWithStats();
+		const zones = structures.filter((s) => s.type === 'zone');
+		const forums = structures.filter((s) => s.type === 'forum');
+		return res.json({ zones, forums });
+	} catch (error) {
+		logger.error('ForumRoutes', 'Error in GET /structure', { error });
+		return res.status(500).json({
+			success: false,
+			error: 'Failed to fetch forum structure'
+		});
+	}
+});
 
 // Validation schemas for remaining endpoints
 const userSearchSchema = z.object({
@@ -135,6 +158,45 @@ router.get('/health', (req: Request, res: Response) => {
 		message: 'Forum API is healthy',
 		timestamp: new Date().toISOString()
 	});
+});
+
+// ------------------------------------------------------------------
+// LIST THREADS BY FORUM ID (flat model)
+// ------------------------------------------------------------------
+
+router.get('/forums/:id/threads', async (req: Request, res: Response) => {
+	try {
+		const forumId = parseInt(req.params.id);
+		const page = parseInt(req.query.page as string) || 1;
+		const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
+		const sortBy = (req.query.sort as string) || 'newest';
+		const search = req.query.search as string;
+
+		const result = await threadService.searchThreads({
+			categoryId: forumId, // threadService still uses categoryId internally
+			page,
+			limit,
+			sortBy: sortBy as any,
+			search
+		});
+
+		return res.json({
+			success: true,
+			data: result,
+			pagination: {
+				page,
+				limit,
+				total: result.total,
+				totalPages: result.totalPages
+			}
+		});
+	} catch (error) {
+		logger.error('ForumRoutes', 'Error in GET /forums/:id/threads', { error });
+		return res.status(500).json({
+			success: false,
+			error: 'Failed to fetch threads'
+		});
+	}
 });
 
 export default router;

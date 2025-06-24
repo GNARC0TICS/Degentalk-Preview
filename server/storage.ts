@@ -2,7 +2,7 @@ import {
 	users,
 	posts,
 	threads,
-	forumCategories,
+	forumStructure,
 	threadTags,
 	tags,
 	postReactions,
@@ -31,8 +31,8 @@ import {
 	type InsertThread,
 	type Post,
 	type InsertPost,
-	type ForumCategory,
-	type InsertForumCategory,
+	type ForumStructureNode,
+	type NewForumStructureNode,
 	type CustomEmoji,
 	type InsertCustomEmoji,
 	type Notification,
@@ -55,8 +55,13 @@ import {
 } from '@schema';
 import { db, pool } from '@db';
 import { and, eq, desc, sql, count, isNull, not, inArray, ne, lte } from 'drizzle-orm';
-import type { ForumCategoryWithStats, ThreadWithUser } from '../db/types/forum.types.ts';
+import type {
+	ForumStructureWithStats,
+	ThreadWithUser,
+	PostWithUser
+} from '../db/types/forum.types.ts';
 import type { UserPluginData } from '../db/types/user.types.ts';
+import type { EmojiWithAvailability } from '../db/types/emoji.types.ts';
 import session from 'express-session';
 import connectPGSink from 'connect-pg-simple';
 import { randomBytes, scrypt } from 'crypto';
@@ -106,15 +111,15 @@ export interface IStorage {
 	getUserRuleAgreements(userId: number): Promise<UserRulesAgreement[]>;
 	agreeToRule(userId: number, ruleId: number, versionHash: string): Promise<void>;
 
-	// Forum category methods
-	getCategories(): Promise<ForumCategoryWithStats[]>;
-	getCategory(id: number): Promise<ForumCategoryWithStats | undefined>;
-	getCategoryBySlug(slug: string): Promise<ForumCategoryWithStats | undefined>;
-	createCategory(category: InsertForumCategory): Promise<ForumCategory>;
+	// Forum structure methods
+	getStructures(): Promise<ForumStructureWithStats[]>;
+	getStructure(id: number): Promise<ForumStructureWithStats | undefined>;
+	getStructureBySlug(slug: string): Promise<ForumStructureWithStats | undefined>;
+	createStructure(structure: NewForumStructureNode): Promise<ForumStructureNode>;
 
 	// Thread methods
 	getThreads(
-		categoryId?: number,
+		structureId?: number,
 		limit?: number,
 		offset?: number,
 		sortBy?: string
@@ -126,7 +131,7 @@ export interface IStorage {
 
 	// Thread draft methods
 	getDraft(id: number): Promise<ThreadDraft | undefined>;
-	getDraftsByUser(userId: number, categoryId?: number): Promise<ThreadDraft[]>;
+	getDraftsByUser(userId: number, structureId?: number): Promise<ThreadDraft[]>;
 	saveDraft(draft: InsertThreadDraft): Promise<ThreadDraft>;
 	updateDraft(id: number, data: Partial<ThreadDraft>): Promise<ThreadDraft>;
 	deleteDraft(id: number): Promise<void>;
@@ -402,105 +407,108 @@ export class DatabaseStorage implements IStorage {
 	}
 
 	// Forum category methods
-	async getCategories(): Promise<ForumCategoryWithStats[]> {
-		const categories = await db
+	async getStructures(): Promise<ForumStructureWithStats[]> {
+		const structures = await db
 			.select({
-				...forumCategories,
+				...forumStructure,
 				threadCount: count(threads.id).as('thread_count')
 			})
-			.from(forumCategories)
-			.leftJoin(threads, eq(forumCategories.id, threads.categoryId))
-			.groupBy(forumCategories.id)
-			.orderBy(forumCategories.position);
+			.from(forumStructure)
+			.leftJoin(threads, eq(forumStructure.id, threads.structureId))
+			.groupBy(forumStructure.id)
+			.orderBy(forumStructure.position);
 
-		// Convert to ForumCategoryWithStats type
-		const categoriesWithStats: ForumCategoryWithStats[] = categories.map((category) => ({
-			...category,
-			threadCount: Number(category.threadCount) || 0,
+		// Convert to ForumStructureWithStats type
+		const structuresWithStats: ForumStructureWithStats[] = structures.map((structure) => ({
+			...structure,
+			threadCount: Number(structure.threadCount) || 0,
 			postCount: 0, // We'll update this with a separate query
-			children: [] as ForumCategoryWithStats[] // Initialize children array
+			childStructures: [] as ForumStructureWithStats[], // Initialize children array
+			canHaveThreads: structure.type === 'forum'
 		}));
 
 		// Create a map for quick lookup
-		const categoryMap = new Map<number, ForumCategoryWithStats>();
-		categoriesWithStats.forEach((category) => {
-			categoryMap.set(category.id, category);
+		const structureMap = new Map<number, ForumStructureWithStats>();
+		structuresWithStats.forEach((structure) => {
+			structureMap.set(structure.id, structure);
 		});
 
 		// Organize into parent-child hierarchy
-		const rootCategories: ForumCategoryWithStats[] = [];
+		const rootStructures: ForumStructureWithStats[] = [];
 
 		// Populate children arrays
-		categoriesWithStats.forEach((category) => {
-			if (category.parentId === null) {
-				// This is a root category
-				rootCategories.push(category);
+		structuresWithStats.forEach((structure) => {
+			if (structure.parentId === null) {
+				// This is a root structure (zone)
+				rootStructures.push(structure);
 			} else {
-				// This is a child category
-				const parent = categoryMap.get(category.parentId);
+				// This is a child structure (forum)
+				const parent = structureMap.get(structure.parentId);
 				if (parent) {
 					// Add it to its parent's children array if parent exists
-					(parent.children || (parent.children = [])).push(category);
+					(parent.childStructures || (parent.childStructures = [])).push(structure);
 				} else {
-					// If parent doesn't exist, treat as root category
-					rootCategories.push(category);
+					// If parent doesn't exist, treat as root structure
+					rootStructures.push(structure);
 				}
 			}
 		});
 
-		// For the API endpoint, we want a flat structure with all categories
-		return categoriesWithStats;
+		// For the API endpoint, we want a flat structure with all structures
+		return structuresWithStats;
 	}
 
-	async getCategory(id: number): Promise<ForumCategoryWithStats | undefined> {
-		const [category] = await db
+	async getStructure(id: number): Promise<ForumStructureWithStats | undefined> {
+		const [structure] = await db
 			.select({
-				...forumCategories,
+				...forumStructure,
 				threadCount: count(threads.id).as('thread_count')
 			})
-			.from(forumCategories)
-			.leftJoin(threads, eq(forumCategories.id, threads.categoryId))
-			.where(eq(forumCategories.id, id))
-			.groupBy(forumCategories.id);
+			.from(forumStructure)
+			.leftJoin(threads, eq(forumStructure.id, threads.structureId))
+			.where(eq(forumStructure.id, id))
+			.groupBy(forumStructure.id);
 
-		if (!category) return undefined;
+		if (!structure) return undefined;
 
 		return {
-			...category,
-			threadCount: Number(category.threadCount) || 0,
-			postCount: 0 // We'll update this with a separate query
+			...structure,
+			threadCount: Number(structure.threadCount) || 0,
+			postCount: 0, // We'll update this with a separate query
+			canHaveThreads: structure.type === 'forum'
 		};
 	}
 
-	async getCategoryBySlug(slug: string): Promise<ForumCategoryWithStats | undefined> {
-		const [category] = await db
+	async getStructureBySlug(slug: string): Promise<ForumStructureWithStats | undefined> {
+		const [structure] = await db
 			.select({
-				...forumCategories,
+				...forumStructure,
 				threadCount: count(threads.id).as('thread_count')
 			})
-			.from(forumCategories)
-			.leftJoin(threads, eq(forumCategories.id, threads.categoryId))
-			.where(eq(forumCategories.slug, slug))
-			.groupBy(forumCategories.id);
+			.from(forumStructure)
+			.leftJoin(threads, eq(forumStructure.id, threads.structureId))
+			.where(eq(forumStructure.slug, slug))
+			.groupBy(forumStructure.id);
 
-		if (!category) return undefined;
+		if (!structure) return undefined;
 
 		return {
-			...category,
-			threadCount: Number(category.threadCount) || 0,
-			postCount: 0 // We'll update this with a separate query
+			...structure,
+			threadCount: Number(structure.threadCount) || 0,
+			postCount: 0, // We'll update this with a separate query
+			canHaveThreads: structure.type === 'forum'
 		};
 	}
 
-	async createCategory(category: InsertForumCategory): Promise<ForumCategory> {
-		const [newCategory] = await db
-			.insert(forumCategories)
+	async createStructure(structure: NewForumStructureNode): Promise<ForumStructureNode> {
+		const [newStructure] = await db
+			.insert(forumStructure)
 			.values({
-				...category,
+				...structure,
 				updatedAt: new Date()
 			})
 			.returning();
-		return newCategory;
+		return newStructure;
 	}
 
 	// Thread methods
@@ -603,7 +611,7 @@ export class DatabaseStorage implements IStorage {
 				.values({
 					title: thread.title,
 					slug: `${slug}-${Date.now()}`, // Ensure uniqueness
-					categoryId: thread.categoryId,
+					structureId: thread.structureId,
 					userId: thread.userId,
 					prefixId: thread.prefixId,
 					updatedAt: new Date()
@@ -655,7 +663,7 @@ export class DatabaseStorage implements IStorage {
 		return draft;
 	}
 
-	async getDraftsByUser(userId: number, categoryId?: number): Promise<ThreadDraft[]> {
+	async getDraftsByUser(userId: number, structureId?: number): Promise<ThreadDraft[]> {
 		const query = db
 			.select()
 			.from(threadDrafts)
@@ -663,7 +671,7 @@ export class DatabaseStorage implements IStorage {
 				and(
 					eq(threadDrafts.userId, userId),
 					eq(threadDrafts.isPublished, false),
-					...(categoryId ? [eq(threadDrafts.categoryId, categoryId)] : [])
+					...(structureId ? [eq(threadDrafts.structureId, structureId)] : [])
 				)
 			)
 			.orderBy(desc(threadDrafts.lastSavedAt));
