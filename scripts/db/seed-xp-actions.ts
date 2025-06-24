@@ -63,6 +63,13 @@ const DEFAULT_XP_ACTIONS = [
     cooldownSec: 604800, // One week
   },
   {
+    action: XP_ACTION.FRAME_EQUIPPED,
+    baseValue: 5,
+    description: 'XP for equipping an avatar frame',
+    maxPerDay: 50,
+    cooldownSec: null,
+  },
+  {
     action: 'DICTIONARY_ENTRY_SUBMITTED',
     baseValue: 5,
     description: 'XP for submitting dictionary entry',

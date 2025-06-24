@@ -1,5 +1,5 @@
 import React from 'react';
-import { ForumPage as ForumPageComponent } from '@/components/forum/enhanced';
+import { ForumPage as ForumPageComponent } from '@/components/forum';
 
 /**
  * Forum Page Route Handler

@@ -17,7 +17,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
-import { MobileForumNavigation } from '@/components/forum/enhanced';
+import MobileForumNavigation from '@/components/forum/enhanced/MobileForumNavigation';
 import HierarchicalZoneNav from '@/features/forum/components/HierarchicalZoneNav';
 
 export interface ResponsiveForumLayoutProps {

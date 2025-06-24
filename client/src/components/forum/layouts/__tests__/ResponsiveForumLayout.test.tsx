@@ -25,8 +25,8 @@ vi.mock('@/hooks/useMediaQuery', () => ({
 	})
 }));
 
-vi.mock('@/components/forum/enhanced', () => ({
-	MobileForumNavigation: () => <div data-testid="mobile-navigation">Mobile Nav</div>
+vi.mock('@/components/forum/enhanced/MobileForumNavigation', () => ({
+	default: () => <div data-testid="mobile-navigation">Mobile Nav</div>
 }));
 
 vi.mock('@/features/forum/components/HierarchicalZoneNav', () => ({

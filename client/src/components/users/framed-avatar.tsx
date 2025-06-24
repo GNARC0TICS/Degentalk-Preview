@@ -60,7 +60,7 @@ export function FramedAvatar({
 	};
 
 	return (
-		<div className={cn('relative inline-block', className)}>
+		<div data-testid="framed-avatar" className={cn('relative inline-block', className)}>
 			{/* Frame (if available) */}
 			{frameUrl && (
 				<img

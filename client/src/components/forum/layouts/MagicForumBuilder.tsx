@@ -35,12 +35,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-import {
-	EnhancedThreadCard,
-	EnhancedZoneCard,
-	CryptoEngagementBar,
-	QuickReactions
-} from '@/components/forum/enhanced';
+import ThreadCard from '@/components/forum/ThreadCard';
+import ZoneCard from '@/components/forum/ZoneCard';
+import CryptoEngagementBar from '@/components/forum/enhanced/CryptoEngagementBar';
+import QuickReactions from '@/components/forum/enhanced/QuickReactions';
 
 export interface MagicForumBuilderProps {
 	onSave?: (config: ForumLayoutConfig) => void;
@@ -647,7 +645,7 @@ const MagicForumBuilder = memo(
 										}
 										className="space-y-3"
 									>
-										<EnhancedThreadCard
+										<ThreadCard
 											thread={thread}
 											variant={config.cardVariant}
 											onTip={(id, amount) => console.log('Tip:', id, amount)}

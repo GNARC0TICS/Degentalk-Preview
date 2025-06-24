@@ -242,6 +242,12 @@ export class DGTService {
 		}
 	}
 
+	/** @deprecated – use debitDGT */
+	async deductDGT(...args: Parameters<this['debitDGT']>): Promise<ReturnType<this['debitDGT']>> {
+		// eslint-disable-next-line prefer-spread
+		return this.debitDGT.apply(this, args as any);
+	}
+
 	/**
 	 * Transfer DGT between users
 	 */

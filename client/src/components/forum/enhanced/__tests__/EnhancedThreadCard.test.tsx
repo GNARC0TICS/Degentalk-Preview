@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { EnhancedThreadCard } from '../EnhancedThreadCard';
-import type { EnhancedThreadCardProps } from '../EnhancedThreadCard';
+import ThreadCard from '../../ThreadCard';
+import type { ThreadCardProps } from '../../ThreadCard';
 
 // Mock framer-motion to avoid animation issues in tests
 vi.mock('framer-motion', () => ({
@@ -17,8 +17,8 @@ vi.mock('wouter', () => ({
 	Link: ({ children, href }: any) => <a href={href}>{children}</a>
 }));
 
-describe('EnhancedThreadCard', () => {
-	const mockThread: EnhancedThreadCardProps['thread'] = {
+describe('ThreadCard', () => {
+	const mockThread: ThreadCardProps['thread'] = {
 		id: '1',
 		title: 'Test Thread: Crypto Market Analysis',
 		slug: 'test-thread-crypto',
@@ -64,9 +64,7 @@ describe('EnhancedThreadCard', () => {
 	});
 
 	it('renders thread card with basic information', () => {
-		render(
-			<EnhancedThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
-		);
+		render(<ThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />);
 
 		expect(screen.getByText('Test Thread: Crypto Market Analysis')).toBeInTheDocument();
 		expect(screen.getByText('CryptoTrader')).toBeInTheDocument();
@@ -75,25 +73,19 @@ describe('EnhancedThreadCard', () => {
 	});
 
 	it('displays hot badge when thread is hot', () => {
-		render(
-			<EnhancedThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
-		);
+		render(<ThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />);
 
 		expect(screen.getByText('HOT')).toBeInTheDocument();
 	});
 
 	it('shows engagement metrics when available', () => {
-		render(
-			<EnhancedThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
-		);
+		render(<ThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />);
 
 		expect(screen.getByText('45 DGT')).toBeInTheDocument();
 	});
 
 	it('displays user verification badge', () => {
-		render(
-			<EnhancedThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
-		);
+		render(<ThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />);
 
 		// Look for Crown icon (verified badge)
 		const verifiedIcon = screen.getByRole('img', { hidden: true });
@@ -102,7 +94,7 @@ describe('EnhancedThreadCard', () => {
 
 	it('shows excerpt on hover when showPreview is true', async () => {
 		const { container } = render(
-			<EnhancedThreadCard
+			<ThreadCard
 				thread={mockThread}
 				showPreview={true}
 				onTip={mockOnTip}
@@ -121,7 +113,7 @@ describe('EnhancedThreadCard', () => {
 
 	it('displays tags when available', async () => {
 		const { container } = render(
-			<EnhancedThreadCard
+			<ThreadCard
 				thread={mockThread}
 				showPreview={true}
 				onTip={mockOnTip}
@@ -141,7 +133,7 @@ describe('EnhancedThreadCard', () => {
 
 	it('handles tip button click', async () => {
 		const { container } = render(
-			<EnhancedThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
+			<ThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
 		);
 
 		// Simulate hover to show actions
@@ -157,7 +149,7 @@ describe('EnhancedThreadCard', () => {
 
 	it('handles bookmark button click', async () => {
 		const { container } = render(
-			<EnhancedThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
+			<ThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
 		);
 
 		// Simulate hover to show actions
@@ -174,7 +166,7 @@ describe('EnhancedThreadCard', () => {
 
 	it('renders different variants correctly', () => {
 		const { rerender } = render(
-			<EnhancedThreadCard
+			<ThreadCard
 				thread={mockThread}
 				variant="compact"
 				onTip={mockOnTip}
@@ -188,7 +180,7 @@ describe('EnhancedThreadCard', () => {
 
 		// Test featured variant
 		rerender(
-			<EnhancedThreadCard
+			<ThreadCard
 				thread={mockThread}
 				variant="featured"
 				onTip={mockOnTip}
@@ -203,7 +195,7 @@ describe('EnhancedThreadCard', () => {
 
 	it('applies zone-specific theme colors', () => {
 		const { container } = render(
-			<EnhancedThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
+			<ThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
 		);
 
 		const card = container.querySelector('.group');
@@ -212,9 +204,7 @@ describe('EnhancedThreadCard', () => {
 	});
 
 	it('displays prefix badge when available', () => {
-		render(
-			<EnhancedThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
-		);
+		render(<ThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />);
 
 		expect(screen.getByText('Discussion')).toBeInTheDocument();
 	});
@@ -226,26 +216,20 @@ describe('EnhancedThreadCard', () => {
 			isLocked: true
 		};
 
-		render(
-			<EnhancedThreadCard thread={stickyThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
-		);
+		render(<ThreadCard thread={stickyThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />);
 
 		expect(screen.getByText('Pinned')).toBeInTheDocument();
 		expect(screen.getByText('Locked')).toBeInTheDocument();
 	});
 
 	it('displays momentum indicator', () => {
-		render(
-			<EnhancedThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
-		);
+		render(<ThreadCard thread={mockThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />);
 
 		expect(screen.getByText('Trending')).toBeInTheDocument();
 	});
 
 	it('does not show tip button when onTip is not provided', async () => {
-		const { container } = render(
-			<EnhancedThreadCard thread={mockThread} onBookmark={mockOnBookmark} />
-		);
+		const { container } = render(<ThreadCard thread={mockThread} onBookmark={mockOnBookmark} />);
 
 		// Simulate hover
 		const card = container.querySelector('.group');
@@ -276,9 +260,7 @@ describe('EnhancedThreadCard', () => {
 			}
 		};
 
-		render(
-			<EnhancedThreadCard thread={minimalThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />
-		);
+		render(<ThreadCard thread={minimalThread} onTip={mockOnTip} onBookmark={mockOnBookmark} />);
 
 		expect(screen.getByText('Minimal Thread')).toBeInTheDocument();
 		expect(screen.getByText('BasicUser')).toBeInTheDocument();

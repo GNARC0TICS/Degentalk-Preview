@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, memo } from 'react';
 import { useParams, useLocation } from 'wouter';
 import { motion } from 'framer-motion';
 import { Plus, Filter, Search, TrendingUp, Clock, MessageSquare } from 'lucide-react';
@@ -12,16 +12,14 @@ import { apiRequest } from '@/lib/queryClient';
 import { API_ROUTES } from '@/constants/apiRoutes';
 
 import { ResponsiveForumLayout, AdaptiveForumGrid } from '@/components/forum/layouts';
-import {
-	EnhancedThreadCard,
-	CryptoEngagementBar,
-	QuickReactions,
-	MobileForumNavigation
-} from '@/components/forum/enhanced';
+import ThreadCard from '@/components/forum/ThreadCard';
+import CryptoEngagementBar from '@/components/forum/enhanced/CryptoEngagementBar';
+import QuickReactions from '@/components/forum/enhanced/QuickReactions';
+import MobileForumNavigation from '@/components/forum/enhanced/MobileForumNavigation';
 import { ThreadFilters } from '@/components/forum/ThreadFilters';
 import { BreadcrumbNav } from '@/components/forum/breadcrumb-nav';
 
-export interface EnhancedForumPageProps {
+export interface ForumPageProps {
 	className?: string;
 }
 
@@ -81,7 +79,7 @@ interface ThreadData {
 	}>;
 }
 
-const EnhancedForumPage = memo(({ className }: EnhancedForumPageProps) => {
+const ForumPage = memo(({ className }: ForumPageProps) => {
 	const params = useParams<{ slug?: string }>();
 	const [location] = useLocation();
 	const forumSlug = params?.slug;
@@ -102,16 +100,11 @@ const EnhancedForumPage = memo(({ className }: EnhancedForumPageProps) => {
 		queryKey: [API_ROUTES.forums.threadsByForum(forum?.id ?? 'none'), sortBy, searchQuery],
 		queryFn: async () => {
 			if (!forum?.id) return [];
-
 			const response = await apiRequest<ThreadData[]>({
 				url: API_ROUTES.forums.threadsByForum(forum.id),
 				method: 'GET',
-				params: {
-					sort: sortBy,
-					search: searchQuery
-				}
+				params: { sort: sortBy, search: searchQuery }
 			});
-
 			return response || [];
 		},
 		enabled: !!forum?.id
@@ -126,17 +119,11 @@ const EnhancedForumPage = memo(({ className }: EnhancedForumPageProps) => {
 			transition={{ delay: index * 0.05 }}
 			className="space-y-3"
 		>
-			<EnhancedThreadCard
+			<ThreadCard
 				thread={thread}
 				variant={layout === 'grid' ? 'compact' : 'default'}
-				onTip={(threadId, amount) => {
-					console.log('Tip thread:', threadId, amount);
-					// TODO: Implement tipping
-				}}
-				onBookmark={(threadId) => {
-					console.log('Bookmark thread:', threadId);
-					// TODO: Implement bookmarking
-				}}
+				onTip={(threadId, amount) => console.log('Tip thread:', threadId, amount)}
+				onBookmark={(threadId) => console.log('Bookmark thread:', threadId)}
 			/>
 
 			{thread.engagement && (
@@ -159,7 +146,6 @@ const EnhancedForumPage = memo(({ className }: EnhancedForumPageProps) => {
 		</motion.div>
 	);
 
-	// Breadcrumb items
 	const breadcrumbItems = [
 		...(parentZone
 			? [
@@ -170,17 +156,9 @@ const EnhancedForumPage = memo(({ className }: EnhancedForumPageProps) => {
 					}
 				]
 			: []),
-		...(forum
-			? [
-					{
-						label: forum.name,
-						href: `/forums/${forum.slug}`
-					}
-				]
-			: [])
+		...(forum ? [{ label: forum.name, href: `/forums/${forum.slug}` }] : [])
 	];
 
-	// Sort options
 	const sortOptions = [
 		{ value: 'latest', label: 'Latest Activity' },
 		{ value: 'popular', label: 'Most Popular' },
@@ -190,10 +168,8 @@ const EnhancedForumPage = memo(({ className }: EnhancedForumPageProps) => {
 		{ value: 'oldest', label: 'Oldest First' }
 	];
 
-	// Forum header content
 	const forumHeader = forum && (
 		<div className="space-y-4">
-			{/* Forum Title & Stats */}
 			<div className="flex items-start justify-between">
 				<div className="space-y-2">
 					<div className="flex items-center gap-3">
@@ -207,7 +183,6 @@ const EnhancedForumPage = memo(({ className }: EnhancedForumPageProps) => {
 							<p className="text-zinc-400">{forum.description}</p>
 						</div>
 					</div>
-
 					<div className="flex items-center gap-4 text-sm text-zinc-400">
 						<div className="flex items-center gap-1">
 							<MessageSquare className="w-4 h-4" />
@@ -218,15 +193,11 @@ const EnhancedForumPage = memo(({ className }: EnhancedForumPageProps) => {
 						</div>
 					</div>
 				</div>
-
-				{/* Create Thread Button */}
 				<Button className="bg-emerald-600 hover:bg-emerald-700">
 					<Plus className="w-4 h-4 mr-2" />
 					New Thread
 				</Button>
 			</div>
-
-			{/* Search & Quick Filters */}
 			<div className="flex items-center gap-3">
 				<div className="relative flex-1 max-w-md">
 					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-zinc-400" />
@@ -237,7 +208,6 @@ const EnhancedForumPage = memo(({ className }: EnhancedForumPageProps) => {
 						className="pl-10 bg-zinc-800/50 border-zinc-700/50"
 					/>
 				</div>
-
 				<div className="flex items-center gap-2">
 					<Badge
 						variant="outline"
@@ -256,7 +226,6 @@ const EnhancedForumPage = memo(({ className }: EnhancedForumPageProps) => {
 						Latest
 					</Badge>
 				</div>
-
 				<Button
 					variant="ghost"
 					size="sm"
@@ -270,16 +239,12 @@ const EnhancedForumPage = memo(({ className }: EnhancedForumPageProps) => {
 		</div>
 	);
 
-	// Thread filters component
 	const threadFilters = (
 		<ThreadFilters
 			forumSlug={forumSlug || ''}
 			availableTags={[]}
 			availablePrefixes={[]}
-			onFiltersChange={(filters) => {
-				console.log('Filters changed:', filters);
-				// TODO: Apply filters
-			}}
+			onFiltersChange={(filters) => console.log('Filters changed:', filters)}
 		/>
 	);
 
@@ -328,6 +293,6 @@ const EnhancedForumPage = memo(({ className }: EnhancedForumPageProps) => {
 	);
 });
 
-EnhancedForumPage.displayName = 'EnhancedForumPage';
+ForumPage.displayName = 'ForumPage';
 
-export default EnhancedForumPage;
+export default ForumPage;

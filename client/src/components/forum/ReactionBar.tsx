@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { QuickReactions } from '@/components/forum/enhanced';
+import QuickReactions from '@/components/forum/enhanced/QuickReactions';
 import {
 	Heart,
 	ThumbsUp,

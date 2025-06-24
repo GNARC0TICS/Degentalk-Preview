@@ -46,7 +46,7 @@ import { useForumTheme } from '@/contexts/ForumThemeProvider';
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
 import { motion } from 'framer-motion'; // Added Framer Motion import
 import BackToHomeButton from '@/components/common/BackToHomeButton';
-import { ZoneCard } from '@/components/forum/ZoneCard'; // Import ZoneCard
+import ZoneCard from '@/components/forum/ZoneCard';
 import {
 	Accordion,
 	AccordionItem,
@@ -159,23 +159,43 @@ const ForumPage = () => {
 		return (
 			<ZoneCard
 				key={zone.id.toString()}
-				id={zone.id}
-				name={zone.name}
-				slug={zone.slug}
-				description={zone.description || ''}
-				icon={zone.icon}
-				colorTheme={zone.colorTheme || 'default'}
-				themeColor={zone.color}
-				threadCount={zone.threadCount}
-				postCount={zone.postCount}
-				activeUsersCount={0} // Could be populated if available
-				lastActivityAt={zone.updatedAt ? new Date(zone.updatedAt) : undefined}
-				hasXpBoost={zone.hasXpBoost}
-				boostMultiplier={zone.boostMultiplier}
-				isEventActive={false} // Could be populated if available
-				layout="horizontal"
+				zone={{
+					id: String(zone.id),
+					name: zone.name,
+					slug: zone.slug,
+					description: zone.description || '',
+					icon: zone.icon ?? undefined,
+					colorTheme: zone.colorTheme || 'default',
+					stats: {
+						activeUsers: 0,
+						totalThreads: zone.threadCount ?? 0,
+						totalPosts: zone.postCount ?? 0,
+						todaysPosts: 0
+					},
+					features: {
+						hasXpBoost: zone.hasXpBoost,
+						boostMultiplier: zone.boostMultiplier,
+						isEventActive: false,
+						isPremium: false
+					},
+					activity: zone.updatedAt
+						? {
+							trendingThreads: 0,
+							momentum: 'stable',
+							lastActiveUser: undefined
+						}
+						: undefined,
+					forums: zone.forums?.map((f) => ({
+						id: String(f.id),
+						name: f.name,
+						threadCount: f.threadCount,
+						isPopular: f.threadCount > 100
+					}))
+				}}
+				layout="compact"
+				showPreview={true}
 				className="flex-shrink-0 w-full max-w-md"
-				onClick={() => zone.colorTheme && setActiveTheme(zone.colorTheme)}
+				onEnter={() => zone.colorTheme && setActiveTheme(zone.colorTheme)}
 			/>
 		);
 	};

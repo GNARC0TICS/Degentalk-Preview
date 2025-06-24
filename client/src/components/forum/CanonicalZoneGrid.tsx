@@ -13,7 +13,7 @@ import { motion } from 'framer-motion';
 // 	Folder
 // } from 'lucide-react';
 import type { ForumTheme } from '@/config/forumMap.config';
-import { ZoneCard } from '@/components/forum/ZoneCard'; // Import external ZoneCard
+import ZoneCard from '@/components/forum/ZoneCard';
 
 export interface ZoneCardData {
 	id: string | number;
@@ -123,27 +123,41 @@ export function CanonicalZoneGrid({
 					) : (
 						// Use the imported ZoneCard component
 						<ZoneCard
-							id={cardData.id}
-							name={cardData.name}
-							slug={cardData.slug}
-							description={cardData.description}
-							icon={cardData.icon === null ? undefined : cardData.icon} // Handle null icon
-							colorTheme={cardData.colorTheme || 'default'} // Use the direct semantic colorTheme from cardData
-							themeColor={cardData.theme?.color} // Pass actual theme color for dynamic styling
-							threadCount={cardData.threadCount}
-							postCount={cardData.postCount}
-							activeUsersCount={cardData.activeUsersCount}
-							lastActivityAt={cardData.lastActivityAt}
-							hasXpBoost={cardData.hasXpBoost}
-							boostMultiplier={cardData.boostMultiplier}
-							isEventActive={cardData.isEventActive}
-							eventData={cardData.eventData}
-							forumCount={(cardData as any).forumCount}
-							forums={cardData.forums}
-							showForumPreviews={true}
-							layout="horizontal"
-							// rarity is not in ZoneCardData, ZoneCard will use its default
-							// className can be passed if needed, or ZoneCard handles its own styling
+							zone={{
+								id: String(cardData.id),
+								name: cardData.name,
+								slug: cardData.slug,
+								description: cardData.description,
+								icon: cardData.icon ?? undefined,
+								colorTheme: cardData.colorTheme || 'default',
+								stats: {
+									activeUsers: cardData.activeUsersCount ?? 0,
+									totalThreads: cardData.threadCount ?? 0,
+									totalPosts: cardData.postCount ?? 0,
+									todaysPosts: 0
+								},
+								features: {
+									hasXpBoost: cardData.hasXpBoost,
+									boostMultiplier: cardData.boostMultiplier,
+									isEventActive: cardData.isEventActive,
+									isPremium: false
+								},
+								activity: cardData.lastActivityAt
+									? {
+											trendingThreads: 0,
+											momentum: 'stable',
+											lastActiveUser: undefined
+									  }
+									: undefined,
+								forums: cardData.forums?.map((f) => ({
+									id: String(f.id),
+									name: f.name,
+									threadCount: f.threadCount,
+									isPopular: f.threadCount > 100
+								}))
+							}}
+							layout="compact"
+							showPreview={true}
 						/>
 					)}
 				</motion.div>

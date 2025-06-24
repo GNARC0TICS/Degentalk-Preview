@@ -61,6 +61,10 @@ const AdaptiveForumGrid = memo(
 		loadingSkeletons = 6,
 		className
 	}: AdaptiveForumGridProps<T>) => {
+		// Ensure items is always an array to avoid runtime errors when callers pass
+		// an object or undefined (e.g. from failed API calls).
+		const safeItems = Array.isArray(items) ? items : ([] as T[]);
+
 		const [currentLayout, setCurrentLayout] = useState<'grid' | 'list' | 'masonry'>(
 			layout === 'auto' ? 'list' : layout
 		);
@@ -98,18 +102,18 @@ const AdaptiveForumGrid = memo(
 
 		// Calculate masonry columns
 		useEffect(() => {
-			if (currentLayout === 'masonry' && items.length > 0) {
+			if (currentLayout === 'masonry' && safeItems.length > 0) {
 				const columnCount = getColumnCount();
 				const newColumns: Array<T[]> = Array.from({ length: columnCount }, () => []);
 
-				items.forEach((item, index) => {
+				safeItems.forEach((item, index) => {
 					const columnIndex = index % columnCount;
 					newColumns[columnIndex].push(item);
 				});
 
 				setMasonryColumns(newColumns);
 			}
-		}, [items, currentLayout, breakpoint, containerWidth]);
+		}, [safeItems, currentLayout, breakpoint, containerWidth]);
 
 		const getColumnCount = () => {
 			if (breakpoint.isMobile) return columns.mobile;
@@ -125,7 +129,7 @@ const AdaptiveForumGrid = memo(
 
 		// Virtualization for list layout
 		const rowVirtualizer = useVirtualizer({
-			count: items.length,
+			count: safeItems.length,
 			getScrollElement: () => containerRef.current,
 			estimateSize: () => estimateSize,
 			enabled: virtualized && currentLayout === 'list'
@@ -225,7 +229,7 @@ const AdaptiveForumGrid = memo(
 
 					{/* Grid Info */}
 					<div className="text-xs text-zinc-400">
-						{items.length} items • {getColumnCount()} columns
+						{safeItems.length} items • {getColumnCount()} columns
 					</div>
 				</div>
 
@@ -285,12 +289,12 @@ const AdaptiveForumGrid = memo(
 															transform: `translateY(${virtualItem.start}px)`
 														}}
 													>
-														{renderItem(items[virtualItem.index], virtualItem.index)}
+														{renderItem(safeItems[virtualItem.index], virtualItem.index)}
 													</motion.div>
 												))}
 											</div>
 										) : (
-											items.map((item, index) => (
+											safeItems.map((item, index) => (
 												<motion.div key={item.id} variants={itemVariants}>
 													{renderItem(item, index)}
 												</motion.div>
@@ -311,7 +315,7 @@ const AdaptiveForumGrid = memo(
 											breakpoint.isLarge && `xl:grid-cols-${columns.large}`
 										)}
 									>
-										{items.map((item, index) => (
+										{safeItems.map((item, index) => (
 											<motion.div key={item.id} variants={itemVariants}>
 												{renderItem(item, index)}
 											</motion.div>
