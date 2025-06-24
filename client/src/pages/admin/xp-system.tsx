@@ -38,7 +38,13 @@ export default function XPSystemPage() {
 		xpRequired: 100,
 		rewardDgt: 0,
 		rewardTitle: '',
-		description: ''
+		description: '',
+		iconUrl: '',
+		frameUrl: '',
+		colorTheme: '#10b981',
+		animationEffect: '',
+		rarity: 'common',
+		unlocks: {}
 	});
 
 	const {
@@ -56,7 +62,19 @@ export default function XPSystemPage() {
 	const levels = levelsApiResponse?.levels || [];
 
 	const resetFormAndCloseDialogs = () => {
-		setFormData({ level: 1, xpRequired: 100, rewardDgt: 0, rewardTitle: '', description: '' });
+		setFormData({
+			level: 1,
+			xpRequired: 100,
+			rewardDgt: 0,
+			rewardTitle: '',
+			description: '',
+			iconUrl: '',
+			frameUrl: '',
+			colorTheme: '#10b981',
+			animationEffect: '',
+			rarity: 'common',
+			unlocks: {}
+		});
 		setSelectedLevel(null);
 		setIsCreateDialogOpen(false);
 		setIsEditDialogOpen(false);
@@ -147,7 +165,13 @@ export default function XPSystemPage() {
 			xpRequired: level.xpRequired,
 			rewardDgt: level.rewardDgt,
 			rewardTitle: level.rewardTitle || '',
-			description: level.description || ''
+			description: level.description || '',
+			iconUrl: level.iconUrl || '',
+			frameUrl: level.frameUrl || '',
+			colorTheme: level.colorTheme || '#10b981',
+			animationEffect: level.animationEffect || '',
+			rarity: level.rarity || 'common',
+			unlocks: level.unlocks || {}
 		});
 		setIsEditDialogOpen(true);
 	};

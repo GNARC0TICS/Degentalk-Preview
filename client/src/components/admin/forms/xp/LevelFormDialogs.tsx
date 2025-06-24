@@ -10,6 +10,16 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import {
+	Select,
+	SelectTrigger,
+	SelectContent,
+	SelectItem,
+	SelectValue
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { TitleMediaInput } from '@/components/admin/forms/xp/TitleMediaInput';
 // Assuming Level and LevelFormData types might be needed by the page as well
 // If not, they can be kept internal to this file.
 
@@ -17,8 +27,21 @@ export interface LevelFormData {
 	level: number;
 	xpRequired: number;
 	rewardDgt: number;
-	rewardTitle: string; // Keep as string, can be empty
-	description: string; // Keep as string, can be empty
+	rewardTitle: string;
+	description: string;
+	// Visual fields
+	iconUrl?: string;
+	frameUrl?: string;
+	colorTheme?: string;
+	animationEffect?: string;
+	rarity?: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
+	// Unlocks JSON (advanced)
+	unlocks?: {
+		titles?: number[];
+		badges?: number[];
+		frames?: number[];
+		[extra: string]: any;
+	};
 }
 
 export interface Level extends LevelFormData {
@@ -65,90 +88,180 @@ export const LevelFormDialogComponent: React.FC<LevelFormDialogProps> = ({
 					</DialogDescription>
 				</DialogHeader>
 
-				<div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-2">
-					<div className="grid grid-cols-2 gap-4">
-						<div>
-							<Label htmlFor="level">Level Number</Label>
-							<Input
-								id="level"
-								type="number"
-								min="1"
-								value={formData.level}
-								onChange={(e) =>
-									setFormData({ ...formData, level: parseInt(e.target.value, 10) || 1 })
-								}
-								required
-							/>
-						</div>
-						<div>
-							<Label htmlFor="xpRequired">XP Required</Label>
-							<Input
-								id="xpRequired"
-								type="number"
-								min="0"
-								value={formData.xpRequired}
-								onChange={(e) =>
-									setFormData({ ...formData, xpRequired: parseInt(e.target.value, 10) || 0 })
-								}
-								required
-							/>
-						</div>
-					</div>
+				<Tabs defaultValue="basics" className="max-h-[70vh] overflow-y-auto pr-2">
+					<TabsList className="sticky top-0 bg-background z-10">
+						<TabsTrigger value="basics">Basics</TabsTrigger>
+						<TabsTrigger value="visuals">Visuals</TabsTrigger>
+						<TabsTrigger value="unlocks">Unlocks</TabsTrigger>
+					</TabsList>
 
-					<div>
-						<Label htmlFor="description">Description (Optional)</Label>
-						<Input
-							id="description"
-							value={formData.description}
-							onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-							placeholder="Level up description"
-						/>
-					</div>
+					<TabsContent value="basics" className="grid gap-4 py-4">
+						<div className="grid grid-cols-2 gap-4">
+							<div>
+								<Label htmlFor="level">Level Number</Label>
+								<Input
+									id="level"
+									type="number"
+									min="1"
+									value={formData.level}
+									onChange={(e) =>
+										setFormData({ ...formData, level: parseInt(e.target.value, 10) || 1 })
+									}
+									required
+								/>
+							</div>
+							<div>
+								<Label htmlFor="xpRequired">XP Required</Label>
+								<Input
+									id="xpRequired"
+									type="number"
+									min="0"
+									value={formData.xpRequired}
+									onChange={(e) =>
+										setFormData({ ...formData, xpRequired: parseInt(e.target.value, 10) || 0 })
+									}
+									required
+								/>
+							</div>
+						</div>
 
-					<div className="grid grid-cols-2 gap-4">
 						<div>
-							<Label htmlFor="rewardDgt">DGT Reward</Label>
+							<Label htmlFor="description">Description (Optional)</Label>
 							<Input
-								id="rewardDgt"
-								type="number"
-								min="0"
-								value={formData.rewardDgt}
-								onChange={(e) =>
-									setFormData({ ...formData, rewardDgt: parseInt(e.target.value, 10) || 0 })
-								}
+								id="description"
+								value={formData.description}
+								onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+								placeholder="Level up description"
 							/>
 						</div>
-						<div>
-							<Label htmlFor="rewardTitle">Title Reward (Optional)</Label>
-							<Input
-								id="rewardTitle"
-								value={formData.rewardTitle}
-								onChange={(e) => setFormData({ ...formData, rewardTitle: e.target.value })}
-								placeholder="e.g., Novice, Adept"
-							/>
-						</div>
-					</div>
 
-					{formData.level > 0 && ( // Show XP diff info if level is set
-						<div className="text-sm text-muted-foreground">
-							<p>
-								Level {formData.level} will require {formData.xpRequired.toLocaleString()} XP.
-							</p>
-							{formData.level > 1 && levelsData?.levels && (
-								<p className="mt-1">
-									{(() => {
-										const prevLevel = levelsData.levels.find((l) => l.level === formData.level - 1);
-										if (prevLevel) {
-											const diff = formData.xpRequired - prevLevel.xpRequired;
-											return `Difference from level ${prevLevel.level}: +${diff.toLocaleString()} XP`;
-										}
-										return null;
-									})()}
+						<div className="grid grid-cols-2 gap-4">
+							<div>
+								<Label htmlFor="rewardDgt">DGT Reward</Label>
+								<Input
+									id="rewardDgt"
+									type="number"
+									min="0"
+									value={formData.rewardDgt}
+									onChange={(e) =>
+										setFormData({ ...formData, rewardDgt: parseInt(e.target.value, 10) || 0 })
+									}
+								/>
+							</div>
+							<div>
+								<Label htmlFor="rewardTitle">Title Reward (Optional)</Label>
+								<Input
+									id="rewardTitle"
+									value={formData.rewardTitle}
+									onChange={(e) => setFormData({ ...formData, rewardTitle: e.target.value })}
+									placeholder="e.g., Novice, Adept"
+								/>
+							</div>
+						</div>
+
+						{formData.level > 0 && ( // Show XP diff info if level is set
+							<div className="text-sm text-muted-foreground">
+								<p>
+									Level {formData.level} will require {formData.xpRequired.toLocaleString()} XP.
 								</p>
-							)}
+								{formData.level > 1 && levelsData?.levels && (
+									<p className="mt-1">
+										{(() => {
+											const prevLevel = levelsData.levels.find(
+												(l) => l.level === formData.level - 1
+											);
+											if (prevLevel) {
+												const diff = formData.xpRequired - prevLevel.xpRequired;
+												return `Difference from level ${prevLevel.level}: +${diff.toLocaleString()} XP`;
+											}
+											return null;
+										})()}
+									</p>
+								)}
+							</div>
+						)}
+					</TabsContent>
+
+					<TabsContent value="visuals" className="grid gap-4 py-4">
+						<TitleMediaInput
+							iconUrl={formData.iconUrl || ''}
+							onChange={(url) => setFormData({ ...formData, iconUrl: url })}
+						/>
+
+						<div className="grid gap-2">
+							<Label>Color Theme</Label>
+							<div className="flex gap-2">
+								<Input
+									type="color"
+									value={formData.colorTheme || '#10b981'}
+									onChange={(e) => setFormData({ ...formData, colorTheme: e.target.value })}
+									className="w-12 h-10 p-1"
+								/>
+								<Input
+									value={formData.colorTheme || ''}
+									onChange={(e) => setFormData({ ...formData, colorTheme: e.target.value })}
+									placeholder="#10b981"
+								/>
+							</div>
 						</div>
-					)}
-				</div>
+
+						<div className="grid grid-cols-2 gap-4">
+							<div className="grid gap-2">
+								<Label>Rarity</Label>
+								<Select
+									value={formData.rarity || 'common'}
+									onValueChange={(v) => setFormData({ ...formData, rarity: v as any })}
+								>
+									<SelectTrigger>
+										<SelectValue placeholder="Select rarity" />
+									</SelectTrigger>
+									<SelectContent>
+										{['common', 'rare', 'epic', 'legendary', 'mythic'].map((r) => (
+											<SelectItem key={r} value={r}>
+												{r}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</div>
+							<div className="grid gap-2">
+								<Label>Animation Effect</Label>
+								<Input
+									placeholder="pulse | glow | chroma"
+									value={formData.animationEffect || ''}
+									onChange={(e) => setFormData({ ...formData, animationEffect: e.target.value })}
+								/>
+							</div>
+						</div>
+
+						<div className="grid gap-2">
+							<Label>Frame URL</Label>
+							<Input
+								placeholder="https://.../frame.png"
+								value={formData.frameUrl || ''}
+								onChange={(e) => setFormData({ ...formData, frameUrl: e.target.value })}
+							/>
+						</div>
+					</TabsContent>
+
+					<TabsContent value="unlocks" className="grid gap-4 py-4">
+						<div className="grid gap-2">
+							<Label>Unlocks JSON</Label>
+							<Textarea
+								rows={6}
+								value={JSON.stringify(formData.unlocks || {}, null, 2)}
+								onChange={(e) => {
+									try {
+										const parsed = JSON.parse(e.target.value || '{}');
+										setFormData({ ...formData, unlocks: parsed });
+									} catch (_) {
+										// ignore parse errors for now
+									}
+								}}
+							/>
+						</div>
+					</TabsContent>
+				</Tabs>
 
 				<DialogFooter className="sticky bottom-0 bg-background py-4 border-t flex-wrap gap-2 sm:justify-end">
 					<Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
