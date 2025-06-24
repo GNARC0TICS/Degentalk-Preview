@@ -5,9 +5,10 @@
  */
 
 import type { Request, Response } from 'express';
-import { adminSettingsService } from './settings.service';
+import { adminSettingsService } from './settings.service.refactored';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { adminController } from '../../admin.controller';
+import { sendSuccess, sendError, sendValidationError } from '../../admin.response';
 import {
 	UpdateSettingSchema,
 	UpdateSettingsSchema,
@@ -25,13 +26,12 @@ export class AdminSettingsController {
 			const filters = validation.success ? validation.data : undefined;
 
 			const settings = await adminSettingsService.getAllSettings(filters);
-			res.json(settings);
+			return sendSuccess(res, settings);
 		} catch (error) {
-			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch settings' });
+			if (error instanceof AdminError) {
+				return sendError(res, error.message, error.httpStatus, error.code);
+			}
+			return sendError(res, 'Failed to fetch settings');
 		}
 	}
 
@@ -39,13 +39,12 @@ export class AdminSettingsController {
 		try {
 			const key = req.params.key;
 			const setting = await adminSettingsService.getSettingByKey(key);
-			res.json(setting);
+			return sendSuccess(res, setting);
 		} catch (error) {
-			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch setting' });
+			if (error instanceof AdminError) {
+				return sendError(res, error.message, error.httpStatus, error.code);
+			}
+			return sendError(res, 'Failed to fetch setting');
 		}
 	}
 
@@ -53,12 +52,7 @@ export class AdminSettingsController {
 		try {
 			const validation = UpdateSettingSchema.safeParse(req.body);
 			if (!validation.success) {
-				throw new AdminError(
-					'Invalid setting data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
+				return sendValidationError(res, 'Invalid setting data', validation.error.format());
 			}
 
 			const setting = await adminSettingsService.updateSetting(validation.data);
@@ -69,13 +63,12 @@ export class AdminSettingsController {
 				validation.data.key,
 				validation.data
 			);
-			res.json(setting);
+			return sendSuccess(res, setting, 'Setting updated successfully');
 		} catch (error) {
-			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to update setting' });
+			if (error instanceof AdminError) {
+				return sendError(res, error.message, error.httpStatus, error.code);
+			}
+			return sendError(res, 'Failed to update setting');
 		}
 	}
 

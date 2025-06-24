@@ -6,6 +6,14 @@ import { XP_ACTION } from '../../../xp/xp-actions';
 import { db } from '@db';
 import { xpAdjustmentLogs } from '@schema';
 import { eq, desc } from 'drizzle-orm';
+import { sendSuccess, sendError, sendValidationError } from '../../admin.response';
+import { validateRequestBody, validateNumberParam } from '../../admin.validation';
+import {
+	XpSettingsSchema,
+	CreateLevelSchema,
+	UpdateLevelSchema,
+	AdjustUserXpSchema
+} from './xp.validators';
 
 // --- XP Settings Management ---
 export const getXpSettings = async (req: Request, res: Response, next: NextFunction) => {
@@ -25,16 +33,19 @@ export const getXpSettings = async (req: Request, res: Response, next: NextFunct
 
 export const updateXpSettings = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		// const updatedSettings = await xpAdminService.updateXpSettings(req.body);
-		// res.json(updatedSettings);
-		res.status(501).json({ message: 'Update XP Settings not implemented' });
+		const validatedData = validateRequestBody(req, res, XpSettingsSchema);
+		if (!validatedData) return;
+
+		// const updatedSettings = await xpAdminService.updateXpSettings(validatedData);
+		// return sendSuccess(res, updatedSettings, 'XP settings updated successfully');
+		return sendError(res, 'Update XP Settings not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
 			'Error updating XP settings:',
 			error instanceof Error ? error.message : String(error)
 		);
-		next(error);
+		return sendError(res, 'Failed to update XP settings');
 	}
 };
 
@@ -42,7 +53,7 @@ export const updateXpSettings = async (req: Request, res: Response, next: NextFu
 export const getLevels = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const levels = await xpAdminService.getLevels();
-		res.json({
+		return sendSuccess(res, {
 			levels,
 			totalLevels: levels.length,
 			highestLevel: levels.length > 0 ? Math.max(...levels.map((l) => l.level)) : 0,
@@ -55,7 +66,7 @@ export const getLevels = async (req: Request, res: Response, next: NextFunction)
 			'Error getting levels:',
 			error instanceof Error ? error.message : String(error)
 		);
-		next(error);
+		return sendError(res, 'Failed to get levels');
 	}
 };
 

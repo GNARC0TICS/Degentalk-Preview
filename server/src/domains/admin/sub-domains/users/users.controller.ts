@@ -25,21 +25,27 @@ export class AdminUsersController {
 			const queryParams = AdminPaginationQuery.safeParse(req.query);
 			if (!queryParams.success) {
 				return res.status(400).json({
+					success: false,
 					error: 'Invalid query parameters',
 					details: queryParams.error.format()
 				});
 			}
 
 			const users = await adminUsersService.getUsers(queryParams.data);
-			return res.json(users);
+			return res.json({
+				success: true,
+				data: users
+			});
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
+					success: false,
 					error: error.message,
 					code: error.code
 				});
 			}
 			return res.status(500).json({
+				success: false,
 				error: 'Failed to fetch users'
 			});
 		}
@@ -52,19 +58,27 @@ export class AdminUsersController {
 		try {
 			const userId = Number(req.params.id);
 			if (isNaN(userId)) {
-				return res.status(400).json({ error: 'Invalid user ID' });
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid user ID'
+				});
 			}
 
 			const userData = await adminUsersService.getUserById(userId);
-			return res.json(userData);
+			return res.json({
+				success: true,
+				data: userData
+			});
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
+					success: false,
 					error: error.message,
 					code: error.code
 				});
 			}
 			return res.status(500).json({
+				success: false,
 				error: 'Failed to fetch user'
 			});
 		}
@@ -77,13 +91,17 @@ export class AdminUsersController {
 		try {
 			const userId = Number(req.params.id);
 			if (isNaN(userId)) {
-				return res.status(400).json({ error: 'Invalid user ID' });
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid user ID'
+				});
 			}
 
 			// Validate request body
 			const validatedData = AdminUserUpdateSchema.safeParse(req.body);
 			if (!validatedData.success) {
 				return res.status(400).json({
+					success: false,
 					error: 'Invalid user data',
 					details: validatedData.error.format()
 				});
@@ -98,16 +116,243 @@ export class AdminUsersController {
 				changes: validatedData.data
 			});
 
-			return res.json(updatedUser);
+			return res.json({
+				success: true,
+				data: updatedUser,
+				message: 'User updated successfully'
+			});
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
+					success: false,
 					error: error.message,
 					code: error.code
 				});
 			}
 			return res.status(500).json({
+				success: false,
 				error: 'Failed to update user'
+			});
+		}
+	}
+
+	/**
+	 * Create a new user
+	 */
+	async createUser(req: Request, res: Response) {
+		try {
+			// Validate request body
+			const validatedData = AdminUserUpdateSchema.extend({
+				password: z.string().min(6).optional(),
+				username: z.string().min(3).max(50),
+				email: z.string().email()
+			}).safeParse(req.body);
+
+			if (!validatedData.success) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid user data',
+					details: validatedData.error.format()
+				});
+			}
+
+			const newUser = await adminUsersService.createUser(validatedData.data);
+
+			// Log admin action
+			const adminId = getUserId(req);
+			await adminController.logAction(req, 'CREATE_USER', 'user', newUser.id.toString(), {
+				adminId,
+				userData: validatedData.data
+			});
+
+			return res.status(201).json({
+				success: true,
+				data: newUser,
+				message: 'User created successfully'
+			});
+		} catch (error) {
+			if (error instanceof AdminError) {
+				return res.status(error.httpStatus).json({
+					success: false,
+					error: error.message,
+					code: error.code
+				});
+			}
+			return res.status(500).json({
+				success: false,
+				error: 'Failed to create user'
+			});
+		}
+	}
+
+	/**
+	 * Delete a user
+	 */
+	async deleteUser(req: Request, res: Response) {
+		try {
+			const userId = Number(req.params.id);
+			if (isNaN(userId)) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid user ID'
+				});
+			}
+
+			await adminUsersService.deleteUser(userId);
+
+			// Log admin action
+			const adminId = getUserId(req);
+			await adminController.logAction(req, 'DELETE_USER', 'user', userId.toString(), {
+				adminId
+			});
+
+			return res.json({
+				success: true,
+				message: 'User deleted successfully'
+			});
+		} catch (error) {
+			if (error instanceof AdminError) {
+				return res.status(error.httpStatus).json({
+					success: false,
+					error: error.message,
+					code: error.code
+				});
+			}
+			return res.status(500).json({
+				success: false,
+				error: 'Failed to delete user'
+			});
+		}
+	}
+
+	/**
+	 * Ban a user
+	 */
+	async banUser(req: Request, res: Response) {
+		try {
+			const userId = Number(req.params.id);
+			if (isNaN(userId)) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid user ID'
+				});
+			}
+
+			const { reason } = req.body;
+			await adminUsersService.banUser(userId, reason);
+
+			// Log admin action
+			const adminId = getUserId(req);
+			await adminController.logAction(req, 'BAN_USER', 'user', userId.toString(), {
+				adminId,
+				reason
+			});
+
+			return res.json({
+				success: true,
+				message: 'User banned successfully'
+			});
+		} catch (error) {
+			if (error instanceof AdminError) {
+				return res.status(error.httpStatus).json({
+					success: false,
+					error: error.message,
+					code: error.code
+				});
+			}
+			return res.status(500).json({
+				success: false,
+				error: 'Failed to ban user'
+			});
+		}
+	}
+
+	/**
+	 * Unban a user
+	 */
+	async unbanUser(req: Request, res: Response) {
+		try {
+			const userId = Number(req.params.id);
+			if (isNaN(userId)) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid user ID'
+				});
+			}
+
+			await adminUsersService.unbanUser(userId);
+
+			// Log admin action
+			const adminId = getUserId(req);
+			await adminController.logAction(req, 'UNBAN_USER', 'user', userId.toString(), {
+				adminId
+			});
+
+			return res.json({
+				success: true,
+				message: 'User unbanned successfully'
+			});
+		} catch (error) {
+			if (error instanceof AdminError) {
+				return res.status(error.httpStatus).json({
+					success: false,
+					error: error.message,
+					code: error.code
+				});
+			}
+			return res.status(500).json({
+				success: false,
+				error: 'Failed to unban user'
+			});
+		}
+	}
+
+	/**
+	 * Change user role
+	 */
+	async changeUserRole(req: Request, res: Response) {
+		try {
+			const userId = Number(req.params.id);
+			if (isNaN(userId)) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid user ID'
+				});
+			}
+
+			const { role } = req.body;
+			if (!role || !['user', 'mod', 'admin'].includes(role)) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid role. Must be one of: user, mod, admin'
+				});
+			}
+
+			const updatedUser = await adminUsersService.changeUserRole(userId, role);
+
+			// Log admin action
+			const adminId = getUserId(req);
+			await adminController.logAction(req, 'CHANGE_USER_ROLE', 'user', userId.toString(), {
+				adminId,
+				newRole: role
+			});
+
+			return res.json({
+				success: true,
+				data: updatedUser,
+				message: 'User role updated successfully'
+			});
+		} catch (error) {
+			if (error instanceof AdminError) {
+				return res.status(error.httpStatus).json({
+					success: false,
+					error: error.message,
+					code: error.code
+				});
+			}
+			return res.status(500).json({
+				success: false,
+				error: 'Failed to change user role'
 			});
 		}
 	}
@@ -119,7 +364,10 @@ export class AdminUsersController {
 		try {
 			const term = req.query.term as string;
 			if (!term || term.length < 3) {
-				return res.status(200).json({ users: [] });
+				return res.status(200).json({
+					success: true,
+					data: { users: [] }
+				});
 			}
 
 			// Search users by username or ID and include clout data
@@ -179,10 +427,14 @@ export class AdminUsersController {
 				};
 			});
 
-			return res.status(200).json({ users: transformedResults });
+			return res.status(200).json({
+				success: true,
+				data: { users: transformedResults }
+			});
 		} catch (error) {
 			console.error('Error searching users:', error);
 			return res.status(500).json({
+				success: false,
 				error: 'Failed to search users'
 			});
 		}

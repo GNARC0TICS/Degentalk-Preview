@@ -18981,3 +18981,10 @@ User not found
   "logPath": "logs/app.log"
 }
 [2025-06-24T01:04:25.065Z] [INFO] [SHOP] Shop already has 6 items. Skipping seeding.
+[2025-06-24T05:08:19.829Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-24T05:08:19.839Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-24T05:08:20.102Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-24T05:08:21.501Z] [INFO] [NOTIFICATIONS] Event notification listener initialized

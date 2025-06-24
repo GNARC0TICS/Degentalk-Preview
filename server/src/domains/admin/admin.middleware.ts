@@ -8,7 +8,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { users } from '@schema';
 import { eq } from 'drizzle-orm';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
-import { pool } from '@db';
+import { db } from '@server/src/core/db';
 import { logger } from '@server/src/core/logger'; // Added logger import
 
 /**
@@ -28,24 +28,18 @@ export async function isAdmin(req: Request, res: Response, next: NextFunction) {
 	// Skip auth check in development mode and auto-login as DevUser
 	if (process.env.NODE_ENV === 'development' && !req.isAuthenticated()) {
 		try {
-			// Use direct SQL to avoid schema discrepancies
-			const devUserResult = await pool.query(`
-        SELECT * FROM users WHERE username = 'DevUser' LIMIT 1
-      `);
+			// Use Drizzle ORM for secure, parameterized queries
+			const [devUser] = await db.select().from(users).where(eq(users.username, 'DevUser')).limit(1);
 
-			if (devUserResult.rows.length > 0) {
-				const devUser = devUserResult.rows[0];
-
+			if (devUser) {
 				// For admin routes, ensure the DevUser has admin privileges
 				if (devUser.role !== 'admin') {
 					logger.warn(
 						'AdminMiddleware',
 						'DevUser exists but does not have admin role. Updating to admin role.',
-						{ userId: devUser.id || devUser.user_id }
+						{ userId: devUser.id }
 					);
-					await pool.query(`
-            UPDATE users SET role = 'admin' WHERE username = 'DevUser'
-          `);
+					await db.update(users).set({ role: 'admin' }).where(eq(users.username, 'DevUser'));
 					devUser.role = 'admin';
 				}
 
@@ -62,8 +56,8 @@ export async function isAdmin(req: Request, res: Response, next: NextFunction) {
 
 					logger.info(
 						'AdminMiddleware',
-						`Auto-authenticated as DevUser admin (ID: ${devUser.user_id || devUser.id})`,
-						{ userId: devUser.id || devUser.user_id }
+						`Auto-authenticated as DevUser admin (ID: ${devUser.id})`,
+						{ userId: devUser.id }
 					);
 					return next();
 				});
@@ -96,24 +90,18 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
 	// Skip auth check in development mode and auto-login as DevUser
 	if (process.env.NODE_ENV === 'development' && !req.isAuthenticated()) {
 		try {
-			// Use direct SQL to avoid schema discrepancies
-			const devUserResult = await pool.query(`
-        SELECT * FROM users WHERE username = 'DevUser' LIMIT 1
-      `);
+			// Use Drizzle ORM for secure, parameterized queries
+			const [devUser] = await db.select().from(users).where(eq(users.username, 'DevUser')).limit(1);
 
-			if (devUserResult.rows.length > 0) {
-				const devUser = devUserResult.rows[0];
-
+			if (devUser) {
 				// For admin routes, ensure the DevUser has admin or mod privileges
 				if (devUser.role !== 'admin' && devUser.role !== 'mod') {
 					logger.warn(
 						'AdminMiddleware',
 						'DevUser exists but does not have admin/mod role. Updating to admin role.',
-						{ userId: devUser.id || devUser.user_id }
+						{ userId: devUser.id }
 					);
-					await pool.query(`
-            UPDATE users SET role = 'admin' WHERE username = 'DevUser'
-          `);
+					await db.update(users).set({ role: 'admin' }).where(eq(users.username, 'DevUser'));
 					devUser.role = 'admin';
 				}
 
@@ -130,8 +118,8 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
 
 					logger.info(
 						'AdminMiddleware',
-						`Auto-authenticated as DevUser admin/mod (ID: ${devUser.user_id || devUser.id})`,
-						{ userId: devUser.id || devUser.user_id }
+						`Auto-authenticated as DevUser admin/mod (ID: ${devUser.id})`,
+						{ userId: devUser.id }
 					);
 					return next();
 				});

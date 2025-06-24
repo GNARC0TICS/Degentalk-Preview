@@ -6,6 +6,8 @@
 import { useState } from 'react';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/queryClient';
+import { useCrudMutation } from '@/hooks/useCrudMutation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -58,6 +60,14 @@ export interface AdminUser {
 	// Add any other fields that might be returned or needed
 }
 
+// Form data for user creation/updates
+export interface UserFormData {
+	username?: string;
+	email?: string;
+	role?: string;
+	password?: string;
+}
+
 interface UsersResponse {
 	users: AdminUser[];
 	total: number;
@@ -105,28 +115,30 @@ export default function AdminUsersPage() {
 	const [userToChangeRole, setUserToChangeRole] = useState<AdminUser | null>(null);
 
 	const {
-		data: usersData,
+		data: usersResponse,
 		isLoading,
 		error
-	} = useQuery<UsersResponse>({
+	} = useQuery<{ success: boolean; data: UsersResponse }>({
 		queryKey: ['/api/admin/users', pagination.pageIndex, pagination.pageSize, searchQuery, filters],
 		queryFn: async () => {
-			const params = new URLSearchParams();
-			params.append('page', (pagination.pageIndex + 1).toString()); // API is 1-indexed
-			params.append('limit', pagination.pageSize.toString());
-			if (searchQuery) params.append('search', searchQuery);
-			if (filters.role && filters.role !== 'all') params.append('role', filters.role as string);
-			if (filters.status && filters.status !== 'all')
-				params.append('status', filters.status as string);
+			const params: Record<string, string> = {
+				page: (pagination.pageIndex + 1).toString(), // API is 1-indexed
+				limit: pagination.pageSize.toString()
+			};
+			if (searchQuery) params.search = searchQuery;
+			if (filters.role && filters.role !== 'all') params.role = filters.role as string;
+			if (filters.status && filters.status !== 'all') params.status = filters.status as string;
 
-			const response = await fetch(`/api/admin/users?${params.toString()}`);
-			if (!response.ok) {
-				throw new Error(`Failed to fetch users: ${response.statusText}`);
-			}
-			return response.json();
+			return apiRequest<{ success: boolean; data: UsersResponse }>({
+				url: '/api/admin/users',
+				method: 'GET',
+				params
+			});
 		},
 		placeholderData: (previousData) => previousData // Keep previous data while loading
 	});
+
+	const usersData = usersResponse?.data;
 
 	const handleSearch = (query: string) => {
 		setSearchQuery(query);
@@ -298,48 +310,134 @@ export default function AdminUsersPage() {
 		// e.g., password?: string; role?: string;
 	}
 
-	// Placeholder submit handlers for dialogs
+	// CRUD mutations
+	const createUserMutation = useCrudMutation({
+		mutationFn: async (userData: UserFormData) => {
+			return apiRequest<{ success: boolean; data: AdminUser }>({
+				url: '/api/admin/users',
+				method: 'POST',
+				data: userData
+			});
+		},
+		queryKeyToInvalidate: ['/api/admin/users'],
+		successMessage: 'User created successfully!',
+		errorMessage: 'Failed to create user'
+	});
+
+	const updateUserMutation = useCrudMutation({
+		mutationFn: async ({ id, userData }: { id: string; userData: UserFormData }) => {
+			return apiRequest<{ success: boolean; data: AdminUser }>({
+				url: `/api/admin/users/${id}`,
+				method: 'PUT',
+				data: userData
+			});
+		},
+		queryKeyToInvalidate: ['/api/admin/users'],
+		successMessage: 'User updated successfully!',
+		errorMessage: 'Failed to update user'
+	});
+
 	const handleUserFormSubmit = async (data: UserFormData) => {
-		console.log('User form submitted:', data, editingUser);
-		// TODO: Implement actual API call for create/update
-		// useCrudMutation will be used here later
-		setIsUserFormOpen(false);
-		setEditingUser(null);
-		// queryClient.invalidateQueries(['/api/admin/users']);
+		try {
+			if (editingUser) {
+				await updateUserMutation.mutateAsync({ id: editingUser.id, userData: data });
+			} else {
+				await createUserMutation.mutateAsync(data);
+			}
+			setIsUserFormOpen(false);
+			setEditingUser(null);
+		} catch (error) {
+			// Error handling is done by useCrudMutation
+			console.error('User form submission failed:', error);
+		}
 	};
 
+	const banUserMutation = useCrudMutation({
+		mutationFn: async (userId: string | number) => {
+			return apiRequest<{ success: boolean; message: string }>({
+				url: `/api/admin/users/${userId}/ban`,
+				method: 'POST'
+			});
+		},
+		queryKeyToInvalidate: ['/api/admin/users'],
+		successMessage: 'User banned successfully!',
+		errorMessage: 'Failed to ban user'
+	});
+
+	const unbanUserMutation = useCrudMutation({
+		mutationFn: async (userId: string | number) => {
+			return apiRequest<{ success: boolean; message: string }>({
+				url: `/api/admin/users/${userId}/unban`,
+				method: 'POST'
+			});
+		},
+		queryKeyToInvalidate: ['/api/admin/users'],
+		successMessage: 'User unbanned successfully!',
+		errorMessage: 'Failed to unban user'
+	});
+
+	const deleteUserMutation = useCrudMutation({
+		mutationFn: async (userId: string | number) => {
+			return apiRequest<{ success: boolean; message: string }>({
+				url: `/api/admin/users/${userId}`,
+				method: 'DELETE'
+			});
+		},
+		queryKeyToInvalidate: ['/api/admin/users'],
+		successMessage: 'User deleted successfully!',
+		errorMessage: 'Failed to delete user'
+	});
+
+	const changeRoleMutation = useCrudMutation({
+		mutationFn: async ({ userId, newRole }: { userId: string | number; newRole: string }) => {
+			return apiRequest<{ success: boolean; data: AdminUser }>({
+				url: `/api/admin/users/${userId}/role`,
+				method: 'PATCH',
+				data: { role: newRole }
+			});
+		},
+		queryKeyToInvalidate: ['/api/admin/users'],
+		successMessage: 'User role updated successfully!',
+		errorMessage: 'Failed to update user role'
+	});
+
 	const handleBanUser = async (userId: string | number) => {
-		console.log('Banning user:', userId);
-		// TODO: Implement ban user API call
-		setUserToBan(null);
-		// queryClient.invalidateQueries(['/api/admin/users']);
+		try {
+			await banUserMutation.mutateAsync(userId);
+			setUserToBan(null);
+		} catch (error) {
+			console.error('Ban user failed:', error);
+		}
 	};
 
 	const handleUnbanUser = async (userId: string | number) => {
-		console.log('Unbanning user:', userId);
-		// TODO: Implement unban user API call
-		setUserToUnban(null);
-		// queryClient.invalidateQueries(['/api/admin/users']);
+		try {
+			await unbanUserMutation.mutateAsync(userId);
+			setUserToUnban(null);
+		} catch (error) {
+			console.error('Unban user failed:', error);
+		}
 	};
 
 	const handleDeleteUser = async (userId: string | number) => {
-		console.log('Deleting user:', userId);
-		// TODO: Implement delete user API call
-		setUserToDelete(null);
-		// queryClient.invalidateQueries(['/api/admin/users']);
+		try {
+			await deleteUserMutation.mutateAsync(userId);
+			setUserToDelete(null);
+		} catch (error) {
+			console.error('Delete user failed:', error);
+		}
 	};
 
 	const handleChangeUserRole = async (userId: string | number, newRole: string) => {
-		console.log('Changing role for user:', userId, 'to', newRole);
-		// TODO: Implement change role API call
-		setUserToChangeRole(null);
-		// queryClient.invalidateQueries(['/api/admin/users']);
+		try {
+			await changeRoleMutation.mutateAsync({ userId, newRole });
+			setUserToChangeRole(null);
+		} catch (error) {
+			console.error('Change user role failed:', error);
+		}
 	};
 
 	// const pageCount = usersData?.totalPages ?? -1; // For EntityTable pagination - to be handled by a separate pagination component
-
-	// TODO: Implement a proper pagination component here that works with the API and updates `pagination` state.
-	// For now, EntityTable itself does not handle pagination state.
 
 	return (
 		<AdminPageShell

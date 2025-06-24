@@ -70,6 +70,7 @@
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"validate": "tsx scripts/validate-everything.ts",
+		"validate:admin": "npx tsx scripts/admin/validate-admin-controllers.ts",
 		"validate:fix": "tsx scripts/validate-everything.ts --fix",
 		"check": "tsx scripts/test-ci-readiness.ts",
 		"precommit": "npm run validate",
