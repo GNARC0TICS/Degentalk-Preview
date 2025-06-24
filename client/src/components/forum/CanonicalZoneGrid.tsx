@@ -147,7 +147,7 @@ export function CanonicalZoneGrid({
 											trendingThreads: 0,
 											momentum: 'stable',
 											lastActiveUser: undefined
-									  }
+										}
 									: undefined,
 								forums: cardData.forums?.map((f) => ({
 									id: String(f.id),

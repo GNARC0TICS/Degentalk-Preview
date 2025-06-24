@@ -180,10 +180,10 @@ const ForumPage = () => {
 					},
 					activity: zone.updatedAt
 						? {
-							trendingThreads: 0,
-							momentum: 'stable',
-							lastActiveUser: undefined
-						}
+								trendingThreads: 0,
+								momentum: 'stable',
+								lastActiveUser: undefined
+							}
 						: undefined,
 					forums: zone.forums?.map((f) => ({
 						id: String(f.id),
