@@ -309,6 +309,3 @@ export class AdminSettingsService {
 
 // Export singleton instance (maintains backward compatibility)
 export const adminSettingsService = new AdminSettingsService();
-
-// Also export the class for dependency injection or testing
-export { AdminSettingsService };

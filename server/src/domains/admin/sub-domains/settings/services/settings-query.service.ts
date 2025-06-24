@@ -10,6 +10,11 @@ import { siteSettings, featureFlags } from '@schema';
 import { eq, and, or, ilike, asc } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
 import { AdminError, AdminErrorCodes } from '../../../admin.errors';
+import {
+	adminCacheService,
+	AdminCacheKeys,
+	CacheResult
+} from '../../../shared/admin-cache.service';
 import type { FilterSettingsInput } from '../settings.validators';
 
 export class SettingsQueryService {
@@ -18,31 +23,46 @@ export class SettingsQueryService {
 	 */
 	async getAllSettings(filters?: FilterSettingsInput) {
 		try {
-			let query = db.select().from(siteSettings);
-
-			// Apply filters if provided
-			if (filters) {
-				const conditions = this.buildFilterConditions(filters);
-				if (conditions.length > 0) {
-					query = query.where(and(...conditions));
-				}
+			// Use cache for unfiltered settings queries
+			if (!filters) {
+				return await adminCacheService.getOrSet(AdminCacheKeys.settings(), async () => {
+					return await this.fetchSettingsFromDB();
+				});
 			}
 
-			// Get settings ordered by group and key
-			const allSettings = await query.orderBy(asc(siteSettings.group), asc(siteSettings.key));
-
-			// Format results with consistent structure
-			return allSettings.map((setting) => ({
-				...setting,
-				group: setting.group || null
-			}));
+			// For filtered queries, bypass cache to ensure accuracy
+			return await this.fetchSettingsFromDB(filters);
 		} catch (error) {
-			logger.error('SettingsQueryService', 'Error fetching all settings', {
-				error: error.message,
+			logger.error('Failed to get settings:', error);
+			throw new AdminError('Failed to retrieve settings', 500, AdminErrorCodes.DB_ERROR, {
+				originalError: error.message,
 				filters
 			});
-			throw new AdminError('Failed to fetch settings', 500, AdminErrorCodes.DB_ERROR);
 		}
+	}
+
+	/**
+	 * Fetch settings from database with optional filtering
+	 */
+	private async fetchSettingsFromDB(filters?: FilterSettingsInput) {
+		let query = db.select().from(siteSettings);
+
+		// Apply filters if provided
+		if (filters) {
+			const conditions = this.buildFilterConditions(filters);
+			if (conditions.length > 0) {
+				query = query.where(and(...conditions));
+			}
+		}
+
+		// Get settings ordered by group and key
+		const allSettings = await query.orderBy(asc(siteSettings.group), asc(siteSettings.key));
+
+		// Format results with consistent structure
+		return allSettings.map((setting) => ({
+			...setting,
+			group: setting.group || null
+		}));
 	}
 
 	/**

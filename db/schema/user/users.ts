@@ -164,3 +164,23 @@ export const insertUserSchema = createInsertSchema(users, {
 
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
+
+/**
+ * Performance Indices (Applied via Migration)
+ *
+ * The following indices are applied to optimize admin panel queries:
+ *
+ * 1. idx_users_search_gin - Full-text search index
+ *    ON users USING gin(to_tsvector('english', username || ' ' || email))
+ *    Purpose: Fast user search in admin panel
+ *
+ * 2. idx_users_role_status - Composite B-tree index
+ *    ON users(role, status, is_active)
+ *    Purpose: Efficient role-based filtering
+ *
+ * 3. idx_users_username_trgm - Trigram GIN index
+ *    ON users USING gin(username gin_trgm_ops)
+ *    Purpose: Fuzzy username search capability
+ *
+ * These indices are managed via db/migrations/2025-06-24_admin_performance_indices
+ */

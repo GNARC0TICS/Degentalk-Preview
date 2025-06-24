@@ -14,6 +14,9 @@ export * from './admin-operation-utils';
 // Error boundaries and typed error handling
 export * from './admin-error-boundaries';
 
+// Cache service and utilities
+export * from './admin-cache.service';
+
 // Response utilities (already created in Phase 1)
 export * from '../admin.response';
 

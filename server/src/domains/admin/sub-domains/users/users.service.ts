@@ -6,7 +6,7 @@
 
 import { db } from '@db';
 import { count, desc, eq, sql, and, like, isNull, or, ne } from 'drizzle-orm';
-import { users, userGroups, posts, threads, bans } from '@schema';
+import { users, userGroups, posts, threads, userBans } from '@schema';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { AdminPaginationQuery } from '@shared/validators/admin';
 import { z } from 'zod';
@@ -40,18 +40,18 @@ export class AdminUsersService {
 				.leftJoin(userGroups, eq(users.groupId, userGroups.id));
 
 			if (search) {
-				userQuery = userQuery.where(
-					or(like(users.username, `%${search}%`), like(users.email, `%${search}%`))
-				);
+				// Use full-text search for better performance
+				const searchCondition = sql`to_tsvector('english', ${users.username} || ' ' || ${users.email}) @@ plainto_tsquery('english', ${search})`;
+				userQuery = userQuery.where(searchCondition);
 			}
 
-			// Get total count for pagination
+			// Get total count for pagination with same search logic
 			const [countResult] = await db
 				.select({ count: count() })
 				.from(users)
 				.where(
 					search
-						? or(like(users.username, `%${search}%`), like(users.email, `%${search}%`))
+						? sql`to_tsvector('english', ${users.username} || ' ' || ${users.email}) @@ plainto_tsquery('english', ${search})`
 						: undefined
 				)
 				.execute();
@@ -326,7 +326,7 @@ export class AdminUsersService {
 			await db.delete(threads).where(eq(threads.userId, userId));
 
 			// Delete any ban records
-			await db.delete(bans).where(eq(bans.userId, userId));
+			await db.delete(userBans).where(eq(userBans.userId, userId));
 
 			// Delete the user
 			await db.delete(users).where(eq(users.id, userId));
@@ -373,10 +373,12 @@ export class AdminUsersService {
 				.where(eq(users.id, userId));
 
 			// Create ban record
-			await db.insert(bans).values({
+			await db.insert(userBans).values({
 				userId,
+				bannedBy: userId, // TODO: Should be admin user ID
 				reason: reason || 'No reason provided',
-				bannedAt: new Date(),
+				banType: 'manual',
+				createdAt: new Date(),
 				isActive: true
 			});
 
@@ -423,12 +425,12 @@ export class AdminUsersService {
 
 			// Deactivate ban records
 			await db
-				.update(bans)
+				.update(userBans)
 				.set({
 					isActive: false,
-					unbannedAt: new Date()
+					liftedAt: new Date()
 				})
-				.where(and(eq(bans.userId, userId), eq(bans.isActive, true)));
+				.where(and(eq(userBans.userId, userId), eq(userBans.isActive, true)));
 
 			return { success: true };
 		} catch (error) {

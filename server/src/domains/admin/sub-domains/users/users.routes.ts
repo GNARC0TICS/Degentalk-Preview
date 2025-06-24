@@ -6,10 +6,14 @@
 
 import { Router } from 'express';
 import { adminUsersController } from './users.controller';
+import { AdminUserBulkOperationsController } from './bulk-operations.controller';
 import { asyncHandler } from '../../admin.middleware';
 
 // Create router
 const router = Router();
+
+// Initialize bulk operations controller
+const bulkOperationsController = new AdminUserBulkOperationsController();
 
 /**
  * @route GET /api/admin/users/search
@@ -76,6 +80,50 @@ router.post('/:id/unban', asyncHandler(adminUsersController.unbanUser.bind(admin
 router.patch(
 	'/:id/role',
 	asyncHandler(adminUsersController.changeUserRole.bind(adminUsersController))
+);
+
+/**
+ * Bulk Operations Routes
+ */
+
+/**
+ * @route POST /api/admin/users/bulk/assign-roles
+ * @desc Bulk assign roles to multiple users
+ * @access Admin
+ */
+router.post(
+	'/bulk/assign-roles',
+	asyncHandler(bulkOperationsController.bulkAssignRoles.bind(bulkOperationsController))
+);
+
+/**
+ * @route POST /api/admin/users/bulk/ban
+ * @desc Bulk ban multiple users
+ * @access Admin
+ */
+router.post(
+	'/bulk/ban',
+	asyncHandler(bulkOperationsController.bulkBanUsers.bind(bulkOperationsController))
+);
+
+/**
+ * @route POST /api/admin/users/bulk/unban
+ * @desc Bulk unban multiple users
+ * @access Admin
+ */
+router.post(
+	'/bulk/unban',
+	asyncHandler(bulkOperationsController.bulkUnbanUsers.bind(bulkOperationsController))
+);
+
+/**
+ * @route GET /api/admin/users/bulk/history
+ * @desc Get bulk operation history for audit
+ * @access Admin
+ */
+router.get(
+	'/bulk/history',
+	asyncHandler(bulkOperationsController.getBulkOperationHistory.bind(bulkOperationsController))
 );
 
 export default router;

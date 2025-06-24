@@ -10,6 +10,7 @@ import { siteSettings, featureFlags } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
 import { AdminError, AdminErrorCodes } from '../../../admin.errors';
+import { adminCacheService } from '../../../shared/admin-cache.service';
 import { settingsQueryService } from './settings-query.service';
 import { settingsValidationService } from './settings-validation.service';
 import type {
@@ -56,6 +57,9 @@ export class SettingsCommandService {
 				.set(updateData)
 				.where(eq(siteSettings.key, key))
 				.returning();
+
+			// Invalidate cache after successful update
+			await adminCacheService.invalidateEntity('setting', key);
 
 			logger.info('SettingsCommandService', 'Setting updated successfully', {
 				key,

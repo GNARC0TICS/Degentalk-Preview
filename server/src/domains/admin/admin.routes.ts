@@ -36,6 +36,7 @@ import animationPackRoutes from './sub-domains/animation-packs/animation-packs.r
 import avatarFramesRoutes from './sub-domains/avatar-frames/avatar-frames.routes';
 import moderatorNotesRoutes from './sub-domains/moderator-notes/moderator-notes.routes';
 import socialRoutes from './sub-domains/social/social.routes';
+import cacheRoutes from './sub-domains/cache/cache.routes';
 import { adminWalletRoutes } from './sub-domains/wallet/wallet.routes';
 // import userAdminRoutes from './users/users.admin.routes'; // DEPRECATED
 // import economyAdminRoutes from './settings/economy.routes'; // Placeholder for future
@@ -71,6 +72,7 @@ adminRouter.use('/animation-packs', animationPackRoutes);
 adminRouter.use('/avatar-frames', avatarFramesRoutes);
 adminRouter.use('/moderator-notes', moderatorNotesRoutes);
 adminRouter.use('/social', socialRoutes);
+adminRouter.use('/cache', cacheRoutes);
 adminRouter.use('/wallet', adminWalletRoutes);
 
 // DEBUG: Middleware to check if /emojis path is reached in adminRouter
