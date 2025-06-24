@@ -44,7 +44,7 @@ export default function XPSystemPage() {
 		colorTheme: '#10b981',
 		animationEffect: '',
 		rarity: 'common',
-		unlocks: {}
+		unlocks: { titles: [], badges: [], frames: [] }
 	});
 
 	const {
@@ -73,7 +73,7 @@ export default function XPSystemPage() {
 			colorTheme: '#10b981',
 			animationEffect: '',
 			rarity: 'common',
-			unlocks: {}
+			unlocks: { titles: [], badges: [], frames: [] }
 		});
 		setSelectedLevel(null);
 		setIsCreateDialogOpen(false);
@@ -171,7 +171,7 @@ export default function XPSystemPage() {
 			colorTheme: level.colorTheme || '#10b981',
 			animationEffect: level.animationEffect || '',
 			rarity: level.rarity || 'common',
-			unlocks: level.unlocks || {}
+			unlocks: level.unlocks || { titles: [], badges: [], frames: [] }
 		});
 		setIsEditDialogOpen(true);
 	};

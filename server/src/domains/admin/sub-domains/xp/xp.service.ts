@@ -99,22 +99,58 @@ export class XpAdminService {
 	}
 
 	async createLevel(levelData: any) {
-		// TODO: Add validation for levelData (minXp, name, rewards etc.)
-		logger.info('XP_ADMIN_SERVICE', 'Create Level called - not implemented', { levelData });
-		// const newLevel = await db.insert(levels).values(levelData).returning();
-		// return newLevel[0];
-		return { message: 'Create Level not implemented' };
+		// Insert a new level row; if level already exists, throw error
+		logger.info('XP_ADMIN_SERVICE', 'Creating level', { levelData });
+		try {
+			const inserted = await db
+				.insert(levels)
+				.values({
+					level: levelData.level,
+					minXp: levelData.xpRequired,
+					name: levelData.rewardTitle || levelData.title || null,
+					rewardDgt: levelData.rewardDgt || 0,
+					rewardTitleId: levelData.rewardTitleId,
+					description: levelData.description || null,
+					iconUrl: levelData.iconUrl,
+					frameUrl: levelData.frameUrl,
+					colorTheme: levelData.colorTheme,
+					animationEffect: levelData.animationEffect,
+					rarity: levelData.rarity || 'common',
+					unlocks: levelData.unlocks || {}
+				})
+				.onConflictDoNothing()
+				.returning();
+			return inserted[0];
+		} catch (err) {
+			logger.error('XP_ADMIN_SERVICE', 'Error creating level', err);
+			throw err;
+		}
 	}
 
 	async updateLevel(levelNumber: number, levelData: any) {
-		// TODO: Add validation
-		logger.info('XP_ADMIN_SERVICE', 'Update Level called - not implemented', {
-			levelNumber,
-			levelData
-		});
-		// const updatedLevel = await db.update(levels).set(levelData).where(eq(levels.level, levelNumber)).returning();
-		// return updatedLevel[0];
-		return { message: 'Update Level not implemented' };
+		logger.info('XP_ADMIN_SERVICE', 'Updating level', { levelNumber, levelData });
+		try {
+			const updated = await db
+				.update(levels)
+				.set({
+					minXp: levelData.xpRequired,
+					name: levelData.rewardTitle || levelData.title || null,
+					rewardDgt: levelData.rewardDgt,
+					description: levelData.description,
+					iconUrl: levelData.iconUrl,
+					frameUrl: levelData.frameUrl,
+					colorTheme: levelData.colorTheme,
+					animationEffect: levelData.animationEffect,
+					rarity: levelData.rarity,
+					unlocks: levelData.unlocks
+				})
+				.where(eq(levels.level, levelNumber))
+				.returning();
+			return updated[0];
+		} catch (err) {
+			logger.error('XP_ADMIN_SERVICE', 'Error updating level', err);
+			throw err;
+		}
 	}
 
 	async deleteLevel(levelNumber: number) {

@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { UserName } from '@/components/users/Username';
-import { LevelBadge } from '@/components/identity/LevelBadge';
+import { LevelBadge } from '@/components/economy/xp/LevelBadge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
 	DropdownMenu,
@@ -315,8 +315,12 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-1.5">
 							<UserName user={msg.user} className="text-sm" />
-							{identity?.level && (
-								<LevelBadge level={identity.level} className="text-xs px-1 py-0" />
+							{(identity?.levelConfig || identity?.level) && (
+								<LevelBadge
+									levelConfig={identity?.levelConfig as any}
+									level={identity?.level}
+									className="text-xs px-1 py-0"
+								/>
 							)}
 							<TooltipProvider>
 								<Tooltip>

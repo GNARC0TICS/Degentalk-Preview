@@ -72,32 +72,30 @@ export const getLevels = async (req: Request, res: Response, next: NextFunction)
 
 export const createLevel = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		// const newLevel = await xpAdminService.createLevel(req.body);
-		// res.status(201).json(newLevel);
-		res.status(501).json({ message: 'Create Level not implemented' });
-	} catch (error) {
-		logger.error(
-			'XP_ADMIN_CONTROLLER',
-			'Error creating level:',
-			error instanceof Error ? error.message : String(error)
-		);
-		next(error);
+		const data = validateRequestBody(req, res, CreateLevelSchema);
+		if (!data) return; // validation handled
+
+		const level = await xpAdminService.createLevel(data);
+		return sendSuccess(res, level, 'Level created');
+	} catch (err) {
+		logger.error('XP_ADMIN_CONTROLLER', 'Error creating level:', err);
+		next(err);
 	}
 };
 
 export const updateLevel = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		// const { levelNumber } = req.params;
-		// const updatedLevel = await xpAdminService.updateLevel(parseInt(levelNumber), req.body);
-		// res.json(updatedLevel);
-		res.status(501).json({ message: 'Update Level not implemented' });
-	} catch (error) {
-		logger.error(
-			'XP_ADMIN_CONTROLLER',
-			'Error updating level:',
-			error instanceof Error ? error.message : String(error)
-		);
-		next(error);
+		const levelNumber = validateNumberParam(req, res, 'levelNumber');
+		if (!levelNumber) return;
+
+		const data = validateRequestBody(req, res, UpdateLevelSchema);
+		if (!data) return;
+
+		const level = await xpAdminService.updateLevel(levelNumber, data);
+		return sendSuccess(res, level, 'Level updated');
+	} catch (err) {
+		logger.error('XP_ADMIN_CONTROLLER', 'Error updating level:', err);
+		next(err);
 	}
 };
 

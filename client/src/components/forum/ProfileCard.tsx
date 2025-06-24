@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { UserName } from '@/components/users/Username';
-import { LevelBadge } from '@/components/identity/LevelBadge';
+import { LevelBadge } from '@/components/economy/xp/LevelBadge';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import { formatDistanceToNow } from 'date-fns';
 import { MessageSquare, Calendar, Award, Shield } from 'lucide-react';
@@ -48,7 +48,9 @@ export function ProfileCard({
 						<Link href={`/profile/${user.id}`} className="flex-shrink-0">
 							<UserName user={user} className="hover:text-emerald-400 transition-colors" />
 						</Link>
-						{showLevel && user.level && <LevelBadge level={user.level} compact />}
+						{showLevel && (user.levelConfig || user.level) && (
+							<LevelBadge levelConfig={user.levelConfig as any} level={user.level} compact />
+						)}
 					</div>
 					{showTitle && user.title && (
 						<p className="text-xs text-zinc-400 truncate">{user.title}</p>
@@ -109,9 +111,9 @@ export function ProfileCard({
 				</div>
 
 				{/* Level and XP */}
-				{showLevel && user.level && (
+				{showLevel && (user.levelConfig || user.level) && (
 					<div className="space-y-2">
-						<LevelBadge level={user.level} showProgress />
+						<LevelBadge levelConfig={user.levelConfig as any} level={user.level} showProgress />
 						{user.xp !== undefined && (
 							<div className="text-xs text-zinc-500 text-center">{user.xp.toLocaleString()} XP</div>
 						)}

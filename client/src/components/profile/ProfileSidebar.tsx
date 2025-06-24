@@ -15,7 +15,7 @@ import type { ProfileData } from '@/types/profile';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { UserName } from '@/components/users/Username';
-import { LevelBadge } from '@/components/identity/LevelBadge';
+import { LevelBadge } from '@/components/economy/xp/LevelBadge';
 import { FollowButton } from '@/components/social/FollowButton';
 
 interface Props {
@@ -96,7 +96,13 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 						{identity.primaryRole.name}
 					</Badge>
 				)}
-				{identity?.level && <LevelBadge level={identity.level} className="mb-4 text-sm" />}
+				{identity && (
+					<LevelBadge
+						levelConfig={identity.levelConfig as any}
+						level={identity.level}
+						className="mb-4 text-sm"
+					/>
+				)}
 
 				{/* Actions */}
 				<div className="flex gap-2 w-full mb-6">

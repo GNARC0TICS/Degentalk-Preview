@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { TitleMediaInput } from '@/components/admin/forms/xp/TitleMediaInput';
+import { UnlockMultiSelect } from '@/components/admin/inputs/UnlockMultiSelect';
 // Assuming Level and LevelFormData types might be needed by the page as well
 // If not, they can be kept internal to this file.
 
@@ -245,8 +246,43 @@ export const LevelFormDialogComponent: React.FC<LevelFormDialogProps> = ({
 					</TabsContent>
 
 					<TabsContent value="unlocks" className="grid gap-4 py-4">
+						<UnlockMultiSelect
+							label="Titles"
+							endpoint="/api/admin/titles"
+							selectedIds={formData.unlocks?.titles || []}
+							onChange={(ids) =>
+								setFormData({
+									...formData,
+									unlocks: { ...formData.unlocks, titles: ids }
+								})
+							}
+						/>
+						<UnlockMultiSelect
+							label="Badges"
+							endpoint="/api/admin/badges"
+							selectedIds={formData.unlocks?.badges || []}
+							onChange={(ids) =>
+								setFormData({
+									...formData,
+									unlocks: { ...formData.unlocks, badges: ids }
+								})
+							}
+						/>
+						<UnlockMultiSelect
+							label="Frames"
+							endpoint="/api/admin/frames"
+							selectedIds={formData.unlocks?.frames || []}
+							onChange={(ids) =>
+								setFormData({
+									...formData,
+									unlocks: { ...formData.unlocks, frames: ids }
+								})
+							}
+						/>
+
+						{/* Collapsible advanced JSON editor */}
 						<div className="grid gap-2">
-							<Label>Unlocks JSON</Label>
+							<Label className="text-sm">Advanced JSON Editor</Label>
 							<Textarea
 								rows={6}
 								value={JSON.stringify(formData.unlocks || {}, null, 2)}
@@ -255,7 +291,7 @@ export const LevelFormDialogComponent: React.FC<LevelFormDialogProps> = ({
 										const parsed = JSON.parse(e.target.value || '{}');
 										setFormData({ ...formData, unlocks: parsed });
 									} catch (_) {
-										// ignore parse errors for now
+										// ignore parse errors
 									}
 								}}
 							/>

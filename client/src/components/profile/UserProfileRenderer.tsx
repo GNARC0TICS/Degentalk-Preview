@@ -3,7 +3,7 @@ import { Link } from 'wouter';
 import { Badge } from '@/components/ui/badge';
 import { PostAvatar } from '@/components/users/UserAvatar';
 import { UserName } from '@/components/users/Username';
-import { LevelBadge } from '@/components/identity/LevelBadge';
+import { LevelBadge } from '@/components/economy/xp/LevelBadge';
 import { RoleBadge } from '@/components/identity/RoleBadge';
 import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import { formatDistanceToNow } from 'date-fns';
@@ -78,7 +78,9 @@ export function UserProfileRenderer({
 					{showVerifiedBadge && user.isVerified && (
 						<Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
 					)}
-					{showLevel && user.level && <LevelBadge level={user.level} size="sm" />}
+					{showLevel && (user.levelConfig || user.level) && (
+						<LevelBadge levelConfig={user.levelConfig} level={user.level} size="sm" />
+					)}
 				</div>
 			</div>
 		);
@@ -97,7 +99,9 @@ export function UserProfileRenderer({
 				<div className="flex-1 min-w-0">
 					<div className="flex items-center space-x-2">
 						{UserNameComponent}
-						{showLevel && user.level && <LevelBadge level={user.level} size="sm" />}
+						{showLevel && (user.levelConfig || user.level) && (
+							<LevelBadge levelConfig={user.levelConfig} level={user.level} size="sm" />
+						)}
 					</div>
 					{showRole && identity?.primaryRole && <RoleBadge role={identity.primaryRole} size="sm" />}
 				</div>
@@ -129,7 +133,9 @@ export function UserProfileRenderer({
 				<div className="space-y-2">
 					{UserNameComponent}
 					{showRole && identity?.primaryRole && <RoleBadge role={identity.primaryRole} size="sm" />}
-					{showLevel && user.level && <LevelBadge level={user.level} size="sm" />}
+					{showLevel && (user.levelConfig || user.level) && (
+						<LevelBadge levelConfig={user.levelConfig} level={user.level} size="sm" />
+					)}
 				</div>
 				{showOnlineStatus && (
 					<Badge variant="outline" className="text-[10px] px-2 py-0.5 mt-2">
@@ -169,7 +175,9 @@ export function UserProfileRenderer({
 						{showRole && identity?.primaryRole && (
 							<RoleBadge role={identity.primaryRole} size="sm" />
 						)}
-						{showLevel && user.level && <LevelBadge level={user.level} showProgress />}
+						{showLevel && (user.levelConfig || user.level) && (
+							<LevelBadge levelConfig={user.levelConfig} level={user.level} showProgress />
+						)}
 					</div>
 				</div>
 
