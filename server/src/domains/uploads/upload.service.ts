@@ -4,13 +4,21 @@
 import {
 	storageService,
 	AVATARS_BUCKET,
-	BANNERS_BUCKET
+	BANNERS_BUCKET,
+	STICKERS_BUCKET
 	// type GetPresignedUploadUrlParams, // This type is for storageService, not directly used here
 	// type PresignedUrlInfo // This type is for storageService, not directly used here
 } from '../../core/storage.service';
 
 // --- Types specific to this Upload Domain Service ---
-export type UploadType = 'avatar' | 'banner';
+export type UploadType =
+	| 'avatar'
+	| 'banner'
+	| 'sticker_static'
+	| 'sticker_animated'
+	| 'sticker_thumbnail'
+	| 'sticker_pack_cover'
+	| 'sticker_pack_preview';
 
 export interface CreatePresignedUrlServiceParams {
 	userId: string;
@@ -18,6 +26,9 @@ export interface CreatePresignedUrlServiceParams {
 	fileType: string;
 	fileSize: number;
 	uploadType: UploadType;
+	// Sticker-specific parameters
+	stickerId?: number; // For individual sticker files
+	packId?: number; // For pack cover/preview images
 }
 
 export interface PresignedUploadServiceResult {
@@ -71,9 +82,17 @@ export class UploadService {
 	async createPresignedUploadUrl(
 		params: CreatePresignedUrlServiceParams
 	): Promise<PresignedUploadServiceResult> {
-		const { userId, fileName, fileType, fileSize, uploadType } = params;
+		const { userId, fileName, fileType, fileSize, uploadType, stickerId, packId } = params;
 
-		const bucketName = uploadType === 'avatar' ? AVATARS_BUCKET : BANNERS_BUCKET;
+		// Determine bucket based on upload type
+		let bucketName: string;
+		if (uploadType.startsWith('sticker')) {
+			bucketName = STICKERS_BUCKET;
+		} else if (uploadType === 'avatar') {
+			bucketName = AVATARS_BUCKET;
+		} else {
+			bucketName = BANNERS_BUCKET;
+		}
 
 		const extension = this.getFileExtension(fileName);
 		if (!extension) {
@@ -83,8 +102,33 @@ export class UploadService {
 			);
 		}
 
-		// Deterministic relative path
-		const relativePath = `users/${userId}/${uploadType}.${extension}`;
+		// Generate path based on upload type
+		let relativePath: string;
+
+		if (uploadType.startsWith('sticker_pack_')) {
+			// Pack files: stickers/packs/{packId}/cover.webp or preview.webp
+			if (!packId) {
+				throw new DegenUploadError(
+					'Pack ID is required for sticker pack uploads. Cannot upload pack assets without a pack.',
+					400
+				);
+			}
+			const fileType = uploadType === 'sticker_pack_cover' ? 'cover' : 'preview';
+			relativePath = `packs/${packId}/${fileType}.${extension}`;
+		} else if (uploadType.startsWith('sticker_')) {
+			// Individual sticker files: stickers/stickers/{stickerId}/static.webp, animated.webm, thumbnail.webp
+			if (!stickerId) {
+				throw new DegenUploadError(
+					'Sticker ID is required for sticker uploads. Cannot upload sticker assets without a sticker.',
+					400
+				);
+			}
+			const fileType = uploadType.replace('sticker_', ''); // static, animated, thumbnail
+			relativePath = `stickers/${stickerId}/${fileType}.${extension}`;
+		} else {
+			// Original logic for avatars/banners
+			relativePath = `users/${userId}/${uploadType}.${extension}`;
+		}
 
 		try {
 			const presignedInfoFromStorage = await storageService.getPresignedUploadUrl({
@@ -134,17 +178,43 @@ export class UploadService {
 	): Promise<UploadConfirmationServiceResult> {
 		const { relativePath, uploadType } = params;
 
-		const bucketName = uploadType === 'avatar' ? AVATARS_BUCKET : BANNERS_BUCKET;
+		// Determine bucket based on upload type
+		let bucketName: string;
+		if (uploadType.startsWith('sticker')) {
+			bucketName = STICKERS_BUCKET;
+		} else if (uploadType === 'avatar') {
+			bucketName = AVATARS_BUCKET;
+		} else {
+			bucketName = BANNERS_BUCKET;
+		}
 
-		const expectedUserFolder = `users/${userId}/`;
-		if (!relativePath.startsWith(expectedUserFolder)) {
-			console.error(
-				`UploadService: Security check failed. User ${userId} trying to confirm path ${relativePath} not matching their folder.`
-			);
-			throw new DegenUploadError(
-				`Hold your horses, degenerate! That path (${relativePath}) ain't yours to confirm. Nice try, script kiddie.`,
-				403
-			);
+		// Security validation - different logic for stickers vs user uploads
+		if (uploadType.startsWith('sticker')) {
+			// For stickers, verify the path structure is valid (no user folder restriction)
+			const isValidStickerPath =
+				relativePath.startsWith('stickers/') || relativePath.startsWith('packs/');
+
+			if (!isValidStickerPath) {
+				console.error(
+					`UploadService: Invalid sticker path structure. Path ${relativePath} does not match expected sticker patterns.`
+				);
+				throw new DegenUploadError(
+					`Invalid sticker upload path: ${relativePath}. Sticker files must be in stickers/ or packs/ directories.`,
+					400
+				);
+			}
+		} else {
+			// Original user folder security check for avatars/banners
+			const expectedUserFolder = `users/${userId}/`;
+			if (!relativePath.startsWith(expectedUserFolder)) {
+				console.error(
+					`UploadService: Security check failed. User ${userId} trying to confirm path ${relativePath} not matching their folder.`
+				);
+				throw new DegenUploadError(
+					`Hold your horses, degenerate! That path (${relativePath}) ain't yours to confirm. Nice try, script kiddie.`,
+					403
+				);
+			}
 		}
 
 		try {
@@ -187,6 +257,56 @@ export class UploadService {
 			throw new DegenUploadError(
 				`Something went intergalactically wrong confirming your upload of ${relativePath}. Server's probably rugged.`,
 				statusCode // Propagate status code if available
+			);
+		}
+	}
+
+	/**
+	 * Delete a file from storage (admin operation for asset management)
+	 */
+	async deleteFile(
+		uploadType: UploadType,
+		relativePath: string,
+		adminId: string
+	): Promise<{ success: boolean; message: string }> {
+		// Determine bucket
+		let bucketName: string;
+		if (uploadType.startsWith('sticker')) {
+			bucketName = STICKERS_BUCKET;
+		} else if (uploadType === 'avatar') {
+			bucketName = AVATARS_BUCKET;
+		} else {
+			bucketName = BANNERS_BUCKET;
+		}
+
+		try {
+			const deleted = await storageService.deleteFile(bucketName, relativePath);
+
+			if (deleted) {
+				console.log(
+					`UploadService: Admin ${adminId} successfully deleted file ${bucketName}/${relativePath}`
+				);
+				return {
+					success: true,
+					message: `File ${relativePath} deleted successfully from ${bucketName}`
+				};
+			} else {
+				return {
+					success: false,
+					message: `File ${relativePath} could not be deleted or was already missing`
+				};
+			}
+		} catch (err) {
+			if (err instanceof DegenUploadError) {
+				throw err;
+			}
+			console.error(
+				`UploadService: Error deleting file ${bucketName}/${relativePath} by admin ${adminId}:`,
+				err
+			);
+			throw new DegenUploadError(
+				`Failed to delete file ${relativePath}. Storage service error.`,
+				500
 			);
 		}
 	}

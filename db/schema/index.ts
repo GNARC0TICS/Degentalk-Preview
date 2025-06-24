@@ -135,6 +135,7 @@ export * from './admin/uiConfig';
 export * from './admin/uiThemes';
 export * from './admin/moderator-notes';
 export * from './admin/emailTemplates';
+export * from './admin/backups';
 
 // Gamification domain exports
 export * from './gamification/achievements';
@@ -176,6 +177,9 @@ export * from './wallet/internal-transfers';
 export * from './wallet/swap-records';
 export * from './wallet/webhook-events';
 export * from './wallet/supported-tokens';
+
+// Collectibles domain exports - Sticker system
+export * from './collectibles/stickers';
 
 // Note: './forum/threadDrafts.ts' was commented out as it was empty in the previous steps.
 // Ensure all files listed for export actually exist and contain exports.

@@ -17,6 +17,7 @@ const supabase: SupabaseClient = createClient(supabaseUrl!, supabaseServiceKey!)
 // --- Constants for Buckets ---
 export const AVATARS_BUCKET = 'avatars';
 export const BANNERS_BUCKET = 'banners';
+export const STICKERS_BUCKET = 'stickers';
 
 // --- Interface Definitions ---
 export interface PresignedUploadOptions {
@@ -45,7 +46,7 @@ export interface IStorageService {
 
 	verifyFileExists(bucket: string, relativePath: string): Promise<boolean>;
 
-	// deleteFile(bucket: string, relativePath: string): Promise<void>; // For future use
+	deleteFile(bucket: string, relativePath: string): Promise<boolean>;
 }
 
 // --- Supabase Storage Service Implementation ---
@@ -53,7 +54,75 @@ class SupabaseStorageService implements IStorageService {
 	// Max file sizes specific to Supabase buckets (can be part of bucket config or here)
 	private MAX_AVATAR_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 	private MAX_BANNER_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
+	private MAX_STICKER_STATIC_SIZE_BYTES = 2 * 1024 * 1024; // 2MB for static stickers
+	private MAX_STICKER_ANIMATED_SIZE_BYTES = 8 * 1024 * 1024; // 8MB for animated stickers
+	private MAX_STICKER_THUMBNAIL_SIZE_BYTES = 512 * 1024; // 512KB for thumbnails
+
 	private ALLOWED_MIME_TYPES: string[] = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+	private ALLOWED_STICKER_STATIC_TYPES: string[] = ['image/webp', 'image/png'];
+	private ALLOWED_STICKER_ANIMATED_TYPES: string[] = ['video/webm', 'application/json']; // WebM videos + Lottie JSON
+	private ALLOWED_STICKER_THUMBNAIL_TYPES: string[] = ['image/webp', 'image/png'];
+
+	/**
+	 * Validate sticker files based on type and path structure
+	 */
+	private validateStickerFile(targetPath: string, fileType: string, fileSize: number): void {
+		// Determine sticker file type from path
+		let stickerFileType: 'static' | 'animated' | 'thumbnail' | 'pack_cover' | 'pack_preview';
+		let maxSize: number;
+		let allowedTypes: string[];
+
+		if (targetPath.includes('/static.') || targetPath.endsWith('/static')) {
+			stickerFileType = 'static';
+			maxSize = this.MAX_STICKER_STATIC_SIZE_BYTES;
+			allowedTypes = this.ALLOWED_STICKER_STATIC_TYPES;
+		} else if (targetPath.includes('/animated.') || targetPath.endsWith('/animated')) {
+			stickerFileType = 'animated';
+			maxSize = this.MAX_STICKER_ANIMATED_SIZE_BYTES;
+			allowedTypes = this.ALLOWED_STICKER_ANIMATED_TYPES;
+		} else if (targetPath.includes('/thumbnail.') || targetPath.endsWith('/thumbnail')) {
+			stickerFileType = 'thumbnail';
+			maxSize = this.MAX_STICKER_THUMBNAIL_SIZE_BYTES;
+			allowedTypes = this.ALLOWED_STICKER_THUMBNAIL_TYPES;
+		} else if (targetPath.includes('/cover.') || targetPath.includes('/preview.')) {
+			// Pack images
+			stickerFileType = targetPath.includes('/cover.') ? 'pack_cover' : 'pack_preview';
+			maxSize = this.MAX_STICKER_STATIC_SIZE_BYTES; // Same as static stickers
+			allowedTypes = this.ALLOWED_STICKER_STATIC_TYPES;
+		} else {
+			throw new DegenUploadError(
+				`Sticker path structure is sus: ${targetPath}. Expected formats like /stickers/123/static.webp or /packs/456/cover.webp`
+			);
+		}
+
+		// Validate file type
+		if (!allowedTypes.includes(fileType.toLowerCase())) {
+			const typeList = allowedTypes.join(', ');
+			throw new DegenUploadError(
+				`File type ${fileType} not allowed for ${stickerFileType} stickers. Allowed: ${typeList}`
+			);
+		}
+
+		// Validate file size
+		if (fileSize > maxSize) {
+			const actualSizeMB = (fileSize / (1024 * 1024)).toFixed(2);
+			const maxSizeMB = (maxSize / (1024 * 1024)).toFixed(2);
+			throw new DegenUploadError(
+				`${stickerFileType} sticker file too large: ${actualSizeMB}MB. Max allowed: ${maxSizeMB}MB`
+			);
+		}
+
+		// Additional validation for Lottie files
+		if (fileType === 'application/json' && stickerFileType === 'animated') {
+			// Lottie files should have reasonable size limits
+			if (fileSize > 1024 * 1024) {
+				// 1MB limit for JSON
+				throw new DegenUploadError(
+					`Lottie animation file too large: ${(fileSize / (1024 * 1024)).toFixed(2)}MB. Max for JSON: 1MB`
+				);
+			}
+		}
+	}
 
 	async getPresignedUploadUrl(params: GetPresignedUploadUrlParams): Promise<PresignedUrlInfo> {
 		const { bucket, relativePath: targetPath, fileType, fileSize } = params;
@@ -65,26 +134,32 @@ class SupabaseStorageService implements IStorageService {
 			);
 		}
 
-		// Validate file type
-		if (!this.ALLOWED_MIME_TYPES.includes(fileType.toLowerCase())) {
-			throw new DegenUploadError(
-				`Yo, storage service says that file type (${fileType}) ain't cool. Stick to JPG, PNG, GIF, or WEBP.`
-			);
-		}
+		// Validate file type and size based on bucket and path
+		if (bucket === STICKERS_BUCKET) {
+			// Sticker-specific validation
+			this.validateStickerFile(targetPath, fileType, fileSize);
+		} else {
+			// Original validation for avatars/banners
+			if (!this.ALLOWED_MIME_TYPES.includes(fileType.toLowerCase())) {
+				throw new DegenUploadError(
+					`Yo, storage service says that file type (${fileType}) ain't cool. Stick to JPG, PNG, GIF, or WEBP.`
+				);
+			}
 
-		// Validate file size based on bucket
-		const maxSizeLimitBytes =
-			bucket === AVATARS_BUCKET ? this.MAX_AVATAR_SIZE_BYTES : this.MAX_BANNER_SIZE_BYTES;
-		const maxSizeLimitMB =
-			bucket === AVATARS_BUCKET
-				? this.MAX_AVATAR_SIZE_BYTES / (1024 * 1024)
-				: this.MAX_BANNER_SIZE_BYTES / (1024 * 1024);
+			// Validate file size based on bucket
+			const maxSizeLimitBytes =
+				bucket === AVATARS_BUCKET ? this.MAX_AVATAR_SIZE_BYTES : this.MAX_BANNER_SIZE_BYTES;
+			const maxSizeLimitMB =
+				bucket === AVATARS_BUCKET
+					? this.MAX_AVATAR_SIZE_BYTES / (1024 * 1024)
+					: this.MAX_BANNER_SIZE_BYTES / (1024 * 1024);
 
-		if (fileSize > maxSizeLimitBytes) {
-			const actualSizeMB = (fileSize / (1024 * 1024)).toFixed(1);
-			throw new DegenUploadError(
-				`That file for ${bucket} is a thicc boi (${actualSizeMB}MB)! Max is ${maxSizeLimitMB}MB. NGMI.`
-			);
+			if (fileSize > maxSizeLimitBytes) {
+				const actualSizeMB = (fileSize / (1024 * 1024)).toFixed(1);
+				throw new DegenUploadError(
+					`That file for ${bucket} is a thicc boi (${actualSizeMB}MB)! Max is ${maxSizeLimitMB}MB. NGMI.`
+				);
+			}
 		}
 
 		try {
@@ -171,6 +246,47 @@ class SupabaseStorageService implements IStorageService {
 		} catch (err) {
 			console.error(`Unexpected error verifying file ${bucket}/${relativePath}:`, err);
 			return false; // Or throw
+		}
+	}
+
+	/**
+	 * Delete a file from storage (for admin asset management)
+	 */
+	async deleteFile(bucket: string, relativePath: string): Promise<boolean> {
+		if (!supabaseUrl || !supabaseServiceKey) {
+			console.error('Supabase creds not set, cannot delete file.');
+			throw new DegenUploadError(
+				'Storage service misconfigured for file deletion. Check your environment setup.',
+				500
+			);
+		}
+
+		try {
+			const { error } = await supabase.storage.from(bucket).remove([relativePath]);
+
+			if (error) {
+				console.error(`Error deleting file ${bucket}/${relativePath}:`, error);
+				throw new DegenUploadError(
+					`Failed to delete file ${relativePath} from ${bucket}. Storage service error: ${error.message}`,
+					500
+				);
+			}
+
+			// Verify deletion
+			const stillExists = await this.verifyFileExists(bucket, relativePath);
+			if (stillExists) {
+				console.warn(`File ${bucket}/${relativePath} still exists after deletion attempt`);
+				return false;
+			}
+
+			return true;
+		} catch (err) {
+			if (err instanceof DegenUploadError) throw err;
+			console.error(`Unexpected error deleting file ${bucket}/${relativePath}:`, err);
+			throw new DegenUploadError(
+				`Something went wrong deleting ${relativePath}. Storage service might be having issues.`,
+				500
+			);
 		}
 	}
 }

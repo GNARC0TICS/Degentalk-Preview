@@ -1,0 +1,674 @@
+/**
+ * Sticker Service
+ *
+ * Business logic for Telegram-style sticker system
+ */
+
+import { eq, and, like, desc, asc, count, sql, inArray, isNull } from 'drizzle-orm';
+import { db } from '@server/src/core/database';
+import {
+	stickers,
+	stickerPacks,
+	userStickerInventory,
+	userStickerPacks,
+	stickerUsage,
+	type Sticker,
+	type StickerPack,
+	type NewSticker,
+	type NewStickerPack
+} from '@schema';
+import {
+	type CreateStickerInput,
+	type UpdateStickerInput,
+	type ListStickersInput,
+	type CreateStickerPackInput,
+	type UpdateStickerPackInput,
+	type ListStickerPacksInput,
+	type BulkDeleteStickersInput,
+	type TrackStickerUsageInput
+} from './stickers.validators';
+
+export class StickerService {
+	// ============ STICKER MANAGEMENT ============
+
+	/**
+	 * Get all stickers with filtering and pagination
+	 */
+	async getStickers(options: ListStickersInput) {
+		const {
+			page,
+			limit,
+			search,
+			rarity,
+			packId,
+			unlockType,
+			isActive,
+			isVisible,
+			isAnimated,
+			sortBy,
+			sortOrder
+		} = options;
+		const offset = (page - 1) * limit;
+
+		// Build where conditions
+		const conditions = [];
+		conditions.push(eq(stickers.isDeleted, false));
+
+		if (search) {
+			conditions.push(
+				sql`(${stickers.displayName} ILIKE ${`%${search}%`} OR ${stickers.shortcode} ILIKE ${`%${search}%`} OR ${stickers.tags} ILIKE ${`%${search}%`})`
+			);
+		}
+		if (rarity) conditions.push(eq(stickers.rarity, rarity));
+		if (packId) conditions.push(eq(stickers.packId, packId));
+		if (unlockType) conditions.push(eq(stickers.unlockType, unlockType));
+		if (isActive !== undefined) conditions.push(eq(stickers.isActive, isActive));
+		if (isVisible !== undefined) conditions.push(eq(stickers.isVisible, isVisible));
+		if (isAnimated !== undefined) conditions.push(eq(stickers.isAnimated, isAnimated));
+
+		// Build sort order
+		const orderBy = sortOrder === 'asc' ? asc : desc;
+		let sortColumn;
+		switch (sortBy) {
+			case 'name':
+				sortColumn = stickers.name;
+				break;
+			case 'displayName':
+				sortColumn = stickers.displayName;
+				break;
+			case 'rarity':
+				sortColumn = stickers.rarity;
+				break;
+			case 'popularity':
+				sortColumn = stickers.popularityScore;
+				break;
+			case 'unlocks':
+				sortColumn = stickers.totalUnlocks;
+				break;
+			default:
+				sortColumn = stickers.createdAt;
+				break;
+		}
+
+		// Execute query with pack information
+		const [stickerList, totalCountResult] = await Promise.all([
+			db
+				.select({
+					id: stickers.id,
+					name: stickers.name,
+					displayName: stickers.displayName,
+					shortcode: stickers.shortcode,
+					description: stickers.description,
+					staticUrl: stickers.staticUrl,
+					animatedUrl: stickers.animatedUrl,
+					thumbnailUrl: stickers.thumbnailUrl,
+					width: stickers.width,
+					height: stickers.height,
+					staticFileSize: stickers.staticFileSize,
+					animatedFileSize: stickers.animatedFileSize,
+					format: stickers.format,
+					rarity: stickers.rarity,
+					packId: stickers.packId,
+					unlockType: stickers.unlockType,
+					priceDgt: stickers.priceDgt,
+					requiredXp: stickers.requiredXp,
+					requiredLevel: stickers.requiredLevel,
+					isActive: stickers.isActive,
+					isVisible: stickers.isVisible,
+					isAnimated: stickers.isAnimated,
+					totalUnlocks: stickers.totalUnlocks,
+					totalUsage: stickers.totalUsage,
+					popularityScore: stickers.popularityScore,
+					createdAt: stickers.createdAt,
+					updatedAt: stickers.updatedAt,
+					tags: stickers.tags,
+					adminNotes: stickers.adminNotes,
+					// Pack information
+					packName: stickerPacks.displayName
+				})
+				.from(stickers)
+				.leftJoin(stickerPacks, eq(stickers.packId, stickerPacks.id))
+				.where(and(...conditions))
+				.orderBy(orderBy(sortColumn))
+				.limit(limit)
+				.offset(offset),
+
+			db
+				.select({ count: count() })
+				.from(stickers)
+				.leftJoin(stickerPacks, eq(stickers.packId, stickerPacks.id))
+				.where(and(...conditions))
+		]);
+
+		const totalCount = totalCountResult[0]?.count || 0;
+		const totalPages = Math.ceil(totalCount / limit);
+
+		return {
+			stickers: stickerList,
+			pagination: {
+				page,
+				limit,
+				totalCount,
+				totalPages,
+				hasNext: page < totalPages,
+				hasPrev: page > 1
+			}
+		};
+	}
+
+	/**
+	 * Get single sticker by ID
+	 */
+	async getSticker(id: number): Promise<Sticker & { packName?: string }> {
+		const result = await db
+			.select({
+				id: stickers.id,
+				name: stickers.name,
+				displayName: stickers.displayName,
+				shortcode: stickers.shortcode,
+				description: stickers.description,
+				staticUrl: stickers.staticUrl,
+				animatedUrl: stickers.animatedUrl,
+				thumbnailUrl: stickers.thumbnailUrl,
+				width: stickers.width,
+				height: stickers.height,
+				staticFileSize: stickers.staticFileSize,
+				animatedFileSize: stickers.animatedFileSize,
+				format: stickers.format,
+				rarity: stickers.rarity,
+				packId: stickers.packId,
+				unlockType: stickers.unlockType,
+				priceDgt: stickers.priceDgt,
+				requiredXp: stickers.requiredXp,
+				requiredLevel: stickers.requiredLevel,
+				isActive: stickers.isActive,
+				isVisible: stickers.isVisible,
+				isAnimated: stickers.isAnimated,
+				isDeleted: stickers.isDeleted,
+				deletedAt: stickers.deletedAt,
+				totalUnlocks: stickers.totalUnlocks,
+				totalUsage: stickers.totalUsage,
+				popularityScore: stickers.popularityScore,
+				createdBy: stickers.createdBy,
+				createdAt: stickers.createdAt,
+				updatedAt: stickers.updatedAt,
+				adminNotes: stickers.adminNotes,
+				tags: stickers.tags,
+				packName: stickerPacks.displayName
+			})
+			.from(stickers)
+			.leftJoin(stickerPacks, eq(stickers.packId, stickerPacks.id))
+			.where(and(eq(stickers.id, id), eq(stickers.isDeleted, false)))
+			.limit(1);
+
+		if (!result[0]) {
+			throw new Error('Sticker not found');
+		}
+
+		return result[0];
+	}
+
+	/**
+	 * Create new sticker
+	 */
+	async createSticker(
+		data: CreateStickerInput,
+		adminId: string
+	): Promise<{ stickerId: number; message: string }> {
+		// Check for duplicate shortcode
+		const existingShortcode = await db
+			.select({ id: stickers.id })
+			.from(stickers)
+			.where(and(eq(stickers.shortcode, data.shortcode), eq(stickers.isDeleted, false)))
+			.limit(1);
+
+		if (existingShortcode.length > 0) {
+			throw new Error('Sticker shortcode already exists');
+		}
+
+		// Check for duplicate name
+		const existingName = await db
+			.select({ id: stickers.id })
+			.from(stickers)
+			.where(and(eq(stickers.name, data.name), eq(stickers.isDeleted, false)))
+			.limit(1);
+
+		if (existingName.length > 0) {
+			throw new Error('Sticker name already exists');
+		}
+
+		// Validate pack exists if specified
+		if (data.packId) {
+			const pack = await db
+				.select({ id: stickerPacks.id })
+				.from(stickerPacks)
+				.where(eq(stickerPacks.id, data.packId))
+				.limit(1);
+
+			if (!pack[0]) {
+				throw new Error('Sticker pack not found');
+			}
+		}
+
+		const newSticker: NewSticker = {
+			...data,
+			createdBy: adminId
+		};
+
+		const result = await db.insert(stickers).values(newSticker).returning({ id: stickers.id });
+		const stickerId = result[0].id;
+
+		// Update pack sticker count if sticker belongs to a pack
+		if (data.packId) {
+			await this.updatePackStickerCount(data.packId);
+		}
+
+		return {
+			stickerId,
+			message: 'Sticker created successfully'
+		};
+	}
+
+	/**
+	 * Update existing sticker
+	 */
+	async updateSticker(
+		id: number,
+		data: UpdateStickerInput,
+		adminId: string
+	): Promise<{ message: string }> {
+		// Check if sticker exists
+		const existingSticker = await this.getSticker(id);
+
+		// Check for duplicate shortcode (if changing)
+		if (data.shortcode && data.shortcode !== existingSticker.shortcode) {
+			const duplicateShortcode = await db
+				.select({ id: stickers.id })
+				.from(stickers)
+				.where(and(eq(stickers.shortcode, data.shortcode), eq(stickers.isDeleted, false)))
+				.limit(1);
+
+			if (duplicateShortcode.length > 0) {
+				throw new Error('Sticker shortcode already exists');
+			}
+		}
+
+		// Check for duplicate name (if changing)
+		if (data.name && data.name !== existingSticker.name) {
+			const duplicateName = await db
+				.select({ id: stickers.id })
+				.from(stickers)
+				.where(and(eq(stickers.name, data.name), eq(stickers.isDeleted, false)))
+				.limit(1);
+
+			if (duplicateName.length > 0) {
+				throw new Error('Sticker name already exists');
+			}
+		}
+
+		// Validate pack exists if changing
+		if (data.packId && data.packId !== existingSticker.packId) {
+			const pack = await db
+				.select({ id: stickerPacks.id })
+				.from(stickerPacks)
+				.where(eq(stickerPacks.id, data.packId))
+				.limit(1);
+
+			if (!pack[0]) {
+				throw new Error('Sticker pack not found');
+			}
+		}
+
+		await db
+			.update(stickers)
+			.set({ ...data, updatedAt: sql`now()` })
+			.where(eq(stickers.id, id));
+
+		// Update pack sticker counts if pack changed
+		if (data.packId !== undefined) {
+			if (existingSticker.packId) {
+				await this.updatePackStickerCount(existingSticker.packId);
+			}
+			if (data.packId) {
+				await this.updatePackStickerCount(data.packId);
+			}
+		}
+
+		return { message: 'Sticker updated successfully' };
+	}
+
+	/**
+	 * Soft delete sticker
+	 */
+	async deleteSticker(id: number, adminId: string): Promise<{ message: string }> {
+		const existingSticker = await this.getSticker(id);
+
+		await db
+			.update(stickers)
+			.set({
+				isDeleted: true,
+				deletedAt: sql`now()`,
+				updatedAt: sql`now()`
+			})
+			.where(eq(stickers.id, id));
+
+		// Update pack sticker count
+		if (existingSticker.packId) {
+			await this.updatePackStickerCount(existingSticker.packId);
+		}
+
+		return { message: 'Sticker deleted successfully' };
+	}
+
+	/**
+	 * Bulk delete stickers
+	 */
+	async bulkDeleteStickers(
+		data: BulkDeleteStickersInput,
+		adminId: string
+	): Promise<{ deletedCount: number; message: string }> {
+		// Get pack IDs for count updates
+		const stickerPacks = await db
+			.select({ packId: stickers.packId })
+			.from(stickers)
+			.where(and(inArray(stickers.id, data.ids), eq(stickers.isDeleted, false)));
+
+		const result = await db
+			.update(stickers)
+			.set({
+				isDeleted: true,
+				deletedAt: sql`now()`,
+				updatedAt: sql`now()`
+			})
+			.where(and(inArray(stickers.id, data.ids), eq(stickers.isDeleted, false)))
+			.returning({ id: stickers.id });
+
+		// Update pack sticker counts
+		const uniquePackIds = [...new Set(stickerPacks.map((p) => p.packId).filter(Boolean))];
+		await Promise.all(uniquePackIds.map((packId) => this.updatePackStickerCount(packId)));
+
+		return {
+			deletedCount: result.length,
+			message: `${result.length} stickers deleted successfully`
+		};
+	}
+
+	// ============ STICKER PACK MANAGEMENT ============
+
+	/**
+	 * Get all sticker packs with filtering
+	 */
+	async getStickerPacks(options: ListStickerPacksInput) {
+		const {
+			page,
+			limit,
+			search,
+			theme,
+			unlockType,
+			isActive,
+			isVisible,
+			isPromoted,
+			sortBy,
+			sortOrder
+		} = options;
+		const offset = (page - 1) * limit;
+
+		// Build where conditions
+		const conditions = [];
+
+		if (search) {
+			conditions.push(
+				sql`(${stickerPacks.displayName} ILIKE ${`%${search}%`} OR ${stickerPacks.description} ILIKE ${`%${search}%`})`
+			);
+		}
+		if (theme) conditions.push(eq(stickerPacks.theme, theme));
+		if (unlockType) conditions.push(eq(stickerPacks.unlockType, unlockType));
+		if (isActive !== undefined) conditions.push(eq(stickerPacks.isActive, isActive));
+		if (isVisible !== undefined) conditions.push(eq(stickerPacks.isVisible, isVisible));
+		if (isPromoted !== undefined) conditions.push(eq(stickerPacks.isPromoted, isPromoted));
+
+		// Build sort order
+		const orderBy = sortOrder === 'asc' ? asc : desc;
+		let sortColumn;
+		switch (sortBy) {
+			case 'name':
+				sortColumn = stickerPacks.name;
+				break;
+			case 'displayName':
+				sortColumn = stickerPacks.displayName;
+				break;
+			case 'popularity':
+				sortColumn = stickerPacks.popularityScore;
+				break;
+			case 'unlocks':
+				sortColumn = stickerPacks.totalUnlocks;
+				break;
+			case 'sortOrder':
+				sortColumn = stickerPacks.sortOrder;
+				break;
+			default:
+				sortColumn = stickerPacks.createdAt;
+				break;
+		}
+
+		// Execute query
+		const [packList, totalCountResult] = await Promise.all([
+			db
+				.select()
+				.from(stickerPacks)
+				.where(conditions.length > 0 ? and(...conditions) : undefined)
+				.orderBy(orderBy(sortColumn))
+				.limit(limit)
+				.offset(offset),
+
+			db
+				.select({ count: count() })
+				.from(stickerPacks)
+				.where(conditions.length > 0 ? and(...conditions) : undefined)
+		]);
+
+		const totalCount = totalCountResult[0]?.count || 0;
+		const totalPages = Math.ceil(totalCount / limit);
+
+		return {
+			packs: packList,
+			pagination: {
+				page,
+				limit,
+				totalCount,
+				totalPages,
+				hasNext: page < totalPages,
+				hasPrev: page > 1
+			}
+		};
+	}
+
+	/**
+	 * Get single sticker pack by ID
+	 */
+	async getStickerPack(id: number): Promise<StickerPack> {
+		const result = await db.select().from(stickerPacks).where(eq(stickerPacks.id, id)).limit(1);
+
+		if (!result[0]) {
+			throw new Error('Sticker pack not found');
+		}
+
+		return result[0];
+	}
+
+	/**
+	 * Create new sticker pack
+	 */
+	async createStickerPack(
+		data: CreateStickerPackInput,
+		adminId: string
+	): Promise<{ packId: number; message: string }> {
+		// Check for duplicate name
+		const existingName = await db
+			.select({ id: stickerPacks.id })
+			.from(stickerPacks)
+			.where(eq(stickerPacks.name, data.name))
+			.limit(1);
+
+		if (existingName.length > 0) {
+			throw new Error('Sticker pack name already exists');
+		}
+
+		const newPack: NewStickerPack = {
+			...data,
+			createdBy: adminId
+		};
+
+		const result = await db.insert(stickerPacks).values(newPack).returning({ id: stickerPacks.id });
+
+		return {
+			packId: result[0].id,
+			message: 'Sticker pack created successfully'
+		};
+	}
+
+	/**
+	 * Update existing sticker pack
+	 */
+	async updateStickerPack(
+		id: number,
+		data: UpdateStickerPackInput,
+		adminId: string
+	): Promise<{ message: string }> {
+		// Check if pack exists
+		await this.getStickerPack(id);
+
+		// Check for duplicate name (if changing)
+		if (data.name) {
+			const duplicateName = await db
+				.select({ id: stickerPacks.id })
+				.from(stickerPacks)
+				.where(and(eq(stickerPacks.name, data.name), sql`${stickerPacks.id} != ${id}`))
+				.limit(1);
+
+			if (duplicateName.length > 0) {
+				throw new Error('Sticker pack name already exists');
+			}
+		}
+
+		await db
+			.update(stickerPacks)
+			.set({ ...data, updatedAt: sql`now()` })
+			.where(eq(stickerPacks.id, id));
+
+		return { message: 'Sticker pack updated successfully' };
+	}
+
+	/**
+	 * Delete sticker pack (and unlink stickers)
+	 */
+	async deleteStickerPack(id: number, adminId: string): Promise<{ message: string }> {
+		// Check if pack exists
+		await this.getStickerPack(id);
+
+		// Unlink all stickers from this pack
+		await db
+			.update(stickers)
+			.set({ packId: null, updatedAt: sql`now()` })
+			.where(eq(stickers.packId, id));
+
+		// Delete the pack
+		await db.delete(stickerPacks).where(eq(stickerPacks.id, id));
+
+		return { message: 'Sticker pack deleted successfully' };
+	}
+
+	// ============ UTILITY METHODS ============
+
+	/**
+	 * Update sticker count for a pack
+	 */
+	private async updatePackStickerCount(packId: number): Promise<void> {
+		const countResult = await db
+			.select({ count: count() })
+			.from(stickers)
+			.where(and(eq(stickers.packId, packId), eq(stickers.isDeleted, false)));
+
+		const stickerCount = countResult[0]?.count || 0;
+
+		await db
+			.update(stickerPacks)
+			.set({ totalStickers: stickerCount, updatedAt: sql`now()` })
+			.where(eq(stickerPacks.id, packId));
+	}
+
+	/**
+	 * Get sticker categories/themes for dropdowns
+	 */
+	async getStickerCategories(): Promise<{
+		themes: string[];
+		rarities: string[];
+		formats: string[];
+	}> {
+		const [themesResult, raritiesResult, formatsResult] = await Promise.all([
+			db
+				.selectDistinct({ theme: stickerPacks.theme })
+				.from(stickerPacks)
+				.where(isNull(stickerPacks.theme).not()),
+
+			db
+				.selectDistinct({ rarity: stickers.rarity })
+				.from(stickers)
+				.where(eq(stickers.isDeleted, false)),
+
+			db
+				.selectDistinct({ format: stickers.format })
+				.from(stickers)
+				.where(eq(stickers.isDeleted, false))
+		]);
+
+		return {
+			themes: themesResult.map((r) => r.theme).filter(Boolean),
+			rarities: raritiesResult.map((r) => r.rarity),
+			formats: formatsResult.map((r) => r.format)
+		};
+	}
+
+	/**
+	 * Track sticker usage
+	 */
+	async trackStickerUsage(data: TrackStickerUsageInput, userId: string): Promise<void> {
+		// Record usage
+		await db.insert(stickerUsage).values({
+			userId,
+			stickerId: data.stickerId,
+			contextType: data.contextType,
+			contextId: data.contextId
+		});
+
+		// Update sticker total usage and user inventory usage
+		await Promise.all([
+			// Update global sticker usage
+			db
+				.update(stickers)
+				.set({
+					totalUsage: sql`${stickers.totalUsage} + 1`,
+					popularityScore: sql`${stickers.popularityScore} + 1`,
+					updatedAt: sql`now()`
+				})
+				.where(eq(stickers.id, data.stickerId)),
+
+			// Update user inventory usage
+			db
+				.update(userStickerInventory)
+				.set({
+					usageCount: sql`${userStickerInventory.usageCount} + 1`,
+					lastUsed: sql`now()`
+				})
+				.where(
+					and(
+						eq(userStickerInventory.userId, userId),
+						eq(userStickerInventory.stickerId, data.stickerId)
+					)
+				)
+		]);
+	}
+}
+
+// Export service instance
+export const stickerService = new StickerService();
