@@ -7,6 +7,8 @@ import {
 	userBadges,
 	titles,
 	badges,
+	userOwnedFrames,
+	avatarFrames,
 	xpCloutSettings,
 	userRoles,
 	roles as rolesTable
@@ -328,7 +330,8 @@ export class XpLevelService {
 				.select({
 					rewardDgt: levels.rewardDgt,
 					rewardTitleId: levels.rewardTitleId,
-					rewardBadgeId: levels.rewardBadgeId
+					rewardBadgeId: levels.rewardBadgeId,
+					unlocks: levels.unlocks
 				})
 				.from(levels)
 				.where(eq(levels.level, level))
@@ -339,7 +342,7 @@ export class XpLevelService {
 				return;
 			}
 
-			const { rewardDgt, rewardTitleId, rewardBadgeId } = levelData[0];
+			const { rewardDgt, rewardTitleId, rewardBadgeId, unlocks } = levelData[0];
 
 			// Award DGT if specified (would need a wallet service integration)
 			if (rewardDgt && rewardDgt > 0) {
@@ -397,6 +400,59 @@ export class XpLevelService {
 				logger.info(
 					'XpLevelService',
 					`Badge ID ${rewardBadgeId} awarded to user ${userId} for reaching level ${level}`
+				);
+			}
+
+			// ──────────── New Unlocks JSON Handling ────────────
+			try {
+				if (unlocks && typeof unlocks === 'object') {
+					// Titles array
+					if (Array.isArray(unlocks.titles) && unlocks.titles.length > 0) {
+						await tx
+							.insert(userTitles)
+							.values(
+								unlocks.titles.map((titleId: number) => ({
+									userId,
+									titleId,
+									awardedAt: new Date()
+								}))
+							)
+							.onConflictDoNothing();
+					}
+
+					// Badges array
+					if (Array.isArray(unlocks.badges) && unlocks.badges.length > 0) {
+						await tx
+							.insert(userBadges)
+							.values(
+								unlocks.badges.map((badgeId: number) => ({
+									userId,
+									badgeId,
+									awardedAt: new Date()
+								}))
+							)
+							.onConflictDoNothing();
+					}
+
+					// Frames array – verify frame IDs exist
+					if (Array.isArray(unlocks.frames) && unlocks.frames.length > 0) {
+						await tx
+							.insert(userOwnedFrames)
+							.values(
+								unlocks.frames.map((frameId: number) => ({
+									userId,
+									frameId,
+									source: 'level'
+								}))
+							)
+							.onConflictDoNothing();
+					}
+				}
+			} catch (unlockErr) {
+				logger.error(
+					'XpLevelService',
+					`Error applying unlocks for level ${level} to user ${userId}:`,
+					unlockErr
 				);
 			}
 		} catch (error) {

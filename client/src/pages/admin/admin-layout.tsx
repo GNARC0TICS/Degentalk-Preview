@@ -102,6 +102,17 @@ const BASE_ADMIN_LINKS = [
 		submenu: [{ href: '/admin/social-config', label: 'Social Configuration' }]
 	},
 
+	// Analytics (Secondary Priority)
+	{
+		href: '#',
+		label: 'Analytics',
+		icon: <BarChart3 className="h-4 w-4" />,
+		submenu: [
+			{ href: '/admin/stats', label: 'Platform Stats' },
+			{ href: '/admin/system-analytics', label: 'System Analytics' }
+		]
+	},
+
 	// Moderation (Secondary Priority)
 	{
 		href: '#',

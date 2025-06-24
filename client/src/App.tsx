@@ -57,6 +57,7 @@ import AdminAnimationsPage from './pages/admin/ui/animations.tsx';
 import AdminPackBuilderPage from './pages/admin/ui/pack-builder.tsx';
 import AdminAvatarFramesPage from './pages/admin/avatar-frames.tsx';
 import AdminSocialConfigPage from './pages/admin/social-config.tsx';
+import SystemAnalyticsDashboard from './pages/admin/system-analytics.tsx';
 
 // Shop Pages
 import DgtPurchasePage from './pages/shop-management/dgt-purchase';
@@ -66,6 +67,7 @@ import PurchaseSuccessPage from './pages/shop-management/purchase-success';
 import ModDashboardPage from './pages/mod/index';
 import ModShoutboxPage from './pages/mod/shoutbox';
 import ModUsersPage from './pages/mod/users';
+import ModReportsPage from './pages/mod/reports';
 
 // Import user profile page and whispers page
 import ProfilePage from './pages/profile/[username]';
@@ -254,6 +256,14 @@ function App() {
 							component={() => (
 								<AdminLayout>
 									<AdminStatsPage />
+								</AdminLayout>
+							)}
+						/>
+						<Route
+							path="/admin/system-analytics"
+							component={() => (
+								<AdminLayout>
+									<SystemAnalyticsDashboard />
 								</AdminLayout>
 							)}
 						/>
@@ -476,6 +486,16 @@ function App() {
 								<RequireMod>
 									<ModLayout>
 										<ModUsersPage />
+									</ModLayout>
+								</RequireMod>
+							)}
+						/>
+						<Route
+							path="/mod/reports"
+							component={() => (
+								<RequireMod>
+									<ModLayout>
+										<ModReportsPage />
 									</ModLayout>
 								</RequireMod>
 							)}
