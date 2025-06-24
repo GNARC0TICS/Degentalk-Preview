@@ -11,7 +11,14 @@
 		"client/**/*.spec.tsx",
 		"client/vitest.config.ts"
 	],
-	"exclude": ["node_modules", "build", "dist", "**/__tests__"],
+	"exclude": [
+		"node_modules",
+		"build",
+		"dist",
+		"**/__tests__",
+		"scripts/templates/**",
+		"scripts/auth/auth-refactor.ts"
+	],
 	"compilerOptions": {
 		"incremental": true,
 		"tsBuildInfoFile": "./.tscache/.tsbuildinfo",
