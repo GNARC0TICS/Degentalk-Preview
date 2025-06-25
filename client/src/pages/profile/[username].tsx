@@ -129,13 +129,15 @@ export default function ProfilePage() {
 					<BackToHomeButton />
 					<div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 						<div className="col-span-1">
-							<ProfileSidebar profile={profile} isOwnProfile={isOwnProfile} />
+							<aside className="sticky top-8">
+								<ProfileSidebar profile={profile} isOwnProfile={isOwnProfile} />
+							</aside>
 						</div>
 						<div className="col-span-1 lg:col-span-3">
-							<div className="rounded-lg overflow-hidden bg-zinc-800/70 backdrop-blur-sm shadow-xl border border-zinc-700/50 p-6">
+							<div className="rounded-lg bg-zinc-800/70 backdrop-blur-sm shadow-xl border border-zinc-700/50 p-4 sm:p-6 flex flex-col h-[calc(100vh-8rem)]">
 								<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
 									<TabsList
-										className={`grid grid-cols-2 md:grid-cols-3 lg:${isOwnProfile ? 'grid-cols-6' : 'grid-cols-5'} mb-6 bg-black/40 backdrop-blur-sm gap-1`}
+										className={`flex overflow-x-auto gap-1 md:grid md:grid-cols-3 lg:${isOwnProfile ? 'grid-cols-6' : 'grid-cols-5'} mb-4 bg-black/40 backdrop-blur-sm`}
 									>
 										<TabsTrigger
 											value="overview"
@@ -189,46 +191,48 @@ export default function ProfilePage() {
 										)}
 									</TabsList>
 
-									<TabsContent value="overview">
-										<OverviewTab profile={profile} />
-									</TabsContent>
-									<TabsContent value="achievements">
-										<XPProfileSection userId={profile.id} />
-									</TabsContent>
-									<TabsContent value="inventory">
-										<InventoryTab profile={profile} />
-									</TabsContent>
-									<TabsContent value="friends">
-										<FriendsTab profile={profile} />
-									</TabsContent>
-									<TabsContent value="whale-watch">
-										<WhaleWatchTab profile={profile} isOwnProfile={isOwnProfile} />
-									</TabsContent>
-									{isOwnProfile && (
-										<TabsContent value="cosmetics">
-											{inventoryLoading ? (
-												<LoadingSpinner size="lg" />
-											) : (
-												<CosmeticControlPanel
-													userId={profile.id}
-													username={profile.username}
-													avatarUrl={profile.avatarUrl}
-													inventory={inventory.map((i) => ({
-														id: i.id,
-														userId: i.userId,
-														productId: i.productId,
-														equipped: i.equipped,
-														purchasedAt: i.purchasedAt,
-														product: i.product
-													}))}
-													activeFrame={profile.activeFrame}
-													activeTitle={profile.activeTitle}
-													activeBadge={profile.activeBadge}
-													onEditProfile={() => setIsEditMode(true)}
-												/>
-											)}
+									<div className="flex-1 overflow-y-auto pr-2">
+										<TabsContent value="overview">
+											<OverviewTab profile={profile} />
 										</TabsContent>
-									)}
+										<TabsContent value="achievements">
+											<XPProfileSection userId={profile.id} />
+										</TabsContent>
+										<TabsContent value="inventory">
+											<InventoryTab profile={profile} />
+										</TabsContent>
+										<TabsContent value="friends">
+											<FriendsTab profile={profile} />
+										</TabsContent>
+										<TabsContent value="whale-watch">
+											<WhaleWatchTab profile={profile} isOwnProfile={isOwnProfile} />
+										</TabsContent>
+										{isOwnProfile && (
+											<TabsContent value="cosmetics">
+												{inventoryLoading ? (
+													<LoadingSpinner size="lg" />
+												) : (
+													<CosmeticControlPanel
+														userId={profile.id}
+														username={profile.username}
+														avatarUrl={profile.avatarUrl}
+														inventory={inventory.map((i) => ({
+															id: i.id,
+															userId: i.userId,
+															productId: i.productId,
+															equipped: i.equipped,
+															purchasedAt: i.purchasedAt,
+															product: i.product
+														}))}
+														activeFrame={profile.activeFrame}
+														activeTitle={profile.activeTitle}
+														activeBadge={profile.activeBadge}
+														onEditProfile={() => setIsEditMode(true)}
+													/>
+												)}
+											</TabsContent>
+										)}
+									</div>
 								</Tabs>
 							</div>
 						</div>

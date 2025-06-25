@@ -1,5 +1,5 @@
 import { db } from '../../db'; // Adjust path as necessary
-import { forumCategories, threads, posts, users } from '../../db/schema'; // Adjust path
+import { forumStructure, threads, posts, users } from '../../db/schema'; // Adjust path
 import { eq, sql } from 'drizzle-orm';
 import { slugify } from '../db/utils/seedUtils'; // Use slugify from local seed utils
 import { parseArgs } from 'node:util';
@@ -41,22 +41,22 @@ async function seedDummyThreads() {
     const threadsPerForum = 3;
 
     for (const forumSlug of forumSlugsToSeed) {
-      // 3. Get the category ID for the current forum slug
-      const [category] = await db
-        .select({ id: forumCategories.id, name: forumCategories.name })
-        .from(forumCategories)
-        .where(eq(forumCategories.slug, forumSlug))
+      // 3. Get the structure ID for the current forum slug
+      const [structure] = await db
+        .select({ id: forumStructure.id, name: forumStructure.name })
+        .from(forumStructure)
+        .where(eq(forumStructure.slug, forumSlug))
         .limit(1);
 
-      if (!category) {
-        console.warn(`Category with slug '${forumSlug}' not found. Skipping.`);
+      if (!structure) {
+        console.warn(`Forum structure with slug '${forumSlug}' not found. Skipping.`);
         continue;
       }
-      const categoryId = category.id;
-      console.log(`Seeding threads for category: '${category.name}' (ID: ${categoryId})`);
+      const structureId = structure.id;
+      console.log(`Seeding threads for forum: '${structure.name}' (ID: ${structureId})`);
 
       for (let i = 1; i <= threadsPerForum; i++) {
-        const threadTitle = `Dummy Thread ${i} in ${category.name}`;
+        const threadTitle = `Dummy Thread ${i} in ${structure.name}`;
         const threadSlug = await slugify(`${threadTitle}-${Date.now()}`); // Ensure unique slug
         const firstPostContent = `This is the first post for ${threadTitle}. Seeded at ${new Date().toISOString()}`;
 
@@ -67,8 +67,7 @@ async function seedDummyThreads() {
               .values({
                 title: threadTitle,
                 slug: threadSlug,
-                // parentForumSlug: forumSlug, // Field removed from schema, categoryId is used
-                categoryId: categoryId,
+                structureId: structureId,
                 userId: userId,
                 // other required fields can be defaulted if schema allows, or set explicitly
               })

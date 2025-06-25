@@ -20,9 +20,14 @@ export const isProdMode = (): boolean => {
 
 /**
  * Checks if authentication should be bypassed (based on dev mode and specific env flags)
+ * SECURITY: This MUST return false in production to prevent auth bypass vulnerabilities
  */
 export const shouldBypassAuth = (): boolean => {
+	// CRITICAL: Never bypass auth in production
 	if (isProdMode()) return false;
+
+	// Additional safety check for production deployment
+	if (process.env.NODE_ENV === 'production') return false;
 
 	// In development, we can have an additional flag to force auth
 	return isDevMode() && process.env.DEV_FORCE_AUTH !== 'true';

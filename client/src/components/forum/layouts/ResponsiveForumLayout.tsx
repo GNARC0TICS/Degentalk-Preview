@@ -145,6 +145,7 @@ const ResponsiveForumLayout = memo(
 											'h-full transition-all duration-300',
 											isCollapsed ? 'px-2' : 'px-4'
 										)}
+										isCollapsed={isCollapsed}
 									/>
 								)}
 							</div>
@@ -295,7 +296,9 @@ const ResponsiveForumLayout = memo(
 									<X className="h-5 w-5" />
 								</Button>
 							</div>
-							<div className="p-4 h-full overflow-auto">{sidebar || <HierarchicalZoneNav />}</div>
+							<div className="p-4 h-full overflow-auto">
+								{sidebar || <HierarchicalZoneNav isCollapsed={false} />}
+							</div>
 						</SheetContent>
 					</Sheet>
 				)}

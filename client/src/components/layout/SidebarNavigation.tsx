@@ -20,6 +20,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface SidebarNavigationProps {
 	className?: string;
+	isCollapsed?: boolean;
 	// userPinnedItems?: PinnedItem[]; // Commenting out PinnedItem for now
 }
 
@@ -27,12 +28,14 @@ const SidebarNavItem = ({
 	node,
 	isActive,
 	onClick,
-	disabled = false
+	disabled = false,
+	isCollapsed = false
 }: {
 	node: NavNode;
 	isActive?: boolean;
 	onClick?: () => void;
 	disabled?: boolean;
+	isCollapsed?: boolean;
 }) => {
 	const baseActiveClasses = `font-medium`; // Simplified active style for this sidebar
 	let activeClassesConfig = '';
@@ -69,15 +72,18 @@ const SidebarNavItem = ({
 	const content = (
 		<div
 			className={cn(
-				'flex items-center px-3 py-1.5 text-sm rounded-md transition-all duration-150 w-full group', // Adjusted padding
+				'flex items-center text-sm rounded-md transition-all duration-150 w-full group',
+				isCollapsed ? 'justify-center px-2 py-2' : 'px-3 py-1.5', // Adjusted padding
 				disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
 				isActive ? activeClasses : 'text-zinc-300',
 				!isActive && !disabled ? hoverClasses : ''
 			)}
 			onClick={onClick}
+			title={isCollapsed ? node.name : undefined} // Show tooltip when collapsed
 		>
 			{displayIcon}
-			<span className="flex-1">{node.name}</span>
+			{/* Hide text when collapsed */}
+			{!isCollapsed && <span className="flex-1">{node.name}</span>}
 			{/* Optional: Add counts if needed, e.g., node.counts?.threads */}
 		</div>
 	);
@@ -97,12 +103,14 @@ const SidebarCategorySection = ({
 	categoryNode,
 	isExpanded,
 	onToggle,
-	currentPath
+	currentPath,
+	isCollapsed = false
 }: {
 	categoryNode: NavNode;
 	isExpanded: boolean;
 	onToggle: () => void;
 	currentPath: string;
+	isCollapsed?: boolean;
 }) => {
 	const isActiveCategory =
 		currentPath === categoryNode.href || currentPath.startsWith(`${categoryNode.href}/`);
@@ -132,7 +140,8 @@ const SidebarCategorySection = ({
 		<div>
 			<div
 				className={cn(
-					'flex items-center justify-between px-3 py-1.5 text-sm rounded-md cursor-pointer transition-all duration-150 hover:bg-zinc-800/50 group',
+					'flex items-center text-sm rounded-md cursor-pointer transition-all duration-150 hover:bg-zinc-800/50 group',
+					isCollapsed ? 'justify-center px-2 py-2' : 'justify-between px-3 py-1.5',
 					// Apply activeCategorySpecificClass if it's set (meaning category itself is active or themed)
 					// Otherwise, default to text-zinc-300 if not active in any way.
 					(isActiveCategory && categoryNode.children.length === 0) ||
@@ -152,16 +161,20 @@ const SidebarCategorySection = ({
 					}
 				}}
 				aria-expanded={isExpanded}
+				title={isCollapsed ? categoryNode.name : undefined} // Show tooltip when collapsed
 			>
-				<div className="flex items-center flex-1">
-					{categoryNode.children.length > 0 &&
+				<div className={cn('flex items-center', isCollapsed ? 'justify-center' : 'flex-1')}>
+					{/* Hide chevron when collapsed */}
+					{!isCollapsed &&
+						categoryNode.children.length > 0 &&
 						(isExpanded ? (
 							<ChevronDown className="w-3.5 h-3.5 mr-1.5 text-zinc-400 transition-transform" />
 						) : (
 							<ChevronRight className="w-3.5 h-3.5 mr-1.5 text-zinc-400 transition-transform" />
 						))}
 					{CategoryIconDisplay}
-					<span className="group-hover:text-white">{categoryNode.name}</span>
+					{/* Hide text when collapsed */}
+					{!isCollapsed && <span className="group-hover:text-white">{categoryNode.name}</span>}
 				</div>
 				{/* Optional: Badge for forum count */}
 				{/* {categoryNode.counts?.forums && categoryNode.counts.forums > 0 && (
@@ -169,33 +182,39 @@ const SidebarCategorySection = ({
 				)} */}
 			</div>
 
+			{/* Don't show expanded content when collapsed */}
 			<AnimatePresence>
-				{isExpanded && categoryNode.children && categoryNode.children.length > 0 && (
-					<motion.div
-						initial={{ opacity: 0, height: 0 }}
-						animate={{ opacity: 1, height: 'auto' }}
-						exit={{ opacity: 0, height: 0 }}
-						transition={{ duration: 0.2 }}
-						className="ml-4 pl-3 mt-1 space-y-0.5 border-l border-zinc-700" // Adjusted spacing
-					>
-						{categoryNode.children.map((forumNode: NavNode) => (
-							<SidebarNavItem
-								key={forumNode.id}
-								node={forumNode}
-								isActive={
-									currentPath === forumNode.href || currentPath.startsWith(`${forumNode.href}/`)
-								}
-							/>
-						))}
-					</motion.div>
-				)}
+				{!isCollapsed &&
+					isExpanded &&
+					categoryNode.children &&
+					categoryNode.children.length > 0 && (
+						<motion.div
+							initial={{ opacity: 0, height: 0 }}
+							animate={{ opacity: 1, height: 'auto' }}
+							exit={{ opacity: 0, height: 0 }}
+							transition={{ duration: 0.2 }}
+							className="ml-4 pl-3 mt-1 space-y-0.5 border-l border-zinc-700" // Adjusted spacing
+						>
+							{categoryNode.children.map((forumNode: NavNode) => (
+								<SidebarNavItem
+									key={forumNode.id}
+									node={forumNode}
+									isActive={
+										currentPath === forumNode.href || currentPath.startsWith(`${forumNode.href}/`)
+									}
+									isCollapsed={isCollapsed}
+								/>
+							))}
+						</motion.div>
+					)}
 			</AnimatePresence>
 		</div>
 	);
 };
 
 export function SidebarNavigation({
-	className = ''
+	className = '',
+	isCollapsed = false
 	// userPinnedItems = [] // Commenting out for now
 }: SidebarNavigationProps) {
 	const [location] = useLocation();
@@ -273,16 +292,24 @@ export function SidebarNavigation({
 						{' '}
 						{/* Adjusted spacing */}
 						{systemLinkNodes.map((node) => (
-							<SidebarNavItem key={node.id} node={node} isActive={location === node.href} />
+							<SidebarNavItem
+								key={node.id}
+								node={node}
+								isActive={location === node.href}
+								isCollapsed={isCollapsed}
+							/>
 						))}
 					</div>
 				</div>
 			)}
 			{primaryZoneNodes.length > 0 && (
 				<div>
-					<div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">
-						Primary Zones
-					</div>
+					{/* Hide section headers when collapsed */}
+					{!isCollapsed && (
+						<div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">
+							Primary Zones
+						</div>
+					)}
 					<div className="space-y-0.5 mt-1">
 						{' '}
 						{/* Adjusted spacing */}
@@ -291,20 +318,26 @@ export function SidebarNavigation({
 								key={node.id}
 								node={node}
 								isActive={location === node.href || location.startsWith(`${node.href}/`)}
+								isCollapsed={isCollapsed}
 							/>
 						))}
 					</div>
 				</div>
 			)}
-			{(systemLinkNodes.length > 0 || primaryZoneNodes.length > 0) &&
+			{/* Hide divider when collapsed */}
+			{!isCollapsed &&
+				(systemLinkNodes.length > 0 || primaryZoneNodes.length > 0) &&
 				generalCategoryNodes.length > 0 && (
 					<div className="h-px bg-zinc-700/60 mx-2 my-3" /> // Adjusted divider
 				)}
 			{generalCategoryNodes.length > 0 && (
 				<div>
-					<div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">
-						Categories
-					</div>
+					{/* Hide section headers when collapsed */}
+					{!isCollapsed && (
+						<div className="px-3 pt-2 pb-1 text-xs font-semibold uppercase text-zinc-500">
+							Categories
+						</div>
+					)}
 					<div className="space-y-0.5 mt-1">
 						{' '}
 						{/* Adjusted spacing */}
@@ -315,6 +348,7 @@ export function SidebarNavigation({
 								isExpanded={!!expandedCategories[categoryNode.id]}
 								onToggle={() => toggleCategoryExpansion(categoryNode.id)}
 								currentPath={location}
+								isCollapsed={isCollapsed}
 							/>
 						))}
 					</div>

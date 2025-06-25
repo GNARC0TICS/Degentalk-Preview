@@ -327,6 +327,17 @@ export const adminConfig: AdminConfig = {
 					order: 1
 				}
 			]
+		},
+		{
+			id: 'brand-config',
+			name: 'Brand Configuration',
+			description: 'Manage platform design system and themes',
+			icon: 'Palette',
+			route: '/admin/brand-config',
+			component: lazy(() => import('@/pages/admin/brand-config')),
+			permissions: ['admin.system.manage'],
+			enabled: true,
+			order: 10
 		}
 	],
 

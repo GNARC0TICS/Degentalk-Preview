@@ -136,6 +136,7 @@ export * from './admin/uiThemes';
 export * from './admin/moderator-notes';
 export * from './admin/emailTemplates';
 export * from './admin/backups';
+export * from './admin/brandConfig';
 
 // Gamification domain exports
 export * from './gamification/achievements';

@@ -1,7 +1,7 @@
 import { db } from '../../db'; // Adjust path
 import {
   users,
-  forumCategories,
+  forumStructure,
   threads,
   posts,
   threadPrefixes,
@@ -66,10 +66,10 @@ async function seedRealisticThreads() {
     }
     console.log(chalk.gray(`  Fetched ${allUsers.length} users.`));
 
-    let queryTargetForums = db.select().from(forumCategories).where(eq(forumCategories.type, 'forum'));
+    let queryTargetForums = db.select().from(forumStructure).where(eq(forumStructure.type, 'forum'));
     if (targetForumSlugs && targetForumSlugs.length > 0) {
       // @ts-expect-error Drizzle inArray typing mismatch when the second arg is string[]; safe to ignore in seed script
-      queryTargetForums = queryTargetForums.where(inArray(forumCategories.slug, targetForumSlugs));
+      queryTargetForums = queryTargetForums.where(inArray(forumStructure.slug, targetForumSlugs));
       console.log(chalk.gray(`  Targeting specific forums: ${targetForumSlugs.join(', ')}`));
     }
     const allPotentialTargetForums = await queryTargetForums;
@@ -82,9 +82,9 @@ async function seedRealisticThreads() {
 
     // Filter for "leaf" forums (forums that are not parents to other forums)
     const allParentIds = (await db
-      .selectDistinct({ parentId: forumCategories.parentId })
-      .from(forumCategories)
-      .where(isNotNull(forumCategories.parentId)))
+      .selectDistinct({ parentId: forumStructure.parentId })
+      .from(forumStructure)
+      .where(isNotNull(forumStructure.parentId)))
       .map(r => r.parentId)
       .filter(id => id !== null) as number[]; // Ensure we have a clean number array
 
@@ -128,7 +128,7 @@ async function seedRealisticThreads() {
           const [newThread] = await tx.insert(threads).values({
             title: threadTitle,
             slug: threadSlug,
-            categoryId: forum.id,
+            structureId: forum.id,
             userId: threadAuthor.id,
             prefixId: selectedPrefixId,
             isSticky: Math.random() < 0.05,

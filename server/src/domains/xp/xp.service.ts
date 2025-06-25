@@ -5,7 +5,18 @@
  * This service is used by both admin and public-facing features.
  */
 
-import { users, levels, titles, badges, userBadges, userTitles, xpAdjustmentLogs } from '@schema';
+import {
+	users,
+	levels,
+	titles,
+	badges,
+	userBadges,
+	userTitles,
+	xpAdjustmentLogs,
+	userRoles,
+	roles as rolesTable,
+	forumStructure
+} from '@schema';
 import { eq, sql, and, desc, gte, lt, asc, gt } from 'drizzle-orm';
 import { db } from '@db';
 import { MissionsService } from '../missions/missions.service';
@@ -15,7 +26,7 @@ import { LevelUpEvent, XpGainEvent, XpLossEvent } from './xp.events';
 import { xpActionLogs, xpActionLimits } from './xp-actions-schema';
 // Import the centralized event handlers
 import { handleXpAward, handleXpLoss, handleLevelUp } from './events/xp.events';
-import { economyConfig } from '@shared/economy/economy.config';
+import { economyConfig, sanitizeMultiplier } from '@shared/economy/economy.config';
 
 const { MAX_XP_PER_DAY, MAX_TIP_XP_PER_DAY } = economyConfig;
 
@@ -248,6 +259,19 @@ export class XpService {
 	 * @returns Result of the XP update operation
 	 */
 	async awardXp(userId: number, action: XP_ACTION, metadata?: any) {
+		return this.awardXpWithContext(userId, action, metadata);
+	}
+
+	/**
+	 * Award XP to a user for completing an action with forum context
+	 *
+	 * @param userId User ID to award XP to
+	 * @param action The action that grants XP
+	 * @param metadata Optional metadata about the action
+	 * @param forumId Optional forum ID for forum-specific multipliers
+	 * @returns Result of the XP update operation
+	 */
+	async awardXpWithContext(userId: number, action: XP_ACTION, metadata?: any, forumId?: number) {
 		try {
 			const canReceive = await this.checkActionLimits(userId, action);
 
@@ -266,12 +290,47 @@ export class XpService {
 				return; // Do not award for unknown or disabled actions
 			}
 
-			// Log the action
-			await this.logXpAction(userId, action, actionConfig.baseValue, metadata);
+			// Get multipliers
+			const roleMultiplier = await this.getUserRoleMultiplier(userId);
+			const forumMultiplier = forumId ? await this.getForumMultiplier(forumId) : 1.0;
+
+			// Apply multiplier protection
+			const multiplierResult = sanitizeMultiplier(roleMultiplier, forumMultiplier, {
+				userId,
+				forumId,
+				action
+			});
+
+			// Calculate final XP amount
+			const baseXp = actionConfig.baseValue;
+			const finalXp = Math.floor(baseXp * multiplierResult.finalMultiplier);
+
+			// Log multiplier violations if any
+			if (multiplierResult.wasCapped) {
+				logger.warn('XP_SERVICE', 'XP multiplier was capped', {
+					userId,
+					forumId,
+					action,
+					baseXp,
+					originalMultiplier: multiplierResult.originalMultiplier,
+					finalMultiplier: multiplierResult.finalMultiplier,
+					violations: multiplierResult.violations
+				});
+			}
+
+			// Log the action with final XP amount
+			await this.logXpAction(userId, action, finalXp, {
+				...metadata,
+				baseXp,
+				roleMultiplier,
+				forumMultiplier,
+				finalMultiplier: multiplierResult.finalMultiplier,
+				wasCapped: multiplierResult.wasCapped
+			});
 
 			// Update user XP
-			const result = await this.updateUserXp(userId, actionConfig.baseValue, 'add', {
-				reason: `Action: ${action}`,
+			const result = await this.updateUserXp(userId, finalXp, 'add', {
+				reason: `Action: ${action} (${finalXp}XP = ${baseXp} * ${multiplierResult.finalMultiplier.toFixed(2)})`,
 				skipLevelCheck: false,
 				skipTriggers: false
 			});
@@ -282,7 +341,10 @@ export class XpService {
 			logger.info('XP_SERVICE', `Awarding XP for action: ${action}`, {
 				userId,
 				action,
-				xpAmount: actionConfig.baseValue,
+				baseXp,
+				finalXp,
+				multiplierUsed: multiplierResult.finalMultiplier,
+				forumId,
 				metadata
 			});
 
@@ -490,6 +552,48 @@ export class XpService {
 				error
 			);
 			return null; // Return null on error
+		}
+	}
+
+	/**
+	 * Get the effective XP multiplier for a user based on their roles.
+	 * If the user has multiple roles, the highest multiplier is applied.
+	 * If the user has no roles with a multiplier > 0, a default of 1 is returned.
+	 */
+	private async getUserRoleMultiplier(userId: number): Promise<number> {
+		try {
+			const roleMultipliers = await db
+				.select({ multiplier: rolesTable.xpMultiplier })
+				.from(userRoles)
+				.innerJoin(rolesTable, eq(userRoles.roleId, rolesTable.id))
+				.where(eq(userRoles.userId, userId));
+
+			if (roleMultipliers.length === 0) return 1;
+
+			// Return the highest multiplier the user has
+			const maxMultiplier = Math.max(...roleMultipliers.map((r) => r.multiplier ?? 1));
+			return maxMultiplier > 0 ? maxMultiplier : 1;
+		} catch (error) {
+			logger.error('XP_SERVICE', `Error fetching role XP multiplier for user ${userId}:`, error);
+			return 1;
+		}
+	}
+
+	/**
+	 * Get the XP multiplier for a specific forum
+	 */
+	private async getForumMultiplier(forumId: number): Promise<number> {
+		try {
+			const [forum] = await db
+				.select({ xpMultiplier: forumStructure.xpMultiplier })
+				.from(forumStructure)
+				.where(eq(forumStructure.id, forumId))
+				.limit(1);
+
+			return forum?.xpMultiplier ?? 1.0;
+		} catch (error) {
+			logger.error('XP_SERVICE', `Error fetching forum XP multiplier for forum ${forumId}:`, error);
+			return 1.0;
 		}
 	}
 }

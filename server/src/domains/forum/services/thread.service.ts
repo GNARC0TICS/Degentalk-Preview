@@ -16,8 +16,8 @@ import type {
 } from '../../../../db/types/forum.types';
 
 export interface ThreadSearchParams {
-	categoryId?: number;
-	authorId?: number;
+	structureId?: number;
+	userId?: string;
 	search?: string;
 	tags?: string[];
 	page?: number;
@@ -29,8 +29,8 @@ export interface ThreadSearchParams {
 export interface ThreadCreateInput {
 	title: string;
 	content: string;
-	categoryId: number;
-	authorId: number;
+	structureId: number;
+	userId: string;
 	tags?: string[];
 	isLocked?: boolean;
 	isPinned?: boolean;
@@ -49,8 +49,8 @@ export class ThreadService {
 	}> {
 		try {
 			const {
-				categoryId,
-				authorId,
+				structureId,
+				userId,
 				search,
 				tags: tagFilters,
 				page = 1,
@@ -64,12 +64,12 @@ export class ThreadService {
 			// Build where conditions
 			const whereConditions = [];
 
-			if (categoryId) {
-				whereConditions.push(eq(threads.categoryId, categoryId));
+			if (structureId) {
+				whereConditions.push(eq(threads.structureId, structureId));
 			}
 
-			if (authorId) {
-				whereConditions.push(eq(threads.authorId, authorId));
+			if (userId) {
+				whereConditions.push(eq(threads.userId, userId));
 			}
 
 			if (search) {
@@ -118,8 +118,8 @@ export class ThreadService {
 					title: threads.title,
 					content: threads.content,
 					slug: threads.slug,
-					categoryId: threads.categoryId,
-					authorId: threads.authorId,
+					structureId: threads.structureId,
+					userId: threads.userId,
 					postCount: threads.postCount,
 					viewCount: threads.viewCount,
 					isLocked: threads.isLocked,
@@ -139,8 +139,8 @@ export class ThreadService {
 					categorySlug: forumStructure.slug
 				})
 				.from(threads)
-				.leftJoin(usersTable, eq(threads.authorId, usersTable.id))
-				.leftJoin(forumStructure, eq(threads.categoryId, forumStructure.id));
+				.leftJoin(usersTable, eq(threads.userId, usersTable.id))
+				.leftJoin(forumStructure, eq(threads.structureId, forumStructure.id));
 
 			// Apply where conditions
 			if (whereConditions.length > 0) {
@@ -198,8 +198,8 @@ export class ThreadService {
 					title: threads.title,
 					content: threads.content,
 					slug: threads.slug,
-					categoryId: threads.categoryId,
-					authorId: threads.authorId,
+					structureId: threads.structureId,
+					userId: threads.userId,
 					postCount: threads.postCount,
 					viewCount: threads.viewCount,
 					isLocked: threads.isLocked,
@@ -219,8 +219,8 @@ export class ThreadService {
 					categorySlug: forumStructure.slug
 				})
 				.from(threads)
-				.leftJoin(usersTable, eq(threads.authorId, usersTable.id))
-				.leftJoin(forumStructure, eq(threads.categoryId, forumStructure.id))
+				.leftJoin(usersTable, eq(threads.userId, usersTable.id))
+				.leftJoin(forumStructure, eq(threads.structureId, forumStructure.id))
 				.where(eq(threads.id, threadId));
 
 			return thread || null;
@@ -242,8 +242,8 @@ export class ThreadService {
 					title: threads.title,
 					content: threads.content,
 					slug: threads.slug,
-					categoryId: threads.categoryId,
-					authorId: threads.authorId,
+					structureId: threads.structureId,
+					userId: threads.userId,
 					postCount: threads.postCount,
 					viewCount: threads.viewCount,
 					isLocked: threads.isLocked,
@@ -263,8 +263,8 @@ export class ThreadService {
 					categorySlug: forumStructure.slug
 				})
 				.from(threads)
-				.leftJoin(usersTable, eq(threads.authorId, usersTable.id))
-				.leftJoin(forumStructure, eq(threads.categoryId, forumStructure.id))
+				.leftJoin(usersTable, eq(threads.userId, usersTable.id))
+				.leftJoin(forumStructure, eq(threads.structureId, forumStructure.id))
 				.where(eq(threads.slug, slug));
 
 			return thread || null;

@@ -29,6 +29,14 @@ export const EconomyConfigSchema = z
 			minAmount: z.number().positive(),
 			maxRecipients: z.number().int().positive(),
 			cooldownSeconds: z.number().int().positive()
+		}),
+		// New XP multiplier protection settings
+		xpMultiplierLimits: z.object({
+			maxTotalMultiplier: z.number().positive(),
+			maxRoleMultiplier: z.number().positive(),
+			maxForumMultiplier: z.number().positive(),
+			stackingRule: z.enum(['additive', 'multiplicative', 'best_of', 'weighted_average']),
+			enforcementMode: z.enum(['strict', 'warn', 'log_only'])
 		})
 	})
 	.strict();
@@ -65,6 +73,26 @@ export const economyConfig = {
 		minAmount: 5,
 		maxRecipients: 15,
 		cooldownSeconds: 3600
+	},
+	// XP multiplier protection configuration
+	xpMultiplierLimits: {
+		// Maximum total multiplier from all sources combined (suggested 3.5x)
+		maxTotalMultiplier: 3.5,
+		// Maximum multiplier from user roles (prevents super-admin abuse)
+		maxRoleMultiplier: 2.5,
+		// Maximum multiplier from forum-specific bonuses
+		maxForumMultiplier: 2.0,
+		// How multiple multipliers combine:
+		// - 'additive': (role - 1) + (forum - 1) + 1 (linear stacking)
+		// - 'multiplicative': role * forum (exponential stacking)
+		// - 'best_of': max(role, forum) (highest wins)
+		// - 'weighted_average': Weighted average based on source priority
+		stackingRule: 'additive' as const,
+		// How violations are handled:
+		// - 'strict': Cap multipliers, log warning
+		// - 'warn': Log warning but allow
+		// - 'log_only': Silent logging for analysis
+		enforcementMode: 'strict' as const
 	}
 } as const;
 
@@ -90,3 +118,172 @@ export const getXpForLevel = (level: number): number => {
 	// Formula for level 11+
 	return level * level * 250 - 250;
 };
+
+// -----------------------------
+// 4. XP Multiplier Protection
+// -----------------------------
+
+/**
+ * Multiplier combination strategies
+ */
+export const MultiplierStrategy = {
+	/**
+	 * Additive stacking: (role - 1) + (forum - 1) + 1
+	 * Example: role=1.5, forum=1.3 → (0.5) + (0.3) + 1 = 1.8x
+	 */
+	additive: (roleMultiplier: number, forumMultiplier: number): number => {
+		return roleMultiplier - 1 + (forumMultiplier - 1) + 1;
+	},
+
+	/**
+	 * Multiplicative stacking: role * forum
+	 * Example: role=1.5, forum=1.3 → 1.5 * 1.3 = 1.95x
+	 */
+	multiplicative: (roleMultiplier: number, forumMultiplier: number): number => {
+		return roleMultiplier * forumMultiplier;
+	},
+
+	/**
+	 * Best of: max(role, forum)
+	 * Example: role=1.5, forum=1.3 → max(1.5, 1.3) = 1.5x
+	 */
+	bestOf: (roleMultiplier: number, forumMultiplier: number): number => {
+		return Math.max(roleMultiplier, forumMultiplier);
+	},
+
+	/**
+	 * Weighted average: role gets 60% weight, forum gets 40% weight
+	 * Example: role=1.5, forum=1.3 → (1.5 * 0.6) + (1.3 * 0.4) = 1.42x
+	 */
+	weightedAverage: (roleMultiplier: number, forumMultiplier: number): number => {
+		return roleMultiplier * 0.6 + forumMultiplier * 0.4;
+	}
+} as const;
+
+/**
+ * Sanitizes and combines multiple XP multipliers according to economy config rules
+ *
+ * @param roleMultiplier - Multiplier from user's role(s)
+ * @param forumMultiplier - Multiplier from forum settings
+ * @param contextInfo - Optional context for logging
+ * @returns Sanitized total multiplier within configured limits
+ */
+export function sanitizeMultiplier(
+	roleMultiplier: number,
+	forumMultiplier: number,
+	contextInfo?: {
+		userId?: number;
+		forumId?: number;
+		action?: string;
+	}
+): {
+	finalMultiplier: number;
+	originalMultiplier: number;
+	wasCapped: boolean;
+	violations: string[];
+} {
+	const config = economyConfig.xpMultiplierLimits;
+	const violations: string[] = [];
+
+	// Sanitize individual multipliers first
+	let sanitizedRole = Math.max(1, roleMultiplier);
+	let sanitizedForum = Math.max(1, forumMultiplier);
+
+	// Check individual caps
+	if (sanitizedRole > config.maxRoleMultiplier) {
+		violations.push(
+			`Role multiplier ${sanitizedRole.toFixed(2)} exceeds cap ${config.maxRoleMultiplier}`
+		);
+		sanitizedRole = config.maxRoleMultiplier;
+	}
+
+	if (sanitizedForum > config.maxForumMultiplier) {
+		violations.push(
+			`Forum multiplier ${sanitizedForum.toFixed(2)} exceeds cap ${config.maxForumMultiplier}`
+		);
+		sanitizedForum = config.maxForumMultiplier;
+	}
+
+	// Combine multipliers according to stacking rule
+	let combinedMultiplier: number;
+	switch (config.stackingRule) {
+		case 'additive':
+			combinedMultiplier = MultiplierStrategy.additive(sanitizedRole, sanitizedForum);
+			break;
+		case 'multiplicative':
+			combinedMultiplier = MultiplierStrategy.multiplicative(sanitizedRole, sanitizedForum);
+			break;
+		case 'best_of':
+			combinedMultiplier = MultiplierStrategy.bestOf(sanitizedRole, sanitizedForum);
+			break;
+		case 'weighted_average':
+			combinedMultiplier = MultiplierStrategy.weightedAverage(sanitizedRole, sanitizedForum);
+			break;
+		default:
+			combinedMultiplier = MultiplierStrategy.additive(sanitizedRole, sanitizedForum);
+	}
+
+	const originalMultiplier = combinedMultiplier;
+
+	// Apply total cap
+	let finalMultiplier = combinedMultiplier;
+	if (combinedMultiplier > config.maxTotalMultiplier) {
+		violations.push(
+			`Total multiplier ${combinedMultiplier.toFixed(2)} exceeds cap ${config.maxTotalMultiplier}`
+		);
+		finalMultiplier = config.maxTotalMultiplier;
+	}
+
+	const wasCapped = finalMultiplier !== originalMultiplier || violations.length > 0;
+
+	// Handle enforcement
+	if (violations.length > 0 && contextInfo) {
+		const logData = {
+			userId: contextInfo.userId,
+			forumId: contextInfo.forumId,
+			action: contextInfo.action,
+			roleMultiplier: sanitizedRole,
+			forumMultiplier: sanitizedForum,
+			stackingRule: config.stackingRule,
+			originalMultiplier: originalMultiplier.toFixed(3),
+			finalMultiplier: finalMultiplier.toFixed(3),
+			violations
+		};
+
+		switch (config.enforcementMode) {
+			case 'strict':
+				console.warn('XP_MULTIPLIER_VIOLATION', 'Multiplier capped due to violations', logData);
+				break;
+			case 'warn':
+				console.warn('XP_MULTIPLIER_WARNING', 'Multiplier violations detected', logData);
+				// In warn mode, return original uncapped multiplier
+				finalMultiplier = originalMultiplier;
+				break;
+			case 'log_only':
+				console.log('XP_MULTIPLIER_ANALYSIS', 'Multiplier data logged', logData);
+				// In log_only mode, return original uncapped multiplier
+				finalMultiplier = originalMultiplier;
+				break;
+		}
+	}
+
+	// Ensure minimum multiplier of 1.0
+	finalMultiplier = Math.max(1.0, finalMultiplier);
+
+	return {
+		finalMultiplier,
+		originalMultiplier,
+		wasCapped,
+		violations
+	};
+}
+
+/**
+ * Quick utility to get a safe multiplier value
+ * @param roleMultiplier Role-based multiplier
+ * @param forumMultiplier Forum-based multiplier
+ * @returns Clamped multiplier value
+ */
+export function getSafeMultiplier(roleMultiplier: number, forumMultiplier: number): number {
+	return sanitizeMultiplier(roleMultiplier, forumMultiplier).finalMultiplier;
+}
