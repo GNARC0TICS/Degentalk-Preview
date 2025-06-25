@@ -1,7 +1,7 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
 import { Card, CardContent } from '@/components/ui/card';
-import { ProfileCard } from './ProfileCard';
+import { UnifiedProfileCard } from '@/components/profile/UnifiedProfileCard';
 import { ReactionBar } from './ReactionBar';
 import { SignatureRenderer } from './SignatureRenderer';
 import { SolveBadge } from './SolveBadge';
@@ -61,20 +61,26 @@ export function BBCodePostCard({
 		>
 			{/* Desktop: Left Author Profile Card */}
 			<div className="hidden lg:block">
-				<ProfileCard
-					user={post.user}
+				<UnifiedProfileCard
+					username={post.user.username}
+					variant="sidebar"
 					className="sticky top-4"
-					showPostCount={true}
+					showStats={true}
 					showJoinDate={true}
 					showLevel={true}
-					showFlair={true}
-					showTitle={true}
+					animated={true}
 				/>
 			</div>
 
 			{/* Mobile: Compact Author Profile (horizontal) */}
 			<div className="lg:hidden mb-4">
-				<ProfileCard user={post.user} compact={true} showPostCount={true} showLevel={true} />
+				<UnifiedProfileCard
+					username={post.user.username}
+					variant="compact"
+					showStats={true}
+					showLevel={true}
+					animated={false}
+				/>
 			</div>
 
 			{/* Main Post Content */}

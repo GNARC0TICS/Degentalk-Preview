@@ -2,7 +2,7 @@ import React from 'react';
 import DOMPurify from 'dompurify';
 import { Link } from 'wouter';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { UserProfileRenderer } from '@/components/profile/UserProfileRenderer';
+import { UnifiedProfileCard } from '@/components/profile/UnifiedProfileCard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
@@ -98,17 +98,15 @@ export function PostCard({
 				)}
 			>
 				{/* Enhanced Author Profile Sidebar */}
-				<UserProfileRenderer
-					user={post.user}
-					variant="post-sidebar"
+				<UnifiedProfileCard
+					username={post.user.username}
+					variant={breakpoint.isMobile ? 'compact' : 'sidebar'}
 					showStats={!breakpoint.isMobile} // Hide detailed stats on mobile
-					showBio={!breakpoint.isMobile}
 					showJoinDate={!breakpoint.isMobile}
 					showOnlineStatus={true}
-					showVerifiedBadge={true}
 					showLevel={true}
 					showRole={true}
-					linkToProfile={true}
+					animated={false}
 				/>
 
 				{/* Post Content Area */}
