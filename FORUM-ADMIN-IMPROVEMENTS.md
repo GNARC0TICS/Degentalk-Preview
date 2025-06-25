@@ -133,4 +133,4 @@ Added new route:
    - Edit primary zone
    - Check desired features
    - Configure XP multipliers
-   - Set visibility rules
+   - Set visibility rules.
