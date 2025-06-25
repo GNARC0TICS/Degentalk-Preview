@@ -302,4 +302,5 @@ const QuickReactions = memo(
 
 QuickReactions.displayName = 'QuickReactions';
 
+export { QuickReactions };
 export default QuickReactions;

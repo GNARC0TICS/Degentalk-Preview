@@ -309,4 +309,5 @@ const CryptoEngagementBar = memo(
 
 CryptoEngagementBar.displayName = 'CryptoEngagementBar';
 
+export { CryptoEngagementBar };
 export default CryptoEngagementBar;
