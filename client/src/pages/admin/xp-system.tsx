@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Pencil, Trash2, TrendingUp, Award, Zap, BarChart3 } from 'lucide-react';
+import {
+	Plus,
+	Pencil,
+	Trash2,
+	TrendingUp,
+	Award,
+	Zap,
+	BarChart3,
+	Settings,
+	Users,
+	Timer
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Badge as UiBadge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { apiRequest } from '@/lib/queryClient';
 
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
@@ -14,6 +26,13 @@ import {
 	DeleteLevelConfirmationDialog
 } from '@/components/admin/forms/xp/LevelFormDialogs';
 import type { Level, LevelFormData } from '@/components/admin/forms/xp/LevelFormDialogs';
+import ProtectedAdminRoute from '@/components/admin/protected-admin-route';
+import { useAdminModule } from '@/hooks/use-admin-modules';
+import { useXpActions, useUpdateXpAction } from '@/features/admin/services/xpActionsService';
+import {
+	useXpCloutSettings,
+	useUpdateXpCloutSettings
+} from '@/features/admin/services/xpCloutService';
 
 // API response structure
 interface LevelsApiResponse {
@@ -24,9 +43,28 @@ interface LevelsApiResponse {
 	totalDgtRewards?: number;
 }
 
-export default function XPSystemPage() {
+// XP System Module Component (Protected)
+function XPSystemModuleContent() {
+	const { module, isEnabled } = useAdminModule('xp-system');
 	const { toast } = useToast();
 	const queryClient = useQueryClient();
+
+	// Show module disabled message if not enabled
+	if (!isEnabled) {
+		return (
+			<div className="container mx-auto py-8">
+				<Card>
+					<CardContent className="p-8 text-center">
+						<TrendingUp className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+						<h3 className="text-lg font-semibold mb-2">XP System Module Disabled</h3>
+						<p className="text-muted-foreground">
+							The XP System module has been disabled by an administrator.
+						</p>
+					</CardContent>
+				</Card>
+			</div>
+		);
+	}
 
 	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -448,13 +486,185 @@ export default function XPSystemPage() {
 		</Card>
 	);
 
+	// XP Actions Tab Content
+	const { data: xpActions, isLoading: actionsLoading } = useXpActions();
+	const updateXpAction = useUpdateXpAction();
+
+	const xpActionsTabContent = (
+		<Card>
+			<CardHeader>
+				<CardTitle className="flex items-center gap-2">
+					<Zap className="h-5 w-5" />
+					XP Action Settings
+				</CardTitle>
+				<CardDescription>
+					Configure how much XP is awarded for different user actions throughout the platform.
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				{actionsLoading && <p>Loading XP actions...</p>}
+				{xpActions && (
+					<div className="space-y-4">
+						{xpActions.map((action: any) => (
+							<div
+								key={action.action}
+								className="flex items-center justify-between p-4 border rounded-lg"
+							>
+								<div className="space-y-1">
+									<h4 className="font-medium">{action.description}</h4>
+									<p className="text-sm text-muted-foreground">Action: {action.action}</p>
+									{action.maxPerDay && (
+										<p className="text-xs text-muted-foreground">Max per day: {action.maxPerDay}</p>
+									)}
+								</div>
+								<div className="flex items-center gap-2">
+									<UiBadge variant={action.enabled ? 'default' : 'secondary'}>
+										{action.baseValue} XP
+									</UiBadge>
+									<Button
+										size="sm"
+										variant="outline"
+										onClick={() => {
+											const newValue = prompt(
+												`Enter new XP value for ${action.action}:`,
+												action.baseValue.toString()
+											);
+											if (newValue && !isNaN(Number(newValue))) {
+												updateXpAction.mutate({
+													actionKey: action.action,
+													payload: { baseValue: Number(newValue) }
+												});
+											}
+										}}
+									>
+										<Settings className="h-3 w-3" />
+									</Button>
+								</div>
+							</div>
+						))}
+					</div>
+				)}
+			</CardContent>
+		</Card>
+	);
+
+	// XP/Clout Settings Tab Content
+	const { data: xpCloutSettings, isLoading: settingsLoading } = useXpCloutSettings();
+	const updateCloutSettings = useUpdateXpCloutSettings();
+
+	const settingsTabContent = (
+		<div className="space-y-6">
+			<Card>
+				<CardHeader>
+					<CardTitle className="flex items-center gap-2">
+						<Settings className="h-5 w-5" />
+						XP & Clout Configuration
+					</CardTitle>
+					<CardDescription>
+						Global settings for the experience point and clout systems.
+					</CardDescription>
+				</CardHeader>
+				<CardContent>
+					{settingsLoading && <p>Loading settings...</p>}
+					{xpCloutSettings && (
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+							<div className="space-y-4">
+								<div>
+									<label className="text-sm font-medium">XP to DGT Rate</label>
+									<div className="flex items-center gap-2 mt-1">
+										<span className="text-2xl font-bold">{xpCloutSettings.xpToDgtRate}</span>
+										<span className="text-sm text-muted-foreground">DGT per XP</span>
+									</div>
+								</div>
+								<div>
+									<label className="text-sm font-medium">Clout Multiplier</label>
+									<div className="flex items-center gap-2 mt-1">
+										<span className="text-2xl font-bold">{xpCloutSettings.cloutMultiplier}x</span>
+										<span className="text-sm text-muted-foreground">Applied to base XP</span>
+									</div>
+								</div>
+								<div>
+									<label className="text-sm font-medium">Decay Rate</label>
+									<div className="flex items-center gap-2 mt-1">
+										<span className="text-2xl font-bold">
+											{(Number(xpCloutSettings.decayRate) * 100).toFixed(1)}%
+										</span>
+										<span className="text-sm text-muted-foreground">Daily clout decay</span>
+									</div>
+								</div>
+							</div>
+
+							<div className="space-y-4">
+								<h3 className="font-semibold">Economy Integration</h3>
+								<div className="space-y-2 text-sm">
+									<div className="flex justify-between">
+										<span>DGT Rewards:</span>
+										<span className="font-medium">Level-based</span>
+									</div>
+									<div className="flex justify-between">
+										<span>Clout System:</span>
+										<span className="font-medium">Active</span>
+									</div>
+									<div className="flex justify-between">
+										<span>XP Decay:</span>
+										<span className="font-medium">Daily</span>
+									</div>
+									<div className="flex justify-between">
+										<span>Action Limits:</span>
+										<span className="font-medium">Configured</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					)}
+				</CardContent>
+			</Card>
+
+			{/* Real-time Stats */}
+			<Card>
+				<CardHeader>
+					<CardTitle className="flex items-center gap-2">
+						<Users className="h-5 w-5" />
+						Live XP Statistics
+					</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+						<div className="text-center">
+							<div className="text-2xl font-bold text-blue-600">12,847</div>
+							<div className="text-xs text-muted-foreground">Total XP Awarded Today</div>
+						</div>
+						<div className="text-center">
+							<div className="text-2xl font-bold text-green-600">1,293</div>
+							<div className="text-xs text-muted-foreground">Active Users This Week</div>
+						</div>
+						<div className="text-center">
+							<div className="text-2xl font-bold text-purple-600">47</div>
+							<div className="text-xs text-muted-foreground">Level-ups Today</div>
+						</div>
+						<div className="text-center">
+							<div className="text-2xl font-bold text-orange-600">8,234</div>
+							<div className="text-xs text-muted-foreground">DGT Rewards Paid</div>
+						</div>
+					</div>
+				</CardContent>
+			</Card>
+		</div>
+	);
+
 	const tabsConfig = [
-		{ value: 'all-levels', label: 'XP Levels', content: allLevelsTabContent },
-		{ value: 'statistics', label: 'System Stats', content: statisticsTabContent }
+		{ value: 'levels', label: 'XP Levels', content: allLevelsTabContent },
+		{ value: 'actions', label: 'XP Actions', content: xpActionsTabContent },
+		{ value: 'settings', label: 'Configuration', content: settingsTabContent },
+		{ value: 'statistics', label: 'Analytics', content: statisticsTabContent }
 	];
 
 	return (
-		<AdminPageShell title="XP System" pageActions={pageActions} tabsConfig={tabsConfig}>
+		<AdminPageShell
+			title={module?.name || 'XP System'}
+			pageActions={pageActions}
+			tabsConfig={tabsConfig}
+		>
 			<LevelFormDialogComponent
 				isOpen={isCreateDialogOpen || isEditDialogOpen}
 				setIsOpen={isEditDialogOpen ? setIsEditDialogOpen : setIsCreateDialogOpen}
@@ -481,5 +691,14 @@ export default function XPSystemPage() {
 				isDeleting={deleteLevelMutation.isPending}
 			/>
 		</AdminPageShell>
+	);
+}
+
+// Main exported component with protection wrapper
+export default function XPSystemPage() {
+	return (
+		<ProtectedAdminRoute moduleId="xp-system">
+			<XPSystemModuleContent />
+		</ProtectedAdminRoute>
 	);
 }

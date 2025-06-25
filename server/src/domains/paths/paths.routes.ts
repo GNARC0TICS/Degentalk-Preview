@@ -5,7 +5,7 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { PathService } from '../../../services/path-service';
-// import { XpProcessor } from '@server/utils/xpProcessor';  // File doesn't exist - commenting out
+// import { XpProcessor } from '@server/src/utils/xpProcessor';  // File doesn't exist - commenting out
 import { db } from '@db';
 import { sql } from 'drizzle-orm';
 

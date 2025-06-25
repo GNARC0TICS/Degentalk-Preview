@@ -2,7 +2,7 @@ import { db } from '@db';
 import { and, count, desc, eq, ilike, or, sql } from 'drizzle-orm';
 import { dictionaryEntries, dictionaryUpvotes, insertDictionaryEntrySchema } from '@schema';
 import { XP_ACTIONS, xpLevelService } from '../../../services/xp-level-service';
-import { slugify } from '@server/utils/slugify';
+import { slugify } from '@server/src/utils/slugify';
 
 export const DictionaryStatus = {
 	PENDING: 'pending',

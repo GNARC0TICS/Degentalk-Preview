@@ -201,13 +201,11 @@ export class AdminModuleRegistry {
 		console.log('DEBUG: userModules count:', userModules.length);
 		console.log(
 			'DEBUG: userModules sample:',
-			userModules
-				.slice(0, 2)
-				.map((m) => ({
-					id: m.id,
-					hasSubModules: !!m.subModules,
-					subModulesCount: m.subModules?.length || 0
-				}))
+			userModules.slice(0, 2).map((m) => ({
+				id: m.id,
+				hasSubModules: !!m.subModules,
+				subModulesCount: m.subModules?.length || 0
+			}))
 		);
 
 		// Build a complete tree first, ensuring every module has subModules array
