@@ -181,7 +181,7 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
 				Sticker: <Star className="h-4 w-4" />,
 				Zap: <Zap className="h-4 w-4" />,
 				ToggleLeft: <Settings className="h-4 w-4" />,
-				Megaphone: <Megaphone className="h-4 w-4" />,
+				Megaphone: <Megaphone className="h-4 w-4" />
 			};
 
 			const icon = iconMap[module.icon] || <Settings className="h-4 w-4" />;
@@ -196,7 +196,7 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
 				href: module.route,
 				label,
 				icon,
-				submenu: module.subModules?.map(subModule => ({
+				submenu: module.subModules?.map((subModule) => ({
 					href: subModule.route,
 					label: subModule.name
 				}))

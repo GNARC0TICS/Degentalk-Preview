@@ -6,13 +6,13 @@ This folder contains the modular admin panel infrastructure powering all admin p
 
 ## 🔧 Core Structure
 
-| File                                      | Purpose                                  |
-|-------------------------------------------|------------------------------------------|
-| `admin.config.ts`                         | Registers all admin modules              |
-| `admin-module-registry.ts`                | Dynamic module registry w/ permissions   |
-| `useAdminModules.ts`                      | Frontend access + navigation integration |
-| `ProtectedAdminRoute.tsx`                 | Route guard for admin-only pages         |
-| `xp-system-modular.tsx`                   | Demo modular page                        |
+| File                       | Purpose                                  |
+| -------------------------- | ---------------------------------------- |
+| `admin.config.ts`          | Registers all admin modules              |
+| `admin-module-registry.ts` | Dynamic module registry w/ permissions   |
+| `useAdminModules.ts`       | Frontend access + navigation integration |
+| `ProtectedAdminRoute.tsx`  | Route guard for admin-only pages         |
+| `xp-system-modular.tsx`    | Demo modular page                        |
 
 ---
 
@@ -30,6 +30,7 @@ This folder contains the modular admin panel infrastructure powering all admin p
 ## 🛠 How to Add a New Admin Module
 
 1. **Register in `admin.config.ts`:**
+
 ```ts
 {
   id: 'shop',
@@ -47,6 +48,7 @@ This folder contains the modular admin panel infrastructure powering all admin p
 ```
 
 2. Wrap page in ProtectedAdminRoute:
+
 ```ts
 export default function ShopPage() {
   return (
@@ -58,9 +60,10 @@ export default function ShopPage() {
 ```
 
 3. Access settings and perms in your component:
+
 ```ts
-const { module, hasPermission } = useAdminModule('shop')
-const itemLimit = module?.settings?.itemLimit || 50
+const { module, hasPermission } = useAdminModule('shop');
+const itemLimit = module?.settings?.itemLimit || 50;
 ```
 
 4. Module will now show in sidebar and respect permissions.
@@ -68,6 +71,7 @@ const itemLimit = module?.settings?.itemLimit || 50
 ---
 
 🧪 Testing Notes
+
 - ✅ Modules auto-hide if disabled
 - ✅ Routes are blocked if user lacks permission
 - ✅ Settings injected via useAdminModule()
@@ -76,19 +80,21 @@ const itemLimit = module?.settings?.itemLimit || 50
 ---
 
 🔁 Cloning Example
+
 ```ts
 // Goated Admin Variant
 adminModuleRegistry.configure({
-  modules: ['xp-system', 'shop', 'wallet'],
-  features: { enableCasino: true },
-  theme: { primary: '#2F2F2F', accent: '#F8D57E' }
-})
+	modules: ['xp-system', 'shop', 'wallet'],
+	features: { enableCasino: true },
+	theme: { primary: '#2F2F2F', accent: '#F8D57E' }
+});
 ```
 
 ---
 
 🚀 Status: Production-Ready
+
 - ✅ Complete feature coverage
 - ✅ Zero-breaking-changes conversion path
 - ✅ Backwards-compatible with legacy routes
-- ✅ Safe for forks, clones, and partner platforms 
+- ✅ Safe for forks, clones, and partner platforms

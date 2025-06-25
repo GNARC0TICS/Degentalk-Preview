@@ -24,7 +24,7 @@ export function useAdminModules(): UseAdminModulesReturn {
 		data: serverConfig,
 		isLoading,
 		error,
-		refetch,
+		refetch
 	} = useQuery({
 		queryKey: ['admin-modules-config'],
 		queryFn: async () => {
@@ -41,7 +41,7 @@ export function useAdminModules(): UseAdminModulesReturn {
 			}
 		},
 		staleTime: 5 * 60 * 1000, // 5 minutes
-		retry: 1, // Only retry once before falling back to local config
+		retry: 1 // Only retry once before falling back to local config
 	});
 
 	// Apply server configuration overrides if available
@@ -49,7 +49,7 @@ export function useAdminModules(): UseAdminModulesReturn {
 		if (serverConfig?.modules) {
 			// Update registry with server configuration
 			adminModuleRegistry.reset();
-			
+
 			// Apply server-side feature flags and settings
 			serverConfig.modules.forEach((serverModule: any) => {
 				const localModule = adminModuleRegistry.getModule(serverModule.id);
@@ -66,7 +66,7 @@ export function useAdminModules(): UseAdminModulesReturn {
 	}, [user, serverConfig]);
 
 	const enabledModules = useMemo(() => {
-		return modules.filter(module => module.enabled);
+		return modules.filter((module) => module.enabled);
 	}, [modules]);
 
 	const navigationStructure = useMemo(() => {
@@ -94,7 +94,7 @@ export function useAdminModules(): UseAdminModulesReturn {
 		getModule,
 		isLoading,
 		error: error as Error | null,
-		refetch,
+		refetch
 	};
 }
 
@@ -104,10 +104,10 @@ export function useAdminPermission(moduleId: string): {
 	isLoading: boolean;
 } {
 	const { hasPermission, isLoading } = useAdminModules();
-	
+
 	return {
 		hasPermission: hasPermission(moduleId),
-		isLoading,
+		isLoading
 	};
 }
 
@@ -119,14 +119,14 @@ export function useAdminModule(moduleId: string): {
 	isLoading: boolean;
 } {
 	const { getModule, hasPermission, isLoading } = useAdminModules();
-	
+
 	const module = getModule(moduleId);
-	
+
 	return {
 		module,
 		hasPermission: hasPermission(moduleId),
 		isEnabled: module?.enabled ?? false,
-		isLoading,
+		isLoading
 	};
 }
 
@@ -136,9 +136,9 @@ export function useAdminNavigation(): {
 	isLoading: boolean;
 } {
 	const { navigationStructure, isLoading } = useAdminModules();
-	
+
 	return {
 		navigationItems: navigationStructure,
-		isLoading,
+		isLoading
 	};
 }

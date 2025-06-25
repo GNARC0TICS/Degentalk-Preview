@@ -42,40 +42,40 @@ export const ADMIN_PERMISSIONS = {
 	'admin.users.manage': 'Manage users',
 	'admin.users.delete': 'Delete users',
 	'admin.users.bulk': 'Bulk user operations',
-	
+
 	// XP System
 	'admin.xp.view': 'View XP configuration',
 	'admin.xp.manage': 'Manage XP levels and rewards',
 	'admin.xp.grant': 'Grant XP to users',
-	
+
 	// Shop Management
 	'admin.shop.view': 'View shop products',
 	'admin.shop.manage': 'Manage shop products',
 	'admin.shop.categories': 'Manage shop categories',
 	'admin.shop.inventory': 'Manage inventory',
-	
+
 	// Wallet & Economy
 	'admin.wallet.view': 'View wallet information',
 	'admin.wallet.manage': 'Manage DGT balances',
 	'admin.wallet.transactions': 'View transactions',
 	'admin.wallet.grant': 'Grant DGT tokens',
-	
+
 	// Forum Management
 	'admin.forum.view': 'View forum structure',
 	'admin.forum.manage': 'Manage forums and categories',
 	'admin.forum.moderate': 'Moderate content',
-	
+
 	// Reports & Analytics
 	'admin.reports.view': 'View reports',
 	'admin.reports.manage': 'Manage reports',
 	'admin.analytics.view': 'View analytics',
 	'admin.analytics.export': 'Export analytics data',
-	
+
 	// System
 	'admin.system.view': 'View system settings',
 	'admin.system.manage': 'Manage system settings',
 	'admin.system.backup': 'Manage backups',
-	'admin.system.audit': 'View audit logs',
+	'admin.system.audit': 'View audit logs'
 } as const;
 
 export type AdminPermission = keyof typeof ADMIN_PERMISSIONS;
@@ -92,7 +92,7 @@ export const adminConfig: AdminConfig = {
 			component: lazy(() => import('@/pages/admin/index')),
 			permissions: ['admin.system.view'],
 			enabled: true,
-			order: 0,
+			order: 0
 		},
 		{
 			id: 'users',
@@ -106,7 +106,7 @@ export const adminConfig: AdminConfig = {
 			order: 1,
 			settings: {
 				enableBulkOperations: true,
-				maxBulkSelection: 100,
+				maxBulkSelection: 100
 			},
 			subModules: [
 				{
@@ -117,7 +117,7 @@ export const adminConfig: AdminConfig = {
 					component: lazy(() => import('@/pages/admin/roles')),
 					permissions: ['admin.users.manage'],
 					enabled: true,
-					order: 0,
+					order: 0
 				},
 				{
 					id: 'permissions',
@@ -127,9 +127,9 @@ export const adminConfig: AdminConfig = {
 					component: lazy(() => import('@/pages/admin/permissions/index')),
 					permissions: ['admin.users.manage'],
 					enabled: true,
-					order: 1,
-				},
-			],
+					order: 1
+				}
+			]
 		},
 		{
 			id: 'xp-system',
@@ -144,8 +144,8 @@ export const adminConfig: AdminConfig = {
 			settings: {
 				maxLevel: 100,
 				xpMultiplier: 1.0,
-				enableSeasonalEvents: true,
-			},
+				enableSeasonalEvents: true
+			}
 		},
 		{
 			id: 'wallets',
@@ -166,7 +166,7 @@ export const adminConfig: AdminConfig = {
 					component: lazy(() => import('@/pages/admin/treasury')),
 					permissions: ['admin.wallet.manage'],
 					enabled: true,
-					order: 0,
+					order: 0
 				},
 				{
 					id: 'dgt-packages',
@@ -176,9 +176,9 @@ export const adminConfig: AdminConfig = {
 					component: lazy(() => import('@/pages/admin/dgt-packages')),
 					permissions: ['admin.wallet.manage'],
 					enabled: true,
-					order: 1,
-				},
-			],
+					order: 1
+				}
+			]
 		},
 		{
 			id: 'shop',
@@ -192,7 +192,7 @@ export const adminConfig: AdminConfig = {
 			order: 4,
 			settings: {
 				enableInventoryTracking: true,
-				lowStockThreshold: 10,
+				lowStockThreshold: 10
 			},
 			subModules: [
 				{
@@ -203,9 +203,9 @@ export const adminConfig: AdminConfig = {
 					component: lazy(() => import('@/pages/admin/shop/categories')),
 					permissions: ['admin.shop.categories'],
 					enabled: true,
-					order: 0,
-				},
-			],
+					order: 0
+				}
+			]
 		},
 		{
 			id: 'forum',
@@ -216,7 +216,7 @@ export const adminConfig: AdminConfig = {
 			component: lazy(() => import('@/pages/admin/forum-structure')),
 			permissions: ['admin.forum.view'],
 			enabled: true,
-			order: 5,
+			order: 5
 		},
 		{
 			id: 'reports',
@@ -227,7 +227,7 @@ export const adminConfig: AdminConfig = {
 			component: lazy(() => import('@/pages/admin/reports/index')),
 			permissions: ['admin.reports.view'],
 			enabled: true,
-			order: 6,
+			order: 6
 		},
 		{
 			id: 'analytics',
@@ -248,9 +248,9 @@ export const adminConfig: AdminConfig = {
 					component: lazy(() => import('@/pages/admin/system-analytics')),
 					permissions: ['admin.analytics.view'],
 					enabled: true,
-					order: 0,
-				},
-			],
+					order: 0
+				}
+			]
 		},
 		{
 			id: 'cosmetics',
@@ -271,7 +271,7 @@ export const adminConfig: AdminConfig = {
 					component: lazy(() => import('@/pages/admin/stickers')),
 					permissions: ['admin.shop.manage'],
 					enabled: true,
-					order: 0,
+					order: 0
 				},
 				{
 					id: 'animations',
@@ -281,7 +281,7 @@ export const adminConfig: AdminConfig = {
 					component: lazy(() => import('@/pages/admin/ui/animations')),
 					permissions: ['admin.shop.manage'],
 					enabled: true,
-					order: 1,
+					order: 1
 				},
 				{
 					id: 'emojis',
@@ -291,9 +291,9 @@ export const adminConfig: AdminConfig = {
 					component: lazy(() => import('@/pages/admin/emojis')),
 					permissions: ['admin.shop.manage'],
 					enabled: true,
-					order: 2,
-				},
-			],
+					order: 2
+				}
+			]
 		},
 		{
 			id: 'settings',
@@ -314,7 +314,7 @@ export const adminConfig: AdminConfig = {
 					component: lazy(() => import('@/pages/admin/feature-flags')),
 					permissions: ['admin.system.manage'],
 					enabled: true,
-					order: 0,
+					order: 0
 				},
 				{
 					id: 'announcements',
@@ -324,12 +324,12 @@ export const adminConfig: AdminConfig = {
 					component: lazy(() => import('@/pages/admin/announcements/index')),
 					permissions: ['admin.system.manage'],
 					enabled: true,
-					order: 1,
-				},
-			],
-		},
+					order: 1
+				}
+			]
+		}
 	],
-	
+
 	defaultPermissions: {
 		superAdmin: Object.keys(ADMIN_PERMISSIONS) as AdminPermission[],
 		admin: [
@@ -345,24 +345,24 @@ export const adminConfig: AdminConfig = {
 			'admin.reports.view',
 			'admin.reports.manage',
 			'admin.analytics.view',
-			'admin.system.view',
+			'admin.system.view'
 		] as AdminPermission[],
 		moderator: [
 			'admin.users.view',
 			'admin.forum.view',
 			'admin.forum.moderate',
 			'admin.reports.view',
-			'admin.reports.manage',
-		] as AdminPermission[],
+			'admin.reports.manage'
+		] as AdminPermission[]
 	},
-	
+
 	features: {
 		auditLog: true,
 		bulkOperations: true,
 		advancedAnalytics: true,
 		emailTemplates: true,
-		backup: true,
-	},
+		backup: true
+	}
 };
 
 // Helper function to get module by ID
@@ -377,14 +377,14 @@ export function getAdminModuleById(moduleId: string): AdminModule | undefined {
 		}
 		return undefined;
 	}
-	
+
 	return findModule(adminConfig.modules);
 }
 
 // Helper function to get all modules flattened
 export function getAllAdminModules(): AdminModule[] {
 	const allModules: AdminModule[] = [];
-	
+
 	function collectModules(modules: AdminModule[]) {
 		for (const module of modules) {
 			allModules.push(module);
@@ -393,7 +393,7 @@ export function getAllAdminModules(): AdminModule[] {
 			}
 		}
 	}
-	
+
 	collectModules(adminConfig.modules);
 	return allModules;
 }

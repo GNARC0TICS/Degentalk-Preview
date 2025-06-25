@@ -19,7 +19,7 @@ export function ProtectedAdminRoute({
 	moduleId,
 	fallbackRoute = '/admin',
 	requireExactPermission = false,
-	showLoadingSpinner = true,
+	showLoadingSpinner = true
 }: ProtectedAdminRouteProps) {
 	const { user, isLoading: authLoading } = useAuth();
 	const { hasPermission, isLoading: permissionLoading } = useAdminPermission(moduleId);
@@ -28,14 +28,12 @@ export function ProtectedAdminRoute({
 	// Show loading state
 	if (authLoading || permissionLoading) {
 		if (!showLoadingSpinner) return null;
-		
+
 		return (
 			<div className="flex items-center justify-center min-h-[400px]">
 				<div className="flex flex-col items-center gap-3">
 					<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-					<p className="text-sm text-muted-foreground">
-						Checking permissions...
-					</p>
+					<p className="text-sm text-muted-foreground">Checking permissions...</p>
 				</div>
 			</div>
 		);
@@ -68,9 +66,7 @@ export function ProtectedAdminRoute({
 	// Permission granted, render the protected content
 	return (
 		<Suspense fallback={<AdminLoadingFallback />}>
-			<AdminErrorBoundary moduleId={moduleId}>
-				{children}
-			</AdminErrorBoundary>
+			<AdminErrorBoundary moduleId={moduleId}>{children}</AdminErrorBoundary>
 		</Suspense>
 	);
 }
@@ -97,7 +93,7 @@ function AdminAccessDenied({
 	moduleId,
 	userRole,
 	fallbackRoute,
-	requireExactPermission,
+	requireExactPermission
 }: {
 	moduleId: string;
 	userRole: string;
@@ -111,31 +107,31 @@ function AdminAccessDenied({
 				<AlertDescription className="space-y-4">
 					<div>
 						<h3 className="font-semibold mb-2">Access Denied</h3>
-						<p className="text-sm">
-							You don't have permission to access this admin module.
-						</p>
+						<p className="text-sm">You don't have permission to access this admin module.</p>
 					</div>
-					
+
 					<div className="text-xs space-y-1 opacity-75">
-						<p><strong>Module:</strong> {moduleId}</p>
-						<p><strong>Your Role:</strong> {userRole}</p>
+						<p>
+							<strong>Module:</strong> {moduleId}
+						</p>
+						<p>
+							<strong>Your Role:</strong> {userRole}
+						</p>
 						{requireExactPermission && (
-							<p><strong>Requirement:</strong> Exact permission match required</p>
+							<p>
+								<strong>Requirement:</strong> Exact permission match required
+							</p>
 						)}
 					</div>
-					
+
 					<div className="flex gap-2">
-						<Button 
-							variant="outline" 
-							size="sm" 
-							onClick={() => window.history.back()}
-						>
+						<Button variant="outline" size="sm" onClick={() => window.history.back()}>
 							Go Back
 						</Button>
-						<Button 
-							variant="secondary" 
+						<Button
+							variant="secondary"
 							size="sm"
-							onClick={() => window.location.href = fallbackRoute}
+							onClick={() => (window.location.href = fallbackRoute)}
 						>
 							Admin Dashboard
 						</Button>
@@ -162,7 +158,7 @@ class AdminErrorBoundary extends React.Component<
 
 	componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
 		console.error(`Admin module error [${this.props.moduleId}]:`, error, errorInfo);
-		
+
 		// TODO: Send error to monitoring service
 		// logError('admin-module-error', {
 		// 	moduleId: this.props.moduleId,
@@ -181,30 +177,28 @@ class AdminErrorBoundary extends React.Component<
 						<AlertDescription className="space-y-4">
 							<div>
 								<h3 className="font-semibold mb-2">Module Error</h3>
-								<p className="text-sm">
-									The admin module failed to load properly.
-								</p>
+								<p className="text-sm">The admin module failed to load properly.</p>
 							</div>
-							
+
 							<div className="text-xs space-y-1 opacity-75">
-								<p><strong>Module:</strong> {this.props.moduleId}</p>
+								<p>
+									<strong>Module:</strong> {this.props.moduleId}
+								</p>
 								{this.state.error && (
-									<p><strong>Error:</strong> {this.state.error.message}</p>
+									<p>
+										<strong>Error:</strong> {this.state.error.message}
+									</p>
 								)}
 							</div>
-							
+
 							<div className="flex gap-2">
-								<Button 
-									variant="outline" 
-									size="sm"
-									onClick={() => window.location.reload()}
-								>
+								<Button variant="outline" size="sm" onClick={() => window.location.reload()}>
 									Reload Page
 								</Button>
-								<Button 
-									variant="secondary" 
+								<Button
+									variant="secondary"
 									size="sm"
-									onClick={() => window.location.href = '/admin'}
+									onClick={() => (window.location.href = '/admin')}
 								>
 									Admin Dashboard
 								</Button>
