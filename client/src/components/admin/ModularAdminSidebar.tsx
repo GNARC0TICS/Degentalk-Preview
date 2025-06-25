@@ -257,8 +257,8 @@ export default function ModularAdminSidebar({
 						className={cn(
 							'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg group transition-all duration-200',
 							isActive
-								? 'bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
-								: 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800/50',
+								? 'bg-admin-text-accent/10 text-admin-text-accent border border-admin-text-accent/20'
+								: 'text-admin-text-secondary hover:text-admin-text-primary hover:bg-admin-surface-hover',
 							!module.enabled && 'opacity-50',
 							collapsed && 'justify-center',
 							isSubModule && 'text-xs'
@@ -300,7 +300,7 @@ export default function ModularAdminSidebar({
 
 					{/* Submodules */}
 					{!collapsed && hasSubModules && isExpanded && module.subModules && (
-						<div className="ml-6 space-y-1 border-l border-gray-200 dark:border-gray-700 pl-3">
+						<div className="ml-6 space-y-1 border-l border-admin-border pl-3">
 							{module.subModules.map((subModule) => renderModule(subModule, true))}
 						</div>
 					)}
@@ -322,13 +322,13 @@ export default function ModularAdminSidebar({
 		return (
 			<aside
 				className={cn(
-					'h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex-shrink-0 flex flex-col transition-all duration-300',
+					'h-full bg-admin-surface border-r border-admin-border flex-shrink-0 flex flex-col transition-all duration-300',
 					collapsed ? 'w-16' : 'w-72',
 					className
 				)}
 			>
 				<div className="p-4 flex items-center justify-center">
-					<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+					<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-admin-text-accent"></div>
 				</div>
 			</aside>
 		);
@@ -337,18 +337,21 @@ export default function ModularAdminSidebar({
 	return (
 		<aside
 			className={cn(
-				'h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex-shrink-0 flex flex-col transition-all duration-300 shadow-sm',
+				'h-full bg-admin-surface border-r border-admin-border flex-shrink-0 flex flex-col transition-all duration-300 shadow-sm',
 				collapsed ? 'w-16' : 'w-72',
 				className
 			)}
 		>
 			{/* Header with toggle */}
-			<div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+			<div className="flex items-center justify-between p-4 border-b border-admin-border">
 				{!collapsed && (
 					<div className="flex items-center gap-2">
-						<h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Admin Panel</h2>
+						<h2 className="text-lg font-semibold text-admin-text-primary">Admin Panel</h2>
 						{user?.role && (
-							<Badge variant="outline" className="text-xs">
+							<Badge
+								variant="outline"
+								className="text-xs border-admin-border text-admin-text-secondary"
+							>
 								{user.role}
 							</Badge>
 						)}
@@ -359,7 +362,7 @@ export default function ModularAdminSidebar({
 					variant="ghost"
 					size="sm"
 					onClick={onToggleCollapsed}
-					className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+					className="p-2 hover:bg-admin-surface-hover text-admin-text-secondary hover:text-admin-text-primary"
 				>
 					{collapsed ? <Menu className="w-4 h-4" /> : <X className="w-4 h-4" />}
 				</Button>
@@ -371,7 +374,7 @@ export default function ModularAdminSidebar({
 					<div key={sectionKey} className="space-y-2">
 						{/* Section header (optional, based on grouping) */}
 						{!collapsed && modules.length > 1 && (
-							<div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3">
+							<div className="text-xs font-medium text-admin-text-secondary uppercase tracking-wider px-3">
 								{Number(sectionKey) === 0
 									? 'Core'
 									: Number(sectionKey) === 1
@@ -390,14 +393,16 @@ export default function ModularAdminSidebar({
 				{/* Empty state */}
 				{navigationItems.length === 0 && (
 					<div className="text-center py-8">
-						<AlertCircle className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-						{!collapsed && <p className="text-sm text-gray-500">No admin modules available</p>}
+						<AlertCircle className="w-8 h-8 text-admin-text-secondary mx-auto mb-2" />
+						{!collapsed && (
+							<p className="text-sm text-admin-text-secondary">No admin modules available</p>
+						)}
 					</div>
 				)}
 			</div>
 
 			{/* Footer */}
-			<div className="border-t border-gray-200 dark:border-gray-800 p-4">
+			<div className="border-t border-admin-border p-4">
 				{!collapsed ? (
 					<div className="space-y-2">
 						<Link

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { WhaleWatchService } from './whale-watch.service';
 import { isAuthenticated } from '../auth/middleware/auth.middleware';
-import { logger } from '@server-core/logger';
+import { logger } from '@server/src/core/logger';
 
 const router = Router();
 

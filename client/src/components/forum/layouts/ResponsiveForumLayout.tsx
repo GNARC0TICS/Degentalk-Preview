@@ -153,11 +153,17 @@ const ResponsiveForumLayout = memo(
 
 					{/* Main Content Area */}
 					<div className="flex-1 flex flex-col overflow-hidden">
-						{/* Top Bar */}
+						{/* Top Bar - Sticky for better navigation */}
 						<motion.header
 							data-testid="top-bar"
 							variants={itemVariants}
-							className="flex items-center justify-between p-4 bg-zinc-900/30 border-b border-zinc-800/50 backdrop-blur-sm"
+							className={cn(
+								'flex items-center justify-between p-4 bg-zinc-900/30 border-b border-zinc-800/50 backdrop-blur-sm',
+								// Sticky positioning for better UX
+								'sticky top-0 z-30',
+								// Mobile: Reduce padding for more content space
+								isMobile ? 'p-3' : 'p-4'
+							)}
 						>
 							<div className="flex items-center gap-4">
 								{/* Mobile Sidebar Toggle */}
@@ -178,8 +184,8 @@ const ResponsiveForumLayout = memo(
 
 							{/* Layout Controls */}
 							<div className="flex items-center gap-2">
-								{/* Layout Switcher */}
-								{onLayoutChange && (
+								{/* Layout Switcher - Hide more complex controls on mobile */}
+								{onLayoutChange && !isMobile && (
 									<div
 										data-testid="layout-controls"
 										className="hidden sm:flex items-center gap-1 p-1 bg-zinc-800/50 rounded-lg"

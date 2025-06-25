@@ -42,6 +42,11 @@
 		--admin-button-secondary-bg: theme('colors.zinc.700');
 		--admin-button-secondary-hover-bg: theme('colors.zinc.600');
 		--admin-button-secondary-text: theme('colors.zinc.50');
+
+		/* Status Colors */
+		--success: theme('colors.emerald.500');
+		--warning: theme('colors.amber.500');
+		--destructive: theme('colors.red.500');
 	}
 }
 

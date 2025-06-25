@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { useLocation, Redirect } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
 import { useAdminPermission } from '@/hooks/use-admin-modules';
 import { Loader2, AlertCircle, Lock } from 'lucide-react';
@@ -41,12 +41,12 @@ export function ProtectedAdminRoute({
 
 	// Not authenticated
 	if (!user) {
-		return <Navigate to="/login" state={{ from: location }} replace />;
+		return <Redirect to="/login" />;
 	}
 
 	// Not an admin/moderator
 	if (!['admin', 'super_admin', 'moderator'].includes(user.role)) {
-		return <Navigate to="/" replace />;
+		return <Redirect to="/" />;
 	}
 
 	// No permission for this specific module

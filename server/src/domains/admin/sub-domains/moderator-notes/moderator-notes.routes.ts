@@ -4,8 +4,8 @@ import { db } from '@db';
 import { moderatorNotes, moderatorNoteTypeEnum } from '@schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { isAdminOrModerator } from '../../../auth/middleware/auth.middleware';
-import { getUserIdFromRequest } from '@server-utils/auth';
-import { logger } from '@server-core/logger';
+import { getUserIdFromRequest } from '@server/src/utils/auth';
+import { logger } from '@server/src/core/logger';
 
 const router = Router();
 

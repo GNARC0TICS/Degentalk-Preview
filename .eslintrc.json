@@ -48,11 +48,10 @@
 					{
 						"paths": [
 							// Add any server-specific restricted imports here if necessary
-							// For example, if client types should not be imported directly:
-							// {
-							//   "name": "@/client/src/types",
-							//   "message": "Server should use shared types or its own domain types."
-							// }
+							{
+								"name": "@server/src/core/database",
+								"message": "Deprecated: use '@db' or '@server/src/core/db' instead."
+							}
 						]
 					}
 				]

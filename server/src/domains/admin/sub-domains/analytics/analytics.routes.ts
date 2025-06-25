@@ -9,7 +9,7 @@ import { isAuthenticated, isAdmin } from '../../../auth/middleware/auth.middlewa
 import rainAnalyticsRoutes from './engagement/rain-analytics.routes';
 import tippingAnalyticsRoutes from './engagement/tipping-analytics.routes';
 import platformStatsRoutes from './routes/stats.routes';
-import { systemAnalyticsRoutes } from './system-analytics.routes';
+// import { systemAnalyticsRoutes } from './system-analytics.routes';
 import { Router } from 'express';
 import { AdminAnalyticsController } from './analytics.controller';
 import { validateQuery } from '@server/src/middleware/validate';
@@ -25,7 +25,7 @@ router.use(isAdmin);
 router.use('/engagement/rain', rainAnalyticsRoutes);
 router.use('/engagement/tips', tippingAnalyticsRoutes);
 router.use('/platform-stats', platformStatsRoutes);
-router.use('/system', systemAnalyticsRoutes);
+// router.use('/system', systemAnalyticsRoutes);
 
 // Additional analytics routes can be added here
 // e.g., router.use('/users', userAnalyticsRoutes);

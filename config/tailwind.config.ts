@@ -73,6 +73,50 @@ export default {
 				zinc: {
 					750: '#333338', // Custom zinc shade between 700 and 800
 					850: '#222226' // Custom zinc shade between 800 and 900
+				},
+				// Admin theme tokens
+				admin: {
+					surface: 'hsl(var(--admin-bg-surface))',
+					page: 'hsl(var(--admin-bg-page))',
+					'surface-hover': 'hsl(var(--admin-bg-surface-hover))',
+					element: 'hsl(var(--admin-bg-element))',
+					'element-hover': 'hsl(var(--admin-bg-element-hover))',
+					border: 'hsl(var(--admin-border-subtle))',
+					'border-strong': 'hsl(var(--admin-border-strong))',
+					'border-interactive': 'hsl(var(--admin-border-interactive))',
+					text: {
+						primary: 'hsl(var(--admin-text-primary))',
+						secondary: 'hsl(var(--admin-text-secondary))',
+						accent: 'hsl(var(--admin-text-accent))',
+						destructive: 'hsl(var(--admin-text-destructive))'
+					},
+					status: {
+						ok: 'hsl(var(--success))',
+						warning: 'hsl(var(--warning))',
+						error: 'hsl(var(--destructive))'
+					}
+				},
+				// Update admin status tokens for proper referencing
+				'admin-status': {
+					ok: 'hsl(var(--success))',
+					warning: 'hsl(var(--warning))',
+					error: 'hsl(var(--destructive))'
+				},
+				'admin-text': {
+					primary: 'hsl(var(--admin-text-primary))',
+					secondary: 'hsl(var(--admin-text-secondary))',
+					accent: 'hsl(var(--admin-text-accent))',
+					destructive: 'hsl(var(--admin-text-destructive))'
+				},
+				'admin-bg': {
+					surface: 'hsl(var(--admin-bg-surface))',
+					page: 'hsl(var(--admin-bg-page))',
+					element: 'hsl(var(--admin-bg-element))'
+				},
+				'admin-border': {
+					DEFAULT: 'hsl(var(--admin-border-subtle))',
+					strong: 'hsl(var(--admin-border-strong))',
+					interactive: 'hsl(var(--admin-border-interactive))'
 				}
 			},
 			keyframes: {

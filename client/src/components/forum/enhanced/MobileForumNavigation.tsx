@@ -111,13 +111,15 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 
 	return (
 		<>
-			{/* Mobile Menu Trigger */}
+			{/* Mobile Menu Trigger - Enhanced for touch */}
 			<Button
 				variant="ghost"
 				size="icon"
 				className={cn(
 					'md:hidden fixed top-4 left-4 z-50 bg-zinc-900/80 backdrop-blur-sm border border-zinc-700/50',
-					'hover:bg-zinc-800/80',
+					'hover:bg-zinc-800/80 active:scale-95 transition-transform',
+					// Ensure 44px minimum touch target
+					'h-11 w-11',
 					className
 				)}
 				onClick={() => setIsOpen(true)}
@@ -194,10 +196,12 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 										key={section.id}
 										onClick={() => setActiveSection(section.id as any)}
 										className={cn(
-											'flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors',
+											'flex-1 flex items-center justify-center gap-2 text-sm font-medium transition-colors',
+											// Better touch target height
+											'py-4 min-h-[44px]',
 											activeSection === section.id
 												? 'text-emerald-400 bg-emerald-900/20 border-b-2 border-emerald-500'
-												: 'text-zinc-400 hover:text-zinc-200'
+												: 'text-zinc-400 hover:text-zinc-200 active:bg-zinc-800/50'
 										)}
 									>
 										<Icon className="w-4 h-4" />
