@@ -17,7 +17,7 @@ import {
 	roles as rolesTable,
 	forumStructure
 } from '@schema';
-import { eq, sql, and, desc, gte, lt, asc, gt } from 'drizzle-orm';
+import { eq, sql, and, desc, gte, lt, asc, gt, count } from 'drizzle-orm';
 import { db } from '@db';
 import { MissionsService } from '../missions/missions.service';
 import { logger } from '../../core/logger';

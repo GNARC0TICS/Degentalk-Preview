@@ -40,6 +40,7 @@ export * from './user/avatarFrames';
 export * from './user/userOwnedFrames';
 export * from './user/userGroups';
 export * from './user/user-social-preferences';
+export * from './user/subscriptions';
 
 // User domain - feature permissions
 export * from './user/featurePermissions';

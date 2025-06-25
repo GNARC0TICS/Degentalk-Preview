@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
+import { createSafeWebSocket } from '@/lib/safeWebSocket';
 
 export interface Level {
 	level: number;
@@ -21,6 +23,14 @@ export interface UserXP {
 	nextLevelData: Level | null;
 	xpForNextLevel: number | null;
 	progress: number;
+	pendingRewards?: {
+		title?: string;
+		badge?: {
+			name: string;
+			imageUrl: string;
+		};
+		dgt?: number;
+	};
 }
 
 export interface UserTitle {
@@ -63,6 +73,7 @@ export interface XpAdjustmentEntry {
  */
 export function useXP(userId?: string): {
 	xpData: UserXP | undefined;
+	pendingRewards: UserXP['pendingRewards'];
 	titles: UserTitle[];
 	badges: UserBadge[];
 	xpHistory: XpAdjustmentEntry[];
@@ -137,8 +148,35 @@ export function useXP(userId?: string): {
 		}
 	});
 
+	const [pendingRewards, setPendingRewards] = useState<UserXP['pendingRewards']>(undefined);
+
+	// WebSocket: listen for XP reward events
+	useEffect(() => {
+		if (!xpData) return;
+		// Attempt to connect – safe in prod only
+		const socket = createSafeWebSocket({
+			path: `/ws/xp?userId=${xpData.userId}`,
+			onMessage: (msg: any) => {
+				if (!msg || typeof msg !== 'object') return;
+				if (msg.type === 'xp_reward') {
+					// Assume payload: { delta: number, newLevel?: number, rewards?: { title?, badge?, dgt? } }
+					if (msg.rewards) {
+						setPendingRewards(msg.rewards);
+					}
+					// Refresh XP query to reflect new totals
+					queryClient.invalidateQueries({ queryKey: ['xp', userId] });
+				}
+			}
+		});
+
+		return () => {
+			if (socket) socket.close();
+		};
+	}, [xpData, userId, queryClient]);
+
 	return {
-		xpData,
+		xpData: xpData ? { ...xpData, pendingRewards } : undefined,
+		pendingRewards,
 		titles,
 		badges,
 		xpHistory,

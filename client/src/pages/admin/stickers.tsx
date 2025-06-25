@@ -56,6 +56,7 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { stickerApiService } from '@/features/admin/services/sticker-api.service';
+import { rarityColorMap } from '@/config/rarity.config';
 
 // Mock data for development (replace with actual API calls)
 const mockStickers = [
@@ -120,15 +121,6 @@ const mockPacks = [
 		createdAt: '2024-06-10T14:20:00Z'
 	}
 ];
-
-// Rarity color mapping
-const rarityColors = {
-	common: 'bg-gray-100 text-gray-800',
-	rare: 'bg-blue-100 text-blue-800',
-	epic: 'bg-purple-100 text-purple-800',
-	legendary: 'bg-yellow-100 text-yellow-800',
-	mythic: 'bg-red-100 text-red-800'
-};
 
 // File upload component
 const FileUploadZone = ({
@@ -430,7 +422,14 @@ export default function AdminStickersPage() {
 													</div>
 												</TableCell>
 												<TableCell>
-													<Badge className={rarityColors[sticker.rarity]}>{sticker.rarity}</Badge>
+													<Badge
+														className={
+															rarityColorMap[sticker.rarity as keyof typeof rarityColorMap] ||
+															rarityColorMap.common
+														}
+													>
+														{sticker.rarity}
+													</Badge>
 												</TableCell>
 												<TableCell>
 													{sticker.packName ? (
@@ -593,7 +592,7 @@ export default function AdminStickersPage() {
 								</CardHeader>
 								<CardContent>
 									<div className="space-y-3">
-										{Object.entries(rarityColors).map(([rarity, className]) => (
+										{Object.entries(rarityColorMap).map(([rarity, className]) => (
 											<div key={rarity} className="flex items-center justify-between">
 												<div className="flex items-center gap-2">
 													<Badge className={className}>{rarity}</Badge>

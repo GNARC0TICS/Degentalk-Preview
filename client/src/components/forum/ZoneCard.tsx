@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
+import { getCardStyle, CARD_STYLES } from '@/utils/card-constants';
 
 export interface ZoneCardProps {
 	zone: {
@@ -144,10 +145,10 @@ const ZoneCardPure = memo(
 		const IconComponent = theme.icon;
 
 		const cardSizes = {
-			default: 'min-h-[240px]',
-			compact: 'min-h-[180px]',
-			hero: 'min-h-[320px]',
-			mobile: 'min-h-[160px]'
+			default: CARD_STYLES.height.large,
+			compact: CARD_STYLES.height.standard,
+			hero: CARD_STYLES.height.hero,
+			mobile: CARD_STYLES.height.compact
 		} as const;
 
 		const handleEnter = () => {
@@ -165,9 +166,11 @@ const ZoneCardPure = memo(
 				<Link href={`/zones/${derivedZone.slug}`}>
 					<Card
 						className={cn(
-							'group relative cursor-pointer transition-all duration-500 ease-out overflow-hidden',
-							'bg-zinc-900/60 backdrop-blur-sm border',
-							'hover:scale-[1.02] hover:shadow-xl',
+							'group relative cursor-pointer overflow-hidden backdrop-blur-sm',
+							CARD_STYLES.background.primary,
+							CARD_STYLES.hover.combined,
+							CARD_STYLES.radius.standard,
+							CARD_STYLES.shadow.standard,
 							theme.border,
 							isHovered && `hover:shadow-2xl ${theme.glow}`,
 							cardSizes[layout],

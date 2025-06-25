@@ -16,7 +16,7 @@ export const friendshipStatusEnum = pgEnum('friendship_status', ['pending', 'acc
 
 // Friend requests and friendships table
 export const friendships = pgTable('friendships', {
-	id: uuid('id').primaryKey().defaultRandom(),
+	id: serial('id').primaryKey(),
 
 	// Who sent the friend request
 	requesterId: uuid('requester_id')
@@ -47,7 +47,7 @@ export const friendships = pgTable('friendships', {
 
 // User friendship preferences
 export const userFriendPreferences = pgTable('user_friend_preferences', {
-	id: uuid('id').primaryKey().defaultRandom(),
+	id: serial('id').primaryKey(),
 	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
@@ -84,7 +84,7 @@ export const userFriendPreferences = pgTable('user_friend_preferences', {
 
 // Friend groups (for organizing friends)
 export const friendGroups = pgTable('friend_groups', {
-	id: uuid('id').primaryKey().defaultRandom(),
+	id: serial('id').primaryKey(),
 	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
@@ -104,12 +104,12 @@ export const friendGroups = pgTable('friend_groups', {
 
 // Friend group memberships
 export const friendGroupMembers = pgTable('friend_group_members', {
-	id: uuid('id').primaryKey().defaultRandom(),
-	groupId: uuid('group_id')
+	id: serial('id').primaryKey(),
+	groupId: integer('group_id')
 		.notNull()
 		.references(() => friendGroups.id, { onDelete: 'cascade' }),
 
-	friendshipId: uuid('friendship_id')
+	friendshipId: integer('friendship_id')
 		.notNull()
 		.references(() => friendships.id, { onDelete: 'cascade' }),
 

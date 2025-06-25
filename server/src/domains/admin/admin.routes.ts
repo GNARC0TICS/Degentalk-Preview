@@ -42,6 +42,7 @@ import { adminWalletRoutes } from './sub-domains/wallet/wallet.routes';
 import { emailTemplateRoutes } from './sub-domains/email-templates/email-templates.routes';
 import { backupRestoreRoutes } from './sub-domains/backup-restore/backup-restore.routes';
 import { stickerRoutes } from '../collectibles/stickers/stickers.routes';
+import subscriptionAdminRoutes from './sub-domains/subscriptions/subscription.admin.routes';
 // import userAdminRoutes from './users/users.admin.routes'; // DEPRECATED
 // import economyAdminRoutes from './settings/economy.routes'; // Placeholder for future
 
@@ -82,6 +83,7 @@ adminRouter.use('/wallet', adminWalletRoutes);
 adminRouter.use('/email-templates', emailTemplateRoutes);
 adminRouter.use('/backup-restore', backupRestoreRoutes);
 adminRouter.use('/collectibles', stickerRoutes);
+adminRouter.use('/subscriptions', subscriptionAdminRoutes);
 
 // DEBUG: Middleware to check if /emojis path is reached in adminRouter
 adminRouter.use('/emojis', (req, res, next) => {

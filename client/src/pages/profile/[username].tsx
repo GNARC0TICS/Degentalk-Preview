@@ -57,6 +57,8 @@ function getMockProfileData(username: string): ProfileData {
 	};
 }
 
+const TAB_GRID_CLASSES = 'flex overflow-x-auto gap-1 md:grid md:grid-cols-3';
+
 export default function ProfilePage() {
 	const { username } = useParams<{ username: string }>();
 	const { user: currentUser } = useAuth();
@@ -137,7 +139,7 @@ export default function ProfilePage() {
 							<div className="rounded-lg bg-zinc-800/70 backdrop-blur-sm shadow-xl border border-zinc-700/50 p-4 sm:p-6 flex flex-col h-[calc(100vh-8rem)]">
 								<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
 									<TabsList
-										className={`flex overflow-x-auto gap-1 md:grid md:grid-cols-3 lg:${isOwnProfile ? 'grid-cols-6' : 'grid-cols-5'} mb-4 bg-black/40 backdrop-blur-sm`}
+										className={`${TAB_GRID_CLASSES} lg:${isOwnProfile ? 'grid-cols-6' : 'grid-cols-5'} mb-4 bg-black/40 backdrop-blur-sm`}
 									>
 										<TabsTrigger
 											value="overview"
@@ -227,6 +229,7 @@ export default function ProfilePage() {
 														activeFrame={profile.activeFrame}
 														activeTitle={profile.activeTitle}
 														activeBadge={profile.activeBadge}
+														canEdit={isOwnProfile}
 														onEditProfile={() => setIsEditMode(true)}
 													/>
 												)}

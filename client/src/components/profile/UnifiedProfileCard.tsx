@@ -14,16 +14,7 @@ import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 import { brandConfig } from '@/config/brand.config';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
-import {
-	MessageSquare,
-	Calendar,
-	Award,
-	Shield,
-	Users,
-	TrendingUp,
-	Eye,
-	Crown
-} from 'lucide-react';
+import { MessageSquare, Calendar, Award, Shield, TrendingUp, Eye, Crown } from 'lucide-react';
 import type { ProfileData } from '@/types/profile';
 
 interface UnifiedProfileCardProps {
@@ -36,41 +27,6 @@ interface UnifiedProfileCardProps {
 	showRole?: boolean;
 	showOnlineStatus?: boolean;
 	animated?: boolean;
-}
-
-// Helper to create mock profile data when running in dev mode or API fails
-function createMockProfile(username: string): ProfileData {
-	return {
-		id: `mock-${username}`,
-		username,
-		avatarUrl: 'https://i.pravatar.cc/300',
-		role: 'Degen',
-		bio: 'This is a mock profile used in development mode.',
-		signature: 'Keep calm and degen on',
-		joinedAt: new Date().toISOString(),
-		lastActiveAt: new Date().toISOString(),
-		dgtBalance: 1234,
-		totalPosts: 420,
-		totalThreads: 69,
-		totalLikes: 777,
-		totalTips: 0,
-		clout: 100,
-		level: 5,
-		xp: 4200,
-		nextLevelXp: 5000,
-		bannerUrl: null,
-		activeFrameId: null,
-		activeFrame: null,
-		activeTitleId: null,
-		activeTitle: null,
-		activeBadgeId: null,
-		activeBadge: null,
-		badges: [],
-		titles: [],
-		inventory: [],
-		relationships: { friends: [], friendRequestsSent: 0, friendRequestsReceived: 0 },
-		stats: { threadViewCount: 0, posterRank: null, tipperRank: null, likerRank: null }
-	};
 }
 
 export function UnifiedProfileCard({
@@ -93,16 +49,13 @@ export function UnifiedProfileCard({
 	} = useQuery<ProfileData>({
 		queryKey: ['profile', username],
 		queryFn: async () => {
-			if (import.meta.env.DEV) {
-				return createMockProfile(username);
-			}
 			const res = await fetch(`/api/profile/${username}`);
 			if (!res.ok) {
-				return createMockProfile(username);
+				throw new Error('Failed to fetch profile');
 			}
 			return res.json();
 		},
-		enabled: !!username
+		enabled: Boolean(username)
 	});
 
 	const identity = useIdentityDisplay(profile);
@@ -145,15 +98,8 @@ export function UnifiedProfileCard({
 	// Prepare stats for StatsBar
 	const stats: StatItem[] = [
 		{
-			icon: <Users className="h-4 w-4" />,
-			label: 'online',
-			value: '12', // Mock online count
-			color: 'primary',
-			animate: true
-		},
-		{
 			icon: <TrendingUp className="h-4 w-4" />,
-			label: 'total members',
+			label: 'total posts',
 			value: profile.totalPosts + profile.totalThreads,
 			color: 'secondary'
 		},

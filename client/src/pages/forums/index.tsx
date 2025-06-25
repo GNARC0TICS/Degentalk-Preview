@@ -55,6 +55,7 @@ import {
 } from '@/components/ui/accordion';
 import { Wide } from '@/layout/primitives';
 import { QuickStats } from '@/components/forum/QuickStats';
+import { getForumSpacing, getForumLayout } from '@/utils/spacing-constants';
 import { HotTopics } from '@/components/forum/HotTopics';
 import { RecentActivity } from '@/components/forum/RecentActivity';
 
@@ -307,12 +308,12 @@ const ForumPage = () => {
 	}
 
 	return (
-		<div className="flex flex-col min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black">
-			<Wide className="px-4 py-6 flex-grow">
+		<div className={getForumLayout('page')}>
+			<Wide className={`${getForumSpacing('container')} flex-grow`}>
 				<BackToHomeButton />
-				<div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+				<div className={getForumLayout('forumGrid')}>
 					{/* Main Content Area */}
-					<div className="lg:col-span-9 space-y-8">
+					<div className={`lg:col-span-9 ${getForumSpacing('cardStack')}`}>
 						{/* Forum Header & Search */}
 						<motion.section
 							variants={sectionVariants}

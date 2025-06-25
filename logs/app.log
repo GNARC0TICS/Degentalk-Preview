@@ -19022,3 +19022,30 @@ User not found
   "statusCode": 304,
   "durationMs": 3186.156
 }
+[2025-06-25T21:52:54.281Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-25T21:52:54.289Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using default table name 'session').
+[2025-06-25T21:52:54.395Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-25T21:52:54.985Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-25T21:52:54.989Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-25T21:52:54.990Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-25T21:52:54.990Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-25T21:52:54.990Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-25T22:02:20.458Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-25T22:05:16.359Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-25T22:06:30.133Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-25T22:07:43.192Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}

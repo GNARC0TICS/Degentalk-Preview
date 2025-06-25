@@ -15,6 +15,7 @@ import { ResponsiveLayoutWrapper } from '@/components/layout/ResponsiveLayoutWra
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
 import { Wide } from '@/layout/primitives';
 import HotThreads from '@/features/forum/components/HotThreads';
+import { getForumSpacing, getForumLayout } from '@/utils/spacing-constants';
 
 // Import UI components
 import { Skeleton } from '@/components/ui/skeleton';
@@ -69,12 +70,12 @@ function HomePage() {
 			<HeroSection />
 			<AnnouncementTicker />
 			<ResponsiveLayoutWrapper page="home">
-				<Wide as="div" className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+				<Wide as="div" className={getForumSpacing('container')}>
 					{/* Hot Threads feed */}
-					<HotThreads variant="feed" limit={5} className="mb-16" />
+					<HotThreads variant="feed" limit={5} className={getForumSpacing('sectionLarge')} />
 
-					<section className="mb-16">
-						<div className="flex items-center justify-between mb-8">
+					<section className={getForumSpacing('sectionLarge')}>
+						<div className={`${getForumLayout('headerFlex')} ${getForumSpacing('headerMargin')}`}>
 							<div>
 								<h2 className="text-2xl font-bold text-white mb-2">Primary Zones</h2>
 								<p className="text-zinc-400">Jump into the action</p>
@@ -96,7 +97,9 @@ function HomePage() {
 								</p>
 							</div>
 						) : structureLoadingFromContext ? (
-							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+							<div
+								className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${getForumSpacing('cardGrid')}`}
+							>
 								{Array.from({ length: primaryZonesFromContext.length || 3 }).map((_, i) => (
 									<Skeleton key={i} className="bg-zinc-900 rounded-xl h-48" />
 								))}

@@ -96,100 +96,81 @@ function HotThreads({ className = '', limit = 5, variant = 'widget' }: HotThread
 		return name?.substring(0, 2).toUpperCase() || 'UN';
 	};
 
-	// Define Row for react-window
-	const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
-		if (!threads || !threads[index]) return null;
-		const thread = threads[index];
-		return (
-			<div style={style} className="group px-1 py-1.5">
-				{' '}
-				{/* Added padding to style for item spacing */}
-				<Link href={`/threads/${thread.thread_id}`}>
-					<div className="relative p-3 md:p-4 rounded-lg bg-gradient-to-r from-zinc-800/50 to-zinc-800/30 border border-zinc-700/50 hover:border-orange-500/30 transition-all duration-300 cursor-pointer h-full flex flex-col justify-between">
-						<div className="relative z-10">
-							{/* Header with badge */}
-							<div className="flex items-start justify-between mb-3">
-								<div
-									className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 ${getBadgeStyle(thread.hot_score)}`}
-								>
-									<TrendingUp className="h-3 w-3" />
-									{getHotnessLevel(thread.hot_score)}
-								</div>
+	// Render individual thread item
+	const renderThreadItem = (thread: ThreadResponse, index: number) => (
+		<div key={thread.thread_id}>
+			<Link href={`/threads/${thread.slug}`}>
+				<div className="border-b border-zinc-800/60 last:border-b-0 p-4 hover:bg-zinc-800/40 transition-all duration-200 cursor-pointer group">
+					<div className="space-y-3">
+						{/* Thread title */}
+						<div className="flex items-start gap-3">
+							<TrendingUp className="h-5 w-5 text-orange-400 mt-0.5 flex-shrink-0" />
+							<div className="flex-1 min-w-0">
+								<h3 className="font-semibold text-zinc-100 group-hover:text-orange-300 transition-colors line-clamp-2 leading-snug">
+									{thread.title}
+								</h3>
+							</div>
+							{thread.hot_score && (
+								<Badge variant="outline" className="border-orange-500/30 text-orange-300 text-xs">
+									{Math.round(thread.hot_score)}
+								</Badge>
+							)}
+						</div>
 
-								{/* Simple flame for very hot threads */}
-								{thread.hot_score > 75 && (
-									<div className="text-orange-500">
-										<FlameIcon />
-									</div>
-								)}
+						{/* User and timestamp */}
+						<div className="flex items-center gap-3 text-xs text-zinc-400">
+							<div className="flex items-center gap-2">
+								<Avatar className="h-5 w-5">
+									<AvatarImage src={thread.avatar_url} alt={thread.username} />
+									<AvatarFallback className="text-xs bg-zinc-700">
+										{thread.username.substring(0, 2).toUpperCase()}
+									</AvatarFallback>
+								</Avatar>
+								<span className="font-medium text-zinc-300">{thread.username}</span>
 							</div>
 
-							{/* Thread title */}
-							<h3 className="font-semibold text-zinc-100 line-clamp-2 mb-3 group-hover:text-orange-300 transition-colors text-base leading-relaxed">
-								{thread.title}
-							</h3>
+							<span className="text-zinc-600">•</span>
 
-							{/* Author and meta info */}
-							<div className="flex items-center gap-3 text-sm text-zinc-400 mb-3">
-								<div className="flex items-center gap-2">
-									<Link href={`/profile/${thread.user_id}`}>
-										<Avatar className="h-6 w-6 cursor-pointer hover:ring-2 hover:ring-orange-500/50 transition-all">
-											<AvatarImage src={thread.avatar_url} alt={thread.username} />
-											<AvatarFallback className="text-xs bg-zinc-800 text-zinc-300">
-												{getInitials(thread.username)}
-											</AvatarFallback>
-										</Avatar>
-									</Link>
-									<Link href={`/profile/${thread.user_id}`}>
-										<span className="text-zinc-300 font-medium hover:text-orange-300 transition-colors cursor-pointer">
-											{thread.username}
-										</span>
-									</Link>
-								</div>
-
-								<span className="text-zinc-600">•</span>
-
-								<div className="flex items-center gap-1">
-									<Clock className="h-3.5 w-3.5" />
-									<span>{formatTimeAgo(thread.last_post_at)}</span>
-								</div>
-							</div>
-
-							{/* Stats */}
-							<div className="flex items-center justify-between">
-								<div className="flex items-center gap-6 text-xs">
-									<div className="flex items-center gap-1.5 text-zinc-400">
-										<MessageSquare className="h-4 w-4" />
-										<span className="font-medium">{thread.post_count}</span>
-									</div>
-									<div className="flex items-center gap-1.5 text-zinc-400">
-										<Eye className="h-4 w-4" />
-										<span className="font-medium">{thread.view_count}</span>
-									</div>
-									<div className="flex items-center gap-1.5 text-zinc-400">
-										<ThumbsUp className="h-4 w-4" />
-										<span className="font-medium">{thread.like_count}</span>
-									</div>
-								</div>
-
-								{/* Category tag */}
-								<Link href={`/forums/${thread.category_slug}`}>
-									<span
-										className="bg-zinc-800/50 text-zinc-400 border border-zinc-600 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs cursor-pointer rounded px-2 py-0.5"
-										onClick={(e) => {
-											e.stopPropagation();
-										}}
-									>
-										{thread.category_name}
-									</span>
-								</Link>
+							<div className="flex items-center gap-1">
+								<Clock className="h-3.5 w-3.5" />
+								<span>{formatTimeAgo(thread.last_post_at)}</span>
 							</div>
 						</div>
+
+						{/* Stats */}
+						<div className="flex items-center justify-between">
+							<div className="flex items-center gap-6 text-xs">
+								<div className="flex items-center gap-1.5 text-zinc-400">
+									<MessageSquare className="h-4 w-4" />
+									<span className="font-medium">{thread.post_count}</span>
+								</div>
+								<div className="flex items-center gap-1.5 text-zinc-400">
+									<Eye className="h-4 w-4" />
+									<span className="font-medium">{thread.view_count}</span>
+								</div>
+								<div className="flex items-center gap-1.5 text-zinc-400">
+									<ThumbsUp className="h-4 w-4" />
+									<span className="font-medium">{thread.like_count}</span>
+								</div>
+							</div>
+
+							{/* Category tag */}
+							<Link href={`/forums/${thread.category_slug}`}>
+								<span
+									className="bg-zinc-800/50 text-zinc-400 border border-zinc-600 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs cursor-pointer rounded px-2 py-0.5"
+									onClick={(e) => {
+										e.stopPropagation();
+									}}
+								>
+									{thread.category_name}
+								</span>
+							</Link>
+						</div>
 					</div>
-				</Link>
-			</div>
-		);
-	};
+				</div>
+			</Link>
+		</div>
+	);
 
 	// Choose a slightly different background for the feed variant (less flashy)
 	const cardBackground =
@@ -228,83 +209,7 @@ function HotThreads({ className = '', limit = 5, variant = 'widget' }: HotThread
 					</div>
 				) : threads && threads.length > 0 ? (
 					<div className="space-y-0">
-						{threads.map((thread, index) => (
-							<div key={thread.thread_id}>
-								<Link href={`/threads/${thread.slug}`}>
-									<div className="border-b border-zinc-800/60 last:border-b-0 p-4 hover:bg-zinc-800/40 transition-all duration-200 cursor-pointer group">
-										<div className="space-y-3">
-											{/* Thread title */}
-											<div className="flex items-start gap-3">
-												<TrendingUp className="h-5 w-5 text-orange-400 mt-0.5 flex-shrink-0" />
-												<div className="flex-1 min-w-0">
-													<h3 className="font-semibold text-zinc-100 group-hover:text-orange-300 transition-colors line-clamp-2 leading-snug">
-														{thread.title}
-													</h3>
-												</div>
-												{thread.hot_score && (
-													<Badge
-														variant="outline"
-														className="border-orange-500/30 text-orange-300 text-xs"
-													>
-														{Math.round(thread.hot_score)}
-													</Badge>
-												)}
-											</div>
-
-											{/* User and timestamp */}
-											<div className="flex items-center gap-3 text-xs text-zinc-400">
-												<div className="flex items-center gap-2">
-													<Avatar className="h-5 w-5">
-														<AvatarImage src={thread.avatar_url} alt={thread.username} />
-														<AvatarFallback className="text-xs bg-zinc-700">
-															{thread.username.substring(0, 2).toUpperCase()}
-														</AvatarFallback>
-													</Avatar>
-													<span className="font-medium text-zinc-300">{thread.username}</span>
-												</div>
-
-												<span className="text-zinc-600">•</span>
-
-												<div className="flex items-center gap-1">
-													<Clock className="h-3.5 w-3.5" />
-													<span>{formatTimeAgo(thread.last_post_at)}</span>
-												</div>
-											</div>
-
-											{/* Stats */}
-											<div className="flex items-center justify-between">
-												<div className="flex items-center gap-6 text-xs">
-													<div className="flex items-center gap-1.5 text-zinc-400">
-														<MessageSquare className="h-4 w-4" />
-														<span className="font-medium">{thread.post_count}</span>
-													</div>
-													<div className="flex items-center gap-1.5 text-zinc-400">
-														<Eye className="h-4 w-4" />
-														<span className="font-medium">{thread.view_count}</span>
-													</div>
-													<div className="flex items-center gap-1.5 text-zinc-400">
-														<ThumbsUp className="h-4 w-4" />
-														<span className="font-medium">{thread.like_count}</span>
-													</div>
-												</div>
-
-												{/* Category tag */}
-												<Link href={`/forums/${thread.category_slug}`}>
-													<span
-														className="bg-zinc-800/50 text-zinc-400 border border-zinc-600 hover:border-orange-500/50 hover:text-orange-300 transition-all text-xs cursor-pointer rounded px-2 py-0.5"
-														onClick={(e) => {
-															e.stopPropagation();
-														}}
-													>
-														{thread.category_name}
-													</span>
-												</Link>
-											</div>
-										</div>
-									</div>
-								</Link>
-							</div>
-						))}
+						{threads.map((thread, index) => renderThreadItem(thread, index))}
 					</div>
 				) : (
 					<div className="text-center py-8 text-zinc-400">

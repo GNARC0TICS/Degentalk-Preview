@@ -1,3 +1,6 @@
+import '../../server/config/loadEnv';
+// Alternatively fallback to dotenv if loadEnv path changes
+// import 'dotenv/config';
 import { db } from '@db';
 import { logSeed } from './utils/seedUtils';
 import { seedXpActions } from './seed-xp-actions';
@@ -26,23 +29,11 @@ async function main() {
   try {
     logSeed(SCRIPT_NAME, 'Starting database cleanup...');
 
-    // Drop tables that are being re-created or significantly altered in new migrations
-    await db.execute(sql`DROP TABLE IF EXISTS admin_manual_airdrop_logs CASCADE;`);
-    logSeed(SCRIPT_NAME, '🗑️ Dropped admin_manual_airdrop_logs (if exists)');
-    await db.execute(sql`DROP TABLE IF EXISTS inventory_transaction_links CASCADE;`);
-    logSeed(SCRIPT_NAME, '🗑️ Dropped inventory_transaction_links (if exists)');
-    await db.execute(sql`DROP TABLE IF EXISTS user_inventory CASCADE;`);
-    logSeed(SCRIPT_NAME, '🗑️ Dropped user_inventory (if exists)');
-    await db.execute(sql`DROP TABLE IF EXISTS platform_treasury_settings CASCADE;`);
-    logSeed(SCRIPT_NAME, '🗑️ Dropped platform_treasury_settings (if exists)');
-    await db.execute(sql`DROP TABLE IF EXISTS thread_feature_permissions CASCADE;`);
-    logSeed(SCRIPT_NAME, '🗑️ Dropped thread_feature_permissions (if exists)');
-    await db.execute(sql`DROP TABLE IF EXISTS notifications CASCADE;`);
-    logSeed(SCRIPT_NAME, '🗑️ Dropped notifications (if exists)');
-    await db.execute(sql`DROP TABLE IF EXISTS post_reactions CASCADE;`);
-    logSeed(SCRIPT_NAME, '🗑️ Dropped post_reactions (if exists)');
-    await db.execute(sql`DROP TYPE IF EXISTS reaction_type CASCADE;`);
-    logSeed(SCRIPT_NAME, '🗑️ Dropped reaction_type enum (if exists)');
+    // 🔄 Full schema reset
+    await db.execute(sql`DROP SCHEMA public CASCADE;`);
+    logSeed(SCRIPT_NAME, '🗑️ Dropped schema "public" (cascade)');
+    await db.execute(sql`CREATE SCHEMA public;`);
+    logSeed(SCRIPT_NAME, '🏗️  Re-created schema "public"');
 
     // Existing DELETE statements for seeded tables (commented out as drops handle full reset)
     // await db.delete(schema.xpActionSettings);
@@ -59,7 +50,7 @@ async function main() {
     logSeed(SCRIPT_NAME, 'Applying database migrations...');
     const { spawn } = await import('child_process');
     await new Promise((resolve, reject) => {
-      const child = spawn('npm', ['run', 'db:migrate:apply', '--silent'], {
+      const child = spawn('npm', ['run', 'db:migrate:Apply', '--silent'], {
         stdio: 'inherit',
         env: process.env,
       });

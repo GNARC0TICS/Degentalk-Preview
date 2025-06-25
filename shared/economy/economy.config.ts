@@ -206,7 +206,8 @@ export function sanitizeMultiplier(
 
 	// Combine multipliers according to stacking rule
 	let combinedMultiplier: number;
-	switch (config.stackingRule) {
+	const stackingRule = config.stackingRule as string;
+	switch (stackingRule) {
 		case 'additive':
 			combinedMultiplier = MultiplierStrategy.additive(sanitizedRole, sanitizedForum);
 			break;
@@ -250,7 +251,8 @@ export function sanitizeMultiplier(
 			violations
 		};
 
-		switch (config.enforcementMode) {
+		const enforcementMode = config.enforcementMode as string;
+		switch (enforcementMode) {
 			case 'strict':
 				console.warn('XP_MULTIPLIER_VIOLATION', 'Multiplier capped due to violations', logData);
 				break;

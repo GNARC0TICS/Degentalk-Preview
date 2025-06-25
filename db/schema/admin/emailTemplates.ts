@@ -34,7 +34,7 @@ export const emailTemplates = pgTable('email_templates', {
 
 	// Tracking
 	lastUsedAt: timestamp('last_used_at', { mode: 'string' }),
-	useCount: serial('use_count').notNull().default(0),
+	useCount: serial('use_count').notNull(),
 
 	// Audit
 	createdBy: uuid('created_by').references(() => users.id),
@@ -43,7 +43,7 @@ export const emailTemplates = pgTable('email_templates', {
 	updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
 
 	// Version control
-	version: serial('version').notNull().default(1),
+	version: serial('version').notNull(),
 	previousVersionId: serial('previous_version_id')
 });
 

@@ -76,3 +76,18 @@ export const contentVisibilityStatusEnum = pgEnum('content_visibility_status', [
 	'deleted'
 ]);
 export const mentionSourceTypeEnum = pgEnum('mention_source_type', ['post', 'thread', 'chat']);
+export const subscriptionTypeEnum = pgEnum('subscription_type', ['vip_pass', 'degen_pass']);
+export const subscriptionStatusEnum = pgEnum('subscription_status', [
+	'active',
+	'expired',
+	'cancelled',
+	'lifetime'
+]);
+export const cosmeticTypeEnum = pgEnum('cosmetic_type', [
+	'avatar_frame',
+	'badge',
+	'title',
+	'sticker',
+	'emoji_pack',
+	'profile_theme'
+]);

@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Wide } from '@/layout/primitives';
+import { ForumBreadcrumbs, createForumBreadcrumbs } from '@/components/navigation/ForumBreadcrumbs';
+import { getForumSpacing, getForumLayout } from '@/utils/spacing-constants';
 
 import type { PostWithUser, ThreadWithPostsAndUser } from '@db_types/forum.types';
 import { Button } from '@/components/ui/button';
@@ -130,7 +132,7 @@ export default function ThreadPage() {
 
 	if (!match) {
 		return (
-			<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+			<Wide className={getForumSpacing('container')}>
 				<div className="text-center">
 					<h1 className="text-2xl font-bold mb-4">404 - Thread Not Found</h1>
 					<p className="text-zinc-400 mb-6">
@@ -146,7 +148,7 @@ export default function ThreadPage() {
 
 	if (isThreadLoading || isPostsLoading) {
 		return (
-			<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+			<Wide className={getForumSpacing('container')}>
 				<div className="animate-pulse">
 					<Skeleton className="h-8 w-1/3 mb-4" />
 					<Skeleton className="h-16 w-full mb-6" />
@@ -162,7 +164,7 @@ export default function ThreadPage() {
 
 	if (isThreadError || isPostsError || !thread) {
 		return (
-			<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+			<Wide className={getForumSpacing('container')}>
 				<div className="flex flex-col items-center justify-center py-24 text-center text-zinc-300">
 					<AlertCircle className="h-12 w-12 text-red-500 mb-4" />
 					<h2 className="text-xl font-semibold mb-2">Error loading thread</h2>
@@ -183,30 +185,11 @@ export default function ThreadPage() {
 	];
 
 	return (
-		<div className="min-h-screen bg-black">
+		<div className={getForumLayout('page')}>
 			<main>
-				<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+				<Wide className={getForumSpacing('container')}>
 					{/* Breadcrumb */}
-					<Breadcrumb className="mb-6">
-						<BreadcrumbList>
-							{breadcrumbItems.map((item, idx) => (
-								<React.Fragment key={item.href}>
-									<BreadcrumbItem>
-										{idx === breadcrumbItems.length - 1 ? (
-											<BreadcrumbPage className="text-zinc-300">{item.label}</BreadcrumbPage>
-										) : (
-											<BreadcrumbLink asChild>
-												<a href={item.href} className="text-zinc-400 hover:text-zinc-200">
-													{item.label}
-												</a>
-											</BreadcrumbLink>
-										)}
-									</BreadcrumbItem>
-									{idx < breadcrumbItems.length - 1 && <BreadcrumbSeparator />}
-								</React.Fragment>
-							))}
-						</BreadcrumbList>
-					</Breadcrumb>
+					<ForumBreadcrumbs items={createForumBreadcrumbs.thread(thread.title, thread.slug)} />
 
 					{/* Thread Header */}
 					<div className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4 sm:p-6 mb-6">
