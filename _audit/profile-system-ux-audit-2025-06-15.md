@@ -21,7 +21,6 @@ This audit covers:
 ## High-Priority Findings (P1 – Blockers / Critical UX Gaps)
 
 1.  **Own vs Public Profile**
-
     - **Problem / Gap:** Two parallel page implementations: `client/src/pages/profile-page.tsx` (old) **and** `client/src/pages/profile/[username].tsx` (new). They diverge in layout, data sources (mock vs API), and route handling (`useParams` vs hard-coded).
     - **Evidence:** Duplicate files listed; only dynamic page is routed by wouter/Next.
     - **Impact:** Code bloat, inconsistent experience, maintenance risk; mobile nav may hit wrong page.
@@ -31,7 +30,6 @@ This audit covers:
       - [ ] Audit all links (`<Link href="/profile">`) and reroute through `/profile/${currentUser.username}`.
 
 2.  **Data Freshness**
-
     - **Problem / Gap:** Current profile queries (`/api/profile/:username`) omit reactive invalidation when preferences/cosmetics change; relies on manual `queryClient.invalidateQueries`.
     - **Evidence:** See `ProfileEditor.tsx` onSuccess invalidating `['profile', username]` only.
     - **Impact:** Stale data after avatar/banner/title change unless full reload.
@@ -40,7 +38,6 @@ This audit covers:
       - [ ] Use `queryClient.setQueryData` optimistically on profile mutations.
 
 3.  **Media Upload**
-
     - **Problem / Gap:** Avatar/Banner upload buttons are **disabled placeholders** (`disabled` attr) in `ProfileEditor.tsx`; no backend route or upload lib wired.
     - **Evidence:** Lines 155-188 in `ProfileEditor`.
     - **Impact:** Core user expectation broken; first-time users cannot personalise profile.
@@ -52,7 +49,6 @@ This audit covers:
         - [ ] Show progress bar during upload.
 
 4.  **Mobile Tab Overflow**
-
     - **Problem / Gap:** On devices < 360 px wide, 5-tab `TabsList` overflows container; triggers horizontal scroll with no cue.
     - **Evidence:** Manual test, CSS grid of 5 cols.
     - **Impact:** Hidden content → poor discoverability.
@@ -74,14 +70,12 @@ This audit covers:
 ## Medium-Priority Findings (P2 – UX / Maintainability)
 
 1.  **Navigation Inconsistency**
-
     - **Problem / Gap:** Profile header lacks quick-links to Wallet, Shop, Badges, Settings. Users must use Site Header drop-downs → extra friction.
     - **Upgrade:**
       - [ ] Add secondary **profile sub-nav** beneath avatar (pill buttons: Overview · Achievements · Wallet · Shop · Settings).
       - [ ] Use router nested routes to lazy-load sub-nav content.
 
 2.  **Cosmetic Control Panel Duplication**
-
     - **Problem / Gap:** `CosmeticControlPanel` lives only in _own_ profile tab «Cosmetics». Preferences page also exposes avatar/banner text fields.
     - **Recommendation:**
       - [ ] Merge into single **Profile Customise** modal.
@@ -89,14 +83,12 @@ This audit covers:
       - [ ] DRY up mutations for cosmetic changes.
 
 3.  **Information Density / Dead Space**
-
     - **Problem / Gap:** Large banner zone (`background-image` + gradient) consumes 45 vh on desktop; actual content starts far below fold. Left sidebar card has ~100 px padding top/bottom; wasted vertical space on mobile.
     - **Fix:**
       - [ ] Compress banner to 30 vh max or make it user-controlled.
       - [ ] Reduce card internal padding on `sm` breakpoints.
 
 4.  **Stats Cards Re-flow**
-
     - **Problem / Gap:** `StatCard` grid fixed 2/4 cols; on tablet (∼680 px) cards wrap oddly.
     - **Solution:**
       - [ ] Use **CSS Grid auto-fit** (`grid-template-columns: repeat(auto-fit,minmax(140px,1fr))`) for `StatCard` grid.

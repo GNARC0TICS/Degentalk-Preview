@@ -373,33 +373,27 @@ File: `client/src/hooks/useThreadZone.ts`
 ##### ✅ Recommendations
 
 1. **Widget Registry Pattern**
-
    - Create `client/src/widgets/index.ts` exporting a `WidgetDescriptor` type `{ id, component, defaultRegion, minWidth, minHeight, fetchPolicy }`.
    - Each feature registers itself (e.g., `registerWidget(UserNotepadWidget)`), enabling lazy import & tree-shaking.
 
 2. **Layout Manager Context**
-
    - Provide `<DashboardLayoutProvider>` wrapping HomePage. Maintain `{ regionId: WidgetId[] }` in context, persist to localStorage per user.
    - Expose drag-and-drop or simple up/down controls to reorder widgets (use `@dnd-kit/sortable` or similar).
 
 3. **Responsive Region Map**
-
    - Define breakpoints: `main`, `sidebar`, `footer`. On `lg+`, show two columns; on `xl+`, allow optional third column. On mobile, stack widgets following user order.
    - Use CSS Grid (`grid-template-areas`) rather than Flex to avoid negative margins & manual gaps.
 
 4. **Widget Visibility & Data Loading**
-
    - Pass `isVisible` prop to each widget; internally gate TanStack queries with `enabled: isVisible` to avoid unnecessary requests.
    - Add "Add / Remove Widgets" modal that toggles `isVisible` in the layout state.
 
 5. **Migration Path**
-
    - Phase 1: Extract current sidebar items (ShoutboxSidebarTop, WalletSummaryWidget, LeaderboardWidget, ActiveMembersWidget) into registry without changing visual order.
    - Phase 2: Introduce new widgets via registry and surface simple reorder UI.
    - Phase 3: Replace negative-margin graffiti banner hacks with `<HeroBanner>` that itself is a registered widget pinned to `main-top` region.
 
 6. **Testing & Analytics**
-
    - Add RTL tests to assert default region map renders expected widgets.
    - Track widget add/remove/reorder events for product analytics (`ui_analytics` table already exists).
 

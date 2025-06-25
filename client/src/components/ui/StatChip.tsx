@@ -41,7 +41,8 @@ export function StatChip({
 
 	const [prevValue, setPrevValue] = useState(value);
 
-	const displayValue = animate ? useAnimatedNumber(value, { immediate: prevValue === 0 }) : value;
+	const animatedValue = useAnimatedNumber(value, { immediate: prevValue === 0 });
+	const displayValue = animate ? animatedValue : value;
 
 	useEffect(() => {
 		setPrevValue(value);

@@ -49,20 +49,17 @@ const CreateThreadButton: React.FC<{ forumSlug: string }> = ({ forumSlug }) => (
 const ForumPageInner: React.FC = () => {
 	const params = useParams<{ slug?: string }>();
 	const forumSlug = params?.slug;
-	const { getForum, getParentZone, isLoading, error } = useForumStructure();
 
 	if (!forumSlug) return <NotFoundPage />;
-	if (isLoading) return <div>Loading…</div>;
-	if (error) return <div>Error loading forum</div>;
 
+	// Hooks must always run
+	const { getForum, getParentZone, isLoading, error } = useForumStructure();
 	const forum = getForum(forumSlug);
-	if (!forum) return <NotFoundPage />;
-
 	const parentZone: MergedZone | undefined = getParentZone(forumSlug);
-	const displayTheme = { ...parentZone?.theme, ...forum.theme };
 
-	// SEO
+	// SEO effect – executes on every render
 	React.useEffect(() => {
+		if (!forum) return;
 		document.title = `${forum.name} | Forums | Degentalk`;
 		const desc = forum.description ?? parentZone?.description ?? 'Forum discussions on Degentalk';
 		let meta = document.querySelector('meta[name="description"]');
@@ -72,7 +69,13 @@ const ForumPageInner: React.FC = () => {
 			document.head.appendChild(meta);
 		}
 		meta.setAttribute('content', desc);
-	}, [forum.name, forum.description, parentZone?.description]);
+	}, [forum, parentZone]);
+
+	if (isLoading) return <div>Loading…</div>;
+	if (error) return <div>Error loading forum</div>;
+	if (!forum) return <NotFoundPage />;
+
+	const displayTheme = { ...parentZone?.theme, ...forum.theme };
 
 	return (
 		<div>
