@@ -66,7 +66,7 @@ const AdaptiveForumGrid = memo(
 		const safeItems = Array.isArray(items) ? items : ([] as T[]);
 
 		const [currentLayout, setCurrentLayout] = useState<'grid' | 'list' | 'masonry'>(
-			layout === 'auto' ? 'list' : layout
+			layout === 'auto' ? 'list' : (layout as 'grid' | 'list' | 'masonry')
 		);
 		const [masonryColumns, setMasonryColumns] = useState<Array<T[]>>([]);
 
@@ -76,6 +76,7 @@ const AdaptiveForumGrid = memo(
 
 		// Auto-adjust layout based on screen size
 		useEffect(() => {
+			// Only auto-adjust if layout is explicitly set to 'auto'
 			if (layout === 'auto') {
 				if (breakpoint.isMobile) {
 					setCurrentLayout('list');
@@ -84,6 +85,9 @@ const AdaptiveForumGrid = memo(
 				} else {
 					setCurrentLayout('grid');
 				}
+			} else {
+				// Respect explicit layout prop when layout is not 'auto'
+				setCurrentLayout(layout);
 			}
 		}, [layout, breakpoint]);
 
@@ -131,7 +135,7 @@ const AdaptiveForumGrid = memo(
 		const rowVirtualizer = useVirtualizer({
 			count: safeItems.length,
 			getScrollElement: () => containerRef.current,
-			estimateSize: () => estimateSize,
+			estimateSize: () => estimateSize || 300,
 			enabled: virtualized && currentLayout === 'list'
 		});
 
@@ -181,13 +185,16 @@ const AdaptiveForumGrid = memo(
 		};
 
 		return (
-			<div className={cn('space-y-4', className)}>
+			<div data-testid="adaptive-forum-grid" className={cn('space-y-4', className)}>
 				{/* Controls Header */}
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-3">
 						{/* Layout Switcher */}
 						{onLayoutChange && (
-							<div className="flex items-center gap-1 p-1 bg-zinc-800/50 rounded-lg">
+							<div
+								data-testid="layout-switcher"
+								className="flex items-center gap-1 p-1 bg-zinc-800/50 rounded-lg"
+							>
 								{Object.entries(layoutIcons).map(([layoutType, Icon]) => (
 									<Button
 										key={layoutType}
@@ -235,6 +242,7 @@ const AdaptiveForumGrid = memo(
 
 				{/* Main Content Container */}
 				<div
+					data-testid="content-container"
 					ref={containerRef}
 					className={cn(
 						'relative',
@@ -251,9 +259,17 @@ const AdaptiveForumGrid = memo(
 								exit="hidden"
 								className={cn(
 									'gap-4',
-									currentLayout === 'grid' && `grid grid-cols-${getColumnCount()}`,
+									currentLayout === 'grid' && 'grid',
+									currentLayout === 'grid' && getColumnCount() === 1 && 'grid-cols-1',
+									currentLayout === 'grid' && getColumnCount() === 2 && 'grid-cols-2',
+									currentLayout === 'grid' && getColumnCount() === 3 && 'grid-cols-3',
+									currentLayout === 'grid' && getColumnCount() === 4 && 'grid-cols-4',
 									currentLayout === 'list' && 'space-y-4',
-									currentLayout === 'masonry' && `grid grid-cols-${getColumnCount()}`
+									currentLayout === 'masonry' && 'grid',
+									currentLayout === 'masonry' && getColumnCount() === 1 && 'grid-cols-1',
+									currentLayout === 'masonry' && getColumnCount() === 2 && 'grid-cols-2',
+									currentLayout === 'masonry' && getColumnCount() === 3 && 'grid-cols-3',
+									currentLayout === 'masonry' && getColumnCount() === 4 && 'grid-cols-4'
 								)}
 							>
 								{renderSkeletons()}
@@ -268,7 +284,17 @@ const AdaptiveForumGrid = memo(
 							>
 								{/* List Layout */}
 								{currentLayout === 'list' && (
-									<div className={cn('space-y-4', gap !== 4 && `space-y-${gap}`)}>
+									<div
+										className={cn(
+											'space-y-4',
+											gap === 1 && 'space-y-1',
+											gap === 2 && 'space-y-2',
+											gap === 3 && 'space-y-3',
+											gap === 5 && 'space-y-5',
+											gap === 6 && 'space-y-6',
+											gap === 8 && 'space-y-8'
+										)}
+									>
 										{virtualized ? (
 											<div
 												style={{
@@ -308,11 +334,41 @@ const AdaptiveForumGrid = memo(
 									<div
 										className={cn(
 											'grid gap-4',
-											gap !== 4 && `gap-${gap}`,
-											breakpoint.isMobile && `grid-cols-${columns.mobile}`,
-											breakpoint.isTablet && `md:grid-cols-${columns.tablet}`,
-											breakpoint.isDesktop && `lg:grid-cols-${columns.desktop}`,
-											breakpoint.isLarge && `xl:grid-cols-${columns.large}`
+											gap === 1 && 'gap-1',
+											gap === 2 && 'gap-2',
+											gap === 3 && 'gap-3',
+											gap === 5 && 'gap-5',
+											gap === 6 && 'gap-6',
+											gap === 8 && 'gap-8',
+											// Use proper grid column classes based on breakpoint
+											breakpoint.isMobile && columns.mobile === 1 && 'grid-cols-1',
+											breakpoint.isMobile && columns.mobile === 2 && 'grid-cols-2',
+											breakpoint.isMobile && columns.mobile === 3 && 'grid-cols-3',
+											breakpoint.isMobile && columns.mobile === 4 && 'grid-cols-4',
+											!breakpoint.isMobile &&
+												breakpoint.isTablet &&
+												columns.tablet === 1 &&
+												'md:grid-cols-1',
+											!breakpoint.isMobile &&
+												breakpoint.isTablet &&
+												columns.tablet === 2 &&
+												'md:grid-cols-2',
+											!breakpoint.isMobile &&
+												breakpoint.isTablet &&
+												columns.tablet === 3 &&
+												'md:grid-cols-3',
+											!breakpoint.isMobile &&
+												breakpoint.isTablet &&
+												columns.tablet === 4 &&
+												'md:grid-cols-4',
+											breakpoint.isDesktop && columns.desktop === 1 && 'lg:grid-cols-1',
+											breakpoint.isDesktop && columns.desktop === 2 && 'lg:grid-cols-2',
+											breakpoint.isDesktop && columns.desktop === 3 && 'lg:grid-cols-3',
+											breakpoint.isDesktop && columns.desktop === 4 && 'lg:grid-cols-4',
+											breakpoint.isLarge && columns.large === 1 && 'xl:grid-cols-1',
+											breakpoint.isLarge && columns.large === 2 && 'xl:grid-cols-2',
+											breakpoint.isLarge && columns.large === 3 && 'xl:grid-cols-3',
+											breakpoint.isLarge && columns.large === 4 && 'xl:grid-cols-4'
 										)}
 									>
 										{safeItems.map((item, index) => (
@@ -325,11 +381,29 @@ const AdaptiveForumGrid = memo(
 
 								{/* Masonry Layout */}
 								{currentLayout === 'masonry' && (
-									<div className={cn('flex gap-4', gap !== 4 && `gap-${gap}`)}>
+									<div
+										className={cn(
+											'flex gap-4',
+											gap === 1 && 'gap-1',
+											gap === 2 && 'gap-2',
+											gap === 3 && 'gap-3',
+											gap === 5 && 'gap-5',
+											gap === 6 && 'gap-6',
+											gap === 8 && 'gap-8'
+										)}
+									>
 										{masonryColumns.map((column, columnIndex) => (
 											<div
 												key={columnIndex}
-												className={cn('flex-1 space-y-4', gap !== 4 && `space-y-${gap}`)}
+												className={cn(
+													'flex-1 space-y-4',
+													gap === 1 && 'space-y-1',
+													gap === 2 && 'space-y-2',
+													gap === 3 && 'space-y-3',
+													gap === 5 && 'space-y-5',
+													gap === 6 && 'space-y-6',
+													gap === 8 && 'space-y-8'
+												)}
 											>
 												{column.map((item, itemIndex) => (
 													<motion.div key={item.id} variants={itemVariants}>

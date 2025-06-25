@@ -190,6 +190,7 @@ const QuickReactions = memo(
 							return (
 								<motion.div key={reaction.id}>
 									<Button
+										aria-label={reactionConfig?.label || reaction.type}
 										size="sm"
 										variant="ghost"
 										className={cn(

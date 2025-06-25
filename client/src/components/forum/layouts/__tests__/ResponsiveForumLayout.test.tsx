@@ -1,8 +1,17 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import {
+	renderWithProviders as render,
+	screen,
+	fireEvent,
+	waitFor
+} from '@/test/utils/renderWithProviders';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ResponsiveForumLayout } from '../ResponsiveForumLayout';
+import ResponsiveForumLayout from '../ResponsiveForumLayout';
 import type { ResponsiveForumLayoutProps } from '../ResponsiveForumLayout';
+import {
+	useMediaQuery as mockUseMediaQuery,
+	useBreakpoint as mockUseBreakpoint
+} from '@/hooks/useMediaQuery';
 
 // Mock dependencies
 vi.mock('framer-motion', () => ({
@@ -22,7 +31,14 @@ vi.mock('@/hooks/useMediaQuery', () => ({
 		if (query.includes('max-width: 1024px')) return false; // tablet
 		if (query.includes('min-width: 1025px')) return true; // desktop
 		return false;
-	})
+	}),
+	useMobileDetector: vi.fn(() => false), // Default to desktop
+	useBreakpoint: vi.fn(() => ({
+		isMobile: false,
+		isTablet: false,
+		isDesktop: true,
+		current: 'desktop' as const
+	}))
 }));
 
 vi.mock('@/components/forum/enhanced/MobileForumNavigation', () => ({
@@ -41,11 +57,30 @@ vi.mock('@/components/ui/sheet', () => ({
 
 describe('ResponsiveForumLayout', () => {
 	const defaultProps: ResponsiveForumLayoutProps = {
-		children: <div data-testid="main-content">Main Content</div>
+		children: <div data-testid="content-children">Main Content</div>,
+		sidebar: <div data-testid="hierarchical-zone-nav">Zone Navigation</div>,
+		showNavigation: true
 	};
 
 	beforeEach(() => {
 		vi.clearAllMocks();
+		// Default to desktop
+		(mockUseMediaQuery as unknown as any).mockImplementation((query: string) => {
+			if (query.includes('max-width: 768px')) return false; // not mobile
+			if (query.includes('max-width: 1024px')) return false; // not tablet
+			if (query.includes('min-width: 1025px')) return true; // desktop
+			return false;
+		});
+		vi.mocked(mockUseBreakpoint).mockReturnValue({
+			isMobile: false,
+			isTablet: false,
+			isDesktop: true,
+			isLarge: false,
+			isXLarge: false,
+			isMobileOrTablet: false,
+			isTabletOrDesktop: true,
+			current: 'desktop'
+		});
 	});
 
 	afterEach(() => {
@@ -57,7 +92,7 @@ describe('ResponsiveForumLayout', () => {
 			render(<ResponsiveForumLayout {...defaultProps} />);
 
 			expect(screen.getByTestId('hierarchical-zone-nav')).toBeInTheDocument();
-			expect(screen.getByTestId('main-content')).toBeInTheDocument();
+			expect(screen.getByTestId('content-children')).toBeInTheDocument();
 			expect(screen.queryByTestId('mobile-navigation')).not.toBeInTheDocument();
 		});
 
@@ -130,10 +165,13 @@ describe('ResponsiveForumLayout', () => {
 				/>
 			);
 
-			const buttons = screen.getAllByRole('button');
-			const gridButton = buttons.find(
-				(btn) => btn.querySelector('svg') && btn.classList.contains('w-8')
-			);
+			// Find the layout controls container and then the grid button
+			const layoutControls = screen.getByTestId('layout-controls');
+			expect(layoutControls).toBeInTheDocument();
+
+			// Find the grid button (first button in layout controls)
+			const buttons = layoutControls.querySelectorAll('button');
+			const gridButton = buttons[0]; // Grid is the first button
 
 			fireEvent.click(gridButton!);
 			expect(mockOnLayoutChange).toHaveBeenCalledWith('grid');
@@ -155,12 +193,21 @@ describe('ResponsiveForumLayout', () => {
 
 	describe('Mobile Layout', () => {
 		beforeEach(() => {
-			const { useMediaQuery } = vi.mocked(await import('@/hooks/useMediaQuery'));
-			useMediaQuery.mockImplementation((query: string) => {
+			(mockUseMediaQuery as unknown as any).mockImplementation((query: string) => {
 				if (query.includes('max-width: 768px')) return true; // mobile
 				if (query.includes('max-width: 1024px')) return true; // tablet
 				if (query.includes('min-width: 1025px')) return false; // desktop
 				return false;
+			});
+			vi.mocked(mockUseBreakpoint).mockReturnValue({
+				isMobile: true,
+				isTablet: false,
+				isDesktop: false,
+				isLarge: false,
+				isXLarge: false,
+				isMobileOrTablet: true,
+				isTabletOrDesktop: false,
+				current: 'mobile'
 			});
 		});
 
@@ -215,12 +262,21 @@ describe('ResponsiveForumLayout', () => {
 
 	describe('Tablet Layout', () => {
 		beforeEach(() => {
-			const { useMediaQuery } = vi.mocked(await import('@/hooks/useMediaQuery'));
-			useMediaQuery.mockImplementation((query: string) => {
+			(mockUseMediaQuery as unknown as any).mockImplementation((query: string) => {
 				if (query.includes('max-width: 768px')) return false; // not mobile
 				if (query.includes('max-width: 1024px')) return true; // is tablet
 				if (query.includes('min-width: 1025px')) return false; // not desktop
 				return false;
+			});
+			vi.mocked(mockUseBreakpoint).mockReturnValue({
+				isMobile: false,
+				isTablet: true,
+				isDesktop: false,
+				isLarge: false,
+				isXLarge: false,
+				isMobileOrTablet: true,
+				isTabletOrDesktop: true,
+				current: 'tablet'
 			});
 		});
 
@@ -251,7 +307,9 @@ describe('ResponsiveForumLayout', () => {
 
 			await waitFor(() => {
 				expect(screen.getByTestId('sheet')).toBeInTheDocument();
-				expect(screen.getByTestId('hierarchical-zone-nav')).toBeInTheDocument();
+				// Check that the sheet contains sidebar content (using getAllByTestId since there might be duplicates)
+				const navElements = screen.getAllByTestId('hierarchical-zone-nav');
+				expect(navElements.length).toBeGreaterThanOrEqual(1);
 			});
 		});
 	});

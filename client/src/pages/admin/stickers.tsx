@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import { AdminPageShell } from '@/components/layout/admin-page-shell';
+import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';

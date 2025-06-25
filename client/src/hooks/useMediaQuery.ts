@@ -42,6 +42,11 @@ export function useMediaQuery(query: string): boolean {
 }
 
 /**
+ * Mobile detector alias for backward compatibility
+ */
+export const useMobileDetector = useMediaQuery;
+
+/**
  * Predefined breakpoint hooks for common use cases
  */
 export const useBreakpoint = () => {

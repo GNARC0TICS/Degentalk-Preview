@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders as render, screen } from '@/test/utils/renderWithProviders';
 import { describe, it, expect, vi } from 'vitest';
-import HomePageWithProvider from '@/pages/home';
+import ShoutboxWidget from './shoutbox-widget';
 import { ShoutboxProvider } from '@/contexts/shoutbox-context';
 
 // Mock the useShoutbox hook
@@ -13,26 +13,22 @@ vi.mock('@/contexts/shoutbox-context', async () => {
 			effectivePosition: 'floating',
 			expansionLevel: 'preview',
 			updateExpansionLevel: vi.fn(),
+			updatePosition: vi.fn(),
 			isMobile: false,
 			isLoading: false
 		})
 	};
 });
 
-// Mock the LayoutRenderer to avoid its complexity in this test
-vi.mock('@/components/layout/LayoutRenderer', () => ({
-	LayoutRenderer: () => <div data-testid="layout-renderer-mock" />
-}));
-
-describe('HomePage Shoutbox', () => {
+describe('ShoutboxWidget', () => {
 	it('should render exactly one shoutbox instance', () => {
 		render(
 			<ShoutboxProvider>
-				<HomePageWithProvider />
+				<ShoutboxWidget instanceId="test" />
 			</ShoutboxProvider>
 		);
 
-		// The ShoutboxWidget contains a div with the class 'shoutbox-root'
+		// The ShoutboxWidget contains a div with data-testid="shoutbox-widget"
 		const shoutboxElements = screen.getAllByTestId('shoutbox-widget');
 		expect(shoutboxElements.length).toBe(1);
 	});

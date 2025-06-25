@@ -218,11 +218,10 @@ const CryptoEngagementBar = memo(
 								variant="ghost"
 								className={cn(
 									'h-8 w-8 p-0 transition-colors',
-									isBookmarked
-										? 'text-amber-400 hover:text-amber-300'
-										: 'text-zinc-400 hover:text-amber-400 hover:bg-amber-900/20'
+									'text-zinc-400 hover:text-emerald-400 hover:bg-emerald-900/20',
+									isBookmarked && 'text-amber-400'
 								)}
-								onClick={onBookmark}
+								onClick={() => onBookmark?.()}
 							>
 								<Star className={cn('w-4 h-4', isBookmarked && 'fill-current')} />
 							</Button>

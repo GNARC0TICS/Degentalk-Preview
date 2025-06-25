@@ -55,7 +55,7 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 	const [positionChangeCount, setPositionChangeCount] = useState(0);
 
 	// Check if we're on mobile
-	const isMobile = useMobileDetector();
+	const isMobile = useMobileDetector('(max-width: 768px)');
 
 	// Cache key for the settings
 	const SETTINGS_QUERY_KEY = '/api/preferences';

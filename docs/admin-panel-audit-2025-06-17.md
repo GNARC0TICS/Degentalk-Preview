@@ -134,7 +134,7 @@
         *   Grant Frame/Title (Cosmetics): Handled by granting shop items via User Inventory page. **Implemented**.
     *   **Force password resets:** **Missing**.
     *   **View system logs:** **Missing**. (Server-side `logger.ts` exists, but no admin UI to view logs).
-    *   **Toggle “beta-only” tools:** This would likely be a feature flag. Management of feature flags is **Missing**.
+    *   **Toggle "beta-only" tools:** This would likely be a feature flag. Management of feature flags is **Missing**.
     *   Developer Seeding Page (`dev/seeding.tsx`): Exists and is functional for triggering backend seed scripts.
 
 ### General Observations:
@@ -150,3 +150,37 @@
 ---
 
 This audit document should serve as a baseline for planning the next phase of development for the admin panel.
+
+---
+
+## Alias Reference (Testing & Build)
+
+| Alias | Path |
+|-------|------|
+| `@/` | `client/src/` |
+| `@shared/` | `shared/` |
+| `@shared/*` | `shared/*` |
+| `@/*` | `client/src/*` |
+
+> These aliases are configured in `client/vitest.config.ts` and `vite.config.ts`. When writing tests or importing modules, prefer the alias over relative paths to keep imports resilient to refactors.
+
+## Provider Guidelines for Tests
+
+All component tests should render under the same core context providers to ensure consistent behavior:
+
+1. **QueryClientProvider** – wraps components to provide React Query context.
+2. **MemoryRouter** (from Wouter) – supplies in-memory routing for navigation hooks.
+3. **Theme / Style Providers** – any global theme context used by the app (e.g., Tailwind theming or custom UI theme provider).
+
+A helper `renderWithProviders` will be available at `client/src/test/utils/renderWithProviders.tsx` and should be used in new or refactored tests:
+
+```tsx
+import { renderWithProviders } from '@/test/utils/renderWithProviders';
+
+it('renders MyComponent', () => {
+  const { getByText } = renderWithProviders(<MyComponent />);
+  expect(getByText('Hello')).toBeInTheDocument();
+});
+```
+
+This guarantees that hooks such as `useQuery`, `useNavigate`, and theme selectors have the required context during unit tests.

@@ -391,6 +391,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 
 	return (
 		<Card
+			data-testid="shoutbox-widget"
 			className={`bg-zinc-900/50 border border-zinc-800 overflow-hidden transition-all duration-300 flex flex-col ${
 				expansionLevel === 'expanded'
 					? 'h-[600px]'

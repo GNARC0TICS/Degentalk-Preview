@@ -1,5 +1,5 @@
 import { adminConfig, type AdminModule, type AdminPermission } from '../config/admin.config';
-import { User } from '@/types/user';
+import type { User } from '@/types/user';
 
 export interface ModuleRegistryOptions {
 	enableAuditLog?: boolean;
@@ -198,32 +198,58 @@ export class AdminModuleRegistry {
 	 */
 	getNavigationStructure(user: User | null): AdminModule[] {
 		const userModules = this.getModulesForUser(user);
+		console.log('DEBUG: userModules count:', userModules.length);
+		console.log(
+			'DEBUG: userModules sample:',
+			userModules
+				.slice(0, 2)
+				.map((m) => ({
+					id: m.id,
+					hasSubModules: !!m.subModules,
+					subModulesCount: m.subModules?.length || 0
+				}))
+		);
 
-		// Group by parent modules and organize sub-modules
-		const navigation: AdminModule[] = [];
-		const processedIds = new Set<string>();
+		// Build a complete tree first, ensuring every module has subModules array
+		const moduleMap = new Map<string, AdminModule>();
+		const rootModules: AdminModule[] = [];
 
+		// First pass: create all modules with empty subModules arrays
 		for (const module of userModules) {
-			if (processedIds.has(module.id)) continue;
-
-			// Find all sub-modules for this module
-			const subModules = userModules.filter(
-				(m) => m.route.startsWith(module.route + '/') && m.id !== module.id
-			);
-
-			navigation.push({
+			const moduleWithSubModules: AdminModule = {
 				...module,
-				subModules:
-					subModules.length > 0
-						? subModules
-						: module.subModules?.filter((sub) => this.hasPermission(sub.id, user))
-			});
-
-			processedIds.add(module.id);
-			subModules.forEach((sub) => processedIds.add(sub.id));
+				subModules: module.subModules || []
+			};
+			moduleMap.set(module.id, moduleWithSubModules);
 		}
 
-		return navigation;
+		// Second pass: organize into tree structure
+		for (const module of userModules) {
+			const moduleWithSubs = moduleMap.get(module.id)!;
+
+			if (module.subModules) {
+				// Filter submodules based on user permissions
+				const accessibleSubModules = module.subModules.filter((subModule) =>
+					this.hasPermission(subModule.id, user)
+				);
+				moduleWithSubs.subModules = accessibleSubModules;
+				console.log(
+					`DEBUG: Module ${module.id} has ${module.subModules.length} total subModules, ${accessibleSubModules.length} accessible`
+				);
+			}
+
+			rootModules.push(moduleWithSubs);
+		}
+
+		console.log('DEBUG: rootModules count:', rootModules.length);
+		console.log(
+			'DEBUG: rootModules with subModules:',
+			rootModules
+				.filter((m) => m.subModules && m.subModules.length > 0)
+				.map((m) => ({ id: m.id, subModulesCount: m.subModules?.length }))
+		);
+
+		return rootModules;
 	}
 
 	/**
