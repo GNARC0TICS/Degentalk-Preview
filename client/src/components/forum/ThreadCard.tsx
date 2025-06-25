@@ -168,7 +168,11 @@ const ThreadCard = memo(
 												{thread.user.username}
 											</span>
 											{thread.user.isVerified && (
-												<Crown className="w-4 h-4 text-amber-500 flex-shrink-0" />
+												<Crown
+													className="w-4 h-4 text-amber-500 flex-shrink-0"
+													role="img"
+													aria-label="Verified account"
+												/>
 											)}
 											{thread.user.reputation && thread.user.reputation > 100 && (
 												<Badge variant="outline" className="text-xs px-1 py-0">

@@ -62,15 +62,15 @@ export const useBreakpoint = () => {
 		isXLarge,
 		isMobileOrTablet,
 		isTabletOrDesktop,
-		// Convenience getters
-		current: isMobile
-			? 'mobile'
-			: isTablet
-				? 'tablet'
+		// Convenience getter prioritising larger breakpoints first
+		current: isXLarge
+			? 'xlarge'
+			: isLarge
+				? 'large'
 				: isDesktop
 					? 'desktop'
-					: isLarge
-						? 'large'
-						: 'xlarge'
+					: isTablet
+						? 'tablet'
+						: 'mobile'
 	};
 };
