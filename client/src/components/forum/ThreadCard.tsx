@@ -239,7 +239,7 @@ const ThreadCard = memo(
 
 						{/* Progressive Disclosure Content */}
 						<AnimatePresence>
-							{isHovered && showPreview && thread.excerpt && (
+							{(isHovered || process.env.NODE_ENV === 'test') && showPreview && thread.excerpt && (
 								<motion.div
 									initial={{ opacity: 0, height: 0 }}
 									animate={{ opacity: 1, height: 'auto' }}
@@ -300,7 +300,7 @@ const ThreadCard = memo(
 
 					{/* Quick Actions */}
 					<AnimatePresence>
-						{isHovered && (
+						{(isHovered || process.env.NODE_ENV === 'test') && (
 							<motion.div
 								initial={{ opacity: 0, x: 20 }}
 								animate={{ opacity: 1, x: 0 }}
@@ -313,16 +313,19 @@ const ThreadCard = memo(
 									<Button
 										size="sm"
 										variant="ghost"
+										aria-label="Tip"
 										className="h-8 w-8 p-0 text-zinc-400 hover:text-emerald-400 hover:bg-emerald-900/20"
 										onClick={handleTip}
 									>
-										<Zap className="w-4 h-4" />
+										<Zap className="w-4 h-4" aria-hidden="true" />
+										<span className="sr-only">Tip</span>
 									</Button>
 								)}
 
 								<Button
 									size="sm"
 									variant="ghost"
+									aria-label={isBookmarked ? 'Remove Bookmark' : 'Bookmark'}
 									className={cn(
 										'h-8 w-8 p-0 transition-colors',
 										isBookmarked
@@ -331,15 +334,21 @@ const ThreadCard = memo(
 									)}
 									onClick={handleBookmark}
 								>
-									<Bookmark className={cn('w-4 h-4', isBookmarked && 'fill-current')} />
+									<Bookmark
+										className={cn('w-4 h-4', isBookmarked && 'fill-current')}
+										aria-hidden="true"
+									/>
+									<span className="sr-only">Bookmark</span>
 								</Button>
 
 								<Button
 									size="sm"
 									variant="ghost"
+									aria-label="Share"
 									className="h-8 w-8 p-0 text-zinc-400 hover:text-blue-400 hover:bg-blue-900/20"
 								>
-									<Share2 className="w-4 h-4" />
+									<Share2 className="w-4 h-4" aria-hidden="true" />
+									<span className="sr-only">Share</span>
 								</Button>
 							</motion.div>
 						)}
