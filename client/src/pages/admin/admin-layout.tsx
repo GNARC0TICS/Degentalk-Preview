@@ -38,6 +38,7 @@ import AdminSidebar from '@/components/admin/admin-sidebar';
 import { AdminSidebarProvider, useAdminSidebar } from '@/contexts/AdminSidebarContext';
 import { useMediaQuery } from '@/hooks/use-media-query'; // Assuming this hook exists or will be created
 import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { useAdminNavigation } from '@/hooks/use-admin-modules';
 // import { Button } from '@/components/ui/button'; // Not used directly here anymore for toggle
 // import { Badge } from '@/components/ui/badge'; // Not used
 // import { AdminRoutePermission, adminRouteGroups, moderatorRouteGroups, ROUTES } from '@/config/admin-routes'; // Not used
@@ -147,20 +148,73 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
 	const isSmallScreen = useMediaQuery('(max-width: 640px)'); // sm breakpoint
 	const isMediumScreen = useMediaQuery('(max-width: 768px)'); // md breakpoint
 
+	// Get dynamic navigation from modular system
+	const { navigationItems, isLoading: isLoadingNavigation } = useAdminNavigation();
+
 	// Fetch economy override flag
 	const { data: economyData } = useEconomyConfig();
 
+	// Transform modular navigation to sidebar format
 	const sidebarLinks = useMemo(() => {
-		return BASE_ADMIN_LINKS.map((link) => {
-			if (link.href === '/admin/config/economy' && economyData?.hasOverrides) {
-				return {
-					...link,
-					label: link.label + ' •'
-				};
+		if (isLoadingNavigation) {
+			return BASE_ADMIN_LINKS; // Fallback to static links while loading
+		}
+
+		const dynamicLinks = navigationItems.map((module) => {
+			// Map lucide icon names to actual icon components
+			const iconMap: Record<string, React.ReactNode> = {
+				LayoutDashboard: <HomeIcon className="h-4 w-4" />,
+				Users: <Users className="h-4 w-4" />,
+				TrendingUp: <TrendingUp className="h-4 w-4" />,
+				Wallet: <CoinsIcon className="h-4 w-4" />,
+				ShoppingBag: <Package className="h-4 w-4" />,
+				MessageSquare: <MessageSquare className="h-4 w-4" />,
+				Flag: <Flag className="h-4 w-4" />,
+				BarChart3: <BarChart3 className="h-4 w-4" />,
+				Sparkles: <Sparkles className="h-4 w-4" />,
+				Settings: <Settings className="h-4 w-4" />,
+				Shield: <Shield className="h-4 w-4" />,
+				Landmark: <CoinsIcon className="h-4 w-4" />,
+				Package: <Package className="h-4 w-4" />,
+				Activity: <BarChart3 className="h-4 w-4" />,
+				Smile: <Smile className="h-4 w-4" />,
+				Sticker: <Star className="h-4 w-4" />,
+				Zap: <Zap className="h-4 w-4" />,
+				ToggleLeft: <Settings className="h-4 w-4" />,
+				Megaphone: <Megaphone className="h-4 w-4" />,
+			};
+
+			const icon = iconMap[module.icon] || <Settings className="h-4 w-4" />;
+
+			// Check for economy overrides
+			let label = module.name;
+			if (module.route === '/admin/config/economy' && economyData?.hasOverrides) {
+				label = label + ' •';
 			}
-			return link;
+
+			return {
+				href: module.route,
+				label,
+				icon,
+				submenu: module.subModules?.map(subModule => ({
+					href: subModule.route,
+					label: subModule.name
+				}))
+			};
 		});
-	}, [economyData]);
+
+		// Add dev tools in development mode
+		if (import.meta.env.MODE === 'development') {
+			dynamicLinks.push({
+				href: '#',
+				label: 'Dev Tools',
+				icon: <Database className="h-4 w-4" />,
+				submenu: [{ href: '/admin/dev/seeding', label: 'Database Seeding' }]
+			});
+		}
+
+		return dynamicLinks;
+	}, [navigationItems, isLoadingNavigation, economyData]);
 
 	// Effect to handle automatic collapsing on medium screens
 	useEffect(() => {
