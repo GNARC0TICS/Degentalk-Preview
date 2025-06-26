@@ -1,12 +1,12 @@
-# DegenTalk Project Brief (MVP Edition)
+# Degentalk Project Brief (MVP Edition)
 
 ## Project Name
 
-**DegenTalk**
+**Degentalk**
 
 ## Overview
 
-DegenTalk is a next-gen crypto-native forum and social platform for degens, traders, builders, and gamblers. It combines a feature-rich discussion board with real-time social mechanics, a platform-exclusive token (DGT), and a gamified XP economy that rewards engagement, not fluff.
+Degentalk is a next-gen crypto-native forum and social platform for degens, traders, builders, and gamblers. It combines a feature-rich discussion board with real-time social mechanics, a platform-exclusive token (DGT), and a gamified XP economy that rewards engagement, not fluff.
 
 ## Core Problem Solved
 
@@ -16,7 +16,7 @@ Traditional platforms lack:
 - Reputation mechanics that _actually_ mean something.
 - A home for unfiltered, long-form, crypto-native chaos.
 
-DegenTalk fixes that by turning forum posting into a game, clout into currency, and the community into an engine.
+Degentalk fixes that by turning forum posting into a game, clout into currency, and the community into an engine.
 
 ## Target Users
 
@@ -43,7 +43,7 @@ DegenTalk fixes that by turning forum posting into a game, clout into currency, 
 
 ---
 
-# DegenTalk Manifesto
+# Degentalk Manifesto
 
 ### “This isn’t for everyone. It’s for us.”
 

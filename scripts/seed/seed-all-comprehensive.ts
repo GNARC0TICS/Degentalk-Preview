@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Comprehensive Seeding Script for DegenTalk
+ * Comprehensive Seeding Script for Degentalk
  * 
  * This script sets up a complete realistic testing environment following
  * the forum structure defined in README-FORUM.md and forumMap.config.ts
@@ -103,7 +103,7 @@ const THREAD_TOPICS = {
     'Limbo probability calculations'
   ],
   'announcements': [
-    'DegenTalk v2.0 Release Notes',
+    'Degentalk v2.0 Release Notes',
     'New XP System Launch',
     'Community Guidelines Update',
     'Maintenance Window Scheduled',
@@ -176,7 +176,7 @@ async function seedUsers() {
       isActive: true,
       isBanned: false,
       isVerified: true,
-      bio: 'Lead administrator of DegenTalk. Here to keep the chaos organized.',
+      bio: 'Lead administrator of Degentalk. Here to keep the chaos organized.',
       signature: '🛡️ Admin | Keeping degens in line since 2024 | [TEST USER]',
       dgtWalletBalance: 10000,
       dgtPoints: 5000
@@ -535,7 +535,7 @@ async function main() {
 
   const startTime = Date.now();
   
-  console.log(chalk.blue.bold('\n🚀 DegenTalk Comprehensive Seeding Script\n'));
+  console.log(chalk.blue.bold('\n🚀 Degentalk Comprehensive Seeding Script\n'));
   
   try {
     // Phase 1: Infrastructure

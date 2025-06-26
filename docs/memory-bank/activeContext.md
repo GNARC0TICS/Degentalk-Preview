@@ -1,8 +1,8 @@
-# DegenTalk Active Context
+# Degentalk Active Context
 
 ## Current Focus & Development Status
 
-DegenTalk is currently in beta development with the following status across major feature areas:
+Degentalk is currently in beta development with the following status across major feature areas:
 
 ### 🟢 Core Database Schema (95% Complete)
 *   **Complete:** Comprehensive schema for users, forum, shop, wallets, transactions, XP, DGT, and vaults, defined via Drizzle migrations.

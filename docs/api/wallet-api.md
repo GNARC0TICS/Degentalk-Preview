@@ -1,6 +1,6 @@
 # Wallet & DGT API
 
-The Wallet system manages cryptocurrency deposits, DGT (DegenTalk Token) transactions, and user-to-user transfers through CCPayment integration.
+The Wallet system manages cryptocurrency deposits, DGT (Degentalk Token) transactions, and user-to-user transfers through CCPayment integration.
 
 ## Base URLs
 
@@ -16,7 +16,7 @@ All wallet endpoints require authentication. Users can only access their own wal
 
 ## DGT Token System
 
-DGT (DegenTalk Token) is the platform's native token with a fixed value of **$0.10 USD** per token.
+DGT (Degentalk Token) is the platform's native token with a fixed value of **$0.10 USD** per token.
 
 ### DGT Sources
 - **Crypto Deposits**: Automatic conversion from ETH, BTC, USDT, etc.

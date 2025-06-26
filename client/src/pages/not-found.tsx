@@ -37,7 +37,7 @@ export default function NotFoundPage() {
 
 				{/* Optional Footer or additional links */}
 				<footer className="mt-16 text-xs text-zinc-600">
-					DegenTalk - {new Date().getFullYear()}
+					Degentalk - {new Date().getFullYear()}
 				</footer>
 			</div>
 		</>

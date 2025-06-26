@@ -1,4 +1,4 @@
-# 📜 DegenTalk XP & DGT Economy – Source of Truth
+# 📜 Degentalk XP & DGT Economy – Source of Truth
 
 **Last updated:** 2025-06-19
 

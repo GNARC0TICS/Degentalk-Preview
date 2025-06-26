@@ -22,7 +22,7 @@ export const SeoHead: React.FC<SeoHeadProps> = ({
 	twitterCard = 'summary',
 	noIndex = false
 }) => {
-	const siteName = 'DegenTalk';
+	const siteName = 'Degentalk';
 	const formattedTitle = title ? `${title} | ${siteName}` : siteName;
 
 	return (

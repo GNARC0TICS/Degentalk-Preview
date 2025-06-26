@@ -2,7 +2,7 @@
 
 ## 🎯 Overview
 
-This guide covers technical implementation details for developers working with the DegenTalk modular admin system.
+This guide covers technical implementation details for developers working with the Degentalk modular admin system.
 
 ## 🏗️ Architecture
 

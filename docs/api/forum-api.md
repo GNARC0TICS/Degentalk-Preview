@@ -1,6 +1,6 @@
 # Forum API
 
-The Forum system manages threads, posts, categories, and user interactions across the DegenTalk platform.
+The Forum system manages threads, posts, categories, and user interactions across the Degentalk platform.
 
 ## Base URLs
 

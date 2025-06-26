@@ -2,7 +2,7 @@
 
 ## Overview
 
-This directory contains all user interface components for the DegenTalk wallet system. These components provide a complete, feature-rich wallet experience with real-time updates, pending state management, and admin-configurable feature gates.
+This directory contains all user interface components for the Degentalk wallet system. These components provide a complete, feature-rich wallet experience with real-time updates, pending state management, and admin-configurable feature gates.
 
 ## 📁 Component Structure
 

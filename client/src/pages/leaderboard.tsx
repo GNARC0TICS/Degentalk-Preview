@@ -217,7 +217,7 @@ export default function LeaderboardPage() {
 				animate="visible"
 				custom={0}
 			>
-				DegenTalk Leaderboards
+				Degentalk Leaderboards
 			</motion.h1>
 
 			{/* Add Tabs for different leaderboards (XP, Clout, DGT) here later */}

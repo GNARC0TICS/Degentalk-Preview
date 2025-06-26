@@ -1,5 +1,5 @@
 /**
- * DegenTalk Dynamic Path System Configuration
+ * Degentalk Dynamic Path System Configuration
  *
  * This file defines the mappings between forum categories and user identity paths.
  * When users interact with content in specific categories, they gain XP in the

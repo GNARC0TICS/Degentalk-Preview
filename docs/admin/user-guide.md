@@ -2,7 +2,7 @@
 
 ## 🎯 Overview
 
-This guide explains how to use the DegenTalk Admin Panel to manage your crypto forum platform. The admin panel provides comprehensive tools for user management, content moderation, economic controls, and system configuration.
+This guide explains how to use the Degentalk Admin Panel to manage your crypto forum platform. The admin panel provides comprehensive tools for user management, content moderation, economic controls, and system configuration.
 
 ## 🚪 Getting Started
 

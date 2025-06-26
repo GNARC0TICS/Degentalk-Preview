@@ -1,4 +1,4 @@
-# 🎰 DegenTalk Forum Audit – The Degen's Guide to Shipping Glory
+# 🎰 Degentalk Forum Audit – The Degen's Guide to Shipping Glory
 
 > **Mission:** Transform this forum from "another crypto Discord clone" into the legendary shitposting colosseum of Web3  
 > **Status:** ~50% complete (42/84 tasks) – we're past the "will this work?" phase, entering "make it legendary" territory  
@@ -28,7 +28,7 @@
 
 ## 🚀 THE HIT LIST: What Ships Next
 
-_Ordered by impact × urgency × degen appeal. Each task includes WHY it matters for DegenTalk._
+_Ordered by impact × urgency × degen appeal. Each task includes WHY it matters for Degentalk._
 
 ### 🎨 Priority 1: Dynamic Theming (The Vibe Machine)
 
@@ -160,7 +160,7 @@ Track these to know we're winning:
 
 ## 🎰 The Endgame
 
-When this ships complete, DegenTalk becomes:
+When this ships complete, Degentalk becomes:
 
 - The fastest forum in Web3 (technically)
 - The most entertaining forum in Web3 (culturally)
@@ -171,7 +171,7 @@ Every task completed gets us closer to legendary status. Ship fast, ship fun, sh
 
 ---
 
-_P.S. – If you're reading this in 2026 and DegenTalk is worth $1B, remember who wrote this guide and send tips to degentalk.eth_
+_P.S. – If you're reading this in 2026 and Degentalk is worth $1B, remember who wrote this guide and send tips to degentalk.eth_
 
 ---
 

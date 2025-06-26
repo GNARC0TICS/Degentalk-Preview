@@ -18,9 +18,9 @@ This repository is protected by an **advanced boundary enforcement system** that
 - Run `npm run validate-everything:fix` to fix issues locally
 - See `CONTRIBUTING.md` for the complete rule system
 
-# DegenTalk - Next-Generation Crypto Forum Platform
+# Degentalk - Next-Generation Crypto Forum Platform
 
-DegenTalk is a modern, highly satirical crypto forum platform designed for gamblers, investors, traders, and crypto fanatics across the globe. Built with cutting-edge technology, it features integrated wallet functionality, a digital goods marketplace, and gamified social features with a comprehensive XP/DGT token economy.
+Degentalk is a modern, highly satirical crypto forum platform designed for gamblers, investors, traders, and crypto fanatics across the globe. Built with cutting-edge technology, it features integrated wallet functionality, a digital goods marketplace, and gamified social features with a comprehensive XP/DGT token economy.
 
 ## 🌟 Key Features
 
@@ -65,7 +65,7 @@ sc /user:load --depth deep --plan
 
 ### 🎯 **Enhanced Development Experience**
 
-DegenTalk includes a comprehensive development environment that simulates a production-ready platform:
+Degentalk includes a comprehensive development environment that simulates a production-ready platform:
 
 #### **🧑‍💼 Pre-configured Admin User**
 
@@ -554,7 +554,7 @@ For detailed architectural information, see [ARCHITECTURE.md](./docs/ARCHITECTUR
 
 ### High-Level Overview
 
-DegenTalk follows a **Domain-Driven Architecture** with clear separation between frontend and backend:
+Degentalk follows a **Domain-Driven Architecture** with clear separation between frontend and backend:
 
 ```
 Frontend (React + Vite)  ←→  Backend (Express + TypeScript)  ←→  PostgreSQL Database

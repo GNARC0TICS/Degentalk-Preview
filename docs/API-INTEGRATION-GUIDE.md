@@ -1,8 +1,8 @@
-# DegenTalk Advertisement System API Integration Guide
+# Degentalk Advertisement System API Integration Guide
 
 ## Overview
 
-This guide provides comprehensive documentation for integrating both external advertising and user-based promotion features into the DegenTalk platform.
+This guide provides comprehensive documentation for integrating both external advertising and user-based promotion features into the Degentalk platform.
 
 ## Authentication
 
@@ -945,9 +945,9 @@ POST https://your-app.com/webhooks/promotion-status
 JavaScript/TypeScript SDK for easy integration:
 
 ```typescript
-import { DegenTalkAds } from '@degentalk/ads-sdk';
+import { DegentalkAds } from '@degentalk/ads-sdk';
 
-const ads = new DegenTalkAds({
+const ads = new DegentalkAds({
   apiKey: 'your-api-key',
   environment: 'production' // or 'sandbox'
 });
@@ -971,4 +971,4 @@ const analytics = await ads.analytics.get(promotion.id, {
 });
 ```
 
-This comprehensive API guide provides everything needed to integrate both external advertising and user promotion features into the DegenTalk platform.
+This comprehensive API guide provides everything needed to integrate both external advertising and user promotion features into the Degentalk platform.

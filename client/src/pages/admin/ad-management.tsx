@@ -159,7 +159,7 @@ export default function AdManagementPage() {
 					<div>
 						<h1 className="text-3xl font-bold text-white">Ad System Management</h1>
 						<p className="text-zinc-400 mt-2">
-							Configure and monitor the DegenTalk advertising platform
+							Configure and monitor the Degentalk advertising platform
 						</p>
 					</div>
 					<Button className="bg-emerald-600 hover:bg-emerald-700">

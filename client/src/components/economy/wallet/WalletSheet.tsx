@@ -258,7 +258,7 @@ export function WalletSheet({ isOpen, onOpenChange }: WalletSheetProps) {
 													<div className="text-sm text-amber-200">
 														<p className="font-medium mb-1">Security Notice</p>
 														<p className="text-amber-300/80">
-															Always verify you're on the official DegenTalk platform before making
+															Always verify you're on the official Degentalk platform before making
 															any transactions.
 														</p>
 													</div>

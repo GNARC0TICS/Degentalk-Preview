@@ -14,7 +14,7 @@ export const walletConfig = {
 		PRICE_USD: 0.1, // Pegged price
 		DECIMALS: 8,
 		SYMBOL: 'DGT',
-		NAME: 'DegenTalk Token'
+		NAME: 'Degentalk Token'
 	},
 
 	// Limits

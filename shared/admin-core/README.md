@@ -1,6 +1,6 @@
-# 🧠 DegenTalk Modular Admin System
+# 🧠 Degentalk Modular Admin System
 
-This folder contains the modular admin panel infrastructure powering all admin pages on DegenTalk and future clones.
+This folder contains the modular admin panel infrastructure powering all admin pages on Degentalk and future clones.
 
 ---
 

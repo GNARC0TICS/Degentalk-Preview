@@ -313,7 +313,7 @@ export default function CreateThreadPage() {
 									Create Thread in {forumNameForDisplay}
 								</CardTitle>
 								<CardDescription className="text-zinc-400 mt-2">
-									Share your thoughts with the DegenTalk community
+									Share your thoughts with the Degentalk community
 								</CardDescription>
 							</CardHeader>
 

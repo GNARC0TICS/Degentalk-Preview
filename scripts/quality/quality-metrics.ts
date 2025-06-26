@@ -2,7 +2,7 @@
 /**
  * Quality Metrics Measurement Tool
  * 
- * Tracks code quality metrics across the DegenTalk codebase
+ * Tracks code quality metrics across the Degentalk codebase
  * Target: 90% overall quality score
  */
 

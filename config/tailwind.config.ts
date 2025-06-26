@@ -69,7 +69,7 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// DegenTalk specific colors
+				// Degentalk specific colors
 				zinc: {
 					750: '#333338', // Custom zinc shade between 700 and 800
 					850: '#222226' // Custom zinc shade between 800 and 900

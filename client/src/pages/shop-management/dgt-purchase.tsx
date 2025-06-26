@@ -180,7 +180,7 @@ export default function DgtPurchasePage() {
 					<div className="flex flex-col space-y-2 text-center mb-8">
 						<h1 className="text-3xl font-bold">DGT Token Packages</h1>
 						<p className="text-muted-foreground">
-							Purchase DGT tokens to unlock exclusive items and features on DegenTalk
+							Purchase DGT tokens to unlock exclusive items and features on Degentalk
 						</p>
 					</div>
 
@@ -268,7 +268,7 @@ export default function DgtPurchasePage() {
 									</li>
 									<li className="flex items-center">
 										<CheckCircle className="h-3.5 w-3.5 mr-1.5 text-primary" />
-										Support the DegenTalk community
+										Support the Degentalk community
 									</li>
 								</ul>
 							</div>

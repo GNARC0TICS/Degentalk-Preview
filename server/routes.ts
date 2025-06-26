@@ -286,7 +286,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			ws.send(
 				JSON.stringify({
 					type: 'connected',
-					message: 'Connected to DegenTalk WebSocket'
+					message: 'Connected to Degentalk WebSocket'
 				})
 			);
 

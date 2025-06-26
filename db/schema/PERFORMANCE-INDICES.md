@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document tracks all performance optimization indices applied to the DegenTalk database. These indices were deployed via MCP commands directly to the production Neon PostgreSQL database and are tracked via migrations for consistency.
+This document tracks all performance optimization indices applied to the Degentalk database. These indices were deployed via MCP commands directly to the production Neon PostgreSQL database and are tracked via migrations for consistency.
 
 ## Index Categories
 

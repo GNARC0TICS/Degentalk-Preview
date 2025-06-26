@@ -2,7 +2,7 @@
 
 ## 📖 Overview
 
-The DegenTalk Admin Panel uses a modular architecture that provides enterprise-grade security, scalability, and platform cloning capabilities. This documentation covers everything you need to know to work with and extend the system.
+The Degentalk Admin Panel uses a modular architecture that provides enterprise-grade security, scalability, and platform cloning capabilities. This documentation covers everything you need to know to work with and extend the system.
 
 ## 📚 Documentation Structure
 
@@ -129,7 +129,7 @@ Third-party module integration and distribution
 
 ## 🔗 Related Documentation
 
-- [DegenTalk CLAUDE.md](../../CLAUDE.md) - Project overview
+- [Degentalk CLAUDE.md](../../CLAUDE.md) - Project overview
 - [Forum System](../../README-FORUM.md) - Forum-specific admin features
 - [XP System](../xp/README.md) - Experience points administration
 - [Wallet System](../wallet/README.md) - DGT token management

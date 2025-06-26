@@ -1,5 +1,5 @@
 // ForumMap Configuration - Single Source of Truth
-// This file defines the canonical forum structure, themes, and rules for DegenTalk
+// This file defines the canonical forum structure, themes, and rules for Degentalk
 
 // --- Type Definitions ---
 
@@ -345,7 +345,7 @@ const PRIMARY_ZONES: Zone[] = [
 			{
 				slug: 'announcements',
 				name: 'Announcements',
-				description: 'Official DegenTalk platform updates',
+				description: 'Official Degentalk platform updates',
 				position: 1,
 				rules: {
 					allowPosting: false, // Staff only
@@ -414,7 +414,7 @@ const PRIMARY_ZONES: Zone[] = [
 			{
 				slug: 'legendary-threads',
 				name: 'Legendary Threads',
-				description: 'The most epic calls and threads in DegenTalk history',
+				description: 'The most epic calls and threads in Degentalk history',
 				position: 1,
 				rules: {
 					allowPosting: false,

@@ -18,7 +18,7 @@ export const buttonVariants = cva(
 				ghost: 'hover:bg-zinc-900/50 text-white hover:text-white rounded-md',
 				link: 'text-primary underline-offset-4 hover:underline',
 
-				// DegenTalk crypto-themed variants
+				// Degentalk crypto-themed variants
 				gradient:
 					'bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-black font-medium rounded-full shadow-[0_0_15px_rgba(0,255,170,0.5)]',
 				'gradient-outline':

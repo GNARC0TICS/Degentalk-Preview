@@ -1,6 +1,6 @@
 /**
  * Social Features Configuration
- * Centralized configuration for all social features in DegenTalk
+ * Centralized configuration for all social features in Degentalk
  */
 
 export interface SocialFeatureConfig {

@@ -17,7 +17,7 @@ import { dgtService } from './dgt.service';
 /**
  * High-level Wallet Service
  *
- * Provides wallet operations for DegenTalk users, abstracting away CCPayment complexity.
+ * Provides wallet operations for Degentalk users, abstracting away CCPayment complexity.
  */
 export class WalletService {
 	private ccpaymentService: CCPaymentService;

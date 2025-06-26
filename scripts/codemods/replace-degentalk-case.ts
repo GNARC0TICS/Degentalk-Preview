@@ -2,7 +2,7 @@
 /**
  * Codemod: replace-degentalk-case.ts
  * ----------------------------------
- * Replaces every exact occurrence of the project name written as "DegenTalk"
+ * Replaces every exact occurrence of the project name written as "Degentalk"
  * (uppercase D + uppercase T) with the preferred brand-case "Degentalk".
  * No other string changes are performed.
  *
@@ -11,7 +11,7 @@
  *
  * The script will:
  * 1. Walk all non-binary text files (default: *.ts,*.tsx,*.js,*.jsx,*.md,*.html,*.css,*.json)
- * 2. Replace exact "DegenTalk" → "Degentalk" (case-sensitive) in file contents.
+ * 2. Replace exact "Degentalk" → "Degentalk" (case-sensitive) in file contents.
  * 3. Skip node_modules, build, logs, and other typical ignore folders.
  * 4. Write changes in-place while preserving permissions & line endings.
  *
@@ -48,8 +48,8 @@ async function run() {
   await Promise.all(
     files.map(async (filePath) => {
       const content = await fs.readFile(filePath, 'utf8');
-      if (content.includes('DegenTalk')) {
-        const replaced = content.split('DegenTalk').join('Degentalk');
+      if (content.includes('Degentalk')) {
+        const replaced = content.split('Degentalk').join('Degentalk');
         if (replaced !== content) {
           await fs.writeFile(filePath, replaced, 'utf8');
           modifiedCount += 1;

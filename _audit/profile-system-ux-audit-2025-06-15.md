@@ -1,4 +1,4 @@
-# Profile System UX/UI Audit — DegenTalk
+# Profile System UX/UI Audit — Degentalk
 
 _Date: 2025-06-15_
 
@@ -218,7 +218,7 @@ This audit covers:
 
 #### 10. X Account Linking and Content Sharing
 
-- [ ] **Problem:** Users cannot link DegenTalk profiles to X accounts or share content, missing viral growth.
+- [ ] **Problem:** Users cannot link Degentalk profiles to X accounts or share content, missing viral growth.
 - [ ] **Solution:** Implement X OAuth 2.0, UI for sharing, and economy integration.
 - [ ] **DB Changes:**
   - [ ] Extend `users` table: `xAccountId VARCHAR(255)`, `xAccessToken VARCHAR(512)`, `xRefreshToken VARCHAR(512)`, `xTokenExpiresAt TIMESTAMP`, `xLinkedAt TIMESTAMP`.

@@ -1,6 +1,6 @@
 # Enhanced Forum Components
 
-A collection of modern, crypto-native forum UI components built for DegenTalk with progressive disclosure, mobile-first design, and beautiful animations.
+A collection of modern, crypto-native forum UI components built for Degentalk with progressive disclosure, mobile-first design, and beautiful animations.
 
 ## Components Overview
 
@@ -309,4 +309,4 @@ When adding new enhanced components:
 
 ---
 
-_Built for DegenTalk's crypto-native forum experience with performance, accessibility, and user delight in mind._
+_Built for Degentalk's crypto-native forum experience with performance, accessibility, and user delight in mind._

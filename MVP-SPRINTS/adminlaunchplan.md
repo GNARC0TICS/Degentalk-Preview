@@ -1,4 +1,4 @@
-# DegenTalk Admin Panel Launch Plan (Streamlined)
+# Degentalk Admin Panel Launch Plan (Streamlined)
 
 ## Current Status Summary (May 2025)
 

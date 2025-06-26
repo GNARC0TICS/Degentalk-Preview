@@ -1,6 +1,6 @@
-# DegenTalk Seeding Scripts
+# Degentalk Seeding Scripts
 
-This directory contains scripts to populate your DegenTalk database with realistic testing data.
+This directory contains scripts to populate your Degentalk database with realistic testing data.
 
 ## 🚀 Quick Start
 

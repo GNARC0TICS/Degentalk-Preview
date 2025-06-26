@@ -1,6 +1,6 @@
 # Admin API
 
-The Admin system provides modular administrative functionality for managing all aspects of the DegenTalk platform through a permission-based, feature-gated architecture.
+The Admin system provides modular administrative functionality for managing all aspects of the Degentalk platform through a permission-based, feature-gated architecture.
 
 ## Base URL
 
@@ -549,7 +549,7 @@ GET /api/admin/settings
   "success": true,
   "data": {
     "platform": {
-      "name": "DegenTalk",
+      "name": "Degentalk",
       "description": "Crypto Forum Platform",
       "maintenanceMode": false,
       "registrationEnabled": true

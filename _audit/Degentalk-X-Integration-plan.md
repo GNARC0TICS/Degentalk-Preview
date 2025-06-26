@@ -1,4 +1,4 @@
-# DegenTalk X Integration Plan
+# Degentalk X Integration Plan
 
 _Date: 2025-06-15_
 
@@ -8,10 +8,10 @@ _Date: 2025-06-15_
 
 Enable users to:
 
-- Link their DegenTalk profiles to X accounts for seamless content sharing.
-- Create DegenTalk accounts using X OAuth authentication.
-- Share posts, threads, and DegenTalk material directly to X from our app.
-- Leverage X integration for viral growth through the referral system and DegenTalk economy.
+- Link their Degentalk profiles to X accounts for seamless content sharing.
+- Create Degentalk accounts using X OAuth authentication.
+- Share posts, threads, and Degentalk material directly to X from our app.
+- Leverage X integration for viral growth through the referral system and Degentalk economy.
 
 ## Scope
 
@@ -59,12 +59,12 @@ Enable users to:
 - [x] **OAuth Authentication Service**:
   - [x] Define Location: `server/src/domains/auth/services/xAuthService.ts`
   - [x] Implement X OAuth 2.0 flow using `passport-twitter` or a similar library.
-  - [x] Handle login/registration: If user exists, link X account; if not, create new DegenTalk account with X data.
+  - [x] Handle login/registration: If user exists, link X account; if not, create new Degentalk account with X data.
   - [x] Store tokens securely in the database with expiration handling.
 - [ ] **API Endpoints**:
   - [x] Create `GET /api/auth/x/login`: Initiate X OAuth flow, redirect to X for authorization.
   - [x] Create `GET /api/auth/x/callback`: Handle callback, store tokens, and link/create account.
-  - [x] Create `POST /api/profile/x/unlink`: Unlink X account from DegenTalk profile.
+  - [x] Create `POST /api/profile/x/unlink`: Unlink X account from Degentalk profile.
   - [x] Create `POST /api/share/x/post`: Share a post or thread to X, requires linked account.
   - [x] Create `POST /api/share/x/referral`: Share referral link to X, track for rewards.
   - [ ] Define Location: `server/src/domains/auth/routes/xAuthRoutes.ts` and `server/src/domains/share/routes/xShareRoutes.ts`
@@ -106,7 +106,7 @@ Enable users to:
   - [ ] Ensure X OAuth flow works in mobile browsers with proper redirect handling.
   - [ ] Use compact share buttons on mobile views.
 
-### 4. Integration with DegenTalk Economy and Referral System
+### 4. Integration with Degentalk Economy and Referral System
 
 - [ ] **Referral System**:
   - [ ] Extend `users/services/referralsApi.ts` to track referrals originating from X shares.
@@ -114,7 +114,7 @@ Enable users to:
 - [ ] **Viral Mechanics**:
   - [ ] Incentivize sharing by offering escalating rewards for X posts that drive engagement (e.g., bonus XP for shares that get likes/retweets on X).
   - [ ] Use `xShares` table to track engagement metrics if X API provides feedback.
-  - [ ] Promote forum culture by encouraging users to share unique DegenTalk content or memes to X with branded hashtags.
+  - [ ] Promote forum culture by encouraging users to share unique Degentalk content or memes to X with branded hashtags.
 - [ ] **Economy Events**:
   - [ ] Trigger economy events for X activities (e.g., `event_logs` entry for 'x_share', 'x_referral_success').
   - [ ] Display notifications for rewards earned via X activities.
@@ -154,4 +154,4 @@ graph TD
     J --> K[Reward for Successful Referrals]
 ```
 
-This plan ensures a robust integration of X account linking into DegenTalk, focusing on user experience, scalability, and viral growth through economy incentives.
+This plan ensures a robust integration of X account linking into Degentalk, focusing on user experience, scalability, and viral growth through economy incentives.

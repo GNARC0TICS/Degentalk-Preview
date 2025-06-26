@@ -4,7 +4,7 @@ import { users } from '../user/users';
 /**
  * User Follows Table (Whale Watch System)
  *
- * Tracks who follows whom in the DegenTalk Whale Watch system.
+ * Tracks who follows whom in the Degentalk Whale Watch system.
  * This is a uni-directional follow system (like Twitter/X).
  */
 export const userFollows = pgTable(

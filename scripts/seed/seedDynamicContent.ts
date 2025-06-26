@@ -700,7 +700,7 @@ async function seedThreadsAndPostsForForums(seededUsers: SeededUser[], seededTag
 }
 
 async function main() {
-  console.log(chalk.bold.magenta('🚀 Starting DegenTalk Dynamic Content Seeder...'));
+  console.log(chalk.bold.magenta('🚀 Starting Degentalk Dynamic Content Seeder...'));
   
   // Ask user if they want to truncate tables in dev
   // For now, let's always truncate in dev for simplicity during refactor
@@ -735,7 +735,7 @@ async function main() {
 
   // TODO: Seed XP activities (revisit this - might involve seeding userAchievements, userMissionProgress)
   
-  console.log(chalk.bold.green('✅ DegenTalk Dynamic Content Seeding Completed Successfully!'));
+  console.log(chalk.bold.green('✅ Degentalk Dynamic Content Seeding Completed Successfully!'));
 }
 
 if (import.meta.url === (process.argv[1] ?? '')) {

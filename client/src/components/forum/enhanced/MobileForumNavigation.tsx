@@ -162,7 +162,7 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 								<div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
 									<span className="text-black font-bold text-sm">DT</span>
 								</div>
-								<span className="font-bold text-white">DegenTalk</span>
+								<span className="font-bold text-white">Degentalk</span>
 							</div>
 							<Button
 								variant="ghost"

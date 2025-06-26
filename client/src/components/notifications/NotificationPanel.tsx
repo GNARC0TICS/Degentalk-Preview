@@ -43,7 +43,7 @@ export function NotificationPanel({}: NotificationPanelProps) {
 	//   {
 	//     user_id: 1,
 	//     type: "info",
-	//     title: "Welcome to DegenTalk!",
+	//     title: "Welcome to Degentalk!",
 	//     body: "Thank you for joining. Explore discussions, earn XP, and trade digital goods.",
 	//     data: {},
 	//     is_read: false,
@@ -243,8 +243,8 @@ export function NotificationPanel({}: NotificationPanelProps) {
 	//   {
 	//     user_id: 1,
 	//     type: "info",
-	//     title: "DegenTalk Weekly Digest",
-	//     body: "Here’s what’s trending this week on DegenTalk.",
+	//     title: "Degentalk Weekly Digest",
+	//     body: "Here’s what’s trending this week on Degentalk.",
 	//     data: {},
 	//     is_read: false,
 	//     read_at: null,

@@ -1,10 +1,10 @@
-# DegenTalk System Architecture
+# Degentalk System Architecture
 
 ## High-Level Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        DegenTalk Platform                       │
+│                        Degentalk Platform                       │
 ├─────────────────────────────────────────────────────────────────┤
 │  Frontend (React 18 + Vite)          │  Backend (Node.js/Express) │
 │  ┌─────────────────────────────────┐  │  ┌─────────────────────────┐ │
@@ -522,4 +522,4 @@ interface PlatformMetrics {
 }
 ```
 
-This architecture supports DegenTalk's requirements for scalability, maintainability, and feature-rich functionality while maintaining security and performance standards.
+This architecture supports Degentalk's requirements for scalability, maintainability, and feature-rich functionality while maintaining security and performance standards.

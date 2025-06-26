@@ -1,6 +1,6 @@
 # Widgets - Reusable Component Library
 
-This directory contains reusable widget components that provide self-contained functionality across the DegenTalk platform.
+This directory contains reusable widget components that provide self-contained functionality across the Degentalk platform.
 
 ## ProfileCard Component
 
@@ -143,7 +143,7 @@ const adminUser = {
 	level: 99,
 	xp: 99999,
 	reputation: 10000,
-	bio: '🔥 DegenTalk Platform Administrator...',
+	bio: '🔥 Degentalk Platform Administrator...',
 	dgtBalance: 500000
 	// ... full profile data
 };
@@ -196,4 +196,4 @@ Uses `framer-motion` for smooth interactions:
 - **Achievement badges** display
 - **Customizable themes** per user preference
 
-The ProfileCard serves as the cornerstone of user identity throughout the DegenTalk platform, providing a consistent and feature-rich representation of user status and capabilities.
+The ProfileCard serves as the cornerstone of user identity throughout the Degentalk platform, providing a consistent and feature-rich representation of user status and capabilities.

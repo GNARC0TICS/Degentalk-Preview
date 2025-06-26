@@ -1,4 +1,4 @@
-# 🚀 DegenTalk Component Migration Roadmap
+# 🚀 Degentalk Component Migration Roadmap
 
 _Unified Design System Implementation Plan - **COMPLETED** ✅_
 

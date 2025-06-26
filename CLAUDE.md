@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-DegenTalk is a modern, highly satirical crypto forum platform designed for gamblers, investors, traders, and crypto fanatics across the globe. It aims to be the next viral forum of the century, featuring integrated wallet functionality, a digital goods marketplace, and gamified social features with XP/DGT economy.
+Degentalk is a modern, highly satirical crypto forum platform designed for gamblers, investors, traders, and crypto fanatics across the globe. It aims to be the next viral forum of the century, featuring integrated wallet functionality, a digital goods marketplace, and gamified social features with XP/DGT economy.
 
 ## Essential Commands
 
@@ -340,7 +340,7 @@ Always run `npm run sync:forums` after editing `forumMap.config.ts`
 
 ### Overview
 
-The DegenTalk Wallet System provides a complete DGT token economy with CCPayment crypto integration, user transfers, and comprehensive transaction management. This system was fully integrated during the frontend completion phase.
+The Degentalk Wallet System provides a complete DGT token economy with CCPayment crypto integration, user transfers, and comprehensive transaction management. This system was fully integrated during the frontend completion phase.
 
 ### Frontend Architecture
 

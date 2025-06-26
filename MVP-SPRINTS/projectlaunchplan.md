@@ -1,4 +1,4 @@
-# DegenTalk Project Launch Plan & Checklist
+# Degentalk Project Launch Plan & Checklist
 
 ## MVP SPRINTS – Streamlined (May 2025)
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the implementation plan for user-based advertisement features that allow DegenTalk community members to spend DGT tokens to promote their content and messages.
+This document outlines the implementation plan for user-based advertisement features that allow Degentalk community members to spend DGT tokens to promote their content and messages.
 
 ## Implementation Phases
 
@@ -838,4 +838,4 @@ router.get('/admin/promotion-analytics', isAdmin, async (req, res) => {
 3. **Community Features**: User voting on promoted content quality
 4. **Mobile App Integration**: Native mobile promotion creation and management
 
-This implementation plan provides a comprehensive roadmap for building a robust user-based advertisement system that integrates seamlessly with DegenTalk's existing DGT economy and community features.
+This implementation plan provides a comprehensive roadmap for building a robust user-based advertisement system that integrates seamlessly with Degentalk's existing DGT economy and community features.

@@ -25,7 +25,7 @@ export default function WhispersPage() {
 								<span>Start a New Whisper</span>
 							</CardTitle>
 							<CardDescription className="text-gray-400">
-								Send a private message to any DegenTalk user
+								Send a private message to any Degentalk user
 							</CardDescription>
 						</CardHeader>
 						<CardContent>

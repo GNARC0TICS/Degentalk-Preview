@@ -1,6 +1,6 @@
-# DegenTalk API Documentation
+# Degentalk API Documentation
 
-This documentation covers all the API endpoints available in the DegenTalk platform, organized by domain.
+This documentation covers all the API endpoints available in the Degentalk platform, organized by domain.
 
 ## Table of Contents
 

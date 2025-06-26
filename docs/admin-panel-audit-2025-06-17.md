@@ -1,6 +1,6 @@
 # Admin Panel Audit (June 17, 2025)
 
-**Objective:** This document summarizes the audit of the DegenTalk admin panel's current state as of June 17, 2025. The audit was conducted against the MVP requirements provided by the user, aiming to determine the existing functionality, identify gaps, and lay the groundwork for a new implementation plan to achieve a "fully functional and configurable" admin panel.
+**Objective:** This document summarizes the audit of the Degentalk admin panel's current state as of June 17, 2025. The audit was conducted against the MVP requirements provided by the user, aiming to determine the existing functionality, identify gaps, and lay the groundwork for a new implementation plan to achieve a "fully functional and configurable" admin panel.
 
 **Acknowledgments:**
 *   The MVP requirements and definition of "fully functional and configurable" were provided by the user (gnarcotic).

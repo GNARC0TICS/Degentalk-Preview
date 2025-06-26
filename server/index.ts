@@ -69,7 +69,7 @@ app.use(traceMiddleware);
 
 (async () => {
 	try {
-		startupLog(`Starting DegenTalk Backend Server...`);
+		startupLog(`Starting Degentalk Backend Server...`);
 		startupLog(`Environment: ${process.env.NODE_ENV || 'development'}`);
 		startupLog(
 			`Database: ${process.env.DATABASE_PROVIDER || 'sqlite'} (${

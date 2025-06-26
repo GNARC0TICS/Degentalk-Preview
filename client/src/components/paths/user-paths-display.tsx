@@ -26,7 +26,7 @@ const UserPathsDisplay: React.FC<UserPathsDisplayProps> = ({ pluginData, classNa
 					<AlertTitle>No paths discovered yet</AlertTitle>
 					<AlertDescription>
 						Paths are discovered by participating in different forum categories. Post in various
-						sections to build your DegenTalk identity!
+						sections to build your Degentalk identity!
 					</AlertDescription>
 				</Alert>
 			</div>

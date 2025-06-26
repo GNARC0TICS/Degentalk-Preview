@@ -1,8 +1,8 @@
-# DegenTalk Advertisement System
+# Degentalk Advertisement System
 
 ## Overview
 
-The DegenTalk Advertisement System is a comprehensive, crypto-native advertising platform designed specifically for the crypto community. It provides both external advertiser campaigns and user-generated promotional content through DGT token spending.
+The Degentalk Advertisement System is a comprehensive, crypto-native advertising platform designed specifically for the crypto community. It provides both external advertiser campaigns and user-generated promotional content through DGT token spending.
 
 ## Table of Contents
 
@@ -559,6 +559,6 @@ AD_MINIMUM_CAMPAIGN_BUDGET=100
 
 ## Conclusion
 
-The DegenTalk Advertisement System provides a comprehensive, crypto-native advertising platform that serves both external advertisers and community members. With its focus on privacy, performance, and community governance, it creates sustainable revenue streams while maintaining the platform's decentralized ethos.
+The Degentalk Advertisement System provides a comprehensive, crypto-native advertising platform that serves both external advertisers and community members. With its focus on privacy, performance, and community governance, it creates sustainable revenue streams while maintaining the platform's decentralized ethos.
 
 For technical support or feature requests, please refer to our [GitHub repository](https://github.com/degentalk/advertisement-system) or contact the development team through the admin panel.
