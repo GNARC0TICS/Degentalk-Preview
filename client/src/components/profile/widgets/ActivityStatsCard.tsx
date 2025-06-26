@@ -96,6 +96,9 @@ interface StatItemProps {
 }
 
 function StatItem({ icon, label, value, rank, isCurrency }: StatItemProps) {
+	const isDefined = typeof value === 'number' && !Number.isNaN(value);
+	const displayValue = isDefined ? value : 0;
+
 	return (
 		<div className="space-y-2">
 			<div className="flex items-center gap-2">
@@ -104,9 +107,11 @@ function StatItem({ icon, label, value, rank, isCurrency }: StatItemProps) {
 			</div>
 			<div className="space-y-1">
 				<div className="text-lg font-bold text-zinc-100">
-					{isCurrency ? `$${value.toLocaleString()}` : value.toLocaleString()}
+					{isCurrency ? `$${displayValue.toLocaleString()}` : displayValue.toLocaleString()}
 				</div>
-				{rank && rank <= 1000 && <div className="text-xs text-amber-400">#{rank} ranked</div>}
+				{rank != null && rank <= 1000 && (
+					<div className="text-xs text-amber-400">#{rank} ranked</div>
+				)}
 			</div>
 		</div>
 	);

@@ -1,16 +1,14 @@
 import { eq, and, sql, desc, asc } from 'drizzle-orm';
-import { db } from '@/core/database';
+import { db } from '@server/src/core/database';
 import {
 	campaigns,
 	adPlacements,
-	targetingProfiles,
 	campaignRules,
 	adImpressions,
 	campaignMetrics,
 	type Campaign,
-	type AdPlacement,
-	type TargetingProfile
-} from '@db/schema';
+	type AdPlacement
+} from '@schema';
 
 export interface AdRequest {
 	placementSlug: string;

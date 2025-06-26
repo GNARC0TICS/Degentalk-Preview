@@ -1,3 +1,7 @@
+// Insert the missing Drizzle imports at the top of the file
+import { pgTable, uuid, varchar, jsonb, integer, boolean, timestamp } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+
 // Campaign rules engine for dynamic configuration
 export const campaignRules = pgTable('campaign_rules', {
 	id: uuid('id').primaryKey().defaultRandom(),

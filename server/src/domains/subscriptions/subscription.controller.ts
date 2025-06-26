@@ -4,7 +4,7 @@
  * Handles HTTP requests for VIP Pass and Degen Pass subscription management
  */
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { subscriptionService } from './subscription.service';
 import { logger } from '../../core/logger';
 

@@ -14,7 +14,7 @@ export function AuthButtons({ className }: AuthButtonsProps) {
 					Log In
 				</Button>
 			</NavLink>
-			<NavLink href="/forums" analyticsLabel="auth_signup">
+			<NavLink href="/auth?mode=signup" analyticsLabel="auth_signup">
 				<Button className="bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500">
 					Sign Up
 				</Button>

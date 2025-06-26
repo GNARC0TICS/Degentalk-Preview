@@ -158,6 +158,13 @@ npm run dev:quick
 
 For the best development experience, set up the enhanced admin user:
 
+> **Quick-login credentials (local dev)**
+>
+> • **Username:** `cryptoadmin`  
+> • **Password:** `password123`
+>
+> These credentials are seeded by `npm run seed:dev-complete` and work in both the `/auth` page and API requests.
+
 ```bash
 # Complete dev user setup (recommended for first-time setup)
 npm run seed:dev-complete
@@ -844,3 +851,66 @@ Access the admin dashboard at `/admin` with appropriate permissions:
 **Built with ❤️ for the crypto community**
 
 For detailed technical documentation, see the `/docs/` directory.
+
+## 🔐 Authentication & User Flow
+
+### Dev Environment Quick Start
+
+For development, use these credentials:
+
+- **Username**: `cryptoadmin`
+- **Password**: `password123`
+
+### Complete Authentication Flow
+
+#### 1. **Guest Experience**
+
+- Header shows "Log In" and "Sign Up" buttons
+- Hero section "Join Community" button redirects to `/auth?mode=signup`
+- All user-specific icons (wallet, notifications, admin) are hidden
+
+#### 2. **Login Process**
+
+- Visit `/auth` or click "Log In"
+- Successful login redirects to home page (`/`)
+- Header automatically switches to authenticated state
+
+#### 3. **Registration Process**
+
+- Visit `/auth?mode=signup` or click "Sign Up"
+- Auto-opens registration tab
+- Successful registration redirects to home page (`/`)
+- Wallet creation is automatically triggered during signup
+
+#### 4. **Authenticated Experience**
+
+- Header shows user menu, wallet, notifications, and admin buttons (if applicable)
+- All authenticated-only features become available
+- User context is maintained across page refreshes
+
+#### 5. **Logout Process**
+
+- Click user menu → "Log Out"
+- **Immediate redirect** to `/auth` (no page flash)
+- All user data cleared from memory
+- Header switches back to guest state instantly
+
+### Auth Route Patterns
+
+```
+/auth                    → Login tab (default)
+/auth?mode=signup       → Registration tab
+/auth?mode=register     → Registration tab (alias)
+```
+
+### Development Notes
+
+When you click "Log Out" in development:
+
+1. User session is cleared from context
+2. All query cache is cleared
+3. Automatic redirect to `/auth`
+4. Header switches to "Log In / Sign Up" buttons
+5. No user icons remain visible
+
+The auth system works seamlessly in both development and production environments.

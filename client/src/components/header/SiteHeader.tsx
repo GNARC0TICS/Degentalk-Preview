@@ -27,7 +27,7 @@ export function SiteHeader() {
 
 	// Handle logout
 	const handleLogout = () => {
-		if (!isDevelopment && logoutMutation?.mutate) {
+		if (logoutMutation?.mutate) {
 			logoutMutation.mutate(undefined);
 		}
 	};

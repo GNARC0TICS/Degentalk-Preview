@@ -1,5 +1,5 @@
 import { eq, and, sql, desc, count } from 'drizzle-orm';
-import { db } from '@/core/database';
+import { db } from '@server/src/core/database';
 import {
 	campaigns,
 	campaignRules,
@@ -9,7 +9,7 @@ import {
 	type Campaign,
 	type CampaignRule,
 	type CryptoPayment
-} from '@db/schema';
+} from '@schema';
 
 export interface CreateCampaignRequest {
 	name: string;

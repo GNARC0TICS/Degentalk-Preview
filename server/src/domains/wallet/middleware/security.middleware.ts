@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { db } from '@db';
 import { wallets, users } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';

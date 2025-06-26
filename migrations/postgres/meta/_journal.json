@@ -29,6 +29,13 @@
       "when": 1750897343461,
       "tag": "0003_fluffy_terror",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1750907008422,
+      "tag": "0004_high_magneto",
+      "breakpoints": true
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { SocialActionsService } from './social-actions.service';
 import { handleControllerError } from '../../lib/error-handler';
 import { z } from 'zod';

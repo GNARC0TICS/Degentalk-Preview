@@ -88,11 +88,13 @@ interface SocialStatItemProps {
 }
 
 function SocialStatItem({ icon, label, value }: SocialStatItemProps) {
+	const displayValue = typeof value === 'number' && !Number.isNaN(value) ? value : 0;
+
 	return (
 		<div className="text-center space-y-2">
 			<div className="flex justify-center">{icon}</div>
 			<div className="space-y-1">
-				<div className="text-lg font-bold text-zinc-100">{value.toLocaleString()}</div>
+				<div className="text-lg font-bold text-zinc-100">{displayValue.toLocaleString()}</div>
 				<div className="text-xs text-zinc-400">{label}</div>
 			</div>
 		</div>

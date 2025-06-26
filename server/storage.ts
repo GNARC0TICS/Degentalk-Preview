@@ -6,7 +6,7 @@ import {
 	threadTags,
 	tags,
 	postReactions,
-	notifications,
+	systemNotifications as notifications,
 	customEmojis,
 	userGroups,
 	conversations,

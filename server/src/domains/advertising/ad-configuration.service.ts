@@ -1,5 +1,5 @@
 import { eq, and, sql, desc, asc } from 'drizzle-orm';
-import { db } from '@/core/database';
+import { db } from '@server/src/core/database';
 import {
 	adPlacements,
 	campaignRules,
@@ -9,7 +9,7 @@ import {
 	type AdPlacement,
 	type CampaignRule,
 	type AdGovernanceProposal
-} from '@db/schema';
+} from '@schema';
 
 export interface PlacementConfiguration {
 	id?: string;

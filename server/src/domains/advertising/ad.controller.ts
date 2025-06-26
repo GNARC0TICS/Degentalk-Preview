@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { adServingService } from './ad-serving.service';
 import { campaignManagementService } from './campaign-management.service';

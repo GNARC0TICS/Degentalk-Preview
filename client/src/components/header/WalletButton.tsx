@@ -8,7 +8,11 @@ interface WalletButtonProps {
 }
 
 export function WalletButton({ className }: WalletButtonProps) {
-	const { toggleWallet } = useHeader();
+	const { toggleWallet, user } = useHeader();
+
+	if (!user) {
+		return null;
+	}
 
 	return (
 		<Button

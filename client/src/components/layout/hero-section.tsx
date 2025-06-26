@@ -113,7 +113,7 @@ export function HeroSection() {
 							<Button
 								size="lg"
 								className="bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300"
-								onClick={() => (window.location.href = '/forums')}
+								onClick={() => (window.location.href = '/auth?mode=signup')}
 							>
 								<Users className="w-5 h-5 mr-2" />
 								Join Community

@@ -45,12 +45,27 @@ export default function ProfilePage() {
 	} = useQuery<ProfileData>({
 		queryKey: ['profile', username],
 		queryFn: async () => {
-			if (isDev && (username?.toLowerCase() === 'devuser' || username?.toLowerCase() === 'dev')) {
+			// 1. Try to fetch real profile from backend
+			try {
+				const res = await fetch(`/api/profile/${username}`);
+				if (res.ok) {
+					return res.json();
+				}
+				// If the profile is not found (404) we might be in dev without seed
+				if (res.status !== 404) {
+					throw new Error('Failed to fetch profile');
+				}
+			} catch (err) {
+				if (!isDev) throw err; // in production surface the error
+			}
+
+			// 2. Fallback: generate mock data only during local dev for the seeded dev account
+			if (isDev && username?.toLowerCase() === 'cryptoadmin') {
 				return generateMockProfile(username);
 			}
-			const res = await fetch(`/api/profile/${username}`);
-			if (!res.ok) throw new Error('Failed to fetch profile');
-			return res.json();
+
+			// 3. If production and still here, throw not found
+			throw new Error('Profile not found');
 		}
 	});
 

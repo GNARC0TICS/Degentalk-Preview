@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
+import { useLocation } from 'wouter';
 
 const { createContext, useContext, useState, useEffect, useMemo } = React;
 
@@ -160,8 +161,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [authError, setAuthError] = useState<string | null>(null);
 	const [isInitialLoading, setIsInitialLoading] = useState(true);
 	const [currentMockRoleState, setCurrentMockRoleState] = useState<MockRole>('admin'); // Default to admin for development
+	const [isLoggedOut, setIsLoggedOut] = useState(() => {
+		if (import.meta.env.MODE === 'development') {
+			return sessionStorage.getItem('dev_loggedOut') === '1';
+		}
+		return false;
+	});
 
 	const isDevelopment = import.meta.env.MODE === 'development';
+	const [, navigate] = useLocation();
 
 	// Fetch user data on initial load (only in production)
 	const {
@@ -195,9 +203,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	// Handle User State based on Mode (Dev vs Prod)
 	useEffect(() => {
 		if (isDevelopment) {
-			// Dev Mode: Use the currently selected mock user
-			console.log(`[DEV MODE] Setting mock user role: ${currentMockRoleState}`);
-			setUserState(mockUsers[currentMockRoleState]);
+			// Dev Mode: Use the currently selected mock user, but respect logout state
+			// Don't restore mock user if user has explicitly logged out
+			if (!isLoggedOut) {
+				setUserState(mockUsers[currentMockRoleState]);
+			}
 			setIsInitialLoading(false);
 		} else {
 			// Production Mode: Use fetched user data
@@ -207,7 +217,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			}
 		}
 		// Update userState whenever the selected mock role changes in dev mode
-	}, [isDevelopment, currentMockRoleState, fetchedUser, userLoading, userError]);
+	}, [isDevelopment, currentMockRoleState, fetchedUser, userLoading, userError, isLoggedOut]);
 
 	// Login Mutation (Only really used in Production)
 	const loginMutation = useMutation<User, Error, { username: string; password: string }>({
@@ -221,6 +231,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		onSuccess: (loggedInUser) => {
 			setUserState(loggedInUser);
 			setAuthError(null);
+			setIsLoggedOut(false); // Reset logout flag on successful login
+			if (import.meta.env.MODE === 'development') {
+				sessionStorage.removeItem('dev_loggedOut');
+			}
 			queryClient.setQueryData(['user'], loggedInUser); // Update user query cache
 		},
 		onError: (error) => {
@@ -245,6 +259,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		onSuccess: (registeredUser) => {
 			setUserState(registeredUser);
 			setAuthError(null);
+			setIsLoggedOut(false); // Reset logout flag on successful registration
+			if (import.meta.env.MODE === 'development') {
+				sessionStorage.removeItem('dev_loggedOut');
+			}
 			queryClient.setQueryData(['user'], registeredUser); // Update user query cache
 		},
 		onError: (error) => {
@@ -264,8 +282,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		onSuccess: () => {
 			setUserState(null);
 			setAuthError(null);
+			setIsLoggedOut(true); // Set logout flag to prevent auto-restore in dev mode
+			if (import.meta.env.MODE === 'development') {
+				sessionStorage.setItem('dev_loggedOut', '1');
+			}
 			queryClient.setQueryData(['user'], null); // Clear user query cache
-			queryClient.clear(); // Optional: clear all query cache on logout
+			queryClient.clear(); // Clear all query cache on logout
+
+			// Client-side navigation keeps React tree mounted (no auto-login reset)
+			navigate('/auth');
 		},
 		onError: (error) => {
 			// Handle logout error, maybe just log it?
@@ -273,7 +298,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			// Still clear state locally even if server logout fails?
 			setUserState(null);
 			setAuthError(null);
+			setIsLoggedOut(true); // Set logout flag even on error
+			if (import.meta.env.MODE === 'development') {
+				sessionStorage.setItem('dev_loggedOut', '1');
+			}
 			queryClient.setQueryData(['user'], null);
+
+			// Navigate even on error
+			navigate('/auth');
 		}
 	});
 

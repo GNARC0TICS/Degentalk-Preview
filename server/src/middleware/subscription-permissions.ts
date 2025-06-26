@@ -4,7 +4,7 @@
  * Injects subscription permissions into request object for easy access
  */
 
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import {
 	subscriptionPermissionsService,
 	SubscriptionPermissions

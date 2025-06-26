@@ -1,5 +1,5 @@
 import { eq, and, sql, desc, asc, gte, lte, isNull } from 'drizzle-orm';
-import { db } from '@/core/database';
+import { db } from '@server/src/core/database';
 import {
 	userPromotions,
 	announcementSlots,
@@ -15,7 +15,7 @@ import {
 	type ShoutboxPin,
 	type ThreadBoost,
 	type ProfileSpotlight
-} from '@db/schema';
+} from '@schema';
 
 export interface CreatePromotionRequest {
 	type:
