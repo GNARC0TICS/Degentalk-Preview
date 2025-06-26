@@ -161,13 +161,66 @@ export class ThreadService {
 					.groupBy(threads.id, usersTable.id, forumStructure.id);
 			}
 
-			// Get total count
-			const [{ total }] = await query.select({ total: count(threads.id) }).execute();
+			// Get total count with a separate query to avoid issues with joins
+			let countQuery = db.select({ total: count(threads.id) }).from(threads);
+
+			if (whereConditions.length > 0) {
+				countQuery = countQuery.where(and(...whereConditions));
+			}
+
+			if (tagFilters && tagFilters.length > 0) {
+				countQuery = countQuery
+					.leftJoin(threadTags, eq(threads.id, threadTags.threadId))
+					.leftJoin(tags, eq(threadTags.tagId, tags.id))
+					.where(
+						and(
+							...(whereConditions.length > 0 ? whereConditions : []),
+							inArray(tags.name, tagFilters)
+						)
+					);
+			}
+
+			const [{ total }] = await countQuery.execute();
 
 			// Get paginated results
 			const threadsData = await query.orderBy(orderBy).limit(limit).offset(offset);
 
 			const totalPages = Math.ceil(total / limit);
+
+			// Transform the flat data into the expected nested structure
+			const formattedThreads = threadsData.map((thread) => ({
+				id: thread.id,
+				title: thread.title,
+				slug: thread.slug,
+				userId: thread.userId,
+				prefixId: null, // TODO: Add prefix support
+				isSticky: thread.isPinned,
+				isLocked: thread.isLocked,
+				isHidden: false, // TODO: Add hidden support
+				viewCount: thread.viewCount,
+				postCount: thread.postCount,
+				firstPostLikeCount: 0, // TODO: Add like count
+				lastPostAt: thread.lastPostAt?.toISOString() || null,
+				createdAt: thread.createdAt.toISOString(),
+				updatedAt: thread.updatedAt?.toISOString() || null,
+				isSolved: thread.isSolved,
+				solvingPostId: null, // TODO: Add solving post support
+				user: {
+					id: thread.userId,
+					username: thread.authorUsername || 'Unknown',
+					avatarUrl: thread.authorAvatar,
+					activeAvatarUrl: thread.authorAvatar,
+					role: thread.authorRole || 'user'
+				},
+				category: {
+					id: thread.structureId,
+					name: thread.categoryName || 'Unknown',
+					slug: thread.categorySlug || 'unknown'
+				},
+				tags: [], // TODO: Add tags support
+				canEdit: false, // TODO: Add permission support
+				canDelete: false // TODO: Add permission support
+			}));
 
 			logger.info(
 				'ThreadService',
@@ -175,7 +228,7 @@ export class ThreadService {
 			);
 
 			return {
-				threads: threadsData as ThreadWithUserAndCategory[],
+				threads: formattedThreads,
 				total,
 				page,
 				totalPages

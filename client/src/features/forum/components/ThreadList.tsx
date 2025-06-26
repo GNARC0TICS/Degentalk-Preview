@@ -15,7 +15,7 @@ export type ApiTag = {
 
 // Type for user object nested in thread
 export type ApiThreadUser = {
-	id: number;
+	id: string;
 	username: string;
 	avatarUrl?: string | null;
 	activeAvatarUrl?: string | null;
@@ -34,7 +34,7 @@ export type ApiThread = {
 	id: number;
 	title: string;
 	slug: string;
-	userId: number;
+	userId: string;
 	prefixId?: number | null;
 	isSticky: boolean;
 	isLocked: boolean;
@@ -94,7 +94,7 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 	}, [filters]);
 
 	const queryKey = [
-		`${THREADS_API_BASE_PATH}?categoryId=${forumId}`,
+		`${THREADS_API_BASE_PATH}?structureId=${forumId}`,
 		page,
 		threadsPerPage,
 		filters
@@ -115,7 +115,7 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 			}
 			// Construct the URL for fetching threads with filters
 			const params = new URLSearchParams({
-				categoryId: forumId.toString(),
+				structureId: forumId.toString(),
 				page: page.toString(),
 				limit: threadsPerPage.toString(),
 				sort: filters.sortBy

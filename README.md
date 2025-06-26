@@ -56,12 +56,40 @@ DegenTalk is a modern, highly satirical crypto forum platform designed for gambl
 # 1. Update environment file
 cp env.local.example env.local  # Edit with your database credentials
 
-# 2. Start development
-pnpm dev                        # Full stack with hot reload
+# 2. Start development with enhanced dev environment
+npm run dev:seed                # Full stack with dev user and wallet data
 
 # 3. Optional: Load with SuperClaude
 sc /user:load --depth deep --plan
 ```
+
+### 🎯 **Enhanced Development Experience**
+
+DegenTalk includes a comprehensive development environment that simulates a production-ready platform:
+
+#### **🧑‍💼 Pre-configured Admin User**
+
+- **Username**: `cryptoadmin` (auto-login in dev mode)
+- **Role**: Platform Administrator with full privileges
+- **Profile**: Complete with bio, avatar, and social links
+- **Stats**: Level 99, 99,999 XP, 10,000 reputation
+
+#### **💰 Realistic Wallet Data**
+
+- **500,000+ DGT tokens** from multiple simulated deposits
+- **10 ETH** ($20,000 value)
+- **5,000 USDT** ($5,000 value)
+- **0.5 BTC** ($15,000 value)
+- **VIP Pass subscription** with lifetime benefits
+
+#### **🎮 Full Platform Features**
+
+- **Forum posting** with admin moderation tools
+- **Real wallet transactions** using seeded balances
+- **Shoutbox chat** with user identity
+- **Shop purchases** with DGT spending
+- **XP system** with real-time updates
+- **Admin panel** access to all features
 
 #### Required Codespaces Secrets:
 
@@ -125,6 +153,27 @@ npm run dev:seed
 # Quick start (skips seeding for faster startup)
 npm run dev:quick
 ```
+
+### 🎯 **Development User Setup**
+
+For the best development experience, set up the enhanced admin user:
+
+```bash
+# Complete dev user setup (recommended for first-time setup)
+npm run seed:dev-complete
+
+# Individual components
+npm run seed:users              # Basic users including cryptoadmin
+npm run seed:dev-wallet         # Wallet with crypto balances
+npm run seed:dev-subscriptions  # VIP subscription data
+```
+
+This creates a realistic development environment where you can:
+
+- **Test wallet features** with actual DGT/crypto balances
+- **Use admin privileges** for forum moderation and platform management
+- **Experience VIP features** with an active subscription
+- **See the profile card** with real user data in the sidebar
 
 **Port Management:**
 
@@ -202,6 +251,9 @@ See `NEON-SYNC.md` for detailed information about the database synchronization s
 - `npm run seed:all` - Run all seed scripts
 - `npm run seed:forum` - Seed forum structure
 - `npm run seed:threads` - Seed example threads
+- `npm run seed:dev-complete` - **Enhanced dev user setup** (admin + wallet + VIP)
+- `npm run seed:dev-wallet` - Seed wallet balances for dev user
+- `npm run seed:dev-subscriptions` - Seed VIP subscription data
 - `npm run seed:xp` - Seed XP system data
 - `npm run seed:levels` - Seed user levels
 - `npm run seed:economy` - Seed economy settings

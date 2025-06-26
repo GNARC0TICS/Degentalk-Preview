@@ -19049,3 +19049,13 @@ User not found
 {
   "logPath": "logs/app.log"
 }
+[2025-06-26T00:55:38.689Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-26T01:03:34.789Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-26T01:03:36.221Z] [INFO] [SHOP] ✅ Successfully seeded shop with 6 items
+[2025-06-26T01:03:36.321Z] [INFO] [SHOP] OG Drip Username Color already exists in the shop. Skipping addition.

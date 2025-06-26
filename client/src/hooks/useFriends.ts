@@ -53,8 +53,8 @@ export function useFriends(profileUserId: string | undefined): UseFriendsResult 
 		enabled: Boolean(currentUser) && !viewingOwnProfile
 	});
 
-	const profileList = profileFriends?.friends.map((f) => f.friend) ?? [];
-	const viewerList = viewerFriends?.friends.map((f) => f.friend) ?? [];
+	const profileList = profileFriends?.friends?.map((f) => f.friend) ?? [];
+	const viewerList = viewerFriends?.friends?.map((f) => f.friend) ?? [];
 
 	let mutual: FriendUserLite[] = [];
 	if (viewingOwnProfile) {

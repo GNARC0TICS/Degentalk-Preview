@@ -13,6 +13,7 @@ import { ReferralPreferences } from '@/components/preferences/referral-preferenc
 import { SocialPreferences } from '@/components/preferences/social-preferences';
 import { User, Shield, Bell, Monitor, Lock, Users, Share2, UserCheck } from 'lucide-react';
 import { ProtectedRoute } from '@/lib/protected-route';
+import { Container } from '@/components/ui/Container';
 
 /**
  * Preferences page with tabbed interface for different preferences categories.
@@ -58,7 +59,7 @@ function PreferencesPage() {
 		return (
 			<div className="min-h-screen bg-black text-white flex flex-col">
 				<SiteHeader />
-				<div className="container mx-auto px-4 py-12 flex-1 flex items-center justify-center">
+				<Container className="flex-1 flex items-center justify-center" padding="lg">
 					<Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
 						<CardHeader>
 							<CardTitle>Authentication Required</CardTitle>
@@ -68,7 +69,7 @@ function PreferencesPage() {
 							<p className="text-zinc-400">Please log in to view and manage your preferences.</p>
 						</CardContent>
 					</Card>
-				</div>
+				</Container>
 				<SiteFooter />
 			</div>
 		);
@@ -79,7 +80,7 @@ function PreferencesPage() {
 		<div className="min-h-screen bg-black text-white flex flex-col">
 			<SiteHeader />
 
-			<main className="container mx-auto px-4 py-6 md:py-12 flex-1">
+			<Container className="flex-1" padding="lg">
 				<div className="max-w-5xl mx-auto">
 					<div className="mb-8">
 						<h1 className="text-3xl font-bold mb-2">Preferences</h1>
@@ -170,7 +171,7 @@ function PreferencesPage() {
 						</div>
 					</Tabs>
 				</div>
-			</main>
+			</Container>
 
 			<SiteFooter />
 		</div>

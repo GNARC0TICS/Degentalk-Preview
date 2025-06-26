@@ -104,7 +104,10 @@ export default function ModularAdminLayout({ children, className }: ModularAdmin
 					)}
 				>
 					{/* Content wrapper */}
-					<div className="flex-1 overflow-auto">{children}</div>
+					<div className="flex-1 overflow-auto p-6 md:p-8 lg:p-10">
+						{/* Constrain width and add vertical rhythm */}
+						<div className="max-w-7xl mx-auto space-y-8">{children}</div>
+					</div>
 				</main>
 			</div>
 		</AdminThemeProvider>

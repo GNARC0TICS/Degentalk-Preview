@@ -32,6 +32,9 @@
 		"seed:all": "npm run db:migrate:Apply && npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/seed/seed-all-comprehensive.ts",
 		"reset-and-seed": "npx dotenv-cli -e env.local -- npx tsx scripts/db/reset-and-seed.ts",
 		"seed:users": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-users.ts",
+		"seed:dev-wallet": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-dev-wallet.ts",
+		"seed:dev-subscriptions": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-dev-subscriptions.ts",
+		"seed:dev-complete": "npm run seed:users && npm run seed:dev-wallet && npm run seed:dev-subscriptions",
 		"seed:forum": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-canonical-zones.ts",
 		"seed:forum:new": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/seed/seedForumsFromConfig.ts",
 		"seed:forum:setup": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/setup-forum-structure.ts",
@@ -217,7 +220,8 @@
 		"ws": "^8.18.0",
 		"zod": "^3.24.2",
 		"zod-validation-error": "^3.4.0",
-		"zustand": "^5.0.3"
+		"zustand": "^5.0.3",
+		"blueimp-md5": "^2.19.0"
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^9.8.0",

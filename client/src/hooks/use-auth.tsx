@@ -124,28 +124,28 @@ const mockUsers: Record<MockRole, User> = {
 	},
 	admin: {
 		id: 997,
-		username: 'DevAdmin',
-		email: 'devadmin@example.com',
-		avatarUrl: null,
+		username: 'cryptoadmin',
+		email: 'admin@degentalk.dev',
+		avatarUrl: '/images/avatars/admin.png',
 		role: 'admin',
 		walletId: 'dev-wallet-789',
-		walletAddress: '0xDevWalletAddressAdmin',
+		walletAddress: '0xAdminWalletAddress',
 		createdAt: new Date().toISOString(),
 		level: 99,
 		xp: 99999,
 		isVerified: true,
-		bio: 'The administrator.',
+		bio: '🔥 DegenTalk Platform Administrator | Crypto Veteran | Building the future of degen communities',
 		clout: 10000,
 		reputation: 10000,
-		website: 'https://admin.example.com',
-		github: 'devadmin',
-		twitter: 'devadmin',
-		discord: 'DevAdmin#0001',
+		website: 'https://degentalk.com',
+		github: 'degentalk-admin',
+		twitter: 'degentalk_official',
+		discord: 'CryptoAdmin#0001',
 		pluginData: { 'system-control': { level: 100, xp: 0, category: 'All Access' } },
 		isActive: true,
-		signature: 'Admin signature',
+		signature: 'WAGMI 🚀 | Not financial advice | DegenTalk Admin',
 		lastActiveAt: new Date().toISOString(),
-		bannerUrl: '/images/profile-banner-admin-mock.png',
+		bannerUrl: '/images/banners/admin-banner.jpg',
 		dgtBalance: 100000,
 		activeFrameId: 2,
 		avatarFrameId: 2,
@@ -159,7 +159,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [userState, setUserState] = useState<User | null>(null);
 	const [authError, setAuthError] = useState<string | null>(null);
 	const [isInitialLoading, setIsInitialLoading] = useState(true);
-	const [currentMockRoleState, setCurrentMockRoleState] = useState<MockRole>('admin'); // Default mock role
+	const [currentMockRoleState, setCurrentMockRoleState] = useState<MockRole>('admin'); // Default to admin for development
 
 	const isDevelopment = import.meta.env.MODE === 'development';
 

@@ -22,7 +22,7 @@ const router = Router();
 const createThreadSchema = z.object({
 	title: z.string().min(1).max(200),
 	content: z.string().min(1),
-	categoryId: z.number().int().positive(),
+	structureId: z.number().int().positive(),
 	tags: z.array(z.string()).optional(),
 	isLocked: z.boolean().optional(),
 	isPinned: z.boolean().optional(),
@@ -44,12 +44,14 @@ router.get('/', async (req: Request, res: Response) => {
 	try {
 		const page = parseInt(req.query.page as string) || 1;
 		const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
-		const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
+		const structureId = req.query.structureId
+			? parseInt(req.query.structureId as string)
+			: undefined;
 		const sortBy = (req.query.sortBy as string) || 'newest';
 		const search = req.query.search as string;
 
 		const result = await threadService.searchThreads({
-			categoryId,
+			structureId,
 			page,
 			limit,
 			sortBy: sortBy as any,
@@ -57,12 +59,11 @@ router.get('/', async (req: Request, res: Response) => {
 		});
 
 		res.json({
-			success: true,
-			data: result,
+			threads: result.threads,
 			pagination: {
 				page,
-				limit,
-				total: result.total,
+				limit: limit,
+				totalThreads: result.total,
 				totalPages: result.totalPages
 			}
 		});
@@ -145,7 +146,7 @@ router.post('/', requireAuth, async (req: Request, res: Response) => {
 
 		const newThread = await threadService.createThread({
 			...validatedData,
-			authorId: userId
+			userId: userId
 		});
 
 		res.status(201).json({

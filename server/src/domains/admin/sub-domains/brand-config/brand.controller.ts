@@ -8,8 +8,7 @@ class BrandController {
 	}
 
 	async updateBrandConfig(req: Request, res: Response) {
-		const { id } = req.params;
-		const updated = await brandService.updateConfig(id, req.body);
+		const updated = await brandService.updateConfig(req.body.id ?? null, req.body);
 		return res.json(updated);
 	}
 }

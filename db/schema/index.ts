@@ -149,8 +149,13 @@ export * from './gamification/platformStats';
 
 // System domain exports
 export * from './system/rateLimits';
-export * from './system/notifications';
+export { notifications as systemNotifications } from './system/notifications';
+export type {
+	Notification as SystemNotification,
+	InsertNotification as InsertSystemNotification
+} from './system/notifications';
 export * from './system/analyticsEvents';
+export * from './system/profileAnalytics';
 export * from './system/activityFeed';
 export * from './system/airdrop-records';
 export * from './system/userAbuseFlags';

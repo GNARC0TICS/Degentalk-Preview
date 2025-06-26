@@ -117,91 +117,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
 		try {
 			const limit = parseInt(req.query.limit as string) || 5;
 
-			// Return the threads we know are in the database
-			const hotThreads = [
-				{
-					thread_id: 25,
-					title: 'BlackRock SOL ETF filing confirmed! 🚨',
-					slug: 'blackrock-sol-etf-filing-confirmed',
-					post_count: 31,
-					view_count: 756,
-					hot_score: 302,
-					created_at: '2025-05-26T13:30:35.986587Z',
-					last_post_at: '2025-05-26T13:30:35.986587Z',
-					user_id: 1,
-					username: 'CryptoTrader',
-					avatar_url: null,
-					category_name: 'Alpha & Leaks',
-					category_slug: 'alpha-leaks',
-					like_count: 67
-				},
-				{
-					thread_id: 27,
-					title: 'Free airdrop alert - verified legit 🎁',
-					slug: 'free-airdrop-alert-verified-legit',
-					post_count: 52,
-					view_count: 623,
-					hot_score: 257,
-					created_at: '2025-05-26T11:00:35.986587Z',
-					last_post_at: '2025-05-26T11:00:35.986587Z',
-					user_id: 1,
-					username: 'CryptoTrader',
-					avatar_url: null,
-					category_name: 'Free Stuff',
-					category_slug: 'free-stuff',
-					like_count: 156
-				},
-				{
-					thread_id: 26,
-					title: 'Finally hit my first 10x! AMA 🎉',
-					slug: 'finally-hit-my-first-10x-ama',
-					post_count: 23,
-					view_count: 445,
-					hot_score: 212,
-					created_at: '2025-05-26T13:00:35.986587Z',
-					last_post_at: '2025-05-26T13:00:35.986587Z',
-					user_id: 1,
-					username: 'CryptoTrader',
-					avatar_url: null,
-					category_name: "Beginner's Portal",
-					category_slug: 'beginners-portal',
-					like_count: 67
-				},
-				{
-					thread_id: 28,
-					title: 'What are you trading today? 📈',
-					slug: 'what-are-you-trading-today',
-					post_count: 28,
-					view_count: 387,
-					hot_score: 195,
-					created_at: '2025-05-26T10:00:35.986587Z',
-					last_post_at: '2025-05-26T10:00:35.986587Z',
-					user_id: 1,
-					username: 'CryptoTrader',
-					avatar_url: null,
-					category_name: 'Alpha & Leaks',
-					category_slug: 'alpha-leaks',
-					like_count: 47
-				},
-				{
-					thread_id: 24,
-					title: '🔥 SOL breakout incoming - $250 target',
-					slug: 'sol-breakout-incoming-250-target',
-					post_count: 18,
-					view_count: 342,
-					hot_score: 190,
-					created_at: '2025-05-26T12:00:35.986587Z',
-					last_post_at: '2025-05-26T12:00:35.986587Z',
-					user_id: 1,
-					username: 'CryptoTrader',
-					avatar_url: null,
-					category_name: 'Alpha & Leaks',
-					category_slug: 'alpha-leaks',
-					like_count: 28
-				}
-			];
+			// Import here to avoid circular dependencies
+			const { threadService } = await import('./src/domains/forum/services/thread.service');
 
-			res.json(hotThreads.slice(0, limit));
+			// Get the latest threads from the database, sorted by creation date as a proxy for "hotness"
+			const result = await threadService.searchThreads({
+				page: 1,
+				limit: limit,
+				sortBy: 'newest'
+			});
+
+			// Transform to match expected format
+			const hotThreads = result.threads.map((thread: any) => ({
+				thread_id: thread.id,
+				title: thread.title,
+				slug: thread.slug,
+				post_count: thread.postCount || 0,
+				view_count: thread.viewCount || 0,
+				hot_score: Math.floor(Math.random() * 100) + 50, // Mock hot score for now
+				created_at: thread.createdAt,
+				last_post_at: thread.lastPostAt || thread.createdAt,
+				user_id: thread.userId,
+				username: thread.user?.username || 'Unknown',
+				avatar_url: thread.user?.avatarUrl || null,
+				category_name: thread.category?.name || 'Unknown',
+				category_slug: thread.category?.slug || 'unknown',
+				like_count: thread.firstPostLikeCount || 0
+			}));
+
+			res.json(hotThreads);
 		} catch (error) {
 			console.error('Error fetching hot threads:', error);
 			res.status(500).json({ error: 'Failed to fetch hot threads' });

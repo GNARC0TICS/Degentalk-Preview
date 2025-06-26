@@ -29,6 +29,8 @@ import {
 	BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
 import { cn } from '@/lib/utils';
+import { SiteFooter } from '@/components/footer/SiteFooter';
+import { Container } from '@/components/ui/Container';
 
 export default function CreateThreadPage() {
 	const { user } = useAuth();
@@ -182,7 +184,7 @@ export default function CreateThreadPage() {
 				}}
 			/>
 
-			<div className="container mx-auto px-4 py-6 max-w-7xl">
+			<Container>
 				{/* Header with breadcrumbs */}
 				<div className="mb-8">
 					<Breadcrumb>
@@ -364,7 +366,8 @@ export default function CreateThreadPage() {
 						</Card>
 					</div>
 				</div>
-			</div>
+			</Container>
+			<SiteFooter />
 		</div>
 	);
 }

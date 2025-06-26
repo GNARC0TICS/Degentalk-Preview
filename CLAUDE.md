@@ -169,12 +169,40 @@ PORT=5001                       # Backend port
 VITE_PORT=5173                  # Frontend port
 ```
 
-### Development Features
+### Enhanced Development Features
 
-- **No authentication required** in development
+#### **🧑‍💼 Realistic Admin User Setup**
+
+```bash
+npm run seed:dev-complete       # Complete setup (recommended)
+npm run seed:users              # Basic users including cryptoadmin
+npm run seed:dev-wallet         # Wallet with crypto balances
+npm run seed:dev-subscriptions  # VIP subscription data
+```
+
+Creates a production-like development environment:
+
+- **Username**: `cryptoadmin` (auto-login as admin)
+- **Wallet**: 500k+ DGT, 10 ETH, 5k USDT, 0.5 BTC
+- **VIP Status**: Active lifetime subscription with benefits
+- **Profile**: Complete with bio, avatar, social links
+- **Stats**: Level 99, 99,999 XP, 10,000 reputation
+
+#### **🎮 Full Platform Testing**
+
+- **ProfileCard widget** - Live user data in left sidebar
+- **Real wallet transactions** - Using seeded balances
+- **Forum moderation** - Admin tools and privileges
+- **Shoutbox chat** - With authenticated user identity
+- **Shop purchases** - DGT spending functionality
+- **XP system** - Real-time experience point updates
+
+#### **⚡ Development Tools**
+
 - **Role switcher** - Test admin/mod/user permissions (bottom-right corner)
-- **Hot reload** on both frontend and backend
+- **Hot reload** - Both frontend and backend with preserved state
 - **Automatic port management** - Kills existing processes before starting
+- **Mock data** - Realistic content for all platform features
 
 ## Forum Business Logic
 

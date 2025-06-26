@@ -16,6 +16,7 @@ export const BrandProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 			const res = await fetch('/api/admin/brand-config', { credentials: 'include' });
 			const data = await res.json();
 			setBrandConfig(data);
+			applyCssVars(data);
 		} catch (err) {
 			console.error('Failed to load brand config', err);
 		}
@@ -36,4 +37,18 @@ export const useBrand = () => {
 	const ctx = useContext(BrandContext);
 	if (!ctx) throw new Error('useBrand must be used within BrandProvider');
 	return ctx;
+};
+
+const applyCssVars = (config: RuntimeBrandConfig) => {
+	const root = document.documentElement;
+	if (config.colors) {
+		Object.entries(config.colors as Record<string, string>).forEach(([key, val]) => {
+			root.style.setProperty(`--brand-${key}`, String(val));
+		});
+	}
+	if (config.typography) {
+		Object.entries(config.typography as Record<string, string>).forEach(([key, val]) => {
+			root.style.setProperty(`--brand-typography-${key}`, String(val));
+		});
+	}
 };

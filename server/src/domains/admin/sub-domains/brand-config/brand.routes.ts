@@ -11,7 +11,7 @@ router.use(isAdmin);
 // GET /api/admin/brand-config
 router.get('/', asyncHandler(brandController.getBrandConfig.bind(brandController)));
 
-// PUT /api/admin/brand-config/:id (placeholder)
-router.put('/:id', asyncHandler(brandController.updateBrandConfig.bind(brandController)));
+// PUT /api/admin/brand-config
+router.put('/', asyncHandler(brandController.updateBrandConfig.bind(brandController)));
 
 export default router;

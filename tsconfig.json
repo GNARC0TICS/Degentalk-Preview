@@ -47,6 +47,7 @@
 			"@shared/*": ["shared/*"],
 			"@server/*": ["server/*"],
 			"@server-core/*": ["server/src/core/*"],
+			"@core/*": ["server/src/core/*"],
 			"@server-utils/*": ["server/src/utils/*"],
 			"@server-middleware/*": ["server/src/middleware/*"],
 			"@db": ["db/index.ts"],

@@ -188,6 +188,9 @@ client/src/components/
 │       ├── level-badge.tsx
 │       └── xp-action-log.tsx
 │
+├── widgets/               # Reusable Widget Components
+│   └── ProfileCard.tsx    # User profile sidebar widget with live data
+│
 └── shared/                # Shared Utilities
     ├── navigation/        # Navigation components
     ├── forms/             # Form building blocks

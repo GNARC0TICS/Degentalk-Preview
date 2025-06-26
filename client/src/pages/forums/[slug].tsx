@@ -30,7 +30,7 @@ import { ForumListItem } from '@/features/forum/components/ForumListItem';
 
 // Enhanced Create Thread button
 const CreateThreadButton: React.FC<{ forumSlug: string }> = ({ forumSlug }) => (
-	<Link href={`/threads/create?forumId=${forumSlug}`}>
+	<Link href={`/threads/create?forumSlug=${forumSlug}`}>
 		<Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
 			<Plus className="w-4 h-4 mr-2" />
 			Create Thread
