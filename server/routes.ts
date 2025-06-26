@@ -65,6 +65,8 @@ import featureGatesRoutes from './src/domains/feature-gates/feature-gates.routes
 import notificationRoutes from './src/domains/notifications/notification.routes';
 // Import domain-based preferences routes
 import preferencesRoutes from './src/domains/preferences/preferences.routes';
+// Import domain-based advertising routes
+import { adRoutes } from './src/domains/advertising/ad.routes';
 
 // REFACTORED: Using the new centralized error handlers
 import {
@@ -230,6 +232,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 	// Set up feature gate routes
 	app.use('/api/features', featureGatesRoutes);
+
+	// Set up advertising routes with domain-based approach
+	app.use('/api/ads', adRoutes);
 
 	// Set up path specialization routes
 	registerPathRoutes(app); // @pending-migration

@@ -1,0 +1,512 @@
+import { eq, and, sql, desc, asc } from 'drizzle-orm';
+import { db } from '@/core/database';
+import {
+	campaigns,
+	adPlacements,
+	targetingProfiles,
+	campaignRules,
+	adImpressions,
+	campaignMetrics,
+	type Campaign,
+	type AdPlacement,
+	type TargetingProfile
+} from '@db/schema';
+
+export interface AdRequest {
+	placementSlug: string;
+	userHash?: string;
+	sessionId: string;
+	forumSlug?: string;
+	threadId?: string;
+	deviceInfo: {
+		type: 'mobile' | 'desktop' | 'tablet';
+		screenSize: string;
+		userAgent: string;
+	};
+	geoData: {
+		region: string;
+		timezone: string;
+	};
+	userContext: {
+		dgtBalanceTier?: string;
+		xpLevel?: number;
+		interestSegments?: string[];
+		activityLevel?: string;
+	};
+}
+
+export interface AdResponse {
+	adId: string;
+	campaignId: string;
+	creative: {
+		type: string;
+		content: string;
+		dimensions: string;
+		clickUrl: string;
+	};
+	tracking: {
+		impressionUrl: string;
+		clickUrl: string;
+		conversionUrl?: string;
+	};
+	dgtReward?: {
+		amount: number;
+		condition: string;
+	};
+	metadata: {
+		bidPrice: number;
+		currency: string;
+		qualityScore: number;
+	};
+}
+
+/**
+ * High-performance ad serving engine with sub-100ms response time
+ * Implements privacy-preserving targeting and real-time optimization
+ */
+export class AdServingService {
+	/**
+	 * Main ad serving endpoint - optimized for speed
+	 * Target: <50ms response time for 95% of requests
+	 */
+	async serveAd(request: AdRequest): Promise<AdResponse | null> {
+		const startTime = Date.now();
+
+		try {
+			// 1. Get placement configuration (5ms)
+			const placement = await this.getPlacement(request.placementSlug);
+			if (!placement) return null;
+
+			// 2. Get eligible campaigns (15ms)
+			const campaigns = await this.getEligibleCampaigns(placement, request);
+			if (campaigns.length === 0) return null;
+
+			// 3. Apply targeting and rules (20ms)
+			const scoredCampaigns = await this.scoreAndRankCampaigns(campaigns, request, placement);
+
+			// 4. Select winning campaign (5ms)
+			const winningCampaign = this.selectWinningCampaign(scoredCampaigns);
+			if (!winningCampaign) return null;
+
+			// 5. Generate ad response (5ms)
+			const adResponse = await this.generateAdResponse(winningCampaign, placement, request);
+
+			// 6. Track impression asynchronously
+			this.trackImpressionAsync(winningCampaign, placement, request, adResponse);
+
+			const responseTime = Date.now() - startTime;
+			console.log(`Ad served in ${responseTime}ms`);
+
+			return adResponse;
+		} catch (error) {
+			console.error('Ad serving error:', error);
+			return null;
+		}
+	}
+
+	/**
+	 * Get placement configuration with caching
+	 */
+	private async getPlacement(placementSlug: string): Promise<AdPlacement | null> {
+		// TODO: Add Redis caching layer
+		const [placement] = await db
+			.select()
+			.from(adPlacements)
+			.where(and(eq(adPlacements.slug, placementSlug), eq(adPlacements.isActive, true)))
+			.limit(1);
+
+		return placement || null;
+	}
+
+	/**
+	 * Get campaigns eligible for the placement
+	 */
+	private async getEligibleCampaigns(
+		placement: AdPlacement,
+		request: AdRequest
+	): Promise<Campaign[]> {
+		const now = new Date();
+
+		return await db
+			.select()
+			.from(campaigns)
+			.where(
+				and(
+					eq(campaigns.status, 'active'),
+					eq(campaigns.isActive, true),
+					// Budget check
+					sql`${campaigns.spentAmount} < ${campaigns.totalBudget}`,
+					// Date range check
+					sql`${campaigns.startDate} <= ${now}`,
+					sql`(${campaigns.endDate} IS NULL OR ${campaigns.endDate} >= ${now})`
+				)
+			)
+			.orderBy(desc(campaigns.bidAmount))
+			.limit(20); // Limit for performance
+	}
+
+	/**
+	 * Score and rank campaigns based on targeting and rules
+	 */
+	private async scoreAndRankCampaigns(
+		campaigns: Campaign[],
+		request: AdRequest,
+		placement: AdPlacement
+	): Promise<Array<{ campaign: Campaign; score: number; bidPrice: number }>> {
+		const scoredCampaigns = [];
+
+		for (const campaign of campaigns) {
+			// Check targeting rules
+			const targetingScore = await this.calculateTargetingScore(campaign, request);
+			if (targetingScore === 0) continue; // Not targeted
+
+			// Apply campaign rules
+			const rulesResult = await this.applyCampaignRules(campaign, request, placement);
+			if (rulesResult.blocked) continue;
+
+			// Calculate final score
+			const qualityScore = campaign.qualityScore?.toNumber() || 1.0;
+			const bidPrice = rulesResult.adjustedBid || campaign.bidAmount?.toNumber() || 0;
+			const finalScore = targetingScore * qualityScore * bidPrice;
+
+			scoredCampaigns.push({
+				campaign,
+				score: finalScore,
+				bidPrice
+			});
+		}
+
+		return scoredCampaigns.sort((a, b) => b.score - a.score);
+	}
+
+	/**
+	 * Calculate targeting score (0-1) based on user profile
+	 */
+	private async calculateTargetingScore(campaign: Campaign, request: AdRequest): Promise<number> {
+		const targetingRules = campaign.targetingRules as any;
+		if (!targetingRules || Object.keys(targetingRules).length === 0) {
+			return 1.0; // No targeting = everyone
+		}
+
+		let score = 1.0;
+
+		// Device targeting
+		if (targetingRules.deviceTypes?.length > 0) {
+			if (!targetingRules.deviceTypes.includes(request.deviceInfo.type)) {
+				return 0;
+			}
+		}
+
+		// Geographic targeting
+		if (targetingRules.geoRegions?.length > 0) {
+			if (!targetingRules.geoRegions.includes(request.geoData.region)) {
+				return 0;
+			}
+		}
+
+		// Interest targeting
+		if (targetingRules.interestSegments?.length > 0 && request.userContext.interestSegments) {
+			const overlap = targetingRules.interestSegments.filter((segment: string) =>
+				request.userContext.interestSegments!.includes(segment)
+			);
+			score *= overlap.length / targetingRules.interestSegments.length;
+		}
+
+		// DGT balance targeting
+		if (targetingRules.dgtBalanceTiers?.length > 0) {
+			if (!targetingRules.dgtBalanceTiers.includes(request.userContext.dgtBalanceTier)) {
+				score *= 0.5; // Partial match
+			}
+		}
+
+		// XP level targeting
+		if (targetingRules.minXpLevel && request.userContext.xpLevel) {
+			if (request.userContext.xpLevel < targetingRules.minXpLevel) {
+				return 0;
+			}
+		}
+
+		return Math.max(0, Math.min(1, score));
+	}
+
+	/**
+	 * Apply campaign rules for dynamic configuration
+	 */
+	private async applyCampaignRules(
+		campaign: Campaign,
+		request: AdRequest,
+		placement: AdPlacement
+	): Promise<{ blocked: boolean; adjustedBid?: number; metadata?: any }> {
+		// Get applicable rules
+		const rules = await db
+			.select()
+			.from(campaignRules)
+			.where(and(eq(campaignRules.campaignId, campaign.id), eq(campaignRules.isActive, true)))
+			.orderBy(asc(campaignRules.priority));
+
+		let blocked = false;
+		let bidMultiplier = 1.0;
+		const metadata: any = {};
+
+		for (const rule of rules) {
+			const ruleResult = this.evaluateRule(rule, request, placement);
+
+			if (ruleResult.block) {
+				blocked = true;
+				break;
+			}
+
+			if (ruleResult.bidAdjustment) {
+				bidMultiplier *= ruleResult.bidAdjustment;
+			}
+
+			if (ruleResult.metadata) {
+				Object.assign(metadata, ruleResult.metadata);
+			}
+		}
+
+		const originalBid = campaign.bidAmount?.toNumber() || 0;
+		const adjustedBid = originalBid * bidMultiplier;
+
+		return {
+			blocked,
+			adjustedBid: adjustedBid !== originalBid ? adjustedBid : undefined,
+			metadata: Object.keys(metadata).length > 0 ? metadata : undefined
+		};
+	}
+
+	/**
+	 * Evaluate individual campaign rule
+	 */
+	private evaluateRule(
+		rule: any,
+		request: AdRequest,
+		placement: AdPlacement
+	): { block?: boolean; bidAdjustment?: number; metadata?: any } {
+		const conditions = rule.conditions as any[];
+		const actions = rule.actions as any[];
+
+		// Check all conditions
+		for (const condition of conditions) {
+			if (!this.evaluateCondition(condition, request, placement)) {
+				return {}; // Condition not met, skip rule
+			}
+		}
+
+		// All conditions met, apply actions
+		const result: any = {};
+
+		for (const action of actions) {
+			switch (action.type) {
+				case 'block_ad':
+					result.block = true;
+					break;
+				case 'adjust_bid':
+					result.bidAdjustment = action.parameters.multiplier;
+					break;
+				case 'set_metadata':
+					result.metadata = { ...result.metadata, ...action.parameters };
+					break;
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Evaluate rule condition
+	 */
+	private evaluateCondition(condition: any, request: AdRequest, placement: AdPlacement): boolean {
+		const { field, operator, value } = condition;
+
+		let fieldValue: any;
+
+		// Extract field value from request
+		switch (field) {
+			case 'device.type':
+				fieldValue = request.deviceInfo.type;
+				break;
+			case 'geo.region':
+				fieldValue = request.geoData.region;
+				break;
+			case 'user.xpLevel':
+				fieldValue = request.userContext.xpLevel;
+				break;
+			case 'user.dgtBalanceTier':
+				fieldValue = request.userContext.dgtBalanceTier;
+				break;
+			case 'placement.priority':
+				fieldValue = placement.priority;
+				break;
+			default:
+				return false;
+		}
+
+		// Apply operator
+		switch (operator) {
+			case 'equals':
+				return fieldValue === value;
+			case 'not_equals':
+				return fieldValue !== value;
+			case 'greater_than':
+				return Number(fieldValue) > Number(value);
+			case 'less_than':
+				return Number(fieldValue) < Number(value);
+			case 'in':
+				return Array.isArray(value) && value.includes(fieldValue);
+			case 'contains':
+				return Array.isArray(fieldValue) && fieldValue.includes(value);
+			default:
+				return false;
+		}
+	}
+
+	/**
+	 * Select winning campaign using auction logic
+	 */
+	private selectWinningCampaign(
+		scoredCampaigns: Array<{ campaign: Campaign; score: number; bidPrice: number }>
+	): { campaign: Campaign; bidPrice: number } | null {
+		if (scoredCampaigns.length === 0) return null;
+
+		// Simple highest score wins (could implement second-price auction)
+		return scoredCampaigns[0];
+	}
+
+	/**
+	 * Generate final ad response
+	 */
+	private async generateAdResponse(
+		winner: { campaign: Campaign; bidPrice: number },
+		placement: AdPlacement,
+		request: AdRequest
+	): Promise<AdResponse> {
+		const { campaign, bidPrice } = winner;
+		const creativeAssets = campaign.creativeAssets as any;
+
+		// Select appropriate creative based on placement
+		const creative = this.selectCreative(creativeAssets, placement);
+
+		// Generate tracking URLs
+		const trackingUrls = this.generateTrackingUrls(campaign.id, placement.id, request.sessionId);
+
+		// Calculate DGT reward if applicable
+		const dgtReward = this.calculateDgtReward(campaign, request);
+
+		return {
+			adId: `ad_${campaign.id}_${Date.now()}`,
+			campaignId: campaign.id,
+			creative: {
+				type: creative.type,
+				content: creative.content,
+				dimensions: placement.dimensions || '300x250',
+				clickUrl: trackingUrls.clickUrl
+			},
+			tracking: trackingUrls,
+			dgtReward,
+			metadata: {
+				bidPrice,
+				currency: 'DGT',
+				qualityScore: campaign.qualityScore?.toNumber() || 1.0
+			}
+		};
+	}
+
+	/**
+	 * Select appropriate creative for placement
+	 */
+	private selectCreative(creativeAssets: any[], placement: AdPlacement): any {
+		// Find creative that matches placement dimensions
+		const matchingCreative = creativeAssets.find(
+			(creative) => creative.dimensions === placement.dimensions
+		);
+
+		return (
+			matchingCreative ||
+			creativeAssets[0] || {
+				type: 'banner',
+				content: '<div>Default Ad</div>',
+				dimensions: placement.dimensions
+			}
+		);
+	}
+
+	/**
+	 * Generate tracking URLs for analytics
+	 */
+	private generateTrackingUrls(
+		campaignId: string,
+		placementId: string,
+		sessionId: string
+	): { impressionUrl: string; clickUrl: string; conversionUrl?: string } {
+		const baseUrl = process.env.DOMAIN || 'https://degentalk.com';
+		const trackingParams = `campaign=${campaignId}&placement=${placementId}&session=${sessionId}`;
+
+		return {
+			impressionUrl: `${baseUrl}/api/ad/track/impression?${trackingParams}`,
+			clickUrl: `${baseUrl}/api/ad/track/click?${trackingParams}`,
+			conversionUrl: `${baseUrl}/api/ad/track/conversion?${trackingParams}`
+		};
+	}
+
+	/**
+	 * Calculate DGT reward for user engagement
+	 */
+	private calculateDgtReward(
+		campaign: Campaign,
+		request: AdRequest
+	): { amount: number; condition: string } | undefined {
+		const campaignType = campaign.type;
+
+		if (campaignType === 'user_reward') {
+			// User gets DGT for viewing/clicking ads
+			const baseReward = 0.1; // 0.1 DGT base
+			const xpMultiplier = Math.min(2.0, 1 + (request.userContext.xpLevel || 1) / 100);
+
+			return {
+				amount: baseReward * xpMultiplier,
+				condition: 'click'
+			};
+		}
+
+		return undefined;
+	}
+
+	/**
+	 * Track impression asynchronously to avoid blocking response
+	 */
+	private async trackImpressionAsync(
+		winner: { campaign: Campaign; bidPrice: number },
+		placement: AdPlacement,
+		request: AdRequest,
+		response: AdResponse
+	): Promise<void> {
+		// Use setTimeout to avoid blocking the response
+		setTimeout(async () => {
+			try {
+				await db.insert(adImpressions).values({
+					id: BigInt(Date.now()), // Simple ID generation
+					campaignId: winner.campaign.id,
+					placementId: placement.id,
+					userHash: request.userHash || null,
+					sessionId: request.sessionId,
+					interactionType: 'impression',
+					bidPrice: winner.bidPrice.toString(),
+					paidPrice: winner.bidPrice.toString(),
+					revenue: (winner.bidPrice * 0.7).toString(), // 70% revenue share
+					currency: 'DGT',
+					forumSlug: request.forumSlug || null,
+					threadId: request.threadId || null,
+					deviceInfo: request.deviceInfo,
+					geoData: request.geoData,
+					dgtRewardAmount: response.dgtReward?.amount?.toString() || null,
+					qualityScore: response.metadata.qualityScore.toString()
+				});
+			} catch (error) {
+				console.error('Failed to track impression:', error);
+			}
+		}, 0);
+	}
+}
+
+export const adServingService = new AdServingService();

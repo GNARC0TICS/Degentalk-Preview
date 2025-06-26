@@ -188,5 +188,13 @@ export * from './wallet/supported-tokens';
 // Collectibles domain exports - Sticker system
 export * from './collectibles/stickers';
 
+// Advertising domain exports
+export * from './advertising/campaigns';
+export * from './advertising/placements';
+export * from './advertising/targeting';
+export * from './advertising/performance';
+export * from './advertising/payments';
+export * from './advertising/user-promotions';
+
 // Note: './forum/threadDrafts.ts' was commented out as it was empty in the previous steps.
 // Ensure all files listed for export actually exist and contain exports.
