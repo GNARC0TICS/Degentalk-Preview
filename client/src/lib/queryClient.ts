@@ -49,8 +49,10 @@ export const getQueryFn: <T>(options: { on401: UnauthorizedBehavior }) => QueryF
 		return await res.json();
 	};
 
-// Create a new query client
-export const queryClient = new QueryClient({
+// DEPRECATED: Use the QueryClient from root-provider.tsx instead
+// This instance was causing conflicts with the main app QueryClient
+// Keeping for reference but should not be used in new code
+export const legacyQueryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			queryFn: getQueryFn({ on401: 'throw' }),
@@ -64,6 +66,10 @@ export const queryClient = new QueryClient({
 		}
 	}
 });
+
+// Export the legacy one as queryClient for backward compatibility
+// TODO: Remove after all imports are updated to use the main QueryClient
+export const queryClient = legacyQueryClient;
 
 // Type for XP gain response
 interface XpGainResponse {

@@ -10,7 +10,7 @@ import {
 	real
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { userGroups } from '../user/userGroups';
+import { roles } from '../user/roles'; // Use roles instead of deprecated userGroups
 
 /**
  * Forum Structure Table
@@ -44,7 +44,7 @@ export const forumStructure = pgTable('forum_structure', {
 	isLocked: boolean('is_locked').notNull().default(false),
 	minXp: integer('min_xp').notNull().default(0),
 	isHidden: boolean('is_hidden').notNull().default(false),
-	minGroupIdRequired: integer('min_group_id_required').references(() => userGroups.id, {
+	minGroupIdRequired: integer('min_group_id_required').references(() => roles.id, {
 		onDelete: 'set null'
 	}),
 

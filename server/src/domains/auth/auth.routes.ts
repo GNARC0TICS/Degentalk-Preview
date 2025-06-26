@@ -38,7 +38,11 @@ export function setupAuthPassport(sessionStore: any) {
 		new LocalStrategy(async (username, password, done) => {
 			try {
 				// In dev mode, we can bypass the password check
-				if (isDevMode() && process.env.DEV_BYPASS_PASSWORD === 'true') {
+				if (
+					isDevMode() &&
+					process.env.DEV_BYPASS_PASSWORD === 'true' &&
+					process.env.DEV_FORCE_AUTH !== 'true'
+				) {
 					const user = await storage.getUserByUsername(username);
 
 					if (!user) {
@@ -112,12 +116,15 @@ export function setupAuthPassport(sessionStore: any) {
 	});
 
 	// Configure user deserialization (retrieving user from session)
-	passport.deserializeUser(async (id: number, done) => {
+	passport.deserializeUser(async (id: number | string, done) => {
+		console.log('🔑 Passport deserializeUser called with ID:', id, 'type:', typeof id);
 		try {
 			// Try to get user from storage
 			try {
+				console.log('🔍 Calling storage.getUser from deserializer...');
 				const user = await storage.getUser(id);
 				if (user) {
+					console.log('✅ Deserializer got user from storage:', JSON.stringify(user, null, 2));
 					// Ensure role is not null and groupId is undefined if null
 					const userWithRole = {
 						...user,
@@ -125,8 +132,11 @@ export function setupAuthPassport(sessionStore: any) {
 						groupId: user.groupId === null ? undefined : user.groupId
 					};
 					return done(null, userWithRole);
+				} else {
+					console.log('❌ Deserializer: storage.getUser returned null/undefined');
 				}
 			} catch (storageErr) {
+				console.log('❌ Deserializer: storage.getUser threw error:', storageErr);
 				logger.warn('AuthRoutes', 'Storage getUser error during deserialization, falling back.', {
 					err: storageErr,
 					userId: id
@@ -136,9 +146,11 @@ export function setupAuthPassport(sessionStore: any) {
 
 			// If in development mode, create a mock user
 			if (isDevMode()) {
+				console.log('⚠️ Deserializer: Creating mock user in dev mode for ID:', id);
 				// Check if there's a dev role stored in session
 				const role = (global as any).devRole || 'user';
 				const mockUser = createMockUser(id, role as any);
+				console.log('🎭 Mock user created:', JSON.stringify(mockUser, null, 2));
 				// Ensure role is not null and groupId is undefined if null for mock user too
 				const mockUserWithRole = {
 					...mockUser,

@@ -41,38 +41,28 @@ interface HeaderProviderProps {
 	theme?: HeaderTheme;
 }
 
-// Check if we're in development mode
-const isDevelopment = import.meta.env.DEV;
-
 export function HeaderProvider({ children, theme }: HeaderProviderProps) {
-	const { user, isLoading } = useAuthWrapper() || {};
+	// CRITICAL: Use the auth wrapper to get the SAME auth state as useAuth hook
+	// This ensures the header UI is always in sync with the main auth state
+	const { user, isLoading, isAuthenticated } = useAuthWrapper() || {};
 
-	// State
+	// Local UI state (not auth-related)
 	const [walletOpen, setWalletOpen] = useState(false);
 	const [notificationsOpen, setNotificationsOpen] = useState(false);
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [currentTheme, setCurrentTheme] = useState<HeaderTheme | undefined>(theme);
 
-	// Mock data for development
-	const mockUser: HeaderUser = {
-		username: 'DevUser',
-		level: 99,
-		xp: 15750,
-		isAdmin: true,
-		isModerator: true
-	};
-
-	// Determine auth status
+	// AUTH STATE MAPPING: Convert auth hook state to header-specific auth status
+	// This function maps the boolean auth state to the header's enum-based status
 	const getAuthStatus = (): AuthStatus => {
-		if (isDevelopment) {
-			return 'admin'; // Always admin in dev
-		}
-
 		if (isLoading) {
 			return 'loading';
 		}
 
-		if (!user) {
+		// CRITICAL: Use isAuthenticated flag to ensure consistency with useAuth
+		// This prevents the "login button → authenticated UI" bug by using the same
+		// auth determination logic as the main auth hook
+		if (!isAuthenticated || !user) {
 			return 'guest';
 		}
 
@@ -83,8 +73,9 @@ export function HeaderProvider({ children, theme }: HeaderProviderProps) {
 		return 'user';
 	};
 
-	// Get display user
-	const displayUser = isDevelopment ? mockUser : (user as HeaderUser | undefined);
+	// DEFENSIVE USER DATA: Only show user when actually authenticated
+	// This prevents stale user data from being displayed when auth state is invalid
+	const displayUser = isAuthenticated && user ? (user as HeaderUser) : undefined;
 
 	// Scroll detection
 	useEffect(() => {

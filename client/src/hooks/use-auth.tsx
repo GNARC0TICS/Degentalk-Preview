@@ -154,9 +154,14 @@ const mockUsers: Record<MockRole, User> = {
 	}
 };
 
-// Real AuthProvider Implementation
+// MAIN AUTH PROVIDER - Single source of truth for authentication state
+// This provider manages all authentication logic and state for the entire application
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+	// CRITICAL: Use the QueryClient from the provider context (RootProvider)
+	// This ensures we're using the same instance with on401: 'returnNull' configuration
 	const queryClient = useQueryClient();
+
+	// LOCAL AUTH STATE: These manage the internal auth state
 	const [userState, setUserState] = useState<User | null>(null);
 	const [authError, setAuthError] = useState<string | null>(null);
 	const [isInitialLoading, setIsInitialLoading] = useState(true);
@@ -168,62 +173,56 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		return false;
 	});
 
-	const isDevelopment = import.meta.env.MODE === 'development';
+	// CACHE CLEARING: Remove any stale auth data on provider initialization
+	// This prevents the "login button → authenticated UI" bug by ensuring
+	// we start with a clean slate each time the provider mounts
+	React.useEffect(() => {
+		queryClient.removeQueries({ queryKey: ['/api/auth/user'] });
+	}, []);
+
+	const isDevelopment =
+		import.meta.env.MODE === 'development' && import.meta.env.VITE_FORCE_AUTH !== 'true';
 	const [, navigate] = useLocation();
 
-	// Fetch user data on initial load (only in production)
+	// USER AUTHENTICATION QUERY: This is the core auth validation
+	// Uses the RootProvider's QueryClient which has on401: 'returnNull' configured
+	// This means 401 responses return null instead of throwing errors
 	const {
 		data: fetchedUser,
 		isLoading: userLoading,
 		error: userError
 	} = useQuery<User | null, Error>({
-		queryKey: ['user'],
-		queryFn: async () => {
-			// Skip fetch entirely in dev mode
-			if (isDevelopment) return null;
-			try {
-				const response = await apiRequest<User>({
-					url: '/user',
-					method: 'GET'
-				});
-				return response;
-			} catch (error: any) {
-				if (error.status === 401) {
-					return null; // Not logged in, return null
-				}
-				throw error; // Re-throw other errors
-			}
-		},
-		enabled: !isDevelopment, // Only run this query in production
-		retry: false,
-		refetchOnWindowFocus: false,
-		staleTime: Infinity
+		queryKey: ['/api/auth/user'], // URL-based key matches backend endpoint
+		enabled: true, // Always fetch user data on mount
+		retry: false, // Don't retry failed auth attempts
+		refetchOnWindowFocus: false, // Don't refetch when window gains focus
+		staleTime: Infinity // Cache auth data until explicitly invalidated
 	});
 
-	// Handle User State based on Mode (Dev vs Prod)
+	// Handle User State - Always use real authentication
 	useEffect(() => {
-		if (isDevelopment) {
-			// Dev Mode: Use the currently selected mock user, but respect logout state
-			// Don't restore mock user if user has explicitly logged out
-			if (!isLoggedOut) {
-				setUserState(mockUsers[currentMockRoleState]);
-			}
+		if (!userLoading) {
+			// Only set user state if we actually have valid user data
+			// If fetchedUser is null (401 response), clear the user state
+			setUserState(fetchedUser ?? null);
 			setIsInitialLoading(false);
-		} else {
-			// Production Mode: Use fetched user data
-			if (!userLoading) {
-				setUserState(fetchedUser ?? null);
-				setIsInitialLoading(false);
+
+			// Debug log to track auth state changes
+			if (import.meta.env.MODE === 'development') {
+				console.log('[AUTH] User state update:', {
+					userLoading,
+					fetchedUser: fetchedUser ? 'user object' : 'null',
+					willSetAuthenticated: !!fetchedUser
+				});
 			}
 		}
-		// Update userState whenever the selected mock role changes in dev mode
-	}, [isDevelopment, currentMockRoleState, fetchedUser, userLoading, userError, isLoggedOut]);
+	}, [fetchedUser, userLoading]);
 
 	// Login Mutation (Only really used in Production)
 	const loginMutation = useMutation<User, Error, { username: string; password: string }>({
 		mutationFn: async (credentials) => {
 			return await apiRequest<User>({
-				url: '/login',
+				url: '/api/auth/login',
 				method: 'POST',
 				data: credentials
 			});
@@ -235,7 +234,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			if (import.meta.env.MODE === 'development') {
 				sessionStorage.removeItem('dev_loggedOut');
 			}
-			queryClient.setQueryData(['user'], loggedInUser); // Update user query cache
+			queryClient.setQueryData(['/api/auth/user'], loggedInUser); // Update user query cache
 		},
 		onError: (error) => {
 			setAuthError(error.message || 'Login failed');
@@ -251,7 +250,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	>({
 		mutationFn: async (userData) => {
 			return await apiRequest<User>({
-				url: '/register',
+				url: '/api/auth/register',
 				method: 'POST',
 				data: userData
 			});
@@ -263,7 +262,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			if (import.meta.env.MODE === 'development') {
 				sessionStorage.removeItem('dev_loggedOut');
 			}
-			queryClient.setQueryData(['user'], registeredUser); // Update user query cache
+			queryClient.setQueryData(['/api/auth/user'], registeredUser); // Update user query cache
 		},
 		onError: (error) => {
 			setAuthError(error.message || 'Registration failed');
@@ -275,7 +274,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const logoutMutation = useMutation<void, Error, void>({
 		mutationFn: async () => {
 			await apiRequest<void>({
-				url: '/logout',
+				url: '/api/auth/logout',
 				method: 'POST'
 			});
 		},
@@ -286,7 +285,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			if (import.meta.env.MODE === 'development') {
 				sessionStorage.setItem('dev_loggedOut', '1');
 			}
-			queryClient.setQueryData(['user'], null); // Clear user query cache
+			queryClient.setQueryData(['/api/auth/user'], null); // Clear user query cache
 			queryClient.clear(); // Clear all query cache on logout
 
 			// Client-side navigation keeps React tree mounted (no auto-login reset)
@@ -302,7 +301,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			if (import.meta.env.MODE === 'development') {
 				sessionStorage.setItem('dev_loggedOut', '1');
 			}
-			queryClient.setQueryData(['user'], null);
+			queryClient.setQueryData(['/api/auth/user'], null);
 
 			// Navigate even on error
 			navigate('/auth');
@@ -319,10 +318,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	};
 
 	// Consolidate context value
-	const authContextValue = useMemo(
-		() => ({
+	const authContextValue = useMemo(() => {
+		const isAuthenticated = !!userState;
+
+		// Debug log for auth context changes
+		if (import.meta.env.MODE === 'development') {
+			console.log('[AUTH] Context value update:', {
+				userState: userState ? `${userState.username} (ID: ${userState.id})` : 'null',
+				isAuthenticated,
+				isInitialLoading,
+				userLoading,
+				userRole: userState?.role,
+				userLevel: userState?.level
+			});
+		}
+
+		return {
 			user: userState,
-			isAuthenticated: !!userState,
+			isAuthenticated,
 			isLoading:
 				isInitialLoading ||
 				loginMutation.isPending ||
@@ -340,23 +353,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			loginMutation,
 			registerMutation,
 			logoutMutation,
-			// --- Dev Mode Specific ---
-			isDevMode: isDevelopment,
-			currentMockRole: isDevelopment ? currentMockRoleState : null,
-			setMockRole: isDevelopment ? setMockRole : () => {}
-		}),
-		[
-			userState,
-			isInitialLoading,
-			authError,
-			loginMutation,
-			registerMutation,
-			logoutMutation,
-			queryClient,
-			isDevelopment,
-			currentMockRoleState
-		]
-	);
+			// --- Dev Mode Specific --- (Disabled for wallet testing)
+			isDevMode: false,
+			currentMockRole: null,
+			setMockRole: () => {}
+		};
+	}, [
+		userState,
+		isInitialLoading,
+		authError,
+		loginMutation,
+		registerMutation,
+		logoutMutation,
+		userLoading
+	]);
 
 	// Development-only check for duplicate providers
 	React.useEffect(() => {

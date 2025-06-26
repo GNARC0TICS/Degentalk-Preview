@@ -11,7 +11,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
-import { userGroups } from '../user/userGroups'; // Adjusted path
+import { roles } from '../user/roles'; // Use roles instead of deprecated userGroups
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
@@ -22,7 +22,7 @@ export const chatRooms = pgTable(
 		name: varchar('name', { length: 100 }).notNull(),
 		description: text('description'),
 		isPrivate: boolean('is_private').notNull().default(false),
-		minGroupIdRequired: integer('min_group_id_required').references(() => userGroups.id, {
+		minGroupIdRequired: integer('min_group_id_required').references(() => roles.id, {
 			onDelete: 'set null'
 		}),
 		minXpRequired: integer('min_xp_required').default(0),

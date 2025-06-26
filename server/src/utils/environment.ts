@@ -29,6 +29,9 @@ export const shouldBypassAuth = (): boolean => {
 	// Additional safety check for production deployment
 	if (process.env.NODE_ENV === 'production') return false;
 
+	// WALLET TESTING: Force real authentication even in dev mode
+	if (process.env.DEV_FORCE_AUTH === 'true') return false;
+
 	// In development, we can have an additional flag to force auth
 	return isDevMode() && process.env.DEV_FORCE_AUTH !== 'true';
 };

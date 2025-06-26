@@ -1,6 +1,6 @@
 // WALLET FINALIZATION ON HOLD - Do not prioritize wallet-related features.
 
-import { users, userGroups } from '@schema';
+import { users, roles } from '@schema';
 import { eq } from 'drizzle-orm';
 import { pool } from '@db';
 import * as crypto from 'crypto';
@@ -11,17 +11,16 @@ import { config } from 'dotenv';
 export async function seedDevUser() {
 	console.log('👤 [SEED-DEV-USER] Starting dev user seeding process...');
 	try {
-		// Ensure default admin group (group_id = 1) exists
-		const groupCheck = await pool.query(`SELECT group_id FROM user_groups WHERE group_id = 1`);
-		if (groupCheck.rows.length === 0) {
-			// Using 'name' as per shared/schema.ts for the group's name.
+		// Ensure default admin role (role_id = 1) exists
+		const roleCheck = await pool.query(`SELECT role_id FROM roles WHERE role_id = 1`);
+		if (roleCheck.rows.length === 0) {
 			await pool.query(`
-        INSERT INTO user_groups (group_id, name, permissions) 
-        VALUES (1, 'Administrators', '{"admin": true, "default": false, "isStaff": true, "isAdmin": true}') 
-        ON CONFLICT (group_id) DO NOTHING
+        INSERT INTO roles (role_id, name, slug, is_admin, is_staff, permissions) 
+        VALUES (1, 'Administrator', 'admin', true, true, '{"admin": true, "manage_users": true, "manage_content": true}') 
+        ON CONFLICT (role_id) DO NOTHING
       `);
-			console.log('✅ [SEED-DEV-USER] Ensured default admin group (ID: 1) exists.');
-			logger.info('USER_SEED', '✅ Ensured default admin group (ID: 1) exists.');
+			console.log('✅ [SEED-DEV-USER] Ensured default admin role (ID: 1) exists.');
+			logger.info('USER_SEED', '✅ Ensured default admin role (ID: 1) exists.');
 		}
 
 		const existingResult = await pool.query(`SELECT user_id FROM users WHERE username = 'DevUser'`);
@@ -32,8 +31,6 @@ export async function seedDevUser() {
           username,
           email,
           password_hash,
-          uuid,
-          group_id,
           level,
           xp,
           is_active,
@@ -46,8 +43,6 @@ export async function seedDevUser() {
           'DevUser',
           'dev@degen.io',
           'mocked_hash',
-          '${crypto.randomUUID()}',
-          1,
           99,
           9999,
           true,

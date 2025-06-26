@@ -315,6 +315,93 @@ npm run kill-ports
 5. **`.cursor/rules/`** - Development rules and patterns
 6. **`db/schema/index.ts`** - Complete database schema exports
 
+## 🔐 Authentication System Architecture
+
+### 🔧 Auth Flow Overview
+
+DegenTalk uses a **unified authentication system** with the following components:
+
+1. **Single QueryClient**: `client/src/providers/root-provider.tsx` contains the ONLY QueryClient instance
+2. **Unified Auth Hook**: `client/src/hooks/use-auth.tsx` is the single source of truth for auth state
+3. **Header Integration**: `client/src/components/header/HeaderContext.tsx` syncs with auth state
+4. **Backend Auth**: Session-based authentication with Passport.js
+
+### 🔗 Critical Auth Components
+
+| Component       | Purpose                                     | Key Features                               |
+| --------------- | ------------------------------------------- | ------------------------------------------ |
+| `RootProvider`  | Main QueryClient with `on401: 'returnNull'` | Handles 401s gracefully for auth           |
+| `AuthProvider`  | Auth state management                       | Real auth validation, cache clearing       |
+| `HeaderContext` | UI auth state sync                          | Syncs with `useAuth` via `isAuthenticated` |
+| `use-auth.tsx`  | Auth business logic                         | Login/logout, session validation           |
+
+### 🚨 Auth Development Rules
+
+**DO:**
+
+- Use `useAuth()` hook for all auth state
+- Use `isAuthenticated` flag from auth context
+- Clear auth cache on logout: `queryClient.setQueryData(['/api/auth/user'], null)`
+- Use URL-based query keys: `['/api/auth/user']` not `['user']`
+- Use `roles` instead of deprecated `userGroups`
+
+**DON'T:**
+
+- Create multiple QueryClient instances
+- Use deprecated `userGroups` schema exports
+- Bypass auth state with manual user objects
+- Use custom 401 handling (QueryClient handles it)
+- Import `queryClient` from `@/lib/queryClient` (use provider's instance)
+
+### 🔄 Environment Configuration
+
+```bash
+# env.local - Force real authentication
+NODE_ENV=development
+DEV_FORCE_AUTH=true          # Forces real auth in dev
+DEV_BYPASS_PASSWORD=false    # Disables password bypass
+VITE_FORCE_AUTH=true         # Frontend auth forcing
+```
+
+### 🛠️ Auth Debugging
+
+```javascript
+// Browser console - check auth state
+console.log('[AUTH] Current state:', {
+	isAuthenticated: !!user,
+	userState: user ? `${user.username} (${user.id})` : 'null'
+});
+```
+
+### 🔧 Common Auth Issues
+
+| Issue                                           | Solution                                           |
+| ----------------------------------------------- | -------------------------------------------------- |
+| "Login button → notifications/wallet instantly" | Cached auth state. Clear browser cache             |
+| "Multiple auth providers error"                 | Only use AuthProvider in RootProvider              |
+| "QueryClient conflicts"                         | Use only the RootProvider QueryClient              |
+| "401 errors not handled"                        | Ensure `on401: 'returnNull'` in QueryClient config |
+| "userGroups import errors"                      | Replace with `roles` import                        |
+
+### 🏗️ Auth Architecture Flow
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   RootProvider  │ -> │   AuthProvider   │ -> │  HeaderContext  │
+│                 │    │                  │    │                 │
+│ • QueryClient   │    │ • useQuery auth  │    │ • UI sync       │
+│ • on401: null   │    │ • State mgmt     │    │ • isAuth flag   │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                        │                        │
+         v                        v                        v
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ Browser Storage │    │   Auth Session   │    │   UI Elements   │
+│                 │    │                  │    │                 │
+│ • Clear on init │    │ • Server session │    │ • Login/Logout  │
+│ • Cache keys    │    │ • Passport.js    │    │ • User menu     │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+```
+
 ## Common Issues & Solutions
 
 ### Port Conflicts
@@ -335,6 +422,16 @@ TypeScript checking is temporarily disabled during major refactor. Use `npm run 
 ### Forum Configuration Changes
 
 Always run `npm run sync:forums` after editing `forumMap.config.ts`
+
+### Authentication Issues
+
+```bash
+# Clear auth cache and reload
+# Option 1: Clear browser data (Dev Tools → Application → Storage → Clear storage)
+# Option 2: Check auth state in browser console (see Auth Debugging above)
+```
+
+**📖 For detailed migration help, see: `docs/AUTH-MIGRATION-GUIDE.md`**
 
 ## 💳 DGT Wallet System Integration (COMPLETE)
 

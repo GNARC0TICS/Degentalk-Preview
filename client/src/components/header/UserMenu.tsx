@@ -75,17 +75,17 @@ interface UserMenuProps {
 export function UserMenu({ className, onLogout }: UserMenuProps) {
 	const { user, toggleWallet } = useHeader();
 
-	if (!user) {
+	if (!user || !user.username) {
 		return null;
 	}
 
-	const nextLevelXp = calculateNextLevelXp(user.level + 1);
-	const progressPercentage = (user.xp / nextLevelXp) * 100;
+	const nextLevelXp = calculateNextLevelXp((user.level || 1) + 1);
+	const progressPercentage = ((user.xp || 0) / nextLevelXp) * 100;
 
 	const menuItems = createUserMenuItems(
 		user.username,
-		user.isAdmin,
-		user.isModerator,
+		user.isAdmin || false,
+		user.isModerator || false,
 		toggleWallet,
 		onLogout
 	);

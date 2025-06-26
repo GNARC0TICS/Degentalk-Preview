@@ -15,8 +15,7 @@ import { AuthButtons } from './AuthButtons';
 import { MobileNav } from './MobileNav';
 import { useHeader } from './HeaderContext';
 
-// Check if we're in development mode
-const isDevelopment = import.meta.env.DEV;
+// Removed dev mode check - using real auth only
 
 export function SiteHeader() {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

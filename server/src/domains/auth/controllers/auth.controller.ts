@@ -127,14 +127,24 @@ export async function register(req: Request, res: Response, next: NextFunction) 
  * Handle user login
  */
 export function login(req: Request, res: Response, next: NextFunction) {
+	console.log('🔐 Login attempt for username:', req.body.username);
 	passport.authenticate('local', (err: Error, user: any, info: any) => {
-		if (err) return next(err);
+		console.log('🔍 Passport authenticate callback:', { err: !!err, user: !!user, info });
+		if (err) {
+			console.log('❌ Authentication error:', err);
+			return next(err);
+		}
 		if (!user) {
+			console.log('❌ Authentication failed:', info?.message || 'No user returned');
 			return res.status(401).json({ message: info?.message || 'Authentication failed' });
 		}
 
+		console.log('✅ User authenticated, logging in:', user.username, user.id);
 		req.login(user, async (err) => {
-			if (err) return next(err);
+			if (err) {
+				console.log('❌ req.login error:', err);
+				return next(err);
+			}
 
 			// Ensure wallet is initialized for existing users
 			if (walletConfig.WALLET_ENABLED && user.id) {

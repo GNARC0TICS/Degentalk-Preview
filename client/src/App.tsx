@@ -516,7 +516,9 @@ function App() {
 				</React.Suspense>
 				<Toaster />
 				{/* Conditionally render the DevRoleSwitcher */}
-				{import.meta.env.MODE === 'development' && <DevRoleSwitcher />}
+				{import.meta.env.MODE === 'development' && import.meta.env.VITE_FORCE_AUTH !== 'true' && (
+					<DevRoleSwitcher />
+				)}
 				{import.meta.env.MODE === 'development' && <DevPlaygroundShortcut />}
 			</div>
 		</HeaderProvider>

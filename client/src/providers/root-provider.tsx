@@ -9,11 +9,17 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { ProfileCardProvider } from '@/contexts/ProfileCardContext';
 import { getQueryFn } from '@/lib/queryClient';
 
-// Initialize React Query client
+// Initialize React Query client - MAIN APPLICATION QUERY CLIENT
+// This is the PRIMARY QueryClient instance used throughout the application
+// Configuration:
+// - on401: 'returnNull' - Returns null for 401 responses instead of throwing errors
+//   This is essential for authentication flows where 401 means "not logged in"
+// - refetchOnWindowFocus: false - Prevents unnecessary refetches on window focus
+// - retry: 1 - Only retry failed requests once to avoid excessive network calls
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
-			queryFn: getQueryFn({ on401: 'returnNull' }),
+			queryFn: getQueryFn({ on401: 'returnNull' }), // Critical for auth flow
 			refetchOnWindowFocus: false,
 			retry: 1
 		}
