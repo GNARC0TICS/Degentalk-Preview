@@ -1,4 +1,5 @@
 import React, { useState, useRef, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loader';
@@ -17,6 +18,19 @@ import { useActiveUsers } from '@/features/users/hooks';
 import { getForumSpacing, getForumLayout } from '@/utils/spacing-constants';
 import { useForumTheme } from '@/contexts/ForumThemeProvider';
 import { THEME_COLORS_BG } from '@/config/themeConstants';
+import { Wide } from '@/layout/primitives';
+import { BackToHomeButton } from '@/components/common';
+import { ZoneCard } from '@/components/forum';
+import { ForumListItem } from '@/features/forum/components';
+import {
+	Accordion,
+	AccordionItem,
+	AccordionTrigger,
+	AccordionContent
+} from '@/components/ui/accordion';
+import { QuickStats } from '@/components/forum/QuickStats';
+import { HotTopics } from '@/components/forum/HotTopics';
+import { RecentActivity } from '@/components/forum/RecentActivity';
 
 // Temporary fallback palette for non-themed zones
 const CATEGORY_COLORS = [
@@ -39,6 +53,7 @@ export default function ForumsIndexPage() {
 	const { data: activeUsers = [], isLoading: activeUsersLoading } = useActiveUsers();
 
 	const [searchText, setSearchText] = useState('');
+	const carouselRef = useRef<HTMLDivElement>(null);
 
 	const { getTheme, setActiveTheme } = useForumTheme();
 
@@ -83,7 +98,7 @@ export default function ForumsIndexPage() {
 					slug: zone.slug,
 					description: zone.description || '',
 					icon: zone.icon ?? undefined,
-					colorTheme: zone.colorTheme || 'default',
+					colorTheme: zone.theme.colorTheme || 'default',
 					stats: {
 						activeUsers: 0,
 						totalThreads: zone.threadCount ?? 0,
@@ -113,7 +128,7 @@ export default function ForumsIndexPage() {
 				layout="compact"
 				showPreview={true}
 				className="flex-shrink-0 w-full max-w-md"
-				onEnter={() => zone.colorTheme && setActiveTheme(zone.colorTheme)}
+				onEnter={() => zone.theme.colorTheme && setActiveTheme(zone.theme.colorTheme)}
 			/>
 		);
 	};
@@ -133,7 +148,7 @@ export default function ForumsIndexPage() {
 		);
 		const totalChildPostCount = allForums.reduce((sum, forum) => sum + (forum.postCount || 0), 0);
 
-		const zoneSemanticThemeKey = zoneData.colorTheme || 'default';
+		const zoneSemanticThemeKey = zoneData.theme.colorTheme || 'default';
 		const theme = getTheme(zoneSemanticThemeKey);
 		const zoneColorClass =
 			(THEME_COLORS_BG as Record<string, string>)[zoneSemanticThemeKey] ??
@@ -143,8 +158,8 @@ export default function ForumsIndexPage() {
 		const zoneIconColorClass = theme.color || 'text-emerald-400';
 
 		// Set CSS variables for this zone once on render
-		if (zoneData.colorTheme) {
-			setActiveTheme(zoneData.colorTheme);
+		if (zoneData.theme.colorTheme) {
+			setActiveTheme(zoneData.theme.colorTheme);
 		}
 
 		const combinedThreadCount = zoneData.threadCount + totalChildThreadCount;
@@ -192,7 +207,7 @@ export default function ForumsIndexPage() {
 								key={forum.id.toString()}
 								forum={forum}
 								href={`/forums/${forum.slug}`}
-								parentZoneColor={zoneData.color ?? undefined}
+								parentZoneColor={zoneData.theme.color ?? undefined}
 							/>
 						))}
 					</div>

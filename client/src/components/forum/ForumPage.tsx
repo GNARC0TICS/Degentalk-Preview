@@ -104,24 +104,16 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 
 	// Fetch threads data
 	const { data: threads = [], isLoading } = useQuery({
-		queryKey: [API_ROUTES.forums.threadsByForum(forum?.id ?? 'none'), sortBy, searchQuery],
-		queryFn: async () => {
+		queryKey: [
+			`/api/forum/threads?structureId=${forum?.id ?? 'none'}&sort=${sortBy}&search=${encodeURIComponent(searchQuery)}`
+		],
+		queryFn: async ({ queryKey }) => {
 			if (!forum?.id) return [];
-			const response = await apiRequest<any>({
-				url: API_ROUTES.forums.threadsByForum(forum.id),
-				method: 'GET',
-				params: { sort: sortBy, search: searchQuery }
-			});
-			// API returns { success, data: { threads, ... } } OR array fallback
-			if (Array.isArray(response)) {
-				return response;
-			}
-			if (response?.data?.threads) {
-				return response.data.threads as ThreadData[];
-			}
-			if (response?.threads) {
-				return response.threads as ThreadData[];
-			}
+			const url = queryKey[0] as string;
+			const response = await apiRequest<any>({ url });
+			if (Array.isArray(response)) return response;
+			if (response?.data?.threads) return response.data.threads as ThreadData[];
+			if (response?.threads) return response.threads as ThreadData[];
 			return [];
 		},
 		enabled: !!forum?.id

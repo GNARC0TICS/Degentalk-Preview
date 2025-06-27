@@ -221,7 +221,10 @@ const ZoneCardPure = memo(
 						{showHotRibbonFeature && hasHotForums && (
 							<Link
 								href={`/zones/${derivedZone.slug}?filter=popular`}
-								className="absolute -left-6 top-3 -rotate-45 bg-red-600 text-white text-[10px] font-bold px-8 py-1 shadow-lg z-20"
+								className={cn(
+									'absolute -left-6 top-3 -rotate-45 badge--primary text-[10px] font-bold px-8 py-1 shadow-lg z-20',
+									theme.accent
+								)}
 								onClick={(e) => {
 									e.stopPropagation();
 									e.preventDefault();

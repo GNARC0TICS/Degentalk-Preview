@@ -609,3 +609,13 @@ body.no-motion *::after {
 	transition: none !important;
 	scroll-behavior: auto !important;
 }
+
+@layer components {
+	/* Primary badge driven by zone theme variable */
+	.badge--primary {
+		@apply inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors;
+		border-color: hsl(var(--zone-primary, 0 0% 100%));
+		color: hsl(var(--zone-primary, 0 0% 100%));
+		background-color: hsl(var(--zone-primary, 0 0% 100%) / 0.15);
+	}
+}
