@@ -1,6 +1,6 @@
 # Feature Scope Guide
 
-Generated on: 2025-06-25T06:23:29.713Z
+Generated on: 2025-06-26T19:44:47.040Z
 
 > NOTE: This file is auto-generated. Do not edit manually.
 
@@ -33,10 +33,12 @@ Generated on: 2025-06-25T06:23:29.713Z
 ### Frontend Pages
 - client/src/pages/admin/activity/index.tsx
 - client/src/pages/admin/activity/user/[userId].tsx
+- client/src/pages/admin/ad-management.tsx
 - client/src/pages/admin/admin-layout.tsx
 - client/src/pages/admin/airdrop.tsx
 - client/src/pages/admin/announcements/index.tsx
 - client/src/pages/admin/avatar-frames.tsx
+- client/src/pages/admin/brand-config.tsx
 - client/src/pages/admin/categories.tsx
 - client/src/pages/admin/clout/achievements.tsx
 - client/src/pages/admin/clout/grants.tsx
@@ -87,10 +89,13 @@ Generated on: 2025-06-25T06:23:29.713Z
 - client/src/pages/admin/xp/user-adjustment.tsx
 
 ### Frontend Components / Hooks / Services
+- client/src/components/admin/AdminDashboard.tsx
+- client/src/components/admin/AdminThemeProvider.tsx
 - client/src/components/admin/FeatureFlagRow.tsx
 - client/src/components/admin/GrantFrameModal.tsx
+- client/src/components/admin/ModularAdminLayout.tsx
+- client/src/components/admin/ModularAdminSidebar.tsx
 - client/src/components/admin/XpActionRow.tsx
-- client/src/components/admin/admin-sidebar.tsx
 - client/src/components/admin/clout/AchievementsSection.tsx
 - client/src/components/admin/clout/CloutGrantsSection.tsx
 - client/src/components/admin/clout/CloutLogsSection.tsx
@@ -138,6 +143,7 @@ Generated on: 2025-06-25T06:23:29.713Z
 - client/src/features/admin/components/dashboard/index.ts
 - client/src/features/admin/hooks/useSystemAnalytics.ts
 - client/src/features/admin/services/animation-pack-api.service.ts
+- client/src/features/admin/services/brandConfigApi.ts
 - client/src/features/admin/services/cloutAchievementsService.ts
 - client/src/features/admin/services/cloutGrantsService.ts
 - client/src/features/admin/services/economyConfigService.ts
@@ -179,7 +185,6 @@ Generated on: 2025-06-25T06:23:29.713Z
 - server/src/domains/admin/sub-domains/analytics/routes/stats.routes.ts
 - server/src/domains/admin/sub-domains/analytics/services/platformStats.service.ts
 - server/src/domains/admin/sub-domains/analytics/system-analytics.controller.ts
-- server/src/domains/admin/sub-domains/analytics/system-analytics.routes.ts
 - server/src/domains/admin/sub-domains/analytics/system-analytics.service.ts
 - server/src/domains/admin/sub-domains/analytics/system-analytics.validators.ts
 - server/src/domains/admin/sub-domains/animation-packs/animation-packs.controller.ts
@@ -197,6 +202,9 @@ Generated on: 2025-06-25T06:23:29.713Z
 - server/src/domains/admin/sub-domains/backup-restore/backup.service.ts
 - server/src/domains/admin/sub-domains/backup-restore/restore.service.ts
 - server/src/domains/admin/sub-domains/backup-restore/schedule.service.ts
+- server/src/domains/admin/sub-domains/brand-config/brand.controller.ts
+- server/src/domains/admin/sub-domains/brand-config/brand.routes.ts
+- server/src/domains/admin/sub-domains/brand-config/brand.service.ts
 - server/src/domains/admin/sub-domains/cache/cache.controller.ts
 - server/src/domains/admin/sub-domains/cache/cache.routes.ts
 - server/src/domains/admin/sub-domains/clout/clout.controller.ts
@@ -254,6 +262,8 @@ Generated on: 2025-06-25T06:23:29.713Z
 - server/src/domains/admin/sub-domains/social/social.controller.ts
 - server/src/domains/admin/sub-domains/social/social.routes.ts
 - server/src/domains/admin/sub-domains/social/social.service.ts
+- server/src/domains/admin/sub-domains/subscriptions/subscription.admin.controller.ts
+- server/src/domains/admin/sub-domains/subscriptions/subscription.admin.routes.ts
 - server/src/domains/admin/sub-domains/titles/titles.controller.ts
 - server/src/domains/admin/sub-domains/titles/titles.routes.ts
 - server/src/domains/admin/sub-domains/titles/titles.service.ts
@@ -293,6 +303,7 @@ Generated on: 2025-06-25T06:23:29.713Z
 - db/schema/admin/announcements.ts
 - db/schema/admin/auditLogs.ts
 - db/schema/admin/backups.ts
+- db/schema/admin/brandConfig.ts
 - db/schema/admin/emailTemplates.ts
 - db/schema/admin/featureFlags.ts
 - db/schema/admin/mediaLibrary.ts
@@ -319,8 +330,28 @@ Generated on: 2025-06-25T06:23:29.713Z
 
 ### Docs
 - docs/admin-panel-audit-2025-06-17.md
-- docs/admin-panel-refactoring-plan.md
+- docs/api/admin-api.md
 - docs/examples/admin-users-query.md
+
+## Advertising
+
+### Backend
+- server/src/domains/advertising/ad-admin.controller.ts
+- server/src/domains/advertising/ad-configuration.service.ts
+- server/src/domains/advertising/ad-serving.service.ts
+- server/src/domains/advertising/ad.controller.ts
+- server/src/domains/advertising/ad.routes.ts
+- server/src/domains/advertising/campaign-management.service.ts
+- server/src/domains/advertising/user-promotion.routes.ts
+- server/src/domains/advertising/user-promotion.service.ts
+
+### Database Schema
+- db/schema/advertising/campaigns.ts
+- db/schema/advertising/payments.ts
+- db/schema/advertising/performance.ts
+- db/schema/advertising/placements.ts
+- db/schema/advertising/targeting.ts
+- db/schema/advertising/user-promotions.ts
 
 ## App-shell
 
@@ -336,9 +367,7 @@ Generated on: 2025-06-25T06:23:29.713Z
 - client/src/pages/auth.tsx
 
 ### Frontend Components / Hooks / Services
-- client/src/components/auth/login-form.tsx
 - client/src/components/auth/protected-route.tsx
-- client/src/components/auth/register-form.tsx
 - client/src/hooks/use-auth.tsx
 - client/src/hooks/wrappers/use-auth-wrapper.ts
 
@@ -354,16 +383,10 @@ Generated on: 2025-06-25T06:23:29.713Z
 - server/src/middleware/authenticate.ts
 - server/src/utils/auth.ts
 
-### Scripts & Tools
-- scripts/auth/auth-refactor.js
-- scripts/auth/auth-refactor.ts
-- scripts/auth/auth-standardize.ts
-- scripts/auth/fix-auth.ts
-
-## Auth-page
-
-### Frontend Pages
-- client/src/pages/auth-page.tsx
+### Docs
+- docs/AUTH-MIGRATION-GUIDE.md
+- docs/api/auth-api.md
+- docs/dev/auth-wallet-dev-guide.md
 
 ## Ccpayment-webhook
 
@@ -502,6 +525,9 @@ Generated on: 2025-06-25T06:23:29.713Z
 
 ## Engagement
 
+### Frontend Components / Hooks / Services
+- client/src/hooks/useProfileEngagement.ts
+
 ### Backend
 - server/src/domains/engagement/airdrop/airdrop.controller.ts
 - server/src/domains/engagement/airdrop/airdrop.routes.ts
@@ -545,6 +571,7 @@ Generated on: 2025-06-25T06:23:29.713Z
 - client/src/components/forum/ShopCard.tsx
 - client/src/components/forum/SignatureRenderer.tsx
 - client/src/components/forum/SolveBadge.tsx
+- client/src/components/forum/StickyBackButton.tsx
 - client/src/components/forum/ThreadAuthor.tsx
 - client/src/components/forum/ThreadCard.tsx
 - client/src/components/forum/ThreadFilters.tsx
@@ -649,6 +676,7 @@ Generated on: 2025-06-25T06:23:29.713Z
 - client/src/components/forum/layouts/__tests__/AdaptiveForumGrid.test.tsx
 - client/src/components/forum/layouts/__tests__/ResponsiveForumLayout.test.tsx
 - server/src/domains/forum/forum.service.test.ts
+- test-forum-e2e.spec.ts
 - tests/e2e/forum-home.spec.ts
 
 ### Scripts & Tools
@@ -670,6 +698,7 @@ Generated on: 2025-06-25T06:23:29.713Z
 - scripts/validation/validate-forum-structure-migration.ts
 
 ### Docs
+- docs/api/forum-api.md
 - docs/archive/FORUM_PRIMARY_ZONES_REFACTOR_PLAN.md
 
 ## Forum-rules
@@ -808,11 +837,14 @@ Generated on: 2025-06-25T06:23:29.713Z
 - client/src/components/profile/InventoryTab.tsx
 - client/src/components/profile/OverviewTab.tsx
 - client/src/components/profile/ProfileCard.tsx
+- client/src/components/profile/ProfileDashboard.tsx
 - client/src/components/profile/ProfileEditor.tsx
+- client/src/components/profile/ProfileNavigation.tsx
 - client/src/components/profile/ProfileSidebar.tsx
 - client/src/components/profile/ProfileSkeleton.tsx
 - client/src/components/profile/SignatureRenderer.tsx
 - client/src/components/profile/StatCard.tsx
+- client/src/components/profile/UnifiedProfileCard.tsx
 - client/src/components/profile/UserBadges.tsx
 - client/src/components/profile/UserProfileRenderer.tsx
 - client/src/components/profile/UserTitles.tsx
@@ -822,13 +854,29 @@ Generated on: 2025-06-25T06:23:29.713Z
 - client/src/components/profile/XpLogView.tsx
 - client/src/components/profile/index.ts
 - client/src/components/profile/rarityUtils.ts
+- client/src/components/profile/widgets/ActivityStatsCard.tsx
+- client/src/components/profile/widgets/MilestoneCard.tsx
+- client/src/components/profile/widgets/ProfileInsightsCard.tsx
+- client/src/components/profile/widgets/QuickActionsCard.tsx
+- client/src/components/profile/widgets/ReputationCard.tsx
+- client/src/components/profile/widgets/SocialStatsCard.tsx
+- client/src/components/profile/widgets/WalletOverviewCard.tsx
+- client/src/components/profile/widgets/index.ts
+- client/src/hooks/useProfileEngagement.ts
+- client/src/hooks/useProfileStats.ts
 
 ### Backend
+- server/src/domains/profile/profile-stats.controller.ts
+- server/src/domains/profile/profile-stats.routes.ts
+- server/src/domains/profile/profile-stats.service.ts
 - server/src/domains/profile/profile.routes.ts
 - server/src/domains/profile/profile.service.ts
 - server/src/domains/profile/referrals.service.ts
 - server/src/domains/profile/signature.routes.ts
 - server/src/domains/profile/signature.service.ts
+- server/src/domains/profile/social-actions.controller.ts
+- server/src/domains/profile/social-actions.routes.ts
+- server/src/domains/profile/social-actions.service.ts
 
 ## Share
 
@@ -906,6 +954,7 @@ Generated on: 2025-06-25T06:23:29.713Z
 
 ### Frontend Components / Hooks / Services
 - client/src/components/social/FollowButton.tsx
+- client/src/components/social/FollowingList.tsx
 - client/src/components/social/FriendsManager.tsx
 - client/src/components/social/WhaleWatchDashboard.tsx
 - client/src/components/social/WhaleWatchDisplay.tsx
@@ -914,6 +963,9 @@ Generated on: 2025-06-25T06:23:29.713Z
 - server/src/domains/admin/sub-domains/social/social.controller.ts
 - server/src/domains/admin/sub-domains/social/social.routes.ts
 - server/src/domains/admin/sub-domains/social/social.service.ts
+- server/src/domains/profile/social-actions.controller.ts
+- server/src/domains/profile/social-actions.routes.ts
+- server/src/domains/profile/social-actions.service.ts
 - server/src/domains/social/follows.routes.ts
 - server/src/domains/social/follows.service.ts
 - server/src/domains/social/follows.types.ts
@@ -932,11 +984,22 @@ Generated on: 2025-06-25T06:23:29.713Z
 - db/schema/social/mentions.ts
 - db/schema/social/user-follows.ts
 
+## Subscriptions
+
+### Backend
+- server/src/domains/subscriptions/subscription-permissions.service.ts
+- server/src/domains/subscriptions/subscription.controller.ts
+- server/src/domains/subscriptions/subscription.routes.ts
+- server/src/domains/subscriptions/subscription.service.ts
+- server/src/domains/subscriptions/subscription.validators.ts
+
+### Scripts & Tools
+- scripts/db/seed-dev-subscriptions.ts
+
 ## System
 
 ### Backend
 - server/src/domains/admin/sub-domains/analytics/system-analytics.controller.ts
-- server/src/domains/admin/sub-domains/analytics/system-analytics.routes.ts
 - server/src/domains/admin/sub-domains/analytics/system-analytics.service.ts
 - server/src/domains/admin/sub-domains/analytics/system-analytics.validators.ts
 
@@ -949,6 +1012,7 @@ Generated on: 2025-06-25T06:23:29.713Z
 - db/schema/system/event_logs.ts
 - db/schema/system/mentionsIndex.ts
 - db/schema/system/notifications.ts
+- db/schema/system/profileAnalytics.ts
 - db/schema/system/rateLimits.ts
 - db/schema/system/referralSources.ts
 - db/schema/system/userAbuseFlags.ts
@@ -959,13 +1023,11 @@ Generated on: 2025-06-25T06:23:29.713Z
 - scripts/testing/test-xp-system.ts
 
 ### Docs
+- docs/ADVERTISEMENT-SYSTEM.md
 - docs/activity-feed-system.md
 - docs/gamification/level-flex-system.md
 - docs/memory-bank/systemPatterns.md
 - docs/ui/avatar-frames-system.md
-- docs/wallet-system.md
-- docs/xp-dgt-system-implementation-plan.md
-- docs/xp-system-reference.md
 
 ## Treasury
 
@@ -1027,6 +1089,8 @@ Generated on: 2025-06-25T06:23:29.713Z
 - server/src/domains/admin/sub-domains/users/users.controller.ts
 - server/src/domains/admin/sub-domains/users/users.routes.ts
 - server/src/domains/admin/sub-domains/users/users.service.ts
+- server/src/domains/advertising/user-promotion.routes.ts
+- server/src/domains/advertising/user-promotion.service.ts
 - server/src/domains/user/user-preferences.routes.ts
 - server/src/domains/user/user-preferences.service.ts
 - server/src/domains/wallet/user-management.service.ts
@@ -1043,6 +1107,7 @@ Generated on: 2025-06-25T06:23:29.713Z
 - db/schema/user/roles.ts
 - db/schema/user/sessions.ts
 - db/schema/user/settingsHistory.ts
+- db/schema/user/subscriptions.ts
 - db/schema/user/user-social-preferences.ts
 - db/schema/user/userGroups.ts
 - db/schema/user/userOwnedFrames.ts
@@ -1066,6 +1131,7 @@ Generated on: 2025-06-25T06:23:29.713Z
 - scripts/seed/shop/username-colors.ts
 
 ### Docs
+- docs/USER-ADVERTISEMENT-IMPLEMENTATION.md
 - docs/admin/user-guide.md
 - docs/examples/admin-users-query.md
 
@@ -1158,6 +1224,8 @@ Generated on: 2025-06-25T06:23:29.713Z
 - server/src/domains/wallet/wallet.dev.controller.ts
 - server/src/domains/wallet/wallet.routes.ts
 - server/src/domains/wallet/wallet.service.ts
+- server/src/domains/wallet/wallet.test.controller.ts
+- server/src/domains/wallet/wallet.test.routes.ts
 - server/src/domains/wallet/wallet.validators.ts
 - server/src/domains/wallet/webhook.service.ts
 - server/src/domains/wallet/withdrawal.controller.ts
@@ -1173,14 +1241,16 @@ Generated on: 2025-06-25T06:23:29.713Z
 - db/schema/wallet/withdrawal-records.ts
 
 ### Scripts & Tools
+- scripts/db/seed-dev-wallet.ts
+- scripts/dev/setup-fresh-wallet-test.ts
 - scripts/wallet/migrate-wallet-components.ts
 - scripts/wallet/migrate-wallet-imports.ts
 - scripts/wallet/wallet-refactor-migration.ts
 
 ### Docs
 - docs/CCPAYMENT/WALLET_INTEGRATION_GUIDE.md
-- docs/wallet-api-integration-plan.md
-- docs/wallet-system.md
+- docs/api/wallet-api.md
+- docs/dev/auth-wallet-dev-guide.md
 
 ## Whispers
 
@@ -1238,8 +1308,8 @@ Generated on: 2025-06-25T06:23:29.713Z
 - scripts/db/seed-xp-actions.ts
 - scripts/test-admin-xp.js
 - scripts/testing/test-xp-actions.js
+- scripts/testing/test-xp-endpoints.js
 - scripts/testing/test-xp-system.ts
 
 ### Docs
-- docs/xp-dgt-system-implementation-plan.md
-- docs/xp-system-reference.md
+- docs/api/xp-api.md

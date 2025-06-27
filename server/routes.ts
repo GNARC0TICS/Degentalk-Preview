@@ -114,7 +114,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
 		res.json({ message: 'Backend working!!!' }).status(200);
 	});
 
-	// Add hot threads endpoint BEFORE authentication middleware
+	// Add new unified content endpoint
+	app.get('/api/content', async (req, res) => {
+		try {
+			const tab = (req.query.tab as string) || 'trending';
+			const page = parseInt(req.query.page as string) || 1;
+			const limit = Math.min(parseInt(req.query.limit as string) || 20, 50); // Max 50
+			const forumId = req.query.forumId ? parseInt(req.query.forumId as string) : undefined;
+			const userId = req.user?.id; // From auth middleware
+
+			// Validate tab
+			const validTabs = ['trending', 'recent', 'following'];
+			if (!validTabs.includes(tab)) {
+				return res
+					.status(400)
+					.json({ error: 'Invalid tab. Must be one of: trending, recent, following' });
+			}
+
+			// Require auth for following tab
+			if (tab === 'following' && !userId) {
+				return res.status(401).json({ error: 'Authentication required for following tab' });
+			}
+
+			// Import here to avoid circular dependencies
+			const { threadService } = await import('./src/domains/forum/services/thread.service');
+
+			// Fetch content using the new tab-based method
+			const result = await threadService.fetchThreadsByTab({
+				tab: tab as any,
+				page,
+				limit,
+				forumId,
+				userId
+			});
+
+			res.json(result);
+		} catch (error) {
+			console.error('Error fetching content:', error);
+			res.status(500).json({ error: 'Failed to fetch content' });
+		}
+	});
+
+	// Add hot threads endpoint BEFORE authentication middleware (legacy support)
 	app.get('/api/hot-threads', async (req, res) => {
 		try {
 			const limit = parseInt(req.query.limit as string) || 5;
@@ -122,15 +163,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			// Import here to avoid circular dependencies
 			const { threadService } = await import('./src/domains/forum/services/thread.service');
 
-			// Get the latest threads from the database, sorted by creation date as a proxy for "hotness"
-			const result = await threadService.searchThreads({
+			// Use the new tab-based method for consistency
+			const result = await threadService.fetchThreadsByTab({
+				tab: 'trending',
 				page: 1,
-				limit: limit,
-				sortBy: 'newest'
+				limit,
+				forumId: undefined,
+				userId: undefined
 			});
 
-			// Transform to match expected format
-			const hotThreads = result.threads.map((thread: any) => ({
+			// Transform to match legacy format for backward compatibility
+			const hotThreads = result.items.map((thread: any) => ({
 				thread_id: thread.id,
 				title: thread.title,
 				slug: thread.slug,
@@ -162,7 +205,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	app.use(passport.session());
 
 	// Use the domain-based auth routes
-	app.use('/api', authRoutes);
+	/*
+	 * ---------------------------------------------------------------------------
+	 * AUTHENTICATION ROUTES
+	 * ---------------------------------------------------------------------------
+	 *  Primary Mount:
+	 *    • All authentication endpoints are now **namespaced** under `/api/auth/*`.
+	 *      Example: `/api/auth/login`, `/api/auth/register`, `/api/auth/user`, etc.
+	 *
+	 *  Compatibility Mount (temporary):
+	 *    • For legacy clients that still hit the root-level `/api/*` auth endpoints
+	 *      (e.g. `/api/login`), we re-mount the same router at `/api`.  This alias
+	 *      will be **removed after v2** once all callers have migrated.
+	 */
+	app.use('/api/auth', authRoutes); // ✅  NEW canonical path
+	app.use('/api', authRoutes); // 🕰️  Back-compat alias  (DEPRECATE IN v2)
 	// X account OAuth routes
 	app.use('/api/auth/x', xAuthRoutes);
 	// X share routes

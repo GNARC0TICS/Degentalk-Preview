@@ -30,6 +30,8 @@
 		"db:create-tables": "npx dotenv-cli -e env.local -- npx tsx -r tsconfig-paths/register scripts/db/create-missing-tables.ts",
 		"db:seed-chat": "npx dotenv-cli -e env.local -- npx tsx -r tsconfig-paths/register scripts/db/seed-chat.ts",
 		"seed:all": "npm run db:migrate:Apply && npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/seed/seed-all-comprehensive.ts",
+		"seed:wipe": "npm run seed:all -- --wipe",
+		"seed:forums:only": "npm run seed:all -- --forums-only",
 		"reset-and-seed": "npx dotenv-cli -e env.local -- npx tsx scripts/db/reset-and-seed.ts",
 		"seed:users": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-users.ts",
 		"seed:dev-wallet": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-dev-wallet.ts",

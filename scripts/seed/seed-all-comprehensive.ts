@@ -402,7 +402,7 @@ async function seedThreadsAndPosts() {
           }
 
           // Generate realistic content based on forum type
-          let content = generateRealisticPostContent(forum.slug, j === 0);
+          const content = generateRealisticPostContent(forum.slug, j === 0);
 
           const [new_post] = await tx.insert(posts).values({
             threadId: new_thread.id,
@@ -414,7 +414,7 @@ async function seedThreadsAndPosts() {
             likeCount: faker.number.int({ min: 0, max: 100 }),
             createdAt: last_post_time,
             updatedAt: last_post_time
-          }).returning();
+          }).returning({ id: posts.id, depth: posts.depth, likeCount: posts.likeCount });
 
           thread_posts.push(new_post);
           total_posts++;
@@ -546,7 +546,12 @@ async function main() {
       // Add wipe logic here if needed
     }
 
-    // Seed forum structure
+    // Phase 2: Users – seed **before** forum structure so we have a default
+    // user available for welcome threads.
+    console.log(chalk.yellow('\n👥 Phase 2: Creating users (runs early now)...'));
+    await seedUsers();
+
+    // Seed forum structure (now has defaultUserId for welcome threads)
     await seedForumsFromConfig();
     
     // Seed economy and XP systems
@@ -560,10 +565,6 @@ async function main() {
     await seedShopItems();
 
     if (!args.values['forums-only']) {
-      // Phase 2: Users
-      console.log(chalk.yellow('\n👥 Phase 2: Creating users...'));
-      await seedUsers();
-
       // Phase 3: Content
       console.log(chalk.yellow('\n💬 Phase 3: Generating realistic content...'));
       await seedThreadsAndPosts();

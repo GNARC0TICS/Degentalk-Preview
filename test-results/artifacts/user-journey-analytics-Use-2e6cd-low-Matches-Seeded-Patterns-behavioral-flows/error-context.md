@@ -1,0 +1,408 @@
+# Page snapshot
+
+```yaml
+- banner:
+    - link "Degentalk™":
+        - /url: //
+        - text: Degentalk
+        - superscript: ™
+    - navigation:
+        - link "Navigate to Home":
+            - /url: //
+            - link "Navigate to Home":
+                - text: Home
+                - img
+        - link "Navigate to Forum":
+            - /url: //forums
+            - link "Navigate to Forum":
+                - text: Forum
+                - img
+        - link "Navigate to Shop":
+            - /url: //shop
+            - link "Navigate to Shop":
+                - text: Shop
+                - img
+        - link "Navigate to Leaderboard":
+            - /url: //leaderboard
+            - link "Navigate to Leaderboard":
+                - text: Leaderboard
+                - img
+    - img
+    - textbox "Search threads..."
+    - link "Log In":
+        - /url: //auth
+        - link "Log In":
+            - button "Log In"
+    - link "Sign Up":
+        - /url: //auth?mode=signup
+        - link "Sign Up":
+            - button "Sign Up"
+- heading "The only thing we diversify is our regrets." [level=1]
+- paragraph: Collect them all.
+- button "Join Community":
+    - img
+    - text: Join Community
+- link "Browse our topics":
+    - /url: //forums
+    - text: Browse our topics
+    - img
+- img
+- text: Welcome to Degentalk! The community-powered crypto forum Welcome to Degentalk! The community-powered crypto forum
+- complementary:
+    - button "Drag widget":
+        - img
+        - text: Drag widget
+    - button "Widget options":
+        - img
+        - text: Widget options
+    - alert:
+        - img
+        - heading "Profile Error" [level=5]
+        - text: Could not load profile information at this time.
+        - button "Retry":
+            - img
+            - text: Retry
+    - button "Add Widget":
+        - img
+        - text: Add Widget
+- main:
+    - text: Hot Threads
+    - paragraph: Trending discussions
+    - link "View All Hot Threads":
+        - /url: //hot-threads
+        - text: View All Hot Threads
+        - img
+    - heading "Primary Zones" [level=2]
+    - paragraph: Jump into the action
+    - link "View All Zones":
+        - /url: //zones
+        - button "View All Zones":
+            - text: View All Zones
+            - img
+    - link "The Pit The daily war-zone for raw market chatter, meme combat, instant wins & public rekt logs. Active 0 Forums 3 Threads 0 Enter The Pit":
+        - /url: //zones/the-pit
+        - img
+        - heading "The Pit" [level=3]
+        - paragraph: The daily war-zone for raw market chatter, meme combat, instant wins & public rekt logs.
+        - img
+        - text: Active 0
+        - img
+        - text: Forums 3
+        - img
+        - text: Threads 0
+        - button "Enter The Pit":
+            - text: Enter The Pit
+            - img
+    - 'link "Mission Control Serious strategy hub: alpha drops, trade plans, research dumps, daily missions & leaderboards. Active 0 Forums 3 Threads 0 Enter Mission Control"':
+        - /url: //zones/mission-control
+        - img
+        - heading "Mission Control" [level=3]
+        - paragraph: 'Serious strategy hub: alpha drops, trade plans, research dumps, daily missions & leaderboards.'
+        - img
+        - text: Active 0
+        - img
+        - text: Forums 3
+        - img
+        - text: Threads 0
+        - button "Enter Mission Control":
+            - text: Enter Mission Control
+            - img
+    - 'link "Casino Floor All gambling content: dice, limbo, degen scripts, RTP leaks. Active 0 Forums 3 Threads 0 Enter Casino Floor"':
+        - /url: //zones/casino-floor
+        - img
+        - heading "Casino Floor" [level=3]
+        - paragraph: 'All gambling content: dice, limbo, degen scripts, RTP leaks.'
+        - img
+        - text: Active 0
+        - img
+        - text: Forums 3
+        - img
+        - text: Threads 0
+        - button "Enter Casino Floor":
+            - text: Enter Casino Floor
+            - img
+    - 'link "Briefing Room Official comms & community governance: announcements, patch notes, bug reports, suggestions. Active 0 Forums 4 Threads 0 Enter Briefing Room"':
+        - /url: //zones/briefing-room
+        - img
+        - heading "Briefing Room" [level=3]
+        - paragraph: 'Official comms & community governance: announcements, patch notes, bug reports, suggestions.'
+        - img
+        - text: Active 0
+        - img
+        - text: Forums 4
+        - img
+        - text: Threads 0
+        - button "Enter Briefing Room":
+            - text: Enter Briefing Room
+            - img
+    - link "The Archive Read-only vault of legendary threads & historic market moments. Active 0 Forums 3 Threads 0 Enter The Archive":
+        - /url: //zones/the-archive
+        - img
+        - heading "The Archive" [level=3]
+        - paragraph: Read-only vault of legendary threads & historic market moments.
+        - img
+        - text: Active 0
+        - img
+        - text: Forums 3
+        - img
+        - text: Threads 0
+        - button "Enter The Archive":
+            - text: Enter The Archive
+            - img
+    - link "Degen Shop Spend DGT, Look Cool Upgrade your profile with exclusive frames, titles, badges, and boosts. Cosmetics Boosts":
+        - /url: //shop
+        - img
+        - heading "Degen Shop" [level=3]
+        - text: Spend DGT, Look Cool
+        - paragraph: Upgrade your profile with exclusive frames, titles, badges, and boosts.
+        - img
+        - text: Cosmetics
+        - img
+        - text: Boosts
+- complementary:
+    - img
+    - text: Shoutbox
+    - button "Collapse":
+        - img
+    - button [disabled]:
+        - img
+    - button "Change shoutbox position":
+        - img
+        - text: Change shoutbox position
+    - img
+    - text: Loading messages...
+    - textbox "Type a message..."
+    - button:
+        - img
+    - button [disabled]:
+        - img
+    - text: 0/200 characters Type a message to chat...
+    - button "Drag widget":
+        - img
+        - text: Drag widget
+    - button "Widget options":
+        - img
+        - text: Widget options
+    - img
+    - text: Your Wallet
+    - img
+    - paragraph: Connect your wallet to access Degentalk's full economy
+    - button "Connect Wallet":
+        - img
+        - text: Connect Wallet
+    - button "Drag widget":
+        - img
+        - text: Drag widget
+    - button "Widget options":
+        - img
+        - text: Widget options
+    - img
+    - text: Daily Tasks 50 XP | 🔥 3-day streak | 2 tasks left
+    - progressbar
+    - paragraph: Post a reply in The Pit
+    - text: +100 XP
+    - img
+    - paragraph: Earn 5 upvotes today
+    - text: +150 XP
+    - img
+    - paragraph: Upload a profile banner
+    - text: +50 XP
+    - button "Drag widget":
+        - img
+        - text: Drag widget
+    - button "Widget options":
+        - img
+        - text: Widget options
+    - text: Hot Threads
+    - paragraph: Trending discussions
+    - link "View All Hot Threads":
+        - /url: //hot-threads
+        - text: View All Hot Threads
+        - img
+    - button "Drag widget":
+        - img
+        - text: Drag widget
+    - button "Widget options":
+        - img
+        - text: Widget options
+    - complementary:
+        - navigation "Forum Navigation":
+            - link "All Content":
+                - /url: //forums
+                - img
+                - text: All Content
+            - heading "Primary Zones" [level=3]
+            - button "The Pit":
+                - img
+                - img
+                - text: The Pit
+            - button "Mission Control":
+                - img
+                - img
+                - text: Mission Control
+            - button "Casino Floor":
+                - img
+                - img
+                - text: Casino Floor
+            - button "Briefing Room":
+                - img
+                - img
+                - text: Briefing Room
+            - button "The Archive":
+                - img
+                - img
+                - text: The Archive
+            - heading "General Forums" [level=3]
+            - button "DegenShop™ 3":
+                - img
+                - img
+                - text: DegenShop™
+                - img
+                - text: '3'
+            - button "Market Analysis 2":
+                - img
+                - img
+                - text: Market Analysis
+                - img
+                - text: '2'
+            - button "DeFi Laboratory 2":
+                - img
+                - img
+                - text: DeFi Laboratory
+                - img
+                - text: '2'
+            - button "NFT District 2":
+                - img
+                - img
+                - text: NFT District
+                - img
+                - text: '2'
+    - button "Drag widget":
+        - img
+        - text: Drag widget
+    - button "Widget options":
+        - img
+        - text: Widget options
+    - img
+    - text: Weekly Leaderboard 1 DE
+    - link "degenking":
+        - /url: //profile/degenking
+    - text: Lvl 42 24,500 XP 2 CR
+    - link "cryptoqueen":
+        - /url: //profile/cryptoqueen
+    - text: Lvl 38 21,300 XP 3 SA
+    - link "satoshi_fan":
+        - /url: //profile/satoshi_fan
+    - text: Lvl 35 19,800 XP 4 ET
+    - link "ethmaxi":
+        - /url: //profile/ethmaxi
+    - text: Lvl 33 18,200 XP 5 MO
+    - link "moonboi":
+        - /url: //profile/moonboi
+    - text: Lvl 32 17,500 XP
+    - button "View Full Leaderboard":
+        - text: View Full Leaderboard
+        - img
+    - button "Drag widget":
+        - img
+        - text: Drag widget
+    - button "Widget options":
+        - img
+        - text: Widget options
+    - img
+    - text: Active Members Members active in the last 30 minutes No active members at the moment
+    - link "View All Members":
+        - /url: //degen-index
+        - text: View All Members
+        - img
+    - button "Add Widget":
+        - img
+        - text: Add Widget
+- button "Hide left sidebar":
+    - img
+- button "Hide right sidebar":
+    - img
+- button "Swap sidebars":
+    - img
+- contentinfo:
+    - img
+    - text: 235 Degens Online Active users right now (probably losing money)
+    - img
+    - text: 42.1K Shitposts Logged Total posts made on mobile (for maximum chaos)
+    - img
+    - text: 1.3K Tips Fired Total DGT sent all-time (probably regretted)
+    - heading "Degentalk™" [level=3]:
+        - text: Degentalk
+        - superscript: ™
+    - paragraph: The premier crypto-native forum and social platform for enthusiasts, traders, and developers. Where chaos meets community.
+    - heading "Navigation" [level=4]
+    - list:
+        - listitem:
+            - link "Home":
+                - /url: //
+        - listitem:
+            - link "Forum":
+                - /url: //forums
+        - listitem:
+            - link "Zones":
+                - /url: //zones
+        - listitem:
+            - link "Missions":
+                - /url: //missions
+        - listitem:
+            - link "Shop":
+                - /url: //shop
+        - listitem:
+            - link "Leaderboard":
+                - /url: //leaderboard
+    - heading "Resources" [level=4]
+    - list:
+        - listitem:
+            - link "Degen Dictionary":
+                - /url: //dictionary
+        - listitem:
+            - link "API Docs ↗":
+                - /url: /docs
+        - listitem:
+            - link "FAQ":
+                - /url: //help/faq
+        - listitem:
+            - link "Status ↗":
+                - /url: https://status.degentalk.com
+    - heading "Community" [level=4]
+    - list:
+        - listitem:
+            - link "Discord ↗":
+                - /url: https://discord.gg/degentalk
+        - listitem:
+            - link "Twitter ↗":
+                - /url: https://twitter.com/degentalk
+        - listitem:
+            - link "Telegram ↗":
+                - /url: https://t.me/degentalk
+        - listitem:
+            - link "GitHub ↗":
+                - /url: https://github.com/degentalk
+    - heading "Legal" [level=4]
+    - list:
+        - listitem:
+            - link "Forum Rules":
+                - /url: //forum-rules
+        - listitem:
+            - link "Privacy Policy":
+                - /url: //legal/privacy
+        - listitem:
+            - link "Terms of Use":
+                - /url: //legal/terms
+        - listitem:
+            - link "Disclaimer":
+                - /url: //legal/disclaimer
+    - text: © 2025 Degentalk. All rights reserved.
+    - paragraph: This is not financial advice. But if it works, you're welcome.
+- region "Notifications (F8)":
+    - list
+- link "Playground":
+    - /url: //ui-playground
+    - img
+    - text: Playground
+```

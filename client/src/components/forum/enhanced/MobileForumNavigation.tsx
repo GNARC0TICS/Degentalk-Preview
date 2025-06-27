@@ -11,13 +11,9 @@ import {
 	Bookmark,
 	User,
 	Settings,
-	Flame,
-	TrendingUp,
-	MessageSquare,
-	Users,
-	Target,
-	Sparkles
+	MessageSquare
 } from 'lucide-react';
+import { getZoneTheme } from '@/config/zoneThemes.config';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -60,39 +56,6 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 		const shouldClose = info.velocity.x < -500 || info.offset.x < -150;
 		if (shouldClose) {
 			setIsOpen(false);
-		}
-	};
-
-	const zoneThemes = {
-		pit: {
-			gradient: 'from-red-900/20 to-red-800/10',
-			accent: 'text-red-400',
-			icon: Flame
-		},
-		mission: {
-			gradient: 'from-blue-900/20 to-blue-800/10',
-			accent: 'text-blue-400',
-			icon: Target
-		},
-		casino: {
-			gradient: 'from-purple-900/20 to-purple-800/10',
-			accent: 'text-purple-400',
-			icon: Sparkles
-		},
-		briefing: {
-			gradient: 'from-amber-900/20 to-amber-800/10',
-			accent: 'text-amber-400',
-			icon: MessageSquare
-		},
-		archive: {
-			gradient: 'from-gray-900/20 to-gray-800/10',
-			accent: 'text-gray-400',
-			icon: MessageSquare
-		},
-		shop: {
-			gradient: 'from-violet-900/20 to-pink-900/10',
-			accent: 'text-violet-400',
-			icon: Sparkles
 		}
 	};
 
@@ -249,9 +212,7 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 											</div>
 										) : (
 											filteredZones.map((zone) => {
-												const theme =
-													zoneThemes[zone.colorTheme as keyof typeof zoneThemes] ||
-													zoneThemes.archive;
+												const theme = getZoneTheme(zone.colorTheme);
 												const IconComponent = theme.icon;
 
 												return (

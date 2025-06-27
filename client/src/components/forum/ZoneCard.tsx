@@ -20,7 +20,8 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
-import { getCardStyle, CARD_STYLES } from '@/utils/card-constants';
+import { CARD_STYLES } from '@/utils/card-constants';
+import { getZoneTheme, ZONE_THEMES } from '@/config/zoneThemes.config';
 
 export interface ZoneCardProps {
 	zone: {
@@ -60,9 +61,15 @@ export interface ZoneCardProps {
 		}>;
 	};
 	layout?: 'default' | 'compact' | 'hero' | 'mobile';
-	variant?: 'default' | 'premium' | 'event';
+	variant?: 'default' | 'premium' | 'event' | 'minimal' | 'promo';
 	showStats?: boolean;
 	showPreview?: boolean;
+	slots?: {
+		header?: React.ReactNode;
+		stats?: React.ReactNode;
+		preview?: React.ReactNode;
+		footer?: React.ReactNode;
+	};
 	className?: string;
 	onEnter?: (zoneId: string) => void;
 }
@@ -75,6 +82,7 @@ const ZoneCardPure = memo(
 		variant = 'default',
 		showStats = true,
 		showPreview = true,
+		slots,
 		className,
 		onEnter
 	}: ZoneCardProps) => {
@@ -96,52 +104,8 @@ const ZoneCardPure = memo(
 
 		const [isHovered, setIsHovered] = useState(false);
 
-		const zoneThemes = {
-			pit: {
-				gradient: 'from-red-900/40 via-red-800/20 to-red-700/10',
-				accent: 'text-red-400',
-				border: 'border-red-500/30 hover:border-red-500/60',
-				glow: 'shadow-red-500/20',
-				icon: Flame
-			},
-			mission: {
-				gradient: 'from-blue-900/40 via-blue-800/20 to-blue-700/10',
-				accent: 'text-blue-400',
-				border: 'border-blue-500/30 hover:border-blue-500/60',
-				glow: 'shadow-blue-500/20',
-				icon: Target
-			},
-			casino: {
-				gradient: 'from-purple-900/40 via-purple-800/20 to-purple-700/10',
-				accent: 'text-purple-400',
-				border: 'border-purple-500/30 hover:border-purple-500/60',
-				glow: 'shadow-purple-500/20',
-				icon: Sparkles
-			},
-			briefing: {
-				gradient: 'from-amber-900/40 via-amber-800/20 to-amber-700/10',
-				accent: 'text-amber-400',
-				border: 'border-amber-500/30 hover:border-amber-500/60',
-				glow: 'shadow-amber-500/20',
-				icon: MessageSquare
-			},
-			archive: {
-				gradient: 'from-gray-900/40 via-gray-800/20 to-gray-700/10',
-				accent: 'text-gray-400',
-				border: 'border-gray-500/30 hover:border-gray-500/60',
-				glow: 'shadow-gray-500/20',
-				icon: MessageSquare
-			},
-			shop: {
-				gradient: 'from-violet-900/30 via-pink-900/20 to-blue-900/30',
-				accent: 'text-violet-400',
-				border: 'border-violet-500/30 hover:border-violet-500/60',
-				glow: 'shadow-violet-500/20',
-				icon: Crown
-			}
-		} as const;
-
-		const theme = zoneThemes[zone.colorTheme as keyof typeof zoneThemes] || zoneThemes.archive;
+		const themeKey = (zone as any).themeId || zone.colorTheme;
+		const theme = getZoneTheme(themeKey as keyof typeof ZONE_THEMES);
 		const IconComponent = theme.icon;
 
 		const cardSizes = {
@@ -233,86 +197,89 @@ const ZoneCardPure = memo(
 						</div>
 
 						<CardHeader className="relative z-10 pb-3">
-							<div className="flex items-center gap-3">
-								<motion.div
-									whileHover={{ scale: 1.1, rotate: 5 }}
-									transition={{ duration: 0.2 }}
-									className={cn(
-										'w-12 h-12 rounded-full bg-zinc-800/50 backdrop-blur-sm border border-zinc-700/50',
-										'flex items-center justify-center text-2xl',
-										theme.accent
-									)}
-								>
-									{derivedZone.icon ? (
-										<span>{derivedZone.icon}</span>
-									) : (
-										<IconComponent className="w-6 h-6" />
-									)}
-								</motion.div>
-
-								<div className="flex-1 min-w-0">
-									<h3
+							{slots?.header ?? (
+								<div className="flex items-center gap-3">
+									<motion.div
+										whileHover={{ scale: 1.1, rotate: 5 }}
+										transition={{ duration: 0.2 }}
 										className={cn(
-											'text-xl font-bold text-white mb-1 group-hover:text-current transition-colors',
+											'w-12 h-12 rounded-full bg-zinc-800/50 backdrop-blur-sm border border-zinc-700/50',
+											'flex items-center justify-center text-2xl',
 											theme.accent
 										)}
 									>
-										{derivedZone.name}
-									</h3>
-									<p className="text-sm text-zinc-400 line-clamp-2 leading-relaxed">
-										{derivedZone.description}
-									</p>
+										{derivedZone.icon ? (
+											<span>{derivedZone.icon}</span>
+										) : (
+											<IconComponent className="w-6 h-6" />
+										)}
+									</motion.div>
+
+									<div className="flex-1 min-w-0">
+										<h3
+											className={cn(
+												'text-xl font-bold text-white mb-1 group-hover:text-current transition-colors',
+												theme.accent
+											)}
+										>
+											{derivedZone.name}
+										</h3>
+										<p className="text-sm text-zinc-400 line-clamp-2 leading-relaxed">
+											{derivedZone.description}
+										</p>
+									</div>
 								</div>
-							</div>
+							)}
 						</CardHeader>
 
 						<CardContent className="relative z-10 space-y-4">
 							{/* Activity Stats */}
-							{showStats && (
-								<div className="grid grid-cols-3 gap-3">
-									<motion.div
-										className="text-center p-2 rounded-lg bg-zinc-800/30 backdrop-blur-sm"
-										whileHover={{ scale: 1.05 }}
-										transition={{ duration: 0.2 }}
-									>
-										<div className="flex items-center justify-center gap-1 text-xs text-zinc-400 mb-1">
-											<Users className="w-3 h-3" />
-											<span>Active</span>
-										</div>
-										<div className="text-lg font-bold text-white">
-											{derivedZone.stats.activeUsers}
-										</div>
-									</motion.div>
+							{showStats &&
+								(slots?.stats ?? (
+									<div className="grid grid-cols-3 gap-3">
+										<motion.div
+											className="text-center p-2 rounded-lg bg-zinc-800/30 backdrop-blur-sm"
+											whileHover={{ scale: 1.05 }}
+											transition={{ duration: 0.2 }}
+										>
+											<div className="flex items-center justify-center gap-1 text-xs text-zinc-400 mb-1">
+												<Users className="w-3 h-3" />
+												<span>Active</span>
+											</div>
+											<div className="text-lg font-bold text-white">
+												{derivedZone.stats.activeUsers}
+											</div>
+										</motion.div>
 
-									<motion.div
-										className="text-center p-2 rounded-lg bg-zinc-800/30 backdrop-blur-sm"
-										whileHover={{ scale: 1.05 }}
-										transition={{ duration: 0.2, delay: 0.1 }}
-									>
-										<div className="flex items-center justify-center gap-1 text-xs text-zinc-400 mb-1">
-											<MessageSquare className="w-3 h-3" />
-											<span>Forums</span>
-										</div>
-										<div className="text-lg font-bold text-white">
-											{derivedZone.forums?.length ?? 0}
-										</div>
-									</motion.div>
+										<motion.div
+											className="text-center p-2 rounded-lg bg-zinc-800/30 backdrop-blur-sm"
+											whileHover={{ scale: 1.05 }}
+											transition={{ duration: 0.2, delay: 0.1 }}
+										>
+											<div className="flex items-center justify-center gap-1 text-xs text-zinc-400 mb-1">
+												<MessageSquare className="w-3 h-3" />
+												<span>Forums</span>
+											</div>
+											<div className="text-lg font-bold text-white">
+												{derivedZone.forums?.length ?? 0}
+											</div>
+										</motion.div>
 
-									<motion.div
-										className="text-center p-2 rounded-lg bg-zinc-800/30 backdrop-blur-sm"
-										whileHover={{ scale: 1.05 }}
-										transition={{ duration: 0.2, delay: 0.2 }}
-									>
-										<div className="flex items-center justify-center gap-1 text-xs text-zinc-400 mb-1">
-											<Activity className="w-3 h-3" />
-											<span>Threads</span>
-										</div>
-										<div className="text-lg font-bold text-white">
-											{derivedZone.forums?.reduce((sum, f) => sum + (f.threadCount || 0), 0)}
-										</div>
-									</motion.div>
-								</div>
-							)}
+										<motion.div
+											className="text-center p-2 rounded-lg bg-zinc-800/30 backdrop-blur-sm"
+											whileHover={{ scale: 1.05 }}
+											transition={{ duration: 0.2, delay: 0.2 }}
+										>
+											<div className="flex items-center justify-center gap-1 text-xs text-zinc-400 mb-1">
+												<Activity className="w-3 h-3" />
+												<span>Threads</span>
+											</div>
+											<div className="text-lg font-bold text-white">
+												{derivedZone.forums?.reduce((sum, f) => sum + (f.threadCount || 0), 0)}
+											</div>
+										</motion.div>
+									</div>
+								))}
 
 							{/* Activity Momentum */}
 							{zone.activity && (
@@ -352,7 +319,8 @@ const ZoneCardPure = memo(
 								{isHovered &&
 									showPreview &&
 									derivedZone.forums &&
-									derivedZone.forums.length > 0 && (
+									derivedZone.forums.length > 0 &&
+									(slots?.preview ?? (
 										<motion.div
 											initial={{ opacity: 0, height: 0 }}
 											animate={{ opacity: 1, height: 'auto' }}
@@ -377,34 +345,36 @@ const ZoneCardPure = memo(
 												</motion.div>
 											))}
 										</motion.div>
-									)}
+									))}
 							</AnimatePresence>
 						</CardContent>
 
 						<CardFooter className="relative z-10 pt-2">
-							<motion.div
-								initial={{ opacity: 0 }}
-								animate={{ opacity: isHovered ? 1 : 0 }}
-								transition={{ duration: 0.2 }}
-								className="w-full"
-							>
-								<Button
-									className={cn(
-										'w-full transition-all duration-300',
-										'bg-zinc-800/50 hover:bg-zinc-700/50 border border-zinc-700/50',
-										`hover:border-current hover:shadow-lg hover:${theme.glow}`,
-										theme.accent
-									)}
-									onClick={(e) => {
-										if (onEnter) {
-											handleEnter();
-										}
-									}}
+							{slots?.footer ?? (
+								<motion.div
+									initial={{ opacity: 0 }}
+									animate={{ opacity: isHovered ? 1 : 0 }}
+									transition={{ duration: 0.2 }}
+									className="w-full"
 								>
-									<span>Enter {derivedZone.name}</span>
-									<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-								</Button>
-							</motion.div>
+									<Button
+										className={cn(
+											'w-full transition-all duration-300',
+											'bg-zinc-800/50 hover:bg-zinc-700/50 border border-zinc-700/50',
+											`hover:border-current hover:shadow-lg hover:${theme.glow}`,
+											theme.accent
+										)}
+										onClick={(e) => {
+											if (onEnter) {
+												handleEnter();
+											}
+										}}
+									>
+										<span>Enter {derivedZone.name}</span>
+										<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+									</Button>
+								</motion.div>
+							)}
 						</CardFooter>
 					</Card>
 				</Link>

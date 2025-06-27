@@ -13,8 +13,9 @@ import { AnnouncementTicker } from '@/components/layout/announcement-ticker';
 import { SiteFooter } from '@/components/footer';
 import { ResponsiveLayoutWrapper } from '@/components/layout/ResponsiveLayoutWrapper';
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
-import { Wide } from '@/layout/primitives';
-import HotThreads from '@/features/forum/components/HotThreads';
+import { Wide } from '@/layout/primitives/Wide';
+import { HomeContentArea } from '@/components/ui/content-area';
+import { ContentFeedProvider } from '@/contexts/content-feed-context';
 import { getForumSpacing, getForumLayout } from '@/utils/spacing-constants';
 
 // Import UI components
@@ -69,47 +70,49 @@ function HomePage() {
 		<>
 			<HeroSection />
 			<AnnouncementTicker />
-			<ResponsiveLayoutWrapper page="home">
-				<Wide as="div" className={getForumSpacing('container')}>
-					{/* Hot Threads feed */}
-					<HotThreads variant="feed" limit={5} className={getForumSpacing('sectionLarge')} />
+			<ContentFeedProvider initialTab="trending">
+				<ResponsiveLayoutWrapper page="home">
+					<Wide as="div" className={getForumSpacing('container')}>
+						{/* New tab-based content feed */}
+						<HomeContentArea className={getForumSpacing('sectionLarge')} />
 
-					<section className={getForumSpacing('sectionLarge')}>
-						<div className={`${getForumLayout('headerFlex')} ${getForumSpacing('headerMargin')}`}>
-							<div>
-								<h2 className="text-2xl font-bold text-white mb-2">Primary Zones</h2>
-								<p className="text-zinc-400">Jump into the action</p>
+						<section className={getForumSpacing('sectionLarge')}>
+							<div className={`${getForumLayout('headerFlex')} ${getForumSpacing('headerMargin')}`}>
+								<div>
+									<h2 className="text-2xl font-bold text-white mb-2">Primary Zones</h2>
+									<p className="text-zinc-400">Jump into the action</p>
+								</div>
+								<Link href="/zones">
+									<Button variant="ghost" className="text-zinc-400 hover:text-white">
+										View All Zones
+										<ArrowRight className="ml-2 h-4 w-4" />
+									</Button>
+								</Link>
 							</div>
-							<Link href="/zones">
-								<Button variant="ghost" className="text-zinc-400 hover:text-white">
-									View All Zones
-									<ArrowRight className="ml-2 h-4 w-4" />
-								</Button>
-							</Link>
-						</div>
 
-						{forumStructureErrorFromContext ? (
-							<div className="text-center py-12">
-								<AlertCircle className="mx-auto h-12 w-12 text-red-400" />
-								<p className="mt-4 text-red-400">Failed to load forum structure.</p>
-								<p className="text-sm text-zinc-500">
-									{(forumStructureErrorFromContext as Error)?.message || 'Unknown error'}
-								</p>
-							</div>
-						) : structureLoadingFromContext ? (
-							<div
-								className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${getForumSpacing('cardGrid')}`}
-							>
-								{Array.from({ length: primaryZonesFromContext.length || 3 }).map((_, i) => (
-									<Skeleton key={i} className="bg-zinc-900 rounded-xl h-48" />
-								))}
-							</div>
-						) : (
-							<CanonicalZoneGrid zones={zoneCardDataForGrid} />
-						)}
-					</section>
-				</Wide>
-			</ResponsiveLayoutWrapper>
+							{forumStructureErrorFromContext ? (
+								<div className="text-center py-12">
+									<AlertCircle className="mx-auto h-12 w-12 text-red-400" />
+									<p className="mt-4 text-red-400">Failed to load forum structure.</p>
+									<p className="text-sm text-zinc-500">
+										{(forumStructureErrorFromContext as Error)?.message || 'Unknown error'}
+									</p>
+								</div>
+							) : structureLoadingFromContext ? (
+								<div
+									className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${getForumSpacing('cardGrid')}`}
+								>
+									{Array.from({ length: primaryZonesFromContext.length || 3 }).map((_, i) => (
+										<Skeleton key={i} className="bg-zinc-900 rounded-xl h-48" />
+									))}
+								</div>
+							) : (
+								<CanonicalZoneGrid zones={zoneCardDataForGrid} />
+							)}
+						</section>
+					</Wide>
+				</ResponsiveLayoutWrapper>
+			</ContentFeedProvider>
 			<SiteFooter />
 		</>
 	);

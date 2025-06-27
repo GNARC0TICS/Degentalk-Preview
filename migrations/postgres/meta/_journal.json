@@ -36,6 +36,13 @@
       "when": 1750907008422,
       "tag": "0004_high_magneto",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1750989184698,
+      "tag": "0005_sparkling_sphinx",
+      "breakpoints": true
     }
   ]
 }

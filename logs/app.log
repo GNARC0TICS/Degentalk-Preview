@@ -29187,3 +29187,33 @@ User not found
   "statusCode": 304,
   "durationMs": 103.867
 }
+[2025-06-26T19:34:01.706Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "env": "development",
+  "logPath": "logs/app.log"
+}
+[2025-06-26T19:34:18.995Z] [INFO] [SHOP] Shop already has 12 items. Skipping seeding.
+[2025-06-26T19:50:19.545Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "env": "development",
+  "logPath": "logs/app.log"
+}
+[2025-06-26T19:50:34.701Z] [INFO] [SHOP] Shop already has 12 items. Skipping seeding.
+[2025-06-26T20:48:25.618Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "logPath": "logs/app.log"
+}
+[2025-06-26T21:51:11.183Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "env": "development",
+  "logPath": "logs/app.log"
+}
+[2025-06-26T21:51:11.187Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using table name 'user_sessions').
+[2025-06-26T21:51:11.265Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-26T21:51:11.571Z] [INFO] [XP_ADMIN_SERVICE] Creating xp_adjustment_logs table if not exists...
+[2025-06-26T21:51:11.670Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-26T21:51:11.672Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-26T21:51:11.672Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-26T21:51:11.672Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-26T21:51:11.673Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-26T21:51:12.092Z] [INFO] [XP_ADMIN_SERVICE] xp_adjustment_logs table setup completed

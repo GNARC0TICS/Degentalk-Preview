@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useMemo, useState, useCallback, useEffect } from 'react';
 import type { ReactNode, ComponentType } from 'react';
 import type { LucideProps } from 'lucide-react';
-import { ZONE_THEMES } from '@/config/themeConstants'; // Default themes
+import { ZONE_THEMES } from '@/config/zoneThemes.config'; // Default themes
 import { apiRequest } from '@/lib/queryClient'; // Fetch utility
 import { Flame, Target, Archive, Dices, FileText, Folder } from 'lucide-react';
 

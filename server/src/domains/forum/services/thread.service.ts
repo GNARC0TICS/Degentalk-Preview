@@ -7,13 +7,67 @@
 
 import { db } from '@db';
 import { logger } from '@server/src/core/logger';
-import { threads, posts, forumStructure, users as usersTable, threadTags, tags } from '@schema';
-import { sql, desc, asc, eq, and, or, ilike, inArray, count } from 'drizzle-orm';
+import {
+	threads,
+	posts,
+	forumStructure,
+	users as usersTable,
+	threadTags,
+	tags,
+	userFollows
+} from '@schema';
+import { sql, desc, asc, eq, and, or, ilike, inArray, count, gte, subDays } from 'drizzle-orm';
 import type {
 	ThreadWithUser,
 	ThreadWithPostsAndUser,
 	ThreadWithUserAndCategory
 } from '../../../../db/types/forum.types';
+
+// Simple in-memory cache for tab content
+interface CacheEntry {
+	data: any;
+	timestamp: number;
+	ttl: number;
+}
+
+class SimpleCache {
+	private cache = new Map<string, CacheEntry>();
+	private readonly DEFAULT_TTL = 60 * 1000; // 60 seconds
+
+	get(key: string): any | null {
+		const entry = this.cache.get(key);
+		if (!entry) return null;
+
+		if (Date.now() - entry.timestamp > entry.ttl) {
+			this.cache.delete(key);
+			return null;
+		}
+
+		return entry.data;
+	}
+
+	set(key: string, data: any, ttl: number = this.DEFAULT_TTL): void {
+		this.cache.set(key, {
+			data,
+			timestamp: Date.now(),
+			ttl
+		});
+	}
+
+	clear(): void {
+		this.cache.clear();
+	}
+
+	// Clean up expired entries
+	cleanup(): void {
+		const now = Date.now();
+		for (const [key, entry] of this.cache.entries()) {
+			if (now - entry.timestamp > entry.ttl) {
+				this.cache.delete(key);
+			}
+		}
+	}
+}
 
 export interface ThreadSearchParams {
 	structureId?: number;
@@ -22,8 +76,19 @@ export interface ThreadSearchParams {
 	tags?: string[];
 	page?: number;
 	limit?: number;
-	sortBy?: 'newest' | 'oldest' | 'mostReplies' | 'mostViews';
+	sortBy?: 'newest' | 'oldest' | 'mostReplies' | 'mostViews' | 'trending';
 	status?: 'active' | 'locked' | 'pinned';
+	followingUserId?: string; // For "following" tab - get threads by users that this user follows
+}
+
+export type ContentTab = 'trending' | 'recent' | 'following';
+
+export interface TabContentParams {
+	tab: ContentTab;
+	page?: number;
+	limit?: number;
+	forumId?: number;
+	userId?: string; // For following tab
 }
 
 export interface ThreadCreateInput {
@@ -38,6 +103,117 @@ export interface ThreadCreateInput {
 }
 
 export class ThreadService {
+	private cache = new SimpleCache();
+
+	constructor() {
+		// Clean up cache every 5 minutes
+		setInterval(() => this.cache.cleanup(), 5 * 60 * 1000);
+	}
+
+	/**
+	 * Fetch threads by tab with caching
+	 * Main entry point for the new content system
+	 */
+	async fetchThreadsByTab(params: TabContentParams): Promise<{
+		items: ThreadWithUserAndCategory[];
+		meta: {
+			hasMore: boolean;
+			total: number;
+			page: number;
+		};
+	}> {
+		const { tab, page = 1, limit = 20, forumId, userId } = params;
+
+		// Build cache key
+		const cacheKey = `${tab}:${forumId ?? 'all'}:${page}:${limit}:${userId ?? 'anon'}`;
+
+		// Try cache first
+		const cached = this.cache.get(cacheKey);
+		if (cached) {
+			logger.debug('ThreadService', 'Cache hit for tab content', { tab, cacheKey });
+			return cached;
+		}
+
+		// Build search params based on tab type
+		const searchParams = this.buildSearchParamsForTab(tab, {
+			page,
+			limit,
+			structureId: forumId,
+			followingUserId: tab === 'following' ? userId : undefined
+		});
+
+		// Fetch data
+		const result = await this.searchThreads(searchParams);
+
+		// Transform to expected format
+		const response = {
+			items: result.threads,
+			meta: {
+				hasMore: result.page < result.totalPages,
+				total: result.total,
+				page: result.page
+			}
+		};
+
+		// Cache the result (different TTL for different tabs)
+		const cacheTTL = this.getCacheTTLForTab(tab);
+		this.cache.set(cacheKey, response, cacheTTL);
+
+		logger.info('ThreadService', 'Fetched tab content', {
+			tab,
+			count: result.threads.length,
+			page,
+			cached: false
+		});
+
+		return response;
+	}
+
+	/**
+	 * Build search parameters for specific tabs
+	 */
+	private buildSearchParamsForTab(
+		tab: ContentTab,
+		baseParams: Partial<ThreadSearchParams>
+	): ThreadSearchParams {
+		const params: ThreadSearchParams = {
+			...baseParams,
+			status: 'active' // Only show active threads by default
+		};
+
+		switch (tab) {
+			case 'trending':
+				params.sortBy = 'trending';
+				// Only consider threads from last 7 days for trending
+				break;
+			case 'recent':
+				params.sortBy = 'newest';
+				break;
+			case 'following':
+				params.sortBy = 'newest';
+				// followingUserId will be used to filter by followed users
+				break;
+		}
+
+		return params;
+	}
+
+	/**
+	 * Get cache TTL based on tab type
+	 */
+	private getCacheTTLForTab(tab: ContentTab): number {
+		switch (tab) {
+			case 'trending':
+				return 60 * 1000; // 1 minute for trending
+			case 'recent':
+				return 30 * 1000; // 30 seconds for recent
+			case 'following':
+				return 45 * 1000; // 45 seconds for following
+			default:
+				return 60 * 1000;
+		}
+	}
+
 	/**
 	 * Search and filter threads with pagination
 	 */
@@ -56,7 +232,8 @@ export class ThreadService {
 				page = 1,
 				limit = 20,
 				sortBy = 'newest',
-				status
+				status,
+				followingUserId
 			} = params;
 
 			const offset = (page - 1) * limit;
@@ -104,6 +281,13 @@ export class ThreadService {
 				case 'mostViews':
 					orderBy = desc(threads.viewCount);
 					break;
+				case 'trending':
+					// Simple trending formula: views*0.3 + posts*0.7, weighted by recency
+					orderBy = desc(sql`
+						(COALESCE(${threads.viewCount}, 0) * 0.3 + COALESCE(${threads.postCount}, 0) * 0.7) * 
+						EXP(-EXTRACT(EPOCH FROM (NOW() - ${threads.createdAt}))/86400)
+					`);
+					break;
 				case 'newest':
 				default:
 					orderBy = desc(threads.createdAt);
@@ -147,6 +331,18 @@ export class ThreadService {
 				query = query.where(and(...whereConditions));
 			}
 
+			// Handle following filtering (must be done before tag filtering)
+			if (followingUserId) {
+				query = query
+					.innerJoin(userFollows, eq(userFollows.followeeId, threads.userId))
+					.where(
+						and(
+							...(whereConditions.length > 0 ? whereConditions : []),
+							eq(userFollows.followerId, followingUserId)
+						)
+					);
+			}
+
 			// Handle tag filtering
 			if (tagFilters && tagFilters.length > 0) {
 				query = query
@@ -155,10 +351,16 @@ export class ThreadService {
 					.where(
 						and(
 							...(whereConditions.length > 0 ? whereConditions : []),
+							...(followingUserId ? [eq(userFollows.followerId, followingUserId)] : []),
 							inArray(tags.name, tagFilters)
 						)
 					)
-					.groupBy(threads.id, usersTable.id, forumStructure.id);
+					.groupBy(
+						threads.id,
+						usersTable.id,
+						forumStructure.id,
+						...(followingUserId ? [userFollows.id] : [])
+					);
 			}
 
 			// Get total count with a separate query to avoid issues with joins
@@ -168,6 +370,18 @@ export class ThreadService {
 				countQuery = countQuery.where(and(...whereConditions));
 			}
 
+			// Add following join to count query if needed
+			if (followingUserId) {
+				countQuery = countQuery
+					.innerJoin(userFollows, eq(userFollows.followeeId, threads.userId))
+					.where(
+						and(
+							...(whereConditions.length > 0 ? whereConditions : []),
+							eq(userFollows.followerId, followingUserId)
+						)
+					);
+			}
+
 			if (tagFilters && tagFilters.length > 0) {
 				countQuery = countQuery
 					.leftJoin(threadTags, eq(threads.id, threadTags.threadId))
@@ -175,6 +389,7 @@ export class ThreadService {
 					.where(
 						and(
 							...(whereConditions.length > 0 ? whereConditions : []),
+							...(followingUserId ? [eq(userFollows.followerId, followingUserId)] : []),
 							inArray(tags.name, tagFilters)
 						)
 					);

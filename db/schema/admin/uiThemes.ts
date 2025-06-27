@@ -49,7 +49,15 @@ export const uiThemes = pgTable('ui_themes', {
 		.default(sql`CURRENT_TIMESTAMP`),
 	updatedAt: timestamp('updated_at')
 		.notNull()
-		.default(sql`CURRENT_TIMESTAMP`)
+		.default(sql`CURRENT_TIMESTAMP`),
+
+	/*
+	 * NEW visual fields for ZoneCard 2025-06-26 upgrade cycle
+	 */
+	gradient: text('gradient'), // Tailwind gradient utility e.g. from-red-900/40 via-...
+	glow: text('glow'), // Tailwind shadow utility e.g. shadow-red-500/20
+	glowIntensity: text('glow_intensity'), // 'low' | 'medium' | 'high'
+	rarityOverlay: text('rarity_overlay') // 'common' | 'premium' | 'legendary'
 });
 
 export type UiTheme = typeof uiThemes.$inferSelect;
