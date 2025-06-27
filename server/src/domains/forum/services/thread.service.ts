@@ -16,7 +16,7 @@ import {
 	tags,
 	userFollows
 } from '@schema';
-import { sql, desc, asc, eq, and, or, ilike, inArray, count, gte, subDays } from 'drizzle-orm';
+import { sql, desc, asc, eq, and, or, ilike, inArray, count, gte } from 'drizzle-orm';
 import type {
 	ThreadWithUser,
 	ThreadWithPostsAndUser,
