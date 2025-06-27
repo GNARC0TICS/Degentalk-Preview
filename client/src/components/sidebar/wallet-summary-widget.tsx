@@ -23,7 +23,7 @@ export default function WalletSummaryWidget({
 }: WalletSummaryWidgetProps) {
 	// Placeholder function for wallet actions
 	const handleWalletAction = () => {
-		console.log('Wallet action clicked');
+		// Wallet action clicked
 	};
 
 	// Handling not logged in state

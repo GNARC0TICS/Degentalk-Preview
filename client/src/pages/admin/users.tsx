@@ -1,8 +1,3 @@
-// Phase 2 Audit:
-// - Verified layout
-// - Added/confirmed <Head> title
-// - Applied DEV_MODE gating (if applicable)
-
 import { useState } from 'react';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
@@ -44,7 +39,6 @@ import {
 	ChangeUserRoleDialog
 } from '@/components/admin/forms/users/UserActionDialogs';
 import { ROUTES } from '@/config/admin-routes';
-// import { PaginationState } from '@tanstack/react-table'; // For EntityTable pagination - EntityTable does not use this directly
 
 // Define user type for type safety
 // Ensure this matches the actual structure from your API and EntityTable needs
@@ -479,14 +473,6 @@ export default function AdminUsersPage() {
 					searchTerm={searchQuery}
 					onSearchChange={handleSearch} // Connects to EntityTable's internal search
 				/>
-				{/* TODO: Add a separate pagination component here */}
-				{/* Example:
-        <CustomPagination
-          currentPage={pagination.pageIndex + 1}
-          totalPages={usersData?.totalPages || 1}
-          onPageChange={(newPage) => setPagination(prev => ({ ...prev, pageIndex: newPage - 1}))}
-        />
-        */}
 			</div>
 
 			{/* Dialogs */}

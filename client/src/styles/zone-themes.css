@@ -315,19 +315,12 @@
 	border-image: linear-gradient(45deg, gold, orange, purple, cyan) 1;
 }
 
-/* XP Boost Animation */
-@keyframes pulse-glow {
-	0%,
-	100% {
-		box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
-	}
-	50% {
-		box-shadow: 0 0 16px rgba(16, 185, 129, 0.7);
-	}
-}
-
-.animate-pulse-glow {
-	animation: pulse-glow 2s infinite;
+/* XP Boost Animation - uses global pulse-glow */
+.xp-boost-glow {
+	--glow-color: rgba(16, 185, 129, 0.4);
+	--glow-color-intense: rgba(16, 185, 129, 0.7);
+	--glow-size-small: 8px;
+	--glow-size-large: 16px;
 }
 
 /* Other animations for rarity */

@@ -47,7 +47,6 @@ export function useProfileEngagement(profileUsername: string): ProfileEngagement
 	const [events, setEvents] = useState<EngagementEvent[]>([]);
 	const [startTime] = useState(Date.now());
 
-	// Track time spent on profile
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setMetrics((prev) => ({
@@ -60,17 +59,14 @@ export function useProfileEngagement(profileUsername: string): ProfileEngagement
 		return () => clearInterval(interval);
 	}, [startTime]);
 
-	// Calculate engagement score
 	useEffect(() => {
 		const score = calculateEngagementScore(metrics, events);
 		setMetrics((prev) => ({ ...prev, engagementScore: score }));
 	}, [metrics.timeSpent, metrics.tabSwitches, metrics.actionsPerformed, events.length]);
 
-	// Send analytics on unmount (simplified - in real app would use proper analytics)
 	useEffect(() => {
 		return () => {
 			if (metrics.timeSpent > 5000) {
-				// Only track if spent more than 5 seconds
 				sendEngagementAnalytics(profileUsername, metrics, events);
 			}
 		};
@@ -84,7 +80,6 @@ export function useProfileEngagement(profileUsername: string): ProfileEngagement
 
 		setEvents((prev) => [...prev, fullEvent]);
 
-		// Update metrics based on event type
 		if (event.type === 'action') {
 			setMetrics((prev) => ({
 				...prev,
@@ -131,7 +126,6 @@ export function useProfileEngagement(profileUsername: string): ProfileEngagement
 					lastActiveTime: Date.now()
 				}));
 
-				// Track significant scroll milestones
 				if (depth >= 0.5 && metrics.scrollDepth < 0.5) {
 					trackEvent({
 						type: 'scroll',
@@ -156,7 +150,6 @@ export function useProfileEngagement(profileUsername: string): ProfileEngagement
 		const insights: EngagementInsight[] = [];
 		const timeMinutes = metrics.timeSpent / 60000;
 
-		// Time spent insights
 		if (timeMinutes > 5) {
 			insights.push({
 				type: 'positive',
@@ -173,7 +166,6 @@ export function useProfileEngagement(profileUsername: string): ProfileEngagement
 			});
 		}
 
-		// Tab switching insights
 		if (metrics.tabSwitches > 3) {
 			insights.push({
 				type: 'positive',
@@ -183,7 +175,6 @@ export function useProfileEngagement(profileUsername: string): ProfileEngagement
 			});
 		}
 
-		// Action insights
 		if (metrics.actionsPerformed > 0) {
 			insights.push({
 				type: 'positive',
@@ -200,7 +191,6 @@ export function useProfileEngagement(profileUsername: string): ProfileEngagement
 			});
 		}
 
-		// Overall engagement score insight
 		if (metrics.engagementScore > 70) {
 			insights.push({
 				type: 'positive',
@@ -245,7 +235,6 @@ async function sendEngagementAnalytics(
 	events: EngagementEvent[]
 ) {
 	try {
-		// In a real app, this would send to your analytics service
 		const analyticsData = {
 			profileUsername,
 			metrics,
@@ -254,15 +243,6 @@ async function sendEngagementAnalytics(
 			engagementScore: metrics.engagementScore,
 			timestamp: Date.now()
 		};
-
-		console.log('Profile Engagement Analytics:', analyticsData);
-
-		// Example: Send to your backend
-		// await fetch('/api/analytics/profile-engagement', {
-		//   method: 'POST',
-		//   headers: { 'Content-Type': 'application/json' },
-		//   body: JSON.stringify(analyticsData)
-		// });
 	} catch (error) {
 		console.error('Failed to send engagement analytics:', error);
 	}

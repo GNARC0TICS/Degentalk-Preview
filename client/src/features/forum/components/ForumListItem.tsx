@@ -1,5 +1,5 @@
 import { Link } from 'wouter';
-import { MessageSquare, CornerDownRight, Lock, Shield, Star, Crown } from 'lucide-react';
+import { MessageSquare, CornerDownRight, Lock, Shield, Star, Crown, Flame } from 'lucide-react';
 import type { MergedForum } from '@/contexts/ForumStructureContext';
 import { useState, useEffect } from 'react';
 import { StatChip } from '@/components/ui/StatChip';
@@ -74,7 +74,7 @@ export function ForumListItem({
 				description: 'Higher level required'
 			};
 		}
-		if (!user) {
+		if (!user && forum.rules?.allowPosting === false) {
 			return {
 				icon: Lock,
 				label: 'Sign in Required',
@@ -140,6 +140,12 @@ export function ForumListItem({
 							isAnimating={isAnimating}
 						/>
 
+						{forum.isPopular && (
+							<Badge className="bg-red-600 text-white text-[10px] px-2 py-0.5 flex items-center gap-1">
+								<Flame className="w-3 h-3" /> HOT
+							</Badge>
+						)}
+
 						{/* Access Level Badge */}
 						{accessInfo && (
 							<Badge
@@ -158,8 +164,8 @@ export function ForumListItem({
 		</div>
 	);
 
-	// Replace canHaveThreads check with permission
-	const canHaveThreads = canPost && forum.canHaveThreads !== false;
+	// Navigation should be allowed even if posting is disabled
+	const canHaveThreads = forum.canHaveThreads !== false;
 
 	return (
 		<div className={`${isParentForum ? 'mb-2' : ''}`}>

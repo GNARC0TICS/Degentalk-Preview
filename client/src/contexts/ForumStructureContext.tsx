@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { forumMap } from '@/config/forumMap.config';
 import type { Zone } from '@/config/forumMap.config';
-import { getQueryFn } from '@/lib/queryClient';
 
 // ===========================================================
 // ForumStructureContext v2.0  🛠️  (2025-06-16)
@@ -55,7 +54,9 @@ const PluginDataSchema = z
 		allowPosting: z.boolean().optional(),
 		xpEnabled: z.boolean().optional(),
 		allowPolls: z.boolean().optional(),
-		allowTags: z.boolean().optional()
+		allowTags: z.boolean().optional(),
+		isPopular: z.boolean().optional(),
+		lastActivityAt: z.union([z.string(), z.date()]).optional().nullable()
 	})
 	.passthrough();
 
@@ -101,7 +102,9 @@ const ApiEntitySchema = z
 			}, PluginDataSchema)
 			.nullish(),
 		createdAt: z.union([z.string(), z.date()]).optional().nullable(),
-		updatedAt: z.union([z.string(), z.date()]).optional().nullable()
+		updatedAt: z.union([z.string(), z.date()]).optional().nullable(),
+		isPopular: z.boolean().optional(),
+		lastActivityAt: z.union([z.string(), z.date()]).optional().nullable()
 	})
 	.passthrough();
 
@@ -114,6 +117,7 @@ const ForumStructureApiResponseSchema = z.object({
 export type ApiEntity = z.infer<typeof ApiEntitySchema>;
 export type PluginData = z.infer<typeof PluginDataSchema>;
 export type ForumStructureApiResponse = z.infer<typeof ForumStructureApiResponseSchema>;
+export type ForumId = string | number;
 
 export interface MergedTheme {
 	icon?: string | null;
@@ -132,7 +136,7 @@ export interface MergedRules {
 }
 
 export interface MergedForum {
-	id: number;
+	id: ForumId;
 	slug: string;
 	name: string;
 	description?: string | null;
@@ -152,6 +156,8 @@ export interface MergedForum {
 	postCount: number;
 	parentCategoryId?: number | null;
 	canHaveThreads?: boolean;
+	isPopular?: boolean;
+	lastActivityAt?: string | undefined;
 }
 
 export interface MergedZone {
@@ -218,7 +224,7 @@ function buildTheme(entity: ApiEntity): MergedTheme {
 
 function makeMergedForum(api: ApiEntity, parentZoneId: number): MergedForum {
 	return {
-		id: api.id,
+		id: api.id as ForumId,
 		slug: api.slug,
 		name: api.name,
 		description: api.description,
@@ -237,7 +243,9 @@ function makeMergedForum(api: ApiEntity, parentZoneId: number): MergedForum {
 		threadCount: api.threadCount,
 		postCount: api.postCount,
 		parentCategoryId: null,
-		canHaveThreads: true
+		canHaveThreads: true,
+		isPopular: api.isPopular ?? false,
+		lastActivityAt: api.lastActivityAt ? String(api.lastActivityAt) : undefined
 	};
 }
 
@@ -364,7 +372,9 @@ function fallbackStructure(staticZones: Zone[]) {
 				threadCount: 0,
 				postCount: 0,
 				parentCategoryId: null,
-				canHaveThreads: true
+				canHaveThreads: true,
+				isPopular: false,
+				lastActivityAt: undefined
 			};
 			forums[mf.slug] = mf;
 			mz.forums.push(mf);
@@ -380,10 +390,25 @@ function fallbackStructure(staticZones: Zone[]) {
 const ForumStructureContext = createContext<ForumStructureContextType | undefined>(undefined);
 
 export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-	// forumMap.config.ts is the single source of truth – skip remote fetch
-	const raw = undefined;
-	const isLoading = false;
-	const netErr: Error | null = null;
+	const [raw, setRaw] = React.useState<ForumStructureApiResponse | null>(null);
+	const [isLoading, setLoading] = React.useState(true);
+	const [netErr, setNetErr] = React.useState<Error | null>(null);
+
+	React.useEffect(() => {
+		(async () => {
+			try {
+				const resp = await fetch('/api/forum/structure');
+				if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+				const data = await resp.json();
+				setRaw(data);
+			} catch (e: any) {
+				console.error('[ForumStructureContext] fetch failed – falling back to config', e);
+				setNetErr(e);
+			} finally {
+				setLoading(false);
+			}
+		})();
+	}, []);
 
 	const { zones, forums, isUsingFallback, parseError } = useMemo(() => {
 		if (raw) {

@@ -38,7 +38,5 @@ export async function unlockEmojiPackForUser({
 		pricePaid
 	});
 
-	// TODO: emit event / log if needed (e.g., analytics_events)
-
 	return { success: true };
 }

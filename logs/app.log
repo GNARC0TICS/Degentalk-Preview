@@ -29217,3 +29217,50 @@ User not found
 [2025-06-26T21:51:11.672Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
 [2025-06-26T21:51:11.673Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
 [2025-06-26T21:51:12.092Z] [INFO] [XP_ADMIN_SERVICE] xp_adjustment_logs table setup completed
+[2025-06-27T02:46:22.913Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "env": "development",
+  "logPath": "logs/app.log"
+}
+[2025-06-27T02:46:22.918Z] [INFO] [DATABASE] 🐘 PostgreSQL session store initialized (using table name 'user_sessions').
+[2025-06-27T02:46:23.026Z] [INFO] [DATABASE] Using PostgreSQL (Neon) database provider.
+[2025-06-27T02:46:23.385Z] [INFO] [XP_ADMIN_SERVICE] Creating xp_adjustment_logs table if not exists...
+[2025-06-27T02:46:24.431Z] [INFO] [XP_ADMIN_SERVICE] xp_adjustment_logs table setup completed
+[2025-06-27T02:46:24.810Z] [INFO] [USER_SEED] ℹ️ DevUser already exists with ID: ff68584b-4735-4070-b749-64ee66bab3cc
+[2025-06-27T02:46:52.629Z] [INFO] [NOTIFICATIONS] Event notification listener initialized
+[2025-06-27T02:46:52.631Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic scheduled tasks...
+[2025-06-27T02:46:52.631Z] [INFO] [TASK_SCHEDULER] 🔄 Running basic maintenance...
+[2025-06-27T02:46:52.631Z] [INFO] [TASK_SCHEDULER] ✅ Basic maintenance completed
+[2025-06-27T02:46:52.631Z] [INFO] [TASK_SCHEDULER] ✅ Scheduled tasks completed
+[2025-06-27T02:48:25.813Z] [INFO] [RequestStart] --> GET /api/forum/content?tab=trending&page=1&limit=5
+{
+  "requestId": "3dfc1f6f-f402-49cf-8f2b-bb9a216a71e8",
+  "method": "GET",
+  "url": "/api/forum/content?tab=trending&page=1&limit=5",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-27T02:48:26.552Z] [INFO] [RequestEnd] <-- GET /api/forum/content?tab=trending&page=1&limit=5 200 738.795ms
+{
+  "requestId": "3dfc1f6f-f402-49cf-8f2b-bb9a216a71e8",
+  "method": "GET",
+  "url": "/api/forum/content?tab=trending&page=1&limit=5",
+  "statusCode": 200,
+  "durationMs": 738.795
+}
+[2025-06-27T02:49:05.087Z] [INFO] [RequestStart] --> GET /api/auth/user
+{
+  "requestId": "28281a0b-1c41-46c3-a1f4-bd8e87ebd4e5",
+  "method": "GET",
+  "url": "/api/auth/user",
+  "ip": "127.0.0.1",
+  "userAgent": "curl/8.7.1"
+}
+[2025-06-27T02:49:05.089Z] [INFO] [RequestEnd] <-- GET /api/auth/user 401 2.313ms
+{
+  "requestId": "28281a0b-1c41-46c3-a1f4-bd8e87ebd4e5",
+  "method": "GET",
+  "url": "/api/auth/user",
+  "statusCode": 401,
+  "durationMs": 2.313
+}

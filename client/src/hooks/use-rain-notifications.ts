@@ -83,7 +83,7 @@ export function useRainNotifications() {
 			};
 
 			ws.onclose = () => {
-				console.log('WebSocket connection closed');
+				// WebSocket connection closed
 			};
 		}
 

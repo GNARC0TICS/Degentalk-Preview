@@ -53,11 +53,12 @@ export function ContentArea({
 
 	// Sync with ContentFeedContext when available
 	useEffect(() => {
-		if (feedContext && !forumId) {
+		if (feedContext && !forumId && feedContext.activeTab !== activeTab) {
 			// Only sync for home content, not forum-specific
 			feedContext.setActiveTab(activeTab);
 		}
-	}, [activeTab, feedContext, forumId]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeTab, forumId]);
 
 	// Update feed meta in context
 	useEffect(() => {
@@ -68,7 +69,8 @@ export function ContentArea({
 				lastRefresh: new Date()
 			});
 		}
-	}, [meta.total, feedContext, forumId]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [meta.total, forumId]);
 
 	// Update badge counts based on current content
 	useEffect(() => {
@@ -85,7 +87,8 @@ export function ContentArea({
 				followingActiveCount: activeTab === 'following' ? items.length : 0
 			});
 		}
-	}, [items, activeTab, feedContext, forumId]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [items, activeTab, forumId]);
 
 	// Network status monitoring
 	useEffect(() => {
@@ -271,7 +274,7 @@ export function ContentArea({
 					<>
 						<ContentFeed
 							items={items}
-							isLoading={isLoading || isFetching}
+							isLoading={!items.length && (isLoading || isFetching)}
 							error={error}
 							variant={variant}
 							showCategory={showCategory && !forumId} // Hide category if in forum context

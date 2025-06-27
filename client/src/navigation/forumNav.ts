@@ -1,7 +1,6 @@
 import type { LucideProps } from 'lucide-react';
 import { LayoutGrid } from 'lucide-react'; // For "All Content"
 import type { MergedZone, MergedForum, MergedTheme } from '@/contexts/ForumStructureContext';
-// NOTE: Removed direct import of ZONE_THEMES. Icons will be resolved at render time via useForumTheme.
 import { getForumEntityUrl } from '@/utils/forum-routing-helper'; // Assuming this helper provides correct URLs
 import type { ComponentType } from 'react';
 
@@ -23,13 +22,9 @@ export interface NavNode {
 	isCanonical?: boolean; // To flag primary zones
 }
 
-export function buildNavigationTree(
-	zones: MergedZone[]
-	// forumsRecord: Record<string, MergedForum> // May not be needed if MergedZone contains all forum details
-): NavNode[] {
+export function buildNavigationTree(zones: MergedZone[]): NavNode[] {
 	const navigationTree: NavNode[] = [];
 
-	// 1. Add "All Content" link
 	navigationTree.push({
 		id: 'all-content',
 		name: 'All Content',
@@ -45,7 +40,6 @@ export function buildNavigationTree(
 	const primaryZonesFromFilter = zones.filter((z) => z.isPrimary === true); // Renamed to avoid conflict
 	const generalZonesFromFilter = zones.filter((z) => z.isPrimary === false); // Renamed to avoid conflict
 
-	// Helper function to process a forum and its potential subforums recursively
 	function processForumRecursive(
 		forum: MergedForum,
 		parentTheme?: MergedTheme, // Theme from parent zone or parent forum
@@ -63,18 +57,13 @@ export function buildNavigationTree(
 			semanticThemeKey: forum.theme?.colorTheme || parentSemanticThemeKey,
 			children: [], // Initialize children for subforums
 			entityData: forum,
-			// Stats: parent forums will have rolled-up stats from service, subforums their direct stats
 			counts: { threads: forum.threadCount, posts: forum.postCount }
 		};
 
-		// Recursively process subforums (only one level deep as per decision)
 		if (forum.forums && forum.forums.length > 0) {
-			// forum.forums is the subForums array from MergedForum
 			forum.forums.forEach((subForum) => {
-				// Pass down the current forum's effective theme as a fallback for the subforum
 				const currentForumEffectiveTheme = forum.theme || parentTheme;
 				const currentForumEffectiveSemanticKey = forum.theme?.colorTheme || parentSemanticThemeKey;
-				// For subforums, their 'parentTheme' is the theme of the 'forum' they are under.
 				forumNode.children.push(
 					processForumRecursive(
 						subForum,
@@ -87,18 +76,7 @@ export function buildNavigationTree(
 		return forumNode;
 	}
 
-	// Original buildNavigationTree starts here, ensure no duplication
-	// The previous export function buildNavigationTree was duplicated. This is the correct start.
-	// Note: The filter for primaryZones and generalCategories was outside this function in the erroneous version.
-	// It should use the 'zones' parameter passed to this function.
-
-	// isPrimary flag should be available on MergedZone from ForumStructureContext
-	// const primaryZones = zones.filter(z => z.isPrimary === true); // This was part of the duplicated block
-	// const generalZones = zones.filter(z => z.isPrimary === false); // This was part of the duplicated block
-
-	// 2. Process Primary Zones
 	primaryZonesFromFilter.forEach((zone) => {
-		// Use renamed variable
 		const zoneNode: NavNode = {
 			id: zone.slug,
 			name: zone.name,
@@ -116,7 +94,6 @@ export function buildNavigationTree(
 		};
 
 		if (zone.forums && zone.forums.length > 0) {
-			// These are top-level/parent forums
 			zone.forums.forEach((parentForum) => {
 				zoneNode.children.push(
 					processForumRecursive(parentForum, zone.theme, zone.theme?.colorTheme)
@@ -126,9 +103,7 @@ export function buildNavigationTree(
 		navigationTree.push(zoneNode);
 	});
 
-	// 3. Process General Zones (previously generalCategories)
 	generalZonesFromFilter.forEach((zone) => {
-		// Use renamed variable and ensure 'zone' is the correct term
 		const zoneNode: NavNode = {
 			id: zone.slug,
 			name: zone.name,
@@ -146,7 +121,6 @@ export function buildNavigationTree(
 		};
 
 		if (zone.forums && zone.forums.length > 0) {
-			// These are top-level/parent forums
 			zone.forums.forEach((parentForum) => {
 				zoneNode.children.push(
 					processForumRecursive(parentForum, zone.theme, zone.theme?.colorTheme)
@@ -158,9 +132,3 @@ export function buildNavigationTree(
 
 	return navigationTree;
 }
-// The duplicated export function buildNavigationTree and its content below this line should be removed.
-// The error "A function whose declared type is neither 'undefined', 'void', nor 'any' must return a value."
-// was likely due to the processForumRecursive being defined *after* the first buildNavigationTree
-// and the second buildNavigationTree (the duplicate) not having its filters (primaryZones, generalZones) defined correctly.
-// By ensuring processForumRecursive is defined first, and only one buildNavigationTree exists, this should be resolved.
-// The '}' expected error was due to the malformed structure from the duplication.

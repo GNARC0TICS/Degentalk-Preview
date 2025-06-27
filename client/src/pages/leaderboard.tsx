@@ -41,7 +41,6 @@ export default function LeaderboardPage() {
 		})
 	};
 
-	// TODO: Replace with actual API call
 	const { data, isLoading, isError, error, refetch } = useQuery<LeaderboardUser[]>({
 		queryKey: ['leaderboard'],
 		queryFn: async () => {
@@ -219,8 +218,6 @@ export default function LeaderboardPage() {
 			>
 				Degentalk Leaderboards
 			</motion.h1>
-
-			{/* Add Tabs for different leaderboards (XP, Clout, DGT) here later */}
 
 			{isLoading ? (
 				<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.1}>

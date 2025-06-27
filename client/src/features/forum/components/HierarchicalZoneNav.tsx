@@ -1,16 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useLocation, useRoute } from 'wouter';
 import {
-	// Folder, // No longer directly used, DefaultFolderIcon is used
 	ChevronRight,
 	ChevronDown,
 	CornerDownRight, // Added import
-	// Flame, // Icons will come from ZONE_THEMES
-	// Target,
-	// Archive,
-	// Dices,
-	// FileText,
-	// LayoutGrid, // No longer directly used by NavItem, systemLinkNodes uses LayoutGrid from forumNav.ts
 	Users,
 	Folder as DefaultFolderIcon, // Renaming Folder to avoid conflict if NavNode uses 'Folder'
 	ChevronRight as DefaultChevronRight,
@@ -21,23 +14,14 @@ import { useForumStructure } from '@/contexts/ForumStructureContext';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-// import { ZONE_THEMES } from '@/config/themeConstants';
 import { buildNavigationTree, type NavNode } from '@/navigation/forumNav';
 import { useForumTheme } from '@/contexts/ForumThemeProvider'; // Import the theme hook
 
-// interface HierarchicalZoneNavProps { // Original props, keeping for reference if needed
-// className?: string;
-// showCounts?: boolean;
-// compact?: boolean;
-// }
-
-// Simplified props as showCounts and compact were not used in the final logic
 interface HierarchicalZoneNavProps {
 	className?: string;
 	isCollapsed?: boolean;
 }
 
-// Updated NavItem to use NavNode
 const NavItem = ({
 	node,
 	isActive,
@@ -63,12 +47,8 @@ const NavItem = ({
 			: 'bg-emerald-900/20 text-emerald-400 border-emerald-500/30';
 
 	if (isActive && node.semanticThemeKey) {
-		// If a specific zone-nav-theme class is needed for complex CSS, it can be added here
-		// For now, direct theme properties are used.
-		// activeClassesConfig = `zone-nav-theme-${node.semanticThemeKey} active ${activeClassesConfig}`;
 		activeClassesConfig = `${activeClassesConfig} active`; // Ensure 'active' class is appended for global active styles
 	} else if (isActive) {
-		// Default active state if no specific theme key applies
 		activeClassesConfig = 'bg-emerald-900/20 text-emerald-400 border-emerald-500/30 active';
 	}
 
@@ -78,14 +58,12 @@ const NavItem = ({
 	let displayIcon;
 	if (theme.icon) {
 		if (typeof theme.icon === 'string') {
-			// Emoji or SVG path
 			displayIcon = (
 				<span className={`mr-3 text-lg`} role="img" aria-hidden="true">
 					{theme.icon}
 				</span>
 			);
 		} else {
-			// LucideIcon component
 			const IconFromTheme = theme.icon;
 			displayIcon = (
 				<IconFromTheme
@@ -94,14 +72,12 @@ const NavItem = ({
 			);
 		}
 	} else if (node.iconEmoji) {
-		// Fallback to node's direct emoji if theme has no icon
 		displayIcon = (
 			<span className={`mr-3 text-lg`} role="img" aria-hidden="true">
 				{node.iconEmoji}
 			</span>
 		);
 	} else if (node.iconComponent) {
-		// Fallback to node's direct component
 		const IconFromNode = node.iconComponent;
 		displayIcon = (
 			<IconFromNode
@@ -109,7 +85,6 @@ const NavItem = ({
 			/>
 		);
 	} else {
-		// Absolute fallback
 		displayIcon = (
 			<DefaultFolderIcon
 				className={cn('w-4 h-4 mr-3', isActive ? '' : 'text-zinc-400 group-hover:text-zinc-300')}
@@ -176,7 +151,6 @@ const NavItem = ({
 	);
 
 	if (disabled || !node.href) {
-		// Use node.href
 		return content;
 	}
 
@@ -190,7 +164,6 @@ const NavItem = ({
 };
 
 const GeneralCategorySection = ({
-	// Renamed from GeneralZoneSection to GeneralCategorySection
 	categoryNode, // Changed prop name from zone to categoryNode
 	isExpanded,
 	onToggle,
@@ -208,16 +181,13 @@ const GeneralCategorySection = ({
 	const { getTheme } = useForumTheme();
 	const theme = getTheme(categoryNode.semanticThemeKey);
 
-	// Determine if the category itself is active (e.g. /zones/category-slug)
 	const isActiveCategory = currentZoneSlug === categoryNode.slug && !currentForumSlug;
 	let activeCategorySpecificClass = theme.color || 'text-zinc-300'; // Default non-active class
 
 	if (isActiveCategory) {
 		if (categoryNode.semanticThemeKey) {
-			// activeCategorySpecificClass = `zone-nav-theme-${categoryNode.semanticThemeKey} active ${theme.color}`;
 			activeCategorySpecificClass = `${theme.bgColor} ${theme.borderColor} ${theme.color} active`;
 		} else {
-			// Default active style for categories without a specific theme key
 			activeCategorySpecificClass =
 				'bg-sky-900/20 text-sky-400 border-l-2 border-sky-500/30 active';
 		}
@@ -325,7 +295,6 @@ const GeneralCategorySection = ({
 									currentActiveSlug={currentForumSlug} // Pass currentForumSlug to determine active subforum
 									depth={1} // Parent forums under a category are at depth 1
 									isCollapsed={isCollapsed}
-									// Pass any other necessary props like onToggle for sub-expansion if needed
 								/>
 							))}
 						</motion.div>
@@ -335,23 +304,18 @@ const GeneralCategorySection = ({
 	);
 };
 
-// New component to render Parent Forums and their SubForums
 const ExpandableForumItem = ({
 	forumNode, // This is a Parent Forum NavNode
 	currentActiveSlug,
 	depth,
 	isCollapsed = false
-	// onToggle, // If sub-expansion state is managed here
 }: {
 	forumNode: NavNode;
 	currentActiveSlug?: string;
 	depth: number;
 	isCollapsed?: boolean;
-	// onToggle?: (nodeId: string) => void;
 }) => {
 	const [isSubforumsExpanded, setIsSubforumsExpanded] = useState(false);
-	// TODO: Persist subforum expansion state similar to categories, if desired.
-	// For now, local state.
 
 	const toggleSubforums = (e: React.MouseEvent) => {
 		e.stopPropagation(); // Prevent link navigation if clicking on expander
@@ -371,7 +335,6 @@ const ExpandableForumItem = ({
 						!forumNode.children.some((sf) => sf.slug === currentActiveSlug)
 					} // Active if it's the direct target and not one of its children
 					isCollapsed={isCollapsed}
-					// onClick={!hasSubforums ? undefined : (e) => { e.preventDefault(); toggleSubforums(); }} // Make clickable to expand if it has children
 				/>
 				{/* Hide expansion button when collapsed */}
 				{hasSubforums && !isCollapsed && (
@@ -430,8 +393,6 @@ function HierarchicalZoneNav({ className = '', isCollapsed = false }: Hierarchic
 	const [, forumPageParams] = useRoute<{ slug?: string }>('/forums/:slug'); // Matches /forums/forum-slug
 
 	const currentZoneSlug = zonePageParams?.zone_slug;
-	// If on a forum page directly (/forums/forum-slug), forumPageParams.slug will be set.
-	// If on a zone's forum page (/zones/zone-slug/forum-slug), zonePageParams.forum_slug will be set.
 	const currentForumSlug = zonePageParams?.forum_slug || forumPageParams?.slug;
 
 	const { zones, isLoading, error } = useForumStructure();
@@ -448,7 +409,6 @@ function HierarchicalZoneNav({ className = '', isCollapsed = false }: Hierarchic
 				console.error('Failed to parse stored expanded general categories', e);
 			}
 		}
-		// Auto-expand current category if it's a general category and not already expanded
 		const currentCategoryNode = navigationTree.find(
 			(node) => node.type === 'generalCategory' && node.slug === currentZoneSlug
 		);
@@ -462,9 +422,7 @@ function HierarchicalZoneNav({ className = '', isCollapsed = false }: Hierarchic
 	}, []);
 
 	const toggleCategoryExpansion = useCallback(
-		// Renamed from toggleGeneralZone
 		(categoryId: string) => {
-			// Changed param name
 			setExpandedCategories((prev) => {
 				const newState = { ...prev, [categoryId]: !prev[categoryId] };
 				saveToStorage(newState);
@@ -493,7 +451,6 @@ function HierarchicalZoneNav({ className = '', isCollapsed = false }: Hierarchic
 	}
 
 	if (!navigationTree.length) {
-		// Check navigationTree instead of zones
 		return (
 			<div
 				className={cn(
@@ -543,12 +500,6 @@ function HierarchicalZoneNav({ className = '', isCollapsed = false }: Hierarchic
 						)}
 						<div className="space-y-1">
 							{primaryZoneNodes.map((zoneNode) => (
-								// If Primary Zones can also have expandable forums/subforums:
-								// Option 1: Create a PrimaryZoneSection similar to GeneralCategorySection
-								// Option 2: Directly use ExpandableForumItem if zoneNode.children are forums
-								// For now, assuming Primary Zones in nav are direct links, sub-content on their page.
-								// If they need to expand to show forums, this needs to be like GeneralCategorySection.
-								// Based on current plan, let's make them expandable too for consistency.
 								<GeneralCategorySection // Reusing GeneralCategorySection logic for Primary Zones too
 									key={zoneNode.id}
 									categoryNode={zoneNode} // Pass zoneNode as categoryNode
@@ -558,12 +509,6 @@ function HierarchicalZoneNav({ className = '', isCollapsed = false }: Hierarchic
 									currentZoneSlug={currentZoneSlug} // Pass currentZoneSlug
 									isCollapsed={isCollapsed}
 								/>
-								// Original simple NavItem for Primary Zones (if not expandable):
-								// <NavItem
-								// 	key={zoneNode.id}
-								// 	node={zoneNode}
-								// 	isActive={currentZoneSlug === zoneNode.slug && !currentForumSlug}
-								// />
 							))}
 						</div>
 					</section>

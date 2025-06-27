@@ -40,7 +40,6 @@ export function createSignature(
 		// Create SHA256 hash
 		return crypto.createHash('sha256').update(signatureStr).digest('hex');
 	} catch (error) {
-		console.error('Error creating CCPayment signature:', error);
 		throw new Error('Failed to create CCPayment API signature');
 	}
 }
@@ -66,7 +65,6 @@ export function verifyWebhookSignature(
 		const calculatedSignature = createSignature(appId, appSecret, data, parseInt(timestamp));
 		return calculatedSignature === signature;
 	} catch (error) {
-		console.error('Error verifying CCPayment webhook signature:', error);
 		return false;
 	}
 }

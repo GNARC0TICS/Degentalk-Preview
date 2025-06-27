@@ -32,21 +32,12 @@
 	animation: shimmer 2s infinite;
 }
 
-/* Pulse glow effect for hot content */
-@keyframes pulse-glow {
-	0%,
-	100% {
-		box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
-	}
-	50% {
-		box-shadow:
-			0 0 20px rgba(239, 68, 68, 0.8),
-			0 0 30px rgba(239, 68, 68, 0.6);
-	}
-}
-
-.animate-pulse-glow {
-	animation: pulse-glow 2s ease-in-out infinite;
+/* Hot content pulse glow - uses global animation */
+.hot-content-glow {
+	--glow-color: rgba(239, 68, 68, 0.5);
+	--glow-color-intense: rgba(239, 68, 68, 0.8);
+	--glow-size-small: 5px;
+	--glow-size-large: 20px;
 }
 
 /* Staggered list entrance */
@@ -194,30 +185,10 @@
 	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Content item entrance stagger */
+/* Content item entrance stagger - disabled to prevent flashing */
 .content-item {
-	opacity: 0;
-	transform: translateY(20px);
-	animation: slide-up 0.5s ease-out forwards;
-}
-
-.content-item:nth-child(1) {
-	animation-delay: 0ms;
-}
-.content-item:nth-child(2) {
-	animation-delay: 100ms;
-}
-.content-item:nth-child(3) {
-	animation-delay: 200ms;
-}
-.content-item:nth-child(4) {
-	animation-delay: 300ms;
-}
-.content-item:nth-child(5) {
-	animation-delay: 400ms;
-}
-.content-item:nth-child(n + 6) {
-	animation-delay: 500ms;
+	opacity: 1;
+	transform: translateY(0);
 }
 
 /* Error state bounce */

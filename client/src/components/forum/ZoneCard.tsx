@@ -11,7 +11,8 @@ import {
 	Crown,
 	Sparkles,
 	Target,
-	Flame
+	Flame,
+	Hash
 } from 'lucide-react';
 
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -22,6 +23,7 @@ import { cn } from '@/lib/utils';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import { CARD_STYLES } from '@/utils/card-constants';
 import { getZoneTheme, ZONE_THEMES } from '@/config/zoneThemes.config';
+import { featureFlags } from '@/config/featureFlags';
 
 export interface ZoneCardProps {
 	zone: {
@@ -58,6 +60,10 @@ export interface ZoneCardProps {
 			name: string;
 			threadCount: number;
 			isPopular?: boolean;
+			subforums?: Array<{
+				id: string | number;
+				name: string;
+			}>;
 		}>;
 	};
 	layout?: 'default' | 'compact' | 'hero' | 'mobile';
@@ -97,7 +103,8 @@ const ZoneCardPure = memo(
 					id: String(f.id),
 					name: f.name,
 					threadCount: f.threadCount,
-					isPopular: f.threadCount > 100
+					isPopular: f.isPopular,
+					subforums: f.subforums?.map((s) => ({ id: s.id, name: s.name }))
 				}))
 			};
 		}, [zone, getZone]);
@@ -114,6 +121,20 @@ const ZoneCardPure = memo(
 			hero: CARD_STYLES.height.hero,
 			mobile: CARD_STYLES.height.compact
 		} as const;
+
+		const showHotRibbonFeature = featureFlags?.forum?.showHotRibbon ?? true;
+		const hasHotForums = React.useMemo(() => {
+			return derivedZone.forums?.some((f) => f.isPopular);
+		}, [derivedZone]);
+
+		// Compute preview forums: prefer top-level, then subforums to fill to 3
+		const previewForums = React.useMemo(() => {
+			if (!derivedZone.forums) return [];
+			const topLevel = derivedZone.forums.slice(0, 3);
+			if (topLevel.length >= 3) return topLevel;
+			const sub = derivedZone.forums.flatMap((f) => f.subforums ?? []);
+			return [...topLevel, ...sub].slice(0, 3);
+		}, [derivedZone.forums]);
 
 		const handleEnter = () => {
 			onEnter?.(zone.id);
@@ -195,6 +216,20 @@ const ZoneCardPure = memo(
 								</Badge>
 							)}
 						</div>
+
+						{/* HOT Ribbon */}
+						{showHotRibbonFeature && hasHotForums && (
+							<Link
+								href={`/zones/${derivedZone.slug}?filter=popular`}
+								className="absolute -left-6 top-3 -rotate-45 bg-red-600 text-white text-[10px] font-bold px-8 py-1 shadow-lg z-20"
+								onClick={(e) => {
+									e.stopPropagation();
+									e.preventDefault();
+								}}
+							>
+								HOT
+							</Link>
+						)}
 
 						<CardHeader className="relative z-10 pb-3">
 							{slots?.header ?? (
@@ -328,19 +363,19 @@ const ZoneCardPure = memo(
 											transition={{ duration: 0.3 }}
 											className="space-y-2 overflow-hidden"
 										>
-											<div className="text-xs font-medium text-zinc-300 mb-2">Popular Forums:</div>
-											{derivedZone.forums.slice(0, 3).map((forum, index) => (
+											<div className="text-xs font-medium text-zinc-300 mb-2">Forums:</div>
+											{previewForums.map((forumItem: any, index: number) => (
 												<motion.div
-													key={forum.id}
+													key={forumItem.id}
 													initial={{ opacity: 0, x: -20 }}
 													animate={{ opacity: 1, x: 0 }}
 													transition={{ delay: index * 0.1 }}
 													className="flex items-center justify-between p-2 rounded bg-zinc-800/40 hover:bg-zinc-800/60 transition-colors"
 												>
-													<span className="text-sm text-zinc-300 truncate">{forum.name}</span>
+													<span className="text-sm text-zinc-300 truncate">{forumItem.name}</span>
 													<div className="flex items-center gap-1 text-xs text-zinc-500">
 														<MessageSquare className="w-3 h-3" />
-														<span>{forum.threadCount}</span>
+														<span>{forumItem.threadCount ?? 0}</span>
 													</div>
 												</motion.div>
 											))}
@@ -459,7 +494,8 @@ const ZoneCardCompat = memo((props: any) => {
 			id: String(f.id),
 			name: f.name,
 			threadCount: f.threadCount,
-			isPopular: f.threadCount > 100
+			isPopular: f.isPopular,
+			subforums: f.subforums?.map((s) => ({ id: s.id, name: s.name }))
 		}))
 	};
 

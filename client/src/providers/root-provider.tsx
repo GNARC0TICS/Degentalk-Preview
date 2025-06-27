@@ -7,7 +7,9 @@ import { ForumStructureProvider } from '@/contexts/ForumStructureContext';
 import { ForumThemeProvider } from '@/contexts/ForumThemeProvider';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ProfileCardProvider } from '@/contexts/ProfileCardContext';
+import { MotionProvider } from '@/contexts/MotionContext';
 import { getQueryFn } from '@/lib/queryClient';
+import { ForumOrderingProvider } from '@/contexts/ForumOrderingContext';
 
 // Initialize React Query client - MAIN APPLICATION QUERY CLIENT
 // This is the PRIMARY QueryClient instance used throughout the application
@@ -42,11 +44,15 @@ export function RootProvider({ children }: { children: React.ReactNode }) {
 					<PurchaseModalProvider>
 						<ShoutboxProvider>
 							<ForumStructureProvider>
-								<ForumThemeProvider>
-									<ProfileCardProvider>
-										<TooltipProvider>{children}</TooltipProvider>
-									</ProfileCardProvider>
-								</ForumThemeProvider>
+								<ForumOrderingProvider>
+									<ForumThemeProvider>
+										<MotionProvider>
+											<ProfileCardProvider>
+												<TooltipProvider>{children}</TooltipProvider>
+											</ProfileCardProvider>
+										</MotionProvider>
+									</ForumThemeProvider>
+								</ForumOrderingProvider>
 							</ForumStructureProvider>
 						</ShoutboxProvider>
 					</PurchaseModalProvider>

@@ -1,11 +1,5 @@
 import React from 'react';
 import { render as rtlRender, RenderOptions } from '@testing-library/react';
-// Wouter doesn't export a dedicated memory router in some versions when using package exports.
-// Instead, we create an in-memory history instance manually. The simple approach below keeps
-// routing working in tests without relying on an extra export path that Vite may not resolve.
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore – optional import only available in browser builds; fall back gracefully.
-// import { createMemoryHistory } from 'wouter/use-location';
 import { RootProvider } from '@/providers/root-provider';
 
 /**

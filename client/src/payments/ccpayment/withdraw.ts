@@ -76,7 +76,6 @@ export async function createWithdrawal(
 			createdAt: new Date().toISOString()
 		};
 	} catch (error) {
-		console.error('Error creating withdrawal:', error);
 		throw new Error(`Failed to create withdrawal: ${error.message}`);
 	}
 }
@@ -103,7 +102,6 @@ export async function checkWithdrawalStatus(orderId: string): Promise<{
 			transactionHash: status.txHash
 		};
 	} catch (error) {
-		console.error('Error checking withdrawal status:', error);
 		throw new Error(`Failed to check withdrawal status: ${error.message}`);
 	}
 }
@@ -173,7 +171,6 @@ export async function validateWithdrawal(
 			maxAmount
 		};
 	} catch (error) {
-		console.error('Error validating withdrawal:', error);
 		throw new Error(`Failed to validate withdrawal: ${error.message}`);
 	}
 }

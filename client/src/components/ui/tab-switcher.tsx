@@ -116,18 +116,18 @@ export function TabSwitcher({
 											? 'text-orange-400 drop-shadow-lg'
 											: 'text-zinc-500 group-hover:text-orange-300',
 										isHovered && !isActive && 'scale-110 text-orange-200',
-										isChanging && isActive && 'animate-pulse'
+										isChanging && isActive && 'opacity-75'
 									)}
 								/>
 
 								{/* Sparkle effect for trending tab when active */}
 								{tab.id === 'trending' && isActive && (
-									<Sparkles className="absolute -top-1 -right-1 h-2 w-2 text-orange-300 animate-pulse" />
+									<Sparkles className="absolute -top-1 -right-1 h-2 w-2 text-orange-300" />
 								)}
 
 								{/* Notification dot for following tab (if needed) */}
 								{tab.id === 'following' && isAuthenticated && isActive && (
-									<div className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 bg-green-400 rounded-full animate-pulse" />
+									<div className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 bg-green-400 rounded-full" />
 								)}
 							</div>
 
@@ -153,7 +153,6 @@ export function TabSwitcher({
 							{isActive && (
 								<>
 									<div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-orange-400 to-red-400 shadow-lg shadow-orange-500/30" />
-									<div className="absolute inset-x-2 bottom-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent animate-pulse" />
 								</>
 							)}
 
@@ -180,7 +179,7 @@ export function TabSwitcher({
 			{isChanging && (
 				<div className="absolute bottom-0 left-0 right-0 h-0.5 bg-zinc-800 overflow-hidden">
 					<div
-						className="h-full bg-gradient-to-r from-orange-400 to-red-400 animate-pulse"
+						className="h-full bg-gradient-to-r from-orange-400 to-red-400"
 						style={{
 							animation: 'shimmer 1s ease-in-out infinite',
 							background: 'linear-gradient(90deg, transparent, #fb923c, #dc2626, transparent)',

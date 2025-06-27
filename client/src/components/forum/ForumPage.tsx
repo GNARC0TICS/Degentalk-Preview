@@ -91,8 +91,15 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 	const [sortBy, setSortBy] = useState('latest');
 	const [showFilters, setShowFilters] = useState(false);
 
-	// Get forum data
-	const forum = forumSlug ? getForum(forumSlug) : null;
+	// Get forum data with error handling
+	let forum = null as ReturnType<typeof getForum> | null;
+	try {
+		forum = forumSlug ? getForum(forumSlug) : null;
+	} catch (error) {
+		console.error('Error retrieving forum data:', error);
+		throw error as Error; // bubble up to error boundary
+	}
+
 	const parentZone = zones?.find((zone) => zone.forums.some((f) => f.slug === forumSlug));
 
 	// Fetch threads data
@@ -100,12 +107,22 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 		queryKey: [API_ROUTES.forums.threadsByForum(forum?.id ?? 'none'), sortBy, searchQuery],
 		queryFn: async () => {
 			if (!forum?.id) return [];
-			const response = await apiRequest<ThreadData[]>({
+			const response = await apiRequest<any>({
 				url: API_ROUTES.forums.threadsByForum(forum.id),
 				method: 'GET',
 				params: { sort: sortBy, search: searchQuery }
 			});
-			return response || [];
+			// API returns { success, data: { threads, ... } } OR array fallback
+			if (Array.isArray(response)) {
+				return response;
+			}
+			if (response?.data?.threads) {
+				return response.data.threads as ThreadData[];
+			}
+			if (response?.threads) {
+				return response.threads as ThreadData[];
+			}
+			return [];
 		},
 		enabled: !!forum?.id
 	});
@@ -122,15 +139,15 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 			<ThreadCard
 				thread={thread}
 				variant={layout === 'grid' ? 'compact' : 'default'}
-				onTip={(threadId, amount) => console.log('Tip thread:', threadId, amount)}
-				onBookmark={(threadId) => console.log('Bookmark thread:', threadId)}
+				onTip={(threadId, amount) => {}}
+				onBookmark={(threadId) => {}}
 			/>
 
 			{thread.engagement && (
 				<CryptoEngagementBar
 					engagement={thread.engagement}
-					onTip={(amount) => console.log('Tip amount:', amount)}
-					onBookmark={() => console.log('Bookmark')}
+					onTip={(amount) => {}}
+					onBookmark={() => {}}
 					showDetailed={false}
 				/>
 			)}
@@ -138,7 +155,7 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 			{thread.reactions && thread.reactions.length > 0 && (
 				<QuickReactions
 					reactions={thread.reactions}
-					onReact={(type) => console.log('React:', type)}
+					onReact={(type) => {}}
 					compact={layout === 'compact'}
 					showTipIntegration={false}
 				/>
@@ -244,7 +261,7 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 			forumSlug={forumSlug || ''}
 			availableTags={[]}
 			availablePrefixes={[]}
-			onFiltersChange={(filters) => console.log('Filters changed:', filters)}
+			onFiltersChange={(filters) => {}}
 		/>
 	);
 

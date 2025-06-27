@@ -1,116 +1,46 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
-import {
-	// Home, // Keep one Home import - Unused
-	Search,
-	Folder,
-	MessageSquare,
-	ChevronLeft,
-	ChevronRight
-	// Flame, // Unused
-	// Target, // Unused
-	// Archive, // Unused
-	// Dices, // Unused
-	// FileText // Unused
-} from 'lucide-react';
-// import { useAuth } from '@/hooks/use-auth.tsx'; // Unused
+import { Search, Folder, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { SiteFooter } from '@/components/footer';
 import { ForumGuidelines } from '@/components/forum/forum-guidelines';
-// ForumSearch seems unused, can be removed if not needed.
-// import { ForumSearch } from '@/components/forum/forum-search';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
-import type { MergedZone, MergedForum } from '@/contexts/ForumStructureContext'; // MergedTheme unused
-// ZoneCardData might not be directly needed if renderZoneCard adapts to MergedZone
-// import type { ZoneCardData } from '@/components/forum/CanonicalZoneGrid';
+import type { MergedZone, MergedForum } from '@/contexts/ForumStructureContext';
 import { Input } from '@/components/ui/input';
 import { Link } from 'wouter';
 import { Badge } from '@/components/ui/badge';
-// getForumEntityUrl and isPrimaryZone might need to be re-evaluated or adapted
-// import { getForumEntityUrl, isPrimaryZone } from '@/utils/forum-routing-helper';
 import { ActiveMembersWidget } from '@/components/users';
-// import type { ActiveUser } from '@/components/users'; // ActiveUser type unused
 import { useActiveUsers } from '@/features/users/hooks';
-// ForumCard seems unused
-// import { ForumCard } from '@/components/forum/forum-card';
-// ForumCategoryWithStats is replaced by MergedZone/MergedForum
-// import type { ForumCategoryWithStats } from '@db_types/forum.types';
-import {
-	THEME_ICONS,
-	THEME_COLORS_BG // Renamed from THEME_COLORS to THEME_COLORS_BG in themeConstants.ts
-} from '@/config/themeConstants';
-import { useForumTheme } from '@/contexts/ForumThemeProvider';
-import { ForumListItem } from '@/features/forum/components/ForumListItem';
-import { motion } from 'framer-motion'; // Added Framer Motion import
-import BackToHomeButton from '@/components/common/BackToHomeButton';
-import ZoneCard from '@/components/forum/ZoneCard';
-import {
-	Accordion,
-	AccordionItem,
-	AccordionTrigger,
-	AccordionContent
-} from '@/components/ui/accordion';
-import { Wide } from '@/layout/primitives';
-import { QuickStats } from '@/components/forum/QuickStats';
 import { getForumSpacing, getForumLayout } from '@/utils/spacing-constants';
-import { HotTopics } from '@/components/forum/HotTopics';
-import { RecentActivity } from '@/components/forum/RecentActivity';
+import { useForumTheme } from '@/contexts/ForumThemeProvider';
+import { THEME_COLORS_BG } from '@/config/themeConstants';
 
+// Temporary fallback palette for non-themed zones
 const CATEGORY_COLORS = [
-	// This can remain for generic category styling if no theme is matched
-	'border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-amber-700/10',
-	'border-blue-500/30 bg-gradient-to-br from-blue-500/10 to-blue-700/10',
-	'border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-emerald-700/10',
-	'border-purple-500/30 bg-gradient-to-br from-purple-500/10 to-purple-700/10',
-	'border-rose-500/30 bg-gradient-to-br from-rose-500/10 to-rose-700/10',
-	'border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-cyan-700/10',
-	'border-indigo-500/30 bg-gradient-to-br from-indigo-500/10 to-indigo-700/10',
-	'border-pink-500/30 bg-gradient-to-br from-pink-500/10 to-pink-700/10'
+	'from-emerald-500/20 to-green-500/20 border-emerald-500/30',
+	'from-sky-500/20 to-blue-500/20 border-sky-500/30',
+	'from-pink-500/20 to-red-500/20 border-pink-500/30',
+	'from-indigo-500/20 to-purple-500/20 border-indigo-500/30'
 ];
 
-const ForumPage = () => {
-	// const { user } = useAuth(); // user is unused
-	const { getTheme, setActiveTheme } = useForumTheme();
-	// const isLoggedIn = !!user; // Unused
-	const [, setLocation] = useLocation(); // location is unused, only setLocation
-
-	const queryParams = new URLSearchParams(
-		typeof window !== 'undefined' && window.location.search ? window.location.search : ''
-	); // Safer access to location
-	const searchQuery = queryParams.get('q') || '';
-
-	const [searchText, setSearchText] = useState(searchQuery);
-	// const [currentZoneIndex, setCurrentZoneIndex] = useState(0); // Unused
-	const carouselRef = useRef<HTMLDivElement>(null);
-
-	// Use centralized forum structure hook from context
+export default function ForumsIndexPage() {
+	const [, setLocation] = useLocation();
 	const {
 		zones: allZones,
+		primaryZones,
+		generalZones,
 		isLoading: structureLoading,
 		error: structureErrorDetails
 	} = useForumStructure();
 
-	// Extract primary zones and categories (non-primary zones)
-	const primaryZones: MergedZone[] = allZones.filter((zone) => zone.isPrimary === true);
-	const generalForumZones: MergedZone[] = allZones.filter((zone) => {
-		if (zone.isPrimary) return false;
-		const hasDirectForums = Array.isArray(zone.forums) && zone.forums.length > 0;
-		const hasCategorisedForums =
-			Array.isArray(zone.categories) &&
-			zone.categories.some((cat) => cat.forums && cat.forums.length > 0);
-		return hasDirectForums || hasCategorisedForums;
-	});
+	const { data: activeUsers = [], isLoading: activeUsersLoading } = useActiveUsers();
 
-	// Fetch active users
-	const { data: activeUsers, isLoading: activeUsersLoading } = useActiveUsers({ limit: 5 });
+	const [searchText, setSearchText] = useState('');
 
-	// const breadcrumbs = [ // Unused
-	// 	{ label: 'Home', href: '/', icon: <Home className="h-4 w-4 mr-1" /> },
-	// 	{ label: 'Forum', href: '/forums', icon: null }
-	// ];
+	const { getTheme, setActiveTheme } = useForumTheme();
 
 	const handleSearch = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -140,19 +70,6 @@ const ForumPage = () => {
 			left: scrollAmount,
 			behavior: 'smooth'
 		});
-	};
-
-	// Helper to render forum stats (can accept MergedForum or MergedZone)
-	const renderForumStats = (entity: MergedForum | MergedZone) => {
-		return (
-			<div className="flex items-center gap-3 text-xs text-zinc-400">
-				<div className="flex items-center">
-					<MessageSquare className="h-3.5 w-3.5 mr-1 text-zinc-500" />
-					{entity.threadCount || 0} threads
-				</div>
-				<div>{entity.postCount || 0} posts</div>
-			</div>
-		);
 	};
 
 	// Render a zone card using the consistent ZoneCard component
@@ -190,7 +107,7 @@ const ForumPage = () => {
 						id: String(f.id),
 						name: f.name,
 						threadCount: f.threadCount,
-						isPopular: f.threadCount > 100
+						isPopular: f.isPopular ?? false
 					}))
 				}}
 				layout="compact"
@@ -219,7 +136,7 @@ const ForumPage = () => {
 		const zoneSemanticThemeKey = zoneData.colorTheme || 'default';
 		const theme = getTheme(zoneSemanticThemeKey);
 		const zoneColorClass =
-			THEME_COLORS_BG[zoneSemanticThemeKey as keyof typeof THEME_COLORS_BG] ||
+			(THEME_COLORS_BG as Record<string, string>)[zoneSemanticThemeKey] ??
 			CATEGORY_COLORS[index % CATEGORY_COLORS.length];
 
 		const IconFromThemeOrFallback = theme.icon ?? Folder;
@@ -230,34 +147,43 @@ const ForumPage = () => {
 			setActiveTheme(zoneData.colorTheme);
 		}
 
+		const combinedThreadCount = zoneData.threadCount + totalChildThreadCount;
+		const combinedPostCount = zoneData.postCount + totalChildPostCount;
+
 		return (
 			<Card
 				key={zoneData.id.toString()}
 				className={`overflow-hidden border mb-8 ${zoneColorClass} hover-scale`}
 			>
-				<CardHeader className="pb-3">
-					<div className="flex items-center justify-between">
-						<CardTitle className="text-lg font-semibold flex items-center">
-							{typeof IconFromThemeOrFallback === 'string' ? (
-								<span className={`mr-2 text-xl ${zoneIconColorClass}`}>
-									{IconFromThemeOrFallback}
-								</span>
-							) : (
-								<IconFromThemeOrFallback className={`h-5 w-5 mr-2 ${zoneIconColorClass}`} />
+				<CardHeader asChild className="pb-3 cursor-pointer hover:bg-zinc-800/30 transition-colors">
+					<Link href={`/zones/${zoneData.slug}`}>
+						<div className="flex flex-col">
+							<div className="flex items-center justify-between">
+								<CardTitle className="text-lg font-semibold flex items-center">
+									{typeof IconFromThemeOrFallback === 'string' ? (
+										<span className={`mr-2 text-xl ${zoneIconColorClass}`}>
+											{IconFromThemeOrFallback}
+										</span>
+									) : (
+										<IconFromThemeOrFallback className={`h-5 w-5 mr-2 ${zoneIconColorClass}`} />
+									)}
+									{zoneData.name}
+								</CardTitle>
+								<Badge
+									variant="outline"
+									className="bg-zinc-800/50 text-zinc-300 border-zinc-700/50"
+								>
+									{allForums.length} {allForums.length === 1 ? 'forum' : 'forums'}
+								</Badge>
+							</div>
+							{zoneData.description && (
+								<CardDescription className="text-zinc-300">{zoneData.description}</CardDescription>
 							)}
-							{zoneData.name}
-						</CardTitle>
-						<Badge variant="outline" className="bg-zinc-800/50 text-zinc-300 border-zinc-700/50">
-							{allForums.length} {allForums.length === 1 ? 'forum' : 'forums'}
-						</Badge>
-					</div>
-					{zoneData.description && (
-						<CardDescription className="text-zinc-300">{zoneData.description}</CardDescription>
-					)}
-					<div className="text-xs text-zinc-400">
-						{zoneData.threadCount} threads • {zoneData.postCount} posts (Children:{' '}
-						{totalChildThreadCount} threads • {totalChildPostCount} posts)
-					</div>
+							<div className="text-xs text-zinc-400">
+								{combinedThreadCount} threads • {combinedPostCount} posts
+							</div>
+						</div>
+					</Link>
 				</CardHeader>
 				<CardContent className="p-0">
 					<div className="divide-y divide-zinc-800/50">
@@ -399,14 +325,14 @@ const ForumPage = () => {
 							custom={0.2} // Stagger delay
 						>
 							<h2 className="text-xl font-semibold text-white mb-4">
-								{generalForumZones.length > 0 ? 'All Forums' : 'No forum categories found.'}
+								{generalZones.length > 0 ? 'All Forums' : 'No forum categories found.'}
 							</h2>
 							<Accordion
 								type="multiple"
 								className="space-y-4"
-								defaultValue={generalForumZones.map((zone) => zone.slug)} // Open all by default
+								defaultValue={generalZones.map((zone) => zone.slug)} // Open all by default
 							>
-								{generalForumZones.map((zoneData, index) => (
+								{generalZones.map((zoneData, index) => (
 									<AccordionItem value={zoneData.slug} key={zoneData.id.toString()}>
 										<AccordionTrigger className="focus:outline-none">
 											{zoneData.name}
@@ -455,6 +381,4 @@ const ForumPage = () => {
 			<SiteFooter />
 		</div>
 	);
-};
-
-export default ForumPage;
+}

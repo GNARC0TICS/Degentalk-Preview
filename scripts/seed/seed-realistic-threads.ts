@@ -16,7 +16,7 @@ import chalk from 'chalk'; // For better console output
 
 // --- Configuration ---
 // Phase 2 lightweight seeding
-const THREADS_PER_FORUM = 1;       // Exactly one thread per forum
+const THREADS_PER_FORUM = 7;       // Seed seven threads per forum for richer data
 const MIN_POSTS_PER_THREAD = 2;    // First post + one reply
 const MAX_POSTS_PER_THREAD = 2;
 const REPLY_CHANCE_PERCENT = 100; // Guarantee the second post is a reply

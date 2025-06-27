@@ -7,7 +7,6 @@ interface UpcomingEventsWidgetProps {
 }
 
 export default function UpcomingEventsWidget({ className = '' }: UpcomingEventsWidgetProps) {
-	// TODO: Replace with real API call once backend provides events endpoint
 	const dummyEvents = [
 		{
 			id: 1,

@@ -42,6 +42,7 @@ export interface ZoneCardData {
 		description?: string | null;
 		threadCount: number;
 		postCount: number;
+		subforums?: unknown[];
 	}>;
 }
 
@@ -153,7 +154,8 @@ export function CanonicalZoneGrid({
 									id: String(f.id),
 									name: f.name,
 									threadCount: f.threadCount,
-									isPopular: f.threadCount > 100
+									isPopular: (f as any).isPopular,
+									subforums: (f as any).subforums
 								}))
 							}}
 							layout="compact"

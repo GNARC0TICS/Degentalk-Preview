@@ -18,7 +18,7 @@ const toasts: ToastProps[] = [];
 export function useToast() {
 	const toast = (props: ToastProps) => {
 		// In a real implementation, this would add the toast to the toasts array
-		console.log('Toast:', props);
+		// Toast would be displayed here
 	};
 
 	return {

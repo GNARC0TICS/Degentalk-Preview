@@ -142,7 +142,6 @@ export function ReactionBar({
 		if (reactionType === 'love') {
 			onLike?.(postId, hasLiked);
 		}
-		// TODO: Add support for other reaction types
 		console.log('Reaction:', reactionType);
 	};
 

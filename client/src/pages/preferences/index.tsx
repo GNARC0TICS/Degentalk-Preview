@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import useSearchParams from '@/hooks/useSearchParams';
 import { SiteHeader } from '@/components/header';
 import { SiteFooter } from '@/components/footer';
 import { useAuth } from '@/hooks/use-auth.tsx';
@@ -23,11 +24,11 @@ function PreferencesPage() {
 	console.log('PreferencesPage component started rendering.');
 	const { user } = useAuth();
 	const [activeTab, setActiveTab] = useState('profile');
+	const searchParams = useSearchParams();
 
-	// Parse URL query parameters to get the active tab
 	useEffect(() => {
-		const params = new URLSearchParams(window.location.search);
-		const tabParam = params.get('tab');
+		if (!searchParams) return;
+		const tabParam = searchParams.get('tab');
 		if (
 			tabParam &&
 			[
@@ -42,14 +43,15 @@ function PreferencesPage() {
 		) {
 			setActiveTab(tabParam);
 		}
-	}, []);
+	}, [searchParams]);
 
-	// Update URL when tab changes
 	const handleTabChange = (value: string) => {
 		setActiveTab(value);
-		const url = new URL(window.location.href);
-		url.searchParams.set('tab', value);
-		window.history.pushState({}, '', url.toString());
+		if (typeof window !== 'undefined') {
+			const url = new URL(window.location.href);
+			url.searchParams.set('tab', value);
+			window.history.pushState({}, '', url.toString());
+		}
 	};
 
 	console.log('User in PreferencesPage:', user);

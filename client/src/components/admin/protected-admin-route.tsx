@@ -25,7 +25,6 @@ export function ProtectedAdminRoute({
 	const { hasPermission, isLoading: permissionLoading } = useAdminPermission(moduleId);
 	const location = useLocation();
 
-	// Show loading state
 	if (authLoading || permissionLoading) {
 		if (!showLoadingSpinner) return null;
 
@@ -39,17 +38,14 @@ export function ProtectedAdminRoute({
 		);
 	}
 
-	// Not authenticated
 	if (!user) {
 		return <Redirect to="/login" />;
 	}
 
-	// Not an admin/moderator
 	if (!['admin', 'super_admin', 'moderator'].includes(user.role)) {
 		return <Redirect to="/" />;
 	}
 
-	// No permission for this specific module
 	if (!hasPermission) {
 		return (
 			<div className="container mx-auto py-8">
@@ -63,7 +59,6 @@ export function ProtectedAdminRoute({
 		);
 	}
 
-	// Permission granted, render the protected content
 	return (
 		<Suspense fallback={<AdminLoadingFallback />}>
 			<AdminErrorBoundary moduleId={moduleId}>{children}</AdminErrorBoundary>
@@ -71,7 +66,6 @@ export function ProtectedAdminRoute({
 	);
 }
 
-// Loading fallback component for lazy-loaded admin modules
 function AdminLoadingFallback() {
 	return (
 		<div className="flex items-center justify-center min-h-[600px]">
@@ -88,7 +82,6 @@ function AdminLoadingFallback() {
 	);
 }
 
-// Access denied component
 function AdminAccessDenied({
 	moduleId,
 	userRole,
@@ -142,7 +135,6 @@ function AdminAccessDenied({
 	);
 }
 
-// Error boundary for admin modules
 class AdminErrorBoundary extends React.Component<
 	{ children: React.ReactNode; moduleId: string },
 	{ hasError: boolean; error?: Error }
@@ -158,14 +150,6 @@ class AdminErrorBoundary extends React.Component<
 
 	componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
 		console.error(`Admin module error [${this.props.moduleId}]:`, error, errorInfo);
-
-		// TODO: Send error to monitoring service
-		// logError('admin-module-error', {
-		// 	moduleId: this.props.moduleId,
-		// 	error: error.message,
-		// 	stack: error.stack,
-		// 	errorInfo,
-		// });
 	}
 
 	render() {
@@ -213,7 +197,6 @@ class AdminErrorBoundary extends React.Component<
 	}
 }
 
-// Higher-order component for wrapping admin pages
 export function withAdminProtection(
 	Component: React.ComponentType,
 	moduleId: string,

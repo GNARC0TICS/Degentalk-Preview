@@ -91,7 +91,6 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 		e.preventDefault();
 		e.stopPropagation();
 		console.log(`Quick action: ${action} on thread ${item.id}`);
-		// TODO: Implement quick actions
 	};
 
 	return (
@@ -134,7 +133,7 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 						<div className="flex items-start gap-3">
 							<div className="relative">
 								{hotLevel === 'volcanic' ? (
-									<Flame className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0 animate-pulse" />
+									<Flame className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0" />
 								) : (
 									<TrendingUp
 										className={cn(
@@ -145,9 +144,9 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 									/>
 								)}
 
-								{/* Activity pulse for recent content */}
+								{/* Activity indicator for recent content */}
 								{new Date(item.createdAt) > new Date(Date.now() - 24 * 60 * 60 * 1000) && (
-									<div className="absolute -top-1 -right-1 h-2 w-2 bg-green-400 rounded-full animate-pulse" />
+									<div className="absolute -top-1 -right-1 h-2 w-2 bg-green-400 rounded-full" />
 								)}
 							</div>
 
@@ -172,10 +171,7 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 							{/* Status badges with animations */}
 							<div className="flex gap-1">
 								{item.isSticky && (
-									<Badge
-										variant="outline"
-										className="border-blue-500/30 text-blue-300 text-xs animate-pulse"
-									>
+									<Badge variant="outline" className="border-blue-500/30 text-blue-300 text-xs">
 										Pinned
 									</Badge>
 								)}
@@ -190,10 +186,7 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 									</Badge>
 								)}
 								{hotLevel === 'volcanic' && (
-									<Badge
-										variant="outline"
-										className="border-red-500/30 text-red-300 text-xs animate-pulse"
-									>
+									<Badge variant="outline" className="border-red-500/30 text-red-300 text-xs">
 										🔥 Hot
 									</Badge>
 								)}

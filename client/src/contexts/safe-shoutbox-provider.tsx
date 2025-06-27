@@ -16,14 +16,12 @@ export function SafeShoutboxProvider({ children }: SafeShoutboxProviderProps) {
 
 	// In development mode, always use the mock provider to avoid WebSocket issues
 	if (!IS_PRODUCTION) {
-		console.log('Using MockShoutboxProvider in development mode');
 		return <MockShoutboxProvider>{children}</MockShoutboxProvider>;
 	}
 
 	// React Error Boundary is class-based, so we're using try/catch and state for functional components
 	try {
 		if (hasError) {
-			console.log('Using MockShoutboxProvider due to previous error');
 			return <MockShoutboxProvider>{children}</MockShoutboxProvider>;
 		}
 

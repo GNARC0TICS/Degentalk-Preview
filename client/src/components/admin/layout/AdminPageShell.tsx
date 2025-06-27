@@ -31,8 +31,6 @@ export function AdminPageShell({
 	children,
 	className
 }: AdminPageShellProps) {
-	// TODO: Implement scroll restoration if needed
-
 	const defaultActiveTab = tabsConfig?.[0]?.value;
 	const currentActiveTab = activeTab || defaultActiveTab;
 

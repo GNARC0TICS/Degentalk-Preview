@@ -74,7 +74,7 @@ export function useContent(params: UseContentParams = {}) {
 				searchParams.append('forumId', params.forumId.toString());
 			}
 
-			const response = await fetch(`/api/content?${searchParams.toString()}`);
+			const response = await fetch(`/api/forum/content?${searchParams.toString()}`);
 
 			if (!response.ok) {
 				throw new Error(`Failed to fetch content: ${response.statusText}`);

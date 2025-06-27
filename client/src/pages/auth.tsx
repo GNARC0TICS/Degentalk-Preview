@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -24,7 +24,7 @@ import {
 	FormMessage
 } from '@/components/ui/form';
 import { Loader2 } from 'lucide-react';
-import React from 'react';
+import useSearchParams from '@/hooks/useSearchParams';
 
 // Login schema
 const loginSchema = z.object({
@@ -59,15 +59,16 @@ export default function AuthPage() {
 	const [activeTab, setActiveTab] = useState<string>('login');
 	const [location, navigate] = useLocation();
 	const { user, isLoading, loginMutation, registerMutation } = useAuth();
+	const searchParams = useSearchParams();
 
 	// Check for mode query parameter and set initial tab
-	React.useEffect(() => {
-		const urlParams = new URLSearchParams(window.location.search);
-		const mode = urlParams.get('mode');
+	useEffect(() => {
+		if (!searchParams) return;
+		const mode = searchParams.get('mode');
 		if (mode === 'signup' || mode === 'register') {
 			setActiveTab('register');
 		}
-	}, []);
+	}, [searchParams]);
 
 	// Login form
 	const loginForm = useForm<z.infer<typeof loginSchema>>({
@@ -100,7 +101,7 @@ export default function AuthPage() {
 	};
 
 	// Redirect authenticated users to home page
-	React.useEffect(() => {
+	useEffect(() => {
 		if (user && !isLoading) {
 			navigate('/');
 		}

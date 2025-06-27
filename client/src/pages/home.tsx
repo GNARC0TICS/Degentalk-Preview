@@ -1,6 +1,4 @@
-import React from 'react';
 import { Link } from 'wouter';
-import '../styles/ticker.css';
 import '../styles/zone-themes.css';
 
 // Import context and hook

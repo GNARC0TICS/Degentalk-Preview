@@ -45,10 +45,8 @@ export default function AdminShopItemsPage() {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['adminShopItems'] });
-			// TODO: Add toast notification for success
 		},
 		onError: (error) => {
-			// TODO: Add toast notification for error
 			console.error('Error deleting product:', error);
 		}
 	});

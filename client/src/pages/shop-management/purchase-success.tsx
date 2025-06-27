@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
 import confetti from 'canvas-confetti';
 import { Wide } from '@/layout/primitives';
+import useSearchParams from '@/hooks/useSearchParams';
 
 export default function PurchaseSuccessPage() {
 	const [, setLocation] = useLocation();
+	const searchParams = useSearchParams();
 	const [purchaseDetails, setPurchaseDetails] = useState<{
 		amount?: number;
 		dgtAmount?: number;
@@ -15,10 +17,10 @@ export default function PurchaseSuccessPage() {
 
 	// Trigger confetti effect when the component mounts
 	useEffect(() => {
+		if (!searchParams) return;
 		// Parse URL parameters to get purchase details
-		const urlParams = new URLSearchParams(window.location.search);
-		const amount = urlParams.get('amount');
-		const dgtAmount = urlParams.get('dgt_amount');
+		const amount = searchParams.get('amount');
+		const dgtAmount = searchParams.get('dgt_amount');
 
 		if (amount) {
 			setPurchaseDetails({
@@ -34,7 +36,7 @@ export default function PurchaseSuccessPage() {
 		return () => {
 			confetti.reset();
 		};
-	}, []);
+	}, [searchParams]);
 
 	// Function to trigger the confetti effect
 	const triggerConfetti = () => {

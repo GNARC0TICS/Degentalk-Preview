@@ -11,7 +11,7 @@ import WalletPage from './pages/wallet';
 import HomePage from './pages/home';
 import ForumsPage from './pages/forums';
 // Import forum system pages
-import ForumBySlugPage from './pages/forums/[forum_slug].tsx';
+import ForumBySlugPage from './pages/forums/[forumSlug].tsx';
 import ForumSearchPage from './pages/forums/search.tsx'; // Import the new search page
 import ZoneBySlugPage from './pages/zones/[slug].tsx'; // Added import for Zone page
 import ThreadPage from './pages/threads/BBCodeThreadPage.tsx';

@@ -110,7 +110,6 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 		queryKey,
 		queryFn: async () => {
 			if (!forumId || forumId === -1) {
-				console.log(`[ThreadList] Invalid forumId (${forumId}), skipping API call.`);
 				return null; // Return null if forumId is invalid
 			}
 			// Construct the URL for fetching threads with filters
@@ -148,13 +147,6 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 		enabled: forumId !== -1 && forumId > 0,
 		staleTime: 1 * 60 * 1000
 	});
-
-	console.log(
-		`[ThreadList] forumId: ${forumId}, isLoading: ${isLoading}, error:`,
-		error,
-		'apiResponse:',
-		apiResponse
-	);
 
 	if (isLoading && forumId > 0) {
 		return <ThreadListSkeleton count={5} />;

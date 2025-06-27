@@ -32,6 +32,21 @@
 	}
 }
 
+/* Generic pulse-glow animation - use CSS custom properties for colors */
+@keyframes pulse-glow {
+	0%,
+	100% {
+		box-shadow: 0 0 var(--glow-size-small, 5px) var(--glow-color, rgba(16, 185, 129, 0.4));
+	}
+	50% {
+		box-shadow: 0 0 var(--glow-size-large, 12px) var(--glow-color-intense, rgba(16, 185, 129, 0.7));
+	}
+}
+
+.animate-pulse-glow {
+	animation: pulse-glow 2s infinite;
+}
+
 /* Custom animations for Degentalk gamified experience */
 
 /* Glitch effect for text */

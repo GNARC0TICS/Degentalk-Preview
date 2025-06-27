@@ -65,7 +65,6 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 	const { data, isLoading } = useQuery({
 		queryKey: [SETTINGS_QUERY_KEY],
 		queryFn: async () => {
-			console.log('ShoutboxContext: Attempting to fetch settings from /api/preferences');
 			try {
 				const response = await fetch('/api/preferences', {
 					method: 'GET',
@@ -74,8 +73,6 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 						'Content-Type': 'application/json'
 					}
 				});
-
-				console.log(`ShoutboxContext: Received response status: ${response.status}`);
 
 				// If we get a 401, just use local storage + default
 				if (response.status === 401) {
@@ -102,7 +99,6 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 				}
 
 				const responseData = await response.json();
-				console.log('ShoutboxContext: Successfully fetched settings:', responseData);
 				return { ...responseData, isAuthenticated: true };
 			} catch (error) {
 				console.error('ShoutboxContext: Error during settings fetch:', error);
@@ -161,16 +157,12 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 		setLastPositionChangeTime(new Date());
 		setPositionChangeCount((prev) => prev + 1);
 
-		// Log position change for debugging
-		console.log(`Shoutbox position changed: ${prevPosition} -> ${newPosition}`);
-
 		// Check if user is authenticated from the data we got
 		const isAuthenticated = data?.isAuthenticated === true;
 
 		if (!isAuthenticated) {
 			// If not authenticated, just save to localStorage (already done in useEffect)
 			// No need to attempt API call that would fail
-			console.log('User not authenticated - position saved locally only');
 			return;
 		}
 
@@ -206,11 +198,8 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 	// Set up WebSocket connection for real-time position updates
 	useEffect(() => {
 		// Always disable WebSocket functionality for now
-		console.log('WebSocket functionality disabled for all environments to prevent white screens.');
-
 		// This is a permanent change to ensure stable operation
 		// WebSocket will remain disabled regardless of environment
-
 		// If WebSocket functionality needs to be added in the future,
 		// it should be implemented with proper environment detection and error handling
 	}, []);
@@ -250,8 +239,6 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 			preview: 'Preview',
 			expanded: 'Expanded'
 		};
-
-		console.log(`Shoutbox size changed to ${levelLabels[newLevel]} Mode`);
 	};
 
 	// Function to cycle through expansion levels
@@ -310,9 +297,7 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 	useEffect(() => {
 		// Skip on first render (when positionChangeCount is 0)
 		if (positionChangeCount > 0) {
-			console.log(
-				`Viewport changed to ${isMobile ? 'mobile' : 'desktop'} view - Shoutbox adjusted`
-			);
+			// Viewport changed logic without logging
 		}
 	}, [isMobile, positionChangeCount]);
 
