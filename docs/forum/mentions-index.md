@@ -1,3 +1,9 @@
+---
+title: mentions index
+status: STABLE
+updated: 2025-06-28
+---
+
 # Mentions Index Table (`mentions_index`)
 
 _Last updated: 2025-06-14_

@@ -1,3 +1,9 @@
+---
+title: ADVERTISEMENT SYSTEM
+status: STABLE
+updated: 2025-06-28
+---
+
 # Degentalk Advertisement System
 
 ## Overview

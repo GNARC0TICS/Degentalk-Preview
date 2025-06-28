@@ -1,3 +1,9 @@
+---
+title: SETUP_GUIDE
+status: STABLE
+updated: 2025-06-28
+---
+
 # Forum Structure Setup Guide
 
 This guide provides step-by-step instructions for setting up the Degentalk forum structure.

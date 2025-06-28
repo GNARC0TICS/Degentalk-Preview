@@ -1,3 +1,9 @@
+---
+title: avatar frames system
+status: STABLE
+updated: 2025-06-28
+---
+
 # Avatar Frame System
 
 > Status: **Production-Ready** (2025-06-23)

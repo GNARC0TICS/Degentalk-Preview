@@ -1,3 +1,9 @@
+---
+title: README
+status: STABLE
+updated: 2025-06-28
+---
+
 # Admin Panel Modular System Documentation
 
 ## 📖 Overview

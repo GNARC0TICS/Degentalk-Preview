@@ -1,3 +1,9 @@
+---
+title: FIXTURES GUIDE
+status: STABLE
+updated: 2025-06-28
+---
+
 # Degentalk Fixtures System Guide
 
 > **Comprehensive test data generation for the crypto community platform**

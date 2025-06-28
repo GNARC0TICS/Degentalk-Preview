@@ -1,3 +1,9 @@
+---
+title: README
+status: STABLE
+updated: 2025-06-28
+---
+
 # Degentalk Shop System Docs
 
 "Welcome to the only store where Cope is a common item and Exit Liquidity is a flex."

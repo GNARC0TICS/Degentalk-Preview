@@ -1,3 +1,9 @@
+---
+title: auth wallet dev guide
+status: STABLE
+updated: 2025-06-28
+---
+
 # Degentalk – Dev-Mode Auth & Wallet Quick-Start Guide
 
 > Everything learned and fixed (2025-06-26) so any teammate can reproduce the flow in minutes.

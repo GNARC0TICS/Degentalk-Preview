@@ -1,3 +1,9 @@
+---
+title: backend improvements
+status: STABLE
+updated: 2025-06-28
+---
+
 # Backend API Improvements Documentation
 
 ## Overview

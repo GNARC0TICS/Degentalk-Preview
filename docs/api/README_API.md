@@ -1,3 +1,9 @@
+---
+title: README_API
+status: STABLE
+updated: 2025-06-28
+---
+
 # Wallet & Engagement API Documentation
 
 This document provides detailed information about the wallet and engagement API endpoints available in the degentalk platform. Use these endpoints to interact with the wallet, tip, and rain functionality.

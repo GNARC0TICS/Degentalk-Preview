@@ -1,3 +1,9 @@
+---
+title: migration plan
+status: STABLE
+updated: 2025-06-28
+---
+
 # Migration Blueprint: Component Consolidation
 
 This document provides a phased, step-by-step plan for refactoring the client-side component structure to align with the `target-structure.md`.

@@ -1,3 +1,9 @@
+---
+title: stripecustoms
+status: STABLE
+updated: 2025-06-28
+---
+
 # Accept in-app payments
 
 Build a customized payments integration in your iOS, Android, or React Native app using the Payment Sheet.

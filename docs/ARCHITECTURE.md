@@ -1,3 +1,9 @@
+---
+title: ARCHITECTURE
+status: STABLE
+updated: 2025-06-28
+---
+
 # Degentalk System Architecture
 
 ## High-Level Architecture

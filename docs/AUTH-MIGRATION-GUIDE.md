@@ -1,3 +1,9 @@
+---
+title: AUTH MIGRATION GUIDE
+status: STABLE
+updated: 2025-06-28
+---
+
 # Authentication System Migration Guide
 
 This guide helps developers understand the new authentication architecture and migrate from the old patterns.

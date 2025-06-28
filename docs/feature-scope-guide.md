@@ -1,3 +1,9 @@
+---
+title: feature scope guide
+status: STABLE
+updated: 2025-06-28
+---
+
 # Feature Scope Guide
 
 Generated on: 2025-06-26T19:44:47.040Z

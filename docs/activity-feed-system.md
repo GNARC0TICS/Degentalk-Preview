@@ -1,3 +1,9 @@
+---
+title: activity feed system
+status: STABLE
+updated: 2025-06-28
+---
+
 # Activity Feed / Event Log System
 
 ## Overview

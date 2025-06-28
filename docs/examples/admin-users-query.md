@@ -1,3 +1,9 @@
+---
+title: admin users query
+status: STABLE
+updated: 2025-06-28
+---
+
 # Example: /api/admin/users Query (Paginated, Zod-validated)
 
 ## Request

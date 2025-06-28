@@ -1,3 +1,9 @@
+---
+title: rain analytics
+status: STABLE
+updated: 2025-06-28
+---
+
 # Rain Analytics
 
 This document describes the Rain analytics system, which provides insights into how users are utilizing the "rain" feature to distribute tokens to random active users.

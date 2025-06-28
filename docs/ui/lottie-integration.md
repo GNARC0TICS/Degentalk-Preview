@@ -1,3 +1,9 @@
+---
+title: lottie integration
+status: STABLE
+updated: 2025-06-28
+---
+
 # DotLottie Animation Integration Guide
 
 > Status: Draft – v1.0 (2025-06-20)

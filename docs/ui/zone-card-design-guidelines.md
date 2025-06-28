@@ -1,3 +1,9 @@
+---
+title: zone card design guidelines
+status: STABLE
+updated: 2025-06-28
+---
+
 # Zone Card Design Guidelines
 
 ## Overview

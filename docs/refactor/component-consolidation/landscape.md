@@ -1,3 +1,9 @@
+---
+title: landscape
+status: STABLE
+updated: 2025-06-28
+---
+
 # Landscape Report: Component & Feature Organization
 
 This document provides a detailed analysis of the current state of the `client/src` directory, focusing on component and feature organization, duplication, and structural inconsistencies.

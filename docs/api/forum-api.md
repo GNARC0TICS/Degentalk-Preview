@@ -1,3 +1,9 @@
+---
+title: forum api
+status: STABLE
+updated: 2025-06-28
+---
+
 # Forum API
 
 The Forum system manages threads, posts, categories, and user interactions across the Degentalk platform.

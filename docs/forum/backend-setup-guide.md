@@ -1,3 +1,9 @@
+---
+title: backend setup guide
+status: STABLE
+updated: 2025-06-28
+---
+
 # Backend Setup Guide for Canonical Zones
 
 ## Overview

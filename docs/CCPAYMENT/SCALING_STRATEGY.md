@@ -1,3 +1,9 @@
+---
+title: SCALING_STRATEGY
+status: STABLE
+updated: 2025-06-28
+---
+
 # DGT Token Scaling Strategy & CCPayment Integration Roadmap
 
 ## 🎯 Vision Statement

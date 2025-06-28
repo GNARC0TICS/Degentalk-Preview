@@ -1,3 +1,9 @@
+---
+title: consolidated_learnings
+status: STABLE
+updated: 2025-06-28
+---
+
 # Consolidated Learnings
 
 This file contains curated, summarized, and actionable insights derived from the raw reflection log (`docs/memory-bank/raw_reflection_log.md`). This serves as the primary, refined knowledge base for long-term use.

@@ -1,3 +1,9 @@
+---
+title: tipping analytics
+status: STABLE
+updated: 2025-06-28
+---
+
 # Tipping Analytics
 
 This document describes the Tipping analytics system, which provides insights into how users are tipping each other across the platform.

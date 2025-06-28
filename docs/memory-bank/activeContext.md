@@ -1,3 +1,9 @@
+---
+title: activeContext
+status: STABLE
+updated: 2025-06-28
+---
+
 # Degentalk Active Context
 
 ## Current Focus & Development Status

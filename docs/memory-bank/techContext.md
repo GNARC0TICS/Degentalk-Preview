@@ -1,3 +1,9 @@
+---
+title: techContext
+status: STABLE
+updated: 2025-06-28
+---
+
 # Degentalk Technical Context
 
 ## Technology Stack

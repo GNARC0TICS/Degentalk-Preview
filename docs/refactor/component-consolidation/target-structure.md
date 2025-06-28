@@ -1,3 +1,9 @@
+---
+title: target structure
+status: STABLE
+updated: 2025-06-28
+---
+
 # Canonical Structure Proposal
 
 This document outlines the target architectural state for the `client/src` directory. The goal is to establish a clear, consistent, and scalable structure that promotes code clarity and developer efficiency.

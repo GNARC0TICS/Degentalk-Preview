@@ -1,3 +1,9 @@
+---
+title: user guide
+status: STABLE
+updated: 2025-06-28
+---
+
 # Admin Panel User Guide
 
 ## 🎯 Overview

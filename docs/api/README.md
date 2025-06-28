@@ -1,3 +1,9 @@
+---
+title: README
+status: STABLE
+updated: 2025-06-28
+---
+
 # Degentalk API Documentation
 
 This documentation covers all the API endpoints available in the Degentalk platform, organized by domain.

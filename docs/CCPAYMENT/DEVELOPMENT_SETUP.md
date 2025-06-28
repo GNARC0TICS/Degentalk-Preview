@@ -1,3 +1,9 @@
+---
+title: DEVELOPMENT_SETUP
+status: STABLE
+updated: 2025-06-28
+---
+
 # CCPayment Development Setup Guide
 
 ## 🎯 Quick Development Setup

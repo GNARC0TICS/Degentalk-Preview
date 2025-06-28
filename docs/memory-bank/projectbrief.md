@@ -1,3 +1,9 @@
+---
+title: projectbrief
+status: STABLE
+updated: 2025-06-28
+---
+
 # Degentalk Project Brief
 
 ## Project Overview

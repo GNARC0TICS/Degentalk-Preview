@@ -1,3 +1,9 @@
+---
+title: mybb deep dive evolution matrix 2
+status: STABLE
+updated: 2025-06-28
+---
+
 # MyBB Deep Dive → Degentalk Evolution Matrix 2.0
 
 > A strategic blueprint for integrating proven MyBB concepts into Degentalk's modern TypeScript-first, Web3-enabled architecture.

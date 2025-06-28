@@ -1,3 +1,9 @@
+---
+title: PRODUCTION_DEPLOYMENT
+status: STABLE
+updated: 2025-06-28
+---
+
 # CCPayment Production Deployment Guide
 
 ## 🎯 Overview

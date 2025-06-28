@@ -1,3 +1,9 @@
+---
+title: API INTEGRATION GUIDE
+status: STABLE
+updated: 2025-06-28
+---
+
 # Degentalk Advertisement System API Integration Guide
 
 ## Overview

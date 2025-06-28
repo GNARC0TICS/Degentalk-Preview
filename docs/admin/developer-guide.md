@@ -1,3 +1,9 @@
+---
+title: developer guide
+status: STABLE
+updated: 2025-06-28
+---
+
 # Developer Guide - Admin Modular System
 
 ## 🎯 Overview

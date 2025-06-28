@@ -1,3 +1,9 @@
+---
+title: USER ADVERTISEMENT IMPLEMENTATION
+status: STABLE
+updated: 2025-06-28
+---
+
 # User Advertisement System Implementation Plan
 
 ## Overview

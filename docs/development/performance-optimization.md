@@ -1,3 +1,9 @@
+---
+title: performance optimization
+status: STABLE
+updated: 2025-06-28
+---
+
 # Performance Optimization Guide
 
 ## Overview

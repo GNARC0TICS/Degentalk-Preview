@@ -1,3 +1,9 @@
+---
+title: routing logic
+status: STABLE
+updated: 2025-06-28
+---
+
 # Forum Routing Logic
 
 ## Overview

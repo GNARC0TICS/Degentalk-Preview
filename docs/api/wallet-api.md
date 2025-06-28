@@ -1,3 +1,9 @@
+---
+title: wallet api
+status: STABLE
+updated: 2025-06-28
+---
+
 # Wallet & DGT API
 
 The Wallet system manages cryptocurrency deposits, DGT (Degentalk Token) transactions, and user-to-user transfers through CCPayment integration.

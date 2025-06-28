@@ -1,3 +1,9 @@
+---
+title: developer tools
+status: STABLE
+updated: 2025-06-28
+---
+
 # Developer Tools Guide
 
 ## Overview

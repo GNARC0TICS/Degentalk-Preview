@@ -1,3 +1,9 @@
+---
+title: xp api
+status: STABLE
+updated: 2025-06-28
+---
+
 # XP System API
 
 The XP (Experience Points) system manages user progression, levels, and action-based rewards throughout the Degentalk platform.

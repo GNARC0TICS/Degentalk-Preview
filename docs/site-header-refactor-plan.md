@@ -1,3 +1,9 @@
+---
+title: site header refactor plan
+status: STABLE
+updated: 2025-06-28
+---
+
 # Site Header Optimization & Modularization Plan
 
 **Status:** Draft – pending kickoff

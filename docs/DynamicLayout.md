@@ -1,3 +1,9 @@
+---
+title: DynamicLayout
+status: STABLE
+updated: 2025-06-28
+---
+
 # Dynamic & Configurable Layout System Plan (Production Grade)
 
 **Date:** 2025-06-18

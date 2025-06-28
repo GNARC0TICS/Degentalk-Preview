@@ -1,3 +1,9 @@
+---
+title: dgt token management plan
+status: STABLE
+updated: 2025-06-28
+---
+
 # DGT Token Management System
 
 ## Overview

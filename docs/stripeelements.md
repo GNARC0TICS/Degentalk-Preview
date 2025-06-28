@@ -1,3 +1,9 @@
+---
+title: stripeelements
+status: STABLE
+updated: 2025-06-28
+---
+
 # Elements Appearance API
 
 Customize the look and feel of Elements to match the design of your site.

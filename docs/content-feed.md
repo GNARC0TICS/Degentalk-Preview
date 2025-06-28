@@ -1,3 +1,9 @@
+---
+title: content feed
+status: STABLE
+updated: 2025-06-28
+---
+
 # Content Feed System
 
 Tab-based content system for home page and forum views with backend-powered filtering.

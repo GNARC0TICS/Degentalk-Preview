@@ -1,3 +1,9 @@
+---
+title: codebase overview
+status: STABLE
+updated: 2025-06-28
+---
+
 # Degentalk Codebase Overview
 
 This document provides a comprehensive overview of the Degentalk platform codebase, a crypto-native forum designed for dynamic user engagement and community management.

@@ -1,3 +1,9 @@
+---
+title: admin api
+status: STABLE
+updated: 2025-06-28
+---
+
 # Admin API
 
 The Admin system provides modular administrative functionality for managing all aspects of the Degentalk platform through a permission-based, feature-gated architecture.
