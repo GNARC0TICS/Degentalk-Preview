@@ -3,39 +3,10 @@ import { useState } from 'react';
 
 export type ContentTab = 'trending' | 'recent' | 'following';
 
-export interface ContentItem {
-	id: number;
-	title: string;
-	slug: string;
-	userId: string;
-	prefixId: number | null;
-	isSticky: boolean;
-	isLocked: boolean;
-	isHidden: boolean;
-	viewCount: number;
-	postCount: number;
-	firstPostLikeCount: number;
-	lastPostAt: string | null;
-	createdAt: string;
-	updatedAt: string | null;
-	isSolved: boolean;
-	solvingPostId: number | null;
-	user: {
-		id: string;
-		username: string;
-		avatarUrl: string | null;
-		activeAvatarUrl: string | null;
-		role: string;
-	};
-	category: {
-		id: number;
-		name: string;
-		slug: string;
-	};
-	tags: any[];
-	canEdit: boolean;
-	canDelete: boolean;
-}
+// Use unified ThreadDisplay type instead of custom ContentItem
+import type { ThreadDisplay } from '@/types/thread.types';
+
+export type ContentItem = ThreadDisplay;
 
 export interface ContentResponse {
 	items: ContentItem[];

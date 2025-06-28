@@ -195,12 +195,11 @@ async function seedForumLevel(
         .where(eq(threads.structureId, newForumDbId))
         .limit(1);
       if (existingThreads.length === 0) {
-        const threadSlug = `${forumConfig.slug}-welcome`;
         const welcomeContent = getWelcomeContent(forumConfig.slug, forumConfig.name);
         
         const [welcomeThread] = await tx.insert(threads).values({
           title: welcomeContent.title,
-          slug: threadSlug,
+          slug: `${forumConfig.slug}-welcome`,
           structureId: newForumDbId,
           userId: defaultUserId,
           isSticky: true

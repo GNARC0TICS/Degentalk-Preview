@@ -5,25 +5,17 @@
  * of interaction with the forum backend endpoints.
  */
 
-// TODO: @syncSchema Update based on recent changes in schema.ts: ForumCategory now has 'color' and 'icon' fields.
 import { apiRequest } from '@/lib/queryClient';
-import type { ForumCategory } from '@schema';
 import type {
-	ForumCategoryWithStats,
 	ThreadWithUser,
 	PostWithUser,
 	ForumTag,
 	ThreadPrefix,
-	ThreadWithPostsAndUser // Added import
+	ThreadWithPostsAndUser
 } from '@db_types/forum.types';
 
-// Define the nested category type extending ForumCategory
-export interface NestedForumCategory extends ForumCategory {
-	children?: NestedForumCategory[];
-}
-
 export interface ThreadSearchParams {
-	categoryId?: number;
+	structureId?: number;
 	prefix?: string;
 	tag?: string;
 	page?: number;
@@ -40,77 +32,10 @@ export interface ThreadSearchResult {
 		totalThreads: number;
 		totalPages: number;
 	};
+	isRestricted?: boolean;
 }
 
 export const forumApi = {
-	/**
-	 * Categories
-	 */
-	getCategories: async (): Promise<ForumCategoryWithStats[]> => {
-		const directArrayResponse = await apiRequest<ForumCategoryWithStats[]>({
-			url: '/api/forum/categories',
-			method: 'GET'
-		});
-		return directArrayResponse;
-	},
-
-	getCategoryBySlug: async (slug: string): Promise<ForumCategoryWithStats> => {
-		const directItemResponse = await apiRequest<ForumCategoryWithStats>({
-			url: `/api/forum/categories/${slug}`,
-			method: 'GET'
-		});
-		return directItemResponse;
-	},
-
-	getForumBySlug: async (
-		slug: string
-	): Promise<{
-		forum: ForumCategoryWithStats;
-	}> => {
-		const directResponse = await apiRequest<{
-			forum: ForumCategoryWithStats;
-		}>({
-			url: `/api/forum/forums/${slug}`,
-			method: 'GET'
-		});
-		return directResponse;
-	},
-
-	getForumBySlugWithTopics: async (
-		slug: string
-	): Promise<{
-		forum: ForumCategoryWithStats;
-		topics: ForumCategoryWithStats[];
-	}> => {
-		const directResponse = await apiRequest<{
-			forum: ForumCategoryWithStats;
-			topics: ForumCategoryWithStats[];
-		}>({
-			url: `/api/forum/forums/${slug}/topics`,
-			method: 'GET'
-		});
-		return directResponse;
-	},
-
-	getCategoryById: async (id: number): Promise<ForumCategoryWithStats> => {
-		const directItemResponse = await apiRequest<ForumCategoryWithStats>({
-			url: `/api/forum/category/${id}`,
-			method: 'GET'
-		});
-		return directItemResponse;
-	},
-
-	/**
-	 * Hierarchical Categories
-	 */
-	getCategoriesTree: async (): Promise<NestedForumCategory[]> => {
-		const directArrayResponse = await apiRequest<NestedForumCategory[]>({
-			url: '/api/forum/categories/tree',
-			method: 'GET'
-		});
-		return directArrayResponse;
-	},
-
 	/**
 	 * Threads
 	 */
@@ -118,8 +43,8 @@ export const forumApi = {
 		// Convert params to string values for API request
 		const apiParams: Record<string, string> = {};
 
-		if (params.categoryId !== undefined) {
-			apiParams.categoryId = String(params.categoryId);
+		if (params.structureId !== undefined) {
+			apiParams.structureId = String(params.structureId);
 		}
 
 		if (params.prefix) {
@@ -146,19 +71,34 @@ export const forumApi = {
 			apiParams.search = params.search;
 		}
 
-		const directResult = await apiRequest<ThreadSearchResult>({
-			url: '/api/forum/threads/search',
-			method: 'GET',
-			params: apiParams
-		});
-
-		return directResult;
+		try {
+			const directResult = await apiRequest<ThreadSearchResult>({
+				url: '/api/forum/threads/search',
+				method: 'GET',
+				params: apiParams
+			});
+			return directResult;
+		} catch (err: any) {
+			if ([401, 403].includes(err?.response?.status)) {
+				return {
+					threads: [],
+					pagination: {
+						page: params.page ?? 1,
+						limit: params.limit ?? 10,
+						totalThreads: 0,
+						totalPages: 0
+					},
+					isRestricted: true
+				};
+			}
+			throw err;
+		}
 	},
 
 	getThread: async (
 		slugOrId: string | number,
 		params?: { page?: number; limit?: number }
-	): Promise<ThreadWithPostsAndUser> => {
+	): Promise<ThreadWithPostsAndUser | null> => {
 		const isSlug = typeof slugOrId === 'string' && isNaN(Number(slugOrId));
 		const url = isSlug ? `/api/forum/threads/slug/${slugOrId}` : `/api/forum/threads/${slugOrId}`;
 
@@ -171,17 +111,32 @@ export const forumApi = {
 			queryParams.limit = String(params.limit);
 		}
 
-		const directResult = await apiRequest<ThreadWithPostsAndUser>({
-			url,
-			method: 'GET',
-			params: Object.keys(queryParams).length > 0 ? queryParams : undefined
-		});
-		return directResult;
+		try {
+			const response = await apiRequest<any>({
+				url,
+				method: 'GET',
+				params: Object.keys(queryParams).length > 0 ? queryParams : undefined
+			});
+
+			// Standardised wrapper → apiRequest has already unwrapped `.data` for us.
+			// 1) If backend already returns { thread: {...}, posts?: [...] }, use as-is.
+			if (response && typeof response === 'object' && 'thread' in response) {
+				return response as ThreadWithPostsAndUser;
+			}
+
+			// 2) If backend returned the raw thread object, normalise into { thread: obj }
+			return { thread: response } as unknown as ThreadWithPostsAndUser;
+		} catch (err: any) {
+			if ([401, 403].includes(err?.response?.status)) {
+				return null; // caller handles restricted access
+			}
+			throw err;
+		}
 	},
 
 	createThread: async (data: {
 		title: string;
-		categoryId: number;
+		structureId: number;
 		content: string;
 		prefixId?: number;
 		editorState?: any;
@@ -199,7 +154,7 @@ export const forumApi = {
 		threadId: number,
 		data: {
 			title?: string;
-			categoryId?: number;
+			structureId?: number;
 			prefixId?: number;
 			isLocked?: boolean;
 			isSticky?: boolean;
@@ -207,7 +162,7 @@ export const forumApi = {
 		}
 	): Promise<ThreadWithUser> => {
 		const directResult = await apiRequest<ThreadWithUser>({
-			url: `/api/threads/${threadId}`,
+			url: `/api/forum/threads/${threadId}`,
 			method: 'PATCH',
 			data
 		});
@@ -216,7 +171,7 @@ export const forumApi = {
 
 	deleteThread: async (threadId: number): Promise<{ success: true }> => {
 		const directResult = await apiRequest<{ success: true }>({
-			url: `/api/threads/${threadId}`,
+			url: `/api/forum/threads/${threadId}`,
 			method: 'DELETE'
 		});
 		return directResult;
@@ -227,7 +182,7 @@ export const forumApi = {
 	 */
 	solveThread: async (threadId: number, postId?: number): Promise<ThreadWithUser> => {
 		const directResult = await apiRequest<ThreadWithUser>({
-			url: `/api/threads/${threadId}/solve`,
+			url: `/api/forum/threads/${threadId}/solve`,
 			method: 'POST',
 			data: { postId }
 		});
@@ -236,7 +191,7 @@ export const forumApi = {
 
 	unsolveThread: async (threadId: number): Promise<ThreadWithUser> => {
 		const directResult = await apiRequest<ThreadWithUser>({
-			url: `/api/threads/${threadId}/unsolve`,
+			url: `/api/forum/threads/${threadId}/unsolve`,
 			method: 'POST'
 		});
 		return directResult;
@@ -272,27 +227,13 @@ export const forumApi = {
 		// No explicit return needed for void, or can return the result of apiRequest if it's truly void-like
 	},
 
-	getThreadsByTag: async (
-		tagSlug: string,
-		params?: {
-			page?: number;
-			limit?: number;
-			sortBy?: 'latest' | 'hot' | 'staked' | 'popular' | 'recent';
-		}
-	): Promise<ThreadSearchResult> => {
-		const directResult = await apiRequest<ThreadSearchResult>({
-			url: `/api/forum/tags/${tagSlug}/threads`,
-			method: 'GET',
-			params: params as Record<string, string>
-		});
-		return directResult;
-	},
+	// NOTE: getThreadsByTag removed - use unified searchThreads with tag filter instead
 
 	/**
 	 * Prefixes
 	 */
-	getPrefixes: async (categoryId?: number): Promise<ThreadPrefix[]> => {
-		const params = categoryId ? { categoryId: String(categoryId) } : undefined; // Ensure categoryId is string for params
+	getPrefixes: async (forumId?: number): Promise<ThreadPrefix[]> => {
+		const params = forumId ? { forumId: String(forumId) } : undefined; // Ensure forumId is string for params
 		const directResult = await apiRequest<ThreadPrefix[]>({
 			url: '/api/forum/prefixes',
 			method: 'GET',
@@ -319,20 +260,20 @@ export const forumApi = {
 			totalPages: number;
 		};
 	}> => {
-		const directResult = await apiRequest<{
-			posts: PostWithUser[];
-			pagination: {
-				page: number;
-				limit: number;
-				totalPosts: number;
-				totalPages: number;
-			};
-		}>({
-			url: `/api/threads/${threadId}/posts`,
+		const response = await apiRequest<any>({
+			url: `/api/forum/threads/${threadId}/posts`,
 			method: 'GET',
 			params: params as Record<string, string>
 		});
-		return directResult;
+
+		// Backend returns { success: true, data: { posts: ..., pagination: ... } }
+		// Frontend expects { posts: ..., pagination: ... }
+		if (response && typeof response === 'object' && 'data' in response && response.success) {
+			return response.data;
+		}
+
+		// Fallback for direct data response
+		return response;
 	},
 
 	createPost: async (data: {
@@ -372,7 +313,7 @@ export const forumApi = {
 
 	deletePost: async (postId: number): Promise<{ success: true }> => {
 		const directResult = await apiRequest<{ success: true }>({
-			url: `/api/posts/${postId}`,
+			url: `/api/forum/posts/${postId}`,
 			method: 'DELETE'
 		});
 		return directResult;
@@ -381,18 +322,14 @@ export const forumApi = {
 	/**
 	 * Reactions
 	 */
-	likePost: async (postId: number): Promise<{ success: true; liked: boolean }> => {
-		const directResult = await apiRequest<{ success: true; liked: boolean }>({
-			url: `/api/posts/${postId}/like`,
-			method: 'POST'
-		});
-		return directResult;
-	},
-
-	unlikePost: async (postId: number): Promise<{ success: true; liked: boolean }> => {
-		const directResult = await apiRequest<{ success: true; liked: boolean }>({
-			url: `/api/posts/${postId}/like`, // Endpoint for unlike is DELETE to the same URL
-			method: 'DELETE'
+	reactToPost: async (
+		postId: number,
+		reactionType: 'like' | 'dislike'
+	): Promise<{ success: true; message: string }> => {
+		const directResult = await apiRequest<{ success: true; message: string }>({
+			url: `/api/forum/posts/${postId}/react`,
+			method: 'POST',
+			data: { reactionType }
 		});
 		return directResult;
 	},
@@ -416,7 +353,7 @@ export const forumApi = {
 				payoutAmount: number;
 			};
 		}>({
-			url: `/api/posts/${postId}/tip`,
+			url: `/api/forum/posts/${postId}/tip`,
 			method: 'POST',
 			data: { amount }
 		});
@@ -428,7 +365,7 @@ export const forumApi = {
 	 */
 	bookmarkThread: async (threadId: number): Promise<{ success: true }> => {
 		const directResult = await apiRequest<{ success: true }>({
-			url: '/api/bookmarks',
+			url: '/api/forum/bookmarks',
 			method: 'POST',
 			data: { threadId }
 		});
@@ -437,7 +374,7 @@ export const forumApi = {
 
 	removeBookmark: async (threadId: number): Promise<{ success: true }> => {
 		const directResult = await apiRequest<{ success: true }>({
-			url: `/api/bookmarks/${threadId}`,
+			url: `/api/forum/bookmarks/${threadId}`,
 			method: 'DELETE'
 		});
 		return directResult;
@@ -445,7 +382,7 @@ export const forumApi = {
 
 	getUserBookmarks: async (): Promise<{ threads: ThreadWithUser[] }> => {
 		const directResult = await apiRequest<{ threads: ThreadWithUser[] }>({
-			url: '/api/bookmarks',
+			url: '/api/forum/bookmarks',
 			method: 'GET'
 		});
 		return directResult;

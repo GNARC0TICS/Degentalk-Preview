@@ -7,13 +7,11 @@ import {
 	Pin,
 	Eye,
 	EyeOff,
-	MessageSquareOff,
 	AlertTriangle,
 	FileText,
 	User,
 	Shield,
-	CheckCircle,
-	MoveHorizontal
+	CheckCircle
 } from 'lucide-react';
 import {
 	DropdownMenu,
@@ -40,11 +38,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
-import {
-	useSolveThread,
-	useUnsolveThread,
-	useFetchForumCategoriesTree
-} from '@/features/forum/hooks/useForumQueries';
+import { useSolveThread, useUnsolveThread } from '@/features/forum/hooks/useForumQueries';
 
 interface ModeratorActionsProps {
 	type: 'thread' | 'post';
@@ -178,23 +172,6 @@ export function ModeratorActions({
 	const solveThread = useSolveThread();
 	const unsolveThread = useUnsolveThread();
 
-	// Move thread
-	const { data: forumsTree = [] } = useFetchForumCategoriesTree();
-	const moveThread = useMutation({
-		mutationFn: async (targetCategoryId: number) => {
-			return apiRequest({
-				url: `/api/forum/threads/${itemId}/move`,
-				method: 'POST',
-				data: { categoryId: targetCategoryId }
-			});
-		},
-		onSuccess: () => {
-			toast({ title: 'Thread moved', variant: 'default' });
-			queryClient.invalidateQueries({ queryKey: ['/api/forum/threads'] });
-			onActionComplete?.();
-		}
-	});
-
 	return (
 		<>
 			<DropdownMenu>
@@ -263,27 +240,6 @@ export function ModeratorActions({
 									</>
 								)}
 							</DropdownMenuItem>
-
-							{/* Move to forum submenu */}
-							{forumsTree.length > 0 && (
-								<DropdownMenuItem className="gap-2" disabled={moveThread.isPending}>
-									<MoveHorizontal className="h-4 w-4" /> Move to…
-									<select
-										className="ml-auto bg-transparent text-sm outline-none"
-										onChange={(e) => {
-											const id = Number(e.target.value);
-											if (id) moveThread.mutate(id);
-										}}
-									>
-										<option value="">Select</option>
-										{forumsTree.map((cat) => (
-											<option key={cat.id} value={cat.id} className="bg-zinc-900">
-												{cat.name}
-											</option>
-										))}
-									</select>
-								</DropdownMenuItem>
-							)}
 
 							<DropdownMenuSeparator />
 						</>

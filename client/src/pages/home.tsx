@@ -24,6 +24,9 @@ import { ArrowRight } from 'lucide-react';
 // Import icons
 import { AlertCircle } from 'lucide-react';
 
+import type { ZoneCardProps } from '@/components/forum/ZoneCard';
+import ForumErrorBoundary from '@/components/forum/ForumErrorBoundary';
+
 function HomePage() {
 	// Get forum structure from context
 	const {
@@ -34,38 +37,46 @@ function HomePage() {
 
 	const primaryZonesFromContext = mergedZones.filter((zone) => zone.isPrimary === true);
 
-	const zoneCardDataForGrid = primaryZonesFromContext.map((zone: MergedZone) => ({
-		id: zone.slug,
-		name: zone.name,
-		slug: zone.slug,
-		description: zone.description || '',
-		icon: zone.icon,
-		colorTheme: zone.theme?.colorTheme || zone.slug,
-		theme: {
-			icon: zone.theme?.icon ?? undefined,
-			color: zone.theme?.color ?? undefined,
-			bannerImage: zone.theme?.bannerImage ?? undefined
-		},
-		threadCount: zone.threadCount,
-		postCount: zone.postCount,
-		forums: zone.forums.map((forum) => ({
-			id: forum.id,
-			slug: forum.slug,
-			name: forum.name,
-			description: forum.description,
-			threadCount: forum.threadCount,
-			postCount: forum.postCount
-		})),
-		activeUsersCount: 0,
-		hasXpBoost: zone.hasXpBoost,
-		boostMultiplier: zone.boostMultiplier,
-		isEventActive: false,
-		eventData: { name: '', endsAt: new Date() },
-		lastActivityAt: zone.updatedAt ? new Date(zone.updatedAt) : undefined
-	}));
+	const zoneCardDataForGrid: ZoneCardProps['zone'][] = primaryZonesFromContext.map(
+		(zone: MergedZone) => ({
+			id: String(zone.id),
+			name: zone.name,
+			slug: zone.slug,
+			description: zone.description || '',
+			icon: zone.icon ?? undefined,
+			colorTheme: zone.theme?.colorTheme || zone.slug,
+			bannerImage: zone.theme?.bannerImage ?? undefined,
+			stats: {
+				activeUsers: 0, // TODO: Replace with real-time data
+				totalThreads: zone.threadCount ?? 0,
+				totalPosts: zone.postCount ?? 0,
+				todaysPosts: 0
+			},
+			features: {
+				hasXpBoost: zone.hasXpBoost,
+				boostMultiplier: zone.boostMultiplier,
+				isEventActive: false,
+				isPremium: false
+			},
+			activity: zone.updatedAt
+				? {
+						trendingThreads: 0,
+						momentum: 'stable',
+						lastActiveUser: undefined
+					}
+				: undefined,
+			forums: zone.forums.map((forum) => ({
+				id: String(forum.id),
+				name: forum.name,
+				threadCount: forum.threadCount,
+				isPopular: forum.isPopular ?? false,
+				subforums: forum.subforums?.map((s) => ({ id: s.id, name: s.name }))
+			}))
+		})
+	);
 
 	return (
-		<>
+		<ForumErrorBoundary>
 			<HeroSection />
 			<AnnouncementTicker />
 			<ContentFeedProvider initialTab="trending">
@@ -112,7 +123,7 @@ function HomePage() {
 				</ResponsiveLayoutWrapper>
 			</ContentFeedProvider>
 			<SiteFooter />
-		</>
+		</ForumErrorBoundary>
 	);
 }
 

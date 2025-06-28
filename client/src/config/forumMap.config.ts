@@ -524,132 +524,114 @@ const PRIMARY_ZONES: Zone[] = [
 	}
 ];
 
-// --- General Zones ---
+// ---------------------------------------------------------------------------
+//  NEW: General Zone Wrapper (holds all standalone forums – does NOT render a
+//       /zones/general page; it merely satisfies the Zone[] structure)
+// ---------------------------------------------------------------------------
 
-const GENERAL_ZONES: Zone[] = [
-	{
-		slug: 'market-analysis',
-		name: 'Market Analysis',
-		description: 'Technical analysis and market discussion',
-		type: 'general',
-		position: 10,
-		theme: {
-			color: '#2ECC71',
-			icon: '📊',
-			colorTheme: 'theme-market'
-		},
-		forums: [
-			{
-				slug: 'btc-analysis',
-				name: 'BTC Analysis',
-				position: 1,
-				rules: {
-					...DEFAULT_FORUM_RULES,
-					availablePrefixes: ['[TA]', '[FA]', '[SIGNAL]', '[TARGET]']
-				}
-			},
-			{
-				slug: 'altcoin-analysis',
-				name: 'Altcoin Analysis',
-				description: 'Discussions about various altcoins.', // Added description for parent
-				position: 2,
-				rules: {
-					...DEFAULT_FORUM_RULES,
-					availablePrefixes: ['[ALT]', '[GEM]', '[ANALYSIS]']
-				},
-				forums: [
-					// Subforums for Altcoin Analysis
-					{
-						slug: 'large-cap-alts',
-						name: 'Large Cap Alts',
-						description: 'Focus on established large-cap altcoins.',
-						position: 1,
-						rules: { ...DEFAULT_FORUM_RULES }
-					},
-					{
-						slug: 'small-cap-gems',
-						name: 'Small Cap Gems',
-						description: 'Exploring high-potential small-cap altcoins.',
-						position: 2,
-						rules: { ...DEFAULT_FORUM_RULES, xpMultiplier: 1.2 }
+const GENERAL_ZONE_WRAPPER: Zone = {
+	slug: 'general',
+	name: 'General Forums',
+	description: 'Default container for non-themed forums',
+	type: 'general',
+	position: 99,
+	theme: {
+		color: '#9CA3AF',
+		icon: '🧱',
+		colorTheme: 'theme-neutral'
+	},
+	forums: [
+		// DeFi Laboratory (formerly a zone)
+		{
+			slug: 'defi-lab',
+			name: 'DeFi Laboratory',
+			description: 'DeFi protocols, yield farming, and strategies',
+			rules: { ...DEFAULT_FORUM_RULES },
+			forums: [
+				{
+					slug: 'yield-farming',
+					name: 'Yield Farming',
+					rules: {
+						...DEFAULT_FORUM_RULES,
+						tippingEnabled: true,
+						availablePrefixes: ['[FARM]', '[APY]', '[YIELD]', '[RISK]']
 					}
-				]
-			}
-		]
-	},
-	{
-		slug: 'defi-lab',
-		name: 'DeFi Laboratory',
-		description: 'DeFi protocols, yield farming, and strategies',
-		type: 'general',
-		position: 11,
-		theme: {
-			color: '#3498DB',
-			icon: '🧪',
-			colorTheme: 'theme-defi'
+				},
+				{
+					slug: 'protocol-discussion',
+					name: 'Protocol Discussion',
+					rules: {
+						...DEFAULT_FORUM_RULES,
+						availablePrefixes: ['[PROTOCOL]', '[AUDIT]', '[SECURITY]']
+					}
+				}
+			]
 		},
-		forums: [
-			{
-				slug: 'yield-farming',
-				name: 'Yield Farming',
-				position: 1,
-				rules: {
-					...DEFAULT_FORUM_RULES,
-					tippingEnabled: true,
-					availablePrefixes: ['[FARM]', '[APY]', '[YIELD]', '[RISK]']
+		// NFT District (formerly a zone)
+		{
+			slug: 'nft-district',
+			name: 'NFT District',
+			description: 'JPEGs, art, and digital collectibles',
+			rules: { ...DEFAULT_FORUM_RULES },
+			forums: [
+				{
+					slug: 'nft-calls',
+					name: 'NFT Calls',
+					rules: {
+						...DEFAULT_FORUM_RULES,
+						tippingEnabled: true,
+						availablePrefixes: ['[MINT]', '[FLIP]', '[HODL]', '[BLUECHIP]']
+					}
+				},
+				{
+					slug: 'art-gallery',
+					name: 'Art Gallery',
+					rules: {
+						...DEFAULT_FORUM_RULES,
+						allowAttachments: true,
+						availablePrefixes: ['[ART]', '[SHOWCASE]', '[COLLECTION]']
+					}
 				}
-			},
-			{
-				slug: 'protocol-discussion',
-				name: 'Protocol Discussion',
-				position: 2,
-				rules: {
-					...DEFAULT_FORUM_RULES,
-					availablePrefixes: ['[PROTOCOL]', '[AUDIT]', '[SECURITY]']
-				}
-			}
-		]
-	},
-	{
-		slug: 'nft-district',
-		name: 'NFT District',
-		description: 'JPEGs, art, and digital collectibles',
-		type: 'general',
-		position: 12,
-		theme: {
-			color: '#E74C3C',
-			icon: '🖼️',
-			colorTheme: 'theme-nft'
+			]
 		},
-		forums: [
-			{
-				slug: 'nft-calls',
-				name: 'NFT Calls',
-				position: 1,
-				rules: {
-					...DEFAULT_FORUM_RULES,
-					tippingEnabled: true,
-					availablePrefixes: ['[MINT]', '[FLIP]', '[HODL]', '[BLUECHIP]']
+		// Market Analysis (formerly a zone)
+		{
+			slug: 'market-analysis',
+			name: 'Market Analysis',
+			description: 'Technical analysis and market discussion',
+			rules: { ...DEFAULT_FORUM_RULES },
+			forums: [
+				{
+					slug: 'btc-analysis',
+					name: 'BTC Analysis',
+					rules: {
+						...DEFAULT_FORUM_RULES,
+						availablePrefixes: ['[TA]', '[FA]', '[SIGNAL]', '[TARGET]']
+					}
+				},
+				{
+					slug: 'altcoin-analysis',
+					name: 'Altcoin Analysis',
+					description: 'Discussions about various altcoins.',
+					rules: { ...DEFAULT_FORUM_RULES, availablePrefixes: ['[ALT]', '[GEM]', '[ANALYSIS]'] },
+					forums: [
+						{ slug: 'large-cap-alts', name: 'Large Cap Alts', rules: { ...DEFAULT_FORUM_RULES } },
+						{
+							slug: 'small-cap-gems',
+							name: 'Small Cap Gems',
+							rules: { ...DEFAULT_FORUM_RULES, xpMultiplier: 1.2 }
+						}
+					]
 				}
-			},
-			{
-				slug: 'art-gallery',
-				name: 'Art Gallery',
-				position: 2,
-				rules: {
-					...DEFAULT_FORUM_RULES,
-					allowAttachments: true,
-					availablePrefixes: ['[ART]', '[SHOWCASE]', '[COLLECTION]']
-				}
-			}
-		]
-	}
-];
+			]
+		}
+	]
+};
 
 // --- Export Configuration ---
 
 export const forumMap = {
-	zones: [...PRIMARY_ZONES, ...GENERAL_ZONES],
+	zones: [...PRIMARY_ZONES, GENERAL_ZONE_WRAPPER],
 
 	// Helper methods
 	getZoneBySlug: (slug: string) => forumMap.zones.find((z) => z.slug === slug),
@@ -658,13 +640,20 @@ export const forumMap = {
 		for (const zone of forumMap.zones) {
 			const forum = zone.forums.find((f) => f.slug === slug);
 			if (forum) return { forum, zone };
+			// Search subforums one level deep
+			for (const parentForum of zone.forums) {
+				if (parentForum.forums) {
+					const sub = parentForum.forums.find((sf) => sf.slug === slug);
+					if (sub) return { forum: sub, zone };
+				}
+			}
 		}
 		return null;
 	},
 
 	getPrimaryZones: () => forumMap.zones.filter((z) => z.type === 'primary'),
 
-	getGeneralZones: () => forumMap.zones.filter((z) => z.type === 'general'),
+	getGeneralZones: () => [GENERAL_ZONE_WRAPPER],
 
 	// Config metadata
 	version: '1.0.0',

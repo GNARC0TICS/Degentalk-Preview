@@ -14,6 +14,7 @@ import {
 } from '../../auth/middleware/auth.middleware';
 import { forumController } from '../forum.controller';
 import { threadService } from '../services/thread.service';
+import { postService } from '../services/post.service';
 import { logger } from '@server/src/core/logger';
 
 const router = Router();
@@ -50,6 +51,15 @@ router.get('/', async (req: Request, res: Response) => {
 		const sortBy = (req.query.sortBy as string) || 'newest';
 		const search = req.query.search as string;
 
+		// Log search parameters for debugging
+		logger.debug('ThreadRoutes', 'Searching threads with parameters', {
+			structureId,
+			page,
+			limit,
+			sortBy,
+			search
+		});
+
 		const result = await threadService.searchThreads({
 			structureId,
 			page,
@@ -58,20 +68,35 @@ router.get('/', async (req: Request, res: Response) => {
 			search
 		});
 
+		logger.debug('ThreadRoutes', 'Thread search results', {
+			threadCount: result.threads.length,
+			total: result.total,
+			page: result.page,
+			totalPages: result.totalPages
+		});
+
 		res.json({
-			threads: result.threads,
-			pagination: {
-				page,
-				limit: limit,
-				totalThreads: result.total,
-				totalPages: result.totalPages
+			success: true,
+			data: {
+				threads: result.threads,
+				pagination: {
+					page,
+					limit: limit,
+					totalThreads: result.total,
+					totalPages: result.totalPages
+				}
 			}
 		});
 	} catch (error) {
-		logger.error('ThreadRoutes', 'Error in GET /threads', { error });
+		logger.error('ThreadRoutes', 'Error in GET /threads', {
+			error: error.message,
+			stack: error.stack,
+			query: req.query
+		});
 		res.status(500).json({
 			success: false,
-			error: 'Failed to fetch threads'
+			error: 'Failed to fetch threads',
+			details: error.message
 		});
 	}
 });
@@ -285,6 +310,53 @@ router.delete(
 		}
 	}
 );
+
+// Get posts for a thread
+router.get('/:threadId/posts', async (req: Request, res: Response) => {
+	try {
+		const threadId = parseInt(req.params.threadId);
+		const page = parseInt(req.query.page as string) || 1;
+		const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
+		const sortBy = (req.query.sortBy as string) || 'oldest';
+
+		if (isNaN(threadId)) {
+			return res.status(400).json({
+				success: false,
+				error: 'Invalid thread ID'
+			});
+		}
+
+		const result = await postService.getPostsByThread({
+			threadId,
+			page,
+			limit,
+			sortBy: sortBy as any
+		});
+
+		res.json({
+			success: true,
+			data: {
+				posts: result.posts,
+				pagination: {
+					page: result.page,
+					limit,
+					totalPosts: result.total,
+					totalPages: result.totalPages
+				}
+			}
+		});
+	} catch (error) {
+		logger.error('ThreadRoutes', 'Error in GET /threads/:threadId/posts', {
+			error: error.message,
+			stack: error.stack,
+			threadId: req.params.threadId
+		});
+		res.status(500).json({
+			success: false,
+			error: 'Failed to fetch thread posts'
+		});
+	}
+});
 
 // Get thread tags
 router.get('/:threadId/tags', async (req: Request, res: Response) => {

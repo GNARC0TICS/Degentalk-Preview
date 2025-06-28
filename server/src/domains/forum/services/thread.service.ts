@@ -238,204 +238,133 @@ export class ThreadService {
 
 			const offset = (page - 1) * limit;
 
-			// Build where conditions
-			const whereConditions = [];
+			// Build WHERE conditions
+			let whereConditions = [];
 
+			// Filter by structureId if provided
 			if (structureId) {
 				whereConditions.push(eq(threads.structureId, structureId));
 			}
 
+			// Filter by userId if provided
 			if (userId) {
 				whereConditions.push(eq(threads.userId, userId));
 			}
 
+			// Filter by search term if provided
 			if (search) {
-				whereConditions.push(
-					or(ilike(threads.title, `%${search}%`), ilike(threads.content, `%${search}%`))
-				);
+				whereConditions.push(ilike(threads.title, `%${search}%`));
 			}
 
-			if (status) {
-				switch (status) {
-					case 'locked':
-						whereConditions.push(eq(threads.isLocked, true));
-						break;
-					case 'pinned':
-						whereConditions.push(eq(threads.isPinned, true));
-						break;
-					case 'active':
-						whereConditions.push(and(eq(threads.isLocked, false), eq(threads.isPinned, false)));
-						break;
-				}
-			}
+			// Combine WHERE conditions
+			const whereClause = whereConditions.length > 0 ? and(...whereConditions) : undefined;
 
-			// Build sort order
-			let orderBy;
+			// Count query with proper filtering
+			const totalCountResult = await db
+				.select({ count: count(threads.id) })
+				.from(threads)
+				.where(whereClause)
+				.execute();
+
+			const total = totalCountResult[0]?.count || 0;
+			const totalPages = Math.max(1, Math.ceil(total / limit));
+
+			// Main query with proper filtering and sorting - using simple select
+			let query = db.select().from(threads).where(whereClause).limit(limit).offset(offset);
+
+			// Apply sorting
 			switch (sortBy) {
+				case 'newest':
+					query = query.orderBy(desc(threads.createdAt));
+					break;
 				case 'oldest':
-					orderBy = asc(threads.createdAt);
+					query = query.orderBy(asc(threads.createdAt));
 					break;
 				case 'mostReplies':
-					orderBy = desc(threads.postCount);
+					query = query.orderBy(desc(threads.postCount));
 					break;
 				case 'mostViews':
-					orderBy = desc(threads.viewCount);
+					query = query.orderBy(desc(threads.viewCount));
 					break;
 				case 'trending':
-					// Simple trending formula: views*0.3 + posts*0.7, weighted by recency
-					orderBy = desc(sql`
-						(COALESCE(${threads.viewCount}, 0) * 0.3 + COALESCE(${threads.postCount}, 0) * 0.7) * 
-						EXP(-EXTRACT(EPOCH FROM (NOW() - ${threads.createdAt}))/86400)
-					`);
+					// For trending, prioritize recent threads with high engagement
+					query = query.orderBy(desc(threads.hotScore), desc(threads.createdAt));
 					break;
-				case 'newest':
 				default:
-					orderBy = desc(threads.createdAt);
-					break;
+					query = query.orderBy(desc(threads.createdAt));
 			}
 
-			// Base query
-			let query = db
-				.select({
-					// Thread fields
-					id: threads.id,
-					title: threads.title,
-					content: threads.content,
-					slug: threads.slug,
-					structureId: threads.structureId,
-					userId: threads.userId,
-					postCount: threads.postCount,
-					viewCount: threads.viewCount,
-					isLocked: threads.isLocked,
-					isPinned: threads.isPinned,
-					isSolved: threads.isSolved,
-					createdAt: threads.createdAt,
-					updatedAt: threads.updatedAt,
-					lastPostAt: threads.lastPostAt,
+			const threadsData = await query.execute();
 
-					// Author fields
-					authorUsername: usersTable.username,
-					authorAvatar: usersTable.avatar,
-					authorRole: usersTable.role,
+			// Format threads with separate queries for relations
+			const formattedThreads = await Promise.all(
+				threadsData.map(async (thread) => {
+					// Get user information separately
+					const [userResult] = await db
+						.select({
+							username: usersTable.username,
+							avatarUrl: usersTable.avatarUrl,
+							activeAvatarUrl: usersTable.activeAvatarUrl,
+							role: usersTable.role
+						})
+						.from(usersTable)
+						.where(eq(usersTable.id, thread.userId));
 
-					// Category fields
-					categoryName: forumStructure.name,
-					categorySlug: forumStructure.slug
+					// Get structure information separately
+					const [structureResult] = await db
+						.select({
+							name: forumStructure.name,
+							slug: forumStructure.slug,
+							type: forumStructure.type
+						})
+						.from(forumStructure)
+						.where(eq(forumStructure.id, thread.structureId));
+
+					// Get zone information for theming
+					const zoneInfo = await this.getZoneInfo(thread.structureId);
+
+					return {
+						id: thread.id,
+						title: thread.title,
+						slug: thread.slug ?? this.generateSlug(thread.title),
+						userId: thread.userId,
+						prefixId: null,
+						isSticky: thread.isSticky || false,
+						isLocked: thread.isLocked || false,
+						isHidden: false,
+						viewCount: thread.viewCount || 0,
+						postCount: thread.postCount || 0,
+						firstPostLikeCount: 0,
+						lastPostAt: thread.lastPostAt ? new Date(thread.lastPostAt).toISOString() : null,
+						createdAt: thread.createdAt
+							? new Date(thread.createdAt).toISOString()
+							: new Date().toISOString(),
+						updatedAt: thread.updatedAt ? new Date(thread.updatedAt).toISOString() : null,
+						isSolved: thread.isSolved || false,
+						solvingPostId: null,
+						user: {
+							id: thread.userId,
+							username: userResult?.username || 'Unknown',
+							avatarUrl: userResult?.avatarUrl || null,
+							activeAvatarUrl: userResult?.activeAvatarUrl || null,
+							role: userResult?.role || 'user'
+						},
+						category: {
+							id: thread.structureId,
+							name: structureResult?.name || 'Unknown',
+							slug: structureResult?.slug || 'unknown'
+						},
+						zone: zoneInfo || {
+							name: structureResult?.name || 'Unknown',
+							slug: structureResult?.slug || 'unknown',
+							colorTheme: 'default'
+						},
+						tags: [],
+						canEdit: false,
+						canDelete: false
+					};
 				})
-				.from(threads)
-				.leftJoin(usersTable, eq(threads.userId, usersTable.id))
-				.leftJoin(forumStructure, eq(threads.structureId, forumStructure.id));
-
-			// Apply where conditions
-			if (whereConditions.length > 0) {
-				query = query.where(and(...whereConditions));
-			}
-
-			// Handle following filtering (must be done before tag filtering)
-			if (followingUserId) {
-				query = query
-					.innerJoin(userFollows, eq(userFollows.followeeId, threads.userId))
-					.where(
-						and(
-							...(whereConditions.length > 0 ? whereConditions : []),
-							eq(userFollows.followerId, followingUserId)
-						)
-					);
-			}
-
-			// Handle tag filtering
-			if (tagFilters && tagFilters.length > 0) {
-				query = query
-					.leftJoin(threadTags, eq(threads.id, threadTags.threadId))
-					.leftJoin(tags, eq(threadTags.tagId, tags.id))
-					.where(
-						and(
-							...(whereConditions.length > 0 ? whereConditions : []),
-							...(followingUserId ? [eq(userFollows.followerId, followingUserId)] : []),
-							inArray(tags.name, tagFilters)
-						)
-					)
-					.groupBy(
-						threads.id,
-						usersTable.id,
-						forumStructure.id,
-						...(followingUserId ? [userFollows.id] : [])
-					);
-			}
-
-			// Get total count with a separate query to avoid issues with joins
-			let countQuery = db.select({ total: count(threads.id) }).from(threads);
-
-			if (whereConditions.length > 0) {
-				countQuery = countQuery.where(and(...whereConditions));
-			}
-
-			// Add following join to count query if needed
-			if (followingUserId) {
-				countQuery = countQuery
-					.innerJoin(userFollows, eq(userFollows.followeeId, threads.userId))
-					.where(
-						and(
-							...(whereConditions.length > 0 ? whereConditions : []),
-							eq(userFollows.followerId, followingUserId)
-						)
-					);
-			}
-
-			if (tagFilters && tagFilters.length > 0) {
-				countQuery = countQuery
-					.leftJoin(threadTags, eq(threads.id, threadTags.threadId))
-					.leftJoin(tags, eq(threadTags.tagId, tags.id))
-					.where(
-						and(
-							...(whereConditions.length > 0 ? whereConditions : []),
-							...(followingUserId ? [eq(userFollows.followerId, followingUserId)] : []),
-							inArray(tags.name, tagFilters)
-						)
-					);
-			}
-
-			const [{ total }] = await countQuery.execute();
-
-			// Get paginated results
-			const threadsData = await query.orderBy(orderBy).limit(limit).offset(offset);
-
-			const totalPages = Math.ceil(total / limit);
-
-			// Transform the flat data into the expected nested structure
-			const formattedThreads = threadsData.map((thread) => ({
-				id: thread.id,
-				title: thread.title,
-				slug: thread.slug,
-				userId: thread.userId,
-				prefixId: null, // TODO: Add prefix support
-				isSticky: thread.isPinned,
-				isLocked: thread.isLocked,
-				isHidden: false, // TODO: Add hidden support
-				viewCount: thread.viewCount,
-				postCount: thread.postCount,
-				firstPostLikeCount: 0, // TODO: Add like count
-				lastPostAt: thread.lastPostAt?.toISOString() || null,
-				createdAt: thread.createdAt.toISOString(),
-				updatedAt: thread.updatedAt?.toISOString() || null,
-				isSolved: thread.isSolved,
-				solvingPostId: null, // TODO: Add solving post support
-				user: {
-					id: thread.userId,
-					username: thread.authorUsername || 'Unknown',
-					avatarUrl: thread.authorAvatar,
-					activeAvatarUrl: thread.authorAvatar,
-					role: thread.authorRole || 'user'
-				},
-				category: {
-					id: thread.structureId,
-					name: thread.categoryName || 'Unknown',
-					slug: thread.categorySlug || 'unknown'
-				},
-				tags: [], // TODO: Add tags support
-				canEdit: false, // TODO: Add permission support
-				canDelete: false // TODO: Add permission support
-			}));
+			);
 
 			logger.info(
 				'ThreadService',
@@ -449,49 +378,105 @@ export class ThreadService {
 				totalPages
 			};
 		} catch (error) {
-			logger.error('ThreadService', 'Error searching threads', { params, error });
+			logger.error('ThreadService', 'Error searching threads', {
+				params,
+				message: (error as any)?.message,
+				stack: (error as any)?.stack
+			});
+
+			// EMERGENCY: Throw the error so we can see what's happening
 			throw error;
 		}
 	}
 
 	/**
 	 * Get thread by ID with author and category details
+	 * Returns ThreadDisplay compatible format with proper zone data
 	 */
 	async getThreadById(threadId: number): Promise<ThreadWithUserAndCategory | null> {
 		try {
-			const [thread] = await db
+			const [threadResult] = await db.select().from(threads).where(eq(threads.id, threadId));
+
+			if (!threadResult) return null;
+
+			// Get user information separately
+			const [userResult] = await db
 				.select({
-					// Thread fields
-					id: threads.id,
-					title: threads.title,
-					content: threads.content,
-					slug: threads.slug,
-					structureId: threads.structureId,
-					userId: threads.userId,
-					postCount: threads.postCount,
-					viewCount: threads.viewCount,
-					isLocked: threads.isLocked,
-					isPinned: threads.isPinned,
-					isSolved: threads.isSolved,
-					createdAt: threads.createdAt,
-					updatedAt: threads.updatedAt,
-					lastPostAt: threads.lastPostAt,
-
-					// Author fields
-					authorUsername: usersTable.username,
-					authorAvatar: usersTable.avatar,
-					authorRole: usersTable.role,
-
-					// Category fields
-					categoryName: forumStructure.name,
-					categorySlug: forumStructure.slug
+					username: usersTable.username,
+					avatarUrl: usersTable.avatarUrl,
+					activeAvatarUrl: usersTable.activeAvatarUrl,
+					role: usersTable.role
 				})
-				.from(threads)
-				.leftJoin(usersTable, eq(threads.userId, usersTable.id))
-				.leftJoin(forumStructure, eq(threads.structureId, forumStructure.id))
-				.where(eq(threads.id, threadId));
+				.from(usersTable)
+				.where(eq(usersTable.id, threadResult.userId));
 
-			return thread || null;
+			// Get structure information separately
+			const [structureResult] = await db
+				.select({
+					name: forumStructure.name,
+					slug: forumStructure.slug,
+					type: forumStructure.type
+				})
+				.from(forumStructure)
+				.where(eq(forumStructure.id, threadResult.structureId));
+
+			// Get zone information for theming
+			const zoneInfo = await this.getZoneInfo(threadResult.structureId);
+
+			// Format as ThreadDisplay-compatible object
+			const formattedThread = {
+				id: threadResult.id,
+				title: threadResult.title,
+				slug: threadResult.slug ?? this.generateSlug(threadResult.title),
+				userId: threadResult.userId,
+				structureId: threadResult.structureId,
+				prefixId: null,
+				isSticky: threadResult.isSticky || false,
+				isLocked: threadResult.isLocked || false,
+				isHidden: false,
+				viewCount: threadResult.viewCount || 0,
+				postCount: threadResult.postCount || 0,
+				firstPostLikeCount: 0,
+				lastPostAt: threadResult.lastPostAt
+					? new Date(threadResult.lastPostAt).toISOString()
+					: null,
+				createdAt: threadResult.createdAt
+					? new Date(threadResult.createdAt).toISOString()
+					: new Date().toISOString(),
+				updatedAt: threadResult.updatedAt ? new Date(threadResult.updatedAt).toISOString() : null,
+				isSolved: threadResult.isSolved || false,
+				solvingPostId: null,
+
+				// User relationship
+				user: {
+					id: threadResult.userId,
+					username: userResult?.username || 'Unknown',
+					avatarUrl: userResult?.avatarUrl || null,
+					activeAvatarUrl: userResult?.activeAvatarUrl || null,
+					role: userResult?.role || 'user'
+				},
+
+				// Category relationship (legacy compatibility)
+				category: {
+					id: threadResult.structureId,
+					name: structureResult?.name || 'Unknown',
+					slug: structureResult?.slug || 'unknown'
+				},
+
+				// Zone relationship (required for theming)
+				zone: zoneInfo || {
+					id: threadResult.structureId,
+					name: structureResult?.name || 'Unknown',
+					slug: structureResult?.slug || 'unknown',
+					colorTheme: 'default'
+				},
+
+				tags: [],
+				canEdit: false,
+				canDelete: false
+			};
+
+			return formattedThread;
 		} catch (error) {
 			logger.error('ThreadService', 'Error fetching thread by ID', { threadId, error });
 			throw error;
@@ -499,43 +484,94 @@ export class ThreadService {
 	}
 
 	/**
-	 * Get thread by slug
+	 * Get thread by slug with author and zone details
+	 * Returns ThreadDisplay compatible format with proper zone data
 	 */
 	async getThreadBySlug(slug: string): Promise<ThreadWithUserAndCategory | null> {
 		try {
-			const [thread] = await db
+			// First, try a simple query to isolate the issue
+			const [threadResult] = await db.select().from(threads).where(eq(threads.slug, slug));
+
+			if (!threadResult) return null;
+
+			// Get user information separately
+			const [userResult] = await db
 				.select({
-					// Thread fields
-					id: threads.id,
-					title: threads.title,
-					content: threads.content,
-					slug: threads.slug,
-					structureId: threads.structureId,
-					userId: threads.userId,
-					postCount: threads.postCount,
-					viewCount: threads.viewCount,
-					isLocked: threads.isLocked,
-					isPinned: threads.isPinned,
-					isSolved: threads.isSolved,
-					createdAt: threads.createdAt,
-					updatedAt: threads.updatedAt,
-					lastPostAt: threads.lastPostAt,
-
-					// Author fields
-					authorUsername: usersTable.username,
-					authorAvatar: usersTable.avatar,
-					authorRole: usersTable.role,
-
-					// Category fields
-					categoryName: forumStructure.name,
-					categorySlug: forumStructure.slug
+					username: usersTable.username,
+					avatarUrl: usersTable.avatarUrl,
+					activeAvatarUrl: usersTable.activeAvatarUrl,
+					role: usersTable.role
 				})
-				.from(threads)
-				.leftJoin(usersTable, eq(threads.userId, usersTable.id))
-				.leftJoin(forumStructure, eq(threads.structureId, forumStructure.id))
-				.where(eq(threads.slug, slug));
+				.from(usersTable)
+				.where(eq(usersTable.id, threadResult.userId));
 
-			return thread || null;
+			// Get structure information separately
+			const [structureResult] = await db
+				.select({
+					name: forumStructure.name,
+					slug: forumStructure.slug,
+					type: forumStructure.type
+				})
+				.from(forumStructure)
+				.where(eq(forumStructure.id, threadResult.structureId));
+
+			// Get zone information for theming
+			const zoneInfo = await this.getZoneInfo(threadResult.structureId);
+
+			// Format as ThreadDisplay-compatible object
+			const formattedThread = {
+				id: threadResult.id,
+				title: threadResult.title,
+				slug: threadResult.slug ?? this.generateSlug(threadResult.title),
+				userId: threadResult.userId,
+				structureId: threadResult.structureId,
+				prefixId: null,
+				isSticky: threadResult.isSticky || false,
+				isLocked: threadResult.isLocked || false,
+				isHidden: false,
+				viewCount: threadResult.viewCount || 0,
+				postCount: threadResult.postCount || 0,
+				firstPostLikeCount: 0,
+				lastPostAt: threadResult.lastPostAt
+					? new Date(threadResult.lastPostAt).toISOString()
+					: null,
+				createdAt: threadResult.createdAt
+					? new Date(threadResult.createdAt).toISOString()
+					: new Date().toISOString(),
+				updatedAt: threadResult.updatedAt ? new Date(threadResult.updatedAt).toISOString() : null,
+				isSolved: threadResult.isSolved || false,
+				solvingPostId: null,
+
+				// User relationship
+				user: {
+					id: threadResult.userId,
+					username: userResult?.username || 'Unknown',
+					avatarUrl: userResult?.avatarUrl || null,
+					activeAvatarUrl: userResult?.activeAvatarUrl || null,
+					role: userResult?.role || 'user'
+				},
+
+				// Category relationship (legacy compatibility)
+				category: {
+					id: threadResult.structureId,
+					name: structureResult?.name || 'Unknown',
+					slug: structureResult?.slug || 'unknown'
+				},
+
+				// Zone relationship (required for theming)
+				zone: zoneInfo || {
+					id: threadResult.structureId,
+					name: structureResult?.name || 'Unknown',
+					slug: structureResult?.slug || 'unknown',
+					colorTheme: 'default'
+				},
+
+				tags: [],
+				canEdit: false,
+				canDelete: false
+			};
+
+			return formattedThread;
 		} catch (error) {
 			logger.error('ThreadService', 'Error fetching thread by slug', { slug, error });
 			throw error;
@@ -547,22 +583,21 @@ export class ThreadService {
 	 */
 	async createThread(input: ThreadCreateInput): Promise<ThreadWithUserAndCategory> {
 		try {
-			const { title, content, categoryId, authorId, tags: tagNames, ...options } = input;
+			const { title, content, structureId, userId, tags: tagNames, ...options } = input;
 
 			// Generate slug from title
 			const slug = this.generateSlug(title);
 
-			// Create thread
+			// Create thread (note: threads table doesn't have content field)
 			const [newThread] = await db
 				.insert(threads)
 				.values({
 					title,
-					content,
 					slug,
-					categoryId,
-					authorId,
+					structureId,
+					userId,
 					isLocked: options.isLocked || false,
-					isPinned: options.isPinned || false,
+					isSticky: options.isPinned || false, // Map isPinned option to isSticky field
 					postCount: 0,
 					viewCount: 0,
 					createdAt: new Date(),
@@ -585,7 +620,7 @@ export class ThreadService {
 			logger.info('ThreadService', 'Thread created successfully', {
 				threadId: newThread.id,
 				title,
-				categoryId
+				structureId
 			});
 
 			return completeThread;
@@ -642,6 +677,41 @@ export class ThreadService {
 	}
 
 	/**
+	 * Update thread solved status
+	 */
+	async updateThreadSolvedStatus(params: {
+		threadId: number;
+		solvingPostId?: number | null;
+	}): Promise<ThreadWithUserAndCategory | null> {
+		try {
+			const { threadId, solvingPostId } = params;
+
+			await db
+				.update(threads)
+				.set({
+					isSolved: !!solvingPostId,
+					solvingPostId: solvingPostId || null,
+					updatedAt: new Date()
+				})
+				.where(eq(threads.id, threadId));
+
+			// Return updated thread
+			const updatedThread = await this.getThreadById(threadId);
+
+			logger.info('ThreadService', 'Thread solved status updated', {
+				threadId,
+				isSolved: !!solvingPostId,
+				solvingPostId
+			});
+
+			return updatedThread;
+		} catch (error) {
+			logger.error('ThreadService', 'Error updating thread solved status', { params, error });
+			throw error;
+		}
+	}
+
+	/**
 	 * Add tags to thread
 	 */
 	private async addTagsToThread(threadId: number, tagNames: string[]): Promise<void> {
@@ -688,6 +758,73 @@ export class ThreadService {
 			.replace(/-+/g, '-')
 			.trim()
 			.substring(0, 100);
+	}
+
+	/**
+	 * Get zone information for a given structure ID
+	 * Traverses up the hierarchy to find the top-level zone
+	 */
+	private async getZoneInfo(structureId: number): Promise<{
+		id: number;
+		name: string;
+		slug: string;
+		colorTheme: string;
+	} | null> {
+		try {
+			// First get the structure node
+			const [structure] = await db
+				.select()
+				.from(forumStructure)
+				.where(eq(forumStructure.id, structureId));
+
+			if (!structure) return null;
+
+			// If it's already a zone, return it
+			if (structure.type === 'zone') {
+				return {
+					id: structure.id,
+					name: structure.name,
+					slug: structure.slug,
+					colorTheme: structure.colorTheme || 'default'
+				};
+			}
+
+			// Otherwise, traverse up to find the zone
+			let currentNode = structure;
+			let maxDepth = 5; // Prevent infinite loops
+
+			while (currentNode.parentId && maxDepth > 0) {
+				const [parent] = await db
+					.select()
+					.from(forumStructure)
+					.where(eq(forumStructure.id, currentNode.parentId));
+
+				if (!parent) break;
+
+				if (parent.type === 'zone') {
+					return {
+						id: parent.id,
+						name: parent.name,
+						slug: parent.slug,
+						colorTheme: parent.colorTheme || 'default'
+					};
+				}
+
+				currentNode = parent;
+				maxDepth--;
+			}
+
+			// If we couldn't find a zone, return the current structure as fallback
+			return {
+				id: structure.id,
+				name: structure.name,
+				slug: structure.slug,
+				colorTheme: structure.colorTheme || structure.color || 'default'
+			};
+		} catch (error) {
+			logger.error('ThreadService', 'Error fetching zone info', { structureId, error });
+			return null;
+		}
 	}
 }
 

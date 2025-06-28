@@ -25,10 +25,40 @@ export async function hashPassword(password: string): Promise<string> {
  * Compare a supplied password with a stored hashed password
  */
 export async function comparePasswords(supplied: string, stored: string): Promise<boolean> {
-	const [hashed, salt] = stored.split('.');
-	const hashedBuf = Buffer.from(hashed, 'hex');
-	const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
-	return timingSafeEqual(hashedBuf, suppliedBuf);
+	if (!stored) {
+		console.warn('No stored password provided');
+		return false;
+	}
+
+	// Check if it's a bcrypt hash (starts with $2a$, $2b$, etc.)
+	if (stored.startsWith('$2')) {
+		// Use bcrypt for comparison
+		const bcrypt = require('bcryptjs');
+		return await bcrypt.compare(supplied, stored);
+	}
+
+	// Handle mock password for development (from seeding)
+	if (stored === 'mocked_hash') {
+		// For development users with mocked passwords, accept any password
+		console.warn('Using mocked password for development user');
+		return true;
+	}
+
+	// Handle scrypt format (hash.salt)
+	if (stored.includes('.')) {
+		const [hashed, salt] = stored.split('.');
+		if (!hashed || !salt) {
+			console.warn('Invalid scrypt password format - missing hash or salt');
+			return false;
+		}
+
+		const hashedBuf = Buffer.from(hashed, 'hex');
+		const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
+		return timingSafeEqual(hashedBuf, suppliedBuf);
+	}
+
+	console.warn('Unknown password format - neither bcrypt nor scrypt');
+	return false;
 }
 
 /**

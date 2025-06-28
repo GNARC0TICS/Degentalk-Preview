@@ -12,11 +12,16 @@ import {
 	Home,
 	AlertCircle,
 	Plus,
-	Users
+	Users,
+	Map
 } from 'lucide-react';
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
 import { Wide } from '@/layout/primitives/Wide';
-import { ForumBreadcrumbs, createForumBreadcrumbs } from '@/components/navigation/ForumBreadcrumbs';
+import {
+	ForumBreadcrumbs,
+	createForumBreadcrumbs,
+	type BreadcrumbItem
+} from '@/components/navigation/ForumBreadcrumbs';
 import { getForumSpacing, getForumLayout } from '@/utils/spacing-constants';
 
 const ZonePage: React.FC = () => {
@@ -25,6 +30,10 @@ const ZonePage: React.FC = () => {
 	const { getZone, isLoading, error: contextError } = useForumStructure();
 	// const [currentPage, setCurrentPage] = useState(1); // Removed
 	// const threadsPerPage = 20; // Removed
+
+	if (slug === 'general') {
+		return <NotFound />;
+	}
 
 	const zone = slug ? getZone(slug) : null;
 	const displayName = zone?.name;
@@ -75,8 +84,17 @@ const ZonePage: React.FC = () => {
 				)}
 
 				<Wide className={`relative z-10 ${getForumSpacing('container')}`}>
-					{/* Breadcrumbs */}
-					<ForumBreadcrumbs items={createForumBreadcrumbs.zone(displayName || 'Zone', slug)} />
+					{/* Breadcrumbs - simplified: Home > Zone Name */}
+					{slug !== 'general' && (
+						<ForumBreadcrumbs
+							items={
+								[
+									{ label: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
+									{ label: displayName || 'Zone', href: `/zones/${slug}` }
+								] as BreadcrumbItem[]
+							}
+						/>
+					)}
 
 					{/* Zone Header */}
 					<div className="flex flex-col sm:flex-row sm:items-start gap-6">

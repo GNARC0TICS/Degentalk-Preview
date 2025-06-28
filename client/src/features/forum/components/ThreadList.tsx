@@ -1,79 +1,17 @@
 import React, { useState, memo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import ThreadCard from '@/components/forum/ThreadCard'; // Corrected import path
+import ThreadCard from '@/components/forum/ThreadCard';
 import { getQueryFn } from '@/lib/queryClient';
 import { Pagination } from '@/components/ui/pagination';
 import { ThreadListSkeleton } from '@/components/ui/thread-skeleton';
 import type { ThreadFiltersState } from '@/components/forum/ThreadFilters';
-
-// Type for individual tag object
-export type ApiTag = {
-	id: number;
-	name: string;
-	slug: string;
-};
-
-// Type for user object nested in thread
-export type ApiThreadUser = {
-	id: string;
-	username: string;
-	avatarUrl?: string | null;
-	activeAvatarUrl?: string | null;
-	role?: 'user' | 'mod' | 'admin' | null;
-};
-
-// Type for category object nested in thread
-export type ApiThreadCategory = {
-	id: number;
-	name: string;
-	slug: string;
-};
-
-// Define the structure of a thread object based on backend API response
-export type ApiThread = {
-	id: number;
-	title: string;
-	slug: string;
-	userId: string;
-	prefixId?: number | null;
-	isSticky: boolean;
-	isLocked: boolean;
-	isHidden: boolean;
-	viewCount: number;
-	postCount: number;
-	firstPostLikeCount?: number;
-	dgtStaked?: number;
-	hotScore?: number;
-	lastPostAt?: string | null;
-	createdAt: string;
-	updatedAt?: string | null;
-	isSolved?: boolean;
-	solvingPostId?: number | null;
-	user: ApiThreadUser;
-	category: ApiThreadCategory;
-	tags: ApiTag[];
-	canEdit?: boolean;
-	canDelete?: boolean;
-};
-
-// Define the structure of the pagination object from the API
-export type ApiPagination = {
-	page: number;
-	limit: number;
-	totalThreads: number;
-	totalPages: number;
-};
-
-// Define the structure of the API response for threads
-export type ThreadsApiResponse = {
-	threads: ApiThread[];
-	pagination: ApiPagination;
-};
+import type { ThreadDisplay, ThreadsApiResponse } from '@/types/thread.types';
+import { PAGINATION_CONFIG } from '@/config/pagination.config';
 
 interface ThreadListProps {
 	forumId: number;
 	forumSlug: string;
-	availableTags?: ApiTag[];
+	availableTags?: Array<{ id: number; name: string; slug: string }>;
 	filters: ThreadFiltersState;
 }
 
@@ -86,7 +24,9 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 	filters
 }) => {
 	const [page, setPage] = useState(1);
-	const threadsPerPage = 10;
+	const threadsPerPage = PAGINATION_CONFIG.threadsPerPage;
+
+	// Component initialization
 
 	// whenever filters prop changes reset to page 1
 	useEffect(() => {
@@ -131,6 +71,8 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 
 			const url = `${THREADS_API_BASE_PATH}?${params.toString()}`;
 
+			// Fetching threads for forum ID: ${forumId}
+
 			// Use getQueryFn for the API call
 			// getQueryFn returns a function that expects a QueryFunctionContext
 			const fetcher = getQueryFn<ThreadsApiResponse>({ on401: 'returnNull' });
@@ -138,10 +80,17 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 			// For now, we pass a minimal context.
 			try {
 				const response = await fetcher({ queryKey: [url], meta: undefined } as any);
+				// Processing API response
+
+				// Handle wrapped API response
+				if (response && response.success && response.data) {
+					return response.data as ThreadsApiResponse;
+				}
+
 				return response;
 			} catch (e) {
-				console.error('[ThreadList] Error fetching threads:', e);
-				throw e; // Re-throw to be caught by useQuery's error state
+				// Error will be handled by useQuery's error state
+				throw e;
 			}
 		},
 		enabled: forumId !== -1 && forumId > 0,
@@ -195,8 +144,8 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 	return (
 		<div>
 			{/* Thread List */}
-			{threads.map((thread: ApiThread) => (
-				<ThreadCard key={thread.id} thread={thread} forumSlug={forumSlug} />
+			{threads.map((thread: ThreadDisplay) => (
+				<ThreadCard key={thread.id} thread={thread} />
 			))}
 
 			{pagination.totalThreads > 0 && pagination.totalPages > 1 && (

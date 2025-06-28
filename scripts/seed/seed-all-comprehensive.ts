@@ -44,15 +44,15 @@ const CONFIG = {
   },
   THREADS: {
     PER_FORUM: {
-      MIN: 1,
-      MAX: 1
+      MIN: 3,
+      MAX: 8
     },
     POSTS: {
       MIN: 2,
-      MAX: 2
+      MAX: 12
     },
-    REPLY_CHANCE: 1,
-    MAX_REPLY_DEPTH: 1
+    REPLY_CHANCE: 0.8,
+    MAX_REPLY_DEPTH: 3
   },
   ENGAGEMENT: {
     LIKE_CHANCE: 0.3,

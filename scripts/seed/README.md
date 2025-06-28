@@ -27,15 +27,10 @@ This will seed:
 
 ### Specialized Scripts
 
-- `npm run seed:all -- --users-only` - Seed users only
-- `npm run seed:all -- --forums-only` - Seed forum structure only  
-- `npm run seed:all -- --threads-only` - Seed threads and posts only
-
-### Legacy Scripts
-
-- `npm run seed:realistic-threads` - Old thread seeding script
-- `npm run seed:dummy-threads` - Basic dummy data
-- `scripts/seed/seedDynamicContent.ts` - Complex full seeding
+- `npm run seed:wipe` - Wipe database and reseed everything
+- `npm run seed:forums:only` - Seed forum structure only
+- `npm run seed:users` - Seed users only
+- `npm run seed:dev-complete` - Complete development user setup with wallet
 
 ## 🔧 Configuration
 
@@ -126,12 +121,9 @@ Adjust the `CONFIG` object at the top of the file.
 ```
 scripts/seed/
 ├── README.md                    # This file
-├── seed-all-comprehensive.ts    # Main seeding script
+├── seed-all-comprehensive.ts    # Main seeding script (unified)
 ├── seedForumsFromConfig.ts      # Forum structure sync
-├── seed-realistic-threads.ts    # Legacy thread seeder
-├── seedDynamicContent.ts        # Complex legacy seeder
-└── shop/
-    └── username-colors.ts       # Shop item seeding
+└── seed-avatar-frames.ts        # Avatar frame seeding
 ```
 
 ## 🎨 Content Examples
@@ -158,12 +150,13 @@ The seeding creates realistic crypto community content:
 
 - Always run on a development database first
 - The `--wipe` flag will delete ALL data
-- Some legacy scripts may conflict - use the new `seed:all` command
+- Use the unified `seed:all` command for consistent seeding
 - Forum structure changes require `npm run sync:forums`
+- All seeding scripts now use the unified thread display system
 
 ## 🐛 Troubleshooting
 
-**"No users found" error**: Run `npm run seed:all -- --users-only` first
+**"No users found" error**: Run `npm run seed:users` first
 
 **"No forums found" error**: Run `npm run sync:forums` first
 

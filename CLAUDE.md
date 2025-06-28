@@ -6,6 +6,38 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Degentalk is a modern, highly satirical crypto forum platform designed for gamblers, investors, traders, and crypto fanatics across the globe. It aims to be the next viral forum of the century, featuring integrated wallet functionality, a digital goods marketplace, and gamified social features with XP/DGT economy.
 
+## 🚨 SYSTEM-WIDE THREAD ARCHITECTURE (CANONICAL)
+
+**ENFORCED AS OF 2025-01-27 - ALL AGENTS MUST FOLLOW**
+
+### ✅ Unified Thread System
+
+- **ALL frontend thread views MUST use `ThreadDisplay` type** from `@/types/thread.types`
+- **ALL API responses include proper `zone` data with `colorTheme`** - DO NOT manually enrich thread data
+- **`ThreadList` component is the ONLY standard** across all views - NO custom thread loaders
+- **Backend provides zone data automatically** - frontend must not hardcode zones or themes
+
+### ✅ Canonical Seeding
+
+- **`seed-all-comprehensive.ts` is the ONLY valid thread seeder**
+- **ALL other thread seeders have been DELETED** (seed-realistic-threads, seedDynamicContent, etc.)
+- **Use `npm run seed:all` or `npm run seed:forums:only`** - no other seeding commands
+- **Thread objects MUST use `structureId` pointing to canonical forum slugs** from forumMap.config.ts
+
+### ✅ Config-Driven Architecture
+
+- **`forumMap.config.ts`** - forum hierarchy and settings (SINGLE SOURCE OF TRUTH)
+- **`thread.config.ts`** - thread form/editor behavior
+- **`pagination.config.ts`** - page sizes, infinite scroll, etc.
+- **Zones resolved at runtime by backend** using forum structure
+
+### 🔒 ENFORCEMENT
+
+- **Any component/service/test using legacy types or hardcoded thread data is OUT OF SPEC**
+- **All routes verified:** ZonePage, ForumPage, TagPage, ProfilePage, Content Feeds
+- **ThreadService handles ALL thread queries** for consistency
+- **NO freelancing this logic** - ask if unsure but assume new structure is canonical
+
 ## Essential Commands
 
 ### Development

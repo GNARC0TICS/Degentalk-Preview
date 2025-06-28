@@ -14,6 +14,7 @@ import { eq, ilike, asc } from 'drizzle-orm';
 import { isAuthenticated as requireAuth } from '../auth/middleware/auth.middleware';
 import { logger } from '@server/src/core/logger';
 import { forumStructureService } from './services/structure.service';
+import { threadService } from './services/thread.service';
 
 // Import specialized route modules
 import threadRoutes from './routes/thread.routes';
@@ -72,8 +73,8 @@ router.get('/users/search', async (req: Request, res: Response) => {
 			.select({
 				id: users.id,
 				username: users.username,
-				avatar: users.avatar,
-				role: users.role
+				avatar: users.avatarUrl
+				// Note: Removed role field since it's in roles table via primaryRoleId
 			})
 			.from(users)
 			.where(ilike(users.username, `%${searchTerm}%`))

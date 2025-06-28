@@ -20,49 +20,10 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
+import type { ThreadDisplay } from '@/types/thread.types';
 
 export interface ThreadCardProps {
-	thread: {
-		id: string;
-		title: string;
-		slug: string;
-		excerpt?: string;
-		createdAt: string;
-		lastPostAt?: string;
-		viewCount: number;
-		postCount: number;
-		isSticky?: boolean;
-		isLocked?: boolean;
-		isHot?: boolean;
-		hotScore?: number;
-		user: {
-			id: string;
-			username: string;
-			avatarUrl?: string;
-			reputation?: number;
-			isVerified?: boolean;
-		};
-		zone: {
-			name: string;
-			slug: string;
-			colorTheme: string;
-		};
-		tags?: Array<{
-			id: number;
-			name: string;
-			color?: string;
-		}>;
-		prefix?: {
-			name: string;
-			color: string;
-		};
-		engagement?: {
-			totalTips: number;
-			uniqueTippers: number;
-			bookmarks: number;
-			momentum: 'bullish' | 'bearish' | 'neutral';
-		};
-	};
+	thread: ThreadDisplay;
 	variant?: 'default' | 'compact' | 'featured';
 	showPreview?: boolean;
 	onTip?: (threadId: string, amount: number) => void;
@@ -86,17 +47,19 @@ const ThreadCard = memo(
 		const isHot = thread.isHot || (thread.hotScore && thread.hotScore > 10);
 		const timeAgo = formatDistanceToNow(new Date(thread.createdAt), { addSuffix: true });
 
+		const threadId = String(thread.id);
+
 		const handleTip = (e: React.MouseEvent) => {
 			e.preventDefault();
 			e.stopPropagation();
-			onTip?.(thread.id, 10); // Default tip amount
+			onTip?.(threadId, 10); // Default tip amount
 		};
 
 		const handleBookmark = (e: React.MouseEvent) => {
 			e.preventDefault();
 			e.stopPropagation();
 			setIsBookmarked(!isBookmarked);
-			onBookmark?.(thread.id);
+			onBookmark?.(threadId);
 		};
 
 		// Responsive spacing based on breakpoint

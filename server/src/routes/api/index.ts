@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import forumRoutes from '../../domains/forum/routes/forum.routes';
+import forumRoutes from '../../domains/forum/forum.routes';
 import shopRoutes from '../../domains/shop/shop.routes';
 import activityRoutes from '../../domains/activity/routes';
 import uploadRoutes from '../../domains/uploads/upload.routes';

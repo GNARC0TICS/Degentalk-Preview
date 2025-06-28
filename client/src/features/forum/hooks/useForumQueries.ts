@@ -7,17 +7,30 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { forumApi } from '../services/forumApi';
-import type {
-	NestedForumCategory,
-	ThreadSearchParams as OriginalThreadSearchParams
-} from '../services/forumApi';
+import type { ThreadSearchParams as OriginalThreadSearchParams } from '../services/forumApi';
 import { toast } from 'sonner';
 import type { Tag } from '@/types/forum';
-import type { ThreadPrefix, ForumCategoryWithStats, ThreadWithUser } from '@db_types/forum.types';
+import type { ThreadPrefix } from '@db_types/forum.types';
 import { useEffect } from 'react';
-import { apiRequest, apiPost, apiPut, apiDelete } from '@/lib/api-request';
 
-// Extend ThreadSearchParams to explicitly include forumSlug for clarity in this hook
+// Utility for common cache invalidation patterns
+const invalidatePostQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
+	queryClient.invalidateQueries({
+		predicate: (query) =>
+			typeof query.queryKey[0] === 'string' &&
+			query.queryKey[0].includes('/api/forum/threads/') &&
+			query.queryKey[0].includes('/posts')
+	});
+};
+
+// Utility for standardized error handling
+const createErrorHandler = (action: string) => (error: unknown) => {
+	toast.error(`Failed to ${action}`, {
+		description: error instanceof Error ? error.message : 'Please try again later'
+	});
+};
+
+// Extend ThreadSearchParams to match API and add hook-specific fields
 export type ThreadSearchParams = OriginalThreadSearchParams & {
 	forumSlug?: string;
 	solved?: boolean;
@@ -29,55 +42,13 @@ export type ThreadSearchParams = OriginalThreadSearchParams & {
 };
 
 /**
- * Categories
- */
-export const useCategories = () => {
-	return useQuery({
-		queryKey: ['/api/categories'],
-		queryFn: forumApi.getCategories,
-		staleTime: 5 * 60 * 1000 // 5 minutes
-	});
-};
-
-/**
- * Hierarchical Categories -- NEW
- */
-export const useFetchForumCategoriesTree = () => {
-	return useQuery<NestedForumCategory[], Error>({
-		queryKey: ['forumCategoriesTree'],
-		queryFn: forumApi.getCategoriesTree,
-		staleTime: 5 * 60 * 1000, // 5 minutes
-		retry: 2, // Retry failed requests 2 times
-		refetchOnMount: true, // Refetch when component mounts
-		refetchOnWindowFocus: false // Don't refetch when window gains focus
-	});
-};
-
-export const useCategoriesWithStats = () => {
-	return useQuery({
-		queryKey: ['/api/categories', 'with-stats'],
-		queryFn: forumApi.getCategories,
-		staleTime: 60 * 1000
-	});
-};
-
-export const useCategory = (slug: string | undefined) => {
-	return useQuery({
-		queryKey: [`/api/categories/${slug}`],
-		queryFn: () => forumApi.getCategoryBySlug(slug!),
-		enabled: !!slug,
-		staleTime: 5 * 60 * 1000 // 5 minutes
-	});
-};
-
-/**
  * Threads
  */
 export const useThreads = (params?: ThreadSearchParams, enabled: boolean = true) => {
 	return useQuery({
-		queryKey: ['/api/threads', params],
+		queryKey: ['/api/forum/threads', params],
 		queryFn: async () => {
-			if (!enabled && !params?.forumSlug && !params?.categoryId) {
+			if (!enabled && !params?.forumSlug && !params?.structureId) {
 				return {
 					threads: [],
 					pagination: {
@@ -91,7 +62,7 @@ export const useThreads = (params?: ThreadSearchParams, enabled: boolean = true)
 			try {
 				return await forumApi.searchThreads(params || {});
 			} catch (error) {
-				console.error('Error fetching threads:', error);
+				// Silent error handling - return empty result for graceful degradation
 				return {
 					threads: [],
 					pagination: {
@@ -112,7 +83,7 @@ export const useThreads = (params?: ThreadSearchParams, enabled: boolean = true)
 
 export const useThread = (slugOrId: string | number | undefined) => {
 	return useQuery({
-		queryKey: [`/api/threads/${slugOrId}`],
+		queryKey: [`/api/forum/threads/${slugOrId}`],
 		queryFn: async () => {
 			if (!slugOrId) throw new Error('Thread ID or slug is required');
 			return await forumApi.getThread(slugOrId);
@@ -126,11 +97,11 @@ export const useThread = (slugOrId: string | number | undefined) => {
 export interface CreateThreadParams {
 	title: string;
 	content: string;
-	categoryId: number;
+	structureId: number;
 	forumSlug?: string; // Optional, not used by API but handy for cache keys / XP logic
 	prefixId?: number;
 	tags?: string[];
-	editorState?: any;
+	editorState?: Record<string, unknown>;
 	// Add any other parameters the API expects for thread creation
 }
 
@@ -139,79 +110,24 @@ export const useCreateThread = () => {
 
 	return useMutation({
 		mutationFn: (data: CreateThreadParams) => forumApi.createThread(data), // forumApi.createThread needs to accept this new param type
-		onSuccess: async (createdThreadData: ThreadWithUser, variables) => {
+		onSuccess: async (_, variables) => {
 			// Invalidate queries that list threads, potentially per-forum if keys are specific
 			queryClient.invalidateQueries({
-				queryKey: ['/api/threads', { forumSlug: variables.forumSlug }]
+				queryKey: ['/api/forum/threads', { forumSlug: variables.forumSlug }]
 			});
-			queryClient.invalidateQueries({ queryKey: ['/api/threads'] }); // General invalidation
+			queryClient.invalidateQueries({ queryKey: ['/api/forum/threads'] }); // General invalidation
 
-			// Invalidate categories/forum structure if thread counts are displayed there
-			// This might need to be more specific if using forumMap on client,
-			// but if any part relies on API for counts, invalidate it.
-			queryClient.invalidateQueries({ queryKey: ['forumCategoriesTree'] });
-			queryClient.invalidateQueries({ queryKey: ['/api/categories', 'with-stats'] });
+			// Invalidate forum structure if thread counts are displayed there
+			queryClient.invalidateQueries({ queryKey: ['forumStructure'] });
 			if (variables.forumSlug) {
 				queryClient.invalidateQueries({ queryKey: [`/api/forums/${variables.forumSlug}`] }); // If there's a specific forum data query
 			}
 
 			toast.success('Thread created successfully!');
 
-			const threadId = createdThreadData.id;
-			const userId = createdThreadData.userId;
-
-			if (userId && threadId && variables.forumSlug) {
-				// --- XP Award ---
-				// Pass forumSlug to XP award if rules are checked backend by forumSlug
-				try {
-					const xpResponse = await apiPost<{ xpAwarded: number }>('/api/xp/award-action', {
-						userId,
-						action: 'create_thread',
-						entityId: threadId,
-						contextData: { forumSlug: variables.forumSlug } // Pass forumSlug for context
-					});
-
-					if (xpResponse && xpResponse.xpAwarded > 0) {
-						setTimeout(() => toast.info(`+${xpResponse.xpAwarded} XP for creating a thread!`), 300);
-					}
-					queryClient.invalidateQueries({ queryKey: ['/api/users/profile', userId] });
-					queryClient.invalidateQueries({ queryKey: ['/api/wallet'] });
-				} catch (error) {
-					console.error('Failed to award XP for thread creation:', error);
-				}
-
-				// --- DGT Award ---
-				try {
-					const dgtAmountToAward = 5; // This should ideally come from forum rules in forumMap or backend config
-					if (dgtAmountToAward > 0) {
-						const dgtResponse = await apiPost<{ dgtAwarded: number }>(
-							'/api/economy/transactions/create',
-							{
-								userId,
-								currency: 'DGT',
-								type: 'reward',
-								amount: dgtAmountToAward,
-								reason: 'Thread creation reward',
-								relatedEntityId: threadId,
-								context: 'create_thread',
-								contextData: { forumSlug: variables.forumSlug } // Pass forumSlug for context
-							}
-						);
-						if (dgtResponse && dgtResponse.dgtAwarded > 0) {
-							setTimeout(() => toast.info(`+${dgtResponse.dgtAwarded} DGT awarded!`), 600);
-						}
-						queryClient.invalidateQueries({ queryKey: ['/api/wallet'] });
-					}
-				} catch (error) {
-					console.error('Failed to award DGT for thread creation:', error);
-				}
-			}
+			// XP & DGT rewards are now handled server-side to prevent client-side forging.
 		},
-		onError: (error) => {
-			toast.error('Failed to create thread', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
+		onError: createErrorHandler('create thread')
 	});
 };
 
@@ -223,16 +139,12 @@ export const useUpdateThread = (threadId: number | undefined) => {
 			forumApi.updateThread(threadId!, data),
 		onSuccess: () => {
 			if (threadId) {
-				queryClient.invalidateQueries({ queryKey: [`/api/threads/${threadId}`] });
-				queryClient.invalidateQueries({ queryKey: ['/api/threads'] });
+				queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${threadId}`] });
+				queryClient.invalidateQueries({ queryKey: ['/api/forum/threads'] });
 			}
 			toast.success('Thread updated successfully');
 		},
-		onError: (error) => {
-			toast.error('Failed to update thread', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
+		onError: createErrorHandler('update thread')
 	});
 };
 
@@ -242,15 +154,11 @@ export const useDeleteThread = () => {
 	return useMutation({
 		mutationFn: forumApi.deleteThread,
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['/api/threads'] });
-			queryClient.invalidateQueries({ queryKey: ['/api/categories'] });
+			queryClient.invalidateQueries({ queryKey: ['/api/forum/threads'] });
+			queryClient.invalidateQueries({ queryKey: ['forumStructure'] });
 			toast.success('Thread deleted successfully');
 		},
-		onError: (error) => {
-			toast.error('Failed to delete thread', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
+		onError: createErrorHandler('delete thread')
 	});
 };
 
@@ -264,15 +172,11 @@ export const useSolveThread = () => {
 		mutationFn: ({ threadId, postId }: { threadId: number; postId?: number }) =>
 			forumApi.solveThread(threadId, postId),
 		onSuccess: (_, variables) => {
-			queryClient.invalidateQueries({ queryKey: [`/api/threads/${variables.threadId}`] });
-			queryClient.invalidateQueries({ queryKey: ['/api/threads'] });
+			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${variables.threadId}`] });
+			queryClient.invalidateQueries({ queryKey: ['/api/forum/threads'] });
 			toast.success('Thread marked as solved');
 		},
-		onError: (error) => {
-			toast.error('Failed to mark thread as solved', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
+		onError: createErrorHandler('mark thread as solved')
 	});
 };
 
@@ -282,15 +186,11 @@ export const useUnsolveThread = () => {
 	return useMutation({
 		mutationFn: (threadId: number) => forumApi.unsolveThread(threadId),
 		onSuccess: (_, threadId) => {
-			queryClient.invalidateQueries({ queryKey: [`/api/threads/${threadId}`] });
-			queryClient.invalidateQueries({ queryKey: ['/api/threads'] });
+			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${threadId}`] });
+			queryClient.invalidateQueries({ queryKey: ['/api/forum/threads'] });
 			toast.success('Thread marked as unsolved');
 		},
-		onError: (error) => {
-			toast.error('Failed to unmark thread as solved', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
+		onError: createErrorHandler('unmark thread as solved')
 	});
 };
 
@@ -302,7 +202,7 @@ export const usePosts = (
 	params?: { page?: number; limit?: number }
 ) => {
 	return useQuery({
-		queryKey: [`/api/threads/${threadId}/posts`, params],
+		queryKey: [`/api/forum/threads/${threadId}/posts`, params],
 		queryFn: () =>
 			threadId ? forumApi.getPosts(threadId, params) : Promise.reject('Thread ID is required'),
 		enabled: !!threadId
@@ -314,16 +214,14 @@ export const useCreatePost = () => {
 
 	return useMutation({
 		mutationFn: forumApi.createPost,
-		onSuccess: (data, variables) => {
-			queryClient.invalidateQueries({ queryKey: [`/api/threads/${variables.threadId}/posts`] });
-			queryClient.invalidateQueries({ queryKey: [`/api/threads/${variables.threadId}`] });
+		onSuccess: (_, variables) => {
+			queryClient.invalidateQueries({
+				queryKey: [`/api/forum/threads/${variables.threadId}/posts`]
+			});
+			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${variables.threadId}`] });
 			toast.success('Reply posted successfully');
 		},
-		onError: (error) => {
-			toast.error('Failed to post reply', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
+		onError: createErrorHandler('post reply')
 	});
 };
 
@@ -334,19 +232,10 @@ export const useUpdatePost = (postId: number | undefined) => {
 		mutationFn: (data: Parameters<typeof forumApi.updatePost>[1]) =>
 			forumApi.updatePost(postId!, data),
 		onSuccess: () => {
-			queryClient.invalidateQueries({
-				predicate: (query) =>
-					typeof query.queryKey[0] === 'string' &&
-					query.queryKey[0].includes('/api/threads/') &&
-					query.queryKey[0].includes('/posts')
-			});
+			invalidatePostQueries(queryClient);
 			toast.success('Post updated successfully');
 		},
-		onError: (error) => {
-			toast.error('Failed to update post', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
+		onError: createErrorHandler('update post')
 	});
 };
 
@@ -356,65 +245,44 @@ export const useDeletePost = () => {
 	return useMutation({
 		mutationFn: forumApi.deletePost,
 		onSuccess: () => {
-			queryClient.invalidateQueries({
-				predicate: (query) =>
-					typeof query.queryKey[0] === 'string' &&
-					query.queryKey[0].includes('/api/threads/') &&
-					query.queryKey[0].includes('/posts')
-			});
+			invalidatePostQueries(queryClient);
 			toast.success('Post deleted successfully');
 		},
-		onError: (error) => {
-			toast.error('Failed to delete post', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
+		onError: createErrorHandler('delete post')
 	});
 };
 
 /**
  * Post Reactions
  */
-export const useLikePost = () => {
+export const useReactToPost = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: forumApi.likePost,
-		onSuccess: (_, postId) => {
-			queryClient.invalidateQueries({
-				predicate: (query) =>
-					typeof query.queryKey[0] === 'string' &&
-					query.queryKey[0].includes('/api/threads/') &&
-					query.queryKey[0].includes('/posts')
-			});
+		mutationFn: ({ postId, reactionType }: { postId: number; reactionType: 'like' | 'dislike' }) =>
+			forumApi.reactToPost(postId, reactionType),
+		onSuccess: () => {
+			invalidatePostQueries(queryClient);
 		},
-		onError: (error) => {
-			toast.error('Failed to like post', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
+		onError: createErrorHandler('update reaction')
 	});
 };
 
-export const useUnlikePost = () => {
-	const queryClient = useQueryClient();
+// Legacy hooks for backward compatibility - can be removed after components are updated
+export const useLikePost = () => {
+	const reactToPost = useReactToPost();
+	return {
+		...reactToPost,
+		mutate: (postId: number) => reactToPost.mutate({ postId, reactionType: 'like' })
+	};
+};
 
-	return useMutation({
-		mutationFn: forumApi.unlikePost,
-		onSuccess: (_, postId) => {
-			queryClient.invalidateQueries({
-				predicate: (query) =>
-					typeof query.queryKey[0] === 'string' &&
-					query.queryKey[0].includes('/api/threads/') &&
-					query.queryKey[0].includes('/posts')
-			});
-		},
-		onError: (error) => {
-			toast.error('Failed to unlike post', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
-	});
+export const useUnlikePost = () => {
+	const reactToPost = useReactToPost();
+	return {
+		...reactToPost,
+		mutate: (postId: number) => reactToPost.mutate({ postId, reactionType: 'dislike' })
+	};
 };
 
 export const useTipPost = () => {
@@ -423,21 +291,12 @@ export const useTipPost = () => {
 	return useMutation({
 		mutationFn: ({ postId, amount }: { postId: number; amount: number }) =>
 			forumApi.tipPost(postId, amount),
-		onSuccess: (_, { postId }) => {
-			queryClient.invalidateQueries({
-				predicate: (query) =>
-					typeof query.queryKey[0] === 'string' &&
-					query.queryKey[0].includes('/api/threads/') &&
-					query.queryKey[0].includes('/posts')
-			});
+		onSuccess: () => {
+			invalidatePostQueries(queryClient);
 			queryClient.invalidateQueries({ queryKey: ['/api/wallet'] });
 			toast.success('Tip sent successfully');
 		},
-		onError: (error) => {
-			toast.error('Failed to send tip', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
+		onError: createErrorHandler('send tip')
 	});
 };
 
@@ -450,15 +309,11 @@ export const useBookmarkThread = () => {
 	return useMutation({
 		mutationFn: forumApi.bookmarkThread,
 		onSuccess: (_, threadId) => {
-			queryClient.invalidateQueries({ queryKey: [`/api/threads/${threadId}`] });
-			queryClient.invalidateQueries({ queryKey: ['/api/bookmarks'] });
+			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${threadId}`] });
+			queryClient.invalidateQueries({ queryKey: ['/api/forum/bookmarks'] });
 			toast.success('Thread bookmarked');
 		},
-		onError: (error) => {
-			toast.error('Failed to bookmark thread', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
+		onError: createErrorHandler('bookmark thread')
 	});
 };
 
@@ -468,21 +323,17 @@ export const useRemoveBookmark = () => {
 	return useMutation({
 		mutationFn: forumApi.removeBookmark,
 		onSuccess: (_, threadId) => {
-			queryClient.invalidateQueries({ queryKey: [`/api/threads/${threadId}`] });
-			queryClient.invalidateQueries({ queryKey: ['/api/bookmarks'] });
+			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${threadId}`] });
+			queryClient.invalidateQueries({ queryKey: ['/api/forum/bookmarks'] });
 			toast.success('Bookmark removed');
 		},
-		onError: (error) => {
-			toast.error('Failed to remove bookmark', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
+		onError: createErrorHandler('remove bookmark')
 	});
 };
 
 export const useUserBookmarks = () => {
 	return useQuery({
-		queryKey: ['/api/bookmarks'],
+		queryKey: ['/api/forum/bookmarks'],
 		queryFn: forumApi.getUserBookmarks
 	});
 };
@@ -503,15 +354,11 @@ export const useAddTagToThread = () => {
 	return useMutation<Tag, Error, { threadId: number; tagId: number }>({
 		mutationFn: ({ threadId, tagId }) => forumApi.addTagToThread(threadId, tagId),
 		onSuccess: (data, variables) => {
-			queryClient.invalidateQueries({ queryKey: [`/api/threads/${variables.threadId}`] });
-			queryClient.invalidateQueries({ queryKey: ['/api/threads'] });
+			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${variables.threadId}`] });
+			queryClient.invalidateQueries({ queryKey: ['/api/forum/threads'] });
 			toast.success(`Tag "${data.name}" added to thread.`);
 		},
-		onError: (error) => {
-			toast.error('Failed to add tag', {
-				description: error instanceof Error ? error.message : 'Unknown error'
-			});
-		}
+		onError: createErrorHandler('add tag')
 	});
 };
 
@@ -520,60 +367,43 @@ export const useRemoveTagFromThread = () => {
 	return useMutation<void, Error, { threadId: number; tagId: number }>({
 		mutationFn: ({ threadId, tagId }) => forumApi.removeTagFromThread(threadId, tagId),
 		onSuccess: (_, variables) => {
-			queryClient.invalidateQueries({ queryKey: [`/api/threads/${variables.threadId}`] });
-			queryClient.invalidateQueries({ queryKey: ['/api/threads'] });
+			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${variables.threadId}`] });
+			queryClient.invalidateQueries({ queryKey: ['/api/forum/threads'] });
 			toast.success(`Tag removed from thread.`);
 		},
-		onError: (error) => {
-			toast.error('Failed to remove tag', {
-				description: error instanceof Error ? error.message : 'Unknown error'
-			});
-		}
+		onError: createErrorHandler('remove tag')
 	});
 };
 
-// Optional: Hook for fetching threads by tag slug
-export const useThreadsByTag = (
-	tagSlug: string | undefined,
-	params?: { page?: number; limit?: number; sortBy?: 'latest' | 'hot' | 'staked' }
-) => {
-	return useQuery({
-		queryKey: [`/api/forum/tags/${tagSlug}/threads`, params],
-		queryFn: () =>
-			tagSlug ? forumApi.getThreadsByTag(tagSlug, params) : Promise.reject('Tag slug is required'),
-		enabled: !!tagSlug
-	});
-};
+// NOTE: useThreadsByTag removed - use unified thread search with tag filters instead
 
 // ------------ Prefix Hooks ------------
 
 // Primary unified hook
-export const usePrefixes = (params?: { categoryId?: number }) => {
+export const usePrefixes = (params?: { forumId?: number }) => {
 	const queryClient = useQueryClient();
-	const categoryId = params?.categoryId;
+	const forumId = params?.forumId;
 
-	const queryKey = ['/api/forum/prefixes', { categoryId }];
+	const queryKey = ['/api/forum/prefixes', { forumId }];
 
 	const result = useQuery<ThreadPrefix[], Error>({
 		queryKey,
-		queryFn: () => forumApi.getPrefixes(categoryId),
+		queryFn: () => forumApi.getPrefixes(forumId),
 		staleTime: 1000 * 60 * 5,
-		enabled: typeof categoryId === 'number'
+		enabled: typeof forumId === 'number'
 	});
 
-	// Ensure fresh data if category changes
+	// Ensure fresh data if forum changes
 	useEffect(() => {
-		if (typeof categoryId === 'number') {
-			queryClient.invalidateQueries({ queryKey: ['/api/forum/prefixes', { categoryId }] });
+		if (typeof forumId === 'number') {
+			queryClient.invalidateQueries({ queryKey: ['/api/forum/prefixes', { forumId }] });
 		}
-	}, [categoryId, queryClient]);
+	}, [forumId, queryClient]);
 
 	return result;
 };
 
-// Hook to fetch forum categories, category and tags remain the same
-export const useForumCategories = useCategoriesWithStats;
-export const useForumCategory = useCategory;
+// Hook aliases for consistency
 export const useForumTags = useTags;
 
 export const usePostUpdate = () => {
@@ -587,11 +417,11 @@ export const usePostUpdate = () => {
 		}: {
 			postId: number;
 			content: string;
-			editorState?: any;
+			editorState?: Record<string, unknown>;
 		}) => forumApi.updatePost(postId, { content, editorState }),
 
 		// When the mutation is successful, update the post in the cache
-		onSuccess: (response, variables) => {
+		onSuccess: () => {
 			// Invalidate affected queries to make sure data is fresh
 			queryClient.invalidateQueries({ queryKey: ['thread'] });
 
@@ -600,10 +430,7 @@ export const usePostUpdate = () => {
 		},
 
 		// Handle errors
-		onError: (error) => {
-			console.error('Error updating post:', error);
-			toast.error('Failed to update post. Please try again.');
-		}
+		onError: createErrorHandler('update post')
 	});
 };
 
@@ -620,10 +447,6 @@ export const useReportPost = () => {
 				'Report submitted successfully. Thank you for helping keep our community safe!'
 			);
 		},
-		onError: (error) => {
-			toast.error('Failed to submit report', {
-				description: error instanceof Error ? error.message : 'Please try again later'
-			});
-		}
+		onError: createErrorHandler('submit report')
 	});
 };

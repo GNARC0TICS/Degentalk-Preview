@@ -11,9 +11,13 @@ import {
 	Bookmark,
 	User,
 	Settings,
-	MessageSquare
+	MessageSquare,
+	Folder,
+	TrendingUp,
+	Activity,
+	Sparkles,
+	Crown
 } from 'lucide-react';
-import { getZoneTheme } from '@/config/zoneThemes.config';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -24,6 +28,56 @@ import { useForumStructure } from '@/contexts/ForumStructureContext';
 export interface MobileForumNavigationProps {
 	className?: string;
 }
+
+// Generate dynamic theme based on colorTheme
+const getDynamicMobileTheme = (colorTheme: string | null) => {
+	const themeMap: Record<
+		string,
+		{
+			gradient: string;
+			accent: string;
+			icon: typeof Folder;
+		}
+	> = {
+		pit: {
+			gradient: 'from-red-500/10 to-orange-500/10',
+			accent: 'text-red-400',
+			icon: TrendingUp
+		},
+		mission: {
+			gradient: 'from-blue-500/10 to-cyan-500/10',
+			accent: 'text-blue-400',
+			icon: Activity
+		},
+		casino: {
+			gradient: 'from-purple-500/10 to-pink-500/10',
+			accent: 'text-purple-400',
+			icon: Sparkles
+		},
+		briefing: {
+			gradient: 'from-amber-500/10 to-yellow-500/10',
+			accent: 'text-amber-400',
+			icon: MessageSquare
+		},
+		archive: {
+			gradient: 'from-gray-500/10 to-slate-500/10',
+			accent: 'text-gray-400',
+			icon: Folder
+		},
+		shop: {
+			gradient: 'from-emerald-500/10 to-green-500/10',
+			accent: 'text-emerald-400',
+			icon: Crown
+		},
+		default: {
+			gradient: 'from-zinc-500/10 to-gray-500/10',
+			accent: 'text-zinc-400',
+			icon: Folder
+		}
+	};
+
+	return themeMap[colorTheme || 'default'] || themeMap.default;
+};
 
 const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -212,7 +266,8 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 											</div>
 										) : (
 											filteredZones.map((zone) => {
-												const theme = getZoneTheme(zone.colorTheme);
+												// Use dynamic theme generation instead of static getZoneTheme
+												const theme = getDynamicMobileTheme(zone.theme.colorTheme);
 												const IconComponent = theme.icon;
 
 												return (

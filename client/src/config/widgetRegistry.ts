@@ -73,7 +73,8 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 			category: 'social',
 			defaultSlots: ['sidebar/right', 'main/top', 'mobile/widgets'],
 			minWidth: 300,
-			responsive: true
+			responsive: true,
+			requiresAuth: true
 		}
 	},
 

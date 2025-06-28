@@ -48,7 +48,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { TagInput } from '@/components/forum/tag-input';
 import type { Tag, ThreadPrefix as Prefix } from '@/types/forum';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
-import type { ForumRules } from '@/config/forumMap.config';
+import type { MergedRules } from '@/contexts/ForumStructureContext';
 import { usePermission } from '@/hooks/usePermission';
 
 interface DraftData {
@@ -77,7 +77,7 @@ type ThreadFormValues = z.infer<typeof threadFormSchema>;
 
 interface CreateThreadFormProps {
 	forumSlug?: string;
-	forumRules?: ForumRules;
+	forumRules?: MergedRules;
 	isForumLocked?: boolean;
 	forumName?: string;
 	isOpen?: boolean;

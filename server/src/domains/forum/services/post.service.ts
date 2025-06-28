@@ -14,18 +14,17 @@ import type { PostWithUser } from '../../../../db/types/forum.types';
 export interface PostCreateInput {
 	content: string;
 	threadId: number;
-	authorId: number;
-	parentPostId?: number;
+	userId: string;
+	replyToPostId?: number;
 }
 
 export interface PostUpdateInput {
 	content: string;
-	editReason?: string;
 }
 
 export interface PostSearchParams {
 	threadId?: number;
-	authorId?: number;
+	userId?: string;
 	page?: number;
 	limit?: number;
 	sortBy?: 'newest' | 'oldest';
@@ -42,7 +41,7 @@ export class PostService {
 		totalPages: number;
 	}> {
 		try {
-			const { threadId, authorId, page = 1, limit = 20, sortBy = 'oldest' } = params;
+			const { threadId, userId, page = 1, limit = 20, sortBy = 'oldest' } = params;
 
 			const offset = (page - 1) * limit;
 
@@ -53,8 +52,8 @@ export class PostService {
 				whereConditions.push(eq(posts.threadId, threadId));
 			}
 
-			if (authorId) {
-				whereConditions.push(eq(posts.authorId, authorId));
+			if (userId) {
+				whereConditions.push(eq(posts.userId, userId));
 			}
 
 			// Build sort order
@@ -63,33 +62,34 @@ export class PostService {
 			// Base query
 			let query = db
 				.select({
-					// Post fields
 					id: posts.id,
 					content: posts.content,
 					threadId: posts.threadId,
-					authorId: posts.authorId,
-					parentPostId: posts.parentPostId,
+					userId: posts.userId,
+					replyToPostId: posts.replyToPostId,
 					createdAt: posts.createdAt,
 					updatedAt: posts.updatedAt,
-					editedAt: posts.editedAt,
-					editReason: posts.editReason,
 					likeCount: posts.likeCount,
+					isEdited: posts.isEdited,
+					editedAt: posts.editedAt,
 
-					// Author fields
 					authorUsername: usersTable.username,
-					authorAvatar: usersTable.avatar,
-					authorRole: usersTable.role
+					authorAvatar: usersTable.avatarUrl
 				})
 				.from(posts)
-				.leftJoin(usersTable, eq(posts.authorId, usersTable.id));
+				.leftJoin(usersTable, eq(posts.userId, usersTable.id));
 
 			// Apply where conditions
 			if (whereConditions.length > 0) {
 				query = query.where(and(...whereConditions));
 			}
 
-			// Get total count
-			const [{ total }] = await query.select({ total: count(posts.id) }).execute();
+			// --- Fix: build a separate count query (Drizzle builders are immutable)
+			let countQuery = db.select({ total: count(posts.id) }).from(posts);
+			if (whereConditions.length > 0) {
+				countQuery = countQuery.where(and(...whereConditions));
+			}
+			const [{ total }] = await countQuery.execute();
 
 			// Get paginated results
 			const postsData = await query.orderBy(orderBy).limit(limit).offset(offset);
@@ -117,25 +117,22 @@ export class PostService {
 		try {
 			const [post] = await db
 				.select({
-					// Post fields
 					id: posts.id,
 					content: posts.content,
 					threadId: posts.threadId,
-					authorId: posts.authorId,
-					parentPostId: posts.parentPostId,
+					userId: posts.userId,
+					replyToPostId: posts.replyToPostId,
 					createdAt: posts.createdAt,
 					updatedAt: posts.updatedAt,
-					editedAt: posts.editedAt,
-					editReason: posts.editReason,
 					likeCount: posts.likeCount,
+					isEdited: posts.isEdited,
+					editedAt: posts.editedAt,
 
-					// Author fields
 					authorUsername: usersTable.username,
-					authorAvatar: usersTable.avatar,
-					authorRole: usersTable.role
+					authorAvatar: usersTable.avatarUrl
 				})
 				.from(posts)
-				.leftJoin(usersTable, eq(posts.authorId, usersTable.id))
+				.leftJoin(usersTable, eq(posts.userId, usersTable.id))
 				.where(eq(posts.id, postId));
 
 			return post || null;
@@ -150,7 +147,7 @@ export class PostService {
 	 */
 	async createPost(input: PostCreateInput): Promise<PostWithUser> {
 		try {
-			const { content, threadId, authorId, parentPostId } = input;
+			const { content, threadId, userId, replyToPostId } = input;
 
 			// Create post
 			const [newPost] = await db
@@ -158,8 +155,8 @@ export class PostService {
 				.values({
 					content,
 					threadId,
-					authorId,
-					parentPostId: parentPostId || null,
+					userId,
+					replyToPostId: replyToPostId || null,
 					likeCount: 0,
 					createdAt: new Date(),
 					updatedAt: new Date()
@@ -179,7 +176,7 @@ export class PostService {
 			logger.info('PostService', 'Post created successfully', {
 				postId: newPost.id,
 				threadId,
-				authorId
+				userId
 			});
 
 			return completePost;
@@ -194,7 +191,7 @@ export class PostService {
 	 */
 	async updatePost(postId: number, input: PostUpdateInput): Promise<PostWithUser> {
 		try {
-			const { content, editReason } = input;
+			const { content } = input;
 
 			// Update post
 			await db
@@ -202,7 +199,7 @@ export class PostService {
 				.set({
 					content,
 					editedAt: new Date(),
-					editReason: editReason || null,
+					isEdited: true,
 					updatedAt: new Date()
 				})
 				.where(eq(posts.id, postId));
@@ -250,7 +247,7 @@ export class PostService {
 	/**
 	 * Add like to post
 	 */
-	async likePost(postId: number, userId: number): Promise<void> {
+	async likePost(postId: number, userId: string): Promise<void> {
 		try {
 			// Check if user already liked this post
 			const [existingReaction] = await db
@@ -260,7 +257,7 @@ export class PostService {
 					and(
 						eq(postReactions.postId, postId),
 						eq(postReactions.userId, userId),
-						eq(postReactions.type, 'like')
+						eq(postReactions.reactionType, 'like')
 					)
 				);
 
@@ -272,7 +269,7 @@ export class PostService {
 			await db.insert(postReactions).values({
 				postId,
 				userId,
-				type: 'like',
+				reactionType: 'like',
 				createdAt: new Date()
 			});
 
@@ -295,7 +292,7 @@ export class PostService {
 	/**
 	 * Remove like from post
 	 */
-	async unlikePost(postId: number, userId: number): Promise<void> {
+	async unlikePost(postId: number, userId: string): Promise<void> {
 		try {
 			// Remove reaction
 			const deletedRows = await db
@@ -304,7 +301,7 @@ export class PostService {
 					and(
 						eq(postReactions.postId, postId),
 						eq(postReactions.userId, userId),
-						eq(postReactions.type, 'like')
+						eq(postReactions.reactionType, 'like')
 					)
 				);
 
@@ -335,26 +332,23 @@ export class PostService {
 		try {
 			const replies = await db
 				.select({
-					// Post fields
 					id: posts.id,
 					content: posts.content,
 					threadId: posts.threadId,
-					authorId: posts.authorId,
-					parentPostId: posts.parentPostId,
+					userId: posts.userId,
+					replyToPostId: posts.replyToPostId,
 					createdAt: posts.createdAt,
 					updatedAt: posts.updatedAt,
 					editedAt: posts.editedAt,
-					editReason: posts.editReason,
+					isEdited: posts.isEdited,
 					likeCount: posts.likeCount,
 
-					// Author fields
 					authorUsername: usersTable.username,
-					authorAvatar: usersTable.avatar,
-					authorRole: usersTable.role
+					authorAvatar: usersTable.avatarUrl
 				})
 				.from(posts)
-				.leftJoin(usersTable, eq(posts.authorId, usersTable.id))
-				.where(eq(posts.parentPostId, parentPostId))
+				.leftJoin(usersTable, eq(posts.userId, usersTable.id))
+				.where(eq(posts.replyToPostId, parentPostId))
 				.orderBy(asc(posts.createdAt));
 
 			return replies as PostWithUser[];

@@ -3,6 +3,7 @@ import React from 'react';
 // import { Link } from 'wouter';
 import { ShopCard } from '@/components/forum/ShopCard';
 import { motion } from 'framer-motion';
+import { animationConfig } from '@/config/animation.config';
 // Icons previously used by internal ForumZoneCard might not be needed directly here
 // if ZoneCard handles its own icon rendering logic.
 // import {
@@ -12,45 +13,9 @@ import { motion } from 'framer-motion';
 // 	Hash,
 // 	Folder
 // } from 'lucide-react';
-import type { ForumTheme } from '@/config/forumMap.config';
-import ZoneCard from '@/components/forum/ZoneCard';
+import ZoneCard, { type ZoneCardProps } from '@/components/forum/ZoneCard';
 
-export interface ZoneCardData {
-	id: string | number;
-	name: string;
-	slug: string;
-	description: string;
-	icon?: string | null;
-	colorTheme?: string; // Add colorTheme here
-	theme?: Partial<ForumTheme>; // This can remain for other theme aspects if needed
-	threadCount?: number;
-	postCount?: number;
-	activeUsersCount?: number;
-	lastActivityAt?: Date;
-	hasXpBoost?: boolean;
-	boostMultiplier?: number;
-	isEventActive?: boolean;
-	eventData?: {
-		name: string;
-		endsAt: Date;
-	};
-	forumCount?: number;
-	forums?: Array<{
-		id: number;
-		slug: string;
-		name: string;
-		description?: string | null;
-		threadCount: number;
-		postCount: number;
-		subforums?: unknown[];
-	}>;
-}
-
-export interface CardData extends ZoneCardData {
-	type?: 'zone' | 'shop' | 'static';
-	isStatic?: boolean;
-}
-
+// Re-export ShopCardData for external consumers (unchanged)
 export interface ShopCardData {
 	id: string | number;
 	type: 'shop';
@@ -62,16 +27,18 @@ export interface ShopCardData {
 	};
 }
 
-export type GridCardData = CardData | ShopCardData;
+type Zone = ZoneCardProps['zone'];
+
+type GridCardData = Zone | ShopCardData;
 
 interface CanonicalZoneGridProps {
-	zones: ZoneCardData[];
+	zones: Zone[];
 	className?: string;
 	includeShopCard?: boolean;
 	shopCardData?: ShopCardData['featuredItem'];
 }
 
-export function CanonicalZoneGrid({
+export const CanonicalZoneGrid = React.memo(function CanonicalZoneGrid({
 	zones,
 	className = '',
 	includeShopCard = true,
@@ -85,89 +52,56 @@ export function CanonicalZoneGrid({
 		);
 	}
 
-	const gridData: GridCardData[] = [
-		...zones.map((zone) => {
-			// Calculate total forums including subforums
-			const directForums = zone.forums ? zone.forums.length : 0;
-			const subForums = zone.forums
-				? zone.forums.reduce((sum, f) => sum + (f.subforums ? f.subforums.length : 0), 0)
-				: 0;
-			const forumCount = directForums + subForums;
-			return { ...zone, forumCount, type: 'zone' as const, isStatic: false };
-		}),
-		...(includeShopCard
-			? [
-					{
-						id: 'shop-card',
-						type: 'shop',
-						isStatic: true,
-						featuredItem: shopCardData
-					} as ShopCardData
-				]
-			: [])
-	];
+	const gridData = React.useMemo<GridCardData[]>(
+		() => [
+			// Spread in zone data directly – assume zones are already fully shaped for ZoneCard
+			...zones,
+			// Optionally append a static ShopCard entry
+			...(includeShopCard
+				? [
+						{
+							id: 'shop-card',
+							type: 'shop',
+							isStatic: true,
+							featuredItem: shopCardData
+						} as ShopCardData
+					]
+				: [])
+		],
+		[zones, includeShopCard, shopCardData]
+	);
+
+	const renderedCards = React.useMemo(
+		() =>
+			gridData.map((cardData, index) => (
+				<motion.div
+					key={cardData.id}
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{
+						delay: index * animationConfig.stagger,
+						duration: animationConfig.durations.slow,
+						ease: animationConfig.easings.standard
+					}}
+				>
+					{'type' in cardData && cardData.type === 'shop' ? (
+						<ShopCard featuredItem={(cardData as ShopCardData).featuredItem} />
+					) : (
+						<ZoneCard zone={cardData as Zone} layout="compact" showPreview />
+					)}
+				</motion.div>
+			)),
+		[gridData]
+	);
 
 	return (
 		<div
 			data-testid="zone-grid"
 			className={`grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-6 ${className}`}
 		>
-			{gridData.map((cardData, index) => (
-				<motion.div
-					key={cardData.id}
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ delay: index * 0.1, duration: 0.5 }}
-				>
-					{cardData.type === 'shop' ? (
-						<ShopCard featuredItem={(cardData as ShopCardData).featuredItem} />
-					) : (
-						// Use the imported ZoneCard component
-						<ZoneCard
-							zone={{
-								id: String(cardData.id),
-								name: cardData.name,
-								slug: cardData.slug,
-								description: cardData.description,
-								icon: cardData.icon ?? undefined,
-								colorTheme: cardData.colorTheme || 'default',
-								stats: {
-									activeUsers: cardData.activeUsersCount ?? 0,
-									totalThreads: cardData.threadCount ?? 0,
-									totalPosts: cardData.postCount ?? 0,
-									todaysPosts: 0
-								},
-								features: {
-									hasXpBoost: cardData.hasXpBoost,
-									boostMultiplier: cardData.boostMultiplier,
-									isEventActive: cardData.isEventActive,
-									isPremium: false
-								},
-								activity: cardData.lastActivityAt
-									? {
-											trendingThreads: 0,
-											momentum: 'stable',
-											lastActiveUser: undefined
-										}
-									: undefined,
-								forums: cardData.forums?.map((f) => ({
-									id: String(f.id),
-									name: f.name,
-									threadCount: f.threadCount,
-									isPopular: (f as any).isPopular,
-									subforums: (f as any).subforums
-								}))
-							}}
-							layout="compact"
-							showPreview={true}
-						/>
-					)}
-				</motion.div>
-			))}
+			{renderedCards}
 		</div>
 	);
-}
-
-// Removed internal ForumZoneCard component as it's replaced by the external ZoneCard
+});
 
 export default CanonicalZoneGrid;

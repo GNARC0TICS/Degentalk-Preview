@@ -21,6 +21,8 @@ import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { PostWithUser, ThreadWithPostsAndUser } from '@db_types/forum.types';
 import useSearchParams from '@/hooks/useSearchParams';
+import { useForumStructure } from '@/contexts/ForumStructureContext';
+import { createForumBreadcrumbs } from '@/lib/forum/breadcrumbs';
 
 export default function BBCodeThreadPage() {
 	// Get slug param from route
@@ -44,6 +46,41 @@ export default function BBCodeThreadPage() {
 		isLoading: isPostsLoading,
 		isError: isPostsError
 	} = usePosts(thread?.id);
+
+	// Forum structure context for proper breadcrumbs
+	const { getThreadContext } = useForumStructure();
+
+	// Breadcrumb items - use proper forum hierarchy
+	const breadcrumbItems = useMemo(() => {
+		if (!thread?.structureId) {
+			// Fallback to old structure if no structureId
+			return [
+				{ label: 'Home', href: '/' },
+				{ label: 'Forums', href: '/forums' },
+				{ label: thread?.forumName || 'Forum', href: `/forums/${thread?.forumSlug || ''}` },
+				{ label: thread?.title || 'Thread', href: `/threads/${thread?.slug || ''}` }
+			];
+		}
+
+		const threadContext = getThreadContext(thread.structureId);
+		if (!threadContext) {
+			// Fallback if context not available
+			return [
+				{ label: 'Home', href: '/' },
+				{ label: 'Forums', href: '/forums' },
+				{ label: thread.forumName || 'Forum', href: `/forums/${thread.forumSlug || ''}` },
+				{ label: thread.title, href: `/threads/${thread.slug}` }
+			];
+		}
+
+		// Use proper zone → forum → thread hierarchy
+		return createForumBreadcrumbs.threadInForum(
+			threadContext.zone,
+			threadContext.forum,
+			thread.title,
+			thread.slug
+		);
+	}, [thread, getThreadContext]);
 
 	// Flatten posts if pagination returns pages/arrays
 	const allPosts: PostWithUser[] = useMemo(() => {
@@ -217,14 +254,6 @@ export default function BBCodeThreadPage() {
 			</div>
 		);
 	}
-
-	// Breadcrumb items
-	const breadcrumbItems = [
-		{ label: 'Home', href: '/' },
-		{ label: 'Forums', href: '/forums' },
-		{ label: thread.forumName || 'Forum', href: `/forums/${thread.forumSlug || ''}` },
-		{ label: thread.title, href: `/threads/${thread.slug}` }
-	];
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black">

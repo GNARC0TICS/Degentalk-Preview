@@ -62,7 +62,7 @@ export function BBCodePostCard({
 			{/* Desktop: Left Author Profile Card */}
 			<div className="hidden lg:block">
 				<UnifiedProfileCard
-					username={post.user.username}
+					username={post.authorUsername}
 					variant="sidebar"
 					className="sticky top-4"
 					showStats={true}
@@ -75,7 +75,7 @@ export function BBCodePostCard({
 			{/* Mobile: Compact Author Profile (horizontal) */}
 			<div className="lg:hidden mb-4">
 				<UnifiedProfileCard
-					username={post.user.username}
+					username={post.authorUsername}
 					variant="compact"
 					showStats={true}
 					showLevel={true}
@@ -189,8 +189,8 @@ export function BBCodePostCard({
 
 						{/* Signature */}
 						<SignatureRenderer
-							signature={post.user.signature}
-							username={post.user.username}
+							signature={''}
+							username={post.authorUsername}
 							showSignatures={showSignatures}
 							maxHeight={80}
 						/>

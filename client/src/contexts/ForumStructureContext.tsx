@@ -19,8 +19,10 @@ import type { Zone } from '@/config/forumMap.config';
 // ---------------- Constants ----------------
 // Flat forum structure endpoint (zones + forums)
 const FORUM_STRUCTURE_API_PATH = '/api/forum/structure';
-const FALLBACK_ZONE_ID = -1;
-const FALLBACK_FORUM_ID = -1;
+// Use positive IDs for fallback to avoid ID conflicts and enable mock functionality
+let FALLBACK_ID_COUNTER = 9000; // Start from high number to avoid real ID conflicts
+const FALLBACK_ZONE_ID = () => ++FALLBACK_ID_COUNTER;
+const FALLBACK_FORUM_ID = () => ++FALLBACK_ID_COUNTER;
 
 // ---------------- Zod Schemas --------------
 const PluginDataSchema = z
@@ -68,27 +70,35 @@ const ApiEntitySchema = z
 		description: z.string().nullish(),
 		parentId: z.number().nullish(),
 		type: z.enum(['zone', 'forum', 'category']),
-		position: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()),
-		isVip: z.boolean().default(false),
-		isLocked: z.boolean().default(false),
-		isHidden: z.boolean().default(false),
-		minXp: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()),
-		minGroupIdRequired: z.number().nullish(),
-		color: z.string().nullish(),
-		icon: z.string().nullish(),
-		colorTheme: z.string().nullish(),
-		tippingEnabled: z.boolean().default(false),
-		xpMultiplier: z.preprocess((v) => (v === null || v === undefined ? 1 : v), z.number()),
-		threadCount: z.preprocess((v) => {
-			if (v === null || v === undefined) return 0;
-			if (typeof v === 'string') return parseInt(v, 10);
-			return v;
-		}, z.number()),
-		postCount: z.preprocess((v) => {
-			if (v === null || v === undefined) return 0;
-			if (typeof v === 'string') return parseInt(v, 10);
-			return v;
-		}, z.number()),
+		position: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()).optional(),
+		isVip: z.boolean().default(false).optional(),
+		isLocked: z.boolean().default(false).optional(),
+		isHidden: z.boolean().default(false).optional(),
+		minXp: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()).optional(),
+		minGroupIdRequired: z.number().optional().nullable(),
+		color: z.string().optional().nullable(),
+		icon: z.string().optional().nullable(),
+		colorTheme: z.string().optional().nullable(),
+		tippingEnabled: z.boolean().default(false).optional(),
+		xpMultiplier: z
+			.preprocess((v) => (v === null || v === undefined ? 1 : v), z.number())
+			.optional(),
+		threadCount: z
+			.preprocess((v) => {
+				if (v === null || v === undefined) return 0;
+				if (typeof v === 'string') return parseInt(v, 10) || 0;
+				if (typeof v === 'number') return v;
+				return 0;
+			}, z.number())
+			.optional(),
+		postCount: z
+			.preprocess((v) => {
+				if (v === null || v === undefined) return 0;
+				if (typeof v === 'string') return parseInt(v, 10) || 0;
+				if (typeof v === 'number') return v;
+				return 0;
+			}, z.number())
+			.optional(),
 		pluginData: z
 			.preprocess((v) => {
 				if (typeof v === 'string') {
@@ -98,13 +108,18 @@ const ApiEntitySchema = z
 						return {};
 					}
 				}
+				if (v === null || v === undefined) return {};
 				return v;
 			}, PluginDataSchema)
-			.nullish(),
+			.optional(),
 		createdAt: z.union([z.string(), z.date()]).optional().nullable(),
 		updatedAt: z.union([z.string(), z.date()]).optional().nullable(),
-		isPopular: z.boolean().optional(),
-		lastActivityAt: z.union([z.string(), z.date()]).optional().nullable()
+		isPopular: z.boolean().optional().nullable(),
+		lastActivityAt: z.union([z.string(), z.date()]).optional().nullable(),
+		// Backend returns lastPostAt, map to lastActivityAt
+		lastPostAt: z.union([z.string(), z.date()]).optional().nullable(),
+		// Additional fields that backend might return
+		parentForumSlug: z.string().optional().nullable()
 	})
 	.passthrough();
 
@@ -187,11 +202,18 @@ export interface MergedZone {
 export interface ForumStructureContextType {
 	zones: MergedZone[];
 	forums: Record<string, MergedForum>;
+	forumsById: Record<number, MergedForum>;
 	primaryZones: MergedZone[];
 	generalZones: MergedZone[];
 	getZone: (slug: string) => MergedZone | undefined;
+	getZoneById: (id: number) => MergedZone | undefined;
 	getForum: (slug: string) => MergedForum | undefined;
+	getForumById: (id: number) => MergedForum | undefined;
 	getParentZone: (forumSlug: string) => MergedZone | undefined;
+	getThreadContext: (structureId: number) => {
+		forum: MergedForum | undefined;
+		zone: MergedZone | undefined;
+	};
 	isPrimaryZone: (slug: string) => boolean;
 	isGeneralZone: (slug: string) => boolean;
 	getZonesByType: (type: 'primary' | 'general') => MergedZone[];
@@ -205,8 +227,8 @@ function buildRules(entity: ApiEntity): MergedRules {
 	const p = entity.pluginData || {};
 	return {
 		allowPosting: p.allowPosting ?? !entity.isLocked,
-		xpEnabled: p.xpEnabled ?? entity.xpMultiplier > 0,
-		tippingEnabled: entity.tippingEnabled,
+		xpEnabled: p.xpEnabled ?? (entity.xpMultiplier ?? 1) > 0,
+		tippingEnabled: entity.tippingEnabled ?? false,
 		prefixGrantRules: p.prefixGrantRules as Record<string, unknown> | undefined,
 		allowPolls: p.allowPolls ?? false,
 		allowTags: p.allowTags ?? false
@@ -233,25 +255,29 @@ function makeMergedForum(api: ApiEntity, parentZoneId: number): MergedForum {
 		parentZoneId,
 		isSubforum: false,
 		subforums: [],
-		isVip: api.isVip,
-		isLocked: api.isLocked,
-		isHidden: api.isHidden,
-		minXp: api.minXp,
-		xpMultiplier: api.xpMultiplier,
+		isVip: api.isVip ?? false,
+		isLocked: api.isLocked ?? false,
+		isHidden: api.isHidden ?? false,
+		minXp: api.minXp ?? 0,
+		xpMultiplier: api.xpMultiplier ?? 1,
 		theme: buildTheme(api),
 		rules: buildRules(api),
-		threadCount: api.threadCount,
-		postCount: api.postCount,
+		threadCount: api.threadCount ?? 0,
+		postCount: api.postCount ?? 0,
 		parentCategoryId: null,
 		canHaveThreads: true,
 		isPopular: api.isPopular ?? false,
-		lastActivityAt: api.lastActivityAt ? String(api.lastActivityAt) : undefined
+		lastActivityAt:
+			api.lastActivityAt || api.lastPostAt
+				? String(api.lastActivityAt || api.lastPostAt)
+				: undefined
 	};
 }
 
 function processApiData(resp: ForumStructureApiResponse) {
 	const zones: MergedZone[] = [];
 	const forums: Record<string, MergedForum> = {};
+	const forumsById: Record<number, MergedForum> = {};
 	const zoneById = new Map<number, MergedZone>();
 	const forumById = new Map<number, MergedForum>();
 	const handled = new Set<number>();
@@ -265,20 +291,20 @@ function processApiData(resp: ForumStructureApiResponse) {
 			description: z.description,
 			type: 'zone',
 			isPrimary: z.pluginData?.configZoneType === 'primary',
-			position: z.position,
+			position: z.position ?? 0,
 			forums: [],
 			theme: buildTheme(z),
 			icon: z.icon,
 			features: z.pluginData?.features || [],
 			customComponents: z.pluginData?.customComponents || [],
 			staffOnly: z.pluginData?.staffOnly || false,
-			hasXpBoost: z.xpMultiplier > 1,
-			boostMultiplier: z.xpMultiplier,
+			hasXpBoost: (z.xpMultiplier ?? 1) > 1,
+			boostMultiplier: z.xpMultiplier ?? 1,
 			xpChallenges: z.pluginData?.xpChallenges,
 			zoneBadges: z.pluginData?.zoneBadges,
-			threadCount: z.threadCount,
-			postCount: z.postCount,
-			updatedAt: z.updatedAt,
+			threadCount: z.threadCount ?? 0,
+			postCount: z.postCount ?? 0,
+			updatedAt: z.updatedAt ? String(z.updatedAt) : undefined,
 			categories: []
 		};
 		zones.push(zone);
@@ -290,9 +316,10 @@ function processApiData(resp: ForumStructureApiResponse) {
 		if (f.parentId && zoneById.has(f.parentId)) {
 			const m = makeMergedForum(f, f.parentId);
 			forums[m.slug] = m;
-			forumById.set(m.id, m);
+			forumsById[m.id as number] = m;
+			forumById.set(m.id as number, m);
 			zoneById.get(f.parentId)!.forums.push(m);
-			handled.add(m.id);
+			handled.add(m.id as number);
 		}
 	});
 
@@ -303,21 +330,24 @@ function processApiData(resp: ForumStructureApiResponse) {
 			const sub = makeMergedForum(f, parent.parentZoneId!);
 			sub.isSubforum = true;
 			forums[sub.slug] = sub;
-			forumById.set(sub.id, sub);
+			forumsById[sub.id as number] = sub;
+			forumById.set(sub.id as number, sub);
 			parent.subforums.push(sub);
 		}
 	});
 
-	return { zones, forums };
+	return { zones, forums, forumsById };
 }
 
 function fallbackStructure(staticZones: Zone[]) {
 	const zones: MergedZone[] = [];
 	const forums: Record<string, MergedForum> = {};
+	const forumsById: Record<number, MergedForum> = {};
 
 	staticZones.forEach((z) => {
+		const zoneId = FALLBACK_ZONE_ID();
 		const mz: MergedZone = {
-			id: FALLBACK_ZONE_ID,
+			id: zoneId,
 			slug: z.slug,
 			name: z.name,
 			description: z.description,
@@ -340,14 +370,15 @@ function fallbackStructure(staticZones: Zone[]) {
 		};
 
 		z.forums.forEach((f) => {
+			const forumId = FALLBACK_FORUM_ID();
 			const mf: MergedForum = {
-				id: FALLBACK_FORUM_ID,
+				id: forumId,
 				slug: f.slug,
 				name: f.name,
 				description: f.description,
 				type: 'forum',
-				parentId: FALLBACK_ZONE_ID,
-				parentZoneId: FALLBACK_ZONE_ID,
+				parentId: zoneId,
+				parentZoneId: zoneId,
 				isSubforum: false,
 				subforums: [],
 				isVip: false,
@@ -377,13 +408,19 @@ function fallbackStructure(staticZones: Zone[]) {
 				lastActivityAt: undefined
 			};
 			forums[mf.slug] = mf;
+			forumsById[forumId] = mf;
 			mz.forums.push(mf);
 		});
 
 		zones.push(mz);
 	});
 
-	return { zones, forums };
+	console.log('[ForumStructureContext] Fallback structure created with IDs:', {
+		zones: zones.map((z) => ({ id: z.id, slug: z.slug })),
+		forums: Object.values(forums).map((f) => ({ id: f.id, slug: f.slug }))
+	});
+
+	return { zones, forums, forumsById };
 }
 
 // ---------------- Context ------------------
@@ -398,8 +435,15 @@ export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ chil
 		(async () => {
 			try {
 				const resp = await fetch('/api/forum/structure');
-				if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+				if (!resp.ok) {
+					console.error('[ForumStructureContext] HTTP error:', resp.status, resp.statusText);
+					throw new Error(`HTTP ${resp.status}`);
+				}
 				const data = await resp.json();
+				console.log('[ForumStructureContext] API response received:', {
+					zones: data.zones?.length,
+					forums: data.forums?.length
+				});
 				setRaw(data);
 			} catch (e: any) {
 				console.error('[ForumStructureContext] fetch failed – falling back to config', e);
@@ -410,32 +454,58 @@ export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ chil
 		})();
 	}, []);
 
-	const { zones, forums, isUsingFallback, parseError } = useMemo(() => {
+	const { zones, forums, forumsById, isUsingFallback, parseError } = useMemo(() => {
 		if (raw) {
+			console.log('[ForumStructureContext] Raw API response:', {
+				type: typeof raw,
+				isArray: Array.isArray(raw),
+				keys: typeof raw === 'object' ? Object.keys(raw) : 'N/A',
+				zonesCount: raw?.zones?.length || 'N/A',
+				forumsCount: raw?.forums?.length || 'N/A'
+			});
+
 			// If backend already returns the flat object shape
 			try {
 				const parsed = ForumStructureApiResponseSchema.parse(raw);
 				const processed = processApiData(parsed);
+				console.info('[ForumStructureContext] ✅ Structure parsing SUCCESS:', {
+					zones: processed.zones.length,
+					forums: Object.keys(processed.forums).length,
+					forumsById: Object.keys(processed.forumsById).length
+				});
 				return { ...processed, isUsingFallback: false, parseError: null };
 			} catch (e) {
+				console.error('[ForumStructureContext] ❌ Structure parsing FAILED:', {
+					error: e,
+					rawData: raw,
+					errorDetails: e instanceof Error ? e.message : 'Unknown error'
+				});
+
 				// Fallback: some environments may still send an *array* of structures
 				// (mixing zones & forums).  We coerce that into the expected object.
 				if (Array.isArray(raw)) {
+					console.log('[ForumStructureContext] Attempting array coercion...');
 					const zones = raw.filter((s: any) => s.type === 'zone');
 					const forums = raw.filter((s: any) => s.type === 'forum');
 					const coerced = { zones, forums };
 					try {
 						const parsed = ForumStructureApiResponseSchema.parse(coerced);
 						const processed = processApiData(parsed);
+						console.info('[ForumStructureContext] ✅ Array coercion SUCCESS:', {
+							zones: processed.zones.length,
+							forums: Object.keys(processed.forums).length
+						});
 						return { ...processed, isUsingFallback: false, parseError: null };
 					} catch (inner) {
-						console.error('[ForumStructureContext] still invalid after coercion', inner);
+						console.error('[ForumStructureContext] ❌ Array coercion FAILED:', inner);
 					}
 				} else {
-					console.error('[ForumStructureContext] invalid API payload', e);
+					console.error('[ForumStructureContext] ❌ Invalid API payload format');
 				}
 			}
 		}
+
+		console.warn('[ForumStructureContext] ⚠️  Using FALLBACK structure (static config)');
 		const fb = fallbackStructure(forumMap.zones);
 		return {
 			...fb,
@@ -451,14 +521,23 @@ export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ chil
 		() => ({
 			zones,
 			forums,
+			forumsById,
 			primaryZones,
 			generalZones,
 			getZone: (s) => zones.find((z) => z.slug === s),
+			getZoneById: (id) => zones.find((z) => z.id === id),
 			getForum: (s) => forums[s],
+			getForumById: (id) => forumsById[id],
 			getParentZone: (forumSlug) => {
 				const f = forums[forumSlug];
 				if (!f) return undefined;
 				return zones.find((z) => z.id === f.parentZoneId);
+			},
+			getThreadContext: (structureId) => {
+				const forum = forumsById[structureId];
+				if (!forum) return { forum: undefined, zone: undefined };
+				const zone = zones.find((z) => z.id === forum.parentZoneId);
+				return { forum, zone };
 			},
 			isPrimaryZone: (s) => primaryZones.some((z) => z.slug === s),
 			isGeneralZone: (s) => generalZones.some((z) => z.slug === s),
@@ -467,7 +546,17 @@ export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ chil
 			error: netErr || parseError || null,
 			isUsingFallback
 		}),
-		[zones, forums, primaryZones, generalZones, isLoading, netErr, parseError, isUsingFallback]
+		[
+			zones,
+			forums,
+			forumsById,
+			primaryZones,
+			generalZones,
+			isLoading,
+			netErr,
+			parseError,
+			isUsingFallback
+		]
 	);
 
 	return <ForumStructureContext.Provider value={value}>{children}</ForumStructureContext.Provider>;

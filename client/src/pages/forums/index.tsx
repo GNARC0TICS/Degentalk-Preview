@@ -4,7 +4,7 @@ import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
-import { Search, Folder, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Folder, ChevronLeft, ChevronRight, LayoutGrid } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { SiteFooter } from '@/components/footer';
 import { ForumGuidelines } from '@/components/forum/forum-guidelines';
@@ -17,7 +17,6 @@ import { ActiveMembersWidget } from '@/components/users';
 import { useActiveUsers } from '@/features/users/hooks';
 import { getForumSpacing, getForumLayout } from '@/utils/spacing-constants';
 import { useForumTheme } from '@/contexts/ForumThemeProvider';
-import { THEME_COLORS_BG } from '@/config/themeConstants';
 import { Wide } from '@/layout/primitives';
 import { BackToHomeButton } from '@/components/common';
 import { ZoneCard } from '@/components/forum';
@@ -31,8 +30,24 @@ import {
 import { QuickStats } from '@/components/forum/QuickStats';
 import { HotTopics } from '@/components/forum/HotTopics';
 import { RecentActivity } from '@/components/forum/RecentActivity';
+import ForumErrorBoundary from '@/components/forum/ForumErrorBoundary';
 
-// Temporary fallback palette for non-themed zones
+// Generate dynamic theme colors based on zone theme
+const getDynamicZoneColors = (colorTheme: string | null) => {
+	const colorMap: Record<string, string> = {
+		pit: 'from-red-500/20 to-orange-500/20 border-red-500/30',
+		mission: 'from-blue-500/20 to-cyan-500/20 border-blue-500/30',
+		casino: 'from-purple-500/20 to-pink-500/20 border-purple-500/30',
+		briefing: 'from-amber-500/20 to-yellow-500/20 border-amber-500/30',
+		archive: 'from-gray-500/20 to-slate-500/20 border-gray-500/30',
+		shop: 'from-emerald-500/20 to-green-500/20 border-emerald-500/30',
+		default: 'from-zinc-500/20 to-gray-500/20 border-zinc-500/30'
+	};
+
+	return colorMap[colorTheme || 'default'] || colorMap.default;
+};
+
+// Temporary fallback palette for non-themed zones - replaced with dynamic generation
 const CATEGORY_COLORS = [
 	'from-emerald-500/20 to-green-500/20 border-emerald-500/30',
 	'from-sky-500/20 to-blue-500/20 border-sky-500/30',
@@ -55,25 +70,34 @@ export default function ForumsIndexPage() {
 	const [searchText, setSearchText] = useState('');
 	const carouselRef = useRef<HTMLDivElement>(null);
 
-	const { getTheme, setActiveTheme } = useForumTheme();
+	const { getTheme } = useForumTheme();
+
+	// Memoized calculations for performance
+	const totalStats = useMemo(() => {
+		return allZones.reduce(
+			(acc, zone) => ({
+				totalThreads: acc.totalThreads + (zone.threadCount || 0),
+				totalPosts: acc.totalPosts + (zone.postCount || 0)
+			}),
+			{ totalThreads: 0, totalPosts: 0 }
+		);
+	}, [allZones]);
 
 	const handleSearch = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (searchText.trim()) {
-			setLocation(`/forums/search?q=${encodeURIComponent(searchText.trim())}`); // Changed from /forum to /forums
+			setLocation(`/forums/search?q=${encodeURIComponent(searchText.trim())}`);
 		}
 	};
 
 	// Carousel navigation
 	const nextZone = () => {
 		if (primaryZones.length === 0) return;
-		// setCurrentZoneIndex((prev) => (prev + 1) % primaryZones.length); // currentZoneIndex is unused
 		scrollCarousel(1);
 	};
 
 	const prevZone = () => {
 		if (primaryZones.length === 0) return;
-		// setCurrentZoneIndex((prev) => (prev - 1 + primaryZones.length) % primaryZones.length); // currentZoneIndex is unused
 		scrollCarousel(-1);
 	};
 
@@ -128,17 +152,14 @@ export default function ForumsIndexPage() {
 				layout="compact"
 				showPreview={true}
 				className="flex-shrink-0 w-full max-w-md"
-				onEnter={() => zone.theme.colorTheme && setActiveTheme(zone.theme.colorTheme)}
+				onEnter={undefined}
 			/>
 		);
 	};
 
 	// Render a general zone (which is a MergedZone) with its child forums (MergedForum[])
 	const renderGeneralZone = (zoneData: MergedZone, index: number) => {
-		const directForums = zoneData.forums ?? [];
-		// Flatten forums from categories
-		const categorisedForums = (zoneData.categories ?? []).flatMap((cat) => cat.forums ?? []);
-		const allForums = [...directForums, ...categorisedForums];
+		const allForums = zoneData.forums ?? [];
 
 		if (allForums.length === 0) return null; // Nothing to show
 
@@ -150,17 +171,13 @@ export default function ForumsIndexPage() {
 
 		const zoneSemanticThemeKey = zoneData.theme.colorTheme || 'default';
 		const theme = getTheme(zoneSemanticThemeKey);
+
+		// Use dynamic color generation instead of static THEME_COLORS_BG
 		const zoneColorClass =
-			(THEME_COLORS_BG as Record<string, string>)[zoneSemanticThemeKey] ??
-			CATEGORY_COLORS[index % CATEGORY_COLORS.length];
+			getDynamicZoneColors(zoneSemanticThemeKey) || CATEGORY_COLORS[index % CATEGORY_COLORS.length];
 
 		const IconFromThemeOrFallback = theme.icon ?? Folder;
 		const zoneIconColorClass = theme.color || 'text-emerald-400';
-
-		// Set CSS variables for this zone once on render
-		if (zoneData.theme.colorTheme) {
-			setActiveTheme(zoneData.theme.colorTheme);
-		}
 
 		const combinedThreadCount = zoneData.threadCount + totalChildThreadCount;
 		const combinedPostCount = zoneData.postCount + totalChildPostCount;
@@ -170,8 +187,11 @@ export default function ForumsIndexPage() {
 				key={zoneData.id.toString()}
 				className={`overflow-hidden border mb-8 ${zoneColorClass} hover-scale`}
 			>
-				<CardHeader asChild className="pb-3 cursor-pointer hover:bg-zinc-800/30 transition-colors">
-					<Link href={`/zones/${zoneData.slug}`}>
+				<CardHeader className="pb-3">
+					<Link
+						href={`/zones/${zoneData.slug}`}
+						className="block cursor-pointer hover:bg-zinc-800/30 transition-colors -m-4 p-4"
+					>
 						<div className="flex flex-col">
 							<div className="flex items-center justify-between">
 								<CardTitle className="text-lg font-semibold flex items-center">
@@ -228,172 +248,203 @@ export default function ForumsIndexPage() {
 
 	if (structureLoading) {
 		return (
-			<div className="flex flex-col min-h-screen">
-				<Wide className="px-4 py-6 flex-grow">
-					<LoadingSpinner text="Loading Forums..." />
-				</Wide>
-				<SiteFooter />
-			</div>
+			<ForumErrorBoundary>
+				<div className="flex flex-col min-h-screen">
+					<Wide className="px-4 py-6 flex-grow">
+						<LoadingSpinner text="Loading Forums..." />
+					</Wide>
+					<SiteFooter />
+				</div>
+			</ForumErrorBoundary>
 		);
 	}
 
 	if (structureErrorDetails) {
 		return (
-			<div className="flex flex-col min-h-screen">
-				<Wide className="px-4 py-6 flex-grow">
-					<ErrorDisplay title="Error loading forums" error={structureErrorDetails} />
-				</Wide>
-				<SiteFooter />
-			</div>
+			<ForumErrorBoundary>
+				<div className="flex flex-col min-h-screen">
+					<Wide className="px-4 py-6 flex-grow">
+						<ErrorDisplay title="Error loading forums" error={structureErrorDetails} />
+					</Wide>
+					<SiteFooter />
+				</div>
+			</ForumErrorBoundary>
 		);
 	}
 
 	return (
-		<div className={getForumLayout('page')}>
-			<Wide className={`${getForumSpacing('container')} flex-grow`}>
-				<BackToHomeButton />
-				<div className={getForumLayout('forumGrid')}>
-					{/* Main Content Area */}
-					<div className={`lg:col-span-9 ${getForumSpacing('cardStack')}`}>
-						{/* Forum Header & Search */}
-						<motion.section
-							variants={sectionVariants}
-							initial="hidden"
-							animate="visible"
-							custom={0}
-						>
-							<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-								<h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 text-transparent bg-clip-text mb-4 sm:mb-0">
-									Community Forums
-								</h1>
-								{/* ... existing breadcrumbs or other elements ... */}
-							</div>
-							<form onSubmit={handleSearch} className="flex gap-2">
-								<Input
-									type="text"
-									value={searchText}
-									onChange={(e) => setSearchText(e.target.value)}
-									placeholder="Search forums..."
-									className="flex-grow bg-zinc-800/50 border-zinc-700 placeholder-zinc-500"
-								/>
-								<Button
-									type="submit"
-									variant="outline"
-									className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-700"
-								>
-									<Search className="h-4 w-4 mr-2" />
-									Search
-								</Button>
-							</form>
-						</motion.section>
-
-						{/* Primary Zones Carousel */}
-						{primaryZones.length > 0 && (
+		<ForumErrorBoundary>
+			<div className={getForumLayout('page')}>
+				<Wide className={`${getForumSpacing('container')} flex-grow`}>
+					<BackToHomeButton />
+					<div className={getForumLayout('forumGrid')}>
+						{/* Main Content Area */}
+						<div className={`lg:col-span-9 ${getForumSpacing('cardStack')}`}>
+							{/* Forum Header & Search */}
 							<motion.section
 								variants={sectionVariants}
 								initial="hidden"
 								animate="visible"
-								custom={0.1} // Stagger delay
+								custom={0}
 							>
-								<div className="flex justify-between items-center mb-3">
-									<h2 className="text-xl font-semibold text-white">Primary Zones</h2>
-									<div className="flex gap-2">
-										<Button
-											variant="ghost"
-											size="icon"
-											onClick={prevZone}
-											className="text-zinc-400 hover:text-white"
-										>
-											<ChevronLeft className="h-5 w-5" />
-										</Button>
-										<Button
-											variant="ghost"
-											size="icon"
-											onClick={nextZone}
-											className="text-zinc-400 hover:text-white"
-										>
-											<ChevronRight className="h-5 w-5" />
-										</Button>
-									</div>
+								<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+									<h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 text-transparent bg-clip-text mb-4 sm:mb-0">
+										Community Forums
+									</h1>
+									{/* ... existing breadcrumbs or other elements ... */}
 								</div>
-								<div className="no-scrollbar flex overflow-x-auto gap-4 pb-2" ref={carouselRef}>
-									{primaryZones.map((zone, idx) => (
-										<motion.div
-											key={zone.id.toString()}
-											initial={{ opacity: 0, x: 20 }}
-											animate={{ opacity: 1, x: 0 }}
-											transition={{ duration: 0.4, delay: idx * 0.1 }}
-											className="flex-shrink-0 w-full max-w-md"
-										>
-											{renderZoneCard(zone)}
-										</motion.div>
-									))}
-								</div>
+								<form onSubmit={handleSearch} className="flex gap-2">
+									<Input
+										type="text"
+										value={searchText}
+										onChange={(e) => setSearchText(e.target.value)}
+										placeholder="Search forums..."
+										className="flex-grow bg-zinc-800/50 border-zinc-700 placeholder-zinc-500"
+									/>
+									<Button
+										type="submit"
+										variant="outline"
+										className="bg-zinc-800/50 border-zinc-700 hover:bg-zinc-700"
+									>
+										<Search className="h-4 w-4 mr-2" />
+										Search
+									</Button>
+								</form>
 							</motion.section>
-						)}
 
-						{/* General Forum Zones List */}
-						<motion.section
-							variants={sectionVariants}
-							initial="hidden"
-							animate="visible"
-							custom={0.2} // Stagger delay
-						>
-							<h2 className="text-xl font-semibold text-white mb-4">
-								{generalZones.length > 0 ? 'All Forums' : 'No forum categories found.'}
-							</h2>
-							<Accordion
-								type="multiple"
-								className="space-y-4"
-								defaultValue={generalZones.map((zone) => zone.slug)} // Open all by default
-							>
-								{generalZones.map((zoneData, index) => (
-									<AccordionItem value={zoneData.slug} key={zoneData.id.toString()}>
-										<AccordionTrigger className="focus:outline-none">
-											{zoneData.name}
-										</AccordionTrigger>
-										<AccordionContent asChild>
-											<motion.div
-												initial={{ opacity: 0, y: 20 }}
-												animate={{ opacity: 1, y: 0 }}
-												transition={{ duration: 0.4 }}
+							{/* Primary Zones Carousel */}
+							{primaryZones.length > 0 && (
+								<motion.section
+									variants={sectionVariants}
+									initial="hidden"
+									animate="visible"
+									custom={0.1} // Stagger delay
+								>
+									<div className="flex justify-between items-center mb-3">
+										<h2 className="text-xl font-semibold text-white">Primary Zones</h2>
+										<div className="flex gap-2">
+											<Button
+												variant="ghost"
+												size="icon"
+												onClick={prevZone}
+												className="text-zinc-400 hover:text-white"
 											>
-												{renderGeneralZone(zoneData, index)}
+												<ChevronLeft className="h-5 w-5" />
+											</Button>
+											<Button
+												variant="ghost"
+												size="icon"
+												onClick={nextZone}
+												className="text-zinc-400 hover:text-white"
+											>
+												<ChevronRight className="h-5 w-5" />
+											</Button>
+										</div>
+									</div>
+									<div className="no-scrollbar flex overflow-x-auto gap-4 pb-2" ref={carouselRef}>
+										{primaryZones.map((zone, idx) => (
+											<motion.div
+												key={zone.id.toString()}
+												initial={{ opacity: 0, x: 20 }}
+												animate={{ opacity: 1, x: 0 }}
+												transition={{ duration: 0.4, delay: idx * 0.1 }}
+												className="flex-shrink-0 w-full max-w-md"
+											>
+												{renderZoneCard(zone)}
 											</motion.div>
-										</AccordionContent>
-									</AccordionItem>
-								))}
-							</Accordion>
-						</motion.section>
-					</div>
+										))}
+									</div>
+								</motion.section>
+							)}
 
-					{/* Sidebar */}
-					<aside className="lg:col-span-3 space-y-6">
-						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.3}>
-							<QuickStats
-								totalThreads={allZones.reduce((sum, zone) => sum + (zone.threadCount || 0), 0)}
-								totalPosts={allZones.reduce((sum, zone) => sum + (zone.postCount || 0), 0)}
-								onlineUsers={activeUsers?.length || 0}
-								todaysActivity={42}
-								isLoading={structureLoading || activeUsersLoading}
-							/>
-						</motion.div>
-						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.35}>
-							<HotTopics threads={[]} isLoading={structureLoading} limit={5} />
-						</motion.div>
-						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.4}>
-							<RecentActivity activities={[]} isLoading={structureLoading} limit={8} />
-						</motion.div>
-						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.45}>
-							<ActiveMembersWidget users={activeUsers || []} isLoading={activeUsersLoading} />
-						</motion.div>
-						<motion.div variants={sectionVariants} initial="hidden" animate="visible" custom={0.5}>
-							<ForumGuidelines />
-						</motion.div>
-					</aside>
-				</div>
-			</Wide>
-			<SiteFooter />
-		</div>
+							{/* General Forum Zones List */}
+							<motion.section
+								variants={sectionVariants}
+								initial="hidden"
+								animate="visible"
+								custom={0.2} // Stagger delay
+							>
+								<h2 className="text-xl font-semibold text-white mb-4">
+									{generalZones.length > 0 ? 'All Forums' : 'No forum categories found.'}
+								</h2>
+								<Accordion
+									type="multiple"
+									className="space-y-4"
+									defaultValue={generalZones.map((zone) => zone.slug)} // Open all by default
+								>
+									{generalZones.map((zoneData, index) => (
+										<AccordionItem value={zoneData.slug} key={zoneData.id.toString()}>
+											<AccordionTrigger className="focus:outline-none">
+												{zoneData.name}
+											</AccordionTrigger>
+											<AccordionContent asChild>
+												<motion.div
+													initial={{ opacity: 0, y: 20 }}
+													animate={{ opacity: 1, y: 0 }}
+													transition={{ duration: 0.4 }}
+												>
+													{renderGeneralZone(zoneData, index)}
+												</motion.div>
+											</AccordionContent>
+										</AccordionItem>
+									))}
+								</Accordion>
+							</motion.section>
+						</div>
+
+						{/* Sidebar */}
+						<aside className="lg:col-span-3 space-y-6">
+							<motion.div
+								variants={sectionVariants}
+								initial="hidden"
+								animate="visible"
+								custom={0.3}
+							>
+								<QuickStats
+									totalThreads={totalStats.totalThreads}
+									totalPosts={totalStats.totalPosts}
+									onlineUsers={activeUsers?.length || 0}
+									todaysActivity={0}
+									isLoading={structureLoading || activeUsersLoading}
+								/>
+							</motion.div>
+							<motion.div
+								variants={sectionVariants}
+								initial="hidden"
+								animate="visible"
+								custom={0.35}
+							>
+								<HotTopics threads={[]} isLoading={structureLoading} limit={5} />
+							</motion.div>
+							<motion.div
+								variants={sectionVariants}
+								initial="hidden"
+								animate="visible"
+								custom={0.4}
+							>
+								<RecentActivity activities={[]} isLoading={structureLoading} limit={8} />
+							</motion.div>
+							<motion.div
+								variants={sectionVariants}
+								initial="hidden"
+								animate="visible"
+								custom={0.45}
+							>
+								<ActiveMembersWidget />
+							</motion.div>
+							<motion.div
+								variants={sectionVariants}
+								initial="hidden"
+								animate="visible"
+								custom={0.5}
+							>
+								<ForumGuidelines />
+							</motion.div>
+						</aside>
+					</div>
+				</Wide>
+				<SiteFooter />
+			</div>
+		</ForumErrorBoundary>
 	);
 }

@@ -7,83 +7,24 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
-import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
-import { API_ROUTES } from '@/constants/apiRoutes';
-
-import { ResponsiveForumLayout, AdaptiveForumGrid } from '@/components/forum/layouts';
-import ThreadCard from '@/components/forum/ThreadCard';
-import CryptoEngagementBar from '@/components/forum/enhanced/CryptoEngagementBar';
-import QuickReactions from '@/components/forum/enhanced/QuickReactions';
-import MobileForumNavigation from '@/components/forum/enhanced/MobileForumNavigation';
-import { ThreadFilters } from '@/components/forum/ThreadFilters';
-import { BreadcrumbNav } from '@/components/forum/breadcrumb-nav';
+import { ResponsiveForumLayout } from '@/components/forum/layouts';
+import { ThreadFilters, type ThreadFiltersState } from '@/components/forum/ThreadFilters';
+import {
+	ForumBreadcrumbs,
+	createForumBreadcrumbs,
+	type BreadcrumbItem
+} from '@/components/navigation/ForumBreadcrumbs';
+import ThreadList from '@/features/forum/components/ThreadList';
 
 export interface ForumPageProps {
 	className?: string;
-}
-
-interface ThreadData {
-	id: string;
-	title: string;
-	slug: string;
-	excerpt?: string;
-	createdAt: string;
-	lastPostAt?: string;
-	viewCount: number;
-	postCount: number;
-	isSticky?: boolean;
-	isLocked?: boolean;
-	isHot?: boolean;
-	hotScore?: number;
-	user: {
-		id: string;
-		username: string;
-		avatarUrl?: string;
-		reputation?: number;
-		isVerified?: boolean;
-	};
-	zone: {
-		name: string;
-		slug: string;
-		colorTheme: string;
-	};
-	tags?: Array<{
-		id: number;
-		name: string;
-		color?: string;
-	}>;
-	prefix?: {
-		name: string;
-		color: string;
-	};
-	engagement?: {
-		totalTips: number;
-		uniqueTippers: number;
-		bookmarks: number;
-		momentum: 'bullish' | 'bearish' | 'neutral';
-		reputationScore?: number;
-		qualityScore?: number;
-		hotScore?: number;
-	};
-	reactions?: Array<{
-		id: string;
-		type: string;
-		emoji: string;
-		label: string;
-		count: number;
-		hasReacted: boolean;
-		color: string;
-		bgColor: string;
-		borderColor: string;
-	}>;
 }
 
 const ForumPage = memo(({ className }: ForumPageProps) => {
 	const params = useParams<{ slug?: string }>();
 	const [location] = useLocation();
 	const forumSlug = params?.slug;
-	const { getForum, zones } = useForumStructure();
+	const { getForum, zones, forums, isUsingFallback } = useForumStructure();
 
 	// State management
 	const [layout, setLayout] = useState<'grid' | 'list' | 'masonry'>('list');
@@ -102,71 +43,34 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 
 	const parentZone = zones?.find((zone) => zone.forums.some((f) => f.slug === forumSlug));
 
-	// Fetch threads data
-	const { data: threads = [], isLoading } = useQuery({
-		queryKey: [
-			`/api/forum/threads?structureId=${forum?.id ?? 'none'}&sort=${sortBy}&search=${encodeURIComponent(searchQuery)}`
-		],
-		queryFn: async ({ queryKey }) => {
-			if (!forum?.id) return [];
-			const url = queryKey[0] as string;
-			const response = await apiRequest<any>({ url });
-			if (Array.isArray(response)) return response;
-			if (response?.data?.threads) return response.data.threads as ThreadData[];
-			if (response?.threads) return response.threads as ThreadData[];
-			return [];
-		},
-		enabled: !!forum?.id
+	// Default filters for ThreadList
+	const [filters, setFilters] = useState<ThreadFiltersState>({
+		sortBy: sortBy as any,
+		tags: [],
+		prefixId: null,
+		solved: null,
+		bookmarked: false,
+		mine: false,
+		replied: false,
+		q: searchQuery
 	});
 
-	// Enhanced thread rendering with engagement
-	const renderThread = (thread: ThreadData, index: number) => (
-		<motion.div
-			key={thread.id}
-			initial={{ opacity: 0, y: 20 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{ delay: index * 0.05 }}
-			className="space-y-3"
-		>
-			<ThreadCard
-				thread={thread}
-				variant={layout === 'grid' ? 'compact' : 'default'}
-				onTip={(threadId, amount) => {}}
-				onBookmark={(threadId) => {}}
-			/>
+	// Update filters when search or sort changes
+	React.useEffect(() => {
+		setFilters((prev) => ({
+			...prev,
+			sortBy: sortBy as any,
+			q: searchQuery
+		}));
+	}, [sortBy, searchQuery]);
 
-			{thread.engagement && (
-				<CryptoEngagementBar
-					engagement={thread.engagement}
-					onTip={(amount) => {}}
-					onBookmark={() => {}}
-					showDetailed={false}
-				/>
-			)}
+	const handleFiltersChange = (newFilters: ThreadFiltersState) => {
+		setFilters(newFilters);
+	};
 
-			{thread.reactions && thread.reactions.length > 0 && (
-				<QuickReactions
-					reactions={thread.reactions}
-					onReact={(type) => {}}
-					compact={layout === 'compact'}
-					showTipIntegration={false}
-				/>
-			)}
-		</motion.div>
-	);
-
-	const breadcrumbItems = [
-		...(parentZone
-			? [
-					{
-						label: parentZone.name,
-						href: `/zones/${parentZone.slug}`,
-						icon: <span className="text-lg">{parentZone.icon}</span>
-					}
-				]
-			: []),
-		...(forum ? [{ label: forum.name, href: `/forums/${forum.slug}` }] : [])
-	];
+	const breadcrumbItems = React.useMemo(() => {
+		return createForumBreadcrumbs.forumInZone(parentZone ?? null, forum ?? null);
+	}, [parentZone, forum]);
 
 	const sortOptions = [
 		{ value: 'latest', label: 'Latest Activity' },
@@ -253,7 +157,7 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 			forumSlug={forumSlug || ''}
 			availableTags={[]}
 			availablePrefixes={[]}
-			onFiltersChange={(filters) => {}}
+			onFiltersChange={handleFiltersChange}
 		/>
 	);
 
@@ -273,31 +177,24 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 		<ResponsiveForumLayout
 			layout={layout}
 			onLayoutChange={setLayout}
-			breadcrumbs={<BreadcrumbNav items={breadcrumbItems} />}
+			breadcrumbs={<ForumBreadcrumbs items={breadcrumbItems} />}
 			header={forumHeader}
 			filters={showFilters ? threadFilters : undefined}
 			showFilters={showFilters}
 			className={className}
 		>
-			<AdaptiveForumGrid
-				items={threads}
-				renderItem={renderThread}
-				layout={layout}
-				columns={{
-					mobile: 1,
-					tablet: layout === 'grid' ? 2 : 1,
-					desktop: layout === 'grid' ? 3 : 1,
-					large: layout === 'grid' ? 4 : 1
-				}}
-				virtualized={threads.length > 20}
-				estimateSize={layout === 'compact' ? 200 : 300}
-				onLayoutChange={setLayout}
-				sortOptions={sortOptions}
-				onSortChange={setSortBy}
-				currentSort={sortBy}
-				isLoading={isLoading}
-				loadingSkeletons={8}
-			/>
+			{forum?.id && !isUsingFallback ? (
+				<ThreadList
+					forumId={forum.id}
+					forumSlug={forum.slug}
+					availableTags={[]}
+					filters={filters}
+				/>
+			) : (
+				<div className="text-center py-8 text-zinc-400">
+					{isUsingFallback ? 'Forum data is loading...' : 'No forum data available'}
+				</div>
+			)}
 		</ResponsiveForumLayout>
 	);
 });

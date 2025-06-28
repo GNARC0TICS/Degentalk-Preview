@@ -1,5 +1,30 @@
 import type { QueryFunction } from '@tanstack/react-query';
 
+// -------------------------------------------------------------
+// Canonical API helpers (shared across app)
+// -------------------------------------------------------------
+import {
+	apiRequest as baseApiRequest,
+	apiPost,
+	apiPut,
+	apiPatch,
+	apiDelete
+} from '@/lib/api-request';
+
+export { apiPost, apiPut, apiPatch, apiDelete };
+
+// Wrapper adds XP-gain detection but delegates actual HTTP to base implementation
+export const apiRequest = async <T>(config: Parameters<typeof baseApiRequest>[0]): Promise<T> => {
+	const data = await baseApiRequest<T>(config);
+	// Reuse existing helper for XP toast if available
+	try {
+		(checkForXpGain as any)?.(data);
+	} catch {
+		/* noop */
+	}
+	return data;
+};
+
 async function throwIfResNotOk(res: Response) {
 	if (!res.ok) {
 		const text = (await res.text()) || res.statusText;
@@ -38,97 +63,6 @@ interface XpGainResponse {
 		description?: string;
 	}>;
 }
-
-// IMPORTANT: This is the main apiRequest function used throughout the application
-/**
- * Make an API request with proper error handling
- */
-export const apiRequest = async <T>(requestConfig: {
-	url: string;
-	method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-	data?: any;
-	headers?: Record<string, string>;
-	params?: Record<string, string>;
-}): Promise<T> => {
-	const { url, method = 'GET', data, headers = {}, params } = requestConfig;
-
-	try {
-		// Construct URL with query parameters if provided
-		let fullUrl = url;
-		if (params) {
-			const queryParams = new URLSearchParams();
-			Object.entries(params).forEach(([key, value]) => {
-				if (value) queryParams.append(key, value);
-			});
-			const queryString = queryParams.toString();
-			if (queryString) {
-				fullUrl = `${url}${url.includes('?') ? '&' : '?'}${queryString}`;
-			}
-		}
-
-		const defaultHeaders = {
-			'Content-Type': 'application/json',
-			Accept: 'application/json'
-		};
-
-		// Construct fetch options
-		const fetchOptions: RequestInit = {
-			method,
-			headers: {
-				...defaultHeaders,
-				...headers
-			},
-			credentials: 'include' // Include cookies for authentication
-		};
-
-		// Add request body if data is provided and method is not GET
-		if (data && method !== 'GET') {
-			fetchOptions.body = JSON.stringify(data);
-		}
-
-		const res = await fetch(fullUrl, fetchOptions);
-
-		// Handle specific HTTP error codes
-		if (!res.ok) {
-			let errorMessage = `Request failed with status ${res.status}`;
-
-			try {
-				// Try to parse error message from response
-				const errorData = await res.json();
-				errorMessage = errorData.message || errorMessage;
-			} catch (parseError) {
-				// If we can't parse JSON, use the status text
-				errorMessage = `${res.status}: ${res.statusText || 'Unknown error'}`;
-			}
-
-			// Throw a structured error
-			const error = new Error(errorMessage);
-			(error as any).status = res.status;
-			(error as any).url = fullUrl;
-			throw error;
-		}
-
-		// Check if response is empty
-		const contentType = res.headers.get('content-type');
-		if (contentType && contentType.includes('application/json')) {
-			const data = await res.json();
-
-			// Check if this response contains XP gain information
-			checkForXpGain(data);
-
-			return data;
-		} else {
-			// For non-JSON responses (like 204 No Content)
-			return {} as T;
-		}
-	} catch (error: any) {
-		console.error(`API request error for ${url}:`, error);
-		if (error.name === 'AbortError') {
-			throw new Error('Request was cancelled');
-		}
-		throw error;
-	}
-};
 
 // Function to check for XP gain in API responses and trigger toast
 function checkForXpGain(data: any) {

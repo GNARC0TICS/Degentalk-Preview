@@ -100,7 +100,7 @@ export class CategoryService {
 					pluginData: forumStructure.pluginData
 				})
 				.from(forumStructure)
-				.leftJoin(threads, eq(forumStructure.id, threads.categoryId))
+				.leftJoin(threads, eq(forumStructure.id, threads.structureId))
 				.leftJoin(posts, eq(threads.id, posts.threadId))
 				.groupBy(forumStructure.id);
 
@@ -152,7 +152,7 @@ export class CategoryService {
 					pluginData: forumStructure.pluginData
 				})
 				.from(forumStructure)
-				.leftJoin(threads, eq(forumStructure.id, threads.categoryId))
+				.leftJoin(threads, eq(forumStructure.id, threads.structureId))
 				.leftJoin(posts, eq(threads.id, posts.threadId))
 				.where(eq(forumStructure.slug, slug))
 				.groupBy(forumStructure.id);
@@ -188,7 +188,7 @@ export class CategoryService {
 					lastPostAt: sql<Date | null>`MAX(${posts.createdAt})`
 				})
 				.from(forumStructure)
-				.leftJoin(threads, eq(forumStructure.id, threads.categoryId))
+				.leftJoin(threads, eq(forumStructure.id, threads.structureId))
 				.leftJoin(posts, eq(threads.id, posts.threadId))
 				.where(eq(forumStructure.id, categoryId))
 				.groupBy(forumStructure.id);

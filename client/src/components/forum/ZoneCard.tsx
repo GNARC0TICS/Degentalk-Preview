@@ -10,9 +10,7 @@ import {
 	ArrowRight,
 	Crown,
 	Sparkles,
-	Target,
-	Flame,
-	Hash
+	Folder
 } from 'lucide-react';
 
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -20,10 +18,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-import { useForumStructure } from '@/contexts/ForumStructureContext';
 import { CARD_STYLES } from '@/utils/card-constants';
-import { getZoneTheme, ZONE_THEMES } from '@/config/zoneThemes.config';
 import { featureFlags } from '@/config/featureFlags';
+import { SafeImage } from '@/components/ui/SafeImage';
+import { animationConfig } from '@/config/animation.config';
 
 export interface ZoneCardProps {
 	zone: {
@@ -80,6 +78,82 @@ export interface ZoneCardProps {
 	onEnter?: (zoneId: string) => void;
 }
 
+// Generate dynamic theme based on colorTheme
+const getDynamicTheme = (colorTheme: string) => {
+	// Map colorTheme to CSS classes and icon
+	const themeMap: Record<
+		string,
+		{
+			gradient: string;
+			border: string;
+			accent: string;
+			glow: string;
+			icon: typeof Folder;
+			color: string;
+		}
+	> = {
+		pit: {
+			gradient: 'from-red-500/20 to-orange-500/20',
+			border: 'border-red-500/30',
+			accent: 'text-red-400',
+			glow: 'shadow-red-500/20',
+			icon: TrendingUp,
+			color: '#ef4444'
+		},
+		mission: {
+			gradient: 'from-blue-500/20 to-cyan-500/20',
+			border: 'border-blue-500/30',
+			accent: 'text-blue-400',
+			glow: 'shadow-blue-500/20',
+			icon: Activity,
+			color: '#3b82f6'
+		},
+		casino: {
+			gradient: 'from-purple-500/20 to-pink-500/20',
+			border: 'border-purple-500/30',
+			accent: 'text-purple-400',
+			glow: 'shadow-purple-500/20',
+			icon: Sparkles,
+			color: '#8b5cf6'
+		},
+		briefing: {
+			gradient: 'from-amber-500/20 to-yellow-500/20',
+			border: 'border-amber-500/30',
+			accent: 'text-amber-400',
+			glow: 'shadow-amber-500/20',
+			icon: MessageSquare,
+			color: '#f59e0b'
+		},
+		archive: {
+			gradient: 'from-gray-500/20 to-slate-500/20',
+			border: 'border-gray-500/30',
+			accent: 'text-gray-400',
+			glow: 'shadow-gray-500/20',
+			icon: Folder,
+			color: '#6b7280'
+		},
+		shop: {
+			gradient: 'from-emerald-500/20 to-green-500/20',
+			border: 'border-emerald-500/30',
+			accent: 'text-emerald-400',
+			glow: 'shadow-emerald-500/20',
+			icon: Crown,
+			color: '#10b981'
+		},
+		// Default fallback
+		default: {
+			gradient: 'from-zinc-500/20 to-gray-500/20',
+			border: 'border-zinc-500/30',
+			accent: 'text-zinc-400',
+			glow: 'shadow-zinc-500/20',
+			icon: Folder,
+			color: '#71717a'
+		}
+	};
+
+	return themeMap[colorTheme] || themeMap.default;
+};
+
 // -------- Pure component that expects the new { zone } prop --------
 const ZoneCardPure = memo(
 	({
@@ -92,27 +166,12 @@ const ZoneCardPure = memo(
 		className,
 		onEnter
 	}: ZoneCardProps) => {
-		const { getZone } = useForumStructure();
-		const derivedZone = React.useMemo(() => {
-			if (zone && zone.forums && zone.forums.length > 0) return zone;
-			const z = getZone(zone.slug);
-			if (!z) return zone;
-			return {
-				...zone,
-				forums: z.forums.map((f) => ({
-					id: String(f.id),
-					name: f.name,
-					threadCount: f.threadCount,
-					isPopular: f.isPopular,
-					subforums: f.subforums?.map((s) => ({ id: s.id, name: s.name }))
-				}))
-			};
-		}, [zone, getZone]);
+		const derivedZone = zone;
 
 		const [isHovered, setIsHovered] = useState(false);
 
-		const themeKey = (zone as any).themeId || zone.colorTheme;
-		const theme = getZoneTheme(themeKey as keyof typeof ZONE_THEMES);
+		// Use dynamic theme generation instead of static ZONE_THEMES
+		const theme = getDynamicTheme(zone.colorTheme);
 		const IconComponent = theme.icon;
 
 		const cardSizes = {
@@ -144,11 +203,14 @@ const ZoneCardPure = memo(
 			<motion.div
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.3 }}
+				transition={{
+					duration: animationConfig.durations.enter,
+					ease: animationConfig.easings.standard
+				}}
 				onHoverStart={() => setIsHovered(true)}
 				onHoverEnd={() => setIsHovered(false)}
 			>
-				<Link href={`/zones/${derivedZone.slug}`}>
+				<Link href={`/zones/${derivedZone.slug}`} aria-label={`Enter zone ${derivedZone.name}`}>
 					<Card
 						className={cn(
 							'group relative cursor-pointer overflow-hidden backdrop-blur-sm',
@@ -175,9 +237,10 @@ const ZoneCardPure = memo(
 
 						{/* Background Image if available */}
 						{zone.bannerImage && (
-							<div
-								className="absolute inset-0 bg-cover bg-center opacity-20 transition-opacity duration-500 group-hover:opacity-30"
-								style={{ backgroundImage: `url(${zone.bannerImage})` }}
+							<SafeImage
+								src={zone.bannerImage}
+								alt={`${zone.name} banner`}
+								className="absolute inset-0 w-full h-full object-cover opacity-20 transition-opacity duration-500 group-hover:opacity-30"
 							/>
 						)}
 
@@ -239,7 +302,10 @@ const ZoneCardPure = memo(
 								<div className="flex items-center gap-3">
 									<motion.div
 										whileHover={{ scale: 1.1, rotate: 5 }}
-										transition={{ duration: 0.2 }}
+										transition={{
+											duration: animationConfig.durations.fast,
+											ease: animationConfig.easings.standard
+										}}
 										className={cn(
 											'w-12 h-12 rounded-full bg-zinc-800/50 backdrop-blur-sm border border-zinc-700/50',
 											'flex items-center justify-center text-2xl',
@@ -277,8 +343,11 @@ const ZoneCardPure = memo(
 									<div className="grid grid-cols-3 gap-3">
 										<motion.div
 											className="text-center p-2 rounded-lg bg-zinc-800/30 backdrop-blur-sm"
-											whileHover={{ scale: 1.05 }}
-											transition={{ duration: 0.2 }}
+											whileHover={{ scale: animationConfig.hoverScale }}
+											transition={{
+												duration: animationConfig.durations.fast,
+												ease: animationConfig.easings.standard
+											}}
 										>
 											<div className="flex items-center justify-center gap-1 text-xs text-zinc-400 mb-1">
 												<Users className="w-3 h-3" />
@@ -291,8 +360,12 @@ const ZoneCardPure = memo(
 
 										<motion.div
 											className="text-center p-2 rounded-lg bg-zinc-800/30 backdrop-blur-sm"
-											whileHover={{ scale: 1.05 }}
-											transition={{ duration: 0.2, delay: 0.1 }}
+											whileHover={{ scale: animationConfig.hoverScale }}
+											transition={{
+												duration: animationConfig.durations.fast,
+												delay: animationConfig.stagger,
+												ease: animationConfig.easings.standard
+											}}
 										>
 											<div className="flex items-center justify-center gap-1 text-xs text-zinc-400 mb-1">
 												<MessageSquare className="w-3 h-3" />
@@ -305,8 +378,12 @@ const ZoneCardPure = memo(
 
 										<motion.div
 											className="text-center p-2 rounded-lg bg-zinc-800/30 backdrop-blur-sm"
-											whileHover={{ scale: 1.05 }}
-											transition={{ duration: 0.2, delay: 0.2 }}
+											whileHover={{ scale: animationConfig.hoverScale }}
+											transition={{
+												duration: animationConfig.durations.fast,
+												delay: animationConfig.stagger * 2,
+												ease: animationConfig.easings.standard
+											}}
 										>
 											<div className="flex items-center justify-center gap-1 text-xs text-zinc-400 mb-1">
 												<Activity className="w-3 h-3" />
@@ -339,7 +416,10 @@ const ZoneCardPure = memo(
 									{zone.activity.lastActiveUser && (
 										<div className="flex items-center gap-2">
 											<Avatar className="h-6 w-6">
-												<AvatarImage src={zone.activity.lastActiveUser.avatarUrl} />
+												<AvatarImage
+													src={zone.activity.lastActiveUser.avatarUrl}
+													alt={zone.activity.lastActiveUser.username}
+												/>
 												<AvatarFallback className="text-xs bg-zinc-700">
 													{zone.activity.lastActiveUser.username.slice(0, 2).toUpperCase()}
 												</AvatarFallback>
@@ -363,7 +443,7 @@ const ZoneCardPure = memo(
 											initial={{ opacity: 0, height: 0 }}
 											animate={{ opacity: 1, height: 'auto' }}
 											exit={{ opacity: 0, height: 0 }}
-											transition={{ duration: 0.3 }}
+											transition={{ duration: animationConfig.durations.enter }}
 											className="space-y-2 overflow-hidden"
 										>
 											<div className="text-xs font-medium text-zinc-300 mb-2">Forums:</div>
@@ -372,7 +452,7 @@ const ZoneCardPure = memo(
 													key={forumItem.id}
 													initial={{ opacity: 0, x: -20 }}
 													animate={{ opacity: 1, x: 0 }}
-													transition={{ delay: index * 0.1 }}
+													transition={{ delay: index * animationConfig.stagger }}
 													className="flex items-center justify-between p-2 rounded bg-zinc-800/40 hover:bg-zinc-800/60 transition-colors"
 												>
 													<span className="text-sm text-zinc-300 truncate">{forumItem.name}</span>
@@ -392,7 +472,10 @@ const ZoneCardPure = memo(
 								<motion.div
 									initial={{ opacity: 0 }}
 									animate={{ opacity: isHovered ? 1 : 0 }}
-									transition={{ duration: 0.2 }}
+									transition={{
+										duration: animationConfig.durations.fast,
+										ease: animationConfig.easings.standard
+									}}
 									className="w-full"
 								>
 									<Button
@@ -407,6 +490,7 @@ const ZoneCardPure = memo(
 												handleEnter();
 											}
 										}}
+										aria-label={`Enter zone ${derivedZone.name}`}
 									>
 										<span>Enter {derivedZone.name}</span>
 										<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -421,112 +505,7 @@ const ZoneCardPure = memo(
 	}
 );
 
-// ---------------- Legacy compatibility wrapper -------------------
-function isLegacyProps(props: any): boolean {
-	return !('zone' in props);
-}
+ZoneCardPure.displayName = 'ZoneCard';
 
-const ZoneCardCompat = memo((props: any) => {
-	if (!isLegacyProps(props)) {
-		// Already in new format
-		return <ZoneCardPure {...props} />;
-	}
-
-	// Build zone object from legacy flat props
-	const {
-		id,
-		name,
-		slug,
-		description,
-		icon,
-		colorTheme = 'archive',
-		themeColor,
-		forumCount,
-		threadCount = 0,
-		postCount = 0,
-		activeUsersCount = 0,
-		lastActivityAt,
-		lastActivityUser,
-		forums = [],
-		hasXpBoost = false,
-		boostMultiplier = 1,
-		isEventActive = false,
-		eventData,
-		rarity = 'common',
-		className = '',
-		onClick,
-		layout = 'vertical',
-		showForumPreviews = false,
-		...rest
-	} = props;
-
-	const zoneObj = {
-		id: String(id),
-		name,
-		slug,
-		description,
-		icon,
-		colorTheme,
-		bannerImage: undefined,
-		stats: {
-			activeUsers: activeUsersCount,
-			totalThreads: threadCount,
-			totalPosts: postCount,
-			todaysPosts: 0
-		},
-		features: {
-			hasXpBoost,
-			boostMultiplier,
-			isEventActive,
-			isPremium: rarity !== 'common'
-		},
-		activity: lastActivityAt
-			? {
-					trendingThreads: 0,
-					momentum: 'stable' as const,
-					lastActiveUser: lastActivityUser
-						? {
-								username: lastActivityUser.username,
-								avatarUrl: lastActivityUser.activeAvatarUrl || lastActivityUser.avatarUrl,
-								timestamp: lastActivityAt.toISOString()
-							}
-						: undefined
-				}
-			: undefined,
-		forums: forums?.map((f: any) => ({
-			id: String(f.id),
-			name: f.name,
-			threadCount: f.threadCount,
-			isPopular: f.isPopular,
-			subforums: f.subforums?.map((s) => ({ id: s.id, name: s.name }))
-		}))
-	};
-
-	const enhancedLayout = layout === 'horizontal' ? 'compact' : 'default';
-	let variant: 'default' | 'premium' | 'event' = 'default';
-	if (isEventActive) variant = 'event';
-	else if (rarity !== 'common') variant = 'premium';
-
-	const handleEnter = () => {
-		onClick?.();
-	};
-
-	return (
-		<ZoneCardPure
-			zone={zoneObj}
-			layout={enhancedLayout}
-			variant={variant}
-			showStats={true}
-			showPreview={showForumPreviews}
-			className={className}
-			onEnter={handleEnter}
-			{...rest}
-		/>
-	);
-});
-
-ZoneCardPure.displayName = 'ZoneCardPure';
-ZoneCardCompat.displayName = 'ZoneCard';
-
-export default ZoneCardCompat;
-export { ZoneCardCompat as ZoneCard, ZoneCardPure };
+export default ZoneCardPure;
+export { ZoneCardPure as ZoneCard };

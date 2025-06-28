@@ -122,9 +122,6 @@ function App() {
 						{/* Auth Routes */}
 						<Route path="/auth" component={AuthPage} />
 
-						{/* Protected Main Routes */}
-						<ProtectedRoute path="/" component={HomePage} />
-
 						{/* Forum Structure Routes */}
 						{/* Updated path to match singular '/forum/:slug' */}
 						<ProtectedRoute path="/forums/:slug" component={ForumBySlugPage} />
@@ -509,6 +506,9 @@ function App() {
 						{import.meta.env.MODE === 'development' && (
 							<ProtectedRoute path="/ui-playground" component={UIPlaygroundPage} />
 						)}
+
+						{/* Root route LAST to avoid shadowing */}
+						<ProtectedRoute path="/" component={HomePage} />
 
 						{/* 404 Route - Render the custom NotFoundPage component */}
 						<Route component={NotFoundPage} />

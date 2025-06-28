@@ -15,16 +15,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { forumCategories } from '@schema'; // Adjusted path
-import type { ForumCategoryWithStats } from '@shared/types'; // Keep if used elsewhere, or combine if ForumCategoryWithStats extends ForumCategory
 import { useLocation } from 'wouter';
 import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
 import { ROUTES } from '@/constants/routes';
 import { ProfileCard } from '@/components/widgets/ProfileCard';
 import { useAuth } from '@/hooks/use-auth';
-
-// Define ForumCategory type from schema
-export type ForumCategory = typeof forumCategories.$inferSelect;
 
 // Helper function to determine icon for a category
 function getCategoryEmoji(name: string): string {
@@ -51,12 +46,11 @@ function getCategoryEmoji(name: string): string {
 }
 
 type SidebarProps = {
-	categories?: ForumCategory[] | ForumCategoryWithStats[];
 	activeCategoryId?: number;
 	forumId?: number;
 };
 
-export function Sidebar({ categories, activeCategoryId, forumId }: SidebarProps) {
+export function Sidebar({ activeCategoryId, forumId }: SidebarProps) {
 	const [location] = useLocation();
 	const { isAuthenticated } = useAuth();
 

@@ -39,15 +39,8 @@ router.get('/:username', async (req: Request, res: Response) => {
 			return res.status(400).json({ message: 'Username is required' });
 		}
 
-		// Fetch user data using Drizzle ORM
-		const user = await db.query.users.findFirst({
-			where: eq(users.username, username),
-			with: {
-				activeFrame: true, // Eager load active frame
-				activeTitle: true, // Eager load active title
-				activeBadge: true // Eager load active badge
-			}
-		});
+		// Fetch user data using simple select (avoiding relational issues)
+		const [user] = await db.select().from(users).where(eq(users.username, username));
 
 		if (!user) {
 			return res.status(404).json({ message: 'User not found' });
@@ -55,29 +48,14 @@ router.get('/:username', async (req: Request, res: Response) => {
 
 		const userId = user.id;
 
-		// Fetch user's inventory
-		const inventory = await db.query.userInventory.findMany({
-			where: eq(userInventory.userId, userId),
-			with: {
-				product: true
-			}
-		});
+		// Fetch user's inventory (simplified)
+		const inventory = await db.select().from(userInventory).where(eq(userInventory.userId, userId));
 
-		// Fetch user's badges
-		const badges = await db.query.userBadges.findMany({
-			where: eq(userBadges.userId, userId),
-			with: {
-				badge: true
-			}
-		});
+		// Fetch user's badges (simplified)
+		const badges = await db.select().from(userBadges).where(eq(userBadges.userId, userId));
 
-		// Fetch user's titles
-		const titles = await db.query.userTitles.findMany({
-			where: eq(userTitles.userId, userId),
-			with: {
-				title: true
-			}
-		});
+		// Fetch user's titles (simplified)
+		const titles = await db.select().from(userTitles).where(eq(userTitles.userId, userId));
 
 		// Get thread count
 		const threadCountResult = await db

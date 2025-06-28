@@ -52,8 +52,8 @@ router.post('/', requireAuth, async (req: Request, res: Response) => {
 		const newPost = await postService.createPost({
 			content: validatedData.content,
 			threadId: validatedData.threadId,
-			authorId: userId,
-			parentPostId: validatedData.replyToPostId
+			userId: userId,
+			replyToPostId: validatedData.replyToPostId
 		});
 
 		res.status(201).json({
@@ -95,8 +95,7 @@ router.put('/:id', requireAuth, async (req: Request, res: Response) => {
 		// TODO: Add permission check - only post author or moderator can edit
 
 		const updatedPost = await postService.updatePost(postId, {
-			content: validatedData.content,
-			editReason: validatedData.editReason
+			content: validatedData.content
 		});
 
 		res.json({
