@@ -44,7 +44,7 @@ const DGT_PACKAGES = [
 	{
 		id: 'whale',
 		name: 'Whale Pack',
-		description: 'For serious DegenTalk power users',
+		description: 'For serious Degentalk power users',
 		dgt_amount: 3000,
 		usd_price: 99.99,
 		discount_percentage: 25,

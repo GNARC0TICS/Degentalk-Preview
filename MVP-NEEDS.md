@@ -1,10 +1,10 @@
-# DegenTalk: MVP Beta Launch - Critical Needs
+# Degentalk: MVP Beta Launch - Critical Needs
 
 ## 1. ✅ MVP Overview
 
-DegenTalk is a next-gen crypto-native forum and social platform designed for cryptocurrency enthusiasts, traders, developers, and the terminally online. It combines a feature-rich discussion board with real-time social mechanics, a platform-exclusive token (**DGT**), and a gamified **XP** economy that rewards engagement.
+Degentalk is a next-gen crypto-native forum and social platform designed for cryptocurrency enthusiasts, traders, developers, and the terminally online. It combines a feature-rich discussion board with real-time social mechanics, a platform-exclusive token (**DGT**), and a gamified **XP** economy that rewards engagement.
 
-**Core Features for Beta Launch (as per `projectBrief.md` & `DegenTalk XP & DGT Economy Manifesto` - Phase 1 & 1.5):**
+**Core Features for Beta Launch (as per `projectBrief.md` & `Degentalk XP & DGT Economy Manifesto` - Phase 1 & 1.5):**
 
 - **User Authentication:** Register, login, logout.
 - **Forum Core:** Create/Edit/View Threads & Posts, Rich Text Editor (Tiptap JSON based).
@@ -302,4 +302,4 @@ DegenTalk is a next-gen crypto-native forum and social platform designed for cry
 
 ---
 
-This document reflects the updated MVP scope. Aggressively validate each point against the DegenTalk XP & DGT Economy Manifesto and desired beta functionality.
+This document reflects the updated MVP scope. Aggressively validate each point against the Degentalk XP & DGT Economy Manifesto and desired beta functionality.

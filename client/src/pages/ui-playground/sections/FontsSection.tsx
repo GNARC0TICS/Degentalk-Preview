@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useState } from 'react';
 import { PlaygroundSection } from '@/pages/dev';
 import { fontConfigs, fontCombinations, type FontConfig } from '@/config/fonts.config';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';

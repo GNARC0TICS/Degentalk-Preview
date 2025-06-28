@@ -64,7 +64,7 @@ export function DisplayPreferences({ user }: DisplayPreferencesProps) {
 		<div>
 			<div className="mb-6">
 				<h2 className="text-2xl font-bold mb-2">Display Preferences</h2>
-				<p className="text-zinc-400">Customize how DegenTalk looks for you</p>
+				<p className="text-zinc-400">Customize how Degentalk looks for you</p>
 			</div>
 
 			{/* Theme Preferences */}

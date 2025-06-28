@@ -1,7 +1,9 @@
 import React from 'react';
 import { useParams, Link } from 'wouter';
 import { ThreadCard } from '@/components/forum/ThreadCard';
-import { useThreadsByTag, useTags } from '@/features/forum/hooks/useForumQueries';
+import { useTags } from '@/features/forum/hooks/useForumQueries';
+import { useQuery } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/queryClient';
 import { SiteHeader } from '@/components/header';
 import { SiteFooter } from '@/components/footer';
 import { Button } from '@/components/ui/button';
@@ -11,22 +13,36 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Hash, AlertTriangle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Pagination } from '@/components/ui/pagination';
+import type { ThreadDisplay, ThreadsApiResponse } from '@/types/thread.types';
 
 export default function TagPage() {
 	const { tagSlug } = useParams();
 	const [page, setPage] = React.useState(1);
 	const limit = 20;
 
-	// Fetch threads with this tag
+	// Fetch threads with this tag using unified thread API
 	const {
 		data: threadsData,
 		isLoading: isLoadingThreads,
 		isError: isThreadsError,
 		error: threadsError
-	} = useThreadsByTag(tagSlug, {
-		page,
-		limit,
-		sortBy: 'latest'
+	} = useQuery({
+		queryKey: [`/api/forum/threads?tags=${tagSlug}&page=${page}&limit=${limit}&sortBy=newest`],
+		queryFn: async ({ queryKey }) => {
+			const url = queryKey[0] as string;
+			const response = await apiRequest<ThreadsApiResponse>({ url });
+
+			// Handle different response formats (same as ForumPage used to do)
+			if (Array.isArray(response))
+				return {
+					threads: response as ThreadDisplay[],
+					pagination: { page, limit, totalThreads: response.length, totalPages: 1 }
+				};
+			if (response?.data?.threads) return response.data;
+			if (response?.threads) return response;
+			return { threads: [], pagination: { page, limit, totalThreads: 0, totalPages: 0 } };
+		},
+		enabled: !!tagSlug
 	});
 
 	// Also fetch all tags to find the current tag's name
@@ -130,32 +146,7 @@ export default function TagPage() {
 
 						<div className="space-y-4">
 							{threadsData.threads.map((thread) => (
-								<ThreadCard
-									key={thread.id}
-									thread={{
-										id: thread.id,
-										title: thread.title,
-										slug: thread.slug, // Assuming thread object from useThreadsByTag has slug
-										createdAt: thread.createdAt,
-										lastPostAt: thread.lastPostAt,
-										viewCount: thread.viewCount,
-										postCount: thread.postCount,
-										user: thread.user, // Assuming thread.user matches Partial<User> & { username, id, avatarUrl?, activeAvatarUrl?, role? }
-										isSticky: thread.isSticky,
-										isLocked: thread.isLocked,
-										isFeatured: thread.isFeatured, // For isAnnouncement in ThreadCard
-										firstPostLikeCount: thread.firstPostLikeCount,
-										// Fields that might not be on thread object from useThreadsByTag, relying on ThreadCardPropsData optionals
-										hasBookmarked: (thread as any).hasBookmarked, // Cast to any if not on type, will be undefined if not present
-										isSolved: thread.isSolved,
-										solvingPostId: thread.solvingPostId,
-										tags: (thread as any).tags, // ThreadWithUser doesn't have tags directly
-										category: undefined, // ThreadWithUser only has categoryId, not the full object.
-										prefix: undefined, // ThreadWithUser only has prefixId, not the full object.
-										preview: (thread as any).preview || '' // ThreadWithUser doesn't have preview
-										// hotScore, isHidden, dgtStaked, updatedAt will be undefined
-									}}
-								/>
+								<ThreadCard key={thread.id} thread={thread} />
 							))}
 						</div>
 

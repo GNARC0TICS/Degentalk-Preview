@@ -52,7 +52,13 @@ export function ProfilePreferences({ user }: ProfilePreferencesProps) {
 	};
 
 	const handleSubmit = () => {
-		updateProfileSettings.mutate(formData);
+		const cleaned = {
+			...formData,
+			discordHandle: formData.discordHandle?.replace(/^@/, ''),
+			twitterHandle: formData.twitterHandle?.replace(/^@/, ''),
+			telegramHandle: formData.telegramHandle?.replace(/^@/, '')
+		};
+		updateProfileSettings.mutate(cleaned);
 	};
 
 	// Placeholder for image upload function

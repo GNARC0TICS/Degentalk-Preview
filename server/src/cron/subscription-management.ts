@@ -1,0 +1,114 @@
+import cron from 'node-cron';
+import { subscriptionService } from '../domains/subscriptions/subscription.service';
+import { logger } from '../core/logger';
+
+/**
+ * Initialize cron jobs for subscription management
+ */
+export function initializeSubscriptionJobs() {
+	// Monthly cosmetic drops for Degen Pass subscribers
+	// Runs on the 1st of every month at 12:00 PM
+	cron.schedule('0 12 1 * *', async () => {
+		try {
+			logger.info('SUBSCRIPTION_CRON', 'Running monthly cosmetic drop job');
+
+			const results = await subscriptionService.processMonthlyCosmetics();
+
+			logger.info(
+				'SUBSCRIPTION_CRON',
+				`Monthly cosmetic drop completed: ${results.processed} processed, ${results.failed} failed`
+			);
+
+			// Log failures for admin attention
+			if (results.failed > 0) {
+				const failedUsers = results.details
+					.filter((d) => !d.success)
+					.map((d) => `${d.userId}: ${d.error}`)
+					.join(', ');
+
+				logger.error('SUBSCRIPTION_CRON', `Failed cosmetic drops for users: ${failedUsers}`);
+			}
+		} catch (error) {
+			logger.error(
+				'SUBSCRIPTION_CRON',
+				'Error running monthly cosmetic drop job:',
+				error instanceof Error ? error.message : String(error)
+			);
+		}
+	});
+
+	// Process subscription renewals and expirations
+	// Runs daily at 6:00 AM to check for expired subscriptions
+	cron.schedule('0 6 * * *', async () => {
+		try {
+			logger.info('SUBSCRIPTION_CRON', 'Running subscription renewal job');
+
+			const expiredSubscriptions = await subscriptionService.getExpiredSubscriptions();
+
+			let renewed = 0;
+			let failed = 0;
+
+			for (const subscription of expiredSubscriptions) {
+				try {
+					if (subscription.autoRenew) {
+						await subscriptionService.renewSubscription(subscription.id);
+						renewed++;
+						logger.info(
+							'SUBSCRIPTION_CRON',
+							`Auto-renewed subscription ${subscription.id} for user ${subscription.userId}`
+						);
+					} else {
+						// Mark as expired if auto-renew is disabled
+						// This would be handled in the renewSubscription method by marking as expired
+						logger.info(
+							'SUBSCRIPTION_CRON',
+							`Subscription ${subscription.id} expired for user ${subscription.userId} (auto-renew disabled)`
+						);
+					}
+				} catch (error) {
+					failed++;
+					logger.error(
+						'SUBSCRIPTION_CRON',
+						`Failed to renew subscription ${subscription.id} for user ${subscription.userId}:`,
+						error instanceof Error ? error.message : String(error)
+					);
+				}
+			}
+
+			logger.info(
+				'SUBSCRIPTION_CRON',
+				`Subscription renewal completed: ${renewed} renewed, ${failed} failed from ${expiredSubscriptions.length} expired`
+			);
+		} catch (error) {
+			logger.error(
+				'SUBSCRIPTION_CRON',
+				'Error running subscription renewal job:',
+				error instanceof Error ? error.message : String(error)
+			);
+		}
+	});
+
+	// Weekly subscription analytics and cleanup
+	// Runs every Sunday at 2:00 AM
+	cron.schedule('0 2 * * 0', async () => {
+		try {
+			logger.info('SUBSCRIPTION_CRON', 'Running weekly subscription analytics job');
+
+			// This could include:
+			// - Generating subscription analytics reports
+			// - Cleaning up old cosmetic drop records
+			// - Sending subscription status emails
+			// - Processing refunds for failed renewals
+
+			logger.info('SUBSCRIPTION_CRON', 'Weekly subscription analytics completed');
+		} catch (error) {
+			logger.error(
+				'SUBSCRIPTION_CRON',
+				'Error running weekly subscription analytics:',
+				error instanceof Error ? error.message : String(error)
+			);
+		}
+	});
+
+	logger.info('SUBSCRIPTION_CRON', 'Subscription management cron jobs initialized');
+}

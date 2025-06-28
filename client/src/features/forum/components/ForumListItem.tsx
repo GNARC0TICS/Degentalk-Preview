@@ -1,10 +1,11 @@
 import { Link } from 'wouter';
-import { MessageSquare, CornerDownRight, Lock, Shield, Star, Crown } from 'lucide-react';
+import { MessageSquare, CornerDownRight, Lock, Shield, Star, Crown, Flame } from 'lucide-react';
 import type { MergedForum } from '@/contexts/ForumStructureContext';
 import { useState, useEffect } from 'react';
 import { StatChip } from '@/components/ui/StatChip';
 import { Badge } from '@/components/ui/badge';
 import { usePermission } from '@/hooks/usePermission';
+import { CARD_STYLES } from '@/utils/card-constants';
 import { useAuth } from '@/hooks/use-auth';
 
 interface ForumListItemProps {
@@ -73,7 +74,7 @@ export function ForumListItem({
 				description: 'Higher level required'
 			};
 		}
-		if (!user) {
+		if (!user && forum.rules?.allowPosting === false) {
 			return {
 				icon: Lock,
 				label: 'Sign in Required',
@@ -89,8 +90,10 @@ export function ForumListItem({
 	// Main content for the forum item (parent or subforum)
 	const forumItemContent = (
 		<div
-			className={`block transition-all duration-300 hover:scale-[1.02] ${
-				isParentForum ? 'p-4 bg-zinc-900/60 backdrop-blur-md' : 'p-3 bg-zinc-900/40'
+			className={`block ${CARD_STYLES.hover.subtle} ${
+				isParentForum
+					? `p-4 ${CARD_STYLES.background.primary} backdrop-blur-md`
+					: `p-3 ${CARD_STYLES.background.secondary}`
 			} ${canPost ? 'hover:bg-zinc-900/80' : 'opacity-75 cursor-not-allowed'}`}
 			style={{
 				borderLeft: isParentForum ? `3px solid ${accentColor}` : 'none',
@@ -137,6 +140,12 @@ export function ForumListItem({
 							isAnimating={isAnimating}
 						/>
 
+						{forum.isPopular && (
+							<Badge className="bg-red-600 text-white text-[10px] px-2 py-0.5 flex items-center gap-1">
+								<Flame className="w-3 h-3" /> HOT
+							</Badge>
+						)}
+
 						{/* Access Level Badge */}
 						{accessInfo && (
 							<Badge
@@ -155,8 +164,8 @@ export function ForumListItem({
 		</div>
 	);
 
-	// Replace canHaveThreads check with permission
-	const canHaveThreads = canPost && forum.canHaveThreads !== false;
+	// Navigation should be allowed even if posting is disabled
+	const canHaveThreads = forum.canHaveThreads !== false;
 
 	return (
 		<div className={`${isParentForum ? 'mb-2' : ''}`}>

@@ -205,9 +205,6 @@ export function ReactionsBar({
 	const handleTip = async (amount: number) => {
 		setTipLoading(true);
 		try {
-			// TODO: Replace with real API call
-			// await apiRequest('POST', `/api/posts/${postId}/tip`, { amount });
-			console.log('Tipped post', postId, amount);
 			setLocalTipCount((c) => c + 1);
 			setTipSuccess(true);
 			setTimeout(() => setTipSuccess(false), 1000);

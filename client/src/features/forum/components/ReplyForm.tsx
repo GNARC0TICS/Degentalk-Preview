@@ -7,6 +7,9 @@ import { LoadingSpinner } from '@/components/ui/loader';
 import { useAuth } from '@/hooks/use-auth';
 import { useLocation } from 'wouter';
 import { X, CornerDownRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useBreakpoint } from '@/hooks/useMediaQuery';
+import { getAdaptiveConfig } from '@/utils/adaptiveSpacing';
 import type { PostWithUser } from '@db_types/forum.types';
 
 interface ReplyFormProps {
@@ -37,6 +40,16 @@ export function ReplyForm({
 	const [content, setContent] = useState('');
 	const [editorContent, setEditorContent] = useState<any>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const breakpoint = useBreakpoint();
+
+	// Get adaptive spacing configuration
+	const adaptiveConfig = getAdaptiveConfig({
+		spacing: 'sm',
+		padding: 'md',
+		typography: 'body',
+		touchTarget: 'md',
+		density: breakpoint.isMobile ? 'compact' : 'comfortable'
+	});
 
 	// Generate quote content when replying to a specific post with quote
 	useEffect(() => {
@@ -106,13 +119,17 @@ ${postContent}
 
 	if (!isAuthenticated) {
 		return (
-			<Card className="mb-4">
-				<CardContent className="p-4">
-					<p className="text-center text-sm text-muted-foreground">
+			<Card className={cn('mb-4', adaptiveConfig.spacing)}>
+				<CardContent className={cn(adaptiveConfig.padding)}>
+					<p className={cn('text-center text-muted-foreground', adaptiveConfig.typography)}>
 						Please{' '}
 						<Button
 							variant="link"
-							className="p-0 h-auto"
+							className={cn(
+								'p-0 h-auto',
+								// Better touch target for mobile
+								breakpoint.isMobile && 'min-h-[44px] inline-flex items-center'
+							)}
 							onClick={() =>
 								setLocation(`/auth?returnUrl=${encodeURIComponent(window.location.pathname)}`)
 							}
@@ -127,18 +144,30 @@ ${postContent}
 	}
 
 	return (
-		<Card className="mb-4">
+		<Card className={cn('mb-4', adaptiveConfig.spacing)}>
 			{(isReplying || replyToPost) && (
-				<CardHeader className="px-4 py-3 flex flex-row items-center justify-between bg-zinc-900/80 border-b border-zinc-800">
-					<div className="flex items-center">
-						<CornerDownRight className="h-4 w-4 mr-2" />
-						<span className="text-sm font-medium">
+				<CardHeader
+					className={cn(
+						'flex flex-row items-center justify-between bg-zinc-900/80 border-b border-zinc-800',
+						adaptiveConfig.padding
+					)}
+				>
+					<div className="flex items-center min-w-0 flex-1">
+						<CornerDownRight
+							className={cn('mr-2 flex-shrink-0', breakpoint.isMobile ? 'h-4 w-4' : 'h-4 w-4')}
+						/>
+						<span className={cn('font-medium truncate', adaptiveConfig.typography)}>
 							{replyToPost ? `Replying to ${replyToPost.user?.username}` : 'Add a reply'}
 						</span>
 					</div>
 					{isReplying && (
-						<Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={handleCancel}>
-							<X className="h-4 w-4" />
+						<Button
+							variant="ghost"
+							size={breakpoint.isMobile ? 'default' : 'sm'}
+							className={cn('p-0 flex-shrink-0', adaptiveConfig.touchTarget)}
+							onClick={handleCancel}
+						>
+							<X className={cn(breakpoint.isMobile ? 'h-5 w-5' : 'h-4 w-4')} />
 							<span className="sr-only">Cancel</span>
 						</Button>
 					)}
@@ -146,38 +175,66 @@ ${postContent}
 			)}
 
 			<form onSubmit={handleSubmit}>
-				<CardContent className="p-4">
+				<CardContent className={cn(adaptiveConfig.padding)}>
 					{showRichEditor ? (
 						<RichTextEditor
 							content={editorContent}
 							onChange={setEditorContent}
 							disabled={isSubmitting}
 							placeholder={placeholder}
-							className="min-h-[120px]"
+							className={cn(
+								'resize-none',
+								// Adaptive height based on device
+								breakpoint.isMobile ? 'min-h-[100px]' : 'min-h-[120px]'
+							)}
 						/>
 					) : (
 						<Textarea
 							value={content}
 							onChange={(e) => setContent(e.target.value)}
 							placeholder={placeholder}
-							rows={4}
+							rows={breakpoint.isMobile ? 3 : 4}
 							disabled={isSubmitting}
-							className="resize-none"
+							className={cn(
+								'resize-none',
+								adaptiveConfig.typography,
+								// Mobile: Larger text for better readability
+								breakpoint.isMobile && 'text-base'
+							)}
 						/>
 					)}
 				</CardContent>
 
-				<CardFooter className="px-4 py-3 flex justify-end space-x-2 border-t">
+				<CardFooter
+					className={cn(
+						'flex justify-end border-t',
+						adaptiveConfig.padding,
+						// Mobile: Full-width buttons
+						breakpoint.isMobile ? 'flex-col space-y-2' : 'flex-row space-x-2'
+					)}
+				>
 					{isReplying && (
-						<Button type="button" variant="ghost" onClick={handleCancel} disabled={isSubmitting}>
+						<Button
+							type="button"
+							variant="ghost"
+							onClick={handleCancel}
+							disabled={isSubmitting}
+							className={cn(breakpoint.isMobile && 'w-full', adaptiveConfig.touchTarget)}
+						>
 							Cancel
 						</Button>
 					)}
 
-					<Button type="submit" disabled={isSubmitting || (!content && !editorContent)}>
+					<Button
+						type="submit"
+						disabled={isSubmitting || (!content && !editorContent)}
+						className={cn(breakpoint.isMobile && 'w-full', adaptiveConfig.touchTarget)}
+					>
 						{isSubmitting ? (
 							<>
-								<LoadingSpinner className="mr-2 h-4 w-4" />
+								<LoadingSpinner
+									className={cn('mr-2', breakpoint.isMobile ? 'h-5 w-5' : 'h-4 w-4')}
+								/>
 								Posting...
 							</>
 						) : (

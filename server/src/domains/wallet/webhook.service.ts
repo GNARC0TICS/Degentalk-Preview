@@ -139,7 +139,7 @@ export class WebhookService {
 				isFlaggedRisky
 			} = payload;
 
-			// Find DegenTalk user from CCPayment UID
+			// Find Degentalk user from CCPayment UID
 			const userMapping = await db
 				.select()
 				.from(ccpaymentUsers)
@@ -251,7 +251,7 @@ export class WebhookService {
 				isFlaggedRisky
 			} = payload;
 
-			// Find DegenTalk user from CCPayment UID
+			// Find Degentalk user from CCPayment UID
 			const userMapping = await db
 				.select()
 				.from(ccpaymentUsers)
@@ -330,7 +330,7 @@ export class WebhookService {
 				failureReason
 			} = payload;
 
-			// Find DegenTalk users from CCPayment UIDs
+			// Find Degentalk users from CCPayment UIDs
 			const [fromUserMapping, toUserMapping] = await Promise.all([
 				db
 					.select()
@@ -410,7 +410,7 @@ export class WebhookService {
 				failureReason
 			} = payload;
 
-			// Find DegenTalk user from CCPayment UID
+			// Find Degentalk user from CCPayment UID
 			const userMapping = await db
 				.select()
 				.from(ccpaymentUsers)

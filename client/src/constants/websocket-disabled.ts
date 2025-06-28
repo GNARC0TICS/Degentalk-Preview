@@ -11,4 +11,4 @@
 export const WEBSOCKET_DISABLED = true;
 
 // Additional utility to log WebSocket state on import
-console.log('📡 WebSocket functionality is DISABLED across the application');
+// WebSocket functionality is DISABLED across the application

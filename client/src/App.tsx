@@ -11,7 +11,7 @@ import WalletPage from './pages/wallet';
 import HomePage from './pages/home';
 import ForumsPage from './pages/forums';
 // Import forum system pages
-import ForumBySlugPage from './pages/forums/[forum_slug].tsx';
+import ForumBySlugPage from './pages/forums/[forumSlug].tsx';
 import ForumSearchPage from './pages/forums/search.tsx'; // Import the new search page
 import ZoneBySlugPage from './pages/zones/[slug].tsx'; // Added import for Zone page
 import ThreadPage from './pages/threads/BBCodeThreadPage.tsx';
@@ -121,9 +121,6 @@ function App() {
 					<Switch>
 						{/* Auth Routes */}
 						<Route path="/auth" component={AuthPage} />
-
-						{/* Protected Main Routes */}
-						<ProtectedRoute path="/" component={HomePage} />
 
 						{/* Forum Structure Routes */}
 						{/* Updated path to match singular '/forum/:slug' */}
@@ -510,13 +507,18 @@ function App() {
 							<ProtectedRoute path="/ui-playground" component={UIPlaygroundPage} />
 						)}
 
+						{/* Root route LAST to avoid shadowing */}
+						<ProtectedRoute path="/" component={HomePage} />
+
 						{/* 404 Route - Render the custom NotFoundPage component */}
 						<Route component={NotFoundPage} />
 					</Switch>
 				</React.Suspense>
 				<Toaster />
 				{/* Conditionally render the DevRoleSwitcher */}
-				{import.meta.env.MODE === 'development' && <DevRoleSwitcher />}
+				{import.meta.env.MODE === 'development' && import.meta.env.VITE_FORCE_AUTH !== 'true' && (
+					<DevRoleSwitcher />
+				)}
 				{import.meta.env.MODE === 'development' && <DevPlaygroundShortcut />}
 			</div>
 		</HeaderProvider>

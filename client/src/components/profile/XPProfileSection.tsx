@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useXP } from '@/hooks/useXP';
 import { XPProgressBar } from '@/components/economy/xp/XPProgressBar';
 import { XPHistoryLog } from '@/components/economy/xp/XPHistoryLog';
@@ -19,13 +19,14 @@ type XPProfileSectionProps = {
 export function XPProfileSection({ userId, className }: XPProfileSectionProps) {
 	const { xpData, xpHistory, isLoading, equipTitle } = useXP(userId);
 
-	// Demo state for level up notification
+	// Level-up notification (controlled via XP hooks in future)
 	const [showLevelUp, setShowLevelUp] = useState(false);
 
-	// Function to trigger level up notification for demo purposes
-	const triggerLevelUpDemo = () => {
-		setShowLevelUp(true);
-	};
+	useEffect(() => {
+		if (xpData?.pendingRewards) {
+			setShowLevelUp(true);
+		}
+	}, [xpData?.pendingRewards]);
 
 	if (isLoading) {
 		return (
@@ -50,15 +51,7 @@ export function XPProfileSection({ userId, className }: XPProfileSectionProps) {
 					showProBadge={xpData.level >= 25}
 				/>
 
-				{/* Debug button for demo purposes - remove in production */}
-				<div className="mt-2 text-right">
-					<button
-						onClick={triggerLevelUpDemo}
-						className="text-xs text-zinc-500 hover:text-zinc-400"
-					>
-						(Demo: Trigger level-up notification)
-					</button>
-				</div>
+				{/* Debug button removed */}
 			</div>
 
 			{/* Tabs for XP history, badges, and titles */}
@@ -86,20 +79,15 @@ export function XPProfileSection({ userId, className }: XPProfileSectionProps) {
 				</TabsContent>
 			</Tabs>
 
-			{/* Level up notification */}
-			<LevelUpNotification
-				level={xpData.level}
-				isVisible={showLevelUp}
-				onClose={() => setShowLevelUp(false)}
-				rewards={{
-					title: 'Forum Explorer',
-					badge: {
-						name: 'Level 5 Achieved',
-						imageUrl: '/images/badges/level-5.png'
-					},
-					dgt: 50
-				}}
-			/>
+			{/* Level up notification placeholder (hook-driven) */}
+			{showLevelUp && (
+				<LevelUpNotification
+					level={xpData.level}
+					isVisible={showLevelUp}
+					onClose={() => setShowLevelUp(false)}
+					rewards={xpData.pendingRewards}
+				/>
+			)}
 		</div>
 	);
 }

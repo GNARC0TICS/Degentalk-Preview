@@ -1,0 +1,118 @@
+import { useQuery } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/queryClient';
+
+export interface ExtendedProfileStats {
+	// Core profile data
+	id: string;
+	username: string;
+	avatarUrl: string | null;
+	bio: string | null;
+	level: number;
+	xp: number;
+	nextLevelXp: number;
+	joinedAt: string;
+
+	// Reputation & trust
+	clout: number;
+	reputation: number;
+	dailyXpGained: number;
+	lastXpGainDate: string | null;
+
+	// Activity metrics
+	totalPosts: number;
+	totalThreads: number;
+	totalLikes: number;
+	totalTips: number;
+	threadViewCount: number;
+	posterRank: number | null;
+	tipperRank: number | null;
+	likerRank: number | null;
+
+	// Wallet & economy
+	dgtBalance: number;
+	walletBalanceUSDT: number;
+	walletPendingWithdrawals: number;
+	dgtPoints: number;
+
+	// Social graph
+	followersCount: number;
+	followingCount: number;
+	friendsCount: number;
+	friendRequestsSent: number;
+	friendRequestsReceived: number;
+
+	// Subscriptions & roles
+	activeSubscription: {
+		type: string;
+		status: string;
+		endDate: string | null;
+		pricePaid: number;
+	} | null;
+	primaryRole: {
+		name: string;
+		badgeImage: string | null;
+		textColor: string | null;
+		xpMultiplier: number;
+	} | null;
+	isStaff: boolean;
+	isModerator: boolean;
+	isAdmin: boolean;
+
+	// Referrals & progression
+	referralLevel: number;
+	referralsCount: number;
+
+	// Path XP breakdown
+	pathXp: Record<string, number>;
+	pathMultipliers: Record<string, number>;
+
+	// Account security
+	lastSeenAt: string | null;
+	lastLogin: string | null;
+}
+
+export function useProfileStats(username: string | undefined) {
+	return useQuery<ExtendedProfileStats>({
+		queryKey: ['profile-stats', username],
+		queryFn: async () => {
+			if (!username) throw new Error('Username required');
+
+			return apiRequest<ExtendedProfileStats>({
+				url: `/api/profile/${username}/stats`,
+				method: 'GET'
+			});
+		},
+		enabled: !!username,
+		staleTime: 30000, // Cache for 30 seconds
+		cacheTime: 5 * 60 * 1000 // Keep in cache for 5 minutes
+	});
+}
+
+// Hook for basic profile data (existing functionality)
+export function useProfile(username: string | undefined) {
+	return useQuery({
+		queryKey: ['profile', username],
+		queryFn: async () => {
+			if (!username) throw new Error('Username required');
+
+			const res = await fetch(`/api/profile/${username}`);
+			if (!res.ok) throw new Error('Failed to fetch profile');
+			return res.json();
+		},
+		enabled: !!username,
+		staleTime: 30000,
+		cacheTime: 5 * 60 * 1000
+	});
+}
+
+// Helper hook to check if stats are available
+export function useProfileStatsAvailable(username: string | undefined) {
+	const { data, isLoading, isError } = useProfileStats(username);
+
+	return {
+		hasExtendedStats: !isLoading && !isError && !!data,
+		extendedStats: data,
+		isLoading,
+		isError
+	};
+}

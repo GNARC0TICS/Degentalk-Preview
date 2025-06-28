@@ -2,7 +2,7 @@
 
 ## 🎯 Overview
 
-This comprehensive guide covers the full CCPayment wallet integration for DegenTalk, from development setup to production deployment and scaling strategies.
+This comprehensive guide covers the full CCPayment wallet integration for Degentalk, from development setup to production deployment and scaling strategies.
 
 ## 📚 Table of Contents
 
@@ -755,4 +755,4 @@ curl -v http://localhost:5001/api/wallet/balance
 
 ---
 
-*This documentation is maintained by the DegenTalk development team. Last updated: 2024-01-20*
+*This documentation is maintained by the Degentalk development team. Last updated: 2024-01-20*

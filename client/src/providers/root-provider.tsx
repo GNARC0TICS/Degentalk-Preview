@@ -7,13 +7,21 @@ import { ForumStructureProvider } from '@/contexts/ForumStructureContext';
 import { ForumThemeProvider } from '@/contexts/ForumThemeProvider';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ProfileCardProvider } from '@/contexts/ProfileCardContext';
+import { MotionProvider } from '@/contexts/MotionContext';
 import { getQueryFn } from '@/lib/queryClient';
+import { ForumOrderingProvider } from '@/contexts/ForumOrderingContext';
 
-// Initialize React Query client
+// Initialize React Query client - MAIN APPLICATION QUERY CLIENT
+// This is the PRIMARY QueryClient instance used throughout the application
+// Configuration:
+// - on401: 'returnNull' - Returns null for 401 responses instead of throwing errors
+//   This is essential for authentication flows where 401 means "not logged in"
+// - refetchOnWindowFocus: false - Prevents unnecessary refetches on window focus
+// - retry: 1 - Only retry failed requests once to avoid excessive network calls
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
-			queryFn: getQueryFn({ on401: 'returnNull' }),
+			queryFn: getQueryFn({ on401: 'returnNull' }), // Critical for auth flow
 			refetchOnWindowFocus: false,
 			retry: 1
 		}
@@ -36,11 +44,15 @@ export function RootProvider({ children }: { children: React.ReactNode }) {
 					<PurchaseModalProvider>
 						<ShoutboxProvider>
 							<ForumStructureProvider>
-								<ForumThemeProvider>
-									<ProfileCardProvider>
-										<TooltipProvider>{children}</TooltipProvider>
-									</ProfileCardProvider>
-								</ForumThemeProvider>
+								<ForumOrderingProvider>
+									<ForumThemeProvider>
+										<MotionProvider>
+											<ProfileCardProvider>
+												<TooltipProvider>{children}</TooltipProvider>
+											</ProfileCardProvider>
+										</MotionProvider>
+									</ForumThemeProvider>
+								</ForumOrderingProvider>
 							</ForumStructureProvider>
 						</ShoutboxProvider>
 					</PurchaseModalProvider>

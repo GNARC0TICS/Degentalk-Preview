@@ -2,7 +2,7 @@
 
 ## 🎯 Vision Statement
 
-**Goal**: Scale DGT from an internal forum currency to a listed cryptocurrency on CCPayment's platform, creating real economic value and liquidity for the DegenTalk ecosystem.
+**Goal**: Scale DGT from an internal forum currency to a listed cryptocurrency on CCPayment's platform, creating real economic value and liquidity for the Degentalk ecosystem.
 
 **Mission**: Build the foundation for DGT to become the premier crypto forum token, driving engagement, community growth, and real economic activity.
 

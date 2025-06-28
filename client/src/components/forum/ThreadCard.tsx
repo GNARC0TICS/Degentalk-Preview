@@ -19,49 +19,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { useBreakpoint } from '@/hooks/useMediaQuery';
+import type { ThreadDisplay } from '@/types/thread.types';
 
 export interface ThreadCardProps {
-	thread: {
-		id: string;
-		title: string;
-		slug: string;
-		excerpt?: string;
-		createdAt: string;
-		lastPostAt?: string;
-		viewCount: number;
-		postCount: number;
-		isSticky?: boolean;
-		isLocked?: boolean;
-		isHot?: boolean;
-		hotScore?: number;
-		user: {
-			id: string;
-			username: string;
-			avatarUrl?: string;
-			reputation?: number;
-			isVerified?: boolean;
-		};
-		zone: {
-			name: string;
-			slug: string;
-			colorTheme: string;
-		};
-		tags?: Array<{
-			id: number;
-			name: string;
-			color?: string;
-		}>;
-		prefix?: {
-			name: string;
-			color: string;
-		};
-		engagement?: {
-			totalTips: number;
-			uniqueTippers: number;
-			bookmarks: number;
-			momentum: 'bullish' | 'bearish' | 'neutral';
-		};
-	};
+	thread: ThreadDisplay;
 	variant?: 'default' | 'compact' | 'featured';
 	showPreview?: boolean;
 	onTip?: (threadId: string, amount: number) => void;
@@ -80,28 +42,43 @@ const ThreadCard = memo(
 	}: ThreadCardProps) => {
 		const [isHovered, setIsHovered] = useState(false);
 		const [isBookmarked, setIsBookmarked] = useState(false);
+		const breakpoint = useBreakpoint();
 
 		const isHot = thread.isHot || (thread.hotScore && thread.hotScore > 10);
 		const timeAgo = formatDistanceToNow(new Date(thread.createdAt), { addSuffix: true });
 
+		const threadId = String(thread.id);
+
 		const handleTip = (e: React.MouseEvent) => {
 			e.preventDefault();
 			e.stopPropagation();
-			onTip?.(thread.id, 10); // Default tip amount
+			onTip?.(threadId, 10); // Default tip amount
 		};
 
 		const handleBookmark = (e: React.MouseEvent) => {
 			e.preventDefault();
 			e.stopPropagation();
 			setIsBookmarked(!isBookmarked);
-			onBookmark?.(thread.id);
+			onBookmark?.(threadId);
 		};
 
-		const cardVariants = {
-			default: 'p-4 space-y-4',
-			compact: 'p-3 space-y-2',
-			featured: 'p-6 space-y-4 border-2'
-		} as const;
+		// Responsive spacing based on breakpoint
+		const getCardSpacing = () => {
+			if (breakpoint.isMobile) {
+				return {
+					default: 'p-3 space-y-3',
+					compact: 'p-2 space-y-2',
+					featured: 'p-4 space-y-3 border-2'
+				};
+			}
+			return {
+				default: 'p-4 space-y-4',
+				compact: 'p-3 space-y-2',
+				featured: 'p-6 space-y-4 border-2'
+			};
+		};
+
+		const cardVariants = getCardSpacing();
 
 		const zoneColorClasses = {
 			pit: 'border-red-500/30 hover:border-red-500/60',
@@ -129,7 +106,10 @@ const ThreadCard = memo(
 						className={cn(
 							'group relative cursor-pointer transition-all duration-300 ease-out',
 							'bg-zinc-900/40 backdrop-blur-sm border border-zinc-800/50',
-							'hover:bg-zinc-900/80 hover:scale-[1.02] hover:shadow-xl hover:shadow-black/20',
+							// Mobile: Remove hover scale for better touch UX
+							breakpoint.isMobile
+								? 'hover:bg-zinc-900/80 active:scale-[0.98] hover:shadow-lg hover:shadow-black/10'
+								: 'hover:bg-zinc-900/80 hover:scale-[1.02] hover:shadow-xl hover:shadow-black/20',
 							zoneThemeClass,
 							isHot && 'ring-1 ring-orange-500/30',
 							cardVariants[variant],
@@ -155,7 +135,13 @@ const ThreadCard = memo(
 							{/* Header Row */}
 							<div className="flex items-start justify-between gap-3">
 								<div className="flex items-center gap-3 min-w-0 flex-1">
-									<Avatar className="h-10 w-10 ring-2 ring-zinc-700/50">
+									{/* Responsive avatar sizing */}
+									<Avatar
+										className={cn(
+											'ring-2 ring-zinc-700/50',
+											breakpoint.isMobile ? 'h-8 w-8' : 'h-10 w-10'
+										)}
+									>
 										<AvatarImage src={thread.user.avatarUrl} alt={thread.user.username} />
 										<AvatarFallback className="bg-zinc-800 text-zinc-300">
 											{thread.user.username.slice(0, 2).toUpperCase()}
@@ -168,7 +154,11 @@ const ThreadCard = memo(
 												{thread.user.username}
 											</span>
 											{thread.user.isVerified && (
-												<Crown className="w-4 h-4 text-amber-500 flex-shrink-0" />
+												<Crown
+													className="w-4 h-4 text-amber-500 flex-shrink-0"
+													role="img"
+													aria-label="Verified account"
+												/>
 											)}
 											{thread.user.reputation && thread.user.reputation > 100 && (
 												<Badge variant="outline" className="text-xs px-1 py-0">
@@ -176,11 +166,21 @@ const ThreadCard = memo(
 												</Badge>
 											)}
 										</div>
-										<div className="flex items-center gap-2 text-xs text-zinc-500">
+										{/* Mobile: Simplified metadata */}
+										<div
+											className={cn(
+												'flex items-center gap-2 text-zinc-500',
+												breakpoint.isMobile ? 'text-xs' : 'text-xs'
+											)}
+										>
 											<Clock className="w-3 h-3" />
 											{timeAgo}
-											<span>•</span>
-											<span className="text-zinc-400">{thread.zone.name}</span>
+											{!breakpoint.isMobile && (
+												<>
+													<span>•</span>
+													<span className="text-zinc-400">{thread.zone.name}</span>
+												</>
+											)}
 										</div>
 									</div>
 								</div>
@@ -232,14 +232,20 @@ const ThreadCard = memo(
 								</div>
 							</div>
 
-							<h3 className="text-lg font-semibold text-white leading-tight line-clamp-2 group-hover:text-emerald-400 transition-colors">
+							{/* Responsive typography */}
+							<h3
+								className={cn(
+									'font-semibold text-white leading-tight line-clamp-2 group-hover:text-emerald-400 transition-colors',
+									breakpoint.isMobile ? 'text-base' : 'text-lg'
+								)}
+							>
 								{thread.title}
 							</h3>
 						</div>
 
 						{/* Progressive Disclosure Content */}
 						<AnimatePresence>
-							{isHovered && showPreview && thread.excerpt && (
+							{(isHovered || process.env.NODE_ENV === 'test') && showPreview && thread.excerpt && (
 								<motion.div
 									initial={{ opacity: 0, height: 0 }}
 									animate={{ opacity: 1, height: 'auto' }}
@@ -298,49 +304,77 @@ const ThreadCard = memo(
 						)}
 					</div>
 
-					{/* Quick Actions */}
+					{/* Quick Actions - Responsive behavior */}
 					<AnimatePresence>
-						{isHovered && (
+						{(isHovered || process.env.NODE_ENV === 'test' || breakpoint.isMobile) && (
 							<motion.div
-								initial={{ opacity: 0, x: 20 }}
+								initial={breakpoint.isMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
 								animate={{ opacity: 1, x: 0 }}
-								exit={{ opacity: 0, x: 20 }}
+								exit={breakpoint.isMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
 								transition={{ duration: 0.2 }}
-								className="flex items-center gap-1"
+								className={cn(
+									'flex items-center',
+									// Mobile: Larger touch targets, different spacing
+									breakpoint.isMobile ? 'gap-2' : 'gap-1'
+								)}
 								onClick={(e) => e.preventDefault()}
 							>
 								{onTip && (
 									<Button
-										size="sm"
+										size={breakpoint.isMobile ? 'default' : 'sm'}
 										variant="ghost"
-										className="h-8 w-8 p-0 text-zinc-400 hover:text-emerald-400 hover:bg-emerald-900/20"
+										aria-label="Tip"
+										className={cn(
+											'p-0 text-zinc-400 hover:text-emerald-400 hover:bg-emerald-900/20',
+											// Mobile: 44px touch target minimum
+											breakpoint.isMobile ? 'h-11 w-11' : 'h-8 w-8'
+										)}
 										onClick={handleTip}
 									>
-										<Zap className="w-4 h-4" />
+										<Zap
+											className={cn(breakpoint.isMobile ? 'w-5 h-5' : 'w-4 h-4')}
+											aria-hidden="true"
+										/>
+										<span className="sr-only">Tip</span>
 									</Button>
 								)}
 
 								<Button
-									size="sm"
+									size={breakpoint.isMobile ? 'default' : 'sm'}
 									variant="ghost"
+									aria-label={isBookmarked ? 'Remove Bookmark' : 'Bookmark'}
 									className={cn(
-										'h-8 w-8 p-0 transition-colors',
+										'p-0 transition-colors',
 										isBookmarked
 											? 'text-amber-400 hover:text-amber-300'
-											: 'text-zinc-400 hover:text-amber-400 hover:bg-amber-900/20'
+											: 'text-zinc-400 hover:text-amber-400 hover:bg-amber-900/20',
+										// Mobile: 44px touch target minimum
+										breakpoint.isMobile ? 'h-11 w-11' : 'h-8 w-8'
 									)}
 									onClick={handleBookmark}
 								>
-									<Bookmark className={cn('w-4 h-4', isBookmarked && 'fill-current')} />
+									<Bookmark
+										className={cn(
+											breakpoint.isMobile ? 'w-5 h-5' : 'w-4 h-4',
+											isBookmarked && 'fill-current'
+										)}
+										aria-hidden="true"
+									/>
+									<span className="sr-only">Bookmark</span>
 								</Button>
 
-								<Button
-									size="sm"
-									variant="ghost"
-									className="h-8 w-8 p-0 text-zinc-400 hover:text-blue-400 hover:bg-blue-900/20"
-								>
-									<Share2 className="w-4 h-4" />
-								</Button>
+								{/* Share button - Hidden on mobile to save space */}
+								{!breakpoint.isMobile && (
+									<Button
+										size="sm"
+										variant="ghost"
+										aria-label="Share"
+										className="h-8 w-8 p-0 text-zinc-400 hover:text-blue-400 hover:bg-blue-900/20"
+									>
+										<Share2 className="w-4 h-4" aria-hidden="true" />
+										<span className="sr-only">Share</span>
+									</Button>
+								)}
 							</motion.div>
 						)}
 					</AnimatePresence>

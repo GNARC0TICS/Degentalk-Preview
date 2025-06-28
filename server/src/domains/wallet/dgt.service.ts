@@ -1,7 +1,7 @@
 /**
  * DGT Service
  *
- * Handles all DGT (DegenTalk Token) operations including crediting, debiting,
+ * Handles all DGT (Degentalk Token) operations including crediting, debiting,
  * transfers, and balance management. Integrates with existing economy system.
  */
 

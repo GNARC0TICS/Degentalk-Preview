@@ -10,20 +10,23 @@ type UserSeedData = {
   username: string;
   email: string;
   password: string; // This holds the password hash
-  // displayName: string; // Removed as it's not in the users schema
   role: UserRole;
-  xp: number; // Renamed from xpTotal to match schema
-  clout: number; // Renamed from cloutScore to match schema
-  // postCount: number; // Removed as it's not in the users schema
-  // threadCount: number; // Removed as it's not in the users schema
+  xp: number;
+  clout: number;
   avatarUrl: string;
   isActive: boolean;
   isBanned: boolean;
   isVerified: boolean;
-  // Optional: Add other fields from schema if they need to be seeded
   bio?: string;
   signature?: string;
-  // etc.
+  website?: string;
+  github?: string;
+  twitter?: string;
+  discord?: string;
+  profileBannerUrl?: string;
+  activeAvatarUrl?: string;
+  level?: number;
+  reputation?: number;
 };
 
 export async function seedUsers() {
@@ -32,33 +35,47 @@ export async function seedUsers() {
   const mockUsers: UserSeedData[] = [
     {
       username: 'cryptoadmin',
-      email: 'admin@example.com',
+      email: 'admin@degentalk.dev',
       password: passwordHash,
-      // displayName: 'Crypto Admin', // Removed
       role: 'admin',
-      xp: 10000, // Renamed
-      clout: 500, // Renamed
-      // postCount: 0, // Removed
-      // threadCount: 0, // Removed
+      xp: 99999,
+      clout: 10000,
+      level: 99,
+      reputation: 10000,
       avatarUrl: '/images/avatars/admin.png',
+      activeAvatarUrl: '/images/avatars/admin.png',
+      profileBannerUrl: '/images/banners/admin-banner.jpg',
       isActive: true,
       isBanned: false,
-      isVerified: true
+      isVerified: true,
+      bio: '🔥 Degentalk Platform Administrator | Crypto Veteran | Building the future of degen communities',
+      signature: 'WAGMI 🚀 | Not financial advice | Degentalk Admin',
+      website: 'https://degentalk.com',
+      github: 'degentalk-admin',
+      twitter: 'degentalk_official',
+      discord: 'CryptoAdmin#0001'
     },
     {
       username: 'degenmod',
-      email: 'mod@example.com',
+      email: 'mod@degentalk.dev',
       password: passwordHash,
-      // displayName: 'Degen Moderator', // Removed
       role: 'mod',
-      xp: 5000, // Renamed
-      clout: 300, // Renamed
-      // postCount: 0, // Removed
-      // threadCount: 0, // Removed
+      xp: 25000,
+      clout: 2500,
+      level: 50,
+      reputation: 2500,
       avatarUrl: '/images/avatars/mod.png',
+      activeAvatarUrl: '/images/avatars/mod.png',
+      profileBannerUrl: '/images/banners/mod-banner.jpg',
       isActive: true,
       isBanned: false,
-      isVerified: true
+      isVerified: true,
+      bio: '🛡️ Degentalk Moderator | Keeping the chaos organized | Diamond hands since 2017',
+      signature: 'Moderation is an art | DM for help | 💎🙌',
+      website: 'https://degentalk.com/mods',
+      github: 'degentalk-mod',
+      twitter: 'degentalk_mod',
+      discord: 'DegenMod#1337'
     }
   ];
   for (let i = 0; i < 20; i++) {
@@ -88,21 +105,26 @@ export async function seedUsers() {
   await db.insert(users).values(uniqueUsers).onConflictDoUpdate({
     target: users.username, // conflict on username
     set: {
-      // Keys here are the JS/TS property names from the Drizzle schema (users object)
-      // Values use sql`excluded.db_column_name`
       email: sql`excluded.email`,
-      password: sql`excluded.password_hash`, // Drizzle schema 'password' maps to DB 'password_hash'
-      // displayName: sql`excluded.display_name`, // Removed as displayName is not in schema
+      password: sql`excluded.password_hash`,
       role: sql`excluded.role`,
-      xp: sql`excluded.xp`, // Drizzle schema 'xp' maps to DB 'xp'
-      clout: sql`excluded.clout`, // Drizzle schema 'clout' maps to DB 'clout'
-      // postCount: sql`excluded.post_count`, // Removed as postCount is not in schema
-      // threadCount: sql`excluded.thread_count`, // Removed as threadCount is not in schema
-      avatarUrl: sql`excluded.avatar_url`, // Drizzle schema 'avatarUrl' maps to DB 'avatar_url'
-      isActive: sql`excluded.is_active`, // Drizzle schema 'isActive' maps to DB 'is_active'
-      isBanned: sql`excluded.is_banned`, // Drizzle schema 'isBanned' maps to DB 'is_banned'
-      isVerified: sql`excluded.is_verified`, // Drizzle schema 'isVerified' maps to DB 'is_verified'
-      updatedAt: sql`CURRENT_TIMESTAMP`, // Explicitly update updatedAt
+      xp: sql`excluded.xp`,
+      clout: sql`excluded.clout`,
+      level: sql`excluded.level`,
+      reputation: sql`excluded.reputation`,
+      avatarUrl: sql`excluded.avatar_url`,
+      activeAvatarUrl: sql`excluded.active_avatar_url`,
+      profileBannerUrl: sql`excluded.profile_banner_url`,
+      isActive: sql`excluded.is_active`,
+      isBanned: sql`excluded.is_banned`,
+      isVerified: sql`excluded.is_verified`,
+      bio: sql`excluded.bio`,
+      signature: sql`excluded.signature`,
+      website: sql`excluded.website`,
+      github: sql`excluded.github`,
+      twitter: sql`excluded.twitter`,
+      discord: sql`excluded.discord`,
+      updatedAt: sql`CURRENT_TIMESTAMP`
     }
   });
   console.log(`✅ Upserted ${uniqueUsers.length} users (inserted or updated).`);

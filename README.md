@@ -18,9 +18,20 @@ This repository is protected by an **advanced boundary enforcement system** that
 - Run `npm run validate-everything:fix` to fix issues locally
 - See `CONTRIBUTING.md` for the complete rule system
 
-# DegenTalk - Crypto Community Platform
+# Degentalk - Next-Generation Crypto Forum Platform
 
-A crypto-native forum and social platform designed for cryptocurrency enthusiasts, traders, and developers. Features integrated wallet functionality, a digital goods marketplace, and gamified social features with XP/DGT economy.
+Degentalk is a modern, highly satirical crypto forum platform designed for gamblers, investors, traders, and crypto fanatics across the globe. Built with cutting-edge technology, it features integrated wallet functionality, a digital goods marketplace, and gamified social features with a comprehensive XP/DGT token economy.
+
+## 🌟 Key Features
+
+- **🏛️ Forum System**: Multi-zone discussion platform with advanced moderation
+- **💰 DGT Economy**: Native token system with $0.10 fixed value and crypto integration
+- **🎮 XP & Leveling**: Comprehensive experience point system with action-based rewards
+- **💳 Crypto Wallet**: CCPayment integration for deposits, withdrawals, and trading
+- **👑 Admin Dashboard**: Modular administrative system with feature flags and analytics
+- **📱 Mobile-First**: Responsive design with touch-optimized interfaces
+- **⚡ Real-time**: WebSocket integration for live updates and chat
+- **🔒 Security**: Rate limiting, audit logging, and permission-based access control
 
 ## 🚀 Quick Start with Codespaces
 
@@ -45,12 +56,40 @@ A crypto-native forum and social platform designed for cryptocurrency enthusiast
 # 1. Update environment file
 cp env.local.example env.local  # Edit with your database credentials
 
-# 2. Start development
-pnpm dev                        # Full stack with hot reload
+# 2. Start development with enhanced dev environment
+npm run dev:seed                # Full stack with dev user and wallet data
 
 # 3. Optional: Load with SuperClaude
 sc /user:load --depth deep --plan
 ```
+
+### 🎯 **Enhanced Development Experience**
+
+Degentalk includes a comprehensive development environment that simulates a production-ready platform:
+
+#### **🧑‍💼 Pre-configured Admin User**
+
+- **Username**: `cryptoadmin` (auto-login in dev mode)
+- **Role**: Platform Administrator with full privileges
+- **Profile**: Complete with bio, avatar, and social links
+- **Stats**: Level 99, 99,999 XP, 10,000 reputation
+
+#### **💰 Realistic Wallet Data**
+
+- **500,000+ DGT tokens** from multiple simulated deposits
+- **10 ETH** ($20,000 value)
+- **5,000 USDT** ($5,000 value)
+- **0.5 BTC** ($15,000 value)
+- **VIP Pass subscription** with lifetime benefits
+
+#### **🎮 Full Platform Features**
+
+- **Forum posting** with admin moderation tools
+- **Real wallet transactions** using seeded balances
+- **Shoutbox chat** with user identity
+- **Shop purchases** with DGT spending
+- **XP system** with real-time updates
+- **Admin panel** access to all features
 
 #### Required Codespaces Secrets:
 
@@ -114,6 +153,34 @@ npm run dev:seed
 # Quick start (skips seeding for faster startup)
 npm run dev:quick
 ```
+
+### 🎯 **Development User Setup**
+
+For the best development experience, set up the enhanced admin user:
+
+> **Quick-login credentials (local dev)**
+>
+> • **Username:** `cryptoadmin`  
+> • **Password:** `password123`
+>
+> These credentials are seeded by `npm run seed:dev-complete` and work in both the `/auth` page and API requests.
+
+```bash
+# Complete dev user setup (recommended for first-time setup)
+npm run seed:dev-complete
+
+# Individual components
+npm run seed:users              # Basic users including cryptoadmin
+npm run seed:dev-wallet         # Wallet with crypto balances
+npm run seed:dev-subscriptions  # VIP subscription data
+```
+
+This creates a realistic development environment where you can:
+
+- **Test wallet features** with actual DGT/crypto balances
+- **Use admin privileges** for forum moderation and platform management
+- **Experience VIP features** with an active subscription
+- **See the profile card** with real user data in the sidebar
 
 **Port Management:**
 
@@ -191,6 +258,9 @@ See `NEON-SYNC.md` for detailed information about the database synchronization s
 - `npm run seed:all` - Run all seed scripts
 - `npm run seed:forum` - Seed forum structure
 - `npm run seed:threads` - Seed example threads
+- `npm run seed:dev-complete` - **Enhanced dev user setup** (admin + wallet + VIP)
+- `npm run seed:dev-wallet` - Seed wallet balances for dev user
+- `npm run seed:dev-subscriptions` - Seed VIP subscription data
 - `npm run seed:xp` - Seed XP system data
 - `npm run seed:levels` - Seed user levels
 - `npm run seed:economy` - Seed economy settings
@@ -458,7 +528,6 @@ To incentivize user participation, the platform awards Experience Points (XP) an
 **Key Backend Components & Endpoints:**
 
 - **XP Service & Rewards:**
-
   - Controller: `server/src/domains/xp/xp.controller.ts` (function: `awardActionXp`)
   - Route: `POST /api/xp/award-action` (defined in `server/src/domains/xp/xp.routes.ts`)
   - Core Logic: `server/src/domains/xp/xp.service.ts` (e.g., `handleXpTrigger`, `processXpAction`) and `server/src/domains/xp/events/xp.events.ts`
@@ -478,3 +547,370 @@ To incentivize user participation, the platform awards Experience Points (XP) an
 
 - XP amounts for actions are configured in the `xpActionSettings` table (schema: `db/schema/economy/xpActionSettings.ts`).
 - The DGT reward amount for actions like thread creation might be in environment variables or a configuration table (e.g., `economySettings` in `db/schema/economy/settings.ts`). Refer to `server/src/domains/wallet/wallet.constants.ts` or service logic for defaults.
+
+## 🏗️ System Architecture
+
+For detailed architectural information, see [ARCHITECTURE.md](./docs/ARCHITECTURE.md).
+
+### High-Level Overview
+
+Degentalk follows a **Domain-Driven Architecture** with clear separation between frontend and backend:
+
+```
+Frontend (React + Vite)  ←→  Backend (Express + TypeScript)  ←→  PostgreSQL Database
+     ↓                           ↓                                    ↓
+- Pages & Components      - Domain Services                   - User Management
+- State Management        - API Routes                        - Forum Content
+- Mobile-Responsive UI    - Middleware                        - Economy & Wallets
+- Real-time Updates       - WebSocket Server                  - XP & Transactions
+```
+
+### Key Architectural Principles
+
+- **🔧 Modular Design**: Each domain (forum, wallet, XP, admin) is self-contained
+- **📱 Mobile-First**: 44px minimum touch targets, progressive disclosure
+- **🔒 Security-First**: Rate limiting, permission-based access, audit logging
+- **⚡ Performance**: Caching layers, optimized queries, efficient state management
+- **🧪 Feature Flags**: A/B testing and gradual rollout capabilities
+
+## 📊 API Documentation
+
+Complete API documentation is available in the `/docs/api/` directory:
+
+- **[API Overview](./docs/api/README.md)** - Base URLs, authentication, rate limiting
+- **[XP System API](./docs/api/xp-api.md)** - Experience points, levels, and action rewards
+- **[Wallet & DGT API](./docs/api/wallet-api.md)** - Cryptocurrency and DGT token operations
+- **[Forum API](./docs/api/forum-api.md)** - Threads, posts, categories, and user interactions
+- **[Admin API](./docs/api/admin-api.md)** - Administrative functions and modular system
+
+### API Quick Reference
+
+| Endpoint                        | Description                 | Authentication |
+| ------------------------------- | --------------------------- | -------------- |
+| `GET /api/forum/threads`        | List forum threads          | Optional       |
+| `POST /api/forum/threads`       | Create new thread           | Required       |
+| `POST /api/xp/award-action`     | Award XP for user action    | Required       |
+| `GET /api/wallet/balances`      | Get DGT and crypto balances | Required       |
+| `POST /api/wallet/transfer-dgt` | Transfer DGT between users  | Required       |
+| `GET /api/admin/modules`        | List admin modules          | Admin          |
+
+## 🔧 Development Guide
+
+### Environment Setup
+
+1. **Prerequisites**
+
+   ```bash
+   # Required software
+   Node.js 18+
+   PostgreSQL 14+
+   Git
+   ```
+
+2. **Database Configuration**
+
+   ```bash
+   # Local PostgreSQL
+   createdb degentalk_dev
+
+   # Or use Neon (cloud PostgreSQL)
+   # Get connection string from dashboard
+   ```
+
+3. **Environment Variables**
+
+   ```bash
+   # Copy template and configure
+   cp env.local.example env.local
+
+   # Essential variables
+   DATABASE_URL=postgresql://user:pass@localhost:5432/degentalk_dev
+   NODE_ENV=development
+   PORT=5001
+   VITE_PORT=5173
+   ```
+
+4. **Initial Setup**
+
+   ```bash
+   # Install dependencies
+   npm install
+
+   # Set up database
+   npm run db:migrate
+   npm run db:migrate:apply
+   npm run seed:all
+
+   # Start development
+   npm run dev
+   ```
+
+### Development Workflow
+
+1. **Feature Development**
+
+   ```bash
+   # Create feature branch
+   git checkout -b feature/new-feature
+
+   # Start development servers
+   npm run dev
+
+   # Make changes with hot reload
+   # Test with role switcher (bottom-right)
+   ```
+
+2. **Database Changes**
+
+   ```bash
+   # Modify schema files in db/schema/
+
+   # Generate migration
+   npm run db:migrate
+
+   # Apply to development database
+   npm run db:migrate:apply
+
+   # Update seed data if needed
+   npm run seed:all
+   ```
+
+3. **Testing & Validation**
+
+   ```bash
+   # Type checking
+   npm run check
+
+   # Linting
+   npm run lint
+
+   # Test XP system
+   npm run test:xp
+
+   # Test forum endpoints
+   npm run test:forum-endpoints
+   ```
+
+### Mobile Development
+
+The platform prioritizes mobile experience with:
+
+- **44px minimum touch targets** for all interactive elements
+- **Progressive disclosure** - complex actions hidden on small screens
+- **Adaptive spacing** using responsive utility classes
+- **Touch-optimized navigation** with sticky headers and floating buttons
+
+Test mobile responsiveness:
+
+```bash
+# View mobile layout
+# Open http://localhost:5173 and toggle device emulation
+
+# Test different breakpoints
+# Mobile: max-767px
+# Tablet: 768px-1023px
+# Desktop: 1024px+
+```
+
+## 🚀 Deployment
+
+### Production Deployment
+
+1. **Build Process**
+
+   ```bash
+   # Build frontend (backend uses tsx runtime)
+   npm run build
+
+   # Verify build
+   npm run preview
+   ```
+
+2. **Environment Variables**
+
+   ```bash
+   # Production variables
+   NODE_ENV=production
+   DATABASE_URL=postgresql://user:pass@host:5432/prod_db
+
+   # Security settings
+   SESSION_SECRET=long-random-string
+   CORS_ORIGIN=https://yourdomain.com
+
+   # Payment integration
+   CCPAYMENT_APP_ID=prod_app_id
+   CCPAYMENT_APP_SECRET=prod_secret
+   ```
+
+3. **Database Migration**
+
+   ```bash
+   # Apply migrations to production
+   npm run db:migrate:apply
+
+   # Verify database health
+   npm run db:validate
+   ```
+
+4. **Start Production Server**
+
+   ```bash
+   # Start with PM2 for process management
+   npm run start
+
+   # Or with PM2 cluster mode
+   pm2 start ecosystem.config.js
+   ```
+
+### Scaling Considerations
+
+- **Database**: Use read replicas for query distribution
+- **Application**: Horizontal scaling with PM2 cluster mode
+- **Caching**: Redis for session storage and query caching
+- **CDN**: Static asset delivery for avatars and attachments
+- **Load Balancing**: Nginx for SSL termination and request distribution
+
+## 🔍 Monitoring & Analytics
+
+### Health Monitoring
+
+```bash
+# Check system health
+curl http://localhost:5001/api/health
+
+# Monitor database connections
+npm run db:status
+
+# Check cache hit rates
+curl http://localhost:5001/api/admin/cache/status
+```
+
+### Key Metrics
+
+- **User Engagement**: DAU, thread creation rate, post frequency
+- **Economic Activity**: DGT transaction volume, XP awards per day
+- **System Performance**: API response times, database query performance
+- **Error Rates**: 4xx/5xx responses, failed transactions
+
+### Admin Dashboard
+
+Access the admin dashboard at `/admin` with appropriate permissions:
+
+- **User Management**: View, suspend, promote users
+- **Economy Controls**: Adjust XP rates, DGT settings, feature gates
+- **Analytics**: Platform statistics and user behavior insights
+- **Feature Flags**: A/B testing and gradual feature rollouts
+- **System Settings**: Platform configuration and maintenance
+
+## 🛡️ Security
+
+### Security Measures
+
+- **Authentication**: Session-based auth with CSRF protection
+- **Authorization**: Role-based permissions with module-level access control
+- **Rate Limiting**: Endpoint-specific limits to prevent abuse
+- **Input Validation**: Zod schemas for all API inputs
+- **SQL Injection Prevention**: Parameterized queries via Drizzle ORM
+- **Audit Logging**: Complete admin action tracking
+
+### Security Best Practices
+
+1. **Environment Variables**: Never commit secrets to git
+2. **Database Access**: Use least-privilege database users
+3. **API Security**: Validate all inputs and sanitize outputs
+4. **Error Handling**: Don't expose sensitive information in errors
+5. **Session Management**: Secure session configuration and timeouts
+
+## 🤝 Contributing
+
+### Getting Started
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Follow the development workflow above
+4. Ensure all tests pass: `npm run test`
+5. Submit a pull request with detailed description
+
+### Code Standards
+
+- **TypeScript**: Strict mode enabled, all functions must be typed
+- **ESLint**: Use provided configuration, fix all warnings
+- **Prettier**: Auto-formatting on save
+- **Conventional Commits**: Use semantic commit messages
+
+### Pull Request Guidelines
+
+- Include comprehensive description of changes
+- Add tests for new functionality
+- Update documentation as needed
+- Ensure all CI checks pass
+- Request review from maintainers
+
+---
+
+**Built with ❤️ for the crypto community**
+
+For detailed technical documentation, see the `/docs/` directory.
+
+## 🔐 Authentication & User Flow
+
+### Dev Environment Quick Start
+
+For development, use these credentials:
+
+- **Username**: `cryptoadmin`
+- **Password**: `password123`
+
+### Complete Authentication Flow
+
+#### 1. **Guest Experience**
+
+- Header shows "Log In" and "Sign Up" buttons
+- Hero section "Join Community" button redirects to `/auth?mode=signup`
+- All user-specific icons (wallet, notifications, admin) are hidden
+
+#### 2. **Login Process**
+
+- Visit `/auth` or click "Log In"
+- Successful login redirects to home page (`/`)
+- Header automatically switches to authenticated state
+
+#### 3. **Registration Process**
+
+- Visit `/auth?mode=signup` or click "Sign Up"
+- Auto-opens registration tab
+- Successful registration redirects to home page (`/`)
+- Wallet creation is automatically triggered during signup
+
+#### 4. **Authenticated Experience**
+
+- Header shows user menu, wallet, notifications, and admin buttons (if applicable)
+- All authenticated-only features become available
+- User context is maintained across page refreshes
+
+#### 5. **Logout Process**
+
+- Click user menu → "Log Out"
+- **Immediate redirect** to `/auth` (no page flash)
+- All user data cleared from memory
+- Header switches back to guest state instantly
+
+### Auth Route Patterns
+
+```
+/auth                    → Login tab (default)
+/auth?mode=signup       → Registration tab
+/auth?mode=register     → Registration tab (alias)
+```
+
+### Development Notes
+
+When you click "Log Out" in development:
+
+1. User session is cleared from context
+2. All query cache is cleared
+3. Automatic redirect to `/auth`
+4. Header switches to "Log In / Sign Up" buttons
+5. No user icons remain visible
+
+The auth system works seamlessly in both development and production environments.

@@ -1,8 +1,8 @@
-# DegenTalk Technical Context
+# Degentalk Technical Context
 
 ## Technology Stack
 
-DegenTalk uses a modern full-stack JavaScript/TypeScript architecture:
+Degentalk uses a modern full-stack JavaScript/TypeScript architecture:
 
 ### Frontend
 *   **Framework**: React 18 with TypeScript
@@ -478,4 +478,4 @@ The codebase integrates with or is prepared for:
 *   All technical patterns and architecture should align with these recommendations for maintainability and scalability.
 *   See the summary table in `activeContext.md` for actionable refactoring areas.
 
-This technical context provides the foundation for understanding the DegenTalk codebase structure, patterns, and constraints that influence development decisions.
+This technical context provides the foundation for understanding the Degentalk codebase structure, patterns, and constraints that influence development decisions.

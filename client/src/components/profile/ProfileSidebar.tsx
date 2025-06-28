@@ -6,7 +6,16 @@ import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { WhisperButton } from '@/components/messages/WhisperButton';
 import { WhisperModal } from '@/components/messages/WhisperModal';
-import { Settings, UserCheck, UserPlus, Crown, Eye } from 'lucide-react';
+import {
+	Settings,
+	UserCheck,
+	UserPlus,
+	Crown,
+	Eye,
+	Twitter,
+	Globe,
+	MessageCircle
+} from 'lucide-react';
 import { cn, formatNumber, formatCurrency, formatRelativeTime } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -17,6 +26,7 @@ import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { UserName } from '@/components/users/Username';
 import { LevelBadge } from '@/components/economy/xp/LevelBadge';
 import { FollowButton } from '@/components/social/FollowButton';
+import { getAvatarUrl } from '@/utils/avatar';
 
 interface Props {
 	profile: ProfileData;
@@ -69,10 +79,14 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 			}
 		>
 			<div className="p-6 flex flex-col items-center">
-				{/* Avatar */}
+				{/* Avatar with fallback */}
 				<div className="relative mb-4">
 					<AvatarFrame
-						avatarUrl={profile.avatarUrl || ''} // Ensure fallback for avatarUrl
+						avatarUrl={getAvatarUrl({
+							avatarUrl: profile.avatarUrl,
+							email: (profile as any).email ?? null,
+							username: profile.username
+						})}
 						frame={identity?.avatarFrame}
 						username={profile.username}
 						size="xl"
@@ -171,6 +185,53 @@ const ProfileSidebar: React.FC<Props> = ({ profile, isOwnProfile }) => {
 						<span className="text-sm text-zinc-400">Watchers</span>
 					</div>
 				</div>
+
+				{/* Social Handles */}
+				{(profile.twitterHandle ||
+					profile.discordHandle ||
+					profile.telegramHandle ||
+					profile.website) && (
+					<div className="w-full bg-zinc-800/20 p-4 rounded-lg border border-zinc-700/30 mb-4">
+						<h3 className="text-md font-semibold text-zinc-200 mb-2">Social</h3>
+						<div className="flex flex-wrap gap-3">
+							{profile.twitterHandle && (
+								<a
+									href={`https://x.com/${profile.twitterHandle.replace(/^@/, '')}`}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-1 text-zinc-300 hover:text-emerald-400 text-sm"
+								>
+									<Twitter className="h-4 w-4" /> @{profile.twitterHandle.replace(/^@/, '')}
+								</a>
+							)}
+							{profile.discordHandle && (
+								<span className="flex items-center gap-1 text-zinc-300 text-sm">
+									<Globe className="h-4 w-4" /> {profile.discordHandle}
+								</span>
+							)}
+							{profile.telegramHandle && (
+								<a
+									href={`https://t.me/${profile.telegramHandle.replace(/^@/, '')}`}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-1 text-zinc-300 hover:text-emerald-400 text-sm"
+								>
+									<MessageCircle className="h-4 w-4" />@{profile.telegramHandle.replace(/^@/, '')}
+								</a>
+							)}
+							{profile.website && (
+								<a
+									href={profile.website}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-1 text-zinc-300 hover:text-emerald-400 text-sm"
+								>
+									<Globe className="h-4 w-4" /> Website
+								</a>
+							)}
+						</div>
+					</div>
+				)}
 
 				{/* About */}
 				<div className="w-full bg-zinc-800/20 p-4 rounded-lg border border-zinc-700/30 mb-4">

@@ -143,7 +143,7 @@ export function DepositButton({ variant = 'default', className, onClick }: Depos
 						Crypto deposits are currently unavailable
 					</span>
 				) : (
-					`Deposit cryptocurrency to your DegenTalk wallet. All deposits are automatically converted to DGT at $${walletConfig?.dgt?.usdPrice || 0.1} per token.`
+					`Deposit cryptocurrency to your Degentalk wallet. All deposits are automatically converted to DGT at $${walletConfig?.dgt?.usdPrice || 0.1} per token.`
 				)}
 			</p>
 

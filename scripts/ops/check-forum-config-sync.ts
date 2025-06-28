@@ -1,10 +1,10 @@
 import { db } from "../../db";
-import { forumCategories } from "../../db/schema/forum/categories";
+import { forumStructure } from "../../db/schema/forum/structure";
 import { forumMap, type Zone as ConfigZone, type Forum as ConfigForum } from "../../client/src/config/forumMap.config";
 import { eq, isNull, or } from "drizzle-orm";
 import chalk from "chalk";
 
-type DbCategory = typeof forumCategories.$inferSelect;
+type DbStructure = typeof forumStructure.$inferSelect;
 
 interface Discrepancy {
   type: 'missing_in_db' | 'missing_in_config' | 'property_mismatch';
@@ -39,9 +39,9 @@ const stableStringify = (obj: any) => {
 async function checkForumConfigSync() {
   console.log(chalk.blue("Starting forum configuration sync check..."));
 
-  const dbCategories: DbCategory[] = await db.select().from(forumCategories);
-  const dbZones = dbCategories.filter(cat => cat.type === 'zone');
-  const dbForums = dbCategories.filter(cat => cat.type === 'forum');
+  const dbStructures: DbStructure[] = await db.select().from(forumStructure);
+  const dbZones = dbStructures.filter(cat => cat.type === 'zone');
+  const dbForums = dbStructures.filter(cat => cat.type === 'forum');
 
   const configZones = forumMap.zones;
   const configForums: (ConfigForum & { parentZoneSlug: string, parentForumSlug?: string })[] = [];

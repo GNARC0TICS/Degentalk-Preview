@@ -2,6 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import type { Badge as BadgeType } from '@schema';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { rarityBorderMap } from '@/config/rarity.config';
 
 type UserBadgesProps = {
 	badges: Array<{
@@ -72,16 +73,8 @@ type BadgeItemProps = {
 };
 
 function BadgeItem({ badge, isActive = false, onClick, interactive = false }: BadgeItemProps) {
-	const rarityColors = {
-		common: 'border-slate-600 bg-slate-900',
-		uncommon: 'border-emerald-600 bg-emerald-900/20',
-		rare: 'border-blue-600 bg-blue-900/20',
-		epic: 'border-purple-500 bg-purple-900/20',
-		legendary: 'border-amber-500 bg-amber-900/20'
-	};
-
-	const rarity = (badge.rarity?.toLowerCase() || 'common') as keyof typeof rarityColors;
-	const borderColor = rarityColors[rarity] || rarityColors.common;
+	const rarityKey = (badge.rarity?.toLowerCase() || 'common') as keyof typeof rarityBorderMap;
+	const borderColor = rarityBorderMap[rarityKey] || rarityBorderMap.common;
 
 	return (
 		<TooltipProvider>
@@ -126,13 +119,13 @@ function BadgeItem({ badge, isActive = false, onClick, interactive = false }: Ba
 							<p
 								className={cn(
 									'text-[10px] mt-1 capitalize',
-									rarity === 'common'
+									rarityKey === 'common'
 										? 'text-slate-400'
-										: rarity === 'uncommon'
+										: rarityKey === 'uncommon'
 											? 'text-emerald-400'
-											: rarity === 'rare'
+											: rarityKey === 'rare'
 												? 'text-blue-400'
-												: rarity === 'epic'
+												: rarityKey === 'epic'
 													? 'text-purple-400'
 													: 'text-amber-400'
 								)}

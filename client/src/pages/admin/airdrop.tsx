@@ -72,7 +72,7 @@ const AdminAirdropPage: React.FC = () => {
 			setAmount(0);
 			setTargetGroupId('');
 			setNote('');
-			queryClient.invalidateQueries({ queryKey: ['adminAirdropHistory'] }); // TODO: For future history table
+			queryClient.invalidateQueries({ queryKey: ['adminAirdropHistory'] });
 		},
 		onError: (error: any) => {
 			toast({
@@ -171,7 +171,6 @@ const AdminAirdropPage: React.FC = () => {
 									)}
 								</SelectContent>
 							</Select>
-							{/* TODO: Add options for targeting individual users or roles later */}
 						</div>
 
 						<div>
@@ -207,7 +206,6 @@ const AdminAirdropPage: React.FC = () => {
 					</CardFooter>
 				</form>
 			</Card>
-			{/* TODO: Add Airdrop History Table here later */}
 		</div>
 	);
 };

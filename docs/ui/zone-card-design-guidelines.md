@@ -1,7 +1,7 @@
 # Zone Card Design Guidelines
 
 ## Overview
-The ZoneCard component is a core UI element that represents Primary Zones in DegenTalk's forum structure. Unlike regular category cards, Zone Cards are specialized, visually distinct elements that represent canonical forum destinations rather than expandable categories.
+The ZoneCard component is a core UI element that represents Primary Zones in Degentalk's forum structure. Unlike regular category cards, Zone Cards are specialized, visually distinct elements that represent canonical forum destinations rather than expandable categories.
 
 ## Component Purpose
 - Visually represent Primary Zones with distinct branding

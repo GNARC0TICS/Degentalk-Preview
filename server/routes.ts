@@ -65,6 +65,8 @@ import featureGatesRoutes from './src/domains/feature-gates/feature-gates.routes
 import notificationRoutes from './src/domains/notifications/notification.routes';
 // Import domain-based preferences routes
 import preferencesRoutes from './src/domains/preferences/preferences.routes';
+// Import domain-based advertising routes
+import { adRoutes } from './src/domains/advertising/ad.routes';
 
 // REFACTORED: Using the new centralized error handlers
 import {
@@ -112,96 +114,83 @@ export async function registerRoutes(app: Express): Promise<Server> {
 		res.json({ message: 'Backend working!!!' }).status(200);
 	});
 
-	// Add hot threads endpoint BEFORE authentication middleware
+	// Add new unified content endpoint
+	app.get('/api/content', async (req, res) => {
+		try {
+			const tab = (req.query.tab as string) || 'trending';
+			const page = parseInt(req.query.page as string) || 1;
+			const limit = Math.min(parseInt(req.query.limit as string) || 20, 50); // Max 50
+			const forumId = req.query.forumId ? parseInt(req.query.forumId as string) : undefined;
+			const userId = req.user?.id; // From auth middleware
+
+			// Validate tab
+			const validTabs = ['trending', 'recent', 'following'];
+			if (!validTabs.includes(tab)) {
+				return res
+					.status(400)
+					.json({ error: 'Invalid tab. Must be one of: trending, recent, following' });
+			}
+
+			// Require auth for following tab
+			if (tab === 'following' && !userId) {
+				return res.status(401).json({ error: 'Authentication required for following tab' });
+			}
+
+			// Import here to avoid circular dependencies
+			const { threadService } = await import('./src/domains/forum/services/thread.service');
+
+			// Fetch content using the new tab-based method
+			const result = await threadService.fetchThreadsByTab({
+				tab: tab as any,
+				page,
+				limit,
+				forumId,
+				userId
+			});
+
+			res.json(result);
+		} catch (error) {
+			console.error('Error fetching content:', error);
+			res.status(500).json({ error: 'Failed to fetch content' });
+		}
+	});
+
+	// Add hot threads endpoint BEFORE authentication middleware (legacy support)
 	app.get('/api/hot-threads', async (req, res) => {
 		try {
 			const limit = parseInt(req.query.limit as string) || 5;
 
-			// Return the threads we know are in the database
-			const hotThreads = [
-				{
-					thread_id: 25,
-					title: 'BlackRock SOL ETF filing confirmed! 🚨',
-					slug: 'blackrock-sol-etf-filing-confirmed',
-					post_count: 31,
-					view_count: 756,
-					hot_score: 302,
-					created_at: '2025-05-26T13:30:35.986587Z',
-					last_post_at: '2025-05-26T13:30:35.986587Z',
-					user_id: 1,
-					username: 'CryptoTrader',
-					avatar_url: null,
-					category_name: 'Alpha & Leaks',
-					category_slug: 'alpha-leaks',
-					like_count: 67
-				},
-				{
-					thread_id: 27,
-					title: 'Free airdrop alert - verified legit 🎁',
-					slug: 'free-airdrop-alert-verified-legit',
-					post_count: 52,
-					view_count: 623,
-					hot_score: 257,
-					created_at: '2025-05-26T11:00:35.986587Z',
-					last_post_at: '2025-05-26T11:00:35.986587Z',
-					user_id: 1,
-					username: 'CryptoTrader',
-					avatar_url: null,
-					category_name: 'Free Stuff',
-					category_slug: 'free-stuff',
-					like_count: 156
-				},
-				{
-					thread_id: 26,
-					title: 'Finally hit my first 10x! AMA 🎉',
-					slug: 'finally-hit-my-first-10x-ama',
-					post_count: 23,
-					view_count: 445,
-					hot_score: 212,
-					created_at: '2025-05-26T13:00:35.986587Z',
-					last_post_at: '2025-05-26T13:00:35.986587Z',
-					user_id: 1,
-					username: 'CryptoTrader',
-					avatar_url: null,
-					category_name: "Beginner's Portal",
-					category_slug: 'beginners-portal',
-					like_count: 67
-				},
-				{
-					thread_id: 28,
-					title: 'What are you trading today? 📈',
-					slug: 'what-are-you-trading-today',
-					post_count: 28,
-					view_count: 387,
-					hot_score: 195,
-					created_at: '2025-05-26T10:00:35.986587Z',
-					last_post_at: '2025-05-26T10:00:35.986587Z',
-					user_id: 1,
-					username: 'CryptoTrader',
-					avatar_url: null,
-					category_name: 'Alpha & Leaks',
-					category_slug: 'alpha-leaks',
-					like_count: 47
-				},
-				{
-					thread_id: 24,
-					title: '🔥 SOL breakout incoming - $250 target',
-					slug: 'sol-breakout-incoming-250-target',
-					post_count: 18,
-					view_count: 342,
-					hot_score: 190,
-					created_at: '2025-05-26T12:00:35.986587Z',
-					last_post_at: '2025-05-26T12:00:35.986587Z',
-					user_id: 1,
-					username: 'CryptoTrader',
-					avatar_url: null,
-					category_name: 'Alpha & Leaks',
-					category_slug: 'alpha-leaks',
-					like_count: 28
-				}
-			];
+			// Import here to avoid circular dependencies
+			const { threadService } = await import('./src/domains/forum/services/thread.service');
 
-			res.json(hotThreads.slice(0, limit));
+			// Use the new tab-based method for consistency
+			const result = await threadService.fetchThreadsByTab({
+				tab: 'trending',
+				page: 1,
+				limit,
+				forumId: undefined,
+				userId: undefined
+			});
+
+			// Transform to match legacy format for backward compatibility
+			const hotThreads = result.items.map((thread: any) => ({
+				thread_id: thread.id,
+				title: thread.title,
+				slug: thread.slug,
+				post_count: thread.postCount || 0,
+				view_count: thread.viewCount || 0,
+				hot_score: Math.floor(Math.random() * 100) + 50, // Mock hot score for now
+				created_at: thread.createdAt,
+				last_post_at: thread.lastPostAt || thread.createdAt,
+				user_id: thread.userId,
+				username: thread.user?.username || 'Unknown',
+				avatar_url: thread.user?.avatarUrl || null,
+				category_name: thread.category?.name || 'Unknown',
+				category_slug: thread.category?.slug || 'unknown',
+				like_count: thread.firstPostLikeCount || 0
+			}));
+
+			res.json(hotThreads);
 		} catch (error) {
 			console.error('Error fetching hot threads:', error);
 			res.status(500).json({ error: 'Failed to fetch hot threads' });
@@ -216,7 +205,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	app.use(passport.session());
 
 	// Use the domain-based auth routes
-	app.use('/api', authRoutes);
+	/*
+	 * ---------------------------------------------------------------------------
+	 * AUTHENTICATION ROUTES
+	 * ---------------------------------------------------------------------------
+	 *  Primary Mount:
+	 *    • All authentication endpoints are now **namespaced** under `/api/auth/*`.
+	 *      Example: `/api/auth/login`, `/api/auth/register`, `/api/auth/user`, etc.
+	 *
+	 *  Compatibility Mount (temporary):
+	 *    • For legacy clients that still hit the root-level `/api/*` auth endpoints
+	 *      (e.g. `/api/login`), we re-mount the same router at `/api`.  This alias
+	 *      will be **removed after v2** once all callers have migrated.
+	 */
+	app.use('/api/auth', authRoutes); // ✅  NEW canonical path
+	app.use('/api', authRoutes); // 🕰️  Back-compat alias  (DEPRECATE IN v2)
 	// X account OAuth routes
 	app.use('/api/auth/x', xAuthRoutes);
 	// X share routes
@@ -287,6 +290,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	// Set up feature gate routes
 	app.use('/api/features', featureGatesRoutes);
 
+	// Set up advertising routes with domain-based approach
+	app.use('/api/ads', adRoutes);
+
 	// Set up path specialization routes
 	registerPathRoutes(app); // @pending-migration
 
@@ -337,7 +343,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			ws.send(
 				JSON.stringify({
 					type: 'connected',
-					message: 'Connected to DegenTalk WebSocket'
+					message: 'Connected to Degentalk WebSocket'
 				})
 			);
 

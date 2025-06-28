@@ -108,4 +108,4 @@ npm run cypress:open  # or headless: npm run cypress
 
 ---
 
-© 2025 DegenTalk 
+© 2025 Degentalk 

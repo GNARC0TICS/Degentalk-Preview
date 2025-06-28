@@ -40,6 +40,7 @@ export * from './user/avatarFrames';
 export * from './user/userOwnedFrames';
 export * from './user/userGroups';
 export * from './user/user-social-preferences';
+export * from './user/subscriptions';
 
 // User domain - feature permissions
 export * from './user/featurePermissions';
@@ -136,6 +137,7 @@ export * from './admin/uiThemes';
 export * from './admin/moderator-notes';
 export * from './admin/emailTemplates';
 export * from './admin/backups';
+export * from './admin/brandConfig';
 
 // Gamification domain exports
 export * from './gamification/achievements';
@@ -147,8 +149,14 @@ export * from './gamification/platformStats';
 
 // System domain exports
 export * from './system/rateLimits';
-export * from './system/notifications';
+export { notifications } from './system/notifications';
+export { notifications as systemNotifications } from './system/notifications';
+export type {
+	Notification as SystemNotification,
+	InsertNotification as InsertSystemNotification
+} from './system/notifications';
 export * from './system/analyticsEvents';
+export * from './system/profileAnalytics';
 export * from './system/activityFeed';
 export * from './system/airdrop-records';
 export * from './system/userAbuseFlags';
@@ -180,6 +188,14 @@ export * from './wallet/supported-tokens';
 
 // Collectibles domain exports - Sticker system
 export * from './collectibles/stickers';
+
+// Advertising domain exports
+export * from './advertising/campaigns';
+export * from './advertising/placements';
+export * from './advertising/targeting';
+export * from './advertising/performance';
+export * from './advertising/payments';
+export * from './advertising/user-promotions';
 
 // Note: './forum/threadDrafts.ts' was commented out as it was empty in the previous steps.
 // Ensure all files listed for export actually exist and contain exports.

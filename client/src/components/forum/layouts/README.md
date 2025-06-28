@@ -376,4 +376,4 @@ interface ResponsiveForumLayoutProps {
 
 ---
 
-_Built for DegenTalk's responsive forum experience with Magic UI integration and performance-first design._
+_Built for Degentalk's responsive forum experience with Magic UI integration and performance-first design._

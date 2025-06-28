@@ -15,7 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useBreakpoint } from '@/hooks/useMediaQuery';
 
 import MobileForumNavigation from '@/components/forum/enhanced/MobileForumNavigation';
 import HierarchicalZoneNav from '@/features/forum/components/HierarchicalZoneNav';
@@ -51,9 +51,8 @@ const ResponsiveForumLayout = memo(
 		const [isCollapsed, setIsCollapsed] = useState(false);
 
 		// Media queries for responsive behavior
-		const isMobile = useMediaQuery('(max-width: 768px)');
-		const isTablet = useMediaQuery('(max-width: 1024px)');
-		const isDesktop = useMediaQuery('(min-width: 1025px)');
+		const breakpoint = useBreakpoint();
+		const { isMobile, isTablet, isDesktop } = breakpoint;
 
 		// Auto-collapse sidebar on tablet
 		useEffect(() => {
@@ -93,7 +92,10 @@ const ResponsiveForumLayout = memo(
 		};
 
 		return (
-			<div className={cn('min-h-screen bg-zinc-950', className)}>
+			<div
+				data-testid="responsive-forum-layout"
+				className={cn('min-h-screen bg-zinc-950', className)}
+			>
 				{/* Mobile Navigation */}
 				{isMobile && showNavigation && <MobileForumNavigation />}
 
@@ -101,6 +103,7 @@ const ResponsiveForumLayout = memo(
 					{/* Desktop Sidebar */}
 					{!isMobile && showNavigation && (
 						<motion.aside
+							data-testid="desktop-sidebar"
 							initial={false}
 							animate={{
 								width: isCollapsed ? '64px' : '280px'
@@ -142,6 +145,7 @@ const ResponsiveForumLayout = memo(
 											'h-full transition-all duration-300',
 											isCollapsed ? 'px-2' : 'px-4'
 										)}
+										isCollapsed={isCollapsed}
 									/>
 								)}
 							</div>
@@ -150,10 +154,17 @@ const ResponsiveForumLayout = memo(
 
 					{/* Main Content Area */}
 					<div className="flex-1 flex flex-col overflow-hidden">
-						{/* Top Bar */}
+						{/* Top Bar - Sticky for better navigation */}
 						<motion.header
+							data-testid="top-bar"
 							variants={itemVariants}
-							className="flex items-center justify-between p-4 bg-zinc-900/30 border-b border-zinc-800/50 backdrop-blur-sm"
+							className={cn(
+								'flex items-center justify-between p-4 bg-zinc-900/30 border-b border-zinc-800/50 backdrop-blur-sm',
+								// Sticky positioning for better UX
+								'sticky top-0 z-30',
+								// Mobile: Reduce padding for more content space
+								isMobile ? 'p-3' : 'p-4'
+							)}
 						>
 							<div className="flex items-center gap-4">
 								{/* Mobile Sidebar Toggle */}
@@ -174,9 +185,12 @@ const ResponsiveForumLayout = memo(
 
 							{/* Layout Controls */}
 							<div className="flex items-center gap-2">
-								{/* Layout Switcher */}
-								{onLayoutChange && (
-									<div className="hidden sm:flex items-center gap-1 p-1 bg-zinc-800/50 rounded-lg">
+								{/* Layout Switcher - Hide more complex controls on mobile */}
+								{onLayoutChange && !isMobile && (
+									<div
+										data-testid="layout-controls"
+										className="hidden sm:flex items-center gap-1 p-1 bg-zinc-800/50 rounded-lg"
+									>
 										{Object.entries(layoutIcons).map(([layoutType, Icon]) => (
 											<Button
 												key={layoutType}
@@ -219,6 +233,7 @@ const ResponsiveForumLayout = memo(
 
 						{/* Main Content */}
 						<motion.main
+							data-testid="main-content"
 							variants={containerVariants}
 							initial="hidden"
 							animate="visible"
@@ -228,6 +243,7 @@ const ResponsiveForumLayout = memo(
 								{/* Content Area */}
 								<div className="flex-1 p-4 md:p-6">
 									<motion.div
+										data-testid="content-area"
 										variants={itemVariants}
 										className={cn(
 											'transition-all duration-300',
@@ -243,6 +259,7 @@ const ResponsiveForumLayout = memo(
 								{/* Desktop Filters Sidebar */}
 								{showFilters && filters && !isMobile && (
 									<motion.aside
+										data-testid="filters-sidebar"
 										variants={itemVariants}
 										className="hidden lg:block w-80 p-6 bg-zinc-900/20 border-l border-zinc-800/50"
 									>
@@ -279,7 +296,9 @@ const ResponsiveForumLayout = memo(
 									<X className="h-5 w-5" />
 								</Button>
 							</div>
-							<div className="p-4 h-full overflow-auto">{sidebar || <HierarchicalZoneNav />}</div>
+							<div className="p-4 h-full overflow-auto">
+								{sidebar || <HierarchicalZoneNav isCollapsed={false} />}
+							</div>
 						</SheetContent>
 					</Sheet>
 				)}

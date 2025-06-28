@@ -32,7 +32,7 @@ export class ForumStructureService {
 
 			logger.info('ForumStructureService', 'Fetching forum structures with stats from database');
 
-			// Query with stats calculation
+			// Query with stats calculation - FILTER OUT HIDDEN FORUMS BY DEFAULT
 			const structuresWithStats = await db
 				.select({
 					id: forumStructure.id,
@@ -63,6 +63,7 @@ export class ForumStructureService {
 				.from(forumStructure)
 				.leftJoin(threads, eq(forumStructure.id, threads.structureId))
 				.leftJoin(posts, eq(threads.id, posts.threadId))
+				.where(eq(forumStructure.isHidden, false))
 				.groupBy(forumStructure.id)
 				.orderBy(forumStructure.position, forumStructure.name);
 
@@ -306,6 +307,14 @@ export class ForumStructureService {
 	clearCache(): void {
 		structureCache = null;
 		logger.info('ForumStructureService', 'Forum structure cache cleared');
+	}
+
+	/**
+	 * Force refresh structures from database (bypass cache)
+	 */
+	async forceRefresh(): Promise<ForumStructureWithStats[]> {
+		this.clearCache();
+		return await this.getStructuresWithStats();
 	}
 
 	/**

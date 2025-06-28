@@ -93,7 +93,7 @@ export function useDraft({
 				}
 			} catch (error) {
 				// No cloud draft or error loading it
-				console.log('No cloud draft found or error loading:', error);
+				// Silent error - this is expected when no draft exists
 			}
 		};
 

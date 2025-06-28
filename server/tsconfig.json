@@ -7,6 +7,7 @@
 			"@/*": ["client/src/*"],
 			"@shared/*": ["shared/*"],
 			"@server/*": ["server/*"],
+			"@server/src/*": ["server/src/*"],
 			"@server-core/*": ["server/src/core/*"],
 			"@server-utils/*": ["server/src/utils/*"],
 			"@server-middleware/*": ["server/src/middleware/*"],

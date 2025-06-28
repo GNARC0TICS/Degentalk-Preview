@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { rarityColorMap } from '@/config/rarity.config';
 import {
 	Select,
 	SelectContent,
@@ -42,13 +43,6 @@ interface CreateFrameData {
 	rarity: string;
 	animated: boolean;
 }
-
-const rarityColors = {
-	common: 'bg-gray-500',
-	rare: 'bg-blue-500',
-	epic: 'bg-purple-500',
-	legendary: 'bg-yellow-500'
-};
 
 export default function AdminAvatarFramesPage() {
 	const { toast } = useToast();
@@ -298,7 +292,7 @@ export default function AdminAvatarFramesPage() {
 									</TableCell>
 									<TableCell className="font-medium">{frame.name}</TableCell>
 									<TableCell>
-										<Badge className={rarityColors[frame.rarity as keyof typeof rarityColors]}>
+										<Badge className={rarityColorMap[frame.rarity as keyof typeof rarityColorMap]}>
 											{frame.rarity}
 										</Badge>
 									</TableCell>

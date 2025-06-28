@@ -1,6 +1,6 @@
-# MyBB Deep Dive → DegenTalk Evolution Matrix 2.0
+# MyBB Deep Dive → Degentalk Evolution Matrix 2.0
 
-> A strategic blueprint for integrating proven MyBB concepts into DegenTalk's modern TypeScript-first, Web3-enabled architecture.
+> A strategic blueprint for integrating proven MyBB concepts into Degentalk's modern TypeScript-first, Web3-enabled architecture.
 
 ---
 
@@ -8,14 +8,14 @@
 
 1. Perform a deep comparative analysis of MyBB's battle-tested forum software.
 2. Extract high-value patterns that remain relevant in 2025.
-3. Translate those patterns into DegenTalk's **React + TypeScript + Drizzle + Web3** stack.
+3. Translate those patterns into Degentalk's **React + TypeScript + Drizzle + Web3** stack.
 4. Produce an actionable roadmap (Phase 4) for the final month of feature work leading to v1 GA.
 
 ---
 
 ## 2  Legacy Patterns vs Modern Counterparts
 
-| Category | MyBB Observation | Risk / Gap | DegenTalk Modern Strategy |
+| Category | MyBB Observation | Risk / Gap | Degentalk Modern Strategy |
 | --- | --- | --- | --- |
 | **Global State** | Monolithic arrays in `class_core.php` (`$mybb->input`, `$mybb->cookies`, …) | Tight coupling, mutation everywhere | Strictly typed **React Context** hierarchy with granular providers (`AppContext → User / Wallet / Forum / Settings`) |
 | **Input Sanitization** | Double-`unset()` globals hack for old PHP | Obsolete & fragile | Centralised **Zod** validation (`schemas/validators/`) and `@segregateLogic` rule enforcement |
@@ -125,11 +125,11 @@ Never hard-code **business parameters**. Use `ConfigService` → DB → Cache �
 
 ## 10  Detailed Actionable Steps
 
-> This section translates the strategic points from the Evolution Matrix into concrete development tasks mapped to DegenTalk's current architecture (React, TypeScript, Express.js, Drizzle ORM, PostgreSQL).
+> This section translates the strategic points from the Evolution Matrix into concrete development tasks mapped to Degentalk's current architecture (React, TypeScript, Express.js, Drizzle ORM, PostgreSQL).
 
 ### I. Global State & Context Management (Matrix §2)
 
-*MyBB Observation:* Monolithic global arrays  →  *DegenTalk Strategy:* Strictly typed React Context hierarchy.
+*MyBB Observation:* Monolithic global arrays  →  *Degentalk Strategy:* Strictly typed React Context hierarchy.
 
 **Actionable Items**
 1. **Audit Existing Contexts**
@@ -148,7 +148,7 @@ Never hard-code **business parameters**. Use `ConfigService` → DB → Cache �
 
 ### II. Input Sanitization & Validation (Matrix §2)
 
-*MyBB Observation:* `unset()` globals hack  →  *DegenTalk Strategy:* Centralised Zod validation.
+*MyBB Observation:* `unset()` globals hack  →  *Degentalk Strategy:* Centralised Zod validation.
 
 **Actionable Items**
 1. **Standardise Zod Usage**
@@ -162,7 +162,7 @@ Never hard-code **business parameters**. Use `ConfigService` → DB → Cache �
 
 ### III. Debug Mode (Matrix §2)
 
-*MyBB Observation:* URL param `?debug=1`  →  *DegenTalk Strategy:* ENV-flag + runtime toggle.
+*MyBB Observation:* URL param `?debug=1`  →  *Degentalk Strategy:* ENV-flag + runtime toggle.
 
 **Actionable Items**
 1. **Environment Flag** – add conditional logging when `NODE_ENV === 'development'`.
@@ -175,7 +175,7 @@ Never hard-code **business parameters**. Use `ConfigService` → DB → Cache �
 
 ### IV. Template System & Theming (Matrix §2 & §3.1)
 
-*MyBB Observation:* 3-tier XML templates  →  *DegenTalk Strategy:* ThemeManager with inheritance.
+*MyBB Observation:* 3-tier XML templates  →  *Degentalk Strategy:* ThemeManager with inheritance.
 
 **Actionable Items**
 1. **Implement `ThemeManager.tsx`**
@@ -188,7 +188,7 @@ Never hard-code **business parameters**. Use `ConfigService` → DB → Cache �
 
 ### V. Plugin Hooks (Matrix §2 & §3.2)
 
-*MyBB Observation:* Scattered hooks  →  *DegenTalk Strategy:* Type-safe `HookManager`.
+*MyBB Observation:* Scattered hooks  →  *Degentalk Strategy:* Type-safe `HookManager`.
 
 **Actionable Items**
 1. **Scaffold Registry & Manager** in `server/src/core/hooks/`.
@@ -199,7 +199,7 @@ Never hard-code **business parameters**. Use `ConfigService` → DB → Cache �
 
 ### VI. Configurability (Matrix §2 & §4)
 
-*MyBB Observation:* 90 % UI configs  →  *DegenTalk Strategy:* DB-backed `ConfigService`.
+*MyBB Observation:* 90 % UI configs  →  *Degentalk Strategy:* DB-backed `ConfigService`.
 
 **Actionable Items**
 1. **Create Table** `site_settings` via Drizzle.
@@ -249,7 +249,7 @@ Never hard-code **business parameters**. Use `ConfigService` → DB → Cache �
 ## 11  References
 
 * MyBB Source v1.8.37 – specific commits analysed `#3d2b1e`, `#4fa9c0`.
-* DegenTalk rules in `.cursor/rules/**` (see: `schema-consistency.mdc`, `startup-logging.mdc`).
+* Degentalk rules in `.cursor/rules/**` (see: `schema-consistency.mdc`, `startup-logging.mdc`).
 * Research log – `_audit/forum/01-batch-1.md` & `02-batch-2.md`.
 
 ---

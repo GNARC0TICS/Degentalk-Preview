@@ -30,9 +30,7 @@ export class CCPaymentClient {
 		this.appSecret = config.appSecret || DEFAULT_CONFIG.appSecret;
 
 		if (!this.appId || !this.appSecret) {
-			console.warn(
-				'CCPaymentClient: Missing APP_ID or APP_SECRET. CCPayment integration will not function properly.'
-			);
+			throw new Error('CCPaymentClient: Missing APP_ID or APP_SECRET');
 		}
 	}
 
@@ -77,7 +75,6 @@ export class CCPaymentClient {
 
 			return response.data.data.payment_link;
 		} catch (error) {
-			console.error('CCPaymentClient: Error creating deposit link:', error);
 			throw new Error(`Failed to create deposit link: ${error.message}`);
 		}
 	}
@@ -104,7 +101,6 @@ export class CCPaymentClient {
 
 			return response.data.data.transaction_id;
 		} catch (error) {
-			console.error('CCPaymentClient: Error requesting withdrawal:', error);
 			throw new Error(`Failed to request withdrawal: ${error.message}`);
 		}
 	}
@@ -132,7 +128,6 @@ export class CCPaymentClient {
 				updatedAt: response.data.data.updated_at
 			};
 		} catch (error) {
-			console.error('CCPaymentClient: Error getting transaction status:', error);
 			throw new Error(`Failed to get transaction status: ${error.message}`);
 		}
 	}

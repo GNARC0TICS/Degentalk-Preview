@@ -1,12 +1,12 @@
 import { pgTable, serial, varchar, integer, boolean, timestamp } from 'drizzle-orm/pg-core';
-import { userGroups } from '../user/userGroups'; // Assuming path to userGroups
+import { roles } from '../user/roles'; // Use roles instead of deprecated userGroups
 
 export const airdropSettings = pgTable('airdrop_settings', {
 	id: serial('id').primaryKey(),
 	tokenType: varchar('token_type', { length: 50 }).notNull(), // 'DGT' or 'XP'
 	amount: integer('amount').notNull(),
 	interval: varchar('interval', { length: 50 }).default('daily'), // daily, weekly, one-time
-	targetGroupId: integer('target_group_id').references(() => userGroups.id), // Corrected column name to match convention
+	targetGroupId: integer('target_group_id').references(() => roles.id), // References roles table (was userGroups)
 	enabled: boolean('enabled').default(true),
 	createdAt: timestamp('created_at').defaultNow()
 });

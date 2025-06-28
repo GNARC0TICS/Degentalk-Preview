@@ -27,7 +27,6 @@ export function PositionedShoutbox({ instanceId }: PositionedShoutboxProps) {
 		if (effectivePosition && !isLoading) {
 			// If effective position has changed, trigger transition
 			if (effectivePosition !== activePosition) {
-				console.log(`Position changing from ${activePosition} to ${effectivePosition}`);
 				setIsTransitioning(true);
 
 				// Small delay to allow the fade-out animation to complete
@@ -161,9 +160,6 @@ export function PositionedShoutbox({ instanceId }: PositionedShoutboxProps) {
 		(activePosition === 'main-top' || activePosition === 'main-bottom') &&
 		document.querySelector('.shoutbox-container-sidebar')
 	) {
-		console.log(
-			"Shoutbox should be in main content but we're in sidebar container - not rendering"
-		);
 		return null;
 	}
 
@@ -171,7 +167,6 @@ export function PositionedShoutbox({ instanceId }: PositionedShoutboxProps) {
 		(activePosition === 'sidebar-top' || activePosition === 'sidebar-bottom') &&
 		document.querySelector('.shoutbox-container-main')
 	) {
-		console.log("Shoutbox should be in sidebar but we're in main container - not rendering");
 		return null;
 	}
 

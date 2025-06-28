@@ -1,5 +1,10 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import {
+	renderWithProviders as render,
+	screen,
+	fireEvent,
+	waitFor
+} from '@/test/utils/renderWithProviders';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { QuickReactions } from '../QuickReactions';
 import type { Reaction } from '../QuickReactions';
@@ -82,11 +87,12 @@ describe('QuickReactions', () => {
 	it('renders all reactions', () => {
 		render(<QuickReactions reactions={mockReactions} onReact={mockOnReact} />);
 
-		expect(screen.getByText('💎')).toBeInTheDocument();
-		expect(screen.getByText('📈')).toBeInTheDocument();
-		expect(screen.getByText('🔥')).toBeInTheDocument();
-		expect(screen.getByText('📉')).toBeInTheDocument();
-		expect(screen.getByText('🚀')).toBeInTheDocument();
+		// Check that all reaction buttons are present using aria-labels
+		expect(screen.getByRole('button', { name: /diamond hands/i })).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: /bullish/i })).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: /fire/i })).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: /bearish/i })).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: /hodl/i })).toBeInTheDocument();
 	});
 
 	it('displays reaction counts correctly', () => {
@@ -109,7 +115,7 @@ describe('QuickReactions', () => {
 	it('highlights user reactions', () => {
 		render(<QuickReactions reactions={mockReactions} onReact={mockOnReact} />);
 
-		const diamondHandsButton = screen.getByRole('button', { name: /💎.*24/i });
+		const diamondHandsButton = screen.getByRole('button', { name: /diamond hands/i });
 		expect(diamondHandsButton).toHaveClass('bg-cyan-900/20');
 		expect(diamondHandsButton).toHaveClass('border-cyan-500/30');
 		expect(diamondHandsButton).toHaveClass('text-cyan-400');
@@ -118,7 +124,7 @@ describe('QuickReactions', () => {
 	it('handles reaction click', () => {
 		render(<QuickReactions reactions={mockReactions} onReact={mockOnReact} />);
 
-		const bullishButton = screen.getByRole('button', { name: /📈.*18/i });
+		const bullishButton = screen.getByRole('button', { name: /bullish/i });
 		fireEvent.click(bullishButton);
 
 		expect(mockOnReact).toHaveBeenCalledWith('bullish');
@@ -134,11 +140,11 @@ describe('QuickReactions', () => {
 	it('shows limited reactions in compact mode', () => {
 		render(<QuickReactions reactions={mockReactions} onReact={mockOnReact} compact={true} />);
 
-		// Should show top 4 reactions
-		expect(screen.getByText('💎')).toBeInTheDocument();
-		expect(screen.getByText('📈')).toBeInTheDocument();
-		expect(screen.getByText('🔥')).toBeInTheDocument();
-		expect(screen.getByText('📉')).toBeInTheDocument();
+		// Should show top 4 reactions using aria-labels
+		expect(screen.getByRole('button', { name: /diamond hands/i })).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: /bullish/i })).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: /fire/i })).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: /bearish/i })).toBeInTheDocument();
 
 		// Should show "+1 more" button
 		expect(screen.getByText('+1 more')).toBeInTheDocument();
@@ -150,8 +156,8 @@ describe('QuickReactions', () => {
 		const moreButton = screen.getByText('+1 more');
 		fireEvent.click(moreButton);
 
-		// Now all reactions should be visible
-		expect(screen.getByText('🚀')).toBeInTheDocument();
+		// Now all reactions should be visible - check for HODL button
+		expect(screen.getByRole('button', { name: /hodl/i })).toBeInTheDocument();
 		expect(screen.getByText('Show Less')).toBeInTheDocument();
 	});
 
@@ -250,7 +256,7 @@ describe('QuickReactions', () => {
 	it('applies hover effects', () => {
 		render(<QuickReactions reactions={mockReactions} onReact={mockOnReact} />);
 
-		const bullishButton = screen.getByRole('button', { name: /📈.*18/i });
+		const bullishButton = screen.getByRole('button', { name: /bullish/i });
 		expect(bullishButton).toHaveClass('hover:scale-105');
 		expect(bullishButton).toHaveClass('active:scale-95');
 	});
@@ -290,8 +296,9 @@ describe('QuickReactions', () => {
 
 		render(<QuickReactions reactions={customReactions} onReact={mockOnReact} />);
 
-		expect(screen.getByText('🧻')).toBeInTheDocument();
-		expect(screen.getByText('💀')).toBeInTheDocument();
+		// Check that custom reactions are present using aria-labels
+		expect(screen.getByRole('button', { name: /paper hands/i })).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: /ngmi/i })).toBeInTheDocument();
 		expect(screen.getByText('3')).toBeInTheDocument();
 		expect(screen.getByText('2')).toBeInTheDocument();
 	});

@@ -11,12 +11,12 @@ import {
 	Bookmark,
 	User,
 	Settings,
-	Flame,
-	TrendingUp,
 	MessageSquare,
-	Users,
-	Target,
-	Sparkles
+	Folder,
+	TrendingUp,
+	Activity,
+	Sparkles,
+	Crown
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -28,6 +28,56 @@ import { useForumStructure } from '@/contexts/ForumStructureContext';
 export interface MobileForumNavigationProps {
 	className?: string;
 }
+
+// Generate dynamic theme based on colorTheme
+const getDynamicMobileTheme = (colorTheme: string | null) => {
+	const themeMap: Record<
+		string,
+		{
+			gradient: string;
+			accent: string;
+			icon: typeof Folder;
+		}
+	> = {
+		pit: {
+			gradient: 'from-red-500/10 to-orange-500/10',
+			accent: 'text-red-400',
+			icon: TrendingUp
+		},
+		mission: {
+			gradient: 'from-blue-500/10 to-cyan-500/10',
+			accent: 'text-blue-400',
+			icon: Activity
+		},
+		casino: {
+			gradient: 'from-purple-500/10 to-pink-500/10',
+			accent: 'text-purple-400',
+			icon: Sparkles
+		},
+		briefing: {
+			gradient: 'from-amber-500/10 to-yellow-500/10',
+			accent: 'text-amber-400',
+			icon: MessageSquare
+		},
+		archive: {
+			gradient: 'from-gray-500/10 to-slate-500/10',
+			accent: 'text-gray-400',
+			icon: Folder
+		},
+		shop: {
+			gradient: 'from-emerald-500/10 to-green-500/10',
+			accent: 'text-emerald-400',
+			icon: Crown
+		},
+		default: {
+			gradient: 'from-zinc-500/10 to-gray-500/10',
+			accent: 'text-zinc-400',
+			icon: Folder
+		}
+	};
+
+	return themeMap[colorTheme || 'default'] || themeMap.default;
+};
 
 const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -63,39 +113,6 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 		}
 	};
 
-	const zoneThemes = {
-		pit: {
-			gradient: 'from-red-900/20 to-red-800/10',
-			accent: 'text-red-400',
-			icon: Flame
-		},
-		mission: {
-			gradient: 'from-blue-900/20 to-blue-800/10',
-			accent: 'text-blue-400',
-			icon: Target
-		},
-		casino: {
-			gradient: 'from-purple-900/20 to-purple-800/10',
-			accent: 'text-purple-400',
-			icon: Sparkles
-		},
-		briefing: {
-			gradient: 'from-amber-900/20 to-amber-800/10',
-			accent: 'text-amber-400',
-			icon: MessageSquare
-		},
-		archive: {
-			gradient: 'from-gray-900/20 to-gray-800/10',
-			accent: 'text-gray-400',
-			icon: MessageSquare
-		},
-		shop: {
-			gradient: 'from-violet-900/20 to-pink-900/10',
-			accent: 'text-violet-400',
-			icon: Sparkles
-		}
-	};
-
 	const filteredZones =
 		zones?.filter(
 			(zone) =>
@@ -111,13 +128,15 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 
 	return (
 		<>
-			{/* Mobile Menu Trigger */}
+			{/* Mobile Menu Trigger - Enhanced for touch */}
 			<Button
 				variant="ghost"
 				size="icon"
 				className={cn(
 					'md:hidden fixed top-4 left-4 z-50 bg-zinc-900/80 backdrop-blur-sm border border-zinc-700/50',
-					'hover:bg-zinc-800/80',
+					'hover:bg-zinc-800/80 active:scale-95 transition-transform',
+					// Ensure 44px minimum touch target
+					'h-11 w-11',
 					className
 				)}
 				onClick={() => setIsOpen(true)}
@@ -160,7 +179,7 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 								<div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
 									<span className="text-black font-bold text-sm">DT</span>
 								</div>
-								<span className="font-bold text-white">DegenTalk</span>
+								<span className="font-bold text-white">Degentalk</span>
 							</div>
 							<Button
 								variant="ghost"
@@ -194,10 +213,12 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 										key={section.id}
 										onClick={() => setActiveSection(section.id as any)}
 										className={cn(
-											'flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors',
+											'flex-1 flex items-center justify-center gap-2 text-sm font-medium transition-colors',
+											// Better touch target height
+											'py-4 min-h-[44px]',
 											activeSection === section.id
 												? 'text-emerald-400 bg-emerald-900/20 border-b-2 border-emerald-500'
-												: 'text-zinc-400 hover:text-zinc-200'
+												: 'text-zinc-400 hover:text-zinc-200 active:bg-zinc-800/50'
 										)}
 									>
 										<Icon className="w-4 h-4" />
@@ -245,9 +266,8 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 											</div>
 										) : (
 											filteredZones.map((zone) => {
-												const theme =
-													zoneThemes[zone.colorTheme as keyof typeof zoneThemes] ||
-													zoneThemes.archive;
+												// Use dynamic theme generation instead of static getZoneTheme
+												const theme = getDynamicMobileTheme(zone.theme.colorTheme);
 												const IconComponent = theme.icon;
 
 												return (

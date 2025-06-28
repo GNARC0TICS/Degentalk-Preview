@@ -8,13 +8,6 @@ import type { ActiveUser } from '@/components/users/ActiveMembersWidget';
  * @returns Promise with active users data
  */
 export async function getActiveUsers(limit: number = 5): Promise<ActiveUser[]> {
-	// TODO: Implement this once the API endpoint is available
-	// return apiRequest<ActiveUser[]>({
-	//   url: '/api/users/active',
-	//   params: { limit }
-	// });
-
-	// Mock data for now
 	const MOCK_ACTIVE_USERS: ActiveUser[] = [
 		{ id: 1, name: 'CryptoMaster', avatar: null, lastActive: '2 min ago' },
 		{ id: 2, name: 'Hodler3000', avatar: null, lastActive: '5 min ago' },
@@ -37,11 +30,6 @@ export async function getActiveUsers(limit: number = 5): Promise<ActiveUser[]> {
  * @returns Promise with user data
  */
 export async function getUserDetails(userId: number | string) {
-	// TODO: Implement this once the API endpoint is available
-	// return apiRequest({
-	//   url: `/api/users/${userId}`,
-	// });
-
 	return Promise.reject(new Error('Not implemented yet'));
 }
 
@@ -53,13 +41,5 @@ export async function getUserDetails(userId: number | string) {
  * @returns Promise with search results
  */
 export async function searchUsers(query: string, limit: number = 10) {
-	// TODO: Implement this once the API endpoint is available
-	// return apiRequest({
-	//   url: '/api/users/search',
-	//   params: { query, limit }
-	// });
-
 	return Promise.reject(new Error('Not implemented yet'));
 }
-
-// Export other user-related API methods here...

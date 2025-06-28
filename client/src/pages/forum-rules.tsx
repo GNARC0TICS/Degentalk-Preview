@@ -247,8 +247,8 @@ const ForumRules: React.FC = () => {
 	return (
 		<div className="container mx-auto py-8">
 			<Helmet>
-				<title>Forum Rules - DegenTalk</title>
-				<meta name="description" content="Forum rules and guidelines for DegenTalk community" />
+				<title>Forum Rules - Degentalk</title>
+				<meta name="description" content="Forum rules and guidelines for Degentalk community" />
 			</Helmet>
 
 			<div className="mb-8">

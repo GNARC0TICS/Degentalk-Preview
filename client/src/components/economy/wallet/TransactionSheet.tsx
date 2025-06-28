@@ -196,7 +196,6 @@ export function TransactionSheet({ isOpen, onOpenChange, onBack }: TransactionSh
 								disabled={true}
 							>
 								{' '}
-								{/* TODO: Implement pagination */}
 								<ChevronLeft className="h-4 w-4" />
 							</Button>
 							<Button
@@ -206,7 +205,6 @@ export function TransactionSheet({ isOpen, onOpenChange, onBack }: TransactionSh
 								disabled={true}
 							>
 								{' '}
-								{/* TODO: Implement pagination */}
 								<ChevronLeft className="h-4 w-4 -rotate-180" />
 							</Button>
 						</div>

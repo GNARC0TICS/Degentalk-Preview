@@ -19,3 +19,7 @@ coverage/
 .validation-cache/
 *.test.js.map
 *.test.ts.map
+
+# Playwright test artifacts
+playwright-report/
+test-results/

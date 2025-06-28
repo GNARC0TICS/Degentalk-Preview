@@ -1,5 +1,4 @@
 import React from 'react';
-import '@/styles/tokens.css';
 import { DevPlaygroundLayout, PlaygroundSection } from '@/pages/dev';
 import NotFoundPage from '@/pages/not-found';
 import * as Primitives from '@/layout/primitives';

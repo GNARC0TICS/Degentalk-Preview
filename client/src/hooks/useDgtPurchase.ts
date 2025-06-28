@@ -69,7 +69,7 @@ export function useDgtPurchase() {
 		mutationFn: async ({ packageId }: PurchaseOptions) => {
 			// In production, this would call the Stripe API
 			// For now, we're just going to simulate this without making actual API calls
-			console.log('Creating payment intent for package', packageId);
+			// Creating payment intent for package
 
 			/*
       // STRIPE INTEGRATION - UNCOMMENT BEFORE LAUNCH

@@ -35,12 +35,14 @@ import dgtPackageRoutes from './sub-domains/dgt-packages/dgt-packages.routes';
 import animationPackRoutes from './sub-domains/animation-packs/animation-packs.routes';
 import avatarFramesRoutes from './sub-domains/avatar-frames/avatar-frames.routes';
 import moderatorNotesRoutes from './sub-domains/moderator-notes/moderator-notes.routes';
+import brandConfigRoutes from './sub-domains/brand-config/brand.routes';
 import socialRoutes from './sub-domains/social/social.routes';
 import cacheRoutes from './sub-domains/cache/cache.routes';
 import { adminWalletRoutes } from './sub-domains/wallet/wallet.routes';
 import { emailTemplateRoutes } from './sub-domains/email-templates/email-templates.routes';
 import { backupRestoreRoutes } from './sub-domains/backup-restore/backup-restore.routes';
 import { stickerRoutes } from '../collectibles/stickers/stickers.routes';
+import subscriptionAdminRoutes from './sub-domains/subscriptions/subscription.admin.routes';
 // import userAdminRoutes from './users/users.admin.routes'; // DEPRECATED
 // import economyAdminRoutes from './settings/economy.routes'; // Placeholder for future
 
@@ -74,12 +76,14 @@ adminRouter.use('/dgt-packages', dgtPackageRoutes);
 adminRouter.use('/animation-packs', animationPackRoutes);
 adminRouter.use('/avatar-frames', avatarFramesRoutes);
 adminRouter.use('/moderator-notes', moderatorNotesRoutes);
+adminRouter.use('/brand-config', brandConfigRoutes);
 adminRouter.use('/social', socialRoutes);
 adminRouter.use('/cache', cacheRoutes);
 adminRouter.use('/wallet', adminWalletRoutes);
 adminRouter.use('/email-templates', emailTemplateRoutes);
 adminRouter.use('/backup-restore', backupRestoreRoutes);
 adminRouter.use('/collectibles', stickerRoutes);
+adminRouter.use('/subscriptions', subscriptionAdminRoutes);
 
 // DEBUG: Middleware to check if /emojis path is reached in adminRouter
 adminRouter.use('/emojis', (req, res, next) => {

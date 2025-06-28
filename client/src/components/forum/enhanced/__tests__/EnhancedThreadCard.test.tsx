@@ -1,5 +1,10 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import {
+	renderWithProviders as render,
+	screen,
+	fireEvent,
+	waitFor
+} from '@/test/utils/renderWithProviders';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import ThreadCard from '../../ThreadCard';
 import type { ThreadCardProps } from '../../ThreadCard';
@@ -157,9 +162,8 @@ describe('ThreadCard', () => {
 		fireEvent.mouseEnter(card!);
 
 		await waitFor(() => {
-			const bookmarkButtons = screen.getAllByRole('button');
-			const bookmarkButton = bookmarkButtons.find((btn) => btn.querySelector('.w-4.h-4'));
-			fireEvent.click(bookmarkButton!);
+			const bookmarkButton = screen.getByRole('button', { name: /bookmark/i });
+			fireEvent.click(bookmarkButton);
 			expect(mockOnBookmark).toHaveBeenCalledWith('1');
 		});
 	});

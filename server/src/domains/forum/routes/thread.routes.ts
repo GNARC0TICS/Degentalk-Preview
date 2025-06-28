@@ -14,6 +14,7 @@ import {
 } from '../../auth/middleware/auth.middleware';
 import { forumController } from '../forum.controller';
 import { threadService } from '../services/thread.service';
+import { postService } from '../services/post.service';
 import { logger } from '@server/src/core/logger';
 
 const router = Router();
@@ -22,7 +23,7 @@ const router = Router();
 const createThreadSchema = z.object({
 	title: z.string().min(1).max(200),
 	content: z.string().min(1),
-	categoryId: z.number().int().positive(),
+	structureId: z.number().int().positive(),
 	tags: z.array(z.string()).optional(),
 	isLocked: z.boolean().optional(),
 	isPinned: z.boolean().optional(),
@@ -44,33 +45,58 @@ router.get('/', async (req: Request, res: Response) => {
 	try {
 		const page = parseInt(req.query.page as string) || 1;
 		const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
-		const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
+		const structureId = req.query.structureId
+			? parseInt(req.query.structureId as string)
+			: undefined;
 		const sortBy = (req.query.sortBy as string) || 'newest';
 		const search = req.query.search as string;
 
+		// Log search parameters for debugging
+		logger.debug('ThreadRoutes', 'Searching threads with parameters', {
+			structureId,
+			page,
+			limit,
+			sortBy,
+			search
+		});
+
 		const result = await threadService.searchThreads({
-			categoryId,
+			structureId,
 			page,
 			limit,
 			sortBy: sortBy as any,
 			search
 		});
 
+		logger.debug('ThreadRoutes', 'Thread search results', {
+			threadCount: result.threads.length,
+			total: result.total,
+			page: result.page,
+			totalPages: result.totalPages
+		});
+
 		res.json({
 			success: true,
-			data: result,
-			pagination: {
-				page,
-				limit,
-				total: result.total,
-				totalPages: result.totalPages
+			data: {
+				threads: result.threads,
+				pagination: {
+					page,
+					limit: limit,
+					totalThreads: result.total,
+					totalPages: result.totalPages
+				}
 			}
 		});
 	} catch (error) {
-		logger.error('ThreadRoutes', 'Error in GET /threads', { error });
+		logger.error('ThreadRoutes', 'Error in GET /threads', {
+			error: error.message,
+			stack: error.stack,
+			query: req.query
+		});
 		res.status(500).json({
 			success: false,
-			error: 'Failed to fetch threads'
+			error: 'Failed to fetch threads',
+			details: error.message
 		});
 	}
 });
@@ -145,7 +171,7 @@ router.post('/', requireAuth, async (req: Request, res: Response) => {
 
 		const newThread = await threadService.createThread({
 			...validatedData,
-			authorId: userId
+			userId: userId
 		});
 
 		res.status(201).json({
@@ -284,6 +310,53 @@ router.delete(
 		}
 	}
 );
+
+// Get posts for a thread
+router.get('/:threadId/posts', async (req: Request, res: Response) => {
+	try {
+		const threadId = parseInt(req.params.threadId);
+		const page = parseInt(req.query.page as string) || 1;
+		const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
+		const sortBy = (req.query.sortBy as string) || 'oldest';
+
+		if (isNaN(threadId)) {
+			return res.status(400).json({
+				success: false,
+				error: 'Invalid thread ID'
+			});
+		}
+
+		const result = await postService.getPostsByThread({
+			threadId,
+			page,
+			limit,
+			sortBy: sortBy as any
+		});
+
+		res.json({
+			success: true,
+			data: {
+				posts: result.posts,
+				pagination: {
+					page: result.page,
+					limit,
+					totalPosts: result.total,
+					totalPages: result.totalPages
+				}
+			}
+		});
+	} catch (error) {
+		logger.error('ThreadRoutes', 'Error in GET /threads/:threadId/posts', {
+			error: error.message,
+			stack: error.stack,
+			threadId: req.params.threadId
+		});
+		res.status(500).json({
+			success: false,
+			error: 'Failed to fetch thread posts'
+		});
+	}
+});
 
 // Get thread tags
 router.get('/:threadId/tags', async (req: Request, res: Response) => {

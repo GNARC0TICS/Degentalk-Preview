@@ -23,7 +23,7 @@ export default function WalletSummaryWidget({
 }: WalletSummaryWidgetProps) {
 	// Placeholder function for wallet actions
 	const handleWalletAction = () => {
-		console.log('Wallet action clicked');
+		// Wallet action clicked
 	};
 
 	// Handling not logged in state
@@ -42,7 +42,7 @@ export default function WalletSummaryWidget({
 							<Wallet className="h-10 w-10 text-zinc-500" />
 						</div>
 						<p className="text-zinc-400 mb-4">
-							Connect your wallet to access DegenTalk's full economy
+							Connect your wallet to access Degentalk's full economy
 						</p>
 						<Button
 							onClick={handleWalletAction}

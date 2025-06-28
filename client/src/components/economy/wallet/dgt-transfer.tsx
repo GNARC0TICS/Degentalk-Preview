@@ -167,7 +167,7 @@ export function DgtTransfer({ className = '' }: DgtTransferProps) {
 							DGT transfers are currently disabled
 						</span>
 					) : (
-						'Send DGT tokens to other DegenTalk users'
+						'Send DGT tokens to other Degentalk users'
 					)}
 				</p>
 			</CardHeader>

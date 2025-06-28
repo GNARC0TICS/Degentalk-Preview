@@ -54,7 +54,7 @@ export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
 				))}
 
 				{/* Authenticated User Section */}
-				{isAuthenticated && user ? (
+				{isAuthenticated && user && user.username ? (
 					<div className="pt-4 pb-3 border-t border-zinc-800">
 						<div className="flex items-center px-3">
 							<div className="flex-shrink-0">
@@ -66,7 +66,7 @@ export function MobileNav({ isOpen, onClose, onLogout }: MobileNavProps) {
 							</div>
 							<div className="ml-3">
 								<div className="text-base font-medium text-white">{user.username}</div>
-								<div className="text-sm font-medium text-zinc-500">Level {user.level || '0'}</div>
+								<div className="text-sm font-medium text-zinc-500">Level {user.level || 1}</div>
 							</div>
 						</div>
 

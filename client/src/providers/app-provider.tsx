@@ -1,5 +1,11 @@
+import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from 'next-themes';
 import XpToastProvider from '@/contexts/XpToastContext';
 import LevelUpProvider from '@/contexts/LevelUpContext';
+
+// Create a client
+const queryClient = new QueryClient();
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
 	return (

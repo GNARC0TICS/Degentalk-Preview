@@ -1,9 +1,20 @@
 import React, { createContext, useContext, useMemo, useState, useCallback, useEffect } from 'react';
 import type { ReactNode, ComponentType } from 'react';
 import type { LucideProps } from 'lucide-react';
-import { ZONE_THEMES } from '@/config/themeConstants'; // Default themes
 import { apiRequest } from '@/lib/queryClient'; // Fetch utility
-import { Flame, Target, Archive, Dices, FileText, Folder } from 'lucide-react';
+import {
+	Flame,
+	Target,
+	Archive,
+	Dices,
+	FileText,
+	Folder,
+	TrendingUp,
+	Activity,
+	Sparkles,
+	MessageSquare,
+	Crown
+} from 'lucide-react';
 
 // LucideIcon is now imported from lucide-react
 
@@ -16,7 +27,12 @@ const ICON_MAP: Record<string, LucideIcon> = {
 	Archive,
 	Dices,
 	FileText,
-	Folder
+	Folder,
+	TrendingUp,
+	Activity,
+	Sparkles,
+	MessageSquare,
+	Crown
 };
 
 const UI_THEMES_ENDPOINT = '/api/ui/themes';
@@ -65,7 +81,62 @@ const COLOR_CLASS_TO_HEX: Record<string, string> = {
 	'text-cyan-400': '#22d3ee'
 };
 
-const defaultTheme = ZONE_THEMES.default;
+// Dynamic theme generation - replaces static ZONE_THEMES
+const generateDynamicTheme = (semanticKey: string): ThemeSettings => {
+	const themeMap: Record<string, ThemeSettings> = {
+		pit: {
+			icon: TrendingUp,
+			color: 'text-red-400',
+			bgColor: 'bg-red-500/10',
+			borderColor: 'border-red-500/30',
+			hexColor: '#f87171'
+		},
+		mission: {
+			icon: Target,
+			color: 'text-blue-400',
+			bgColor: 'bg-blue-500/10',
+			borderColor: 'border-blue-500/30',
+			hexColor: '#60a5fa'
+		},
+		casino: {
+			icon: Sparkles,
+			color: 'text-purple-400',
+			bgColor: 'bg-purple-500/10',
+			borderColor: 'border-purple-500/30',
+			hexColor: '#c084fc'
+		},
+		briefing: {
+			icon: MessageSquare,
+			color: 'text-amber-400',
+			bgColor: 'bg-amber-500/10',
+			borderColor: 'border-amber-500/30',
+			hexColor: '#fbbf24'
+		},
+		archive: {
+			icon: Archive,
+			color: 'text-gray-400',
+			bgColor: 'bg-gray-500/10',
+			borderColor: 'border-gray-500/30',
+			hexColor: '#9ca3af'
+		},
+		shop: {
+			icon: Crown,
+			color: 'text-emerald-400',
+			bgColor: 'bg-emerald-500/10',
+			borderColor: 'border-emerald-500/30',
+			hexColor: '#34d399'
+		},
+		default: {
+			icon: Folder,
+			color: 'text-zinc-400',
+			bgColor: 'bg-zinc-500/10',
+			borderColor: 'border-zinc-500/30',
+			hexColor: '#10b981'
+		}
+	};
+
+	return themeMap[semanticKey] || themeMap.default;
+};
 
 const ForumThemeContext = createContext<ForumThemeContextType | undefined>(undefined);
 
@@ -129,10 +200,10 @@ export const ForumThemeProvider: React.FC<{
 			const key = semanticKey || 'default';
 			// Theme overrides from state (which could include fetched remote themes) take precedence
 			const override = themeOverrides[key];
-			// Fallback to ZONE_THEMES if no override for the specific key
-			const baseTheme = ZONE_THEMES[key as keyof typeof ZONE_THEMES] || defaultTheme;
+			// Use dynamic theme generation instead of static ZONE_THEMES
+			const baseTheme = generateDynamicTheme(key);
 
-			// If icon is a component from ZONE_THEMES, it's already LucideIcon.
+			// If icon is a component from dynamic themes, it's already LucideIcon.
 			// If it's a string (emoji from MergedZone/Forum), it's handled.
 			let finalIcon: LucideIcon | string | undefined = baseTheme.icon;
 			if (override?.icon) {

@@ -12,7 +12,7 @@ This guide gets you up and running with the CCPayment wallet integration in unde
 - PostgreSQL
 - Git
 
-# DegenTalk setup
+# Degentalk setup
 git clone https://github.com/your-org/degentalk
 cd degentalk
 npm install

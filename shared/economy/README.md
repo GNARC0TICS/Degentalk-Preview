@@ -1,6 +1,6 @@
 # 🏦 Shared Economy Modules
 
-This directory is **the** single source of truth for the DegenTalk XP & DGT economy.
+This directory is **the** single source of truth for the Degentalk XP & DGT economy.
 All backend services, frontend widgets, admin panels and scripts **import only** from
 these modules—never re-declare numbers or formulas elsewhere.
 

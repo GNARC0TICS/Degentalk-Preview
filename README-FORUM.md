@@ -1,4 +1,4 @@
-# DegenTalk Forum – Canonical Architecture & Developer Guide
+# Degentalk Forum – Canonical Architecture & Developer Guide
 
 > **Status – 2025-06-16**  
 > This document is the single source of truth for anything related to the forum

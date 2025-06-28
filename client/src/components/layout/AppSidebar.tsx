@@ -15,17 +15,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-// import { api } from '@/lib/api'; // Removed unused import
-import { useUser } from '@stackframe/stack';
-import { forumCategories } from '@schema'; // Adjusted path
-import type { ForumCategoryWithStats } from '@shared/types'; // Keep if used elsewhere, or combine if ForumCategoryWithStats extends ForumCategory
 import { useLocation } from 'wouter';
 import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
 import { ROUTES } from '@/constants/routes';
-// import { useForumStructure } from '@/features/forum/hooks/useForumStructure'; // Removed unused import
-
-// Define ForumCategory type from schema
-export type ForumCategory = typeof forumCategories.$inferSelect;
+import { ProfileCard } from '@/components/widgets/ProfileCard';
+import { useAuth } from '@/hooks/use-auth';
 
 // Helper function to determine icon for a category
 function getCategoryEmoji(name: string): string {
@@ -52,13 +46,13 @@ function getCategoryEmoji(name: string): string {
 }
 
 type SidebarProps = {
-	categories?: ForumCategory[] | ForumCategoryWithStats[];
 	activeCategoryId?: number;
 	forumId?: number;
 };
 
-export function Sidebar({ categories, activeCategoryId, forumId }: SidebarProps) {
+export function Sidebar({ activeCategoryId, forumId }: SidebarProps) {
 	const [location] = useLocation();
+	const { isAuthenticated } = useAuth();
 
 	const navItems = [
 		{ icon: Home, label: 'Home', href: ROUTES.HOME },
@@ -72,6 +66,9 @@ export function Sidebar({ categories, activeCategoryId, forumId }: SidebarProps)
 
 	return (
 		<div className="w-full space-y-6">
+			{/* Profile Card - Show at top when authenticated */}
+			{isAuthenticated && <ProfileCard variant="sidebar" />}
+
 			{/* Navigation */}
 			<Card className="bg-zinc-900/50 border border-zinc-800 shadow-md rounded-lg transition-all">
 				<CardHeader className="bg-zinc-900 border-b border-zinc-800 py-3">

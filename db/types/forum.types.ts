@@ -10,9 +10,20 @@ export interface ThreadWithUser extends Thread {
 	lastPost?: Post;
 }
 
-export interface PostWithUser extends Post {
-	user: User;
-	hasLiked?: boolean; // Added
+export interface PostWithUser {
+	id: number;
+	content: string;
+	threadId: number;
+	userId: string;
+	replyToPostId?: number | null;
+	createdAt: Date;
+	updatedAt: Date;
+	likeCount: number;
+	isEdited: boolean;
+	editedAt?: Date | null;
+	authorUsername: string;
+	authorAvatar?: string | null;
+	hasLiked?: boolean;
 }
 
 export interface ForumTag {

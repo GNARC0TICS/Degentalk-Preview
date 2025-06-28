@@ -193,7 +193,7 @@ export function WhispersInbox({ className }: WhispersInboxProps) {
 							</span>
 						</CardTitle>
 						<CardDescription className="text-gray-400">
-							Private messages with other DegenTalk users
+							Private messages with other Degentalk users
 						</CardDescription>
 						<div className="relative mt-2">
 							<Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />

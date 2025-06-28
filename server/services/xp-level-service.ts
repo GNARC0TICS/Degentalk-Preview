@@ -11,11 +11,13 @@ import {
 	avatarFrames,
 	xpCloutSettings,
 	userRoles,
-	roles as rolesTable
+	roles as rolesTable,
+	forumStructure
 } from '@schema';
 import { eq, sql, lte, desc, and, isNull } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 import { getLevelForXp, getXpForLevel } from '@shared/economy/reward-calculator';
+import { sanitizeMultiplier } from '@shared/economy/economy.config';
 
 /**
  * XP Action types used in economySettings
@@ -83,7 +85,7 @@ export class XpLevelService {
 				}
 			}
 
-			// Apply role-based XP multiplier
+			// Apply role-based XP multiplier with protection
 			const xpMultiplier = await this.getUserXpMultiplier(userId);
 			baseXp = Math.floor(baseXp * xpMultiplier);
 
@@ -549,20 +551,53 @@ export class XpLevelService {
 	 * Get the effective XP multiplier for a user based on their roles.
 	 * If the user has multiple roles, the highest multiplier is applied.
 	 * If the user has no roles with a multiplier > 0, a default of 1 is returned.
+	 * Now includes forum multiplier protection against stacking exploits.
 	 */
-	private async getUserXpMultiplier(userId: number): Promise<number> {
+	private async getUserXpMultiplier(userId: number, forumId?: number): Promise<number> {
 		try {
+			// Get role multiplier
 			const roleMultipliers = await this.db
 				.select({ multiplier: rolesTable.xpMultiplier })
 				.from(userRoles)
 				.innerJoin(rolesTable, eq(userRoles.roleId, rolesTable.id))
 				.where(eq(userRoles.userId, userId));
 
-			if (roleMultipliers.length === 0) return 1;
+			const roleMultiplier =
+				roleMultipliers.length === 0
+					? 1
+					: Math.max(...roleMultipliers.map((r) => r.multiplier ?? 1));
 
-			// Return the highest multiplier the user has
-			const maxMultiplier = Math.max(...roleMultipliers.map((r) => r.multiplier ?? 1));
-			return maxMultiplier > 0 ? maxMultiplier : 1;
+			// Get forum multiplier if forumId provided
+			let forumMultiplier = 1;
+			if (forumId) {
+				const [forum] = await this.db
+					.select({ xpMultiplier: forumStructure.xpMultiplier })
+					.from(forumStructure)
+					.where(eq(forumStructure.id, forumId))
+					.limit(1);
+
+				forumMultiplier = forum?.xpMultiplier ?? 1.0;
+			}
+
+			// Apply multiplier protection
+			const result = sanitizeMultiplier(roleMultiplier, forumMultiplier, {
+				userId,
+				forumId
+			});
+
+			if (result.wasCapped) {
+				logger.warn('XpLevelService', 'XP multiplier was capped for user', {
+					userId,
+					forumId,
+					roleMultiplier,
+					forumMultiplier,
+					originalMultiplier: result.originalMultiplier,
+					finalMultiplier: result.finalMultiplier,
+					violations: result.violations
+				});
+			}
+
+			return result.finalMultiplier;
 		} catch (error) {
 			logger.error('XpLevelService', `Error fetching XP multiplier for user ${userId}:`, error);
 			return 1;

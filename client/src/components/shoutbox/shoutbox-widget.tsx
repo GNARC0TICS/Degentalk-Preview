@@ -33,7 +33,8 @@ import { useIdentityDisplay } from '@/hooks/useIdentityDisplay';
 
 // Import icons
 import {
-	MessageSquare,
+	MessageSquareLock,
+	MessagesSquare,
 	Send,
 	RefreshCw,
 	Clock,
@@ -391,6 +392,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 
 	return (
 		<Card
+			data-testid="shoutbox-widget"
 			className={`bg-zinc-900/50 border border-zinc-800 overflow-hidden transition-all duration-300 flex flex-col ${
 				expansionLevel === 'expanded'
 					? 'h-[600px]'
@@ -401,7 +403,11 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 		>
 			<CardHeader className="pb-2 space-y-2 sm:space-y-0 flex flex-col sm:flex-row sm:items-center sm:justify-between">
 				<CardTitle className="text-lg flex items-center">
-					<MessageSquare className="h-5 w-5 text-emerald-500 mr-2" />
+					{userLoggedIn ? (
+						<MessagesSquare className="h-5 w-5 text-emerald-500 mr-2" />
+					) : (
+						<MessageSquareLock className="h-5 w-5 text-emerald-500 mr-2" />
+					)}
 					Shoutbox
 				</CardTitle>
 				<div className="flex items-center space-x-1">
@@ -474,7 +480,11 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 						</div>
 					) : messages.length === 0 ? (
 						<div className="flex flex-col items-center justify-center h-full text-zinc-500">
-							<MessageSquare className="h-8 w-8 mb-2" />
+							{userLoggedIn ? (
+								<MessagesSquare className="h-8 w-8 mb-2" />
+							) : (
+								<MessageSquareLock className="h-8 w-8 mb-2" />
+							)}
 							<span>No messages yet</span>
 							<span className="text-xs mt-1">Be the first to say something!</span>
 						</div>

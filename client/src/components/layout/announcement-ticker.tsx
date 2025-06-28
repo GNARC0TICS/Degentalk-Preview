@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import './announcement-ticker.css';
 import {
 	AlertCircle,
 	TrendingUp,
@@ -14,7 +15,19 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Link } from 'wouter';
-import type { Announcement } from '@/../db/types/announcement.types';
+
+interface Announcement {
+	id: number;
+	type: string;
+	content: string;
+	createdAt: string;
+	priority?: number;
+	tickerMode?: boolean;
+	link?: string;
+	bgColor?: string;
+	textColor?: string;
+	icon?: string;
+}
 
 const getIconComponent = (iconName?: string, type: string = 'info', textColor?: string) => {
 	const baseIconClasses = 'w-4 h-4';
@@ -106,6 +119,21 @@ export function AnnouncementTicker() {
 
 	const [isHovered, setIsHovered] = useState(false);
 
+	const contentRef = useRef<HTMLDivElement>(null);
+	const trackRef = useRef<HTMLDivElement>(null);
+
+	// Ensure animation duration scales with content width for smoother feel
+	useEffect(() => {
+		if (!contentRef.current || !trackRef.current) return;
+		const contentWidth = contentRef.current.scrollWidth;
+		const trackWidth = trackRef.current.clientWidth;
+		if (contentWidth === 0) return;
+		// Duration: 15s per full track length (default). Scale proportionally
+		const baseDuration = 15000; // ms
+		const duration = (contentWidth / trackWidth) * baseDuration;
+		contentRef.current.style.setProperty('--ticker-duration', `${duration}ms`);
+	}, [displayAnnouncements]);
+
 	// Don't show the ticker if there are no announcements
 	if (!displayAnnouncements || displayAnnouncements.length === 0) {
 		return null;
@@ -132,8 +160,8 @@ export function AnnouncementTicker() {
 				<div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-zinc-900/60 to-transparent z-[5]" />
 
 				{/* Scrolling text container */}
-				<div className="ticker-track ml-12 w-full overflow-hidden">
-					<div className={`ticker-content ${isHovered ? 'paused' : ''}`}>
+				<div ref={trackRef} className="ticker-track ml-12 w-full overflow-hidden">
+					<div ref={contentRef} className={`ticker-content ${isHovered ? 'paused' : ''}`}>
 						{displayAnnouncements.map((announcement, index) => {
 							// Prepare custom styles
 							const customStyle: React.CSSProperties = {};
@@ -171,18 +199,13 @@ export function AnnouncementTicker() {
 							);
 						})}
 
-						{/* Duplicate announcements for seamless loop */}
-						{displayAnnouncements.map((announcement, index) => {
-							// Prepare custom styles
+						{/* Duplicate announcements op */}
+						{[...displayAnnouncements].map((announcement, index) => {
+							// duplicate set for seamless scrolling
 							const customStyle: React.CSSProperties = {};
 
-							if (announcement.bgColor) {
-								customStyle.backgroundColor = announcement.bgColor;
-							}
-
-							if (announcement.textColor) {
-								customStyle.color = announcement.textColor;
-							}
+							if (announcement.bgColor) customStyle.backgroundColor = announcement.bgColor;
+							if (announcement.textColor) customStyle.color = announcement.textColor;
 
 							const AnnouncementContent = () => (
 								<span
@@ -193,7 +216,6 @@ export function AnnouncementTicker() {
 								</span>
 							);
 
-							// If announcement has a link, wrap it in a Link component
 							return announcement.link ? (
 								<Link
 									key={`ann-dup-link-${announcement.id}-${index}`}

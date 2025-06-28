@@ -1,5 +1,10 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import {
+	renderWithProviders as render,
+	screen,
+	fireEvent,
+	waitFor
+} from '@/test/utils/renderWithProviders';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CryptoEngagementBar } from '../CryptoEngagementBar';
 import type { CryptoEngagementBarProps } from '../CryptoEngagementBar';
@@ -154,9 +159,10 @@ describe('CryptoEngagementBar', () => {
 			/>
 		);
 
+		// Find the bookmark button by looking for the button with Star icon (has w-8 class and p-0)
 		const bookmarkButton = screen
 			.getAllByRole('button')
-			.find((btn) => btn.querySelector('svg.w-4.h-4'));
+			.find((btn) => btn.classList.contains('w-8') && btn.classList.contains('p-0'));
 		fireEvent.click(bookmarkButton!);
 
 		expect(mockOnBookmark).toHaveBeenCalled();
@@ -172,9 +178,10 @@ describe('CryptoEngagementBar', () => {
 			/>
 		);
 
+		// Find the bookmark button by looking for the button with Star icon (has w-8 class and p-0)
 		const bookmarkButton = screen
 			.getAllByRole('button')
-			.find((btn) => btn.querySelector('svg.w-4.h-4'));
+			.find((btn) => btn.classList.contains('w-8') && btn.classList.contains('p-0'));
 		expect(bookmarkButton).toHaveClass('text-amber-400');
 	});
 
@@ -218,9 +225,10 @@ describe('CryptoEngagementBar', () => {
 		const secondPlaceBadge = badges.find((el) => el.textContent === '2');
 		const thirdPlaceBadge = badges.find((el) => el.textContent === '3');
 
-		expect(firstPlaceBadge?.parentElement).toHaveClass('bg-amber-500/20');
-		expect(secondPlaceBadge?.parentElement).toHaveClass('bg-zinc-500/20');
-		expect(thirdPlaceBadge?.parentElement).toHaveClass('bg-orange-500/20');
+		// The color classes are applied directly to the Badge component
+		expect(firstPlaceBadge).toHaveClass('bg-amber-500/20');
+		expect(secondPlaceBadge).toHaveClass('bg-zinc-500/20');
+		expect(thirdPlaceBadge).toHaveClass('bg-orange-500/20');
 	});
 
 	it('handles missing optional data gracefully', () => {

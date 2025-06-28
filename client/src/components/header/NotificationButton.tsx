@@ -46,10 +46,10 @@ interface NotificationButtonProps {
 }
 
 export function NotificationButton({ className }: NotificationButtonProps) {
-	const { unreadNotifications } = useHeader();
+	const { unreadNotifications, user } = useHeader();
 	const [isOpen, setIsOpen] = useState(false);
 
-	if (unreadNotifications === 0) {
+	if (!user || unreadNotifications === 0) {
 		return null;
 	}
 

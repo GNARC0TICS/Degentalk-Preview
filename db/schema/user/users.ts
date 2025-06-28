@@ -81,14 +81,30 @@ export const users = pgTable(
 		activeBadgeId: integer('active_badge_id').references(() => badges.id, { onDelete: 'set null' }),
 		dgtPoints: integer('dgt_points').notNull().default(0),
 		dgtWalletBalance: integer('dgt_wallet_balance').notNull().default(0),
+		// Enhanced profile metrics
+		dgtBalance: bigint('dgt_balance', { mode: 'number' }).notNull().default(0),
+		reputation: integer('reputation').notNull().default(0),
+		totalPosts: integer('total_posts').notNull().default(0),
+		totalThreads: integer('total_threads').notNull().default(0),
+		totalLikes: integer('total_likes').notNull().default(0),
+		totalTips: integer('total_tips').notNull().default(0),
+		nextLevelXp: integer('next_level_xp').notNull().default(100),
+		// Profile system enhancements
 		pointsVersion: integer('points_version').notNull().default(1),
 		dailyXpGained: integer('daily_xp_gained').notNull().default(0),
 		lastXpGainDate: timestamp('last_xp_gain_date'),
+		friendRequestsSent: integer('friend_requests_sent').notNull().default(0),
+		friendRequestsReceived: integer('friend_requests_received').notNull().default(0),
+		isStaff: boolean('is_staff').notNull().default(false),
+		isModerator: boolean('is_moderator').notNull().default(false),
+		isAdmin: boolean('is_admin').notNull().default(false),
 		role: userRoleEnum('role').default('user'),
 		walletAddress: varchar('wallet_address', { length: 255 }),
 		encryptedPrivateKey: varchar('encrypted_private_key', { length: 512 }),
 		walletBalanceUSDT: bigint('wallet_balance_usdt', { mode: 'number' }).notNull().default(0), // Corrected to bigint based on schema.ts (doublePrecision was used there, but bigint seems more appropriate for currency)
-		walletPendingWithdrawals: jsonb('wallet_pending_withdrawals').default('[]'),
+		walletPendingWithdrawals: bigint('wallet_pending_withdrawals', { mode: 'number' })
+			.notNull()
+			.default(0),
 		ccpaymentAccountId: varchar('ccpayment_account_id', { length: 100 }),
 		verifyToken: varchar('verify_token', { length: 255 }),
 		resetToken: varchar('reset_token', { length: 255 }),

@@ -1,5 +1,5 @@
 import React from 'react';
-import { WhaleWatchDisplay } from '@/components/social/WhaleWatchDisplay';
+import { FollowingList } from '@/components/social/FollowingList';
 import type { ProfileData } from '@/types/profile';
 
 interface WhaleWatchTabProps {
@@ -9,13 +9,8 @@ interface WhaleWatchTabProps {
 
 export default function WhaleWatchTab({ profile, isOwnProfile }: WhaleWatchTabProps) {
 	return (
-		<div className="space-y-6">
-			<WhaleWatchDisplay
-				userId={profile.id}
-				username={profile.username}
-				isCurrentUser={isOwnProfile}
-				compact={false}
-			/>
+		<div className="space-y-4">
+			<FollowingList userId={profile.id} isCurrentUser={isOwnProfile} />
 		</div>
 	);
 }

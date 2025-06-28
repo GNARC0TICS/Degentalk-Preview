@@ -4,7 +4,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-DegenTalk is a modern, highly satirical crypto forum platform designed for gamblers, investors, traders, and crypto fanatics across the globe. It aims to be the next viral forum of the century, featuring integrated wallet functionality, a digital goods marketplace, and gamified social features with XP/DGT economy.
+Degentalk is a modern, highly satirical crypto forum platform designed for gamblers, investors, traders, and crypto fanatics across the globe. It aims to be the next viral forum of the century, featuring integrated wallet functionality, a digital goods marketplace, and gamified social features with XP/DGT economy.
+
+## 🚨 SYSTEM-WIDE THREAD ARCHITECTURE (CANONICAL)
+
+**ENFORCED AS OF 2025-01-27 - ALL AGENTS MUST FOLLOW**
+
+### ✅ Unified Thread System
+
+- **ALL frontend thread views MUST use `ThreadDisplay` type** from `@/types/thread.types`
+- **ALL API responses include proper `zone` data with `colorTheme`** - DO NOT manually enrich thread data
+- **`ThreadList` component is the ONLY standard** across all views - NO custom thread loaders
+- **Backend provides zone data automatically** - frontend must not hardcode zones or themes
+
+### ✅ Canonical Seeding
+
+- **`seed-all-comprehensive.ts` is the ONLY valid thread seeder**
+- **ALL other thread seeders have been DELETED** (seed-realistic-threads, seedDynamicContent, etc.)
+- **Use `npm run seed:all` or `npm run seed:forums:only`** - no other seeding commands
+- **Thread objects MUST use `structureId` pointing to canonical forum slugs** from forumMap.config.ts
+
+### ✅ Config-Driven Architecture
+
+- **`forumMap.config.ts`** - forum hierarchy and settings (SINGLE SOURCE OF TRUTH)
+- **`thread.config.ts`** - thread form/editor behavior
+- **`pagination.config.ts`** - page sizes, infinite scroll, etc.
+- **Zones resolved at runtime by backend** using forum structure
+
+### 🔒 ENFORCEMENT
+
+- **Any component/service/test using legacy types or hardcoded thread data is OUT OF SPEC**
+- **All routes verified:** ZonePage, ForumPage, TagPage, ProfilePage, Content Feeds
+- **ThreadService handles ALL thread queries** for consistency
+- **NO freelancing this logic** - ask if unsure but assume new structure is canonical
 
 ## Essential Commands
 
@@ -169,12 +201,40 @@ PORT=5001                       # Backend port
 VITE_PORT=5173                  # Frontend port
 ```
 
-### Development Features
+### Enhanced Development Features
 
-- **No authentication required** in development
+#### **🧑‍💼 Realistic Admin User Setup**
+
+```bash
+npm run seed:dev-complete       # Complete setup (recommended)
+npm run seed:users              # Basic users including cryptoadmin
+npm run seed:dev-wallet         # Wallet with crypto balances
+npm run seed:dev-subscriptions  # VIP subscription data
+```
+
+Creates a production-like development environment:
+
+- **Username**: `cryptoadmin` (auto-login as admin)
+- **Wallet**: 500k+ DGT, 10 ETH, 5k USDT, 0.5 BTC
+- **VIP Status**: Active lifetime subscription with benefits
+- **Profile**: Complete with bio, avatar, social links
+- **Stats**: Level 99, 99,999 XP, 10,000 reputation
+
+#### **🎮 Full Platform Testing**
+
+- **ProfileCard widget** - Live user data in left sidebar
+- **Real wallet transactions** - Using seeded balances
+- **Forum moderation** - Admin tools and privileges
+- **Shoutbox chat** - With authenticated user identity
+- **Shop purchases** - DGT spending functionality
+- **XP system** - Real-time experience point updates
+
+#### **⚡ Development Tools**
+
 - **Role switcher** - Test admin/mod/user permissions (bottom-right corner)
-- **Hot reload** on both frontend and backend
+- **Hot reload** - Both frontend and backend with preserved state
 - **Automatic port management** - Kills existing processes before starting
+- **Mock data** - Realistic content for all platform features
 
 ## Forum Business Logic
 
@@ -287,6 +347,93 @@ npm run kill-ports
 5. **`.cursor/rules/`** - Development rules and patterns
 6. **`db/schema/index.ts`** - Complete database schema exports
 
+## 🔐 Authentication System Architecture
+
+### 🔧 Auth Flow Overview
+
+DegenTalk uses a **unified authentication system** with the following components:
+
+1. **Single QueryClient**: `client/src/providers/root-provider.tsx` contains the ONLY QueryClient instance
+2. **Unified Auth Hook**: `client/src/hooks/use-auth.tsx` is the single source of truth for auth state
+3. **Header Integration**: `client/src/components/header/HeaderContext.tsx` syncs with auth state
+4. **Backend Auth**: Session-based authentication with Passport.js
+
+### 🔗 Critical Auth Components
+
+| Component       | Purpose                                     | Key Features                               |
+| --------------- | ------------------------------------------- | ------------------------------------------ |
+| `RootProvider`  | Main QueryClient with `on401: 'returnNull'` | Handles 401s gracefully for auth           |
+| `AuthProvider`  | Auth state management                       | Real auth validation, cache clearing       |
+| `HeaderContext` | UI auth state sync                          | Syncs with `useAuth` via `isAuthenticated` |
+| `use-auth.tsx`  | Auth business logic                         | Login/logout, session validation           |
+
+### 🚨 Auth Development Rules
+
+**DO:**
+
+- Use `useAuth()` hook for all auth state
+- Use `isAuthenticated` flag from auth context
+- Clear auth cache on logout: `queryClient.setQueryData(['/api/auth/user'], null)`
+- Use URL-based query keys: `['/api/auth/user']` not `['user']`
+- Use `roles` instead of deprecated `userGroups`
+
+**DON'T:**
+
+- Create multiple QueryClient instances
+- Use deprecated `userGroups` schema exports
+- Bypass auth state with manual user objects
+- Use custom 401 handling (QueryClient handles it)
+- Import `queryClient` from `@/lib/queryClient` (use provider's instance)
+
+### 🔄 Environment Configuration
+
+```bash
+# env.local - Force real authentication
+NODE_ENV=development
+DEV_FORCE_AUTH=true          # Forces real auth in dev
+DEV_BYPASS_PASSWORD=false    # Disables password bypass
+VITE_FORCE_AUTH=true         # Frontend auth forcing
+```
+
+### 🛠️ Auth Debugging
+
+```javascript
+// Browser console - check auth state
+console.log('[AUTH] Current state:', {
+	isAuthenticated: !!user,
+	userState: user ? `${user.username} (${user.id})` : 'null'
+});
+```
+
+### 🔧 Common Auth Issues
+
+| Issue                                           | Solution                                           |
+| ----------------------------------------------- | -------------------------------------------------- |
+| "Login button → notifications/wallet instantly" | Cached auth state. Clear browser cache             |
+| "Multiple auth providers error"                 | Only use AuthProvider in RootProvider              |
+| "QueryClient conflicts"                         | Use only the RootProvider QueryClient              |
+| "401 errors not handled"                        | Ensure `on401: 'returnNull'` in QueryClient config |
+| "userGroups import errors"                      | Replace with `roles` import                        |
+
+### 🏗️ Auth Architecture Flow
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   RootProvider  │ -> │   AuthProvider   │ -> │  HeaderContext  │
+│                 │    │                  │    │                 │
+│ • QueryClient   │    │ • useQuery auth  │    │ • UI sync       │
+│ • on401: null   │    │ • State mgmt     │    │ • isAuth flag   │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                        │                        │
+         v                        v                        v
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ Browser Storage │    │   Auth Session   │    │   UI Elements   │
+│                 │    │                  │    │                 │
+│ • Clear on init │    │ • Server session │    │ • Login/Logout  │
+│ • Cache keys    │    │ • Passport.js    │    │ • User menu     │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+```
+
 ## Common Issues & Solutions
 
 ### Port Conflicts
@@ -308,11 +455,21 @@ TypeScript checking is temporarily disabled during major refactor. Use `npm run 
 
 Always run `npm run sync:forums` after editing `forumMap.config.ts`
 
+### Authentication Issues
+
+```bash
+# Clear auth cache and reload
+# Option 1: Clear browser data (Dev Tools → Application → Storage → Clear storage)
+# Option 2: Check auth state in browser console (see Auth Debugging above)
+```
+
+**📖 For detailed migration help, see: `docs/AUTH-MIGRATION-GUIDE.md`**
+
 ## 💳 DGT Wallet System Integration (COMPLETE)
 
 ### Overview
 
-The DegenTalk Wallet System provides a complete DGT token economy with CCPayment crypto integration, user transfers, and comprehensive transaction management. This system was fully integrated during the frontend completion phase.
+The Degentalk Wallet System provides a complete DGT token economy with CCPayment crypto integration, user transfers, and comprehensive transaction management. This system was fully integrated during the frontend completion phase.
 
 ### Frontend Architecture
 
@@ -338,35 +495,30 @@ client/src/pages/wallet.tsx         # Main wallet page with tab interface
 ### Key Features Implemented
 
 1. **Real-time Balance Display**
-
    - Primary DGT balance with animated changes and visual feedback
    - Secondary crypto balances with auto-conversion information
    - Pending transaction indicators with live count updates
    - Feature gate integration showing disabled functions
 
 2. **CCPayment Crypto Deposits**
-
    - Live deposit addresses for ETH, BTC, USDT, and other cryptocurrencies
    - Automatic conversion to DGT at $0.10 per token
    - Real-time deposit tracking with webhooks
    - Minimum deposit validation and conversion rate display
 
 3. **User-to-User DGT Transfers**
-
    - Username validation and user lookup
    - Configurable transfer limits (default: 10,000 DGT max)
    - Optional transfer notes (200 character limit)
    - Real-time balance updates for both sender and recipient
 
 4. **Enhanced Transaction History**
-
    - DGT-specific transaction types: DEPOSIT_CREDIT, ADMIN_CREDIT, TRANSFER, TIP, RAIN, SHOP
    - Advanced filtering: All, DGT, Crypto, Transfers, Pending
    - Visual indicators for pending transactions with floating animations
    - Detailed metadata display (original crypto amounts, conversion rates, etc.)
 
 5. **Feature Gate System**
-
    - Admin-configurable wallet features via `/api/wallet/config`
    - `allowCryptoWithdrawals` - Controls crypto withdrawal requests
    - `allowDGTSpending` - Controls DGT conversion to shop credits
@@ -374,7 +526,6 @@ client/src/pages/wallet.tsx         # Main wallet page with tab interface
    - Dynamic UI adaptation with visual disabled states
 
 6. **Pending State Management**
-
    - Visual indicators for pending transactions (amber glow, pulsing)
    - Real-time pending count display in balance header
    - Separate "Pending" filter tab when transactions exist

@@ -65,6 +65,14 @@ export class CCPaymentWebhookService {
 				case 'withdrawal_failed':
 					return await this.handleWithdrawalFailed(event);
 
+				case 'user_created':
+				case 'wallet_created':
+					return await this.handleWalletCreated(event);
+
+				case 'user_failed':
+				case 'wallet_failed':
+					return await this.handleWalletFailed(event);
+
 				default:
 					logger.warn('Unknown webhook event type', { eventType: event.eventType });
 					return { success: false, message: 'Unknown event type' };
@@ -298,6 +306,91 @@ export class CCPaymentWebhookService {
 			return {
 				success: false,
 				message: `Error updating withdrawal transaction: ${error.message}`
+			};
+		}
+	}
+
+	/**
+	 * Handle wallet creation success webhook
+	 * @param event Webhook event
+	 * @returns Processing result
+	 */
+	private async handleWalletCreated(
+		event: CCPaymentWebhookEvent
+	): Promise<{ success: boolean; message: string }> {
+		try {
+			logger.info('Processing wallet creation success webhook', {
+				eventType: event.eventType,
+				userId: event.uid,
+				orderId: event.orderId
+			});
+
+			// Find the user by CCPayment user ID if provided
+			if (event.uid) {
+				const [user] = await db.select().from(users).where(eq(users.id, event.uid)).limit(1);
+
+				if (user) {
+					// Award welcome bonus DGT for new wallet
+					const welcomeAmount = 10; // 10 DGT welcome bonus
+
+					await dgtService.awardDGT(user.id, welcomeAmount, {
+						reason: 'WELCOME_BONUS',
+						metadata: {
+							source: 'ccpayment_webhook',
+							event: 'wallet_created',
+							webhookEventId: event.orderId
+						}
+					});
+
+					logger.info('Welcome bonus awarded for new wallet', {
+						userId: user.id,
+						amount: welcomeAmount,
+						webhookEventId: event.orderId
+					});
+				}
+			}
+
+			return {
+				success: true,
+				message: 'Wallet creation processed successfully'
+			};
+		} catch (error) {
+			logger.error('Error handling wallet created webhook', error);
+			return {
+				success: false,
+				message: `Error processing wallet creation: ${error.message}`
+			};
+		}
+	}
+
+	/**
+	 * Handle wallet creation failure webhook
+	 * @param event Webhook event
+	 * @returns Processing result
+	 */
+	private async handleWalletFailed(
+		event: CCPaymentWebhookEvent
+	): Promise<{ success: boolean; message: string }> {
+		try {
+			logger.warn('Processing wallet creation failure webhook', {
+				eventType: event.eventType,
+				userId: event.uid,
+				orderId: event.orderId,
+				reason: event.status
+			});
+
+			// Log the failure for admin review
+			// In production, you might want to trigger alerts or retry mechanisms
+
+			return {
+				success: true,
+				message: 'Wallet creation failure logged for review'
+			};
+		} catch (error) {
+			logger.error('Error handling wallet failed webhook', error);
+			return {
+				success: false,
+				message: `Error processing wallet failure: ${error.message}`
 			};
 		}
 	}

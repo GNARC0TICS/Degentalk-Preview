@@ -83,7 +83,7 @@ export function BadgeShowcase({
 		);
 	}
 
-	if (badges.length === 0) {
+	if (!badges || badges.length === 0) {
 		return (
 			<Card className={className}>
 				<CardHeader className="pb-2">

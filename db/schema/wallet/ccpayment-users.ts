@@ -3,7 +3,7 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 
 /**
- * CCPayment Users - Maps DegenTalk users to CCPayment user IDs
+ * CCPayment Users - Maps Degentalk users to CCPayment user IDs
  */
 export const ccpaymentUsers = pgTable(
 	'ccpayment_users',

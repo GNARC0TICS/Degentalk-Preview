@@ -14,12 +14,14 @@ import { eq, ilike, asc } from 'drizzle-orm';
 import { isAuthenticated as requireAuth } from '../auth/middleware/auth.middleware';
 import { logger } from '@server/src/core/logger';
 import { forumStructureService } from './services/structure.service';
+import { threadService } from './services/thread.service';
 
 // Import specialized route modules
 import threadRoutes from './routes/thread.routes';
 import postRoutes from './routes/post.routes';
 import bookmarkRoutes from './routes/bookmark.routes';
 import categoryRoutes from './routes/category.routes';
+import contentRoutes from './routes/content.routes';
 import rulesRoutes from './rules/rules.routes';
 import reportsRoutes from './sub-domains/reports/reports.routes';
 
@@ -30,6 +32,7 @@ router.use('/threads', threadRoutes);
 router.use('/posts', postRoutes);
 router.use('/bookmarks', bookmarkRoutes);
 router.use('/categories', categoryRoutes);
+router.use('/content', contentRoutes);
 router.use('/rules', rulesRoutes);
 router.use('/reports', reportsRoutes);
 
@@ -70,8 +73,8 @@ router.get('/users/search', async (req: Request, res: Response) => {
 			.select({
 				id: users.id,
 				username: users.username,
-				avatar: users.avatar,
-				role: users.role
+				avatar: users.avatarUrl
+				// Note: Removed role field since it's in roles table via primaryRoleId
 			})
 			.from(users)
 			.where(ilike(users.username, `%${searchTerm}%`))
@@ -173,7 +176,7 @@ router.get('/forums/:id/threads', async (req: Request, res: Response) => {
 		const search = req.query.search as string;
 
 		const result = await threadService.searchThreads({
-			categoryId: forumId, // threadService still uses categoryId internally
+			structureId: forumId,
 			page,
 			limit,
 			sortBy: sortBy as any,

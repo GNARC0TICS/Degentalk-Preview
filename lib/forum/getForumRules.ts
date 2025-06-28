@@ -1,12 +1,19 @@
-import { forumMap, ForumRules } from '@/config/forumMap.config';
+/**
+ * @deprecated Use useForumStructure().getForum(slug)?.rules instead
+ * This function is kept for backward compatibility but will be removed.
+ * Prefer using the ForumStructureContext for dynamic forum rules.
+ */
 
-export function getForumRules(forumSlug: string): ForumRules | undefined {
-	for (const zone of forumMap.zones) {
-		for (const forum of zone.forums) {
-			if (forum.slug === forumSlug) {
-				return forum.rules;
-			}
-		}
-	}
+import type { MergedRules } from '@/contexts/ForumStructureContext';
+
+// This function is deprecated - use ForumStructureContext instead
+export function getForumRules(forumSlug: string): MergedRules | undefined {
+	console.warn(
+		'getForumRules() is deprecated. Use useForumStructure().getForum(slug)?.rules instead'
+	);
+	// Return undefined to force migration to context-based approach
 	return undefined;
 }
+
+// Export the type for backward compatibility
+export type { MergedRules as ForumRules };

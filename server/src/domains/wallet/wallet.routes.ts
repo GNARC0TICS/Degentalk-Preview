@@ -1,10 +1,17 @@
 import { Router } from 'express';
 import { WalletService } from './wallet.service';
 import { UserManagementService } from './user-management.service';
+import { isDevMode } from '@server/src/utils/environment';
+import walletTestRoutes from './wallet.test.routes';
 
 const router = Router();
 const walletService = new WalletService();
 const userManagementService = new UserManagementService();
+
+// Mount test routes in development mode
+if (isDevMode()) {
+	router.use('/test', walletTestRoutes);
+}
 
 /**
  * Wallet API Routes

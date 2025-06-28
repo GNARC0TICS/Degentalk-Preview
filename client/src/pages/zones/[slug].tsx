@@ -12,10 +12,17 @@ import {
 	Home,
 	AlertCircle,
 	Plus,
-	Users
+	Users,
+	Map
 } from 'lucide-react';
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
 import { Wide } from '@/layout/primitives/Wide';
+import {
+	ForumBreadcrumbs,
+	createForumBreadcrumbs,
+	type BreadcrumbItem
+} from '@/components/navigation/ForumBreadcrumbs';
+import { getForumSpacing, getForumLayout } from '@/utils/spacing-constants';
 
 const ZonePage: React.FC = () => {
 	const params = useParams<{ slug: string }>();
@@ -23,6 +30,10 @@ const ZonePage: React.FC = () => {
 	const { getZone, isLoading, error: contextError } = useForumStructure();
 	// const [currentPage, setCurrentPage] = useState(1); // Removed
 	// const threadsPerPage = 20; // Removed
+
+	if (slug === 'general') {
+		return <NotFound />;
+	}
 
 	const zone = slug ? getZone(slug) : null;
 	const displayName = zone?.name;
@@ -54,7 +65,7 @@ const ZonePage: React.FC = () => {
 	}
 
 	return (
-		<div className="min-h-screen bg-black">
+		<div className={getForumLayout('page')}>
 			{/* Hero Section with Theme */}
 			<div
 				className="relative overflow-hidden"
@@ -72,18 +83,18 @@ const ZonePage: React.FC = () => {
 					</div>
 				)}
 
-				<Wide className="relative z-10 px-2 sm:px-4 py-6 sm:py-8 md:py-12">
-					{/* Breadcrumbs */}
-					<nav className="flex items-center space-x-2 text-sm text-zinc-400 mb-6">
-						<Link href="/">
-							<a className="flex items-center hover:text-white transition-colors">
-								<Home className="w-4 h-4 mr-1" />
-								Home
-							</a>
-						</Link>
-						<ChevronRight className="w-4 h-4" />
-						<span className="text-white font-medium">{displayName}</span>
-					</nav>
+				<Wide className={`relative z-10 ${getForumSpacing('container')}`}>
+					{/* Breadcrumbs - simplified: Home > Zone Name */}
+					{slug !== 'general' && (
+						<ForumBreadcrumbs
+							items={
+								[
+									{ label: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
+									{ label: displayName || 'Zone', href: `/zones/${slug}` }
+								] as BreadcrumbItem[]
+							}
+						/>
+					)}
 
 					{/* Zone Header */}
 					<div className="flex flex-col sm:flex-row sm:items-start gap-6">
@@ -145,7 +156,7 @@ const ZonePage: React.FC = () => {
 				</Wide>
 			</div>
 
-			<Wide className="px-2 sm:px-4 py-6 sm:py-8 md:py-12">
+			<Wide className={getForumSpacing('container')}>
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 					{/* Main Content */}
 					<div className="lg:col-span-2 space-y-6">

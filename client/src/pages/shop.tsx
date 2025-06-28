@@ -119,7 +119,7 @@ export default function ShopPage() {
 					<div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
 						<div>
 							<h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 text-transparent bg-clip-text mb-2">
-								DegenTalk Shop
+								Degentalk Shop
 							</h1>
 							<p className="text-zinc-400 text-lg">
 								Upgrade your profile with unique items and boosts

@@ -1,7 +1,7 @@
 /**
  * Wallet Configuration
  *
- * Default configuration for the DegenTalk wallet system.
+ * Default configuration for the Degentalk wallet system.
  * These defaults can be overridden by database settings via the admin panel.
  */
 

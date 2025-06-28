@@ -101,21 +101,12 @@
 	animation: rainDrop 2s linear forwards;
 }
 
-/* Pulse Glow Animation */
-@keyframes pulseGlow {
-	0% {
-		box-shadow: 0 0 5px rgba(10, 255, 170, 0.2);
-	}
-	50% {
-		box-shadow: 0 0 12px rgba(10, 255, 170, 0.5);
-	}
-	100% {
-		box-shadow: 0 0 5px rgba(10, 255, 170, 0.2);
-	}
-}
-
-.animate-pulse-glow {
-	animation: pulseGlow 2s infinite;
+/* Wallet-specific pulse glow using global animation */
+.wallet-pulse-glow {
+	--glow-color: rgba(10, 255, 170, 0.2);
+	--glow-color-intense: rgba(10, 255, 170, 0.5);
+	--glow-size-small: 5px;
+	--glow-size-large: 12px;
 }
 
 /* Success Animation */
@@ -229,21 +220,7 @@
 	animation: buttonPress 0.1s ease-out;
 }
 
-/* Smooth Fade In */
-@keyframes fadeInUp {
-	from {
-		opacity: 0;
-		transform: translateY(20px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-.fade-in-up {
-	animation: fadeInUp 0.5s ease-out;
-}
+/* Note: fade-in-up animation is available globally from animations.css */
 
 /* Media Queries for Responsive Design */
 @media (max-width: 640px) {

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { SiteFooter } from '@/components/footer';
 import ProfileSidebar from '@/components/profile/ProfileSidebar';
 import OverviewTab from '@/components/profile/OverviewTab';
@@ -11,51 +11,23 @@ import WhaleWatchTab from '@/components/profile/WhaleWatchTab';
 import { XPProfileSection } from '@/components/profile/XPProfileSection';
 import { CosmeticControlPanel } from '@/components/profile/CosmeticControlPanel';
 import { ProfileSkeleton } from '@/components/profile/ProfileSkeleton';
+import { ProfileDashboard } from '@/components/profile/ProfileDashboard';
+import { ProfileNavigation } from '@/components/profile/ProfileNavigation';
 import { SeoHead } from '@/components/ui/SeoHead';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { LoadingSpinner } from '@/components/ui/loader';
 import BackToHomeButton from '@/components/common/BackToHomeButton';
 import { useAuth } from '@/hooks/use-auth.tsx';
 import { useUserInventory } from '@/hooks/useUserInventory';
-import { Home, Trophy, ShoppingBag, Users, Sparkles, Eye } from 'lucide-react';
+import { useProfileEngagement } from '@/hooks/useProfileEngagement';
 import type { ProfileData } from '@/types/profile';
 import { ProfileEditor } from '@/components/profile/ProfileEditor';
 import { Wide } from '@/layout/primitives';
+import { Home, Trophy, ShoppingBag, Users, Sparkles, Eye } from 'lucide-react';
+import { generateMockProfile } from '@/utils/dev/mockProfile';
 
-// TEMP: mock data helper for dev mode
-function getMockProfileData(username: string): ProfileData {
-	return {
-		id: 'mock-user',
-		username,
-		avatarUrl: 'https://i.pravatar.cc/300',
-		role: 'Developer',
-		bio: 'Mock user bio',
-		signature: 'Mock signature',
-		joinedAt: new Date().toISOString(),
-		lastActiveAt: new Date().toISOString(),
-		dgtBalance: 0,
-		totalPosts: 0,
-		totalThreads: 0,
-		totalLikes: 0,
-		totalTips: 0,
-		clout: 0,
-		level: 1,
-		xp: 0,
-		nextLevelXp: 100,
-		bannerUrl: null,
-		activeFrameId: null,
-		activeFrame: null,
-		activeTitleId: null,
-		activeTitle: null,
-		activeBadgeId: null,
-		activeBadge: null,
-		badges: [],
-		titles: [],
-		inventory: [],
-		relationships: { friends: [], friendRequestsSent: 0, friendRequestsReceived: 0 },
-		stats: { threadViewCount: 0, posterRank: null, tipperRank: null, likerRank: null }
-	};
-}
+const TAB_GRID_CLASSES =
+	'flex overflow-x-auto gap-1 min-w-0 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-600';
 
 export default function ProfilePage() {
 	const { username } = useParams<{ username: string }>();
@@ -63,6 +35,7 @@ export default function ProfilePage() {
 	const isDev = import.meta.env.DEV;
 	const [activeTab, setActiveTab] = useState('overview');
 	const [isEditMode, setIsEditMode] = useState(false);
+	const [previousTab, setPreviousTab] = useState<string | null>(null);
 
 	const {
 		data: profile,
@@ -72,12 +45,27 @@ export default function ProfilePage() {
 	} = useQuery<ProfileData>({
 		queryKey: ['profile', username],
 		queryFn: async () => {
-			if (isDev && (username?.toLowerCase() === 'devuser' || username?.toLowerCase() === 'dev')) {
-				return getMockProfileData(username);
+			// 1. Try to fetch real profile from backend
+			try {
+				const res = await fetch(`/api/profile/${username}`);
+				if (res.ok) {
+					return res.json();
+				}
+				// If the profile is not found (404) we might be in dev without seed
+				if (res.status !== 404) {
+					throw new Error('Failed to fetch profile');
+				}
+			} catch (err) {
+				if (!isDev) throw err; // in production surface the error
 			}
-			const res = await fetch(`/api/profile/${username}`);
-			if (!res.ok) throw new Error('Failed to fetch profile');
-			return res.json();
+
+			// 2. Fallback: generate mock data only during local dev for the seeded dev account
+			if (isDev && username?.toLowerCase() === 'cryptoadmin') {
+				return generateMockProfile(username);
+			}
+
+			// 3. If production and still here, throw not found
+			throw new Error('Profile not found');
 		}
 	});
 
@@ -85,6 +73,46 @@ export default function ProfilePage() {
 	const { data: inventory = [], isLoading: inventoryLoading } = useUserInventory(
 		isOwnProfile ? profile?.id : undefined
 	);
+
+	// Engagement tracking
+	const engagement = useProfileEngagement(username || '');
+
+	// Track tab changes
+	const handleTabChange = (newTab: string) => {
+		if (previousTab) {
+			engagement.trackTabSwitch(previousTab, newTab);
+		}
+		setPreviousTab(activeTab);
+		setActiveTab(newTab);
+		engagement.trackAction('tab_switch', newTab);
+	};
+
+	// Track scroll depth
+	useEffect(() => {
+		const handleScroll = () => {
+			const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+			const scrollDepth = window.scrollY / scrollHeight;
+			engagement.trackScrollDepth(scrollDepth);
+		};
+
+		window.addEventListener('scroll', handleScroll);
+		return () => window.removeEventListener('scroll', handleScroll);
+	}, [engagement]);
+
+	// Track initial page view
+	useEffect(() => {
+		if (profile) {
+			engagement.trackEvent({
+				type: 'view',
+				target: 'profile_page',
+				metadata: {
+					profileId: profile.id,
+					isOwnProfile,
+					viewerRole: currentUser?.role || 'anonymous'
+				}
+			});
+		}
+	}, [profile, engagement, isOwnProfile, currentUser]);
 
 	if (isLoading) {
 		return (
@@ -129,106 +157,101 @@ export default function ProfilePage() {
 					<BackToHomeButton />
 					<div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 						<div className="col-span-1">
-							<ProfileSidebar profile={profile} isOwnProfile={isOwnProfile} />
+							<aside className="sticky top-8">
+								<ProfileSidebar profile={profile} isOwnProfile={isOwnProfile} />
+							</aside>
 						</div>
 						<div className="col-span-1 lg:col-span-3">
-							<div className="rounded-lg overflow-hidden bg-zinc-800/70 backdrop-blur-sm shadow-xl border border-zinc-700/50 p-6">
-								<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-									<TabsList
-										className={`grid grid-cols-2 md:grid-cols-3 lg:${isOwnProfile ? 'grid-cols-6' : 'grid-cols-5'} mb-6 bg-black/40 backdrop-blur-sm gap-1`}
-									>
-										<TabsTrigger
-											value="overview"
-											className="flex items-center justify-center text-xs sm:text-sm data-[state=active]:bg-emerald-600/20 data-[state=active]:text-emerald-400 px-2 py-3"
-										>
-											<Home className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-											<span className="hidden sm:inline">Overview</span>
-											<span className="sm:hidden">Home</span>
-										</TabsTrigger>
-										<TabsTrigger
-											value="achievements"
-											className="flex items-center justify-center text-xs sm:text-sm data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-400 px-2 py-3"
-										>
-											<Trophy className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-											<span className="hidden sm:inline">Achievements</span>
-											<span className="sm:hidden">XP</span>
-										</TabsTrigger>
-										<TabsTrigger
-											value="inventory"
-											className="flex items-center justify-center text-xs sm:text-sm data-[state=active]:bg-zinc-600/20 data-[state=active]:text-zinc-300 px-2 py-3"
-										>
-											<ShoppingBag className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-											<span className="hidden sm:inline">Inventory</span>
-											<span className="sm:hidden">Items</span>
-										</TabsTrigger>
-										<TabsTrigger
-											value="friends"
-											className="flex items-center justify-center text-xs sm:text-sm data-[state=active]:bg-zinc-600/20 data-[state=active]:text-zinc-300 px-2 py-3"
-										>
-											<Users className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-											<span className="hidden sm:inline">Friends</span>
-											<span className="sm:hidden">Friends</span>
-										</TabsTrigger>
-										<TabsTrigger
-											value="whale-watch"
-											className="flex items-center justify-center text-xs sm:text-sm data-[state=active]:bg-emerald-600/20 data-[state=active]:text-emerald-400 px-2 py-3"
-										>
-											<Eye className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-											<span className="hidden sm:inline">Whale Watch</span>
-											<span className="sm:hidden">Watch</span>
-										</TabsTrigger>
-										{isOwnProfile && (
-											<TabsTrigger
-												value="cosmetics"
-												className="flex items-center justify-center text-xs sm:text-sm data-[state=active]:bg-purple-600/20 data-[state=active]:text-purple-400 px-2 py-3"
-											>
-												<Sparkles className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-												<span className="hidden sm:inline">Cosmetics</span>
-												<span className="sm:hidden">Style</span>
-											</TabsTrigger>
-										)}
-									</TabsList>
+							<div className="rounded-lg bg-zinc-800/70 backdrop-blur-sm shadow-xl border border-zinc-700/50 p-4 sm:p-6 flex flex-col">
+								<Tabs
+									value={activeTab}
+									onValueChange={handleTabChange}
+									className="w-full flex flex-col"
+								>
+									<ProfileNavigation
+										activeTab={activeTab}
+										onTabChange={handleTabChange}
+										isOwnProfile={isOwnProfile}
+										pendingFriendRequests={0} // TODO: Get from profile data
+										unreadNotifications={0} // TODO: Get from profile data
+										newAchievements={0} // TODO: Get from profile data
+									/>
 
-									<TabsContent value="overview">
-										<OverviewTab profile={profile} />
-									</TabsContent>
-									<TabsContent value="achievements">
-										<XPProfileSection userId={profile.id} />
-									</TabsContent>
-									<TabsContent value="inventory">
-										<InventoryTab profile={profile} />
-									</TabsContent>
-									<TabsContent value="friends">
-										<FriendsTab profile={profile} />
-									</TabsContent>
-									<TabsContent value="whale-watch">
-										<WhaleWatchTab profile={profile} isOwnProfile={isOwnProfile} />
-									</TabsContent>
-									{isOwnProfile && (
-										<TabsContent value="cosmetics">
-											{inventoryLoading ? (
-												<LoadingSpinner size="lg" />
+									<div className="flex-1 overflow-y-auto pr-2 min-h-0">
+										<TabsContent
+											value="overview"
+											className="mt-0 focus-visible:outline-none focus-visible:ring-0"
+										>
+											{activeTab === 'overview' ? (
+												<ProfileDashboard profile={profile} isOwnProfile={isOwnProfile} />
 											) : (
-												<CosmeticControlPanel
-													userId={profile.id}
-													username={profile.username}
-													avatarUrl={profile.avatarUrl}
-													inventory={inventory.map((i) => ({
-														id: i.id,
-														userId: i.userId,
-														productId: i.productId,
-														equipped: i.equipped,
-														purchasedAt: i.purchasedAt,
-														product: i.product
-													}))}
-													activeFrame={profile.activeFrame}
-													activeTitle={profile.activeTitle}
-													activeBadge={profile.activeBadge}
-													onEditProfile={() => setIsEditMode(true)}
-												/>
+												<OverviewTab profile={profile} />
 											)}
 										</TabsContent>
-									)}
+										<TabsContent
+											value="achievements"
+											className="mt-0 focus-visible:outline-none focus-visible:ring-0"
+										>
+											<XPProfileSection userId={profile.id} />
+										</TabsContent>
+										<TabsContent
+											value="inventory"
+											className="mt-0 focus-visible:outline-none focus-visible:ring-0"
+										>
+											<InventoryTab profile={profile} />
+										</TabsContent>
+										<TabsContent
+											value="friends"
+											className="mt-0 focus-visible:outline-none focus-visible:ring-0"
+										>
+											<FriendsTab profile={profile} />
+										</TabsContent>
+										<TabsContent
+											value="whale-watch"
+											className="mt-0 focus-visible:outline-none focus-visible:ring-0"
+										>
+											<WhaleWatchTab profile={profile} isOwnProfile={isOwnProfile} />
+										</TabsContent>
+										{isOwnProfile && (
+											<>
+												<TabsContent
+													value="cosmetics"
+													className="mt-0 focus-visible:outline-none focus-visible:ring-0"
+												>
+													{inventoryLoading ? (
+														<LoadingSpinner size="lg" />
+													) : (
+														<CosmeticControlPanel
+															userId={profile.id}
+															username={profile.username}
+															avatarUrl={profile.avatarUrl}
+															inventory={inventory.map((i) => ({
+																id: i.id,
+																userId: i.userId,
+																productId: i.productId,
+																equipped: i.equipped,
+																purchasedAt: i.purchasedAt,
+																product: i.product
+															}))}
+															activeFrame={profile.activeFrame}
+															activeTitle={profile.activeTitle}
+															activeBadge={profile.activeBadge}
+															canEdit={isOwnProfile}
+															onEditProfile={() => setIsEditMode(true)}
+														/>
+													)}
+												</TabsContent>
+												<TabsContent
+													value="notifications"
+													className="mt-0 focus-visible:outline-none focus-visible:ring-0"
+												>
+													<div className="text-center py-8 text-zinc-400">
+														Notifications tab coming soon...
+													</div>
+												</TabsContent>
+											</>
+										)}
+									</div>
 								</Tabs>
 							</div>
 						</div>

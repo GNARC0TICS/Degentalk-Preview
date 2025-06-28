@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import type { Title } from '@schema';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
+import { rarityBorderMap, rarityColorMap } from '@/config/rarity.config';
 
 type UserTitlesProps = {
 	titles: Array<{
@@ -73,16 +74,11 @@ type TitleItemProps = {
 };
 
 function TitleItem({ title, isActive = false, onClick, interactive = false }: TitleItemProps) {
-	const rarityColors = {
-		common: 'bg-slate-900 border-slate-700 text-slate-300',
-		uncommon: 'bg-emerald-900/30 border-emerald-700/50 text-emerald-300',
-		rare: 'bg-blue-900/30 border-blue-700/50 text-blue-300',
-		epic: 'bg-purple-900/30 border-purple-700/50 text-purple-300',
-		legendary: 'bg-amber-900/30 border-amber-700/50 text-amber-300'
-	};
-
-	const rarity = (title.rarity?.toLowerCase() || 'common') as keyof typeof rarityColors;
-	const colorClasses = rarityColors[rarity] || rarityColors.common;
+	const rarityKey = (title.rarity?.toLowerCase() || 'common') as keyof typeof rarityBorderMap;
+	const colorClasses = cn(
+		rarityBorderMap[rarityKey] || rarityBorderMap.common,
+		rarityColorMap[rarityKey] ? rarityColorMap[rarityKey].replace('text-', '') : ''
+	);
 
 	return (
 		<TooltipProvider>
@@ -128,24 +124,7 @@ function TitleItem({ title, isActive = false, onClick, interactive = false }: Ti
 						{title.description && (
 							<p className="text-xs text-slate-300 mt-1">{title.description}</p>
 						)}
-						{title.rarity && (
-							<p
-								className={cn(
-									'text-[10px] mt-1 capitalize',
-									rarity === 'common'
-										? 'text-slate-400'
-										: rarity === 'uncommon'
-											? 'text-emerald-400'
-											: rarity === 'rare'
-												? 'text-blue-400'
-												: rarity === 'epic'
-													? 'text-purple-400'
-													: 'text-amber-400'
-								)}
-							>
-								{title.rarity} Rarity
-							</p>
-						)}
+						{title.rarity && <p className="text-[10px] mt-1 capitalize">{title.rarity} Rarity</p>}
 					</div>
 				</TooltipContent>
 			</Tooltip>

@@ -5,7 +5,7 @@
  */
 
 import { db } from '@db';
-import { userGroups, users } from '@schema';
+import { roles as userGroups, users } from '@schema'; // userGroups is deprecated alias for roles
 import { eq, and, sql, count, desc, ne } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type { UserGroupInput, ListGroupUsersQueryInput } from './user-groups.validators';

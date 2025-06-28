@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Community Engagement sprint delivers a comprehensive social layer for DegenTalk, transforming it from a simple forum into a dynamic crypto community platform. This document outlines the implemented features, technical architecture, and usage guidelines.
+The Community Engagement sprint delivers a comprehensive social layer for Degentalk, transforming it from a simple forum into a dynamic crypto community platform. This document outlines the implemented features, technical architecture, and usage guidelines.
 
 ## Features Implemented
 
@@ -347,4 +347,4 @@ FOLLOWS_ENABLED=true
 
 ---
 
-The Community Engagement features represent a significant evolution of DegenTalk's social capabilities, providing the foundation for a vibrant, connected crypto community. The modular architecture ensures easy maintenance and future expansion while maintaining high performance and security standards.
+The Community Engagement features represent a significant evolution of Degentalk's social capabilities, providing the foundation for a vibrant, connected crypto community. The modular architecture ensures easy maintenance and future expansion while maintaining high performance and security standards.

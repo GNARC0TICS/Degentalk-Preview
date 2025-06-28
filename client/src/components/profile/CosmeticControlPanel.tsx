@@ -29,6 +29,7 @@ interface CosmeticControlPanelProps {
 		rarity: string;
 	} | null;
 	onEditProfile?: () => void;
+	canEdit?: boolean;
 }
 
 export function CosmeticControlPanel({
@@ -39,7 +40,8 @@ export function CosmeticControlPanel({
 	activeFrame,
 	activeTitle,
 	activeBadge,
-	onEditProfile
+	onEditProfile,
+	canEdit = true
 }: CosmeticControlPanelProps) {
 	const { toast } = useToast();
 	const queryClient = useQueryClient();
@@ -67,6 +69,7 @@ export function CosmeticControlPanel({
 			});
 			queryClient.invalidateQueries({ queryKey: ['profile', username] });
 			queryClient.invalidateQueries({ queryKey: ['user-inventory', userId] });
+			queryClient.invalidateQueries({ queryKey: ['userCosmeticsInventory', userId] });
 		},
 		onError: (error) => {
 			toast({
@@ -91,6 +94,7 @@ export function CosmeticControlPanel({
 	};
 
 	const handleUnequip = (inventoryId: number) => {
+		if (!canEdit) return;
 		toggleEquipMutation.mutate({ inventoryId, equip: false });
 	};
 
@@ -135,7 +139,7 @@ export function CosmeticControlPanel({
 									)}
 								</div>
 							</div>
-							{equippedByType.usernameColor && (
+							{equippedByType.usernameColor && canEdit && (
 								<Button
 									variant="outline"
 									size="sm"
@@ -161,7 +165,7 @@ export function CosmeticControlPanel({
 									)}
 								</div>
 							</div>
-							{equippedByType.avatarFrame && (
+							{equippedByType.avatarFrame && canEdit && (
 								<Button
 									variant="outline"
 									size="sm"
@@ -200,7 +204,7 @@ export function CosmeticControlPanel({
 									)}
 								</div>
 							</div>
-							{equippedByType.userTitle && (
+							{equippedByType.userTitle && canEdit && (
 								<Button
 									variant="outline"
 									size="sm"

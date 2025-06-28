@@ -17,6 +17,11 @@ export interface ProfileData {
 	xp: number;
 	nextLevelXp: number;
 	bannerUrl: string | null;
+	email?: string | null;
+	discordHandle?: string | null;
+	twitterHandle?: string | null;
+	telegramHandle?: string | null;
+	website?: string | null;
 	activeFrameId: number | null;
 	activeFrame: {
 		id: number;

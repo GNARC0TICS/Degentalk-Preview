@@ -67,7 +67,6 @@ export async function createDeposit(params: CreateDepositParams): Promise<Deposi
 			createdAt: new Date().toISOString()
 		};
 	} catch (error) {
-		console.error('Error creating deposit:', error);
 		throw new Error(`Failed to create deposit: ${error.message}`);
 	}
 }
@@ -94,7 +93,6 @@ export async function checkDepositStatus(orderId: string): Promise<{
 			transactionHash: status.txHash
 		};
 	} catch (error) {
-		console.error('Error checking deposit status:', error);
 		throw new Error(`Failed to check deposit status: ${error.message}`);
 	}
 }

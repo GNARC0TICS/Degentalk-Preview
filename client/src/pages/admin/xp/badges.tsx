@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge as UiBadge } from '@/components/ui/badge'; // Renamed to avoid conflict
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-// Tabs components are now handled by AdminPageShell
 import { useDebounce } from '@/hooks/use-debounce';
 import { apiRequest } from '@/lib/queryClient';
 import { useCrudMutation } from '@/hooks/useCrudMutation';
@@ -19,18 +18,15 @@ import {
 } from '@/components/admin/forms/xp/BadgeFormDialogs';
 import type { Badge, BadgeFormData } from '@/components/admin/forms/xp/BadgeFormDialogs';
 
-// Extended Badge type for this page, including createdAt
 interface PageBadge extends Badge {
 	createdAt: string;
 }
 
-// API response structure (assuming pagination)
 interface BadgesApiResponse {
 	badges: PageBadge[];
 	totalPages: number;
 	currentPage: number;
 	totalBadges: number;
-	// For stats tab
 	badgesAwarded?: number;
 	mostCommonBadge?: { name: string };
 	rarestBadge?: { name: string };
@@ -68,7 +64,6 @@ export default function BadgeManagementPage() {
 			{ search: debouncedSearchTerm, sort: sortField, direction: sortDirection, page, pageSize }
 		],
 		queryFn: async () => {
-			// Ensure apiRequest can handle query params or construct URL manually
 			const params = new URLSearchParams({
 				search: debouncedSearchTerm,
 				sort: sortField,
@@ -156,16 +151,6 @@ export default function BadgeManagementPage() {
 			deleteBadgeMutation.mutate(selectedBadge.id);
 		}
 	};
-
-	// const handleSort = (field: 'name' | 'rarity' | 'createdAt') => { // Sorting handled by backend/API query params
-	//   if (sortField === field) {
-	//     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-	//   } else {
-	//     setSortField(field);
-	//     setSortDirection('asc');
-	//   }
-	//   setPage(1); // Reset to first page on sort change
-	// };
 
 	const columns = [
 		{

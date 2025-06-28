@@ -79,9 +79,6 @@ export function MockShoutboxProvider({ children }: MockShoutboxProviderProps) {
 		setLastPositionChangeTime(new Date());
 		setPositionChangeCount((prev) => prev + 1);
 
-		// Log position change for debugging
-		console.log(`Shoutbox position changed: ${prevPosition} -> ${newPosition}`);
-
 		// Show feedback toast for better UX
 		toast({
 			title: 'Shoutbox Position Updated',

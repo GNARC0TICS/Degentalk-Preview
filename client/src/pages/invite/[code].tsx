@@ -184,7 +184,7 @@ export default function InvitePage() {
 					<CardHeader>
 						<CardTitle className="flex items-center gap-2">
 							<UserPlus className="h-5 w-5 text-emerald-500" />
-							Join DegenTalk
+							Join Degentalk
 						</CardTitle>
 					</CardHeader>
 					<CardContent className="space-y-4">
@@ -194,7 +194,7 @@ export default function InvitePage() {
 							</div>
 							<h3 className="font-semibold mb-2">{validation.referrerUsername} invited you!</h3>
 							<p className="text-zinc-400 text-sm mb-4">
-								Join DegenTalk and you'll both earn rewards when you sign up using this referral
+								Join Degentalk and you'll both earn rewards when you sign up using this referral
 								code.
 							</p>
 						</div>

@@ -12,7 +12,8 @@ const badgeVariants = cva(
 				secondary: 'border-transparent bg-purple-900 text-purple-50 hover:bg-purple-900/80',
 				destructive: 'border-transparent bg-red-900 text-red-50 hover:bg-red-900/80',
 				outline: 'text-zinc-50 border-zinc-700',
-				success: 'border-transparent bg-green-900 text-green-50 hover:bg-green-900/80'
+				success: 'border-transparent bg-green-900 text-green-50 hover:bg-green-900/80',
+				primary: 'badge--primary'
 			}
 		},
 		defaultVariants: {

@@ -6,7 +6,7 @@ import {
 	threadTags,
 	tags,
 	postReactions,
-	notifications,
+	systemNotifications as notifications,
 	customEmojis,
 	userGroups,
 	conversations,
@@ -81,7 +81,7 @@ type SessionStore = connectPGSink.PGStore;
 
 export interface IStorage {
 	// User methods
-	getUser(id: number): Promise<User | undefined>;
+	getUser(id: number | string): Promise<User | undefined>;
 	getUserByUsername(username: string): Promise<User | undefined>;
 	getUserByEmail(email: string): Promise<User | undefined>;
 	createUser(user: InsertUser): Promise<User>;
@@ -246,40 +246,135 @@ export class DatabaseStorage implements IStorage {
 	constructor() {
 		this.sessionStore = new PGStore({
 			pool: pool,
+			tableName: 'user_sessions',
 			createTableIfMissing: true
 		});
 		logger.info(
 			'DATABASE',
-			"🐘 PostgreSQL session store initialized (using default table name 'session')."
+			"🐘 PostgreSQL session store initialized (using table name 'user_sessions')."
 		);
 	}
 
 	// User methods
-	async getUser(id: number): Promise<User | undefined> {
+	async getUser(id: number | string): Promise<User | undefined> {
+		console.log('🔍 getUser called with ID:', id, 'type:', typeof id);
+
 		try {
-			// First try with id column and handle schema mismatches
-			const query = db.select().from(users).where(eq(users.id, id));
-			const [user] = await query;
+			// Handle both numeric and UUID string IDs
+			const [user] = await db.select().from(users).where(eq(users.id, id));
 
 			if (user) {
+				console.log('✅ Drizzle ORM result for user:', JSON.stringify(user, null, 2));
 				return user;
+			} else {
+				console.log('❌ Drizzle ORM: No user found with ID:', id);
 			}
 		} catch (err) {
-			console.warn('Error fetching user with id column, trying with user_id', err);
+			console.warn('❌ Error fetching user with Drizzle ORM, trying direct SQL', err);
 		}
 
-		// Try with user_id column as fallback
+		// Try with user_id column as fallback with proper column mapping
 		try {
 			// For development mode, try a direct SQL query to bypass schema mismatches
 			if (process.env.NODE_ENV === 'development') {
 				const result = await db.execute(sql`
-          SELECT * 
+          SELECT 
+            user_id as id,
+            username,
+            email,
+            password_hash as password,
+            bio,
+            signature,
+            avatar_url as avatarUrl,
+            active_avatar_url as activeAvatarUrl, 
+            profile_banner_url as profileBannerUrl,
+            primary_role_id as primaryRoleId,
+            discord_handle as discordHandle,
+            twitter_handle as twitterHandle,
+            website,
+            telegram_handle as telegramHandle,
+            is_active as isActive,
+            is_verified as isVerified,
+            is_deleted as isDeleted, 
+            is_banned as isBanned,
+            is_shadowbanned as isShadowbanned,
+            subscribed_to_newsletter as subscribedToNewsletter,
+            last_seen_at as lastSeenAt,
+            created_at as createdAt,
+            last_login as lastLogin,
+            referrer_id as referrerId,
+            referral_level as referralLevel,
+            xp,
+            level,
+            clout,
+            active_title_id as activeTitleId,
+            active_badge_id as activeBadgeId,
+            dgt_balance as dgtBalance,
+            reputation,
+            total_posts as totalPosts, 
+            total_threads as totalThreads,
+            total_likes as totalLikes,
+            total_tips as totalTips,
+            is_staff as isStaff,
+            is_moderator as isModerator,
+            is_admin as isAdmin,
+            role,
+            wallet_address as walletAddress,
+            group_id as groupId
           FROM users WHERE user_id = ${id} LIMIT 1
         `);
 
 				if (result.rows && result.rows.length > 0) {
-					const user = result.rows[0] as any;
-					return user as User;
+					const rawUser = result.rows[0] as any;
+					console.log('SQL query result for user:', JSON.stringify(rawUser, null, 2));
+
+					// Manually map the raw database row to the expected User object
+					const user: User = {
+						id: rawUser.user_id,
+						username: rawUser.username,
+						email: rawUser.email,
+						password: rawUser.password_hash,
+						bio: rawUser.bio,
+						signature: rawUser.signature,
+						avatarUrl: rawUser.avatar_url,
+						activeAvatarUrl: rawUser.active_avatar_url,
+						profileBannerUrl: rawUser.profile_banner_url,
+						primaryRoleId: rawUser.primary_role_id,
+						discordHandle: rawUser.discord_handle,
+						twitterHandle: rawUser.twitter_handle,
+						website: rawUser.website,
+						telegramHandle: rawUser.telegram_handle,
+						isActive: rawUser.is_active,
+						isVerified: rawUser.is_verified,
+						isDeleted: rawUser.is_deleted,
+						isBanned: rawUser.is_banned,
+						isShadowbanned: rawUser.is_shadowbanned,
+						subscribedToNewsletter: rawUser.subscribed_to_newsletter,
+						lastSeenAt: rawUser.last_seen_at,
+						createdAt: rawUser.created_at,
+						lastLogin: rawUser.last_login,
+						referrerId: rawUser.referrer_id,
+						referralLevel: rawUser.referral_level,
+						xp: rawUser.xp,
+						level: rawUser.level,
+						clout: rawUser.clout,
+						activeTitleId: rawUser.active_title_id,
+						activeBadgeId: rawUser.active_badge_id,
+						dgtBalance: rawUser.dgt_balance,
+						reputation: rawUser.reputation,
+						totalPosts: rawUser.total_posts,
+						totalThreads: rawUser.total_threads,
+						totalLikes: rawUser.total_likes,
+						totalTips: rawUser.total_tips,
+						isStaff: rawUser.is_staff,
+						isModerator: rawUser.is_moderator,
+						isAdmin: rawUser.is_admin,
+						role: rawUser.role,
+						walletAddress: rawUser.wallet_address,
+						groupId: rawUser.group_id
+					} as any;
+
+					return user;
 				}
 			}
 		} catch (err) {

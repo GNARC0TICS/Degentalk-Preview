@@ -1,8 +1,3 @@
-// Phase 2 Audit:
-// - Verified layout
-// - Added/confirmed <Head> title
-// - Applied DEV_MODE gating (if applicable)
-
 import { useState } from 'react';
 import { formatTimestamp } from '@/lib/format-date';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

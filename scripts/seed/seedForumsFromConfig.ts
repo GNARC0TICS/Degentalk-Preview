@@ -15,7 +15,7 @@ function getWelcomeContent(forumSlug: string, forumName: string): { title: strin
   const welcomeMessages: Record<string, { title: string; content: string }> = {
     'live-trade-reacts': {
       title: '🚀 Welcome to Live Trade Reacts!',
-      content: `Welcome to the most intense trading forum on DegenTalk! 
+      content: `Welcome to the most intense trading forum on Degentalk! 
 
 This is where we share our live reactions to market moves, celebrate our wins, and commiserate our losses. 
 
@@ -70,10 +70,10 @@ Share your betting strategies, automation scripts, and mathematical analysis for
 Gamble responsibly and may the odds be in your favor! 🍀`
     },
     'announcements': {
-      title: '📢 Official DegenTalk Announcements',
+      title: '📢 Official Degentalk Announcements',
       content: `Welcome to the official announcements forum.
 
-This forum is reserved for official platform updates, feature releases, and important community notices from the DegenTalk team.
+This forum is reserved for official platform updates, feature releases, and important community notices from the Degentalk team.
 
 All posts here are from verified staff members. Stay tuned for the latest updates! 
 
@@ -85,7 +85,7 @@ For discussions about announcements, please use the appropriate discussion forum
     title: `Welcome to ${forumName}!`,
     content: `Welcome to ${forumName}!
 
-This forum is part of the DegenTalk community. Feel free to start discussions, ask questions, and engage with fellow community members.
+This forum is part of the Degentalk community. Feel free to start discussions, ask questions, and engage with fellow community members.
 
 Please follow the community guidelines and enjoy your time here! 🎉`
   };
@@ -195,12 +195,11 @@ async function seedForumLevel(
         .where(eq(threads.structureId, newForumDbId))
         .limit(1);
       if (existingThreads.length === 0) {
-        const threadSlug = `${forumConfig.slug}-welcome`;
         const welcomeContent = getWelcomeContent(forumConfig.slug, forumConfig.name);
         
         const [welcomeThread] = await tx.insert(threads).values({
           title: welcomeContent.title,
-          slug: threadSlug,
+          slug: `${forumConfig.slug}-welcome`,
           structureId: newForumDbId,
           userId: defaultUserId,
           isSticky: true

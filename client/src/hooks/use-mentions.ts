@@ -91,7 +91,7 @@ export function useMentions(options: UseMentionsOptions = {}) {
 
 			// This would typically be handled by the backend when creating posts/threads
 			// The frontend just needs to ensure the content includes the mentions
-			console.log('Processing mentions:', matches, 'in', type, 'content');
+			// Processing mentions
 		},
 		[]
 	);

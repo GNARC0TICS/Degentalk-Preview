@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Comprehensive Seeding Script for DegenTalk
+ * Comprehensive Seeding Script for Degentalk
  * 
  * This script sets up a complete realistic testing environment following
  * the forum structure defined in README-FORUM.md and forumMap.config.ts
@@ -44,15 +44,15 @@ const CONFIG = {
   },
   THREADS: {
     PER_FORUM: {
-      MIN: 1,
-      MAX: 1
+      MIN: 3,
+      MAX: 8
     },
     POSTS: {
       MIN: 2,
-      MAX: 2
+      MAX: 12
     },
-    REPLY_CHANCE: 1,
-    MAX_REPLY_DEPTH: 1
+    REPLY_CHANCE: 0.8,
+    MAX_REPLY_DEPTH: 3
   },
   ENGAGEMENT: {
     LIKE_CHANCE: 0.3,
@@ -103,7 +103,7 @@ const THREAD_TOPICS = {
     'Limbo probability calculations'
   ],
   'announcements': [
-    'DegenTalk v2.0 Release Notes',
+    'Degentalk v2.0 Release Notes',
     'New XP System Launch',
     'Community Guidelines Update',
     'Maintenance Window Scheduled',
@@ -176,7 +176,7 @@ async function seedUsers() {
       isActive: true,
       isBanned: false,
       isVerified: true,
-      bio: 'Lead administrator of DegenTalk. Here to keep the chaos organized.',
+      bio: 'Lead administrator of Degentalk. Here to keep the chaos organized.',
       signature: '🛡️ Admin | Keeping degens in line since 2024 | [TEST USER]',
       dgtWalletBalance: 10000,
       dgtPoints: 5000
@@ -402,7 +402,7 @@ async function seedThreadsAndPosts() {
           }
 
           // Generate realistic content based on forum type
-          let content = generateRealisticPostContent(forum.slug, j === 0);
+          const content = generateRealisticPostContent(forum.slug, j === 0);
 
           const [new_post] = await tx.insert(posts).values({
             threadId: new_thread.id,
@@ -414,7 +414,7 @@ async function seedThreadsAndPosts() {
             likeCount: faker.number.int({ min: 0, max: 100 }),
             createdAt: last_post_time,
             updatedAt: last_post_time
-          }).returning();
+          }).returning({ id: posts.id, depth: posts.depth, likeCount: posts.likeCount });
 
           thread_posts.push(new_post);
           total_posts++;
@@ -535,7 +535,7 @@ async function main() {
 
   const startTime = Date.now();
   
-  console.log(chalk.blue.bold('\n🚀 DegenTalk Comprehensive Seeding Script\n'));
+  console.log(chalk.blue.bold('\n🚀 Degentalk Comprehensive Seeding Script\n'));
   
   try {
     // Phase 1: Infrastructure
@@ -546,7 +546,12 @@ async function main() {
       // Add wipe logic here if needed
     }
 
-    // Seed forum structure
+    // Phase 2: Users – seed **before** forum structure so we have a default
+    // user available for welcome threads.
+    console.log(chalk.yellow('\n👥 Phase 2: Creating users (runs early now)...'));
+    await seedUsers();
+
+    // Seed forum structure (now has defaultUserId for welcome threads)
     await seedForumsFromConfig();
     
     // Seed economy and XP systems
@@ -560,10 +565,6 @@ async function main() {
     await seedShopItems();
 
     if (!args.values['forums-only']) {
-      // Phase 2: Users
-      console.log(chalk.yellow('\n👥 Phase 2: Creating users...'));
-      await seedUsers();
-
       // Phase 3: Content
       console.log(chalk.yellow('\n💬 Phase 3: Generating realistic content...'));
       await seedThreadsAndPosts();

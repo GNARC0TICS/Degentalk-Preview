@@ -68,7 +68,7 @@ export default function MissionsPage() {
 	return (
 		<>
 			<Head>
-				<title>Daily Missions | DegenTalk</title>
+				<title>Daily Missions | Degentalk</title>
 			</Head>
 
 			{/* Quick progress overview using the same widget */}

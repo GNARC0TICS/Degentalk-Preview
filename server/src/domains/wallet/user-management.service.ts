@@ -6,8 +6,8 @@ import { CCPaymentService } from './ccpayment.service';
 /**
  * User Management Service for CCPayment Integration
  *
- * Handles the mapping between DegenTalk users and CCPayment user accounts.
- * Ensures each DegenTalk user has a corresponding CCPayment user for wallet operations.
+ * Handles the mapping between Degentalk users and CCPayment user accounts.
+ * Ensures each Degentalk user has a corresponding CCPayment user for wallet operations.
  */
 export class UserManagementService {
 	private ccpaymentService: CCPaymentService;
@@ -17,7 +17,7 @@ export class UserManagementService {
 	}
 
 	/**
-	 * Get or create a CCPayment user for a DegenTalk user
+	 * Get or create a CCPayment user for a Degentalk user
 	 */
 	async getOrCreateCCPaymentUser(userId: string): Promise<string> {
 		try {
@@ -32,7 +32,7 @@ export class UserManagementService {
 				return existingMapping[0].ccpaymentUserId;
 			}
 
-			// Get user details from DegenTalk
+			// Get user details from Degentalk
 			const userDetails = await db
 				.select({
 					id: users.id,
@@ -70,7 +70,7 @@ export class UserManagementService {
 	}
 
 	/**
-	 * Get CCPayment user ID for a DegenTalk user
+	 * Get CCPayment user ID for a Degentalk user
 	 */
 	async getCCPaymentUserId(userId: string): Promise<string | null> {
 		try {
@@ -88,9 +88,9 @@ export class UserManagementService {
 	}
 
 	/**
-	 * Get DegenTalk user ID from CCPayment user ID
+	 * Get Degentalk user ID from CCPayment user ID
 	 */
-	async getDegenTalkUserId(ccpaymentUserId: string): Promise<string | null> {
+	async getDegentalkUserId(ccpaymentUserId: string): Promise<string | null> {
 		try {
 			const mapping = await db
 				.select()
@@ -100,7 +100,7 @@ export class UserManagementService {
 
 			return mapping.length > 0 ? mapping[0].userId : null;
 		} catch (error) {
-			console.error('Error getting DegenTalk user ID:', error);
+			console.error('Error getting Degentalk user ID:', error);
 			return null;
 		}
 	}

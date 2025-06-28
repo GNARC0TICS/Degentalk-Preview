@@ -1,10 +1,15 @@
-@keyframes ticker {
+/* Announcement ticker animations - single source of truth */
+@keyframes announcement-ticker {
 	0% {
 		transform: translateX(0);
 	}
 	100% {
-		transform: translateX(-50%);
+		transform: translateX(-100%);
 	}
+}
+
+:root {
+	--ticker-duration: 15s;
 }
 
 .ticker-track {
@@ -18,9 +23,9 @@
 .ticker-content {
 	display: inline-block;
 	white-space: nowrap;
-	animation: ticker 55s linear infinite;
+	animation: announcement-ticker var(--ticker-duration) linear infinite !important;
 }
 
 .ticker-content.paused {
-	animation-play-state: paused;
+	animation-play-state: paused !important;
 }

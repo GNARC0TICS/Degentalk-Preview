@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { SocialService } from './social.service';
-import { logger } from '@server-core/logger';
+import { logger } from '@server/src/core/logger';
 
 export class SocialController {
 	/**
