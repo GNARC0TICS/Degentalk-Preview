@@ -1,7 +1,7 @@
 export interface PluginReward {
 	type: string;
-	value?: any;
-	rarity?: string;
+	value?: string | number | boolean;
+	rarity?: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
 	description?: string;
 }
 
@@ -23,7 +23,7 @@ export interface UserInventory {
 	equipped: boolean;
 	acquiredAt: string; // ISO date string
 	updatedAt: string; // ISO date string
-	metadata?: any;
+	metadata?: Record<string, unknown>;
 	// Add any other userInventory fields
 }
 

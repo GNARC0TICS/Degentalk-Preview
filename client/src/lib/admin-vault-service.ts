@@ -4,55 +4,18 @@ import {
 	VaultTitle,
 	VaultColor,
 	VaultBoost,
+	vaultItems
+} from './rare-items-vault';
+import type {
 	ItemCategory,
 	ItemRarity,
 	UnlockMethod,
 	SeasonType,
-	vaultItems
-} from './rare-items-vault';
-
-// Global interface for all admin operations on vault items
-export interface VaultAdminService {
-	// Item CRUD operations
-	getItem(id: string): Promise<BaseVaultItem | null>;
-	getAllItems(): Promise<BaseVaultItem[]>;
-	getItemsByCategory(category: ItemCategory): Promise<BaseVaultItem[]>;
-	getItemsByRarity(rarity: ItemRarity): Promise<BaseVaultItem[]>;
-	createItem(item: Omit<BaseVaultItem, 'id'>): Promise<BaseVaultItem>;
-	updateItem(id: string, updates: Partial<BaseVaultItem>): Promise<BaseVaultItem>;
-	deleteItem(id: string): Promise<boolean>;
-
-	// Specialized operations
-	enableItem(id: string): Promise<BaseVaultItem>;
-	disableItem(id: string): Promise<BaseVaultItem>;
-	setItemRarity(id: string, rarity: ItemRarity): Promise<BaseVaultItem>;
-	setItemPrice(id: string, dgtPrice: number, usdtPrice: number): Promise<BaseVaultItem>;
-	addItemUnlockMethod(id: string, method: UnlockMethod): Promise<BaseVaultItem>;
-	removeItemUnlockMethod(id: string, method: UnlockMethod): Promise<BaseVaultItem>;
-	setItemXpRequirement(id: string, xp: number): Promise<BaseVaultItem>;
-
-	// Seasonal management
-	setItemSeason(id: string, season: SeasonType): Promise<BaseVaultItem>;
-	setItemAvailabilityDates(
-		id: string,
-		releaseDateUtc: string,
-		expiryDateUtc: string
-	): Promise<BaseVaultItem>;
-	getCurrentSeasonalItems(): Promise<BaseVaultItem[]>;
-
-	// Lootbox management
-	setItemDropChance(id: string, dropChance: number): Promise<BaseVaultItem>;
-	getLootboxItems(): Promise<BaseVaultItem[]>;
-
-	// Event management
-	createEvent(name: string, startDate: string, endDate: string, itemIds: string[]): Promise<any>;
-	getEvents(): Promise<any[]>;
-	addItemToEvent(eventId: string, itemId: string): Promise<any>;
-
-	// Admin audit
-	getItemHistory(id: string): Promise<any[]>;
-	getAdminActionLog(): Promise<any[]>;
-}
+	VaultEvent,
+	AdminActionLog,
+	ItemHistory,
+	VaultAdminService
+} from '@/types/vault.types';
 
 // Mock implementation for demo purposes
 export class MockVaultAdminService implements VaultAdminService {
@@ -64,19 +27,21 @@ export class MockVaultAdminService implements VaultAdminService {
 		...vaultItems.exclusives
 	];
 
-	private events: any[] = [];
-	private actionLog: any[] = [];
-	private itemHistory: Record<string, any[]> = {};
+	private events: VaultEvent[] = [];
+	private actionLog: AdminActionLog[] = [];
+	private itemHistory: Record<string, ItemHistory[]> = {};
 
 	// Helper to log admin actions
-	private logAction(action: string, itemId?: string, details?: any): void {
+	private logAction(action: VaultAdminAction, itemId?: string, details?: VaultActionDetails): void {
 		const timestamp = new Date().toISOString();
-		const logEntry = {
+		const logEntry: AdminActionLog = {
+			id: `log-${Date.now()}`,
 			timestamp,
+			adminId: 'current-admin', // In a real implementation, this would be the actual admin ID
 			action,
-			itemId,
-			details,
-			adminId: 'current-admin' // In a real implementation, this would be the actual admin ID
+			targetType: itemId ? 'item' : 'system',
+			targetId: itemId || 'system',
+			details
 		};
 
 		this.actionLog.push(logEntry);
@@ -86,7 +51,16 @@ export class MockVaultAdminService implements VaultAdminService {
 			if (!this.itemHistory[itemId]) {
 				this.itemHistory[itemId] = [];
 			}
-			this.itemHistory[itemId].push(logEntry);
+			const historyEntry: ItemHistory = {
+				id: `history-${Date.now()}`,
+				itemId,
+				action: this.mapActionToHistoryAction(action),
+				timestamp,
+				adminId: 'current-admin',
+				changes: details.newState,
+				metadata: details.metadata
+			};
+			this.itemHistory[itemId].push(historyEntry);
 		}
 	}
 

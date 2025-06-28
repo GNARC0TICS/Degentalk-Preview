@@ -10,6 +10,7 @@ import { logger } from '@server/src/core/logger';
 import { postService } from './post.service';
 import { cacheService } from '@server/src/core/cache.service';
 import { AchievementEventEmitter } from '../../../core/events/achievement-events.service';
+import { getZoneInfoBatch } from './thread.service.batch-optimization';
 import {
 	threads,
 	posts,
@@ -292,58 +293,57 @@ export class ThreadService {
 			const structuresMap = new Map(structuresData.map((s) => [s.id, s]));
 			const excerptsMap = new Map(excerptData.map((e) => [e.threadId, e.excerpt]));
 
-			const formattedThreads = await Promise.all(
-				threadsData.map(async (thread) => {
-					const userResult = usersMap.get(thread.userId);
-					const structureResult = structuresMap.get(thread.structureId);
-					const excerpt = excerptsMap.get(thread.id);
+			// Batch fetch zone info for all unique structure IDs to eliminate N+1
+			const zoneInfoMap = await getZoneInfoBatch(structureIds);
 
-					// Get zone info (keep async for now, can optimize later)
-					const zoneInfo = await this.getZoneInfo(thread.structureId);
+			const formattedThreads = threadsData.map((thread) => {
+				const userResult = usersMap.get(thread.userId);
+				const structureResult = structuresMap.get(thread.structureId);
+				const excerpt = excerptsMap.get(thread.id);
+				const zoneInfo = zoneInfoMap.get(thread.structureId);
 
-					return {
-						id: thread.id,
-						title: thread.title,
-						slug: thread.slug ?? this.generateSlug(thread.title),
-						userId: thread.userId,
-						prefixId: null,
-						isSticky: thread.isSticky || false,
-						isLocked: thread.isLocked || false,
-						isHidden: false,
-						viewCount: thread.viewCount || 0,
-						postCount: thread.postCount || 0,
-						firstPostLikeCount: 0,
-						lastPostAt: thread.lastPostAt ? new Date(thread.lastPostAt).toISOString() : null,
-						createdAt: thread.createdAt
-							? new Date(thread.createdAt).toISOString()
-							: new Date().toISOString(),
-						updatedAt: thread.updatedAt ? new Date(thread.updatedAt).toISOString() : null,
-						isSolved: thread.isSolved || false,
-						solvingPostId: null,
-						user: {
-							id: thread.userId,
-							username: userResult?.username || 'Unknown',
-							avatarUrl: userResult?.avatarUrl || null,
-							activeAvatarUrl: userResult?.activeAvatarUrl || null,
-							role: userResult?.role || 'user'
-						},
-						category: {
-							id: thread.structureId,
-							name: structureResult?.name || 'Unknown',
-							slug: structureResult?.slug || 'unknown'
-						},
-						zone: zoneInfo || {
-							name: structureResult?.name || 'Unknown',
-							slug: structureResult?.slug || 'unknown',
-							colorTheme: 'default'
-						},
-						tags: [],
-						canEdit: false,
-						canDelete: false,
-						excerpt: excerpt || undefined
-					};
-				})
-			);
+				return {
+					id: thread.id,
+					title: thread.title,
+					slug: thread.slug ?? this.generateSlug(thread.title),
+					userId: thread.userId,
+					prefixId: null,
+					isSticky: thread.isSticky || false,
+					isLocked: thread.isLocked || false,
+					isHidden: false,
+					viewCount: thread.viewCount || 0,
+					postCount: thread.postCount || 0,
+					firstPostLikeCount: 0,
+					lastPostAt: thread.lastPostAt ? new Date(thread.lastPostAt).toISOString() : null,
+					createdAt: thread.createdAt
+						? new Date(thread.createdAt).toISOString()
+						: new Date().toISOString(),
+					updatedAt: thread.updatedAt ? new Date(thread.updatedAt).toISOString() : null,
+					isSolved: thread.isSolved || false,
+					solvingPostId: null,
+					user: {
+						id: thread.userId,
+						username: userResult?.username || 'Unknown',
+						avatarUrl: userResult?.avatarUrl || null,
+						activeAvatarUrl: userResult?.activeAvatarUrl || null,
+						role: userResult?.role || 'user'
+					},
+					category: {
+						id: thread.structureId,
+						name: structureResult?.name || 'Unknown',
+						slug: structureResult?.slug || 'unknown'
+					},
+					zone: zoneInfo || {
+						name: structureResult?.name || 'Unknown',
+						slug: structureResult?.slug || 'unknown',
+						colorTheme: 'default'
+					},
+					tags: [],
+					canEdit: false,
+					canDelete: false,
+					excerpt: excerpt || undefined
+				};
+			});
 
 			logger.info(
 				'ThreadService',

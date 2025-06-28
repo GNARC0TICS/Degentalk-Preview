@@ -10,13 +10,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-// Import other necessary form components (e.g., Select for roles)
+import type { User, UserFormData } from '@/types/admin.types';
 
 interface UserFormDialogProps {
 	isOpen: boolean;
 	onClose: () => void;
-	user?: any; // Replace 'any' with a proper User type
-	onSubmit: (data: any) => void; // Replace 'any' with form data type
+	user?: User;
+	onSubmit: (data: UserFormData) => void;
 }
 
 const UserFormDialog: React.FC<UserFormDialogProps> = ({ isOpen, onClose, user, onSubmit }) => {

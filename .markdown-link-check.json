@@ -1,8 +1,8 @@
 {
-  "ignorePatterns": [
-    { "pattern": "^http://localhost" },
-    { "pattern": "^\\./" },
-    { "pattern": "^\\.\\./" },
-    { "pattern": "^https://dashboard\\.ccpayment\\.com" }
-  ]
-} 
+	"ignorePatterns": [
+		{ "pattern": "^http://localhost" },
+		{ "pattern": "^\\./" },
+		{ "pattern": "^\\.\\./" },
+		{ "pattern": "^https://dashboard\\.ccpayment\\.com" }
+	]
+}
