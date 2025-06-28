@@ -1,10 +1,20 @@
 import React, { useMemo, useEffect, useState, useCallback } from 'react';
 import { useRoute } from 'wouter';
-import { AlertCircle, ArrowUp, MessageSquare, Plus } from 'lucide-react';
+import {
+	AlertCircle,
+	ArrowUp,
+	MessageSquare,
+	Plus,
+	Eye,
+	Pin,
+	Lock,
+	CheckCircle
+} from 'lucide-react';
 import { useThread, usePosts } from '@/features/forum/hooks/useForumQueries';
 import { BBCodePostCard } from '@/components/forum/BBCodePostCard';
 import { ThreadSidebar } from '@/components/forum/ThreadSidebar';
 import { ThreadPagination } from '@/components/forum/ThreadPagination';
+import { QuickReplyBox } from '@/components/forum/bbcode/QuickReplyBox';
 import { SiteFooter } from '@/components/footer';
 import {
 	Breadcrumb,
@@ -23,11 +33,15 @@ import type { PostWithUser, ThreadWithPostsAndUser } from '@db_types/forum.types
 import useSearchParams from '@/hooks/useSearchParams';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import { createForumBreadcrumbs } from '@/lib/forum/breadcrumbs';
+import { useAuth } from '@/hooks/use-auth';
 
 export default function BBCodeThreadPage() {
 	// Get slug param from route
 	const [match, params] = useRoute<{ thread_slug: string }>('/threads/:thread_slug');
 	const slug = params?.thread_slug;
+
+	// Authentication state
+	const { user, isAuthenticated } = useAuth();
 
 	// Pagination state
 	const [currentPage, setCurrentPage] = useState(1);
@@ -215,6 +229,14 @@ export default function BBCodeThreadPage() {
 		// TODO: Implement report functionality
 	};
 
+	const handleSubmitReply = async (content: string) => {
+		// TODO: Implement reply submission
+		console.log('Submitting reply:', content);
+		// This would typically call an API to create a new post
+		// await createPost({ threadId: thread.id, content });
+		// Then refresh the posts or optimistically update the list
+	};
+
 	if (!match) {
 		return <div>404 Not Found</div>;
 	}
@@ -296,7 +318,8 @@ export default function BBCodeThreadPage() {
 										{allPosts.length} {allPosts.length === 1 ? 'post' : 'posts'}
 									</div>
 									<div className="flex items-center">
-										👀 {(thread.viewCount || 0).toLocaleString()} views
+										<Eye className="h-4 w-4 mr-1" />
+										{(thread.viewCount || 0).toLocaleString()} views
 									</div>
 									{totalPages > 1 && (
 										<div className="text-xs text-zinc-500">
@@ -343,16 +366,21 @@ export default function BBCodeThreadPage() {
 						{/* Thread status badges */}
 						<div className="flex flex-wrap gap-2">
 							{thread.isPinned && (
-								<Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30">
-									📌 Pinned
+								<Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 flex items-center">
+									<Pin className="h-3 w-3 mr-1" />
+									Pinned
 								</Badge>
 							)}
 							{thread.isLocked && (
-								<Badge className="bg-red-500/20 text-red-400 border-red-500/30">🔒 Locked</Badge>
+								<Badge className="bg-red-500/20 text-red-400 border-red-500/30 flex items-center">
+									<Lock className="h-3 w-3 mr-1" />
+									Locked
+								</Badge>
 							)}
 							{thread.isSolved && (
-								<Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-									✅ Solved
+								<Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 flex items-center">
+									<CheckCircle className="h-3 w-3 mr-1" />
+									Solved
 								</Badge>
 							)}
 						</div>
@@ -361,43 +389,72 @@ export default function BBCodeThreadPage() {
 					{/* Main Layout */}
 					<div className={`grid gap-8 ${showSidebar ? 'xl:grid-cols-[1fr_300px]' : 'grid-cols-1'}`}>
 						{/* Posts Content */}
-						<div className="space-y-0">
+						<div className="bbcode-thread-container">
 							{posts.length === 0 ? (
 								<div className="text-center py-12 text-zinc-400">
 									<MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
 									<p>No posts yet in this thread.</p>
 								</div>
 							) : (
-								<AnimatePresence>
-									{posts.map((post, index) => (
-										<motion.div
-											key={post.id}
-											initial={{ opacity: 0, y: 20 }}
-											animate={{ opacity: 1, y: 0 }}
-											transition={{ duration: 0.4, delay: index * 0.05 }}
-										>
-											<BBCodePostCard
-												post={post}
-												isFirst={index === 0}
-												isThreadSolved={!!thread.isSolved}
-												isSolution={post.id === thread.solutionPostId}
-												canEdit={false} // TODO: Check permissions
-												canDelete={false} // TODO: Check permissions
-												canMarkSolution={!thread.isSolved} // TODO: Check permissions
-												tippingEnabled={true}
-												showSignatures={true}
-												onLike={handleLike}
-												onReply={handleReply}
-												onQuote={handleQuote}
-												onEdit={handleEdit}
-												onDelete={handleDelete}
-												onMarkSolution={handleMarkSolution}
-												onTip={handleTip}
-												onReport={handleReport}
-											/>
-										</motion.div>
-									))}
-								</AnimatePresence>
+								<div className="space-y-0">
+									{/* Desktop: Seamless classic forum posts */}
+									<div className="hidden lg:block border border-zinc-700/50 rounded-lg overflow-hidden bg-zinc-900/40 backdrop-blur-sm shadow-lg">
+										{posts.map((post, index) => (
+											<div key={post.id} className={index > 0 ? 'border-t border-zinc-700/50' : ''}>
+												<BBCodePostCard
+													post={post}
+													isFirst={index === 0}
+													isThreadSolved={!!thread.isSolved}
+													isSolution={post.id === thread.solutionPostId}
+													threadTitle={index === 0 ? thread.title : undefined}
+													canEdit={false} // TODO: Check permissions
+													canDelete={false} // TODO: Check permissions
+													canMarkSolution={!thread.isSolved} // TODO: Check permissions
+													tippingEnabled={true}
+													showSignatures={true}
+													onLike={handleLike}
+													onReply={handleReply}
+													onQuote={handleQuote}
+													onEdit={handleEdit}
+													onDelete={handleDelete}
+													onMarkSolution={handleMarkSolution}
+													onTip={handleTip}
+													onReport={handleReport}
+													className="border-none rounded-none" // Remove individual post borders for seamless look
+												/>
+											</div>
+										))}
+									</div>
+
+									{/* Mobile: Individual post cards with animations */}
+									<div className="lg:hidden space-y-4">
+										<AnimatePresence>
+											{posts.map((post, index) => (
+												<BBCodePostCard
+													key={post.id}
+													post={post}
+													isFirst={index === 0}
+													isThreadSolved={!!thread.isSolved}
+													isSolution={post.id === thread.solutionPostId}
+													threadTitle={index === 0 ? thread.title : undefined}
+													canEdit={false} // TODO: Check permissions
+													canDelete={false} // TODO: Check permissions
+													canMarkSolution={!thread.isSolved} // TODO: Check permissions
+													tippingEnabled={true}
+													showSignatures={true}
+													onLike={handleLike}
+													onReply={handleReply}
+													onQuote={handleQuote}
+													onEdit={handleEdit}
+													onDelete={handleDelete}
+													onMarkSolution={handleMarkSolution}
+													onTip={handleTip}
+													onReport={handleReport}
+												/>
+											))}
+										</AnimatePresence>
+									</div>
+								</div>
 							)}
 
 							{/* Thread Pagination */}
@@ -410,6 +467,19 @@ export default function BBCodeThreadPage() {
 										totalPosts={allPosts.length}
 										onPageChange={handlePageChange}
 										showPostCount={true}
+									/>
+								</div>
+							)}
+
+							{/* Quick Reply Box - shown when user is signed in */}
+							{isAuthenticated && user && thread && (
+								<div className="mt-8">
+									<QuickReplyBox
+										threadId={thread.id}
+										threadTitle={thread.title}
+										userAvatar={user.avatarUrl}
+										username={user.username}
+										onSubmit={handleSubmitReply}
 									/>
 								</div>
 							)}

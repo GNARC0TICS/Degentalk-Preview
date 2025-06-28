@@ -39505,3 +39505,9 @@ User not found
   "statusCode": 304,
   "durationMs": 681.664
 }
+[2025-06-28T11:15:59.523Z] [INFO] [SYSTEM_STARTUP] Logger initialized
+{
+  "env": "development",
+  "logPath": "logs/app.log"
+}
+[2025-06-28T11:16:09.891Z] [INFO] [SHOP] Shop already has 6 items. Skipping seeding.

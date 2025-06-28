@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en" class="dark">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>BBCode Forum Mockup - Degentalk Style</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script>
+			tailwind.config = {
+				darkMode: 'class',
+				theme: {
+					extend: {
+						colors: {
+							zinc: {
+								900: '#18181b',
+								800: '#27272a',
+								700: '#3f3f46',
+								600: '#52525b',
+								500: '#71717a',
+								400: '#a1a1aa',
+								300: '#d4d4d8'
+							}
+						}
+					}
+				}
+			};
+		</script>
+	</head>
+	<body class="bg-gradient-to-br from-black via-zinc-950 to-black min-h-screen text-white">
+		<div class="container mx-auto p-8 max-w-6xl">
+			<!-- Thread Header -->
+			<div class="mb-8">
+				<h1 class="text-3xl font-bold text-zinc-100 mb-4">
+					🚀 Next Moon Shot? DEGEN vs CHAD Token Analysis
+				</h1>
+				<div class="flex items-center space-x-4 text-sm text-zinc-400">
+					<span>📝 23 posts</span>
+					<span>👀 1,247 views</span>
+					<span
+						class="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded text-xs border border-emerald-500/30"
+						>💎 Hot</span
+					>
+					<span
+						class="px-2 py-1 bg-amber-500/20 text-amber-400 rounded text-xs border border-amber-500/30"
+						>📌 Pinned</span
+					>
+				</div>
+			</div>
+
+			<!-- Classic BBCode Forum Posts Container -->
+			<div
+				class="border border-zinc-700/50 rounded-lg overflow-hidden bg-zinc-900/40 backdrop-blur-sm shadow-lg"
+			>
+				<!-- Post #1 (Original Post) -->
+				<div>
+					<!-- Post Header -->
+					<div
+						class="flex items-center justify-between p-3 border-b border-zinc-700/30 bg-zinc-800/20"
+					>
+						<div class="flex items-center space-x-2">
+							<span
+								class="px-2 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs rounded"
+							>
+								📌 Original Post
+							</span>
+						</div>
+						<div class="flex items-center space-x-3 text-sm text-zinc-400">
+							<span class="font-mono">#1</span>
+							<button
+								class="text-zinc-500 hover:text-emerald-400 transition-colors"
+								title="Copy permalink"
+							>
+								🔗
+							</button>
+						</div>
+					</div>
+
+					<!-- Post Content Area -->
+					<div class="flex border-separate">
+						<!-- Left Sidebar - User Info -->
+						<div
+							class="w-[180px] p-4 border-r border-zinc-700/50 bg-gradient-to-b from-zinc-800/30 to-zinc-900/50 backdrop-blur-sm"
+						>
+							<!-- Avatar -->
+							<div class="text-center mb-4">
+								<div
+									class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-cyan-400 rounded-full mx-auto mb-2 ring-2 ring-zinc-700/50 flex items-center justify-center text-xl font-bold"
+								>
+									🦍
+								</div>
+								<div class="flex items-center justify-center mb-2">
+									<div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+									<span class="ml-1 text-xs text-emerald-400">Online</span>
+								</div>
+							</div>
+
+							<!-- Username and role -->
+							<div class="text-center mb-4">
+								<div class="font-semibold mb-1 text-yellow-400">CryptoWhale69</div>
+								<div
+									class="px-2 py-1 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 text-xs rounded mb-2"
+								>
+									👑 Admin
+								</div>
+								<div class="text-xs text-zinc-400 italic">Diamond Hands Supreme</div>
+							</div>
+
+							<!-- Level badge -->
+							<div class="flex justify-center mb-4">
+								<div
+									class="px-3 py-1 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-full text-xs"
+								>
+									⭐ Level 99
+								</div>
+							</div>
+
+							<!-- Stats -->
+							<div class="space-y-2 text-xs border-t border-zinc-700/30 pt-3">
+								<div class="flex items-center text-zinc-400">
+									<span>📅</span>
+									<span class="ml-2">Joined 6 months ago</span>
+								</div>
+								<div class="flex items-center text-zinc-400">
+									<span>💬</span>
+									<span class="ml-2">Posts: 1,337</span>
+								</div>
+								<div class="flex items-center text-zinc-400">
+									<span>📈</span>
+									<span class="ml-2">Rep: 42,069</span>
+								</div>
+								<div class="flex items-center text-zinc-400">
+									<span>⚡</span>
+									<span class="ml-2">XP: 99,999</span>
+								</div>
+							</div>
+						</div>
+
+						<!-- Right Content Area -->
+						<div class="flex-1 flex flex-col">
+							<!-- Post Body -->
+							<div class="p-6 flex-1">
+								<div class="prose prose-invert prose-zinc max-w-none mb-4">
+									<p>Alright degens, let's talk about the next 100x gem 💎</p>
+
+									<p>
+										I've been deep diving into <strong>DEGEN</strong> vs
+										<strong>CHAD</strong> tokens and here's my analysis:
+									</p>
+
+									<blockquote
+										class="border-l-4 border-emerald-500 bg-zinc-800/40 p-4 rounded-r-lg relative italic"
+									>
+										<div
+											class="absolute -left-3 top-2 w-6 h-6 bg-zinc-900 rounded-full flex items-center justify-center text-xs"
+										>
+											💬
+										</div>
+										"In crypto, you're either a CHAD or you get REKT. There's no middle ground." -
+										Sun Tzu, probably
+									</blockquote>
+
+									<p><strong>DEGEN Token:</strong></p>
+									<ul>
+										<li>✅ Based community</li>
+										<li>✅ Actual utility (tipping on Base)</li>
+										<li>✅ Growing ecosystem</li>
+										<li>❌ High supply inflation</li>
+									</ul>
+
+									<p><strong>CHAD Token:</strong></p>
+									<ul>
+										<li>✅ Deflationary mechanics</li>
+										<li>✅ Meme power is unmatched</li>
+										<li>❌ Limited utility so far</li>
+										<li>❌ Smaller community</li>
+									</ul>
+
+									<!-- Signature Section -->
+									<div class="signature-section mt-6 pt-4 border-t border-zinc-600/30">
+										<div class="text-sm text-zinc-400 italic">
+											🚀 <em>Not financial advice, DYOR!</em> | Follow me:
+											<a href="#" class="text-emerald-400 hover:text-emerald-300">@CryptoWhale69</a>
+											|
+											<img
+												src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjMTBiOTgxIi8+Cjx0ZXh0IHg9IjEwIiB5PSIxNCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+💎</text+
+                                        </svg>"
+												alt="diamond"
+												class="inline w-5 h-5"
+											/>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Post Actions -->
+							<div
+								class="flex items-center justify-between px-4 py-3 border-t border-zinc-700/30 bg-zinc-800/20"
+							>
+								<div class="flex items-center space-x-1">
+									<button
+										class="h-8 px-3 text-zinc-400 hover:text-pink-400 hover:bg-pink-500/10 transition-all rounded text-xs flex items-center"
+									>
+										❤️ <span class="ml-1.5">12</span>
+									</button>
+									<button
+										class="h-8 px-3 text-zinc-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-all rounded text-xs flex items-center"
+									>
+										💬 <span class="ml-1.5">Reply</span>
+									</button>
+									<button
+										class="h-8 px-3 text-zinc-400 hover:text-cyan-400 hover:bg-cyan-500/10 transition-all rounded text-xs flex items-center"
+									>
+										📝 <span class="ml-1.5">Quote</span>
+									</button>
+									<button
+										class="h-8 px-3 text-zinc-400 hover:text-yellow-400 hover:bg-yellow-500/10 transition-all rounded text-xs flex items-center"
+									>
+										🪙 <span class="ml-1.5">Tip</span>
+									</button>
+								</div>
+								<div class="flex items-center space-x-1">
+									<button
+										class="h-8 w-8 text-zinc-400 hover:text-amber-400 hover:bg-amber-500/10 transition-all rounded flex items-center justify-center"
+									>
+										🔖
+									</button>
+									<button
+										class="h-8 w-8 text-zinc-400 hover:text-zinc-300 hover:bg-zinc-700/50 transition-all rounded flex items-center justify-center"
+									>
+										⋯
+									</button>
+								</div>
+							</div>
+
+							<!-- Post Footer -->
+							<div
+								class="flex items-center justify-between px-4 py-2 text-xs text-zinc-500 border-t border-zinc-700/20 bg-zinc-900/30"
+							>
+								<div class="flex items-center space-x-4">
+									<div class="flex items-center">
+										🕐 <span class="ml-1">Posted 2 hours ago</span>
+									</div>
+								</div>
+								<div class="flex items-center text-zinc-400">
+									👥 <span class="ml-1">You and 11 others reacted</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Separator between posts -->
+				<div class="border-t border-zinc-700/50"></div>
+
+				<!-- Post #2 -->
+				<div>
+					<!-- Post Header -->
+					<div
+						class="flex items-center justify-between p-3 border-b border-zinc-700/30 bg-zinc-800/20"
+					>
+						<div></div>
+						<div class="flex items-center space-x-3 text-sm text-zinc-400">
+							<span class="font-mono">#2</span>
+							<button
+								class="text-zinc-500 hover:text-emerald-400 transition-colors"
+								title="Copy permalink"
+							>
+								🔗
+							</button>
+						</div>
+					</div>
+
+					<!-- Post Content Area -->
+					<div class="flex border-separate">
+						<!-- Left Sidebar - User Info -->
+						<div
+							class="w-[180px] p-4 border-r border-zinc-700/50 bg-gradient-to-b from-zinc-800/30 to-zinc-900/50 backdrop-blur-sm"
+						>
+							<!-- Avatar -->
+							<div class="text-center mb-4">
+								<div
+									class="w-16 h-16 bg-gradient-to-br from-purple-400 to-blue-400 rounded-full mx-auto mb-2 ring-2 ring-zinc-700/50 flex items-center justify-center text-xl font-bold"
+								>
+									🤖
+								</div>
+							</div>
+
+							<!-- Username and role -->
+							<div class="text-center mb-4">
+								<div class="font-semibold mb-1 text-emerald-400">DegenTrader</div>
+								<div
+									class="px-2 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs rounded mb-2"
+								>
+									🛡️ Moderator
+								</div>
+								<div class="text-xs text-zinc-400 italic">To The Moon 🚀</div>
+							</div>
+
+							<!-- Level badge -->
+							<div class="flex justify-center mb-4">
+								<div
+									class="px-3 py-1 bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 rounded-full text-xs"
+								>
+									⭐ Level 45
+								</div>
+							</div>
+
+							<!-- Stats -->
+							<div class="space-y-2 text-xs border-t border-zinc-700/30 pt-3">
+								<div class="flex items-center text-zinc-400">
+									<span>📅</span>
+									<span class="ml-2">Joined 2 years ago</span>
+								</div>
+								<div class="flex items-center text-zinc-400">
+									<span>💬</span>
+									<span class="ml-2">Posts: 420</span>
+								</div>
+								<div class="flex items-center text-zinc-400">
+									<span>📈</span>
+									<span class="ml-2">Rep: 6,969</span>
+								</div>
+							</div>
+						</div>
+
+						<!-- Right Content Area -->
+						<div class="flex-1 flex flex-col">
+							<!-- Post Body -->
+							<div class="p-6 flex-1">
+								<div class="prose prose-invert prose-zinc max-w-none mb-4">
+									<p>Solid analysis! 🔥 I'm bullish on DEGEN for the long term.</p>
+
+									<p>
+										The Base ecosystem is exploding and DEGEN is at the center of it. Plus that
+										tipping mechanism is genius for community building.
+									</p>
+
+									<p>CHAD is fun but memes only take you so far without real utility 🤷‍♂️</p>
+
+									<!-- Signature Section -->
+									<div class="signature-section mt-6 pt-4 border-t border-zinc-600/30">
+										<div class="text-sm text-zinc-400 italic">
+											💫 <em>Diamond hands since 2021</em> | Portfolio: +420% this year 📈
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Post Actions -->
+							<div
+								class="flex items-center justify-between px-4 py-3 border-t border-zinc-700/30 bg-zinc-800/20"
+							>
+								<div class="flex items-center space-x-1">
+									<button
+										class="h-8 px-3 text-pink-400 bg-pink-500/10 hover:bg-pink-500/20 transition-all rounded text-xs flex items-center"
+									>
+										❤️ <span class="ml-1.5">5</span>
+									</button>
+									<button
+										class="h-8 px-3 text-zinc-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-all rounded text-xs flex items-center"
+									>
+										💬 <span class="ml-1.5">Reply</span>
+									</button>
+									<button
+										class="h-8 px-3 text-zinc-400 hover:text-cyan-400 hover:bg-cyan-500/10 transition-all rounded text-xs flex items-center"
+									>
+										📝 <span class="ml-1.5">Quote</span>
+									</button>
+								</div>
+								<div class="flex items-center space-x-1">
+									<button
+										class="h-8 w-8 text-zinc-400 hover:text-amber-400 hover:bg-amber-500/10 transition-all rounded flex items-center justify-center"
+									>
+										🔖
+									</button>
+									<button
+										class="h-8 w-8 text-zinc-400 hover:text-zinc-300 hover:bg-zinc-700/50 transition-all rounded flex items-center justify-center"
+									>
+										⋯
+									</button>
+								</div>
+							</div>
+
+							<!-- Post Footer -->
+							<div
+								class="flex items-center justify-between px-4 py-2 text-xs text-zinc-500 border-t border-zinc-700/20 bg-zinc-900/30"
+							>
+								<div class="flex items-center space-x-4">
+									<div class="flex items-center">
+										🕐 <span class="ml-1">Posted 1 hour ago</span>
+									</div>
+									<div class="flex items-center text-zinc-400">
+										✏️ <span class="ml-1">Edited 30 min ago by DegenTrader</span>
+									</div>
+								</div>
+								<div class="flex items-center text-zinc-400">
+									👥 <span class="ml-1">You and 4 others reacted</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Pagination -->
+			<div class="flex items-center justify-between mt-8">
+				<div class="text-sm text-zinc-400">Showing posts 1-20 of 156</div>
+				<div class="flex items-center space-x-2">
+					<button class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-sm">
+						← Prev
+					</button>
+					<div class="flex space-x-1">
+						<button class="px-3 py-2 bg-emerald-600 text-white rounded text-sm">1</button>
+						<button class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-sm">
+							2
+						</button>
+						<button class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-sm">
+							3
+						</button>
+						<span class="px-3 py-2 text-zinc-500">...</span>
+						<button class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-sm">
+							8
+						</button>
+					</div>
+					<button class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-sm">
+						Next →
+					</button>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

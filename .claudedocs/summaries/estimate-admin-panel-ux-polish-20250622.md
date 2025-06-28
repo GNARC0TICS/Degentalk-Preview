@@ -32,23 +32,27 @@
 **Required Work**:
 
 1. **Hard-coded Settings Audit** (16 hours)
+
    - Systematic grep analysis across codebase
    - Document 50+ configuration points (XP caps, rain limits, pricing)
    - Create migration plan for each setting type
 
 2. **DB Schema Extensions** (24 hours)
+
    - Extend `siteSettings` table with JSON schema validation
    - Add `configCategories`, `configTemplates` tables
    - Create audit logging for all config changes
    - Database migrations + seed data
 
 3. **Generic ConfigEditor Component** (40 hours)
+
    - Build `<ConfigEditor />` with JSON schema support
    - Live preview functionality for UI changes
    - Form validation with type safety
    - Bulk import/export capabilities
 
 4. **RBAC Integration** (24 hours)
+
    - Extend existing role system for config permissions
    - Add granular edit rights (admin vs super-admin)
    - Audit trail integration
@@ -78,18 +82,21 @@
 **Required Work**:
 
 1. **User Journey Mapping** (16 hours)
+
    - Map "visitor → power user" flow across 8+ touchpoints
    - Document current conversion points
    - Identify drop-off locations
    - Create user personas and scenarios
 
 2. **Friction Point Analysis** (20 hours)
+
    - Usability testing simulation
    - Mobile vs desktop experience audit
    - Performance bottleneck identification
    - Error state documentation
 
 3. **Telemetry Implementation** (32 hours)
+
    - Event tracking hooks throughout funnel
    - Analytics dashboard components
    - A/B testing framework setup
@@ -121,18 +128,21 @@
 **Required Work**:
 
 1. **Design Token System** (24 hours)
+
    - Convert Tailwind config to design tokens
    - Create token hierarchy (semantic > component > primitive)
    - Build token documentation site
    - Automate design-to-code sync
 
 2. **Component Standardization** (32 hours)
+
    - Audit 180+ components for consistency
    - Refactor shadcn primitives integration
    - Create component variants system
    - Mobile-responsive improvements
 
 3. **Polish Pass** (16 hours)
+
    - Empty state illustrations
    - Loading skeleton improvements
    - Error toast standardization
@@ -162,12 +172,14 @@
 **Required Work**:
 
 1. **Storybook Integration** (20 hours)
+
    - Component stories for design system
    - Token visualization
    - Interactive documentation
    - Automated screenshot testing
 
 2. **Config Framework Documentation** (12 hours)
+
    - API reference for ConfigEditor
    - Admin workflow guides
    - Schema definition examples
@@ -203,6 +215,7 @@
 ### High Risk (25% probability)
 
 1. **Legacy Code Compatibility**
+
    - Risk: Hard-coded values deeply embedded
    - Mitigation: Gradual migration strategy, feature flags
    - Time Impact: +1 week
@@ -215,6 +228,7 @@
 ### Medium Risk (40% probability)
 
 1. **Performance Impact**
+
    - Risk: Config system adds latency
    - Mitigation: Caching strategy, performance monitoring
    - Time Impact: +3 days

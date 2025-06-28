@@ -86,11 +86,13 @@ Added new route:
 ## 📋 Next Steps
 
 1. **Test the Admin Panel**
+
    - Navigate to `/admin/forum-management`
    - Create/edit zones and forums
    - Verify all features work correctly
 
 2. **Future Enhancements**
+
    - Drag-and-drop reordering
    - Bulk operations
    - Import/export functionality
@@ -113,6 +115,7 @@ Added new route:
 ## 📝 Usage Guide
 
 1. **Creating a Zone**:
+
    - Click "New Zone" button
    - Fill in name, slug, description
    - Select icon and theme
@@ -120,6 +123,7 @@ Added new route:
    - Save
 
 2. **Managing Forums**:
+
    - Navigate to zone card
    - Click settings icon
    - Add/edit child forums

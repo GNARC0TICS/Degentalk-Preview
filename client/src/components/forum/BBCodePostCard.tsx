@@ -1,10 +1,10 @@
 import React from 'react';
-import DOMPurify from 'dompurify';
-import { Card, CardContent } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import { Pin, CheckCircle, Link2 } from 'lucide-react';
+import { PostHeader, PostSidebar, PostBody, PostActions, PostFooter } from './bbcode';
 import { UnifiedProfileCard } from '@/components/profile/UnifiedProfileCard';
-import { ReactionBar } from './ReactionBar';
-import { SignatureRenderer } from './SignatureRenderer';
-import { SolveBadge } from './SolveBadge';
+import { brandConfig } from '@/config/brand.config';
+import { cn } from '@/lib/utils';
 import type { PostWithUser } from '@db_types/forum.types';
 
 interface BBCodePostCardProps {
@@ -12,6 +12,7 @@ interface BBCodePostCardProps {
 	isFirst?: boolean;
 	isThreadSolved?: boolean;
 	isSolution?: boolean;
+	threadTitle?: string;
 	canEdit?: boolean;
 	canDelete?: boolean;
 	canMarkSolution?: boolean;
@@ -36,6 +37,7 @@ export function BBCodePostCard({
 	isFirst = false,
 	isThreadSolved = false,
 	isSolution = false,
+	threadTitle,
 	canEdit = false,
 	canDelete = false,
 	canMarkSolution = false,
@@ -54,241 +56,183 @@ export function BBCodePostCard({
 	onCopyLink,
 	className = ''
 }: BBCodePostCardProps) {
+	// Calculate post number (this would typically come from props in a real implementation)
+	const postNumber = post.id;
+
+	// Handle post action callbacks
+	const handleCopyPermalink = () => {
+		// Optional toast notification could be added here
+		console.log(`Copied permalink for post ${post.id}`);
+	};
 	return (
-		<div
-			id={`post-${post.id}`}
-			className={`grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-0 mb-6 ${className}`}
-		>
-			{/* Desktop: Left Author Profile Card */}
-			<div className="hidden lg:block">
-				<UnifiedProfileCard
-					username={post.authorUsername}
-					variant="sidebar"
-					className="sticky top-4"
-					showStats={true}
-					showJoinDate={true}
-					showLevel={true}
-					animated={true}
-				/>
-			</div>
-
-			{/* Mobile: Compact Author Profile (horizontal) */}
-			<div className="lg:hidden mb-4">
-				<UnifiedProfileCard
-					username={post.authorUsername}
-					variant="compact"
-					showStats={true}
-					showLevel={true}
-					animated={false}
-				/>
-			</div>
-
-			{/* Main Post Content */}
-			<Card
-				className={`bg-zinc-900/60 border-zinc-800 ${isSolution ? 'ring-1 ring-emerald-500/30 border-emerald-700/50' : ''} lg:col-start-2`}
-			>
-				{/* Post Header with Solution Badge */}
-				{isSolution && (
-					<div className="flex items-center justify-between p-3 border-b border-zinc-800/50 bg-emerald-900/20">
-						<SolveBadge size="sm" />
-						<span className="text-xs text-emerald-400">Marked as solution</span>
-					</div>
+		<>
+			{/* Desktop: Classic BBCode Forum Layout */}
+			<div
+				id={`post-${post.id}`}
+				className={cn(
+					'hidden lg:block backdrop-blur-sm shadow-lg mb-0 relative',
+					isFirst
+						? 'border border-zinc-600/60 bg-zinc-900/50 border-l-2 border-l-zinc-500/60'
+						: 'border border-zinc-700/50 bg-zinc-900/40',
+					isSolution && 'ring-1 ring-emerald-500/30 border-emerald-700/50',
+					className
 				)}
+			>
+				{/* Post Header */}
+				<PostHeader
+					postId={post.id}
+					postNumber={postNumber}
+					createdAt={new Date(post.createdAt)}
+					editedAt={post.updatedAt ? new Date(post.updatedAt) : null}
+					isFirst={isFirst}
+					isSolution={isSolution}
+					threadTitle={threadTitle}
+					onCopyPermalink={handleCopyPermalink}
+				/>
 
-				{/* Post Body */}
-				<CardContent className="p-0">
-					<div className="p-6">
-						{/* Post number and permalink */}
-						<div className="flex items-center justify-between mb-4">
-							<div className="flex items-center space-x-2">
-								{isFirst && (
-									<span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded border border-emerald-500/30">
-										Original Post
-									</span>
-								)}
-								<span className="text-xs text-zinc-500">#{post.id}</span>
-							</div>
-							<a
-								href={`#post-${post.id}`}
-								className="text-xs text-zinc-500 hover:text-emerald-400 transition-colors"
-								title="Permalink to this post"
-							>
-								🔗
-							</a>
-						</div>
+				{/* Main post content area - Classic two-column */}
+				<div className="flex border-separate">
+					{/* Left Sidebar - User Info */}
+					<PostSidebar
+						username={post.authorUsername}
+						authorAvatar={post.authorAvatar}
+						isFirst={isFirst}
+					/>
 
-						{/* Post Content */}
-						<div className="prose prose-invert prose-zinc max-w-none mb-4">
-							{post.content && (
-								<div
-									className="post-content"
-									dangerouslySetInnerHTML={{
-										__html: DOMPurify.sanitize(post.content, {
-											ALLOWED_TAGS: [
-												'p',
-												'br',
-												'strong',
-												'b',
-												'em',
-												'i',
-												'u',
-												's',
-												'strike',
-												'del',
-												'a',
-												'img',
-												'h1',
-												'h2',
-												'h3',
-												'h4',
-												'h5',
-												'h6',
-												'ul',
-												'ol',
-												'li',
-												'blockquote',
-												'code',
-												'pre',
-												'table',
-												'thead',
-												'tbody',
-												'tr',
-												'th',
-												'td',
-												'span',
-												'div',
-												'hr'
-											],
-											ALLOWED_ATTR: [
-												'href',
-												'src',
-												'alt',
-												'title',
-												'class',
-												'style',
-												'target',
-												'rel',
-												'width',
-												'height'
-											],
-											ADD_ATTR: ['target'],
-											HOOK_ATTRIBUTES: {
-												a: function (node) {
-													const href = node.getAttribute('href');
-													if (href && (href.startsWith('http') || href.startsWith('//'))) {
-														node.setAttribute('target', '_blank');
-														node.setAttribute('rel', 'noopener noreferrer');
-													}
-												}
-											}
-										})
-									}}
-								/>
-							)}
-						</div>
-
-						{/* Signature */}
-						<SignatureRenderer
-							signature={''}
+					{/* Right Content Area */}
+					<div className="flex-1 flex flex-col">
+						{/* Post body with content and signature */}
+						<PostBody
+							content={post.content}
+							signature={null} // TODO: Get signature from user profile
 							username={post.authorUsername}
 							showSignatures={showSignatures}
-							maxHeight={80}
+							isFirst={isFirst}
+							className="flex-1"
+						/>
+
+						{/* Post actions */}
+						<PostActions
+							postId={post.id}
+							likeCount={post.likeCount}
+							hasLiked={post.hasLiked}
+							canEdit={canEdit}
+							canDelete={canDelete}
+							canMarkSolution={canMarkSolution}
+							isSolution={isSolution}
+							isThreadSolved={isThreadSolved}
+							isFirst={isFirst}
+							tippingEnabled={tippingEnabled}
+							onLike={onLike}
+							onReply={onReply}
+							onQuote={onQuote}
+							onEdit={onEdit}
+							onDelete={onDelete}
+							onMarkSolution={onMarkSolution}
+							onTip={onTip}
+							onReport={onReport}
+							onBookmark={onBookmark}
+							onShare={onShare}
+							onCopyLink={onCopyLink}
+						/>
+
+						{/* Post footer with timestamps */}
+						<PostFooter
+							createdAt={new Date(post.createdAt)}
+							editedAt={post.updatedAt ? new Date(post.updatedAt) : null}
+							isEdited={post.isEdited}
+							reactionCount={post.likeCount}
+							hasReacted={post.hasLiked}
 						/>
 					</div>
+				</div>
+			</div>
 
-					{/* Reaction Bar */}
-					<ReactionBar
-						postId={post.id}
-						likeCount={post.likeCount}
-						hasLiked={post.hasLiked}
-						canEdit={canEdit}
-						canDelete={canDelete}
-						canMarkSolution={canMarkSolution}
-						isSolution={isSolution}
-						isThreadSolved={isThreadSolved}
-						tippingEnabled={tippingEnabled}
-						createdAt={post.createdAt}
-						editedAt={post.updatedAt}
-						isEdited={post.isEdited}
-						onLike={onLike}
-						onReply={onReply}
-						onQuote={onQuote}
-						onEdit={onEdit}
-						onDelete={onDelete}
-						onMarkSolution={onMarkSolution}
-						onTip={onTip}
-						onReport={onReport}
-						onBookmark={onBookmark}
-						onShare={onShare}
-						onCopyLink={onCopyLink}
-					/>
-				</CardContent>
-			</Card>
+			{/* Mobile: Timeline Conversation View */}
+			<motion.div
+				id={`post-${post.id}-mobile`}
+				className={cn(
+					'lg:hidden mb-4 backdrop-blur-sm rounded-lg',
+					isFirst
+						? 'bg-zinc-900/65 border border-zinc-600/60 shadow-lg'
+						: 'bg-zinc-900/60 border border-zinc-700/50',
+					isSolution && 'ring-1 ring-emerald-500/30 border-emerald-700/50',
+					className
+				)}
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.3 }}
+			>
+				{/* Mobile header with user info */}
+				<div className="p-4 border-b border-zinc-700/30">
+					<div className="flex items-center justify-between mb-2">
+						<UnifiedProfileCard
+							username={post.authorUsername}
+							variant="mini"
+							showLevel={true}
+							showOnlineStatus={true}
+							animated={false}
+						/>
+						<div className="flex items-center space-x-2 text-xs text-zinc-500">
+							{isFirst && (
+								<span className="px-2 py-1 bg-zinc-800/60 text-zinc-200 border border-zinc-600/50 rounded text-sm font-medium flex items-center">
+									<Pin className="h-3 w-3 mr-1" />
+									OP
+								</span>
+							)}
+							{isSolution && (
+								<span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs flex items-center">
+									<CheckCircle className="h-3 w-3 mr-1" />
+									Solution
+								</span>
+							)}
+							<span>#{postNumber}</span>
+							<button
+								onClick={handleCopyPermalink}
+								className="text-zinc-500 hover:text-emerald-400 transition-colors"
+								title="Copy permalink"
+							>
+								<Link2 className="h-3 w-3" />
+							</button>
+						</div>
+					</div>
+				</div>
 
-			<style jsx>{`
-				.post-content {
-					line-height: 1.6;
-				}
-				.post-content img {
-					max-width: 100%;
-					height: auto;
-					border-radius: 8px;
-					margin: 1rem 0;
-				}
-				.post-content a {
-					color: rgb(34 197 94); /* emerald-500 */
-					text-decoration: none;
-				}
-				.post-content a:hover {
-					color: rgb(16 185 129); /* emerald-600 */
-					text-decoration: underline;
-				}
-				.post-content blockquote {
-					border-left: 4px solid rgb(34 197 94);
-					padding-left: 1rem;
-					margin: 1rem 0;
-					background: rgba(39, 39, 42, 0.3);
-					border-radius: 0 8px 8px 0;
-					padding: 1rem;
-				}
-				.post-content code {
-					background: rgba(39, 39, 42, 0.8);
-					padding: 2px 6px;
-					border-radius: 4px;
-					font-size: 0.9em;
-				}
-				.post-content pre {
-					background: rgba(39, 39, 42, 0.8);
-					padding: 1rem;
-					border-radius: 8px;
-					overflow-x: auto;
-					border: 1px solid rgba(82, 82, 91, 0.3);
-				}
-				.post-content pre code {
-					background: none;
-					padding: 0;
-				}
-				.post-content table {
-					border-collapse: collapse;
-					width: 100%;
-					margin: 1rem 0;
-				}
-				.post-content th,
-				.post-content td {
-					border: 1px solid rgba(82, 82, 91, 0.3);
-					padding: 0.5rem;
-					text-align: left;
-				}
-				.post-content th {
-					background: rgba(39, 39, 42, 0.5);
-					font-weight: 600;
-				}
-				.post-content hr {
-					border: none;
-					border-top: 1px solid rgba(82, 82, 91, 0.3);
-					margin: 2rem 0;
-				}
-			`}</style>
-		</div>
+				{/* Mobile content */}
+				<PostBody
+					content={post.content}
+					signature={null}
+					username={post.authorUsername}
+					showSignatures={showSignatures}
+					className="border-b border-zinc-700/30"
+				/>
+
+				{/* Mobile actions */}
+				<PostActions
+					postId={post.id}
+					likeCount={post.likeCount}
+					hasLiked={post.hasLiked}
+					canEdit={canEdit}
+					canDelete={canDelete}
+					canMarkSolution={canMarkSolution}
+					isSolution={isSolution}
+					isThreadSolved={isThreadSolved}
+					isFirst={isFirst}
+					tippingEnabled={tippingEnabled}
+					onLike={onLike}
+					onReply={onReply}
+					onQuote={onQuote}
+					onEdit={onEdit}
+					onDelete={onDelete}
+					onMarkSolution={onMarkSolution}
+					onTip={onTip}
+					onReport={onReport}
+					onBookmark={onBookmark}
+					onShare={onShare}
+					onCopyLink={onCopyLink}
+					className="border-none"
+				/>
+			</motion.div>
+		</>
 	);
 }

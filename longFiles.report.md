@@ -7,6 +7,7 @@ This report tracks files over 800 lines that should be considered for refactorin
 ### Critical - Over 1000 Lines
 
 1. **client/src/pages/admin/announcements/index.tsx** (1,227 lines)
+
    - Admin announcements management page
    - Complex form handling and state management
    - Consider breaking into components and hooks
@@ -19,11 +20,13 @@ This report tracks files over 800 lines that should be considered for refactorin
 ### High Priority - 900-1000 Lines
 
 3. **client/src/pages/admin/xp/adjust.tsx** (886 lines)
+
    - XP adjustment functionality
    - Complex user lookup and adjustment logic
    - Consider extracting hooks and validation
 
 4. **client/src/pages/admin/clout/grants.tsx** (881 lines)
+
    - Clout grants management
    - Multiple modals and state management
    - Could benefit from component extraction
@@ -36,26 +39,31 @@ This report tracks files over 800 lines that should be considered for refactorin
 ### Medium Priority - 800-900 Lines
 
 6. **client/src/pages/admin/categories.tsx** (862 lines)
+
    - Forum categories management
    - CRUD operations and validation
    - Extractable form components
 
 7. **client/src/pages/admin/emojis.tsx** (840 lines)
+
    - Emoji management interface
    - File upload and preview logic
    - Consider emoji components
 
 8. **client/src/components/admin/clout/AchievementsSection.tsx** (837 lines)
+
    - Achievements management section
    - Complex form and table logic
    - Extract achievement components
 
 9. **client/src/pages/admin/reports/index.tsx** (831 lines)
+
    - Reports management page
    - Data tables and filtering
    - Extract report components
 
 10. **client/src/pages/mod/users.tsx** (825 lines)
+
     - Moderator user management
     - User actions and moderation tools
     - Extract moderation components

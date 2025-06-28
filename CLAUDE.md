@@ -495,30 +495,35 @@ client/src/pages/wallet.tsx         # Main wallet page with tab interface
 ### Key Features Implemented
 
 1. **Real-time Balance Display**
+
    - Primary DGT balance with animated changes and visual feedback
    - Secondary crypto balances with auto-conversion information
    - Pending transaction indicators with live count updates
    - Feature gate integration showing disabled functions
 
 2. **CCPayment Crypto Deposits**
+
    - Live deposit addresses for ETH, BTC, USDT, and other cryptocurrencies
    - Automatic conversion to DGT at $0.10 per token
    - Real-time deposit tracking with webhooks
    - Minimum deposit validation and conversion rate display
 
 3. **User-to-User DGT Transfers**
+
    - Username validation and user lookup
    - Configurable transfer limits (default: 10,000 DGT max)
    - Optional transfer notes (200 character limit)
    - Real-time balance updates for both sender and recipient
 
 4. **Enhanced Transaction History**
+
    - DGT-specific transaction types: DEPOSIT_CREDIT, ADMIN_CREDIT, TRANSFER, TIP, RAIN, SHOP
    - Advanced filtering: All, DGT, Crypto, Transfers, Pending
    - Visual indicators for pending transactions with floating animations
    - Detailed metadata display (original crypto amounts, conversion rates, etc.)
 
 5. **Feature Gate System**
+
    - Admin-configurable wallet features via `/api/wallet/config`
    - `allowCryptoWithdrawals` - Controls crypto withdrawal requests
    - `allowDGTSpending` - Controls DGT conversion to shop credits
@@ -526,6 +531,7 @@ client/src/pages/wallet.tsx         # Main wallet page with tab interface
    - Dynamic UI adaptation with visual disabled states
 
 6. **Pending State Management**
+
    - Visual indicators for pending transactions (amber glow, pulsing)
    - Real-time pending count display in balance header
    - Separate "Pending" filter tab when transactions exist

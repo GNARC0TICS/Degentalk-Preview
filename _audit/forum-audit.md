@@ -35,11 +35,13 @@ _Ordered by impact × urgency × degen appeal. Each task includes WHY it matters
 **Why This Matters:** Forums are tribes. Tribes need colors. Dynamic themes = instant zone personality.
 
 - [ ] **DB-Backed Themes** – Move `ZONE_THEMES` to database
+
   - _Impact:_ Admins can create "Blood Red Bear Market" theme in 2 clicks
   - _Implementation:_ `ui_themes` table with HSL values + WebSocket updates
   - _Degen Feature:_ Theme changes based on market conditions (green/red candles)
 
 - [ ] **Live Theme Override** – Admin panel with instant preview
+
   - _Why:_ Zone mods can match themes to current memecoin meta
   - _Tech:_ React Context + CSS variables, no page reload needed
 
@@ -52,6 +54,7 @@ _Ordered by impact × urgency × degen appeal. Each task includes WHY it matters
 **Why This Matters:** One mismatched type = exploits, data loss, or worse... boring error pages.
 
 - [ ] **Contract Enforcement** – Single source of truth via `drizzle-codegen`
+
   - _Current Pain:_ Backend returns `user_id`, frontend expects `userId`
   - _Solution:_ Generate types from DB schema → `forum-sdk` → everywhere
   - _Test:_ Break a type on purpose, CI should scream
@@ -65,6 +68,7 @@ _Ordered by impact × urgency × degen appeal. Each task includes WHY it matters
 **Why This Matters:** Current structure is more complex than DeFi yield farming. Simplify or die.
 
 - [ ] **Flatten The Hierarchy** – Kill nested confusion
+
   - _Problem:_ `primaryZones[0].categories[1].forums[0]` (wtf?)
   - _Solution:_ Flat structure with `parentId` relationships
   - _Migration:_ Write shim, test extensively, then nuke old code
@@ -78,11 +82,13 @@ _Ordered by impact × urgency × degen appeal. Each task includes WHY it matters
 **Why This Matters:** Every click should feel like hitting a 100x. Current UX feels like filing taxes.
 
 - [ ] **Zone Pages** – Focus on the vibe, not the threads
+
   - Show zone leaderboard, hot tips, rising degens
   - Big "Enter Zone" button with particle effects
   - Zone-specific memes/inside jokes in the header
 
 - [ ] **Thread Creation** – Make it feel important
+
   - "Shill Your Thesis" instead of "Create Thread"
   - Auto-suggest provocative titles based on content
   - Preview how much XP they'll earn for engagement
@@ -97,6 +103,7 @@ _Ordered by impact × urgency × degen appeal. Each task includes WHY it matters
 **Why This Matters:** Nothing kills hype like a broken forum during a token launch.
 
 - [ ] **E2E Scenarios** – Test real degen behavior
+
   1. **The FOMO Flow**: Visitor sees hot thread → registers → posts immediately
   2. **The Whale Flow**: Power user creates thread, gets tipped, tips others
   3. **The Mod Power Trip**: Admin locks forum during "maintenance" (price dump)
@@ -108,11 +115,13 @@ _Ordered by impact × urgency × degen appeal. Each task includes WHY it matters
 ### 🎪 Priority 6: The Fun Stuff (Ship After Core Is Solid)
 
 - [ ] **XP Animations** – Make numbers go brrrrr
+
   - Particle effects on level up
   - Screen shake on big tips
   - Achievement unlocks with sound
 
 - [ ] **Easter Eggs** – Hidden features for true degens
+
   - Konami code unlocks "Turbo Mode"
   - Type "wagmi" for rainbow text
   - 69/420 post counts get special badges
@@ -139,14 +148,17 @@ Track these to know we're winning:
 ## 🛠️ How to Use This Guide
 
 1. **Pick a section based on current energy:**
+
    - Feeling sharp? → Type Safety or Testing
    - Feeling creative? → UI Polish or Fun Stuff
    - Feeling burned out? → Quick wins in Dynamic Theming
 
 2. **Every PR title starts with:** `[DEGEN-{number}]`
+
    - Makes it easy to track what shipped when
 
 3. **Definition of Done:**
+
    - Works on mobile (degens trade from toilets)
    - Has at least one degen touch (naming, animation, easter egg)
    - Won't break when 10,000 apes rush in
