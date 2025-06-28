@@ -89,7 +89,7 @@
 		"scan:icons": "tsx scripts/tools/icon-scan.ts",
 		"db:reset-hard": "npx dotenv-cli -e env.local -- psql $DATABASE_URL -c \"DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public; DROP SCHEMA IF EXISTS drizzle CASCADE;\" && npm run db:migrate:Apply",
 		"docs:frontmatter": "node scripts/docs/add-frontmatter.cjs",
-		"docs:lint": "markdownlint docs/**/*.md && markdown-link-check -q docs/**/*.md"
+		"docs:lint": "markdownlint docs/**/*.md && markdown-link-check -q -c .markdown-link-check.json docs/**/*.md"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.10.0",
