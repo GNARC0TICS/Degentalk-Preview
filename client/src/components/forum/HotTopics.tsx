@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { Flame, MessageSquare, Clock } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FrostCard } from '@/components/ui/frost-card';
+import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 interface HotThread {
@@ -26,7 +27,7 @@ interface HotTopicsProps {
 export function HotTopics({ threads = [], isLoading = false, limit = 5 }: HotTopicsProps) {
 	if (isLoading) {
 		return (
-			<Card className="bg-gradient-to-br from-zinc-900/90 to-zinc-800/90 border-zinc-700/50">
+			<FrostCard accentColor="orange">
 				<CardHeader className="pb-3">
 					<CardTitle className="text-orange-400 text-lg flex items-center">
 						<Flame className="h-5 w-5 mr-2" />
@@ -44,14 +45,14 @@ export function HotTopics({ threads = [], isLoading = false, limit = 5 }: HotTop
 						</div>
 					))}
 				</CardContent>
-			</Card>
+			</FrostCard>
 		);
 	}
 
 	const displayThreads = threads.slice(0, limit);
 
 	return (
-		<Card className="bg-gradient-to-br from-zinc-900/90 to-zinc-800/90 border-zinc-700/50 hover:border-orange-500/30 transition-colors">
+		<FrostCard accentColor="orange" className="hover:border-orange-500/30">
 			<CardHeader className="pb-3">
 				<CardTitle className="text-orange-400 text-lg flex items-center">
 					<Flame className="h-5 w-5 mr-2" />
@@ -122,6 +123,6 @@ export function HotTopics({ threads = [], isLoading = false, limit = 5 }: HotTop
 					))
 				)}
 			</CardContent>
-		</Card>
+		</FrostCard>
 	);
 }

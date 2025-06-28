@@ -323,6 +323,9 @@ export class ThreadService {
 					// Get zone information for theming
 					const zoneInfo = await this.getZoneInfo(thread.structureId);
 
+					// Get excerpt
+					const excerpt = await this.getFirstPostExcerpt(thread.id);
+
 					return {
 						id: thread.id,
 						title: thread.title,
@@ -361,7 +364,8 @@ export class ThreadService {
 						},
 						tags: [],
 						canEdit: false,
-						canDelete: false
+						canDelete: false,
+						excerpt: excerpt || undefined
 					};
 				})
 			);
@@ -423,6 +427,9 @@ export class ThreadService {
 			// Get zone information for theming
 			const zoneInfo = await this.getZoneInfo(threadResult.structureId);
 
+			// Get excerpt
+			const excerpt = await this.getFirstPostExcerpt(threadId);
+
 			// Format as ThreadDisplay-compatible object
 			const formattedThread = {
 				id: threadResult.id,
@@ -473,7 +480,8 @@ export class ThreadService {
 
 				tags: [],
 				canEdit: false,
-				canDelete: false
+				canDelete: false,
+				excerpt: excerpt || undefined
 			};
 
 			return formattedThread;
@@ -518,6 +526,9 @@ export class ThreadService {
 			// Get zone information for theming
 			const zoneInfo = await this.getZoneInfo(threadResult.structureId);
 
+			// Get excerpt
+			const excerpt = await this.getFirstPostExcerpt(threadResult.id);
+
 			// Format as ThreadDisplay-compatible object
 			const formattedThread = {
 				id: threadResult.id,
@@ -568,7 +579,8 @@ export class ThreadService {
 
 				tags: [],
 				canEdit: false,
-				canDelete: false
+				canDelete: false,
+				excerpt: excerpt || undefined
 			};
 
 			return formattedThread;
@@ -823,6 +835,36 @@ export class ThreadService {
 			};
 		} catch (error) {
 			logger.error('ThreadService', 'Error fetching zone info', { structureId, error });
+			return null;
+		}
+	}
+
+	private stripMarkup(raw: string): string {
+		// Removes HTML tags
+		let text = raw.replace(/<[^>]*>/g, '');
+		// Removes simple BBCode tags like [b], [/url], etc.
+		text = text.replace(/\[.*?\]/g, '');
+		return text;
+	}
+
+	/**
+	 * Fetch first post excerpt (plain-text, 150 chars max) for a thread
+	 */
+	private async getFirstPostExcerpt(threadId: number): Promise<string | null> {
+		try {
+			const [firstPost] = await db
+				.select({ content: posts.content })
+				.from(posts)
+				.where(eq(posts.threadId, threadId))
+				.orderBy(asc(posts.createdAt))
+				.limit(1);
+
+			if (!firstPost) return null;
+
+			const plain = this.stripMarkup(firstPost.content || '');
+			return plain.substring(0, 150);
+		} catch (error) {
+			logger.warn('ThreadService', 'Failed to fetch excerpt', { threadId, error });
 			return null;
 		}
 	}

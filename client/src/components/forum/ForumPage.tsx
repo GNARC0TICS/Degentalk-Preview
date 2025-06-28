@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
-import { ResponsiveForumLayout } from '@/components/forum/layouts';
+import { Wide } from '@/layout/primitives';
 import { ThreadFilters, type ThreadFiltersState } from '@/components/forum/ThreadFilters';
 import {
 	ForumBreadcrumbs,
@@ -15,6 +15,8 @@ import {
 	type BreadcrumbItem
 } from '@/components/navigation/ForumBreadcrumbs';
 import ThreadList from '@/features/forum/components/ThreadList';
+import { DynamicSidebar } from '@/components/forum/sidebar';
+import { SiteFooter } from '@/components/footer';
 
 export interface ForumPageProps {
 	className?: string;
@@ -152,18 +154,9 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 		</div>
 	);
 
-	const threadFilters = (
-		<ThreadFilters
-			forumSlug={forumSlug || ''}
-			availableTags={[]}
-			availablePrefixes={[]}
-			onFiltersChange={handleFiltersChange}
-		/>
-	);
-
 	if (!forum) {
 		return (
-			<div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+			<div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black flex items-center justify-center">
 				<div className="text-center">
 					<h1 className="text-2xl font-bold text-white mb-4">Forum Not Found</h1>
 					<p className="text-zinc-400 mb-6">The forum you're looking for doesn't exist.</p>
@@ -174,28 +167,54 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 	}
 
 	return (
-		<ResponsiveForumLayout
-			layout={layout}
-			onLayoutChange={setLayout}
-			breadcrumbs={<ForumBreadcrumbs items={breadcrumbItems} />}
-			header={forumHeader}
-			filters={showFilters ? threadFilters : undefined}
-			showFilters={showFilters}
-			className={className}
-		>
-			{forum?.id && !isUsingFallback ? (
-				<ThreadList
-					forumId={forum.id}
-					forumSlug={forum.slug}
-					availableTags={[]}
-					filters={filters}
-				/>
-			) : (
-				<div className="text-center py-8 text-zinc-400">
-					{isUsingFallback ? 'Forum data is loading...' : 'No forum data available'}
+		<div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black">
+			<Wide className="py-8">
+				{/* Breadcrumbs */}
+				<div className="mb-6">
+					<ForumBreadcrumbs items={breadcrumbItems} />
 				</div>
-			)}
-		</ResponsiveForumLayout>
+
+				<div className="grid grid-cols-1 xl:grid-cols-[1fr_300px] gap-8">
+					{/* Main Content */}
+					<div className="space-y-6">
+						{/* Forum Header */}
+						{forumHeader}
+
+						{/* Filters */}
+						{showFilters && (
+							<div className="bg-zinc-900/60 backdrop-blur-sm border border-zinc-700/50 rounded-lg p-4">
+								<ThreadFilters
+									forumSlug={forumSlug || ''}
+									availableTags={[]}
+									availablePrefixes={[]}
+									onFiltersChange={handleFiltersChange}
+								/>
+							</div>
+						)}
+
+						{/* Thread List */}
+						{forum?.id && !isUsingFallback ? (
+							<ThreadList
+								forumId={forum.id}
+								forumSlug={forum.slug}
+								availableTags={[]}
+								filters={filters}
+							/>
+						) : (
+							<div className="text-center py-8 text-zinc-400">
+								{isUsingFallback ? 'Forum data is loading...' : 'No forum data available'}
+							</div>
+						)}
+					</div>
+
+					{/* Right Sidebar */}
+					<aside className="space-y-6">
+						<DynamicSidebar structureId={forum?.id} zoneSlug={parentZone?.slug} />
+					</aside>
+				</div>
+			</Wide>
+			<SiteFooter />
+		</div>
 	);
 });
 

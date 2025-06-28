@@ -34,6 +34,7 @@ import useSearchParams from '@/hooks/useSearchParams';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import { createForumBreadcrumbs } from '@/lib/forum/breadcrumbs';
 import { useAuth } from '@/hooks/use-auth';
+import { DynamicSidebar } from '@/components/forum/sidebar';
 
 export default function BBCodeThreadPage() {
 	// Get slug param from route
@@ -493,13 +494,19 @@ export default function BBCodeThreadPage() {
 								transition={{ duration: 0.4 }}
 								className="hidden xl:block"
 							>
-								<div className="sticky top-4">
+								<div className="sticky top-4 space-y-6">
 									<ThreadSidebar
 										thread={thread}
 										postCount={allPosts.length}
 										canModerate={false} // TODO: Check permissions
 										canEdit={false} // TODO: Check permissions
 										canDelete={false} // TODO: Check permissions
+									/>
+
+									{/* Context-aware widgets based on thread's zone */}
+									<DynamicSidebar
+										structureId={thread.structureId}
+										zoneSlug={getThreadContext(thread.structureId)?.zone?.slug}
 									/>
 								</div>
 							</motion.div>

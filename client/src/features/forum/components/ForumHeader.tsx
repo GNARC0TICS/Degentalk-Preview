@@ -4,7 +4,6 @@ import { Badge } from '@/components/ui/badge';
 import { Flame, Users, MessageSquare } from 'lucide-react';
 // import { ForumEntity } from '@/features/forum/hooks/useForumStructure'; // Old import
 import type { MergedForum, MergedZone } from '@/contexts/ForumStructureContext'; // New import
-import { getThemeClass } from '@/utils/forum-routing-helper';
 
 interface ForumHeaderProps {
 	forum: MergedForum | MergedZone; // Allow either type, or a common base if defined
@@ -17,8 +16,6 @@ interface ForumHeaderProps {
  * Handles both Primary Zones and regular forums with different styling
  */
 export function ForumHeader({ forum, isPrimaryZone = false, className = '' }: ForumHeaderProps) {
-	const themeClass = forum.colorTheme ? `forum-header-theme-${forum.colorTheme}` : '';
-
 	// Select icon based on theme or use default
 	const renderIcon = () => {
 		// If forum has an emoji icon, render it directly

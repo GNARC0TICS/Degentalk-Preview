@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { activityApi, EventLogFilters } from '../services/activityApi';
-import { useAuth } from '@/hooks/useAuth';
+import { activityApi, type EventLogFilters } from '../services/activityApi';
+import { useAuth } from '@/hooks/use-auth';
 
 /**
  * Hook for fetching and managing user activity feed

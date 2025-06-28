@@ -1,5 +1,4 @@
 import { Link } from 'wouter';
-import '../styles/zone-themes.css';
 
 // Import context and hook
 import { useForumStructure } from '@/contexts/ForumStructureContext';
@@ -11,6 +10,7 @@ import { AnnouncementTicker } from '@/components/layout/announcement-ticker';
 import { SiteFooter } from '@/components/footer';
 import { ResponsiveLayoutWrapper } from '@/components/layout/ResponsiveLayoutWrapper';
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
+import { PrimaryZoneCarousel } from '@/components/zone/PrimaryZoneCarousel';
 import { Wide } from '@/layout/primitives/Wide';
 import { HomeContentArea } from '@/components/ui/content-area';
 import { ContentFeedProvider } from '@/contexts/content-feed-context';
@@ -79,6 +79,16 @@ function HomePage() {
 		<ForumErrorBoundary>
 			<HeroSection />
 			<AnnouncementTicker />
+
+			{/* Primary Zone Carousel */}
+			{primaryZonesFromContext.length > 0 && (
+				<PrimaryZoneCarousel
+					zones={zoneCardDataForGrid}
+					autoRotateMs={8000}
+					className="bg-gradient-to-b from-zinc-900/50 to-transparent"
+				/>
+			)}
+
 			<ContentFeedProvider initialTab="trending">
 				<ResponsiveLayoutWrapper page="home">
 					<Wide as="div" className={getForumSpacing('container')}>
@@ -88,8 +98,8 @@ function HomePage() {
 						<section className={getForumSpacing('sectionLarge')}>
 							<div className={`${getForumLayout('headerFlex')} ${getForumSpacing('headerMargin')}`}>
 								<div>
-									<h2 className="text-2xl font-bold text-white mb-2">Primary Zones</h2>
-									<p className="text-zinc-400">Jump into the action</p>
+									<h2 className="text-xl font-semibold text-zinc-300 mb-2">All Zones</h2>
+									<p className="text-zinc-500">Browse all available discussion areas</p>
 								</div>
 								<Link href="/zones">
 									<Button variant="ghost" className="text-zinc-400 hover:text-white">

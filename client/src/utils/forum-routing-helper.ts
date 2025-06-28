@@ -143,19 +143,6 @@ export function getForumAnchorId(entity: ForumEntityBase): string {
 }
 
 /**
- * Gets the appropriate CSS class for a forum entity based on its theme
- * @param entity The forum entity
- * @returns CSS class name for applying theme styles
- */
-export function getThemeClass(entity: ForumEntityBase): string {
-	if (!entity.colorTheme) {
-		return 'zone-theme-default';
-	}
-
-	return `zone-theme-${entity.colorTheme}`;
-}
-
-/**
  * Formats a zone/forum name for display with its icon
  * @param entity The forum entity
  * @returns String with icon and name or just name

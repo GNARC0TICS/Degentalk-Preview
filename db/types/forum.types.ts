@@ -37,6 +37,8 @@ export interface ForumTag {
 export interface ThreadWithUserAndCategory extends Thread {
 	user: User;
 	category: ForumStructureNode; // Updated to use forum structure
+	// Excerpt from first post (plain text, 150 chars max)
+	excerpt?: string;
 	hasBookmarked?: boolean; // Added
 	postCount: number;
 	lastPost?: Post;
@@ -49,6 +51,8 @@ export interface ThreadWithUserAndCategory extends Thread {
 export interface ThreadWithUserAndStructure extends Thread {
 	user: User;
 	structure: ForumStructureNode;
+	// Excerpt from first post (plain text, 150 chars max)
+	excerpt?: string;
 	hasBookmarked?: boolean;
 	postCount: number;
 	lastPost?: Post;

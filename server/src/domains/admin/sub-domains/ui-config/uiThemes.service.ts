@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../../../../../core/db.ts';
 import { uiThemes, type UiTheme, type NewUiTheme } from '@schema/admin/uiThemes';
-import zoneThemesConfig from '../../../../../config/zoneThemes.config';
+import { ZONE_THEMES as zoneThemesConfig } from '../../../../../../../shared/config/zoneThemes.config';
 
 interface UiThemesCache {
 	data: Record<string, UiTheme>;
@@ -37,11 +37,11 @@ export class UiThemesService {
 				themeMap[key] = {
 					themeKey: key,
 					id: 0, // placeholder (config, not DB)
-					icon: configTheme.icon ?? null,
-					color: configTheme.color ?? null,
-					bgColor: configTheme.bgColor ?? null,
-					borderColor: configTheme.borderColor ?? null,
-					label: configTheme.label ?? null,
+					icon: configTheme.icon?.name ?? null,
+					color: configTheme.accent ?? null,
+					bgColor: configTheme.gradient ?? null,
+					borderColor: configTheme.border ?? null,
+					label: key ?? null,
 					version: 1,
 					isActive: true,
 					metadata: {},

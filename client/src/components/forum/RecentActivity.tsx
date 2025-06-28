@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { Clock, MessageSquare, UserPlus, Award } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FrostCard } from '@/components/ui/frost-card';
+import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface ActivityItem {
@@ -34,7 +35,7 @@ export function RecentActivity({
 }: RecentActivityProps) {
 	if (isLoading) {
 		return (
-			<Card className="bg-gradient-to-br from-zinc-900/90 to-zinc-800/90 border-zinc-700/50">
+			<FrostCard accentColor="cyan">
 				<CardHeader className="pb-3">
 					<CardTitle className="text-cyan-400 text-lg flex items-center">
 						<Clock className="h-5 w-5 mr-2" />
@@ -52,7 +53,7 @@ export function RecentActivity({
 						</div>
 					))}
 				</CardContent>
-			</Card>
+			</FrostCard>
 		);
 	}
 
@@ -121,7 +122,7 @@ export function RecentActivity({
 	};
 
 	return (
-		<Card className="bg-gradient-to-br from-zinc-900/90 to-zinc-800/90 border-zinc-700/50 hover:border-cyan-500/30 transition-colors">
+		<FrostCard accentColor="cyan" className="hover:border-cyan-500/30">
 			<CardHeader className="pb-3">
 				<CardTitle className="text-cyan-400 text-lg flex items-center">
 					<Clock className="h-5 w-5 mr-2" />
@@ -170,6 +171,6 @@ export function RecentActivity({
 					))
 				)}
 			</CardContent>
-		</Card>
+		</FrostCard>
 	);
 }

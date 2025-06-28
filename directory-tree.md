@@ -1,6 +1,6 @@
 # ForumFusion Directory Structure
 
-Generated on: 2025-06-26
+Generated on: 2025-06-28
 
 ```
 ├─ _audit/
@@ -18,7 +18,10 @@ Generated on: 2025-06-26
 │  ├─ mcp.json
 │  └─ settings.local.json
 ├─ .claudedocs/
+│  ├─ metrics/
+│  │  └─ cleanup-savings-20250627.md
 │  ├─ reports/
+│  │  ├─ cleanup-comprehensive-20250627.md
 │  │  └─ risk-analysis-admin-panel-ux-20250622.md
 │  └─ summaries/
 │     └─ estimate-admin-panel-ux-polish-20250622.md
@@ -147,8 +150,6 @@ Generated on: 2025-06-26
 │  │  │  ├─ economy/
 │  │  │  │  ├─ badges/
 │  │  │  │  │  ... (max depth reached)
-│  │  │  │  ├─ styles/
-│  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ wallet/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ xp/
@@ -164,6 +165,9 @@ Generated on: 2025-06-26
 │  │  │  │  ├─ NetworkError.tsx
 │  │  │  │  ├─ ThreadNotFound.tsx
 │  │  │  │  └─ UserNotFound.tsx
+│  │  │  ├─ fixtures/
+│  │  │  │  ├─ fixture-builder.tsx
+│  │  │  │  └─ fixture-preview.tsx
 │  │  │  ├─ footer/
 │  │  │  │  ├─ FooterBrand.tsx
 │  │  │  │  ├─ FooterSection.tsx
@@ -172,9 +176,13 @@ Generated on: 2025-06-26
 │  │  │  │  ├─ RandomTagline.tsx
 │  │  │  │  └─ SiteFooter.tsx
 │  │  │  ├─ forum/
+│  │  │  │  ├─ bbcode/
+│  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ enhanced/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ layouts/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ sidebar/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ BBCodePostCard.tsx
 │  │  │  │  ├─ breadcrumb-nav.tsx
@@ -185,6 +193,7 @@ Generated on: 2025-06-26
 │  │  │  │  ├─ forum-category-card.tsx
 │  │  │  │  ├─ forum-filters.tsx
 │  │  │  │  ├─ forum-guidelines.tsx
+│  │  │  │  ├─ ForumErrorBoundary.tsx
 │  │  │  │  ├─ ForumPage.tsx
 │  │  │  │  ├─ HotTopics.tsx
 │  │  │  │  ├─ index.ts
@@ -276,6 +285,10 @@ Generated on: 2025-06-26
 │  │  │  ├─ mod/
 │  │  │  │  ├─ mod-layout.tsx
 │  │  │  │  └─ mod-sidebar.tsx
+│  │  │  ├─ modals/
+│  │  │  │  ├─ DeleteConfirmModal.tsx
+│  │  │  │  ├─ QuotePostModal.tsx
+│  │  │  │  └─ TipPostModal.tsx
 │  │  │  ├─ navigation/
 │  │  │  │  ├─ ForumBreadcrumbs.tsx
 │  │  │  │  ├─ mobile-nav-bar.tsx
@@ -361,6 +374,8 @@ Generated on: 2025-06-26
 │  │  │  │  └─ ShoutboxInput.tsx
 │  │  │  ├─ sidebar/
 │  │  │  │  ├─ leaderboard-widget.tsx
+│  │  │  │  ├─ navigation-widget.tsx
+│  │  │  │  ├─ related-content-widget.tsx
 │  │  │  │  └─ wallet-summary-widget.tsx
 │  │  │  ├─ social/
 │  │  │  │  ├─ FollowButton.tsx
@@ -369,6 +384,7 @@ Generated on: 2025-06-26
 │  │  │  │  ├─ WhaleWatchDashboard.tsx
 │  │  │  │  └─ WhaleWatchDisplay.tsx
 │  │  │  ├─ ui/
+│  │  │  │  ├─ accessibility-enhancements.tsx
 │  │  │  │  ├─ accordion.tsx
 │  │  │  │  ├─ alert-dialog.tsx
 │  │  │  │  ├─ alert.tsx
@@ -388,14 +404,21 @@ Generated on: 2025-06-26
 │  │  │  │  ├─ collapsible.tsx
 │  │  │  │  ├─ command.tsx
 │  │  │  │  ├─ Container.tsx
+│  │  │  │  ├─ content-area.tsx
+│  │  │  │  ├─ content-feed.tsx
 │  │  │  │  ├─ context-menu.tsx
 │  │  │  │  ├─ dialog.tsx
 │  │  │  │  ├─ drawer.tsx
 │  │  │  │  ├─ dropdown-menu.tsx
+│  │  │  │  ├─ enhanced-button.tsx
+│  │  │  │  ├─ enhanced-loading-states.tsx
+│  │  │  │  ├─ enhanced-notifications.tsx
+│  │  │  │  ├─ enhanced-thread-card.tsx
 │  │  │  │  ├─ error-display.tsx
 │  │  │  │  ├─ feature-gate.tsx
 │  │  │  │  ├─ FileDropZone.tsx
 │  │  │  │  ├─ form.tsx
+│  │  │  │  ├─ frost-card.tsx
 │  │  │  │  ├─ hamburger.tsx
 │  │  │  │  ├─ hover-card.tsx
 │  │  │  │  ├─ index.ts
@@ -405,6 +428,7 @@ Generated on: 2025-06-26
 │  │  │  │  ├─ loader.tsx
 │  │  │  │  ├─ menu.tsx
 │  │  │  │  ├─ menubar.tsx
+│  │  │  │  ├─ mobile-forum-nav.tsx
 │  │  │  │  ├─ navigation-menu.tsx
 │  │  │  │  ├─ pagination.tsx
 │  │  │  │  ├─ popover.tsx
@@ -412,6 +436,7 @@ Generated on: 2025-06-26
 │  │  │  │  ├─ radio-group.tsx
 │  │  │  │  ├─ reactions-bar.tsx
 │  │  │  │  ├─ resizable.tsx
+│  │  │  │  ├─ SafeImage.tsx
 │  │  │  │  ├─ scroll-area.tsx
 │  │  │  │  ├─ select.tsx
 │  │  │  │  ├─ SeoHead.tsx
@@ -420,8 +445,10 @@ Generated on: 2025-06-26
 │  │  │  │  ├─ sidebar.tsx
 │  │  │  │  ├─ skeleton.tsx
 │  │  │  │  ├─ slider.tsx
+│  │  │  │  ├─ smart-thread-filters.tsx
 │  │  │  │  ├─ StatChip.tsx
 │  │  │  │  ├─ switch.tsx
+│  │  │  │  ├─ tab-switcher.tsx
 │  │  │  │  ├─ table.tsx
 │  │  │  │  ├─ tabs.tsx
 │  │  │  │  ├─ tag-badge.tsx
@@ -459,6 +486,7 @@ Generated on: 2025-06-26
 │  │  ├─ config/
 │  │  │  ├─ admin-navigation.ts
 │  │  │  ├─ admin-routes.ts
+│  │  │  ├─ animation.config.ts
 │  │  │  ├─ brand.config.ts
 │  │  │  ├─ easter-eggs.config.ts
 │  │  │  ├─ featureFlags.ts
@@ -468,15 +496,19 @@ Generated on: 2025-06-26
 │  │  │  ├─ frames.config.ts
 │  │  │  ├─ navigation.ts
 │  │  │  ├─ pageSlotMap.ts
+│  │  │  ├─ pagination.config.ts
 │  │  │  ├─ publicConfig.ts
 │  │  │  ├─ rarity.config.ts
 │  │  │  ├─ README.md
+│  │  │  ├─ sidebarWidgets.config.ts
 │  │  │  ├─ social.config.ts
 │  │  │  ├─ tags.config.ts
 │  │  │  ├─ themeConstants.ts
 │  │  │  ├─ themeFallbacks.ts
+│  │  │  ├─ thread.config.ts
 │  │  │  ├─ ui.config.ts
-│  │  │  └─ widgetRegistry.ts
+│  │  │  ├─ widgetRegistry.ts
+│  │  │  └─ zoneThemes.config.ts
 │  │  ├─ constants/
 │  │  │  ├─ apiRoutes.ts
 │  │  │  ├─ env.ts
@@ -485,10 +517,13 @@ Generated on: 2025-06-26
 │  │  ├─ contexts/
 │  │  │  ├─ AdminSidebarContext.tsx
 │  │  │  ├─ BrandContext.tsx
+│  │  │  ├─ content-feed-context.tsx
+│  │  │  ├─ ForumOrderingContext.tsx
 │  │  │  ├─ ForumStructureContext.tsx
 │  │  │  ├─ ForumThemeProvider.tsx
 │  │  │  ├─ LevelUpContext.tsx
 │  │  │  ├─ mock-shoutbox-context.tsx
+│  │  │  ├─ MotionContext.tsx
 │  │  │  ├─ ProfileCardContext.tsx
 │  │  │  ├─ safe-shoutbox-provider.tsx
 │  │  │  ├─ shoutbox-context.tsx
@@ -550,6 +585,7 @@ Generated on: 2025-06-26
 │  │  │  ├─ use-admin-modules.ts
 │  │  │  ├─ use-async-button.tsx
 │  │  │  ├─ use-auth.tsx
+│  │  │  ├─ use-content.ts
 │  │  │  ├─ use-debounce.ts
 │  │  │  ├─ use-dgt-packages.ts
 │  │  │  ├─ use-draft.ts
@@ -582,6 +618,7 @@ Generated on: 2025-06-26
 │  │  │  ├─ usePermission.ts
 │  │  │  ├─ useProfileEngagement.ts
 │  │  │  ├─ useProfileStats.ts
+│  │  │  ├─ useSearchParams.ts
 │  │  │  ├─ useThreadZone.ts
 │  │  │  ├─ useUserCosmetics.ts
 │  │  │  ├─ useUserInventory.ts
@@ -593,10 +630,14 @@ Generated on: 2025-06-26
 │  │  │     ├─ ClampPadding.tsx
 │  │  │     ├─ FullBleedSection.tsx
 │  │  │     ├─ index.ts
+│  │  │     ├─ PageBackdrop.tsx
 │  │  │     ├─ Prose.tsx
 │  │  │     ├─ StickyRegion.tsx
 │  │  │     └─ Wide.tsx
 │  │  ├─ lib/
+│  │  │  ├─ forum/
+│  │  │  │  ├─ breadcrumbs.ts
+│  │  │  │  └─ sidebarUtils.ts
 │  │  │  ├─ utils/
 │  │  │  │  ├─ animateNumber.ts
 │  │  │  │  ├─ api-helpers.ts
@@ -609,6 +650,7 @@ Generated on: 2025-06-26
 │  │  │  ├─ admin-vault-service.ts
 │  │  │  ├─ adminApi.ts
 │  │  │  ├─ api-request.ts
+│  │  │  ├─ api-response.ts
 │  │  │  ├─ api.ts
 │  │  │  ├─ format-date.ts
 │  │  │  ├─ formatters.ts
@@ -616,8 +658,7 @@ Generated on: 2025-06-26
 │  │  │  ├─ queryClient.ts
 │  │  │  ├─ rare-items-vault.ts
 │  │  │  ├─ safeWebSocket.ts
-│  │  │  ├─ utils.ts
-│  │  │  └─ wallet-service.ts
+│  │  │  └─ utils.ts
 │  │  ├─ navigation/
 │  │  │  └─ forumNav.ts
 │  │  ├─ pages/
@@ -691,8 +732,7 @@ Generated on: 2025-06-26
 │  │  │  │  ├─ [slug].tsx
 │  │  │  │  └─ index.tsx
 │  │  │  ├─ forums/
-│  │  │  │  ├─ [forum_slug].tsx
-│  │  │  │  ├─ [slug].tsx
+│  │  │  │  ├─ [forumSlug].tsx
 │  │  │  │  ├─ index.tsx
 │  │  │  │  └─ search.tsx
 │  │  │  ├─ invite/
@@ -724,7 +764,6 @@ Generated on: 2025-06-26
 │  │  │  ├─ tags/
 │  │  │  │  └─ [tagSlug].tsx
 │  │  │  ├─ threads/
-│  │  │  │  ├─ [thread_slug].tsx
 │  │  │  │  ├─ BBCodeThreadPage.tsx
 │  │  │  │  └─ create.tsx
 │  │  │  ├─ ui-playground/
@@ -738,6 +777,7 @@ Generated on: 2025-06-26
 │  │  │  │  └─ index.tsx
 │  │  │  ├─ auth.tsx
 │  │  │  ├─ degen-index.tsx
+│  │  │  ├─ fixtures-dashboard.tsx
 │  │  │  ├─ forum-rules.tsx
 │  │  │  ├─ home.tsx
 │  │  │  ├─ leaderboard.tsx
@@ -766,12 +806,12 @@ Generated on: 2025-06-26
 │  │  │  ├─ useLayoutStore.ts
 │  │  │  └─ usePlaygroundControls.ts
 │  │  ├─ styles/
+│  │  │  ├─ accessibility.css
 │  │  │  ├─ admin-theme.css
 │  │  │  ├─ animations.css
+│  │  │  ├─ content-feed.css
 │  │  │  ├─ cssVariables.ts
 │  │  │  ├─ globals.css
-│  │  │  ├─ ticker.css
-│  │  │  ├─ tokens.css
 │  │  │  ├─ underline-links.css
 │  │  │  ├─ utilities.css
 │  │  │  ├─ wallet-animations.css
@@ -781,11 +821,13 @@ Generated on: 2025-06-26
 │  │  │  │  └─ renderWithProviders.tsx
 │  │  │  └─ setup.ts
 │  │  ├─ types/
+│  │  │  ├─ canonical.types.ts
 │  │  │  ├─ forum.ts
 │  │  │  ├─ inventory.ts
 │  │  │  ├─ notifications.ts
 │  │  │  ├─ preferences.types.ts
 │  │  │  ├─ profile.ts
+│  │  │  ├─ thread.types.ts
 │  │  │  ├─ user.ts
 │  │  │  └─ wallet.ts
 │  │  ├─ utils/
@@ -1062,9 +1104,11 @@ Generated on: 2025-06-26
 │  ├─ ARCHITECTURE.md
 │  ├─ AUTH-MIGRATION-GUIDE.md
 │  ├─ codebase-overview.md
+│  ├─ content-feed.md
 │  ├─ dgt-token-management-plan.md
 │  ├─ DynamicLayout.md
 │  ├─ feature-scope-guide.md
+│  ├─ FIXTURES-GUIDE.md
 │  ├─ frontend-enhancement-plan.md
 │  ├─ mybb-deep-dive-evolution-matrix-2.md
 │  ├─ site-header-refactor-plan.md
@@ -1111,13 +1155,19 @@ Generated on: 2025-06-26
 │  │  │  ├─ _journal.json
 │  │  │  ├─ 0002_snapshot.json
 │  │  │  ├─ 0003_snapshot.json
-│  │  │  └─ 0004_snapshot.json
+│  │  │  ├─ 0004_snapshot.json
+│  │  │  ├─ 0005_snapshot.json
+│  │  │  └─ 0006_snapshot.json
 │  │  ├─ 0000_silky_drax.sql
 │  │  ├─ 0001_happy_vulture.sql
 │  │  ├─ 0002_closed_romulus.sql
 │  │  ├─ 0003_fluffy_terror.sql
 │  │  ├─ 0004_enhanced_profiles.sql
-│  │  └─ 0004_high_magneto.sql
+│  │  ├─ 0004_high_magneto.sql
+│  │  ├─ 0005_sparkling_sphinx.sql
+│  │  ├─ 0006_funny_speedball.sql
+│  │  ├─ relations.ts
+│  │  └─ schema.snapshot.ts
 │  ├─ 0008_add_users_profile_fields.sql
 │  ├─ 0009_create_xp_logs_table.sql
 │  ├─ 0010_add_x_account_fields.sql
@@ -1152,11 +1202,11 @@ Generated on: 2025-06-26
 │  │  ├─ db-helper.js
 │  │  ├─ db-schema-summary.js
 │  │  ├─ diagnose-mentions-table.ts
+│  │  ├─ diff-schema-snapshot.ts
 │  │  ├─ fix-forum-relationships.ts
 │  │  ├─ generate-performance-migration.ts
 │  │  ├─ initialize-giphy-settings.ts
 │  │  ├─ initialize-xp-system.ts
-│  │  ├─ read-forum-categories.ts
 │  │  ├─ read-thread.ts
 │  │  ├─ README-UI-CONFIG.md
 │  │  ├─ reset-and-seed.ts
@@ -1188,6 +1238,7 @@ Generated on: 2025-06-26
 │  ├─ logs/
 │  ├─ migration/
 │  │  ├─ cleanup-old-category-schema.ts
+│  │  ├─ fix-shoutbox-message-id.ts
 │  │  └─ migrate-forum-structure.ts
 │  ├─ ops/
 │  │  ├─ check-forum-config-sync.ts
@@ -1217,9 +1268,6 @@ Generated on: 2025-06-26
 │  │  ├─ run-username-colors.ts
 │  │  ├─ seed-all-comprehensive.ts
 │  │  ├─ seed-avatar-frames.ts
-│  │  ├─ seed-dummy-threads.ts
-│  │  ├─ seed-realistic-threads.ts
-│  │  ├─ seedDynamicContent.ts
 │  │  └─ seedForumsFromConfig.ts
 │  ├─ templates/
 │  │  ├─ transaction-domain-template.ts
@@ -1281,6 +1329,7 @@ Generated on: 2025-06-26
 │  │  ├─ 20250618_add_updated_by_to_site_settings.ts
 │  │  ├─ 20250618_create_xp_clout_settings.ts
 │  │  ├─ 20250624_add_visual_fields_to_levels.ts
+│  │  ├─ 20250626_extend_ui_themes.ts
 │  │  ├─ add-daily-xp-tracking.ts
 │  │  ├─ add-dgt-packages-table.ts
 │  │  ├─ add-dgt-purchase-orders-table.ts
@@ -1573,6 +1622,16 @@ Generated on: 2025-06-26
 │  │  ├─ README.md
 │  │  ├─ reward-calculator.ts
 │  │  └─ shop-items.ts
+│  ├─ fixtures/
+│  │  ├─ core/
+│  │  │  └─ factory.ts
+│  │  ├─ factories/
+│  │  │  ├─ forum.factory.ts
+│  │  │  └─ user.factory.ts
+│  │  ├─ utilities/
+│  │  │  ├─ scenario-generator.ts
+│  │  │  └─ test-helpers.ts
+│  │  └─ index.ts
 │  ├─ lib/
 │  │  └─ admin-module-registry.ts
 │  ├─ signature/
@@ -1655,11 +1714,59 @@ Generated on: 2025-06-26
 │  ├─ RULES.md
 │  └─ SECURITY.md
 ├─ test-results/
-│  └─ .last-run.json
+│  ├─ artifacts/
+│  │  ├─ .playwright-artifacts-5/
+│  │  │  ├─ traces/
+│  │  │  │  ├─ resources/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ a91dcd0cf94c577a6db9-684a717408c3331f2fea-retry1.network
+│  │  │  │  └─ a91dcd0cf94c577a6db9-684a717408c3331f2fea-retry1.trace
+│  │  │  └─ da96a6e4051c62fee860efc1cb648c25.webm
+│  │  ├─ user-journey-analytics-Use-2e6cd-low-Matches-Seeded-Patterns-behavioral-flows/
+│  │  │  ├─ error-context.md
+│  │  │  ├─ test-failed-1.png
+│  │  │  └─ video.webm
+│  │  ├─ user-journey-analytics-Use-2e6cd-low-Matches-Seeded-Patterns-behavioral-flows-retry1/
+│  │  │  ├─ error-context.md
+│  │  │  ├─ test-failed-1.png
+│  │  │  ├─ trace.zip
+│  │  │  └─ video.webm
+│  │  ├─ user-journey-analytics-Use-6d764-ta-Integration-Verification-behavioral-flows/
+│  │  │  ├─ error-context.md
+│  │  │  ├─ test-failed-1.png
+│  │  │  └─ video.webm
+│  │  ├─ user-journey-analytics-Use-6d764-ta-Integration-Verification-behavioral-flows-retry1/
+│  │  ├─ user-journey-analytics-Use-f02aa--Accessibility-Verification-behavioral-flows/
+│  │  │  ├─ error-context.md
+│  │  │  └─ video.webm
+│  │  └─ user-journey-analytics-Use-f02aa--Accessibility-Verification-behavioral-flows-retry1/
+│  │     ├─ error-context.md
+│  │     ├─ test-failed-1.png
+│  │     ├─ trace.zip
+│  │     └─ video.webm
+│  ├─ html-report/
+│  │  ├─ data/
+│  │  │  ├─ 4ab82790a324f7aed9bd9d975b24253f327d4b21.webm
+│  │  │  └─ 764b08856e05bc2d45de8ff294904b70cb943b7a.md
+│  │  └─ index.html
+│  ├─ .last-run.json
+│  ├─ junit.xml
+│  └─ results.json
 ├─ tests/
 │  └─ e2e/
+│     ├─ behavioral-flows/
+│     │  └─ user-journey-analytics.spec.ts
+│     ├─ cross-domain/
+│     │  └─ data-consistency.spec.ts
+│     ├─ fixtures/
+│     │  ├─ test-setup.ts
+│     │  └─ user-journeys.ts
+│     ├─ helpers/
+│     │  └─ behavior-analyzer.ts
+│     ├─ reports/
+│     │  └─ test-analytics-reporter.ts
 │     ├─ admin-settings.spec.ts
-│     ├─ avatarFrames.spec.ts
+│     ├─ avatarFrames.spec.ts.backup
 │     └─ forum-home.spec.ts
 ├─ .env
 ├─ .eslintrc.json
@@ -1680,18 +1787,22 @@ Generated on: 2025-06-26
 ├─ CONTRIBUTING.md
 ├─ cookies.txt
 ├─ demo-admin-modular.md
+├─ dev.log
 ├─ directory-tree.md
 ├─ drizzle.config.ts
 ├─ env.local
 ├─ fix-package-manager.sh
+├─ FORUM_TEST_REPORT.md
 ├─ FORUM-ADMIN-IMPROVEMENTS.md
 ├─ FORUM-POWER-FEATURES.md
 ├─ forum-sprint-subforums.md
 ├─ frontend.log
+├─ longFiles.report.md
 ├─ MVP-FORUM-SETUP.md
 ├─ MVP-NEEDS.md
 ├─ package-lock.json
 ├─ package.json
+├─ playwright.config.ts
 ├─ pnpm-lock.yaml
 ├─ PRIMARY-ZONES-IMPLEMENTATION.md
 ├─ projectBrief.md
@@ -1700,6 +1811,7 @@ Generated on: 2025-06-26
 ├─ startup.log
 ├─ style-dictionary.config.js
 ├─ test-forum-e2e.spec.ts
+├─ test-threads-simple.ts
 ├─ tsconfig.client.json
 ├─ tsconfig.eslint.json
 ├─ tsconfig.json

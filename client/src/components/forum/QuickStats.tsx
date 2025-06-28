@@ -1,6 +1,7 @@
 import React from 'react';
 import { MessageSquare, Users, Eye, TrendingUp } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FrostCard } from '@/components/ui/frost-card';
+import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface QuickStatsProps {
 	totalThreads?: number;
@@ -19,7 +20,7 @@ export function QuickStats({
 }: QuickStatsProps) {
 	if (isLoading) {
 		return (
-			<Card className="bg-gradient-to-br from-zinc-900/90 to-zinc-800/90 border-zinc-700/50">
+			<FrostCard accentColor="emerald">
 				<CardHeader className="pb-3">
 					<CardTitle className="text-emerald-400 text-lg">Forum Stats</CardTitle>
 				</CardHeader>
@@ -36,7 +37,7 @@ export function QuickStats({
 						))}
 					</div>
 				</CardContent>
-			</Card>
+			</FrostCard>
 		);
 	}
 
@@ -68,7 +69,7 @@ export function QuickStats({
 	];
 
 	return (
-		<Card className="bg-gradient-to-br from-zinc-900/90 to-zinc-800/90 border-zinc-700/50 hover:border-emerald-500/30 transition-colors">
+		<FrostCard accentColor="emerald" className="hover:border-emerald-500/30">
 			<CardHeader className="pb-3">
 				<CardTitle className="text-emerald-400 text-lg">Forum Stats</CardTitle>
 			</CardHeader>
@@ -87,6 +88,6 @@ export function QuickStats({
 					))}
 				</div>
 			</CardContent>
-		</Card>
+		</FrostCard>
 	);
 }

@@ -63,7 +63,7 @@ export const widgetRegistry: Record<string, WidgetConfig> = {
 	shoutbox: {
 		component: () =>
 			import('@/components/shoutbox/positioned-shoutbox').then((module) => ({
-				default: module.PositionedShoutbox
+				default: module.default
 			})),
 		metadata: {
 			id: 'shoutbox',

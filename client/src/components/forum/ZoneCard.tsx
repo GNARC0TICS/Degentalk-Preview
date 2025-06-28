@@ -1,6 +1,6 @@
-import React, { useState, memo } from 'react';
+import React, { memo } from 'react';
 import { Link } from 'wouter';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
 	Users,
 	MessageSquare,
@@ -9,8 +9,7 @@ import {
 	Activity,
 	ArrowRight,
 	Crown,
-	Sparkles,
-	Folder
+	Sparkles
 } from 'lucide-react';
 
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -19,9 +18,10 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { CARD_STYLES } from '@/utils/card-constants';
-import { featureFlags } from '@/config/featureFlags';
+import { useShowHotRibbon } from '@/hooks/useShowHotRibbon';
 import { SafeImage } from '@/components/ui/SafeImage';
 import { animationConfig } from '@/config/animation.config';
+import { getZoneTheme } from '../../../../shared/config/zoneThemes.config';
 
 export interface ZoneCardProps {
 	zone: {
@@ -67,7 +67,6 @@ export interface ZoneCardProps {
 	layout?: 'default' | 'compact' | 'hero' | 'mobile';
 	variant?: 'default' | 'premium' | 'event' | 'minimal' | 'promo';
 	showStats?: boolean;
-	showPreview?: boolean;
 	slots?: {
 		header?: React.ReactNode;
 		stats?: React.ReactNode;
@@ -76,82 +75,33 @@ export interface ZoneCardProps {
 	};
 	className?: string;
 	onEnter?: (zoneId: string) => void;
+	onCtaClick?: (zoneId: string) => void;
 }
 
-// Generate dynamic theme based on colorTheme
-const getDynamicTheme = (colorTheme: string) => {
-	// Map colorTheme to CSS classes and icon
-	const themeMap: Record<
-		string,
-		{
-			gradient: string;
-			border: string;
-			accent: string;
-			glow: string;
-			icon: typeof Folder;
-			color: string;
-		}
-	> = {
-		pit: {
-			gradient: 'from-red-500/20 to-orange-500/20',
-			border: 'border-red-500/30',
-			accent: 'text-red-400',
-			glow: 'shadow-red-500/20',
-			icon: TrendingUp,
-			color: '#ef4444'
-		},
-		mission: {
-			gradient: 'from-blue-500/20 to-cyan-500/20',
-			border: 'border-blue-500/30',
-			accent: 'text-blue-400',
-			glow: 'shadow-blue-500/20',
-			icon: Activity,
-			color: '#3b82f6'
-		},
-		casino: {
-			gradient: 'from-purple-500/20 to-pink-500/20',
-			border: 'border-purple-500/30',
-			accent: 'text-purple-400',
-			glow: 'shadow-purple-500/20',
-			icon: Sparkles,
-			color: '#8b5cf6'
-		},
-		briefing: {
-			gradient: 'from-amber-500/20 to-yellow-500/20',
-			border: 'border-amber-500/30',
-			accent: 'text-amber-400',
-			glow: 'shadow-amber-500/20',
-			icon: MessageSquare,
-			color: '#f59e0b'
-		},
-		archive: {
-			gradient: 'from-gray-500/20 to-slate-500/20',
-			border: 'border-gray-500/30',
-			accent: 'text-gray-400',
-			glow: 'shadow-gray-500/20',
-			icon: Folder,
-			color: '#6b7280'
-		},
-		shop: {
-			gradient: 'from-emerald-500/20 to-green-500/20',
-			border: 'border-emerald-500/30',
-			accent: 'text-emerald-400',
-			glow: 'shadow-emerald-500/20',
-			icon: Crown,
-			color: '#10b981'
-		},
-		// Default fallback
-		default: {
-			gradient: 'from-zinc-500/20 to-gray-500/20',
-			border: 'border-zinc-500/30',
-			accent: 'text-zinc-400',
-			glow: 'shadow-zinc-500/20',
-			icon: Folder,
-			color: '#71717a'
-		}
+// Generate CSS custom properties for zone theming using shared config
+export const getZoneThemeVars = (colorTheme: string): React.CSSProperties => {
+	const theme = getZoneTheme(colorTheme);
+
+	// Convert Tailwind classes to CSS custom properties
+	const accentColorMap: Record<string, string> = {
+		'text-red-400': '#f87171',
+		'text-blue-400': '#60a5fa',
+		'text-purple-400': '#c084fc',
+		'text-amber-400': '#fbbf24',
+		'text-gray-400': '#9ca3af',
+		'text-violet-400': '#a78bfa',
+		'text-zinc-400': '#a1a1aa'
 	};
 
-	return themeMap[colorTheme] || themeMap.default;
+	const accentColor = accentColorMap[theme.accent] || '#a1a1aa';
+
+	return {
+		'--zone-accent': accentColor,
+		'--zone-gradient-from': `${accentColor}33`, // 20% opacity
+		'--zone-gradient-to': `${accentColor}1a`, // 10% opacity
+		'--zone-glow': `${accentColor}33`, // 20% opacity
+		'--zone-border': `${accentColor}4d` // 30% opacity
+	};
 };
 
 // -------- Pure component that expects the new { zone } prop --------
@@ -161,27 +111,35 @@ const ZoneCardPure = memo(
 		layout = 'default',
 		variant = 'default',
 		showStats = true,
-		showPreview = true,
 		slots,
 		className,
-		onEnter
+		onEnter,
+		onCtaClick
 	}: ZoneCardProps) => {
 		const derivedZone = zone;
 
-		const [isHovered, setIsHovered] = useState(false);
-
-		// Use dynamic theme generation instead of static ZONE_THEMES
-		const theme = getDynamicTheme(zone.colorTheme);
+		// Use consolidated theme configuration
+		const theme = getZoneTheme(zone.colorTheme);
 		const IconComponent = theme.icon;
 
-		const cardSizes = {
-			default: CARD_STYLES.height.large,
-			compact: CARD_STYLES.height.standard,
-			hero: CARD_STYLES.height.hero,
-			mobile: CARD_STYLES.height.compact
-		} as const;
+		// Generate CSS variables for theming
+		const themeVars = getZoneThemeVars(zone.colorTheme);
 
-		const showHotRibbonFeature = featureFlags?.forum?.showHotRibbon ?? true;
+		// Map layout to CARD_STYLES height constants
+		const getCardHeight = (layout: string) => {
+			switch (layout) {
+				case 'compact':
+					return 'h-[280px]'; // Fixed height for carousel consistency - increased to show all content
+				case 'hero':
+					return CARD_STYLES.height.hero;
+				case 'mobile':
+					return CARD_STYLES.height.compact;
+				default:
+					return CARD_STYLES.height.large;
+			}
+		};
+
+		const showHotRibbonFeature = useShowHotRibbon();
 		const hasHotForums = React.useMemo(() => {
 			return derivedZone.forums?.some((f) => f.isPopular);
 		}, [derivedZone]);
@@ -199,6 +157,16 @@ const ZoneCardPure = memo(
 			onEnter?.(zone.id);
 		};
 
+		const handleCtaClick = (e: React.MouseEvent) => {
+			e.preventDefault();
+			e.stopPropagation();
+			if (onCtaClick) {
+				onCtaClick(zone.id);
+			} else {
+				handleEnter();
+			}
+		};
+
 		return (
 			<motion.div
 				initial={{ opacity: 0, y: 20 }}
@@ -207,32 +175,30 @@ const ZoneCardPure = memo(
 					duration: animationConfig.durations.enter,
 					ease: animationConfig.easings.standard
 				}}
-				onHoverStart={() => setIsHovered(true)}
-				onHoverEnd={() => setIsHovered(false)}
 			>
 				<Link href={`/zones/${derivedZone.slug}`} aria-label={`Enter zone ${derivedZone.name}`}>
 					<Card
+						style={themeVars}
 						className={cn(
 							'group relative cursor-pointer overflow-hidden backdrop-blur-sm',
 							CARD_STYLES.background.primary,
-							CARD_STYLES.hover.combined,
+							'hover:bg-zinc-800/40 hover:shadow-xl transition-all duration-300',
 							CARD_STYLES.radius.standard,
 							CARD_STYLES.shadow.standard,
-							theme.border,
-							isHovered && `hover:shadow-2xl ${theme.glow}`,
-							cardSizes[layout],
+							'border-[var(--zone-border)]',
+							'hover:shadow-2xl',
+							getCardHeight(layout),
 							variant === 'premium' && 'ring-2 ring-amber-500/30',
 							variant === 'event' && 'ring-2 ring-emerald-500/30',
 							className
 						)}
 					>
-						{/* Animated Background Gradient */}
+						{/* Background Gradient */}
 						<div
-							className={cn(
-								'absolute inset-0 bg-gradient-to-br opacity-60 transition-opacity duration-500',
-								theme.gradient,
-								isHovered && 'opacity-80'
-							)}
+							className="absolute inset-0 opacity-60 group-hover:opacity-80 transition-opacity duration-500"
+							style={{
+								background: `linear-gradient(to bottom right, var(--zone-gradient-from), var(--zone-gradient-to))`
+							}}
 						/>
 
 						{/* Background Image if available */}
@@ -286,7 +252,7 @@ const ZoneCardPure = memo(
 								href={`/zones/${derivedZone.slug}?filter=popular`}
 								className={cn(
 									'absolute -left-6 top-3 -rotate-45 badge--primary text-[10px] font-bold px-8 py-1 shadow-lg z-20',
-									theme.accent
+									'text-[var(--zone-accent)]'
 								)}
 								onClick={(e) => {
 									e.stopPropagation();
@@ -306,11 +272,8 @@ const ZoneCardPure = memo(
 											duration: animationConfig.durations.fast,
 											ease: animationConfig.easings.standard
 										}}
-										className={cn(
-											'w-12 h-12 rounded-full bg-zinc-800/50 backdrop-blur-sm border border-zinc-700/50',
-											'flex items-center justify-center text-2xl',
-											theme.accent
-										)}
+										className="w-12 h-12 rounded-full bg-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 flex items-center justify-center text-2xl"
+										style={{ color: 'var(--zone-accent)' }}
 									>
 										{derivedZone.icon ? (
 											<span>{derivedZone.icon}</span>
@@ -320,15 +283,10 @@ const ZoneCardPure = memo(
 									</motion.div>
 
 									<div className="flex-1 min-w-0">
-										<h3
-											className={cn(
-												'text-xl font-bold text-white mb-1 group-hover:text-current transition-colors',
-												theme.accent
-											)}
-										>
+										<h3 className="text-xl font-bold text-white mb-1 group-hover:text-[var(--zone-accent)] transition-colors">
 											{derivedZone.name}
 										</h3>
-										<p className="text-sm text-zinc-400 line-clamp-2 leading-relaxed">
+										<p className="text-sm text-zinc-400 line-clamp-1 leading-tight">
 											{derivedZone.description}
 										</p>
 									</div>
@@ -336,30 +294,30 @@ const ZoneCardPure = memo(
 							)}
 						</CardHeader>
 
-						<CardContent className="relative z-10 space-y-4">
+						<CardContent className="relative z-10 space-y-3">
 							{/* Activity Stats */}
 							{showStats &&
 								(slots?.stats ?? (
-									<div className="grid grid-cols-3 gap-3">
+									<div className="grid grid-cols-3 gap-2">
 										<motion.div
-											className="text-center p-2 rounded-lg bg-zinc-800/30 backdrop-blur-sm"
+											className="text-center px-2 py-1 rounded bg-zinc-800/30 backdrop-blur-sm"
 											whileHover={{ scale: animationConfig.hoverScale }}
 											transition={{
 												duration: animationConfig.durations.fast,
 												ease: animationConfig.easings.standard
 											}}
 										>
-											<div className="flex items-center justify-center gap-1 text-xs text-zinc-400 mb-1">
-												<Users className="w-3 h-3" />
-												<span>Active</span>
+											<div className="flex items-center justify-center gap-1 text-xs text-zinc-500">
+												<Users className="w-2.5 h-2.5" />
+												<span className="text-xs">Active</span>
 											</div>
-											<div className="text-lg font-bold text-white">
+											<div className="text-sm font-semibold text-white mt-0.5">
 												{derivedZone.stats.activeUsers}
 											</div>
 										</motion.div>
 
 										<motion.div
-											className="text-center p-2 rounded-lg bg-zinc-800/30 backdrop-blur-sm"
+											className="text-center px-2 py-1 rounded bg-zinc-800/30 backdrop-blur-sm"
 											whileHover={{ scale: animationConfig.hoverScale }}
 											transition={{
 												duration: animationConfig.durations.fast,
@@ -367,17 +325,17 @@ const ZoneCardPure = memo(
 												ease: animationConfig.easings.standard
 											}}
 										>
-											<div className="flex items-center justify-center gap-1 text-xs text-zinc-400 mb-1">
-												<MessageSquare className="w-3 h-3" />
-												<span>Forums</span>
+											<div className="flex items-center justify-center gap-1 text-xs text-zinc-500">
+												<MessageSquare className="w-2.5 h-2.5" />
+												<span className="text-xs">Forums</span>
 											</div>
-											<div className="text-lg font-bold text-white">
+											<div className="text-sm font-semibold text-white mt-0.5">
 												{derivedZone.forums?.length ?? 0}
 											</div>
 										</motion.div>
 
 										<motion.div
-											className="text-center p-2 rounded-lg bg-zinc-800/30 backdrop-blur-sm"
+											className="text-center px-2 py-1 rounded bg-zinc-800/30 backdrop-blur-sm"
 											whileHover={{ scale: animationConfig.hoverScale }}
 											transition={{
 												duration: animationConfig.durations.fast,
@@ -385,11 +343,11 @@ const ZoneCardPure = memo(
 												ease: animationConfig.easings.standard
 											}}
 										>
-											<div className="flex items-center justify-center gap-1 text-xs text-zinc-400 mb-1">
-												<Activity className="w-3 h-3" />
-												<span>Threads</span>
+											<div className="flex items-center justify-center gap-1 text-xs text-zinc-500">
+												<Activity className="w-2.5 h-2.5" />
+												<span className="text-xs">Threads</span>
 											</div>
-											<div className="text-lg font-bold text-white">
+											<div className="text-sm font-semibold text-white mt-0.5">
 												{derivedZone.forums?.reduce((sum, f) => sum + (f.threadCount || 0), 0)}
 											</div>
 										</motion.div>
@@ -432,70 +390,43 @@ const ZoneCardPure = memo(
 								</div>
 							)}
 
-							{/* Forum Previews */}
-							<AnimatePresence>
-								{isHovered &&
-									showPreview &&
-									derivedZone.forums &&
-									derivedZone.forums.length > 0 &&
-									(slots?.preview ?? (
-										<motion.div
-											initial={{ opacity: 0, height: 0 }}
-											animate={{ opacity: 1, height: 'auto' }}
-											exit={{ opacity: 0, height: 0 }}
-											transition={{ duration: animationConfig.durations.enter }}
-											className="space-y-2 overflow-hidden"
-										>
-											<div className="text-xs font-medium text-zinc-300 mb-2">Forums:</div>
-											{previewForums.map((forumItem: any, index: number) => (
-												<motion.div
-													key={forumItem.id}
-													initial={{ opacity: 0, x: -20 }}
-													animate={{ opacity: 1, x: 0 }}
-													transition={{ delay: index * animationConfig.stagger }}
-													className="flex items-center justify-between p-2 rounded bg-zinc-800/40 hover:bg-zinc-800/60 transition-colors"
-												>
-													<span className="text-sm text-zinc-300 truncate">{forumItem.name}</span>
-													<div className="flex items-center gap-1 text-xs text-zinc-500">
-														<MessageSquare className="w-3 h-3" />
-														<span>{forumItem.threadCount ?? 0}</span>
-													</div>
-												</motion.div>
-											))}
-										</motion.div>
-									))}
-							</AnimatePresence>
+							{/* Forum Previews - Always Visible */}
+							{derivedZone.forums &&
+								derivedZone.forums.length > 0 &&
+								(slots?.preview ?? (
+									<div className="space-y-2">
+										<div className="text-xs font-medium text-zinc-300 mb-2">Forums:</div>
+										{previewForums.map((forumItem: any) => (
+											<div
+												key={forumItem.id}
+												className="flex items-center justify-between p-2 rounded bg-zinc-800/40 hover:bg-zinc-800/60 transition-colors"
+											>
+												<span className="text-sm text-zinc-300 truncate">{forumItem.name}</span>
+												<div className="flex items-center gap-1 text-xs text-zinc-500">
+													<MessageSquare className="w-3 h-3" />
+													<span>{forumItem.threadCount ?? 0}</span>
+												</div>
+											</div>
+										))}
+									</div>
+								))}
 						</CardContent>
 
 						<CardFooter className="relative z-10 pt-2">
 							{slots?.footer ?? (
-								<motion.div
-									initial={{ opacity: 0 }}
-									animate={{ opacity: isHovered ? 1 : 0 }}
-									transition={{
-										duration: animationConfig.durations.fast,
-										ease: animationConfig.easings.standard
-									}}
-									className="w-full"
+								<Button
+									className="w-full transition-all duration-300 bg-zinc-800/50 hover:bg-zinc-700/50 border border-zinc-700/50 hover:border-[var(--zone-accent)] hover:shadow-lg text-[var(--zone-accent)]"
+									style={
+										{
+											'--tw-shadow-color': 'var(--zone-glow)'
+										} as React.CSSProperties
+									}
+									onClick={handleCtaClick}
+									aria-label={`Enter zone ${derivedZone.name}`}
 								>
-									<Button
-										className={cn(
-											'w-full transition-all duration-300',
-											'bg-zinc-800/50 hover:bg-zinc-700/50 border border-zinc-700/50',
-											`hover:border-current hover:shadow-lg hover:${theme.glow}`,
-											theme.accent
-										)}
-										onClick={(e) => {
-											if (onEnter) {
-												handleEnter();
-											}
-										}}
-										aria-label={`Enter zone ${derivedZone.name}`}
-									>
-										<span>Enter {derivedZone.name}</span>
-										<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-									</Button>
-								</motion.div>
+									<span>Enter {derivedZone.name}</span>
+									<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+								</Button>
 							)}
 						</CardFooter>
 					</Card>

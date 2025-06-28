@@ -87,7 +87,7 @@ export const CanonicalZoneGrid = React.memo(function CanonicalZoneGrid({
 					{'type' in cardData && cardData.type === 'shop' ? (
 						<ShopCard featuredItem={(cardData as ShopCardData).featuredItem} />
 					) : (
-						<ZoneCard zone={cardData as Zone} layout="compact" showPreview />
+						<ZoneCard zone={cardData as Zone} layout="compact" />
 					)}
 				</motion.div>
 			)),

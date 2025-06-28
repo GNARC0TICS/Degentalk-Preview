@@ -173,3 +173,5 @@ export function PositionedShoutbox({ instanceId }: PositionedShoutboxProps) {
 	// Otherwise render in-place
 	return createShoutboxContent();
 }
+
+export default PositionedShoutbox;

@@ -270,28 +270,3 @@
 	pointer-events: none;
 	animation: float-up 20s linear infinite;
 }
-
-/* Zone card hover glow variables */
-.zone-theme-pit {
-	--zone-glow-color: rgba(255, 81, 81, 0.2);
-}
-
-.zone-theme-mission {
-	--zone-glow-color: rgba(81, 255, 176, 0.2);
-}
-
-.zone-theme-casino {
-	--zone-glow-color: rgba(255, 81, 235, 0.2);
-}
-
-.zone-theme-briefing {
-	--zone-glow-color: rgba(81, 162, 255, 0.2);
-}
-
-.zone-theme-archive {
-	--zone-glow-color: rgba(255, 235, 81, 0.2);
-}
-
-.zone-theme-default {
-	--zone-glow-color: rgba(16, 185, 129, 0.2);
-}

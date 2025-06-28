@@ -42,6 +42,7 @@ function ContentFeedSkeleton({ count = 5 }: { count?: number }) {
 							<div className="flex-1 space-y-2">
 								<Skeleton className="h-4 w-3/4 animate-pulse" />
 								<Skeleton className="h-3 w-1/2 animate-pulse" />
+								<Skeleton className="h-3 w-11/12 animate-pulse" />
 							</div>
 							<Skeleton className="h-5 w-12 rounded animate-pulse" />
 						</div>
@@ -95,7 +96,7 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 
 	return (
 		<div
-			className="content-item relative border-b border-zinc-800/60 last:border-b-0 transition-all duration-300 group touch-feedback"
+			className="content-item relative border-b border-zinc-800/60 last:border-b-0 transition-colors duration-300 group touch-feedback"
 			onMouseEnter={() => {
 				setIsHovered(true);
 				setTimeout(() => setShowQuickActions(true), 200);
@@ -124,8 +125,8 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 			<Link href={`/threads/${item.slug}`}>
 				<div
 					className={cn(
-						'relative p-4 cursor-pointer transition-all duration-300',
-						isHovered && 'bg-zinc-800/30 transform translate-x-1'
+						'relative p-4 cursor-pointer transition-colors duration-300',
+						isHovered && 'bg-zinc-800/30'
 					)}
 				>
 					<div className="space-y-3">
@@ -137,16 +138,11 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 								) : (
 									<TrendingUp
 										className={cn(
-											'h-5 w-5 mt-0.5 flex-shrink-0 transition-all duration-300',
+											'h-5 w-5 mt-0.5 flex-shrink-0 transition-colors duration-300',
 											hotLevel === 'hot' ? 'text-orange-400' : 'text-zinc-500',
-											isHovered && 'scale-110 text-orange-300'
+											isHovered && 'text-orange-300'
 										)}
 									/>
-								)}
-
-								{/* Activity indicator for recent content */}
-								{new Date(item.createdAt) > new Date(Date.now() - 24 * 60 * 60 * 1000) && (
-									<div className="absolute -top-1 -right-1 h-2 w-2 bg-green-400 rounded-full" />
 								)}
 							</div>
 
@@ -154,16 +150,20 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 								<h3
 									className={cn(
 										'font-semibold text-zinc-100 transition-all duration-300 line-clamp-2 leading-snug',
-										isHovered && 'text-orange-300 transform translate-x-1'
+										isHovered && 'text-orange-300'
 									)}
 								>
 									{item.title}
 								</h3>
-
-								{/* Preview snippet on hover */}
-								{isHovered && (
-									<p className="text-xs text-zinc-400 mt-1 line-clamp-1 opacity-0 animate-fade-in">
-										Click to join the discussion...
+								{/* Excerpt preview - hidden on small screens */}
+								{item.excerpt && (
+									<p
+										className={cn(
+											'mt-1 text-zinc-400 text-sm leading-relaxed line-clamp-2 hidden md:block',
+											'group-hover:text-zinc-300 transition-colors duration-300'
+										)}
+									>
+										{item.excerpt}
 									</p>
 								)}
 							</div>
@@ -197,30 +197,15 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 						<div className="flex items-center gap-3 text-xs text-zinc-400">
 							<div className="flex items-center gap-2">
 								<div className="relative">
-									<Avatar
-										className={cn(
-											'h-5 w-5 ring-1 ring-zinc-700 transition-all duration-300',
-											isHovered && 'ring-2 ring-orange-400/50 scale-110'
-										)}
-									>
+									<Avatar className="h-8 w-8 ring-2 ring-zinc-700">
 										<AvatarImage src={item.user.avatarUrl || undefined} alt={item.user.username} />
 										<AvatarFallback className="text-xs bg-zinc-700">
 											{item.user.username.substring(0, 2).toUpperCase()}
 										</AvatarFallback>
 									</Avatar>
-
-									{/* User status indicator */}
-									<div className="absolute -bottom-0.5 -right-0.5 h-2 w-2 bg-green-400 rounded-full border border-zinc-800" />
 								</div>
 
-								<span
-									className={cn(
-										'font-medium transition-colors duration-300',
-										isHovered ? 'text-orange-300' : 'text-zinc-300'
-									)}
-								>
-									{item.user.username}
-								</span>
+								<span className={cn('font-medium text-zinc-300')}>{item.user.username}</span>
 							</div>
 
 							<span className="text-zinc-600">•</span>
@@ -234,30 +219,15 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 						{/* Enhanced stats with hover effects */}
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-6 text-xs">
-								<div
-									className={cn(
-										'flex items-center gap-1.5 transition-all duration-300',
-										isHovered ? 'text-orange-300 scale-105' : 'text-zinc-400'
-									)}
-								>
+								<div className="flex items-center gap-1.5 text-zinc-400">
 									<MessageSquare className="h-4 w-4" />
 									<span className="font-medium">{item.postCount}</span>
 								</div>
-								<div
-									className={cn(
-										'flex items-center gap-1.5 transition-all duration-300',
-										isHovered ? 'text-blue-300 scale-105' : 'text-zinc-400'
-									)}
-								>
+								<div className="flex items-center gap-1.5 text-zinc-400">
 									<Eye className="h-4 w-4" />
 									<span className="font-medium">{item.viewCount}</span>
 								</div>
-								<div
-									className={cn(
-										'flex items-center gap-1.5 transition-all duration-300',
-										isHovered ? 'text-green-300 scale-105' : 'text-zinc-400'
-									)}
-								>
+								<div className="flex items-center gap-1.5 text-zinc-400">
 									<ThumbsUp className="h-4 w-4" />
 									<span className="font-medium">{item.firstPostLikeCount}</span>
 								</div>
