@@ -49,29 +49,24 @@ export function StatsWidget({ structureId, colorTheme, className }: StatsWidgetP
 	const bodyContent = isLoading ? (
 		<WidgetSkeleton rows={4} />
 	) : (
-		<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+		<div className="grid grid-cols-2 gap-4">
 			{stats.map((stat) => (
-				<div key={stat.label} className="flex items-center space-x-3">
-					<div className="p-2 rounded-lg bg-zinc-800/50">
-						<stat.icon className="h-4 w-4 text-zinc-400" />
-					</div>
-					<div className="flex-1 min-w-0">
-						<div className="flex items-center gap-2">
-							<span className="font-semibold text-zinc-100">{stat.value.toLocaleString()}</span>
-							{stat.delta && (
-								<span
-									className={cn(
-										'text-xs font-medium px-1.5 py-0.5 rounded-full',
-										stat.delta > 0 ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'
-									)}
-								>
-									{stat.delta > 0 ? '+' : ''}
-									{stat.delta}%
-								</span>
-							)}
-						</div>
-						<div className="text-xs text-zinc-500">{stat.label}</div>
-					</div>
+				<div key={stat.label} className="space-y-1">
+					<span className="block text-sm font-semibold text-zinc-100 leading-tight">
+						{stat.value.toLocaleString()}
+						{stat.delta && (
+							<span
+								className={cn(
+									'ml-1 text-2xs font-medium px-1 py-0.5 rounded-full',
+									stat.delta > 0 ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'
+								)}
+							>
+								{stat.delta > 0 ? '+' : ''}
+								{stat.delta}%
+							</span>
+						)}
+					</span>
+					<span className="text-2xs uppercase tracking-wide text-zinc-500">{stat.label}</span>
 				</div>
 			))}
 		</div>
@@ -79,7 +74,7 @@ export function StatsWidget({ structureId, colorTheme, className }: StatsWidgetP
 
 	return (
 		<SidebarWidgetCard
-			title="Forum Stats"
+			title="Forum Stonks"
 			icon={TrendingUp}
 			colorTheme={colorTheme}
 			className={className}

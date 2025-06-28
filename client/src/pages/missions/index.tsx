@@ -5,6 +5,7 @@ import DailyTasksWidget from '@/components/dashboard/DailyTasksWidget';
 import { Sparkles, Trophy, Gift, Calendar } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth'; // Changed path
 import { useMissions } from '@/hooks/useMissions';
+import { useUserAchievements } from '@/hooks/use-achievements';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -34,6 +35,7 @@ interface MissionWithProgress extends Mission {
 export default function MissionsPage() {
 	const { user } = useAuth();
 	const { missionsWithProgress } = useMissions();
+	const { data: userAchievements = [] } = useUserAchievements();
 
 	// Calculate mission stats
 	const totalMissionsCount = missionsWithProgress?.length || 0;
@@ -64,6 +66,17 @@ export default function MissionsPage() {
 	// Calculate completion percentage for the progress display
 	const completionPercentage =
 		totalMissionsCount > 0 ? (completedMissionsCount / totalMissionsCount) * 100 : 0;
+
+	// Calculate achievement stats
+	const recentAchievements = userAchievements
+		.filter((ua) => ua.isCompleted)
+		.sort((a, b) => new Date(b.completedAt || 0).getTime() - new Date(a.completedAt || 0).getTime())
+		.slice(0, 3);
+
+	const inProgressAchievements = userAchievements
+		.filter((ua) => !ua.isCompleted && parseFloat(ua.progressPercentage) > 0)
+		.sort((a, b) => parseFloat(b.progressPercentage) - parseFloat(a.progressPercentage))
+		.slice(0, 3);
 
 	return (
 		<>
@@ -198,6 +211,110 @@ export default function MissionsPage() {
 
 				{/* Main missions list */}
 				<DailyMissions />
+
+				{/* Achievements Section */}
+				{user && userAchievements.length > 0 && (
+					<div className="mt-12">
+						<h2 className="text-2xl font-bold flex items-center mb-6">
+							<Trophy className="mr-3 h-7 w-7 text-amber-500" />
+							Your Achievements
+						</h2>
+
+						<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+							{/* Recent Achievements */}
+							{recentAchievements.length > 0 && (
+								<Card className="bg-zinc-900 border-zinc-800">
+									<CardHeader>
+										<CardTitle className="text-lg flex items-center">
+											<Trophy className="h-5 w-5 mr-2 text-emerald-500" />
+											Recent Achievements
+										</CardTitle>
+										<CardDescription>Your latest unlocked achievements</CardDescription>
+									</CardHeader>
+									<CardContent className="space-y-3">
+										{recentAchievements.map((ua) => (
+											<div
+												key={ua.id}
+												className="flex items-center gap-3 p-3 rounded-lg bg-zinc-800 border border-emerald-500/20"
+											>
+												<span className="text-2xl">{ua.achievement.iconEmoji || '🏆'}</span>
+												<div className="flex-1">
+													<div className="font-medium text-zinc-200">{ua.achievement.name}</div>
+													<div className="text-sm text-zinc-400">{ua.achievement.description}</div>
+													{ua.completedAt && (
+														<div className="text-xs text-emerald-400">
+															Completed {new Date(ua.completedAt).toLocaleDateString()}
+														</div>
+													)}
+												</div>
+												<div className="text-emerald-400">
+													<Trophy className="h-5 w-5" />
+												</div>
+											</div>
+										))}
+									</CardContent>
+								</Card>
+							)}
+
+							{/* In Progress Achievements */}
+							{inProgressAchievements.length > 0 && (
+								<Card className="bg-zinc-900 border-zinc-800">
+									<CardHeader>
+										<CardTitle className="text-lg flex items-center">
+											<Sparkles className="h-5 w-5 mr-2 text-blue-500" />
+											In Progress
+										</CardTitle>
+										<CardDescription>Achievements you're working towards</CardDescription>
+									</CardHeader>
+									<CardContent className="space-y-3">
+										{inProgressAchievements.map((ua) => (
+											<div
+												key={ua.id}
+												className="flex items-center gap-3 p-3 rounded-lg bg-zinc-800 border border-blue-500/20"
+											>
+												<span className="text-2xl">{ua.achievement.iconEmoji || '🎯'}</span>
+												<div className="flex-1">
+													<div className="font-medium text-zinc-200">{ua.achievement.name}</div>
+													<div className="text-sm text-zinc-400">{ua.achievement.description}</div>
+													<div className="mt-2">
+														<div className="flex justify-between text-xs text-zinc-400 mb-1">
+															<span>Progress</span>
+															<span>{Math.round(parseFloat(ua.progressPercentage))}%</span>
+														</div>
+														<div className="w-full bg-zinc-700 rounded-full h-2">
+															<div
+																className="bg-blue-500 h-2 rounded-full transition-all"
+																style={{ width: `${ua.progressPercentage}%` }}
+															/>
+														</div>
+													</div>
+												</div>
+											</div>
+										))}
+									</CardContent>
+								</Card>
+							)}
+						</div>
+
+						{/* Achievement Link */}
+						<div className="mt-6 text-center">
+							<Card className="bg-gradient-to-r from-amber-950/30 to-orange-950/30 border-amber-800/50">
+								<CardContent className="p-4">
+									<p className="text-zinc-300 mb-2">
+										Want to see all your achievements and discover new ones?
+									</p>
+									<a
+										href={`/profile/${user.username}?tab=achievements`}
+										className="inline-flex items-center text-amber-400 hover:text-amber-300 font-medium"
+									>
+										<Trophy className="h-4 w-4 mr-2" />
+										View All Achievements
+									</a>
+								</CardContent>
+							</Card>
+						</div>
+					</div>
+				)}
 			</div>
 		</>
 	);

@@ -244,7 +244,7 @@ describe('useBreakpoint', () => {
 	});
 
 	it('updates breakpoints when window resizes', () => {
-		let changeListeners: Map<string, (event: MediaQueryListEvent) => void> = new Map();
+		const changeListeners: Map<string, (event: MediaQueryListEvent) => void> = new Map();
 
 		window.matchMedia = vi.fn((query: string) => {
 			const mediaQueryList = {

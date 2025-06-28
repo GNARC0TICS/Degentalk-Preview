@@ -3,15 +3,6 @@
 Generated on: 2025-06-28
 
 ```
-├─ _audit/
-│  ├─ forum/
-│  │  └─ 08-consolidation-update.md
-│  ├─ codebase-audit.md
-│  ├─ codebase-tasks.md
-│  ├─ Degentalk-X-Integration-plan.md
-│  ├─ forum-audit.md
-│  ├─ profile-system-ux-audit-2025-06-15.md
-│  └─ profile-system-ux-implementation-plan-2025-06-15.md
 ├─ .claude/
 │  ├─ MCP-QUICK-REFERENCE.md
 │  ├─ MCP-SETUP.md
@@ -19,9 +10,11 @@ Generated on: 2025-06-28
 │  └─ settings.local.json
 ├─ .claudedocs/
 │  ├─ metrics/
+│  │  ├─ cleanup-savings-20250128.md
 │  │  └─ cleanup-savings-20250627.md
 │  ├─ reports/
 │  │  ├─ cleanup-comprehensive-20250627.md
+│  │  ├─ cleanup-zone-refactor-20250128.md
 │  │  └─ risk-analysis-admin-panel-ux-20250622.md
 │  └─ summaries/
 │     └─ estimate-admin-panel-ux-polish-20250622.md
@@ -201,6 +194,7 @@ Generated on: 2025-06-28
 │  │  │  │  ├─ OriginForumPill.tsx
 │  │  │  │  ├─ prefix-badge.tsx
 │  │  │  │  ├─ ProfileCard.tsx
+│  │  │  │  ├─ QuickReplyInput.tsx
 │  │  │  │  ├─ QuickStats.tsx
 │  │  │  │  ├─ ReactionBar.tsx
 │  │  │  │  ├─ RecentActivity.tsx
@@ -221,6 +215,18 @@ Generated on: 2025-06-28
 │  │  │  │  ├─ zone-group.tsx
 │  │  │  │  ├─ ZoneCard.tsx
 │  │  │  │  └─ ZoneStats.tsx
+│  │  │  ├─ gamification/
+│  │  │  │  ├─ achievement-card.tsx
+│  │  │  │  ├─ achievement-grid.tsx
+│  │  │  │  ├─ achievement-unlock-modal.tsx
+│  │  │  │  ├─ index.ts
+│  │  │  │  ├─ leaderboard.tsx
+│  │  │  │  ├─ level-display.tsx
+│  │  │  │  ├─ level-up-modal.tsx
+│  │  │  │  ├─ mission-card.tsx
+│  │  │  │  ├─ mission-dashboard.tsx
+│  │  │  │  ├─ profile-gamification-widget.tsx
+│  │  │  │  └─ progression-card.tsx
 │  │  │  ├─ header/
 │  │  │  │  ├─ AdminButton.tsx
 │  │  │  │  ├─ AuthButtons.tsx
@@ -331,6 +337,7 @@ Generated on: 2025-06-28
 │  │  │  ├─ profile/
 │  │  │  │  ├─ widgets/
 │  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ AchievementsTab.tsx
 │  │  │  │  ├─ CosmeticControlPanel.tsx
 │  │  │  │  ├─ FriendsTab.tsx
 │  │  │  │  ├─ index.ts
@@ -482,6 +489,8 @@ Generated on: 2025-06-28
 │  │  │  │  ├─ XPBarsContainer.tsx
 │  │  │  │  ├─ XPBarTrack.tsx
 │  │  │  │  └─ XpToast.tsx
+│  │  │  ├─ zone/
+│  │  │  │  └─ PrimaryZoneCarousel.tsx
 │  │  │  └─ ErrorBoundary.tsx
 │  │  ├─ config/
 │  │  │  ├─ admin-navigation.ts
@@ -507,8 +516,7 @@ Generated on: 2025-06-28
 │  │  │  ├─ themeFallbacks.ts
 │  │  │  ├─ thread.config.ts
 │  │  │  ├─ ui.config.ts
-│  │  │  ├─ widgetRegistry.ts
-│  │  │  └─ zoneThemes.config.ts
+│  │  │  └─ widgetRegistry.ts
 │  │  ├─ constants/
 │  │  │  ├─ apiRoutes.ts
 │  │  │  ├─ env.ts
@@ -560,10 +568,16 @@ Generated on: 2025-06-28
 │  │  │  ├─ forum/
 │  │  │  │  ├─ components/
 │  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ contexts/
+│  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ hooks/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  └─ services/
 │  │  │  │     ... (max depth reached)
+│  │  │  ├─ gamification/
+│  │  │  │  ├─ services/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  └─ README.md
 │  │  │  ├─ users/
 │  │  │  │  ├─ hooks/
 │  │  │  │  │  ... (max depth reached)
@@ -582,6 +596,7 @@ Generated on: 2025-06-28
 │  │  │  │  └─ use-auth-wrapper.ts
 │  │  │  ├─ index.ts
 │  │  │  ├─ README.md
+│  │  │  ├─ use-achievements.ts
 │  │  │  ├─ use-admin-modules.ts
 │  │  │  ├─ use-async-button.tsx
 │  │  │  ├─ use-auth.tsx
@@ -589,6 +604,7 @@ Generated on: 2025-06-28
 │  │  │  ├─ use-debounce.ts
 │  │  │  ├─ use-dgt-packages.ts
 │  │  │  ├─ use-draft.ts
+│  │  │  ├─ use-gamification.ts
 │  │  │  ├─ use-local-storage.ts
 │  │  │  ├─ use-media-query.ts
 │  │  │  ├─ use-mentions.ts
@@ -619,6 +635,7 @@ Generated on: 2025-06-28
 │  │  │  ├─ useProfileEngagement.ts
 │  │  │  ├─ useProfileStats.ts
 │  │  │  ├─ useSearchParams.ts
+│  │  │  ├─ useShowHotRibbon.ts
 │  │  │  ├─ useThreadZone.ts
 │  │  │  ├─ useUserCosmetics.ts
 │  │  │  ├─ useUserInventory.ts
@@ -635,6 +652,8 @@ Generated on: 2025-06-28
 │  │  │     ├─ StickyRegion.tsx
 │  │  │     └─ Wide.tsx
 │  │  ├─ lib/
+│  │  │  ├─ api/
+│  │  │  │  └─ achievements.ts
 │  │  │  ├─ forum/
 │  │  │  │  ├─ breadcrumbs.ts
 │  │  │  │  └─ sidebarUtils.ts
@@ -779,6 +798,7 @@ Generated on: 2025-06-28
 │  │  │  ├─ degen-index.tsx
 │  │  │  ├─ fixtures-dashboard.tsx
 │  │  │  ├─ forum-rules.tsx
+│  │  │  ├─ gamification.tsx
 │  │  │  ├─ home.tsx
 │  │  │  ├─ leaderboard.tsx
 │  │  │  ├─ not-found.tsx
@@ -814,8 +834,7 @@ Generated on: 2025-06-28
 │  │  │  ├─ globals.css
 │  │  │  ├─ underline-links.css
 │  │  │  ├─ utilities.css
-│  │  │  ├─ wallet-animations.css
-│  │  │  └─ zone-themes.css
+│  │  │  └─ wallet-animations.css
 │  │  ├─ test/
 │  │  │  ├─ utils/
 │  │  │  │  └─ renderWithProviders.tsx
@@ -864,6 +883,7 @@ Generated on: 2025-06-28
 │  │  ├─ 2025-06-24_backup_restore_system.sql
 │  │  ├─ 2025-06-24_email_templates.sql
 │  │  ├─ 2025-06-24_sticker_system.sql
+│  │  ├─ 20250128_enhanced_achievements_system.sql
 │  │  └─ 20250701_fix_wallet_columns.sql
 │  ├─ schema/
 │  │  ├─ admin/
@@ -946,6 +966,7 @@ Generated on: 2025-06-28
 │  │  │  ├─ userEmojiPacks.ts
 │  │  │  └─ userRuleAgreements.ts
 │  │  ├─ gamification/
+│  │  │  ├─ achievementEvents.ts
 │  │  │  ├─ achievements.ts
 │  │  │  ├─ leaderboards.ts
 │  │  │  ├─ missions.ts
@@ -1048,21 +1069,45 @@ Generated on: 2025-06-28
 │  ├─ api/
 │  │  ├─ admin-api.md
 │  │  ├─ auth-api.md
+│  │  ├─ backend-improvements.md
 │  │  ├─ forum-api.md
+│  │  ├─ gamification-api.md
 │  │  ├─ README_API.md
 │  │  ├─ README.md
 │  │  ├─ wallet-api.md
 │  │  └─ xp-api.md
+│  ├─ architecture/
+│  │  └─ cache-system.md
 │  ├─ archive/
+│  │  ├─ 2025-06/
+│  │  │  ├─ _audit/
+│  │  │  │  ├─ forum/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ codebase-audit.md
+│  │  │  │  ├─ codebase-tasks.md
+│  │  │  │  ├─ Degentalk-X-Integration-plan.md
+│  │  │  │  ├─ forum-audit.md
+│  │  │  │  ├─ profile-system-ux-audit-2025-06-15.md
+│  │  │  │  └─ profile-system-ux-implementation-plan-2025-06-15.md
+│  │  │  ├─ MVP-SPRINTS/
+│  │  │  │  ├─ adminlaunchplan.md
+│  │  │  │  ├─ projectlaunchplan.md
+│  │  │  │  ├─ UI_Wiring_Tasks.md
+│  │  │  │  ├─ userprofilepolishplan.md
+│  │  │  │  └─ XP-DGT-SPRINT.md
+│  │  │  ├─ BRAND-SYSTEM-INTEGRATION-PLAN.md
+│  │  │  ├─ COMMUNITY-ENGAGEMENT-FEATURES.md
+│  │  │  └─ WALLET_INTEGRATION_GUIDE.md
 │  │  ├─ FORUM_PRIMARY_ZONES_REFACTOR_PLAN.md
 │  │  └─ placeholder.txt
 │  ├─ CCPAYMENT/
 │  │  ├─ DEVELOPMENT_SETUP.md
 │  │  ├─ PRODUCTION_DEPLOYMENT.md
-│  │  ├─ SCALING_STRATEGY.md
-│  │  └─ WALLET_INTEGRATION_GUIDE.md
+│  │  └─ SCALING_STRATEGY.md
 │  ├─ dev/
 │  │  └─ auth-wallet-dev-guide.md
+│  ├─ development/
+│  │  └─ performance-optimization.md
 │  ├─ engagement/
 │  │  ├─ rain-analytics.md
 │  │  └─ tipping-analytics.md
@@ -1074,6 +1119,8 @@ Generated on: 2025-06-28
 │  │  └─ SETUP_GUIDE.md
 │  ├─ gamification/
 │  │  └─ level-flex-system.md
+│  ├─ guides/
+│  │  └─ developer-tools.md
 │  ├─ memory-bank/
 │  │  ├─ activeContext.md
 │  │  ├─ consolidated_learnings.md
@@ -1110,6 +1157,7 @@ Generated on: 2025-06-28
 │  ├─ feature-scope-guide.md
 │  ├─ FIXTURES-GUIDE.md
 │  ├─ frontend-enhancement-plan.md
+│  ├─ index.md
 │  ├─ mybb-deep-dive-evolution-matrix-2.md
 │  ├─ site-header-refactor-plan.md
 │  ├─ stripecustoms.md
@@ -1157,7 +1205,8 @@ Generated on: 2025-06-28
 │  │  │  ├─ 0003_snapshot.json
 │  │  │  ├─ 0004_snapshot.json
 │  │  │  ├─ 0005_snapshot.json
-│  │  │  └─ 0006_snapshot.json
+│  │  │  ├─ 0006_snapshot.json
+│  │  │  └─ 0007_snapshot.json
 │  │  ├─ 0000_silky_drax.sql
 │  │  ├─ 0001_happy_vulture.sql
 │  │  ├─ 0002_closed_romulus.sql
@@ -1166,18 +1215,13 @@ Generated on: 2025-06-28
 │  │  ├─ 0004_high_magneto.sql
 │  │  ├─ 0005_sparkling_sphinx.sql
 │  │  ├─ 0006_funny_speedball.sql
+│  │  ├─ 0007_shiny_stepford_cuckoos.sql
 │  │  ├─ relations.ts
 │  │  └─ schema.snapshot.ts
 │  ├─ 0008_add_users_profile_fields.sql
 │  ├─ 0009_create_xp_logs_table.sql
 │  ├─ 0010_add_x_account_fields.sql
 │  └─ 0011_create_x_shares_table.sql
-├─ MVP-SPRINTS/
-│  ├─ adminlaunchplan.md
-│  ├─ projectlaunchplan.md
-│  ├─ UI_Wiring_Tasks.md
-│  ├─ userprofilepolishplan.md
-│  └─ XP-DGT-SPRINT.md
 ├─ quality-reports/
 │  └─ quality-report-2025-06-22.json
 ├─ scripts/
@@ -1194,8 +1238,10 @@ Generated on: 2025-06-28
 │  │  │  └─ seedUtils.ts
 │  │  ├─ add_categoryid_to_thread_prefixes.ts
 │  │  ├─ add-color-theme-field.ts
+│  │  ├─ add-critical-indices.ts
 │  │  ├─ apply-migration.ts
 │  │  ├─ backfill-configZoneType.ts
+│  │  ├─ check-indices.ts
 │  │  ├─ check-levels-table.ts
 │  │  ├─ check-reward-tables.ts
 │  │  ├─ create-missing-tables.ts
@@ -1211,6 +1257,7 @@ Generated on: 2025-06-28
 │  │  ├─ README-UI-CONFIG.md
 │  │  ├─ reset-and-seed.ts
 │  │  ├─ run-db-summary.cjs
+│  │  ├─ seed-achievements.ts
 │  │  ├─ seed-badges.ts
 │  │  ├─ seed-chat.ts
 │  │  ├─ seed-default-levels.ts
@@ -1313,8 +1360,7 @@ Generated on: 2025-06-28
 │  └─ validate-imports.ts
 ├─ server/
 │  ├─ config/
-│  │  ├─ loadEnv.ts
-│  │  └─ zoneThemes.config.ts
+│  │  └─ loadEnv.ts
 │  ├─ logs/
 │  │  └─ app.log
 │  ├─ migrations/
@@ -1347,6 +1393,8 @@ Generated on: 2025-06-28
 │  │  ├─ config/
 │  │  │  └─ forum.config.ts
 │  │  ├─ core/
+│  │  │  ├─ events/
+│  │  │  │  └─ achievement-events.service.ts
 │  │  │  ├─ repository/
 │  │  │  │  ├─ __tests__/
 │  │  │  │  │  ... (max depth reached)
@@ -1359,7 +1407,9 @@ Generated on: 2025-06-28
 │  │  │  ├─ routes/
 │  │  │  │  └─ api/
 │  │  │  │     ... (max depth reached)
+│  │  │  ├─ background-processor.ts
 │  │  │  ├─ base-controller.ts
+│  │  │  ├─ cache.service.ts
 │  │  │  ├─ config.service.ts
 │  │  │  ├─ database.ts
 │  │  │  ├─ db.ts
@@ -1457,6 +1507,24 @@ Generated on: 2025-06-28
 │  │  │  │  ├─ forum.routes.ts
 │  │  │  │  ├─ forum.service.test.ts
 │  │  │  │  └─ forum.service.ts
+│  │  │  ├─ gamification/
+│  │  │  │  ├─ achievements/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ achievement.controller.ts
+│  │  │  │  ├─ achievement.routes.ts
+│  │  │  │  ├─ achievement.service.ts
+│  │  │  │  ├─ admin.controller.ts
+│  │  │  │  ├─ admin.routes.ts
+│  │  │  │  ├─ analytics.controller.ts
+│  │  │  │  ├─ analytics.routes.ts
+│  │  │  │  ├─ analytics.service.ts
+│  │  │  │  ├─ gamification.routes.ts
+│  │  │  │  ├─ index.ts
+│  │  │  │  ├─ leveling.controller.ts
+│  │  │  │  ├─ leveling.routes.ts
+│  │  │  │  ├─ leveling.service.ts
+│  │  │  │  ├─ mission.controller.ts
+│  │  │  │  └─ mission.routes.ts
 │  │  │  ├─ messaging/
 │  │  │  │  └─ message.routes.ts
 │  │  │  ├─ missions/
@@ -1564,19 +1632,21 @@ Generated on: 2025-06-28
 │  │  ├─ middleware/
 │  │  │  ├─ auth.ts
 │  │  │  ├─ authenticate.ts
+│  │  │  ├─ dev-security.middleware.ts
 │  │  │  ├─ mission-progress.ts
 │  │  │  ├─ subscription-permissions.ts
 │  │  │  ├─ trace.middleware.ts
 │  │  │  ├─ validate-request.ts
 │  │  │  └─ validate.ts
 │  │  ├─ routes/
-│  │  │  └─ api/
-│  │  │     ├─ store/
-│  │  │     │  ... (max depth reached)
-│  │  │     ├─ user/
-│  │  │     │  ... (max depth reached)
-│  │  │     ├─ index.ts
-│  │  │     └─ ui.routes.ts
+│  │  │  ├─ api/
+│  │  │  │  ├─ store/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ user/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ index.ts
+│  │  │  │  └─ ui.routes.ts
+│  │  │  └─ dev.routes.ts
 │  │  ├─ utils/
 │  │  │  ├─ auth.ts
 │  │  │  ├─ db-utils.ts
@@ -1614,7 +1684,8 @@ Generated on: 2025-06-28
 │  │  └─ README.md
 │  ├─ config/
 │  │  ├─ admin.config.ts
-│  │  └─ social.config.ts
+│  │  ├─ social.config.ts
+│  │  └─ zoneThemes.config.ts
 │  ├─ economy/
 │  │  ├─ clout-calculator.ts
 │  │  ├─ economy.config.ts
@@ -1777,11 +1848,9 @@ Generated on: 2025-06-28
 ├─ ADMIN-CONVERSION-COMPLETE.md
 ├─ backend_new.log
 ├─ backend.log
-├─ BRAND-SYSTEM-INTEGRATION-PLAN.md
 ├─ CLAUDE.local.md
 ├─ CLAUDE.md
 ├─ CODESPACES-SETUP-SAFE.md
-├─ COMMUNITY-ENGAGEMENT-FEATURES.md
 ├─ COMPONENT-MIGRATION-ROADMAP.md
 ├─ components.json
 ├─ CONTRIBUTING.md

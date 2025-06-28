@@ -1,0 +1,117 @@
+/**
+ * Achievement API Routes
+ *
+ * RESTful routes for achievement tracking, progress monitoring,
+ * and reward management.
+ */
+
+import { Router } from 'express';
+import { achievementController } from './achievement.controller';
+import { isAuthenticated, isAdmin } from '../auth/middleware/auth.middleware';
+import rateLimit from 'express-rate-limit';
+
+const router = Router();
+
+// Rate limiting
+const publicRateLimit = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // 100 requests per window
+	standardHeaders: true,
+	legacyHeaders: false
+});
+
+const userRateLimit = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 200, // 200 requests per window for authenticated users
+	standardHeaders: true,
+	legacyHeaders: false
+});
+
+const adminRateLimit = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 50, // 50 requests per window for admin operations
+	standardHeaders: true,
+	legacyHeaders: false
+});
+
+// Public routes
+router.get(
+	'/',
+	publicRateLimit,
+	achievementController.getAllAchievements.bind(achievementController)
+);
+
+router.get(
+	'/leaderboard',
+	publicRateLimit,
+	achievementController.getAchievementLeaderboard.bind(achievementController)
+);
+
+router.get(
+	'/:id',
+	publicRateLimit,
+	achievementController.getAchievementById.bind(achievementController)
+);
+
+// User-specific routes (can view any user's public achievement data)
+router.get(
+	'/user/:userId',
+	publicRateLimit,
+	achievementController.getUserAchievements.bind(achievementController)
+);
+
+router.get(
+	'/progress/:userId',
+	publicRateLimit,
+	achievementController.getUserProgress.bind(achievementController)
+);
+
+// Authenticated user routes (own data)
+router.get(
+	'/my-stats',
+	isAuthenticated,
+	userRateLimit,
+	achievementController.getMyAchievements.bind(achievementController)
+);
+
+router.get(
+	'/my-progress',
+	isAuthenticated,
+	userRateLimit,
+	achievementController.getMyProgress.bind(achievementController)
+);
+
+// System integration routes (for triggering achievement checks)
+router.post(
+	'/check',
+	isAuthenticated,
+	userRateLimit,
+	achievementController.checkAchievements.bind(achievementController)
+);
+
+// Admin-only routes
+router.post(
+	'/',
+	isAuthenticated,
+	isAdmin,
+	adminRateLimit,
+	achievementController.createAchievement.bind(achievementController)
+);
+
+router.post(
+	'/award',
+	isAuthenticated,
+	isAdmin,
+	adminRateLimit,
+	achievementController.awardAchievement.bind(achievementController)
+);
+
+router.post(
+	'/seed-defaults',
+	isAuthenticated,
+	isAdmin,
+	adminRateLimit,
+	achievementController.seedDefaultAchievements.bind(achievementController)
+);
+
+export default router;

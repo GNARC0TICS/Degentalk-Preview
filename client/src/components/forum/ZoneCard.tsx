@@ -21,7 +21,7 @@ import { CARD_STYLES } from '@/utils/card-constants';
 import { useShowHotRibbon } from '@/hooks/useShowHotRibbon';
 import { SafeImage } from '@/components/ui/SafeImage';
 import { animationConfig } from '@/config/animation.config';
-import { getZoneTheme } from '../../../../shared/config/zoneThemes.config';
+import { getZoneTheme } from '@shared/config/zoneThemes.config';
 
 export interface ZoneCardProps {
 	zone: {

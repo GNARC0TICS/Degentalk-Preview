@@ -1,83 +1,36 @@
-## Status: Reviewed – Awaiting Final Approval | 2025-06-02
+# 🛠️ Scripts Directory
 
-# ForumFusion Scripts
+This folder hosts one-off utilities, maintenance tools, and developer helpers.  Sub-folders are grouped by domain so you can find the right script quickly.
 
-This directory contains scripts for various operations in the ForumFusion project.
+| Sub-folder | Purpose |
+| ---------- | ------- |
+| `admin/`   | Admin-panel maintenance (e.g. index optimizers, controller validators) |
+| `codemods/`| Automated code transformations (jscodeshift / ts-morph) |
+| `db/`      | Database helpers, seeders, and migration generators |
+| `dev/`     | Local-dev tooling (e.g. environment sync, demo data) |
+| `migration/`| Manual data migrations that don't fit Drizzle workflows |
+| `ops/`     | Operational scripts (cron helpers, deployment verifiers) |
+| `quality/` | Quality metrics and reports |
+| `refactor/`| Large-scale refactor helpers |
+| `seed/`    | Seed data for local or staging environments |
+| `testing/` | Test harnesses and smoke tests |
+| `tools/`   | Generic generators such as `generate-tree.js` |
+| `validation/` | Schema & config validators |
+| `wallet/`  | Wallet-specific migration aides |
 
-## Directory Structure
+## Running a Script
 
-- **db/** - Database and schema-related scripts
-  - Schema management and migrations
-  - Database seeding and initialization
-  - Database queries and utilities
-
-- **auth/** - Authentication-related scripts
-  - Auth refactoring and standardization
-  - Authentication fixes and utilities
-
-- **wallet/** - Wallet and transaction scripts
-  - Wallet refactoring and migration
-  - Component and import migration utilities
-
-- **forum/** - Forum-related scripts
-  - Forum seeding and structure initialization
-  - Test data generation
-
-- **testing/** - Test and validation scripts
-  - API tests and validation
-  - Mock request testing
-  - Domain migration validation
-
-- **tools/** - Development tools
-  - Directory tree generation
-  - Import checking and fixing
-  - Code cleanup and file management
-
-- **ops/** - Operational scripts
-  - Sprint setup and initialization
-  - System setup scripts
-
-- **templates/** - Template files used by other scripts
-
-## Usage Examples
-
-### Database Scripts
+Almost every script is built with `tsx` and can be executed via npm-based helpers:
 
 ```bash
-# Initialize the XP system
-npm run xp:init
-# or
-node scripts/db/initialize-xp-system.ts
-
-# Seed forum structure
-node scripts/db/seed-forum-structure.ts
+# Example: regenerate forum SDK
+yarn tsx scripts/build-forum-sdk.ts    # or npm run build-forum-sdk
 ```
 
-### Testing Scripts
+Many scripts have an accompanying `--help` flag.  Always dry-run first when available.
 
-```bash
-# Run API tests
-bash scripts/testing/admin-api-tests.sh
+## Conventions
 
-# Validate domain migration
-bash scripts/testing/validate-domain-migration.sh
-```
-
-### Tools
-
-```bash
-# Generate directory tree
-node scripts/tools/generate-tree.js > directory-tree.md
-
-# Check imports
-node scripts/tools/check-imports.ts
-```
-
-## Adding New Scripts
-
-When adding new scripts, please:
-
-1. Place them in the appropriate directory based on functionality
-2. Use consistent naming conventions (kebab-case recommended)
-3. Include proper documentation and usage examples in the script
-4. Update this README if adding a new category or important script
+1. **TypeScript First** – use `.ts` or `.tsx`; Node ESM loader (`tsx`) handles them.
+2. **No Side Effects on Import** – scripts should execute logic only inside `main()`.
+3. **Verbose Logging** – prefer `console.log` wrappers in `scripts/logs/` for consistency.

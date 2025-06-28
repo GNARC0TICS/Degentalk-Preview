@@ -1,5 +1,4 @@
-import { Link } from 'wouter';
-
+// Removed Link (no longer needed after zone grid removal)
 // Import context and hook
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedZone } from '@/contexts/ForumStructureContext';
@@ -9,31 +8,20 @@ import { HeroSection } from '@/components/layout/hero-section';
 import { AnnouncementTicker } from '@/components/layout/announcement-ticker';
 import { SiteFooter } from '@/components/footer';
 import { ResponsiveLayoutWrapper } from '@/components/layout/ResponsiveLayoutWrapper';
-import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
 import { PrimaryZoneCarousel } from '@/components/zone/PrimaryZoneCarousel';
 import { Wide } from '@/layout/primitives/Wide';
 import { HomeContentArea } from '@/components/ui/content-area';
 import { ContentFeedProvider } from '@/contexts/content-feed-context';
 import { getForumSpacing, getForumLayout } from '@/utils/spacing-constants';
 
-// Import UI components
-import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
-
-// Import icons
-import { AlertCircle } from 'lucide-react';
+// Removed grid-related UI imports (Skeleton, Button, icons)
 
 import type { ZoneCardProps } from '@/components/forum/ZoneCard';
 import ForumErrorBoundary from '@/components/forum/ForumErrorBoundary';
 
 function HomePage() {
 	// Get forum structure from context
-	const {
-		zones: mergedZones,
-		isLoading: structureLoadingFromContext,
-		error: forumStructureErrorFromContext
-	} = useForumStructure();
+	const { zones: mergedZones } = useForumStructure();
 
 	const primaryZonesFromContext = mergedZones.filter((zone) => zone.isPrimary === true);
 
@@ -94,41 +82,6 @@ function HomePage() {
 					<Wide as="div" className={getForumSpacing('container')}>
 						{/* New tab-based content feed */}
 						<HomeContentArea className={getForumSpacing('sectionLarge')} />
-
-						<section className={getForumSpacing('sectionLarge')}>
-							<div className={`${getForumLayout('headerFlex')} ${getForumSpacing('headerMargin')}`}>
-								<div>
-									<h2 className="text-xl font-semibold text-zinc-300 mb-2">All Zones</h2>
-									<p className="text-zinc-500">Browse all available discussion areas</p>
-								</div>
-								<Link href="/zones">
-									<Button variant="ghost" className="text-zinc-400 hover:text-white">
-										View All Zones
-										<ArrowRight className="ml-2 h-4 w-4" />
-									</Button>
-								</Link>
-							</div>
-
-							{forumStructureErrorFromContext ? (
-								<div className="text-center py-12">
-									<AlertCircle className="mx-auto h-12 w-12 text-red-400" />
-									<p className="mt-4 text-red-400">Failed to load forum structure.</p>
-									<p className="text-sm text-zinc-500">
-										{(forumStructureErrorFromContext as Error)?.message || 'Unknown error'}
-									</p>
-								</div>
-							) : structureLoadingFromContext ? (
-								<div
-									className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${getForumSpacing('cardGrid')}`}
-								>
-									{Array.from({ length: primaryZonesFromContext.length || 3 }).map((_, i) => (
-										<Skeleton key={i} className="bg-zinc-900 rounded-xl h-48" />
-									))}
-								</div>
-							) : (
-								<CanonicalZoneGrid zones={zoneCardDataForGrid} />
-							)}
-						</section>
 					</Wide>
 				</ResponsiveLayoutWrapper>
 			</ContentFeedProvider>

@@ -5,7 +5,7 @@
  * of interaction with the forum backend endpoints.
  */
 
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import type {
 	ThreadWithUser,
 	PostWithUser,

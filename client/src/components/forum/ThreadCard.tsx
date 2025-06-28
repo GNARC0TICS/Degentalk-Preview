@@ -20,6 +20,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import type { ThreadDisplay } from '@/types/thread.types';
+import { getZoneTheme } from '@shared/config/zoneThemes.config';
+import { useThreadActionsOptional } from '@/features/forum/contexts/ThreadActionsContext';
+import QuickReplyInput from '@/components/forum/QuickReplyInput';
+import { ButtonTooltip } from '@/components/ui/tooltip-utils';
 
 export interface ThreadCardProps {
 	thread: ThreadDisplay;
@@ -39,7 +43,20 @@ const ThreadCard = memo(
 		onBookmark,
 		className
 	}: ThreadCardProps) => {
-		const [isBookmarked, setIsBookmarked] = useState(false);
+		// If an actions provider exists, defer bookmark state to it
+		const actionsCtx = useThreadActionsOptional();
+
+		const [localBookmark, setLocalBookmark] = useState(thread.hasBookmarked ?? false);
+
+		// Sync local state when parent data updates (only when no provider)
+		React.useEffect(() => {
+			if (!actionsCtx) {
+				setLocalBookmark(thread.hasBookmarked ?? false);
+			}
+		}, [thread.hasBookmarked, actionsCtx]);
+
+		const isBookmarked = actionsCtx ? actionsCtx.isBookmarked : localBookmark;
+
 		const breakpoint = useBreakpoint();
 
 		const isHot = thread.isHot || (thread.hotScore && thread.hotScore > 10);
@@ -47,18 +64,8 @@ const ThreadCard = memo(
 
 		const threadId = String(thread.id);
 
-		const handleTip = (e: React.MouseEvent) => {
-			e.preventDefault();
-			e.stopPropagation();
-			onTip?.(threadId, 10); // Default tip amount
-		};
-
-		const handleBookmark = (e: React.MouseEvent) => {
-			e.preventDefault();
-			e.stopPropagation();
-			setIsBookmarked(!isBookmarked);
-			onBookmark?.(threadId);
-		};
+		const tipFn = onTip ?? actionsCtx?.tip;
+		const bookmarkFn = onBookmark ?? actionsCtx?.toggleBookmark;
 
 		// Responsive spacing based on breakpoint
 		const getCardSpacing = () => {
@@ -78,18 +85,9 @@ const ThreadCard = memo(
 
 		const cardVariants = getCardSpacing();
 
-		const zoneColorClasses = {
-			pit: 'border-red-500/30 hover:border-red-500/60',
-			mission: 'border-blue-500/30 hover:border-blue-500/60',
-			casino: 'border-purple-500/30 hover:border-purple-500/60',
-			briefing: 'border-amber-500/30 hover:border-amber-500/60',
-			archive: 'border-gray-500/30 hover:border-gray-500/60',
-			shop: 'border-violet-500/30 hover:border-violet-500/60'
-		} as const;
-
-		const zoneThemeClass =
-			zoneColorClasses[thread.zone.colorTheme as keyof typeof zoneColorClasses] ||
-			'border-zinc-700/30 hover:border-zinc-600/60';
+		// Resolve theme safely via shared config util
+		const zoneTheme = getZoneTheme(thread.zone.colorTheme);
+		const zoneThemeClass = zoneTheme.border ?? 'border-zinc-700/30 hover:border-zinc-600/60';
 
 		return (
 			<Link href={`/threads/${thread.slug}`}>
@@ -287,11 +285,18 @@ const ThreadCard = memo(
 									variant="ghost"
 									aria-label="Tip"
 									className={cn(
-										'p-0 text-zinc-400 hover:text-emerald-400 hover:bg-emerald-900/20',
-										// Mobile: 44px touch target minimum
+										'p-0',
+										tipFn
+											? 'text-zinc-400 hover:text-emerald-400 hover:bg-emerald-900/20'
+											: 'text-zinc-700 cursor-not-allowed',
 										breakpoint.isMobile ? 'h-11 w-11' : 'h-8 w-8'
 									)}
-									onClick={handleTip}
+									disabled={!tipFn}
+									onClick={(e) => {
+										e.preventDefault();
+										e.stopPropagation();
+										tipFn?.(threadId as any, 10);
+									}}
 								>
 									<Zap
 										className={cn(breakpoint.isMobile ? 'w-5 h-5' : 'w-4 h-4')}
@@ -313,7 +318,20 @@ const ThreadCard = memo(
 									// Mobile: 44px touch target minimum
 									breakpoint.isMobile ? 'h-11 w-11' : 'h-8 w-8'
 								)}
-								onClick={handleBookmark}
+								disabled={!bookmarkFn}
+								onClick={(e) => {
+									e.preventDefault();
+									e.stopPropagation();
+									if (!actionsCtx) {
+										setLocalBookmark(!localBookmark);
+									}
+									if (!bookmarkFn) return;
+									if (bookmarkFn.length === 0) {
+										(bookmarkFn as () => void)();
+									} else {
+										bookmarkFn?.(threadId as any);
+									}
+								}}
 							>
 								<Bookmark
 									className={cn(
@@ -326,19 +344,44 @@ const ThreadCard = memo(
 							</Button>
 
 							{/* Share button - Hidden on mobile to save space */}
-							{!breakpoint.isMobile && (
-								<Button
-									size="sm"
-									variant="ghost"
-									aria-label="Share"
-									className="h-8 w-8 p-0 text-zinc-400 hover:text-blue-400 hover:bg-blue-900/20"
-								>
-									<Share2 className="w-4 h-4" aria-hidden="true" />
-									<span className="sr-only">Share</span>
-								</Button>
-							)}
+							{!breakpoint.isMobile &&
+								(actionsCtx?.share ? (
+									<ButtonTooltip content="Copy link" side="top">
+										<Button
+											size="sm"
+											variant="ghost"
+											aria-label="Share"
+											className="h-8 w-8 p-0 text-zinc-400 hover:text-blue-400 hover:bg-blue-900/20"
+											onClick={(e) => {
+												e.preventDefault();
+												e.stopPropagation();
+												actionsCtx.share();
+											}}
+										>
+											<Share2 className="w-4 h-4" aria-hidden="true" />
+											<span className="sr-only">Share</span>
+										</Button>
+									</ButtonTooltip>
+								) : (
+									<Button
+										size="sm"
+										variant="ghost"
+										aria-label="Share (disabled)"
+										className="h-8 w-8 p-0 text-zinc-700 cursor-not-allowed"
+										disabled
+									>
+										<Share2 className="w-4 h-4" aria-hidden="true" />
+										<span className="sr-only">Share</span>
+									</Button>
+								))}
 						</div>
 					</div>
+
+					{actionsCtx && (
+						<div className="pt-3">
+							<QuickReplyInput />
+						</div>
+					)}
 				</Card>
 			</Link>
 		);

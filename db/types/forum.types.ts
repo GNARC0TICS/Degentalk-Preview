@@ -8,6 +8,8 @@ export interface ThreadWithUser extends Thread {
 	user: User;
 	postCount: number;
 	lastPost?: Post;
+	// Plain text excerpt (first 150 chars)
+	excerpt?: string;
 }
 
 export interface PostWithUser {

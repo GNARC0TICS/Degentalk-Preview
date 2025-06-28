@@ -85,6 +85,7 @@ export function PostCard({
 
 	return (
 		<Card
+			id={`post-${post.id}`}
 			className={cn(
 				'bg-zinc-900/60 border overflow-hidden',
 				isSolution ? 'border-emerald-800/70 ring-1 ring-emerald-500/30' : 'border-zinc-800',

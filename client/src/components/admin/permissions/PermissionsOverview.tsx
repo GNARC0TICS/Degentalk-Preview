@@ -1,11 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+interface Role {
+	id: string;
+	name: string;
+	permissions: string[];
+}
+
 interface PermissionsOverviewProps {
-	roles: any[];
+	roles: Role[];
 	isLoading: boolean;
 }
 
-export function PermissionsOverview({ roles, isLoading }: PermissionsOverviewProps) {
+export function PermissionsOverview({ isLoading }: PermissionsOverviewProps) {
 	if (isLoading) {
 		return (
 			<Card>

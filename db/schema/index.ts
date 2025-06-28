@@ -142,6 +142,7 @@ export * from './admin/brandConfig';
 // Gamification domain exports
 export * from './gamification/achievements';
 export * from './gamification/userAchievements';
+export * from './gamification/achievementEvents';
 export * from './gamification/missions';
 export * from './gamification/userMissionProgress';
 export * from './gamification/leaderboards';

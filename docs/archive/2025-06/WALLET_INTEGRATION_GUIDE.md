@@ -41,8 +41,8 @@ Your `env.local` should contain:
 DATABASE_URL=postgresql://...
 
 # CCPayment Configuration
-CCPAYMENT_APP_ID=isloZpLGWgTHrdY1
-CCPAYMENT_APP_SECRET=f3bb9be4cc138840bb806cdbe7797b9d
+CCPAYMENT_APP_ID=isloZpLGWgTHrugY1
+CCPAYMENT_APP_SECRET=f3bb9be438840bb806cdbyue7797b9d
 
 # Development Settings
 NODE_ENV=development
@@ -755,4 +755,4 @@ curl -v http://localhost:5001/api/wallet/balance
 
 ---
 
-*This documentation is maintained by the Degentalk development team. Last updated: 2024-01-20*
+*This documentation is maintained by the Degentalk development team. Last updated: 2025-01-20*

@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../../../../../core/db.ts';
 import { uiThemes, type UiTheme, type NewUiTheme } from '@schema/admin/uiThemes';
-import { ZONE_THEMES as zoneThemesConfig } from '../../../../../../../shared/config/zoneThemes.config';
+import { ZONE_THEMES as zoneThemesConfig } from '@shared/config/zoneThemes.config';
 
 interface UiThemesCache {
 	data: Record<string, UiTheme>;

@@ -35,6 +35,7 @@ import { useForumStructure } from '@/contexts/ForumStructureContext';
 import { createForumBreadcrumbs } from '@/lib/forum/breadcrumbs';
 import { useAuth } from '@/hooks/use-auth';
 import { DynamicSidebar } from '@/components/forum/sidebar';
+import { ThreadActionsProvider } from '@/features/forum/contexts/ThreadActionsContext';
 
 export default function BBCodeThreadPage() {
 	// Get slug param from route
@@ -278,9 +279,9 @@ export default function BBCodeThreadPage() {
 		);
 	}
 
-	return (
-		<div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black">
-			<main>
+	const pageContent = (
+		<div className="min-h-screen flex flex-col">
+			<header className="bg-zinc-950/80 backdrop-blur-sm border-b border-zinc-800/50">
 				<Wide className="px-4 py-8">
 					{/* Breadcrumb */}
 					<Breadcrumb className="mb-6">
@@ -386,7 +387,11 @@ export default function BBCodeThreadPage() {
 							)}
 						</div>
 					</div>
+				</Wide>
+			</header>
 
+			<main>
+				<Wide className="px-4 py-8">
 					{/* Main Layout */}
 					<div className={`grid gap-8 ${showSidebar ? 'xl:grid-cols-[1fr_300px]' : 'grid-cols-1'}`}>
 						{/* Posts Content */}
@@ -538,4 +543,11 @@ export default function BBCodeThreadPage() {
 			<SiteFooter />
 		</div>
 	);
+
+	// If thread has loaded, provide global actions context; else render as-is
+	if (thread) {
+		return <ThreadActionsProvider thread={thread}>{pageContent}</ThreadActionsProvider>;
+	}
+
+	return pageContent;
 }

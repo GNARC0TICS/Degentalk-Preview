@@ -7,6 +7,9 @@
 
 import { db } from '@db';
 import { logger } from '@server/src/core/logger';
+import { postService } from './post.service';
+import { cacheService } from '@server/src/core/cache.service';
+import { AchievementEventEmitter } from '../../../core/events/achievement-events.service';
 import {
 	threads,
 	posts,
@@ -22,52 +25,9 @@ import type {
 	ThreadWithPostsAndUser,
 	ThreadWithUserAndCategory
 } from '../../../../db/types/forum.types';
+import { eventLogger } from '../../activity/services/event-logger.service';
 
-// Simple in-memory cache for tab content
-interface CacheEntry {
-	data: any;
-	timestamp: number;
-	ttl: number;
-}
-
-class SimpleCache {
-	private cache = new Map<string, CacheEntry>();
-	private readonly DEFAULT_TTL = 60 * 1000; // 60 seconds
-
-	get(key: string): any | null {
-		const entry = this.cache.get(key);
-		if (!entry) return null;
-
-		if (Date.now() - entry.timestamp > entry.ttl) {
-			this.cache.delete(key);
-			return null;
-		}
-
-		return entry.data;
-	}
-
-	set(key: string, data: any, ttl: number = this.DEFAULT_TTL): void {
-		this.cache.set(key, {
-			data,
-			timestamp: Date.now(),
-			ttl
-		});
-	}
-
-	clear(): void {
-		this.cache.clear();
-	}
-
-	// Clean up expired entries
-	cleanup(): void {
-		const now = Date.now();
-		for (const [key, entry] of this.cache.entries()) {
-			if (now - entry.timestamp > entry.ttl) {
-				this.cache.delete(key);
-			}
-		}
-	}
-}
+// Using centralized cache service (Redis with in-memory fallback)
 
 export interface ThreadSearchParams {
 	structureId?: number;
@@ -103,11 +63,8 @@ export interface ThreadCreateInput {
 }
 
 export class ThreadService {
-	private cache = new SimpleCache();
-
 	constructor() {
-		// Clean up cache every 5 minutes
-		setInterval(() => this.cache.cleanup(), 5 * 60 * 1000);
+		// Cache is now handled by the centralized cache service
 	}
 
 	/**
@@ -128,7 +85,7 @@ export class ThreadService {
 		const cacheKey = `${tab}:${forumId ?? 'all'}:${page}:${limit}:${userId ?? 'anon'}`;
 
 		// Try cache first
-		const cached = this.cache.get(cacheKey);
+		const cached = await cacheService.get(cacheKey);
 		if (cached) {
 			logger.debug('ThreadService', 'Cache hit for tab content', { tab, cacheKey });
 			return cached;
@@ -157,7 +114,7 @@ export class ThreadService {
 
 		// Cache the result (different TTL for different tabs)
 		const cacheTTL = this.getCacheTTLForTab(tab);
-		this.cache.set(cacheKey, response, cacheTTL);
+		await cacheService.set(cacheKey, response, cacheTTL);
 
 		logger.info('ThreadService', 'Fetched tab content', {
 			tab,
@@ -297,34 +254,52 @@ export class ThreadService {
 			const threadsData = await query.execute();
 
 			// Format threads with separate queries for relations
+			// Batch fetch all users and structures instead of N+1 queries
+			const userIds = [...new Set(threadsData.map((t) => t.userId))];
+			const structureIds = [...new Set(threadsData.map((t) => t.structureId))];
+			const threadIds = threadsData.map((t) => t.id);
+
+			const [usersData, structuresData, excerptData] = await Promise.all([
+				// Batch fetch users
+				db
+					.select({
+						id: usersTable.id,
+						username: usersTable.username,
+						avatarUrl: usersTable.avatarUrl,
+						activeAvatarUrl: usersTable.activeAvatarUrl,
+						role: usersTable.role
+					})
+					.from(usersTable)
+					.where(inArray(usersTable.id, userIds)),
+
+				// Batch fetch structures
+				db
+					.select({
+						id: forumStructure.id,
+						name: forumStructure.name,
+						slug: forumStructure.slug,
+						type: forumStructure.type
+					})
+					.from(forumStructure)
+					.where(inArray(forumStructure.id, structureIds)),
+
+				// Batch fetch excerpts
+				this.getFirstPostExcerptsBatch(threadIds)
+			]);
+
+			// Create lookup maps for O(1) access
+			const usersMap = new Map(usersData.map((u) => [u.id, u]));
+			const structuresMap = new Map(structuresData.map((s) => [s.id, s]));
+			const excerptsMap = new Map(excerptData.map((e) => [e.threadId, e.excerpt]));
+
 			const formattedThreads = await Promise.all(
 				threadsData.map(async (thread) => {
-					// Get user information separately
-					const [userResult] = await db
-						.select({
-							username: usersTable.username,
-							avatarUrl: usersTable.avatarUrl,
-							activeAvatarUrl: usersTable.activeAvatarUrl,
-							role: usersTable.role
-						})
-						.from(usersTable)
-						.where(eq(usersTable.id, thread.userId));
+					const userResult = usersMap.get(thread.userId);
+					const structureResult = structuresMap.get(thread.structureId);
+					const excerpt = excerptsMap.get(thread.id);
 
-					// Get structure information separately
-					const [structureResult] = await db
-						.select({
-							name: forumStructure.name,
-							slug: forumStructure.slug,
-							type: forumStructure.type
-						})
-						.from(forumStructure)
-						.where(eq(forumStructure.id, thread.structureId));
-
-					// Get zone information for theming
+					// Get zone info (keep async for now, can optimize later)
 					const zoneInfo = await this.getZoneInfo(thread.structureId);
-
-					// Get excerpt
-					const excerpt = await this.getFirstPostExcerpt(thread.id);
 
 					return {
 						id: thread.id,
@@ -617,12 +592,40 @@ export class ThreadService {
 				})
 				.returning();
 
-			// Handle tags if provided
+			// 1️⃣  Create the very first post inside this thread so the UI has content
+			await postService.createPost({
+				content,
+				threadId: newThread.id,
+				userId,
+				replyToPostId: undefined
+			});
+
+			// 2️⃣  Handle tags if provided
 			if (tagNames && tagNames.length > 0) {
 				await this.addTagsToThread(newThread.id, tagNames);
 			}
 
-			// Fetch the complete thread with relations
+			// 3️⃣  Emit event-log for analytics / notifications
+			try {
+				await eventLogger.logThreadCreated(userId, String(newThread.id));
+			} catch (err) {
+				logger.warn('ThreadService', 'Failed to emit thread_created event', { err });
+			}
+
+			// Emit achievement event
+			try {
+				await AchievementEventEmitter.emitThreadCreated(userId, {
+					id: newThread.id,
+					forumId: newThread.structureId,
+					title: newThread.title,
+					tags: tagNames || [],
+					createdAt: newThread.createdAt
+				});
+			} catch (err) {
+				logger.warn('ThreadService', 'Failed to emit achievement thread_created event', { err });
+			}
+
+			// 4️⃣  Fetch the complete thread with first-post count updated
 			const completeThread = await this.getThreadById(newThread.id);
 
 			if (!completeThread) {
@@ -866,6 +869,44 @@ export class ThreadService {
 		} catch (error) {
 			logger.warn('ThreadService', 'Failed to fetch excerpt', { threadId, error });
 			return null;
+		}
+	}
+
+	/**
+	 * Batch fetch first post excerpts for multiple threads (fixes N+1)
+	 */
+	private async getFirstPostExcerptsBatch(
+		threadIds: number[]
+	): Promise<Array<{ threadId: number; excerpt: string | null }>> {
+		if (threadIds.length === 0) return [];
+
+		try {
+			// Get first post for each thread using a more compatible approach
+			const firstPosts = await db
+				.select({
+					threadId: posts.threadId,
+					content: posts.content
+				})
+				.from(posts)
+				.where(
+					and(
+						inArray(posts.threadId, threadIds),
+						// Only get posts that are the earliest for their thread
+						sql`${posts.createdAt} = (SELECT MIN(${posts.createdAt}) FROM ${posts} p2 WHERE p2.${posts.threadId} = ${posts.threadId})`
+					)
+				);
+
+			return firstPosts.map((post) => ({
+				threadId: post.threadId,
+				excerpt: post.content ? this.stripMarkup(post.content).substring(0, 150) : null
+			}));
+		} catch (error) {
+			logger.warn('ThreadService', 'Failed to batch fetch excerpts', {
+				threadIds: threadIds.length,
+				error
+			});
+			// Fallback: return empty excerpts for all threads
+			return threadIds.map((threadId) => ({ threadId, excerpt: null }));
 		}
 	}
 }

@@ -8,6 +8,7 @@ import OverviewTab from '@/components/profile/OverviewTab';
 import InventoryTab from '@/components/profile/InventoryTab';
 import FriendsTab from '@/components/profile/FriendsTab';
 import WhaleWatchTab from '@/components/profile/WhaleWatchTab';
+import AchievementsTab from '@/components/profile/AchievementsTab';
 import { XPProfileSection } from '@/components/profile/XPProfileSection';
 import { CosmeticControlPanel } from '@/components/profile/CosmeticControlPanel';
 import { ProfileSkeleton } from '@/components/profile/ProfileSkeleton';
@@ -192,7 +193,7 @@ export default function ProfilePage() {
 											value="achievements"
 											className="mt-0 focus-visible:outline-none focus-visible:ring-0"
 										>
-											<XPProfileSection userId={profile.id} />
+											<AchievementsTab profile={profile} isOwnProfile={isOwnProfile} />
 										</TabsContent>
 										<TabsContent
 											value="inventory"

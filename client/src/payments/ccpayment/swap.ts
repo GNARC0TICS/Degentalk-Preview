@@ -4,7 +4,6 @@
  * This module provides currency swap functionality using CCPayment
  */
 
-import { ccpaymentClient } from './ccpayment-client';
 import { generateOrderId } from './utils';
 import { SupportedCurrency } from './types';
 

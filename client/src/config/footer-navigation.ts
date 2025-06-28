@@ -20,6 +20,7 @@ export const footerNavigation: FooterNavigationSection[] = [
 			{ label: 'Zones', href: '/zones' },
 			{ label: 'Missions', href: '/missions' },
 			{ label: 'Shop', href: '/shop' },
+			{ label: 'Degen Index', href: '/degen-index' },
 			{ label: 'Leaderboard', href: '/leaderboard' }
 		]
 	},

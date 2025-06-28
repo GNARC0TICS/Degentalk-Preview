@@ -7,6 +7,7 @@ import { ThreadListSkeleton } from '@/components/ui/thread-skeleton';
 import type { ThreadFiltersState } from '@/components/forum/ThreadFilters';
 import type { ThreadDisplay, ThreadsApiResponse } from '@/types/thread.types';
 import { PAGINATION_CONFIG } from '@/config/pagination.config';
+import { ThreadActionsProvider } from '@/features/forum/contexts/ThreadActionsContext';
 
 interface ThreadListProps {
 	forumId: number;
@@ -145,7 +146,9 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 		<div>
 			{/* Thread List */}
 			{threads.map((thread: ThreadDisplay) => (
-				<ThreadCard key={thread.id} thread={thread} />
+				<ThreadActionsProvider key={thread.id} thread={thread}>
+					<ThreadCard thread={thread} />
+				</ThreadActionsProvider>
 			))}
 
 			{pagination.totalThreads > 0 && pagination.totalPages > 1 && (

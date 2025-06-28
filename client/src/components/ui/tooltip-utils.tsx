@@ -16,18 +16,32 @@ export function SafeTooltip({
 	content: React.ReactNode;
 	children: React.ReactElement;
 	side?: 'top' | 'right' | 'bottom' | 'left';
+	sideOffset?: number;
+	collisionPadding?: number;
+	hideOnMobile?: boolean;
 	[key: string]: any;
 }) {
-	// Only render the tooltip if we have both content and a valid trigger element
+	// Hide tooltips on very small screens if requested
+	if (props.hideOnMobile && typeof window !== 'undefined' && window.innerWidth < 400) {
+		return children;
+	}
+
 	if (!content || !React.isValidElement(children)) {
 		return children || null;
 	}
+
+	const { sideOffset = 4, collisionPadding = 8, ...rest } = props;
 
 	return (
 		<TooltipProvider>
 			<Tooltip>
 				<TooltipTrigger asChild>{children}</TooltipTrigger>
-				<TooltipContent side={side} {...props}>
+				<TooltipContent
+					side={side}
+					sideOffset={sideOffset}
+					collisionPadding={collisionPadding}
+					{...rest}
+				>
 					{content}
 				</TooltipContent>
 			</Tooltip>
@@ -47,12 +61,21 @@ export function ButtonTooltip({
 	content: React.ReactNode;
 	children: React.ReactElement;
 	side?: 'top' | 'right' | 'bottom' | 'left';
+	sideOffset?: number;
+	collisionPadding?: number;
+	hideOnMobile?: boolean;
 	[key: string]: any;
 }) {
-	// If no content or invalid element, just return the children
+	// Hide tooltips on very small screens if requested
+	if (props.hideOnMobile && typeof window !== 'undefined' && window.innerWidth < 400) {
+		return children;
+	}
+
 	if (!content || !React.isValidElement(children)) {
 		return children || null;
 	}
+
+	const { sideOffset = 4, collisionPadding = 8, ...rest } = props;
 
 	// Make sure the child has necessary a11y attributes for buttons
 	const enhancedChild = React.cloneElement(children, {
@@ -64,7 +87,12 @@ export function ButtonTooltip({
 		<TooltipProvider>
 			<Tooltip>
 				<TooltipTrigger asChild>{enhancedChild}</TooltipTrigger>
-				<TooltipContent side={side} {...props}>
+				<TooltipContent
+					side={side}
+					sideOffset={sideOffset}
+					collisionPadding={collisionPadding}
+					{...rest}
+				>
 					{content}
 				</TooltipContent>
 			</Tooltip>

@@ -17,23 +17,13 @@ import {
 } from 'lucide-react';
 import { ForumListItem } from '@/features/forum/components/ForumListItem';
 import { Wide } from '@/layout/primitives/Wide';
-import {
-	ForumBreadcrumbs,
-	createForumBreadcrumbs,
-	type BreadcrumbItem
-} from '@/components/navigation/ForumBreadcrumbs';
+import { ForumBreadcrumbs, type BreadcrumbItem } from '@/components/navigation/ForumBreadcrumbs';
 import { getForumSpacing, getForumLayout } from '@/utils/spacing-constants';
 
 const ZonePage: React.FC = () => {
 	const params = useParams<{ slug: string }>();
 	const slug = params?.slug;
 	const { getZone, isLoading, error: contextError } = useForumStructure();
-	// const [currentPage, setCurrentPage] = useState(1); // Removed
-	// const threadsPerPage = 20; // Removed
-
-	if (slug === 'general') {
-		return <NotFound />;
-	}
 
 	const zone = slug ? getZone(slug) : null;
 	const displayName = zone?.name;
@@ -46,6 +36,10 @@ const ZonePage: React.FC = () => {
 			document.title = `${displayName} | Zones | Degentalk`;
 		}
 	}, [displayName]);
+
+	if (slug === 'general') {
+		return <NotFound />;
+	}
 
 	if (!slug) {
 		return <NotFound />;

@@ -1,0 +1,39 @@
+/**
+ * Achievement System Exports
+ *
+ * Central exports for the achievement system components.
+ */
+
+// Core services
+export { AchievementProcessorService } from './achievement-processor.service';
+export { AchievementAdminService } from './achievement-admin.service';
+
+// Event system
+export { AchievementEventEmitter } from '../../../core/events/achievement-events.service';
+
+// Evaluators
+export { DegenAchievementEvaluators } from './evaluators/degen-evaluators';
+
+// Templates
+export {
+	getAllAchievementTemplates,
+	getTemplateById,
+	getTemplatesByTags,
+	getTemplatesByCategory,
+	CORE_ACHIEVEMENT_TEMPLATES,
+	CULTURAL_ACHIEVEMENT_TEMPLATES
+} from './templates/achievement-templates';
+
+// Controller and routes
+export { AchievementController } from './achievement.controller';
+export { achievementRoutes } from './achievement.routes';
+
+// Types
+export type { AchievementProgress } from './achievement-processor.service';
+export type {
+	AchievementFilters,
+	AchievementStats,
+	AchievementWithStats
+} from './achievement-admin.service';
+export type { AchievementTemplate } from './templates/achievement-templates';
+export type { EvaluatorConfig } from './evaluators/degen-evaluators';

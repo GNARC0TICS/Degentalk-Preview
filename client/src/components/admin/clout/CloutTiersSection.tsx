@@ -24,25 +24,6 @@ export function CloutTiersSection({ tiers, isLoading }: CloutTiersSectionProps) 
 		);
 	}
 
-	const getTierIcon = (tier: CloutTier) => {
-		switch (tier.id) {
-			case 'newcomer':
-				return '👋';
-			case 'known':
-				return '👤';
-			case 'respected':
-				return '⭐';
-			case 'influential':
-				return '💎';
-			case 'feared':
-				return '🔥';
-			case 'mythic':
-				return '👑';
-			default:
-				return '🎯';
-		}
-	};
-
 	const getTierEffectPreview = (tier: CloutTier) => {
 		if (!tier.titleEffect) return null;
 

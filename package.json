@@ -40,6 +40,7 @@
 		"seed:dev-subscriptions": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-dev-subscriptions.ts",
 		"seed:dev-complete": "npm run seed:users && npm run seed:dev-wallet && npm run seed:dev-subscriptions",
 		"seed:threads": "npm run seed:all",
+		"seed:achievements": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/db/seed-achievements.ts",
 		"sync:forums": "npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/dev/syncForumsToDB.ts",
 		"sync:check-forum-config": "npx dotenv-cli -e env.local -- tsx scripts/ops/check-forum-config-sync.ts",
 		"dev:fresh-wallet": "npx dotenv-cli -e env.local -- tsx scripts/dev/setup-fresh-wallet-test.ts",

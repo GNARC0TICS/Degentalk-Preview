@@ -48,6 +48,8 @@ import editorRoutes from './src/domains/editor/editor.routes';
 // import settingsRoutes from './src/domains/settings/settings.routes';
 // Import domain-based profile routes
 import profileRoutes from './src/domains/profile/profile.routes';
+// Import development routes
+import devRoutes from './src/routes/dev.routes';
 // Import domain-based relationships routes
 import relationshipsRoutes from './src/domains/social/relationships.routes';
 // Import domain-based whale watch routes
@@ -107,6 +109,11 @@ import session from 'express-session';
 // X integration routes
 import xAuthRoutes from './src/domains/auth/routes/xAuthRoutes';
 import xShareRoutes from './src/domains/share/routes/xShareRoutes';
+import rateLimit from 'express-rate-limit';
+import { randomUUID } from 'crypto';
+import { analyticsEvents } from '@schema/system/analyticsEvents';
+import gamificationRoutes from './src/domains/gamification/gamification.routes';
+import { achievementRoutes } from './src/domains/gamification/achievements';
 
 export async function registerRoutes(app: Express): Promise<Server> {
 	// Test
@@ -275,6 +282,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	// Set up whale watch routes with domain-based approach
 	app.use('/api', whaleWatchRoutes);
 
+	// Set up development routes (dev mode only)
+	app.use('/api/dev', devRoutes);
+
 	// Set up messaging routes with domain-based approach
 	app.use('/api/messages', messageRoutes);
 
@@ -305,16 +315,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	// Set up dictionary routes
 	app.use('/api/dictionary', dictionaryRoutes);
 
-	// Removed legacy route registrations:
-	// - registerSettingsRoutes(app) -> Migrated to domains/settings/settings.routes.ts
-	// - registerEditorRoutes(app) -> Migrated to domains/editor/editor.routes.ts
-	// - registerProfileRoutes(app) -> Migrated to domains/profile/profile.routes.ts
-	// - registerUserRelationshipRoutes(app) -> Migrated to domains/social/relationships.routes.ts
-	// - registerMessageRoutes(app) -> Migrated to domains/messaging/message.routes.ts
-	// - registerVaultRoutes(app) -> Migrated to domains/engagement/vault/vault.routes.ts
-	// - registerForumRulesRoutes(app) -> Migrated to domains/forum/rules/rules.routes.ts
-	// - setupAuth(app) -> Migrated to domains/auth/auth.routes.ts
-	// - registerAnnouncementRoutes(app) -> Migrated to domains/admin/sub-domains/announcements
+	// Set up gamification routes
+	app.use('/api/gamification', gamificationRoutes);
+
+	// Set up achievement routes
+	app.use('/api/achievements', achievementRoutes);
+
+	// ---------------------------------------------------------------------------
+	// 📈 Public Analytics Beacon Route (rate-limited 100 req/min per IP)
+	// ---------------------------------------------------------------------------
+
+	const analyticsLimiter = rateLimit({
+		windowMs: 60 * 1000,
+		max: 100,
+		standardHeaders: true,
+		legacyHeaders: false
+	});
+
+	app.post('/api/analytics/track', analyticsLimiter, async (req: Request, res: Response) => {
+		try {
+			const schema = z.object({
+				event: z.string().max(100),
+				threadId: z.number().int().optional(),
+				data: z.record(z.any()).optional()
+			});
+			const parsed = schema.safeParse(req.body);
+			if (!parsed.success) {
+				return res.status(400).json({ error: 'Invalid payload' });
+			}
+			const { event, threadId, data } = parsed.data;
+			await db.insert(analyticsEvents).values({
+				userId: (req as any).user?.id ?? null,
+				sessionId: req.cookies?.session_id ?? null,
+				type: event,
+				data: data ?? { threadId },
+				ipAddress: req.ip,
+				userAgent: req.headers['user-agent'] || null
+			});
+			return res.status(204).end();
+		} catch (e) {
+			console.error('Analytics track error', e);
+			return res.status(500).json({ error: 'Failed to record analytics' });
+		}
+	});
 
 	// Register the global error handler as the final middleware
 	app.use(globalErrorHandler);

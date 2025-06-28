@@ -48,6 +48,7 @@ import { seedEconomySettings } from '../scripts/db/seed-economy-settings';
 import { createMissingTables } from '../scripts/db/create-missing-tables';
 import { seedForumsFromConfig } from '../scripts/seed/seedForumsFromConfig';
 import { initEventNotificationListener } from './src/domains/notifications/event-notification-listener';
+import './src/core/background-processor'; // Import to start background processing
 
 // Startup logging helper
 const startupLog = (message: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
@@ -137,6 +138,9 @@ app.use(traceMiddleware);
 		startupLog('Initializing event notification listener...');
 		initEventNotificationListener();
 		startupLog('Event notification listener initialized.', 'success');
+
+		// Achievement background processor is auto-started via import
+		startupLog('Achievement background processor started.', 'success');
 
 		// Start the server
 		const port = process.env.PORT ? parseInt(process.env.PORT) : 5001;

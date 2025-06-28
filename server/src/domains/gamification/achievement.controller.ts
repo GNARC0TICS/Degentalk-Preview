@@ -1,0 +1,481 @@
+/**
+ * Achievement API Controller
+ *
+ * RESTful endpoints for achievement tracking, progress monitoring,
+ * and reward management.
+ */
+
+import type { Request, Response } from 'express';
+import { z } from 'zod';
+import { achievementService, AchievementService } from './achievement.service';
+import type { AchievementRequirement } from './achievement.service';
+import { logger } from '../../core/logger';
+import { AppError } from '../../core/errors';
+
+// Validation schemas
+const getUserAchievementsSchema = z.object({
+	userId: z.string().transform(Number).pipe(z.number().int().min(1))
+});
+
+const getProgressSchema = z.object({
+	userId: z.string().transform(Number).pipe(z.number().int().min(1)),
+	achievementIds: z
+		.string()
+		.optional()
+		.transform((str) => (str ? str.split(',').map(Number) : undefined))
+});
+
+const awardAchievementSchema = z.object({
+	userId: z.number().int().min(1),
+	achievementId: z.number().int().min(1)
+});
+
+const checkAchievementsSchema = z.object({
+	userId: z.number().int().min(1),
+	actionType: z.string().min(1).max(100),
+	metadata: z.record(z.any()).optional()
+});
+
+const createAchievementSchema = z.object({
+	name: z.string().min(1).max(100),
+	description: z.string().min(1).max(500),
+	iconUrl: z.string().url().optional(),
+	rewardXp: z.number().int().min(0).max(10000),
+	rewardPoints: z.number().int().min(0).max(10000),
+	requirement: z.object({
+		type: z.enum(['count', 'threshold', 'streak', 'composite']),
+		action: z.string().min(1).max(100),
+		target: z.number().int().min(1),
+		timeframe: z.enum(['daily', 'weekly', 'monthly', 'lifetime']).optional(),
+		conditions: z.record(z.any()).optional()
+	}),
+	isActive: z.boolean().optional().default(true)
+});
+
+const getLeaderboardSchema = z.object({
+	limit: z.string().transform(Number).pipe(z.number().int().min(1).max(100)).optional().default(50)
+});
+
+export class AchievementController {
+	private service: AchievementService;
+
+	constructor() {
+		this.service = achievementService;
+	}
+
+	/**
+	 * GET /api/gamification/achievements
+	 * Get all available achievements
+	 */
+	async getAllAchievements(req: Request, res: Response) {
+		try {
+			const activeOnly = req.query.active !== 'false';
+			const achievements = await this.service.getAllAchievements(activeOnly);
+
+			// Group by category for better organization
+			const grouped = achievements.reduce(
+				(acc, achievement) => {
+					const category = achievement.category;
+					if (!acc[category]) {
+						acc[category] = [];
+					}
+					acc[category].push(achievement);
+					return acc;
+				},
+				{} as Record<string, typeof achievements>
+			);
+
+			res.json({
+				success: true,
+				data: {
+					achievements,
+					grouped,
+					stats: {
+						total: achievements.length,
+						byCategory: Object.fromEntries(
+							Object.entries(grouped).map(([cat, items]) => [cat, items.length])
+						),
+						byRarity: achievements.reduce(
+							(acc, a) => {
+								acc[a.rarity] = (acc[a.rarity] || 0) + 1;
+								return acc;
+							},
+							{} as Record<string, number>
+						)
+					}
+				}
+			});
+		} catch (error) {
+			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting all achievements:', error);
+			res.status(500).json({
+				success: false,
+				error: 'Internal server error'
+			});
+		}
+	}
+
+	/**
+	 * GET /api/gamification/achievements/user/:userId
+	 * Get user's achievement statistics and completed achievements
+	 */
+	async getUserAchievements(req: Request, res: Response) {
+		try {
+			const { userId } = getUserAchievementsSchema.parse(req.params);
+
+			const stats = await this.service.getUserAchievementStats(userId);
+
+			res.json({
+				success: true,
+				data: stats
+			});
+		} catch (error) {
+			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting user achievements:', error);
+			if (error instanceof z.ZodError) {
+				res.status(400).json({
+					success: false,
+					error: 'Validation error',
+					details: error.errors
+				});
+			} else {
+				res.status(500).json({
+					success: false,
+					error: 'Internal server error'
+				});
+			}
+		}
+	}
+
+	/**
+	 * GET /api/gamification/achievements/my-stats
+	 * Get current user's achievement statistics
+	 */
+	async getMyAchievements(req: Request, res: Response) {
+		try {
+			const userId = req.user?.id;
+			if (!userId) {
+				throw new AppError('Authentication required', 401);
+			}
+
+			const stats = await this.service.getUserAchievementStats(userId);
+
+			res.json({
+				success: true,
+				data: stats
+			});
+		} catch (error) {
+			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting user achievements:', error);
+			if (error instanceof AppError) {
+				res.status(error.statusCode).json({
+					success: false,
+					error: error.message
+				});
+			} else {
+				res.status(500).json({
+					success: false,
+					error: 'Internal server error'
+				});
+			}
+		}
+	}
+
+	/**
+	 * GET /api/gamification/achievements/progress/:userId
+	 * Get user's progress towards achievements
+	 */
+	async getUserProgress(req: Request, res: Response) {
+		try {
+			const { userId, achievementIds } = getProgressSchema.parse({
+				...req.params,
+				...req.query
+			});
+
+			const progress = await this.service.getUserAchievementProgress(userId, achievementIds);
+
+			// Separate completed and in-progress achievements
+			const completed = progress.filter((p) => p.isCompleted);
+			const inProgress = progress.filter((p) => !p.isCompleted && p.progressPercentage > 0);
+			const notStarted = progress.filter((p) => !p.isCompleted && p.progressPercentage === 0);
+
+			res.json({
+				success: true,
+				data: {
+					all: progress,
+					completed,
+					inProgress,
+					notStarted,
+					stats: {
+						total: progress.length,
+						completed: completed.length,
+						inProgress: inProgress.length,
+						completionRate: progress.length > 0 ? (completed.length / progress.length) * 100 : 0
+					}
+				}
+			});
+		} catch (error) {
+			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting user progress:', error);
+			if (error instanceof z.ZodError) {
+				res.status(400).json({
+					success: false,
+					error: 'Validation error',
+					details: error.errors
+				});
+			} else {
+				res.status(500).json({
+					success: false,
+					error: 'Internal server error'
+				});
+			}
+		}
+	}
+
+	/**
+	 * GET /api/gamification/achievements/my-progress
+	 * Get current user's achievement progress
+	 */
+	async getMyProgress(req: Request, res: Response) {
+		try {
+			const userId = req.user?.id;
+			if (!userId) {
+				throw new AppError('Authentication required', 401);
+			}
+
+			const achievementIds = req.query.achievementIds
+				? String(req.query.achievementIds).split(',').map(Number)
+				: undefined;
+
+			const progress = await this.service.getUserAchievementProgress(userId, achievementIds);
+
+			// Separate completed and in-progress achievements
+			const completed = progress.filter((p) => p.isCompleted);
+			const inProgress = progress.filter((p) => !p.isCompleted && p.progressPercentage > 0);
+			const notStarted = progress.filter((p) => !p.isCompleted && p.progressPercentage === 0);
+
+			res.json({
+				success: true,
+				data: {
+					all: progress,
+					completed,
+					inProgress,
+					notStarted,
+					stats: {
+						total: progress.length,
+						completed: completed.length,
+						inProgress: inProgress.length,
+						completionRate: progress.length > 0 ? (completed.length / progress.length) * 100 : 0
+					}
+				}
+			});
+		} catch (error) {
+			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting user progress:', error);
+			if (error instanceof AppError) {
+				res.status(error.statusCode).json({
+					success: false,
+					error: error.message
+				});
+			} else {
+				res.status(500).json({
+					success: false,
+					error: 'Internal server error'
+				});
+			}
+		}
+	}
+
+	/**
+	 * POST /api/gamification/achievements/check
+	 * Check and award achievements for a user action
+	 */
+	async checkAchievements(req: Request, res: Response) {
+		try {
+			const { userId, actionType, metadata } = checkAchievementsSchema.parse(req.body);
+
+			const awardedAchievements = await this.service.checkAndAwardAchievements(
+				userId,
+				actionType,
+				metadata
+			);
+
+			res.json({
+				success: true,
+				data: {
+					awarded: awardedAchievements,
+					count: awardedAchievements.length
+				},
+				message:
+					awardedAchievements.length > 0
+						? `Awarded ${awardedAchievements.length} achievement(s)`
+						: 'No new achievements awarded'
+			});
+		} catch (error) {
+			logger.error('ACHIEVEMENT_CONTROLLER', 'Error checking achievements:', error);
+			if (error instanceof z.ZodError) {
+				res.status(400).json({
+					success: false,
+					error: 'Validation error',
+					details: error.errors
+				});
+			} else {
+				res.status(500).json({
+					success: false,
+					error: 'Internal server error'
+				});
+			}
+		}
+	}
+
+	/**
+	 * POST /api/gamification/achievements/award
+	 * Manually award an achievement to a user (Admin only)
+	 */
+	async awardAchievement(req: Request, res: Response) {
+		try {
+			const { userId, achievementId } = awardAchievementSchema.parse(req.body);
+
+			await this.service.awardAchievement(userId, achievementId);
+
+			res.json({
+				success: true,
+				message: `Achievement ${achievementId} awarded to user ${userId}`
+			});
+		} catch (error) {
+			logger.error('ACHIEVEMENT_CONTROLLER', 'Error awarding achievement:', error);
+			if (error instanceof z.ZodError) {
+				res.status(400).json({
+					success: false,
+					error: 'Validation error',
+					details: error.errors
+				});
+			} else if (error instanceof Error && error.message.includes('not found')) {
+				res.status(404).json({
+					success: false,
+					error: error.message
+				});
+			} else {
+				res.status(500).json({
+					success: false,
+					error: 'Internal server error'
+				});
+			}
+		}
+	}
+
+	/**
+	 * POST /api/gamification/achievements
+	 * Create a new achievement (Admin only)
+	 */
+	async createAchievement(req: Request, res: Response) {
+		try {
+			const achievementData = createAchievementSchema.parse(req.body);
+
+			const achievement = await this.service.createAchievement(achievementData);
+
+			res.status(201).json({
+				success: true,
+				data: achievement,
+				message: `Achievement "${achievement.name}" created successfully`
+			});
+		} catch (error) {
+			logger.error('ACHIEVEMENT_CONTROLLER', 'Error creating achievement:', error);
+			if (error instanceof z.ZodError) {
+				res.status(400).json({
+					success: false,
+					error: 'Validation error',
+					details: error.errors
+				});
+			} else {
+				res.status(500).json({
+					success: false,
+					error: 'Internal server error'
+				});
+			}
+		}
+	}
+
+	/**
+	 * GET /api/gamification/achievements/leaderboard
+	 * Get achievement leaderboard
+	 */
+	async getAchievementLeaderboard(req: Request, res: Response) {
+		try {
+			const { limit } = getLeaderboardSchema.parse(req.query);
+
+			const leaderboard = await this.service.getAchievementLeaderboard(limit);
+
+			res.json({
+				success: true,
+				data: leaderboard,
+				meta: {
+					limit,
+					count: leaderboard.length
+				}
+			});
+		} catch (error) {
+			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting achievement leaderboard:', error);
+			res.status(500).json({
+				success: false,
+				error: 'Internal server error'
+			});
+		}
+	}
+
+	/**
+	 * POST /api/gamification/achievements/seed-defaults
+	 * Create default achievements (Admin only)
+	 */
+	async seedDefaultAchievements(req: Request, res: Response) {
+		try {
+			await this.service.createDefaultAchievements();
+
+			res.json({
+				success: true,
+				message: 'Default achievements created successfully'
+			});
+		} catch (error) {
+			logger.error('ACHIEVEMENT_CONTROLLER', 'Error seeding default achievements:', error);
+			res.status(500).json({
+				success: false,
+				error: 'Internal server error'
+			});
+		}
+	}
+
+	/**
+	 * GET /api/gamification/achievements/:id
+	 * Get specific achievement details
+	 */
+	async getAchievementById(req: Request, res: Response) {
+		try {
+			const achievementId = Number(req.params.id);
+			if (isNaN(achievementId)) {
+				throw new AppError('Invalid achievement ID', 400);
+			}
+
+			const achievements = await this.service.getAllAchievements(false);
+			const achievement = achievements.find((a) => a.id === achievementId);
+
+			if (!achievement) {
+				throw new AppError('Achievement not found', 404);
+			}
+
+			res.json({
+				success: true,
+				data: achievement
+			});
+		} catch (error) {
+			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting achievement by ID:', error);
+			if (error instanceof AppError) {
+				res.status(error.statusCode).json({
+					success: false,
+					error: error.message
+				});
+			} else {
+				res.status(500).json({
+					success: false,
+					error: 'Internal server error'
+				});
+			}
+		}
+	}
+}
+
+export const achievementController = new AchievementController();

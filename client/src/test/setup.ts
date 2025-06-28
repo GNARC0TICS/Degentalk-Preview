@@ -24,7 +24,7 @@ class ResizeObserverStub {
 	unobserve() {}
 	disconnect() {}
 }
-// @ts-ignore
+// @ts-expect-error - ResizeObserver is not available in JSDOM
 window.ResizeObserver = window.ResizeObserver || ResizeObserverStub;
 
 // Ensure crypto.randomUUID is stubbed for the JSDOM test environment
@@ -33,8 +33,7 @@ if (typeof globalThis.crypto === 'undefined') {
 	globalThis.crypto = {} as Crypto;
 }
 if (typeof globalThis.crypto.randomUUID !== 'function') {
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore – We are intentionally assigning to readonly for test env
+	// @ts-expect-error - We are intentionally assigning to readonly for test env
 	globalThis.crypto.randomUUID = () => '00000000-0000-0000-0000-000000000000';
 }
 

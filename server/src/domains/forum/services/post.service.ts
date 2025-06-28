@@ -7,6 +7,8 @@
 
 import { db } from '@db';
 import { logger } from '@server/src/core/logger';
+import { eventLogger } from '../../activity/services/event-logger.service';
+import { AchievementEventEmitter } from '../../../core/events/achievement-events.service';
 import { posts, threads, users as usersTable, postReactions } from '@schema';
 import { sql, desc, asc, eq, and, count } from 'drizzle-orm';
 import type { PostWithUser } from '../../../../db/types/forum.types';
@@ -171,6 +173,25 @@ export class PostService {
 
 			if (!completePost) {
 				throw new Error('Failed to retrieve created post');
+			}
+
+			// Emit event for notifications/analytics
+			try {
+				await eventLogger.logPostCreated(userId, String(newPost.id), String(threadId));
+			} catch (err) {
+				logger.warn('PostService', 'Failed to emit post_created event', { err });
+			}
+
+			// Emit achievement event
+			try {
+				await AchievementEventEmitter.emitPostCreated(userId, {
+					id: newPost.id,
+					threadId: newPost.threadId,
+					content: newPost.content,
+					createdAt: newPost.createdAt
+				});
+			} catch (err) {
+				logger.warn('PostService', 'Failed to emit achievement post_created event', { err });
 			}
 
 			logger.info('PostService', 'Post created successfully', {

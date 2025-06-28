@@ -317,6 +317,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		setCurrentMockRoleState(role);
 	};
 
+	// Development auto-login: when in development and real user not authenticated, use mock user unless explicitly logged out
+	React.useEffect(() => {
+		if (
+			isDevelopment && // only in dev
+			!isInitialLoading && // wait until initial auth check completes
+			!fetchedUser && // backend reported no authenticated user
+			!isLoggedOut && // respect explicit logout flag
+			!userState // avoid overriding an existing user state
+		) {
+			const mockUser = mockUsers[currentMockRoleState] ?? mockUsers.user;
+			setUserState(mockUser);
+
+			if (import.meta.env.MODE === 'development') {
+				console.log('[AUTH] Dev auto-login activated with mock role:', currentMockRoleState);
+			}
+		}
+	}, [isDevelopment, isInitialLoading, fetchedUser, isLoggedOut, currentMockRoleState, userState]);
+
 	// Consolidate context value
 	const authContextValue = useMemo(() => {
 		const isAuthenticated = !!userState;
@@ -354,9 +372,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			registerMutation,
 			logoutMutation,
 			// --- Dev Mode Specific --- (Disabled for wallet testing)
-			isDevMode: false,
-			currentMockRole: null,
-			setMockRole: () => {}
+			isDevMode: isDevelopment,
+			currentMockRole: isDevelopment ? currentMockRoleState : null,
+			setMockRole: isDevelopment ? setMockRole : () => {}
 		};
 	}, [
 		userState,
