@@ -27,8 +27,9 @@
 		"db:migrate:Apply": "npx dotenv-cli -e env.local -- drizzle-kit push",
 		"db:drop": "drizzle-kit drop",
 		"db:studio": "drizzle-kit studio",
-		"db:introspect": "npx dotenv-cli -e env.local -- drizzle-kit introspect:pg",
-		"db:drift": "npm run db:introspect && git diff --exit-code drizzle/schema.ts || (echo '⚠ Schema drift detected — run git diff drizzle/schema.ts to review.' && exit 1)",
+		"db:introspect": "npx dotenv-cli -e env.local -- drizzle-kit pull",
+		"db:baseline": "npm run db:introspect && git add -A migrations/postgres/schema.ts migrations/postgres/relations.ts && git commit -m \"chore(db): baseline schema snapshot\" --no-verify || echo 'No changes to baseline'",
+		"db:drift": "npm run db:introspect && git ls-files --error-unmatch migrations/postgres/schema.ts > /dev/null 2>&1 && git diff --exit-code migrations/postgres/schema.ts || (echo '⚠ Schema drift detected — review diff above.' && exit 1)",
 		"db:create-tables": "npx dotenv-cli -e env.local -- npx tsx -r tsconfig-paths/register scripts/db/create-missing-tables.ts",
 		"db:seed-chat": "npx dotenv-cli -e env.local -- npx tsx -r tsconfig-paths/register scripts/db/seed-chat.ts",
 		"seed:all": "npm run db:migrate:Apply && npx dotenv-cli -e env.local -- tsx -r tsconfig-paths/register scripts/seed/seed-all-comprehensive.ts",
@@ -84,7 +85,8 @@
 		"prepare": "simple-git-hooks",
 		"codemod:dry-run": "bash scripts/refactor/component-merge/run-dry-run.sh",
 		"generate:scope": "tsx scripts/dev/generate-scope-guide.ts",
-		"scan:icons": "tsx scripts/tools/icon-scan.ts"
+		"scan:icons": "tsx scripts/tools/icon-scan.ts",
+		"db:reset-hard": "npx dotenv-cli -e env.local -- psql $DATABASE_URL -c \"DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public; DROP SCHEMA IF EXISTS drizzle CASCADE;\" && npm run db:migrate:Apply"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.10.0",
