@@ -88,7 +88,8 @@
 		"generate:scope": "tsx scripts/dev/generate-scope-guide.ts",
 		"scan:icons": "tsx scripts/tools/icon-scan.ts",
 		"db:reset-hard": "npx dotenv-cli -e env.local -- psql $DATABASE_URL -c \"DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public; DROP SCHEMA IF EXISTS drizzle CASCADE;\" && npm run db:migrate:Apply",
-		"docs:frontmatter": "node scripts/docs/add-frontmatter.cjs"
+		"docs:frontmatter": "node scripts/docs/add-frontmatter.cjs",
+		"docs:lint": "markdownlint docs/**/*.md && markdown-link-check -q docs/**/*.md"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.10.0",
@@ -263,6 +264,8 @@
 		"gray-matter": "^4.0.3",
 		"jscodeshift": "^0.15.0",
 		"jsdom": "^26.1.0",
+		"markdown-link-check": "^3.13.7",
+		"markdownlint-cli": "^0.45.0",
 		"node-fetch": "^2.7.0",
 		"postcss": "^8.4.47",
 		"simple-git-hooks": "^2.12.0",

@@ -4,4 +4,8 @@
 # Run code formatter and automatically stage any modifications
 npm run format
 
+# Ensure docs front-matter & lint pass
+npm run docs:frontmatter
+npm run docs:lint || exit 1
+
 git add -A 
