@@ -106,6 +106,20 @@ import {
 } from './src/domains/auth/middleware/auth.middleware';
 import passport from 'passport';
 import session from 'express-session';
+// Security middleware
+import {
+	corsMiddleware,
+	csrfProtection,
+	securityHeaders,
+	csrfTokenProvider,
+	securityAuditLogger,
+	originValidation,
+	developmentSecurityWarning,
+	apiResponseSecurity
+} from './src/core/middleware/security.middleware';
+import { rateLimiters } from './src/core/services/rate-limit.service';
+import healthCheckRouter, { requestMetricsMiddleware } from './src/core/monitoring/health-check';
+import { auditMiddleware } from './src/core/audit/audit-logger';
 // X integration routes
 import xAuthRoutes from './src/domains/auth/routes/xAuthRoutes';
 import xShareRoutes from './src/domains/share/routes/xShareRoutes';
@@ -116,7 +130,38 @@ import gamificationRoutes from './src/domains/gamification/gamification.routes';
 import { achievementRoutes } from './src/domains/gamification/achievements';
 
 export async function registerRoutes(app: Express): Promise<Server> {
-	// Test
+	// ===================================================================
+	// SECURITY MIDDLEWARE - Applied before any routes
+	// ===================================================================
+
+	// 1. Security headers (helmet)
+	app.use(securityHeaders);
+
+	// 2. CORS protection
+	app.use(corsMiddleware);
+
+	// 3. Origin validation
+	app.use(originValidation);
+
+	// 4. General rate limiting
+	app.use('/api/', rateLimiters.general);
+
+	// 5. Security audit logging
+	app.use(securityAuditLogger);
+
+	// 6. API response security headers
+	app.use(apiResponseSecurity);
+
+	// 7. Development security warnings
+	app.use(developmentSecurityWarning);
+
+	// 8. Request metrics collection
+	app.use(requestMetricsMiddleware);
+
+	// 9. Audit logging for security events
+	app.use(auditMiddleware);
+
+	// Test endpoint (before auth setup)
 	app.get('/', async (req, res) => {
 		res.json({ message: 'Backend working!!!' }).status(200);
 	});
@@ -210,6 +255,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	app.use(session(sessionSettings));
 	app.use(passport.initialize());
 	app.use(passport.session());
+
+	// ===================================================================
+	// CSRF PROTECTION - After session setup
+	// ===================================================================
+
+	// CSRF token provider endpoint (must be before CSRF protection)
+	app.use(csrfTokenProvider);
+
+	// CSRF protection for state-changing operations
+	app.use('/api/', (req, res, next) => {
+		// Skip CSRF for safe methods and specific endpoints
+		if (req.method === 'GET' || req.method === 'HEAD' || req.method === 'OPTIONS') {
+			return next();
+		}
+
+		// Skip CSRF for webhooks and public endpoints
+		if (req.path.includes('/webhook') || req.path.includes('/public')) {
+			return next();
+		}
+
+		// Apply CSRF protection
+		return csrfProtection(req, res, next);
+	});
+
+	// ===================================================================
+	// SPECIFIC RATE LIMITING - Applied to sensitive endpoints
+	// ===================================================================
+
+	// Authentication endpoints (strict rate limiting)
+	app.use('/api/auth/login', rateLimiters.auth);
+	app.use('/api/auth/register', rateLimiters.auth);
+	app.use('/api/auth/password-reset', rateLimiters.passwordReset);
+
+	// Admin endpoints (strict rate limiting)
+	app.use('/api/admin/', rateLimiters.admin);
+
+	// Financial endpoints (very strict rate limiting)
+	app.use('/api/wallet/', rateLimiters.financial);
+	app.use('/api/engagement/tip/', rateLimiters.financial);
+	app.use('/api/engagement/rain/', rateLimiters.financial);
+
+	// Forum posting (moderate rate limiting)
+	app.use('/api/forum/threads/', rateLimiters.posting);
+	app.use('/api/forum/posts/', rateLimiters.posting);
 
 	// Use the domain-based auth routes
 	/*
@@ -320,6 +409,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 	// Set up achievement routes
 	app.use('/api/achievements', achievementRoutes);
+
+	// Set up health check and monitoring routes
+	app.use('/api', healthCheckRouter);
 
 	// ---------------------------------------------------------------------------
 	// 📈 Public Analytics Beacon Route (rate-limited 100 req/min per IP)

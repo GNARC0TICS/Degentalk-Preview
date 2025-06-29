@@ -1,58 +1,39 @@
 import React from 'react';
-import { useBrand, BrandProvider } from '@/contexts/BrandContext';
-import { Card, CardHeader, CardTitle, CardContent, Textarea, Button } from '@/components/ui';
-import { brandConfigApi } from '@/features/admin/services/brandConfigApi';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
+import { VisualJsonTabs } from '@/components/admin/VisualJsonTabs';
+import { useJsonConfig } from '@/hooks/useJsonConfig';
+import { brandSchema, type BrandConfig } from '@/schemas/brand.schema';
 
-const Editor: React.FC = () => {
-	const { brandConfig, refresh } = useBrand();
-	const [value, setValue] = React.useState('');
-	const [saving, setSaving] = React.useState(false);
+// Temporary visual builder (Phase-1) – simply displays JSON preview. Enhance later.
+const BrandVisualBuilder: React.FC<{
+	state: BrandConfig;
+	setState: (next: BrandConfig) => void;
+}> = ({ state }) => {
+	return (
+		<pre className="text-xs bg-zinc-800/40 p-4 rounded max-h-[60vh] overflow-auto">
+			{JSON.stringify(state, null, 2)}
+		</pre>
+	);
+};
 
-	React.useEffect(() => {
-		if (brandConfig) setValue(JSON.stringify(brandConfig, null, 2));
-	}, [brandConfig]);
-
-	const handleSave = async () => {
-		try {
-			setSaving(true);
-			const parsed = JSON.parse(value);
-			await brandConfigApi.updateConfig(parsed);
-			await refresh();
-		} catch (err) {
-			alert('Error saving config: ' + (err as Error).message);
-		} finally {
-			setSaving(false);
-		}
-	};
+export default function BrandConfigAdminPage() {
+	const { data, save, loading } = useJsonConfig<BrandConfig>('/admin/brand-config', brandSchema);
 
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle>Brand Configuration</CardTitle>
 			</CardHeader>
-			<CardContent className="space-y-4">
-				<Textarea
-					className="w-full h-[60vh]"
-					value={value}
-					onChange={(e) => setValue(e.target.value)}
-				/>
-				<div className="flex gap-2">
-					<Button onClick={handleSave} disabled={saving}>
-						Save
-					</Button>
-					<Button variant="secondary" onClick={refresh}>
-						Refresh
-					</Button>
-				</div>
+			<CardContent>
+				<VisualJsonTabs<BrandConfig>
+					shapeSchema={brandSchema}
+					value={data}
+					onChange={save}
+					loading={loading}
+				>
+					{(state, setState) => <BrandVisualBuilder state={state} setState={setState} />}
+				</VisualJsonTabs>
 			</CardContent>
 		</Card>
 	);
-};
-
-const BrandConfigAdminPage: React.FC = () => (
-	<BrandProvider>
-		<Editor />
-	</BrandProvider>
-);
-
-export default BrandConfigAdminPage;
+}

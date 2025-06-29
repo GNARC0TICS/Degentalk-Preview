@@ -165,7 +165,7 @@ export class AchievementController {
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting user achievements:', error);
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({
+				res.status(error.httpStatus).json({
 					success: false,
 					error: error.message
 				});
@@ -268,7 +268,7 @@ export class AchievementController {
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting user progress:', error);
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({
+				res.status(error.httpStatus).json({
 					success: false,
 					error: error.message
 				});
@@ -464,7 +464,7 @@ export class AchievementController {
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting achievement by ID:', error);
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({
+				res.status(error.httpStatus).json({
 					success: false,
 					error: error.message
 				});

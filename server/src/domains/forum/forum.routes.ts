@@ -18,7 +18,7 @@ import {
 	threads,
 	users as usersTable
 } from '@schema';
-import { eq, ilike, asc, gt, inArray, lt, desc, and } from 'drizzle-orm';
+import { eq, ilike, asc, gt, inArray, lt, desc, and, sql } from 'drizzle-orm';
 import { isAuthenticated as requireAuth } from '../auth/middleware/auth.middleware';
 import { logger } from '@server/src/core/logger';
 import { forumStructureService } from './services/structure.service';

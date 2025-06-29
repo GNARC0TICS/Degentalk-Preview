@@ -1,192 +1,240 @@
----
-title: index
-status: STABLE
-updated: 2025-06-28
----
-
 # Degentalk Documentation
 
-## Overview
-
-Comprehensive documentation for the Degentalk platform - a modern, highly satirical crypto forum designed for gamblers, investors, traders, and crypto fanatics across the globe.
+## Legend
+| Symbol | Meaning | | Abbrev | Meaning |
+|--------|---------|---|--------|---------|
+| → | leads to | | API | application programming interface |
+| 📚 | documentation | | Auth | authentication |
+| ✅ | complete | | DGT | Degentalk Token |
+| 🚧 | in progress | | XP | experience points |
 
 ## Quick Navigation
 
-### 📚 API Documentation
-- **[Backend Improvements](api/backend-improvements.md)** - Recent performance optimizations and new development endpoints
-- [Forum API Reference](api/forum-api.md) - Forum system endpoints and data structures
-- [Authentication API](api/auth-api.md) - User authentication and session management
-- [Wallet API](api/wallet-api.md) - DGT wallet and cryptocurrency integration
+### 🚀 Getting Started
+- **[Setup Guide](./setup.md)** - Development environment setup
+- **[API Overview](./api/README.md)** - Complete API reference
+- **[Architecture](./architecture.md)** - System design & patterns
+- **[Database Schema](./database.md)** - Complete data model
 
-### 🛠️ Development Guides
-- **[Performance Optimization](development/performance-optimization.md)** - Database optimization, caching, and monitoring
-- **[Developer Tools](guides/developer-tools.md)** - Health monitoring, debugging, and development workflow
-- [Setup Guide](development/setup.md) - Getting started with local development
-- [Testing Guide](development/testing.md) - Unit tests, integration tests, and E2E testing
+### 🔧 API Documentation
+- **[Authentication API](./api/auth/README.md)** - Login, registration, session management
+- **[Forum System API](./api/forum/README.md)** - Threads, posts, zones, categories
+- **[Wallet System API](./api/wallet/README.md)** - DGT tokens, crypto deposits, transfers
+- **[XP & Gamification API](./api/xp/README.md)** - Experience points, levels, achievements
+- **[Chat System API](./api/chat/README.md)** - Shoutbox, rooms, real-time messaging
+- **[Admin Panel API](./api/admin/README.md)** - User management, analytics, settings
+- **[Webhooks & Integration API](./api/webhooks/README.md)** - External integrations, callbacks
 
-### 🏗️ Architecture Documentation
-- [System Architecture](architecture/system-overview.md) - High-level system design and components
-- [Database Schema](architecture/database-schema.md) - Complete database structure and relationships
-- [Cache Architecture](architecture/cache-system.md) - Redis and in-memory caching strategy
-- [Security Model](architecture/security.md) - Authentication, authorization, and data protection
+### 🏗️ Development Guides
+- **[Contributing Guide](./contributing.md)** - How to contribute to the project
+- **[Testing Guide](./testing.md)** - Unit, integration & E2E testing
+- **[Deployment Guide](./deployment.md)** - Production deployment
+- **[Troubleshooting](./troubleshooting.md)** - Common issues & solutions
 
-### 👥 User Guides
-- [Forum User Guide](guides/forum-usage.md) - How to use the forum features
-- [Wallet User Guide](guides/wallet-usage.md) - DGT wallet and cryptocurrency features
-- [Admin Guide](guides/admin-panel.md) - Administrative functions and moderation tools
+### 🎮 Feature Documentation
+- **[Forum Power Features](./features/forum-power-features.md)** - Advanced forum capabilities
+- **[XP System](./features/xp-system.md)** - Gamification mechanics
+- **[DGT Economy](./features/dgt-economy.md)** - Token economy & rewards
+- **[Real-time Features](./features/realtime.md)** - WebSocket & live updates
 
-## Recent Updates
+### 🔐 Security & Administration
+- **[Security Model](./security/README.md)** - Authentication, authorization, data protection
+- **[Admin Features](./admin/README.md)** - Administrative tools & capabilities
+- **[Monitoring](./monitoring.md)** - System monitoring & alerting
+- **[Backup & Recovery](./backup.md)** - Data backup & disaster recovery
 
-### 🚀 Backend Performance Improvements (Latest)
-- **5x faster thread loading** through N+1 query elimination
-- **Redis cache integration** with automatic fallback
-- **Development monitoring tools** for real-time performance tracking
-- **Database indices** for critical query optimization
-- **Security middleware** for development environment protection
+## Project Overview
 
-**Quick Start**: Access development tools at `http://localhost:5001/api/dev/health`
+**Degentalk** is a modern, highly satirical crypto forum platform designed for gamblers, investors, traders, and crypto fanatics across the globe. It aims to be the next viral forum of the century, featuring:
 
-### 🎨 Frontend Improvements
-- **Zone carousel system** with auto-rotation and responsive design
-- **Thread animation optimization** for better clickability
-- **Zone theme consolidation** eliminating redundant configurations
-- **Positioned shoutbox fixes** resolving dynamic import errors
+### Core Features ✅
+- **Hierarchical Forum System** - Zones → Forums → Threads w/ advanced moderation
+- **DGT Token Economy** - Native cryptocurrency w/ CCPayment integration
+- **XP & Gamification** - Levels, achievements, missions & leaderboards
+- **Real-time Chat** - Shoutbox w/ rooms, reactions & WebSocket integration
+- **Advanced Analytics** - Comprehensive user & platform analytics
+- **Admin Panel** - Full administrative interface w/ user management
 
-### 🏛️ System Architecture
-- **Domain-driven backend** with clean separation of concerns
-- **Unified thread architecture** using canonical ThreadDisplay types
-- **Config-driven forum system** with single source of truth
-- **Advanced error handling** with contextual user feedback
+### Technical Stack
+```yaml
+Frontend:
+  - React 18 w/ TypeScript
+  - Vite build system
+  - TanStack Query for state management
+  - Tailwind CSS for styling
 
-## Development Quickstart
+Backend:
+  - Node.js w/ Express
+  - Domain-driven architecture
+  - PostgreSQL w/ Drizzle ORM
+  - Passport.js authentication
 
-### Prerequisites
-```bash
-# Required
-Node.js 18+
-PostgreSQL (local or remote)
-
-# Optional (for enhanced caching)
-Redis
+Infrastructure:
+  - WebSocket for real-time features
+  - CCPayment for crypto integration
+  - Rate limiting & security middleware
+  - Comprehensive logging & monitoring
 ```
 
-### Setup
-```bash
-# 1. Install dependencies
-npm install
+### Architecture Highlights
 
-# 2. Configure environment
-cp env.example env.local
-# Edit env.local with your database credentials
-
-# 3. Initialize database
-npm run db:migrate:Apply
-npm run seed:all
-
-# 4. Start development
-npm run dev
+#### Domain-Driven Design
+```
+server/src/domains/
+├── auth/           # Authentication & session management
+├── forum/          # Forum structure, threads, posts
+├── wallet/         # DGT economy, crypto deposits
+├── xp/             # Experience points, levels
+├── admin/          # Administrative functions
+├── engagement/     # Tips, airdrops, social features
+└── messaging/      # Chat, notifications
 ```
 
-### Health Check
-```bash
-# Verify everything is working
-curl http://localhost:5001/api/dev/health
+#### Database Organization
+```
+db/schema/
+├── user/           # Users, roles, permissions
+├── forum/          # Categories, threads, posts
+├── economy/        # Wallets, XP, transactions
+├── shop/           # Products, inventory
+├── messaging/      # Chat, notifications
+└── admin/          # System administration
 ```
 
-## Key Features
+## Development Workflow
 
-### 🏆 Performance
-- **Sub-50ms response times** for cached content
-- **3-query limit** for complex thread listings (down from 40+)
-- **Automatic cache warming** for common content
-- **Real-time performance monitoring** during development
+### Essential Commands
+```bash
+# Start full development environment
+npm run dev                    # Frontend (5173) + Backend (5001)
 
-### 🔒 Security
-- **Development-focused security** preventing accidental exposure
-- **IP allowlisting** for sensitive endpoints
-- **Production domain blocking** for shared development links
-- **Comprehensive audit logging** for administrative actions
+# Database management
+npm run db:migrate:Apply       # Apply migrations
+npm run db:studio             # Open Drizzle Studio
+npm run seed:all              # Seed with test data
 
-### 🔧 Developer Experience
-- **Hot reload** for both frontend and backend
-- **Comprehensive error messages** with actionable hints
-- **Real-time cache management** via API endpoints
-- **Dynamic log level adjustment** without restarts
+# Forum system
+npm run sync:forums           # Sync forumMap.config.ts → database
 
-## Architecture Highlights
+# Testing
+npm run test:e2e              # Playwright E2E tests
+npm run test:xp               # XP system validation
+```
 
-### Database
-- **PostgreSQL** with optimized indices for development workloads
-- **Drizzle ORM** with type-safe query building
-- **Automatic migrations** with schema validation
+### Key Configuration Files
+- **`forumMap.config.ts`** - Master forum structure configuration
+- **`CLAUDE.md`** - Project instructions for AI assistants
+- **`package.json`** - Essential npm scripts & dependencies
+- **`env.local`** - Environment configuration
 
-### Cache Layer
-- **Redis-first** with automatic memory fallback
-- **Structured cache keys** for predictable invalidation
-- **TTL optimization** based on content freshness requirements
+## API Quick Reference
 
-### API Design
-- **Domain-driven routes** organized by business logic
-- **Consistent error handling** across all endpoints
-- **Development-specific endpoints** for debugging and monitoring
+### Base URL
+```
+Development: http://localhost:5001/api
+Production: https://degentalk.com/api
+```
+
+### Authentication
+```bash
+# Login
+curl -X POST http://localhost:5001/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"testuser","password":"password"}'
+
+# Get current user
+curl -X GET http://localhost:5001/api/auth/user \
+  -H "Cookie: connect.sid=<session-cookie>"
+```
+
+### Common Operations
+```bash
+# Get forum structure
+curl -X GET http://localhost:5001/api/forum/structure
+
+# Check DGT balance
+curl -X GET http://localhost:5001/api/wallet/balances \
+  -H "Cookie: connect.sid=<session>"
+
+# Create thread
+curl -X POST http://localhost:5001/api/forum/threads \
+  -H "Content-Type: application/json" \
+  -H "Cookie: connect.sid=<session>" \
+  -d '{"title":"Bitcoin Analysis","content":"Analysis here...","forumId":"bitcoin-discussion"}'
+```
+
+## Security Features
+
+### Authentication & Authorization
+- **Session-based authentication** w/ Passport.js
+- **Role-based access control** (admin/moderator/user)
+- **JWT tokens** for API access
+- **Rate limiting** on all endpoints
+
+### Data Protection
+- **Input validation** w/ Zod schemas
+- **SQL injection prevention** via parameterized queries
+- **XSS protection** through content sanitization
+- **CSRF protection** for state-changing operations
+
+### Financial Security
+- **Multi-signature withdrawals** for crypto
+- **Real-time monitoring** for suspicious activity
+- **Audit logging** for all financial transactions
+- **Feature gates** for admin-controlled functionality
 
 ## Contributing
 
-### Code Quality
-- Follow existing patterns in domain-driven architecture
-- Write tests for new features
-- Use TypeScript for type safety
-- Document API changes
+### Development Setup
+1. **Clone repository** & install dependencies
+2. **Configure environment** (`env.local`)
+3. **Setup PostgreSQL** database
+4. **Run migrations** & seed data
+5. **Start development server**
 
-### Performance
-- Monitor query counts for N+1 patterns
-- Use batch operations for multiple database calls
-- Implement appropriate caching for repeated operations
-- Test performance impact of changes
+### Code Standards
+- **TypeScript** for type safety
+- **ESLint** for code quality
+- **Domain-driven architecture** patterns
+- **Comprehensive testing** (unit, integration, E2E)
 
-### Documentation
-- Update relevant documentation for new features
-- Include code examples in API documentation
-- Add troubleshooting guides for common issues
-- Keep README files current
+### Submission Process
+1. **Create feature branch** from main
+2. **Implement changes** w/ tests
+3. **Run validation** scripts
+4. **Submit pull request** w/ description
+5. **Code review** & merge
 
-## Support & Troubleshooting
+## Support & Resources
 
-### Common Issues
-- **Slow page loading**: Check `/api/dev/health` for performance metrics
-- **Memory usage growing**: Clear cache via `/api/dev/clear-cache`
-- **Database connection issues**: Verify credentials in `env.local`
-- **Cache not working**: Check Redis status or restart development server
+### Documentation Updates
+This documentation is automatically updated as the codebase evolves. For the latest information:
+
+1. **Check API endpoints** using the development server
+2. **Review recent commits** for breaking changes
+3. **Run test suites** to validate functionality
+4. **Consult troubleshooting guide** for common issues
 
 ### Getting Help
-- Check the troubleshooting sections in relevant documentation
-- Use development health endpoints to diagnose issues
-- Enable debug logging for detailed information
-- Review application logs for error messages
+- **GitHub Issues** - Report bugs & request features
+- **Development Discord** - Real-time developer support
+- **API Status Page** - Monitor system health
+- **Admin Panel** - Built-in monitoring & logs
 
-### Debug Resources
-- **Health Dashboard**: `http://localhost:5001/api/dev/health`
-- **Cache Management**: `POST /api/dev/clear-cache`
-- **Log Level Control**: `POST /api/dev/logs/levels`
-- **Database Testing**: `GET /api/dev/db/test`
+### External Links
+- **Live Demo:** https://degentalk.com
+- **API Status:** https://status.degentalk.com
+- **Developer Discord:** https://discord.gg/degentalk-dev
+- **GitHub Repository:** https://github.com/degentalk/platform
 
 ---
 
-📚 **Documentation Index**: This page serves as the central hub for all Degentalk documentation. Each section links to detailed guides and references for specific aspects of the platform.
+**📚 Documentation Version:** 2.0.0  
+**Last Updated:** 2025-01-01  
+**API Version:** v2
 
-**Last Updated**: 2025-06-28
-
-# 📚 Documentation Index
-
-| Domain | Primary Docs | Owner |
-| ------ | ------------ | ----- |
-| Architecture | [ARCHITECTURE.md](./ARCHITECTURE.md) | @core |
-| API | [API Overview](./api/README.md) | @backend |
-| Database | [db/schema/PERFORMANCE-INDICES.md](../db/schema/PERFORMANCE-INDICES.md) | @db |
-| Frontend | [DynamicLayout](./DynamicLayout.md) | @frontend |
-| Gamification | [gamification/level-flex-system.md](./gamification/level-flex-system.md) | @xp |
-| Forum | [forum/SETUP_GUIDE.md](./forum/SETUP_GUIDE.md) | @forum |
-| Admin | [admin/developer-guide.md](./admin/developer-guide.md) | @admin |
-| Engagement | [engagement/tipping-analytics.md](./engagement/tipping-analytics.md) | @engagement |
-
-> **Note**  All archived or superseded documents are now located under [`docs/archive/`](./archive/) with date-stamped folders (e.g. `2025-06`).
+**Quick Access:**
+- [🚀 Start Development](./setup.md)
+- [📡 API Reference](./api/README.md)
+- [🔧 Troubleshooting](./troubleshooting.md)
+- [🏗️ Architecture](./architecture.md)

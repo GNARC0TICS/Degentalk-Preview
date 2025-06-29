@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { shouldBypassAuth, isDevMode } from '../../../utils/environment';
+import { env, isDevelopment, isProduction } from '@server/src/core/config/environment';
 import { createMockUser } from '../services/auth.service';
 import { logger } from '@server/src/core/logger';
 
@@ -13,20 +13,40 @@ export function hasRole(req: Request, role: string): boolean {
 
 /**
  * Authentication middleware that enforces login requirement
- * In development mode, it can be bypassed based on environment settings
+ * Secure development bypass with strict production protection
  */
 export function isAuthenticated(req: Request, res: Response, next: NextFunction) {
 	if (req.isAuthenticated()) {
 		return next();
 	}
 
-	// Check if we should bypass auth in development mode
-	if (shouldBypassAuth()) {
-		logger.info('AuthMiddleware', 'Bypassing authentication in development mode', {
-			path: req.path
+	// SECURITY: Strict production check - no bypass allowed
+	if (isProduction()) {
+		return res.status(401).json({
+			message: 'Unauthorized',
+			error: 'PRODUCTION_AUTH_REQUIRED'
 		});
-		// Get the dev mode role from headers or default to 'user'
+	}
+
+	// Development mode bypass with strict validation
+	if (isDevelopment() && env.DEV_BYPASS_PASSWORD && !env.DEV_FORCE_AUTH) {
+		logger.warn('AuthMiddleware', 'DEVELOPMENT: Bypassing authentication', {
+			path: req.path,
+			ip: req.ip,
+			userAgent: req.get('User-Agent')
+		});
+
+		// Validate development role
 		const devRole = (req.headers['x-dev-role'] as string) || 'user';
+		const validRoles = ['user', 'moderator', 'admin'];
+
+		if (!validRoles.includes(devRole)) {
+			return res.status(400).json({
+				message: 'Invalid development role',
+				validRoles
+			});
+		}
+
 		const roleId = req.headers['x-dev-role-id']
 			? parseInt(req.headers['x-dev-role-id'] as string, 10)
 			: devRole === 'admin'
@@ -34,12 +54,20 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
 				: devRole === 'moderator'
 					? 2
 					: 3;
-		// Create a mock user with the specified role
+
+		// Create mock user with audit trail
 		(req as any).user = createMockUser(roleId, devRole as any);
+
+		// Add development flag to request for audit purposes
+		(req as any).isDevelopmentBypass = true;
+
 		return next();
 	}
 
-	res.status(401).json({ message: 'Unauthorized' });
+	res.status(401).json({
+		message: 'Unauthorized',
+		hint: isDevelopment() ? 'Set DEV_BYPASS_PASSWORD=true for development bypass' : undefined
+	});
 }
 
 /**
@@ -76,26 +104,50 @@ export function isAuthenticatedOptional(req: Request, res: Response, next: NextF
 
 /**
  * Admin role middleware - requires admin privileges
+ * Secure development bypass with strict production protection
  */
 export function isAdmin(req: Request, res: Response, next: NextFunction) {
+	// Check if user has admin role
 	if (hasRole(req, 'admin')) {
 		return next();
 	}
 
-	// Check if we should bypass auth in development mode with admin role
-	if (shouldBypassAuth() && req.headers['x-dev-role'] === 'admin') {
-		logger.info('AuthMiddleware', 'Bypassing admin authentication in development mode', {
-			path: req.path
+	// SECURITY: Strict production check - no bypass allowed
+	if (isProduction()) {
+		logger.warn('AuthMiddleware', 'PRODUCTION: Admin access denied', {
+			path: req.path,
+			userId: (req.user as any)?.id,
+			userRole: (req.user as any)?.role,
+			ip: req.ip
 		});
+		return res.status(403).json({
+			message: 'Forbidden - Admin access required',
+			error: 'PRODUCTION_ADMIN_REQUIRED'
+		});
+	}
+
+	// Development mode bypass with strict validation
+	if (isDevelopment() && env.DEV_BYPASS_PASSWORD && req.headers['x-dev-role'] === 'admin') {
+		logger.warn('AuthMiddleware', 'DEVELOPMENT: Bypassing admin authentication', {
+			path: req.path,
+			ip: req.ip,
+			userAgent: req.get('User-Agent')
+		});
+
 		const roleId = req.headers['x-dev-role-id']
 			? parseInt(req.headers['x-dev-role-id'] as string, 10)
 			: 1;
 
 		(req as any).user = createMockUser(roleId, 'admin');
+		(req as any).isDevelopmentBypass = true;
+
 		return next();
 	}
 
-	res.status(403).json({ message: 'Forbidden' });
+	res.status(403).json({
+		message: 'Forbidden - Admin access required',
+		hint: isDevelopment() ? 'Set x-dev-role header to "admin" for development bypass' : undefined
+	});
 }
 
 /**
@@ -139,19 +191,35 @@ export function isAdminOrModerator(req: Request, res: Response, next: NextFuncti
 
 /**
  * Middleware for handling developer mode authentication switching
+ * SECURITY: Only available in development with bypass enabled
  */
 export function devModeAuthHandler(req: Request, res: Response, next: NextFunction) {
-	// Only available in development mode
-	if (!isDevMode()) {
+	// SECURITY: Strict production check
+	if (isProduction()) {
 		return res.status(404).json({ message: 'Not found' });
 	}
+
+	// Only available in development mode with bypass enabled
+	if (!isDevelopment() || !env.DEV_BYPASS_PASSWORD) {
+		return res.status(404).json({ message: 'Not found' });
+	}
+
+	// Log security-sensitive operation
+	logger.warn('AuthMiddleware', 'DEVELOPMENT: Role switching requested', {
+		ip: req.ip,
+		userAgent: req.get('User-Agent'),
+		requestedRole: req.query.role
+	});
 
 	// Get the requested role from the query parameters
 	const role = (req.query.role as string) || 'user';
 	const validRoles = ['user', 'moderator', 'admin'];
 
 	if (!validRoles.includes(role)) {
-		return res.status(400).json({ message: 'Invalid role' });
+		return res.status(400).json({
+			message: 'Invalid role',
+			validRoles
+		});
 	}
 
 	// Set a session cookie with the selected role
@@ -159,6 +227,7 @@ export function devModeAuthHandler(req: Request, res: Response, next: NextFuncti
 
 	res.json({
 		message: `Development mode authentication set to: ${role}`,
-		role: role
+		role: role,
+		warning: 'DEVELOPMENT ONLY - This endpoint is disabled in production'
 	});
 }

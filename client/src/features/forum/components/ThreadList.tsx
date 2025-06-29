@@ -8,12 +8,16 @@ import type { ThreadFiltersState } from '@/components/forum/ThreadFilters';
 import type { ThreadDisplay, ThreadsApiResponse } from '@/types/thread.types';
 import { PAGINATION_CONFIG } from '@/config/pagination.config';
 import { ThreadActionsProvider } from '@/features/forum/contexts/ThreadActionsContext';
+import ThreadRow from '@/components/forum/ThreadRow';
+
+type DisplayMode = 'card' | 'table';
 
 interface ThreadListProps {
 	forumId: number;
 	forumSlug: string;
 	availableTags?: Array<{ id: number; name: string; slug: string }>;
 	filters: ThreadFiltersState;
+	displayMode?: DisplayMode;
 }
 
 const THREADS_API_BASE_PATH = '/api/forum/threads';
@@ -22,7 +26,8 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 	forumId,
 	forumSlug,
 	availableTags = [],
-	filters
+	filters,
+	displayMode = 'card'
 }) => {
 	const [page, setPage] = useState(1);
 	const threadsPerPage = PAGINATION_CONFIG.threadsPerPage;
@@ -144,12 +149,32 @@ const ThreadListComponent: React.FC<ThreadListProps> = ({
 
 	return (
 		<div>
-			{/* Thread List */}
-			{threads.map((thread: ThreadDisplay) => (
-				<ThreadActionsProvider key={thread.id} thread={thread}>
-					<ThreadCard thread={thread} />
-				</ThreadActionsProvider>
-			))}
+			{displayMode === 'table' ? (
+				<table className="w-full text-sm text-left border-collapse">
+					<thead>
+						<tr className="bg-zinc-800/70 text-zinc-300">
+							<th className="w-8" />
+							<th className="py-2 px-3">Topic</th>
+							<th className="py-2 px-3 text-center w-20">Replies</th>
+							<th className="py-2 px-3 text-center w-20">Views</th>
+							<th className="py-2 px-3 w-56">Last Post</th>
+						</tr>
+					</thead>
+					<tbody>
+						{threads.map((thread: ThreadDisplay, idx) => (
+							<ThreadActionsProvider key={thread.id} thread={thread}>
+								<ThreadRow thread={thread} index={idx} />
+							</ThreadActionsProvider>
+						))}
+					</tbody>
+				</table>
+			) : (
+				threads.map((thread: ThreadDisplay) => (
+					<ThreadActionsProvider key={thread.id} thread={thread}>
+						<ThreadCard thread={thread} />
+					</ThreadActionsProvider>
+				))
+			)}
 
 			{pagination.totalThreads > 0 && pagination.totalPages > 1 && (
 				<div className="mt-5 flex justify-center">

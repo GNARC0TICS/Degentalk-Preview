@@ -1,7 +1,7 @@
 import type { LucideProps } from 'lucide-react';
 import { LayoutGrid } from 'lucide-react'; // For "All Content"
 import type { MergedZone, MergedForum, MergedTheme } from '@/contexts/ForumStructureContext';
-import { getForumEntityUrl } from '@/utils/forum-routing-helper'; // Assuming this helper provides correct URLs
+import { getSmartForumUrl, getZoneUrl } from '@/utils/forum-urls';
 import type { ComponentType } from 'react';
 
 type LucideIcon = ComponentType<LucideProps>;
@@ -49,7 +49,11 @@ export function buildNavigationTree(zones: MergedZone[]): NavNode[] {
 			id: forum.slug, // Use slug as ID for NavNode
 			name: forum.name,
 			slug: forum.slug,
-			href: getForumEntityUrl(forum), // Flat URL: /forums/[slug]
+			href: getSmartForumUrl({
+				slug: forum.slug,
+				name: forum.name,
+				zoneSlug: parentSemanticThemeKey
+			}),
 			type: 'forum', // Type remains 'forum' for both parent forums and subforums
 			iconEmoji: forum.theme?.icon || parentTheme?.icon, // Prioritize forum's own theme icon
 			iconComponent: undefined, // Resolved at render time by NavItem using theme context
@@ -81,7 +85,7 @@ export function buildNavigationTree(zones: MergedZone[]): NavNode[] {
 			id: zone.slug,
 			name: zone.name,
 			slug: zone.slug,
-			href: `/zones/${zone.slug}`,
+			href: getZoneUrl(zone.slug),
 			type: 'primaryZone', // Keep distinct type for now, or use 'zone' with isPrimary flag
 			iconEmoji: zone.theme?.icon,
 			iconComponent: undefined,
@@ -108,7 +112,7 @@ export function buildNavigationTree(zones: MergedZone[]): NavNode[] {
 			id: zone.slug,
 			name: zone.name,
 			slug: zone.slug,
-			href: `/zones/${zone.slug}`,
+			href: getZoneUrl(zone.slug),
 			type: 'generalCategory', // This type distinguishes rendering in HierarchicalZoneNav. Consider if 'zone' with a flag is better.
 			iconEmoji: zone.theme?.icon,
 			iconComponent: undefined,

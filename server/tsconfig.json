@@ -4,16 +4,20 @@
 		"outDir": "./dist",
 		"baseUrl": "..",
 		"paths": {
-			"@/*": ["client/src/*"],
+			"@/*": ["server/src/*", "client/src/*"],
 			"@shared/*": ["shared/*"],
 			"@server/*": ["server/*"],
 			"@server/src/*": ["server/src/*"],
 			"@server-core/*": ["server/src/core/*"],
+			"@core/*": ["server/src/core/*"],
 			"@server-utils/*": ["server/src/utils/*"],
 			"@server-middleware/*": ["server/src/middleware/*"],
 			"@db": ["db/index.ts"],
 			"@schema": ["db/schema/index.ts"],
-			"@schema/*": ["db/schema/*"]
+			"@schema/*": ["db/schema/*"],
+			"@lib/*": ["lib/*"],
+			"@/db": ["db/index.ts"],
+			"@/db/*": ["db/*"]
 		},
 		"skipLibCheck": true,
 		"noEmitOnError": false

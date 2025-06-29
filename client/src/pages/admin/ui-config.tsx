@@ -52,13 +52,18 @@ import {
 	Upload,
 	MoreHorizontal
 } from 'lucide-react';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import {
 	uiConfigApi,
 	type CreateQuoteData,
 	type QuoteFilters,
 	type PaginationOptions
 } from '@/features/admin/services/uiConfigApi';
+import ProtectedAdminRoute from '@/components/admin/protected-admin-route';
+import { useAdminModule } from '@/hooks/use-admin-modules';
+import { VisualJsonTabs } from '@/components/admin/VisualJsonTabs';
+import { useJsonConfig } from '@/hooks/useJsonConfig';
+import { uiQuotesSchema, type UIQuotes } from '@/schemas/uiQuotes.schema';
 
 // Types
 interface Quote {
@@ -86,7 +91,40 @@ interface QuotesResponse {
 	limit: number;
 }
 
+/* Minimal visual builder – table/inputs will be added in Phase-2 */
+const QuotesVisualBuilder: React.FC<{
+	state: UIQuotes;
+	setState: (next: UIQuotes) => void;
+}> = ({ state }) => (
+	<pre className="text-xs bg-zinc-800/40 p-4 rounded max-h-[60vh] overflow-auto">
+		{JSON.stringify(state, null, 2)}
+	</pre>
+);
+
+function UIConfigContent() {
+	const { data, save, loading } = useJsonConfig<UIQuotes>('/admin/ui-quotes', uiQuotesSchema);
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>UI Quotes Configuration</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<VisualJsonTabs<UIQuotes>
+					shapeSchema={uiQuotesSchema}
+					value={data}
+					onChange={save}
+					loading={loading}
+				>
+					{(state, setState) => <QuotesVisualBuilder state={state} setState={setState} />}
+				</VisualJsonTabs>
+			</CardContent>
+		</Card>
+	);
+}
+
 const UiConfigPage: React.FC = () => {
+	const { toast } = useToast();
 	// State
 	const [activeTab, setActiveTab] = useState('hero');
 	const [quotes, setQuotes] = useState<Quote[]>([]);
@@ -303,258 +341,262 @@ const UiConfigPage: React.FC = () => {
 	};
 
 	return (
-		<div className="container mx-auto p-6">
-			<div className="flex justify-between items-center mb-6">
-				<h1 className="text-3xl font-bold">UI Quote Manager</h1>
-				<div className="flex gap-2">
-					<Button variant="outline" onClick={handleExport}>
-						<Download className="h-4 w-4 mr-2" />
-						Export
-					</Button>
-					<Button onClick={() => setShowCreateDialog(true)}>
-						<Plus className="h-4 w-4 mr-2" />
-						Add Quote
-					</Button>
+		<ProtectedAdminRoute moduleId="ui-config">
+			<div className="container mx-auto p-6">
+				<div className="flex justify-between items-center mb-6">
+					<h1 className="text-3xl font-bold">UI Quote Manager</h1>
+					<div className="flex gap-2">
+						<Button variant="outline" onClick={handleExport}>
+							<Download className="h-4 w-4 mr-2" />
+							Export
+						</Button>
+						<Button onClick={() => setShowCreateDialog(true)}>
+							<Plus className="h-4 w-4 mr-2" />
+							Add Quote
+						</Button>
+					</div>
 				</div>
-			</div>
 
-			<Tabs value={activeTab} onValueChange={setActiveTab}>
-				<TabsList className="grid w-full grid-cols-4">
-					<TabsTrigger value="hero">Hero Quotes</TabsTrigger>
-					<TabsTrigger value="footer">Footer Quotes</TabsTrigger>
-					<TabsTrigger value="toast">Toast Messages</TabsTrigger>
-					<TabsTrigger value="loading">Loading Text</TabsTrigger>
-				</TabsList>
+				<Tabs value={activeTab} onValueChange={setActiveTab}>
+					<TabsList className="grid w-full grid-cols-4">
+						<TabsTrigger value="hero">Hero Quotes</TabsTrigger>
+						<TabsTrigger value="footer">Footer Quotes</TabsTrigger>
+						<TabsTrigger value="toast">Toast Messages</TabsTrigger>
+						<TabsTrigger value="loading">Loading Text</TabsTrigger>
+					</TabsList>
 
-				<div className="mt-6">
-					{/* Search and Filters */}
-					<Card className="mb-6">
-						<CardContent className="pt-6">
-							<div className="flex gap-4">
-								<div className="flex-1">
-									<div className="relative">
-										<Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-										<Input
-											placeholder="Search quotes..."
-											value={searchTerm}
-											onChange={(e) => setSearchTerm(e.target.value)}
-											className="pl-8"
-										/>
+					<div className="mt-6">
+						{/* Search and Filters */}
+						<Card className="mb-6">
+							<CardContent className="pt-6">
+								<div className="flex gap-4">
+									<div className="flex-1">
+										<div className="relative">
+											<Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+											<Input
+												placeholder="Search quotes..."
+												value={searchTerm}
+												onChange={(e) => setSearchTerm(e.target.value)}
+												className="pl-8"
+											/>
+										</div>
 									</div>
+									<Select
+										value={filters.intensity?.[0]?.toString() || ''}
+										onValueChange={(value) =>
+											setFilters((prev) => ({
+												...prev,
+												intensity: value ? [parseInt(value)] : undefined
+											}))
+										}
+									>
+										<SelectTrigger className="w-40">
+											<SelectValue placeholder="Intensity" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="">All Intensities</SelectItem>
+											<SelectItem value="1">Mild (1)</SelectItem>
+											<SelectItem value="2">Medium (2)</SelectItem>
+											<SelectItem value="3">Spicy (3)</SelectItem>
+											<SelectItem value="4">Hot (4)</SelectItem>
+											<SelectItem value="5">Nuclear (5)</SelectItem>
+										</SelectContent>
+									</Select>
+									<Select
+										value={filters.isActive?.toString() || ''}
+										onValueChange={(value) =>
+											setFilters((prev) => ({
+												...prev,
+												isActive: value === '' ? undefined : value === 'true'
+											}))
+										}
+									>
+										<SelectTrigger className="w-32">
+											<SelectValue placeholder="Status" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="">All</SelectItem>
+											<SelectItem value="true">Active</SelectItem>
+											<SelectItem value="false">Inactive</SelectItem>
+										</SelectContent>
+									</Select>
 								</div>
-								<Select
-									value={filters.intensity?.[0]?.toString() || ''}
-									onValueChange={(value) =>
-										setFilters((prev) => ({
-											...prev,
-											intensity: value ? [parseInt(value)] : undefined
-										}))
-									}
-								>
-									<SelectTrigger className="w-40">
-										<SelectValue placeholder="Intensity" />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectItem value="">All Intensities</SelectItem>
-										<SelectItem value="1">Mild (1)</SelectItem>
-										<SelectItem value="2">Medium (2)</SelectItem>
-										<SelectItem value="3">Spicy (3)</SelectItem>
-										<SelectItem value="4">Hot (4)</SelectItem>
-										<SelectItem value="5">Nuclear (5)</SelectItem>
-									</SelectContent>
-								</Select>
-								<Select
-									value={filters.isActive?.toString() || ''}
-									onValueChange={(value) =>
-										setFilters((prev) => ({
-											...prev,
-											isActive: value === '' ? undefined : value === 'true'
-										}))
-									}
-								>
-									<SelectTrigger className="w-32">
-										<SelectValue placeholder="Status" />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectItem value="">All</SelectItem>
-										<SelectItem value="true">Active</SelectItem>
-										<SelectItem value="false">Inactive</SelectItem>
-									</SelectContent>
-								</Select>
-							</div>
-						</CardContent>
-					</Card>
-
-					{/* Quotes Table */}
-					<TabsContent value={activeTab}>
-						<Card>
-							<CardHeader>
-								<CardTitle className="flex items-center justify-between">
-									{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Quotes
-									<Badge variant="secondary">{total} total</Badge>
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								{loading ? (
-									<div className="text-center py-8">Loading quotes...</div>
-								) : quotes.length === 0 ? (
-									<div className="text-center py-8 text-muted-foreground">
-										No quotes found. Create your first quote!
-									</div>
-								) : (
-									<Table>
-										<TableHeader>
-											<TableRow>
-												<TableHead>Headline</TableHead>
-												<TableHead>Tags</TableHead>
-												<TableHead>Intensity</TableHead>
-												<TableHead>Status</TableHead>
-												<TableHead>Performance</TableHead>
-												<TableHead>Actions</TableHead>
-											</TableRow>
-										</TableHeader>
-										<TableBody>
-											{quotes.map((quote) => (
-												<TableRow key={quote.id}>
-													<TableCell>
-														<div>
-															<div className="font-medium">{quote.headline}</div>
-															{quote.subheader && (
-																<div className="text-sm text-muted-foreground">
-																	{quote.subheader}
-																</div>
-															)}
-														</div>
-													</TableCell>
-													<TableCell>
-														<div className="flex flex-wrap gap-1">
-															{quote.tags?.map((tag) => (
-																<Badge key={tag} variant="outline" className="text-xs">
-																	{tag}
-																</Badge>
-															))}
-														</div>
-													</TableCell>
-													<TableCell>
-														<Badge
-															variant={
-																quote.intensity && quote.intensity > 3 ? 'destructive' : 'secondary'
-															}
-														>
-															{quote.intensity || 1}
-														</Badge>
-													</TableCell>
-													<TableCell>
-														<Button
-															variant="ghost"
-															size="sm"
-															onClick={() => handleToggleActive(quote)}
-														>
-															{quote.isActive ? (
-																<Eye className="h-4 w-4 text-green-600" />
-															) : (
-																<EyeOff className="h-4 w-4 text-gray-400" />
-															)}
-														</Button>
-													</TableCell>
-													<TableCell>
-														<div className="text-sm">
-															<div>{quote.impressions} impressions</div>
-															<div>{quote.clicks} clicks</div>
-															<div className="text-xs text-muted-foreground">
-																{quote.impressions > 0
-																	? `${((quote.clicks / quote.impressions) * 100).toFixed(1)}% CTR`
-																	: '0% CTR'}
-															</div>
-														</div>
-													</TableCell>
-													<TableCell>
-														<div className="flex gap-1">
-															<Button
-																variant="ghost"
-																size="sm"
-																onClick={() => openEditDialog(quote)}
-															>
-																<Edit className="h-4 w-4" />
-															</Button>
-															<Button
-																variant="ghost"
-																size="sm"
-																onClick={() => setDeleteConfirm(quote.id)}
-															>
-																<Trash2 className="h-4 w-4 text-red-600" />
-															</Button>
-														</div>
-													</TableCell>
-												</TableRow>
-											))}
-										</TableBody>
-									</Table>
-								)}
 							</CardContent>
 						</Card>
-					</TabsContent>
-				</div>
-			</Tabs>
 
-			{/* Create Quote Dialog */}
-			<Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-				<DialogContent className="max-w-2xl">
-					<DialogHeader>
-						<DialogTitle>
-							Create New {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Quote
-						</DialogTitle>
-					</DialogHeader>
-					<QuoteForm
-						data={formData}
-						onChange={setFormData}
-						onSubmit={handleCreateQuote}
-						onCancel={() => setShowCreateDialog(false)}
-					/>
-				</DialogContent>
-			</Dialog>
+						{/* Quotes Table */}
+						<TabsContent value={activeTab}>
+							<Card>
+								<CardHeader>
+									<CardTitle className="flex items-center justify-between">
+										{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Quotes
+										<Badge variant="secondary">{total} total</Badge>
+									</CardTitle>
+								</CardHeader>
+								<CardContent>
+									{loading ? (
+										<div className="text-center py-8">Loading quotes...</div>
+									) : quotes.length === 0 ? (
+										<div className="text-center py-8 text-muted-foreground">
+											No quotes found. Create your first quote!
+										</div>
+									) : (
+										<Table>
+											<TableHeader>
+												<TableRow>
+													<TableHead>Headline</TableHead>
+													<TableHead>Tags</TableHead>
+													<TableHead>Intensity</TableHead>
+													<TableHead>Status</TableHead>
+													<TableHead>Performance</TableHead>
+													<TableHead>Actions</TableHead>
+												</TableRow>
+											</TableHeader>
+											<TableBody>
+												{quotes.map((quote) => (
+													<TableRow key={quote.id}>
+														<TableCell>
+															<div>
+																<div className="font-medium">{quote.headline}</div>
+																{quote.subheader && (
+																	<div className="text-sm text-muted-foreground">
+																		{quote.subheader}
+																	</div>
+																)}
+															</div>
+														</TableCell>
+														<TableCell>
+															<div className="flex flex-wrap gap-1">
+																{quote.tags?.map((tag) => (
+																	<Badge key={tag} variant="outline" className="text-xs">
+																		{tag}
+																	</Badge>
+																))}
+															</div>
+														</TableCell>
+														<TableCell>
+															<Badge
+																variant={
+																	quote.intensity && quote.intensity > 3
+																		? 'destructive'
+																		: 'secondary'
+																}
+															>
+																{quote.intensity || 1}
+															</Badge>
+														</TableCell>
+														<TableCell>
+															<Button
+																variant="ghost"
+																size="sm"
+																onClick={() => handleToggleActive(quote)}
+															>
+																{quote.isActive ? (
+																	<Eye className="h-4 w-4 text-green-600" />
+																) : (
+																	<EyeOff className="h-4 w-4 text-gray-400" />
+																)}
+															</Button>
+														</TableCell>
+														<TableCell>
+															<div className="text-sm">
+																<div>{quote.impressions} impressions</div>
+																<div>{quote.clicks} clicks</div>
+																<div className="text-xs text-muted-foreground">
+																	{quote.impressions > 0
+																		? `${((quote.clicks / quote.impressions) * 100).toFixed(1)}% CTR`
+																		: '0% CTR'}
+																</div>
+															</div>
+														</TableCell>
+														<TableCell>
+															<div className="flex gap-1">
+																<Button
+																	variant="ghost"
+																	size="sm"
+																	onClick={() => openEditDialog(quote)}
+																>
+																	<Edit className="h-4 w-4" />
+																</Button>
+																<Button
+																	variant="ghost"
+																	size="sm"
+																	onClick={() => setDeleteConfirm(quote.id)}
+																>
+																	<Trash2 className="h-4 w-4 text-red-600" />
+																</Button>
+															</div>
+														</TableCell>
+													</TableRow>
+												))}
+											</TableBody>
+										</Table>
+									)}
+								</CardContent>
+							</Card>
+						</TabsContent>
+					</div>
+				</Tabs>
 
-			{/* Edit Quote Dialog */}
-			<Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-				<DialogContent className="max-w-2xl">
-					<DialogHeader>
-						<DialogTitle>Edit Quote</DialogTitle>
-					</DialogHeader>
-					<QuoteForm
-						data={formData}
-						onChange={setFormData}
-						onSubmit={handleEditQuote}
-						onCancel={() => setShowEditDialog(false)}
-						isEditing
-					/>
-				</DialogContent>
-			</Dialog>
+				{/* Create Quote Dialog */}
+				<Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+					<DialogContent className="max-w-2xl">
+						<DialogHeader>
+							<DialogTitle>
+								Create New {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Quote
+							</DialogTitle>
+						</DialogHeader>
+						<QuoteForm
+							data={formData}
+							onChange={setFormData}
+							onSubmit={handleCreateQuote}
+							onCancel={() => setShowCreateDialog(false)}
+						/>
+					</DialogContent>
+				</Dialog>
 
-			{/* Delete Confirmation */}
-			<AlertDialog open={!!deleteConfirm} onOpenChange={() => setDeleteConfirm(null)}>
-				<AlertDialogContent>
-					<AlertDialogHeader>
-						<AlertDialogTitle>Delete Quote</AlertDialogTitle>
-						<AlertDialogDescription>
-							Are you sure you want to delete this quote? This action cannot be undone.
-						</AlertDialogDescription>
-					</AlertDialogHeader>
-					<AlertDialogFooter>
-						<AlertDialogCancel>Cancel</AlertDialogCancel>
-						<AlertDialogAction
-							onClick={() => {
-								if (deleteConfirm) {
-									handleDeleteQuote(deleteConfirm);
-									setDeleteConfirm(null);
-								}
-							}}
-						>
-							Delete
-						</AlertDialogAction>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
-		</div>
+				{/* Edit Quote Dialog */}
+				<Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+					<DialogContent className="max-w-2xl">
+						<DialogHeader>
+							<DialogTitle>Edit Quote</DialogTitle>
+						</DialogHeader>
+						<QuoteForm
+							data={formData}
+							onChange={setFormData}
+							onSubmit={handleEditQuote}
+							onCancel={() => setShowEditDialog(false)}
+							isEditing
+						/>
+					</DialogContent>
+				</Dialog>
+
+				{/* Delete Confirmation */}
+				<AlertDialog open={!!deleteConfirm} onOpenChange={() => setDeleteConfirm(null)}>
+					<AlertDialogContent>
+						<AlertDialogHeader>
+							<AlertDialogTitle>Delete Quote</AlertDialogTitle>
+							<AlertDialogDescription>
+								Are you sure you want to delete this quote? This action cannot be undone.
+							</AlertDialogDescription>
+						</AlertDialogHeader>
+						<AlertDialogFooter>
+							<AlertDialogCancel>Cancel</AlertDialogCancel>
+							<AlertDialogAction
+								onClick={() => {
+									if (deleteConfirm) {
+										handleDeleteQuote(deleteConfirm);
+										setDeleteConfirm(null);
+									}
+								}}
+							>
+								Delete
+							</AlertDialogAction>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+				</AlertDialog>
+			</div>
+		</ProtectedAdminRoute>
 	);
 };
 

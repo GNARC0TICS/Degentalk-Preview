@@ -204,7 +204,7 @@ export function ForumListItem({
 							// Fallback to legacy URL if no zone context
 							subforumHref = `/forums/${subForum.slug}`;
 						}
-						
+
 						return (
 							<ForumListItem
 								key={subForum.slug}

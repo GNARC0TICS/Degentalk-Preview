@@ -1,13 +1,10 @@
-import React, { useState, useEffect, lazy } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'wouter';
-import { Users, MessageSquare, ArrowRight, Sparkles } from 'lucide-react';
+import { Users, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { AnimatedLogo } from '@/components/ui/animated-logo';
 import { motion, AnimatePresence } from 'framer-motion';
 import { uiConfig } from '@/config/ui.config';
 import type { HeroQuote } from '@/config/ui.config';
-
-const ActiveMembersWidgetLazy = lazy(() => import('@/components/users/ActiveMembersWidget'));
 
 // Fisher-Yates shuffle
 function shuffleArray<T>(array: T[]): T[] {
@@ -144,12 +141,7 @@ export function HeroSection() {
 					</motion.div>
 				</motion.div>
 
-				{/* Active Members Widget (desktop only) */}
-				<div className="hidden lg:block mt-10">
-					<React.Suspense fallback={null}>
-						<ActiveMembersWidgetLazy limit={10} />
-					</React.Suspense>
-				</div>
+				{/* The Active Members Widget has been moved to the sidebar via the widget system */}
 			</div>
 		</section>
 	);

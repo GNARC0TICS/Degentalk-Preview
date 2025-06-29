@@ -3,10 +3,10 @@
  * N+1 query elimination for getZoneInfo calls
  */
 
-import { db } from '@/core/database';
-import { forumStructure } from '@/db/schema';
+import { db } from '@db';
+import { forumStructure } from '@schema';
 import { inArray } from 'drizzle-orm';
-import { logger } from '@/core/logger';
+import { logger } from '@server/src/core/logger';
 
 /**
  * Batch fetch zone information for multiple structure IDs

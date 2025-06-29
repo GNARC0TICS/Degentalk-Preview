@@ -1,7 +1,7 @@
 import React from 'react';
 import { SiteFooter } from '@/components/footer';
 import { CanonicalZoneGrid } from '@/components/forum/CanonicalZoneGrid';
-import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZoneNav';
+import HierarchicalZoneNav from '@/features/forum/components/HierarchicalZoneNav';
 // Corrected import path for useForumStructure and MergedZone type
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedZone } from '@/contexts/ForumStructureContext';

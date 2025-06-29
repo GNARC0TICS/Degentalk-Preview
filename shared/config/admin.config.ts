@@ -75,7 +75,12 @@ export const ADMIN_PERMISSIONS = {
 	'admin.system.view': 'View system settings',
 	'admin.system.manage': 'Manage system settings',
 	'admin.system.backup': 'Manage backups',
-	'admin.system.audit': 'View audit logs'
+	'admin.system.audit': 'View audit logs',
+
+	// Database Editor
+	'admin.database.view': 'View database tables',
+	'admin.database.edit': 'Edit database records',
+	'admin.database.export': 'Export database data'
 } as const;
 
 export type AdminPermission = keyof typeof ADMIN_PERMISSIONS;
@@ -338,6 +343,42 @@ export const adminConfig: AdminConfig = {
 			permissions: ['admin.system.manage'],
 			enabled: true,
 			order: 10
+		},
+		{
+			id: 'ui-config',
+			name: 'UI Configuration',
+			description: 'Manage hero and footer quotes',
+			icon: 'Quote',
+			route: '/admin/ui-config',
+			component: lazy(() => import('@/pages/admin/ui-config')),
+			permissions: ['admin.system.manage'],
+			enabled: true,
+			order: 11
+		},
+		{
+			id: 'live-database',
+			name: 'Live Database Editor',
+			description: 'Browse and edit database tables for moderation and maintenance',
+			icon: 'Database',
+			route: '/admin/live-database',
+			component: lazy(() => import('@/pages/admin/live-database')),
+			permissions: ['admin.database.view', 'admin.database.edit'],
+			enabled: true,
+			order: 12,
+			settings: {
+				beta: true,
+				restrictToTables: [
+					'users',
+					'threads',
+					'posts',
+					'bans',
+					'reports',
+					'roles',
+					'categories',
+					'forum_structure',
+					'tags'
+				]
+			}
 		}
 	],
 
@@ -356,7 +397,10 @@ export const adminConfig: AdminConfig = {
 			'admin.reports.view',
 			'admin.reports.manage',
 			'admin.analytics.view',
-			'admin.system.view'
+			'admin.system.view',
+			'admin.database.view',
+			'admin.database.edit',
+			'admin.database.export'
 		] as AdminPermission[],
 		moderator: [
 			'admin.users.view',

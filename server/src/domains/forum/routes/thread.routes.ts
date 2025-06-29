@@ -12,6 +12,10 @@ import {
 	isAuthenticated as requireAuth,
 	isAdminOrModerator
 } from '../../auth/middleware/auth.middleware';
+import {
+	requireThreadSolvePermission,
+	requireThreadTagPermission
+} from '../services/permissions.service';
 import { forumController } from '../forum.controller';
 import { threadService } from '../services/thread.service';
 import { postService } from '../services/post.service';
@@ -197,99 +201,93 @@ router.post('/', requireAuth, async (req: Request, res: Response) => {
 });
 
 // Update thread solved status
-router.put('/:threadId/solve', requireAuth, async (req: Request, res: Response) => {
-	try {
-		const threadId = parseInt(req.params.threadId);
-		const validatedData = updateThreadSolvedSchema.parse(req.body);
-		const userId = (req.user as any)?.id;
+router.put(
+	'/:threadId/solve',
+	requireAuth,
+	requireThreadSolvePermission,
+	async (req: Request, res: Response) => {
+		try {
+			const threadId = parseInt(req.params.threadId);
+			const validatedData = updateThreadSolvedSchema.parse(req.body);
+			const userId = (req.user as any)?.id;
 
-		if (!userId) {
-			return res.status(401).json({
+			const updatedThread = await threadService.updateThreadSolvedStatus({
+				threadId,
+				solvingPostId: validatedData.solvingPostId
+			});
+
+			if (!updatedThread) {
+				return res.status(404).json({
+					success: false,
+					error: 'Thread not found'
+				});
+			}
+
+			res.json({
+				success: true,
+				data: updatedThread
+			});
+		} catch (error) {
+			logger.error('ThreadRoutes', 'Error in PUT /threads/:threadId/solve', { error });
+
+			if (error instanceof z.ZodError) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid input data',
+					details: error.errors
+				});
+			}
+
+			res.status(500).json({
 				success: false,
-				error: 'User not authenticated'
+				error: 'Failed to update thread'
 			});
 		}
-
-		// TODO: Add permission check - only thread author or moderator can solve
-
-		const updatedThread = await threadService.updateThreadSolvedStatus({
-			threadId,
-			solvingPostId: validatedData.solvingPostId
-		});
-
-		if (!updatedThread) {
-			return res.status(404).json({
-				success: false,
-				error: 'Thread not found'
-			});
-		}
-
-		res.json({
-			success: true,
-			data: updatedThread
-		});
-	} catch (error) {
-		logger.error('ThreadRoutes', 'Error in PUT /threads/:threadId/solve', { error });
-
-		if (error instanceof z.ZodError) {
-			return res.status(400).json({
-				success: false,
-				error: 'Invalid input data',
-				details: error.errors
-			});
-		}
-
-		res.status(500).json({
-			success: false,
-			error: 'Failed to update thread'
-		});
 	}
-});
+);
 
 // Add tags to thread
-router.post('/:threadId/tags', requireAuth, async (req: Request, res: Response) => {
-	try {
-		const threadId = parseInt(req.params.threadId);
-		const validatedData = addTagsSchema.parse(req.body);
-		const userId = (req.user as any)?.id;
+router.post(
+	'/:threadId/tags',
+	requireAuth,
+	requireThreadTagPermission,
+	async (req: Request, res: Response) => {
+		try {
+			const threadId = parseInt(req.params.threadId);
+			const validatedData = addTagsSchema.parse(req.body);
+			const userId = (req.user as any)?.id;
 
-		if (!userId) {
-			return res.status(401).json({
+			// Permission check is handled by middleware
+			// TODO: Implement tag addition logic
+
+			res.json({
+				success: true,
+				message: 'Tags added successfully'
+			});
+		} catch (error) {
+			logger.error('ThreadRoutes', 'Error in POST /threads/:threadId/tags', { error });
+
+			if (error instanceof z.ZodError) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid input data',
+					details: error.errors
+				});
+			}
+
+			res.status(500).json({
 				success: false,
-				error: 'User not authenticated'
+				error: 'Failed to add tags'
 			});
 		}
-
-		// TODO: Add permission check and implement tag addition logic
-		// For now, return success to maintain API compatibility
-
-		res.json({
-			success: true,
-			message: 'Tags added successfully'
-		});
-	} catch (error) {
-		logger.error('ThreadRoutes', 'Error in POST /threads/:threadId/tags', { error });
-
-		if (error instanceof z.ZodError) {
-			return res.status(400).json({
-				success: false,
-				error: 'Invalid input data',
-				details: error.errors
-			});
-		}
-
-		res.status(500).json({
-			success: false,
-			error: 'Failed to add tags'
-		});
 	}
-});
+);
 
 // Remove tag from thread
 router.delete(
 	'/:threadId/tags/:tagId',
 	requireAuth,
-	isAdminOrModerator,
+	requireThreadTagPermission,
 	async (req: Request, res: Response) => {
 		try {
 			const threadId = parseInt(req.params.threadId);

@@ -3,19 +3,22 @@
 
 export const ROUTES = {
 	HOME: '/',
-	
+
 	// Hierarchical Forum Structure
 	ZONES: '/zones', // List all zones
 	ZONE: (slug: string) => `/zones/${slug}`, // View a specific zone
 	FORUM: (zoneSlug: string, forumSlug: string) => `/zones/${zoneSlug}/${forumSlug}`, // Forum within zone
-	SUBFORUM: (zoneSlug: string, forumSlug: string, subforumSlug: string) => `/zones/${zoneSlug}/${forumSlug}/${subforumSlug}`, // Subforum
+	SUBFORUM: (zoneSlug: string, forumSlug: string, subforumSlug: string) =>
+		`/zones/${zoneSlug}/${forumSlug}/${subforumSlug}`, // Subforum
 	THREAD: (slug: string) => `/threads/${slug}`, // Individual thread (global)
-	
+
 	// Thread Creation
 	CREATE_THREAD: '/threads/create', // Generic thread creation
-	CREATE_THREAD_IN_FORUM: (zoneSlug: string, forumSlug: string) => `/zones/${zoneSlug}/${forumSlug}/create`,
-	CREATE_THREAD_IN_SUBFORUM: (zoneSlug: string, forumSlug: string, subforumSlug: string) => `/zones/${zoneSlug}/${forumSlug}/${subforumSlug}/create`,
-	
+	CREATE_THREAD_IN_FORUM: (zoneSlug: string, forumSlug: string) =>
+		`/zones/${zoneSlug}/${forumSlug}/create`,
+	CREATE_THREAD_IN_SUBFORUM: (zoneSlug: string, forumSlug: string, subforumSlug: string) =>
+		`/zones/${zoneSlug}/${forumSlug}/${subforumSlug}/create`,
+
 	// Search
 	SEARCH_FORUMS: '/search/forums',
 

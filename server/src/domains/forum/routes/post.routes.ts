@@ -11,6 +11,10 @@ import { z } from 'zod';
 import { isAuthenticated as requireAuth } from '../../auth/middleware/auth.middleware';
 import { postService } from '../services/post.service';
 import { logger } from '@server/src/core/logger';
+import {
+	requirePostEditPermission,
+	requirePostDeletePermission
+} from '../services/permissions.service';
 
 const router = Router();
 
@@ -79,20 +83,11 @@ router.post('/', requireAuth, async (req: Request, res: Response) => {
 });
 
 // Update post
-router.put('/:id', requireAuth, async (req: Request, res: Response) => {
+router.put('/:id', requireAuth, requirePostEditPermission, async (req: Request, res: Response) => {
 	try {
 		const postId = parseInt(req.params.id);
 		const validatedData = updatePostSchema.parse(req.body);
 		const userId = (req.user as any)?.id;
-
-		if (!userId) {
-			return res.status(401).json({
-				success: false,
-				error: 'User not authenticated'
-			});
-		}
-
-		// TODO: Add permission check - only post author or moderator can edit
 
 		const updatedPost = await postService.updatePost(postId, {
 			content: validatedData.content
@@ -121,34 +116,30 @@ router.put('/:id', requireAuth, async (req: Request, res: Response) => {
 });
 
 // Delete post
-router.delete('/:id', requireAuth, async (req: Request, res: Response) => {
-	try {
-		const postId = parseInt(req.params.id);
-		const userId = (req.user as any)?.id;
+router.delete(
+	'/:id',
+	requireAuth,
+	requirePostDeletePermission,
+	async (req: Request, res: Response) => {
+		try {
+			const postId = parseInt(req.params.id);
+			const userId = (req.user as any)?.id;
 
-		if (!userId) {
-			return res.status(401).json({
+			await postService.deletePost(postId);
+
+			res.json({
+				success: true,
+				message: 'Post deleted successfully'
+			});
+		} catch (error) {
+			logger.error('PostRoutes', 'Error in DELETE /posts/:id', { error });
+			res.status(500).json({
 				success: false,
-				error: 'User not authenticated'
+				error: 'Failed to delete post'
 			});
 		}
-
-		// TODO: Add permission check - only post author or moderator can delete
-
-		await postService.deletePost(postId);
-
-		res.json({
-			success: true,
-			message: 'Post deleted successfully'
-		});
-	} catch (error) {
-		logger.error('PostRoutes', 'Error in DELETE /posts/:id', { error });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to delete post'
-		});
 	}
-});
+);
 
 // React to post (like/dislike)
 router.post('/:postId/react', requireAuth, async (req: Request, res: Response) => {

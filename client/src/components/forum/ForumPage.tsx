@@ -3,6 +3,7 @@ import { useParams } from 'wouter';
 import { Filter } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import { getCreateThreadUrl, parseForumUrl } from '@/utils/forum-urls';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import { useForumFilters } from '@/hooks/useForumFilters';
 import { Wide } from '@/layout/primitives';
@@ -69,14 +70,12 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 	);
 
 	const handleNewThread = useCallback(() => {
-		// Navigate to create thread page with proper hierarchy
-		if (parentZone && forumSlug) {
-			const basePath = params?.subforumSlug
-				? `/zones/${parentZone.slug}/${params.forumSlug}/${params.subforumSlug}`
-				: `/zones/${parentZone.slug}/${forumSlug}`;
-			window.location.href = `${basePath}/create`;
+		// Navigate to create thread page using smart URL generation
+		if (forumSlug) {
+			const createUrl = getCreateThreadUrl(forumSlug, parentZone?.slug);
+			window.location.href = createUrl;
 		}
-	}, [parentZone, forumSlug, params]);
+	}, [parentZone, forumSlug]);
 
 	const breadcrumbItems = React.useMemo(() => {
 		if (!parentZone || !forum) return [];

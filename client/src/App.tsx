@@ -14,6 +14,7 @@ import ForumsPage from './pages/forums';
 import ForumBySlugPage from './pages/forums/[forumSlug].tsx';
 import ForumSearchPage from './pages/forums/search.tsx'; // Import the new search page
 import ZoneBySlugPage from './pages/zones/[slug].tsx'; // Added import for Zone page
+import ZonesIndexPage from './pages/zones/index.tsx';
 import ThreadPage from './pages/threads/BBCodeThreadPage.tsx';
 import CreateThreadPage from './pages/threads/create.tsx';
 import ShopPage from './pages/shop';
@@ -125,19 +126,21 @@ function App() {
 						{/* Auth Routes */}
 						<Route path="/auth" component={AuthPage} />
 
-						{/* Forum Structure Routes - Hierarchical URL Pattern */}
-						{/* Zone listing page */}
-						<ProtectedRoute path="/zones" component={ForumsPage} />
+						{/* Forum Structure Routes - Hybrid Navigation System */}
 
-						{/* Zone page */}
+						{/* Direct Forum Access (legacy/power user pattern) */}
+						<ProtectedRoute path="/forums" component={ForumsPage} />
+						<ProtectedRoute path="/forums/:forumSlug" component={ForumBySlugPage} />
+						<ProtectedRoute path="/forums/:forumSlug/create" component={CreateThreadPage} />
+
+						{/* Zone-based Navigation (hierarchical pattern) */}
+						<ProtectedRoute path="/zones" component={ZonesIndexPage} />
 						<ProtectedRoute path="/zones/:zoneSlug" component={ZoneBySlugPage} />
-
-						{/* Forum within zone (with optional subforum) */}
+						<ProtectedRoute path="/zones/:zoneSlug/:forumSlug" component={ForumBySlugPage} />
 						<ProtectedRoute
 							path="/zones/:zoneSlug/:forumSlug/:subforumSlug"
 							component={ForumBySlugPage}
 						/>
-						<ProtectedRoute path="/zones/:zoneSlug/:forumSlug" component={ForumBySlugPage} />
 
 						{/* Search Page */}
 						<ProtectedRoute path="/search/forums" component={ForumSearchPage} />
@@ -515,13 +518,9 @@ function App() {
 							)}
 						/>
 
-						{/* Legacy Forum Routes - Redirect to new structure */}
-						<Route path="/forums">
-							<Redirect to="/zones" />
-						</Route>
-						<Route path="/forums/:slug" component={LegacyForumRedirect} />
+						{/* Legacy Forum Routes - Only redirect old singular /forum pattern */}
 						<Route path="/forum">
-							<Redirect to="/zones" />
+							<Redirect to="/forums" />
 						</Route>
 						<Route path="/forum/:slug" component={LegacyForumRedirect} />
 

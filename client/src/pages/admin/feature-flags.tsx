@@ -1,19 +1,101 @@
-import { useFeatureFlags } from '@/features/admin/services/featureFlagsService';
-import { FeatureFlagRow } from '@/components/admin/FeatureFlagRow';
-import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
-import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { Button } from '@/components/ui/button';
-import { RefreshCw, ToggleLeft, Plus } from 'lucide-react';
+import { Table, TableHeader, TableRow, TableHead, TableBody } from '@/components/ui/table';
+import { RefreshCw, ToggleLeft } from 'lucide-react';
 import ProtectedAdminRoute from '@/components/admin/protected-admin-route';
 import { useAdminModule } from '@/hooks/use-admin-modules';
+import { VisualJsonTabs } from '@/components/admin/VisualJsonTabs';
+import { useJsonConfig } from '@/hooks/useJsonConfig';
+import {
+	featureFlagsSchema,
+	type FeatureFlags,
+	type FeatureFlag
+} from '@/schemas/featureFlags.schema';
+import { SwitchRow } from '@/components/admin/form-controls';
+import { Slider } from '@/components/ui/slider';
+import { Input } from '@/components/ui/input';
 
-// Feature Flags Module Component (Protected)
-function FeatureFlagsModuleContent() {
+/* -------------------------------------------------------------------------
+ * Visual feature-flag editor: simple table with inline controls
+ * -----------------------------------------------------------------------*/
+function VisualFeatureFlagsEditor({
+	state,
+	setState
+}: {
+	state: FeatureFlags;
+	setState: (next: FeatureFlags) => void;
+}) {
+	const updateFlag = (idx: number, changes: Partial<FeatureFlag>) => {
+		const next = state.map((f, i) => (i === idx ? { ...f, ...changes } : f));
+		setState(next);
+	};
+
+	return (
+		<Table>
+			<TableHeader>
+				<TableRow>
+					<TableHead>Key</TableHead>
+					<TableHead>Description</TableHead>
+					<TableHead className="text-center">Enabled</TableHead>
+					<TableHead>Rollout %</TableHead>
+				</TableRow>
+			</TableHeader>
+			<TableBody>
+				{state.map((flag, idx) => (
+					<TableRow key={flag.key}>
+						<TableHead>{flag.key}</TableHead>
+						<TableHead>{flag.description}</TableHead>
+						<TableHead className="text-center">
+							<SwitchRow
+								label=""
+								checked={flag.isEnabled}
+								onChange={(v) => updateFlag(idx, { isEnabled: v })}
+							/>
+						</TableHead>
+						<TableHead className="w-56">
+							<div className="flex items-center gap-2">
+								<Slider
+									min={0}
+									max={100}
+									step={1}
+									value={[flag.rolloutPercentage]}
+									onValueChange={(v) => updateFlag(idx, { rolloutPercentage: v[0] })}
+									disabled={!flag.isEnabled}
+									className="flex-1"
+								/>
+								<Input
+									type="number"
+									min={0}
+									max={100}
+									className="h-8 w-16"
+									value={flag.rolloutPercentage}
+									onChange={(e) =>
+										updateFlag(idx, {
+											rolloutPercentage: Math.min(100, Math.max(0, Number(e.target.value) ?? 0))
+										})
+									}
+									disabled={!flag.isEnabled}
+								/>
+								<span className="text-xs">%</span>
+							</div>
+						</TableHead>
+					</TableRow>
+				))}
+			</TableBody>
+		</Table>
+	);
+}
+
+/* -------------------------------------------------------------------------
+ * Main content component
+ * -----------------------------------------------------------------------*/
+function FeatureFlagsContent() {
 	const { module, isEnabled } = useAdminModule('feature-flags');
-	const { data: flags, isLoading, error, refetch } = useFeatureFlags();
+	const { data, save, loading } = useJsonConfig<FeatureFlags>(
+		'/admin/feature-flags',
+		featureFlagsSchema
+	);
 
-	// Show module disabled message if not enabled
 	if (!isEnabled) {
 		return (
 			<div className="container mx-auto py-8">
@@ -30,127 +112,38 @@ function FeatureFlagsModuleContent() {
 		);
 	}
 
-	const pageActions = (
-		<div className="flex gap-2">
-			<Button variant="outline" onClick={() => refetch()}>
-				<RefreshCw className="h-4 w-4 mr-2" />
-				Refresh
-			</Button>
-		</div>
-	);
-
 	return (
-		<AdminPageShell title={module?.name || 'Feature Flags'} pageActions={pageActions}>
-			<div className="space-y-6">
-				{/* Overview Card */}
-				<Card>
-					<CardHeader>
-						<CardTitle className="flex items-center gap-2">
-							<ToggleLeft className="h-5 w-5" />
-							Feature Flag Management
-						</CardTitle>
-						<CardDescription>
-							Control feature rollouts and gradual deployments across the platform. Toggle features
-							on/off and adjust rollout percentages for controlled releases.
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						{isLoading && (
-							<div className="flex items-center justify-center py-8">
-								<RefreshCw className="h-6 w-6 animate-spin mr-2" />
-								<span>Loading feature flags...</span>
-							</div>
-						)}
-
-						{error && (
-							<div className="text-center py-8">
-								<p className="text-red-500 mb-4">Error loading feature flags</p>
-								<Button variant="outline" onClick={() => refetch()}>
-									Try Again
-								</Button>
-							</div>
-						)}
-
-						{flags && (
-							<>
-								{flags.length === 0 ? (
-									<div className="text-center py-8">
-										<ToggleLeft className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-										<h3 className="text-lg font-semibold mb-2">No Feature Flags</h3>
-										<p className="text-muted-foreground mb-4">
-											No feature flags are currently configured in the system.
-										</p>
-									</div>
-								) : (
-									<div className="space-y-4">
-										<div className="flex justify-between items-center">
-											<p className="text-sm text-muted-foreground">
-												{flags.length} feature flag{flags.length !== 1 ? 's' : ''} configured
-											</p>
-										</div>
-
-										<Table>
-											<TableHeader>
-												<TableRow>
-													<TableHead>Flag Name</TableHead>
-													<TableHead>Description</TableHead>
-													<TableHead className="text-center">Enabled</TableHead>
-													<TableHead>Rollout %</TableHead>
-												</TableRow>
-											</TableHeader>
-											<TableBody>
-												{flags.map((flag) => (
-													<FeatureFlagRow key={flag.key} flag={flag} />
-												))}
-											</TableBody>
-										</Table>
-									</div>
-								)}
-							</>
-						)}
-					</CardContent>
-				</Card>
-
-				{/* Statistics Card */}
-				{flags && flags.length > 0 && (
-					<Card>
-						<CardHeader>
-							<CardTitle className="text-base">Statistics</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div className="grid grid-cols-3 gap-4 text-center">
-								<div>
-									<div className="text-2xl font-bold text-green-600">
-										{flags.filter((f) => f.isEnabled).length}
-									</div>
-									<div className="text-sm text-muted-foreground">Enabled</div>
-								</div>
-								<div>
-									<div className="text-2xl font-bold text-red-600">
-										{flags.filter((f) => !f.isEnabled).length}
-									</div>
-									<div className="text-sm text-muted-foreground">Disabled</div>
-								</div>
-								<div>
-									<div className="text-2xl font-bold text-blue-600">
-										{flags.filter((f) => f.rolloutPercentage < 100 && f.isEnabled).length}
-									</div>
-									<div className="text-sm text-muted-foreground">Partial Rollout</div>
-								</div>
-							</div>
-						</CardContent>
-					</Card>
-				)}
-			</div>
-		</AdminPageShell>
+		<Card>
+			<CardHeader>
+				<CardTitle className="flex items-center gap-2">
+					<ToggleLeft className="h-5 w-5" /> Feature Flag Management
+				</CardTitle>
+				<CardDescription>
+					Control feature rollouts and gradual deployments across the platform. Toggle features and
+					adjust rollout percentages for controlled releases.
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<VisualJsonTabs<FeatureFlags>
+					shapeSchema={featureFlagsSchema}
+					value={data}
+					onChange={save}
+					loading={loading}
+				>
+					{(state, setState) => <VisualFeatureFlagsEditor state={state} setState={setState} />}
+				</VisualJsonTabs>
+			</CardContent>
+		</Card>
 	);
 }
 
-// Main exported component with protection wrapper
+/* -------------------------------------------------------------------------
+ * Page export with admin protection
+ * -----------------------------------------------------------------------*/
 export default function AdminFeatureFlagsPage() {
 	return (
 		<ProtectedAdminRoute moduleId="feature-flags">
-			<FeatureFlagsModuleContent />
+			<FeatureFlagsContent />
 		</ProtectedAdminRoute>
 	);
 }
