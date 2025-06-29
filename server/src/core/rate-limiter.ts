@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
+import { userService } from './services/user.service';
 import { db } from './db';
 import { rateLimits } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
@@ -18,7 +19,8 @@ export function rateLimiter(options: { endpoint: string; limit?: number; windowM
 	return async function (req: Request, res: Response, next: NextFunction) {
 		try {
 			// Get client IP or user ID
-			const key = req.ip || req.user?.id?.toString() || 'anonymous';
+			const authUser = userService.getUserFromRequest(req);
+			const key = req.ip || authUser?.id?.toString() || 'anonymous';
 
 			// Get current time
 			const now = new Date();

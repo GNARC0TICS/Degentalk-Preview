@@ -5,6 +5,7 @@
  */
 
 import { logger } from '../logger';
+import { userService } from '../services/user.service';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -494,7 +495,7 @@ export function auditMiddleware(req: any, res: any, next: any) {
 	const startTime = Date.now();
 
 	// Get user info if available
-	const user = req.user;
+	const user = userService.getUserFromRequest(req);
 	const ipAddress = req.ip || req.connection.remoteAddress || 'unknown';
 	const userAgent = req.get('User-Agent');
 

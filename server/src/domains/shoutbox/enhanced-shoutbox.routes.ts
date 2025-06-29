@@ -838,4 +838,235 @@ router.get('/export', isAdmin, async (req: Request, res: Response) => {
 	}
 });
 
+/**
+ * Performance monitoring endpoints
+ */
+
+// Get performance statistics (admin only)
+router.get('/performance/stats', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const stats = PerformanceService.getPerformanceStats();
+		const cacheStats = ShoutboxCacheService.getCacheStats();
+		const queueStats = messageQueue.getStats();
+
+		res.json({
+			success: true,
+			data: {
+				performance: stats,
+				cache: cacheStats,
+				queue: queueStats,
+				generatedAt: new Date().toISOString()
+			}
+		});
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error fetching performance stats', { error });
+		res.status(500).json({ error: 'Failed to fetch performance statistics' });
+	}
+});
+
+// Get optimization suggestions (admin only)
+router.get('/performance/analyze', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const suggestions = PerformanceService.analyzeQueryPerformance();
+
+		res.json({
+			success: true,
+			data: {
+				suggestions,
+				analyzedAt: new Date().toISOString()
+			}
+		});
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error analyzing performance', { error });
+		res.status(500).json({ error: 'Failed to analyze performance' });
+	}
+});
+
+// Get optimized messages with caching
+router.get('/messages/optimized', isAuthenticatedOptional, async (req: Request, res: Response) => {
+	try {
+		const roomId = parseInt(req.query.roomId as string);
+		const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
+		const cursor = req.query.cursor ? parseInt(req.query.cursor as string) : undefined;
+		const direction = (req.query.direction as 'before' | 'after') || 'before';
+		const userId = userService.getUserFromRequest(req);
+
+		if (!roomId) {
+			return res.status(400).json({ error: 'Room ID is required' });
+		}
+
+		const result = await PerformanceService.getOptimizedMessages({
+			roomId,
+			limit,
+			cursor,
+			direction,
+			userId: userId || undefined
+		});
+
+		res.json({
+			success: true,
+			...result
+		});
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error fetching optimized messages', { error });
+		res.status(500).json({ error: 'Failed to fetch messages' });
+	}
+});
+
+// Queue management endpoints (admin only)
+router.get('/queue/status', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
+		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
+
+		const queuedMessages = messageQueue.getQueuedMessages(userId, roomId);
+		const stats = messageQueue.getStats();
+
+		res.json({
+			success: true,
+			data: {
+				stats,
+				queuedMessages: queuedMessages.slice(0, 50), // Limit for performance
+				totalQueued: queuedMessages.length
+			}
+		});
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error fetching queue status', { error });
+		res.status(500).json({ error: 'Failed to fetch queue status' });
+	}
+});
+
+// Remove message from queue (admin only)
+router.delete('/queue/:messageId', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const messageId = req.params.messageId;
+		const removed = await messageQueue.removeMessage(messageId);
+
+		if (removed) {
+			res.json({
+				success: true,
+				message: 'Message removed from queue'
+			});
+		} else {
+			res.status(404).json({ error: 'Message not found in queue' });
+		}
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error removing message from queue', { error });
+		res.status(500).json({ error: 'Failed to remove message from queue' });
+	}
+});
+
+// Cache management endpoints (admin only)
+router.post('/cache/clear', isAdmin, async (req: Request, res: Response) => {
+	try {
+		const { type, roomId } = req.body;
+
+		switch (type) {
+			case 'messages':
+				if (roomId) {
+					ShoutboxCacheService.invalidateMessages(roomId);
+				} else {
+					// Clear all message caches
+					ShoutboxCacheService.clearAll();
+				}
+				break;
+			case 'config':
+				ShoutboxCacheService.invalidateRoomConfig(roomId);
+				break;
+			case 'all':
+				ShoutboxCacheService.clearAll();
+				break;
+			default:
+				return res.status(400).json({ error: 'Invalid cache type' });
+		}
+
+		res.json({
+			success: true,
+			message: `Cache cleared for type: ${type}`
+		});
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error clearing cache', { error });
+		res.status(500).json({ error: 'Failed to clear cache' });
+	}
+});
+
+// Enhanced message history with performance optimization
+router.get('/history/advanced', isAdminOrModerator, async (req: Request, res: Response) => {
+	try {
+		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
+		const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
+		const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
+		const cursor = req.query.cursor ? parseInt(req.query.cursor as string) : undefined;
+		const direction = (req.query.direction as 'before' | 'after') || 'before';
+		const includeDeleted = req.query.includeDeleted === 'true';
+
+		const result = await MessageHistoryService.getMessageHistory({
+			roomId,
+			userId,
+			limit,
+			cursor,
+			direction,
+			includeDeleted
+		});
+
+		res.json({
+			success: true,
+			data: result
+		});
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error fetching message history', { error });
+		res.status(500).json({ error: 'Failed to fetch message history' });
+	}
+});
+
+// Message statistics for analytics
+router.get('/stats/messages', isAdminOrModerator, async (req: Request, res: Response) => {
+	try {
+		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
+		const dateFrom = req.query.dateFrom ? new Date(req.query.dateFrom as string) : undefined;
+		const dateTo = req.query.dateTo ? new Date(req.query.dateTo as string) : undefined;
+		const groupBy = (req.query.groupBy as 'hour' | 'day' | 'week' | 'month') || 'day';
+
+		const stats = await MessageHistoryService.getMessageStatistics({
+			roomId,
+			dateFrom,
+			dateTo,
+			groupBy
+		});
+
+		res.json({
+			success: true,
+			data: stats
+		});
+	} catch (error) {
+		logger.error('Enhanced Shoutbox', 'Error fetching message statistics', { error });
+		res.status(500).json({ error: 'Failed to fetch message statistics' });
+	}
+});
+
+// Active users in room with performance optimization
+router.get(
+	'/users/active/:roomId',
+	isAuthenticatedOptional,
+	async (req: Request, res: Response) => {
+		try {
+			const roomId = parseInt(req.params.roomId);
+
+			if (!roomId) {
+				return res.status(400).json({ error: 'Invalid room ID' });
+			}
+
+			const activeUsers = await PerformanceService.getActiveUsersInRoom(roomId);
+
+			res.json({
+				success: true,
+				data: activeUsers
+			});
+		} catch (error) {
+			logger.error('Enhanced Shoutbox', 'Error fetching active users', { error });
+			res.status(500).json({ error: 'Failed to fetch active users' });
+		}
+	}
+);
+
 export default router;
