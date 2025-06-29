@@ -34,6 +34,10 @@ import { getUserId } from '../auth/services/auth.service';
 import { logger } from '@server/src/core/logger';
 import { ShoutboxService } from './services/shoutbox.service';
 import { RoomService } from './services/room.service';
+import { MessageHistoryService } from './services/history.service';
+import { ShoutboxCacheService } from './services/cache.service';
+import { messageQueue, MessageQueueService } from './services/queue.service';
+import { PerformanceService } from './services/performance.service';
 import { createCustomRateLimiter } from '@server/src/core/services/rate-limit.service';
 
 const router = Router();

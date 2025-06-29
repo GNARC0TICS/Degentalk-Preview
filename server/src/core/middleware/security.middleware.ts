@@ -10,6 +10,7 @@ import helmet from 'helmet';
 import { randomBytes, createHmac } from 'crypto';
 import type { Request, Response, NextFunction } from 'express';
 import { env, getCorsConfig, isProduction, isDevelopment } from '../config/environment';
+import { userService } from '../services/user.service';
 import { logger } from '../logger';
 
 /**
@@ -253,8 +254,9 @@ export function securityAuditLogger(req: Request, res: Response, next: NextFunct
 
 	// Log admin operations
 	if (req.path.startsWith('/api/admin') && req.method !== 'GET') {
+		const authUser = userService.getUserFromRequest(req);
 		logger.info('SecurityAudit', 'Admin operation', {
-			userId: (req.user as any)?.id,
+			userId: authUser?.id,
 			method: req.method,
 			path: req.path,
 			ip: req.ip,
@@ -264,8 +266,9 @@ export function securityAuditLogger(req: Request, res: Response, next: NextFunct
 
 	// Log financial operations
 	if (req.path.startsWith('/api/wallet') && req.method !== 'GET') {
+		const authUser = userService.getUserFromRequest(req);
 		logger.info('SecurityAudit', 'Financial operation', {
-			userId: (req.user as any)?.id,
+			userId: authUser?.id,
 			method: req.method,
 			path: req.path,
 			ip: req.ip,

@@ -9,6 +9,7 @@ import Redis from 'ioredis';
 import rateLimit from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
 import type { Request, Response } from 'express';
+import { userService } from './user.service';
 import { env, getRateLimitConfig, isDevelopment } from '../config/environment';
 import { logger } from '../logger';
 
@@ -67,10 +68,10 @@ function createRateLimiter(config: any) {
 		legacyHeaders: false,
 		// Custom key generator for better tracking
 		keyGenerator: (req: Request) => {
-			const userId = (req.user as any)?.id;
+			const authUser = userService.getUserFromRequest(req);
 			const ip = req.ip || req.connection.remoteAddress;
 			// Use user ID if authenticated, otherwise IP
-			return userId ? `user:${userId}` : `ip:${ip}`;
+			return authUser ? `user:${authUser.id}` : `ip:${ip}`;
 		},
 		// Skip successful requests to reduce Redis load
 		skipSuccessfulRequests: false,

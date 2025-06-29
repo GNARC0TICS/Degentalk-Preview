@@ -7,6 +7,7 @@
 
 import type { Request, Response } from 'express';
 import { ZodError } from 'zod';
+import { userService } from '../services/user.service';
 import { logger } from '../logger';
 
 export interface ErrorResponse {
@@ -105,12 +106,13 @@ export function handleValidationError(error: ZodError): ErrorResponse {
 export function createErrorHandler(context: string) {
 	return (error: Error, req: Request, res: Response, next: any) => {
 		// Log the error
+		const authUser = userService.getUserFromRequest(req);
 		logger.error(context, 'Request error', {
 			error: error.message,
 			stack: error.stack,
 			path: req.path,
 			method: req.method,
-			userId: (req.user as any)?.id,
+			userId: authUser?.id,
 			ip: req.ip
 		});
 
