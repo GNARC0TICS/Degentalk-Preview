@@ -1,5 +1,11 @@
 import { adminConfig, type AdminModule, type AdminPermission } from '../config/admin.config';
-import type { User } from '@/types/user';
+
+// Simple User interface for admin module registry
+interface User {
+	id: string;
+	role: string;
+	username: string;
+}
 
 export interface ModuleRegistryOptions {
 	enableAuditLog?: boolean;

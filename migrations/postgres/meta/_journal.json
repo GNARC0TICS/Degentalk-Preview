@@ -71,6 +71,13 @@
       "when": 1751151913135,
       "tag": "0009_nappy_skreet",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1751199895191,
+      "tag": "0010_tiny_vin_gonzales",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,101 @@
+CREATE TABLE "shoutbox_analytics" (
+	"id" varchar(128) PRIMARY KEY NOT NULL,
+	"event_type" varchar(50) NOT NULL,
+	"user_id" varchar(128),
+	"room_id" varchar(128) NOT NULL,
+	"event_data" jsonb DEFAULT '{}'::jsonb,
+	"session_id" varchar(128),
+	"ip_address" varchar(45),
+	"user_agent" text,
+	"timestamp" timestamp DEFAULT now() NOT NULL,
+	"date_key" varchar(10) NOT NULL,
+	"hour_key" integer NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "shoutbox_banned_words" (
+	"id" varchar(128) PRIMARY KEY NOT NULL,
+	"pattern" varchar(255) NOT NULL,
+	"is_regex" boolean DEFAULT false NOT NULL,
+	"severity" varchar(20) DEFAULT 'medium' NOT NULL,
+	"action" varchar(20) DEFAULT 'filter' NOT NULL,
+	"timeout_duration" integer,
+	"warning_message" text,
+	"room_id" varchar(128),
+	"enabled" boolean DEFAULT true NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_by" varchar(128) NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "shoutbox_config" (
+	"id" varchar(128) PRIMARY KEY NOT NULL,
+	"scope" varchar(20) DEFAULT 'global' NOT NULL,
+	"room_id" varchar(128),
+	"enabled" boolean DEFAULT true NOT NULL,
+	"max_message_length" integer DEFAULT 500 NOT NULL,
+	"message_retention_days" integer DEFAULT 365 NOT NULL,
+	"rate_limit_seconds" integer DEFAULT 10 NOT NULL,
+	"auto_moderation_enabled" boolean DEFAULT true NOT NULL,
+	"profanity_filter_enabled" boolean DEFAULT true NOT NULL,
+	"spam_detection_enabled" boolean DEFAULT true NOT NULL,
+	"link_moderation_enabled" boolean DEFAULT false NOT NULL,
+	"allow_user_avatars" boolean DEFAULT true NOT NULL,
+	"allow_username_colors" boolean DEFAULT true NOT NULL,
+	"allow_custom_emojis" boolean DEFAULT true NOT NULL,
+	"allow_mentions" boolean DEFAULT true NOT NULL,
+	"allow_reactions" boolean DEFAULT true NOT NULL,
+	"commands_enabled" boolean DEFAULT true NOT NULL,
+	"allow_tipping_commands" boolean DEFAULT true NOT NULL,
+	"allow_rain_commands" boolean DEFAULT true NOT NULL,
+	"allow_airdrop_commands" boolean DEFAULT true NOT NULL,
+	"allow_moderation_commands" boolean DEFAULT true NOT NULL,
+	"theme_config" jsonb DEFAULT '{}'::jsonb,
+	"allow_pinned_messages" boolean DEFAULT true NOT NULL,
+	"max_pinned_messages" integer DEFAULT 3 NOT NULL,
+	"pinned_message_duration" integer DEFAULT 86400,
+	"role_permissions" jsonb DEFAULT '{}'::jsonb,
+	"analytics_enabled" boolean DEFAULT true NOT NULL,
+	"log_message_history" boolean DEFAULT true NOT NULL,
+	"log_moderation_actions" boolean DEFAULT true NOT NULL,
+	"log_command_usage" boolean DEFAULT true NOT NULL,
+	"allow_message_export" boolean DEFAULT true NOT NULL,
+	"export_formats" jsonb DEFAULT '["json","csv","txt"]'::jsonb,
+	"ai_moderation_enabled" boolean DEFAULT false NOT NULL,
+	"ai_moderation_config" jsonb DEFAULT '{}'::jsonb,
+	"message_search_enabled" boolean DEFAULT false NOT NULL,
+	"user_ignore_system_enabled" boolean DEFAULT true NOT NULL,
+	"typing_indicators_enabled" boolean DEFAULT true NOT NULL,
+	"message_queue_enabled" boolean DEFAULT true NOT NULL,
+	"max_concurrent_users" integer DEFAULT 1000,
+	"message_preload_count" integer DEFAULT 50 NOT NULL,
+	"cache_enabled" boolean DEFAULT true NOT NULL,
+	"cache_ttl_seconds" integer DEFAULT 300 NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"created_by" varchar(128) NOT NULL,
+	"updated_by" varchar(128),
+	"config_version" varchar(10) DEFAULT '1.0' NOT NULL,
+	CONSTRAINT "shoutbox_config_scope_room_id_unique" UNIQUE("scope","room_id")
+);
+--> statement-breakpoint
+CREATE TABLE "shoutbox_emoji_permissions" (
+	"id" varchar(128) PRIMARY KEY NOT NULL,
+	"emoji_id" varchar(128) NOT NULL,
+	"room_id" varchar(128),
+	"required_role" varchar(50),
+	"required_level" integer,
+	"enabled" boolean DEFAULT true NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_by" varchar(128) NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "shoutbox_user_ignores" (
+	"id" varchar(128) PRIMARY KEY NOT NULL,
+	"user_id" varchar(128) NOT NULL,
+	"ignored_user_id" varchar(128) NOT NULL,
+	"hide_messages" boolean DEFAULT true NOT NULL,
+	"hide_commands" boolean DEFAULT true NOT NULL,
+	"hide_mentions" boolean DEFAULT true NOT NULL,
+	"room_id" varchar(128),
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "shoutbox_user_ignores_user_id_ignored_user_id_room_id_unique" UNIQUE("user_id","ignored_user_id","room_id")
+);
