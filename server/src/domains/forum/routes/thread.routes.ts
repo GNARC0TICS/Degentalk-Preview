@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Thread Routes
  *
@@ -176,7 +177,7 @@ router.post(
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
 			const validatedData = createThreadSchema.parse(req.body);
-			const userId = (req.user as any)?.id;
+			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!userId) {
 				return res.status(401).json({
@@ -222,7 +223,7 @@ router.put(
 		try {
 			const threadId = parseInt(req.params.threadId);
 			const validatedData = updateThreadSolvedSchema.parse(req.body);
-			const userId = (req.user as any)?.id;
+			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			const updatedThread = await threadService.updateThreadSolvedStatus({
 				threadId,
@@ -268,7 +269,7 @@ router.post(
 		try {
 			const threadId = parseInt(req.params.threadId);
 			const validatedData = addTagsSchema.parse(req.body);
-			const userId = (req.user as any)?.id;
+			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			// Permission check is handled by middleware
 			// TODO: Implement tag addition logic

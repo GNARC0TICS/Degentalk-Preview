@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Forum Permissions Service
  *
@@ -233,7 +234,7 @@ export function canAdministrate(user: User): boolean {
  * @deprecated Use userService.getUserFromRequest() instead
  */
 export function getUserFromRequest(req: any): User | null {
-	const user = req.user;
+	const user = userService.getUserFromRequest(req);
 	if (!user || !user.id) {
 		return null;
 	}
@@ -254,7 +255,7 @@ export function createPermissionChecker<T extends (...args: any[]) => Promise<bo
 ) {
 	return async (req: any, res: any, next: any) => {
 		try {
-			const user = getUserFromRequest(req);
+			const user = userService.getUserFromRequest(req);
 
 			if (!user) {
 				return res.status(401).json({
@@ -331,7 +332,7 @@ export const requireThreadTagPermission = createPermissionChecker(
  * Role-based middleware
  */
 export function requireModerator(req: any, res: any, next: any) {
-	const user = getUserFromRequest(req);
+	const user = userService.getUserFromRequest(req);
 
 	if (!user) {
 		return res.status(401).json({
@@ -357,7 +358,7 @@ export function requireModerator(req: any, res: any, next: any) {
 }
 
 export function requireAdmin(req: any, res: any, next: any) {
-	const user = getUserFromRequest(req);
+	const user = userService.getUserFromRequest(req);
 
 	if (!user) {
 		return res.status(401).json({

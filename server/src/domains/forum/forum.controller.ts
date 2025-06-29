@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { forumService } from './forum.service';
 import type { ThreadSearchParams } from './forum.service';
@@ -27,7 +28,9 @@ export const forumController = {
 			const includeEmptyStats = req.query.includeEmptyStats === 'true';
 
 			// Admin can see hidden categories
-			const isAdmin = req.user && (req.user as any).role === 'admin';
+			const isAdmin =
+				userService.getUserFromRequest(req) &&
+				(userService.getUserFromRequest(req) as any).role === 'admin';
 
 			const categories = await forumService.getCategoriesTree({
 				includeHidden: isAdmin || includeHidden,

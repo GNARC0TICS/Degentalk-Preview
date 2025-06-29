@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Forum Rules Routes
  *
@@ -77,7 +78,11 @@ router.get(
 			}
 
 			// Only allow published rules to be viewed, unless the user is an admin
-			if (rule.status !== 'published' && (!req.user || (req.user as any).role !== 'admin')) {
+			if (
+				rule.status !== 'published' &&
+				(!userService.getUserFromRequest(req) ||
+					(userService.getUserFromRequest(req) as any).role !== 'admin')
+			) {
 				// Fixed isAdmin check
 				return res.status(403).json({ error: 'This rule is not published' });
 			}
@@ -94,7 +99,7 @@ router.get(
 router.get(
 	'/user-agreements',
 	asyncHandler(async (req: Request, res: Response) => {
-		if (!req.isAuthenticated() || !req.user) {
+		if (!req.isAuthenticated() || !userService.getUserFromRequest(req)) {
 			return res.status(401).json({ error: 'Authentication required' });
 		}
 
@@ -148,7 +153,7 @@ router.get(
 router.post(
 	'/agree',
 	asyncHandler(async (req: Request, res: Response) => {
-		if (!req.isAuthenticated() || !req.user) {
+		if (!req.isAuthenticated() || !userService.getUserFromRequest(req)) {
 			return res.status(401).json({ error: 'Authentication required' });
 		}
 

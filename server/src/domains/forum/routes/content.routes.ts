@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Content Routes
  *
@@ -57,7 +58,7 @@ router.get(
 				limit: limitNum,
 				sortBy,
 				status: 'active',
-				followingUserId: tab === 'following' ? req.user?.id : undefined
+				followingUserId: tab === 'following' ? userService.getUserFromRequest(req)?.id : undefined
 			});
 
 			// Return unified ThreadDisplay format (includes zone data)

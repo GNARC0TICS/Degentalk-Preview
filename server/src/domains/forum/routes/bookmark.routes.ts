@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Bookmark Routes
  *
@@ -28,7 +29,7 @@ router.post(
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
 			const validatedData = createBookmarkSchema.parse(req.body);
-			const userId = (req.user as any)?.id;
+			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!userId) {
 				return res.status(401).json({
@@ -93,7 +94,7 @@ router.delete(
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
 			const threadId = parseInt(req.params.threadId);
-			const userId = (req.user as any)?.id;
+			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!userId) {
 				return res.status(401).json({
@@ -128,7 +129,7 @@ router.get(
 	requireAuth,
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const userId = (req.user as any)?.id;
+			const userId = (userService.getUserFromRequest(req) as any)?.id;
 			const page = parseInt(req.query.page as string) || 1;
 			const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
 			const offset = (page - 1) * limit;
