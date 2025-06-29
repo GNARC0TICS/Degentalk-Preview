@@ -1,0 +1,1937 @@
+[
+	{
+		"file": "server/src/middleware/auth.ts",
+		"line": 18,
+		"snippet": "if (req.user?.role !== 'admin') {"
+	},
+	{
+		"file": "server/src/middleware/auth.ts",
+		"line": 30,
+		"snippet": "return req.user?.role === 'admin';"
+	},
+	{
+		"file": "server/src/middleware/auth.ts",
+		"line": 42,
+		"snippet": "if (req.user?.role !== 'moderator' && req.user?.role !== 'admin') {"
+	},
+	{
+		"file": "server/src/middleware/authenticate.ts",
+		"line": 59,
+		"snippet": "req.user = {"
+	},
+	{
+		"file": "server/src/middleware/dev-security.middleware.ts",
+		"line": 98,
+		"snippet": "if (!req.user) {"
+	},
+	{
+		"file": "server/src/middleware/subscription-permissions.ts",
+		"line": 32,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/middleware/subscription-permissions.ts",
+		"line": 131,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/core/base-controller.ts",
+		"line": 194,
+		"snippet": "protected getUserId(req: any): number {"
+	},
+	{
+		"file": "server/src/core/base-controller.ts",
+		"line": 195,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/core/base-controller.ts",
+		"line": 206,
+		"snippet": "const role = req.user?.role;"
+	},
+	{
+		"file": "server/src/core/rate-limiter.ts",
+		"line": 21,
+		"snippet": "const key = req.ip || req.user?.id?.toString() || 'anonymous';"
+	},
+	{
+		"file": "server/src/utils/auth.ts",
+		"line": 6,
+		"snippet": "* Prefers `req.user.id`, falls back to `req.user.user_id`."
+	},
+	{
+		"file": "server/src/utils/auth.ts",
+		"line": 15,
+		"snippet": "if (req.user) {"
+	},
+	{
+		"file": "server/src/utils/auth.ts",
+		"line": 16,
+		"snippet": "const user = req.user as any; // Cast to any to access potential id properties"
+	},
+	{
+		"file": "server/src/utils/auth.ts",
+		"line": 29,
+		"snippet": "logger.warn('AuthUtil', 'User ID accessed via fallback req.user.user_id', {"
+	},
+	{
+		"file": "server/src/utils/auth.ts",
+		"line": 35,
+		"snippet": "logger.error('AuthUtil', 'User ID not found or not a number in req.user', {"
+	},
+	{
+		"file": "server/src/utils/auth.ts",
+		"line": 36,
+		"snippet": "userObject: req.user"
+	},
+	{
+		"file": "server/src/domains/advertising/user-promotion.routes.ts",
+		"line": 50,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/advertising/user-promotion.routes.ts",
+		"line": 78,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/advertising/user-promotion.routes.ts",
+		"line": 137,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/advertising/user-promotion.routes.ts",
+		"line": 170,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/advertising/user-promotion.routes.ts",
+		"line": 262,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/advertising/user-promotion.routes.ts",
+		"line": 391,
+		"snippet": "const moderatorId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/admin.controller.ts",
+		"line": 65,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/admin.middleware.ts",
+		"line": 18,
+		"snippet": "export function getUserId(req: Request): number {"
+	},
+	{
+		"file": "server/src/domains/admin/admin.middleware.ts",
+		"line": 20,
+		"snippet": "return (req.user as any)?.id || 0;"
+	},
+	{
+		"file": "server/src/domains/admin/admin.middleware.ts",
+		"line": 74,
+		"snippet": "const user = req.user as any;"
+	},
+	{
+		"file": "server/src/domains/admin/admin.middleware.ts",
+		"line": 135,
+		"snippet": "const user = req.user as any;"
+	},
+	{
+		"file": "server/src/domains/auth/auth.routes.ts",
+		"line": 125,
+		"snippet": "const user = await storage.getUser(id);"
+	},
+	{
+		"file": "server/src/domains/feature-gates/feature-gates.controller.ts",
+		"line": 48,
+		"snippet": "// @ts-ignore - req.user is added by auth middleware"
+	},
+	{
+		"file": "server/src/domains/feature-gates/feature-gates.controller.ts",
+		"line": 49,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/feature-gates/feature-gates.controller.ts",
+		"line": 77,
+		"snippet": "// @ts-ignore - req.user is added by auth middleware"
+	},
+	{
+		"file": "server/src/domains/feature-gates/feature-gates.controller.ts",
+		"line": 78,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/dictionary/dictionary.routes.ts",
+		"line": 54,
+		"snippet": "const created = await DictionaryService.create({ ...data, authorId: req.user.id });"
+	},
+	{
+		"file": "server/src/domains/dictionary/dictionary.routes.ts",
+		"line": 70,
+		"snippet": "const updated = await DictionaryService.moderate(Number(req.params.id), status, req.user.id);"
+	},
+	{
+		"file": "server/src/domains/dictionary/dictionary.routes.ts",
+		"line": 81,
+		"snippet": "const result = await DictionaryService.toggleUpvote(Number(req.params.id), req.user.id);"
+	},
+	{
+		"file": "server/src/domains/forum/forum.controller.ts",
+		"line": 30,
+		"snippet": "const isAdmin = req.user && (req.user as any).role === 'admin';"
+	},
+	{
+		"file": "server/src/domains/gamification/achievement.controller.ts",
+		"line": 154,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/gamification/achievement.controller.ts",
+		"line": 237,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/gamification/admin.controller.ts",
+		"line": 404,
+		"snippet": "adminId: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/gamification/leveling.controller.ts",
+		"line": 159,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/gamification/mission.controller.ts",
+		"line": 224,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/gamification/mission.controller.ts",
+		"line": 254,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/missions/missions.controller.ts",
+		"line": 26,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/missions/missions.controller.ts",
+		"line": 28,
+		"snippet": "const userLevel = req.user?.level || 1;"
+	},
+	{
+		"file": "server/src/domains/missions/missions.controller.ts",
+		"line": 48,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/missions/missions.controller.ts",
+		"line": 137,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/paths/paths.routes.ts",
+		"line": 61,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/paths/paths.routes.ts",
+		"line": 77,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/paths/paths.routes.ts",
+		"line": 101,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/preferences/preferences.routes.ts",
+		"line": 85,
+		"snippet": "const userId = req.user.id;"
+	},
+	{
+		"file": "server/src/domains/preferences/preferences.routes.ts",
+		"line": 107,
+		"snippet": "const userId = req.user.id;"
+	},
+	{
+		"file": "server/src/domains/preferences/preferences.routes.ts",
+		"line": 131,
+		"snippet": "const userId = req.user.id;"
+	},
+	{
+		"file": "server/src/domains/preferences/preferences.routes.ts",
+		"line": 155,
+		"snippet": "const userId = req.user.id;"
+	},
+	{
+		"file": "server/src/domains/preferences/preferences.routes.ts",
+		"line": 179,
+		"snippet": "const userId = req.user.id;"
+	},
+	{
+		"file": "server/src/domains/preferences/preferences.routes.ts",
+		"line": 203,
+		"snippet": "const userId = req.user.id;"
+	},
+	{
+		"file": "server/src/domains/preferences/preferences.routes.ts",
+		"line": 225,
+		"snippet": "user: req.user,"
+	},
+	{
+		"file": "server/src/domains/preferences/preferences.routes.ts",
+		"line": 366,
+		"snippet": "const username = (req.user as any).username;"
+	},
+	{
+		"file": "server/src/domains/notifications/notification.routes.ts",
+		"line": 31,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/notifications/notification.routes.ts",
+		"line": 57,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/notifications/notification.routes.ts",
+		"line": 79,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/notifications/notification.routes.ts",
+		"line": 106,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/profile/profile.routes.ts",
+		"line": 172,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/profile/profile.routes.ts",
+		"line": 192,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/profile/profile.routes.ts",
+		"line": 212,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/profile/profile-stats.controller.ts",
+		"line": 35,
+		"snippet": "if (req.user?.id) {"
+	},
+	{
+		"file": "server/src/domains/profile/profile-stats.controller.ts",
+		"line": 36,
+		"snippet": "await ProfileStatsService.updateLastSeen(req.user.id);"
+	},
+	{
+		"file": "server/src/domains/profile/profile-stats.controller.ts",
+		"line": 49,
+		"snippet": "const sanitizedStats = this.sanitizeProfileStats(stats, req.user?.id === stats.id);"
+	},
+	{
+		"file": "server/src/domains/profile/profile-stats.controller.ts",
+		"line": 73,
+		"snippet": "viewerId: req.user?.id || null,"
+	},
+	{
+		"file": "server/src/domains/shop/shop.routes.ts",
+		"line": 128,
+		"snippet": "if (!req.user) {"
+	},
+	{
+		"file": "server/src/domains/shop/shop.routes.ts",
+		"line": 132,
+		"snippet": "const userId = (req.user as { id: number }).id;"
+	},
+	{
+		"file": "server/src/domains/shop/shop.routes.ts",
+		"line": 239,
+		"snippet": "userId: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/shop/shop.routes.ts",
+		"line": 248,
+		"snippet": "if (!req.user) {"
+	},
+	{
+		"file": "server/src/domains/shop/shop.routes.ts",
+		"line": 252,
+		"snippet": "const userId = (req.user as { id: number }).id;"
+	},
+	{
+		"file": "server/src/domains/shop/shop.routes.ts",
+		"line": 276,
+		"snippet": "userId: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/social/follows.routes.ts",
+		"line": 67,
+		"snippet": "const followerId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/follows.routes.ts",
+		"line": 93,
+		"snippet": "const followerId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/follows.routes.ts",
+		"line": 115,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/follows.routes.ts",
+		"line": 140,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/follows.routes.ts",
+		"line": 164,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/follows.routes.ts",
+		"line": 181,
+		"snippet": "const followerId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/follows.routes.ts",
+		"line": 198,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/follows.routes.ts",
+		"line": 262,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/follows.routes.ts",
+		"line": 280,
+		"snippet": "const currentUserId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/follows.routes.ts",
+		"line": 297,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/follows.routes.ts",
+		"line": 314,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/follows.routes.ts",
+		"line": 332,
+		"snippet": "const followerId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/shoutbox/enhanced-shoutbox.routes.ts",
+		"line": 108,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/enhanced-shoutbox.routes.ts",
+		"line": 131,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/enhanced-shoutbox.routes.ts",
+		"line": 156,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/enhanced-shoutbox.routes.ts",
+		"line": 188,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/enhanced-shoutbox.routes.ts",
+		"line": 213,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/enhanced-shoutbox.routes.ts",
+		"line": 261,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/enhanced-shoutbox.routes.ts",
+		"line": 361,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/enhanced-shoutbox.routes.ts",
+		"line": 475,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/enhanced-shoutbox.routes.ts",
+		"line": 560,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/enhanced-shoutbox.routes.ts",
+		"line": 619,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/enhanced-shoutbox.routes.ts",
+		"line": 642,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/social/friends.routes.ts",
+		"line": 63,
+		"snippet": "const requesterId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/friends.routes.ts",
+		"line": 115,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/friends.routes.ts",
+		"line": 137,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/friends.routes.ts",
+		"line": 161,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/friends.routes.ts",
+		"line": 177,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/friends.routes.ts",
+		"line": 193,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/friends.routes.ts",
+		"line": 210,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/friends.routes.ts",
+		"line": 228,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/friends.routes.ts",
+		"line": 246,
+		"snippet": "const currentUserId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/friends.routes.ts",
+		"line": 263,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/friends.routes.ts",
+		"line": 280,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/friends.routes.ts",
+		"line": 298,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/friends.routes.ts",
+		"line": 321,
+		"snippet": "const senderId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/mentions.routes.ts",
+		"line": 41,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/mentions.routes.ts",
+		"line": 67,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/mentions.routes.ts",
+		"line": 84,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/mentions.routes.ts",
+		"line": 101,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/mentions.routes.ts",
+		"line": 118,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/whale-watch.routes.ts",
+		"line": 35,
+		"snippet": "const followerId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/whale-watch.routes.ts",
+		"line": 69,
+		"snippet": "const followerId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/whale-watch.routes.ts",
+		"line": 168,
+		"snippet": "const currentUserId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/social/whale-watch.routes.ts",
+		"line": 202,
+		"snippet": "const currentUserId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/subscriptions/subscription.controller.ts",
+		"line": 19,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/subscriptions/subscription.controller.ts",
+		"line": 64,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/subscriptions/subscription.controller.ts",
+		"line": 98,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/subscriptions/subscription.controller.ts",
+		"line": 133,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/subscriptions/subscription.controller.ts",
+		"line": 182,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/subscriptions/subscription.controller.ts",
+		"line": 218,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/subscriptions/subscription.controller.ts",
+		"line": 314,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/subscriptions/subscription.controller.ts",
+		"line": 315,
+		"snippet": "const userRole = req.user?.role;"
+	},
+	{
+		"file": "server/src/domains/treasury/treasury.routes.ts",
+		"line": 45,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/treasury/treasury.routes.ts",
+		"line": 364,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/treasury/treasury.routes.ts",
+		"line": 511,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/uploads/upload.controller.ts",
+		"line": 15,
+		"snippet": "// So, `req.user` should be available and typed correctly if `requireAuth` middleware is used."
+	},
+	{
+		"file": "server/src/domains/uploads/upload.controller.ts",
+		"line": 17,
+		"snippet": "// The `req.user` type comes from the global Express namespace augmentation in `authenticate.ts`."
+	},
+	{
+		"file": "server/src/domains/uploads/upload.controller.ts",
+		"line": 33,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/uploads/upload.controller.ts",
+		"line": 77,
+		"snippet": "// Relies on global Express.User augmentation from authenticate.ts for req.user typing"
+	},
+	{
+		"file": "server/src/domains/uploads/upload.controller.ts",
+		"line": 92,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/user/user-preferences.routes.ts",
+		"line": 43,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/user/user-preferences.routes.ts",
+		"line": 61,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/user/user-preferences.routes.ts",
+		"line": 92,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/user/user-preferences.routes.ts",
+		"line": 110,
+		"snippet": "const userId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/xp/xp.controller.ts",
+		"line": 126,
+		"snippet": "const authUserId = (req.user as any)?.id; // Added type assertion"
+	},
+	{
+		"file": "server/src/domains/xp/xp.controller.ts",
+		"line": 130,
+		"snippet": "const isAdmin = (req.user as any)?.role === 'admin'; // Added type assertion"
+	},
+	{
+		"file": "server/src/domains/wallet/treasury.controller.ts",
+		"line": 219,
+		"snippet": "const adminId = (req.user as { id: number }).id;"
+	},
+	{
+		"file": "server/src/domains/wallet/treasury.controller.ts",
+		"line": 280,
+		"snippet": "const adminId = (req.user as { id: number }).id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.dev.controller.ts",
+		"line": 37,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.dev.controller.ts",
+		"line": 58,
+		"snippet": "userId: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.dev.controller.ts",
+		"line": 73,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.dev.controller.ts",
+		"line": 105,
+		"snippet": "userId: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.dev.controller.ts",
+		"line": 120,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.dev.controller.ts",
+		"line": 137,
+		"snippet": "userId: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.dev.controller.ts",
+		"line": 200,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.dev.controller.ts",
+		"line": 215,
+		"snippet": "userId: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.controller.ts",
+		"line": 38,
+		"snippet": "const userId = this.getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.controller.ts",
+		"line": 108,
+		"snippet": "const authUserId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.controller.ts",
+		"line": 197,
+		"snippet": "if (!req.user) {"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.controller.ts",
+		"line": 206,
+		"snippet": "const userId = (req.user as { id: number }).id; // Explicit cast after check"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.controller.ts",
+		"line": 270,
+		"snippet": "if (!req.user) {"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.controller.ts",
+		"line": 279,
+		"snippet": "const userId = (req.user as { id: number }).id; // Explicit cast after check"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.controller.ts",
+		"line": 363,
+		"snippet": "if (!req.user) {"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.controller.ts",
+		"line": 373,
+		"snippet": "const userId = (req.user as { id: number }).id; // Explicit cast after check"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.controller.ts",
+		"line": 429,
+		"snippet": "if (!req.user) {"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.controller.ts",
+		"line": 439,
+		"snippet": "const userId = (req.user as { id: number }).id; // Explicit cast after check"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.controller.ts",
+		"line": 615,
+		"snippet": "if (!req.user) return res.status(401).json({ error: 'Unauthenticated' });"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.controller.ts",
+		"line": 616,
+		"snippet": "const userId = (req.user as { id: number }).id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.routes.ts",
+		"line": 30,
+		"snippet": "const userId = req.body.userId || req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.routes.ts",
+		"line": 57,
+		"snippet": "const userId = (req.query.userId as string) || req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.routes.ts",
+		"line": 84,
+		"snippet": "const userId = (req.query.userId as string) || req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.routes.ts",
+		"line": 111,
+		"snippet": "const userId = req.body.userId || req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.routes.ts",
+		"line": 150,
+		"snippet": "const fromUserId = req.body.fromUserId || req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.routes.ts",
+		"line": 189,
+		"snippet": "const userId = req.body.userId || req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.routes.ts",
+		"line": 227,
+		"snippet": "const userId = (req.query.userId as string) || req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.routes.ts",
+		"line": 282,
+		"snippet": "const userId = (req.query.userId as string) || req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.test.routes.ts",
+		"line": 17,
+		"snippet": "if (!isDevMode() && req.user?.role !== 'admin') {"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.test.controller.ts",
+		"line": 21,
+		"snippet": "if (!isDevMode() && (!req.user || (req.user as any).role !== 'admin')) {"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.test.controller.ts",
+		"line": 28,
+		"snippet": "const targetUserId = userId || (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.test.controller.ts",
+		"line": 37,
+		"snippet": "requestingUser: (req.user as any)?.id"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.test.controller.ts",
+		"line": 193,
+		"snippet": "const targetUserId = userId || (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.test.controller.ts",
+		"line": 250,
+		"snippet": "(!req.user ||"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.test.controller.ts",
+		"line": 251,
+		"snippet": "((req.user as any).role !== 'admin' && (req.user as any).id !== req.params.userId))"
+	},
+	{
+		"file": "server/src/domains/wallet/wallet.test.controller.ts",
+		"line": 258,
+		"snippet": "const targetUserId = req.params.userId || (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/withdrawal.controller.ts",
+		"line": 39,
+		"snippet": "if (!req.user) {"
+	},
+	{
+		"file": "server/src/domains/wallet/withdrawal.controller.ts",
+		"line": 43,
+		"snippet": "const userId = (req.user as { id: number }).id;"
+	},
+	{
+		"file": "server/src/domains/wallet/withdrawal.controller.ts",
+		"line": 172,
+		"snippet": "userId: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/wallet/withdrawal.controller.ts",
+		"line": 183,
+		"snippet": "if (!req.user) {"
+	},
+	{
+		"file": "server/src/domains/wallet/withdrawal.controller.ts",
+		"line": 187,
+		"snippet": "const userId = (req.user as { id: number }).id;"
+	},
+	{
+		"file": "server/src/domains/wallet/withdrawal.controller.ts",
+		"line": 232,
+		"snippet": "userId: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/wallet/withdrawal.controller.ts",
+		"line": 307,
+		"snippet": "const adminId = (req.user as { id: number }).id;"
+	},
+	{
+		"file": "server/src/core/audit/audit-logger.ts",
+		"line": 497,
+		"snippet": "const user = req.user;"
+	},
+	{
+		"file": "server/src/core/middleware/security.middleware.ts",
+		"line": 257,
+		"snippet": "userId: (req.user as any)?.id,"
+	},
+	{
+		"file": "server/src/core/middleware/security.middleware.ts",
+		"line": 268,
+		"snippet": "userId: (req.user as any)?.id,"
+	},
+	{
+		"file": "server/src/core/services/rate-limit.service.ts",
+		"line": 70,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/core/utils/error-response.util.ts",
+		"line": 113,
+		"snippet": "userId: (req.user as any)?.id,"
+	},
+	{
+		"file": "server/src/domains/shoutbox/shoutbox.routes.ts",
+		"line": 94,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/shoutbox.routes.ts",
+		"line": 95,
+		"snippet": "const isAdminOrMod = req.user"
+	},
+	{
+		"file": "server/src/domains/shoutbox/shoutbox.routes.ts",
+		"line": 98,
+		"snippet": "id: (req.user as any).id,"
+	},
+	{
+		"file": "server/src/domains/shoutbox/shoutbox.routes.ts",
+		"line": 99,
+		"snippet": "primaryRoleId: (req.user as any).primaryRoleId,"
+	},
+	{
+		"file": "server/src/domains/shoutbox/shoutbox.routes.ts",
+		"line": 100,
+		"snippet": "secondaryRoleIds: (req.user as any).secondaryRoleIds"
+	},
+	{
+		"file": "server/src/domains/shoutbox/shoutbox.routes.ts",
+		"line": 229,
+		"snippet": "const moderatorId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/shoutbox.routes.ts",
+		"line": 278,
+		"snippet": "const currentUserId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/shoutbox.routes.ts",
+		"line": 432,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/shoutbox/shoutbox.routes.ts",
+		"line": 543,
+		"snippet": "const userIdForLog = getUserId(req); // Ensure userId is available"
+	},
+	{
+		"file": "server/src/domains/shoutbox/shoutbox.routes.ts",
+		"line": 593,
+		"snippet": "const moderatorId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/shared/admin-error-boundaries.ts",
+		"line": 380,
+		"snippet": "userId: (req.user as any)?.id,"
+	},
+	{
+		"file": "server/src/core/services/user.service.ts",
+		"line": 45,
+		"snippet": "getUserFromRequest(req: any): AuthenticatedUser | null {"
+	},
+	{
+		"file": "server/src/core/services/user.service.ts",
+		"line": 46,
+		"snippet": "const user = req.user;"
+	},
+	{
+		"file": "server/src/core/services/user.service.ts",
+		"line": 250,
+		"snippet": "const user = this.getUserFromRequest(req);"
+	},
+	{
+		"file": "server/src/core/services/user.service.ts",
+		"line": 310,
+		"snippet": "export function getUserFromRequest(req: any): AuthenticatedUser | null {"
+	},
+	{
+		"file": "server/src/core/services/user.service.ts",
+		"line": 311,
+		"snippet": "return userService.getUserFromRequest(req);"
+	},
+	{
+		"file": "server/src/domains/auth/middleware/auth.middleware.ts",
+		"line": 10,
+		"snippet": "if (!req.user) return false;"
+	},
+	{
+		"file": "server/src/domains/auth/middleware/auth.middleware.ts",
+		"line": 11,
+		"snippet": "return (req.user as any).role === role;"
+	},
+	{
+		"file": "server/src/domains/auth/middleware/auth.middleware.ts",
+		"line": 119,
+		"snippet": "userId: (req.user as any)?.id,"
+	},
+	{
+		"file": "server/src/domains/auth/middleware/auth.middleware.ts",
+		"line": 120,
+		"snippet": "userRole: (req.user as any)?.role,"
+	},
+	{
+		"file": "server/src/domains/auth/controllers/auth.controller.ts",
+		"line": 192,
+		"snippet": "const userResponse = { ...(req.user as any) };"
+	},
+	{
+		"file": "server/src/domains/auth/services/auth.service.ts",
+		"line": 182,
+		"snippet": "export function getUserId(req: any): number {"
+	},
+	{
+		"file": "server/src/domains/auth/services/xAuthService.ts",
+		"line": 75,
+		"snippet": "if (req.user) {"
+	},
+	{
+		"file": "server/src/domains/auth/services/xAuthService.ts",
+		"line": 85,
+		"snippet": ".where(eq(users.id, (req.user as any).id));"
+	},
+	{
+		"file": "server/src/domains/auth/services/xAuthService.ts",
+		"line": 131,
+		"snippet": "if (!req.user) return res.status(401).json({ message: 'Not logged in' });"
+	},
+	{
+		"file": "server/src/domains/auth/services/xAuthService.ts",
+		"line": 141,
+		"snippet": ".where(eq(users.id, (req.user as any).id));"
+	},
+	{
+		"file": "server/src/domains/collectibles/stickers/stickers.controller.ts",
+		"line": 87,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/collectibles/stickers/stickers.controller.ts",
+		"line": 112,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/collectibles/stickers/stickers.controller.ts",
+		"line": 136,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/collectibles/stickers/stickers.controller.ts",
+		"line": 160,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/collectibles/stickers/stickers.controller.ts",
+		"line": 222,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/collectibles/stickers/stickers.controller.ts",
+		"line": 247,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/collectibles/stickers/stickers.controller.ts",
+		"line": 271,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/collectibles/stickers/stickers.controller.ts",
+		"line": 314,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/collectibles/stickers/stickers.controller.ts",
+		"line": 360,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/collectibles/stickers/stickers.controller.ts",
+		"line": 418,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/collectibles/stickers/stickers.controller.ts",
+		"line": 502,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/engagement/airdrop/airdrop.controller.ts",
+		"line": 23,
+		"snippet": "const adminUserId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/engagement/airdrop/airdrop.controller.ts",
+		"line": 24,
+		"snippet": "const isAdmin = req.user?.role === 'admin';"
+	},
+	{
+		"file": "server/src/domains/engagement/airdrop/airdrop.controller.ts",
+		"line": 93,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/engagement/airdrop/airdrop.controller.ts",
+		"line": 94,
+		"snippet": "const isAdmin = req.user?.role === 'admin';"
+	},
+	{
+		"file": "server/src/domains/engagement/airdrop/airdrop.controller.ts",
+		"line": 139,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/engagement/airdrop/airdrop.controller.ts",
+		"line": 140,
+		"snippet": "const isAdmin = req.user?.role === 'admin';"
+	},
+	{
+		"file": "server/src/domains/engagement/rain/rain.controller.ts",
+		"line": 29,
+		"snippet": "const fromUserId = req.user.id;"
+	},
+	{
+		"file": "server/src/domains/engagement/rain/rain.controller.ts",
+		"line": 92,
+		"snippet": "const userId = req.user.id;"
+	},
+	{
+		"file": "server/src/domains/engagement/tip/tip.controller.ts",
+		"line": 29,
+		"snippet": "const fromUserId = req.user.id;"
+	},
+	{
+		"file": "server/src/domains/engagement/tip/tip.controller.ts",
+		"line": 58,
+		"snippet": "const userId = req.user.id;"
+	},
+	{
+		"file": "server/src/domains/engagement/tip/tip.controller.ts",
+		"line": 104,
+		"snippet": "const userId = req.user.id;"
+	},
+	{
+		"file": "server/src/domains/engagement/vault/vault.controller.ts",
+		"line": 25,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/engagement/vault/vault.controller.ts",
+		"line": 87,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/engagement/vault/vault.controller.ts",
+		"line": 147,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/engagement/vault/vault.controller.ts",
+		"line": 179,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/engagement/vault/vault.controller.ts",
+		"line": 180,
+		"snippet": "const isAdmin = (req.user as any)?.role === 'admin';"
+	},
+	{
+		"file": "server/src/domains/forum/routes/bookmark.routes.ts",
+		"line": 28,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/forum/routes/bookmark.routes.ts",
+		"line": 89,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/forum/routes/bookmark.routes.ts",
+		"line": 120,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/forum/rules/rules.routes.ts",
+		"line": 75,
+		"snippet": "if (rule.status !== 'published' && (!req.user || (req.user as any).role !== 'admin')) {"
+	},
+	{
+		"file": "server/src/domains/forum/rules/rules.routes.ts",
+		"line": 89,
+		"snippet": "if (!req.isAuthenticated() || !req.user) {"
+	},
+	{
+		"file": "server/src/domains/forum/rules/rules.routes.ts",
+		"line": 97,
+		"snippet": "// but as a safeguard if req.user exists but ID doesn't."
+	},
+	{
+		"file": "server/src/domains/forum/rules/rules.routes.ts",
+		"line": 140,
+		"snippet": "if (!req.isAuthenticated() || !req.user) {"
+	},
+	{
+		"file": "server/src/domains/forum/routes/content.routes.ts",
+		"line": 57,
+		"snippet": "followingUserId: tab === 'following' ? req.user?.id : undefined"
+	},
+	{
+		"file": "server/src/domains/forum/routes/post.routes.ts",
+		"line": 47,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/forum/routes/post.routes.ts",
+		"line": 90,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/forum/routes/post.routes.ts",
+		"line": 126,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/forum/routes/post.routes.ts",
+		"line": 149,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/forum/routes/post.routes.ts",
+		"line": 191,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/forum/routes/thread.routes.ts",
+		"line": 167,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/forum/routes/thread.routes.ts",
+		"line": 212,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/forum/routes/thread.routes.ts",
+		"line": 258,
+		"snippet": "const userId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/forum/services/permissions.service.ts",
+		"line": 233,
+		"snippet": "* @deprecated Use userService.getUserFromRequest() instead"
+	},
+	{
+		"file": "server/src/domains/forum/services/permissions.service.ts",
+		"line": 235,
+		"snippet": "export function getUserFromRequest(req: any): User | null {"
+	},
+	{
+		"file": "server/src/domains/forum/services/permissions.service.ts",
+		"line": 236,
+		"snippet": "const user = req.user;"
+	},
+	{
+		"file": "server/src/domains/forum/services/permissions.service.ts",
+		"line": 257,
+		"snippet": "const user = getUserFromRequest(req);"
+	},
+	{
+		"file": "server/src/domains/forum/services/permissions.service.ts",
+		"line": 334,
+		"snippet": "const user = getUserFromRequest(req);"
+	},
+	{
+		"file": "server/src/domains/forum/services/permissions.service.ts",
+		"line": 360,
+		"snippet": "const user = getUserFromRequest(req);"
+	},
+	{
+		"file": "server/src/domains/share/routes/xShareRoutes.ts",
+		"line": 20,
+		"snippet": "userId: (req.user as any).id,"
+	},
+	{
+		"file": "server/src/domains/share/routes/xShareRoutes.ts",
+		"line": 37,
+		"snippet": "userId: (req.user as any).id,"
+	},
+	{
+		"file": "server/src/domains/wallet/middleware/security.middleware.ts",
+		"line": 63,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/middleware/security.middleware.ts",
+		"line": 114,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/middleware/security.middleware.ts",
+		"line": 165,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/middleware/security.middleware.ts",
+		"line": 232,
+		"snippet": "const fromUserId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/wallet/middleware/security.middleware.ts",
+		"line": 302,
+		"snippet": "const adminUserId = req.user?.id;"
+	},
+	{
+		"file": "server/src/routes/api/user/frames.ts",
+		"line": 9,
+		"snippet": "if (!req.user) return res.status(401).json({ error: 'Not authenticated' });"
+	},
+	{
+		"file": "server/src/routes/api/user/frames.ts",
+		"line": 10,
+		"snippet": "const userId = (req.user as any).id as string;"
+	},
+	{
+		"file": "server/src/routes/api/store/avatar-frames.ts",
+		"line": 26,
+		"snippet": "if (!req.user) return res.status(401).json({ error: 'Not authenticated' });"
+	},
+	{
+		"file": "server/src/routes/api/store/avatar-frames.ts",
+		"line": 27,
+		"snippet": "const userId = (req.user as any).id as string;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/airdrop/airdrop.controller.ts",
+		"line": 19,
+		"snippet": "const adminId = req.user?.id; // Assuming adminId is available from auth middleware"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/analytics/system-analytics.controller.ts",
+		"line": 229,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/avatar-frames/avatar-frames.controller.ts",
+		"line": 66,
+		"snippet": "createdBy: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/avatar-frames/avatar-frames.controller.ts",
+		"line": 80,
+		"snippet": "userId: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/avatar-frames/avatar-frames.controller.ts",
+		"line": 105,
+		"snippet": "updatedBy: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/avatar-frames/avatar-frames.controller.ts",
+		"line": 120,
+		"snippet": "userId: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/avatar-frames/avatar-frames.controller.ts",
+		"line": 143,
+		"snippet": "deletedBy: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/avatar-frames/avatar-frames.controller.ts",
+		"line": 151,
+		"snippet": "userId: req.user?.id"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/backup-restore/backup-restore.controller.ts",
+		"line": 88,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/backup-restore/backup-restore.controller.ts",
+		"line": 112,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/backup-restore/backup-restore.controller.ts",
+		"line": 268,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/backup-restore/backup-restore.controller.ts",
+		"line": 292,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/backup-restore/backup-restore.controller.ts",
+		"line": 372,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/backup-restore/backup-restore.controller.ts",
+		"line": 397,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/backup-restore/backup-restore.controller.ts",
+		"line": 421,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/backup-restore/backup-restore.controller.ts",
+		"line": 445,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/cache/cache.controller.ts",
+		"line": 31,
+		"snippet": "userId: (req.user as any)?.id,"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/cache/cache.controller.ts",
+		"line": 73,
+		"snippet": "userId: (req.user as any)?.id,"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/cache/cache.controller.ts",
+		"line": 130,
+		"snippet": "userId: (req.user as any)?.id,"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/cache/cache.controller.ts",
+		"line": 170,
+		"snippet": "userId: (req.user as any)?.id,"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/bulk-operations.controller.ts",
+		"line": 51,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/bulk-operations.controller.ts",
+		"line": 224,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/bulk-operations.controller.ts",
+		"line": 298,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/database.controller.ts",
+		"line": 57,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/database.controller.ts",
+		"line": 86,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/database.controller.ts",
+		"line": 126,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/database.controller.ts",
+		"line": 169,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/database.controller.ts",
+		"line": 236,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/database.controller.ts",
+		"line": 298,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/database.controller.ts",
+		"line": 353,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/database.controller.ts",
+		"line": 420,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/database.controller.ts",
+		"line": 459,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/database.controller.ts",
+		"line": 499,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/query.controller.ts",
+		"line": 32,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/query.controller.ts",
+		"line": 76,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/query.controller.ts",
+		"line": 112,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/query.controller.ts",
+		"line": 149,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/query.controller.ts",
+		"line": 189,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/query.controller.ts",
+		"line": 218,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/database/query.controller.ts",
+		"line": 263,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/email-templates/email-templates.controller.ts",
+		"line": 112,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/email-templates/email-templates.controller.ts",
+		"line": 138,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/email-templates/email-templates.controller.ts",
+		"line": 171,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/email-templates/email-templates.controller.ts",
+		"line": 246,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/emojis/emojis.controller.ts",
+		"line": 20,
+		"snippet": "function getUserId(req: Request): number | undefined {"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/emojis/emojis.controller.ts",
+		"line": 21,
+		"snippet": "return (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/emojis/emojis.controller.ts",
+		"line": 130,
+		"snippet": "createdBy: getUserId(req)"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/moderator-notes/moderator-notes.routes.ts",
+		"line": 123,
+		"snippet": "const isAdmin = req.user?.role === 'admin';"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/forum/forum.controller.ts",
+		"line": 243,
+		"snippet": "getUserId(req),"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/roles/roles.controller.ts",
+		"line": 22,
+		"snippet": "userId: (req.user as any)?.id,"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/roles/roles.controller.ts",
+		"line": 51,
+		"snippet": "userId: (req.user as any)?.id,"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/roles/roles.controller.ts",
+		"line": 84,
+		"snippet": "userId: (req.user as any)?.id,"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/roles/roles.controller.ts",
+		"line": 114,
+		"snippet": "userId: (req.user as any)?.id,"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/reports/reports.controller.ts",
+		"line": 61,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/reports/reports.controller.ts",
+		"line": 91,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/reports/reports.controller.ts",
+		"line": 121,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/reports/reports.controller.ts",
+		"line": 159,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/permissions/permissions.routes.ts",
+		"line": 11,
+		"snippet": "const user = req.user;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/roles/roles.routes.ts",
+		"line": 11,
+		"snippet": "const user = req.user;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/referrals/referrals.controller.ts",
+		"line": 14,
+		"snippet": "const createdBy = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/social/social.controller.ts",
+		"line": 27,
+		"snippet": "const adminUserId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/social/social.controller.ts",
+		"line": 66,
+		"snippet": "const adminUserId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/social/social.controller.ts",
+		"line": 104,
+		"snippet": "const adminUserId = req.user!.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/subscriptions/subscription.admin.controller.ts",
+		"line": 269,
+		"snippet": "const adminUserId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/subscriptions/subscription.admin.controller.ts",
+		"line": 333,
+		"snippet": "const adminUserId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/titles/titles.routes.ts",
+		"line": 11,
+		"snippet": "const user = req.user;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/treasury/treasury.controller.ts",
+		"line": 41,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/treasury/treasury.controller.ts",
+		"line": 64,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/treasury/treasury.controller.ts",
+		"line": 87,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/treasury/treasury.controller.ts",
+		"line": 126,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/ui-config/ui-config.controller.ts",
+		"line": 93,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/ui-config/ui-config.controller.ts",
+		"line": 123,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/ui-config/ui-config.controller.ts",
+		"line": 224,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/ui-config/ui-config.controller.ts",
+		"line": 260,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/ui-config/ui-config.controller.ts",
+		"line": 404,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/wallet/wallet.controller.ts",
+		"line": 79,
+		"snippet": "const adminUserId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/wallet/wallet.controller.ts",
+		"line": 115,
+		"snippet": "const adminUserId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/users/bulk-operations.controller.ts",
+		"line": 36,
+		"snippet": "const adminId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/users/bulk-operations.controller.ts",
+		"line": 86,
+		"snippet": "const adminId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/users/bulk-operations.controller.ts",
+		"line": 136,
+		"snippet": "const adminId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/users/bulk-operations.controller.ts",
+		"line": 182,
+		"snippet": "const adminId = (req.user as any)?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/users/users.controller.ts",
+		"line": 98,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/users/users.controller.ts",
+		"line": 139,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/users/users.controller.ts",
+		"line": 181,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/users/users.controller.ts",
+		"line": 222,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/users/users.controller.ts",
+		"line": 263,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/users/users.controller.ts",
+		"line": 311,
+		"snippet": "const adminId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/xp/xp.controller.ts",
+		"line": 248,
+		"snippet": "const adminId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/xp/xp.controller.ts",
+		"line": 352,
+		"snippet": "adminId: req.user?.id,"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/announcements/controllers/announcements.controller.ts",
+		"line": 14,
+		"snippet": "* Helper function to get user ID from req.user, handling both id and user_id formats"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/announcements/controllers/announcements.controller.ts",
+		"line": 16,
+		"snippet": "function getUserId(req: Request): number {"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/announcements/controllers/announcements.controller.ts",
+		"line": 17,
+		"snippet": "return (req.user as any)?.id || (req.user as any)?.user_id || 0;"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/announcements/controllers/announcements.controller.ts",
+		"line": 26,
+		"snippet": "const userRole = req.user?.role || 'guest';"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/announcements/controllers/announcements.controller.ts",
+		"line": 27,
+		"snippet": "const userId = getUserId(req);"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/announcements/controllers/announcements.controller.ts",
+		"line": 84,
+		"snippet": "if (!req.user) {"
+	},
+	{
+		"file": "server/src/domains/admin/sub-domains/announcements/controllers/announcements.controller.ts",
+		"line": 91,
+		"snippet": "createdBy: getUserId(req)"
+	},
+	{
+		"file": "server/src/middleware/mission-progress.ts",
+		"line": 20,
+		"snippet": "const userId = req.user?.id;"
+	},
+	{
+		"file": "server/src/domains/profile/social-actions.controller.ts",
+		"line": 31,
+		"snippet": "if (!req.user?.id) {"
+	},
+	{
+		"file": "server/src/domains/profile/social-actions.controller.ts",
+		"line": 40,
+		"snippet": "const result = await SocialActionsService.toggleFollow(req.user.id, targetUserId);"
+	},
+	{
+		"file": "server/src/domains/profile/social-actions.controller.ts",
+		"line": 64,
+		"snippet": "if (!req.user?.id) {"
+	},
+	{
+		"file": "server/src/domains/profile/social-actions.controller.ts",
+		"line": 74,
+		"snippet": "req.user.id,"
+	},
+	{
+		"file": "server/src/domains/profile/social-actions.controller.ts",
+		"line": 101,
+		"snippet": "if (!req.user?.id) {"
+	},
+	{
+		"file": "server/src/domains/profile/social-actions.controller.ts",
+		"line": 110,
+		"snippet": "const result = await SocialActionsService.toggleBlock(req.user.id, targetUserId);"
+	},
+	{
+		"file": "server/src/domains/profile/social-actions.controller.ts",
+		"line": 134,
+		"snippet": "if (!req.user?.id) {"
+	},
+	{
+		"file": "server/src/domains/profile/social-actions.controller.ts",
+		"line": 143,
+		"snippet": "const status = await SocialActionsService.getRelationshipStatus(req.user.id, targetUserId);"
+	},
+	{
+		"file": "server/src/domains/profile/social-actions.controller.ts",
+		"line": 161,
+		"snippet": "if (!req.user?.id) {"
+	},
+	{
+		"file": "server/src/domains/profile/social-actions.controller.ts",
+		"line": 174,
+		"snippet": "const suggestions = await this.generateSocialSuggestions(req.user.id);"
+	},
+	{
+		"file": "server/src/domains/profile/social-actions.controller.ts",
+		"line": 195,
+		"snippet": "if (!req.user?.id) {"
+	},
+	{
+		"file": "server/src/domains/profile/social-actions.controller.ts",
+		"line": 203,
+		"snippet": "const pendingRequests = await this.getPendingRequests(req.user.id);"
+	}
+]

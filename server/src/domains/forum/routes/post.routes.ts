@@ -41,86 +41,95 @@ const tipPostSchema = z.object({
 });
 
 // Create new post (reply)
-router.post('/', requireAuth, async (req: Request, res: Response) => {
-	try {
-		const validatedData = createPostSchema.parse(req.body);
-		const userId = (req.user as any)?.id;
+router.post(
+	'/',
+	requireAuth,
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const validatedData = createPostSchema.parse(req.body);
+			const userId = (req.user as any)?.id;
 
-		if (!userId) {
-			return res.status(401).json({
+			if (!userId) {
+				return res.status(401).json({
+					success: false,
+					error: 'User not authenticated'
+				});
+			}
+
+			const newPost = await postService.createPost({
+				content: validatedData.content,
+				threadId: validatedData.threadId,
+				userId: userId,
+				replyToPostId: validatedData.replyToPostId
+			});
+
+			res.status(201).json({
+				success: true,
+				data: newPost
+			});
+		} catch (error) {
+			logger.error('PostRoutes', 'Error in POST /posts', { error });
+
+			if (error instanceof z.ZodError) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid input data',
+					details: error.errors
+				});
+			}
+
+			res.status(500).json({
 				success: false,
-				error: 'User not authenticated'
+				error: 'Failed to create post'
 			});
 		}
-
-		const newPost = await postService.createPost({
-			content: validatedData.content,
-			threadId: validatedData.threadId,
-			userId: userId,
-			replyToPostId: validatedData.replyToPostId
-		});
-
-		res.status(201).json({
-			success: true,
-			data: newPost
-		});
-	} catch (error) {
-		logger.error('PostRoutes', 'Error in POST /posts', { error });
-
-		if (error instanceof z.ZodError) {
-			return res.status(400).json({
-				success: false,
-				error: 'Invalid input data',
-				details: error.errors
-			});
-		}
-
-		res.status(500).json({
-			success: false,
-			error: 'Failed to create post'
-		});
-	}
-});
+	})
+);
 
 // Update post
-router.put('/:id', requireAuth, requirePostEditPermission, async (req: Request, res: Response) => {
-	try {
-		const postId = parseInt(req.params.id);
-		const validatedData = updatePostSchema.parse(req.body);
-		const userId = (req.user as any)?.id;
+router.put(
+	'/:id',
+	requireAuth,
+	requirePostEditPermission,
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const postId = parseInt(req.params.id);
+			const validatedData = updatePostSchema.parse(req.body);
+			const userId = (req.user as any)?.id;
 
-		const updatedPost = await postService.updatePost(postId, {
-			content: validatedData.content
-		});
+			const updatedPost = await postService.updatePost(postId, {
+				content: validatedData.content
+			});
 
-		res.json({
-			success: true,
-			data: updatedPost
-		});
-	} catch (error) {
-		logger.error('PostRoutes', 'Error in PUT /posts/:id', { error });
+			res.json({
+				success: true,
+				data: updatedPost
+			});
+		} catch (error) {
+			logger.error('PostRoutes', 'Error in PUT /posts/:id', { error });
 
-		if (error instanceof z.ZodError) {
-			return res.status(400).json({
+			if (error instanceof z.ZodError) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid input data',
+					details: error.errors
+				});
+			}
+
+			res.status(500).json({
 				success: false,
-				error: 'Invalid input data',
-				details: error.errors
+				error: 'Failed to update post'
 			});
 		}
-
-		res.status(500).json({
-			success: false,
-			error: 'Failed to update post'
-		});
-	}
-});
+	})
+);
 
 // Delete post
 router.delete(
 	'/:id',
 	requireAuth,
 	requirePostDeletePermission,
-	async (req: Request, res: Response) => {
+	asyncHandler(async (req: Request, res: Response) => {
 		try {
 			const postId = parseInt(req.params.id);
 			const userId = (req.user as any)?.id;
@@ -138,107 +147,118 @@ router.delete(
 				error: 'Failed to delete post'
 			});
 		}
-	}
+	})
 );
 
 // React to post (like/dislike)
-router.post('/:postId/react', requireAuth, async (req: Request, res: Response) => {
-	try {
-		const postId = parseInt(req.params.postId);
-		const validatedData = postReactionSchema.parse(req.body);
-		const userId = (req.user as any)?.id;
+router.post(
+	'/:postId/react',
+	requireAuth,
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const postId = parseInt(req.params.postId);
+			const validatedData = postReactionSchema.parse(req.body);
+			const userId = (req.user as any)?.id;
 
-		if (!userId) {
-			return res.status(401).json({
+			if (!userId) {
+				return res.status(401).json({
+					success: false,
+					error: 'User not authenticated'
+				});
+			}
+
+			if (validatedData.reactionType === 'like') {
+				await postService.likePost(postId, userId);
+			} else {
+				await postService.unlikePost(postId, userId);
+			}
+
+			res.json({
+				success: true,
+				message: 'Reaction updated successfully'
+			});
+		} catch (error) {
+			logger.error('PostRoutes', 'Error in POST /posts/:postId/react', { error });
+
+			if (error instanceof z.ZodError) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid input data',
+					details: error.errors
+				});
+			}
+
+			res.status(500).json({
 				success: false,
-				error: 'User not authenticated'
+				error: 'Failed to update reaction'
 			});
 		}
-
-		if (validatedData.reactionType === 'like') {
-			await postService.likePost(postId, userId);
-		} else {
-			await postService.unlikePost(postId, userId);
-		}
-
-		res.json({
-			success: true,
-			message: 'Reaction updated successfully'
-		});
-	} catch (error) {
-		logger.error('PostRoutes', 'Error in POST /posts/:postId/react', { error });
-
-		if (error instanceof z.ZodError) {
-			return res.status(400).json({
-				success: false,
-				error: 'Invalid input data',
-				details: error.errors
-			});
-		}
-
-		res.status(500).json({
-			success: false,
-			error: 'Failed to update reaction'
-		});
-	}
-});
+	})
+);
 
 // Tip post
-router.post('/:postId/tip', requireAuth, async (req: Request, res: Response) => {
-	try {
-		const postId = parseInt(req.params.postId);
-		const validatedData = tipPostSchema.parse(req.body);
-		const userId = (req.user as any)?.id;
+router.post(
+	'/:postId/tip',
+	requireAuth,
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const postId = parseInt(req.params.postId);
+			const validatedData = tipPostSchema.parse(req.body);
+			const userId = (req.user as any)?.id;
 
-		if (!userId) {
-			return res.status(401).json({
+			if (!userId) {
+				return res.status(401).json({
+					success: false,
+					error: 'User not authenticated'
+				});
+			}
+
+			// TODO: Implement tipping logic with DGT service integration
+
+			res.json({
+				success: true,
+				message: 'Post tipped successfully'
+			});
+		} catch (error) {
+			logger.error('PostRoutes', 'Error in POST /posts/:postId/tip', { error });
+
+			if (error instanceof z.ZodError) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid input data',
+					details: error.errors
+				});
+			}
+
+			res.status(500).json({
 				success: false,
-				error: 'User not authenticated'
+				error: 'Failed to tip post'
 			});
 		}
-
-		// TODO: Implement tipping logic with DGT service integration
-
-		res.json({
-			success: true,
-			message: 'Post tipped successfully'
-		});
-	} catch (error) {
-		logger.error('PostRoutes', 'Error in POST /posts/:postId/tip', { error });
-
-		if (error instanceof z.ZodError) {
-			return res.status(400).json({
-				success: false,
-				error: 'Invalid input data',
-				details: error.errors
-			});
-		}
-
-		res.status(500).json({
-			success: false,
-			error: 'Failed to tip post'
-		});
-	}
-});
+	})
+);
 
 // Get post replies
-router.get('/:postId/replies', async (req: Request, res: Response) => {
-	try {
-		const postId = parseInt(req.params.postId);
+router.get(
+	'/:postId/replies',
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const postId = parseInt(req.params.postId);
 
-		const replies = await postService.getPostReplies(postId);
+			const replies = await postService.getPostReplies(postId);
 
-		res.json({
-			success: true,
-			data: replies
-		});
-	} catch (error) {
-		logger.error('PostRoutes', 'Error in GET /posts/:postId/replies', { error });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to fetch post replies'
-		});
-	}
-});
+			res.json({
+				success: true,
+				data: replies
+			});
+		} catch (error) {
+			logger.error('PostRoutes', 'Error in GET /posts/:postId/replies', { error });
+			res.status(500).json({
+				success: false,
+				error: 'Failed to fetch post replies'
+			});
+		}
+	})
+);
 
 export default router;

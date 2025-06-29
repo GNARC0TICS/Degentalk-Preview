@@ -18,7 +18,27 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			// Merged from client/tailwind.config.js
+			fontFamily: {
+				sans: ['Inter', 'sans-serif'],
+				headline: ['"Space Grotesk"', 'Inter', 'sans-serif'],
+				orbitron: ['Orbitron', 'monospace'],
+				audiowide: ['Audiowide', 'cursive'],
+				'black-ops': ['"Black Ops One"', 'cursive'],
+				jetbrains: ['"JetBrains Mono"', 'monospace'],
+				'space-mono': ['"Space Mono"', 'monospace'],
+				'press-start': ['"Press Start 2P"', 'cursive']
+			},
 			colors: {
+				// Client-specific color palette
+				'cod-gray': {
+					'950': '#0B0B0B',
+					'900': '#121212',
+					'800': '#1E1E1E',
+					'700': '#2A2A2A',
+					'600': '#363636'
+				},
+				// Shadcn/UI color system
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				card: {
@@ -43,7 +63,14 @@ export default {
 				},
 				accent: {
 					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					foreground: 'hsl(var(--accent-foreground))',
+					// Override with client palette
+					primary: '#10B981',
+					secondary: '#06B6D4',
+					success: '#22C55E',
+					warning: '#F59E0B',
+					error: '#EF4444',
+					xp: '#8B5CF6'
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',

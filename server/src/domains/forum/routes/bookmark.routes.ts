@@ -22,139 +22,151 @@ const createBookmarkSchema = z.object({
 });
 
 // Create bookmark
-router.post('/', requireAuth, async (req: Request, res: Response) => {
-	try {
-		const validatedData = createBookmarkSchema.parse(req.body);
-		const userId = (req.user as any)?.id;
+router.post(
+	'/',
+	requireAuth,
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const validatedData = createBookmarkSchema.parse(req.body);
+			const userId = (req.user as any)?.id;
 
-		if (!userId) {
-			return res.status(401).json({
-				success: false,
-				error: 'User not authenticated'
-			});
-		}
+			if (!userId) {
+				return res.status(401).json({
+					success: false,
+					error: 'User not authenticated'
+				});
+			}
 
-		// Check if bookmark already exists
-		const existingBookmark = await db
-			.select()
-			.from(userThreadBookmarks)
-			.where(
-				and(
-					eq(userThreadBookmarks.userId, userId),
-					eq(userThreadBookmarks.threadId, validatedData.threadId)
+			// Check if bookmark already exists
+			const existingBookmark = await db
+				.select()
+				.from(userThreadBookmarks)
+				.where(
+					and(
+						eq(userThreadBookmarks.userId, userId),
+						eq(userThreadBookmarks.threadId, validatedData.threadId)
+					)
 				)
-			)
-			.limit(1);
+				.limit(1);
 
-		if (existingBookmark.length > 0) {
-			return res.status(409).json({
+			if (existingBookmark.length > 0) {
+				return res.status(409).json({
+					success: false,
+					error: 'Thread already bookmarked'
+				});
+			}
+
+			// Create bookmark
+			await db.insert(userThreadBookmarks).values({
+				userId,
+				threadId: validatedData.threadId,
+				createdAt: new Date()
+			});
+
+			res.status(201).json({
+				success: true,
+				message: 'Thread bookmarked successfully'
+			});
+		} catch (error) {
+			logger.error('BookmarkRoutes', 'Error in POST /bookmarks', { error });
+
+			if (error instanceof z.ZodError) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid input data',
+					details: error.errors
+				});
+			}
+
+			res.status(500).json({
 				success: false,
-				error: 'Thread already bookmarked'
+				error: 'Failed to create bookmark'
 			});
 		}
-
-		// Create bookmark
-		await db.insert(userThreadBookmarks).values({
-			userId,
-			threadId: validatedData.threadId,
-			createdAt: new Date()
-		});
-
-		res.status(201).json({
-			success: true,
-			message: 'Thread bookmarked successfully'
-		});
-	} catch (error) {
-		logger.error('BookmarkRoutes', 'Error in POST /bookmarks', { error });
-
-		if (error instanceof z.ZodError) {
-			return res.status(400).json({
-				success: false,
-				error: 'Invalid input data',
-				details: error.errors
-			});
-		}
-
-		res.status(500).json({
-			success: false,
-			error: 'Failed to create bookmark'
-		});
-	}
-});
+	})
+);
 
 // Delete bookmark
-router.delete('/:threadId', requireAuth, async (req: Request, res: Response) => {
-	try {
-		const threadId = parseInt(req.params.threadId);
-		const userId = (req.user as any)?.id;
+router.delete(
+	'/:threadId',
+	requireAuth,
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const threadId = parseInt(req.params.threadId);
+			const userId = (req.user as any)?.id;
 
-		if (!userId) {
-			return res.status(401).json({
+			if (!userId) {
+				return res.status(401).json({
+					success: false,
+					error: 'User not authenticated'
+				});
+			}
+
+			const result = await db
+				.delete(userThreadBookmarks)
+				.where(
+					and(eq(userThreadBookmarks.userId, userId), eq(userThreadBookmarks.threadId, threadId))
+				);
+
+			res.json({
+				success: true,
+				message: 'Bookmark removed successfully'
+			});
+		} catch (error) {
+			logger.error('BookmarkRoutes', 'Error in DELETE /bookmarks/:threadId', { error });
+			res.status(500).json({
 				success: false,
-				error: 'User not authenticated'
+				error: 'Failed to remove bookmark'
 			});
 		}
-
-		const result = await db
-			.delete(userThreadBookmarks)
-			.where(
-				and(eq(userThreadBookmarks.userId, userId), eq(userThreadBookmarks.threadId, threadId))
-			);
-
-		res.json({
-			success: true,
-			message: 'Bookmark removed successfully'
-		});
-	} catch (error) {
-		logger.error('BookmarkRoutes', 'Error in DELETE /bookmarks/:threadId', { error });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to remove bookmark'
-		});
-	}
-});
+	})
+);
 
 // Get user bookmarks
-router.get('/', requireAuth, async (req: Request, res: Response) => {
-	try {
-		const userId = (req.user as any)?.id;
-		const page = parseInt(req.query.page as string) || 1;
-		const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
-		const offset = (page - 1) * limit;
+router.get(
+	'/',
+	requireAuth,
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const userId = (req.user as any)?.id;
+			const page = parseInt(req.query.page as string) || 1;
+			const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
+			const offset = (page - 1) * limit;
 
-		if (!userId) {
-			return res.status(401).json({
+			if (!userId) {
+				return res.status(401).json({
+					success: false,
+					error: 'User not authenticated'
+				});
+			}
+
+			const bookmarks = await db
+				.select()
+				.from(userThreadBookmarks)
+				.where(eq(userThreadBookmarks.userId, userId))
+				.limit(limit)
+				.offset(offset)
+				.orderBy(userThreadBookmarks.createdAt);
+
+			// TODO: Join with threads table to get thread details
+
+			res.json({
+				success: true,
+				data: bookmarks,
+				pagination: {
+					page,
+					limit,
+					offset
+				}
+			});
+		} catch (error) {
+			logger.error('BookmarkRoutes', 'Error in GET /bookmarks', { error });
+			res.status(500).json({
 				success: false,
-				error: 'User not authenticated'
+				error: 'Failed to fetch bookmarks'
 			});
 		}
-
-		const bookmarks = await db
-			.select()
-			.from(userThreadBookmarks)
-			.where(eq(userThreadBookmarks.userId, userId))
-			.limit(limit)
-			.offset(offset)
-			.orderBy(userThreadBookmarks.createdAt);
-
-		// TODO: Join with threads table to get thread details
-
-		res.json({
-			success: true,
-			data: bookmarks,
-			pagination: {
-				page,
-				limit,
-				offset
-			}
-		});
-	} catch (error) {
-		logger.error('BookmarkRoutes', 'Error in GET /bookmarks', { error });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to fetch bookmarks'
-		});
-	}
-});
+	})
+);
 
 export default router;

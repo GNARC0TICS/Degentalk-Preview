@@ -45,167 +45,180 @@ const addTagsSchema = z.object({
 // Thread search and listing
 router.get('/search', forumController.searchThreads);
 
-router.get('/', async (req: Request, res: Response) => {
-	try {
-		const page = parseInt(req.query.page as string) || 1;
-		const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
-		const structureId = req.query.structureId
-			? parseInt(req.query.structureId as string)
-			: undefined;
-		const sortBy = (req.query.sortBy as string) || 'newest';
-		const search = req.query.search as string;
+router.get(
+	'/',
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const page = parseInt(req.query.page as string) || 1;
+			const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
+			const structureId = req.query.structureId
+				? parseInt(req.query.structureId as string)
+				: undefined;
+			const sortBy = (req.query.sortBy as string) || 'newest';
+			const search = req.query.search as string;
 
-		// Log search parameters for debugging
-		logger.debug('ThreadRoutes', 'Searching threads with parameters', {
-			structureId,
-			page,
-			limit,
-			sortBy,
-			search
-		});
+			// Log search parameters for debugging
+			logger.debug('ThreadRoutes', 'Searching threads with parameters', {
+				structureId,
+				page,
+				limit,
+				sortBy,
+				search
+			});
 
-		const result = await threadService.searchThreads({
-			structureId,
-			page,
-			limit,
-			sortBy: sortBy as any,
-			search
-		});
+			const result = await threadService.searchThreads({
+				structureId,
+				page,
+				limit,
+				sortBy: sortBy as any,
+				search
+			});
 
-		logger.debug('ThreadRoutes', 'Thread search results', {
-			threadCount: result.threads.length,
-			total: result.total,
-			page: result.page,
-			totalPages: result.totalPages
-		});
+			logger.debug('ThreadRoutes', 'Thread search results', {
+				threadCount: result.threads.length,
+				total: result.total,
+				page: result.page,
+				totalPages: result.totalPages
+			});
 
-		res.json({
-			success: true,
-			data: {
-				threads: result.threads,
-				pagination: {
-					page,
-					limit: limit,
-					totalThreads: result.total,
-					totalPages: result.totalPages
+			res.json({
+				success: true,
+				data: {
+					threads: result.threads,
+					pagination: {
+						page,
+						limit: limit,
+						totalThreads: result.total,
+						totalPages: result.totalPages
+					}
 				}
-			}
-		});
-	} catch (error) {
-		logger.error('ThreadRoutes', 'Error in GET /threads', {
-			error: error.message,
-			stack: error.stack,
-			query: req.query
-		});
-		res.status(500).json({
-			success: false,
-			error: 'Failed to fetch threads',
-			details: error.message
-		});
-	}
-});
+			});
+		} catch (error) {
+			logger.error('ThreadRoutes', 'Error in GET /threads', {
+				error: error.message,
+				stack: error.stack,
+				query: req.query
+			});
+			res.status(500).json({
+				success: false,
+				error: 'Failed to fetch threads',
+				details: error.message
+			});
+		}
+	})
+);
 
 // Get thread by ID
-router.get('/:id', async (req: Request, res: Response) => {
-	try {
-		const threadId = parseInt(req.params.id);
-		const thread = await threadService.getThreadById(threadId);
+router.get(
+	'/:id',
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const threadId = parseInt(req.params.id);
+			const thread = await threadService.getThreadById(threadId);
 
-		if (!thread) {
-			return res.status(404).json({
+			if (!thread) {
+				return res.status(404).json({
+					success: false,
+					error: 'Thread not found'
+				});
+			}
+
+			res.json({
+				success: true,
+				data: thread
+			});
+		} catch (error) {
+			logger.error('ThreadRoutes', 'Error in GET /threads/:id', { error });
+			res.status(500).json({
 				success: false,
-				error: 'Thread not found'
+				error: 'Failed to fetch thread'
 			});
 		}
-
-		res.json({
-			success: true,
-			data: thread
-		});
-	} catch (error) {
-		logger.error('ThreadRoutes', 'Error in GET /threads/:id', { error });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to fetch thread'
-		});
-	}
-});
+	})
+);
 
 // Get thread by slug
-router.get('/slug/:slug', async (req: Request, res: Response) => {
-	try {
-		const slug = req.params.slug;
-		const thread = await threadService.getThreadBySlug(slug);
+router.get(
+	'/slug/:slug',
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const slug = req.params.slug;
+			const thread = await threadService.getThreadBySlug(slug);
 
-		if (!thread) {
-			return res.status(404).json({
+			if (!thread) {
+				return res.status(404).json({
+					success: false,
+					error: 'Thread not found'
+				});
+			}
+
+			// Increment view count
+			await threadService.incrementViewCount(thread.id);
+
+			res.json({
+				success: true,
+				data: thread
+			});
+		} catch (error) {
+			logger.error('ThreadRoutes', 'Error in GET /threads/slug/:slug', { error });
+			res.status(500).json({
 				success: false,
-				error: 'Thread not found'
+				error: 'Failed to fetch thread'
 			});
 		}
-
-		// Increment view count
-		await threadService.incrementViewCount(thread.id);
-
-		res.json({
-			success: true,
-			data: thread
-		});
-	} catch (error) {
-		logger.error('ThreadRoutes', 'Error in GET /threads/slug/:slug', { error });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to fetch thread'
-		});
-	}
-});
+	})
+);
 
 // Create new thread
-router.post('/', requireAuth, async (req: Request, res: Response) => {
-	try {
-		const validatedData = createThreadSchema.parse(req.body);
-		const userId = (req.user as any)?.id;
+router.post(
+	'/',
+	requireAuth,
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const validatedData = createThreadSchema.parse(req.body);
+			const userId = (req.user as any)?.id;
 
-		if (!userId) {
-			return res.status(401).json({
+			if (!userId) {
+				return res.status(401).json({
+					success: false,
+					error: 'User not authenticated'
+				});
+			}
+
+			const newThread = await threadService.createThread({
+				...validatedData,
+				userId: userId
+			});
+
+			res.status(201).json({
+				success: true,
+				data: newThread
+			});
+		} catch (error) {
+			logger.error('ThreadRoutes', 'Error in POST /threads', { error });
+
+			if (error instanceof z.ZodError) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid input data',
+					details: error.errors
+				});
+			}
+
+			res.status(500).json({
 				success: false,
-				error: 'User not authenticated'
+				error: 'Failed to create thread'
 			});
 		}
-
-		const newThread = await threadService.createThread({
-			...validatedData,
-			userId: userId
-		});
-
-		res.status(201).json({
-			success: true,
-			data: newThread
-		});
-	} catch (error) {
-		logger.error('ThreadRoutes', 'Error in POST /threads', { error });
-
-		if (error instanceof z.ZodError) {
-			return res.status(400).json({
-				success: false,
-				error: 'Invalid input data',
-				details: error.errors
-			});
-		}
-
-		res.status(500).json({
-			success: false,
-			error: 'Failed to create thread'
-		});
-	}
-});
+	})
+);
 
 // Update thread solved status
 router.put(
 	'/:threadId/solve',
 	requireAuth,
 	requireThreadSolvePermission,
-	async (req: Request, res: Response) => {
+	asyncHandler(async (req: Request, res: Response) => {
 		try {
 			const threadId = parseInt(req.params.threadId);
 			const validatedData = updateThreadSolvedSchema.parse(req.body);
@@ -243,7 +256,7 @@ router.put(
 				error: 'Failed to update thread'
 			});
 		}
-	}
+	})
 );
 
 // Add tags to thread
@@ -251,7 +264,7 @@ router.post(
 	'/:threadId/tags',
 	requireAuth,
 	requireThreadTagPermission,
-	async (req: Request, res: Response) => {
+	asyncHandler(async (req: Request, res: Response) => {
 		try {
 			const threadId = parseInt(req.params.threadId);
 			const validatedData = addTagsSchema.parse(req.body);
@@ -280,7 +293,7 @@ router.post(
 				error: 'Failed to add tags'
 			});
 		}
-	}
+	})
 );
 
 // Remove tag from thread
@@ -288,7 +301,7 @@ router.delete(
 	'/:threadId/tags/:tagId',
 	requireAuth,
 	requireThreadTagPermission,
-	async (req: Request, res: Response) => {
+	asyncHandler(async (req: Request, res: Response) => {
 		try {
 			const threadId = parseInt(req.params.threadId);
 			const tagId = parseInt(req.params.tagId);
@@ -306,74 +319,80 @@ router.delete(
 				error: 'Failed to remove tag'
 			});
 		}
-	}
+	})
 );
 
 // Get posts for a thread
-router.get('/:threadId/posts', async (req: Request, res: Response) => {
-	try {
-		const threadId = parseInt(req.params.threadId);
-		const page = parseInt(req.query.page as string) || 1;
-		const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
-		const sortBy = (req.query.sortBy as string) || 'oldest';
+router.get(
+	'/:threadId/posts',
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const threadId = parseInt(req.params.threadId);
+			const page = parseInt(req.query.page as string) || 1;
+			const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
+			const sortBy = (req.query.sortBy as string) || 'oldest';
 
-		if (isNaN(threadId)) {
-			return res.status(400).json({
+			if (isNaN(threadId)) {
+				return res.status(400).json({
+					success: false,
+					error: 'Invalid thread ID'
+				});
+			}
+
+			const result = await postService.getPostsByThread({
+				threadId,
+				page,
+				limit,
+				sortBy: sortBy as any
+			});
+
+			res.json({
+				success: true,
+				data: {
+					posts: result.posts,
+					pagination: {
+						page: result.page,
+						limit,
+						totalPosts: result.total,
+						totalPages: result.totalPages
+					}
+				}
+			});
+		} catch (error) {
+			logger.error('ThreadRoutes', 'Error in GET /threads/:threadId/posts', {
+				error: error.message,
+				stack: error.stack,
+				threadId: req.params.threadId
+			});
+			res.status(500).json({
 				success: false,
-				error: 'Invalid thread ID'
+				error: 'Failed to fetch thread posts'
 			});
 		}
-
-		const result = await postService.getPostsByThread({
-			threadId,
-			page,
-			limit,
-			sortBy: sortBy as any
-		});
-
-		res.json({
-			success: true,
-			data: {
-				posts: result.posts,
-				pagination: {
-					page: result.page,
-					limit,
-					totalPosts: result.total,
-					totalPages: result.totalPages
-				}
-			}
-		});
-	} catch (error) {
-		logger.error('ThreadRoutes', 'Error in GET /threads/:threadId/posts', {
-			error: error.message,
-			stack: error.stack,
-			threadId: req.params.threadId
-		});
-		res.status(500).json({
-			success: false,
-			error: 'Failed to fetch thread posts'
-		});
-	}
-});
+	})
+);
 
 // Get thread tags
-router.get('/:threadId/tags', async (req: Request, res: Response) => {
-	try {
-		const threadId = parseInt(req.params.threadId);
+router.get(
+	'/:threadId/tags',
+	asyncHandler(async (req: Request, res: Response) => {
+		try {
+			const threadId = parseInt(req.params.threadId);
 
-		// TODO: Implement get thread tags logic
+			// TODO: Implement get thread tags logic
 
-		res.json({
-			success: true,
-			data: []
-		});
-	} catch (error) {
-		logger.error('ThreadRoutes', 'Error in GET /threads/:threadId/tags', { error });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to fetch thread tags'
-		});
-	}
-});
+			res.json({
+				success: true,
+				data: []
+			});
+		} catch (error) {
+			logger.error('ThreadRoutes', 'Error in GET /threads/:threadId/tags', { error });
+			res.status(500).json({
+				success: false,
+				error: 'Failed to fetch thread tags'
+			});
+		}
+	})
+);
 
 export default router;

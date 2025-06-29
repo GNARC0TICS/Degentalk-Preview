@@ -230,6 +230,7 @@ export function canAdministrate(user: User): boolean {
 
 /**
  * Get user from request object with type safety
+ * @deprecated Use userService.getUserFromRequest() instead
  */
 export function getUserFromRequest(req: any): User | null {
 	const user = req.user;
