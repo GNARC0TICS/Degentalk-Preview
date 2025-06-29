@@ -1,4 +1,5 @@
 import { authenticate } from './authenticate';
+import { userService } from '../core/services/user.service';
 
 // Re-export authenticate as the default authentication middleware
 export { authenticate };
@@ -15,7 +16,8 @@ export const requireAdmin = (req: any, res: any, next: any) => {
 		if (err) return next(err);
 
 		// Check if user is an admin
-		if (req.user?.role !== 'admin') {
+		const authUser = userService.getUserFromRequest(req);
+		if (!authUser || authUser.role !== 'admin') {
 			return res.status(403).json({ error: 'Admin access required' });
 		}
 
@@ -27,7 +29,8 @@ export const requireAdmin = (req: any, res: any, next: any) => {
  * Check if a user has admin privileges
  */
 export const isAdmin = (req: any) => {
-	return req.user?.role === 'admin';
+	const authUser = userService.getUserFromRequest(req);
+	return authUser?.role === 'admin';
 };
 
 /**
@@ -39,7 +42,8 @@ export const requireModerator = (req: any, res: any, next: any) => {
 		if (err) return next(err);
 
 		// Check if user is a moderator or admin
-		if (req.user?.role !== 'moderator' && req.user?.role !== 'admin') {
+		const authUser = userService.getUserFromRequest(req);
+		if (!authUser || (authUser.role !== 'moderator' && authUser.role !== 'admin')) {
 			return res.status(403).json({ error: 'Moderator access required' });
 		}
 

@@ -1,5 +1,6 @@
 module.exports = {
 	rules: {
-		'no-raw-container-auto': require('./rules/no-raw-container-auto')
+		'no-raw-container-auto': require('./rules/no-raw-container-auto'),
+		'no-direct-req-user': require('./rules/no-direct-req-user')
 	}
 };

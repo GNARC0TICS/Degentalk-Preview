@@ -7,6 +7,7 @@
 
 import type { Request, Response, NextFunction } from 'express';
 import { logger } from '@server/src/core/logger';
+import { userService } from '@server/src/core/services/user.service';
 import { isDevMode } from '@server/src/utils/environment';
 
 interface DevSecurityConfig {
@@ -95,7 +96,8 @@ class DevSecurityMiddleware {
 			return next();
 		}
 
-		if (!req.user) {
+		const authUser = userService.getUserFromRequest(req);
+		if (!authUser) {
 			return res.status(401).json({
 				error: 'Development mode: Authentication required',
 				hint: 'Log in to access this endpoint'

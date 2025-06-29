@@ -1,6 +1,7 @@
 import globby from 'globby';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import fs from 'node:fs/promises';
 
 /**
  * identify-legacy-user-fetch.ts
@@ -64,6 +65,33 @@ async function scan(): Promise<Hit[]> {
   return hits;
 }
 
+// Category helper
+function categorize(filePath: string): string {
+  const p = filePath.toLowerCase();
+  if (p.includes('/test') || p.includes('.test.')) return 'test';
+  if (p.includes('middleware')) return 'middleware';
+  if (p.includes('controller')) return 'controller';
+  if (p.includes('service')) return 'service';
+  if (p.includes('routes')) return 'routes';
+  return 'other';
+}
+
+function isComment(line: string): boolean {
+  const trimmed = line.trim();
+  return trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*');
+}
+
+async function generateMarkdown(matches: Hit[], outfile: string) {
+  let md = `| File | Line | Category | Code |\n|------|------|----------|------|\n`;
+  for (const m of matches) {
+    const cat = categorize(m.file);
+    const safeCode = m.snippet.replace(/\|/g, '\\|').slice(0, 120);
+    md += `| ${m.file}:${m.line} | ${m.line} | ${cat} | ${safeCode} |\n`;
+  }
+  await fs.writeFile(outfile, md, 'utf8');
+  console.log(`Markdown audit written to ${outfile}`);
+}
+
 async function main() {
   const writeIdx = process.argv.findIndex((arg) => arg === '--write');
   const writePath = writeIdx !== -1 ? process.argv[writeIdx + 1] : undefined;
@@ -87,6 +115,11 @@ async function main() {
       console.log(`  ${file}:${pad(line, 4)}  |  ${snippet}`);
     });
     console.log();
+  }
+
+  if (process.argv.includes('--markdown')) {
+    const mdPath = process.argv[process.argv.indexOf('--markdown') + 1] as string;
+    if (mdPath) await generateMarkdown(hits, mdPath);
   }
 }
 

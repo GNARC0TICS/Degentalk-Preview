@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { missionsService } from '../domains/missions/missions.service';
+import { userService } from '../core/services/user.service';
 import { MissionType } from '@schema';
 import { logger } from '../core/logger';
 
@@ -16,11 +17,11 @@ export const trackMissionProgress = (
 	return async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			// Skip if no authenticated user
-			// @ts-ignore - user is added by auth middleware
-			const userId = req.user?.id;
-			if (!userId) {
+			const authUser = userService.getUserFromRequest(req);
+			if (!authUser) {
 				return next();
 			}
+			const userId = authUser.id;
 
 			// Create a response interceptor to update missions after the main handler completes
 			const originalSend = res.send;

@@ -9,6 +9,7 @@ import {
 	subscriptionPermissionsService,
 	SubscriptionPermissions
 } from '../domains/subscriptions/subscription-permissions.service';
+import { userService } from '../core/services/user.service';
 import { logger } from '../core/logger';
 
 // Extend Request interface to include subscription permissions
@@ -29,7 +30,8 @@ export async function injectSubscriptionPermissions(
 	next: NextFunction
 ): Promise<void> {
 	try {
-		const userId = req.user?.id;
+		const authUser = userService.getUserFromRequest(req);
+		const userId = authUser?.id;
 
 		if (userId) {
 			// Get user's subscription permissions
@@ -128,9 +130,8 @@ export function requirePremiumAccess(req: Request, res: Response, next: NextFunc
 export function requireSubscriptionBenefit(benefitKey: string) {
 	return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 		try {
-			const userId = req.user?.id;
-
-			if (!userId) {
+			const authUser = userService.getUserFromRequest(req);
+			if (!authUser) {
 				res.status(401).json({
 					success: false,
 					error: 'Authentication required'
@@ -138,7 +139,10 @@ export function requireSubscriptionBenefit(benefitKey: string) {
 				return;
 			}
 
-			const canUseBenefit = await subscriptionPermissionsService.canUseBenefit(userId, benefitKey);
+			const canUseBenefit = await subscriptionPermissionsService.canUseBenefit(
+				authUser.id,
+				benefitKey
+			);
 
 			if (!canUseBenefit) {
 				res.status(403).json({

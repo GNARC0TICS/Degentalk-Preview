@@ -16,6 +16,7 @@ import type {
 	TypedResponse
 } from '@shared/types/api.types';
 import { logger } from './logger';
+import { userService } from './services/user.service';
 
 export abstract class BaseController {
 	/**
@@ -192,22 +193,22 @@ export abstract class BaseController {
 	 * Extract user ID from request with type safety
 	 */
 	protected getUserId(req: any): number {
-		const userId = req.user?.id;
-		if (typeof userId !== 'number') {
+		const authUser = userService.getUserFromRequest(req);
+		if (!authUser || typeof authUser.id !== 'number') {
 			throw new UnauthorizedError('User not authenticated');
 		}
-		return userId;
+		return authUser.id;
 	}
 
 	/**
 	 * Extract user role from request with type safety
 	 */
 	protected getUserRole(req: any): string {
-		const role = req.user?.role;
-		if (typeof role !== 'string') {
+		const authUser = userService.getUserFromRequest(req);
+		if (!authUser || typeof authUser.role !== 'string') {
 			throw new UnauthorizedError('User role not available');
 		}
-		return role;
+		return authUser.role;
 	}
 
 	/**
