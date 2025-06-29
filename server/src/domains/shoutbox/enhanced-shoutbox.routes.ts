@@ -363,15 +363,12 @@ router.get('/messages', isAuthenticatedOptional, async (req: Request, res: Respo
 	}
 });
 
-/**
- * Send message with command processing and enhanced features
- */
-router.post('/messages', isAuthenticated, async (req: Request, res: Response) => {
+// Dynamic rate-limiter middleware that picks limiter based on user role/level
+async function dynamicRateLimiter(req: Request, res: Response, next: Function) {
 	try {
 		const userId = getUserId(req);
-		const messageData = messageSchema.parse(req.body);
+		if (!userId) return res.status(401).json({ error: 'Unauthorized' });
 
-		// Get user data for context
 		const user = await db.query.users.findFirst({
 			where: eq(users.id, userId),
 			columns: {
@@ -383,13 +380,9 @@ router.post('/messages', isAuthenticated, async (req: Request, res: Response) =>
 			}
 		});
 
-		if (!user) {
-			return res.status(401).json({ error: 'User not found' });
-		}
+		if (!user) return res.status(401).json({ error: 'User not found' });
 
-		// Apply rate limiting based on user level/role
 		let rateLimiter = userRateLimiters.regular;
-
 		if (
 			user.roles?.includes('vip') ||
 			user.roles?.includes('admin') ||
@@ -400,81 +393,94 @@ router.post('/messages', isAuthenticated, async (req: Request, res: Response) =>
 			rateLimiter = userRateLimiters.newUser;
 		}
 
-		// Apply rate limiting (using express-rate-limit middleware)
-		rateLimiter(req, res, async () => {
-			try {
-				// Determine room ID
-				let roomId = messageData.roomId;
-				if (!roomId) {
-					// Get default room
-					const defaultRoom = await db.query.chatRooms.findFirst({
-						where: and(eq(chatRooms.name, 'degen-lounge'), eq(chatRooms.isDeleted, false))
-					});
-					roomId = defaultRoom?.id || 1;
-				}
+		// Attach user to request for downstream handlers
+		(req as any).currentUser = user;
+		return rateLimiter(req, res, next);
+	} catch (err) {
+		logger.error('Enhanced Shoutbox', 'Rate-limit middleware failed', { err });
+		return res.status(429).json({ error: 'Rate limit exceeded' });
+	}
+}
 
-				// Check room access
-				const accessCheck = await RoomService.checkRoomAccess(userId, roomId);
-				if (!accessCheck.hasAccess) {
-					return res.status(403).json({
-						error: 'Access denied',
-						reason: accessCheck.reason
-					});
-				}
+// Revised POST /messages endpoint: middleware chain enforces rate limiting before handler
 
-				// Process message through enhanced service
-				const context = {
-					userId,
-					username: user.username,
-					roomId,
-					content: messageData.content,
-					userRoles: user.roles || [],
-					userLevel: user.level || 1,
-					ipAddress: req.ip,
-					sessionId: req.sessionID
-				};
+router.post(
+	'/messages',
+	isAuthenticated,
+	dynamicRateLimiter,
+	async (req: Request, res: Response) => {
+		try {
+			const userId = getUserId(req);
+			const user = (req as any).currentUser;
+			const messageData = messageSchema.parse(req.body);
 
-				const result = await ShoutboxService.processMessage(context);
+			// Determine room ID
+			let roomId = messageData.roomId;
+			if (!roomId) {
+				const defaultRoom = await db.query.chatRooms.findFirst({
+					where: and(eq(chatRooms.name, 'degen-lounge'), eq(chatRooms.isDeleted, false))
+				});
+				roomId = defaultRoom?.id || 1;
+			}
 
-				if (result.success) {
-					// Broadcast to WebSocket clients if available
-					if (result.broadcastData && req.app && (req.app as any).wss) {
-						const clients = (req.app as any).wss.clients;
-						for (const client of clients) {
-							if (client.readyState === 1) {
-								client.send(JSON.stringify(result.broadcastData));
-							}
+			const accessCheck = await RoomService.checkRoomAccess(userId, roomId);
+
+			if (!accessCheck.hasAccess) {
+				return res.status(403).json({
+					error: 'Access denied',
+					reason: accessCheck.reason
+				});
+			}
+
+			// Process message through enhanced service
+			const context = {
+				userId,
+				username: user.username,
+				roomId,
+				content: messageData.content,
+				userRoles: user.roles || [],
+				userLevel: user.level || 1,
+				ipAddress: req.ip,
+				sessionId: req.sessionID
+			};
+
+			const result = await ShoutboxService.processMessage(context);
+
+			if (result.success) {
+				// Broadcast to WebSocket clients if available
+				if (result.broadcastData && req.app && (req.app as any).wss) {
+					const clients = (req.app as any).wss.clients;
+					for (const client of clients) {
+						if (client.readyState === 1) {
+							client.send(JSON.stringify(result.broadcastData));
 						}
 					}
-
-					res.status(201).json({
-						success: true,
-						message: result.message,
-						data: result.data
-					});
-				} else {
-					res.status(400).json({
-						error: result.message,
-						code: result.error
-					});
 				}
-			} catch (error) {
-				logger.error('Enhanced Shoutbox', 'Error processing message', { error });
-				res.status(500).json({ error: 'Failed to process message' });
-			}
-		});
-	} catch (error) {
-		if (error instanceof z.ZodError) {
-			return res.status(400).json({
-				error: 'Invalid message data',
-				details: error.errors
-			});
-		}
 
-		logger.error('Enhanced Shoutbox', 'Error in message endpoint', { error });
-		res.status(500).json({ error: 'Failed to send message' });
+				res.status(201).json({
+					success: true,
+					message: result.message,
+					data: result.data
+				});
+			} else {
+				res.status(400).json({
+					error: result.message,
+					code: result.error
+				});
+			}
+		} catch (error) {
+			if (error instanceof z.ZodError) {
+				return res.status(400).json({
+					error: 'Invalid message data',
+					details: error.errors
+				});
+			}
+
+			logger.error('Enhanced Shoutbox', 'Error in message endpoint', { error });
+			res.status(500).json({ error: 'Failed to send message' });
+		}
 	}
-});
+);
 
 /**
  * Pin/Unpin message (moderator+)

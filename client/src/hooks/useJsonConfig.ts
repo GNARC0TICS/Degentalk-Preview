@@ -4,7 +4,7 @@ import { apiRequest } from '@/lib/api-request';
 import { useToast } from '@/hooks/use-toast';
 
 export interface UseJsonConfigReturn<T> {
-	data: T;
+	data: T | null;
 	save: (next: T) => void;
 	reset: () => void;
 	loading: boolean;
@@ -16,10 +16,11 @@ export interface UseJsonConfigReturn<T> {
  */
 export function useJsonConfig<T>(endpoint: string, schema: ZodSchema<T>): UseJsonConfigReturn<T> {
 	const { toast } = useToast();
-	const [data, setData] = useState<T>(schema.parse({} as T)); // temp placeholder until fetch
+	const [data, setData] = useState<T | null>(null);
 	const [original, setOriginal] = useState<T | null>(null);
 	const [loading, setLoading] = useState(true);
-	const isDirty = original !== null && JSON.stringify(original) !== JSON.stringify(data);
+	const isDirty =
+		original !== null && data !== null && JSON.stringify(original) !== JSON.stringify(data);
 
 	// initial load
 	useEffect(() => {

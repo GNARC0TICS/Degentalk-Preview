@@ -32,6 +32,31 @@ export async function executeQuery(req: Request, res: Response) {
 		const userId = getUserId(req);
 		const { query, saveToHistory } = executeQuerySchema.parse(req.body);
 
+		// Additional safeguard: only allow read-only/select queries
+		const READ_ONLY_REGEX = /^(\s*)(SELECT|WITH|EXPLAIN)\b/i;
+		if (!READ_ONLY_REGEX.test(query)) {
+			logger.warn('QueryController', 'Blocked non-read SQL statement', {
+				userId,
+				queryPreview: query.slice(0, 100)
+			});
+			return res.status(403).json({
+				success: false,
+				error: 'Only read-only SELECT/EXPLAIN queries are permitted.'
+			});
+		}
+
+		// Reject multi-statement queries to avoid stacked injections
+		if (query.includes(';')) {
+			logger.warn('QueryController', 'Blocked multi-statement SQL', {
+				userId,
+				queryPreview: query.slice(0, 100)
+			});
+			return res.status(403).json({
+				success: false,
+				error: 'Multiple SQL statements are not allowed.'
+			});
+		}
+
 		// Log query attempt
 		logger.info('QueryController', 'SQL query execution requested', {
 			userId,
