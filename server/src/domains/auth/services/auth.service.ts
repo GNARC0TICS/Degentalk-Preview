@@ -180,8 +180,4 @@ export function getSessionCookieSettings(): {
 /**
  * Get user ID from request object, handling different user object formats
  */
-export function getUserId(req: any): number {
-	return (
-		userService.getUserFromRequest(req)?.id || userService.getUserFromRequest(req)?.user_id || 0
-	);
-}
+// Removed deprecated getUserId wrapper - use userService.getUserFromRequest(req)?.id directly

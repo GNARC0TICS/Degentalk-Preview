@@ -117,14 +117,17 @@ export function setupAuthPassport(sessionStore: any) {
 
 	// Configure user deserialization (retrieving user from session)
 	passport.deserializeUser(async (id: number | string, done) => {
-		console.log('🔑 Passport deserializeUser called with ID:', id, 'type:', typeof id);
+		logger.debug('Passport deserializeUser called', { id, idType: typeof id });
 		try {
 			// Try to get user from storage
 			try {
-				console.log('🔍 Calling storage.getUser from deserializer...');
+				logger.debug('Calling storage.getUser from deserializer');
 				const user = await storage.getUser(id);
 				if (user) {
-					console.log('✅ Deserializer got user from storage:', JSON.stringify(user, null, 2));
+					logger.debug('Deserializer got user from storage', {
+						userId: user.id,
+						username: user.username
+					});
 					// Ensure role is not null and groupId is undefined if null
 					const userWithRole = {
 						...user,
@@ -133,7 +136,7 @@ export function setupAuthPassport(sessionStore: any) {
 					};
 					return done(null, userWithRole);
 				} else {
-					console.log('❌ Deserializer: storage.getUser returned null/undefined');
+					logger.warn('Deserializer: storage.getUser returned null/undefined', { id });
 				}
 			} catch (storageErr) {
 				console.log('❌ Deserializer: storage.getUser threw error:', storageErr);

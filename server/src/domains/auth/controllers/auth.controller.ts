@@ -128,22 +128,22 @@ export async function register(req: Request, res: Response, next: NextFunction) 
  * Handle user login
  */
 export function login(req: Request, res: Response, next: NextFunction) {
-	console.log('🔐 Login attempt for username:', req.body.username);
+	logger.info('Login attempt', { username: req.body.username });
 	passport.authenticate('local', (err: Error, user: any, info: any) => {
-		console.log('🔍 Passport authenticate callback:', { err: !!err, user: !!user, info });
+		logger.debug('Passport authenticate callback', { hasError: !!err, hasUser: !!user, info });
 		if (err) {
-			console.log('❌ Authentication error:', err);
+			logger.error('Authentication error', err);
 			return next(err);
 		}
 		if (!user) {
-			console.log('❌ Authentication failed:', info?.message || 'No user returned');
+			logger.warn('Authentication failed', { message: info?.message || 'No user returned' });
 			return res.status(401).json({ message: info?.message || 'Authentication failed' });
 		}
 
-		console.log('✅ User authenticated, logging in:', user.username, user.id);
+		logger.info('User authenticated', { username: user.username, userId: user.id });
 		req.login(user, async (err) => {
 			if (err) {
-				console.log('❌ req.login error:', err);
+				logger.error('Login session error', err);
 				return next(err);
 			}
 

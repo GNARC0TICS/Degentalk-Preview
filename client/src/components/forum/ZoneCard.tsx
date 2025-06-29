@@ -130,7 +130,8 @@ const ZoneCardPure = memo(
 		const getCardHeight = (layout: string) => {
 			switch (layout) {
 				case 'compact':
-					return 'h-[280px]'; // Fixed height for carousel consistency - increased to show all content
+					// Use responsive min-heights so the card never clips on very small devices
+					return 'min-h-[240px] sm:min-h-[260px] md:min-h-[280px]';
 				case 'hero':
 					return CARD_STYLES.height.hero;
 				case 'mobile':
@@ -291,7 +292,7 @@ const ZoneCardPure = memo(
 							{/* Activity Stats */}
 							{showStats &&
 								(slots?.stats ?? (
-									<div className="grid grid-cols-3 gap-2">
+									<div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
 										<motion.div
 											className="text-center px-2 py-1 rounded bg-zinc-800/30 backdrop-blur-sm"
 											whileHover={{ scale: animationConfig.hoverScale }}

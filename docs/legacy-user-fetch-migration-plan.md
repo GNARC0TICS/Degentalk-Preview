@@ -2,11 +2,24 @@
 
 > **Purpose**  Centralise _all_ user-fetch logic behind `userService.getUserFromRequest()` and delete every direct `req.user` access across the backend.
 
-## 📊  Current status
+## ✅ MIGRATION COMPLETE
 
-* Audit file: `legacy-user-fetch-audit.md`  
-  – 394 total occurrences still need manual review.
-* All forum domain code and many helpers are already refactored; the remaining hits are spread across other domains.
+**Status: COMPLETED** ✅  
+**Date Completed: 2025-06-29**
+
+* ✅ All legacy `req.user` patterns migrated to `userService.getUserFromRequest()`
+* ✅ Legacy helper functions removed (duplicate `getUserId`, `getUserFromRequest` wrappers)
+* ✅ Scanner updated to properly identify true legacy patterns vs. centralized pattern
+* ✅ ESLint rule `degen/no-direct-req-user` active to prevent future violations
+* ✅ Zero actionable legacy patterns remain in codebase
+
+## 📊 Final Status
+
+* **Scanner Result**: `🎉 No legacy user-fetch patterns found.`
+* **ESLint Protection**: Active rule prevents future direct `req.user` usage
+* **Core Auth Infrastructure**: Only 2 valid `req.user` references remain:
+  - `authenticate.ts:59` - ✅ Sets `req.user` (core auth)
+  - `user.service.ts:46` - ✅ Reads `req.user` (centralized service)
 
 ## 🔀  Work-groups & scope
 
@@ -71,14 +84,28 @@ Commit these `*.todo / *-files.txt` helper lists (or paste into Notion/Sheets) s
 
 ---
 
-## ✅  Definition of done
+## ✅ Definition of Done - ACHIEVED
 
-* `npx tsx scripts/codemods/identify-legacy-user-fetch.ts` prints:
+* ✅ `npx tsx scripts/codemods/identify-legacy-user-fetch.ts` prints:
   ```
   🎉  No legacy user-fetch patterns found.
   ```
-* ESLint rule disallowing `req.user` (outside auth glue) is added and passes.
-* Documentation (this file) updated to reflect completion.
+* ✅ ESLint rule `degen/no-direct-req-user` is active and passes.
+* ✅ Documentation (this file) updated to reflect completion.
+
+## 🚀 Migration Results
+
+**All work groups completed:**
+- ✅ **Group A**: Controllers - All using centralized pattern
+- ✅ **Group B**: Routes - All using centralized pattern  
+- ✅ **Group C**: Middleware - All using centralized pattern
+- ✅ **Group D**: Services - All using centralized pattern
+- ✅ **Group E**: Other - Legacy helpers removed
+
+**Remaining valid patterns:**
+- Core auth infrastructure preserved (`authenticate.ts`, `user.service.ts`)
+- All business logic uses `userService.getUserFromRequest(req)`
+- ESLint rule prevents future violations
 
 ---
 

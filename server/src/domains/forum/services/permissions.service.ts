@@ -229,22 +229,7 @@ export function canAdministrate(user: User): boolean {
 	return isAdmin(user);
 }
 
-/**
- * Get user from request object with type safety
- * @deprecated Use userService.getUserFromRequest() instead
- */
-export function getUserFromRequest(req: any): User | null {
-	const user = userService.getUserFromRequest(req);
-	if (!user || !user.id) {
-		return null;
-	}
-
-	return {
-		id: user.id,
-		role: user.role || 'user',
-		username: user.username
-	};
-}
+// Removed deprecated getUserFromRequest wrapper - use userService.getUserFromRequest() directly
 
 /**
  * Middleware helper for permission checking

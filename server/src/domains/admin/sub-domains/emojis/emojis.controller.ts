@@ -15,12 +15,7 @@ import {
 import { logger } from '../../../../core/logger';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 
-/**
- * Helper function to get user ID from request
- */
-function getUserId(req: Request): number | undefined {
-	return (userService.getUserFromRequest(req) as any)?.id;
-}
+// Removed redundant getUserId helper - use userService.getUserFromRequest(req)?.id directly
 
 /**
  * Helper function to handle validation errors

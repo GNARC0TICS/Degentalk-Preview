@@ -11,16 +11,7 @@ import {
 	deactivateAnnouncement
 } from '../services/announcements.service';
 
-/**
- * Helper function to get user ID from req.user, handling both id and user_id formats
- */
-function getUserId(req: Request): number {
-	return (
-		(userService.getUserFromRequest(req) as any)?.id ||
-		(userService.getUserFromRequest(req) as any)?.user_id ||
-		0
-	);
-}
+// Removed redundant getUserId helper - use userService.getUserFromRequest(req)?.id directly
 
 /**
  * Controller for fetching active announcements (public endpoint)

@@ -29,10 +29,29 @@ const PrimaryZoneCarousel = memo(
 
 		const [isHovered, setIsHovered] = useState(false);
 		const intervalRef = useRef<NodeJS.Timeout>();
+
+		// Wait for hydration before reading media queries to avoid SSR mismatch
+		const [isMounted, setIsMounted] = useState(false);
+		useEffect(() => {
+			setIsMounted(true);
+		}, []);
+
 		const breakpoint = useBreakpoint();
 
-		// Responsive cards per view
-		const cardsPerView = breakpoint.isMobile ? 1 : breakpoint.isTablet ? 2 : 3;
+		// Responsive cards per view – fallback to 1 until mounted
+		const cardsPerView = React.useMemo(() => {
+			if (!isMounted) return 1;
+			return breakpoint.isMobile ? 1 : breakpoint.isTablet ? 2 : 3;
+		}, [isMounted, breakpoint]);
+
+		// Ensure currentIndex never exceeds the new maxIndex (handles viewport resize)
+		useEffect(() => {
+			setState((prev) => {
+				const newMax = Math.max(0, zones.length - cardsPerView);
+				return prev.currentIndex > newMax ? { ...prev, currentIndex: newMax } : prev;
+			});
+		}, [cardsPerView, zones.length]);
+
 		const maxIndex = Math.max(0, zones.length - cardsPerView);
 
 		// Auto-rotation effect

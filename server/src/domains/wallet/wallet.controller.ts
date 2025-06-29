@@ -36,7 +36,11 @@ export class WalletController extends BaseController {
 	async getBalance(req: Request, res: Response): Promise<void> {
 		try {
 			// Get authenticated user ID with type safety
-			const userId = this.getUserId(req);
+			const authUser = userService.getUserFromRequest(req);
+			if (!authUser || !authUser.id) {
+				throw new UnauthorizedError('User not authenticated');
+			}
+			const userId = authUser.id;
 
 			logger.info('WALLET_CONTROLLER', `Getting DGT balance for user ID: ${userId}`);
 
