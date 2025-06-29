@@ -3,13 +3,25 @@
 
 export const ROUTES = {
 	HOME: '/',
-	// Main Forum routes with clear hierarchy
-	FORUMS: '/forums', // List all forums
-	FORUM_DETAIL: (slug: string) => `/forums/${slug}`, // View a specific forum and its topics
-	THREAD_DETAIL: (slug: string) => `/threads/${slug}`, // View a specific thread and its posts
+	
+	// Hierarchical Forum Structure
+	ZONES: '/zones', // List all zones
+	ZONE: (slug: string) => `/zones/${slug}`, // View a specific zone
+	FORUM: (zoneSlug: string, forumSlug: string) => `/zones/${zoneSlug}/${forumSlug}`, // Forum within zone
+	SUBFORUM: (zoneSlug: string, forumSlug: string, subforumSlug: string) => `/zones/${zoneSlug}/${forumSlug}/${subforumSlug}`, // Subforum
+	THREAD: (slug: string) => `/threads/${slug}`, // Individual thread (global)
+	
+	// Thread Creation
+	CREATE_THREAD: '/threads/create', // Generic thread creation
+	CREATE_THREAD_IN_FORUM: (zoneSlug: string, forumSlug: string) => `/zones/${zoneSlug}/${forumSlug}/create`,
+	CREATE_THREAD_IN_SUBFORUM: (zoneSlug: string, forumSlug: string, subforumSlug: string) => `/zones/${zoneSlug}/${forumSlug}/${subforumSlug}/create`,
+	
+	// Search
+	SEARCH_FORUMS: '/search/forums',
 
-	// Legacy alias – redirects to '/forums'. Prefer using FORUMS.
-	FORUM: '/forums', // Alias for backward compatibility
+	// Legacy routes (deprecated - use hierarchical ones above)
+	FORUMS: '/forums', // Redirects to /zones
+	FORUM_DETAIL: (slug: string) => `/forums/${slug}`, // Legacy - redirects to new structure
 	FORUM_CATEGORY: (slug: string) => `/categories/${slug}`, // Old category view
 
 	// Shop routes

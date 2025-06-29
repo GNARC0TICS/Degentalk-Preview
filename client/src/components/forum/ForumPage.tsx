@@ -18,8 +18,10 @@ export interface ForumPageProps {
 }
 
 const ForumPage = memo(({ className }: ForumPageProps) => {
-	const params = useParams<{ slug?: string }>();
-	const forumSlug = params?.slug;
+	const params = useParams<{ zoneSlug?: string; forumSlug?: string; subforumSlug?: string }>();
+	// Use subforum slug if present, otherwise forum slug
+	const forumSlug = params?.subforumSlug || params?.forumSlug;
+	const zoneSlug = params?.zoneSlug;
 	const { getForum, zones, isUsingFallback } = useForumStructure();
 
 	// State management
@@ -41,14 +43,23 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 
 	// Get forum data with error handling
 	let forum = null as ReturnType<typeof getForum> | null;
+	let parentForum = null as ReturnType<typeof getForum> | null;
 	try {
 		forum = forumSlug ? getForum(forumSlug) : null;
+
+		// If we have a subforum, find its parent
+		if (params?.subforumSlug && params?.forumSlug) {
+			parentForum = getForum(params.forumSlug);
+		}
 	} catch (error) {
 		console.error('Error retrieving forum data:', error);
 		throw error as Error; // bubble up to error boundary
 	}
 
-	const parentZone = zones?.find((zone) => zone.forums.some((f) => f.slug === forumSlug));
+	// Find parent zone - either from URL or by searching
+	const parentZone = zoneSlug
+		? zones?.find((zone) => zone.slug === zoneSlug)
+		: zones?.find((zone) => zone.forums.some((f) => f.slug === forumSlug));
 
 	const handleFiltersChange = useCallback(
 		(newFilters: typeof filters) => {
@@ -58,13 +69,19 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 	);
 
 	const handleNewThread = useCallback(() => {
-		// TODO: Navigate to create thread page or open modal
-		window.location.href = `/forums/${forumSlug}/create`;
-	}, [forumSlug]);
+		// Navigate to create thread page with proper hierarchy
+		if (parentZone && forumSlug) {
+			const basePath = params?.subforumSlug
+				? `/zones/${parentZone.slug}/${params.forumSlug}/${params.subforumSlug}`
+				: `/zones/${parentZone.slug}/${forumSlug}`;
+			window.location.href = `${basePath}/create`;
+		}
+	}, [parentZone, forumSlug, params]);
 
 	const breadcrumbItems = React.useMemo(() => {
-		return createForumBreadcrumbs.forumInZone(parentZone ?? null, forum ?? null);
-	}, [parentZone, forum]);
+		if (!parentZone || !forum) return [];
+		return createForumBreadcrumbs.forumInZone(parentZone, forum, parentForum ?? undefined);
+	}, [parentZone, forum, parentForum]);
 
 	if (!forum) {
 		return (
@@ -126,6 +143,7 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 								forumSlug={forum.slug}
 								availableTags={[]}
 								filters={filters}
+								displayMode="table"
 							/>
 						) : (
 							<div className="text-center py-8 text-zinc-400">

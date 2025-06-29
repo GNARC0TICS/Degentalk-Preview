@@ -172,8 +172,9 @@ const ZonePage: React.FC = () => {
 										>
 											<ForumListItem
 												forum={forum}
-												href={`/forums/${forum.slug}`}
+												href={`/zones/${zone.slug}/${forum.slug}`}
 												parentZoneColor={theme?.color ?? undefined}
+												zoneSlug={zone.slug}
 											/>
 										</div>
 									))}

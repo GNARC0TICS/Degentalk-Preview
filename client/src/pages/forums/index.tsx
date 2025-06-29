@@ -85,7 +85,7 @@ export default function ForumsIndexPage() {
 	const handleSearch = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (searchText.trim()) {
-			setLocation(`/forums/search?q=${encodeURIComponent(searchText.trim())}`);
+			setLocation(`/search/forums?q=${encodeURIComponent(searchText.trim())}`);
 		}
 	};
 
@@ -225,8 +225,9 @@ export default function ForumsIndexPage() {
 							<ForumListItem
 								key={forum.id.toString()}
 								forum={forum}
-								href={`/forums/${forum.slug}`}
+								href={`/zones/${zoneData.slug}/${forum.slug}`}
 								parentZoneColor={zoneData.theme.color ?? undefined}
+								zoneSlug={zoneData.slug}
 							/>
 						))}
 					</div>

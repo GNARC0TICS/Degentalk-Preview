@@ -21,29 +21,56 @@ export const createForumBreadcrumbs = {
 	 * Format: Home > Zone > Forum > Thread
 	 */
 	threadInForum(
-		zone: ZoneContext,
-		forum: ForumContext,
+		zone: ZoneContext | undefined,
+		forum: ForumContext | undefined,
 		threadTitle: string,
-		threadSlug: string
+		threadSlug: string,
+		parentForum?: ForumContext | undefined
 	): BreadcrumbItem[] {
-		return [
+		if (!zone || !forum) {
+			return [
+				{ label: 'Home', href: '/' },
+				{ label: 'Zones', href: '/zones' },
+				{ label: threadTitle, href: `/threads/${threadSlug}` }
+			];
+		}
+		
+		const breadcrumbs: BreadcrumbItem[] = [
 			{ label: 'Home', href: '/' },
-			{ label: zone.name, href: `/zones/${zone.slug}` },
-			{ label: forum.name, href: `/zones/${zone.slug}/${forum.slug}` },
-			{ label: threadTitle, href: `/threads/${threadSlug}` }
+			{ label: zone.name, href: `/zones/${zone.slug}` }
 		];
+		
+		// If this is a subforum, add parent forum to breadcrumbs
+		if (parentForum) {
+			breadcrumbs.push({ label: parentForum.name, href: `/zones/${zone.slug}/${parentForum.slug}` });
+			breadcrumbs.push({ label: forum.name, href: `/zones/${zone.slug}/${parentForum.slug}/${forum.slug}` });
+		} else {
+			breadcrumbs.push({ label: forum.name, href: `/zones/${zone.slug}/${forum.slug}` });
+		}
+		
+		breadcrumbs.push({ label: threadTitle, href: `/threads/${threadSlug}` });
+		return breadcrumbs;
 	},
 
 	/**
 	 * Creates breadcrumbs for a forum page
-	 * Format: Home > Zone > Forum
+	 * Format: Home > Zone > Forum (> Subforum)
 	 */
-	forumInZone(zone: ZoneContext, forum: ForumContext): BreadcrumbItem[] {
-		return [
+	forumInZone(zone: ZoneContext, forum: ForumContext, parentForum?: ForumContext): BreadcrumbItem[] {
+		const breadcrumbs: BreadcrumbItem[] = [
 			{ label: 'Home', href: '/' },
-			{ label: zone.name, href: `/zones/${zone.slug}` },
-			{ label: forum.name, href: `/zones/${zone.slug}/${forum.slug}` }
+			{ label: zone.name, href: `/zones/${zone.slug}` }
 		];
+		
+		// If this is a subforum, add parent forum to breadcrumbs
+		if (parentForum) {
+			breadcrumbs.push({ label: parentForum.name, href: `/zones/${zone.slug}/${parentForum.slug}` });
+			breadcrumbs.push({ label: forum.name, href: `/zones/${zone.slug}/${parentForum.slug}/${forum.slug}` });
+		} else {
+			breadcrumbs.push({ label: forum.name, href: `/zones/${zone.slug}/${forum.slug}` });
+		}
+		
+		return breadcrumbs;
 	},
 
 	/**

@@ -13,13 +13,17 @@ interface ForumListItemProps {
 	href: string;
 	parentZoneColor?: string;
 	depthLevel?: number;
+	zoneSlug?: string;
+	parentForumSlug?: string;
 }
 
 export function ForumListItem({
 	forum,
 	href,
 	parentZoneColor,
-	depthLevel = 0
+	depthLevel = 0,
+	zoneSlug,
+	parentForumSlug
 }: ForumListItemProps) {
 	const [prevThreadCount, setPrevThreadCount] = useState(forum.threadCount || 0);
 	const [prevPostCount, setPrevPostCount] = useState(forum.postCount || 0);
@@ -190,15 +194,29 @@ export function ForumListItem({
 						borderColor: 'rgba(113, 113, 122, 0.3)'
 					}}
 				>
-					{forum.forums.map((subForum) => (
-						<ForumListItem
-							key={subForum.slug}
-							forum={subForum}
-							href={`/forums/${subForum.slug}`}
-							parentZoneColor={forum.color || parentZoneColor}
-							depthLevel={depthLevel + 1}
-						/>
-					))}
+					{forum.forums.map((subForum) => {
+						// Build hierarchical URL for subforum
+						let subforumHref: string;
+						if (zoneSlug) {
+							// If we have zone context, build full hierarchical URL
+							subforumHref = `/zones/${zoneSlug}/${forum.slug}/${subForum.slug}`;
+						} else {
+							// Fallback to legacy URL if no zone context
+							subforumHref = `/forums/${subForum.slug}`;
+						}
+						
+						return (
+							<ForumListItem
+								key={subForum.slug}
+								forum={subForum}
+								href={subforumHref}
+								parentZoneColor={forum.color || parentZoneColor}
+								depthLevel={depthLevel + 1}
+								zoneSlug={zoneSlug}
+								parentForumSlug={forum.slug}
+							/>
+						);
+					})}
 				</div>
 			)}
 		</div>

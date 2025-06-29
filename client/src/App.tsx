@@ -97,6 +97,9 @@ import InvitePage from './pages/invite/[code]';
 import UIPlaygroundPage from './pages/ui-playground';
 import { DevPlaygroundShortcut } from '@/components/dev/dev-playground-shortcut';
 
+// Import Legacy Redirect Component
+import LegacyForumRedirect from '@/components/forum/LegacyForumRedirect';
+
 // Permission wrapper for mod routes
 function RequireMod({ children }: { children: React.ReactNode }) {
 	// Always allow access without permission checks
@@ -122,19 +125,33 @@ function App() {
 						{/* Auth Routes */}
 						<Route path="/auth" component={AuthPage} />
 
-						{/* Forum Structure Routes */}
-						{/* Updated path to match singular '/forum/:slug' */}
-						<ProtectedRoute path="/forums/:slug" component={ForumBySlugPage} />
-						{/* The /forum route might be for a general forum listing page if needed */}
-						<ProtectedRoute path="/forums" component={ForumsPage} />
-						{/* Search Page Route */}
-						<ProtectedRoute path="/forums/search" component={ForumSearchPage} />
+						{/* Forum Structure Routes - Hierarchical URL Pattern */}
+						{/* Zone listing page */}
+						<ProtectedRoute path="/zones" component={ForumsPage} />
 
-						{/* Zone Page Route */}
-						<ProtectedRoute path="/zones/:slug" component={ZoneBySlugPage} />
+						{/* Zone page */}
+						<ProtectedRoute path="/zones/:zoneSlug" component={ZoneBySlugPage} />
+
+						{/* Forum within zone (with optional subforum) */}
+						<ProtectedRoute
+							path="/zones/:zoneSlug/:forumSlug/:subforumSlug"
+							component={ForumBySlugPage}
+						/>
+						<ProtectedRoute path="/zones/:zoneSlug/:forumSlug" component={ForumBySlugPage} />
+
+						{/* Search Page */}
+						<ProtectedRoute path="/search/forums" component={ForumSearchPage} />
 
 						{/* Thread Routes */}
 						<ProtectedRoute path="/threads/create" component={CreateThreadPage} />
+						<ProtectedRoute
+							path="/zones/:zoneSlug/:forumSlug/create"
+							component={CreateThreadPage}
+						/>
+						<ProtectedRoute
+							path="/zones/:zoneSlug/:forumSlug/:subforumSlug/create"
+							component={CreateThreadPage}
+						/>
 						<ProtectedRoute path="/threads/:thread_slug" component={ThreadPage} />
 
 						{/* Other Routes */}
@@ -498,9 +515,15 @@ function App() {
 							)}
 						/>
 
-						{/* Legacy Forum Routes – temporary aliases for '/forum' */}
-						<ProtectedRoute path="/forum" component={ForumsPage} />
-						<ProtectedRoute path="/forum/:slug" component={ForumBySlugPage} />
+						{/* Legacy Forum Routes - Redirect to new structure */}
+						<Route path="/forums">
+							<Redirect to="/zones" />
+						</Route>
+						<Route path="/forums/:slug" component={LegacyForumRedirect} />
+						<Route path="/forum">
+							<Redirect to="/zones" />
+						</Route>
+						<Route path="/forum/:slug" component={LegacyForumRedirect} />
 
 						{/* UI Playground (dev only) */}
 						{import.meta.env.MODE === 'development' && (
