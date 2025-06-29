@@ -12,7 +12,7 @@ import {
 	SelectValue
 } from '@/components/ui/select';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { EntityTable } from '@/components/admin/layout/EntityTable';
+import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
 import type { ColumnDef } from '@/components/admin/layout/EntityTable';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -177,7 +177,7 @@ export default function ForumStructureAdminPage() {
 			<Button className="mb-4" onClick={openCreateDialog}>
 				<Plus className="h-4 w-4 mr-2" /> New Entity
 			</Button>
-			<EntityTable<Entity>
+			<AdminDataTable<Entity>
 				columns={columns}
 				data={entities}
 				isLoading={isLoading}

@@ -91,10 +91,16 @@ Generated on: 2025-06-28
 │  │     └─ profile-background.png
 │  ├─ src/
 │  │  ├─ __tests__/
+│  │  │  ├─ services/
+│  │  │  │  └─ error.service.test.ts
+│  │  │  ├─ types/
+│  │  │  │  └─ admin.types.test.ts
 │  │  │  └─ admin-modules.test.ts
 │  │  ├─ components/
 │  │  │  ├─ admin/
 │  │  │  │  ├─ clout/
+│  │  │  │  │  ... (max depth reached)
+│  │  │  │  ├─ common/
 │  │  │  │  │  ... (max depth reached)
 │  │  │  │  ├─ effects/
 │  │  │  │  │  ... (max depth reached)
@@ -154,6 +160,8 @@ Generated on: 2025-06-28
 │  │  │  │  ├─ rich-text-editor.tsx
 │  │  │  │  └─ suggestion.ts
 │  │  │  ├─ errors/
+│  │  │  │  ├─ AdminErrorBoundary.tsx
+│  │  │  │  ├─ ErrorBoundary.tsx
 │  │  │  │  ├─ ForumNotFound.tsx
 │  │  │  │  ├─ NetworkError.tsx
 │  │  │  │  ├─ ThreadNotFound.tsx
@@ -604,7 +612,7 @@ Generated on: 2025-06-28
 │  │  │  ├─ use-debounce.ts
 │  │  │  ├─ use-dgt-packages.ts
 │  │  │  ├─ use-draft.ts
-│  │  │  ├─ use-gamification.ts
+│  │  │  ├─ use-gamification.tsx
 │  │  │  ├─ use-local-storage.ts
 │  │  │  ├─ use-media-query.ts
 │  │  │  ├─ use-mentions.ts
@@ -798,10 +806,10 @@ Generated on: 2025-06-28
 │  │  │  ├─ degen-index.tsx
 │  │  │  ├─ fixtures-dashboard.tsx
 │  │  │  ├─ forum-rules.tsx
-│  │  │  ├─ gamification.tsx
 │  │  │  ├─ home.tsx
 │  │  │  ├─ leaderboard.tsx
 │  │  │  ├─ not-found.tsx
+│  │  │  ├─ progress.tsx
 │  │  │  ├─ shop.tsx
 │  │  │  ├─ ui-playground.tsx
 │  │  │  ├─ wallet.tsx
@@ -822,6 +830,8 @@ Generated on: 2025-06-28
 │  │  ├─ providers/
 │  │  │  ├─ app-provider.tsx
 │  │  │  └─ root-provider.tsx
+│  │  ├─ services/
+│  │  │  └─ error.service.ts
 │  │  ├─ stores/
 │  │  │  ├─ useLayoutStore.ts
 │  │  │  └─ usePlaygroundControls.ts
@@ -840,14 +850,19 @@ Generated on: 2025-06-28
 │  │  │  │  └─ renderWithProviders.tsx
 │  │  │  └─ setup.ts
 │  │  ├─ types/
+│  │  │  ├─ admin.types.ts
 │  │  │  ├─ canonical.types.ts
+│  │  │  ├─ core.types.ts
 │  │  │  ├─ forum.ts
+│  │  │  ├─ gamification.types.ts
 │  │  │  ├─ inventory.ts
 │  │  │  ├─ notifications.ts
+│  │  │  ├─ payment.types.ts
 │  │  │  ├─ preferences.types.ts
 │  │  │  ├─ profile.ts
 │  │  │  ├─ thread.types.ts
 │  │  │  ├─ user.ts
+│  │  │  ├─ vault.types.ts
 │  │  │  └─ wallet.ts
 │  │  ├─ utils/
 │  │  │  ├─ dev/
@@ -1063,7 +1078,9 @@ Generated on: 2025-06-28
 │     └─ typography.json
 ├─ docs/
 │  ├─ admin/
+│  │  ├─ ADMIN-CONVERSION-COMPLETE.md
 │  │  ├─ developer-guide.md
+│  │  ├─ FORUM-ADMIN-IMPROVEMENTS.md
 │  │  ├─ README.md
 │  │  └─ user-guide.md
 │  ├─ api/
@@ -1097,6 +1114,7 @@ Generated on: 2025-06-28
 │  │  │  │  └─ XP-DGT-SPRINT.md
 │  │  │  ├─ BRAND-SYSTEM-INTEGRATION-PLAN.md
 │  │  │  ├─ COMMUNITY-ENGAGEMENT-FEATURES.md
+│  │  │  ├─ projectBrief.md
 │  │  │  └─ WALLET_INTEGRATION_GUIDE.md
 │  │  ├─ FORUM_PRIMARY_ZONES_REFACTOR_PLAN.md
 │  │  └─ placeholder.txt
@@ -1105,7 +1123,8 @@ Generated on: 2025-06-28
 │  │  ├─ PRODUCTION_DEPLOYMENT.md
 │  │  └─ SCALING_STRATEGY.md
 │  ├─ dev/
-│  │  └─ auth-wallet-dev-guide.md
+│  │  ├─ auth-wallet-dev-guide.md
+│  │  └─ CODESPACES-SETUP-SAFE.md
 │  ├─ development/
 │  │  └─ performance-optimization.md
 │  ├─ engagement/
@@ -1118,7 +1137,8 @@ Generated on: 2025-06-28
 │  │  ├─ mentions-index.md
 │  │  └─ SETUP_GUIDE.md
 │  ├─ gamification/
-│  │  └─ level-flex-system.md
+│  │  ├─ level-flex-system.md
+│  │  └─ XP-DGT-SOURCE-OF-TRUTH.md
 │  ├─ guides/
 │  │  └─ developer-tools.md
 │  ├─ memory-bank/
@@ -1129,13 +1149,24 @@ Generated on: 2025-06-28
 │  │  ├─ raw_reflection_log.md
 │  │  ├─ systemPatterns.md
 │  │  └─ techContext.md
+│  ├─ plans/
+│  │  ├─ demo-admin-modular.md
+│  │  ├─ FORUM-POWER-FEATURES.md
+│  │  ├─ forum-sprint-subforums.md
+│  │  ├─ MVP-FORUM-SETUP.md
+│  │  ├─ MVP-NEEDS.md
+│  │  └─ PRIMARY-ZONES-IMPLEMENTATION.md
 │  ├─ refactor/
-│  │  └─ component-consolidation/
-│  │     ├─ dupes.csv
-│  │     ├─ import-stats.json
-│  │     ├─ landscape.md
-│  │     ├─ migration-plan.md
-│  │     └─ target-structure.md
+│  │  ├─ component-consolidation/
+│  │  │  ├─ dupes.csv
+│  │  │  ├─ import-stats.json
+│  │  │  ├─ landscape.md
+│  │  │  ├─ migration-plan.md
+│  │  │  └─ target-structure.md
+│  │  └─ COMPONENT-MIGRATION-ROADMAP.md
+│  ├─ reports/
+│  │  ├─ FORUM_TEST_REPORT.md
+│  │  └─ longFiles.report.md
 │  ├─ shop/
 │  │  └─ README.md
 │  ├─ system/
@@ -1162,6 +1193,7 @@ Generated on: 2025-06-28
 │  ├─ site-header-refactor-plan.md
 │  ├─ stripecustoms.md
 │  ├─ stripeelements.md
+│  ├─ STYLE_GUIDE.md
 │  └─ USER-ADVERTISEMENT-IMPLEMENTATION.md
 ├─ eslint-plugins/
 │  └─ degen/
@@ -1282,6 +1314,8 @@ Generated on: 2025-06-28
 │  │  ├─ generate-scope-guide.ts
 │  │  ├─ setup-fresh-wallet-test.ts
 │  │  └─ syncForumsToDB.ts
+│  ├─ docs/
+│  │  └─ add-frontmatter.cjs
 │  ├─ logs/
 │  ├─ migration/
 │  │  ├─ cleanup-old-category-schema.ts
@@ -1843,38 +1877,28 @@ Generated on: 2025-06-28
 ├─ .eslintrc.json
 ├─ .gitignore
 ├─ .jscodeshift.json
+├─ .markdown-link-check.json
+├─ .markdownlint.json
+├─ .markdownlintignore
 ├─ .prettierignore
 ├─ .prettierrc
-├─ ADMIN-CONVERSION-COMPLETE.md
 ├─ backend_new.log
 ├─ backend.log
 ├─ CLAUDE.local.md
 ├─ CLAUDE.md
-├─ CODESPACES-SETUP-SAFE.md
-├─ COMPONENT-MIGRATION-ROADMAP.md
 ├─ components.json
 ├─ CONTRIBUTING.md
 ├─ cookies.txt
-├─ demo-admin-modular.md
 ├─ dev.log
 ├─ directory-tree.md
 ├─ drizzle.config.ts
 ├─ env.local
 ├─ fix-package-manager.sh
-├─ FORUM_TEST_REPORT.md
-├─ FORUM-ADMIN-IMPROVEMENTS.md
-├─ FORUM-POWER-FEATURES.md
-├─ forum-sprint-subforums.md
 ├─ frontend.log
-├─ longFiles.report.md
-├─ MVP-FORUM-SETUP.md
-├─ MVP-NEEDS.md
 ├─ package-lock.json
 ├─ package.json
 ├─ playwright.config.ts
 ├─ pnpm-lock.yaml
-├─ PRIMARY-ZONES-IMPLEMENTATION.md
-├─ projectBrief.md
 ├─ README-FORUM.md
 ├─ README.md
 ├─ startup.log
@@ -1883,8 +1907,7 @@ Generated on: 2025-06-28
 ├─ test-threads-simple.ts
 ├─ tsconfig.client.json
 ├─ tsconfig.eslint.json
-├─ tsconfig.json
-└─ XP-DGT-SOURCE-OF-TRUTH.md
+└─ tsconfig.json
 ```
 
 ## Structure Notes

@@ -10,7 +10,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { useCrudMutation } from '@/hooks/useCrudMutation';
 
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { EntityTable } from '@/components/admin/layout/EntityTable';
+import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
 import {
 	BadgeFormDialogComponent,
 	DeleteBadgeConfirmationDialog,
@@ -217,7 +217,7 @@ export default function BadgeManagementPage() {
 				</div>
 			</CardHeader>
 			<CardContent className="p-0">
-				<EntityTable<PageBadge>
+				<AdminDataTable<PageBadge>
 					columns={columns}
 					data={badges}
 					isLoading={isLoading}

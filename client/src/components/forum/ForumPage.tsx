@@ -1,22 +1,17 @@
-import React, { useState, memo } from 'react';
-import { useParams, useLocation } from 'wouter';
-import { motion } from 'framer-motion';
-import { Plus, Filter, Search, TrendingUp, Clock, MessageSquare } from 'lucide-react';
+import React, { useState, memo, useCallback } from 'react';
+import { useParams } from 'wouter';
+import { Filter } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
+import { useForumFilters } from '@/hooks/useForumFilters';
 import { Wide } from '@/layout/primitives';
-import { ThreadFilters, type ThreadFiltersState } from '@/components/forum/ThreadFilters';
-import {
-	ForumBreadcrumbs,
-	createForumBreadcrumbs,
-	type BreadcrumbItem
-} from '@/components/navigation/ForumBreadcrumbs';
+import { ThreadFilters } from '@/components/forum/ThreadFilters';
+import { ForumBreadcrumbs, createForumBreadcrumbs } from '@/components/navigation/ForumBreadcrumbs';
 import ThreadList from '@/features/forum/components/ThreadList';
 import { DynamicSidebar } from '@/components/forum/sidebar';
 import { SiteFooter } from '@/components/footer';
+import { ForumHeader } from '@/components/forum/ForumHeader';
 
 export interface ForumPageProps {
 	className?: string;
@@ -24,15 +19,25 @@ export interface ForumPageProps {
 
 const ForumPage = memo(({ className }: ForumPageProps) => {
 	const params = useParams<{ slug?: string }>();
-	const [location] = useLocation();
 	const forumSlug = params?.slug;
-	const { getForum, zones, forums, isUsingFallback } = useForumStructure();
+	const { getForum, zones, isUsingFallback } = useForumStructure();
 
 	// State management
-	const [layout, setLayout] = useState<'grid' | 'list' | 'masonry'>('list');
-	const [searchQuery, setSearchQuery] = useState('');
-	const [sortBy, setSortBy] = useState('latest');
 	const [showFilters, setShowFilters] = useState(false);
+
+	// Use the consolidated filter hook with optional storage key
+	const forumFiltersOptions = React.useMemo(() => {
+		const options: Parameters<typeof useForumFilters>[0] = {
+			defaultSort: 'latest',
+			syncWithUrl: true
+		};
+		if (forumSlug) {
+			options.storageKey = `forum-filters-${forumSlug}`;
+		}
+		return options;
+	}, [forumSlug]);
+
+	const { filters, setFilters } = useForumFilters(forumFiltersOptions);
 
 	// Get forum data with error handling
 	let forum = null as ReturnType<typeof getForum> | null;
@@ -45,114 +50,21 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 
 	const parentZone = zones?.find((zone) => zone.forums.some((f) => f.slug === forumSlug));
 
-	// Default filters for ThreadList
-	const [filters, setFilters] = useState<ThreadFiltersState>({
-		sortBy: sortBy as any,
-		tags: [],
-		prefixId: null,
-		solved: null,
-		bookmarked: false,
-		mine: false,
-		replied: false,
-		q: searchQuery
-	});
+	const handleFiltersChange = useCallback(
+		(newFilters: typeof filters) => {
+			setFilters(newFilters);
+		},
+		[setFilters]
+	);
 
-	// Update filters when search or sort changes
-	React.useEffect(() => {
-		setFilters((prev) => ({
-			...prev,
-			sortBy: sortBy as any,
-			q: searchQuery
-		}));
-	}, [sortBy, searchQuery]);
-
-	const handleFiltersChange = (newFilters: ThreadFiltersState) => {
-		setFilters(newFilters);
-	};
+	const handleNewThread = useCallback(() => {
+		// TODO: Navigate to create thread page or open modal
+		window.location.href = `/forums/${forumSlug}/create`;
+	}, [forumSlug]);
 
 	const breadcrumbItems = React.useMemo(() => {
 		return createForumBreadcrumbs.forumInZone(parentZone ?? null, forum ?? null);
 	}, [parentZone, forum]);
-
-	const sortOptions = [
-		{ value: 'latest', label: 'Latest Activity' },
-		{ value: 'popular', label: 'Most Popular' },
-		{ value: 'trending', label: 'Trending' },
-		{ value: 'hot', label: 'Hot Threads' },
-		{ value: 'tips', label: 'Most Tipped' },
-		{ value: 'oldest', label: 'Oldest First' }
-	];
-
-	const forumHeader = forum && (
-		<div className="space-y-4">
-			<div className="flex items-start justify-between">
-				<div className="space-y-2">
-					<div className="flex items-center gap-3">
-						{forum.theme?.icon && (
-							<div className="w-12 h-12 rounded-lg bg-zinc-800/50 flex items-center justify-center text-2xl">
-								{forum.theme.icon}
-							</div>
-						)}
-						<div>
-							<h1 className="text-3xl font-bold text-white">{forum.name}</h1>
-							<p className="text-zinc-400">{forum.description}</p>
-						</div>
-					</div>
-					<div className="flex items-center gap-4 text-sm text-zinc-400">
-						<div className="flex items-center gap-1">
-							<MessageSquare className="w-4 h-4" />
-							<span>{forum.threadCount} threads</span>
-						</div>
-						<div className="flex items-center gap-1">
-							<span>{forum.postCount} posts</span>
-						</div>
-					</div>
-				</div>
-				<Button className="bg-emerald-600 hover:bg-emerald-700">
-					<Plus className="w-4 h-4 mr-2" />
-					New Thread
-				</Button>
-			</div>
-			<div className="flex items-center gap-3">
-				<div className="relative flex-1 max-w-md">
-					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-zinc-400" />
-					<Input
-						placeholder={`Search ${forum.name}...`}
-						value={searchQuery}
-						onChange={(e) => setSearchQuery(e.target.value)}
-						className="pl-10 bg-zinc-800/50 border-zinc-700/50"
-					/>
-				</div>
-				<div className="flex items-center gap-2">
-					<Badge
-						variant="outline"
-						className="cursor-pointer hover:bg-zinc-700/50"
-						onClick={() => setSortBy('hot')}
-					>
-						<TrendingUp className="w-3 h-3 mr-1" />
-						Hot
-					</Badge>
-					<Badge
-						variant="outline"
-						className="cursor-pointer hover:bg-zinc-700/50"
-						onClick={() => setSortBy('latest')}
-					>
-						<Clock className="w-3 h-3 mr-1" />
-						Latest
-					</Badge>
-				</div>
-				<Button
-					variant="ghost"
-					size="sm"
-					onClick={() => setShowFilters(!showFilters)}
-					className="text-zinc-400 hover:text-white"
-				>
-					<Filter className="w-4 h-4 mr-2" />
-					Filters
-				</Button>
-			</div>
-		</div>
-	);
 
 	if (!forum) {
 		return (
@@ -178,7 +90,22 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 					{/* Main Content */}
 					<div className="space-y-6">
 						{/* Forum Header */}
-						{forumHeader}
+						{forum && (
+							<ForumHeader forum={forum} variant="detailed" onNewThread={handleNewThread} />
+						)}
+
+						{/* Filter Toggle */}
+						<div className="flex justify-end">
+							<Button
+								variant="ghost"
+								size="sm"
+								onClick={() => setShowFilters(!showFilters)}
+								className="text-zinc-400 hover:text-white"
+							>
+								<Filter className="w-4 h-4 mr-2" />
+								{showFilters ? 'Hide' : 'Show'} Filters
+							</Button>
+						</div>
 
 						{/* Filters */}
 						{showFilters && (
@@ -195,7 +122,7 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 						{/* Thread List */}
 						{forum?.id && !isUsingFallback ? (
 							<ThreadList
-								forumId={forum.id}
+								forumId={forum.id as number}
 								forumSlug={forum.slug}
 								availableTags={[]}
 								filters={filters}
@@ -209,7 +136,9 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 
 					{/* Right Sidebar */}
 					<aside className="space-y-6">
-						<DynamicSidebar structureId={forum?.id} zoneSlug={parentZone?.slug} />
+						{parentZone && (
+							<DynamicSidebar structureId={forum?.id as number} zoneSlug={parentZone.slug} />
+						)}
 					</aside>
 				</div>
 			</Wide>

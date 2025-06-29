@@ -20,6 +20,7 @@ import {
 	type ModerateThreadInput
 } from './forum.validators';
 import { logger } from '@server/src/core/logger';
+import { validateRequestBody, validateQueryParams } from '../../admin.validation';
 
 export class AdminForumController {
 	async getAllCategories(req: Request, res: Response) {
@@ -54,23 +55,15 @@ export class AdminForumController {
 
 	async createCategory(req: Request, res: Response) {
 		try {
-			const validation = CategorySchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid category data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const category = await adminForumService.createCategory(validation.data);
+			const data = validateRequestBody(req, res, CategorySchema);
+			if (!data) return;
+			const category = await adminForumService.createCategory(data);
 			await adminController.logAction(
 				req,
 				'CREATE_CATEGORY',
 				'category',
 				category.id.toString(),
-				validation.data
+				data
 			);
 			res.status(201).json(category);
 		} catch (error) {
@@ -88,23 +81,15 @@ export class AdminForumController {
 			if (isNaN(categoryId))
 				throw new AdminError('Invalid category ID', 400, AdminErrorCodes.INVALID_REQUEST);
 
-			const validation = CategorySchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid category data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const category = await adminForumService.updateCategory(categoryId, validation.data);
+			const data = validateRequestBody(req, res, CategorySchema);
+			if (!data) return;
+			const category = await adminForumService.updateCategory(categoryId, data);
 			await adminController.logAction(
 				req,
 				'UPDATE_CATEGORY',
 				'category',
 				categoryId.toString(),
-				validation.data
+				data
 			);
 			res.json(category);
 		} catch (error) {
@@ -155,23 +140,15 @@ export class AdminForumController {
 
 	async createPrefix(req: Request, res: Response) {
 		try {
-			const validation = PrefixSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid prefix data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const prefix = await adminForumService.createPrefix(validation.data);
+			const dataPrefix = validateRequestBody(req, res, PrefixSchema);
+			if (!dataPrefix) return;
+			const prefix = await adminForumService.createPrefix(dataPrefix);
 			await adminController.logAction(
 				req,
 				'CREATE_THREAD_PREFIX',
 				'thread_prefix',
 				prefix.id.toString(),
-				validation.data
+				dataPrefix
 			);
 			res.status(201).json(prefix);
 		} catch (error) {
@@ -200,18 +177,10 @@ export class AdminForumController {
 
 	async createTag(req: Request, res: Response) {
 		try {
-			const validation = TagSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid tag data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const tag = await adminForumService.createTag(validation.data);
-			await adminController.logAction(req, 'CREATE_TAG', 'tag', tag.id.toString(), validation.data);
+			const dataTag = validateRequestBody(req, res, TagSchema);
+			if (!dataTag) return;
+			const tag = await adminForumService.createTag(dataTag);
+			await adminController.logAction(req, 'CREATE_TAG', 'tag', tag.id.toString(), dataTag);
 			res.status(201).json(tag);
 		} catch (error) {
 			if (error instanceof AdminError)
@@ -228,18 +197,10 @@ export class AdminForumController {
 			if (isNaN(tagId))
 				throw new AdminError('Invalid tag ID', 400, AdminErrorCodes.INVALID_REQUEST);
 
-			const validation = TagSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid tag data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const tag = await adminForumService.updateTag(tagId, validation.data);
-			await adminController.logAction(req, 'UPDATE_TAG', 'tag', tagId.toString(), validation.data);
+			const dataTagU = validateRequestBody(req, res, TagSchema);
+			if (!dataTagU) return;
+			const tag = await adminForumService.updateTag(tagId, dataTagU);
+			await adminController.logAction(req, 'UPDATE_TAG', 'tag', tagId.toString(), dataTagU);
 			res.json(tag);
 		} catch (error) {
 			if (error instanceof AdminError)
@@ -274,25 +235,16 @@ export class AdminForumController {
 			if (isNaN(threadId))
 				throw new AdminError('Invalid thread ID', 400, AdminErrorCodes.INVALID_REQUEST);
 
-			const validation = ModerateThreadSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid moderation data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const thread = await adminForumService.moderateThread(threadId, validation.data);
-			const actionType = this.determineModerationType(validation.data);
-			await adminController.logAction(
-				req,
-				actionType,
-				'thread',
-				threadId.toString(),
-				validation.data
+			const dataMod = validateRequestBody(req, res, ModerateThreadSchema);
+			if (!dataMod) return;
+			const thread = await adminForumService.moderateThread(
+				threadId,
+				dataMod,
+				getUserId(req),
+				this.determineModerationType(dataMod)
 			);
+			const moderationType = this.determineModerationType(dataMod);
+			await adminController.logAction(req, moderationType, 'thread', threadId.toString(), dataMod);
 			res.json(thread);
 		} catch (error) {
 			if (error instanceof AdminError)
@@ -319,7 +271,8 @@ export class AdminForumController {
 	// Forum entity management methods
 	async getAllEntities(req: Request, res: Response) {
 		try {
-			const entities = await adminForumService.getAllEntities();
+			const pagination = validateQueryParams(req, res, PaginationSchema) || undefined;
+			const entities = await adminForumService.getAllEntities(pagination);
 			res.json(entities);
 		} catch (error) {
 			logger.error('AdminForumController', 'Error getting all entities', { err: error });
@@ -348,15 +301,16 @@ export class AdminForumController {
 
 	async createEntity(req: Request, res: Response) {
 		try {
-			const validation = createEntitySchema.safeParse(req.body);
-			if (!validation.success) {
-				return res.status(400).json({
-					message: 'Invalid entity data',
-					errors: validation.error.flatten()
-				});
-			}
-
-			const entity = await adminForumService.createEntity(validation.data);
+			const dataEnt = validateRequestBody(req, res, createEntitySchema);
+			if (!dataEnt) return;
+			const entity = await adminForumService.createEntity(dataEnt);
+			await adminController.logAction(
+				req,
+				'CREATE_FORUM_ENTITY',
+				'forum_entity',
+				entity.id.toString(),
+				dataEnt
+			);
 			res.status(201).json(entity);
 		} catch (error) {
 			logger.error('AdminForumController', 'Error creating entity', { err: error });
@@ -371,19 +325,20 @@ export class AdminForumController {
 				return res.status(400).json({ message: 'Invalid entity ID' });
 			}
 
-			const validation = updateEntitySchema.safeParse(req.body);
-			if (!validation.success) {
-				return res.status(400).json({
-					message: 'Invalid entity data',
-					errors: validation.error.flatten()
-				});
-			}
-
-			const entity = await adminForumService.updateEntity(entityId, validation.data);
+			const dataEntU = validateRequestBody(req, res, updateEntitySchema);
+			if (!dataEntU) return;
+			const entity = await adminForumService.updateEntity(entityId, dataEntU);
 			if (!entity) {
 				return res.status(404).json({ message: 'Entity not found' });
 			}
 
+			await adminController.logAction(
+				req,
+				'UPDATE_FORUM_ENTITY',
+				'forum_entity',
+				entityId.toString(),
+				dataEntU
+			);
 			res.json(entity);
 		} catch (error) {
 			logger.error('AdminForumController', 'Error updating entity', { err: error });

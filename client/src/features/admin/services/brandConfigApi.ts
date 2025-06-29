@@ -1,4 +1,4 @@
-import { RuntimeBrandConfig, BrandConfigUpdate } from '@db_types/brand.types';
+import { RuntimeBrandConfig, BrandConfigUpdate } from '@/types/compat/brand';
 
 export const brandConfigApi = {
 	async getConfig(): Promise<RuntimeBrandConfig> {

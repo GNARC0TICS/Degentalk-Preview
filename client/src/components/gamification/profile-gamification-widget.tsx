@@ -53,7 +53,7 @@ export function ProfileGamificationWidget({
 						Gamification Stats
 					</span>
 					{isOwnProfile && (
-						<Button variant="ghost" size="sm" onClick={() => router.push('/gamification')}>
+						<Button variant="ghost" size="sm" onClick={() => router.push('/progress')}>
 							View All
 							<ChevronRight className="w-4 h-4 ml-1" />
 						</Button>
@@ -174,7 +174,11 @@ export function ProfileGamificationWidget({
 				{/* View Full Profile */}
 				{isOwnProfile && (
 					<div className="grid grid-cols-2 gap-2 pt-2">
-						<Button variant="outline" size="sm" onClick={() => router.push('/achievements')}>
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => router.push('/progress?tab=achievements')}
+						>
 							<Trophy className="w-3 h-3 mr-1" />
 							Achievements
 						</Button>

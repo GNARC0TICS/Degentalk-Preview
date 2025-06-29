@@ -26,7 +26,7 @@ export function getUserId(req: Request): number {
  */
 export async function isAdmin(req: Request, res: Response, next: NextFunction) {
 	// Skip auth check in development mode and auto-login as DevUser
-	if (process.env.NODE_ENV === 'development' && !req.isAuthenticated()) {
+	if (process.env.ALLOW_DEV_ADMIN === 'true' && !req.isAuthenticated()) {
 		try {
 			// Use Drizzle ORM for secure, parameterized queries
 			const [devUser] = await db.select().from(users).where(eq(users.username, 'DevUser')).limit(1);
@@ -72,7 +72,7 @@ export async function isAdmin(req: Request, res: Response, next: NextFunction) {
 	} else if (req.isAuthenticated()) {
 		// Normal authentication - use RBAC util
 		const user = req.user as any;
-		const { canUser } = await import('../../../../lib/auth/canUser.ts');
+		const { canUser } = await import('@lib/auth/canUser.ts');
 		if (user && (await canUser(user, 'canViewAdminPanel'))) {
 			return next();
 		}
@@ -88,7 +88,7 @@ export async function isAdmin(req: Request, res: Response, next: NextFunction) {
  */
 export async function isAdminOrModerator(req: Request, res: Response, next: NextFunction) {
 	// Skip auth check in development mode and auto-login as DevUser
-	if (process.env.NODE_ENV === 'development' && !req.isAuthenticated()) {
+	if (process.env.ALLOW_DEV_ADMIN === 'true' && !req.isAuthenticated()) {
 		try {
 			// Use Drizzle ORM for secure, parameterized queries
 			const [devUser] = await db.select().from(users).where(eq(users.username, 'DevUser')).limit(1);
@@ -133,7 +133,7 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
 		}
 	} else if (req.isAuthenticated()) {
 		const user = req.user as any;
-		const { canUser } = await import('../../../../lib/auth/canUser.ts');
+		const { canUser } = await import('@lib/auth/canUser.ts');
 		if (user && (await canUser(user, 'canManageUsers'))) {
 			return next();
 		}

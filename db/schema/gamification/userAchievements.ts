@@ -2,12 +2,12 @@ import {
 	pgTable,
 	timestamp,
 	jsonb,
-	primaryKey,
 	uuid,
 	integer,
 	boolean,
 	decimal,
-	serial
+	serial,
+	uniqueIndex
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
@@ -46,10 +46,10 @@ export const userAchievements = pgTable(
 		completionData: jsonb('completion_data').notNull().default('{}')
 	},
 	(table) => ({
-		userAchievementUnique: primaryKey({
-			name: 'user_achievement_unique',
-			columns: [table.userId, table.achievementId]
-		})
+		userAchievementUnique: uniqueIndex('user_achievement_unique').on(
+			table.userId,
+			table.achievementId
+		)
 	})
 );
 

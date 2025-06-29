@@ -19,6 +19,7 @@ import {
 	type TreasurySettingsUpdateInput,
 	type MassAirdropInput
 } from './treasury.validators';
+import { validateRequestBody } from '../../admin.validation';
 
 export class AdminTreasuryController {
 	async getDgtSupplyStats(req: Request, res: Response) {
@@ -35,29 +36,16 @@ export class AdminTreasuryController {
 
 	async sendFromTreasury(req: Request, res: Response) {
 		try {
-			const validation = TreasuryDepositSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid input',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
+			const data = validateRequestBody(req, res, TreasuryDepositSchema);
+			if (!data) return;
 			const adminId = getUserId(req);
-			const result = await adminTreasuryService.sendFromTreasury(validation.data, adminId);
+			const result = await adminTreasuryService.sendFromTreasury(data, adminId);
 
-			await adminController.logAction(
-				req,
-				'TREASURY_SEND',
-				'treasury',
-				validation.data.userId.toString(),
-				{
-					amount: validation.data.amount,
-					recipientUserId: validation.data.userId,
-					description: validation.data.description
-				}
-			);
+			await adminController.logAction(req, 'TREASURY_SEND', 'treasury', data.userId.toString(), {
+				amount: data.amount,
+				recipientUserId: data.userId,
+				description: data.description
+			});
 			res.json({ message: 'DGT sent from treasury successfully', data: result });
 		} catch (error) {
 			if (error instanceof AdminError) {
@@ -71,29 +59,16 @@ export class AdminTreasuryController {
 
 	async recoverToTreasury(req: Request, res: Response) {
 		try {
-			const validation = TreasuryWithdrawalSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid input',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
+			const data = validateRequestBody(req, res, TreasuryWithdrawalSchema);
+			if (!data) return;
 			const adminId = getUserId(req);
-			const result = await adminTreasuryService.recoverToTreasury(validation.data, adminId);
+			const result = await adminTreasuryService.recoverToTreasury(data, adminId);
 
-			await adminController.logAction(
-				req,
-				'TREASURY_RECOVER',
-				'treasury',
-				validation.data.userId.toString(),
-				{
-					amount: validation.data.amount,
-					sourceUserId: validation.data.userId,
-					description: validation.data.description
-				}
-			);
+			await adminController.logAction(req, 'TREASURY_RECOVER', 'treasury', data.userId.toString(), {
+				amount: data.amount,
+				sourceUserId: data.userId,
+				description: data.description
+			});
 			res.json({ message: 'DGT recovered to treasury successfully', data: result });
 		} catch (error) {
 			if (error instanceof AdminError) {
@@ -107,24 +82,15 @@ export class AdminTreasuryController {
 
 	async massAirdrop(req: Request, res: Response) {
 		try {
-			const validation = MassAirdropSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid input for mass airdrop',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
+			const dataAirdrop = validateRequestBody(req, res, MassAirdropSchema);
+			if (!dataAirdrop) return;
 			const adminId = getUserId(req);
-			const result = await adminTreasuryService.massAirdrop(validation.data, adminId);
+			const result = await adminTreasuryService.massAirdrop(dataAirdrop, adminId);
 
 			await adminController.logAction(req, 'TREASURY_MASS_AIRDROP', 'treasury', 'multiple_users', {
-				amountPerUser: validation.data.amountPerUser,
-				userCount: validation.data.userIds.length,
-				reason: validation.data.reason,
-				successfulAirdrops: result.airdropResults.filter((r) => r.status === 'success').length,
-				failedAirdrops: result.airdropResults.filter((r) => r.status === 'failed').length,
+				amountPerUser: dataAirdrop.amountPerUser,
+				userCount: dataAirdrop.userIds.length,
+				reason: dataAirdrop.reason,
 				missingUserIds: result.missingUserIds
 			});
 			res.json({ message: 'Mass airdrop process completed.', data: result });
@@ -155,20 +121,10 @@ export class AdminTreasuryController {
 
 	async updateTreasurySettings(req: Request, res: Response) {
 		try {
-			const validation = TreasurySettingsUpdateSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid settings data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
+			const dataSettings = validateRequestBody(req, res, TreasurySettingsUpdateSchema);
+			if (!dataSettings) return;
 			const adminId = getUserId(req);
-			const result = await adminTreasuryService.updateDgtEconomyParameters(
-				validation.data,
-				adminId
-			);
+			const result = await adminTreasuryService.updateDgtEconomyParameters(dataSettings, adminId);
 
 			await adminController.logAction(
 				req,
@@ -176,7 +132,7 @@ export class AdminTreasuryController {
 				'treasury_settings',
 				'general',
 				{
-					updatedSettings: validation.data
+					updatedSettings: dataSettings
 				}
 			);
 			res.json({ message: 'Treasury settings updated successfully', data: result });

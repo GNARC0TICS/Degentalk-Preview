@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { AdminPermissionsController } from './permissions.controller';
-import { canUser } from '../../../../../../lib/auth/canUser.ts';
+import { canUser } from '@lib/auth/canUser.ts';
 
 const controller = new AdminPermissionsController();
 const router = Router();

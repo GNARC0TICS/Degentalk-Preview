@@ -445,7 +445,8 @@ export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ chil
 					forums: data.forums?.length
 				});
 				setRaw(data);
-			} catch (e: any) {
+			} catch (e: unknown) {
+				// FIXME: any → unknown (safe generic)
 				console.error('[ForumStructureContext] fetch failed – falling back to config', e);
 				setNetErr(e);
 			} finally {
@@ -485,8 +486,8 @@ export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ chil
 				// (mixing zones & forums).  We coerce that into the expected object.
 				if (Array.isArray(raw)) {
 					console.log('[ForumStructureContext] Attempting array coercion...');
-					const zones = raw.filter((s: any) => s.type === 'zone');
-					const forums = raw.filter((s: any) => s.type === 'forum');
+					const zones = raw.filter((s: Record<string, unknown>) => s.type === 'zone'); // FIXME: any → safe record
+					const forums = raw.filter((s: Record<string, unknown>) => s.type === 'forum'); // FIXME: any → safe record
 					const coerced = { zones, forums };
 					try {
 						const parsed = ForumStructureApiResponseSchema.parse(coerced);

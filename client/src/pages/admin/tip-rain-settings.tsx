@@ -108,7 +108,8 @@ export default function TipRainSettings() {
 	}, [rainSettings]);
 
 	// Handle tip form changes
-	const handleTipChange = (field: keyof TipSettings, value: any) => {
+	const handleTipChange = (field: keyof TipSettings, value: string | number | boolean) => {
+		// FIXME: any → union type
 		setTipFormData((prev) => ({
 			...prev,
 			[field]: field === 'enabled' ? value : Number(value)
@@ -116,7 +117,8 @@ export default function TipRainSettings() {
 	};
 
 	// Handle rain form changes
-	const handleRainChange = (field: keyof RainSettings, value: any) => {
+	const handleRainChange = (field: keyof RainSettings, value: string | number | boolean) => {
+		// FIXME: any → union type
 		setRainFormData((prev) => ({
 			...prev,
 			[field]: field === 'enabled' ? value : Number(value)
@@ -137,7 +139,8 @@ export default function TipRainSettings() {
 				variant: 'success'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: unknown) => {
+			// FIXME: any → unknown (safe)
 			toast({
 				title: 'Error saving tip settings',
 				description: error.response?.data?.message || 'An error occurred while saving tip settings',
@@ -160,7 +163,8 @@ export default function TipRainSettings() {
 				variant: 'success'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: unknown) => {
+			// FIXME: any → unknown (safe)
 			toast({
 				title: 'Error saving rain settings',
 				description:

@@ -57,7 +57,7 @@ interface DraftData {
 	forumSlug?: string;
 	prefixId?: string;
 	content?: string;
-	editorState?: any;
+	editorState?: Record<string, unknown>;
 	tags?: string[];
 }
 
@@ -69,7 +69,7 @@ const threadFormSchema = z.object({
 	forumSlug: z.string().min(1, { message: 'Please select a forum.' }),
 	prefixId: z.string().optional(),
 	content: z.string().min(10, { message: 'Content must be at least 10 characters.' }),
-	editorState: z.any().optional(),
+	editorState: z.record(z.unknown()).optional(),
 	tags: z.array(z.string()).max(10).optional()
 });
 
@@ -98,7 +98,7 @@ export function CreateThreadForm({
 	const [, navigate] = useLocation();
 	const { user } = useAuth();
 	const [editorContent, setEditorContent] = useState('');
-	const [editorState, setEditorState] = useState<any>(null);
+	const [editorState, setEditorState] = useState<Record<string, unknown> | null>(null);
 	const [hasActiveDraft, setHasActiveDraft] = useState(false);
 	const [draftId, setDraftId] = useState<number | null>(null);
 	const [selectedForumSlugState, setSelectedForumSlugState] = useState<string | undefined>(
@@ -106,7 +106,9 @@ export function CreateThreadForm({
 	);
 	const queryClient = useQueryClient();
 
-	const [targetForumConfig, setTargetForumConfig] = useState<any | undefined>(undefined); // Merged forum data from context
+	const [targetForumConfig, setTargetForumConfig] = useState<Record<string, unknown> | undefined>(
+		undefined
+	); // Merged forum data from context
 	const [formDisabledReason, setFormDisabledReason] = useState<string | null>(null);
 
 	const { zones, getForum } = useForumStructure();
@@ -269,7 +271,7 @@ export function CreateThreadForm({
 	}, [isDraftLoadSuccess, draftData, form, passedForumSlug]);
 
 	const handleSaveDraft = useCallback(
-		(html: string, jsonState: any) => {
+		(html: string, jsonState: Record<string, unknown>) => {
 			const currentValues = form.getValues();
 			if (!currentValues.title && !html) return;
 			if (!currentValues.forumSlug) {
@@ -378,7 +380,7 @@ export function CreateThreadForm({
 		});
 	};
 
-	const handleEditorChange = (html: string, jsonState: any) => {
+	const handleEditorChange = (html: string, jsonState: Record<string, unknown>) => {
 		setEditorContent(html);
 		setEditorState(jsonState);
 		form.setValue('content', html, { shouldValidate: true });

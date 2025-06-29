@@ -1,320 +1,112 @@
 import React from 'react';
-import { Helmet as Head } from 'react-helmet'; // Changed from next/head
-import { DailyMissions } from '@/components/missions/DailyMissions';
-import DailyTasksWidget from '@/components/dashboard/DailyTasksWidget';
-import { Sparkles, Trophy, Gift, Calendar } from 'lucide-react';
-import { useAuth } from '@/hooks/use-auth'; // Changed path
-import { useMissions } from '@/hooks/useMissions';
-import { useUserAchievements } from '@/hooks/use-achievements';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useAuth } from '@/hooks/use-auth';
+import { useGamification } from '@/hooks/use-gamification';
+import { MissionDashboard } from '@/components/gamification';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-
-// Basic type definition for missions, consider moving to a shared types file
-interface MissionProgress {
-	isCompleted: boolean;
-	isRewardClaimed: boolean;
-	// Add other progress fields if necessary, e.g., current_value, target_value
-}
-
-interface Mission {
-	id: string | number; // Assuming id can be string or number
-	xpReward: number;
-	dgtReward?: number;
-	// Add other mission fields if necessary, e.g., title, description
-}
-
-interface MissionWithProgress extends Mission {
-	progress?: MissionProgress;
-}
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Trophy, Target, ChevronRight, AlertCircle, RefreshCw } from 'lucide-react';
 
 /**
- * Main missions page that displays all available missions
- * and user's progress
+ * Focused missions page that displays actionable tasks like
+ * daily, weekly, and event missions.
  */
 export default function MissionsPage() {
 	const { user } = useAuth();
-	const { missionsWithProgress } = useMissions();
-	const { data: userAchievements = [] } = useUserAchievements();
+	const { missions, isLoading, claimMissionReward, isClaimingReward } = useGamification();
 
-	// Calculate mission stats
-	const totalMissionsCount = missionsWithProgress?.length || 0;
-	const completedMissionsCount =
-		missionsWithProgress?.filter((m: MissionWithProgress) => m.progress?.isCompleted).length || 0;
-	const claimableMissionsCount =
-		missionsWithProgress?.filter(
-			(m: MissionWithProgress) => m.progress?.isCompleted && !m.progress?.isRewardClaimed
-		).length || 0;
+	// Loading state
+	if (isLoading) {
+		return (
+			<div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+				<div className="text-center space-y-4">
+					<RefreshCw className="w-8 h-8 animate-spin mx-auto text-purple-500" />
+					<p className="text-muted-foreground">Loading your missions...</p>
+				</div>
+			</div>
+		);
+	}
 
-	// Calculate total possible XP and DGT rewards
-	const totalPossibleXP =
-		missionsWithProgress?.reduce((sum: number, mission: MissionWithProgress) => {
-			if (!mission.progress?.isRewardClaimed) {
-				return sum + mission.xpReward;
-			}
-			return sum;
-		}, 0) || 0;
+	// Not authenticated
+	if (!user) {
+		return (
+			<div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+				<Alert className="max-w-md">
+					<AlertCircle className="w-4 h-4" />
+					<AlertDescription>Please log in to view your missions.</AlertDescription>
+				</Alert>
+			</div>
+		);
+	}
 
-	const totalPossibleDGT =
-		missionsWithProgress?.reduce((sum: number, mission: MissionWithProgress) => {
-			if (!mission.progress?.isRewardClaimed && mission.dgtReward) {
-				return sum + mission.dgtReward;
-			}
-			return sum;
-		}, 0) || 0;
-
-	// Calculate completion percentage for the progress display
-	const completionPercentage =
-		totalMissionsCount > 0 ? (completedMissionsCount / totalMissionsCount) * 100 : 0;
-
-	// Calculate achievement stats
-	const recentAchievements = userAchievements
-		.filter((ua) => ua.isCompleted)
-		.sort((a, b) => new Date(b.completedAt || 0).getTime() - new Date(a.completedAt || 0).getTime())
-		.slice(0, 3);
-
-	const inProgressAchievements = userAchievements
-		.filter((ua) => !ua.isCompleted && parseFloat(ua.progressPercentage) > 0)
-		.sort((a, b) => parseFloat(b.progressPercentage) - parseFloat(a.progressPercentage))
-		.slice(0, 3);
+	// Error state or no missions
+	if (!missions) {
+		return (
+			<div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+				<Alert className="max-w-md" variant="destructive">
+					<AlertCircle className="w-4 h-4" />
+					<AlertDescription>
+						Failed to load mission data. Please try refreshing the page.
+					</AlertDescription>
+				</Alert>
+			</div>
+		);
+	}
 
 	return (
 		<>
 			<Head>
-				<title>Daily Missions | Degentalk</title>
+				<title>Missions | Degentalk</title>
+				<meta name="description" content="Complete daily, weekly, and special event missions." />
 			</Head>
 
-			{/* Quick progress overview using the same widget */}
-			<div className="container py-4 max-w-3xl">
-				<DailyTasksWidget />
-			</div>
-
-			<div className="container py-6 max-w-6xl">
-				<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+			<div className="container py-8 max-w-6xl space-y-8">
+				{/* Header */}
+				<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
 					<div>
 						<h1 className="text-3xl font-bold flex items-center">
-							<Trophy className="mr-3 h-8 w-8 text-amber-500" />
-							Daily Missions & Quests
+							<Target className="mr-3 h-8 w-8 text-purple-500" />
+							Missions & Quests
 						</h1>
-						<p className="text-zinc-400 mt-1">
-							Complete missions to earn XP, DGT rewards, and badges
-						</p>
+						<p className="text-zinc-400 mt-1">Complete tasks to earn XP, DGT, and other rewards.</p>
 					</div>
-
-					{user && (
-						<div className="flex flex-wrap gap-4">
-							{/* XP available card */}
-							<Card className="bg-gradient-to-br from-blue-950 to-blue-900/50 border-blue-800 shadow">
-								<CardContent className="p-4 flex items-center gap-3">
-									<div className="rounded-full bg-blue-900/50 border border-blue-700 p-2">
-										<Sparkles className="h-5 w-5 text-blue-300" />
-									</div>
-									<div>
-										<div className="text-blue-300 text-sm">Total XP Available</div>
-										<div className="text-xl font-bold">{totalPossibleXP} XP</div>
-									</div>
-								</CardContent>
-							</Card>
-
-							{/* DGT available card */}
-							{totalPossibleDGT > 0 && (
-								<Card className="bg-gradient-to-br from-purple-950 to-purple-900/50 border-purple-800 shadow">
-									<CardContent className="p-4 flex items-center gap-3">
-										<div className="rounded-full bg-purple-900/50 border border-purple-700 p-2">
-											<Gift className="h-5 w-5 text-purple-300" />
-										</div>
-										<div>
-											<div className="text-purple-300 text-sm">Total DGT Available</div>
-											<div className="text-xl font-bold">{totalPossibleDGT} DGT</div>
-										</div>
-									</CardContent>
-								</Card>
-							)}
-						</div>
-					)}
+					<Link href="/progress" passHref>
+						<Button variant="outline">
+							View Full Progress Hub
+							<ChevronRight className="w-4 h-4 ml-2" />
+						</Button>
+					</Link>
 				</div>
 
-				{user && (
-					<div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-						{/* Mission stats */}
-						<Card className="bg-zinc-900 border-zinc-800 col-span-3">
-							<CardHeader className="pb-2">
-								<CardTitle className="text-xl">Mission Progress</CardTitle>
-								<CardDescription>Your progress on active missions</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<div className="flex flex-wrap gap-4 justify-between">
-									<div className="flex items-center gap-4">
-										<div className="h-16 w-16">
-											<CircularProgressbar
-												value={completionPercentage}
-												text={`${Math.round(completionPercentage)}%`}
-												strokeWidth={10}
-												styles={buildStyles({
-													textColor: '#10b981',
-													pathColor: '#10b981',
-													trailColor: '#27272a',
-													textSize: '1.5rem'
-												})}
-											/>
-										</div>
-										<div className="space-y-1">
-											<div className="text-sm text-zinc-400">Completion Rate</div>
-											<div className="text-xl font-semibold">
-												{completedMissionsCount}/{totalMissionsCount} Missions
-											</div>
-										</div>
-									</div>
-
-									<div className="flex gap-6">
-										<div className="space-y-1">
-											<div className="text-sm text-zinc-400">Claimable Rewards</div>
-											<div className="text-xl font-semibold flex items-center">
-												<Gift className="h-5 w-5 mr-2 text-emerald-500" />
-												{claimableMissionsCount}{' '}
-												{claimableMissionsCount === 1 ? 'Mission' : 'Missions'}
-											</div>
-										</div>
-
-										<div className="space-y-1">
-											<div className="text-sm text-zinc-400">Reset Schedule</div>
-											<div className="text-xl font-semibold flex items-center">
-												<Calendar className="h-5 w-5 mr-2 text-blue-500" />
-												Daily & Weekly
-											</div>
-										</div>
-									</div>
-								</div>
-							</CardContent>
-						</Card>
-
-						{/* Info/Tip card */}
-						<Card className="bg-gradient-to-br from-amber-950/50 to-zinc-900 border-amber-800/50">
-							<CardHeader className="pb-2">
-								<CardTitle className="text-lg flex items-center">
-									<Gift className="h-5 w-5 mr-2 text-amber-500" />
-									Mission Tip
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<p className="text-sm text-zinc-300">
-									Daily missions reset every 24 hours. Make sure to claim your rewards before they
-									reset!
-								</p>
-								<p className="text-sm text-zinc-400 mt-2">
-									Weekly missions give bigger rewards and reset every 7 days.
-								</p>
-							</CardContent>
-						</Card>
-					</div>
-				)}
-
 				{/* Main missions list */}
-				<DailyMissions />
+				<MissionDashboard
+					missions={missions}
+					onClaimReward={claimMissionReward}
+					isClaimingReward={isClaimingReward}
+				/>
 
-				{/* Achievements Section */}
-				{user && userAchievements.length > 0 && (
-					<div className="mt-12">
-						<h2 className="text-2xl font-bold flex items-center mb-6">
-							<Trophy className="mr-3 h-7 w-7 text-amber-500" />
-							Your Achievements
-						</h2>
-
-						<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-							{/* Recent Achievements */}
-							{recentAchievements.length > 0 && (
-								<Card className="bg-zinc-900 border-zinc-800">
-									<CardHeader>
-										<CardTitle className="text-lg flex items-center">
-											<Trophy className="h-5 w-5 mr-2 text-emerald-500" />
-											Recent Achievements
-										</CardTitle>
-										<CardDescription>Your latest unlocked achievements</CardDescription>
-									</CardHeader>
-									<CardContent className="space-y-3">
-										{recentAchievements.map((ua) => (
-											<div
-												key={ua.id}
-												className="flex items-center gap-3 p-3 rounded-lg bg-zinc-800 border border-emerald-500/20"
-											>
-												<span className="text-2xl">{ua.achievement.iconEmoji || '🏆'}</span>
-												<div className="flex-1">
-													<div className="font-medium text-zinc-200">{ua.achievement.name}</div>
-													<div className="text-sm text-zinc-400">{ua.achievement.description}</div>
-													{ua.completedAt && (
-														<div className="text-xs text-emerald-400">
-															Completed {new Date(ua.completedAt).toLocaleDateString()}
-														</div>
-													)}
-												</div>
-												<div className="text-emerald-400">
-													<Trophy className="h-5 w-5" />
-												</div>
-											</div>
-										))}
-									</CardContent>
-								</Card>
-							)}
-
-							{/* In Progress Achievements */}
-							{inProgressAchievements.length > 0 && (
-								<Card className="bg-zinc-900 border-zinc-800">
-									<CardHeader>
-										<CardTitle className="text-lg flex items-center">
-											<Sparkles className="h-5 w-5 mr-2 text-blue-500" />
-											In Progress
-										</CardTitle>
-										<CardDescription>Achievements you're working towards</CardDescription>
-									</CardHeader>
-									<CardContent className="space-y-3">
-										{inProgressAchievements.map((ua) => (
-											<div
-												key={ua.id}
-												className="flex items-center gap-3 p-3 rounded-lg bg-zinc-800 border border-blue-500/20"
-											>
-												<span className="text-2xl">{ua.achievement.iconEmoji || '🎯'}</span>
-												<div className="flex-1">
-													<div className="font-medium text-zinc-200">{ua.achievement.name}</div>
-													<div className="text-sm text-zinc-400">{ua.achievement.description}</div>
-													<div className="mt-2">
-														<div className="flex justify-between text-xs text-zinc-400 mb-1">
-															<span>Progress</span>
-															<span>{Math.round(parseFloat(ua.progressPercentage))}%</span>
-														</div>
-														<div className="w-full bg-zinc-700 rounded-full h-2">
-															<div
-																className="bg-blue-500 h-2 rounded-full transition-all"
-																style={{ width: `${ua.progressPercentage}%` }}
-															/>
-														</div>
-													</div>
-												</div>
-											</div>
-										))}
-									</CardContent>
-								</Card>
-							)}
+				{/* Achievements Link Card */}
+				<Card className="bg-gradient-to-r from-amber-950/30 to-orange-950/30 border-amber-800/50">
+					<CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+						<div className="flex items-center gap-4">
+							<Trophy className="w-8 h-8 text-amber-400" />
+							<div>
+								<h3 className="font-semibold text-lg">Track Your Achievements</h3>
+								<p className="text-sm text-zinc-300">
+									View all your unlocked achievements and overall progress.
+								</p>
+							</div>
 						</div>
-
-						{/* Achievement Link */}
-						<div className="mt-6 text-center">
-							<Card className="bg-gradient-to-r from-amber-950/30 to-orange-950/30 border-amber-800/50">
-								<CardContent className="p-4">
-									<p className="text-zinc-300 mb-2">
-										Want to see all your achievements and discover new ones?
-									</p>
-									<a
-										href={`/profile/${user.username}?tab=achievements`}
-										className="inline-flex items-center text-amber-400 hover:text-amber-300 font-medium"
-									>
-										<Trophy className="h-4 w-4 mr-2" />
-										View All Achievements
-									</a>
-								</CardContent>
-							</Card>
-						</div>
-					</div>
-				)}
+						<Link href="/progress?tab=achievements" passHref>
+							<Button variant="secondary" className="bg-amber-600/20 hover:bg-amber-600/40">
+								View Achievements
+								<ChevronRight className="w-4 h-4 ml-2" />
+							</Button>
+						</Link>
+					</CardContent>
+				</Card>
 			</div>
 		</>
 	);

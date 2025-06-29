@@ -7,6 +7,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import type { ApiErrorData } from '@/types/core.types';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -225,14 +226,20 @@ export default function UserManagementPage() {
 
 	// Mutations
 	const banUserMutation = useMutation({
-		mutationFn: ({ userId, data }: { userId: string; data: any }) => usersApi.banUser(userId, data),
+		mutationFn: ({
+			userId,
+			data
+		}: {
+			userId: string;
+			data: { reason: string; duration: string; type: string };
+		}) => usersApi.banUser(userId, data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['mod-users'] });
 			toast.success('User banned successfully');
 			setActionDialogOpen(null);
 			setBanData({ reason: '', duration: '1d', type: 'temporary' });
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error('Failed to ban user', { description: error.message });
 		}
 	});
@@ -244,21 +251,26 @@ export default function UserManagementPage() {
 			queryClient.invalidateQueries({ queryKey: ['mod-users'] });
 			toast.success('User unbanned successfully');
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error('Failed to unban user', { description: error.message });
 		}
 	});
 
 	const warnUserMutation = useMutation({
-		mutationFn: ({ userId, data }: { userId: string; data: any }) =>
-			usersApi.warnUser(userId, data),
+		mutationFn: ({
+			userId,
+			data
+		}: {
+			userId: string;
+			data: { reason: string; severity: string };
+		}) => usersApi.warnUser(userId, data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['mod-users'] });
 			toast.success('Warning issued successfully');
 			setActionDialogOpen(null);
 			setWarnData({ reason: '', severity: 'medium' });
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error('Failed to issue warning', { description: error.message });
 		}
 	});
@@ -270,7 +282,7 @@ export default function UserManagementPage() {
 			queryClient.invalidateQueries({ queryKey: ['mod-users'] });
 			toast.success('User role updated successfully');
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error('Failed to update user role', { description: error.message });
 		}
 	});

@@ -8,6 +8,9 @@
 
 import type { CanonicalThread, CanonicalUser, CanonicalZone } from './canonical.types';
 
+// Canonical zone with optional isPrimary flag for frontend helpers
+export type ResolvedZone = CanonicalZone & { isPrimary?: boolean };
+
 // User type for thread author
 export interface ThreadUser {
 	id: string;
@@ -84,13 +87,7 @@ export interface ThreadDisplay extends CanonicalThread {
 	excerpt?: string; // First 150 chars of content for previews
 
 	// Enhanced zone data (automatically provided by backend)
-	zone: {
-		id: number;
-		name: string;
-		slug: string;
-		colorTheme: string;
-		isPrimary?: boolean;
-	};
+	zone: ResolvedZone;
 
 	// Enhanced user data for display
 	user: CanonicalUser & {

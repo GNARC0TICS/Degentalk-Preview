@@ -66,6 +66,7 @@ import { z } from 'zod';
 import { Badge } from '@/components/ui/badge';
 import { useLocation } from 'wouter'; // Fixed import for useLocation
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import { apiRequest } from '@/lib/apiRequest';
 
 const categorySchema = z.object({
 	name: z
@@ -122,29 +123,13 @@ export default function AdminCategoriesPage() {
 	} = useQuery({
 		queryKey: ['/admin/forum/categories'],
 		queryFn: async () => {
-			const response = await fetch('/admin/forum/categories');
-			if (!response.ok) {
-				throw new Error('Failed to fetch categories');
-			}
-			return response.json();
+			return apiRequest<any>({ url: '/admin/forum/categories', method: 'GET' });
 		}
 	});
 
 	const createCategoryMutation = useMutation({
 		mutationFn: async (data: z.infer<typeof categorySchema>) => {
-			const response = await fetch('/admin/forum/categories', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			});
-
-			if (!response.ok) {
-				throw new Error('Failed to create category');
-			}
-
-			return response.json();
+			return apiRequest<any>({ url: '/admin/forum/categories', method: 'POST', data });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/admin/forum/categories'] });
@@ -160,19 +145,7 @@ export default function AdminCategoriesPage() {
 	const editCategoryMutation = useMutation({
 		mutationFn: async (data: z.infer<typeof categorySchema> & { id: number }) => {
 			const { id, ...categoryData } = data;
-			const response = await fetch(`/admin/forum/categories/${id}`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(categoryData)
-			});
-
-			if (!response.ok) {
-				throw new Error('Failed to update category');
-			}
-
-			return response.json();
+			return apiRequest<any>({ url: `/admin/forum/categories/${id}`, method: 'PUT', data });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/admin/forum/categories'] });
@@ -186,15 +159,7 @@ export default function AdminCategoriesPage() {
 
 	const deleteCategoryMutation = useMutation({
 		mutationFn: async (id: number) => {
-			const response = await fetch(`/admin/forum/categories/${id}`, {
-				method: 'DELETE'
-			});
-
-			if (!response.ok) {
-				throw new Error('Failed to delete category');
-			}
-
-			return response.json();
+			return apiRequest<any>({ url: `/admin/forum/categories/${id}`, method: 'DELETE' });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/admin/forum/categories'] });
@@ -208,19 +173,11 @@ export default function AdminCategoriesPage() {
 
 	const reorderCategoryMutation = useMutation({
 		mutationFn: async ({ id, direction }: { id: number; direction: 'up' | 'down' }) => {
-			const response = await fetch(`/admin/forum/categories/${id}/reorder`, {
+			return apiRequest<any>({
+				url: `/admin/forum/categories/${id}/reorder`,
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ direction })
+				data: { direction }
 			});
-
-			if (!response.ok) {
-				throw new Error('Failed to reorder categories');
-			}
-
-			return response.json();
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/admin/forum/categories'] });

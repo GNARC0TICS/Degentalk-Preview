@@ -95,7 +95,7 @@ export function getSignatureTierForLevel(userLevel: number): SignatureTierLevel 
 	}
 
 	// Get the highest qualifying tier
-	const highestTier = qualifyingTiers[qualifyingTiers.length - 1];
+	const highestTier = qualifyingTiers[qualifyingTiers.length - 1]!;
 
 	return highestTier;
 }

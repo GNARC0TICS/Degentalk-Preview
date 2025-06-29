@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import type { RuntimeBrandConfig } from '@db_types/brand.types';
+import type { RuntimeBrandConfig } from '@/types/compat/brand';
 
 interface BrandContextValue {
 	brandConfig: RuntimeBrandConfig | null;

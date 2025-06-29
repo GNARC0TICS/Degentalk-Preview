@@ -70,6 +70,7 @@
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"validate": "tsx scripts/validate-everything.ts",
+		"validate-everything": "npm run validate",
 		"validate:admin": "npx tsx scripts/admin/validate-admin-controllers.ts",
 		"validate:fix": "tsx scripts/validate-everything.ts --fix",
 		"check": "tsx scripts/test-ci-readiness.ts",
@@ -224,7 +225,7 @@
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^9.8.0",
-		"@neondatabase/mcp-server-neon": "^0.5.0",
+		"@neondatabase/mcp-server-neon": "^0.3.7",
 		"@playwright/test": "^1.44.0",
 		"@replit/vite-plugin-cartographer": "^0.0.11",
 		"@replit/vite-plugin-runtime-error-modal": "^0.0.3",
@@ -253,7 +254,7 @@
 		"chalk": "^5.4.1",
 		"concurrently": "^8.2.2",
 		"dotenv-cli": "^8.0.0",
-		"drizzle-kit": "^0.31.1",
+		"drizzle-kit": "^0.18.1",
 		"esbuild": "^0.25.0",
 		"eslint": "^8.57.0",
 		"eslint-plugin-degen": "file:eslint-plugins/degen",
@@ -276,7 +277,7 @@
 		"ts-node": "^10.9.2",
 		"tsx": "^4.19.4",
 		"typescript": "5.6.3",
-		"vite": "^5.4.14",
+		"vite": "^7.0.0",
 		"vitest": "^3.2.4"
 	},
 	"optionalDependencies": {

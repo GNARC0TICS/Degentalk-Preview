@@ -1,6 +1,8 @@
 import type { Request, Response, NextFunction } from 'express';
 import { loadEconomyConfig, saveEconomyOverrides } from '@server/src/utils/economy-loader';
 import { economyConfig as canonicalEconomyConfig } from '@shared/economy/economy.config';
+import { z } from 'zod';
+import { validateRequestBody } from '../../admin.validation.ts';
 
 /**
  * GET /api/admin/economy/config
@@ -22,7 +24,9 @@ export const getEconomyConfig = async (req: Request, res: Response, next: NextFu
  */
 export const updateEconomyConfig = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const partialOverride = req.body;
+		const partialSchema = z.record(z.any()); // Accept arbitrary keys but ensure object type
+		const partialOverride = validateRequestBody(req, res, partialSchema);
+		if (!partialOverride) return; // Error handled inside validateRequestBody
 		await saveEconomyOverrides(partialOverride);
 		const mergedConfig = await loadEconomyConfig();
 		res.json({ config: mergedConfig, hasOverrides: true });

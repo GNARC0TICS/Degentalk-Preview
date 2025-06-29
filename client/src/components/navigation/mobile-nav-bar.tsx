@@ -1,7 +1,17 @@
 import React from 'react';
 import { useLocation } from 'wouter';
-import { Home, MessageSquare, Users, ShoppingBag, BarChart2, Wallet } from 'lucide-react';
-import { NavItem, NavItemProps } from './nav-item';
+import {
+	Home,
+	MessageSquare,
+	Users,
+	ShoppingBag,
+	BarChart2,
+	Wallet,
+	Target,
+	Trophy
+} from 'lucide-react';
+import { NavItem } from './nav-item';
+import type { NavItemProps } from './nav-item';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth.tsx';
 
@@ -22,8 +32,7 @@ export function MobileNavBar({ items, className }: MobileNavBarProps) {
 			icon: <Home className="h-5 w-5" />,
 			label: 'Home',
 			href: '/',
-			isActive: location === '/',
-			show: true
+			isActive: location === '/'
 		},
 		{
 			icon: <MessageSquare className="h-5 w-5" />,
@@ -32,40 +41,46 @@ export function MobileNavBar({ items, className }: MobileNavBarProps) {
 			isActive:
 				location.startsWith('/forums') ||
 				location.startsWith('/threads') ||
-				location.startsWith('/tags'),
-			show: true
+				location.startsWith('/tags')
 		},
 		{
 			icon: <ShoppingBag className="h-5 w-5" />,
 			label: 'Shop',
 			href: '/shop',
-			isActive: location.startsWith('/shop'),
-			show: true
+			isActive: location.startsWith('/shop')
 		},
 		{
-			icon: <BarChart2 className="h-5 w-5" />,
-			label: 'Leaders',
-			href: '/leaderboard',
-			isActive: location.startsWith('/leaderboard'),
-			show: true
+			icon: <Target className="h-5 w-5" />,
+			label: 'Missions',
+			href: '/missions',
+			isActive: location.startsWith('/missions')
 		},
 		{
-			icon: <Wallet className="h-5 w-5" />,
-			label: 'Wallet',
-			href: '/wallet',
-			isActive: location.startsWith('/wallet'),
-			show: isAuthenticated
-		},
-		{
-			icon: <Users className="h-5 w-5" />,
-			label: 'Profile',
-			href: isAuthenticated && user ? `/profile/${user.username}` : '/login?redirect=/profile',
-			isActive: location.startsWith('/profile'),
-			show: isAuthenticated
+			icon: <Trophy className="h-5 w-5" />,
+			label: 'Progress',
+			href: '/progress',
+			isActive: location.startsWith('/progress')
 		}
 	];
 
-	const navItems = (items || defaultItems).filter((item) => item.show);
+	if (isAuthenticated) {
+		defaultItems.push(
+			{
+				icon: <Wallet className="h-5 w-5" />,
+				label: 'Wallet',
+				href: '/wallet',
+				isActive: location.startsWith('/wallet')
+			},
+			{
+				icon: <Users className="h-5 w-5" />,
+				label: 'Profile',
+				href: user ? `/profile/${user.username}` : '/login?redirect=/profile',
+				isActive: location.startsWith('/profile')
+			}
+		);
+	}
+
+	const navItems = items || defaultItems;
 
 	return (
 		<div
@@ -81,12 +96,12 @@ export function MobileNavBar({ items, className }: MobileNavBarProps) {
 							icon={item.icon}
 							label={item.label}
 							href={item.href}
-							isActive={item.isActive}
-							badge={item.badge}
+							isActive={item.isActive ?? false}
+							{...(item.badge && { badge: item.badge })}
 							variant="ghost"
 							size="sm"
 							isMobile={true}
-							onClick={item.onClick}
+							{...(item.onClick && { onClick: item.onClick })}
 						/>
 					</div>
 				))}

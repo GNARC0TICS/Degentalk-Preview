@@ -1,6 +1,20 @@
-import type { User } from '@schema/user/users';
-import type { ForumCategory } from '@schema/forum/categories';
-import type { ThreadPrefix, ForumTag as ThreadTag } from '@db_types/forum.types';
+import type { ThreadPrefix, ForumTag as ThreadTag } from '@/types/compat/forum';
+
+// Local fallback interfaces to avoid cross-boundary imports
+// These are intentionally minimal and should be replaced with canonical types once the backend API stabilises.
+export interface ForumUserLite {
+	id: number;
+	username: string;
+	avatarUrl?: string | null;
+	activeAvatarUrl?: string | null;
+	role?: string | null;
+}
+
+export interface ForumCategoryLite {
+	id: number;
+	name: string;
+	slug: string;
+}
 
 // Based on ThreadWithUserAndCategory and observed usage
 export interface ThreadCardPropsData {
@@ -15,14 +29,8 @@ export interface ThreadCardPropsData {
 	lastPostAt?: string | Date | null;
 	createdAt: string | Date;
 	updatedAt?: string | Date | null;
-	user: Partial<User> & {
-		username: string;
-		id: number;
-		avatarUrl?: string | null;
-		activeAvatarUrl?: string | null;
-		role?: string | null;
-	}; // Simplified user
-	category?: Partial<ForumCategory> & { name: string; slug: string; id: number }; // Simplified category
+	user: ForumUserLite;
+	category?: ForumCategoryLite; // Simplified category
 	tags?: Partial<ThreadTag>[];
 	prefix?: Partial<ThreadPrefix> & { name: string; color?: string | null };
 	hotScore?: number;

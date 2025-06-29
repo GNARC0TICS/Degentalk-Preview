@@ -75,6 +75,45 @@ shared/
   └── db-utils.ts        # 🚨 NO! Database belongs in server/
 ```
 
+## 🔗 API Request & Networking Guidelines
+
+### Unified Request Helper
+
+🚫 **Do NOT** call `fetch()` directly anywhere in `client/`. All HTTP
+requests **must** go through the typed helper found in
+
+```ts
+// client/src/lib/api-request.ts
+apiRequest<T>(config);
+```
+
+This ensures:
+
+1.  Automatic credential handling (`credentials: 'include'`)
+2.  Consistent error wrapping (`{ status, data, message }`)
+3.  XP-gain detection / toast hooks
+
+If you need custom behaviour (e.g. file uploads), extend the helper **once**
+and reuse it—never bypass it.
+
+### Server-Side Calls
+
+`apiRequest` is **frontend-only**. Backend code should call service-layer
+functions or external SDKs directly, never importing the client helper.
+
+## 🧩 Canonical Type Guidelines
+
+The forum domain is now fully canonicalised. Follow these rules:
+
+| Domain  | Use This          | Avoid                                            |
+| ------- | ----------------- | ------------------------------------------------ |
+| Threads | `CanonicalThread` | `ThreadWithUser`, `ThreadWithPostsAndUser`, etc. |
+| Posts   | `CanonicalPost`   | `PostWithUser`                                   |
+| Zones   | `ResolvedZone`    | ad-hoc `{ id,name,slug }` objects                |
+
+Legacy interfaces in `db/types/forum.types.ts` are kept **only** as temporary
+aliases with `/** @deprecated */` tags. New code **must not** import them.
+
 ## 🛡️ Pre-Commit Validation
 
 **ALWAYS run this before committing:**

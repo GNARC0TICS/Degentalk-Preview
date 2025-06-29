@@ -1,69 +1,30 @@
 import type { ForumStructureNode } from '../schema/forum/structure';
-import type { Thread } from '../schema/forum/threads';
-import type { Post } from '../schema/forum/posts';
-import type { User } from '../schema/user/users';
 import type { threadPrefixes } from '../schema'; // Import threadPrefixes schema
 
-export interface ThreadWithUser extends Thread {
-	user: User;
-	postCount: number;
-	lastPost?: Post;
-	// Plain text excerpt (first 150 chars)
-	excerpt?: string;
-}
+// Canonical types – single source of truth
+import type { CanonicalThread, CanonicalPost } from '@/client/src/types/canonical.types';
 
-export interface PostWithUser {
-	id: number;
-	content: string;
-	threadId: number;
-	userId: string;
-	replyToPostId?: number | null;
-	createdAt: Date;
-	updatedAt: Date;
-	likeCount: number;
-	isEdited: boolean;
-	editedAt?: Date | null;
-	authorUsername: string;
-	authorAvatar?: string | null;
-	hasLiked?: boolean;
-}
+/**
+ * ---------------------------------------------------------------------------
+ *  DEPRECATION NOTICE
+ *  This file previously contained parallel "hydrated" thread/post interfaces.
+ *  All consumers should migrate to CanonicalThread / CanonicalPost (see
+ *  client/src/types/canonical.types.ts). The legacy names below are kept as
+ *  type aliases for a single release cycle to avoid breaking builds. They will
+ *  be removed in Q4 2025. DO NOT ADD NEW USAGES.
+ * ---------------------------------------------------------------------------
+ */
 
-export interface ForumTag {
-	id: number;
-	name: string;
-	slug: string;
-	description?: string | null;
-	createdAt: Date; // Assuming timestamp maps to Date
-}
+/** @deprecated – use CanonicalThread */
+export type ThreadWithUser = CanonicalThread;
 
-export interface ThreadWithUserAndCategory extends Thread {
-	user: User;
-	category: ForumStructureNode; // Updated to use forum structure
-	// Excerpt from first post (plain text, 150 chars max)
-	excerpt?: string;
-	hasBookmarked?: boolean; // Added
-	postCount: number;
-	lastPost?: Post;
-	parentForumSlug: string | null; // Corrected to allow null, and it's the immediate parent forum's slug
-	zoneSlug?: string | null; // ADDED: Slug of the top-level zone
-	tags?: ForumTag[]; // Added tags property
-}
+/** @deprecated – use CanonicalPost */
+export type PostWithUser = CanonicalPost;
 
-// New interface using forum structure instead of categories
-export interface ThreadWithUserAndStructure extends Thread {
-	user: User;
-	structure: ForumStructureNode;
-	// Excerpt from first post (plain text, 150 chars max)
-	excerpt?: string;
-	hasBookmarked?: boolean;
-	postCount: number;
-	lastPost?: Post;
-	parentForumSlug: string | null;
-	zoneSlug?: string | null;
-	tags?: ForumTag[];
-}
+/** @deprecated – use CanonicalThread */
+export type ThreadWithUserAndCategory = CanonicalThread;
 
-// Added PaginationInfo and ThreadWithPostsAndUser
+/** Pagination info retained for server responses – keep for now */
 export interface PaginationInfo {
 	page: number;
 	pageSize: number;
@@ -71,17 +32,26 @@ export interface PaginationInfo {
 	totalPages: number;
 }
 
+/** @deprecated – use CanonicalThread */
+export interface ThreadWithUserAndStructure extends CanonicalThread {}
+
+/** @deprecated – use CanonicalThread & CanonicalPost composite */
 export interface ThreadWithPostsAndUser {
-	thread: ThreadWithUserAndCategory; // This will now include zoneSlug
-	posts: PostWithUser[];
+	thread: CanonicalThread;
+	posts: CanonicalPost[];
 	pagination: PaginationInfo;
 }
 
-// New interface using forum structure
-export interface ThreadWithPostsAndUserStructure {
-	thread: ThreadWithUserAndStructure;
-	posts: PostWithUser[];
-	pagination: PaginationInfo;
+/** @deprecated – consolidated under CanonicalThread */
+export interface ThreadWithPostsAndUserStructure extends ThreadWithPostsAndUser {}
+
+// Non-thread structures (still used in admin analytics). Keep for now
+export interface ForumTag {
+	id: number;
+	name: string;
+	slug: string;
+	description?: string | null;
+	createdAt: Date; // Assuming timestamp maps to Date
 }
 
 export interface ForumCategoryWithStats extends ForumStructureNode {

@@ -148,22 +148,5 @@ export function setupLevelUpListener(showLevelUp: Function) {
 	};
 }
 
-// Re-export queryClient from core for backward compatibility
-import { QueryClient } from '@tanstack/react-query';
-
-// Create a temporary queryClient export to maintain compatibility
-// Note: This should be migrated to use the main QueryClient from RootProvider
-export const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			queryFn: getQueryFn({ on401: 'throw' }),
-			refetchInterval: false,
-			refetchOnWindowFocus: false,
-			staleTime: Infinity,
-			retry: false
-		},
-		mutations: {
-			retry: false
-		}
-	}
-});
+// Re-export the canonical QueryClient instance to avoid duplicate caches
+export { queryClient } from '@/core/queryClient';

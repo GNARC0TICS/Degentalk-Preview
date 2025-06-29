@@ -1,0 +1,118 @@
+/**
+ * Avatar Frame Styles
+ * CSS classes for avatar frame cosmetics
+ */
+
+/* Base frame styles */
+.avatar-frame {
+	position: relative;
+	display: inline-block;
+	border-radius: 50%;
+}
+
+.avatar-frame img {
+	border-radius: 50%;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* Midnight Frame - Sleek dark theme */
+.frame-midnight {
+	box-shadow:
+		0 0 0 2px #1a1a2e,
+		0 0 0 4px #16213e,
+		0 0 15px rgba(26, 26, 46, 0.6);
+	background: linear-gradient(45deg, #1a1a2e, #16213e);
+	padding: 3px;
+}
+
+.frame-midnight img {
+	border: 2px solid #0f3460;
+}
+
+/* Gold Liner Frame - Prestigious gold */
+.frame-gold {
+	box-shadow:
+		0 0 0 2px #ffd700,
+		0 0 0 4px #ffb700,
+		0 0 20px rgba(255, 215, 0, 0.4);
+	background: linear-gradient(45deg, #ffd700, #ffb700);
+	padding: 3px;
+}
+
+.frame-gold img {
+	border: 2px solid #ffa500;
+}
+
+/* Animation for premium frames */
+@keyframes frame-pulse {
+	0% {
+		box-shadow:
+			0 0 0 2px var(--frame-color-1),
+			0 0 0 4px var(--frame-color-2),
+			0 0 15px var(--frame-glow);
+	}
+	50% {
+		box-shadow:
+			0 0 0 2px var(--frame-color-1),
+			0 0 0 4px var(--frame-color-2),
+			0 0 25px var(--frame-glow);
+	}
+	100% {
+		box-shadow:
+			0 0 0 2px var(--frame-color-1),
+			0 0 0 4px var(--frame-color-2),
+			0 0 15px var(--frame-glow);
+	}
+}
+
+/* Hover effects */
+.frame-midnight:hover,
+.frame-gold:hover {
+	transform: scale(1.05);
+	transition: transform 0.2s ease-in-out;
+}
+
+/* Responsive sizes */
+.avatar-frame.size-sm {
+	width: 32px;
+	height: 32px;
+}
+
+.avatar-frame.size-md {
+	width: 48px;
+	height: 48px;
+}
+
+.avatar-frame.size-lg {
+	width: 64px;
+	height: 64px;
+}
+
+.avatar-frame.size-xl {
+	width: 96px;
+	height: 96px;
+}
+
+/* Integration with existing avatar components */
+.user-avatar .avatar-frame {
+	display: block;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+	.frame-midnight {
+		box-shadow:
+			0 0 0 2px #2d2d44,
+			0 0 0 4px #3d3d5c,
+			0 0 20px rgba(45, 45, 68, 0.8);
+	}
+
+	.frame-gold {
+		box-shadow:
+			0 0 0 2px #ffd700,
+			0 0 0 4px #ffb700,
+			0 0 25px rgba(255, 215, 0, 0.6);
+	}
+}

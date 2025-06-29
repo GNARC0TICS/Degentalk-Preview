@@ -51,6 +51,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { apiRequest } from '@/lib/queryClient';
+import type { ApiErrorData } from '@/types/core.types';
 
 // Types
 interface Report {
@@ -187,13 +188,19 @@ export default function ReportsManagementPage() {
 
 	// Mutations
 	const resolveReportMutation = useMutation({
-		mutationFn: ({ id, data }: { id: number; data: any }) => reportsApi.resolveReport(id, data),
+		mutationFn: ({
+			id,
+			data
+		}: {
+			id: number;
+			data: { action: string; reason?: string; banDuration?: string };
+		}) => reportsApi.resolveReport(id, data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['mod-reports'] });
 			toast.success('Report resolved successfully');
 			setResolveDialogOpen(null);
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error('Failed to resolve report', {
 				description: error.message
 			});
@@ -207,7 +214,7 @@ export default function ReportsManagementPage() {
 			queryClient.invalidateQueries({ queryKey: ['mod-reports'] });
 			toast.success('Report dismissed');
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error('Failed to dismiss report', {
 				description: error.message
 			});
@@ -228,7 +235,7 @@ export default function ReportsManagementPage() {
 			queryClient.invalidateQueries({ queryKey: ['mod-reports'] });
 			toast.success('Content deleted successfully');
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error('Failed to delete content', {
 				description: error.message
 			});

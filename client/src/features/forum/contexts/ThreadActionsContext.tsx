@@ -8,7 +8,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 interface ThreadActionsContextValue {
 	isBookmarked: boolean;
-	tip: (...args: any[]) => void;
+	tip: (...args: [string, number] | [number]) => void;
 	toggleBookmark: () => void;
 	share: () => void;
 	quickReply: (content: string) => void;

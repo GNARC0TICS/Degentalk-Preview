@@ -64,7 +64,7 @@ import { cn } from '@/lib/utils';
 
 export interface RichTextEditorProps {
 	content?: string;
-	onChange?: (html: string, json: any) => void;
+	onChange?: (html: string, json: Record<string, unknown>) => void;
 	placeholder?: string;
 	readOnly?: boolean;
 	autoFocus?: boolean;
@@ -74,7 +74,7 @@ export interface RichTextEditorProps {
 	featurePermissions?: {
 		[key: string]: boolean;
 	};
-	onSaveDraft?: (html: string, json: any) => void;
+	onSaveDraft?: (html: string, json: Record<string, unknown>) => void;
 }
 
 // Feature -> level mapping, can be overridden by featurePermissions prop

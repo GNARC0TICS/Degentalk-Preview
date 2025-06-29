@@ -5,11 +5,22 @@ import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient'; // As per api-client-pattern.mdc
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'wouter';
-import type { Product } from '@schema'; // Assuming Product type can be imported
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { EntityTable } from '@/components/admin/layout/EntityTable';
+import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
 import type { ColumnDef } from '@/components/admin/layout/EntityTable';
 import { Badge } from '@/components/ui/badge';
+
+// Local Product shape (minimal) – avoids server schema coupling
+interface Product {
+	id?: number;
+	name: string;
+	price: number;
+	stock: number;
+	stockLimit: number | null;
+	status: 'draft' | 'published' | string;
+	isDeleted?: boolean;
+	pluginReward?: any;
+}
 
 // Helper to format pluginReward for display
 const formatPluginReward = (reward: any) => {
@@ -121,7 +132,7 @@ export default function AdminShopItemsPage() {
 
 	return (
 		<AdminPageShell title="Shop Items Management" pageActions={pageActions}>
-			<EntityTable
+			<AdminDataTable
 				columns={columns}
 				data={products || []}
 				isLoading={isLoading}

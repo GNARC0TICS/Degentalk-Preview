@@ -9,7 +9,7 @@ import { useCrudMutation } from '@/hooks/useCrudMutation'; // Import the new hoo
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { EntityTable } from '@/components/admin/layout/EntityTable';
+import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
 import { RoleFormDialog, roleSchema } from '@/components/admin/forms/roles/RoleFormDialog';
 import type { RoleFormValues } from '@/components/admin/forms/roles/RoleFormDialog';
 import { Button } from '@/components/ui/button';
@@ -150,7 +150,7 @@ export default function RolesAdminPage() {
 					<CardDescription>Manage user roles and their privileges.</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<EntityTable<Role>
+					<AdminDataTable<Role>
 						columns={columns}
 						data={roles}
 						isLoading={isLoading}

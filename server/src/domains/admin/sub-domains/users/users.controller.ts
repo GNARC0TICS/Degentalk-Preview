@@ -10,6 +10,7 @@ import { AdminError } from '../../admin.errors';
 import { adminController } from '../../admin.controller';
 import { getUserId } from '../../admin.middleware';
 import { AdminPaginationQuery, AdminUserUpdateSchema } from '@shared/validators/admin';
+import { validateQueryParams, validateRequestBody } from '../../admin.validation';
 import { z } from 'zod';
 import { db } from '@db';
 import { users } from '@schema';
@@ -21,17 +22,9 @@ export class AdminUsersController {
 	 */
 	async getUsers(req: Request, res: Response) {
 		try {
-			// Validate query params using Zod
-			const queryParams = AdminPaginationQuery.safeParse(req.query);
-			if (!queryParams.success) {
-				return res.status(400).json({
-					success: false,
-					error: 'Invalid query parameters',
-					details: queryParams.error.format()
-				});
-			}
-
-			const users = await adminUsersService.getUsers(queryParams.data);
+			const query = validateQueryParams(req, res, AdminPaginationQuery);
+			if (!query) return;
+			const users = await adminUsersService.getUsers(query);
 			return res.json({
 				success: true,
 				data: users
@@ -97,23 +90,15 @@ export class AdminUsersController {
 				});
 			}
 
-			// Validate request body
-			const validatedData = AdminUserUpdateSchema.safeParse(req.body);
-			if (!validatedData.success) {
-				return res.status(400).json({
-					success: false,
-					error: 'Invalid user data',
-					details: validatedData.error.format()
-				});
-			}
-
-			const updatedUser = await adminUsersService.updateUser(userId, validatedData.data);
+			const data = validateRequestBody(req, res, AdminUserUpdateSchema);
+			if (!data) return;
+			const updatedUser = await adminUsersService.updateUser(userId, data);
 
 			// Log admin action
 			const adminId = getUserId(req);
 			await adminController.logAction(req, 'UPDATE_USER', 'user', userId.toString(), {
 				adminId,
-				changes: validatedData.data
+				changes: data
 			});
 
 			return res.json({
@@ -141,28 +126,20 @@ export class AdminUsersController {
 	 */
 	async createUser(req: Request, res: Response) {
 		try {
-			// Validate request body
-			const validatedData = AdminUserUpdateSchema.extend({
+			const createSchema = AdminUserUpdateSchema.extend({
 				password: z.string().min(6).optional(),
 				username: z.string().min(3).max(50),
 				email: z.string().email()
-			}).safeParse(req.body);
-
-			if (!validatedData.success) {
-				return res.status(400).json({
-					success: false,
-					error: 'Invalid user data',
-					details: validatedData.error.format()
-				});
-			}
-
-			const newUser = await adminUsersService.createUser(validatedData.data);
+			});
+			const dataCreate = validateRequestBody(req, res, createSchema);
+			if (!dataCreate) return;
+			const newUser = await adminUsersService.createUser(dataCreate);
 
 			// Log admin action
 			const adminId = getUserId(req);
 			await adminController.logAction(req, 'CREATE_USER', 'user', newUser.id.toString(), {
 				adminId,
-				userData: validatedData.data
+				userData: dataCreate
 			});
 
 			return res.status(201).json({

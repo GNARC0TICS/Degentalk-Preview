@@ -42,7 +42,7 @@ import { MoreHorizontal, Plus, Pencil, Trash2, Tag, Search, AlertTriangle } from
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import type { ForumTag } from '@db/types/forum.types';
+import type { ForumTag } from '@/types/compat/forum';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { AdminTitlesController } from './titles.controller';
-import { canUser } from '../../../../../../lib/auth/canUser.ts';
+import { canUser } from '@lib/auth/canUser.ts';
 
 const controller = new AdminTitlesController();
 const router = Router();

@@ -9,7 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { forumApi } from '../services/forumApi';
 import { apiPost } from '@/lib/api-request';
-import type { PostWithUser } from '@db_types/forum.types';
+import type { PostWithUser } from '@/types/compat/forum';
 
 // Utility for standardized error handling
 const createErrorHandler = (action: string) => (error: unknown) => {

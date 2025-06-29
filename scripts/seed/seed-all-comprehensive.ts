@@ -33,6 +33,7 @@ import { seedShopItems } from '../../server/utils/shop-utils';
 import { seedEconomySettings } from '../db/seed-economy-settings';
 import { seedXpActions } from '../db/seed-xp-actions';
 import { seedAvatarFrames } from './seed-avatar-frames';
+import seedDefaultCosmetics from './shop/seed-default-cosmetics';
 
 // Configuration
 const CONFIG = {
@@ -155,6 +156,13 @@ const POST_TEMPLATES = {
     'Help needed: Having trouble with {problem}. Any solutions?'
   ]
 };
+
+// Create strongly-typed aliases for commonly used row shapes
+export type UserRow = typeof users.$inferSelect;
+export type ForumRow = typeof forumStructure.$inferSelect;
+export type ThreadPrefixRow = typeof threadPrefixes.$inferSelect;
+export type TagRow = typeof tags.$inferSelect;
+export type PostRow = typeof posts.$inferSelect;
 
 async function seedUsers() {
   console.log(chalk.blue('👥 Seeding users...'));
@@ -290,8 +298,13 @@ async function seedThreadsAndPosts() {
   console.log(chalk.blue('💬 Seeding realistic threads and posts...'));
 
   // Get all users and forums
-  const all_users = await db.select().from(users).where(eq(users.isActive, true));
-  const all_forums = await db.select().from(forumStructure)
+  const all_users: UserRow[] = await db
+    .select()
+    .from(users)
+    .where(eq(users.isActive, true));
+  const all_forums: ForumRow[] = await db
+    .select()
+    .from(forumStructure)
     .where(eq(forumStructure.type, 'forum'))
     .orderBy(asc(forumStructure.position));
 
@@ -300,14 +313,16 @@ async function seedThreadsAndPosts() {
   }
 
   // Filter to leaf forums (not parent to other forums)
-  const all_parent_ids = (await db
+  const parentRows: { parentId: number | null }[] = await db
     .selectDistinct({ parentId: forumStructure.parentId })
     .from(forumStructure)
-    .where(isNotNull(forumStructure.parentId)))
-    .map(r => r.parentId)
+    .where(isNotNull(forumStructure.parentId));
+
+  const all_parent_ids = parentRows
+    .map(({ parentId }) => parentId)
     .filter(Boolean) as number[];
 
-  const leaf_forums = all_forums.filter(forum => !all_parent_ids.includes(forum.id));
+  const leaf_forums = all_forums.filter((forum: ForumRow) => !all_parent_ids.includes(forum.id));
   
   console.log(chalk.gray(`Found ${leaf_forums.length} leaf forums to populate`));
 
@@ -315,8 +330,8 @@ async function seedThreadsAndPosts() {
   await seedThreadPrefixes();
   await seedTags();
 
-  const all_prefixes = await db.select().from(threadPrefixes);
-  const all_tags = await db.select().from(tags);
+  const all_prefixes: ThreadPrefixRow[] = await db.select().from(threadPrefixes);
+  const all_tags: TagRow[] = await db.select().from(tags);
 
   let total_threads = 0;
   let total_posts = 0;
@@ -330,9 +345,9 @@ async function seedThreadsAndPosts() {
     console.log(chalk.cyan(`  📁 ${forum.name}: Creating ${threads_count} threads`));
 
     for (let i = 0; i < threads_count; i++) {
-      await db.transaction(async (tx) => {
+      await db.transaction(async (tx: any) => {
         // Create thread
-        const author = faker.helpers.arrayElement(all_users);
+        const author = faker.helpers.arrayElement<UserRow>(all_users);
         const thread_topics = THREAD_TOPICS[forum.slug as keyof typeof THREAD_TOPICS] || [
           'General discussion topic',
           'Question about the market',
@@ -353,10 +368,10 @@ async function seedThreadsAndPosts() {
           
           if (available_prefixes?.length > 0) {
             const prefix_name = faker.helpers.arrayElement(available_prefixes);
-            const prefix = all_prefixes.find(p => p.name === prefix_name);
+            const prefix = all_prefixes.find((p: ThreadPrefixRow) => p.name === prefix_name);
             if (prefix) prefix_id = prefix.id;
           } else {
-            prefix_id = faker.helpers.arrayElement(all_prefixes).id;
+            prefix_id = faker.helpers.arrayElement<ThreadPrefixRow>(all_prefixes).id;
           }
         }
 
@@ -381,11 +396,11 @@ async function seedThreadsAndPosts() {
           max: CONFIG.THREADS.POSTS.MAX
         });
 
-        const thread_posts = [];
+        const thread_posts: PostRow[] = [];
         let last_post_time = created_at;
 
         for (let j = 0; j < posts_count; j++) {
-          const post_author = faker.helpers.arrayElement(all_users);
+          const post_author = faker.helpers.arrayElement<UserRow>(all_users);
           last_post_time = faker.date.soon({ days: 5, refDate: last_post_time });
 
           // Determine if this is a reply
@@ -393,9 +408,9 @@ async function seedThreadsAndPosts() {
           let post_depth = 0;
           
           if (j > 0 && Math.random() < CONFIG.THREADS.REPLY_CHANCE && thread_posts.length > 0) {
-            const potential_parents = thread_posts.filter(p => p.depth < CONFIG.THREADS.MAX_REPLY_DEPTH);
+            const potential_parents = thread_posts.filter((p: PostRow) => p.depth < CONFIG.THREADS.MAX_REPLY_DEPTH);
             if (potential_parents.length > 0) {
-              const parent = faker.helpers.arrayElement(potential_parents);
+              const parent = faker.helpers.arrayElement<PostRow>(potential_parents);
               reply_to_id = parent.id;
               post_depth = parent.depth + 1;
             }
@@ -404,7 +419,7 @@ async function seedThreadsAndPosts() {
           // Generate realistic content based on forum type
           const content = generateRealisticPostContent(forum.slug, j === 0);
 
-          const [new_post] = await tx.insert(posts).values({
+          const [new_post]: [{ id: number; depth: number; likeCount: number; createdAt: Date }] = await tx.insert(posts).values({
             threadId: new_thread.id,
             userId: post_author.id,
             content,
@@ -414,19 +429,19 @@ async function seedThreadsAndPosts() {
             likeCount: faker.number.int({ min: 0, max: 100 }),
             createdAt: last_post_time,
             updatedAt: last_post_time
-          }).returning({ id: posts.id, depth: posts.depth, likeCount: posts.likeCount });
+          }).returning({ id: posts.id, depth: posts.depth, likeCount: posts.likeCount, createdAt: posts.createdAt });
 
-          thread_posts.push(new_post);
+          thread_posts.push(new_post as unknown as PostRow);
           total_posts++;
 
           // Add some likes to posts
           if (Math.random() < CONFIG.ENGAGEMENT.LIKE_CHANCE) {
-            const likers = faker.helpers.arrayElements(
-              all_users.filter(u => u.id !== post_author.id),
+            const likers = faker.helpers.arrayElements<UserRow>(
+              all_users.filter((u: UserRow) => u.id !== post_author.id),
               faker.number.int({ min: 1, max: 10 })
             );
 
-            for (const liker of likers) {
+            for (const liker of likers as UserRow[]) {
               await tx.insert(postLikes).values({
                 postId: new_post.id,
                 likedByUserId: liker.id
@@ -436,19 +451,19 @@ async function seedThreadsAndPosts() {
         }
 
         // Update thread with post counts and last post info
-        const last_post = thread_posts[thread_posts.length - 1];
+        const last_post = thread_posts[thread_posts.length - 1]!;
         await tx.update(threads).set({
           postCount: thread_posts.length,
           lastPostId: last_post.id,
           lastPostAt: last_post.createdAt,
-          firstPostLikeCount: thread_posts[0]?.likeCount || 0
+          firstPostLikeCount: thread_posts[0]!.likeCount || 0
         }).where(eq(threads.id, new_thread.id));
 
         // Add tags to thread
         if (Math.random() < CONFIG.ENGAGEMENT.TAG_CHANCE && all_tags.length > 0) {
-          const selected_tags = faker.helpers.arrayElements(all_tags, faker.number.int({ min: 1, max: 3 }));
+          const selected_tags = faker.helpers.arrayElements<TagRow>(all_tags, faker.number.int({ min: 1, max: 3 }));
           await tx.insert(threadTags).values(
-            selected_tags.map(tag => ({ threadId: new_thread.id, tagId: tag.id }))
+            selected_tags.map((tag: TagRow) => ({ threadId: new_thread.id, tagId: tag.id }))
           ).onConflictDoNothing();
         }
       });
@@ -563,6 +578,9 @@ async function main() {
     
     // Seed shop items
     await seedShopItems();
+    
+    // Seed default cosmetics (username colors, avatar frames, titles)
+    await seedDefaultCosmetics();
 
     if (!args.values['forums-only']) {
       // Phase 3: Content

@@ -24,6 +24,21 @@ export interface UserMenuItemConfig {
 	separator?: boolean;
 }
 
+// Extend the Window interface for Google Analytics
+declare global {
+	interface Window {
+		gtag?: (
+			command: 'event',
+			action: string,
+			params: {
+				event_category: string;
+				event_label: string;
+				page_path: string;
+			}
+		) => void;
+	}
+}
+
 // Primary navigation configuration
 export const primaryNavigation: NavItemConfig[] = [
 	{
@@ -84,13 +99,33 @@ export const createUserMenuItems = (
 		requiresAuth: true
 	},
 	{
+		label: 'Missions',
+		href: '/missions',
+		icon: React.createElement(IconRenderer, {
+			icon: 'missions',
+			size: 16,
+			className: 'mr-2 h-4 w-4'
+		}),
+		requiresAuth: true
+	},
+	{
+		label: 'Progress',
+		href: '/progress',
+		icon: React.createElement(IconRenderer, {
+			icon: 'leaderboard',
+			size: 16,
+			className: 'mr-2 h-4 w-4'
+		}),
+		requiresAuth: true
+	},
+	{
 		label: 'Wallet',
 		icon: React.createElement(IconRenderer, {
 			icon: 'wallet',
 			size: 16,
 			className: 'mr-2 h-4 w-4'
 		}),
-		onClick: onWalletClick,
+		...(onWalletClick && { onClick: onWalletClick }),
 		requiresAuth: true
 	},
 	{
@@ -168,7 +203,7 @@ export const createUserMenuItems = (
 			size: 16,
 			className: 'mr-2 h-4 w-4'
 		}),
-		onClick: onLogout,
+		...(onLogout && { onClick: onLogout }),
 		requiresAuth: true
 	}
 ];

@@ -13,7 +13,7 @@ import {
 	unique
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { userRoleEnum } from '../core/enums';
+import { userRoleEnum } from '../../../shared/enums/user';
 import { roles } from './roles';
 import { titles } from '../economy/titles';
 import { badges } from '../economy/badges';
@@ -98,6 +98,7 @@ export const users = pgTable(
 		isStaff: boolean('is_staff').notNull().default(false),
 		isModerator: boolean('is_moderator').notNull().default(false),
 		isAdmin: boolean('is_admin').notNull().default(false),
+		/** @deprecated – use primaryRoleId and roles table */
 		role: userRoleEnum('role').default('user'),
 		walletAddress: varchar('wallet_address', { length: 255 }),
 		encryptedPrivateKey: varchar('encrypted_private_key', { length: 512 }),
@@ -123,10 +124,7 @@ export const users = pgTable(
 		// profileThemeId: integer('profile_theme_id').references(() => uiThemes.id, { onDelete: 'set null' }),
 		// resumeSlug: text('resume_slug'),
 		updatedAt: timestamp('updated_at').defaultNow().notNull(),
-		/**
-		 * DEPRECATED: Legacy group integer ID. Retained temporarily to keep code compiling
-		 * while we migrate services to the new role system. Do NOT use in new code.
-		 */
+		/** @deprecated – legacy group integer. Planned removal Q4 */
 		groupId: integer('group_id')
 	},
 	(table) => ({

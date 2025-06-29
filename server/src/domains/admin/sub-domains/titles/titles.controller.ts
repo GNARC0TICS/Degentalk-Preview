@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import { AdminTitlesService } from './titles.service';
 import { createTitleSchema, updateTitleSchema } from './titles.validators';
+import { validateRequestBody } from '../../admin.validation.ts';
 
 const service = new AdminTitlesService();
 
@@ -35,11 +36,9 @@ export class AdminTitlesController {
 
 	async create(req: Request, res: Response) {
 		try {
-			const parsed = createTitleSchema.safeParse(req.body);
-			if (!parsed.success) {
-				return res.status(400).json({ error: 'Validation failed', details: parsed.error.format() });
-			}
-			const title = await service.create(parsed.data);
+			const data = validateRequestBody(req, res, createTitleSchema);
+			if (!data) return;
+			const title = await service.create(data);
 			res.status(201).json(title);
 		} catch (error: any) {
 			res.status(500).json({ error: error.message });
@@ -54,12 +53,10 @@ export class AdminTitlesController {
 				return res.status(400).json({ error: 'Invalid title ID' });
 			}
 
-			const parsed = updateTitleSchema.safeParse(req.body);
-			if (!parsed.success) {
-				return res.status(400).json({ error: 'Validation failed', details: parsed.error.format() });
-			}
+			const data = validateRequestBody(req, res, updateTitleSchema);
+			if (!data) return;
 
-			const title = await service.update(titleId, parsed.data);
+			const title = await service.update(titleId, data);
 			res.json(title);
 		} catch (error: any) {
 			res.status(404).json({ error: error.message });

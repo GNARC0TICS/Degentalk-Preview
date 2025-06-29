@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import type { User } from '@schema';
+// removed heavy server schema import
+import type { User } from '@/types/compat/user';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';

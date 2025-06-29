@@ -203,7 +203,7 @@ export const api = {
 			limit: number = 20,
 			offset: number = 0
 		): Promise<{
-			tips: any[];
+			tips: Record<string, unknown>[]; // FIXME: any → tip objects
 			total: number;
 		}> {
 			return fetchJSON(

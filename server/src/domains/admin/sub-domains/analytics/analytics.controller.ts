@@ -8,20 +8,14 @@ import type { Request, Response } from 'express';
 import { adminAnalyticsService } from './analytics.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { AnalyticsQuerySchema, AnalyticsPeriodSchema } from './analytics.validators';
+import { validateQueryParams } from '../../admin.validation';
 
 export class AdminAnalyticsController {
 	async getOverviewStats(req: Request, res: Response) {
 		try {
-			const validation = AnalyticsPeriodSchema.safeParse(req.query);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid query parameters for overview stats',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-			const stats = await adminAnalyticsService.getOverviewStats(validation.data);
+			const query = validateQueryParams(req, res, AnalyticsPeriodSchema);
+			if (!query) return;
+			const stats = await adminAnalyticsService.getOverviewStats(query);
 			res.json(stats);
 		} catch (error) {
 			if (error instanceof AdminError)
@@ -34,16 +28,9 @@ export class AdminAnalyticsController {
 
 	async getUserGrowthChart(req: Request, res: Response) {
 		try {
-			const validation = AnalyticsQuerySchema.safeParse(req.query);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid query parameters for user growth chart',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-			const chartData = await adminAnalyticsService.getUserGrowthChart(validation.data);
+			const query = validateQueryParams(req, res, AnalyticsQuerySchema);
+			if (!query) return;
+			const chartData = await adminAnalyticsService.getUserGrowthChart(query);
 			res.json(chartData);
 		} catch (error) {
 			if (error instanceof AdminError)
@@ -56,16 +43,9 @@ export class AdminAnalyticsController {
 
 	async getMostActiveThreads(req: Request, res: Response) {
 		try {
-			const validation = AnalyticsQuerySchema.safeParse(req.query);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid query parameters for most active threads',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-			const threads = await adminAnalyticsService.getMostActiveThreads(validation.data);
+			const query = validateQueryParams(req, res, AnalyticsQuerySchema);
+			if (!query) return;
+			const threads = await adminAnalyticsService.getMostActiveThreads(query);
 			res.json(threads);
 		} catch (error) {
 			if (error instanceof AdminError)

@@ -10,13 +10,13 @@ import { X, CornerDownRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import { getAdaptiveConfig } from '@/utils/adaptiveSpacing';
-import type { PostWithUser } from '@db_types/forum.types';
+import type { PostWithUser } from '@/types/compat/forum';
 
 interface ReplyFormProps {
 	threadId: number;
 	replyToId?: number | null;
 	replyToPost?: PostWithUser | null;
-	onSubmit: (content: string, editorState?: any) => Promise<void>;
+	onSubmit: (content: string, editorState?: Record<string, unknown>) => Promise<void>;
 	showRichEditor?: boolean;
 	placeholder?: string;
 	isReplying?: boolean;
@@ -38,7 +38,7 @@ export function ReplyForm({
 	const { user, isAuthenticated } = useAuth();
 	const [, setLocation] = useLocation();
 	const [content, setContent] = useState('');
-	const [editorContent, setEditorContent] = useState<any>(null);
+	const [editorContent, setEditorContent] = useState<Record<string, unknown> | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const breakpoint = useBreakpoint();
 

@@ -5,7 +5,7 @@ import { PostHeader, PostSidebar, PostBody, PostActions, PostFooter } from './bb
 import { UnifiedProfileCard } from '@/components/profile/UnifiedProfileCard';
 import { brandConfig } from '@/config/brand.config';
 import { cn } from '@/lib/utils';
-import type { PostWithUser } from '@db_types/forum.types';
+import type { PostWithUser } from '@/types/compat/forum';
 
 interface BBCodePostCardProps {
 	post: PostWithUser;

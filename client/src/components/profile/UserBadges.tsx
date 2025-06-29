@@ -1,8 +1,8 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { Badge as BadgeType } from '@schema';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { rarityBorderMap } from '@/config/rarity.config';
+// TODO: BadgeType import removed – local prop already typed without external schema
 
 type UserBadgesProps = {
 	badges: Array<{

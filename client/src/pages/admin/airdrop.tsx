@@ -51,16 +51,17 @@ const AdminAirdropPage: React.FC = () => {
 	// Fetch user groups for the dropdown
 	const { data: userGroups, isLoading: isLoadingGroups } = useQuery<UserGroup[]>({
 		queryKey: ['adminUserGroups'],
-		queryFn: async () => apiRequest('/api/admin/users/groups') // TODO: Verify this API endpoint exists
+		queryFn: async () => apiRequest<UserGroup[]>({ url: '/api/admin/users/groups', method: 'GET' }) // TODO: Verify endpoint
 	});
 
 	// Mutation for submitting the airdrop
 	const airdropMutation = useMutation({
 		mutationFn: async (payload: AirdropPayload) => {
 			// TODO: Implement the actual API call to /api/admin/airdrop
-			return apiRequest('/api/admin/airdrop', {
+			return apiRequest<{ success: boolean; message?: string }>({
+				url: '/api/admin/airdrop',
 				method: 'POST',
-				body: JSON.stringify(payload)
+				data: payload
 			});
 		},
 		onSuccess: (data) => {

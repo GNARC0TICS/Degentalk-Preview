@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { LoadingSpinner } from '@/components/ui/loader';
-import type { AvatarFrame } from '@db_schema/user/avatarFrames';
+import type { AvatarFrame } from '@/types/compat/avatar';
 
 interface Props {
 	frame: AvatarFrame | null;

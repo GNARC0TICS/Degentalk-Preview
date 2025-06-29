@@ -27,8 +27,8 @@ import {
 } from 'lucide-react';
 
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { EntityTable } from '@/components/admin/layout/EntityTable';
-import type { ColumnDef } from '@/components/admin/layout/EntityTable'; // Type-only import
+import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
+import type { AdminDataTableProps } from '@/components/admin/common/AdminDataTable';
 import { EntityFilters } from '@/components/admin/layout/EntityFilters';
 import type { FilterConfig, FilterValue } from '@/components/admin/layout/EntityFilters'; // Type-only imports
 import UserFormDialog from '@/components/admin/forms/users/UserFormDialog';
@@ -38,7 +38,7 @@ import {
 	DeleteUserDialog,
 	ChangeUserRoleDialog
 } from '@/components/admin/forms/users/UserActionDialogs';
-import { ROUTES } from '@/config/admin-routes';
+import { ROUTES } from '@/constants/routes';
 
 // Define user type for type safety
 // Ensure this matches the actual structure from your API and EntityTable needs
@@ -205,8 +205,8 @@ export default function AdminUsersPage() {
 		}
 	};
 
-	// Define columns for EntityTable
-	const columns: ColumnDef<AdminUser>[] = [
+	// Define columns for AdminDataTable
+	const columns: AdminDataTableProps['columns'] = [
 		{
 			key: 'username',
 			header: 'Username',
@@ -463,7 +463,7 @@ export default function AdminUsersPage() {
 					}}
 					// Pass searchQuery and onSearchChange if EntityFilters is updated to handle a main search input
 				/>
-				<EntityTable
+				<AdminDataTable
 					columns={columns}
 					data={usersData?.users || []}
 					isLoading={isLoading}

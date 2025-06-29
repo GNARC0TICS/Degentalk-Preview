@@ -8,6 +8,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { achievementApi, type AchievementFilters, type Achievement } from '@/lib/api/achievements';
 import { useAuth } from './use-auth';
 import { toast } from 'sonner';
+import type { ApiErrorData } from '@/types/core.types';
 
 /**
  * Get user's achievements with progress
@@ -98,7 +99,7 @@ export function useCreateAchievement() {
 			queryClient.invalidateQueries({ queryKey: ['achievements'] });
 			toast.success(`Achievement "${data.data.name}" created successfully!`);
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error(`Failed to create achievement: ${error.message}`);
 		}
 	});
@@ -118,7 +119,7 @@ export function useUpdateAchievement() {
 			queryClient.invalidateQueries({ queryKey: ['achievements', 'detail', variables.id] });
 			toast.success(`Achievement "${data.data.name}" updated successfully!`);
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error(`Failed to update achievement: ${error.message}`);
 		}
 	});
@@ -136,7 +137,7 @@ export function useDeleteAchievement() {
 			queryClient.invalidateQueries({ queryKey: ['achievements'] });
 			toast.success(data.message);
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error(`Failed to delete achievement: ${error.message}`);
 		}
 	});
@@ -155,7 +156,7 @@ export function useBulkUpdateAchievements() {
 			queryClient.invalidateQueries({ queryKey: ['achievements'] });
 			toast.success(data.message);
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error(`Failed to bulk update achievements: ${error.message}`);
 		}
 	});
@@ -174,7 +175,7 @@ export function useManuallyAwardAchievement() {
 			queryClient.invalidateQueries({ queryKey: ['achievements'] });
 			toast.success(data.message);
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error(`Failed to award achievement: ${error.message}`);
 		}
 	});
@@ -198,7 +199,7 @@ export function useCreateFromTemplate() {
 			queryClient.invalidateQueries({ queryKey: ['achievements'] });
 			toast.success(data.message);
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error(`Failed to create achievement from template: ${error.message}`);
 		}
 	});
@@ -216,12 +217,12 @@ export function useEmitAchievementEvent() {
 		}: {
 			eventType: string;
 			userId: string;
-			eventData: any;
+			eventData: Record<string, unknown>;
 		}) => achievementApi.emitAchievementEvent(eventType, userId, eventData),
 		onSuccess: (data) => {
 			toast.success(data.message);
 		},
-		onError: (error: any) => {
+		onError: (error: ApiErrorData) => {
 			toast.error(`Failed to emit event: ${error.message}`);
 		}
 	});

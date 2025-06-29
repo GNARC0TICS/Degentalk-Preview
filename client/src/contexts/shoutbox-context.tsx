@@ -138,7 +138,11 @@ export function ShoutboxProvider({ children }: ShoutboxProviderProps) {
 	// Update position mutation
 	const updatePositionMutation = useMutation({
 		mutationFn: async (newPosition: ShoutboxPosition) => {
-			return apiRequest('PUT', '/api/settings/shoutbox-position', { position: newPosition });
+			return apiRequest<void>({
+				url: '/api/settings/shoutbox-position',
+				method: 'PUT',
+				data: { position: newPosition }
+			});
 		},
 		onSuccess: () => {
 			// Invalidate the settings query to get fresh data

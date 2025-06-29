@@ -17,7 +17,13 @@
 		"dist",
 		"**/__tests__",
 		"scripts/templates/**",
-		"scripts/auth/auth-refactor.ts"
+		"scripts/auth/auth-refactor.ts",
+		"shared/fixtures/**",
+		"server/test/**",
+		"server/tests/**",
+		"server/**/*.test.ts",
+		"server/**/*.spec.ts",
+		"server/utils/**"
 	],
 	"compilerOptions": {
 		"incremental": true,

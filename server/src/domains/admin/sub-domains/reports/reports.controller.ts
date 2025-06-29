@@ -15,20 +15,14 @@ import {
 	BanUserSchema,
 	DeleteContentSchema
 } from './reports.validators';
+import { validateRequestBody, validateQueryParams } from '../../admin.validation';
 
 export class AdminReportsController {
 	async getReports(req: Request, res: Response) {
 		try {
-			const validation = GetReportsQuerySchema.safeParse(req.query);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid query parameters',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-			const result = await adminReportsService.getReports(validation.data);
+			const query = validateQueryParams(req, res, GetReportsQuerySchema);
+			if (!query) return;
+			const result = await adminReportsService.getReports(query);
 			res.json(result);
 		} catch (error) {
 			if (error instanceof AdminError)
@@ -62,25 +56,18 @@ export class AdminReportsController {
 			if (isNaN(reportId))
 				throw new AdminError('Invalid report ID', 400, AdminErrorCodes.INVALID_REQUEST);
 
-			const validation = ReportActionSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid input for resolving report',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
+			const body = validateRequestBody(req, res, ReportActionSchema);
+			if (!body) return;
 			const adminId = getUserId(req);
 			const updatedReport = await adminReportsService.updateReportStatus(
 				reportId,
 				'resolved',
 				adminId,
-				validation.data.notes
+				body.notes
 			);
 
 			await adminController.logAction(req, 'RESOLVE_REPORT', 'report', reportId.toString(), {
-				notes: validation.data.notes,
+				notes: body.notes,
 				finalStatus: 'resolved'
 			});
 			res.json({ message: 'Report resolved successfully', data: updatedReport });
@@ -99,25 +86,18 @@ export class AdminReportsController {
 			if (isNaN(reportId))
 				throw new AdminError('Invalid report ID', 400, AdminErrorCodes.INVALID_REQUEST);
 
-			const validation = ReportActionSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid input for dismissing report',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
+			const body = validateRequestBody(req, res, ReportActionSchema);
+			if (!body) return;
 			const adminId = getUserId(req);
 			const updatedReport = await adminReportsService.updateReportStatus(
 				reportId,
 				'dismissed',
 				adminId,
-				validation.data.notes
+				body.notes
 			);
 
 			await adminController.logAction(req, 'DISMISS_REPORT', 'report', reportId.toString(), {
-				notes: validation.data.notes,
+				notes: body.notes,
 				finalStatus: 'dismissed'
 			});
 			res.json({ message: 'Report dismissed successfully', data: updatedReport });
@@ -136,21 +116,14 @@ export class AdminReportsController {
 			if (isNaN(userIdToBan))
 				throw new AdminError('Invalid user ID for ban', 400, AdminErrorCodes.INVALID_REQUEST);
 
-			const validation = BanUserSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid ban request data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
+			const body = validateRequestBody(req, res, BanUserSchema);
+			if (!body) return;
 			const adminId = getUserId(req);
-			const banResult = await adminReportsService.banUser(userIdToBan, validation.data, adminId);
+			const banResult = await adminReportsService.banUser(userIdToBan, body, adminId);
 
 			await adminController.logAction(req, 'BAN_USER', 'user', userIdToBan.toString(), {
-				reason: validation.data.reason,
-				duration: validation.data.duration
+				reason: body.reason,
+				duration: body.duration
 			});
 			res.json({ message: 'User banned successfully', data: banResult });
 		} catch (error) {
@@ -181,20 +154,13 @@ export class AdminReportsController {
 					AdminErrorCodes.INVALID_REQUEST
 				);
 
-			const validation = DeleteContentSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid deletion request data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
+			const body = validateRequestBody(req, res, DeleteContentSchema);
+			if (!body) return;
 			const adminId = getUserId(req);
 			const deleteResult = await adminReportsService.deleteContent(
 				contentType,
 				contentId,
-				validation.data,
+				body,
 				adminId
 			);
 
@@ -203,7 +169,7 @@ export class AdminReportsController {
 				`DELETE_${contentType.toUpperCase()}`,
 				contentType,
 				contentId.toString(),
-				{ reason: validation.data.reason }
+				{ reason: body.reason }
 			);
 			res.json(deleteResult);
 		} catch (error) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy } from 'react';
 import { Link } from 'wouter';
 import { Users, MessageSquare, ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +6,8 @@ import { AnimatedLogo } from '@/components/ui/animated-logo';
 import { motion, AnimatePresence } from 'framer-motion';
 import { uiConfig } from '@/config/ui.config';
 import type { HeroQuote } from '@/config/ui.config';
+
+const ActiveMembersWidgetLazy = lazy(() => import('@/components/users/ActiveMembersWidget'));
 
 // Fisher-Yates shuffle
 function shuffleArray<T>(array: T[]): T[] {
@@ -38,7 +40,10 @@ export function HeroSection() {
 	const currentQuote: HeroQuote = shuffledQuotes[currentQuoteIndex];
 
 	return (
-		<section className="relative overflow-hidden bg-gradient-to-br from-cod-gray-950 via-cod-gray-900 to-black">
+		<section
+			className="relative overflow-hidden bg-gradient-to-br from-cod-gray-950 via-cod-gray-900 to-black"
+			suppressHydrationWarning
+		>
 			{/* Animated gradient background */}
 			<div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/5 via-purple-500/5 to-cyan-500/5 animate-gradient-shift" />
 
@@ -138,6 +143,13 @@ export function HeroSection() {
 						</Link>
 					</motion.div>
 				</motion.div>
+
+				{/* Active Members Widget (desktop only) */}
+				<div className="hidden lg:block mt-10">
+					<React.Suspense fallback={null}>
+						<ActiveMembersWidgetLazy limit={10} />
+					</React.Suspense>
+				</div>
 			</div>
 		</section>
 	);

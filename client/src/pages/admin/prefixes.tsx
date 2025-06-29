@@ -42,7 +42,7 @@ import { MoreHorizontal, Plus, Pencil, Trash2, MoveUp, MoveDown, Tag, Search } f
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import type { ThreadPrefix } from '@db_types/forum.types';
+import type { ThreadPrefix } from '@/types/compat/forum';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 // Define validation schema for prefixes
@@ -360,8 +360,9 @@ export default function AdminPrefixesPage() {
 												<TableCell>{prefix.position}</TableCell>
 												<TableCell>
 													{prefix.categoryId
-														? categories?.find((cat: any) => cat.id === prefix.categoryId)?.name ||
-															'Unknown'
+														? categories?.find(
+																(cat: Record<string, unknown>) => cat.id === prefix.categoryId
+															)?.name || 'Unknown'
 														: 'Global'}
 												</TableCell>
 												<TableCell className="text-right">
@@ -491,7 +492,7 @@ export default function AdminPrefixesPage() {
 													}}
 												>
 													<option value="">Global (All Categories)</option>
-													{categories?.map((category: any) => (
+													{categories?.map((category: Record<string, unknown>) => (
 														<option key={category.id} value={category.id}>
 															{category.name}
 														</option>
@@ -630,7 +631,7 @@ export default function AdminPrefixesPage() {
 													}}
 												>
 													<option value="">Global (All Categories)</option>
-													{categories?.map((category: any) => (
+													{categories?.map((category: Record<string, unknown>) => (
 														<option key={category.id} value={category.id}>
 															{category.name}
 														</option>

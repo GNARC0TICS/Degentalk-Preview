@@ -50,7 +50,7 @@ export async function setupVite(app: Express, server: Server) {
 		allowedHosts: true as const
 	};
 
-	// Safe inline config - no imports from client-side vite.config
+	// Safe inline Vite server setup -- intentionally avoids importing the root client Vite config
 	const vite = await createViteServer({
 		root: path.resolve(__dirname, '..', 'client'),
 		configFile: false,

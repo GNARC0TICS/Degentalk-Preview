@@ -3,15 +3,21 @@ import { useQuery } from '@tanstack/react-query';
 import { forumApi } from '@/features/forum/services/forumApi';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedZone } from '@/contexts/ForumStructureContext'; // Use MergedZone as type-only import
-import type { ThreadWithPostsAndUser } from '@db_types/forum.types';
+import type { CanonicalThread, CanonicalPost } from '@/types/canonical.types';
 
 interface UseThreadZoneParams {
 	page?: number;
 	limit?: number;
 }
 
+// Thread response shape expected from forumApi.getThread
+export interface ThreadWithPosts {
+	thread: CanonicalThread;
+	posts: CanonicalPost[];
+}
+
 interface UseThreadZoneReturn {
-	threadWithPosts: ThreadWithPostsAndUser | null | undefined;
+	threadWithPosts: ThreadWithPosts | null | undefined;
 	zone: MergedZone | undefined;
 	isLoading: boolean;
 	error: Error | null;
@@ -28,7 +34,7 @@ export function useThreadZone(
 		data: threadData,
 		isLoading: isThreadLoading,
 		error: threadError
-	} = useQuery<ThreadWithPostsAndUser | null>({
+	} = useQuery<ThreadWithPosts | null>({
 		// Added | null for consistency
 		queryKey: ['thread', threadSlug, { page, limit }], // Changed queryKey to match [thread_slug].tsx
 		queryFn: () => {

@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { useContentFeedState } from '@/contexts/content-feed-context';
 import { cn } from '@/lib/utils';
-import type { User } from '@schema';
+import type { User } from '@/types/compat/user';
 
 // Define structure needed by the component
 type FormattedUser = {

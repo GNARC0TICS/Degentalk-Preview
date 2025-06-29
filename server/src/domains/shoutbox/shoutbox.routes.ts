@@ -22,7 +22,7 @@ import {
 	isAdminOrModerator
 } from '../auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
-import { canUser } from '../../../../lib/auth/canUser.ts';
+import { canUser } from '@lib/auth/canUser.ts';
 import { logger } from '@server/src/core/logger';
 import { MentionsService } from '../social/mentions.service';
 

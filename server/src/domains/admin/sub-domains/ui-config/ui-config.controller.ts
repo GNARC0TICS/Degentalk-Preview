@@ -23,6 +23,7 @@ import {
 	AnalyticsRequestSchema,
 	TrackEventSchema
 } from './ui-config.validators.ts';
+import { validateRequestBody, validateQueryParams } from '../../admin.validation.ts';
 
 export class UiConfigController {
 	// ==================== QUOTE OPERATIONS ====================
@@ -33,31 +34,12 @@ export class UiConfigController {
 	 */
 	async getQuotes(req: Request, res: Response) {
 		try {
-			const paginationValidation = PaginationSchema.safeParse(req.query);
-			const filtersValidation = QuoteFiltersSchema.safeParse(req.query);
+			const pagination = validateQueryParams(req, res, PaginationSchema);
+			if (!pagination) return;
+			const filters = validateQueryParams(req, res, QuoteFiltersSchema);
+			if (!filters) return;
 
-			if (!paginationValidation.success) {
-				throw new AdminError(
-					'Invalid pagination parameters',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					paginationValidation.error.format()
-				);
-			}
-
-			if (!filtersValidation.success) {
-				throw new AdminError(
-					'Invalid filter parameters',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					filtersValidation.error.format()
-				);
-			}
-
-			const result = await uiConfigService.getQuotes(
-				filtersValidation.data,
-				paginationValidation.data
-			);
+			const result = await uiConfigService.getQuotes(filters, pagination);
 
 			res.json(result);
 		} catch (error) {
@@ -106,27 +88,13 @@ export class UiConfigController {
 	 */
 	async createQuote(req: Request, res: Response) {
 		try {
-			const validation = CreateQuoteSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid quote data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
+			const data = validateRequestBody(req, res, CreateQuoteSchema);
+			if (!data) return;
 			const userId = getUserId(req);
-			const quote = await uiConfigService.createQuote(validation.data, userId);
+			const quote = await uiConfigService.createQuote(data, userId);
 
 			// Log admin action
-			await adminController.logAction(
-				req,
-				'CREATE_UI_QUOTE',
-				'ui_quote',
-				quote.id,
-				validation.data
-			);
+			await adminController.logAction(req, 'CREATE_UI_QUOTE', 'ui_quote', quote.id, data);
 
 			res.status(201).json(quote);
 		} catch (error) {
@@ -148,22 +116,15 @@ export class UiConfigController {
 	async updateQuote(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
-			const validation = UpdateQuoteSchema.safeParse({ ...req.body, id });
-
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid quote data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
+			// augment body with id for validation
+			(req as any).body = { ...req.body, id };
+			const dataUpdate = validateRequestBody(req, res, UpdateQuoteSchema);
+			if (!dataUpdate) return;
 			const userId = getUserId(req);
-			const quote = await uiConfigService.updateQuote(validation.data, userId);
+			const quote = await uiConfigService.updateQuote(dataUpdate, userId);
 
 			// Log admin action
-			await adminController.logAction(req, 'UPDATE_UI_QUOTE', 'ui_quote', id, validation.data);
+			await adminController.logAction(req, 'UPDATE_UI_QUOTE', 'ui_quote', id, dataUpdate);
 
 			res.json(quote);
 		} catch (error) {
@@ -215,24 +176,13 @@ export class UiConfigController {
 	 */
 	async reorderQuotes(req: Request, res: Response) {
 		try {
-			const validation = ReorderQuotesSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid reorder data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const success = await uiConfigService.reorderQuotes(validation.data);
-			if (!success) {
-				throw new AdminError('Failed to reorder quotes', 500, AdminErrorCodes.INTERNAL_ERROR);
-			}
+			const data = validateRequestBody(req, res, ReorderQuotesSchema);
+			if (!data) return;
+			const success = await uiConfigService.reorderQuotes(data);
 
 			// Log admin action
 			await adminController.logAction(req, 'REORDER_UI_QUOTES', 'ui_quote', 'multiple', {
-				count: validation.data.quoteOrders.length
+				count: data.quoteOrders.length
 			});
 
 			res.json({ success: true });
@@ -269,18 +219,10 @@ export class UiConfigController {
 	 */
 	async createCollection(req: Request, res: Response) {
 		try {
-			const validation = CreateCollectionSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid collection data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
+			const data = validateRequestBody(req, res, CreateCollectionSchema);
+			if (!data) return;
 			const userId = getUserId(req);
-			const collection = await uiConfigService.createCollection(validation.data, userId);
+			const collection = await uiConfigService.createCollection(data, userId);
 
 			// Log admin action
 			await adminController.logAction(
@@ -288,7 +230,7 @@ export class UiConfigController {
 				'CREATE_UI_COLLECTION',
 				'ui_collection',
 				collection.id,
-				validation.data
+				data
 			);
 
 			res.status(201).json(collection);
@@ -311,28 +253,15 @@ export class UiConfigController {
 	async updateCollection(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
-			const validation = UpdateCollectionSchema.safeParse({ ...req.body, id });
-
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid collection data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
+			// augment body with id for validation
+			(req as any).body = { ...req.body, id };
+			const dataUpdate = validateRequestBody(req, res, UpdateCollectionSchema);
+			if (!dataUpdate) return;
 			const userId = getUserId(req);
-			const collection = await uiConfigService.updateCollection(validation.data, userId);
+			const collection = await uiConfigService.updateCollection(dataUpdate, userId);
 
 			// Log admin action
-			await adminController.logAction(
-				req,
-				'UPDATE_UI_COLLECTION',
-				'ui_collection',
-				id,
-				validation.data
-			);
+			await adminController.logAction(req, 'UPDATE_UI_COLLECTION', 'ui_collection', id, dataUpdate);
 
 			res.json(collection);
 		} catch (error) {
@@ -386,21 +315,11 @@ export class UiConfigController {
 	 */
 	async trackEvent(req: Request, res: Response) {
 		try {
-			const validation = TrackEventSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid tracking data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
+			const data = validateRequestBody(req, res, TrackEventSchema);
+			if (!data) return;
+			const { quoteId, eventType, context } = data;
 
-			await uiConfigService.trackQuoteEvent(
-				validation.data.quoteId,
-				validation.data.eventType,
-				validation.data.context
-			);
+			await uiConfigService.trackQuoteEvent(quoteId, eventType, context);
 
 			res.status(204).send();
 		} catch (error) {
@@ -422,19 +341,13 @@ export class UiConfigController {
 	async getQuoteAnalytics(req: Request, res: Response) {
 		try {
 			const { quoteId } = req.params;
-			const validation = AnalyticsRequestSchema.safeParse({ ...req.query, quoteId });
+			// augment query with quoteId for validation
+			(req as any).query = { ...req.query, quoteId };
+			const queryAnalytics = validateQueryParams(req, res, AnalyticsRequestSchema);
+			if (!queryAnalytics) return;
 
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid analytics request',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const analytics = await uiConfigService.getQuoteAnalytics(validation.data);
-			res.json(analytics);
+			const result = await uiConfigService.getQuoteAnalytics(queryAnalytics);
+			res.json(result);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -455,25 +368,14 @@ export class UiConfigController {
 	 */
 	async bulkUpdateQuotes(req: Request, res: Response) {
 		try {
-			const validation = BulkQuoteOperationSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid bulk operation data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const success = await uiConfigService.bulkUpdateQuotes(validation.data);
-			if (!success) {
-				throw new AdminError('Bulk operation failed', 500, AdminErrorCodes.INTERNAL_ERROR);
-			}
+			const data = validateRequestBody(req, res, BulkQuoteOperationSchema);
+			if (!data) return;
+			const success = await uiConfigService.bulkUpdateQuotes(data);
 
 			// Log admin action
 			await adminController.logAction(req, 'BULK_UPDATE_UI_QUOTES', 'ui_quote', 'multiple', {
-				action: validation.data.action,
-				count: validation.data.quoteIds.length
+				action: data.action,
+				count: data.quoteIds.length
 			});
 
 			res.json({ success: true });
@@ -497,24 +399,16 @@ export class UiConfigController {
 	 */
 	async importQuotes(req: Request, res: Response) {
 		try {
-			const validation = ImportQuotesSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid import data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
+			const data = validateRequestBody(req, res, ImportQuotesSchema);
+			if (!data) return;
 			const userId = getUserId(req);
-			const result = await uiConfigService.importQuotes(validation.data, userId);
+			const result = await uiConfigService.importQuotes(data, userId);
 
 			// Log admin action
 			await adminController.logAction(req, 'IMPORT_UI_QUOTES', 'ui_quote', 'multiple', {
 				imported: result.imported,
 				skipped: result.skipped,
-				total: validation.data.quotes.length
+				total: data.quotes.length
 			});
 
 			res.json(result);
@@ -536,18 +430,10 @@ export class UiConfigController {
 	 */
 	async exportQuotes(req: Request, res: Response) {
 		try {
-			const validation = ExportQuotesSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid export parameters',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const result = await uiConfigService.exportQuotes(validation.data);
-			const format = validation.data.format || 'json';
+			const data = validateRequestBody(req, res, ExportQuotesSchema);
+			if (!data) return;
+			const result = await uiConfigService.exportQuotes(data);
+			const format = data.format || 'json';
 
 			// Set appropriate headers
 			if (format === 'csv') {
@@ -561,7 +447,7 @@ export class UiConfigController {
 			// Log admin action
 			await adminController.logAction(req, 'EXPORT_UI_QUOTES', 'ui_quote', 'multiple', {
 				format,
-				includeAnalytics: validation.data.includeAnalytics
+				includeAnalytics: data.includeAnalytics
 			});
 
 			res.send(result);

@@ -19,7 +19,7 @@ import {
 	AlertTriangle
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import type { ThreadWithPostsAndUser } from '@db_types/forum.types';
+import type { ThreadWithPostsAndUser } from '@/types/compat/forum';
 
 interface ThreadSidebarProps {
 	thread: ThreadWithPostsAndUser['thread'];

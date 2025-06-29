@@ -18,7 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell'; // Import TabConfig
 import type { TabConfig } from '@/components/admin/layout/AdminPageShell'; // Type-only import
-import { EntityTable } from '@/components/admin/layout/EntityTable';
+import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
 import type { ColumnDef } from '@/components/admin/layout/EntityTable'; // Type-only import
 import ManualDgtAdjustmentDialog from '@/components/admin/forms/wallets/ManualDgtAdjustmentDialog';
 import { MockWebhookTrigger } from '@/components/admin/wallet/mock-webhook-trigger'; // Assuming this path is correct
@@ -273,7 +273,7 @@ export default function AdminWalletsPage() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<EntityTable
+				<AdminDataTable
 					columns={topUsersColumns}
 					data={topUsersData?.users || []}
 					isLoading={isLoadingTopUsers}
@@ -291,7 +291,7 @@ export default function AdminWalletsPage() {
 				<CardDescription>Last 20 DGT transactions across the platform.</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<EntityTable
+				<AdminDataTable
 					columns={transactionsColumns}
 					data={recentTransactionsData?.transactions || []}
 					isLoading={isLoadingTransactions}

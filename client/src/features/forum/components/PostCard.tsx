@@ -17,7 +17,7 @@ import {
 	LogIn,
 	MoreHorizontal
 } from 'lucide-react';
-import type { PostWithUser } from '@db_types/forum.types';
+import type { PostWithUser } from '@/types/compat/forum';
 import { SolveBadge } from '@/components/forum/SolveBadge';
 import { SignatureRenderer } from '@/components/forum/SignatureRenderer';
 import { useAuth } from '@/hooks/use-auth';

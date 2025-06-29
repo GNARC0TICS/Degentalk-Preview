@@ -97,3 +97,74 @@ export const AdminPaginatedResponse = <T extends z.ZodTypeAny>(item: T) =>
 // Usage: AdminPaginatedResponse(AdminUserBody)
 
 export const ToggleFeatureFlagSchema = AdminFeatureFlagUpdateSchema;
+
+// =====================
+// New Admin Schemas V2
+// =====================
+
+const _RoleBase = z.object({
+	name: z.string().min(1),
+	slug: z
+		.string()
+		.min(1)
+		.regex(/^[a-z0-9-]+$/),
+	rank: z.number().int().min(0)
+});
+export const RoleCreateInput = _RoleBase;
+export const RoleUpdateInput = _RoleBase.partial();
+
+export const BulkUserRoleAssignment = z.object({
+	userIds: z.array(z.number()).min(1),
+	newRole: z.string().min(1),
+	reason: z.string().optional()
+});
+
+export const TitleCreateInput = z.object({
+	name: z.string().min(1).max(100),
+	imageUrl: z.string().url().optional(),
+	description: z.string().optional()
+});
+
+export const PermissionUpdateInput = z.object({
+	name: z.string().min(1),
+	description: z.string().optional()
+});
+
+// =====================
+// XP Actions Schemas
+// =====================
+export const XpActionCreateSchema = z.object({
+	key: z.string().min(1),
+	label: z.string().min(1),
+	amount: z.number().int().nonnegative(),
+	icon: z.string().optional()
+});
+export type XpActionCreateInput = z.infer<typeof XpActionCreateSchema>;
+
+export const XpActionUpdateSchema = XpActionCreateSchema.extend({
+	id: z.number().int()
+});
+export type XpActionUpdateInput = z.infer<typeof XpActionUpdateSchema>;
+
+// =====================
+// Permission Group Schemas
+// =====================
+export const PermissionGroupCreateSchema = z.object({
+	name: z.string().min(1),
+	permissions: z.array(z.string())
+});
+export type PermissionGroupCreateInput = z.infer<typeof PermissionGroupCreateSchema>;
+
+export const PermissionGroupUpdateSchema = PermissionGroupCreateSchema.extend({
+	id: z.number().int()
+});
+export type PermissionGroupUpdateInput = z.infer<typeof PermissionGroupUpdateSchema>;
+
+// =====================
+// Admin Toggle Schema
+// =====================
+export const AdminToggleSchema = z.object({
+	key: z.string(),
+	value: z.union([z.boolean(), z.string(), z.number()])
+});
+export type AdminToggleInput = z.infer<typeof AdminToggleSchema>;

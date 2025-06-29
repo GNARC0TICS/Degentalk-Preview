@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select';
 import { useReportPost } from '../hooks/useForumQueries';
 import { Loader2, AlertTriangle } from 'lucide-react';
-import type { PostWithUser } from '@db_types/forum.types';
+import type { PostWithUser } from '@/types/compat/forum';
 
 interface ReportPostDialogProps {
 	post: PostWithUser | null;

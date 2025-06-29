@@ -29,7 +29,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Wide } from '@/layout/primitives';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { PostWithUser, ThreadWithPostsAndUser } from '@db_types/forum.types';
+import type { PostWithUser, ThreadWithPostsAndUser } from '@/types/compat/forum';
 import useSearchParams from '@/hooks/useSearchParams';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import { createForumBreadcrumbs } from '@/lib/forum/breadcrumbs';

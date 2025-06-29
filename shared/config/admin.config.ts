@@ -408,3 +408,152 @@ export function getAllAdminModules(): AdminModule[] {
 	collectModules(adminConfig.modules);
 	return allModules;
 }
+
+// =============================
+// Admin Config V2 – Consolidated
+// =============================
+// Note: React imports already available from above
+
+export interface AdminModuleV2 {
+	slug: string; // unique slug, used as key
+	label: string;
+	icon: AdminRouteIcon | string; // fall back to string for lucide name
+	permission: string; // e.g. 'admin:users:view'
+	component: LazyExoticComponent<ComponentType<any>>;
+	path: string; // URL path for React-Router (absolute)
+	children?: AdminModuleV2[];
+}
+
+// Core admin modules.  Only most-used MVP pages are defined here – extend freely.
+export const adminModulesV2: AdminModuleV2[] = [
+	{
+		slug: 'dashboard',
+		label: 'Dashboard',
+		icon: 'layout-dashboard',
+		permission: 'admin:overview:view',
+		path: '/admin',
+		component: lazy(() => import('@/pages/admin/index'))
+	},
+	{
+		slug: 'users',
+		label: 'Users',
+		icon: 'users',
+		permission: 'admin:users:view',
+		path: '/admin/users',
+		component: lazy(() => import('@/pages/admin/users')),
+		children: [
+			{
+				slug: 'roles',
+				label: 'Roles',
+				icon: 'shield',
+				permission: 'admin:roles:manage',
+				path: '/admin/roles',
+				component: lazy(() => import('@/pages/admin/roles'))
+			},
+			{
+				slug: 'permissions',
+				label: 'Permissions',
+				icon: 'key',
+				permission: 'admin:permissions:view',
+				path: '/admin/permissions',
+				component: lazy(() => import('@/pages/admin/permissions/index'))
+			}
+		]
+	},
+	{
+		slug: 'economy',
+		label: 'Economy',
+		icon: 'dollar-sign',
+		permission: 'admin:economy:view',
+		path: '/admin/treasury', // top-level route
+		component: lazy(() => import('@/pages/admin/treasury')),
+		children: [
+			{
+				slug: 'wallets',
+				label: 'Wallets',
+				icon: 'wallet',
+				permission: 'admin:economy:view',
+				path: '/admin/wallets',
+				component: lazy(() => import('@/pages/admin/wallets/index'))
+			},
+			{
+				slug: 'dgt-packages',
+				label: 'DGT Packages',
+				icon: 'package',
+				permission: 'admin:economy:manage',
+				path: '/admin/dgt-packages',
+				component: lazy(() => import('@/pages/admin/dgt-packages'))
+			}
+		]
+	},
+	{
+		slug: 'xp',
+		label: 'XP System',
+		icon: 'trophy',
+		permission: 'admin:xp:view',
+		path: '/admin/xp-system',
+		component: lazy(() => import('@/pages/admin/xp-system'))
+	}
+];
+
+// -----------------------------
+// Helper utilities
+// -----------------------------
+
+function flatten(mods: AdminModuleV2[]): AdminModuleV2[] {
+	const result: AdminModuleV2[] = [];
+	for (const m of mods) {
+		result.push(m);
+		if (m.children) result.push(...flatten(m.children));
+	}
+	return result;
+}
+
+/**
+ * Generate sidebar links in the old `adminLinks` shape ({ label, href, children? })
+ */
+export function generateSidebarLinks() {
+	return adminModulesV2.map((m) => {
+		if (m.children && m.children.length) {
+			return {
+				label: m.label,
+				children: m.children.map((c) => ({ label: c.label, href: c.path }))
+			};
+		}
+		return { label: m.label, href: m.path };
+	});
+}
+
+/**
+ * Generate route groups compatible with legacy `adminRouteGroups` typing so we don't break pages while migrating.
+ */
+export function generateAdminRouteGroups() {
+	return adminModulesV2.map((m) => ({
+		id: m.slug,
+		label: m.label,
+		icon: (m.icon as any) ?? 'layout-dashboard',
+		permissions: [m.permission.split(':')[0] as any],
+		routes: [
+			{
+				path: m.path,
+				label: m.label,
+				icon: (m.icon as any) ?? 'layout-dashboard',
+				permissions: [m.permission.split(':')[0] as any]
+			},
+			...(m.children
+				? m.children.map((c) => ({
+						path: c.path,
+						label: c.label,
+						icon: (c.icon as any) ?? 'dot',
+						permissions: [c.permission.split(':')[0] as any]
+					}))
+				: [])
+		]
+	}));
+}
+
+/** Map of permission -> module for quick RBAC checks */
+export const permissionToModuleMap: Record<string, AdminModuleV2> = {};
+for (const m of flatten(adminModulesV2)) {
+	permissionToModuleMap[m.permission] = m;
+}

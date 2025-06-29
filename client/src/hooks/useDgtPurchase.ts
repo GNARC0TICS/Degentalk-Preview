@@ -42,13 +42,11 @@ export function useDgtPurchase() {
 	const fetchPackages = async () => {
 		setIsLoading(true);
 		try {
-			const response = await apiRequest('GET', '/api/dgt-purchase/packages');
+			const data = await apiRequest<Package[]>({
+				url: '/api/dgt-purchase/packages',
+				method: 'GET'
+			});
 
-			if (!response.ok) {
-				throw new Error('Failed to fetch DGT packages');
-			}
-
-			const data = await response.json();
 			return data;
 		} catch (error) {
 			console.error('Error fetching DGT packages:', error);

@@ -166,6 +166,10 @@ const PrimaryZoneCarousel = memo(
 				tabIndex={0}
 			>
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					<span className="sr-only" aria-live="polite">
+						Slide {state.currentIndex + 1} of {zones.length}
+					</span>
+
 					{/* Header */}
 					<div className="flex items-center justify-between mb-6">
 						<div>

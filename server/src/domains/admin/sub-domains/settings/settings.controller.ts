@@ -8,7 +8,8 @@ import type { Request, Response } from 'express';
 import { adminSettingsService } from './settings.service.refactored';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { adminController } from '../../admin.controller';
-import { sendSuccess, sendError, sendValidationError } from '../../admin.response';
+import { sendSuccess, sendError } from '../../admin.response';
+import { validateRequestBody, validateQueryParams } from '../../admin.validation';
 import {
 	UpdateSettingSchema,
 	UpdateSettingsSchema,
@@ -22,8 +23,7 @@ import { ToggleFeatureFlagSchema } from '@shared/validators/admin';
 export class AdminSettingsController {
 	async getAllSettings(req: Request, res: Response) {
 		try {
-			const validation = FilterSettingsSchema.safeParse(req.query);
-			const filters = validation.success ? validation.data : undefined;
+			const filters = validateQueryParams(req, res, FilterSettingsSchema) || undefined;
 
 			const settings = await adminSettingsService.getAllSettings(filters);
 			return sendSuccess(res, settings);
@@ -50,19 +50,10 @@ export class AdminSettingsController {
 
 	async updateSetting(req: Request, res: Response) {
 		try {
-			const validation = UpdateSettingSchema.safeParse(req.body);
-			if (!validation.success) {
-				return sendValidationError(res, 'Invalid setting data', validation.error.format());
-			}
-
-			const setting = await adminSettingsService.updateSetting(validation.data);
-			await adminController.logAction(
-				req,
-				'UPDATE_SETTING',
-				'setting',
-				validation.data.key,
-				validation.data
-			);
+			const data = validateRequestBody(req, res, UpdateSettingSchema);
+			if (!data) return;
+			const setting = await adminSettingsService.updateSetting(data);
+			await adminController.logAction(req, 'UPDATE_SETTING', 'setting', data.key, data);
 			return sendSuccess(res, setting, 'Setting updated successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
@@ -74,20 +65,12 @@ export class AdminSettingsController {
 
 	async updateSettings(req: Request, res: Response) {
 		try {
-			const validation = UpdateSettingsSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid settings data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const settings = await adminSettingsService.updateSettings(validation.data);
+			const data = validateRequestBody(req, res, UpdateSettingsSchema);
+			if (!data) return;
+			const settings = await adminSettingsService.updateSettings(data);
 			await adminController.logAction(req, 'BULK_UPDATE_SETTINGS', 'settings', 'multiple', {
-				count: validation.data.settings.length,
-				keys: validation.data.settings.map((s) => s.key)
+				count: data.settings.length,
+				keys: data.settings.map((s) => s.key)
 			});
 			res.json(settings);
 		} catch (error) {
@@ -114,23 +97,15 @@ export class AdminSettingsController {
 
 	async createSettingGroup(req: Request, res: Response) {
 		try {
-			const validation = SettingGroupSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid setting group data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const group = await adminSettingsService.createSettingGroup(validation.data);
+			const data = validateRequestBody(req, res, SettingGroupSchema);
+			if (!data) return;
+			const group = await adminSettingsService.createSettingGroup(data);
 			await adminController.logAction(
 				req,
 				'CREATE_SETTING_GROUP',
 				'setting_group',
 				group.key,
-				validation.data
+				data
 			);
 			res.status(201).json(group);
 		} catch (error) {
@@ -146,19 +121,11 @@ export class AdminSettingsController {
 		try {
 			const key = req.params.key;
 
-			const validation = SettingGroupSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid setting group data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const group = await adminSettingsService.updateSettingGroup(key, validation.data);
+			const data = validateRequestBody(req, res, SettingGroupSchema);
+			if (!data) return;
+			const group = await adminSettingsService.updateSettingGroup(key, data);
 			await adminController.logAction(req, 'UPDATE_SETTING_GROUP', 'setting_group', key, {
-				...validation.data,
+				...data,
 				originalKey: key
 			});
 			res.json(group);
@@ -193,24 +160,10 @@ export class AdminSettingsController {
 
 	async createSetting(req: Request, res: Response) {
 		try {
-			const validation = CreateSettingSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid setting data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const setting = await adminSettingsService.createSetting(validation.data);
-			await adminController.logAction(
-				req,
-				'CREATE_SETTING',
-				'setting',
-				setting.key,
-				validation.data
-			);
+			const data = validateRequestBody(req, res, CreateSettingSchema);
+			if (!data) return;
+			const setting = await adminSettingsService.createSetting(data);
+			await adminController.logAction(req, 'CREATE_SETTING', 'setting', setting.key, data);
 			res.status(201).json(setting);
 		} catch (error) {
 			if (error instanceof AdminError)
@@ -225,24 +178,10 @@ export class AdminSettingsController {
 		try {
 			const key = req.params.key;
 
-			const validation = UpdateSettingMetadataSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid setting metadata',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const setting = await adminSettingsService.updateSettingMetadata(key, validation.data);
-			await adminController.logAction(
-				req,
-				'UPDATE_SETTING_METADATA',
-				'setting',
-				key,
-				validation.data
-			);
+			const data = validateRequestBody(req, res, UpdateSettingMetadataSchema);
+			if (!data) return;
+			const setting = await adminSettingsService.updateSettingMetadata(key, data);
+			await adminController.logAction(req, 'UPDATE_SETTING_METADATA', 'setting', key, data);
 			res.json(setting);
 		} catch (error) {
 			if (error instanceof AdminError)
@@ -285,25 +224,11 @@ export class AdminSettingsController {
 	async updateFeatureFlag(req: Request, res: Response) {
 		try {
 			const key = req.params.key;
-			const validation = ToggleFeatureFlagSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid feature flag data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-
-			const updated = await adminSettingsService.updateFeatureFlag({ key, ...validation.data });
-			await adminController.logAction(
-				req,
-				'UPDATE_FEATURE_FLAG',
-				'feature_flag',
-				key,
-				validation.data
-			);
-			res.json(updated);
+			const data = validateRequestBody(req, res, ToggleFeatureFlagSchema);
+			if (!data) return;
+			const result = await adminSettingsService.updateFeatureFlag(data);
+			await adminController.logAction(req, 'UPDATE_FEATURE_FLAG', 'feature_flag', key, data);
+			res.json(result);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res

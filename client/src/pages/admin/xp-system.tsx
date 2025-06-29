@@ -20,7 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { apiRequest } from '@/lib/queryClient';
 
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import { EntityTable } from '@/components/admin/layout/EntityTable';
+import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
 import {
 	LevelFormDialogComponent,
 	DeleteLevelConfirmationDialog
@@ -309,7 +309,7 @@ function XPSystemModuleContent() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<EntityTable<Level>
+				<AdminDataTable<Level>
 					columns={columns}
 					data={levels.sort((a, b) => a.level - b.level)}
 					isLoading={isLoading}

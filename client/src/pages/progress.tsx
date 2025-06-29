@@ -1,5 +1,5 @@
 /**
- * Gamification Page
+ * Progress Page
  *
  * Main hub for all gamification features including:
  * - User progression overview
@@ -55,7 +55,7 @@ export default function GamificationPage() {
 			<div className="min-h-screen bg-zinc-950 flex items-center justify-center">
 				<div className="text-center space-y-4">
 					<RefreshCw className="w-8 h-8 animate-spin mx-auto text-purple-500" />
-					<p className="text-muted-foreground">Loading your gamification data...</p>
+					<p className="text-muted-foreground">Loading your progress data...</p>
 				</div>
 			</div>
 		);
@@ -67,7 +67,7 @@ export default function GamificationPage() {
 			<div className="min-h-screen bg-zinc-950 flex items-center justify-center">
 				<Alert className="max-w-md">
 					<AlertCircle className="w-4 h-4" />
-					<AlertDescription>Please log in to view your gamification progress.</AlertDescription>
+					<AlertDescription>Please log in to view your progress.</AlertDescription>
 				</Alert>
 			</div>
 		);
@@ -80,7 +80,7 @@ export default function GamificationPage() {
 				<Alert className="max-w-md" variant="destructive">
 					<AlertCircle className="w-4 h-4" />
 					<AlertDescription>
-						Failed to load gamification data. Please try refreshing the page.
+						Failed to load progress data. Please try refreshing the page.
 					</AlertDescription>
 				</Alert>
 			</div>
@@ -92,7 +92,7 @@ export default function GamificationPage() {
 	return (
 		<>
 			<Head>
-				<title>Gamification - Degentalk</title>
+				<title>Progress - Degentalk</title>
 				<meta
 					name="description"
 					content="Track your progress, unlock achievements, and compete with other traders"
@@ -108,7 +108,7 @@ export default function GamificationPage() {
 						className="text-center space-y-4"
 					>
 						<h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-							Gamification Hub
+							Progress Hub
 						</h1>
 						<p className="text-muted-foreground max-w-2xl mx-auto">
 							Track your progress, unlock achievements, complete missions, and compete with fellow

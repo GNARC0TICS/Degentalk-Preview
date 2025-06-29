@@ -64,6 +64,22 @@ export class MockVaultAdminService implements VaultAdminService {
 		}
 	}
 
+	// Helper to map vault admin actions to item history actions
+	private mapActionToHistoryAction(action: VaultAdminAction): ItemHistory['action'] {
+		switch (action) {
+			case 'create_item':
+				return 'created';
+			case 'update_item':
+			case 'enable_item':
+			case 'disable_item':
+				return 'updated';
+			case 'grant_item':
+				return 'granted';
+			default:
+				return 'updated';
+		}
+	}
+
 	// Item CRUD operations
 	async getItem(id: string): Promise<BaseVaultItem | null> {
 		const item = this.items.find((item) => item.id === id);
@@ -92,7 +108,10 @@ export class MockVaultAdminService implements VaultAdminService {
 		} as BaseVaultItem;
 
 		this.items.push(newItem);
-		this.logAction('create_item', id, { item: newItem });
+		this.logAction('create_item', id, {
+			newState: { item: newItem },
+			metadata: { category: itemData.category, rarity: itemData.rarity }
+		});
 
 		return newItem;
 	}
@@ -107,7 +126,11 @@ export class MockVaultAdminService implements VaultAdminService {
 		};
 
 		this.items[index] = updatedItem;
-		this.logAction('update_item', id, { updates, item: updatedItem });
+		this.logAction('update_item', id, {
+			previousState: { item: this.items[index] },
+			newState: { item: updatedItem, updates },
+			metadata: { fieldsUpdated: Object.keys(updates) }
+		});
 
 		return updatedItem;
 	}
@@ -116,8 +139,12 @@ export class MockVaultAdminService implements VaultAdminService {
 		const index = this.items.findIndex((item) => item.id === id);
 		if (index === -1) return false;
 
+		const deletedItem = this.items[index];
 		this.items.splice(index, 1);
-		this.logAction('delete_item', id);
+		this.logAction('delete_item', id, {
+			previousState: { item: deletedItem },
+			metadata: { operation: 'permanent_deletion' }
+		});
 
 		return true;
 	}
@@ -135,8 +162,11 @@ export class MockVaultAdminService implements VaultAdminService {
 		return this.updateItem(id, { rarity });
 	}
 
-	async setItemPrice(id: string, dgtPrice: number, usdtPrice: number): Promise<BaseVaultItem> {
-		return this.updateItem(id, { dgtPrice, usdtPrice });
+	async setItemPrice(id: string, prices: { dgt?: number; usdt?: number }): Promise<BaseVaultItem> {
+		return this.updateItem(id, {
+			dgtPrice: prices.dgt,
+			usdtPrice: prices.usdt
+		});
 	}
 
 	async addItemUnlockMethod(id: string, method: UnlockMethod): Promise<BaseVaultItem> {
@@ -212,32 +242,28 @@ export class MockVaultAdminService implements VaultAdminService {
 	}
 
 	// Event management
-	async createEvent(
-		name: string,
-		startDate: string,
-		endDate: string,
-		itemIds: string[]
-	): Promise<any> {
-		const event = {
+	async createEvent(eventData: Omit<VaultEvent, 'id'>): Promise<VaultEvent> {
+		const event: VaultEvent = {
+			...eventData,
 			id: `event-${Date.now()}`,
-			name,
-			startDate,
-			endDate,
-			itemIds,
-			isActive: new Date(startDate) <= new Date() && new Date(endDate) >= new Date()
+			isActive:
+				new Date(eventData.startDate) <= new Date() && new Date(eventData.endDate) >= new Date()
 		};
 
 		this.events.push(event);
-		this.logAction('create_event', undefined, { event });
+		this.logAction('create_event', undefined, {
+			newState: { event },
+			metadata: { eventType: 'vault_event' }
+		});
 
 		return event;
 	}
 
-	async getEvents(): Promise<any[]> {
+	async getEvents(): Promise<VaultEvent[]> {
 		return [...this.events];
 	}
 
-	async addItemToEvent(eventId: string, itemId: string): Promise<any> {
+	async addItemToEvent(eventId: string, itemId: string): Promise<VaultEvent> {
 		const eventIndex = this.events.findIndex((e) => e.id === eventId);
 		if (eventIndex === -1) throw new Error(`Event with ID ${eventId} not found`);
 
@@ -246,17 +272,20 @@ export class MockVaultAdminService implements VaultAdminService {
 			event.itemIds.push(itemId);
 		}
 
-		this.logAction('add_item_to_event', itemId, { eventId });
+		this.logAction('grant_item', itemId, {
+			newState: { eventId, addedToEvent: true },
+			metadata: { operation: 'add_item_to_event' }
+		});
 
 		return event;
 	}
 
 	// Admin audit
-	async getItemHistory(id: string): Promise<any[]> {
+	async getItemHistory(id: string): Promise<ItemHistory[]> {
 		return this.itemHistory[id] || [];
 	}
 
-	async getAdminActionLog(): Promise<any[]> {
+	async getAdminActionLog(): Promise<AdminActionLog[]> {
 		return [...this.actionLog];
 	}
 }

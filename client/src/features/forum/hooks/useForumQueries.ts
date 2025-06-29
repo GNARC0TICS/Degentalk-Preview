@@ -10,7 +10,7 @@ import { forumApi } from '../services/forumApi';
 import type { ThreadSearchParams as OriginalThreadSearchParams } from '../services/forumApi';
 import { toast } from 'sonner';
 import type { Tag } from '@/types/forum';
-import type { ThreadPrefix } from '@db_types/forum.types';
+import type { ThreadPrefix } from '@/types/compat/forum';
 import { useEffect } from 'react';
 
 // Utility for common cache invalidation patterns

@@ -22,6 +22,7 @@ import { useShowHotRibbon } from '@/hooks/useShowHotRibbon';
 import { SafeImage } from '@/components/ui/SafeImage';
 import { animationConfig } from '@/config/animation.config';
 import { getZoneTheme } from '@shared/config/zoneThemes.config';
+import XpBoostBadge from './XpBoostBadge';
 
 export interface ZoneCardProps {
 	zone: {
@@ -212,19 +213,6 @@ const ZoneCardPure = memo(
 
 						{/* Special Badges */}
 						<div className="absolute top-3 right-3 flex gap-2 z-10">
-							{zone.features?.hasXpBoost && (
-								<motion.div
-									initial={{ scale: 0 }}
-									animate={{ scale: 1 }}
-									transition={{ delay: 0.2 }}
-								>
-									<Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-black px-2 py-1 text-xs font-bold">
-										<Zap className="w-3 h-3 mr-1" />
-										{zone.features.boostMultiplier}x XP
-									</Badge>
-								</motion.div>
-							)}
-
 							{zone.features?.isEventActive && (
 								<motion.div
 									initial={{ scale: 0 }}
@@ -245,6 +233,11 @@ const ZoneCardPure = memo(
 								</Badge>
 							)}
 						</div>
+
+						{/* XP Boost Badge */}
+						{zone.features?.hasXpBoost && (
+							<XpBoostBadge boostMultiplier={zone.features?.boostMultiplier ?? 1} />
+						)}
 
 						{/* HOT Ribbon */}
 						{showHotRibbonFeature && hasHotForums && (

@@ -4,9 +4,13 @@ import {
 	CreateEmojiSchema,
 	UpdateEmojiSchema,
 	ListEmojisQuerySchema,
-	EmojiIdParamSchema,
 	BulkDeleteEmojisSchema
 } from './emojis.validators';
+import {
+	validateRequestBody,
+	validateQueryParams,
+	validateNumberParam
+} from '../../admin.validation';
 import { logger } from '../../../../core/logger';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 
@@ -39,14 +43,9 @@ export const getAllEmojis = async (req: Request, res: Response) => {
 	try {
 		logger.info('EMOJI_CONTROLLER', 'GET /api/admin/emojis requested', { query: req.query });
 
-		// Validate query parameters
-		const validation = ListEmojisQuerySchema.safeParse(req.query);
-		if (!validation.success) {
-			return handleValidationError(validation.error, res);
-		}
-
-		const options = validation.data;
-		const result = await emojiService.getAll(options);
+		const query = validateQueryParams(req, res, ListEmojisQuerySchema);
+		if (!query) return;
+		const result = await emojiService.getAll(query);
 
 		logger.info('EMOJI_CONTROLLER', `Successfully fetched ${result.emojis.length} emojis`);
 
@@ -81,13 +80,8 @@ export const getEmojiById = async (req: Request, res: Response) => {
 	try {
 		logger.info('EMOJI_CONTROLLER', `GET /api/admin/emojis/${req.params.id} requested`);
 
-		// Validate path parameter
-		const paramValidation = EmojiIdParamSchema.safeParse(req.params);
-		if (!paramValidation.success) {
-			return handleValidationError(paramValidation.error, res);
-		}
-
-		const { id } = paramValidation.data;
+		const id = validateNumberParam(req, res, 'id');
+		if (id === null) return;
 		const emoji = await emojiService.getById(id);
 
 		if (!emoji) {
@@ -129,15 +123,11 @@ export const createEmoji = async (req: Request, res: Response) => {
 	try {
 		logger.info('EMOJI_CONTROLLER', 'POST /api/admin/emojis requested', { body: req.body });
 
-		// Validate request body
-		const validation = CreateEmojiSchema.safeParse(req.body);
-		if (!validation.success) {
-			return handleValidationError(validation.error, res);
-		}
-
+		const data = validateRequestBody(req, res, CreateEmojiSchema);
+		if (!data) return;
 		const emojiData = {
-			...validation.data,
-			createdBy: getUserId(req) // Add creator ID if available
+			...data,
+			createdBy: getUserId(req)
 		};
 
 		const newEmoji = await emojiService.create(emojiData);
@@ -190,28 +180,20 @@ export const updateEmoji = async (req: Request, res: Response) => {
 			body: req.body
 		});
 
-		// Validate path parameter
-		const paramValidation = EmojiIdParamSchema.safeParse(req.params);
-		if (!paramValidation.success) {
-			return handleValidationError(paramValidation.error, res);
-		}
+		const id = validateNumberParam(req, res, 'id');
+		if (id === null) return;
 
-		// Validate request body
-		const bodyValidation = UpdateEmojiSchema.safeParse(req.body);
-		if (!bodyValidation.success) {
-			return handleValidationError(bodyValidation.error, res);
-		}
+		const dataUpdate = validateRequestBody(req, res, UpdateEmojiSchema);
+		if (!dataUpdate) return;
 
-		// Check if there's actually something to update
-		if (Object.keys(bodyValidation.data).length === 0) {
+		if (Object.keys(dataUpdate).length === 0) {
 			return res.status(400).json({
 				error: 'No fields provided for update',
 				code: AdminErrorCodes.VALIDATION_ERROR
 			});
 		}
 
-		const { id } = paramValidation.data;
-		const updateData = bodyValidation.data;
+		const updateData = dataUpdate;
 
 		const updatedEmoji = await emojiService.update(id, updateData);
 
@@ -264,13 +246,8 @@ export const deleteEmoji = async (req: Request, res: Response) => {
 	try {
 		logger.info('EMOJI_CONTROLLER', `DELETE /api/admin/emojis/${req.params.id} requested`);
 
-		// Validate path parameter
-		const paramValidation = EmojiIdParamSchema.safeParse(req.params);
-		if (!paramValidation.success) {
-			return handleValidationError(paramValidation.error, res);
-		}
-
-		const { id } = paramValidation.data;
+		const id = validateNumberParam(req, res, 'id');
+		if (id === null) return;
 		const deletedEmoji = await emojiService.delete(id);
 
 		logger.info('EMOJI_CONTROLLER', `Successfully deleted emoji (ID: ${id})`);
@@ -324,13 +301,10 @@ export const bulkDeleteEmojis = async (req: Request, res: Response) => {
 			body: req.body
 		});
 
-		// Validate request body
-		const validation = BulkDeleteEmojisSchema.safeParse(req.body);
-		if (!validation.success) {
-			return handleValidationError(validation.error, res);
-		}
+		const dataBulk = validateRequestBody(req, res, BulkDeleteEmojisSchema);
+		if (!dataBulk) return;
 
-		const { ids } = validation.data;
+		const { ids } = dataBulk;
 		const deletedEmojis = await emojiService.bulkDelete(ids);
 
 		logger.info('EMOJI_CONTROLLER', `Successfully bulk deleted ${deletedEmojis.length} emojis`);

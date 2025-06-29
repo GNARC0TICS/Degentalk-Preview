@@ -5,10 +5,20 @@ import { useAdminPermission } from '@/hooks/use-admin-modules';
 import { Loader2, AlertCircle, Lock } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { permissionToModuleMap } from '@shared/config/admin.config';
 
 interface ProtectedAdminRouteProps {
 	children: React.ReactNode;
-	moduleId: string;
+	/**
+	 * Canonical permission string (e.g. 'admin:xp:view').
+	 * Takes precedence over moduleId.  Provide either permission OR moduleId while we migrate.
+	 */
+	permission?: string;
+	/**
+	 * Legacy module slug.  Will be looked-up via permissionToModuleMap when only `permission` is given.
+	 * Deprecated – do not use in new code.
+	 */
+	moduleId?: string;
 	fallbackRoute?: string;
 	requireExactPermission?: boolean;
 	showLoadingSpinner?: boolean;
@@ -16,13 +26,25 @@ interface ProtectedAdminRouteProps {
 
 export function ProtectedAdminRoute({
 	children,
-	moduleId,
+	permission,
+	moduleId: legacyModuleId,
 	fallbackRoute = '/admin',
 	requireExactPermission = false,
 	showLoadingSpinner = true
 }: ProtectedAdminRouteProps) {
+	// Resolve moduleId: permission -> slug mapping OR use legacy prop
+	const resolvedModuleId = React.useMemo(() => {
+		if (permission) {
+			const mod = permissionToModuleMap[permission];
+			return mod?.slug ?? legacyModuleId;
+		}
+		return legacyModuleId;
+	}, [permission, legacyModuleId]);
+
 	const { user, isLoading: authLoading } = useAuth();
-	const { hasPermission, isLoading: permissionLoading } = useAdminPermission(moduleId);
+	const { hasPermission, isLoading: permissionLoading } = useAdminPermission(
+		resolvedModuleId || ''
+	);
 	const location = useLocation();
 
 	if (authLoading || permissionLoading) {
@@ -50,7 +72,7 @@ export function ProtectedAdminRoute({
 		return (
 			<div className="container mx-auto py-8">
 				<AdminAccessDenied
-					moduleId={moduleId}
+					moduleId={resolvedModuleId || ''}
 					userRole={user.role}
 					fallbackRoute={fallbackRoute}
 					requireExactPermission={requireExactPermission}
@@ -61,7 +83,7 @@ export function ProtectedAdminRoute({
 
 	return (
 		<Suspense fallback={<AdminLoadingFallback />}>
-			<AdminErrorBoundary moduleId={moduleId}>{children}</AdminErrorBoundary>
+			<AdminErrorBoundary moduleId={resolvedModuleId || ''}>{children}</AdminErrorBoundary>
 		</Suspense>
 	);
 }
@@ -198,13 +220,20 @@ class AdminErrorBoundary extends React.Component<
 }
 
 export function withAdminProtection(
-	Component: React.ComponentType,
-	moduleId: string,
-	options?: Omit<ProtectedAdminRouteProps, 'children' | 'moduleId'>
+	Component: React.ComponentType<any>,
+	permissionOrModuleId: string,
+	options?: Omit<ProtectedAdminRouteProps, 'children' | 'permission' | 'moduleId'>
 ) {
+	const isPermissionFormat = permissionOrModuleId.includes(':');
+
 	return function ProtectedComponent(props: any) {
 		return (
-			<ProtectedAdminRoute moduleId={moduleId} {...options}>
+			<ProtectedAdminRoute
+				{...(isPermissionFormat
+					? { permission: permissionOrModuleId }
+					: { moduleId: permissionOrModuleId })}
+				{...options}
+			>
 				<Component {...props} />
 			</ProtectedAdminRoute>
 		);

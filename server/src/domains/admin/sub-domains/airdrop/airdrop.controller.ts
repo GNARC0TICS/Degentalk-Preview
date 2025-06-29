@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { airdropAdminService } from './airdrop.service';
 import { logger } from '../../../../core/logger';
 import { z } from 'zod';
+import { validateRequestBody } from '../../admin.validation';
 
 const airdropRequestSchema = z.object({
 	tokenType: z.enum(['XP', 'DGT']),
@@ -20,17 +21,9 @@ export const executeAirdrop = async (req: Request, res: Response, next: NextFunc
 			return res.status(401).json({ message: 'Unauthorized: Admin ID not found.' });
 		}
 
-		const validationResult = airdropRequestSchema.safeParse(req.body);
-		if (!validationResult.success) {
-			logger.warn('AIRDROP_CONTROLLER', 'Invalid airdrop request payload', {
-				errors: validationResult.error.format()
-			});
-			return res
-				.status(400)
-				.json({ message: 'Invalid request payload.', errors: validationResult.error.format() });
-		}
-
-		const { tokenType, amount, targetCriteria, note } = validationResult.data;
+		const data = validateRequestBody(req, res, airdropRequestSchema);
+		if (!data) return;
+		const { tokenType, amount, targetCriteria, note } = data;
 
 		const result = await airdropAdminService.processAirdrop({
 			adminId,

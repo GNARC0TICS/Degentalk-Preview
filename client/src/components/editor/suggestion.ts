@@ -1,16 +1,37 @@
 import { ReactRenderer } from '@tiptap/react';
-import tippy from 'tippy.js';
+import tippy, { type Instance as TippyInstance } from 'tippy.js';
 import { apiRequest } from '@/lib/queryClient';
+
+// User mention item interface
+interface MentionItem {
+	id: string;
+	label: string;
+	avatarUrl?: string;
+	role?: string;
+	level?: number;
+}
+
+// Command function for inserting mentions
+type MentionCommand = (item: MentionItem) => void;
+
+// Tiptap suggestion props
+interface SuggestionProps {
+	editor: any; // FIXME: Replace with proper Tiptap editor type post-deployment
+	clientRect: () => DOMRect;
+	event: KeyboardEvent;
+	items: MentionItem[];
+	command: MentionCommand;
+}
 
 // Component for rendering the mentions suggestion
 class MentionList {
-	items: any[];
-	command: any;
+	items: MentionItem[];
+	command: MentionCommand;
 	selectedIndex: number;
 	element: HTMLElement;
 	scrollContainer: HTMLElement;
 
-	constructor({ items, command }: { items: any[]; command: any }) {
+	constructor({ items, command }: { items: MentionItem[]; command: MentionCommand }) {
 		this.items = items;
 		this.command = command;
 		this.selectedIndex = 0;
@@ -185,10 +206,10 @@ export default {
 
 	render: () => {
 		let component: ReactRenderer<MentionList>;
-		let popup: any;
+		let popup: TippyInstance[];
 
 		return {
-			onStart: (props: any) => {
+			onStart: (props: SuggestionProps) => {
 				component = new ReactRenderer(MentionList, {
 					props,
 					editor: props.editor
@@ -205,7 +226,7 @@ export default {
 				});
 			},
 
-			onUpdate(props: any) {
+			onUpdate(props: SuggestionProps) {
 				component.updateProps(props);
 
 				popup[0].setProps({
@@ -213,7 +234,7 @@ export default {
 				});
 			},
 
-			onKeyDown(props: any) {
+			onKeyDown(props: { event: KeyboardEvent }) {
 				if (!component.ref) {
 					return false;
 				}

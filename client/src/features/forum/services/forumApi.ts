@@ -12,7 +12,8 @@ import type {
 	ForumTag,
 	ThreadPrefix,
 	ThreadWithPostsAndUser
-} from '@db_types/forum.types';
+} from '@/types/compat/forum';
+import type { ApiErrorData } from '@/types/core.types';
 
 export interface ThreadSearchParams {
 	structureId?: number;
@@ -78,7 +79,7 @@ export const forumApi = {
 				params: apiParams
 			});
 			return directResult;
-		} catch (err: any) {
+		} catch (err: ApiErrorData) {
 			if ([401, 403].includes(err?.response?.status)) {
 				return {
 					threads: [],
@@ -112,7 +113,7 @@ export const forumApi = {
 		}
 
 		try {
-			const response = await apiRequest<any>({
+			const response = await apiRequest<ThreadWithPostsAndUser>({
 				url,
 				method: 'GET',
 				params: Object.keys(queryParams).length > 0 ? queryParams : undefined
@@ -126,7 +127,7 @@ export const forumApi = {
 
 			// 2) If backend returned the raw thread object, normalise into { thread: obj }
 			return { thread: response } as unknown as ThreadWithPostsAndUser;
-		} catch (err: any) {
+		} catch (err: ApiErrorData) {
 			if ([401, 403].includes(err?.response?.status)) {
 				return null; // caller handles restricted access
 			}
@@ -139,7 +140,7 @@ export const forumApi = {
 		structureId: number;
 		content: string;
 		prefixId?: number;
-		editorState?: any;
+		editorState?: Record<string, unknown>;
 		tagIds?: number[];
 	}): Promise<ThreadWithUser> => {
 		const directResult = await apiRequest<ThreadWithUser>({
@@ -260,7 +261,15 @@ export const forumApi = {
 			totalPages: number;
 		};
 	}> => {
-		const response = await apiRequest<any>({
+		const response = await apiRequest<{
+			posts: PostWithUser[];
+			pagination: {
+				page: number;
+				limit: number;
+				totalPosts: number;
+				totalPages: number;
+			};
+		}>({
 			url: `/api/forum/threads/${threadId}/posts`,
 			method: 'GET',
 			params: params as Record<string, string>
@@ -280,7 +289,7 @@ export const forumApi = {
 		threadId: number;
 		content: string;
 		replyToPostId?: number;
-		editorState?: any;
+		editorState?: Record<string, unknown>;
 	}): Promise<PostWithUser> => {
 		const directResult = await apiRequest<PostWithUser>({
 			url: '/api/forum/posts',
@@ -294,7 +303,7 @@ export const forumApi = {
 		postId: number,
 		data: {
 			content: string;
-			editorState?: any;
+			editorState?: Record<string, unknown>;
 		}
 	): Promise<{
 		message: string;
@@ -391,19 +400,19 @@ export const forumApi = {
 	/**
 	 * Rules
 	 */
-	getForumRules: async (): Promise<any[]> => {
+	getForumRules: async (): Promise<Record<string, unknown>[]> => {
 		// This endpoint correctly returns { data: rules, count: rules.length }
 		// So, this method is an exception and should remain as is.
-		const response = await apiRequest<{ data: any[] }>({
+		const response = await apiRequest<{ data: Record<string, unknown>[] }>({
 			url: '/api/forum/rules',
 			method: 'GET'
 		});
 		return response.data;
 	},
 
-	getUserAgreements: async (): Promise<any> => {
+	getUserAgreements: async (): Promise<Record<string, unknown>> => {
 		// Server returns the agreement object directly
-		const directResponse = await apiRequest<any>({
+		const directResponse = await apiRequest<Record<string, unknown>>({
 			url: '/api/forum/rules/user-agreements',
 			method: 'GET'
 		});

@@ -10,6 +10,7 @@ import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { getUserId } from '../../admin.middleware';
 import { adminController } from '../../admin.controller';
 import { UserGroupSchema, ListGroupUsersQuerySchema } from './user-groups.validators';
+import { validateRequestBody, validateQueryParams } from '../../admin.validation';
 
 export class AdminUserGroupsController {
 	async getAllGroups(req: Request, res: Response) {
@@ -43,22 +44,15 @@ export class AdminUserGroupsController {
 
 	async createGroup(req: Request, res: Response) {
 		try {
-			const validation = UserGroupSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid user group data',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-			const newGroup = await adminUserGroupsService.createGroup(validation.data);
+			const data = validateRequestBody(req, res, UserGroupSchema);
+			if (!data) return;
+			const newGroup = await adminUserGroupsService.createGroup(data);
 			await adminController.logAction(
 				req,
 				'CREATE_USER_GROUP',
 				'user_group',
 				newGroup.id.toString(),
-				validation.data
+				data
 			);
 			res.status(201).json(newGroup);
 		} catch (error) {
@@ -76,22 +70,15 @@ export class AdminUserGroupsController {
 			if (isNaN(groupId))
 				throw new AdminError('Invalid group ID', 400, AdminErrorCodes.INVALID_REQUEST);
 
-			const validation = UserGroupSchema.safeParse(req.body);
-			if (!validation.success) {
-				throw new AdminError(
-					'Invalid user group data for update',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					validation.error.format()
-				);
-			}
-			const updatedGroup = await adminUserGroupsService.updateGroup(groupId, validation.data);
+			const data = validateRequestBody(req, res, UserGroupSchema);
+			if (!data) return;
+			const updatedGroup = await adminUserGroupsService.updateGroup(groupId, data);
 			await adminController.logAction(
 				req,
 				'UPDATE_USER_GROUP',
 				'user_group',
 				groupId.toString(),
-				validation.data
+				data
 			);
 			res.json(updatedGroup);
 		} catch (error) {
@@ -129,17 +116,10 @@ export class AdminUserGroupsController {
 			if (isNaN(groupId))
 				throw new AdminError('Invalid group ID', 400, AdminErrorCodes.INVALID_REQUEST);
 
-			const queryValidation = ListGroupUsersQuerySchema.safeParse(req.query);
-			if (!queryValidation.success) {
-				throw new AdminError(
-					'Invalid pagination parameters',
-					400,
-					AdminErrorCodes.VALIDATION_ERROR,
-					queryValidation.error.format()
-				);
-			}
+			const query = validateQueryParams(req, res, ListGroupUsersQuerySchema);
+			if (!query) return;
 
-			const result = await adminUserGroupsService.getUsersInGroup(groupId, queryValidation.data);
+			const result = await adminUserGroupsService.getUsersInGroup(groupId, query);
 			res.json(result);
 		} catch (error) {
 			if (error instanceof AdminError)

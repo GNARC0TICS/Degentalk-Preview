@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { User } from '@schema';
+import type { User } from '@/types/compat/user';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
