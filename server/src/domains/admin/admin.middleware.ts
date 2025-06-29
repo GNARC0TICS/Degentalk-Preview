@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Admin Middleware
  *
@@ -17,7 +18,7 @@ import { logger } from '@server/src/core/logger'; // Added logger import
  */
 export function getUserId(req: Request): number {
 	// Handle both auth patterns (id and user_id)
-	return (req.user as any)?.id || 0;
+	return (userService.getUserFromRequest(req) as any)?.id || 0;
 }
 
 /**
@@ -71,7 +72,7 @@ export async function isAdmin(req: Request, res: Response, next: NextFunction) {
 		}
 	} else if (req.isAuthenticated()) {
 		// Normal authentication - use RBAC util
-		const user = req.user as any;
+		const user = userService.getUserFromRequest(req) as any;
 		const { canUser } = await import('@lib/auth/canUser.ts');
 		if (user && (await canUser(user, 'canViewAdminPanel'))) {
 			return next();
@@ -132,7 +133,7 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
 			return res.status(401).json({ message: 'Unauthorized' });
 		}
 	} else if (req.isAuthenticated()) {
-		const user = req.user as any;
+		const user = userService.getUserFromRequest(req) as any;
 		const { canUser } = await import('@lib/auth/canUser.ts');
 		if (user && (await canUser(user, 'canManageUsers'))) {
 			return next();

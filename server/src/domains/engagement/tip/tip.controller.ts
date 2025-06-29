@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Tip Controller
  *
@@ -26,7 +27,7 @@ export class TipController {
 	 * Send a tip to another user
 	 */
 	sendTip = asyncHandler(async (req: Request, res: Response) => {
-		const fromUserId = req.user.id;
+		const fromUserId = userService.getUserFromRequest(req).id;
 		const { toUserId, amount, reason } = req.body;
 
 		// Validate input using zod
@@ -55,7 +56,7 @@ export class TipController {
 	 * Get tip history for the authenticated user
 	 */
 	getTipHistory = asyncHandler(async (req: Request, res: Response) => {
-		const userId = req.user.id;
+		const userId = userService.getUserFromRequest(req).id;
 		const limit = parseInt(req.query.limit as string) || 20;
 		const offset = parseInt(req.query.offset as string) || 0;
 		const type = (req.query.type as string) || 'all'; // 'sent', 'received', 'all'
@@ -101,7 +102,7 @@ export class TipController {
 	 * Update tip settings (admin only)
 	 */
 	updateTipSettings = asyncHandler(async (req: Request, res: Response) => {
-		const userId = req.user.id;
+		const userId = userService.getUserFromRequest(req).id;
 		const { minAmount, maxAmount, cooldownMinutes, burnPercentage } = req.body;
 
 		// Validate input using zod

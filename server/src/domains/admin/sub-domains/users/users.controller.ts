@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Admin Users Controller
  *
@@ -95,7 +96,7 @@ export class AdminUsersController {
 			const updatedUser = await adminUsersService.updateUser(userId, data);
 
 			// Log admin action
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			await adminController.logAction(req, 'UPDATE_USER', 'user', userId.toString(), {
 				adminId,
 				changes: data
@@ -136,7 +137,7 @@ export class AdminUsersController {
 			const newUser = await adminUsersService.createUser(dataCreate);
 
 			// Log admin action
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			await adminController.logAction(req, 'CREATE_USER', 'user', newUser.id.toString(), {
 				adminId,
 				userData: dataCreate
@@ -178,7 +179,7 @@ export class AdminUsersController {
 			await adminUsersService.deleteUser(userId);
 
 			// Log admin action
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			await adminController.logAction(req, 'DELETE_USER', 'user', userId.toString(), {
 				adminId
 			});
@@ -219,7 +220,7 @@ export class AdminUsersController {
 			await adminUsersService.banUser(userId, reason);
 
 			// Log admin action
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			await adminController.logAction(req, 'BAN_USER', 'user', userId.toString(), {
 				adminId,
 				reason
@@ -260,7 +261,7 @@ export class AdminUsersController {
 			await adminUsersService.unbanUser(userId);
 
 			// Log admin action
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			await adminController.logAction(req, 'UNBAN_USER', 'user', userId.toString(), {
 				adminId
 			});
@@ -308,7 +309,7 @@ export class AdminUsersController {
 			const updatedUser = await adminUsersService.changeUserRole(userId, role);
 
 			// Log admin action
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			await adminController.logAction(req, 'CHANGE_USER_ROLE', 'user', userId.toString(), {
 				adminId,
 				newRole: role

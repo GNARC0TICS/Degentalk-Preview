@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { AdminPermissionsController } from './permissions.controller';
 import { canUser } from '@lib/auth/canUser.ts';
@@ -8,7 +9,7 @@ const router = Router();
 // Permission middleware
 router.use(async (req: any, res, next) => {
 	try {
-		const user = req.user;
+		const user = userService.getUserFromRequest(req);
 		if (!user || !(await canUser(user, 'roles.view'))) {
 			return res.status(403).json({ message: 'Forbidden' });
 		}

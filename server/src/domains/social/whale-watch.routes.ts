@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { z } from 'zod';
 import { WhaleWatchService } from './whale-watch.service';
@@ -32,7 +33,7 @@ const searchSchema = z.object({
 router.post('/follow', isAuthenticated, async (req, res) => {
 	try {
 		const { userIdToFollow } = followUserSchema.parse(req.body);
-		const followerId = req.user!.id;
+		const followerId = userService.getUserFromRequest(req)!.id;
 
 		await WhaleWatchService.followUser(followerId, userIdToFollow);
 
@@ -66,7 +67,7 @@ router.post('/follow', isAuthenticated, async (req, res) => {
 router.delete('/unfollow', isAuthenticated, async (req, res) => {
 	try {
 		const { userIdToUnfollow } = unfollowUserSchema.parse(req.body);
-		const followerId = req.user!.id;
+		const followerId = userService.getUserFromRequest(req)!.id;
 
 		await WhaleWatchService.unfollowUser(followerId, userIdToUnfollow);
 
@@ -165,7 +166,7 @@ router.get('/users/:id/follow-counts', async (req, res) => {
 router.get('/follow-status/:userId', isAuthenticated, async (req, res) => {
 	try {
 		const targetUserId = req.params.userId;
-		const currentUserId = req.user!.id;
+		const currentUserId = userService.getUserFromRequest(req)!.id;
 
 		const isFollowing = await WhaleWatchService.isFollowing(currentUserId, targetUserId);
 
@@ -199,7 +200,7 @@ router.get('/whales', async (req, res) => {
 router.get('/search-users', isAuthenticated, async (req, res) => {
 	try {
 		const { q, limit } = searchSchema.parse(req.query);
-		const currentUserId = req.user!.id;
+		const currentUserId = userService.getUserFromRequest(req)!.id;
 
 		const users = await WhaleWatchService.searchUsers(q, currentUserId, limit);
 

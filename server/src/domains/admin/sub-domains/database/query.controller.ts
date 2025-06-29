@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Query Controller
  *
@@ -29,7 +30,7 @@ const queryHistorySchema = z.object({
  */
 export async function executeQuery(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const { query, saveToHistory } = executeQuerySchema.parse(req.body);
 
 		// Additional safeguard: only allow read-only/select queries
@@ -98,7 +99,7 @@ export async function executeQuery(req: Request, res: Response) {
  */
 export async function validateQuery(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const { query } = z.object({ query: z.string().min(1) }).parse(req.body);
 
 		const validation = queryService.validateQuery(query);
@@ -134,7 +135,7 @@ export async function validateQuery(req: Request, res: Response) {
  */
 export async function getQueryHistory(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const { userId: targetUserId, limit } = queryHistorySchema.parse(req.query);
 
 		// Only allow users to see their own history unless they're super admin
@@ -171,7 +172,7 @@ export async function getQueryHistory(req: Request, res: Response) {
  */
 export async function clearQueryHistory(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const { userId: targetUserId } = z
 			.object({
 				userId: z.coerce.number().optional()
@@ -211,7 +212,7 @@ export async function clearQueryHistory(req: Request, res: Response) {
  */
 export async function getSuggestedQueries(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 
 		const suggestions = queryService.getSuggestedQueries();
 
@@ -240,7 +241,7 @@ export async function getSuggestedQueries(req: Request, res: Response) {
  */
 export async function exportQueryResults(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const { query } = z.object({ query: z.string().min(1) }).parse(req.body);
 
 		// Execute query
@@ -285,7 +286,7 @@ export async function exportQueryResults(req: Request, res: Response) {
  */
 export async function getQueryMetrics(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 
 		const history = queryService.getQueryHistory();
 

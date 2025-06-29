@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 // REFACTORED: Updated auth middleware imports to use canonical path
 /**
  * Preferences Routes
@@ -82,7 +83,7 @@ const router = express.Router();
  */
 router.get('/me/preferences-all', authenticate, async (req, res) => {
 	try {
-		const userId = req.user.id;
+		const userId = userService.getUserFromRequest(req).id;
 		const preferences = await getAllPreferences(userId);
 		res.json(preferences);
 	} catch (error) {
@@ -104,7 +105,7 @@ router.put(
 	validateBody(profileSettingsSchema),
 	async (req, res) => {
 		try {
-			const userId = req.user.id;
+			const userId = userService.getUserFromRequest(req).id;
 			const ipAddress = req.ip;
 			const result = await updateProfilePreferences(userId, req.body, ipAddress);
 			res.json(result);
@@ -128,7 +129,7 @@ router.put(
 	validateBody(accountSettingsSchema),
 	async (req, res) => {
 		try {
-			const userId = req.user.id;
+			const userId = userService.getUserFromRequest(req).id;
 			const ipAddress = req.ip;
 			const result = await updateAccountPreferences(userId, req.body, ipAddress);
 			res.json(result);
@@ -152,7 +153,7 @@ router.put(
 	validateBody(notificationSettingsSchema),
 	async (req, res) => {
 		try {
-			const userId = req.user.id;
+			const userId = userService.getUserFromRequest(req).id;
 			const ipAddress = req.ip;
 			const result = await updateNotificationPreferences(userId, req.body, ipAddress);
 			res.json(result);
@@ -176,7 +177,7 @@ router.put(
 	validateBody(displayPreferencesSchema),
 	async (req, res) => {
 		try {
-			const userId = req.user.id;
+			const userId = userService.getUserFromRequest(req).id;
 			const ipAddress = req.ip;
 			const result = await updateDisplayPreferences(userId, req.body, ipAddress);
 			res.json(result);
@@ -200,7 +201,7 @@ router.post(
 	validateBody(passwordChangeSchema),
 	async (req, res) => {
 		try {
-			const userId = req.user.id;
+			const userId = userService.getUserFromRequest(req).id;
 			const ipAddress = req.ip;
 			const result = await changePassword(userId, req.body, ipAddress);
 			res.json(result);
@@ -222,7 +223,7 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
 		// Ensure userId is valid
 		if (userId === undefined) {
 			logger.error('PREFERENCES', 'Invalid or missing user ID in authenticated request', {
-				user: req.user,
+				user: userService.getUserFromRequest(req),
 				derivedUserId: userId
 			});
 			// In development, default to a known mock user ID for consistency
@@ -363,7 +364,7 @@ router.put(
 			try {
 				const wss = (req.app as any).wss;
 				if (wss && wss.clients) {
-					const username = (req.user as any).username;
+					const username = (userService.getUserFromRequest(req) as any).username;
 
 					// Create broadcast message with position update
 					const broadcastMessage = JSON.stringify({

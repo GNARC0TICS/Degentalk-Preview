@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Notifications Routes
  *
@@ -28,7 +29,7 @@ router.use(isAuthenticated);
  */
 router.get('/getPaginatedNotifications', async (req, res) => {
 	try {
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({ error: 'Unauthorized' });
 		}
@@ -54,7 +55,7 @@ router.get('/getPaginatedNotifications', async (req, res) => {
  */
 router.get('/unread/count', async (req, res) => {
 	try {
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({ error: 'Unauthorized' });
 		}
@@ -76,7 +77,7 @@ router.get('/unread/count', async (req, res) => {
  */
 router.put('/:id/read', async (req, res) => {
 	try {
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({ error: 'Unauthorized' });
 		}
@@ -103,7 +104,7 @@ router.put('/:id/read', async (req, res) => {
  */
 router.put('/read-all', async (req, res) => {
 	try {
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({ error: 'Unauthorized' });
 		}

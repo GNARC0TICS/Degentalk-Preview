@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Leveling API Controller
  *
@@ -156,7 +157,7 @@ export class LevelingController {
 	 */
 	async getMyProgression(req: Request, res: Response) {
 		try {
-			const userId = req.user?.id;
+			const userId = userService.getUserFromRequest(req)?.id;
 			if (!userId) {
 				throw new AppError('Authentication required', 401);
 			}

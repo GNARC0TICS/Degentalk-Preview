@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Profile Routes
  *
@@ -169,7 +170,7 @@ router.get('/:username', async (req: Request, res: Response) => {
  */
 router.get('/', authenticate, async (req, res) => {
 	try {
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({ success: false, message: 'User not authenticated' });
 		}
@@ -189,7 +190,7 @@ router.get('/', authenticate, async (req, res) => {
  */
 router.get('/referrals', authenticate, async (req, res) => {
 	try {
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({ success: false, message: 'User not authenticated' });
 		}
@@ -209,7 +210,7 @@ router.get('/referrals', authenticate, async (req, res) => {
  */
 router.get('/referrals/link', authenticate, async (req, res) => {
 	try {
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({ success: false, message: 'User not authenticated' });
 		}

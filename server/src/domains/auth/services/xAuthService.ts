@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { TwitterApi } from 'twitter-api-v2';
 import { db } from '@server/src/core/db';
@@ -72,7 +73,7 @@ export async function handleXCallback(req: Request, res: Response, next: NextFun
 		const xTokenExpiresAt = new Date(Date.now() + expiresIn * 1000);
 
 		// If user is logged in, link account; else create user
-		if (req.user) {
+		if (userService.getUserFromRequest(req)) {
 			await db
 				.update(users)
 				.set({
@@ -82,7 +83,7 @@ export async function handleXCallback(req: Request, res: Response, next: NextFun
 					xTokenExpiresAt,
 					xLinkedAt
 				})
-				.where(eq(users.id, (req.user as any).id));
+				.where(eq(users.id, (userService.getUserFromRequest(req) as any).id));
 
 			return res.redirect('/profile/settings?linked=x');
 		}
@@ -128,7 +129,8 @@ export async function handleXCallback(req: Request, res: Response, next: NextFun
 
 export async function unlinkXAccount(req: Request, res: Response, next: NextFunction) {
 	try {
-		if (!req.user) return res.status(401).json({ message: 'Not logged in' });
+		if (!userService.getUserFromRequest(req))
+			return res.status(401).json({ message: 'Not logged in' });
 		await db
 			.update(users)
 			.set({
@@ -138,7 +140,7 @@ export async function unlinkXAccount(req: Request, res: Response, next: NextFunc
 				xTokenExpiresAt: null,
 				xLinkedAt: null
 			})
-			.where(eq(users.id, (req.user as any).id));
+			.where(eq(users.id, (userService.getUserFromRequest(req) as any).id));
 
 		return res.json({ success: true });
 	} catch (err) {

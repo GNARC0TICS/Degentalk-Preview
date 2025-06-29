@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { shopItems } from '../../../utils/shop-utils';
 import { db } from '@db';
@@ -125,11 +126,11 @@ const purchaseSchema = z.object({
 // POST /api/shop/purchase
 router.post('/purchase', isAuthenticated, async (req, res) => {
 	try {
-		if (!req.user) {
+		if (!userService.getUserFromRequest(req)) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
 
-		const userId = (req.user as { id: number }).id;
+		const userId = (userService.getUserFromRequest(req) as { id: number }).id;
 		const { itemId, paymentMethod } = purchaseSchema.parse(req.body);
 
 		// Find the item in mock data (TODO: replace with database query)
@@ -236,7 +237,7 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 		}
 		logger.error('ShopController', 'Error processing purchase', {
 			error: error instanceof Error ? error.message : String(error),
-			userId: req.user?.id
+			userId: userService.getUserFromRequest(req)?.id
 		});
 		res.status(500).json({ error: 'Failed to process purchase' });
 	}
@@ -245,11 +246,11 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 // GET /api/shop/inventory - Get user's purchased items
 router.get('/inventory', isAuthenticated, async (req, res) => {
 	try {
-		if (!req.user) {
+		if (!userService.getUserFromRequest(req)) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
 
-		const userId = (req.user as { id: number }).id;
+		const userId = (userService.getUserFromRequest(req) as { id: number }).id;
 
 		// Get user's inventory
 		const inventory = await db.select().from(userInventory).where(eq(userInventory.userId, userId));
@@ -273,7 +274,7 @@ router.get('/inventory', isAuthenticated, async (req, res) => {
 	} catch (error) {
 		logger.error('ShopController', 'Error getting inventory', {
 			error: error instanceof Error ? error.message : String(error),
-			userId: req.user?.id
+			userId: userService.getUserFromRequest(req)?.id
 		});
 		res.status(500).json({ error: 'Failed to get inventory' });
 	}

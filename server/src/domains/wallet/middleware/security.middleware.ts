@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { db } from '@db';
 import { wallets, users } from '@schema';
@@ -60,7 +61,7 @@ const checkRateLimit = async (
  */
 const depositRateLimit = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			res.status(401).json({ success: false, message: 'Authentication required' });
 			return;
@@ -111,7 +112,7 @@ const transferRateLimit = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			res.status(401).json({ success: false, message: 'Authentication required' });
 			return;
@@ -162,7 +163,7 @@ const withdrawalSecurityCheck = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			res.status(401).json({ success: false, message: 'Authentication required' });
 			return;
@@ -229,7 +230,7 @@ const dgtTransferValidation = async (
 ): Promise<void> => {
 	try {
 		const { amount, toUserId } = req.body;
-		const fromUserId = req.user?.id;
+		const fromUserId = userService.getUserFromRequest(req)?.id;
 
 		if (!fromUserId) {
 			res.status(401).json({ success: false, message: 'Authentication required' });
@@ -299,7 +300,7 @@ const adminDGTOperationValidation = async (
 ): Promise<void> => {
 	try {
 		const { userId: targetUserId, amount } = req.body;
-		const adminUserId = req.user?.id;
+		const adminUserId = userService.getUserFromRequest(req)?.id;
 
 		if (!adminUserId) {
 			res.status(401).json({ success: false, message: 'Admin authentication required' });

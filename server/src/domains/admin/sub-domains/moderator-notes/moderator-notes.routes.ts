@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { z } from 'zod';
 import { db } from '@db';
@@ -120,7 +121,7 @@ router.delete('/:id', isAdminOrModerator, async (req, res) => {
 		}
 
 		// Only allow deletion by the creator or admins
-		const isAdmin = req.user?.role === 'admin';
+		const isAdmin = userService.getUserFromRequest(req)?.role === 'admin';
 		if (existingNote.createdBy !== userId && !isAdmin) {
 			return res.status(403).json({ error: 'You can only delete your own notes' });
 		}

@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * XP Controller
  *
@@ -123,11 +124,11 @@ export const getUserXpLogs = async (req: Request, res: Response, next: NextFunct
 	try {
 		// Get user ID from params or from authenticated user
 		const paramUserId = req.params.userId ? Number(req.params.userId) : undefined;
-		const authUserId = (req.user as any)?.id; // Added type assertion
+		const authUserId = (userService.getUserFromRequest(req) as any)?.id; // Added type assertion
 
 		// If not admin and trying to access someone else's logs, reject
 		const isOwnLogs = paramUserId === authUserId;
-		const isAdmin = (req.user as any)?.role === 'admin'; // Added type assertion
+		const isAdmin = (userService.getUserFromRequest(req) as any)?.role === 'admin'; // Added type assertion
 
 		if (!isOwnLogs && !isAdmin) {
 			return res.status(403).json({

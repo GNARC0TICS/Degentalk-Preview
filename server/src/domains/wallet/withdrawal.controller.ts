@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Withdrawal Controller
  *
@@ -36,11 +37,11 @@ export class WithdrawalController {
 	 */
 	async createWithdrawalRequest(req: Request, res: Response, next: NextFunction) {
 		try {
-			if (!req.user) {
+			if (!userService.getUserFromRequest(req)) {
 				return res.status(401).json({ error: 'User not authenticated' });
 			}
 
-			const userId = (req.user as { id: number }).id;
+			const userId = (userService.getUserFromRequest(req) as { id: number }).id;
 
 			// Check if withdrawals are enabled
 			if (!walletConfig.WITHDRAWALS_ENABLED) {
@@ -169,7 +170,7 @@ export class WithdrawalController {
 			}
 			logger.error('WithdrawalController', 'Error creating withdrawal request', {
 				error: error instanceof Error ? error.message : String(error),
-				userId: req.user?.id
+				userId: userService.getUserFromRequest(req)?.id
 			});
 			next(error);
 		}
@@ -180,11 +181,11 @@ export class WithdrawalController {
 	 */
 	async getWithdrawalHistory(req: Request, res: Response, next: NextFunction) {
 		try {
-			if (!req.user) {
+			if (!userService.getUserFromRequest(req)) {
 				return res.status(401).json({ error: 'User not authenticated' });
 			}
 
-			const userId = (req.user as { id: number }).id;
+			const userId = (userService.getUserFromRequest(req) as { id: number }).id;
 			const page = parseInt(req.query.page as string) || 1;
 			const limit = parseInt(req.query.limit as string) || 10;
 			const offset = (page - 1) * limit;
@@ -229,7 +230,7 @@ export class WithdrawalController {
 		} catch (error) {
 			logger.error('WithdrawalController', 'Error getting withdrawal history', {
 				error: error instanceof Error ? error.message : String(error),
-				userId: req.user?.id
+				userId: userService.getUserFromRequest(req)?.id
 			});
 			next(error);
 		}
@@ -304,7 +305,7 @@ export class WithdrawalController {
 	 */
 	async processWithdrawalRequest(req: Request, res: Response, next: NextFunction) {
 		try {
-			const adminId = (req.user as { id: number }).id;
+			const adminId = (userService.getUserFromRequest(req) as { id: number }).id;
 			const requestId = parseInt(req.params.requestId);
 			const { action, adminNotes } = processWithdrawalSchema.parse(req.body);
 

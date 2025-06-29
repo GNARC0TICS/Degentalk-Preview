@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Admin Controller
  *
@@ -62,7 +63,7 @@ export class AdminController {
 		entityId: string,
 		details: any = {}
 	) {
-		const adminId = getUserId(req);
+		const adminId = userService.getUserFromRequest(req);
 		await adminService.logAdminAction(adminId, action, entityType, entityId, details);
 	}
 }

@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Treasury Routes
  *
@@ -42,7 +43,7 @@ async function adjustTreasuryBalance(
 	}
 ): Promise<Response> {
 	try {
-		const adminId = getUserId(req);
+		const adminId = userService.getUserFromRequest(req);
 		const { amount, type, reason, currency } = params;
 
 		if (!amount || !type || !currency) {
@@ -361,7 +362,7 @@ router.get('/overview', isAdmin, async (req: Request, res: Response) => {
 // Adjust user DGT balance (admin only)
 router.post('/adjust-balance', isAdmin, async (req: Request, res: Response) => {
 	try {
-		const adminId = getUserId(req);
+		const adminId = userService.getUserFromRequest(req);
 		const { user_id, amount, type, reason } = req.body;
 
 		if (!user_id || !amount || !type) {
@@ -508,7 +509,7 @@ router.post('/adjust', isAdmin, async (req: Request, res: Response) => {
 // Update treasury settings (admin only)
 router.put('/settings', isAdmin, async (req: Request, res: Response) => {
 	try {
-		const adminId = getUserId(req);
+		const adminId = userService.getUserFromRequest(req);
 		const {
 			treasury_wallet_address,
 			min_withdrawal_amount,

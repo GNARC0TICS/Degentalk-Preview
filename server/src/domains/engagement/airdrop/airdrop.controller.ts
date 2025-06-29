@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Airdrop Controller
  *
@@ -20,8 +21,8 @@ export class AirdropController {
 	 * Process an airdrop (admin only)
 	 */
 	processAirdrop = asyncHandler(async (req: Request, res: Response) => {
-		const adminUserId = req.user?.id;
-		const isAdmin = req.user?.role === 'admin';
+		const adminUserId = userService.getUserFromRequest(req)?.id;
+		const isAdmin = userService.getUserFromRequest(req)?.role === 'admin';
 
 		if (!adminUserId) {
 			return res.status(401).json({
@@ -90,8 +91,8 @@ export class AirdropController {
 	 * Get airdrop history (admin only)
 	 */
 	getAirdropHistory = asyncHandler(async (req: Request, res: Response) => {
-		const userId = req.user?.id;
-		const isAdmin = req.user?.role === 'admin';
+		const userId = userService.getUserFromRequest(req)?.id;
+		const isAdmin = userService.getUserFromRequest(req)?.role === 'admin';
 
 		if (!userId) {
 			return res.status(401).json({
@@ -136,8 +137,8 @@ export class AirdropController {
 	 * Get airdrop details (admin only)
 	 */
 	getAirdropDetails = asyncHandler(async (req: Request, res: Response) => {
-		const userId = req.user?.id;
-		const isAdmin = req.user?.role === 'admin';
+		const userId = userService.getUserFromRequest(req)?.id;
+		const isAdmin = userService.getUserFromRequest(req)?.role === 'admin';
 
 		if (!userId) {
 			return res.status(401).json({

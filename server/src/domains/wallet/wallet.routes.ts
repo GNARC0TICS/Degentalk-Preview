@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { WalletService } from './wallet.service';
 import { UserManagementService } from './user-management.service';
@@ -27,7 +28,7 @@ router.post('/initialize', async (req, res) => {
 	try {
 		// In production, get userId from authenticated session
 		// For development, accept it from request body
-		const userId = req.body.userId || req.user?.id;
+		const userId = req.body.userId || userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
 			return res.status(401).json({ error: 'User not authenticated' });
@@ -54,7 +55,7 @@ router.post('/initialize', async (req, res) => {
  */
 router.get('/balances', async (req, res) => {
 	try {
-		const userId = (req.query.userId as string) || req.user?.id;
+		const userId = (req.query.userId as string) || userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
 			return res.status(401).json({ error: 'User not authenticated' });
@@ -81,7 +82,7 @@ router.get('/balances', async (req, res) => {
  */
 router.get('/deposit-addresses', async (req, res) => {
 	try {
-		const userId = (req.query.userId as string) || req.user?.id;
+		const userId = (req.query.userId as string) || userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
 			return res.status(401).json({ error: 'User not authenticated' });
@@ -108,7 +109,7 @@ router.get('/deposit-addresses', async (req, res) => {
  */
 router.post('/withdraw', async (req, res) => {
 	try {
-		const userId = req.body.userId || req.user?.id;
+		const userId = req.body.userId || userService.getUserFromRequest(req)?.id;
 		const { coinId, amount, toAddress, memo } = req.body;
 
 		if (!userId) {
@@ -147,7 +148,7 @@ router.post('/withdraw', async (req, res) => {
  */
 router.post('/transfer', async (req, res) => {
 	try {
-		const fromUserId = req.body.fromUserId || req.user?.id;
+		const fromUserId = req.body.fromUserId || userService.getUserFromRequest(req)?.id;
 		const { toUserId, coinId, amount, note } = req.body;
 
 		if (!fromUserId) {
@@ -186,7 +187,7 @@ router.post('/transfer', async (req, res) => {
  */
 router.post('/swap', async (req, res) => {
 	try {
-		const userId = req.body.userId || req.user?.id;
+		const userId = req.body.userId || userService.getUserFromRequest(req)?.id;
 		const { fromCoinId, toCoinId, fromAmount } = req.body;
 
 		if (!userId) {
@@ -224,7 +225,7 @@ router.post('/swap', async (req, res) => {
  */
 router.get('/history', async (req, res) => {
 	try {
-		const userId = (req.query.userId as string) || req.user?.id;
+		const userId = (req.query.userId as string) || userService.getUserFromRequest(req)?.id;
 		const type = req.query.type as 'deposit' | 'withdrawal' | 'transfer' | 'swap' | undefined;
 		const limit = parseInt(req.query.limit as string) || 50;
 		const offset = parseInt(req.query.offset as string) || 0;
@@ -279,7 +280,7 @@ router.get('/supported-coins', async (req, res) => {
  */
 router.get('/status', async (req, res) => {
 	try {
-		const userId = (req.query.userId as string) || req.user?.id;
+		const userId = (req.query.userId as string) || userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
 			return res.status(401).json({ error: 'User not authenticated' });

@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { avatarFrameService } from './avatar-frames.service';
 import { logger } from '../../../../core/logger';
@@ -63,7 +64,7 @@ class AvatarFrameController {
 			logger.info('AvatarFrameController', 'Frame created', {
 				frameId: frame.id,
 				name: frame.name,
-				createdBy: req.user?.id
+				createdBy: userService.getUserFromRequest(req)?.id
 			});
 
 			return res.status(201).json(frame);
@@ -77,7 +78,7 @@ class AvatarFrameController {
 
 			logger.error('AvatarFrameController', 'Failed to create frame', {
 				error,
-				userId: req.user?.id
+				userId: userService.getUserFromRequest(req)?.id
 			});
 			return res.status(500).json({
 				error: 'Failed to create avatar frame',
@@ -102,7 +103,7 @@ class AvatarFrameController {
 
 			logger.info('AvatarFrameController', 'Frame updated', {
 				frameId,
-				updatedBy: req.user?.id
+				updatedBy: userService.getUserFromRequest(req)?.id
 			});
 
 			return res.json(frame);
@@ -117,7 +118,7 @@ class AvatarFrameController {
 			logger.error('AvatarFrameController', 'Failed to update frame', {
 				error,
 				frameId: req.params.id,
-				userId: req.user?.id
+				userId: userService.getUserFromRequest(req)?.id
 			});
 			return res.status(500).json({
 				error: 'Failed to update avatar frame',
@@ -140,7 +141,7 @@ class AvatarFrameController {
 
 			logger.info('AvatarFrameController', 'Frame deleted', {
 				frameId,
-				deletedBy: req.user?.id
+				deletedBy: userService.getUserFromRequest(req)?.id
 			});
 
 			return res.status(204).send();
@@ -148,7 +149,7 @@ class AvatarFrameController {
 			logger.error('AvatarFrameController', 'Failed to delete frame', {
 				error,
 				frameId: req.params.id,
-				userId: req.user?.id
+				userId: userService.getUserFromRequest(req)?.id
 			});
 			return res.status(500).json({
 				error: 'Failed to delete avatar frame',

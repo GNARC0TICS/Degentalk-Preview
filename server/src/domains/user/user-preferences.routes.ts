@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { z } from 'zod';
 import { UserPreferencesService } from './user-preferences.service';
@@ -40,7 +41,7 @@ const socialPreferencesSchema = z.object({
  */
 router.get('/social-preferences', requireAuth, async (req, res) => {
 	try {
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const preferences = await UserPreferencesService.getSocialPreferences(userId);
 		res.json(preferences);
 	} catch (error) {
@@ -58,7 +59,7 @@ router.get('/social-preferences', requireAuth, async (req, res) => {
  */
 router.put('/social-preferences', requireAuth, async (req, res) => {
 	try {
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const validatedData = socialPreferencesSchema.parse(req.body);
 
 		const updatedPreferences = await UserPreferencesService.updateSocialPreferences(
@@ -89,7 +90,7 @@ router.put('/social-preferences', requireAuth, async (req, res) => {
  */
 router.get('/privacy-summary', requireAuth, async (req, res) => {
 	try {
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const summary = await UserPreferencesService.getPrivacySummary(userId);
 		res.json(summary);
 	} catch (error) {
@@ -107,7 +108,7 @@ router.get('/privacy-summary', requireAuth, async (req, res) => {
  */
 router.post('/reset-social-preferences', requireAuth, async (req, res) => {
 	try {
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const defaultPreferences = await UserPreferencesService.resetSocialPreferences(userId);
 		res.json(defaultPreferences);
 	} catch (error) {

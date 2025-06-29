@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { airdropAdminService } from './airdrop.service';
 import { logger } from '../../../../core/logger';
@@ -16,7 +17,7 @@ const airdropRequestSchema = z.object({
 
 export const executeAirdrop = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const adminId = req.user?.id; // Assuming adminId is available from auth middleware
+		const adminId = userService.getUserFromRequest(req)?.id; // Assuming adminId is available from auth middleware
 		if (!adminId) {
 			return res.status(401).json({ message: 'Unauthorized: Admin ID not found.' });
 		}

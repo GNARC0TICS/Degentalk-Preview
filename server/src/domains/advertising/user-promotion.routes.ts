@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { z } from 'zod';
 import { userPromotionService } from './user-promotion.service';
@@ -47,7 +48,7 @@ const moderationActionSchema = z.object({
  */
 router.post('/user-promotions', isAuthenticated, async (req, res) => {
 	try {
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
@@ -75,7 +76,7 @@ router.post('/user-promotions', isAuthenticated, async (req, res) => {
  */
 router.get('/user-promotions', isAuthenticated, async (req, res) => {
 	try {
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
@@ -134,7 +135,7 @@ router.post('/user-promotions/calculate-cost', isAuthenticated, async (req, res)
 router.post('/user-promotions/:id/extend', isAuthenticated, async (req, res) => {
 	try {
 		const { id } = req.params;
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		const { additionalHours } = extendPromotionSchema.parse(req.body);
 
 		// TODO: Implement promotion extension logic
@@ -167,7 +168,7 @@ router.post('/user-promotions/:id/extend', isAuthenticated, async (req, res) => 
 router.delete('/user-promotions/:id', isAuthenticated, async (req, res) => {
 	try {
 		const { id } = req.params;
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 
 		// TODO: Implement promotion cancellation logic
 		// This would involve:
@@ -259,7 +260,7 @@ router.get('/announcement-slots/available', async (req, res) => {
 router.post('/announcement-slots/reserve', isAuthenticated, async (req, res) => {
 	try {
 		const { slotId, promotionId } = req.body;
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!slotId || !promotionId || !userId) {
 			return res
@@ -388,7 +389,7 @@ router.get('/admin/user-promotions/pending', isAdmin, async (req, res) => {
 router.post('/admin/user-promotions/:id/moderate', isAdmin, async (req, res) => {
 	try {
 		const { id } = req.params;
-		const moderatorId = req.user?.id;
+		const moderatorId = userService.getUserFromRequest(req)?.id;
 		const { action, notes, rejectionReason } = moderationActionSchema.parse(req.body);
 
 		if (!moderatorId) {

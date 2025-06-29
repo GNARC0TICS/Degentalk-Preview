@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { FollowsService } from './follows.service';
 import { requireAuth } from '@/middleware/auth';
@@ -64,7 +65,7 @@ const searchUsersSchema = z.object({
 router.post('/', requireAuth, async (req, res) => {
 	try {
 		const { userId: followedId, notificationSettings } = followUserSchema.parse(req.body);
-		const followerId = req.user!.id;
+		const followerId = userService.getUserFromRequest(req)!.id;
 
 		const result = await FollowsService.followUser({
 			followerId,
@@ -90,7 +91,7 @@ router.post('/', requireAuth, async (req, res) => {
 router.delete('/', requireAuth, async (req, res) => {
 	try {
 		const { userId: followedId } = unfollowUserSchema.parse(req.body);
-		const followerId = req.user!.id;
+		const followerId = userService.getUserFromRequest(req)!.id;
 
 		await FollowsService.unfollowUser(followerId, followedId);
 
@@ -112,7 +113,7 @@ router.delete('/', requireAuth, async (req, res) => {
 router.get('/following', requireAuth, async (req, res) => {
 	try {
 		const { page, limit } = getPaginationSchema.parse(req.query);
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 
 		const following = await FollowsService.getUserFollowing(userId, page, limit);
 
@@ -137,7 +138,7 @@ router.get('/following', requireAuth, async (req, res) => {
 router.get('/followers', requireAuth, async (req, res) => {
 	try {
 		const { page, limit } = getPaginationSchema.parse(req.query);
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 
 		const followers = await FollowsService.getUserFollowers(userId, page, limit);
 
@@ -161,7 +162,7 @@ router.get('/followers', requireAuth, async (req, res) => {
  */
 router.get('/counts', requireAuth, async (req, res) => {
 	try {
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const counts = await FollowsService.getUserFollowCounts(userId);
 
 		res.json(counts);
@@ -178,7 +179,7 @@ router.get('/counts', requireAuth, async (req, res) => {
 router.get('/check/:userId', requireAuth, async (req, res) => {
 	try {
 		const followedId = req.params.userId;
-		const followerId = req.user!.id;
+		const followerId = userService.getUserFromRequest(req)!.id;
 
 		const isFollowing = await FollowsService.isFollowing(followerId, followedId);
 
@@ -195,7 +196,7 @@ router.get('/check/:userId', requireAuth, async (req, res) => {
  */
 router.get('/requests', requireAuth, async (req, res) => {
 	try {
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const requests = await FollowsService.getFollowRequests(userId);
 
 		res.json({ requests });
@@ -259,7 +260,7 @@ router.get('/whales', requireAuth, async (req, res) => {
 router.get('/activity', requireAuth, async (req, res) => {
 	try {
 		const { page, limit } = getPaginationSchema.parse(req.query);
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 
 		const activity = await FollowsService.getFollowingActivity(userId, page, limit);
 
@@ -277,7 +278,7 @@ router.get('/activity', requireAuth, async (req, res) => {
 router.get('/search', requireAuth, async (req, res) => {
 	try {
 		const { q, limit } = searchUsersSchema.parse(req.query);
-		const currentUserId = req.user!.id;
+		const currentUserId = userService.getUserFromRequest(req)!.id;
 
 		const users = await FollowsService.searchUsersToFollow(q, currentUserId, limit);
 
@@ -294,7 +295,7 @@ router.get('/search', requireAuth, async (req, res) => {
  */
 router.get('/preferences', requireAuth, async (req, res) => {
 	try {
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const preferences = await FollowsService.getUserFollowPreferences(userId);
 
 		res.json(preferences);
@@ -311,7 +312,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 router.put('/preferences', requireAuth, async (req, res) => {
 	try {
 		const preferences = updatePreferencesSchema.parse(req.body);
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 
 		const updatedPrefs = await FollowsService.updateUserFollowPreferences(userId, preferences);
 
@@ -329,7 +330,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
 router.put('/:userId/notifications', requireAuth, async (req, res) => {
 	try {
 		const followedId = req.params.userId;
-		const followerId = req.user!.id;
+		const followerId = userService.getUserFromRequest(req)!.id;
 		const settings = updateNotificationSettingsSchema.parse(req.body);
 
 		const result = await FollowsService.updateFollowNotificationSettings(

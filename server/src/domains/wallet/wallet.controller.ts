@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Wallet Controller
  *
@@ -105,7 +106,7 @@ export class WalletController extends BaseController {
 	async getTransactionHistory(req: Request, res: Response): Promise<void> {
 		try {
 			// Use authenticated user ID if available, otherwise default to dev user ID 2
-			const authUserId = (req.user as any)?.id;
+			const authUserId = (userService.getUserFromRequest(req) as any)?.id;
 			const userId = authUserId || 2; // Default to user ID 2 if no authenticated user
 
 			const page = parseInt(req.query.page as string) || 1;
@@ -194,7 +195,7 @@ export class WalletController extends BaseController {
 	 */
 	async createDepositAddress(req: Request, res: Response): Promise<void> {
 		try {
-			if (!req.user) {
+			if (!userService.getUserFromRequest(req)) {
 				logger.warn(
 					'WALLET_CONTROLLER',
 					`Attempt to access createDepositAddress without authentication. Request details: path ${req.path}, ip ${req.ip}`
@@ -203,7 +204,7 @@ export class WalletController extends BaseController {
 					.status(401)
 					.json({ error: 'User not authenticated', code: WalletErrorCodes.UNAUTHORIZED });
 			}
-			const userId = (req.user as { id: number }).id; // Explicit cast after check
+			const userId = (userService.getUserFromRequest(req) as { id: number }).id; // Explicit cast after check
 			const { currency } = req.body;
 
 			if (!currency) {
@@ -267,7 +268,7 @@ export class WalletController extends BaseController {
 	 */
 	async createDgtPurchase(req: Request, res: Response): Promise<void> {
 		try {
-			if (!req.user) {
+			if (!userService.getUserFromRequest(req)) {
 				logger.warn(
 					'WALLET_CONTROLLER',
 					`Attempt to access createDgtPurchase without authentication. Request details: path ${req.path}, ip ${req.ip}`
@@ -276,7 +277,7 @@ export class WalletController extends BaseController {
 					.status(401)
 					.json({ error: 'User not authenticated', code: WalletErrorCodes.UNAUTHORIZED });
 			}
-			const userId = (req.user as { id: number }).id; // Explicit cast after check
+			const userId = (userService.getUserFromRequest(req) as { id: number }).id; // Explicit cast after check
 			const { dgtAmount, cryptoCurrency } = req.body;
 
 			if (!dgtAmount || !cryptoCurrency) {
@@ -360,7 +361,7 @@ export class WalletController extends BaseController {
 	 */
 	async getPurchaseOrderStatus(req: Request, res: Response): Promise<void> {
 		try {
-			if (!req.user) {
+			if (!userService.getUserFromRequest(req)) {
 				logger.warn(
 					'Attempt to access getPurchaseOrderStatus without authentication. Request details: path %s, ip %s',
 					req.path,
@@ -370,7 +371,7 @@ export class WalletController extends BaseController {
 					.status(401)
 					.json({ error: 'User not authenticated', code: WalletErrorCodes.UNAUTHORIZED });
 			}
-			const userId = (req.user as { id: number }).id; // Explicit cast after check
+			const userId = (userService.getUserFromRequest(req) as { id: number }).id; // Explicit cast after check
 			const orderId = parseInt(req.params.orderId);
 
 			if (isNaN(orderId)) {
@@ -426,7 +427,7 @@ export class WalletController extends BaseController {
 	 */
 	async transferDgt(req: Request, res: Response): Promise<void> {
 		try {
-			if (!req.user) {
+			if (!userService.getUserFromRequest(req)) {
 				logger.warn(
 					'Attempt to access transferDgt without authentication. Request details: path %s, ip %s',
 					req.path,
@@ -436,7 +437,7 @@ export class WalletController extends BaseController {
 					.status(401)
 					.json({ error: 'User not authenticated', code: WalletErrorCodes.UNAUTHORIZED });
 			}
-			const userId = (req.user as { id: number }).id; // Explicit cast after check
+			const userId = (userService.getUserFromRequest(req) as { id: number }).id; // Explicit cast after check
 			const { toUserId, amount, reason } = req.body;
 
 			if (!toUserId || !amount) {
@@ -612,8 +613,9 @@ export class WalletController extends BaseController {
 
 	async createPurchaseOrder(req: Request, res: Response): Promise<void> {
 		try {
-			if (!req.user) return res.status(401).json({ error: 'Unauthenticated' });
-			const userId = (req.user as { id: number }).id;
+			if (!userService.getUserFromRequest(req))
+				return res.status(401).json({ error: 'Unauthenticated' });
+			const userId = (userService.getUserFromRequest(req) as { id: number }).id;
 			const { packageId, cryptoCurrency = 'USDT' } = req.body;
 
 			if (!packageId) return res.status(400).json({ error: 'packageId is required' });

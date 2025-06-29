@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { referralsService } from './referrals.service';
 
@@ -11,7 +12,7 @@ export class ReferralsController {
 	async createReferralSource(req: Request, res: Response) {
 		try {
 			const { name, slug, metadata } = req.body;
-			const createdBy = req.user?.id;
+			const createdBy = userService.getUserFromRequest(req)?.id;
 
 			const source = await referralsService.createReferralSource(
 				name,

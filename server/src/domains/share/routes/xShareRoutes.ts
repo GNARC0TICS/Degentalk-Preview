@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { shareToX } from '../services/xShareService';
 import { isAuthenticated } from '../../auth/auth.routes';
@@ -17,7 +18,7 @@ router.post('/post', isAuthenticated, async (req, res, next) => {
 		}
 
 		const result = await shareToX({
-			userId: (req.user as any).id,
+			userId: (userService.getUserFromRequest(req) as any).id,
 			text,
 			contentType,
 			contentId
@@ -34,7 +35,7 @@ router.post('/referral', isAuthenticated, async (req, res, next) => {
 		const { text } = req.body as { text: string };
 		if (!text) return res.status(400).json({ message: 'Missing text' });
 		const result = await shareToX({
-			userId: (req.user as any).id,
+			userId: (userService.getUserFromRequest(req) as any).id,
 			text,
 			contentType: 'referral'
 		});

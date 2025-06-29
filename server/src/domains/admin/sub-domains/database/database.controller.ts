@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Database Admin Controller
  *
@@ -54,7 +55,7 @@ const bulkOperationSchema = z.object({
  */
 export async function getTables(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 
 		const tables = await databaseService.getTables();
 
@@ -83,7 +84,7 @@ export async function getTables(req: Request, res: Response) {
  */
 export async function getTableSchema(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const { table } = req.params;
 
 		if (!table) {
@@ -123,7 +124,7 @@ export async function getTableSchema(req: Request, res: Response) {
  */
 export async function getTableData(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const { table } = req.params;
 		const queryParams = tableQuerySchema.parse(req.query);
 
@@ -166,7 +167,7 @@ export async function getTableData(req: Request, res: Response) {
  */
 export async function updateRow(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const requestData = rowUpdateSchema.parse(req.body);
 
 		// Check table access permissions
@@ -233,7 +234,7 @@ export async function updateRow(req: Request, res: Response) {
  */
 export async function createRow(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const requestData = rowCreateSchema.parse(req.body);
 
 		// Check table access permissions
@@ -295,7 +296,7 @@ export async function createRow(req: Request, res: Response) {
  */
 export async function deleteRow(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const requestData = rowDeleteSchema.parse(req.body);
 
 		// Check table access permissions
@@ -350,7 +351,7 @@ export async function deleteRow(req: Request, res: Response) {
  */
 export async function bulkOperation(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const requestData = bulkOperationSchema.parse(req.body);
 
 		// Check table access permissions
@@ -417,7 +418,7 @@ export async function bulkOperation(req: Request, res: Response) {
  */
 export async function exportTableCSV(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const { table } = req.params;
 
 		if (!table) {
@@ -456,7 +457,7 @@ export async function exportTableCSV(req: Request, res: Response) {
  */
 export async function getTableRelationships(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const { table } = req.params;
 
 		if (!table) {
@@ -496,7 +497,7 @@ export async function getTableRelationships(req: Request, res: Response) {
  */
 export async function getDatabaseStats(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 
 		const stats = await databaseService.getDatabaseStats();
 

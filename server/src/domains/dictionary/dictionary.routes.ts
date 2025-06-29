@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { DictionaryService, DictionaryStatus } from './dictionary.service';
 import {
@@ -51,7 +52,10 @@ router.post(
 	async (req: any, res) => {
 		try {
 			const data = insertDictionaryEntrySchema.parse(req.body);
-			const created = await DictionaryService.create({ ...data, authorId: req.user.id });
+			const created = await DictionaryService.create({
+				...data,
+				authorId: userService.getUserFromRequest(req).id
+			});
 			return res.status(201).json(created);
 		} catch (error) {
 			console.error('Entry submission error', error);
@@ -67,7 +71,11 @@ router.patch('/:id', requireAuth, isAdminOrModerator, async (req: any, res) => {
 		if (!['approved', 'rejected'].includes(status)) {
 			return res.status(400).json({ error: 'Invalid status' });
 		}
-		const updated = await DictionaryService.moderate(Number(req.params.id), status, req.user.id);
+		const updated = await DictionaryService.moderate(
+			Number(req.params.id),
+			status,
+			userService.getUserFromRequest(req).id
+		);
 		return res.json(updated);
 	} catch (error) {
 		console.error('Moderation error', error);
@@ -78,7 +86,10 @@ router.patch('/:id', requireAuth, isAdminOrModerator, async (req: any, res) => {
 // POST /api/dictionary/:id/upvote (toggle)
 router.post('/:id/upvote', requireAuth, async (req: any, res) => {
 	try {
-		const result = await DictionaryService.toggleUpvote(Number(req.params.id), req.user.id);
+		const result = await DictionaryService.toggleUpvote(
+			Number(req.params.id),
+			userService.getUserFromRequest(req).id
+		);
 		return res.json(result);
 	} catch (error) {
 		console.error('Upvote error', error);

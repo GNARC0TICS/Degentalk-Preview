@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Development endpoints for wallet testing
  * These are only available in development mode
@@ -34,7 +35,7 @@ export async function initializeWallet(req: Request, res: Response, next: NextFu
 			return res.status(403).json({ error: 'This endpoint is only available in development mode' });
 		}
 
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
@@ -55,7 +56,7 @@ export async function initializeWallet(req: Request, res: Response, next: NextFu
 	} catch (error) {
 		logger.error('WalletDevController', 'Error initializing wallet', {
 			error: error instanceof Error ? error.message : String(error),
-			userId: req.user?.id
+			userId: userService.getUserFromRequest(req)?.id
 		});
 		next(error);
 	}
@@ -70,7 +71,7 @@ export async function devTopUp(req: Request, res: Response, next: NextFunction) 
 			return res.status(403).json({ error: 'This endpoint is only available in development mode' });
 		}
 
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
@@ -102,7 +103,7 @@ export async function devTopUp(req: Request, res: Response, next: NextFunction) 
 		}
 		logger.error('WalletDevController', 'Error in dev top-up', {
 			error: error instanceof Error ? error.message : String(error),
-			userId: req.user?.id
+			userId: userService.getUserFromRequest(req)?.id
 		});
 		next(error);
 	}
@@ -117,7 +118,7 @@ export async function getDevWalletInfo(req: Request, res: Response, next: NextFu
 			return res.status(403).json({ error: 'This endpoint is only available in development mode' });
 		}
 
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
@@ -134,7 +135,7 @@ export async function getDevWalletInfo(req: Request, res: Response, next: NextFu
 	} catch (error) {
 		logger.error('WalletDevController', 'Error getting dev wallet info', {
 			error: error instanceof Error ? error.message : String(error),
-			userId: req.user?.id
+			userId: userService.getUserFromRequest(req)?.id
 		});
 		next(error);
 	}
@@ -197,7 +198,7 @@ export async function resetWallet(req: Request, res: Response, next: NextFunctio
 			return res.status(403).json({ error: 'This endpoint is disabled for safety' });
 		}
 
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
@@ -212,7 +213,7 @@ export async function resetWallet(req: Request, res: Response, next: NextFunctio
 	} catch (error) {
 		logger.error('WalletDevController', 'Error resetting wallet', {
 			error: error instanceof Error ? error.message : String(error),
-			userId: req.user?.id
+			userId: userService.getUserFromRequest(req)?.id
 		});
 		next(error);
 	}

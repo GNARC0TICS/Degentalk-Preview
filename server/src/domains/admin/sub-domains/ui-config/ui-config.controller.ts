@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Admin UI Configuration Controller
  *
@@ -90,7 +91,7 @@ export class UiConfigController {
 		try {
 			const data = validateRequestBody(req, res, CreateQuoteSchema);
 			if (!data) return;
-			const userId = getUserId(req);
+			const userId = userService.getUserFromRequest(req);
 			const quote = await uiConfigService.createQuote(data, userId);
 
 			// Log admin action
@@ -120,7 +121,7 @@ export class UiConfigController {
 			(req as any).body = { ...req.body, id };
 			const dataUpdate = validateRequestBody(req, res, UpdateQuoteSchema);
 			if (!dataUpdate) return;
-			const userId = getUserId(req);
+			const userId = userService.getUserFromRequest(req);
 			const quote = await uiConfigService.updateQuote(dataUpdate, userId);
 
 			// Log admin action
@@ -221,7 +222,7 @@ export class UiConfigController {
 		try {
 			const data = validateRequestBody(req, res, CreateCollectionSchema);
 			if (!data) return;
-			const userId = getUserId(req);
+			const userId = userService.getUserFromRequest(req);
 			const collection = await uiConfigService.createCollection(data, userId);
 
 			// Log admin action
@@ -257,7 +258,7 @@ export class UiConfigController {
 			(req as any).body = { ...req.body, id };
 			const dataUpdate = validateRequestBody(req, res, UpdateCollectionSchema);
 			if (!dataUpdate) return;
-			const userId = getUserId(req);
+			const userId = userService.getUserFromRequest(req);
 			const collection = await uiConfigService.updateCollection(dataUpdate, userId);
 
 			// Log admin action
@@ -401,7 +402,7 @@ export class UiConfigController {
 		try {
 			const data = validateRequestBody(req, res, ImportQuotesSchema);
 			if (!data) return;
-			const userId = getUserId(req);
+			const userId = userService.getUserFromRequest(req);
 			const result = await uiConfigService.importQuotes(data, userId);
 
 			// Log admin action

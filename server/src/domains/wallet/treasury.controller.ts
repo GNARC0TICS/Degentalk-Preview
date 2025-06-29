@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Treasury Controller
  *
@@ -216,7 +217,7 @@ export class TreasuryController {
 	 */
 	async adjustUserBalance(req: Request, res: Response, next: NextFunction) {
 		try {
-			const adminId = (req.user as { id: number }).id;
+			const adminId = (userService.getUserFromRequest(req) as { id: number }).id;
 			const { userId, amount, reason, type } = adjustBalanceSchema.parse(req.body);
 
 			// Verify user exists
@@ -277,7 +278,7 @@ export class TreasuryController {
 	 */
 	async executeBulkAirdrop(req: Request, res: Response, next: NextFunction) {
 		try {
-			const adminId = (req.user as { id: number }).id;
+			const adminId = (userService.getUserFromRequest(req) as { id: number }).id;
 			const { amount, reason, targetUsers, userIds, minLevel } = bulkAirdropSchema.parse(req.body);
 
 			let targetUserList: { id: number; username: string }[] = [];

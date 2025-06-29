@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Sticker Controller
  *
@@ -84,7 +85,7 @@ export class StickerController {
 
 		return boundary.execute(async () => {
 			const stickerData = createStickerSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -109,7 +110,7 @@ export class StickerController {
 		return boundary.execute(async () => {
 			const { id } = stickerIdSchema.parse(req.params);
 			const stickerData = updateStickerSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -133,7 +134,7 @@ export class StickerController {
 
 		return boundary.execute(async () => {
 			const { id } = stickerIdSchema.parse(req.params);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -157,7 +158,7 @@ export class StickerController {
 
 		return boundary.execute(async () => {
 			const data = bulkDeleteStickersSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -219,7 +220,7 @@ export class StickerController {
 
 		return boundary.execute(async () => {
 			const packData = createStickerPackSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -244,7 +245,7 @@ export class StickerController {
 		return boundary.execute(async () => {
 			const { id } = packIdSchema.parse(req.params);
 			const packData = updateStickerPackSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -268,7 +269,7 @@ export class StickerController {
 
 		return boundary.execute(async () => {
 			const { id } = packIdSchema.parse(req.params);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -311,7 +312,7 @@ export class StickerController {
 
 		return boundary.execute(async () => {
 			const usageData = trackStickerUsageSchema.parse(req.body);
-			const userId = req.user?.id;
+			const userId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId) {
 				throw new AdminError('User ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -357,7 +358,7 @@ export class StickerController {
 			});
 
 			const uploadData = uploadSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -415,7 +416,7 @@ export class StickerController {
 			});
 
 			const confirmData = confirmSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -499,7 +500,7 @@ export class StickerController {
 			});
 
 			const deleteData = deleteSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);

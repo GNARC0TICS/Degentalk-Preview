@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { logger, LogLevel } from '../../core/logger';
 import { featureGatesService } from './feature-gates.service';
@@ -46,7 +47,7 @@ export const checkFeatureAccess = async (req: Request, res: Response, next: Next
 	try {
 		const { featureId } = req.params;
 		// @ts-ignore - req.user is added by auth middleware
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
 			return res.status(401).json({
@@ -75,7 +76,7 @@ export const checkFeatureAccess = async (req: Request, res: Response, next: Next
 export const checkAllFeatureAccess = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// @ts-ignore - req.user is added by auth middleware
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
 			return res.status(401).json({ message: 'Authentication required' });

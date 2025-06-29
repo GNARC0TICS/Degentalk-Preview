@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { adminCacheService } from '../../shared/admin-cache.service';
@@ -28,7 +29,7 @@ export class AdminCacheController {
 			new AdminOperationBoundary({
 				operation: 'GET_CACHE_METRICS',
 				entityType: 'cache',
-				userId: (req.user as any)?.id,
+				userId: (userService.getUserFromRequest(req) as any)?.id,
 				timestamp: new Date()
 			});
 
@@ -70,7 +71,7 @@ export class AdminCacheController {
 			new AdminOperationBoundary({
 				operation: 'CLEAR_CACHE',
 				entityType: 'cache',
-				userId: (req.user as any)?.id,
+				userId: (userService.getUserFromRequest(req) as any)?.id,
 				timestamp: new Date()
 			});
 
@@ -127,7 +128,7 @@ export class AdminCacheController {
 			new AdminOperationBoundary({
 				operation: 'WARMUP_CACHE',
 				entityType: 'cache',
-				userId: (req.user as any)?.id,
+				userId: (userService.getUserFromRequest(req) as any)?.id,
 				timestamp: new Date()
 			});
 
@@ -167,7 +168,7 @@ export class AdminCacheController {
 			new AdminOperationBoundary({
 				operation: 'GET_CACHE_ANALYTICS',
 				entityType: 'cache',
-				userId: (req.user as any)?.id,
+				userId: (userService.getUserFromRequest(req) as any)?.id,
 				timestamp: new Date()
 			});
 

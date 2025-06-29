@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Email Template Controller
  *
@@ -109,7 +110,7 @@ export class EmailTemplateController {
 
 		return boundary.execute(async () => {
 			const templateData = emailTemplateSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -135,7 +136,7 @@ export class EmailTemplateController {
 			const templateId = Number(id);
 			const updateData = emailTemplateSchema.partial().parse(req.body);
 			const { changeDescription } = req.body;
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -168,7 +169,7 @@ export class EmailTemplateController {
 		return boundary.execute(async () => {
 			const { id } = req.params;
 			const templateId = Number(id);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -243,7 +244,7 @@ export class EmailTemplateController {
 			const { id, versionId } = req.params;
 			const templateId = Number(id);
 			const versionNumber = Number(versionId);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);

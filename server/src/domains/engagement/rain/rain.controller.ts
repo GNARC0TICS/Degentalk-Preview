@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Rain Controller
  *
@@ -26,7 +27,7 @@ export class RainController {
 	 * Process a rain distribution
 	 */
 	processRain = asyncHandler(async (req: Request, res: Response) => {
-		const fromUserId = req.user.id;
+		const fromUserId = userService.getUserFromRequest(req).id;
 		const { amount, eligibleUserCount, channel, message } = req.body;
 
 		// Validate input using zod
@@ -89,7 +90,7 @@ export class RainController {
 	 * Update rain settings (admin only)
 	 */
 	updateRainSettings = asyncHandler(async (req: Request, res: Response) => {
-		const userId = req.user.id;
+		const userId = userService.getUserFromRequest(req).id;
 		const {
 			minAmount,
 			maxAmount,

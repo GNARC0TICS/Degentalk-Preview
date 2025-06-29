@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { xpAdminService } from './xp.service';
 import { logger } from '../../../../core/logger';
@@ -245,7 +246,7 @@ export const deleteTitle = async (req: Request, res: Response, next: NextFunctio
 export const adjustUserXp = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const { userId, amount, adjustmentType, reason } = req.body;
-		const adminId = req.user?.id;
+		const adminId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId || !amount || !adjustmentType) {
 			return res.status(400).json({
@@ -349,7 +350,7 @@ export const testXpActionAward = async (req: Request, res: Response, next: NextF
 		}
 
 		logger.info('XP_ADMIN_CONTROLLER', 'Admin testing XP action award', {
-			adminId: req.user?.id,
+			adminId: userService.getUserFromRequest(req)?.id,
 			userId,
 			action,
 			metadata

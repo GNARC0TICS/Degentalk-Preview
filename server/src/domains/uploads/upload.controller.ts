@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 // Use type-only imports for types
 import {
@@ -30,7 +31,7 @@ export async function createPresignedUploadUrlController(req: AuthenticatedReque
 		const { fileName, fileType, fileSize, uploadType } = req.body;
 
 		// Ensure user is authenticated and userId is available
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
 			return res.status(401).json({
 				error: 'Unauthorized: User ID missing. You gotta be logged in to flex that new PFP, anon.'
@@ -89,7 +90,7 @@ export async function confirmUploadController(
 ) {
 	try {
 		const { relativePath, uploadType } = req.body; // Changed from supabasePath
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
 			return res.status(401).json({

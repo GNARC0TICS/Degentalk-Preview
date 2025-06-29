@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Enhanced Shoutbox Routes
  *
@@ -105,7 +106,7 @@ router.get('/config', isAdmin, async (req: Request, res: Response) => {
 router.patch('/config', isAdmin, async (req: Request, res: Response) => {
 	try {
 		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 
 		const updatedConfig = await ShoutboxService.updateConfig(
 			{
@@ -131,7 +132,7 @@ router.patch('/config', isAdmin, async (req: Request, res: Response) => {
  */
 router.get('/rooms', isAuthenticatedOptional, async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const includeStats = req.query.includeStats === 'true';
 
 		if (includeStats) {
@@ -158,7 +159,7 @@ router.get('/rooms', isAuthenticatedOptional, async (req: Request, res: Response
  */
 router.post('/rooms', isAdmin, async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const roomData = createRoomSchema.parse({
 			...req.body,
 			createdBy: userId
@@ -190,7 +191,7 @@ router.post('/rooms', isAdmin, async (req: Request, res: Response) => {
 router.patch('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => {
 	try {
 		const roomId = parseInt(req.params.roomId);
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 
 		if (isNaN(roomId)) {
 			return res.status(400).json({ error: 'Invalid room ID' });
@@ -215,7 +216,7 @@ router.patch('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => {
 router.delete('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => {
 	try {
 		const roomId = parseInt(req.params.roomId);
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 
 		if (isNaN(roomId)) {
 			return res.status(400).json({ error: 'Invalid room ID' });
@@ -263,7 +264,7 @@ router.patch('/rooms/reorder', isAdmin, async (req: Request, res: Response) => {
  */
 router.get('/messages', isAuthenticatedOptional, async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : null;
 		const limit = Math.min(parseInt(req.query.limit as string) || 50, 100);
 		const before = req.query.before ? parseInt(req.query.before as string) : null;
@@ -366,7 +367,7 @@ router.get('/messages', isAuthenticatedOptional, async (req: Request, res: Respo
 // Dynamic rate-limiter middleware that picks limiter based on user role/level
 async function dynamicRateLimiter(req: Request, res: Response, next: Function) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		if (!userId) return res.status(401).json({ error: 'Unauthorized' });
 
 		const user = await db.query.users.findFirst({
@@ -410,7 +411,7 @@ router.post(
 	dynamicRateLimiter,
 	async (req: Request, res: Response) => {
 		try {
-			const userId = getUserId(req);
+			const userId = userService.getUserFromRequest(req);
 			const user = (req as any).currentUser;
 			const messageData = messageSchema.parse(req.body);
 
@@ -492,7 +493,7 @@ router.patch(
 		try {
 			const messageId = parseInt(req.params.messageId);
 			const { isPinned } = req.body;
-			const userId = getUserId(req);
+			const userId = userService.getUserFromRequest(req);
 
 			if (isNaN(messageId) || typeof isPinned !== 'boolean') {
 				return res.status(400).json({ error: 'Invalid parameters' });
@@ -582,7 +583,7 @@ router.patch(
 router.delete('/messages/:messageId', isAdminOrModerator, async (req: Request, res: Response) => {
 	try {
 		const messageId = parseInt(req.params.messageId);
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 
 		if (isNaN(messageId)) {
 			return res.status(400).json({ error: 'Invalid message ID' });
@@ -642,7 +643,7 @@ router.delete('/messages/:messageId', isAdminOrModerator, async (req: Request, r
  */
 router.post('/ignore', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const { targetUserId, roomId, options } = req.body;
 
 		if (!targetUserId || isNaN(parseInt(targetUserId))) {
@@ -665,7 +666,7 @@ router.post('/ignore', isAuthenticated, async (req: Request, res: Response) => {
 
 router.delete('/ignore/:targetUserId', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const targetUserId = parseInt(req.params.targetUserId);
 		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
 

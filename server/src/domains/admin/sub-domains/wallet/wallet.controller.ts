@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { walletConfigService } from '../../../wallet/wallet-config.service';
 import { dgtService } from '../../../wallet/dgt.service';
@@ -76,7 +77,7 @@ export class AdminWalletController {
 	async creditDGTToUser(req: Request, res: Response): Promise<void> {
 		try {
 			const { userId, amount, reason } = req.body;
-			const adminUserId = req.user?.id;
+			const adminUserId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminUserId) {
 				res.status(401).json({
@@ -112,7 +113,7 @@ export class AdminWalletController {
 	async debitDGTFromUser(req: Request, res: Response): Promise<void> {
 		try {
 			const { userId, amount, reason } = req.body;
-			const adminUserId = req.user?.id;
+			const adminUserId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminUserId) {
 				res.status(401).json({

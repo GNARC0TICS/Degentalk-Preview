@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { AdminRolesService } from './roles.service';
 import { createRoleSchema, updateRoleSchema } from './roles.validators';
@@ -19,7 +20,7 @@ export class AdminRolesController {
 			new AdminOperationBoundary({
 				operation: 'LIST_ROLES',
 				entityType: 'role',
-				userId: (req.user as any)?.id,
+				userId: (userService.getUserFromRequest(req) as any)?.id,
 				timestamp: new Date()
 			});
 
@@ -48,7 +49,7 @@ export class AdminRolesController {
 			new AdminOperationBoundary({
 				operation: 'CREATE_ROLE',
 				entityType: 'role',
-				userId: (req.user as any)?.id,
+				userId: (userService.getUserFromRequest(req) as any)?.id,
 				timestamp: new Date()
 			});
 
@@ -81,7 +82,7 @@ export class AdminRolesController {
 				operation: 'UPDATE_ROLE',
 				entityType: 'role',
 				entityId: roleId,
-				userId: (req.user as any)?.id,
+				userId: (userService.getUserFromRequest(req) as any)?.id,
 				timestamp: new Date()
 			});
 
@@ -111,7 +112,7 @@ export class AdminRolesController {
 				operation: 'DELETE_ROLE',
 				entityType: 'role',
 				entityId: roleId,
-				userId: (req.user as any)?.id,
+				userId: (userService.getUserFromRequest(req) as any)?.id,
 				timestamp: new Date()
 			});
 

@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * System Analytics Controller
  *
@@ -226,7 +227,7 @@ export class SystemAnalyticsController {
 
 		return boundary.execute(async () => {
 			const operation = cacheOperationSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);

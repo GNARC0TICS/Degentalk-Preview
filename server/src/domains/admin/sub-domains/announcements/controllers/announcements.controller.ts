@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { insertAnnouncementSchema } from '@schema';
@@ -14,7 +15,11 @@ import {
  * Helper function to get user ID from req.user, handling both id and user_id formats
  */
 function getUserId(req: Request): number {
-	return (req.user as any)?.id || (req.user as any)?.user_id || 0;
+	return (
+		(userService.getUserFromRequest(req) as any)?.id ||
+		(userService.getUserFromRequest(req) as any)?.user_id ||
+		0
+	);
 }
 
 /**
@@ -23,8 +28,8 @@ function getUserId(req: Request): number {
 export async function getAnnouncementsController(req: Request, res: Response) {
 	try {
 		const isTicker = req.query.ticker === 'true';
-		const userRole = req.user?.role || 'guest';
-		const userId = getUserId(req);
+		const userRole = userService.getUserFromRequest(req)?.role || 'guest';
+		const userId = userService.getUserFromRequest(req);
 
 		const announcements = await getActiveAnnouncements({
 			tickerOnly: isTicker,
@@ -81,14 +86,14 @@ export async function getAnnouncementByIdController(req: Request, res: Response)
  */
 export async function createAnnouncementController(req: Request, res: Response) {
 	try {
-		if (!req.user) {
+		if (!userService.getUserFromRequest(req)) {
 			return res.status(401).json({ message: 'Unauthorized' });
 		}
 
 		// Validate input against schema
 		const validatedData = insertAnnouncementSchema.parse({
 			...req.body,
-			createdBy: getUserId(req)
+			createdBy: userService.getUserFromRequest(req)
 		});
 
 		const newAnnouncement = await createAnnouncement(validatedData);

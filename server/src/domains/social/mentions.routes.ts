@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { MentionsService } from './mentions.service';
 import { requireAuth } from '@/middleware/auth';
@@ -38,7 +39,7 @@ const searchUsersSchema = z.object({
 router.get('/', requireAuth, async (req, res) => {
 	try {
 		const { page, limit } = getUserMentionsSchema.parse(req.query);
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 
 		const mentions = await MentionsService.getUserMentions(userId, page, limit);
 		const unreadCount = await MentionsService.getUnreadMentionCount(userId);
@@ -64,7 +65,7 @@ router.get('/', requireAuth, async (req, res) => {
  */
 router.get('/unread-count', requireAuth, async (req, res) => {
 	try {
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const count = await MentionsService.getUnreadMentionCount(userId);
 
 		res.json({ unreadCount: count });
@@ -81,7 +82,7 @@ router.get('/unread-count', requireAuth, async (req, res) => {
 router.post('/mark-read', requireAuth, async (req, res) => {
 	try {
 		const { mentionIds } = markAsReadSchema.parse(req.body);
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 
 		await MentionsService.markMentionsAsRead(userId, mentionIds);
 
@@ -98,7 +99,7 @@ router.post('/mark-read', requireAuth, async (req, res) => {
  */
 router.get('/preferences', requireAuth, async (req, res) => {
 	try {
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const preferences = await MentionsService.getUserMentionPreferences(userId);
 
 		res.json(preferences);
@@ -115,7 +116,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 router.put('/preferences', requireAuth, async (req, res) => {
 	try {
 		const preferences = updatePreferencesSchema.parse(req.body);
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 
 		const updatedPrefs = await MentionsService.updateUserMentionPreferences(userId, preferences);
 

@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * XP Path Routes
  * Handles API endpoints for the XP path specialization system
@@ -58,7 +59,7 @@ export function registerPathRoutes(router: Router) {
 	 */
 	router.get('/paths/user/me', isAuthenticated, async (req: Request, res: Response) => {
 		try {
-			const userId = getUserId(req);
+			const userId = userService.getUserFromRequest(req);
 			const userPaths = await PathService.getUserPaths(userId);
 			res.json(userPaths);
 		} catch (error) {
@@ -74,7 +75,7 @@ export function registerPathRoutes(router: Router) {
 	 */
 	router.get('/paths/user/me/primary', isAuthenticated, async (req: Request, res: Response) => {
 		try {
-			const userId = getUserId(req);
+			const userId = userService.getUserFromRequest(req);
 			const primaryPath = await PathService.getUserPrimaryPath(userId);
 
 			if (!primaryPath) {
@@ -98,7 +99,7 @@ export function registerPathRoutes(router: Router) {
 		isAuthenticated,
 		async (req: Request, res: Response) => {
 			try {
-				const userId = getUserId(req);
+				const userId = userService.getUserFromRequest(req);
 				const pathId = req.params.pathId;
 
 				// Check if path exists

@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { createHash, randomBytes } from 'crypto';
@@ -189,7 +190,7 @@ export function getCurrentUser(req: Request, res: Response) {
 	if (!req.isAuthenticated()) return res.sendStatus(401);
 
 	// Remove password from response
-	const userResponse = { ...(req.user as any) };
+	const userResponse = { ...(userService.getUserFromRequest(req) as any) };
 	delete userResponse.password;
 
 	res.json(userResponse);

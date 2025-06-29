@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { logger } from '@server/src/core/logger';
 import { walletService } from './wallet.service';
@@ -18,14 +19,18 @@ export class WalletTestController {
 	async testCreateWallet(req: Request, res: Response) {
 		try {
 			// Security: Only allow in dev mode or for admins
-			if (!isDevMode() && (!req.user || (req.user as any).role !== 'admin')) {
+			if (
+				!isDevMode() &&
+				(!userService.getUserFromRequest(req) ||
+					(userService.getUserFromRequest(req) as any).role !== 'admin')
+			) {
 				return res.status(403).json({
 					error: 'Wallet testing only available in development mode or for admins'
 				});
 			}
 
 			const { userId, testMode = true } = req.body;
-			const targetUserId = userId || (req.user as any)?.id;
+			const targetUserId = userId || (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!targetUserId) {
 				return res.status(400).json({ error: 'User ID required' });
@@ -34,7 +39,7 @@ export class WalletTestController {
 			logger.info('WalletTestController', 'Testing wallet creation', {
 				targetUserId,
 				testMode,
-				requestingUser: (req.user as any)?.id
+				requestingUser: (userService.getUserFromRequest(req) as any)?.id
 			});
 
 			// 1. Initialize DGT wallet
@@ -190,7 +195,7 @@ export class WalletTestController {
 				currency = 'USDT'
 			} = req.body;
 
-			const targetUserId = userId || (req.user as any)?.id;
+			const targetUserId = userId || (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!targetUserId) {
 				return res.status(400).json({ error: 'User ID required for webhook simulation' });
@@ -247,15 +252,16 @@ export class WalletTestController {
 			// Security: Only allow in dev mode or for the user themselves/admins
 			if (
 				!isDevMode() &&
-				(!req.user ||
-					((req.user as any).role !== 'admin' && (req.user as any).id !== req.params.userId))
+				(!userService.getUserFromRequest(req) ||
+					((userService.getUserFromRequest(req) as any).role !== 'admin' &&
+						(userService.getUserFromRequest(req) as any).id !== req.params.userId))
 			) {
 				return res.status(403).json({
 					error: 'Debug info access denied'
 				});
 			}
 
-			const targetUserId = req.params.userId || (req.user as any)?.id;
+			const targetUserId = req.params.userId || (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!targetUserId) {
 				return res.status(400).json({ error: 'User ID required' });

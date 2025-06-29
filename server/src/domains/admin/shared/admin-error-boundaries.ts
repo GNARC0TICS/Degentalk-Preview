@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Admin Error Boundaries and Typed Error Handling
  *
@@ -377,7 +378,7 @@ export function adminErrorBoundaryMiddleware(req: Request, res: Response, next: 
 			operation,
 			entityType,
 			entityId,
-			userId: (req.user as any)?.id,
+			userId: (userService.getUserFromRequest(req) as any)?.id,
 			timestamp: new Date(),
 			requestId: (req.headers['x-request-id'] as string) || generateRequestId(),
 			metadata: {

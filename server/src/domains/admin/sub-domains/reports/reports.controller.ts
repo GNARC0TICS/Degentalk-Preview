@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Admin Reports Controller
  *
@@ -58,7 +59,7 @@ export class AdminReportsController {
 
 			const body = validateRequestBody(req, res, ReportActionSchema);
 			if (!body) return;
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			const updatedReport = await adminReportsService.updateReportStatus(
 				reportId,
 				'resolved',
@@ -88,7 +89,7 @@ export class AdminReportsController {
 
 			const body = validateRequestBody(req, res, ReportActionSchema);
 			if (!body) return;
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			const updatedReport = await adminReportsService.updateReportStatus(
 				reportId,
 				'dismissed',
@@ -118,7 +119,7 @@ export class AdminReportsController {
 
 			const body = validateRequestBody(req, res, BanUserSchema);
 			if (!body) return;
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			const banResult = await adminReportsService.banUser(userIdToBan, body, adminId);
 
 			await adminController.logAction(req, 'BAN_USER', 'user', userIdToBan.toString(), {
@@ -156,7 +157,7 @@ export class AdminReportsController {
 
 			const body = validateRequestBody(req, res, DeleteContentSchema);
 			if (!body) return;
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			const deleteResult = await adminReportsService.deleteContent(
 				contentType,
 				contentId,

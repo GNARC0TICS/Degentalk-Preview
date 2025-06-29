@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { SocialActionsService } from './social-actions.service';
 import { handleControllerError } from '../../lib/error-handler';
@@ -28,7 +29,7 @@ export class SocialActionsController {
 	 */
 	static async toggleFollow(req: Request, res: Response) {
 		try {
-			if (!req.user?.id) {
+			if (!userService.getUserFromRequest(req)?.id) {
 				return res.status(401).json({
 					success: false,
 					error: 'Authentication required'
@@ -37,7 +38,10 @@ export class SocialActionsController {
 
 			const { targetUserId } = FollowUserSchema.parse(req.body);
 
-			const result = await SocialActionsService.toggleFollow(req.user.id, targetUserId);
+			const result = await SocialActionsService.toggleFollow(
+				userService.getUserFromRequest(req).id,
+				targetUserId
+			);
 
 			const statusCode = result.success ? 200 : 400;
 
@@ -61,7 +65,7 @@ export class SocialActionsController {
 	 */
 	static async manageFriendRequest(req: Request, res: Response) {
 		try {
-			if (!req.user?.id) {
+			if (!userService.getUserFromRequest(req)?.id) {
 				return res.status(401).json({
 					success: false,
 					error: 'Authentication required'
@@ -71,7 +75,7 @@ export class SocialActionsController {
 			const { targetUserId, action } = FriendRequestSchema.parse(req.body);
 
 			const result = await SocialActionsService.manageFriendRequest(
-				req.user.id,
+				userService.getUserFromRequest(req).id,
 				targetUserId,
 				action
 			);
@@ -98,7 +102,7 @@ export class SocialActionsController {
 	 */
 	static async toggleBlock(req: Request, res: Response) {
 		try {
-			if (!req.user?.id) {
+			if (!userService.getUserFromRequest(req)?.id) {
 				return res.status(401).json({
 					success: false,
 					error: 'Authentication required'
@@ -107,7 +111,10 @@ export class SocialActionsController {
 
 			const { targetUserId } = BlockUserSchema.parse(req.body);
 
-			const result = await SocialActionsService.toggleBlock(req.user.id, targetUserId);
+			const result = await SocialActionsService.toggleBlock(
+				userService.getUserFromRequest(req).id,
+				targetUserId
+			);
 
 			const statusCode = result.success ? 200 : 400;
 
@@ -131,7 +138,7 @@ export class SocialActionsController {
 	 */
 	static async getRelationshipStatus(req: Request, res: Response) {
 		try {
-			if (!req.user?.id) {
+			if (!userService.getUserFromRequest(req)?.id) {
 				return res.status(401).json({
 					success: false,
 					error: 'Authentication required'
@@ -140,7 +147,10 @@ export class SocialActionsController {
 
 			const { targetUserId } = RelationshipStatusSchema.parse(req.params);
 
-			const status = await SocialActionsService.getRelationshipStatus(req.user.id, targetUserId);
+			const status = await SocialActionsService.getRelationshipStatus(
+				userService.getUserFromRequest(req).id,
+				targetUserId
+			);
 
 			res.json({
 				success: true,
@@ -158,7 +168,7 @@ export class SocialActionsController {
 	 */
 	static async getSocialSuggestions(req: Request, res: Response) {
 		try {
-			if (!req.user?.id) {
+			if (!userService.getUserFromRequest(req)?.id) {
 				return res.status(401).json({
 					success: false,
 					error: 'Authentication required'
@@ -171,7 +181,9 @@ export class SocialActionsController {
 			// - Active users in same forums
 			// - Geographic proximity (if available)
 
-			const suggestions = await this.generateSocialSuggestions(req.user.id);
+			const suggestions = await this.generateSocialSuggestions(
+				userService.getUserFromRequest(req).id
+			);
 
 			res.json({
 				success: true,
@@ -192,7 +204,7 @@ export class SocialActionsController {
 	 */
 	static async getPendingFriendRequests(req: Request, res: Response) {
 		try {
-			if (!req.user?.id) {
+			if (!userService.getUserFromRequest(req)?.id) {
 				return res.status(401).json({
 					success: false,
 					error: 'Authentication required'
@@ -200,7 +212,7 @@ export class SocialActionsController {
 			}
 
 			// TODO: Implement pending requests query
-			const pendingRequests = await this.getPendingRequests(req.user.id);
+			const pendingRequests = await this.getPendingRequests(userService.getUserFromRequest(req).id);
 
 			res.json({
 				success: true,

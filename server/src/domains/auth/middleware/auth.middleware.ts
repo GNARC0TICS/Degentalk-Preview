@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { env, isDevelopment, isProduction } from '@server/src/core/config/environment';
 import { createMockUser } from '../services/auth.service';
@@ -7,8 +8,8 @@ import { logger } from '@server/src/core/logger';
  * Determines if a user has a specific role
  */
 export function hasRole(req: Request, role: string): boolean {
-	if (!req.user) return false;
-	return (req.user as any).role === role;
+	if (!userService.getUserFromRequest(req)) return false;
+	return (userService.getUserFromRequest(req) as any).role === role;
 }
 
 /**
@@ -116,8 +117,8 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
 	if (isProduction()) {
 		logger.warn('AuthMiddleware', 'PRODUCTION: Admin access denied', {
 			path: req.path,
-			userId: (req.user as any)?.id,
-			userRole: (req.user as any)?.role,
+			userId: (userService.getUserFromRequest(req) as any)?.id,
+			userRole: (userService.getUserFromRequest(req) as any)?.role,
 			ip: req.ip
 		});
 		return res.status(403).json({

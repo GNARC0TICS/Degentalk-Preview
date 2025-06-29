@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Admin Treasury Controller
  *
@@ -38,7 +39,7 @@ export class AdminTreasuryController {
 		try {
 			const data = validateRequestBody(req, res, TreasuryDepositSchema);
 			if (!data) return;
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			const result = await adminTreasuryService.sendFromTreasury(data, adminId);
 
 			await adminController.logAction(req, 'TREASURY_SEND', 'treasury', data.userId.toString(), {
@@ -61,7 +62,7 @@ export class AdminTreasuryController {
 		try {
 			const data = validateRequestBody(req, res, TreasuryWithdrawalSchema);
 			if (!data) return;
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			const result = await adminTreasuryService.recoverToTreasury(data, adminId);
 
 			await adminController.logAction(req, 'TREASURY_RECOVER', 'treasury', data.userId.toString(), {
@@ -84,7 +85,7 @@ export class AdminTreasuryController {
 		try {
 			const dataAirdrop = validateRequestBody(req, res, MassAirdropSchema);
 			if (!dataAirdrop) return;
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			const result = await adminTreasuryService.massAirdrop(dataAirdrop, adminId);
 
 			await adminController.logAction(req, 'TREASURY_MASS_AIRDROP', 'treasury', 'multiple_users', {
@@ -123,7 +124,7 @@ export class AdminTreasuryController {
 		try {
 			const dataSettings = validateRequestBody(req, res, TreasurySettingsUpdateSchema);
 			if (!dataSettings) return;
-			const adminId = getUserId(req);
+			const adminId = userService.getUserFromRequest(req);
 			const result = await adminTreasuryService.updateDgtEconomyParameters(dataSettings, adminId);
 
 			await adminController.logAction(

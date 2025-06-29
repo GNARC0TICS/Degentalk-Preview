@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Admin Subscription Controller
  *
@@ -266,7 +267,7 @@ export class AdminSubscriptionController {
 		try {
 			const { id } = req.params;
 			const { reason } = req.body;
-			const adminUserId = req.user?.id;
+			const adminUserId = userService.getUserFromRequest(req)?.id;
 
 			const subscriptionId = parseInt(id);
 			if (isNaN(subscriptionId)) {
@@ -330,7 +331,7 @@ export class AdminSubscriptionController {
 	async grantSubscription(req: Request, res: Response): Promise<void> {
 		try {
 			const { userId, type, reason } = req.body;
-			const adminUserId = req.user?.id;
+			const adminUserId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId || !type || !['vip_pass', 'degen_pass'].includes(type)) {
 				res.status(400).json({

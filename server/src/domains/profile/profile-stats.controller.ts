@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { ProfileStatsService } from './profile-stats.service';
 import { handleControllerError } from '../../lib/error-handler';
@@ -32,8 +33,8 @@ export class ProfileStatsController {
 			const { username } = GetProfileStatsSchema.parse(req.params);
 
 			// Optional: Track profile view for analytics
-			if (req.user?.id) {
-				await ProfileStatsService.updateLastSeen(req.user.id);
+			if (userService.getUserFromRequest(req)?.id) {
+				await ProfileStatsService.updateLastSeen(userService.getUserFromRequest(req).id);
 			}
 
 			const stats = await ProfileStatsService.getExtendedProfileStats(username);
@@ -46,7 +47,10 @@ export class ProfileStatsController {
 			}
 
 			// Remove sensitive data if not own profile
-			const sanitizedStats = this.sanitizeProfileStats(stats, req.user?.id === stats.id);
+			const sanitizedStats = this.sanitizeProfileStats(
+				stats,
+				userService.getUserFromRequest(req)?.id === stats.id
+			);
 
 			res.json({
 				success: true,
@@ -70,7 +74,7 @@ export class ProfileStatsController {
 			// Store engagement analytics (implement based on your analytics system)
 			await this.storeEngagementAnalytics({
 				...engagementData,
-				viewerId: req.user?.id || null,
+				viewerId: userService.getUserFromRequest(req)?.id || null,
 				userAgent: req.headers['user-agent'] || null,
 				ip: req.ip,
 				timestamp: new Date()

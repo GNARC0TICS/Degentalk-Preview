@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Bulk Operations Controller
  *
@@ -48,7 +49,7 @@ const upload = multer({
  */
 export async function importCSV(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 
 		// Handle file upload
 		upload(req, res, async (uploadError) => {
@@ -221,7 +222,7 @@ export async function importCSV(req: Request, res: Response) {
  */
 export async function getImportTemplate(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const { table } = req.params;
 
 		if (!table) {
@@ -295,7 +296,7 @@ export async function getImportTemplate(req: Request, res: Response) {
  */
 export async function validateImportData(req: Request, res: Response) {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const { table, data } = validateDataSchema.parse(req.body);
 
 		// Check table access

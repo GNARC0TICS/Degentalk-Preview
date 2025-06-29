@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Subscription Controller
  *
@@ -16,7 +17,7 @@ export class SubscriptionController {
 	async purchaseSubscription(req: Request, res: Response): Promise<void> {
 		try {
 			const { type } = req.body;
-			const userId = req.user?.id;
+			const userId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId) {
 				res.status(401).json({
@@ -61,7 +62,7 @@ export class SubscriptionController {
 	 */
 	async getCurrentSubscription(req: Request, res: Response): Promise<void> {
 		try {
-			const userId = req.user?.id;
+			const userId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId) {
 				res.status(401).json({
@@ -95,7 +96,7 @@ export class SubscriptionController {
 	 */
 	async getSubscriptionHistory(req: Request, res: Response): Promise<void> {
 		try {
-			const userId = req.user?.id;
+			const userId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId) {
 				res.status(401).json({
@@ -130,7 +131,7 @@ export class SubscriptionController {
 	async cancelSubscription(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const userId = req.user?.id;
+			const userId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId) {
 				res.status(401).json({
@@ -179,7 +180,7 @@ export class SubscriptionController {
 	 */
 	async getCosmeticDrops(req: Request, res: Response): Promise<void> {
 		try {
-			const userId = req.user?.id;
+			const userId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId) {
 				res.status(401).json({
@@ -215,7 +216,7 @@ export class SubscriptionController {
 	async checkBenefit(req: Request, res: Response): Promise<void> {
 		try {
 			const { benefitKey } = req.params;
-			const userId = req.user?.id;
+			const userId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId) {
 				res.status(401).json({
@@ -311,8 +312,8 @@ export class SubscriptionController {
 	 */
 	async processMonthlyCosmetics(req: Request, res: Response): Promise<void> {
 		try {
-			const userId = req.user?.id;
-			const userRole = req.user?.role;
+			const userId = userService.getUserFromRequest(req)?.id;
+			const userRole = userService.getUserFromRequest(req)?.role;
 
 			if (!userId || userRole !== 'admin') {
 				res.status(403).json({

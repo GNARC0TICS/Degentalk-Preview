@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Gamification Admin Controller
  *
@@ -401,7 +402,7 @@ export class GamificationAdminController {
 				userId,
 				resetType,
 				reason,
-				adminId: req.user?.id
+				adminId: userService.getUserFromRequest(req)?.id
 			});
 
 			res.json({

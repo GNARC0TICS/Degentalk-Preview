@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { walletTestController } from './wallet.test.controller';
 import { isAuthenticated, isAuthenticatedOptional } from '../auth/middleware/auth.middleware';
@@ -14,7 +15,7 @@ const router = Router();
 
 // Middleware to ensure dev mode for most test routes
 const ensureDevMode = (req: any, res: any, next: any) => {
-	if (!isDevMode() && req.user?.role !== 'admin') {
+	if (!isDevMode() && userService.getUserFromRequest(req)?.role !== 'admin') {
 		return res.status(403).json({
 			error: 'Test endpoints only available in development mode or for admins'
 		});

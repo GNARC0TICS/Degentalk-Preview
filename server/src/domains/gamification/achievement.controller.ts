@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Achievement API Controller
  *
@@ -151,7 +152,7 @@ export class AchievementController {
 	 */
 	async getMyAchievements(req: Request, res: Response) {
 		try {
-			const userId = req.user?.id;
+			const userId = userService.getUserFromRequest(req)?.id;
 			if (!userId) {
 				throw new AppError('Authentication required', 401);
 			}
@@ -234,7 +235,7 @@ export class AchievementController {
 	 */
 	async getMyProgress(req: Request, res: Response) {
 		try {
-			const userId = req.user?.id;
+			const userId = userService.getUserFromRequest(req)?.id;
 			if (!userId) {
 				throw new AppError('Authentication required', 401);
 			}

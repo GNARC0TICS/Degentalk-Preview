@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { emojiService } from './emojis.service';
 import {
@@ -18,7 +19,7 @@ import { AdminError, AdminErrorCodes } from '../../admin.errors';
  * Helper function to get user ID from request
  */
 function getUserId(req: Request): number | undefined {
-	return (req.user as any)?.id;
+	return (userService.getUserFromRequest(req) as any)?.id;
 }
 
 /**
@@ -127,7 +128,7 @@ export const createEmoji = async (req: Request, res: Response) => {
 		if (!data) return;
 		const emojiData = {
 			...data,
-			createdBy: getUserId(req)
+			createdBy: userService.getUserFromRequest(req)
 		};
 
 		const newEmoji = await emojiService.create(emojiData);

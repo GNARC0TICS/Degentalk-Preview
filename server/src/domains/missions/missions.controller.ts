@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { logger } from '../../core/logger';
 import { MissionsService } from './missions.service';
@@ -23,9 +24,9 @@ export const getAllMissions = async (req: Request, res: Response, next: NextFunc
 export const getActiveMissions = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// @ts-ignore - user is added by auth middleware
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		// @ts-ignore - user is added by auth middleware
-		const userLevel = req.user?.level || 1;
+		const userLevel = userService.getUserFromRequest(req)?.level || 1;
 
 		if (!userId) {
 			return res.status(401).json({ message: 'Authentication required' });
@@ -45,7 +46,7 @@ export const getActiveMissions = async (req: Request, res: Response, next: NextF
 export const getUserMissionProgress = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// @ts-ignore - user is added by auth middleware
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
 			return res.status(401).json({ message: 'Authentication required' });
@@ -134,7 +135,7 @@ export const updateMission = async (req: Request, res: Response, next: NextFunct
 export const claimMissionReward = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// @ts-ignore - user is added by auth middleware
-		const userId = req.user?.id;
+		const userId = userService.getUserFromRequest(req)?.id;
 		const { missionId } = req.params;
 
 		if (!userId) {

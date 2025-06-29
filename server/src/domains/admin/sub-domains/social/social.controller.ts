@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { SocialService } from './social.service';
 import { logger } from '@server/src/core/logger';
@@ -24,7 +25,7 @@ export class SocialController {
 	 */
 	static async updateSocialConfig(req: Request, res: Response, validatedData: any) {
 		try {
-			const adminUserId = req.user!.id;
+			const adminUserId = userService.getUserFromRequest(req)!.id;
 			const updatedConfig = await SocialService.updateSocialConfig(validatedData, adminUserId);
 
 			logger.info('SocialController', 'Social configuration updated', {
@@ -63,7 +64,7 @@ export class SocialController {
 	 */
 	static async resetSocialConfig(req: Request, res: Response) {
 		try {
-			const adminUserId = req.user!.id;
+			const adminUserId = userService.getUserFromRequest(req)!.id;
 			const defaultConfig = await SocialService.resetToDefaults(adminUserId);
 
 			logger.warn('SocialController', 'Social configuration reset to defaults', {
@@ -101,7 +102,7 @@ export class SocialController {
 	 */
 	static async emergencyDisableSocial(req: Request, res: Response) {
 		try {
-			const adminUserId = req.user!.id;
+			const adminUserId = userService.getUserFromRequest(req)!.id;
 			const result = await SocialService.emergencyDisable(adminUserId);
 
 			logger.warn('SocialController', 'Emergency social disable triggered', {

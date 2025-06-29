@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Admin Forum Controller
  *
@@ -240,7 +241,7 @@ export class AdminForumController {
 			const thread = await adminForumService.moderateThread(
 				threadId,
 				dataMod,
-				getUserId(req),
+				userService.getUserFromRequest(req),
 				this.determineModerationType(dataMod)
 			);
 			const moderationType = this.determineModerationType(dataMod);

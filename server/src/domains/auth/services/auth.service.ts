@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
 import { featureFlags, users } from '@schema';
@@ -180,5 +181,7 @@ export function getSessionCookieSettings(): {
  * Get user ID from request object, handling different user object formats
  */
 export function getUserId(req: any): number {
-	return req?.user?.id || req?.user?.user_id || 0;
+	return (
+		userService.getUserFromRequest(req)?.id || userService.getUserFromRequest(req)?.user_id || 0
+	);
 }

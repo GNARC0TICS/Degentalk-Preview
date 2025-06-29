@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { FriendsService } from './friends.service';
 import { requireAuth } from '@/middleware/auth';
@@ -60,7 +61,7 @@ const searchUsersSchema = z.object({
 router.post('/request', requireAuth, async (req, res) => {
 	try {
 		const { userId: addresseeId, message } = sendRequestSchema.parse(req.body);
-		const requesterId = req.user!.id;
+		const requesterId = userService.getUserFromRequest(req)!.id;
 
 		const request = await FriendsService.sendFriendRequest({
 			requesterId,
@@ -112,7 +113,7 @@ router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
 router.delete('/', requireAuth, async (req, res) => {
 	try {
 		const { userId: friendId } = removeFriendSchema.parse(req.body);
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 
 		await FriendsService.removeFriend(userId, friendId);
 
@@ -134,7 +135,7 @@ router.delete('/', requireAuth, async (req, res) => {
 router.get('/', requireAuth, async (req, res) => {
 	try {
 		const { page, limit } = getPaginationSchema.parse(req.query);
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 
 		const friends = await FriendsService.getUserFriends(userId, page, limit);
 
@@ -158,7 +159,7 @@ router.get('/', requireAuth, async (req, res) => {
  */
 router.get('/requests/incoming', requireAuth, async (req, res) => {
 	try {
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const requests = await FriendsService.getIncomingFriendRequests(userId);
 
 		res.json({ requests });
@@ -174,7 +175,7 @@ router.get('/requests/incoming', requireAuth, async (req, res) => {
  */
 router.get('/requests/outgoing', requireAuth, async (req, res) => {
 	try {
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const requests = await FriendsService.getOutgoingFriendRequests(userId);
 
 		res.json({ requests });
@@ -190,7 +191,7 @@ router.get('/requests/outgoing', requireAuth, async (req, res) => {
  */
 router.get('/counts', requireAuth, async (req, res) => {
 	try {
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const counts = await FriendsService.getFriendCounts(userId);
 
 		res.json(counts);
@@ -207,7 +208,7 @@ router.get('/counts', requireAuth, async (req, res) => {
 router.get('/check/:userId', requireAuth, async (req, res) => {
 	try {
 		const friendId = req.params.userId;
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 
 		const areFriends = await FriendsService.areFriends(userId, friendId);
 
@@ -225,7 +226,7 @@ router.get('/check/:userId', requireAuth, async (req, res) => {
 router.get('/mutual/:userId', requireAuth, async (req, res) => {
 	try {
 		const otherUserId = req.params.userId;
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 
 		const mutualFriends = await FriendsService.getMutualFriends(userId, otherUserId);
 
@@ -243,7 +244,7 @@ router.get('/mutual/:userId', requireAuth, async (req, res) => {
 router.get('/search', requireAuth, async (req, res) => {
 	try {
 		const { q, limit } = searchUsersSchema.parse(req.query);
-		const currentUserId = req.user!.id;
+		const currentUserId = userService.getUserFromRequest(req)!.id;
 
 		const users = await FriendsService.searchUsersForFriends(q, currentUserId, limit);
 
@@ -260,7 +261,7 @@ router.get('/search', requireAuth, async (req, res) => {
  */
 router.get('/preferences', requireAuth, async (req, res) => {
 	try {
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const preferences = await FriendsService.getUserFriendPreferences(userId);
 
 		res.json(preferences);
@@ -277,7 +278,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 router.put('/preferences', requireAuth, async (req, res) => {
 	try {
 		const preferences = updatePreferencesSchema.parse(req.body);
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 
 		const updatedPrefs = await FriendsService.updateUserFriendPreferences(userId, preferences);
 
@@ -295,7 +296,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
 router.put('/:userId/permissions', requireAuth, async (req, res) => {
 	try {
 		const friendId = req.params.userId;
-		const userId = req.user!.id;
+		const userId = userService.getUserFromRequest(req)!.id;
 		const permissions = updatePermissionsSchema.parse(req.body);
 
 		const result = await FriendsService.updateFriendshipPermissions(userId, friendId, permissions);
@@ -318,7 +319,7 @@ router.put('/:userId/permissions', requireAuth, async (req, res) => {
 router.get('/whisper-permission/:userId', requireAuth, async (req, res) => {
 	try {
 		const recipientId = req.params.userId;
-		const senderId = req.user!.id;
+		const senderId = userService.getUserFromRequest(req)!.id;
 
 		const canSendWhisper = await FriendsService.canSendWhisper(senderId, recipientId);
 

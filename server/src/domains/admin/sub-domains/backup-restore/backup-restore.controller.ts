@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Backup & Restore Controller
  *
@@ -85,7 +86,7 @@ export class BackupRestoreController {
 
 		return boundary.execute(async () => {
 			const backupData = createBackupSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -109,7 +110,7 @@ export class BackupRestoreController {
 
 		return boundary.execute(async () => {
 			const { id } = backupIdSchema.parse(req.params);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -265,7 +266,7 @@ export class BackupRestoreController {
 
 		return boundary.execute(async () => {
 			const restoreData = createRestoreSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -289,7 +290,7 @@ export class BackupRestoreController {
 
 		return boundary.execute(async () => {
 			const { operationId } = req.params;
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -369,7 +370,7 @@ export class BackupRestoreController {
 
 		return boundary.execute(async () => {
 			const scheduleData = createScheduleSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -394,7 +395,7 @@ export class BackupRestoreController {
 		return boundary.execute(async () => {
 			const { id } = backupIdSchema.parse(req.params);
 			const scheduleData = updateScheduleSchema.parse(req.body);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -418,7 +419,7 @@ export class BackupRestoreController {
 
 		return boundary.execute(async () => {
 			const { id } = backupIdSchema.parse(req.params);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);
@@ -442,7 +443,7 @@ export class BackupRestoreController {
 
 		return boundary.execute(async () => {
 			const { id } = backupIdSchema.parse(req.params);
-			const adminId = req.user?.id;
+			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
 				throw new AdminError('Admin ID required', 401, AdminErrorCodes.UNAUTHORIZED);

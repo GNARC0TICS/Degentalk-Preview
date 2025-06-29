@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Shoutbox Routes
  *
@@ -91,13 +92,13 @@ const router = Router();
 // Get available chat rooms
 router.get('/rooms', async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
-		const isAdminOrMod = req.user
+		const userId = userService.getUserFromRequest(req);
+		const isAdminOrMod = userService.getUserFromRequest(req)
 			? await canUser(
 					{
-						id: (req.user as any).id,
-						primaryRoleId: (req.user as any).primaryRoleId,
-						secondaryRoleIds: (req.user as any).secondaryRoleIds
+						id: (userService.getUserFromRequest(req) as any).id,
+						primaryRoleId: (userService.getUserFromRequest(req) as any).primaryRoleId,
+						secondaryRoleIds: (userService.getUserFromRequest(req) as any).secondaryRoleIds
 					},
 					'canModerateChat'
 				)
@@ -226,7 +227,7 @@ router.delete('/messages/:id', isAdminOrModerator, async (req: Request, res: Res
 			.returning();
 
 		// Log the moderation action
-		const moderatorId = getUserId(req);
+		const moderatorId = userService.getUserFromRequest(req);
 		logger.info('ShoutboxRoutes', `User ${moderatorId} deleted shoutbox message ${messageId}`, {
 			moderatorId,
 			messageId,
@@ -275,7 +276,7 @@ router.get('/messages', async (req: Request, res: Response) => {
 	try {
 		const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
 		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : null;
-		const currentUserId = getUserId(req);
+		const currentUserId = userService.getUserFromRequest(req);
 
 		// Check if the user has access to the specified room
 		if (roomId && currentUserId) {
@@ -429,7 +430,7 @@ router.get('/messages', async (req: Request, res: Response) => {
 // Post a new shoutbox message - now with room support and WebSocket broadcast
 router.post('/messages', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const userId = getUserId(req);
+		const userId = userService.getUserFromRequest(req);
 		const { roomId } = req.body;
 
 		// Check rate limiting
@@ -540,7 +541,7 @@ router.post('/messages', isAuthenticated, async (req: Request, res: Response) =>
 			});
 		}
 
-		const userIdForLog = getUserId(req); // Ensure userId is available
+		const userIdForLog = userService.getUserFromRequest(req); // Ensure userId is available
 		const roomIdForLog = req.body.roomId; // Get roomId from request body for logging context
 		logger.error('ShoutboxRoutes', 'Error creating shoutbox message', {
 			err: error,
@@ -590,7 +591,7 @@ router.patch('/messages/:id', isAdminOrModerator, async (req: Request, res: Resp
 			.returning();
 
 		// Log the moderation action
-		const moderatorId = getUserId(req);
+		const moderatorId = userService.getUserFromRequest(req);
 		logger.info(
 			'ShoutboxRoutes',
 			`User ${moderatorId} ${isPinned ? 'pinned' : 'unpinned'} shoutbox message ${messageId}`,

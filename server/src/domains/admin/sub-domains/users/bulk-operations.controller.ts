@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { adminUserBulkOperationsService } from './bulk-operations.service';
@@ -33,7 +34,7 @@ export class AdminUserBulkOperationsController {
 		const validatedData = validateRequestBody(req, res, bulkRoleAssignmentSchema);
 		if (!validatedData) return;
 
-		const adminId = (req.user as any)?.id;
+		const adminId = (userService.getUserFromRequest(req) as any)?.id;
 		if (!adminId) {
 			return sendError(res, 'Admin user ID required', 401);
 		}
@@ -83,7 +84,7 @@ export class AdminUserBulkOperationsController {
 		const validatedData = validateRequestBody(req, res, bulkBanSchema);
 		if (!validatedData) return;
 
-		const adminId = (req.user as any)?.id;
+		const adminId = (userService.getUserFromRequest(req) as any)?.id;
 		if (!adminId) {
 			return sendError(res, 'Admin user ID required', 401);
 		}
@@ -133,7 +134,7 @@ export class AdminUserBulkOperationsController {
 		const validatedData = validateRequestBody(req, res, bulkUnbanSchema);
 		if (!validatedData) return;
 
-		const adminId = (req.user as any)?.id;
+		const adminId = (userService.getUserFromRequest(req) as any)?.id;
 		if (!adminId) {
 			return sendError(res, 'Admin user ID required', 401);
 		}
@@ -179,7 +180,7 @@ export class AdminUserBulkOperationsController {
 	 * Get bulk operation history for audit purposes
 	 */
 	async getBulkOperationHistory(req: Request, res: Response) {
-		const adminId = (req.user as any)?.id;
+		const adminId = (userService.getUserFromRequest(req) as any)?.id;
 		if (!adminId) {
 			return sendError(res, 'Admin user ID required', 401);
 		}

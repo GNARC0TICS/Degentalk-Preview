@@ -1,3 +1,4 @@
+import { userService } from '@server/src/core/services/user.service';
 /**
  * Vault Controller
  *
@@ -22,7 +23,7 @@ export class VaultController {
 	 * Lock tokens in the vault
 	 */
 	lockTokens = asyncHandler(async (req: Request, res: Response) => {
-		const userId = (req.user as any)?.id;
+		const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 		if (!userId) {
 			return res.status(401).json({
@@ -84,7 +85,7 @@ export class VaultController {
 	 * Unlock tokens from the vault
 	 */
 	unlockTokens = asyncHandler(async (req: Request, res: Response) => {
-		const userId = (req.user as any)?.id;
+		const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 		if (!userId) {
 			return res.status(401).json({
@@ -144,7 +145,7 @@ export class VaultController {
 	 * Get user's vault locks
 	 */
 	getUserVaultLocks = asyncHandler(async (req: Request, res: Response) => {
-		const userId = (req.user as any)?.id;
+		const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 		if (!userId) {
 			return res.status(401).json({
@@ -176,8 +177,8 @@ export class VaultController {
 	 * Process automatic unlocks (admin/cron only)
 	 */
 	processAutomaticUnlocks = asyncHandler(async (req: Request, res: Response) => {
-		const userId = (req.user as any)?.id;
-		const isAdmin = (req.user as any)?.role === 'admin';
+		const userId = (userService.getUserFromRequest(req) as any)?.id;
+		const isAdmin = (userService.getUserFromRequest(req) as any)?.role === 'admin';
 
 		if (!userId) {
 			return res.status(401).json({
