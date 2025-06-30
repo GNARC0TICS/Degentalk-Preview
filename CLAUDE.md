@@ -465,6 +465,119 @@ Always run `npm run sync:forums` after editing `forumMap.config.ts`
 
 **📖 For detailed migration help, see: `docs/AUTH-MIGRATION-GUIDE.md`**
 
+## 🛡️ Role-Based Access Control System
+
+### 🏗️ Role Hierarchy Architecture
+
+DegenTalk implements a **hierarchical role system** with production-ready route guards and permission checking:
+
+```
+super_admin (100) - Full system access
+    ↓
+admin (80) - Admin panel, user management, mod actions
+    ↓
+moderator (60) - Content moderation, reports
+    ↓
+dev (50) - Developer tools access
+    ↓
+content_mod (40) - Content-specific moderation
+market_mod (40) - Market-specific moderation
+    ↓
+shoutbox_mod (30) - Shoutbox moderation
+    ↓
+user (0) - Basic user access
+```
+
+### 🔧 Core Role Components
+
+| Component                            | Purpose                    | Example Usage                                 |
+| ------------------------------------ | -------------------------- | --------------------------------------------- |
+| `lib/roles.ts`                       | Centralized role utilities | `hasRoleAtLeast(userRole, 'admin')`           |
+| `components/auth/ProtectedRoute.tsx` | Base route protection      | `<ProtectedRoute minRole="admin">`            |
+| `components/auth/RouteGuards.tsx`    | Convenience guards         | `<RequireAdmin><AdminPanel /></RequireAdmin>` |
+| `hooks/useRouteProtection.ts`        | Programmatic checking      | `const { canAccess } = useRequireAdmin()`     |
+
+### 🎯 Usage Patterns
+
+**Component Protection:**
+
+```tsx
+// Basic protection
+<RequireAdmin><AdminDashboard /></RequireAdmin>
+
+// Custom fallback
+<RequireModerator fallback={<AccessDenied />}>
+  <ModerationTools />
+</RequireModerator>
+
+// Exact role matching
+<RequireSuperAdmin><DatabaseConfig /></RequireSuperAdmin>
+```
+
+**Programmatic Checking:**
+
+```tsx
+const { user, isAdmin, canAccessAdminPanel } = useAuth();
+const { canAccess, reason } = useRequireAdmin();
+
+// Conditional rendering
+{
+	isAdmin && <AdminNavButton />;
+}
+
+// Action validation
+if (canAccess) performAdminAction();
+```
+
+**Route-Level Protection:**
+
+```tsx
+// HOC pattern
+const ProtectedAdminPage = withAdmin(AdminUsersPage);
+
+// Direct wrapping
+export default function AdminPage() {
+	return (
+		<RequireAdmin>
+			<AdminContent />
+		</RequireAdmin>
+	);
+}
+```
+
+### 🔒 Security Features
+
+- **Hierarchical Permissions**: Higher roles inherit lower role permissions
+- **Defense in Depth**: Frontend + backend validation required
+- **Error UI**: Clear messaging for access denied scenarios
+- **Audit Logging**: Route access monitoring and analytics
+- **Type Safety**: Full TypeScript support throughout
+
+### 📊 Current Role Distribution
+
+- **super_admin**: Platform architects (database, roles, system settings)
+- **admin**: System administrators (users, economy, shop, forums)
+- **moderator**: Content moderators (threads, posts, reports)
+- **dev**: Developers (API console, component library)
+- **Specialized mods**: Domain-specific moderation (shoutbox, content, market)
+
+### 🚨 Critical Admin Pages
+
+**Super Admin Only:**
+
+- `/admin/database` - Database configuration
+- `/admin/roles` - Role management
+- `/admin/system` - System settings
+
+**Admin Level:**
+
+- `/admin` - Admin dashboard
+- `/admin/users` - User management
+- `/admin/economy` - Economy settings
+- `/admin/shop` - Shop management
+
+**Note**: Real authentication enforced - `cryptoadmin` user has been upgraded to `super_admin` role for full system access.
+
 ## 💳 DGT Wallet System Integration (COMPLETE)
 
 ### Overview

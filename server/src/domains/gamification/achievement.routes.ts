@@ -47,10 +47,19 @@ router.get(
 	achievementController.getAchievementLeaderboard.bind(achievementController)
 );
 
+// Authenticated user routes (own data) - PUT BEFORE /:id route
 router.get(
-	'/:id',
-	publicRateLimit,
-	achievementController.getAchievementById.bind(achievementController)
+	'/my-stats',
+	isAuthenticated,
+	userRateLimit,
+	achievementController.getMyAchievements.bind(achievementController)
+);
+
+router.get(
+	'/my-progress',
+	isAuthenticated,
+	userRateLimit,
+	achievementController.getMyProgress.bind(achievementController)
 );
 
 // User-specific routes (can view any user's public achievement data)
@@ -66,19 +75,11 @@ router.get(
 	achievementController.getUserProgress.bind(achievementController)
 );
 
-// Authenticated user routes (own data)
+// Dynamic ID route MUST come after specific routes to avoid conflicts
 router.get(
-	'/my-stats',
-	isAuthenticated,
-	userRateLimit,
-	achievementController.getMyAchievements.bind(achievementController)
-);
-
-router.get(
-	'/my-progress',
-	isAuthenticated,
-	userRateLimit,
-	achievementController.getMyProgress.bind(achievementController)
+	'/:id',
+	publicRateLimit,
+	achievementController.getAchievementById.bind(achievementController)
 );
 
 // System integration routes (for triggering achievement checks)

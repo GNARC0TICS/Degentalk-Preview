@@ -37,7 +37,13 @@ const adminRateLimit = rateLimit({
 // Public routes (mission browsing)
 router.get('/', publicRateLimit, missionController.getMissions.bind(missionController));
 
-router.get('/:id', publicRateLimit, missionController.getMissionById.bind(missionController));
+// Authenticated user routes (own missions and actions) - PUT BEFORE /:id route
+router.get(
+	'/my-progress',
+	isAuthenticated,
+	userRateLimit,
+	missionController.getMyMissions.bind(missionController)
+);
 
 // User-specific routes (can view any user's mission progress)
 router.get(
@@ -46,13 +52,8 @@ router.get(
 	missionController.getUserMissions.bind(missionController)
 );
 
-// Authenticated user routes (own missions and actions)
-router.get(
-	'/my-progress',
-	isAuthenticated,
-	userRateLimit,
-	missionController.getMyMissions.bind(missionController)
-);
+// Dynamic ID route MUST come after specific routes to avoid conflicts
+router.get('/:id', publicRateLimit, missionController.getMissionById.bind(missionController));
 
 router.post(
 	'/claim',

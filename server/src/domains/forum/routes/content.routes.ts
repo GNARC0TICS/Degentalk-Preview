@@ -11,6 +11,7 @@ import type { Request, Response } from 'express';
 import { logger } from '../../../core/logger';
 import { isAuthenticatedOptional } from '../../auth/middleware/auth.middleware';
 import { threadService } from '../services/thread.service';
+import { asyncHandler } from '@server/src/core/errors';
 
 const router = Router();
 

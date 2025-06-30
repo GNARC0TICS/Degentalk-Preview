@@ -163,28 +163,12 @@ export default {
 						height: '0'
 					}
 				},
-				'pulse-glow': {
-					'0%, 100%': {
-						boxShadow: '0 0 8px rgba(0, 255, 170, 0.2)'
-					},
-					'50%': {
-						boxShadow: '0 0 16px rgba(0, 255, 170, 0.5)'
-					}
-				},
 				'slide-left': {
 					'0%': {
 						transform: 'translateX(100%)'
 					},
 					'100%': {
 						transform: 'translateX(-100%)'
-					}
-				},
-				float: {
-					'0%, 100%': {
-						transform: 'translateY(0)'
-					},
-					'50%': {
-						transform: 'translateY(-8px)'
 					}
 				},
 				glow: {

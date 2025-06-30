@@ -1,64 +1,54 @@
 import type { BreadcrumbItem } from '@/components/navigation/ForumBreadcrumbs';
-import {
-	getZoneUrl,
-	getForumUrl,
-	getZoneForumUrl,
-	getZoneSubforumUrl,
-	getThreadUrl
-} from '@/utils/forum-urls';
-
-export interface ZoneContext {
-	id: number;
-	name: string;
-	slug: string;
-}
+import { getForumUrl, getSubforumUrl, getThreadUrl } from '@/utils/forum-urls';
 
 export interface ForumContext {
 	id: number;
 	name: string;
 	slug: string;
+	isPrimary?: boolean;
 }
 
 /**
- * Creates breadcrumb navigation items for forum pages
+ * Creates breadcrumb navigation items for forum pages using clean /forums/ structure
  */
 export const createForumBreadcrumbs = {
 	/**
 	 * Creates breadcrumbs for a thread within a forum
-	 * Format: Home > Zone > Forum > Thread
+	 * Format: Home > Forums > Forum > Thread (or Home > Forums > Forum > Subforum > Thread)
 	 */
 	threadInForum(
-		zone: ZoneContext | undefined,
 		forum: ForumContext | undefined,
 		threadTitle: string,
 		threadSlug: string,
 		parentForum?: ForumContext | undefined
 	): BreadcrumbItem[] {
-		if (!zone || !forum) {
+		if (!forum) {
 			return [
 				{ label: 'Home', href: '/' },
-				{ label: 'Zones', href: '/zones' },
+				{ label: 'Forums', href: '/forums' },
 				{ label: threadTitle, href: getThreadUrl(threadSlug) }
 			];
 		}
 
 		const breadcrumbs: BreadcrumbItem[] = [
 			{ label: 'Home', href: '/' },
-			{ label: zone.name, href: getZoneUrl(zone.slug) }
+			{ label: 'Forums', href: '/forums' }
 		];
 
 		// If this is a subforum, add parent forum to breadcrumbs
 		if (parentForum) {
+			const parentLabel = parentForum.isPrimary ? `🌟 ${parentForum.name}` : parentForum.name;
 			breadcrumbs.push({
-				label: parentForum.name,
-				href: getZoneForumUrl(zone.slug, parentForum.slug)
+				label: parentLabel,
+				href: getForumUrl(parentForum.slug)
 			});
 			breadcrumbs.push({
 				label: forum.name,
-				href: getZoneSubforumUrl(zone.slug, parentForum.slug, forum.slug)
+				href: getSubforumUrl(parentForum.slug, forum.slug)
 			});
 		} else {
-			breadcrumbs.push({ label: forum.name, href: getZoneForumUrl(zone.slug, forum.slug) });
+			const forumLabel = forum.isPrimary ? `🌟 ${forum.name}` : forum.name;
+			breadcrumbs.push({ label: forumLabel, href: getForumUrl(forum.slug) });
 		}
 
 		breadcrumbs.push({ label: threadTitle, href: `/threads/${threadSlug}` });
@@ -67,43 +57,41 @@ export const createForumBreadcrumbs = {
 
 	/**
 	 * Creates breadcrumbs for a forum page
-	 * Format: Home > Zone > Forum (> Subforum)
+	 * Format: Home > Forums > Forum (or Home > Forums > Forum > Subforum)
 	 */
-	forumInZone(
-		zone: ZoneContext,
-		forum: ForumContext,
-		parentForum?: ForumContext
-	): BreadcrumbItem[] {
+	forumPage(forum: ForumContext, parentForum?: ForumContext): BreadcrumbItem[] {
 		const breadcrumbs: BreadcrumbItem[] = [
 			{ label: 'Home', href: '/' },
-			{ label: zone.name, href: getZoneUrl(zone.slug) }
+			{ label: 'Forums', href: '/forums' }
 		];
 
 		// If this is a subforum, add parent forum to breadcrumbs
 		if (parentForum) {
+			const parentLabel = parentForum.isPrimary ? `🌟 ${parentForum.name}` : parentForum.name;
 			breadcrumbs.push({
-				label: parentForum.name,
-				href: getZoneForumUrl(zone.slug, parentForum.slug)
+				label: parentLabel,
+				href: getForumUrl(parentForum.slug)
 			});
 			breadcrumbs.push({
 				label: forum.name,
-				href: getZoneSubforumUrl(zone.slug, parentForum.slug, forum.slug)
+				href: getSubforumUrl(parentForum.slug, forum.slug)
 			});
 		} else {
-			breadcrumbs.push({ label: forum.name, href: getZoneForumUrl(zone.slug, forum.slug) });
+			const forumLabel = forum.isPrimary ? `🌟 ${forum.name}` : forum.name;
+			breadcrumbs.push({ label: forumLabel, href: getForumUrl(forum.slug) });
 		}
 
 		return breadcrumbs;
 	},
 
 	/**
-	 * Creates breadcrumbs for a zone page
-	 * Format: Home > Zone
+	 * Creates breadcrumbs for forums listing page
+	 * Format: Home > Forums
 	 */
-	zone(zone: ZoneContext): BreadcrumbItem[] {
+	forumsIndex(): BreadcrumbItem[] {
 		return [
 			{ label: 'Home', href: '/' },
-			{ label: zone.name, href: getZoneUrl(zone.slug) }
+			{ label: 'Forums', href: '/forums' }
 		];
 	}
 };

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Database, Settings, RefreshCw, Shield, AlertTriangle, CheckCircle } from 'lucide-react';
+import { RequireSuperAdmin } from '@/components/auth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,7 +32,7 @@ interface MigrationInfo {
 	description?: string;
 }
 
-export default function DatabaseConfigPage() {
+function DatabaseConfigPage() {
 	const [editingConfig, setEditingConfig] = useState<ConfigEntry | null>(null);
 	const [newConfigKey, setNewConfigKey] = useState('');
 	const [newConfigValue, setNewConfigValue] = useState('');
@@ -468,5 +469,13 @@ export default function DatabaseConfigPage() {
 				</TabsContent>
 			</Tabs>
 		</AdminPageShell>
+	);
+}
+
+export default function ProtectedDatabaseConfigPage() {
+	return (
+		<RequireSuperAdmin>
+			<DatabaseConfigPage />
+		</RequireSuperAdmin>
 	);
 }

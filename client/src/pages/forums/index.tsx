@@ -151,7 +151,11 @@ export default function ForumsIndexPage() {
 				layout="compact"
 				showPreview={true}
 				className="flex-shrink-0 w-full max-w-md"
-				onEnter={undefined}
+				onEnter={(zoneId) => {
+					// For now, clicking a zone card simply navigates to forums index
+					// In the future, this could filter to show only that zone's forums
+					setLocation('/forums');
+				}}
 			/>
 		);
 	};

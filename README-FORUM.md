@@ -25,15 +25,51 @@ Keep reading for the long version.
 
 ---
 
-## 1. Anatomy of the Forum System
+## 1. URL Structure & Navigation
 
-| Level      | Purpose                                                                                         | Holds Threads? |
-| ---------- | ----------------------------------------------------------------------------------------------- | -------------- |
-| **Zone**   | Top-level visual context & branding (Primary or General)                                        | ❌             |
-| **Forum**  | Primary unit for rules, posting & XP (child of a Zone, or child of another Forum as a SubForum) | ✅             |
-| (SubForum) | (A Forum that is a child of another Forum)                                                      | ✅             |
-| Thread     | Discussion container (belongs to one forum or subforum)                                         | —              |
-| Reply      | Message inside a thread                                                                         | —              |
+### 1.1 Clean URL Architecture (2025-01-27 Update)
+
+DegenTalk now uses a clean `/forums/` URL structure that eliminates the zone layer from URLs while preserving the Featured vs General forum distinction:
+
+| URL Pattern                         | Purpose                                 | Example                                            |
+| ----------------------------------- | --------------------------------------- | -------------------------------------------------- |
+| `/forums`                           | All forums listing (Featured + General) | `/forums`                                          |
+| `/forums/{forum}`                   | Direct forum access                     | `/forums/crypto-discussion`                        |
+| `/forums/{forum}/{subforum}`        | Subforum access                         | `/forums/crypto-discussion/trading-signals`        |
+| `/forums/{forum}/create`            | Create thread in forum                  | `/forums/crypto-discussion/create`                 |
+| `/forums/{forum}/{subforum}/create` | Create thread in subforum               | `/forums/crypto-discussion/trading-signals/create` |
+| `/threads/{slug}`                   | Individual thread                       | `/threads/bitcoin-price-analysis`                  |
+
+### 1.2 Featured vs General Forums
+
+- **Featured Forums** (`isPrimary: true`): Enhanced theming, prominent placement, 🌟 visual indicators
+- **General Forums** (`isPrimary: false`): Standard presentation, organized below Featured Forums
+- **Legacy zones** are now represented as Featured Forums for better SEO and user experience
+
+### 1.3 Legacy URL Redirects
+
+All legacy URLs automatically redirect to the new structure:
+
+- `/zones/casino-floor/crypto-discussion` → `/forums/crypto-discussion`
+- `/zones/featured/trading-signals` → `/forums/trading-signals`
+- `/forum/crypto-discussion` → `/forums/crypto-discussion`
+
+---
+
+## 2. Anatomy of the Forum System
+
+| Level        | Purpose                                                         | Holds Threads? | URL Access                   |
+| ------------ | --------------------------------------------------------------- | -------------- | ---------------------------- |
+| **Forum**    | Primary unit for rules, posting & XP (Featured or General type) | ✅             | `/forums/{forum}`            |
+| **SubForum** | Child forum under a parent forum                                | ✅             | `/forums/{forum}/{subforum}` |
+| **Thread**   | Discussion container (belongs to one forum or subforum)         | —              | `/threads/{slug}`            |
+| **Reply**    | Message inside a thread                                         | —              | N/A                          |
+
+**Key Changes from Legacy Structure:**
+
+- **Zones** are now represented as **Featured Forums** (`isPrimary: true`) for cleaner URLs
+- **Forums** are the primary navigation unit, directly accessible via `/forums/{slug}`
+- **SubForums** maintain hierarchical nesting: `/forums/{parent}/{child}`
 
 Important notes:
 
@@ -44,53 +80,49 @@ Important notes:
 
 ---
 
-## 2. Canonical Structure (2025-06-16)
+## 3. Canonical Structure (2025-01-27 Update)
 
-### 2.1 Primary Zones (visual top carousel & `/zones/[slug]`)
+### 3.1 Featured Forums (Enhanced Experience, `isPrimary: true`)
 
-| Slug              | Name              | Quick Description                           |
-| ----------------- | ----------------- | ------------------------------------------- |
-| `the-pit`         | The Pit           | Raw, unfiltered, often unhinged discussion. |
-| `mission-control` | Mission Control   | Alpha, research & strategic deep dives.     |
-| `briefing-room`   | The Briefing Room | Official news & announcements.              |
-| `casino-floor`    | The Casino Floor  | Trading, gambling & high-stakes plays.      |
-| `the-archive`     | The Archive       | Historical records & past glories.          |
+Accessible via `/forums/{slug}` with enhanced theming and prominent placement:
 
-Every primary zone directly hosts **0-n forums**. Categories are no longer a
-required middle layer; if you need extra nesting, create a **sub-forum**
-under the parent forum instead. Each zone carries immutable theming (colour,
-icon, banners, landing component) defined in `THEME_PRESETS` inside
-`client/src/config/forumMap.config.ts`.
-Primary Zones are designed to be feature-rich, staff-driven areas, often incorporating custom UI components, unique gamification rules (like special XP challenges or badges), and enhanced content curation capabilities. These extended features are typically configured via the `pluginData` field for the respective zone in `forumMap.config.ts` and utilized by both frontend and backend services.
+| Slug              | Name                 | Quick Description                           | URL                       |
+| ----------------- | -------------------- | ------------------------------------------- | ------------------------- |
+| `the-pit`         | 🔥 The Pit           | Raw, unfiltered, often unhinged discussion. | `/forums/the-pit`         |
+| `mission-control` | 🚀 Mission Control   | Alpha, research & strategic deep dives.     | `/forums/mission-control` |
+| `briefing-room`   | 📢 The Briefing Room | Official news & announcements.              | `/forums/briefing-room`   |
+| `casino-floor`    | 🎰 The Casino Floor  | Trading, gambling & high-stakes plays.      | `/forums/casino-floor`    |
+| `the-archive`     | 📚 The Archive       | Historical records & past glories.          | `/forums/the-archive`     |
 
-### 2.2 General Zones
+Featured Forums carry enhanced theming (color, icon, banners, custom components) and are designed for high-engagement, staff-driven content with unique gamification rules, special XP challenges, and enhanced curation capabilities.
 
-These appear directly beneath the Primary Zones carousel on the `/forums` page (and potentially on **Home** and in **HierarchicalZoneNav** in future). They are also of `type: 'zone'` in the database but are distinguished by `pluginData.configZoneType = 'general'` (leading to `isPrimary: false` in frontend contexts).
+### 3.2 General Forums (Standard Experience, `isPrimary: false`)
 
-| Slug              | Name            | Forums (initial set)                   |
-| ----------------- | --------------- | -------------------------------------- |
-| `market-analysis` | Market Analysis | `btc-analysis`, `altcoin-analysis`     |
-| `defi-lab`        | DeFi Laboratory | `yield-farming`, `protocol-discussion` |
-| `nft-district`    | NFT District    | `nft-calls`, `art-gallery`             |
+Standard forums that appear below Featured Forums on `/forums` page:
 
-_(This list is based on `GENERAL_ZONES` in `forumMap.config.ts`)_
+| Slug              | Name            | SubForums (examples)                   | URL                       |
+| ----------------- | --------------- | -------------------------------------- | ------------------------- |
+| `market-analysis` | Market Analysis | `btc-analysis`, `altcoin-analysis`     | `/forums/market-analysis` |
+| `defi-lab`        | DeFi Laboratory | `yield-farming`, `protocol-discussion` | `/forums/defi-lab`        |
+| `nft-district`    | NFT District    | `nft-calls`, `art-gallery`             | `/forums/nft-district`    |
 
-### 2.3 Forums (selected examples)
+General Forums provide standard functionality without the enhanced theming and special features of Featured Forums.
 
-| Forum Slug       | Parent (Zone / Category) | Key Rules (excerpt)                     |
-| ---------------- | ------------------------ | --------------------------------------- |
-| `general-brawls` | the-pit                  | posting ✅ · tipping ✅ · XP ✅         |
-| `pit-memes`      | the-pit                  | XP ❌ · tipping ✅                      |
-| `alpha-leaks`    | mission-control          | access `level_10+` · XP ×2              |
-| `announcements`  | briefing-room            | posting ❌ (mods only)                  |
-| `signals-ta`     | market-moves             | posting ✅ · prefixes `[SIGNAL]` `[TA]` |
+### 3.3 SubForum Examples
 
-_Never rely on this table in code – the full, authoritative list lives in
-`forumMap.config.ts`._
+| SubForum Slug    | Parent Forum    | URL                                   | Key Rules (excerpt)                     |
+| ---------------- | --------------- | ------------------------------------- | --------------------------------------- |
+| `general-brawls` | the-pit         | `/forums/the-pit/general-brawls`      | posting ✅ · tipping ✅ · XP ✅         |
+| `pit-memes`      | the-pit         | `/forums/the-pit/pit-memes`           | XP ❌ · tipping ✅                      |
+| `alpha-leaks`    | mission-control | `/forums/mission-control/alpha-leaks` | access `level_10+` · XP ×2              |
+| `announcements`  | briefing-room   | `/forums/briefing-room/announcements` | posting ❌ (mods only)                  |
+| `signals-ta`     | market-analysis | `/forums/market-analysis/signals-ta`  | posting ✅ · prefixes `[SIGNAL]` `[TA]` |
+
+_Never rely on this table in code – the full, authoritative list lives in `forumMap.config.ts`._
 
 ---
 
-## 3. Single-Source-of-Truth Workflow
+## 4. Single-Source-of-Truth Workflow
 
 1. **Edit** `client/src/config/forumMap.config.ts` (or use the forthcoming
    admin UI which writes to the DB).
@@ -109,30 +141,28 @@ Result:
 
 ---
 
-## 4. Navigation & User Experience
+## 5. Navigation & User Experience
 
-### 4.1 First Visit (Unauthenticated)
+### 5.1 First Visit (Unauthenticated)
 
 1. **Home (`/`)** shows:
    - **Hero** & **Announcement Ticker**.
-   - **Primary Zone Grid** (`CanonicalZoneGrid`) → large branded cards.
-   - **General Zones** listed just below if present.
+   - **Featured Forums Grid** (primary forums with `isPrimary: true`) → large branded cards.
+   - **General Forums** listed just below if present.
    - **Hot Threads**, **Leaderboard**, **Active Users** widgets.
-2. Clicking a **Zone card** goes to `/zones/[zone]` → shows its child forums
-   (and sub-forums, if any) with full theme applied.
-3. Clicking a **General Zone** goes to `/zones/[categorySlug]` (same page
-   template, different breadcrumb colour).
-4. Finally a **Forum** click navigates to `/forums/[forumSlug]`, the only place
-   threads can be created.
+2. Clicking **"Forums"** in navigation goes to `/forums` → shows all forums (Featured + General).
+3. Clicking a **Featured Forum card** goes to `/forums/[forumSlug]` → shows the forum with enhanced theme.
+4. Clicking a **General Forum** goes to `/forums/[forumSlug]` (same page template, standard styling).
+5. **Subforum** clicks navigate to `/forums/[forumSlug]/[subforumSlug]`, where threads can be created.
 
-### 4.2 Returning / Power Users
+### 5.2 Returning / Power Users
 
-• `HierarchicalZoneNav` in the sidebar persists expanded state per user via
-`localStorage` (key: `dt-expanded-general-zones`).  
-• Deep links (`/threads/[threadSlug]`) hydrate breadcrumbs using
-`ForumStructureContext` so navigation never breaks even on page refresh.
+• **Featured Forum shortcuts** appear prominently with 🌟 indicators for quick access.
+• **Forum sidebar navigation** persists expanded state per user via `localStorage`.  
+• Deep links (`/threads/[threadSlug]`) hydrate breadcrumbs using `ForumStructureContext` so navigation never breaks even on page refresh.
+• **Clean URLs**: `/forums/crypto/trading` instead of `/zones/casino-floor/crypto/trading` for better UX.
 
-### 4.3 Thread / Post Creation Flow
+### 5.3 Thread / Post Creation Flow
 
 `CreateThreadForm` / `CreatePostForm` take the current `forumSlug` from route
 params → fetch **rules** → gate on permissions (`accessLevel`) & features
@@ -192,7 +222,7 @@ The upcoming **Admin UI → UI Config** surface writes to `ui_themes` DB table. 
 
 ---
 
-## 5. Business Logic – Forums or Bust 🎯
+## 6. Business Logic – Forums or Bust 🎯
 
 Business logic is primarily attached at the Forum (or SubForum) level. While the `ForumRules` TypeScript type (defined in `forumMap.config.ts` and stored within the `pluginData.rules` field in the database) is the conceptual container for many rules, some core and frequently accessed rules are also available as direct columns on the `forum_categories` database table for performance and easier querying.
 
@@ -214,7 +244,7 @@ Business logic is primarily attached at the Forum (or SubForum) level. While the
 
 ---
 
-## 6. Admin & Ops Cheatsheet
+## 7. Admin & Ops Cheatsheet
 
 • **Add Zone** → config `zones.push(...)` → run sync script → add banner
 image in `public/banners/`.  
@@ -227,7 +257,7 @@ sync script.
 
 ---
 
-## 7. Edge-Cases & Gotchas ⚠️
+## 8. Edge-Cases & Gotchas ⚠️
 
 1. **Zone without forums** → valid, but it still needs ≥1 forum or the page
    looks empty (CI warns).
@@ -242,7 +272,7 @@ sync script.
 
 ---
 
-## 8. Developer On-Boarding Checklist
+## 9. Developer On-Boarding Checklist
 
 1. `npm run dev` ➜ should start backend & Vite with clear prefixed logs.
 2. Confirm `/api/forum/structure` returns **200** with canonical JSON.
@@ -254,9 +284,9 @@ Welcome to the colosseum – now ship something legendary. 🏴‍☠️
 
 ---
 
-## 9. Database Guide (Schema & Migrations)
+## 10. Database Guide (Schema & Migrations)
 
-### 9.1 Core Tables
+### 10.1 Core Tables
 
 | Table                                                      | Purpose                                                                                                                                                                                     | Relation Keys                                                                      |
 | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -269,14 +299,14 @@ Welcome to the colosseum – now ship something legendary. 🏴‍☠️
 
 _All tables live under `db/schema/forum/` (Drizzle). Migrations are auto-generated via `npm run db:migrate` and live in `migrations/postgres/*`._
 
-### 9.2 Entity Lifecycle
+### 10.2 Entity Lifecycle
 
 1. **Config Sync** – `scripts/dev/syncForumsToDB.ts` upserts rows into `forum_categories` based on `forumMap.config.ts`.
 2. **Seeding** – Example seeds (`seed-canonical-zones.ts`, `seed-threads.ts`) populate starter content.
 3. **Cascade Rules** – `ON DELETE SET NULL` for parent–child to prevent accidental purges; `ON DELETE CASCADE` for content (threads/posts).
 4. **Type Generation** – `drizzle-kit` produces TypeScript types into `db/types/generated` used by `forum-sdk`.
 
-### 9.3 Writing a Migration Manually
+### 10.3 Writing a Migration Manually
 
 ```bash
 npm run db:generate --name add-casino-floor-event-column
@@ -288,9 +318,9 @@ npm run db:push   # applies to local dev DB
 
 ---
 
-## 10. Front-End Scope Guide
+## 11. Front-End Scope Guide
 
-### 10.1 Feature Domains
+### 11.1 Feature Domains
 
 | Path                          | Description                                                           |
 | ----------------------------- | --------------------------------------------------------------------- |

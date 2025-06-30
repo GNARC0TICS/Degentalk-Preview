@@ -193,6 +193,11 @@ export function getCurrentUser(req: Request, res: Response) {
 	const userResponse = { ...(userService.getUserFromRequest(req) as any) };
 	delete userResponse.password;
 
+	// Add computed role properties for frontend compatibility
+	userResponse.isAdmin = ['admin', 'super_admin'].includes(userResponse.role);
+	userResponse.isModerator = ['moderator', 'mod'].includes(userResponse.role);
+	userResponse.isSuperAdmin = userResponse.role === 'super_admin';
+
 	res.json(userResponse);
 }
 

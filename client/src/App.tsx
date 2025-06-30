@@ -13,8 +13,6 @@ import ForumsPage from './pages/forums';
 // Import forum system pages
 import ForumBySlugPage from './pages/forums/[forumSlug].tsx';
 import ForumSearchPage from './pages/forums/search.tsx'; // Import the new search page
-import ZoneBySlugPage from './pages/zones/[slug].tsx'; // Added import for Zone page
-import ZonesIndexPage from './pages/zones/index.tsx';
 import ThreadPage from './pages/threads/BBCodeThreadPage.tsx';
 import CreateThreadPage from './pages/threads/create.tsx';
 import ShopPage from './pages/shop';
@@ -126,35 +124,37 @@ function App() {
 						{/* Auth Routes */}
 						<Route path="/auth" component={AuthPage} />
 
-						{/* Forum Structure Routes - Hybrid Navigation System */}
-
-						{/* Direct Forum Access (legacy/power user pattern) */}
+						{/* Forum Routes - Clean /forums/ Structure */}
+						{/* Main forum discovery page (Featured + General forums) */}
 						<ProtectedRoute path="/forums" component={ForumsPage} />
-						<ProtectedRoute path="/forums/:forumSlug" component={ForumBySlugPage} />
-						<ProtectedRoute path="/forums/:forumSlug/create" component={CreateThreadPage} />
 
-						{/* Zone-based Navigation (hierarchical pattern) */}
-						<ProtectedRoute path="/zones" component={ZonesIndexPage} />
-						<ProtectedRoute path="/zones/:zoneSlug" component={ZoneBySlugPage} />
-						<ProtectedRoute path="/zones/:zoneSlug/:forumSlug" component={ForumBySlugPage} />
+						{/* Individual forum pages */}
+						<ProtectedRoute path="/forums/:forumSlug" component={ForumBySlugPage} />
+
+						{/* Subforum pages */}
+						<ProtectedRoute path="/forums/:forumSlug/:subforumSlug" component={ForumBySlugPage} />
+
+						{/* Thread creation */}
+						<ProtectedRoute path="/forums/:forumSlug/create" component={CreateThreadPage} />
 						<ProtectedRoute
-							path="/zones/:zoneSlug/:forumSlug/:subforumSlug"
-							component={ForumBySlugPage}
+							path="/forums/:forumSlug/:subforumSlug/create"
+							component={CreateThreadPage}
 						/>
 
-						{/* Search Page */}
+						{/* Forum search */}
 						<ProtectedRoute path="/search/forums" component={ForumSearchPage} />
+
+						{/* Legacy redirects from old /zones/ structure */}
+						<ProtectedRoute path="/zones" component={LegacyForumRedirect} />
+						<ProtectedRoute path="/zones/:slug" component={LegacyForumRedirect} />
+						<ProtectedRoute path="/zones/:zoneSlug/:forumSlug" component={LegacyForumRedirect} />
+						<ProtectedRoute
+							path="/zones/:zoneSlug/:forumSlug/:subforumSlug"
+							component={LegacyForumRedirect}
+						/>
 
 						{/* Thread Routes */}
 						<ProtectedRoute path="/threads/create" component={CreateThreadPage} />
-						<ProtectedRoute
-							path="/zones/:zoneSlug/:forumSlug/create"
-							component={CreateThreadPage}
-						/>
-						<ProtectedRoute
-							path="/zones/:zoneSlug/:forumSlug/:subforumSlug/create"
-							component={CreateThreadPage}
-						/>
 						<ProtectedRoute path="/threads/:thread_slug" component={ThreadPage} />
 
 						{/* Other Routes */}

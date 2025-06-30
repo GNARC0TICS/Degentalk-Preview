@@ -2,24 +2,26 @@ import React from 'react';
 import { IconRenderer } from '@/components/icons/iconRenderer';
 import { Button } from '@/components/ui/button';
 import { NavLink } from './NavLink';
-import { useHeader } from './HeaderContext';
+import { useAuth } from '@/hooks/use-auth';
+import { hasRoleAtLeast, Role } from '@/lib/roles';
 
 interface AdminButtonProps {
 	className?: string;
 }
 
 export function AdminButton({ className }: AdminButtonProps) {
-	const { user } = useHeader();
+	const { user } = useAuth();
 
-	if (!user?.isAdmin && !user?.isModerator) {
+	if (!user || !hasRoleAtLeast(user.role as Role, 'moderator')) {
 		return null;
 	}
 
-	const href = user.isAdmin ? '/admin' : '/mod';
-	const label = user.isAdmin ? 'Admin Panel' : 'Moderator Panel';
+	const isAdminLevel = hasRoleAtLeast(user.role as Role, 'admin');
+	const href = isAdminLevel ? '/admin' : '/mod';
+	const label = isAdminLevel ? 'Admin Panel' : 'Moderator Panel';
 
 	return (
-		<NavLink href={href} analyticsLabel={user.isAdmin ? 'nav_admin' : 'nav_mod'}>
+		<NavLink href={href} analyticsLabel={isAdminLevel ? 'nav_admin' : 'nav_mod'}>
 			<div className={`text-zinc-400 hover:text-white ${className}`}>
 				<Button variant="ghost" size="icon" aria-label={label}>
 					<IconRenderer icon="admin" className="h-5 w-5" />

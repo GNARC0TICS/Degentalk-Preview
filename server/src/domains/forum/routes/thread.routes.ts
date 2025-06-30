@@ -21,6 +21,7 @@ import { forumController } from '../forum.controller';
 import { threadService } from '../services/thread.service';
 import { postService } from '../services/post.service';
 import { logger } from '@server/src/core/logger';
+import { asyncHandler } from '@server/src/core/errors';
 
 const router = Router();
 

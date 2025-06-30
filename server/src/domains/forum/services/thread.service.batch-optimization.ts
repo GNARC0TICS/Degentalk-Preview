@@ -14,7 +14,17 @@ import { logger } from '@server/src/core/logger';
  */
 export async function getZoneInfoBatch(
 	structureIds: number[]
-): Promise<Map<number, { zone: { slug: string; name: string; colorTheme?: string } } | null>> {
+): Promise<
+	Map<
+		number,
+		{ id: number; name: string; slug: string; colorTheme: string; isPrimary?: boolean } | null
+	>
+> {
+	logger.info('ThreadService', 'Starting getZoneInfoBatch', {
+		structureIds,
+		count: structureIds.length
+	});
+
 	if (structureIds.length === 0) {
 		return new Map();
 	}
@@ -28,7 +38,7 @@ export async function getZoneInfoBatch(
 				slug: forumStructure.slug,
 				parentId: forumStructure.parentId,
 				type: forumStructure.type,
-				configZoneType: forumStructure.configZoneType,
+				pluginData: forumStructure.pluginData,
 				colorTheme: forumStructure.colorTheme
 			})
 			.from(forumStructure)
@@ -46,7 +56,7 @@ export async function getZoneInfoBatch(
 					slug: forumStructure.slug,
 					parentId: forumStructure.parentId,
 					type: forumStructure.type,
-					configZoneType: forumStructure.configZoneType,
+					pluginData: forumStructure.pluginData,
 					colorTheme: forumStructure.colorTheme
 				})
 				.from(forumStructure)
@@ -60,55 +70,95 @@ export async function getZoneInfoBatch(
 		// Build zone info map
 		const zoneInfoMap = new Map<
 			number,
-			{ zone: { slug: string; name: string; colorTheme?: string } } | null
+			{ id: number; name: string; slug: string; colorTheme: string; isPrimary?: boolean } | null
 		>();
 
 		for (const structureId of structureIds) {
-			const structure = structureMap.get(structureId);
-			if (!structure) {
-				zoneInfoMap.set(structureId, null);
-				continue;
-			}
-
-			// If this structure is itself a zone
-			if (structure.configZoneType && structure.configZoneType !== 'none') {
-				zoneInfoMap.set(structureId, {
-					zone: {
-						slug: structure.slug,
-						name: structure.name,
-						colorTheme: structure.colorTheme || undefined
-					}
-				});
-				continue;
-			}
-
-			// If this structure has a parent, check if parent is a zone
-			if (structure.parentId) {
-				const parentStructure = structureMap.get(structure.parentId);
-				if (
-					parentStructure &&
-					parentStructure.configZoneType &&
-					parentStructure.configZoneType !== 'none'
-				) {
-					zoneInfoMap.set(structureId, {
-						zone: {
-							slug: parentStructure.slug,
-							name: parentStructure.name,
-							colorTheme: parentStructure.colorTheme || undefined
-						}
-					});
+			try {
+				const structure = structureMap.get(structureId);
+				if (!structure) {
+					logger.warn('ThreadService', `Structure ${structureId} not found in map`);
+					zoneInfoMap.set(structureId, null);
 					continue;
 				}
-			}
 
-			// No zone found
-			zoneInfoMap.set(structureId, null);
+				logger.info('ThreadService', `Processing structure ${structureId}`, {
+					id: structure.id,
+					name: structure.name,
+					type: structure.type,
+					parentId: structure.parentId,
+					hasPluginData: !!structure.pluginData,
+					pluginDataType: typeof structure.pluginData
+				});
+
+				// If this structure is itself a zone
+				const pluginData = (structure.pluginData || {}) as any;
+				const configZoneType = pluginData?.configZoneType;
+
+				if (configZoneType && configZoneType !== 'none') {
+					const zoneData = {
+						id: structure.id,
+						slug: structure.slug,
+						name: structure.name,
+						colorTheme: structure.colorTheme || 'default',
+						isPrimary: configZoneType === 'primary'
+					};
+					zoneInfoMap.set(structureId, zoneData);
+					continue;
+				}
+
+				// If this structure has a parent, check if parent is a zone
+				if (structure.parentId) {
+					const parentStructure = structureMap.get(structure.parentId);
+					if (parentStructure) {
+						const parentPluginData = (parentStructure.pluginData || {}) as any;
+						const parentConfigZoneType = parentPluginData?.configZoneType;
+
+						if (parentConfigZoneType && parentConfigZoneType !== 'none') {
+							const zoneData = {
+								id: parentStructure.id,
+								slug: parentStructure.slug,
+								name: parentStructure.name,
+								colorTheme: parentStructure.colorTheme || 'default',
+								isPrimary: parentConfigZoneType === 'primary'
+							};
+							zoneInfoMap.set(structureId, zoneData);
+							continue;
+						}
+					}
+				}
+
+				// No zone found
+				zoneInfoMap.set(structureId, null);
+			} catch (structureError) {
+				logger.error('ThreadService', `Error processing structure ${structureId}`, {
+					error: structureError.message,
+					stack: structureError.stack
+				});
+				zoneInfoMap.set(structureId, null);
+			}
 		}
 
-		logger.debug('ThreadService', `Batch fetched zone info for ${structureIds.length} structures`, {
-			structureIds: structureIds.length,
-			foundZones: Array.from(zoneInfoMap.values()).filter(Boolean).length
-		});
+		try {
+			const resultSummary = Object.fromEntries(
+				Array.from(zoneInfoMap.entries()).map(([id, zone]) => [
+					id,
+					zone ? `${zone.name} (${zone.slug})` : 'null'
+				])
+			);
+
+			logger.info('ThreadService', `Batch zone info results:`, {
+				requested: structureIds,
+				found: Array.from(zoneInfoMap.values()).filter(Boolean).length,
+				results: resultSummary
+			});
+		} catch (summaryError) {
+			logger.error('ThreadService', 'Error creating result summary', {
+				error: summaryError.message,
+				mapSize: zoneInfoMap.size,
+				mapEntries: Array.from(zoneInfoMap.entries())
+			});
+		}
 
 		return zoneInfoMap;
 	} catch (error) {
@@ -117,12 +167,7 @@ export async function getZoneInfoBatch(
 			error: (error as Error).message
 		});
 
-		// Return empty map to prevent errors, callers should handle null values
-		const fallbackMap = new Map<
-			number,
-			{ zone: { slug: string; name: string; colorTheme?: string } } | null
-		>();
-		structureIds.forEach((id) => fallbackMap.set(id, null));
-		return fallbackMap;
+		// Throw error so caller can implement fallback strategy
+		throw error;
 	}
 }

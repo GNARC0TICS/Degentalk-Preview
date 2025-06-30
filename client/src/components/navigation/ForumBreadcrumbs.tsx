@@ -70,20 +70,21 @@ export const createForumBreadcrumbs = {
 	],
 
 	/**
-	 * Home > Zone (simplified)
+	 * Home > Featured Forum (simplified)
 	 */
-	zone: (zoneName: string, zoneSlug: string): BreadcrumbItem[] => [
+	featuredForum: (forumName: string, forumSlug: string): BreadcrumbItem[] => [
 		{ label: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
-		{ label: stripLeadingEmoji(zoneName), href: `/zones/${zoneSlug}` }
+		{ label: 'Forums', href: '/forums' },
+		{ label: `🌟 ${stripLeadingEmoji(forumName)}`, href: `/forums/${forumSlug}` }
 	],
 
 	/**
-	 * Home > Zone > Forum (simplified)
+	 * Home > Forum (simplified)
 	 */
-	forum: (zoneName: string, zoneSlug: string, forumName: string): BreadcrumbItem[] => [
+	forum: (forumName: string, forumSlug: string, isPrimary: boolean = false): BreadcrumbItem[] => [
 		{ label: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
-		{ label: stripLeadingEmoji(zoneName), href: `/zones/${zoneSlug}` },
-		{ label: forumName, href: '#' } // Current page, no link
+		{ label: 'Forums', href: '/forums' },
+		{ label: isPrimary ? `🌟 ${forumName}` : forumName, href: `/forums/${forumSlug}` }
 	],
 
 	/**
@@ -100,14 +101,13 @@ export const createForumBreadcrumbs = {
 	custom: (items: BreadcrumbItem[]): BreadcrumbItem[] => items,
 
 	/**
-	 * Smart breadcrumb generation - simplified and direct:
-	 * - Zones: Home > Zone Name
-	 * - Forums: Home > Zone Name > Forum Name
-	 * - Subforums: Home > Zone Name > Forum Name > Subforum Name
+	 * Smart breadcrumb generation - clean /forums/ structure:
+	 * - Forums: Home > Forums > Forum Name
+	 * - Subforums: Home > Forums > Forum Name > Subforum Name
 	 */
-	forumInZone: (
-		zone?: { name: string; slug: string; isPrimary?: boolean } | null,
-		forum?: { name: string; slug: string } | null
+	smartForum: (
+		forum?: { name: string; slug: string; isPrimary?: boolean } | null,
+		subforum?: { name: string; slug: string } | null
 	): BreadcrumbItem[] => {
 		// If no forum, fallback to generic Forums list
 		if (!forum) {
@@ -117,51 +117,59 @@ export const createForumBreadcrumbs = {
 			];
 		}
 
-		// If we have both zone and forum: Home > Zone > Forum
-		if (zone) {
+		const forumLabel = forum.isPrimary ? `🌟 ${forum.name}` : forum.name;
+
+		// If we have both forum and subforum: Home > Forums > Forum > Subforum
+		if (subforum) {
 			return [
 				{ label: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
-				{ label: stripLeadingEmoji(zone.name), href: `/zones/${zone.slug}` },
-				{ label: forum.name, href: `/forums/${forum.slug}` }
+				{ label: 'Forums', href: '/forums' },
+				{ label: forumLabel, href: `/forums/${forum.slug}` },
+				{ label: subforum.name, href: `/forums/${forum.slug}/${subforum.slug}` }
 			];
 		}
 
-		// If only forum (shouldn't happen based on rules): Home > Forum
+		// If only forum: Home > Forums > Forum
 		return [
 			{ label: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
-			{ label: forum.name, href: `/forums/${forum.slug}` }
+			{ label: 'Forums', href: '/forums' },
+			{ label: forumLabel, href: `/forums/${forum.slug}` }
 		];
 	},
 
 	/**
-	 * Smart thread breadcrumb generation - simplified and direct:
-	 * - Threads: Home > Zone > Forum > Thread
-	 * - Follows hierarchical structure without intermediate "Zones/Forums" labels
+	 * Smart thread breadcrumb generation - clean /forums/ structure:
+	 * - Threads: Home > Forums > Forum > Thread
+	 * - Subforum Threads: Home > Forums > Forum > Subforum > Thread
 	 */
 	threadInForum: (
-		zone?: { name: string; slug: string; isPrimary?: boolean } | null,
-		forum?: { name: string; slug: string } | null,
+		forum?: { name: string; slug: string; isPrimary?: boolean } | null,
+		subforum?: { name: string; slug: string } | null,
 		threadTitle?: string | null
 	): BreadcrumbItem[] => {
 		if (!threadTitle) {
 			threadTitle = 'Thread';
 		}
 
-		// If both zone and forum exist: Home > Zone > Forum > Thread
-		if (zone && forum) {
+		// If forum, subforum, and thread exist: Home > Forums > Forum > Subforum > Thread
+		if (forum && subforum) {
+			const forumLabel = forum.isPrimary ? `🌟 ${forum.name}` : forum.name;
 			return [
 				{ label: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
-				{ label: stripLeadingEmoji(zone.name), href: `/zones/${zone.slug}` },
-				{ label: forum.name, href: `/forums/${forum.slug}` },
+				{ label: 'Forums', href: '/forums' },
+				{ label: forumLabel, href: `/forums/${forum.slug}` },
+				{ label: subforum.name, href: `/forums/${forum.slug}/${subforum.slug}` },
 				{ label: threadTitle, href: '#' }
 			];
 		}
 
-		// If only forum exists: Home > Forum > Thread
+		// If only forum and thread exist: Home > Forums > Forum > Thread
 		if (forum) {
+			const forumLabel = forum.isPrimary ? `🌟 ${forum.name}` : forum.name;
 			return [
 				{ label: 'Home', href: '/', icon: <Home className="w-4 h-4" /> },
-				{ label: forum.name, href: `/forums/${forum.slug}` },
+				{ label: 'Forums', href: '/forums' },
+				{ label: forumLabel, href: `/forums/${forum.slug}` },
 				{ label: threadTitle, href: '#' }
 			];
 		}

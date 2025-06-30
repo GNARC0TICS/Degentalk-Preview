@@ -23,6 +23,7 @@ import { isAuthenticated as requireAuth } from '../auth/middleware/auth.middlewa
 import { logger } from '@server/src/core/logger';
 import { forumStructureService } from './services/structure.service';
 import { threadService } from './services/thread.service';
+import { asyncHandler } from '@server/src/core/errors';
 
 // Import specialized route modules
 import threadRoutes from './routes/thread.routes';

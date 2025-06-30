@@ -9,7 +9,12 @@
  */
 
 import AdminDashboard from '@/components/admin/AdminDashboard';
+import { RequireAdmin } from '@/components/auth';
 
 export default function AdminDashboardPage() {
-	return <AdminDashboard />;
+	return (
+		<RequireAdmin>
+			<AdminDashboard />
+		</RequireAdmin>
+	);
 }

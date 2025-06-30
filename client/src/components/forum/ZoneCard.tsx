@@ -178,7 +178,7 @@ const ZoneCardPure = memo(
 					ease: animationConfig.easings.standard
 				}}
 			>
-				<Link href={`/zones/${derivedZone.slug}`} aria-label={`Enter zone ${derivedZone.name}`}>
+				<Link href={`/forums`} aria-label={`Browse ${derivedZone.name} forums`}>
 					<Card
 						style={themeVars}
 						className={cn(
@@ -243,7 +243,7 @@ const ZoneCardPure = memo(
 						{/* HOT Ribbon */}
 						{showHotRibbonFeature && hasHotForums && (
 							<Link
-								href={`/zones/${derivedZone.slug}?filter=popular`}
+								href={`/forums`}
 								className={cn(
 									'absolute -left-6 top-3 -rotate-45 badge--primary text-[10px] font-bold px-8 py-1 shadow-lg z-20',
 									'text-[var(--zone-accent)]'

@@ -8,8 +8,17 @@
 import { db } from '@db';
 import { siteSettings } from '@schema';
 import { eq } from 'drizzle-orm';
-import type { WalletConfig } from './wallet.config';
-import { defaultWalletConfig, getEnvironmentConfig, WALLET_CONFIG_KEYS } from './wallet.config';
+import type { WalletConfig } from '@shared/wallet.config';
+import { walletConfig as defaultWalletConfig } from '@shared/wallet.config';
+
+// Generate a simple mapping of wallet config paths for description purposes
+const WALLET_CONFIG_KEYS = Object.keys(defaultWalletConfig).reduce(
+	(acc, key) => {
+		acc[key] = key;
+		return acc;
+	},
+	{} as Record<string, string>
+);
 
 /**
  * In-memory cache for wallet configuration
@@ -243,17 +252,7 @@ export class WalletConfigService {
 	 * Get default configuration with environment overrides
 	 */
 	private getDefaultConfig(): WalletConfig {
-		const envOverrides = getEnvironmentConfig();
-		return {
-			...defaultWalletConfig,
-			...envOverrides,
-			// Deep merge for nested objects
-			ccpayment: { ...defaultWalletConfig.ccpayment, ...envOverrides.ccpayment },
-			features: { ...defaultWalletConfig.features, ...envOverrides.features },
-			dgt: { ...defaultWalletConfig.dgt, ...envOverrides.dgt },
-			limits: { ...defaultWalletConfig.limits, ...envOverrides.limits },
-			security: { ...defaultWalletConfig.security, ...envOverrides.security }
-		};
+		return defaultWalletConfig as unknown as WalletConfig;
 	}
 
 	/**

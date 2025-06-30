@@ -378,3 +378,5 @@ export function validateStatusTransition(
 		);
 	}
 }
+
+export const adminCreateAuditLogEntry = createAuditLogEntry;

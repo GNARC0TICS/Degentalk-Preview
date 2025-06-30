@@ -260,7 +260,26 @@ export class ThreadService {
 			const structureIds = [...new Set(threadsData.map((t) => t.structureId))];
 			const threadIds = threadsData.map((t) => t.id);
 
-			const [usersData, structuresData, excerptData] = await Promise.all([
+			// First get the initial structures to find parent IDs
+			const initialStructuresData = await db
+				.select({
+					id: forumStructure.id,
+					name: forumStructure.name,
+					slug: forumStructure.slug,
+					type: forumStructure.type,
+					parentId: forumStructure.parentId,
+					pluginData: forumStructure.pluginData,
+					colorTheme: forumStructure.colorTheme
+				})
+				.from(forumStructure)
+				.where(inArray(forumStructure.id, structureIds));
+
+			// Get unique parent IDs for additional zone lookup
+			const parentIds = [
+				...new Set(initialStructuresData.map((s) => s.parentId).filter(Boolean))
+			] as number[];
+
+			const [usersData, parentStructuresData, excerptData] = await Promise.all([
 				// Batch fetch users
 				db
 					.select({
@@ -273,20 +292,28 @@ export class ThreadService {
 					.from(usersTable)
 					.where(inArray(usersTable.id, userIds)),
 
-				// Batch fetch structures
-				db
-					.select({
-						id: forumStructure.id,
-						name: forumStructure.name,
-						slug: forumStructure.slug,
-						type: forumStructure.type
-					})
-					.from(forumStructure)
-					.where(inArray(forumStructure.id, structureIds)),
+				// Batch fetch parent structures (potential zones)
+				parentIds.length > 0
+					? db
+							.select({
+								id: forumStructure.id,
+								name: forumStructure.name,
+								slug: forumStructure.slug,
+								type: forumStructure.type,
+								parentId: forumStructure.parentId,
+								pluginData: forumStructure.pluginData,
+								colorTheme: forumStructure.colorTheme
+							})
+							.from(forumStructure)
+							.where(inArray(forumStructure.id, parentIds))
+					: [],
 
 				// Batch fetch excerpts
 				this.getFirstPostExcerptsBatch(threadIds)
 			]);
+
+			// Combine all structures
+			const structuresData = [...initialStructuresData, ...parentStructuresData];
 
 			// Create lookup maps for O(1) access
 			const usersMap = new Map(usersData.map((u) => [u.id, u]));
@@ -294,13 +321,71 @@ export class ThreadService {
 			const excerptsMap = new Map(excerptData.map((e) => [e.threadId, e.excerpt]));
 
 			// Batch fetch zone info for all unique structure IDs to eliminate N+1
-			const zoneInfoMap = await getZoneInfoBatch(structureIds);
+			let zoneInfoMap: Map<number, any>;
+			try {
+				zoneInfoMap = await getZoneInfoBatch(structureIds);
+			} catch (batchError) {
+				logger.warn('ThreadService', 'Batch zone fetch failed, using individual lookups', {
+					error: batchError.message,
+					structureCount: structureIds.length
+				});
+				// Fallback to individual lookups
+				zoneInfoMap = new Map();
+				for (const structureId of structureIds) {
+					try {
+						const zoneInfo = await this.getZoneInfo(structureId);
+						zoneInfoMap.set(structureId, zoneInfo);
+					} catch (individualError) {
+						logger.warn('ThreadService', `Individual zone lookup failed for ${structureId}`, {
+							error: individualError.message
+						});
+						zoneInfoMap.set(structureId, null);
+					}
+				}
+			}
+
+			// Debug: Log what zone info we got
+			logger.info('ThreadService', 'Zone info batch results', {
+				requestedIds: structureIds,
+				mapSize: zoneInfoMap.size,
+				results: Object.fromEntries(
+					Array.from(zoneInfoMap.entries()).map(([id, info]) => [
+						id,
+						info ? `${info.name} (${info.slug})` : 'null'
+					])
+				)
+			});
 
 			const formattedThreads = threadsData.map((thread) => {
 				const userResult = usersMap.get(thread.userId);
 				const structureResult = structuresMap.get(thread.structureId);
 				const excerpt = excerptsMap.get(thread.id);
-				const zoneInfo = zoneInfoMap.get(thread.structureId);
+				let zoneInfo = zoneInfoMap.get(thread.structureId);
+
+				// Fallback: If batch optimization didn't find zone, try direct lookup
+				if (!zoneInfo && structureResult?.parentId) {
+					const parentStructure = structuresMap.get(structureResult.parentId);
+					if (parentStructure) {
+						const parentPluginData = (parentStructure.pluginData || {}) as any;
+						const parentConfigZoneType = parentPluginData?.configZoneType;
+						if (parentConfigZoneType && parentConfigZoneType !== 'none') {
+							zoneInfo = {
+								id: parentStructure.id,
+								name: parentStructure.name,
+								slug: parentStructure.slug,
+								colorTheme: parentStructure.colorTheme || 'default',
+								isPrimary: parentConfigZoneType === 'primary'
+							};
+							logger.info('ThreadService', `Fallback zone found for thread ${thread.id}`, {
+								threadStructureId: thread.structureId,
+								threadStructureName: structureResult?.name,
+								parentId: structureResult.parentId,
+								parentName: parentStructure.name,
+								parentConfigZoneType
+							});
+						}
+					}
+				}
 
 				return {
 					id: thread.id,
@@ -326,19 +411,48 @@ export class ThreadService {
 						username: userResult?.username || 'Unknown',
 						avatarUrl: userResult?.avatarUrl || null,
 						activeAvatarUrl: userResult?.activeAvatarUrl || null,
-						role: userResult?.role || 'user'
+						role: userResult?.role || 'user',
+						forumStats: {
+							level: 1, // TODO: Calculate actual level from XP
+							xp: 0, // TODO: Fetch actual XP
+							reputation: 0, // TODO: Fetch actual reputation
+							totalPosts: 0, // TODO: Calculate post count
+							totalThreads: 0, // TODO: Calculate thread count
+							totalLikes: 0, // TODO: Calculate like count
+							totalTips: 0 // TODO: Calculate tip count
+						},
+						isOnline: false, // TODO: Implement online status
+						lastSeenAt: null // TODO: Implement last seen tracking
 					},
 					category: {
 						id: thread.structureId,
 						name: structureResult?.name || 'Unknown',
 						slug: structureResult?.slug || 'unknown'
 					},
-					zone: zoneInfo || {
-						name: structureResult?.name || 'Unknown',
-						slug: structureResult?.slug || 'unknown',
-						colorTheme: 'default'
-					},
+					zone: zoneInfo
+						? {
+								id: zoneInfo.id,
+								name: zoneInfo.name,
+								slug: zoneInfo.slug,
+								colorTheme: zoneInfo.colorTheme || 'default',
+								isPrimary: zoneInfo.isPrimary || false
+							}
+						: {
+								id: thread.structureId,
+								name: structureResult?.name || 'Unknown',
+								slug: structureResult?.slug || 'unknown',
+								colorTheme: 'default',
+								isPrimary: false
+							},
 					tags: [],
+					permissions: {
+						canEdit: false, // TODO: Implement proper permission checking
+						canDelete: false, // TODO: Implement proper permission checking
+						canReply: true, // TODO: Check forum rules and user permissions
+						canMarkSolved: false, // TODO: Check if user can mark as solved
+						canModerate: userResult?.role === 'admin' || userResult?.role === 'mod'
+					},
+					// Legacy compatibility fields (deprecated but keeping for now)
 					canEdit: false,
 					canDelete: false,
 					excerpt: excerpt || undefined

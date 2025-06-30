@@ -71,9 +71,8 @@ export default function CreateThreadPage() {
 
 	const breadcrumbItems = React.useMemo(() => {
 		const items = [{ label: 'Home', icon: Home, href: '/' }];
-		if (parentZone) {
-			items.push({ label: parentZone.name, icon: Folder, href: `/zones/${parentZone.slug}` });
-		}
+		// Always include Forums link since we use /forums/ structure
+		items.push({ label: 'Forums', icon: Folder, href: '/forums' });
 		if (targetForum) {
 			items.push({
 				label: targetForum.name,
@@ -87,7 +86,7 @@ export default function CreateThreadPage() {
 			href: `/threads/create${forumSlugFromQuery ? `?forumSlug=${forumSlugFromQuery}` : ''}`
 		});
 		return items;
-	}, [parentZone, targetForum, forumSlugFromQuery]);
+	}, [targetForum, forumSlugFromQuery]);
 
 	if (isForumStructureLoading) {
 		return (
@@ -345,13 +344,13 @@ export default function CreateThreadPage() {
 										<p className="text-zinc-400 text-sm mb-6 max-w-sm mx-auto">
 											Thread creation is currently disabled in "{targetForum.name}".
 										</p>
-										<Link href={parentZone ? `/zones/${parentZone.slug}` : '/forums'}>
+										<Link href="/forums">
 											<Button
 												variant="outline"
 												className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
 											>
 												<ArrowLeft className="h-4 w-4 mr-2" />
-												Back to {parentZone ? parentZone.name : 'Forums'}
+												Back to Forums
 											</Button>
 										</Link>
 									</div>

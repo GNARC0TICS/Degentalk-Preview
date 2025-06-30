@@ -188,6 +188,21 @@ router.get('/user', getCurrentUser);
 router.get('/verify-email', verifyEmail);
 router.post('/resend-verification', resendVerification);
 
+// Test endpoint to verify role computation
+router.get('/test-roles', (req, res) => {
+	if (!req.isAuthenticated()) return res.json({ authenticated: false });
+
+	const user = req.user as any;
+	const computedRoles = {
+		originalRole: user.role,
+		isAdmin: ['admin', 'super_admin'].includes(user.role),
+		isModerator: user.role === 'moderator',
+		isSuperAdmin: user.role === 'super_admin'
+	};
+
+	res.json({ authenticated: true, user: user.username, computedRoles });
+});
+
 // Dev mode auth switching endpoint
 router.get('/dev-mode/set-role', devModeAuthHandler);
 

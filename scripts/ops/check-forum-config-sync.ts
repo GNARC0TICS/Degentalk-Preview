@@ -82,18 +82,16 @@ async function checkForumConfigSync() {
 
     const dbPluginData = dz.pluginData as any; // Type assertion for easier access
 
-    if (cz.description !== dbPluginData?.description) {
-        discrepancies.push({ type: 'property_mismatch', entityType: 'zone', slug: cz.slug, property: 'description (from pluginData)', expected: cz.description, actual: dbPluginData?.description });
+    if (cz.description !== dbPluginData?.configDescription) {
+        discrepancies.push({ type: 'property_mismatch', entityType: 'zone', slug: cz.slug, property: 'description (from pluginData)', expected: cz.description, actual: dbPluginData?.configDescription });
     }
     if (cz.type !== dbPluginData?.configZoneType) {
         discrepancies.push({ type: 'property_mismatch', entityType: 'zone', slug: cz.slug, property: 'config type (from pluginData)', expected: cz.type, actual: dbPluginData?.configZoneType });
     }
-    if (stableStringify(cz.theme) !== stableStringify(dbPluginData?.theme)) {
-        discrepancies.push({ type: 'property_mismatch', entityType: 'zone', slug: cz.slug, property: 'theme (from pluginData)', expected: cz.theme, actual: dbPluginData?.theme });
+    if (stableStringify(cz.theme) !== stableStringify(dbPluginData?.originalTheme)) {
+        discrepancies.push({ type: 'property_mismatch', entityType: 'zone', slug: cz.slug, property: 'theme (from pluginData)', expected: cz.theme, actual: dbPluginData?.originalTheme });
     }
-     if ((cz.type === 'primary') !== dz.canonical) {
-        discrepancies.push({ type: 'property_mismatch', entityType: 'zone', slug: cz.slug, property: 'canonical (derived from type)', expected: (cz.type === 'primary'), actual: dz.canonical });
-    }
+    // REMOVED: canonical field validation - field doesn't exist in database schema
   }
 
   // Check for zones in DB not in config
@@ -174,23 +172,34 @@ async function checkForumConfigSync() {
         discrepancies.push({ type: 'property_mismatch', entityType: 'forum', slug: cf.slug, property: 'xpMultiplier', expected: expectedXpMultiplier, actual: df.xpMultiplier });
     }
 
-    // Derived theme properties (color, icon)
-    const parentZoneForTheme = dbZones.find(z => z.id === df.parentId);
-    const parentZoneThemeFromPlugin = parentZoneForTheme?.pluginData as any;
+    // Derived theme properties (color, icon) - Updated to match seeding logic
+    // Handle cases where parent is a forum vs zone differently
+    let parentForTheme;
+    let parentThemeFromPlugin;
+    
+    if (cf.parentForumSlug) {
+        // This is a subforum - get parent forum's theme
+        const parentForum = dbForums.find(f => f.slug === cf.parentForumSlug);
+        parentForTheme = parentForum;
+        parentThemeFromPlugin = parentForum?.pluginData as any;
+    } else {
+        // This is a top-level forum - get parent zone's theme
+        const parentZone = dbZones.find(z => z.id === df.parentId);
+        parentForTheme = parentZone;
+        parentThemeFromPlugin = parentZone?.pluginData as any;
+    }
 
-    const expectedColor = cf.themeOverride?.color || parentZoneThemeFromPlugin?.theme?.color || 'gray';
+    const expectedColor = cf.themeOverride?.color || parentThemeFromPlugin?.originalTheme?.color || parentForTheme?.color || 'gray';
     if (expectedColor !== df.color) {
         discrepancies.push({ type: 'property_mismatch', entityType: 'forum', slug: cf.slug, property: 'color (derived)', expected: expectedColor, actual: df.color });
     }
 
-    const expectedIcon = cf.themeOverride?.icon || parentZoneThemeFromPlugin?.theme?.icon || 'hash';
+    const expectedIcon = cf.themeOverride?.icon || parentThemeFromPlugin?.originalTheme?.icon || parentForTheme?.icon || 'hash';
     if (expectedIcon !== df.icon) {
         discrepancies.push({ type: 'property_mismatch', entityType: 'forum', slug: cf.slug, property: 'icon (derived)', expected: expectedIcon, actual: df.icon });
     }
 
-    if (df.canonical !== false) { // Forums are never canonical according to seed script
-        discrepancies.push({ type: 'property_mismatch', entityType: 'forum', slug: cf.slug, property: 'canonical', expected: false, actual: df.canonical });
-    }
+    // REMOVED: canonical field validation for forums - field doesn't exist in database schema
   }
 
   // Check for forums in DB not in config

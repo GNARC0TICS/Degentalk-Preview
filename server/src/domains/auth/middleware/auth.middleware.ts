@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { env, isDevelopment, isProduction } from '@server/src/core/config/environment';
 import { createMockUser } from '../services/auth.service';
 import { logger } from '@server/src/core/logger';
+import { shouldBypassAuth } from '@server/src/utils/environment';
 
 /**
  * Determines if a user has a specific role

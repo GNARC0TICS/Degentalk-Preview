@@ -15,6 +15,7 @@ import {
 import { NavLink } from './NavLink';
 import { createUserMenuItems } from '@/config/navigation';
 import { useHeader } from './HeaderContext';
+import { useAuth } from '@/hooks/use-auth';
 
 // Helper to calculate next level XP requirement
 const calculateNextLevelXp = (level: number): number => {
@@ -74,6 +75,7 @@ interface UserMenuProps {
 
 export function UserMenu({ className, onLogout }: UserMenuProps) {
 	const { user, toggleWallet } = useHeader();
+	const { isAdmin, isModerator } = useAuth();
 
 	if (!user || !user.username) {
 		return null;
@@ -84,8 +86,8 @@ export function UserMenu({ className, onLogout }: UserMenuProps) {
 
 	const menuItems = createUserMenuItems(
 		user.username,
-		user.isAdmin || false,
-		user.isModerator || false,
+		isAdmin,
+		isModerator,
 		toggleWallet,
 		onLogout
 	);

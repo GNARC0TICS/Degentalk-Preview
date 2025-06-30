@@ -178,6 +178,10 @@ export function getSessionCookieSettings(): {
 }
 
 /**
- * Get user ID from request object, handling different user object formats
+ * Backward compatibility helper to get user ID from request
+ * Prefer using userService.getUserFromRequest but some routes still expect getUserId
  */
-// Removed deprecated getUserId wrapper - use userService.getUserFromRequest(req)?.id directly
+export function getUserId(req: any): number | null {
+	const user = userService.getUserFromRequest(req as any);
+	return user?.id ?? null;
+}

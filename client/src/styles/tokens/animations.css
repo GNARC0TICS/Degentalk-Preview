@@ -1,0 +1,343 @@
+/*
+ * Animation Tokens — single source of truth for Degentalk
+ * -------------------------------------------------------
+ * 1. Global duration variables
+ * 2. All @keyframes definitions (consolidated)
+ * 3. "prefers-reduced-motion" fallback
+ *
+ * NOTE: Do NOT place any utility classes here – keep those in
+ *       animations.css or utilities.css.  Import this file where
+ *       needed with:  @import './tokens/animations.css';
+ */
+
+:root {
+	--anim-fast: 0.2s;
+	--anim-normal: 0.5s;
+	--anim-slow: 1s;
+}
+
+/* ------------------------------------------------------------------ */
+/* Generic, reusable keyframes                                         */
+/* ------------------------------------------------------------------ */
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes fade-in-up {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes pulse-scale {
+	0%,
+	100% {
+		transform: scale(1);
+		filter: brightness(1);
+	}
+	50% {
+		transform: scale(1.05);
+		filter: brightness(1.15);
+	}
+}
+
+@keyframes pulse-glow {
+	0%,
+	100% {
+		box-shadow: 0 0 var(--glow-size-small, 5px) var(--glow-color, rgba(16, 185, 129, 0.4));
+	}
+	50% {
+		box-shadow: 0 0 var(--glow-size-large, 12px) var(--glow-color-intense, rgba(16, 185, 129, 0.7));
+	}
+}
+
+@keyframes shimmer {
+	0% {
+		transform: translateX(-100%);
+	}
+	100% {
+		transform: translateX(100%);
+	}
+}
+
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-8px);
+	}
+}
+
+@keyframes float-up {
+	0% {
+		transform: translateY(100vh) translateX(0);
+		opacity: 0;
+	}
+	10% {
+		opacity: 1;
+	}
+	90% {
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(-100vh) translateX(100px);
+		opacity: 0;
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* Gamification / XP specific                                          */
+/* ------------------------------------------------------------------ */
+
+@keyframes glitch-1 {
+	0% {
+		transform: none;
+		opacity: 1;
+	}
+	7% {
+		transform: skew(-0.5deg, -0.9deg);
+		opacity: 0.75;
+	}
+	10%,
+	27% {
+		transform: none;
+		opacity: 1;
+	}
+	30% {
+		transform: skew(0.8deg, -0.1deg);
+		opacity: 0.75;
+	}
+	35%,
+	52% {
+		transform: none;
+		opacity: 1;
+	}
+	55% {
+		transform: skew(-1deg, 0.2deg);
+		opacity: 0.75;
+	}
+	50%,
+	72% {
+		transform: none;
+		opacity: 1;
+	}
+	75% {
+		transform: skew(0.4deg, 1deg);
+		opacity: 0.75;
+	}
+	80%,
+	100% {
+		transform: none;
+		opacity: 1;
+	}
+}
+
+@keyframes glitch-2 {
+	0% {
+		transform: none;
+		opacity: 0.25;
+	}
+	7% {
+		transform: translate(-2px, -3px);
+		opacity: 0.5;
+	}
+	10%,
+	27% {
+		transform: none;
+		opacity: 0.25;
+	}
+	30% {
+		transform: translate(-5px, -2px);
+		opacity: 0.5;
+	}
+	35%,
+	52% {
+		transform: none;
+		opacity: 0.25;
+	}
+	55% {
+		transform: translate(-5px, -1px);
+		opacity: 0.5;
+	}
+	50%,
+	72% {
+		transform: none;
+		opacity: 0.25;
+	}
+	75% {
+		transform: translate(-2px, -6px);
+		opacity: 0.5;
+	}
+	80%,
+	100% {
+		transform: none;
+		opacity: 0.25;
+	}
+}
+
+@keyframes level-up {
+	0% {
+		transform: scale(0.5) rotate(0);
+		opacity: 0;
+	}
+	50% {
+		transform: scale(1.2) rotate(180deg);
+		opacity: 1;
+	}
+	100% {
+		transform: scale(1) rotate(360deg);
+		opacity: 1;
+	}
+}
+
+@keyframes xp-pulse {
+	0%,
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+	50% {
+		transform: scale(1.1);
+		opacity: 0.8;
+	}
+}
+
+@keyframes achievement-unlock {
+	0% {
+		transform: translateY(100px) scale(0.8);
+		opacity: 0;
+	}
+	50% {
+		transform: translateY(-20px) scale(1.1);
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(0) scale(1);
+		opacity: 1;
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* Wallet-related animations (formerly wallet-animations.css)          */
+/* ------------------------------------------------------------------ */
+
+@keyframes balancePop {
+	0% {
+		transform: scale(1);
+		color: inherit;
+	}
+	30% {
+		transform: scale(1.2);
+		color: var(--balance-color, #10b981);
+	}
+	100% {
+		transform: scale(1);
+		color: inherit;
+	}
+}
+
+@keyframes depositGlow {
+	0% {
+		box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+	}
+	50% {
+		box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+	}
+	100% {
+		box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+	}
+}
+
+@keyframes tipPulse {
+	0% {
+		box-shadow: 0 0 0 rgba(245, 158, 11, 0);
+	}
+	50% {
+		box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+	}
+	100% {
+		box-shadow: 0 0 0 rgba(245, 158, 11, 0);
+	}
+}
+
+@keyframes rainDrop {
+	0% {
+		opacity: 0;
+		transform: translateY(-20px);
+	}
+	70% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(100px);
+	}
+}
+
+@keyframes successFade {
+	0% {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	10% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	90% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+}
+
+@keyframes transferPulse {
+	0% {
+		box-shadow: 0 0 0 rgba(168, 85, 247, 0);
+	}
+	50% {
+		box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+	}
+	100% {
+		box-shadow: 0 0 0 rgba(168, 85, 247, 0);
+	}
+}
+
+@keyframes buttonPress {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(0.95);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* Accessibility                                                       */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+	*:not(.particle) {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}

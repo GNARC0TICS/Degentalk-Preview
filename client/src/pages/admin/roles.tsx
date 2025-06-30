@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query'; // Removed useMutation and useQueryClient
+import { RequireSuperAdmin } from '@/components/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 // useToast is now handled by useCrudMutation, but keep if used elsewhere directly
@@ -22,7 +23,7 @@ type Role = RoleFormValues & {
 	updatedAt: string;
 };
 
-export default function RolesAdminPage() {
+function RolesAdminPage() {
 	// const queryClient = useQueryClient(); // Handled by useCrudMutation for invalidation
 	// const { toast } = useToast(); // Handled by useCrudMutation
 
@@ -180,5 +181,13 @@ export default function RolesAdminPage() {
 				form={form}
 			/>
 		</AdminPageShell>
+	);
+}
+
+export default function ProtectedRolesAdminPage() {
+	return (
+		<RequireSuperAdmin>
+			<RolesAdminPage />
+		</RequireSuperAdmin>
 	);
 }

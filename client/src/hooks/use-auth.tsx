@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useLocation } from 'wouter';
+import { getUserPermissions, Role } from '@/lib/roles';
 
 const { createContext, useContext, useState, useEffect, useMemo } = React;
 
@@ -11,7 +12,7 @@ export interface User {
 	username: string;
 	email: string;
 	avatarUrl: string | null;
-	role: 'user' | 'mod' | 'admin' | null;
+	role: Role;
 	walletId?: string;
 	walletAddress?: string;
 	createdAt: string;
@@ -37,7 +38,7 @@ export interface User {
 }
 
 // Possible roles for mock user switching
-type MockRole = 'user' | 'mod' | 'admin';
+type MockRole = 'user' | 'moderator' | 'admin' | 'super_admin';
 
 // Auth context type
 interface AuthContextType {
@@ -52,6 +53,12 @@ interface AuthContextType {
 	loginMutation: ReturnType<typeof useMutation>;
 	registerMutation: ReturnType<typeof useMutation>;
 	logoutMutation: ReturnType<typeof useMutation>;
+	// Role-based permissions (computed from user.role)
+	isAdmin: boolean;
+	isSuperAdmin: boolean;
+	isModerator: boolean;
+	canAccessAdminPanel: boolean;
+	isAdminOrModerator: boolean;
 	// --- Dev Mode Specific --- (Only available in dev)
 	isDevMode: boolean;
 	currentMockRole: MockRole | null;
@@ -94,12 +101,12 @@ const mockUsers: Record<MockRole, User> = {
 		avatarFrameId: 1,
 		isBanned: false
 	},
-	mod: {
+	moderator: {
 		id: 998,
 		username: 'DevMod',
 		email: 'devmod@example.com',
 		avatarUrl: null,
-		role: 'mod',
+		role: 'moderator',
 		walletId: 'dev-wallet-456',
 		walletAddress: '0xDevWalletAddressMod',
 		createdAt: new Date().toISOString(),
@@ -151,6 +158,35 @@ const mockUsers: Record<MockRole, User> = {
 		activeFrameId: 2,
 		avatarFrameId: 2,
 		isBanned: false
+	},
+	super_admin: {
+		id: 996,
+		username: 'SuperAdmin',
+		email: 'superadmin@degentalk.dev',
+		avatarUrl: '/images/avatars/super-admin.png',
+		role: 'super_admin',
+		walletId: 'dev-wallet-super',
+		walletAddress: '0xSuperAdminWalletAddress',
+		createdAt: new Date().toISOString(),
+		level: 100,
+		xp: 999999,
+		isVerified: true,
+		bio: '👑 Supreme Administrator | Platform Architect | Full System Access',
+		clout: 99999,
+		reputation: 99999,
+		website: 'https://degentalk.com',
+		github: 'degentalk-superadmin',
+		twitter: 'degentalk_super',
+		discord: 'SuperAdmin#0000',
+		pluginData: { 'system-control': { level: 1000, xp: 0, category: 'Supreme Access' } },
+		isActive: true,
+		signature: '👑 Supreme Authority | System Architect | WAGMI 🚀',
+		lastActiveAt: new Date().toISOString(),
+		bannerUrl: '/images/banners/super-admin-banner.jpg',
+		dgtBalance: 1000000,
+		activeFrameId: 3,
+		avatarFrameId: 3,
+		isBanned: false
 	}
 };
 
@@ -165,7 +201,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [userState, setUserState] = useState<User | null>(null);
 	const [authError, setAuthError] = useState<string | null>(null);
 	const [isInitialLoading, setIsInitialLoading] = useState(true);
-	const [currentMockRoleState, setCurrentMockRoleState] = useState<MockRole>('admin'); // Default to admin for development
+	const [currentMockRoleState, setCurrentMockRoleState] = useState<MockRole>('super_admin'); // Default to super_admin for development
 	const [isLoggedOut, setIsLoggedOut] = useState(() => {
 		if (import.meta.env.MODE === 'development') {
 			return sessionStorage.getItem('dev_loggedOut') === '1';
@@ -338,6 +374,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	// Consolidate context value
 	const authContextValue = useMemo(() => {
 		const isAuthenticated = !!userState;
+		const userRole = (userState?.role || 'user') as Role;
+		const permissions = getUserPermissions(userRole);
 
 		// Debug log for auth context changes
 		if (import.meta.env.MODE === 'development') {
@@ -347,7 +385,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				isInitialLoading,
 				userLoading,
 				userRole: userState?.role,
-				userLevel: userState?.level
+				userLevel: userState?.level,
+				permissions
 			});
 		}
 
@@ -371,6 +410,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			loginMutation,
 			registerMutation,
 			logoutMutation,
+			// Role-based permissions (computed from user.role)
+			isAdmin: permissions.isAdmin,
+			isSuperAdmin: permissions.isSuperAdmin,
+			isModerator: permissions.isModerator,
+			canAccessAdminPanel: permissions.canAccessAdminPanel,
+			isAdminOrModerator: permissions.isAdminOrModerator,
 			// --- Dev Mode Specific --- (Disabled for wallet testing)
 			isDevMode: isDevelopment,
 			currentMockRole: isDevelopment ? currentMockRoleState : null,

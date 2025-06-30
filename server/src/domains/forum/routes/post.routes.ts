@@ -16,6 +16,7 @@ import {
 	requirePostEditPermission,
 	requirePostDeletePermission
 } from '../services/permissions.service';
+import { asyncHandler } from '@server/src/core/errors';
 
 const router = Router();
 

@@ -14,6 +14,7 @@ import { userThreadBookmarks } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { isAuthenticated as requireAuth } from '../../auth/middleware/auth.middleware';
 import { logger } from '@server/src/core/logger';
+import { asyncHandler } from '@server/src/core/errors';
 
 const router = Router();
 

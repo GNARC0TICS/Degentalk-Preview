@@ -1,32 +1,67 @@
 import React, { useEffect } from 'react';
 import { useParams, useLocation } from 'wouter';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
-import { getForumUrl } from '@/utils/forum-urls';
 
 /**
- * Handles redirects from legacy forum URLs to hybrid structure
- * Old: /forum/{forum-slug} (singular, deprecated)
- * New: /forums/{forum-slug} (direct access pattern)
+ * Handles redirects from legacy URLs to new /forums/ structure
+ * Legacy patterns:
+ * - /zones → /forums
+ * - /zones/{slug} → /forums/{slug}
+ * - /zones/{zoneSlug}/{forumSlug} → /forums/{forumSlug}
+ * - /zones/{zoneSlug}/{forumSlug}/{subforumSlug} → /forums/{forumSlug}/{subforumSlug}
+ * - /forum/{slug} → /forums/{slug} (singular deprecated)
  */
 const LegacyForumRedirect: React.FC = () => {
-	const params = useParams<{ slug: string }>();
-	const [, setLocation] = useLocation();
-	const { getForum, zones } = useForumStructure();
+	const params = useParams<{
+		slug?: string;
+		zoneSlug?: string;
+		forumSlug?: string;
+		subforumSlug?: string;
+	}>();
+	const [location, setLocation] = useLocation();
+	const { getForum } = useForumStructure();
 
 	useEffect(() => {
-		if (!params.slug) return;
+		let targetUrl = '/forums';
 
-		// Try to find the forum by slug
-		const forum = getForum(params.slug);
-		if (!forum) {
-			// If forum not found, redirect to forums listing
-			setLocation('/forums');
-			return;
+		// Handle different legacy URL patterns
+		if (location.startsWith('/zones/')) {
+			if (params.subforumSlug && params.forumSlug) {
+				// /zones/{zoneSlug}/{forumSlug}/{subforumSlug} → /forums/{forumSlug}/{subforumSlug}
+				targetUrl = `/forums/${params.forumSlug}/${params.subforumSlug}`;
+			} else if (params.forumSlug) {
+				// /zones/{zoneSlug}/{forumSlug} → /forums/{forumSlug}
+				targetUrl = `/forums/${params.forumSlug}`;
+			} else if (params.slug) {
+				// /zones/{slug} → /forums/{slug} (assuming slug is a forum)
+				const forum = getForum(params.slug);
+				if (forum) {
+					targetUrl = `/forums/${params.slug}`;
+				} else {
+					// If not a valid forum, redirect to forums listing
+					targetUrl = '/forums';
+				}
+			}
+			// /zones → /forums (handled by default targetUrl)
+		} else if (location.startsWith('/forum/')) {
+			// Handle singular /forum/ pattern
+			if (params.slug) {
+				const forum = getForum(params.slug);
+				if (forum) {
+					targetUrl = `/forums/${params.slug}`;
+				} else {
+					targetUrl = '/forums';
+				}
+			} else {
+				targetUrl = '/forums';
+			}
 		}
 
-		// Redirect to direct forum URL (hybrid approach)
-		setLocation(getForumUrl(forum.slug));
-	}, [params.slug, getForum, setLocation]);
+		// Only redirect if we're not already at the target
+		if (location !== targetUrl) {
+			setLocation(targetUrl);
+		}
+	}, [location, params, getForum, setLocation]);
 
 	return (
 		<div className="min-h-screen bg-black flex items-center justify-center">
@@ -34,7 +69,7 @@ const LegacyForumRedirect: React.FC = () => {
 				<div className="inline-flex items-center justify-center w-16 h-16 mb-4">
 					<div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
 				</div>
-				<p className="text-zinc-400">Redirecting to forum...</p>
+				<p className="text-zinc-400">Redirecting to forums...</p>
 			</div>
 		</div>
 	);

@@ -5,6 +5,8 @@
  * Import this file in global.css once
  */
 
+@import './tokens/animations.css';
+
 /* Glass Cards & Containers */
 .glass-card {
 	@apply bg-zinc-900/60 backdrop-blur-md border border-zinc-800;
@@ -100,23 +102,5 @@
 	.animate-fade-in,
 	.animate-bounce {
 		animation: none;
-	}
-}
-
-@keyframes shimmer {
-	0% {
-		transform: translateX(-100%);
-	}
-	100% {
-		transform: translateX(100%);
-	}
-}
-
-@keyframes fade-in {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
 	}
 }

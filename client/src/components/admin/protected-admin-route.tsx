@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { useLocation, Redirect } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
 import { useAdminPermission } from '@/hooks/use-admin-modules';
+import { hasRoleAtLeast, Role } from '@/lib/roles';
 import { Loader2, AlertCircle, Lock } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -64,7 +65,7 @@ export function ProtectedAdminRoute({
 		return <Redirect to="/login" />;
 	}
 
-	if (!['admin', 'super_admin', 'moderator'].includes(user.role)) {
+	if (!hasRoleAtLeast(user.role as Role, 'moderator')) {
 		return <Redirect to="/" />;
 	}
 

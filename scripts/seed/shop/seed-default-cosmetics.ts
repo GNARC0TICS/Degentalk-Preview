@@ -7,6 +7,7 @@ import { db } from '../../../server/src/core/db';
 import { products } from '../../../db/schema/shop/products';
 import { defaultShopItems, isUsernameColorItem, isAvatarFrameItem, isUserTitleItem } from '../../../client/src/config/shop-items.config';
 import { sql } from 'drizzle-orm';
+import { fileURLToPath } from 'url';
 
 export async function seedDefaultCosmetics() {
   console.log('🎨 Seeding default cosmetic shop items...');
@@ -81,8 +82,10 @@ export async function seedDefaultCosmetics() {
   console.log(`📦 Total items processed: ${defaultShopItems.length}`);
 }
 
-// Main execution
-if (require.main === module) {
+// Main execution (ESM-friendly)
+const isExecutedDirectly = process.argv[1] === fileURLToPath(import.meta.url);
+
+if (isExecutedDirectly) {
   seedDefaultCosmetics()
     .then(() => {
       console.log('✨ Seeding completed successfully');

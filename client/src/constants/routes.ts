@@ -4,27 +4,28 @@
 export const ROUTES = {
 	HOME: '/',
 
-	// Hierarchical Forum Structure
-	ZONES: '/zones', // List all zones
-	ZONE: (slug: string) => `/zones/${slug}`, // View a specific zone
-	FORUM: (zoneSlug: string, forumSlug: string) => `/zones/${zoneSlug}/${forumSlug}`, // Forum within zone
-	SUBFORUM: (zoneSlug: string, forumSlug: string, subforumSlug: string) =>
-		`/zones/${zoneSlug}/${forumSlug}/${subforumSlug}`, // Subforum
+	// Clean Forum Structure (Featured + General Forums)
+	FORUMS: '/forums', // List all forums (Featured + General)
+	FORUM: (forumSlug: string) => `/forums/${forumSlug}`, // Direct forum access
+	SUBFORUM: (forumSlug: string, subforumSlug: string) => `/forums/${forumSlug}/${subforumSlug}`, // Subforum
 	THREAD: (slug: string) => `/threads/${slug}`, // Individual thread (global)
 
 	// Thread Creation
 	CREATE_THREAD: '/threads/create', // Generic thread creation
-	CREATE_THREAD_IN_FORUM: (zoneSlug: string, forumSlug: string) =>
-		`/zones/${zoneSlug}/${forumSlug}/create`,
-	CREATE_THREAD_IN_SUBFORUM: (zoneSlug: string, forumSlug: string, subforumSlug: string) =>
-		`/zones/${zoneSlug}/${forumSlug}/${subforumSlug}/create`,
+	CREATE_THREAD_IN_FORUM: (forumSlug: string) => `/forums/${forumSlug}/create`,
+	CREATE_THREAD_IN_SUBFORUM: (forumSlug: string, subforumSlug: string) =>
+		`/forums/${forumSlug}/${subforumSlug}/create`,
 
 	// Search
 	SEARCH_FORUMS: '/search/forums',
 
-	// Legacy routes (deprecated - use hierarchical ones above)
-	FORUMS: '/forums', // Redirects to /zones
-	FORUM_DETAIL: (slug: string) => `/forums/${slug}`, // Legacy - redirects to new structure
+	// Legacy routes (deprecated - use clean /forums/ structure above)
+	LEGACY_ZONES: '/zones', // Redirects to /forums
+	LEGACY_ZONE: (slug: string) => `/zones/${slug}`, // Redirects to new structure
+	LEGACY_ZONE_FORUM: (zoneSlug: string, forumSlug: string) => `/zones/${zoneSlug}/${forumSlug}`, // Redirects
+	LEGACY_ZONE_SUBFORUM: (zoneSlug: string, forumSlug: string, subforumSlug: string) =>
+		`/zones/${zoneSlug}/${forumSlug}/${subforumSlug}`, // Redirects
+	FORUM_DETAIL: (slug: string) => `/forums/${slug}`, // Direct forum access (no longer legacy)
 	FORUM_CATEGORY: (slug: string) => `/categories/${slug}`, // Old category view
 
 	// Shop routes
