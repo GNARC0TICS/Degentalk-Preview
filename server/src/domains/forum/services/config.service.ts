@@ -10,7 +10,7 @@ import {
 	forumMap,
 	type Forum as ConfigForum,
 	type Zone as ConfigZone
-} from '@/config/forumMap.config';
+} from '../../../../../client/src/config/forumMap.config';
 import type { ForumCategoryWithStats } from '../../../../db/types/forum.types';
 
 export interface ForumConfigEntry {

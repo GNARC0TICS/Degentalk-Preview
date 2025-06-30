@@ -11,10 +11,10 @@ import WalletPage from './pages/wallet';
 import HomePage from './pages/home';
 import ForumsPage from './pages/forums';
 // Import forum system pages
-import ForumBySlugPage from './pages/forums/[forumSlug].tsx';
-import ForumSearchPage from './pages/forums/search.tsx'; // Import the new search page
-import ThreadPage from './pages/threads/BBCodeThreadPage.tsx';
-import CreateThreadPage from './pages/threads/create.tsx';
+import ForumBySlugPage from './pages/forums/[forumSlug]';
+import ForumSearchPage from './pages/forums/search'; // Import the new search page
+import ThreadPage from './pages/threads/BBCodeThreadPage';
+import CreateThreadPage from './pages/threads/create';
 import ShopPage from './pages/shop';
 import NotFoundPage from './pages/not-found';
 import LeaderboardPage from './pages/leaderboard';
@@ -25,38 +25,38 @@ import AnnouncementsPage from './pages/announcements';
 import SearchPage from './pages/search';
 
 // Admin Pages
-import AdminDashboardPage from './pages/admin/index.tsx';
-import AdminUsersPage from './pages/admin/users.tsx';
-import AdminUserEdit from './pages/admin/users/[userId].tsx';
-import AdminRolesPage from './pages/admin/roles.tsx'; // Import AdminRolesPage
-import RolesTitlesPage from './pages/admin/roles-titles.tsx';
-import CloutSystemPage from './pages/admin/clout/index.tsx';
-import UserXpAdjustmentPage from './pages/admin/xp/adjust.tsx';
-import BadgeManagementPage from './pages/admin/xp/badges.tsx';
-import XPSystemPage from './pages/admin/xp-system.tsx';
-import XpSettingsPage from './pages/admin/xp/settings.tsx';
-import TitleManagementPage from './pages/admin/xp/titles.tsx';
-import AdminTreasuryPage from './pages/admin/treasury.tsx';
-import AdminWalletsPage from './pages/admin/wallets/index.tsx';
-import AdminTransactionsPage from './pages/admin/transactions/index.tsx';
-import AdminStatsPage from './pages/admin/stats/index.tsx';
-import AdminAnnouncementsPage from './pages/admin/announcements/index.tsx';
-import AdminCategoriesPage from './pages/admin/categories.tsx';
-import AdminPrefixesPage from './pages/admin/prefixes.tsx';
-import TagConfigPage from './pages/admin/config/tags.tsx';
-import XpConfigPage from './pages/admin/config/xp.tsx';
-import ZoneConfigPage from './pages/admin/config/zones.tsx';
-import AdminDgtPackagesPage from './pages/admin/dgt-packages.tsx';
-import TipRainSettingsPage from './pages/admin/tip-rain-settings.tsx';
-import AdminDevSeedingPage from './pages/admin/dev/seeding.tsx';
-import ForumStructureAdminPage from './pages/admin/forum-structure.tsx';
+import AdminDashboardPage from './pages/admin/index';
+import AdminUsersPage from './pages/admin/users';
+import AdminUserEdit from './pages/admin/users/[userId]';
+import AdminRolesPage from './pages/admin/roles'; // Import AdminRolesPage
+import RolesTitlesPage from './pages/admin/roles-titles';
+import CloutSystemPage from './pages/admin/clout/index';
+import UserXpAdjustmentPage from './pages/admin/xp/adjust';
+import BadgeManagementPage from './pages/admin/xp/badges';
+import XPSystemPage from './pages/admin/xp-system';
+import XpSettingsPage from './pages/admin/xp/settings';
+import TitleManagementPage from './pages/admin/xp/titles';
+import AdminTreasuryPage from './pages/admin/treasury';
+import AdminWalletsPage from './pages/admin/wallets/index';
+import AdminTransactionsPage from './pages/admin/transactions/index';
+import AdminStatsPage from './pages/admin/stats/index';
+import AdminAnnouncementsPage from './pages/admin/announcements/index';
+import AdminCategoriesPage from './pages/admin/categories';
+import AdminPrefixesPage from './pages/admin/prefixes';
+import TagConfigPage from './pages/admin/config/tags';
+import XpConfigPage from './pages/admin/config/xp';
+import ZoneConfigPage from './pages/admin/config/zones';
+import AdminDgtPackagesPage from './pages/admin/dgt-packages';
+import TipRainSettingsPage from './pages/admin/tip-rain-settings';
+import AdminDevSeedingPage from './pages/admin/dev/seeding';
+import ForumStructureAdminPage from './pages/admin/forum-structure';
 import AdminDictionaryQueuePage from './pages/admin/dictionary';
-import AdminReportsPage from './pages/admin/reports/index.tsx';
-import AdminAnimationsPage from './pages/admin/ui/animations.tsx';
-import AdminPackBuilderPage from './pages/admin/ui/pack-builder.tsx';
-import AdminAvatarFramesPage from './pages/admin/avatar-frames.tsx';
-import AdminSocialConfigPage from './pages/admin/social-config.tsx';
-import SystemAnalyticsDashboard from './pages/admin/system-analytics.tsx';
+import AdminReportsPage from './pages/admin/reports/index';
+import AdminAnimationsPage from './pages/admin/ui/animations';
+import AdminPackBuilderPage from './pages/admin/ui/pack-builder';
+import AdminAvatarFramesPage from './pages/admin/avatar-frames';
+import AdminSocialConfigPage from './pages/admin/social-config';
+import SystemAnalyticsDashboard from './pages/admin/system-analytics';
 
 // Shop Pages
 import DgtPurchasePage from './pages/shop-management/dgt-purchase';
@@ -84,7 +84,7 @@ import PreferencesPage from './pages/preferences/index';
 
 // Import Dictionary Pages
 import DictionaryIndexPage from './pages/dictionary/index';
-import DictionarySlugPage from './pages/dictionary/[slug].tsx';
+import DictionarySlugPage from './pages/dictionary/[slug]';
 
 // Import Referrals Page
 import ReferralsPage from './pages/referrals/index';

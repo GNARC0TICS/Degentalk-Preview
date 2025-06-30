@@ -1,7 +1,7 @@
 import { db } from '@db';
 import { rarities } from '@schema';
 import { eq, asc } from 'drizzle-orm';
-import { AdminError } from '../../../../core/errors';
+import { AdminError } from '../../admin.errors';
 
 interface RarityInput {
 	name: string;

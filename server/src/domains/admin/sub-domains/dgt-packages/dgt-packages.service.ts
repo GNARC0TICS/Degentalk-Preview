@@ -1,7 +1,7 @@
 import { db } from '@db';
 import { dgtPackages } from '@schema';
 import { eq, asc } from 'drizzle-orm';
-import { AdminError } from '../../../../core/errors';
+import { AdminError } from '../../admin.errors';
 
 interface DgtPackageInput {
 	name: string;

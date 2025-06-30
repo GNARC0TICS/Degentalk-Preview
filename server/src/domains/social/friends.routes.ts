@@ -1,7 +1,7 @@
 import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { FriendsService } from './friends.service';
-import { requireAuth } from '@/middleware/auth';
+import { requireAuth } from '../../../middleware/auth';
 import { z } from 'zod';
 
 const router = Router();

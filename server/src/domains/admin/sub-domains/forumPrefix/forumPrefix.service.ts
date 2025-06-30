@@ -1,7 +1,7 @@
 import { db } from '@db';
 import { threadPrefixes } from '@schema';
 import { eq, not, and, asc, desc } from 'drizzle-orm';
-import { AdminError } from '../../../../core/errors';
+import { AdminError } from '../../admin.errors';
 
 interface UpdatePrefixInput {
 	name?: string;

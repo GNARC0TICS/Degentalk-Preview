@@ -1,10 +1,12 @@
 # ForumFusion Directory Structure
 
-Generated on: 2025-06-29
+Generated on: 2025-06-30
 
 ```
 ├─ .claude/
 │  ├─ audit/
+│  │  ├─ 2025-06-29.jsonl
+│  │  └─ 2025-06-30.jsonl
 │  ├─ mcp.json
 │  └─ settings.local.json
 ├─ .claudedocs/
@@ -152,7 +154,14 @@ Generated on: 2025-06-29
 │  │  │  │  ├─ VisualJsonTabs.tsx
 │  │  │  │  └─ XpActionRow.tsx
 │  │  │  ├─ auth/
-│  │  │  │  └─ protected-route.tsx
+│  │  │  │  ├─ GlobalRouteGuard.tsx
+│  │  │  │  ├─ index.ts
+│  │  │  │  ├─ protected-route.tsx
+│  │  │  │  ├─ ProtectedRoute.tsx
+│  │  │  │  ├─ README.md
+│  │  │  │  ├─ RequireRole.tsx
+│  │  │  │  ├─ RouteGuards.tsx
+│  │  │  │  └─ withRouteProtection.tsx
 │  │  │  ├─ common/
 │  │  │  │  ├─ BackToHomeButton.tsx
 │  │  │  │  ├─ Breadcrumb.tsx
@@ -426,6 +435,8 @@ Generated on: 2025-06-29
 │  │  │  │  ├─ FriendsManager.tsx
 │  │  │  │  ├─ WhaleWatchDashboard.tsx
 │  │  │  │  └─ WhaleWatchDisplay.tsx
+│  │  │  ├─ test/
+│  │  │  │  └─ RoleTest.tsx
 │  │  │  ├─ ui/
 │  │  │  │  ├─ accessibility-enhancements.tsx
 │  │  │  │  ├─ accordion.tsx
@@ -670,6 +681,7 @@ Generated on: 2025-06-29
 │  │  │  ├─ usePermission.ts
 │  │  │  ├─ useProfileEngagement.ts
 │  │  │  ├─ useProfileStats.ts
+│  │  │  ├─ useRouteProtection.ts
 │  │  │  ├─ useSearchParams.ts
 │  │  │  ├─ useShowHotRibbon.ts
 │  │  │  ├─ useThreadZone.ts
@@ -714,6 +726,8 @@ Generated on: 2025-06-29
 │  │  │  ├─ protected-route.tsx
 │  │  │  ├─ queryClient.ts
 │  │  │  ├─ rare-items-vault.ts
+│  │  │  ├─ roles.ts
+│  │  │  ├─ routeConfig.ts
 │  │  │  ├─ safeWebSocket.ts
 │  │  │  └─ utils.ts
 │  │  ├─ navigation/
@@ -843,6 +857,7 @@ Generated on: 2025-06-29
 │  │  │  ├─ leaderboard.tsx
 │  │  │  ├─ not-found.tsx
 │  │  │  ├─ progress.tsx
+│  │  │  ├─ RouteProtectionDemo.tsx
 │  │  │  ├─ shop.tsx
 │  │  │  ├─ ui-playground.tsx
 │  │  │  ├─ wallet.tsx
@@ -1319,7 +1334,8 @@ Generated on: 2025-06-29
 │  │  │  ├─ 0007_snapshot.json
 │  │  │  ├─ 0008_snapshot.json
 │  │  │  ├─ 0009_snapshot.json
-│  │  │  └─ 0010_snapshot.json
+│  │  │  ├─ 0010_snapshot.json
+│  │  │  └─ 0011_snapshot.json
 │  │  ├─ 0000_silky_drax.sql
 │  │  ├─ 0001_happy_vulture.sql
 │  │  ├─ 0002_closed_romulus.sql
@@ -1332,6 +1348,7 @@ Generated on: 2025-06-29
 │  │  ├─ 0008_round_loners.sql
 │  │  ├─ 0009_nappy_skreet.sql
 │  │  ├─ 0010_tiny_vin_gonzales.sql
+│  │  ├─ 0011_motionless_malice.sql
 │  │  ├─ relations.ts
 │  │  └─ schema.snapshot.ts
 │  ├─ 0008_add_users_profile_fields.sql

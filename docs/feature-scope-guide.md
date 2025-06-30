@@ -1,14 +1,13 @@
----
-title: feature scope guide
-status: STABLE
-updated: 2025-06-28
----
-
 # Feature Scope Guide
 
-Generated on: 2025-06-26T19:44:47.040Z
+Generated on: 2025-06-30T09:55:00.020Z
 
 > NOTE: This file is auto-generated. Do not edit manually.
+
+## RouteProtectionDemo
+
+### Frontend Pages
+- client/src/pages/RouteProtectionDemo.tsx
 
 ## Activity
 
@@ -62,6 +61,7 @@ Generated on: 2025-06-26T19:44:47.040Z
 - client/src/pages/admin/features/index.tsx
 - client/src/pages/admin/forum-structure.tsx
 - client/src/pages/admin/index.tsx
+- client/src/pages/admin/live-database.tsx
 - client/src/pages/admin/missions/index.tsx
 - client/src/pages/admin/permissions/index.tsx
 - client/src/pages/admin/prefixes.tsx
@@ -72,6 +72,7 @@ Generated on: 2025-06-26T19:44:47.040Z
 - client/src/pages/admin/shop/edit.tsx
 - client/src/pages/admin/shop/index.tsx
 - client/src/pages/admin/shop/rarities.tsx
+- client/src/pages/admin/shoutbox.tsx
 - client/src/pages/admin/social-config.tsx
 - client/src/pages/admin/stats/index.tsx
 - client/src/pages/admin/stickers.tsx
@@ -97,18 +98,25 @@ Generated on: 2025-06-26T19:44:47.040Z
 ### Frontend Components / Hooks / Services
 - client/src/components/admin/AdminDashboard.tsx
 - client/src/components/admin/AdminThemeProvider.tsx
-- client/src/components/admin/FeatureFlagRow.tsx
 - client/src/components/admin/GrantFrameModal.tsx
 - client/src/components/admin/ModularAdminLayout.tsx
 - client/src/components/admin/ModularAdminSidebar.tsx
+- client/src/components/admin/VisualJsonTabs.tsx
 - client/src/components/admin/XpActionRow.tsx
 - client/src/components/admin/clout/AchievementsSection.tsx
 - client/src/components/admin/clout/CloutGrantsSection.tsx
 - client/src/components/admin/clout/CloutLogsSection.tsx
 - client/src/components/admin/clout/CloutTiersSection.tsx
+- client/src/components/admin/common/AdminDataTable.tsx
 - client/src/components/admin/cooldown-settings.tsx
 - client/src/components/admin/effects/BankruptcyEffect.tsx
 - client/src/components/admin/effects/CloutObliterationEffect.tsx
+- client/src/components/admin/form-controls/ColorPicker.tsx
+- client/src/components/admin/form-controls/ImageUpload.tsx
+- client/src/components/admin/form-controls/InlineError.tsx
+- client/src/components/admin/form-controls/JsonEditor.tsx
+- client/src/components/admin/form-controls/SwitchRow.tsx
+- client/src/components/admin/form-controls/index.ts
 - client/src/components/admin/forms/reports/ReportActionDialogs.tsx
 - client/src/components/admin/forms/reports/ViewReportDialog.tsx
 - client/src/components/admin/forms/roles/RoleFormDialog.tsx
@@ -153,7 +161,6 @@ Generated on: 2025-06-26T19:44:47.040Z
 - client/src/features/admin/services/cloutAchievementsService.ts
 - client/src/features/admin/services/cloutGrantsService.ts
 - client/src/features/admin/services/economyConfigService.ts
-- client/src/features/admin/services/featureFlagsService.ts
 - client/src/features/admin/services/media-api.service.ts
 - client/src/features/admin/services/settingsService.ts
 - client/src/features/admin/services/sticker-api.service.ts
@@ -215,6 +222,12 @@ Generated on: 2025-06-26T19:44:47.040Z
 - server/src/domains/admin/sub-domains/cache/cache.routes.ts
 - server/src/domains/admin/sub-domains/clout/clout.controller.ts
 - server/src/domains/admin/sub-domains/clout/clout.routes.ts
+- server/src/domains/admin/sub-domains/database/bulk-operations.controller.ts
+- server/src/domains/admin/sub-domains/database/database.controller.ts
+- server/src/domains/admin/sub-domains/database/database.routes.ts
+- server/src/domains/admin/sub-domains/database/database.service.ts
+- server/src/domains/admin/sub-domains/database/query.controller.ts
+- server/src/domains/admin/sub-domains/database/query.service.ts
 - server/src/domains/admin/sub-domains/dev/seeding.routes.ts
 - server/src/domains/admin/sub-domains/dgt-packages/dgt-packages.controller.ts
 - server/src/domains/admin/sub-domains/dgt-packages/dgt-packages.routes.ts
@@ -304,6 +317,8 @@ Generated on: 2025-06-26T19:44:47.040Z
 - server/src/domains/admin/sub-domains/xp/xp.routes.ts
 - server/src/domains/admin/sub-domains/xp/xp.service.ts
 - server/src/domains/admin/sub-domains/xp/xp.validators.ts
+- server/src/domains/gamification/admin.controller.ts
+- server/src/domains/gamification/admin.routes.ts
 
 ### Database Schema
 - db/schema/admin/announcements.ts
@@ -318,6 +333,7 @@ Generated on: 2025-06-26T19:44:47.040Z
 - db/schema/admin/reports.ts
 - db/schema/admin/scheduledTasks.ts
 - db/schema/admin/seoMetadata.ts
+- db/schema/admin/shoutboxConfig.ts
 - db/schema/admin/siteSettings.ts
 - db/schema/admin/templates.ts
 - db/schema/admin/themes.ts
@@ -326,6 +342,7 @@ Generated on: 2025-06-26T19:44:47.040Z
 
 ### Tests
 - client/src/__tests__/admin-modules.test.ts
+- client/src/__tests__/types/admin.types.test.ts
 - tests/e2e/admin-settings.spec.ts
 
 ### Scripts & Tools
@@ -335,9 +352,14 @@ Generated on: 2025-06-26T19:44:47.040Z
 - scripts/test-admin-xp.js
 
 ### Docs
+- docs/admin-navigation.md
 - docs/admin-panel-audit-2025-06-17.md
+- docs/admin/ADMIN-CONVERSION-COMPLETE.md
+- docs/admin/FORUM-ADMIN-IMPROVEMENTS.md
 - docs/api/admin-api.md
+- docs/archive/2025-06/MVP-SPRINTS/adminlaunchplan.md
 - docs/examples/admin-users-query.md
+- docs/plans/demo-admin-modular.md
 
 ## Advertising
 
@@ -373,7 +395,13 @@ Generated on: 2025-06-26T19:44:47.040Z
 - client/src/pages/auth.tsx
 
 ### Frontend Components / Hooks / Services
+- client/src/components/auth/GlobalRouteGuard.tsx
+- client/src/components/auth/ProtectedRoute.tsx
+- client/src/components/auth/RequireRole.tsx
+- client/src/components/auth/RouteGuards.tsx
+- client/src/components/auth/index.ts
 - client/src/components/auth/protected-route.tsx
+- client/src/components/auth/withRouteProtection.tsx
 - client/src/hooks/use-auth.tsx
 - client/src/hooks/wrappers/use-auth-wrapper.ts
 
@@ -426,6 +454,9 @@ Generated on: 2025-06-26T19:44:47.040Z
 - server/src/domains/cosmetics/avatarFrameStore.service.ts
 - server/src/domains/cosmetics/frameEquip.service.ts
 
+### Scripts & Tools
+- scripts/seed/shop/seed-default-cosmetics.ts
+
 ## Degen-index
 
 ### Frontend Pages
@@ -461,6 +492,7 @@ Generated on: 2025-06-26T19:44:47.040Z
 ### Frontend Components / Hooks / Services
 - client/src/components/economy/badges/BadgeShowcase.tsx
 - client/src/components/economy/badges/UserBadgesDisplay.tsx
+- client/src/components/economy/shoutbox/enhanced-shoutbox-widget.tsx
 - client/src/components/economy/wallet-display.tsx
 - client/src/components/economy/wallet/DgtPackageCard.tsx
 - client/src/components/economy/wallet/PackagesGrid.tsx
@@ -529,6 +561,9 @@ Generated on: 2025-06-26T19:44:47.040Z
 ### Backend
 - server/src/domains/editor/editor.routes.ts
 
+### Docs
+- docs/admin/live-db-editor.md
+
 ## Engagement
 
 ### Frontend Components / Hooks / Services
@@ -552,6 +587,9 @@ Generated on: 2025-06-26T19:44:47.040Z
 ### Tests
 - client/src/components/forum/enhanced/__tests__/CryptoEngagementBar.test.tsx
 
+### Docs
+- docs/archive/2025-06/COMMUNITY-ENGAGEMENT-FEATURES.md
+
 ## Feature-gates
 
 ### Backend
@@ -559,17 +597,26 @@ Generated on: 2025-06-26T19:44:47.040Z
 - server/src/domains/feature-gates/feature-gates.routes.ts
 - server/src/domains/feature-gates/feature-gates.service.ts
 
+## Fixtures-dashboard
+
+### Frontend Pages
+- client/src/pages/fixtures-dashboard.tsx
+
 ## Forum
 
 ### Frontend Components / Hooks / Services
 - client/src/components/forum/BBCodePostCard.tsx
 - client/src/components/forum/CanonicalZoneGrid.tsx
 - client/src/components/forum/CreateThreadButton.tsx
+- client/src/components/forum/ForumErrorBoundary.tsx
+- client/src/components/forum/ForumHeader.tsx
 - client/src/components/forum/ForumPage.tsx
 - client/src/components/forum/HotTopics.tsx
+- client/src/components/forum/LegacyForumRedirect.tsx
 - client/src/components/forum/ModeratorActions.tsx
 - client/src/components/forum/OriginForumPill.tsx
 - client/src/components/forum/ProfileCard.tsx
+- client/src/components/forum/QuickReplyInput.tsx
 - client/src/components/forum/QuickStats.tsx
 - client/src/components/forum/ReactionBar.tsx
 - client/src/components/forum/RecentActivity.tsx
@@ -582,12 +629,20 @@ Generated on: 2025-06-26T19:44:47.040Z
 - client/src/components/forum/ThreadCard.tsx
 - client/src/components/forum/ThreadFilters.tsx
 - client/src/components/forum/ThreadPagination.tsx
+- client/src/components/forum/ThreadRow.tsx
 - client/src/components/forum/ThreadSidebar.tsx
 - client/src/components/forum/ThreadStats.tsx
 - client/src/components/forum/UserLevelDisplay.tsx
 - client/src/components/forum/XpBoostBadge.tsx
 - client/src/components/forum/ZoneCard.tsx
 - client/src/components/forum/ZoneStats.tsx
+- client/src/components/forum/bbcode/PostActions.tsx
+- client/src/components/forum/bbcode/PostBody.tsx
+- client/src/components/forum/bbcode/PostFooter.tsx
+- client/src/components/forum/bbcode/PostHeader.tsx
+- client/src/components/forum/bbcode/PostSidebar.tsx
+- client/src/components/forum/bbcode/QuickReplyBox.tsx
+- client/src/components/forum/bbcode/index.ts
 - client/src/components/forum/breadcrumb-nav.tsx
 - client/src/components/forum/category-card.tsx
 - client/src/components/forum/enhanced/CryptoEngagementBar.tsx
@@ -608,6 +663,14 @@ Generated on: 2025-06-26T19:44:47.040Z
 - client/src/components/forum/layouts/__tests__/ResponsiveForumLayout.test.tsx
 - client/src/components/forum/layouts/index.ts
 - client/src/components/forum/prefix-badge.tsx
+- client/src/components/forum/sidebar/ActivityFeedWidget.tsx
+- client/src/components/forum/sidebar/DynamicSidebar.tsx
+- client/src/components/forum/sidebar/HotTopicsWidget.tsx
+- client/src/components/forum/sidebar/SidebarIntegrationExample.tsx
+- client/src/components/forum/sidebar/SidebarWidgetCard.tsx
+- client/src/components/forum/sidebar/StatsWidget.tsx
+- client/src/components/forum/sidebar/WidgetSkeleton.tsx
+- client/src/components/forum/sidebar/index.ts
 - client/src/components/forum/tag-input.tsx
 - client/src/components/forum/zone-group.tsx
 - client/src/features/forum/components/CreatePostForm.tsx
@@ -625,8 +688,13 @@ Generated on: 2025-06-26T19:44:47.040Z
 - client/src/features/forum/components/ThreadForm.tsx
 - client/src/features/forum/components/ThreadList.tsx
 - client/src/features/forum/components/index.ts
+- client/src/features/forum/contexts/ThreadActionsContext.tsx
+- client/src/features/forum/hooks/useForumMutations.ts
 - client/src/features/forum/hooks/useForumQueries.ts
+- client/src/features/forum/hooks/useForumStats.ts
+- client/src/features/forum/hooks/useThreadPermissions.ts
 - client/src/features/forum/services/forumApi.ts
+- client/src/hooks/useForumFilters.ts
 
 ### Backend
 - server/src/config/forum.config.ts
@@ -641,14 +709,17 @@ Generated on: 2025-06-26T19:44:47.040Z
 - server/src/domains/forum/forum.service.ts
 - server/src/domains/forum/routes/bookmark.routes.ts
 - server/src/domains/forum/routes/category.routes.ts
+- server/src/domains/forum/routes/content.routes.ts
 - server/src/domains/forum/routes/post.routes.ts
 - server/src/domains/forum/routes/thread.routes.ts
 - server/src/domains/forum/rules/rules.routes.ts
 - server/src/domains/forum/services/cache.service.ts
 - server/src/domains/forum/services/category.service.ts
 - server/src/domains/forum/services/config.service.ts
+- server/src/domains/forum/services/permissions.service.ts
 - server/src/domains/forum/services/post.service.ts
 - server/src/domains/forum/services/structure.service.ts
+- server/src/domains/forum/services/thread.service.batch-optimization.ts
 - server/src/domains/forum/services/thread.service.ts
 - server/src/domains/forum/sub-domains/reports/reports.controller.ts
 - server/src/domains/forum/sub-domains/reports/reports.routes.ts
@@ -688,9 +759,7 @@ Generated on: 2025-06-26T19:44:47.040Z
 ### Scripts & Tools
 - scripts/backfill-thread-parentForumSlug.ts
 - scripts/build-forum-sdk.ts
-- scripts/db/dist/scripts/db/seed-forum-categories.js
 - scripts/db/fix-forum-relationships.ts
-- scripts/db/read-forum-categories.ts
 - scripts/db/test-forum-query.ts
 - scripts/db/test-forum-runtime.ts
 - scripts/db/update-forum-slugs.ts
@@ -704,8 +773,14 @@ Generated on: 2025-06-26T19:44:47.040Z
 - scripts/validation/validate-forum-structure-migration.ts
 
 ### Docs
+- docs/admin/FORUM-ADMIN-IMPROVEMENTS.md
 - docs/api/forum-api.md
+- docs/archive/2025-06/_audit/forum-audit.md
 - docs/archive/FORUM_PRIMARY_ZONES_REFACTOR_PLAN.md
+- docs/plans/FORUM-POWER-FEATURES.md
+- docs/plans/MVP-FORUM-SETUP.md
+- docs/plans/forum-sprint-subforums.md
+- docs/reports/FORUM_TEST_REPORT.md
 
 ## Forum-rules
 
@@ -714,13 +789,56 @@ Generated on: 2025-06-26T19:44:47.040Z
 
 ## Gamification
 
+### Frontend Components / Hooks / Services
+- client/src/components/gamification/achievement-card.tsx
+- client/src/components/gamification/achievement-grid.tsx
+- client/src/components/gamification/achievement-unlock-modal.tsx
+- client/src/components/gamification/index.ts
+- client/src/components/gamification/leaderboard.tsx
+- client/src/components/gamification/level-display.tsx
+- client/src/components/gamification/level-up-modal.tsx
+- client/src/components/gamification/mission-card.tsx
+- client/src/components/gamification/mission-dashboard.tsx
+- client/src/components/gamification/profile-gamification-widget.tsx
+- client/src/components/gamification/progression-card.tsx
+- client/src/features/gamification/services/gamification-api.service.ts
+- client/src/hooks/use-gamification.tsx
+
+### Backend
+- server/src/domains/gamification/achievement.controller.ts
+- server/src/domains/gamification/achievement.routes.ts
+- server/src/domains/gamification/achievement.service.ts
+- server/src/domains/gamification/achievements/achievement-admin.service.ts
+- server/src/domains/gamification/achievements/achievement-processor.service.ts
+- server/src/domains/gamification/achievements/achievement.controller.ts
+- server/src/domains/gamification/achievements/achievement.routes.ts
+- server/src/domains/gamification/achievements/evaluators/degen-evaluators.ts
+- server/src/domains/gamification/achievements/index.ts
+- server/src/domains/gamification/achievements/templates/achievement-templates.ts
+- server/src/domains/gamification/admin.controller.ts
+- server/src/domains/gamification/admin.routes.ts
+- server/src/domains/gamification/analytics.controller.ts
+- server/src/domains/gamification/analytics.routes.ts
+- server/src/domains/gamification/analytics.service.ts
+- server/src/domains/gamification/gamification.routes.ts
+- server/src/domains/gamification/index.ts
+- server/src/domains/gamification/leveling.controller.ts
+- server/src/domains/gamification/leveling.routes.ts
+- server/src/domains/gamification/leveling.service.ts
+- server/src/domains/gamification/mission.controller.ts
+- server/src/domains/gamification/mission.routes.ts
+
 ### Database Schema
+- db/schema/gamification/achievementEvents.ts
 - db/schema/gamification/achievements.ts
 - db/schema/gamification/leaderboards.ts
 - db/schema/gamification/missions.ts
 - db/schema/gamification/platformStats.ts
 - db/schema/gamification/userAchievements.ts
 - db/schema/gamification/userMissionProgress.ts
+
+### Docs
+- docs/api/gamification-api.md
 
 ## Home
 
@@ -838,6 +956,7 @@ Generated on: 2025-06-26T19:44:47.040Z
 - client/src/pages/profile/xp.tsx
 
 ### Frontend Components / Hooks / Services
+- client/src/components/profile/AchievementsTab.tsx
 - client/src/components/profile/CosmeticControlPanel.tsx
 - client/src/components/profile/FriendsTab.tsx
 - client/src/components/profile/InventoryTab.tsx
@@ -883,6 +1002,16 @@ Generated on: 2025-06-26T19:44:47.040Z
 - server/src/domains/profile/social-actions.controller.ts
 - server/src/domains/profile/social-actions.routes.ts
 - server/src/domains/profile/social-actions.service.ts
+
+### Docs
+- docs/archive/2025-06/MVP-SPRINTS/userprofilepolishplan.md
+- docs/archive/2025-06/_audit/profile-system-ux-audit-2025-06-15.md
+- docs/archive/2025-06/_audit/profile-system-ux-implementation-plan-2025-06-15.md
+
+## Progress
+
+### Frontend Pages
+- client/src/pages/progress.tsx
 
 ## Share
 
@@ -935,9 +1064,11 @@ Generated on: 2025-06-26T19:44:47.040Z
 ## Shoutbox
 
 ### Frontend Pages
+- client/src/pages/admin/shoutbox.tsx
 - client/src/pages/mod/shoutbox.tsx
 
 ### Frontend Components / Hooks / Services
+- client/src/components/economy/shoutbox/enhanced-shoutbox-widget.tsx
 - client/src/components/shoutbox/ShoutboxContainer.tsx
 - client/src/components/shoutbox/ShoutboxInput.tsx
 - client/src/components/shoutbox/index.ts
@@ -951,10 +1082,20 @@ Generated on: 2025-06-26T19:44:47.040Z
 - client/src/components/shoutbox/shoutbox.spec.tsx
 
 ### Backend
+- server/src/domains/shoutbox/enhanced-shoutbox.routes.ts
+- server/src/domains/shoutbox/services/cache.service.ts
+- server/src/domains/shoutbox/services/history.service.ts
+- server/src/domains/shoutbox/services/performance.service.ts
+- server/src/domains/shoutbox/services/queue.service.ts
+- server/src/domains/shoutbox/services/room.service.ts
+- server/src/domains/shoutbox/services/shoutbox.service.ts
 - server/src/domains/shoutbox/shoutbox.routes.ts
 
 ### Tests
 - client/src/components/shoutbox/shoutbox.spec.tsx
+
+### Scripts & Tools
+- scripts/migration/fix-shoutbox-message-id.ts
 
 ## Social
 
@@ -1031,6 +1172,10 @@ Generated on: 2025-06-26T19:44:47.040Z
 ### Docs
 - docs/ADVERTISEMENT-SYSTEM.md
 - docs/activity-feed-system.md
+- docs/architecture/cache-system.md
+- docs/archive/2025-06/BRAND-SYSTEM-INTEGRATION-PLAN.md
+- docs/archive/2025-06/_audit/profile-system-ux-audit-2025-06-15.md
+- docs/archive/2025-06/_audit/profile-system-ux-implementation-plan-2025-06-15.md
 - docs/gamification/level-flex-system.md
 - docs/memory-bank/systemPatterns.md
 - docs/ui/avatar-frames-system.md
@@ -1081,6 +1226,7 @@ Generated on: 2025-06-26T19:44:47.040Z
 ### Frontend Components / Hooks / Services
 - client/src/hooks/preferences/useUpdateUserSettings.ts
 - client/src/hooks/preferences/useUserSettings.ts
+- client/src/hooks/useRouteProtection.ts
 - client/src/hooks/useUserCosmetics.ts
 - client/src/hooks/useUserInventory.ts
 - client/src/hooks/useUserXP.ts
@@ -1088,6 +1234,7 @@ Generated on: 2025-06-26T19:44:47.040Z
 ### Backend
 - server/src/core/repository/__tests__/user-repository.test.ts
 - server/src/core/repository/repositories/user-repository.ts
+- server/src/core/services/user.service.ts
 - server/src/domains/admin/sub-domains/user-groups/user-groups.controller.ts
 - server/src/domains/admin/sub-domains/user-groups/user-groups.routes.ts
 - server/src/domains/admin/sub-domains/user-groups/user-groups.service.ts
@@ -1124,22 +1271,26 @@ Generated on: 2025-06-26T19:44:47.040Z
 
 ### Tests
 - server/src/core/repository/__tests__/user-repository.test.ts
+- tests/e2e/behavioral-flows/user-journey-analytics.spec.ts
 
 ### Scripts & Tools
+- scripts/codemods/identify-legacy-user-fetch.ts
+- scripts/codemods/migrate-user-fetch.ts
 - scripts/db/seed-user-role-migration.ts
 - scripts/db/seed-users.ts
 - scripts/db/update-users-table.ts
 - scripts/fix-all-user-refs.ts
 - scripts/fix-userid-types.ts
-- scripts/refactor/component-merge/user-avatar.js
-- scripts/refactor/component-merge/username.js
 - scripts/seed/run-username-colors.ts
 - scripts/seed/shop/username-colors.ts
 
 ### Docs
+- docs/MIGRATION-COMPLETE-legacy-user-fetch.md
 - docs/USER-ADVERTISEMENT-IMPLEMENTATION.md
 - docs/admin/user-guide.md
+- docs/archive/2025-06/MVP-SPRINTS/userprofilepolishplan.md
 - docs/examples/admin-users-query.md
+- docs/legacy-user-fetch-migration-plan.md
 
 ## Users
 
@@ -1224,7 +1375,6 @@ Generated on: 2025-06-26T19:44:47.040Z
 - server/src/domains/wallet/user-management.service.ts
 - server/src/domains/wallet/wallet-api-tests.ts
 - server/src/domains/wallet/wallet-config.service.ts
-- server/src/domains/wallet/wallet.config.ts
 - server/src/domains/wallet/wallet.constants.ts
 - server/src/domains/wallet/wallet.controller.ts
 - server/src/domains/wallet/wallet.dev.controller.ts
@@ -1254,8 +1404,8 @@ Generated on: 2025-06-26T19:44:47.040Z
 - scripts/wallet/wallet-refactor-migration.ts
 
 ### Docs
-- docs/CCPAYMENT/WALLET_INTEGRATION_GUIDE.md
 - docs/api/wallet-api.md
+- docs/archive/2025-06/WALLET_INTEGRATION_GUIDE.md
 - docs/dev/auth-wallet-dev-guide.md
 
 ## Whispers
@@ -1319,3 +1469,5 @@ Generated on: 2025-06-26T19:44:47.040Z
 
 ### Docs
 - docs/api/xp-api.md
+- docs/archive/2025-06/MVP-SPRINTS/XP-DGT-SPRINT.md
+- docs/gamification/XP-DGT-SOURCE-OF-TRUTH.md

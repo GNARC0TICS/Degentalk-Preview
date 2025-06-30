@@ -1,4 +1,4 @@
-// Auto-generated on 2025-06-21T11:07:04.725Z. Do not edit manually.
+// Auto-generated on 2025-06-30T09:56:02.182Z. Do not edit manually.
 
 // 	Activity
 // 	Folder
@@ -7,29 +7,9 @@
 // 	MessageCircle
 // 	Zap
 // Added import
-	// Flame
-// Archive
-// Dices
-// FileText
-// Folder
-// Home
-// Icons will come from ZONE_THEMES
-	// Target
-// Keep one Home import - Unused
-	Search
-// LayoutGrid
-// No longer directly used
-// No longer directly used by NavItem
+	Users
 // Renaming Folder to avoid conflict if NavNode uses 'Folder'
 	ChevronRight
-// Unused
-	// Archive
-// Unused
-	// Dices
-// Unused
-	// FileText // Unused
-// Unused
-	// Target
 Activity
 AlertCircle
 AlertOctagon
@@ -39,21 +19,19 @@ AlignLeft
 AlignRight
 Archive
 ArrowDown
-ArrowDownCircle
 ArrowDownLeft
-ArrowDownRight
 ArrowDownToLine
 ArrowLeft
 ArrowRight
 ArrowUp
 ArrowUpCircle
 ArrowUpDown
+ArrowUpFromLine
 ArrowUpRight
 ArrowUpToLine
 AtSign
 Award
 BadgeCheck
-BadgeIcon
 BadgeInfo
 Ban
 BarChart
@@ -63,12 +41,15 @@ Beaker
 Bell
 BellOff
 BellRing
+Block
 Bold
 BookOpen
 Bookmark
 BookmarkIcon
+Bug
 Calendar
 CalendarClock
+CalendarDays
 Check
 CheckCheck
 CheckCircle
@@ -78,8 +59,6 @@ ChevronDown
 ChevronLeft
 ChevronLeftIcon
 ChevronRight
-ChevronRight
-	// Flame
 ChevronRightIcon
 ChevronUp
 ChevronsLeftIcon
@@ -94,30 +73,35 @@ Code
 Code2
 Coins
 CoinsIcon
+Columns
 Command
+Compass
+Contrast
 Copy
 CornerDownRight
 CreditCard
 Crown
 Database
-DefaultFolderIcon is used
-	ChevronRight
+Diamond
 Dice5
 Dices
 DollarSign
 Dot
 Download
 Edit
+Edit3
 ExternalLink
 Eye
 EyeOff
 File
+FileImage
 FileText
-Film
+FileVideo
 Filter
 Flag
 Flame
 FlameIcon
+Focus
 Folder
 FolderIcon
 FolderOpen
@@ -125,7 +109,9 @@ Frame
 Frown
 Gift
 Globe
+Grid3X3
 GripVertical
+HardDrive
 Hash
 Heading1
 Heading2
@@ -139,9 +125,11 @@ Image
 Inbox
 Info
 Italic
+Keyboard
 Laptop
 Laugh
 Layers
+Layout
 LayoutGrid
 LayoutList
 Lightbulb
@@ -149,28 +137,32 @@ Link
 Link2
 List
 ListOrdered
-Loader
 Loader2
 Lock
 LogIn
 LogOut
 Mail
+Map
 Maximize2
+Medal
 Megaphone
 Menu
 MessageCircle
 MessageCircleReply
 MessageSquare
+MessageSquareLock
 MessageSquareOff
 MessagesSquare
 Minimize2
 Minus
 MinusCircle
 Monitor
+MonitorSpeaker
 Moon
 MoreHorizontal
 MoreHorizontalIcon
 MoreVertical
+MousePointer
 Move
 MoveDown
 MoveUp
@@ -180,6 +172,8 @@ Palette
 PanelLeft
 PanelRight
 PanelsTopLeft
+Pause
+PenTool
 Pencil
 Pin
 PinOff
@@ -211,6 +205,7 @@ ShoppingCart
 Sidebar
 SidebarClose
 Skull
+SlidersHorizontal
 Smartphone
 Smile
 SortAsc
@@ -221,32 +216,38 @@ Sticker
 Sun
 Tablet
 Tag
-TagIcon
 Target
-Terminal
+ThumbsDown
 ThumbsUp
 Timer
+ToggleLeft
 Trash
 Trash2
 TrendingDown
 TrendingUp
 Trophy
+Twitter
+Type
 Underline
+Unlock
 Upload
 UploadCloud
 User
 UserCheck
-UserCog
+UserMinus
 UserPlus
 UserRound
 UserX
 Users
+Volume2
+VolumeX
 Wallet
+Wand2
+Wifi
+WifiOff
 Wind
 X
 XCircle
 Zap
 ZapIcon
-systemLinkNodes uses LayoutGrid from forumNav.ts
-	Users
 type LucideIcon

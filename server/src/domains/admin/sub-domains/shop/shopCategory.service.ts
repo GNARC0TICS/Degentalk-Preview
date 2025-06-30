@@ -1,7 +1,7 @@
 import { db } from '@db';
 import { cosmeticCategories } from '@schema';
 import { eq, desc, asc } from 'drizzle-orm';
-import { AdminError } from '../../../../core/errors';
+import { AdminError } from '../../admin.errors';
 
 interface CategoryInput {
 	name: string;
