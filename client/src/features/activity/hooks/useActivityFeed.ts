@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { activityApi, type EventLogFilters } from '../services/activityApi';
+import { activityApi, type EventLogFilters } from '@/features/activity/services/activityApi';
 import { useAuth } from '@/hooks/use-auth';
 
 /**

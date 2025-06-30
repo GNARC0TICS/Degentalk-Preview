@@ -14,7 +14,7 @@ import { ReferralPreferences } from '@/components/preferences/referral-preferenc
 import { SocialPreferences } from '@/components/preferences/social-preferences';
 import { User, Shield, Bell, Monitor, Lock, Users, Share2, UserCheck } from 'lucide-react';
 import { ProtectedRoute } from '@/lib/protected-route';
-import { Container } from '@/components/ui/Container';
+import { Container } from '@/components/ui/container';
 
 /**
  * Preferences page with tabbed interface for different preferences categories.

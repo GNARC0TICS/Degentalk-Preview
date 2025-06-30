@@ -1,6 +1,6 @@
 import React from 'react';
-import { useActivityFeed } from '../hooks/useActivityFeed';
-import { EventLog } from '../services/activityApi';
+import { useActivityFeed } from '@/features/activity/hooks/useActivityFeed';
+import { EventLog } from '@/features/activity/services/activityApi';
 import { format } from 'date-fns';
 
 interface ActivityFeedProps {

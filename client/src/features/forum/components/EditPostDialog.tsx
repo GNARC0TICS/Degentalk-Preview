@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { RichTextEditor } from '@/components/editor/rich-text-editor';
-import { usePostUpdate } from '../hooks/useForumQueries';
+import { usePostUpdate } from '@/features/forum/hooks/useForumQueries';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import type { PostWithUser } from '@/types/compat/forum';

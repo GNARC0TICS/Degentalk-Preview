@@ -8,11 +8,8 @@ type ProtectedRouteProps = {
 	component: React.ComponentType<any>;
 } & Omit<RouteProps, 'component' | 'path' | 'children'>;
 
-// Check if we're in development mode
-const isDevelopment = import.meta.env.MODE === 'development';
-
 export function ProtectedRoute({ path, component: Component, ...routeProps }: ProtectedRouteProps) {
-	const { user, isLoading } = useAuth();
+	const { user, isLoading, isAuthenticated } = useAuth();
 
 	return (
 		<Route path={path} {...routeProps}>
@@ -20,7 +17,7 @@ export function ProtectedRoute({ path, component: Component, ...routeProps }: Pr
 				<div className="flex items-center justify-center min-h-screen">
 					<Loader2 className="h-8 w-8 animate-spin text-primary" />
 				</div>
-			) : user || isDevelopment ? (
+			) : isAuthenticated ? (
 				<Component />
 			) : (
 				<Redirect to="/auth" />

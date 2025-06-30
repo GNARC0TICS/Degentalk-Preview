@@ -2,7 +2,7 @@ import { Link } from 'wouter';
 import { MessageSquare, CornerDownRight, Lock, Shield, Star, Crown, Flame } from 'lucide-react';
 import type { MergedForum } from '@/contexts/ForumStructureContext';
 import { useState, useEffect } from 'react';
-import { StatChip } from '@/components/ui/StatChip';
+import { StatChip } from '@/components/ui/stat-chip';
 import { Badge } from '@/components/ui/badge';
 import { usePermission } from '@/hooks/usePermission';
 import { CARD_STYLES } from '@/utils/card-constants';

@@ -19,7 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { CARD_STYLES } from '@/utils/card-constants';
 import { useShowHotRibbon } from '@/hooks/useShowHotRibbon';
-import { SafeImage } from '@/components/ui/SafeImage';
+import { SafeImage } from '@/components/ui/safe-image';
 import { animationConfig } from '@/config/animation.config';
 import { getZoneTheme } from '@shared/config/zoneThemes.config';
 import XpBoostBadge from './XpBoostBadge';

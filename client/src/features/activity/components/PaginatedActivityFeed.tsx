@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useActivityFeed } from '../hooks/useActivityFeed';
-import { EventLog, EventLogFilters } from '../services/activityApi';
+import { useActivityFeed } from '@/features/activity/hooks/useActivityFeed';
+import { EventLog, EventLogFilters } from '@/features/activity/services/activityApi';
 import { format } from 'date-fns';
 
 interface PaginatedActivityFeedProps {

@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { Save, X, User, Image, Globe, MessageSquare } from 'lucide-react'; // Removed Upload icon
-import { FileDropZone } from '@/components/ui/FileDropZone';
+import { FileDropZone } from '@/components/ui/file-drop-zone';
 
 interface ProfileEditorProps {
 	profile: {

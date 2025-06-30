@@ -14,7 +14,7 @@ import { CosmeticControlPanel } from '@/components/profile/CosmeticControlPanel'
 import { ProfileSkeleton } from '@/components/profile/ProfileSkeleton';
 import { ProfileDashboard } from '@/components/profile/ProfileDashboard';
 import { ProfileNavigation } from '@/components/profile/ProfileNavigation';
-import { SeoHead } from '@/components/ui/SeoHead';
+import { SeoHead } from '@/components/ui/seo-head';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { LoadingSpinner } from '@/components/ui/loader';
 import BackToHomeButton from '@/components/common/BackToHomeButton';

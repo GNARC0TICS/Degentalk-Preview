@@ -16,7 +16,7 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select';
-import { useReportPost } from '../hooks/useForumQueries';
+import { useReportPost } from '@/features/forum/hooks/useForumQueries';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import type { PostWithUser } from '@/types/compat/forum';
 
