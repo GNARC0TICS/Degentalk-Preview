@@ -1,7 +1,6 @@
 import {
 	pgTable,
 	serial,
-	integer,
 	bigint,
 	varchar,
 	text,
@@ -27,7 +26,7 @@ export const withdrawalRequests = pgTable(
 		amount: bigint('amount', { mode: 'number' }).notNull(),
 		status: withdrawalStatusEnum('status').notNull().default('pending'),
 		walletAddress: varchar('wallet_address', { length: 255 }).notNull(),
-		transactionId: integer('transaction_id').references(() => transactions.id, {
+		transactionId: uuid('transaction_id').references(() => transactions.id, {
 			onDelete: 'set null'
 		}),
 		processingFee: bigint('processing_fee', { mode: 'number' }).notNull().default(0),

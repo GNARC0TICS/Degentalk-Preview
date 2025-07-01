@@ -102,7 +102,7 @@ export const stickers = pgTable(
 
 		// Collectible properties
 		rarity: varchar('rarity', { length: 20 }).notNull().default('common'), // 'common' | 'rare' | 'epic' | 'legendary' | 'mythic'
-		packId: integer('pack_id').references(() => stickerPacks.id), // Optional pack membership
+		packId: uuid('pack_id').references(() => stickerPacks.id), // Optional pack membership
 
 		// Unlock mechanics
 		unlockType: varchar('unlock_type', { length: 20 }).notNull().default('shop'), // 'shop' | 'xp_milestone' | 'admin_grant' | 'event' | 'free'
@@ -158,7 +158,7 @@ export const userStickerInventory = pgTable(
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		stickerId: integer('sticker_id')
+		stickerId: uuid('sticker_id')
 			.notNull()
 			.references(() => stickers.id, { onDelete: 'cascade' }),
 
@@ -201,7 +201,7 @@ export const userStickerPacks = pgTable(
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		packId: integer('pack_id')
+		packId: uuid('pack_id')
 			.notNull()
 			.references(() => stickerPacks.id, { onDelete: 'cascade' }),
 
@@ -239,7 +239,7 @@ export const stickerUsage = pgTable(
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		stickerId: integer('sticker_id')
+		stickerId: uuid('sticker_id')
 			.notNull()
 			.references(() => stickers.id, { onDelete: 'cascade' }),
 

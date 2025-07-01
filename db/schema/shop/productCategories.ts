@@ -20,8 +20,8 @@ export const productCategories = pgTable(
 		name: varchar('name', { length: 100 }).notNull(),
 		slug: varchar('slug', { length: 100 }).notNull().unique(),
 		description: text('description'),
-		imageId: integer('image_id').references(() => mediaLibrary.id, { onDelete: 'set null' }),
-		parentId: integer('parent_id').references((): AnyPgColumn => productCategories.id, {
+		imageId: uuid('image_id').references(() => mediaLibrary.id, { onDelete: 'set null' }),
+		parentId: uuid('parent_id').references((): AnyPgColumn => productCategories.id, {
 			onDelete: 'set null'
 		}),
 		position: integer('position').notNull().default(0),

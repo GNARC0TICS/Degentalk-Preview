@@ -7,7 +7,7 @@ import { permissions } from './permissions';
 export const rolePermissions = pgTable(
 	'role_permissions',
 	{
-		roleId: integer('role_id')
+		roleId: uuid('role_id')
 			.notNull()
 			.references(() => roles.id, { onDelete: 'cascade' }),
 		permId: integer('perm_id')

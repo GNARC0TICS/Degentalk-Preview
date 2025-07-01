@@ -22,14 +22,14 @@ export const userInventory = pgTable(
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		productId: integer('product_id')
+		productId: uuid('product_id')
 			.notNull()
 			.references(() => products.id, { onDelete: 'cascade' }),
 		quantity: integer('quantity').notNull().default(1),
 		equipped: boolean('equipped').notNull().default(false),
 		acquiredAt: timestamp('acquired_at').notNull().defaultNow(),
 		updatedAt: timestamp('updated_at').defaultNow().notNull(),
-		transactionId: integer('transaction_id').references(() => transactions.id, {
+		transactionId: uuid('transaction_id').references(() => transactions.id, {
 			onDelete: 'set null'
 		}),
 		metadata: jsonb('metadata').default('{}')
@@ -56,7 +56,7 @@ export const userInventoryRelations = relations(userInventory, ({ one }) => ({
 
 export const inventoryTransactionLinks = pgTable('inventory_transaction_links', {
 	id: uuid('id').primaryKey().defaultRandom(),
-	inventoryId: integer('inventory_id')
+	inventoryId: uuid('inventory_id')
 		.notNull()
 		.references(() => userInventory.id, { onDelete: 'cascade' }),
 	transactionType: text('transaction_type').notNull(),
@@ -64,7 +64,7 @@ export const inventoryTransactionLinks = pgTable('inventory_transaction_links', 
 	relatedTransactionId: integer('related_transaction_id'),
 	notes: text('notes'),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
-	dgtTransactionId: integer('dgt_transaction_id').references(() => transactions.id, {
+	dgtTransactionId: uuid('dgt_transaction_id').references(() => transactions.id, {
 		onDelete: 'set null'
 	})
 });

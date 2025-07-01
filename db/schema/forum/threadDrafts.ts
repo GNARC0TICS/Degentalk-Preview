@@ -1,13 +1,11 @@
 import {
 	pgTable,
 	serial,
-	// integer, // No longer using integer for userId
 	varchar,
 	text,
 	jsonb,
 	timestamp,
-	uuid, // Added uuid
-	integer // Ensured integer is imported for categoryId and prefixId
+	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
@@ -21,10 +19,10 @@ export const threadDrafts = pgTable('thread_drafts', {
 	userId: uuid('user_id') // Changed to uuid
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	structureId: integer('structure_id').references(() => forumStructure.id, {
+	structureId: uuid('structure_id').references(() => forumStructure.id, {
 		onDelete: 'set null'
-	}), // Updated to use forum structure
-	prefixId: integer('prefix_id').references(() => threadPrefixes.id, { onDelete: 'set null' }), // Kept as integer
+	}), // Updated to UUID to match forumStructure PK
+	prefixId: uuid('prefix_id').references(() => threadPrefixes.id, { onDelete: 'set null' }), // Updated to UUID to match threadPrefixes PK
 	title: varchar('title', { length: 255 }),
 	content: text('content'),
 	editorState: jsonb('editor_state'), // To store Tiptap's JSON state

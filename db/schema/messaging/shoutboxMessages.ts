@@ -21,7 +21,7 @@ export const shoutboxMessages = pgTable(
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		roomId: integer('room_id').references(() => chatRooms.id, { onDelete: 'cascade' }), // Nullable in schema.ts, but seems like it should be required if it's a shoutbox message for a room. Kept as integer.
+		roomId: uuid('room_id').references(() => chatRooms.id, { onDelete: 'cascade' }), // Updated to uuid
 		content: text('content').notNull(),
 		createdAt: timestamp('created_at')
 			.notNull()
@@ -40,7 +40,7 @@ export const shoutboxMessages = pgTable(
 
 export const insertShoutboxMessageSchema = createInsertSchema(shoutboxMessages, {
 	content: z.string().min(2).max(250),
-	roomId: z.number().optional() // Kept optional to align with schema.ts, though consider if it should be required
+	roomId: z.string().uuid().optional() // Updated to uuid
 }).omit({
 	id: true,
 	createdAt: true,

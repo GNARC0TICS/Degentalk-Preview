@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProtectedRoute } from './ProtectedRoute';
-import { Role } from '@/lib/roles';
+import type { Role } from '@/lib/roles';
 
 interface RouteGuardProps {
 	children: React.ReactNode;

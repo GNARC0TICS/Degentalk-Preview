@@ -3,7 +3,8 @@ import { IconRenderer } from '@/components/icons/iconRenderer';
 import { Button } from '@/components/ui/button';
 import { NavLink } from './NavLink';
 import { useAuth } from '@/hooks/use-auth';
-import { hasRoleAtLeast, Role } from '@/lib/roles';
+import { hasRoleAtLeast } from '@/lib/roles';
+import type { Role } from '@/lib/roles';
 
 interface AdminButtonProps {
 	className?: string;

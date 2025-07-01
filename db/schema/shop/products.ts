@@ -33,16 +33,16 @@ export const products = pgTable(
 		stock: integer('stock').notNull().default(0),
 		weight: doublePrecision('weight'),
 		dimensions: jsonb('dimensions').default('{}'),
-		categoryId: integer('category_id').references(() => productCategories.id, {
+		categoryId: uuid('category_id').references(() => productCategories.id, {
 			onDelete: 'set null'
 		}),
-		featuredImageId: integer('featured_image_id').references(() => mediaLibrary.id, {
+		featuredImageId: uuid('featured_image_id').references(() => mediaLibrary.id, {
 			onDelete: 'set null'
 		}),
 		status: varchar('status', { length: 50 }).notNull().default('draft'), // e.g., draft, published, archived
 		pluginReward: jsonb('plugin_reward').default('{}'),
 		isDigital: boolean('is_digital').notNull().default(false),
-		digitalFileId: integer('digital_file_id').references(() => mediaLibrary.id, {
+		digitalFileId: uuid('digital_file_id').references(() => mediaLibrary.id, {
 			onDelete: 'set null'
 		}),
 		pointsPrice: integer('points_price'),
@@ -65,7 +65,7 @@ export const products = pgTable(
 		 * When this product represents an avatar frame, we store a foreign key to the frame
 		 * so price, rarity and preview can be resolved quickly in joins.
 		 */
-		frameId: integer('frame_id').references(() => avatarFrames.id, { onDelete: 'set null' })
+		frameId: uuid('frame_id').references(() => avatarFrames.id, { onDelete: 'set null' })
 	},
 	(table) => ({
 		categoryIdx: index('idx_products_category_id').on(table.categoryId),

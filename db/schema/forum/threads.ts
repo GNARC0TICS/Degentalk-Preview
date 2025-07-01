@@ -37,7 +37,7 @@ export const threads = pgTable(
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		prefixId: integer('prefix_id').references(() => threadPrefixes.id, { onDelete: 'set null' }),
+		prefixId: uuid('prefix_id').references(() => threadPrefixes.id, { onDelete: 'set null' }),
 		isSticky: boolean('is_sticky').notNull().default(false),
 		isLocked: boolean('is_locked').notNull().default(false),
 		isHidden: boolean('is_hidden').notNull().default(false),

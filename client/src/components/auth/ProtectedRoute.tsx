@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '@/hooks/use-auth';
-import { hasRoleAtLeast, Role } from '@/lib/roles';
+import { hasRoleAtLeast } from '@/lib/roles';
+import type { Role } from '@/lib/roles';
 import { Redirect } from 'wouter';
 import { Loader2, Lock, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';

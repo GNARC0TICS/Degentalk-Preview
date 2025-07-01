@@ -13,7 +13,7 @@ export const userOwnedFrames = pgTable('user_owned_frames', {
 	userId: uuid('user_id')
 		.references(() => users.id, { onDelete: 'cascade' })
 		.notNull(),
-	frameId: integer('frame_id')
+	frameId: uuid('frame_id')
 		.references(() => avatarFrames.id, { onDelete: 'cascade' })
 		.notNull(),
 	/**

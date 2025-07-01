@@ -99,7 +99,7 @@ export const backupSchedules = pgTable('backup_schedules', {
 	isActive: boolean('is_active').default(true),
 	lastRunAt: timestamp('last_run_at', { mode: 'string' }),
 	nextRunAt: timestamp('next_run_at', { mode: 'string' }),
-	lastBackupId: integer('last_backup_id').references(() => adminBackups.id),
+	lastBackupId: uuid('last_backup_id').references(() => adminBackups.id),
 
 	// Error tracking
 	consecutiveFailures: integer('consecutive_failures').default(0),
@@ -128,7 +128,7 @@ export const restoreOperations = pgTable('restore_operations', {
 	description: text('description'),
 
 	// Source backup information
-	sourceBackupId: integer('source_backup_id')
+	sourceBackupId: uuid('source_backup_id')
 		.notNull()
 		.references(() => adminBackups.id),
 	sourceFilename: varchar('source_filename', { length: 255 }).notNull(),
@@ -138,7 +138,7 @@ export const restoreOperations = pgTable('restore_operations', {
 	targetDatabase: varchar('target_database', { length: 100 }),
 
 	// Pre-restore backup (safety checkpoint)
-	preRestoreBackupId: integer('pre_restore_backup_id').references(() => adminBackups.id),
+	preRestoreBackupId: uuid('pre_restore_backup_id').references(() => adminBackups.id),
 	createPreBackup: boolean('create_pre_backup').default(true),
 
 	// Selective restore options

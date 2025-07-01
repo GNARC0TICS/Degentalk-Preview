@@ -22,7 +22,7 @@ export const userReferrals = pgTable(
 		referredByUserId: uuid('referred_by_user_id').references(() => users.id, {
 			onDelete: 'set null'
 		}),
-		referralSourceId: integer('referral_source_id').references(() => referralSources.id, {
+		referralSourceId: uuid('referral_source_id').references(() => referralSources.id, {
 			onDelete: 'set null'
 		}),
 		bonusGranted: boolean('bonus_granted').notNull().default(false),

@@ -10,7 +10,7 @@ import { Router } from 'express';
 import { AirdropController } from './airdrop.controller';
 import { isAuthenticated as authenticate } from '../../auth/middleware/auth.middleware.js';
 import { validateAmountMiddleware } from '../../wallet/wallet.validators';
-import { walletErrorHandler } from '../../../core/errors.js';
+import { globalErrorHandler } from '../../../core/errors.js';
 
 // [REFAC-AIRDROP]
 export function registerAirdropRoutes(app: Router) {
@@ -18,7 +18,7 @@ export function registerAirdropRoutes(app: Router) {
 	const airdropController = new AirdropController();
 
 	// Apply error handling middleware
-	router.use(walletErrorHandler);
+	router.use(globalErrorHandler);
 
 	/**
 	 * @route   POST /api/engagement/airdrop

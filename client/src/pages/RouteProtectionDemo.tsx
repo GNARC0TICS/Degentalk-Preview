@@ -12,7 +12,8 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { hasRoleAtLeast, Role } from '@/lib/roles';
+import { hasRoleAtLeast } from '@/lib/roles';
+import type { Role } from '@/lib/roles';
 
 export default function RouteProtectionDemo() {
 	const { user } = useAuth();

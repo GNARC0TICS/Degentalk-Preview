@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useLocation } from 'wouter';
-import { getUserPermissions, Role } from '@/lib/roles';
+import { getUserPermissions } from '@/lib/roles';
+import type { Role } from '@/lib/roles';
 
 const { createContext, useContext, useState, useEffect, useMemo } = React;
 

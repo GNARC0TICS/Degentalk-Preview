@@ -17,7 +17,7 @@ export const userCloutLog = pgTable(
 			.references(() => users.id, {
 				onDelete: 'cascade'
 			}),
-		achievementId: integer('achievement_id').references(() => cloutAchievements.id, {
+		achievementId: uuid('achievement_id').references(() => cloutAchievements.id, {
 			onDelete: 'set null'
 		}),
 		cloutEarned: integer('clout_earned').notNull(),

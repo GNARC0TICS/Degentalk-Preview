@@ -72,9 +72,6 @@ import { adRoutes } from './src/domains/advertising/ad.routes';
 
 // REFACTORED: Using the new centralized error handlers
 import {
-	walletErrorHandler,
-	adminErrorHandler,
-	forumErrorHandler,
 	globalErrorHandler
 } from './src/core/errors';
 // Legacy route imports (@pending-migration)
@@ -326,8 +323,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 	// Set up wallet routes with domain-based approach
 	app.use('/api/wallet', walletRoutes);
-	// Use the centralized wallet error handler
-	app.use('/api/wallet', walletErrorHandler);
 
 	// Set up tip routes with domain-based approach
 	app.use('/api/engagement/tip', tipRoutes);
@@ -347,8 +342,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 	// Set up forum routes with domain-based approach
 	app.use('/api/forum', forumRoutes);
-	// Use the centralized forum error handler
-	app.use('/api/forum', forumErrorHandler);
 
 	// Set up editor routes with domain-based approach
 	app.use('/api/editor', editorRoutes);
@@ -359,8 +352,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	app.use('/api/users', preferencesRoutes);
 	// Use the domain-based notifications routes
 	app.use('/api/notifications', notificationRoutes);
-	// Use the centralized admin error handler
-	app.use('/api/admin', adminErrorHandler);
 
 	// Set up profile routes with domain-based approach
 	app.use('/api/profile', profileRoutes);

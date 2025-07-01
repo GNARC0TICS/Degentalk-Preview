@@ -8,7 +8,8 @@ import {
 	jsonb,
 	doublePrecision,
 	timestamp,
-	unique
+	unique,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
@@ -21,7 +22,7 @@ export const roles = pgTable(
 	'roles',
 	{
 		// Primary key – use UUIDs for easier merges between environments
-		id: serial('role_id').primaryKey(),
+		id: uuid('role_id').defaultRandom().primaryKey(),
 
 		// Human-readable name and URL-safe slug
 		name: varchar('name', { length: 100 }).notNull(),

@@ -22,7 +22,7 @@ export const onlineUsers = pgTable(
 		userId: uuid('user_id') // Changed to uuid
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		roomId: integer('room_id').references(() => chatRooms.id, { onDelete: 'set null' }), // Kept as integer
+		roomId: uuid('room_id').references(() => chatRooms.id, { onDelete: 'set null' }), // Updated to uuid
 		lastActive: timestamp('last_active')
 			.notNull()
 			.default(sql`now()`), // Changed defaultNow() to sql`now()`

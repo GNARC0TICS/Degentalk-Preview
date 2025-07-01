@@ -47,7 +47,7 @@ export const users = pgTable(
 		 * Primary role for the user – replaces legacy groupId.
 		 * Nullable to support users without explicit role (falls back to default).
 		 */
-		primaryRoleId: integer('primary_role_id').references(() => roles.id, { onDelete: 'set null' }),
+		primaryRoleId: uuid('primary_role_id').references(() => roles.id, { onDelete: 'set null' }),
 		discordHandle: varchar('discord_handle', { length: 255 }),
 		twitterHandle: varchar('twitter_handle', { length: 255 }),
 		website: varchar('website', { length: 255 }),
