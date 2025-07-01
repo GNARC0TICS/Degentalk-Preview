@@ -13,8 +13,8 @@
 	"scripts": {
 		"generate": "pnpm --workspace-root db:generate",
 		"migrate": "npx dotenv-cli -e ../env.development.local -- drizzle-kit generate --dialect postgresql --schema \"../db/schema/**/*.ts\" --out ../migrations/postgres",
-		"migrate:apply": "npx dotenv-cli -e ../env.development.local -- drizzle-kit push --dialect postgresql",
-		"push": "npx dotenv-cli -e ../env.development.local -- drizzle-kit push --dialect postgresql",
+		"migrate:apply": "npx dotenv-cli -e ../env.development.local -- drizzle-kit push --config ../drizzle.config.ts --dialect postgresql --schema \"../db/schema/**/*.ts\"",
+		"push": "npx dotenv-cli -e ../env.development.local -- drizzle-kit push --config ../drizzle.config.ts --dialect postgresql --schema \"../db/schema/**/*.ts\"",
 		"drop": "drizzle-kit drop --dialect postgresql",
 		"studio": "drizzle-kit studio --dialect postgresql",
 		"introspect": "npx dotenv-cli -e ../env.development.local -- drizzle-kit pull --dialect postgresql"
