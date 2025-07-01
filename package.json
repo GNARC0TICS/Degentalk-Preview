@@ -49,7 +49,11 @@
 		"codemod:apply": "tsx scripts/codemods/apply-id-codemod.ts",
 		"codemod:tsmorph:dry": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts --dry",
 		"codemod:tsmorph:apply": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts",
-		"prepare": "simple-git-hooks"
+		"prepare": "simple-git-hooks",
+		"db:generate": "drizzle-kit generate --config drizzle.config.ts",
+		"db:push": "drizzle-kit push --config drizzle.config.ts",
+		"db:studio": "drizzle-kit studio --config drizzle.config.ts",
+		"db:migrate:dev": "pnpm run db:push && pnpm run db:studio"
 	},
 	"devDependencies": {
 		"@types/node": "^20.19.0",
