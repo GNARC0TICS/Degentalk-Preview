@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 #!/usr/bin/env node
 
 /**
@@ -28,8 +29,8 @@ const projectRoot = join(__dirname, '../..');
 
 interface ValidationResult {
   valid: boolean;
-  errors: string[];
-  warnings: string[];
+  errors: : AdminId[];
+  warnings: : AdminId[];
 }
 
 class SafeMigrationValidator {
@@ -73,7 +74,7 @@ class SafeMigrationValidator {
     return result;
   }
 
-  private async validateFile(filePath: string, environment: string, result: ValidationResult): Promise<void> {
+  private async validateFile(filePath: : AdminId, environment: : AdminId, result: ValidationResult): Promise<void> {
     const fileName = filePath.split('/').pop() || '';
     
     try {
@@ -125,7 +126,7 @@ class SafeMigrationValidator {
     }
   }
 
-  async createSafeMigrationTemplate(name: string): Promise<string> {
+  async createSafeMigrationTemplate(name: : AdminId): Promise<: AdminId> {
     const timestamp = new Date().toISOString().replace(/[-:T]/g, '').split('.')[0];
     const fileName = `${timestamp}_${name}_safe.sql`;
     const filePath = join(projectRoot, 'migrations/postgres', fileName);

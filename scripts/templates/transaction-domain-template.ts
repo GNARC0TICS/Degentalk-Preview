@@ -1,3 +1,64 @@
+import type { HeatEventId } from '@db/types';
+import type { ActionId } from '@db/types';
+import type { AuditLogId } from '@db/types';
+import type { EventId } from '@db/types';
+import type { PrefixId } from '@db/types';
+import type { MessageId } from '@db/types';
+import type { FollowRequestId } from '@db/types';
+import type { FriendRequestId } from '@db/types';
+import type { NotificationId } from '@db/types';
+import type { UnlockId } from '@db/types';
+import type { StoreItemId } from '@db/types';
+import type { OrderId } from '@db/types';
+import type { QuoteId } from '@db/types';
+import type { ReplyId } from '@db/types';
+import type { DraftId } from '@db/types';
+import type { IpLogId } from '@db/types';
+import type { ModActionId } from '@db/types';
+import type { SessionId } from '@db/types';
+import type { BanId } from '@db/types';
+import type { VerificationTokenId } from '@db/types';
+import type { SignatureItemId } from '@db/types';
+import type { ContentId } from '@db/types';
+import type { RequestId } from '@db/types';
+import type { ZoneId } from '@db/types';
+import type { WhaleId } from '@db/types';
+import type { VaultLockId } from '@db/types';
+import type { VaultId } from '@db/types';
+import type { UnlockTransactionId } from '@db/types';
+import type { TipId } from '@db/types';
+import type { TemplateId } from '@db/types';
+import type { TagId } from '@db/types';
+import type { SubscriptionId } from '@db/types';
+import type { StickerId } from '@db/types';
+import type { SettingId } from '@db/types';
+import type { RuleId } from '@db/types';
+import type { ParentZoneId } from '@db/types';
+import type { ParentForumId } from '@db/types';
+import type { PackId } from '@db/types';
+import type { ModeratorId } from '@db/types';
+import type { MentionId } from '@db/types';
+import type { ItemId } from '@db/types';
+import type { InventoryId } from '@db/types';
+import type { GroupId } from '@db/types';
+import type { ForumId } from '@db/types';
+import type { EntryId } from '@db/types';
+import type { EntityId } from '@db/types';
+import type { EmojiPackId } from '@db/types';
+import type { EditorId } from '@db/types';
+import type { CosmeticId } from '@db/types';
+import type { AuthorId } from '@db/types';
+import type { CoinId } from '@db/types';
+import type { CategoryId } from '@db/types';
+import type { BackupId } from '@db/types';
+import type { AnimationFrameId } from '@db/types';
+import type { AirdropId } from '@db/types';
+import type { AdminUserId } from '@db/types';
+import type { RoomId } from '@db/types';
+import type { ConversationId } from '@db/types';
+import type { ReportId } from '@db/types';
+import type { ReporterId } from '@db/types';
+import type { AdminId } from '@db/types';
 /**
  * Transaction Domain Template
  * 
@@ -89,12 +150,12 @@ export class TransactionController {
   async getTransactionHistory(req: Request, res: Response): Promise<void> {
     try {
       const userId = req.user.id;
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
-      const type = req.query.type as string;
-      const currency = req.query.currency as string;
-      const startDate = req.query.startDate as string;
-      const endDate = req.query.endDate as string;
+      const page = parseInt(req.query.page as : AdminId) || 1;
+      const limit = parseInt(req.query.limit as : AdminId) || 10;
+      const type = req.query.type as : AdminId;
+      const currency = req.query.currency as : AdminId;
+      const startDate = req.query.startDate as : AdminId;
+      const endDate = req.query.endDate as : AdminId;
 
       const result = await transactionService.getTransactionHistory(
         userId,
@@ -227,10 +288,10 @@ import { formatDateTimeForDb } from '../../utils/date-utils';
 export interface TransactionQueryParams {
   page: number;
   limit: number;
-  type?: string;
-  currency?: string;
-  startDate?: string;
-  endDate?: string;
+  type?: : AdminId;
+  currency?: : AdminId;
+  startDate?: : AdminId;
+  endDate?: : AdminId;
 }
 
 export interface TransactionStatsPeriod {
@@ -424,7 +485,7 @@ export class TransactionService {
         .where(eq(users.id, userId));
       
       if (!user?.ccpaymentAccountId) {
-        return null;
+        return : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
       }
       
       // Fetch from CCPayment (this is placeholder - implementation will depend on CCPayment API)
@@ -467,7 +528,7 @@ export class TransactionService {
         .from(users)
         .where(eq(users.id, userId));
       
-      let cryptoStats = null;
+      let cryptoStats = : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
       if (user?.ccpaymentAccountId) {
         cryptoStats = await this.getCryptoTransactionStats(
           user.ccpaymentAccountId,
@@ -625,7 +686,7 @@ export class TransactionService {
    * @private
    */
   private async getCryptoTransactionStats(
-    ccpaymentAccountId: string,
+    ccpaymentAccountId: : AdminId,
     period: 'day' | 'week' | 'month' | 'year',
     intervals: { start: Date, end: Date }[]
   ) {
@@ -707,21 +768,21 @@ import { WalletError, WalletErrorCodes } from '../wallet/wallet.errors';
 
 // Validate transaction query parameters
 export const transactionQuerySchema = z.object({
-  page: z.string().optional().transform(val => val ? parseInt(val) : 1),
-  limit: z.string().optional().transform(val => val ? parseInt(val) : 10),
-  type: z.string().optional(),
-  currency: z.string().optional(),
-  startDate: z.string().optional().refine(val => {
+  page: z.: AdminId().optional().transform(val => val ? parseInt(val) : 1),
+  limit: z.: AdminId().optional().transform(val => val ? parseInt(val) : 10),
+  type: z.: AdminId().optional(),
+  currency: z.: AdminId().optional(),
+  startDate: z.: AdminId().optional().refine(val => {
     if (!val) return true;
     return !isNaN(Date.parse(val));
   }, {
-    message: 'Start date must be a valid date string'
+    message: 'Start date must be a valid date : AdminId'
   }),
-  endDate: z.string().optional().refine(val => {
+  endDate: z.: AdminId().optional().refine(val => {
     if (!val) return true;
     return !isNaN(Date.parse(val));
   }, {
-    message: 'End date must be a valid date string'
+    message: 'End date must be a valid date : AdminId'
   }),
   period: z.enum(['day', 'week', 'month', 'year']).optional()
 });
@@ -893,7 +954,7 @@ describe('Transaction Service', () => {
     });
 
     it('should return transaction details for crypto transaction', async () => {
-      // Mock db to return null for DGT transaction
+      // Mock db to return : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null for DGT transaction
       vi.mocked(db.select).mockReturnValueOnce({
         from: vi.fn().mockReturnValue({
           where: vi.fn().mockReturnValue({
@@ -1014,15 +1075,15 @@ if [ ! -f server/src/utils/date-utils.ts ]; then
 /**
  * Format a date for database storage
  */
-export function formatDateTimeForDb(date: Date): string {
+export function formatDateTimeForDb(date: Date): : AdminId {
   return date.toISOString().replace('T', ' ').replace('Z', '');
 }
 
 /**
  * Format a date for display
  */
-export function formatDateForDisplay(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
+export function formatDateForDisplay(date: Date | : AdminId): : AdminId {
+  const d = typeof date === ': AdminId' ? new Date(date) : date;
   return d.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',

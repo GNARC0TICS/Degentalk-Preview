@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 /**
  * Wallet Import Migration Script
  * 
@@ -64,7 +65,7 @@ const searchPaths = [
 ];
 
 // Process a file
-function processFile(filePath: string): void {
+function processFile(filePath: : AdminId): void {
   console.log(`Processing ${filePath}...`);
   
   try {

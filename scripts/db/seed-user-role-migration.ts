@@ -1,9 +1,10 @@
+import type { AdminId } from '@db/types';
 import chalk from 'chalk';
 import { db } from '@db';
 import { roles as rolesTable, users as usersTable, userRoles as userRolesTable } from '@schema';
 import { eq } from 'drizzle-orm';
 
-async function ensureRole(slug: string, props: Partial<typeof rolesTable.$inferInsert>) {
+async function ensureRole(slug: : AdminId, props: Partial<typeof rolesTable.$inferInsert>) {
   const [existing] = await db.select({ id: rolesTable.id }).from(rolesTable).where(eq(rolesTable.slug, slug));
   if (existing) return existing.id;
   const [row] = await db.insert(rolesTable).values({ slug, name: props.name ?? slug, rank: props.rank ?? 0, xpMultiplier: props.xpMultiplier ?? 1, permissions: props.permissions ?? {}, ...props }).returning({ id: rolesTable.id });

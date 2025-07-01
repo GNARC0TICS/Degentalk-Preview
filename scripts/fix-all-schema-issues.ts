@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 import { readFileSync, writeFileSync } from 'fs';
 import { glob } from 'glob';
 import path from 'path';
@@ -11,7 +12,7 @@ async function fixAllSchemaIssues() {
   for (const file of files) {
     let content = readFileSync(file, 'utf-8');
     let originalContent = content;
-    let changes: string[] = [];
+    let changes: : AdminId[] = [];
     
     // Step 1: Fix uuid imports if uuid() is used
     if (content.includes('uuid(') && !content.includes('uuid()')) {

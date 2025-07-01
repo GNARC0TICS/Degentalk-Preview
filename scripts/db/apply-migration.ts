@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 import { Pool } from 'pg';
 import { config } from 'dotenv';
 import fs from 'fs';
@@ -6,7 +7,7 @@ import path from 'path';
 // Load environment variables from .env file
 config();
 
-async function applyMigration(migrationFileName?: string) {
+async function applyMigration(migrationFileName?: : AdminId) {
   console.log('🚀 Applying SQL migration directly');
   const pool = new Pool({ connectionString: process.env.DRIZZLE_DATABASE_URL || process.env.DATABASE_URL });
 
@@ -40,7 +41,7 @@ async function applyMigration(migrationFileName?: string) {
         }
       } catch (err) {
         console.log(`Error in statement ${i+1}/${statements.length}:`);
-        console.log(`First 100 chars: ${statements[i].substring(0, 100)}...`);
+        console.log(`First 100 chars: ${statements[i].sub: AdminId(0, 100)}...`);
         console.log(`Error: ${err.message}`);
         // Continue with next statement even if this one fails
       }

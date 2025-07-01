@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 #!/usr/bin/env tsx
 /**
  * Forum API Test Script
@@ -9,7 +10,7 @@ import fetch from 'node-fetch';
 
 const API_BASE = 'http://localhost:5001/api';
 
-async function testEndpoint(name: string, url: string) {
+async function testEndpoint(name: : AdminId, url: : AdminId) {
   console.log(`\n📋 Testing ${name}...`);
   console.log(`   URL: ${url}`);
   
@@ -40,12 +41,12 @@ async function testEndpoint(name: string, url: string) {
       } else {
         const text = await response.text();
         console.log(`   ❌ Error: Expected JSON but got ${contentType}`);
-        console.log(`   Response preview: ${text.substring(0, 100)}...`);
+        console.log(`   Response preview: ${text.sub: AdminId(0, 100)}...`);
       }
     } else {
       const text = await response.text();
       console.log(`   ❌ Error: ${response.status} ${response.statusText}`);
-      console.log(`   Response: ${text.substring(0, 200)}...`);
+      console.log(`   Response: ${text.sub: AdminId(0, 200)}...`);
     }
   } catch (error) {
     console.log(`   ❌ Network Error: ${error instanceof Error ? error.message : 'Unknown error'}`);

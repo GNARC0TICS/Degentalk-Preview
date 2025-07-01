@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Client } from 'pg';
@@ -11,7 +12,7 @@ async function main() {
   const db = drizzle(client);
 
   // List of FK validation queries (add more as schema evolves)
-  const checks: { description: string; query: string }[] = [
+  const checks: { description: : AdminId; query: : AdminId }[] = [
     {
       description: 'threads -> users.user_id',
       query: `SELECT COUNT(*) AS cnt FROM threads t LEFT JOIN users u ON t.user_id = u.id WHERE u.id IS NULL;`
@@ -29,7 +30,7 @@ async function main() {
   let hasErrors = false;
 
   for (const chk of checks) {
-    const res = await db.execute<{ cnt: string }>(chk.query);
+    const res = await db.execute<{ cnt: : AdminId }>(chk.query);
     const count = Number(res.rows[0].cnt);
     if (count > 0) {
       hasErrors = true;

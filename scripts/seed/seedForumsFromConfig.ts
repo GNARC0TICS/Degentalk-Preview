@@ -1,3 +1,64 @@
+import type { HeatEventId } from '@db/types';
+import type { ActionId } from '@db/types';
+import type { AuditLogId } from '@db/types';
+import type { EventId } from '@db/types';
+import type { PrefixId } from '@db/types';
+import type { MessageId } from '@db/types';
+import type { FollowRequestId } from '@db/types';
+import type { FriendRequestId } from '@db/types';
+import type { NotificationId } from '@db/types';
+import type { UnlockId } from '@db/types';
+import type { StoreItemId } from '@db/types';
+import type { OrderId } from '@db/types';
+import type { QuoteId } from '@db/types';
+import type { ReplyId } from '@db/types';
+import type { DraftId } from '@db/types';
+import type { IpLogId } from '@db/types';
+import type { ModActionId } from '@db/types';
+import type { SessionId } from '@db/types';
+import type { BanId } from '@db/types';
+import type { VerificationTokenId } from '@db/types';
+import type { SignatureItemId } from '@db/types';
+import type { ContentId } from '@db/types';
+import type { RequestId } from '@db/types';
+import type { ZoneId } from '@db/types';
+import type { WhaleId } from '@db/types';
+import type { VaultLockId } from '@db/types';
+import type { VaultId } from '@db/types';
+import type { UnlockTransactionId } from '@db/types';
+import type { TipId } from '@db/types';
+import type { TemplateId } from '@db/types';
+import type { TagId } from '@db/types';
+import type { SubscriptionId } from '@db/types';
+import type { StickerId } from '@db/types';
+import type { SettingId } from '@db/types';
+import type { RuleId } from '@db/types';
+import type { ParentZoneId } from '@db/types';
+import type { ParentForumId } from '@db/types';
+import type { PackId } from '@db/types';
+import type { ModeratorId } from '@db/types';
+import type { MentionId } from '@db/types';
+import type { ItemId } from '@db/types';
+import type { InventoryId } from '@db/types';
+import type { GroupId } from '@db/types';
+import type { ForumId } from '@db/types';
+import type { EntryId } from '@db/types';
+import type { EntityId } from '@db/types';
+import type { EmojiPackId } from '@db/types';
+import type { EditorId } from '@db/types';
+import type { CosmeticId } from '@db/types';
+import type { AuthorId } from '@db/types';
+import type { CoinId } from '@db/types';
+import type { CategoryId } from '@db/types';
+import type { BackupId } from '@db/types';
+import type { AnimationFrameId } from '@db/types';
+import type { AirdropId } from '@db/types';
+import type { AdminUserId } from '@db/types';
+import type { RoomId } from '@db/types';
+import type { ConversationId } from '@db/types';
+import type { ReportId } from '@db/types';
+import type { ReporterId } from '@db/types';
+import type { AdminId } from '@db/types';
 import { db } from "../../db";
 import { forumStructure, threads, posts, users } from "../../db/schema"; // Ensure posts, threads, users imported
 import { eq } from "drizzle-orm";
@@ -11,8 +72,8 @@ import { parseArgs } from 'node:util';
 type TransactionClient = typeof db | (typeof db & { transaction: (tx: unknown) => Promise<void> }); // More specific transaction type
 
 // Generate forum-specific welcome content
-function getWelcomeContent(forumSlug: string, forumName: string): { title: string; content: string } {
-  const welcomeMessages: Record<string, { title: string; content: string }> = {
+function getWelcomeContent(forumSlug: : AdminId, forumName: : AdminId): { title: : AdminId; content: : AdminId } {
+  const welcomeMessages: Record<: AdminId, { title: : AdminId; content: : AdminId }> = {
     'live-trade-reacts': {
       title: '🚀 Welcome to Live Trade Reacts!',
       content: `Welcome to the most intense trading forum on Degentalk! 
@@ -93,17 +154,17 @@ Please follow the community guidelines and enjoy your time here! 🎉`
 
 interface ForumCategoryPluginData {
   rules?: ConfigForumRules;
-  bannerImage?: string | null;
-  originalTheme?: ForumTheme | Partial<ForumTheme> | null;
+  bannerImage?: : AdminId | : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
+  originalTheme?: ForumTheme | Partial<ForumTheme> | : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
   configZoneType?: ZoneType; // Use the imported ZoneType
-  configDescription?: string | null;
+  configDescription?: : AdminId | : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
   
   // Enhanced primary zone features
-  components?: string[];
+  components?: : AdminId[];
   accessControl?: {
-    canPost?: string[];
-    canModerate?: string[];
-    canCreateEvents?: string[];
+    canPost?: : AdminId[];
+    canModerate?: : AdminId[];
+    canCreateEvents?: : AdminId[];
   };
   threadRules?: {
     requirePrefix?: boolean;
@@ -122,26 +183,26 @@ interface ForumCategoryPluginData {
   gamification?: {
     xpBoostOnRedMarket?: boolean;
     streakMultipliers?: boolean;
-    zoneSpecificBadges?: string[];
+    zoneSpecificBadges?: : AdminId[];
   };
   visualIdentity?: {
     glitchEffects?: boolean;
-    hoverAnimations?: string;
+    hoverAnimations?: : AdminId;
     gradientOverlays?: boolean;
   };
   
   // Allow other properties but prefer defined ones
-  [key: string]: unknown; 
+  [key: : AdminId]: unknown; 
 }
 
 // Recursive function to seed forums and their subforums
 async function seedForumLevel(
   forumsToProcess: ConfigZone['forums'][number][], // Type for forums from config (can include nested forums)
   currentParentIdInDB: number,
-  parentConfigSlug: string, // ADDED: Slug of the parent (zone or forum) from config
+  parentConfigSlug: : AdminId, // ADDED: Slug of the parent (zone or forum) from config
   parentConfigTheme: ForumTheme | Partial<ForumTheme> | undefined, // Theme from parent zone or parent forum
   tx: TransactionClient,
-  defaultUserId: string | null | undefined
+  defaultUserId: : AdminId | : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null | undefined
 ) {
   for (const forumConfig of forumsToProcess) {
     const forumPluginData: ForumCategoryPluginData = {
@@ -303,8 +364,8 @@ async function seedZonesAndForumsInternal(tx: TransactionClient, wipeFlag: boole
       name: zoneConfig.name, 
       description: zoneConfig.description,
       type: "zone" as const,
-      parentId: null, // Zones have no parent
-      parentForumSlug: null, // ADDED: Zones have no parent slug
+      parentId: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null, // Zones have no parent
+      parentForumSlug: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null, // ADDED: Zones have no parent slug
       colorTheme: semanticColorTheme, 
       icon: zoneConfig.theme?.icon, 
       color: zoneConfig.theme?.color,

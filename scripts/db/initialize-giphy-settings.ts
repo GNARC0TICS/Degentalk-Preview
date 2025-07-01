@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 import { db } from '@db';
 import { siteSettings } from '../../shared/schema';
 import { eq } from 'drizzle-orm';
@@ -34,7 +35,7 @@ async function initializeGiphySettings() {
     {
       key: 'giphy_rating',
       value: 'pg-13',
-      valueType: 'string',
+      valueType: ': AdminId',
       group: 'editor',
       description: 'Content rating for Giphy results (g, pg, pg-13, r)',
       isPublic: true
@@ -45,7 +46,7 @@ async function initializeGiphySettings() {
   const existingSettingsMap = existingSettings.reduce((acc, setting) => {
     acc[setting.key] = true;
     return acc;
-  }, {} as Record<string, boolean>);
+  }, {} as Record<: AdminId, boolean>);
   
   // Insert any missing settings
   for (const setting of requiredSettings) {

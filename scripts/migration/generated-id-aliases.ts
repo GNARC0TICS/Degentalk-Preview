@@ -1,0 +1,76 @@
+/**
+ * Auto-generated alias suggestions – review and copy into db/types/id.types.ts if desired.
+ * Generated: 2025-07-01T00:03:38.926Z
+ */
+
+import type { Id } from './id.types';
+
+export type ActiveBadgeId = Id<'activeBadge'>;
+export type ActiveFrameId = Id<'activeFrame'>;
+export type ActiveTitleId = Id<'activeTitle'>;
+export type AdminUserId = Id<'adminUser'>;
+export type AirdropId = Id<'airdrop'>;
+export type AnimationFrameId = Id<'animationFrame'>;
+export type BackupId = Id<'backup'>;
+export type CategoryId = Id<'category'>;
+export type CoinId = Id<'coin'>;
+export type ContentAuthorId = Id<'contentAuthor'>;
+export type CosmeticId = Id<'cosmetic'>;
+export type DbId = Id<'db'>;
+export type EditorId = Id<'editor'>;
+export type EmojiPackId = Id<'emojiPack'>;
+export type EntityId = Id<'entity'>;
+export type EntryId = Id<'entry'>;
+export type ExcludeUserId = Id<'excludeUser'>;
+export type ExpectedParentId = Id<'expectedParent'>;
+export type FindByAuthorId = Id<'findByAuthor'>;
+export type FindByCategoryId = Id<'findByCategory'>;
+export type FindByThreadId = Id<'findByThread'>;
+export type FindByUserId = Id<'findByUser'>;
+export type ForumId = Id<'forum'>;
+export type FromCoinId = Id<'fromCoin'>;
+export type FromUserId = Id<'fromUser'>;
+export type GetDgtUnlockById = Id<'getDgtUnlockBy'>;
+export type GetGroupById = Id<'getGroupBy'>;
+export type GetPostById = Id<'getPostBy'>;
+export type GetReportById = Id<'getReportBy'>;
+export type GetSubForumsByParentForumId = Id<'getSubForumsByParentForum'>;
+export type GetThreadById = Id<'getThreadBy'>;
+export type GetThreadUrlById = Id<'getThreadUrlBy'>;
+export type GetTransactionById = Id<'getTransactionBy'>;
+export type GetUserById = Id<'getUserBy'>;
+export type GroupId = Id<'group'>;
+export type IgnoredUserId = Id<'ignoredUser'>;
+export type InventoryId = Id<'inventory'>;
+export type ItemId = Id<'item'>;
+export type MentionId = Id<'mention'>;
+export type ModeratorId = Id<'moderator'>;
+export type PackId = Id<'pack'>;
+export type ParentId = Id<'parent'>;
+export type ParentForumId = Id<'parentForum'>;
+export type ParentPostId = Id<'parentPost'>;
+export type ParentZoneId = Id<'parentZone'>;
+export type PkgId = Id<'pkg'>;
+export type RecipientId = Id<'recipient'>;
+export type RecipientUserId = Id<'recipientUser'>;
+export type ReportedUserId = Id<'reportedUser'>;
+export type RequestId = Id<'request'>;
+export type RuleId = Id<'rule'>;
+export type SenderId = Id<'sender'>;
+export type SenderUserId = Id<'senderUser'>;
+export type SettingId = Id<'setting'>;
+export type SourceId = Id<'source'>;
+export type StartStructureId = Id<'startStructure'>;
+export type StickerId = Id<'sticker'>;
+export type SubscriptionId = Id<'subscription'>;
+export type TagId = Id<'tag'>;
+export type TargetId = Id<'target'>;
+export type TargetRoomId = Id<'targetRoom'>;
+export type TemplateId = Id<'template'>;
+export type TipId = Id<'tip'>;
+export type ToCoinId = Id<'toCoin'>;
+export type ToUserId = Id<'toUser'>;
+export type UnlockTransactionId = Id<'unlockTransaction'>;
+export type VaultId = Id<'vault'>;
+export type VaultLockId = Id<'vaultLock'>;
+export type WhaleId = Id<'whale'>;

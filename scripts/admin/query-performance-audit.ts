@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 #!/usr/bin/env npx tsx
 
 /**
@@ -11,12 +12,12 @@ import fs from 'fs';
 import path from 'path';
 
 interface QueryAnalysis {
-	endpoint: string;
-	method: string;
-	queries: string[];
+	endpoint: : AdminId;
+	method: : AdminId;
+	queries: : AdminId[];
 	complexity: 'low' | 'medium' | 'high' | 'critical';
-	optimizationOpportunities: string[];
-	suggestedIndices: string[];
+	optimizationOpportunities: : AdminId[];
+	suggestedIndices: : AdminId[];
 	estimatedTraffic: 'low' | 'medium' | 'high';
 }
 

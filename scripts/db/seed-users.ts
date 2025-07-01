@@ -1,30 +1,31 @@
+import type { AdminId } from '@db/types';
 import { db } from '@db';
 import { users } from '@schema/user/users';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import { faker } from '@faker-js/faker';
 import { sql } from 'drizzle-orm';
 
 // Define types for clarity and stricter type checking for mockUsers
 type UserRole = 'admin' | 'mod' | 'user';
 type UserSeedData = {
-  username: string;
-  email: string;
-  password: string; // This holds the password hash
+  username: : AdminId;
+  email: : AdminId;
+  password: : AdminId; // This holds the password hash
   role: UserRole;
   xp: number;
   clout: number;
-  avatarUrl: string;
+  avatarUrl: : AdminId;
   isActive: boolean;
   isBanned: boolean;
   isVerified: boolean;
-  bio?: string;
-  signature?: string;
-  website?: string;
-  github?: string;
-  twitter?: string;
-  discord?: string;
-  profileBannerUrl?: string;
-  activeAvatarUrl?: string;
+  bio?: : AdminId;
+  signature?: : AdminId;
+  website?: : AdminId;
+  github?: : AdminId;
+  twitter?: : AdminId;
+  discord?: : AdminId;
+  profileBannerUrl?: : AdminId;
+  activeAvatarUrl?: : AdminId;
   level?: number;
   reputation?: number;
 };

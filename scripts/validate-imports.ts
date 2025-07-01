@@ -1,3 +1,64 @@
+import type { HeatEventId } from '@db/types';
+import type { ActionId } from '@db/types';
+import type { AuditLogId } from '@db/types';
+import type { EventId } from '@db/types';
+import type { PrefixId } from '@db/types';
+import type { MessageId } from '@db/types';
+import type { FollowRequestId } from '@db/types';
+import type { FriendRequestId } from '@db/types';
+import type { NotificationId } from '@db/types';
+import type { UnlockId } from '@db/types';
+import type { StoreItemId } from '@db/types';
+import type { OrderId } from '@db/types';
+import type { QuoteId } from '@db/types';
+import type { ReplyId } from '@db/types';
+import type { DraftId } from '@db/types';
+import type { IpLogId } from '@db/types';
+import type { ModActionId } from '@db/types';
+import type { SessionId } from '@db/types';
+import type { BanId } from '@db/types';
+import type { VerificationTokenId } from '@db/types';
+import type { SignatureItemId } from '@db/types';
+import type { ContentId } from '@db/types';
+import type { RequestId } from '@db/types';
+import type { ZoneId } from '@db/types';
+import type { WhaleId } from '@db/types';
+import type { VaultLockId } from '@db/types';
+import type { VaultId } from '@db/types';
+import type { UnlockTransactionId } from '@db/types';
+import type { TipId } from '@db/types';
+import type { TemplateId } from '@db/types';
+import type { TagId } from '@db/types';
+import type { SubscriptionId } from '@db/types';
+import type { StickerId } from '@db/types';
+import type { SettingId } from '@db/types';
+import type { RuleId } from '@db/types';
+import type { ParentZoneId } from '@db/types';
+import type { ParentForumId } from '@db/types';
+import type { PackId } from '@db/types';
+import type { ModeratorId } from '@db/types';
+import type { MentionId } from '@db/types';
+import type { ItemId } from '@db/types';
+import type { InventoryId } from '@db/types';
+import type { GroupId } from '@db/types';
+import type { ForumId } from '@db/types';
+import type { EntryId } from '@db/types';
+import type { EntityId } from '@db/types';
+import type { EmojiPackId } from '@db/types';
+import type { EditorId } from '@db/types';
+import type { CosmeticId } from '@db/types';
+import type { AuthorId } from '@db/types';
+import type { CoinId } from '@db/types';
+import type { CategoryId } from '@db/types';
+import type { BackupId } from '@db/types';
+import type { AnimationFrameId } from '@db/types';
+import type { AirdropId } from '@db/types';
+import type { AdminUserId } from '@db/types';
+import type { RoomId } from '@db/types';
+import type { ConversationId } from '@db/types';
+import type { ReportId } from '@db/types';
+import type { ReporterId } from '@db/types';
+import type { AdminId } from '@db/types';
 #!/usr/bin/env tsx
 
 /**
@@ -16,30 +77,30 @@ import * as fs from 'fs';
 import chalk from 'chalk';
 
 interface ImportIssue {
-  file: string;
+  file: : AdminId;
   line: number;
   column: number;
-  importPath: string;
-  symbols: string[];
-  resolvedPath?: string;
+  importPath: : AdminId;
+  symbols: : AdminId[];
+  resolvedPath?: : AdminId;
   fileExists: boolean;
-  symbolIssues: { symbol: string; exists: boolean; suggestion?: string }[];
+  symbolIssues: { symbol: : AdminId; exists: boolean; suggestion?: : AdminId }[];
   severity: 'error' | 'warning';
 }
 
 interface ValidationOptions {
   fix: boolean;
   verbose: boolean;
-  includePatterns: string[];
-  excludePatterns: string[];
+  includePatterns: : AdminId[];
+  excludePatterns: : AdminId[];
 }
 
 class ImportValidator {
   private project: Project;
   private tsConfig: any;
-  private pathMappings: Map<string, string[]> = new Map();
+  private pathMappings: Map<: AdminId, : AdminId[]> = new Map();
   private issues: ImportIssue[] = [];
-  private projectRoot: string;
+  private projectRoot: : AdminId;
 
   constructor() {
     this.projectRoot = path.resolve(process.cwd());
@@ -64,14 +125,14 @@ class ImportValidator {
     const resolvedBaseUrl = path.resolve(this.projectRoot, baseUrl);
 
     for (const [alias, mappings] of Object.entries(paths)) {
-      const resolvedMappings = (mappings as string[]).map(mapping => 
+      const resolvedMappings = (mappings as : AdminId[]).map(mapping => 
         path.resolve(resolvedBaseUrl, mapping)
       );
       this.pathMappings.set(alias, resolvedMappings);
     }
   }
 
-  private resolveAliasPath(importPath: string): string | null {
+  private resolveAliasPath(importPath: : AdminId): : AdminId | : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null {
     for (const [alias, mappings] of this.pathMappings.entries()) {
       // Convert alias pattern to regex (e.g., "@server/*" -> "^@server/(.*)$")
       const aliasRegex = new RegExp('^' + alias.replace('*', '(.*)') + '$');
@@ -104,11 +165,11 @@ class ImportValidator {
       }
     }
     
-    return null;
+    return : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
   }
 
-  private getExportedSymbols(filePath: string): Set<string> {
-    const exports = new Set<string>();
+  private getExportedSymbols(filePath: : AdminId): Set<: AdminId> {
+    const exports = new Set<: AdminId>();
     
     try {
       const sourceFile = this.project.addSourceFileAtPath(filePath);
@@ -167,7 +228,7 @@ class ImportValidator {
     return exports;
   }
 
-  private findSimilarSymbol(targetSymbol: string, availableSymbols: Set<string>): string | undefined {
+  private findSimilarSymbol(targetSymbol: : AdminId, availableSymbols: Set<: AdminId>): : AdminId | undefined {
     const lowercaseTarget = targetSymbol.toLowerCase();
     
     // Exact match (case insensitive)
@@ -188,7 +249,7 @@ class ImportValidator {
     return undefined;
   }
 
-  private validateImport(importDecl: ImportDeclaration, sourceFile: SourceFile): ImportIssue | null {
+  private validateImport(importDecl: ImportDeclaration, sourceFile: SourceFile): ImportIssue | : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null {
     const importPath = importDecl.getModuleSpecifierValue();
     const line = importDecl.getStartLineNumber();
     const column = importDecl.getStart() - importDecl.getSourceFile().getLineAndColumnAtPos(importDecl.getStart()).line;
@@ -199,14 +260,14 @@ class ImportValidator {
     );
     
     if (!isAliasImport) {
-      return null;
+      return : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
     }
     
     const resolvedPath = this.resolveAliasPath(importPath);
-    const fileExists = resolvedPath !== null;
+    const fileExists = resolvedPath !== : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
     
     // Get imported symbols
-    const symbols: string[] = [];
+    const symbols: : AdminId[] = [];
     const defaultImport = importDecl.getDefaultImport();
     if (defaultImport) {
       symbols.push('default');
@@ -223,8 +284,8 @@ class ImportValidator {
     }
     
     // Check symbol exports if file exists
-    const symbolIssues: { symbol: string; exists: boolean; suggestion?: string }[] = [];
-    let availableSymbols = new Set<string>();
+    const symbolIssues: { symbol: : AdminId; exists: boolean; suggestion?: : AdminId }[] = [];
+    let availableSymbols = new Set<: AdminId>();
     
     if (fileExists && resolvedPath) {
       availableSymbols = this.getExportedSymbols(resolvedPath);
@@ -252,7 +313,7 @@ class ImportValidator {
     const hasIssues = !fileExists || symbolIssues.some(issue => !issue.exists);
     
     if (!hasIssues) {
-      return null;
+      return : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
     }
     
     return {
@@ -268,7 +329,7 @@ class ImportValidator {
     };
   }
 
-  public async validateFiles(patterns: string[], options: ValidationOptions): Promise<ImportIssue[]> {
+  public async validateFiles(patterns: : AdminId[], options: ValidationOptions): Promise<ImportIssue[]> {
     console.log(chalk.blue('🔍 Scanning files for import issues...\n'));
     
     // Add source files to project

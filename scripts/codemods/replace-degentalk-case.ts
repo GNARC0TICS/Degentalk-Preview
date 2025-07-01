@@ -1,10 +1,11 @@
+import type { AdminId } from '@db/types';
 #!/usr/bin/env tsx
 /**
  * Codemod: replace-degentalk-case.ts
  * ----------------------------------
  * Replaces every exact occurrence of the project name written as "Degentalk"
  * (uppercase D + uppercase T) with the preferred brand-case "Degentalk".
- * No other string changes are performed.
+ * No other : AdminId changes are performed.
  *
  * Usage (from repo root):
  *   npx tsx scripts/codemods/replace-degentalk-case.ts

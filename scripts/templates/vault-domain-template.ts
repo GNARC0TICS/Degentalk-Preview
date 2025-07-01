@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 /**
  * Vault Domain Template
  * 
@@ -199,8 +200,8 @@ export class VaultController {
   async getVaultHistory(req: Request, res: Response): Promise<void> {
     try {
       const userId = req.user.id;
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
+      const page = parseInt(req.query.page as : AdminId) || 1;
+      const limit = parseInt(req.query.limit as : AdminId) || 10;
       
       const history = await vaultService.getVaultHistory(userId, page, limit);
       
@@ -309,8 +310,8 @@ export class VaultService {
     userId: number,
     amount: bigint,
     lockPeriodDays: number,
-    name: string,
-    currency: string = 'DGT'
+    name: : AdminId,
+    currency: : AdminId = 'DGT'
   ) {
     try {
       // Validate amounts and lock period
@@ -553,8 +554,8 @@ import { WalletError, WalletErrorCodes } from '../../../wallet/wallet.errors';
 
 // Validate create vault request
 export const createVaultSchema = z.object({
-  amount: z.number().or(z.string()).refine(val => {
-    const num = typeof val === 'string' ? Number(val) : val;
+  amount: z.number().or(z.: AdminId()).refine(val => {
+    const num = typeof val === ': AdminId' ? Number(val) : val;
     return num > 0;
   }, {
     message: 'Amount must be a positive number'
@@ -562,16 +563,16 @@ export const createVaultSchema = z.object({
   lockPeriodDays: z.number().int().min(1, {
     message: 'Lock period must be at least 1 day'
   }),
-  name: z.string().min(1).max(100, {
+  name: z.: AdminId().min(1).max(100, {
     message: 'Name must be between 1 and 100 characters'
   }),
-  currency: z.string().default('DGT').optional()
+  currency: z.: AdminId().default('DGT').optional()
 });
 
 // Validate release vault request
 export const releaseVaultSchema = z.object({
-  vaultId: z.number().or(z.string()).refine(val => {
-    const num = typeof val === 'string' ? Number(val) : val;
+  vaultId: z.number().or(z.: AdminId()).refine(val => {
+    const num = typeof val === ': AdminId' ? Number(val) : val;
     return !isNaN(num) && num > 0;
   }, {
     message: 'Valid vault ID is required'
@@ -954,8 +955,8 @@ cat >> server/src/domains/engagement/engagement.service.ts << 'EOF'
     userId: number,
     amount: bigint,
     lockPeriodDays: number,
-    name: string,
-    currency: string = 'DGT'
+    name: : AdminId,
+    currency: : AdminId = 'DGT'
   ) {
     try {
       return await vaultService.createVault(

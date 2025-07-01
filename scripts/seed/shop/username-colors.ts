@@ -1,24 +1,85 @@
+import type { HeatEventId } from '@db/types';
+import type { ActionId } from '@db/types';
+import type { AuditLogId } from '@db/types';
+import type { EventId } from '@db/types';
+import type { PrefixId } from '@db/types';
+import type { MessageId } from '@db/types';
+import type { FollowRequestId } from '@db/types';
+import type { FriendRequestId } from '@db/types';
+import type { NotificationId } from '@db/types';
+import type { UnlockId } from '@db/types';
+import type { StoreItemId } from '@db/types';
+import type { OrderId } from '@db/types';
+import type { QuoteId } from '@db/types';
+import type { ReplyId } from '@db/types';
+import type { DraftId } from '@db/types';
+import type { IpLogId } from '@db/types';
+import type { ModActionId } from '@db/types';
+import type { SessionId } from '@db/types';
+import type { BanId } from '@db/types';
+import type { VerificationTokenId } from '@db/types';
+import type { SignatureItemId } from '@db/types';
+import type { ContentId } from '@db/types';
+import type { RequestId } from '@db/types';
+import type { ZoneId } from '@db/types';
+import type { WhaleId } from '@db/types';
+import type { VaultLockId } from '@db/types';
+import type { VaultId } from '@db/types';
+import type { UnlockTransactionId } from '@db/types';
+import type { TipId } from '@db/types';
+import type { TemplateId } from '@db/types';
+import type { TagId } from '@db/types';
+import type { SubscriptionId } from '@db/types';
+import type { StickerId } from '@db/types';
+import type { SettingId } from '@db/types';
+import type { RuleId } from '@db/types';
+import type { ParentZoneId } from '@db/types';
+import type { ParentForumId } from '@db/types';
+import type { PackId } from '@db/types';
+import type { ModeratorId } from '@db/types';
+import type { MentionId } from '@db/types';
+import type { ItemId } from '@db/types';
+import type { InventoryId } from '@db/types';
+import type { GroupId } from '@db/types';
+import type { ForumId } from '@db/types';
+import type { EntryId } from '@db/types';
+import type { EntityId } from '@db/types';
+import type { EmojiPackId } from '@db/types';
+import type { EditorId } from '@db/types';
+import type { CosmeticId } from '@db/types';
+import type { AuthorId } from '@db/types';
+import type { CoinId } from '@db/types';
+import type { CategoryId } from '@db/types';
+import type { BackupId } from '@db/types';
+import type { AnimationFrameId } from '@db/types';
+import type { AirdropId } from '@db/types';
+import type { AdminUserId } from '@db/types';
+import type { RoomId } from '@db/types';
+import type { ConversationId } from '@db/types';
+import type { ReportId } from '@db/types';
+import type { ReporterId } from '@db/types';
+import type { AdminId } from '@db/types';
 /**
  * Seed data for username colors
  * Organized by rarity tier with progressive pricing
  */
 
 export interface UsernameColorProduct {
-  name: string;
-  description: string;
+  name: : AdminId;
+  description: : AdminId;
   price: number; // DGT price
   pointsPrice?: number; // Optional points price
-  stockLimit: number | null; // null = unlimited
+  stockLimit: number | : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null; // : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null = unlimited
   status: 'published' | 'draft' | 'archived';
   pluginReward: {
     type: 'usernameColor';
-    value: string; // Hex color
-    rarity: string;
-    label: string;
+    value: : AdminId; // Hex color
+    rarity: : AdminId;
+    label: : AdminId;
   };
   metadata: {
-    rarity: string;
-    visual?: string; // Optional visual description
+    rarity: : AdminId;
+    visual?: : AdminId; // Optional visual description
   };
 }
 
@@ -28,7 +89,7 @@ export const USERNAME_COLOR_PRODUCTS: UsernameColorProduct[] = [
     name: "Gray Username",
     description: "A subtle gray color for those who keep it low-key",
     price: 100,
-    stockLimit: null,
+    stockLimit: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null,
     status: 'published',
     pluginReward: {
       type: 'usernameColor',
@@ -45,7 +106,7 @@ export const USERNAME_COLOR_PRODUCTS: UsernameColorProduct[] = [
     name: "Slate Username",
     description: "A darker slate gray for the understated",
     price: 100,
-    stockLimit: null,
+    stockLimit: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null,
     status: 'published',
     pluginReward: {
       type: 'usernameColor',
@@ -62,7 +123,7 @@ export const USERNAME_COLOR_PRODUCTS: UsernameColorProduct[] = [
     name: "Stone Username",
     description: "Neutral stone color - whatever helps you sleep at night",
     price: 100,
-    stockLimit: null,
+    stockLimit: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null,
     status: 'published',
     pluginReward: {
       type: 'usernameColor',
@@ -81,7 +142,7 @@ export const USERNAME_COLOR_PRODUCTS: UsernameColorProduct[] = [
     name: "Green Username",
     description: "Classic green - still bullish on CNBC signals",
     price: 250,
-    stockLimit: null,
+    stockLimit: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null,
     status: 'published',
     pluginReward: {
       type: 'usernameColor',
@@ -98,7 +159,7 @@ export const USERNAME_COLOR_PRODUCTS: UsernameColorProduct[] = [
     name: "Blue Username",
     description: "Standard blue for the everyday trader",
     price: 250,
-    stockLimit: null,
+    stockLimit: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null,
     status: 'published',
     pluginReward: {
       type: 'usernameColor',
@@ -115,7 +176,7 @@ export const USERNAME_COLOR_PRODUCTS: UsernameColorProduct[] = [
     name: "Orange Username",
     description: "Warm orange for those who follow the herd",
     price: 250,
-    stockLimit: null,
+    stockLimit: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null,
     status: 'published',
     pluginReward: {
       type: 'usernameColor',
@@ -134,7 +195,7 @@ export const USERNAME_COLOR_PRODUCTS: UsernameColorProduct[] = [
     name: "Yellow Glow Username",
     description: "Soft yellow glow - still checking the chart",
     price: 500,
-    stockLimit: null,
+    stockLimit: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null,
     status: 'published',
     pluginReward: {
       type: 'usernameColor',
@@ -151,7 +212,7 @@ export const USERNAME_COLOR_PRODUCTS: UsernameColorProduct[] = [
     name: "Purple Haze Username",
     description: "Mystical purple for eternal HODLers",
     price: 500,
-    stockLimit: null,
+    stockLimit: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null,
     status: 'published',
     pluginReward: {
       type: 'usernameColor',
@@ -168,7 +229,7 @@ export const USERNAME_COLOR_PRODUCTS: UsernameColorProduct[] = [
     name: "Teal Wave Username",
     description: "Oceanic teal - riding waves to zero",
     price: 500,
-    stockLimit: null,
+    stockLimit: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null,
     status: 'published',
     pluginReward: {
       type: 'usernameColor',
@@ -187,7 +248,7 @@ export const USERNAME_COLOR_PRODUCTS: UsernameColorProduct[] = [
     name: "Crimson Rush Username",
     description: "Bold red - no bankroll management, just vibes",
     price: 1000,
-    stockLimit: null,
+    stockLimit: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null,
     status: 'published',
     pluginReward: {
       type: 'usernameColor',
@@ -204,7 +265,7 @@ export const USERNAME_COLOR_PRODUCTS: UsernameColorProduct[] = [
     name: "Cyan Lightning Username",
     description: "Electric cyan for maximum visibility",
     price: 1000,
-    stockLimit: null,
+    stockLimit: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null,
     status: 'published',
     pluginReward: {
       type: 'usernameColor',
@@ -221,7 +282,7 @@ export const USERNAME_COLOR_PRODUCTS: UsernameColorProduct[] = [
     name: "Pink Power Username",
     description: "Hot pink - betting it all on every hand",
     price: 1000,
-    stockLimit: null,
+    stockLimit: : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null,
     status: 'published',
     pluginReward: {
       type: 'usernameColor',
@@ -338,8 +399,8 @@ export async function seedUsernameColors(db: any) {
         pointsPrice: colorProduct.pointsPrice,
         stockLimit: colorProduct.stockLimit,
         status: colorProduct.status,
-        pluginReward: JSON.stringify(colorProduct.pluginReward),
-        metadata: JSON.stringify(colorProduct.metadata),
+        pluginReward: JSON.: AdminIdify(colorProduct.pluginReward),
+        metadata: JSON.: AdminIdify(colorProduct.metadata),
         createdAt: new Date(),
         updatedAt: new Date()
       });

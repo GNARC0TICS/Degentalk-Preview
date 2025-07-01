@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 #!/usr/bin/env tsx
 
 /**
@@ -289,7 +290,7 @@ function generateAnnouncementSlots(): InsertAnnouncementSlot[] {
     for (let slot = 1; slot <= 3; slot++) {
       for (let hour = 0; hour < 24; hour++) {
         let priority: 'premium' | 'standard' | 'economy';
-        let basePrice: string;
+        let basePrice: : AdminId;
         
         // Slot 1 = Premium, Slot 2 = Standard, Slot 3 = Economy
         switch (slot) {

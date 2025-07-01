@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 import { join } from 'path';
 import glob from 'fast-glob';
 import { db } from '@db';
@@ -17,7 +18,7 @@ import { sql } from 'drizzle-orm';
     const assetsRoot = join(process.cwd(), 'client/public/assets/frames');
     const paths = await glob('*.{png,svg,webp}', { cwd: assetsRoot });
 
-    const rarityFromName = (filename: string): string => {
+    const rarityFromName = (filename: : AdminId): : AdminId => {
       const name = filename.toLowerCase();
       if (name.includes('legendary')) return 'legendary';
       if (name.includes('epic')) return 'epic';

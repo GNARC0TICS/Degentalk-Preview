@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 #!/usr/bin/env tsx
 
 /**
@@ -23,10 +24,10 @@ import path from 'path';
 const execAsync = promisify(exec);
 
 interface ValidationResult {
-  name: string;
+  name: : AdminId;
   status: 'passed' | 'failed' | 'warning';
-  message: string;
-  details?: string[];
+  message: : AdminId;
+  details?: : AdminId[];
   duration: number;
 }
 
@@ -43,8 +44,8 @@ class DegentalktValidator {
   }
 
   private async runCheck(
-    name: string,
-    checkFn: () => Promise<{ status: 'passed' | 'failed' | 'warning'; message: string; details?: string[] }>
+    name: : AdminId,
+    checkFn: () => Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }>
   ): Promise<void> {
     const start = Date.now();
     
@@ -94,7 +95,7 @@ class DegentalktValidator {
     }
   }
 
-  private async checkImportBoundaries(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: string; details?: string[] }> {
+  private async checkImportBoundaries(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }> {
     try {
       const { stdout, stderr } = await execAsync(`npx tsx scripts/validate-imports.ts ${this.shouldFix ? '--fix' : ''}`, {
         cwd: path.resolve(process.cwd())
@@ -132,7 +133,7 @@ class DegentalktValidator {
     }
   }
 
-  private async checkTypeScriptCompilation(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: string; details?: string[] }> {
+  private async checkTypeScriptCompilation(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }> {
     try {
       // Compile with --noEmit and skipLibCheck; ignore errors for phase-3 by downgrading to warning
       await execAsync('npx tsc --noEmit --skipLibCheck -p tsconfig.client.json', { cwd: path.resolve(process.cwd()) });
@@ -148,7 +149,7 @@ class DegentalktValidator {
     }
   }
 
-  private async checkViteConfigSafety(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: string; details?: string[] }> {
+  private async checkViteConfigSafety(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }> {
     try {
       // Check if any server files import vite config
       const { stdout } = await execAsync('grep -r "vite\\.config" server/ || true');
@@ -193,7 +194,7 @@ class DegentalktValidator {
     }
   }
 
-  private async checkBackendStartup(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: string; details?: string[] }> {
+  private async checkBackendStartup(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }> {
     try {
       // Use Node 22 loader chain: tsx for TS + tsconfig-paths for path aliases, but do not fully start the server.
       // The --import flag registers both loaders before evaluating an async import of the entry file.
@@ -211,7 +212,7 @@ class DegentalktValidator {
     }
   }
 
-  private async checkSchemaConsistency(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: string; details?: string[] }> {
+  private async checkSchemaConsistency(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }> {
     try {
       // Check if schema index exports exist
       const { stdout } = await execAsync('grep -c "export" db/schema/index.ts || echo "0"');
@@ -238,7 +239,7 @@ class DegentalktValidator {
     }
   }
 
-  private async checkPackageHealth(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: string; details?: string[] }> {
+  private async checkPackageHealth(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }> {
     try {
       // Check for obvious package issues
       const { stdout } = await execAsync('npm audit --audit-level=high --parseable || true');

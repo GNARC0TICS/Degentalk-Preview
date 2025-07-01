@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 #!/usr/bin/env tsx
 
 /**
@@ -12,9 +13,9 @@ import { sql } from 'drizzle-orm';
 import chalk from 'chalk';
 
 interface CleanupStep {
-  name: string;
-  query: string;
-  rollback?: string;
+  name: : AdminId;
+  query: : AdminId;
+  rollback?: : AdminId;
 }
 
 const cleanupSteps: CleanupStep[] = [

@@ -10,7 +10,7 @@
 import { db } from '@db';
 import { users, ccpaymentUsers, transactions } from '@schema';
 import { eq } from 'drizzle-orm';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
 async function setupFreshWalletTest() {
 	console.log('🧪 Setting up fresh wallet test environment...');

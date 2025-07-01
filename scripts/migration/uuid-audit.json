@@ -1,0 +1,3206 @@
+{
+  "generatedAt": "2025-06-30T23:53:54.763Z",
+  "schemaIntegerColumns": [],
+  "codeIntegerIdOccurrences": [
+    {
+      "file": "server/storage.ts",
+      "line": 89,
+      "match": "getUsersInGroup(groupId: number): Promise<User[]>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 111,
+      "match": "getUserRuleAgreements(userId: number): Promise<UserRulesAgreement[]>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 112,
+      "match": "agreeToRule(userId: number, ruleId: number, versionHash: string): Promise<void>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 129,
+      "match": "createThread(thread: InsertThread & { userId: number }): Promise<Thread>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 134,
+      "match": "getDraftsByUser(userId: number, structureId?: number): Promise<ThreadDraft[]>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 142,
+      "match": "getThreadFeaturePermissionsForUser(userId: number): Promise<Record<string, boolean>>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 145,
+      "match": "getPosts(threadId: number, limit?: number, offset?: number): Promise<PostWithUser[]>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 147,
+      "match": "createPost(post: InsertPost & { userId: number; isFirstPost?: boolean }): Promise<Post>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 148,
+      "match": "updatePost(id: number, postData: Partial<Post> & { editorId: number }): Promise<Post>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 152,
+      "match": "addReaction(userId: number, postId: number, reaction: string): Promise<void>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 153,
+      "match": "removeReaction(userId: number, postId: number, reaction: string): Promise<void>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 156,
+      "match": "getNotifications(userId: number, limit?: number, offset?: number): Promise<Notification[]>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 165,
+      "match": "getAvailableEmojisForUser(userId: number): Promise<EmojiWithAvailability[]>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 166,
+      "match": "unlockEmojiForUser(userId: number, emojiId: number): Promise<void>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 174,
+      "match": "purchaseProduct(userId: number, productId: number, quantity?: number): Promise<Order>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 178,
+      "match": "userId: number"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 188,
+      "match": "conversationId: number,"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 193,
+      "match": "conversationId: number;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 194,
+      "match": "senderId: number;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 199,
+      "match": "markMessagesAsRead(conversationId: number, userId: number): Promise<void>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 202,
+      "match": "addUserXp(userId: number, amount: number, path?: string): Promise<void>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 203,
+      "match": "getUserPathXp(userId: number, path?: string): Promise<Record<string, number>>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 204,
+      "match": "recalculateUserPathMultipliers(userId: number): Promise<Record<string, number>>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 207,
+      "match": "getUserInventory(userId: number): Promise<UserInventoryItem[]>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 208,
+      "match": "checkUserOwnsProduct(userId: number, productId: number): Promise<boolean>;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 211,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 212,
+      "match": "productId: number,"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 216,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 217,
+      "match": "productId: number;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 387,
+      "match": "async storeVerificationToken(userId: number, token: string): Promise<void> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 695,
+      "match": "async createThread(thread: InsertThread & { userId: number }): Promise<Thread> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 761,
+      "match": "async getDraftsByUser(userId: number, structureId?: number): Promise<ThreadDraft[]> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 880,
+      "match": "async getThreadFeaturePermissionsForUser(userId: number): Promise<Record<string, boolean>> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 909,
+      "match": "async getPosts(threadId: number, limit = 20, offset = 0): Promise<PostWithUser[]> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 936,
+      "match": "async createPost(post: InsertPost & { userId: number; isFirstPost?: boolean }): Promise<Post> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 968,
+      "match": "async updatePost(id: number, postData: Partial<Post> & { editorId: number }): Promise<Post> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1070,
+      "match": "async addReaction(userId: number, postId: number, reaction: string): Promise<void> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1108,
+      "match": "async removeReaction(userId: number, postId: number, reaction: string): Promise<void> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1167,
+      "match": "async getNotifications(userId: number, limit = 20, offset = 0): Promise<Notification[]> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1242,
+      "match": "async getAvailableEmojisForUser(userId: number): Promise<EmojiWithAvailability[]> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1286,
+      "match": "async unlockEmojiForUser(userId: number, emojiId: number): Promise<void> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1316,
+      "match": "async getUsersInGroup(groupId: number): Promise<User[]> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1397,
+      "match": "async getUserRuleAgreements(userId: number): Promise<UserRulesAgreement[]> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1405,
+      "match": "async agreeToRule(userId: number, ruleId: number, versionHash: string): Promise<void> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1667,
+      "match": "async purchaseProduct(userId: number, productId: number, quantity: number = 1): Promise<Order> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1795,
+      "match": "userId: number"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1905,
+      "match": "conversationId: number,"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1923,
+      "match": "conversationId: number;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1924,
+      "match": "senderId: number;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 1997,
+      "match": "async markMessagesAsRead(conversationId: number, userId: number): Promise<void> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 2036,
+      "match": "async addUserXp(userId: number, amount: number, path?: string): Promise<void> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 2123,
+      "match": "async getUserPathXp(userId: number, path?: string): Promise<Record<string, number>> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 2144,
+      "match": "async recalculateUserPathMultipliers(userId: number): Promise<Record<string, number>> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 2203,
+      "match": "async getUserInventory(userId: number): Promise<UserInventoryItem[]> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 2225,
+      "match": "async checkUserOwnsProduct(userId: number, productId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 2238,
+      "match": "let transactionId: number | null = null;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 2293,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 2294,
+      "match": "productId: number,"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 2307,
+      "match": "userId: number"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 2317,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/storage.ts",
+      "line": 2318,
+      "match": "productId: number;"
+    },
+    {
+      "file": "shared/path-config.ts",
+      "line": 107,
+      "match": "export function getPathForCategory(categoryId: number): string | undefined {"
+    },
+    {
+      "file": "server/utils/walletEngine.ts",
+      "line": 41,
+      "match": "fromUserId: number;"
+    },
+    {
+      "file": "server/utils/walletEngine.ts",
+      "line": 42,
+      "match": "toUserId: number;"
+    },
+    {
+      "file": "server/utils/walletEngine.ts",
+      "line": 59,
+      "match": "static async getUserWallet(userId: number): Promise<UserWallet | null> {"
+    },
+    {
+      "file": "server/utils/walletEngine.ts",
+      "line": 101,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/utils/walletEngine.ts",
+      "line": 140,
+      "match": "static async getDgtUnlockById(unlockId: number): Promise<DgtUnlock | null> {"
+    },
+    {
+      "file": "server/utils/walletEngine.ts",
+      "line": 162,
+      "match": "userId: number"
+    },
+    {
+      "file": "server/utils/walletEngine.ts",
+      "line": 193,
+      "match": "static async purchaseDgtUnlock(userId: number, unlockId: number): Promise<DgtPurchaseResult> {"
+    },
+    {
+      "file": "server/utils/walletEngine.ts",
+      "line": 541,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/utils/walletEngine.ts",
+      "line": 622,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/utils/wallet-utils.ts",
+      "line": 47,
+      "match": "transactionId: number,"
+    },
+    {
+      "file": "server/utils/wallet-utils.ts",
+      "line": 114,
+      "match": "transactionId: number,"
+    },
+    {
+      "file": "server/utils/platform-energy.ts",
+      "line": 193,
+      "match": "export async function featureThread(threadId: number, userId: number, expiresAt?: Date) {"
+    },
+    {
+      "file": "server/utils/platform-energy.ts",
+      "line": 206,
+      "match": "export async function unfeatureThread(threadId: number) {"
+    },
+    {
+      "file": "server/utils/path-utils.ts",
+      "line": 24,
+      "match": "categoryId: number,"
+    },
+    {
+      "file": "server/utils/dgt-wallet-integration.ts",
+      "line": 74,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/utils/dgt-wallet-integration.ts",
+      "line": 163,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/utils/dgt-wallet-integration.ts",
+      "line": 220,
+      "match": "static async getUserDgtPurchaseHistory(userId: number, limit = 20, offset = 0) {"
+    },
+    {
+      "file": "server/services/xp-level-service.ts",
+      "line": 61,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/services/xp-level-service.ts",
+      "line": 231,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/services/xp-level-service.ts",
+      "line": 297,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/services/xp-level-service.ts",
+      "line": 328,
+      "match": "private async distributeRewards(tx: any, userId: number, level: number): Promise<void> {"
+    },
+    {
+      "file": "server/services/xp-level-service.ts",
+      "line": 416,
+      "match": "unlocks.titles.map((titleId: number) => ({"
+    },
+    {
+      "file": "server/services/xp-level-service.ts",
+      "line": 430,
+      "match": "unlocks.badges.map((badgeId: number) => ({"
+    },
+    {
+      "file": "server/services/xp-level-service.ts",
+      "line": 444,
+      "match": "unlocks.frames.map((frameId: number) => ({"
+    },
+    {
+      "file": "server/services/xp-level-service.ts",
+      "line": 475,
+      "match": "async getUserXpInfo(userId: number): Promise<{"
+    },
+    {
+      "file": "server/services/xp-level-service.ts",
+      "line": 556,
+      "match": "private async getUserXpMultiplier(userId: number, forumId?: number): Promise<number> {"
+    },
+    {
+      "file": "server/services/xp-clout-service.ts",
+      "line": 44,
+      "match": "async awardPoints(userId: number, actionKey: string, multiplier: number = 1): Promise<boolean> {"
+    },
+    {
+      "file": "server/services/xp-clout-service.ts",
+      "line": 95,
+      "match": "async checkLevelUp(userId: number): Promise<void> {"
+    },
+    {
+      "file": "server/services/tip-service-ccpayment.ts",
+      "line": 31,
+      "match": "senderUserId: number,"
+    },
+    {
+      "file": "server/services/tip-service-ccpayment.ts",
+      "line": 32,
+      "match": "recipientUserId: number,"
+    },
+    {
+      "file": "server/services/tip-service-ccpayment.ts",
+      "line": 35,
+      "match": "transactionId: number;"
+    },
+    {
+      "file": "server/services/tip-service-ccpayment.ts",
+      "line": 207,
+      "match": "senderUserId: number,"
+    },
+    {
+      "file": "server/services/tip-service-ccpayment.ts",
+      "line": 208,
+      "match": "recipientUserId: number,"
+    },
+    {
+      "file": "server/services/tip-service-ccpayment.ts",
+      "line": 211,
+      "match": "roomId: number,"
+    },
+    {
+      "file": "server/services/tip-service-ccpayment.ts",
+      "line": 214,
+      "match": "transactionId: number;"
+    },
+    {
+      "file": "server/services/tip-service-ccpayment.ts",
+      "line": 391,
+      "match": "private async checkCooldowns(userId: number, commandType: 'tip' | 'rain'): Promise<void> {"
+    },
+    {
+      "file": "server/services/tip-service-ccpayment.ts",
+      "line": 440,
+      "match": "private async updateLastCommandTime(userId: number, commandType: 'tip' | 'rain'): Promise<void> {"
+    },
+    {
+      "file": "server/services/path-service.ts",
+      "line": 68,
+      "match": "static async getUserPaths(userId: number): Promise<Array<UserPath & { path: XpPath }>> {"
+    },
+    {
+      "file": "server/services/path-service.ts",
+      "line": 103,
+      "match": "static async getUserPrimaryPath(userId: number): Promise<(UserPath & { path: XpPath }) | null> {"
+    },
+    {
+      "file": "server/services/path-service.ts",
+      "line": 143,
+      "match": "static async setUserPrimaryPath(userId: number, pathId: string): Promise<boolean> {"
+    },
+    {
+      "file": "server/services/path-service.ts",
+      "line": 196,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/services/path-service.ts",
+      "line": 308,
+      "match": "static async getUserPathRank(userId: number, pathId: string): Promise<number | null> {"
+    },
+    {
+      "file": "scripts/testing/test-xp-system.ts",
+      "line": 24,
+      "match": "let userId: number;"
+    },
+    {
+      "file": "scripts/templates/vault-domain-template.ts",
+      "line": 253,
+      "match": "async getUserVaults(userId: number) {"
+    },
+    {
+      "file": "scripts/templates/vault-domain-template.ts",
+      "line": 309,
+      "match": "userId: number,"
+    },
+    {
+      "file": "scripts/templates/vault-domain-template.ts",
+      "line": 385,
+      "match": "async releaseVault(userId: number, vaultId: number) {"
+    },
+    {
+      "file": "scripts/templates/vault-domain-template.ts",
+      "line": 477,
+      "match": "async getVaultHistory(userId: number, page: number = 1, limit: number = 10) {"
+    },
+    {
+      "file": "scripts/templates/vault-domain-template.ts",
+      "line": 954,
+      "match": "userId: number,"
+    },
+    {
+      "file": "scripts/templates/transaction-domain-template.ts",
+      "line": 265,
+      "match": "async getTransactionHistory(userId: number, params: TransactionQueryParams) {"
+    },
+    {
+      "file": "scripts/templates/transaction-domain-template.ts",
+      "line": 388,
+      "match": "async getTransactionById(userId: number, transactionId: number) {"
+    },
+    {
+      "file": "scripts/templates/transaction-domain-template.ts",
+      "line": 456,
+      "match": "async getTransactionStats(userId: number, period: 'day' | 'week' | 'month' | 'year' = 'month') {"
+    },
+    {
+      "file": "scripts/templates/transaction-domain-template.ts",
+      "line": 567,
+      "match": "userId: number,"
+    },
+    {
+      "file": "scripts/seed/seed-all-comprehensive.ts",
+      "line": 316,
+      "match": "const parentRows: { parentId: number | null }[] = await db"
+    },
+    {
+      "file": "scripts/ops/check-forum-config-sync.ts",
+      "line": 135,
+      "match": "let expectedParentId: number | undefined;"
+    },
+    {
+      "file": "client/src/utils/forum-urls.ts",
+      "line": 59,
+      "match": "export function getThreadUrlById(threadId: number): string {"
+    },
+    {
+      "file": "client/src/types/profile.ts",
+      "line": 25,
+      "match": "activeFrameId: number | null;"
+    },
+    {
+      "file": "client/src/types/profile.ts",
+      "line": 32,
+      "match": "activeTitleId: number | null;"
+    },
+    {
+      "file": "client/src/types/profile.ts",
+      "line": 40,
+      "match": "activeBadgeId: number | null;"
+    },
+    {
+      "file": "client/src/types/profile.ts",
+      "line": 65,
+      "match": "productId: number;"
+    },
+    {
+      "file": "client/src/types/payment.types.ts",
+      "line": 20,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/types/payment.types.ts",
+      "line": 39,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/types/payment.types.ts",
+      "line": 56,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/types/payment.types.ts",
+      "line": 90,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/types/notifications.ts",
+      "line": 6,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/types/inventory.ts",
+      "line": 21,
+      "match": "productId: number;"
+    },
+    {
+      "file": "client/src/types/inventory.ts",
+      "line": 33,
+      "match": "productId: number;"
+    },
+    {
+      "file": "client/src/types/canonical.types.ts",
+      "line": 62,
+      "match": "parentZoneId: number;"
+    },
+    {
+      "file": "client/src/types/canonical.types.ts",
+      "line": 112,
+      "match": "parentForumId: number;"
+    },
+    {
+      "file": "client/src/types/canonical.types.ts",
+      "line": 151,
+      "match": "structureId: number; // Forum or subforum ID"
+    },
+    {
+      "file": "client/src/types/canonical.types.ts",
+      "line": 206,
+      "match": "threadId: number;"
+    },
+    {
+      "file": "client/src/types/canonical.types.ts",
+      "line": 366,
+      "match": "structureId: number; // Forum or subforum ID"
+    },
+    {
+      "file": "client/src/types/canonical.types.ts",
+      "line": 376,
+      "match": "threadId: number;"
+    },
+    {
+      "file": "client/src/types/canonical.types.ts",
+      "line": 399,
+      "match": "getThreadContext: (structureId: number) => {"
+    },
+    {
+      "file": "client/src/pages/forum-rules.tsx",
+      "line": 48,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/pages/forum-rules.tsx",
+      "line": 49,
+      "match": "ruleId: number;"
+    },
+    {
+      "file": "client/src/pages/forum-rules.tsx",
+      "line": 141,
+      "match": "const handleRuleAgreementChange = (ruleId: number, checked: boolean) => {"
+    },
+    {
+      "file": "client/src/hooks/useXP.ts",
+      "line": 82,
+      "match": "equipTitle: (titleId: number) => void;"
+    },
+    {
+      "file": "client/src/hooks/useXP.ts",
+      "line": 138,
+      "match": "mutationFn: async (titleId: number) => {"
+    },
+    {
+      "file": "client/src/hooks/useXP.ts",
+      "line": 185,
+      "match": "equipTitle: (titleId: number) => equipTitle.mutate(titleId)"
+    },
+    {
+      "file": "client/src/hooks/useUserXP.ts",
+      "line": 6,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/hooks/useMissions.ts",
+      "line": 28,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/hooks/useMissions.ts",
+      "line": 29,
+      "match": "missionId: number;"
+    },
+    {
+      "file": "client/src/hooks/useMissions.ts",
+      "line": 99,
+      "match": "mutationFn: async (missionId: number) => {"
+    },
+    {
+      "file": "client/src/hooks/useMissions.ts",
+      "line": 104,
+      "match": "missionId: number"
+    },
+    {
+      "file": "client/src/hooks/useMissions.ts",
+      "line": 204,
+      "match": "claimReward: (missionId: number) => claimRewardMutation.mutate(missionId),"
+    },
+    {
+      "file": "client/src/hooks/useForumFilters.ts",
+      "line": 161,
+      "match": "const toggleTag = useCallback((tagId: number) => {"
+    },
+    {
+      "file": "client/src/hooks/use-tip.ts",
+      "line": 6,
+      "match": "toUserId: number;"
+    },
+    {
+      "file": "client/src/hooks/use-tip.ts",
+      "line": 14,
+      "match": "tipId: number;"
+    },
+    {
+      "file": "client/src/hooks/use-tip.ts",
+      "line": 21,
+      "match": "fromUserId: number;"
+    },
+    {
+      "file": "client/src/hooks/use-tip.ts",
+      "line": 22,
+      "match": "toUserId: number;"
+    },
+    {
+      "file": "client/src/hooks/use-rain.ts",
+      "line": 14,
+      "match": "transactionId: number;"
+    },
+    {
+      "file": "client/src/hooks/use-rain.ts",
+      "line": 25,
+      "match": "fromUserId: number;"
+    },
+    {
+      "file": "client/src/hooks/use-gamification.tsx",
+      "line": 64,
+      "match": "mutationFn: (missionId: number) => gamificationApi.claimMissionReward(missionId),"
+    },
+    {
+      "file": "client/src/hooks/use-content.ts",
+      "line": 98,
+      "match": "export function useForumContent(forumId: number, initialTab: ContentTab = 'recent') {"
+    },
+    {
+      "file": "client/src/core/api.ts",
+      "line": 141,
+      "match": "toUserId: number,"
+    },
+    {
+      "file": "client/src/core/api.ts",
+      "line": 146,
+      "match": "transactionId: number;"
+    },
+    {
+      "file": "client/src/core/api.ts",
+      "line": 178,
+      "match": "toUserId: number,"
+    },
+    {
+      "file": "client/src/core/api.ts",
+      "line": 185,
+      "match": "tipId: number;"
+    },
+    {
+      "file": "client/src/core/api.ts",
+      "line": 222,
+      "match": "transactionId: number;"
+    },
+    {
+      "file": "client/src/core/api.ts",
+      "line": 282,
+      "match": "vaultId: number;"
+    },
+    {
+      "file": "client/src/core/api.ts",
+      "line": 298,
+      "match": "async unlockVault(vaultId: number): Promise<{"
+    },
+    {
+      "file": "client/src/contexts/ForumStructureContext.tsx",
+      "line": 213,
+      "match": "getThreadContext: (structureId: number) => {"
+    },
+    {
+      "file": "client/src/contexts/ForumStructureContext.tsx",
+      "line": 247,
+      "match": "function makeMergedForum(api: ApiEntity, parentZoneId: number): MergedForum {"
+    },
+    {
+      "file": "server/src/middleware/mission-progress.ts",
+      "line": 55,
+      "match": "userId: number,"
+    },
+    {
+      "file": "shared/fixtures/utilities/test-helpers.ts",
+      "line": 259,
+      "match": "generateRealisticPosts(threadId: number, userIds: number[], count: number = 10): any[] {"
+    },
+    {
+      "file": "shared/fixtures/utilities/test-helpers.ts",
+      "line": 315,
+      "match": "private generateAdminActions(adminId: number, users: any[]): any[] {"
+    },
+    {
+      "file": "shared/fixtures/utilities/scenario-generator.ts",
+      "line": 511,
+      "match": "private generateWhaleTransactions(whaleId: number): any[] {"
+    },
+    {
+      "file": "shared/fixtures/utilities/scenario-generator.ts",
+      "line": 522,
+      "match": "private generateWhaleTips(whaleId: number, userIds: number[]): any[] {"
+    },
+    {
+      "file": "shared/fixtures/utilities/scenario-generator.ts",
+      "line": 552,
+      "match": "private generateOnboardingProgression(userId: number): any[] {"
+    },
+    {
+      "file": "shared/fixtures/utilities/scenario-generator.ts",
+      "line": 587,
+      "match": "private generateSettingsChanges(adminId: number): any[] {"
+    },
+    {
+      "file": "shared/fixtures/utilities/scenario-generator.ts",
+      "line": 623,
+      "match": "private generateMarketReactionData(users: any[], threadId: number): any {"
+    },
+    {
+      "file": "shared/lib/moderation/applyModerationAction.ts",
+      "line": 14,
+      "match": "moderatorId: number;"
+    },
+    {
+      "file": "shared/lib/moderation/applyModerationAction.ts",
+      "line": 16,
+      "match": "targetId: number;"
+    },
+    {
+      "file": "shared/lib/mentions/createMentionsIndex.ts",
+      "line": 10,
+      "match": "sourceId: number;"
+    },
+    {
+      "file": "shared/lib/emoji/unlockEmojiPack.ts",
+      "line": 6,
+      "match": "userId: number;"
+    },
+    {
+      "file": "shared/lib/emoji/unlockEmojiPack.ts",
+      "line": 7,
+      "match": "emojiPackId: number;"
+    },
+    {
+      "file": "client/src/payments/shared/index.ts",
+      "line": 23,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/payments/ccpayment/withdraw.ts",
+      "line": 15,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/payments/ccpayment/withdraw.ts",
+      "line": 118,
+      "match": "userId: number,"
+    },
+    {
+      "file": "client/src/payments/ccpayment/swap.ts",
+      "line": 14,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/payments/ccpayment/deposit.ts",
+      "line": 15,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/pages/threads/BBCodeThreadPage.tsx",
+      "line": 200,
+      "match": "const handleLike = (postId: number, hasLiked: boolean) => {"
+    },
+    {
+      "file": "client/src/pages/threads/BBCodeThreadPage.tsx",
+      "line": 204,
+      "match": "const handleReply = (postId: number) => {"
+    },
+    {
+      "file": "client/src/pages/threads/BBCodeThreadPage.tsx",
+      "line": 209,
+      "match": "const handleQuote = (postId: number) => {"
+    },
+    {
+      "file": "client/src/pages/threads/BBCodeThreadPage.tsx",
+      "line": 214,
+      "match": "const handleEdit = (postId: number) => {"
+    },
+    {
+      "file": "client/src/pages/threads/BBCodeThreadPage.tsx",
+      "line": 218,
+      "match": "const handleDelete = (postId: number) => {"
+    },
+    {
+      "file": "client/src/pages/threads/BBCodeThreadPage.tsx",
+      "line": 222,
+      "match": "const handleMarkSolution = (postId: number) => {"
+    },
+    {
+      "file": "client/src/pages/threads/BBCodeThreadPage.tsx",
+      "line": 226,
+      "match": "const handleTip = (postId: number) => {"
+    },
+    {
+      "file": "client/src/pages/threads/BBCodeThreadPage.tsx",
+      "line": 230,
+      "match": "const handleReport = (postId: number) => {"
+    },
+    {
+      "file": "client/src/pages/shop/avatar-frames.tsx",
+      "line": 20,
+      "match": "productId: number;"
+    },
+    {
+      "file": "client/src/pages/shop/avatar-frames.tsx",
+      "line": 41,
+      "match": "mutationFn: (frameId: number) =>"
+    },
+    {
+      "file": "client/src/pages/shop/avatar-frames.tsx",
+      "line": 54,
+      "match": "mutationFn: (frameId: number) =>"
+    },
+    {
+      "file": "client/src/pages/shop/avatar-frames.tsx",
+      "line": 65,
+      "match": "const handleBuy = (frameId: number) => {"
+    },
+    {
+      "file": "client/src/pages/shop/avatar-frames.tsx",
+      "line": 69,
+      "match": "const handleEquip = (frameId: number) => {"
+    },
+    {
+      "file": "client/src/pages/mod/reports.tsx",
+      "line": 60,
+      "match": "contentId: number;"
+    },
+    {
+      "file": "client/src/pages/mod/reports.tsx",
+      "line": 148,
+      "match": "async banUser(userId: string, data: { duration: string; reason: string; reportId: number }) {"
+    },
+    {
+      "file": "client/src/pages/mod/reports.tsx",
+      "line": 156,
+      "match": "async deleteContent(contentType: string, contentId: number, reason: string) {"
+    },
+    {
+      "file": "client/src/pages/mod/reports.tsx",
+      "line": 231,
+      "match": "contentId: number;"
+    },
+    {
+      "file": "client/src/pages/mod/reports.tsx",
+      "line": 317,
+      "match": "const handleQuickAction = (reportId: number, action: string) => {"
+    },
+    {
+      "file": "client/src/lib/utils/animateNumber.ts",
+      "line": 21,
+      "match": "let animationFrameId: number;"
+    },
+    {
+      "file": "client/src/pages/admin/treasury.tsx",
+      "line": 31,
+      "match": "settingId: number;"
+    },
+    {
+      "file": "client/src/pages/admin/treasury.tsx",
+      "line": 44,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/pages/admin/treasury.tsx",
+      "line": 51,
+      "match": "walletId: number;"
+    },
+    {
+      "file": "client/src/pages/admin/treasury.tsx",
+      "line": 52,
+      "match": "fromUserId: number | null;"
+    },
+    {
+      "file": "client/src/pages/admin/treasury.tsx",
+      "line": 53,
+      "match": "toUserId: number | null;"
+    },
+    {
+      "file": "client/src/pages/admin/shoutbox.tsx",
+      "line": 191,
+      "match": "mutationFn: async ({ roomId, updates }: { roomId: number; updates: any }) => {"
+    },
+    {
+      "file": "client/src/pages/admin/shoutbox.tsx",
+      "line": 212,
+      "match": "mutationFn: async (roomId: number) => {"
+    },
+    {
+      "file": "client/src/lib/api/achievements.ts",
+      "line": 12,
+      "match": "achievementId: number;"
+    },
+    {
+      "file": "client/src/hooks/preferences/useUserSettings.ts",
+      "line": 20,
+      "match": "activeTitleId: number | null;"
+    },
+    {
+      "file": "client/src/hooks/preferences/useUserSettings.ts",
+      "line": 21,
+      "match": "activeBadgeId: number | null;"
+    },
+    {
+      "file": "client/src/hooks/preferences/useUserSettings.ts",
+      "line": 22,
+      "match": "activeFrameId: number | null;"
+    },
+    {
+      "file": "client/src/hooks/preferences/useUserSettings.ts",
+      "line": 25,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/hooks/preferences/useUserSettings.ts",
+      "line": 34,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/components/social/FriendsManager.tsx",
+      "line": 180,
+      "match": "requestId: number;"
+    },
+    {
+      "file": "client/src/components/ui/reactions-bar.tsx",
+      "line": 21,
+      "match": "postId: number;"
+    },
+    {
+      "file": "client/src/components/ui/content-area.tsx",
+      "line": 344,
+      "match": "export function ForumContentArea({ forumId, ...props }: ContentAreaProps & { forumId: number }) {"
+    },
+    {
+      "file": "client/src/components/ui/bookmark-button.tsx",
+      "line": 12,
+      "match": "threadId: number;"
+    },
+    {
+      "file": "client/src/components/shoutbox/shoutbox-widget.tsx",
+      "line": 62,
+      "match": "groupId: number; // 1 = admin, 2 = moderator, 3 = regular user"
+    },
+    {
+      "file": "client/src/components/shoutbox/shoutbox-widget.tsx",
+      "line": 199,
+      "match": "mutationFn: async (messageId: number) => {"
+    },
+    {
+      "file": "client/src/components/shoutbox/shoutbox-widget.tsx",
+      "line": 221,
+      "match": "mutationFn: async ({ messageId, isPinned }: { messageId: number; isPinned: boolean }) => {"
+    },
+    {
+      "file": "client/src/components/shoutbox/ShoutboxContainer.tsx",
+      "line": 27,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/components/profile/UserTitles.tsx",
+      "line": 16,
+      "match": "onSelectTitle?: (titleId: number) => void;"
+    },
+    {
+      "file": "client/src/components/profile/UserBadges.tsx",
+      "line": 16,
+      "match": "onSelectBadge?: (badgeId: number) => void;"
+    },
+    {
+      "file": "client/src/components/profile/CosmeticControlPanel.tsx",
+      "line": 55,
+      "match": "mutationFn: async ({ inventoryId, equip }: { inventoryId: number; equip: boolean }) => {"
+    },
+    {
+      "file": "client/src/components/profile/CosmeticControlPanel.tsx",
+      "line": 96,
+      "match": "const handleUnequip = (inventoryId: number) => {"
+    },
+    {
+      "file": "client/src/components/notifications/MentionsNotifications.tsx",
+      "line": 152,
+      "match": "const toggleMentionSelection = (mentionId: number) => {"
+    },
+    {
+      "file": "client/src/components/gamification/mission-dashboard.tsx",
+      "line": 52,
+      "match": "onClaimReward: (missionId: number) => void;"
+    },
+    {
+      "file": "client/src/components/gamification/leaderboard.tsx",
+      "line": 101,
+      "match": "const toggleRowExpansion = (userId: number) => {"
+    },
+    {
+      "file": "client/src/components/forum/ThreadFilters.tsx",
+      "line": 129,
+      "match": "const toggleTag = (tagId: number) => {"
+    },
+    {
+      "file": "client/src/components/forum/ShareButton.tsx",
+      "line": 6,
+      "match": "threadId: number | string;"
+    },
+    {
+      "file": "client/src/components/forum/ReactionBar.tsx",
+      "line": 29,
+      "match": "postId: number;"
+    },
+    {
+      "file": "client/src/components/forum/ReactionBar.tsx",
+      "line": 41,
+      "match": "onLike?: (postId: number, hasLiked: boolean) => void;"
+    },
+    {
+      "file": "client/src/components/forum/ReactionBar.tsx",
+      "line": 42,
+      "match": "onReply?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/ReactionBar.tsx",
+      "line": 43,
+      "match": "onQuote?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/ReactionBar.tsx",
+      "line": 44,
+      "match": "onEdit?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/ReactionBar.tsx",
+      "line": 45,
+      "match": "onDelete?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/ReactionBar.tsx",
+      "line": 46,
+      "match": "onMarkSolution?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/ReactionBar.tsx",
+      "line": 47,
+      "match": "onTip?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/ReactionBar.tsx",
+      "line": 48,
+      "match": "onReport?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/ReactionBar.tsx",
+      "line": 49,
+      "match": "onBookmark?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/ReactionBar.tsx",
+      "line": 50,
+      "match": "onShare?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/ReactionBar.tsx",
+      "line": 51,
+      "match": "onCopyLink?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/ModeratorActions.tsx",
+      "line": 45,
+      "match": "itemId: number;"
+    },
+    {
+      "file": "client/src/components/admin/GrantFrameModal.tsx",
+      "line": 34,
+      "match": "const grantMutation = useMutation<void, Error, { frameId: number; userIds: string[] }>({"
+    },
+    {
+      "file": "server/src/domains/xp/xp.service.ts",
+      "line": 44,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/xp/xp.service.ts",
+      "line": 153,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/xp/xp.service.ts",
+      "line": 154,
+      "match": "adminId: number,"
+    },
+    {
+      "file": "server/src/domains/xp/xp.service.ts",
+      "line": 204,
+      "match": "async getUserXpInfo(userId: number) {"
+    },
+    {
+      "file": "server/src/domains/xp/xp.service.ts",
+      "line": 261,
+      "match": "async awardXp(userId: number, action: XP_ACTION, metadata?: any) {"
+    },
+    {
+      "file": "server/src/domains/xp/xp.service.ts",
+      "line": 274,
+      "match": "async awardXpWithContext(userId: number, action: XP_ACTION, metadata?: any, forumId?: number) {"
+    },
+    {
+      "file": "server/src/domains/xp/xp.service.ts",
+      "line": 361,
+      "match": "private async checkActionLimits(userId: number, action: XP_ACTION): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/xp/xp.service.ts",
+      "line": 428,
+      "match": "private async updateActionLimits(userId: number, action: XP_ACTION): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/xp/xp.service.ts",
+      "line": 430,
+      "match": "// private async updateActionLimits(userId: number, action: XP_ACTION): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/xp/xp.service.ts",
+      "line": 446,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/xp/xp.service.ts",
+      "line": 475,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/xp/xp.service.ts",
+      "line": 563,
+      "match": "private async getUserRoleMultiplier(userId: number): Promise<number> {"
+    },
+    {
+      "file": "server/src/domains/xp/xp.service.ts",
+      "line": 585,
+      "match": "private async getForumMultiplier(forumId: number): Promise<number> {"
+    },
+    {
+      "file": "server/src/domains/xp/xp.events.ts",
+      "line": 13,
+      "match": "public userId: number,"
+    },
+    {
+      "file": "server/src/domains/xp/xp.events.ts",
+      "line": 25,
+      "match": "public userId: number,"
+    },
+    {
+      "file": "server/src/domains/xp/xp.events.ts",
+      "line": 37,
+      "match": "public userId: number,"
+    },
+    {
+      "file": "server/src/domains/wallet/wallet.service.ts",
+      "line": 40,
+      "match": "coinId: number;"
+    },
+    {
+      "file": "server/src/domains/wallet/wallet.service.ts",
+      "line": 112,
+      "match": "coinId: number;"
+    },
+    {
+      "file": "server/src/domains/wallet/wallet.service.ts",
+      "line": 143,
+      "match": "coinId: number;"
+    },
+    {
+      "file": "server/src/domains/wallet/wallet.service.ts",
+      "line": 196,
+      "match": "coinId: number;"
+    },
+    {
+      "file": "server/src/domains/wallet/wallet.service.ts",
+      "line": 246,
+      "match": "fromCoinId: number;"
+    },
+    {
+      "file": "server/src/domains/wallet/wallet.service.ts",
+      "line": 247,
+      "match": "toCoinId: number;"
+    },
+    {
+      "file": "server/src/domains/wallet/wallet.service.ts",
+      "line": 380,
+      "match": "transactionId: number;"
+    },
+    {
+      "file": "server/src/domains/wallet/wallet.service.ts",
+      "line": 468,
+      "match": "coinId: number;"
+    },
+    {
+      "file": "server/src/domains/wallet/user-management.service.ts",
+      "line": 132,
+      "match": "coinId: number;"
+    },
+    {
+      "file": "server/src/domains/wallet/dgt.service.ts",
+      "line": 43,
+      "match": "walletId: number;"
+    },
+    {
+      "file": "server/src/domains/wallet/dgt.service.ts",
+      "line": 57,
+      "match": "transactionId: number;"
+    },
+    {
+      "file": "server/src/domains/wallet/ccpayment.service.ts",
+      "line": 219,
+      "match": "async createCcPaymentWalletForUser(userId: number): Promise<string> {"
+    },
+    {
+      "file": "server/src/domains/subscriptions/subscription.service.ts",
+      "line": 42,
+      "match": "cosmeticId: number;"
+    },
+    {
+      "file": "server/src/domains/subscriptions/subscription.service.ts",
+      "line": 187,
+      "match": "async cancelSubscription(userId: string, subscriptionId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/subscriptions/subscription.service.ts",
+      "line": 232,
+      "match": "async renewSubscription(subscriptionId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/social/friends.service.ts",
+      "line": 83,
+      "match": "static async respondToFriendRequest(requestId: number, response: 'accept' | 'decline' | 'block') {"
+    },
+    {
+      "file": "server/src/domains/social/follows.service.ts",
+      "line": 277,
+      "match": "static async respondToFollowRequest(requestId: number, approve: boolean) {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/shoutbox.routes.ts",
+      "line": 35,
+      "match": "async function userHasRoomAccess(userId: number, roomId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/shoutbox.routes.ts",
+      "line": 301,
+      "match": "let targetRoomId: number | null = roomId;"
+    },
+    {
+      "file": "server/src/domains/profile/signature.service.ts",
+      "line": 13,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/profile/signature.service.ts",
+      "line": 21,
+      "match": "static async getUserSignature(userId: number) {"
+    },
+    {
+      "file": "server/src/domains/profile/signature.service.ts",
+      "line": 117,
+      "match": "static async getUserSignatureItems(userId: number) {"
+    },
+    {
+      "file": "server/src/domains/profile/signature.service.ts",
+      "line": 129,
+      "match": "static async purchaseSignatureItem(userId: number, itemId: number) {"
+    },
+    {
+      "file": "server/src/domains/profile/signature.service.ts",
+      "line": 197,
+      "match": "static async activateSignatureItem(userId: number, itemId: number) {"
+    },
+    {
+      "file": "server/src/domains/profile/referrals.service.ts",
+      "line": 15,
+      "match": "export async function getUserReferrals(userId: number) {"
+    },
+    {
+      "file": "server/src/domains/profile/referrals.service.ts",
+      "line": 42,
+      "match": "export async function getUserReferralLink(userId: number) {"
+    },
+    {
+      "file": "server/src/domains/profile/profile.service.ts",
+      "line": 18,
+      "match": "userId: number; // User ID is a number in the database"
+    },
+    {
+      "file": "server/src/domains/profile/profile.service.ts",
+      "line": 27,
+      "match": "export async function getUserProfile(userId: number) {"
+    },
+    {
+      "file": "server/src/domains/preferences/preferences.service.ts",
+      "line": 28,
+      "match": "export const getAllPreferences = async (userId: number) => {"
+    },
+    {
+      "file": "server/src/domains/preferences/preferences.service.ts",
+      "line": 84,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/preferences/preferences.service.ts",
+      "line": 141,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/preferences/preferences.service.ts",
+      "line": 215,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/preferences/preferences.service.ts",
+      "line": 281,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/preferences/preferences.service.ts",
+      "line": 344,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/preferences/preferences.service.ts",
+      "line": 390,
+      "match": "export const createDefaultPreferences = async (userId: number) => {"
+    },
+    {
+      "file": "server/src/domains/missions/missions.service.ts",
+      "line": 15,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/missions/missions.service.ts",
+      "line": 142,
+      "match": "userId: number"
+    },
+    {
+      "file": "server/src/domains/missions/missions.service.ts",
+      "line": 189,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/missions/missions.service.ts",
+      "line": 426,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/missions/missions.service.ts",
+      "line": 427,
+      "match": "missionId: number"
+    },
+    {
+      "file": "server/src/domains/gamification/leveling.service.ts",
+      "line": 46,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/gamification/leveling.service.ts",
+      "line": 70,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/gamification/leveling.service.ts",
+      "line": 154,
+      "match": "async getUserProgression(userId: number): Promise<UserProgression | null> {"
+    },
+    {
+      "file": "server/src/domains/gamification/leveling.service.ts",
+      "line": 382,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/gamification/analytics.service.ts",
+      "line": 43,
+      "match": "achievementId: number;"
+    },
+    {
+      "file": "server/src/domains/gamification/analytics.service.ts",
+      "line": 49,
+      "match": "achievementId: number;"
+    },
+    {
+      "file": "server/src/domains/gamification/analytics.service.ts",
+      "line": 107,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/gamification/achievement.service.ts",
+      "line": 48,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/gamification/achievement.service.ts",
+      "line": 49,
+      "match": "achievementId: number;"
+    },
+    {
+      "file": "server/src/domains/gamification/achievement.service.ts",
+      "line": 118,
+      "match": "async getUserAchievementStats(userId: number): Promise<AchievementStats> {"
+    },
+    {
+      "file": "server/src/domains/gamification/achievement.service.ts",
+      "line": 209,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/gamification/achievement.service.ts",
+      "line": 279,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/gamification/achievement.service.ts",
+      "line": 356,
+      "match": "async awardAchievement(userId: number, achievementId: number): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/gamification/achievement.service.ts",
+      "line": 466,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/gamification/achievement.service.ts",
+      "line": 532,
+      "match": "private async countUserPosts(userId: number, timeFilter?: Date): Promise<number> {"
+    },
+    {
+      "file": "server/src/domains/gamification/achievement.service.ts",
+      "line": 543,
+      "match": "private async countUserThreads(userId: number, timeFilter?: Date): Promise<number> {"
+    },
+    {
+      "file": "server/src/domains/gamification/achievement.service.ts",
+      "line": 554,
+      "match": "private async sumUserXp(userId: number, timeFilter?: Date): Promise<number> {"
+    },
+    {
+      "file": "server/src/domains/gamification/achievement.service.ts",
+      "line": 576,
+      "match": "private async calculateLoginStreak(userId: number): Promise<number> {"
+    },
+    {
+      "file": "server/src/domains/gamification/achievement.service.ts",
+      "line": 582,
+      "match": "private async countUserTips(userId: number, timeFilter?: Date): Promise<number> {"
+    },
+    {
+      "file": "server/src/domains/gamification/achievement.service.ts",
+      "line": 638,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/forum/forum.service.ts",
+      "line": 42,
+      "match": "async function getAllDescendantLeafForumIds(startStructureId: number): Promise<number[]> {"
+    },
+    {
+      "file": "server/src/domains/forum/forum.service.ts",
+      "line": 53,
+      "match": "{ id: number; parentId: number | null; type: string; children: number[] }"
+    },
+    {
+      "file": "server/src/domains/forum/forum.service.ts",
+      "line": 181,
+      "match": "async getSubForumsByParentForumId(parentForumId: number): Promise<ForumStructureWithStats[]> {"
+    },
+    {
+      "file": "server/src/domains/forum/forum.service.ts",
+      "line": 304,
+      "match": "async updateThreadSolvedStatus(params: { threadId: number; solvingPostId?: number | null }) {"
+    },
+    {
+      "file": "server/src/domains/feature-gates/feature-gates.service.ts",
+      "line": 125,
+      "match": "async checkFeatureAccess(userId: number, featureId: string): Promise<UserFeatureAccess> {"
+    },
+    {
+      "file": "server/src/domains/feature-gates/feature-gates.service.ts",
+      "line": 195,
+      "match": "async checkAllFeatureAccess(userId: number): Promise<UserFeatureAccess[]> {"
+    },
+    {
+      "file": "server/src/domains/engagement/engagement.service.ts",
+      "line": 36,
+      "match": "fromUserId: number,"
+    },
+    {
+      "file": "server/src/domains/engagement/engagement.service.ts",
+      "line": 37,
+      "match": "toUserId: number,"
+    },
+    {
+      "file": "server/src/domains/engagement/engagement.service.ts",
+      "line": 69,
+      "match": "fromUserId: number,"
+    },
+    {
+      "file": "server/src/domains/engagement/engagement.service.ts",
+      "line": 98,
+      "match": "adminUserId: number,"
+    },
+    {
+      "file": "server/src/domains/engagement/engagement.service.ts",
+      "line": 123,
+      "match": "async getUserEngagementStats(userId: number) {"
+    },
+    {
+      "file": "server/src/domains/dictionary/dictionary.service.ts",
+      "line": 124,
+      "match": "static async moderate(entryId: number, status: 'approved' | 'rejected', approverId: string) {"
+    },
+    {
+      "file": "server/src/domains/dictionary/dictionary.service.ts",
+      "line": 150,
+      "match": "static async toggleUpvote(entryId: number, userId: string) {"
+    },
+    {
+      "file": "server/src/domains/cosmetics/frameEquip.service.ts",
+      "line": 8,
+      "match": "async userOwnsFrame(userId: string, frameId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/cosmetics/frameEquip.service.ts",
+      "line": 18,
+      "match": "async equipFrame(userId: string, frameId: number) {"
+    },
+    {
+      "file": "server/src/domains/cosmetics/frameEquip.service.ts",
+      "line": 33,
+      "match": "async grantOwnership(userId: string, frameId: number, source: string = 'purchase') {"
+    },
+    {
+      "file": "server/src/domains/cosmetics/avatarFrameStore.service.ts",
+      "line": 13,
+      "match": "productId: number;"
+    },
+    {
+      "file": "server/src/domains/cosmetics/avatarFrameStore.service.ts",
+      "line": 38,
+      "match": "frameId: number"
+    },
+    {
+      "file": "server/src/domains/cosmetics/avatarFrameStore.service.ts",
+      "line": 41,
+      "match": "frameId: number;"
+    },
+    {
+      "file": "server/src/domains/admin/admin.service.ts",
+      "line": 19,
+      "match": "adminId: number,"
+    },
+    {
+      "file": "server/src/domains/admin/admin.service.ts",
+      "line": 75,
+      "match": "async getUserById(userId: number) {"
+    },
+    {
+      "file": "server/src/core/services/user.service.ts",
+      "line": 70,
+      "match": "async getUserById(userId: number): Promise<UserProfile | null> {"
+    },
+    {
+      "file": "server/src/core/services/user.service.ts",
+      "line": 190,
+      "match": "async isActiveUser(userId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/core/services/user.service.ts",
+      "line": 208,
+      "match": "async updateLastActive(userId: number): Promise<void> {"
+    },
+    {
+      "file": "server/src/core/repository/interfaces.ts",
+      "line": 39,
+      "match": "updateStats(categoryId: number): Promise<void>;"
+    },
+    {
+      "file": "server/src/core/repository/interfaces.ts",
+      "line": 45,
+      "match": "findByCategoryId(categoryId: number, options?: QueryOptions): Promise<PaginatedResult<Thread>>;"
+    },
+    {
+      "file": "server/src/core/repository/interfaces.ts",
+      "line": 46,
+      "match": "findByAuthorId(authorId: number, options?: QueryOptions): Promise<PaginatedResult<Thread>>;"
+    },
+    {
+      "file": "server/src/core/repository/interfaces.ts",
+      "line": 55,
+      "match": "findByThreadId(threadId: number, options?: QueryOptions): Promise<PaginatedResult<Post>>;"
+    },
+    {
+      "file": "server/src/core/repository/interfaces.ts",
+      "line": 56,
+      "match": "findByAuthorId(authorId: number, options?: QueryOptions): Promise<PaginatedResult<Post>>;"
+    },
+    {
+      "file": "server/src/core/repository/interfaces.ts",
+      "line": 57,
+      "match": "findReplies(parentPostId: number): Promise<Post[]>;"
+    },
+    {
+      "file": "server/src/core/repository/interfaces.ts",
+      "line": 65,
+      "match": "findByUserId(userId: number, options?: QueryOptions): Promise<PaginatedResult<Transaction>>;"
+    },
+    {
+      "file": "server/src/core/repository/interfaces.ts",
+      "line": 68,
+      "match": "getTotalByUser(userId: number, type?: string): Promise<number>;"
+    },
+    {
+      "file": "server/src/core/repository/interfaces.ts",
+      "line": 69,
+      "match": "getBalanceByUser(userId: number): Promise<number>;"
+    },
+    {
+      "file": "server/src/core/repository/interfaces.ts",
+      "line": 74,
+      "match": "findByUserId(userId: number): Promise<any>;"
+    },
+    {
+      "file": "server/src/core/repository/interfaces.ts",
+      "line": 75,
+      "match": "awardXP(userId: number, amount: number, reason: string): Promise<any>;"
+    },
+    {
+      "file": "server/src/core/repository/interfaces.ts",
+      "line": 77,
+      "match": "getUserRank(userId: number): Promise<number>;"
+    },
+    {
+      "file": "server/src/core/audit/audit-logger.ts",
+      "line": 157,
+      "match": "userId: number | undefined,"
+    },
+    {
+      "file": "server/src/core/audit/audit-logger.ts",
+      "line": 189,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/core/audit/audit-logger.ts",
+      "line": 219,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/core/audit/audit-logger.ts",
+      "line": 274,
+      "match": "userId: number,"
+    },
+    {
+      "file": "client/src/pages/admin/xp/user-adjustment.tsx",
+      "line": 75,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/pages/admin/xp/user-adjustment.tsx",
+      "line": 203,
+      "match": "const refetchUserInfo = async (userId: number) => {"
+    },
+    {
+      "file": "client/src/pages/admin/users/[userId].tsx",
+      "line": 44,
+      "match": "const equipMutation = useMutation<any, Error, { inventoryId: number }>({"
+    },
+    {
+      "file": "client/src/pages/admin/users/[userId].tsx",
+      "line": 60,
+      "match": "const unequipMutation = useMutation<any, Error, { inventoryId: number }>({"
+    },
+    {
+      "file": "client/src/pages/admin/users/[userId].tsx",
+      "line": 83,
+      "match": "const grantItemMutation = useMutation<any, Error, { productId: number }>({"
+    },
+    {
+      "file": "client/src/pages/admin/shop/index.tsx",
+      "line": 65,
+      "match": "const handleDelete = (productId: number) => {"
+    },
+    {
+      "file": "client/src/pages/admin/reports/index.tsx",
+      "line": 75,
+      "match": "contentId: number;"
+    },
+    {
+      "file": "client/src/pages/admin/reports/index.tsx",
+      "line": 210,
+      "match": "mutationFn: async (data: { userId: number; reason: string; duration?: string }) => {"
+    },
+    {
+      "file": "client/src/pages/admin/reports/index.tsx",
+      "line": 227,
+      "match": "mutationFn: async (data: { contentType: string; contentId: number; reason: string }) => {"
+    },
+    {
+      "file": "client/src/features/users/services/usersApi.ts",
+      "line": 32,
+      "match": "export async function getUserDetails(userId: number | string) {"
+    },
+    {
+      "file": "client/src/features/users/services/referralsApi.ts",
+      "line": 9,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/features/users/services/referralsApi.ts",
+      "line": 19,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/features/gamification/services/gamification-api.service.ts",
+      "line": 34,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/features/gamification/services/gamification-api.service.ts",
+      "line": 77,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/features/gamification/services/gamification-api.service.ts",
+      "line": 78,
+      "match": "achievementId: number;"
+    },
+    {
+      "file": "client/src/features/gamification/services/gamification-api.service.ts",
+      "line": 107,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/features/gamification/services/gamification-api.service.ts",
+      "line": 108,
+      "match": "missionId: number;"
+    },
+    {
+      "file": "client/src/features/gamification/services/gamification-api.service.ts",
+      "line": 117,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/features/gamification/services/gamification-api.service.ts",
+      "line": 242,
+      "match": "async checkAndAwardAchievements(userId: number, actionType: string, metadata?: any) {"
+    },
+    {
+      "file": "client/src/features/gamification/services/gamification-api.service.ts",
+      "line": 298,
+      "match": "async claimMissionReward(missionId: number) {"
+    },
+    {
+      "file": "client/src/features/gamification/services/gamification-api.service.ts",
+      "line": 314,
+      "match": "async updateMissionProgress(userId: number, actionType: string, metadata?: any) {"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 140,
+      "match": "structureId: number;"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 155,
+      "match": "threadId: number,"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 173,
+      "match": "deleteThread: async (threadId: number): Promise<{ success: true }> => {"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 184,
+      "match": "solveThread: async (threadId: number, postId?: number): Promise<ThreadWithUser> => {"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 193,
+      "match": "unsolveThread: async (threadId: number): Promise<ThreadWithUser> => {"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 212,
+      "match": "addTagToThread: async (threadId: number, tagId: number): Promise<ForumTag> => {"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 221,
+      "match": "removeTagFromThread: async (threadId: number, tagId: number): Promise<void> => {"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 250,
+      "match": "threadId: number,"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 289,
+      "match": "threadId: number;"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 303,
+      "match": "postId: number,"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 323,
+      "match": "deletePost: async (postId: number): Promise<{ success: true }> => {"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 335,
+      "match": "postId: number,"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 347,
+      "match": "postId: number,"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 375,
+      "match": "bookmarkThread: async (threadId: number): Promise<{ success: true }> => {"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 384,
+      "match": "removeBookmark: async (threadId: number): Promise<{ success: true }> => {"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 437,
+      "match": "contentId: number;"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 440,
+      "match": "}): Promise<{ success: true; message: string; reportId: number }> => {"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "line": 441,
+      "match": "const directResult = await apiRequest<{ success: true; message: string; reportId: number }>({"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 100,
+      "match": "structureId: number;"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 134,
+      "match": "export const useUpdateThread = (threadId: number | undefined) => {"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 172,
+      "match": "mutationFn: ({ threadId, postId }: { threadId: number; postId?: number }) =>"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 187,
+      "match": "mutationFn: (threadId: number) => forumApi.unsolveThread(threadId),"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 201,
+      "match": "threadId: number | undefined,"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 228,
+      "match": "export const useUpdatePost = (postId: number | undefined) => {"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 262,
+      "match": "mutationFn: ({ postId, reactionType }: { postId: number; reactionType: 'like' | 'dislike' }) =>"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 276,
+      "match": "mutate: (postId: number) => reactToPost.mutate({ postId, reactionType: 'like' })"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 284,
+      "match": "mutate: (postId: number) => reactToPost.mutate({ postId, reactionType: 'dislike' })"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 292,
+      "match": "mutationFn: ({ postId, amount }: { postId: number; amount: number }) =>"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 354,
+      "match": "return useMutation<Tag, Error, { threadId: number; tagId: number }>({"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 367,
+      "match": "return useMutation<void, Error, { threadId: number; tagId: number }>({"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 418,
+      "match": "postId: number;"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "line": 441,
+      "match": "contentId: number;"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumMutations.ts",
+      "line": 35,
+      "match": "threadId: number;"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumMutations.ts",
+      "line": 64,
+      "match": "contentId: number;"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumMutations.ts",
+      "line": 91,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumMutations.ts",
+      "line": 93,
+      "match": "entityId: number;"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumMutations.ts",
+      "line": 132,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumMutations.ts",
+      "line": 135,
+      "match": "entityId: number;"
+    },
+    {
+      "file": "client/src/features/forum/components/ThreadList.tsx",
+      "line": 16,
+      "match": "forumId: number;"
+    },
+    {
+      "file": "client/src/features/forum/components/ReplyForm.tsx",
+      "line": 16,
+      "match": "threadId: number;"
+    },
+    {
+      "file": "client/src/features/forum/components/ReactionTray.tsx",
+      "line": 6,
+      "match": "postId: number; // postId might be used for keys or future data fetching within this component"
+    },
+    {
+      "file": "client/src/features/forum/components/LikeButton.tsx",
+      "line": 6,
+      "match": "postId: number; // Retained for context, though not directly used in this simplified version"
+    },
+    {
+      "file": "client/src/features/forum/components/CreatePostForm.tsx",
+      "line": 25,
+      "match": "threadId: number;"
+    },
+    {
+      "file": "client/src/features/admin/services/sticker-api.service.ts",
+      "line": 214,
+      "match": "): Promise<ApiResponse<{ stickerId: number; message: string }>> {"
+    },
+    {
+      "file": "client/src/features/admin/services/sticker-api.service.ts",
+      "line": 215,
+      "match": "return apiRequest<ApiResponse<{ stickerId: number; message: string }>>({"
+    },
+    {
+      "file": "client/src/features/admin/services/sticker-api.service.ts",
+      "line": 289,
+      "match": "): Promise<ApiResponse<{ packId: number; message: string }>> {"
+    },
+    {
+      "file": "client/src/features/admin/services/sticker-api.service.ts",
+      "line": 290,
+      "match": "return apiRequest<ApiResponse<{ packId: number; message: string }>>({"
+    },
+    {
+      "file": "client/src/features/admin/services/sticker-api.service.ts",
+      "line": 347,
+      "match": "stickerId: number,"
+    },
+    {
+      "file": "client/src/components/forum/sidebar/SidebarIntegrationExample.tsx",
+      "line": 44,
+      "match": "export const ForumPageSidebar: React.FC<{ structureId: number; zoneSlug: string }> = ({"
+    },
+    {
+      "file": "client/src/components/forum/sidebar/SidebarIntegrationExample.tsx",
+      "line": 54,
+      "match": "structureId: number;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/QuickReplyBox.tsx",
+      "line": 10,
+      "match": "threadId: number;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostHeader.tsx",
+      "line": 10,
+      "match": "postId: number;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostActions.tsx",
+      "line": 30,
+      "match": "postId: number;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostActions.tsx",
+      "line": 41,
+      "match": "onLike?: (postId: number, hasLiked: boolean) => void;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostActions.tsx",
+      "line": 42,
+      "match": "onReply?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostActions.tsx",
+      "line": 43,
+      "match": "onQuote?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostActions.tsx",
+      "line": 44,
+      "match": "onEdit?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostActions.tsx",
+      "line": 45,
+      "match": "onDelete?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostActions.tsx",
+      "line": 46,
+      "match": "onMarkSolution?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostActions.tsx",
+      "line": 47,
+      "match": "onTip?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostActions.tsx",
+      "line": 48,
+      "match": "onReport?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostActions.tsx",
+      "line": 49,
+      "match": "onBookmark?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostActions.tsx",
+      "line": 50,
+      "match": "onShare?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostActions.tsx",
+      "line": 51,
+      "match": "onCopyLink?: (postId: number) => void;"
+    },
+    {
+      "file": "client/src/components/economy/wallet/tip-button.tsx",
+      "line": 42,
+      "match": "recipientId: number;"
+    },
+    {
+      "file": "client/src/components/economy/wallet/PackagesGrid.tsx",
+      "line": 12,
+      "match": "const handleBuy = async (pkgId: number) => {"
+    },
+    {
+      "file": "client/src/components/economy/shoutbox/enhanced-shoutbox-widget.tsx",
+      "line": 50,
+      "match": "roomId: number;"
+    },
+    {
+      "file": "client/src/components/economy/shoutbox/enhanced-shoutbox-widget.tsx",
+      "line": 234,
+      "match": "mutationFn: async ({ messageId, isPinned }: { messageId: number; isPinned: boolean }) => {"
+    },
+    {
+      "file": "client/src/components/economy/shoutbox/enhanced-shoutbox-widget.tsx",
+      "line": 250,
+      "match": "mutationFn: async (messageId: number) => {"
+    },
+    {
+      "file": "client/src/components/economy/shoutbox/enhanced-shoutbox-widget.tsx",
+      "line": 265,
+      "match": "mutationFn: async ({ userId, ignore }: { userId: number; ignore: boolean }) => {"
+    },
+    {
+      "file": "client/src/components/economy/badges/UserBadgesDisplay.tsx",
+      "line": 20,
+      "match": "onSelectBadge?: (badgeId: number) => void;"
+    },
+    {
+      "file": "server/src/domains/xp/events/xp.events.ts",
+      "line": 33,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/xp/events/xp.events.ts",
+      "line": 136,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/xp/events/xp.events.ts",
+      "line": 285,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/shoutbox.service.ts",
+      "line": 29,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/shoutbox.service.ts",
+      "line": 31,
+      "match": "roomId: number;"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/shoutbox.service.ts",
+      "line": 854,
+      "match": "private static async createSystemMessage(roomId: number, content: string): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/shoutbox.service.ts",
+      "line": 870,
+      "match": "private static async getActiveRoomUsers(roomId: number): Promise<any[]> {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/room.service.ts",
+      "line": 146,
+      "match": "roomId: number,"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/room.service.ts",
+      "line": 254,
+      "match": "roomId: number,"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/room.service.ts",
+      "line": 415,
+      "match": "static async getRoomStats(roomId: number): Promise<{"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/room.service.ts",
+      "line": 490,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/room.service.ts",
+      "line": 491,
+      "match": "roomId: number"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/room.service.ts",
+      "line": 554,
+      "match": "static async getUserIgnoreList(userId: number, roomId?: number): Promise<number[]> {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/room.service.ts",
+      "line": 581,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/room.service.ts",
+      "line": 582,
+      "match": "ignoredUserId: number,"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/room.service.ts",
+      "line": 627,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/room.service.ts",
+      "line": 628,
+      "match": "ignoredUserId: number,"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/room.service.ts",
+      "line": 659,
+      "match": "private static async createRoomConfig(roomId: number, roomData: CreateRoomData): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/room.service.ts",
+      "line": 677,
+      "match": "roomId: number,"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/room.service.ts",
+      "line": 726,
+      "match": "static async reorderRooms(roomOrders: { roomId: number; order: number }[]): Promise<{"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/queue.service.ts",
+      "line": 17,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/queue.service.ts",
+      "line": 18,
+      "match": "roomId: number;"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/performance.service.ts",
+      "line": 40,
+      "match": "roomId: number;"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/performance.service.ts",
+      "line": 210,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/performance.service.ts",
+      "line": 211,
+      "match": "roomId: number;"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/performance.service.ts",
+      "line": 278,
+      "match": "static async getActiveUsersInRoom(roomId: number): Promise<"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/history.service.ts",
+      "line": 47,
+      "match": "userId: number | null;"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/history.service.ts",
+      "line": 48,
+      "match": "roomId: number;"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 23,
+      "match": "userId: number | null;"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 24,
+      "match": "roomId: number;"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 38,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 70,
+      "match": "static async cacheMessages(roomId: number, messages: MessageCacheEntry[]): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 83,
+      "match": "static getCachedMessages(roomId: number): MessageCacheEntry[] | null {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 97,
+      "match": "static invalidateMessages(roomId: number, messageId?: number): void {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 121,
+      "match": "static cacheUserSession(userId: number, session: UserSessionCache): void {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 129,
+      "match": "static getCachedUserSession(userId: number): UserSessionCache | null {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 134,
+      "match": "static updateUserLastSeen(userId: number): void {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 145,
+      "match": "static invalidateUserSession(userId: number): void {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 155,
+      "match": "userId: number"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 162,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 178,
+      "match": "static cacheRoomConfig(roomId: number, config: any): void {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 186,
+      "match": "static getCachedRoomConfig(roomId: number): any | null {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 215,
+      "match": "static getCachedRoom(roomId: number): RoomCache | null {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 220,
+      "match": "static addUserToRoom(roomId: number, userId: number): void {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 231,
+      "match": "static removeUserFromRoom(roomId: number, userId: number): void {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 245,
+      "match": "static setTypingIndicator(roomId: number, userId: number, username: string): void {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 258,
+      "match": "static removeTypingIndicator(roomId: number, userId: number): void {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 269,
+      "match": "static getTypingIndicators(roomId: number): string[] {"
+    },
+    {
+      "file": "server/src/domains/shoutbox/services/cache.service.ts",
+      "line": 282,
+      "match": "private static cleanupTypingIndicators(roomId: number): void {"
+    },
+    {
+      "file": "server/src/domains/share/services/xShareService.ts",
+      "line": 10,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/gamification/achievements/achievement-processor.service.ts",
+      "line": 468,
+      "match": "achievementId: number"
+    },
+    {
+      "file": "server/src/domains/gamification/achievements/achievement-admin.service.ts",
+      "line": 439,
+      "match": "achievementId: number,"
+    },
+    {
+      "file": "server/src/domains/gamification/achievements/achievement-admin.service.ts",
+      "line": 495,
+      "match": "achievementId: number,"
+    },
+    {
+      "file": "server/src/domains/forum/services/thread.service.ts",
+      "line": 58,
+      "match": "structureId: number;"
+    },
+    {
+      "file": "server/src/domains/forum/services/thread.service.ts",
+      "line": 489,
+      "match": "async getThreadById(threadId: number): Promise<ThreadWithUserAndCategory | null> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/thread.service.ts",
+      "line": 765,
+      "match": "async incrementViewCount(threadId: number): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/thread.service.ts",
+      "line": 785,
+      "match": "async updatePostCount(threadId: number): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/thread.service.ts",
+      "line": 812,
+      "match": "threadId: number;"
+    },
+    {
+      "file": "server/src/domains/forum/services/thread.service.ts",
+      "line": 846,
+      "match": "private async addTagsToThread(threadId: number, tagNames: string[]): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/thread.service.ts",
+      "line": 896,
+      "match": "private async getZoneInfo(structureId: number): Promise<{"
+    },
+    {
+      "file": "server/src/domains/forum/services/thread.service.ts",
+      "line": 970,
+      "match": "private async getFirstPostExcerpt(threadId: number): Promise<string | null> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/thread.service.ts",
+      "line": 994,
+      "match": "): Promise<Array<{ threadId: number; excerpt: string | null }>> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/structure.service.ts",
+      "line": 205,
+      "match": "async getStructureStats(structureId: number): Promise<{"
+    },
+    {
+      "file": "server/src/domains/forum/services/post.service.ts",
+      "line": 18,
+      "match": "threadId: number;"
+    },
+    {
+      "file": "server/src/domains/forum/services/post.service.ts",
+      "line": 118,
+      "match": "async getPostById(postId: number): Promise<PostWithUser | null> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/post.service.ts",
+      "line": 213,
+      "match": "async updatePost(postId: number, input: PostUpdateInput): Promise<PostWithUser> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/post.service.ts",
+      "line": 247,
+      "match": "async deletePost(postId: number): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/post.service.ts",
+      "line": 271,
+      "match": "async likePost(postId: number, userId: string): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/post.service.ts",
+      "line": 316,
+      "match": "async unlikePost(postId: number, userId: string): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/post.service.ts",
+      "line": 352,
+      "match": "async getPostReplies(parentPostId: number): Promise<PostWithUser[]> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/post.service.ts",
+      "line": 385,
+      "match": "private async updateThreadStats(threadId: number): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/permissions.service.ts",
+      "line": 21,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/forum/services/permissions.service.ts",
+      "line": 45,
+      "match": "export async function isPostOwner(userId: number, postId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/permissions.service.ts",
+      "line": 63,
+      "match": "export async function isThreadOwner(userId: number, threadId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/permissions.service.ts",
+      "line": 86,
+      "match": "export async function canEditPost(user: User, postId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/permissions.service.ts",
+      "line": 100,
+      "match": "export async function canDeletePost(user: User, postId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/permissions.service.ts",
+      "line": 114,
+      "match": "export async function canEditThread(user: User, threadId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/permissions.service.ts",
+      "line": 128,
+      "match": "export async function canDeleteThread(user: User, threadId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/permissions.service.ts",
+      "line": 142,
+      "match": "export async function canSolveThread(user: User, threadId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/permissions.service.ts",
+      "line": 156,
+      "match": "export async function canManageThreadTags(user: User, threadId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/permissions.service.ts",
+      "line": 170,
+      "match": "export async function canPostInForum(user: User, forumId: number): Promise<boolean> {"
+    },
+    {
+      "file": "server/src/domains/forum/services/config.service.ts",
+      "line": 97,
+      "match": "parentId: number | null = null"
+    },
+    {
+      "file": "server/src/domains/forum/services/category.service.ts",
+      "line": 178,
+      "match": "async getCategoryStats(categoryId: number): Promise<{"
+    },
+    {
+      "file": "server/src/domains/engagement/vault/vault.service.ts",
+      "line": 24,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/engagement/vault/vault.service.ts",
+      "line": 68,
+      "match": "let transactionId: number | null = null; // This will be lockTransactionId in vaults table"
+    },
+    {
+      "file": "server/src/domains/engagement/vault/vault.service.ts",
+      "line": 143,
+      "match": "async unlockTokens(vaultLockId: number): Promise<any> {"
+    },
+    {
+      "file": "server/src/domains/engagement/vault/vault.service.ts",
+      "line": 169,
+      "match": "let unlockTransactionId: number | null = null;"
+    },
+    {
+      "file": "server/src/domains/engagement/vault/vault.service.ts",
+      "line": 273,
+      "match": "async getUserVaultLocks(userId: number): Promise<any[]> {"
+    },
+    {
+      "file": "server/src/domains/engagement/vault/vault.service.ts",
+      "line": 297,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/engagement/tip/tip.service.ts",
+      "line": 65,
+      "match": "fromUserId: number;"
+    },
+    {
+      "file": "server/src/domains/engagement/tip/tip.service.ts",
+      "line": 66,
+      "match": "toUserId: number;"
+    },
+    {
+      "file": "server/src/domains/engagement/tip/tip.service.ts",
+      "line": 79,
+      "match": "fromUserId: number;"
+    },
+    {
+      "file": "server/src/domains/engagement/tip/tip.service.ts",
+      "line": 80,
+      "match": "toUserId: number;"
+    },
+    {
+      "file": "server/src/domains/engagement/tip/tip.service.ts",
+      "line": 198,
+      "match": "fromUserId: number,"
+    },
+    {
+      "file": "server/src/domains/engagement/tip/tip.service.ts",
+      "line": 199,
+      "match": "toUserId: number,"
+    },
+    {
+      "file": "server/src/domains/engagement/tip/tip.service.ts",
+      "line": 292,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/engagement/rain/rain.service.ts",
+      "line": 52,
+      "match": "senderUserId: number,"
+    },
+    {
+      "file": "server/src/domains/engagement/rain/rain.service.ts",
+      "line": 58,
+      "match": "transactionId: number;"
+    },
+    {
+      "file": "server/src/domains/engagement/rain/rain.service.ts",
+      "line": 272,
+      "match": "senderUserId: number,"
+    },
+    {
+      "file": "server/src/domains/engagement/rain/rain.service.ts",
+      "line": 276,
+      "match": "transactionId: number"
+    },
+    {
+      "file": "server/src/domains/engagement/rain/rain.service.ts",
+      "line": 291,
+      "match": "private async getRandomActiveUsers(excludeUserId: number, count: number): Promise<number[]> {"
+    },
+    {
+      "file": "server/src/domains/engagement/rain/rain.service.ts",
+      "line": 371,
+      "match": "private async checkCooldowns(userId: number, commandType: 'tip' | 'rain'): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/engagement/rain/rain.service.ts",
+      "line": 466,
+      "match": "private async updateLastCommandTime(userId: number, commandType: 'tip' | 'rain'): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/engagement/rain/rain.service.ts",
+      "line": 519,
+      "match": "async updateRainSettings(userId: number, settings: any) {"
+    },
+    {
+      "file": "server/src/domains/economy/services/rewardService.ts",
+      "line": 19,
+      "match": "export async function awardXShareReward(userId: number) {"
+    },
+    {
+      "file": "server/src/domains/economy/services/rewardService.ts",
+      "line": 35,
+      "match": "export async function awardXReferralReward(userId: number) {"
+    },
+    {
+      "file": "server/src/domains/engagement/airdrop/airdrop.service.ts",
+      "line": 21,
+      "match": "adminUserId: number;"
+    },
+    {
+      "file": "server/src/domains/engagement/airdrop/airdrop.service.ts",
+      "line": 37,
+      "match": "adminUserId: number;"
+    },
+    {
+      "file": "server/src/domains/engagement/airdrop/airdrop.service.ts",
+      "line": 42,
+      "match": "transactionId: number;"
+    },
+    {
+      "file": "server/src/domains/engagement/airdrop/airdrop.service.ts",
+      "line": 263,
+      "match": "adminUserId: number,"
+    },
+    {
+      "file": "server/src/domains/engagement/airdrop/airdrop.service.ts",
+      "line": 266,
+      "match": "transactionId: number,"
+    },
+    {
+      "file": "server/src/domains/engagement/airdrop/airdrop.service.ts",
+      "line": 267,
+      "match": "airdropId: number,"
+    },
+    {
+      "file": "server/src/domains/engagement/airdrop/airdrop.service.ts",
+      "line": 414,
+      "match": "async getAirdropDetails(airdropId: number): Promise<any> {"
+    },
+    {
+      "file": "server/src/domains/collectibles/stickers/stickers.service.ts",
+      "line": 217,
+      "match": "): Promise<{ stickerId: number; message: string }> {"
+    },
+    {
+      "file": "server/src/domains/collectibles/stickers/stickers.service.ts",
+      "line": 505,
+      "match": "): Promise<{ packId: number; message: string }> {"
+    },
+    {
+      "file": "server/src/domains/collectibles/stickers/stickers.service.ts",
+      "line": 586,
+      "match": "private async updatePackStickerCount(packId: number): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/auth/services/auth.service.ts",
+      "line": 99,
+      "match": "export async function verifyEmailToken(token: string): Promise<{ userId: number } | false> {"
+    },
+    {
+      "file": "server/src/domains/auth/services/auth.service.ts",
+      "line": 121,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/admin/shared/admin-operation-utils.ts",
+      "line": 97,
+      "match": "adminId: number,"
+    },
+    {
+      "file": "server/src/domains/admin/shared/admin-operation-utils.ts",
+      "line": 103,
+      "match": "adminId: number;"
+    },
+    {
+      "file": "server/src/core/repository/repositories/transaction-repository.ts",
+      "line": 32,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/core/repository/repositories/transaction-repository.ts",
+      "line": 141,
+      "match": "async getTotalByUser(userId: number, type?: string): Promise<number> {"
+    },
+    {
+      "file": "server/src/core/repository/repositories/transaction-repository.ts",
+      "line": 179,
+      "match": "async getBalanceByUser(userId: number): Promise<number> {"
+    },
+    {
+      "file": "server/src/core/repository/repositories/transaction-repository.ts",
+      "line": 272,
+      "match": "async getUserStats(userId: number): Promise<{"
+    },
+    {
+      "file": "client/src/components/platform-energy/recent-posts/recent-posts-feed.tsx",
+      "line": 64,
+      "match": "const toggleExpand = (postId: number) => {"
+    },
+    {
+      "file": "client/src/features/admin/components/dashboard/TippingAnalyticsCard.tsx",
+      "line": 65,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/features/admin/components/dashboard/TippingAnalyticsCard.tsx",
+      "line": 72,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/features/admin/components/dashboard/RainAnalyticsCard.tsx",
+      "line": 61,
+      "match": "userId: number;"
+    },
+    {
+      "file": "client/src/components/admin/forms/reports/ViewReportDialog.tsx",
+      "line": 35,
+      "match": "contentId: number;"
+    },
+    {
+      "file": "client/src/components/admin/forms/reports/ViewReportDialog.tsx",
+      "line": 37,
+      "match": "reportedUserId: number;"
+    },
+    {
+      "file": "client/src/components/admin/forms/reports/ViewReportDialog.tsx",
+      "line": 39,
+      "match": "reporterId: number;"
+    },
+    {
+      "file": "server/src/domains/forum/sub-domains/reports/reports.service.ts",
+      "line": 12,
+      "match": "contentId: number;"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/xp/xp.service.ts",
+      "line": 175,
+      "match": "async updateBadge(badgeId: number, badgeData: any) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/xp/xp.service.ts",
+      "line": 185,
+      "match": "async deleteBadge(badgeId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/xp/xp.service.ts",
+      "line": 204,
+      "match": "async updateTitle(titleId: number, titleData: any) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/xp/xp.service.ts",
+      "line": 214,
+      "match": "async deleteTitle(titleId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/xp/xp.service.ts",
+      "line": 222,
+      "match": "userId: number,"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/xp/xp.service.ts",
+      "line": 226,
+      "match": "adminId: number"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/user-groups/user-groups.service.ts",
+      "line": 48,
+      "match": "async getGroupById(groupId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/user-groups/user-groups.service.ts",
+      "line": 104,
+      "match": "async updateGroup(groupId: number, data: UserGroupInput) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/user-groups/user-groups.service.ts",
+      "line": 139,
+      "match": "async deleteGroup(groupId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/user-groups/user-groups.service.ts",
+      "line": 181,
+      "match": "async getUsersInGroup(groupId: number, params: ListGroupUsersQueryInput) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/users/users.service.ts",
+      "line": 124,
+      "match": "async getUserById(userId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/users/users.service.ts",
+      "line": 190,
+      "match": "async updateUser(userId: number, userData: Partial<typeof users.$inferInsert>) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/users/users.service.ts",
+      "line": 309,
+      "match": "async deleteUser(userId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/users/users.service.ts",
+      "line": 349,
+      "match": "async banUser(userId: number, reason?: string) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/users/users.service.ts",
+      "line": 400,
+      "match": "async unbanUser(userId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/users/users.service.ts",
+      "line": 450,
+      "match": "async changeUserRole(userId: number, newRole: string) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/users/bulk-operations.service.ts",
+      "line": 23,
+      "match": "errors: Array<{ userId: number; error: string }>;"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/users/bulk-operations.service.ts",
+      "line": 29,
+      "match": "adminId: number;"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/users/bulk-operations.service.ts",
+      "line": 36,
+      "match": "adminId: number;"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/users/bulk-operations.service.ts",
+      "line": 284,
+      "match": "adminId: number;"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/users/bulk-operations.service.ts",
+      "line": 378,
+      "match": "async getBulkOperationHistory(adminId: number, limit: number = 50) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/treasury/treasury.service.ts",
+      "line": 79,
+      "match": "async sendFromTreasury(input: TreasuryDepositInput, adminUserId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/treasury/treasury.service.ts",
+      "line": 136,
+      "match": "async recoverToTreasury(input: TreasuryWithdrawalInput, adminUserId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/treasury/treasury.service.ts",
+      "line": 192,
+      "match": "async massAirdrop(input: MassAirdropInput, adminUserId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/treasury/treasury.service.ts",
+      "line": 235,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/treasury/treasury.service.ts",
+      "line": 319,
+      "match": "async updateDgtEconomyParameters(input: TreasurySettingsUpdateInput, adminUserId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/reports/reports.service.ts",
+      "line": 27,
+      "match": "async function getContentPreview(type: string, contentId: number): Promise<string | null> {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/reports/reports.service.ts",
+      "line": 173,
+      "match": "async getReportById(reportId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/reports/reports.service.ts",
+      "line": 214,
+      "match": "reportId: number,"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/reports/reports.service.ts",
+      "line": 216,
+      "match": "adminUserId: number,"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/reports/reports.service.ts",
+      "line": 259,
+      "match": "async banUser(userIdToBan: number, input: BanUserInput, adminUserId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/reports/reports.service.ts",
+      "line": 321,
+      "match": "contentId: number,"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/reports/reports.service.ts",
+      "line": 323,
+      "match": "adminUserId: number"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/reports/reports.service.ts",
+      "line": 326,
+      "match": "let contentAuthorId: number | null = null;"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/referrals/referrals.service.ts",
+      "line": 57,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/forum/forum.service.ts",
+      "line": 435,
+      "match": "async moderateThread(threadId: number, data: ModerateThreadInput) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/email-templates/email-templates.service.ts",
+      "line": 306,
+      "match": "async getTemplateVersions(templateId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/email-templates/email-templates.service.ts",
+      "line": 325,
+      "match": "async restoreVersion(templateId: number, versionId: number, adminId: string) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/email-templates/email-templates.service.ts",
+      "line": 365,
+      "match": "async getTemplateStats(templateId: number, days: number = 30) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/database/query.service.ts",
+      "line": 96,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/database/query.service.ts",
+      "line": 108,
+      "match": "async executeQuery(query: string, userId: number): Promise<QueryResult> {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/backup-restore/restore.service.ts",
+      "line": 61,
+      "match": "async validateRestoreOperation(backupId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/backup-restore/restore.service.ts",
+      "line": 310,
+      "match": "dbId: number,"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/backup-restore/backup.service.ts",
+      "line": 51,
+      "match": "backupId: number;"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/backup-restore/backup.service.ts",
+      "line": 69,
+      "match": "): Promise<{ backupId: number; message: string }> {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/backup-restore/backup.service.ts",
+      "line": 364,
+      "match": "private async executeBackup(backupId: number, filePath: string, options: CreateBackupInput) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/backup-restore/backup.service.ts",
+      "line": 480,
+      "match": "private async executePgDump(args: string[], outputPath: string, backupId: number): Promise<void> {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/backup-restore/backup.service.ts",
+      "line": 535,
+      "match": "private updateProgress(backupId: number, percent: number, step: string) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/animation-packs/animation-packs.service.ts",
+      "line": 26,
+      "match": "async contentsForPack(packId: number) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/animation-packs/animation-packs.service.ts",
+      "line": 73,
+      "match": "private async syncItems(packId: number, mediaIds: number[]) {"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/airdrop/airdrop.service.ts",
+      "line": 10,
+      "match": "adminId: number;"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/analytics/engagement/tipping-analytics.service.ts",
+      "line": 29,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/analytics/engagement/tipping-analytics.service.ts",
+      "line": 38,
+      "match": "userId: number;"
+    },
+    {
+      "file": "server/src/domains/admin/sub-domains/analytics/engagement/rain-analytics.service.ts",
+      "line": 29,
+      "match": "userId: number;"
+    }
+  ]
+}

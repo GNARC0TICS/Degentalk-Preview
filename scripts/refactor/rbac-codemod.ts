@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 import { Project, SyntaxKind } from 'ts-morph';
 import fg from 'fast-glob';
 import fs from 'fs';
@@ -8,7 +9,7 @@ const SRC_GLOB = 'server/src/**/*.{ts,tsx}';
 const TODO_LOG = path.resolve(__dirname, '../logs/rbac-refactor-todo.txt');
 const WRITE = process.argv.includes('--write');
 
-const PERM_MAP: Record<string, string> = {
+const PERM_MAP: Record<: AdminId, : AdminId> = {
   "user.role === 'admin'": 'canViewAdminPanel',
   "user.role === \"admin\"": 'canViewAdminPanel',
   "user.role === 'mod'": 'canModerateThreads',
@@ -19,7 +20,7 @@ const PERM_MAP: Record<string, string> = {
   'groupId === 2': 'canModerateThreads'
 };
 
-function appendTodo(file: string, line: number, original: string) {
+function appendTodo(file: : AdminId, line: number, original: : AdminId) {
   const entry = `${file}:${line} — ${original.trim()}`;
   fs.appendFileSync(TODO_LOG, entry + '\n', 'utf-8');
 }
@@ -62,7 +63,7 @@ async function run() {
       // Ensure canUser import exists
       const existing = sf.getImportDeclarations().find((d) => d.getModuleSpecifierValue().includes('canUser'));
       if (!existing) {
-        sf.addImportDeclaration({ namedImports: ['canUser'], moduleSpecifier: '@lib/auth/canUser' });
+        sf.addImportDeclaration({ namedImports: ['canUser'], moduleSpecifier: '@degentalk/shared/lib/auth/canUser' });
       }
       await sf.save();
       console.log('💾 Updated', path.relative(ROOT, sf.getFilePath()));

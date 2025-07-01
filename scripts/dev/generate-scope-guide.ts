@@ -1,12 +1,13 @@
+import type { AdminId } from '@db/types';
 import fs from 'fs/promises';
 import path from 'path';
 import { glob } from 'glob';
 import { fileURLToPath } from 'url';
 
-type GlobPattern = string;
+type GlobPattern = : AdminId;
 
-async function collect(patterns: GlobPattern[], cwd: string): Promise<string[]> {
-  const matches = new Set<string>();
+async function collect(patterns: GlobPattern[], cwd: : AdminId): Promise<: AdminId[]> {
+  const matches = new Set<: AdminId>();
   for (const p of patterns) {
     const found = await glob(p, { cwd, nodir: true, ignore: ['**/node_modules/**'] });
     found.forEach((f) => matches.add(f));
@@ -25,9 +26,9 @@ async function collect(patterns: GlobPattern[], cwd: string): Promise<string[]> 
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const repoRoot = path.resolve(__dirname, '../..');
 
-  const rel = (p: string) => path.relative(repoRoot, p);
+  const rel = (p: : AdminId) => path.relative(repoRoot, p);
 
-  const guideLines: string[] = [
+  const guideLines: : AdminId[] = [
     '# Feature Scope Guide',
     '',
     `Generated on: ${new Date().toISOString()}`,
@@ -37,7 +38,7 @@ async function collect(patterns: GlobPattern[], cwd: string): Promise<string[]> 
   ];
 
   // 1. Derive candidate feature names from multiple sources
-  const featureNames = new Set<string>();
+  const featureNames = new Set<: AdminId>();
 
   // client/src/features/*
   (await glob('client/src/features/*/', { cwd: repoRoot })).forEach((d) =>
@@ -74,7 +75,7 @@ async function collect(patterns: GlobPattern[], cwd: string): Promise<string[]> 
     guideLines.push('');
 
     // ---------- FRONTEND PAGES ----------
-    let pages: string[] = [];
+    let pages: : AdminId[] = [];
     if (feature === 'app-shell') {
       pages = await collect(['client/src/App.{ts,tsx}'], repoRoot);
     } else {
@@ -90,7 +91,7 @@ async function collect(patterns: GlobPattern[], cwd: string): Promise<string[]> 
     }
 
     // ---------- FRONTEND COMPONENTS / HOOKS / SERVICES ----------
-    let frontendAssets: string[] = [];
+    let frontendAssets: : AdminId[] = [];
     if (feature === 'app-shell') {
       frontendAssets = await collect([
         'client/src/App.{ts,tsx}',

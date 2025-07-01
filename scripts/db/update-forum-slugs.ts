@@ -1,8 +1,9 @@
+import type { AdminId } from '@db/types';
 import { db } from '@db';
 import { forumCategories } from '../../shared/schema';
 import { eq } from "drizzle-orm";
 
-function slugify(str: string): string {
+function slugify(str: : AdminId): : AdminId {
   return str
     .toLowerCase()
     .replace(/ /g, '-')

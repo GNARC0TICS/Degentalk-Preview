@@ -1,3 +1,64 @@
+import type { HeatEventId } from '@db/types';
+import type { ActionId } from '@db/types';
+import type { AuditLogId } from '@db/types';
+import type { EventId } from '@db/types';
+import type { PrefixId } from '@db/types';
+import type { MessageId } from '@db/types';
+import type { FollowRequestId } from '@db/types';
+import type { FriendRequestId } from '@db/types';
+import type { NotificationId } from '@db/types';
+import type { UnlockId } from '@db/types';
+import type { StoreItemId } from '@db/types';
+import type { OrderId } from '@db/types';
+import type { QuoteId } from '@db/types';
+import type { ReplyId } from '@db/types';
+import type { DraftId } from '@db/types';
+import type { IpLogId } from '@db/types';
+import type { ModActionId } from '@db/types';
+import type { SessionId } from '@db/types';
+import type { BanId } from '@db/types';
+import type { VerificationTokenId } from '@db/types';
+import type { SignatureItemId } from '@db/types';
+import type { ContentId } from '@db/types';
+import type { RequestId } from '@db/types';
+import type { ZoneId } from '@db/types';
+import type { WhaleId } from '@db/types';
+import type { VaultLockId } from '@db/types';
+import type { VaultId } from '@db/types';
+import type { UnlockTransactionId } from '@db/types';
+import type { TipId } from '@db/types';
+import type { TemplateId } from '@db/types';
+import type { TagId } from '@db/types';
+import type { SubscriptionId } from '@db/types';
+import type { StickerId } from '@db/types';
+import type { SettingId } from '@db/types';
+import type { RuleId } from '@db/types';
+import type { ParentZoneId } from '@db/types';
+import type { ParentForumId } from '@db/types';
+import type { PackId } from '@db/types';
+import type { ModeratorId } from '@db/types';
+import type { MentionId } from '@db/types';
+import type { ItemId } from '@db/types';
+import type { InventoryId } from '@db/types';
+import type { GroupId } from '@db/types';
+import type { ForumId } from '@db/types';
+import type { EntryId } from '@db/types';
+import type { EntityId } from '@db/types';
+import type { EmojiPackId } from '@db/types';
+import type { EditorId } from '@db/types';
+import type { CosmeticId } from '@db/types';
+import type { AuthorId } from '@db/types';
+import type { CoinId } from '@db/types';
+import type { CategoryId } from '@db/types';
+import type { BackupId } from '@db/types';
+import type { AnimationFrameId } from '@db/types';
+import type { AirdropId } from '@db/types';
+import type { AdminUserId } from '@db/types';
+import type { RoomId } from '@db/types';
+import type { ConversationId } from '@db/types';
+import type { ReportId } from '@db/types';
+import type { ReporterId } from '@db/types';
+import type { AdminId } from '@db/types';
 import { db } from "../../db";
 import { forumStructure } from "../../db/schema/forum/structure";
 import { forumMap, type Zone as ConfigZone, type Forum as ConfigForum } from "../../client/src/config/forumMap.config";
@@ -9,30 +70,30 @@ type DbStructure = typeof forumStructure.$inferSelect;
 interface Discrepancy {
   type: 'missing_in_db' | 'missing_in_config' | 'property_mismatch';
   entityType: 'zone' | 'forum';
-  slug: string;
-  property?: string;
+  slug: : AdminId;
+  property?: : AdminId;
   expected?: any;
   actual?: any;
-  message?: string;
+  message?: : AdminId;
 }
 
 const discrepancies: Discrepancy[] = [];
 
-// Helper to stringify for comparison, handling undefined
+// Helper to : AdminIdify for comparison, handling undefined
 const stableStringify = (obj: any) => {
   if (obj === undefined) return 'undefined';
-  if (obj === null) return 'null';
-  // Sort object keys for consistent stringification
-  if (typeof obj === 'object' && obj !== null) {
+  if (obj === : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null) return ': AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null';
+  // Sort object keys for consistent : AdminIdification
+  if (typeof obj === 'object' && obj !== : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null) {
     const sortedObj = Object.keys(obj)
       .sort()
       .reduce((acc, key) => {
         acc[key] = obj[key];
         return acc;
       }, {} as any);
-    return JSON.stringify(sortedObj);
+    return JSON.: AdminIdify(sortedObj);
   }
-  return JSON.stringify(obj);
+  return JSON.: AdminIdify(obj);
 };
 
 
@@ -44,10 +105,10 @@ async function checkForumConfigSync() {
   const dbForums = dbStructures.filter(cat => cat.type === 'forum');
 
   const configZones = forumMap.zones;
-  const configForums: (ConfigForum & { parentZoneSlug: string, parentForumSlug?: string })[] = [];
+  const configForums: (ConfigForum & { parentZoneSlug: : AdminId, parentForumSlug?: : AdminId })[] = [];
   
   // Recursively flatten forums including subforums
-  function flattenForums(forums: any[], parentZoneSlug: string, parentForumSlug?: string) {
+  function flattenForums(forums: any[], parentZoneSlug: : AdminId, parentForumSlug?: : AdminId) {
     forums.forEach(forum => {
       configForums.push({ ...forum, parentZoneSlug, parentForumSlug });
       // Check for subforums
@@ -157,8 +218,8 @@ async function checkForumConfigSync() {
         discrepancies.push({ type: 'property_mismatch', entityType: 'forum', slug: cf.slug, property: 'rules (from pluginData)', expected: cf.rules, actual: dfPluginData?.rules });
     }
     if (stableStringify(cf.themeOverride) !== stableStringify(dfPluginData?.themeOverride)) {
-        // Handle case where cf.themeOverride is undefined but dfPluginData.themeOverride is null (from seed script)
-        if (!(cf.themeOverride === undefined && dfPluginData?.themeOverride === null)) {
+        // Handle case where cf.themeOverride is undefined but dfPluginData.themeOverride is : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null (from seed script)
+        if (!(cf.themeOverride === undefined && dfPluginData?.themeOverride === : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null)) {
              discrepancies.push({ type: 'property_mismatch', entityType: 'forum', slug: cf.slug, property: 'themeOverride (from pluginData)', expected: cf.themeOverride, actual: dfPluginData?.themeOverride });
         }
     }

@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 #!/usr/bin/env tsx
 
 /**
@@ -10,15 +11,15 @@ import { readFileSync } from 'fs';
 import chalk from 'chalk';
 
 interface TestResult {
-  name: string;
+  name: : AdminId;
   passed: boolean;
-  error?: string;
+  error?: : AdminId;
   duration: number;
 }
 
 const results: TestResult[] = [];
 
-function runTest(name: string, testFn: () => void): void {
+function runTest(name: : AdminId, testFn: () => void): void {
   const start = Date.now();
   console.log(chalk.blue(`🔍 Testing: ${name}`));
   

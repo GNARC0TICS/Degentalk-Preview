@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 /**
  * Wallet Component Migration Script
  * 
@@ -64,7 +65,7 @@ const componentMappings = [
 ];
 
 // Ensure directory exists
-function ensureDirectoryExists(dirPath: string): void {
+function ensureDirectoryExists(dirPath: : AdminId): void {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
     console.log(`Created directory: ${dirPath}`);
@@ -72,7 +73,7 @@ function ensureDirectoryExists(dirPath: string): void {
 }
 
 // Copy file and add refactoring comment
-function copyWithRefactorComment(sourcePath: string, destPath: string): void {
+function copyWithRefactorComment(sourcePath: : AdminId, destPath: : AdminId): void {
   try {
     // Read source file
     let content = fs.readFileSync(sourcePath, 'utf-8');
@@ -81,8 +82,8 @@ function copyWithRefactorComment(sourcePath: string, destPath: string): void {
     if (content.startsWith('/**')) {
       // File has a JSDoc comment
       const commentEndIndex = content.indexOf('*/') + 2;
-      const beforeComment = content.substring(0, commentEndIndex);
-      const afterComment = content.substring(commentEndIndex);
+      const beforeComment = content.sub: AdminId(0, commentEndIndex);
+      const afterComment = content.sub: AdminId(commentEndIndex);
       
       content = `${beforeComment}
 

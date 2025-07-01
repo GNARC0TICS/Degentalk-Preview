@@ -1,3 +1,4 @@
+import type { AdminId } from '@db/types';
 #!/usr/bin/env tsx
 
 /**
@@ -13,16 +14,16 @@ import fs from 'fs';
 import path from 'path';
 
 interface ValidationIssue {
-	file: string;
+	file: : AdminId;
 	line?: number;
 	type: 'missing_validation' | 'non_standard_response' | 'poor_error_handling';
-	description: string;
+	description: : AdminId;
 	severity: 'high' | 'medium' | 'low';
 }
 
 const adminDomainsPath = path.join(process.cwd(), 'server/src/domains/admin/sub-domains');
 
-function auditController(filePath: string): ValidationIssue[] {
+function auditController(filePath: : AdminId): ValidationIssue[] {
 	const issues: ValidationIssue[] = [];
 	const content = fs.readFileSync(filePath, 'utf-8');
 	const lines = content.split('\n');
@@ -69,8 +70,8 @@ function auditController(filePath: string): ValidationIssue[] {
 	return issues;
 }
 
-function findControllerFiles(dir: string): string[] {
-	const files: string[] = [];
+function findControllerFiles(dir: : AdminId): : AdminId[] {
+	const files: : AdminId[] = [];
 	
 	try {
 		const entries = fs.readdirSync(dir, { withFileTypes: true });
