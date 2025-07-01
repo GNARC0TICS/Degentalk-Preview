@@ -19,7 +19,7 @@ import {
 import { users } from '../user/users';
 
 export const adminBackups = pgTable('admin_backups', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 
 	// Backup identification
 	filename: varchar('filename', { length: 255 }).notNull().unique(),
@@ -73,7 +73,7 @@ export const adminBackups = pgTable('admin_backups', {
 });
 
 export const backupSchedules = pgTable('backup_schedules', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 
 	// Schedule identification
 	name: varchar('name', { length: 255 }).notNull(),
@@ -120,7 +120,7 @@ export const backupSchedules = pgTable('backup_schedules', {
 });
 
 export const restoreOperations = pgTable('restore_operations', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 
 	// Operation identification
 	operationId: uuid('operation_id').defaultRandom().notNull().unique(),
@@ -192,7 +192,7 @@ export const restoreOperations = pgTable('restore_operations', {
 });
 
 export const backupSettings = pgTable('backup_settings', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 
 	// Storage configuration
 	storageLocation: text('storage_location').notNull().default('/var/backups/degentalk'),

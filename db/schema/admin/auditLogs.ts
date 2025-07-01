@@ -16,7 +16,7 @@ import { users } from '../user/users'; // Adjusted path
 export const auditLogs = pgTable(
 	'audit_logs',
 	{
-		id: serial('log_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }), // Nullable if action can be system-initiated. Changed to uuid
 		action: varchar('action', { length: 100 }).notNull(),
 		entityType: varchar('entity_type', { length: 100 }).notNull(), // Changed from 50 to 100 for consistency

@@ -6,7 +6,7 @@ import { users } from '../user/users';
 export const dictionaryUpvotes = pgTable(
 	'dictionary_upvotes',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		entryId: integer('entry_id')
 			.notNull()
 			.references(() => dictionaryEntries.id, { onDelete: 'cascade' }),

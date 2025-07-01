@@ -10,7 +10,7 @@ import { users } from '../user/users';
 export const userFollows = pgTable(
 	'user_follows',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		followerId: uuid('follower_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

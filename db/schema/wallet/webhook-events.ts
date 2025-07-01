@@ -16,7 +16,7 @@ import { sql } from 'drizzle-orm';
 export const webhookEvents = pgTable(
 	'webhook_events',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		webhookId: varchar('webhook_id', { length: 255 }).notNull().unique(),
 		eventType: varchar('event_type', { length: 50 }).notNull(), // deposit, withdraw, transfer, etc.
 		status: varchar('status', { length: 20 }).notNull(), // received, processed, failed

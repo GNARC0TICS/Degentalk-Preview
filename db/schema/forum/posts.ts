@@ -1,4 +1,4 @@
-import type { AnyPgColumn } from 'drizzle-orm/pg-core';
+import type { AnyPgColumn, uuid } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
 	serial,
@@ -20,17 +20,17 @@ import { contentVisibilityStatusEnum } from '../core/enums';
 export const posts = pgTable(
 	'posts',
 	{
-		id: serial('post_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		uuid: uuid('uuid').notNull().defaultRandom(),
-		threadId: integer('thread_id')
-			.notNull()
-			.references(() => threads.id, { onDelete: 'cascade' }),
+		threadId: uuid('thread_id')
+            			.notNull()
+            			.references(() => threads.id, { onDelete: 'cascade' }),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		replyToPostId: integer('reply_to_post_id').references((): AnyPgColumn => posts.id, {
-			onDelete: 'set null'
-		}),
+		replyToPostId: uuid('reply_to_post_id').references((): AnyPgColumn => posts.id, {
+            			onDelete: 'set null'
+            		}),
 		content: text('content').notNull(),
 		editorState: jsonb('editor_state'),
 		likeCount: integer('like_count').notNull().default(0),

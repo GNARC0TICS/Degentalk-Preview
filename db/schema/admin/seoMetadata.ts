@@ -3,7 +3,7 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 
 export const seoMetadata = pgTable('seo_metadata', {
-	id: serial('meta_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	path: varchar('path', { length: 255 }).notNull().unique(),
 	title: varchar('title', { length: 255 }),
 	description: text('description'),

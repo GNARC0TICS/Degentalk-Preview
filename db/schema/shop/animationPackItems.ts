@@ -1,9 +1,9 @@
-import { pgTable, serial, integer } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, uuid } from 'drizzle-orm/pg-core';
 import { mediaLibrary } from '../admin/mediaLibrary';
 import { animationPacks } from './animationPacks';
 
 export const animationPackItems = pgTable('animation_pack_items', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	packId: integer('pack_id')
 		.references(() => animationPacks.id, { onDelete: 'cascade' })
 		.notNull(),

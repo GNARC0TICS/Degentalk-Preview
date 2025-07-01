@@ -5,7 +5,7 @@ import { roles } from '../user/roles'; // Use roles instead of deprecated userGr
 export const tokenTypeEnumAirdrop = pgEnum('token_type_admin_airdrop', ['XP', 'DGT']);
 
 export const adminManualAirdropLogs = pgTable('admin_manual_airdrop_logs', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	adminId: uuid('admin_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'set null' }), // Keep record even if admin is deleted

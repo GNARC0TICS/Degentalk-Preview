@@ -7,13 +7,12 @@ import {
 	integer,
 	jsonb,
 	boolean,
-	doublePrecision
-} from 'drizzle-orm/pg-core';
+	doublePrecision, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 
 export const titles = pgTable('titles', {
-	id: serial('title_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('name', { length: 100 }).notNull(),
 	description: text('description'),
 	iconUrl: varchar('icon_url', { length: 255 }),

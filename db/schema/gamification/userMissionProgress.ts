@@ -6,7 +6,7 @@ import { missions } from './missions'; // Adjusted path
 export const userMissionProgress = pgTable(
 	'user_mission_progress',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

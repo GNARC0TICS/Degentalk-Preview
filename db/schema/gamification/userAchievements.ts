@@ -16,7 +16,7 @@ import { achievements } from './achievements';
 export const userAchievements = pgTable(
 	'user_achievements',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

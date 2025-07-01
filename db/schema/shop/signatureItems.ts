@@ -1,8 +1,8 @@
-import { pgTable, serial, text, integer, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, integer, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const signatureShopItems = pgTable('signature_shop_items', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	name: text('name').notNull(),
 	effectKey: text('effect_key').notNull(), // Key used by frontend to apply the effect
 	price: integer('price').notNull(), // Assuming DGT points or similar internal currency

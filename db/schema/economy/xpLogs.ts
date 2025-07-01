@@ -14,7 +14,7 @@ import { users } from '../user/users';
 export const xpLogs = pgTable(
 	'xp_logs',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

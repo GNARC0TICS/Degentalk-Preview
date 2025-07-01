@@ -128,7 +128,7 @@ export const shoutboxPins = pgTable('shoutbox_pins', {
 	userPromotionId: uuid('user_promotion_id')
 		.notNull()
 		.references(() => userPromotions.id, { onDelete: 'cascade' }),
-	messageId: integer('message_id').references(() => shoutboxMessages.id),
+	messageId: uuid('message_id').references(() => shoutboxMessages.id),
 	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),

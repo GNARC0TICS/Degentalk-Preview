@@ -6,8 +6,7 @@ import {
 	decimal,
 	boolean,
 	timestamp,
-	index
-} from 'drizzle-orm/pg-core';
+	index, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 /**
@@ -16,7 +15,7 @@ import { sql } from 'drizzle-orm';
 export const supportedTokens = pgTable(
 	'supported_tokens',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		coinId: integer('coin_id').notNull().unique(), // CCPayment's coin ID
 		coinSymbol: varchar('coin_symbol', { length: 20 }).notNull(),
 		coinName: varchar('coin_name', { length: 100 }).notNull(),

@@ -34,7 +34,7 @@ export type SubscriptionStatus = 'active' | 'expired' | 'cancelled' | 'lifetime'
  * Tracks both VIP Pass (lifetime) and Degen Pass (monthly) subscriptions
  */
 export const subscriptions = pgTable('subscriptions', {
-	id: serial('subscription_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
@@ -83,7 +83,7 @@ export const subscriptions = pgTable('subscriptions', {
  * Defines what each subscription type provides
  */
 export const subscriptionBenefits = pgTable('subscription_benefits', {
-	id: serial('benefit_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 
 	// Subscription type this benefit applies to
 	subscriptionType: subscriptionTypeEnum('subscription_type').notNull(),
@@ -111,7 +111,7 @@ export const subscriptionBenefits = pgTable('subscription_benefits', {
  * Tracks monthly cosmetic drops for Degen Pass subscribers
  */
 export const cosmeticDrops = pgTable('cosmetic_drops', {
-	id: serial('drop_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 
 	// User and subscription
 	userId: uuid('user_id')

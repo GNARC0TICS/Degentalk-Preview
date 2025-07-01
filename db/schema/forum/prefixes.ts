@@ -1,9 +1,9 @@
-import { pgTable, serial, varchar, boolean, integer, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, boolean, integer, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { forumStructure } from './structure'; // Updated to use forum structure
 
 export const threadPrefixes = pgTable('thread_prefixes', {
-	id: serial('prefix_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('name', { length: 30 }).notNull().unique(),
 	color: varchar('color', { length: 20 }),
 	isActive: boolean('is_active').notNull().default(true),

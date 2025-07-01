@@ -17,7 +17,7 @@ import { z } from 'zod';
 export const shoutboxMessages = pgTable(
 	'shoutbox_messages',
 	{
-		id: serial('message_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

@@ -8,8 +8,7 @@ import {
 	integer,
 	boolean,
 	timestamp,
-	index
-} from 'drizzle-orm/pg-core';
+	index, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
@@ -17,7 +16,7 @@ import { z } from 'zod';
 export const dgtPackages = pgTable(
 	'dgt_packages',
 	{
-		id: serial('package_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		name: varchar('name', { length: 100 }).notNull(),
 		description: text('description'),
 		dgtAmount: bigint('dgt_amount', { mode: 'number' }).notNull(),

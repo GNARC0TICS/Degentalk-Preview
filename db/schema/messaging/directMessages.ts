@@ -15,7 +15,7 @@ import { z } from 'zod';
 export const directMessages = pgTable(
 	'direct_messages',
 	{
-		id: serial('message_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		senderId: uuid('sender_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

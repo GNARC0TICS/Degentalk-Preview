@@ -12,7 +12,7 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 
 export const activityFeed = pgTable('activity_feed', {
-	id: serial('activity_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),

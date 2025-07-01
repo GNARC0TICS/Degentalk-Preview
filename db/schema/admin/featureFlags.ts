@@ -15,7 +15,7 @@ import { users } from '../user/users'; // Adjusted path
 
 // Consolidated from betaFeatureFlags and featureFlags in shared/schema.ts
 export const featureFlags = pgTable('feature_flags', {
-	id: serial('flag_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	key: varchar('key', { length: 100 }).notNull().unique(), // This was from featureFlags, good practice
 	name: varchar('name', { length: 100 }).notNull(), // from betaFeatureFlags, good for display
 	description: text('description'),

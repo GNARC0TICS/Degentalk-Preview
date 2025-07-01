@@ -5,7 +5,7 @@ import { users } from '../user/users'; // Adjusted path
 export const conversations = pgTable(
 	'conversations',
 	{
-		id: serial('conversation_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		uuid: uuid('uuid').notNull().defaultRandom(),
 		title: varchar('title', { length: 255 }),
 		isGroup: boolean('is_group').notNull().default(false),

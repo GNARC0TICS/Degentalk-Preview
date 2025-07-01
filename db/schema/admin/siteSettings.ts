@@ -3,7 +3,7 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 
 export const siteSettings = pgTable('site_settings', {
-	id: serial('setting_id').primaryKey(), // schema.ts had this, useful for direct edits if needed
+	id: uuid('id').primaryKey().defaultRandom(), // schema.ts had this, useful for direct edits if needed
 	key: varchar('key', { length: 100 }).notNull().unique(),
 	value: text('value'),
 	valueType: varchar('value_type', { length: 20 }).notNull().default('string'), // string, number, boolean, json

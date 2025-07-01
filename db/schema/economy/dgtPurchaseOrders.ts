@@ -17,7 +17,7 @@ import { z } from 'zod';
 export const dgtPurchaseOrders = pgTable(
 	'dgt_purchase_orders',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

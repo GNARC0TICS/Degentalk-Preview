@@ -1,8 +1,8 @@
-import { pgTable, serial, varchar, text, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const tags = pgTable('tags', {
-	id: serial('tag_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('name', { length: 50 }).notNull().unique(),
 	slug: varchar('slug', { length: 50 }).notNull().unique(),
 	description: text('description'),

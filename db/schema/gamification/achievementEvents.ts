@@ -3,7 +3,7 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 
 export const achievementEvents = pgTable('achievement_events', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),

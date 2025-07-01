@@ -18,7 +18,7 @@ import { conversations } from './conversations'; // Adjusted path
 export const messages = pgTable(
 	'messages',
 	{
-		id: serial('message_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		uuid: uuid('uuid').notNull().defaultRandom(), // Separate uuid field
 		conversationId: integer('conversation_id') // Kept as integer
 			.notNull()

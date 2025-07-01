@@ -1,4 +1,4 @@
-import type { AnyPgColumn } from 'drizzle-orm/pg-core';
+import type { AnyPgColumn, uuid } from 'drizzle-orm/pg-core';
 
 import {
 	pgTable,
@@ -117,9 +117,9 @@ export const users = pgTable(
 		pathMultipliers: jsonb('path_multipliers').default('{}'),
 		pluginData: jsonb('plugin_data').default('{}'),
 		statusLine: text('status_line'),
-		pinnedPostId: integer('pinned_post_id').references((): AnyPgColumn => posts.id as AnyPgColumn, {
-			onDelete: 'set null'
-		}),
+		pinnedPostId: uuid('pinned_post_id').references((): AnyPgColumn => posts.id as AnyPgColumn, {
+            			onDelete: 'set null'
+            		}),
 		// Optional future enhancements
 		// profileThemeId: integer('profile_theme_id').references(() => uiThemes.id, { onDelete: 'set null' }),
 		// resumeSlug: text('resume_slug'),

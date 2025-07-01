@@ -16,7 +16,7 @@ import { users } from '../user/users';
 export const wallets = pgTable(
 	'wallets',
 	{
-		id: serial('wallet_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id') // Changed to uuid
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

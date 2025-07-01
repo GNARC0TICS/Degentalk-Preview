@@ -15,7 +15,7 @@ import { users } from '../user/users'; // Adjusted path
 export const analyticsEvents = pgTable(
 	'analytics_events',
 	{
-		id: serial('event_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }), // Nullable if event is not user-specific
 		sessionId: uuid('session_id'), // Can be used to group events from a single user session
 		type: varchar('event_type', { length: 100 }).notNull(), // e.g., 'page_view', 'button_click', 'form_submit'

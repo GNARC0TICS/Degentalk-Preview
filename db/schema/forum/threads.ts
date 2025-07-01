@@ -1,4 +1,4 @@
-import type { AnyPgColumn } from 'drizzle-orm/pg-core';
+import type { AnyPgColumn, uuid } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
 	serial,
@@ -26,7 +26,7 @@ export type PostTable = { id: AnyPgColumn }; // Corrected PgColumn to AnyPgColum
 export const threads = pgTable(
 	'threads',
 	{
-		id: serial('thread_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		uuid: uuid('uuid').notNull().defaultRandom(),
 		title: varchar('title', { length: 255 }).notNull(),
 		slug: varchar('slug', { length: 255 }).notNull(),

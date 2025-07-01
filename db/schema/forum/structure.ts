@@ -1,4 +1,4 @@
-import type { AnyPgColumn } from 'drizzle-orm/pg-core';
+import type { AnyPgColumn, uuid } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
 	serial,
@@ -24,7 +24,7 @@ import { roles } from '../user/roles'; // Use roles instead of deprecated userGr
  * - SubForum (type: 'forum' with parentId pointing to another forum)
  */
 export const forumStructure = pgTable('forum_structure', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	name: text('name').notNull(),
 	slug: text('slug').notNull().unique(),
 	description: text('description'),

@@ -17,7 +17,7 @@ import { users } from '../user/users';
 export const orders = pgTable(
 	'orders',
 	{
-		id: serial('order_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		uuid: uuid('uuid').notNull().defaultRandom(),
 		userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
 		status: varchar('status', { length: 50 }).notNull().default('pending'),

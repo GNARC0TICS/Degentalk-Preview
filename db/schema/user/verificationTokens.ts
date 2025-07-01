@@ -3,7 +3,7 @@ import { sql } from 'drizzle-orm';
 import { users } from './users';
 
 export const verificationTokens = pgTable('verification_tokens', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),

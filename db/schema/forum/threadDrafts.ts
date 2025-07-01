@@ -16,7 +16,7 @@ import { forumStructure } from './structure'; // Updated to use forum structure
 import { threadPrefixes } from './prefixes'; // Assuming you have threadPrefixes schema
 
 export const threadDrafts = pgTable('thread_drafts', {
-	id: serial('draft_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	uuid: uuid('uuid').notNull().defaultRandom(), // This is a separate uuid field
 	userId: uuid('user_id') // Changed to uuid
 		.notNull()

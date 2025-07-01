@@ -11,7 +11,7 @@ import { cloutAchievements } from './cloutAchievements';
 export const userCloutLog = pgTable(
 	'user_clout_log',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, {

@@ -18,7 +18,7 @@ export const mentionTypeEnum = pgEnum('mention_type', ['thread', 'post', 'shoutb
 
 // Mentions table - tracks when users are mentioned
 export const mentions = pgTable('mentions', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 
 	// Who was mentioned
 	mentionedUserId: uuid('mentioned_user_id')
@@ -34,8 +34,8 @@ export const mentions = pgTable('mentions', {
 	type: mentionTypeEnum('type').notNull(),
 
 	// Reference to the specific content (thread, post, etc.)
-	threadId: integer('thread_id').references(() => threads.id, { onDelete: 'cascade' }),
-	postId: integer('post_id').references(() => posts.id, { onDelete: 'cascade' }),
+	threadId: uuid('thread_id').references(() => threads.id, { onDelete: 'cascade' }),
+	postId: uuid('post_id').references(() => posts.id, { onDelete: 'cascade' }),
 
 	// For shoutbox/whisper mentions, we'll store the message ID as text
 	messageId: varchar('message_id', { length: 255 }),
@@ -57,7 +57,7 @@ export const mentions = pgTable('mentions', {
 
 // User mention preferences
 export const userMentionPreferences = pgTable('user_mention_preferences', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),

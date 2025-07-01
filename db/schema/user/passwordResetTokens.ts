@@ -14,7 +14,7 @@ import { users } from './users';
 export const passwordResetTokens = pgTable(
 	'password_reset_tokens',
 	{
-		id: serial('token_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

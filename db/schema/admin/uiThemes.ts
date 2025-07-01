@@ -1,4 +1,4 @@
-import { pgTable, serial, text, boolean, integer, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, boolean, integer, timestamp, jsonb, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 /**
@@ -14,7 +14,7 @@ import { sql } from 'drizzle-orm';
  *       user-customisable (for now).
  */
 export const uiThemes = pgTable('ui_themes', {
-	id: serial('theme_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 
 	/**
 	 * Identifier used by the frontend to locate a theme. Example: "pit", "casino".

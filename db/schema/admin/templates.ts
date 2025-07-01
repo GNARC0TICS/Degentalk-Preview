@@ -3,7 +3,7 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 
 export const siteTemplates = pgTable('site_templates', {
-	id: serial('template_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('name', { length: 100 }).notNull().unique(),
 	type: varchar('type', { length: 50 }).notNull(), // e.g., page, email_layout, component_wrapper
 	content: text('content').notNull(), // HTML, Handlebars, Liquid, etc.

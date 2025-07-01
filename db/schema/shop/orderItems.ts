@@ -7,8 +7,7 @@ import {
 	jsonb,
 	timestamp,
 	index,
-	boolean
-} from 'drizzle-orm/pg-core';
+	boolean, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { orders } from './orders';
 import { products } from './products';
@@ -16,7 +15,7 @@ import { products } from './products';
 export const orderItems = pgTable(
 	'order_items',
 	{
-		id: serial('item_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		orderId: integer('order_id')
 			.notNull()
 			.references(() => orders.id, { onDelete: 'cascade' }),

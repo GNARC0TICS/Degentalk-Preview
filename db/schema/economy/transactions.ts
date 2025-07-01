@@ -19,7 +19,7 @@ import { transactionTypeEnum, transactionStatusEnum } from '../core/enums';
 export const transactions = pgTable(
 	'transactions',
 	{
-		id: serial('transaction_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
 		walletId: integer('wallet_id').references(() => wallets.id, { onDelete: 'cascade' }), // DGT wallet
 		fromUserId: uuid('from_user_id').references(() => users.id, { onDelete: 'set null' }),

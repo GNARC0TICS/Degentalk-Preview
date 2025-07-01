@@ -1,8 +1,8 @@
-import { pgTable, serial, timestamp, varchar, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, serial, timestamp, varchar, jsonb, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const leaderboardHistory = pgTable('leaderboard_history', {
-	id: serial('leaderboard_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	weekStartDate: timestamp('week_start_date').notNull(),
 	weekEndDate: timestamp('week_end_date').notNull(),
 	leaderboardType: varchar('leaderboard_type', { length: 50 }).notNull(), // e.g., 'xp_weekly', 'clout_monthly'

@@ -14,7 +14,7 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 
 export const achievements = pgTable('achievements', {
-	id: serial('achievement_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 
 	// Basic info
 	key: varchar('key', { length: 100 }).unique(),

@@ -18,7 +18,7 @@ import { z } from 'zod';
 export const chatRooms = pgTable(
 	'chat_rooms',
 	{
-		id: serial('room_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		name: varchar('name', { length: 100 }).notNull(),
 		description: text('description'),
 		isPrivate: boolean('is_private').notNull().default(false),

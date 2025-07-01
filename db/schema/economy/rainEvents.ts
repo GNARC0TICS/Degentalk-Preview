@@ -13,7 +13,7 @@ import { users } from '../user/users';
 import { transactions } from './transactions';
 
 export const rainEvents = pgTable('rain_events', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),

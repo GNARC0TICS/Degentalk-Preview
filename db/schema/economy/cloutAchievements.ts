@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, text, integer, boolean, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, integer, boolean, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 /**
@@ -8,7 +8,7 @@ import { sql } from 'drizzle-orm';
  * These milestones are criterion-based (e.g., likes received, popular threads, shop purchases).
  */
 export const cloutAchievements = pgTable('clout_achievements', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	achievementKey: varchar('achievement_key', { length: 100 }).notNull().unique(),
 	name: varchar('name', { length: 255 }).notNull(),
 	description: text('description'),

@@ -1,11 +1,11 @@
-import { pgTable, serial, integer, index } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, index, uuid } from 'drizzle-orm/pg-core';
 import { emojiPacks } from './emojiPacks';
 import { customEmojis } from './customEmojis';
 
 export const emojiPackItems = pgTable(
 	'emoji_pack_items',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		packId: integer('pack_id')
 			.notNull()
 			.references(() => emojiPacks.id, { onDelete: 'cascade' }),

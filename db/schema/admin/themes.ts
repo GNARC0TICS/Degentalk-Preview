@@ -12,7 +12,7 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 
 export const adminThemes = pgTable('admin_themes', {
-	id: serial('theme_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('name', { length: 100 }).notNull().unique(),
 	description: text('description'),
 	cssVars: jsonb('css_vars').notNull().default('{}'),

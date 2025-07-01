@@ -6,7 +6,7 @@ import { emojiPacks } from './emojiPacks';
 export const userEmojiPacks = pgTable(
 	'user_emoji_packs',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

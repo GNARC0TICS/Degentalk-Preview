@@ -14,7 +14,7 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 
 export const dgtEconomyParameters = pgTable('dgt_economy_parameters', {
-	id: serial('setting_id').primaryKey(), // Added primary key for consistency, can be a single row table if needed
+	id: uuid('id').primaryKey().defaultRandom(), // Added primary key for consistency, can be a single row table if needed
 	treasuryWalletAddress: varchar('treasury_wallet_address', { length: 255 }),
 	dgtTreasuryBalance: bigint('dgt_treasury_balance', { mode: 'number' }).notNull().default(0),
 	minWithdrawalAmount: bigint('min_withdrawal_amount', { mode: 'number' })
@@ -45,7 +45,7 @@ export type DgtEconomyParameter = typeof dgtEconomyParameters.$inferSelect;
 export type InsertDgtEconomyParameter = typeof dgtEconomyParameters.$inferInsert; // Assuming full insert okay for settings
 
 export const tipSettings = pgTable('tip_settings', {
-	id: serial('setting_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	enabled: boolean('enabled').notNull().default(true),
 	minAmountDGT: doublePrecision('min_amount_dgt').notNull().default(10.0),
 	minAmountUSDT: doublePrecision('min_amount_usdt').notNull().default(0.1),
@@ -66,7 +66,7 @@ export type TipSetting = typeof tipSettings.$inferSelect;
 export type InsertTipSetting = typeof tipSettings.$inferInsert;
 
 export const rainSettings = pgTable('rain_settings', {
-	id: serial('setting_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	enabled: boolean('enabled').notNull().default(true),
 	minAmountDGT: doublePrecision('min_amount_dgt').notNull().default(10.0),
 	minAmountUSDT: doublePrecision('min_amount_usdt').notNull().default(1.0),
@@ -85,7 +85,7 @@ export const rainSettings = pgTable('rain_settings', {
 // export type InsertRainSetting = typeof rainSettings.$inferInsert;
 
 export const cooldownSettings = pgTable('cooldown_settings', {
-	id: serial('id').primaryKey(), // Changed from setting_id to id for consistency with schema.ts
+	id: uuid('id').primaryKey().defaultRandom(), // Changed from setting_id to id for consistency with schema.ts
 	tipCooldownSeconds: integer('tip_cooldown_seconds').notNull().default(10),
 	rainCooldownSeconds: integer('rain_cooldown_seconds').notNull().default(60),
 	moderatorBypassCooldown: boolean('moderator_bypass_cooldown').notNull().default(true),

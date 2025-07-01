@@ -18,7 +18,7 @@ import { z } from 'zod';
 export const announcements = pgTable(
 	'announcements',
 	{
-		id: serial('announcement_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		content: text('content').notNull(),
 		icon: varchar('icon', { length: 50 }),
 		type: varchar('type', { length: 30 }).default('info'), // e.g., info, warning, success, critical

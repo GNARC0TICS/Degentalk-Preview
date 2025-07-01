@@ -4,7 +4,7 @@ import { pollOptions } from './pollOptions';
 import { users } from '../user/users';
 
 export const pollVotes = pgTable('poll_votes', {
-	id: serial('vote_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	optionId: integer('option_id')
 		.notNull()
 		.references(() => pollOptions.id, { onDelete: 'cascade' }),

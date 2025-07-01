@@ -18,7 +18,7 @@ import { chatRooms } from './chatRooms'; // Adjusted path
 export const onlineUsers = pgTable(
 	'online_users',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id') // Changed to uuid
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

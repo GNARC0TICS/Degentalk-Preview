@@ -11,7 +11,7 @@ import {
 import { sql } from 'drizzle-orm';
 
 export const animationPacks = pgTable('animation_packs', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	uuid: uuid('uuid').notNull().defaultRandom(),
 	name: varchar('name', { length: 255 }).notNull(),
 	slug: varchar('slug', { length: 255 }).notNull().unique(),

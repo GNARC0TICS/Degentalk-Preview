@@ -12,7 +12,7 @@ import { sql } from 'drizzle-orm';
 import { users } from './users';
 
 export const userBans = pgTable('user_bans', {
-	id: serial('ban_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),

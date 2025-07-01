@@ -1,10 +1,10 @@
-import { pgTable, serial, varchar, integer, boolean, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, integer, boolean, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 // Note: `MissionType` was defined in schema.ts, it should be moved to a types file or enums if it's a pgEnum
 
 export const missions = pgTable('missions', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	title: varchar('title', { length: 100 }).notNull(),
 	description: varchar('description', { length: 255 }).notNull(),
 	type: varchar('type', { length: 50 }).notNull(), // Corresponds to MissionType, consider pgEnum if values are fixed

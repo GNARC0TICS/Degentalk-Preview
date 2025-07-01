@@ -21,7 +21,7 @@ import { z } from 'zod';
 export const vaults = pgTable(
 	'vaults',
 	{
-		id: serial('vault_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id') // Changed to uuid
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

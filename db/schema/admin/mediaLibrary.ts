@@ -16,7 +16,7 @@ import { users } from '../user/users'; // Adjusted path
 export const mediaLibrary = pgTable(
 	'media_library',
 	{
-		id: serial('media_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }), // User who uploaded
 		type: varchar('type', { length: 50 }).notNull(), // e.g., image, video, document, avatar, banner
 		fileName: varchar('file_name', { length: 255 }).notNull(),

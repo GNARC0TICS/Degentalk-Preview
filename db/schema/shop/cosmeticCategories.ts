@@ -7,8 +7,7 @@ import {
 	timestamp,
 	jsonb,
 	integer,
-	index
-} from 'drizzle-orm/pg-core';
+	index, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 /**
@@ -20,7 +19,7 @@ import { sql } from 'drizzle-orm';
 export const cosmeticCategories = pgTable(
 	'cosmetic_categories',
 	{
-		id: serial('category_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 
 		name: varchar('name', { length: 100 }).notNull(),
 		slug: varchar('slug', { length: 100 }).notNull().unique(),

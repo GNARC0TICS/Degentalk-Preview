@@ -18,7 +18,7 @@ import { transactions } from '../economy/transactions';
 export const userInventory = pgTable(
 	'user_inventory',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
@@ -55,7 +55,7 @@ export const userInventoryRelations = relations(userInventory, ({ one }) => ({
 }));
 
 export const inventoryTransactionLinks = pgTable('inventory_transaction_links', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	inventoryId: integer('inventory_id')
 		.notNull()
 		.references(() => userInventory.id, { onDelete: 'cascade' }),

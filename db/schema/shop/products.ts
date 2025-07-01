@@ -19,7 +19,7 @@ import { avatarFrames } from '../user/avatarFrames';
 export const products = pgTable(
 	'products',
 	{
-		id: serial('product_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		uuid: uuid('uuid').notNull().defaultRandom(),
 		name: varchar('name', { length: 255 }).notNull(),
 		slug: varchar('slug', { length: 255 }).notNull().unique(),

@@ -4,9 +4,9 @@ import { threads } from './threads'; // Adjusted import
 import { users } from '../user/users'; // Adjusted import
 
 export const postDrafts = pgTable('post_drafts', {
-	id: serial('draft_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	uuid: uuid('uuid').notNull().defaultRandom(),
-	threadId: integer('thread_id').references(() => threads.id, { onDelete: 'cascade' }),
+	threadId: uuid('thread_id').references(() => threads.id, { onDelete: 'cascade' }),
 	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),

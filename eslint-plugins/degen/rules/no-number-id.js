@@ -1,6 +1,6 @@
 /**
  * ESLint rule: no-number-id
- * 
+ *
  * Prevents the use of numeric ID types to enforce UUID-based branded types.
  * This rule helps maintain consistency during and after the UUID migration.
  */
@@ -27,8 +27,10 @@ module.exports = {
 			}
 		],
 		messages: {
-			numericId: 'Use UUID-based branded ID types (e.g., UserId, ThreadId) instead of numeric IDs. Found: {{pattern}}',
-			legacyNumericId: 'Legacy numeric ID detected: {{pattern}}. Consider migrating to UUID-based type.'
+			numericId:
+				'Use UUID-based branded ID types (e.g., UserId, ThreadId) instead of numeric IDs. Found: {{pattern}}',
+			legacyNumericId:
+				'Legacy numeric ID detected: {{pattern}}. Consider migrating to UUID-based type.'
 		}
 	},
 
@@ -51,7 +53,7 @@ module.exports = {
 		// Exceptions - these are allowed numeric IDs
 		const allowedNumericIds = [
 			'primaryRoleId',
-			'roleId', 
+			'roleId',
 			'groupId',
 			'categoryId', // Legacy forum categories
 			'statusCode',
@@ -63,19 +65,19 @@ module.exports = {
 			const sourceCode = context.getSourceCode();
 			const text = sourceCode.getText(node);
 
-			numericIdPatterns.forEach(pattern => {
+			numericIdPatterns.forEach((pattern) => {
 				let match;
 				while ((match = pattern.exec(text)) !== null) {
 					const fullMatch = match[0];
 					const idName = match[1] || 'id';
 
 					// Skip if this is an allowed numeric ID
-					if (allowedNumericIds.some(allowed => fullMatch.includes(allowed))) {
+					if (allowedNumericIds.some((allowed) => fullMatch.includes(allowed))) {
 						continue;
 					}
 
 					const messageId = allowLegacy ? 'legacyNumericId' : 'numericId';
-					
+
 					context.report({
 						node,
 						messageId,
@@ -100,19 +102,19 @@ module.exports = {
 		function getSuggestedReplacement(pattern, idName) {
 			// Map common ID names to their branded types
 			const typeMap = {
-				'userId': 'UserId',
-				'threadId': 'ThreadId', 
-				'postId': 'PostId',
-				'messageId': 'MessageId',
-				'walletId': 'WalletId',
-				'transactionId': 'TransactionId',
-				'productId': 'ProductId',
-				'badgeId': 'BadgeId',
-				'titleId': 'TitleId',
-				'frameId': 'FrameId',
-				'structureId': 'StructureId',
-				'achievementId': 'AchievementId',
-				'missionId': 'MissionId'
+				userId: 'UserId',
+				threadId: 'ThreadId',
+				postId: 'PostId',
+				messageId: 'MessageId',
+				walletId: 'WalletId',
+				transactionId: 'TransactionId',
+				productId: 'ProductId',
+				badgeId: 'BadgeId',
+				titleId: 'TitleId',
+				frameId: 'FrameId',
+				structureId: 'StructureId',
+				achievementId: 'AchievementId',
+				missionId: 'MissionId'
 			};
 
 			// Replace number with appropriate branded type
@@ -127,12 +129,12 @@ module.exports = {
 			TSTypeAliasDeclaration: checkNode,
 			TSPropertySignature: checkNode,
 			TSMethodSignature: checkNode,
-			
+
 			// Check function parameters and return types
 			FunctionDeclaration: checkNode,
 			ArrowFunctionExpression: checkNode,
 			FunctionExpression: checkNode,
-			
+
 			// Check variable declarations
 			VariableDeclarator: checkNode
 		};

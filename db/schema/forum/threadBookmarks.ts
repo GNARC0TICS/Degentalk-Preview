@@ -9,9 +9,9 @@ export const userThreadBookmarks = pgTable(
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		threadId: integer('thread_id')
-			.notNull()
-			.references(() => threads.id, { onDelete: 'cascade' }),
+		threadId: uuid('thread_id')
+            			.notNull()
+            			.references(() => threads.id, { onDelete: 'cascade' }),
 		createdAt: timestamp('created_at')
 			.notNull()
 			.default(sql`now()`)

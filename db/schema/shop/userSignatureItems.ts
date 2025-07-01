@@ -6,7 +6,7 @@ import { signatureShopItems } from './signatureItems';
 export const userSignatureItems = pgTable(
 	'user_signature_items',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

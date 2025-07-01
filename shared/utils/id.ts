@@ -1,6 +1,6 @@
 /**
  * UUID ID Utilities for UUID Migration
- * 
+ *
  * Provides type-safe ID conversion and validation utilities for the migration
  * from numeric IDs to UUID-based branded types.
  */
@@ -22,7 +22,7 @@ export function toId<T extends string>(value: string): Id<T> {
  */
 export function isValidId(value: unknown): value is string {
 	if (typeof value !== 'string') return false;
-	
+
 	// UUID v4 regex pattern
 	const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 	return uuidRegex.test(value);
@@ -55,7 +55,7 @@ export function parseId<T extends string>(value: unknown): Id<T> | null {
 /**
  * TEMPORARY: Bridge function to convert numeric IDs to string during migration
  * This will be removed once migration is complete
- * 
+ *
  * @deprecated Use UUIDs directly instead of converting from numbers
  */
 export function toInt(value: unknown): number {
@@ -75,11 +75,11 @@ export function generateId<T extends string>(): Id<T> {
 	if (typeof crypto !== 'undefined' && crypto.randomUUID) {
 		return crypto.randomUUID() as Id<T>;
 	}
-	
+
 	// Fallback implementation
-	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-		const r = Math.random() * 16 | 0;
-		const v = c == 'x' ? r : (r & 0x3 | 0x8);
+	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+		const r = (Math.random() * 16) | 0;
+		const v = c == 'x' ? r : (r & 0x3) | 0x8;
 		return v.toString(16);
 	}) as Id<T>;
 }
@@ -87,7 +87,10 @@ export function generateId<T extends string>(): Id<T> {
 /**
  * Check if two IDs are equal (type-safe comparison)
  */
-export function idsEqual<T extends string>(a: Id<T> | null | undefined, b: Id<T> | null | undefined): boolean {
+export function idsEqual<T extends string>(
+	a: Id<T> | null | undefined,
+	b: Id<T> | null | undefined
+): boolean {
 	return a === b;
 }
 

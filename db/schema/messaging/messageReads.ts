@@ -6,9 +6,9 @@ import { messages } from './messages'; // Adjusted path
 export const messageReads = pgTable(
 	'message_reads',
 	{
-		messageId: integer('message_id')
-			.notNull()
-			.references(() => messages.id, { onDelete: 'cascade' }),
+		messageId: uuid('message_id')
+            			.notNull()
+            			.references(() => messages.id, { onDelete: 'cascade' }),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

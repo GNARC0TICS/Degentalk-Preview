@@ -15,7 +15,7 @@ import { conversations } from './conversations'; // Adjusted path
 export const conversationParticipants = pgTable(
 	'conversation_participants',
 	{
-		id: serial('participant_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		conversationId: integer('conversation_id')
 			.notNull()
 			.references(() => conversations.id, { onDelete: 'cascade' }),

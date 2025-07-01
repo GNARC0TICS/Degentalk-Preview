@@ -16,7 +16,7 @@ import { users } from '../user/users';
 export const customEmojis = pgTable(
 	'custom_emojis',
 	{
-		id: serial('emoji_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		name: varchar('name', { length: 50 }).notNull().unique(),
 		code: varchar('code', { length: 50 }).notNull(),
 		type: varchar('type', { length: 20 }).notNull().default('static'),

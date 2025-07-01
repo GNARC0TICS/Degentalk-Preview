@@ -4,7 +4,7 @@ import { users } from '../user/users';
 export const moderatorNoteTypeEnum = pgEnum('moderator_note_type', ['thread', 'post', 'user']);
 
 export const moderatorNotes = pgTable('moderator_notes', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	type: moderatorNoteTypeEnum('type').notNull(),
 	itemId: varchar('item_id', { length: 255 }).notNull(), // Can be thread_id, post_id, or user_id
 	note: text('note').notNull(),

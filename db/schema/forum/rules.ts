@@ -18,7 +18,7 @@ import { z } from 'zod';
 export const forumRules = pgTable(
 	'forum_rules',
 	{
-		id: serial('rule_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		title: varchar('title', { length: 255 }).notNull(),
 		content: text('content').notNull(),
 		contentHtml: text('content_html'),

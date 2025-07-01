@@ -1,8 +1,8 @@
-import { pgTable, serial, varchar, integer, boolean, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, integer, boolean, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { roles } from '../user/roles'; // Use roles instead of deprecated userGroups
 
 export const airdropSettings = pgTable('airdrop_settings', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	tokenType: varchar('token_type', { length: 50 }).notNull(), // 'DGT' or 'XP'
 	amount: integer('amount').notNull(),
 	interval: varchar('interval', { length: 50 }).default('daily'), // daily, weekly, one-time

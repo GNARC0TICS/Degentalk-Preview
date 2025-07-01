@@ -9,7 +9,7 @@ import { avatarFrames } from './avatarFrames';
  * This table enables purchase history, airdrop/reward tracking, and equips.
  */
 export const userOwnedFrames = pgTable('user_owned_frames', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
 		.references(() => users.id, { onDelete: 'cascade' })
 		.notNull(),

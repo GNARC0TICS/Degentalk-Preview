@@ -10,7 +10,7 @@ import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
 export const dictionaryEntries = pgTable('dictionary_entries', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	slug: text('slug').notNull().unique(),
 	word: text('word').notNull(),
 	definition: text('definition').notNull(),

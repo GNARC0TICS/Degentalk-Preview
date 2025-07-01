@@ -15,7 +15,7 @@ import { users } from '../user/users';
 export const referralSources = pgTable(
 	'referral_sources',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		name: varchar('name', { length: 100 }).notNull(),
 		slug: varchar('slug', { length: 100 }).notNull(),
 		metadata: jsonb('metadata').default('{}'),

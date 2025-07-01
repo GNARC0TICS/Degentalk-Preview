@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, boolean, timestamp, unique, index } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, boolean, timestamp, unique, index, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { products } from './products';
 import { mediaLibrary } from '../admin/mediaLibrary'; // Adjust path as needed
@@ -6,7 +6,7 @@ import { mediaLibrary } from '../admin/mediaLibrary'; // Adjust path as needed
 export const productMedia = pgTable(
 	'product_media',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		productId: integer('product_id')
 			.notNull()
 			.references(() => products.id, { onDelete: 'cascade' }),

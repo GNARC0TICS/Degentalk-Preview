@@ -2,7 +2,7 @@ import { pgTable, serial, varchar, integer, timestamp, uuid } from 'drizzle-orm/
 import { users } from '../user/users'; // Assuming path to users
 
 export const airdropRecords = pgTable('airdrop_records', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id').references(() => users.id),
 	tokenType: varchar('token_type', { length: 50 }),
 	amount: integer('amount'),

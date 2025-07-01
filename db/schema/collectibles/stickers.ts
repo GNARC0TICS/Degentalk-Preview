@@ -23,7 +23,7 @@ import { users } from '../user/users';
 export const stickerPacks = pgTable(
 	'sticker_packs',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 
 		// Pack identification
 		name: varchar('name', { length: 100 }).notNull().unique(), // "whale_pack"
@@ -80,7 +80,7 @@ export const stickerPacks = pgTable(
 export const stickers = pgTable(
 	'stickers',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 
 		// Basic sticker identification
 		name: varchar('name', { length: 50 }).notNull().unique(), // Internal name "pepe_cry"
@@ -152,7 +152,7 @@ export const stickers = pgTable(
 export const userStickerInventory = pgTable(
 	'user_sticker_inventory',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 
 		// Relationships
 		userId: uuid('user_id')
@@ -195,7 +195,7 @@ export const userStickerInventory = pgTable(
 export const userStickerPacks = pgTable(
 	'user_sticker_packs',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 
 		// Relationships
 		userId: uuid('user_id')
@@ -233,7 +233,7 @@ export const userStickerPacks = pgTable(
 export const stickerUsage = pgTable(
 	'sticker_usage',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 
 		// Relationships
 		userId: uuid('user_id')

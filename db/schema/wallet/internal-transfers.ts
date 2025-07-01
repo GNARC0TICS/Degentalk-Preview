@@ -18,7 +18,7 @@ import { users } from '../user/users';
 export const internalTransfers = pgTable(
 	'internal_transfers',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		fromUserId: uuid('from_user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

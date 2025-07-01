@@ -12,7 +12,7 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 
 export const emailTemplates = pgTable('email_templates', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	key: varchar('key', { length: 100 }).notNull().unique(),
 	name: varchar('name', { length: 255 }).notNull(),
 	description: text('description'),
@@ -48,7 +48,7 @@ export const emailTemplates = pgTable('email_templates', {
 });
 
 export const emailTemplateVersions = pgTable('email_template_versions', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	templateId: serial('template_id')
 		.notNull()
 		.references(() => emailTemplates.id),
@@ -67,7 +67,7 @@ export const emailTemplateVersions = pgTable('email_template_versions', {
 });
 
 export const emailTemplateLogs = pgTable('email_template_logs', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	templateId: serial('template_id')
 		.notNull()
 		.references(() => emailTemplates.id),

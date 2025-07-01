@@ -1,9 +1,9 @@
-import type { AnyPgColumn } from 'drizzle-orm/pg-core';
+import type { AnyPgColumn, uuid } from 'drizzle-orm/pg-core';
 import { pgTable, serial, integer, varchar, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { users } from './users';
 
 export const xShares = pgTable('x_shares', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	userId: uuid('user_id')
 		.notNull()
 		.references((): AnyPgColumn => users.id as AnyPgColumn, { onDelete: 'cascade' }),

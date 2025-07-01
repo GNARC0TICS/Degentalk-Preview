@@ -1,8 +1,8 @@
-import { pgTable, serial, text, integer, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, integer, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm'; // Assuming sql is needed for default timestamps
 
 export const rateLimits = pgTable('rate_limits', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	key: text('key').notNull(), // Can be User ID, IP address, or a combination
 	endpoint: text('endpoint').notNull(), // API endpoint or action being rate-limited
 	count: integer('count').notNull().default(0),

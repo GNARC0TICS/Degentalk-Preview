@@ -16,7 +16,7 @@ import { products } from './products';
 export const inventoryTransactions = pgTable(
 	'inventory_transactions',
 	{
-		id: serial('transaction_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

@@ -6,7 +6,7 @@ import { mentionSourceTypeEnum } from '../core/enums';
 export const mentionsIndex = pgTable(
 	'mentions_index',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		sourceType: mentionSourceTypeEnum('source_type').notNull(), // post | thread | chat
 		sourceId: integer('source_id').notNull(), // e.g., post_id, thread_id, chat_msg_id
 		mentioningUserId: uuid('mentioning_user_id')

@@ -1,8 +1,8 @@
-import { pgTable, serial, varchar, text, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, boolean, timestamp, jsonb, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const scheduledTasks = pgTable('scheduled_tasks', {
-	id: serial('task_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('name', { length: 100 }).notNull(),
 	description: text('description'),
 	taskType: varchar('task_type', { length: 50 }).notNull(), // e.g., 'send_newsletter', 'recalculate_hot_scores'

@@ -18,7 +18,7 @@ import { users } from '../user/users';
 export const depositRecords = pgTable(
 	'deposit_records',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

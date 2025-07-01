@@ -1,8 +1,8 @@
-import { pgTable, serial, varchar, integer, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, integer, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const platformStatistics = pgTable('platform_statistics', {
-	id: serial('stat_id').primaryKey(), // Added for easier management if ever needed
+	id: uuid('id').primaryKey().defaultRandom(), // Added for easier management if ever needed
 	key: varchar('stat_key', { length: 100 }).notNull().unique(), // e.g., 'total_users', 'total_posts', 'active_shoutbox_users'
 	value: integer('stat_value').notNull().default(0),
 	lastUpdated: timestamp('last_updated')

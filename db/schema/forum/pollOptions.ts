@@ -1,8 +1,8 @@
-import { pgTable, serial, integer, text } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, text, uuid } from 'drizzle-orm/pg-core';
 import { polls } from './polls';
 
 export const pollOptions = pgTable('poll_options', {
-	id: serial('option_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	pollId: integer('poll_id')
 		.notNull()
 		.references(() => polls.id, { onDelete: 'cascade' }),

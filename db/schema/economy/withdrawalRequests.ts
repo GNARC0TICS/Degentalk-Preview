@@ -20,7 +20,7 @@ import { z } from 'zod';
 export const withdrawalRequests = pgTable(
 	'withdrawal_requests',
 	{
-		id: serial('request_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

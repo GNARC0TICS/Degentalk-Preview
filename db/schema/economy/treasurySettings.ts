@@ -15,7 +15,7 @@ import { sql } from 'drizzle-orm';
 // This table is for platform-wide treasury settings, potentially for multiple currencies (e.g., CCPayment)
 export const platformTreasurySettings = pgTable('platform_treasury_settings', {
 	// Renamed table
-	id: serial('id').primaryKey(), // Changed back to id, as it's a new table
+	id: uuid('id').primaryKey().defaultRandom(), // Changed back to id, as it's a new table
 	currency: text('currency').notNull().unique(), // e.g., 'USDT', 'DGT' - should be unique for platform settings
 	balance: numeric('balance', { precision: 18, scale: 2 }).default('0').notNull(),
 	hotWalletAddress: varchar('hot_wallet_address', { length: 255 }),

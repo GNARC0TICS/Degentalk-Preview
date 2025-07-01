@@ -1,4 +1,4 @@
-import type { AnyPgColumn } from 'drizzle-orm/pg-core';
+import type { AnyPgColumn, uuid } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
 	serial,
@@ -15,7 +15,7 @@ import { mediaLibrary } from '../admin/mediaLibrary'; // Placeholder
 export const productCategories = pgTable(
 	'product_categories',
 	{
-		id: serial('category_id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		name: varchar('name', { length: 100 }).notNull(),
 		slug: varchar('slug', { length: 100 }).notNull().unique(),
 		description: text('description'),

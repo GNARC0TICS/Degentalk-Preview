@@ -15,7 +15,7 @@ import { referralSources } from './referralSources';
 export const userReferrals = pgTable(
 	'user_referrals',
 	{
-		id: serial('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
