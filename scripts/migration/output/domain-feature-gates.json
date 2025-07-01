@@ -1,0 +1,138 @@
+{
+  "name": "feature-gates",
+  "files": [
+    {
+      "path": "server/src/domains/feature-gates/feature-gates.service.ts",
+      "domain": "feature-gates",
+      "subdomain": "feature-gates.service.ts",
+      "layer": "other",
+      "size": 5242,
+      "lines": 205,
+      "complexity": 3,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "FeatureGate",
+        "UserFeatureAccess",
+        "FeatureGatesService",
+        "featureGatesService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 125,
+          "context": "async checkFeatureAccess(userId: number, featureId: string): Promise<UserFeatureAccess> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 195,
+          "context": "async checkAllFeatureAccess(userId: number): Promise<UserFeatureAccess[]> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7999999999999998
+    },
+    {
+      "path": "server/src/domains/feature-gates/feature-gates.routes.ts",
+      "domain": "feature-gates",
+      "subdomain": "feature-gates.routes.ts",
+      "layer": "routes",
+      "size": 839,
+      "lines": 28,
+      "complexity": 0,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/feature-gates/feature-gates.controller.ts",
+      "domain": "feature-gates",
+      "subdomain": "feature-gates.controller.ts",
+      "layer": "controllers",
+      "size": 3615,
+      "lines": 140,
+      "complexity": 4,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express"
+      ],
+      "exports": [
+        "getAllFeatureGates",
+        "getFeatureGate",
+        "checkFeatureAccess",
+        "checkAllFeatureAccess",
+        "checkFeatureAccessForUser",
+        "getAllFeatureAccessForUser"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.3
+    }
+  ],
+  "totalIssues": 2,
+  "avgComplexity": 2.3333333333333335,
+  "migrationEffort": 3.5999999999999996,
+  "dependencies": [
+    "@db",
+    "@schema",
+    "@server/src/core/services/user.service"
+  ],
+  "dependents": [],
+  "criticalPath": false,
+  "riskAssessment": {
+    "runtime": "medium",
+    "testing": "low",
+    "integration": "low"
+  },
+  "migrationStrategy": {
+    "priority": 3,
+    "approach": "atomic",
+    "estimatedDays": 1,
+    "blockers": [],
+    "prerequisites": []
+  }
+}

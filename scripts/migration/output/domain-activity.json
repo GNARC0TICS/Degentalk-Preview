@@ -1,0 +1,182 @@
+{
+  "name": "activity",
+  "files": [
+    {
+      "path": "server/src/domains/activity/services/event-logger.service.ts",
+      "domain": "activity",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 4940,
+      "lines": 307,
+      "complexity": 4,
+      "dependencies": [
+        "@schema/system/event_logs"
+      ],
+      "exports": [
+        "EventLoggerService",
+        "eventLogger"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "InsertEventLog"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7999999999999998
+    },
+    {
+      "path": "server/src/domains/activity/services/event-log.service.ts",
+      "domain": "activity",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 3150,
+      "lines": 125,
+      "complexity": 3,
+      "dependencies": [
+        "@schema/system/event_logs",
+        "@schema/user/users",
+        "drizzle-orm",
+        "@db_types/system.types",
+        "@schema/system/event_logs"
+      ],
+      "exports": [
+        "EventLogService",
+        "eventLogService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "EventLogFilters",
+          "EventLogPagination"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "server/src/domains/activity/routes/index.ts",
+      "domain": "activity",
+      "subdomain": "routes",
+      "layer": "routes",
+      "size": 182,
+      "lines": 9,
+      "complexity": 0,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/activity/routes/event-log.routes.ts",
+      "domain": "activity",
+      "subdomain": "routes",
+      "layer": "routes",
+      "size": 837,
+      "lines": 20,
+      "complexity": 0,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/activity/controllers/event-log.controller.ts",
+      "domain": "activity",
+      "subdomain": "controllers",
+      "layer": "controllers",
+      "size": 5501,
+      "lines": 222,
+      "complexity": 4,
+      "dependencies": [
+        "express",
+        "zod",
+        "@schema/system/event_logs"
+      ],
+      "exports": [
+        "EventLogController",
+        "eventLogController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7999999999999998
+    }
+  ],
+  "totalIssues": 0,
+  "avgComplexity": 2.2,
+  "migrationEffort": 4.699999999999999,
+  "dependencies": [
+    "@schema/system/event_logs",
+    "@schema/user/users",
+    "@db_types/system.types"
+  ],
+  "dependents": [
+    "user-management",
+    "moderation",
+    "other",
+    "forum-core"
+  ],
+  "criticalPath": true,
+  "riskAssessment": {
+    "runtime": "medium",
+    "testing": "low",
+    "integration": "high"
+  },
+  "migrationStrategy": {
+    "priority": 2,
+    "approach": "atomic",
+    "estimatedDays": 1,
+    "blockers": [
+      "Dependencies from: user-management, moderation, other, forum-core"
+    ],
+    "prerequisites": []
+  }
+}

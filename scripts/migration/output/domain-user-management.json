@@ -1,0 +1,6062 @@
+{
+  "name": "user-management",
+  "files": [
+    {
+      "path": "scripts/fix-userid-types.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 3145,
+      "lines": 80,
+      "complexity": 2,
+      "dependencies": [
+        "fs",
+        "glob",
+        "path",
+        ",\\n\\t"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "scripts/fix-all-user-refs.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 2814,
+      "lines": 84,
+      "complexity": 2,
+      "dependencies": [
+        "fs",
+        "glob",
+        "path",
+        ",\\n\\t"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "tests/e2e/admin-settings.spec.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 866,
+      "lines": 27,
+      "complexity": 1,
+      "dependencies": [
+        "@playwright/test"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "shared/enums/user.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 327,
+      "lines": 16,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core"
+      ],
+      "exports": [
+        "userRoleEnum",
+        "UserRole"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/utils/seed-dev-user.ts",
+      "domain": "user-management",
+      "layer": "utils",
+      "size": 3302,
+      "lines": 89,
+      "complexity": 2,
+      "dependencies": [
+        "@schema",
+        "drizzle-orm",
+        "@db",
+        "crypto",
+        "bcryptjs",
+        "dotenv"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.4
+    },
+    {
+      "path": "server/migrations/20250618_create_xp_clout_settings.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 879,
+      "lines": 25,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm",
+        "drizzle-orm/node-postgres/migrator"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "server/migrations/20250618_add_updated_by_to_site_settings.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 477,
+      "lines": 14,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm",
+        "drizzle-orm/node-postgres/migrator"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "server/migrations/20250513_create_xp_action_settings.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 989,
+      "lines": 32,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm",
+        "@db"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "scripts/seed/run-username-colors.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 5362,
+      "lines": 115,
+      "complexity": 1,
+      "dependencies": [
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "HeatEventId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.2
+    },
+    {
+      "path": "scripts/db/update-users-table.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 2644,
+      "lines": 84,
+      "complexity": 2,
+      "dependencies": [
+        "pg",
+        "dotenv"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "scripts/db/seed-users.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 4621,
+      "lines": 135,
+      "complexity": 1,
+      "dependencies": [
+        "@db/types",
+        "@db",
+        "@schema/user/users",
+        "bcrypt",
+        "@faker-js/faker",
+        "drizzle-orm"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "AdminId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "scripts/db/seed-user-role-migration.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 2491,
+      "lines": 58,
+      "complexity": 2,
+      "dependencies": [
+        "@db/types",
+        "chalk",
+        "@db",
+        "@schema",
+        "drizzle-orm"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "AdminId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "scripts/db/seed-economy-settings.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 2382,
+      "lines": 59,
+      "complexity": 2,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "scripts/db/initialize-giphy-settings.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 1933,
+      "lines": 68,
+      "complexity": 1,
+      "dependencies": [
+        "@db/types",
+        "@db",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "initializeGiphySettings "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "AdminId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.2
+    },
+    {
+      "path": "lib/forum/canUserPost.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 662,
+      "lines": 29,
+      "complexity": 1,
+      "dependencies": [],
+      "exports": [
+        "User",
+        "canUserPost"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "lib/auth/canUser.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 2884,
+      "lines": 91,
+      "complexity": 3,
+      "dependencies": [
+        "@schema",
+        "@db",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "RBACUser",
+        "canUserSync"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 11,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.9000000000000004
+    },
+    {
+      "path": "db/types/user.types.ts",
+      "domain": "user-management",
+      "layer": "types",
+      "size": 161,
+      "lines": 7,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "UserPluginData"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.5
+    },
+    {
+      "path": "tests/e2e/fixtures/user-journeys.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 17253,
+      "lines": 512,
+      "complexity": 4,
+      "dependencies": [
+        "@faker-js/faker"
+      ],
+      "exports": [
+        "UserJourney",
+        "JourneyStep",
+        "NewbieJourney",
+        "WhaleJourney",
+        "ForumEngagementJourney",
+        "EconomicParticipationJourney",
+        "validateJourneyProgression",
+        "generateTestScenarioData"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.3
+    },
+    {
+      "path": "tests/e2e/behavioral-flows/user-journey-analytics.spec.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 6080,
+      "lines": 173,
+      "complexity": 5,
+      "dependencies": [
+        "@playwright/test"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "shared/types/core/user.types.ts",
+      "domain": "user-management",
+      "layer": "types",
+      "size": 5824,
+      "lines": 253,
+      "complexity": 1,
+      "dependencies": [
+        "@db/types/id.types",
+        "@db/schema/core/enums"
+      ],
+      "exports": [
+        "User",
+        "UserSettings",
+        "NotificationSettings",
+        "PrivacySettings",
+        "DisplaySettings",
+        "UserStats",
+        "UserProfile",
+        "UserBadge",
+        "UserTitle",
+        "UserFrame",
+        "UserWallet",
+        "UserAchievement",
+        "UserInventory",
+        "InventoryItem",
+        "CreateUserRequest",
+        "UpdateUserRequest",
+        "UserSearchParams",
+        "isUser",
+        "isUserProfile",
+        "isUserAchievement"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "UserId",
+          "WalletId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "shared/lib/forum/canUserPost.ts",
+      "domain": "user-management",
+      "layer": "utils",
+      "size": 704,
+      "lines": 30,
+      "complexity": 1,
+      "dependencies": [
+        "@db/types"
+      ],
+      "exports": [
+        "User",
+        "canUserPost"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "AdminId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "shared/lib/auth/canUser.ts",
+      "domain": "user-management",
+      "layer": "utils",
+      "size": 2422,
+      "lines": 79,
+      "complexity": 3,
+      "dependencies": [
+        "@/lib/db",
+        "drizzle-orm",
+        "@schema"
+      ],
+      "exports": [
+        "UserRole",
+        "RBACUser"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 15,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3.7
+    },
+    {
+      "path": "shared/fixtures/factories/user.factory.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 5208,
+      "lines": 173,
+      "complexity": 2,
+      "dependencies": [
+        "@schema"
+      ],
+      "exports": [
+        "UserFactory",
+        "AdminUserFactory",
+        "CryptoWhaleFactory",
+        "NewbieUserFactory"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "User"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "server/src/utils/auth.ts",
+      "domain": "user-management",
+      "layer": "utils",
+      "size": 666,
+      "lines": 18,
+      "complexity": 1,
+      "dependencies": [
+        "express",
+        "@server/src/core/services/user.service",
+        "@server/src/core/logger"
+      ],
+      "exports": [
+        "getUserIdFromRequest"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Request"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "server/src/middleware/authenticate.ts",
+      "domain": "user-management",
+      "layer": "middleware",
+      "size": 1823,
+      "lines": 77,
+      "complexity": 1,
+      "dependencies": [
+        "express",
+        "jsonwebtoken",
+        "@db",
+        "@schema",
+        "drizzle-orm",
+        "@/db/types"
+      ],
+      "exports": [
+        "authenticate"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 12,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 3.3
+    },
+    {
+      "path": "server/src/middleware/auth.ts",
+      "domain": "user-management",
+      "layer": "middleware",
+      "size": 1412,
+      "lines": 53,
+      "complexity": 1,
+      "dependencies": [],
+      "exports": [
+        "requireAuth",
+        "requireAdmin",
+        "isAdmin",
+        "requireModerator",
+        "authenticate "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "high",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "scripts/seed/shop/username-colors.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 23617,
+      "lines": 418,
+      "complexity": 2,
+      "dependencies": [
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types"
+      ],
+      "exports": [
+        "UsernameColorProduct",
+        "USERNAME_COLOR_PRODUCTS"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "HeatEventId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.9
+    },
+    {
+      "path": "db/schema/wallet/ccpayment-users.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 920,
+      "lines": 28,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "ccpaymentUsers",
+        "CCPaymentUser",
+        "InsertCCPaymentUser"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/user/xShares.ts",
+      "domain": "user-management",
+      "subdomain": "xShares.ts",
+      "layer": "other",
+      "size": 654,
+      "lines": 17,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm/pg-core"
+      ],
+      "exports": [
+        "xShares",
+        "XShare"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/user/verificationTokens.ts",
+      "domain": "user-management",
+      "subdomain": "verificationTokens.ts",
+      "layer": "other",
+      "size": 797,
+      "lines": 20,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "verificationTokens",
+        "VerificationToken",
+        "InsertVerificationToken"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "db/schema/user/users.ts",
+      "domain": "user-management",
+      "subdomain": "users.ts",
+      "layer": "other",
+      "size": 8692,
+      "lines": 201,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm",
+        "drizzle-orm",
+        "drizzle-zod",
+        "zod"
+      ],
+      "exports": [
+        "users",
+        "usersRelations",
+        "insertUserSchema",
+        "User",
+        "InsertUser"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "db/schema/user/userRoles.ts",
+      "domain": "user-management",
+      "subdomain": "userRoles.ts",
+      "layer": "other",
+      "size": 871,
+      "lines": 29,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userRoles",
+        "UserRole",
+        "InsertUserRole"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "db/schema/user/userOwnedFrames.ts",
+      "domain": "user-management",
+      "subdomain": "userOwnedFrames.ts",
+      "layer": "other",
+      "size": 1131,
+      "lines": 31,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userOwnedFrames",
+        "UserOwnedFrame",
+        "InsertUserOwnedFrame"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/user/userGroups.ts",
+      "domain": "user-management",
+      "subdomain": "userGroups.ts",
+      "layer": "other",
+      "size": 229,
+      "lines": 8,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "userGroups"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/user/user-social-preferences.ts",
+      "domain": "user-management",
+      "subdomain": "user-social-preferences.ts",
+      "layer": "other",
+      "size": 2163,
+      "lines": 43,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core"
+      ],
+      "exports": [
+        "userSocialPreferences"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/user/subscriptions.ts",
+      "domain": "user-management",
+      "subdomain": "subscriptions.ts",
+      "layer": "other",
+      "size": 6796,
+      "lines": 212,
+      "complexity": 2,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "SubscriptionType",
+        "SubscriptionStatus",
+        "subscriptions",
+        "subscriptionBenefits",
+        "cosmeticDrops",
+        "Subscription",
+        "InsertSubscription",
+        "SubscriptionBenefit",
+        "InsertSubscriptionBenefit",
+        "CosmeticDrop",
+        "InsertCosmeticDrop",
+        "DEFAULT_SUBSCRIPTION_BENEFITS"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "db/schema/user/settingsHistory.ts",
+      "domain": "user-management",
+      "subdomain": "settingsHistory.ts",
+      "layer": "other",
+      "size": 835,
+      "lines": 22,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userSettingsHistory",
+        "UserSettingsHistory",
+        "InsertUserSettingsHistory"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/user/sessions.ts",
+      "domain": "user-management",
+      "subdomain": "sessions.ts",
+      "layer": "other",
+      "size": 446,
+      "lines": 12,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core"
+      ],
+      "exports": [
+        "userSessions",
+        "UserSession",
+        "InsertUserSession"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "db/schema/user/roles.ts",
+      "domain": "user-management",
+      "subdomain": "roles.ts",
+      "layer": "other",
+      "size": 1956,
+      "lines": 73,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "roles",
+        "Role",
+        "InsertRole"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "db/schema/user/rolePermissions.ts",
+      "domain": "user-management",
+      "subdomain": "rolePermissions.ts",
+      "layer": "other",
+      "size": 932,
+      "lines": 29,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "rolePermissions",
+        "RolePermission",
+        "InsertRolePermission"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "db/schema/user/relationships.ts",
+      "domain": "user-management",
+      "subdomain": "relationships.ts",
+      "layer": "other",
+      "size": 2269,
+      "lines": 68,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userRelationships",
+        "UserRelationship",
+        "InsertUserRelationship"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "db/schema/user/preferences.ts",
+      "domain": "user-management",
+      "subdomain": "preferences.ts",
+      "layer": "other",
+      "size": 3602,
+      "lines": 88,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userSettings",
+        "notificationSettings",
+        "displayPreferences",
+        "UserSetting",
+        "InsertUserSetting",
+        "NotificationSetting",
+        "InsertNotificationSetting",
+        "DisplayPreference",
+        "InsertDisplayPreference"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "db/schema/user/permissions.ts",
+      "domain": "user-management",
+      "subdomain": "permissions.ts",
+      "layer": "other",
+      "size": 612,
+      "lines": 17,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "permissions",
+        "Permission",
+        "InsertPermission"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "db/schema/user/passwordResetTokens.ts",
+      "domain": "user-management",
+      "subdomain": "passwordResetTokens.ts",
+      "layer": "other",
+      "size": 1097,
+      "lines": 39,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "passwordResetTokens",
+        "PasswordResetToken",
+        "InsertPasswordResetToken"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/user/featurePermissions.ts",
+      "domain": "user-management",
+      "subdomain": "featurePermissions.ts",
+      "layer": "other",
+      "size": 749,
+      "lines": 14,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core"
+      ],
+      "exports": [
+        "featurePermissions",
+        "FeaturePermission",
+        "InsertFeaturePermission"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/user/bans.ts",
+      "domain": "user-management",
+      "subdomain": "bans.ts",
+      "layer": "other",
+      "size": 1050,
+      "lines": 36,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userBans",
+        "UserBan",
+        "InsertUserBan"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/user/avatarFrames.ts",
+      "domain": "user-management",
+      "subdomain": "avatarFrames.ts",
+      "layer": "other",
+      "size": 639,
+      "lines": 17,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "avatarFrames",
+        "AvatarFrame",
+        "InsertAvatarFrame"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "db/schema/system/userReferrals.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 1025,
+      "lines": 40,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userReferrals",
+        "UserReferral"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/system/userAbuseFlags.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 705,
+      "lines": 22,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userAbuseFlags",
+        "UserAbuseFlag"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/system/profileAnalytics.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 1491,
+      "lines": 33,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "profileAnalytics",
+        "ProfileAnalytics"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/social/user-follows.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 1043,
+      "lines": 31,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core"
+      ],
+      "exports": [
+        "userFollows"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/shop/userSignatureItems.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 1124,
+      "lines": 32,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userSignatureItems",
+        "UserSignatureItem",
+        "InsertUserSignatureItem"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "db/schema/shop/userInventory.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 2621,
+      "lines": 88,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userInventory",
+        "userInventoryRelations",
+        "inventoryTransactionLinks",
+        "inventoryTransactionLinksRelations",
+        "UserInventoryItem",
+        "InsertUserInventoryItem"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/messaging/onlineUsers.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 1484,
+      "lines": 43,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "onlineUsers",
+        "OnlineUser",
+        "InsertOnlineUser"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "db/schema/gamification/userMissionProgress.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 1258,
+      "lines": 32,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userMissionProgress",
+        "UserMissionProgress",
+        "InsertUserMissionProgress"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/gamification/userAchievements.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 1561,
+      "lines": 58,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userAchievements",
+        "UserAchievement",
+        "InsertUserAchievement"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/forum/userRuleAgreements.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 958,
+      "lines": 28,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userRulesAgreements",
+        "UserRulesAgreement",
+        "InsertUserRulesAgreement"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/forum/userEmojiPacks.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 933,
+      "lines": 28,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userEmojiPacks",
+        "UserEmojiPack"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/economy/xpCloutSettings.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 748,
+      "lines": 18,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "xpCloutSettings",
+        "XpCloutSettings",
+        "InsertXpCloutSettings"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/economy/xpActionSettings.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 715,
+      "lines": 19,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "xpActionSettings",
+        "XpActionSetting",
+        "InsertXpActionSetting"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/economy/userTitles.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 777,
+      "lines": 27,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userTitles",
+        "UserTitle",
+        "InsertUserTitle"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "db/schema/economy/userCommands.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 718,
+      "lines": 20,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userCommands",
+        "UserCommand",
+        "InsertUserCommand"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "db/schema/economy/userCloutLog.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 1115,
+      "lines": 36,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userCloutLog",
+        "UserCloutLog",
+        "InsertUserCloutLog"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/economy/userBadges.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 777,
+      "lines": 27,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "userBadges",
+        "UserBadge",
+        "InsertUserBadge"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "db/schema/economy/treasurySettings.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 2182,
+      "lines": 44,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm",
+        "drizzle-zod"
+      ],
+      "exports": [
+        "platformTreasurySettings",
+        "insertPlatformTreasurySettingSchema",
+        "PlatformTreasurySetting",
+        "InsertPlatformTreasurySetting",
+        "selectPlatformTreasurySettingSchema"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "db/schema/economy/settings.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 5528,
+      "lines": 125,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm",
+        "drizzle-zod"
+      ],
+      "exports": [
+        "dgtEconomyParameters",
+        "DgtEconomyParameter",
+        "InsertDgtEconomyParameter",
+        "tipSettings",
+        "TipSetting",
+        "InsertTipSetting",
+        "rainSettings",
+        "RainSetting",
+        "InsertRainSetting",
+        "cooldownSettings",
+        "CooldownSetting",
+        "InsertCooldownSetting",
+        "xpCloutSettings",
+        "XpCloutSetting",
+        "InsertXpCloutSetting",
+        "economySettings",
+        "insertEconomySettingSchema",
+        "EconomySetting",
+        "InsertEconomySetting"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "db/schema/economy/airdropSettings.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 850,
+      "lines": 16,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core"
+      ],
+      "exports": [
+        "airdropSettings",
+        "AirdropSetting",
+        "InsertAirdropSetting"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/advertising/user-promotions.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 11566,
+      "lines": 301,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "promotionTypeEnum",
+        "promotionStatusEnum",
+        "slotPriorityEnum",
+        "userPromotions",
+        "announcementSlots",
+        "shoutboxPins",
+        "promotionPricingConfig",
+        "threadBoosts",
+        "profileSpotlights",
+        "userPromotionAnalytics",
+        "UserPromotion",
+        "InsertUserPromotion",
+        "AnnouncementSlot",
+        "InsertAnnouncementSlot",
+        "ShoutboxPin",
+        "InsertShoutboxPin",
+        "PromotionPricingConfig",
+        "InsertPromotionPricingConfig",
+        "ThreadBoost",
+        "InsertThreadBoost"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/admin/siteSettings.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 1203,
+      "lines": 24,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "siteSettings",
+        "SiteSetting",
+        "InsertSiteSetting"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "client/src/types/user.ts",
+      "domain": "user-management",
+      "layer": "types",
+      "size": 96,
+      "lines": 7,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "User"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/types/profile.ts",
+      "domain": "user-management",
+      "layer": "types",
+      "size": 1700,
+      "lines": 88,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "ProfileData"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 27,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 34,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 42,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 49,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 56,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 63,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "high",
+      "migrationEffort": 3.1
+    },
+    {
+      "path": "client/src/pages/auth.tsx",
+      "domain": "user-management",
+      "layer": "pages",
+      "size": 9937,
+      "lines": 333,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "react-hook-form",
+        "@hookform/resolvers/zod",
+        "zod",
+        "wouter",
+        "@/hooks/use-auth",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/tabs",
+        "lucide-react",
+        "@/hooks/useSearchParams"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "client/src/hooks/useUserXP.ts",
+      "domain": "user-management",
+      "layer": "hooks",
+      "size": 1998,
+      "lines": 92,
+      "complexity": 1,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/hooks/use-toast",
+        "@/lib/queryClient"
+      ],
+      "exports": [
+        "UserXPData",
+        "useUserXP"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 6,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.8
+    },
+    {
+      "path": "client/src/hooks/useUserInventory.ts",
+      "domain": "user-management",
+      "layer": "hooks",
+      "size": 839,
+      "lines": 30,
+      "complexity": 1,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/types/inventory",
+        "@/lib/queryClient"
+      ],
+      "exports": [
+        "useUserInventory"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "UserInventoryWithProduct"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/hooks/useUserCosmetics.ts",
+      "domain": "user-management",
+      "layer": "hooks",
+      "size": 2856,
+      "lines": 90,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/types/inventory",
+        "@/lib/queryClient",
+        "@/lib/utils/applyPluginRewards"
+      ],
+      "exports": [
+        "useUserCosmetics"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 11,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "UserInventoryWithProduct",
+          "AppliedCosmetics"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1
+    },
+    {
+      "path": "client/src/hooks/useRouteProtection.ts",
+      "domain": "user-management",
+      "layer": "hooks",
+      "size": 2437,
+      "lines": 111,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "@/lib/roles",
+        "@/lib/roles"
+      ],
+      "exports": [
+        "useRouteProtection",
+        "useRequireAuth",
+        "useRequireAdmin",
+        "useRequireSuperAdmin",
+        "useRequireModerator",
+        "useRequireRole"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Role"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.1
+    },
+    {
+      "path": "client/src/hooks/useProfileStats.ts",
+      "domain": "user-management",
+      "layer": "hooks",
+      "size": 2759,
+      "lines": 119,
+      "complexity": 2,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/lib/queryClient"
+      ],
+      "exports": [
+        "ExtendedProfileStats",
+        "useProfileStats",
+        "useProfile",
+        "useProfileStatsAvailable"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/hooks/useProfileEngagement.ts",
+      "domain": "user-management",
+      "layer": "hooks",
+      "size": 6519,
+      "lines": 250,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "@/hooks/use-auth"
+      ],
+      "exports": [
+        "useProfileEngagement"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.1
+    },
+    {
+      "path": "client/src/hooks/use-auth.tsx",
+      "domain": "user-management",
+      "layer": "hooks",
+      "size": 15680,
+      "lines": 500,
+      "complexity": 4,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/lib/queryClient",
+        "wouter",
+        "@/lib/roles",
+        "@/lib/roles"
+      ],
+      "exports": [
+        "User",
+        "AuthProvider",
+        "useAuth",
+        "AuthProvider",
+        "LoginData",
+        "RegisterData"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 12,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Role"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 4.4
+    },
+    {
+      "path": "client/src/contexts/ProfileCardContext.tsx",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 1156,
+      "lines": 38,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@/hooks/use-auth"
+      ],
+      "exports": [
+        "useProfileCard",
+        "ProfileCardProvider"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "archive/legacy/codemods/migrate-user-fetch.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 6535,
+      "lines": 144,
+      "complexity": 1,
+      "dependencies": [
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "HeatEventId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "archive/legacy/codemods/identify-legacy-user-fetch.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 9447,
+      "lines": 221,
+      "complexity": 6,
+      "dependencies": [
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "HeatEventId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.9000000000000001
+    },
+    {
+      "path": "archive/auth-cleanup-2025-06-26/auth/fix-auth.ts",
+      "domain": "user-management",
+      "subdomain": "auth",
+      "layer": "other",
+      "size": 5622,
+      "lines": 166,
+      "complexity": 6,
+      "dependencies": [
+        "fs",
+        "path",
+        "\\nimport { isAuthenticated, isAdminOrModerator, isAdmin } from "
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.7
+    },
+    {
+      "path": "archive/auth-cleanup-2025-06-26/auth/auth-standardize.ts",
+      "domain": "user-management",
+      "subdomain": "auth",
+      "layer": "other",
+      "size": 5170,
+      "lines": 164,
+      "complexity": 5,
+      "dependencies": [
+        "fs",
+        "path"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "archive/auth-cleanup-2025-06-26/auth/auth-refactor.ts",
+      "domain": "user-management",
+      "subdomain": "auth",
+      "layer": "other",
+      "size": 3613,
+      "lines": 110,
+      "complexity": 2,
+      "dependencies": [
+        "fs",
+        "path",
+        "${canonicalImportPath}",
+        "${canonicalImportPath}",
+        "${canonicalImportPath}"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.0999999999999999
+    },
+    {
+      "path": "server/src/core/services/user.service.ts",
+      "domain": "user-management",
+      "layer": "services",
+      "size": 7278,
+      "lines": 310,
+      "complexity": 6,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "User",
+        "UserProfile",
+        "AuthenticatedUser",
+        "userService",
+        "injectUserService",
+        "getUserFromRequest"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 14,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 70,
+          "context": "async getUserById(userId: number): Promise<UserProfile | null> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 190,
+          "context": "async isActiveUser(userId: number): Promise<boolean> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 208,
+          "context": "async updateLastActive(userId: number): Promise<void> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "high",
+      "migrationEffort": 3.8
+    },
+    {
+      "path": "client/src/utils/dev/mockProfile.ts",
+      "domain": "user-management",
+      "layer": "utils",
+      "size": 1141,
+      "lines": 54,
+      "complexity": 1,
+      "dependencies": [
+        "@/types/profile"
+      ],
+      "exports": [
+        "generateMockProfile"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ProfileData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/types/compat/user.ts",
+      "domain": "user-management",
+      "layer": "types",
+      "size": 133,
+      "lines": 4,
+      "complexity": 0,
+      "dependencies": [
+        "@/types/canonical.types"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "CanonicalUser"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/pages/profile/xp.tsx",
+      "domain": "user-management",
+      "subdomain": "xp.tsx",
+      "layer": "pages",
+      "size": 4101,
+      "lines": 125,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "framer-motion",
+        "lucide-react",
+        "@/components/ui/skeleton",
+        "@/components/ui/progress",
+        "@/components/ui/card",
+        "@/components/profile/XpLogView",
+        "@/hooks/useUserXP"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/pages/profile/xp-demo.tsx",
+      "domain": "user-management",
+      "subdomain": "xp-demo.tsx",
+      "layer": "pages",
+      "size": 1398,
+      "lines": 48,
+      "complexity": 1,
+      "dependencies": [
+        "react"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/pages/profile/activity.tsx",
+      "domain": "user-management",
+      "subdomain": "activity.tsx",
+      "layer": "pages",
+      "size": 1060,
+      "lines": 39,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@/features/activity/components/PaginatedActivityFeed",
+        "@/hooks/useAuth"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/pages/profile/[username].tsx",
+      "domain": "user-management",
+      "layer": "pages",
+      "size": 9468,
+      "lines": 285,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@tanstack/react-query",
+        "@/components/ui/tabs",
+        "@/components/footer",
+        "@/components/profile/ProfileSidebar",
+        "@/components/profile/OverviewTab",
+        "@/components/profile/InventoryTab",
+        "@/components/profile/FriendsTab",
+        "@/components/profile/WhaleWatchTab",
+        "@/components/profile/AchievementsTab",
+        "@/components/profile/XPProfileSection",
+        "@/components/profile/CosmeticControlPanel",
+        "@/components/profile/ProfileSkeleton",
+        "@/components/profile/ProfileDashboard",
+        "@/components/profile/ProfileNavigation",
+        "@/components/ui/seo-head",
+        "@/components/ui/error-display",
+        "@/components/ui/loader",
+        "@/components/common/BackToHomeButton"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ProfileData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/pages/mod/users.tsx",
+      "domain": "user-management",
+      "layer": "pages",
+      "size": 25926,
+      "lines": 838,
+      "complexity": 4,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/components/ui/card",
+        "@/types/core.types",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/avatar",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/components/ui/textarea",
+        "@/components/ui/checkbox",
+        "@/components/ui/separator",
+        "@/components/ui/alert",
+        "@/components/ui/tabs",
+        "sonner",
+        "@/lib/queryClient"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 94,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 106,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ApiErrorData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3.5
+    },
+    {
+      "path": "client/src/pages/admin/users.tsx",
+      "domain": "user-management",
+      "layer": "pages",
+      "size": 15247,
+      "lines": 516,
+      "complexity": 6,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@tanstack/react-query",
+        "@/lib/queryClient",
+        "@/hooks/useCrudMutation",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/admin/layout/AdminPageShell",
+        "@/components/admin/common/AdminDataTable",
+        "@/components/admin/common/AdminDataTable",
+        "@/components/admin/layout/EntityFilters",
+        "@/components/admin/layout/EntityFilters",
+        "@/components/admin/forms/users/UserFormDialog",
+        "@/constants/routes"
+      ],
+      "exports": [
+        "AdminUser",
+        "UserFormData"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "AdminDataTableProps"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.7
+    },
+    {
+      "path": "client/src/pages/admin/tip-rain-settings.tsx",
+      "domain": "user-management",
+      "layer": "pages",
+      "size": 16772,
+      "lines": 531,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "axios",
+        "@/components/ui/tabs",
+        "@/components/ui/switch",
+        "@/components/ui/label",
+        "@/components/ui/input",
+        "@/components/ui/button",
+        "lucide-react",
+        "@/components/ui/separator",
+        "@/hooks/use-toast",
+        "@/components/ui/alert",
+        "@/components/admin/layout/AdminPageShell"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.9
+    },
+    {
+      "path": "client/src/hooks/wrappers/use-auth-wrapper.ts",
+      "domain": "user-management",
+      "layer": "hooks",
+      "size": 305,
+      "lines": 11,
+      "complexity": 0,
+      "dependencies": [
+        "@/hooks/use-auth"
+      ],
+      "exports": [
+        "useAuthWrapper"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.5
+    },
+    {
+      "path": "client/src/hooks/preferences/useUserSettings.ts",
+      "domain": "user-management",
+      "layer": "hooks",
+      "size": 1444,
+      "lines": 61,
+      "complexity": 1,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/lib/queryClient"
+      ],
+      "exports": [
+        "UserSettingsData",
+        "useUserSettings"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 9,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 25,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 34,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 4
+    },
+    {
+      "path": "client/src/hooks/preferences/useUpdateUserSettings.ts",
+      "domain": "user-management",
+      "layer": "hooks",
+      "size": 2231,
+      "lines": 84,
+      "complexity": 2,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/lib/queryClient",
+        "@/hooks/use-toast",
+        "@/types/preferences.types"
+      ],
+      "exports": [
+        "useUpdateUserSettings",
+        "useUpdatePassword"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "PreferenceSection"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.9
+    },
+    {
+      "path": "client/src/components/widgets/ProfileCard.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 10154,
+      "lines": 317,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "framer-motion",
+        "@/components/ui/card",
+        "@/components/ui/badge",
+        "@/components/ui/avatar",
+        "@/components/ui/progress",
+        "@/components/ui/button",
+        "@/hooks/use-auth",
+        "@/hooks/use-wallet",
+        "@/lib/utils",
+        "date-fns"
+      ],
+      "exports": [
+        "ProfileCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/users/user-avatar.tsx",
+      "domain": "user-management",
+      "subdomain": "user-avatar.tsx",
+      "layer": "components",
+      "size": 131,
+      "lines": 3,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "Avatar as UserAvatar "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/users/index.ts",
+      "domain": "user-management",
+      "subdomain": "index.ts",
+      "layer": "components",
+      "size": 229,
+      "lines": 7,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "default as ActiveMembersWidget "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/users/framed-avatar.tsx",
+      "domain": "user-management",
+      "subdomain": "framed-avatar.tsx",
+      "layer": "components",
+      "size": 2709,
+      "lines": 112,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "FramedAvatar"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/users/Username.tsx",
+      "domain": "user-management",
+      "subdomain": "Username.tsx",
+      "layer": "components",
+      "size": 5509,
+      "lines": 194,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "@/lib/utils",
+        "@/components/ui/badge",
+        "@/hooks/useUserCosmetics",
+        "@/lib/utils/applyPluginRewards",
+        "@/contexts/ProfileCardContext"
+      ],
+      "exports": [
+        "Username",
+        "SimpleUsername",
+        "Username as UserName "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.1
+    },
+    {
+      "path": "client/src/components/users/UserFilters.tsx",
+      "domain": "user-management",
+      "subdomain": "UserFilters.tsx",
+      "layer": "components",
+      "size": 3965,
+      "lines": 128,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/switch",
+        "@/components/ui/label",
+        "@/components/ui/input",
+        "lucide-react"
+      ],
+      "exports": [
+        "UserFilters"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/components/users/UserDirectoryTable.tsx",
+      "domain": "user-management",
+      "subdomain": "UserDirectoryTable.tsx",
+      "layer": "components",
+      "size": 6410,
+      "lines": 176,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@/components/ui/avatar",
+        "@/components/ui/badge",
+        "@/components/ui/card",
+        "lucide-react",
+        "framer-motion",
+        "@/pages/degen-index"
+      ],
+      "exports": [
+        "UserDirectoryTable"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "DegenUser"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/users/UserCard.tsx",
+      "domain": "user-management",
+      "subdomain": "UserCard.tsx",
+      "layer": "components",
+      "size": 5040,
+      "lines": 147,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@/components/ui/card",
+        "@/components/ui/avatar",
+        "@/components/ui/badge",
+        "lucide-react",
+        "framer-motion",
+        "@/pages/degen-index"
+      ],
+      "exports": [
+        "UserCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "DegenUser"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/users/UserAvatar.tsx",
+      "domain": "user-management",
+      "subdomain": "UserAvatar.tsx",
+      "layer": "components",
+      "size": 1747,
+      "lines": 67,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "UserAvatar",
+        "PostAvatar",
+        "ThreadListAvatar",
+        "ProfileAvatar",
+        "MiniAvatar"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 10,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.8
+    },
+    {
+      "path": "client/src/components/users/Avatar.tsx",
+      "domain": "user-management",
+      "subdomain": "Avatar.tsx",
+      "layer": "components",
+      "size": 2840,
+      "lines": 124,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@/lib/utils",
+        "@/hooks/useUserCosmetics"
+      ],
+      "exports": [
+        "Avatar",
+        "SimpleAvatar"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/components/users/ActiveMembersWidget.tsx",
+      "domain": "user-management",
+      "subdomain": "ActiveMembersWidget.tsx",
+      "layer": "components",
+      "size": 4039,
+      "lines": 120,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@tanstack/react-query",
+        "@/components/ui/avatar",
+        "lucide-react",
+        "framer-motion",
+        "@/hooks/widgetData",
+        "@/components/ui/widget-skeleton"
+      ],
+      "exports": [
+        "ActiveUser",
+        "ActiveMembersWidgetProps"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 19,
+          "context": "id: number | string;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.8
+    },
+    {
+      "path": "client/src/components/ui/user-badge.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 1009,
+      "lines": 48,
+      "complexity": 1,
+      "dependencies": [
+        "@/types/compat/user",
+        "@/components/ui/badge",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "UserBadge"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "User"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/preferences/session-preferences.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 6741,
+      "lines": 230,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/types/compat/user",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/badge",
+        "@/components/ui/separator",
+        "date-fns"
+      ],
+      "exports": [
+        "SessionPreferences"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "User"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/preferences/profile-preferences.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 6003,
+      "lines": 189,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/types/compat/user",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/textarea",
+        "@/components/ui/switch",
+        "@/components/ui/label",
+        "@/components/ui/avatar",
+        "@/components/ui/card",
+        "@/components/ui/separator",
+        "lucide-react",
+        "@/hooks/preferences/useUserSettings",
+        "@/hooks/preferences/useUpdateUserSettings"
+      ],
+      "exports": [
+        "ProfilePreferences"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "User"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/profile/rarityUtils.ts",
+      "domain": "user-management",
+      "subdomain": "rarityUtils.ts",
+      "layer": "components",
+      "size": 481,
+      "lines": 12,
+      "complexity": 1,
+      "dependencies": [
+        "@/config/rarity.config"
+      ],
+      "exports": [
+        "getRarityColor",
+        "getRarityBorderClass"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/profile/index.ts",
+      "domain": "user-management",
+      "subdomain": "index.ts",
+      "layer": "components",
+      "size": 881,
+      "lines": 24,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "UnifiedProfileCard ",
+        "default as ProfileCard ",
+        "UserProfileRenderer ",
+        "default as FriendsTab ",
+        "default as InventoryTab ",
+        "default as OverviewTab ",
+        "default as ProfileSidebar ",
+        "default as XpLogView "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/profile/XpLogView.tsx",
+      "domain": "user-management",
+      "subdomain": "XpLogView.tsx",
+      "layer": "components",
+      "size": 11051,
+      "lines": 371,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/lib/queryClient",
+        "date-fns",
+        "framer-motion",
+        "@/components/ui/tabs",
+        "@/components/ui/badge",
+        "@/components/ui/button",
+        "@/components/ui/skeleton",
+        "@db/types"
+      ],
+      "exports": [
+        "XpLogMetadata"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 58,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "OrderId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.2000000000000002
+    },
+    {
+      "path": "client/src/components/profile/XPProgressBar.tsx",
+      "domain": "user-management",
+      "subdomain": "XPProgressBar.tsx",
+      "layer": "components",
+      "size": 5122,
+      "lines": 168,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "@/lib/utils",
+        "@/components/ui/progress",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "XPProgressBar"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.1
+    },
+    {
+      "path": "client/src/components/profile/XPProfileSection.tsx",
+      "domain": "user-management",
+      "subdomain": "XPProfileSection.tsx",
+      "layer": "components",
+      "size": 2783,
+      "lines": 94,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/hooks/useXP",
+        "@/components/economy/xp/XPProgressBar",
+        "@/components/economy/xp/XPHistoryLog",
+        "@/components/economy/badges/BadgeShowcase",
+        "@/components/economy/xp/TitleSelector",
+        "@/components/economy/xp/LevelUpNotification",
+        "@/components/ui/tabs",
+        "@/components/ui/card"
+      ],
+      "exports": [
+        "XPProfileSection"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/profile/WhaleWatchTab.tsx",
+      "domain": "user-management",
+      "subdomain": "WhaleWatchTab.tsx",
+      "layer": "components",
+      "size": 440,
+      "lines": 17,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@/components/social/FollowingList",
+        "@/types/profile"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ProfileData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/profile/UserTitles.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 3693,
+      "lines": 133,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/lib/utils",
+        "@/components/ui/tooltip",
+        "@/components/ui/badge",
+        "@/config/rarity.config"
+      ],
+      "exports": [
+        "UserTitles"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 9,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 64,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.9
+    },
+    {
+      "path": "client/src/components/profile/UserProfileRenderer.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 1612,
+      "lines": 67,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/lib/utils",
+        "@/types/compat/user"
+      ],
+      "exports": [
+        "UserProfileRendererProps",
+        "UserProfileRenderer"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "User"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/components/profile/UserBadges.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 3897,
+      "lines": 142,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/lib/utils",
+        "@/components/ui/tooltip",
+        "@/config/rarity.config"
+      ],
+      "exports": [
+        "UserBadges"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 9,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 64,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.4
+    },
+    {
+      "path": "client/src/components/profile/UnifiedProfileCard.tsx",
+      "domain": "user-management",
+      "subdomain": "UnifiedProfileCard.tsx",
+      "layer": "components",
+      "size": 7358,
+      "lines": 250,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "framer-motion",
+        "@tanstack/react-query",
+        "@/components/ui/card",
+        "@/components/ui/badge",
+        "@/components/common/LoadingCard",
+        "@/components/common/StandardErrorDisplay",
+        "@/components/common/StatsBar",
+        "@/components/identity/AvatarFrame",
+        "@/components/users/Username",
+        "@/components/economy/xp/LevelBadge",
+        "@/hooks/useIdentityDisplay",
+        "@/config/brand.config",
+        "@/lib/utils",
+        "date-fns",
+        "lucide-react",
+        "@/types/profile"
+      ],
+      "exports": [
+        "UnifiedProfileCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ProfileData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/components/profile/StatCard.tsx",
+      "domain": "user-management",
+      "subdomain": "StatCard.tsx",
+      "layer": "components",
+      "size": 849,
+      "lines": 27,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@/lib/utils"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/profile/SignatureRenderer.tsx",
+      "domain": "user-management",
+      "subdomain": "SignatureRenderer.tsx",
+      "layer": "components",
+      "size": 4592,
+      "lines": 159,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "dompurify",
+        "@shared/signature/SignatureTierConfig",
+        "@/hooks/useUserCosmetics",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "SignatureRenderer"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.1
+    },
+    {
+      "path": "client/src/components/profile/ProfileSkeleton.tsx",
+      "domain": "user-management",
+      "subdomain": "ProfileSkeleton.tsx",
+      "layer": "components",
+      "size": 2155,
+      "lines": 75,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/skeleton"
+      ],
+      "exports": [
+        "ProfileSkeleton"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/profile/ProfileSidebar.tsx",
+      "domain": "user-management",
+      "subdomain": "ProfileSidebar.tsx",
+      "layer": "components",
+      "size": 8846,
+      "lines": 259,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@tanstack/react-query",
+        "@/components/ui/badge",
+        "@/components/ui/button",
+        "@/components/ui/loader",
+        "@/components/messages/WhisperButton",
+        "@/components/messages/WhisperModal",
+        "@/lib/utils",
+        "@/hooks/use-toast",
+        "@/lib/queryClient",
+        "@/hooks/use-auth.tsx",
+        "@/types/profile",
+        "@/hooks/useIdentityDisplay",
+        "@/components/identity/AvatarFrame",
+        "@/components/users/Username",
+        "@/components/economy/xp/LevelBadge",
+        "@/components/social/FollowButton",
+        "@/utils/avatar"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ProfileData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/components/profile/ProfileNavigation.tsx",
+      "domain": "user-management",
+      "subdomain": "ProfileNavigation.tsx",
+      "layer": "components",
+      "size": 6845,
+      "lines": 259,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "framer-motion",
+        "lucide-react",
+        "@/components/ui/tabs",
+        "@/lib/utils",
+        "@/hooks/use-auth"
+      ],
+      "exports": [
+        "ProfileNavigation"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/components/profile/ProfileEditor.tsx",
+      "domain": "user-management",
+      "subdomain": "ProfileEditor.tsx",
+      "layer": "components",
+      "size": 17906,
+      "lines": 533,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "@/components/ui/card",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/textarea",
+        "@/components/ui/label",
+        "@/components/ui/tabs",
+        "@/hooks/use-toast",
+        "@tanstack/react-query",
+        "@/lib/queryClient",
+        "lucide-react",
+        "@/components/ui/file-drop-zone"
+      ],
+      "exports": [
+        "ProfileEditor"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.1
+    },
+    {
+      "path": "client/src/components/profile/ProfileDashboard.tsx",
+      "domain": "user-management",
+      "subdomain": "ProfileDashboard.tsx",
+      "layer": "components",
+      "size": 7144,
+      "lines": 254,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "framer-motion",
+        "@/hooks/use-auth",
+        "@/hooks/useProfileStats",
+        "@/types/profile"
+      ],
+      "exports": [
+        "ProfileDashboard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ProfileData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.0999999999999999
+    },
+    {
+      "path": "client/src/components/profile/ProfileCard.tsx",
+      "domain": "user-management",
+      "subdomain": "ProfileCard.tsx",
+      "layer": "components",
+      "size": 743,
+      "lines": 30,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/lib/utils"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/profile/OverviewTab.tsx",
+      "domain": "user-management",
+      "subdomain": "OverviewTab.tsx",
+      "layer": "components",
+      "size": 4155,
+      "lines": 124,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "lucide-react",
+        "@/components/profile/XPProgressBar",
+        "@/hooks/useProfileStats",
+        "@/types/profile"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ProfileData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/profile/InventoryTab.tsx",
+      "domain": "user-management",
+      "subdomain": "InventoryTab.tsx",
+      "layer": "components",
+      "size": 3483,
+      "lines": 109,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/hooks/useUserInventory",
+        "@/types/profile",
+        "@/components/ui/skeleton",
+        "@/components/ui/badge",
+        "@/config/rarity.config"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ProfileData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/components/profile/FriendsTab.tsx",
+      "domain": "user-management",
+      "subdomain": "FriendsTab.tsx",
+      "layer": "components",
+      "size": 2717,
+      "lines": 86,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/skeleton",
+        "@/types/profile",
+        "@/hooks/useFriends",
+        "@/components/ui/avatar",
+        "@/components/ui/tabs"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ProfileData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/components/profile/CosmeticControlPanel.tsx",
+      "domain": "user-management",
+      "subdomain": "CosmeticControlPanel.tsx",
+      "layer": "components",
+      "size": 11811,
+      "lines": 359,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@/components/ui/card",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/separator",
+        "@/components/ui/tabs",
+        "@/lib/utils",
+        "@/hooks/use-toast",
+        "@tanstack/react-query",
+        "@/lib/queryClient",
+        "@/components/users/framed-avatar",
+        "lucide-react",
+        "wouter",
+        "@/lib/utils/applyPluginRewards",
+        "@/types/inventory",
+        "@db/types"
+      ],
+      "exports": [
+        "CosmeticControlPanel"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 23,
+          "context": "activeFrame?: { id: number; name: string; imageUrl: string; rarity: string } | null; // IDs for frame, title, badge are numbers",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 24,
+          "context": "activeTitle?: { id: number; name: string; description: string | null; rarity: string } | null; // IDs for frame, title, badge are numbers",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 26,
+          "context": "id: number; // IDs for frame, title, badge are numbers",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "UserInventoryWithProduct"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 4.2
+    },
+    {
+      "path": "client/src/components/profile/AchievementsTab.tsx",
+      "domain": "user-management",
+      "subdomain": "AchievementsTab.tsx",
+      "layer": "components",
+      "size": 10414,
+      "lines": 313,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@/hooks/use-achievements",
+        "@/components/ui/card",
+        "@/components/ui/badge",
+        "@/components/ui/button",
+        "@/components/ui/progress",
+        "@/components/ui/loader",
+        "lucide-react",
+        "@/types/profile"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ProfileData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.9
+    },
+    {
+      "path": "client/src/components/paths/user-paths-display.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 1411,
+      "lines": 53,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@shared/path-config",
+        "@/components/ui/alert",
+        "lucide-react"
+      ],
+      "exports": [
+        "UserPathsDisplay "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.5
+    },
+    {
+      "path": "client/src/components/layout/ProfileBackground.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 1265,
+      "lines": 47,
+      "complexity": 1,
+      "dependencies": [
+        "react"
+      ],
+      "exports": [
+        "ProfileBackground"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/identity/UserName.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 133,
+      "lines": 3,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "Username as UserName "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/header/UserMenu.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 4548,
+      "lines": 181,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "framer-motion",
+        "@/components/icons/iconRenderer",
+        "@/components/ui/button",
+        "@/components/ui/avatar",
+        "@/components/ui/progress",
+        "@/config/navigation",
+        "@/hooks/use-auth"
+      ],
+      "exports": [
+        "UserMenu"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/header/AuthButtons.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 724,
+      "lines": 25,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/button"
+      ],
+      "exports": [
+        "AuthButtons"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/gamification/profile-gamification-widget.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 6591,
+      "lines": 195,
+      "complexity": 1,
+      "dependencies": [
+        "@/lib/utils",
+        "@/components/ui/card",
+        "@/components/ui/badge",
+        "@/components/ui/progress",
+        "@/components/ui/button",
+        "@/components/ui/separator",
+        "@/lib/utils",
+        "lucide-react",
+        "wouter",
+        "@/features/gamification/services/gamification-api.service"
+      ],
+      "exports": [
+        "ProfileGamificationWidget"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "UserProgression"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/forum/UserLevelDisplay.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 2806,
+      "lines": 89,
+      "complexity": 2,
+      "dependencies": [
+        "@/lib/utils",
+        "lucide-react",
+        "@/components/ui/badge",
+        "@/components/ui/tooltip",
+        "@/components/economy/xp/LevelBadge",
+        "@/components/economy/xp/LevelBadge"
+      ],
+      "exports": [
+        "UserLevelDisplay"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "LevelVisualConfig"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/components/forum/ThreadAuthor.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 1713,
+      "lines": 69,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@/lib/utils",
+        "@/components/identity/AvatarFrame",
+        "@/components/users/Username",
+        "@/components/economy/xp/LevelBadge",
+        "@/hooks/useIdentityDisplay"
+      ],
+      "exports": [
+        "ThreadAuthor"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/components/forum/ProfileCard.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 1033,
+      "lines": 45,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/profile/UnifiedProfileCard",
+        "@/lib/utils",
+        "@/types/compat/user"
+      ],
+      "exports": [
+        "ProfileCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "User"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/errors/UserNotFound.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 5417,
+      "lines": 164,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@tanstack/react-query",
+        "@/lib/queryClient"
+      ],
+      "exports": [
+        "UserNotFound"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/auth/withRouteProtection.tsx",
+      "domain": "user-management",
+      "subdomain": "withRouteProtection.tsx",
+      "layer": "components",
+      "size": 2103,
+      "lines": 73,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@/lib/routeConfig"
+      ],
+      "exports": [
+        "withRouteProtection",
+        "withAuth",
+        "withAdmin",
+        "withModerator",
+        "withSuperAdmin"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/components/auth/protected-route.tsx",
+      "domain": "user-management",
+      "subdomain": "protected-route.tsx",
+      "layer": "components",
+      "size": 781,
+      "lines": 28,
+      "complexity": 0,
+      "dependencies": [
+        "@/hooks/use-auth",
+        "lucide-react",
+        "wouter",
+        "wouter"
+      ],
+      "exports": [
+        "ProtectedRoute"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "RouteProps"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.5
+    },
+    {
+      "path": "client/src/components/auth/index.ts",
+      "domain": "user-management",
+      "subdomain": "index.ts",
+      "layer": "components",
+      "size": 802,
+      "lines": 39,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "ProtectedRoute ",
+        "RequireRole ",
+        "RequireAuth",
+        "RequireAdmin",
+        "RequireSuperAdmin",
+        "RequireModerator",
+        "RequireDev",
+        "RequireShoutboxMod",
+        "RequireContentMod",
+        "RequireMarketMod",
+        "RequireRole as RequireSpecificRole",
+        "withRouteProtection",
+        "withAuth",
+        "withAdmin",
+        "withModerator",
+        "withSuperAdmin",
+        "GlobalRouteGuard",
+        "useRouteAnalytics",
+        "useRouteProtection",
+        "useRequireAuth"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/auth/RouteGuards.tsx",
+      "domain": "user-management",
+      "subdomain": "RouteGuards.tsx",
+      "layer": "components",
+      "size": 2989,
+      "lines": 142,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@/lib/roles"
+      ],
+      "exports": [
+        "RequireAuth",
+        "RequireAdmin",
+        "RequireSuperAdmin",
+        "RequireModerator",
+        "RequireDev",
+        "RequireShoutboxMod",
+        "RequireContentMod",
+        "RequireMarketMod",
+        "RequireRole"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Role"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.9
+    },
+    {
+      "path": "client/src/components/auth/RequireRole.tsx",
+      "domain": "user-management",
+      "subdomain": "RequireRole.tsx",
+      "layer": "components",
+      "size": 551,
+      "lines": 23,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/hooks/use-auth",
+        "@/lib/roles",
+        "@/lib/roles"
+      ],
+      "exports": [
+        "RequireRole"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Role"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/auth/ProtectedRoute.tsx",
+      "domain": "user-management",
+      "subdomain": "ProtectedRoute.tsx",
+      "layer": "components",
+      "size": 3590,
+      "lines": 132,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@/hooks/use-auth",
+        "@/lib/roles",
+        "@/lib/roles",
+        "wouter",
+        "lucide-react",
+        "@/components/ui/alert",
+        "@/components/ui/button"
+      ],
+      "exports": [
+        "ProtectedRoute"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Role"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/components/auth/GlobalRouteGuard.tsx",
+      "domain": "user-management",
+      "subdomain": "GlobalRouteGuard.tsx",
+      "layer": "components",
+      "size": 3119,
+      "lines": 109,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@/hooks/use-auth",
+        "@/lib/routeConfig",
+        "@/lib/roles",
+        "@/lib/roles"
+      ],
+      "exports": [
+        "GlobalRouteGuard",
+        "useRouteAnalytics"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Role"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.1
+    },
+    {
+      "path": "client/src/components/admin/cooldown-settings.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 6853,
+      "lines": 229,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "axios",
+        "@/components/ui/label",
+        "@/components/ui/input",
+        "@/components/ui/button",
+        "@/components/ui/separator",
+        "@/components/ui/alert",
+        "@/components/ui/slider",
+        "@/hooks/use-toast",
+        "lucide-react"
+      ],
+      "exports": [
+        "CooldownSettings"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.9
+    },
+    {
+      "path": "server/src/routes/api/user/frames.ts",
+      "domain": "user-management",
+      "subdomain": "frames.ts",
+      "layer": "routes",
+      "size": 947,
+      "lines": 25,
+      "complexity": 1,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.8999999999999999
+    },
+    {
+      "path": "server/src/core/repository/repositories/user-repository.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 6455,
+      "lines": 249,
+      "complexity": 4,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm",
+        "@schema",
+        "@server/src/core/logger"
+      ],
+      "exports": [
+        "UserRepository"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 82,
+          "context": "async updateLastLogin(id: number): Promise<void> {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 105,
+          "context": "async incrementXP(id: number, amount: number): Promise<User> {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 244,
+          "context": "async update(id: number | string, data: Partial<User>): Promise<User> {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "IUserRepository"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3.3
+    },
+    {
+      "path": "server/src/core/repository/__tests__/user-repository.test.ts",
+      "domain": "user-management",
+      "layer": "other",
+      "size": 11313,
+      "lines": 486,
+      "complexity": 5,
+      "dependencies": [
+        "vitest",
+        "@schema"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "User"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2
+    },
+    {
+      "path": "client/src/pages/admin/users/[userId].tsx",
+      "domain": "user-management",
+      "subdomain": "[userId].tsx",
+      "layer": "pages",
+      "size": 7734,
+      "lines": 226,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@tanstack/react-query",
+        "@/lib/queryClient",
+        "@/components/ui/button",
+        "@/hooks/use-toast",
+        "lucide-react",
+        "@/components/ui/tabs",
+        "@/types/inventory",
+        "@db/types"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "UserInventoryWithProduct",
+          "Product"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.9
+    },
+    {
+      "path": "client/src/pages/admin/xp/user-adjustment.tsx",
+      "domain": "user-management",
+      "layer": "pages",
+      "size": 17071,
+      "lines": 566,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "react-hook-form",
+        "@hookform/resolvers/zod",
+        "zod",
+        "@/hooks/use-toast",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/economy/xp/XPProgressBar",
+        "@/components/ui/textarea",
+        "@/components/ui/badge",
+        "@/components/admin/layout/AdminPageShell"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 63,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 74,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 75,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 203,
+          "context": "const refetchUserInfo = async (userId: number) => {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3
+    },
+    {
+      "path": "client/src/pages/admin/xp/settings.tsx",
+      "domain": "user-management",
+      "layer": "pages",
+      "size": 13112,
+      "lines": 457,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "lucide-react",
+        "@/hooks/use-toast",
+        "@/components/ui/input",
+        "@/components/ui/button",
+        "@/components/ui/label",
+        "@/components/ui/tooltip",
+        "@/components/ui/switch",
+        "@/components/ui/tabs",
+        "@/components/ui/separator",
+        "@/components/ui/alert",
+        "@/lib/queryClient",
+        "@/components/admin/layout/AdminPageShell"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/features/users/services/usersApi.ts",
+      "domain": "user-management",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 1467,
+      "lines": 46,
+      "complexity": 2,
+      "dependencies": [
+        "@/lib/queryClient",
+        "@/components/users/ActiveMembersWidget"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 32,
+          "context": "export async function getUserDetails(userId: number | string) {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ActiveUser"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 1
+    },
+    {
+      "path": "client/src/features/users/services/referralsApi.ts",
+      "domain": "user-management",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 1261,
+      "lines": 62,
+      "complexity": 1,
+      "dependencies": [
+        "@/lib/queryClient"
+      ],
+      "exports": [
+        "UserReferralStats",
+        "ReferralLinkResponse",
+        "referralsApi"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 9,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 19,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "high",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/features/users/services/index.ts",
+      "domain": "user-management",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 28,
+      "lines": 2,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "high",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/features/users/hooks/useUserReferrals.ts",
+      "domain": "user-management",
+      "subdomain": "hooks",
+      "layer": "hooks",
+      "size": 1713,
+      "lines": 72,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/hooks/use-toast"
+      ],
+      "exports": [
+        "useUserReferrals"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "UserReferralStats"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/features/users/hooks/useActiveUsers.ts",
+      "domain": "user-management",
+      "subdomain": "hooks",
+      "layer": "hooks",
+      "size": 726,
+      "lines": 24,
+      "complexity": 1,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/components/users/ActiveMembersWidget"
+      ],
+      "exports": [
+        "useActiveUsers"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ActiveUser"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/features/users/hooks/index.ts",
+      "domain": "user-management",
+      "subdomain": "hooks",
+      "layer": "hooks",
+      "size": 96,
+      "lines": 3,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "default as useActiveUsers "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/features/admin/services/settingsService.ts",
+      "domain": "user-management",
+      "layer": "services",
+      "size": 1203,
+      "lines": 43,
+      "complexity": 1,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/lib/adminApi"
+      ],
+      "exports": [
+        "useSiteSettings",
+        "useUpdateSetting",
+        "useFeatureFlags",
+        "useToggleFeatureFlag"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "high",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/components/profile/widgets/index.ts",
+      "domain": "user-management",
+      "subdomain": "widgets",
+      "layer": "components",
+      "size": 441,
+      "lines": 9,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "ReputationCard ",
+        "ActivityStatsCard ",
+        "WalletOverviewCard ",
+        "SocialStatsCard ",
+        "MilestoneCard ",
+        "QuickActionsCard ",
+        "ProfileInsightsCard "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/profile/widgets/WalletOverviewCard.tsx",
+      "domain": "user-management",
+      "subdomain": "widgets",
+      "layer": "components",
+      "size": 2949,
+      "lines": 92,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "lucide-react",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "WalletOverviewCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/profile/widgets/SocialStatsCard.tsx",
+      "domain": "user-management",
+      "subdomain": "widgets",
+      "layer": "components",
+      "size": 2896,
+      "lines": 103,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "lucide-react",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "SocialStatsCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "client/src/components/profile/widgets/ReputationCard.tsx",
+      "domain": "user-management",
+      "subdomain": "widgets",
+      "layer": "components",
+      "size": 3584,
+      "lines": 114,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "lucide-react",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "ReputationCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/components/profile/widgets/QuickActionsCard.tsx",
+      "domain": "user-management",
+      "subdomain": "widgets",
+      "layer": "components",
+      "size": 5876,
+      "lines": 222,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/lib/utils",
+        "@/hooks/use-auth",
+        "sonner"
+      ],
+      "exports": [
+        "QuickActionsCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.1
+    },
+    {
+      "path": "client/src/components/profile/widgets/ProfileInsightsCard.tsx",
+      "domain": "user-management",
+      "subdomain": "widgets",
+      "layer": "components",
+      "size": 7387,
+      "lines": 259,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "lucide-react",
+        "@/lib/utils",
+        "@/types/profile",
+        "@/hooks/useProfileStats"
+      ],
+      "exports": [
+        "ProfileInsightsCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ProfileData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.1
+    },
+    {
+      "path": "client/src/components/profile/widgets/MilestoneCard.tsx",
+      "domain": "user-management",
+      "subdomain": "widgets",
+      "layer": "components",
+      "size": 5686,
+      "lines": 221,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "lucide-react",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "MilestoneCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/profile/widgets/ActivityStatsCard.tsx",
+      "domain": "user-management",
+      "subdomain": "widgets",
+      "layer": "components",
+      "size": 3194,
+      "lines": 119,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "lucide-react",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "ActivityStatsCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "client/src/components/economy/badges/UserBadgesDisplay.tsx",
+      "domain": "user-management",
+      "layer": "components",
+      "size": 5561,
+      "lines": 183,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@/components/ui/tooltip",
+        "@/lib/utils",
+        "lucide-react",
+        "@/components/ui/badge",
+        "@/config/rarity.config"
+      ],
+      "exports": [
+        "UserBadge",
+        "UserBadgesDisplay"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 9,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3
+    },
+    {
+      "path": "client/src/pages/admin/activity/user/[userId].tsx",
+      "domain": "user-management",
+      "subdomain": "[userId].tsx",
+      "layer": "pages",
+      "size": 7810,
+      "lines": 254,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@/features/activity/hooks/useActivityFeed",
+        "@/features/activity/services/activityApi",
+        "date-fns",
+        "@/hooks/useAuth",
+        "wouter",
+        "@/components/admin/layout/AdminPageShell",
+        "@/layout/primitives"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "client/src/components/admin/forms/users/UserFormDialog.tsx",
+      "domain": "user-management",
+      "subdomain": "UserFormDialog.tsx",
+      "layer": "components",
+      "size": 1980,
+      "lines": 67,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/types/admin.types"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "User",
+          "UserFormData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/admin/forms/users/UserActionDialogs.tsx",
+      "domain": "user-management",
+      "subdomain": "UserActionDialogs.tsx",
+      "layer": "components",
+      "size": 5422,
+      "lines": 207,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/button",
+        "@/components/ui/label"
+      ],
+      "exports": [
+        "BanUserDialog",
+        "UnbanUserDialog",
+        "DeleteUserDialog",
+        "ChangeUserRoleDialog"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    }
+  ],
+  "totalIssues": 42,
+  "avgComplexity": 1.247191011235955,
+  "migrationEffort": 184.69999999999993,
+  "dependencies": [
+    "@playwright/test",
+    "@schema",
+    "@db",
+    "@db/types",
+    "@schema/user/users",
+    "@faker-js/faker",
+    "@db/types/id.types",
+    "@db/schema/core/enums",
+    "@/lib/db",
+    "@server/src/core/services/user.service",
+    "@server/src/core/logger",
+    "@/db/types",
+    "@hookform/resolvers/zod",
+    "@/hooks/use-auth",
+    "@/components/ui/button",
+    "@/components/ui/input",
+    "@/components/ui/tabs",
+    "@/hooks/useSearchParams",
+    "@tanstack/react-query",
+    "@/hooks/use-toast",
+    "@/lib/queryClient",
+    "@/types/inventory",
+    "@/lib/utils/applyPluginRewards",
+    "@/lib/roles",
+    "@/types/profile",
+    "@/types/canonical.types",
+    "@/components/ui/skeleton",
+    "@/components/ui/progress",
+    "@/components/ui/card",
+    "@/components/profile/XpLogView",
+    "@/hooks/useUserXP",
+    "@/features/activity/components/PaginatedActivityFeed",
+    "@/hooks/useAuth",
+    "@/components/footer",
+    "@/components/profile/ProfileSidebar",
+    "@/components/profile/OverviewTab",
+    "@/components/profile/InventoryTab",
+    "@/components/profile/FriendsTab",
+    "@/components/profile/WhaleWatchTab",
+    "@/components/profile/AchievementsTab",
+    "@/components/profile/XPProfileSection",
+    "@/components/profile/CosmeticControlPanel",
+    "@/components/profile/ProfileSkeleton",
+    "@/components/profile/ProfileDashboard",
+    "@/components/profile/ProfileNavigation",
+    "@/components/ui/seo-head",
+    "@/components/ui/error-display",
+    "@/components/ui/loader",
+    "@/components/common/BackToHomeButton",
+    "@/types/core.types",
+    "@/components/ui/badge",
+    "@/components/ui/avatar",
+    "@/components/ui/label",
+    "@/components/ui/textarea",
+    "@/components/ui/checkbox",
+    "@/components/ui/separator",
+    "@/components/ui/alert",
+    "@/hooks/useCrudMutation",
+    "@/components/admin/layout/AdminPageShell",
+    "@/components/admin/common/AdminDataTable",
+    "@/components/admin/layout/EntityFilters",
+    "@/components/admin/forms/users/UserFormDialog",
+    "@/constants/routes",
+    "@/components/ui/switch",
+    "@/types/preferences.types",
+    "@/hooks/use-wallet",
+    "@/lib/utils",
+    "@/hooks/useUserCosmetics",
+    "@/contexts/ProfileCardContext",
+    "@/pages/degen-index",
+    "@/hooks/widgetData",
+    "@/components/ui/widget-skeleton",
+    "@/types/compat/user",
+    "@/hooks/preferences/useUserSettings",
+    "@/hooks/preferences/useUpdateUserSettings",
+    "@/config/rarity.config",
+    "@/hooks/useXP",
+    "@/components/economy/xp/XPProgressBar",
+    "@/components/economy/xp/XPHistoryLog",
+    "@/components/economy/badges/BadgeShowcase",
+    "@/components/economy/xp/TitleSelector",
+    "@/components/economy/xp/LevelUpNotification",
+    "@/components/social/FollowingList",
+    "@/components/ui/tooltip",
+    "@/components/common/LoadingCard",
+    "@/components/common/StandardErrorDisplay",
+    "@/components/common/StatsBar",
+    "@/components/identity/AvatarFrame",
+    "@/components/users/Username",
+    "@/components/economy/xp/LevelBadge",
+    "@/hooks/useIdentityDisplay",
+    "@/config/brand.config",
+    "@shared/signature/SignatureTierConfig",
+    "@/components/messages/WhisperButton",
+    "@/components/messages/WhisperModal",
+    "@/hooks/use-auth.tsx",
+    "@/components/social/FollowButton",
+    "@/utils/avatar",
+    "@/components/ui/file-drop-zone",
+    "@/hooks/useProfileStats",
+    "@/components/profile/XPProgressBar",
+    "@/hooks/useUserInventory",
+    "@/hooks/useFriends",
+    "@/components/users/framed-avatar",
+    "@/hooks/use-achievements",
+    "@shared/path-config",
+    "@/components/icons/iconRenderer",
+    "@/config/navigation",
+    "@/features/gamification/services/gamification-api.service",
+    "@/components/profile/UnifiedProfileCard",
+    "@/lib/routeConfig",
+    "@/components/ui/slider",
+    "@/components/users/ActiveMembersWidget",
+    "@/lib/adminApi",
+    "@/features/activity/hooks/useActivityFeed",
+    "@/features/activity/services/activityApi",
+    "@/layout/primitives",
+    "@/types/admin.types"
+  ],
+  "dependents": [],
+  "criticalPath": true,
+  "riskAssessment": {
+    "runtime": "high",
+    "testing": "high",
+    "integration": "low"
+  },
+  "migrationStrategy": {
+    "priority": 1,
+    "approach": "parallel",
+    "estimatedDays": 37,
+    "blockers": [],
+    "prerequisites": []
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "name": "editor",
+  "files": [
+    {
+      "path": "server/src/domains/editor/editor.routes.ts",
+      "domain": "editor",
+      "subdomain": "editor.routes.ts",
+      "layer": "routes",
+      "size": 3500,
+      "lines": 121,
+      "complexity": 2,
+      "dependencies": [
+        "express",
+        "express",
+        "axios",
+        "zod"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
+    }
+  ],
+  "totalIssues": 0,
+  "avgComplexity": 2,
+  "migrationEffort": 0.4,
+  "dependencies": [],
+  "dependents": [
+    "forum-core",
+    "moderation"
+  ],
+  "criticalPath": false,
+  "riskAssessment": {
+    "runtime": "medium",
+    "testing": "low",
+    "integration": "medium"
+  },
+  "migrationStrategy": {
+    "priority": 3,
+    "approach": "atomic",
+    "estimatedDays": 1,
+    "blockers": [
+      "Dependencies from: forum-core, moderation"
+    ],
+    "prerequisites": []
+  }
+}

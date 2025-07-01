@@ -1,0 +1,374 @@
+{
+  "name": "infrastructure",
+  "files": [
+    {
+      "path": "shared/validation/common.schemas.ts",
+      "domain": "infrastructure",
+      "subdomain": "common.schemas.ts",
+      "layer": "other",
+      "size": 8814,
+      "lines": 320,
+      "complexity": 3,
+      "dependencies": [
+        "zod"
+      ],
+      "exports": [
+        "positiveInt",
+        "nonNegativeInt",
+        "positiveFloat",
+        "nonNegativeFloat",
+        "nonEmptyString",
+        "trimmedString",
+        "email",
+        "url",
+        "slug",
+        "username",
+        "dateString",
+        "futureDate",
+        "pastDate",
+        "userId",
+        "groupId",
+        "threadId",
+        "postId",
+        "forumId",
+        "paginationSchema",
+        "sortSchema"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 1.6
+    },
+    {
+      "path": "scripts/validation/validate-uuid-migration.ts",
+      "domain": "infrastructure",
+      "subdomain": "validate-uuid-migration.ts",
+      "layer": "other",
+      "size": 10613,
+      "lines": 354,
+      "complexity": 7,
+      "dependencies": [
+        "fs/promises",
+        "path",
+        "chalk"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.6000000000000001
+    },
+    {
+      "path": "shared/types/validation/index.ts",
+      "domain": "infrastructure",
+      "subdomain": "index.ts",
+      "layer": "types",
+      "size": 4901,
+      "lines": 183,
+      "complexity": 6,
+      "dependencies": [
+        "@db/types/id.types"
+      ],
+      "exports": [
+        "isValidUuid",
+        "isValidUserId",
+        "createIdValidator",
+        "isValidDate",
+        "isValidDateString",
+        "isPositiveNumber",
+        "isNonNegativeNumber",
+        "isValidAmount",
+        "isNonEmptyString",
+        "isValidEmail",
+        "isValidUsername",
+        "isNonEmptyArray",
+        "isArrayOf",
+        "hasProperty",
+        "hasProperties",
+        "validateApiInput",
+        "validateOptionalInput",
+        "isEnumValue",
+        "validatePaginationParams",
+        "validateSortParams"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "UserId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9000000000000001
+    },
+    {
+      "path": "server/src/middleware/validate.ts",
+      "domain": "infrastructure",
+      "subdomain": "validate.ts",
+      "layer": "middleware",
+      "size": 1790,
+      "lines": 66,
+      "complexity": 1,
+      "dependencies": [
+        "express",
+        "zod"
+      ],
+      "exports": [
+        "validateBody",
+        "validateQuery",
+        "validateParams"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "server/src/middleware/validate-request.ts",
+      "domain": "infrastructure",
+      "subdomain": "validate-request.ts",
+      "layer": "middleware",
+      "size": 419,
+      "lines": 17,
+      "complexity": 1,
+      "dependencies": [
+        "express",
+        "zod"
+      ],
+      "exports": [
+        "validateRequest"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "server/src/middleware/trace.middleware.ts",
+      "domain": "infrastructure",
+      "subdomain": "trace.middleware.ts",
+      "layer": "middleware",
+      "size": 1126,
+      "lines": 40,
+      "complexity": 1,
+      "dependencies": [
+        "express",
+        "uuid"
+      ],
+      "exports": [
+        "traceMiddleware"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "server/src/middleware/dev-security.middleware.ts",
+      "domain": "infrastructure",
+      "subdomain": "dev-security.middleware.ts",
+      "layer": "middleware",
+      "size": 4289,
+      "lines": 172,
+      "complexity": 2,
+      "dependencies": [
+        "express",
+        "@server/src/core/logger",
+        "@server/src/core/services/user.service",
+        "@server/src/utils/environment"
+      ],
+      "exports": [
+        "devSecurity"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.10000000000000003
+    },
+    {
+      "path": "server/src/core/middleware.ts",
+      "domain": "infrastructure",
+      "layer": "other",
+      "size": 109,
+      "lines": 4,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/core/cache.service.ts",
+      "domain": "infrastructure",
+      "layer": "other",
+      "size": 4303,
+      "lines": 201,
+      "complexity": 5,
+      "dependencies": [],
+      "exports": [
+        "cacheService",
+        "memoryCache"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.5
+    },
+    {
+      "path": "server/src/core/middleware/security.middleware.ts",
+      "domain": "infrastructure",
+      "subdomain": "security.middleware.ts",
+      "layer": "middleware",
+      "size": 9663,
+      "lines": 380,
+      "complexity": 5,
+      "dependencies": [
+        "cors",
+        "helmet",
+        "crypto",
+        "express"
+      ],
+      "exports": [
+        "corsMiddleware",
+        "csrfProtection",
+        "generateSessionCsrfToken",
+        "securityHeaders",
+        "rateLimitConfigs",
+        "csrfTokenProvider",
+        "securityAuditLogger",
+        "originValidation",
+        "developmentSecurityWarning",
+        "apiResponseSecurity",
+        "requestSizeLimits",
+        "cors",
+        "helmet"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    }
+  ],
+  "totalIssues": 0,
+  "avgComplexity": 3.1,
+  "migrationEffort": 10,
+  "dependencies": [
+    "@db/types/id.types",
+    "@server/src/core/logger",
+    "@server/src/core/services/user.service",
+    "@server/src/utils/environment"
+  ],
+  "dependents": [],
+  "criticalPath": false,
+  "riskAssessment": {
+    "runtime": "medium",
+    "testing": "low",
+    "integration": "low"
+  },
+  "migrationStrategy": {
+    "priority": 3,
+    "approach": "atomic",
+    "estimatedDays": 2,
+    "blockers": [],
+    "prerequisites": []
+  }
+}

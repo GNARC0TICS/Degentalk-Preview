@@ -1,0 +1,3620 @@
+{
+  "name": "gamification",
+  "files": [
+    {
+      "path": "server/services/xp-level-service.ts",
+      "domain": "gamification",
+      "layer": "services",
+      "size": 17227,
+      "lines": 610,
+      "complexity": 10,
+      "dependencies": [
+        "@db",
+        "drizzle-orm",
+        "@shared/economy/reward-calculator",
+        "@shared/economy/economy.config"
+      ],
+      "exports": [
+        "XP_ACTIONS",
+        "XpLevelService",
+        "xpLevelService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 61,
+          "context": "userId: number,",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 231,
+          "context": "userId: number,",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 297,
+          "context": "userId: number,",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 328,
+          "context": "private async distributeRewards(tx: any, userId: number, level: number): Promise<void> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 475,
+          "context": "async getUserXpInfo(userId: number): Promise<{",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 556,
+          "context": "private async getUserXpMultiplier(userId: number, forumId?: number): Promise<number> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "critical",
+      "migrationEffort": 2.8000000000000003
+    },
+    {
+      "path": "server/services/xp-clout-service.ts",
+      "domain": "gamification",
+      "layer": "services",
+      "size": 3578,
+      "lines": 113,
+      "complexity": 4,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "XpCloutService",
+        "xpCloutService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 44,
+          "context": "async awardPoints(userId: number, actionKey: string, multiplier: number = 1): Promise<boolean> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 95,
+          "context": "async checkLevelUp(userId: number): Promise<void> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "high",
+      "migrationEffort": 1
+    },
+    {
+      "path": "server/migrations/xp-clout-levels-migration.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 7151,
+      "lines": 159,
+      "complexity": 3,
+      "dependencies": [
+        "drizzle-orm/node-postgres",
+        "pg",
+        "drizzle-orm",
+        "dotenv",
+        "url"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.1
+    },
+    {
+      "path": "server/migrations/add-daily-xp-tracking.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 2924,
+      "lines": 83,
+      "complexity": 2,
+      "dependencies": [
+        "drizzle-orm/node-postgres",
+        "pg",
+        "drizzle-orm",
+        "url",
+        "dotenv"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "server/migrations/20250624_add_visual_fields_to_levels.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 3360,
+      "lines": 83,
+      "complexity": 2,
+      "dependencies": [
+        "drizzle-orm/node-postgres",
+        "pg",
+        "drizzle-orm",
+        "dotenv"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "server/migrations/20250618_add_clout_achievements.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 3480,
+      "lines": 90,
+      "complexity": 2,
+      "dependencies": [
+        "drizzle-orm/node-postgres",
+        "pg",
+        "drizzle-orm",
+        "dotenv"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "server/migrations/20250512_create_xp_action_logs.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 2027,
+      "lines": 51,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm",
+        "@db"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "server/migrations/20250510_create_xp_adjustment_logs.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 1214,
+      "lines": 34,
+      "complexity": 1,
+      "dependencies": [
+        "@db",
+        "drizzle-orm"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "scripts/testing/test-xp-system.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 8452,
+      "lines": 212,
+      "complexity": 3,
+      "dependencies": [
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types"
+      ],
+      "exports": [
+        "testXpSystem "
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 85,
+          "context": "let userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "HeatEventId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7000000000000002
+    },
+    {
+      "path": "scripts/db/seed-xp-actions.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 3261,
+      "lines": 54,
+      "complexity": 2,
+      "dependencies": [
+        "@/db",
+        "@/schema/economy/xpActionSettings",
+        "drizzle-orm"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "scripts/db/seed-default-levels.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 5715,
+      "lines": 149,
+      "complexity": 3,
+      "dependencies": [
+        "node:crypto",
+        "@paralleldrive/cuid2",
+        "@/db",
+        "@/schema",
+        "drizzle-orm"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.6000000000000001
+    },
+    {
+      "path": "scripts/db/seed-badges.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 1850,
+      "lines": 60,
+      "complexity": 1,
+      "dependencies": [
+        "@db",
+        "drizzle-orm"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "scripts/db/seed-achievements.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 2070,
+      "lines": 67,
+      "complexity": 2,
+      "dependencies": [
+        "@db",
+        "@schema"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "scripts/db/initialize-xp-system.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 2369,
+      "lines": 73,
+      "complexity": 1,
+      "dependencies": [
+        "@db",
+        "drizzle-orm",
+        "url",
+        "dotenv"
+      ],
+      "exports": [
+        "initializeXpSystem "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "scripts/db/check-levels-table.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 1573,
+      "lines": 53,
+      "complexity": 2,
+      "dependencies": [
+        "pg",
+        "dotenv"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "shared/types/config/xp.schema.ts",
+      "domain": "gamification",
+      "layer": "types",
+      "size": 7678,
+      "lines": 248,
+      "complexity": 1,
+      "dependencies": [
+        "zod"
+      ],
+      "exports": [
+        "XpActionSchema",
+        "XpMultiplierSchema",
+        "LevelFormulaSchema",
+        "LevelMilestoneSchema",
+        "XpConfigSchema",
+        "XpConfig",
+        "XpAction",
+        "XpMultiplier",
+        "LevelFormula",
+        "LevelMilestone",
+        "validateXpConfig",
+        "validatePartialXpConfig",
+        "defaultXpConfig"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "server/src/middleware/subscription-permissions.ts",
+      "domain": "gamification",
+      "layer": "middleware",
+      "size": 4221,
+      "lines": 166,
+      "complexity": 3,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [
+        "requireVipAccess",
+        "requireDegenAccess",
+        "requirePremiumAccess",
+        "requireSubscriptionBenefit"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.1
+    },
+    {
+      "path": "server/src/middleware/mission-progress.ts",
+      "domain": "gamification",
+      "layer": "middleware",
+      "size": 2650,
+      "lines": 94,
+      "complexity": 3,
+      "dependencies": [
+        "express",
+        "@schema"
+      ],
+      "exports": [
+        "trackMissionProgress"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 55,
+          "context": "userId: number,",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 1.7000000000000002
+    },
+    {
+      "path": "server/src/cron/mission-reset.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 1322,
+      "lines": 43,
+      "complexity": 1,
+      "dependencies": [
+        "node-cron"
+      ],
+      "exports": [
+        "initializeMissionResetJobs"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "db/schema/gamification/missions.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 1577,
+      "lines": 28,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "missions",
+        "Mission",
+        "InsertMission"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "db/schema/gamification/leaderboards.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 907,
+      "lines": 18,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "leaderboardHistory",
+        "LeaderboardHistoryItem"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "db/schema/gamification/achievements.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 2411,
+      "lines": 88,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "achievements",
+        "Achievement",
+        "InsertAchievement",
+        "AchievementCategory",
+        "AchievementTier",
+        "AchievementTriggerType"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/gamification/achievementEvents.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 1391,
+      "lines": 45,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "achievementEvents",
+        "AchievementEvent",
+        "InsertAchievementEvent",
+        "AchievementEventType",
+        "ProcessingStatus"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/pages/leaderboard.tsx",
+      "domain": "gamification",
+      "layer": "pages",
+      "size": 7615,
+      "lines": 236,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/components/ui/loader",
+        "@/components/ui/error-display",
+        "@/lib/utils",
+        "@/hooks/use-toast",
+        "@/components/ui/card",
+        "lucide-react",
+        "@/components/ui/avatar",
+        "framer-motion",
+        "@/components/common/BackToHomeButton"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 23,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.8
+    },
+    {
+      "path": "client/src/hooks/useXP.ts",
+      "domain": "gamification",
+      "layer": "hooks",
+      "size": 4793,
+      "lines": 188,
+      "complexity": 3,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/lib/queryClient",
+        "sonner",
+        "react",
+        "@/lib/safeWebSocket"
+      ],
+      "exports": [
+        "Level",
+        "UserXP",
+        "UserTitle",
+        "UserBadge",
+        "XpAdjustmentEntry",
+        "useXP"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 37,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 47,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 56,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 4.4
+    },
+    {
+      "path": "client/src/hooks/usePermission.ts",
+      "domain": "gamification",
+      "layer": "hooks",
+      "size": 2261,
+      "lines": 69,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@/hooks/use-auth.tsx",
+        "@/contexts/ForumStructureContext"
+      ],
+      "exports": [
+        "PermissionResult",
+        "usePermission"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "MergedForum"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/hooks/useMissions.ts",
+      "domain": "gamification",
+      "layer": "hooks",
+      "size": 5991,
+      "lines": 222,
+      "complexity": 3,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/lib/queryClient",
+        "@/hooks/use-auth",
+        "@/hooks/use-toast"
+      ],
+      "exports": [
+        "Mission",
+        "MissionProgress",
+        "MissionReward",
+        "useMissions"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 8,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 27,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 28,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3.6000000000000005
+    },
+    {
+      "path": "client/src/hooks/use-achievements.ts",
+      "domain": "gamification",
+      "layer": "hooks",
+      "size": 6412,
+      "lines": 230,
+      "complexity": 3,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/lib/api/achievements",
+        "sonner",
+        "@/types/core.types"
+      ],
+      "exports": [
+        "useUserAchievements",
+        "useAchievements",
+        "useAchievementStats",
+        "useAchievement",
+        "useAchievementCompletions",
+        "useAchievementTemplates",
+        "useCreateAchievement",
+        "useUpdateAchievement",
+        "useDeleteAchievement",
+        "useBulkUpdateAchievements",
+        "useManuallyAwardAchievement",
+        "useCreateFromTemplate",
+        "useEmitAchievementEvent"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 55,
+          "context": "export function useAchievement(id: number) {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 68,
+          "context": "export function useAchievementCompletions(id: number, page = 1, limit = 50) {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 115,
+          "context": "mutationFn: ({ id, data }: { id: number; data: Partial<Achievement> }) =>",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 135,
+          "context": "mutationFn: (id: number) => achievementApi.deleteAchievement(id),",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 172,
+          "context": "mutationFn: ({ id, userIds, reason }: { id: number; userIds: string[]; reason?: string }) =>",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ApiErrorData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3.6
+    },
+    {
+      "path": "client/src/contexts/XpToastContext.tsx",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 2449,
+      "lines": 96,
+      "complexity": 1,
+      "dependencies": [
+        "framer-motion",
+        "@/components/xp/XpToast",
+        "@/lib/queryClient"
+      ],
+      "exports": [
+        "useXpToast",
+        "XpToastProvider"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/contexts/LevelUpContext.tsx",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 1794,
+      "lines": 80,
+      "complexity": 0,
+      "dependencies": [
+        "@/components/xp/LevelUpModal",
+        "@/lib/queryClient"
+      ],
+      "exports": [
+        "useLevelUp",
+        "LevelUpProvider"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/gamification/mission.routes.ts",
+      "domain": "gamification",
+      "subdomain": "mission.routes.ts",
+      "layer": "routes",
+      "size": 2783,
+      "lines": 123,
+      "complexity": 1,
+      "dependencies": [
+        "express",
+        "express-rate-limit"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "server/src/domains/gamification/mission.controller.ts",
+      "domain": "gamification",
+      "subdomain": "mission.controller.ts",
+      "layer": "controllers",
+      "size": 14460,
+      "lines": 549,
+      "complexity": 8,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "zod"
+      ],
+      "exports": [
+        "MissionController",
+        "missionController"
+      ],
+      "idPatterns": [
+        {
+          "type": "conversion",
+          "pattern": "Number(req.params.id)",
+          "line": 350,
+          "context": "const missionId = Number(req.params.id);",
+          "suggestedFix": "remove Number(), use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "Number(req.params.id)",
+          "line": 419,
+          "context": "const missionId = Number(req.params.id);",
+          "suggestedFix": "remove Number(), use branded type",
+          "confidence": 0.5
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 1.9999999999999998
+    },
+    {
+      "path": "server/src/domains/gamification/leveling.service.ts",
+      "domain": "gamification",
+      "subdomain": "leveling.service.ts",
+      "layer": "other",
+      "size": 17037,
+      "lines": 687,
+      "complexity": 7,
+      "dependencies": [
+        "@db",
+        "drizzle-orm",
+        "@db/types"
+      ],
+      "exports": [
+        "LevelInfo",
+        "UserProgression",
+        "LeaderboardEntry",
+        "ProgressionAnalytics",
+        "LevelingService",
+        "levelingService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "UserId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.4000000000000004
+    },
+    {
+      "path": "server/src/domains/gamification/leveling.routes.ts",
+      "domain": "gamification",
+      "subdomain": "leveling.routes.ts",
+      "layer": "routes",
+      "size": 2124,
+      "lines": 96,
+      "complexity": 0,
+      "dependencies": [
+        "express",
+        "express-rate-limit"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/gamification/leveling.controller.ts",
+      "domain": "gamification",
+      "subdomain": "leveling.controller.ts",
+      "layer": "controllers",
+      "size": 10351,
+      "lines": 409,
+      "complexity": 7,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "zod"
+      ],
+      "exports": [
+        "LevelingController",
+        "levelingController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 2.4000000000000004
+    },
+    {
+      "path": "server/src/domains/gamification/index.ts",
+      "domain": "gamification",
+      "subdomain": "index.ts",
+      "layer": "other",
+      "size": 922,
+      "lines": 34,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "LevelingService",
+        "levelingService",
+        "AchievementService",
+        "achievementService",
+        "LevelingController",
+        "levelingController",
+        "AchievementController",
+        "achievementController",
+        "default as levelingRoutes ",
+        "default as achievementRoutes "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/gamification/gamification.routes.ts",
+      "domain": "gamification",
+      "subdomain": "gamification.routes.ts",
+      "layer": "routes",
+      "size": 1706,
+      "lines": 65,
+      "complexity": 1,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "server/src/domains/gamification/analytics.service.ts",
+      "domain": "gamification",
+      "subdomain": "analytics.service.ts",
+      "layer": "other",
+      "size": 14947,
+      "lines": 582,
+      "complexity": 4,
+      "dependencies": [
+        "@db",
+        "drizzle-orm",
+        "@/db/types"
+      ],
+      "exports": [
+        "ProgressionMetrics",
+        "AchievementMetrics",
+        "MissionMetrics",
+        "EngagementMetrics",
+        "SystemHealth",
+        "GamificationDashboard",
+        "GamificationAnalyticsService",
+        "gamificationAnalyticsService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "UserId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7999999999999998
+    },
+    {
+      "path": "server/src/domains/gamification/analytics.routes.ts",
+      "domain": "gamification",
+      "subdomain": "analytics.routes.ts",
+      "layer": "routes",
+      "size": 3121,
+      "lines": 132,
+      "complexity": 1,
+      "dependencies": [
+        "express",
+        "express-rate-limit"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "server/src/domains/gamification/analytics.controller.ts",
+      "domain": "gamification",
+      "subdomain": "analytics.controller.ts",
+      "layer": "controllers",
+      "size": 11349,
+      "lines": 435,
+      "complexity": 7,
+      "dependencies": [
+        "express",
+        "zod"
+      ],
+      "exports": [
+        "GamificationAnalyticsController",
+        "gamificationAnalyticsController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 1.4000000000000001
+    },
+    {
+      "path": "server/src/domains/gamification/admin.routes.ts",
+      "domain": "gamification",
+      "subdomain": "admin.routes.ts",
+      "layer": "routes",
+      "size": 2747,
+      "lines": 110,
+      "complexity": 1,
+      "dependencies": [
+        "express",
+        "express-rate-limit"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "server/src/domains/gamification/admin.controller.ts",
+      "domain": "gamification",
+      "subdomain": "admin.controller.ts",
+      "layer": "controllers",
+      "size": 16234,
+      "lines": 595,
+      "complexity": 7,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "zod"
+      ],
+      "exports": [
+        "GamificationAdminController",
+        "gamificationAdminController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 2.4000000000000004
+    },
+    {
+      "path": "server/src/domains/gamification/achievement.service.ts",
+      "domain": "gamification",
+      "subdomain": "achievement.service.ts",
+      "layer": "other",
+      "size": 20587,
+      "lines": 766,
+      "complexity": 9,
+      "dependencies": [
+        "@db",
+        "drizzle-orm",
+        "@/db/types"
+      ],
+      "exports": [
+        "AchievementDefinition",
+        "AchievementRequirement",
+        "UserAchievementProgress",
+        "AchievementStats",
+        "AchievementService",
+        "achievementService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 28,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 639,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "UserId",
+          "AchievementId"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 3
+    },
+    {
+      "path": "server/src/domains/gamification/achievement.routes.ts",
+      "domain": "gamification",
+      "subdomain": "achievement.routes.ts",
+      "layer": "routes",
+      "size": 2692,
+      "lines": 119,
+      "complexity": 1,
+      "dependencies": [
+        "express",
+        "express-rate-limit"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "server/src/domains/gamification/achievement.controller.ts",
+      "domain": "gamification",
+      "subdomain": "achievement.controller.ts",
+      "layer": "controllers",
+      "size": 12747,
+      "lines": 483,
+      "complexity": 7,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "zod"
+      ],
+      "exports": [
+        "AchievementController",
+        "achievementController"
+      ],
+      "idPatterns": [
+        {
+          "type": "conversion",
+          "pattern": "Number(req.params.id)",
+          "line": 449,
+          "context": "const achievementId = Number(req.params.id);",
+          "suggestedFix": "remove Number(), use branded type",
+          "confidence": 0.5
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "server/src/core/events/achievement-events.service.ts",
+      "domain": "gamification",
+      "layer": "other",
+      "size": 7497,
+      "lines": 265,
+      "complexity": 5,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "@schema"
+      ],
+      "exports": [
+        "AchievementEventEmitter"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "AchievementEventType"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2
+    },
+    {
+      "path": "client/src/pages/missions/index.tsx",
+      "domain": "gamification",
+      "subdomain": "index.tsx",
+      "layer": "pages",
+      "size": 3721,
+      "lines": 114,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "react-helmet",
+        "wouter",
+        "@/hooks/use-auth",
+        "@/hooks/use-gamification",
+        "@/components/gamification",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/alert",
+        "lucide-react"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/pages/admin/xp-system.tsx",
+      "domain": "gamification",
+      "layer": "pages",
+      "size": 22583,
+      "lines": 705,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/hooks/use-toast",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/card",
+        "@/components/ui/tabs",
+        "@/lib/queryClient",
+        "@/components/admin/layout/AdminPageShell",
+        "@/components/admin/common/AdminDataTable",
+        "@/components/admin/forms/xp/LevelFormDialogs",
+        "@/components/admin/protected-admin-route",
+        "@/hooks/use-admin-modules",
+        "@/features/admin/services/xpActionsService"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 136,
+          "context": "mutationFn: ({ id, data }: { id: number; data: LevelFormData }) =>",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 150,
+          "context": "mutationFn: (id: number) => apiRequest({ url: `/api/admin/xp/levels/${id}`, method: 'DELETE' }),",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Level",
+          "LevelFormData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3.5
+    },
+    {
+      "path": "client/src/lib/api/achievements.ts",
+      "domain": "gamification",
+      "layer": "utils",
+      "size": 4678,
+      "lines": 207,
+      "complexity": 0,
+      "dependencies": [
+        "@/lib/queryClient"
+      ],
+      "exports": [
+        "UserAchievement",
+        "Achievement",
+        "AchievementStats",
+        "AchievementFilters",
+        "PaginatedResponse",
+        "achievementApi"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 11,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 18,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 35,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 115,
+          "context": "getAchievementById: (id: number) =>",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 123,
+          "context": "getAchievementCompletions: (id: number, page = 1, limit = 50) =>",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 142,
+          "context": "updateAchievement: (id: number, achievementData: Partial<Achievement>) =>",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 152,
+          "context": "deleteAchievement: (id: number) =>",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 171,
+          "context": "manuallyAwardAchievement: (id: number, userIds: string[], reason?: string) =>",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 4.3
+    },
+    {
+      "path": "client/src/components/xp/tracks.ts",
+      "domain": "gamification",
+      "subdomain": "tracks.ts",
+      "layer": "components",
+      "size": 334,
+      "lines": 19,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "XPTrack",
+        "xpTracks"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/xp/XpToast.tsx",
+      "domain": "gamification",
+      "subdomain": "XpToast.tsx",
+      "layer": "components",
+      "size": 4507,
+      "lines": 154,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "framer-motion",
+        "lucide-react"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/xp/XPBarsContainer.tsx",
+      "domain": "gamification",
+      "subdomain": "XPBarsContainer.tsx",
+      "layer": "components",
+      "size": 639,
+      "lines": 26,
+      "complexity": 0,
+      "dependencies": [
+        "react"
+      ],
+      "exports": [
+        "UserXP",
+        "XPBarsContainerProps"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/xp/XPBarTrack.tsx",
+      "domain": "gamification",
+      "subdomain": "XPBarTrack.tsx",
+      "layer": "components",
+      "size": 1620,
+      "lines": 59,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@/shared/economy/reward-calculator"
+      ],
+      "exports": [
+        "XPBarTrackProps"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "XPTrack"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/xp/LevelUpModal.tsx",
+      "domain": "gamification",
+      "subdomain": "LevelUpModal.tsx",
+      "layer": "components",
+      "size": 5380,
+      "lines": 186,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "framer-motion",
+        "canvas-confetti",
+        "lucide-react",
+        "@/components/ui/button"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/ui/tag-badge.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 667,
+      "lines": 26,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@/components/ui/badge",
+        "@/types/forum"
+      ],
+      "exports": [
+        "TagBadge"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Tag"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/ui/badge.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 1138,
+      "lines": 34,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "class-variance-authority",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "BadgeProps",
+        "Badge",
+        "badgeVariants"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/sidebar/leaderboard-widget.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 6900,
+      "lines": 198,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "wouter",
+        "lucide-react",
+        "@/components/ui/card",
+        "@/components/ui/avatar",
+        "@/components/ui/button",
+        "@/components/ui/skeleton",
+        "@/components/ui/badge",
+        "@/contexts/content-feed-context",
+        "@/lib/utils",
+        "@/types/compat/user"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "User"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.10000000000000003
+    },
+    {
+      "path": "client/src/components/missions/MissionsWidget.tsx",
+      "domain": "gamification",
+      "subdomain": "MissionsWidget.tsx",
+      "layer": "components",
+      "size": 5059,
+      "lines": 161,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@/hooks/useMissions",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/progress",
+        "lucide-react",
+        "framer-motion",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "MissionsWidget"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/missions/DailyMissions.tsx",
+      "domain": "gamification",
+      "subdomain": "DailyMissions.tsx",
+      "layer": "components",
+      "size": 10478,
+      "lines": 379,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@/hooks/useMissions",
+        "@/components/ui/tabs",
+        "@/components/ui/button",
+        "@/components/ui/progress",
+        "@/components/ui/badge",
+        "@/components/ui/scroll-area",
+        "@/components/ui/skeleton",
+        "framer-motion",
+        "@/hooks/use-auth",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "DailyMissions"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 37,
+          "context": "onClaim: (id: number) => void;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3
+    },
+    {
+      "path": "client/src/components/identity/RoleBadge.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 487,
+      "lines": 21,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@/components/ui/badge",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "Role",
+        "RoleBadge"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/identity/LevelBadge.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 111,
+      "lines": 3,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "LevelBadge "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/gamification/mission-dashboard.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 10251,
+      "lines": 347,
+      "complexity": 1,
+      "dependencies": [
+        "@/lib/utils",
+        "@/components/ui/card",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/tabs",
+        "@/components/ui/progress",
+        "@/components/ui/alert",
+        "framer-motion"
+      ],
+      "exports": [
+        "MissionDashboard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "MissionProgress",
+          "Mission"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/gamification/mission-card.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 7463,
+      "lines": 276,
+      "complexity": 2,
+      "dependencies": [
+        "@/lib/utils",
+        "@/components/ui/card",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/progress",
+        "framer-motion",
+        "@/features/gamification/services/gamification-api.service"
+      ],
+      "exports": [
+        "MissionCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "MissionProgress"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/components/gamification/level-up-modal.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 6406,
+      "lines": 229,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/lib/utils",
+        "@/components/ui/dialog",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/lib/utils",
+        "lucide-react",
+        "framer-motion",
+        "canvas-confetti",
+        "@/features/gamification/services/gamification-api.service"
+      ],
+      "exports": [
+        "LevelUpModal"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "LevelInfo"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/gamification/level-display.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 5744,
+      "lines": 236,
+      "complexity": 2,
+      "dependencies": [
+        "@/lib/utils",
+        "@/components/ui/badge",
+        "@/components/ui/tooltip",
+        "lucide-react",
+        "framer-motion"
+      ],
+      "exports": [
+        "LevelDisplay",
+        "LevelBadge"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/components/gamification/leaderboard.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 10775,
+      "lines": 335,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/lib/utils",
+        "@/components/ui/card",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/avatar",
+        "@/components/ui/tabs",
+        "@/lib/utils",
+        "framer-motion",
+        "wouter",
+        "@/features/gamification/services/gamification-api.service"
+      ],
+      "exports": [
+        "Leaderboard"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 101,
+          "context": "const toggleRowExpansion = (userId: number) => {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "LeaderboardEntry"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.8
+    },
+    {
+      "path": "client/src/components/gamification/achievement-unlock-modal.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 7538,
+      "lines": 274,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/lib/utils",
+        "@/components/ui/dialog",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/lib/utils",
+        "lucide-react",
+        "framer-motion",
+        "canvas-confetti",
+        "@/features/gamification/services/gamification-api.service"
+      ],
+      "exports": [
+        "AchievementUnlockModal"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Achievement"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/gamification/achievement-grid.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 8195,
+      "lines": 245,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/lib/utils",
+        "@/components/ui/card",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/tabs",
+        "@/components/ui/progress",
+        "lucide-react",
+        "@/features/gamification/services/gamification-api.service"
+      ],
+      "exports": [
+        "AchievementGrid"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "UserAchievement"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/components/gamification/achievement-card.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 8143,
+      "lines": 279,
+      "complexity": 1,
+      "dependencies": [
+        "@/lib/utils",
+        "@/components/ui/card",
+        "@/components/ui/progress",
+        "@/components/ui/badge",
+        "@/components/ui/tooltip",
+        "lucide-react",
+        "framer-motion",
+        "@/features/gamification/services/gamification-api.service"
+      ],
+      "exports": [
+        "AchievementCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "UserAchievement"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/admin/XpActionRow.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 1166,
+      "lines": 49,
+      "complexity": 1,
+      "dependencies": [
+        "@/components/ui/input",
+        "@/components/ui/switch",
+        "react",
+        "@/features/admin/services/xpActionsService"
+      ],
+      "exports": [
+        "XpAction",
+        "XpActionRow"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "server/src/domains/gamification/achievements/index.ts",
+      "domain": "gamification",
+      "subdomain": "achievements",
+      "layer": "other",
+      "size": 1185,
+      "lines": 40,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "AchievementProcessorService ",
+        "AchievementAdminService ",
+        "AchievementEventEmitter ",
+        "DegenAchievementEvaluators ",
+        "getAllAchievementTemplates",
+        "getTemplateById",
+        "getTemplatesByTags",
+        "getTemplatesByCategory",
+        "CORE_ACHIEVEMENT_TEMPLATES",
+        "CULTURAL_ACHIEVEMENT_TEMPLATES",
+        "AchievementController ",
+        "achievementRoutes "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/gamification/achievements/achievement.routes.ts",
+      "domain": "gamification",
+      "subdomain": "achievements",
+      "layer": "routes",
+      "size": 2965,
+      "lines": 129,
+      "complexity": 0,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [
+        "router as achievementRoutes "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/gamification/achievements/achievement.controller.ts",
+      "domain": "gamification",
+      "subdomain": "achievements",
+      "layer": "controllers",
+      "size": 13718,
+      "lines": 512,
+      "complexity": 7,
+      "dependencies": [
+        "express",
+        "@db",
+        "drizzle-orm",
+        "@schema",
+        "@schema"
+      ],
+      "exports": [
+        "AchievementController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 2.4000000000000004
+    },
+    {
+      "path": "server/src/domains/gamification/achievements/achievement-processor.service.ts",
+      "domain": "gamification",
+      "subdomain": "achievements",
+      "layer": "other",
+      "size": 15529,
+      "lines": 575,
+      "complexity": 8,
+      "dependencies": [
+        "@db",
+        "drizzle-orm",
+        "@schema",
+        "@schema",
+        "@schema",
+        "@schema",
+        "@/db/types"
+      ],
+      "exports": [
+        "AchievementProgress",
+        "AchievementProcessorService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Achievement",
+          "UserAchievement"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.6
+    },
+    {
+      "path": "server/src/domains/gamification/achievements/achievement-admin.service.ts",
+      "domain": "gamification",
+      "subdomain": "achievements",
+      "layer": "other",
+      "size": 15929,
+      "lines": 616,
+      "complexity": 7,
+      "dependencies": [
+        "@db",
+        "drizzle-orm",
+        "@schema",
+        "@/db/types"
+      ],
+      "exports": [
+        "AchievementFilters",
+        "AchievementStats",
+        "AchievementWithStats",
+        "AchievementAdminService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Achievement",
+          "InsertAchievement",
+          "AchievementCategory",
+          "AchievementTier",
+          "AchievementTriggerType"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.6000000000000003
+    },
+    {
+      "path": "client/src/pages/ui-playground/sections/AvatarBadgesSection.tsx",
+      "domain": "gamification",
+      "layer": "pages",
+      "size": 1874,
+      "lines": 54,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@/pages/dev",
+        "lucide-react",
+        "@/components/ui/badge",
+        "@/config/frames.config"
+      ],
+      "exports": [
+        "AvatarBadgesSection"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/pages/admin/permissions/index.tsx",
+      "domain": "gamification",
+      "subdomain": "index.tsx",
+      "layer": "pages",
+      "size": 290,
+      "lines": 11,
+      "complexity": 0,
+      "dependencies": [
+        "react"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/pages/admin/missions/index.tsx",
+      "domain": "gamification",
+      "subdomain": "index.tsx",
+      "layer": "pages",
+      "size": 19103,
+      "lines": 649,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "react-query",
+        "@/lib/queryClient",
+        "lucide-react",
+        "@/hooks/use-toast",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/badge",
+        "@/components/ui/separator",
+        "@/components/ui/switch",
+        "@/components/ui/label",
+        "@/components/ui/tabs"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 48,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 4.2
+    },
+    {
+      "path": "client/src/pages/admin/config/xp.tsx",
+      "domain": "gamification",
+      "layer": "pages",
+      "size": 1915,
+      "lines": 65,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "lucide-react",
+        "@/components/ui/textarea.tsx",
+        "@/components/ui/button.tsx",
+        "@/hooks/use-toast.ts",
+        "@/lib/queryClient.ts"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/pages/admin/xp/titles.tsx",
+      "domain": "gamification",
+      "subdomain": "titles.tsx",
+      "layer": "pages",
+      "size": 24568,
+      "lines": 817,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "lucide-react",
+        "@/hooks/use-toast",
+        "@/components/ui/input",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/label",
+        "@/components/ui/textarea",
+        "@/components/ui/card",
+        "@/components/ui/tabs",
+        "@/hooks/use-debounce",
+        "@/lib/queryClient",
+        "@/components/admin/layout/AdminPageShell",
+        "@/components/admin/forms/xp/TitleMediaInput",
+        "@/components/media/MediaAsset"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 43,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 174,
+          "context": "mutationFn: async ({ id, data }: { id: number; data: TitleFormData }) => {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 196,
+          "context": "mutationFn: async (id: number) => {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3.2
+    },
+    {
+      "path": "client/src/pages/admin/xp/badges.tsx",
+      "domain": "gamification",
+      "subdomain": "badges.tsx",
+      "layer": "pages",
+      "size": 10807,
+      "lines": 339,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "lucide-react",
+        "@/components/ui/input",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/card",
+        "@/hooks/use-debounce",
+        "@/lib/queryClient",
+        "@/hooks/useCrudMutation",
+        "@/components/admin/layout/AdminPageShell",
+        "@/components/admin/common/AdminDataTable",
+        "@/components/admin/forms/xp/BadgeFormDialogs"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 97,
+          "context": "const updateBadgeMutation = useCrudMutation<unknown, Error, { id: number; data: BadgeFormData }>({",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Badge",
+          "BadgeFormData"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.8
+    },
+    {
+      "path": "client/src/pages/admin/xp/adjust.tsx",
+      "domain": "gamification",
+      "subdomain": "adjust.tsx",
+      "layer": "pages",
+      "size": 27324,
+      "lines": 887,
+      "complexity": 6,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/hooks/use-toast",
+        "@/components/ui/input",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/tabs",
+        "@/components/ui/label",
+        "@/components/ui/textarea",
+        "@/components/ui/radio-group",
+        "@/components/ui/checkbox",
+        "@/components/ui/avatar",
+        "@/hooks/use-debounce",
+        "@/lib/queryClient",
+        "@shared/economy/reward-calculator",
+        "@/config/easter-eggs.config",
+        "@/components/admin/effects/BankruptcyEffect"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 70,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3.8000000000000003
+    },
+    {
+      "path": "client/src/pages/admin/xp/actions.tsx",
+      "domain": "gamification",
+      "subdomain": "actions.tsx",
+      "layer": "pages",
+      "size": 1276,
+      "lines": 41,
+      "complexity": 1,
+      "dependencies": [
+        "@/features/admin/services/xpActionsService",
+        "@/components/admin/XpActionRow",
+        "@/components/ui/table",
+        "@/components/ui/card"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/pages/admin/clout/achievements.tsx",
+      "domain": "gamification",
+      "layer": "pages",
+      "size": 2032,
+      "lines": 57,
+      "complexity": 1,
+      "dependencies": [
+        "@/features/admin/services/cloutAchievementsService",
+        "@/components/ui/table",
+        "@/components/ui/card",
+        "@/components/ui/switch",
+        "@/features/admin/services/cloutAchievementsService"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/features/admin/services/xpCloutService.ts",
+      "domain": "gamification",
+      "layer": "services",
+      "size": 670,
+      "lines": 23,
+      "complexity": 1,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/lib/adminApi",
+        "@/types/compat/economy"
+      ],
+      "exports": [
+        "useXpCloutSettings",
+        "useUpdateXpCloutSettings"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "InsertXpCloutSettings"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/features/admin/services/xpActionsService.ts",
+      "domain": "gamification",
+      "layer": "services",
+      "size": 716,
+      "lines": 29,
+      "complexity": 1,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/lib/adminApi",
+        "@/types/compat/economy"
+      ],
+      "exports": [
+        "useXpActions",
+        "useUpdateXpAction"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "InsertXpActionSetting"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/features/admin/services/cloutAchievementsService.ts",
+      "domain": "gamification",
+      "layer": "services",
+      "size": 1394,
+      "lines": 45,
+      "complexity": 1,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/lib/adminApi"
+      ],
+      "exports": [
+        "ACHIEVEMENTS_KEY",
+        "useCloutAchievements",
+        "useCreateAchievement",
+        "useUpdateAchievement",
+        "useToggleAchievement",
+        "useDeleteAchievement"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 24,
+          "context": "mutationFn: ({ id, payload }: { id: number; payload: any }) =>",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 33,
+          "context": "mutationFn: (id: number) => adminApi.post(`/clout/achievements/${id}/toggle`, {}),",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 41,
+          "context": "mutationFn: (id: number) => adminApi.delete(`/clout/achievements/${id}`),",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "high",
+      "migrationEffort": 4
+    },
+    {
+      "path": "client/src/components/platform-energy/leaderboards/weekly-leaderboard.tsx",
+      "domain": "gamification",
+      "subdomain": "weekly-leaderboard.tsx",
+      "layer": "components",
+      "size": 7085,
+      "lines": 242,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "wouter",
+        "@/components/ui/card",
+        "@/components/ui/tabs",
+        "@/components/ui/avatar",
+        "@/components/ui/skeleton",
+        "@/components/ui/badge",
+        "@/lib/utils",
+        "lucide-react"
+      ],
+      "exports": [
+        "LeaderboardUser",
+        "WeeklyLeaderboard"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 13,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3
+    },
+    {
+      "path": "client/src/components/admin/permissions/PermissionsOverview.tsx",
+      "domain": "gamification",
+      "subdomain": "PermissionsOverview.tsx",
+      "layer": "components",
+      "size": 819,
+      "lines": 39,
+      "complexity": 1,
+      "dependencies": [
+        "@/components/ui/card"
+      ],
+      "exports": [
+        "PermissionsOverview"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/admin/permissions/PermissionsEditor.tsx",
+      "domain": "gamification",
+      "subdomain": "PermissionsEditor.tsx",
+      "layer": "components",
+      "size": 2973,
+      "lines": 108,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/card",
+        "@/components/ui/checkbox",
+        "@/components/ui/button"
+      ],
+      "exports": [
+        "PermissionsEditor"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/admin/clout/AchievementsSection.tsx",
+      "domain": "gamification",
+      "layer": "components",
+      "size": 25083,
+      "lines": 838,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/components/ui/card",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/input",
+        "@/components/ui/textarea",
+        "@/components/ui/switch",
+        "react-hook-form",
+        "@hookform/resolvers/zod",
+        "zod",
+        "@/hooks/use-toast",
+        "@/lib/queryClient",
+        "@/pages/admin/clout"
+      ],
+      "exports": [
+        "AchievementsSection"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 164,
+          "context": "mutationFn: async (data: AchievementForm & { id: number }) => {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 192,
+          "context": "mutationFn: async (id: number) => {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 218,
+          "context": "mutationFn: async (id: number) => {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "CloutAchievement"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3.7
+    },
+    {
+      "path": "server/src/domains/gamification/achievements/templates/achievement-templates.ts",
+      "domain": "gamification",
+      "subdomain": "achievements",
+      "layer": "other",
+      "size": 14406,
+      "lines": 623,
+      "complexity": 2,
+      "dependencies": [
+        "@schema/gamification/achievements"
+      ],
+      "exports": [
+        "AchievementTemplate",
+        "CORE_ACHIEVEMENT_TEMPLATES",
+        "CULTURAL_ACHIEVEMENT_TEMPLATES",
+        "getAllAchievementTemplates",
+        "getTemplateById",
+        "getTemplatesByTags",
+        "getTemplatesByCategory"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "InsertAchievement"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "server/src/domains/gamification/achievements/evaluators/degen-evaluators.ts",
+      "domain": "gamification",
+      "subdomain": "achievements",
+      "layer": "other",
+      "size": 16124,
+      "lines": 569,
+      "complexity": 8,
+      "dependencies": [
+        "@db",
+        "drizzle-orm",
+        "@schema",
+        "@schema"
+      ],
+      "exports": [
+        "EvaluatorConfig",
+        "DegenAchievementEvaluators"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "AchievementEventType"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.6
+    },
+    {
+      "path": "client/src/components/admin/forms/xp/TitleMediaInput.tsx",
+      "domain": "gamification",
+      "subdomain": "TitleMediaInput.tsx",
+      "layer": "components",
+      "size": 1121,
+      "lines": 40,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@/components/ui/button",
+        "lucide-react",
+        "@/components/media/MediaAsset",
+        "@/components/admin/media/MediaPickerModal"
+      ],
+      "exports": [
+        "TitleMediaInput"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/admin/forms/xp/LevelFormDialogs.tsx",
+      "domain": "gamification",
+      "subdomain": "LevelFormDialogs.tsx",
+      "layer": "components",
+      "size": 10637,
+      "lines": 360,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/input",
+        "@/components/ui/button",
+        "@/components/ui/label",
+        "@/components/ui/tabs",
+        "@/components/ui/textarea",
+        "@/components/admin/forms/xp/TitleMediaInput",
+        "@/components/admin/inputs/UnlockMultiSelect"
+      ],
+      "exports": [
+        "LevelFormData",
+        "Level",
+        "LevelFormDialogComponent",
+        "DeleteLevelConfirmationDialog"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 49,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3.8
+    },
+    {
+      "path": "client/src/components/admin/forms/xp/BadgeFormDialogs.tsx",
+      "domain": "gamification",
+      "subdomain": "BadgeFormDialogs.tsx",
+      "layer": "components",
+      "size": 6948,
+      "lines": 238,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/input",
+        "@/components/ui/button",
+        "@/components/ui/label",
+        "@/components/ui/textarea",
+        "lucide-react",
+        "@/components/admin/media/MediaPickerModal",
+        "@/components/media/MediaAsset"
+      ],
+      "exports": [
+        "BadgeFormData",
+        "Badge",
+        "RARITIES",
+        "getBadgeRarityDisplay",
+        "BadgeFormDialogComponent",
+        "DeleteBadgeConfirmationDialog"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 37,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.8
+    }
+  ],
+  "totalIssues": 54,
+  "avgComplexity": 2.1770833333333335,
+  "migrationEffort": 137.70000000000007,
+  "dependencies": [
+    "@db",
+    "@shared/economy/reward-calculator",
+    "@shared/economy/economy.config",
+    "@schema",
+    "@db/types",
+    "@/db",
+    "@/schema/economy/xpActionSettings",
+    "@paralleldrive/cuid2",
+    "@/schema",
+    "@tanstack/react-query",
+    "@/components/ui/loader",
+    "@/components/ui/error-display",
+    "@/lib/utils",
+    "@/hooks/use-toast",
+    "@/components/ui/card",
+    "@/components/ui/avatar",
+    "@/components/common/BackToHomeButton",
+    "@/lib/queryClient",
+    "@/lib/safeWebSocket",
+    "@/hooks/use-auth.tsx",
+    "@/contexts/ForumStructureContext",
+    "@/hooks/use-auth",
+    "@/lib/api/achievements",
+    "@/types/core.types",
+    "@/components/xp/XpToast",
+    "@/components/xp/LevelUpModal",
+    "@server/src/core/services/user.service",
+    "@/db/types",
+    "@/hooks/use-gamification",
+    "@/components/gamification",
+    "@/components/ui/button",
+    "@/components/ui/alert",
+    "@/components/ui/badge",
+    "@/components/ui/tabs",
+    "@/components/admin/layout/AdminPageShell",
+    "@/components/admin/common/AdminDataTable",
+    "@/components/admin/forms/xp/LevelFormDialogs",
+    "@/components/admin/protected-admin-route",
+    "@/hooks/use-admin-modules",
+    "@/features/admin/services/xpActionsService",
+    "@/shared/economy/reward-calculator",
+    "@/types/forum",
+    "@/components/ui/skeleton",
+    "@/contexts/content-feed-context",
+    "@/types/compat/user",
+    "@/hooks/useMissions",
+    "@/components/ui/progress",
+    "@/components/ui/scroll-area",
+    "@/features/gamification/services/gamification-api.service",
+    "@/components/ui/dialog",
+    "@/components/ui/tooltip",
+    "@/components/ui/input",
+    "@/components/ui/switch",
+    "@/pages/dev",
+    "@/config/frames.config",
+    "@/components/ui/separator",
+    "@/components/ui/label",
+    "@/components/ui/textarea.tsx",
+    "@/components/ui/button.tsx",
+    "@/hooks/use-toast.ts",
+    "@/lib/queryClient.ts",
+    "@/components/ui/textarea",
+    "@/hooks/use-debounce",
+    "@/components/admin/forms/xp/TitleMediaInput",
+    "@/components/media/MediaAsset",
+    "@/hooks/useCrudMutation",
+    "@/components/admin/forms/xp/BadgeFormDialogs",
+    "@/components/ui/radio-group",
+    "@/components/ui/checkbox",
+    "@/config/easter-eggs.config",
+    "@/components/admin/effects/BankruptcyEffect",
+    "@/components/admin/XpActionRow",
+    "@/components/ui/table",
+    "@/features/admin/services/cloutAchievementsService",
+    "@/lib/adminApi",
+    "@/types/compat/economy",
+    "@hookform/resolvers/zod",
+    "@/pages/admin/clout",
+    "@schema/gamification/achievements",
+    "@/components/admin/media/MediaPickerModal",
+    "@/components/admin/inputs/UnlockMultiSelect"
+  ],
+  "dependents": [
+    "other",
+    "user-management"
+  ],
+  "criticalPath": false,
+  "riskAssessment": {
+    "runtime": "critical",
+    "testing": "high",
+    "integration": "medium"
+  },
+  "migrationStrategy": {
+    "priority": 2,
+    "approach": "incremental",
+    "estimatedDays": 28,
+    "blockers": [
+      "Dependencies from: other, user-management"
+    ],
+    "prerequisites": []
+  }
+}

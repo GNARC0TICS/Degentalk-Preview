@@ -1,0 +1,359 @@
+{
+  "name": "xp",
+  "files": [
+    {
+      "path": "server/src/domains/xp/xp.service.ts",
+      "domain": "xp",
+      "subdomain": "xp.service.ts",
+      "layer": "other",
+      "size": 17016,
+      "lines": 603,
+      "complexity": 10,
+      "dependencies": [
+        "drizzle-orm",
+        "@db",
+        "@shared/economy/economy.config",
+        "@/db/types"
+      ],
+      "exports": [
+        "XpService",
+        "xpService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 431,
+          "context": "// private async updateActionLimits(userId: number, action: XP_ACTION): Promise<void> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "AdminId",
+          "ForumId",
+          "UserId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3.1
+    },
+    {
+      "path": "server/src/domains/xp/xp.routes.ts",
+      "domain": "xp",
+      "subdomain": "xp.routes.ts",
+      "layer": "routes",
+      "size": 1027,
+      "lines": 30,
+      "complexity": 1,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "server/src/domains/xp/xp.events.ts",
+      "domain": "xp",
+      "subdomain": "xp.events.ts",
+      "layer": "other",
+      "size": 822,
+      "lines": 46,
+      "complexity": 1,
+      "dependencies": [
+        "@/db/types"
+      ],
+      "exports": [
+        "XpGainEvent",
+        "XpLossEvent",
+        "LevelUpEvent"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "UserId"
+        ]
+      },
+      "riskLevel": "low",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "server/src/domains/xp/xp.controller.ts",
+      "domain": "xp",
+      "subdomain": "xp.controller.ts",
+      "layer": "controllers",
+      "size": 9238,
+      "lines": 298,
+      "complexity": 7,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "@schema",
+        "@db",
+        "drizzle-orm",
+        "@schema",
+        "zod",
+        "drizzle-orm/select-builder/select"
+      ],
+      "exports": [
+        "awardXpForAction",
+        "getUserXpInfo",
+        "getXpActions",
+        "getUserXpLogs",
+        "awardActionXp"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.4000000000000004
+    },
+    {
+      "path": "server/src/domains/xp/xp.admin.routes.ts",
+      "domain": "xp",
+      "subdomain": "xp.admin.routes.ts",
+      "layer": "routes",
+      "size": 1857,
+      "lines": 46,
+      "complexity": 0,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/xp/xp-actions.ts",
+      "domain": "xp",
+      "subdomain": "xp-actions.ts",
+      "layer": "other",
+      "size": 5451,
+      "lines": 210,
+      "complexity": 4,
+      "dependencies": [
+        "@schema",
+        "drizzle-orm",
+        "@db"
+      ],
+      "exports": [
+        "XpActionConfig",
+        "DEFAULT_XP_ACTIONS",
+        "XP_ACTIONS",
+        "getXpActionSync",
+        "getXpValueForActionSync"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.8
+    },
+    {
+      "path": "server/src/domains/xp/xp-actions.controller.ts",
+      "domain": "xp",
+      "subdomain": "xp-actions.controller.ts",
+      "layer": "controllers",
+      "size": 471,
+      "lines": 18,
+      "complexity": 1,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "server/src/domains/xp/xp-actions-schema.ts",
+      "domain": "xp",
+      "subdomain": "xp-actions-schema.ts",
+      "layer": "other",
+      "size": 1865,
+      "lines": 51,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm/pg-core",
+        "@schema"
+      ],
+      "exports": [
+        "xpActionLogs",
+        "xpActionLimits",
+        "XpActionLog",
+        "InsertXpActionLog",
+        "XpActionLimit",
+        "InsertXpActionLimit"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "server/src/domains/xp/events/xp.events.ts",
+      "domain": "xp",
+      "subdomain": "events",
+      "layer": "other",
+      "size": 9222,
+      "lines": 390,
+      "complexity": 6,
+      "dependencies": [
+        "@db",
+        "drizzle-orm",
+        "drizzle-orm/pg-core",
+        "@/db/types"
+      ],
+      "exports": [
+        "XpGainEvent",
+        "XpLossEvent",
+        "LevelUpEvent"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "UserId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.2
+    }
+  ],
+  "totalIssues": 1,
+  "avgComplexity": 3.4444444444444446,
+  "migrationEffort": 11.8,
+  "dependencies": [
+    "@db",
+    "@shared/economy/economy.config",
+    "@/db/types",
+    "@server/src/core/services/user.service",
+    "@schema"
+  ],
+  "dependents": [
+    "other",
+    "engagement",
+    "gamification",
+    "user-management",
+    "infrastructure",
+    "economy",
+    "wallet",
+    "user",
+    "uploads",
+    "treasury",
+    "subscriptions",
+    "social",
+    "shoutbox",
+    "shop",
+    "profile",
+    "preferences",
+    "paths",
+    "notifications",
+    "missions",
+    "messaging",
+    "forum",
+    "feature-gates",
+    "editor",
+    "dictionary",
+    "ccpayment-webhook",
+    "auth",
+    "advertising",
+    "admin",
+    "cosmetics",
+    "share",
+    "collectibles",
+    "activity",
+    "forum-core"
+  ],
+  "criticalPath": true,
+  "riskAssessment": {
+    "runtime": "medium",
+    "testing": "low",
+    "integration": "high"
+  },
+  "migrationStrategy": {
+    "priority": 2,
+    "approach": "atomic",
+    "estimatedDays": 3,
+    "blockers": [
+      "Dependencies from: other, engagement, gamification, user-management, infrastructure, economy, wallet, user, uploads, treasury, subscriptions, social, shoutbox, shop, profile, preferences, paths, notifications, missions, messaging, forum, feature-gates, editor, dictionary, ccpayment-webhook, auth, advertising, admin, cosmetics, share, collectibles, activity, forum-core"
+    ],
+    "prerequisites": []
+  }
+}

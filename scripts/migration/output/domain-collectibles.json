@@ -1,0 +1,221 @@
+{
+  "name": "collectibles",
+  "files": [
+    {
+      "path": "server/src/domains/collectibles/stickers/stickers.validators.ts",
+      "domain": "collectibles",
+      "subdomain": "stickers",
+      "layer": "other",
+      "size": 6529,
+      "lines": 190,
+      "complexity": 0,
+      "dependencies": [
+        "zod"
+      ],
+      "exports": [
+        "StickerRaritySchema",
+        "StickerUnlockTypeSchema",
+        "StickerFormatSchema",
+        "createStickerSchema",
+        "updateStickerSchema",
+        "listStickersSchema",
+        "createStickerPackSchema",
+        "updateStickerPackSchema",
+        "listStickerPacksSchema",
+        "bulkDeleteStickersSchema",
+        "bulkDeleteStickerPacksSchema",
+        "addStickersToPackSchema",
+        "removeStickersFromPackSchema",
+        "stickerFileUploadSchema",
+        "trackStickerUsageSchema",
+        "CreateStickerInput",
+        "UpdateStickerInput",
+        "ListStickersInput",
+        "CreateStickerPackInput",
+        "UpdateStickerPackInput"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "server/src/domains/collectibles/stickers/stickers.service.ts",
+      "domain": "collectibles",
+      "subdomain": "stickers",
+      "layer": "other",
+      "size": 17363,
+      "lines": 676,
+      "complexity": 9,
+      "dependencies": [
+        "drizzle-orm",
+        "@db",
+        "@/db/types"
+      ],
+      "exports": [
+        "StickerService",
+        "stickerService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 163,
+          "context": "async getSticker(id: number): Promise<Sticker & { packName?: string }> {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 277,
+          "context": "id: number,",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 344,
+          "context": "async deleteSticker(id: number, adminId: string): Promise<{ message: string }> {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 490,
+          "context": "async getStickerPack(id: number): Promise<StickerPack> {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 535,
+          "context": "id: number,",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 566,
+          "context": "async deleteStickerPack(id: number, adminId: string): Promise<{ message: string }> {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "PackId",
+          "StickerId"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 3.6000000000000005
+    },
+    {
+      "path": "server/src/domains/collectibles/stickers/stickers.routes.ts",
+      "domain": "collectibles",
+      "subdomain": "stickers",
+      "layer": "routes",
+      "size": 2387,
+      "lines": 74,
+      "complexity": 0,
+      "dependencies": [
+        "express",
+        "@server/src/domains/admin/admin.middleware"
+      ],
+      "exports": [
+        "stickerRoutes"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/collectibles/stickers/stickers.controller.ts",
+      "domain": "collectibles",
+      "subdomain": "stickers",
+      "layer": "controllers",
+      "size": 16624,
+      "lines": 590,
+      "complexity": 10,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "zod",
+        "@server/src/domains/admin/shared",
+        "@server/src/domains/admin/admin.errors"
+      ],
+      "exports": [
+        "StickerController",
+        "stickerController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 3
+    }
+  ],
+  "totalIssues": 6,
+  "avgComplexity": 4.75,
+  "migrationEffort": 7.200000000000001,
+  "dependencies": [
+    "@db",
+    "@/db/types",
+    "@server/src/domains/admin/admin.middleware",
+    "@server/src/core/services/user.service",
+    "@server/src/domains/admin/shared",
+    "@server/src/domains/admin/admin.errors"
+  ],
+  "dependents": [],
+  "criticalPath": false,
+  "riskAssessment": {
+    "runtime": "high",
+    "testing": "low",
+    "integration": "low"
+  },
+  "migrationStrategy": {
+    "priority": 3,
+    "approach": "atomic",
+    "estimatedDays": 2,
+    "blockers": [],
+    "prerequisites": []
+  }
+}

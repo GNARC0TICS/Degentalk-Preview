@@ -130,20 +130,45 @@ const MIGRATION_BATCHES = {
     priority: 5,
     description: 'Page components'
   },
+  'client-other': {
+    pattern: 'client/src/**/*.{ts,tsx}',
+    priority: 6,
+    description: 'Other client files'
+  },
   'server-types': {
     pattern: 'server/src/types/**/*.ts',
-    priority: 6,
-    description: 'Server type definitions'
-  },
-  'server-routes': {
-    pattern: 'server/src/routes/**/*.ts',
     priority: 7,
-    description: 'API route handlers'
+    description: 'Server type definitions'
   },
   'server-services': {
     pattern: 'server/src/services/**/*.ts',
     priority: 8,
-    description: 'Business logic services'
+    description: 'Business logic services (HIGH IMPACT)'
+  },
+  'server-routes': {
+    pattern: 'server/src/routes/**/*.ts',
+    priority: 9,
+    description: 'API route handlers'
+  },
+  'server-repositories': {
+    pattern: 'server/src/repositories/**/*.ts',
+    priority: 10,
+    description: 'Data access layer'
+  },
+  'server-middleware': {
+    pattern: 'server/src/middleware/**/*.ts',
+    priority: 11,
+    description: 'Express middleware'
+  },
+  'server-other': {
+    pattern: 'server/src/**/*.ts',
+    priority: 12,
+    description: 'Other server files'
+  },
+  'database': {
+    pattern: 'db/**/*.ts',
+    priority: 13,
+    description: 'Database layer (should be clean)'
   }
 };
 

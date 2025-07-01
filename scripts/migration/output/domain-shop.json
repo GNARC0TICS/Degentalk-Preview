@@ -1,0 +1,81 @@
+{
+  "name": "shop",
+  "files": [
+    {
+      "path": "server/src/domains/shop/shop.routes.ts",
+      "domain": "shop",
+      "subdomain": "shop.routes.ts",
+      "layer": "routes",
+      "size": 8064,
+      "lines": 284,
+      "complexity": 4,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "@db",
+        "@schema",
+        "drizzle-orm",
+        "@shared/wallet.config",
+        "zod"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 133,
+          "context": "const userId = (userService.getUserFromRequest(req) as { id: number }).id;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 253,
+          "context": "const userId = (userService.getUserFromRequest(req) as { id: number }).id;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.2
+    }
+  ],
+  "totalIssues": 2,
+  "avgComplexity": 4,
+  "migrationEffort": 2.2,
+  "dependencies": [
+    "@server/src/core/services/user.service",
+    "@db",
+    "@schema",
+    "@shared/wallet.config"
+  ],
+  "dependents": [
+    "cosmetics",
+    "other"
+  ],
+  "criticalPath": false,
+  "riskAssessment": {
+    "runtime": "medium",
+    "testing": "low",
+    "integration": "medium"
+  },
+  "migrationStrategy": {
+    "priority": 3,
+    "approach": "atomic",
+    "estimatedDays": 1,
+    "blockers": [
+      "Dependencies from: cosmetics, other"
+    ],
+    "prerequisites": []
+  }
+}

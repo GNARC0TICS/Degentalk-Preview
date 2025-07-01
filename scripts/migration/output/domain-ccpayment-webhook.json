@@ -1,0 +1,115 @@
+{
+  "name": "ccpayment-webhook",
+  "files": [
+    {
+      "path": "server/src/domains/ccpayment-webhook/ccpayment-webhook.service.ts",
+      "domain": "ccpayment-webhook",
+      "subdomain": "ccpayment-webhook.service.ts",
+      "layer": "other",
+      "size": 10934,
+      "lines": 401,
+      "complexity": 6,
+      "dependencies": [
+        "@schema",
+        "drizzle-orm",
+        "@db"
+      ],
+      "exports": [
+        "CCPaymentWebhookService",
+        "ccpaymentWebhookService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "CCPaymentWebhookEvent"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.2000000000000002
+    },
+    {
+      "path": "server/src/domains/ccpayment-webhook/ccpayment-webhook.routes.ts",
+      "domain": "ccpayment-webhook",
+      "subdomain": "ccpayment-webhook.routes.ts",
+      "layer": "routes",
+      "size": 759,
+      "lines": 28,
+      "complexity": 0,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/ccpayment-webhook/ccpayment-webhook.controller.ts",
+      "domain": "ccpayment-webhook",
+      "subdomain": "ccpayment-webhook.controller.ts",
+      "layer": "controllers",
+      "size": 3055,
+      "lines": 100,
+      "complexity": 2,
+      "dependencies": [
+        "express",
+        "crypto"
+      ],
+      "exports": [
+        "CCPaymentWebhookController",
+        "ccpaymentWebhookController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    }
+  ],
+  "totalIssues": 0,
+  "avgComplexity": 2.6666666666666665,
+  "migrationEffort": 2.6,
+  "dependencies": [
+    "@schema",
+    "@db"
+  ],
+  "dependents": [],
+  "criticalPath": false,
+  "riskAssessment": {
+    "runtime": "medium",
+    "testing": "low",
+    "integration": "low"
+  },
+  "migrationStrategy": {
+    "priority": 3,
+    "approach": "atomic",
+    "estimatedDays": 1,
+    "blockers": [],
+    "prerequisites": []
+  }
+}

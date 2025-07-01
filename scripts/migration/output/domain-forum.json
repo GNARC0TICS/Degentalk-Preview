@@ -1,0 +1,799 @@
+{
+  "name": "forum",
+  "files": [
+    {
+      "path": "server/src/domains/forum/forum.service.ts",
+      "domain": "forum",
+      "subdomain": "forum.service.ts",
+      "layer": "other",
+      "size": 9909,
+      "lines": 379,
+      "complexity": 7,
+      "dependencies": [
+        "@db",
+        "@server/src/core/logger",
+        "@schema",
+        "drizzle-orm",
+        "@/db/types"
+      ],
+      "exports": [
+        "ThreadSearchParams",
+        "forumService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 161,
+          "context": "async getForumById(id: number): Promise<ForumStructureWithStats | null> {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "ForumStructureWithStats",
+          "ThreadWithPostsAndUser"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.5
+    },
+    {
+      "path": "server/src/domains/forum/forum.service.test.ts",
+      "domain": "forum",
+      "subdomain": "forum.service.test.ts",
+      "layer": "other",
+      "size": 6129,
+      "lines": 235,
+      "complexity": 2,
+      "dependencies": [
+        "@schema",
+        "@db",
+        "drizzle-orm"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 1.4
+    },
+    {
+      "path": "server/src/domains/forum/forum.routes.ts",
+      "domain": "forum",
+      "subdomain": "forum.routes.ts",
+      "layer": "routes",
+      "size": 9002,
+      "lines": 322,
+      "complexity": 4,
+      "dependencies": [
+        "express",
+        "express",
+        "@db",
+        "zod",
+        "drizzle-orm",
+        "@server/src/core/logger",
+        "@server/src/core/errors",
+        "@/db/types"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7999999999999998
+    },
+    {
+      "path": "server/src/domains/forum/forum.controller.ts",
+      "domain": "forum",
+      "subdomain": "forum.controller.ts",
+      "layer": "controllers",
+      "size": 8518,
+      "lines": 264,
+      "complexity": 7,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "@server/src/core/logger",
+        "@/db/types",
+        "@server/src/domains/auth/middleware/auth.middleware"
+      ],
+      "exports": [
+        "forumController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.4000000000000004
+    },
+    {
+      "path": "server/src/domains/forum/services/thread.service.ts",
+      "domain": "forum",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 29486,
+      "lines": 1031,
+      "complexity": 10,
+      "dependencies": [
+        "@db",
+        "@server/src/core/logger",
+        "@server/src/core/cache.service",
+        "drizzle-orm",
+        "@/db/types"
+      ],
+      "exports": [
+        "ThreadSearchParams",
+        "ContentTab",
+        "TabContentParams",
+        "ThreadCreateInput",
+        "ThreadService",
+        "threadService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "ThreadWithUser",
+          "ThreadWithPostsAndUser",
+          "ThreadWithUserAndCategory"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 3
+    },
+    {
+      "path": "server/src/domains/forum/services/thread.service.batch-optimization.ts",
+      "domain": "forum",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 5236,
+      "lines": 183,
+      "complexity": 3,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm",
+        "@server/src/core/logger",
+        "@/db/types"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "StructureId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.6
+    },
+    {
+      "path": "server/src/domains/forum/services/structure.service.ts",
+      "domain": "forum",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 11005,
+      "lines": 334,
+      "complexity": 4,
+      "dependencies": [
+        "@db",
+        "@server/src/core/logger",
+        "@schema",
+        "drizzle-orm",
+        "@/db/types"
+      ],
+      "exports": [
+        "ForumStructureService",
+        "forumStructureService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "ForumStructureWithStats"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7999999999999998
+    },
+    {
+      "path": "server/src/domains/forum/services/post.service.ts",
+      "domain": "forum",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 10374,
+      "lines": 415,
+      "complexity": 6,
+      "dependencies": [
+        "@db",
+        "@server/src/core/logger",
+        "@schema",
+        "drizzle-orm",
+        "@/db/types"
+      ],
+      "exports": [
+        "PostCreateInput",
+        "PostUpdateInput",
+        "PostSearchParams",
+        "PostService",
+        "postService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "PostWithUser"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.2000000000000002
+    },
+    {
+      "path": "server/src/domains/forum/services/permissions.service.ts",
+      "domain": "forum",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 8995,
+      "lines": 371,
+      "complexity": 10,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "@db",
+        "@schema",
+        "drizzle-orm",
+        "@server/src/core/logger",
+        "@/db/types"
+      ],
+      "exports": [
+        "User",
+        "PermissionContext",
+        "isAdmin",
+        "isModerator",
+        "canModerate",
+        "canAdministrate",
+        "createPermissionChecker",
+        "requirePostEditPermission",
+        "requirePostDeletePermission",
+        "requireThreadEditPermission",
+        "requireThreadDeletePermission",
+        "requireThreadSolvePermission",
+        "requireThreadTagPermission",
+        "requireModerator",
+        "requireAdmin"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "EntityId",
+          "ForumId",
+          "UserId",
+          "PostId",
+          "ThreadId"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 2.2
+    },
+    {
+      "path": "server/src/domains/forum/services/config.service.ts",
+      "domain": "forum",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 4580,
+      "lines": 160,
+      "complexity": 2,
+      "dependencies": [
+        "@server/src/core/logger",
+        "@/db/types"
+      ],
+      "exports": [
+        "ForumConfigEntry",
+        "ConfigService",
+        "configService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ForumCategoryWithStats"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.10000000000000003
+    },
+    {
+      "path": "server/src/domains/forum/services/category.service.ts",
+      "domain": "forum",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 6528,
+      "lines": 207,
+      "complexity": 3,
+      "dependencies": [
+        "@db",
+        "@server/src/core/logger",
+        "@schema",
+        "drizzle-orm",
+        "@/db/types"
+      ],
+      "exports": [
+        "CategoryService",
+        "categoryService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "ForumCategoryWithStats"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.6000000000000001
+    },
+    {
+      "path": "server/src/domains/forum/services/cache.service.ts",
+      "domain": "forum",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 2396,
+      "lines": 108,
+      "complexity": 2,
+      "dependencies": [
+        "@server/src/core/logger"
+      ],
+      "exports": [
+        "CacheService",
+        "cacheService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ForumCategoryWithStats"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.0999999999999999
+    },
+    {
+      "path": "server/src/domains/forum/rules/rules.routes.ts",
+      "domain": "forum",
+      "subdomain": "rules",
+      "layer": "routes",
+      "size": 8103,
+      "lines": 272,
+      "complexity": 5,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "express",
+        "@db",
+        "drizzle-orm",
+        "crypto",
+        "zod",
+        "@server/src/core/errors",
+        "@server/src/utils/auth"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "conversion",
+          "pattern": "Number(req.params.id)",
+          "line": 69,
+          "context": "const ruleId = Number(req.params.id);",
+          "suggestedFix": "remove Number(), use branded type",
+          "confidence": 0.5
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.3
+    },
+    {
+      "path": "server/src/domains/forum/routes/thread.routes.ts",
+      "domain": "forum",
+      "subdomain": "routes",
+      "layer": "routes",
+      "size": 9372,
+      "lines": 402,
+      "complexity": 5,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "express",
+        "zod",
+        "@server/src/core/logger",
+        "@server/src/core/errors",
+        "@/db/types"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.2
+    },
+    {
+      "path": "server/src/domains/forum/routes/post.routes.ts",
+      "domain": "forum",
+      "subdomain": "routes",
+      "layer": "routes",
+      "size": 6272,
+      "lines": 268,
+      "complexity": 4,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "express",
+        "zod",
+        "@server/src/core/logger",
+        "@server/src/core/errors",
+        "@/db/types"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7999999999999998
+    },
+    {
+      "path": "server/src/domains/forum/routes/content.routes.ts",
+      "domain": "forum",
+      "subdomain": "routes",
+      "layer": "routes",
+      "size": 2217,
+      "lines": 83,
+      "complexity": 1,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "express",
+        "@server/src/core/errors",
+        "@/db/types"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "server/src/domains/forum/routes/category.routes.ts",
+      "domain": "forum",
+      "subdomain": "routes",
+      "layer": "routes",
+      "size": 4429,
+      "lines": 167,
+      "complexity": 3,
+      "dependencies": [
+        "express",
+        "express",
+        "@server/src/core/logger",
+        "@server/src/core/errors"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.1
+    },
+    {
+      "path": "server/src/domains/forum/routes/bookmark.routes.ts",
+      "domain": "forum",
+      "subdomain": "routes",
+      "layer": "routes",
+      "size": 4193,
+      "lines": 175,
+      "complexity": 2,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "express",
+        "zod",
+        "@db",
+        "@schema",
+        "drizzle-orm",
+        "@server/src/core/logger",
+        "@server/src/core/errors"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.4
+    },
+    {
+      "path": "server/src/domains/forum/sub-domains/reports/reports.validators.ts",
+      "domain": "forum",
+      "subdomain": "sub-domains",
+      "layer": "other",
+      "size": 530,
+      "lines": 27,
+      "complexity": 0,
+      "dependencies": [
+        "zod"
+      ],
+      "exports": [
+        "CreateReportSchema"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "server/src/domains/forum/sub-domains/reports/reports.service.ts",
+      "domain": "forum",
+      "subdomain": "sub-domains",
+      "layer": "other",
+      "size": 810,
+      "lines": 38,
+      "complexity": 1,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "@/db/types"
+      ],
+      "exports": [
+        "CreateReportData",
+        "ReportsService",
+        "reportsService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "ContentId"
+        ]
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "server/src/domains/forum/sub-domains/reports/reports.routes.ts",
+      "domain": "forum",
+      "subdomain": "sub-domains",
+      "layer": "routes",
+      "size": 343,
+      "lines": 16,
+      "complexity": 0,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/forum/sub-domains/reports/reports.controller.ts",
+      "domain": "forum",
+      "subdomain": "sub-domains",
+      "layer": "controllers",
+      "size": 1313,
+      "lines": 48,
+      "complexity": 2,
+      "dependencies": [
+        "express",
+        "@server/src/utils/auth"
+      ],
+      "exports": [
+        "ReportsController",
+        "reportsController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
+    }
+  ],
+  "totalIssues": 2,
+  "avgComplexity": 3.772727272727273,
+  "migrationEffort": 27.400000000000002,
+  "dependencies": [
+    "@db",
+    "@server/src/core/logger",
+    "@schema",
+    "@/db/types",
+    "@server/src/core/errors",
+    "@server/src/core/services/user.service",
+    "@server/src/domains/auth/middleware/auth.middleware",
+    "@server/src/core/cache.service",
+    "@server/src/utils/auth"
+  ],
+  "dependents": [
+    "forum-core",
+    "other",
+    "moderation",
+    "gamification"
+  ],
+  "criticalPath": true,
+  "riskAssessment": {
+    "runtime": "high",
+    "testing": "low",
+    "integration": "high"
+  },
+  "migrationStrategy": {
+    "priority": 1,
+    "approach": "atomic",
+    "estimatedDays": 6,
+    "blockers": [
+      "Dependencies from: forum-core, other, moderation, gamification"
+    ],
+    "prerequisites": []
+  }
+}

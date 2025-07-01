@@ -1,0 +1,566 @@
+{
+  "name": "shoutbox",
+  "files": [
+    {
+      "path": "server/src/domains/shoutbox/shoutbox.routes.ts",
+      "domain": "shoutbox",
+      "subdomain": "shoutbox.routes.ts",
+      "layer": "routes",
+      "size": 19293,
+      "lines": 647,
+      "complexity": 10,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "express",
+        "@db",
+        "drizzle-orm",
+        "zod",
+        "@lib/auth/canUser.ts",
+        "@server/src/core/logger",
+        "@/db/types"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 36,
+          "context": "async function userHasRoomAccess(userId: number, roomId: RoomId): Promise<boolean> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 203,
+          "context": "const messageId = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 266,
+          "context": "const messageIdForLog = parseInt(req.params.id); // Ensure messageId is available for logging",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 559,
+          "context": "const messageId = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 635,
+          "context": "const messageIdForLog = parseInt(req.params.id); // Ensure messageId is available",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 2.7
+    },
+    {
+      "path": "server/src/domains/shoutbox/enhanced-shoutbox.routes.ts",
+      "domain": "shoutbox",
+      "subdomain": "enhanced-shoutbox.routes.ts",
+      "layer": "routes",
+      "size": 30662,
+      "lines": 1073,
+      "complexity": 10,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "express",
+        "@db",
+        "drizzle-orm",
+        "zod",
+        "@server/src/core/logger",
+        "@server/src/core/services/rate-limit.service"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.2
+    },
+    {
+      "path": "server/src/domains/shoutbox/services/shoutbox.service.ts",
+      "domain": "shoutbox",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 24655,
+      "lines": 947,
+      "complexity": 10,
+      "dependencies": [
+        "@db",
+        "drizzle-orm",
+        "@server/src/core/logger",
+        "@paralleldrive/cuid2",
+        "@schema/admin/shoutboxConfig",
+        "@/db/types"
+      ],
+      "exports": [
+        "ShoutboxService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 30,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "NewShoutboxConfig",
+          "ShoutboxConfig"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 2.3000000000000003
+    },
+    {
+      "path": "server/src/domains/shoutbox/services/room.service.ts",
+      "domain": "shoutbox",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 19678,
+      "lines": 749,
+      "complexity": 10,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm",
+        "@server/src/core/logger",
+        "@paralleldrive/cuid2",
+        "@/db/types"
+      ],
+      "exports": [
+        "CreateRoomData",
+        "RoomWithStats",
+        "RoomService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 29,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 491,
+          "context": "userId: number,",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 555,
+          "context": "static async getUserIgnoreList(userId: number, roomId?: RoomId): Promise<number[]> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 582,
+          "context": "userId: number,",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 628,
+          "context": "userId: number,",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": true,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "RoomId",
+          "GroupId"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 2.7
+    },
+    {
+      "path": "server/src/domains/shoutbox/services/queue.service.ts",
+      "domain": "shoutbox",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 10999,
+      "lines": 425,
+      "complexity": 6,
+      "dependencies": [
+        "@server/src/core/logger",
+        "events",
+        "@/db/types"
+      ],
+      "exports": [
+        "MessageQueueService",
+        "messageQueue"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 18,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "RoomId",
+          "MessageId"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 2.8000000000000003
+    },
+    {
+      "path": "server/src/domains/shoutbox/services/performance.service.ts",
+      "domain": "shoutbox",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 13757,
+      "lines": 534,
+      "complexity": 5,
+      "dependencies": [
+        "@db",
+        "@server/src/core/logger",
+        "drizzle-orm",
+        "@schema",
+        "@/db/types"
+      ],
+      "exports": [
+        "PerformanceService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 281,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 211,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "RoomId"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 3.4000000000000004
+    },
+    {
+      "path": "server/src/domains/shoutbox/services/history.service.ts",
+      "domain": "shoutbox",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 22573,
+      "lines": 866,
+      "complexity": 10,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm",
+        "@server/src/core/logger",
+        "fs",
+        "stream/promises",
+        "stream",
+        "archiver",
+        "date-fns",
+        "@/db/types"
+      ],
+      "exports": [
+        "MessageHistoryService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 47,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 48,
+          "context": "userId: number | null;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "RoomId"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 5.2
+    },
+    {
+      "path": "server/src/domains/shoutbox/services/cache.service.ts",
+      "domain": "shoutbox",
+      "subdomain": "services",
+      "layer": "services",
+      "size": 10916,
+      "lines": 399,
+      "complexity": 3,
+      "dependencies": [
+        "@server/src/core/logger",
+        "crypto",
+        "@/db/types"
+      ],
+      "exports": [
+        "ShoutboxCacheService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 23,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 53,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 24,
+          "context": "userId: number | null;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 39,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 122,
+          "context": "static cacheUserSession(userId: number, session: UserSessionCache): void {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 130,
+          "context": "static getCachedUserSession(userId: number): UserSessionCache | null {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 135,
+          "context": "static updateUserLastSeen(userId: number): void {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 146,
+          "context": "static invalidateUserSession(userId: number): void {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 156,
+          "context": "userId: number",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 163,
+          "context": "userId: number,",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 221,
+          "context": "static addUserToRoom(roomId: RoomId, userId: number): void {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 232,
+          "context": "static removeUserFromRoom(roomId: RoomId, userId: number): void {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 246,
+          "context": "static setTypingIndicator(roomId: RoomId, userId: number, username: string): void {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 259,
+          "context": "static removeTypingIndicator(roomId: RoomId, userId: number): void {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "RoomId",
+          "MessageId"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 5.5
+    }
+  ],
+  "totalIssues": 30,
+  "avgComplexity": 8,
+  "migrationEffort": 26.8,
+  "dependencies": [
+    "@server/src/core/services/user.service",
+    "@db",
+    "@lib/auth/canUser.ts",
+    "@server/src/core/logger",
+    "@/db/types",
+    "@server/src/core/services/rate-limit.service",
+    "@paralleldrive/cuid2",
+    "@schema/admin/shoutboxConfig",
+    "@schema"
+  ],
+  "dependents": [
+    "other",
+    "social",
+    "engagement",
+    "cosmetics"
+  ],
+  "criticalPath": true,
+  "riskAssessment": {
+    "runtime": "high",
+    "testing": "high",
+    "integration": "high"
+  },
+  "migrationStrategy": {
+    "priority": 1,
+    "approach": "parallel",
+    "estimatedDays": 6,
+    "blockers": [
+      "Dependencies from: other, social, engagement, cosmetics"
+    ],
+    "prerequisites": []
+  }
+}
