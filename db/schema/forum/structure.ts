@@ -1,4 +1,4 @@
-import type { AnyPgColumn, uuid } from 'drizzle-orm/pg-core';
+import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
 	serial,
@@ -7,7 +7,8 @@ import {
 	boolean,
 	timestamp,
 	jsonb,
-	real
+	real,
+	uuid
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { roles } from '../user/roles'; // Use roles instead of deprecated userGroups

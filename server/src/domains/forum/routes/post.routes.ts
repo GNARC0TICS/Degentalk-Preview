@@ -17,14 +17,15 @@ import {
 	requirePostDeletePermission
 } from '../services/permissions.service';
 import { asyncHandler } from '@server/src/core/errors';
+import type { ThreadId, PostId, UserId } from '@/db/types';
 
 const router = Router();
 
 // Validation schemas
 const createPostSchema = z.object({
-	threadId: z.number().int().positive(),
+	threadId: z.string().uuid('Invalid threadId format'),
 	content: z.string().min(1),
-	replyToPostId: z.number().int().positive().optional().nullable(),
+	replyToPostId: z.string().uuid('Invalid postId format').optional().nullable(),
 	editorState: z.any().optional()
 });
 
@@ -95,7 +96,7 @@ router.put(
 	requirePostEditPermission,
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const postId = parseInt(req.params.id);
+			const postId = req.params.id as PostId;
 			const validatedData = updatePostSchema.parse(req.body);
 			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
@@ -133,7 +134,7 @@ router.delete(
 	requirePostDeletePermission,
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const postId = parseInt(req.params.id);
+			const postId = req.params.id as PostId;
 			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			await postService.deletePost(postId);
@@ -158,7 +159,7 @@ router.post(
 	requireAuth,
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const postId = parseInt(req.params.postId);
+			const postId = req.params.postId as PostId;
 			const validatedData = postReactionSchema.parse(req.body);
 			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
@@ -204,7 +205,7 @@ router.post(
 	requireAuth,
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const postId = parseInt(req.params.postId);
+			const postId = req.params.postId as PostId;
 			const validatedData = tipPostSchema.parse(req.body);
 			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
@@ -245,7 +246,7 @@ router.get(
 	'/:postId/replies',
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const postId = parseInt(req.params.postId);
+			const postId = req.params.postId as PostId;
 
 			const replies = await postService.getPostReplies(postId);
 

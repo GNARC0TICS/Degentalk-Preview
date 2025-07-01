@@ -233,7 +233,6 @@ export default function BBCodeThreadPage() {
 
 	const handleSubmitReply = async (content: string) => {
 		// TODO: Implement reply submission
-		console.log('Submitting reply:', content);
 		// This would typically call an API to create a new post
 		// await createPost({ threadId: thread.id, content });
 		// Then refresh the posts or optimistically update the list

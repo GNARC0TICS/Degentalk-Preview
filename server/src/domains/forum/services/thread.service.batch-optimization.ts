@@ -7,17 +7,18 @@ import { db } from '@db';
 import { forumStructure } from '@schema';
 import { inArray } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
+import type { StructureId } from '@/db/types';
 
 /**
  * Batch fetch zone information for multiple structure IDs
  * Eliminates N+1 queries in thread listing operations
  */
 export async function getZoneInfoBatch(
-	structureIds: number[]
+	structureIds: StructureId[]
 ): Promise<
 	Map<
-		number,
-		{ id: number; name: string; slug: string; colorTheme: string; isPrimary?: boolean } | null
+		StructureId,
+		{ id: StructureId; name: string; slug: string; colorTheme: string; isPrimary?: boolean } | null
 	>
 > {
 	logger.info('ThreadService', 'Starting getZoneInfoBatch', {
@@ -45,7 +46,9 @@ export async function getZoneInfoBatch(
 			.where(inArray(forumStructure.id, structureIds));
 
 		// Get all unique parent IDs to fetch zone data
-		const parentIds = [...new Set(structures.map((s) => s.parentId).filter(Boolean))] as number[];
+		const parentIds = [
+			...new Set(structures.map((s) => s.parentId).filter(Boolean))
+		] as StructureId[];
 
 		let parentStructures: typeof structures = [];
 		if (parentIds.length > 0) {
@@ -69,8 +72,14 @@ export async function getZoneInfoBatch(
 
 		// Build zone info map
 		const zoneInfoMap = new Map<
-			number,
-			{ id: number; name: string; slug: string; colorTheme: string; isPrimary?: boolean } | null
+			StructureId,
+			{
+				id: StructureId;
+				name: string;
+				slug: string;
+				colorTheme: string;
+				isPrimary?: boolean;
+			} | null
 		>();
 
 		for (const structureId of structureIds) {

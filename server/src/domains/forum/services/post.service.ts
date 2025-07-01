@@ -12,12 +12,13 @@ import { AchievementEventEmitter } from '../../../core/events/achievement-events
 import { posts, threads, users as usersTable, postReactions } from '@schema';
 import { sql, desc, asc, eq, and, count } from 'drizzle-orm';
 import type { PostWithUser } from '../../../../db/types/forum.types';
+import type { ThreadId, UserId, PostId } from '@/db/types';
 
 export interface PostCreateInput {
 	content: string;
-	threadId: number;
-	userId: string;
-	replyToPostId?: number;
+	threadId: ThreadId;
+	userId: UserId;
+	replyToPostId?: PostId;
 }
 
 export interface PostUpdateInput {
@@ -25,8 +26,8 @@ export interface PostUpdateInput {
 }
 
 export interface PostSearchParams {
-	threadId?: number;
-	userId?: string;
+	threadId?: ThreadId;
+	userId?: UserId;
 	page?: number;
 	limit?: number;
 	sortBy?: 'newest' | 'oldest';
@@ -115,7 +116,7 @@ export class PostService {
 	/**
 	 * Get post by ID with author details
 	 */
-	async getPostById(postId: number): Promise<PostWithUser | null> {
+	async getPostById(postId: PostId): Promise<PostWithUser | null> {
 		try {
 			const [post] = await db
 				.select({
@@ -210,7 +211,7 @@ export class PostService {
 	/**
 	 * Update a post
 	 */
-	async updatePost(postId: number, input: PostUpdateInput): Promise<PostWithUser> {
+	async updatePost(postId: PostId, input: PostUpdateInput): Promise<PostWithUser> {
 		try {
 			const { content } = input;
 
@@ -244,7 +245,7 @@ export class PostService {
 	/**
 	 * Delete a post
 	 */
-	async deletePost(postId: number): Promise<void> {
+	async deletePost(postId: PostId): Promise<void> {
 		try {
 			// Get post to get thread ID
 			const post = await this.getPostById(postId);
@@ -268,7 +269,7 @@ export class PostService {
 	/**
 	 * Add like to post
 	 */
-	async likePost(postId: number, userId: string): Promise<void> {
+	async likePost(postId: PostId, userId: UserId): Promise<void> {
 		try {
 			// Check if user already liked this post
 			const [existingReaction] = await db
@@ -313,7 +314,7 @@ export class PostService {
 	/**
 	 * Remove like from post
 	 */
-	async unlikePost(postId: number, userId: string): Promise<void> {
+	async unlikePost(postId: PostId, userId: UserId): Promise<void> {
 		try {
 			// Remove reaction
 			const deletedRows = await db
@@ -349,7 +350,7 @@ export class PostService {
 	/**
 	 * Get post replies (nested posts)
 	 */
-	async getPostReplies(parentPostId: number): Promise<PostWithUser[]> {
+	async getPostReplies(parentPostId: PostId): Promise<PostWithUser[]> {
 		try {
 			const replies = await db
 				.select({
@@ -382,7 +383,7 @@ export class PostService {
 	/**
 	 * Update thread statistics after post changes
 	 */
-	private async updateThreadStats(threadId: number): Promise<void> {
+	private async updateThreadStats(threadId: ThreadId): Promise<void> {
 		try {
 			const [stats] = await db
 				.select({

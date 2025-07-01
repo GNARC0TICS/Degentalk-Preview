@@ -27,20 +27,20 @@ import type {
 	ThreadWithUserAndCategory
 } from '../../../../db/types/forum.types';
 import { eventLogger } from '../../activity/services/event-logger.service';
-import type { ForumId } from '@/db/types';
+import type { ForumId, StructureId, ThreadId, UserId, PostId, TagId } from '@/db/types';
 
 // Using centralized cache service (Redis with in-memory fallback)
 
 export interface ThreadSearchParams {
-	structureId?: number;
-	userId?: string;
+	structureId?: StructureId;
+	userId?: UserId;
 	search?: string;
 	tags?: string[];
 	page?: number;
 	limit?: number;
 	sortBy?: 'newest' | 'oldest' | 'mostReplies' | 'mostViews' | 'trending';
 	status?: 'active' | 'locked' | 'pinned';
-	followingUserId?: string; // For "following" tab - get threads by users that this user follows
+	followingUserId?: UserId; // For "following" tab - get threads by users that this user follows
 }
 
 export type ContentTab = 'trending' | 'recent' | 'following';
@@ -50,14 +50,14 @@ export interface TabContentParams {
 	page?: number;
 	limit?: number;
 	forumId?: ForumId;
-	userId?: string; // For following tab
+	userId?: UserId; // For following tab
 }
 
 export interface ThreadCreateInput {
 	title: string;
 	content: string;
-	structureId: number;
-	userId: string;
+	structureId: StructureId;
+	userId: UserId;
 	tags?: string[];
 	isLocked?: boolean;
 	isPinned?: boolean;
@@ -487,7 +487,7 @@ export class ThreadService {
 	 * Get thread by ID with author and category details
 	 * Returns ThreadDisplay compatible format with proper zone data
 	 */
-	async getThreadById(threadId: number): Promise<ThreadWithUserAndCategory | null> {
+	async getThreadById(threadId: ThreadId): Promise<ThreadWithUserAndCategory | null> {
 		try {
 			const [threadResult] = await db.select().from(threads).where(eq(threads.id, threadId));
 
@@ -763,7 +763,7 @@ export class ThreadService {
 	/**
 	 * Update thread view count
 	 */
-	async incrementViewCount(threadId: number): Promise<void> {
+	async incrementViewCount(threadId: ThreadId): Promise<void> {
 		try {
 			await db
 				.update(threads)
@@ -783,7 +783,7 @@ export class ThreadService {
 	/**
 	 * Update thread post count
 	 */
-	async updatePostCount(threadId: number): Promise<void> {
+	async updatePostCount(threadId: ThreadId): Promise<void> {
 		try {
 			const [{ postCount }] = await db
 				.select({ postCount: count(posts.id) })
@@ -810,8 +810,8 @@ export class ThreadService {
 	 * Update thread solved status
 	 */
 	async updateThreadSolvedStatus(params: {
-		threadId: number;
-		solvingPostId?: number | null;
+		threadId: ThreadId;
+		solvingPostId?: PostId | null;
 	}): Promise<ThreadWithUserAndCategory | null> {
 		try {
 			const { threadId, solvingPostId } = params;
@@ -844,10 +844,10 @@ export class ThreadService {
 	/**
 	 * Add tags to thread
 	 */
-	private async addTagsToThread(threadId: number, tagNames: string[]): Promise<void> {
+	private async addTagsToThread(threadId: ThreadId, tagNames: string[]): Promise<void> {
 		try {
 			// Get or create tags
-			const tagIds: number[] = [];
+			const tagIds: TagId[] = [];
 
 			for (const tagName of tagNames) {
 				let [tag] = await db.select({ id: tags.id }).from(tags).where(eq(tags.name, tagName));
@@ -894,8 +894,8 @@ export class ThreadService {
 	 * Get zone information for a given structure ID
 	 * Traverses up the hierarchy to find the top-level zone
 	 */
-	private async getZoneInfo(structureId: number): Promise<{
-		id: number;
+	private async getZoneInfo(structureId: StructureId): Promise<{
+		id: StructureId;
 		name: string;
 		slug: string;
 		colorTheme: string;
@@ -968,7 +968,7 @@ export class ThreadService {
 	/**
 	 * Fetch first post excerpt (plain-text, 150 chars max) for a thread
 	 */
-	private async getFirstPostExcerpt(threadId: number): Promise<string | null> {
+	private async getFirstPostExcerpt(threadId: ThreadId): Promise<string | null> {
 		try {
 			const [firstPost] = await db
 				.select({ content: posts.content })
@@ -991,8 +991,8 @@ export class ThreadService {
 	 * Batch fetch first post excerpts for multiple threads (fixes N+1)
 	 */
 	private async getFirstPostExcerptsBatch(
-		threadIds: number[]
-	): Promise<Array<{ threadId: number; excerpt: string | null }>> {
+		threadIds: ThreadId[]
+	): Promise<Array<{ threadId: ThreadId; excerpt: string | null }>> {
 		if (threadIds.length === 0) return [];
 
 		try {

@@ -142,7 +142,6 @@ export function ReactionBar({
 		if (reactionType === 'love') {
 			onLike?.(postId, hasLiked);
 		}
-		console.log('Reaction:', reactionType);
 	};
 
 	const handleTipAmount = (amount: number) => {

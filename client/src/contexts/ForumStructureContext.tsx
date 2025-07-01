@@ -416,11 +416,6 @@ function fallbackStructure(staticZones: Zone[]) {
 		zones.push(mz);
 	});
 
-	console.log('[ForumStructureContext] Fallback structure created with IDs:', {
-		zones: zones.map((z) => ({ id: z.id, slug: z.slug })),
-		forums: Object.values(forums).map((f) => ({ id: f.id, slug: f.slug }))
-	});
-
 	return { zones, forums, forumsById };
 }
 
@@ -441,10 +436,6 @@ export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ chil
 					throw new Error(`HTTP ${resp.status}`);
 				}
 				const data = await resp.json();
-				console.log('[ForumStructureContext] API response received:', {
-					zones: data.zones?.length,
-					forums: data.forums?.length
-				});
 				setRaw(data);
 			} catch (e: unknown) {
 				// FIXME: any → unknown (safe generic)
@@ -458,23 +449,10 @@ export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ chil
 
 	const { zones, forums, forumsById, isUsingFallback, parseError } = useMemo(() => {
 		if (raw) {
-			console.log('[ForumStructureContext] Raw API response:', {
-				type: typeof raw,
-				isArray: Array.isArray(raw),
-				keys: typeof raw === 'object' ? Object.keys(raw) : 'N/A',
-				zonesCount: raw?.zones?.length || 'N/A',
-				forumsCount: raw?.forums?.length || 'N/A'
-			});
-
 			// If backend already returns the flat object shape
 			try {
 				const parsed = ForumStructureApiResponseSchema.parse(raw);
 				const processed = processApiData(parsed);
-				console.info('[ForumStructureContext] ✅ Structure parsing SUCCESS:', {
-					zones: processed.zones.length,
-					forums: Object.keys(processed.forums).length,
-					forumsById: Object.keys(processed.forumsById).length
-				});
 				return { ...processed, isUsingFallback: false, parseError: null };
 			} catch (e) {
 				console.error('[ForumStructureContext] ❌ Structure parsing FAILED:', {
@@ -486,28 +464,21 @@ export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ chil
 				// Fallback: some environments may still send an *array* of structures
 				// (mixing zones & forums).  We coerce that into the expected object.
 				if (Array.isArray(raw)) {
-					console.log('[ForumStructureContext] Attempting array coercion...');
 					const zones = raw.filter((s: Record<string, unknown>) => s.type === 'zone'); // FIXME: any → safe record
 					const forums = raw.filter((s: Record<string, unknown>) => s.type === 'forum'); // FIXME: any → safe record
 					const coerced = { zones, forums };
 					try {
 						const parsed = ForumStructureApiResponseSchema.parse(coerced);
 						const processed = processApiData(parsed);
-						console.info('[ForumStructureContext] ✅ Array coercion SUCCESS:', {
-							zones: processed.zones.length,
-							forums: Object.keys(processed.forums).length
-						});
 						return { ...processed, isUsingFallback: false, parseError: null };
 					} catch (inner) {
 						console.error('[ForumStructureContext] ❌ Array coercion FAILED:', inner);
 					}
 				} else {
-					console.error('[ForumStructureContext] ❌ Invalid API payload format');
 				}
 			}
 		}
 
-		console.warn('[ForumStructureContext] ⚠️  Using FALLBACK structure (static config)');
 		const fb = fallbackStructure(forumMap.zones);
 		return {
 			...fb,

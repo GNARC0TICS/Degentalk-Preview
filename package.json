@@ -50,9 +50,9 @@
 		"codemod:tsmorph:dry": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts --dry",
 		"codemod:tsmorph:apply": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts",
 		"prepare": "simple-git-hooks",
-		"db:generate": "drizzle-kit generate --config drizzle.config.ts",
-		"db:push": "drizzle-kit push --config drizzle.config.ts",
-		"db:studio": "drizzle-kit studio --config drizzle.config.ts",
+		"db:generate": "drizzle-kit generate --dialect postgresql --schema \"./db/schema/**/*.ts\" --out ./migrations/postgres",
+		"db:push": "drizzle-kit push --dialect postgresql",
+		"db:studio": "drizzle-kit studio --dialect postgresql",
 		"db:migrate:dev": "pnpm run db:push && pnpm run db:studio"
 	},
 	"devDependencies": {
@@ -73,7 +73,9 @@
 		"minimist": "^1.2.8",
 		"ts-node": "^10.9.2",
 		"ts-morph": "^26.0.0",
-		"drizzle-kit": "^0.31.4"
+		"drizzle-kit": "0.31.4",
+		"drizzle-orm": "0.44.2",
+		"@paralleldrive/cuid2": "^2.2.2"
 	},
 	"simple-git-hooks": {
 		"pre-commit": "pnpm format && git add -A"
@@ -81,7 +83,7 @@
 	"pnpm": {
 		"overrides": {
 			"typescript": "5.6.3",
-			"drizzle-orm": "0.31.4",
+			"drizzle-orm": "0.44.2",
 			"drizzle-kit": "0.31.4"
 		},
 		"peerDependencyRules": {

@@ -24,6 +24,7 @@ import { logger } from '@server/src/core/logger';
 import { forumStructureService } from './services/structure.service';
 import { threadService } from './services/thread.service';
 import { asyncHandler } from '@server/src/core/errors';
+import type { StructureId } from '@/db/types';
 
 // Import specialized route modules
 import threadRoutes from './routes/thread.routes';
@@ -123,7 +124,7 @@ router.get(
 	'/prefixes',
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const forumId = req.query.forumId ? parseInt(req.query.forumId as string) : undefined;
+			const forumId = req.query.forumId ? (req.query.forumId as string) : undefined;
 
 			let prefixes;
 			if (forumId) {
@@ -195,7 +196,7 @@ router.get(
 	'/forums/:id/threads',
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const forumId = parseInt(req.params.id);
+			const forumId = req.params.id as StructureId;
 			const page = parseInt(req.query.page as string) || 1;
 			const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
 			const sortBy = (req.query.sort as string) || 'newest';

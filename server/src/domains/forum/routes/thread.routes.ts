@@ -22,6 +22,7 @@ import { threadService } from '../services/thread.service';
 import { postService } from '../services/post.service';
 import { logger } from '@server/src/core/logger';
 import { asyncHandler } from '@server/src/core/errors';
+import type { ThreadId, PostId, StructureId } from '@/db/types';
 
 const router = Router();
 
@@ -29,7 +30,7 @@ const router = Router();
 const createThreadSchema = z.object({
 	title: z.string().min(1).max(200),
 	content: z.string().min(1),
-	structureId: z.number().int().positive(),
+	structureId: z.string().uuid('Invalid structureId format'),
 	tags: z.array(z.string()).optional(),
 	isLocked: z.boolean().optional(),
 	isPinned: z.boolean().optional(),
@@ -37,7 +38,7 @@ const createThreadSchema = z.object({
 });
 
 const updateThreadSolvedSchema = z.object({
-	solvingPostId: z.number().int().positive().optional().nullable()
+	solvingPostId: z.string().uuid('Invalid postId format').optional().nullable()
 });
 
 const addTagsSchema = z.object({
@@ -54,7 +55,7 @@ router.get(
 			const page = parseInt(req.query.page as string) || 1;
 			const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
 			const structureId = req.query.structureId
-				? parseInt(req.query.structureId as string)
+				? (req.query.structureId as StructureId)
 				: undefined;
 			const sortBy = (req.query.sortBy as string) || 'newest';
 			const search = req.query.search as string;
@@ -115,7 +116,7 @@ router.get(
 	'/:id',
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const threadId = parseInt(req.params.id);
+			const threadId = req.params.id as ThreadId;
 			const thread = await threadService.getThreadById(threadId);
 
 			if (!thread) {
@@ -222,7 +223,7 @@ router.put(
 	requireThreadSolvePermission,
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const threadId = parseInt(req.params.threadId);
+			const threadId = req.params.threadId as ThreadId;
 			const validatedData = updateThreadSolvedSchema.parse(req.body);
 			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
@@ -268,7 +269,7 @@ router.post(
 	requireThreadTagPermission,
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const threadId = parseInt(req.params.threadId);
+			const threadId = req.params.threadId as ThreadId;
 			const validatedData = addTagsSchema.parse(req.body);
 			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
@@ -305,8 +306,8 @@ router.delete(
 	requireThreadTagPermission,
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const threadId = parseInt(req.params.threadId);
-			const tagId = parseInt(req.params.tagId);
+			const threadId = req.params.threadId as ThreadId;
+			const tagId = req.params.tagId; // TagId conversion TODO if needed
 
 			// TODO: Implement tag removal logic
 
@@ -329,7 +330,7 @@ router.get(
 	'/:threadId/posts',
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const threadId = parseInt(req.params.threadId);
+			const threadId = req.params.threadId as ThreadId;
 			const page = parseInt(req.query.page as string) || 1;
 			const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
 			const sortBy = (req.query.sortBy as string) || 'oldest';
@@ -379,7 +380,7 @@ router.get(
 	'/:threadId/tags',
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const threadId = parseInt(req.params.threadId);
+			const threadId = req.params.threadId as ThreadId;
 
 			// TODO: Implement get thread tags logic
 

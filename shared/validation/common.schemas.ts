@@ -35,11 +35,11 @@ export const futureDate = z
 	.refine((date) => date > new Date(), 'Date must be in the future');
 export const pastDate = z.date().refine((date) => date < new Date(), 'Date must be in the past');
 
-// ID validators
-export const userId = positiveInt;
-export const threadId = positiveInt;
-export const postId = positiveInt;
-export const forumId = positiveInt;
+// ID validators (UUID-based)
+export const userId = z.string().uuid('Invalid userId format');
+export const threadId = z.string().uuid('Invalid threadId format');
+export const postId = z.string().uuid('Invalid postId format');
+export const forumId = z.string().uuid('Invalid forumId format');
 
 // Pagination schemas
 export const paginationSchema = z.object({
@@ -294,12 +294,12 @@ export const paginatedQuerySchema = paginationSchema.merge(sortSchema).merge(sea
 
 // Export commonly used combinations
 export const apiQuerySchema = paginatedQuerySchema;
-export const idParamSchema = z.object({ id: positiveInt });
+export const idParamSchema = z.object({ id: z.string().uuid('Invalid ID format') });
 export const slugParamSchema = z.object({ slug });
 
 // Validation helper functions
-export function validateId(id: unknown): number {
-	return positiveInt.parse(id);
+export function validateId(id: unknown): string {
+	return z.string().uuid().parse(id);
 }
 
 export function validateEmail(email: unknown): string {

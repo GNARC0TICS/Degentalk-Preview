@@ -12,6 +12,7 @@ import {
 	type Zone as ConfigZone
 } from '../../../../../client/src/config/forumMap.config';
 import type { ForumCategoryWithStats } from '../../../../db/types/forum.types';
+import type { StructureId } from '@/db/types';
 
 export interface ForumConfigEntry {
 	forum: ConfigForum;
@@ -94,7 +95,7 @@ export class ConfigService {
 	mapConfigForumToCategory(
 		forum: ConfigForum,
 		zone: ConfigZone,
-		parentId: number | null = null
+		parentId: StructureId | null = null
 	): ForumCategoryWithStats {
 		const baseColor = forum.themeOverride?.color || zone.theme.color;
 		const baseIcon = zone.theme.icon;

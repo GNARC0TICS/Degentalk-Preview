@@ -20,10 +20,10 @@ import { threadService } from './services/thread.service';
 import { postService } from './services/post.service';
 import { configService } from './services/config.service';
 import { cacheService } from './services/cache.service';
-import type { ForumId, ParentForumId } from '@/db/types';
+import type { ForumId, ParentForumId, StructureId, ThreadId, PostId } from '@/db/types';
 
 export interface ThreadSearchParams {
-	structureId?: number;
+	structureId?: StructureId;
 	prefix?: string;
 	tag?: string;
 	page?: number;
@@ -40,7 +40,7 @@ interface StructureTreeOptions {
 /**
  * Helper function to get all descendant leaf forum IDs for a given structure ID
  */
-async function getAllDescendantLeafForumIds(startStructureId: number): Promise<number[]> {
+async function getAllDescendantLeafForumIds(startStructureId: StructureId): Promise<StructureId[]> {
 	const allStructures = await db
 		.select({
 			id: forumStructure.id,
@@ -50,8 +50,8 @@ async function getAllDescendantLeafForumIds(startStructureId: number): Promise<n
 		.from(forumStructure);
 
 	const structureMap = new Map<
-		number,
-		{ id: number; parentId: number | null; type: string; children: number[] }
+		StructureId,
+		{ id: StructureId; parentId: StructureId | null; type: string; children: StructureId[] }
 	>();
 
 	allStructures.forEach((s) => {
@@ -64,9 +64,9 @@ async function getAllDescendantLeafForumIds(startStructureId: number): Promise<n
 		}
 	});
 
-	const leafForumIds: number[] = [];
-	const queue: number[] = [startStructureId];
-	const visited = new Set<number>();
+	const leafForumIds: StructureId[] = [];
+	const queue: StructureId[] = [startStructureId];
+	const visited = new Set<StructureId>();
 
 	while (queue.length > 0) {
 		const currentId = queue.shift()!;
@@ -302,7 +302,7 @@ export const forumService = {
 	/**
 	 * Update thread solved status - delegates to ThreadService
 	 */
-	async updateThreadSolvedStatus(params: { threadId: number; solvingPostId?: number | null }) {
+	async updateThreadSolvedStatus(params: { threadId: ThreadId; solvingPostId?: PostId | null }) {
 		// For now, keeping this implementation here as it's thread-specific
 		// TODO: Move to ThreadService in next iteration
 		try {

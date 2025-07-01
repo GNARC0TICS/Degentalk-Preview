@@ -10,16 +10,16 @@ import { db } from '@db';
 import { posts, threads, forumStructure } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
-import type { EntityId, ForumId } from '@/db/types';
+import type { EntityId, ForumId, UserId, PostId, ThreadId } from '@/db/types';
 
 export interface User {
-	id: number;
+	id: UserId;
 	role: 'user' | 'moderator' | 'admin';
 	username?: string;
 }
 
 export interface PermissionContext {
-	userId: number;
+	userId: UserId;
 	userRole: string;
 	entityId?: EntityId;
 	entityType?: 'post' | 'thread' | 'forum';
@@ -43,7 +43,7 @@ export function isModerator(user: User): boolean {
 /**
  * Check if user owns a specific post
  */
-export async function isPostOwner(userId: number, postId: number): Promise<boolean> {
+export async function isPostOwner(userId: UserId, postId: PostId): Promise<boolean> {
 	try {
 		const [post] = await db
 			.select({ userId: posts.userId })
@@ -61,7 +61,7 @@ export async function isPostOwner(userId: number, postId: number): Promise<boole
 /**
  * Check if user owns a specific thread
  */
-export async function isThreadOwner(userId: number, threadId: number): Promise<boolean> {
+export async function isThreadOwner(userId: UserId, threadId: ThreadId): Promise<boolean> {
 	try {
 		const [thread] = await db
 			.select({ userId: threads.userId })
@@ -84,7 +84,7 @@ export async function isThreadOwner(userId: number, threadId: number): Promise<b
  * Check if user can edit a post
  * Rules: Post owner, moderators, or admins can edit
  */
-export async function canEditPost(user: User, postId: number): Promise<boolean> {
+export async function canEditPost(user: User, postId: PostId): Promise<boolean> {
 	// Admins and moderators can edit any post
 	if (isModerator(user)) {
 		return true;
@@ -98,7 +98,7 @@ export async function canEditPost(user: User, postId: number): Promise<boolean> 
  * Check if user can delete a post
  * Rules: Post owner, moderators, or admins can delete
  */
-export async function canDeletePost(user: User, postId: number): Promise<boolean> {
+export async function canDeletePost(user: User, postId: PostId): Promise<boolean> {
 	// Admins and moderators can delete any post
 	if (isModerator(user)) {
 		return true;
@@ -112,7 +112,7 @@ export async function canDeletePost(user: User, postId: number): Promise<boolean
  * Check if user can edit a thread
  * Rules: Thread owner, moderators, or admins can edit
  */
-export async function canEditThread(user: User, threadId: number): Promise<boolean> {
+export async function canEditThread(user: User, threadId: ThreadId): Promise<boolean> {
 	// Admins and moderators can edit any thread
 	if (isModerator(user)) {
 		return true;
@@ -126,7 +126,7 @@ export async function canEditThread(user: User, threadId: number): Promise<boole
  * Check if user can delete a thread
  * Rules: Thread owner, moderators, or admins can delete
  */
-export async function canDeleteThread(user: User, threadId: number): Promise<boolean> {
+export async function canDeleteThread(user: User, threadId: ThreadId): Promise<boolean> {
 	// Admins and moderators can delete any thread
 	if (isModerator(user)) {
 		return true;
@@ -140,7 +140,7 @@ export async function canDeleteThread(user: User, threadId: number): Promise<boo
  * Check if user can solve/unsolved a thread
  * Rules: Thread owner, moderators, or admins can solve
  */
-export async function canSolveThread(user: User, threadId: number): Promise<boolean> {
+export async function canSolveThread(user: User, threadId: ThreadId): Promise<boolean> {
 	// Admins and moderators can solve any thread
 	if (isModerator(user)) {
 		return true;
@@ -154,7 +154,7 @@ export async function canSolveThread(user: User, threadId: number): Promise<bool
  * Check if user can manage thread tags
  * Rules: Thread owner, moderators, or admins can manage tags
  */
-export async function canManageThreadTags(user: User, threadId: number): Promise<boolean> {
+export async function canManageThreadTags(user: User, threadId: ThreadId): Promise<boolean> {
 	// Admins and moderators can manage tags on any thread
 	if (isModerator(user)) {
 		return true;
