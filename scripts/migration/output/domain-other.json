@@ -1392,64 +1392,6 @@
       "migrationEffort": 1.2
     },
     {
-      "path": "config/vite.config.ts",
-      "domain": "other",
-      "layer": "other",
-      "size": 3965,
-      "lines": 101,
-      "complexity": 2,
-      "dependencies": [
-        "vite",
-        "@vitejs/plugin-react",
-        "path",
-        "url",
-        "@replit/vite-plugin-runtime-error-modal",
-        "vite-tsconfig-paths"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.4
-    },
-    {
-      "path": "config/tailwind.config.ts",
-      "domain": "other",
-      "layer": "other",
-      "size": 6689,
-      "lines": 231,
-      "complexity": 1,
-      "dependencies": [
-        "tailwindcss",
-        "tailwindcss-animate",
-        "@tailwindcss/typography",
-        "@tailwindcss/container-queries"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "Config"
-        ]
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.7
-    },
-    {
       "path": "client/vitest.config.ts",
       "domain": "other",
       "layer": "other",
@@ -1534,6 +1476,64 @@
       "migrationEffort": 0.7
     },
     {
+      "path": "config/vite.config.ts",
+      "domain": "other",
+      "layer": "other",
+      "size": 3965,
+      "lines": 101,
+      "complexity": 2,
+      "dependencies": [
+        "vite",
+        "@vitejs/plugin-react",
+        "path",
+        "url",
+        "@replit/vite-plugin-runtime-error-modal",
+        "vite-tsconfig-paths"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "config/tailwind.config.ts",
+      "domain": "other",
+      "layer": "other",
+      "size": 6689,
+      "lines": 231,
+      "complexity": 1,
+      "dependencies": [
+        "tailwindcss",
+        "tailwindcss-animate",
+        "@tailwindcss/typography",
+        "@tailwindcss/container-queries"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Config"
+        ]
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.7
+    },
+    {
       "path": "shared/validators/index.ts",
       "domain": "other",
       "layer": "other",
@@ -1554,40 +1554,6 @@
       },
       "riskLevel": "low",
       "migrationEffort": 0.5
-    },
-    {
-      "path": "shared/utils/id.ts",
-      "domain": "other",
-      "layer": "utils",
-      "size": 2249,
-      "lines": 90,
-      "complexity": 3,
-      "dependencies": [
-        "@db/types"
-      ],
-      "exports": [
-        "toId",
-        "isValidId",
-        "validateUuid",
-        "parseId",
-        "generateId",
-        "idsEqual",
-        "filterValidIds"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": true,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": true,
-        "hasZodValidation": false,
-        "typeImports": [
-          "Id"
-        ]
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.3000000000000001
     },
     {
       "path": "shared/types/index.ts",
@@ -1716,6 +1682,40 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 1.7
+    },
+    {
+      "path": "shared/utils/id.ts",
+      "domain": "other",
+      "layer": "utils",
+      "size": 2249,
+      "lines": 90,
+      "complexity": 3,
+      "dependencies": [
+        "@db/types"
+      ],
+      "exports": [
+        "toId",
+        "isValidId",
+        "validateUuid",
+        "parseId",
+        "generateId",
+        "idsEqual",
+        "filterValidIds"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Id"
+        ]
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.3000000000000001
     },
     {
       "path": "shared/signature/SignatureTierConfig.ts",
@@ -2287,92 +2287,6 @@
       "migrationEffort": 0.9
     },
     {
-      "path": "scripts/seed/seed-all-comprehensive.ts",
-      "domain": "other",
-      "layer": "other",
-      "size": 26934,
-      "lines": 672,
-      "complexity": 8,
-      "dependencies": [
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types",
-        "@db/types"
-      ],
-      "exports": [
-        "UserRow",
-        "ForumRow",
-        "ThreadPrefixRow",
-        "TagRow",
-        "PostRow"
-      ],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 483,
-          "context": "const [new_post]: [{ id: number; depth: number; likeCount: number; createdAt: Date }] = await tx.insert(posts).values({",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": true,
-        "hasBrandedIds": true,
-        "hasNumericIds": true,
-        "hasTypeGuards": true,
-        "hasZodValidation": true,
-        "typeImports": [
-          "HeatEventId"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.9000000000000001
-    },
-    {
-      "path": "scripts/seed/dictionary.ts",
-      "domain": "other",
-      "layer": "other",
-      "size": 1489,
-      "lines": 42,
-      "complexity": 1,
-      "dependencies": [
-        "@db",
-        "@schema",
-        "@server/src/utils/slugify"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.19999999999999996
-    },
-    {
       "path": "scripts/quality/quality-metrics.ts",
       "domain": "other",
       "layer": "other",
@@ -2714,18 +2628,76 @@
       "migrationEffort": 2.1
     },
     {
-      "path": "scripts/dev/generate-scope-guide.ts",
+      "path": "scripts/seed/seed-all-comprehensive.ts",
       "domain": "other",
       "layer": "other",
-      "size": 5996,
-      "lines": 180,
-      "complexity": 2,
+      "size": 26934,
+      "lines": 672,
+      "complexity": 8,
       "dependencies": [
         "@db/types",
-        "fs/promises",
-        "path",
-        "glob",
-        "url"
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types",
+        "@db/types"
+      ],
+      "exports": [
+        "UserRow",
+        "ForumRow",
+        "ThreadPrefixRow",
+        "TagRow",
+        "PostRow"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 483,
+          "context": "const [new_post]: [{ id: number; depth: number; likeCount: number; createdAt: Date }] = await tx.insert(posts).values({",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": true,
+        "hasNumericIds": true,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "HeatEventId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.9000000000000001
+    },
+    {
+      "path": "scripts/seed/dictionary.ts",
+      "domain": "other",
+      "layer": "other",
+      "size": 1489,
+      "lines": 42,
+      "complexity": 1,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "@server/src/utils/slugify"
       ],
       "exports": [],
       "idPatterns": [],
@@ -2736,12 +2708,10 @@
         "hasNumericIds": false,
         "hasTypeGuards": false,
         "hasZodValidation": true,
-        "typeImports": [
-          "AdminId"
-        ]
+        "typeImports": []
       },
       "riskLevel": "low",
-      "migrationEffort": 0.4
+      "migrationEffort": 0.19999999999999996
     },
     {
       "path": "scripts/db/verify-neon-connection.ts",
@@ -3228,6 +3198,36 @@
       },
       "riskLevel": "low",
       "migrationEffort": 1.9
+    },
+    {
+      "path": "scripts/dev/generate-scope-guide.ts",
+      "domain": "other",
+      "layer": "other",
+      "size": 5996,
+      "lines": 180,
+      "complexity": 2,
+      "dependencies": [
+        "@db/types",
+        "fs/promises",
+        "path",
+        "glob",
+        "url"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "AdminId"
+        ]
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.4
     },
     {
       "path": "migrations/archive/canonical-zones-schema-update.ts",
@@ -4894,127 +4894,6 @@
       "migrationEffort": 0.5
     },
     {
-      "path": "db/schema/advertising/targeting.ts",
-      "domain": "other",
-      "layer": "other",
-      "size": 1465,
-      "lines": 40,
-      "complexity": 0,
-      "dependencies": [
-        "drizzle-orm/pg-core",
-        "drizzle-orm"
-      ],
-      "exports": [
-        "campaignRules",
-        "CampaignRule",
-        "InsertCampaignRule"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "db/schema/advertising/placements.ts",
-      "domain": "other",
-      "layer": "other",
-      "size": 2527,
-      "lines": 88,
-      "complexity": 0,
-      "dependencies": [
-        "drizzle-orm"
-      ],
-      "exports": [
-        "placementPositionEnum",
-        "adFormatEnum",
-        "adPlacements",
-        "AdPlacement",
-        "InsertAdPlacement"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "db/schema/advertising/performance.ts",
-      "domain": "other",
-      "layer": "other",
-      "size": 4596,
-      "lines": 146,
-      "complexity": 0,
-      "dependencies": [
-        "drizzle-orm"
-      ],
-      "exports": [
-        "interactionTypeEnum",
-        "adImpressions",
-        "campaignMetrics",
-        "AdImpression",
-        "InsertAdImpression",
-        "CampaignMetrics"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "db/schema/advertising/campaigns.ts",
-      "domain": "other",
-      "layer": "other",
-      "size": 2541,
-      "lines": 95,
-      "complexity": 0,
-      "dependencies": [
-        "drizzle-orm"
-      ],
-      "exports": [
-        "campaignStatusEnum",
-        "paymentMethodEnum",
-        "campaignTypeEnum",
-        "campaigns",
-        "Campaign",
-        "InsertCampaign"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
-    },
-    {
       "path": "client/src/utils/spacing-constants.ts",
       "domain": "other",
       "layer": "utils",
@@ -5376,42 +5255,20 @@
       "migrationEffort": 2.7
     },
     {
-      "path": "client/src/test/setup.ts",
+      "path": "db/schema/advertising/targeting.ts",
       "domain": "other",
       "layer": "other",
-      "size": 2644,
-      "lines": 87,
-      "complexity": 3,
+      "size": 1465,
+      "lines": 40,
+      "complexity": 0,
       "dependencies": [
-        "vitest",
-        "react"
+        "drizzle-orm/pg-core",
+        "drizzle-orm"
       ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 2.1
-    },
-    {
-      "path": "client/src/styles/cssVariables.ts",
-      "domain": "other",
-      "layer": "other",
-      "size": 1671,
-      "lines": 56,
-      "complexity": 1,
-      "dependencies": [],
       "exports": [
-        "setZoneAccentVariables",
-        "getZoneAccent",
-        "hexToRgb"
+        "campaignRules",
+        "CampaignRule",
+        "InsertCampaignRule"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -5424,7 +5281,99 @@
         "typeImports": []
       },
       "riskLevel": "low",
-      "migrationEffort": 0.7
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/advertising/placements.ts",
+      "domain": "other",
+      "layer": "other",
+      "size": 2527,
+      "lines": 88,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "placementPositionEnum",
+        "adFormatEnum",
+        "adPlacements",
+        "AdPlacement",
+        "InsertAdPlacement"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/advertising/performance.ts",
+      "domain": "other",
+      "layer": "other",
+      "size": 4596,
+      "lines": 146,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "interactionTypeEnum",
+        "adImpressions",
+        "campaignMetrics",
+        "AdImpression",
+        "InsertAdImpression",
+        "CampaignMetrics"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "db/schema/advertising/campaigns.ts",
+      "domain": "other",
+      "layer": "other",
+      "size": 2541,
+      "lines": 95,
+      "complexity": 0,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "campaignStatusEnum",
+        "paymentMethodEnum",
+        "campaignTypeEnum",
+        "campaigns",
+        "Campaign",
+        "InsertCampaign"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.5
     },
     {
       "path": "client/src/stores/usePlaygroundControls.ts",
@@ -6247,6 +6196,32 @@
       "migrationEffort": 2.5
     },
     {
+      "path": "client/src/styles/cssVariables.ts",
+      "domain": "other",
+      "layer": "other",
+      "size": 1671,
+      "lines": 56,
+      "complexity": 1,
+      "dependencies": [],
+      "exports": [
+        "setZoneAccentVariables",
+        "getZoneAccent",
+        "hexToRgb"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.7
+    },
+    {
       "path": "client/src/hooks/widgetData.ts",
       "domain": "other",
       "layer": "hooks",
@@ -7013,53 +6988,20 @@
       "migrationEffort": 2.0000000000000004
     },
     {
-      "path": "client/src/contexts/content-feed-context.tsx",
+      "path": "client/src/test/setup.ts",
       "domain": "other",
       "layer": "other",
-      "size": 2589,
-      "lines": 92,
-      "complexity": 1,
+      "size": 2644,
+      "lines": 87,
+      "complexity": 3,
       "dependencies": [
-        "react",
-        "@/hooks/use-content"
-      ],
-      "exports": [
-        "ContentFeedProvider",
-        "useContentFeed",
-        "useContentFeedState"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "ContentTab"
-        ]
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.7
-    },
-    {
-      "path": "client/src/contexts/MotionContext.tsx",
-      "domain": "other",
-      "layer": "other",
-      "size": 1576,
-      "lines": 46,
-      "complexity": 1,
-      "dependencies": [
+        "vitest",
         "react"
       ],
-      "exports": [
-        "MotionProvider",
-        "useMotion"
-      ],
+      "exports": [],
       "idPatterns": [],
       "typeUsage": {
-        "hasAnyTypes": false,
+        "hasAnyTypes": true,
         "hasUnknownTypes": false,
         "hasBrandedIds": false,
         "hasNumericIds": false,
@@ -7068,7 +7010,7 @@
         "typeImports": []
       },
       "riskLevel": "low",
-      "migrationEffort": 0.7
+      "migrationEffort": 2.1
     },
     {
       "path": "client/src/constants/websocket-disabled.ts",
@@ -7179,6 +7121,90 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 2.6
+    },
+    {
+      "path": "client/src/contexts/content-feed-context.tsx",
+      "domain": "other",
+      "layer": "other",
+      "size": 2589,
+      "lines": 92,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/hooks/use-content"
+      ],
+      "exports": [
+        "ContentFeedProvider",
+        "useContentFeed",
+        "useContentFeedState"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ContentTab"
+        ]
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/contexts/MotionContext.tsx",
+      "domain": "other",
+      "layer": "other",
+      "size": 1576,
+      "lines": 46,
+      "complexity": 1,
+      "dependencies": [
+        "react"
+      ],
+      "exports": [
+        "MotionProvider",
+        "useMotion"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/ErrorBoundary.tsx",
+      "domain": "other",
+      "layer": "components",
+      "size": 1210,
+      "lines": 50,
+      "complexity": 1,
+      "dependencies": [
+        "react"
+      ],
+      "exports": [
+        "ErrorBoundary"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.7
     },
     {
       "path": "client/src/config/widgetRegistry.ts",
@@ -7660,32 +7686,6 @@
       "migrationEffort": 0.5
     },
     {
-      "path": "client/src/components/ErrorBoundary.tsx",
-      "domain": "other",
-      "layer": "components",
-      "size": 1210,
-      "lines": 50,
-      "complexity": 1,
-      "dependencies": [
-        "react"
-      ],
-      "exports": [
-        "ErrorBoundary"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.7
-    },
-    {
       "path": "server/src/routes/api/ui.routes.ts",
       "domain": "other",
       "layer": "routes",
@@ -7732,85 +7732,6 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 0.5
-    },
-    {
-      "path": "server/src/core/utils/error-response.util.ts",
-      "domain": "other",
-      "layer": "utils",
-      "size": 6261,
-      "lines": 287,
-      "complexity": 6,
-      "dependencies": [
-        "express",
-        "zod"
-      ],
-      "exports": [
-        "ErrorResponse",
-        "SuccessResponse",
-        "ApiResponse",
-        "ResponseError",
-        "formatErrorResponse",
-        "formatSuccessResponse",
-        "handleValidationError",
-        "createErrorHandler",
-        "asyncHandler",
-        "requirePermission",
-        "requireResource",
-        "checkRateLimit",
-        "createPaginationMeta",
-        "controllerMethod",
-        "healthResponse"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": [
-          "Request",
-          "Response"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 2.2
-    },
-    {
-      "path": "server/src/core/services/rate-limit.service.ts",
-      "domain": "other",
-      "layer": "services",
-      "size": 6887,
-      "lines": 301,
-      "complexity": 6,
-      "dependencies": [
-        "ioredis",
-        "express-rate-limit",
-        "rate-limit-redis",
-        "express"
-      ],
-      "exports": [
-        "rateLimiters",
-        "createCustomRateLimiter",
-        "bypassRateLimit",
-        "redisClient "
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": true,
-        "hasZodValidation": false,
-        "typeImports": [
-          "Request",
-          "Response"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.9000000000000001
     },
     {
       "path": "server/src/core/repository/repository-factory.ts",
@@ -8229,6 +8150,50 @@
       "migrationEffort": 2.3
     },
     {
+      "path": "server/src/core/utils/error-response.util.ts",
+      "domain": "other",
+      "layer": "utils",
+      "size": 6261,
+      "lines": 287,
+      "complexity": 6,
+      "dependencies": [
+        "express",
+        "zod"
+      ],
+      "exports": [
+        "ErrorResponse",
+        "SuccessResponse",
+        "ApiResponse",
+        "ResponseError",
+        "formatErrorResponse",
+        "formatSuccessResponse",
+        "handleValidationError",
+        "createErrorHandler",
+        "asyncHandler",
+        "requirePermission",
+        "requireResource",
+        "checkRateLimit",
+        "createPaginationMeta",
+        "controllerMethod",
+        "healthResponse"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.2
+    },
+    {
       "path": "server/src/core/config/environment.ts",
       "domain": "other",
       "layer": "other",
@@ -8327,6 +8292,41 @@
       "migrationEffort": 3.1
     },
     {
+      "path": "server/src/core/services/rate-limit.service.ts",
+      "domain": "other",
+      "layer": "services",
+      "size": 6887,
+      "lines": 301,
+      "complexity": 6,
+      "dependencies": [
+        "ioredis",
+        "express-rate-limit",
+        "rate-limit-redis",
+        "express"
+      ],
+      "exports": [
+        "rateLimiters",
+        "createCustomRateLimiter",
+        "bypassRateLimit",
+        "redisClient "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.9000000000000001
+    },
+    {
       "path": "client/src/types/compat/brand.ts",
       "domain": "other",
       "layer": "types",
@@ -8387,34 +8387,6 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 2.1
-    },
-    {
-      "path": "client/src/test/utils/renderWithProviders.tsx",
-      "domain": "other",
-      "layer": "utils",
-      "size": 936,
-      "lines": 30,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "@testing-library/react",
-        "@/providers/root-provider"
-      ],
-      "exports": [
-        "renderWithProviders"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.7
     },
     {
       "path": "client/src/pages/zones/index.tsx",
@@ -8489,35 +8461,6 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "client/src/pages/ui-playground/demo-data.ts",
-      "domain": "other",
-      "layer": "pages",
-      "size": 3561,
-      "lines": 104,
-      "complexity": 0,
-      "dependencies": [],
-      "exports": [
-        "usernameTiers",
-        "userTitles",
-        "avatarFrameRarities",
-        "cryptoIcons",
-        "sampleAnnouncements",
-        "navSections"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
-    },
-    {
       "path": "client/src/pages/tags/[tagSlug].tsx",
       "domain": "other",
       "layer": "pages",
@@ -8560,30 +8503,6 @@
       "migrationEffort": 0.1
     },
     {
-      "path": "client/src/pages/search/index.tsx",
-      "domain": "other",
-      "layer": "pages",
-      "size": 162,
-      "lines": 6,
-      "complexity": 0,
-      "dependencies": [
-        "react"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
-    },
-    {
       "path": "client/src/pages/referrals/index.tsx",
       "domain": "other",
       "layer": "pages",
@@ -8620,6 +8539,35 @@
       },
       "riskLevel": "low",
       "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/pages/ui-playground/demo-data.ts",
+      "domain": "other",
+      "layer": "pages",
+      "size": 3561,
+      "lines": 104,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "usernameTiers",
+        "userTitles",
+        "avatarFrameRarities",
+        "cryptoIcons",
+        "sampleAnnouncements",
+        "navSections"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.5
     },
     {
       "path": "client/src/pages/preferences/index.tsx",
@@ -8696,95 +8644,28 @@
       "migrationEffort": 1.9
     },
     {
-      "path": "client/src/pages/dictionary/index.tsx",
+      "path": "client/src/pages/search/index.tsx",
       "domain": "other",
       "layer": "pages",
-      "size": 2252,
-      "lines": 68,
-      "complexity": 1,
+      "size": 162,
+      "lines": 6,
+      "complexity": 0,
       "dependencies": [
-        "react",
-        "@tanstack/react-query",
-        "wouter",
-        "@/lib/queryClient",
-        "@/components/ui/button",
-        "@/components/ui/card",
-        "@/components/ui/loader",
-        "@/components/ui/error-display",
-        "@/features/dictionary/components/AddWordModal",
-        "@/components/ui/tooltip"
+        "react"
       ],
       "exports": [],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 13,
-          "context": "id: number;",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        }
-      ],
+      "idPatterns": [],
       "typeUsage": {
         "hasAnyTypes": false,
         "hasUnknownTypes": false,
         "hasBrandedIds": false,
-        "hasNumericIds": true,
+        "hasNumericIds": false,
         "hasTypeGuards": false,
         "hasZodValidation": false,
         "typeImports": []
       },
-      "riskLevel": "medium",
-      "migrationEffort": 2.8
-    },
-    {
-      "path": "client/src/pages/dictionary/[slug].tsx",
-      "domain": "other",
-      "layer": "pages",
-      "size": 2475,
-      "lines": 80,
-      "complexity": 2,
-      "dependencies": [
-        "react",
-        "wouter",
-        "@tanstack/react-query",
-        "@/lib/queryClient",
-        "@/components/ui/loader",
-        "@/components/ui/error-display",
-        "@/components/ui/button",
-        "@/components/ui/tooltip",
-        "@/features/dictionary/services/dictionaryApi"
-      ],
-      "exports": [],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 12,
-          "context": "id: number;",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        },
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 34,
-          "context": "const upvoteMutation = useMutation((id: number) => dictionaryApi.upvote(id), {",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": true,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 4.1
+      "riskLevel": "low",
+      "migrationEffort": 0.5
     },
     {
       "path": "client/src/pages/dev/index.ts",
@@ -8896,6 +8777,97 @@
       },
       "riskLevel": "low",
       "migrationEffort": 1.5
+    },
+    {
+      "path": "client/src/pages/dictionary/index.tsx",
+      "domain": "other",
+      "layer": "pages",
+      "size": 2252,
+      "lines": 68,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "wouter",
+        "@/lib/queryClient",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/loader",
+        "@/components/ui/error-display",
+        "@/features/dictionary/components/AddWordModal",
+        "@/components/ui/tooltip"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 13,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.8
+    },
+    {
+      "path": "client/src/pages/dictionary/[slug].tsx",
+      "domain": "other",
+      "layer": "pages",
+      "size": 2475,
+      "lines": 80,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "wouter",
+        "@tanstack/react-query",
+        "@/lib/queryClient",
+        "@/components/ui/loader",
+        "@/components/ui/error-display",
+        "@/components/ui/button",
+        "@/components/ui/tooltip",
+        "@/features/dictionary/services/dictionaryApi"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 12,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 34,
+          "context": "const upvoteMutation = useMutation((id: number) => dictionaryApi.upvote(id), {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 4.1
     },
     {
       "path": "client/src/pages/announcements/index.tsx",
@@ -9056,6 +9028,59 @@
       },
       "riskLevel": "low",
       "migrationEffort": 2.1
+    },
+    {
+      "path": "client/src/hooks/__tests__/useMediaQuery.test.tsx",
+      "domain": "other",
+      "layer": "hooks",
+      "size": 8083,
+      "lines": 284,
+      "complexity": 2,
+      "dependencies": [
+        "@testing-library/react",
+        "vitest"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 1.9
+    },
+    {
+      "path": "client/src/test/utils/renderWithProviders.tsx",
+      "domain": "other",
+      "layer": "utils",
+      "size": 936,
+      "lines": 30,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@testing-library/react",
+        "@/providers/root-provider"
+      ],
+      "exports": [
+        "renderWithProviders"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.7
     },
     {
       "path": "client/src/layout/primitives/index.ts",
@@ -9249,29 +9274,34 @@
       "migrationEffort": 0.5
     },
     {
-      "path": "client/src/hooks/__tests__/useMediaQuery.test.tsx",
+      "path": "client/src/__tests__/services/error.service.test.ts",
       "domain": "other",
-      "layer": "hooks",
-      "size": 8083,
-      "lines": 284,
-      "complexity": 2,
+      "layer": "services",
+      "size": 8854,
+      "lines": 281,
+      "complexity": 3,
       "dependencies": [
-        "@testing-library/react",
-        "vitest"
+        "vitest",
+        "@/services/error.service",
+        "@/services/error.service"
       ],
       "exports": [],
       "idPatterns": [],
       "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
         "hasBrandedIds": false,
         "hasNumericIds": false,
         "hasTypeGuards": false,
         "hasZodValidation": false,
-        "typeImports": []
+        "typeImports": [
+          "AppError",
+          "ErrorCategory",
+          "ErrorSeverity"
+        ]
       },
-      "riskLevel": "low",
-      "migrationEffort": 1.9
+      "riskLevel": "medium",
+      "migrationEffort": 1.1
     },
     {
       "path": "client/src/components/social/WhaleWatchDisplay.tsx",
@@ -11618,55 +11648,6 @@
       "migrationEffort": 0.5
     },
     {
-      "path": "client/src/components/skeletons/ZoneCardSkeleton.tsx",
-      "domain": "other",
-      "layer": "components",
-      "size": 367,
-      "lines": 13,
-      "complexity": 0,
-      "dependencies": [
-        "react",
-        "@/components/ui/skeleton"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "client/src/components/skeletons/HomePageSkeleton.tsx",
-      "domain": "other",
-      "layer": "components",
-      "size": 516,
-      "lines": 21,
-      "complexity": 1,
-      "dependencies": [
-        "react"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.7
-    },
-    {
       "path": "client/src/components/sidebar/related-content-widget.tsx",
       "domain": "other",
       "layer": "components",
@@ -11712,6 +11693,39 @@
         "@/lib/utils"
       ],
       "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/zone/PrimaryZoneCarousel.tsx",
+      "domain": "other",
+      "layer": "components",
+      "size": 8789,
+      "lines": 309,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "framer-motion",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/components/forum/ZoneCard",
+        "@/lib/utils",
+        "@/hooks/useMediaQuery"
+      ],
+      "exports": [
+        "PrimaryZoneCarouselProps",
+        "PrimaryZoneCarousel "
+      ],
       "idPatterns": [],
       "typeUsage": {
         "hasAnyTypes": false,
@@ -12038,6 +12052,55 @@
       "migrationEffort": 0.7
     },
     {
+      "path": "client/src/components/skeletons/ZoneCardSkeleton.tsx",
+      "domain": "other",
+      "layer": "components",
+      "size": 367,
+      "lines": 13,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@/components/ui/skeleton"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/skeletons/HomePageSkeleton.tsx",
+      "domain": "other",
+      "layer": "components",
+      "size": 516,
+      "lines": 21,
+      "complexity": 1,
+      "dependencies": [
+        "react"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.7
+    },
+    {
       "path": "client/src/components/platform-energy/index.ts",
       "domain": "other",
       "layer": "components",
@@ -12058,38 +12121,6 @@
       },
       "riskLevel": "low",
       "migrationEffort": 0.5
-    },
-    {
-      "path": "client/src/components/paths/path-progress.tsx",
-      "domain": "other",
-      "layer": "components",
-      "size": 2793,
-      "lines": 106,
-      "complexity": 2,
-      "dependencies": [
-        "react",
-        "@/components/ui/progress",
-        "@shared/path-config",
-        "@/lib/utils",
-        "lucide-react"
-      ],
-      "exports": [
-        "PathProgress",
-        "getPathLevel",
-        "getProgressPercentage"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 1.9
     },
     {
       "path": "client/src/components/navigation/nav-item.tsx",
@@ -12153,6 +12184,38 @@
       "migrationEffort": 0.7
     },
     {
+      "path": "client/src/components/paths/path-progress.tsx",
+      "domain": "other",
+      "layer": "components",
+      "size": 2793,
+      "lines": 106,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@/components/ui/progress",
+        "@shared/path-config",
+        "@/lib/utils",
+        "lucide-react"
+      ],
+      "exports": [
+        "PathProgress",
+        "getPathLevel",
+        "getProgressPercentage"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 1.9
+    },
+    {
       "path": "client/src/components/media/MediaAsset.tsx",
       "domain": "other",
       "layer": "components",
@@ -12181,6 +12244,54 @@
       },
       "riskLevel": "low",
       "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/identity/path-progress.tsx",
+      "domain": "other",
+      "layer": "components",
+      "size": 165,
+      "lines": 7,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "PathProgress",
+        "getPathLevel",
+        "getProgressPercentage"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/identity/index.ts",
+      "domain": "other",
+      "layer": "components",
+      "size": 118,
+      "lines": 5,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.5
     },
     {
       "path": "client/src/components/layout/site-layout-wrapper.tsx",
@@ -12502,166 +12613,6 @@
       },
       "riskLevel": "low",
       "migrationEffort": 1.1
-    },
-    {
-      "path": "client/src/components/identity/path-progress.tsx",
-      "domain": "other",
-      "layer": "components",
-      "size": 165,
-      "lines": 7,
-      "complexity": 0,
-      "dependencies": [],
-      "exports": [
-        "PathProgress",
-        "getPathLevel",
-        "getProgressPercentage"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "client/src/components/identity/index.ts",
-      "domain": "other",
-      "layer": "components",
-      "size": 118,
-      "lines": 5,
-      "complexity": 0,
-      "dependencies": [],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "client/src/components/icons/types.ts",
-      "domain": "other",
-      "layer": "components",
-      "size": 852,
-      "lines": 28,
-      "complexity": 0,
-      "dependencies": [
-        "lucide-react"
-      ],
-      "exports": [
-        "Theme",
-        "IconConfig",
-        "IconMap"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "LucideIcon"
-        ]
-      },
-      "riskLevel": "low",
-      "migrationEffort": 1.5
-    },
-    {
-      "path": "client/src/components/icons/iconRenderer.tsx",
-      "domain": "other",
-      "layer": "components",
-      "size": 1866,
-      "lines": 78,
-      "complexity": 2,
-      "dependencies": [
-        "react",
-        "lucide-react",
-        "react-lottie-player"
-      ],
-      "exports": [
-        "IconRendererProps",
-        "IconRenderer"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": true,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": true,
-        "hasZodValidation": false,
-        "typeImports": [
-          "LucideIcon"
-        ]
-      },
-      "riskLevel": "low",
-      "migrationEffort": 1.0999999999999999
-    },
-    {
-      "path": "client/src/components/icons/iconMap.config.ts",
-      "domain": "other",
-      "layer": "components",
-      "size": 2240,
-      "lines": 186,
-      "complexity": 0,
-      "dependencies": [],
-      "exports": [
-        "iconMap",
-        "IconKey"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "client/src/components/icons/iconLoader.ts",
-      "domain": "other",
-      "layer": "components",
-      "size": 196,
-      "lines": 7,
-      "complexity": 0,
-      "dependencies": [],
-      "exports": [
-        "getIconConfig"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "IconConfig"
-        ]
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
     },
     {
       "path": "client/src/components/header/index.ts",
@@ -13036,6 +12987,74 @@
       "migrationEffort": 0.5
     },
     {
+      "path": "client/src/components/fixtures/fixture-preview.tsx",
+      "domain": "other",
+      "layer": "components",
+      "size": 10317,
+      "lines": 359,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/card",
+        "@/components/ui/badge",
+        "@/components/ui/button",
+        "@/components/ui/avatar",
+        "@/components/ui/tabs",
+        "date-fns"
+      ],
+      "exports": [
+        "FixturePreview"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/components/fixtures/fixture-builder.tsx",
+      "domain": "other",
+      "layer": "components",
+      "size": 12798,
+      "lines": 451,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@/components/ui/card",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/label",
+        "@/components/ui/textarea",
+        "@/components/ui/switch",
+        "@/components/ui/badge",
+        "@/components/ui/tabs",
+        "lucide-react",
+        "sonner"
+      ],
+      "exports": [
+        "FixtureBuilder"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 1.9
+    },
+    {
       "path": "client/src/components/footer/index.ts",
       "domain": "other",
       "layer": "components",
@@ -13210,89 +13229,18 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "client/src/components/fixtures/fixture-preview.tsx",
+      "path": "client/src/components/dev/dev-playground-shortcut.tsx",
       "domain": "other",
       "layer": "components",
-      "size": 10317,
-      "lines": 359,
-      "complexity": 1,
+      "size": 567,
+      "lines": 21,
+      "complexity": 0,
       "dependencies": [
-        "react",
-        "@/components/ui/card",
-        "@/components/ui/badge",
-        "@/components/ui/button",
-        "@/components/ui/avatar",
-        "@/components/ui/tabs",
-        "date-fns"
+        "wouter",
+        "lucide-react"
       ],
       "exports": [
-        "FixturePreview"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 1.7
-    },
-    {
-      "path": "client/src/components/fixtures/fixture-builder.tsx",
-      "domain": "other",
-      "layer": "components",
-      "size": 12798,
-      "lines": 451,
-      "complexity": 2,
-      "dependencies": [
-        "react",
-        "@/components/ui/card",
-        "@/components/ui/button",
-        "@/components/ui/input",
-        "@/components/ui/label",
-        "@/components/ui/textarea",
-        "@/components/ui/switch",
-        "@/components/ui/badge",
-        "@/components/ui/tabs",
-        "lucide-react",
-        "sonner"
-      ],
-      "exports": [
-        "FixtureBuilder"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 1.9
-    },
-    {
-      "path": "client/src/components/errors/NetworkError.tsx",
-      "domain": "other",
-      "layer": "components",
-      "size": 6416,
-      "lines": 216,
-      "complexity": 3,
-      "dependencies": [
-        "react",
-        "lucide-react",
-        "@/components/ui/button",
-        "@/components/ui/card",
-        "@/components/ui/alert"
-      ],
-      "exports": [
-        "NetworkError"
+        "DevPlaygroundShortcut"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -13305,25 +13253,80 @@
         "typeImports": []
       },
       "riskLevel": "low",
-      "migrationEffort": 1.1
+      "migrationEffort": 0.5
     },
     {
-      "path": "client/src/components/errors/ErrorBoundary.tsx",
+      "path": "client/src/components/icons/types.ts",
       "domain": "other",
       "layer": "components",
-      "size": 6839,
-      "lines": 230,
+      "size": 852,
+      "lines": 28,
+      "complexity": 0,
+      "dependencies": [
+        "lucide-react"
+      ],
+      "exports": [
+        "Theme",
+        "IconConfig",
+        "IconMap"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "LucideIcon"
+        ]
+      },
+      "riskLevel": "low",
+      "migrationEffort": 1.5
+    },
+    {
+      "path": "client/src/components/icons/iconRenderer.tsx",
+      "domain": "other",
+      "layer": "components",
+      "size": 1866,
+      "lines": 78,
       "complexity": 2,
       "dependencies": [
         "react",
         "lucide-react",
-        "@/components/ui/button",
-        "@/components/ui/card"
+        "react-lottie-player"
       ],
       "exports": [
-        "ErrorBoundary",
-        "withErrorBoundary",
-        "useErrorHandler"
+        "IconRendererProps",
+        "IconRenderer"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "LucideIcon"
+        ]
+      },
+      "riskLevel": "low",
+      "migrationEffort": 1.0999999999999999
+    },
+    {
+      "path": "client/src/components/icons/iconMap.config.ts",
+      "domain": "other",
+      "layer": "components",
+      "size": 2240,
+      "lines": 186,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "iconMap",
+        "IconKey"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -13336,7 +13339,33 @@
         "typeImports": []
       },
       "riskLevel": "low",
-      "migrationEffort": 0.9
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/icons/iconLoader.ts",
+      "domain": "other",
+      "layer": "components",
+      "size": 196,
+      "lines": 7,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "getIconConfig"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "IconConfig"
+        ]
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.5
     },
     {
       "path": "client/src/components/editor/suggestion.ts",
@@ -13469,33 +13498,6 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 2.5
-    },
-    {
-      "path": "client/src/components/dev/dev-playground-shortcut.tsx",
-      "domain": "other",
-      "layer": "components",
-      "size": 567,
-      "lines": 21,
-      "complexity": 0,
-      "dependencies": [
-        "wouter",
-        "lucide-react"
-      ],
-      "exports": [
-        "DevPlaygroundShortcut"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
     },
     {
       "path": "client/src/components/dashboard/UpcomingEventsWidget.tsx",
@@ -13721,54 +13723,21 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "client/src/__tests__/services/error.service.test.ts",
-      "domain": "other",
-      "layer": "services",
-      "size": 8854,
-      "lines": 281,
-      "complexity": 3,
-      "dependencies": [
-        "vitest",
-        "@/services/error.service",
-        "@/services/error.service"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": true,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "AppError",
-          "ErrorCategory",
-          "ErrorSeverity"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.1
-    },
-    {
-      "path": "client/src/components/zone/PrimaryZoneCarousel.tsx",
+      "path": "client/src/components/errors/NetworkError.tsx",
       "domain": "other",
       "layer": "components",
-      "size": 8789,
-      "lines": 309,
-      "complexity": 1,
+      "size": 6416,
+      "lines": 216,
+      "complexity": 3,
       "dependencies": [
         "react",
-        "framer-motion",
         "lucide-react",
         "@/components/ui/button",
-        "@/components/forum/ZoneCard",
-        "@/lib/utils",
-        "@/hooks/useMediaQuery"
+        "@/components/ui/card",
+        "@/components/ui/alert"
       ],
       "exports": [
-        "PrimaryZoneCarouselProps",
-        "PrimaryZoneCarousel "
+        "NetworkError"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -13781,7 +13750,38 @@
         "typeImports": []
       },
       "riskLevel": "low",
-      "migrationEffort": 0.7
+      "migrationEffort": 1.1
+    },
+    {
+      "path": "client/src/components/errors/ErrorBoundary.tsx",
+      "domain": "other",
+      "layer": "components",
+      "size": 6839,
+      "lines": 230,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/components/ui/card"
+      ],
+      "exports": [
+        "ErrorBoundary",
+        "withErrorBoundary",
+        "useErrorHandler"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.9
     },
     {
       "path": "server/src/core/routes/api/status.ts",
@@ -13831,6 +13831,91 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/pages/ui-playground/animations/FadeInListDemo.tsx",
+      "domain": "other",
+      "layer": "pages",
+      "size": 485,
+      "lines": 23,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "framer-motion"
+      ],
+      "exports": [
+        "FadeInListDemo"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/pages/ui-playground/animations/CardFlipDemo.tsx",
+      "domain": "other",
+      "layer": "pages",
+      "size": 1157,
+      "lines": 45,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "framer-motion",
+        "@/pages/dev/DemoCard",
+        "react"
+      ],
+      "exports": [
+        "CardFlipDemo"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/pages/ui-playground/animations/ButtonPulseDemo.tsx",
+      "domain": "other",
+      "layer": "pages",
+      "size": 672,
+      "lines": 28,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "react",
+        "@/components/ui/button",
+        "@/pages/dev/DemoCard"
+      ],
+      "exports": [
+        "ButtonPulseDemo"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 1.5
     },
     {
       "path": "client/src/pages/ui-playground/sections/FontsSection.tsx",
@@ -13980,91 +14065,6 @@
       },
       "riskLevel": "low",
       "migrationEffort": 0.5
-    },
-    {
-      "path": "client/src/pages/ui-playground/animations/FadeInListDemo.tsx",
-      "domain": "other",
-      "layer": "pages",
-      "size": 485,
-      "lines": 23,
-      "complexity": 0,
-      "dependencies": [
-        "react",
-        "framer-motion"
-      ],
-      "exports": [
-        "FadeInListDemo"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "client/src/pages/ui-playground/animations/CardFlipDemo.tsx",
-      "domain": "other",
-      "layer": "pages",
-      "size": 1157,
-      "lines": 45,
-      "complexity": 0,
-      "dependencies": [
-        "react",
-        "framer-motion",
-        "@/pages/dev/DemoCard",
-        "react"
-      ],
-      "exports": [
-        "CardFlipDemo"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "client/src/pages/ui-playground/animations/ButtonPulseDemo.tsx",
-      "domain": "other",
-      "layer": "pages",
-      "size": 672,
-      "lines": 28,
-      "complexity": 0,
-      "dependencies": [
-        "react",
-        "react",
-        "@/components/ui/button",
-        "@/pages/dev/DemoCard"
-      ],
-      "exports": [
-        "ButtonPulseDemo"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 1.5
     },
     {
       "path": "client/src/features/gamification/services/gamification-api.service.ts",
@@ -14249,36 +14249,6 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "client/src/features/activity/services/activityApi.ts",
-      "domain": "other",
-      "layer": "services",
-      "size": 4077,
-      "lines": 172,
-      "complexity": 4,
-      "dependencies": [
-        "@/lib/queryClient"
-      ],
-      "exports": [
-        "EventLog",
-        "EventLogFilters",
-        "EventLogPagination",
-        "ApiResponse",
-        "activityApi"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": true,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.5
-    },
-    {
       "path": "client/src/features/activity/components/PaginatedActivityFeed.tsx",
       "domain": "other",
       "layer": "components",
@@ -14335,6 +14305,36 @@
       },
       "riskLevel": "low",
       "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/features/activity/services/activityApi.ts",
+      "domain": "other",
+      "layer": "services",
+      "size": 4077,
+      "lines": 172,
+      "complexity": 4,
+      "dependencies": [
+        "@/lib/queryClient"
+      ],
+      "exports": [
+        "EventLog",
+        "EventLogFilters",
+        "EventLogPagination",
+        "ApiResponse",
+        "activityApi"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.5
     },
     {
       "path": "client/src/components/platform-energy/stats/platform-stats-widget.tsx",
@@ -14477,8 +14477,6 @@
     "@/hooks/use-content",
     "@/stores/useLayoutStore",
     "@/components/icons/iconRenderer",
-    "@testing-library/react",
-    "@/providers/root-provider",
     "@/components/forum/CanonicalZoneGrid",
     "@/features/forum/components/HierarchicalZoneNav",
     "@/components/ui/skeleton",
@@ -14499,10 +14497,13 @@
     "@/components/preferences/referral-preferences",
     "@/components/preferences/social-preferences",
     "@/components/ui/container",
+    "@/stores/usePlaygroundControls",
     "@/features/dictionary/components/AddWordModal",
     "@/features/dictionary/services/dictionaryApi",
-    "@/stores/usePlaygroundControls",
     "@/types/inventory",
+    "@testing-library/react",
+    "@/providers/root-provider",
+    "@/services/error.service",
     "@/components/ui/avatar",
     "@/components/ui/scroll-area",
     "@/hooks/useFollowing",
@@ -14576,9 +14577,8 @@
     "@tiptap/extension-code-block-lowlight",
     "@tiptap/extension-mention",
     "@/hooks/useDailyTasks",
-    "@/services/error.service",
-    "@/config/fonts.config",
     "@/pages/dev/DemoCard",
+    "@/config/fonts.config",
     "@/features/activity/services/activityApi",
     "@/features/activity/hooks/useActivityFeed"
   ],

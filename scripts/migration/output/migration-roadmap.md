@@ -1,12 +1,12 @@
 # DegenTalk Migration Roadmap
 
-Generated: 2025-07-01T23:13:47.762Z
+Generated: 2025-07-01T23:28:03.738Z
 
 ## Executive Summary
 
-- **Total Files**: 1,539
-- **Total Lines**: 275,974
-- **ID Issues**: 699
+- **Total Files**: 1,540
+- **Total Lines**: 276,388
+- **ID Issues**: 700
 - **Domains**: 35
 - **Estimated Duration**: 365 days
 
@@ -49,7 +49,7 @@ Generated: 2025-07-01T23:13:47.762Z
 
 ### Phase 3: Extended Systems
 - **Duration**: 9 days
-- **Domains**: engagement, profile, preferences, shop, feature-gates, dictionary, subscriptions, infrastructure, uploads, treasury, paths, notifications, messaging, editor, ccpayment-webhook
+- **Domains**: engagement, profile, preferences, feature-gates, shop, dictionary, subscriptions, infrastructure, treasury, uploads, paths, messaging, notifications, editor, ccpayment-webhook
 - **Parallel**: Yes
 - **Blockers**: forum-core, other, admin, moderation, economy, user-management, shoutbox, cosmetics, missions, collectibles, auth, forum, wallet, advertising, social, xp, share, user, activity
 
@@ -81,7 +81,7 @@ Generated: 2025-07-01T23:13:47.762Z
 
 | Domain | Issues | Risk | Effort | Dependents | Strategy |
 |--------|--------|------|--------|------------|----------|
-| forum-core | 117 | critical | 40d | 0 | incremental |
+| forum-core | 118 | critical | 40d | 0 | incremental |
 | gamification | 54 | critical | 28d | 2 | incremental |
 | other | 180 | high | 81d | 0 | incremental |
 | admin | 86 | high | 39d | 9 | incremental |
@@ -100,19 +100,19 @@ Generated: 2025-07-01T23:13:47.762Z
 | social | 9 | medium | 8d | 4 | atomic |
 | profile | 9 | medium | 3d | 3 | atomic |
 | preferences | 7 | medium | 2d | 3 | atomic |
-| shop | 2 | medium | 1d | 2 | atomic |
 | feature-gates | 2 | medium | 1d | 0 | atomic |
+| shop | 2 | medium | 1d | 2 | atomic |
 | dictionary | 2 | medium | 1d | 2 | atomic |
 | xp | 1 | medium | 3d | 33 | atomic |
 | subscriptions | 1 | medium | 2d | 0 | atomic |
 | share | 1 | medium | 1d | 13 | atomic |
 | infrastructure | 0 | medium | 2d | 0 | atomic |
-| user | 0 | medium | 1d | 29 | atomic |
-| uploads | 0 | medium | 1d | 0 | atomic |
 | treasury | 0 | medium | 1d | 0 | atomic |
+| uploads | 0 | medium | 1d | 0 | atomic |
+| user | 0 | medium | 1d | 29 | atomic |
 | paths | 0 | medium | 1d | 1 | atomic |
-| notifications | 0 | medium | 1d | 3 | atomic |
 | messaging | 0 | medium | 1d | 0 | atomic |
+| notifications | 0 | medium | 1d | 3 | atomic |
 | editor | 0 | medium | 1d | 2 | atomic |
 | ccpayment-webhook | 0 | medium | 1d | 0 | atomic |
 | activity | 0 | medium | 1d | 4 | atomic |
@@ -123,10 +123,10 @@ Generated: 2025-07-01T23:13:47.762Z
 ### forum-core (CRITICAL RISK)
 
 **Risk Factors:**
-- 117 ID issues
-- 186 files
+- 118 ID issues
+- 187 files
 - 0 dependents
-- Complexity: 1.4
+- Complexity: 1.5
 
 **Mitigation:**
 - Incremental migration
@@ -437,8 +437,8 @@ Generated: 2025-07-01T23:13:47.762Z
 
 ## Dependency Graph
 
-- **forum-core** depends on: other, user-management, forum, gamification, user, admin, economy, profile, editor, activity, cosmetics
-- **other** depends on: forum-core, xp, user-management, economy, paths, auth, moderation, forum, infrastructure, engagement, gamification, social, user, cosmetics, profile, preferences, dictionary, admin, activity
+- **forum-core** depends on: other, user-management, forum, gamification, user, admin, economy, profile, editor, cosmetics, activity
+- **other** depends on: forum-core, xp, user-management, economy, wallet, paths, auth, moderation, forum, infrastructure, engagement, gamification, social, user, cosmetics, preferences, dictionary, admin, activity
 - **economy** depends on: other, xp, forum-core, wallet, user-management, gamification, admin, moderation, engagement
 - **user-management** depends on: other, economy, xp, user, forum-core, cosmetics, moderation, profile, activity, gamification, admin, preferences, social
 - **moderation** depends on: forum-core, other, user-management, gamification, admin, economy, forum, auth, dictionary, activity, editor
@@ -447,31 +447,31 @@ Generated: 2025-07-01T23:13:47.762Z
 - **gamification** depends on: other, economy, forum-core, xp, user-management, user, admin, moderation, auth, cosmetics
 - **engagement** depends on: other, xp, forum-core, cosmetics, user, economy, social, user-management, gamification
 - **social** depends on: other, user-management, forum-core, shoutbox, user, xp, gamification, preferences, notifications
-- **xp** depends on: other, economy, user
 - **wallet** depends on: user, other, xp, economy
-- **user** depends on: other, xp
-- **uploads** depends on: other, xp, user
+- **xp** depends on: other, economy, user
 - **treasury** depends on: user, xp, other
 - **subscriptions** depends on: other, xp, user
+- **uploads** depends on: other, xp, user
+- **user** depends on: other, xp
 - **shoutbox** depends on: user, xp, other, user-management, moderation, economy
-- **shop** depends on: user, xp, other, economy
-- **profile** depends on: xp, user, other, user-management
 - **preferences** depends on: other, user, xp, user-management
 - **paths** depends on: user, xp, other
-- **notifications** depends on: other, user, xp, economy
-- **missions** depends on: other, xp, user
+- **profile** depends on: xp, user, other, user-management
 - **messaging** depends on: xp, other, economy, user-management
+- **missions** depends on: other, xp, user
 - **forum** depends on: other, xp, user, auth, infrastructure, economy, user-management
 - **feature-gates** depends on: other, xp, user
+- **shop** depends on: user, xp, other, economy
+- **notifications** depends on: other, user, xp, economy
 - **editor** depends on: xp
-- **dictionary** depends on: other, user, xp
 - **ccpayment-webhook** depends on: other, xp, economy
+- **dictionary** depends on: other, user, xp
 - **auth** depends on: xp, other, user, user-management, economy
-- **advertising** depends on: other, user, xp
 - **admin** depends on: xp, other, user, moderation, infrastructure, user-management, economy
-- **share** depends on: other, user-management, user, xp
+- **advertising** depends on: other, user, xp
+- **share** depends on: user, xp, other, user-management
 - **collectibles** depends on: other, xp, admin, user
-- **activity** depends on: other, user-management, xp
+- **activity** depends on: xp, other, user-management
 
 ## Implementation Strategy
 

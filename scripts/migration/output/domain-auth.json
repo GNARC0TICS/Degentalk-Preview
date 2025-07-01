@@ -79,31 +79,6 @@
       "migrationEffort": 3.6
     },
     {
-      "path": "server/src/domains/auth/routes/xAuthRoutes.ts",
-      "domain": "auth",
-      "subdomain": "routes",
-      "layer": "routes",
-      "size": 505,
-      "lines": 17,
-      "complexity": 0,
-      "dependencies": [
-        "express"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
       "path": "server/src/domains/auth/services/xAuthService.ts",
       "domain": "auth",
       "subdomain": "services",
@@ -193,47 +168,6 @@
       "migrationEffort": 1.6000000000000003
     },
     {
-      "path": "server/src/domains/auth/controllers/auth.controller.ts",
-      "domain": "auth",
-      "subdomain": "controllers",
-      "layer": "controllers",
-      "size": 8726,
-      "lines": 283,
-      "complexity": 7,
-      "dependencies": [
-        "@server/src/core/services/user.service",
-        "express",
-        "zod",
-        "crypto",
-        "passport",
-        "@schema",
-        "@schema",
-        "@server/src/core/logger",
-        "@shared/wallet.config"
-      ],
-      "exports": [
-        "login",
-        "logout",
-        "getCurrentUser"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": true,
-        "hasZodValidation": true,
-        "typeImports": [
-          "Request",
-          "Response",
-          "NextFunction"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.6000000000000003
-    },
-    {
       "path": "server/src/domains/auth/middleware/auth.middleware.ts",
       "domain": "auth",
       "subdomain": "middleware",
@@ -273,6 +207,72 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 1.7
+    },
+    {
+      "path": "server/src/domains/auth/routes/xAuthRoutes.ts",
+      "domain": "auth",
+      "subdomain": "routes",
+      "layer": "routes",
+      "size": 505,
+      "lines": 17,
+      "complexity": 0,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/auth/controllers/auth.controller.ts",
+      "domain": "auth",
+      "subdomain": "controllers",
+      "layer": "controllers",
+      "size": 8726,
+      "lines": 283,
+      "complexity": 7,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "zod",
+        "crypto",
+        "passport",
+        "@schema",
+        "@schema",
+        "@server/src/core/logger",
+        "@shared/wallet.config"
+      ],
+      "exports": [
+        "login",
+        "logout",
+        "getCurrentUser"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.6000000000000003
     }
   ],
   "totalIssues": 3,
@@ -285,9 +285,9 @@
     "@schema/user/users",
     "@schema",
     "@db",
-    "@shared/wallet.config",
     "@server/src/core/config/environment",
-    "@server/src/utils/environment"
+    "@server/src/utils/environment",
+    "@shared/wallet.config"
   ],
   "dependents": [
     "other",
@@ -297,8 +297,8 @@
     "gamification",
     "social",
     "shoutbox",
-    "profile",
     "preferences",
+    "profile",
     "messaging",
     "forum",
     "engagement",
@@ -317,7 +317,7 @@
     "approach": "atomic",
     "estimatedDays": 3,
     "blockers": [
-      "Dependencies from: other, forum-core, user-management, moderation, gamification, social, shoutbox, profile, preferences, messaging, forum, engagement, cosmetics, economy, admin"
+      "Dependencies from: other, forum-core, user-management, moderation, gamification, social, shoutbox, preferences, profile, messaging, forum, engagement, cosmetics, economy, admin"
     ],
     "prerequisites": []
   }

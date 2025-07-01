@@ -174,33 +174,6 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "scripts/validation/validate-forum-structure-migration.ts",
-      "domain": "forum-core",
-      "layer": "other",
-      "size": 6889,
-      "lines": 158,
-      "complexity": 2,
-      "dependencies": [
-        "drizzle-orm",
-        "chalk"
-      ],
-      "exports": [
-        "validateMigration "
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.4
-    },
-    {
       "path": "scripts/testing/validate-forum-fks.ts",
       "domain": "forum-core",
       "layer": "other",
@@ -226,35 +199,6 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 2.5
-    },
-    {
-      "path": "scripts/seed/seedForumsFromConfig.ts",
-      "domain": "forum-core",
-      "layer": "other",
-      "size": 1916,
-      "lines": 65,
-      "complexity": 2,
-      "dependencies": [
-        "node:crypto",
-        "@paralleldrive/cuid2",
-        "@/db",
-        "@/schema/forum/structure",
-        "@/client/src/config/forumMap.config",
-        "chalk"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.4
     },
     {
       "path": "scripts/ops/check-forum-config-sync.ts",
@@ -300,6 +244,33 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 2.2
+    },
+    {
+      "path": "scripts/validation/validate-forum-structure-migration.ts",
+      "domain": "forum-core",
+      "layer": "other",
+      "size": 6889,
+      "lines": 158,
+      "complexity": 2,
+      "dependencies": [
+        "drizzle-orm",
+        "chalk"
+      ],
+      "exports": [
+        "validateMigration "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
     },
     {
       "path": "scripts/migration/migrate-forum-structure.ts",
@@ -350,13 +321,20 @@
       "migrationEffort": 0.6000000000000001
     },
     {
-      "path": "scripts/dev/syncForumsToDB.ts",
+      "path": "scripts/seed/seedForumsFromConfig.ts",
       "domain": "forum-core",
       "layer": "other",
-      "size": 307,
-      "lines": 10,
-      "complexity": 0,
-      "dependencies": [],
+      "size": 1916,
+      "lines": 65,
+      "complexity": 2,
+      "dependencies": [
+        "node:crypto",
+        "@paralleldrive/cuid2",
+        "@/db",
+        "@/schema/forum/structure",
+        "@/client/src/config/forumMap.config",
+        "chalk"
+      ],
       "exports": [],
       "idPatterns": [],
       "typeUsage": {
@@ -365,11 +343,11 @@
         "hasBrandedIds": false,
         "hasNumericIds": false,
         "hasTypeGuards": false,
-        "hasZodValidation": false,
+        "hasZodValidation": true,
         "typeImports": []
       },
       "riskLevel": "medium",
-      "migrationEffort": 0.5
+      "migrationEffort": 0.4
     },
     {
       "path": "scripts/db/update-forum-slugs.ts",
@@ -587,6 +565,28 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "scripts/dev/syncForumsToDB.ts",
+      "domain": "forum-core",
+      "layer": "other",
+      "size": 307,
+      "lines": 10,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
     },
     {
       "path": "migrations/postgres/schema.snapshot.ts",
@@ -1172,6 +1172,44 @@
       "migrationEffort": 0.5
     },
     {
+      "path": "scripts/migration/domain-migrations/forum-core-migration.ts",
+      "domain": "forum-core",
+      "layer": "other",
+      "size": 13783,
+      "lines": 414,
+      "complexity": 6,
+      "dependencies": [
+        "fs",
+        "ts-morph",
+        "glob",
+        "readline"
+      ],
+      "exports": [
+        "ForumCoreMigration "
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 128,
+          "context": "// Pattern 1: Interface/type definitions with id: number",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.5
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.8000000000000003
+    },
+    {
       "path": "db/schema/system/mentionsIndex.ts",
       "domain": "forum-core",
       "layer": "other",
@@ -1185,32 +1223,6 @@
       "exports": [
         "mentionsIndex",
         "MentionIndex"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "db/schema/social/mentions.ts",
-      "domain": "forum-core",
-      "layer": "other",
-      "size": 2789,
-      "lines": 83,
-      "complexity": 0,
-      "dependencies": [],
-      "exports": [
-        "mentionTypeEnum",
-        "mentions",
-        "userMentionPreferences"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -2079,6 +2091,32 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 2.6000000000000005
+    },
+    {
+      "path": "db/schema/social/mentions.ts",
+      "domain": "forum-core",
+      "layer": "other",
+      "size": 2789,
+      "lines": 83,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "mentionTypeEnum",
+        "mentions",
+        "userMentionPreferences"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
     },
     {
       "path": "client/src/navigation/forumNav.ts",
@@ -3089,55 +3127,6 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "client/src/components/notifications/MentionsNotifications.tsx",
-      "domain": "forum-core",
-      "layer": "components",
-      "size": 9136,
-      "lines": 316,
-      "complexity": 2,
-      "dependencies": [
-        "react",
-        "@tanstack/react-query",
-        "@/lib/queryClient",
-        "@/components/ui/badge",
-        "@/components/ui/button",
-        "@/components/ui/avatar",
-        "@/components/ui/card",
-        "@/components/ui/skeleton",
-        "@/components/ui/scroll-area",
-        "date-fns",
-        "wouter",
-        "@/lib/utils",
-        "@db/types"
-      ],
-      "exports": [
-        "MentionsNotifications"
-      ],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 27,
-          "context": "id: number;",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": true,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "MentionId"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 3
-    },
-    {
       "path": "client/src/components/navigation/ForumBreadcrumbs.tsx",
       "domain": "forum-core",
       "layer": "components",
@@ -3232,6 +3221,55 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/notifications/MentionsNotifications.tsx",
+      "domain": "forum-core",
+      "layer": "components",
+      "size": 9136,
+      "lines": 316,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/lib/queryClient",
+        "@/components/ui/badge",
+        "@/components/ui/button",
+        "@/components/ui/avatar",
+        "@/components/ui/card",
+        "@/components/ui/skeleton",
+        "@/components/ui/scroll-area",
+        "date-fns",
+        "wouter",
+        "@/lib/utils",
+        "@db/types"
+      ],
+      "exports": [
+        "MentionsNotifications"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 27,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "MentionId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3
     },
     {
       "path": "client/src/components/mentions/MentionRenderer.tsx",
@@ -5009,362 +5047,6 @@
       "migrationEffort": 2.7
     },
     {
-      "path": "client/src/features/forum/contexts/ThreadActionsContext.tsx",
-      "domain": "forum-core",
-      "subdomain": "contexts",
-      "layer": "other",
-      "size": 4271,
-      "lines": 138,
-      "complexity": 2,
-      "dependencies": [
-        "react",
-        "@/hooks/use-toast",
-        "@/hooks/use-tip",
-        "@/features/forum/hooks/useForumQueries",
-        "@/features/forum/hooks/useForumQueries",
-        "@/types/thread.types",
-        "@tanstack/react-query"
-      ],
-      "exports": [
-        "ThreadActionsProvider",
-        "useThreadActions",
-        "useThreadActionsOptional"
-      ],
-      "idPatterns": [
-        {
-          "type": "conversion",
-          "pattern": "Number(thread.user.id)",
-          "line": 38,
-          "context": "const authorId = Number(thread.user.id);",
-          "suggestedFix": "remove Number(), use branded type",
-          "confidence": 0.5
-        },
-        {
-          "type": "conversion",
-          "pattern": "Number(thread.id)",
-          "line": 46,
-          "context": "const threadId = Number(thread.id);",
-          "suggestedFix": "remove Number(), use branded type",
-          "confidence": 0.5
-        },
-        {
-          "type": "conversion",
-          "pattern": "Number(thread.id)",
-          "line": 89,
-          "context": "const threadIdNum = Number(thread.id);",
-          "suggestedFix": "remove Number(), use branded type",
-          "confidence": 0.5
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": false,
-        "hasTypeGuards": true,
-        "hasZodValidation": false,
-        "typeImports": [
-          "ThreadDisplay"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.4000000000000001
-    },
-    {
-      "path": "client/src/features/forum/hooks/useThreadPermissions.ts",
-      "domain": "forum-core",
-      "subdomain": "hooks",
-      "layer": "hooks",
-      "size": 4640,
-      "lines": 177,
-      "complexity": 3,
-      "dependencies": [
-        "@/hooks/use-auth",
-        "@/contexts/ForumStructureContext",
-        "@/types/thread.types"
-      ],
-      "exports": [
-        "MOCK_THREAD",
-        "MOCK_POST",
-        "useThreadPermissions"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "ThreadDisplay"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.1
-    },
-    {
-      "path": "client/src/features/forum/hooks/useForumStats.ts",
-      "domain": "forum-core",
-      "subdomain": "hooks",
-      "layer": "hooks",
-      "size": 1491,
-      "lines": 63,
-      "complexity": 1,
-      "dependencies": [
-        "@tanstack/react-query",
-        "@/lib/queryClient"
-      ],
-      "exports": [
-        "ForumMetrics",
-        "useForumMetrics",
-        "HotThread",
-        "useHotThreads"
-      ],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 30,
-          "context": "id: number;",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": true,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 2.8
-    },
-    {
-      "path": "client/src/features/forum/hooks/useForumQueries.ts",
-      "domain": "forum-core",
-      "subdomain": "hooks",
-      "layer": "hooks",
-      "size": 13275,
-      "lines": 454,
-      "complexity": 3,
-      "dependencies": [
-        "@tanstack/react-query",
-        "sonner",
-        "@/types/forum",
-        "@/types/compat/forum",
-        "react",
-        "@db/types"
-      ],
-      "exports": [
-        "ThreadSearchParams",
-        "useThreads",
-        "useThread",
-        "CreateThreadParams",
-        "useCreateThread",
-        "useUpdateThread",
-        "useDeleteThread",
-        "useSolveThread",
-        "useUnsolveThread",
-        "usePosts",
-        "useCreatePost",
-        "useUpdatePost",
-        "useDeletePost",
-        "useReactToPost",
-        "useLikePost",
-        "useUnlikePost",
-        "useTipPost",
-        "useBookmarkThread",
-        "useRemoveBookmark",
-        "useUserBookmarks"
-      ],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "threadId: number",
-          "line": 135,
-          "context": "export const useUpdateThread = (threadId: number | undefined) => {",
-          "suggestedFix": "ThreadId",
-          "confidence": 0.8
-        },
-        {
-          "type": "definition",
-          "pattern": "threadId: number",
-          "line": 173,
-          "context": "mutationFn: ({ threadId, postId }: { threadId: number; postId?: number }) =>",
-          "suggestedFix": "ThreadId",
-          "confidence": 0.8
-        },
-        {
-          "type": "definition",
-          "pattern": "threadId: number",
-          "line": 188,
-          "context": "mutationFn: (threadId: number) => forumApi.unsolveThread(threadId),",
-          "suggestedFix": "ThreadId",
-          "confidence": 0.8
-        },
-        {
-          "type": "definition",
-          "pattern": "threadId: number",
-          "line": 202,
-          "context": "threadId: number | undefined,",
-          "suggestedFix": "ThreadId",
-          "confidence": 0.8
-        },
-        {
-          "type": "definition",
-          "pattern": "threadId: number",
-          "line": 355,
-          "context": "return useMutation<Tag, Error, { threadId: number; tagId: TagId }>({",
-          "suggestedFix": "ThreadId",
-          "confidence": 0.8
-        },
-        {
-          "type": "definition",
-          "pattern": "threadId: number",
-          "line": 368,
-          "context": "return useMutation<void, Error, { threadId: number; tagId: TagId }>({",
-          "suggestedFix": "ThreadId",
-          "confidence": 0.8
-        },
-        {
-          "type": "definition",
-          "pattern": "postId: number",
-          "line": 229,
-          "context": "export const useUpdatePost = (postId: number | undefined) => {",
-          "suggestedFix": "PostId",
-          "confidence": 0.5
-        },
-        {
-          "type": "definition",
-          "pattern": "postId: number",
-          "line": 263,
-          "context": "mutationFn: ({ postId, reactionType }: { postId: number; reactionType: 'like' | 'dislike' }) =>",
-          "suggestedFix": "PostId",
-          "confidence": 0.5
-        },
-        {
-          "type": "definition",
-          "pattern": "postId: number",
-          "line": 277,
-          "context": "mutate: (postId: number) => reactToPost.mutate({ postId, reactionType: 'like' })",
-          "suggestedFix": "PostId",
-          "confidence": 0.5
-        },
-        {
-          "type": "definition",
-          "pattern": "postId: number",
-          "line": 285,
-          "context": "mutate: (postId: number) => reactToPost.mutate({ postId, reactionType: 'dislike' })",
-          "suggestedFix": "PostId",
-          "confidence": 0.5
-        },
-        {
-          "type": "definition",
-          "pattern": "postId: number",
-          "line": 293,
-          "context": "mutationFn: ({ postId, amount }: { postId: number; amount: number }) =>",
-          "suggestedFix": "PostId",
-          "confidence": 0.5
-        },
-        {
-          "type": "definition",
-          "pattern": "postId: number",
-          "line": 419,
-          "context": "postId: number;",
-          "suggestedFix": "PostId",
-          "confidence": 0.5
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": true,
-        "hasBrandedIds": true,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "ThreadSearchParams as OriginalThreadSearchParams"
-        ]
-      },
-      "riskLevel": "high",
-      "migrationEffort": 3.3000000000000003
-    },
-    {
-      "path": "client/src/features/forum/hooks/useForumMutations.ts",
-      "domain": "forum-core",
-      "subdomain": "hooks",
-      "layer": "hooks",
-      "size": 4241,
-      "lines": 176,
-      "complexity": 2,
-      "dependencies": [
-        "@tanstack/react-query",
-        "sonner",
-        "@/lib/api-request",
-        "@/types/compat/forum",
-        "@db/types"
-      ],
-      "exports": [
-        "useQuotePost",
-        "useReportContent",
-        "useAwardForumXP",
-        "useAwardForumDGT",
-        "useLikePost",
-        "useUnlikePost",
-        "useTipPost",
-        "useCreatePost",
-        "useUpdatePost",
-        "useDeletePost",
-        "useSolveThread",
-        "useUnsolveThread",
-        "useBookmarkThread",
-        "useRemoveBookmark"
-      ],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "userId: number",
-          "line": 92,
-          "context": "userId: number;",
-          "suggestedFix": "UserId",
-          "confidence": 0.8
-        },
-        {
-          "type": "definition",
-          "pattern": "userId: number",
-          "line": 133,
-          "context": "userId: number;",
-          "suggestedFix": "UserId",
-          "confidence": 0.8
-        },
-        {
-          "type": "definition",
-          "pattern": "threadId: number",
-          "line": 36,
-          "context": "threadId: number;",
-          "suggestedFix": "ThreadId",
-          "confidence": 0.8
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": true,
-        "hasBrandedIds": true,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "PostWithUser"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.2000000000000002
-    },
-    {
       "path": "client/src/features/forum/components/index.ts",
       "domain": "forum-core",
       "subdomain": "components",
@@ -6026,6 +5708,362 @@
       "migrationEffort": 1.5
     },
     {
+      "path": "client/src/features/forum/hooks/useThreadPermissions.ts",
+      "domain": "forum-core",
+      "subdomain": "hooks",
+      "layer": "hooks",
+      "size": 4640,
+      "lines": 177,
+      "complexity": 3,
+      "dependencies": [
+        "@/hooks/use-auth",
+        "@/contexts/ForumStructureContext",
+        "@/types/thread.types"
+      ],
+      "exports": [
+        "MOCK_THREAD",
+        "MOCK_POST",
+        "useThreadPermissions"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ThreadDisplay"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.1
+    },
+    {
+      "path": "client/src/features/forum/hooks/useForumStats.ts",
+      "domain": "forum-core",
+      "subdomain": "hooks",
+      "layer": "hooks",
+      "size": 1491,
+      "lines": 63,
+      "complexity": 1,
+      "dependencies": [
+        "@tanstack/react-query",
+        "@/lib/queryClient"
+      ],
+      "exports": [
+        "ForumMetrics",
+        "useForumMetrics",
+        "HotThread",
+        "useHotThreads"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 30,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.8
+    },
+    {
+      "path": "client/src/features/forum/hooks/useForumQueries.ts",
+      "domain": "forum-core",
+      "subdomain": "hooks",
+      "layer": "hooks",
+      "size": 13275,
+      "lines": 454,
+      "complexity": 3,
+      "dependencies": [
+        "@tanstack/react-query",
+        "sonner",
+        "@/types/forum",
+        "@/types/compat/forum",
+        "react",
+        "@db/types"
+      ],
+      "exports": [
+        "ThreadSearchParams",
+        "useThreads",
+        "useThread",
+        "CreateThreadParams",
+        "useCreateThread",
+        "useUpdateThread",
+        "useDeleteThread",
+        "useSolveThread",
+        "useUnsolveThread",
+        "usePosts",
+        "useCreatePost",
+        "useUpdatePost",
+        "useDeletePost",
+        "useReactToPost",
+        "useLikePost",
+        "useUnlikePost",
+        "useTipPost",
+        "useBookmarkThread",
+        "useRemoveBookmark",
+        "useUserBookmarks"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "threadId: number",
+          "line": 135,
+          "context": "export const useUpdateThread = (threadId: number | undefined) => {",
+          "suggestedFix": "ThreadId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "threadId: number",
+          "line": 173,
+          "context": "mutationFn: ({ threadId, postId }: { threadId: number; postId?: number }) =>",
+          "suggestedFix": "ThreadId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "threadId: number",
+          "line": 188,
+          "context": "mutationFn: (threadId: number) => forumApi.unsolveThread(threadId),",
+          "suggestedFix": "ThreadId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "threadId: number",
+          "line": 202,
+          "context": "threadId: number | undefined,",
+          "suggestedFix": "ThreadId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "threadId: number",
+          "line": 355,
+          "context": "return useMutation<Tag, Error, { threadId: number; tagId: TagId }>({",
+          "suggestedFix": "ThreadId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "threadId: number",
+          "line": 368,
+          "context": "return useMutation<void, Error, { threadId: number; tagId: TagId }>({",
+          "suggestedFix": "ThreadId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "postId: number",
+          "line": 229,
+          "context": "export const useUpdatePost = (postId: number | undefined) => {",
+          "suggestedFix": "PostId",
+          "confidence": 0.5
+        },
+        {
+          "type": "definition",
+          "pattern": "postId: number",
+          "line": 263,
+          "context": "mutationFn: ({ postId, reactionType }: { postId: number; reactionType: 'like' | 'dislike' }) =>",
+          "suggestedFix": "PostId",
+          "confidence": 0.5
+        },
+        {
+          "type": "definition",
+          "pattern": "postId: number",
+          "line": 277,
+          "context": "mutate: (postId: number) => reactToPost.mutate({ postId, reactionType: 'like' })",
+          "suggestedFix": "PostId",
+          "confidence": 0.5
+        },
+        {
+          "type": "definition",
+          "pattern": "postId: number",
+          "line": 285,
+          "context": "mutate: (postId: number) => reactToPost.mutate({ postId, reactionType: 'dislike' })",
+          "suggestedFix": "PostId",
+          "confidence": 0.5
+        },
+        {
+          "type": "definition",
+          "pattern": "postId: number",
+          "line": 293,
+          "context": "mutationFn: ({ postId, amount }: { postId: number; amount: number }) =>",
+          "suggestedFix": "PostId",
+          "confidence": 0.5
+        },
+        {
+          "type": "definition",
+          "pattern": "postId: number",
+          "line": 419,
+          "context": "postId: number;",
+          "suggestedFix": "PostId",
+          "confidence": 0.5
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ThreadSearchParams as OriginalThreadSearchParams"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 3.3000000000000003
+    },
+    {
+      "path": "client/src/features/forum/hooks/useForumMutations.ts",
+      "domain": "forum-core",
+      "subdomain": "hooks",
+      "layer": "hooks",
+      "size": 4241,
+      "lines": 176,
+      "complexity": 2,
+      "dependencies": [
+        "@tanstack/react-query",
+        "sonner",
+        "@/lib/api-request",
+        "@/types/compat/forum",
+        "@db/types"
+      ],
+      "exports": [
+        "useQuotePost",
+        "useReportContent",
+        "useAwardForumXP",
+        "useAwardForumDGT",
+        "useLikePost",
+        "useUnlikePost",
+        "useTipPost",
+        "useCreatePost",
+        "useUpdatePost",
+        "useDeletePost",
+        "useSolveThread",
+        "useUnsolveThread",
+        "useBookmarkThread",
+        "useRemoveBookmark"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 92,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 133,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "threadId: number",
+          "line": 36,
+          "context": "threadId: number;",
+          "suggestedFix": "ThreadId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "PostWithUser"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.2000000000000002
+    },
+    {
+      "path": "client/src/features/forum/contexts/ThreadActionsContext.tsx",
+      "domain": "forum-core",
+      "subdomain": "contexts",
+      "layer": "other",
+      "size": 4271,
+      "lines": 138,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@/hooks/use-toast",
+        "@/hooks/use-tip",
+        "@/features/forum/hooks/useForumQueries",
+        "@/features/forum/hooks/useForumQueries",
+        "@/types/thread.types",
+        "@tanstack/react-query"
+      ],
+      "exports": [
+        "ThreadActionsProvider",
+        "useThreadActions",
+        "useThreadActionsOptional"
+      ],
+      "idPatterns": [
+        {
+          "type": "conversion",
+          "pattern": "Number(thread.user.id)",
+          "line": 38,
+          "context": "const authorId = Number(thread.user.id);",
+          "suggestedFix": "remove Number(), use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "Number(thread.id)",
+          "line": 46,
+          "context": "const threadId = Number(thread.id);",
+          "suggestedFix": "remove Number(), use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "Number(thread.id)",
+          "line": 89,
+          "context": "const threadIdNum = Number(thread.id);",
+          "suggestedFix": "remove Number(), use branded type",
+          "confidence": 0.5
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ThreadDisplay"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4000000000000001
+    },
+    {
       "path": "client/src/components/platform-energy/recent-posts/recent-posts-feed.tsx",
       "domain": "forum-core",
       "subdomain": "recent-posts-feed.tsx",
@@ -6105,6 +6143,105 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/components/forum/enhanced/QuickReactions.tsx",
+      "domain": "forum-core",
+      "subdomain": "enhanced",
+      "layer": "components",
+      "size": 8117,
+      "lines": 308,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "framer-motion",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "Reaction",
+        "QuickReactionsProps",
+        "QuickReactions "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/forum/enhanced/MobileForumNavigation.tsx",
+      "domain": "forum-core",
+      "subdomain": "enhanced",
+      "layer": "components",
+      "size": 11799,
+      "lines": 387,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "framer-motion",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/input",
+        "@/lib/utils",
+        "@/contexts/ForumStructureContext"
+      ],
+      "exports": [
+        "MobileForumNavigationProps"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/components/forum/enhanced/CryptoEngagementBar.tsx",
+      "domain": "forum-core",
+      "subdomain": "enhanced",
+      "layer": "components",
+      "size": 9304,
+      "lines": 313,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "framer-motion",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "CryptoEngagementBarProps",
+        "CryptoEngagementBar "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
     },
     {
       "path": "client/src/components/forum/layouts/index.ts",
@@ -6240,351 +6377,6 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 1.0999999999999999
-    },
-    {
-      "path": "client/src/components/forum/enhanced/QuickReactions.tsx",
-      "domain": "forum-core",
-      "subdomain": "enhanced",
-      "layer": "components",
-      "size": 8117,
-      "lines": 308,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "framer-motion",
-        "@/components/ui/button",
-        "@/components/ui/badge",
-        "@/lib/utils"
-      ],
-      "exports": [
-        "Reaction",
-        "QuickReactionsProps",
-        "QuickReactions "
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
-    },
-    {
-      "path": "client/src/components/forum/enhanced/MobileForumNavigation.tsx",
-      "domain": "forum-core",
-      "subdomain": "enhanced",
-      "layer": "components",
-      "size": 11799,
-      "lines": 387,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "wouter",
-        "framer-motion",
-        "@/components/ui/button",
-        "@/components/ui/badge",
-        "@/components/ui/input",
-        "@/lib/utils",
-        "@/contexts/ForumStructureContext"
-      ],
-      "exports": [
-        "MobileForumNavigationProps"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.7
-    },
-    {
-      "path": "client/src/components/forum/enhanced/CryptoEngagementBar.tsx",
-      "domain": "forum-core",
-      "subdomain": "enhanced",
-      "layer": "components",
-      "size": 9304,
-      "lines": 313,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "framer-motion",
-        "@/components/ui/button",
-        "@/components/ui/badge",
-        "@/lib/utils"
-      ],
-      "exports": [
-        "CryptoEngagementBarProps",
-        "CryptoEngagementBar "
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
-    },
-    {
-      "path": "client/src/components/forum/sidebar/index.ts",
-      "domain": "forum-core",
-      "subdomain": "sidebar",
-      "layer": "components",
-      "size": 316,
-      "lines": 7,
-      "complexity": 0,
-      "dependencies": [],
-      "exports": [
-        "SidebarWidgetCard ",
-        "WidgetSkeleton ",
-        "StatsWidget ",
-        "HotTopicsWidget ",
-        "ActivityFeedWidget ",
-        "DynamicSidebar "
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "client/src/components/forum/sidebar/WidgetSkeleton.tsx",
-      "domain": "forum-core",
-      "subdomain": "sidebar",
-      "layer": "components",
-      "size": 875,
-      "lines": 30,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "@/lib/utils"
-      ],
-      "exports": [
-        "WidgetSkeleton"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
-    },
-    {
-      "path": "client/src/components/forum/sidebar/StatsWidget.tsx",
-      "domain": "forum-core",
-      "subdomain": "sidebar",
-      "layer": "components",
-      "size": 2056,
-      "lines": 85,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "lucide-react",
-        "@/features/forum/hooks/useForumStats",
-        "@/lib/utils"
-      ],
-      "exports": [
-        "StatsWidget"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
-    },
-    {
-      "path": "client/src/components/forum/sidebar/SidebarWidgetCard.tsx",
-      "domain": "forum-core",
-      "subdomain": "sidebar",
-      "layer": "components",
-      "size": 1421,
-      "lines": 55,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "lucide-react",
-        "@/contexts/ForumThemeProvider",
-        "@/lib/utils"
-      ],
-      "exports": [
-        "SidebarWidgetCard"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
-    },
-    {
-      "path": "client/src/components/forum/sidebar/SidebarIntegrationExample.tsx",
-      "domain": "forum-core",
-      "subdomain": "sidebar",
-      "layer": "components",
-      "size": 2221,
-      "lines": 68,
-      "complexity": 0,
-      "dependencies": [
-        "react",
-        "@/components/forum/QuickStats",
-        "@/components/forum/HotTopics",
-        "@/components/forum/RecentActivity"
-      ],
-      "exports": [
-        "ForumSidebar",
-        "ZonePageSidebar",
-        "ForumPageSidebar",
-        "ThreadPageSidebar"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.5
-    },
-    {
-      "path": "client/src/components/forum/sidebar/HotTopicsWidget.tsx",
-      "domain": "forum-core",
-      "subdomain": "sidebar",
-      "layer": "components",
-      "size": 3386,
-      "lines": 114,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "wouter",
-        "lucide-react",
-        "@/features/forum/hooks/useForumStats",
-        "date-fns",
-        "@/lib/utils"
-      ],
-      "exports": [
-        "HotTopicsWidget"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
-    },
-    {
-      "path": "client/src/components/forum/sidebar/DynamicSidebar.tsx",
-      "domain": "forum-core",
-      "subdomain": "sidebar",
-      "layer": "components",
-      "size": 2019,
-      "lines": 77,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "@/lib/forum/sidebarUtils",
-        "@/lib/utils"
-      ],
-      "exports": [
-        "DynamicSidebar"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": true,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
-    },
-    {
-      "path": "client/src/components/forum/sidebar/ActivityFeedWidget.tsx",
-      "domain": "forum-core",
-      "subdomain": "sidebar",
-      "layer": "components",
-      "size": 3697,
-      "lines": 136,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "wouter",
-        "lucide-react",
-        "@/features/activity/hooks/useActivityFeed",
-        "date-fns",
-        "@/features/activity/services/activityApi"
-      ],
-      "exports": [
-        "ActivityFeedWidget"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "EventLog"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
     },
     {
       "path": "client/src/components/forum/bbcode/index.ts",
@@ -6927,62 +6719,250 @@
       "migrationEffort": 1.9000000000000001
     },
     {
-      "path": "client/src/components/forum/layouts/__tests__/ResponsiveForumLayout.test.tsx",
+      "path": "client/src/components/forum/sidebar/index.ts",
       "domain": "forum-core",
-      "subdomain": "layouts",
+      "subdomain": "sidebar",
       "layer": "components",
-      "size": 12087,
-      "lines": 384,
-      "complexity": 3,
-      "dependencies": [
-        "react",
-        "vitest"
+      "size": 316,
+      "lines": 7,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "SidebarWidgetCard ",
+        "WidgetSkeleton ",
+        "StatsWidget ",
+        "HotTopicsWidget ",
+        "ActivityFeedWidget ",
+        "DynamicSidebar "
       ],
-      "exports": [],
       "idPatterns": [],
       "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": true,
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
         "hasBrandedIds": false,
         "hasNumericIds": false,
         "hasTypeGuards": false,
         "hasZodValidation": false,
-        "typeImports": [
-          "ResponsiveForumLayoutProps"
-        ]
+        "typeImports": []
       },
       "riskLevel": "medium",
-      "migrationEffort": 2.1
+      "migrationEffort": 0.5
     },
     {
-      "path": "client/src/components/forum/layouts/__tests__/AdaptiveForumGrid.test.tsx",
+      "path": "client/src/components/forum/sidebar/WidgetSkeleton.tsx",
       "domain": "forum-core",
-      "subdomain": "layouts",
+      "subdomain": "sidebar",
       "layer": "components",
-      "size": 9446,
-      "lines": 347,
-      "complexity": 2,
+      "size": 875,
+      "lines": 30,
+      "complexity": 1,
       "dependencies": [
         "react",
-        "vitest",
-        "@/hooks/useMediaQuery",
-        "@tanstack/react-virtual"
+        "@/lib/utils"
       ],
-      "exports": [],
+      "exports": [
+        "WidgetSkeleton"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/forum/sidebar/StatsWidget.tsx",
+      "domain": "forum-core",
+      "subdomain": "sidebar",
+      "layer": "components",
+      "size": 2056,
+      "lines": 85,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "lucide-react",
+        "@/features/forum/hooks/useForumStats",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "StatsWidget"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/forum/sidebar/SidebarWidgetCard.tsx",
+      "domain": "forum-core",
+      "subdomain": "sidebar",
+      "layer": "components",
+      "size": 1421,
+      "lines": 55,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "lucide-react",
+        "@/contexts/ForumThemeProvider",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "SidebarWidgetCard"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/forum/sidebar/SidebarIntegrationExample.tsx",
+      "domain": "forum-core",
+      "subdomain": "sidebar",
+      "layer": "components",
+      "size": 2221,
+      "lines": 68,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@/components/forum/QuickStats",
+        "@/components/forum/HotTopics",
+        "@/components/forum/RecentActivity"
+      ],
+      "exports": [
+        "ForumSidebar",
+        "ZonePageSidebar",
+        "ForumPageSidebar",
+        "ThreadPageSidebar"
+      ],
       "idPatterns": [],
       "typeUsage": {
         "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.5
+    },
+    {
+      "path": "client/src/components/forum/sidebar/HotTopicsWidget.tsx",
+      "domain": "forum-core",
+      "subdomain": "sidebar",
+      "layer": "components",
+      "size": 3386,
+      "lines": 114,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "lucide-react",
+        "@/features/forum/hooks/useForumStats",
+        "date-fns",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "HotTopicsWidget"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/forum/sidebar/DynamicSidebar.tsx",
+      "domain": "forum-core",
+      "subdomain": "sidebar",
+      "layer": "components",
+      "size": 2019,
+      "lines": 77,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/lib/forum/sidebarUtils",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "DynamicSidebar"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
         "hasUnknownTypes": true,
         "hasBrandedIds": false,
         "hasNumericIds": false,
         "hasTypeGuards": false,
         "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/forum/sidebar/ActivityFeedWidget.tsx",
+      "domain": "forum-core",
+      "subdomain": "sidebar",
+      "layer": "components",
+      "size": 3697,
+      "lines": 136,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "wouter",
+        "lucide-react",
+        "@/features/activity/hooks/useActivityFeed",
+        "date-fns",
+        "@/features/activity/services/activityApi"
+      ],
+      "exports": [
+        "ActivityFeedWidget"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
         "typeImports": [
-          "AdaptiveForumGridProps"
+          "EventLog"
         ]
       },
       "riskLevel": "medium",
-      "migrationEffort": 1.9
+      "migrationEffort": 0.7
     },
     {
       "path": "client/src/components/forum/enhanced/__tests__/QuickReactions.test.tsx",
@@ -7067,11 +7047,69 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 1.9
+    },
+    {
+      "path": "client/src/components/forum/layouts/__tests__/ResponsiveForumLayout.test.tsx",
+      "domain": "forum-core",
+      "subdomain": "layouts",
+      "layer": "components",
+      "size": 12087,
+      "lines": 384,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "vitest"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "ResponsiveForumLayoutProps"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.1
+    },
+    {
+      "path": "client/src/components/forum/layouts/__tests__/AdaptiveForumGrid.test.tsx",
+      "domain": "forum-core",
+      "subdomain": "layouts",
+      "layer": "components",
+      "size": 9446,
+      "lines": 347,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "vitest",
+        "@/hooks/useMediaQuery",
+        "@tanstack/react-virtual"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "AdaptiveForumGridProps"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.9
     }
   ],
-  "totalIssues": 117,
-  "avgComplexity": 1.4301075268817205,
-  "migrationEffort": 197.30000000000007,
+  "totalIssues": 118,
+  "avgComplexity": 1.4545454545454546,
+  "migrationEffort": 199.10000000000005,
   "dependencies": [
     "@playwright/test",
     "@db/types",
@@ -7154,8 +7192,8 @@
     "@/components/ui/tooltip",
     "@/components/ui/avatar",
     "@/types/thread.types",
-    "@/components/ui/scroll-area",
     "@/components/ui/textarea",
+    "@/components/ui/scroll-area",
     "@/types/forum",
     "@/utils/card-constants",
     "@/hooks/useShowHotRibbon",
@@ -7176,7 +7214,6 @@
     "@/config/brand.config",
     "@/lib/api-request",
     "@/types/core.types",
-    "@/hooks/use-tip",
     "@/components/forum/ThreadCard",
     "@/components/ui/pagination",
     "@/components/ui/thread-skeleton",
@@ -7195,22 +7232,23 @@
     "@/features/forum/hooks/useForumStructure",
     "@/components/forum/prefix-badge",
     "@/hooks/use-draft",
+    "@/hooks/use-tip",
     "@/components/ui/sheet",
     "@/components/forum/enhanced/MobileForumNavigation",
     "@/features/forum/components/HierarchicalZoneNav",
     "@/components/forum/enhanced/CryptoEngagementBar",
     "@tanstack/react-virtual",
+    "@/components/identity/AvatarFrame",
+    "@/components/users/Username",
+    "@/components/economy/xp/LevelBadge",
+    "@/types/profile",
     "@/features/forum/hooks/useForumStats",
     "@/components/forum/QuickStats",
     "@/components/forum/HotTopics",
     "@/components/forum/RecentActivity",
     "@/lib/forum/sidebarUtils",
     "@/features/activity/hooks/useActivityFeed",
-    "@/features/activity/services/activityApi",
-    "@/components/identity/AvatarFrame",
-    "@/components/users/Username",
-    "@/components/economy/xp/LevelBadge",
-    "@/types/profile"
+    "@/features/activity/services/activityApi"
   ],
   "dependents": [],
   "criticalPath": true,

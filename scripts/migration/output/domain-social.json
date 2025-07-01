@@ -126,34 +126,6 @@
       "migrationEffort": 0.5
     },
     {
-      "path": "db/schema/social/friends.ts",
-      "domain": "social",
-      "layer": "other",
-      "size": 4235,
-      "lines": 119,
-      "complexity": 1,
-      "dependencies": [],
-      "exports": [
-        "friendshipStatusEnum",
-        "friendships",
-        "userFriendPreferences",
-        "friendGroups",
-        "friendGroupMembers"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.7
-    },
-    {
       "path": "db/schema/messaging/shoutboxMessages.ts",
       "domain": "social",
       "layer": "other",
@@ -312,6 +284,34 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 2.7
+    },
+    {
+      "path": "db/schema/social/friends.ts",
+      "domain": "social",
+      "layer": "other",
+      "size": 4235,
+      "lines": 119,
+      "complexity": 1,
+      "dependencies": [],
+      "exports": [
+        "friendshipStatusEnum",
+        "friendships",
+        "userFriendPreferences",
+        "friendGroups",
+        "friendGroupMembers"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.7
     },
     {
       "path": "client/src/hooks/useFriends.ts",

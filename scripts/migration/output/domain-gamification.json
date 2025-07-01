@@ -1627,40 +1627,6 @@
       "migrationEffort": 2
     },
     {
-      "path": "client/src/pages/missions/index.tsx",
-      "domain": "gamification",
-      "subdomain": "index.tsx",
-      "layer": "pages",
-      "size": 3721,
-      "lines": 114,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "react-helmet",
-        "wouter",
-        "@/hooks/use-auth",
-        "@/hooks/use-gamification",
-        "@/components/gamification",
-        "@/components/ui/button",
-        "@/components/ui/card",
-        "@/components/ui/alert",
-        "lucide-react"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
-    },
-    {
       "path": "client/src/pages/admin/xp-system.tsx",
       "domain": "gamification",
       "layer": "pages",
@@ -1716,6 +1682,40 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 3.5
+    },
+    {
+      "path": "client/src/pages/missions/index.tsx",
+      "domain": "gamification",
+      "subdomain": "index.tsx",
+      "layer": "pages",
+      "size": 3721,
+      "lines": 114,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "react-helmet",
+        "wouter",
+        "@/hooks/use-auth",
+        "@/hooks/use-gamification",
+        "@/components/gamification",
+        "@/components/ui/button",
+        "@/components/ui/card",
+        "@/components/ui/alert",
+        "lucide-react"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
     },
     {
       "path": "client/src/lib/api/achievements.ts",
@@ -2711,106 +2711,6 @@
       "migrationEffort": 0.5
     },
     {
-      "path": "client/src/pages/admin/permissions/index.tsx",
-      "domain": "gamification",
-      "subdomain": "index.tsx",
-      "layer": "pages",
-      "size": 290,
-      "lines": 11,
-      "complexity": 0,
-      "dependencies": [
-        "react"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "client/src/pages/admin/missions/index.tsx",
-      "domain": "gamification",
-      "subdomain": "index.tsx",
-      "layer": "pages",
-      "size": 19103,
-      "lines": 649,
-      "complexity": 3,
-      "dependencies": [
-        "react",
-        "react-query",
-        "@/lib/queryClient",
-        "lucide-react",
-        "@/hooks/use-toast",
-        "@/components/ui/button",
-        "@/components/ui/input",
-        "@/components/ui/badge",
-        "@/components/ui/separator",
-        "@/components/ui/switch",
-        "@/components/ui/label",
-        "@/components/ui/tabs"
-      ],
-      "exports": [],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 48,
-          "context": "id: number;",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": true,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 4.2
-    },
-    {
-      "path": "client/src/pages/admin/config/xp.tsx",
-      "domain": "gamification",
-      "layer": "pages",
-      "size": 1915,
-      "lines": 65,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "@tanstack/react-query",
-        "lucide-react",
-        "@/components/ui/textarea.tsx",
-        "@/components/ui/button.tsx",
-        "@/hooks/use-toast.ts",
-        "@/lib/queryClient.ts"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.7
-    },
-    {
       "path": "client/src/pages/admin/xp/titles.tsx",
       "domain": "gamification",
       "subdomain": "titles.tsx",
@@ -2987,6 +2887,106 @@
         "@/components/admin/XpActionRow",
         "@/components/ui/table",
         "@/components/ui/card"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
+      "path": "client/src/pages/admin/missions/index.tsx",
+      "domain": "gamification",
+      "subdomain": "index.tsx",
+      "layer": "pages",
+      "size": 19103,
+      "lines": 649,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "react-query",
+        "@/lib/queryClient",
+        "lucide-react",
+        "@/hooks/use-toast",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/badge",
+        "@/components/ui/separator",
+        "@/components/ui/switch",
+        "@/components/ui/label",
+        "@/components/ui/tabs"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 48,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 4.2
+    },
+    {
+      "path": "client/src/pages/admin/permissions/index.tsx",
+      "domain": "gamification",
+      "subdomain": "index.tsx",
+      "layer": "pages",
+      "size": 290,
+      "lines": 11,
+      "complexity": 0,
+      "dependencies": [
+        "react"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/pages/admin/config/xp.tsx",
+      "domain": "gamification",
+      "layer": "pages",
+      "size": 1915,
+      "lines": 65,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "lucide-react",
+        "@/components/ui/textarea.tsx",
+        "@/components/ui/button.tsx",
+        "@/hooks/use-toast.ts",
+        "@/lib/queryClient.ts"
       ],
       "exports": [],
       "idPatterns": [],
@@ -3544,10 +3544,7 @@
     "@/components/xp/LevelUpModal",
     "@server/src/core/services/user.service",
     "@/db/types",
-    "@/hooks/use-gamification",
-    "@/components/gamification",
     "@/components/ui/button",
-    "@/components/ui/alert",
     "@/components/ui/badge",
     "@/components/ui/tabs",
     "@/components/admin/layout/AdminPageShell",
@@ -3556,6 +3553,9 @@
     "@/components/admin/protected-admin-route",
     "@/hooks/use-admin-modules",
     "@/features/admin/services/xpActionsService",
+    "@/hooks/use-gamification",
+    "@/components/gamification",
+    "@/components/ui/alert",
     "@/shared/economy/reward-calculator",
     "@/types/forum",
     "@/components/ui/skeleton",
@@ -3571,12 +3571,7 @@
     "@/components/ui/switch",
     "@/pages/dev",
     "@/config/frames.config",
-    "@/components/ui/separator",
     "@/components/ui/label",
-    "@/components/ui/textarea.tsx",
-    "@/components/ui/button.tsx",
-    "@/hooks/use-toast.ts",
-    "@/lib/queryClient.ts",
     "@/components/ui/textarea",
     "@/hooks/use-debounce",
     "@/components/admin/forms/xp/TitleMediaInput",
@@ -3589,6 +3584,11 @@
     "@/components/admin/effects/BankruptcyEffect",
     "@/components/admin/XpActionRow",
     "@/components/ui/table",
+    "@/components/ui/separator",
+    "@/components/ui/textarea.tsx",
+    "@/components/ui/button.tsx",
+    "@/hooks/use-toast.ts",
+    "@/lib/queryClient.ts",
     "@/features/admin/services/cloutAchievementsService",
     "@/lib/adminApi",
     "@/types/compat/economy",

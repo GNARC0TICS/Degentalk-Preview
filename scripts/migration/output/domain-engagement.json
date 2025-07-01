@@ -895,6 +895,245 @@
       "migrationEffort": 0.4
     },
     {
+      "path": "server/src/domains/engagement/rain/rain.service.ts",
+      "domain": "engagement",
+      "subdomain": "rain",
+      "layer": "other",
+      "size": 15153,
+      "lines": 563,
+      "complexity": 8,
+      "dependencies": [
+        "@db",
+        "drizzle-orm",
+        "@/db/types"
+      ],
+      "exports": [
+        "RainService",
+        "rainService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 63,
+          "context": "recipients: Array<{ id: number; username: string }>;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 372,
+          "context": "private async checkCooldowns(userId: number, commandType: 'tip' | 'rain'): Promise<void> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 467,
+          "context": "private async updateLastCommandTime(userId: number, commandType: 'tip' | 'rain'): Promise<void> {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 520,
+          "context": "async updateRainSettings(userId: number, settings: any) {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "ActionId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3
+    },
+    {
+      "path": "server/src/domains/engagement/rain/rain.routes.ts",
+      "domain": "engagement",
+      "subdomain": "rain",
+      "layer": "routes",
+      "size": 1848,
+      "lines": 61,
+      "complexity": 0,
+      "dependencies": [
+        "express",
+        "zod"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "server/src/domains/engagement/rain/rain.controller.ts",
+      "domain": "engagement",
+      "subdomain": "rain",
+      "layer": "controllers",
+      "size": 3137,
+      "lines": 133,
+      "complexity": 2,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "zod"
+      ],
+      "exports": [
+        "RainController",
+        "rainController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "server/src/domains/engagement/airdrop/airdrop.service.ts",
+      "domain": "engagement",
+      "subdomain": "airdrop",
+      "layer": "other",
+      "size": 11003,
+      "lines": 457,
+      "complexity": 5,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm",
+        "uuid",
+        "@/db/types"
+      ],
+      "exports": [
+        "AirdropOptions",
+        "AirdropResult",
+        "AirdropService",
+        "airdropService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 36,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "AdminUserId",
+          "AirdropId",
+          "ActionId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.1
+    },
+    {
+      "path": "server/src/domains/engagement/airdrop/airdrop.routes.ts",
+      "domain": "engagement",
+      "subdomain": "airdrop",
+      "layer": "routes",
+      "size": 1862,
+      "lines": 69,
+      "complexity": 1,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [
+        "registerAirdropRoutes"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "server/src/domains/engagement/airdrop/airdrop.controller.ts",
+      "domain": "engagement",
+      "subdomain": "airdrop",
+      "layer": "controllers",
+      "size": 5084,
+      "lines": 194,
+      "complexity": 4,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express"
+      ],
+      "exports": [
+        "AirdropController",
+        "airdropController"
+      ],
+      "idPatterns": [
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 158,
+          "context": "const airdropId = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.4
+    },
+    {
       "path": "server/src/domains/engagement/vault/vault.service.ts",
       "domain": "engagement",
       "subdomain": "vault",
@@ -1029,250 +1268,11 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 2.4
-    },
-    {
-      "path": "server/src/domains/engagement/airdrop/airdrop.service.ts",
-      "domain": "engagement",
-      "subdomain": "airdrop",
-      "layer": "other",
-      "size": 11003,
-      "lines": 457,
-      "complexity": 5,
-      "dependencies": [
-        "@db",
-        "@schema",
-        "drizzle-orm",
-        "uuid",
-        "@/db/types"
-      ],
-      "exports": [
-        "AirdropOptions",
-        "AirdropResult",
-        "AirdropService",
-        "airdropService"
-      ],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 36,
-          "context": "id: number;",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": true,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": [
-          "AdminUserId",
-          "AirdropId",
-          "ActionId"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 2.1
-    },
-    {
-      "path": "server/src/domains/engagement/airdrop/airdrop.routes.ts",
-      "domain": "engagement",
-      "subdomain": "airdrop",
-      "layer": "routes",
-      "size": 1862,
-      "lines": 69,
-      "complexity": 1,
-      "dependencies": [
-        "express"
-      ],
-      "exports": [
-        "registerAirdropRoutes"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
-    },
-    {
-      "path": "server/src/domains/engagement/airdrop/airdrop.controller.ts",
-      "domain": "engagement",
-      "subdomain": "airdrop",
-      "layer": "controllers",
-      "size": 5084,
-      "lines": 194,
-      "complexity": 4,
-      "dependencies": [
-        "@server/src/core/services/user.service",
-        "express"
-      ],
-      "exports": [
-        "AirdropController",
-        "airdropController"
-      ],
-      "idPatterns": [
-        {
-          "type": "conversion",
-          "pattern": "parseInt(req.params.id)",
-          "line": 158,
-          "context": "const airdropId = parseInt(req.params.id);",
-          "suggestedFix": "remove parseInt, use branded type",
-          "confidence": 0.5
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "Request",
-          "Response"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.4
-    },
-    {
-      "path": "server/src/domains/engagement/rain/rain.service.ts",
-      "domain": "engagement",
-      "subdomain": "rain",
-      "layer": "other",
-      "size": 15153,
-      "lines": 563,
-      "complexity": 8,
-      "dependencies": [
-        "@db",
-        "drizzle-orm",
-        "@/db/types"
-      ],
-      "exports": [
-        "RainService",
-        "rainService"
-      ],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 63,
-          "context": "recipients: Array<{ id: number; username: string }>;",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        },
-        {
-          "type": "definition",
-          "pattern": "userId: number",
-          "line": 372,
-          "context": "private async checkCooldowns(userId: number, commandType: 'tip' | 'rain'): Promise<void> {",
-          "suggestedFix": "UserId",
-          "confidence": 0.8
-        },
-        {
-          "type": "definition",
-          "pattern": "userId: number",
-          "line": 467,
-          "context": "private async updateLastCommandTime(userId: number, commandType: 'tip' | 'rain'): Promise<void> {",
-          "suggestedFix": "UserId",
-          "confidence": 0.8
-        },
-        {
-          "type": "definition",
-          "pattern": "userId: number",
-          "line": 520,
-          "context": "async updateRainSettings(userId: number, settings: any) {",
-          "suggestedFix": "UserId",
-          "confidence": 0.8
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": true,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": [
-          "ActionId"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 3
-    },
-    {
-      "path": "server/src/domains/engagement/rain/rain.routes.ts",
-      "domain": "engagement",
-      "subdomain": "rain",
-      "layer": "routes",
-      "size": 1848,
-      "lines": 61,
-      "complexity": 0,
-      "dependencies": [
-        "express",
-        "zod"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.1
-    },
-    {
-      "path": "server/src/domains/engagement/rain/rain.controller.ts",
-      "domain": "engagement",
-      "subdomain": "rain",
-      "layer": "controllers",
-      "size": 3137,
-      "lines": 133,
-      "complexity": 2,
-      "dependencies": [
-        "@server/src/core/services/user.service",
-        "express",
-        "zod"
-      ],
-      "exports": [
-        "RainController",
-        "rainController"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": [
-          "Request",
-          "Response"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.4
     }
   ],
   "totalIssues": 25,
   "avgComplexity": 2.6875,
-  "migrationEffort": 41.199999999999996,
+  "migrationEffort": 41.19999999999999,
   "dependencies": [
     "@db/types",
     "@db",

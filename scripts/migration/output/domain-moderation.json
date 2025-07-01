@@ -2498,6 +2498,37 @@
       "migrationEffort": 1.1
     },
     {
+      "path": "client/src/__tests__/types/admin.types.test.ts",
+      "domain": "moderation",
+      "layer": "types",
+      "size": 4795,
+      "lines": 198,
+      "complexity": 1,
+      "dependencies": [
+        "vitest"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "User",
+          "UserFormData",
+          "EconomyConfig",
+          "AdminApiResponse",
+          "BulkOperationRequest",
+          "Achievement"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
       "path": "client/src/components/test/RoleTest.tsx",
       "domain": "moderation",
       "layer": "components",
@@ -2527,6 +2558,35 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/modals/DeleteConfirmModal.tsx",
+      "domain": "moderation",
+      "subdomain": "DeleteConfirmModal.tsx",
+      "layer": "components",
+      "size": 1846,
+      "lines": 73,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@/components/ui/button",
+        "lucide-react"
+      ],
+      "exports": [
+        "DeleteConfirmModal"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
     },
     {
       "path": "client/src/components/mod/mod-sidebar.tsx",
@@ -2592,35 +2652,6 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "client/src/components/modals/DeleteConfirmModal.tsx",
-      "domain": "moderation",
-      "subdomain": "DeleteConfirmModal.tsx",
-      "layer": "components",
-      "size": 1846,
-      "lines": 73,
-      "complexity": 0,
-      "dependencies": [
-        "react",
-        "@/components/ui/button",
-        "lucide-react"
-      ],
-      "exports": [
-        "DeleteConfirmModal"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
       "path": "client/src/components/header/AdminButton.tsx",
       "domain": "moderation",
       "layer": "components",
@@ -2654,35 +2685,6 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "client/src/components/errors/AdminErrorBoundary.tsx",
-      "domain": "moderation",
-      "layer": "components",
-      "size": 3885,
-      "lines": 124,
-      "complexity": 2,
-      "dependencies": [
-        "react",
-        "lucide-react",
-        "@/components/ui/button",
-        "@/components/ui/card"
-      ],
-      "exports": [
-        "AdminErrorBoundary"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.9
-    },
-    {
       "path": "client/src/components/dev/dev-role-switcher.tsx",
       "domain": "moderation",
       "layer": "components",
@@ -2705,37 +2707,6 @@
         "hasTypeGuards": false,
         "hasZodValidation": false,
         "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
-    },
-    {
-      "path": "client/src/__tests__/types/admin.types.test.ts",
-      "domain": "moderation",
-      "layer": "types",
-      "size": 4795,
-      "lines": 198,
-      "complexity": 1,
-      "dependencies": [
-        "vitest"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "User",
-          "UserFormData",
-          "EconomyConfig",
-          "AdminApiResponse",
-          "BulkOperationRequest",
-          "Achievement"
-        ]
       },
       "riskLevel": "medium",
       "migrationEffort": 0.7
@@ -2966,6 +2937,109 @@
       "migrationEffort": 0.7
     },
     {
+      "path": "client/src/components/errors/AdminErrorBoundary.tsx",
+      "domain": "moderation",
+      "layer": "components",
+      "size": 3885,
+      "lines": 124,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/components/ui/card"
+      ],
+      "exports": [
+        "AdminErrorBoundary"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/pages/admin/ui/pack-builder.tsx",
+      "domain": "moderation",
+      "subdomain": "ui",
+      "layer": "pages",
+      "size": 5263,
+      "lines": 159,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/features/admin/services/media-api.service",
+        "@/components/admin/layout/AdminPageShell",
+        "@lottiefiles/dotlottie-react",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/textarea",
+        "@/hooks/use-toast"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 61,
+          "context": "const removeFromPack = (id: number) => setContents(contents.filter((c) => c.id !== id));",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3.8
+    },
+    {
+      "path": "client/src/pages/admin/ui/animations.tsx",
+      "domain": "moderation",
+      "subdomain": "ui",
+      "layer": "pages",
+      "size": 3414,
+      "lines": 105,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/features/admin/services/media-api.service",
+        "@/components/admin/layout/AdminPageShell",
+        "@/components/media/MediaAsset",
+        "@/components/ui/button",
+        "@/components/admin/media/MediaLibraryModal",
+        "@/hooks/use-toast"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
       "path": "client/src/pages/admin/stats/index.tsx",
       "domain": "moderation",
       "subdomain": "stats",
@@ -3070,41 +3144,6 @@
       "migrationEffort": 3
     },
     {
-      "path": "client/src/pages/admin/features/index.tsx",
-      "domain": "moderation",
-      "subdomain": "features",
-      "layer": "pages",
-      "size": 11641,
-      "lines": 404,
-      "complexity": 2,
-      "dependencies": [
-        "react",
-        "react-query",
-        "@/lib/queryClient",
-        "lucide-react",
-        "@/hooks/use-toast",
-        "@/components/ui/button",
-        "@/components/ui/input",
-        "@/components/ui/badge",
-        "@/components/ui/separator",
-        "@/components/ui/switch",
-        "@/components/ui/label"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.9
-    },
-    {
       "path": "client/src/pages/admin/dictionary/index.tsx",
       "domain": "moderation",
       "subdomain": "dictionary",
@@ -3153,17 +3192,25 @@
       "migrationEffort": 2.9
     },
     {
-      "path": "client/src/pages/admin/dev/seeding.tsx",
+      "path": "client/src/pages/admin/features/index.tsx",
       "domain": "moderation",
-      "subdomain": "dev",
+      "subdomain": "features",
       "layer": "pages",
-      "size": 1746,
-      "lines": 63,
-      "complexity": 1,
+      "size": 11641,
+      "lines": 404,
+      "complexity": 2,
       "dependencies": [
         "react",
+        "react-query",
+        "@/lib/queryClient",
+        "lucide-react",
+        "@/hooks/use-toast",
         "@/components/ui/button",
-        "@/components/admin/layout/AdminPageShell"
+        "@/components/ui/input",
+        "@/components/ui/badge",
+        "@/components/ui/separator",
+        "@/components/ui/switch",
+        "@/components/ui/label"
       ],
       "exports": [],
       "idPatterns": [],
@@ -3177,7 +3224,7 @@
         "typeImports": []
       },
       "riskLevel": "medium",
-      "migrationEffort": 1.7
+      "migrationEffort": 1.9
     },
     {
       "path": "client/src/pages/admin/config/zones.tsx",
@@ -3309,6 +3356,33 @@
       "migrationEffort": 3.1
     },
     {
+      "path": "client/src/pages/admin/dev/seeding.tsx",
+      "domain": "moderation",
+      "subdomain": "dev",
+      "layer": "pages",
+      "size": 1746,
+      "lines": 63,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/button",
+        "@/components/admin/layout/AdminPageShell"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
+    },
+    {
       "path": "client/src/pages/admin/activity/index.tsx",
       "domain": "moderation",
       "subdomain": "activity",
@@ -3338,80 +3412,6 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 0.7
-    },
-    {
-      "path": "client/src/pages/admin/ui/pack-builder.tsx",
-      "domain": "moderation",
-      "subdomain": "ui",
-      "layer": "pages",
-      "size": 5263,
-      "lines": 159,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "@tanstack/react-query",
-        "@/features/admin/services/media-api.service",
-        "@/components/admin/layout/AdminPageShell",
-        "@lottiefiles/dotlottie-react",
-        "@/components/ui/button",
-        "@/components/ui/input",
-        "@/components/ui/textarea",
-        "@/hooks/use-toast"
-      ],
-      "exports": [],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 61,
-          "context": "const removeFromPack = (id: number) => setContents(contents.filter((c) => c.id !== id));",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": true,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 3.8
-    },
-    {
-      "path": "client/src/pages/admin/ui/animations.tsx",
-      "domain": "moderation",
-      "subdomain": "ui",
-      "layer": "pages",
-      "size": 3414,
-      "lines": 105,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "@tanstack/react-query",
-        "@/features/admin/services/media-api.service",
-        "@/components/admin/layout/AdminPageShell",
-        "@/components/media/MediaAsset",
-        "@/components/ui/button",
-        "@/components/admin/media/MediaLibraryModal",
-        "@/hooks/use-toast"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.7
     },
     {
       "path": "client/src/pages/admin/clout/index.tsx",
@@ -3557,6 +3557,45 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "client/src/features/admin/hooks/useSystemAnalytics.ts",
+      "domain": "moderation",
+      "subdomain": "hooks",
+      "layer": "hooks",
+      "size": 6622,
+      "lines": 205,
+      "complexity": 1,
+      "dependencies": [
+        "@tanstack/react-query",
+        "sonner"
+      ],
+      "exports": [
+        "systemAnalyticsKeys",
+        "useSystemMetrics",
+        "useSystemOverview",
+        "usePerformanceHeatmap",
+        "useSystemHealth",
+        "useRealtimeAnalytics",
+        "useCacheStats",
+        "useCacheOperation",
+        "useDatabaseStats",
+        "useRefreshSystemAnalytics",
+        "useSystemAnalyticsLoadingState",
+        "useSystemAnalyticsErrorState"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.7
     },
     {
       "path": "client/src/features/admin/services/uiConfigApi.ts",
@@ -3765,45 +3804,6 @@
       "migrationEffort": 1.9
     },
     {
-      "path": "client/src/features/admin/hooks/useSystemAnalytics.ts",
-      "domain": "moderation",
-      "subdomain": "hooks",
-      "layer": "hooks",
-      "size": 6622,
-      "lines": 205,
-      "complexity": 1,
-      "dependencies": [
-        "@tanstack/react-query",
-        "sonner"
-      ],
-      "exports": [
-        "systemAnalyticsKeys",
-        "useSystemMetrics",
-        "useSystemOverview",
-        "usePerformanceHeatmap",
-        "useSystemHealth",
-        "useRealtimeAnalytics",
-        "useCacheStats",
-        "useCacheOperation",
-        "useDatabaseStats",
-        "useRefreshSystemAnalytics",
-        "useSystemAnalyticsLoadingState",
-        "useSystemAnalyticsErrorState"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.7
-    },
-    {
       "path": "client/src/components/admin/roles/RolesSection.tsx",
       "domain": "moderation",
       "subdomain": "roles",
@@ -3932,236 +3932,6 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 1.7
-    },
-    {
-      "path": "client/src/components/admin/inputs/UnlockMultiSelect.tsx",
-      "domain": "moderation",
-      "subdomain": "inputs",
-      "layer": "components",
-      "size": 2915,
-      "lines": 102,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "@tanstack/react-query",
-        "@/components/ui/checkbox",
-        "@/components/ui/button",
-        "@/components/ui/popover",
-        "@/components/ui/scroll-area",
-        "lucide-react",
-        "@/lib/utils"
-      ],
-      "exports": [
-        "UnlockMultiSelect"
-      ],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 11,
-          "context": "id: number;",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        },
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 44,
-          "context": "const toggle = (id: number) => {",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": true,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 2.9
-    },
-    {
-      "path": "client/src/components/admin/inputs/AdminToggle.tsx",
-      "domain": "moderation",
-      "subdomain": "inputs",
-      "layer": "components",
-      "size": 899,
-      "lines": 37,
-      "complexity": 0,
-      "dependencies": [
-        "react",
-        "@/components/ui/switch",
-        "@/components/ui/label",
-        "@/lib/utils"
-      ],
-      "exports": [
-        "AdminToggle"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "client/src/components/admin/inputs/AdminAccessSelector.tsx",
-      "domain": "moderation",
-      "subdomain": "inputs",
-      "layer": "components",
-      "size": 2862,
-      "lines": 101,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "@tanstack/react-query",
-        "@/components/ui/checkbox",
-        "@/components/ui/button",
-        "@/components/ui/popover",
-        "@/components/ui/scroll-area",
-        "@/lib/utils",
-        "lucide-react"
-      ],
-      "exports": [
-        "AdminAccessSelector"
-      ],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 11,
-          "context": "id: number;",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        },
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 44,
-          "context": "const toggleRole = (id: number) => {",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": true,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 2.9
-    },
-    {
-      "path": "client/src/components/admin/layout/EntityTable.tsx",
-      "domain": "moderation",
-      "subdomain": "layout",
-      "layer": "components",
-      "size": 5277,
-      "lines": 170,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "@/components/ui/skeleton",
-        "@/components/ui/input",
-        "@/lib/utils"
-      ],
-      "exports": [
-        "ColumnDef",
-        "EntityTable"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": true,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
-    },
-    {
-      "path": "client/src/components/admin/layout/EntityFilters.tsx",
-      "domain": "moderation",
-      "subdomain": "layout",
-      "layer": "components",
-      "size": 4464,
-      "lines": 146,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "@/components/ui/input",
-        "@/components/ui/button",
-        "@/components/ui/date-range-picker",
-        "react-day-picker",
-        "@/lib/utils",
-        "lucide-react"
-      ],
-      "exports": [
-        "FilterValue",
-        "FilterConfig",
-        "EntityFilters"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "DateRange"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
-    },
-    {
-      "path": "client/src/components/admin/layout/AdminPageShell.tsx",
-      "domain": "moderation",
-      "subdomain": "layout",
-      "layer": "components",
-      "size": 2558,
-      "lines": 82,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "@/components/ui/tabs",
-        "@/lib/utils"
-      ],
-      "exports": [
-        "TabConfig",
-        "AdminPageShell"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
     },
     {
       "path": "client/src/components/admin/form-controls/index.ts",
@@ -4399,35 +4169,6 @@
       "migrationEffort": 0.7
     },
     {
-      "path": "client/src/components/admin/common/AdminDataTable.tsx",
-      "domain": "moderation",
-      "subdomain": "common",
-      "layer": "components",
-      "size": 701,
-      "lines": 22,
-      "complexity": 0,
-      "dependencies": [
-        "react",
-        "@/components/admin/layout/EntityTable"
-      ],
-      "exports": [
-        "AdminDataTableProps",
-        "AdminDataTable"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": true,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
       "path": "client/src/components/admin/clout/CloutTiersSection.tsx",
       "domain": "moderation",
       "subdomain": "clout",
@@ -4535,6 +4276,265 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 1.2
+    },
+    {
+      "path": "client/src/components/admin/inputs/UnlockMultiSelect.tsx",
+      "domain": "moderation",
+      "subdomain": "inputs",
+      "layer": "components",
+      "size": 2915,
+      "lines": 102,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/components/ui/checkbox",
+        "@/components/ui/button",
+        "@/components/ui/popover",
+        "@/components/ui/scroll-area",
+        "lucide-react",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "UnlockMultiSelect"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 11,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 44,
+          "context": "const toggle = (id: number) => {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.9
+    },
+    {
+      "path": "client/src/components/admin/inputs/AdminToggle.tsx",
+      "domain": "moderation",
+      "subdomain": "inputs",
+      "layer": "components",
+      "size": 899,
+      "lines": 37,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@/components/ui/switch",
+        "@/components/ui/label",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "AdminToggle"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "client/src/components/admin/inputs/AdminAccessSelector.tsx",
+      "domain": "moderation",
+      "subdomain": "inputs",
+      "layer": "components",
+      "size": 2862,
+      "lines": 101,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@/components/ui/checkbox",
+        "@/components/ui/button",
+        "@/components/ui/popover",
+        "@/components/ui/scroll-area",
+        "@/lib/utils",
+        "lucide-react"
+      ],
+      "exports": [
+        "AdminAccessSelector"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 11,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 44,
+          "context": "const toggleRole = (id: number) => {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.9
+    },
+    {
+      "path": "client/src/components/admin/layout/EntityTable.tsx",
+      "domain": "moderation",
+      "subdomain": "layout",
+      "layer": "components",
+      "size": 5277,
+      "lines": 170,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/skeleton",
+        "@/components/ui/input",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "ColumnDef",
+        "EntityTable"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/admin/layout/EntityFilters.tsx",
+      "domain": "moderation",
+      "subdomain": "layout",
+      "layer": "components",
+      "size": 4464,
+      "lines": 146,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/input",
+        "@/components/ui/button",
+        "@/components/ui/date-range-picker",
+        "react-day-picker",
+        "@/lib/utils",
+        "lucide-react"
+      ],
+      "exports": [
+        "FilterValue",
+        "FilterConfig",
+        "EntityFilters"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "DateRange"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/admin/layout/AdminPageShell.tsx",
+      "domain": "moderation",
+      "subdomain": "layout",
+      "layer": "components",
+      "size": 2558,
+      "lines": 82,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/components/ui/tabs",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "TabConfig",
+        "AdminPageShell"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "client/src/components/admin/common/AdminDataTable.tsx",
+      "domain": "moderation",
+      "subdomain": "common",
+      "layer": "components",
+      "size": 701,
+      "lines": 22,
+      "complexity": 0,
+      "dependencies": [
+        "react",
+        "@/components/admin/layout/EntityTable"
+      ],
+      "exports": [
+        "AdminDataTableProps",
+        "AdminDataTable"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
     },
     {
       "path": "client/src/features/admin/components/dashboard/index.ts",
@@ -5097,6 +5097,7 @@
     "@/components/ui/tooltip",
     "@/hooks/use-media-query",
     "@/lib/admin-utils",
+    "@lottiefiles/dotlottie-react",
     "@/features/dictionary/services/dictionaryApi",
     "@/components/ui/loader",
     "@/components/ui/error-display",
@@ -5110,7 +5111,6 @@
     "@/features/activity/services/activityApi",
     "@/hooks/useAuth",
     "@/layout/primitives",
-    "@lottiefiles/dotlottie-react",
     "@/components/admin/clout/CloutTiersSection",
     "@/components/admin/clout/AchievementsSection",
     "@/components/admin/clout/CloutGrantsSection",
@@ -5125,13 +5125,13 @@
     "@/lib/adminApi",
     "@/types/compat/brand",
     "@/pages/admin/roles-titles",
-    "@/components/ui/scroll-area",
-    "@/components/ui/date-range-picker",
     "@radix-ui/react-switch",
     "@monaco-editor/react",
-    "@/components/admin/layout/EntityTable",
     "@/components/ui/progress",
     "@/pages/admin/clout",
+    "@/components/ui/scroll-area",
+    "@/components/ui/date-range-picker",
+    "@/components/admin/layout/EntityTable",
     "@/features/admin/api/system-analytics.api",
     "@/components/ui/chart",
     "@/features/admin/hooks/useSystemAnalytics"

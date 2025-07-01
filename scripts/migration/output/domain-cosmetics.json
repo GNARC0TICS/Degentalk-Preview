@@ -519,49 +519,6 @@
       "migrationEffort": 0.5
     },
     {
-      "path": "db/schema/collectibles/stickers.ts",
-      "domain": "cosmetics",
-      "layer": "other",
-      "size": 11640,
-      "lines": 280,
-      "complexity": 1,
-      "dependencies": [
-        "drizzle-orm"
-      ],
-      "exports": [
-        "stickerPacks",
-        "stickers",
-        "userStickerInventory",
-        "userStickerPacks",
-        "stickerUsage",
-        "StickerPack",
-        "NewStickerPack",
-        "Sticker",
-        "NewSticker",
-        "UserStickerInventory",
-        "NewUserStickerInventory",
-        "UserStickerPack",
-        "NewUserStickerPack",
-        "StickerUsage",
-        "NewStickerUsage",
-        "StickerRarity",
-        "StickerUnlockType",
-        "StickerFormat"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.19999999999999996
-    },
-    {
       "path": "client/src/types/inventory.ts",
       "domain": "cosmetics",
       "layer": "types",
@@ -613,6 +570,49 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 3.8
+    },
+    {
+      "path": "db/schema/collectibles/stickers.ts",
+      "domain": "cosmetics",
+      "layer": "other",
+      "size": 11640,
+      "lines": 280,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "stickerPacks",
+        "stickers",
+        "userStickerInventory",
+        "userStickerPacks",
+        "stickerUsage",
+        "StickerPack",
+        "NewStickerPack",
+        "Sticker",
+        "NewSticker",
+        "UserStickerInventory",
+        "NewUserStickerInventory",
+        "UserStickerPack",
+        "NewUserStickerPack",
+        "StickerUsage",
+        "NewStickerUsage",
+        "StickerRarity",
+        "StickerUnlockType",
+        "StickerFormat"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.19999999999999996
     },
     {
       "path": "client/src/pages/shop.tsx",
@@ -1188,6 +1188,33 @@
       "migrationEffort": 0.5
     },
     {
+      "path": "client/src/components/identity/AvatarFrame.tsx",
+      "domain": "cosmetics",
+      "layer": "components",
+      "size": 1738,
+      "lines": 68,
+      "complexity": 1,
+      "dependencies": [
+        "react",
+        "@/lib/utils"
+      ],
+      "exports": [
+        "AvatarFrame"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.7
+    },
+    {
       "path": "client/src/components/layout/WidgetFrame.tsx",
       "domain": "cosmetics",
       "layer": "components",
@@ -1220,33 +1247,6 @@
       },
       "riskLevel": "low",
       "migrationEffort": 1.9
-    },
-    {
-      "path": "client/src/components/identity/AvatarFrame.tsx",
-      "domain": "cosmetics",
-      "layer": "components",
-      "size": 1738,
-      "lines": 68,
-      "complexity": 1,
-      "dependencies": [
-        "react",
-        "@/lib/utils"
-      ],
-      "exports": [
-        "AvatarFrame"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.7
     },
     {
       "path": "client/src/components/admin/GrantFrameModal.tsx",
@@ -1640,7 +1640,7 @@
   ],
   "totalIssues": 22,
   "avgComplexity": 1.3409090909090908,
-  "migrationEffort": 52.20000000000002,
+  "migrationEffort": 52.20000000000001,
   "dependencies": [
     "@schema",
     "@db",
@@ -1681,10 +1681,10 @@
     "@/components/ui/alert",
     "@/hooks/use-auth",
     "@/components/ui/feature-gate",
+    "@/lib/utils",
     "@/stores/useLayoutStore",
     "@/config/widgetRegistry",
     "@/contexts/shoutbox-context",
-    "@/lib/utils",
     "@hookform/resolvers/zod",
     "@/components/admin/common/AdminDataTable",
     "@/components/admin/layout/EntityTable",

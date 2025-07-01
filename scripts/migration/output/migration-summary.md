@@ -1,6 +1,6 @@
 # Numeric ID Migration Report
 
-Generated: 2025-07-01T23:06:24.764Z
+Generated: 2025-07-01T23:26:46.758Z
 
 ## Summary
 - **Total Files**: 1931
@@ -51,9 +51,9 @@ Top issues:
 Top issues:
 - `client/src/components/users/UserAvatar.tsx:10` - id: number → check entity context for correct branded type
 - `client/src/components/users/ActiveMembersWidget.tsx:19` - id: number → check entity context for correct branded type
-- `client/src/components/social/WhaleWatchDashboard.tsx:43` - id: number → check entity context for correct branded type
-- `client/src/components/social/FriendsManager.tsx:55` - id: number → check entity context for correct branded type
-- `client/src/components/social/FriendsManager.tsx:66` - id: number → check entity context for correct branded type
+- `client/src/components/ui/smart-thread-filters.tsx:67` - id: number → check entity context for correct branded type
+- `client/src/components/ui/smart-thread-filters.tsx:68` - id: number → check entity context for correct branded type
+- `client/src/components/ui/reactions-bar.tsx:21` - postId: number → PostId
 
 ### client-pages (Priority 5)
 - Files: 113
@@ -126,7 +126,7 @@ Top issues:
 - `server/src/middleware/authenticate.ts:12` - id: number → check entity context for correct branded type
 - `server/src/domains/xp/xp.service.ts:431` - userId: number → UserId
 - `server/src/domains/subscriptions/subscription.service.ts:29` - id: number → check entity context for correct branded type
-- `server/src/domains/social/mentions.types.ts:4` - id: number → check entity context for correct branded type
+- `server/src/domains/shoutbox/shoutbox.routes.ts:36` - userId: number → UserId
 
 ### database (Priority 13)
 - Files: 156

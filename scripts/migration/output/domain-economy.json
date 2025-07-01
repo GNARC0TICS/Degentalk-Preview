@@ -643,35 +643,6 @@
       "migrationEffort": 2.7
     },
     {
-      "path": "scripts/dev/setup-fresh-wallet-test.ts",
-      "domain": "economy",
-      "layer": "other",
-      "size": 3546,
-      "lines": 129,
-      "complexity": 2,
-      "dependencies": [
-        "@db",
-        "@schema",
-        "drizzle-orm",
-        "bcrypt"
-      ],
-      "exports": [
-        "setupFreshWalletTest "
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.4
-    },
-    {
       "path": "scripts/db/seed-dev-wallet.ts",
       "domain": "economy",
       "layer": "other",
@@ -715,6 +686,35 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 0.4
+    },
+    {
+      "path": "scripts/dev/setup-fresh-wallet-test.ts",
+      "domain": "economy",
+      "layer": "other",
+      "size": 3546,
+      "lines": 129,
+      "complexity": 2,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm",
+        "bcrypt"
+      ],
+      "exports": [
+        "setupFreshWalletTest "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.4
     },
     {
       "path": "lib/wallet/testUtils.ts",
@@ -1255,34 +1255,6 @@
       "migrationEffort": 1.5
     },
     {
-      "path": "db/schema/shop/inventoryTransactions.ts",
-      "domain": "economy",
-      "layer": "other",
-      "size": 1790,
-      "lines": 47,
-      "complexity": 0,
-      "dependencies": [
-        "drizzle-orm"
-      ],
-      "exports": [
-        "inventoryTransactions",
-        "InventoryTransaction",
-        "InsertInventoryTransaction"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
       "path": "db/schema/economy/xpLogs.ts",
       "domain": "economy",
       "subdomain": "xpLogs.ts",
@@ -1705,38 +1677,32 @@
       "migrationEffort": 0.5
     },
     {
-      "path": "db/schema/advertising/payments.ts",
+      "path": "db/schema/shop/inventoryTransactions.ts",
       "domain": "economy",
       "layer": "other",
-      "size": 5137,
-      "lines": 161,
-      "complexity": 1,
+      "size": 1790,
+      "lines": 47,
+      "complexity": 0,
       "dependencies": [
         "drizzle-orm"
       ],
       "exports": [
-        "paymentStatusEnum",
-        "cryptoCurrencyEnum",
-        "cryptoPayments",
-        "adGovernanceProposals",
-        "adGovernanceVotes",
-        "CryptoPayment",
-        "InsertCryptoPayment",
-        "AdGovernanceProposal",
-        "AdGovernanceVote"
+        "inventoryTransactions",
+        "InventoryTransaction",
+        "InsertInventoryTransaction"
       ],
       "idPatterns": [],
       "typeUsage": {
         "hasAnyTypes": false,
         "hasUnknownTypes": false,
-        "hasBrandedIds": true,
+        "hasBrandedIds": false,
         "hasNumericIds": false,
         "hasTypeGuards": false,
         "hasZodValidation": false,
         "typeImports": []
       },
       "riskLevel": "medium",
-      "migrationEffort": 0.7
+      "migrationEffort": 0.5
     },
     {
       "path": "client/src/types/wallet.ts",
@@ -1837,6 +1803,40 @@
       },
       "riskLevel": "high",
       "migrationEffort": 0.9
+    },
+    {
+      "path": "db/schema/advertising/payments.ts",
+      "domain": "economy",
+      "layer": "other",
+      "size": 5137,
+      "lines": 161,
+      "complexity": 1,
+      "dependencies": [
+        "drizzle-orm"
+      ],
+      "exports": [
+        "paymentStatusEnum",
+        "cryptoCurrencyEnum",
+        "cryptoPayments",
+        "adGovernanceProposals",
+        "adGovernanceVotes",
+        "CryptoPayment",
+        "InsertCryptoPayment",
+        "AdGovernanceProposal",
+        "AdGovernanceVote"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
     },
     {
       "path": "client/src/payments/index.ts",
@@ -3037,6 +3037,35 @@
       "migrationEffort": 1.9
     },
     {
+      "path": "client/src/features/admin/services/economyConfigService.ts",
+      "domain": "economy",
+      "layer": "services",
+      "size": 981,
+      "lines": 37,
+      "complexity": 1,
+      "dependencies": [
+        "@/lib/adminApi",
+        "@tanstack/react-query"
+      ],
+      "exports": [
+        "useEconomyConfig",
+        "useUpdateEconomyConfig",
+        "useResetEconomyConfig"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "high",
+      "migrationEffort": 1.7
+    },
+    {
       "path": "client/src/features/wallet/services/wallet-api.service.ts",
       "domain": "economy",
       "subdomain": "services",
@@ -3069,102 +3098,170 @@
       "migrationEffort": 1.9
     },
     {
-      "path": "client/src/features/admin/services/economyConfigService.ts",
+      "path": "client/src/components/economy/xp/XPProgressBar.tsx",
       "domain": "economy",
-      "layer": "services",
-      "size": 981,
-      "lines": 37,
-      "complexity": 1,
+      "subdomain": "xp",
+      "layer": "components",
+      "size": 6187,
+      "lines": 203,
+      "complexity": 3,
       "dependencies": [
-        "@/lib/adminApi",
-        "@tanstack/react-query"
+        "@/lib/utils",
+        "@/components/ui/progress",
+        "@/lib/utils",
+        "@/components/ui/badge",
+        "lucide-react"
       ],
       "exports": [
-        "useEconomyConfig",
-        "useUpdateEconomyConfig",
-        "useResetEconomyConfig"
+        "XPProgressBar"
       ],
       "idPatterns": [],
       "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": true,
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
         "hasBrandedIds": false,
         "hasNumericIds": false,
         "hasTypeGuards": false,
         "hasZodValidation": false,
         "typeImports": []
       },
-      "riskLevel": "high",
-      "migrationEffort": 1.7
+      "riskLevel": "medium",
+      "migrationEffort": 1.1
     },
     {
-      "path": "client/src/components/economy/shoutbox/enhanced-shoutbox-widget.tsx",
+      "path": "client/src/components/economy/xp/XPHistoryLog.tsx",
       "domain": "economy",
-      "subdomain": "shoutbox",
+      "subdomain": "xp",
       "layer": "components",
-      "size": 19742,
-      "lines": 698,
-      "complexity": 5,
+      "size": 4560,
+      "lines": 150,
+      "complexity": 1,
       "dependencies": [
         "react",
-        "@/hooks/use-auth",
-        "@tanstack/react-query",
-        "react-hot-toast",
         "@/lib/utils",
+        "@/hooks/useXP",
         "date-fns",
-        "@/lib/queryClient",
-        "@db/types"
+        "lucide-react",
+        "@/components/ui/scroll-area",
+        "@/components/ui/card",
+        "@/components/ui/badge"
       ],
-      "exports": [],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 40,
-          "context": "id: number;",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        },
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 50,
-          "context": "id: number;",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        },
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 62,
-          "context": "id: number;",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        },
-        {
-          "type": "definition",
-          "pattern": "userId: number",
-          "line": 266,
-          "context": "mutationFn: async ({ userId, ignore }: { userId: number; ignore: boolean }) => {",
-          "suggestedFix": "UserId",
-          "confidence": 0.8
-        }
+      "exports": [
+        "XPHistoryLog"
       ],
+      "idPatterns": [],
       "typeUsage": {
-        "hasAnyTypes": true,
+        "hasAnyTypes": false,
         "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": false,
+        "typeImports": [
+          "XpAdjustmentEntry"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "client/src/components/economy/xp/TitleSelector.tsx",
+      "domain": "economy",
+      "subdomain": "xp",
+      "layer": "components",
+      "size": 7666,
+      "lines": 265,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@/lib/utils",
+        "@/hooks/useXP",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/components/ui/tooltip",
+        "@/components/ui/card",
+        "@/components/ui/badge",
+        "@/components/ui/scroll-area"
+      ],
+      "exports": [
+        "TitleSelector"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
         "hasTypeGuards": false,
         "hasZodValidation": false,
         "typeImports": [
-          "RoomId",
-          "GroupId",
-          "MessageId"
+          "UserTitle"
         ]
       },
-      "riskLevel": "high",
-      "migrationEffort": 2.9
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/components/economy/xp/LevelUpNotification.tsx",
+      "domain": "economy",
+      "subdomain": "xp",
+      "layer": "components",
+      "size": 7596,
+      "lines": 256,
+      "complexity": 2,
+      "dependencies": [
+        "react",
+        "@/lib/utils",
+        "framer-motion",
+        "lucide-react",
+        "@/components/ui/button"
+      ],
+      "exports": [
+        "LevelUpNotification"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "client/src/components/economy/xp/LevelBadge.tsx",
+      "domain": "economy",
+      "subdomain": "xp",
+      "layer": "components",
+      "size": 4553,
+      "lines": 166,
+      "complexity": 3,
+      "dependencies": [
+        "react",
+        "@/lib/utils",
+        "lucide-react",
+        "@/components/ui/tooltip"
+      ],
+      "exports": [
+        "LevelVisualConfig",
+        "LevelBadge"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.1
     },
     {
       "path": "client/src/components/economy/wallet/withdraw-button.tsx",
@@ -3626,170 +3723,73 @@
       "migrationEffort": 0.5
     },
     {
-      "path": "client/src/components/economy/xp/XPProgressBar.tsx",
+      "path": "client/src/components/economy/shoutbox/enhanced-shoutbox-widget.tsx",
       "domain": "economy",
-      "subdomain": "xp",
+      "subdomain": "shoutbox",
       "layer": "components",
-      "size": 6187,
-      "lines": 203,
-      "complexity": 3,
-      "dependencies": [
-        "@/lib/utils",
-        "@/components/ui/progress",
-        "@/lib/utils",
-        "@/components/ui/badge",
-        "lucide-react"
-      ],
-      "exports": [
-        "XPProgressBar"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.1
-    },
-    {
-      "path": "client/src/components/economy/xp/XPHistoryLog.tsx",
-      "domain": "economy",
-      "subdomain": "xp",
-      "layer": "components",
-      "size": 4560,
-      "lines": 150,
-      "complexity": 1,
+      "size": 19742,
+      "lines": 698,
+      "complexity": 5,
       "dependencies": [
         "react",
+        "@/hooks/use-auth",
+        "@tanstack/react-query",
+        "react-hot-toast",
         "@/lib/utils",
-        "@/hooks/useXP",
         "date-fns",
-        "lucide-react",
-        "@/components/ui/scroll-area",
-        "@/components/ui/card",
-        "@/components/ui/badge"
+        "@/lib/queryClient",
+        "@db/types"
       ],
-      "exports": [
-        "XPHistoryLog"
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 40,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 50,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 62,
+          "context": "id: number;",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 266,
+          "context": "mutationFn: async ({ userId, ignore }: { userId: number; ignore: boolean }) => {",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
+        }
       ],
-      "idPatterns": [],
       "typeUsage": {
-        "hasAnyTypes": false,
+        "hasAnyTypes": true,
         "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": true,
-        "hasZodValidation": false,
-        "typeImports": [
-          "XpAdjustmentEntry"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.1
-    },
-    {
-      "path": "client/src/components/economy/xp/TitleSelector.tsx",
-      "domain": "economy",
-      "subdomain": "xp",
-      "layer": "components",
-      "size": 7666,
-      "lines": 265,
-      "complexity": 2,
-      "dependencies": [
-        "react",
-        "@/lib/utils",
-        "@/hooks/useXP",
-        "lucide-react",
-        "@/components/ui/button",
-        "@/components/ui/tooltip",
-        "@/components/ui/card",
-        "@/components/ui/badge",
-        "@/components/ui/scroll-area"
-      ],
-      "exports": [
-        "TitleSelector"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": true,
         "hasTypeGuards": false,
         "hasZodValidation": false,
         "typeImports": [
-          "UserTitle"
+          "RoomId",
+          "GroupId",
+          "MessageId"
         ]
       },
-      "riskLevel": "medium",
-      "migrationEffort": 0.9
-    },
-    {
-      "path": "client/src/components/economy/xp/LevelUpNotification.tsx",
-      "domain": "economy",
-      "subdomain": "xp",
-      "layer": "components",
-      "size": 7596,
-      "lines": 256,
-      "complexity": 2,
-      "dependencies": [
-        "react",
-        "@/lib/utils",
-        "framer-motion",
-        "lucide-react",
-        "@/components/ui/button"
-      ],
-      "exports": [
-        "LevelUpNotification"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.9
-    },
-    {
-      "path": "client/src/components/economy/xp/LevelBadge.tsx",
-      "domain": "economy",
-      "subdomain": "xp",
-      "layer": "components",
-      "size": 4553,
-      "lines": 166,
-      "complexity": 3,
-      "dependencies": [
-        "react",
-        "@/lib/utils",
-        "lucide-react",
-        "@/components/ui/tooltip"
-      ],
-      "exports": [
-        "LevelVisualConfig",
-        "LevelBadge"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.1
+      "riskLevel": "high",
+      "migrationEffort": 2.9
     },
     {
       "path": "client/src/components/economy/badges/BadgeShowcase.tsx",
@@ -3992,7 +3992,8 @@
     "@/components/admin/wallet/mock-webhook-trigger",
     "@/components/ui/alert",
     "@/lib/adminApi",
-    "@/hooks/use-auth",
+    "@/components/ui/progress",
+    "@/hooks/useXP",
     "@/components/ui/scroll-area",
     "@/components/ui/slider",
     "@/hooks/use-tip",
@@ -4001,8 +4002,7 @@
     "@/components/ui/separator",
     "@/components/ui/sheet",
     "@/hooks/use-dgt-packages",
-    "@/components/ui/progress",
-    "@/hooks/useXP"
+    "@/hooks/use-auth"
   ],
   "dependents": [
     "gamification",

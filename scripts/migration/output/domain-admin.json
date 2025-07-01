@@ -229,6 +229,29 @@
       "migrationEffort": 1.9
     },
     {
+      "path": "server/src/domains/admin/sub-domains/index.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "other",
+      "size": 67,
+      "lines": 3,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.5
+    },
+    {
       "path": "server/src/domains/admin/shared/index.ts",
       "domain": "admin",
       "subdomain": "shared",
@@ -431,14 +454,173 @@
       "migrationEffort": 3.1
     },
     {
-      "path": "server/src/domains/admin/sub-domains/index.ts",
+      "path": "server/src/domains/admin/sub-domains/wallet/wallet.validators.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
       "layer": "other",
-      "size": 67,
-      "lines": 3,
+      "size": 3208,
+      "lines": 130,
+      "complexity": 2,
+      "dependencies": [
+        "express",
+        "zod"
+      ],
+      "exports": [
+        "validateWalletConfig",
+        "validateDGTTransaction",
+        "validateUserId"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/wallet/wallet.routes.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "routes",
+      "size": 1135,
+      "lines": 29,
       "complexity": 0,
-      "dependencies": [],
+      "dependencies": [
+        "express"
+      ],
+      "exports": [
+        "router as adminWalletRoutes "
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/wallet/wallet.controller.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "controllers",
+      "size": 5933,
+      "lines": 239,
+      "complexity": 4,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express"
+      ],
+      "exports": [
+        "AdminWalletController",
+        "adminWalletController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.3
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/user-groups/user-groups.validators.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "other",
+      "size": 1453,
+      "lines": 38,
+      "complexity": 1,
+      "dependencies": [
+        "zod"
+      ],
+      "exports": [
+        "UserGroupSchema",
+        "ListGroupUsersQuerySchema",
+        "UserGroupInput",
+        "ListGroupUsersQueryInput"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.19999999999999996
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/user-groups/user-groups.service.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "other",
+      "size": 6470,
+      "lines": 229,
+      "complexity": 4,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm",
+        "@/db/types"
+      ],
+      "exports": [
+        "AdminUserGroupsService",
+        "adminUserGroupsService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "UserGroupInput",
+          "ListGroupUsersQueryInput"
+        ]
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.8
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/user-groups/user-groups.routes.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "routes",
+      "size": 1215,
+      "lines": 50,
+      "complexity": 0,
+      "dependencies": [
+        "express"
+      ],
       "exports": [],
       "idPatterns": [],
       "typeUsage": {
@@ -450,8 +632,72 @@
         "hasZodValidation": false,
         "typeImports": []
       },
-      "riskLevel": "low",
+      "riskLevel": "medium",
       "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/user-groups/user-groups.controller.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "controllers",
+      "size": 4440,
+      "lines": 135,
+      "complexity": 5,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [
+        "AdminUserGroupsController",
+        "adminUserGroupsController"
+      ],
+      "idPatterns": [
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 31,
+          "context": "const groupId = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 69,
+          "context": "const groupId = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 95,
+          "context": "const groupId = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 115,
+          "context": "const groupId = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 0.5999999999999999
     },
     {
       "path": "server/src/domains/admin/sub-domains/xp/xp.validators.ts",
@@ -902,252 +1148,6 @@
       "migrationEffort": 1.7999999999999998
     },
     {
-      "path": "server/src/domains/admin/sub-domains/user-groups/user-groups.validators.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "other",
-      "size": 1453,
-      "lines": 38,
-      "complexity": 1,
-      "dependencies": [
-        "zod"
-      ],
-      "exports": [
-        "UserGroupSchema",
-        "ListGroupUsersQuerySchema",
-        "UserGroupInput",
-        "ListGroupUsersQueryInput"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.19999999999999996
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/user-groups/user-groups.service.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "other",
-      "size": 6470,
-      "lines": 229,
-      "complexity": 4,
-      "dependencies": [
-        "@db",
-        "@schema",
-        "drizzle-orm",
-        "@/db/types"
-      ],
-      "exports": [
-        "AdminUserGroupsService",
-        "adminUserGroupsService"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": [
-          "UserGroupInput",
-          "ListGroupUsersQueryInput"
-        ]
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.8
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/user-groups/user-groups.routes.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "routes",
-      "size": 1215,
-      "lines": 50,
-      "complexity": 0,
-      "dependencies": [
-        "express"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/user-groups/user-groups.controller.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "controllers",
-      "size": 4440,
-      "lines": 135,
-      "complexity": 5,
-      "dependencies": [
-        "express"
-      ],
-      "exports": [
-        "AdminUserGroupsController",
-        "adminUserGroupsController"
-      ],
-      "idPatterns": [
-        {
-          "type": "conversion",
-          "pattern": "parseInt(req.params.id)",
-          "line": 31,
-          "context": "const groupId = parseInt(req.params.id);",
-          "suggestedFix": "remove parseInt, use branded type",
-          "confidence": 0.5
-        },
-        {
-          "type": "conversion",
-          "pattern": "parseInt(req.params.id)",
-          "line": 69,
-          "context": "const groupId = parseInt(req.params.id);",
-          "suggestedFix": "remove parseInt, use branded type",
-          "confidence": 0.5
-        },
-        {
-          "type": "conversion",
-          "pattern": "parseInt(req.params.id)",
-          "line": 95,
-          "context": "const groupId = parseInt(req.params.id);",
-          "suggestedFix": "remove parseInt, use branded type",
-          "confidence": 0.5
-        },
-        {
-          "type": "conversion",
-          "pattern": "parseInt(req.params.id)",
-          "line": 115,
-          "context": "const groupId = parseInt(req.params.id);",
-          "suggestedFix": "remove parseInt, use branded type",
-          "confidence": 0.5
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": false,
-        "hasTypeGuards": true,
-        "hasZodValidation": true,
-        "typeImports": [
-          "Request",
-          "Response"
-        ]
-      },
-      "riskLevel": "high",
-      "migrationEffort": 0.5999999999999999
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/wallet/wallet.validators.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "other",
-      "size": 3208,
-      "lines": 130,
-      "complexity": 2,
-      "dependencies": [
-        "express",
-        "zod"
-      ],
-      "exports": [
-        "validateWalletConfig",
-        "validateDGTTransaction",
-        "validateUserId"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": [
-          "Request",
-          "Response",
-          "NextFunction"
-        ]
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.4
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/wallet/wallet.routes.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "routes",
-      "size": 1135,
-      "lines": 29,
-      "complexity": 0,
-      "dependencies": [
-        "express"
-      ],
-      "exports": [
-        "router as adminWalletRoutes "
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/wallet/wallet.controller.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "controllers",
-      "size": 5933,
-      "lines": 239,
-      "complexity": 4,
-      "dependencies": [
-        "@server/src/core/services/user.service",
-        "express"
-      ],
-      "exports": [
-        "AdminWalletController",
-        "adminWalletController"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "Request",
-          "Response"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.3
-    },
-    {
       "path": "server/src/domains/admin/sub-domains/treasury/treasury.validators.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
@@ -1478,6 +1478,217 @@
       "migrationEffort": 0.1
     },
     {
+      "path": "server/src/domains/admin/sub-domains/ui-config/uiThemes.service.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "other",
+      "size": 2503,
+      "lines": 95,
+      "complexity": 2,
+      "dependencies": [
+        "drizzle-orm",
+        "@schema/admin/uiThemes",
+        "@shared/config/zoneThemes.config"
+      ],
+      "exports": [
+        "UiThemesService",
+        "uiThemesService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.4
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/ui-config/ui-config.validators.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "other",
+      "size": 8220,
+      "lines": 299,
+      "complexity": 1,
+      "dependencies": [
+        "zod"
+      ],
+      "exports": [
+        "PaginationSchema",
+        "QuoteFiltersSchema",
+        "CreateQuoteSchema",
+        "UpdateQuoteSchema",
+        "ReorderQuotesSchema",
+        "CreateCollectionSchema",
+        "UpdateCollectionSchema",
+        "TrackEventSchema",
+        "AnalyticsRequestSchema",
+        "BulkQuoteOperationSchema",
+        "ImportQuotesSchema",
+        "ExportQuotesSchema",
+        "validateQuoteType",
+        "validateCollectionType",
+        "validateEventType",
+        "EnhancedCreateQuoteSchema",
+        "EnhancedCreateCollectionSchema",
+        "EnhancedTrackEventSchema",
+        "CreateQuoteRequest",
+        "UpdateQuoteRequest"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 1.2
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/ui-config/ui-config.types.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "other",
+      "size": 4487,
+      "lines": 185,
+      "complexity": 0,
+      "dependencies": [
+        "@schema"
+      ],
+      "exports": [
+        "PaginationOptions",
+        "QuoteFilters",
+        "QuotesResponse",
+        "CreateQuoteRequest",
+        "UpdateQuoteRequest",
+        "ReorderQuotesRequest",
+        "CreateCollectionRequest",
+        "UpdateCollectionRequest",
+        "QuoteAnalyticsRequest",
+        "QuoteAnalyticsResponse",
+        "BulkQuoteOperation",
+        "ImportQuotesRequest",
+        "ExportQuotesRequest",
+        "UiConfigService",
+        "QuoteDisplayConfig",
+        "QuoteContextConfig"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "UiQuote",
+          "UiCollection",
+          "NewUiQuote",
+          "NewUiCollection"
+        ]
+      },
+      "riskLevel": "low",
+      "migrationEffort": 1
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/ui-config/ui-config.service.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "other",
+      "size": 13674,
+      "lines": 585,
+      "complexity": 9,
+      "dependencies": [
+        "drizzle-orm",
+        "drizzle-orm/node-postgres"
+      ],
+      "exports": [
+        "UiConfigService",
+        "uiConfigService"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": true,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "NodePgDatabase"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2.8
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/ui-config/ui-config.routes.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "routes",
+      "size": 4124,
+      "lines": 172,
+      "complexity": 1,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/ui-config/ui-config.controller.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "controllers",
+      "size": 13054,
+      "lines": 470,
+      "complexity": 10,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express"
+      ],
+      "exports": [
+        "UiConfigController",
+        "uiConfigController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 3
+    },
+    {
       "path": "server/src/domains/admin/sub-domains/social/social.service.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
@@ -1567,238 +1778,6 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 2.1
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/shop/shopCategory.service.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "other",
-      "size": 1643,
-      "lines": 60,
-      "complexity": 2,
-      "dependencies": [
-        "@db",
-        "@schema",
-        "drizzle-orm"
-      ],
-      "exports": [
-        "ShopCategoryService",
-        "shopCategoryService"
-      ],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 34,
-          "context": "async update(id: number, data: Partial<CategoryInput>) {",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        },
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 49,
-          "context": "async delete(id: number) {",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": true,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 3.5999999999999996
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/shop/shopCategory.routes.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "routes",
-      "size": 859,
-      "lines": 42,
-      "complexity": 1,
-      "dependencies": [
-        "express"
-      ],
-      "exports": [],
-      "idPatterns": [
-        {
-          "type": "conversion",
-          "pattern": "parseInt(req.params.id)",
-          "line": 26,
-          "context": "const id = parseInt(req.params.id);",
-          "suggestedFix": "remove parseInt, use branded type",
-          "confidence": 0.5
-        },
-        {
-          "type": "conversion",
-          "pattern": "parseInt(req.params.id)",
-          "line": 35,
-          "context": "const id = parseInt(req.params.id);",
-          "suggestedFix": "remove parseInt, use branded type",
-          "confidence": 0.5
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.9
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/shop/shop.admin.routes.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "routes",
-      "size": 1108,
-      "lines": 29,
-      "complexity": 0,
-      "dependencies": [
-        "express"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/shop/shop.admin.controller.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "controllers",
-      "size": 4632,
-      "lines": 143,
-      "complexity": 4,
-      "dependencies": [
-        "@db",
-        "@schema",
-        "drizzle-orm"
-      ],
-      "exports": [
-        "shopAdminController"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.8
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/shop/rarity.service.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "other",
-      "size": 1349,
-      "lines": 48,
-      "complexity": 2,
-      "dependencies": [
-        "@db",
-        "@schema",
-        "drizzle-orm"
-      ],
-      "exports": [
-        "RarityService",
-        "rarityService"
-      ],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 29,
-          "context": "async update(id: number, data: Partial<RarityInput>) {",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        },
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 40,
-          "context": "async delete(id: number) {",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": true,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 3.5999999999999996
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/shop/rarity.routes.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "routes",
-      "size": 823,
-      "lines": 42,
-      "complexity": 1,
-      "dependencies": [
-        "express"
-      ],
-      "exports": [],
-      "idPatterns": [
-        {
-          "type": "conversion",
-          "pattern": "parseInt(req.params.id)",
-          "line": 26,
-          "context": "const id = parseInt(req.params.id);",
-          "suggestedFix": "remove parseInt, use branded type",
-          "confidence": 0.5
-        },
-        {
-          "type": "conversion",
-          "pattern": "parseInt(req.params.id)",
-          "line": 35,
-          "context": "const id = parseInt(req.params.id);",
-          "suggestedFix": "remove parseInt, use branded type",
-          "confidence": 0.5
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.9
     },
     {
       "path": "server/src/domains/admin/sub-domains/settings/settings.validators.ts",
@@ -2052,82 +2031,101 @@
       "migrationEffort": 1.6
     },
     {
-      "path": "server/src/domains/admin/sub-domains/referrals/referrals.validators.ts",
+      "path": "server/src/domains/admin/sub-domains/shop/shopCategory.service.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
       "layer": "other",
-      "size": 1084,
-      "lines": 38,
-      "complexity": 1,
+      "size": 1643,
+      "lines": 60,
+      "complexity": 2,
       "dependencies": [
-        "zod"
+        "@db",
+        "@schema",
+        "drizzle-orm"
       ],
       "exports": [
-        "createReferralSourceSchema",
-        "recordUserReferralSchema",
-        "CreateReferralSourceInput",
-        "RecordUserReferralInput"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 1.2
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/referrals/referrals.service.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "other",
-      "size": 4329,
-      "lines": 176,
-      "complexity": 3,
-      "dependencies": [
-        "drizzle-orm",
-        "@schema/system/referralSources",
-        "@schema/system/userReferrals",
-        "@schema/user/users"
-      ],
-      "exports": [
-        "ReferralsService",
-        "referralsService"
+        "ShopCategoryService",
+        "shopCategoryService"
       ],
       "idPatterns": [
         {
           "type": "definition",
-          "pattern": "userId: number",
-          "line": 57,
-          "context": "userId: number;",
-          "suggestedFix": "UserId",
-          "confidence": 0.8
+          "pattern": "id: number",
+          "line": 34,
+          "context": "async update(id: number, data: Partial<CategoryInput>) {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 49,
+          "context": "async delete(id: number) {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
         }
       ],
       "typeUsage": {
         "hasAnyTypes": true,
         "hasUnknownTypes": false,
-        "hasBrandedIds": true,
-        "hasNumericIds": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
         "hasTypeGuards": false,
         "hasZodValidation": true,
         "typeImports": []
       },
       "riskLevel": "medium",
-      "migrationEffort": 1.7000000000000002
+      "migrationEffort": 3.5999999999999996
     },
     {
-      "path": "server/src/domains/admin/sub-domains/referrals/referrals.routes.ts",
+      "path": "server/src/domains/admin/sub-domains/shop/shopCategory.routes.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
       "layer": "routes",
-      "size": 1585,
-      "lines": 66,
+      "size": 859,
+      "lines": 42,
+      "complexity": 1,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 26,
+          "context": "const id = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 35,
+          "context": "const id = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/shop/shop.admin.routes.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "routes",
+      "size": 1108,
+      "lines": 29,
       "complexity": 0,
       "dependencies": [
         "express"
@@ -2140,27 +2138,27 @@
         "hasBrandedIds": false,
         "hasNumericIds": false,
         "hasTypeGuards": false,
-        "hasZodValidation": true,
+        "hasZodValidation": false,
         "typeImports": []
       },
       "riskLevel": "medium",
-      "migrationEffort": 0.1
+      "migrationEffort": 0.5
     },
     {
-      "path": "server/src/domains/admin/sub-domains/referrals/referrals.controller.ts",
+      "path": "server/src/domains/admin/sub-domains/shop/shop.admin.controller.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
       "layer": "controllers",
-      "size": 2476,
-      "lines": 114,
-      "complexity": 3,
+      "size": 4632,
+      "lines": 143,
+      "complexity": 4,
       "dependencies": [
-        "@server/src/core/services/user.service",
-        "express"
+        "@db",
+        "@schema",
+        "drizzle-orm"
       ],
       "exports": [
-        "ReferralsController",
-        "referralsController"
+        "shopAdminController"
       ],
       "idPatterns": [],
       "typeUsage": {
@@ -2169,14 +2167,100 @@
         "hasBrandedIds": false,
         "hasNumericIds": false,
         "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": [
-          "Request",
-          "Response"
-        ]
+        "hasZodValidation": true,
+        "typeImports": []
       },
       "riskLevel": "medium",
-      "migrationEffort": 1.1
+      "migrationEffort": 0.8
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/shop/rarity.service.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "other",
+      "size": 1349,
+      "lines": 48,
+      "complexity": 2,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "RarityService",
+        "rarityService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 29,
+          "context": "async update(id: number, data: Partial<RarityInput>) {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 40,
+          "context": "async delete(id: number) {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 3.5999999999999996
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/shop/rarity.routes.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "routes",
+      "size": 823,
+      "lines": 42,
+      "complexity": 1,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 26,
+          "context": "const id = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 35,
+          "context": "const id = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.9
     },
     {
       "path": "server/src/domains/admin/sub-domains/reports/reports.validators.ts",
@@ -2330,32 +2414,61 @@
       "migrationEffort": 0.5
     },
     {
-      "path": "server/src/domains/admin/sub-domains/moderator-notes/moderator-notes.routes.ts",
+      "path": "server/src/domains/admin/sub-domains/referrals/referrals.validators.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
-      "layer": "routes",
-      "size": 3816,
-      "lines": 148,
-      "complexity": 2,
+      "layer": "other",
+      "size": 1084,
+      "lines": 38,
+      "complexity": 1,
       "dependencies": [
-        "@server/src/core/services/user.service",
-        "express",
-        "zod",
-        "@db",
-        "@schema",
-        "drizzle-orm",
-        "@server/src/utils/auth",
-        "@server/src/core/logger"
+        "zod"
       ],
-      "exports": [],
+      "exports": [
+        "createReferralSourceSchema",
+        "recordUserReferralSchema",
+        "CreateReferralSourceInput",
+        "RecordUserReferralInput"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 1.2
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/referrals/referrals.service.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "other",
+      "size": 4329,
+      "lines": 176,
+      "complexity": 3,
+      "dependencies": [
+        "drizzle-orm",
+        "@schema/system/referralSources",
+        "@schema/system/userReferrals",
+        "@schema/user/users"
+      ],
+      "exports": [
+        "ReferralsService",
+        "referralsService"
+      ],
       "idPatterns": [
         {
-          "type": "conversion",
-          "pattern": "parseInt(req.params.id)",
-          "line": 105,
-          "context": "const noteId = parseInt(req.params.id);",
-          "suggestedFix": "remove parseInt, use branded type",
-          "confidence": 0.5
+          "type": "definition",
+          "pattern": "userId: number",
+          "line": 57,
+          "context": "userId: number;",
+          "suggestedFix": "UserId",
+          "confidence": 0.8
         }
       ],
       "typeUsage": {
@@ -2363,12 +2476,69 @@
         "hasUnknownTypes": false,
         "hasBrandedIds": true,
         "hasNumericIds": false,
-        "hasTypeGuards": true,
+        "hasTypeGuards": false,
         "hasZodValidation": true,
         "typeImports": []
       },
       "riskLevel": "medium",
-      "migrationEffort": 0.7
+      "migrationEffort": 1.7000000000000002
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/referrals/referrals.routes.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "routes",
+      "size": 1585,
+      "lines": 66,
+      "complexity": 0,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.1
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/referrals/referrals.controller.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "controllers",
+      "size": 2476,
+      "lines": 114,
+      "complexity": 3,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express"
+      ],
+      "exports": [
+        "ReferralsController",
+        "referralsController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.1
     },
     {
       "path": "server/src/domains/admin/sub-domains/permissions/permissions.service.ts",
@@ -2457,54 +2627,45 @@
       "migrationEffort": 1.9
     },
     {
-      "path": "server/src/domains/admin/sub-domains/forumPrefix/forumPrefix.service.ts",
+      "path": "server/src/domains/admin/sub-domains/moderator-notes/moderator-notes.routes.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
-      "layer": "other",
-      "size": 2347,
-      "lines": 80,
+      "layer": "routes",
+      "size": 3816,
+      "lines": 148,
       "complexity": 2,
       "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "zod",
         "@db",
         "@schema",
         "drizzle-orm",
-        "@/db/types"
+        "@server/src/utils/auth",
+        "@server/src/core/logger"
       ],
-      "exports": [
-        "ForumPrefixService",
-        "forumPrefixService"
-      ],
+      "exports": [],
       "idPatterns": [
         {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 16,
-          "context": "async updatePrefix(id: number, data: UpdatePrefixInput) {",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        },
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 46,
-          "context": "async deletePrefix(id: number) {",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 105,
+          "context": "const noteId = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
         }
       ],
       "typeUsage": {
-        "hasAnyTypes": false,
+        "hasAnyTypes": true,
         "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": true,
+        "hasBrandedIds": true,
+        "hasNumericIds": false,
         "hasTypeGuards": true,
         "hasZodValidation": true,
-        "typeImports": [
-          "CategoryId"
-        ]
+        "typeImports": []
       },
       "riskLevel": "medium",
-      "migrationEffort": 1.8
+      "migrationEffort": 0.7
     },
     {
       "path": "server/src/domains/admin/sub-domains/forum/forum.validators.ts",
@@ -2802,6 +2963,56 @@
       "migrationEffort": 2.1
     },
     {
+      "path": "server/src/domains/admin/sub-domains/forumPrefix/forumPrefix.service.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "other",
+      "size": 2347,
+      "lines": 80,
+      "complexity": 2,
+      "dependencies": [
+        "@db",
+        "@schema",
+        "drizzle-orm",
+        "@/db/types"
+      ],
+      "exports": [
+        "ForumPrefixService",
+        "forumPrefixService"
+      ],
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 16,
+          "context": "async updatePrefix(id: number, data: UpdatePrefixInput) {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 46,
+          "context": "async deletePrefix(id: number) {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": true,
+        "hasTypeGuards": true,
+        "hasZodValidation": true,
+        "typeImports": [
+          "CategoryId"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.8
+    },
+    {
       "path": "server/src/domains/admin/sub-domains/emojis/emojis.validators.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
@@ -2952,6 +3163,67 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 2.4000000000000004
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/economy/economy.routes.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "routes",
+      "size": 391,
+      "lines": 12,
+      "complexity": 0,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/economy/economy.controller.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "controllers",
+      "size": 1788,
+      "lines": 51,
+      "complexity": 2,
+      "dependencies": [
+        "express",
+        "@server/src/utils/economy-loader",
+        "@shared/economy/economy.config",
+        "zod"
+      ],
+      "exports": [
+        "getEconomyConfig",
+        "updateEconomyConfig",
+        "resetEconomyConfig"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 1.4
     },
     {
       "path": "server/src/domains/admin/sub-domains/email-templates/email-templates.service.ts",
@@ -3176,67 +3448,6 @@
       "migrationEffort": 0.9
     },
     {
-      "path": "server/src/domains/admin/sub-domains/economy/economy.routes.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "routes",
-      "size": 391,
-      "lines": 12,
-      "complexity": 0,
-      "dependencies": [
-        "express"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/economy/economy.controller.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "controllers",
-      "size": 1788,
-      "lines": 51,
-      "complexity": 2,
-      "dependencies": [
-        "express",
-        "@server/src/utils/economy-loader",
-        "@shared/economy/economy.config",
-        "zod"
-      ],
-      "exports": [
-        "getEconomyConfig",
-        "updateEconomyConfig",
-        "resetEconomyConfig"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": [
-          "Request",
-          "Response",
-          "NextFunction"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 1.4
-    },
-    {
       "path": "server/src/domains/admin/sub-domains/dev/seeding.routes.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
@@ -3261,6 +3472,164 @@
       },
       "riskLevel": "medium",
       "migrationEffort": 0.7
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/clout/clout.routes.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "routes",
+      "size": 1113,
+      "lines": 24,
+      "complexity": 0,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/clout/clout.controller.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "controllers",
+      "size": 9224,
+      "lines": 316,
+      "complexity": 6,
+      "dependencies": [
+        "express",
+        "@db",
+        "@schema",
+        "drizzle-orm"
+      ],
+      "exports": [
+        "getAllAchievements",
+        "getAchievementById",
+        "createAchievement",
+        "updateAchievement",
+        "deleteAchievement",
+        "toggleAchievement",
+        "grantClout",
+        "getCloutLogs",
+        "adjustClout",
+        "getCloutAdjustmentLogs"
+      ],
+      "idPatterns": [
+        {
+          "type": "conversion",
+          "pattern": "Number(req.params.id)",
+          "line": 24,
+          "context": "const id = Number(req.params.id);",
+          "suggestedFix": "remove Number(), use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "Number(req.params.id)",
+          "line": 74,
+          "context": "const id = Number(req.params.id);",
+          "suggestedFix": "remove Number(), use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "Number(req.params.id)",
+          "line": 95,
+          "context": "const id = Number(req.params.id);",
+          "suggestedFix": "remove Number(), use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "Number(req.params.id)",
+          "line": 105,
+          "context": "const id = Number(req.params.id);",
+          "suggestedFix": "remove Number(), use branded type",
+          "confidence": 0.5
+        }
+      ],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response",
+          "NextFunction"
+        ]
+      },
+      "riskLevel": "high",
+      "migrationEffort": 2.6
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/cache/cache.routes.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "routes",
+      "size": 1255,
+      "lines": 46,
+      "complexity": 0,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/cache/cache.controller.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "controllers",
+      "size": 8154,
+      "lines": 306,
+      "complexity": 5,
+      "dependencies": [
+        "@server/src/core/services/user.service",
+        "express",
+        "zod"
+      ],
+      "exports": [
+        "AdminCacheController"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": true,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": true,
+        "typeImports": [
+          "Request",
+          "Response"
+        ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 2
     },
     {
       "path": "server/src/domains/admin/sub-domains/database/query.service.ts",
@@ -3471,164 +3840,6 @@
       "migrationEffort": 2.2
     },
     {
-      "path": "server/src/domains/admin/sub-domains/clout/clout.routes.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "routes",
-      "size": 1113,
-      "lines": 24,
-      "complexity": 0,
-      "dependencies": [
-        "express"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/clout/clout.controller.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "controllers",
-      "size": 9224,
-      "lines": 316,
-      "complexity": 6,
-      "dependencies": [
-        "express",
-        "@db",
-        "@schema",
-        "drizzle-orm"
-      ],
-      "exports": [
-        "getAllAchievements",
-        "getAchievementById",
-        "createAchievement",
-        "updateAchievement",
-        "deleteAchievement",
-        "toggleAchievement",
-        "grantClout",
-        "getCloutLogs",
-        "adjustClout",
-        "getCloutAdjustmentLogs"
-      ],
-      "idPatterns": [
-        {
-          "type": "conversion",
-          "pattern": "Number(req.params.id)",
-          "line": 24,
-          "context": "const id = Number(req.params.id);",
-          "suggestedFix": "remove Number(), use branded type",
-          "confidence": 0.5
-        },
-        {
-          "type": "conversion",
-          "pattern": "Number(req.params.id)",
-          "line": 74,
-          "context": "const id = Number(req.params.id);",
-          "suggestedFix": "remove Number(), use branded type",
-          "confidence": 0.5
-        },
-        {
-          "type": "conversion",
-          "pattern": "Number(req.params.id)",
-          "line": 95,
-          "context": "const id = Number(req.params.id);",
-          "suggestedFix": "remove Number(), use branded type",
-          "confidence": 0.5
-        },
-        {
-          "type": "conversion",
-          "pattern": "Number(req.params.id)",
-          "line": 105,
-          "context": "const id = Number(req.params.id);",
-          "suggestedFix": "remove Number(), use branded type",
-          "confidence": 0.5
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": [
-          "Request",
-          "Response",
-          "NextFunction"
-        ]
-      },
-      "riskLevel": "high",
-      "migrationEffort": 2.6
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/cache/cache.routes.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "routes",
-      "size": 1255,
-      "lines": 46,
-      "complexity": 0,
-      "dependencies": [
-        "express"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/cache/cache.controller.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "controllers",
-      "size": 8154,
-      "lines": 306,
-      "complexity": 5,
-      "dependencies": [
-        "@server/src/core/services/user.service",
-        "express",
-        "zod"
-      ],
-      "exports": [
-        "AdminCacheController"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": [
-          "Request",
-          "Response"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 2
-    },
-    {
       "path": "server/src/domains/admin/sub-domains/brand-config/brand.service.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
@@ -3712,6 +3923,64 @@
           "Request",
           "Response"
         ]
+      },
+      "riskLevel": "medium",
+      "migrationEffort": 0.7
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/announcements/index.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "other",
+      "size": 471,
+      "lines": 17,
+      "complexity": 0,
+      "dependencies": [],
+      "exports": [
+        "ORIGINAL_ANNOUNCEMENTS_DEPRECATED",
+        "registerAnnouncementRoutes",
+        "publicRouter as publicAnnouncementRoutes",
+        "adminRouter as adminAnnouncementRoutes",
+        "default as createAnnouncementRouter"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
+      },
+      "riskLevel": "low",
+      "migrationEffort": 0.5
+    },
+    {
+      "path": "server/src/domains/admin/sub-domains/announcements/announcements.routes.ts",
+      "domain": "admin",
+      "subdomain": "sub-domains",
+      "layer": "routes",
+      "size": 2081,
+      "lines": 61,
+      "complexity": 1,
+      "dependencies": [
+        "express"
+      ],
+      "exports": [
+        "registerAnnouncementRoutes",
+        "publicRouter",
+        "adminRouter"
+      ],
+      "idPatterns": [],
+      "typeUsage": {
+        "hasAnyTypes": false,
+        "hasUnknownTypes": false,
+        "hasBrandedIds": false,
+        "hasNumericIds": false,
+        "hasTypeGuards": false,
+        "hasZodValidation": false,
+        "typeImports": []
       },
       "riskLevel": "medium",
       "migrationEffort": 0.7
@@ -3973,208 +4242,6 @@
       },
       "riskLevel": "high",
       "migrationEffort": 2
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/announcements/index.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "other",
-      "size": 471,
-      "lines": 17,
-      "complexity": 0,
-      "dependencies": [],
-      "exports": [
-        "ORIGINAL_ANNOUNCEMENTS_DEPRECATED",
-        "registerAnnouncementRoutes",
-        "publicRouter as publicAnnouncementRoutes",
-        "adminRouter as adminAnnouncementRoutes",
-        "default as createAnnouncementRouter"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/announcements/announcements.routes.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "routes",
-      "size": 2081,
-      "lines": 61,
-      "complexity": 1,
-      "dependencies": [
-        "express"
-      ],
-      "exports": [
-        "registerAnnouncementRoutes",
-        "publicRouter",
-        "adminRouter"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.7
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/avatar-frames/avatar-frames.service.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "other",
-      "size": 3094,
-      "lines": 127,
-      "complexity": 4,
-      "dependencies": [
-        "@db",
-        "@schema",
-        "drizzle-orm"
-      ],
-      "exports": [
-        "avatarFrameService"
-      ],
-      "idPatterns": [
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 31,
-          "context": "async getFrameById(id: number) {",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        },
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 61,
-          "context": "async updateFrame(id: number, data: UpdateFrameData) {",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        },
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 81,
-          "context": "async deleteFrame(id: number) {",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        },
-        {
-          "type": "definition",
-          "pattern": "id: number",
-          "line": 111,
-          "context": "async getFrameUsageCount(id: number) {",
-          "suggestedFix": "check entity context for correct branded type",
-          "confidence": 0.3
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": true,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 4.2
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/avatar-frames/avatar-frames.routes.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "routes",
-      "size": 729,
-      "lines": 26,
-      "complexity": 0,
-      "dependencies": [
-        "express"
-      ],
-      "exports": [],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": false,
-        "typeImports": []
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.5
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/avatar-frames/avatar-frames.controller.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "controllers",
-      "size": 4671,
-      "lines": 163,
-      "complexity": 4,
-      "dependencies": [
-        "@server/src/core/services/user.service",
-        "express",
-        "zod"
-      ],
-      "exports": [
-        "avatarFrameController"
-      ],
-      "idPatterns": [
-        {
-          "type": "conversion",
-          "pattern": "parseInt(req.params.id)",
-          "line": 35,
-          "context": "const frameId = parseInt(req.params.id);",
-          "suggestedFix": "remove parseInt, use branded type",
-          "confidence": 0.5
-        },
-        {
-          "type": "conversion",
-          "pattern": "parseInt(req.params.id)",
-          "line": 92,
-          "context": "const frameId = parseInt(req.params.id);",
-          "suggestedFix": "remove parseInt, use branded type",
-          "confidence": 0.5
-        },
-        {
-          "type": "conversion",
-          "pattern": "parseInt(req.params.id)",
-          "line": 132,
-          "context": "const frameId = parseInt(req.params.id);",
-          "suggestedFix": "remove parseInt, use branded type",
-          "confidence": 0.5
-        }
-      ],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": true,
-        "hasZodValidation": true,
-        "typeImports": [
-          "Request",
-          "Response"
-        ]
-      },
-      "riskLevel": "medium",
-      "migrationEffort": 0.3000000000000001
     },
     {
       "path": "server/src/domains/admin/sub-domains/animation-packs/animation-packs.service.ts",
@@ -4543,167 +4610,75 @@
       "migrationEffort": 0.6000000000000001
     },
     {
-      "path": "server/src/domains/admin/sub-domains/ui-config/uiThemes.service.ts",
+      "path": "server/src/domains/admin/sub-domains/avatar-frames/avatar-frames.service.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
       "layer": "other",
-      "size": 2503,
-      "lines": 95,
-      "complexity": 2,
+      "size": 3094,
+      "lines": 127,
+      "complexity": 4,
       "dependencies": [
-        "drizzle-orm",
-        "@schema/admin/uiThemes",
-        "@shared/config/zoneThemes.config"
+        "@db",
+        "@schema",
+        "drizzle-orm"
       ],
       "exports": [
-        "UiThemesService",
-        "uiThemesService"
+        "avatarFrameService"
       ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": false,
-        "hasUnknownTypes": true,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 0.4
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/ui-config/ui-config.validators.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "other",
-      "size": 8220,
-      "lines": 299,
-      "complexity": 1,
-      "dependencies": [
-        "zod"
+      "idPatterns": [
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 31,
+          "context": "async getFrameById(id: number) {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 61,
+          "context": "async updateFrame(id: number, data: UpdateFrameData) {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 81,
+          "context": "async deleteFrame(id: number) {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        },
+        {
+          "type": "definition",
+          "pattern": "id: number",
+          "line": 111,
+          "context": "async getFrameUsageCount(id: number) {",
+          "suggestedFix": "check entity context for correct branded type",
+          "confidence": 0.3
+        }
       ],
-      "exports": [
-        "PaginationSchema",
-        "QuoteFiltersSchema",
-        "CreateQuoteSchema",
-        "UpdateQuoteSchema",
-        "ReorderQuotesSchema",
-        "CreateCollectionSchema",
-        "UpdateCollectionSchema",
-        "TrackEventSchema",
-        "AnalyticsRequestSchema",
-        "BulkQuoteOperationSchema",
-        "ImportQuotesSchema",
-        "ExportQuotesSchema",
-        "validateQuoteType",
-        "validateCollectionType",
-        "validateEventType",
-        "EnhancedCreateQuoteSchema",
-        "EnhancedCreateCollectionSchema",
-        "EnhancedTrackEventSchema",
-        "CreateQuoteRequest",
-        "UpdateQuoteRequest"
-      ],
-      "idPatterns": [],
       "typeUsage": {
         "hasAnyTypes": true,
         "hasUnknownTypes": false,
         "hasBrandedIds": false,
-        "hasNumericIds": false,
+        "hasNumericIds": true,
         "hasTypeGuards": false,
         "hasZodValidation": true,
         "typeImports": []
-      },
-      "riskLevel": "low",
-      "migrationEffort": 1.2
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/ui-config/ui-config.types.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "other",
-      "size": 4487,
-      "lines": 185,
-      "complexity": 0,
-      "dependencies": [
-        "@schema"
-      ],
-      "exports": [
-        "PaginationOptions",
-        "QuoteFilters",
-        "QuotesResponse",
-        "CreateQuoteRequest",
-        "UpdateQuoteRequest",
-        "ReorderQuotesRequest",
-        "CreateCollectionRequest",
-        "UpdateCollectionRequest",
-        "QuoteAnalyticsRequest",
-        "QuoteAnalyticsResponse",
-        "BulkQuoteOperation",
-        "ImportQuotesRequest",
-        "ExportQuotesRequest",
-        "UiConfigService",
-        "QuoteDisplayConfig",
-        "QuoteContextConfig"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": false,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": [
-          "UiQuote",
-          "UiCollection",
-          "NewUiQuote",
-          "NewUiCollection"
-        ]
-      },
-      "riskLevel": "low",
-      "migrationEffort": 1
-    },
-    {
-      "path": "server/src/domains/admin/sub-domains/ui-config/ui-config.service.ts",
-      "domain": "admin",
-      "subdomain": "sub-domains",
-      "layer": "other",
-      "size": 13674,
-      "lines": 585,
-      "complexity": 9,
-      "dependencies": [
-        "drizzle-orm",
-        "drizzle-orm/node-postgres"
-      ],
-      "exports": [
-        "UiConfigService",
-        "uiConfigService"
-      ],
-      "idPatterns": [],
-      "typeUsage": {
-        "hasAnyTypes": true,
-        "hasUnknownTypes": true,
-        "hasBrandedIds": false,
-        "hasNumericIds": false,
-        "hasTypeGuards": false,
-        "hasZodValidation": true,
-        "typeImports": [
-          "NodePgDatabase"
-        ]
       },
       "riskLevel": "medium",
-      "migrationEffort": 2.8
+      "migrationEffort": 4.2
     },
     {
-      "path": "server/src/domains/admin/sub-domains/ui-config/ui-config.routes.ts",
+      "path": "server/src/domains/admin/sub-domains/avatar-frames/avatar-frames.routes.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
       "layer": "routes",
-      "size": 4124,
-      "lines": 172,
-      "complexity": 1,
+      "size": 729,
+      "lines": 26,
+      "complexity": 0,
       "dependencies": [
         "express"
       ],
@@ -4719,39 +4694,64 @@
         "typeImports": []
       },
       "riskLevel": "medium",
-      "migrationEffort": 0.7
+      "migrationEffort": 0.5
     },
     {
-      "path": "server/src/domains/admin/sub-domains/ui-config/ui-config.controller.ts",
+      "path": "server/src/domains/admin/sub-domains/avatar-frames/avatar-frames.controller.ts",
       "domain": "admin",
       "subdomain": "sub-domains",
       "layer": "controllers",
-      "size": 13054,
-      "lines": 470,
-      "complexity": 10,
+      "size": 4671,
+      "lines": 163,
+      "complexity": 4,
       "dependencies": [
         "@server/src/core/services/user.service",
-        "express"
+        "express",
+        "zod"
       ],
       "exports": [
-        "UiConfigController",
-        "uiConfigController"
+        "avatarFrameController"
       ],
-      "idPatterns": [],
+      "idPatterns": [
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 35,
+          "context": "const frameId = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 92,
+          "context": "const frameId = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        },
+        {
+          "type": "conversion",
+          "pattern": "parseInt(req.params.id)",
+          "line": 132,
+          "context": "const frameId = parseInt(req.params.id);",
+          "suggestedFix": "remove parseInt, use branded type",
+          "confidence": 0.5
+        }
+      ],
       "typeUsage": {
-        "hasAnyTypes": true,
+        "hasAnyTypes": false,
         "hasUnknownTypes": false,
-        "hasBrandedIds": true,
+        "hasBrandedIds": false,
         "hasNumericIds": false,
-        "hasTypeGuards": false,
+        "hasTypeGuards": true,
         "hasZodValidation": true,
         "typeImports": [
           "Request",
           "Response"
         ]
       },
-      "riskLevel": "high",
-      "migrationEffort": 3
+      "riskLevel": "medium",
+      "migrationEffort": 0.3000000000000001
     },
     {
       "path": "server/src/domains/admin/sub-domains/airdrop/airdrop.service.ts",
@@ -5382,7 +5382,7 @@
   ],
   "totalIssues": 86,
   "avgComplexity": 3.0476190476190474,
-  "migrationEffort": 194.49999999999994,
+  "migrationEffort": 194.4999999999999,
   "dependencies": [
     "@db",
     "@schema",
@@ -5395,6 +5395,8 @@
     "@server/src/middleware/validate",
     "@shared/utils/id",
     "@lib/auth/canUser.ts",
+    "@schema/admin/uiThemes",
+    "@shared/config/zoneThemes.config",
     "@shared/config/social.config",
     "@schema/system/referralSources",
     "@schema/system/userReferrals",
@@ -5406,9 +5408,7 @@
     "@schema/admin/brandConfig",
     "@server/src/domains/admin/shared/admin-cache.service",
     "@server/src/domains/admin/shared",
-    "@server/src/domains/admin/admin.errors",
-    "@schema/admin/uiThemes",
-    "@shared/config/zoneThemes.config"
+    "@server/src/domains/admin/admin.errors"
   ],
   "dependents": [
     "moderation",
