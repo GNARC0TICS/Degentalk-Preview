@@ -63,6 +63,13 @@
 		"@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "^[A-Z][A-Za-z0-9]+$" }],
 		"degen/no-raw-container-auto": "warn",
 		"degen/no-direct-req-user": "error",
-		"@typescript-eslint/ban-types": "warn"
+		"@typescript-eslint/ban-types": "warn",
+		"react-hooks/rules-of-hooks": "warn",
+		"no-useless-catch": "warn",
+		"no-useless-escape": "warn",
+		"no-mixed-spaces-and-tabs": "warn",
+		"no-case-declarations": "warn",
+		"no-empty-pattern": "warn",
+		"no-prototype-builtins": "warn"
 	}
 }

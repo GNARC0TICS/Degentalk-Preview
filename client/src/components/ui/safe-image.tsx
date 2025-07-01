@@ -13,7 +13,6 @@ export const SafeImage = ({
 	const [imgSrc, setImgSrc] = useState(src);
 
 	return (
-		// eslint-disable-next-line @next/next/no-img-element
 		<img {...props} src={imgSrc} alt={alt} onError={() => setImgSrc(fallbackSrc)} />
 	);
 };
