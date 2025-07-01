@@ -1,12 +1,12 @@
 # Numeric ID Migration Report
 
-Generated: 2025-07-01T23:26:46.758Z
+Generated: 2025-07-01T23:50:05.341Z
 
 ## Summary
 - **Total Files**: 1931
-- **Total Issues**: 775
-- **Critical**: 723
-- **High**: 52  
+- **Total Issues**: 739
+- **Critical**: 691
+- **High**: 48  
 - **Medium**: 0
 
 ## Migration Batches (Priority Order)
@@ -45,15 +45,15 @@ Top issues:
 
 ### client-components (Priority 4)
 - Files: 414
-- Issues: 92
+- Issues: 81
 - Status: ⚠️ Needs migration
 
 Top issues:
 - `client/src/components/users/UserAvatar.tsx:10` - id: number → check entity context for correct branded type
 - `client/src/components/users/ActiveMembersWidget.tsx:19` - id: number → check entity context for correct branded type
-- `client/src/components/ui/smart-thread-filters.tsx:67` - id: number → check entity context for correct branded type
-- `client/src/components/ui/smart-thread-filters.tsx:68` - id: number → check entity context for correct branded type
-- `client/src/components/ui/reactions-bar.tsx:21` - postId: number → PostId
+- `client/src/components/social/WhaleWatchDashboard.tsx:43` - id: number → check entity context for correct branded type
+- `client/src/components/social/FriendsManager.tsx:55` - id: number → check entity context for correct branded type
+- `client/src/components/social/FriendsManager.tsx:66` - id: number → check entity context for correct branded type
 
 ### client-pages (Priority 5)
 - Files: 113
@@ -69,15 +69,15 @@ Top issues:
 
 ### client-other (Priority 6)
 - Files: 771
-- Issues: 321
+- Issues: 298
 - Status: ⚠️ Needs migration
 
 Top issues:
-- `client/src/types/profile.ts:27` - id: number → check entity context for correct branded type
-- `client/src/types/profile.ts:34` - id: number → check entity context for correct branded type
-- `client/src/types/profile.ts:42` - id: number → check entity context for correct branded type
-- `client/src/types/profile.ts:49` - id: number → check entity context for correct branded type
-- `client/src/types/profile.ts:56` - id: number → check entity context for correct branded type
+- `client/src/pages/leaderboard.tsx:23` - id: number → check entity context for correct branded type
+- `client/src/pages/forum-rules.tsx:27` - id: number → check entity context for correct branded type
+- `client/src/pages/forum-rules.tsx:48` - id: number → check entity context for correct branded type
+- `client/src/pages/forum-rules.tsx:49` - userId: number → UserId
+- `client/src/pages/degen-index.tsx:15` - id: number → check entity context for correct branded type
 
 ### server-types (Priority 7)
 - Files: 0
@@ -118,15 +118,15 @@ Top issues:
 
 ### server-other (Priority 12)
 - Files: 384
-- Issues: 224
+- Issues: 222
 - Status: ⚠️ Needs migration
 
 Top issues:
 - `server/src/middleware/mission-progress.ts:55` - userId: number → UserId
 - `server/src/middleware/authenticate.ts:12` - id: number → check entity context for correct branded type
 - `server/src/domains/xp/xp.service.ts:431` - userId: number → UserId
-- `server/src/domains/subscriptions/subscription.service.ts:29` - id: number → check entity context for correct branded type
-- `server/src/domains/shoutbox/shoutbox.routes.ts:36` - userId: number → UserId
+- `server/src/domains/social/mentions.types.ts:4` - id: number → check entity context for correct branded type
+- `server/src/domains/social/mentions.types.ts:20` - id: number → check entity context for correct branded type
 
 ### database (Priority 13)
 - Files: 156

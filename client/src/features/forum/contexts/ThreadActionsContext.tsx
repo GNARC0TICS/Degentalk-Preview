@@ -4,6 +4,7 @@ import { useTip } from '@/hooks/use-tip';
 import { useCreatePost } from '@/features/forum/hooks/useForumQueries';
 import { useBookmarkThread, useRemoveBookmark } from '@/features/forum/hooks/useForumQueries';
 import type { ThreadDisplay } from '@/types/thread.types';
+import type { UserId, ThreadId } from '@degentalk/shared/types/core';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface ThreadActionsContextValue {
@@ -35,16 +36,14 @@ export const ThreadActionsProvider: React.FC<{
 		(...args: [string, number] | [number]) => {
 			const amount = args.length === 1 ? args[0] : args[1];
 			if (typeof amount !== 'number') return;
-			const authorId = Number(thread.user.id);
-			if (Number.isNaN(authorId)) return;
+			const authorId = thread.user.id as UserId;
 			sendTip({ toUserId: authorId, amount, reason: 'thread_tip', source: 'forum_thread' });
 		},
 		[sendTip, thread.user.id]
 	);
 
 	const toggleBookmark = useCallback(() => {
-		const threadId = Number(thread.id);
-		if (Number.isNaN(threadId)) return;
+		const threadId = thread.id as ThreadId;
 
 		setIsBookmarked((prev) => {
 			const next = !prev;
@@ -86,18 +85,18 @@ export const ThreadActionsProvider: React.FC<{
 
 	const quickReply = useCallback(
 		(content: string) => {
-			const threadIdNum = Number(thread.id);
-			if (!content.trim() || Number.isNaN(threadIdNum)) return;
+			const threadId = thread.id as ThreadId;
+			if (!content.trim()) return;
 
 			createPost.mutate(
-				{ threadId: threadIdNum, content },
+				{ threadId, content },
 				{
 					onSuccess: (newPost) => {
 						// Invalidate the thread + posts queries so UI refreshes
 						queryClient.invalidateQueries({
-							queryKey: [`/api/forum/threads/${threadIdNum}/posts`]
+							queryKey: [`/api/forum/threads/${threadId}/posts`]
 						});
-						queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${threadIdNum}`] });
+						queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${threadId}`] });
 
 						// Scroll to the new post element if present
 						setTimeout(() => {

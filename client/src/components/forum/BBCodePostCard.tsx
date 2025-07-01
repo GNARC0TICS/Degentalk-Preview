@@ -6,6 +6,7 @@ import { UnifiedProfileCard } from '@/components/profile/UnifiedProfileCard';
 import { brandConfig } from '@/config/brand.config';
 import { cn } from '@/lib/utils';
 import type { PostWithUser } from '@/types/compat/forum';
+import type { PostId } from '@db/types';
 
 interface BBCodePostCardProps {
 	post: PostWithUser;
@@ -18,17 +19,17 @@ interface BBCodePostCardProps {
 	canMarkSolution?: boolean;
 	tippingEnabled?: boolean;
 	showSignatures?: boolean;
-	onLike?: (id: number, hasLiked: boolean) => void;
-	onReply?: (id: number) => void;
-	onQuote?: (id: number) => void;
-	onEdit?: (id: number) => void;
-	onDelete?: (id: number) => void;
-	onMarkSolution?: (id: number) => void;
-	onTip?: (id: number) => void;
-	onReport?: (id: number) => void;
-	onBookmark?: (id: number) => void;
-	onShare?: (id: number) => void;
-	onCopyLink?: (id: number) => void;
+	onLike?: (id: PostId, hasLiked: boolean) => void;
+	onReply?: (id: PostId) => void;
+	onQuote?: (id: PostId) => void;
+	onEdit?: (id: PostId) => void;
+	onDelete?: (id: PostId) => void;
+	onMarkSolution?: (id: PostId) => void;
+	onTip?: (id: PostId) => void;
+	onReport?: (id: PostId) => void;
+	onBookmark?: (id: PostId) => void;
+	onShare?: (id: PostId) => void;
+	onCopyLink?: (id: PostId) => void;
 	className?: string;
 }
 

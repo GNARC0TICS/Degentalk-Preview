@@ -251,7 +251,14 @@ export function createPermissionChecker<T extends (...args: any[]) => Promise<bo
 			}
 
 			// Extract entity ID from params
-			const entityId = parseInt(req.params.id || req.params.postId || req.params.threadId);
+			const rawId = req.params.id || req.params.postId || req.params.threadId;
+			if (!rawId || typeof rawId !== 'string') {
+				return res.status(400).json({ 
+					success: false, 
+					error: 'Invalid ID format' 
+				});
+			}
+			const entityId = rawId; // Keep as string for branded type system
 
 			const hasPermission = await permissionFn(user, entityId);
 

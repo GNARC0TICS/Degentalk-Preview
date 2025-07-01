@@ -66,8 +66,8 @@ router.get(
 	'/:id',
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const ruleId = Number(req.params.id);
-			if (isNaN(ruleId)) {
+			const ruleId = req.params.id;
+			if (!ruleId || typeof ruleId !== 'string') {
 				return res.status(400).json({ error: 'Invalid rule ID' });
 			}
 

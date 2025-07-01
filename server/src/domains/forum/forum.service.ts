@@ -13,6 +13,7 @@ import type {
 	ForumStructureWithStats,
 	ThreadWithPostsAndUser
 } from '../../../db/types/forum.types';
+import type { ForumId } from '@db/types';
 
 // Import specialized services
 import { forumStructureService } from './services/structure.service';
@@ -158,7 +159,7 @@ export const forumService = {
 	/**
 	 * Get forum by ID from structure
 	 */
-	async getForumById(id: number): Promise<ForumStructureWithStats | null> {
+	async getForumById(id: ForumId): Promise<ForumStructureWithStats | null> {
 		const { zones } = await this.getForumStructure();
 		for (const zone of zones) {
 			for (const parentForum of zone.childForums || []) {

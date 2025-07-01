@@ -18,6 +18,7 @@ import {
 	MoreHorizontal
 } from 'lucide-react';
 import type { PostWithUser } from '@/types/compat/forum';
+import type { PostId } from '@db/types';
 import { SolveBadge } from '@/components/forum/SolveBadge';
 import { SignatureRenderer } from '@/components/forum/SignatureRenderer';
 import { useAuth } from '@/hooks/use-auth';
@@ -39,12 +40,12 @@ interface PostCardProps {
 	isEditable?: boolean;
 	isThreadSolved?: boolean;
 	isSolution?: boolean;
-	onLike?: (id: number, hasLiked: boolean) => void;
-	onReply?: (id: number) => void;
-	onEdit?: (id: number) => void;
-	onDelete?: (id: number) => void;
-	onMarkAsSolution?: (id: number) => void;
-	onReport?: (id: number) => void; // New prop
+	onLike?: (id: PostId, hasLiked: boolean) => void;
+	onReply?: (id: PostId) => void;
+	onEdit?: (id: PostId) => void;
+	onDelete?: (id: PostId) => void;
+	onMarkAsSolution?: (id: PostId) => void;
+	onReport?: (id: PostId) => void; // New prop
 	isFirst?: boolean;
 	parentForumTheme?: string | null;
 	tippingEnabled?: boolean;

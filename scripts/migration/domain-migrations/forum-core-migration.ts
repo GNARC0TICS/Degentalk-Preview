@@ -385,7 +385,8 @@ async function main() {
     console.log('Make sure you have committed all changes and have backups.');
     
     // Simple confirmation
-    const readline = require('readline').createInterface({
+    const { createInterface } = await import('readline');
+    const readline = createInterface({
       input: process.stdin,
       output: process.stdout
     });

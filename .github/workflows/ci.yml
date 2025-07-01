@@ -31,5 +31,8 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Numeric-ID Guard
+        run: pnpm migration:check-ids
+
       - name: Test
         run: pnpm test -- --run

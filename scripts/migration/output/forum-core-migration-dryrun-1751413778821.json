@@ -1,0 +1,786 @@
+{
+  "timestamp": "2025-07-01T23:49:38.820Z",
+  "domain": "forum-core",
+  "mode": "dry-run",
+  "summary": {
+    "filesAnalyzed": 26,
+    "totalChanges": 88,
+    "highConfidence": 86,
+    "manualReview": 2,
+    "errors": 0
+  },
+  "results": [
+    {
+      "file": "client/src/components/forum/zone-group.tsx",
+      "changes": [
+        {
+          "line": 50,
+          "original": "\n\tid: number;",
+          "replacement": "\n\tid: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        },
+        {
+          "line": 58,
+          "original": "\n\t\tid: number;",
+          "replacement": "\n\t\tid: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        },
+        {
+          "line": 72,
+          "original": "\n\tid: number;",
+          "replacement": "\n\tid: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/components/forum/forum-card.tsx",
+      "changes": [
+        {
+          "line": 8,
+          "original": "\n\tid: number;",
+          "replacement": "\n\tid: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        },
+        {
+          "line": 17,
+          "original": "\n\t\tid: number;",
+          "replacement": "\n\t\tid: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/components/forum/category-card.tsx",
+      "changes": [
+        {
+          "line": 17,
+          "original": "\n\tid: number;",
+          "replacement": "\n\tid: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/components/forum/ThreadFilters.tsx",
+      "changes": [
+        {
+          "line": 57,
+          "original": " id: number;",
+          "replacement": " id: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/components/forum/ShareButton.tsx",
+      "changes": [
+        {
+          "line": 5,
+          "original": "\n\tthreadId: number ",
+          "replacement": "\n\tthreadId: ThreadId ",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/components/forum/RecentActivity.tsx",
+      "changes": [
+        {
+          "line": 8,
+          "original": "\n\tid: number;",
+          "replacement": "\n\tid: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        },
+        {
+          "line": 12,
+          "original": "\n\t\tid: number;",
+          "replacement": "\n\t\tid: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/components/forum/ReactionBar.tsx",
+      "changes": [
+        {
+          "line": 28,
+          "original": "\n\tpostId: number;",
+          "replacement": "\n\tpostId: PostId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 41,
+          "original": "postId: number,",
+          "replacement": "postId: PostId,",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 42,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 43,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 44,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 45,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 46,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 47,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 48,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 49,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 50,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 51,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/components/forum/HotTopics.tsx",
+      "changes": [
+        {
+          "line": 8,
+          "original": "\n\tid: number;",
+          "replacement": "\n\tid: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/components/forum/BBCodePostCard.tsx",
+      "changes": [
+        {
+          "line": 31,
+          "original": "id: number",
+          "replacement": "id: ThreadId",
+          "confidence": 0.9,
+          "type": "id_definition"
+        },
+        {
+          "line": 32,
+          "original": "id: number",
+          "replacement": "id: ThreadId",
+          "confidence": 0.9,
+          "type": "id_definition"
+        },
+        {
+          "line": 31,
+          "original": "(id: number)",
+          "replacement": "(id: ThreadId)",
+          "confidence": 0.8,
+          "type": "id_usage"
+        },
+        {
+          "line": 32,
+          "original": "(id: number)",
+          "replacement": "(id: ThreadId)",
+          "confidence": 0.8,
+          "type": "id_usage"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/QuickReplyBox.tsx",
+      "changes": [
+        {
+          "line": 9,
+          "original": "\n\tthreadId: number;",
+          "replacement": "\n\tthreadId: ThreadId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostHeader.tsx",
+      "changes": [
+        {
+          "line": 9,
+          "original": "\n\tpostId: number;",
+          "replacement": "\n\tpostId: PostId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/components/forum/bbcode/PostActions.tsx",
+      "changes": [
+        {
+          "line": 29,
+          "original": "\n\tpostId: number;",
+          "replacement": "\n\tpostId: PostId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 41,
+          "original": "postId: number,",
+          "replacement": "postId: PostId,",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 42,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 43,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 44,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 45,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 46,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 47,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 48,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 49,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 50,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 51,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/features/forum/services/forumApi.ts",
+      "changes": [
+        {
+          "line": 155,
+          "original": "\n\t\tthreadId: number,",
+          "replacement": "\n\t\tthreadId: ThreadId,",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 174,
+          "original": "threadId: number",
+          "replacement": "threadId: ThreadId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 185,
+          "original": "threadId: number,",
+          "replacement": "threadId: ThreadId,",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 194,
+          "original": "threadId: number",
+          "replacement": "threadId: ThreadId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 213,
+          "original": "threadId: number,",
+          "replacement": "threadId: ThreadId,",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 222,
+          "original": "threadId: number,",
+          "replacement": "threadId: ThreadId,",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 250,
+          "original": "\n\t\tthreadId: number,",
+          "replacement": "\n\t\tthreadId: ThreadId,",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 303,
+          "original": "\n\t\tpostId: number,",
+          "replacement": "\n\t\tpostId: PostId,",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 324,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 335,
+          "original": "\n\t\tpostId: number,",
+          "replacement": "\n\t\tpostId: PostId,",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 347,
+          "original": "\n\t\tpostId: number,",
+          "replacement": "\n\t\tpostId: PostId,",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumStats.ts",
+      "changes": [
+        {
+          "line": 29,
+          "original": "\n\tid: number;",
+          "replacement": "\n\tid: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumQueries.ts",
+      "changes": [
+        {
+          "line": 135,
+          "original": "threadId: number ",
+          "replacement": "threadId: ThreadId ",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 173,
+          "original": " threadId: number;",
+          "replacement": " threadId: ThreadId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 188,
+          "original": "threadId: number",
+          "replacement": "threadId: ThreadId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 201,
+          "original": "\n\tthreadId: number ",
+          "replacement": "\n\tthreadId: ThreadId ",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 355,
+          "original": " threadId: number;",
+          "replacement": " threadId: ThreadId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 368,
+          "original": " threadId: number;",
+          "replacement": " threadId: ThreadId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 229,
+          "original": "postId: number ",
+          "replacement": "postId: PostId ",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 263,
+          "original": " postId: number;",
+          "replacement": " postId: PostId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 277,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 285,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 293,
+          "original": " postId: number;",
+          "replacement": " postId: PostId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 418,
+          "original": "\n\t\t\tpostId: number;",
+          "replacement": "\n\t\t\tpostId: PostId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/features/forum/hooks/useForumMutations.ts",
+      "changes": [
+        {
+          "line": 35,
+          "original": "\n\t\t\tthreadId: number;",
+          "replacement": "\n\t\t\tthreadId: ThreadId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 91,
+          "original": "\n\t\t\tuserId: number;",
+          "replacement": "\n\t\t\tuserId: UserId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 132,
+          "original": "\n\t\t\tuserId: number;",
+          "replacement": "\n\t\t\tuserId: UserId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/features/forum/components/ThreadList.tsx",
+      "changes": [
+        {
+          "line": 19,
+          "original": " id: number;",
+          "replacement": " id: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/features/forum/components/ReplyForm.tsx",
+      "changes": [
+        {
+          "line": 15,
+          "original": "\n\tthreadId: number;",
+          "replacement": "\n\tthreadId: ThreadId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/features/forum/components/ReactionTray.tsx",
+      "changes": [
+        {
+          "line": 5,
+          "original": "\n\tpostId: number;",
+          "replacement": "\n\tpostId: PostId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/features/forum/components/LikeButton.tsx",
+      "changes": [
+        {
+          "line": 5,
+          "original": "\n\tpostId: number;",
+          "replacement": "\n\tpostId: PostId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/features/forum/components/HotThreads.tsx",
+      "changes": [
+        {
+          "line": 15,
+          "original": "id: number;",
+          "replacement": "id: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        },
+        {
+          "line": 23,
+          "original": "id: number;",
+          "replacement": "id: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/features/forum/components/CreateThreadForm.tsx",
+      "changes": [
+        {
+          "line": 55,
+          "original": "\n\tid: number;",
+          "replacement": "\n\tid: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/features/forum/components/CreatePostForm.tsx",
+      "changes": [
+        {
+          "line": 24,
+          "original": "\n\tthreadId: number;",
+          "replacement": "\n\tthreadId: ThreadId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/pages/forum-rules.tsx",
+      "changes": [
+        {
+          "line": 26,
+          "original": "\n\tid: number;",
+          "replacement": "\n\tid: ForumId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        },
+        {
+          "line": 47,
+          "original": "\n\tid: number;",
+          "replacement": "\n\tid: ForumId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        },
+        {
+          "line": 48,
+          "original": "\n\tuserId: number;",
+          "replacement": "\n\tuserId: UserId;",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "client/src/pages/threads/BBCodeThreadPage.tsx",
+      "changes": [
+        {
+          "line": 200,
+          "original": "postId: number,",
+          "replacement": "postId: PostId,",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 204,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 209,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 214,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 218,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 222,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 226,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        },
+        {
+          "line": 230,
+          "original": "postId: number",
+          "replacement": "postId: PostId",
+          "confidence": 0.95,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    },
+    {
+      "file": "db/types/forum.types.ts",
+      "changes": [
+        {
+          "line": 49,
+          "original": "\n\tid: number;",
+          "replacement": "\n\tid: ThreadId;",
+          "confidence": 0.9,
+          "type": "id_definition"
+        }
+      ],
+      "status": "success"
+    }
+  ]
+}

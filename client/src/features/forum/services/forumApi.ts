@@ -14,7 +14,7 @@ import type {
 	ThreadWithPostsAndUser
 } from '@/types/compat/forum';
 import type { ApiErrorData } from '@/types/core.types';
-import type { ReportId, ForumId, TagId, ContentId, PrefixId } from '@db/types';
+import type { ReportId, ForumId, TagId, ContentId, PrefixId, ThreadId, PostId } from '@db/types';
 
 export interface ThreadSearchParams {
 	structureId?: number;
@@ -287,9 +287,9 @@ export const forumApi = {
 	},
 
 	createPost: async (data: {
-		threadId: number;
+		threadId: ThreadId;
 		content: string;
-		replyToPostId?: number;
+		replyToPostId?: PostId;
 		editorState?: Record<string, unknown>;
 	}): Promise<PostWithUser> => {
 		const directResult = await apiRequest<PostWithUser>({
@@ -373,7 +373,7 @@ export const forumApi = {
 	/**
 	 * Bookmarks
 	 */
-	bookmarkThread: async (threadId: number): Promise<{ success: true }> => {
+	bookmarkThread: async (threadId: ThreadId): Promise<{ success: true }> => {
 		const directResult = await apiRequest<{ success: true }>({
 			url: '/api/forum/bookmarks',
 			method: 'POST',
@@ -382,7 +382,7 @@ export const forumApi = {
 		return directResult;
 	},
 
-	removeBookmark: async (threadId: number): Promise<{ success: true }> => {
+	removeBookmark: async (threadId: ThreadId): Promise<{ success: true }> => {
 		const directResult = await apiRequest<{ success: true }>({
 			url: `/api/forum/bookmarks/${threadId}`,
 			method: 'DELETE'
