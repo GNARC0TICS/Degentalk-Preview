@@ -34,6 +34,9 @@ importers:
       dotenv-cli:
         specifier: ^8.0.0
         version: 8.0.0
+      drizzle-kit:
+        specifier: 0.31.4
+        version: 0.31.4
       eslint:
         specifier: ^8.57.0
         version: 8.57.1

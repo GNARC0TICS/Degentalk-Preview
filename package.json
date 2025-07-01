@@ -72,7 +72,8 @@
 		"utility-types": "^3.10.0",
 		"minimist": "^1.2.8",
 		"ts-node": "^10.9.2",
-		"ts-morph": "^26.0.0"
+		"ts-morph": "^26.0.0",
+		"drizzle-kit": "^0.31.4"
 	},
 	"simple-git-hooks": {
 		"pre-commit": "pnpm format && git add -A"
