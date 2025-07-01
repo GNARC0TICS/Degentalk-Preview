@@ -1,3 +1,5 @@
+import type { UserId } from '@db/types/id.types';
+
 /**
  * Shared Configuration Types
  *
@@ -23,7 +25,7 @@ export interface FeatureGate extends BaseConfig {
 export interface ModuleConfig extends BaseConfig {
 	module: string;
 	dependencies?: string[];
-	settings: Record<string, any>;
+	settings: Record<string, unknown>;
 }
 
 export interface ApiConfig extends BaseConfig {
@@ -175,9 +177,9 @@ export interface SocialConfig extends BaseConfig {
 
 // Configuration validation helpers
 export interface ConfigValidation<T> {
-	schema: any; // Zod schema
+	schema: unknown; // Zod schema - should be typed by specific implementations
 	validate: (config: T) => boolean;
-	migrate?: (oldConfig: any) => T;
+	migrate?: (oldConfig: unknown) => T;
 }
 
 // Configuration storage interface
@@ -199,10 +201,10 @@ export interface EnvironmentConfig {
 // Configuration change tracking
 export interface ConfigChange<T> {
 	timestamp: Date;
-	userId?: number;
+	userId?: UserId;
 	field: keyof T;
-	oldValue: any;
-	newValue: any;
+	oldValue: unknown;
+	newValue: unknown;
 	reason?: string;
 }
 

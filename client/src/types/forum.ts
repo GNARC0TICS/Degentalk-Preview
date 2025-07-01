@@ -1,10 +1,10 @@
 import type { ThreadPrefix, ForumTag as ThreadTag } from '@/types/compat/forum';
-import type { GroupId } from '@db/types';
+import type { GroupId, UserId, ThreadId, ForumId } from '@db/types';
 
 // Local fallback interfaces to avoid cross-boundary imports
 // These are intentionally minimal and should be replaced with canonical types once the backend API stabilises.
 export interface ForumUserLite {
-	id: number;
+	id: UserId;
 	username: string;
 	avatarUrl?: string | null;
 	activeAvatarUrl?: string | null;
@@ -12,14 +12,14 @@ export interface ForumUserLite {
 }
 
 export interface ForumCategoryLite {
-	id: number;
+	id: ForumId;
 	name: string;
 	slug: string;
 }
 
 // Based on ThreadWithUserAndCategory and observed usage
 export interface ThreadCardPropsData {
-	id: number;
+	id: ThreadId;
 	title: string;
 	slug: string;
 	isSticky?: boolean;
@@ -36,7 +36,7 @@ export interface ThreadCardPropsData {
 	prefix?: Partial<ThreadPrefix> & { name: string; color?: string | null };
 	hotScore?: number;
 	isSolved?: boolean;
-	solvingPostId?: number | null;
+	solvingPostId?: string | null;
 	firstPostLikeCount?: number; // from ApiThread
 	// Fields that might be needed from other contexts (e.g. ApiThread in tags/[tagSlug].tsx)
 	preview?: string | null;
@@ -58,7 +58,7 @@ export interface ThreadCardComponentProps {
 
 // Re-exporting Tag type if it's commonly used with ThreadCard or related components
 export interface Tag {
-	id: number;
+	id: string;
 	name: string;
 	slug: string;
 	description?: string | null;

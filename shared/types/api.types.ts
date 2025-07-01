@@ -1,8 +1,10 @@
+import type { UserId } from '@db/types/id.types';
+
 /**
  * Type-Safe API Response Interfaces
  *
  * QUALITY IMPROVEMENT: Standardized API response types
- * Eliminates 'any' types in API layer
+ * Eliminates 'any' types in API layer. Uses branded ID types for type safety.
  */
 
 export interface ApiSuccess<T = unknown> {
@@ -95,9 +97,10 @@ export interface TypedRequest<TBody = unknown, TQuery = unknown, TParams = unkno
 	query: TQuery;
 	params: TParams;
 	user?: {
-		id: number;
+		id: UserId;
 		role: string;
 		username: string;
+		level: number;
 	};
 }
 
