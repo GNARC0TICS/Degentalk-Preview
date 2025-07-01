@@ -10,7 +10,7 @@ import { users, roles, posts, threads, userBans, userGroups } from '@schema';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { AdminPaginationQuery } from '@shared/validators/admin';
 import { z } from 'zod';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import type { UserId } from '@/db/types';
 
 export class AdminUsersService {

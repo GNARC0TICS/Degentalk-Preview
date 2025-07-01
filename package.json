@@ -46,6 +46,7 @@
 		"seed:forums:only": "pnpm --filter @degentalk/scripts seed:forums:only",
 		"sync:forums": "pnpm --filter @degentalk/scripts sync:forums",
 		"validate": "pnpm --filter @degentalk/scripts validate",
+		"validate:uuid": "tsx scripts/validation/validate-uuid-migration.ts",
 		"audit:uuid": "tsx scripts/migration/generate-uuid-audit.ts",
 		"generate:id-aliases": "tsx scripts/migration/generate-id-aliases.ts",
 		"codemod:plan": "tsx scripts/codemods/generate-id-codemod-plan.ts",
