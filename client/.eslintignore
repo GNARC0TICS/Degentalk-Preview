@@ -1,1 +1,26 @@
-vite.config.ts 
+# ESLint ignore for client workspace
+node_modules/
+dist/
+build/
+.turbo/
+*.config.js
+*.config.ts
+!eslint.config.js
+!eslint.config.ts
+
+# Generated files
+*.d.ts
+*.js.map
+*.d.ts.map
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE files
+.vscode/
+.idea/
+
+# Test artifacts
+coverage/
+test-results/
