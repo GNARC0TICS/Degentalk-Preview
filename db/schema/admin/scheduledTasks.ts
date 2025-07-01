@@ -1,4 +1,13 @@
-import { pgTable, serial, varchar, text, boolean, timestamp, jsonb, uuid } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	varchar,
+	text,
+	boolean,
+	timestamp,
+	jsonb,
+	uuid
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const scheduledTasks = pgTable('scheduled_tasks', {

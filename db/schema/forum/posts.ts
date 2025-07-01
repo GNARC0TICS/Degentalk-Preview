@@ -23,14 +23,14 @@ export const posts = pgTable(
 		id: uuid('id').primaryKey().defaultRandom(),
 		uuid: uuid('uuid').notNull().defaultRandom(),
 		threadId: uuid('thread_id')
-            			.notNull()
-            			.references(() => threads.id, { onDelete: 'cascade' }),
+			.notNull()
+			.references(() => threads.id, { onDelete: 'cascade' }),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		replyToPostId: uuid('reply_to_post_id').references((): AnyPgColumn => posts.id, {
-            			onDelete: 'set null'
-            		}),
+			onDelete: 'set null'
+		}),
 		content: text('content').notNull(),
 		editorState: jsonb('editor_state'),
 		likeCount: integer('like_count').notNull().default(0),

@@ -8,7 +8,9 @@ import {
 	integer,
 	boolean,
 	timestamp,
-	index, uuid } from 'drizzle-orm/pg-core';
+	index,
+	uuid
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';

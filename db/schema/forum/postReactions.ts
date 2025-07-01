@@ -11,8 +11,8 @@ export const postReactions = pgTable(
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		postId: uuid('post_id') // Kept as integer
-            			.notNull()
-            			.references(() => posts.id, { onDelete: 'cascade' }),
+			.notNull()
+			.references(() => posts.id, { onDelete: 'cascade' }),
 		reactionType: reactionTypeEnum('reaction_type').notNull(),
 		createdAt: timestamp('created_at')
 			.notNull()

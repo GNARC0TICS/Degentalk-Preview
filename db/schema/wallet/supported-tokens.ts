@@ -6,7 +6,9 @@ import {
 	decimal,
 	boolean,
 	timestamp,
-	index, uuid } from 'drizzle-orm/pg-core';
+	index,
+	uuid
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 /**

@@ -7,8 +7,8 @@ export const messageReads = pgTable(
 	'message_reads',
 	{
 		messageId: uuid('message_id')
-            			.notNull()
-            			.references(() => messages.id, { onDelete: 'cascade' }),
+			.notNull()
+			.references(() => messages.id, { onDelete: 'cascade' }),
 		userId: uuid('user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

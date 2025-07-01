@@ -8,8 +8,8 @@ export const postLikes = pgTable(
 	{
 		id: uuid('id').primaryKey().defaultRandom(),
 		postId: uuid('post_id')
-            			.notNull()
-            			.references(() => posts.id, { onDelete: 'cascade' }),
+			.notNull()
+			.references(() => posts.id, { onDelete: 'cascade' }),
 		likedByUserId: uuid('liked_by_user_id')
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),

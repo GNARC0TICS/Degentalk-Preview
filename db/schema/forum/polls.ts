@@ -6,8 +6,8 @@ export const polls = pgTable('polls', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	uuid: uuid('uuid').notNull().defaultRandom(),
 	threadId: uuid('thread_id')
-        		.notNull()
-        		.references(() => threads.id, { onDelete: 'cascade' }),
+		.notNull()
+		.references(() => threads.id, { onDelete: 'cascade' }),
 	question: text('question').notNull(),
 	allowsMultipleChoices: boolean('allows_multiple_choices').notNull().default(false),
 	expiresAt: timestamp('expires_at'),

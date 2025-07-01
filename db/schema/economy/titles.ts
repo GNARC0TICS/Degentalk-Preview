@@ -7,7 +7,9 @@ import {
 	integer,
 	jsonb,
 	boolean,
-	doublePrecision, uuid } from 'drizzle-orm/pg-core';
+	doublePrecision,
+	uuid
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 

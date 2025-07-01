@@ -118,8 +118,8 @@ export const users = pgTable(
 		pluginData: jsonb('plugin_data').default('{}'),
 		statusLine: text('status_line'),
 		pinnedPostId: uuid('pinned_post_id').references((): AnyPgColumn => posts.id as AnyPgColumn, {
-            			onDelete: 'set null'
-            		}),
+			onDelete: 'set null'
+		}),
 		// Optional future enhancements
 		// profileThemeId: integer('profile_theme_id').references(() => uiThemes.id, { onDelete: 'set null' }),
 		// resumeSlug: text('resume_slug'),

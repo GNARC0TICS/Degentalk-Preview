@@ -7,8 +7,8 @@ import { createInsertSchema } from 'drizzle-zod';
 export const postTips = pgTable('post_tips', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	postId: uuid('post_id')
-        		.notNull()
-        		.references(() => posts.id, { onDelete: 'cascade' }),
+		.notNull()
+		.references(() => posts.id, { onDelete: 'cascade' }),
 	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),

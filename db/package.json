@@ -11,18 +11,18 @@
 		"./types/*": "./types/*.ts"
 	},
 	"scripts": {
-		"generate": "drizzle-kit generate",
-		"migrate": "npx dotenv-cli -e ../env.local -- drizzle-kit generate",
-		"migrate:apply": "npx dotenv-cli -e ../env.local -- drizzle-kit push",
-		"push": "npx dotenv-cli -e ../env.local -- drizzle-kit push",
-		"drop": "drizzle-kit drop",
-		"studio": "drizzle-kit studio",
-		"introspect": "npx dotenv-cli -e ../env.local -- drizzle-kit pull"
+		"generate": "npx dotenv-cli -e ../env.development.local -- drizzle-kit generate --config ../drizzle.config.ts",
+		"migrate": "npx dotenv-cli -e ../env.development.local -- drizzle-kit generate --config ../drizzle.config.ts",
+		"migrate:apply": "npx dotenv-cli -e ../env.development.local -- drizzle-kit push --config ../drizzle.config.ts",
+		"push": "npx dotenv-cli -e ../env.development.local -- drizzle-kit push --config ../drizzle.config.ts",
+		"drop": "drizzle-kit drop --config ../drizzle.config.ts",
+		"studio": "drizzle-kit studio --config ../drizzle.config.ts",
+		"introspect": "npx dotenv-cli -e ../env.development.local -- drizzle-kit pull --config ../drizzle.config.ts"
 	},
 	"dependencies": {
 		"@degentalk/shared": "workspace:*",
 		"@neondatabase/serverless": "^0.10.4",
-		"drizzle-orm": "^0.43.1",
+		"drizzle-orm": "^0.31.4",
 		"drizzle-zod": "^0.7.0",
 		"pg": "^8.11.0",
 		"ws": "^8.16.0",

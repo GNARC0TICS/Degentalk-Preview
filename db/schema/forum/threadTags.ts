@@ -6,8 +6,8 @@ export const threadTags = pgTable(
 	'thread_tags',
 	{
 		threadId: uuid('thread_id')
-            			.notNull()
-            			.references(() => threads.id, { onDelete: 'cascade' }),
+			.notNull()
+			.references(() => threads.id, { onDelete: 'cascade' }),
 		tagId: integer('tag_id')
 			.notNull()
 			.references(() => tags.id, { onDelete: 'cascade' })
