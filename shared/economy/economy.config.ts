@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { ForumId } from '@/db/types';
 
 /*
  * Centralised XP / DGT economy configuration.
@@ -173,7 +174,7 @@ export function sanitizeMultiplier(
 	forumMultiplier: number,
 	contextInfo?: {
 		userId?: number;
-		forumId?: number;
+		forumId?: ForumId;
 		action?: string;
 	}
 ): {

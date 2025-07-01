@@ -10,13 +10,14 @@ import { chatRooms, users, shoutboxConfig, shoutboxMessages, shoutboxUserIgnores
 import { eq, and, or, desc, asc, sql, gt, lt, isNull, inArray, not, count } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
 import { createId } from '@paralleldrive/cuid2';
+import type { RoomId, GroupId } from '@/db/types';
 
 export interface CreateRoomData {
 	name: string;
 	description?: string;
 	isPrivate?: boolean;
 	minXpRequired?: number;
-	minGroupIdRequired?: number;
+	minGroupIdRequired?: GroupId;
 	order?: number;
 	createdBy: number;
 	accessRoles?: string[];
@@ -30,7 +31,7 @@ export interface RoomWithStats {
 	description: string | null;
 	isPrivate: boolean;
 	minXpRequired: number | null;
-	minGroupIdRequired: number | null;
+	minGroupIdRequired: GroupId | null;
 	order: number | null;
 	createdAt: Date;
 	createdBy: number;
@@ -143,7 +144,7 @@ export class RoomService {
 	 * Update an existing chat room
 	 */
 	static async updateRoom(
-		roomId: number,
+		roomId: RoomId,
 		updateData: Partial<CreateRoomData>,
 		updatedBy: number
 	): Promise<{
@@ -251,7 +252,7 @@ export class RoomService {
 	 * Delete a chat room (soft delete)
 	 */
 	static async deleteRoom(
-		roomId: number,
+		roomId: RoomId,
 		deletedBy: number
 	): Promise<{
 		success: boolean;
@@ -412,7 +413,7 @@ export class RoomService {
 	/**
 	 * Get statistics for a specific room
 	 */
-	static async getRoomStats(roomId: number): Promise<{
+	static async getRoomStats(roomId: RoomId): Promise<{
 		messageCount: number;
 		activeUsers: number;
 		onlineUsers: number;
@@ -488,7 +489,7 @@ export class RoomService {
 	 */
 	static async checkRoomAccess(
 		userId: number,
-		roomId: number
+		roomId: RoomId
 	): Promise<{
 		hasAccess: boolean;
 		reason?: string;
@@ -551,7 +552,7 @@ export class RoomService {
 	/**
 	 * Get user's ignored users for a room
 	 */
-	static async getUserIgnoreList(userId: number, roomId?: number): Promise<number[]> {
+	static async getUserIgnoreList(userId: number, roomId?: RoomId): Promise<number[]> {
 		try {
 			const ignoreList = await db
 				.select({
@@ -580,7 +581,7 @@ export class RoomService {
 	static async ignoreUser(
 		userId: number,
 		ignoredUserId: number,
-		roomId?: number,
+		roomId?: RoomId,
 		options?: {
 			hideMessages?: boolean;
 			hideCommands?: boolean;
@@ -626,7 +627,7 @@ export class RoomService {
 	static async unignoreUser(
 		userId: number,
 		ignoredUserId: number,
-		roomId?: number
+		roomId?: RoomId
 	): Promise<{ success: boolean; message: string }> {
 		try {
 			const result = await db
@@ -656,7 +657,7 @@ export class RoomService {
 	/**
 	 * Create room-specific configuration
 	 */
-	private static async createRoomConfig(roomId: number, roomData: CreateRoomData): Promise<void> {
+	private static async createRoomConfig(roomId: RoomId, roomData: CreateRoomData): Promise<void> {
 		try {
 			await db.insert(shoutboxConfig).values({
 				scope: 'room',
@@ -674,7 +675,7 @@ export class RoomService {
 	 * Update room-specific configuration
 	 */
 	private static async updateRoomConfig(
-		roomId: number,
+		roomId: RoomId,
 		updateData: Partial<CreateRoomData>
 	): Promise<void> {
 		try {
@@ -706,7 +707,7 @@ export class RoomService {
 	/**
 	 * Clear room cache
 	 */
-	private static clearRoomCache(roomId?: number): void {
+	private static clearRoomCache(roomId?: RoomId): void {
 		if (roomId) {
 			this.cache.delete(`room:${roomId}`);
 			this.cache.delete(`room-stats:${roomId}`);
@@ -723,7 +724,7 @@ export class RoomService {
 	/**
 	 * Reorder rooms
 	 */
-	static async reorderRooms(roomOrders: { roomId: number; order: number }[]): Promise<{
+	static async reorderRooms(roomOrders: { roomId: RoomId; order: number }[]): Promise<{
 		success: boolean;
 		message: string;
 	}> {

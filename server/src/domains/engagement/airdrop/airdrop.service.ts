@@ -13,12 +13,13 @@ import { logger } from '../../../core/logger';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../../core/errors';
 import { dgtService } from '../../wallet/dgt.service';
 import { v4 as uuidv4 } from 'uuid';
+import type { AdminUserId, AirdropId, ActionId } from '@/db/types';
 
 /**
  * Airdrop options structure
  */
 export interface AirdropOptions {
-	adminUserId: number;
+	adminUserId: AdminUserId;
 	amount: number;
 	currency: string;
 	title?: string;
@@ -34,12 +35,12 @@ export interface AirdropOptions {
 export interface AirdropResult {
 	id: number;
 	title: string;
-	adminUserId: number;
+	adminUserId: AdminUserId;
 	amount: number;
 	perUserAmount: number;
 	currency: string;
 	recipientCount: number;
-	transactionId: number;
+	transactionId: ActionId;
 	status: string;
 	createdAt: Date;
 }
@@ -260,11 +261,11 @@ export class AirdropService {
 	 * Process DGT airdrop by distributing to recipient users
 	 */
 	private async processDGTAirdrop(
-		adminUserId: number,
+		adminUserId: AdminUserId,
 		perUserAmount: number,
 		recipientIds: number[],
-		transactionId: number,
-		airdropId: number,
+		transactionId: ActionId,
+		airdropId: AirdropId,
 		title: string
 	): Promise<void> {
 		// Process airdrop for each recipient individually
@@ -411,7 +412,7 @@ export class AirdropService {
 	/**
 	 * Get airdrop details with recipients
 	 */
-	async getAirdropDetails(airdropId: number): Promise<any> {
+	async getAirdropDetails(airdropId: AirdropId): Promise<any> {
 		try {
 			const [airdrop] = await db
 				.select()

@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { forumApi } from '../services/forumApi';
 import { apiPost } from '@/lib/api-request';
 import type { PostWithUser } from '@/types/compat/forum';
+import type { EntityId, ContentId } from '@/db/types';
 
 // Utility for standardized error handling
 const createErrorHandler = (action: string) => (error: unknown) => {
@@ -61,7 +62,7 @@ export const useReportContent = () => {
 	return useMutation({
 		mutationFn: (data: {
 			contentType: 'post' | 'thread' | 'message';
-			contentId: number;
+			contentId: ContentId;
 			reason: string;
 			details?: string;
 		}) => forumApi.reportPost(data),
@@ -90,7 +91,7 @@ export const useAwardForumXP = () => {
 		}: {
 			userId: number;
 			action: 'create_thread' | 'create_post';
-			entityId: number;
+			entityId: EntityId;
 			forumSlug?: string;
 		}) => {
 			return apiPost<{ xpAwarded: number }>('/api/xp/award-action', {
@@ -132,7 +133,7 @@ export const useAwardForumDGT = () => {
 			userId: number;
 			amount: number;
 			reason: string;
-			entityId: number;
+			entityId: EntityId;
 			context: 'create_thread' | 'create_post';
 			forumSlug?: string;
 		}) => {

@@ -66,13 +66,14 @@ import { z } from 'zod';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { apiRequest } from '@/lib/queryClient';
+import type { ContentId } from '@/db/types';
 
 // Types for reports
 interface ReportedContent {
 	id: number;
 	reporterId: string;
 	contentType: 'post' | 'thread' | 'message' | 'user';
-	contentId: number;
+	contentId: ContentId;
 	reason: string;
 	details?: string;
 	status: 'pending' | 'resolved' | 'dismissed';
@@ -224,7 +225,7 @@ export default function ReportsPage() {
 
 	// Delete content mutation
 	const deleteContentMutation = useMutation({
-		mutationFn: async (data: { contentType: string; contentId: number; reason: string }) => {
+		mutationFn: async (data: { contentType: string; contentId: ContentId; reason: string }) => {
 			return apiRequest({
 				url: `/api/admin/reports/content/${data.contentType}/${data.contentId}`,
 				method: 'DELETE',

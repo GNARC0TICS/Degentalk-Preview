@@ -13,6 +13,7 @@ import { CCPaymentService } from './ccpayment.service';
 import { UserManagementService } from './user-management.service';
 import { walletConfigService } from './wallet-config.service';
 import { dgtService } from './dgt.service';
+import type { CoinId, ActionId } from '@/db/types';
 
 /**
  * High-level Wallet Service
@@ -37,7 +38,7 @@ export class WalletService {
 			lastTransactionAt: Date | null;
 		};
 		crypto: Array<{
-			coinId: number;
+			coinId: CoinId;
 			coinSymbol: string;
 			chain: string;
 			balance: string;
@@ -109,7 +110,7 @@ export class WalletService {
 	 */
 	async getUserDepositAddresses(userId: string): Promise<
 		Array<{
-			coinId: number;
+			coinId: CoinId;
 			coinSymbol: string;
 			chain: string;
 			address: string;
@@ -140,7 +141,7 @@ export class WalletService {
 	async withdrawToBlockchain(
 		userId: string,
 		params: {
-			coinId: number;
+			coinId: CoinId;
 			amount: string;
 			toAddress: string;
 			memo?: string;
@@ -193,7 +194,7 @@ export class WalletService {
 		fromUserId: string,
 		params: {
 			toUserId: string;
-			coinId: number;
+			coinId: CoinId;
 			amount: string;
 			note?: string;
 		}
@@ -243,8 +244,8 @@ export class WalletService {
 	async swapCrypto(
 		userId: string,
 		params: {
-			fromCoinId: number;
-			toCoinId: number;
+			fromCoinId: CoinId;
+			toCoinId: CoinId;
 			fromAmount: string;
 		}
 	): Promise<string> {
@@ -377,7 +378,7 @@ export class WalletService {
 			note?: string;
 		}
 	): Promise<{
-		transactionId: number;
+		transactionId: ActionId;
 		fromBalance: number;
 		toBalance: number;
 		transferId: string;
@@ -465,7 +466,7 @@ export class WalletService {
 	 */
 	async getSupportedCryptocurrencies(): Promise<
 		Array<{
-			coinId: number;
+			coinId: CoinId;
 			coinSymbol: string;
 			coinName: string;
 			chain: string;

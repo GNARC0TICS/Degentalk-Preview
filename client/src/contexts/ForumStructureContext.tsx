@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { forumMap } from '@/config/forumMap.config';
 import type { Zone } from '@/config/forumMap.config';
+import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@/db/types';
 
 // ===========================================================
 // ForumStructureContext v2.0  🛠️  (2025-06-16)
@@ -132,7 +133,7 @@ const ForumStructureApiResponseSchema = z.object({
 export type ApiEntity = z.infer<typeof ApiEntitySchema>;
 export type PluginData = z.infer<typeof PluginDataSchema>;
 export type ForumStructureApiResponse = z.infer<typeof ForumStructureApiResponseSchema>;
-export type ForumId = string | number;
+export type ForumId = string | ForumId;
 
 export interface MergedTheme {
 	icon?: string | null;
@@ -157,7 +158,7 @@ export interface MergedForum {
 	description?: string | null;
 	type: 'forum';
 	parentId?: number | null;
-	parentZoneId?: number | null;
+	parentZoneId?: ParentZoneId | null;
 	isSubforum: boolean;
 	subforums: MergedForum[];
 	isVip: boolean;
@@ -169,7 +170,7 @@ export interface MergedForum {
 	rules: MergedRules;
 	threadCount: number;
 	postCount: number;
-	parentCategoryId?: number | null;
+	parentCategoryId?: CategoryId | null;
 	canHaveThreads?: boolean;
 	isPopular?: boolean;
 	lastActivityAt?: string | undefined;
@@ -244,7 +245,7 @@ function buildTheme(entity: ApiEntity): MergedTheme {
 	};
 }
 
-function makeMergedForum(api: ApiEntity, parentZoneId: number): MergedForum {
+function makeMergedForum(api: ApiEntity, parentZoneId: ParentZoneId): MergedForum {
 	return {
 		id: api.id as ForumId,
 		slug: api.slug,

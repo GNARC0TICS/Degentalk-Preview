@@ -27,6 +27,7 @@ import {
 	DropdownMenuContent,
 	DropdownMenuCheckboxItem
 } from '@/components/ui/dropdown-menu';
+import type { OrderId } from '@/db/types';
 
 // Types
 /**
@@ -48,7 +49,7 @@ export interface XpLogMetadata {
 	referrerId?: string;
 	referredUserId?: string;
 	productId?: number;
-	orderId?: number;
+	orderId?: OrderId;
 	adminId?: string;
 	[key: string]: string | number | boolean | undefined;
 }

@@ -21,6 +21,7 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { Link } from 'wouter';
 import { cn } from '@/lib/utils';
+import type { MentionId } from '@/db/types';
 
 interface MentionNotification {
 	id: number;
@@ -149,7 +150,7 @@ export function MentionsNotifications({
 		}
 	};
 
-	const toggleMentionSelection = (mentionId: number) => {
+	const toggleMentionSelection = (mentionId: MentionId) => {
 		setSelectedMentions((prev) =>
 			prev.includes(mentionId) ? prev.filter((id) => id !== mentionId) : [...prev, mentionId]
 		);

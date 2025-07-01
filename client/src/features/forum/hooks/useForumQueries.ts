@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import type { Tag } from '@/types/forum';
 import type { ThreadPrefix } from '@/types/compat/forum';
 import { useEffect } from 'react';
+import type { ForumId, TagId, ContentId, PrefixId } from '@/db/types';
 
 // Utility for common cache invalidation patterns
 const invalidatePostQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
@@ -99,7 +100,7 @@ export interface CreateThreadParams {
 	content: string;
 	structureId: number;
 	forumSlug?: string; // Optional, not used by API but handy for cache keys / XP logic
-	prefixId?: number;
+	prefixId?: PrefixId;
 	tags?: string[];
 	editorState?: Record<string, unknown>;
 	// Add any other parameters the API expects for thread creation
@@ -351,7 +352,7 @@ export const useTags = () => {
 
 export const useAddTagToThread = () => {
 	const queryClient = useQueryClient();
-	return useMutation<Tag, Error, { threadId: number; tagId: number }>({
+	return useMutation<Tag, Error, { threadId: number; tagId: TagId }>({
 		mutationFn: ({ threadId, tagId }) => forumApi.addTagToThread(threadId, tagId),
 		onSuccess: (data, variables) => {
 			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${variables.threadId}`] });
@@ -364,7 +365,7 @@ export const useAddTagToThread = () => {
 
 export const useRemoveTagFromThread = () => {
 	const queryClient = useQueryClient();
-	return useMutation<void, Error, { threadId: number; tagId: number }>({
+	return useMutation<void, Error, { threadId: number; tagId: TagId }>({
 		mutationFn: ({ threadId, tagId }) => forumApi.removeTagFromThread(threadId, tagId),
 		onSuccess: (_, variables) => {
 			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${variables.threadId}`] });
@@ -380,7 +381,7 @@ export const useRemoveTagFromThread = () => {
 // ------------ Prefix Hooks ------------
 
 // Primary unified hook
-export const usePrefixes = (params?: { forumId?: number }) => {
+export const usePrefixes = (params?: { forumId?: ForumId }) => {
 	const queryClient = useQueryClient();
 	const forumId = params?.forumId;
 
@@ -438,7 +439,7 @@ export const useReportPost = () => {
 	return useMutation({
 		mutationFn: (data: {
 			contentType: 'post' | 'thread' | 'message';
-			contentId: number;
+			contentId: ContentId;
 			reason: string;
 			details?: string;
 		}) => forumApi.reportPost(data),

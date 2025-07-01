@@ -52,12 +52,13 @@ import {
 import { toast } from 'sonner';
 import { apiRequest } from '@/lib/queryClient';
 import type { ApiErrorData } from '@/types/core.types';
+import type { ReportId, ContentId } from '@/db/types';
 
 // Types
 interface Report {
 	id: number;
 	contentType: 'thread' | 'post' | 'user' | 'message';
-	contentId: number;
+	contentId: ContentId;
 	reporterId: string;
 	reason: string;
 	description?: string;
@@ -145,7 +146,7 @@ const reportsApi = {
 		});
 	},
 
-	async banUser(userId: string, data: { duration: string; reason: string; reportId: number }) {
+	async banUser(userId: string, data: { duration: string; reason: string; reportId: ReportId }) {
 		return apiRequest<{ message: string }>({
 			url: `/api/admin/reports/users/${userId}/ban`,
 			method: 'POST',
@@ -153,7 +154,7 @@ const reportsApi = {
 		});
 	},
 
-	async deleteContent(contentType: string, contentId: number, reason: string) {
+	async deleteContent(contentType: string, contentId: ContentId, reason: string) {
 		return apiRequest<{ message: string }>({
 			url: `/api/admin/reports/content/${contentType}/${contentId}`,
 			method: 'DELETE',
@@ -228,7 +229,7 @@ export default function ReportsManagementPage() {
 			reason
 		}: {
 			contentType: string;
-			contentId: number;
+			contentId: ContentId;
 			reason: string;
 		}) => reportsApi.deleteContent(contentType, contentId, reason),
 		onSuccess: () => {
@@ -314,7 +315,7 @@ export default function ReportsManagementPage() {
 		return date.toLocaleDateString();
 	};
 
-	const handleQuickAction = (reportId: number, action: string) => {
+	const handleQuickAction = (reportId: ReportId, action: string) => {
 		switch (action) {
 			case 'resolve':
 				resolveReportMutation.mutate({ id: reportId, data: { action: 'resolve' } });

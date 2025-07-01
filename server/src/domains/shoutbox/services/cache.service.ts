@@ -11,6 +11,7 @@
 
 import { logger } from '@server/src/core/logger';
 import { createHash } from 'crypto';
+import type { RoomId, MessageId } from '@/db/types';
 
 interface CacheItem<T> {
 	data: T;
@@ -21,7 +22,7 @@ interface CacheItem<T> {
 interface MessageCacheEntry {
 	id: number;
 	userId: number | null;
-	roomId: number;
+	roomId: RoomId;
 	content: string;
 	createdAt: Date;
 	isPinned: boolean;
@@ -67,7 +68,7 @@ export class ShoutboxCacheService {
 	/**
 	 * Message caching with LRU eviction
 	 */
-	static async cacheMessages(roomId: number, messages: MessageCacheEntry[]): Promise<void> {
+	static async cacheMessages(roomId: RoomId, messages: MessageCacheEntry[]): Promise<void> {
 		const key = `messages:${roomId}`;
 		const version = this.generateVersion();
 
@@ -80,7 +81,7 @@ export class ShoutboxCacheService {
 		logger.debug('ShoutboxCacheService', 'Cached messages', { roomId, count: messages.length });
 	}
 
-	static getCachedMessages(roomId: number): MessageCacheEntry[] | null {
+	static getCachedMessages(roomId: RoomId): MessageCacheEntry[] | null {
 		const key = `messages:${roomId}`;
 		const cached = this.getCache<MessageCacheEntry[]>(key);
 
@@ -94,7 +95,7 @@ export class ShoutboxCacheService {
 		return cached;
 	}
 
-	static invalidateMessages(roomId: number, messageId?: number): void {
+	static invalidateMessages(roomId: RoomId, messageId?: MessageId): void {
 		const key = `messages:${roomId}`;
 
 		if (messageId) {
@@ -175,7 +176,7 @@ export class ShoutboxCacheService {
 	/**
 	 * Room configuration caching
 	 */
-	static cacheRoomConfig(roomId: number, config: any): void {
+	static cacheRoomConfig(roomId: RoomId, config: any): void {
 		const key = `room_config:${roomId}`;
 		const version = this.generateVersion();
 
@@ -183,12 +184,12 @@ export class ShoutboxCacheService {
 		logger.debug('ShoutboxCacheService', 'Cached room config', { roomId });
 	}
 
-	static getCachedRoomConfig(roomId: number): any | null {
+	static getCachedRoomConfig(roomId: RoomId): any | null {
 		const key = `room_config:${roomId}`;
 		return this.getCache(key);
 	}
 
-	static invalidateRoomConfig(roomId?: number): void {
+	static invalidateRoomConfig(roomId?: RoomId): void {
 		if (roomId) {
 			const key = `room_config:${roomId}`;
 			this.deleteCache(key);
@@ -212,12 +213,12 @@ export class ShoutboxCacheService {
 		logger.debug('ShoutboxCacheService', 'Cached room data', { roomId: room.id });
 	}
 
-	static getCachedRoom(roomId: number): RoomCache | null {
+	static getCachedRoom(roomId: RoomId): RoomCache | null {
 		const key = `room:${roomId}`;
 		return this.getCache<RoomCache>(key);
 	}
 
-	static addUserToRoom(roomId: number, userId: number): void {
+	static addUserToRoom(roomId: RoomId, userId: number): void {
 		const key = `room:${roomId}`;
 		const cached = this.getCache<RoomCache>(key);
 
@@ -228,7 +229,7 @@ export class ShoutboxCacheService {
 		}
 	}
 
-	static removeUserFromRoom(roomId: number, userId: number): void {
+	static removeUserFromRoom(roomId: RoomId, userId: number): void {
 		const key = `room:${roomId}`;
 		const cached = this.getCache<RoomCache>(key);
 
@@ -242,7 +243,7 @@ export class ShoutboxCacheService {
 	/**
 	 * Typing indicators
 	 */
-	static setTypingIndicator(roomId: number, userId: number, username: string): void {
+	static setTypingIndicator(roomId: RoomId, userId: number, username: string): void {
 		const key = `typing:${roomId}`;
 		const cached =
 			this.getCache<Map<number, { username: string; timestamp: number }>>(key) || new Map();
@@ -255,7 +256,7 @@ export class ShoutboxCacheService {
 		this.cleanupTypingIndicators(roomId);
 	}
 
-	static removeTypingIndicator(roomId: number, userId: number): void {
+	static removeTypingIndicator(roomId: RoomId, userId: number): void {
 		const key = `typing:${roomId}`;
 		const cached = this.getCache<Map<number, { username: string; timestamp: number }>>(key);
 
@@ -266,7 +267,7 @@ export class ShoutboxCacheService {
 		}
 	}
 
-	static getTypingIndicators(roomId: number): string[] {
+	static getTypingIndicators(roomId: RoomId): string[] {
 		const key = `typing:${roomId}`;
 		const cached = this.getCache<Map<number, { username: string; timestamp: number }>>(key);
 
@@ -279,7 +280,7 @@ export class ShoutboxCacheService {
 		return Array.from(cached.values()).map((t) => t.username);
 	}
 
-	private static cleanupTypingIndicators(roomId: number): void {
+	private static cleanupTypingIndicators(roomId: RoomId): void {
 		const key = `typing:${roomId}`;
 		const cached = this.getCache<Map<number, { username: string; timestamp: number }>>(key);
 

@@ -20,6 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth.tsx';
 import { apiRequest } from '@/lib/queryClient';
 import { LoadingSpinner as Spinner } from '@/components/ui/loader';
+import type { RuleId } from '@/db/types';
 
 // Type definitions
 interface ForumRule {
@@ -46,7 +47,7 @@ interface ForumRulesResponse {
 interface UserRuleAgreement {
 	id: number;
 	userId: number;
-	ruleId: number;
+	ruleId: RuleId;
 	versionHash: string;
 	agreedAt: string;
 }
@@ -138,7 +139,7 @@ const ForumRules: React.FC = () => {
 	}, [rules, agreedRules]);
 
 	// Handle checkbox change
-	const handleRuleAgreementChange = (ruleId: number, checked: boolean) => {
+	const handleRuleAgreementChange = (ruleId: RuleId, checked: boolean) => {
 		setAgreedRules((prev) => ({
 			...prev,
 			[ruleId]: checked

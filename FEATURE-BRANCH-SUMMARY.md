@@ -43,7 +43,6 @@
 - **User Service Centralization**: Eliminated 200+ instances of `req.user` anti-pattern
 - **Security Middleware**: Custom CSRF implementation, rate limiting, audit logging
 - **Monitoring Suite**:
-
   - `health-check.ts`: Comprehensive health endpoints
   - `query-performance.ts`: Database query tracking
   - `audit-logger.ts`: Security event logging
@@ -126,19 +125,16 @@
 ## 🚀 Key Architectural Changes
 
 1. **Centralized Services**:
-
    - `userService.getUserFromRequest()` replaces direct `req.user` access
    - Configuration management through `useJsonConfig` hook
    - Unified error handling with `asyncHandler` wrapper
 
 2. **Component Architecture**:
-
    - Reusable form controls in `admin/form-controls/`
    - Visual editors for JSON configuration
    - Live preview capabilities
 
 3. **Database Schema**:
-
    - Shoutbox configuration tables with fine-grained permissions
    - Enhanced analytics tracking
    - Improved relationship modeling

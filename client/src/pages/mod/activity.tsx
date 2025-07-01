@@ -47,6 +47,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { apiRequest } from '@/lib/queryClient';
+import type { ReportId, ContentId } from '@/db/types';
 
 // Types
 interface ActivityLogEntry {
@@ -75,7 +76,7 @@ interface ActivityLogEntry {
 		duration?: string;
 		previousValue?: string;
 		newValue?: string;
-		reportId?: number;
+		reportId?: ReportId;
 		severity?: string;
 		originalForum?: string;
 		newForum?: string;

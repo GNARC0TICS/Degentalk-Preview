@@ -10,13 +10,14 @@ import { db } from '@db';
 import { count, desc, eq, sql, and, like, isNull, or, ne, sum } from 'drizzle-orm';
 import { users, auditLogs, transactions } from '@schema';
 import { AdminError, AdminErrorCodes } from './admin.errors';
+import type { AdminId } from '@/db/types';
 
 export class AdminService {
 	/**
 	 * Log admin action for audit purposes
 	 */
 	async logAdminAction(
-		adminId: number,
+		adminId: AdminId,
 		action: string,
 		entityType: string,
 		entityId: string,

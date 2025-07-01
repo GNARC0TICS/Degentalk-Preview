@@ -5,6 +5,7 @@
  */
 
 import { apiRequest } from '@/lib/queryClient';
+import type { PackId, StickerId } from '@/db/types';
 
 // Types
 export interface Sticker {
@@ -22,7 +23,7 @@ export interface Sticker {
 	animatedFileSize?: number;
 	format: string;
 	rarity: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
-	packId?: number;
+	packId?: PackId;
 	packName?: string;
 	unlockType: 'shop' | 'xp_milestone' | 'admin_grant' | 'event' | 'free';
 	priceDgt: number;
@@ -78,7 +79,7 @@ export interface CreateStickerData {
 	animatedFileSize?: number;
 	format?: 'webp' | 'png' | 'webm' | 'lottie';
 	rarity?: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
-	packId?: number;
+	packId?: PackId;
 	unlockType?: 'shop' | 'xp_milestone' | 'admin_grant' | 'event' | 'free';
 	priceDgt?: number;
 	requiredXp?: number;
@@ -117,7 +118,7 @@ export interface ListStickersParams {
 	limit?: number;
 	search?: string;
 	rarity?: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
-	packId?: number;
+	packId?: PackId;
 	unlockType?: 'shop' | 'xp_milestone' | 'admin_grant' | 'event' | 'free';
 	isActive?: boolean;
 	isVisible?: boolean;
@@ -211,8 +212,8 @@ export class StickerApiService {
 	 */
 	async createSticker(
 		data: CreateStickerData
-	): Promise<ApiResponse<{ stickerId: number; message: string }>> {
-		return apiRequest<ApiResponse<{ stickerId: number; message: string }>>({
+	): Promise<ApiResponse<{ stickerId: StickerId; message: string }>> {
+		return apiRequest<ApiResponse<{ stickerId: StickerId; message: string }>>({
 			url: `${this.baseUrl}/stickers`,
 			method: 'POST',
 			data
@@ -286,8 +287,8 @@ export class StickerApiService {
 	 */
 	async createStickerPack(
 		data: CreateStickerPackData
-	): Promise<ApiResponse<{ packId: number; message: string }>> {
-		return apiRequest<ApiResponse<{ packId: number; message: string }>>({
+	): Promise<ApiResponse<{ packId: PackId; message: string }>> {
+		return apiRequest<ApiResponse<{ packId: PackId; message: string }>>({
 			url: `${this.baseUrl}/sticker-packs`,
 			method: 'POST',
 			data
@@ -344,7 +345,7 @@ export class StickerApiService {
 	 * Track sticker usage
 	 */
 	async trackStickerUsage(
-		stickerId: number,
+		stickerId: StickerId,
 		contextType: string,
 		contextId?: string
 	): Promise<ApiResponse<{ message: string }>> {
@@ -372,7 +373,7 @@ export class StickerApiService {
 			| 'sticker_thumbnail'
 			| 'sticker_pack_cover'
 			| 'sticker_pack_preview',
-		options: { stickerId?: number; packId?: number } = {}
+		options: { stickerId?: StickerId; packId?: PackId } = {}
 	): Promise<ApiResponse<{ uploadUrl: string; publicUrl: string; relativePath: string }>> {
 		// Step 1: Get presigned upload URL
 		const uploadResponse = await apiRequest<
@@ -423,8 +424,8 @@ export class StickerApiService {
 			| 'sticker_thumbnail'
 			| 'sticker_pack_cover'
 			| 'sticker_pack_preview';
-		stickerId?: number;
-		packId?: number;
+		stickerId?: StickerId;
+		packId?: PackId;
 	}): Promise<ApiResponse<{ success: boolean; message: string; newPublicUrl?: string }>> {
 		return apiRequest<ApiResponse<{ success: boolean; message: string; newPublicUrl?: string }>>({
 			url: `${this.baseUrl}/stickers/confirm-upload`,
@@ -444,8 +445,8 @@ export class StickerApiService {
 			| 'sticker_thumbnail'
 			| 'sticker_pack_cover'
 			| 'sticker_pack_preview';
-		stickerId?: number;
-		packId?: number;
+		stickerId?: StickerId;
+		packId?: PackId;
 	}): Promise<ApiResponse<{ success: boolean; message: string }>> {
 		return apiRequest<ApiResponse<{ success: boolean; message: string }>>({
 			url: `${this.baseUrl}/stickers/delete-file`,

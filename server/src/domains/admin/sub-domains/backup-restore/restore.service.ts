@@ -14,6 +14,7 @@ import { spawn } from 'child_process';
 import { existsSync, statSync } from 'fs';
 import { randomUUID } from 'crypto';
 import { z } from 'zod';
+import type { BackupId } from '@/db/types';
 
 // Validation schemas
 export const createRestoreSchema = z.object({
@@ -58,7 +59,7 @@ export class RestoreService {
 	/**
 	 * Validate backup file and get restore impact assessment
 	 */
-	async validateRestoreOperation(backupId: number) {
+	async validateRestoreOperation(backupId: BackupId) {
 		try {
 			// Get backup details
 			const backup = await backupService.getBackup(backupId);

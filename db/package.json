@@ -1,0 +1,37 @@
+{
+	"name": "@degentalk/db",
+	"version": "1.0.0",
+	"type": "module",
+	"main": "./index.ts",
+	"exports": {
+		".": "./index.ts",
+		"./schema": "./schema/index.ts",
+		"./schema/*": "./schema/*.ts",
+		"./types": "./types/index.ts",
+		"./types/*": "./types/*.ts"
+	},
+	"scripts": {
+		"generate": "drizzle-kit generate",
+		"migrate": "npx dotenv-cli -e ../env.local -- drizzle-kit generate",
+		"migrate:apply": "npx dotenv-cli -e ../env.local -- drizzle-kit push",
+		"push": "npx dotenv-cli -e ../env.local -- drizzle-kit push",
+		"drop": "drizzle-kit drop",
+		"studio": "drizzle-kit studio",
+		"introspect": "npx dotenv-cli -e ../env.local -- drizzle-kit pull"
+	},
+	"dependencies": {
+		"@degentalk/shared": "workspace:*",
+		"@neondatabase/serverless": "^0.10.4",
+		"drizzle-orm": "^0.43.1",
+		"drizzle-zod": "^0.7.0",
+		"pg": "^8.11.0",
+		"ws": "^8.16.0",
+		"zod": "^3.24.2"
+	},
+	"devDependencies": {
+		"@types/pg": "^8.10.0",
+		"dotenv-cli": "^8.0.0",
+		"drizzle-kit": "^0.31.4",
+		"@types/node": "^20.19.0"
+	}
+}

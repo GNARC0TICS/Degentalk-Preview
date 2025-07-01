@@ -27,6 +27,7 @@ import type {
 	ThreadWithUserAndCategory
 } from '../../../../db/types/forum.types';
 import { eventLogger } from '../../activity/services/event-logger.service';
+import type { ForumId } from '@/db/types';
 
 // Using centralized cache service (Redis with in-memory fallback)
 
@@ -48,7 +49,7 @@ export interface TabContentParams {
 	tab: ContentTab;
 	page?: number;
 	limit?: number;
-	forumId?: number;
+	forumId?: ForumId;
 	userId?: string; // For following tab
 }
 

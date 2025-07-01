@@ -2,6 +2,7 @@ import { db } from '@db';
 import { ccpaymentUsers, users, cryptoWallets } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { CCPaymentService } from './ccpayment.service';
+import type { CoinId } from '@/db/types';
 
 /**
  * User Management Service for CCPayment Integration
@@ -129,7 +130,7 @@ export class UserManagementService {
 	async initializeUserWallet(userId: string): Promise<{
 		ccpaymentUserId: string;
 		wallets: Array<{
-			coinId: number;
+			coinId: CoinId;
 			coinSymbol: string;
 			chain: string;
 			address: string;

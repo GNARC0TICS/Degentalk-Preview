@@ -20,6 +20,7 @@ import type {
 	TreasurySettingsUpdateInput,
 	MassAirdropInput
 } from './treasury.validators';
+import type { AdminUserId, ActionId } from '@/db/types';
 
 // Helper to format DGT amounts for display (assuming 6 decimal places for DGT)
 function formatDgtAmount(amount: number): number {
@@ -76,7 +77,7 @@ export class AdminTreasuryService {
 		}
 	}
 
-	async sendFromTreasury(input: TreasuryDepositInput, adminUserId: number) {
+	async sendFromTreasury(input: TreasuryDepositInput, adminUserId: AdminUserId) {
 		const { amount, userId, description, metadata } = input;
 		const transferAmountDgt = parseDgtAmount(amount);
 
@@ -133,7 +134,7 @@ export class AdminTreasuryService {
 		});
 	}
 
-	async recoverToTreasury(input: TreasuryWithdrawalInput, adminUserId: number) {
+	async recoverToTreasury(input: TreasuryWithdrawalInput, adminUserId: AdminUserId) {
 		const { amount, userId, description, metadata } = input;
 		const transferAmountDgt = parseDgtAmount(amount);
 
@@ -189,7 +190,7 @@ export class AdminTreasuryService {
 		});
 	}
 
-	async massAirdrop(input: MassAirdropInput, adminUserId: number) {
+	async massAirdrop(input: MassAirdropInput, adminUserId: AdminUserId) {
 		const { userIds, amountPerUser, reason } = input;
 		const dgtAmountPerUserStorage = parseDgtAmount(amountPerUser);
 		const totalDgtAmountStorage = dgtAmountPerUserStorage * userIds.length;
@@ -235,7 +236,7 @@ export class AdminTreasuryService {
 				userId: number;
 				username: string;
 				amount: number;
-				transactionId?: number;
+				transactionId?: ActionId;
 				status: string;
 				error?: string;
 			}> = [];
@@ -316,7 +317,7 @@ export class AdminTreasuryService {
 		}
 	}
 
-	async updateDgtEconomyParameters(input: TreasurySettingsUpdateInput, adminUserId: number) {
+	async updateDgtEconomyParameters(input: TreasurySettingsUpdateInput, adminUserId: AdminUserId) {
 		try {
 			const [existingSettings] = await db.select().from(dgtEconomyParameters).limit(1);
 

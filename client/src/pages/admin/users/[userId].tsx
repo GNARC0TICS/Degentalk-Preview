@@ -13,7 +13,8 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, CheckCircle, XCircle, Gift } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import type { UserInventoryWithProduct, Product } from '@/types/inventory'; // Assuming these types
+import type { UserInventoryWithProduct, Product } from '@/types/inventory';
+import type { InventoryId } from '@/db/types';
 
 export default function AdminUserInventoryPage() {
 	const params = useParams();
@@ -41,7 +42,7 @@ export default function AdminUserInventoryPage() {
 	});
 
 	// Mutation for equipping an item
-	const equipMutation = useMutation<any, Error, { inventoryId: number }>({
+	const equipMutation = useMutation<any, Error, { inventoryId: InventoryId }>({
 		mutationFn: ({ inventoryId }) =>
 			apiRequest({
 				url: `/api/admin/user-inventory/${userId}/equip/${inventoryId}`,
@@ -57,7 +58,7 @@ export default function AdminUserInventoryPage() {
 	});
 
 	// Mutation for unequipping an item
-	const unequipMutation = useMutation<any, Error, { inventoryId: number }>({
+	const unequipMutation = useMutation<any, Error, { inventoryId: InventoryId }>({
 		mutationFn: ({ inventoryId }) =>
 			apiRequest({
 				url: `/api/admin/user-inventory/${userId}/unequip/${inventoryId}`,

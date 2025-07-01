@@ -7,6 +7,7 @@ import type {
 	DepositAddress,
 	WalletBalances
 } from '@/types/wallet';
+import type { RoomId, TipId, VaultId, ActionId } from '@/db/types';
 
 // API endpoint base URL
 const API_BASE_URL = '/api';
@@ -143,7 +144,7 @@ export const api = {
 			reason: string
 		): Promise<{
 			success: boolean;
-			transactionId: number;
+			transactionId: ActionId;
 			message: string;
 		}> {
 			return fetchJSON(`${API_BASE_URL}/wallet/transfer`, {
@@ -182,7 +183,7 @@ export const api = {
 			contextId?: string
 		): Promise<{
 			success: boolean;
-			tipId: number;
+			tipId: TipId;
 			message: string;
 		}> {
 			return fetchJSON(`${API_BASE_URL}/engagement/tip`, {
@@ -216,10 +217,10 @@ export const api = {
 			amount: number,
 			currency: string,
 			userCount: number,
-			roomId?: number
+			roomId?: RoomId
 		): Promise<{
 			success: boolean;
-			transactionId: number;
+			transactionId: ActionId;
 			recipients: { id: number; username: string }[];
 			message: string;
 		}> {
@@ -279,7 +280,7 @@ export const api = {
 			unlockTime?: Date
 		): Promise<{
 			success: boolean;
-			vaultId: number;
+			vaultId: VaultId;
 			message: string;
 		}> {
 			return fetchJSON(`${API_BASE_URL}/engagement/vault/lock`, {
@@ -295,10 +296,10 @@ export const api = {
 			return fetchJSON(`${API_BASE_URL}/engagement/vault`);
 		},
 
-		async unlockVault(vaultId: number): Promise<{
+		async unlockVault(vaultId: VaultId): Promise<{
 			success: boolean;
 			message: string;
-			transactionId?: number;
+			transactionId?: ActionId;
 		}> {
 			return fetchJSON(`${API_BASE_URL}/engagement/vault/unlock/${vaultId}`, {
 				method: 'POST'

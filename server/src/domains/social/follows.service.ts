@@ -2,6 +2,7 @@ import { db } from '@db';
 import { userFollows, userFollowPreferences, followRequests, users } from '@schema';
 import { eq, and, desc, sql, count, inArray } from 'drizzle-orm';
 import type { FollowNotificationSettings, UserStats } from './follows.types';
+import type { RequestId } from '@/db/types';
 
 export class FollowsService {
 	/**
@@ -274,7 +275,7 @@ export class FollowsService {
 	/**
 	 * Respond to a follow request
 	 */
-	static async respondToFollowRequest(requestId: number, approve: boolean) {
+	static async respondToFollowRequest(requestId: RequestId, approve: boolean) {
 		// Get the request details
 		const request = await db
 			.select()

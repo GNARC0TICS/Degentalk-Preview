@@ -7,6 +7,7 @@
 
 import NodeCache from 'node-cache';
 import { AdminError, AdminErrorCodes } from '../admin.errors';
+import type { EntityId } from '@/db/types';
 
 export interface CacheConfig {
 	defaultTTL: number; // Time to live in seconds
@@ -209,7 +210,7 @@ export class AdminCacheService {
 	/**
 	 * Invalidate caches related to specific entities
 	 */
-	async invalidateEntity(entityType: string, entityId?: string | number): Promise<void> {
+	async invalidateEntity(entityType: string, entityId?: string | EntityId): Promise<void> {
 		const patterns = this.getInvalidationPatterns(entityType, entityId);
 
 		for (const pattern of patterns) {
@@ -291,7 +292,7 @@ export class AdminCacheService {
 		return 600; // Default 10 minutes
 	}
 
-	private getInvalidationPatterns(entityType: string, entityId?: string | number): string[] {
+	private getInvalidationPatterns(entityType: string, entityId?: string | EntityId): string[] {
 		const patterns: string[] = [];
 
 		switch (entityType) {

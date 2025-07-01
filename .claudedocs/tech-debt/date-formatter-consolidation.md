@@ -2,7 +2,7 @@
 
 **Status**: Identified during monorepo migration cleanup  
 **Priority**: Low  
-**Effort**: 2-4 hours  
+**Effort**: 2-4 hours
 
 ## Issue
 
@@ -11,22 +11,24 @@ Inline `formatTimeAgo` implementations found in multiple files instead of using 
 ## Files with Inline Date Formatters
 
 1. **`client/src/features/forum/components/HotThreads.tsx:86`**
+
    ```typescript
    const formatTimeAgo = (dateString: string) => {
-     // Custom implementation using date-fns
-   }
+   	// Custom implementation using date-fns
+   };
    ```
 
 2. **`client/src/components/ui/content-feed.tsx:73`**
    ```typescript
    const formatTimeAgo = (dateString: string) => {
-     // Similar custom implementation
-   }
+   	// Similar custom implementation
+   };
    ```
 
 ## Canonical Solution
 
 **`client/src/lib/format-date.ts`** already provides:
+
 - `formatTimeAgo(date: string | Date)` - Exact replacement needed
 - `formatDate(date, { relative: true })` - Alternative approach
 - 6 total date formatting functions with consistent API
@@ -34,6 +36,7 @@ Inline `formatTimeAgo` implementations found in multiple files instead of using 
 ## Migration Task
 
 1. **Import centralized formatter:**
+
    ```typescript
    import { formatTimeAgo } from '@/lib/format-date';
    ```
@@ -51,11 +54,13 @@ Inline `formatTimeAgo` implementations found in multiple files instead of using 
 
 ## Risk Assessment
 
-**Low Risk**: 
+**Low Risk**:
+
 - Existing centralized function has identical signature
 - No breaking changes to component APIs
 - Visual output should be identical
 
 ---
-*Identified: 2025-01-07 during monorepo migration*  
-*Next: Schedule during next refactoring sprint*
+
+_Identified: 2025-01-07 during monorepo migration_  
+_Next: Schedule during next refactoring sprint_

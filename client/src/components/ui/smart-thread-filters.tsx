@@ -43,12 +43,13 @@ import {
 import { cn } from '@/lib/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import { useLocalStorage } from '@/hooks/use-local-storage';
+import type { PrefixId } from '@/db/types';
 
 export interface ThreadFiltersState {
 	sortBy: string;
 	search?: string;
 	tags: number[];
-	prefixId?: number | null;
+	prefixId?: PrefixId | null;
 	solved?: 'all' | 'solved' | 'unsolved';
 	bookmarked?: boolean;
 	mine?: boolean;

@@ -12,9 +12,7 @@ export const SafeImage = ({
 }: SafeImageProps) => {
 	const [imgSrc, setImgSrc] = useState(src);
 
-	return (
-		<img {...props} src={imgSrc} alt={alt} onError={() => setImgSrc(fallbackSrc)} />
-	);
+	return <img {...props} src={imgSrc} alt={alt} onError={() => setImgSrc(fallbackSrc)} />;
 };
 
 export default SafeImage;

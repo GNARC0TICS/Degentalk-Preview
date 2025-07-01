@@ -9,6 +9,7 @@ import { roles as userGroups, users } from '@schema'; // userGroups is deprecate
 import { eq, and, sql, count, desc, ne } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type { UserGroupInput, ListGroupUsersQueryInput } from './user-groups.validators';
+import type { GroupId } from '@/db/types';
 
 export class AdminUserGroupsService {
 	async getAllGroupsWithCounts() {
@@ -45,7 +46,7 @@ export class AdminUserGroupsService {
 		}));
 	}
 
-	async getGroupById(groupId: number) {
+	async getGroupById(groupId: GroupId) {
 		const [group] = await db.select().from(userGroups).where(eq(userGroups.id, groupId));
 		if (!group) {
 			throw new AdminError('User group not found', 404, AdminErrorCodes.NOT_FOUND);
@@ -101,7 +102,7 @@ export class AdminUserGroupsService {
 		return newGroup;
 	}
 
-	async updateGroup(groupId: number, data: UserGroupInput) {
+	async updateGroup(groupId: GroupId, data: UserGroupInput) {
 		const [existingGroup] = await db.select().from(userGroups).where(eq(userGroups.id, groupId));
 		if (!existingGroup) {
 			throw new AdminError('User group not found to update', 404, AdminErrorCodes.NOT_FOUND);
@@ -136,7 +137,7 @@ export class AdminUserGroupsService {
 		return updatedGroup;
 	}
 
-	async deleteGroup(groupId: number) {
+	async deleteGroup(groupId: GroupId) {
 		const [existingGroup] = await db.select().from(userGroups).where(eq(userGroups.id, groupId));
 		if (!existingGroup) {
 			throw new AdminError('User group not found to delete', 404, AdminErrorCodes.NOT_FOUND);
@@ -178,7 +179,7 @@ export class AdminUserGroupsService {
 		};
 	}
 
-	async getUsersInGroup(groupId: number, params: ListGroupUsersQueryInput) {
+	async getUsersInGroup(groupId: GroupId, params: ListGroupUsersQueryInput) {
 		const { page, limit } = params;
 		const offset = (page - 1) * limit;
 

@@ -50,6 +50,7 @@ import type { Tag, ThreadPrefix as Prefix } from '@/types/forum';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedRules } from '@/contexts/ForumStructureContext';
 import { usePermission } from '@/hooks/usePermission';
+import type { DraftId } from '@/db/types';
 
 interface DraftData {
 	id: number;
@@ -195,7 +196,7 @@ export function CreateThreadForm({
 
 	const saveDraftMutation = useMutation({
 		mutationFn: async (
-			values: ThreadFormValues & { draftId?: number; forumSlugToSave: string }
+			values: ThreadFormValues & { draftId?: DraftId; forumSlugToSave: string }
 		) => {
 			const endpoint = values.draftId
 				? `/api/threads/drafts/${values.draftId}`

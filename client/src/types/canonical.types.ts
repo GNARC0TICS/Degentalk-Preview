@@ -1,3 +1,5 @@
+import type { ForumId, ParentZoneId, ZoneId } from '@/db/types';
+
 /**
  * Canonical Forum Types
  *
@@ -59,7 +61,7 @@ export interface CanonicalForum {
 	name: string;
 	slug: string;
 	description?: string;
-	parentZoneId: number;
+	parentZoneId: ParentZoneId;
 	parentZone?: Pick<CanonicalZone, 'id' | 'name' | 'slug' | 'colorTheme'>;
 	sortOrder: number;
 	isVisible: boolean;
@@ -109,7 +111,7 @@ export interface CanonicalSubforum {
 	name: string;
 	slug: string;
 	description?: string;
-	parentForumId: number;
+	parentForumId: ForumId;
 	parentForum?: Pick<CanonicalForum, 'id' | 'name' | 'slug'>;
 	sortOrder: number;
 	isVisible: boolean;
@@ -335,9 +337,9 @@ export interface PaginatedResponse<T> {
  */
 export interface CanonicalThreadSearchParams {
 	// Structure filtering
-	zoneId?: number;
-	forumId?: number;
-	subforumId?: number;
+	zoneId?: ZoneId;
+	forumId?: ForumId;
+	subforumId?: ForumId;
 
 	// Content filtering
 	search?: string;

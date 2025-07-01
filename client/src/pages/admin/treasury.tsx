@@ -26,9 +26,10 @@ import {
 } from '@/components/ui/table';
 import type { Transaction } from '@/types/wallet';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import type { SettingId } from '@/db/types';
 
 type TreasurySetting = {
-	settingId: number;
+	settingId: SettingId;
 	treasuryWalletAddress: string;
 	minWithdrawalAmount: number;
 	withdrawalFeePercent: number;

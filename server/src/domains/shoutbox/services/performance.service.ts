@@ -14,6 +14,7 @@ import { logger } from '@server/src/core/logger';
 import { ShoutboxCacheService } from './cache.service';
 import { eq, and, desc, asc, sql, gte, lte, inArray } from 'drizzle-orm';
 import { shoutboxMessages, chatRooms, users, shoutboxConfig } from '@schema';
+import type { RoomId } from '@/db/types';
 
 interface QueryMetrics {
 	queryType: string;
@@ -37,7 +38,7 @@ interface PerformanceStats {
 }
 
 interface OptimizedMessageQuery {
-	roomId: number;
+	roomId: RoomId;
 	limit?: number;
 	cursor?: number;
 	direction?: 'before' | 'after';
@@ -208,7 +209,7 @@ export class PerformanceService {
 	static async batchInsertMessages(
 		messages: Array<{
 			userId: number;
-			roomId: number;
+			roomId: RoomId;
 			content: string;
 			type?: string;
 			metadata?: any;
@@ -275,7 +276,7 @@ export class PerformanceService {
 	/**
 	 * Optimized user session management
 	 */
-	static async getActiveUsersInRoom(roomId: number): Promise<
+	static async getActiveUsersInRoom(roomId: RoomId): Promise<
 		Array<{
 			id: number;
 			username: string;

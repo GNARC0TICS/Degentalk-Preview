@@ -3,6 +3,7 @@ import { and, count, desc, eq, ilike, or, sql } from 'drizzle-orm';
 import { dictionaryEntries, dictionaryUpvotes, insertDictionaryEntrySchema } from '@schema';
 import { XP_ACTIONS, xpLevelService } from '../../../services/xp-level-service';
 import slugify from 'slugify';
+import type { EntryId } from '@/db/types';
 
 export const DictionaryStatus = {
 	PENDING: 'pending',
@@ -121,7 +122,7 @@ export class DictionaryService {
 	}
 
 	/** Approve or reject entry (moderation) */
-	static async moderate(entryId: number, status: 'approved' | 'rejected', approverId: string) {
+	static async moderate(entryId: EntryId, status: 'approved' | 'rejected', approverId: string) {
 		const [updated] = await db
 			.update(dictionaryEntries)
 			.set({ status, approverId, updatedAt: new Date() })
@@ -147,7 +148,7 @@ export class DictionaryService {
 	}
 
 	/** Upvote toggle */
-	static async toggleUpvote(entryId: number, userId: string) {
+	static async toggleUpvote(entryId: EntryId, userId: string) {
 		// Check existing
 		const existing = await db
 			.select()

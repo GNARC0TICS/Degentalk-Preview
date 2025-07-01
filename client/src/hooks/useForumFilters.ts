@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useLocation, useSearch } from 'wouter';
 import type { ThreadFiltersState, ThreadSortOption } from '@/components/forum/ThreadFilters';
+import type { TagId } from '@/db/types';
 
 interface UseForumFiltersOptions {
 	defaultSort?: ThreadSortOption;
@@ -158,7 +159,7 @@ export function useForumFilters({
 		}
 	}, [defaultSort, storageKey]);
 
-	const toggleTag = useCallback((tagId: number) => {
+	const toggleTag = useCallback((tagId: TagId) => {
 		setFiltersState((prev) => ({
 			...prev,
 			tags: prev.tags.includes(tagId)

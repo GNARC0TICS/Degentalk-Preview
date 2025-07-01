@@ -10,6 +10,7 @@ import { logger } from '@server/src/core/logger';
 import { forumStructure, threads, posts, users as usersTable } from '@schema';
 import { sql, desc, eq, count, isNull } from 'drizzle-orm';
 import type { ForumCategoryWithStats } from '../../../../db/types/forum.types';
+import type { CategoryId } from '@/db/types';
 
 // Simple in-memory cache for categories
 const CACHE_DURATION_MS = 30 * 1000; // 30 seconds
@@ -175,7 +176,7 @@ export class CategoryService {
 	/**
 	 * Get category statistics
 	 */
-	async getCategoryStats(categoryId: number): Promise<{
+	async getCategoryStats(categoryId: CategoryId): Promise<{
 		threadCount: number;
 		postCount: number;
 		lastPostAt: Date | null;

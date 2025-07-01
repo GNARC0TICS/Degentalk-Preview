@@ -2,13 +2,14 @@ import { db } from '@db';
 import { threadPrefixes } from '@schema';
 import { eq, not, and, asc, desc } from 'drizzle-orm';
 import { AdminError } from '../../admin.errors';
+import type { CategoryId } from '@/db/types';
 
 interface UpdatePrefixInput {
 	name?: string;
 	color?: string | null;
 	isActive?: boolean;
 	position?: number;
-	categoryId?: number | null;
+	categoryId?: CategoryId | null;
 }
 
 export class ForumPrefixService {

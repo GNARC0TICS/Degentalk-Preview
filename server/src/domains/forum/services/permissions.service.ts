@@ -10,6 +10,7 @@ import { db } from '@db';
 import { posts, threads, forumStructure } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
+import type { EntityId, ForumId } from '@/db/types';
 
 export interface User {
 	id: number;
@@ -20,7 +21,7 @@ export interface User {
 export interface PermissionContext {
 	userId: number;
 	userRole: string;
-	entityId?: number;
+	entityId?: EntityId;
 	entityType?: 'post' | 'thread' | 'forum';
 	action: 'create' | 'read' | 'update' | 'delete' | 'moderate';
 }
@@ -167,7 +168,7 @@ export async function canManageThreadTags(user: User, threadId: number): Promise
  * Check if user can post in a forum
  * Rules: Check forum access level and user permissions
  */
-export async function canPostInForum(user: User, forumId: number): Promise<boolean> {
+export async function canPostInForum(user: User, forumId: ForumId): Promise<boolean> {
 	try {
 		const [forum] = await db
 			.select({

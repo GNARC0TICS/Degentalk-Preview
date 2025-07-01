@@ -2,6 +2,7 @@ import { db } from '@db';
 import { animationPacks, animationPackItems, mediaLibrary } from '@schema';
 import { eq, asc } from 'drizzle-orm';
 import slugify from 'slugify';
+import type { PackId } from '@/db/types';
 
 export interface PackInput {
 	name: string;
@@ -23,7 +24,7 @@ export class AnimationPackService {
 		);
 	}
 
-	async contentsForPack(packId: number) {
+	async contentsForPack(packId: PackId) {
 		return db
 			.select({ id: mediaLibrary.id, url: mediaLibrary.url })
 			.from(animationPackItems)
@@ -70,7 +71,7 @@ export class AnimationPackService {
 		await db.delete(animationPacks).where(eq(animationPacks.id, id));
 	}
 
-	private async syncItems(packId: number, mediaIds: number[]) {
+	private async syncItems(packId: PackId, mediaIds: number[]) {
 		// Clear existing
 		await db.delete(animationPackItems).where(eq(animationPackItems.packId, packId));
 		if (!mediaIds.length) return;

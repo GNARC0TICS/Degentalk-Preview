@@ -4,11 +4,13 @@ import { Button } from '@/components/ui/button';
 import type { ButtonProps } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
+import type { CategoryId } from '@/db/types';
+
 // import { ROUTES } from '@/constants/routes'; // ROUTES not used directly here
 
 interface CreateThreadButtonProps extends ButtonProps {
 	forumSlug?: string;
-	categoryId?: number;
+	categoryId?: CategoryId;
 	redirectAuth?: boolean;
 	// onThreadCreated?: () => void; // This prop doesn't seem to be used, consider removing if not needed elsewhere
 }

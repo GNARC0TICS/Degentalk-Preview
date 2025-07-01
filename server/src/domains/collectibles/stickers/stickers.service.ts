@@ -27,6 +27,7 @@ import {
 	type BulkDeleteStickersInput,
 	type TrackStickerUsageInput
 } from './stickers.validators';
+import type { PackId, StickerId } from '@/db/types';
 
 export class StickerService {
 	// ============ STICKER MANAGEMENT ============
@@ -214,7 +215,7 @@ export class StickerService {
 	async createSticker(
 		data: CreateStickerInput,
 		adminId: string
-	): Promise<{ stickerId: number; message: string }> {
+	): Promise<{ stickerId: StickerId; message: string }> {
 		// Check for duplicate shortcode
 		const existingShortcode = await db
 			.select({ id: stickers.id })
@@ -502,7 +503,7 @@ export class StickerService {
 	async createStickerPack(
 		data: CreateStickerPackInput,
 		adminId: string
-	): Promise<{ packId: number; message: string }> {
+	): Promise<{ packId: PackId; message: string }> {
 		// Check for duplicate name
 		const existingName = await db
 			.select({ id: stickerPacks.id })
@@ -583,7 +584,7 @@ export class StickerService {
 	/**
 	 * Update sticker count for a pack
 	 */
-	private async updatePackStickerCount(packId: number): Promise<void> {
+	private async updatePackStickerCount(packId: PackId): Promise<void> {
 		const countResult = await db
 			.select({ count: count() })
 			.from(stickers)

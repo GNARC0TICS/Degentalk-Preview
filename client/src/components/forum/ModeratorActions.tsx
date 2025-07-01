@@ -39,10 +39,11 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
 import { useSolveThread, useUnsolveThread } from '@/features/forum/hooks/useForumQueries';
+import type { ItemId } from '@/db/types';
 
 interface ModeratorActionsProps {
 	type: 'thread' | 'post';
-	itemId: number;
+	itemId: ItemId;
 	itemData: {
 		isLocked?: boolean;
 		isSticky?: boolean;

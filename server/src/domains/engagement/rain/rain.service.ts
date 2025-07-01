@@ -23,6 +23,7 @@ import { WalletError, ErrorCodes as WalletErrorCodes } from '../../../core/error
 import { dgtService } from '../../../domains/wallet/dgt.service';
 import { walletService } from '../../../domains/wallet/wallet.service';
 import { WalletService } from '../../wallet/wallet.service';
+import type { ActionId } from '@/db/types';
 
 // Constants
 const MIN_RAIN_AMOUNT_DGT = 10; // Minimum rain amount for DGT
@@ -55,7 +56,7 @@ export class RainService {
 		userCount: number,
 		source: string = 'shoutbox'
 	): Promise<{
-		transactionId: number;
+		transactionId: ActionId;
 		amount: number;
 		currency: string;
 		perUserAmount: number;
@@ -273,7 +274,7 @@ export class RainService {
 		totalAmount: number,
 		perUserAmount: number,
 		recipientIds: number[],
-		transactionId: number
+		transactionId: ActionId
 	): Promise<void> {
 		// Process rain for each recipient individually
 		for (const recipientId of recipientIds) {

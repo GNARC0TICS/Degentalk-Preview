@@ -1,1 +1,1 @@
-export * from './id.types'; 
+export * from './id.types';

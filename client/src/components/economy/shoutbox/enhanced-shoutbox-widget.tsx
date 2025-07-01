@@ -34,20 +34,21 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { apiRequest } from '@/lib/queryClient';
+import type { RoomId, GroupId, MessageId } from '@/db/types';
 
 interface User {
 	id: number;
 	username: string;
 	avatarUrl?: string;
 	level: number;
-	groupId?: number;
+	groupId?: GroupId;
 	roles?: string[];
 	usernameColor?: string;
 }
 
 interface Message {
 	id: number;
-	roomId: number;
+	roomId: RoomId;
 	content: string;
 	createdAt: string;
 	editedAt?: string;
@@ -94,7 +95,7 @@ interface ShoutboxConfig {
 }
 
 interface EnhancedShoutboxWidgetProps {
-	defaultRoomId?: number;
+	defaultRoomId?: RoomId;
 	position?: 'sidebar' | 'main' | 'floating';
 	maxHeight?: string;
 	className?: string;
@@ -231,7 +232,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 
 	// Pin/unpin message mutation
 	const pinMessageMutation = useMutation({
-		mutationFn: async ({ messageId, isPinned }: { messageId: number; isPinned: boolean }) => {
+		mutationFn: async ({ messageId, isPinned }: { messageId: MessageId; isPinned: boolean }) => {
 			const response = await apiRequest({
 				url: `/api/shoutbox/messages/${messageId}/pin`,
 				method: 'PATCH',
@@ -247,7 +248,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 
 	// Delete message mutation
 	const deleteMessageMutation = useMutation({
-		mutationFn: async (messageId: number) => {
+		mutationFn: async (messageId: MessageId) => {
 			const response = await apiRequest({
 				url: `/api/shoutbox/messages/${messageId}`,
 				method: 'DELETE'

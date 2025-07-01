@@ -9,12 +9,13 @@ import { userService } from '@server/src/core/services/user.service';
 import { logger } from '@server/src/core/logger';
 import { AdminError, AdminErrorCodes } from '../admin.errors';
 import type { Request, Response } from 'express';
+import type { EntityId, RequestId } from '@/db/types';
 
 // Enhanced error types with context
 export interface AdminErrorContext {
 	operation: string;
 	entityType?: string;
-	entityId?: string | number;
+	entityId?: string | EntityId;
 	userId?: number;
 	timestamp: Date;
 	requestId?: string;
@@ -115,7 +116,7 @@ export class AdminErrorFactory {
 
 	static notFound(
 		entityType: string,
-		entityId: string | number,
+		entityId: string | EntityId,
 		context?: AdminErrorContext
 	): TypedAdminError {
 		return new TypedAdminError(
@@ -373,7 +374,7 @@ export class AdminOperationBoundary {
  */
 export function adminErrorBoundaryMiddleware(req: Request, res: Response, next: Function) {
 	// Add error boundary helper to request
-	req.adminBoundary = (operation: string, entityType?: string, entityId?: string | number) => {
+	req.adminBoundary = (operation: string, entityType?: string, entityId?: string | EntityId) => {
 		const context: AdminErrorContext = {
 			operation,
 			entityType,
@@ -435,7 +436,7 @@ declare global {
 			adminBoundary?: (
 				operation: string,
 				entityType?: string,
-				entityId?: string | number
+				entityId?: string | EntityId
 			) => AdminOperationBoundary;
 		}
 	}

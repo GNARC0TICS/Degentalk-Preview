@@ -24,11 +24,12 @@ import { eq, and, or, desc, asc, sql, gt, lt, isNull, inArray, not } from 'drizz
 import { logger } from '@server/src/core/logger';
 import { createId } from '@paralleldrive/cuid2';
 import type { NewShoutboxConfig, ShoutboxConfig } from '@schema/admin/shoutboxConfig';
+import type { RoomId } from '@/db/types';
 
 interface MessageContext {
 	userId: number;
 	username: string;
-	roomId: number;
+	roomId: RoomId;
 	content: string;
 	userRoles: string[];
 	userLevel: number;
@@ -53,7 +54,7 @@ export class ShoutboxService {
 	 * Get shoutbox configuration with hierarchical override system
 	 * Global config can be overridden by room-specific config
 	 */
-	static async getConfig(roomId?: number): Promise<ShoutboxConfig> {
+	static async getConfig(roomId?: RoomId): Promise<ShoutboxConfig> {
 		const cacheKey = `config:${roomId || 'global'}`;
 
 		if (this.configCache.has(cacheKey)) {
@@ -851,7 +852,7 @@ export class ShoutboxService {
 	/**
 	 * Create a system message
 	 */
-	private static async createSystemMessage(roomId: number, content: string): Promise<void> {
+	private static async createSystemMessage(roomId: RoomId, content: string): Promise<void> {
 		try {
 			await db.insert(shoutboxMessages).values({
 				userId: null, // System message
@@ -867,7 +868,7 @@ export class ShoutboxService {
 	/**
 	 * Get active users in a room
 	 */
-	private static async getActiveRoomUsers(roomId: number): Promise<any[]> {
+	private static async getActiveRoomUsers(roomId: RoomId): Promise<any[]> {
 		// This would typically query online users or recent message senders
 		// For now, return mock data
 		return [];
@@ -910,7 +911,7 @@ export class ShoutboxService {
 	/**
 	 * Clear configuration cache
 	 */
-	static clearConfigCache(roomId?: number): void {
+	static clearConfigCache(roomId?: RoomId): void {
 		const cacheKey = `config:${roomId || 'global'}`;
 		this.configCache.delete(cacheKey);
 	}
@@ -920,7 +921,7 @@ export class ShoutboxService {
 	 */
 	static async updateConfig(
 		configData: Partial<NewShoutboxConfig>,
-		roomId?: number
+		roomId?: RoomId
 	): Promise<ShoutboxConfig> {
 		const scope = roomId ? 'room' : 'global';
 		const whereClause = roomId

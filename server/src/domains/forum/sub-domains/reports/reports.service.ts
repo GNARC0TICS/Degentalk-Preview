@@ -6,10 +6,11 @@
 
 import { db } from '@db';
 import { reportedContent } from '@schema';
+import type { ContentId } from '@/db/types';
 
 export interface CreateReportData {
 	contentType: 'post' | 'thread' | 'message';
-	contentId: number;
+	contentId: ContentId;
 	reason: string;
 	details?: string;
 	reporterId: string; // UUID in the schema

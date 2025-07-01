@@ -1,88 +1,93 @@
 {
-  "name": "@degentalk/monorepo",
-  "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "packageManager": "pnpm@9.15.0",
-  "engines": {
-    "node": ">=18.0.0",
-    "pnpm": ">=9.0.0"
-  },
-  "scripts": {
-    "dev": "pnpm run kill-ports && pnpm --parallel --filter @degentalk/server --filter @degentalk/client dev",
-    "dev:client": "pnpm --filter @degentalk/client dev",
-    "dev:server": "pnpm --filter @degentalk/server dev",
-    "dev:seed": "pnpm run kill-ports && pnpm run seed:all && pnpm dev",
-    "dev:quick": "pnpm run kill-ports && pnpm --parallel --filter @degentalk/server dev:quick --filter @degentalk/client dev",
-    "build": "pnpm -r build",
-    "build:client": "pnpm --filter @degentalk/client build",
-    "build:server": "pnpm --filter @degentalk/server build",
-    "start": "pnpm --filter @degentalk/server start",
-    "test": "pnpm -r test",
-    "test:e2e": "playwright test",
-    "test:unit": "pnpm --filter @degentalk/client test",
-    "lint": "pnpm -r lint",
-    "lint:client": "pnpm --filter @degentalk/client lint",
-    "lint:server": "pnpm --filter @degentalk/server lint",
-    "typecheck": "pnpm -r typecheck",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "clean": "pnpm -r exec rm -rf node_modules dist build .turbo && rm -rf node_modules",
-    "install:clean": "pnpm clean && pnpm install",
-    "kill-ports": "lsof -ti:5001 | xargs kill -9 2>/dev/null || echo 'Port 5001 clear' && lsof -ti:5173 | xargs kill -9 2>/dev/null || echo 'Port 5173 clear'",
-    "kill-port:5001": "lsof -ti:5001 | xargs kill -9 2>/dev/null || echo 'Port 5001 clear'",
-    "kill-port:5173": "lsof -ti:5173 | xargs kill -9 2>/dev/null || echo 'Port 5173 clear'",
-    "db:migrate": "pnpm --filter @degentalk/db migrate",
-    "db:migrate:apply": "pnpm --filter @degentalk/db migrate:apply",
-    "db:studio": "pnpm --filter @degentalk/db studio",
-    "db:push": "pnpm --filter @degentalk/db push",
-    "db:drop": "pnpm --filter @degentalk/db drop",
-    "seed:all": "pnpm --filter @degentalk/scripts seed:all",
-    "seed:users": "pnpm --filter @degentalk/scripts seed:users",
-    "seed:forums:only": "pnpm --filter @degentalk/scripts seed:forums:only",
-    "sync:forums": "pnpm --filter @degentalk/scripts sync:forums",
-    "validate": "pnpm --filter @degentalk/scripts validate",
-    "audit:uuid": "tsx scripts/migration/generate-uuid-audit.ts",
-    "generate:id-aliases": "tsx scripts/migration/generate-id-aliases.ts",
-    "codemod:plan": "tsx scripts/codemods/generate-id-codemod-plan.ts",
-    "codemod:dry": "tsx scripts/codemods/apply-id-codemod.ts --dry",
-    "codemod:apply": "tsx scripts/codemods/apply-id-codemod.ts",
-    "codemod:tsmorph:dry": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts --dry",
-    "codemod:tsmorph:apply": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts",
-    "prepare": "simple-git-hooks"
-  },
-  "devDependencies": {
-    "@types/node": "^20.19.0",
-    "@typescript-eslint/eslint-plugin": "6.21.0",
-    "@typescript-eslint/parser": "6.21.0",
-    "chalk": "^5.3.0",
-    "concurrently": "^8.2.2",
-    "dotenv": "^16.5.0",
-    "dotenv-cli": "^8.0.0",
-    "eslint": "^8.57.0",
-    "prettier": "^3.5.3",
-    "simple-git-hooks": "^2.12.0",
-    "tsx": "^4.19.4",
-    "typescript": "5.6.3",
-    "glob": "^10.3.10",
-    "utility-types": "^3.10.0",
-    "minimist": "^1.2.8",
-    "ts-node": "^10.9.2",
-    "ts-morph": "^26.0.0"
-  },
-  "simple-git-hooks": {
-    "pre-commit": "pnpm format && git add -A"
-  },
-  "pnpm": {
-    "overrides": {
-      "typescript": "5.6.3"
-    },
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "react": "18",
-        "react-dom": "18"
-      }
-    },
-    "publicHoistPattern": ["*eslint*", "*prettier*", "@types/*", "typescript"]
-  }
+	"name": "@degentalk/monorepo",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@9.15.0",
+	"engines": {
+		"node": ">=18.0.0",
+		"pnpm": ">=9.0.0"
+	},
+	"scripts": {
+		"dev": "pnpm run kill-ports && pnpm --parallel --filter @degentalk/server --filter @degentalk/client dev",
+		"dev:client": "pnpm --filter @degentalk/client dev",
+		"dev:server": "pnpm --filter @degentalk/server dev",
+		"dev:seed": "pnpm run kill-ports && pnpm run seed:all && pnpm dev",
+		"dev:quick": "pnpm run kill-ports && pnpm --parallel --filter @degentalk/server dev:quick --filter @degentalk/client dev",
+		"build": "pnpm -r build",
+		"build:client": "pnpm --filter @degentalk/client build",
+		"build:server": "pnpm --filter @degentalk/server build",
+		"start": "pnpm --filter @degentalk/server start",
+		"test": "pnpm -r test",
+		"test:e2e": "playwright test",
+		"test:unit": "pnpm --filter @degentalk/client test",
+		"lint": "pnpm -r lint",
+		"lint:client": "pnpm --filter @degentalk/client lint",
+		"lint:server": "pnpm --filter @degentalk/server lint",
+		"typecheck": "pnpm -r typecheck",
+		"format": "prettier --write .",
+		"format:check": "prettier --check .",
+		"clean": "pnpm -r exec rm -rf node_modules dist build .turbo && rm -rf node_modules",
+		"install:clean": "pnpm clean && pnpm install",
+		"kill-ports": "lsof -ti:5001 | xargs kill -9 2>/dev/null || echo 'Port 5001 clear' && lsof -ti:5173 | xargs kill -9 2>/dev/null || echo 'Port 5173 clear'",
+		"kill-port:5001": "lsof -ti:5001 | xargs kill -9 2>/dev/null || echo 'Port 5001 clear'",
+		"kill-port:5173": "lsof -ti:5173 | xargs kill -9 2>/dev/null || echo 'Port 5173 clear'",
+		"db:migrate": "pnpm --filter @degentalk/db migrate",
+		"db:migrate:apply": "pnpm --filter @degentalk/db migrate:apply",
+		"db:studio": "pnpm --filter @degentalk/db studio",
+		"db:push": "pnpm --filter @degentalk/db push",
+		"db:drop": "pnpm --filter @degentalk/db drop",
+		"seed:all": "pnpm --filter @degentalk/scripts seed:all",
+		"seed:users": "pnpm --filter @degentalk/scripts seed:users",
+		"seed:forums:only": "pnpm --filter @degentalk/scripts seed:forums:only",
+		"sync:forums": "pnpm --filter @degentalk/scripts sync:forums",
+		"validate": "pnpm --filter @degentalk/scripts validate",
+		"audit:uuid": "tsx scripts/migration/generate-uuid-audit.ts",
+		"generate:id-aliases": "tsx scripts/migration/generate-id-aliases.ts",
+		"codemod:plan": "tsx scripts/codemods/generate-id-codemod-plan.ts",
+		"codemod:dry": "tsx scripts/codemods/apply-id-codemod.ts --dry",
+		"codemod:apply": "tsx scripts/codemods/apply-id-codemod.ts",
+		"codemod:tsmorph:dry": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts --dry",
+		"codemod:tsmorph:apply": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts",
+		"prepare": "simple-git-hooks"
+	},
+	"devDependencies": {
+		"@types/node": "^20.19.0",
+		"@typescript-eslint/eslint-plugin": "6.21.0",
+		"@typescript-eslint/parser": "6.21.0",
+		"chalk": "^5.3.0",
+		"concurrently": "^8.2.2",
+		"dotenv": "^16.5.0",
+		"dotenv-cli": "^8.0.0",
+		"eslint": "^8.57.0",
+		"prettier": "^3.5.3",
+		"simple-git-hooks": "^2.12.0",
+		"tsx": "^4.19.4",
+		"typescript": "5.6.3",
+		"glob": "^10.3.10",
+		"utility-types": "^3.10.0",
+		"minimist": "^1.2.8",
+		"ts-node": "^10.9.2",
+		"ts-morph": "^26.0.0"
+	},
+	"simple-git-hooks": {
+		"pre-commit": "pnpm format && git add -A"
+	},
+	"pnpm": {
+		"overrides": {
+			"typescript": "5.6.3"
+		},
+		"peerDependencyRules": {
+			"allowedVersions": {
+				"react": "18",
+				"react-dom": "18"
+			}
+		},
+		"publicHoistPattern": [
+			"*eslint*",
+			"*prettier*",
+			"@types/*",
+			"typescript"
+		]
+	}
 }

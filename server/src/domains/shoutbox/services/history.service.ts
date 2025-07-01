@@ -18,9 +18,10 @@ import { pipeline } from 'stream/promises';
 import { Transform } from 'stream';
 import archiver from 'archiver';
 import { format } from 'date-fns';
+import type { RoomId } from '@/db/types';
 
 interface MessageHistoryOptions {
-	roomId?: number;
+	roomId?: RoomId;
 	userId?: number;
 	dateFrom?: Date;
 	dateTo?: Date;
@@ -34,7 +35,7 @@ interface MessageHistoryOptions {
 
 interface ExportOptions {
 	format: 'json' | 'csv' | 'txt' | 'html';
-	roomId?: number;
+	roomId?: RoomId;
 	dateFrom?: Date;
 	dateTo?: Date;
 	includeDeleted?: boolean;
@@ -45,7 +46,7 @@ interface ExportOptions {
 interface MessageWithUser {
 	id: number;
 	userId: number | null;
-	roomId: number;
+	roomId: RoomId;
 	content: string;
 	createdAt: Date;
 	editedAt: Date | null;
@@ -801,7 +802,7 @@ export class MessageHistoryService {
 	 * Get message statistics for analytics
 	 */
 	static async getMessageStatistics(options: {
-		roomId?: number;
+		roomId?: RoomId;
 		dateFrom?: Date;
 		dateTo?: Date;
 		groupBy?: 'hour' | 'day' | 'week' | 'month';

@@ -24,6 +24,7 @@ import {
 	ShieldAlert,
 	Trash2
 } from 'lucide-react';
+import type { ReporterId, ContentId } from '@/db/types';
 
 // Types (should ideally be shared)
 export type ReportStatus = 'pending' | 'resolved' | 'dismissed';
@@ -32,11 +33,11 @@ export type ReportType = 'post' | 'thread' | 'user' | 'message';
 export interface Report {
 	id: number;
 	type: ReportType;
-	contentId: number;
+	contentId: ContentId;
 	contentPreview: string;
 	reportedUserId: number;
 	reportedUsername: string;
-	reporterId: number;
+	reporterId: ReporterId;
 	reporterUsername: string;
 	reason: string;
 	status: ReportStatus;

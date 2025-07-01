@@ -2,6 +2,7 @@ import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { shareToX } from '../services/xShareService';
 import { isAuthenticated } from '../../auth/auth.routes';
+import type { ContentId } from '@/db/types';
 
 const router = Router();
 
@@ -10,7 +11,7 @@ router.post('/post', isAuthenticated, async (req, res, next) => {
 		const { text, contentType, contentId } = req.body as {
 			text: string;
 			contentType: 'post' | 'thread' | 'referral';
-			contentId?: number;
+			contentId?: ContentId;
 		};
 
 		if (!text || !contentType) {

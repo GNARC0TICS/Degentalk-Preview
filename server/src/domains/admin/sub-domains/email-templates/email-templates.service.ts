@@ -12,6 +12,7 @@ import { marked } from 'marked';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { adminCacheService, AdminCacheKeys } from '../../shared/admin-cache.service';
 import { z } from 'zod';
+import type { TemplateId } from '@/db/types';
 
 // Template variable schema
 const templateVariableSchema = z.object({
@@ -303,7 +304,7 @@ export class EmailTemplateService {
 	/**
 	 * Get template version history
 	 */
-	async getTemplateVersions(templateId: number) {
+	async getTemplateVersions(templateId: TemplateId) {
 		try {
 			const versions = await db
 				.select()
@@ -322,7 +323,7 @@ export class EmailTemplateService {
 	/**
 	 * Restore a previous version
 	 */
-	async restoreVersion(templateId: number, versionId: number, adminId: string) {
+	async restoreVersion(templateId: TemplateId, versionId: number, adminId: string) {
 		try {
 			// Get the version to restore
 			const [version] = await db
@@ -362,7 +363,7 @@ export class EmailTemplateService {
 	/**
 	 * Get template usage statistics
 	 */
-	async getTemplateStats(templateId: number, days: number = 30) {
+	async getTemplateStats(templateId: TemplateId, days: number = 30) {
 		try {
 			const startDate = new Date();
 			startDate.setDate(startDate.getDate() - days);

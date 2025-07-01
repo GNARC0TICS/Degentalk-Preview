@@ -14,6 +14,7 @@ import type {
 	ThreadWithPostsAndUser
 } from '@/types/compat/forum';
 import type { ApiErrorData } from '@/types/core.types';
+import type { ReportId, ForumId, TagId, ContentId, PrefixId } from '@/db/types';
 
 export interface ThreadSearchParams {
 	structureId?: number;
@@ -139,7 +140,7 @@ export const forumApi = {
 		title: string;
 		structureId: number;
 		content: string;
-		prefixId?: number;
+		prefixId?: PrefixId;
 		editorState?: Record<string, unknown>;
 		tagIds?: number[];
 	}): Promise<ThreadWithUser> => {
@@ -156,7 +157,7 @@ export const forumApi = {
 		data: {
 			title?: string;
 			structureId?: number;
-			prefixId?: number;
+			prefixId?: PrefixId;
 			isLocked?: boolean;
 			isSticky?: boolean;
 			tagIds?: number[];
@@ -209,7 +210,7 @@ export const forumApi = {
 		return directResult;
 	},
 
-	addTagToThread: async (threadId: number, tagId: number): Promise<ForumTag> => {
+	addTagToThread: async (threadId: number, tagId: TagId): Promise<ForumTag> => {
 		const directResult = await apiRequest<ForumTag>({
 			url: `/api/forum/threads/${threadId}/tags`,
 			method: 'POST',
@@ -218,7 +219,7 @@ export const forumApi = {
 		return directResult;
 	},
 
-	removeTagFromThread: async (threadId: number, tagId: number): Promise<void> => {
+	removeTagFromThread: async (threadId: number, tagId: TagId): Promise<void> => {
 		// For void responses, apiRequest returns {}, which is compatible with Promise<void>
 		// Assuming the server returns 204 No Content and apiRequest handles it gracefully by returning {}
 		await apiRequest<void>({
@@ -233,7 +234,7 @@ export const forumApi = {
 	/**
 	 * Prefixes
 	 */
-	getPrefixes: async (forumId?: number): Promise<ThreadPrefix[]> => {
+	getPrefixes: async (forumId?: ForumId): Promise<ThreadPrefix[]> => {
 		const params = forumId ? { forumId: String(forumId) } : undefined; // Ensure forumId is string for params
 		const directResult = await apiRequest<ThreadPrefix[]>({
 			url: '/api/forum/prefixes',
@@ -434,11 +435,11 @@ export const forumApi = {
 	 */
 	reportPost: async (data: {
 		contentType: 'post' | 'thread' | 'message';
-		contentId: number;
+		contentId: ContentId;
 		reason: string;
 		details?: string;
-	}): Promise<{ success: true; message: string; reportId: number }> => {
-		const directResult = await apiRequest<{ success: true; message: string; reportId: number }>({
+	}): Promise<{ success: true; message: string; reportId: ReportId }> => {
+		const directResult = await apiRequest<{ success: true; message: string; reportId: ReportId }>({
 			url: '/api/forum/reports',
 			method: 'POST',
 			data

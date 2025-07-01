@@ -5,13 +5,14 @@ import { apiRequest } from '@/lib/queryClient';
 import { useToast } from './use-toast';
 import { useAuth } from './use-auth';
 import debounce from 'lodash/debounce';
+import type { CategoryId, PrefixId } from '@/db/types';
 
 interface DraftData {
 	id?: number;
 	title?: string;
 	content?: string;
-	categoryId?: number;
-	prefixId?: number;
+	categoryId?: CategoryId;
+	prefixId?: PrefixId;
 	tags?: number[];
 	lastSaved?: Date;
 }

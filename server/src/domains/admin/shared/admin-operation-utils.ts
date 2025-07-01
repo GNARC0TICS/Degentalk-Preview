@@ -7,6 +7,7 @@
 
 import { logger } from '@server/src/core/logger';
 import { AdminError, AdminErrorCodes } from '../admin.errors';
+import type { AdminId, EntityId } from '@/db/types';
 
 // Common role definitions
 export const USER_ROLES = {
@@ -94,13 +95,13 @@ export function createAuditLogEntry(
 	action: string,
 	entityType: string,
 	entityId: string,
-	adminId: number,
+	adminId: AdminId,
 	details?: Record<string, any>
 ): {
 	action: string;
 	entityType: string;
 	entityId: string;
-	adminId: number;
+	adminId: AdminId;
 	details: string;
 	timestamp: Date;
 } {

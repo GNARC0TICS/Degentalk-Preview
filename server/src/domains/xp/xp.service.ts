@@ -27,6 +27,7 @@ import { xpActionLogs, xpActionLimits } from './xp-actions-schema';
 // Import the centralized event handlers
 import { handleXpAward, handleXpLoss, handleLevelUp } from './events/xp.events';
 import { economyConfig, sanitizeMultiplier } from '@shared/economy/economy.config';
+import type { AdminId, ForumId } from '@/db/types';
 
 const { MAX_XP_PER_DAY, MAX_TIP_XP_PER_DAY } = economyConfig;
 
@@ -46,7 +47,7 @@ export class XpService {
 		adjustmentType: 'add' | 'subtract' | 'set' = 'add',
 		options: {
 			reason?: string;
-			adminId?: number;
+			adminId?: AdminId;
 			logAdjustment?: boolean;
 			skipLevelCheck?: boolean;
 			skipTriggers?: boolean;
@@ -151,7 +152,7 @@ export class XpService {
 	 */
 	private async logXpAdjustment(
 		userId: number,
-		adminId: number,
+		adminId: AdminId,
 		adjustmentType: string,
 		amount: number,
 		reason: string,
@@ -271,7 +272,7 @@ export class XpService {
 	 * @param forumId Optional forum ID for forum-specific multipliers
 	 * @returns Result of the XP update operation
 	 */
-	async awardXpWithContext(userId: number, action: XP_ACTION, metadata?: any, forumId?: number) {
+	async awardXpWithContext(userId: number, action: XP_ACTION, metadata?: any, forumId?: ForumId) {
 		try {
 			const canReceive = await this.checkActionLimits(userId, action);
 
@@ -582,7 +583,7 @@ export class XpService {
 	/**
 	 * Get the XP multiplier for a specific forum
 	 */
-	private async getForumMultiplier(forumId: number): Promise<number> {
+	private async getForumMultiplier(forumId: ForumId): Promise<number> {
 		try {
 			const [forum] = await db
 				.select({ xpMultiplier: forumStructure.xpMultiplier })

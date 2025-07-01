@@ -10,6 +10,8 @@ import {
 } from '@schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
+import type { AdminId } from '@/db/types';
+
 // Import core XP service once refactored, e.g.:
 // import { coreXpService } from '../../../xp/xp.service';
 
@@ -223,7 +225,7 @@ export class XpAdminService {
 		amount: number,
 		reason: string,
 		adjustmentType: 'add' | 'subtract' | 'set',
-		adminId: number
+		adminId: AdminId
 	) {
 		logger.info('XP_ADMIN_SERVICE', 'Admin adjust user XP called', {
 			userId,

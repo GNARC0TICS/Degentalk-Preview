@@ -12,6 +12,7 @@ import { logger } from '../../../core/logger';
 import { isAuthenticatedOptional } from '../../auth/middleware/auth.middleware';
 import { threadService } from '../services/thread.service';
 import { asyncHandler } from '@server/src/core/errors';
+import type { ForumId } from '@/db/types';
 
 const router = Router();
 
@@ -19,7 +20,7 @@ interface ContentQuery {
 	tab: 'trending' | 'recent' | 'following';
 	page?: number;
 	limit?: number;
-	forumId?: number;
+	forumId?: ForumId;
 }
 
 router.get(

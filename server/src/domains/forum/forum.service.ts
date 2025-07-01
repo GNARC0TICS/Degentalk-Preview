@@ -20,6 +20,7 @@ import { threadService } from './services/thread.service';
 import { postService } from './services/post.service';
 import { configService } from './services/config.service';
 import { cacheService } from './services/cache.service';
+import type { ForumId, ParentForumId } from '@/db/types';
 
 export interface ThreadSearchParams {
 	structureId?: number;
@@ -178,7 +179,7 @@ export const forumService = {
 	/**
 	 * Get sub-forums by parent forum ID
 	 */
-	async getSubForumsByParentForumId(parentForumId: number): Promise<ForumStructureWithStats[]> {
+	async getSubForumsByParentForumId(parentForumId: ForumId): Promise<ForumStructureWithStats[]> {
 		const parentForum = await this.getForumById(parentForumId);
 		return parentForum?.childForums || [];
 	},
@@ -217,7 +218,7 @@ export const forumService = {
 	/**
 	 * Get thread prefixes - simple delegation
 	 */
-	async getPrefixes(forumId?: number) {
+	async getPrefixes(forumId?: ForumId) {
 		if (forumId) {
 			return db
 				.select()

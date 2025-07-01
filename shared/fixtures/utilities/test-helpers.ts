@@ -5,6 +5,7 @@
 
 import { Factory } from '../core/factory';
 import { scenarioGenerator, AvailableScenario } from './scenario-generator';
+import type { AdminId } from '@/db/types';
 
 // Setup helpers for test environments
 export class TestDataManager {
@@ -312,7 +313,7 @@ export class TestDataManager {
 		}));
 	}
 
-	private generateAdminActions(adminId: number, users: any[]): any[] {
+	private generateAdminActions(adminId: AdminId, users: any[]): any[] {
 		const actions = ['user_warning', 'post_deletion', 'thread_lock', 'user_timeout', 'ban_user'];
 
 		return Array.from({ length: 10 }, (_, i) => ({

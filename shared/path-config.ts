@@ -1,3 +1,5 @@
+import type { CategoryId } from '@/db/types';
+
 /**
  * Degentalk Dynamic Path System Configuration
  *
@@ -104,7 +106,7 @@ export const xpRewards = {
  * @param categoryId The forum category ID
  * @returns The path ID or undefined if no mapping exists
  */
-export function getPathForCategory(categoryId: number): string | undefined {
+export function getPathForCategory(categoryId: CategoryId): string | undefined {
 	return categoryPathMappings[categoryId];
 }
 

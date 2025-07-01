@@ -26,13 +26,14 @@ import { getUserId } from '../auth/services/auth.service';
 import { canUser } from '@lib/auth/canUser.ts';
 import { logger } from '@server/src/core/logger';
 import { MentionsService } from '../social/mentions.service';
+import type { RoomId, GroupId } from '@/db/types';
 
 // Rate limiting for shoutbox messages (10 seconds cooldown)
 const userLastMessageTime = new Map<number, number>();
 const COOLDOWN_MS = 10000; // 10 seconds
 
 // Check if user has access to a specific chat room
-async function userHasRoomAccess(userId: number, roomId: number): Promise<boolean> {
+async function userHasRoomAccess(userId: number, roomId: RoomId): Promise<boolean> {
 	try {
 		// Get the room info
 		const roomInfo = await db.select().from(chatRooms).where(eq(chatRooms.id, roomId)).limit(1);
@@ -298,7 +299,7 @@ router.get('/messages', async (req: Request, res: Response) => {
 
 		// Variable to hold our where condition
 		let whereCondition;
-		let targetRoomId: number | null = roomId;
+		let targetRoomId: RoomId | null = roomId;
 
 		// Determine the target room ID if not explicitly provided
 		if (!targetRoomId) {

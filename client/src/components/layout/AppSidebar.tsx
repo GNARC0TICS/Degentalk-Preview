@@ -20,6 +20,7 @@ import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZon
 import { ROUTES } from '@/constants/routes';
 import { ProfileCard } from '@/components/widgets/ProfileCard';
 import { useAuth } from '@/hooks/use-auth';
+import type { CategoryId, ForumId } from '@/db/types';
 
 // Helper function to determine icon for a category
 function getCategoryEmoji(name: string): string {
@@ -46,8 +47,8 @@ function getCategoryEmoji(name: string): string {
 }
 
 type SidebarProps = {
-	activeCategoryId?: number;
-	forumId?: number;
+	activeCategoryId?: CategoryId;
+	forumId?: ForumId;
 };
 
 export function Sidebar({ activeCategoryId, forumId }: SidebarProps) {

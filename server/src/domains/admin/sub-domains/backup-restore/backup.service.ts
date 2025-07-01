@@ -17,6 +17,7 @@ import { pipeline } from 'stream/promises';
 import { join, dirname } from 'path';
 import { mkdirSync } from 'fs';
 import { z } from 'zod';
+import type { BackupId } from '@/db/types';
 
 // Validation schemas
 export const createBackupSchema = z.object({
@@ -48,7 +49,7 @@ export type CreateBackupInput = z.infer<typeof createBackupSchema>;
 export type ListBackupsInput = z.infer<typeof listBackupsSchema>;
 
 interface BackupProgress {
-	backupId: number;
+	backupId: BackupId;
 	status: 'pending' | 'running' | 'completed' | 'failed';
 	progressPercent: number;
 	currentStep: string;
@@ -66,7 +67,7 @@ export class BackupService {
 	async createBackup(
 		data: CreateBackupInput,
 		adminId: string
-	): Promise<{ backupId: number; message: string }> {
+	): Promise<{ backupId: BackupId; message: string }> {
 		try {
 			// Validate input
 			const validatedData = createBackupSchema.parse(data);
@@ -361,7 +362,7 @@ export class BackupService {
 
 	// Private helper methods
 
-	private async executeBackup(backupId: number, filePath: string, options: CreateBackupInput) {
+	private async executeBackup(backupId: BackupId, filePath: string, options: CreateBackupInput) {
 		try {
 			// Update status to running
 			await this.updateBackupStatus(backupId, 'running', null, {
@@ -477,7 +478,11 @@ export class BackupService {
 		return args;
 	}
 
-	private async executePgDump(args: string[], outputPath: string, backupId: number): Promise<void> {
+	private async executePgDump(
+		args: string[],
+		outputPath: string,
+		backupId: BackupId
+	): Promise<void> {
 		return new Promise((resolve, reject) => {
 			const pgDump = spawn('pg_dump', [...args, '--file', outputPath], {
 				env: {
@@ -532,7 +537,7 @@ export class BackupService {
 		});
 	}
 
-	private updateProgress(backupId: number, percent: number, step: string) {
+	private updateProgress(backupId: BackupId, percent: number, step: string) {
 		const progress = this.activeBackups.get(backupId);
 		if (progress) {
 			progress.progressPercent = percent;

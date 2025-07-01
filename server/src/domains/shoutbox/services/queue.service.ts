@@ -11,11 +11,12 @@
 
 import { logger } from '@server/src/core/logger';
 import { EventEmitter } from 'events';
+import type { RoomId, MessageId } from '@/db/types';
 
 interface QueuedMessage {
 	id: string;
 	userId: number;
-	roomId: number;
+	roomId: RoomId;
 	content: string;
 	type: 'regular' | 'command' | 'system' | 'broadcast';
 	priority: 'low' | 'normal' | 'high' | 'critical';
@@ -341,7 +342,7 @@ export class MessageQueueService extends EventEmitter {
 		return false;
 	}
 
-	getQueuedMessages(userId?: number, roomId?: number): QueuedMessage[] {
+	getQueuedMessages(userId?: number, roomId?: RoomId): QueuedMessage[] {
 		const allMessages: QueuedMessage[] = [];
 
 		for (const queue of this.queues.values()) {

@@ -13,6 +13,7 @@ import { ShoppingBag, Sparkles, Palette, Frame, Crown, Edit } from 'lucide-react
 import { Link } from 'wouter';
 import { applyPluginRewards } from '@/lib/utils/applyPluginRewards';
 import type { UserInventoryWithProduct } from '@/types/inventory';
+import type { InventoryId } from '@/db/types';
 
 interface CosmeticControlPanelProps {
 	userId: string; // Changed to string
@@ -52,7 +53,7 @@ export function CosmeticControlPanel({
 
 	// Mutation for equipping/unequipping items
 	const toggleEquipMutation = useMutation({
-		mutationFn: async ({ inventoryId, equip }: { inventoryId: number; equip: boolean }) => {
+		mutationFn: async ({ inventoryId, equip }: { inventoryId: InventoryId; equip: boolean }) => {
 			const endpoint = equip ? 'equip' : 'unequip';
 			return apiRequest({
 				method: 'POST',
@@ -93,7 +94,7 @@ export function CosmeticControlPanel({
 		badge: equippedItems.find((item) => item.product?.pluginReward?.type === 'badge')
 	};
 
-	const handleUnequip = (inventoryId: number) => {
+	const handleUnequip = (inventoryId: InventoryId) => {
 		if (!canEdit) return;
 		toggleEquipMutation.mutate({ inventoryId, equip: false });
 	};

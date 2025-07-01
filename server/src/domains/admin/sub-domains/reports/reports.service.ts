@@ -23,8 +23,9 @@ import type {
 	BanUserInput,
 	DeleteContentInput
 } from './reports.validators';
+import type { ReportId, AdminUserId, AuthorId, ContentId } from '@/db/types';
 
-async function getContentPreview(type: string, contentId: number): Promise<string | null> {
+async function getContentPreview(type: string, contentId: ContentId): Promise<string | null> {
 	try {
 		switch (type) {
 			case 'post': {
@@ -170,7 +171,7 @@ export class AdminReportsService {
 		};
 	}
 
-	async getReportById(reportId: number) {
+	async getReportById(reportId: ReportId) {
 		const [report] = await db
 			.select()
 			.from(reportedContent)
@@ -211,9 +212,9 @@ export class AdminReportsService {
 	}
 
 	async updateReportStatus(
-		reportId: number,
+		reportId: ReportId,
 		newStatus: 'resolved' | 'dismissed',
-		adminUserId: number,
+		adminUserId: AdminUserId,
 		notes?: string
 	) {
 		const [existingReport] = await db
@@ -256,7 +257,7 @@ export class AdminReportsService {
 		return updatedReport;
 	}
 
-	async banUser(userIdToBan: number, input: BanUserInput, adminUserId: number) {
+	async banUser(userIdToBan: number, input: BanUserInput, adminUserId: AdminUserId) {
 		const { reason, duration } = input;
 		const [user] = await db.select().from(users).where(eq(users.id, userIdToBan));
 		if (!user) {
@@ -318,12 +319,12 @@ export class AdminReportsService {
 
 	async deleteContent(
 		contentType: 'post' | 'thread' | 'message',
-		contentId: number,
+		contentId: ContentId,
 		input: DeleteContentInput,
-		adminUserId: number
+		adminUserId: AdminUserId
 	) {
 		const { reason } = input;
-		let contentAuthorId: number | null = null;
+		let contentAuthorId: AuthorId | null = null;
 
 		if (contentType === 'post') {
 			const [postData] = await db

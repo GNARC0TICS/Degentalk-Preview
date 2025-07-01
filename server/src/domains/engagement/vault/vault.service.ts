@@ -16,6 +16,7 @@ import { eq, and, lt, sql, gte } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
 import { WalletError, ErrorCodes } from '../../../core/errors';
 import { dgtService } from '../../wallet/dgt.service.js';
+import type { UnlockTransactionId, VaultLockId, ActionId } from '@/db/types';
 
 /**
  * Vault lock options structure
@@ -65,7 +66,7 @@ export class VaultService {
 			const unlockDate = new Date();
 			unlockDate.setDate(unlockDate.getDate() + lockDurationDays);
 
-			let transactionId: number | null = null; // This will be lockTransactionId in vaults table
+			let transactionId: ActionId | null = null; // This will be lockTransactionId in vaults table
 
 			if (currency === 'DGT') {
 				const deductResult = await dgtService.deductDgt(
@@ -140,7 +141,7 @@ export class VaultService {
 	 * @param vaultLockId The ID of the vault lock to unlock
 	 * @returns The updated vault lock record
 	 */
-	async unlockTokens(vaultLockId: number): Promise<any> {
+	async unlockTokens(vaultLockId: VaultLockId): Promise<any> {
 		try {
 			const [vaultLock] = await db
 				.select()
@@ -166,7 +167,7 @@ export class VaultService {
 				});
 			}
 
-			let unlockTransactionId: number | null = null;
+			let unlockTransactionId: UnlockTransactionId | null = null;
 			const vaultCurrency = (vaultLock.metadata as any)?.currency || 'DGT';
 
 			if (vaultCurrency === 'DGT') {

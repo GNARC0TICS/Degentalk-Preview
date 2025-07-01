@@ -7,6 +7,7 @@ import {
 	users
 } from '@schema';
 import { eq, and, desc, sql, count, inArray, or } from 'drizzle-orm';
+import type { RequestId } from '@/db/types';
 
 export class FriendsService {
 	/**
@@ -80,7 +81,10 @@ export class FriendsService {
 	/**
 	 * Respond to a friend request
 	 */
-	static async respondToFriendRequest(requestId: number, response: 'accept' | 'decline' | 'block') {
+	static async respondToFriendRequest(
+		requestId: RequestId,
+		response: 'accept' | 'decline' | 'block'
+	) {
 		// Get the request
 		const request = await db
 			.select()

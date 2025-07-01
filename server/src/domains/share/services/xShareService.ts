@@ -5,12 +5,13 @@ import { xShares } from '@schema/user/xShares';
 import { eq } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
 import { awardXShareReward } from '../../economy/services/rewardService';
+import type { ContentId } from '@/db/types';
 
 export async function shareToX(opts: {
 	userId: number;
 	text: string;
 	contentType: 'post' | 'thread' | 'referral';
-	contentId?: number;
+	contentId?: ContentId;
 }): Promise<{ tweetUrl: string }> {
 	const user = await db.query.users.findFirst({ where: eq(users.id, opts.userId) });
 	if (!user || !user.xAccessToken || !user.xRefreshToken) {

@@ -8,10 +8,11 @@ import { useContentFeed } from '@/contexts/content-feed-context';
 import { RefreshCw, Wifi, WifiOff, AlertCircle, RotateCcw } from 'lucide-react';
 import type { ContentTab, UseContentParams } from '@/hooks/use-content';
 import { useContent, useHomeContent, useForumContent } from '@/hooks/use-content';
+import type { ForumId } from '@/db/types';
 
 export interface ContentAreaProps {
 	className?: string;
-	forumId?: number;
+	forumId?: ForumId;
 	initialTab?: ContentTab;
 	showCategory?: boolean;
 	variant?: 'default' | 'compact';
@@ -341,7 +342,7 @@ export function HomeContentArea(props: Omit<ContentAreaProps, 'forumId'>) {
 /**
  * Pre-configured content area for forum pages
  */
-export function ForumContentArea({ forumId, ...props }: ContentAreaProps & { forumId: number }) {
+export function ForumContentArea({ forumId, ...props }: ContentAreaProps & { forumId: ForumId }) {
 	return (
 		<ContentArea
 			{...props}

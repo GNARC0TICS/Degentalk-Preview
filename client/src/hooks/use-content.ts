@@ -5,6 +5,7 @@ export type ContentTab = 'trending' | 'recent' | 'following';
 
 // Use unified ThreadDisplay type instead of custom ContentItem
 import type { ThreadDisplay } from '@/types/thread.types';
+import type { ForumId } from '@/db/types';
 
 export type ContentItem = ThreadDisplay;
 
@@ -19,7 +20,7 @@ export interface ContentResponse {
 
 export interface UseContentParams {
 	tab?: ContentTab;
-	forumId?: number;
+	forumId?: ForumId;
 	initialTab?: ContentTab;
 }
 
@@ -95,6 +96,6 @@ export function useHomeContent(initialTab: ContentTab = 'trending') {
 /**
  * Hook specifically for forum content (with forumId)
  */
-export function useForumContent(forumId: number, initialTab: ContentTab = 'recent') {
+export function useForumContent(forumId: ForumId, initialTab: ContentTab = 'recent') {
 	return useContent({ forumId, initialTab });
 }

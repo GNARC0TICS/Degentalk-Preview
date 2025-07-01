@@ -9,6 +9,7 @@ import { db } from '@db';
 import { wallets, transactions, users } from '@schema';
 import { eq, and, sql, desc } from 'drizzle-orm';
 import { walletConfigService } from './wallet-config.service';
+import type { ItemId, ActionId } from '@/db/types';
 
 export interface DGTTransactionMetadata {
 	source:
@@ -54,7 +55,7 @@ export interface DGTTransaction {
 }
 
 export interface DGTTransferResult {
-	transactionId: number;
+	transactionId: ActionId;
 	fromBalance: number;
 	toBalance: number;
 	transferId: string;

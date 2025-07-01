@@ -31,6 +31,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { cn } from '@/lib/utils';
 import type { Tag } from '@/types/forum';
+import type { TagId, PrefixId } from '@/db/types';
 
 export type ThreadSortOption =
 	| 'latest'
@@ -43,7 +44,7 @@ export type ThreadSortOption =
 export interface ThreadFiltersState {
 	sortBy: ThreadSortOption;
 	tags: number[];
-	prefixId?: number;
+	prefixId?: PrefixId;
 	solved?: 'solved' | 'unsolved';
 	bookmarked?: boolean;
 	mine?: boolean;
@@ -126,7 +127,7 @@ export function ThreadFilters({
 		setSavedFilters(defaultFilters);
 	};
 
-	const toggleTag = (tagId: number) => {
+	const toggleTag = (tagId: TagId) => {
 		setFilters((prev) => ({
 			...prev,
 			tags: prev.tags.includes(tagId)

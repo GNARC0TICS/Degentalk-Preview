@@ -101,4 +101,4 @@ export type PrefixId = Id<'prefix'>;
 export type EventId = Id<'event'>;
 export type AuditLogId = Id<'auditLog'>;
 export type ActionId = Id<'action'>;
-export type HeatEventId = Id<'heatEvent'>; 
+export type HeatEventId = Id<'heatEvent'>;

@@ -18,6 +18,7 @@ import {
 import { eq, and, sql, desc, gte, lt } from 'drizzle-orm';
 import { dgtService } from '../wallet/dgt.service';
 import { logger } from '../../core/logger';
+import type { CosmeticId, ItemId, SubscriptionId } from '@/db/types';
 
 export interface SubscriptionPurchaseRequest {
 	userId: string;
@@ -39,7 +40,7 @@ export interface SubscriptionInfo {
 
 export interface CosmeticDropInfo {
 	cosmeticType: 'avatar_frame' | 'badge' | 'title' | 'sticker' | 'emoji_pack' | 'profile_theme';
-	cosmeticId: number;
+	cosmeticId: CosmeticId;
 	cosmeticName: string;
 	cosmeticValue: number;
 }
@@ -184,7 +185,7 @@ export class SubscriptionService {
 	/**
 	 * Cancel a subscription
 	 */
-	async cancelSubscription(userId: string, subscriptionId: number): Promise<boolean> {
+	async cancelSubscription(userId: string, subscriptionId: SubscriptionId): Promise<boolean> {
 		try {
 			// Verify subscription belongs to user and is active
 			const subscription = await db
@@ -229,7 +230,7 @@ export class SubscriptionService {
 	/**
 	 * Renew monthly subscription
 	 */
-	async renewSubscription(subscriptionId: number): Promise<boolean> {
+	async renewSubscription(subscriptionId: SubscriptionId): Promise<boolean> {
 		try {
 			const subscription = await db
 				.select()

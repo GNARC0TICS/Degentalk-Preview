@@ -9,6 +9,7 @@ import {
 	// type GetPresignedUploadUrlParams, // This type is for storageService, not directly used here
 	// type PresignedUrlInfo // This type is for storageService, not directly used here
 } from '../../core/storage.service';
+import type { PackId, StickerId } from '@/db/types';
 
 // --- Types specific to this Upload Domain Service ---
 export type UploadType =
@@ -27,8 +28,8 @@ export interface CreatePresignedUrlServiceParams {
 	fileSize: number;
 	uploadType: UploadType;
 	// Sticker-specific parameters
-	stickerId?: number; // For individual sticker files
-	packId?: number; // For pack cover/preview images
+	stickerId?: StickerId; // For individual sticker files
+	packId?: PackId; // For pack cover/preview images
 }
 
 export interface PresignedUploadServiceResult {

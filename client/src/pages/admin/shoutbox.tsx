@@ -26,6 +26,7 @@ import {
 	EyeOff,
 	RefreshCw
 } from 'lucide-react';
+import type { RoomId, GroupId } from '@/db/types';
 
 interface ShoutboxConfig {
 	id: string;
@@ -69,7 +70,7 @@ interface ChatRoom {
 	description: string | null;
 	isPrivate: boolean;
 	minXpRequired: number | null;
-	minGroupIdRequired: number | null;
+	minGroupIdRequired: GroupId | null;
 	order: number | null;
 	createdAt: string;
 	createdBy: number;
@@ -86,7 +87,7 @@ interface ChatRoom {
 
 interface AnalyticsData {
 	period: string;
-	roomId?: number;
+	roomId?: RoomId;
 	eventCounts: Array<{ eventType: string; count: number }>;
 	hourlyActivity: Array<{ hour: number; count: number }>;
 	topUsers: Array<{ userId: string; username: string; count: number }>;
@@ -188,7 +189,7 @@ const ShoutboxAdminPage: React.FC = () => {
 
 	// Update room mutation
 	const updateRoomMutation = useMutation({
-		mutationFn: async ({ roomId, updates }: { roomId: number; updates: any }) => {
+		mutationFn: async ({ roomId, updates }: { roomId: RoomId; updates: any }) => {
 			const response = await fetch(`/api/shoutbox/rooms/${roomId}`, {
 				method: 'PATCH',
 				headers: { 'Content-Type': 'application/json' },
@@ -209,7 +210,7 @@ const ShoutboxAdminPage: React.FC = () => {
 
 	// Delete room mutation
 	const deleteRoomMutation = useMutation({
-		mutationFn: async (roomId: number) => {
+		mutationFn: async (roomId: RoomId) => {
 			const response = await fetch(`/api/shoutbox/rooms/${roomId}`, {
 				method: 'DELETE'
 			});

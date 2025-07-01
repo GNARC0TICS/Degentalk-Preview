@@ -6,6 +6,7 @@
 import { Factory } from '../core/factory';
 import { UserFactory, AdminUserFactory, CryptoWhaleFactory } from '../factories/user.factory';
 import { ThreadFactory, PostFactory, ForumCategoryFactory } from '../factories/forum.factory';
+import type { AdminId, WhaleId } from '@/db/types';
 
 // Register all factories
 Factory.register('user', new UserFactory());
@@ -508,7 +509,7 @@ Thanks in advance for any help! 🙏`,
 		return templates[Math.floor(Math.random() * templates.length)];
 	}
 
-	private generateWhaleTransactions(whaleId: number): any[] {
+	private generateWhaleTransactions(whaleId: WhaleId): any[] {
 		return Array.from({ length: 12 }, (_, i) => ({
 			id: Date.now() + i,
 			userId: whaleId,
@@ -519,7 +520,7 @@ Thanks in advance for any help! 🙏`,
 		}));
 	}
 
-	private generateWhaleTips(whaleId: number, userIds: number[]): any[] {
+	private generateWhaleTips(whaleId: WhaleId, userIds: number[]): any[] {
 		return Array.from({ length: 8 }, (_, i) => ({
 			id: Date.now() + i,
 			fromUserId: whaleId,
@@ -584,7 +585,7 @@ Thanks in advance for any help! 🙏`,
 		}));
 	}
 
-	private generateSettingsChanges(adminId: number): any[] {
+	private generateSettingsChanges(adminId: AdminId): any[] {
 		return [
 			{
 				setting: 'max_daily_tips',

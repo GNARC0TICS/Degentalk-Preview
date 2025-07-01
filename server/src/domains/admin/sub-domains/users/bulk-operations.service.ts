@@ -15,6 +15,7 @@ import {
 	validateRoleAssignment,
 	USER_ROLES
 } from '../../shared';
+import type { AdminId } from '@/db/types';
 
 export interface BulkOperationResult {
 	success: boolean;
@@ -26,14 +27,14 @@ export interface BulkOperationResult {
 export interface BulkRoleAssignmentData {
 	userIds: number[];
 	newRole: string;
-	adminId: number;
+	adminId: AdminId;
 	reason?: string;
 }
 
 export interface BulkBanData {
 	userIds: number[];
 	reason: string;
-	adminId: number;
+	adminId: AdminId;
 }
 
 export class AdminUserBulkOperationsService {
@@ -281,7 +282,7 @@ export class AdminUserBulkOperationsService {
 	 */
 	async bulkUnbanUsers(data: {
 		userIds: number[];
-		adminId: number;
+		adminId: AdminId;
 		reason?: string;
 	}): Promise<BulkOperationResult> {
 		const { userIds, adminId, reason } = data;
@@ -375,7 +376,7 @@ export class AdminUserBulkOperationsService {
 	/**
 	 * Get bulk operation status/history
 	 */
-	async getBulkOperationHistory(adminId: number, limit: number = 50) {
+	async getBulkOperationHistory(adminId: AdminId, limit: number = 50) {
 		try {
 			const history = await db
 				.select({

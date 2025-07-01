@@ -528,7 +528,6 @@ To incentivize user participation, the platform awards Experience Points (XP) an
 **Key Backend Components & Endpoints:**
 
 - **XP Service & Rewards:**
-
   - Controller: `server/src/domains/xp/xp.controller.ts` (function: `awardActionXp`)
   - Route: `POST /api/xp/award-action` (defined in `server/src/domains/xp/xp.routes.ts`)
   - Core Logic: `server/src/domains/xp/xp.service.ts` (e.g., `handleXpTrigger`, `processXpAction`) and `server/src/domains/xp/events/xp.events.ts`

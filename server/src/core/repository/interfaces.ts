@@ -7,6 +7,7 @@
 
 import type { User, ForumCategory, Thread, Post, Transaction } from '@schema';
 import type { PaginatedResult, QueryOptions } from './base-repository';
+import type { CategoryId, AuthorId, EntityId } from '@/db/types';
 
 // Base repository interface
 export interface IBaseRepository<T> {
@@ -36,14 +37,17 @@ export interface IForumRepository extends IBaseRepository<ForumCategory> {
 	findByType(type: string): Promise<ForumCategory[]>;
 	findWithStats(): Promise<ForumCategory[]>;
 	getHierarchy(): Promise<ForumCategory[]>;
-	updateStats(categoryId: number): Promise<void>;
+	updateStats(categoryId: CategoryId): Promise<void>;
 }
 
 // Thread Repository Interface
 export interface IThreadRepository extends IBaseRepository<Thread> {
 	findBySlug(slug: string): Promise<Thread | null>;
-	findByCategoryId(categoryId: number, options?: QueryOptions): Promise<PaginatedResult<Thread>>;
-	findByAuthorId(authorId: number, options?: QueryOptions): Promise<PaginatedResult<Thread>>;
+	findByCategoryId(
+		categoryId: CategoryId,
+		options?: QueryOptions
+	): Promise<PaginatedResult<Thread>>;
+	findByAuthorId(authorId: AuthorId, options?: QueryOptions): Promise<PaginatedResult<Thread>>;
 	searchThreads(query: string, options?: QueryOptions): Promise<PaginatedResult<Thread>>;
 	incrementViewCount(id: number): Promise<void>;
 	updatePostCount(id: number): Promise<void>;
@@ -53,7 +57,7 @@ export interface IThreadRepository extends IBaseRepository<Thread> {
 // Post Repository Interface
 export interface IPostRepository extends IBaseRepository<Post> {
 	findByThreadId(threadId: number, options?: QueryOptions): Promise<PaginatedResult<Post>>;
-	findByAuthorId(authorId: number, options?: QueryOptions): Promise<PaginatedResult<Post>>;
+	findByAuthorId(authorId: AuthorId, options?: QueryOptions): Promise<PaginatedResult<Post>>;
 	findReplies(parentPostId: number): Promise<Post[]>;
 	incrementLikeCount(id: number): Promise<void>;
 	decrementLikeCount(id: number): Promise<void>;
@@ -122,7 +126,7 @@ export interface RepositoryConfig {
 export interface RepositoryErrorContext {
 	operation: string;
 	entityType: string;
-	entityId?: number | string;
+	entityId?: EntityId | string;
 	filters?: Record<string, any>;
 	originalError?: Error;
 }

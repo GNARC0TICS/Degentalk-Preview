@@ -51,6 +51,7 @@ import {
 	Maximize2,
 	Lock as LockIcon
 } from 'lucide-react';
+import type { GroupId, MessageId } from '@/db/types';
 
 // Types for shoutbox messages
 interface ShoutboxUser {
@@ -59,7 +60,7 @@ interface ShoutboxUser {
 	avatarUrl: string | null;
 	activeAvatarUrl: string | null;
 	level: number;
-	groupId: number; // 1 = admin, 2 = moderator, 3 = regular user
+	groupId: GroupId; // 1 = admin, 2 = moderator, 3 = regular user
 }
 
 interface ShoutboxMessage {
@@ -196,7 +197,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 
 	// Delete message mutation for mods/admins
 	const deleteMessage = useMutation({
-		mutationFn: async (messageId: number) => {
+		mutationFn: async (messageId: MessageId) => {
 			const response = await axios.delete(`/api/shoutbox/messages/${messageId}`);
 			return response.data;
 		},
@@ -218,7 +219,7 @@ export default function ShoutboxWidget({ instanceId }: ShoutboxWidgetProps) {
 
 	// Pin message mutation for mods/admins
 	const pinMessage = useMutation({
-		mutationFn: async ({ messageId, isPinned }: { messageId: number; isPinned: boolean }) => {
+		mutationFn: async ({ messageId, isPinned }: { messageId: MessageId; isPinned: boolean }) => {
 			const response = await axios.patch(`/api/shoutbox/messages/${messageId}`, {
 				isPinned
 			});
