@@ -33,7 +33,10 @@ export type {
 // User type guards
 export {
   isUser,
-  isUserProfile
+  isUserProfile,
+  isUserAchievement,
+  isInventoryItem,
+  isUserInventory
 } from './user.types';
 
 // Forum domain types
@@ -67,7 +70,10 @@ export type {
 export {
   isForum,
   isThread,
-  isPost
+  isPost,
+  isThreadSubscription,
+  isThreadView,
+  isPostReaction
 } from './forum.types';
 
 // Economy domain types
@@ -101,6 +107,9 @@ export type {
 export {
   isWallet,
   isTransaction,
+  isPendingTransaction,
+  isTip,
+  isWithdrawal,
   toDGTAmount,
   fromDGTAmount,
   DGT_DECIMALS,
@@ -145,5 +154,7 @@ export {
   isFrame,
   isBadge,
   isTitle,
+  isItemBundle,
+  isUserCosmetics,
   RARITY_COLORS
 } from './cosmetics.types';

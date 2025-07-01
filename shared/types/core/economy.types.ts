@@ -232,7 +232,55 @@ export function isTransaction(value: unknown): value is Transaction {
     'id' in value &&
     'type' in value &&
     'amount' in value &&
-    'status' in value
+    'status' in value &&
+    'currency' in value &&
+    'reference' in value &&
+    'metadata' in value &&
+    typeof (value as Transaction).amount === 'number' &&
+    typeof (value as Transaction).fee === 'number'
+  );
+}
+
+export function isPendingTransaction(value: unknown): value is PendingTransaction {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    'walletId' in value &&
+    'amount' in value &&
+    'type' in value &&
+    'expiresAt' in value &&
+    'reason' in value &&
+    typeof (value as PendingTransaction).canCancel === 'boolean'
+  );
+}
+
+export function isTip(value: unknown): value is Tip {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    'fromUserId' in value &&
+    'toUserId' in value &&
+    'amount' in value &&
+    'transactionId' in value &&
+    typeof (value as Tip).amount === 'number' &&
+    typeof (value as Tip).isAnonymous === 'boolean'
+  );
+}
+
+export function isWithdrawal(value: unknown): value is Withdrawal {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    'walletId' in value &&
+    'amount' in value &&
+    'address' in value &&
+    'status' in value &&
+    'transactionId' in value &&
+    typeof (value as Withdrawal).amount === 'number' &&
+    typeof (value as Withdrawal).fee === 'number'
   );
 }
 

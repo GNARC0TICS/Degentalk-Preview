@@ -246,6 +246,34 @@ export function isTitle(value: unknown): value is Title {
   return isShopItem(value) && 'category' in value && value.category === 'title';
 }
 
+export function isItemBundle(value: unknown): value is ItemBundle {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    'name' in value &&
+    'items' in value &&
+    'price' in value &&
+    'discount' in value &&
+    'savings' in value &&
+    Array.isArray((value as ItemBundle).items) &&
+    typeof (value as ItemBundle).price === 'number'
+  );
+}
+
+export function isUserCosmetics(value: unknown): value is UserCosmetics {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'userId' in value &&
+    'inventory' in value &&
+    'favorites' in value &&
+    'equipped' in value &&
+    Array.isArray((value as UserCosmetics).activeBadges) &&
+    Array.isArray((value as UserCosmetics).favorites)
+  );
+}
+
 // Utility types
 export type ShopItemPreview = Pick<ShopItem, 'id' | 'name' | 'rarity' | 'price'> & {
   thumbnailUrl?: string;

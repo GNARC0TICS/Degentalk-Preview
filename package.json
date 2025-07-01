@@ -54,6 +54,7 @@
 		"codemod:apply": "tsx scripts/codemods/apply-id-codemod.ts",
 		"codemod:tsmorph:dry": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts --dry",
 		"codemod:tsmorph:apply": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts",
+		"generate:tree": "node scripts/tools/generate-tree.js",
 		"prepare": "simple-git-hooks",
 		"db:generate": "drizzle-kit generate --dialect postgresql --schema \"./db/schema/**/*.ts\" --out ./migrations/postgres",
 		"db:migrate:dev": "pnpm run db:push && pnpm run db:studio"

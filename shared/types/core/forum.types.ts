@@ -252,6 +252,39 @@ export function isPost(value: unknown): value is Post {
   );
 }
 
+export function isThreadSubscription(value: unknown): value is ThreadSubscription {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'threadId' in value &&
+    'userId' in value &&
+    'subscribedAt' in value &&
+    typeof (value as ThreadSubscription).notifyOnReply === 'boolean' &&
+    typeof (value as ThreadSubscription).notifyOnMention === 'boolean'
+  );
+}
+
+export function isThreadView(value: unknown): value is ThreadView {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'threadId' in value &&
+    'userId' in value &&
+    'viewedAt' in value
+  );
+}
+
+export function isPostReaction(value: unknown): value is PostReaction {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'userId' in value &&
+    'emoji' in value &&
+    'createdAt' in value &&
+    typeof (value as PostReaction).emoji === 'string'
+  );
+}
+
 // Utility types
 export type ThreadWithAuthor = Thread & { author: { id: UserId; username: string; level: number } };
 export type PostWithAuthor = Post & { author: { id: UserId; username: string; level: number } };

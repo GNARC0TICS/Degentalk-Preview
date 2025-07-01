@@ -6,7 +6,9 @@
  */
 
 import { promises as fs } from 'fs';
-import { join, relative } from 'path';
+import { join, relative, dirname, resolve } from 'path';
+import { fileURLToPath } from 'url';
+import minimist from 'minimist';
 
 // Directories to exclude from the tree
 const EXCLUDE_DIRS = [
@@ -90,31 +92,43 @@ async function generateTree(dir, basePath = '', depth = 0, prefix = '') {
  * Main function to generate the directory tree
  */
 async function main() {
-  const rootDir = process.cwd();
-  
+  const argv = minimist(process.argv.slice(2));
+
+  // Determine project root reliably even when called from sub-directories
+  const __filename = fileURLToPath(import.meta.url);
+  const scriptDir = dirname(__filename);
+  const rootDir = resolve(scriptDir, '../../');
+
+  // Determine output path
+  const outputPath = argv.output
+    ? resolve(process.cwd(), argv.output)
+    : join(rootDir, 'directory-tree.md');
+
   // Header for the markdown file
-  const header = `# ForumFusion Directory Structure
-  
-Generated on: ${new Date().toISOString().split('T')[0]}
+  let projectName = 'Project';
+  try {
+    const pkgRaw = await fs.readFile(join(rootDir, 'package.json'), 'utf8');
+    projectName = JSON.parse(pkgRaw).name || projectName;
+  } catch {
+    // ignore
+  }
 
-\`\`\`
-`;
+  const date = new Date().toISOString().split('T')[0];
+  const header = `# ${projectName} Directory Structure\n\nGenerated on: ${date}\n\n\`\`\`\n`;
 
-  const footer = `\`\`\`
-
-## Structure Notes
-
-- \`server/src/domains/\` - Domain-driven backend modules
-- \`client/src/components/\` - Reusable React components
-- \`client/src/pages/\` - Page components corresponding to routes
-- \`shared/\` - Shared code between client and server
-`;
+  const footer = `\`\`\`\n\n## Structure Notes\n\n- \`server/src/domains/\` - Domain-driven backend modules\n- \`client/src/components/\` - Reusable React components\n- \`client/src/pages/\` - Page components corresponding to routes\n- \`shared/\` - Shared code between client and server\n`;
 
   // Generate the tree
   const tree = await generateTree(rootDir, rootDir);
-  
-  // Output the formatted tree as markdown
-  process.stdout.write(header + tree + footer);
+  const markdown = header + tree + footer;
+
+  // Write to file
+  await fs.writeFile(outputPath, markdown, 'utf8');
+
+  // Also pipe to stdout so users can still redirect if desired
+  process.stdout.write(markdown);
+
+  console.log(`\nDirectory tree written to: ${relative(rootDir, outputPath)}`);
 }
 
 main().catch(error => {
