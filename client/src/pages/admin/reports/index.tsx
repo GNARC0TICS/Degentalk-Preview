@@ -66,7 +66,7 @@ import { z } from 'zod';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { apiRequest } from '@/lib/queryClient';
-import type { ContentId } from '@/db/types';
+import type { ContentId } from '@db/types';
 
 // Types for reports
 interface ReportedContent {

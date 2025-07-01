@@ -20,6 +20,7 @@ import { eq, desc } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
 import { dgtService } from '../../wallet/dgt.service';
 import { PgTransaction } from 'drizzle-orm/pg-core';
+import type { UserId } from '@/db/types';
 
 // Re-export event types from the main events file
 import { XpGainEvent, XpLossEvent, LevelUpEvent } from '../xp.events';
@@ -30,7 +31,7 @@ export { XpGainEvent, XpLossEvent, LevelUpEvent };
  * Central function to process XP gain and trigger appropriate side effects
  */
 export async function handleXpAward(
-	userId: number,
+	userId: UserId,
 	amount: number,
 	source: string,
 	reason?: string
@@ -133,7 +134,7 @@ export async function handleXpAward(
  */
 export async function handleLevelUp(
 	tx: any, // Transaction context
-	userId: number,
+	userId: UserId,
 	oldLevel: number,
 	newLevel: number,
 	username?: string
@@ -282,7 +283,7 @@ export async function handleLevelUp(
  * Process logic when a user loses XP (admin adjustment, penalty, etc.)
  */
 export async function handleXpLoss(
-	userId: number,
+	userId: UserId,
 	amount: number,
 	reason: string
 ): Promise<{

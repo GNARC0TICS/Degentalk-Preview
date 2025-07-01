@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { ForumId } from '@/db/types';
+import type { ForumId } from '@degentalk/db/types';
 
 /*
  * Centralised XP / DGT economy configuration.

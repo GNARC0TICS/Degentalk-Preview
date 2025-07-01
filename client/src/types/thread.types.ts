@@ -24,7 +24,7 @@ export interface ThreadUser {
 
 // Zone information for theming and navigation
 export interface ThreadZone {
-	id?: number;
+	id?: string;
 	name: string;
 	slug: string;
 	colorTheme: string;
@@ -32,14 +32,14 @@ export interface ThreadZone {
 
 // Category/Forum information
 export interface ThreadCategory {
-	id: number;
+	id: string;
 	name: string;
 	slug: string;
 }
 
 // Tag information
 export interface ThreadTag {
-	id: number;
+	id: string;
 	name: string;
 	slug?: string;
 	color?: string;
@@ -47,7 +47,7 @@ export interface ThreadTag {
 
 // Thread prefix for categorization
 export interface ThreadPrefix {
-	id?: number;
+	id?: string;
 	name: string;
 	color: string;
 }

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import type { RoomId, ActionId } from '@/db/types';
+import type { RoomId, ActionId } from '@db/types';
 
 export interface RainParams {
 	amount: number;

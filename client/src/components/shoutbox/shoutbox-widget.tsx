@@ -51,7 +51,7 @@ import {
 	Maximize2,
 	Lock as LockIcon
 } from 'lucide-react';
-import type { GroupId, MessageId } from '@/db/types';
+import type { GroupId, MessageId } from '@db/types';
 
 // Types for shoutbox messages
 interface ShoutboxUser {

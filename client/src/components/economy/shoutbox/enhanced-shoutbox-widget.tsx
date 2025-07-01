@@ -34,7 +34,7 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { apiRequest } from '@/lib/queryClient';
-import type { RoomId, GroupId, MessageId } from '@/db/types';
+import type { RoomId, GroupId, MessageId } from '@db/types';
 
 interface User {
 	id: number;

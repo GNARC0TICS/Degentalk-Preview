@@ -1,6 +1,6 @@
 import React from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
+import { Helmet } from 'react-helmet';
+import { Link } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
 import { useGamification } from '@/hooks/use-gamification';
 import { MissionDashboard } from '@/components/gamification';
@@ -57,10 +57,10 @@ export default function MissionsPage() {
 
 	return (
 		<>
-			<Head>
+			<Helmet>
 				<title>Missions | Degentalk</title>
 				<meta name="description" content="Complete daily, weekly, and special event missions." />
-			</Head>
+			</Helmet>
 
 			<div className="container py-8 max-w-6xl space-y-8">
 				{/* Header */}

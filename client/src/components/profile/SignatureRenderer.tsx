@@ -3,8 +3,6 @@ import DOMPurify from 'dompurify';
 import { SignatureTierLevel } from '@shared/signature/SignatureTierConfig';
 import { useUserCosmetics } from '@/hooks/useUserCosmetics';
 import { cn } from '@/lib/utils';
-import type { AppliedCosmetics } from '@/types/inventory';
-import type { UserId } from '@/db/types';
 
 type SignatureRendererProps = {
 	signature: string;

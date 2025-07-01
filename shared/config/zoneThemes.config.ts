@@ -1,5 +1,5 @@
-import { Flame, Target, Sparkles, MessageSquare, Crown } from 'lucide-react';
-import type { ComponentType } from 'react';
+// Note: Icon strings reference lucide-react icon names
+// The actual icons should be resolved in the client
 
 // Extended visual theme configuration for Zones / Primary Areas
 // This file centralises all visual styling tokens for Zone-level components (cards, nav items, etc.)
@@ -17,8 +17,8 @@ export interface ZoneTheme {
 	border: string;
 	/** Tailwind shadow utility used for glow */
 	glow: string;
-	/** Lucide icon shown when no custom emoji/icon is provided */
-	icon: ComponentType<{ className?: string }>;
+	/** Lucide icon name shown when no custom emoji/icon is provided */
+	icon: string;
 	/** Optional – controls shadow intensity classes */
 	glowIntensity?: GlowIntensity;
 	/** Optional – overlay used for rarity tiers */
@@ -31,7 +31,7 @@ export const ZONE_THEMES: Record<string, ZoneTheme> = {
 		accent: 'text-red-400',
 		border: 'border-red-500/30 hover:border-red-500/60',
 		glow: 'shadow-red-500/20',
-		icon: Flame,
+		icon: 'Flame',
 		glowIntensity: 'high',
 		rarityOverlay: 'common'
 	},
@@ -40,7 +40,7 @@ export const ZONE_THEMES: Record<string, ZoneTheme> = {
 		accent: 'text-blue-400',
 		border: 'border-blue-500/30 hover:border-blue-500/60',
 		glow: 'shadow-blue-500/20',
-		icon: Target,
+		icon: 'Target',
 		glowIntensity: 'medium',
 		rarityOverlay: 'common'
 	},
@@ -49,7 +49,7 @@ export const ZONE_THEMES: Record<string, ZoneTheme> = {
 		accent: 'text-purple-400',
 		border: 'border-purple-500/30 hover:border-purple-500/60',
 		glow: 'shadow-purple-500/20',
-		icon: Sparkles,
+		icon: 'Sparkles',
 		glowIntensity: 'medium',
 		rarityOverlay: 'premium'
 	},
@@ -58,7 +58,7 @@ export const ZONE_THEMES: Record<string, ZoneTheme> = {
 		accent: 'text-amber-400',
 		border: 'border-amber-500/30 hover:border-amber-500/60',
 		glow: 'shadow-amber-500/20',
-		icon: MessageSquare,
+		icon: 'MessageSquare',
 		glowIntensity: 'low',
 		rarityOverlay: 'common'
 	},
@@ -67,7 +67,7 @@ export const ZONE_THEMES: Record<string, ZoneTheme> = {
 		accent: 'text-gray-400',
 		border: 'border-gray-500/30 hover:border-gray-500/60',
 		glow: 'shadow-gray-500/20',
-		icon: MessageSquare,
+		icon: 'MessageSquare',
 		glowIntensity: 'low',
 		rarityOverlay: 'common'
 	},
@@ -76,7 +76,7 @@ export const ZONE_THEMES: Record<string, ZoneTheme> = {
 		accent: 'text-violet-400',
 		border: 'border-violet-500/30 hover:border-violet-500/60',
 		glow: 'shadow-violet-500/20',
-		icon: Crown,
+		icon: 'Crown',
 		glowIntensity: 'high',
 		rarityOverlay: 'legendary'
 	},
@@ -85,7 +85,7 @@ export const ZONE_THEMES: Record<string, ZoneTheme> = {
 		accent: 'text-zinc-400',
 		border: 'border-zinc-500/30 hover:border-zinc-500/60',
 		glow: 'shadow-zinc-500/20',
-		icon: MessageSquare,
+		icon: 'MessageSquare',
 		glowIntensity: 'medium',
 		rarityOverlay: 'common'
 	}

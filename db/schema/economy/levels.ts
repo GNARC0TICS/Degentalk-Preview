@@ -1,9 +1,10 @@
-import { pgTable, integer, bigint, varchar, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, integer, bigint, varchar, jsonb, uuid } from 'drizzle-orm/pg-core';
 import { titles } from './titles'; // Placeholder
 import { badges } from './badges'; // Placeholder
 
 export const levels = pgTable('levels', {
-	level: integer('level').primaryKey().notNull(),
+	id: uuid('id').primaryKey().defaultRandom(),
+	level: integer('level').notNull().unique(),
 	/**
 	 * XP required to reach (keeps legacy column name `min_xp` for backward-compat).
 	 * A view / trigger can map to `xp_required` once all codepaths are updated.

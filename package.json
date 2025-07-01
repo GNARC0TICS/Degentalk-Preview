@@ -14,6 +14,10 @@
 		"dev:server": "pnpm --filter @degentalk/server dev",
 		"dev:seed": "pnpm run kill-ports && pnpm run seed:all && pnpm dev",
 		"dev:quick": "pnpm run kill-ports && pnpm --parallel --filter @degentalk/server dev:quick --filter @degentalk/client dev",
+		"validate:workspace": "pnpm -r exec pnpm why @degentalk/shared",
+		"validate:boundaries": "node scripts/validation/validate-boundaries.cjs",
+		"validate:dependencies": "node scripts/validation/validate-dependencies.cjs",
+		"clean:artifacts": "find . -name 'package-lock.json' -not -path './node_modules/*' -delete",
 		"build": "pnpm -r build",
 		"build:client": "pnpm --filter @degentalk/client build",
 		"build:server": "pnpm --filter @degentalk/server build",
@@ -51,34 +55,33 @@
 		"codemod:tsmorph:apply": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts",
 		"prepare": "simple-git-hooks",
 		"db:generate": "drizzle-kit generate --dialect postgresql --schema \"./db/schema/**/*.ts\" --out ./migrations/postgres",
-		"db:push": "drizzle-kit push --dialect postgresql",
-		"db:studio": "drizzle-kit studio --dialect postgresql",
 		"db:migrate:dev": "pnpm run db:push && pnpm run db:studio"
 	},
 	"devDependencies": {
+		"@paralleldrive/cuid2": "^2.2.2",
 		"@types/node": "^20.19.0",
+		"@types/ws": "^8.5.13",
 		"@typescript-eslint/eslint-plugin": "6.21.0",
 		"@typescript-eslint/parser": "6.21.0",
 		"chalk": "^5.3.0",
 		"concurrently": "^8.2.2",
 		"dotenv": "^16.5.0",
 		"dotenv-cli": "^8.0.0",
-		"eslint": "^8.57.0",
-		"prettier": "^3.5.3",
-		"simple-git-hooks": "^2.12.0",
-		"tsx": "^4.19.4",
-		"typescript": "5.6.3",
-		"glob": "^10.3.10",
-		"utility-types": "^3.10.0",
-		"minimist": "^1.2.8",
-		"ts-node": "^10.9.2",
-		"ts-morph": "^26.0.0",
 		"drizzle-kit": "0.31.4",
 		"drizzle-orm": "0.44.2",
-		"@paralleldrive/cuid2": "^2.2.2"
+		"eslint": "^8.57.0",
+		"glob": "^10.3.10",
+		"minimist": "^1.2.8",
+		"prettier": "^3.5.3",
+		"simple-git-hooks": "^2.12.0",
+		"ts-morph": "^26.0.0",
+		"ts-node": "^10.9.2",
+		"tsx": "^4.19.4",
+		"typescript": "5.6.3",
+		"utility-types": "^3.10.0"
 	},
 	"simple-git-hooks": {
-		"pre-commit": "pnpm format && git add -A"
+		"pre-commit": "echo \"[simple-git-hooks] Prettier formatting temporarily disabled (2025-07-01). Remove this line or revert commit to re-enable.\""
 	},
 	"pnpm": {
 		"overrides": {
@@ -97,6 +100,70 @@
 			"*prettier*",
 			"@types/*",
 			"typescript"
-		]
+		],
+		"updateConfig": {
+			"ignoreDependencies": [
+				"@degentalk/*"
+			]
+		},
+		"patchedDependencies": {},
+		"allowNonAppliedPatches": true,
+		"packageExtensions": {
+			"@degentalk/client": {
+				"peerDependencies": {
+					"@degentalk/shared": "workspace:*"
+				}
+			},
+			"@degentalk/server": {
+				"peerDependencies": {
+					"@degentalk/shared": "workspace:*",
+					"@degentalk/db": "workspace:*"
+				}
+			},
+			"@degentalk/scripts": {
+				"peerDependencies": {
+					"@degentalk/shared": "workspace:*",
+					"@degentalk/db": "workspace:*"
+				}
+			}
+		},
+		"dependencyRules": {
+			"@degentalk/shared": {
+				"allowedDependencies": [],
+				"disallowedDependencies": [
+					"@degentalk/*"
+				]
+			},
+			"@degentalk/db": {
+				"allowedDependencies": [
+					"@degentalk/shared"
+				],
+				"disallowedDependencies": [
+					"@degentalk/client",
+					"@degentalk/server",
+					"@degentalk/scripts"
+				]
+			},
+			"@degentalk/client": {
+				"allowedDependencies": [
+					"@degentalk/shared"
+				],
+				"disallowedDependencies": [
+					"@degentalk/db",
+					"@degentalk/server",
+					"@degentalk/scripts"
+				]
+			},
+			"@degentalk/server": {
+				"allowedDependencies": [
+					"@degentalk/shared",
+					"@degentalk/db"
+				],
+				"disallowedDependencies": [
+					"@degentalk/client",
+					"@degentalk/scripts"
+				]
+			}
+		}
 	}
 }

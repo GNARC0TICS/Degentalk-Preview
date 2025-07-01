@@ -20,7 +20,7 @@ const router = Router();
 
 // Validation schemas
 const createBookmarkSchema = z.object({
-	threadId: z.number().int().positive()
+	threadId: z.string().uuid('Invalid threadId format')
 });
 
 // Create bookmark
@@ -94,7 +94,7 @@ router.delete(
 	requireAuth,
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const threadId = parseInt(req.params.threadId);
+			const threadId = req.params.threadId; // Note: Consider adding ThreadId type if needed
 			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!userId) {

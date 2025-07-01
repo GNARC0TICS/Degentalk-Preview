@@ -9,7 +9,7 @@ import type { ThreadDisplay, ThreadsApiResponse } from '@/types/thread.types';
 import { PAGINATION_CONFIG } from '@/config/pagination.config';
 import { ThreadActionsProvider } from '@/features/forum/contexts/ThreadActionsContext';
 import ThreadRow from '@/components/forum/ThreadRow';
-import type { ForumId } from '@/db/types';
+import type { ForumId } from '@db/types';
 
 type DisplayMode = 'card' | 'table';
 

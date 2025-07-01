@@ -5,12 +5,14 @@
  * These are used for triggering notifications and other actions when XP changes occur
  */
 
+import type { UserId } from '@/db/types';
+
 /**
  * Event emitted when a user gains XP
  */
 export class XpGainEvent {
 	constructor(
-		public userId: number,
+		public userId: UserId,
 		public amount: number,
 		public source: string,
 		public metadata?: any
@@ -22,7 +24,7 @@ export class XpGainEvent {
  */
 export class XpLossEvent {
 	constructor(
-		public userId: number,
+		public userId: UserId,
 		public amount: number,
 		public reason: string,
 		public metadata?: any
@@ -34,7 +36,7 @@ export class XpLossEvent {
  */
 export class LevelUpEvent {
 	constructor(
-		public userId: number,
+		public userId: UserId,
 		public oldLevel: number,
 		public newLevel: number,
 		public newXp: number,

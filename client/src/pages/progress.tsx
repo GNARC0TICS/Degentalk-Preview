@@ -9,8 +9,7 @@
  */
 
 import { useState } from 'react';
-import { GetServerSideProps } from 'next';
-import Head from 'next/head';
+import { Helmet } from 'react-helmet';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -91,13 +90,13 @@ export default function GamificationPage() {
 
 	return (
 		<>
-			<Head>
+			<Helmet>
 				<title>Progress - Degentalk</title>
 				<meta
 					name="description"
 					content="Track your progress, unlock achievements, and compete with other traders"
 				/>
-			</Head>
+			</Helmet>
 
 			<div className="min-h-screen bg-zinc-950">
 				<div className="container mx-auto px-4 py-8 space-y-8">
@@ -266,7 +265,6 @@ export default function GamificationPage() {
 					achievement={showAchievementModal?.achievement}
 					onShare={() => {
 						// TODO: Implement sharing functionality
-						console.log('Share achievement:', showAchievementModal);
 					}}
 				/>
 			</div>
@@ -274,8 +272,3 @@ export default function GamificationPage() {
 	);
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-	return {
-		props: {}
-	};
-};

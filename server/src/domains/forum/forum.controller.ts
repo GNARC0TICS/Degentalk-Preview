@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import { forumService } from './forum.service';
 import type { ThreadSearchParams } from './forum.service';
 import { logger } from '@server/src/core/logger';
+import type { StructureId, ThreadId } from '@/db/types';
 // import { isAuthenticated } from "@server/src/domains/auth/middleware/auth.middleware"; // Removed as unused
 
 // TODO: @syncSchema threads
@@ -102,11 +103,11 @@ export const forumController = {
 		try {
 			const { id } = req.params;
 
-			if (!id || isNaN(parseInt(id))) {
+			if (!id) {
 				return res.status(400).json({ message: 'Valid category ID is required' });
 			}
 
-			const category = await forumService.getCategoryById(parseInt(id));
+			const category = await forumService.getCategoryById(id as StructureId);
 
 			if (!category) {
 				return res.status(404).json({ message: 'Category not found' });
@@ -126,7 +127,7 @@ export const forumController = {
 	async getPrefixes(req: Request, res: Response) {
 		try {
 			const categoryId = req.query.categoryId
-				? parseInt(req.query.categoryId as string)
+				? (req.query.categoryId as StructureId)
 				: undefined;
 
 			const prefixes = await forumService.getPrefixes(categoryId);
@@ -157,7 +158,7 @@ export const forumController = {
 			logger.debug('ForumController', 'Thread search endpoint called', { query: req.query });
 
 			const params: ThreadSearchParams = {
-				categoryId: req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined,
+				categoryId: req.query.categoryId ? (req.query.categoryId as StructureId) : undefined,
 				prefix: req.query.prefix as string | undefined,
 				tag: req.query.tag as string | undefined,
 				page: req.query.page ? parseInt(req.query.page as string) : 1,
@@ -179,7 +180,7 @@ export const forumController = {
 	// ADDED: Controller function to mark/unmark a thread as solved
 	async solveThread(req: Request, res: Response) {
 		try {
-			const threadId = parseInt(req.params.threadId);
+			const threadId = req.params.threadId as ThreadId;
 			// The route handler already validated that threadId is a number and permissions are checked.
 			// The route handler also validated the body and extracted postId.
 			const { postId } = req.body; // postId is optional (null/undefined for unsolve)
@@ -240,9 +241,9 @@ export const forumController = {
 	// Get child forums by parent ID
 	async getForumsByParentId(req: Request, res: Response) {
 		try {
-			const parentId = req.query.parentId ? parseInt(req.query.parentId as string) : undefined;
+			const parentId = req.query.parentId ? (req.query.parentId as StructureId) : undefined;
 
-			if (!parentId || isNaN(parentId)) {
+			if (!parentId) {
 				return res.status(400).json({ message: 'Valid parent ID is required' });
 			}
 

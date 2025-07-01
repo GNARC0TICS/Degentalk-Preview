@@ -461,7 +461,7 @@ export function getAllAdminModules(): AdminModule[] {
 export interface AdminModuleV2 {
 	slug: string; // unique slug, used as key
 	label: string;
-	icon: AdminRouteIcon | string; // fall back to string for lucide name
+	icon: string; // lucide icon name
 	permission: string; // e.g. 'admin:users:view'
 	component: LazyExoticComponent<ComponentType<any>>;
 	path: string; // URL path for React-Router (absolute)

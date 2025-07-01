@@ -22,6 +22,7 @@ import {
 	transactions
 } from '@schema';
 import { logger } from '../../core/logger';
+import type { UserId } from '@/db/types';
 
 export interface ProgressionMetrics {
 	period: string;
@@ -104,7 +105,7 @@ export interface GamificationDashboard {
 	missions: MissionMetrics;
 	engagement: EngagementMetrics;
 	topPerformers: Array<{
-		userId: number;
+		userId: UserId;
 		username: string;
 		level: number;
 		xp: number;

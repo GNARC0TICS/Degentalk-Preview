@@ -52,20 +52,7 @@ export function parseId<T extends string>(value: unknown): Id<T> | null {
 	}
 }
 
-/**
- * TEMPORARY: Bridge function to convert numeric IDs to string during migration
- * This will be removed once migration is complete
- *
- * @deprecated Use UUIDs directly instead of converting from numbers
- */
-export function toInt(value: unknown): number {
-	if (typeof value === 'number') return value;
-	if (typeof value === 'string') {
-		const num = parseInt(value, 10);
-		if (!isNaN(num)) return num;
-	}
-	throw new Error(`Cannot convert to integer: ${value}`);
-}
+// Legacy toInt function removed - use UUID-based branded types instead
 
 /**
  * Generate a new UUID v4

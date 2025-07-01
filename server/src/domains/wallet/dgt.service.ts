@@ -9,7 +9,7 @@ import { db } from '@db';
 import { wallets, transactions, users } from '@schema';
 import { eq, and, sql, desc } from 'drizzle-orm';
 import { walletConfigService } from './wallet-config.service';
-import type { ItemId, ActionId } from '@/db/types';
+import type { ItemId, ActionId, WalletId, TransactionId } from '@/db/types';
 
 export interface DGTTransactionMetadata {
 	source:
@@ -41,11 +41,11 @@ export interface DGTBalance {
 	userId: string;
 	balance: number;
 	lastTransactionAt: Date | null;
-	walletId: number;
+	walletId: WalletId;
 }
 
 export interface DGTTransaction {
-	id: number;
+	id: TransactionId;
 	userId: string;
 	amount: number;
 	type: string;
@@ -167,7 +167,8 @@ export class DGTService {
 			};
 		} catch (error) {
 			console.error('Error crediting DGT:', error);
-			throw new Error(`Failed to credit DGT: ${error.message}`);
+			const err = error as Error;
+			throw new Error(`Failed to credit DGT: ${err.message}`);
 		}
 	}
 
@@ -239,7 +240,8 @@ export class DGTService {
 			};
 		} catch (error) {
 			console.error('Error debiting DGT:', error);
-			throw new Error(`Failed to debit DGT: ${error.message}`);
+			const err = error as Error;
+			throw new Error(`Failed to debit DGT: ${err.message}`);
 		}
 	}
 
@@ -328,7 +330,8 @@ export class DGTService {
 			};
 		} catch (error) {
 			console.error('Error transferring DGT:', error);
-			throw new Error(`Failed to transfer DGT: ${error.message}`);
+			const err = error as Error;
+			throw new Error(`Failed to transfer DGT: ${err.message}`);
 		}
 	}
 

@@ -1,233 +1,335 @@
-import type { AdminId } from '@db/types';
-#!/usr/bin/env node
+#!/usr/bin/env tsx
 
 /**
- * Safe Migration Validator - Enforces production migration safety rules
+ * Safe Migration Validator
  * 
- * Safety rules:
- * - Production migrations must end with _safe.sql
- * - No destructive operations (DROP, DELETE, TRUNCATE) in safe files
- * - Warns about risky operations (ALTER TYPE, NOT NULL, UNIQUE)
- * - Checks for proper documentation and rollback instructions
- * 
- * Usage:
- *   npm run migration:validate [env]    - Validate migrations
- *   npm run migration:template <name>   - Generate safe template
- * 
- * Environments:
- *   dev - Relaxed rules, warnings only
- *   staging - Standard validation
- *   prod - Strict validation, enforces _safe.sql naming
+ * Enforces production migration safety rules:
+ * - Detects unsafe operations (DROP, DELETE, TRUNCATE)
+ * - Warns about risky operations (ALTER TYPE, ADD NOT NULL)
+ * - Validates migration file naming conventions
+ * - Checks for rollback documentation
  */
 
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
-import { fileURLToPath } from 'url';
+import chalk from 'chalk';
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url));
-const projectRoot = join(__dirname, '../..');
-
-interface ValidationResult {
-  valid: boolean;
-  errors: : AdminId[];
-  warnings: : AdminId[];
+interface UnsafePattern {
+  pattern: RegExp;
+  severity: 'error' | 'warning';
+  description: string;
+  suggestion?: string;
 }
 
-class SafeMigrationValidator {
-  private destructivePatterns = [
-    /DROP\s+TABLE/i,
-    /DROP\s+COLUMN/i,
-    /DELETE\s+FROM/i,
-    /TRUNCATE/i,
-    /ALTER\s+TABLE\s+\w+\s+DROP/i,
-  ];
+interface MigrationIssue {
+  file: string;
+  line: number;
+  severity: 'error' | 'warning';
+  message: string;
+  suggestion?: string;
+}
 
-  private riskyPatterns = [
-    /ALTER\s+TABLE\s+\w+\s+ALTER\s+COLUMN\s+\w+\s+TYPE/i,
-    /CREATE\s+UNIQUE\s+INDEX/i,
-    /ADD\s+CONSTRAINT\s+\w+\s+UNIQUE/i,
-    /NOT\s+NULL/i,
-  ];
+interface ValidationOptions {
+  environment: 'dev' | 'staging' | 'prod';
+  strict: boolean;
+}
 
-  async validateMigrations(environment: 'dev' | 'staging' | 'prod' = 'prod'): Promise<ValidationResult> {
-    const result: ValidationResult = {
-      valid: true,
-      errors: [],
-      warnings: []
-    };
+class MigrationValidator {
+  private issues: MigrationIssue[] = [];
+  private migrationsDir: string;
 
-    const migrationsDir = join(projectRoot, 'migrations/postgres');
-    
-    try {
-      const files = await readdir(migrationsDir);
-      const sqlFiles = files.filter(f => f.endsWith('.sql'));
-
-      for (const file of sqlFiles) {
-        const filePath = join(migrationsDir, file);
-        await this.validateFile(filePath, environment, result);
-      }
-    } catch (error) {
-      result.valid = false;
-      result.errors.push(`Failed to read migrations directory: ${error}`);
-    }
-
-    return result;
+  constructor() {
+    this.migrationsDir = join(process.cwd(), 'migrations/postgres');
   }
 
-  private async validateFile(filePath: : AdminId, environment: : AdminId, result: ValidationResult): Promise<void> {
+  private getUnsafePatterns(): UnsafePattern[] {
+    return [
+      // Critical unsafe operations
+      {
+        pattern: /\bDROP\s+(TABLE|COLUMN|INDEX|CONSTRAINT)\b/gi,
+        severity: 'error',
+        description: 'DROP operations can cause data loss',
+        suggestion: 'Consider deprecation or safe removal process'
+      },
+      {
+        pattern: /\bDELETE\s+FROM\b/gi,
+        severity: 'error',
+        description: 'DELETE operations in migrations can cause data loss',
+        suggestion: 'Use data migration scripts instead'
+      },
+      {
+        pattern: /\bTRUNCATE\s+TABLE\b/gi,
+        severity: 'error',
+        description: 'TRUNCATE operations cause immediate data loss',
+        suggestion: 'Use DELETE with WHERE clause or separate script'
+      },
+      
+      // Risky operations that should be reviewed
+      {
+        pattern: /\bALTER\s+TABLE\s+\w+\s+ADD\s+COLUMN\s+\w+.*NOT\s+NULL\b/gi,
+        severity: 'warning',
+        description: 'Adding NOT NULL columns to existing tables without defaults',
+        suggestion: 'Add DEFAULT value or make nullable initially'
+      },
+      {
+        pattern: /\bALTER\s+TYPE\b/gi,
+        severity: 'warning',
+        description: 'Altering types can cause downtime in large tables',
+        suggestion: 'Consider creating new column and migration strategy'
+      },
+      {
+        pattern: /\bCREATE\s+UNIQUE\s+INDEX\b/gi,
+        severity: 'warning',
+        description: 'Creating unique indexes can fail on existing data',
+        suggestion: 'Validate data uniqueness before creating index'
+      },
+      {
+        pattern: /\bADD\s+CONSTRAINT.*UNIQUE\b/gi,
+        severity: 'warning',
+        description: 'Adding unique constraints can fail on existing data',
+        suggestion: 'Clean duplicate data before adding constraint'
+      },
+      
+      // Performance concerns
+      {
+        pattern: /\bCREATE\s+INDEX\s+(?!CONCURRENTLY)\b/gi,
+        severity: 'warning',
+        description: 'Creating indexes without CONCURRENTLY causes table locks',
+        suggestion: 'Use CREATE INDEX CONCURRENTLY for production'
+      }
+    ];
+  }
+
+  private async getMigrationFiles(): Promise<string[]> {
+    try {
+      const files = await readdir(this.migrationsDir);
+      return files
+        .filter(file => file.endsWith('.sql'))
+        .map(file => join(this.migrationsDir, file))
+        .sort();
+    } catch (error) {
+      throw new Error(`Failed to read migrations directory: ${error}`);
+    }
+  }
+
+  private validateFileName(filePath: string, options: ValidationOptions): void {
     const fileName = filePath.split('/').pop() || '';
     
-    try {
-      const content = await readFile(filePath, 'utf-8');
-      
-      // Production environment requires _safe.sql naming
-      if (environment === 'prod' && !fileName.endsWith('_safe.sql')) {
-        result.valid = false;
-        result.errors.push(`Production migration must end with '_safe.sql': ${fileName}`);
-        return;
-      }
+    // In production, enforce _safe.sql naming for safety
+    if (options.environment === 'prod' && !fileName.includes('_safe.sql')) {
+      this.issues.push({
+        file: fileName,
+        line: 0,
+        severity: 'error',
+        message: 'Production migrations must end with _safe.sql',
+        suggestion: 'Rename file to include _safe suffix'
+      });
+    }
 
-      // Check for destructive operations in safe files
-      if (fileName.includes('_safe.sql')) {
-        for (const pattern of this.destructivePatterns) {
-          if (pattern.test(content)) {
-            result.valid = false;
-            result.errors.push(`Destructive operation found in safe migration ${fileName}: ${pattern.source}`);
+    // Check for proper numbering
+    const numberMatch = fileName.match(/^(\d{4})_/);
+    if (!numberMatch) {
+      this.issues.push({
+        file: fileName,
+        line: 0,
+        severity: 'warning',
+        message: 'Migration file should start with 4-digit number',
+        suggestion: 'Use format: 0001_description.sql'
+      });
+    }
+  }
+
+  private async validateMigrationContent(filePath: string): Promise<void> {
+    try {
+      const content = await readFile(filePath, 'utf8');
+      const lines = content.split('\n');
+      const fileName = filePath.split('/').pop() || '';
+
+      const patterns = this.getUnsafePatterns();
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        
+        for (const pattern of patterns) {
+          if (pattern.pattern.test(line)) {
+            this.issues.push({
+              file: fileName,
+              line: i + 1,
+              severity: pattern.severity,
+              message: pattern.description,
+              suggestion: pattern.suggestion
+            });
           }
         }
       }
 
-      // Check for risky operations and warn
-      for (const pattern of this.riskyPatterns) {
-        if (pattern.test(content)) {
-          result.warnings.push(`Risky operation in ${fileName}: ${pattern.source}`);
+      // Check for rollback documentation
+      const hasRollback = content.toLowerCase().includes('rollback') || 
+                         content.toLowerCase().includes('revert') ||
+                         content.includes('-- Down migration');
+      
+      if (!hasRollback) {
+        this.issues.push({
+          file: fileName,
+          line: 0,
+          severity: 'warning',
+          message: 'Migration lacks rollback documentation',
+          suggestion: 'Add comments explaining how to rollback changes'
+        });
+      }
+
+      // Check for transaction usage
+      const hasTransaction = content.toLowerCase().includes('begin') || 
+                            content.toLowerCase().includes('start transaction');
+      
+      if (!hasTransaction && content.length > 100) {
+        this.issues.push({
+          file: fileName,
+          line: 0,
+          severity: 'warning',
+          message: 'Migration should use transactions for safety',
+          suggestion: 'Wrap changes in BEGIN; ... COMMIT; block'
+        });
+      }
+
+    } catch (error) {
+      this.issues.push({
+        file: filePath.split('/').pop() || '',
+        line: 0,
+        severity: 'error',
+        message: `Failed to read migration file: ${error}`,
+      });
+    }
+  }
+
+  private printResults(options: ValidationOptions): void {
+    const errors = this.issues.filter(i => i.severity === 'error');
+    const warnings = this.issues.filter(i => i.severity === 'warning');
+
+    console.log(chalk.blue(`\n🔍 Migration Safety Analysis (${options.environment} mode)`));
+    console.log('='.repeat(60));
+
+    if (this.issues.length === 0) {
+      console.log(chalk.green('✅ All migrations passed safety checks!'));
+      return;
+    }
+
+    if (errors.length > 0) {
+      console.log(chalk.red(`\n❌ ERRORS (${errors.length}):`));
+      for (const issue of errors) {
+        console.log(chalk.red(`  ${issue.file}:${issue.line || 'file'} - ${issue.message}`));
+        if (issue.suggestion) {
+          console.log(chalk.yellow(`    💡 ${issue.suggestion}`));
         }
       }
+    }
 
-      // Check for proper comments and rollback sections
-      if (!content.includes('-- Description:')) {
-        result.warnings.push(`Missing description comment in ${fileName}`);
+    if (warnings.length > 0) {
+      console.log(chalk.yellow(`\n⚠️  WARNINGS (${warnings.length}):`));
+      for (const issue of warnings) {
+        console.log(chalk.yellow(`  ${issue.file}:${issue.line || 'file'} - ${issue.message}`));
+        if (issue.suggestion) {
+          console.log(chalk.gray(`    💡 ${issue.suggestion}`));
+        }
       }
+    }
 
-      if (!content.includes('-- Rollback:') && !fileName.includes('_safe.sql')) {
-        result.warnings.push(`Missing rollback instructions in ${fileName}`);
+    // Summary
+    console.log('\n' + '-'.repeat(40));
+    console.log(chalk.red(`Errors: ${errors.length}`));
+    console.log(chalk.yellow(`Warnings: ${warnings.length}`));
+
+    if (errors.length > 0) {
+      console.log(chalk.red('\n💥 Migration safety validation FAILED'));
+      if (options.environment === 'prod') {
+        console.log(chalk.red('❌ Production migrations must pass all safety checks'));
       }
-
-      // Validate SQL syntax basics
-      if (content.trim().length === 0) {
-        result.errors.push(`Empty migration file: ${fileName}`);
-        result.valid = false;
-      }
-
-      console.log(`✅ Validated ${fileName}`);
-    } catch (error) {
-      result.valid = false;
-      result.errors.push(`Failed to read migration file ${fileName}: ${error}`);
+    } else if (warnings.length > 0) {
+      console.log(chalk.yellow('\n⚠️  Migration safety validation passed with warnings'));
+      console.log(chalk.gray('Review warnings before deploying to production'));
+    } else {
+      console.log(chalk.green('\n✅ Migration safety validation PASSED'));
     }
   }
 
-  async createSafeMigrationTemplate(name: : AdminId): Promise<: AdminId> {
-    const timestamp = new Date().toISOString().replace(/[-:T]/g, '').split('.')[0];
-    const fileName = `${timestamp}_${name}_safe.sql`;
-    const filePath = join(projectRoot, 'migrations/postgres', fileName);
+  async validate(options: ValidationOptions): Promise<boolean> {
+    console.log(chalk.blue('🔒 Validating migration safety...'));
+    
+    try {
+      const migrationFiles = await this.getMigrationFiles();
+      
+      if (migrationFiles.length === 0) {
+        console.log(chalk.yellow('⚠️  No migration files found'));
+        return true;
+      }
 
-    const template = `-- Description: ${name}
--- Created: ${new Date().toISOString()}
--- Type: SAFE (No destructive operations)
--- Rollback: Manual rollback instructions below
+      console.log(chalk.gray(`Found ${migrationFiles.length} migration files`));
 
--- Migration starts here
--- Example: Add new column (safe operation)
--- ALTER TABLE table_name ADD COLUMN new_column_name TEXT;
+      for (const file of migrationFiles) {
+        this.validateFileName(file, options);
+        await this.validateMigrationContent(file);
+      }
 
--- Example: Create new index (safe operation)  
--- CREATE INDEX CONCURRENTLY idx_table_column ON table_name(column_name);
+      this.printResults(options);
 
--- Example: Insert default data (safe operation)
--- INSERT INTO table_name (column) VALUES ('default_value') ON CONFLICT DO NOTHING;
+      // Return false if there are errors, or warnings in strict mode
+      const hasErrors = this.issues.some(i => i.severity === 'error');
+      const hasWarnings = this.issues.some(i => i.severity === 'warning');
 
--- Rollback instructions:
--- To rollback this migration:
--- 1. DROP INDEX IF EXISTS idx_table_column;
--- 2. ALTER TABLE table_name DROP COLUMN IF EXISTS new_column_name;
+      if (hasErrors) return false;
+      if (options.strict && hasWarnings) return false;
 
--- ⚠️  PRODUCTION SAFETY RULES:
--- ✅ Only additive operations (ADD COLUMN, CREATE INDEX CONCURRENTLY, INSERT with ON CONFLICT)
--- ❌ No DROP, DELETE, TRUNCATE, or destructive ALTER operations
--- ❌ No data type changes that could cause data loss
--- ❌ No constraints that could fail on existing data
--- ✅ Always use IF NOT EXISTS / IF EXISTS patterns
--- ✅ Always use CONCURRENTLY for index creation
--- ✅ Always provide rollback instructions
-`;
+      return true;
 
-    return template;
+    } catch (error) {
+      console.error(chalk.red(`Migration validation failed: ${error}`));
+      return false;
+    }
   }
 }
 
-// CLI interface
 async function main() {
   const args = process.argv.slice(2);
-  const command = args[0];
-  const validator = new SafeMigrationValidator();
+  
+  if (args.includes('--help') || args.includes('-h')) {
+    console.log(`
+Usage: tsx scripts/ops/validate-safe-migrations.ts [environment] [options]
 
-  switch (command) {
-    case 'validate': {
-      const environment = (args[1] as 'dev' | 'staging' | 'prod') || 'prod';
-      console.log(`🔍 Validating migrations for ${environment} environment...`);
-      
-      const result = await validator.validateMigrations(environment);
-      
-      if (result.warnings.length > 0) {
-        console.log('\n⚠️  Warnings:');
-        result.warnings.forEach(warning => console.log(`   ${warning}`));
-      }
-      
-      if (result.errors.length > 0) {
-        console.log('\n❌ Errors:');
-        result.errors.forEach(error => console.log(`   ${error}`));
-        process.exit(1);
-      }
-      
-      console.log('\n✅ All migrations are valid for production deployment');
-      break;
-    }
-    
-    case 'template': {
-      const name = args[1];
-      if (!name) {
-        console.error('❌ Please provide a migration name');
-        console.error('Usage: npm run migration:template <name>');
-        process.exit(1);
-      }
-      
-      const template = await validator.createSafeMigrationTemplate(name);
-      console.log('\n📄 Safe migration template:');
-      console.log(template);
-      break;
-    }
-    
-    default:
-      console.log(`
-🔒 Safe Migration Validator
+Environments:
+  dev      - Relaxed rules, warnings only (default)
+  staging  - Standard validation
+  prod     - Strict validation, enforces _safe.sql naming
 
-Commands:
-  validate [env]     Validate migrations for environment (dev|staging|prod)
-  template <name>    Generate safe migration template
+Options:
+  --strict     - Treat warnings as errors
+  --help, -h   - Show this help message
 
 Examples:
-  npm run migration:validate prod
-  npm run migration:template add_user_preferences
-      `);
-      break;
+  tsx scripts/ops/validate-safe-migrations.ts
+  tsx scripts/ops/validate-safe-migrations.ts prod --strict
+`);
+    process.exit(0);
   }
+
+  const environment = (args[0] === 'dev' || args[0] === 'staging' || args[0] === 'prod') 
+    ? args[0] as 'dev' | 'staging' | 'prod'
+    : 'dev';
+
+  const options: ValidationOptions = {
+    environment,
+    strict: args.includes('--strict') || environment === 'prod'
+  };
+
+  const validator = new MigrationValidator();
+  const success = await validator.validate(options);
+  
+  process.exit(success ? 0 : 1);
 }
 
+// ESM compatibility check
 if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch(error => {
-    console.error('❌ Validation failed:', error);
+    console.error(chalk.red('Fatal error:'), error);
     process.exit(1);
   });
 }
-
-export { SafeMigrationValidator };

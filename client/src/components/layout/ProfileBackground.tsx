@@ -10,7 +10,6 @@ export const ProfileBackground: React.FC<ProfileBackgroundProps> = ({
 }) => {
 	// Use an effect to confirm the component is mounting
 	React.useEffect(() => {
-		console.log('ProfileBackground mounted with image:', imagePath);
 	}, [imagePath]);
 
 	return (

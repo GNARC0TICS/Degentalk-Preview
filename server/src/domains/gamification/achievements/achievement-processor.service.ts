@@ -14,6 +14,7 @@ import { users } from '@schema';
 import { logger } from '../../../core/logger';
 import { XpService } from '../../xp/xp.service';
 import { DegenAchievementEvaluators } from './evaluators/degen-evaluators';
+import type { UserId, AchievementId } from '@/db/types';
 
 export interface AchievementProgress {
 	current: number;
@@ -32,7 +33,7 @@ export class AchievementProcessorService {
 	 */
 	async processEvent(
 		eventType: AchievementEventType,
-		userId: string,
+		userId: UserId,
 		eventData: any
 	): Promise<void> {
 		try {
@@ -131,7 +132,7 @@ export class AchievementProcessorService {
 	 * Update user progress for a specific achievement
 	 */
 	private async updateUserProgress(
-		userId: string,
+		userId: UserId,
 		achievement: Achievement,
 		eventData: any
 	): Promise<void> {
@@ -167,7 +168,7 @@ export class AchievementProcessorService {
 	 */
 	private async calculateProgress(
 		achievement: Achievement,
-		userId: string,
+		userId: UserId,
 		eventData: any
 	): Promise<AchievementProgress> {
 		const config = achievement.triggerConfig as any;
@@ -198,7 +199,7 @@ export class AchievementProcessorService {
 	 */
 	private async calculateCountProgress(
 		achievement: Achievement,
-		userId: string,
+		userId: UserId,
 		config: any
 	): Promise<AchievementProgress> {
 		const action = config.action;
@@ -233,7 +234,7 @@ export class AchievementProcessorService {
 	 */
 	private async calculateThresholdProgress(
 		achievement: Achievement,
-		userId: string,
+		userId: UserId,
 		config: any
 	): Promise<AchievementProgress> {
 		// Similar to count but may use different data sources
@@ -257,7 +258,7 @@ export class AchievementProcessorService {
 	 */
 	private async calculateEventProgress(
 		achievement: Achievement,
-		userId: string,
+		userId: UserId,
 		config: any,
 		eventData: any
 	): Promise<AchievementProgress> {
@@ -277,7 +278,7 @@ export class AchievementProcessorService {
 	 */
 	private async calculateCompositeProgress(
 		achievement: Achievement,
-		userId: string,
+		userId: UserId,
 		config: any
 	): Promise<AchievementProgress> {
 		const requirements = config.requirements || [];
@@ -312,7 +313,7 @@ export class AchievementProcessorService {
 	 */
 	private async calculateCustomProgress(
 		achievement: Achievement,
-		userId: string,
+		userId: UserId,
 		config: any,
 		eventData: any
 	): Promise<AchievementProgress> {
@@ -338,7 +339,7 @@ export class AchievementProcessorService {
 	 * Complete an achievement for a user
 	 */
 	private async completeAchievement(
-		userId: string,
+		userId: UserId,
 		achievement: Achievement,
 		progress: AchievementProgress
 	): Promise<void> {
@@ -400,7 +401,7 @@ export class AchievementProcessorService {
 	 * Update achievement progress (partial completion)
 	 */
 	private async updateProgress(
-		userId: string,
+		userId: UserId,
 		achievement: Achievement,
 		progress: AchievementProgress
 	): Promise<void> {
@@ -425,7 +426,7 @@ export class AchievementProcessorService {
 	/**
 	 * Distribute rewards for completed achievement
 	 */
-	private async distributeRewards(userId: string, achievement: Achievement): Promise<void> {
+	private async distributeRewards(userId: UserId, achievement: Achievement): Promise<void> {
 		try {
 			// Award XP
 			if (achievement.rewardXp > 0) {
@@ -464,8 +465,8 @@ export class AchievementProcessorService {
 	 * Helper methods
 	 */
 	private async getUserAchievement(
-		userId: string,
-		achievementId: number
+		userId: UserId,
+		achievementId: AchievementId
 	): Promise<UserAchievement | null> {
 		const result = await db
 			.select()
@@ -478,7 +479,7 @@ export class AchievementProcessorService {
 		return result[0] || null;
 	}
 
-	private async getUserMetric(userId: string, metric: string): Promise<number> {
+	private async getUserMetric(userId: UserId, metric: string): Promise<number> {
 		// Get user metrics from users table or calculate from events
 		switch (metric) {
 			case 'total_posts':
@@ -553,7 +554,7 @@ export class AchievementProcessorService {
 
 	private async markEventProcessed(
 		eventType: AchievementEventType,
-		userId: string,
+		userId: UserId,
 		eventData: any
 	): Promise<void> {
 		await db

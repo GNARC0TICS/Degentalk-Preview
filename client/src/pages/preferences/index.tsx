@@ -13,7 +13,7 @@ import { SessionPreferences } from '@/components/preferences/session-preferences
 import { ReferralPreferences } from '@/components/preferences/referral-preferences';
 import { SocialPreferences } from '@/components/preferences/social-preferences';
 import { User, Shield, Bell, Monitor, Lock, Users, Share2, UserCheck } from 'lucide-react';
-import { ProtectedRoute } from '@/lib/protected-route';
+import { ProtectedRoute } from '@/components/auth/protected-route';
 import { Container } from '@/components/ui/container';
 
 /**
@@ -21,7 +21,6 @@ import { Container } from '@/components/ui/container';
  * This page is protected and only accessible to logged-in users.
  */
 function PreferencesPage() {
-	console.log('PreferencesPage component started rendering.');
 	const { user } = useAuth();
 	const [activeTab, setActiveTab] = useState('profile');
 	const searchParams = useSearchParams();
@@ -54,10 +53,8 @@ function PreferencesPage() {
 		}
 	};
 
-	console.log('User in PreferencesPage:', user);
 
 	if (!user) {
-		console.log('User is null, rendering authentication required message.');
 		return (
 			<div className="min-h-screen bg-black text-white flex flex-col">
 				<SiteHeader />
@@ -77,7 +74,6 @@ function PreferencesPage() {
 		);
 	}
 
-	console.log('User is present, rendering main preferences content.');
 	return (
 		<div className="min-h-screen bg-black text-white flex flex-col">
 			<SiteHeader />

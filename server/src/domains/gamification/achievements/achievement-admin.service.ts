@@ -17,6 +17,7 @@ import type {
 } from '@schema';
 import { logger } from '../../../core/logger';
 import { DegenAchievementEvaluators } from './evaluators/degen-evaluators';
+import type { AchievementId, UserId } from '@/db/types';
 
 export interface AchievementFilters {
 	category?: AchievementCategory;
@@ -266,7 +267,7 @@ export class AchievementAdminService {
 	/**
 	 * Update an existing achievement
 	 */
-	async updateAchievement(id: number, data: Partial<InsertAchievement>): Promise<Achievement> {
+	async updateAchievement(id: AchievementId, data: Partial<InsertAchievement>): Promise<Achievement> {
 		try {
 			// Validate trigger configuration if provided
 			if (data.triggerType && data.triggerConfig) {
@@ -305,7 +306,7 @@ export class AchievementAdminService {
 	/**
 	 * Delete an achievement (soft delete by deactivating)
 	 */
-	async deleteAchievement(id: number): Promise<void> {
+	async deleteAchievement(id: AchievementId): Promise<void> {
 		try {
 			const result = await db
 				.update(achievements)
@@ -337,7 +338,7 @@ export class AchievementAdminService {
 	 * Bulk update achievements
 	 */
 	async bulkUpdateAchievements(
-		ids: number[],
+		ids: AchievementId[],
 		updates: Partial<InsertAchievement>
 	): Promise<Achievement[]> {
 		try {
@@ -370,7 +371,7 @@ export class AchievementAdminService {
 	/**
 	 * Get achievement by ID with detailed stats
 	 */
-	async getAchievementById(id: number): Promise<AchievementWithStats | null> {
+	async getAchievementById(id: AchievementId): Promise<AchievementWithStats | null> {
 		try {
 			const result = await db
 				.select({
@@ -436,7 +437,7 @@ export class AchievementAdminService {
 	 * Get user completions for a specific achievement
 	 */
 	async getAchievementCompletions(
-		achievementId: number,
+		achievementId: AchievementId,
 		page: number = 1,
 		limit: number = 50
 	): Promise<{ completions: any[]; total: number }> {
@@ -492,7 +493,7 @@ export class AchievementAdminService {
 	 * Manually award achievement to user(s)
 	 */
 	async manuallyAwardAchievement(
-		achievementId: number,
+		achievementId: AchievementId,
 		userIds: string[],
 		reason?: string
 	): Promise<void> {

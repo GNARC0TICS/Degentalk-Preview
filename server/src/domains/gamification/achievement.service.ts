@@ -22,6 +22,7 @@ import {
 } from '@schema';
 import { logger } from '../../core/logger';
 import { XpService } from '../xp/xp.service';
+import type { UserId, AchievementId } from '@/db/types';
 
 export interface AchievementDefinition {
 	id: number;
@@ -45,8 +46,8 @@ export interface AchievementRequirement {
 }
 
 export interface UserAchievementProgress {
-	userId: number;
-	achievementId: number;
+	userId: UserId;
+	achievementId: AchievementId;
 	currentProgress: number;
 	isCompleted: boolean;
 	earnedAt?: Date;
@@ -115,7 +116,7 @@ export class AchievementService {
 	/**
 	 * Get user's achievement progress and statistics
 	 */
-	async getUserAchievementStats(userId: number): Promise<AchievementStats> {
+	async getUserAchievementStats(userId: UserId): Promise<AchievementStats> {
 		try {
 			// Get all achievements
 			const allAchievements = await this.getAllAchievements();
@@ -206,8 +207,8 @@ export class AchievementService {
 	 * Get user's progress towards specific achievements
 	 */
 	async getUserAchievementProgress(
-		userId: number,
-		achievementIds?: number[]
+		userId: UserId,
+		achievementIds?: AchievementId[]
 	): Promise<UserAchievementProgress[]> {
 		try {
 			// Get achievements to check
@@ -276,7 +277,7 @@ export class AchievementService {
 	 * Check and award achievements for a user action
 	 */
 	async checkAndAwardAchievements(
-		userId: number,
+		userId: UserId,
 		actionType: string,
 		metadata?: any
 	): Promise<AchievementDefinition[]> {
@@ -353,7 +354,7 @@ export class AchievementService {
 	/**
 	 * Manually award an achievement to a user
 	 */
-	async awardAchievement(userId: number, achievementId: number): Promise<void> {
+	async awardAchievement(userId: UserId, achievementId: AchievementId): Promise<void> {
 		try {
 			const achievement = await db
 				.select()
@@ -463,7 +464,7 @@ export class AchievementService {
 	 * Calculate current progress for an achievement requirement
 	 */
 	private async calculateAchievementProgress(
-		userId: number,
+		userId: UserId,
 		requirement: AchievementRequirement
 	): Promise<number> {
 		try {
@@ -529,7 +530,7 @@ export class AchievementService {
 	/**
 	 * Helper methods for progress calculation
 	 */
-	private async countUserPosts(userId: number, timeFilter?: Date): Promise<number> {
+	private async countUserPosts(userId: UserId, timeFilter?: Date): Promise<number> {
 		let query = db.select({ count: count() }).from(posts).where(eq(posts.authorId, userId));
 
 		if (timeFilter) {
@@ -540,7 +541,7 @@ export class AchievementService {
 		return result[0]?.count || 0;
 	}
 
-	private async countUserThreads(userId: number, timeFilter?: Date): Promise<number> {
+	private async countUserThreads(userId: UserId, timeFilter?: Date): Promise<number> {
 		let query = db.select({ count: count() }).from(threads).where(eq(threads.authorId, userId));
 
 		if (timeFilter) {
@@ -551,7 +552,7 @@ export class AchievementService {
 		return result[0]?.count || 0;
 	}
 
-	private async sumUserXp(userId: number, timeFilter?: Date): Promise<number> {
+	private async sumUserXp(userId: UserId, timeFilter?: Date): Promise<number> {
 		let query = db
 			.select({ total: sum(xpAdjustmentLogs.amount) })
 			.from(xpAdjustmentLogs)
@@ -573,13 +574,13 @@ export class AchievementService {
 		return parseInt(result[0]?.total || '0');
 	}
 
-	private async calculateLoginStreak(userId: number): Promise<number> {
+	private async calculateLoginStreak(userId: UserId): Promise<number> {
 		// TODO: Implement login streak calculation
 		// This would require a login tracking system
 		return 0;
 	}
 
-	private async countUserTips(userId: number, timeFilter?: Date): Promise<number> {
+	private async countUserTips(userId: UserId, timeFilter?: Date): Promise<number> {
 		let query = db
 			.select({ count: count() })
 			.from(transactions)

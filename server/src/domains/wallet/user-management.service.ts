@@ -192,7 +192,7 @@ export class UserManagementService {
 	/**
 	 * Ensure user has all necessary wallets for supported coins
 	 */
-	async ensureUserWallets(userId: string, coinIds?: number[]): Promise<void> {
+	async ensureUserWallets(userId: string, coinIds?: CoinId[]): Promise<void> {
 		try {
 			const ccpaymentUserId = await this.getOrCreateCCPaymentUser(userId);
 

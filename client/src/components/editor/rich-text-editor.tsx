@@ -12,20 +12,10 @@ import Color from '@tiptap/extension-color';
 import TextAlign from '@tiptap/extension-text-align';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { common, createLowlight } from 'lowlight';
-import css from 'highlight.js/lib/languages/css';
-import js from 'highlight.js/lib/languages/javascript';
-import ts from 'highlight.js/lib/languages/typescript';
-import html from 'highlight.js/lib/languages/xml';
-import 'highlight.js/styles/atom-one-dark.css';
 import Mention from '@tiptap/extension-mention';
-import suggestion from './suggestion';
+// Temporarily disabled for build test
+// import suggestion from './suggestion';
 const lowlight = createLowlight(common);
-lowlight.register('html', html);
-lowlight.register('css', css);
-lowlight.register('js', js);
-lowlight.register('javascript', js);
-lowlight.register('typescript', ts);
-lowlight.register('ts', ts);
 import { Button } from '@/components/ui/button';
 import { GifPicker } from './gif-picker';
 import { EnhancedGifPicker } from './enhanced-gif-picker';
@@ -166,12 +156,12 @@ export function RichTextEditor({
 					})
 				: null,
 			canUseFeature('images') ? Image : null,
-			Mention.configure({
-				HTMLAttributes: {
-					class: 'mention'
-				},
-				suggestion
-			})
+			// Mention.configure({
+			//	HTMLAttributes: {
+			//		class: 'mention'
+			//	},
+			//	suggestion
+			// })
 		].filter(Boolean) as any,
 		content,
 		editable: !readOnly,

@@ -34,7 +34,7 @@ import {
 	ChevronDown
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/router';
+import { useLocation } from 'wouter';
 import type { LeaderboardEntry } from '@/features/gamification/services/gamification-api.service';
 
 interface LeaderboardProps {

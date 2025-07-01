@@ -5,6 +5,7 @@
  */
 
 import { z } from 'zod';
+import { userId, groupId } from './common.schemas';
 
 /**
  * Pagination and search query params
@@ -24,7 +25,7 @@ export const AdminUserUpdateSchema = z.object({
 	username: z.string().min(3).max(50).optional(),
 	email: z.string().email().optional(),
 	bio: z.string().max(1000).optional().nullable(),
-	groupId: z.number().nullable().optional(),
+	groupId: groupId.nullable().optional(),
 	isActive: z.boolean().optional(),
 	isVerified: z.boolean().optional(),
 	isBanned: z.boolean().optional(),
@@ -41,7 +42,7 @@ export const AdminCategoryUpdateSchema = z.object({
 	position: z.number().optional(),
 	isLocked: z.boolean().optional(),
 	isVip: z.boolean().optional(),
-	parentId: z.number().nullable().optional()
+	parentId: z.string().uuid().nullable().optional()
 });
 
 /**
@@ -114,7 +115,7 @@ export const RoleCreateInput = _RoleBase;
 export const RoleUpdateInput = _RoleBase.partial();
 
 export const BulkUserRoleAssignment = z.object({
-	userIds: z.array(z.number()).min(1),
+	userIds: z.array(userId).min(1),
 	newRole: z.string().min(1),
 	reason: z.string().optional()
 });
@@ -142,7 +143,7 @@ export const XpActionCreateSchema = z.object({
 export type XpActionCreateInput = z.infer<typeof XpActionCreateSchema>;
 
 export const XpActionUpdateSchema = XpActionCreateSchema.extend({
-	id: z.number().int()
+	id: z.string().uuid()
 });
 export type XpActionUpdateInput = z.infer<typeof XpActionUpdateSchema>;
 
@@ -156,7 +157,7 @@ export const PermissionGroupCreateSchema = z.object({
 export type PermissionGroupCreateInput = z.infer<typeof PermissionGroupCreateSchema>;
 
 export const PermissionGroupUpdateSchema = PermissionGroupCreateSchema.extend({
-	id: z.number().int()
+	id: z.string().uuid()
 });
 export type PermissionGroupUpdateInput = z.infer<typeof PermissionGroupUpdateSchema>;
 

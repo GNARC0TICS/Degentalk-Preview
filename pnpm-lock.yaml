@@ -9,6 +9,8 @@ overrides:
   drizzle-orm: 0.44.2
   drizzle-kit: 0.31.4
 
+packageExtensionsChecksum: 01024426c495ea8fcf0f03eefad777e9
+
 importers:
 
   .:
@@ -19,6 +21,9 @@ importers:
       '@types/node':
         specifier: ^20.19.0
         version: 20.19.2
+      '@types/ws':
+        specifier: ^8.5.13
+        version: 8.18.1
       '@typescript-eslint/eslint-plugin':
         specifier: 6.21.0
         version: 6.21.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1)(typescript@5.6.3)
@@ -619,6 +624,9 @@ importers:
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
+      vite:
+        specifier: ^6.3.5
+        version: 6.3.5(@types/node@22.7.5)(jiti@1.21.7)(tsx@4.20.3)(yaml@2.8.0)
       ws:
         specifier: ^8.18.0
         version: 8.18.3

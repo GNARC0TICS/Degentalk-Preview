@@ -42,7 +42,7 @@ export const awardXpForAction = async (req: Request, res: Response, next: NextFu
 		logger.info('Awarding XP for action (via API)', JSON.stringify({ userId, action, metadata }));
 
 		// Call the service to award XP
-		const result = await xpService.awardXp(Number(userId), action as XP_ACTION, metadata); // Changed to xpService instance
+		const result = await xpService.awardXp(userId, action as XP_ACTION, metadata);
 
 		if (!result) {
 			return res.status(429).json({
@@ -73,13 +73,13 @@ export const awardXpForAction = async (req: Request, res: Response, next: NextFu
  */
 export const getUserXpInfo = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const userId = Number(req.params.userId);
+		const userId = req.params.userId;
 
 		if (!userId) {
 			return res.status(400).json({ message: 'User ID is required' });
 		}
 
-		const xpInfo = await xpService.getUserXpInfo(userId); // Changed to xpService instance
+		const xpInfo = await xpService.getUserXpInfo(userId);
 
 		res.status(200).json(xpInfo);
 	} catch (error: any) {
@@ -123,7 +123,7 @@ export const getXpActions = async (req: Request, res: Response) => {
 export const getUserXpLogs = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// Get user ID from params or from authenticated user
-		const paramUserId = req.params.userId ? Number(req.params.userId) : undefined;
+		const paramUserId = req.params.userId;
 		const authUserId = (userService.getUserFromRequest(req) as any)?.id; // Added type assertion
 
 		// If not admin and trying to access someone else's logs, reject
@@ -136,7 +136,7 @@ export const getUserXpLogs = async (req: Request, res: Response, next: NextFunct
 			});
 		}
 
-		const userIdToQuery = paramUserId || authUserId; // Use a different variable name
+		const userIdToQuery = paramUserId || authUserId;
 
 		if (!userIdToQuery) {
 			return res.status(400).json({ message: 'User ID is required' });
@@ -153,7 +153,7 @@ export const getUserXpLogs = async (req: Request, res: Response, next: NextFunct
 		const period = req.query.period as string; // 'today', 'week', 'month'
 
 		// Build the query filters
-		let filters = [eq(xpActionLogs.userId, userIdToQuery)]; // Use userIdToQuery
+		let filters = [eq(xpActionLogs.userId, userIdToQuery)];
 
 		// Add action filter if specified
 		if (action) {

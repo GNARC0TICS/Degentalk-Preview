@@ -12,12 +12,12 @@ import fs from 'fs';
 import path from 'path';
 
 interface QueryAnalysis {
-	endpoint: : AdminId;
-	method: : AdminId;
-	queries: : AdminId[];
+	endpoint;
+	method;
+	queries[];
 	complexity: 'low' | 'medium' | 'high' | 'critical';
-	optimizationOpportunities: : AdminId[];
-	suggestedIndices: : AdminId[];
+	optimizationOpportunities[];
+	suggestedIndices[];
 	estimatedTraffic: 'low' | 'medium' | 'high';
 }
 

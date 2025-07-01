@@ -17,7 +17,7 @@ import { Separator } from '@/components/ui/separator';
 import { LevelDisplay } from './level-display';
 import { formatNumber } from '@/lib/utils';
 import { Trophy, Target, Flame, TrendingUp, ChevronRight, Sparkles, Award } from 'lucide-react';
-import { useRouter } from 'next/router';
+import { useLocation } from 'wouter';
 import type { UserProgression } from '@/features/gamification/services/gamification-api.service';
 
 interface ProfileGamificationWidgetProps {

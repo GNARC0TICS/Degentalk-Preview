@@ -9,6 +9,7 @@ import type { Request, Response } from 'express';
 import { adminService } from './admin.service';
 import { getUserId } from './admin.middleware';
 import { AdminError } from './admin.errors';
+import type { AdminId, UserId } from '@/db/types';
 
 export class AdminController {
 	/**
@@ -63,7 +64,8 @@ export class AdminController {
 		entityId: string,
 		details: any = {}
 	) {
-		const adminId = userService.getUserFromRequest(req);
+		const adminUser = userService.getUserFromRequest(req);
+		const adminId = adminUser?.id as AdminId;
 		await adminService.logAdminAction(adminId, action, entityType, entityId, details);
 	}
 }

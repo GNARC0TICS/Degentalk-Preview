@@ -1,4 +1,5 @@
 import { userService } from '@server/src/core/services/user.service';
+import type { UserId } from '@/db/types';
 /**
  * Withdrawal Controller
  *
@@ -41,7 +42,7 @@ export class WithdrawalController {
 				return res.status(401).json({ error: 'User not authenticated' });
 			}
 
-			const userId = (userService.getUserFromRequest(req) as { id: number }).id;
+			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id;
 
 			// Check if withdrawals are enabled
 			if (!walletConfig.WITHDRAWALS_ENABLED) {
@@ -185,7 +186,7 @@ export class WithdrawalController {
 				return res.status(401).json({ error: 'User not authenticated' });
 			}
 
-			const userId = (userService.getUserFromRequest(req) as { id: number }).id;
+			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id;
 			const page = parseInt(req.query.page as string) || 1;
 			const limit = parseInt(req.query.limit as string) || 10;
 			const offset = (page - 1) * limit;
@@ -305,7 +306,7 @@ export class WithdrawalController {
 	 */
 	async processWithdrawalRequest(req: Request, res: Response, next: NextFunction) {
 		try {
-			const adminId = (userService.getUserFromRequest(req) as { id: number }).id;
+			const adminId = (userService.getUserFromRequest(req) as { id: UserId }).id;
 			const requestId = parseInt(req.params.requestId);
 			const { action, adminNotes } = processWithdrawalSchema.parse(req.body);
 

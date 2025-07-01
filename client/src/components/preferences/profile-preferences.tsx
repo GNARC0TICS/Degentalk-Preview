@@ -63,7 +63,7 @@ export function ProfilePreferences({ user }: ProfilePreferencesProps) {
 
 	// Placeholder for image upload function
 	const handleImageUpload = (type: 'avatar' | 'banner') => {
-		console.log(`Upload ${type} image - to be implemented`);
+		// TODO: Implement ${type} image upload
 	};
 
 	if (isLoading) {

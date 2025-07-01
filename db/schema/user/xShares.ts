@@ -1,6 +1,6 @@
-import type { AnyPgColumn, uuid } from 'drizzle-orm/pg-core';
 import { pgTable, serial, integer, varchar, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { users } from './users';
+import { type AnyPgColumn } from 'drizzle-orm/pg-core';
 
 export const xShares = pgTable('x_shares', {
 	id: uuid('id').primaryKey().defaultRandom(),

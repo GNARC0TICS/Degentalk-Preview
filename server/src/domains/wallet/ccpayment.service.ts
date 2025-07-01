@@ -7,6 +7,7 @@
 
 import { logger } from '../../core/logger';
 import { WalletError, ErrorCodes } from '../../core/errors';
+import type { UserId } from '@/db/types';
 
 // Import specialized services
 import { ccpaymentApiService } from './services/ccpayment-api.service';
@@ -216,7 +217,7 @@ export class CCPaymentService {
 	/**
 	 * Create CCPayment wallet for user
 	 */
-	async createCcPaymentWalletForUser(userId: number): Promise<string> {
+	async createCcPaymentWalletForUser(userId: UserId): Promise<string> {
 		try {
 			logger.info('CCPaymentService', 'Creating CCPayment wallet for user', { userId });
 

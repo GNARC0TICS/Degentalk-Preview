@@ -27,7 +27,7 @@ import { xpActionLogs, xpActionLimits } from './xp-actions-schema';
 // Import the centralized event handlers
 import { handleXpAward, handleXpLoss, handleLevelUp } from './events/xp.events';
 import { economyConfig, sanitizeMultiplier } from '@shared/economy/economy.config';
-import type { AdminId, ForumId } from '@/db/types';
+import type { AdminId, ForumId, UserId } from '@/db/types';
 
 const { MAX_XP_PER_DAY, MAX_TIP_XP_PER_DAY } = economyConfig;
 
@@ -42,7 +42,7 @@ export class XpService {
 	 * @returns Object with old and new XP values and level information
 	 */
 	async updateUserXp(
-		userId: number,
+		userId: UserId,
 		amount: number,
 		adjustmentType: 'add' | 'subtract' | 'set' = 'add',
 		options: {
@@ -151,7 +151,7 @@ export class XpService {
 	 * Log an XP adjustment for auditing purposes
 	 */
 	private async logXpAdjustment(
-		userId: number,
+		userId: UserId,
 		adminId: AdminId,
 		adjustmentType: string,
 		amount: number,
@@ -202,7 +202,7 @@ export class XpService {
 	/**
 	 * Get user XP information
 	 */
-	async getUserXpInfo(userId: number) {
+	async getUserXpInfo(userId: UserId) {
 		const userArray = await db
 			.select({
 				id: users.id,
@@ -259,7 +259,7 @@ export class XpService {
 	 * @param metadata Optional metadata about the action
 	 * @returns Result of the XP update operation
 	 */
-	async awardXp(userId: number, action: XP_ACTION, metadata?: any) {
+	async awardXp(userId: UserId, action: XP_ACTION, metadata?: any) {
 		return this.awardXpWithContext(userId, action, metadata);
 	}
 
@@ -272,7 +272,7 @@ export class XpService {
 	 * @param forumId Optional forum ID for forum-specific multipliers
 	 * @returns Result of the XP update operation
 	 */
-	async awardXpWithContext(userId: number, action: XP_ACTION, metadata?: any, forumId?: ForumId) {
+	async awardXpWithContext(userId: UserId, action: XP_ACTION, metadata?: any, forumId?: ForumId) {
 		try {
 			const canReceive = await this.checkActionLimits(userId, action);
 
@@ -359,7 +359,7 @@ export class XpService {
 	/**
 	 * Check if a user can receive XP for a given action based on limits (daily max, cooldown)
 	 */
-	private async checkActionLimits(userId: number, action: XP_ACTION): Promise<boolean> {
+	private async checkActionLimits(userId: UserId, action: XP_ACTION): Promise<boolean> {
 		try {
 			const actionConfig = await getXpAction(action);
 
@@ -426,7 +426,7 @@ export class XpService {
 	/**
 	 * Update action limits for a user after an XP award
 	 */
-	private async updateActionLimits(userId: number, action: XP_ACTION): Promise<void> {
+	private async updateActionLimits(userId: UserId, action: XP_ACTION): Promise<void> {
 		// This method is a placeholder and currently does nothing as limits are log-based.
 		// private async updateActionLimits(userId: number, action: XP_ACTION): Promise<void> {
 		//   const actionConfig = await getXpAction(action); // Use getXpAction
@@ -444,7 +444,7 @@ export class XpService {
 	 * Log an XP action for auditing and limit tracking
 	 */
 	private async logXpAction(
-		userId: number,
+		userId: UserId,
 		action: XP_ACTION,
 		amount: number,
 		metadata?: any
@@ -473,7 +473,7 @@ export class XpService {
 	 * @returns Object with limit information or null if no limits
 	 */
 	async getActionLimitsForUser(
-		userId: number,
+		userId: UserId,
 		action: XP_ACTION
 	): Promise<{
 		dailyLimit: number | null;
@@ -561,7 +561,7 @@ export class XpService {
 	 * If the user has multiple roles, the highest multiplier is applied.
 	 * If the user has no roles with a multiplier > 0, a default of 1 is returned.
 	 */
-	private async getUserRoleMultiplier(userId: number): Promise<number> {
+	private async getUserRoleMultiplier(userId: UserId): Promise<number> {
 		try {
 			const roleMultipliers = await db
 				.select({ multiplier: rolesTable.xpMultiplier })

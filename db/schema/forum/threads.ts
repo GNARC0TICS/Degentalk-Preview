@@ -1,4 +1,3 @@
-import type { AnyPgColumn, uuid } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
 	serial,
@@ -18,6 +17,7 @@ import { forumStructure } from './structure'; // Updated to use forum structure
 import { users } from '../user/users'; // Adjusted import path
 import { threadPrefixes } from './prefixes'; // Placeholder for future import
 import { contentVisibilityStatusEnum } from '../core/enums';
+import { type AnyPgColumn } from 'drizzle-orm/pg-core';
 // import { posts } from "./posts"; // Placeholder for self-reference with posts
 
 // Forward declare the post type for solvingPostId reference

@@ -1,4 +1,3 @@
-import type { AnyPgColumn, uuid } from 'drizzle-orm/pg-core';
 import {
 	pgTable,
 	serial,
@@ -16,6 +15,7 @@ import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted import path
 import { threads } from './threads'; // Adjusted import path
 import { contentVisibilityStatusEnum } from '../core/enums';
+import { type AnyPgColumn } from 'drizzle-orm/pg-core';
 
 export const posts = pgTable(
 	'posts',

@@ -19,7 +19,7 @@ import { LevelDisplay } from './level-display';
 import { formatNumber } from '@/lib/utils';
 import { TrendingUp, Trophy, Target, Flame, ChevronRight, Sparkles, Zap, Gift } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/router';
+import { useLocation } from 'wouter';
 import type { UserProgression } from '@/features/gamification/services/gamification-api.service';
 
 interface ProgressionCardProps {

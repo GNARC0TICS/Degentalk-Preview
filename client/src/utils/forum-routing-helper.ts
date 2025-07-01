@@ -9,14 +9,14 @@
  * Forum entity base type (zone, category, forum)
  */
 export interface ForumEntityBase {
-	id: number;
+	id: string;
 	name: string;
 	slug: string;
 	description?: string | null; // Matched MergedForum
 	type: 'zone' | 'category' | 'forum'; // Added type, should be primary
 	isZone?: boolean; // Will be derived from type
 	canonical?: boolean; // Will be derived from type and parentId
-	parentId?: number | null;
+	parentId?: string | null;
 	parentSlug?: string;
 	parentName?: string;
 	icon?: string;
@@ -112,7 +112,7 @@ export function getStaticBreadcrumbs(entity: ForumEntityBase): BreadcrumbItem[] 
 /**
  * Thread URL generator
  */
-export function getThreadUrl(thread: { id: number; slug?: string }): string {
+export function getThreadUrl(thread: { id: string; slug?: string }): string {
 	return `/threads/${thread.slug || thread.id}`;
 }
 

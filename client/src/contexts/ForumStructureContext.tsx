@@ -1,10 +1,9 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { forumMap } from '@/config/forumMap.config';
 import type { Zone } from '@/config/forumMap.config';
-import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@/db/types';
+import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@db/types';
 
 // ===========================================================
 // ForumStructureContext v2.0  🛠️  (2025-06-16)

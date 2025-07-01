@@ -10,7 +10,7 @@ import { db } from '@db';
 import { count, desc, eq, sql, and, like, isNull, or, ne, sum } from 'drizzle-orm';
 import { users, auditLogs, transactions } from '@schema';
 import { AdminError, AdminErrorCodes } from './admin.errors';
-import type { AdminId } from '@/db/types';
+import type { AdminId, UserId } from '@/db/types';
 
 export class AdminService {
 	/**
@@ -73,9 +73,9 @@ export class AdminService {
 	/**
 	 * Get a user by ID with standardized ID handling
 	 */
-	async getUserById(userId: number) {
+	async getUserById(userId: UserId) {
 		try {
-			if (!userId || isNaN(userId)) {
+			if (!userId) {
 				throw new AdminError('Invalid user ID', 400, AdminErrorCodes.INVALID_REQUEST);
 			}
 

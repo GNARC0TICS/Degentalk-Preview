@@ -5,20 +5,19 @@ import type { Brand } from 'utility-types';
  * structured ID is expected. Use these across the codebase instead of raw `string`.
  */
 
-export type UserId = Brand<string, 'UserId'>;
-export type ThreadId = Brand<string, 'ThreadId'>;
-export type PostId = Brand<string, 'PostId'>;
-export type StructureId = Brand<string, 'StructureId'>;
-export type MessageId = Brand<string, 'MessageId'>;
-export type WalletId = Brand<string, 'WalletId'>;
-export type TransactionId = Brand<string, 'TransactionId'>;
-export type MissionId = Brand<string, 'MissionId'>;
-export type AchievementId = Brand<string, 'AchievementId'>;
-export type ProductId = Brand<string, 'ProductId'>;
-export type BadgeId = Brand<string, 'BadgeId'>;
-export type TitleId = Brand<string, 'TitleId'>;
-export type FrameId = Brand<string, 'FrameId'>;
-export type PathId = Brand<string, 'PathId'>;
+export type UserId = Id<'user'>;
+export type ThreadId = Id<'thread'>;
+export type PostId = Id<'post'>;
+export type StructureId = Id<'structure'>;
+export type WalletId = Id<'wallet'>;
+export type TransactionId = Id<'transaction'>;
+export type MissionId = Id<'mission'>;
+export type AchievementId = Id<'achievement'>;
+export type ProductId = Id<'product'>;
+export type BadgeId = Id<'badge'>;
+export type TitleId = Id<'title'>;
+export type FrameId = Id<'frame'>;
+export type PathId = Id<'path'>;
 // Add additional IDs as needed following the same convention.
 
 export const __ensureModule = true;
@@ -102,3 +101,5 @@ export type EventId = Id<'event'>;
 export type AuditLogId = Id<'auditLog'>;
 export type ActionId = Id<'action'>;
 export type HeatEventId = Id<'heatEvent'>;
+
+export type XpLevelId = Id<'xpLevel'>;

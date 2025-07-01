@@ -146,7 +146,7 @@ router.get(
 	'/:id/stats',
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const structureId = parseInt(req.params.id);
+			const structureId = req.params.id; // Note: Consider adding StructureId type if needed
 			const stats = await forumStructureService.getStructureStats(structureId);
 
 			res.json({

@@ -159,7 +159,7 @@ router.post(
 
 		// Validate request body using Zod
 		const agreeSchema = z.object({
-			ruleIds: z.array(z.number())
+			ruleIds: z.array(z.string().uuid('Invalid ruleId format'))
 		});
 
 		const parsed = agreeSchema.safeParse(req.body);

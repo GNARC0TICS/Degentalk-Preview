@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import type { Tag } from '@/types/forum';
 import type { ThreadPrefix } from '@/types/compat/forum';
 import { useEffect } from 'react';
-import type { ForumId, TagId, ContentId, PrefixId } from '@/db/types';
+import type { ForumId, TagId, ContentId, PrefixId } from '@db/types';
 
 // Utility for common cache invalidation patterns
 const invalidatePostQueries = (queryClient: ReturnType<typeof useQueryClient>) => {

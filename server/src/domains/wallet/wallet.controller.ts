@@ -21,6 +21,7 @@ import { eq, desc, and, sql, SQL, asc } from 'drizzle-orm';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
 import crypto from 'crypto';
 import { z } from 'zod';
+import type { UserId, OrderId } from '@/db/types';
 // import { validateRequest } from '../../middleware/validate'; // Ensure this is commented or removed
 import { DGT_CURRENCY, DEFAULT_DGT_REWARD_CREATE_THREAD } from './wallet.constants';
 import { walletService } from './wallet.service';
@@ -58,7 +59,7 @@ export class WalletController extends BaseController {
 			//   .where(eq(users.id, userId))
 			//   .execute(); // Ensure .execute() is called
 
-			let cryptoBalances: CryptoBalance[] = []; // Return empty crypto balances for now, explicitly typed
+			const cryptoBalances: CryptoBalance[] = []; // Return empty crypto balances for now, explicitly typed
 
 			// if (user?.ccpaymentAccountId) {
 			//   cryptoBalances = await ccpaymentService.getUserCryptoBalances(user.ccpaymentAccountId);
@@ -208,7 +209,7 @@ export class WalletController extends BaseController {
 					.status(401)
 					.json({ error: 'User not authenticated', code: WalletErrorCodes.UNAUTHORIZED });
 			}
-			const userId = (userService.getUserFromRequest(req) as { id: number }).id; // Explicit cast after check
+			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id; // Explicit cast after check
 			const { currency } = req.body;
 
 			if (!currency) {
@@ -281,7 +282,7 @@ export class WalletController extends BaseController {
 					.status(401)
 					.json({ error: 'User not authenticated', code: WalletErrorCodes.UNAUTHORIZED });
 			}
-			const userId = (userService.getUserFromRequest(req) as { id: number }).id; // Explicit cast after check
+			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id; // Explicit cast after check
 			const { dgtAmount, cryptoCurrency } = req.body;
 
 			if (!dgtAmount || !cryptoCurrency) {
@@ -375,10 +376,10 @@ export class WalletController extends BaseController {
 					.status(401)
 					.json({ error: 'User not authenticated', code: WalletErrorCodes.UNAUTHORIZED });
 			}
-			const userId = (userService.getUserFromRequest(req) as { id: number }).id; // Explicit cast after check
-			const orderId = parseInt(req.params.orderId);
+			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id; // Explicit cast after check
+			const orderId = req.params.orderId as OrderId;
 
-			if (isNaN(orderId)) {
+			if (!orderId) {
 				res.status(400).json({
 					error: 'Invalid order ID',
 					code: WalletErrorCodes.INVALID_REQUEST
@@ -441,7 +442,7 @@ export class WalletController extends BaseController {
 					.status(401)
 					.json({ error: 'User not authenticated', code: WalletErrorCodes.UNAUTHORIZED });
 			}
-			const userId = (userService.getUserFromRequest(req) as { id: number }).id; // Explicit cast after check
+			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id; // Explicit cast after check
 			const { toUserId, amount, reason } = req.body;
 
 			if (!toUserId || !amount) {
@@ -619,7 +620,7 @@ export class WalletController extends BaseController {
 		try {
 			if (!userService.getUserFromRequest(req))
 				return res.status(401).json({ error: 'Unauthenticated' });
-			const userId = (userService.getUserFromRequest(req) as { id: number }).id;
+			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id;
 			const { packageId, cryptoCurrency = 'USDT' } = req.body;
 
 			if (!packageId) return res.status(400).json({ error: 'packageId is required' });

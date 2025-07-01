@@ -1,542 +1,274 @@
-import type { HeatEventId } from '@db/types';
-import type { ActionId } from '@db/types';
-import type { AuditLogId } from '@db/types';
-import type { EventId } from '@db/types';
-import type { PrefixId } from '@db/types';
-import type { MessageId } from '@db/types';
-import type { FollowRequestId } from '@db/types';
-import type { FriendRequestId } from '@db/types';
-import type { NotificationId } from '@db/types';
-import type { UnlockId } from '@db/types';
-import type { StoreItemId } from '@db/types';
-import type { OrderId } from '@db/types';
-import type { QuoteId } from '@db/types';
-import type { ReplyId } from '@db/types';
-import type { DraftId } from '@db/types';
-import type { IpLogId } from '@db/types';
-import type { ModActionId } from '@db/types';
-import type { SessionId } from '@db/types';
-import type { BanId } from '@db/types';
-import type { VerificationTokenId } from '@db/types';
-import type { SignatureItemId } from '@db/types';
-import type { ContentId } from '@db/types';
-import type { RequestId } from '@db/types';
-import type { ZoneId } from '@db/types';
-import type { WhaleId } from '@db/types';
-import type { VaultLockId } from '@db/types';
-import type { VaultId } from '@db/types';
-import type { UnlockTransactionId } from '@db/types';
-import type { TipId } from '@db/types';
-import type { TemplateId } from '@db/types';
-import type { TagId } from '@db/types';
-import type { SubscriptionId } from '@db/types';
-import type { StickerId } from '@db/types';
-import type { SettingId } from '@db/types';
-import type { RuleId } from '@db/types';
-import type { ParentZoneId } from '@db/types';
-import type { ParentForumId } from '@db/types';
-import type { PackId } from '@db/types';
-import type { ModeratorId } from '@db/types';
-import type { MentionId } from '@db/types';
-import type { ItemId } from '@db/types';
-import type { InventoryId } from '@db/types';
-import type { GroupId } from '@db/types';
-import type { ForumId } from '@db/types';
-import type { EntryId } from '@db/types';
-import type { EntityId } from '@db/types';
-import type { EmojiPackId } from '@db/types';
-import type { EditorId } from '@db/types';
-import type { CosmeticId } from '@db/types';
-import type { AuthorId } from '@db/types';
-import type { CoinId } from '@db/types';
-import type { CategoryId } from '@db/types';
-import type { BackupId } from '@db/types';
-import type { AnimationFrameId } from '@db/types';
-import type { AirdropId } from '@db/types';
-import type { AdminUserId } from '@db/types';
-import type { RoomId } from '@db/types';
-import type { ConversationId } from '@db/types';
-import type { ReportId } from '@db/types';
-import type { ReporterId } from '@db/types';
-import type { AdminId } from '@db/types';
 #!/usr/bin/env tsx
 
 /**
  * Import Validation Script
  * 
  * Validates all TypeScript imports in the codebase, checking:
- * - Path alias resolution
- * - File existence
- * - Symbol exports
- * - Provides fixing capabilities
+ * - Path alias resolution (@/, @server/, @shared/, etc.)
+ * - File existence for imports
+ * - Module boundary enforcement
+ * - Banned import patterns
  */
 
-import { Project, Node, ImportDeclaration, ExportDeclaration, SourceFile } from 'ts-morph';
 import * as path from 'path';
 import * as fs from 'fs';
+import { glob } from 'glob';
 import chalk from 'chalk';
 
 interface ImportIssue {
-  file: : AdminId;
+  file: string;
   line: number;
-  column: number;
-  importPath: : AdminId;
-  symbols: : AdminId[];
-  resolvedPath?: : AdminId;
-  fileExists: boolean;
-  symbolIssues: { symbol: : AdminId; exists: boolean; suggestion?: : AdminId }[];
+  importPath: string;
+  issue: string;
   severity: 'error' | 'warning';
 }
 
 interface ValidationOptions {
   fix: boolean;
   verbose: boolean;
-  includePatterns: : AdminId[];
-  excludePatterns: : AdminId[];
 }
 
 class ImportValidator {
-  private project: Project;
-  private tsConfig: any;
-  private pathMappings: Map<: AdminId, : AdminId[]> = new Map();
   private issues: ImportIssue[] = [];
-  private projectRoot: : AdminId;
+  private projectRoot: string;
+  private pathMappings: Map<string, string> = new Map();
 
   constructor() {
     this.projectRoot = path.resolve(process.cwd());
-    this.project = new Project({
-      tsConfigFilePath: path.join(this.projectRoot, 'tsconfig.json'),
-    });
-    this.loadTsConfig();
     this.setupPathMappings();
   }
 
-  private loadTsConfig() {
-    const tsConfigPath = path.join(this.projectRoot, 'tsconfig.json');
-    try {
-      this.tsConfig = JSON.parse(fs.readFileSync(tsConfigPath, 'utf8'));
-    } catch (error) {
-      throw new Error(`Failed to load tsconfig.json: ${error}`);
-    }
-  }
-
   private setupPathMappings() {
-    const { baseUrl = '.', paths = {} } = this.tsConfig.compilerOptions || {};
-    const resolvedBaseUrl = path.resolve(this.projectRoot, baseUrl);
-
-    for (const [alias, mappings] of Object.entries(paths)) {
-      const resolvedMappings = (mappings as : AdminId[]).map(mapping => 
-        path.resolve(resolvedBaseUrl, mapping)
-      );
-      this.pathMappings.set(alias, resolvedMappings);
-    }
+    // Based on tsconfig.json path mappings
+    this.pathMappings.set('@/', path.join(this.projectRoot, 'client/src/'));
+    this.pathMappings.set('@server/', path.join(this.projectRoot, 'server/src/'));
+    this.pathMappings.set('@shared/', path.join(this.projectRoot, 'shared/'));
+    this.pathMappings.set('@db/', path.join(this.projectRoot, 'db/'));
+    this.pathMappings.set('@scripts/', path.join(this.projectRoot, 'scripts/'));
   }
 
-  private resolveAliasPath(importPath: : AdminId): : AdminId | : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null {
-    for (const [alias, mappings] of this.pathMappings.entries()) {
-      // Convert alias pattern to regex (e.g., "@server/*" -> "^@server/(.*)$")
-      const aliasRegex = new RegExp('^' + alias.replace('*', '(.*)') + '$');
-      const match = importPath.match(aliasRegex);
-      
-      if (match) {
-        for (const mapping of mappings) {
-          let resolvedPath = mapping;
-          
-          // Replace * with captured group if it exists
-          if (match[1] !== undefined) {
-            resolvedPath = mapping.replace('*', match[1]);
-          }
-          
-          // Try different extensions
-          const extensions = ['.ts', '.tsx', '.js', '.jsx', '.d.ts', '/index.ts', '/index.tsx'];
-          
-          for (const ext of extensions) {
-            const fullPath = resolvedPath + ext;
-            if (fs.existsSync(fullPath)) {
-              return fullPath;
-            }
-          }
-          
-          // Try without extension if it exists
-          if (fs.existsSync(resolvedPath)) {
-            return resolvedPath;
-          }
-        }
+  private resolveImportPath(importPath: string, fromFile: string): string | null {
+    // Handle relative imports
+    if (importPath.startsWith('./') || importPath.startsWith('../')) {
+      return path.resolve(path.dirname(fromFile), importPath);
+    }
+
+    // Handle path alias imports
+    for (const [alias, basePath] of Array.from(this.pathMappings.entries())) {
+      if (importPath.startsWith(alias)) {
+        const relativePath = importPath.slice(alias.length);
+        return path.join(basePath, relativePath);
       }
     }
-    
-    return : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
+
+    // Node modules - don't validate
+    if (!importPath.startsWith('.') && !importPath.includes('/')) {
+      return null;
+    }
+
+    return null;
   }
 
-  private getExportedSymbols(filePath: : AdminId): Set<: AdminId> {
-    const exports = new Set<: AdminId>();
+  private checkFileExists(filePath: string): boolean {
+    const extensions = ['.ts', '.tsx', '.js', '.jsx', '.d.ts'];
     
-    try {
-      const sourceFile = this.project.addSourceFileAtPath(filePath);
-      
-      // Get default export
-      const defaultExport = sourceFile.getDefaultExportSymbol();
-      if (defaultExport) {
-        exports.add('default');
-      }
-      
-      // Get named exports
-      sourceFile.getExportDeclarations().forEach(exportDecl => {
-        const namedExports = exportDecl.getNamedExports();
-        namedExports.forEach(namedExport => {
-          exports.add(namedExport.getName());
-        });
-      });
-      
-      // Get exported functions, classes, interfaces, etc.
-      sourceFile.getFunctions().forEach(func => {
-        if (func.isExported()) {
-          exports.add(func.getName() || 'default');
-        }
-      });
-      
-      sourceFile.getClasses().forEach(cls => {
-        if (cls.isExported()) {
-          exports.add(cls.getName() || 'default');
-        }
-      });
-      
-      sourceFile.getInterfaces().forEach(iface => {
-        if (iface.isExported()) {
-          exports.add(iface.getName());
-        }
-      });
-      
-      sourceFile.getVariableStatements().forEach(varStatement => {
-        if (varStatement.isExported()) {
-          varStatement.getDeclarations().forEach(decl => {
-            exports.add(decl.getName());
-          });
-        }
-      });
-      
-      sourceFile.getTypeAliases().forEach(typeAlias => {
-        if (typeAlias.isExported()) {
-          exports.add(typeAlias.getName());
-        }
-      });
-      
-    } catch (error) {
-      console.warn(chalk.yellow(`Warning: Could not parse exports from ${filePath}: ${error}`));
+    // Check exact path
+    if (fs.existsSync(filePath)) return true;
+
+    // Check with extensions
+    for (const ext of extensions) {
+      if (fs.existsSync(filePath + ext)) return true;
     }
-    
-    return exports;
+
+    // Check index files
+    for (const ext of extensions) {
+      if (fs.existsSync(path.join(filePath, 'index' + ext))) return true;
+    }
+
+    return false;
   }
 
-  private findSimilarSymbol(targetSymbol: : AdminId, availableSymbols: Set<: AdminId>): : AdminId | undefined {
-    const lowercaseTarget = targetSymbol.toLowerCase();
-    
-    // Exact match (case insensitive)
-    for (const symbol of availableSymbols) {
-      if (symbol.toLowerCase() === lowercaseTarget) {
-        return symbol;
-      }
-    }
-    
-    // Partial match
-    for (const symbol of availableSymbols) {
-      if (symbol.toLowerCase().includes(lowercaseTarget) || 
-          lowercaseTarget.includes(symbol.toLowerCase())) {
-        return symbol;
-      }
-    }
-    
-    return undefined;
-  }
+  private validateModuleBoundaries(importPath: string, fromFile: string): string | null {
+    const fromContext = this.getFileContext(fromFile);
+    const toContext = this.getFileContextFromImport(importPath);
 
-  private validateImport(importDecl: ImportDeclaration, sourceFile: SourceFile): ImportIssue | : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null {
-    const importPath = importDecl.getModuleSpecifierValue();
-    const line = importDecl.getStartLineNumber();
-    const column = importDecl.getStart() - importDecl.getSourceFile().getLineAndColumnAtPos(importDecl.getStart()).line;
-    
-    // Only validate alias imports
-    const isAliasImport = Array.from(this.pathMappings.keys()).some(alias => 
-      importPath.startsWith(alias.replace('/*', '').replace('*', ''))
-    );
-    
-    if (!isAliasImport) {
-      return : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
-    }
-    
-    const resolvedPath = this.resolveAliasPath(importPath);
-    const fileExists = resolvedPath !== : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
-    
-    // Get imported symbols
-    const symbols: : AdminId[] = [];
-    const defaultImport = importDecl.getDefaultImport();
-    if (defaultImport) {
-      symbols.push('default');
-    }
-    
-    const namedImports = importDecl.getNamedImports();
-    namedImports.forEach(namedImport => {
-      symbols.push(namedImport.getName());
-    });
-    
-    const namespaceImport = importDecl.getNamespaceImport();
-    if (namespaceImport) {
-      symbols.push('*');
-    }
-    
-    // Check symbol exports if file exists
-    const symbolIssues: { symbol: : AdminId; exists: boolean; suggestion?: : AdminId }[] = [];
-    let availableSymbols = new Set<: AdminId>();
-    
-    if (fileExists && resolvedPath) {
-      availableSymbols = this.getExportedSymbols(resolvedPath);
-      
-      symbols.forEach(symbol => {
-        const exists = symbol === '*' || availableSymbols.has(symbol);
-        const suggestion = exists ? undefined : this.findSimilarSymbol(symbol, availableSymbols);
-        
-        symbolIssues.push({
-          symbol,
-          exists,
-          suggestion
-        });
-      });
-    } else {
-      symbols.forEach(symbol => {
-        symbolIssues.push({
-          symbol,
-          exists: false
-        });
-      });
-    }
-    
-    // Determine if this is an issue
-    const hasIssues = !fileExists || symbolIssues.some(issue => !issue.exists);
-    
-    if (!hasIssues) {
-      return : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
-    }
-    
-    return {
-      file: sourceFile.getFilePath(),
-      line,
-      column,
-      importPath,
-      symbols,
-      resolvedPath,
-      fileExists,
-      symbolIssues,
-      severity: !fileExists ? 'error' : 'warning'
+    // Boundary rules
+    const violations: { [key: string]: string[] } = {
+      'client': ['server'],
+      'server': ['client'],
     };
+
+    if (violations[fromContext]?.includes(toContext)) {
+      return `Cross-boundary import: ${fromContext} → ${toContext}`;
+    }
+
+    return null;
   }
 
-  public async validateFiles(patterns: : AdminId[], options: ValidationOptions): Promise<ImportIssue[]> {
-    console.log(chalk.blue('🔍 Scanning files for import issues...\n'));
-    
-    // Add source files to project
-    for (const pattern of patterns) {
-      this.project.addSourceFilesAtPaths(pattern);
-    }
-    
-    const sourceFiles = this.project.getSourceFiles();
-    let processedFiles = 0;
-    
-    for (const sourceFile of sourceFiles) {
-      const filePath = sourceFile.getFilePath();
+  private getFileContext(filePath: string): string {
+    if (filePath.includes('/client/')) return 'client';
+    if (filePath.includes('/server/')) return 'server';
+    if (filePath.includes('/shared/')) return 'shared';
+    if (filePath.includes('/db/')) return 'db';
+    if (filePath.includes('/scripts/')) return 'scripts';
+    return 'unknown';
+  }
+
+  private getFileContextFromImport(importPath: string): string {
+    if (importPath.startsWith('@/')) return 'client';
+    if (importPath.startsWith('@server/')) return 'server';
+    if (importPath.startsWith('@shared/')) return 'shared';
+    if (importPath.startsWith('@db/')) return 'db';
+    if (importPath.startsWith('@scripts/')) return 'scripts';
+    return 'unknown';
+  }
+
+  private extractImports(fileContent: string): Array<{ line: number; importPath: string }> {
+    const imports: Array<{ line: number; importPath: string }> = [];
+    const lines = fileContent.split('\n');
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
       
-      // Skip excluded patterns
-      if (options.excludePatterns.some(pattern => filePath.includes(pattern))) {
+      // Match import statements
+      const importMatch = line.match(/^\s*import\s+.*?from\s+['"`]([^'"`]+)['"`]/);
+      if (importMatch) {
+        imports.push({ line: i + 1, importPath: importMatch[1] });
         continue;
       }
-      
-      if (options.verbose) {
-        console.log(chalk.gray(`Checking: ${path.relative(this.projectRoot, filePath)}`));
+
+      // Match dynamic imports
+      const dynamicMatch = line.match(/import\s*\(\s*['"`]([^'"`]+)['"`]\s*\)/);
+      if (dynamicMatch) {
+        imports.push({ line: i + 1, importPath: dynamicMatch[1] });
+        continue;
       }
-      
-      const importDeclarations = sourceFile.getImportDeclarations();
-      
-      for (const importDecl of importDeclarations) {
-        const issue = this.validateImport(importDecl, sourceFile);
-        if (issue) {
-          this.issues.push(issue);
-        }
+
+      // Match require statements
+      const requireMatch = line.match(/require\s*\(\s*['"`]([^'"`]+)['"`]\s*\)/);
+      if (requireMatch) {
+        imports.push({ line: i + 1, importPath: requireMatch[1] });
       }
-      
-      processedFiles++;
     }
-    
-    console.log(chalk.green(`✓ Processed ${processedFiles} files\n`));
-    return this.issues;
+
+    return imports;
   }
 
-  public printReport() {
-    if (this.issues.length === 0) {
-      console.log(chalk.green('🎉 No import issues found!'));
-      return;
-    }
-    
-    console.log(chalk.red(`❌ Found ${this.issues.length} import issues:\n`));
-    
-    // Group by severity
-    const errors = this.issues.filter(issue => issue.severity === 'error');
-    const warnings = this.issues.filter(issue => issue.severity === 'warning');
-    
-    if (errors.length > 0) {
-      console.log(chalk.red.bold(`🚨 ERRORS (${errors.length}):`));
-      errors.forEach(this.printIssue.bind(this));
-      console.log();
-    }
-    
-    if (warnings.length > 0) {
-      console.log(chalk.yellow.bold(`⚠️  WARNINGS (${warnings.length}):`));
-      warnings.forEach(this.printIssue.bind(this));
-      console.log();
-    }
-  }
+  private validateFile(filePath: string): void {
+    try {
+      const content = fs.readFileSync(filePath, 'utf8');
+      const imports = this.extractImports(content);
 
-  private printIssue(issue: ImportIssue) {
-    const relativePath = path.relative(this.projectRoot, issue.file);
-    const location = `${relativePath}:${issue.line}:${issue.column}`;
-    
-    console.log(chalk.cyan(`  📁 ${location}`));
-    console.log(chalk.white(`     Import: ${issue.importPath}`));
-    
-    if (!issue.fileExists) {
-      console.log(chalk.red(`     ❌ File not found`));
-      if (issue.resolvedPath) {
-        console.log(chalk.gray(`     Tried: ${path.relative(this.projectRoot, issue.resolvedPath)}`));
-      }
-    } else {
-      console.log(chalk.green(`     ✓ File exists: ${path.relative(this.projectRoot, issue.resolvedPath!)}`));
-      
-      issue.symbolIssues.forEach(symbolIssue => {
-        if (!symbolIssue.exists) {
-          console.log(chalk.red(`     ❌ Symbol '${symbolIssue.symbol}' not exported`));
-          if (symbolIssue.suggestion) {
-            console.log(chalk.yellow(`        💡 Did you mean '${symbolIssue.suggestion}'?`));
+      for (const { line, importPath } of imports) {
+        // Skip node_modules
+        if (!importPath.startsWith('.') && !importPath.includes('@')) continue;
+
+        const resolvedPath = this.resolveImportPath(importPath, filePath);
+        
+        if (resolvedPath) {
+          // Check if file exists
+          if (!this.checkFileExists(resolvedPath)) {
+            this.issues.push({
+              file: path.relative(this.projectRoot, filePath),
+              line,
+              importPath,
+              issue: `File not found: ${path.relative(this.projectRoot, resolvedPath)}`,
+              severity: 'error'
+            });
           }
         }
+
+        // Check module boundaries
+        const boundaryViolation = this.validateModuleBoundaries(importPath, filePath);
+        if (boundaryViolation) {
+          this.issues.push({
+            file: path.relative(this.projectRoot, filePath),
+            line,
+            importPath,
+            issue: boundaryViolation,
+            severity: 'error'
+          });
+        }
+      }
+    } catch (error) {
+      this.issues.push({
+        file: path.relative(this.projectRoot, filePath),
+        line: 0,
+        importPath: '',
+        issue: `Failed to read file: ${error}`,
+        severity: 'error'
       });
     }
-    
-    console.log();
   }
 
-  public async fixIssues() {
-    console.log(chalk.blue('🔧 Attempting to fix issues...\n'));
-    
-    let fixedCount = 0;
-    let commentedCount = 0;
-    
-    for (const issue of this.issues) {
-      const sourceFile = this.project.getSourceFile(issue.file);
-      if (!sourceFile) continue;
-      
-      const importDecls = sourceFile.getImportDeclarations();
-      const targetImport = importDecls.find(imp => 
-        imp.getModuleSpecifierValue() === issue.importPath &&
-        imp.getStartLineNumber() === issue.line
-      );
-      
-      if (!targetImport) continue;
-      
-      if (!issue.fileExists) {
-        // Comment out the entire import
-        const importText = targetImport.getText();
-        targetImport.replaceWithText(`// FIXME: File not found - ${importText}`);
-        commentedCount++;
-        console.log(chalk.yellow(`💬 Commented out: ${issue.importPath} in ${path.relative(this.projectRoot, issue.file)}`));
-      } else {
-        // Try to fix symbol issues
-        let hasFixableIssues = false;
-        
-        for (const symbolIssue of issue.symbolIssues) {
-          if (!symbolIssue.exists && symbolIssue.suggestion) {
-            hasFixableIssues = true;
-            
-            // Fix named imports
-            const namedImports = targetImport.getNamedImports();
-            const targetNamedImport = namedImports.find(ni => ni.getName() === symbolIssue.symbol);
-            
-            if (targetNamedImport) {
-              targetNamedImport.setName(symbolIssue.suggestion);
-              fixedCount++;
-              console.log(chalk.green(`🔧 Fixed: ${symbolIssue.symbol} → ${symbolIssue.suggestion} in ${path.relative(this.projectRoot, issue.file)}`));
-            }
-          }
-        }
-        
-        if (!hasFixableIssues) {
-          // Comment out problematic symbols
-          const problematicSymbols = issue.symbolIssues
-            .filter(si => !si.exists)
-            .map(si => si.symbol);
-          
-          if (problematicSymbols.length > 0) {
-            const importText = targetImport.getText();
-            targetImport.replaceWithText(`// FIXME: Missing symbols [${problematicSymbols.join(', ')}] - ${importText}`);
-            commentedCount++;
-            console.log(chalk.yellow(`💬 Commented out problematic import in ${path.relative(this.projectRoot, issue.file)}`));
-          }
-        }
+  async validate(options: ValidationOptions = { fix: false, verbose: false }): Promise<boolean> {
+    console.log(chalk.blue('🔍 Validating imports...'));
+
+    // Find all TypeScript files
+    const tsFiles = await glob('**/*.{ts,tsx}', {
+      cwd: this.projectRoot,
+      ignore: [
+        'node_modules/**',
+        'dist/**',
+        'build/**',
+        '.next/**',
+        'coverage/**',
+        '**/*.d.ts'
+      ],
+      absolute: true
+    });
+
+    console.log(chalk.gray(`Found ${tsFiles.length} TypeScript files`));
+
+    for (const file of tsFiles) {
+      this.validateFile(file);
+    }
+
+    // Report results
+    if (this.issues.length === 0) {
+      console.log(chalk.green('✅ All imports are valid!'));
+      return true;
+    }
+
+    console.log(chalk.red(`\n❌ Found ${this.issues.length} import issues:\n`));
+
+    const errors = this.issues.filter(i => i.severity === 'error');
+    const warnings = this.issues.filter(i => i.severity === 'warning');
+
+    if (errors.length > 0) {
+      console.log(chalk.red(`Errors (${errors.length}):`));
+      for (const issue of errors) {
+        console.log(chalk.red(`  ${issue.file}:${issue.line} - ${issue.importPath}`));
+        console.log(chalk.red(`    ${issue.issue}`));
       }
     }
-    
-    // Save all changes
-    await this.project.save();
-    
-    console.log(chalk.green(`\n✅ Fixed ${fixedCount} issues, commented out ${commentedCount} problematic imports`));
+
+    if (warnings.length > 0) {
+      console.log(chalk.yellow(`\nWarnings (${warnings.length}):`));
+      for (const issue of warnings) {
+        console.log(chalk.yellow(`  ${issue.file}:${issue.line} - ${issue.importPath}`));
+        console.log(chalk.yellow(`    ${issue.issue}`));
+      }
+    }
+
+    return errors.length === 0;
   }
 }
 
-// CLI interface
 async function main() {
+  const validator = new ImportValidator();
   const args = process.argv.slice(2);
-  const fix = args.includes('--fix');
-  const verbose = args.includes('--verbose') || args.includes('-v');
   
   const options: ValidationOptions = {
-    fix,
-    verbose,
-    includePatterns: [
-      '../client/src/**/*.{ts,tsx}',
-      '../server/**/*.{ts,tsx}',
-      '../shared/**/*.{ts,tsx}'
-    ],
-    excludePatterns: [
-      'node_modules',
-      '.git',
-      'dist',
-      'build',
-      '__tests__',
-      '.test.',
-      '.spec.'
-    ]
+    fix: args.includes('--fix'),
+    verbose: args.includes('--verbose')
   };
-  
-  try {
-    const validator = new ImportValidator();
-    
-    console.log(chalk.blue.bold('🚀 TypeScript Import Validator\n'));
-    
-    const issues = await validator.validateFiles(options.includePatterns, options);
-    
-    validator.printReport();
-    
-    if (fix && issues.length > 0) {
-      await validator.fixIssues();
-    } else if (issues.length > 0) {
-      console.log(chalk.blue('\n💡 Run with --fix to automatically fix issues'));
-    }
-    
-    process.exit(issues.length > 0 ? 1 : 0);
-    
-  } catch (error) {
-    console.error(chalk.red(`❌ Error: ${error}`));
-    process.exit(1);
-  }
+
+  const success = await validator.validate(options);
+  process.exit(success ? 0 : 1);
 }
 
-// ESM equivalent of require.main === module
+// ESM compatibility check
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main();
-} 
+  main().catch(console.error);
+}

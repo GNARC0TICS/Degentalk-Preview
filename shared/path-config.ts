@@ -1,4 +1,4 @@
-import type { CategoryId } from '@/db/types';
+import type { CategoryId } from '@degentalk/db/types';
 
 /**
  * Degentalk Dynamic Path System Configuration

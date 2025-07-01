@@ -91,7 +91,6 @@ function ContentItem({ item, showCategory = true }: { item: ContentItem; showCat
 	const handleQuickAction = (e: React.MouseEvent, action: string) => {
 		e.preventDefault();
 		e.stopPropagation();
-		console.log(`Quick action: ${action} on thread ${item.id}`);
 	};
 
 	return (

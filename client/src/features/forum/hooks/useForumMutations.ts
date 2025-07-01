@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { forumApi } from '../services/forumApi';
 import { apiPost } from '@/lib/api-request';
 import type { PostWithUser } from '@/types/compat/forum';
-import type { EntityId, ContentId } from '@/db/types';
+import type { EntityId, ContentId } from '@db/types';
 
 // Utility for standardized error handling
 const createErrorHandler = (action: string) => (error: unknown) => {

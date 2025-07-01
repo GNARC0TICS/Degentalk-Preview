@@ -50,7 +50,7 @@ export function validateAmountMiddleware(minAmount: number = 0, maxAmount?: numb
 
 // Validate transfer DGT request
 export const transferDgtSchema = z.object({
-	toUserId: z.number().int().positive(),
+	toUserId: z.string().uuid('Invalid user ID format'),
 	amount: z
 		.number()
 		.or(z.string())

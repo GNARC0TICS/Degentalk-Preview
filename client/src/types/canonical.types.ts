@@ -1,4 +1,4 @@
-import type { ForumId, ParentZoneId, ZoneId } from '@/db/types';
+import type { ForumId, ParentZoneId, ZoneId } from '@db/types';
 
 /**
  * Canonical Forum Types

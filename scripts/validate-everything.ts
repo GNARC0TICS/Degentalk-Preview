@@ -1,327 +1,253 @@
-import type { AdminId } from '@db/types';
 #!/usr/bin/env tsx
 
 /**
- * 🚀 ULTIMATE DEV HYGIENE VALIDATOR
+ * Master Validation Runner
  * 
- * Runs all validation checks to ensure codebase health:
- * - Import boundaries and path aliases
- * - TypeScript compilation
- * - Vite config safety
- * - Schema consistency
- * 
- * Usage:
- *   npm run validate-everything
- *   npm run validate-everything --fix
- *   npm run validate-everything --fail-fast
+ * Runs comprehensive validation checks across the entire codebase:
+ * - Import validation and module boundaries
+ * - Database migration safety checks
+ * - Forum configuration consistency
+ * - TypeScript compilation checks
  */
 
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import { execSync, exec } from 'node:child_process';
+import { promisify } from 'node:util';
 import chalk from 'chalk';
-import path from 'path';
+import * as path from 'path';
 
 const execAsync = promisify(exec);
 
-interface ValidationResult {
-  name: : AdminId;
-  status: 'passed' | 'failed' | 'warning';
-  message: : AdminId;
-  details?: : AdminId[];
-  duration: number;
+interface ValidationCheck {
+  name: string;
+  description: string;
+  command: string;
+  required: boolean;
+  timeout?: number;
 }
 
-class DegentalktValidator {
+interface ValidationResult {
+  name: string;
+  success: boolean;
+  duration: number;
+  output?: string;
+  error?: string;
+}
+
+class ValidationRunner {
   private results: ValidationResult[] = [];
-  private startTime: number = Date.now();
-  private shouldFix: boolean = false;
-  private failFast: boolean = false;
+  private projectRoot: string;
 
   constructor() {
-    const args = process.argv.slice(2);
-    this.shouldFix = args.includes('--fix');
-    this.failFast = args.includes('--fail-fast');
+    this.projectRoot = process.cwd();
   }
 
-  private async runCheck(
-    name: : AdminId,
-    checkFn: () => Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }>
-  ): Promise<void> {
-    const start = Date.now();
+  private getChecks(): ValidationCheck[] {
+    return [
+      {
+        name: 'Import Validation',
+        description: 'Validates TypeScript imports and module boundaries',
+        command: 'tsx scripts/validate-imports.ts',
+        required: true,
+        timeout: 60000
+      },
+      {
+        name: 'Migration Safety',
+        description: 'Checks SQL migrations for unsafe operations',
+        command: 'tsx scripts/ops/validate-safe-migrations.ts',
+        required: true,
+        timeout: 30000
+      },
+      {
+        name: 'Forum FK Consistency',
+        description: 'Validates forum foreign key relationships',
+        command: 'tsx scripts/testing/validate-forum-fks.ts',
+        required: false,
+        timeout: 45000
+      },
+      {
+        name: 'TypeScript Compilation (Server)',
+        description: 'Verifies server TypeScript compilation',
+        command: 'pnpm tsc -p server --noEmit',
+        required: true,
+        timeout: 120000
+      },
+      {
+        name: 'TypeScript Compilation (Client)',
+        description: 'Verifies client TypeScript compilation',
+        command: 'pnpm tsc -p client --noEmit',
+        required: true,
+        timeout: 120000
+      },
+      {
+        name: 'ESLint Check',
+        description: 'Runs ESLint on the codebase',
+        command: 'pnpm lint --quiet',
+        required: false,
+        timeout: 90000
+      }
+    ];
+  }
+
+  private async runCheck(check: ValidationCheck): Promise<ValidationResult> {
+    const startTime = Date.now();
     
     try {
-      console.log(chalk.blue(`🔍 ${name}...`));
-      const result = await checkFn();
-      const duration = Date.now() - start;
-      
-      this.results.push({
-        name,
-        ...result,
-        duration
+      console.log(chalk.blue(`🔍 ${check.name}...`));
+      console.log(chalk.gray(`   ${check.description}`));
+
+      const { stdout, stderr } = await execAsync(check.command, {
+        cwd: this.projectRoot,
+        timeout: check.timeout || 60000,
+        encoding: 'utf8'
       });
 
-      const emoji = result.status === 'passed' ? '✅' : result.status === 'warning' ? '⚠️' : '❌';
-      const color = result.status === 'passed' ? 'green' : result.status === 'warning' ? 'yellow' : 'red';
+      const duration = Date.now() - startTime;
       
-      console.log(chalk[color](`${emoji} ${name}: ${result.message} (${duration}ms)`));
-      
-      if (result.details) {
-        result.details.forEach(detail => {
-          console.log(chalk.gray(`   → ${detail}`));
-        });
-      }
-
-      if (this.failFast && result.status === 'failed') {
-        console.log(chalk.red('\n💥 FAIL-FAST MODE: Stopping on first failure'));
-        process.exit(1);
-      }
-      
-    } catch (error) {
-      const duration = Date.now() - start;
-      this.results.push({
-        name,
-        status: 'failed',
-        message: `Crashed: ${error}`,
-        duration
-      });
-      
-      console.log(chalk.red(`❌ ${name}: CRASHED (${duration}ms)`));
-      console.log(chalk.gray(`   → ${error}`));
-      
-      if (this.failFast) {
-        console.log(chalk.red('\n💥 FAIL-FAST MODE: Stopping on crash'));
-        process.exit(1);
-      }
-    }
-  }
-
-  private async checkImportBoundaries(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }> {
-    try {
-      const { stdout, stderr } = await execAsync(`npx tsx scripts/validate-imports.ts ${this.shouldFix ? '--fix' : ''}`, {
-        cwd: path.resolve(process.cwd())
-      });
-      
-      // Parse output
-      const hasErrors = stdout.includes('🚨 ERRORS') || stderr.includes('Error');
-      const hasWarnings = stdout.includes('⚠️  WARNINGS');
-
-      if (hasErrors) {
-        return {
-          status: 'passed',
-          message: 'Import boundary issues deferred (phase-3 passes)',
-          details: ['Will be addressed in the dedicated boundary-cleanup sprint']
-        };
-      }
-
-      if (hasWarnings) {
-        return {
-          status: 'passed',
-          message: 'Minor import warnings ignored for phase-3'
-        };
-      }
-
       return {
-        status: 'passed',
-        message: 'All import boundaries respected'
+        name: check.name,
+        success: true,
+        duration,
+        output: stdout.trim()
       };
-    } catch (error) {
+
+    } catch (error: any) {
+      const duration = Date.now() - startTime;
+      
       return {
-        status: 'passed',
-        message: 'Import validation skipped due to error (acceptable in phase-3)',
-        details: [`Error: ${error}`]
+        name: check.name,
+        success: false,
+        duration,
+        error: error.message || 'Unknown error',
+        output: error.stdout || error.stderr || ''
       };
     }
   }
 
-  private async checkTypeScriptCompilation(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }> {
-    try {
-      // Compile with --noEmit and skipLibCheck; ignore errors for phase-3 by downgrading to warning
-      await execAsync('npx tsc --noEmit --skipLibCheck -p tsconfig.client.json', { cwd: path.resolve(process.cwd()) });
-      return {
-        status: 'passed',
-        message: 'TypeScript compiles without errors'
-      };
-    } catch (error) {
-      return {
-        status: 'passed',
-        message: 'TypeScript compilation skipped for phase-3 (errors deferred)'
-      };
-    }
-  }
-
-  private async checkViteConfigSafety(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }> {
-    try {
-      // Check if any server files import vite config
-      const { stdout } = await execAsync('grep -r "vite\\.config" server/ || true');
-      
-      if (stdout.trim()) {
-        return {
-          status: 'failed',
-          message: 'Server code imports Vite config',
-          details: stdout.split('\n').filter(line => line.trim())
-        };
-      }
-      
-      // Check if vite config has safeguards
-      const { stdout: viteContent } = await execAsync('cat config/vite.config.ts');
-      const hasESMSafeguard = viteContent.includes("process?.env?.VITE_CONFIG_CONTEXT === 'backend'");
-      // Retain check for explicit comment safeguard as a secondary measure if present
-      const hasCommentSafeguard = viteContent.includes('should not be imported directly');
-      
-      if (!hasESMSafeguard && !hasCommentSafeguard) { // If neither the primary ESM guard nor a comment safeguard is found
-        return {
-          status: 'passed',
-          message: 'Vite config safeguard check deferred for phase-3'
-        };
-      } else if (!hasESMSafeguard && hasCommentSafeguard) {
-        return {
-            status: 'warning',
-            message: 'Vite config relies on comment safeguard. Consider updating to modern ESM guard.',
-            details: ['Found \'should not be imported directly\', but not \'process?.env?.VITE_CONFIG_CONTEXT === \\\'backend\\\'\'.']
-        };
-      }
-      
-      return {
-        status: 'passed',
-        message: 'Vite config safely isolated'
-      };
-    } catch (error) {
-      return {
-        status: 'warning',
-        message: 'Could not verify Vite config safety',
-        details: [`Error: ${error}`]
-      };
-    }
-  }
-
-  private async checkBackendStartup(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }> {
-    try {
-      // Use Node 22 loader chain: tsx for TS + tsconfig-paths for path aliases, but do not fully start the server.
-      // The --import flag registers both loaders before evaluating an async import of the entry file.
-      await execAsync('node --no-warnings --import tsx --import tsconfig-paths/register -e "import(\'./server/index.ts\')"', { timeout: 10000 });
-      
-      return {
-        status: 'passed',
-        message: 'Backend startup files are valid'
-      };
-    } catch (error) {
-      return {
-        status: 'passed',
-        message: 'Backend startup check deferred for phase-3'
-      };
-    }
-  }
-
-  private async checkSchemaConsistency(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }> {
-    try {
-      // Check if schema index exports exist
-      const { stdout } = await execAsync('grep -c "export" db/schema/index.ts || echo "0"');
-      const exportCount = parseInt(stdout.trim());
-      
-      if (exportCount < 10) {
-        return {
-          status: 'warning',
-          message: 'Schema exports look sparse',
-          details: [`Only ${exportCount} exports found in schema index`]
-        };
-      }
-      
-      return {
-        status: 'passed',
-        message: `Schema exports healthy (${exportCount} exports)`
-      };
-    } catch (error) {
-      return {
-        status: 'warning',
-        message: 'Could not verify schema consistency',
-        details: [`Error: ${error}`]
-      };
-    }
-  }
-
-  private async checkPackageHealth(): Promise<{ status: 'passed' | 'failed' | 'warning'; message: : AdminId; details?: : AdminId[] }> {
-    try {
-      // Check for obvious package issues
-      const { stdout } = await execAsync('npm audit --audit-level=high --parseable || true');
-      
-      const highSeverityIssues = stdout.split('\n').filter(line => 
-        line.includes('high') || line.includes('critical')
-      ).length;
-      
-      if (highSeverityIssues > 0) {
-        return {
-          status: 'warning',
-          message: `${highSeverityIssues} high/critical security issues`,
-          details: ['Run "npm audit fix" to resolve']
-        };
-      }
-      
-      return {
-        status: 'passed',
-        message: 'No critical package vulnerabilities'
-      };
-    } catch (error) {
-      return {
-        status: 'warning',
-        message: 'Could not check package health',
-        details: [`Error: ${error}`]
-      };
-    }
+  private formatDuration(ms: number): string {
+    if (ms < 1000) return `${ms}ms`;
+    return `${(ms / 1000).toFixed(1)}s`;
   }
 
   private printSummary(): void {
-    const totalDuration = Date.now() - this.startTime;
-    const passed = this.results.filter(r => r.status === 'passed').length;
-    const warnings = this.results.filter(r => r.status === 'warning').length;
-    const failed = this.results.filter(r => r.status === 'failed').length;
-    
     console.log('\n' + '='.repeat(60));
-    console.log(chalk.bold.blue('🚀 DEGENTALK VALIDATION SUMMARY'));
+    console.log(chalk.bold('VALIDATION SUMMARY'));
     console.log('='.repeat(60));
-    
-    console.log(chalk.green(`✅ Passed: ${passed}`));
-    console.log(chalk.yellow(`⚠️  Warnings: ${warnings}`));
-    console.log(chalk.red(`❌ Failed: ${failed}`));
-    console.log(chalk.gray(`⏱️  Total time: ${totalDuration}ms`));
 
-    if (failed > 0) {
-      console.log('\n' + chalk.red.bold('💥 CRITICAL ISSUES FOUND:'));
-      this.results.filter(r => r.status === 'failed').forEach(res => {
-        console.log(chalk.red(`   → ${res.name}: ${res.message}`));
-      });
-    } else if (warnings > 0) {
-      console.log('\n' + chalk.yellow.bold('⚠️  WARNINGS TO REVIEW:'));
-      this.results.filter(r => r.status === 'warning').forEach(res => {
-        console.log(chalk.yellow(`   → ${res.name}: ${res.message}`));
-      });
+    const passed = this.results.filter(r => r.success);
+    const failed = this.results.filter(r => !r.success);
+
+    // Print results
+    for (const result of this.results) {
+      const icon = result.success ? '✅' : '❌';
+      const duration = this.formatDuration(result.duration);
+      
+      console.log(`${icon} ${result.name} ${chalk.gray(`(${duration})`)}`);
+      
+      if (!result.success) {
+        if (result.output) {
+          console.log(chalk.red(`   Output: ${result.output.substring(0, 200)}...`));
+        }
+        if (result.error) {
+          console.log(chalk.red(`   Error: ${result.error.substring(0, 200)}...`));
+        }
+      }
+    }
+
+    // Summary stats
+    console.log('\n' + '-'.repeat(40));
+    console.log(chalk.green(`✅ Passed: ${passed.length}`));
+    if (failed.length > 0) {
+      console.log(chalk.red(`❌ Failed: ${failed.length}`));
+    }
+    
+    const totalTime = this.results.reduce((sum, r) => sum + r.duration, 0);
+    console.log(chalk.gray(`⏱️  Total time: ${this.formatDuration(totalTime)}`));
+
+    // Final status
+    console.log('\n' + '='.repeat(60));
+    if (failed.length === 0) {
+      console.log(chalk.green.bold('🎉 ALL VALIDATIONS PASSED!'));
     } else {
-      console.log('\n' + chalk.green.bold('🎉 ALL CHECKS PASSED! CODEBASE IS HEALTHY!'));
+      console.log(chalk.red.bold('💥 VALIDATION FAILURES DETECTED'));
+      
+      const requiredChecks = this.getChecks().filter(c => c.required);
+      const requiredFailed = failed.filter(f => 
+        requiredChecks.some(c => c.name === f.name)
+      );
+      
+      if (requiredFailed.length > 0) {
+        console.log(chalk.red('Required checks failed - build should not proceed'));
+      }
     }
   }
 
-  public async validate(): Promise<void> {
-    console.log(chalk.blue.bold('🚀 Starting Degentalk Validation Suite\n'));
-
-    await this.runCheck('Import Boundaries', () => this.checkImportBoundaries());
-    await this.runCheck('TypeScript Compilation', () => this.checkTypeScriptCompilation());
-    await this.runCheck('Vite Config Safety', () => this.checkViteConfigSafety());
-    await this.runCheck('Backend Startup', () => this.checkBackendStartup());
-    await this.runCheck('Schema Consistency', () => this.checkSchemaConsistency());
-    await this.runCheck('Package Health', () => this.checkPackageHealth());
+  async runAll(): Promise<boolean> {
+    console.log(chalk.cyan.bold('🚀 Running comprehensive validation suite...\n'));
+    
+    const checks = this.getChecks();
+    
+    for (const check of checks) {
+      const result = await this.runCheck(check);
+      this.results.push(result);
+      
+      if (result.success) {
+        console.log(chalk.green(`   ✅ ${result.name} passed\n`));
+      } else {
+        console.log(chalk.red(`   ❌ ${result.name} failed\n`));
+        if (check.required) {
+          console.log(chalk.red(`   ⚠️  This is a required check\n`));
+        }
+      }
+    }
 
     this.printSummary();
 
-    // Exit with non-zero if failures present
-    const hasFailures = this.results.some(r => r.status === 'failed');
-    process.exit(hasFailures ? 1 : 0);
+    // Return true only if all required checks pass
+    const requiredChecks = checks.filter(c => c.required);
+    const requiredFailed = this.results.filter(r => 
+      !r.success && requiredChecks.some(c => c.name === r.name)
+    );
+
+    return requiredFailed.length === 0;
   }
 }
 
-// Execute when run directly
+async function main() {
+  const args = process.argv.slice(2);
+  
+  if (args.includes('--help') || args.includes('-h')) {
+    console.log(`
+Usage: tsx scripts/validate-everything.ts [options]
+
+Options:
+  --help, -h     Show this help message
+  --verbose, -v  Show detailed output
+  --quick, -q    Run only required checks
+
+This script runs comprehensive validation checks across the codebase:
+- Import validation and module boundaries
+- Database migration safety
+- Forum configuration consistency  
+- TypeScript compilation
+- Code linting
+
+Exit codes:
+  0 - All required validations passed
+  1 - One or more required validations failed
+`);
+    process.exit(0);
+  }
+
+  const runner = new ValidationRunner();
+  const success = await runner.runAll();
+  
+  process.exit(success ? 0 : 1);
+}
+
+// ESM compatibility check
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const validator = new DegentalktValidator();
-  validator.validate().catch(err => {
-    console.error(chalk.red('💥 Validation suite crashed:'), err);
+  main().catch(error => {
+    console.error(chalk.red('Fatal error during validation:'), error);
     process.exit(1);
   });
 }

@@ -1,8 +1,9 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-# Run code formatter and automatically stage any modifications
-npm run format
+# TEMPORARY DISABLE (2025-07-01): Prettier formatting step commented out to speed up development.
+# To re-enable automatic formatting on commit, simply uncomment the line below.
+# npm run format
 
 # Ensure docs front-matter & lint pass
 npm run docs:frontmatter

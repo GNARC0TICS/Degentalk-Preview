@@ -16,6 +16,8 @@ import { z } from 'zod';
 import { db } from '@db';
 import { users } from '@schema';
 import { ilike } from 'drizzle-orm';
+import type { UserId, AdminId } from '@/db/types';
+import { toId, isValidId } from '@shared/utils/id';
 
 export class AdminUsersController {
 	/**
@@ -50,14 +52,15 @@ export class AdminUsersController {
 	 */
 	async getUserById(req: Request, res: Response) {
 		try {
-			const userId = Number(req.params.id);
-			if (isNaN(userId)) {
+			const userIdParam = req.params.id;
+			if (!isValidId(userIdParam)) {
 				return res.status(400).json({
 					success: false,
-					error: 'Invalid user ID'
+					error: 'Invalid user ID format'
 				});
 			}
 
+			const userId = toId<'User'>(userIdParam);
 			const userData = await adminUsersService.getUserById(userId);
 			return res.json({
 				success: true,
@@ -83,22 +86,21 @@ export class AdminUsersController {
 	 */
 	async updateUser(req: Request, res: Response) {
 		try {
-			const userId = Number(req.params.id);
-			if (isNaN(userId)) {
+			const userIdParam = req.params.id;
+			if (!isValidId(userIdParam)) {
 				return res.status(400).json({
 					success: false,
-					error: 'Invalid user ID'
+					error: 'Invalid user ID format'
 				});
 			}
 
+			const userId = toId<'User'>(userIdParam);
 			const data = validateRequestBody(req, res, AdminUserUpdateSchema);
 			if (!data) return;
 			const updatedUser = await adminUsersService.updateUser(userId, data);
 
 			// Log admin action
-			const adminId = userService.getUserFromRequest(req);
-			await adminController.logAction(req, 'UPDATE_USER', 'user', userId.toString(), {
-				adminId,
+			await adminController.logAction(req, 'UPDATE_USER', 'user', userId, {
 				changes: data
 			});
 
@@ -137,9 +139,7 @@ export class AdminUsersController {
 			const newUser = await adminUsersService.createUser(dataCreate);
 
 			// Log admin action
-			const adminId = userService.getUserFromRequest(req);
-			await adminController.logAction(req, 'CREATE_USER', 'user', newUser.id.toString(), {
-				adminId,
+			await adminController.logAction(req, 'CREATE_USER', 'user', newUser.id, {
 				userData: dataCreate
 			});
 
@@ -168,21 +168,19 @@ export class AdminUsersController {
 	 */
 	async deleteUser(req: Request, res: Response) {
 		try {
-			const userId = Number(req.params.id);
-			if (isNaN(userId)) {
+			const userIdParam = req.params.id;
+			if (!isValidId(userIdParam)) {
 				return res.status(400).json({
 					success: false,
-					error: 'Invalid user ID'
+					error: 'Invalid user ID format'
 				});
 			}
 
+			const userId = toId<'User'>(userIdParam);
 			await adminUsersService.deleteUser(userId);
 
 			// Log admin action
-			const adminId = userService.getUserFromRequest(req);
-			await adminController.logAction(req, 'DELETE_USER', 'user', userId.toString(), {
-				adminId
-			});
+			await adminController.logAction(req, 'DELETE_USER', 'user', userId, {});
 
 			return res.json({
 				success: true,
@@ -208,21 +206,20 @@ export class AdminUsersController {
 	 */
 	async banUser(req: Request, res: Response) {
 		try {
-			const userId = Number(req.params.id);
-			if (isNaN(userId)) {
+			const userIdParam = req.params.id;
+			if (!isValidId(userIdParam)) {
 				return res.status(400).json({
 					success: false,
-					error: 'Invalid user ID'
+					error: 'Invalid user ID format'
 				});
 			}
 
+			const userId = toId<'User'>(userIdParam);
 			const { reason } = req.body;
 			await adminUsersService.banUser(userId, reason);
 
 			// Log admin action
-			const adminId = userService.getUserFromRequest(req);
-			await adminController.logAction(req, 'BAN_USER', 'user', userId.toString(), {
-				adminId,
+			await adminController.logAction(req, 'BAN_USER', 'user', userId, {
 				reason
 			});
 
@@ -250,21 +247,19 @@ export class AdminUsersController {
 	 */
 	async unbanUser(req: Request, res: Response) {
 		try {
-			const userId = Number(req.params.id);
-			if (isNaN(userId)) {
+			const userIdParam = req.params.id;
+			if (!isValidId(userIdParam)) {
 				return res.status(400).json({
 					success: false,
-					error: 'Invalid user ID'
+					error: 'Invalid user ID format'
 				});
 			}
 
+			const userId = toId<'User'>(userIdParam);
 			await adminUsersService.unbanUser(userId);
 
 			// Log admin action
-			const adminId = userService.getUserFromRequest(req);
-			await adminController.logAction(req, 'UNBAN_USER', 'user', userId.toString(), {
-				adminId
-			});
+			await adminController.logAction(req, 'UNBAN_USER', 'user', userId, {});
 
 			return res.json({
 				success: true,
@@ -290,14 +285,15 @@ export class AdminUsersController {
 	 */
 	async changeUserRole(req: Request, res: Response) {
 		try {
-			const userId = Number(req.params.id);
-			if (isNaN(userId)) {
+			const userIdParam = req.params.id;
+			if (!isValidId(userIdParam)) {
 				return res.status(400).json({
 					success: false,
-					error: 'Invalid user ID'
+					error: 'Invalid user ID format'
 				});
 			}
 
+			const userId = toId<'User'>(userIdParam);
 			const { role } = req.body;
 			if (!role || !['user', 'mod', 'admin'].includes(role)) {
 				return res.status(400).json({
@@ -309,9 +305,7 @@ export class AdminUsersController {
 			const updatedUser = await adminUsersService.changeUserRole(userId, role);
 
 			// Log admin action
-			const adminId = userService.getUserFromRequest(req);
-			await adminController.logAction(req, 'CHANGE_USER_ROLE', 'user', userId.toString(), {
-				adminId,
+			await adminController.logAction(req, 'CHANGE_USER_ROLE', 'user', userId, {
 				newRole: role
 			});
 

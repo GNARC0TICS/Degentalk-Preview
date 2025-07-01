@@ -18,7 +18,7 @@ export interface ForumEntity {
 
 export interface ThreadEntity {
 	slug: string;
-	id: number;
+	id: string;
 }
 
 /**
@@ -56,7 +56,7 @@ export function getThreadUrl(threadSlug: string): string {
 	return `/threads/${threadSlug}`;
 }
 
-export function getThreadUrlById(threadId: number): string {
+export function getThreadUrlById(threadId: string): string {
 	return `/threads/${threadId}`;
 }
 

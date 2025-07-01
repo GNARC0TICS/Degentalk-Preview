@@ -62,7 +62,6 @@ export function BBCodePostCard({
 	// Handle post action callbacks
 	const handleCopyPermalink = () => {
 		// Optional toast notification could be added here
-		console.log(`Copied permalink for post ${post.id}`);
 	};
 	return (
 		<>

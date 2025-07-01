@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useParams } from 'wouter';
 import { useUserActivityFeed } from '@/features/activity/hooks/useActivityFeed';
 import { EventLogFilters } from '@/features/activity/services/activityApi';
 import { format } from 'date-fns';
 import { useAuth } from '@/hooks/useAuth';
-import Link from 'next/link';
+import { Link } from 'wouter';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { Wide } from '@/layout/primitives';
 
@@ -12,8 +12,8 @@ import { Wide } from '@/layout/primitives';
  * Admin page for viewing a specific user's activities
  */
 const UserActivityPage: React.FC = () => {
-	const router = useRouter();
-	const { userId } = router.query;
+	const params = useParams();
+	const { userId } = params;
 	const { user } = useAuth();
 
 	const [filters, setFilters] = useState<EventLogFilters>({

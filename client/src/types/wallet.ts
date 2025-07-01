@@ -18,11 +18,11 @@ export interface Transaction {
 	timestamp: string;
 	description: string;
 	to?: {
-		id: number;
+		id: string;
 		username: string;
 	};
 	from?: {
-		id: number;
+		id: string;
 		username: string;
 	};
 }

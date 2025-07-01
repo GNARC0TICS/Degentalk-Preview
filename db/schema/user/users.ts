@@ -1,4 +1,4 @@
-import type { AnyPgColumn, uuid } from 'drizzle-orm/pg-core';
+import { type AnyPgColumn } from 'drizzle-orm/pg-core';
 
 import {
 	pgTable,

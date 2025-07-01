@@ -648,8 +648,8 @@ const MagicForumBuilder = memo(
 										<ThreadCard
 											thread={thread}
 											variant={config.cardVariant}
-											onTip={(id, amount) => console.log('Tip:', id, amount)}
-											onBookmark={(id) => console.log('Bookmark:', id)}
+											onTip={(id, amount) => {/* TODO: Implement tip functionality */}}
+											onBookmark={(id) => {/* TODO: Implement bookmark functionality */}}
 											className={cn(
 												config.theme.shadows && 'shadow-lg',
 												`rounded-[${config.theme.borderRadius}px]`
@@ -659,8 +659,8 @@ const MagicForumBuilder = memo(
 										{config.showEngagement && (
 											<CryptoEngagementBar
 												engagement={thread.engagement}
-												onTip={(amount) => console.log('Tip amount:', amount)}
-												onBookmark={() => console.log('Bookmark')}
+												onTip={(amount) => {/* TODO: Implement tip functionality */}}
+												onBookmark={() => {/* TODO: Implement bookmark functionality */}}
 											/>
 										)}
 

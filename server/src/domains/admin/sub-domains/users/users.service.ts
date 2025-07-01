@@ -6,11 +6,12 @@
 
 import { db } from '@db';
 import { count, desc, eq, sql, and, like, isNull, or, ne } from 'drizzle-orm';
-import { users, roles, posts, threads, userBans } from '@schema';
+import { users, roles, posts, threads, userBans, userGroups } from '@schema';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { AdminPaginationQuery } from '@shared/validators/admin';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
+import type { UserId } from '@/db/types';
 
 export class AdminUsersService {
 	/**
@@ -121,9 +122,9 @@ export class AdminUsersService {
 	/**
 	 * Get detailed user information by ID
 	 */
-	async getUserById(userId: number) {
+	async getUserById(userId: UserId) {
 		try {
-			if (!userId || isNaN(userId)) {
+			if (!userId) {
 				throw new AdminError('Invalid user ID', 400, AdminErrorCodes.INVALID_REQUEST);
 			}
 
@@ -187,7 +188,7 @@ export class AdminUsersService {
 	/**
 	 * Update a user
 	 */
-	async updateUser(userId: number, userData: Partial<typeof users.$inferInsert>) {
+	async updateUser(userId: UserId, userData: Partial<typeof users.$inferInsert>) {
 		try {
 			// Make sure the user exists
 			const [existingUser] = await db.select().from(users).where(eq(users.id, userId));
@@ -306,7 +307,7 @@ export class AdminUsersService {
 	/**
 	 * Delete a user
 	 */
-	async deleteUser(userId: number) {
+	async deleteUser(userId: UserId) {
 		try {
 			// Check if user exists
 			const [user] = await db.select().from(users).where(eq(users.id, userId));
@@ -346,7 +347,7 @@ export class AdminUsersService {
 	/**
 	 * Ban a user
 	 */
-	async banUser(userId: number, reason?: string) {
+	async banUser(userId: UserId, reason?: string) {
 		try {
 			// Check if user exists
 			const [user] = await db.select().from(users).where(eq(users.id, userId));
@@ -397,7 +398,7 @@ export class AdminUsersService {
 	/**
 	 * Unban a user
 	 */
-	async unbanUser(userId: number) {
+	async unbanUser(userId: UserId) {
 		try {
 			// Check if user exists
 			const [user] = await db.select().from(users).where(eq(users.id, userId));
@@ -447,7 +448,7 @@ export class AdminUsersService {
 	/**
 	 * Change user role
 	 */
-	async changeUserRole(userId: number, newRole: string) {
+	async changeUserRole(userId: UserId, newRole: string) {
 		try {
 			// Check if user exists
 			const [user] = await db.select().from(users).where(eq(users.id, userId));

@@ -8,7 +8,7 @@ import { z } from 'zod';
 
 export const CreateReportSchema = z.object({
 	contentType: z.enum(['post', 'thread', 'message']),
-	contentId: z.number().int().positive(),
+	contentId: z.string().uuid('Invalid content ID format'),
 	reason: z.enum([
 		'spam',
 		'harassment',

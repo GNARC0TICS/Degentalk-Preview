@@ -24,7 +24,7 @@ import {
 	ShieldAlert,
 	Trash2
 } from 'lucide-react';
-import type { ReporterId, ContentId } from '@/db/types';
+import type { ReporterId, ContentId } from '@db/types';
 
 // Types (should ideally be shared)
 export type ReportStatus = 'pending' | 'resolved' | 'dismissed';

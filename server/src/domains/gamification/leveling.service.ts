@@ -23,6 +23,7 @@ import {
 } from '@schema';
 import { logger } from '../../core/logger';
 import { XpService } from '../xp/xp.service';
+import type { UserId } from '@db/types';
 
 export interface LevelInfo {
 	level: number;
@@ -43,7 +44,7 @@ export interface LevelInfo {
 }
 
 export interface UserProgression {
-	userId: number;
+	userId: UserId;
 	username: string;
 	currentLevel: number;
 	currentXp: number;
@@ -67,7 +68,7 @@ export interface UserProgression {
 }
 
 export interface LeaderboardEntry {
-	userId: number;
+	userId: UserId;
 	username: string;
 	level: number;
 	totalXp: number;
@@ -151,7 +152,7 @@ export class LevelingService {
 	/**
 	 * Get comprehensive user progression data
 	 */
-	async getUserProgression(userId: number): Promise<UserProgression | null> {
+	async getUserProgression(userId: UserId): Promise<UserProgression | null> {
 		try {
 			// Get user basic info
 			const userData = await db
@@ -233,12 +234,12 @@ export class LevelingService {
 			const recentAchievements = await db
 				.select({
 					achievement: achievements,
-					earnedAt: userAchievements.earnedAt
+					earnedAt: userAchievements.awardedAt
 				})
 				.from(userAchievements)
 				.innerJoin(achievements, eq(userAchievements.achievementId, achievements.id))
 				.where(eq(userAchievements.userId, userId))
-				.orderBy(desc(userAchievements.earnedAt))
+				.orderBy(desc(userAchievements.awardedAt))
 				.limit(5);
 
 			// Get mission stats
@@ -265,13 +266,13 @@ export class LevelingService {
 				xpForNextLevel,
 				progressPercentage: Math.min(100, Math.max(0, progressPercentage)),
 				levelInfo: currentLevelInfo,
-				nextLevelInfo,
+				...(nextLevelInfo ? { nextLevelInfo } : {}),
 				recentLevelUps: recentLevelUps[0]?.count || 0,
 				weeklyXpGain: parseInt(weeklyXpGain[0]?.total || '0'),
 				rank,
 				achievements: {
 					total: achievementStats[0]?.count || 0,
-					recent: recentAchievements.map((a) => ({
+					recent: recentAchievements.map((a: { achievement: any; earnedAt: Date }) => ({
 						...a.achievement,
 						earnedAt: a.earnedAt
 					}))
@@ -379,7 +380,7 @@ export class LevelingService {
 	 * Calculate and award level up rewards
 	 */
 	async processLevelUp(
-		userId: number,
+		userId: UserId,
 		oldLevel: number,
 		newLevel: number
 	): Promise<{
@@ -507,7 +508,7 @@ export class LevelingService {
 			const activeUsers = await db
 				.select({ count: count() })
 				.from(users)
-				.where(gte(users.lastLoginAt || users.createdAt, timeFilter));
+				.where(gte(users.lastLogin, timeFilter));
 
 			// Level ups today
 			const levelUpsToday = await db
@@ -546,7 +547,7 @@ export class LevelingService {
 			const topPerformers = await this.getLeaderboard('weekly', 10);
 
 			return {
-				userDistribution: userDistribution.map((d) => ({
+				userDistribution: userDistribution.map((d: { level: number; count: number }) => ({
 					level: d.level,
 					count: d.count
 				})),

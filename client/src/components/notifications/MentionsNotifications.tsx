@@ -21,7 +21,7 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { Link } from 'wouter';
 import { cn } from '@/lib/utils';
-import type { MentionId } from '@/db/types';
+import type { MentionId } from '@db/types';
 
 interface MentionNotification {
 	id: number;

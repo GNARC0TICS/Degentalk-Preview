@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { AnimationFrameId } from '@/db/types';
+import type { AnimationFrameId } from '@db/types';
 
 /**
  * Animates a number change from start to end value.

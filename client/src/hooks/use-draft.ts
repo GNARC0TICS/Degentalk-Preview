@@ -4,8 +4,18 @@ import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from './use-toast';
 import { useAuth } from './use-auth';
-import debounce from 'lodash/debounce';
-import type { CategoryId, PrefixId } from '@/db/types';
+// Simple debounce utility function
+const debounce = <T extends (...args: any[]) => any>(
+	func: T,
+	delay: number
+): (...args: Parameters<T>) => void => {
+	let timeoutId: NodeJS.Timeout;
+	return (...args: Parameters<T>) => {
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => func(...args), delay);
+	};
+};
+import type { CategoryId, PrefixId } from '@db/types';
 
 interface DraftData {
 	id?: number;
