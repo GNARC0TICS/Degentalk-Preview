@@ -25,7 +25,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { brandConfig } from '@/config/brand.config';
-import type { PostId } from '@db/types';
 
 interface PostActionsProps {
 	postId: number;
@@ -39,17 +38,17 @@ interface PostActionsProps {
 	isFirst?: boolean;
 	tippingEnabled?: boolean;
 	className?: string;
-	onLike?: (postId: PostId, hasLiked: boolean) => void;
-	onReply?: (postId: PostId) => void;
-	onQuote?: (postId: PostId) => void;
-	onEdit?: (postId: PostId) => void;
-	onDelete?: (postId: PostId) => void;
-	onMarkSolution?: (postId: PostId) => void;
-	onTip?: (postId: PostId) => void;
-	onReport?: (postId: PostId) => void;
-	onBookmark?: (postId: PostId) => void;
-	onShare?: (postId: PostId) => void;
-	onCopyLink?: (postId: PostId) => void;
+	onLike?: (postId: number, hasLiked: boolean) => void;
+	onReply?: (postId: number) => void;
+	onQuote?: (postId: number) => void;
+	onEdit?: (postId: number) => void;
+	onDelete?: (postId: number) => void;
+	onMarkSolution?: (postId: number) => void;
+	onTip?: (postId: number) => void;
+	onReport?: (postId: number) => void;
+	onBookmark?: (postId: number) => void;
+	onShare?: (postId: number) => void;
+	onCopyLink?: (postId: number) => void;
 }
 
 export function PostActions({

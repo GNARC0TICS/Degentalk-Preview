@@ -16,7 +16,7 @@ type DisplayMode = 'card' | 'table';
 interface ThreadListProps {
 	forumId: ForumId;
 	forumSlug: string;
-	availableTags?: Array<{ id: ThreadId; name: string; slug: string }>;
+	availableTags?: Array<{ id: number; name: string; slug: string }>;
 	filters: ThreadFiltersState;
 	displayMode?: DisplayMode;
 }

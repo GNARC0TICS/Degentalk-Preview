@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import type { Tag } from '@/types/forum';
 import type { ThreadPrefix } from '@/types/compat/forum';
 import { useEffect } from 'react';
-import type { ForumId, TagId, ContentId, PrefixId, ThreadId, PostId } from '@db/types';
+import type { ForumId, TagId, ContentId, PrefixId } from '@db/types';
 
 // Utility for common cache invalidation patterns
 const invalidatePostQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
@@ -132,7 +132,7 @@ export const useCreateThread = () => {
 	});
 };
 
-export const useUpdateThread = (threadId: ThreadId | undefined) => {
+export const useUpdateThread = (threadId: number | undefined) => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
@@ -170,7 +170,7 @@ export const useSolveThread = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ threadId, postId }: { threadId: ThreadId; postId?: number }) =>
+		mutationFn: ({ threadId, postId }: { threadId: number; postId?: number }) =>
 			forumApi.solveThread(threadId, postId),
 		onSuccess: (_, variables) => {
 			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${variables.threadId}`] });
@@ -185,7 +185,7 @@ export const useUnsolveThread = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: (threadId: ThreadId) => forumApi.unsolveThread(threadId),
+		mutationFn: (threadId: number) => forumApi.unsolveThread(threadId),
 		onSuccess: (_, threadId) => {
 			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${threadId}`] });
 			queryClient.invalidateQueries({ queryKey: ['/api/forum/threads'] });
@@ -226,7 +226,7 @@ export const useCreatePost = () => {
 	});
 };
 
-export const useUpdatePost = (postId: PostId | undefined) => {
+export const useUpdatePost = (postId: number | undefined) => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
@@ -260,7 +260,7 @@ export const useReactToPost = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ postId, reactionType }: { postId: PostId; reactionType: 'like' | 'dislike' }) =>
+		mutationFn: ({ postId, reactionType }: { postId: number; reactionType: 'like' | 'dislike' }) =>
 			forumApi.reactToPost(postId, reactionType),
 		onSuccess: () => {
 			invalidatePostQueries(queryClient);
@@ -274,7 +274,7 @@ export const useLikePost = () => {
 	const reactToPost = useReactToPost();
 	return {
 		...reactToPost,
-		mutate: (postId: PostId) => reactToPost.mutate({ postId, reactionType: 'like' })
+		mutate: (postId: number) => reactToPost.mutate({ postId, reactionType: 'like' })
 	};
 };
 
@@ -282,7 +282,7 @@ export const useUnlikePost = () => {
 	const reactToPost = useReactToPost();
 	return {
 		...reactToPost,
-		mutate: (postId: PostId) => reactToPost.mutate({ postId, reactionType: 'dislike' })
+		mutate: (postId: number) => reactToPost.mutate({ postId, reactionType: 'dislike' })
 	};
 };
 
@@ -290,7 +290,7 @@ export const useTipPost = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ postId, amount }: { postId: PostId; amount: number }) =>
+		mutationFn: ({ postId, amount }: { postId: number; amount: number }) =>
 			forumApi.tipPost(postId, amount),
 		onSuccess: () => {
 			invalidatePostQueries(queryClient);
@@ -352,7 +352,7 @@ export const useTags = () => {
 
 export const useAddTagToThread = () => {
 	const queryClient = useQueryClient();
-	return useMutation<Tag, Error, { threadId: ThreadId; tagId: TagId }>({
+	return useMutation<Tag, Error, { threadId: number; tagId: TagId }>({
 		mutationFn: ({ threadId, tagId }) => forumApi.addTagToThread(threadId, tagId),
 		onSuccess: (data, variables) => {
 			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${variables.threadId}`] });
@@ -365,7 +365,7 @@ export const useAddTagToThread = () => {
 
 export const useRemoveTagFromThread = () => {
 	const queryClient = useQueryClient();
-	return useMutation<void, Error, { threadId: ThreadId; tagId: TagId }>({
+	return useMutation<void, Error, { threadId: number; tagId: TagId }>({
 		mutationFn: ({ threadId, tagId }) => forumApi.removeTagFromThread(threadId, tagId),
 		onSuccess: (_, variables) => {
 			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${variables.threadId}`] });

@@ -171,7 +171,7 @@ export const forumApi = {
 		return directResult;
 	},
 
-	deleteThread: async (threadId: ThreadId): Promise<{ success: true }> => {
+	deleteThread: async (threadId: number): Promise<{ success: true }> => {
 		const directResult = await apiRequest<{ success: true }>({
 			url: `/api/forum/threads/${threadId}`,
 			method: 'DELETE'
@@ -182,7 +182,7 @@ export const forumApi = {
 	/**
 	 * Solved/Unsolved Thread Actions
 	 */
-	solveThread: async (threadId: ThreadId, postId?: number): Promise<ThreadWithUser> => {
+	solveThread: async (threadId: number, postId?: number): Promise<ThreadWithUser> => {
 		const directResult = await apiRequest<ThreadWithUser>({
 			url: `/api/forum/threads/${threadId}/solve`,
 			method: 'POST',
@@ -191,7 +191,7 @@ export const forumApi = {
 		return directResult;
 	},
 
-	unsolveThread: async (threadId: ThreadId): Promise<ThreadWithUser> => {
+	unsolveThread: async (threadId: number): Promise<ThreadWithUser> => {
 		const directResult = await apiRequest<ThreadWithUser>({
 			url: `/api/forum/threads/${threadId}/unsolve`,
 			method: 'POST'
@@ -210,7 +210,7 @@ export const forumApi = {
 		return directResult;
 	},
 
-	addTagToThread: async (threadId: ThreadId, tagId: TagId): Promise<ForumTag> => {
+	addTagToThread: async (threadId: number, tagId: TagId): Promise<ForumTag> => {
 		const directResult = await apiRequest<ForumTag>({
 			url: `/api/forum/threads/${threadId}/tags`,
 			method: 'POST',
@@ -219,7 +219,7 @@ export const forumApi = {
 		return directResult;
 	},
 
-	removeTagFromThread: async (threadId: ThreadId, tagId: TagId): Promise<void> => {
+	removeTagFromThread: async (threadId: number, tagId: TagId): Promise<void> => {
 		// For void responses, apiRequest returns {}, which is compatible with Promise<void>
 		// Assuming the server returns 204 No Content and apiRequest handles it gracefully by returning {}
 		await apiRequest<void>({
@@ -321,7 +321,7 @@ export const forumApi = {
 		return directResult;
 	},
 
-	deletePost: async (postId: PostId): Promise<{ success: true }> => {
+	deletePost: async (postId: number): Promise<{ success: true }> => {
 		const directResult = await apiRequest<{ success: true }>({
 			url: `/api/forum/posts/${postId}`,
 			method: 'DELETE'

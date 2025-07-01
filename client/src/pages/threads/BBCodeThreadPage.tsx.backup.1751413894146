@@ -197,37 +197,37 @@ export default function BBCodeThreadPage() {
 	};
 
 	// Mock handlers - these should be connected to actual API calls
-	const handleLike = (postId: PostId, hasLiked: boolean) => {
+	const handleLike = (postId: number, hasLiked: boolean) => {
 		// TODO: Implement like functionality
 	};
 
-	const handleReply = (postId: PostId) => {
+	const handleReply = (postId: number) => {
 		// TODO: Implement reply functionality
 		// Could scroll to reply form or open modal
 	};
 
-	const handleQuote = (postId: PostId) => {
+	const handleQuote = (postId: number) => {
 		// TODO: Implement quote functionality
 		// Could populate reply form with quoted content
 	};
 
-	const handleEdit = (postId: PostId) => {
+	const handleEdit = (postId: number) => {
 		// TODO: Implement edit functionality
 	};
 
-	const handleDelete = (postId: PostId) => {
+	const handleDelete = (postId: number) => {
 		// TODO: Implement delete functionality
 	};
 
-	const handleMarkSolution = (postId: PostId) => {
+	const handleMarkSolution = (postId: number) => {
 		// TODO: Implement mark as solution functionality
 	};
 
-	const handleTip = (postId: PostId) => {
+	const handleTip = (postId: number) => {
 		// TODO: Implement tip functionality
 	};
 
-	const handleReport = (postId: PostId) => {
+	const handleReport = (postId: number) => {
 		// TODO: Implement report functionality
 	};
 

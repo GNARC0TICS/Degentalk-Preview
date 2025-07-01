@@ -9,11 +9,10 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { HotThreadsSkeleton } from '@/components/ui/thread-skeleton';
 import { API_ROUTES } from '@/constants/apiRoutes';
-import type { ThreadId } from '@db/types';
 // Removed motion, AnimatePresence
 
 interface ThreadResponse {
-	thread_id: ThreadId;
+	thread_id: number;
 	title: string;
 	slug: string;
 	post_count: number;
@@ -21,7 +20,7 @@ interface ThreadResponse {
 	hot_score: number;
 	created_at: string;
 	last_post_at: string;
-	user_id: ThreadId;
+	user_id: number;
 	username: string;
 	avatar_url: string;
 	category_name: string;

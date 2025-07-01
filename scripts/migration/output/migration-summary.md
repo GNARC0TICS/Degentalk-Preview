@@ -1,11 +1,11 @@
 # Numeric ID Migration Report
 
-Generated: 2025-07-01T23:50:05.341Z
+Generated: 2025-07-01T23:51:51.176Z
 
 ## Summary
 - **Total Files**: 1931
-- **Total Issues**: 739
-- **Critical**: 691
+- **Total Issues**: 660
+- **Critical**: 612
 - **High**: 48  
 - **Medium**: 0
 
@@ -45,7 +45,7 @@ Top issues:
 
 ### client-components (Priority 4)
 - Files: 414
-- Issues: 81
+- Issues: 58
 - Status: ⚠️ Needs migration
 
 Top issues:
@@ -57,7 +57,7 @@ Top issues:
 
 ### client-pages (Priority 5)
 - Files: 113
-- Issues: 81
+- Issues: 73
 - Status: ⚠️ Needs migration
 
 Top issues:
@@ -69,15 +69,15 @@ Top issues:
 
 ### client-other (Priority 6)
 - Files: 771
-- Issues: 298
+- Issues: 250
 - Status: ⚠️ Needs migration
 
 Top issues:
-- `client/src/pages/leaderboard.tsx:23` - id: number → check entity context for correct branded type
-- `client/src/pages/forum-rules.tsx:27` - id: number → check entity context for correct branded type
-- `client/src/pages/forum-rules.tsx:48` - id: number → check entity context for correct branded type
-- `client/src/pages/forum-rules.tsx:49` - userId: number → UserId
-- `client/src/pages/degen-index.tsx:15` - id: number → check entity context for correct branded type
+- `client/src/types/profile.ts:27` - id: number → check entity context for correct branded type
+- `client/src/types/profile.ts:34` - id: number → check entity context for correct branded type
+- `client/src/types/profile.ts:42` - id: number → check entity context for correct branded type
+- `client/src/types/profile.ts:49` - id: number → check entity context for correct branded type
+- `client/src/types/profile.ts:56` - id: number → check entity context for correct branded type
 
 ### server-types (Priority 7)
 - Files: 0
@@ -125,8 +125,8 @@ Top issues:
 - `server/src/middleware/mission-progress.ts:55` - userId: number → UserId
 - `server/src/middleware/authenticate.ts:12` - id: number → check entity context for correct branded type
 - `server/src/domains/xp/xp.service.ts:431` - userId: number → UserId
+- `server/src/domains/subscriptions/subscription.service.ts:29` - id: number → check entity context for correct branded type
 - `server/src/domains/social/mentions.types.ts:4` - id: number → check entity context for correct branded type
-- `server/src/domains/social/mentions.types.ts:20` - id: number → check entity context for correct branded type
 
 ### database (Priority 13)
 - Files: 156

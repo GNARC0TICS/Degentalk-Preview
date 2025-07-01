@@ -31,7 +31,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { cn } from '@/lib/utils';
 import type { Tag } from '@/types/forum';
-import type { TagId, PrefixId, ThreadId } from '@db/types';
+import type { TagId, PrefixId } from '@db/types';
 
 export type ThreadSortOption =
 	| 'latest'
@@ -54,7 +54,7 @@ export interface ThreadFiltersState {
 
 interface ThreadFiltersProps {
 	availableTags?: Tag[];
-	availablePrefixes?: Array<{ id: ThreadId; name: string; color: string }>;
+	availablePrefixes?: Array<{ id: number; name: string; color: string }>;
 	onFiltersChange: (filters: ThreadFiltersState) => void;
 	forumSlug?: string;
 	className?: string;
