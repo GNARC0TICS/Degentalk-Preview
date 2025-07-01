@@ -40,13 +40,7 @@ import { setupVite, serveStatic } from './vite'; // Removed 'log' from here
 import { runScheduledTasks } from './utils/task-scheduler';
 import { seedDevUser } from './utils/seed-dev-user';
 import { traceMiddleware } from './src/middleware/trace.middleware'; // Import new traceMiddleware
-// Import seed scripts
-// import { seedForumStructure } from "../scripts/db/seed-forum-structure";
-import { seedXpActions } from '../scripts/db/seed-xp-actions';
-import { seedDefaultLevels } from '../scripts/db/seed-default-levels';
-import { seedEconomySettings } from '../scripts/db/seed-economy-settings';
-import { createMissingTables } from '../scripts/db/create-missing-tables';
-import { seedForumsFromConfig } from '../scripts/seed/seedForumsFromConfig';
+// Dynamic imports for seed scripts to avoid path resolution issues at startup
 import { initEventNotificationListener } from './src/domains/notifications/event-notification-listener';
 import './src/core/background-processor'; // Import to start background processing
 
@@ -86,6 +80,7 @@ app.use(traceMiddleware);
 			startupLog('Using PostgreSQL - skipping SQLite table creation script');
 		} else {
 			startupLog('Running database migrations...');
+			const { createMissingTables } = await import('../scripts/db/create-missing-tables');
 			await createMissingTables();
 			startupLog('Database migrations complete.', 'success');
 		}
@@ -98,7 +93,11 @@ app.use(traceMiddleware);
 			// Run all other seed scripts in development
 			startupLog('Running seed scripts in development mode...');
 			try {
-				// await seedForumStructure();
+				const { seedXpActions } = await import('../scripts/db/seed-xp-actions');
+				const { seedDefaultLevels } = await import('../scripts/db/seed-default-levels');
+				const { seedEconomySettings } = await import('../scripts/db/seed-economy-settings');
+				const { seedForumsFromConfig } = await import('../scripts/seed/seedForumsFromConfig');
+				
 				await seedXpActions();
 				await seedDefaultLevels();
 				await seedEconomySettings();

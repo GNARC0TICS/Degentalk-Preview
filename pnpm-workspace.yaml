@@ -4,4 +4,3 @@ packages:
   - 'shared'
   - 'db'
   - 'scripts'
-  - 'packages/*'

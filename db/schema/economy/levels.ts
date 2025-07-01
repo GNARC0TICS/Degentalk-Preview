@@ -29,8 +29,8 @@ export const levels = pgTable('levels', {
 
 	/** ──────────── Existing Reward Columns ──────────── */
 	rewardDgt: integer('reward_dgt').default(0),
-	rewardTitleId: integer('reward_title_id').references(() => titles.id, { onDelete: 'set null' }),
-	rewardBadgeId: integer('reward_badge_id').references(() => badges.id, { onDelete: 'set null' })
+	rewardTitleId: uuid('reward_title_id').references(() => titles.id, { onDelete: 'set null' }),
+	rewardBadgeId: uuid('reward_badge_id').references(() => badges.id, { onDelete: 'set null' })
 });
 
 import { createInsertSchema } from 'drizzle-zod';

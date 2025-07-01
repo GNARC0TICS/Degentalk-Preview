@@ -5,7 +5,7 @@
  */
 
 import { z } from 'zod';
-import { userId, groupId } from './common.schemas';
+import { userId, groupId } from '../validation/common.schemas';
 
 /**
  * Pagination and search query params

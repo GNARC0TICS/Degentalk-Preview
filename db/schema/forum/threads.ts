@@ -31,7 +31,7 @@ export const threads = pgTable(
 		title: varchar('title', { length: 255 }).notNull(),
 		slug: varchar('slug', { length: 255 }).notNull(),
 		// parentForumSlug: varchar('parent_forum_slug', { length: 128 }).notNull().default(''), // REMOVED
-		structureId: integer('structure_id')
+		structureId: uuid('structure_id')
 			.notNull()
 			.references(() => forumStructure.id, { onDelete: 'cascade' }),
 		userId: uuid('user_id')
@@ -67,7 +67,7 @@ export const threads = pgTable(
 		isArchived: boolean('is_archived').notNull().default(false),
 		pollId: bigint('poll_id', { mode: 'number' }),
 		isSolved: boolean('is_solved').notNull().default(false),
-		solvingPostId: integer('solving_post_id'), // .references((): AnyPgColumn => posts.id, { onDelete: 'set null' }), // Placeholder
+		solvingPostId: uuid('solving_post_id'), // .references((): AnyPgColumn => posts.id, { onDelete: 'set null' }), // Placeholder
 		pluginData: jsonb('plugin_data').default('{}'),
 		visibilityStatus: contentVisibilityStatusEnum('visibility_status')
 			.notNull()

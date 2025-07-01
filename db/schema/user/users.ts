@@ -37,10 +37,10 @@ export const users = pgTable(
 		avatarUrl: varchar('avatar_url', { length: 255 }),
 		activeAvatarUrl: varchar('active_avatar_url', { length: 255 }),
 		profileBannerUrl: varchar('profile_banner_url', { length: 255 }),
-		activeFrameId: integer('active_frame_id').references(() => avatarFrames.id, {
+		activeFrameId: uuid('active_frame_id').references(() => avatarFrames.id, {
 			onDelete: 'set null'
 		}),
-		avatarFrameId: integer('avatar_frame_id').references(() => avatarFrames.id, {
+		avatarFrameId: uuid('avatar_frame_id').references(() => avatarFrames.id, {
 			onDelete: 'set null'
 		}),
 		/**
@@ -77,8 +77,8 @@ export const users = pgTable(
 		xp: bigint('xp', { mode: 'number' }).notNull().default(0),
 		level: integer('level').notNull().default(1),
 		clout: integer('clout').notNull().default(0),
-		activeTitleId: integer('active_title_id').references(() => titles.id, { onDelete: 'set null' }),
-		activeBadgeId: integer('active_badge_id').references(() => badges.id, { onDelete: 'set null' }),
+		activeTitleId: uuid('active_title_id').references(() => titles.id, { onDelete: 'set null' }),
+		activeBadgeId: uuid('active_badge_id').references(() => badges.id, { onDelete: 'set null' }),
 		dgtPoints: integer('dgt_points').notNull().default(0),
 		dgtWalletBalance: integer('dgt_wallet_balance').notNull().default(0),
 		// Enhanced profile metrics

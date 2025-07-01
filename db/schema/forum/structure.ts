@@ -32,7 +32,7 @@ export const forumStructure = pgTable('forum_structure', {
 
 	// Hierarchy fields
 	parentForumSlug: text('parent_forum_slug'), // Slug of the parent zone or forum from config
-	parentId: integer('parent_id').references((): AnyPgColumn => forumStructure.id, {
+	parentId: uuid('parent_id').references((): AnyPgColumn => forumStructure.id, {
 		onDelete: 'set null'
 	}),
 

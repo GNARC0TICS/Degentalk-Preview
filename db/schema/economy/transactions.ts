@@ -21,7 +21,7 @@ export const transactions = pgTable(
 	{
 		id: uuid('id').primaryKey().defaultRandom(),
 		userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
-		walletId: integer('wallet_id').references(() => wallets.id, { onDelete: 'cascade' }), // DGT wallet
+		walletId: uuid('wallet_id').references(() => wallets.id, { onDelete: 'cascade' }), // DGT wallet
 		fromUserId: uuid('from_user_id').references(() => users.id, { onDelete: 'set null' }),
 		toUserId: uuid('to_user_id').references(() => users.id, { onDelete: 'set null' }),
 		amount: bigint('amount', { mode: 'number' }).notNull(),

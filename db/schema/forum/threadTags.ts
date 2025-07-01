@@ -1,4 +1,4 @@
-import { pgTable, integer, primaryKey, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
 import { threads } from './threads'; // Adjusted import
 import { tags } from './tags'; // Adjusted import
 
@@ -8,7 +8,7 @@ export const threadTags = pgTable(
 		threadId: uuid('thread_id')
 			.notNull()
 			.references(() => threads.id, { onDelete: 'cascade' }),
-		tagId: integer('tag_id')
+		tagId: uuid('tag_id')
 			.notNull()
 			.references(() => tags.id, { onDelete: 'cascade' })
 	},
