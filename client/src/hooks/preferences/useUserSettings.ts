@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
+import type { UserId } from '@/types/ids';
 
 /**
  * Type definitions for User Preferences data
  */
 export interface UserSettingsData {
 	profile: {
-		id: number;
+		id: UserId;
 		username: string;
 		email: string;
 		bio: string | null;
@@ -22,7 +23,7 @@ export interface UserSettingsData {
 		activeFrameId: number | null;
 	};
 	preferences: {
-		userId: number;
+		userId: UserId;
 		theme: string;
 		language: string;
 		timezone: string | null;
@@ -31,7 +32,7 @@ export interface UserSettingsData {
 		profileVisibility: string;
 	};
 	notifications: {
-		userId: number;
+		userId: UserId;
 		receiveEmailNotifications: boolean;
 		notifyOnMentions: boolean;
 		notifyOnNewReplies: boolean;

@@ -11,8 +11,8 @@ export type ItemRarity = 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
 export type ItemCategory = 'frame' | 'badge' | 'title' | 'effect' | 'emoji' | 'theme';
 export type ItemType = 'cosmetic' | 'consumable' | 'permanent' | 'limited';
 
-export interface ShopItem {
-  id: ItemId;
+export interface ShopItem<TId extends ItemId = ItemId> {
+  id: TId;
   name: string;
   description: string;
   category: ItemCategory;
@@ -93,8 +93,7 @@ export interface ItemStock {
   perUser?: number;
 }
 
-export interface Frame extends ShopItem {
-  id: FrameId;
+export interface Frame extends ShopItem<FrameId> {
   category: 'frame';
   cssClass: string;
   borderStyle: FrameBorderStyle;
@@ -120,8 +119,7 @@ export interface FrameAnimation {
   iterationCount: number | 'infinite';
 }
 
-export interface Badge extends ShopItem {
-  id: BadgeId;
+export interface Badge extends ShopItem<BadgeId> {
   category: 'badge';
   icon: string;
   size: 'small' | 'medium' | 'large';
@@ -130,8 +128,7 @@ export interface Badge extends ShopItem {
   maxStack: number;
 }
 
-export interface Title extends ShopItem {
-  id: TitleId;
+export interface Title extends ShopItem<TitleId> {
   category: 'title';
   text: string;
   color: string;

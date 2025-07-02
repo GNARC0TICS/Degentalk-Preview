@@ -9,6 +9,7 @@ import { achievementApi, type AchievementFilters, type Achievement } from '@/lib
 import { useAuth } from './use-auth';
 import { toast } from 'sonner';
 import type { ApiErrorData } from '@/types/core.types';
+import type { AchievementId } from '@db/types';
 
 /**
  * Get user's achievements with progress
@@ -52,7 +53,7 @@ export function useAchievementStats() {
 /**
  * Get specific achievement details
  */
-export function useAchievement(id: number) {
+export function useAchievement(id: AchievementId) {
 	return useQuery({
 		queryKey: ['achievements', 'detail', id],
 		queryFn: () => achievementApi.getAchievementById(id),
@@ -65,7 +66,7 @@ export function useAchievement(id: number) {
 /**
  * Get achievement completions (admin)
  */
-export function useAchievementCompletions(id: number, page = 1, limit = 50) {
+export function useAchievementCompletions(id: AchievementId, page = 1, limit = 50) {
 	return useQuery({
 		queryKey: ['achievements', 'completions', id, page, limit],
 		queryFn: () => achievementApi.getAchievementCompletions(id, page, limit),
@@ -112,7 +113,7 @@ export function useUpdateAchievement() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ id, data }: { id: number; data: Partial<Achievement> }) =>
+		mutationFn: ({ id, data }: { id: AchievementId; data: Partial<Achievement> }) =>
 			achievementApi.updateAchievement(id, data),
 		onSuccess: (data, variables) => {
 			queryClient.invalidateQueries({ queryKey: ['achievements'] });
@@ -132,7 +133,7 @@ export function useDeleteAchievement() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: (id: number) => achievementApi.deleteAchievement(id),
+		mutationFn: (id: AchievementId) => achievementApi.deleteAchievement(id),
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({ queryKey: ['achievements'] });
 			toast.success(data.message);
@@ -169,7 +170,7 @@ export function useManuallyAwardAchievement() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ id, userIds, reason }: { id: number; userIds: string[]; reason?: string }) =>
+		mutationFn: ({ id, userIds, reason }: { id: AchievementId; userIds: string[]; reason?: string }) =>
 			achievementApi.manuallyAwardAchievement(id, userIds, reason),
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({ queryKey: ['achievements'] });

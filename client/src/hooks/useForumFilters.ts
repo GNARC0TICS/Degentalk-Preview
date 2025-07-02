@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useLocation, useSearch } from 'wouter';
 import type { ThreadFiltersState, ThreadSortOption } from '@/components/forum/ThreadFilters';
 import type { TagId } from '@db/types';
+import type { PrefixId } from '@/types/ids';
 
 interface UseForumFiltersOptions {
 	defaultSort?: ThreadSortOption;
@@ -28,7 +29,7 @@ export function useForumFilters({
 	const getInitialFilters = (): ThreadFiltersState => {
 		if (syncWithUrl && searchParams) {
 			const tags = urlParams.getAll('tags[]').map(Number).filter(Boolean);
-			const prefixId = urlParams.get('prefixId') ? Number(urlParams.get('prefixId')) : undefined;
+			const prefixId = urlParams.get('prefixId') as PrefixId | undefined;
 			const solved = urlParams.get('solved') as 'solved' | 'unsolved' | undefined;
 
 			const filters: ThreadFiltersState = {

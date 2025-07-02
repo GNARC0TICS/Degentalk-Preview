@@ -4,12 +4,13 @@ import { apiRequest } from '@/lib/queryClient';
 import { useLocation } from 'wouter';
 import { getUserPermissions } from '@/lib/roles';
 import type { Role } from '@/lib/roles';
+import type { UserId } from '@db/types';
 
 const { createContext, useContext, useState, useEffect, useMemo } = React;
 
 // Define user type
 export interface User {
-	id: number;
+	id: UserId;
 	username: string;
 	email: string;
 	avatarUrl: string | null;

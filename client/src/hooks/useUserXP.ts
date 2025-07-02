@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
+import type { UserId } from '@/types/ids';
 
 export type UserXPData = {
-	userId: number;
+	userId: UserId;
 	username: string;
 	currentXp: number;
 	currentLevel: number;
@@ -31,7 +32,7 @@ export type UserXPData = {
  * @param userId Optional user ID. If not provided, fetches the current user's data
  * @returns User XP data and loading state
  */
-export function useUserXP(userId?: number) {
+export function useUserXP(userId?: UserId) {
 	const { toast } = useToast();
 
 	// Use the new domain-based endpoints
@@ -62,7 +63,7 @@ export function useUserXP(userId?: number) {
 		refetchOnWindowFocus: false,
 		// Fallback for unauthenticated users or errors
 		placeholderData: {
-			userId: 0,
+			userId: 'guest' as UserId,
 			username: 'Guest',
 			currentXp: 0,
 			currentLevel: 1,

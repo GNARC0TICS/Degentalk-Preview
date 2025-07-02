@@ -3,14 +3,15 @@ import { apiRequest } from '@/lib/queryClient';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { createSafeWebSocket } from '@/lib/safeWebSocket';
+import type { TitleId, BadgeId, LevelId } from '@db/types';
 
 export interface Level {
 	level: number;
 	minXp: number;
 	name?: string;
 	rewardDgt?: number;
-	rewardTitleId?: number;
-	rewardBadgeId?: number;
+	rewardTitleId?: TitleId;
+	rewardBadgeId?: BadgeId;
 }
 
 export interface UserXP {
@@ -34,7 +35,7 @@ export interface UserXP {
 }
 
 export interface UserTitle {
-	id: number;
+	id: TitleId;
 	name: string;
 	description?: string;
 	iconUrl?: string;
@@ -44,7 +45,7 @@ export interface UserTitle {
 }
 
 export interface UserBadge {
-	id: number;
+	id: BadgeId;
 	name: string;
 	description?: string;
 	iconUrl: string;
@@ -53,7 +54,7 @@ export interface UserBadge {
 }
 
 export interface XpAdjustmentEntry {
-	id: number;
+	id: LevelId;
 	userId: string; // Changed to string
 	adminId: string; // Changed to string, as it's a user ID
 	adminUsername?: string;
@@ -79,7 +80,7 @@ export function useXP(userId?: string): {
 	xpHistory: XpAdjustmentEntry[];
 	isLoading: boolean;
 	error: Error | null;
-	equipTitle: (titleId: number) => void;
+	equipTitle: (titleId: TitleId) => void;
 } {
 	// Changed to string
 	const queryClient = useQueryClient();
@@ -135,7 +136,7 @@ export function useXP(userId?: string): {
 
 	// Equip a title mutation
 	const equipTitle = useMutation({
-		mutationFn: async (titleId: number) => {
+		mutationFn: async (titleId: TitleId) => {
 			return apiRequest({ method: 'POST', url: '/api/xp/me/titles/equip', data: { titleId } });
 		},
 		onSuccess: () => {
@@ -182,6 +183,6 @@ export function useXP(userId?: string): {
 		xpHistory,
 		isLoading: isLoading || isHistoryLoading,
 		error,
-		equipTitle: (titleId: number) => equipTitle.mutate(titleId)
+		equipTitle: (titleId: TitleId) => equipTitle.mutate(titleId)
 	};
 }

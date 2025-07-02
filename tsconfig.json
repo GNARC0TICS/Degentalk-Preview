@@ -1,15 +1,38 @@
 {
 	"include": [
-		"db/types/id.types.ts",
-		"db/types/index.ts",
-		"db/types/utils.ts",
+		"client/src/**/*",
+		"server/**/*",
+		"shared/**/*",
 		"scripts/migration/identify-numeric-ids.ts",
-		"scripts/migration/check-ids-ci.ts"
+		"scripts/migration/check-ids-ci.ts",
+		"db/**/*",
+		"client/**/*.test.ts",
+		"client/**/*.test.tsx",
+		"client/**/*.spec.ts",
+		"client/**/*.spec.tsx",
+		"client/vitest.config.ts"
 	],
 	"exclude": [
 		"node_modules",
 		"build",
-		"dist"
+		"dist",
+		"**/__tests__",
+		"scripts/templates/**",
+		"scripts/auth/auth-refactor.ts",
+		"scripts/codemods/**",
+		"scripts/wallet/**",
+		"scripts/validate-*.ts",
+		"scripts/ops/validate-safe-migrations.ts",
+		"scripts/testing/validate-forum-fks.ts",
+		"scripts/migration/cleanup-old-category-schema.ts",
+		"scripts/migration/generate-id-aliases.ts",
+		"scripts/migration/generate-uuid-audit.ts",
+		"shared/fixtures/**",
+		"server/test/**",
+		"server/tests/**",
+		"server/**/*.test.ts",
+		"server/**/*.spec.ts",
+		"server/utils/**"
 	],
 	"compilerOptions": {
 		"incremental": true,
@@ -51,6 +74,8 @@
 			"@db_types/*": ["db/types/*"],
 			"@db/types": ["db/types/index.ts"],
 			"@db/types/*": ["db/types/*"],
+			"@db/schema/core/enums": ["db/schema/core/enums.ts"],
+			"@degentalk/db/types": ["db/types/index.ts"],
 			"@/types/ids": ["client/src/types/ids.ts"],
 			"@lib/*": ["./lib/*"],
 			"@forum-sdk/*": ["forum-sdk/*"]

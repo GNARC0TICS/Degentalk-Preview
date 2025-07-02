@@ -1,5 +1,6 @@
 import { useUserCosmetics } from '@/hooks/useUserCosmetics';
 import { useUserXP } from '@/hooks/useUserXP';
+import type { UserId } from '@/types/ids';
 
 interface BaseUser {
 	id: string;
@@ -31,7 +32,7 @@ export interface IdentityDisplay {
  */
 export function useIdentityDisplay(user: BaseUser | null | undefined): IdentityDisplay | null {
 	const { cosmetics } = useUserCosmetics(user?.id);
-	const { data: xpData } = useUserXP(typeof user?.id === 'string' ? parseInt(user.id) : user?.id);
+	const { data: xpData } = useUserXP(user?.id as UserId);
 
 	if (!user) return null;
 

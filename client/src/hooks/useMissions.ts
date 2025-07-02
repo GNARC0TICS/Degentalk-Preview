@@ -2,10 +2,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
+import type { MissionId, UserId } from '@db/types';
 
 // Types for missions
 export interface Mission {
-	id: number;
+	id: MissionId;
 	title: string;
 	description: string;
 	type: string;
@@ -24,9 +25,9 @@ export interface Mission {
 }
 
 export interface MissionProgress {
-	id: number;
-	userId: number;
-	missionId: number;
+	id: MissionId;
+	userId: UserId;
+	missionId: MissionId;
 	currentCount: number;
 	isCompleted: boolean;
 	isRewardClaimed: boolean;
@@ -94,14 +95,14 @@ export function useMissions() {
 	const claimRewardMutation = useMutation<
 		{ success: boolean; message: string; rewards: MissionReward },
 		unknown,
-		number
+		MissionId
 	>({
-		mutationFn: async (missionId: number) => {
+		mutationFn: async (missionId: MissionId) => {
 			return apiRequest({ url: `/api/missions/claim/${missionId}`, method: 'POST' });
 		},
 		onSuccess: (
 			data: { success: boolean; message: string; rewards: MissionReward },
-			missionId: number
+			missionId: MissionId
 		) => {
 			// Show success toast with reward details
 			const xpText = data.rewards.xp ? `${data.rewards.xp} XP` : '';
@@ -201,7 +202,7 @@ export function useMissions() {
 		error: missionsErrorData || progressErrorData,
 
 		// Actions
-		claimReward: (missionId: number) => claimRewardMutation.mutate(missionId),
+		claimReward: (missionId: MissionId) => claimRewardMutation.mutate(missionId),
 		isClaimingReward: claimRewardMutation.isPending,
 
 		// Helper functions
