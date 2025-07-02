@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "db/types/id.types.ts",
+    "db/types/index.ts", 
+    "db/types/utils.ts",
+    "scripts/migration/identify-numeric-ids.ts",
+    "scripts/migration/check-ids-ci.ts"
+  ],
+  "exclude": [
+    "**/*.backup.*",
+    "**/node_modules/**",
+    "**/dist/**"
+  ]
+}
