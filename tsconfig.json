@@ -59,7 +59,7 @@
 		"allowImportingTsExtensions": true,
 		"verbatimModuleSyntax": true,
 		"baseUrl": ".",
-		"types": ["node", "vite/client"],
+		"types": ["node"],
 		"paths": {
 			"@/*": ["client/src/*"],
 			"@shared/*": ["shared/*"],
@@ -74,6 +74,7 @@
 			"@db_types/*": ["db/types/*"],
 			"@db/types": ["db/types/index.ts"],
 			"@db/types/*": ["db/types/*"],
+			"@/types/ids": ["client/src/types/ids.ts"],
 			"@lib/*": ["./lib/*"],
 			"@forum-sdk/*": ["forum-sdk/*"]
 		},
