@@ -6,12 +6,13 @@
 
 import { generateOrderId } from './utils';
 import { SupportedCurrency } from './types';
+import type { UserId } from '@db/types';
 
 /**
  * Swap request parameters
  */
 export interface CreateSwapParams {
-	userId: number;
+	userId: UserId;
 	fromAmount: number;
 	fromCurrency: SupportedCurrency;
 	toCurrency: SupportedCurrency;

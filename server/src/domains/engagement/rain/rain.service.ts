@@ -61,7 +61,7 @@ export class RainService {
 		amount: number;
 		currency: string;
 		perUserAmount: number;
-		recipients: Array<{ id: number; username: string }>;
+		recipients: Array<{ id: UserId; username: string }>;
 	}> {
 		try {
 			logger.info('RainService', `Processing rain from user ${senderUserId}`, {
@@ -290,7 +290,7 @@ export class RainService {
 	/**
 	 * Get random active users to receive the rain
 	 */
-	private async getRandomActiveUsers(excludeUserId: number, count: number): Promise<number[]> {
+	private async getRandomActiveUsers(excludeUserId: UserId, count: number): Promise<UserId[]> {
 		// First try to get users who are online in the last 5 minutes
 		const fiveMinutesAgo = new Date();
 		fiveMinutesAgo.setMinutes(fiveMinutesAgo.getMinutes() - 5);

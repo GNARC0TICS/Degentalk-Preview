@@ -7,12 +7,13 @@
 import { ccpaymentClient } from './ccpayment-client';
 import { generateOrderId } from './utils';
 import { SupportedCurrency } from './types';
+import type { UserId } from '@db/types';
 
 /**
  * Withdrawal request parameters
  */
 export interface CreateWithdrawalParams {
-	userId: number;
+	userId: UserId;
 	amount: number;
 	currency: SupportedCurrency;
 	address: string;
@@ -115,7 +116,7 @@ export async function checkWithdrawalStatus(orderId: string): Promise<{
  * @returns Validation result
  */
 export async function validateWithdrawal(
-	userId: number,
+	userId: UserId,
 	amount: number,
 	currency: SupportedCurrency
 ): Promise<{

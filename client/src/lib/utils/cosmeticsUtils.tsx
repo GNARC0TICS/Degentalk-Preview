@@ -1,7 +1,9 @@
+import type { UserId } from '@db/types';
+
 interface UserInventoryItem {
 	id: string | number;
 	productId: string | number;
-	userId: string | number;
+	userId: UserId;
 	equipped: boolean;
 	quantity: number;
 	createdAt: string | Date;

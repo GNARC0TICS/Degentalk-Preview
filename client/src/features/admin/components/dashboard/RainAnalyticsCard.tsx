@@ -22,6 +22,7 @@ import {
 	CardTitle
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import type { UserId } from '@db/types';
 import {
 	Select,
 	SelectContent,
@@ -58,7 +59,7 @@ interface RainAnalytics {
 		percentage: number;
 	}>;
 	topRainers: Array<{
-		userId: number;
+		userId: UserId;
 		username: string;
 		avatarUrl?: string;
 		totalAmount: number;

@@ -7,7 +7,7 @@
  */
 
 import { db } from '@db';
-import type { UserId } from '@db/types';
+import type { UserId, TipId, TransactionId } from '@db/types';
 import { users, transactions } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
@@ -76,7 +76,7 @@ export interface TipRequest {
  * Tip response structure
  */
 export interface TipResponse {
-	id: number;
+	id: TipId;
 	fromUserId: UserId;
 	toUserId: UserId;
 	amount: number;
@@ -84,7 +84,7 @@ export interface TipResponse {
 	source: string;
 	status: string;
 	createdAt: Date;
-	transactionIds?: number[];
+	transactionIds?: TransactionId[];
 }
 
 /**
@@ -119,7 +119,7 @@ export class TipService {
 			await this.validateTipSettings(fromUserId, toUserId, amount, currency, source);
 
 			// Process tip based on currency type
-			let transactionIds: number[] = [];
+			let transactionIds: TransactionId[] = [];
 
 			if (currency === 'DGT') {
 				// Handle DGT tip using internal transfer

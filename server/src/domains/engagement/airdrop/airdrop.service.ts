@@ -33,7 +33,7 @@ export interface AirdropOptions {
  * Airdrop result structure
  */
 export interface AirdropResult {
-	id: number;
+	id: AirdropId;
 	title: string;
 	adminUserId: AdminUserId;
 	amount: number;
@@ -263,7 +263,7 @@ export class AirdropService {
 	private async processDGTAirdrop(
 		adminUserId: AdminUserId,
 		perUserAmount: number,
-		recipientIds: number[],
+		recipientIds: UserId[],
 		transactionId: ActionId,
 		airdropId: AirdropId,
 		title: string
@@ -319,7 +319,7 @@ export class AirdropService {
 		target: 'all' | 'active' | 'premium',
 		activityDays: number,
 		threshold: number
-	): Promise<number[]> {
+	): Promise<UserId[]> {
 		switch (target) {
 			case 'all':
 				// Get all users excluding suspended

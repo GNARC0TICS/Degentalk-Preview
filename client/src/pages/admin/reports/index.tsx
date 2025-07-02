@@ -66,7 +66,7 @@ import { z } from 'zod';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { apiRequest } from '@/lib/queryClient';
-import type { ContentId } from '@db/types';
+import type { ContentId, UserId } from '@db/types';
 
 // Types for reports
 interface ReportedContent {
@@ -208,7 +208,7 @@ export default function ReportsPage() {
 
 	// Ban user mutation
 	const banUserMutation = useMutation({
-		mutationFn: async (data: { userId: number; reason: string; duration?: string }) => {
+		mutationFn: async (data: { userId: UserId; reason: string; duration?: string }) => {
 			return apiRequest({
 				url: `/api/admin/reports/users/${data.userId}/ban`,
 				method: 'POST',

@@ -19,7 +19,7 @@ import { rainService } from './rain/rain.service';
 import { airdropService } from './airdrop/airdrop.service';
 import { WalletError, WalletErrorCodes } from '../../../core/errors';
 import { vaultService } from './vault/vault.service';
-import type { AdminUserId } from '@/db/types';
+import type { AdminUserId, EntityId } from '@/db/types';
 
 /**
  * Engagement service for orchestrating social engagement features
@@ -41,7 +41,7 @@ export class EngagementService {
 		reason?: string,
 		contentReference?: {
 			type: 'post' | 'thread' | 'reply';
-			id: number;
+			id: EntityId;
 		}
 	) {
 		try {

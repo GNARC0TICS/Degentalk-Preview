@@ -5,6 +5,8 @@
  * different payment providers.
  */
 
+import type { UserId } from '@db/types';
+
 /**
  * Generic transaction type
  */
@@ -20,7 +22,7 @@ export type TransactionStatus = 'pending' | 'processing' | 'completed' | 'failed
  */
 export interface Transaction {
 	id: string;
-	userId: number;
+	userId: UserId;
 	type: TransactionType;
 	status: TransactionStatus;
 	amount: number;

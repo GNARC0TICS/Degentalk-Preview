@@ -2,7 +2,7 @@
  * Notifications
  */
 
-import type { UserId } from '@db/types';
+import type { UserId, ThreadId, PostId } from '@db/types';
 export interface Notification {
 	id: UserId;
 	userId: UserId;
@@ -16,9 +16,9 @@ export interface Notification {
 }
 
 export interface NotificationData {
-	threadId?: number;
-	postId?: number;
-	userId?: number;
+	threadId?: ThreadId;
+	postId?: PostId;
+	userId?: UserId;
 	amount?: number;
 	achievementId?: string;
 	metadata?: Record<string, unknown>;

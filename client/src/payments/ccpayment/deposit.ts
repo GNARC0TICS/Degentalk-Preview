@@ -7,12 +7,13 @@
 import { ccpaymentClient } from './ccpayment-client';
 import { generateOrderId } from './utils';
 import { SupportedCurrency } from './types';
+import type { UserId } from '@db/types';
 
 /**
  * Deposit request parameters
  */
 export interface CreateDepositParams {
-	userId: number;
+	userId: UserId;
 	amount: number;
 	currency: SupportedCurrency;
 	productName?: string;
