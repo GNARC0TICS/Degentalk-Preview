@@ -25,7 +25,7 @@ A **pixel-perfect replica** of the Degentalk home page with functional email int
 1. Push to GitHub: `git add . && git commit -m "Deploy" && git push`
 2. Visit [vercel.com](https://vercel.com) → Import Project
 3. Select your repository
-4. Framework: **Vite** | Build: `npm run build` | Output: `dist`
+4. Framework: **Vite** | Build: `pnpm run build` | Output: `dist`
 5. Deploy!
 
 ### 3. Add Environment Variables (1 minute)
@@ -74,16 +74,16 @@ VITE_EMAILJS_PUBLIC_KEY=your_public_key
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Start development server
-npm run dev
+pnpm run dev
 
 # Build for production
-npm run build
+pnpm run build
 
 # Preview production build
-npm run preview
+pnpm run preview
 ```
 
 ## 🚨 Need Help?

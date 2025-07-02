@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,15 +8,17 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 interface FormState {
   email: string;
-  status: 'idle' | 'loading' | 'success' | 'error';
+  status: 'idle' | 'loading' | 'success' | 'error' | 'offline';
   message: string;
+  retryCount?: number;
 }
 
 export function NewsletterSignup() {
   const [form, setForm] = useState<FormState>({
     email: '',
     status: 'idle',
-    message: ''
+    message: '',
+    retryCount: 0
   });
 
   // Initialize EmailJS on component mount
@@ -48,6 +50,16 @@ export function NewsletterSignup() {
     setForm(prev => ({ ...prev, status: 'loading', message: '' }));
 
     try {
+      // Check online status
+      if (!navigator.onLine) {
+        setForm(prev => ({
+          ...prev,
+          status: 'offline',
+          message: 'You appear to be offline. Please check your connection and try again.'
+        }));
+        return;
+      }
+
       // Use real email service
       const result = await handleNewsletterSignup(form.email);
       
@@ -56,7 +68,8 @@ export function NewsletterSignup() {
           ...prev,
           status: 'success',
           message: result.message,
-          email: ''
+          email: '',
+          retryCount: 0
         }));
       } else {
         setForm(prev => ({
@@ -67,11 +80,23 @@ export function NewsletterSignup() {
       }
     } catch (error) {
       console.error('Newsletter signup error:', error);
-      setForm(prev => ({
-        ...prev,
-        status: 'error',
-        message: 'Something went wrong. Please try again later.'
-      }));
+      const retryCount = form.retryCount || 0;
+      
+      if (retryCount < 2) {
+        setForm(prev => ({
+          ...prev,
+          status: 'error',
+          message: `Connection failed. Click "Join Waitlist" to retry. (Attempt ${retryCount + 1}/3)`,
+          retryCount: retryCount + 1
+        }));
+      } else {
+        setForm(prev => ({
+          ...prev,
+          status: 'error',
+          message: 'Unable to connect after multiple attempts. Please try again later or check your connection.',
+          retryCount: 0
+        }));
+      }
     }
   };
 
@@ -82,9 +107,18 @@ export function NewsletterSignup() {
   return (
     <section 
       id="newsletter-signup" 
-      className="py-20 bg-gradient-to-b from-zinc-900 to-black"
+      className="py-20 relative overflow-hidden"
     >
-      <div className="container mx-auto px-4 max-w-4xl">
+      {/* Multi-layered background with subtle purple accents */}
+      <div className="absolute inset-0 bg-gradient-to-b from-zinc-900 to-black" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/3 via-transparent to-violet-500/2" />
+      
+      {/* Subtle glow effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-purple-500/4 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-violet-500/3 rounded-full blur-3xl" />
+      </div>
+      <div className="container mx-auto px-4 max-w-4xl relative z-10">
         <motion.div
           className="text-center"
           initial={{ opacity: 0, y: 20 }}
@@ -93,33 +127,54 @@ export function NewsletterSignup() {
           viewport={{ once: true }}
         >
           {/* Header */}
-          <div className="mb-12">
+          <div className="mb-12 flex flex-col lg:flex-row items-center lg:items-start gap-6 lg:gap-12 text-center lg:text-left">
+            {/* Icon */}
             <motion.div
-              className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-full mb-6"
+              className="flex-shrink-0 inline-flex items-center justify-center"
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <Mail className="w-8 h-8 text-white" />
+              <img
+                src="/images/ANN.PNG"
+                alt="Announcements Icon"
+                className="h-32 w-auto sm:h-36 md:h-40 lg:h-48"
+              />
             </motion.div>
-            
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Join the{' '}
-              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                Degen Waitlist
-              </span>
-            </h2>
-            
-            <p className="text-xl text-zinc-300 max-w-2xl mx-auto leading-relaxed">
-              Be the first to experience the most satirical crypto forum on the internet. 
-              Get exclusive early access when we launch.
-            </p>
+
+            {/* Headline & subtext */}
+            <div className="max-w-2xl">
+              {(() => {
+                const headlines = [
+                  'HODL My Place',
+                  'Let Me Lurk Early',
+                  'Reserve Your Username',
+                  'Stake Your Claim',
+                  'Save Me a Spot 🚀',
+                  'Unlock Beta Access',
+                  'I\'m In — Notify Me',
+                  'Claim Your Front-Row Seat'
+                ] as const;
+                const headline = useMemo(() =>
+                  headlines[Math.floor(Math.random() * headlines.length)], []);
+                return (
+                  <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 lg:mb-6 leading-tight">
+                    {headline}
+                  </h2>
+                );
+              })()}
+
+              <p className="text-xl text-zinc-300 leading-relaxed">
+                Be the first to experience the most satirical crypto forum on the internet.
+                Join our exclusive launch list for early access and founding member benefits.
+              </p>
+            </div>
           </div>
 
           {/* Newsletter Form */}
           <motion.div
-            className="max-w-md mx-auto"
+            className="max-w-lg mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
@@ -129,7 +184,7 @@ export function NewsletterSignup() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Input
                   type="email"
-                  placeholder="Enter your email address"
+                  placeholder="Your email (we promise not to sell it... yet)"
                   value={form.email}
                   onChange={(e) => setForm(prev => ({ 
                     ...prev, 
@@ -137,13 +192,13 @@ export function NewsletterSignup() {
                     status: 'idle',
                     message: ''
                   }))}
-                  className="flex-1"
+                  className="flex-1 w-full min-w-0"
                   disabled={form.status === 'loading'}
                 />
                 <Button
                   type="submit"
                   disabled={form.status === 'loading' || form.status === 'success'}
-                  className="bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white shadow-lg hover:shadow-emerald-500/25 transition-all duration-300 px-8"
+                  className="border border-zinc-800 bg-black text-white hover:bg-zinc-900 hover:border-zinc-700 transition-colors duration-200 px-8"
                 >
                   {form.status === 'loading' ? (
                     <div className="flex items-center space-x-2">
@@ -191,16 +246,16 @@ export function NewsletterSignup() {
               transition={{ duration: 0.8, delay: 0.5 }}
               viewport={{ once: true }}
             >
-              <p className="text-sm text-zinc-400 mb-4 text-center">
-                What you'll get as an early member:
+              <p className="text-sm text-zinc-300 mb-4 text-center">
+                What you'll get for trusting us with your email:
               </p>
               <ul className="space-y-2 text-sm text-zinc-300">
                 {[
-                  'Exclusive beta access before public launch',
-                  'Founding member badge and special privileges',
-                  'Early DGT token allocation',
-                  'Behind-the-scenes development updates',
-                  'Direct line to the development team'
+                  'Exclusive beta access (AKA: first to experience the bugs)',
+                  'Founding member badge (flex on late adopters)',
+                  'Early DGT token allocation (probably worth something)',
+                  'Behind-the-scenes chaos and existential dev updates',
+                  'Direct line to complain when things inevitably break'
                 ].map((benefit, index) => (
                   <motion.li
                     key={index}
@@ -219,14 +274,14 @@ export function NewsletterSignup() {
 
             {/* Privacy Note */}
             <motion.p
-              className="text-xs text-zinc-500 mt-6"
+              className="text-xs text-zinc-400 mt-6"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.7 }}
               viewport={{ once: true }}
             >
-              We respect your privacy. No spam, no sharing your data. 
-              Just launch updates and degen-worthy content.
+              We respect your privacy. No spam, just premium cope content. 
+              Your data stays safer than your portfolio.
             </motion.p>
           </motion.div>
         </motion.div>

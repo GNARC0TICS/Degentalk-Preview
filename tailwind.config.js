@@ -86,14 +86,21 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       animation: {
-        'gradient-shift': 'gradient-shift 8s ease-in-out infinite',
+        'gradient-shift': 'gradient-shift 15s ease infinite',
         'float': 'float 6s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite alternate',
+        'neon-flicker': 'neon-flicker 3s ease-in-out infinite',
       },
       keyframes: {
         'gradient-shift': {
-          '0%, 100%': { 'background-position': '0% 50%' },
-          '50%': { 'background-position': '100% 50%' },
+          '0%, 100%': { 
+            'background-position': '0% 50%',
+            'background-size': '400% 400%'
+          },
+          '50%': { 
+            'background-position': '100% 50%',
+            'background-size': '400% 400%'
+          },
         },
         'float': {
           '0%, 100%': { transform: 'translateY(0px)' },
@@ -102,6 +109,36 @@ export default {
         'glow': {
           '0%': { 'box-shadow': '0 0 5px rgb(16 185 129 / 0.5)' },
           '100%': { 'box-shadow': '0 0 20px rgb(16 185 129 / 0.8), 0 0 30px rgb(16 185 129 / 0.4)' },
+        },
+        'neon-flicker': {
+          '0%, 100%': { 
+            'opacity': '1',
+            'filter': 'brightness(125%) contrast(110%) drop-shadow(0 0 15px rgba(16, 185, 129, 0.8)) drop-shadow(0 0 30px rgba(16, 185, 129, 0.4)) drop-shadow(0 0 45px rgba(16, 185, 129, 0.2))'
+          },
+          '2%': { 
+            'opacity': '0.9',
+            'filter': 'brightness(140%) contrast(120%) drop-shadow(0 0 10px rgba(16, 185, 129, 0.6)) drop-shadow(0 0 20px rgba(16, 185, 129, 0.3))'
+          },
+          '4%': { 
+            'opacity': '1',
+            'filter': 'brightness(125%) contrast(110%) drop-shadow(0 0 15px rgba(16, 185, 129, 0.8)) drop-shadow(0 0 30px rgba(16, 185, 129, 0.4)) drop-shadow(0 0 45px rgba(16, 185, 129, 0.2))'
+          },
+          '8%': { 
+            'opacity': '0.7',
+            'filter': 'brightness(90%) contrast(95%) drop-shadow(0 0 5px rgba(16, 185, 129, 0.4)) drop-shadow(0 0 15px rgba(16, 185, 129, 0.2))'
+          },
+          '12%': { 
+            'opacity': '1',
+            'filter': 'brightness(125%) contrast(110%) drop-shadow(0 0 15px rgba(16, 185, 129, 0.8)) drop-shadow(0 0 30px rgba(16, 185, 129, 0.4)) drop-shadow(0 0 45px rgba(16, 185, 129, 0.2))'
+          },
+          '16%': { 
+            'opacity': '0.85',
+            'filter': 'brightness(110%) contrast(105%) drop-shadow(0 0 8px rgba(16, 185, 129, 0.5)) drop-shadow(0 0 18px rgba(16, 185, 129, 0.3))'
+          },
+          '18%': { 
+            'opacity': '1',
+            'filter': 'brightness(125%) contrast(110%) drop-shadow(0 0 15px rgba(16, 185, 129, 0.8)) drop-shadow(0 0 30px rgba(16, 185, 129, 0.4)) drop-shadow(0 0 45px rgba(16, 185, 129, 0.2))'
+          }
         },
       },
       backgroundImage: {

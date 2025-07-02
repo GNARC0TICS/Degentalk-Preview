@@ -5,8 +5,8 @@ Use this checklist to ensure your Degentalk landing page is working perfectly in
 ## 🎯 Pre-Deployment Checklist
 
 ### Local Testing
-- [ ] `npm run build` completes without errors
-- [ ] `npm run preview` serves the built site correctly
+- [ ] `pnpm run build` completes without errors
+- [ ] `pnpm run preview` serves the built site correctly
 - [ ] Hero section fills full viewport height
 - [ ] Logo shows "Degentalk™" (no green icon)
 - [ ] Background is dark and matches original
@@ -169,7 +169,7 @@ Test error scenarios:
 5. **Try different email**: Test with another email address
 
 ### Performance Issues
-1. **Check bundle size**: Run `npm run build` and review output
+1. **Check bundle size**: pnpm run build
 2. **Optimize images**: Ensure no large images loading
 3. **CDN caching**: Verify Vercel CDN is working
 4. **JavaScript errors**: Check browser console for issues

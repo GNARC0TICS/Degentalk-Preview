@@ -70,7 +70,7 @@ VITE_EMAILJS_PUBLIC_KEY=abc123xyz
 
 #### 6. Test Locally
 ```bash
-npm run dev
+pnpm run dev
 # Visit http://localhost:5174
 # Test the newsletter signup form
 ```
@@ -110,7 +110,7 @@ VITE_CONVERTKIT_FORM_ID=1234567
 
 #### 5. Test Integration
 ```bash
-npm run dev
+pnpm run dev
 # Test newsletter signup
 # Check ConvertKit dashboard for new subscribers
 ```
@@ -158,7 +158,7 @@ cp .env.example .env.local
 
 # Add your email service credentials
 # Start development server
-npm run dev
+pnpm run dev
 
 # Test email signup at http://localhost:5174
 ```

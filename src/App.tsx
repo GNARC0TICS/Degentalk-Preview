@@ -10,9 +10,23 @@ function App() {
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-background text-foreground">
+        {/* Skip Links for Accessibility */}
+        <a 
+          href="#main-content" 
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-black px-4 py-2 rounded-md z-50 font-medium"
+        >
+          Skip to main content
+        </a>
+        <a 
+          href="#newsletter-signup" 
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-32 bg-white text-black px-4 py-2 rounded-md z-50 font-medium"
+        >
+          Skip to signup
+        </a>
+        
         <Header />
         
-        <main>
+        <main id="main-content">
           <div id="hero">
             <ErrorBoundary fallback={
               <div className="min-h-screen bg-cod-gray-950 flex items-center justify-center">

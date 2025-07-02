@@ -280,7 +280,7 @@ export const heroQuotes: HeroQuote[] = [
 
 export const footerQuotes: string[] = [
   "This is not financial advice. But if it works, you're welcome.",
-  'Degentalk™ is powered by caffeine, cope, and completely unlicensed opinions.',
+  'Degentalk is powered by caffeine, cope, and completely unlicensed opinions.',
   "We are not financial advisors. We just yell louder when we're right.",
   'Not financial advice. Consult your local psychic for better accuracy.',
   'Any gains you make are pure coincidence. Any losses are definitely your fault.',
@@ -288,9 +288,25 @@ export const footerQuotes: string[] = [
   'If this feels like good advice, please reconsider everything.',
   'Everything here is entirely theoretical. Especially your profits.',
   "Don't sue us. Sue the market.",
-  'Side effects of listening to Degentalk™ may include delusion, euphoria, or margin calls.',
+  'Side effects of listening to Degentalk may include delusion, euphoria, or margin calls.',
   'DYOR. Then ignore it and ape anyway.',
   'This is not financial advice, seriously.',
   'Shoutout to the guy who lost his paycheck today.',
-  'Up only... in spirit.'
+  'Up only... in spirit.',
+  'Post your wins. Hide your losses.',
+  'No charts. Just vibes.',
+  "Rugged? Good. Now you're one of us.",
+  'Built different. Just not financially stable.',
+  "Degens don't cry—we redeposit.",
+  'Who needs therapy when you have leverage?',
+  'Your portfolio is our entertainment.',
+  'Welcome to group therapy with bonus rounds.',
+  '0xFaith, 100x Cope.',
+  'Lose fast, post faster.',
+  "If this site loads, you haven't been liquidated yet.",
+  'Do NOT try this at home. Try it on-chain.',
+  'Warning: May cause spontaneous aping into shitcoins.',
+  'Results not typical. Actually, results not even probable.',
+  'Professional bag holders since 2024.',
+  'Turning FOMO into an art form.'
 ];

@@ -25,8 +25,8 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <motion.div
-            className="flex items-center cursor-pointer"
+          <motion.button
+            className="flex items-center cursor-pointer text-left"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
@@ -35,11 +35,12 @@ export function Header() {
                 behavior: 'smooth' 
               });
             }}
+            aria-label="Degentalk - Go to homepage"
           >
             <span className="text-xl font-bold text-white">
               Degentalk<sup className="text-xs text-zinc-400 font-normal">™</sup>
             </span>
-          </motion.div>
+          </motion.button>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
@@ -67,7 +68,7 @@ export function Header() {
           >
             <Button
               variant="outline"
-              size="sm"
+              size="default"
               className="border border-zinc-800 bg-black hover:bg-zinc-900 hover:border-zinc-700 text-white rounded-md"
               onClick={() => scrollToSection('newsletter-signup')}
             >
@@ -79,7 +80,10 @@ export function Header() {
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-cod-gray-300 hover:text-white transition-colors"
+              className="text-cod-gray-300 hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation"
             >
               {isMobileMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -98,13 +102,17 @@ export function Header() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
+            id="mobile-navigation"
+            role="navigation"
+            aria-label="Mobile navigation menu"
           >
             <div className="py-4 space-y-4 border-t border-cod-gray-800">
               {navigation.map((item) => (
                 <button
                   key={item.name}
-                  className="block w-full text-left px-4 py-2 text-cod-gray-300 hover:text-emerald-400 hover:bg-cod-gray-800/50 rounded-md transition-colors duration-200"
+                  className="block w-full text-left px-4 py-2 text-cod-gray-300 hover:text-emerald-400 hover:bg-cod-gray-800/50 rounded-md transition-colors duration-200 min-h-[44px]"
                   onClick={() => scrollToSection(item.id)}
+                  aria-label={`Navigate to ${item.name} section`}
                 >
                   {item.name}
                 </button>

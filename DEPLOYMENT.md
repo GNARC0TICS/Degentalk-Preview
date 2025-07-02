@@ -40,15 +40,15 @@ git push origin main
 
 ```bash
 Framework Preset: Vite
-Build Command: npm run build
+Build Command: pnpm run build
 Output Directory: dist
-Install Command: npm install
+Install Command: pnpm install
 ```
 
 ### CLI Deployment (Alternative)
 ```bash
 # Install Vercel CLI
-npm install -g vercel
+pnpm dlx vercel
 
 # Deploy from landing-page directory
 cd landing-page
@@ -149,8 +149,8 @@ Value: cname.vercel-dns.com
 ### Testing Commands
 ```bash
 # Test build locally
-npm run build
-npm run preview
+pnpm run build
+pnpm run preview
 
 # Test email functionality
 # Use browser dev tools to check network requests
@@ -189,7 +189,7 @@ Solution: Set Node.js version in vercel.json
 
 #### Performance Issues
 ```bash
-# Check bundle size: npm run build
+# Check bundle size: pnpm run build
 # Optimize images: Use WebP format
 # Enable compression in vercel.json
 ```
@@ -224,10 +224,10 @@ Solution: Set Node.js version in vercel.json
 ### Deployment Settings
 ```json
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
-  "installCommand": "npm install",
-  "devCommand": "npm run dev"
+  "installCommand": "pnpm install",
+  "devCommand": "pnpm run dev"
 }
 ```
 

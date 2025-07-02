@@ -24,22 +24,22 @@ A standalone pre-launch landing page for Degentalk - the most satirical crypto f
 
 ### Prerequisites
 - Node.js 18+
-- npm or yarn
+- pnpm (v8+)
 
 ### Installation
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Start development server
-npm run dev
+pnpm run dev
 
 # Build for production
-npm run build
+pnpm run build
 
 # Preview production build
-npm run preview
+pnpm run preview
 ```
 
 ## 🎨 Brand Consistency
@@ -78,7 +78,7 @@ The landing page maintains exact visual consistency with the main Degentalk plat
 
 2. **Deploy on Vercel**:
    - Visit [vercel.com](https://vercel.com) → Import Project
-   - Framework: **Vite** | Build: `npm run build` | Output: `dist`
+   - Framework: **Vite** | Build: `pnpm run build` | Output: `dist`
    - Add environment variables (see EMAIL-SETUP.md)
    - Deploy!
 
@@ -180,10 +180,10 @@ src/
 ### Code Quality
 ```bash
 # Linting
-npm run lint
+pnpm run lint
 
 # Type checking
-npm run build
+pnpm run build
 ```
 
 ## 📝 License
