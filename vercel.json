@@ -3,11 +3,6 @@
   "outputDirectory": "dist",
   "installCommand": "pnpm install",
   "devCommand": "pnpm run dev",
-  "functions": {
-    "src/**/*.{js,ts,tsx}": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "headers": [
     {
       "source": "/assets/(.*)",
