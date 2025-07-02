@@ -1,9 +1,10 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button'; // Using Button for consistency, can be styled
+import type { PostId } from '@db/types';
 
 interface ReactionTrayProps {
-	postId: number; // postId might be used for keys or future data fetching within this component
+	postId: PostId; // postId might be used for keys or future data fetching within this component
 	currentUserReaction?: string | null;
 	reactions: {
 		emoji: string;
