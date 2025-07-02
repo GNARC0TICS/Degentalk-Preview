@@ -77,10 +77,12 @@ export function HeroSection() {
       )}
 
       {/* Fixed height container - solving spacing issue */}
-      <div className="container mx-auto px-4 flex items-center justify-center min-h-[calc(100vh-4rem)] relative z-10">
+      <div className="container mx-auto px-4 flex items-center justify-center min-h-[calc(100vh-6rem)] relative z-10">
         <motion.div
           className="max-w-3xl mx-auto text-center"
-          {...(animConfig.prefersReducedMotion ? {} : lazyFadeIn)}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
         >
 
           {/* Optimized headline container - responsive height */}
@@ -92,8 +94,8 @@ export function HeroSection() {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                transition={createTransition('normal')}
-                className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white text-center leading-tight px-4"
+                transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+                className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-white text-center leading-tight px-4"
                 style={{ textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
               >
                 {currentQuote.headline}
@@ -105,11 +107,9 @@ export function HeroSection() {
           <motion.p
             className="text-lg md:text-xl lg:text-2xl text-white/90 mb-12 font-medium"
             style={{ textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}
-            {...(animConfig.prefersReducedMotion ? {} : {
-              initial: { opacity: 0 },
-              animate: { opacity: 1 },
-              transition: createTransition('normal', 0.2)
-            })}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
           >
             {currentQuote.subheader}
           </motion.p>
@@ -117,14 +117,14 @@ export function HeroSection() {
           {/* Action buttons */}
           <motion.div
             className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
-            {...(animConfig.prefersReducedMotion ? {} : {
-              initial: { opacity: 0, y: 20 },
-              animate: { opacity: 1, y: 0 },
-              transition: createTransition('normal', 0.4)
-            })}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
           >
             <motion.div 
-              {...(animConfig.prefersReducedMotion ? {} : { whileHover: hoverScale, whileTap: { scale: 0.98 } })}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
               <Button
                 size="lg"
@@ -140,11 +140,9 @@ export function HeroSection() {
           {/* Learn more link */}
           <motion.div
             className="flex justify-center"
-            {...(animConfig.prefersReducedMotion ? {} : {
-              initial: { opacity: 0 },
-              animate: { opacity: 1 },
-              transition: createTransition('normal', 0.6)
-            })}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6, ease: [0.4, 0, 0.2, 1] }}
           >
             <button
               onClick={scrollToOverview}
@@ -152,7 +150,8 @@ export function HeroSection() {
             >
               <span className="text-base">Learn more about Degentalk</span>
               <motion.div
-                {...(animConfig.prefersReducedMotion ? {} : { whileHover: hoverSlide })}
+                whileHover={{ x: 8 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
               </motion.div>
