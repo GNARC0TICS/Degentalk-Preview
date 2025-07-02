@@ -3,13 +3,13 @@ import jwt from 'jsonwebtoken';
 import { db } from '@db';
 import { users } from '@schema';
 import { eq } from 'drizzle-orm';
-import type { GroupId } from '@/db/types';
+import type { GroupId, UserId } from '@/db/types';
 
 // Extend Express Request type to include user
 declare global {
 	namespace Express {
 		interface User {
-			id: number;
+			id: UserId;
 			role: string;
 			username: string;
 			email: string;

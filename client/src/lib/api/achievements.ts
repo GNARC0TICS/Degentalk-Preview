@@ -6,16 +6,17 @@
  */
 
 import { apiRequest } from '@/lib/queryClient';
+import type { AchievementId } from '@db/types';
 
 export interface UserAchievement {
-	id: number;
+	id: AchievementId;
 	achievementId: number;
 	currentProgress: any;
 	progressPercentage: string;
 	isCompleted: boolean;
 	completedAt?: string;
 	achievement: {
-		id: number;
+		id: AchievementId;
 		key: string;
 		name: string;
 		description: string;
@@ -32,7 +33,7 @@ export interface UserAchievement {
 }
 
 export interface Achievement {
-	id: number;
+	id: AchievementId;
 	key: string;
 	name: string;
 	description: string;
@@ -112,7 +113,7 @@ export const achievementApi = {
 	/**
 	 * Get specific achievement details
 	 */
-	getAchievementById: (id: number) =>
+	getAchievementById: (id: AchievementId) =>
 		apiRequest<{ data: Achievement }>({
 			url: `/api/achievements/${id}`
 		}),
@@ -120,7 +121,7 @@ export const achievementApi = {
 	/**
 	 * Get achievement completions (admin)
 	 */
-	getAchievementCompletions: (id: number, page = 1, limit = 50) =>
+	getAchievementCompletions: (id: AchievementId, page = 1, limit = 50) =>
 		apiRequest<PaginatedResponse<any>>({
 			url: `/api/achievements/${id}/completions`,
 			params: { page, limit }
@@ -139,7 +140,7 @@ export const achievementApi = {
 	/**
 	 * Update achievement (admin)
 	 */
-	updateAchievement: (id: number, achievementData: Partial<Achievement>) =>
+	updateAchievement: (id: AchievementId, achievementData: Partial<Achievement>) =>
 		apiRequest<{ data: Achievement }>({
 			url: `/api/achievements/${id}`,
 			method: 'PUT',
@@ -149,7 +150,7 @@ export const achievementApi = {
 	/**
 	 * Delete achievement (admin)
 	 */
-	deleteAchievement: (id: number) =>
+	deleteAchievement: (id: AchievementId) =>
 		apiRequest<{ success: boolean; message: string }>({
 			url: `/api/achievements/${id}`,
 			method: 'DELETE'
@@ -168,7 +169,7 @@ export const achievementApi = {
 	/**
 	 * Manually award achievement (admin)
 	 */
-	manuallyAwardAchievement: (id: number, userIds: string[], reason?: string) =>
+	manuallyAwardAchievement: (id: AchievementId, userIds: string[], reason?: string) =>
 		apiRequest<{ success: boolean; message: string }>({
 			url: `/api/achievements/${id}/award`,
 			method: 'POST',

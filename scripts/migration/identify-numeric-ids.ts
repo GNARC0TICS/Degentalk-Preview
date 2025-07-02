@@ -175,8 +175,10 @@ const MIGRATION_BATCHES = {
 function scanFile(filePath: string): IdIssue[] {
   const issues: IdIssue[] = [];
   
-  // Skip migration backup files
+  // Early exit for unwanted files (performance optimization)
   if (filePath.includes('.backup.')) return issues;
+  if (filePath.endsWith('.d.ts')) return issues;
+  if (filePath.includes('/scripts/')) return issues;
   
   try {
     const content = readFileSync(filePath, 'utf-8');

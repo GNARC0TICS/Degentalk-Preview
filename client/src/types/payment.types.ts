@@ -3,6 +3,8 @@
  * CCPayment integration and wallet management types
  */
 
+import type { UserId } from '@db/types';
+
 // Supported currencies
 export type SupportedCurrency = 'BTC' | 'ETH' | 'USDT' | 'USDC' | 'LTC' | 'BCH' | 'BNB';
 
@@ -17,7 +19,7 @@ export interface CCPaymentResponse<T> {
 
 // Deposit Types
 export interface DepositRequest {
-	userId: number;
+	userId: UserId;
 	currency: SupportedCurrency;
 	amount: number;
 	returnUrl?: string;
@@ -36,7 +38,7 @@ export interface DepositResponse {
 
 // Withdrawal Types
 export interface WithdrawalRequest {
-	userId: number;
+	userId: UserId;
 	currency: SupportedCurrency;
 	amount: number;
 	address: string;
@@ -53,7 +55,7 @@ export interface WithdrawalResponse {
 
 // Swap Types
 export interface SwapRequest {
-	userId: number;
+	userId: UserId;
 	fromCurrency: SupportedCurrency;
 	toCurrency: SupportedCurrency;
 	amount: number;
@@ -87,7 +89,7 @@ export interface WalletBalances {
 // Transaction Types
 export interface Transaction {
 	id: string;
-	userId: number;
+	userId: UserId;
 	type: 'deposit' | 'withdrawal' | 'swap' | 'transfer' | 'tip' | 'purchase' | 'reward';
 	status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
 	amount: number;
@@ -118,7 +120,7 @@ export interface TransactionMetadata {
 export interface CCPaymentWebhook {
 	event_type: 'deposit_confirmed' | 'withdrawal_completed' | 'swap_completed';
 	order_id: string;
-	user_id: number;
+	user_id: UserId;
 	amount: number;
 	currency: SupportedCurrency;
 	status: string;

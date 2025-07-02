@@ -1,3 +1,5 @@
+import type { UserId } from '@db/types';
+
 export interface ProfileData {
 	id: string;
 	username: string;
@@ -24,14 +26,14 @@ export interface ProfileData {
 	website?: string | null;
 	activeFrameId: number | null;
 	activeFrame: {
-		id: number;
+		id: UserId;
 		name: string;
 		imageUrl: string;
 		rarity: string;
 	} | null;
 	activeTitleId: number | null;
 	activeTitle: {
-		id: number;
+		id: UserId;
 		name: string;
 		description: string | null;
 		iconUrl: string | null;
@@ -39,28 +41,28 @@ export interface ProfileData {
 	} | null;
 	activeBadgeId: number | null;
 	activeBadge: {
-		id: number;
+		id: UserId;
 		name: string;
 		description: string | null;
 		iconUrl: string;
 		rarity: string;
 	} | null;
 	badges: {
-		id: number;
+		id: UserId;
 		name: string;
 		description: string | null;
 		iconUrl: string;
 		rarity: string;
 	}[];
 	titles: {
-		id: number;
+		id: UserId;
 		name: string;
 		description: string | null;
 		iconUrl: string | null;
 		rarity: string;
 	}[];
 	inventory: {
-		id: number;
+		id: UserId;
 		userId: string;
 		productId: number;
 		isEquipped: boolean;

@@ -34,3 +34,6 @@ coverage/
 # Playwright test artifacts
 playwright-report/
 test-results/
+
+# Migration backup files
+*.backup.*

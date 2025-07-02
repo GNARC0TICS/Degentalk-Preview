@@ -7,7 +7,7 @@ import type {
 	DepositAddress,
 	WalletBalances
 } from '@/types/wallet';
-import type { RoomId, TipId, VaultId, ActionId } from '@db/types';
+import type { RoomId, TipId, VaultId, ActionId, UserId } from '@db/types';
 
 // API endpoint base URL
 const API_BASE_URL = '/api';
@@ -221,7 +221,7 @@ export const api = {
 		): Promise<{
 			success: boolean;
 			transactionId: ActionId;
-			recipients: { id: number; username: string }[];
+			recipients: { id: UserId; username: string }[];
 			message: string;
 		}> {
 			return fetchJSON(`${API_BASE_URL}/engagement/rain`, {

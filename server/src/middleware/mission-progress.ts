@@ -3,6 +3,7 @@ import { missionsService } from '../domains/missions/missions.service';
 import { userService } from '../core/services/user.service';
 import { MissionType } from '@schema';
 import { logger } from '../core/logger';
+import type { UserId } from '@db/types';
 
 /**
  * Middleware for tracking mission progress when users perform actions
@@ -52,7 +53,7 @@ export const trackMissionProgress = (
  * Update mission progress for a user action
  */
 const updateMissionProgress = async (
-	userId: number,
+	userId: UserId,
 	actionType: MissionType,
 	req: Request,
 	getMetadata?: (req: Request) => Record<string, any>

@@ -1,4 +1,4 @@
-import type { ForumId, ParentZoneId, ZoneId } from '@db/types';
+import type { ForumId, ParentZoneId, ZoneId, UserId, ThreadId, StructureId } from '@db/types';
 
 /**
  * Canonical Forum Types
@@ -20,7 +20,7 @@ import type { ForumId, ParentZoneId, ZoneId } from '@db/types';
  * Replaces: ZoneWithForums, MergedZone, etc.
  */
 export interface CanonicalZone {
-	id: number;
+	id: UserId;
 	name: string;
 	slug: string;
 	description?: string;
@@ -57,7 +57,7 @@ export interface CanonicalZone {
  * Replaces: ForumCategoryWithStats, MergedForum, etc.
  */
 export interface CanonicalForum {
-	id: number;
+	id: UserId;
 	name: string;
 	slug: string;
 	description?: string;
@@ -107,7 +107,7 @@ export interface CanonicalForum {
  * Replaces: various subforum representations
  */
 export interface CanonicalSubforum {
-	id: number;
+	id: UserId;
 	name: string;
 	slug: string;
 	description?: string;
@@ -146,7 +146,7 @@ export interface CanonicalSubforum {
  * Replaces: ThreadWithUser, ThreadWithPostsAndUser, etc.
  */
 export interface CanonicalThread {
-	id: number;
+	id: UserId;
 	title: string;
 	slug: string;
 	content?: string; // First post content (optional for list views)
@@ -175,7 +175,7 @@ export interface CanonicalThread {
 
 	// Structure relationships
 	structure: {
-		id: number;
+		id: UserId;
 		name: string;
 		slug: string;
 		type: 'forum' | 'subforum';
@@ -203,9 +203,9 @@ export interface CanonicalThread {
  * Replaces: PostWithUser, various post representations
  */
 export interface CanonicalPost {
-	id: number;
+	id: UserId;
 	content: string;
-	threadId: number;
+	threadId: ThreadId;
 	userId: string;
 	replyToPostId?: number;
 
@@ -272,7 +272,7 @@ export interface CanonicalUser {
  * Canonical Tag - Thread categorization
  */
 export interface CanonicalTag {
-	id: number;
+	id: UserId;
 	name: string;
 	slug: string;
 	description?: string;
@@ -375,7 +375,7 @@ export interface CanonicalThreadCreateParams {
  * Post Creation Parameters
  */
 export interface CanonicalPostCreateParams {
-	threadId: number;
+	threadId: ThreadId;
 	content: string;
 	replyToPostId?: number;
 }
@@ -397,8 +397,8 @@ export interface ForumStructureContext {
 	getZoneBySlug: (slug: string) => CanonicalZone | undefined;
 	getForumBySlug: (slug: string) => CanonicalForum | undefined;
 	getSubforumBySlug: (slug: string) => CanonicalSubforum | undefined;
-	getStructureById: (id: number) => CanonicalForum | CanonicalSubforum | undefined;
-	getThreadContext: (structureId: number) => {
+	getStructureById: (id: StructureId) => CanonicalForum | CanonicalSubforum | undefined;
+	getThreadContext: (structureId: StructureId) => {
 		zone?: CanonicalZone;
 		forum?: CanonicalForum;
 		subforum?: CanonicalSubforum;

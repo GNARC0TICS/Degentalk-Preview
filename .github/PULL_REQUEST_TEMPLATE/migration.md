@@ -15,6 +15,7 @@
 **Files Modified:** `<count>`
 **Issues Fixed:** `<count>`
 **Baseline:** `<old-count>` → `<new-count>`
+**Batch Template:** See `docs/migration/batch-template.md` for detailed tracking
 
 ### Review Guidance
 - **Review scope**: Only files listed in the batch's JSON output

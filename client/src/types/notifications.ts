@@ -1,9 +1,11 @@
 /**
  * Notifications
  */
+
+import type { UserId } from '@db/types';
 export interface Notification {
-	id: number;
-	userId: number;
+	id: UserId;
+	userId: UserId;
 	type: 'mention' | 'like' | 'reply' | 'tip' | 'achievement' | 'system' | 'admin';
 	title: string;
 	body: string;
