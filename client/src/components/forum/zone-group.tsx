@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Link } from 'wouter';
 import { FolderOpen, ChevronDown, ChevronRight, MessageSquare, Megaphone } from 'lucide-react';
+import type { ForumId, ZoneId, ThreadId, EntityId } from '@/types/ids';
 
 // Define theme colors for different zones
 const ZONE_COLORS = {
@@ -48,7 +49,7 @@ const getZoneTheme = (zone: Zone) => {
 };
 
 export interface Forum {
-	id: number;
+	id: ForumId;
 	name: string;
 	description: string | null;
 	threadCount: number;
@@ -56,7 +57,7 @@ export interface Forum {
 	slug: string;
 	lastActivity?: string;
 	lastThread?: {
-		id: number;
+		id: ThreadId;
 		title: string;
 		user: {
 			username: string;
@@ -70,7 +71,7 @@ export interface Forum {
 }
 
 export interface Zone {
-	id: number;
+	id: ZoneId;
 	name: string;
 	position: number;
 	slug?: string;

@@ -24,7 +24,7 @@ import RainButton from '@/components/economy/wallet/rain-button';
 // ShoutMessage type definition
 interface ShoutMessage {
 	id: string;
-	userId: number;
+	userId: UserId;
 	username: string;
 	avatarUrl?: string;
 	message: string;

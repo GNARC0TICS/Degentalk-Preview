@@ -1,3 +1,5 @@
+#!/usr/bin/env ts-node
+
 import type { HeatEventId } from '@db/types';
 import type { ActionId } from '@db/types';
 import type { AuditLogId } from '@db/types';
@@ -59,7 +61,6 @@ import type { ConversationId } from '@db/types';
 import type { ReportId } from '@db/types';
 import type { ReporterId } from '@db/types';
 import type { AdminId } from '@db/types';
-#!/usr/bin/env ts-node
 import fs from 'node:fs';
 import path from 'node:path';
 import { glob } from 'glob';
@@ -75,14 +76,19 @@ const WORKSPACE_ROOT = process.cwd();
 const idTypesPath = path.resolve('db/types/id.types.ts');
 const idTypesSrc = fs.readFileSync(idTypesPath, 'utf-8');
 const aliasRegex = /export\s+type\s+(\w+Id)\s*=\s*Id<[^>]+>/g;
-const aliasNames: : AdminId[] = [];
-let m: RegExpExecArray | : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null;
+
+// Store the names of all branded ID aliases we find (e.g. "UserId", "ThreadId")
+const aliasNames: string[] = [];
+
+// Iterator variable for regex execution; will be either a RegExpExecArray (match) or null when done
+let m: RegExpExecArray | null;
+
 while ((m = aliasRegex.exec(idTypesSrc))) {
   aliasNames.push(m[1]);
 }
 
 // Build mapping from variable suffix to type name
-const suffixMap = new Map<: AdminId, : AdminId>();
+const suffixMap = new Map<string, string>();
 for (const alias of aliasNames) {
   suffixMap.set(alias.charAt(0).toLowerCase() + alias.slice(1), alias); // userId -> UserId
   // add plural? not necessary
@@ -105,13 +111,13 @@ for (const filePath of targetFiles) {
     const pattern = new RegExp(`(\b${varName})\s*:\s*number(?![A-Za-z])`, 'g');
     modified = modified.replace(pattern, `$1: ${typeName}`);
 
-    // Pattern 2: union with : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null
-    const patternNull = new RegExp(`(\b${varName})\s*:\s*number\s*\|\s*: AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null`, 'g');
-    modified = modified.replace(patternNull, `$1: ${typeName} | : AdminId | : ReporterId | : ReportId | : ConversationId | : RoomId | : AdminUserId | : AirdropId | : AnimationFrameId | : BackupId | : CategoryId | : CoinId | : AuthorId | : CosmeticId | : EditorId | : EmojiPackId | : EntityId | : EntryId | : ForumId | : GroupId | : InventoryId | : ItemId | : MentionId | : ModeratorId | : PackId | : ParentForumId | : ParentZoneId | : RuleId | : SettingId | : StickerId | : SubscriptionId | : TagId | : TemplateId | : TipId | : UnlockTransactionId | : VaultId | : VaultLockId | : WhaleId | : ZoneId | : RequestId | : ContentId | : SignatureItemId | : VerificationTokenId | : BanId | : SessionId | : ModActionId | : IpLogId | : DraftId | : ReplyId | : QuoteId | : OrderId | : StoreItemId | : UnlockId | : NotificationId | : FriendRequestId | : FollowRequestId | : MessageId | : PrefixId | : EventId | : AuditLogId | : ActionId | : HeatEventId | null`);
+    // Pattern 2: union with null (e.g. "userId: number | null")
+    const patternNull = new RegExp(`(\\b${varName})\\s*:\\s*number\\s*\\|\\s*null`, 'g');
+    modified = modified.replace(patternNull, `$1: ${typeName} | null`);
 
-    // Pattern 3: union with : AdminId
-    const patternStr = new RegExp(`(\b${varName})\s*:\s*number\s*\|\s*: AdminId`, 'g');
-    modified = modified.replace(patternStr, `$1: ${typeName}`); // assume we want just the branded type
+    // Pattern 3: union with string (e.g. "userId: number | string")
+    const patternStr = new RegExp(`(\\b${varName})\\s*:\\s*number\\s*\\|\\s*string`, 'g');
+    modified = modified.replace(patternStr, `$1: ${typeName} | string`);
   }
 
   if (modified !== src) {

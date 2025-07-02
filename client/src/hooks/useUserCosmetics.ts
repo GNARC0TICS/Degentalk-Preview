@@ -3,12 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import type { UserInventoryWithProduct, AppliedCosmetics } from '@/types/inventory';
 import { apiRequest } from '@/lib/queryClient';
 import { applyPluginRewards } from '@/lib/utils/applyPluginRewards';
+import type { UserId } from '@db/types';
 
 // TODO: Replace with actual useUser hook from your application
 // This is a placeholder/mock for demonstration if the real hook doesn't exist yet.
 interface UserContextType {
 	user: {
-		id: number;
+		id: UserId;
 		username: string;
 		role?: string; // Added role field
 	} | null;

@@ -4,6 +4,7 @@
 
 import { BaseFactory } from '../core/factory';
 import type { Thread, Post, ForumCategory } from '@schema';
+import { generateId } from '@shared/utils/id';
 
 export class ThreadFactory extends BaseFactory<Thread> {
 	private static readonly CRYPTO_THREAD_TITLES = [
@@ -58,11 +59,11 @@ export class ThreadFactory extends BaseFactory<Thread> {
 		const title = this.generateCryptoTitle();
 
 		return {
-			id: this.faker.number.int({ min: 1, max: 999999 }),
+			id: generateId<'thread'>(),
 			title,
 			slug: this.slugify(title),
-			forumId: this.faker.number.int({ min: 1, max: 50 }),
-			userId: this.faker.number.int({ min: 1, max: 1000 }),
+			forumId: generateId<'forum'>(),
+			userId: generateId<'user'>(),
 			isPinned: this.faker.datatype.boolean(0.05),
 			isLocked: this.faker.datatype.boolean(0.02),
 			viewCount: this.faker.number.int({ min: 0, max: 10000 }),
@@ -167,9 +168,9 @@ export class PostFactory extends BaseFactory<Post> {
 
 	definition(): Partial<Post> {
 		return {
-			id: this.faker.number.int({ min: 1, max: 999999 }),
-			threadId: this.faker.number.int({ min: 1, max: 10000 }),
-			userId: this.faker.number.int({ min: 1, max: 1000 }),
+			id: generateId<'post'>(),
+			threadId: generateId<'thread'>(),
+			userId: generateId<'user'>(),
 			content: this.generateCryptoContent(),
 			isFirstPost: false,
 			likeCount: this.faker.number.int({ min: 0, max: 100 }),
@@ -266,7 +267,7 @@ export class ForumCategoryFactory extends BaseFactory<ForumCategory> {
 		const name = this.faker.helpers.arrayElement(ForumCategoryFactory.CRYPTO_FORUM_NAMES);
 
 		return {
-			id: this.faker.number.int({ min: 1, max: 999 }),
+			id: generateId<'category'>(),
 			name,
 			slug: this.slugify(name),
 			description: this.generateForumDescription(name),

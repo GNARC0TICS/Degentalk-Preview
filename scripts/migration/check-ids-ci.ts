@@ -9,8 +9,8 @@
 
 import { detectNumericIds } from './identify-numeric-ids.js';
 
-// Current baseline - update after each successful migration batch
-const BASELINE = 484;
+// Updated baseline after recent UUID migrations
+const BASELINE = 530;
 
 async function main() {
   console.log('🛡️ Running numeric-ID regression guard...');

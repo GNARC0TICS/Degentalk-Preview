@@ -13,17 +13,17 @@ import { ShoppingBag, Sparkles, Palette, Frame, Crown, Edit } from 'lucide-react
 import { Link } from 'wouter';
 import { applyPluginRewards } from '@/lib/utils/applyPluginRewards';
 import type { UserInventoryWithProduct } from '@/types/inventory';
-import type { InventoryId } from '@db/types';
+import type { InventoryId, EntityId } from '@/types/ids';
 
 interface CosmeticControlPanelProps {
 	userId: string; // Changed to string
 	username: string;
 	avatarUrl: string | null;
 	inventory: UserInventoryWithProduct[];
-	activeFrame?: { id: number; name: string; imageUrl: string; rarity: string } | null; // IDs for frame, title, badge are numbers
-	activeTitle?: { id: number; name: string; description: string | null; rarity: string } | null; // IDs for frame, title, badge are numbers
+	activeFrame?: { id: EntityId; name: string; imageUrl: string; rarity: string } | null; // IDs brnd
+	activeTitle?: { id: EntityId; name: string; description: string | null; rarity: string } | null; // IDs brnd
 	activeBadge?: {
-		id: number; // IDs for frame, title, badge are numbers
+		id: EntityId; // IDs branded
 		name: string;
 		description: string | null;
 		iconUrl: string;

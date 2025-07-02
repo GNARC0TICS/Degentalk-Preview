@@ -1,12 +1,12 @@
 # Numeric ID Migration Report
 
-Generated: 2025-07-02T02:41:34.411Z
+Generated: 2025-07-02T06:05:09.710Z
 
 ## Summary
-- **Total Files**: 1933
-- **Total Issues**: 594
-- **Critical**: 546
-- **High**: 48  
+- **Total Files**: 1934
+- **Total Issues**: 530
+- **Critical**: 484
+- **High**: 46  
 - **Medium**: 0
 
 ## Migration Batches (Priority Order)
@@ -20,15 +20,10 @@ Generated: 2025-07-02T02:41:34.411Z
 
 ### client-hooks (Priority 2)
 - Files: 55
-- Issues: 24
-- Status: ⚠️ Needs migration
+- Issues: 0
+- Status: ✅ Clean
 
-Top issues:
-- `client/src/hooks/useXP.ts:37` - id: number → check entity context for correct branded type
-- `client/src/hooks/useXP.ts:47` - id: number → check entity context for correct branded type
-- `client/src/hooks/useXP.ts:56` - id: number → check entity context for correct branded type
-- `client/src/hooks/useUserXP.ts:6` - userId: number → UserId
-- `client/src/hooks/useUserCosmetics.ts:11` - id: number → check entity context for correct branded type
+
 
 ### client-api (Priority 3)
 - Files: 6
@@ -39,15 +34,15 @@ Top issues:
 
 ### client-components (Priority 4)
 - Files: 414
-- Issues: 58
+- Issues: 53
 - Status: ⚠️ Needs migration
 
 Top issues:
-- `client/src/components/users/UserAvatar.tsx:10` - id: number → check entity context for correct branded type
-- `client/src/components/users/ActiveMembersWidget.tsx:19` - id: number → check entity context for correct branded type
+- `client/src/components/social/WhaleWatchDashboard.tsx:43` - id: number → check entity context for correct branded type
+- `client/src/components/social/FriendsManager.tsx:55` - id: number → check entity context for correct branded type
+- `client/src/components/social/FriendsManager.tsx:66` - id: number → check entity context for correct branded type
 - `client/src/components/ui/smart-thread-filters.tsx:67` - id: number → check entity context for correct branded type
 - `client/src/components/ui/smart-thread-filters.tsx:68` - id: number → check entity context for correct branded type
-- `client/src/components/ui/reactions-bar.tsx:21` - postId: number → PostId
 
 ### client-pages (Priority 5)
 - Files: 113
@@ -63,7 +58,7 @@ Top issues:
 
 ### client-other (Priority 6)
 - Files: 772
-- Issues: 213
+- Issues: 184
 - Status: ⚠️ Needs migration
 
 Top issues:
@@ -103,33 +98,29 @@ Top issues:
 
 ### server-middleware (Priority 11)
 - Files: 8
-- Issues: 2
-- Status: ⚠️ Needs migration
+- Issues: 0
+- Status: ✅ Clean
 
-Top issues:
-- `server/src/middleware/mission-progress.ts:55` - userId: number → UserId
-- `server/src/middleware/authenticate.ts:12` - id: number → check entity context for correct branded type
+
 
 ### server-other (Priority 12)
 - Files: 384
-- Issues: 222
+- Issues: 220
 - Status: ⚠️ Needs migration
 
 Top issues:
-- `server/src/middleware/mission-progress.ts:55` - userId: number → UserId
-- `server/src/middleware/authenticate.ts:12` - id: number → check entity context for correct branded type
 - `server/src/domains/xp/xp.service.ts:431` - userId: number → UserId
 - `server/src/domains/subscriptions/subscription.service.ts:29` - id: number → check entity context for correct branded type
-- `server/src/domains/social/mentions.types.ts:4` - id: number → check entity context for correct branded type
+- `server/src/domains/shoutbox/shoutbox.routes.ts:36` - userId: number → UserId
+- `server/src/domains/shoutbox/shoutbox.routes.ts:203` - parseInt(req.params.id) → remove parseInt, use branded type
+- `server/src/domains/shoutbox/shoutbox.routes.ts:266` - parseInt(req.params.id) → remove parseInt, use branded type
 
 ### database (Priority 13)
-- Files: 156
-- Issues: 2
-- Status: ⚠️ Needs migration
+- Files: 157
+- Issues: 0
+- Status: ✅ Clean
 
-Top issues:
-- `db/types/forum.types.ts:50` - id: number → check entity context for correct branded type
-- `db/types/announcement.types.ts:2` - id: number → check entity context for correct branded type
+
 
 
 ## Next Steps

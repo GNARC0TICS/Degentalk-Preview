@@ -1,3 +1,4 @@
+import type { UserId } from '@db/types';
 import { apiRequest } from '@/lib/queryClient';
 import type { ActiveUser } from '@/components/users/ActiveMembersWidget';
 
@@ -29,7 +30,7 @@ export async function getActiveUsers(limit: number = 5): Promise<ActiveUser[]> {
  * @param userId The ID of the user to fetch
  * @returns Promise with user data
  */
-export async function getUserDetails(userId: number | string) {
+export async function getUserDetails(userId: UserId | string) {
 	return Promise.reject(new Error('Not implemented yet'));
 }
 

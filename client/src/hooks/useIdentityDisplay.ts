@@ -1,11 +1,11 @@
 import { useUserCosmetics } from '@/hooks/useUserCosmetics';
 import { useUserXP } from '@/hooks/useUserXP';
-import type { UserId } from '@/types/ids';
+import type { UserId, RoleId } from '@/types/ids';
 
 interface BaseUser {
 	id: string;
 	username: string;
-	roles?: Array<{ id: number; name: string; hexColor?: string | null }>;
+	roles?: Array<{ id: RoleId; name: string; hexColor?: string | null }>;
 	level?: number;
 }
 

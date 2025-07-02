@@ -43,7 +43,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import type { PrefixId } from '@db/types';
+import type { PrefixId, EntityId } from '@/types/ids';
 
 export interface ThreadFiltersState {
 	sortBy: string;
@@ -64,8 +64,8 @@ export interface ThreadFiltersState {
 export interface SmartThreadFiltersProps {
 	filters: ThreadFiltersState;
 	onFiltersChange: (filters: ThreadFiltersState) => void;
-	availableTags?: Array<{ id: number; name: string; slug: string; color?: string }>;
-	availablePrefixes?: Array<{ id: number; name: string; color?: string }>;
+	availableTags?: Array<{ id: EntityId; name: string; slug: string; color?: string }>;
+	availablePrefixes?: Array<{ id: EntityId; name: string; color?: string }>;
 	className?: string;
 	compact?: boolean;
 }

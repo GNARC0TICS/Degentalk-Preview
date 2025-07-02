@@ -1,3 +1,4 @@
+import type { TransactionId } from '@db/types';
 import {
 	users,
 	posts,
@@ -2235,7 +2236,7 @@ export class DatabaseStorage implements IStorage {
 
 	async addProductToUserInventory(item: InsertUserInventoryItem): Promise<UserInventoryItem> {
 		// First record the transaction if not already provided
-		let transactionId: number | null = null;
+		let transactionId: TransactionId | null = null;
 
 		if (item.transactionId === undefined) {
 			// Create transaction record if not provided

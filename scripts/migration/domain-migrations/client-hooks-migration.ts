@@ -8,7 +8,6 @@
  */
 
 import { readFileSync, writeFileSync } from 'fs';
-import { Project, SourceFile, SyntaxKind } from 'ts-morph';
 import { glob } from 'glob';
 
 interface MigrationResult {
@@ -29,16 +28,11 @@ interface Change {
 }
 
 class ClientHooksMigration {
-  private project: Project;
   private results: MigrationResult[] = [];
   private dryRun: boolean;
 
   constructor(dryRun: boolean = true) {
-    this.dryRun = true; // Force dry-run mode for safety
-    this.project = new Project({
-      tsConfigFilePath: './tsconfig.json',
-      skipAddingFilesFromTsConfig: true
-    });
+    this.dryRun = dryRun;
   }
 
   async migrate(): Promise<void> {
@@ -51,17 +45,9 @@ class ClientHooksMigration {
     const files = await this.getClientHooksFiles();
     console.log(`📁 Found ${files.length} client-hooks files`);
 
-    // Phase 1: Analyze and plan
-    console.log('\n📊 Phase 1: Analysis and Planning');
-    await this.analyzeFiles(files);
-
-    // Phase 2: Safe migrations (high confidence)
-    console.log('\n🛡️ Phase 2: High-confidence migrations');
-    await this.performSafeMigrations(files);
-
-    // Phase 3: Manual review required
-    console.log('\n⚠️ Phase 3: Manual review required');
-    await this.identifyManualReviewItems(files);
+    // Single-pass processing (analysis + migrations + manual list)
+    console.log('\n📊 Processing files (single pass)');
+    await this.processFiles(files);
 
     // Generate report
     console.log('\n📄 Generating migration report...');
@@ -86,26 +72,6 @@ class ClientHooksMigration {
     }
 
     return [...new Set(files)]; // Remove duplicates
-  }
-
-  private async analyzeFiles(files: string[]): Promise<void> {
-    console.log('🔍 Analyzing client hooks files...');
-
-    for (const file of files) {
-      try {
-        const content = readFileSync(file, 'utf-8');
-        const patterns = this.findNumericIdPatterns(content, file);
-        
-        if (patterns.length > 0) {
-          console.log(`  📄 ${file}: ${patterns.length} patterns found`);
-          patterns.forEach(p => {
-            console.log(`    - Line ${p.line}: ${p.original} → ${p.replacement} (confidence: ${p.confidence})`);
-          });
-        }
-      } catch (error) {
-        console.error(`❌ Error analyzing ${file}:`, error);
-      }
-    }
   }
 
   private findNumericIdPatterns(content: string, filepath: string): Change[] {
@@ -181,26 +147,32 @@ class ClientHooksMigration {
     return changes;
   }
 
-  private async performSafeMigrations(files: string[]): Promise<void> {
-    console.log('🛡️ Performing high-confidence migrations...');
+  private async processFiles(files: string[]): Promise<void> {
+    const allManualItems: Array<{ file: string; items: Change[] }> = [];
 
     for (const file of files) {
       try {
         const content = readFileSync(file, 'utf-8');
         const changes = this.findNumericIdPatterns(content, file);
-        
-        // Only apply high-confidence changes (≥0.9)
-        const safeChanges = changes.filter(c => c.confidence >= 0.9);
-        
+
+        // Separate high-confidence vs manual-review changes
+        const safeChanges = changes.filter((c) => c.confidence >= 0.9);
+        const manualChanges = changes.filter((c) => c.confidence < 0.9);
+
         if (safeChanges.length > 0) {
           const result = await this.applyChanges(file, safeChanges);
           this.results.push(result);
-          
+
           if (result.status === 'success') {
             console.log(`  ✅ ${file}: ${safeChanges.length} changes applied`);
           } else {
             console.log(`  ❌ ${file}: ${result.error}`);
           }
+        }
+
+        if (manualChanges.length > 0) {
+          allManualItems.push({ file, items: manualChanges });
+          console.log(`  📋 ${file}: ${manualChanges.length} item(s) need manual review`);
         }
       } catch (error) {
         console.error(`❌ Error processing ${file}:`, error);
@@ -208,9 +180,13 @@ class ClientHooksMigration {
           file,
           changes: [],
           status: 'error',
-          error: error instanceof Error ? error.message : 'Unknown error'
+          error: error instanceof Error ? error.message : 'Unknown error',
         });
       }
+    }
+
+    if (allManualItems.length > 0) {
+      this.generateManualReviewChecklist(allManualItems);
     }
   }
 
@@ -256,37 +232,6 @@ class ClientHooksMigration {
         status: 'error',
         error: error instanceof Error ? error.message : 'Unknown error'
       };
-    }
-  }
-
-  private async identifyManualReviewItems(files: string[]): Promise<void> {
-    console.log('⚠️ Identifying items requiring manual review...');
-
-    const allManualItems: Array<{file: string, items: Change[]}> = [];
-
-    for (const file of files) {
-      try {
-        const content = readFileSync(file, 'utf-8');
-        const changes = this.findNumericIdPatterns(content, file);
-        
-        // Items with lower confidence need manual review
-        const manualReviewItems = changes.filter(c => c.confidence < 0.9);
-        
-        if (manualReviewItems.length > 0) {
-          console.log(`  📋 ${file}: ${manualReviewItems.length} items need manual review`);
-          manualReviewItems.forEach(item => {
-            console.log(`    - Line ${item.line}: ${item.original} (confidence: ${item.confidence})`);
-          });
-          allManualItems.push({ file, items: manualReviewItems });
-        }
-      } catch (error) {
-        console.error(`❌ Error reviewing ${file}:`, error);
-      }
-    }
-
-    // Generate manual review checklist
-    if (allManualItems.length > 0) {
-      this.generateManualReviewChecklist(allManualItems);
     }
   }
 

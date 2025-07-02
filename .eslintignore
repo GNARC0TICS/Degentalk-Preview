@@ -1,1 +1,7 @@
-client/vite.config.ts 
+client/vite.config.ts
+archive/**
+tailwind.config.ts
+lib/**
+migrations/**
+scripts/**
+playwright.config.ts 

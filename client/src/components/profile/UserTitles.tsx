@@ -1,19 +1,20 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
+import type { TitleId } from '@/types/ids';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { rarityBorderMap, rarityColorMap } from '@/config/rarity.config';
 
 type UserTitlesProps = {
 	titles: Array<{
-		id: number;
+		id: TitleId;
 		name: string;
 		description?: string | null;
 		iconUrl?: string | null;
 		rarity?: string;
 	}>;
-	activeTitleId?: number | null;
-	onSelectTitle?: (titleId: number) => void;
+	activeTitleId?: TitleId | null;
+	onSelectTitle?: (titleId: TitleId) => void;
 	className?: string;
 	editable?: boolean;
 };
@@ -61,7 +62,7 @@ export function UserTitles({
 
 type TitleItemProps = {
 	title: {
-		id: number;
+		id: TitleId;
 		name: string;
 		description?: string | null;
 		iconUrl?: string | null;

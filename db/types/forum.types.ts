@@ -1,5 +1,6 @@
 import type { ForumStructureNode } from '../schema/forum/structure';
 import type { threadPrefixes } from '../schema'; // Import threadPrefixes schema
+import type { TagId } from './id.types';
 
 // Canonical types – single source of truth
 import type { CanonicalThread, CanonicalPost } from '@/client/src/types/canonical.types';
@@ -47,7 +48,7 @@ export interface ThreadWithPostsAndUserStructure extends ThreadWithPostsAndUser 
 
 // Non-thread structures (still used in admin analytics). Keep for now
 export interface ForumTag {
-	id: number;
+	id: TagId;
 	name: string;
 	slug: string;
 	description?: string | null;

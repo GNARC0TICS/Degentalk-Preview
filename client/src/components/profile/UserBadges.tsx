@@ -1,19 +1,20 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
+import type { BadgeId } from '@/types/ids';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { rarityBorderMap } from '@/config/rarity.config';
 // TODO: BadgeType import removed – local prop already typed without external schema
 
 type UserBadgesProps = {
 	badges: Array<{
-		id: number;
+		id: BadgeId;
 		name: string;
 		description?: string | null;
 		iconUrl: string;
 		rarity?: string;
 	}>;
-	activeBadgeId?: number | null;
-	onSelectBadge?: (badgeId: number) => void;
+	activeBadgeId?: BadgeId | null;
+	onSelectBadge?: (badgeId: BadgeId) => void;
 	className?: string;
 	editable?: boolean;
 };
@@ -61,7 +62,7 @@ export function UserBadges({
 
 type BadgeItemProps = {
 	badge: {
-		id: number;
+		id: BadgeId;
 		name: string;
 		description?: string | null;
 		iconUrl: string;

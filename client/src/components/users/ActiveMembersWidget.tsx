@@ -1,4 +1,5 @@
 import React from 'react';
+import type { UserId } from '@/types/ids';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -16,7 +17,7 @@ import { createWidgetQueryKey } from '@/hooks/widgetData';
 import { WidgetSkeleton } from '@/components/ui/widget-skeleton';
 
 export interface ActiveUser {
-	id: number | string;
+	id: UserId | string;
 	name: string;
 	avatar: string | null;
 	lastActive: string;

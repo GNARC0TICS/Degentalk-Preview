@@ -103,3 +103,4 @@ export type ActionId = Id<'action'>;
 export type HeatEventId = Id<'heatEvent'>;
 
 export type XpLevelId = Id<'xpLevel'>;
+export type AnnouncementId = Id<'announcement'>;

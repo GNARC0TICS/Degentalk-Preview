@@ -4,13 +4,14 @@ import { Clock, MessageSquare, UserPlus, Award } from 'lucide-react';
 import { FrostCard } from '@/components/ui/frost-card';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import type { EntityId } from '@/types/ids';
 
 interface ActivityItem {
-	id: number;
+	id: EntityId;
 	type: 'thread' | 'post' | 'user_join' | 'achievement';
 	title: string;
 	user: {
-		id: number;
+		id: EntityId;
 		username: string;
 		avatar?: string;
 		level?: number;

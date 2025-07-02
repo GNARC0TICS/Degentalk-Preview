@@ -38,7 +38,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Link } from 'wouter';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import type { RequestId } from '@db/types';
+import type { RequestId, EntityId } from '@/types/ids';
 
 interface FriendUser {
 	id: string;
@@ -52,7 +52,7 @@ interface FriendUser {
 }
 
 interface Friendship {
-	id: number;
+	id: EntityId;
 	friendedAt: string;
 	permissions: {
 		allowWhispers: boolean;
@@ -63,7 +63,7 @@ interface Friendship {
 }
 
 interface FriendRequest {
-	id: number;
+	id: EntityId;
 	requestMessage?: string | null;
 	createdAt: string;
 	requester?: FriendUser;

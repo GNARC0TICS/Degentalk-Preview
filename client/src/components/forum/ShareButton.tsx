@@ -1,9 +1,10 @@
+import type { ThreadId } from '@db/types';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Share2 } from 'lucide-react';
 
 interface ShareButtonProps {
-	threadId: number | string;
+	threadId: ThreadId | string;
 	threadTitle: string;
 	variant?: 'button' | 'icon';
 	className?: string;

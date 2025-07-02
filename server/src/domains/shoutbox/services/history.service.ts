@@ -1,3 +1,4 @@
+import type { UserId } from '@db/types';
 /**
  * Message History Service
  *
@@ -45,7 +46,7 @@ interface ExportOptions {
 
 interface MessageWithUser {
 	id: number;
-	userId: number | null;
+	userId: UserId | null;
 	roomId: RoomId;
 	content: string;
 	createdAt: Date;

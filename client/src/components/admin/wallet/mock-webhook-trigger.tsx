@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { UserId } from '@/types/ids';
 import {
 	Card,
 	CardContent,
@@ -41,7 +42,7 @@ export function MockWebhookTrigger() {
 	const [webhookType, setWebhookType] = useState<string>('deposit');
 	const [amount, setAmount] = useState<string>('100');
 	const [currency, setCurrency] = useState<string>('USDT');
-	const [userId, setUserId] = useState<string>('');
+	const [userId, setUserId] = useState<UserId | ''>('');
 	const [mockTxHash, setMockTxHash] = useState<string>('');
 
 	// Mutation to trigger mock webhook
@@ -55,7 +56,7 @@ export function MockWebhookTrigger() {
 						type: webhookType,
 						amount: parseFloat(amount),
 						currency,
-						userId: userId ? parseInt(userId) : undefined,
+						userId: userId || undefined,
 						txHash: mockTxHash || undefined
 					}
 				});
@@ -94,7 +95,7 @@ export function MockWebhookTrigger() {
 			return;
 		}
 
-		if (userId && (isNaN(parseInt(userId)) || parseInt(userId) <= 0)) {
+		if (userId && userId.length === 0) {
 			toast({
 				variant: 'destructive',
 				title: 'Invalid User ID',
@@ -176,7 +177,7 @@ export function MockWebhookTrigger() {
 								id="user-id"
 								type="number"
 								value={userId}
-								onChange={(e) => setUserId(e.target.value)}
+								onChange={(e) => setUserId(e.target.value as UserId | '')}
 								placeholder="Random if empty"
 							/>
 						</div>

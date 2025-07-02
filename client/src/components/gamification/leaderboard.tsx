@@ -98,7 +98,7 @@ export function Leaderboard({
 	};
 
 	// Toggle row expansion
-	const toggleRowExpansion = (userId: number) => {
+	const toggleRowExpansion = (userId: UserId) => {
 		const newExpanded = new Set(expandedRows);
 		if (newExpanded.has(userId)) {
 			newExpanded.delete(userId);

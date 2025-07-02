@@ -1,5 +1,7 @@
+import type { AnnouncementId } from './id.types';
+
 export type Announcement = {
-	id: number;
+	id: AnnouncementId;
 	content: string;
 	icon?: string;
 	type: string;

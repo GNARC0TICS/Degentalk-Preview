@@ -18,9 +18,9 @@ interface TipResponse {
 
 interface TipHistoryResponse {
 	tips: Array<{
-		id: number;
-		fromUserId: number;
-		toUserId: number;
+		id: TipId;
+		fromUserId: UserId;
+		toUserId: UserId;
 		amount: number;
 		currency: string;
 		source: string;

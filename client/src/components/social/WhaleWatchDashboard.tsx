@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import type { EntityId } from '@/types/ids';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -40,7 +41,7 @@ interface FollowUser {
 }
 
 interface FollowRelationship {
-	id: number;
+	id: EntityId;
 	followedAt: string;
 	notificationSettings: {
 		notifyOnPosts: boolean;

@@ -1,0 +1,58 @@
+.sleepy-loader-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.sleepy-loader-wrapper .sleepy-container {
+  position: relative;
+  padding: 20px;
+}
+
+.sleepy-loader-wrapper .z-container {
+  position: relative;
+  height: 100px;
+  width: 100px;
+}
+
+.sleepy-loader-wrapper .z {
+  position: absolute;
+  font-size: 32px;
+  opacity: 0;
+  font-weight: bold;
+  color: #956afa;
+}
+
+.sleepy-loader-wrapper .z-1 {
+  animation: swayUpToRight 2s ease-out infinite;
+}
+
+.sleepy-loader-wrapper .z-2 {
+  animation: swayUpToRight 2s ease-out 0.5s infinite;
+}
+
+.sleepy-loader-wrapper .z-3 {
+  animation: swayUpToRight 2s ease-out 1s infinite;
+}
+
+.sleepy-loader-wrapper .z-4 {
+  animation: swayUpToRight 2s ease-out 1.5s infinite;
+}
+
+.sleepy-loader-wrapper .loading-text {
+  margin-top: 20px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+@keyframes swayUpToRight {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(80px, -100px) rotate(30deg);
+    opacity: 0;
+  }
+}

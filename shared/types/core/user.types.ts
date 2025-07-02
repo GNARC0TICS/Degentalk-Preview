@@ -1,5 +1,8 @@
 import type { UserId, WalletId } from '@db/types/id.types';
-import type { UserLevel, UserRole } from '@db/schema/core/enums';
+import type { UserRole } from '@db/schema/core/enums';
+
+// UserLevel is a numeric value, not an enum
+export type UserLevel = number;
 
 /**
  * Core User Domain Types

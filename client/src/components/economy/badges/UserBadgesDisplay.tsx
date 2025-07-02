@@ -4,9 +4,10 @@ import { cn } from '@/lib/utils';
 import { Trophy } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { rarityBorderMap, rarityColorMap } from '@/config/rarity.config';
+import type { BadgeId } from '@/types/ids';
 
 export type UserBadge = {
-	id: number;
+	id: BadgeId;
 	name: string;
 	description?: string | null;
 	iconUrl?: string | null;
@@ -16,8 +17,8 @@ export type UserBadge = {
 
 type UserBadgesDisplayProps = {
 	badges: UserBadge[];
-	activeBadgeId?: number | null;
-	onSelectBadge?: (badgeId: number) => void;
+	activeBadgeId?: BadgeId | null;
+	onSelectBadge?: (badgeId: BadgeId) => void;
 	isSelectable?: boolean;
 	maxDisplay?: number;
 	className?: string;

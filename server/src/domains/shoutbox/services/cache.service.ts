@@ -1,3 +1,4 @@
+import type { UserId } from '@db/types';
 /**
  * Shoutbox Cache Service
  *
@@ -21,7 +22,7 @@ interface CacheItem<T> {
 
 interface MessageCacheEntry {
 	id: number;
-	userId: number | null;
+	userId: UserId | null;
 	roomId: RoomId;
 	content: string;
 	createdAt: Date;

@@ -1,6 +1,6 @@
 # Client-Components Manual Review Checklist
 
-Generated: 2025-07-02T05:36:16.316Z
+Generated: 2025-07-02T06:04:58.840Z
 
 ## Items Requiring Manual Review (confidence < 0.9)
 
@@ -11,17 +11,22 @@ Generated: 2025-07-02T05:36:16.316Z
   - Confidence: 0.7
   - Import needed: UserId
 
-### client/src/components/users/UserAvatar.tsx
+### client/src/components/ui/smart-thread-filters.tsx
 
-- **Line 10**: `id: number;`
-  - Suggested: `			id: EntityId;`
+- **Line 67**: `availableTags?: Array<{ id: number; name: string; slug: string; color?: string }>;`
+  - Suggested: `	availableTags?: Array<{ id: EntityId; name: string; slug: string; color?: string }>;`
   - Confidence: 0.6
   - Import needed: EntityId
 
-### client/src/components/users/ActiveMembersWidget.tsx
+- **Line 68**: `availablePrefixes?: Array<{ id: number; name: string; color?: string }>;`
+  - Suggested: `	availablePrefixes?: Array<{ id: EntityId; name: string; color?: string }>;`
+  - Confidence: 0.6
+  - Import needed: EntityId
 
-- **Line 19**: `id: number | string;`
-  - Suggested: `	id: EntityId | string;`
+### client/src/components/ui/enhanced-button.tsx
+
+- **Line 86**: `const [ripples, setRipples] = React.useState<Array<{ id: number; x: number; y: number }>>([]);`
+  - Suggested: `		const [ripples, setRipples] = React.useState<Array<{ id: EntityId; x: number; y: number }>>([]);`
   - Confidence: 0.6
   - Import needed: EntityId
 
@@ -41,25 +46,6 @@ Generated: 2025-07-02T05:36:16.316Z
 
 - **Line 66**: `id: number;`
   - Suggested: `	id: EntityId;`
-  - Confidence: 0.6
-  - Import needed: EntityId
-
-### client/src/components/ui/smart-thread-filters.tsx
-
-- **Line 67**: `availableTags?: Array<{ id: number; name: string; slug: string; color?: string }>;`
-  - Suggested: `	availableTags?: Array<{ id: EntityId; name: string; slug: string; color?: string }>;`
-  - Confidence: 0.6
-  - Import needed: EntityId
-
-- **Line 68**: `availablePrefixes?: Array<{ id: number; name: string; color?: string }>;`
-  - Suggested: `	availablePrefixes?: Array<{ id: EntityId; name: string; color?: string }>;`
-  - Confidence: 0.6
-  - Import needed: EntityId
-
-### client/src/components/ui/enhanced-button.tsx
-
-- **Line 86**: `const [ripples, setRipples] = React.useState<Array<{ id: number; x: number; y: number }>>([]);`
-  - Suggested: `		const [ripples, setRipples] = React.useState<Array<{ id: EntityId; x: number; y: number }>>([]);`
   - Confidence: 0.6
   - Import needed: EntityId
 
@@ -313,6 +299,13 @@ Generated: 2025-07-02T05:36:16.316Z
   - Confidence: 0.7
   - Import needed: UserId
 
+### client/src/components/economy/badges/UserBadgesDisplay.tsx
+
+- **Line 9**: `id: number;`
+  - Suggested: `	id: EntityId;`
+  - Confidence: 0.6
+  - Import needed: EntityId
+
 ### client/src/components/economy/shoutbox/enhanced-shoutbox-widget.tsx
 
 - **Line 40**: `id: number;`
@@ -334,13 +327,6 @@ Generated: 2025-07-02T05:36:16.316Z
   - Suggested: `							onChange={(e) => setSelectedRoom(e.target.value as UserId)}`
   - Confidence: 0.7
   - Import needed: UserId
-
-### client/src/components/economy/badges/UserBadgesDisplay.tsx
-
-- **Line 9**: `id: number;`
-  - Suggested: `	id: EntityId;`
-  - Confidence: 0.6
-  - Import needed: EntityId
 
 ### client/src/components/admin/wallet/mock-webhook-trigger.tsx
 

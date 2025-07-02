@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Clock, FolderIcon, MessageSquare, MessagesSquare } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import type { ForumId, ThreadId } from '@/types/ids';
 
 interface ForumCardProps {
-	id: number;
+	id: ForumId;
 	name: string;
 	description: string | null;
 	threadCount: number;
@@ -15,7 +16,7 @@ interface ForumCardProps {
 	lastActivity?: string;
 	slug: string;
 	lastThread?: {
-		id: number;
+		id: ThreadId;
 		title: string;
 		user: { username: string; avatarUrl?: string | null };
 		createdAt: string;

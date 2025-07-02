@@ -1,0 +1,75 @@
+.delete-button-wrapper button {
+  width: 150px;
+  height: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: red;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+  background: #e62222;
+}
+
+.delete-button-wrapper button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.delete-button-wrapper button,
+.delete-button-wrapper button span {
+  transition: 200ms;
+}
+
+.delete-button-wrapper .text {
+  transform: translateX(35px);
+  color: white;
+  font-weight: bold;
+}
+
+.delete-button-wrapper .icon {
+  position: absolute;
+  border-left: 1px solid #c41b1b;
+  transform: translateX(110px);
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-button-wrapper button svg {
+  width: 15px;
+  fill: #eee;
+}
+
+.delete-button-wrapper button:hover:not(:disabled) {
+  background: #ff3636;
+}
+
+.delete-button-wrapper button:hover:not(:disabled) .text {
+  color: transparent;
+}
+
+.delete-button-wrapper button:hover:not(:disabled) .icon {
+  width: 150px;
+  border-left: none;
+  transform: translateX(0);
+}
+
+.delete-button-wrapper button:focus {
+  outline: none;
+}
+
+.delete-button-wrapper button:active:not(:disabled) .icon svg {
+  transform: scale(0.8);
+}
+
+.delete-button-wrapper .noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

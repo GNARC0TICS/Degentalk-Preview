@@ -34,10 +34,10 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { apiRequest } from '@/lib/queryClient';
-import type { RoomId, GroupId, MessageId } from '@db/types';
+import type { GroupId, MessageId, RoomId, UserId, EntityId } from '@/types/ids';
 
 interface User {
-	id: number;
+	id: UserId;
 	username: string;
 	avatarUrl?: string;
 	level: number;
@@ -59,7 +59,7 @@ interface Message {
 }
 
 interface Room {
-	id: number;
+	id: RoomId;
 	name: string;
 	description?: string;
 	isPrivate: boolean;
@@ -263,7 +263,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 
 	// Ignore/unignore user mutation
 	const toggleIgnoreUserMutation = useMutation({
-		mutationFn: async ({ userId, ignore }: { userId: number; ignore: boolean }) => {
+		mutationFn: async ({ userId, ignore }: { userId: UserId; ignore: boolean }) => {
 			if (ignore) {
 				const response = await apiRequest({
 					url: '/api/shoutbox/ignore',
@@ -558,7 +558,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 					{rooms && rooms.length > 1 && (
 						<select
 							value={selectedRoom || ''}
-							onChange={(e) => setSelectedRoom(parseInt(e.target.value))}
+							onChange={(e) => setSelectedRoom(e.target.value as RoomId)}
 							className="text-sm px-2 py-1 border border-gray-300 rounded"
 						>
 							{rooms.map((room) => (

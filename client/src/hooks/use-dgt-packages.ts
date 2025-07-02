@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
+import type { PackageId } from '@db/types';
 
 export interface DgtPackage {
-	id: number;
+	id: PackageId;
 	name: string;
 	description?: string;
 	dgtAmount: number;

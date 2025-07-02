@@ -4,6 +4,7 @@
 
 import { BaseFactory } from '../core/factory';
 import type { User } from '@schema';
+import { generateId } from '@shared/utils/id';
 
 export class UserFactory extends BaseFactory<User> {
 	private static readonly CRYPTO_USERNAMES = [
@@ -35,7 +36,7 @@ export class UserFactory extends BaseFactory<User> {
 		const username = this.generateCryptoUsername();
 
 		return {
-			id: this.faker.number.int({ min: 1, max: 999999 }),
+			id: generateId<'user'>(),
 			username,
 			email: `${username}@${this.faker.helpers.arrayElement(UserFactory.CRYPTO_EMAILS)}`,
 			passwordHash: '$2b$10$' + this.faker.string.alphanumeric(53), // Realistic bcrypt hash

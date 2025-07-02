@@ -49,7 +49,7 @@ interface MissionDashboardProps {
 			rewardEfficiency: number;
 		};
 	};
-	onClaimReward: (missionId: number) => void;
+	onClaimReward: (missionId: MissionId) => void;
 	isClaimingReward?: boolean;
 	streak?: number;
 	className?: string;

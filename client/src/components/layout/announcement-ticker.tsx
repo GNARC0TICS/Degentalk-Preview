@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import type { AnnouncementId } from '@/types/ids';
 import './announcement-ticker.css';
 import {
 	AlertCircle,
@@ -17,7 +18,7 @@ import axios from 'axios';
 import { Link } from 'wouter';
 
 interface Announcement {
-	id: number;
+	id: AnnouncementId;
 	type: string;
 	content: string;
 	createdAt: string;

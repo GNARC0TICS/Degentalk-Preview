@@ -28,13 +28,14 @@ import {
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
+import type { MissionId } from '@/types/ids';
 
 /**
  * Mission Card component to display a single mission
  */
 interface MissionCardProps {
 	mission: ReturnType<typeof useMissions>['missionsWithProgress'][0];
-	onClaim: (id: number) => void;
+	onClaim: (id: MissionId) => void;
 	isClaimingReward: boolean;
 	expirationTime: string | null;
 }

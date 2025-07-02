@@ -21,10 +21,10 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { Link } from 'wouter';
 import { cn } from '@/lib/utils';
-import type { MentionId } from '@db/types';
+import type { MentionId } from '@/types/ids';
 
 interface MentionNotification {
-	id: number;
+	id: MentionId;
 	type: 'thread' | 'post' | 'shoutbox' | 'whisper';
 	threadId?: string;
 	postId?: string;
@@ -53,7 +53,7 @@ export function MentionsNotifications({
 	className
 }: MentionsNotificationsProps) {
 	const queryClient = useQueryClient();
-	const [selectedMentions, setSelectedMentions] = useState<number[]>([]);
+	const [selectedMentions, setSelectedMentions] = useState<MentionId[]>([]);
 
 	// Fetch mentions
 	const {
@@ -82,7 +82,7 @@ export function MentionsNotifications({
 
 	// Mark mentions as read
 	const markAsReadMutation = useMutation({
-		mutationFn: async (mentionIds?: number[]) => {
+		mutationFn: async (mentionIds?: MentionId[]) => {
 			return await apiRequest({
 				url: '/api/social/mentions/mark-read',
 				method: 'POST',

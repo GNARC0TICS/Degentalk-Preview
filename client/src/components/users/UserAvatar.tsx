@@ -1,4 +1,5 @@
 import React from 'react';
+import type { FrameId } from '@/types/ids';
 import { FramedAvatar } from './framed-avatar';
 import { cn } from '@/lib/utils';
 
@@ -7,7 +8,7 @@ interface UserAvatarProps {
 		username: string;
 		avatarUrl?: string | null;
 		activeFrame?: {
-			id: number;
+			id: FrameId;
 			name: string;
 			imageUrl: string;
 			rarity: string;
