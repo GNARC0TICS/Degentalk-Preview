@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/adminApi';
+import type { AchievementId } from '@db/types';
 
 export const ACHIEVEMENTS_KEY = ['admin', 'clout', 'achievements'];
 
@@ -21,7 +22,7 @@ export function useCreateAchievement() {
 export function useUpdateAchievement() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: ({ id, payload }: { id: number; payload: any }) =>
+		mutationFn: ({ id, payload }: { id: AchievementId; payload: any }) =>
 			adminApi.put(`/clout/achievements/${id}`, payload),
 		onSuccess: () => qc.invalidateQueries({ queryKey: ACHIEVEMENTS_KEY })
 	});
@@ -30,7 +31,7 @@ export function useUpdateAchievement() {
 export function useToggleAchievement() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: (id: number) => adminApi.post(`/clout/achievements/${id}/toggle`, {}),
+		mutationFn: (id: AchievementId) => adminApi.post(`/clout/achievements/${id}/toggle`, {}),
 		onSuccess: () => qc.invalidateQueries({ queryKey: ACHIEVEMENTS_KEY })
 	});
 }
@@ -38,7 +39,7 @@ export function useToggleAchievement() {
 export function useDeleteAchievement() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: (id: number) => adminApi.delete(`/clout/achievements/${id}`),
+		mutationFn: (id: AchievementId) => adminApi.delete(`/clout/achievements/${id}`),
 		onSuccess: () => qc.invalidateQueries({ queryKey: ACHIEVEMENTS_KEY })
 	});
 }

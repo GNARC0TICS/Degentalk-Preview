@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import type { UserId } from '@db/types';
 import {
 	Dialog,
 	DialogContent,
@@ -39,7 +40,7 @@ const tipFormSchema = z.object({
 type TipFormValues = z.infer<typeof tipFormSchema>;
 
 interface TipButtonProps {
-	recipientId: number;
+	recipientId: UserId;
 	recipientName: string;
 	buttonText?: string;
 	buttonVariant?: 'default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'destructive';

@@ -6,6 +6,7 @@ import { userService } from '@server/src/core/services/user.service';
  */
 
 import type { Request, Response } from 'express';
+import type { CategoryId, TagId, ThreadId, EntityId } from '@db/types';
 import { adminForumService } from './forum.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { getUserId } from '../../admin.middleware';
@@ -39,9 +40,7 @@ export class AdminForumController {
 
 	async getCategoryById(req: Request, res: Response) {
 		try {
-			const categoryId = parseInt(req.params.id);
-			if (isNaN(categoryId))
-				throw new AdminError('Invalid category ID', 400, AdminErrorCodes.INVALID_REQUEST);
+			const categoryId = req.params.id as CategoryId;
 
 			const category = await adminForumService.getCategoryById(categoryId);
 			res.json(category);
@@ -78,9 +77,7 @@ export class AdminForumController {
 
 	async updateCategory(req: Request, res: Response) {
 		try {
-			const categoryId = parseInt(req.params.id);
-			if (isNaN(categoryId))
-				throw new AdminError('Invalid category ID', 400, AdminErrorCodes.INVALID_REQUEST);
+			const categoryId = req.params.id as CategoryId;
 
 			const data = validateRequestBody(req, res, CategorySchema);
 			if (!data) return;
@@ -104,9 +101,7 @@ export class AdminForumController {
 
 	async deleteCategory(req: Request, res: Response) {
 		try {
-			const categoryId = parseInt(req.params.id);
-			if (isNaN(categoryId))
-				throw new AdminError('Invalid category ID', 400, AdminErrorCodes.INVALID_REQUEST);
+			const categoryId = req.params.id as CategoryId;
 
 			const result = await adminForumService.deleteCategory(categoryId);
 			await adminController.logAction(
@@ -194,9 +189,7 @@ export class AdminForumController {
 
 	async updateTag(req: Request, res: Response) {
 		try {
-			const tagId = parseInt(req.params.id);
-			if (isNaN(tagId))
-				throw new AdminError('Invalid tag ID', 400, AdminErrorCodes.INVALID_REQUEST);
+			const tagId = req.params.id as TagId;
 
 			const dataTagU = validateRequestBody(req, res, TagSchema);
 			if (!dataTagU) return;
@@ -214,9 +207,7 @@ export class AdminForumController {
 
 	async deleteTag(req: Request, res: Response) {
 		try {
-			const tagId = parseInt(req.params.id);
-			if (isNaN(tagId))
-				throw new AdminError('Invalid tag ID', 400, AdminErrorCodes.INVALID_REQUEST);
+			const tagId = req.params.id as TagId;
 
 			const result = await adminForumService.deleteTag(tagId);
 			await adminController.logAction(req, 'DELETE_TAG', 'tag', tagId.toString(), {});
@@ -232,9 +223,7 @@ export class AdminForumController {
 
 	async moderateThread(req: Request, res: Response) {
 		try {
-			const threadId = parseInt(req.params.id);
-			if (isNaN(threadId))
-				throw new AdminError('Invalid thread ID', 400, AdminErrorCodes.INVALID_REQUEST);
+			const threadId = req.params.id as ThreadId;
 
 			const dataMod = validateRequestBody(req, res, ModerateThreadSchema);
 			if (!dataMod) return;
@@ -283,10 +272,7 @@ export class AdminForumController {
 
 	async getEntityById(req: Request, res: Response) {
 		try {
-			const entityId = parseInt(req.params.id);
-			if (isNaN(entityId)) {
-				return res.status(400).json({ message: 'Invalid entity ID' });
-			}
+			const entityId = req.params.id as EntityId;
 
 			const entity = await adminForumService.getEntityById(entityId);
 			if (!entity) {
@@ -321,10 +307,7 @@ export class AdminForumController {
 
 	async updateEntity(req: Request, res: Response) {
 		try {
-			const entityId = parseInt(req.params.id);
-			if (isNaN(entityId)) {
-				return res.status(400).json({ message: 'Invalid entity ID' });
-			}
+			const entityId = req.params.id as EntityId;
 
 			const dataEntU = validateRequestBody(req, res, updateEntitySchema);
 			if (!dataEntU) return;
@@ -349,10 +332,7 @@ export class AdminForumController {
 
 	async deleteEntity(req: Request, res: Response) {
 		try {
-			const entityId = parseInt(req.params.id);
-			if (isNaN(entityId)) {
-				return res.status(400).json({ message: 'Invalid entity ID' });
-			}
+			const entityId = req.params.id as EntityId;
 
 			const result = await adminForumService.deleteEntity(entityId);
 			if (!result) {

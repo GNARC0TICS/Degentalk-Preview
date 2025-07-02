@@ -7,6 +7,7 @@
  */
 
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import {
 	transactions,
 	users, // vaultSettings is not in schema
@@ -22,7 +23,7 @@ import type { UnlockTransactionId, VaultLockId, ActionId } from '@/db/types';
  * Vault lock options structure
  */
 export interface VaultLockOptions {
-	userId: number;
+	userId: UserId;
 	amount: number;
 	currency: string;
 	lockDurationDays: number;
@@ -271,7 +272,7 @@ export class VaultService {
 	 * @param userId User ID
 	 * @returns Array of active vault locks
 	 */
-	async getUserVaultLocks(userId: number): Promise<any[]> {
+	async getUserVaultLocks(userId: UserId): Promise<any[]> {
 		try {
 			const vaultLocksList = await db
 				.select()
@@ -295,7 +296,7 @@ export class VaultService {
 	 * Validate lock options
 	 */
 	private async validateLockOptions(
-		userId: number,
+		userId: UserId,
 		amount: number,
 		currency: string,
 		lockDurationDays: number

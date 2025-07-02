@@ -6,6 +6,7 @@
  */
 
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import { chatRooms, users, shoutboxConfig, shoutboxMessages, shoutboxUserIgnores } from '@schema';
 import { eq, and, or, desc, asc, sql, gt, lt, isNull, inArray, not, count } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
@@ -146,7 +147,7 @@ export class RoomService {
 	static async updateRoom(
 		roomId: RoomId,
 		updateData: Partial<CreateRoomData>,
-		updatedBy: number
+		updatedBy: UserId
 	): Promise<{
 		success: boolean;
 		room?: any;
@@ -253,7 +254,7 @@ export class RoomService {
 	 */
 	static async deleteRoom(
 		roomId: RoomId,
-		deletedBy: number
+		deletedBy: UserId
 	): Promise<{
 		success: boolean;
 		message: string;
@@ -327,7 +328,7 @@ export class RoomService {
 	/**
 	 * Get all chat rooms with statistics
 	 */
-	static async getRoomsWithStats(userId?: number): Promise<RoomWithStats[]> {
+	static async getRoomsWithStats(userId?: UserId): Promise<RoomWithStats[]> {
 		const cacheKey = `rooms-with-stats:${userId || 'guest'}`;
 
 		if (this.cache.has(cacheKey)) {
@@ -488,7 +489,7 @@ export class RoomService {
 	 * Check if user has access to a room
 	 */
 	static async checkRoomAccess(
-		userId: number,
+		userId: UserId,
 		roomId: RoomId
 	): Promise<{
 		hasAccess: boolean;
@@ -552,7 +553,7 @@ export class RoomService {
 	/**
 	 * Get user's ignored users for a room
 	 */
-	static async getUserIgnoreList(userId: number, roomId?: RoomId): Promise<number[]> {
+	static async getUserIgnoreList(userId: UserId, roomId?: RoomId): Promise<UserId[]> {
 		try {
 			const ignoreList = await db
 				.select({
@@ -579,8 +580,8 @@ export class RoomService {
 	 * Add user to ignore list
 	 */
 	static async ignoreUser(
-		userId: number,
-		ignoredUserId: number,
+		userId: UserId,
+		ignoredUserId: UserId,
 		roomId?: RoomId,
 		options?: {
 			hideMessages?: boolean;
@@ -625,8 +626,8 @@ export class RoomService {
 	 * Remove user from ignore list
 	 */
 	static async unignoreUser(
-		userId: number,
-		ignoredUserId: number,
+		userId: UserId,
+		ignoredUserId: UserId,
 		roomId?: RoomId
 	): Promise<{ success: boolean; message: string }> {
 		try {

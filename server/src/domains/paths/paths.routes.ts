@@ -1,4 +1,5 @@
 import { userService } from '@server/src/core/services/user.service';
+import type { UserId } from '@db/types';
 /**
  * XP Path Routes
  * Handles API endpoints for the XP path specialization system
@@ -153,10 +154,10 @@ export function registerPathRoutes(router: Router) {
 	 */
 	router.get('/paths/user/:userId/:pathId', async (req: Request, res: Response) => {
 		try {
-			const userId = parseInt(req.params.userId);
+			const userId = req.params.userId as UserId;
 			const pathId = req.params.pathId;
 
-			if (isNaN(userId)) {
+			if (!userId || isNaN(Number(userId)) || Number(userId) <= 0) {
 				return res.status(400).json({ message: 'Invalid user ID' });
 			}
 
@@ -196,9 +197,9 @@ export function registerPathRoutes(router: Router) {
 	 */
 	router.get('/paths/user/:userId/summary', async (req: Request, res: Response) => {
 		try {
-			const userId = parseInt(req.params.userId);
+			const userId = req.params.userId as UserId;
 
-			if (isNaN(userId)) {
+			if (!userId || isNaN(Number(userId)) || Number(userId) <= 0) {
 				return res.status(400).json({ message: 'Invalid user ID' });
 			}
 

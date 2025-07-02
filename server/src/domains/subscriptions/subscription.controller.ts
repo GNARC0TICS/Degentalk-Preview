@@ -6,6 +6,7 @@ import { userService } from '@server/src/core/services/user.service';
  */
 
 import type { Request, Response } from 'express';
+import type { EntityId } from '@db/types';
 import { subscriptionService } from './subscription.service';
 import { logger } from '../../core/logger';
 
@@ -141,8 +142,8 @@ export class SubscriptionController {
 				return;
 			}
 
-			const subscriptionId = parseInt(id);
-			if (isNaN(subscriptionId)) {
+			const subscriptionId = id as EntityId;
+			if (!subscriptionId) {
 				res.status(400).json({
 					success: false,
 					error: 'Valid subscription ID required'

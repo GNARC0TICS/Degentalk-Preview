@@ -47,7 +47,7 @@ interface User {
 }
 
 interface Message {
-	id: number;
+	id: MessageId;
 	roomId: RoomId;
 	content: string;
 	createdAt: string;

@@ -68,14 +68,14 @@ const ApiEntitySchema = z
 		slug: z.string().min(1),
 		name: z.string().min(1),
 		description: z.string().nullish(),
-		parentId: z.number().nullish(),
+		parentId: z.custom<CategoryId>().nullish(),
 		type: z.enum(['zone', 'forum', 'category']),
 		position: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()).optional(),
 		isVip: z.boolean().default(false).optional(),
 		isLocked: z.boolean().default(false).optional(),
 		isHidden: z.boolean().default(false).optional(),
 		minXp: z.preprocess((v) => (v === null || v === undefined ? 0 : v), z.number()).optional(),
-		minGroupIdRequired: z.number().optional().nullable(),
+		minGroupIdRequired: z.custom<GroupId>().optional().nullable(),
 		color: z.string().optional().nullable(),
 		icon: z.string().optional().nullable(),
 		colorTheme: z.string().optional().nullable(),
@@ -86,7 +86,7 @@ const ApiEntitySchema = z
 		threadCount: z
 			.preprocess((v) => {
 				if (v === null || v === undefined) return 0;
-				if (typeof v === 'string') return parseInt(v, 10) || 0;
+				if (typeof v === 'string') return Number(v) || 0;
 				if (typeof v === 'number') return v;
 				return 0;
 			}, z.number())
@@ -94,7 +94,7 @@ const ApiEntitySchema = z
 		postCount: z
 			.preprocess((v) => {
 				if (v === null || v === undefined) return 0;
-				if (typeof v === 'string') return parseInt(v, 10) || 0;
+				if (typeof v === 'string') return Number(v) || 0;
 				if (typeof v === 'number') return v;
 				return 0;
 			}, z.number())

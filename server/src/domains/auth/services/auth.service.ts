@@ -1,4 +1,5 @@
 import { userService } from '@server/src/core/services/user.service';
+import type { UserId } from '@db/types';
 import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
 import { featureFlags, users } from '@schema';
@@ -96,7 +97,7 @@ export async function storeTempDevMetadata(password: string): Promise<string | n
 /**
  * Helper function to verify email token
  */
-export async function verifyEmailToken(token: string): Promise<{ userId: number } | false> {
+export async function verifyEmailToken(token: string): Promise<{ userId: UserId } | false> {
 	try {
 		// This is a stub implementation - replace with actual database query
 		// In a real implementation, we'd:
@@ -118,7 +119,7 @@ export async function verifyEmailToken(token: string): Promise<{ userId: number 
  * This maintains compatibility with the existing dev mode user selection mechanism
  */
 export function createMockUser(
-	userId: number,
+	userId: UserId,
 	role: 'admin' | 'moderator' | 'user' = 'user'
 ): User {
 	logger.info('AuthService', `Creating mock ${role} user for ID ${userId} in development mode`, {

@@ -1,4 +1,5 @@
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import { featureFlags, users } from '@schema'; // Corrected import
 import { logger, LogLevel } from '../../core/logger';
 import { eq, and } from 'drizzle-orm';
@@ -122,7 +123,7 @@ export class FeatureGatesService {
 	/**
 	 * Check if a user has access to a specific feature
 	 */
-	async checkFeatureAccess(userId: number, featureId: string): Promise<UserFeatureAccess> {
+	async checkFeatureAccess(userId: UserId, featureId: string): Promise<UserFeatureAccess> {
 		try {
 			const gate = await this.getFeatureGate(featureId);
 
@@ -192,7 +193,7 @@ export class FeatureGatesService {
 	/**
 	 * Check access for multiple features for a user
 	 */
-	async checkAllFeatureAccess(userId: number): Promise<UserFeatureAccess[]> {
+	async checkAllFeatureAccess(userId: UserId): Promise<UserFeatureAccess[]> {
 		const gates = await this.getAllFeatureGates();
 
 		const accessPromises = gates.map((gate) => this.checkFeatureAccess(userId, gate.id));

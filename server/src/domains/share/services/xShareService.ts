@@ -1,4 +1,5 @@
 import { TwitterApi } from 'twitter-api-v2';
+import type { UserId } from '@db/types';
 import { db } from '@server/src/core/db';
 import { users } from '@schema/user/users';
 import { xShares } from '@schema/user/xShares';
@@ -8,7 +9,7 @@ import { awardXShareReward } from '../../economy/services/rewardService';
 import type { ContentId } from '@/db/types';
 
 export async function shareToX(opts: {
-	userId: number;
+	userId: UserId;
 	text: string;
 	contentType: 'post' | 'thread' | 'referral';
 	contentId?: ContentId;

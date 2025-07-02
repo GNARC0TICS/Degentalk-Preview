@@ -6,6 +6,7 @@
  */
 
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import { transactions } from '@schema';
 import { eq, and, desc, asc, sum, sql } from 'drizzle-orm';
 import {
@@ -29,7 +30,7 @@ export class TransactionRepository
 	 * Find transactions by user ID with pagination
 	 */
 	async findByUserId(
-		userId: number,
+		userId: UserId,
 		options: QueryOptions = {}
 	): Promise<PaginatedResult<Transaction>> {
 		try {
@@ -138,7 +139,7 @@ export class TransactionRepository
 	/**
 	 * Get total transaction amount by user and optionally by type
 	 */
-	async getTotalByUser(userId: number, type?: string): Promise<number> {
+	async getTotalByUser(userId: UserId, type?: string): Promise<number> {
 		try {
 			const conditions = [eq(transactions.userId, userId)];
 
@@ -176,7 +177,7 @@ export class TransactionRepository
 	/**
 	 * Get balance by user (credits minus debits)
 	 */
-	async getBalanceByUser(userId: number): Promise<number> {
+	async getBalanceByUser(userId: UserId): Promise<number> {
 		try {
 			// Calculate credits (positive transactions)
 			const [creditsResult] = await db
@@ -269,7 +270,7 @@ export class TransactionRepository
 	/**
 	 * Get transaction statistics for a user
 	 */
-	async getUserStats(userId: number): Promise<{
+	async getUserStats(userId: UserId): Promise<{
 		totalTransactions: number;
 		totalCredits: number;
 		totalDebits: number;

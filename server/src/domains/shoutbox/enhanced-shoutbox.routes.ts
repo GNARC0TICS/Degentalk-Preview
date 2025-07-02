@@ -13,6 +13,7 @@ import { userService } from '@server/src/core/services/user.service';
 
 import { Router } from 'express';
 import type { Request, Response } from 'express';
+import type { MessageId, RoomId, UserId } from '@db/types';
 import { db } from '@db';
 import {
 	shoutboxMessages,
@@ -194,7 +195,7 @@ router.post('/rooms', isAdmin, async (req: Request, res: Response) => {
  */
 router.patch('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => {
 	try {
-		const roomId = parseInt(req.params.roomId);
+		const roomId = req.params.roomId as RoomId;
 		const userId = userService.getUserFromRequest(req);
 
 		if (isNaN(roomId)) {
@@ -219,7 +220,7 @@ router.patch('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => {
  */
 router.delete('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => {
 	try {
-		const roomId = parseInt(req.params.roomId);
+		const roomId = req.params.roomId as RoomId;
 		const userId = userService.getUserFromRequest(req);
 
 		if (isNaN(roomId)) {
@@ -495,7 +496,7 @@ router.patch(
 	isAdminOrModerator,
 	async (req: Request, res: Response) => {
 		try {
-			const messageId = parseInt(req.params.messageId);
+			const messageId = req.params.messageId as MessageId;
 			const { isPinned } = req.body;
 			const userId = userService.getUserFromRequest(req);
 
@@ -586,7 +587,7 @@ router.patch(
  */
 router.delete('/messages/:messageId', isAdminOrModerator, async (req: Request, res: Response) => {
 	try {
-		const messageId = parseInt(req.params.messageId);
+		const messageId = req.params.messageId as MessageId;
 		const userId = userService.getUserFromRequest(req);
 
 		if (isNaN(messageId)) {
@@ -671,7 +672,7 @@ router.post('/ignore', isAuthenticated, async (req: Request, res: Response) => {
 router.delete('/ignore/:targetUserId', isAuthenticated, async (req: Request, res: Response) => {
 	try {
 		const userId = userService.getUserFromRequest(req);
-		const targetUserId = parseInt(req.params.targetUserId);
+		const targetUserId = req.params.targetUserId as UserId;
 		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
 
 		if (isNaN(targetUserId)) {
@@ -1050,7 +1051,7 @@ router.get(
 	isAuthenticatedOptional,
 	async (req: Request, res: Response) => {
 		try {
-			const roomId = parseInt(req.params.roomId);
+			const roomId = req.params.roomId as RoomId;
 
 			if (!roomId) {
 				return res.status(400).json({ error: 'Invalid room ID' });

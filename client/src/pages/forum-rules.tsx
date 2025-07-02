@@ -20,11 +20,11 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth.tsx';
 import { apiRequest } from '@/lib/queryClient';
 import { LoadingSpinner as Spinner } from '@/components/ui/loader';
-import type { RuleId, UserId } from '@db/types';
+import type { RuleId, UserId, EntityId } from '@db/types';
 
 // Type definitions
 interface ForumRule {
-	id: number;
+	id: RuleId;
 	title: string;
 	content: string;
 	section: string;
@@ -33,8 +33,8 @@ interface ForumRule {
 	position: number;
 	createdAt: string;
 	updatedAt: string | null;
-	createdBy: number | null;
-	updatedBy: number | null;
+	createdBy: UserId | null;
+	updatedBy: UserId | null;
 	versionHash: string;
 	lastAgreedVersionHash: string | null;
 }
@@ -45,7 +45,7 @@ interface ForumRulesResponse {
 }
 
 interface UserRuleAgreement {
-	id: number;
+	id: EntityId;
 	userId: UserId;
 	ruleId: RuleId;
 	versionHash: string;

@@ -8,6 +8,7 @@ import { db } from '@db';
 import { products, avatarFrames } from '@schema';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
+import type { FrameId } from '@db/types';
 
 const router = Router();
 
@@ -27,8 +28,7 @@ router.post('/:id/purchase', isAuthenticated, async (req, res) => {
 	const authUser = userService.getUserFromRequest(req);
 	if (!authUser) return res.status(401).json({ error: 'Not authenticated' });
 	const userId = String(authUser.id);
-	const frameId = parseInt(req.params.id, 10);
-	if (isNaN(frameId)) return res.status(400).json({ error: 'Invalid frame id' });
+	const frameId = req.params.id as FrameId;
 
 	try {
 		// Fetch frame product with price

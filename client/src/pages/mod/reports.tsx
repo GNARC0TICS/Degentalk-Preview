@@ -56,7 +56,7 @@ import type { ReportId, ContentId } from '@db/types';
 
 // Types
 interface Report {
-	id: number;
+	id: ReportId;
 	contentType: 'thread' | 'post' | 'user' | 'message';
 	contentId: ContentId;
 	reporterId: string;
@@ -123,14 +123,14 @@ const reportsApi = {
 		});
 	},
 
-	async getReport(id: number) {
+	async getReport(id: ReportId) {
 		return apiRequest<{ report: Report }>({
 			url: `/api/admin/reports/${id}`,
 			method: 'GET'
 		});
 	},
 
-	async resolveReport(id: number, data: { action: string; reason?: string; banDuration?: string }) {
+	async resolveReport(id: ReportId, data: { action: string; reason?: string; banDuration?: string }) {
 		return apiRequest<{ message: string }>({
 			url: `/api/admin/reports/${id}/resolve`,
 			method: 'POST',
@@ -138,7 +138,7 @@ const reportsApi = {
 		});
 	},
 
-	async dismissReport(id: number, reason: string) {
+	async dismissReport(id: ReportId, reason: string) {
 		return apiRequest<{ message: string }>({
 			url: `/api/admin/reports/${id}/dismiss`,
 			method: 'POST',
@@ -169,9 +169,9 @@ export default function ReportsManagementPage() {
 		page: 1,
 		limit: 20
 	});
-	const [selectedReports, setSelectedReports] = useState<number[]>([]);
+	const [selectedReports, setSelectedReports] = useState<ReportId[]>([]);
 	const [showFilters, setShowFilters] = useState(false);
-	const [resolveDialogOpen, setResolveDialogOpen] = useState<number | null>(null);
+	const [resolveDialogOpen, setResolveDialogOpen] = useState<ReportId | null>(null);
 
 	const queryClient = useQueryClient();
 
@@ -193,7 +193,7 @@ export default function ReportsManagementPage() {
 			id,
 			data
 		}: {
-			id: number;
+			id: ReportId;
 			data: { action: string; reason?: string; banDuration?: string };
 		}) => reportsApi.resolveReport(id, data),
 		onSuccess: () => {
@@ -209,7 +209,7 @@ export default function ReportsManagementPage() {
 	});
 
 	const dismissReportMutation = useMutation({
-		mutationFn: ({ id, reason }: { id: number; reason: string }) =>
+		mutationFn: ({ id, reason }: { id: ReportId; reason: string }) =>
 			reportsApi.dismissReport(id, reason),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['mod-reports'] });

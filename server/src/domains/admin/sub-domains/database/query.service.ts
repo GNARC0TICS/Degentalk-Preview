@@ -6,6 +6,7 @@
  */
 
 import { db } from '@server/src/core/db';
+import type { UserId } from '@db/types';
 import { logger } from '@server/src/core/logger';
 import { sql } from 'drizzle-orm';
 
@@ -93,7 +94,7 @@ export interface QueryHistory {
 	executionTime: number;
 	rowCount: number;
 	success: boolean;
-	userId: number;
+	userId: UserId;
 }
 
 export class QueryService {
@@ -105,7 +106,7 @@ export class QueryService {
 	/**
 	 * Execute a read-only SQL query with safety checks
 	 */
-	async executeQuery(query: string, userId: number): Promise<QueryResult> {
+	async executeQuery(query: string, userId: UserId): Promise<QueryResult> {
 		const startTime = Date.now();
 
 		try {

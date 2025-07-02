@@ -99,7 +99,6 @@ export type {
   DGTToken,
   Wallet,
   WalletFeatures,
-  WalletLimits,
   Transaction,
   TransactionReference,
   TransactionMetadata,

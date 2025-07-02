@@ -19,13 +19,14 @@ import type {
 	PasswordChangeInput,
 	DisplayPreferencesInput
 } from './preferences.validators';
+import type { UserId } from '@db/types';
 import bcrypt from 'bcrypt';
 
 /**
  * Fetches all preferences for a user (profile, account, notifications, display)
  * @param userId The user ID
  */
-export const getAllPreferences = async (userId: number) => {
+export const getAllPreferences = async (userId: UserId) => {
 	// Fetch the user's profile data
 	const user = await db.query.users.findFirst({
 		where: eq(users.id, userId),
@@ -81,7 +82,7 @@ export const getAllPreferences = async (userId: number) => {
  * @param ipAddress The IP address of the requester
  */
 export const updateProfilePreferences = async (
-	userId: number,
+	userId: UserId,
 	data: ProfileSettingsInput,
 	ipAddress?: string
 ) => {
@@ -138,7 +139,7 @@ export const updateProfilePreferences = async (
  * @param ipAddress The IP address of the requester
  */
 export const updateAccountPreferences = async (
-	userId: number,
+	userId: UserId,
 	data: AccountSettingsInput,
 	ipAddress?: string
 ) => {
@@ -212,7 +213,7 @@ export const updateAccountPreferences = async (
  * @param ipAddress The IP address of the requester
  */
 export const updateNotificationPreferences = async (
-	userId: number,
+	userId: UserId,
 	data: NotificationSettingsInput,
 	ipAddress?: string
 ) => {
@@ -278,7 +279,7 @@ export const updateNotificationPreferences = async (
  * @param ipAddress The IP address of the requester
  */
 export const updateDisplayPreferences = async (
-	userId: number,
+	userId: UserId,
 	data: DisplayPreferencesInput,
 	ipAddress?: string
 ) => {
@@ -341,7 +342,7 @@ export const updateDisplayPreferences = async (
  * @param ipAddress The IP address of the requester
  */
 export const changePassword = async (
-	userId: number,
+	userId: UserId,
 	data: PasswordChangeInput,
 	ipAddress?: string
 ) => {
@@ -387,7 +388,7 @@ export const changePassword = async (
  * Creates default preferences for a new user
  * @param userId The ID of the user to create preferences for
  */
-export const createDefaultPreferences = async (userId: number) => {
+export const createDefaultPreferences = async (userId: UserId) => {
 	const defaultProfilePreferences = {
 		userId,
 		bio: null,

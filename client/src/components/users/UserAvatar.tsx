@@ -2,6 +2,7 @@ import React from 'react';
 import type { FrameId } from '@/types/ids';
 import { FramedAvatar } from './framed-avatar';
 import { cn } from '@/lib/utils';
+import { useUserCosmetics } from '@/hooks/useUserCosmetics';
 
 interface UserAvatarProps {
 	user: {
@@ -14,7 +15,9 @@ interface UserAvatarProps {
 			rarity: string;
 			animated: boolean;
 		} | null;
+		id?: string | number;
 	};
+	userId?: string | number;
 	size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 	shape?: 'circle' | 'square';
 	className?: string;
@@ -28,17 +31,29 @@ interface UserAvatarProps {
  */
 export function UserAvatar({
 	user,
+	userId,
 	size = 'md',
 	shape = 'circle',
 	className,
 	frameClassName,
 	showFrame = true
 }: UserAvatarProps) {
-	const frameUrl = showFrame && user.activeFrame ? user.activeFrame.imageUrl : null;
+	const targetId = userId ?? user.id;
+	const { cosmetics, isLoading } = useUserCosmetics(targetId);
+
+	let frameUrl: string | null = null;
+
+	if (showFrame) {
+		if (user.activeFrame && user.activeFrame.imageUrl) {
+			frameUrl = user.activeFrame.imageUrl;
+		} else if (!isLoading) {
+			frameUrl = cosmetics.avatarFrameUrl ?? null;
+		}
+	}
 
 	return (
 		<FramedAvatar
-			avatarUrl={user.avatarUrl}
+			avatarUrl={user.avatarUrl || null}
 			frameUrl={frameUrl}
 			username={user.username}
 			size={size}

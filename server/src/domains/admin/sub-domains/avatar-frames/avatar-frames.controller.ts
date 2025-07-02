@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import { avatarFrameService } from './avatar-frames.service';
 import { logger } from '../../../../core/logger';
 import { z } from 'zod';
+import type { FrameId } from '@db/types';
 
 const createFrameSchema = z.object({
 	name: z.string().min(1, 'Name is required').max(255, 'Name must be less than 255 characters'),
@@ -32,10 +33,7 @@ class AvatarFrameController {
 
 	async getFrame(req: Request, res: Response) {
 		try {
-			const frameId = parseInt(req.params.id);
-			if (isNaN(frameId)) {
-				return res.status(400).json({ error: 'Invalid frame ID' });
-			}
+			const frameId = req.params.id as FrameId;
 
 			const frame = await avatarFrameService.getFrameById(frameId);
 			if (!frame) {
@@ -89,10 +87,7 @@ class AvatarFrameController {
 
 	async updateFrame(req: Request, res: Response) {
 		try {
-			const frameId = parseInt(req.params.id);
-			if (isNaN(frameId)) {
-				return res.status(400).json({ error: 'Invalid frame ID' });
-			}
+			const frameId = req.params.id as FrameId;
 
 			const validatedData = updateFrameSchema.parse(req.body);
 
@@ -129,10 +124,7 @@ class AvatarFrameController {
 
 	async deleteFrame(req: Request, res: Response) {
 		try {
-			const frameId = parseInt(req.params.id);
-			if (isNaN(frameId)) {
-				return res.status(400).json({ error: 'Invalid frame ID' });
-			}
+			const frameId = req.params.id as FrameId;
 
 			const deleted = await avatarFrameService.deleteFrame(frameId);
 			if (!deleted) {

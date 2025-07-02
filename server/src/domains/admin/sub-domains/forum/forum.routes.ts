@@ -8,6 +8,7 @@ import { Router } from 'express';
 import { adminForumController } from './forum.controller';
 import { asyncHandler } from '../../admin.middleware';
 import { forumPrefixService } from '../forumPrefix/forumPrefix.service';
+import type { PrefixId } from '@db/types';
 
 const router = Router();
 
@@ -68,7 +69,7 @@ router.post(
 router.put(
 	'/prefixes/:id',
 	asyncHandler(async (req, res) => {
-		const id = parseInt(req.params.id);
+		const id = req.params.id as PrefixId;
 		const updated = await forumPrefixService.updatePrefix(id, req.body);
 		res.json(updated);
 	})
@@ -77,7 +78,7 @@ router.put(
 router.delete(
 	'/prefixes/:id',
 	asyncHandler(async (req, res) => {
-		const id = parseInt(req.params.id);
+		const id = req.params.id as PrefixId;
 		const result = await forumPrefixService.deletePrefix(id);
 		res.json(result);
 	})

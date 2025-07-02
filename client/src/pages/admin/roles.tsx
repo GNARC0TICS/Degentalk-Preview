@@ -15,10 +15,11 @@ import { RoleFormDialog, roleSchema } from '@/components/admin/forms/roles/RoleF
 import type { RoleFormValues } from '@/components/admin/forms/roles/RoleFormDialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'; // Keep Card for now
+import type { RoleId } from '@db/types';
 
 // Type for Role data, extending form values with ID and timestamps
 type Role = RoleFormValues & {
-	id: number;
+	id: RoleId;
 	createdAt: string;
 	updatedAt: string;
 };

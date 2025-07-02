@@ -43,6 +43,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { ThreadPrefix } from '@/types/compat/forum';
+import type { PrefixId, CategoryId } from '@db/types';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 // Define validation schema for prefixes
@@ -54,7 +55,7 @@ const prefixSchema = z.object({
 	color: z.string().min(3, 'Please select a valid color'),
 	isActive: z.boolean().default(true),
 	position: z.number().int().min(0).default(0),
-	categoryId: z.number().nullable().default(null)
+	categoryId: z.custom<CategoryId>().nullable().default(null)
 });
 
 export default function AdminPrefixesPage() {
@@ -153,7 +154,7 @@ export default function AdminPrefixesPage() {
 
 	// Edit prefix mutation
 	const editPrefixMutation = useMutation({
-		mutationFn: async (data: z.infer<typeof prefixSchema> & { id: number }) => {
+		mutationFn: async (data: z.infer<typeof prefixSchema> & { id: PrefixId }) => {
 			const { id, ...prefixData } = data;
 			const response = await fetch(`/admin/forum/prefixes/${id}`, {
 				method: 'PUT',
@@ -178,7 +179,7 @@ export default function AdminPrefixesPage() {
 
 	// Delete prefix mutation
 	const deletePrefixMutation = useMutation({
-		mutationFn: async (id: number) => {
+		mutationFn: async (id: PrefixId) => {
 			const response = await fetch(`/admin/forum/prefixes/${id}`, {
 				method: 'DELETE'
 			});
@@ -198,7 +199,7 @@ export default function AdminPrefixesPage() {
 
 	// Reorder prefix mutation
 	const reorderPrefixMutation = useMutation({
-		mutationFn: async ({ id, direction }: { id: number; direction: 'up' | 'down' }) => {
+		mutationFn: async ({ id, direction }: { id: PrefixId; direction: 'up' | 'down' }) => {
 			const response = await fetch(`/admin/forum/prefixes/${id}/reorder`, {
 				method: 'POST',
 				headers: {

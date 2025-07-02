@@ -10,6 +10,7 @@
  */
 
 import { apiRequest } from '@/lib/queryClient';
+import type { UserId, AchievementId, MissionId } from '@db/types';
 
 // Types for API responses
 export interface LevelInfo {
@@ -25,13 +26,13 @@ export interface LevelInfo {
 	unlocks?: Record<string, any>;
 	rewards?: {
 		dgt?: number;
-		titleId?: number;
-		badgeId?: number;
+		titleId?: AchievementId;
+		badgeId?: AchievementId;
 	};
 }
 
 export interface UserProgression {
-	userId: number;
+	userId: UserId;
 	username: string;
 	currentLevel: number;
 	currentXp: number;
@@ -55,7 +56,7 @@ export interface UserProgression {
 }
 
 export interface Achievement {
-	id: number;
+	id: AchievementId;
 	name: string;
 	description: string;
 	iconUrl?: string;
@@ -74,8 +75,8 @@ export interface Achievement {
 }
 
 export interface UserAchievement {
-	userId: number;
-	achievementId: number;
+	userId: UserId;
+	achievementId: AchievementId;
 	currentProgress: number;
 	isCompleted: boolean;
 	earnedAt?: string;
@@ -84,7 +85,7 @@ export interface UserAchievement {
 }
 
 export interface Mission {
-	id: number;
+	id: MissionId;
 	title: string;
 	description: string;
 	type: string;
@@ -104,8 +105,8 @@ export interface Mission {
 
 export interface MissionProgress {
 	id: number;
-	userId: number;
-	missionId: number;
+	userId: UserId;
+	missionId: MissionId;
 	currentCount: number;
 	isCompleted: boolean;
 	isRewardClaimed: boolean;
@@ -114,7 +115,7 @@ export interface MissionProgress {
 }
 
 export interface LeaderboardEntry {
-	userId: number;
+	userId: UserId;
 	username: string;
 	level: number;
 	totalXp: number;
@@ -175,7 +176,7 @@ export class GamificationApiService {
 		});
 	}
 
-	async getUserProgression(userId?: number) {
+	async getUserProgression(userId?: UserId) {
 		const endpoint = userId
 			? `${this.baseUrl}/progression/${userId}`
 			: `${this.baseUrl}/progression/me`;
@@ -209,7 +210,7 @@ export class GamificationApiService {
 		});
 	}
 
-	async getUserAchievementStats(userId?: number) {
+	async getUserAchievementStats(userId?: UserId) {
 		const endpoint = userId
 			? `${this.baseUrl}/achievements/user/${userId}`
 			: `${this.baseUrl}/achievements/my-stats`;
@@ -219,7 +220,7 @@ export class GamificationApiService {
 		});
 	}
 
-	async getUserAchievementProgress(userId?: number, achievementIds?: number[]) {
+	async getUserAchievementProgress(userId?: UserId, achievementIds?: AchievementId[]) {
 		const endpoint = userId
 			? `${this.baseUrl}/achievements/progress/${userId}`
 			: `${this.baseUrl}/achievements/my-progress`;
@@ -239,7 +240,7 @@ export class GamificationApiService {
 		});
 	}
 
-	async checkAndAwardAchievements(userId: number, actionType: string, metadata?: any) {
+	async checkAndAwardAchievements(userId: UserId, actionType: string, metadata?: any) {
 		return apiRequest<{
 			success: boolean;
 			data: {
@@ -274,7 +275,7 @@ export class GamificationApiService {
 		});
 	}
 
-	async getUserMissionProgress(userId?: number) {
+	async getUserMissionProgress(userId?: UserId) {
 		const endpoint = userId
 			? `${this.baseUrl}/missions/user/${userId}`
 			: `${this.baseUrl}/missions/my-progress`;
@@ -295,7 +296,7 @@ export class GamificationApiService {
 		});
 	}
 
-	async claimMissionReward(missionId: number) {
+	async claimMissionReward(missionId: MissionId) {
 		return apiRequest<{
 			success: boolean;
 			data: {
@@ -311,7 +312,7 @@ export class GamificationApiService {
 		});
 	}
 
-	async updateMissionProgress(userId: number, actionType: string, metadata?: any) {
+	async updateMissionProgress(userId: UserId, actionType: string, metadata?: any) {
 		return apiRequest<{ success: boolean; message: string }>({
 			url: `${this.baseUrl}/missions/update-progress`,
 			method: 'POST',

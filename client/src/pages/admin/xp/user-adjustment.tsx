@@ -44,6 +44,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
+import type { UserId } from '@db/types';
 
 // Form schema for user search
 const searchFormSchema = z.object({
@@ -52,7 +53,7 @@ const searchFormSchema = z.object({
 
 // Form schema for XP adjustment
 const adjustmentFormSchema = z.object({
-	userId: z.coerce.number().positive('Invalid user'),
+	userId: z.custom<UserId>().refine(val => Number(val) > 0, 'Invalid user'),
 	amount: z.coerce.number().int('Must be a whole number'),
 	adjustmentType: z.enum(['add', 'subtract', 'set']),
 	reason: z.string().min(3, 'Please provide a reason for this adjustment')
@@ -60,7 +61,7 @@ const adjustmentFormSchema = z.object({
 
 // User type definition
 type User = {
-	id: number;
+	id: UserId;
 	username: string;
 	avatarUrl?: string;
 	level: number;
@@ -72,7 +73,7 @@ type User = {
 // XP Adjustment log entry type
 type XpAdjustmentLog = {
 	id: number;
-	userId: number;
+	userId: UserId;
 	username: string;
 	adjustmentType: 'add' | 'subtract' | 'set';
 	amount: number;
@@ -200,7 +201,7 @@ export default function UserXPAdjustmentPage() {
 	});
 
 	// Function to fetch user info when selected
-	const refetchUserInfo = async (userId: number) => {
+	const refetchUserInfo = async (userId: UserId) => {
 		try {
 			const response = await fetch(`/api/admin/users/${userId}/xp`);
 			if (!response.ok) {

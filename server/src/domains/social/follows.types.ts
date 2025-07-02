@@ -1,3 +1,5 @@
+import type { EntityId } from '@db/types';
+
 export interface FollowNotificationSettings {
 	notifyOnPosts: boolean;
 	notifyOnThreads: boolean;
@@ -33,7 +35,7 @@ export interface FollowUser {
 }
 
 export interface FollowRelationship {
-	id: number;
+	id: EntityId;
 	followerId: string;
 	followedId: string;
 	followedAt: Date;
@@ -43,7 +45,7 @@ export interface FollowRelationship {
 }
 
 export interface FollowRequest {
-	id: number;
+	id: EntityId;
 	requesterId: string;
 	targetId: string;
 	message?: string | null;

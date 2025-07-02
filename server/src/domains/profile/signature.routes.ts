@@ -5,6 +5,7 @@
  */
 
 import { Router } from 'express';
+import type { UserId } from '@db/types';
 import type { Request, Response } from 'express';
 import { SignatureService } from './signature.service';
 import { z } from 'zod';
@@ -55,9 +56,9 @@ router.get('/me', async (req: Request, res: Response) => {
  */
 router.get('/:userId', async (req: Request, res: Response) => {
 	try {
-		const userId = parseInt(req.params.userId);
+		const userId = req.params.userId as UserId;
 
-		if (isNaN(userId)) {
+		if (!userId || isNaN(Number(userId)) || Number(userId) <= 0) {
 			return res.status(400).json({ message: 'Invalid user ID' });
 		}
 

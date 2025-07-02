@@ -7,6 +7,7 @@
 
 import { db } from '../db';
 import { transactions, users, tipSettings, cooldownSettings } from '@schema';
+import type { UserId } from '@db/types';
 import { eq, and } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../src/core/errors';
@@ -388,7 +389,7 @@ export class TipService {
 	/**
 	 * Check if user is on cooldown for a command
 	 */
-	private async checkCooldowns(userId: number, commandType: 'tip' | 'rain'): Promise<void> {
+	private async checkCooldowns(userId: UserId, commandType: 'tip' | 'rain'): Promise<void> {
 		try {
 			// Get cooldown settings
 			const settings = await db.query.cooldownSettings.findFirst({
@@ -437,7 +438,7 @@ export class TipService {
 	/**
 	 * Update the last command time for a user
 	 */
-	private async updateLastCommandTime(userId: number, commandType: 'tip' | 'rain'): Promise<void> {
+	private async updateLastCommandTime(userId: UserId, commandType: 'tip' | 'rain'): Promise<void> {
 		try {
 			// Check if user has a cooldown record
 			const existingRecord = await db.execute(sql`

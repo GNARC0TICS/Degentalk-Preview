@@ -9,9 +9,10 @@ import { db } from '@db';
 import { users, userRoles } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { logger } from '../logger';
+import type { UserId } from '@db/types';
 
 export interface User {
-	id: number;
+	id: UserId;
 	username: string;
 	email: string;
 	role: 'user' | 'moderator' | 'admin';
@@ -67,7 +68,7 @@ class UserService {
 	/**
 	 * Get user by ID with complete profile data
 	 */
-	async getUserById(userId: number): Promise<UserProfile | null> {
+	async getUserById(userId: UserId): Promise<UserProfile | null> {
 		try {
 			const [user] = await db
 				.select({
@@ -158,7 +159,7 @@ class UserService {
 	/**
 	 * Get multiple users by IDs
 	 */
-	async getUsersByIds(userIds: number[]): Promise<User[]> {
+	async getUsersByIds(userIds: UserId[]): Promise<User[]> {
 		if (userIds.length === 0) return [];
 
 		try {
@@ -187,7 +188,7 @@ class UserService {
 	/**
 	 * Check if user exists and is active
 	 */
-	async isActiveUser(userId: number): Promise<boolean> {
+	async isActiveUser(userId: UserId): Promise<boolean> {
 		try {
 			const [user] = await db
 				.select({ isActive: users.isActive })
@@ -205,7 +206,7 @@ class UserService {
 	/**
 	 * Update user's last active timestamp
 	 */
-	async updateLastActive(userId: number): Promise<void> {
+	async updateLastActive(userId: UserId): Promise<void> {
 		try {
 			await db.update(users).set({ lastActiveAt: new Date() }).where(eq(users.id, userId));
 		} catch (error) {
@@ -278,9 +279,9 @@ class UserService {
 	/**
 	 * Batch user operations for efficiency
 	 */
-	async batchGetUsers(userIds: number[]): Promise<Map<number, User>> {
+	async batchGetUsers(userIds: UserId[]): Promise<Map<UserId, User>> {
 		const users = await this.getUsersByIds(userIds);
-		const userMap = new Map<number, User>();
+		const userMap = new Map<UserId, User>();
 
 		users.forEach((user) => {
 			userMap.set(user.id, user);

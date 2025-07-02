@@ -1,4 +1,5 @@
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import {
 	users,
 	levels,
@@ -221,7 +222,7 @@ export class XpAdminService {
 
 	// --- User XP Adjustment ---
 	async adjustUserXp(
-		userId: number,
+		userId: UserId,
 		amount: number,
 		reason: string,
 		adjustmentType: 'add' | 'subtract' | 'set',

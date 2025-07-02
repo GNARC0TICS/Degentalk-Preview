@@ -5,6 +5,7 @@
  */
 
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import { transactions, users, postTips } from '@schema';
 import { sql, desc, eq, count, sum, and, between, isNotNull } from 'drizzle-orm';
 import { startOfDay, subDays, format } from 'date-fns';
@@ -26,7 +27,7 @@ export interface TippingAnalytics {
 
 	// Top tippers
 	topTippers: {
-		userId: number;
+		userId: UserId;
 		username: string;
 		avatarUrl: string | null;
 		totalAmount: number;
@@ -35,7 +36,7 @@ export interface TippingAnalytics {
 
 	// Top recipients
 	topRecipients: {
-		userId: number;
+		userId: UserId;
 		username: string;
 		avatarUrl: string | null;
 		totalReceived: number;

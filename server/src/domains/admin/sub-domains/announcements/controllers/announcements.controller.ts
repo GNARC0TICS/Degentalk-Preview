@@ -1,5 +1,6 @@
 import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
+import type { EntityId } from '@db/types';
 import { z } from 'zod';
 import { insertAnnouncementSchema } from '@schema';
 import {
@@ -54,7 +55,7 @@ export async function getAllAnnouncementsController(req: Request, res: Response)
  */
 export async function getAnnouncementByIdController(req: Request, res: Response) {
 	try {
-		const id = parseInt(req.params.id);
+		const id = req.params.id as EntityId;
 		if (isNaN(id)) {
 			return res.status(400).json({ message: 'Invalid announcement ID' });
 		}
@@ -103,7 +104,7 @@ export async function createAnnouncementController(req: Request, res: Response) 
  */
 export async function updateAnnouncementController(req: Request, res: Response) {
 	try {
-		const id = parseInt(req.params.id);
+		const id = req.params.id as EntityId;
 		if (isNaN(id)) {
 			return res.status(400).json({ message: 'Invalid announcement ID' });
 		}
@@ -130,7 +131,7 @@ export async function updateAnnouncementController(req: Request, res: Response) 
  */
 export async function deactivateAnnouncementController(req: Request, res: Response) {
 	try {
-		const id = parseInt(req.params.id);
+		const id = req.params.id as EntityId;
 		if (isNaN(id)) {
 			return res.status(400).json({ message: 'Invalid announcement ID' });
 		}

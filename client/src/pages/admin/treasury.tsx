@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/table';
 import type { Transaction } from '@/types/wallet';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import type { SettingId } from '@db/types';
+import type { SettingId, WalletId, UserId } from '@db/types';
 
 type TreasurySetting = {
 	settingId: SettingId;
@@ -41,17 +41,17 @@ type TreasurySetting = {
 };
 
 type WalletData = {
-	id: number;
-	userId: number;
+	id: WalletId;
+	userId: UserId;
 	username: string;
 	balance: number;
 };
 
 // Admin-specific transaction type that extends the base Transaction
 type AdminTransaction = Transaction & {
-	walletId: number;
-	fromUserId: number | null;
-	toUserId: number | null;
+	walletId: WalletId;
+	fromUserId: UserId | null;
+	toUserId: UserId | null;
 	description: string | null;
 	createdAt: string;
 	updatedAt: string;

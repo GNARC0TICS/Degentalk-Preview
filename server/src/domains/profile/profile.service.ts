@@ -4,6 +4,7 @@
  * Service for handling user profile operations.
  */
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import { users, userInventory, threads, posts, userBadges, userTitles } from '@schema'; // Removed 'products'
 import { eq, sql, count } from 'drizzle-orm'; // Removed 'and' and 'InferModel'
 // type User = InferModel<typeof users, 'select'>; // Removed as ESLint flagged as unused, Drizzle types are inferred.
@@ -15,7 +16,7 @@ import { logger } from '@server/src/core/logger'; // For logging event emission 
 export const PROFILE_UPDATED_EVENT = 'profile_updated_event';
 
 export interface ProfileMediaUpdateParams {
-	userId: number; // User ID is a number in the database
+	userId: UserId; // User ID is a number in the database
 	mediaType: 'avatar' | 'banner';
 	relativePath: string; // Store relative path, not full URL
 }
@@ -24,7 +25,7 @@ export interface ProfileMediaUpdateParams {
  * Get a user's profile data
  * @param userId The user ID (number, as it is in the database)
  */
-export async function getUserProfile(userId: number) {
+export async function getUserProfile(userId: UserId) {
 	// Changed userId to number
 	// Fetch user data
 	const user = await db.query.users.findFirst({

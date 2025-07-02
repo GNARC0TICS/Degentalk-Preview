@@ -5,6 +5,7 @@
  */
 
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import { rainEvents, users, transactions } from '@schema';
 import { sql, desc, eq, count, sum, and, between } from 'drizzle-orm';
 import { startOfDay, subDays, format } from 'date-fns';
@@ -26,7 +27,7 @@ export interface RainEventAnalytics {
 
 	// Top rainers
 	topRainers: {
-		userId: number;
+		userId: UserId;
 		username: string;
 		avatarUrl: string | null;
 		totalAmount: number;

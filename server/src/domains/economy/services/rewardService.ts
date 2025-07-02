@@ -1,4 +1,5 @@
 import { db } from '@server/src/core/db';
+import type { UserId } from '@db/types';
 import { economySettings } from '@schema/economy/settings';
 import { eq } from 'drizzle-orm';
 import { XpLevelService } from '../../../../services/xp-level-service';
@@ -16,7 +17,7 @@ async function getSettingInt(key: string, defaultVal: number = 0): Promise<numbe
 	return row.length ? row[0].value : defaultVal;
 }
 
-export async function awardXShareReward(userId: number) {
+export async function awardXShareReward(userId: UserId) {
 	const xpReward = await getSettingInt('X_SHARE_XP', 10);
 	const dgtReward = await getSettingInt('X_SHARE_DGT', 0);
 
@@ -32,7 +33,7 @@ export async function awardXShareReward(userId: number) {
 	logger.info('RewardService', 'Issued X share reward', { userId, xpReward, dgtReward });
 }
 
-export async function awardXReferralReward(userId: number) {
+export async function awardXReferralReward(userId: UserId) {
 	const xpReward = await getSettingInt('X_REFERRAL_XP', 50);
 	const dgtReward = await getSettingInt('X_REFERRAL_DGT', 100);
 

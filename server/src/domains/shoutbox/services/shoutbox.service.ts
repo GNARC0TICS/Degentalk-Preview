@@ -10,6 +10,7 @@
  */
 
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import {
 	shoutboxMessages,
 	chatRooms,
@@ -27,7 +28,7 @@ import type { NewShoutboxConfig, ShoutboxConfig } from '@schema/admin/shoutboxCo
 import type { RoomId } from '@/db/types';
 
 interface MessageContext {
-	userId: number;
+	userId: UserId;
 	username: string;
 	roomId: RoomId;
 	content: string;

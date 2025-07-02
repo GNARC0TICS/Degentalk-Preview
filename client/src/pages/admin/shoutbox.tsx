@@ -26,7 +26,7 @@ import {
 	EyeOff,
 	RefreshCw
 } from 'lucide-react';
-import type { RoomId, GroupId } from '@db/types';
+import type { RoomId, GroupId, UserId } from '@db/types';
 
 interface ShoutboxConfig {
 	id: string;
@@ -65,7 +65,7 @@ interface ShoutboxConfig {
 }
 
 interface ChatRoom {
-	id: number;
+	id: RoomId;
 	name: string;
 	description: string | null;
 	isPrivate: boolean;
@@ -73,7 +73,7 @@ interface ChatRoom {
 	minGroupIdRequired: GroupId | null;
 	order: number | null;
 	createdAt: string;
-	createdBy: number;
+	createdBy: UserId;
 	isDeleted: boolean;
 	accessRoles: string[] | null;
 	themeConfig: Record<string, any>;

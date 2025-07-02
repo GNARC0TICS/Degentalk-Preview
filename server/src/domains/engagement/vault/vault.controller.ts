@@ -13,6 +13,7 @@ import { WalletError, ErrorCodes } from '../../../core/errors'; // Changed Walle
 import { asyncHandler } from '@server/src/core/errors';
 import { logger } from '../../../core/logger';
 import { VaultService } from './vault.service';
+import type { EntityId } from '@db/types';
 // import { VaultError, VaultErrorCodes } from './vault.errors'; // Removed as file not found and errors not used
 
 /**
@@ -94,7 +95,7 @@ export class VaultController {
 			});
 		}
 
-		const vaultLockId = parseInt(req.params.id);
+		const vaultLockId = req.params.id as EntityId;
 
 		if (!vaultLockId) {
 			return res.status(400).json({

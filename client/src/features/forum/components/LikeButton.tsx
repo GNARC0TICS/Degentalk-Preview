@@ -1,6 +1,7 @@
 import React from 'react';
 import { Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import type { PostId } from '@db/types';
 
 interface LikeButtonProps {
 	postId: number; // Retained for context, though not directly used in this simplified version

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { asyncHandler } from '../../admin.middleware';
 import { shopCategoryService } from './shopCategory.service';
+import type { EntityId } from '@db/types';
 
 const router = Router();
 
@@ -23,7 +24,7 @@ router.post(
 router.put(
 	'/:id',
 	asyncHandler(async (req, res) => {
-		const id = parseInt(req.params.id);
+		const id = req.params.id as EntityId;
 		const updated = await shopCategoryService.update(id, req.body);
 		res.json(updated);
 	})
@@ -32,7 +33,7 @@ router.put(
 router.delete(
 	'/:id',
 	asyncHandler(async (req, res) => {
-		const id = parseInt(req.params.id);
+		const id = req.params.id as EntityId;
 		const result = await shopCategoryService.delete(id);
 		res.json(result);
 	})

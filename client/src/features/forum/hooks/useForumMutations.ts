@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { forumApi } from '../services/forumApi';
 import { apiPost } from '@/lib/api-request';
 import type { PostWithUser } from '@/types/compat/forum';
-import type { EntityId, ContentId } from '@db/types';
+import type { EntityId, ContentId, ThreadId, PostId, UserId } from '@db/types';
 
 // Utility for standardized error handling
 const createErrorHandler = (action: string) => (error: unknown) => {
@@ -33,10 +33,10 @@ export const useQuotePost = () => {
 			replyContent,
 			replyToPostId
 		}: {
-			threadId: number;
+			threadId: ThreadId;
 			quotedContent: string;
 			replyContent: string;
-			replyToPostId?: number;
+			replyToPostId?: PostId;
 		}) => {
 			const fullContent = quotedContent + replyContent;
 			return forumApi.createPost({
@@ -89,7 +89,7 @@ export const useAwardForumXP = () => {
 			entityId,
 			forumSlug
 		}: {
-			userId: number;
+			userId: UserId;
 			action: 'create_thread' | 'create_post';
 			entityId: EntityId;
 			forumSlug?: string;
@@ -130,7 +130,7 @@ export const useAwardForumDGT = () => {
 			context,
 			forumSlug
 		}: {
-			userId: number;
+			userId: UserId;
 			amount: number;
 			reason: string;
 			entityId: EntityId;

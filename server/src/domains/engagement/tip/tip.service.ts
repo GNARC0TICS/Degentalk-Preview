@@ -7,6 +7,7 @@
  */
 
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import { users, transactions } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
@@ -62,8 +63,8 @@ const tipSettings = pgTable('tip_settings', {
  * Tip request structure
  */
 export interface TipRequest {
-	fromUserId: number;
-	toUserId: number;
+	fromUserId: UserId;
+	toUserId: UserId;
 	amount: number;
 	currency: string; // DGT or crypto currency code
 	source: string; // forum, shoutbox, etc.
@@ -76,8 +77,8 @@ export interface TipRequest {
  */
 export interface TipResponse {
 	id: number;
-	fromUserId: number;
-	toUserId: number;
+	fromUserId: UserId;
+	toUserId: UserId;
 	amount: number;
 	currency: string;
 	source: string;
@@ -195,8 +196,8 @@ export class TipService {
 	 * Validate tip settings, including limits and cooldowns
 	 */
 	private async validateTipSettings(
-		fromUserId: number,
-		toUserId: number,
+		fromUserId: UserId,
+		toUserId: UserId,
 		amount: number,
 		currency: string,
 		source: string
@@ -289,7 +290,7 @@ export class TipService {
 	 * Get tip history for a user (sent or received)
 	 */
 	async getTipHistory(
-		userId: number,
+		userId: UserId,
 		type: 'sent' | 'received' = 'both',
 		limit: number = 20,
 		offset: number = 0

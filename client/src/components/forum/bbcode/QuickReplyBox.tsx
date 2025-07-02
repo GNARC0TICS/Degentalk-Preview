@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { cn } from '@/lib/utils';
+import type { ThreadId } from '@db/types';
 
 interface QuickReplyBoxProps {
-	threadId: number;
+	threadId: ThreadId;
 	threadTitle: string;
 	userAvatar?: string;
 	username?: string;

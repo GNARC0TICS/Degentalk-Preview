@@ -1,4 +1,5 @@
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import { eq, and, gte, lte, SQL, isNull, inArray } from 'drizzle-orm';
 import {
 	missions,
@@ -12,7 +13,7 @@ import { logger } from '../../core/logger';
 import { addDays, startOfDay, endOfDay, isBefore, format, parse, addWeeks } from 'date-fns';
 
 interface MissionProgressUpdate {
-	userId: number;
+	userId: UserId;
 	actionType: MissionType;
 	metadata?: Record<string, any>;
 }
@@ -139,7 +140,7 @@ export class MissionsService {
 	 * Get user's mission progress
 	 */
 	async getUserMissionProgress(
-		userId: number
+		userId: UserId
 	): Promise<(UserMissionProgress & { mission: Mission })[]> {
 		try {
 			// Get all active missions
@@ -186,7 +187,7 @@ export class MissionsService {
 	 * Called when a user accesses missions for the first time or when new missions are added
 	 */
 	private async initializeMissionsForUser(
-		userId: number,
+		userId: UserId,
 		missionsToInit: Mission[]
 	): Promise<void> {
 		try {
@@ -423,7 +424,7 @@ export class MissionsService {
 	 * Claim rewards for a completed mission
 	 */
 	async claimMissionReward(
-		userId: number,
+		userId: UserId,
 		missionId: number
 	): Promise<{
 		success: boolean;

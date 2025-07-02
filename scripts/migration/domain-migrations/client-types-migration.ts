@@ -8,7 +8,6 @@
  */
 
 import { readFileSync, writeFileSync } from 'fs';
-import { Project, SourceFile, SyntaxKind } from 'ts-morph';
 import { glob } from 'glob';
 
 interface MigrationResult {
@@ -28,16 +27,11 @@ interface Change {
 }
 
 class ClientTypesMigration {
-  private project: Project;
   private results: MigrationResult[] = [];
   private dryRun: boolean;
 
   constructor(dryRun: boolean = true) {
     this.dryRun = dryRun;
-    this.project = new Project({
-      tsConfigFilePath: './tsconfig.json',
-      skipAddingFilesFromTsConfig: true
-    });
   }
 
   async migrate(): Promise<void> {

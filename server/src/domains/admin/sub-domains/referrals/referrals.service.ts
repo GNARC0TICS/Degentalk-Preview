@@ -1,4 +1,5 @@
 import { eq, sql } from 'drizzle-orm';
+import type { UserId } from '@db/types';
 import { db } from '../../../../core/db';
 import { referralSources } from '@schema/system/referralSources';
 import { userReferrals } from '@schema/system/userReferrals';
@@ -54,7 +55,7 @@ export class ReferralsService {
 	 * @returns The created user referral or null if already exists
 	 */
 	async recordUserReferral(params: {
-		userId: number;
+		userId: UserId;
 		referredByUserId?: number;
 		sourceSlug: string;
 	}) {

@@ -1,7 +1,9 @@
+import type { EntityId } from '@db/types';
+
 export type MentionType = 'thread' | 'post' | 'shoutbox' | 'whisper';
 
 export interface MentionRecord {
-	id: number;
+	id: EntityId;
 	mentionedUserId: string;
 	mentioningUserId: string;
 	type: MentionType;
@@ -17,7 +19,7 @@ export interface MentionRecord {
 }
 
 export interface UserMentionPreferences {
-	id: number;
+	id: EntityId;
 	userId: string;
 	emailNotifications: boolean;
 	pushNotifications: boolean;

@@ -64,6 +64,7 @@ import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import type { CloutAchievement } from '@/pages/admin/clout';
+import type { AchievementId } from '@db/types';
 
 interface AchievementsSectionProps {
 	achievements: CloutAchievement[];
@@ -161,7 +162,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 
 	// Update achievement mutation
 	const updateAchievementMutation = useMutation({
-		mutationFn: async (data: AchievementForm & { id: number }) => {
+		mutationFn: async (data: AchievementForm & { id: AchievementId }) => {
 			const { id, ...updateData } = data;
 			return apiRequest({
 				url: `/api/admin/clout/achievements/${id}`,
@@ -189,7 +190,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 
 	// Delete achievement mutation
 	const deleteAchievementMutation = useMutation({
-		mutationFn: async (id: number) => {
+		mutationFn: async (id: AchievementId) => {
 			return apiRequest({
 				url: `/api/admin/clout/achievements/${id}`,
 				method: 'DELETE'
@@ -215,7 +216,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 
 	// Toggle achievement mutation
 	const toggleAchievementMutation = useMutation({
-		mutationFn: async (id: number) => {
+		mutationFn: async (id: AchievementId) => {
 			return apiRequest({
 				url: `/api/admin/clout/achievements/${id}/toggle`,
 				method: 'POST'

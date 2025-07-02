@@ -1,10 +1,10 @@
 // No canonical AvatarFrame yet; define minimal shape here.
 
-import type { UserId } from '@db/types';
+import type { FrameId } from '@db/types';
 
 // Minimal AvatarFrame interface replicating schema for frontend usage
 export interface AvatarFrame {
-	id: UserId;
+	id: FrameId;
 	name: string;
 	imageUrl: string;
 	rarity?: string;

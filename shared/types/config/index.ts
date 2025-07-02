@@ -96,7 +96,6 @@ export {
   PostMetadataSchema,
   WalletSchema,
   WalletFeaturesSchema,
-  WalletLimitsSchema,
   TransactionSchema,
   TransactionMetadataSchema,
   ShopItemSchema,

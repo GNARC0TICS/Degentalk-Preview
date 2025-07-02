@@ -1,5 +1,6 @@
 import { db } from '@db';
 import { products, avatarFrames, userOwnedFrames } from '@schema';
+import type { UserId } from '@db/types';
 import { eq, and } from 'drizzle-orm';
 import { dgtService } from '../wallet/dgt.service';
 
@@ -71,7 +72,7 @@ class AvatarFrameStoreService {
 				.select()
 				.from(userOwnedFrames)
 				.where(
-					and(eq(userOwnedFrames.userId, parseInt(userId)), eq(userOwnedFrames.frameId, frameId))
+					and(eq(userOwnedFrames.userId, userId as UserId), eq(userOwnedFrames.frameId, frameId))
 				)
 				.limit(1);
 
@@ -97,7 +98,7 @@ class AvatarFrameStoreService {
 
 			// Grant frame ownership
 			await db.insert(userOwnedFrames).values({
-				userId: parseInt(userId),
+				userId: userId as UserId,
 				frameId: frameId,
 				purchasedAt: new Date(),
 				isActive: false // User needs to manually equip

@@ -11,10 +11,11 @@ import { cn } from '@/lib/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import { getAdaptiveConfig } from '@/utils/adaptiveSpacing';
 import type { PostWithUser } from '@/types/compat/forum';
+import type { ThreadId, PostId } from '@db/types';
 
 interface ReplyFormProps {
-	threadId: number;
-	replyToId?: number | null;
+	threadId: ThreadId;
+	replyToId?: PostId | null;
 	replyToPost?: PostWithUser | null;
 	onSubmit: (content: string, editorState?: Record<string, unknown>) => Promise<void>;
 	showRichEditor?: boolean;

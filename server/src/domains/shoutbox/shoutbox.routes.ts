@@ -7,7 +7,7 @@ import { userService } from '@server/src/core/services/user.service';
 
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import type { MessageId } from '@db/types';
+import type { MessageId, UserId } from '@db/types';
 import { db } from '@db';
 import {
 	shoutboxMessages,
@@ -27,7 +27,7 @@ import { getUserId } from '../auth/services/auth.service';
 import { canUser } from '@lib/auth/canUser.ts';
 import { logger } from '@server/src/core/logger';
 import { MentionsService } from '../social/mentions.service';
-import type { RoomId, GroupId } from '@/db/types';
+import type { RoomId, GroupId } from '@db/types';
 
 // Rate limiting for shoutbox messages (10 seconds cooldown)
 const userLastMessageTime = new Map<UserId, number>();
@@ -203,10 +203,6 @@ router.delete('/messages/:id', isAdminOrModerator, async (req: Request, res: Res
 	try {
 		const messageId = req.params.id as MessageId;
 
-		if (isNaN(messageId)) {
-			return res.status(400).json({ error: 'Invalid message ID' });
-		}
-
 		// Check if message exists
 		const existingMessage = await db
 			.select()
@@ -277,7 +273,7 @@ router.delete('/messages/:id', isAdminOrModerator, async (req: Request, res: Res
 router.get('/messages', async (req: Request, res: Response) => {
 	try {
 		const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
-		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : null;
+		const roomId = req.query.roomId ? (req.query.roomId as string) as RoomId : null;
 		const currentUserId = userService.getUserFromRequest(req);
 
 		// Check if the user has access to the specified room
@@ -418,7 +414,7 @@ router.get('/messages', async (req: Request, res: Response) => {
 
 		res.json(messages);
 	} catch (error) {
-		const roomIdForLog = req.query.roomId ? parseInt(req.query.roomId as string) : null;
+		const roomIdForLog = req.query.roomId ? (req.query.roomId as string) as RoomId : null;
 		const limitForLog = req.query.limit ? parseInt(req.query.limit as string) : 50;
 		logger.error('ShoutboxRoutes', 'Error fetching shoutbox messages', {
 			err: error,
@@ -559,10 +555,6 @@ router.patch('/messages/:id', isAdminOrModerator, async (req: Request, res: Resp
 	try {
 		const messageId = req.params.id as MessageId;
 
-		if (isNaN(messageId)) {
-			return res.status(400).json({ error: 'Invalid message ID' });
-		}
-
 		// Check if message exists
 		const existingMessage = await db
 			.select()
@@ -633,7 +625,7 @@ router.patch('/messages/:id', isAdminOrModerator, async (req: Request, res: Resp
 		});
 	} catch (error) {
 		// console.error('Error updating shoutbox message:', error); // Original console.error removed
-		const messageIdForLog = parseInt(req.params.id); // Ensure messageId is available
+		const messageIdForLog = req.params.id as MessageId; // Ensure messageId is available
 		const isPinnedForLog = req.body.isPinned; // Ensure isPinned is available
 		logger.error('ShoutboxRoutes', 'Error updating shoutbox message', {
 			err: error,

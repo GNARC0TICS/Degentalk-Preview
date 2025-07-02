@@ -17,7 +17,7 @@ import type { ApiErrorData } from '@/types/core.types';
 import type { ReportId, ForumId, TagId, ContentId, PrefixId, ThreadId, PostId } from '@db/types';
 
 export interface ThreadSearchParams {
-	structureId?: number;
+	structureId?: ForumId;
 	prefix?: string;
 	tag?: string;
 	page?: number;
@@ -153,10 +153,10 @@ export const forumApi = {
 	},
 
 	updateThread: async (
-		threadId: number,
+		threadId: ThreadId,
 		data: {
 			title?: string;
-			structureId?: number;
+			structureId?: ForumId;
 			prefixId?: PrefixId;
 			isLocked?: boolean;
 			isSticky?: boolean;
@@ -182,7 +182,7 @@ export const forumApi = {
 	/**
 	 * Solved/Unsolved Thread Actions
 	 */
-	solveThread: async (threadId: ThreadId, postId?: number): Promise<ThreadWithUser> => {
+	solveThread: async (threadId: ThreadId, postId?: PostId): Promise<ThreadWithUser> => {
 		const directResult = await apiRequest<ThreadWithUser>({
 			url: `/api/forum/threads/${threadId}/solve`,
 			method: 'POST',
@@ -248,7 +248,7 @@ export const forumApi = {
 	 * Posts (Replies)
 	 */
 	getPosts: async (
-		threadId: number,
+		threadId: ThreadId,
 		params?: {
 			page?: number;
 			limit?: number;
@@ -301,7 +301,7 @@ export const forumApi = {
 	},
 
 	updatePost: async (
-		postId: number,
+		postId: PostId,
 		data: {
 			content: string;
 			editorState?: Record<string, unknown>;
@@ -333,7 +333,7 @@ export const forumApi = {
 	 * Reactions
 	 */
 	reactToPost: async (
-		postId: number,
+		postId: PostId,
 		reactionType: 'like' | 'dislike'
 	): Promise<{ success: true; message: string }> => {
 		const directResult = await apiRequest<{ success: true; message: string }>({
@@ -345,7 +345,7 @@ export const forumApi = {
 	},
 
 	tipPost: async (
-		postId: number,
+		postId: PostId,
 		amount: number
 	): Promise<{
 		success: true;

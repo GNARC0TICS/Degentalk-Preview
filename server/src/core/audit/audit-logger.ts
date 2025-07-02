@@ -5,6 +5,7 @@
  */
 
 import { logger } from '../logger';
+import type { UserId } from '@db/types';
 import { userService } from '../services/user.service';
 import fs from 'fs/promises';
 import path from 'path';
@@ -154,7 +155,7 @@ class AuditLogger {
 			AuditEventType,
 			'auth.login' | 'auth.logout' | 'auth.failed_login' | 'auth.password_change'
 		>,
-		userId: number | undefined,
+		userId: UserId | undefined,
 		username: string | undefined,
 		ipAddress: string,
 		userAgent?: string,
@@ -186,7 +187,7 @@ class AuditLogger {
 			| 'forum.moderation_action'
 		>,
 		action: string,
-		userId: number,
+		userId: UserId,
 		username: string,
 		ipAddress: string,
 		target: AuditEvent['target'],
@@ -216,7 +217,7 @@ class AuditLogger {
 			'admin.user_role_changed' | 'admin.system_config_changed' | 'admin.data_export'
 		>,
 		action: string,
-		userId: number,
+		userId: UserId,
 		username: string,
 		ipAddress: string,
 		target?: AuditEvent['target'],
@@ -271,7 +272,7 @@ class AuditLogger {
 	async logWallet(
 		type: Extract<AuditEventType, 'wallet.transaction' | 'wallet.deposit' | 'wallet.withdrawal'>,
 		action: string,
-		userId: number,
+		userId: UserId,
 		username: string,
 		ipAddress: string,
 		amount: number,

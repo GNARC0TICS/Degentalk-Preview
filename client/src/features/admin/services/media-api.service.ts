@@ -1,9 +1,10 @@
 import { apiRequest } from '@/lib/queryClient';
+import type { EntityId } from '@db/types';
 
 export type MediaType = 'emoji' | 'lottie' | 'badge' | 'title' | 'flair';
 
 export interface MediaItem {
-	id: number;
+	id: EntityId;
 	url: string;
 	type: MediaType;
 	createdAt: string;
@@ -39,7 +40,7 @@ export class MediaApiService {
 		return this.listMedia('lottie');
 	}
 
-	async deleteMedia(id: number): Promise<void> {
+	async deleteMedia(id: EntityId): Promise<void> {
 		return apiRequest<void>({ url: `/api/admin/media/${id}`, method: 'DELETE' });
 	}
 }

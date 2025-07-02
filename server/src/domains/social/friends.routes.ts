@@ -1,5 +1,6 @@
 import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
+import type { EntityId } from '@db/types';
 import { FriendsService } from './friends.service';
 import { requireAuth } from '../../../middleware/auth';
 import { z } from 'zod';
@@ -86,12 +87,8 @@ router.post('/request', requireAuth, async (req, res) => {
  */
 router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
 	try {
-		const requestId = parseInt(req.params.requestId);
+		const requestId = req.params.requestId as EntityId;
 		const { response } = respondToRequestSchema.parse(req.body);
-
-		if (isNaN(requestId)) {
-			return res.status(400).json({ error: 'Invalid request ID' });
-		}
 
 		const result = await FriendsService.respondToFriendRequest(requestId, response);
 

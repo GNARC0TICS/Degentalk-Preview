@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import type { UserId } from '@db/types';
 import { db } from '../../core/db';
 import { users } from '@schema/user/users';
 
@@ -12,7 +13,7 @@ import { users } from '@schema/user/users';
  * Get a user's referral stats
  * @param userId The user ID
  */
-export async function getUserReferrals(userId: number) {
+export async function getUserReferrals(userId: UserId) {
 	// Get all users referred by this user
 	const referrals = await db.query.users.findMany({
 		where: eq(users.referrerId, userId)
@@ -39,7 +40,7 @@ export async function getUserReferrals(userId: number) {
  * Get a user's referral link
  * @param userId The user ID
  */
-export async function getUserReferralLink(userId: number) {
+export async function getUserReferralLink(userId: UserId) {
 	// Get user data
 	const user = await db.query.users.findFirst({
 		where: eq(users.id, userId)

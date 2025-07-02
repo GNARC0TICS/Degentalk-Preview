@@ -11,6 +11,7 @@
  */
 
 import { logger } from '../../../core/logger';
+import type { UserId } from '@db/types';
 import { db } from '@db';
 import { dgtService } from '../wallet/dgt.service';
 import { tipService } from './tip/tip.service';
@@ -34,8 +35,8 @@ export class EngagementService {
 	 * @param contentReference Optional content reference (post/thread ID)
 	 */
 	async processTip(
-		fromUserId: number,
-		toUserId: number,
+		fromUserId: UserId,
+		toUserId: UserId,
 		amount: bigint,
 		reason?: string,
 		contentReference?: {
@@ -67,7 +68,7 @@ export class EngagementService {
 	 * @param channelId Optional channel ID for targeting
 	 */
 	async processRain(
-		fromUserId: number,
+		fromUserId: UserId,
 		amount: bigint,
 		recipientCount: number,
 		channelId?: number
@@ -97,7 +98,7 @@ export class EngagementService {
 	 */
 	async processAirdrop(
 		adminUserId: AdminUserId,
-		targetUserIds: number[],
+		targetUserIds: UserId[],
 		amount: bigint,
 		reason: string
 	) {
@@ -121,7 +122,7 @@ export class EngagementService {
 	 *
 	 * @param userId User ID
 	 */
-	async getUserEngagementStats(userId: number) {
+	async getUserEngagementStats(userId: UserId) {
 		try {
 			// Get tip stats
 			const tipStats = await tipService.getUserTipStats(userId);

@@ -17,6 +17,7 @@ import {
 	roles as rolesTable,
 	forumStructure
 } from '@schema';
+import type { UserId } from '@db/types';
 import { eq, sql, and, desc, gte, lt, asc, gt, count } from 'drizzle-orm';
 import { db } from '@db';
 import { MissionsService } from '../missions/missions.service';
@@ -428,7 +429,7 @@ export class XpService {
 	 */
 	private async updateActionLimits(userId: UserId, action: XP_ACTION): Promise<void> {
 		// This method is a placeholder and currently does nothing as limits are log-based.
-		// private async updateActionLimits(userId: number, action: XP_ACTION): Promise<void> {
+		// private async updateActionLimits(userId: UserId, action: XP_ACTION): Promise<void> {
 		//   const actionConfig = await getXpAction(action); // Use getXpAction
 		//
 		//   if (!actionConfig || !actionConfig.enabled) {

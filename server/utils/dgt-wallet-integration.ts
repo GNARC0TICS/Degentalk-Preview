@@ -1,5 +1,6 @@
 import { db } from '../db';
 import { sql } from 'drizzle-orm';
+import type { UserId } from '@db/types';
 import Stripe from 'stripe';
 
 // Initialize Stripe with secret key if available
@@ -71,7 +72,7 @@ export class DgtWalletIntegration {
 	 * Create Stripe checkout session for DGT purchase
 	 */
 	static async createStripeCheckoutSession(params: {
-		userId: number;
+		userId: UserId;
 		packageId: string;
 		successUrl: string;
 		cancelUrl: string;
@@ -160,7 +161,7 @@ export class DgtWalletIntegration {
 	 * Process USDT purchase for DGT
 	 */
 	static async processUsdtPurchase(params: {
-		userId: number;
+		userId: UserId;
 		packageId: string;
 		usdtAmount: number;
 		txHash: string;
@@ -217,7 +218,7 @@ export class DgtWalletIntegration {
 	/**
 	 * Get user's DGT purchase history
 	 */
-	static async getUserDgtPurchaseHistory(userId: number, limit = 20, offset = 0) {
+	static async getUserDgtPurchaseHistory(userId: UserId, limit = 20, offset = 0) {
 		try {
 			const purchases = await db.execute(sql`
         SELECT 

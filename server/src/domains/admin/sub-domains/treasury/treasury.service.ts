@@ -5,6 +5,7 @@
  */
 
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import {
 	users,
 	transactions,
@@ -233,7 +234,7 @@ export class AdminTreasuryService {
 			});
 
 			const airdropResults: Array<{
-				userId: number;
+				userId: UserId;
 				username: string;
 				amount: number;
 				transactionId?: ActionId;

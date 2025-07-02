@@ -9,6 +9,7 @@
  */
 
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import {
 	transactions,
 	users,
@@ -50,7 +51,7 @@ export class RainService {
 	 * @returns Rain transaction details
 	 */
 	async processRain(
-		senderUserId: number,
+		senderUserId: UserId,
 		amount: number,
 		currency: string,
 		userCount: number,
@@ -270,10 +271,10 @@ export class RainService {
 	 * Process DGT rain by using dgtService for transfers
 	 */
 	private async processDGTRain(
-		senderUserId: number,
+		senderUserId: UserId,
 		totalAmount: number,
 		perUserAmount: number,
-		recipientIds: number[],
+		recipientIds: UserId[],
 		transactionId: ActionId
 	): Promise<void> {
 		// Process rain for each recipient individually
@@ -369,7 +370,7 @@ export class RainService {
 	 * @param userId - User ID
 	 * @param commandType - 'tip' or 'rain'
 	 */
-	private async checkCooldowns(userId: number, commandType: 'tip' | 'rain'): Promise<void> {
+	private async checkCooldowns(userId: UserId, commandType: 'tip' | 'rain'): Promise<void> {
 		try {
 			// Get user to check group (admin/mod for bypass)
 			const [user] = await db
@@ -464,7 +465,7 @@ export class RainService {
 	 * @param userId - User ID
 	 * @param commandType - 'tip' or 'rain'
 	 */
-	private async updateLastCommandTime(userId: number, commandType: 'tip' | 'rain'): Promise<void> {
+	private async updateLastCommandTime(userId: UserId, commandType: 'tip' | 'rain'): Promise<void> {
 		try {
 			await db.execute(sql`
         INSERT INTO user_commands (user_id, command_type, executed_at)
@@ -517,7 +518,7 @@ export class RainService {
 	 * @param settings Settings to update
 	 * @returns Updated settings
 	 */
-	async updateRainSettings(userId: number, settings: any) {
+	async updateRainSettings(userId: UserId, settings: any) {
 		try {
 			// First check if settings exist
 			const existingSettings = await db.select().from(rainSettings).limit(1);

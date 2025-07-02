@@ -67,6 +67,7 @@ import { Badge } from '@/components/ui/badge';
 import { useLocation } from 'wouter'; // Fixed import for useLocation
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { apiRequest } from '@/lib/api-request';
+import type { CategoryId } from '@db/types';
 
 const categorySchema = z.object({
 	name: z
@@ -80,13 +81,13 @@ const categorySchema = z.object({
 		.max(50, 'Slug must be at most 50 characters')
 		.regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
 	isVisible: z.boolean().default(true),
-	parentId: z.number().nullable().default(null),
+	parentId: z.custom<CategoryId>().nullable().default(null),
 	position: z.number().int().min(0).default(0),
 	icon: z.string().optional()
 });
 
 type Category = z.infer<typeof categorySchema> & {
-	id: number;
+	id: CategoryId;
 	threadCount: number;
 	postCount: number;
 	createdAt: string;
@@ -143,7 +144,7 @@ export default function AdminCategoriesPage() {
 	});
 
 	const editCategoryMutation = useMutation({
-		mutationFn: async (data: z.infer<typeof categorySchema> & { id: number }) => {
+		mutationFn: async (data: z.infer<typeof categorySchema> & { id: CategoryId }) => {
 			const { id, ...categoryData } = data;
 			return apiRequest<any>({ url: `/admin/forum/categories/${id}`, method: 'PUT', data });
 		},
@@ -158,7 +159,7 @@ export default function AdminCategoriesPage() {
 	});
 
 	const deleteCategoryMutation = useMutation({
-		mutationFn: async (id: number) => {
+		mutationFn: async (id: CategoryId) => {
 			return apiRequest<any>({ url: `/admin/forum/categories/${id}`, method: 'DELETE' });
 		},
 		onSuccess: () => {
@@ -172,7 +173,7 @@ export default function AdminCategoriesPage() {
 	});
 
 	const reorderCategoryMutation = useMutation({
-		mutationFn: async ({ id, direction }: { id: number; direction: 'up' | 'down' }) => {
+		mutationFn: async ({ id, direction }: { id: CategoryId; direction: 'up' | 'down' }) => {
 			return apiRequest<any>({
 				url: `/admin/forum/categories/${id}/reorder`,
 				method: 'POST',

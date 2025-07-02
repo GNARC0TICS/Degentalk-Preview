@@ -7,6 +7,7 @@ import { eq, and, desc } from 'drizzle-orm';
 import { isAdminOrModerator } from '../../../auth/middleware/auth.middleware';
 import { getUserIdFromRequest } from '@server/src/utils/auth';
 import { logger } from '@server/src/core/logger';
+import type { EntityId } from '@db/types';
 
 const router = Router();
 
@@ -102,12 +103,8 @@ router.get('/', isAdminOrModerator, async (req, res) => {
 // Delete a moderator note (admin only)
 router.delete('/:id', isAdminOrModerator, async (req, res) => {
 	try {
-		const noteId = parseInt(req.params.id);
+		const noteId = req.params.id as EntityId;
 		const userId = getUserIdFromRequest(req);
-
-		if (isNaN(noteId)) {
-			return res.status(400).json({ error: 'Invalid note ID' });
-		}
 
 		// Check if note exists and user can delete it
 		const [existingNote] = await db

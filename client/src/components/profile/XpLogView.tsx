@@ -27,7 +27,7 @@ import {
 	DropdownMenuContent,
 	DropdownMenuCheckboxItem
 } from '@/components/ui/dropdown-menu';
-import type { OrderId } from '@db/types';
+import type { OrderId, PostId, ThreadId, EntityId } from '@db/types';
 
 // Types
 /**
@@ -41,21 +41,21 @@ import type { OrderId } from '@db/types';
  * More can be added as needed.
  */
 export interface XpLogMetadata {
-	postId?: number;
-	threadId?: number;
-	badgeId?: number;
-	titleId?: number;
-	frameId?: number;
+	postId?: PostId;
+	threadId?: ThreadId;
+	badgeId?: EntityId;
+	titleId?: EntityId;
+	frameId?: EntityId;
 	referrerId?: string;
 	referredUserId?: string;
-	productId?: number;
+	productId?: EntityId;
 	orderId?: OrderId;
 	adminId?: string;
 	[key: string]: string | number | boolean | undefined;
 }
 
 interface XpLogEntry {
-	id: number;
+	id: EntityId;
 	userId: string; // UUID
 	eventType: string;
 	delta: number;

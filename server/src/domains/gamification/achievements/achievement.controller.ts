@@ -6,6 +6,7 @@
  */
 
 import type { Request, Response } from 'express';
+import type { AchievementId } from '@db/types';
 import { AchievementProcessorService } from './achievement-processor.service';
 import { AchievementAdminService } from './achievement-admin.service';
 import { AchievementEventEmitter } from '../../../core/events/achievement-events.service';
@@ -170,7 +171,7 @@ export class AchievementController {
 	async getAchievementById(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const achievement = await this.adminService.getAchievementById(parseInt(id));
+			const achievement = await this.adminService.getAchievementById(id as AchievementId);
 
 			if (!achievement) {
 				res.status(404).json({
@@ -227,7 +228,7 @@ export class AchievementController {
 	async updateAchievement(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const achievement = await this.adminService.updateAchievement(parseInt(id), req.body);
+			const achievement = await this.adminService.updateAchievement(id as AchievementId, req.body);
 
 			res.json({
 				success: true,
@@ -253,7 +254,7 @@ export class AchievementController {
 	async deleteAchievement(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			await this.adminService.deleteAchievement(parseInt(id));
+			await this.adminService.deleteAchievement(id as AchievementId);
 
 			res.json({
 				success: true,
@@ -307,7 +308,7 @@ export class AchievementController {
 			const { page = '1', limit = '50' } = req.query;
 
 			const result = await this.adminService.getAchievementCompletions(
-				parseInt(id),
+				id as AchievementId,
 				parseInt(page as string),
 				parseInt(limit as string)
 			);
@@ -343,7 +344,7 @@ export class AchievementController {
 			const { id } = req.params;
 			const { userIds, reason } = req.body;
 
-			await this.adminService.manuallyAwardAchievement(parseInt(id), userIds, reason);
+			await this.adminService.manuallyAwardAchievement(id as AchievementId, userIds, reason);
 
 			res.json({
 				success: true,

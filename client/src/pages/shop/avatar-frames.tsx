@@ -9,9 +9,10 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { Coins, Check, Sparkles } from 'lucide-react';
+import type { FrameId } from '@db/types';
 
 interface StoreFrame {
-	id: number;
+	id: FrameId;
 	name: string;
 	imageUrl: string;
 	rarity: keyof typeof frameRarityConfig;
@@ -23,8 +24,8 @@ interface StoreFrame {
 export default function AvatarFramesShopPage() {
 	const queryClient = useQueryClient();
 	const { toast } = useToast();
-	const [activeEquipped, setActiveEquipped] = useState<number | null>(null);
-	const [ownedFrames, setOwnedFrames] = useState<Set<number>>(new Set());
+	const [activeEquipped, setActiveEquipped] = useState<FrameId | null>(null);
+	const [ownedFrames, setOwnedFrames] = useState<Set<FrameId>>(new Set());
 
 	// Fetch frames for sale
 	const {
@@ -37,8 +38,8 @@ export default function AvatarFramesShopPage() {
 	});
 
 	// Purchase mutation
-	const purchaseMutation = useMutation<{ success: boolean }, Error, number>({
-		mutationFn: (frameId: number) =>
+	const purchaseMutation = useMutation<{ success: boolean }, Error, FrameId>({
+		mutationFn: (frameId: FrameId) =>
 			apiRequest({ url: `/api/store/avatar-frames/${frameId}/purchase`, method: 'POST' }),
 		onSuccess: (_data, frameId) => {
 			setOwnedFrames((prev) => new Set(prev).add(frameId));

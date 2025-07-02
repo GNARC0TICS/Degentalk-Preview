@@ -6,6 +6,7 @@
 
 import { Router } from 'express';
 import type { Request, Response } from 'express';
+import type { UserId } from '@db/types';
 import { z } from 'zod';
 import { db } from '@db';
 import { randomUUID } from 'crypto';
@@ -73,7 +74,7 @@ router.get('/conversation/:userId', isAuthenticated, async (req: Request, res: R
 		if (currentUserId === undefined) {
 			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
 		}
-		const otherUserId = parseInt(req.params.userId);
+		const otherUserId = req.params.userId as UserId;
 
 		if (isNaN(otherUserId)) {
 			return res.status(400).json({ message: 'Invalid user ID' });
@@ -169,7 +170,7 @@ router.post('/mark-read/:userId', isAuthenticated, async (req: Request, res: Res
 		if (currentUserId === undefined) {
 			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
 		}
-		const senderId = parseInt(req.params.userId);
+		const senderId = req.params.userId as UserId;
 
 		if (isNaN(senderId)) {
 			return res.status(400).json({ message: 'Invalid user ID' });
@@ -204,7 +205,7 @@ router.delete('/conversation/:userId', isAuthenticated, async (req: Request, res
 		if (currentUserId === undefined) {
 			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
 		}
-		const otherUserId = parseInt(req.params.userId);
+		const otherUserId = req.params.userId as UserId;
 
 		if (isNaN(otherUserId)) {
 			return res.status(400).json({ message: 'Invalid user ID' });

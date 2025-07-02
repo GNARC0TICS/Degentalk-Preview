@@ -9,7 +9,7 @@ import type { PackId, StickerId } from '@db/types';
 
 // Types
 export interface Sticker {
-	id: number;
+	id: StickerId;
 	name: string;
 	displayName: string;
 	shortcode: string;
@@ -42,7 +42,7 @@ export interface Sticker {
 }
 
 export interface StickerPack {
-	id: number;
+	id: PackId;
 	name: string;
 	displayName: string;
 	description?: string;
@@ -200,7 +200,7 @@ export class StickerApiService {
 	/**
 	 * Get single sticker by ID
 	 */
-	async getSticker(id: number): Promise<ApiResponse<{ sticker: Sticker }>> {
+	async getSticker(id: StickerId): Promise<ApiResponse<{ sticker: Sticker }>> {
 		return apiRequest<ApiResponse<{ sticker: Sticker }>>({
 			url: `${this.baseUrl}/stickers/${id}`,
 			method: 'GET'
@@ -224,7 +224,7 @@ export class StickerApiService {
 	 * Update existing sticker
 	 */
 	async updateSticker(
-		id: number,
+		id: StickerId,
 		data: UpdateStickerData
 	): Promise<ApiResponse<{ message: string }>> {
 		return apiRequest<ApiResponse<{ message: string }>>({
@@ -237,7 +237,7 @@ export class StickerApiService {
 	/**
 	 * Delete sticker (soft delete)
 	 */
-	async deleteSticker(id: number): Promise<ApiResponse<{ message: string }>> {
+	async deleteSticker(id: StickerId): Promise<ApiResponse<{ message: string }>> {
 		return apiRequest<ApiResponse<{ message: string }>>({
 			url: `${this.baseUrl}/stickers/${id}`,
 			method: 'DELETE'
@@ -248,7 +248,7 @@ export class StickerApiService {
 	 * Bulk delete stickers
 	 */
 	async bulkDeleteStickers(
-		ids: number[]
+		ids: StickerId[]
 	): Promise<ApiResponse<{ deletedCount: number; message: string }>> {
 		return apiRequest<ApiResponse<{ deletedCount: number; message: string }>>({
 			url: `${this.baseUrl}/stickers/bulk-delete`,
@@ -275,7 +275,7 @@ export class StickerApiService {
 	/**
 	 * Get single sticker pack by ID
 	 */
-	async getStickerPack(id: number): Promise<ApiResponse<{ pack: StickerPack }>> {
+	async getStickerPack(id: PackId): Promise<ApiResponse<{ pack: StickerPack }>> {
 		return apiRequest<ApiResponse<{ pack: StickerPack }>>({
 			url: `${this.baseUrl}/sticker-packs/${id}`,
 			method: 'GET'
@@ -299,7 +299,7 @@ export class StickerApiService {
 	 * Update existing sticker pack
 	 */
 	async updateStickerPack(
-		id: number,
+		id: PackId,
 		data: UpdateStickerPackData
 	): Promise<ApiResponse<{ message: string }>> {
 		return apiRequest<ApiResponse<{ message: string }>>({
@@ -312,7 +312,7 @@ export class StickerApiService {
 	/**
 	 * Delete sticker pack
 	 */
-	async deleteStickerPack(id: number): Promise<ApiResponse<{ message: string }>> {
+	async deleteStickerPack(id: PackId): Promise<ApiResponse<{ message: string }>> {
 		return apiRequest<ApiResponse<{ message: string }>>({
 			url: `${this.baseUrl}/sticker-packs/${id}`,
 			method: 'DELETE'
@@ -334,7 +334,7 @@ export class StickerApiService {
 	/**
 	 * Preview sticker (get URLs and metadata)
 	 */
-	async previewSticker(id: number): Promise<ApiResponse<StickerPreview>> {
+	async previewSticker(id: StickerId): Promise<ApiResponse<StickerPreview>> {
 		return apiRequest<ApiResponse<StickerPreview>>({
 			url: `${this.baseUrl}/stickers/preview/${id}`,
 			method: 'GET'

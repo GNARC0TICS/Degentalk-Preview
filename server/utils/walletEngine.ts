@@ -8,6 +8,7 @@
  */
 import { db } from '../db';
 import { sql } from 'drizzle-orm';
+import type { UserId } from '@db/types';
 
 interface DgtTransaction {
 	id: number;
@@ -56,7 +57,7 @@ export class WalletEngine {
 	/**
 	 * Get user's wallet information
 	 */
-	static async getUserWallet(userId: number): Promise<UserWallet | null> {
+	static async getUserWallet(userId: UserId): Promise<UserWallet | null> {
 		try {
 			// Check if user wallet exists
 			const walletResult = await db.execute(sql`
@@ -98,7 +99,7 @@ export class WalletEngine {
 	 * Get user's DGT transaction history
 	 */
 	static async getUserTransactions(
-		userId: number,
+		userId: UserId,
 		limit: number = 20,
 		offset: number = 0
 	): Promise<DgtTransaction[]> {
@@ -190,7 +191,7 @@ export class WalletEngine {
 	/**
 	 * Purchase a DGT unlock
 	 */
-	static async purchaseDgtUnlock(userId: number, unlockId: number): Promise<DgtPurchaseResult> {
+	static async purchaseDgtUnlock(userId: UserId, unlockId: number): Promise<DgtPurchaseResult> {
 		try {
 			return await db.transaction(async (tx) => {
 				// Get the unlock
@@ -538,7 +539,7 @@ export class WalletEngine {
 	 * Add DGT to user's balance (admin function)
 	 */
 	static async addDgt(
-		userId: number,
+		userId: UserId,
 		amount: number,
 		reason: string,
 		metadata: Record<string, any> = {}
@@ -619,7 +620,7 @@ export class WalletEngine {
 	 * Deduct DGT from user's balance (admin function)
 	 */
 	static async deductDgt(
-		userId: number,
+		userId: UserId,
 		amount: number,
 		reason: string,
 		metadata: Record<string, any> = {}

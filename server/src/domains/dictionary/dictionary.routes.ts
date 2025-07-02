@@ -1,5 +1,6 @@
 import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
+import type { EntityId } from '@db/types';
 import { DictionaryService, DictionaryStatus } from './dictionary.service';
 import {
 	isAuthenticated as requireAuth,
@@ -72,7 +73,7 @@ router.patch('/:id', requireAuth, isAdminOrModerator, async (req: any, res) => {
 			return res.status(400).json({ error: 'Invalid status' });
 		}
 		const updated = await DictionaryService.moderate(
-			Number(req.params.id),
+			req.params.id as EntityId,
 			status,
 			userService.getUserFromRequest(req).id
 		);
@@ -87,7 +88,7 @@ router.patch('/:id', requireAuth, isAdminOrModerator, async (req: any, res) => {
 router.post('/:id/upvote', requireAuth, async (req: any, res) => {
 	try {
 		const result = await DictionaryService.toggleUpvote(
-			Number(req.params.id),
+			req.params.id as EntityId,
 			userService.getUserFromRequest(req).id
 		);
 		return res.json(result);

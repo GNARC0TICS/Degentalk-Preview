@@ -6,6 +6,7 @@ import { userService } from '@server/src/core/services/user.service';
  */
 
 import type { Request, Response } from 'express';
+import type { ReportId, MessageId } from '@db/types';
 import { adminReportsService } from './reports.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { getUserId } from '../../admin.middleware';
@@ -36,9 +37,7 @@ export class AdminReportsController {
 
 	async getReportById(req: Request, res: Response) {
 		try {
-			const reportId = parseInt(req.params.id);
-			if (isNaN(reportId))
-				throw new AdminError('Invalid report ID', 400, AdminErrorCodes.INVALID_REQUEST);
+			const reportId = req.params.id as ReportId;
 
 			const report = await adminReportsService.getReportById(reportId);
 			res.json(report);
@@ -53,9 +52,7 @@ export class AdminReportsController {
 
 	async resolveReport(req: Request, res: Response) {
 		try {
-			const reportId = parseInt(req.params.id);
-			if (isNaN(reportId))
-				throw new AdminError('Invalid report ID', 400, AdminErrorCodes.INVALID_REQUEST);
+			const reportId = req.params.id as ReportId;
 
 			const body = validateRequestBody(req, res, ReportActionSchema);
 			if (!body) return;
@@ -83,9 +80,7 @@ export class AdminReportsController {
 
 	async dismissReport(req: Request, res: Response) {
 		try {
-			const reportId = parseInt(req.params.id);
-			if (isNaN(reportId))
-				throw new AdminError('Invalid report ID', 400, AdminErrorCodes.INVALID_REQUEST);
+			const reportId = req.params.id as ReportId;
 
 			const body = validateRequestBody(req, res, ReportActionSchema);
 			if (!body) return;
@@ -113,9 +108,7 @@ export class AdminReportsController {
 
 	async banUser(req: Request, res: Response) {
 		try {
-			const userIdToBan = parseInt(req.params.userId); // Assuming route is /users/:userId/ban
-			if (isNaN(userIdToBan))
-				throw new AdminError('Invalid user ID for ban', 400, AdminErrorCodes.INVALID_REQUEST);
+			const userIdToBan = req.params.userId as string; // User ID as string
 
 			const body = validateRequestBody(req, res, BanUserSchema);
 			if (!body) return;
@@ -139,7 +132,7 @@ export class AdminReportsController {
 	async deleteContent(req: Request, res: Response) {
 		try {
 			const contentType = req.params.contentType as 'post' | 'thread' | 'message';
-			const contentId = parseInt(req.params.contentId);
+			const contentId = req.params.contentId as MessageId;
 
 			if (!['post', 'thread', 'message'].includes(contentType)) {
 				throw new AdminError(
@@ -148,12 +141,6 @@ export class AdminReportsController {
 					AdminErrorCodes.INVALID_REQUEST
 				);
 			}
-			if (isNaN(contentId))
-				throw new AdminError(
-					'Invalid content ID for deletion',
-					400,
-					AdminErrorCodes.INVALID_REQUEST
-				);
 
 			const body = validateRequestBody(req, res, DeleteContentSchema);
 			if (!body) return;

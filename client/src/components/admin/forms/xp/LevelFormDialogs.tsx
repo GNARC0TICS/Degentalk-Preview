@@ -21,6 +21,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { TitleMediaInput } from '@/components/admin/forms/xp/TitleMediaInput';
 import { UnlockMultiSelect } from '@/components/admin/inputs/UnlockMultiSelect';
+import type { LevelId } from '@db/types';
 // Assuming Level and LevelFormData types might be needed by the page as well
 // If not, they can be kept internal to this file.
 
@@ -46,7 +47,7 @@ export interface LevelFormData {
 }
 
 export interface Level extends LevelFormData {
-	id: number;
+	id: LevelId;
 	// createdAt: string; // Not strictly needed for form dialogs
 }
 

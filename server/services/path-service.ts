@@ -4,6 +4,7 @@
  */
 import { db } from '@db';
 import { sql } from 'drizzle-orm';
+import type { UserId } from '@db/types';
 
 interface XpPath {
 	id: string;
@@ -65,7 +66,7 @@ export class PathService {
 	/**
 	 * Get user's paths
 	 */
-	static async getUserPaths(userId: number): Promise<Array<UserPath & { path: XpPath }>> {
+	static async getUserPaths(userId: UserId): Promise<Array<UserPath & { path: XpPath }>> {
 		try {
 			const result = await db.execute(sql`
         SELECT up.*, p.*
@@ -100,7 +101,7 @@ export class PathService {
 	/**
 	 * Get user's primary path
 	 */
-	static async getUserPrimaryPath(userId: number): Promise<(UserPath & { path: XpPath }) | null> {
+	static async getUserPrimaryPath(userId: UserId): Promise<(UserPath & { path: XpPath }) | null> {
 		try {
 			const result = await db.execute(sql`
         SELECT up.*, p.*
@@ -140,7 +141,7 @@ export class PathService {
 	/**
 	 * Set user's primary path
 	 */
-	static async setUserPrimaryPath(userId: number, pathId: string): Promise<boolean> {
+	static async setUserPrimaryPath(userId: UserId, pathId: string): Promise<boolean> {
 		try {
 			// Check if the path exists
 			const pathExists = await db.execute(sql`
@@ -193,7 +194,7 @@ export class PathService {
 	 * Award path XP to a user
 	 */
 	static async awardPathXp(
-		userId: number,
+		userId: UserId,
 		pathId: string,
 		xpAmount: number
 	): Promise<{
@@ -305,7 +306,7 @@ export class PathService {
 	/**
 	 * Get user's path rank
 	 */
-	static async getUserPathRank(userId: number, pathId: string): Promise<number | null> {
+	static async getUserPathRank(userId: UserId, pathId: string): Promise<number | null> {
 		try {
 			const result = await db.execute(sql`
         SELECT path_rank

@@ -3,6 +3,7 @@
 
 import { sql } from 'drizzle-orm';
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import { threads, posts, users, forumStructure } from '@schema';
 import { eq, desc, and, count } from 'drizzle-orm';
 
@@ -190,7 +191,7 @@ export async function getLeaderboards(type: string = 'xp', isCurrentWeek: boolea
 /**
  * Feature a thread - Placeholder for MVP
  */
-export async function featureThread(threadId: number, userId: number, expiresAt?: Date) {
+export async function featureThread(threadId: number, userId: UserId, expiresAt?: Date) {
 	try {
 		console.log(`✅ Thread ${threadId} featured by user ${userId} (MVP stub - not implemented)`);
 		return true;

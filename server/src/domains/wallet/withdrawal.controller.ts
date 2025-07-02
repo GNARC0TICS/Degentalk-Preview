@@ -1,5 +1,5 @@
 import { userService } from '@server/src/core/services/user.service';
-import type { UserId } from '@/db/types';
+import type { UserId, EntityId } from '@db/types';
 /**
  * Withdrawal Controller
  *
@@ -307,12 +307,8 @@ export class WithdrawalController {
 	async processWithdrawalRequest(req: Request, res: Response, next: NextFunction) {
 		try {
 			const adminId = (userService.getUserFromRequest(req) as { id: UserId }).id;
-			const requestId = parseInt(req.params.requestId);
+			const requestId = req.params.requestId as EntityId;
 			const { action, adminNotes } = processWithdrawalSchema.parse(req.body);
-
-			if (isNaN(requestId)) {
-				return res.status(400).json({ error: 'Invalid request ID' });
-			}
 
 			// Get withdrawal request
 			const [withdrawalRequest] = await db

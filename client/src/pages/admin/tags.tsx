@@ -43,6 +43,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { ForumTag } from '@/types/compat/forum';
+import type { TagId } from '@db/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
@@ -119,7 +120,7 @@ export default function AdminTagsPage() {
 
 	// Edit tag mutation
 	const editTagMutation = useMutation({
-		mutationFn: async (data: z.infer<typeof tagSchema> & { id: number }) => {
+		mutationFn: async (data: z.infer<typeof tagSchema> & { id: TagId }) => {
 			const { id, ...tagData } = data;
 			const response = await fetch(`/api/admin/forum/tags/${id}`, {
 				method: 'PUT',
@@ -144,7 +145,7 @@ export default function AdminTagsPage() {
 
 	// Delete tag mutation
 	const deleteTagMutation = useMutation({
-		mutationFn: async (id: number) => {
+		mutationFn: async (id: TagId) => {
 			const response = await fetch(`/api/admin/forum/tags/${id}`, {
 				method: 'DELETE'
 			});

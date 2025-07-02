@@ -63,6 +63,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { apiRequest } from '@/lib/queryClient';
+import type { BanId, WarningId } from '@db/types';
 
 // Types
 interface User {
@@ -91,7 +92,7 @@ interface User {
 }
 
 interface Ban {
-	id: number;
+	id: BanId;
 	userId: string;
 	bannedBy: string;
 	reason: string;
@@ -103,7 +104,7 @@ interface Ban {
 }
 
 interface Warning {
-	id: number;
+	id: WarningId;
 	userId: string;
 	issuedBy: string;
 	reason: string;

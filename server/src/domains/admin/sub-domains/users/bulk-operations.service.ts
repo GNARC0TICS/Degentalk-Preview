@@ -6,6 +6,7 @@
  */
 
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import { eq, inArray, sql } from 'drizzle-orm';
 import { users, userBans, auditLogs } from '@schema';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
@@ -21,7 +22,7 @@ export interface BulkOperationResult {
 	success: boolean;
 	processed: number;
 	failed: number;
-	errors: Array<{ userId: number; error: string }>;
+	errors: Array<{ userId: UserId; error: string }>;
 }
 
 export interface BulkRoleAssignmentData {

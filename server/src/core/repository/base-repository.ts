@@ -9,6 +9,7 @@ import { db } from '@db';
 import { sql, eq, and, or, SQL, count, desc, asc } from 'drizzle-orm';
 import type { AnyPgColumn, AnyPgTable } from 'drizzle-orm/pg-core';
 import { logger } from '../logger';
+import type { EntityId } from '@db/types';
 
 export interface PaginationOptions {
 	page?: number;
@@ -66,7 +67,7 @@ export abstract class BaseRepository<T extends Record<string, any>> {
 	/**
 	 * Find entity by ID
 	 */
-	async findById(id: number | string): Promise<T | null> {
+	async findById(id: EntityId): Promise<T | null> {
 		try {
 			const idColumn = this.getIdColumn();
 			const [result] = await db.select().from(this.table).where(eq(idColumn, id)).limit(1);
@@ -198,7 +199,7 @@ export abstract class BaseRepository<T extends Record<string, any>> {
 	/**
 	 * Update entity by ID
 	 */
-	async update(id: number | string, data: Partial<T>): Promise<T> {
+	async update(id: EntityId, data: Partial<T>): Promise<T> {
 		try {
 			const idColumn = this.getIdColumn();
 			const [result] = await db
@@ -230,7 +231,7 @@ export abstract class BaseRepository<T extends Record<string, any>> {
 	/**
 	 * Delete entity by ID
 	 */
-	async delete(id: number | string): Promise<void> {
+	async delete(id: EntityId): Promise<void> {
 		try {
 			const idColumn = this.getIdColumn();
 			const result = await db.delete(this.table).where(eq(idColumn, id));
@@ -248,7 +249,7 @@ export abstract class BaseRepository<T extends Record<string, any>> {
 	/**
 	 * Check if entity exists
 	 */
-	async exists(id: number | string): Promise<boolean> {
+	async exists(id: EntityId): Promise<boolean> {
 		try {
 			const entity = await this.findById(id);
 			return entity !== null;

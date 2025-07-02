@@ -47,6 +47,7 @@ import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { MediaLibraryModal } from '@/components/admin/media/MediaLibraryModal';
 import { mediaApiService } from '@/features/admin/services/media-api.service';
 import { MediaAsset } from '@/components/media/MediaAsset';
+import type { EmojiId } from '@db/types';
 
 // Type for emoji schema validation
 const emojiFormSchema = z.object({
@@ -65,7 +66,7 @@ const emojiFormSchema = z.object({
 type EmojiFormValues = z.infer<typeof emojiFormSchema>;
 
 interface Emoji {
-	id: number;
+	id: EmojiId;
 	name: string;
 	code: string;
 	imageUrl: string;
@@ -138,7 +139,7 @@ export default function AdminEmojisPage() {
 
 	// Update emoji mutation
 	const updateEmojiMutation = useMutation({
-		mutationFn: ({ id, emoji }: { id: number; emoji: EmojiFormValues }) =>
+		mutationFn: ({ id, emoji }: { id: EmojiId; emoji: EmojiFormValues }) =>
 			apiRequest(`/api/admin/emojis/${id}`, {
 				method: 'PUT',
 				data: {
@@ -171,7 +172,7 @@ export default function AdminEmojisPage() {
 
 	// Delete emoji mutation
 	const deleteEmojiMutation = useMutation({
-		mutationFn: (id: number) =>
+		mutationFn: (id: EmojiId) =>
 			apiRequest(`/api/admin/emojis/${id}`, {
 				method: 'DELETE'
 			}),

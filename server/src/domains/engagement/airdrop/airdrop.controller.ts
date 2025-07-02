@@ -12,6 +12,7 @@ import { airdropService, AirdropOptions } from './airdrop.service';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../../core/errors';
 import { asyncHandler } from '../../../core/errors';
 import { logger } from '../../../core/logger';
+import type { EntityId } from '@db/types';
 
 /**
  * Controller for airdrop functionality
@@ -155,7 +156,7 @@ export class AirdropController {
 			});
 		}
 
-		const airdropId = parseInt(req.params.id);
+		const airdropId = req.params.id as EntityId;
 
 		if (!airdropId) {
 			return res.status(400).json({

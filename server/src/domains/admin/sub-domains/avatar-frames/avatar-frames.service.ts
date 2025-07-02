@@ -2,6 +2,8 @@ import { db } from '@db';
 import { avatarFrames, users } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
+import type { AvatarFrame } from '@schema';
+import type { FrameId } from '@db/types';
 
 interface CreateFrameData {
 	name: string;
@@ -28,7 +30,7 @@ class AvatarFrameService {
 		}
 	}
 
-	async getFrameById(id: number) {
+	async getFrameById(id: FrameId) {
 		try {
 			const [frame] = await db.select().from(avatarFrames).where(eq(avatarFrames.id, id)).limit(1);
 			return frame || null;
@@ -58,7 +60,7 @@ class AvatarFrameService {
 		}
 	}
 
-	async updateFrame(id: number, data: UpdateFrameData) {
+	async updateFrame(id: FrameId, data: UpdateFrameData) {
 		try {
 			const [frame] = await db
 				.update(avatarFrames)
@@ -78,7 +80,7 @@ class AvatarFrameService {
 		}
 	}
 
-	async deleteFrame(id: number) {
+	async deleteFrame(id: FrameId) {
 		try {
 			// Check if any users are currently using this frame
 			const usersWithFrame = await db
@@ -108,7 +110,7 @@ class AvatarFrameService {
 		}
 	}
 
-	async getFrameUsageCount(id: number) {
+	async getFrameUsageCount(id: FrameId) {
 		try {
 			const [result] = await db
 				.select({ count: eq(users.activeFrameId, id) })

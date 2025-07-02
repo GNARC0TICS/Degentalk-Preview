@@ -6,6 +6,7 @@
  */
 
 import { db } from '@db';
+import type { UserId } from '@db/types';
 import { eq, and, desc, asc, gte, lte, count, sum, sql, inArray, isNull } from 'drizzle-orm';
 import {
 	achievements,
@@ -636,7 +637,7 @@ export class AchievementService {
 	 */
 	async getAchievementLeaderboard(limit: number = 50): Promise<
 		Array<{
-			userId: number;
+			userId: UserId;
 			username: string;
 			achievementCount: number;
 			totalXpReward: number;

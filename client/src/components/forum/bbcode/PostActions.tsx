@@ -28,7 +28,7 @@ import { brandConfig } from '@/config/brand.config';
 import type { PostId } from '@db/types';
 
 interface PostActionsProps {
-	postId: number;
+	postId: PostId;
 	likeCount?: number;
 	hasLiked?: boolean;
 	canEdit?: boolean;

@@ -170,7 +170,7 @@ export const useSolveThread = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ threadId, postId }: { threadId: ThreadId; postId?: number }) =>
+		mutationFn: ({ threadId, postId }: { threadId: ThreadId; postId?: PostId }) =>
 			forumApi.solveThread(threadId, postId),
 		onSuccess: (_, variables) => {
 			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${variables.threadId}`] });
@@ -199,7 +199,7 @@ export const useUnsolveThread = () => {
  * Posts
  */
 export const usePosts = (
-	threadId: number | undefined,
+	threadId: ThreadId | undefined,
 	params?: { page?: number; limit?: number }
 ) => {
 	return useQuery({
@@ -416,7 +416,7 @@ export const usePostUpdate = () => {
 			content,
 			editorState
 		}: {
-			postId: number;
+			postId: PostId;
 			content: string;
 			editorState?: Record<string, unknown>;
 		}) => forumApi.updatePost(postId, { content, editorState }),

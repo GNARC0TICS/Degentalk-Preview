@@ -7,17 +7,17 @@
 
 import type { User, ForumCategory, Thread, Post, Transaction } from '@schema';
 import type { PaginatedResult, QueryOptions } from './base-repository';
-import type { CategoryId, AuthorId, EntityId } from '@/db/types';
+import type { CategoryId, AuthorId, EntityId, UserId, ThreadId, PostId } from '@/db/types';
 
 // Base repository interface
 export interface IBaseRepository<T> {
-	findById(id: number | string): Promise<T | null>;
+	findById(id: EntityId): Promise<T | null>;
 	find(options?: QueryOptions): Promise<T[]>;
 	findPaginated(options?: QueryOptions): Promise<PaginatedResult<T>>;
 	create(data: Partial<T>): Promise<T>;
-	update(id: number | string, data: Partial<T>): Promise<T>;
-	delete(id: number | string): Promise<void>;
-	exists(id: number | string): Promise<boolean>;
+	update(id: EntityId, data: Partial<T>): Promise<T>;
+	delete(id: EntityId): Promise<void>;
+	exists(id: EntityId): Promise<boolean>;
 	count(filters?: Record<string, any>): Promise<number>;
 }
 
@@ -26,8 +26,8 @@ export interface IUserRepository extends IBaseRepository<User> {
 	findByUsername(username: string): Promise<User | null>;
 	findByEmail(email: string): Promise<User | null>;
 	findByRole(role: string): Promise<User[]>;
-	updateLastLogin(id: number): Promise<void>;
-	incrementXP(id: number, amount: number): Promise<User>;
+	updateLastLogin(id: UserId): Promise<void>;
+	incrementXP(id: UserId, amount: number): Promise<User>;
 	searchUsers(query: string, limit?: number): Promise<User[]>;
 }
 
@@ -49,36 +49,36 @@ export interface IThreadRepository extends IBaseRepository<Thread> {
 	): Promise<PaginatedResult<Thread>>;
 	findByAuthorId(authorId: AuthorId, options?: QueryOptions): Promise<PaginatedResult<Thread>>;
 	searchThreads(query: string, options?: QueryOptions): Promise<PaginatedResult<Thread>>;
-	incrementViewCount(id: number): Promise<void>;
-	updatePostCount(id: number): Promise<void>;
-	markAsSolved(id: number, solvingPostId?: number): Promise<Thread>;
+	incrementViewCount(id: ThreadId): Promise<void>;
+	updatePostCount(id: ThreadId): Promise<void>;
+	markAsSolved(id: ThreadId, solvingPostId?: PostId): Promise<Thread>;
 }
 
 // Post Repository Interface
 export interface IPostRepository extends IBaseRepository<Post> {
-	findByThreadId(threadId: number, options?: QueryOptions): Promise<PaginatedResult<Post>>;
+	findByThreadId(threadId: ThreadId, options?: QueryOptions): Promise<PaginatedResult<Post>>;
 	findByAuthorId(authorId: AuthorId, options?: QueryOptions): Promise<PaginatedResult<Post>>;
-	findReplies(parentPostId: number): Promise<Post[]>;
-	incrementLikeCount(id: number): Promise<void>;
-	decrementLikeCount(id: number): Promise<void>;
-	updateTipCount(id: number, amount: number): Promise<void>;
+	findReplies(parentPostId: PostId): Promise<Post[]>;
+	incrementLikeCount(id: PostId): Promise<void>;
+	decrementLikeCount(id: PostId): Promise<void>;
+	updateTipCount(id: PostId, amount: number): Promise<void>;
 }
 
 // Transaction Repository Interface
 export interface ITransactionRepository extends IBaseRepository<Transaction> {
-	findByUserId(userId: number, options?: QueryOptions): Promise<PaginatedResult<Transaction>>;
+	findByUserId(userId: UserId, options?: QueryOptions): Promise<PaginatedResult<Transaction>>;
 	findByType(type: string, options?: QueryOptions): Promise<PaginatedResult<Transaction>>;
 	findByStatus(status: string, options?: QueryOptions): Promise<PaginatedResult<Transaction>>;
-	getTotalByUser(userId: number, type?: string): Promise<number>;
-	getBalanceByUser(userId: number): Promise<number>;
+	getTotalByUser(userId: UserId, type?: string): Promise<number>;
+	getBalanceByUser(userId: UserId): Promise<number>;
 }
 
 // XP Repository Interface (for future implementation)
 export interface IXPRepository {
-	findByUserId(userId: number): Promise<any>;
-	awardXP(userId: number, amount: number, reason: string): Promise<any>;
+	findByUserId(userId: UserId): Promise<any>;
+	awardXP(userId: UserId, amount: number, reason: string): Promise<any>;
 	getLeaderboard(limit?: number): Promise<any[]>;
-	getUserRank(userId: number): Promise<number>;
+	getUserRank(userId: UserId): Promise<number>;
 }
 
 // Repository Factory Interface

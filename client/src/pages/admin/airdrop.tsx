@@ -23,10 +23,11 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Send } from 'lucide-react';
+import type { GroupId } from '@db/types';
 
 // Types
 interface UserGroup {
-	id: number;
+	id: GroupId;
 	name: string;
 	// Add other properties as needed from your userGroups schema
 }

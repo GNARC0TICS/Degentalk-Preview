@@ -14,6 +14,7 @@ import {
 	roles as rolesTable,
 	forumStructure
 } from '@schema';
+import type { UserId } from '@db/types';
 import { eq, sql, lte, desc, and, isNull } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 import { getLevelForXp, getXpForLevel } from '@shared/economy/reward-calculator';
@@ -58,7 +59,7 @@ export class XpLevelService {
 	 * @returns Object containing success info and XP awarded
 	 */
 	async awardXp(
-		userId: number,
+		userId: UserId,
 		actionKey: string,
 		metadata?: { amount?: number }
 	): Promise<{
@@ -228,7 +229,7 @@ export class XpLevelService {
 	 * @returns Object containing allowed XP and new daily total
 	 */
 	private async checkDailyXpCap(
-		userId: number,
+		userId: UserId,
 		xpToAward: number
 	): Promise<{ allowedXp: number; newDailyTotal: number }> {
 		try {
@@ -294,7 +295,7 @@ export class XpLevelService {
 	 */
 	private async handleLevelUp(
 		tx: any,
-		userId: number,
+		userId: UserId,
 		currentLevel: number,
 		newLevel: number
 	): Promise<void> {
@@ -325,7 +326,7 @@ export class XpLevelService {
 	 * @param userId The user ID to reward
 	 * @param level The level to distribute rewards for
 	 */
-	private async distributeRewards(tx: any, userId: number, level: number): Promise<void> {
+	private async distributeRewards(tx: any, userId: UserId, level: number): Promise<void> {
 		try {
 			// Get the level data to check for rewards
 			const levelData = await tx
@@ -472,7 +473,7 @@ export class XpLevelService {
 	 * @param userId The user ID to get info for
 	 * @returns Object with current XP, level, next level XP, and progress percentage
 	 */
-	async getUserXpInfo(userId: number): Promise<{
+	async getUserXpInfo(userId: UserId): Promise<{
 		currentXp: number;
 		currentLevel: number;
 		nextLevelXp: number | null;
@@ -553,7 +554,7 @@ export class XpLevelService {
 	 * If the user has no roles with a multiplier > 0, a default of 1 is returned.
 	 * Now includes forum multiplier protection against stacking exploits.
 	 */
-	private async getUserXpMultiplier(userId: number, forumId?: number): Promise<number> {
+	private async getUserXpMultiplier(userId: UserId, forumId?: number): Promise<number> {
 		try {
 			// Get role multiplier
 			const roleMultipliers = await this.db

@@ -8,10 +8,10 @@ import { db } from '@db';
 import { users, signatureShopItems, userSignatureItems } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { getSignatureTierForLevel } from '@shared/signature/SignatureTierConfig';
-import type { ItemId } from '@/db/types';
+import type { ItemId, UserId } from '@/db/types';
 
 interface UpdateSignatureParams {
-	userId: number;
+	userId: UserId;
 	signatureText: string;
 }
 
@@ -19,7 +19,7 @@ export class SignatureService {
 	/**
 	 * Get a user's signature with validation based on their level
 	 */
-	static async getUserSignature(userId: number) {
+	static async getUserSignature(userId: UserId) {
 		const userResult = await db.query.users.findFirst({
 			where: eq(users.id, userId),
 			columns: {
@@ -115,7 +115,7 @@ export class SignatureService {
 	/**
 	 * Get user's purchased signature items
 	 */
-	static async getUserSignatureItems(userId: number) {
+	static async getUserSignatureItems(userId: UserId) {
 		return db.query.userSignatureItems.findMany({
 			where: eq(userSignatureItems.userId, userId),
 			with: {
@@ -127,7 +127,7 @@ export class SignatureService {
 	/**
 	 * Purchase a signature shop item
 	 */
-	static async purchaseSignatureItem(userId: number, itemId: ItemId) {
+	static async purchaseSignatureItem(userId: UserId, itemId: ItemId) {
 		// Get user details
 		const user = await db.query.users.findFirst({
 			where: eq(users.id, userId),
@@ -195,7 +195,7 @@ export class SignatureService {
 	/**
 	 * Activate a signature shop item for a user
 	 */
-	static async activateSignatureItem(userId: number, itemId: ItemId) {
+	static async activateSignatureItem(userId: UserId, itemId: ItemId) {
 		// Check if user owns this item
 		const existingItem = await db.query.userSignatureItems.findFirst({
 			where: and(

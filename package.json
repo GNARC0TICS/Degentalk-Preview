@@ -93,6 +93,7 @@
 		"ts-node": "^10.9.2",
 		"tsx": "^4.19.4",
 		"typescript": "5.6.3",
+		"recast": "^0.23.4",
 		"utility-types": "^3.10.0"
 	},
 	"simple-git-hooks": {

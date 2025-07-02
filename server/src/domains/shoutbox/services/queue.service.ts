@@ -10,12 +10,13 @@
  */
 
 import { logger } from '@server/src/core/logger';
+import type { UserId } from '@db/types';
 import { EventEmitter } from 'events';
 import type { RoomId, MessageId } from '@/db/types';
 
 interface QueuedMessage {
 	id: string;
-	userId: number;
+	userId: UserId;
 	roomId: RoomId;
 	content: string;
 	type: 'regular' | 'command' | 'system' | 'broadcast';

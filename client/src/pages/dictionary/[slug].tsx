@@ -7,9 +7,10 @@ import { ErrorDisplay } from '@/components/ui/error-display';
 import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/tooltip';
 import { dictionaryApi } from '@/features/dictionary/services/dictionaryApi';
+import type { DictionaryEntryId } from '@db/types';
 
 interface DictionaryEntry {
-	id: number;
+	id: DictionaryEntryId;
 	slug: string;
 	word: string;
 	definition: string;
@@ -31,7 +32,7 @@ export default function DictionaryDetailPage() {
 		}
 	});
 
-	const upvoteMutation = useMutation((id: number) => dictionaryApi.upvote(id), {
+	const upvoteMutation = useMutation((id: DictionaryEntryId) => dictionaryApi.upvote(id), {
 		onMutate: async () => {
 			if (!data) return;
 			queryClient.setQueryData(['dictionary', slug], (old: any) => {

@@ -8,6 +8,7 @@
 
 import React from 'react';
 import { DynamicSidebar } from './DynamicSidebar';
+import type { EntityId } from '@db/types';
 
 // BEFORE: Manual widget management
 // import { QuickStats } from '@/components/forum/QuickStats';
@@ -24,7 +25,7 @@ import { DynamicSidebar } from './DynamicSidebar';
 
 // AFTER: Config-driven sidebar
 interface ForumSidebarProps {
-	structureId?: number;
+	structureId?: EntityId;
 	zoneSlug?: string;
 	className?: string;
 }
@@ -41,7 +42,7 @@ export const ZonePageSidebar: React.FC<{ zoneSlug: string }> = ({ zoneSlug }) =>
 );
 
 // Forum page sidebar
-export const ForumPageSidebar: React.FC<{ structureId: number; zoneSlug: string }> = ({
+export const ForumPageSidebar: React.FC<{ structureId: EntityId; zoneSlug: string }> = ({
 	structureId,
 	zoneSlug
 }) => (
@@ -51,7 +52,7 @@ export const ForumPageSidebar: React.FC<{ structureId: number; zoneSlug: string 
 // Thread page sidebar (using existing ThreadSidebar + DynamicSidebar)
 export const ThreadPageSidebar: React.FC<{
 	thread: any;
-	structureId: number;
+	structureId: EntityId;
 	zoneSlug: string;
 }> = ({ thread, structureId, zoneSlug }) => (
 	<div className="space-y-6 xl:w-80">

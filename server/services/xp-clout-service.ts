@@ -1,5 +1,6 @@
 import { db } from '@db';
 import { users, xpCloutSettings } from '@schema';
+import type { UserId } from '@db/types';
 import { eq, sql } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 
@@ -41,7 +42,7 @@ export class XpCloutService {
 	 * @param multiplier - Optional multiplier (e.g., for tips based on amount).
 	 * @returns Boolean indicating if the points were awarded successfully.
 	 */
-	async awardPoints(userId: number, actionKey: string, multiplier: number = 1): Promise<boolean> {
+	async awardPoints(userId: UserId, actionKey: string, multiplier: number = 1): Promise<boolean> {
 		const values = await this.getActionValues(actionKey);
 
 		if (!values || (values.xpValue === 0 && values.cloutValue === 0)) {
@@ -92,7 +93,7 @@ export class XpCloutService {
 	 * Checks if a user has leveled up after gaining XP and applies rewards.
 	 * (Placeholder - needs implementation)
 	 */
-	async checkLevelUp(userId: number): Promise<void> {
+	async checkLevelUp(userId: UserId): Promise<void> {
 		// 1. Get current user XP and level
 		// 2. Query `levels` table to find the next level threshold
 		// 3. If user XP >= next level threshold:

@@ -8,9 +8,10 @@ import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { AddWordModal } from '@/features/dictionary/components/AddWordModal';
 import { Tooltip } from '@/components/ui/tooltip';
+import type { DictionaryEntryId } from '@db/types';
 
 interface DictionaryEntry {
-	id: number;
+	id: DictionaryEntryId;
 	slug: string;
 	word: string;
 	definition: string;

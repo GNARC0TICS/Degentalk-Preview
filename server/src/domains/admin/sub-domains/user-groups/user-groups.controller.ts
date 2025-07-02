@@ -5,6 +5,7 @@
  */
 
 import type { Request, Response } from 'express';
+import type { GroupId } from '@db/types';
 import { adminUserGroupsService } from './user-groups.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { getUserId } from '../../admin.middleware';
@@ -28,7 +29,7 @@ export class AdminUserGroupsController {
 
 	async getGroupById(req: Request, res: Response) {
 		try {
-			const groupId = parseInt(req.params.id);
+			const groupId = req.params.id as GroupId;
 			if (isNaN(groupId))
 				throw new AdminError('Invalid group ID', 400, AdminErrorCodes.INVALID_REQUEST);
 			const group = await adminUserGroupsService.getGroupById(groupId);
@@ -66,7 +67,7 @@ export class AdminUserGroupsController {
 
 	async updateGroup(req: Request, res: Response) {
 		try {
-			const groupId = parseInt(req.params.id);
+			const groupId = req.params.id as GroupId;
 			if (isNaN(groupId))
 				throw new AdminError('Invalid group ID', 400, AdminErrorCodes.INVALID_REQUEST);
 
@@ -92,7 +93,7 @@ export class AdminUserGroupsController {
 
 	async deleteGroup(req: Request, res: Response) {
 		try {
-			const groupId = parseInt(req.params.id);
+			const groupId = req.params.id as GroupId;
 			if (isNaN(groupId))
 				throw new AdminError('Invalid group ID', 400, AdminErrorCodes.INVALID_REQUEST);
 
@@ -112,7 +113,7 @@ export class AdminUserGroupsController {
 
 	async getUsersInGroup(req: Request, res: Response) {
 		try {
-			const groupId = parseInt(req.params.id);
+			const groupId = req.params.id as GroupId;
 			if (isNaN(groupId))
 				throw new AdminError('Invalid group ID', 400, AdminErrorCodes.INVALID_REQUEST);
 

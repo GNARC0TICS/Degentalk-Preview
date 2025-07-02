@@ -1,5 +1,5 @@
 import { userService } from '@server/src/core/services/user.service';
-import type { UserId } from '@/db/types';
+import type { UserId } from '@db/types';
 /**
  * Treasury Controller
  *
@@ -149,10 +149,7 @@ export class TreasuryController {
 	 */
 	async getUserBalanceDetails(req: Request, res: Response, next: NextFunction) {
 		try {
-			const userId = parseInt(req.params.userId);
-			if (isNaN(userId)) {
-				return res.status(400).json({ error: 'Invalid user ID' });
-			}
+			const userId = req.params.userId as UserId;
 
 			// Get user info
 			const [user] = await db

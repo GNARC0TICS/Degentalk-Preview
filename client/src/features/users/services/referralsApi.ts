@@ -1,4 +1,5 @@
 import { apiRequest } from '@/lib/queryClient';
+import type { UserId } from '@db/types';
 
 /**
  * Interface for user referral statistics
@@ -6,7 +7,7 @@ import { apiRequest } from '@/lib/queryClient';
 export interface UserReferralStats {
 	referralCount: number;
 	referredUsers: Array<{
-		userId: number;
+		userId: UserId;
 		username: string;
 		avatarUrl: string | null;
 		joinedAt: string;
@@ -16,7 +17,7 @@ export interface UserReferralStats {
 		} | null;
 	}>;
 	referredBy: {
-		userId: number;
+		userId: UserId;
 		username: string;
 		avatarUrl: string | null;
 	} | null;
