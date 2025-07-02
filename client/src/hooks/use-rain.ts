@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import type { RoomId, ActionId } from '@db/types';
+import type { UserId } from '@/types/ids';
 
 export interface RainParams {
 	amount: number;
@@ -14,7 +15,7 @@ interface RainResponse {
 	success: boolean;
 	transactionId: ActionId;
 	recipients: Array<{
-		id: number;
+		id: UserId;
 		username: string;
 	}>;
 	message: string;
@@ -22,8 +23,8 @@ interface RainResponse {
 
 interface RecentRainResponse {
 	events: Array<{
-		id: number;
-		fromUserId: number;
+		id: UserId;
+		fromUserId: UserId;
 		fromUsername: string;
 		amount: number;
 		currency: string;
