@@ -188,6 +188,9 @@ function scanFile(filePath: string): IdIssue[] {
         const line = lines[lineNum - 1];
         const column = match.index - content.lastIndexOf('\n', match.index - 1);
         
+        // Skip if line is undefined
+        if (!line) continue;
+        
         // Skip comments and type definitions that are intentionally legacy
         if (line.includes('//') && line.includes('legacy')) continue;
         if (line.includes('LEGACY') || line.includes('TODO')) continue;
@@ -229,7 +232,7 @@ async function detectNumericIds(): Promise<MigrationReport> {
     console.log(`📁 Batch: ${batchName} (${batchConfig.description})`);
     
     const files = await glob(batchConfig.pattern, { 
-      ignore: ['**/node_modules/**', '**/dist/**', '**/*.d.ts', '**/build/**'] 
+      ignore: ['**/node_modules/**', '**/dist/**', '**/*.d.ts', '**/build/**', '**/*.backup.*', '**/scripts/**'] 
     });
     
     const batchIssues: IdIssue[] = [];
