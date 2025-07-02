@@ -34,7 +34,7 @@ class ClientComponentsMigration {
   private dryRun: boolean;
 
   constructor(dryRun: boolean = true) {
-    this.dryRun = true; // Force dry-run mode for safety
+    this.dryRun = dryRun; // Honor flag so --live applies changes
     this.project = new Project({
       tsConfigFilePath: './tsconfig.json',
       skipAddingFilesFromTsConfig: true
@@ -342,8 +342,9 @@ class ClientComponentsMigration {
 async function main() {
   const args = process.argv.slice(2);
   const isDryRun = !args.includes('--live');
+  const isForce = args.includes('--force');
 
-  if (!isDryRun) {
+  if (!isDryRun && !isForce) {
     const readline = await import('readline');
     const rl = readline.createInterface({
       input: process.stdin,
