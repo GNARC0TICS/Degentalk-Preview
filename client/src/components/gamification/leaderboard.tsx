@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react';
+import type { UserId } from '@/types/ids';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -39,7 +40,7 @@ import type { LeaderboardEntry } from '@/features/gamification/services/gamifica
 
 interface LeaderboardProps {
 	entries: LeaderboardEntry[];
-	currentUserId?: number;
+	currentUserId?: UserId;
 	type?: 'level' | 'xp' | 'weekly' | 'monthly';
 	onTypeChange?: (type: 'level' | 'xp' | 'weekly' | 'monthly') => void;
 	className?: string;
@@ -53,7 +54,7 @@ export function Leaderboard({
 	className
 }: LeaderboardProps) {
 	const router = useRouter();
-	const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
+	const [expandedRows, setExpandedRows] = useState<Set<UserId>>(new Set());
 
 	// Get rank icon based on position
 	const getRankIcon = (rank: number) => {

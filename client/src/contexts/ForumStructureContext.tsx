@@ -474,6 +474,7 @@ export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ chil
 						console.error('[ForumStructureContext] ❌ Array coercion FAILED:', inner);
 					}
 				} else {
+					// Fallback structure conversion failed; will use config fallback below
 				}
 			}
 		}

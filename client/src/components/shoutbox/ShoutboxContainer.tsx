@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import type { UserId } from '@/types/ids';
 import { MessageSquare, Send, Lock } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';

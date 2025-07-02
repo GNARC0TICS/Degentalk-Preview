@@ -13,6 +13,7 @@ import {
 	TableRow
 } from '@/components/ui/table';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import type { UserId } from '@db/types';
 import { Trophy } from 'lucide-react'; // Removed TrendingUp, CircleDollarSign, Diamond
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { motion } from 'framer-motion';
@@ -20,7 +21,7 @@ import BackToHomeButton from '@/components/common/BackToHomeButton';
 
 // Mock data structure - replace with actual API response type
 interface LeaderboardUser {
-	id: number;
+	id: UserId;
 	username: string;
 	avatarUrl?: string | null;
 	xp: number;

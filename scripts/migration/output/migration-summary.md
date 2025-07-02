@@ -1,11 +1,11 @@
 # Numeric ID Migration Report
 
-Generated: 2025-07-02T06:05:09.710Z
+Generated: 2025-07-02T08:26:14.012Z
 
 ## Summary
 - **Total Files**: 1934
-- **Total Issues**: 530
-- **Critical**: 484
+- **Total Issues**: 453
+- **Critical**: 407
 - **High**: 46  
 - **Medium**: 0
 
@@ -34,39 +34,39 @@ Generated: 2025-07-02T06:05:09.710Z
 
 ### client-components (Priority 4)
 - Files: 414
-- Issues: 53
+- Issues: 19
 - Status: ⚠️ Needs migration
 
 Top issues:
-- `client/src/components/social/WhaleWatchDashboard.tsx:43` - id: number → check entity context for correct branded type
-- `client/src/components/social/FriendsManager.tsx:55` - id: number → check entity context for correct branded type
-- `client/src/components/social/FriendsManager.tsx:66` - id: number → check entity context for correct branded type
-- `client/src/components/ui/smart-thread-filters.tsx:67` - id: number → check entity context for correct branded type
-- `client/src/components/ui/smart-thread-filters.tsx:68` - id: number → check entity context for correct branded type
+- `client/src/components/ui/reactions-bar.tsx:21` - postId: number → PostId
+- `client/src/components/ui/bookmark-button.tsx:12` - threadId: number → ThreadId
+- `client/src/components/profile/XpLogView.tsx:58` - id: number → check entity context for correct branded type
+- `client/src/components/forum/ReactionBar.tsx:30` - postId: number → PostId
+- `client/src/components/platform-energy/recent-posts/recent-posts-feed.tsx:64` - postId: number → PostId
 
 ### client-pages (Priority 5)
 - Files: 113
-- Issues: 73
+- Issues: 70
 - Status: ⚠️ Needs migration
 
 Top issues:
-- `client/src/pages/leaderboard.tsx:23` - id: number → check entity context for correct branded type
 - `client/src/pages/forum-rules.tsx:27` - id: number → check entity context for correct branded type
 - `client/src/pages/forum-rules.tsx:48` - id: number → check entity context for correct branded type
-- `client/src/pages/forum-rules.tsx:49` - userId: number → UserId
-- `client/src/pages/degen-index.tsx:15` - id: number → check entity context for correct branded type
+- `client/src/pages/shop/avatar-frames.tsx:14` - id: number → check entity context for correct branded type
+- `client/src/pages/mod/users.tsx:94` - id: number → check entity context for correct branded type
+- `client/src/pages/mod/users.tsx:106` - id: number → check entity context for correct branded type
 
 ### client-other (Priority 6)
 - Files: 772
-- Issues: 184
+- Issues: 146
 - Status: ⚠️ Needs migration
 
 Top issues:
-- `client/src/pages/leaderboard.tsx:23` - id: number → check entity context for correct branded type
 - `client/src/pages/forum-rules.tsx:27` - id: number → check entity context for correct branded type
 - `client/src/pages/forum-rules.tsx:48` - id: number → check entity context for correct branded type
-- `client/src/pages/forum-rules.tsx:49` - userId: number → UserId
-- `client/src/pages/degen-index.tsx:15` - id: number → check entity context for correct branded type
+- `client/src/contexts/ForumStructureContext.tsx:179` - id: number → check entity context for correct branded type
+- `client/src/contexts/ForumStructureContext.tsx:209` - id: number → check entity context for correct branded type
+- `client/src/contexts/ForumStructureContext.tsx:211` - id: number → check entity context for correct branded type
 
 ### server-types (Priority 7)
 - Files: 0
@@ -105,7 +105,7 @@ Top issues:
 
 ### server-other (Priority 12)
 - Files: 384
-- Issues: 220
+- Issues: 218
 - Status: ⚠️ Needs migration
 
 Top issues:
