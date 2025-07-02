@@ -27,7 +27,7 @@ import { formatDistanceToNow } from 'date-fns';
 import type { PostId } from '@db/types';
 
 interface ReactionBarProps {
-	postId: number;
+	postId: PostId;
 	likeCount?: number;
 	hasLiked?: boolean;
 	canEdit?: boolean;

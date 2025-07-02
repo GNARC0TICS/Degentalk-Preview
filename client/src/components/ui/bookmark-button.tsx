@@ -7,9 +7,10 @@ import { cn } from '@/lib/utils';
 import { apiRequest } from '@/lib/queryClient';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
+import type { ThreadId } from '@db/types';
 
 interface BookmarkButtonProps {
-	threadId: number;
+	threadId: ThreadId;
 	hasBookmarked: boolean;
 	size?: 'sm' | 'md' | 'lg';
 }

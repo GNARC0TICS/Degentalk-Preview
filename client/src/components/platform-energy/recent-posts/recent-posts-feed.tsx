@@ -16,15 +16,16 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
 import { MessageSquare, Eye, ArrowRight } from 'lucide-react';
 import { getInitials } from '@/lib/utils';
+import type { PostId, ThreadId, UserId } from '@db/types';
 
 export type RecentPost = {
-	post_id: number;
+	post_id: PostId;
 	content: string;
 	created_at: string;
-	thread_id: number;
+	thread_id: ThreadId;
 	title: string;
 	slug: string;
-	user_id: number;
+	user_id: UserId;
 	username: string;
 	avatar_url?: string;
 	category_name: string;
@@ -61,7 +62,7 @@ export function RecentPostsFeed({
 		}
 	});
 
-	const toggleExpand = (postId: number) => {
+	const toggleExpand = (postId: PostId) => {
 		setExpanded((prev) => ({
 			...prev,
 			[postId]: !prev[postId]

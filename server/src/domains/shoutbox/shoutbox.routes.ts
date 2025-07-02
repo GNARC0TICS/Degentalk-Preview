@@ -7,6 +7,7 @@ import { userService } from '@server/src/core/services/user.service';
 
 import { Router } from 'express';
 import type { Request, Response } from 'express';
+import type { MessageId } from '@db/types';
 import { db } from '@db';
 import {
 	shoutboxMessages,
@@ -29,11 +30,11 @@ import { MentionsService } from '../social/mentions.service';
 import type { RoomId, GroupId } from '@/db/types';
 
 // Rate limiting for shoutbox messages (10 seconds cooldown)
-const userLastMessageTime = new Map<number, number>();
+const userLastMessageTime = new Map<UserId, number>();
 const COOLDOWN_MS = 10000; // 10 seconds
 
 // Check if user has access to a specific chat room
-async function userHasRoomAccess(userId: number, roomId: RoomId): Promise<boolean> {
+async function userHasRoomAccess(userId: UserId, roomId: RoomId): Promise<boolean> {
 	try {
 		// Get the room info
 		const roomInfo = await db.select().from(chatRooms).where(eq(chatRooms.id, roomId)).limit(1);
@@ -200,7 +201,7 @@ router.get('/rooms', async (req: Request, res: Response) => {
 // Moderation endpoint: Delete (soft delete) a shoutbox message with WebSocket notification
 router.delete('/messages/:id', isAdminOrModerator, async (req: Request, res: Response) => {
 	try {
-		const messageId = parseInt(req.params.id);
+		const messageId = req.params.id as MessageId;
 
 		if (isNaN(messageId)) {
 			return res.status(400).json({ error: 'Invalid message ID' });
@@ -263,7 +264,7 @@ router.delete('/messages/:id', isAdminOrModerator, async (req: Request, res: Res
 		});
 	} catch (error) {
 		// console.error('Error deleting shoutbox message:', error); // Original console.error removed
-		const messageIdForLog = parseInt(req.params.id); // Ensure messageId is available for logging
+		const messageIdForLog = req.params.id as MessageId; // Ensure messageId is available for logging
 		logger.error('ShoutboxRoutes', 'Error deleting shoutbox message', {
 			err: error,
 			messageId: messageIdForLog
@@ -556,7 +557,7 @@ router.post('/messages', isAuthenticated, async (req: Request, res: Response) =>
 // Update a shoutbox message (for pinning/unpinning) - admin/mod only with WebSocket notification
 router.patch('/messages/:id', isAdminOrModerator, async (req: Request, res: Response) => {
 	try {
-		const messageId = parseInt(req.params.id);
+		const messageId = req.params.id as MessageId;
 
 		if (isNaN(messageId)) {
 			return res.status(400).json({ error: 'Invalid message ID' });
