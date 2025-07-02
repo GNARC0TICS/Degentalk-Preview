@@ -175,11 +175,6 @@ const MIGRATION_BATCHES = {
 function scanFile(filePath: string): IdIssue[] {
   const issues: IdIssue[] = [];
   
-  // Early exit for unwanted files (performance optimization)
-  if (filePath.includes('.backup.')) return issues;
-  if (filePath.endsWith('.d.ts')) return issues;
-  if (filePath.includes('/scripts/')) return issues;
-  
   try {
     const content = readFileSync(filePath, 'utf-8');
     const lines = content.split('\n');
@@ -240,6 +235,11 @@ async function detectNumericIds(): Promise<MigrationReport> {
     const batchIssues: IdIssue[] = [];
     
     for (const file of files) {
+      // Skip unwanted files before processing (performance optimization)
+      if (file.includes('.backup.') || file.endsWith('.d.ts') || file.includes('/scripts/')) {
+        continue;
+      }
+      
       const fileIssues = scanFile(file);
       batchIssues.push(...fileIssues);
       
