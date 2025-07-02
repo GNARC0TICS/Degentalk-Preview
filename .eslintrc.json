@@ -64,7 +64,7 @@
 		"degen/no-raw-container-auto": "warn",
 		"degen/no-direct-req-user": "error",
 		"degen/no-number-id": "warn",
-		"degen/no-missing-branded-id-import": "off",
+		"degen/no-missing-branded-id-import": "error",
 		"@typescript-eslint/ban-types": "warn",
 		"react-hooks/rules-of-hooks": "warn",
 		"no-useless-catch": "warn",
