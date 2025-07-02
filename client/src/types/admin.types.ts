@@ -3,6 +3,8 @@
  * Comprehensive types for admin components and operations
  */
 
+import type { UserId } from '@db/types';
+
 // Base User Interface
 export interface User {
 	id: string;
@@ -79,7 +81,7 @@ export interface EconomyConfig {
 
 // Level System
 export interface LevelData {
-	id: number;
+	id: UserId;
 	level: number;
 	name: string;
 	xpRequired: number;

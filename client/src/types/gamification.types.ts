@@ -3,6 +3,7 @@
  * Types for XP, achievements, missions, and gamified content
  */
 
+import type { UserId } from '@db/types';
 import type { StandardApiResponse } from './core.types';
 
 // Achievement System
@@ -85,7 +86,7 @@ export interface XPLog {
 }
 
 export interface UserLevel {
-	id: number;
+	id: UserId;
 	level: number;
 	name: string;
 	xpRequired: number;

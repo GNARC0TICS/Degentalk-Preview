@@ -13,6 +13,7 @@ import {
 import { useThread, usePosts } from '@/features/forum/hooks/useForumQueries';
 import { BBCodePostCard } from '@/components/forum/BBCodePostCard';
 import { ThreadSidebar } from '@/components/forum/ThreadSidebar';
+import type { PostId } from '@db/types';
 import { ThreadPagination } from '@/components/forum/ThreadPagination';
 import { QuickReplyBox } from '@/components/forum/bbcode/QuickReplyBox';
 import { SiteFooter } from '@/components/footer';

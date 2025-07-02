@@ -1,3 +1,5 @@
+import type { ProductId } from '@db/types';
+
 export interface PluginReward {
 	type: string;
 	value?: string | number | boolean;
@@ -6,7 +8,7 @@ export interface PluginReward {
 }
 
 export interface Product {
-	id: number;
+	id: ProductId;
 	name: string;
 	description: string;
 	price: number;
