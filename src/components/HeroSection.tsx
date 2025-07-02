@@ -77,7 +77,7 @@ export function HeroSection() {
       )}
 
       {/* Fixed height container - solving spacing issue */}
-      <div className="container mx-auto px-4 flex items-center justify-center min-h-[calc(100vh-4rem)]">
+      <div className="container mx-auto px-4 flex items-center justify-center min-h-[calc(100vh-4rem)] relative z-10">
         <motion.div
           className="max-w-3xl mx-auto text-center"
           {...(animConfig.prefersReducedMotion ? {} : lazyFadeIn)}
