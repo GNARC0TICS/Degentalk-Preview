@@ -15,8 +15,7 @@
 	"extends": [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
-		"plugin:react-hooks/recommended",
-		"plugin:degen/recommended"
+		"plugin:react-hooks/recommended"
 	],
 	"overrides": [
 		{
@@ -65,6 +64,7 @@
 		"degen/no-raw-container-auto": "warn",
 		"degen/no-direct-req-user": "error",
 		"degen/no-number-id": "warn",
+		"degen/no-missing-branded-id-import": "off",
 		"@typescript-eslint/ban-types": "warn",
 		"react-hooks/rules-of-hooks": "warn",
 		"no-useless-catch": "warn",
@@ -72,6 +72,7 @@
 		"no-mixed-spaces-and-tabs": "warn",
 		"no-case-declarations": "warn",
 		"no-empty-pattern": "warn",
-		"no-prototype-builtins": "warn"
+		"no-prototype-builtins": "warn",
+		"degen/no-undeclared-branded-id": "off"
 	}
 }
