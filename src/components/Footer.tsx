@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { footerQuotes } from '@/config/quotes';
-import { useReducedMotion, getAnimationConfig } from '@/hooks/useReducedMotion';
 
 function RandomTagline({ className }: { className?: string }) {
   const [tagline, setTagline] = useState(footerQuotes[0]);
   const [isGlitching, setIsGlitching] = useState(false);
-  const prefersReducedMotion = useReducedMotion();
 
   const handleTaglineHover = () => {
     setIsGlitching(true);
@@ -41,8 +39,6 @@ function RandomTagline({ className }: { className?: string }) {
 }
 
 export function Footer() {
-  const prefersReducedMotion = useReducedMotion();
-  
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ 
       behavior: 'smooth' 
