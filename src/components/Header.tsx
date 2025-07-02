@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -21,15 +20,12 @@ export function Header() {
   ];
 
   return (
-    <header className="bg-zinc-900/80 backdrop-blur-sm border-b border-zinc-800 sticky top-0 z-50 shadow-md transition-all">
+    <header className="bg-zinc-900/80 backdrop-blur-sm border-b border-zinc-800 sticky top-0 z-50 shadow-md transition-all relative">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <motion.button
-            className="flex items-center cursor-pointer text-left"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
+          <button
+            className="flex items-center cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded-md px-2 py-1"
             onClick={() => {
               document.getElementById('hero')?.scrollIntoView({ 
                 behavior: 'smooth' 
@@ -40,32 +36,23 @@ export function Header() {
             <span className="text-xl font-bold text-white">
               Degentalk<sup className="text-xs text-zinc-400 font-normal">™</sup>
             </span>
-          </motion.button>
+          </button>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {navigation.map((item, index) => (
-              <motion.button
+            {navigation.map((item) => (
+              <button
                 key={item.name}
-                className="text-cod-gray-300 hover:text-emerald-400 transition-colors duration-200"
+                className="text-zinc-300 hover:text-emerald-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded-md px-3 py-2"
                 onClick={() => scrollToSection(item.id)}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
               >
                 {item.name}
-              </motion.button>
+              </button>
             ))}
           </nav>
 
           {/* Desktop CTA */}
-          <motion.div
-            className="hidden md:block"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
+          <div className="hidden md:block">
             <Button
               variant="outline"
               size="default"
@@ -74,13 +61,13 @@ export function Header() {
             >
               Join Waitlist
             </Button>
-          </motion.div>
+          </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-cod-gray-300 hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="text-zinc-300 hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400"
               aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-navigation"
@@ -94,30 +81,26 @@ export function Header() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - Positioned absolutely to not affect layout */}
         {isMobileMenuOpen && (
-          <motion.div
-            className="md:hidden"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
+          <div
+            className="absolute top-full left-0 right-0 md:hidden bg-zinc-900/95 backdrop-blur-sm border-b border-zinc-800 shadow-lg z-40"
             id="mobile-navigation"
             role="navigation"
             aria-label="Mobile navigation menu"
           >
-            <div className="py-4 space-y-4 border-t border-cod-gray-800">
+            <div className="container mx-auto px-4 py-4 space-y-2">
               {navigation.map((item) => (
                 <button
                   key={item.name}
-                  className="block w-full text-left px-4 py-2 text-cod-gray-300 hover:text-emerald-400 hover:bg-cod-gray-800/50 rounded-md transition-colors duration-200 min-h-[44px]"
+                  className="block w-full text-left px-4 py-3 text-zinc-300 hover:text-emerald-400 hover:bg-zinc-800/50 rounded-md transition-colors duration-200 min-h-[44px] focus:outline-none focus:ring-2 focus:ring-emerald-400"
                   onClick={() => scrollToSection(item.id)}
                   aria-label={`Navigate to ${item.name} section`}
                 >
                   {item.name}
                 </button>
               ))}
-              <div className="px-4 pt-2">
+              <div className="pt-2">
                 <Button
                   variant="outline"
                   size="sm"
@@ -128,7 +111,7 @@ export function Header() {
                 </Button>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
       </div>
     </header>

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { handleNewsletterSignup, initEmailJS } from '@/lib/email';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { useAnimationConfig } from '@/hooks/useReducedMotion';
 
 interface FormState {
   email: string;
@@ -14,6 +15,7 @@ interface FormState {
 }
 
 export function NewsletterSignup() {
+  const animConfig = useAnimationConfig();
   const [form, setForm] = useState<FormState>({
     email: '',
     status: 'idle',
@@ -109,39 +111,29 @@ export function NewsletterSignup() {
       id="newsletter-signup" 
       className="py-20 relative overflow-hidden"
     >
-      {/* Multi-layered background with subtle purple accents */}
+      {/* Optimized background */}
       <div className="absolute inset-0 bg-gradient-to-b from-zinc-900 to-black" />
-      <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/3 via-transparent to-violet-500/2" />
-      
-      {/* Subtle glow effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-purple-500/4 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-violet-500/3 rounded-full blur-3xl" />
-      </div>
+      {animConfig.enableHeavyAnimations && (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/3 via-transparent to-violet-500/2" />
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-purple-500/4 rounded-full blur-3xl" />
+            <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-violet-500/3 rounded-full blur-3xl" />
+          </div>
+        </>
+      )}
       <div className="container mx-auto px-4 max-w-4xl relative z-10">
-        <motion.div
-          className="text-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
+        <div className="text-center">
           {/* Header */}
           <div className="mb-12 flex flex-col lg:flex-row items-center lg:items-start gap-6 lg:gap-12 text-center lg:text-left">
             {/* Icon */}
-            <motion.div
-              className="flex-shrink-0 inline-flex items-center justify-center"
-              initial={{ scale: 0 }}
-              whileInView={{ scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
+            <div className="flex-shrink-0 inline-flex items-center justify-center">
               <img
                 src="/images/ANN.PNG"
                 alt="Announcements Icon"
                 className="h-32 w-auto sm:h-36 md:h-40 lg:h-48"
               />
-            </motion.div>
+            </div>
 
             {/* Headline & subtext */}
             <div className="max-w-2xl">
@@ -173,13 +165,7 @@ export function NewsletterSignup() {
           </div>
 
           {/* Newsletter Form */}
-          <motion.div
-            className="max-w-lg mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            viewport={{ once: true }}
-          >
+          <div className="max-w-lg mx-auto">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="flex flex-col sm:flex-row gap-3">
                 <Input
@@ -239,13 +225,7 @@ export function NewsletterSignup() {
             </form>
 
             {/* Features List */}
-            <motion.div
-              className="mt-8 text-left"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              viewport={{ once: true }}
-            >
+            <div className="mt-8 text-left">
               <p className="text-sm text-zinc-300 mb-4 text-center">
                 What you'll get for trusting us with your email:
               </p>
@@ -257,34 +237,24 @@ export function NewsletterSignup() {
                   'Behind-the-scenes chaos and existential dev updates',
                   'Direct line to complain when things inevitably break'
                 ].map((benefit, index) => (
-                  <motion.li
+                  <li
                     key={index}
                     className="flex items-start space-x-2"
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    viewport={{ once: true }}
                   >
                     <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
                     <span>{benefit}</span>
-                  </motion.li>
+                  </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
 
             {/* Privacy Note */}
-            <motion.p
-              className="text-xs text-zinc-400 mt-6"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              viewport={{ once: true }}
-            >
+            <p className="text-xs text-zinc-400 mt-6">
               We respect your privacy. No spam, just premium cope content. 
               Your data stays safer than your portfolio.
-            </motion.p>
-          </motion.div>
-        </motion.div>
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );
