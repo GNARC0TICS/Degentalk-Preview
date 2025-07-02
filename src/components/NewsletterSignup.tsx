@@ -129,7 +129,7 @@ export function NewsletterSignup() {
             {/* Icon */}
             <div className="flex-shrink-0 inline-flex items-center justify-center">
               <img
-                src="/images/ANN.PNG"
+                src="/images/replpace.png"
                 alt="Announcements Icon"
                 className="h-32 w-auto sm:h-36 md:h-40 lg:h-48"
               />
