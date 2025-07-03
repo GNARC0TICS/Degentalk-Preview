@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <title>Welcome to the Degentalk™ Waitlist</title>
+ <style>
+  /* Resets & typography */
+  body { margin:0; padding:0; background:#0a0a0a; color:#e5e5e5; font-family:Inter,'Segoe UI',Helvetica,Arial,sans-serif; line-height:1.6; }
+  a { color:#10b981; text-decoration:none; }
+  a:hover { color:#34d399; }
+  img { max-width:100%; height:auto; }
+  
+  /* Container */
+  .wrapper { width:100%; max-width:600px; margin:auto; padding:32px 24px; }
+  .card { background:linear-gradient(135deg, #18181b 0%, #1f1f23 100%); border-radius:16px; padding:48px 40px; border:1px solid #27272a; box-shadow:0 20px 25px -5px rgba(0,0,0,0.5), 0 10px 10px -5px rgba(0,0,0,0.3); }
+  
+  /* Typography */
+  .title { margin-top:0; margin-bottom:24px; font-size:32px; line-height:1.2; font-weight:800; background:linear-gradient(135deg, #fff 0%, #e5e5e5 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .subtitle { font-size:18px; color:#a1a1aa; margin:0 0 24px; font-style:italic; }
+  .position { background:linear-gradient(135deg, #10b981 0%, #34d399 100%); color:#000!important; padding:8px 16px; border-radius:8px; font-weight:700; display:inline-block; margin:0 0 24px; }
+  
+  /* Button */
+  .btn { display:inline-block; padding:16px 32px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#fff!important; border-radius:12px; font-weight:700; font-size:16px; border:none; box-shadow:0 4px 14px 0 rgba(16,185,129,0.25); transition:all 0.2s; }
+  .btn:hover { transform:translateY(-2px); box-shadow:0 8px 25px 0 rgba(16,185,129,0.35); }
+  
+  /* List styling */
+  .benefits { background:#111113; border-radius:12px; padding:24px; margin:24px 0; border-left:4px solid #10b981; }
+  .benefits li { margin-bottom:12px; color:#d4d4d8; }
+  .benefits li strong { color:#10b981; }
+  
+  /* Footer */
+  .footer { font-size:12px; color:#52525b; margin-top:32px; text-align:center; line-height:1.8; }
+  .footer a { color:#71717a; }
+  
+  /* Responsive */
+  @media (max-width:640px) {
+    .wrapper { padding:24px 16px; }
+    .card { padding:32px 24px; }
+    .title { font-size:28px; }
+  }
+  
+  /* Dark mode override */
+  @media (prefers-color-scheme:light) {
+    body { background:#fafafa; color:#333; }
+    .card { background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-color:#e2e8f0; }
+    .title { background:linear-gradient(135deg, #1e293b 0%, #334155 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .benefits { background:#f1f5f9; }
+  }
+ </style>
+</head>
+<body>
+ <div class="wrapper">
+
+  <!-- HEADER -->
+  <table width="100%" role="presentation" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center" style="padding-bottom:32px;">
+        <div style="font-size:24px; font-weight:800; color:#fff; letter-spacing:-0.5px;">
+          Degentalk<sup style="font-size:12px; color:#a1a1aa; font-weight:400;">™</sup>
+        </div>
+        <div style="font-size:14px; color:#71717a; margin-top:4px; font-style:italic;">
+          Where chaos meets community
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- MAIN CARD -->
+  <div class="card">
+    <h1 class="title">
+      🎉 Welcome to the chaos, {{firstName | "fellow degen"}}!
+    </h1>
+
+    <p class="subtitle">
+      You're officially part of the Degentalk™ early access crew.
+    </p>
+
+    <div class="position">
+      You're #{{queuePosition}} in the launch queue
+    </div>
+
+    <p style="margin:0 0 8px; font-size:16px; color:#e5e5e5;">
+      Here's what happens next:
+    </p>
+
+    <div class="benefits">
+      <ul style="margin:0; padding-left:20px;">
+        <li><strong>Launch Access:</strong> First to experience the platform when we go live</li>
+        <li><strong>Founding Member Badge:</strong> Permanent flex on late adopters</li>
+        <li><strong>$DGT Token Allocation:</strong> Early community rewards (probably worth something)</li>
+        <li><strong>Behind-the-Scenes Updates:</strong> Development chaos and existential progress reports</li>
+        <li><strong>Direct Feedback Line:</strong> Complain when things inevitably break</li>
+      </ul>
+    </div>
+
+    <p style="margin:0 0 32px; color:#d4d4d8;">
+      We'll keep you posted with launch updates and beta invites. No spam, just premium content.
+      <br><br>
+      <em style="color:#a1a1aa;">Your data stays safer than your portfolio.</em>
+    </p>
+
+    <p style="margin:0 0 40px;">
+      <a class="btn" href="https://degentalk.io">Visit Website</a>
+    </p>
+
+    <div style="border-top:1px solid #27272a; padding-top:24px; margin-top:32px;">
+      <p style="font-size:14px; color:#a1a1aa; margin:0; font-style:italic;">
+        Ready to lose money responsibly,<br />
+        <strong style="color:#10b981;">— The Degentalk™ Team</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    You received this because you joined the Degentalk™ waitlist at degentalk.io<br />
+    Questions? Email us: <a href="mailto:degentalk.io@gmail.com">degentalk.io@gmail.com</a><br />
+    <a href="{{unsubscribeLink}}">Unsubscribe</a> • <a href="https://degentalk.io/privacy">Privacy Policy</a> • <a href="https://degentalk.io">Website</a>
+  </div>
+
+ </div>
+</body>
+</html>
