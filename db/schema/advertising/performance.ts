@@ -14,6 +14,7 @@ import {
 import { sql } from 'drizzle-orm';
 import { campaigns } from './campaigns';
 import { adPlacements } from './placements';
+import { threads } from '../forum/threads';
 
 // Interaction type enum
 export const interactionTypeEnum = pgEnum('interaction_type', [
@@ -58,7 +59,7 @@ export const adImpressions = pgTable(
 
 		// Context data
 		forumSlug: varchar('forum_slug', { length: 100 }),
-		threadId: uuid('thread_id'),
+		threadId: uuid('thread_id').references(() => threads.id, { onDelete: 'set null' }),
 
 		// Technical metadata
 		deviceInfo: jsonb('device_info'),

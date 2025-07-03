@@ -123,7 +123,7 @@ export const restoreOperations = pgTable('restore_operations', {
 	id: uuid('id').primaryKey().defaultRandom(),
 
 	// Operation identification
-	operationId: uuid('operation_id').defaultRandom().notNull().unique(),
+	operationId: uuid('operation_id').defaultRandom().notNull().unique(), // @uuid-exception - unique operation identifier
 	displayName: varchar('display_name', { length: 255 }).notNull(),
 	description: text('description'),
 

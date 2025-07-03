@@ -113,7 +113,7 @@ export class WalletController extends BaseController {
 		try {
 			// Use authenticated user ID if available, otherwise default to dev user ID 2
 			const authUserId = (userService.getUserFromRequest(req) as any)?.id;
-			const userId = authUserId || 2; // Default to user ID 2 if no authenticated user
+			const userId = authUserId || 2 as UserId; // Default to user ID 2 if no authenticated user
 
 			const page = parseInt(req.query.page as string) || 1;
 			const limit = parseInt(req.query.limit as string) || 10;

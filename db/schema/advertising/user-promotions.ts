@@ -43,7 +43,7 @@ export const userPromotions = pgTable('user_promotions', {
 	type: promotionTypeEnum('type').notNull(),
 
 	// Content details
-	contentId: uuid('content_id'), // Reference to thread, post, or profile
+	contentId: uuid('content_id'), // @uuid-exception - polymorphic reference to thread, post, or profile
 	title: varchar('title', { length: 255 }).notNull(),
 	description: text('description'),
 	imageUrl: varchar('image_url', { length: 500 }),

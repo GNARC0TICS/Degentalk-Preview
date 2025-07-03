@@ -6,9 +6,11 @@
 
 import { Router } from 'express';
 import type { Request, Response } from 'express';
+import type { UserId } from '@db/types';
 import { db } from '@db';
 import { users, userRelationships } from '@schema';
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';
+import { isValidId } from '@shared/utils/id';
 
 import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware/auth.middleware';
 import { getUserIdFromRequest } from '@server/src/utils/auth';
@@ -18,9 +20,9 @@ const router = Router();
 // Get followers for a user
 router.get('/:userId/followers', async (req: Request, res: Response) => {
 	try {
-		const { userId } = req.params;
+		const userId = req.params.userId as UserId;
 
-		if (!userId || isNaN(Number(userId))) {
+		if (!userId || !isValidId(userId)) {
 			return res.status(400).json({ message: 'Valid user ID is required' });
 		}
 
@@ -36,7 +38,7 @@ router.get('/:userId/followers', async (req: Request, res: Response) => {
 			.innerJoin(users, eq(users.id, userRelationships.followerId))
 			.where(
 				and(
-					eq(userRelationships.followingId, Number(userId)),
+					eq(userRelationships.followingId, userId),
 					eq(userRelationships.relationshipType, 'follow')
 				)
 			)
@@ -52,9 +54,9 @@ router.get('/:userId/followers', async (req: Request, res: Response) => {
 // Get following for a user
 router.get('/:userId/following', async (req: Request, res: Response) => {
 	try {
-		const { userId } = req.params;
+		const userId = req.params.userId as UserId;
 
-		if (!userId || isNaN(Number(userId))) {
+		if (!userId || !isValidId(userId)) {
 			return res.status(400).json({ message: 'Valid user ID is required' });
 		}
 
@@ -70,7 +72,7 @@ router.get('/:userId/following', async (req: Request, res: Response) => {
 			.innerJoin(users, eq(users.id, userRelationships.followingId))
 			.where(
 				and(
-					eq(userRelationships.followerId, Number(userId)),
+					eq(userRelationships.followerId, userId),
 					eq(userRelationships.relationshipType, 'follow')
 				)
 			)
@@ -86,10 +88,10 @@ router.get('/:userId/following', async (req: Request, res: Response) => {
 // Follow a user
 router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const { userId } = req.params;
+		const userId = req.params.userId as UserId;
 		const followerId = getUserIdFromRequest(req);
 
-		if (!userId || isNaN(Number(userId))) {
+		if (!userId || !isValidId(userId)) {
 			return res.status(400).json({ message: 'Valid user ID is required' });
 		}
 
@@ -104,7 +106,7 @@ router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Respon
 			.where(
 				and(
 					eq(userRelationships.followerId, followerId),
-					eq(userRelationships.followingId, Number(userId)),
+					eq(userRelationships.followingId, userId),
 					eq(userRelationships.relationshipType, 'follow')
 				)
 			);
@@ -117,14 +119,14 @@ router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Respon
 		const userExists = await db
 			.select()
 			.from(users)
-			.where(eq(users.id, Number(userId)));
+			.where(eq(users.id, userId));
 
 		if (userExists.length === 0) {
 			return res.status(404).json({ message: 'User not found' });
 		}
 
 		// Cannot follow yourself
-		if (followerId === Number(userId)) {
+		if (followerId === userId) {
 			return res.status(400).json({ message: 'You cannot follow yourself' });
 		}
 
@@ -133,7 +135,7 @@ router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Respon
 			.insert(userRelationships)
 			.values({
 				followerId: followerId,
-				followingId: Number(userId),
+				followingId: userId,
 				relationshipType: 'follow',
 				isAccepted: true, // follow doesn't need acceptance
 				createdAt: new Date()
@@ -153,10 +155,10 @@ router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Respon
 // Unfollow a user
 router.delete('/unfollow/:userId', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const { userId } = req.params;
+		const userId = req.params.userId as UserId;
 		const followerId = getUserIdFromRequest(req);
 
-		if (!userId || isNaN(Number(userId))) {
+		if (!userId || !isValidId(userId)) {
 			return res.status(400).json({ message: 'Valid user ID is required' });
 		}
 
@@ -171,7 +173,7 @@ router.delete('/unfollow/:userId', isAuthenticated, async (req: Request, res: Re
 			.where(
 				and(
 					eq(userRelationships.followerId, followerId),
-					eq(userRelationships.followingId, Number(userId)),
+					eq(userRelationships.followingId, userId),
 					eq(userRelationships.relationshipType, 'follow')
 				)
 			);
@@ -186,7 +188,7 @@ router.delete('/unfollow/:userId', isAuthenticated, async (req: Request, res: Re
 			.where(
 				and(
 					eq(userRelationships.followerId, followerId),
-					eq(userRelationships.followingId, Number(userId)),
+					eq(userRelationships.followingId, userId),
 					eq(userRelationships.relationshipType, 'follow')
 				)
 			);
@@ -201,10 +203,10 @@ router.delete('/unfollow/:userId', isAuthenticated, async (req: Request, res: Re
 // Check if current user is following a user
 router.get('/is-following/:userId', isAuthenticated, async (req: Request, res: Response) => {
 	try {
-		const { userId } = req.params;
+		const userId = req.params.userId as UserId;
 		const followerId = getUserIdFromRequest(req);
 
-		if (!userId || isNaN(Number(userId))) {
+		if (!userId || !isValidId(userId)) {
 			return res.status(400).json({ message: 'Valid user ID is required' });
 		}
 

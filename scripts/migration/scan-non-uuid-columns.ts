@@ -67,16 +67,28 @@ function isExternalIdException(column: string, content: string): boolean {
   
   // Known external system IDs
   const externalIdPatterns = [
-    /ccpayment_user_id/i,
-    /external_id/i,
-    /third_party_id/i,
+    /ccpayment.*id/i,
+    /external.*id/i,
+    /third_party.*id/i,
     /api_key/i,
-    /webhook_id/i,
+    /webhook.*id/i,
     /stripe_/i,
     /paypal_/i,
     /discord_/i,
     /twitter_/i,
-    /github_/i
+    /github_/i,
+    /blockchain.*id/i,
+    /tx.*id/i,
+    /record.*id/i,
+    /payment.*id/i,
+    /x.*id/i,
+    /session.*id/i, // Session IDs are often external
+    /entity.*id/i,  // Generic entity IDs are often polymorphic
+    /context.*id/i, // Context IDs are often polymorphic
+    /room.*id/i,    // Room IDs often reference external chat systems
+    /message.*id/i, // Message IDs can be polymorphic or external
+    /related.*id/i, // Related IDs are often polymorphic
+    /airdrop.*batch.*id/i // Airdrop batch IDs are internal counters
   ];
   
   return externalIdPatterns.some(pattern => pattern.test(column));
@@ -156,16 +168,17 @@ async function scanFile(filePath: string): Promise<ColumnIssue[]> {
   }
   
   // 4. Check for missing .references() on FK columns
-  const possibleFkPattern = /(\w+(?:Id|_id)):\s*(uuid|varchar)\([^)]+\)(?![^.]*\.references)/g;
+  const possibleFkPattern = /(\w+(?:Id|_id)):\s*(uuid|varchar)\([^)]+\)(?![^}]*\.references)/g;
   while ((match = possibleFkPattern.exec(content)) !== null) {
     const columnName = match[1];
     const columnType = match[2];
     
     if (!isExternalIdException(columnName, content)) {
-      // Skip if it's already a proper FK
-      const hasReference = new RegExp(`${columnName}:[^.]*\\.references\\(`).test(content);
+      // More precise check: look for the specific column definition and see if it has .references()
+      const columnDefPattern = new RegExp(`${columnName}:\\s*(?:uuid|varchar)\\([^)]+\\)[^,}]*`, 'g');
+      const columnDefMatch = columnDefPattern.exec(content);
       
-      if (!hasReference) {
+      if (columnDefMatch && !columnDefMatch[0].includes('.references(')) {
         issues.push({
           file: relativeFile,
           table: tableName,

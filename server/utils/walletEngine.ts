@@ -160,7 +160,7 @@ export class WalletEngine {
 	 * Get user's purchased DGT unlocks
 	 */
 	static async getUserUnlocks(
-		userId: number
+		userId: UserId
 	): Promise<Array<{ unlock: DgtUnlock; acquired_at: Date }>> {
 		try {
 			const result = await db.execute(sql`

@@ -13,6 +13,7 @@ import {
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { campaigns } from './campaigns';
+import { threads } from '../forum/threads';
 
 // Payment status enum
 export const paymentStatusEnum = pgEnum('payment_status', [
@@ -120,7 +121,8 @@ export const adGovernanceProposals = pgTable('ad_governance_proposals', {
 	executionResult: jsonb('execution_result'),
 
 	// Community engagement
-	discussionThreadId: uuid('discussion_thread_id'), // Link to forum thread
+	discussionThreadId: uuid('discussion_thread_id')
+		.references(() => threads.id, { onDelete: 'set null' }), // Link to forum thread
 
 	createdAt: timestamp('created_at')
 		.notNull()

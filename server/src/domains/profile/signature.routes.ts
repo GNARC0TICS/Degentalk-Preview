@@ -11,6 +11,7 @@ import { SignatureService } from './signature.service';
 import { z } from 'zod';
 import { validateRequest } from '../../middleware/validate-request';
 import { getUserIdFromRequest } from '@server/src/utils/auth';
+import { isValidId } from '@shared/utils/id';
 
 const router = Router();
 
@@ -58,7 +59,7 @@ router.get('/:userId', async (req: Request, res: Response) => {
 	try {
 		const userId = req.params.userId as UserId;
 
-		if (!userId || isNaN(Number(userId)) || Number(userId) <= 0) {
+		if (!userId || !isValidId(userId)) {
 			return res.status(400).json({ message: 'Invalid user ID' });
 		}
 

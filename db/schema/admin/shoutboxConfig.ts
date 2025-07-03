@@ -12,6 +12,7 @@ import {
 	uuid
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
+import { customEmojis } from '../forum/customEmojis';
 
 /**
  * Comprehensive shoutbox configuration settings for admin panel
@@ -209,7 +210,9 @@ export const shoutboxEmojiPermissions = pgTable('shoutbox_emoji_permissions', {
 		.primaryKey()
 		.$defaultFn(() => createId()),
 
-	emojiId: varchar('emoji_id', { length: 128 }).notNull(),
+	emojiId: varchar('emoji_id', { length: 128 })
+		.notNull()
+		.references(() => customEmojis.id, { onDelete: 'cascade' }),
 	roomId: varchar('room_id', { length: 128 }), // null = global
 
 	// Role-based access

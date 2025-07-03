@@ -1,0 +1,8 @@
+File,Table,Column,Current Type,Issue,Severity,Recommendation
+"/db/schema/admin/backups.ts","adminBackups","operationId","uuid","Foreign key column missing .references()","medium","Add: .references(() => [targetTable].id)"
+"/db/schema/admin/shoutboxConfig.ts","shoutboxConfig","emojiId","varchar","Foreign key column missing .references()","medium","Add: .references(() => [targetTable].id)"
+"/db/schema/advertising/payments.ts","cryptoPayments","discussionThreadId","uuid","Foreign key column missing .references()","medium","Add: .references(() => [targetTable].id)"
+"/db/schema/advertising/performance.ts","adImpressions","threadId","uuid","Foreign key column missing .references()","medium","Add: .references(() => [targetTable].id)"
+"/db/schema/advertising/targeting.ts","campaignRules","campaignId","uuid","Foreign key column missing .references()","medium","Add: .references(() => [targetTable].id)"
+"/db/schema/advertising/user-promotions.ts","userPromotions","contentId","uuid","Foreign key column missing .references()","medium","Add: .references(() => [targetTable].id)"
+"/db/schema/economy/titles.ts","titles","roleId","varchar","Foreign key column missing .references()","medium","Add: .references(() => [targetTable].id)"

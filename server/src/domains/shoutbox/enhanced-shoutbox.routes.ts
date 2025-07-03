@@ -40,6 +40,7 @@ import { ShoutboxCacheService } from './services/cache.service';
 import { messageQueue, MessageQueueService } from './services/queue.service';
 import { PerformanceService } from './services/performance.service';
 import { createCustomRateLimiter } from '@server/src/core/services/rate-limit.service';
+import { isValidId } from '@shared/utils/id';
 
 const router = Router();
 
@@ -651,13 +652,13 @@ router.post('/ignore', isAuthenticated, async (req: Request, res: Response) => {
 		const userId = userService.getUserFromRequest(req);
 		const { targetUserId, roomId, options } = req.body;
 
-		if (!targetUserId || isNaN(parseInt(targetUserId))) {
+		if (!targetUserId || !isValidId(targetUserId)) {
 			return res.status(400).json({ error: 'Invalid target user ID' });
 		}
 
 		const result = await RoomService.ignoreUser(
 			userId,
-			parseInt(targetUserId),
+			targetUserId as UserId,
 			roomId ? parseInt(roomId) : undefined,
 			options
 		);

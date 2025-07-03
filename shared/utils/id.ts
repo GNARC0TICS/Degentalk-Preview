@@ -87,3 +87,56 @@ export function idsEqual<T extends string>(
 export function filterValidIds<T extends string>(ids: (Id<T> | null | undefined)[]): Id<T>[] {
 	return ids.filter((id): id is Id<T> => id != null && isValidId(id));
 }
+
+/**
+ * Convert route parameter to typed ID
+ * Replaces parseInt() patterns for ID parameters
+ */
+export function parseIdParam<T extends string>(param: string | undefined): Id<T> | null {
+	if (!param || !isValidId(param)) {
+		return null;
+	}
+	return param as Id<T>;
+}
+
+/**
+ * Validate and assert ID is valid UUID
+ * Throws error for better debugging
+ */
+export function assertValidId(id: string | undefined, paramName: string = 'id'): asserts id is string {
+	if (!id || !isValidId(id)) {
+		throw new Error(`Invalid ${paramName}: must be a valid UUID`);
+	}
+}
+
+/**
+ * Legacy support for numeric validation during migration
+ * Use this for entities that haven't been migrated to UUIDs yet
+ */
+export function isValidNumericId(id: string | number | undefined | null): boolean {
+	if (!id) return false;
+	
+	const num = Number(id);
+	return !isNaN(num) && num > 0 && Number.isInteger(num);
+}
+
+/**
+ * Convert route parameter to entity ID (supports both numeric and UUID)
+ * For gradual migration scenarios
+ */
+export function parseEntityIdParam(param: string | undefined): string | number | null {
+	if (!param) return null;
+	
+	// Try UUID first
+	if (isValidId(param)) {
+		return param;
+	}
+	
+	// Fall back to numeric for legacy support
+	const num = parseInt(param);
+	if (!isNaN(num) && num > 0) {
+		return num;
+	}
+	
+	return null;
+}

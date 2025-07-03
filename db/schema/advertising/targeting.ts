@@ -1,6 +1,7 @@
 // Insert the missing Drizzle imports at the top of the file
 import { pgTable, uuid, varchar, jsonb, integer, boolean, timestamp } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
+import { campaigns } from './campaigns';
 
 // Campaign rules engine for dynamic configuration
 export const campaignRules = pgTable('campaign_rules', {
@@ -9,7 +10,7 @@ export const campaignRules = pgTable('campaign_rules', {
 	// Rule identification
 	name: varchar('name', { length: 255 }).notNull(),
 	description: varchar('description', { length: 500 }),
-	campaignId: uuid('campaign_id'), // null = global rule
+	campaignId: uuid('campaign_id').references(() => campaigns.id, { onDelete: 'cascade' }), // null = global rule
 
 	// Rule definition
 	ruleType: varchar('rule_type', { length: 50 }).notNull(), // targeting, bidding, display, frequency

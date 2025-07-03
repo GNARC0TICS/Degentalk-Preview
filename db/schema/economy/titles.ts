@@ -44,7 +44,7 @@ export const titles = pgTable('titles', {
 	animationDuration: doublePrecision('animation_duration'),
 
 	// Role binding
-	roleId: varchar('role_id', { length: 50 }),
+	roleId: varchar('role_id', { length: 50 }), // @uuid-exception - string role identifier
 
 	// Metadata
 	isShopItem: boolean('is_shop_item').default(false),

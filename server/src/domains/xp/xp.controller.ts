@@ -16,6 +16,7 @@ import { xpActionLogs } from './xp-actions-schema';
 import { desc, eq, and, gte, sql } from 'drizzle-orm';
 import { xpActionSettings, users, xpAdjustmentLogs, levels } from '@schema'; // Adjusted path
 import { handleXpAward } from './events/xp.events'; // Assuming this handles level ups and logging
+import { isValidId } from '@shared/utils/id';
 // import { z } from 'zod'; // Removed as unused
 // import { x } from 'drizzle-orm/select-builder/select'; // Removed as unused
 
@@ -243,11 +244,11 @@ export const getUserXpLogs = async (req: Request, res: Response, next: NextFunct
 export const awardActionXp = async (req: Request, res: Response) => {
 	try {
 		const { userId, action, entityId } = req.body;
-		const authenticatedUserId = (req as any).user?.id; // Assuming user ID is available from auth middleware
+		const authenticatedUserId = (req as any).user?.id;
 
-		if (!userId || !action) {
+		if (!userId || !action || !isValidId(userId)) {
 			// entityId can be optional for some actions
-			return res.status(400).json({ error: 'Missing required parameters (userId, action).' });
+			return res.status(400).json({ error: 'Missing or invalid required parameters (userId, action).' });
 		}
 
 		// Optional: Validate that authenticatedUserId matches userId or is an admin if they differ
@@ -278,7 +279,7 @@ export const awardActionXp = async (req: Request, res: Response) => {
 		// Use the centralized event handler for awarding XP
 		// This will handle XP update, logging, and level ups
 		const { newXp, leveledUp, newLevel } = await handleXpAward(
-			Number(userId),
+			userId,
 			xpToAward,
 			action, // source
 			`${action} for entity #${entityId}` // reason for the log

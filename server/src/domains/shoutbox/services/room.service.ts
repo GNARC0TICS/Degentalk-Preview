@@ -569,7 +569,7 @@ export class RoomService {
 					)
 				);
 
-			return ignoreList.map((item) => parseInt(item.ignoredUserId));
+			return ignoreList.map((item) => item.ignoredUserId as UserId);
 		} catch (error) {
 			logger.error('RoomService', 'Error getting ignore list', { error, userId, roomId });
 			return [];

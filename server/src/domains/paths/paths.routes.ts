@@ -13,6 +13,7 @@ import { sql } from 'drizzle-orm';
 
 import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
+import { isValidId } from '@shared/utils/id';
 
 // Using shared isAuthenticated middleware from middleware/auth.ts
 
@@ -157,7 +158,7 @@ export function registerPathRoutes(router: Router) {
 			const userId = req.params.userId as UserId;
 			const pathId = req.params.pathId;
 
-			if (!userId || isNaN(Number(userId)) || Number(userId) <= 0) {
+			if (!userId || !isValidId(userId)) {
 				return res.status(400).json({ message: 'Invalid user ID' });
 			}
 
@@ -199,7 +200,7 @@ export function registerPathRoutes(router: Router) {
 		try {
 			const userId = req.params.userId as UserId;
 
-			if (!userId || isNaN(Number(userId)) || Number(userId) <= 0) {
+			if (!userId || !isValidId(userId)) {
 				return res.status(400).json({ message: 'Invalid user ID' });
 			}
 
