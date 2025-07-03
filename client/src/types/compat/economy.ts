@@ -1,12 +1,12 @@
 export interface InsertXpCloutSettings {
-	id?: number;
+	id?: string;
 	xpAmount: number;
 	cloutAmount: number;
 	description?: string;
 }
 
 export interface InsertXpActionSetting {
-	id?: number;
+	id?: string;
 	key: string;
 	xp: number;
 	description?: string;

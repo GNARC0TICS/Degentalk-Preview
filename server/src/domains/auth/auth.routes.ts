@@ -116,7 +116,7 @@ export function setupAuthPassport(sessionStore: any) {
 	});
 
 	// Configure user deserialization (retrieving user from session)
-	passport.deserializeUser(async (id: number | string, done) => {
+	passport.deserializeUser(async (id: string, done) => {
 		logger.debug('Passport deserializeUser called', { id, idType: typeof id });
 		try {
 			// Try to get user from storage

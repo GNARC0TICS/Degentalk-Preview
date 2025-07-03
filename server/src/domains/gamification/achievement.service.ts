@@ -26,7 +26,7 @@ import { XpService } from '../xp/xp.service';
 import type { UserId, AchievementId } from '@/db/types';
 
 export interface AchievementDefinition {
-	id: number;
+	id: AchievementId;
 	name: string;
 	description: string;
 	iconUrl?: string;

@@ -24,14 +24,15 @@ import {
 } from './stickers.validators';
 import { formatAdminResponse, AdminOperationBoundary } from '@server/src/domains/admin/shared';
 import { AdminError, AdminErrorCodes } from '@server/src/domains/admin/admin.errors';
+import type { StickerId, PackId } from '@db/types';
 
 // Additional validation schemas
 const stickerIdSchema = z.object({
-	id: z.coerce.number().positive()
+	id: z.string()
 });
 
 const packIdSchema = z.object({
-	id: z.coerce.number().positive()
+	id: z.string()
 });
 
 export class StickerController {
