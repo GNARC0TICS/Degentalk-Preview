@@ -175,7 +175,7 @@ export class XpAdminService {
 		return { message: 'Create Badge not implemented' };
 	}
 
-	async updateBadge(badgeId: number, badgeData: any) {
+	async updateBadge(badgeId: string, badgeData: any) {
 		logger.info('XP_ADMIN_SERVICE', 'Update Badge called - not implemented', {
 			badgeId,
 			badgeData
@@ -185,7 +185,7 @@ export class XpAdminService {
 		return { message: 'Update Badge not implemented' };
 	}
 
-	async deleteBadge(badgeId: number) {
+	async deleteBadge(badgeId: string) {
 		logger.info('XP_ADMIN_SERVICE', 'Delete Badge called - not implemented', { badgeId });
 		// await db.delete(badges).where(eq(badges.id, badgeId));
 		return { message: 'Delete Badge not implemented' };
@@ -204,7 +204,7 @@ export class XpAdminService {
 		return { message: 'Create Title not implemented' };
 	}
 
-	async updateTitle(titleId: number, titleData: any) {
+	async updateTitle(titleId: string, titleData: any) {
 		logger.info('XP_ADMIN_SERVICE', 'Update Title called - not implemented', {
 			titleId,
 			titleData
@@ -214,7 +214,7 @@ export class XpAdminService {
 		return { message: 'Update Title not implemented' };
 	}
 
-	async deleteTitle(titleId: number) {
+	async deleteTitle(titleId: string) {
 		logger.info('XP_ADMIN_SERVICE', 'Delete Title called - not implemented', { titleId });
 		// await db.delete(titles).where(eq(titles.id, titleId));
 		return { message: 'Delete Title not implemented' };
