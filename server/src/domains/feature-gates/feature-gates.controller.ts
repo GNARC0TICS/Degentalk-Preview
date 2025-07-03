@@ -2,6 +2,7 @@ import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response, NextFunction } from 'express';
 import { logger, LogLevel } from '../../core/logger';
 import { featureGatesService } from './feature-gates.service';
+import { isValidId } from '@shared/utils/id';
 
 /**
  * Get all feature gates
@@ -101,13 +102,13 @@ export const checkFeatureAccessForUser = async (
 	try {
 		const { userId, featureId } = req.params;
 
-		if (!userId || !featureId) {
+		if (!userId || !featureId || !isValidId(userId)) {
 			return res.status(400).json({
-				message: 'User ID and Feature ID are required'
+				message: 'User ID and Feature ID are required and must be valid'
 			});
 		}
 
-		const access = await featureGatesService.checkFeatureAccess(Number(userId), featureId);
+		const access = await featureGatesService.checkFeatureAccess(userId as UserId, featureId);
 		res.status(200).json(access);
 	} catch (error) {
 		logger.error('Error checking feature access for user:', error);
@@ -126,11 +127,11 @@ export const getAllFeatureAccessForUser = async (
 	try {
 		const { userId } = req.params;
 
-		if (!userId) {
-			return res.status(400).json({ message: 'User ID is required' });
+		if (!userId || !isValidId(userId)) {
+			return res.status(400).json({ message: 'User ID is required and must be valid' });
 		}
 
-		const access = await featureGatesService.checkAllFeatureAccess(Number(userId));
+		const access = await featureGatesService.checkAllFeatureAccess(userId as UserId);
 		res.status(200).json(access);
 	} catch (error) {
 		logger.error('Error getting all feature access for user:', error);

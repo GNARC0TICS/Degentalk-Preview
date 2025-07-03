@@ -8,7 +8,8 @@ import {
 	decimal,
 	boolean,
 	date,
-	pgEnum
+	pgEnum,
+	index
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
 import { shoutboxMessages } from '../messaging/shoutboxMessages';

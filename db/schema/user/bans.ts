@@ -6,7 +6,8 @@ import {
 	varchar,
 	timestamp,
 	boolean,
-	uuid
+	uuid,
+	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from './users';

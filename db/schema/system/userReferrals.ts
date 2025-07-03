@@ -6,7 +6,8 @@ import {
 	boolean,
 	jsonb,
 	unique,
-	uuid
+	uuid,
+	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';

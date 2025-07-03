@@ -19,13 +19,14 @@ import {
 	isAdmin
 } from '../../auth/middleware/auth.middleware';
 import { getUserIdFromRequest } from '@server/src/utils/auth';
+import { isValidId } from '@shared/utils/id';
 
 // Initialize the service
 const vaultService = new VaultService();
 
 // Create validation schemas
 const lockFundsSchema = z.object({
-	userId: z.number(),
+	userId: z.string().uuid(),
 	walletAddress: z.string(), // No length validation - we handle test addresses
 	amount: z.number().positive(),
 	unlockTime: z.string().transform((str) => new Date(str)), // Convert string to Date
@@ -33,8 +34,8 @@ const lockFundsSchema = z.object({
 });
 
 const unlockFundsSchema = z.object({
-	userId: z.number(),
-	vaultId: z.number()
+	userId: z.string().uuid(),
+	vaultId: z.string().uuid()
 });
 
 const router = Router();
@@ -72,8 +73,8 @@ router.get('/admin/vaults', isAdmin, async (req: Request, res: Response) => {
 // Admin endpoint to manually unlock a vault (override time constraints)
 router.post('/admin/vaults/unlock/:vaultId', isAdmin, async (req: Request, res: Response) => {
 	try {
-		const vaultId = Number(req.params.vaultId);
-		if (isNaN(vaultId)) {
+		const vaultId = req.params.vaultId;
+		if (!isValidId(vaultId)) {
 			return res.status(400).json({ error: 'Invalid vault ID' });
 		}
 

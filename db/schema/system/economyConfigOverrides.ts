@@ -1,4 +1,7 @@
-import { pgTable, serial, jsonb, timestamp, uuid } from 'drizzle-orm/pg-core';
+import {
+	pgTable, serial, jsonb, timestamp, uuid,
+	index
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 /**
@@ -10,7 +13,11 @@ export const economyConfigOverrides = pgTable('economy_config_overrides', {
 	config: jsonb('config').notNull(), // JSON blob mirroring `economy.config.ts` shape
 	createdAt: timestamp('created_at').default(sql`now()`),
 	updatedAt: timestamp('updated_at').default(sql`now()`)
-});
+},
+	(table) => ({
+		idx_economyConfigOverrides_createdAt: index('idx_economyConfigOverrides_createdAt').on(table.createdAt),
+		idx_economyConfigOverrides_updatedAt: index('idx_economyConfigOverrides_updatedAt').on(table.updatedAt),
+	}));
 
 export type EconomyConfigOverride = typeof economyConfigOverrides.$inferSelect;
 export type NewEconomyConfigOverride = typeof economyConfigOverrides.$inferInsert;

@@ -1,4 +1,7 @@
-import { pgTable, serial, varchar, boolean, integer, timestamp, uuid } from 'drizzle-orm/pg-core';
+import {
+	pgTable, serial, varchar, boolean, integer, timestamp, uuid,
+	index
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { forumStructure } from './structure'; // Updated to use forum structure
 

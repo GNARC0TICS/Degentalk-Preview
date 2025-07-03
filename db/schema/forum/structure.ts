@@ -8,7 +8,8 @@ import {
 	timestamp,
 	jsonb,
 	real,
-	uuid
+	uuid,
+	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { roles } from '../user/roles'; // Use roles instead of deprecated userGroups

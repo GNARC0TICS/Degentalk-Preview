@@ -1,4 +1,7 @@
-import { pgTable, text, boolean, timestamp, uuid, integer, serial } from 'drizzle-orm/pg-core';
+import {
+	pgTable, text, boolean, timestamp, uuid, integer, serial,
+	index
+} from 'drizzle-orm/pg-core';
 import { threads } from './threads'; // Import threads to reference its ID
 
 export const threadFeaturePermissions = pgTable('thread_feature_permissions', {

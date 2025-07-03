@@ -1,4 +1,7 @@
-import { pgTable, serial, numeric, timestamp, uuid } from 'drizzle-orm/pg-core';
+import {
+	pgTable, serial, numeric, timestamp, uuid,
+	index
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const xpCloutSettings = pgTable('xp_clout_settings', {

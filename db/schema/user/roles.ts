@@ -9,7 +9,8 @@ import {
 	doublePrecision,
 	timestamp,
 	unique,
-	uuid
+	uuid,
+	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 

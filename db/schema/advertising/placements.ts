@@ -8,7 +8,8 @@ import {
 	boolean,
 	jsonb,
 	integer,
-	pgEnum
+	pgEnum,
+	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 

@@ -7,7 +7,8 @@ import {
 	boolean,
 	timestamp,
 	numeric,
-	uuid
+	uuid,
+	index
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
 import { sql } from 'drizzle-orm';

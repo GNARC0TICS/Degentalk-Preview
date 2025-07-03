@@ -7,7 +7,8 @@ import {
 	text,
 	pgEnum,
 	varchar,
-	integer
+	integer,
+	index
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
 

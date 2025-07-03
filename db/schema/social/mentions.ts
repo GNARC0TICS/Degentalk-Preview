@@ -7,7 +7,8 @@ import {
 	timestamp,
 	boolean,
 	pgEnum,
-	integer
+	integer,
+	index
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
 import { threads } from '../forum/threads';

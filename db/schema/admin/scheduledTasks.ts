@@ -6,7 +6,8 @@ import {
 	boolean,
 	timestamp,
 	jsonb,
-	uuid
+	uuid,
+	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 

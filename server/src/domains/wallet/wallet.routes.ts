@@ -123,7 +123,7 @@ router.post('/withdraw', async (req, res) => {
 		}
 
 		const recordId = await walletService.withdrawToBlockchain(userId, {
-			coinId: parseInt(coinId),
+			coinId,
 			amount,
 			toAddress,
 			memo
@@ -163,7 +163,7 @@ router.post('/transfer', async (req, res) => {
 
 		const recordId = await walletService.transferToUser(fromUserId, {
 			toUserId,
-			coinId: parseInt(coinId),
+			coinId,
 			amount,
 			note
 		});
@@ -201,8 +201,8 @@ router.post('/swap', async (req, res) => {
 		}
 
 		const recordId = await walletService.swapCrypto(userId, {
-			fromCoinId: parseInt(fromCoinId),
-			toCoinId: parseInt(toCoinId),
+			fromCoinId,
+			toCoinId,
 			fromAmount
 		});
 

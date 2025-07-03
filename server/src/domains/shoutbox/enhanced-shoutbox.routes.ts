@@ -93,7 +93,7 @@ const createRoomSchema = z.object({
  */
 router.get('/config', isAdmin, async (req: Request, res: Response) => {
 	try {
-		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
 		const config = await ShoutboxService.getConfig(roomId);
 
 		res.json({
@@ -111,7 +111,7 @@ router.get('/config', isAdmin, async (req: Request, res: Response) => {
  */
 router.patch('/config', isAdmin, async (req: Request, res: Response) => {
 	try {
-		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
 		const userId = userService.getUserFromRequest(req);
 
 		const updatedConfig = await ShoutboxService.updateConfig(
@@ -199,10 +199,6 @@ router.patch('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => {
 		const roomId = req.params.roomId as RoomId;
 		const userId = userService.getUserFromRequest(req);
 
-		if (isNaN(roomId)) {
-			return res.status(400).json({ error: 'Invalid room ID' });
-		}
-
 		const result = await RoomService.updateRoom(roomId, req.body, userId);
 
 		if (result.success) {
@@ -223,10 +219,6 @@ router.delete('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => 
 	try {
 		const roomId = req.params.roomId as RoomId;
 		const userId = userService.getUserFromRequest(req);
-
-		if (isNaN(roomId)) {
-			return res.status(400).json({ error: 'Invalid room ID' });
-		}
 
 		const result = await RoomService.deleteRoom(roomId, userId);
 
@@ -271,7 +263,7 @@ router.patch('/rooms/reorder', isAdmin, async (req: Request, res: Response) => {
 router.get('/messages', isAuthenticatedOptional, async (req: Request, res: Response) => {
 	try {
 		const userId = userService.getUserFromRequest(req);
-		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : null;
+		const roomId = req.query.roomId ? (req.query.roomId as string) : null;
 		const limit = Math.min(parseInt(req.query.limit as string) || 50, 100);
 		const before = req.query.before ? parseInt(req.query.before as string) : null;
 		const after = req.query.after ? parseInt(req.query.after as string) : null;
@@ -501,7 +493,7 @@ router.patch(
 			const { isPinned } = req.body;
 			const userId = userService.getUserFromRequest(req);
 
-			if (isNaN(messageId) || typeof isPinned !== 'boolean') {
+			if (typeof isPinned !== 'boolean') {
 				return res.status(400).json({ error: 'Invalid parameters' });
 			}
 
@@ -591,10 +583,6 @@ router.delete('/messages/:messageId', isAdminOrModerator, async (req: Request, r
 		const messageId = req.params.messageId as MessageId;
 		const userId = userService.getUserFromRequest(req);
 
-		if (isNaN(messageId)) {
-			return res.status(400).json({ error: 'Invalid message ID' });
-		}
-
 		// Soft delete message
 		const [deletedMessage] = await db
 			.update(shoutboxMessages)
@@ -659,7 +647,7 @@ router.post('/ignore', isAuthenticated, async (req: Request, res: Response) => {
 		const result = await RoomService.ignoreUser(
 			userId,
 			targetUserId as UserId,
-			roomId ? parseInt(roomId) : undefined,
+			roomId ? (roomId as RoomId) : undefined,
 			options
 		);
 
@@ -674,9 +662,9 @@ router.delete('/ignore/:targetUserId', isAuthenticated, async (req: Request, res
 	try {
 		const userId = userService.getUserFromRequest(req);
 		const targetUserId = req.params.targetUserId as UserId;
-		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
 
-		if (isNaN(targetUserId)) {
+		if (typeof targetUserId !== 'string') {
 			return res.status(400).json({ error: 'Invalid target user ID' });
 		}
 
@@ -695,7 +683,7 @@ router.delete('/ignore/:targetUserId', isAuthenticated, async (req: Request, res
 router.get('/analytics', isAdmin, async (req: Request, res: Response) => {
 	try {
 		const period = (req.query.period as string) || '24h';
-		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
 
 		let timeFilter: any;
 		switch (period) {
@@ -717,7 +705,7 @@ router.get('/analytics', isAdmin, async (req: Request, res: Response) => {
 
 		const conditions = [
 			timeFilter,
-			roomId ? eq(shoutboxAnalytics.roomId, roomId.toString()) : undefined
+			roomId ? eq(shoutboxAnalytics.roomId, roomId) : undefined
 		].filter(Boolean);
 
 		// Get event counts by type
@@ -777,7 +765,7 @@ router.get('/analytics', isAdmin, async (req: Request, res: Response) => {
 router.get('/export', isAdmin, async (req: Request, res: Response) => {
 	try {
 		const format = (req.query.format as string) || 'json';
-		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
 		const dateFrom = req.query.dateFrom as string;
 		const dateTo = req.query.dateTo as string;
 
@@ -887,7 +875,7 @@ router.get('/performance/analyze', isAdmin, async (req: Request, res: Response) 
 // Get optimized messages with caching
 router.get('/messages/optimized', isAuthenticatedOptional, async (req: Request, res: Response) => {
 	try {
-		const roomId = parseInt(req.query.roomId as string);
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
 		const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
 		const cursor = req.query.cursor ? parseInt(req.query.cursor as string) : undefined;
 		const direction = (req.query.direction as 'before' | 'after') || 'before';
@@ -918,8 +906,8 @@ router.get('/messages/optimized', isAuthenticatedOptional, async (req: Request, 
 // Queue management endpoints (admin only)
 router.get('/queue/status', isAdmin, async (req: Request, res: Response) => {
 	try {
-		const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
-		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
+		const userId = req.query.userId ? (req.query.userId as string) : undefined;
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
 
 		const queuedMessages = messageQueue.getQueuedMessages(userId, roomId);
 		const stats = messageQueue.getStats();
@@ -995,8 +983,8 @@ router.post('/cache/clear', isAdmin, async (req: Request, res: Response) => {
 // Enhanced message history with performance optimization
 router.get('/history/advanced', isAdminOrModerator, async (req: Request, res: Response) => {
 	try {
-		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
-		const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
+		const userId = req.query.userId ? (req.query.userId as string) : undefined;
 		const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
 		const cursor = req.query.cursor ? parseInt(req.query.cursor as string) : undefined;
 		const direction = (req.query.direction as 'before' | 'after') || 'before';
@@ -1024,7 +1012,7 @@ router.get('/history/advanced', isAdminOrModerator, async (req: Request, res: Re
 // Message statistics for analytics
 router.get('/stats/messages', isAdminOrModerator, async (req: Request, res: Response) => {
 	try {
-		const roomId = req.query.roomId ? parseInt(req.query.roomId as string) : undefined;
+		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
 		const dateFrom = req.query.dateFrom ? new Date(req.query.dateFrom as string) : undefined;
 		const dateTo = req.query.dateTo ? new Date(req.query.dateTo as string) : undefined;
 		const groupBy = (req.query.groupBy as 'hour' | 'day' | 'week' | 'month') || 'day';

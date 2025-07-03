@@ -5,7 +5,8 @@ import {
 	text,
 	jsonb,
 	timestamp,
-	uuid
+	uuid,
+	index
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';

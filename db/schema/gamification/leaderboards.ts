@@ -1,4 +1,7 @@
-import { pgTable, serial, timestamp, varchar, jsonb, uuid } from 'drizzle-orm/pg-core';
+import {
+	pgTable, serial, timestamp, varchar, jsonb, uuid,
+	index
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const leaderboardHistory = pgTable('leaderboard_history', {

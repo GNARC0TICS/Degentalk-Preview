@@ -9,7 +9,8 @@ import {
 	primaryKey,
 	boolean,
 	jsonb,
-	uuid
+	uuid,
+	index
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
 import { products } from './products';

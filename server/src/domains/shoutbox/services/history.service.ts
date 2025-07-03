@@ -229,7 +229,7 @@ export class MessageHistoryService {
 					.from(shoutboxMessages)
 					.where(
 						and(
-							config.roomId ? eq(shoutboxMessages.roomId, parseInt(config.roomId)) : undefined,
+							config.roomId ? eq(shoutboxMessages.roomId, config.roomId) : undefined,
 							lt(shoutboxMessages.createdAt, cutoffDate),
 							eq(shoutboxMessages.isDeleted, false)
 						)

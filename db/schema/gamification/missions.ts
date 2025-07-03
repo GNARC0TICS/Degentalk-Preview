@@ -1,4 +1,7 @@
-import { pgTable, serial, varchar, integer, boolean, timestamp, uuid } from 'drizzle-orm/pg-core';
+import {
+	pgTable, serial, varchar, integer, boolean, timestamp, uuid,
+	index
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 // Note: `MissionType` was defined in schema.ts, it should be moved to a types file or enums if it's a pgEnum

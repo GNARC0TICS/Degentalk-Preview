@@ -14,7 +14,7 @@ export const userInventoryAdminController = {
 			})
 			.from(userInventory)
 			.leftJoin(products, eq(userInventory.productId, products.id))
-			.where(eq(userInventory.userId, parseInt(userId)));
+			.where(eq(userInventory.userId, userId));
 		res.json(inventoryItems);
 	},
 
@@ -35,7 +35,7 @@ export const userInventoryAdminController = {
 				.select()
 				.from(userInventory)
 				.where(
-					and(eq(userInventory.userId, parseInt(userId)), eq(userInventory.productId, productId))
+					and(eq(userInventory.userId, userId), eq(userInventory.productId, productId))
 				)
 				.limit(1);
 
@@ -49,7 +49,7 @@ export const userInventoryAdminController = {
 			const newItem = await db
 				.insert(userInventory)
 				.values({
-					userId: parseInt(userId),
+					userId,
 					productId,
 					quantity,
 					metadata,
@@ -82,8 +82,8 @@ export const userInventoryAdminController = {
 					.leftJoin(products, eq(userInventory.productId, products.id))
 					.where(
 						and(
-							eq(userInventory.id, parseInt(inventoryItemId)),
-							eq(userInventory.userId, parseInt(userId))
+							eq(userInventory.id, inventoryItemId),
+							eq(userInventory.userId, userId)
 						)
 					)
 					.limit(1);
@@ -120,10 +120,10 @@ export const userInventoryAdminController = {
 						.leftJoin(products, eq(userInventory.productId, products.id))
 						.where(
 							and(
-								eq(userInventory.userId, parseInt(userId)),
+								eq(userInventory.userId, userId),
 								eq(userInventory.equipped, true),
 								// Exclude the item we are about to equip
-								eq(userInventory.id, parseInt(inventoryItemId)).not()
+								eq(userInventory.id, inventoryItemId).not()
 							)
 						);
 
@@ -154,7 +154,7 @@ export const userInventoryAdminController = {
 							.set({ equipped: false, updatedAt: new Date() })
 							.where(
 								and(
-									eq(userInventory.userId, parseInt(userId)),
+									eq(userInventory.userId, userId),
 									userInventory.id.in(itemsToUnequipIds)
 								)
 							);
@@ -165,7 +165,7 @@ export const userInventoryAdminController = {
 				const updateResult = await tx
 					.update(userInventory)
 					.set({ equipped: true, updatedAt: new Date() })
-					.where(eq(userInventory.id, parseInt(inventoryItemId)))
+					.where(eq(userInventory.id, inventoryItemId))
 					.returning();
 
 				if (updateResult.length === 0) {
@@ -176,7 +176,7 @@ export const userInventoryAdminController = {
 			const finalEquippedItem = await db
 				.select()
 				.from(userInventory)
-				.where(eq(userInventory.id, parseInt(inventoryItemId)))
+				.where(eq(userInventory.id, inventoryItemId))
 				.limit(1);
 
 			res.json({
@@ -202,8 +202,8 @@ export const userInventoryAdminController = {
 				.set({ equipped: false, updatedAt: new Date() })
 				.where(
 					and(
-						eq(userInventory.id, parseInt(inventoryItemId)),
-						eq(userInventory.userId, parseInt(userId))
+						eq(userInventory.id, inventoryItemId),
+						eq(userInventory.userId, userId)
 					)
 				)
 				.returning();

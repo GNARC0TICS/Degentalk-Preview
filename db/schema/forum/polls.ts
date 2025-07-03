@@ -1,4 +1,7 @@
-import { pgTable, serial, integer, boolean, timestamp, text, uuid } from 'drizzle-orm/pg-core';
+import {
+	pgTable, serial, integer, boolean, timestamp, text, uuid,
+	index
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { threads } from './threads';
 

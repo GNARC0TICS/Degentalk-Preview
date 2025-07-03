@@ -1,4 +1,7 @@
-import { pgTable, serial, boolean, timestamp, unique, uuid, integer } from 'drizzle-orm/pg-core';
+import {
+	pgTable, serial, boolean, timestamp, unique, uuid, integer,
+	index
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users'; // Adjusted path
 import { missions } from './missions'; // Adjusted path

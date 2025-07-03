@@ -1,4 +1,7 @@
-import { pgTable, serial, text, integer, timestamp, uuid } from 'drizzle-orm/pg-core';
+import {
+	pgTable, serial, text, integer, timestamp, uuid,
+	index
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const signatureShopItems = pgTable('signature_shop_items', {
@@ -14,7 +17,11 @@ export const signatureShopItems = pgTable('signature_shop_items', {
 	updatedAt: timestamp('updated_at')
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`)
-});
+},
+	(table) => ({
+		idx_signatureShopItems_createdAt: index('idx_signatureShopItems_createdAt').on(table.createdAt),
+		idx_signatureShopItems_updatedAt: index('idx_signatureShopItems_updatedAt').on(table.updatedAt),
+	}));
 
 export type SignatureShopItem = typeof signatureShopItems.$inferSelect;
 export type InsertSignatureShopItem = typeof signatureShopItems.$inferInsert;

@@ -9,7 +9,8 @@ import {
 	jsonb,
 	text,
 	unique,
-	uuid
+	uuid,
+	index
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/users';
 import { customEmojis } from '../forum/customEmojis';

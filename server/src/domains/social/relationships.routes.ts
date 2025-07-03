@@ -221,7 +221,7 @@ router.get('/is-following/:userId', isAuthenticated, async (req: Request, res: R
 			.where(
 				and(
 					eq(userRelationships.followerId, followerId),
-					eq(userRelationships.followingId, Number(userId)),
+					eq(userRelationships.followingId, userId),
 					eq(userRelationships.relationshipType, 'follow')
 				)
 			);

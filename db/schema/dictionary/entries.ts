@@ -3,7 +3,10 @@
  * New table definitions for Degen Dictionary feature.
  */
 
-import { pgTable, serial, text, uuid, integer, timestamp, boolean } from 'drizzle-orm/pg-core';
+import {
+	pgTable, serial, text, uuid, integer, timestamp, boolean,
+	index
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
 import { createInsertSchema } from 'drizzle-zod';

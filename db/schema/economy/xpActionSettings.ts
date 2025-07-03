@@ -1,4 +1,7 @@
-import { pgTable, text, integer, boolean, timestamp } from 'drizzle-orm/pg-core';
+import {
+	pgTable, text, integer, boolean, timestamp,
+	index
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const xpActionSettings = pgTable('xp_action_settings', {
@@ -12,7 +15,12 @@ export const xpActionSettings = pgTable('xp_action_settings', {
 	updatedAt: timestamp('updated_at')
 		.default(sql`now()`)
 		.notNull()
-});
+},
+	(table) => ({
+		idx_xpActionSettings_createdAt: index('idx_xpActionSettings_createdAt').on(table.createdAt),
+		idx_xpActionSettings_updatedAt: index('idx_xpActionSettings_updatedAt').on(table.updatedAt),
+		idx_xpActionSettings_description_search: index('idx_xpActionSettings_description_search').on(table.description),
+	}));
 
 export type XpActionSetting = typeof xpActionSettings.$inferSelect;
 export type InsertXpActionSetting = typeof xpActionSettings.$inferInsert;

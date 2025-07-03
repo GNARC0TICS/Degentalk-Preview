@@ -1,4 +1,7 @@
-import { pgTable, serial, integer, uuid } from 'drizzle-orm/pg-core';
+import {
+	pgTable, serial, integer, uuid,
+	index
+} from 'drizzle-orm/pg-core';
 import { mediaLibrary } from '../admin/mediaLibrary';
 import { animationPacks } from './animationPacks';
 

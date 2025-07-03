@@ -1,4 +1,7 @@
-import { pgTable, serial, varchar, integer, boolean, timestamp, uuid } from 'drizzle-orm/pg-core';
+import {
+	pgTable, serial, varchar, integer, boolean, timestamp, uuid,
+	index
+} from 'drizzle-orm/pg-core';
 import { roles } from '../user/roles'; // Use roles instead of deprecated userGroups
 
 export const airdropSettings = pgTable('airdrop_settings', {

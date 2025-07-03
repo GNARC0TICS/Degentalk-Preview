@@ -3,7 +3,7 @@ import { userEmojiPacks } from '@schema';
 import { eq, and } from 'drizzle-orm';
 
 interface UnlockEmojiPackParams {
-	userId: number;
+	userId: UserId;
 	emojiPackId: number;
 	unlockType: 'shop' | 'admin' | 'xp_reward';
 	pricePaid?: number;
