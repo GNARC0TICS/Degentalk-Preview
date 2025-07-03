@@ -4,6 +4,7 @@ import { CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { handleNewsletterSignup, initEmailJS } from '@/lib/email';
+import { trackNewsletterSignup, trackWaitlistConversion, trackCTAClick } from '@/lib/analytics';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { SectionBackground } from '@/components/ViewportBackground';
 
@@ -65,6 +66,10 @@ export function NewsletterSignup() {
       const result = await handleNewsletterSignup(form.email);
       
       if (result.success) {
+        // Track successful signup
+        trackNewsletterSignup(form.email, 'landing_page');
+        trackWaitlistConversion();
+        
         setForm(prev => ({
           ...prev,
           status: 'success',
@@ -106,10 +111,10 @@ export function NewsletterSignup() {
   };
 
   return (
-    <SectionBackground variant="fade-down" intensity={0.8} className="py-16 sm:py-20 md:py-24">
+    <SectionBackground variant="solid" intensity={0.15} className="py-16 sm:py-20 md:py-24">
       <section 
         id="newsletter-signup" 
-        className="relative"
+        className="relative scroll-mt-16"
       >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl relative z-10">
         <div className="text-center">
@@ -120,8 +125,12 @@ export function NewsletterSignup() {
               <div className="relative">
                 <img
                   src="/images/replpace.png"
-                  alt="Announcements Icon"
+                  alt="Degentalk Community Icon - Join the waitlist for early access"
                   className="h-32 w-auto sm:h-36 md:h-40 lg:h-48 relative z-10 drop-shadow-2xl"
+                  width="192"
+                  height="192"
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     filter: 'drop-shadow(0 20px 25px rgba(0, 0, 0, 0.4)) drop-shadow(0 8px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0 0 15px rgba(16, 185, 129, 0.15))'
                   }}
@@ -194,6 +203,7 @@ export function NewsletterSignup() {
                   type="submit"
                   disabled={form.status === 'loading' || form.status === 'success'}
                   className="border border-zinc-800 bg-black text-white hover:bg-zinc-900 hover:border-emerald-500/30 transition-all duration-200 px-6 sm:px-8 py-3 font-semibold shadow-md hover:shadow-emerald-500/10 w-full"
+                  onClick={() => trackCTAClick('newsletter_signup', 'signup_form')}
                 >
                   {form.status === 'loading' ? (
                     <div className="flex items-center space-x-2">

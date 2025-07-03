@@ -61,7 +61,7 @@ export function HeroSection() {
 
       {/* Dynamic glow orbs with animation */}
       {backgroundConfig.blurEffects && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none [mask-image:linear-gradient(to_bottom,black_70%,transparent)]">
           <motion.div 
             className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-emerald-500/20 rounded-full blur-[100px]"
             animate={{

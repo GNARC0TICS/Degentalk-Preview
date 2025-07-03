@@ -2,6 +2,7 @@ import React from 'react';
 import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/HeroSection';
 import { PlatformOverview } from '@/components/PlatformOverview';
+import { FAQ } from '@/components/FAQ';
 import { NewsletterSignup } from '@/components/NewsletterSignup';
 import { Footer } from '@/components/Footer';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -12,7 +13,7 @@ function App() {
     <ErrorBoundary>
       <div className="min-h-screen text-foreground relative bg-black">
         {/* Global Viewport Background - fixed behind content */}
-        <div className="fixed inset-0 w-full h-full" style={{ zIndex: -1, position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
+        <div className="fixed inset-0 -z-10">
           <ViewportBackground />
         </div>
         
@@ -45,13 +46,19 @@ function App() {
             </ErrorBoundary>
           </div>
           
-          <div id="platform-overview">
+          <div>
             <ErrorBoundary>
               <PlatformOverview />
             </ErrorBoundary>
           </div>
           
-          <div id="newsletter-signup">
+          <div>
+            <ErrorBoundary>
+              <FAQ />
+            </ErrorBoundary>
+          </div>
+          
+          <div>
             <ErrorBoundary>
               <NewsletterSignup />
             </ErrorBoundary>

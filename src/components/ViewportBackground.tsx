@@ -9,17 +9,17 @@ export function ViewportBackground() {
   // Static gradient configuration for performance
   const gradientConfig = useMemo(() => ({
     emerald: {
-      position: 'ellipse 800px 600px at 50% 20%',
+      position: 'ellipse 1200px 900px at 50% 15%',
       colors: 'rgba(16,185,129,0.15) 0%, transparent 60%',
       opacity: 0.7
     },
     cyan: {
-      position: 'ellipse 700px 500px at 20% 80%', 
+      position: 'ellipse 1000px 750px at 20% 85%', 
       colors: 'rgba(6,182,212,0.12) 0%, transparent 60%',
       opacity: 0.6
     },
     red: {
-      position: 'ellipse 600px 400px at 80% 60%',
+      position: 'ellipse 900px 650px at 80% 65%',
       colors: 'rgba(239,68,68,0.10) 0%, transparent 65%', 
       opacity: 0.5
     }
@@ -27,10 +27,8 @@ export function ViewportBackground() {
 
   return (
     <div className="absolute inset-0 w-full pointer-events-none" style={{ 
-      height: '100vh',
-      minHeight: '100vh',
       height: '100dvh',
-      minHeight: '100dvh'
+      minHeight: '100vh'
     }}>
       {/* Base black layer */}
       <div 

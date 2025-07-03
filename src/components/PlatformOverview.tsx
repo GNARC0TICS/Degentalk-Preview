@@ -1,6 +1,8 @@
 import { useMemo, useState, useEffect } from 'react';
 import { SectionBackground } from '@/components/ViewportBackground';
 import { motion } from 'framer-motion';
+import { useLiveVisitorCount } from '@/hooks/useSiteAnalytics';
+import { trackSocialProofView } from '@/lib/analytics';
 import { 
   MessagesSquare, 
   Bitcoin, 
@@ -116,10 +118,10 @@ export function PlatformOverview() {
     return taglines[Math.floor(Math.random() * taglines.length)];
   }, []);
   return (
-    <SectionBackground variant="fade-down" intensity={0.6} className="py-16 sm:py-20 md:py-24">
+    <SectionBackground variant="solid" intensity={0.15} className="py-16 sm:py-20 md:py-24">
       <section 
         id="platform-overview" 
-        className="relative"
+        className="relative scroll-mt-16"
       >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
         {/* Section Header */}
@@ -217,9 +219,19 @@ This isn’t just a forum. This is the most addictive, gloriously unhinged hub t
 // Social Proof Counters Component
 function SocialProofCounters() {
   const [inView, setInView] = useState(false);
-  const degenCount = useAnimatedCounter(inView ? 2847 : 0, 2500);
+  const { count: liveVisitorCount, currentVisitors, isUpdating, isLoading } = useLiveVisitorCount();
+  
+  // Use live visitor count for the main counter, keep satirical numbers for others
+  const degenCount = useAnimatedCounter(inView ? liveVisitorCount : 0, 2500);
   const lossCount = useAnimatedCounter(inView ? 1337 : 0, 2000);
   const hopeCount = useAnimatedCounter(inView ? 420 : 0, 1500);
+
+  // Track social proof view when component becomes visible
+  useEffect(() => {
+    if (inView && !isLoading) {
+      trackSocialProofView('platform_overview', liveVisitorCount);
+    }
+  }, [inView, isLoading, liveVisitorCount]);
 
   return (
     <motion.div
@@ -229,9 +241,25 @@ function SocialProofCounters() {
       onViewportEnter={() => setInView(true)}
       viewport={{ once: true }}
     >
-      <h3 className="text-lg md:text-xl font-bold text-white mb-8">
-        Join <span className="text-emerald-400">{degenCount.toLocaleString()}</span> degens already losing money responsibly
-      </h3>
+      <div className="text-lg md:text-xl font-bold text-white mb-8">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+          <span>Join</span>
+          <span className="text-emerald-400 relative">
+            {!isLoading && degenCount.toLocaleString()}
+            {isLoading && "..."}
+            {isUpdating && (
+              <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+            )}
+          </span>
+          <span className="text-center">degens already losing money responsibly</span>
+        </div>
+        {currentVisitors > 0 && (
+          <div className="flex items-center justify-center gap-1 mt-2">
+            <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+            <span className="text-xs text-zinc-400">{currentVisitors} currently browsing</span>
+          </div>
+        )}
+      </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
         <div className="text-center">
