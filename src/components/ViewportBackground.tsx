@@ -26,22 +26,28 @@ export function ViewportBackground() {
   }), []);
 
   return (
-    <div className="absolute inset-0 pointer-events-none">
+    <div className="absolute inset-0 w-full pointer-events-none" style={{ 
+      height: '100vh',
+      minHeight: '100vh',
+      height: '100dvh',
+      minHeight: '100dvh'
+    }}>
       {/* Base black layer */}
       <div 
-        className="absolute inset-0" 
-        style={{ backgroundColor: '#000000' }} 
+        className="absolute inset-0 w-full h-full" 
+        style={{ backgroundColor: '#000000', minHeight: 'inherit' }} 
       />
       
       {/* Primary gradient layer */}
-      <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-black to-zinc-950" />
+      <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-zinc-950 via-black to-zinc-950" style={{ minHeight: 'inherit' }} />
       
       {/* Colored gradient overlays - viewport positioned */}
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 w-full h-full"
         style={{
           background: `radial-gradient(${gradientConfig.emerald.position}, ${gradientConfig.emerald.colors})`,
-          opacity: gradientConfig.emerald.opacity
+          opacity: gradientConfig.emerald.opacity,
+          minHeight: 'inherit'
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: gradientConfig.emerald.opacity }}
@@ -49,10 +55,11 @@ export function ViewportBackground() {
       />
       
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 w-full h-full"
         style={{
           background: `radial-gradient(${gradientConfig.cyan.position}, ${gradientConfig.cyan.colors})`,
-          opacity: gradientConfig.cyan.opacity
+          opacity: gradientConfig.cyan.opacity,
+          minHeight: 'inherit'
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: gradientConfig.cyan.opacity }}
@@ -60,10 +67,11 @@ export function ViewportBackground() {
       />
       
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 w-full h-full"
         style={{
           background: `radial-gradient(${gradientConfig.red.position}, ${gradientConfig.red.colors})`,
-          opacity: gradientConfig.red.opacity
+          opacity: gradientConfig.red.opacity,
+          minHeight: 'inherit'
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: gradientConfig.red.opacity }}
@@ -72,11 +80,12 @@ export function ViewportBackground() {
       
       {/* Noise texture for premium finish */}
       <div 
-        className="absolute inset-0 opacity-[0.015] mix-blend-soft-light"
+        className="absolute inset-0 w-full h-full opacity-[0.015] mix-blend-soft-light"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
           backgroundRepeat: 'repeat',
-          backgroundSize: '128px 128px'
+          backgroundSize: '128px 128px',
+          minHeight: 'inherit'
         }}
       />
     </div>

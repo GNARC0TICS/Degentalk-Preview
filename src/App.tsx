@@ -10,9 +10,9 @@ import { ViewportBackground } from '@/components/ViewportBackground';
 function App() {
   return (
     <ErrorBoundary>
-      <div className="min-h-screen text-foreground relative">
+      <div className="min-h-screen text-foreground relative bg-black">
         {/* Global Viewport Background - fixed behind content */}
-        <div className="fixed inset-0" style={{ zIndex: -1 }}>
+        <div className="fixed inset-0 w-full h-full" style={{ zIndex: -1, position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
           <ViewportBackground />
         </div>
         
