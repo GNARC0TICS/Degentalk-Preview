@@ -194,7 +194,7 @@ const UserActivityPage: React.FC = () => {
 								</tr>
 							</thead>
 							<tbody className="bg-white divide-y divide-gray-200">
-								{activityFeed.items.map((event) => (
+								{activityFeed.items.map((event: any) => (
 									<tr key={event.id} className="hover:bg-gray-50">
 										<td className="px-6 py-4 whitespace-nowrap">
 											<div className="flex items-center">

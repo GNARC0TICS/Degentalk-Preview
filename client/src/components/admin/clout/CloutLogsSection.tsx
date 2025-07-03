@@ -46,7 +46,7 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 
 	// Create achievement lookup map
 	const achievementMap = achievements.reduce(
-		(map, achievement) => {
+		(map: any, achievement) => {
 			map[achievement.id] = achievement;
 			return map;
 		},

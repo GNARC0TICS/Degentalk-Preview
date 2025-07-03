@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { CategoryId } from '@db/types';
 import { formatTimestamp } from '@/lib/format-date';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -205,7 +206,7 @@ export default function AdminCategoriesPage() {
 	};
 
 	const handleReorderCategory = (id: string, direction: 'up' | 'down') => {
-		reorderCategoryMutation.mutate({ id, direction });
+		reorderCategoryMutation.mutate({ id: id as CategoryId, direction });
 	};
 
 	const handleEditCategory = (category: Category) => {
@@ -250,7 +251,7 @@ export default function AdminCategoriesPage() {
 		}
 
 		const rootCategories: Category[] = [];
-		const childrenMap: { [key: number]: Category[] } = {};
+		const childrenMap: { [key: string]: Category[] } = {};
 
 		filteredCategories.forEach((category) => {
 			if (!category.parentId) {
@@ -263,8 +264,8 @@ export default function AdminCategoriesPage() {
 			}
 		});
 
-		const attachChildren = (parentCategories: Category[]) => {
-			return parentCategories.map((parent) => {
+		const attachChildren = (parentCategories: Category[]): any => {
+			return parentCategories.map((parent): any => {
 				const children = childrenMap[parent.id] || [];
 				return {
 					...parent,

@@ -53,7 +53,7 @@ export function AdminPageShell({
 
 			{/* Tabs Section or Direct Children */}
 			{tabsConfig && tabsConfig.length > 0 && currentActiveTab ? (
-				<Tabs value={currentActiveTab} onValueChange={onTabChange} className="w-full">
+				<Tabs value={currentActiveTab} onValueChange={onTabChange || undefined} className="w-full">
 					<TabsList className="bg-admin-surface border border-admin-border-subtle w-full justify-start overflow-x-auto">
 						{tabsConfig.map((tab) => (
 							<TabsTrigger
