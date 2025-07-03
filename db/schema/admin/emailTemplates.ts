@@ -6,7 +6,8 @@ import {
 	boolean,
 	timestamp,
 	jsonb,
-	uuid
+	uuid,
+	integer
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/users';
@@ -34,7 +35,7 @@ export const emailTemplates = pgTable('email_templates', {
 
 	// Tracking
 	lastUsedAt: timestamp('last_used_at', { mode: 'string' }),
-	useCount: serial('use_count').notNull(),
+	useCount: integer('use_count').notNull().default(0),
 
 	// Audit
 	createdBy: uuid('created_by').references(() => users.id),
@@ -43,16 +44,16 @@ export const emailTemplates = pgTable('email_templates', {
 	updatedAt: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
 
 	// Version control
-	version: serial('version').notNull(),
-	previousVersionId: serial('previous_version_id')
+	version: integer('version').notNull().default(1),
+	previousVersionId: uuid('previous_version_id').references(() => emailTemplates.id)
 });
 
 export const emailTemplateVersions = pgTable('email_template_versions', {
 	id: uuid('id').primaryKey().defaultRandom(),
-	templateId: serial('template_id')
+	templateId: uuid('template_id')
 		.notNull()
 		.references(() => emailTemplates.id),
-	version: serial('version').notNull(),
+	version: integer('version').notNull().default(1),
 
 	// Snapshot of template at this version
 	subject: text('subject').notNull(),
@@ -68,7 +69,7 @@ export const emailTemplateVersions = pgTable('email_template_versions', {
 
 export const emailTemplateLogs = pgTable('email_template_logs', {
 	id: uuid('id').primaryKey().defaultRandom(),
-	templateId: serial('template_id')
+	templateId: uuid('template_id')
 		.notNull()
 		.references(() => emailTemplates.id),
 	recipientEmail: varchar('recipient_email', { length: 255 }).notNull(),

@@ -29,11 +29,11 @@ export class TipService {
 	 * @returns Transaction details
 	 */
 	async processTip(
-		senderUserId: number,
-		recipientUserId: number,
+		senderUserId: UserId,
+		recipientUserId: UserId,
 		amount: number
 	): Promise<{
-		transactionId: number;
+		transactionId: string;
 		amount: number;
 		success: boolean;
 	}> {
@@ -205,17 +205,17 @@ export class TipService {
 	 * @returns Transaction details
 	 */
 	async processTipCommand(
-		senderUserId: number,
-		recipientUserId: number,
+		senderUserId: UserId,
+		recipientUserId: UserId,
 		amount: number,
 		currency: 'DGT' | 'USDT',
 		roomId: number,
 		isDust: boolean = false
 	): Promise<{
-		transactionId: number;
+		transactionId: string;
 		amount: number;
 		currency: string;
-		recipient: { id: number; username: string };
+		recipient: { id: UserId; username: string };
 	}> {
 		try {
 			logger.info(

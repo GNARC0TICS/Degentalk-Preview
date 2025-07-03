@@ -151,7 +151,7 @@ export function useBulkUpdateAchievements() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ ids, updates }: { ids: number[]; updates: Partial<Achievement> }) =>
+		mutationFn: ({ ids, updates }: { ids: AchievementId[]; updates: Partial<Achievement> }) =>
 			achievementApi.bulkUpdateAchievements(ids, updates),
 		onSuccess: (data) => {
 			queryClient.invalidateQueries({ queryKey: ['achievements'] });

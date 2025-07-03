@@ -56,7 +56,7 @@ function RolesAdminPage() {
 	const saveRoleMutation = useCrudMutation<
 		Role, // Assuming the API returns the saved/updated role
 		Error,
-		RoleFormValues & { id?: number }
+		RoleFormValues & { id?: RoleId }
 	>({
 		mutationFn: async (values) => {
 			if (values.id) {

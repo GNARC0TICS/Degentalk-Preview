@@ -11,11 +11,11 @@ import { sql } from 'drizzle-orm';
 import type { UserId } from '@db/types';
 
 interface DgtTransaction {
-	id: number;
-	user_id: number;
+	id: string;
+	user_id: UserId;
 	amount: number;
 	transaction_type: string;
-	reference_id?: number;
+	reference_id?: string;
 	reference_type?: string;
 	description: string;
 	created_at: Date;
@@ -23,7 +23,7 @@ interface DgtTransaction {
 }
 
 interface DgtUnlock {
-	id: number;
+	id: string;
 	name: string;
 	type: string;
 	cost_dgt: number;
@@ -32,15 +32,15 @@ interface DgtUnlock {
 }
 
 interface UserWallet {
-	user_id: number;
+	user_id: UserId;
 	dgt_balance: number;
 	lifetime_earned: number;
 	lifetime_spent: number;
 }
 
 interface DgtTransferOptions {
-	fromUserId: number;
-	toUserId: number;
+	fromUserId: UserId;
+	toUserId: UserId;
 	amount: number;
 	description: string;
 	metadata?: Record<string, any>;

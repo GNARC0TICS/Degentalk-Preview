@@ -3,6 +3,7 @@ import { cloutAchievements, userCloutLog } from '@schema';
 import { users } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
+import type { UserId, AchievementId } from '@db/types';
 
 export class CloutService {
 	constructor(private drizzle = db) {}
@@ -17,7 +18,7 @@ export class CloutService {
 	 * @returns List of achievement keys awarded this call
 	 */
 	async checkAchievements(
-		userId: string,
+		userId: UserId,
 		triggerType: string,
 		triggerValue?: number
 	): Promise<string[]> {
@@ -74,7 +75,7 @@ export class CloutService {
 	/**
 	 * Directly grant clout to a user (admin grants, shop purchases, achievements).
 	 */
-	async grantClout(userId: string, amount: number, reason: string, achievementId?: number) {
+	async grantClout(userId: UserId, amount: number, reason: string, achievementId?: AchievementId) {
 		if (amount <= 0) return;
 
 		await this.drizzle.transaction(async (tx) => {

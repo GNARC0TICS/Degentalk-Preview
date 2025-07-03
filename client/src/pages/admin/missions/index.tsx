@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { apiRequest } from '@/lib/queryClient';
+import type { MissionId } from '@db/types';
 import { Trophy, Edit, Plus, Trash, CheckCircle, X, Save, RefreshCw, Filter } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -45,7 +46,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // Types for missions
 interface Mission {
-	id: number;
+	id: MissionId;
 	title: string;
 	description: string;
 	type: string;

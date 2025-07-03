@@ -53,7 +53,7 @@ import { usePermission } from '@/hooks/usePermission';
 import type { DraftId } from '@db/types';
 
 interface DraftData {
-	id: number;
+	id: DraftId;
 	title?: string;
 	forumSlug?: string;
 	prefixId?: string;

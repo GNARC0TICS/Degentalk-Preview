@@ -8,8 +8,10 @@ import {
 	timestamp,
 	jsonb,
 	text,
-	unique
+	unique,
+	uuid
 } from 'drizzle-orm/pg-core';
+import { users } from '../user/users';
 
 /**
  * Comprehensive shoutbox configuration settings for admin panel
@@ -126,8 +128,11 @@ export const shoutboxConfig = pgTable(
 		// Metadata
 		createdAt: timestamp('created_at').notNull().defaultNow(),
 		updatedAt: timestamp('updated_at').notNull().defaultNow(),
-		createdBy: varchar('created_by', { length: 128 }).notNull(),
-		updatedBy: varchar('updated_by', { length: 128 }),
+		createdBy: uuid('created_by')
+			.notNull()
+			.references(() => users.id, { onDelete: 'set null' }),
+		updatedBy: uuid('updated_by')
+			.references(() => users.id, { onDelete: 'set null' }),
 
 		// Configuration version for migrations
 		configVersion: varchar('config_version', { length: 10 }).notNull().default('1.0')
@@ -162,7 +167,9 @@ export const shoutboxBannedWords = pgTable('shoutbox_banned_words', {
 	enabled: boolean('enabled').notNull().default(true),
 
 	createdAt: timestamp('created_at').notNull().defaultNow(),
-	createdBy: varchar('created_by', { length: 128 }).notNull()
+	createdBy: uuid('created_by')
+		.notNull()
+		.references(() => users.id, { onDelete: 'set null' })
 });
 
 /**
@@ -175,8 +182,8 @@ export const shoutboxUserIgnores = pgTable(
 			.primaryKey()
 			.$defaultFn(() => createId()),
 
-		userId: varchar('user_id', { length: 128 }).notNull(),
-		ignoredUserId: varchar('ignored_user_id', { length: 128 }).notNull(),
+		userId: uuid('user_id').notNull().references(() => users.id),
+		ignoredUserId: uuid('ignored_user_id').notNull().references(() => users.id),
 
 		// Ignore settings
 		hideMessages: boolean('hide_messages').notNull().default(true),
@@ -212,7 +219,7 @@ export const shoutboxEmojiPermissions = pgTable('shoutbox_emoji_permissions', {
 	enabled: boolean('enabled').notNull().default(true),
 
 	createdAt: timestamp('created_at').notNull().defaultNow(),
-	createdBy: varchar('created_by', { length: 128 }).notNull()
+	createdBy: uuid('created_by').notNull().references(() => users.id)
 });
 
 /**
@@ -224,7 +231,7 @@ export const shoutboxAnalytics = pgTable('shoutbox_analytics', {
 		.$defaultFn(() => createId()),
 
 	eventType: varchar('event_type', { length: 50 }).notNull(), // 'message', 'command', 'reaction', 'join', 'leave'
-	userId: varchar('user_id', { length: 128 }),
+	userId: uuid('user_id').references(() => users.id),
 	roomId: varchar('room_id', { length: 128 }).notNull(),
 
 	// Event data

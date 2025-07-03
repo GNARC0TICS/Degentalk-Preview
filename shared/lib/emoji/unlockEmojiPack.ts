@@ -1,10 +1,10 @@
 import { db } from '@server/src/lib/db';
 import { userEmojiPacks } from '@schema';
 import { eq, and } from 'drizzle-orm';
-import type { EmojiPackId, PackId } from '@/db/types';
+import type { EmojiPackId, PackId, UserId } from '@/db/types';
 
 interface UnlockEmojiPackParams {
-	userId: number;
+	userId: UserId;
 	emojiPackId: EmojiPackId;
 	unlockType: 'shop' | 'admin' | 'xp_reward';
 	pricePaid?: number;

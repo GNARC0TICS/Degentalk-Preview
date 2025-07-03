@@ -15,15 +15,15 @@ const debounce = <T extends (...args: any[]) => any>(
 		timeoutId = setTimeout(() => func(...args), delay);
 	};
 };
-import type { CategoryId, PrefixId } from '@db/types';
+import type { CategoryId, PrefixId, DraftId, TagId } from '@db/types';
 
 interface DraftData {
-	id?: number;
+	id?: DraftId;
 	title?: string;
 	content?: string;
 	categoryId?: CategoryId;
 	prefixId?: PrefixId;
-	tags?: number[];
+	tags?: TagId[];
 	lastSaved?: Date;
 }
 

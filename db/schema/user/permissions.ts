@@ -1,8 +1,8 @@
-import { pgTable, serial, varchar, text, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const permissions = pgTable('permissions', {
-	id: serial('perm_id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	name: varchar('perm_name', { length: 100 }).notNull().unique(),
 	description: text('description'),
 	category: varchar('category', { length: 50 }),

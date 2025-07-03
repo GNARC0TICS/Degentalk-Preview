@@ -104,7 +104,7 @@ export interface Mission {
 }
 
 export interface MissionProgress {
-	id: number;
+	id: string;
 	userId: UserId;
 	missionId: MissionId;
 	currentCount: number;

@@ -139,7 +139,7 @@ export const api = {
 
 		// [REFAC-DGT]
 		async transferDGT(
-			toUserId: number,
+			toUserId: UserId,
 			amount: number,
 			reason: string
 		): Promise<{
@@ -176,7 +176,7 @@ export const api = {
 	engagement: {
 		// [REFAC-TIP]
 		async sendTip(
-			toUserId: number,
+			toUserId: UserId,
 			amount: number,
 			currency: string,
 			source: string,

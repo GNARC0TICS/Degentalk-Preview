@@ -1,5 +1,5 @@
 import { db } from '@db';
-import type { UserId } from '@db/types';
+import type { UserId, MissionId } from '@db/types';
 import { eq, and, gte, lte, SQL, isNull, inArray } from 'drizzle-orm';
 import {
 	missions,
@@ -71,7 +71,7 @@ export class MissionsService {
 	/**
 	 * Get a mission by ID
 	 */
-	async getMission(id: number): Promise<Mission | null> {
+	async getMission(id: MissionId): Promise<Mission | null> {
 		try {
 			const result = await db.select().from(missions).where(eq(missions.id, id)).limit(1);
 
@@ -122,7 +122,7 @@ export class MissionsService {
 	/**
 	 * Update a mission
 	 */
-	async updateMission(id: number, data: Partial<Mission>): Promise<Mission | null> {
+	async updateMission(id: MissionId, data: Partial<Mission>): Promise<Mission | null> {
 		try {
 			const result = await db.update(missions).set(data).where(eq(missions.id, id)).returning();
 

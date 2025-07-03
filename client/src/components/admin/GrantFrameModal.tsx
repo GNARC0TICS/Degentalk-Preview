@@ -14,6 +14,7 @@ import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { LoadingSpinner } from '@/components/ui/loader';
 import type { AvatarFrame } from '@/types/compat/avatar';
+import type { FrameId, UserId } from '@db/types';
 
 interface Props {
 	frame: AvatarFrame | null;
@@ -31,7 +32,7 @@ export const GrantFrameModal: React.FC<Props> = ({ frame, open, onClose, onSucce
 	const { toast } = useToast();
 	const [userIds, setUserIds] = useState('');
 
-	const grantMutation = useMutation<void, Error, { frameId: number; userIds: string[] }>({
+	const grantMutation = useMutation<void, Error, { frameId: FrameId; userIds: UserId[] }>({
 		mutationFn: ({ frameId, userIds }) =>
 			apiRequest({
 				url: `/api/admin/avatar-frames/${frameId}/grant`,
