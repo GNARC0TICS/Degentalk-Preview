@@ -67,24 +67,72 @@ const features = [
   }
 ];
 
-// Satirical taglines for the section header (randomized per visit)
-const taglines = [
-  'For Players Who Love To Bet On Everything',
-  'Because "Down Bad" Deserved Its Own Website',
-  'Home of Unsolicited Alpha and Inevitable Hope',
-  'Chart Patterns, Memes, and Existential Regret',
-  'A cultural safehouse for high-functioning degenerates',
-  'Were the lovechild of /biz/, SomethingAwful and a Telegram alpha group.',
-  'Financial Advice You Definitely Shouldn\'t Take',
-  'Bullish Opinions, Bearish Portfolios, and the occasional meme',
-  'Welcome to the Group Chat Your Therapist Warned You About',
-  'Buy High, Sell Cope—Join the Conversation',
-  'Liquidity Optional, Opinions Mandatory',
-  'No, you can\'t buy a house with this',
-  'This isn\'t for everyone. It\'s for us.',
-  'Where Strategy Meets Community',
-  'Where Technical Analysis Meets Emotional Damage',
-  'Where Every Bet Tells a Story'
+// Satirical taglines paired with platform descriptions (randomized per visit)
+const taglineDescriptionPairs = [
+  {
+    tagline: 'For Players Who Love To Bet On Everything',
+    description: 'We\'re building the ultimate crypto community hub.'
+  },
+  {
+    tagline: 'Because "Down Bad" Deserved Its Own Website',
+    description: 'Where serious trading meets satirical community.'
+  },
+  {
+    tagline: 'Home of Unsolicited Alpha and Inevitable Hope',
+    description: 'Finally, a forum that matches crypto\'s energy.'
+  },
+  {
+    tagline: 'Chart Patterns, Memes, and Existential Regret',
+    description: 'We\'re building the ultimate crypto community hub.'
+  },
+  {
+    tagline: 'A cultural safehouse for high-functioning degenerates',
+    description: 'Where serious trading meets satirical community.'
+  },
+  {
+    tagline: 'Were the lovechild of /biz/, SomethingAwful and a Telegram alpha group.',
+    description: 'Finally, a forum that matches crypto\'s energy.'
+  },
+  {
+    tagline: 'Financial Advice You Definitely Shouldn\'t Take',
+    description: 'We\'re building the ultimate crypto community hub.'
+  },
+  {
+    tagline: 'Bullish Opinions, Bearish Portfolios, and the occasional meme',
+    description: 'Where serious trading meets satirical community.'
+  },
+  {
+    tagline: 'Welcome to the Group Chat Your Therapist Warned You About',
+    description: 'Finally, a forum that matches crypto\'s energy.'
+  },
+  {
+    tagline: 'Buy High, Sell Cope—Join the Conversation',
+    description: 'We\'re building the ultimate crypto community hub.'
+  },
+  {
+    tagline: 'Liquidity Optional, Opinions Mandatory',
+    description: 'Where serious trading meets satirical community.'
+  },
+  {
+    tagline: 'No, you can\'t buy a house with this',
+    description: 'Finally, a forum that matches crypto\'s energy.'
+  },
+  {
+    tagline: 'This isn\'t for everyone. It\'s for us.',
+    description: 'We\'re building the ultimate crypto community hub.'
+  },
+  {
+    tagline: 'Where Strategy Meets Community',
+    description: 'Where serious trading meets satirical community.'
+  },
+  {
+    tagline: 'Where Technical Analysis Meets Emotional Damage',
+    description: 'Finally, a forum that matches crypto\'s energy.'
+  },
+  {
+    tagline: 'Where Every Bet Tells a Story',
+    description: 'We\'re building the ultimate crypto community hub.'
+  }
 ];
 
 // Animated counter hook
@@ -116,9 +164,9 @@ function useAnimatedCounter(target: number, duration: number = 2000) {
 export function PlatformOverview() {
   const animConfig = useAnimationConfig();
   
-  // Pick one tagline once per mount
-  const randomTagline = useMemo(() => {
-    return taglines[Math.floor(Math.random() * taglines.length)];
+  // Pick one tagline-description pair once per mount
+  const randomPair = useMemo(() => {
+    return taglineDescriptionPairs[Math.floor(Math.random() * taglineDescriptionPairs.length)];
   }, []);
   return (
     <SectionBackground variant="solid" intensity={0.15} className="py-16 sm:py-20 md:py-24">
@@ -136,10 +184,10 @@ export function PlatformOverview() {
           viewport={{ once: true }}
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4 sm:mb-6 leading-tight tracking-tight px-2">
-            {randomTagline}
+            {randomPair.tagline}
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-3xl mx-auto leading-relaxed font-semibold px-2">
-            We decided to bring forums to the blockchain.
+            {randomPair.description}
           </p>
         </motion.div>
 

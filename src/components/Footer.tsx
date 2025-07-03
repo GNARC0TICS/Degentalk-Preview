@@ -79,8 +79,9 @@ export function Footer() {
       title: 'Resources',
       links: [
         { name: 'FAQ', id: 'platform-overview' },
-        { name: 'Support', id: 'newsletter-signup' },
-        { name: 'Terms', id: 'footer' }
+        { name: 'Privacy Policy', href: '/privacy' },
+        { name: 'Terms of Service', href: '/terms' },
+        { name: 'Contact', href: '/contact' }
       ]
     }
   ];
@@ -120,12 +121,21 @@ export function Footer() {
               <ul className="space-y-2">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    <button
-                      onClick={() => scrollToSection(link.id)}
-                      className="text-zinc-300 hover:text-emerald-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded-md px-1 py-1"
-                    >
-                      {link.name}
-                    </button>
+                    {link.href ? (
+                      <a
+                        href={link.href}
+                        className="text-zinc-300 hover:text-emerald-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded-md px-1 py-1"
+                      >
+                        {link.name}
+                      </a>
+                    ) : (
+                      <button
+                        onClick={() => link.id && scrollToSection(link.id)}
+                        className="text-zinc-300 hover:text-emerald-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded-md px-1 py-1"
+                      >
+                        {link.name}
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>

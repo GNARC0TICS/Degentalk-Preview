@@ -177,7 +177,16 @@ export function NewsletterSignup() {
                 <div className="relative">
                   <Input
                     type="email"
-                    placeholder="Email goes here, we promise we won't sell it... yet."
+                    placeholder={(() => {
+                      const placeholders = [
+                        "Email goes here, we promise we won't sell it... yet.",
+                        "Your email (safer than your seed phrase)",
+                        "Drop your email before you drop your bags"
+                      ];
+                      const randomPlaceholder = useMemo(() => 
+                        placeholders[Math.floor(Math.random() * placeholders.length)], []);
+                      return randomPlaceholder;
+                    })()}
                     value={form.email}
                     onChange={(e) => setForm(prev => ({ 
                       ...prev, 
@@ -218,7 +227,18 @@ export function NewsletterSignup() {
                       <span>Joined!</span>
                     </div>
                   ) : (
-                    'Fine, I\'ll Join.'
+                    (() => {
+                      const buttonTexts = [
+                        'Fine, I\'ll Join.',
+                        'Alright, I\'m In.',
+                        'Don\'t Fade Me, I\'m In.',
+                        'Yes, I Want Chaos.',
+                        'Okay, You Got Me.'
+                      ];
+                      const randomText = useMemo(() => 
+                        buttonTexts[Math.floor(Math.random() * buttonTexts.length)], []);
+                      return randomText;
+                    })()
                   )}
                 </Button>
               </div>

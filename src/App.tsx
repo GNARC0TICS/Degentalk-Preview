@@ -7,8 +7,27 @@ import { NewsletterSignup } from '@/components/NewsletterSignup';
 import { Footer } from '@/components/Footer';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ViewportBackground } from '@/components/ViewportBackground';
+import { PrivacyPolicy } from '@/pages/PrivacyPolicy';
+import { TermsOfService } from '@/pages/TermsOfService';
+import { Contact } from '@/pages/Contact';
 
 function App() {
+  const currentPath = window.location.pathname;
+
+  // Handle different routes
+  if (currentPath === '/privacy') {
+    return <PrivacyPolicy />;
+  }
+  
+  if (currentPath === '/terms') {
+    return <TermsOfService />;
+  }
+  
+  if (currentPath === '/contact') {
+    return <Contact />;
+  }
+
+  // Default landing page
   return (
     <ErrorBoundary>
       <div className="min-h-screen text-foreground relative bg-black">
