@@ -1,4 +1,5 @@
 import { userService } from '@server/src/core/services/user.service';
+import type { UserId } from '@db/types';
 /**
  * Wallet Controller
  *
@@ -577,7 +578,7 @@ export class WalletController extends BaseController {
 			// 1. Updating users.dgtWalletBalance
 			// 2. Inserting into the transactionsSchema table
 			const newBalance = await dgtService.addDgt(
-				Number(userId),
+				userId as UserId,
 				BigInt(dgtAmountToAward),
 				'REWARD', // DgtTransactionType
 				{
@@ -628,7 +629,7 @@ export class WalletController extends BaseController {
 			const [pkg] = await db
 				.select()
 				.from(dgtPackages)
-				.where(eq(dgtPackages.id, Number(packageId)));
+				.where(eq(dgtPackages.id, packageId));
 			if (!pkg || !pkg.isActive) return res.status(404).json({ error: 'Package not found' });
 
 			// Generate merchant order id

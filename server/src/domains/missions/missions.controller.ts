@@ -1,4 +1,5 @@
 import { userService } from '@server/src/core/services/user.service';
+import type { UserId, MissionId } from '@db/types';
 import type { Request, Response, NextFunction } from 'express';
 import { logger } from '../../core/logger';
 import { MissionsService } from './missions.service';
@@ -75,7 +76,7 @@ export const getUserMissionProgressById = async (
 			return res.status(400).json({ message: 'User ID is required' });
 		}
 
-		const progress = await missionsService.getUserMissionProgress(Number(userId));
+		const progress = await missionsService.getUserMissionProgress(userId as UserId);
 		res.status(200).json(progress);
 	} catch (error) {
 		logger.error('Error getting user mission progress by ID:', error);
@@ -116,7 +117,7 @@ export const updateMission = async (req: Request, res: Response, next: NextFunct
 			return res.status(400).json({ message: 'Mission ID is required' });
 		}
 
-		const mission = await missionsService.updateMission(Number(id), missionData);
+		const mission = await missionsService.updateMission(id as MissionId, missionData);
 
 		if (!mission) {
 			return res.status(404).json({ message: 'Mission not found' });
@@ -146,7 +147,7 @@ export const claimMissionReward = async (req: Request, res: Response, next: Next
 			return res.status(400).json({ message: 'Mission ID is required' });
 		}
 
-		const result = await missionsService.claimMissionReward(userId, Number(missionId));
+		const result = await missionsService.claimMissionReward(userId as UserId, missionId as MissionId);
 
 		if (!result.success) {
 			return res.status(400).json({ message: result.message });
