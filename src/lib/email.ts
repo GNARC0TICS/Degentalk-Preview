@@ -24,15 +24,12 @@ export interface NewsletterSignup {
 // Send newsletter signup email
 export const sendNewsletterSignup = async (data: NewsletterSignup): Promise<{ success: boolean; message: string }> => {
   try {
-    // Check if EmailJS is configured
+    // Ensure EmailJS is fully configured
     if (!emailConfig.serviceId || !emailConfig.templateId || !emailConfig.publicKey) {
-      console.warn('EmailJS not configured. Add environment variables:');
-      console.warn('VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, VITE_EMAILJS_PUBLIC_KEY');
-      
-      // Simulate success for development
+      console.error('[Email] EmailJS credentials missing. Set VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, VITE_EMAILJS_PUBLIC_KEY');
       return {
-        success: true,
-        message: 'Demo mode: Email would be sent in production'
+        success: false,
+        message: 'Email service not configured. Please try again later.'
       };
     }
 
@@ -74,10 +71,10 @@ export const sendToConvertKit = async (data: NewsletterSignup): Promise<{ succes
   const formId = import.meta.env.VITE_CONVERTKIT_FORM_ID;
 
   if (!apiKey || !formId) {
-    console.warn('ConvertKit not configured. Add VITE_CONVERTKIT_API_KEY and VITE_CONVERTKIT_FORM_ID');
+    console.error('[Email] ConvertKit credentials missing. Set VITE_CONVERTKIT_API_KEY and VITE_CONVERTKIT_FORM_ID');
     return {
-      success: true,
-      message: 'Demo mode: Would subscribe to ConvertKit in production'
+      success: false,
+      message: 'Email service not configured. Please try again later.'
     };
   }
 
@@ -117,10 +114,10 @@ export const sendToMailchimp = async (): Promise<{ success: boolean; message: st
   const audienceId = import.meta.env.VITE_MAILCHIMP_AUDIENCE_ID;
 
   if (!apiKey || !audienceId) {
-    console.warn('Mailchimp not configured. Add VITE_MAILCHIMP_API_KEY and VITE_MAILCHIMP_AUDIENCE_ID');
+    console.error('[Email] Mailchimp credentials missing. Set VITE_MAILCHIMP_API_KEY and VITE_MAILCHIMP_AUDIENCE_ID');
     return {
-      success: true,
-      message: 'Demo mode: Would subscribe to Mailchimp in production'
+      success: false,
+      message: 'Email service not configured. Please try again later.'
     };
   }
 
@@ -160,10 +157,10 @@ export const handleNewsletterSignup = async (email: string): Promise<{ success: 
     return await sendToConvertKit(signupData);
   }
 
-  // Demo mode if no service configured
-  console.log('Newsletter signup (demo mode):', signupData);
+  // No email service configured
+  console.error('[Email] No email service configured – unable to process signup.');
   return {
-    success: true,
-    message: 'Demo mode: Email would be sent in production. Check console for details.'
+    success: false,
+    message: 'Email service not configured. Please try again later.'
   };
 };
