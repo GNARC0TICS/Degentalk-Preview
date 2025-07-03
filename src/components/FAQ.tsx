@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, HelpCircle } from 'lucide-react';
 import { SectionBackground } from '@/components/ViewportBackground';
 import { trackFAQInteraction, trackCTAClick } from '@/lib/analytics';
+import { useAnimationConfig } from '@/hooks/useReducedMotion';
 
 interface FAQItem {
   question: string;
@@ -54,6 +55,7 @@ const faqData: FAQItem[] = [
 ];
 
 export function FAQ() {
+  const animConfig = useAnimationConfig();
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
 
   const toggleItem = (id: string) => {
@@ -102,7 +104,7 @@ export function FAQ() {
                 className="bg-zinc-800/50 backdrop-blur-sm rounded-lg border border-zinc-700/50 hover:border-emerald-500/30 transition-all duration-300"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                transition={{ duration: 0.6, delay: animConfig.enableHeavyAnimations ? index * 0.1 : 0 }}
                 viewport={{ once: true }}
               >
                 <button

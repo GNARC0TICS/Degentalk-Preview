@@ -3,6 +3,7 @@ import { SectionBackground } from '@/components/ViewportBackground';
 import { motion } from 'framer-motion';
 import { useLiveVisitorCount } from '@/hooks/useSiteAnalytics';
 import { trackSocialProofView } from '@/lib/analytics';
+import { useAnimationConfig } from '@/hooks/useReducedMotion';
 import { 
   MessagesSquare, 
   Bitcoin, 
@@ -113,6 +114,8 @@ function useAnimatedCounter(target: number, duration: number = 2000) {
 }
 
 export function PlatformOverview() {
+  const animConfig = useAnimationConfig();
+  
   // Pick one tagline once per mount
   const randomTagline = useMemo(() => {
     return taglines[Math.floor(Math.random() * taglines.length)];
@@ -148,7 +151,7 @@ export function PlatformOverview() {
               className="group bg-zinc-800/50 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-zinc-700/50 hover:border-emerald-500/30 transition-all duration-300 hover:bg-zinc-700/50 hover:shadow-lg hover:shadow-emerald-500/10"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              transition={{ duration: 0.6, delay: animConfig.enableHeavyAnimations ? index * 0.1 : 0 }}
               viewport={{ once: true }}
               whileHover={{ scale: 1.02, y: -5 }}
             >

@@ -85,6 +85,17 @@ export interface AnimationConfig {
   enableHeavyAnimations: boolean;
 }
 
+// Performance-aware stagger configurations
+export const createStaggerContainer = (enableHeavyAnimations: boolean): Variants => ({
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: enableHeavyAnimations ? 0.1 : 0,
+      delayChildren: enableHeavyAnimations ? 0.1 : 0
+    }
+  }
+});
+
 export const getOptimizedAnimation = (
   animation: Variants | any,
   config: AnimationConfig
@@ -199,6 +210,26 @@ export const hamburgerBottomLine: Variants = {
 };
 
 // Mobile menu dropdown animations
+export const createMobileMenuContainer = (enableHeavyAnimations: boolean): Variants => ({
+  closed: {
+    opacity: 0,
+    y: -20,
+    scale: 0.95,
+    transition: createTransition('fast')
+  },
+  open: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      ...createTransition('normal'),
+      staggerChildren: enableHeavyAnimations ? 0.05 : 0,
+      delayChildren: enableHeavyAnimations ? 0.1 : 0
+    }
+  }
+});
+
+// Legacy support
 export const mobileMenuContainer: Variants = {
   closed: {
     opacity: 0,

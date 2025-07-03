@@ -7,6 +7,7 @@ import { handleNewsletterSignup, initEmailJS } from '@/lib/email';
 import { trackNewsletterSignup, trackWaitlistConversion, trackCTAClick } from '@/lib/analytics';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { SectionBackground } from '@/components/ViewportBackground';
+import { useAnimationConfig } from '@/hooks/useReducedMotion';
 
 interface FormState {
   email: string;
@@ -16,6 +17,7 @@ interface FormState {
 }
 
 export function NewsletterSignup() {
+  const animConfig = useAnimationConfig();
   const [form, setForm] = useState<FormState>({
     email: '',
     status: 'idle',
@@ -261,7 +263,7 @@ export function NewsletterSignup() {
                     className="flex items-start space-x-3 text-center justify-center"
                     initial={{ opacity: 0, y: 10 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                    transition={{ duration: 0.4, delay: animConfig.enableHeavyAnimations ? index * 0.1 : 0 }}
                     viewport={{ once: true }}
                   >
                     <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
