@@ -5,11 +5,19 @@ import { PlatformOverview } from '@/components/PlatformOverview';
 import { NewsletterSignup } from '@/components/NewsletterSignup';
 import { Footer } from '@/components/Footer';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { ViewportBackground } from '@/components/ViewportBackground';
 
 function App() {
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen text-foreground relative">
+        {/* Global Viewport Background - fixed behind content */}
+        <div className="fixed inset-0" style={{ zIndex: -1 }}>
+          <ViewportBackground />
+        </div>
+        
+        {/* Content layer */}
+        <div className="relative z-10">
         {/* Skip Links for Accessibility */}
         <a 
           href="#main-content" 
@@ -54,6 +62,7 @@ function App() {
           <ErrorBoundary>
             <Footer />
           </ErrorBoundary>
+        </div>
         </div>
       </div>
     </ErrorBoundary>

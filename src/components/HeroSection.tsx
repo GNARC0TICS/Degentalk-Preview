@@ -56,28 +56,53 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-zinc-950 via-zinc-900 to-black">
+    <section className="relative overflow-hidden bg-transparent">
       
-      {/* Optimized background system */}
-      {backgroundConfig.gradientAnimation && (
-        <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/4 via-purple-500/2 to-cyan-500/4" />
-      )}
-      
-      {/* Simplified pattern overlay */}
-      {backgroundConfig.patternOverlay && (
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.1),transparent_50%)]" />
-      )}
 
-      {/* Minimal glow effects */}
+      {/* Dynamic glow orbs with animation */}
       {backgroundConfig.blurEffects && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-emerald-500/3 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-cyan-500/3 rounded-full blur-3xl" />
+          <motion.div 
+            className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-emerald-500/20 rounded-full blur-[100px]"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.2, 0.3, 0.2],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div 
+            className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-cyan-500/20 rounded-full blur-[120px]"
+            animate={{
+              scale: [1.2, 1, 1.2],
+              opacity: [0.15, 0.25, 0.15],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-[80px]"
+            animate={{
+              scale: [1, 1.3, 1],
+              rotate: [0, 180, 360],
+            }}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
         </div>
       )}
 
       {/* Fixed height container - solving spacing issue */}
-      <div className="container mx-auto px-4 flex items-center justify-center min-h-[calc(100vh-6rem)] relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-[calc(100vh-4rem)] relative">
         <motion.div
           className="max-w-3xl mx-auto text-center"
           initial={{ opacity: 0, y: 30 }}
@@ -86,7 +111,7 @@ export function HeroSection() {
         >
 
           {/* Optimized headline container - responsive height */}
-          <div className="min-h-[8rem] md:min-h-[10rem] lg:min-h-[12rem] flex items-center justify-center mb-8">
+          <div className="min-h-[10rem] sm:min-h-[12rem] md:min-h-[14rem] lg:min-h-[16rem] xl:min-h-[18rem] flex items-center justify-center mb-6 sm:mb-8 md:mb-10">
             <AnimatePresence mode="wait">
               <motion.h1
                 key={currentQuoteIndex}
@@ -95,28 +120,38 @@ export function HeroSection() {
                 animate="visible"
                 exit="exit"
                 transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-                className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-white text-center leading-tight px-4"
-                style={{ textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
+                className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white text-center leading-tight px-2 sm:px-4 tracking-tight"
+                style={{ 
+                  textShadow: '0 8px 16px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.2), 0 0 20px rgba(16,185,129,0.08)'
+                }}
               >
                 {currentQuote.headline}
               </motion.h1>
             </AnimatePresence>
           </div>
 
-          {/* Simplified subheader */}
-          <motion.p
-            className="text-lg md:text-xl lg:text-2xl text-white/90 mb-12 font-medium"
-            style={{ textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
-          >
-            {currentQuote.subheader}
-          </motion.p>
+          {/* Animated subheader with stagger */}
+          <div className="min-h-[4rem] sm:min-h-[5rem] flex items-center justify-center mb-8 sm:mb-10 md:mb-12">
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={`${currentQuoteIndex}-sub`}
+                className="text-lg md:text-xl lg:text-2xl text-white/85 max-w-2xl mx-auto font-medium text-center"
+                style={{ 
+                  textShadow: '0 2px 4px rgba(0,0,0,0.5), 0 0 12px rgba(16,185,129,0.12)'
+                }}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.5, delay: 0.3, ease: [0.4, 0, 0.2, 1] }}
+              >
+                {currentQuote.subheader}
+              </motion.p>
+            </AnimatePresence>
+          </div>
 
           {/* Action buttons */}
           <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-12 sm:mb-16"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
@@ -128,11 +163,12 @@ export function HeroSection() {
             >
               <Button
                 size="lg"
-                className="border border-zinc-800 bg-black text-white hover:bg-zinc-900 hover:border-zinc-700 transition-all duration-200 px-8 py-4 text-lg font-semibold"
+                className="relative border border-zinc-800 bg-black/90 backdrop-blur-sm text-white hover:bg-zinc-900/90 hover:border-emerald-500/50 transition-all duration-300 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold group overflow-hidden shadow-lg hover:shadow-emerald-500/20 w-full sm:w-auto"
                 onClick={scrollToNewsletter}
               >
-                <Users className="w-5 h-5 mr-2" />
-                Join Waitlist
+                <span className="absolute inset-0 bg-gradient-to-r from-emerald-600/0 via-emerald-600/10 to-emerald-600/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                <Users className="w-5 h-5 mr-2 relative z-10 group-hover:rotate-12 transition-transform duration-300" />
+                <span className="relative z-10">Join Waitlist</span>
               </Button>
             </motion.div>
           </motion.div>
@@ -146,9 +182,12 @@ export function HeroSection() {
           >
             <button
               onClick={scrollToOverview}
-              className="group flex items-center text-emerald-400 hover:text-emerald-300 transition-colors duration-200"
+              className="group relative flex items-center text-emerald-400 hover:text-emerald-300 transition-all duration-300 hover:scale-105 active:scale-95"
             >
-              <span className="text-base">Learn more about Degentalk</span>
+              <span className="text-base font-medium relative">
+                Learn more about Degentalk
+                <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-emerald-400 group-hover:w-full transition-all duration-300" />
+              </span>
               <motion.div
                 whileHover={{ x: 8 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
@@ -160,8 +199,6 @@ export function HeroSection() {
         </motion.div>
       </div>
 
-      {/* Minimal bottom blend */}
-      <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-b from-transparent to-black pointer-events-none" />
     </section>
   );
 }

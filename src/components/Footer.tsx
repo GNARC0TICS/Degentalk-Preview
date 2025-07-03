@@ -39,7 +39,7 @@ function RandomTagline({ className }: { className?: string }) {
             animate="visible"
             exit="exit"
             transition={createTransition('fast')}
-            className="hover:text-emerald-400 transition-colors text-center md:text-right text-zinc-500"
+            className="hover:text-emerald-400 transition-colors text-center md:text-right text-zinc-400"
           >
             {tagline}
           </motion.p>
@@ -60,7 +60,7 @@ export function Footer() {
 
   const footerSections = [
     {
-      title: 'Platform',
+      title: 'Forums',
       links: [
         { name: 'About', id: 'platform-overview' },
         { name: 'Features', id: 'features' },
@@ -86,7 +86,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="relative bg-gradient-to-b from-zinc-900/50 to-zinc-950 border-t border-zinc-800 py-8 mt-auto overflow-hidden">
+    <footer className="relative bg-gradient-to-b from-zinc-900/50 to-zinc-950 border-t border-zinc-800 py-8 sm:py-10 md:py-12 mt-auto overflow-hidden">
       {/* Subtle footer accent - only if heavy animations enabled */}
       {animConfig.enableHeavyAnimations && (
         <>
@@ -96,18 +96,18 @@ export function Footer() {
         </>
       )}
 
-      <div className="container mx-auto px-4 max-w-6xl relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
 
         {/* Main Footer Content Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 mb-6 lg:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8 mb-8 lg:mb-10">
           {/* Brand Section */}
           <div className="col-span-2 sm:col-span-2 md:col-span-1 lg:col-span-1">
             <div className="flex items-center mb-4">
-              <span className="text-xl font-bold text-white">
+              <span className="text-xl font-extrabold text-white tracking-tight">
                 Degentalk<sup className="text-xs text-zinc-400 font-normal">™</sup>
               </span>
             </div>
-            <p className="text-zinc-400 text-sm leading-relaxed">
+            <p className="text-zinc-300 text-sm leading-relaxed">
               The premier crypto-native forum and social platform for enthusiasts, traders, and
               developers. Where chaos meets community.
             </p>
@@ -116,13 +116,13 @@ export function Footer() {
           {/* Navigation Sections */}
           {footerSections.map((section) => (
             <div key={section.title}>
-              <h3 className="text-white font-semibold mb-4">{section.title}</h3>
+              <h3 className="text-white font-bold mb-4">{section.title}</h3>
               <ul className="space-y-2">
                 {section.links.map((link) => (
                   <li key={link.name}>
                     <button
                       onClick={() => scrollToSection(link.id)}
-                      className="text-zinc-400 hover:text-emerald-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded-md px-1 py-1"
+                      className="text-zinc-300 hover:text-emerald-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded-md px-1 py-1"
                     >
                       {link.name}
                     </button>
@@ -134,7 +134,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-zinc-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-500">
+        <div className="border-t border-zinc-700 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-400">
           <div className="order-2 md:order-1">
             &copy; {new Date().getFullYear()} Degentalk. All rights reserved.
           </div>

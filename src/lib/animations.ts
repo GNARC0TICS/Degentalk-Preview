@@ -154,6 +154,83 @@ export const navItemAnimation = (delay = 0) => ({
   transition: createTransition('normal', delay)
 });
 
+// Mobile navigation animations (ultra-optimized)
+export const hamburgerLine: Variants = {
+  closed: { 
+    rotate: 0, 
+    y: 0, 
+    opacity: 1, 
+    scaleX: 1,
+    transition: createTransition('fast')
+  },
+  open: { 
+    transition: createTransition('fast')
+  }
+};
+
+// Individual line animations for hamburger
+export const hamburgerTopLine: Variants = {
+  ...hamburgerLine,
+  open: {
+    rotate: 45,
+    y: 6,
+    x: 3,
+    transition: createTransition('fast')
+  }
+};
+
+export const hamburgerMiddleLine: Variants = {
+  ...hamburgerLine,
+  open: {
+    opacity: 0,
+    scaleX: 0,
+    transition: createTransition('fast')
+  }
+};
+
+export const hamburgerBottomLine: Variants = {
+  ...hamburgerLine,
+  open: {
+    rotate: -45,
+    y: -6,
+    x: 3,
+    transition: createTransition('fast')
+  }
+};
+
+// Mobile menu dropdown animations
+export const mobileMenuContainer: Variants = {
+  closed: {
+    opacity: 0,
+    y: -20,
+    scale: 0.95,
+    transition: createTransition('fast')
+  },
+  open: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      ...createTransition('normal'),
+      staggerChildren: 0.05,
+      delayChildren: 0.1
+    }
+  }
+};
+
+export const mobileMenuItem: Variants = {
+  closed: {
+    opacity: 0,
+    x: -20,
+    transition: createTransition('fast')
+  },
+  open: {
+    opacity: 1,
+    x: 0,
+    transition: createTransition('fast')
+  }
+};
+
 // Export default configuration
 export const defaultAnimationConfig: AnimationConfig = {
   prefersReducedMotion: false,
