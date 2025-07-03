@@ -67,7 +67,7 @@ export function useMentions(options: UseMentionsOptions = {}) {
 
 	// Mark mentions as read
 	const markAsReadMutation = useMutation({
-		mutationFn: async (mentionIds?: number[]) => {
+		mutationFn: async (mentionIds?: string[]) => {
 			return await apiRequest({
 				url: '/api/social/mentions/mark-read',
 				method: 'POST',
@@ -201,7 +201,7 @@ export function useMentions(options: UseMentionsOptions = {}) {
 
 	// Mark specific mentions as read
 	const markMentionsAsRead = useCallback(
-		(mentionIds: number[]) => {
+		(mentionIds: string[]) => {
 			markAsReadMutation.mutate(mentionIds);
 		},
 		[markAsReadMutation]

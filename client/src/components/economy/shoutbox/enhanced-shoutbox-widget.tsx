@@ -159,8 +159,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 		queryFn: async () => {
 			if (!selectedRoom) return { data: [], meta: { count: 0, hasMore: false } };
 
-			const response = await apiRequest({
-				url: `/api/shoutbox/messages?roomId=${selectedRoom}&limit=50`
+			const response = await apiRequest({ url: `/api/shoutbox/messages?roomId=${selectedRoom}&limit=50`
 			});
 			return response;
 		},
@@ -169,12 +168,11 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 	});
 
 	// Fetch ignored users
-	const { data: ignoreList } = useQuery<number[]>({
+	const { data: ignoreList } = useQuery<string[]>({
 		queryKey: ['shoutbox-ignored-users', user?.id],
 		queryFn: async () => {
 			if (!user) return [];
-			const response = await apiRequest({
-				url: `/api/shoutbox/ignore?userId=${user.id}`
+			const response = await apiRequest({ url: `/api/shoutbox/ignore?userId=${user.id}`
 			});
 			return response.data || [];
 		},
@@ -233,8 +231,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 	// Pin/unpin message mutation
 	const pinMessageMutation = useMutation({
 		mutationFn: async ({ messageId, isPinned }: { messageId: MessageId; isPinned: boolean }) => {
-			const response = await apiRequest({
-				url: `/api/shoutbox/messages/${messageId}/pin`,
+			const response = await apiRequest({ url: `/api/shoutbox/messages/${messageId}/pin`,
 				method: 'PATCH',
 				data: { isPinned }
 			});
@@ -249,8 +246,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 	// Delete message mutation
 	const deleteMessageMutation = useMutation({
 		mutationFn: async (messageId: MessageId) => {
-			const response = await apiRequest({
-				url: `/api/shoutbox/messages/${messageId}`,
+			const response = await apiRequest({ url: `/api/shoutbox/messages/${messageId}`,
 				method: 'DELETE'
 			});
 			return response;
@@ -272,8 +268,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 				});
 				return response;
 			} else {
-				const response = await apiRequest({
-					url: `/api/shoutbox/ignore/${userId}`,
+				const response = await apiRequest({ url: `/api/shoutbox/ignore/${userId}`,
 					method: 'DELETE',
 					params: { roomId: selectedRoom }
 				});

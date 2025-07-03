@@ -41,7 +41,7 @@ const defaultLayout: Omit<LayoutStateV1, 'version'> = {
 		position: 'left-right'
 	},
 	order: {
-		'sidebar/left': ['profile-card'], // Example default
+		'sidebar/left': ['profile-card'],
 		'sidebar/right': [
 			'shoutbox',
 			'wallet-summary',
@@ -50,10 +50,20 @@ const defaultLayout: Omit<LayoutStateV1, 'version'> = {
 			'forum-nav',
 			'leaderboard',
 			'active-members'
-		], // Example default
+		],
+		'sidebar/top': [],
+		'sidebar/bottom': [],
+		'sidebar/widgets': [],
+		'main/left': [],
+		'main/right': [],
 		'main/top': [],
 		'main/bottom': [],
-		'mobile/widgets': ['mobile-shoutbox', 'mobile-wallet', 'mobile-leaderboard'] // Mobile-specific widgets
+		'main/widgets': [],
+		'mobile/left': [],
+		'mobile/right': [],
+		'mobile/top': [],
+		'mobile/bottom': [],
+		'mobile/widgets': ['mobile-shoutbox', 'mobile-wallet', 'mobile-leaderboard']
 	},
 	instances: {
 		'profile-card': { instanceId: 'profile-card', componentId: 'profileCard' },
@@ -130,15 +140,14 @@ export const useLayoutStore = create<LayoutStoreState>()(
 						produce((draft: LayoutStateV1) => {
 							const sourceList = draft.order[sourceSlot];
 							const [movedItem] = sourceList.splice(sourceIndex, 1);
-
-							if (sourceSlot === destSlot) {
-								// When moving downward within the same list, the removal shifts the subsequent indices
-								// so we need to account for the offset to keep the final position correct.
-								if (sourceIndex < destIndex) destIndex -= 1;
-								sourceList.splice(destIndex, 0, movedItem);
-							} else {
-								const destList = draft.order[destSlot];
-								destList.splice(destIndex, 0, movedItem);
+							if (movedItem !== undefined) {
+								if (sourceSlot === destSlot) {
+									if (sourceIndex < destIndex) destIndex -= 1;
+									sourceList.splice(destIndex, 0, movedItem);
+								} else {
+									const destList = draft.order[destSlot];
+									destList.splice(destIndex, 0, movedItem);
+								}
 							}
 						})
 					);
@@ -166,7 +175,9 @@ export const useLayoutStore = create<LayoutStoreState>()(
 						produce((draft: LayoutStateV1) => {
 							const list = draft.order[slot];
 							const [moved] = list.splice(oldIndex, 1);
-							list.splice(newIndex, 0, moved);
+							if (moved !== undefined) {
+								list.splice(newIndex, 0, moved);
+							}
 						})
 					);
 				}
@@ -183,3 +194,5 @@ export const useLayoutStore = create<LayoutStoreState>()(
 		)
 	)
 );
+
+// All instanceId/componentId are string/UUID. No direct entity IDs found, but this file is future compatible.

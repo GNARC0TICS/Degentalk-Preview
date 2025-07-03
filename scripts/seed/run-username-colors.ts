@@ -1,4 +1,5 @@
-import type { HeatEventId } from '@db/types';
+import type { HeatEventId } from 'import { randomUUID } from "crypto";
+@db/types';
 import type { ActionId } from '@db/types';
 import type { AuditLogId } from '@db/types';
 import type { EventId } from '@db/types';

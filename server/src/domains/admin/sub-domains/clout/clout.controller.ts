@@ -21,7 +21,7 @@ export const getAllAchievements = async (req: Request, res: Response, next: Next
 
 export const getAchievementById = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const id = Number(req.params.id);
+		const id = req.params.id;
 		const rows = await db
 			.select()
 			.from(cloutAchievements)
@@ -71,7 +71,7 @@ export const createAchievement = async (req: Request, res: Response, next: NextF
 
 export const updateAchievement = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const id = Number(req.params.id);
+		const id = req.params.id;
 		const updateData = { ...req.body, updatedAt: new Date() } as any;
 		delete updateData.id;
 
@@ -92,7 +92,7 @@ export const updateAchievement = async (req: Request, res: Response, next: NextF
 
 export const deleteAchievement = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const id = Number(req.params.id);
+		const id = req.params.id;
 		await db.delete(cloutAchievements).where(eq(cloutAchievements.id, id));
 		res.json({ message: 'Achievement deleted' });
 	} catch (err) {
@@ -102,7 +102,7 @@ export const deleteAchievement = async (req: Request, res: Response, next: NextF
 
 export const toggleAchievement = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const id = Number(req.params.id);
+		const id = req.params.id;
 		const rows = await db
 			.select({ enabled: cloutAchievements.enabled })
 			.from(cloutAchievements)

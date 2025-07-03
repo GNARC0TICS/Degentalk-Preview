@@ -38,8 +38,8 @@ const createLevelSchema = z.object({
 	animationEffect: z.string().max(30).optional(),
 	unlocks: z.record(z.any()).optional(),
 	rewardDgt: z.number().int().min(0).optional(),
-	rewardTitleId: z.number().int().min(1).optional(),
-	rewardBadgeId: z.number().int().min(1).optional()
+	rewardTitleId: z.string().uuid().optional(),
+	rewardBadgeId: z.string().uuid().optional()
 });
 
 const generateXpCurveSchema = z.object({

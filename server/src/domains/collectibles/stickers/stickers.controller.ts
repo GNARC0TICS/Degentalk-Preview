@@ -354,8 +354,8 @@ export class StickerController {
 					'sticker_pack_cover',
 					'sticker_pack_preview'
 				]),
-				stickerId: z.number().positive().optional(),
-				packId: z.number().positive().optional()
+				stickerId: z.string().uuid().positive().optional(),
+				packId: z.string().uuid().positive().optional()
 			});
 
 			const uploadData = uploadSchema.parse(req.body);
@@ -412,8 +412,8 @@ export class StickerController {
 					'sticker_pack_cover',
 					'sticker_pack_preview'
 				]),
-				stickerId: z.number().positive().optional(),
-				packId: z.number().positive().optional()
+				stickerId: z.string().uuid().positive().optional(),
+				packId: z.string().uuid().positive().optional()
 			});
 
 			const confirmData = confirmSchema.parse(req.body);
@@ -496,8 +496,8 @@ export class StickerController {
 					'sticker_pack_cover',
 					'sticker_pack_preview'
 				]),
-				stickerId: z.number().positive().optional(),
-				packId: z.number().positive().optional()
+				stickerId: z.string().uuid().positive().optional(),
+				packId: z.string().uuid().positive().optional()
 			});
 
 			const deleteData = deleteSchema.parse(req.body);

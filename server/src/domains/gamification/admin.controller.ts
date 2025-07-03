@@ -33,8 +33,8 @@ const bulkCreateLevelsSchema = z.object({
 				animationEffect: z.string().max(30).optional(),
 				unlocks: z.record(z.any()).optional(),
 				rewardDgt: z.number().int().min(0).optional(),
-				rewardTitleId: z.number().int().min(1).optional(),
-				rewardBadgeId: z.number().int().min(1).optional()
+				rewardTitleId: z.string().uuid().optional(),
+				rewardBadgeId: z.string().uuid().optional()
 			})
 		)
 		.min(1)
@@ -104,7 +104,7 @@ const systemConfigSchema = z.object({
 });
 
 const resetUserProgressSchema = z.object({
-	userId: z.number().int().min(1),
+	userId: z.string().uuid(),
 	resetType: z.enum(['xp', 'level', 'achievements', 'missions', 'all']),
 	reason: z.string().min(1).max(500)
 });

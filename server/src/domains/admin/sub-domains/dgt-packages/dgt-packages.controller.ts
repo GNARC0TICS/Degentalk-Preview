@@ -12,7 +12,7 @@ export const listPackages = async (req: Request, res: Response, next: NextFuncti
 
 export const getPackageById = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const id = Number(req.params.packageId);
+		const id = req.params.packageId;
 		const [item] = await dgtPackageService.list().then((r) => r.filter((p) => p.id === id));
 		if (!item) return res.status(404).json({ error: 'Package not found' });
 		res.json(item);
@@ -32,7 +32,7 @@ export const createPackage = async (req: Request, res: Response, next: NextFunct
 
 export const updatePackage = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const id = Number(req.params.packageId);
+		const id = req.params.packageId;
 		const updated = await dgtPackageService.update(id, req.body);
 		res.json(updated);
 	} catch (err) {
@@ -42,7 +42,7 @@ export const updatePackage = async (req: Request, res: Response, next: NextFunct
 
 export const deletePackage = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const id = Number(req.params.packageId);
+		const id = req.params.packageId;
 		const result = await dgtPackageService.delete(id);
 		res.json(result);
 	} catch (err) {

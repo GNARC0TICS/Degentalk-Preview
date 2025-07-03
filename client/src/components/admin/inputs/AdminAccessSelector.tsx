@@ -8,15 +8,15 @@ import { cn } from '@/lib/utils';
 import { Loader2, Check } from 'lucide-react';
 
 interface Role {
-	id: number;
+	id: string;
 	name: string;
 	color?: string | null;
 }
 
 interface AdminAccessSelectorProps {
 	label?: string;
-	selectedIds: number[];
-	onChange: (ids: number[]) => void;
+	selectedIds: string[];
+	onChange: (ids: string[]) => void;
 	className?: string;
 }
 
@@ -41,7 +41,7 @@ export const AdminAccessSelector: React.FC<AdminAccessSelectorProps> = ({
 		}
 	});
 
-	const toggleRole = (id: number) => {
+	const toggleRole = (id: string) => {
 		if (selectedIds.includes(id)) {
 			onChange(selectedIds.filter((r) => r !== id));
 		} else {

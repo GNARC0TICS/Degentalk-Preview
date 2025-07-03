@@ -31,23 +31,20 @@ export default function AdminUserInventoryPage() {
 		refetch: refetchInventory
 	} = useQuery<UserInventoryWithProduct[], Error>({
 		queryKey: ['userInventory', userId],
-		queryFn: () => apiRequest({ url: `/api/admin/user-inventory/${userId}` }),
+		queryFn: () => apiRequest({ url: `/api/admin/user-inventory/${userId}`, method: 'GET' }),
 		enabled: !!userId
 	});
 
 	// Fetch all available shop items for granting
 	const { data: shopItems, isLoading: isLoadingShopItems } = useQuery<Product[], Error>({
 		queryKey: ['allShopItemsForGrant'],
-		queryFn: () => apiRequest({ url: '/api/admin/shop-management/products' }) // Assuming this endpoint lists all products
+		queryFn: () => apiRequest({ url: '/api/admin/shop-management/products', method: 'GET' }) // Assuming this endpoint lists all products
 	});
 
 	// Mutation for equipping an item
 	const equipMutation = useMutation<any, Error, { inventoryId: InventoryId }>({
 		mutationFn: ({ inventoryId }) =>
-			apiRequest({
-				url: `/api/admin/user-inventory/${userId}/equip/${inventoryId}`,
-				method: 'POST'
-			}),
+			apiRequest({ url: `/api/admin/user-inventory/${userId}/equip/${inventoryId}`, method: 'POST' }),
 		onSuccess: () => {
 			toast({ title: 'Item equipped', description: 'The item has been successfully equipped.' });
 			queryClient.invalidateQueries({ queryKey: ['userInventory', userId] });
@@ -60,10 +57,7 @@ export default function AdminUserInventoryPage() {
 	// Mutation for unequipping an item
 	const unequipMutation = useMutation<any, Error, { inventoryId: InventoryId }>({
 		mutationFn: ({ inventoryId }) =>
-			apiRequest({
-				url: `/api/admin/user-inventory/${userId}/unequip/${inventoryId}`,
-				method: 'POST'
-			}),
+			apiRequest({ url: `/api/admin/user-inventory/${userId}/unequip/${inventoryId}`, method: 'POST' }),
 		onSuccess: () => {
 			toast({
 				title: 'Item unequipped',
@@ -81,10 +75,9 @@ export default function AdminUserInventoryPage() {
 	});
 
 	// Mutation for granting an item
-	const grantItemMutation = useMutation<any, Error, { productId: number }>({
+	const grantItemMutation = useMutation<any, Error, { productId: string }>({
 		mutationFn: ({ productId }) =>
-			apiRequest({
-				url: `/api/admin/user-inventory/${userId}/grant`,
+			apiRequest({ url: `/api/admin/user-inventory/${userId}/grant`,
 				method: 'POST',
 				data: { productId, quantity: 1 } // Assuming quantity 1 for cosmetics
 			}),
@@ -103,7 +96,7 @@ export default function AdminUserInventoryPage() {
 
 	const handleGrantItem = () => {
 		if (selectedItemToGrant) {
-			grantItemMutation.mutate({ productId: parseInt(selectedItemToGrant) });
+			grantItemMutation.mutate({ productId: selectedItemToGrant });
 		}
 	};
 

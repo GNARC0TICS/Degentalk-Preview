@@ -18,7 +18,7 @@ import type { BackupId } from '@/db/types';
 
 // Validation schemas
 export const createRestoreSchema = z.object({
-	sourceBackupId: z.number().positive(),
+	sourceBackupId: z.string().uuid(),
 	displayName: z.string().min(1).max(255),
 	description: z.string().optional(),
 	restoreType: z.enum(['full', 'schema_only', 'data_only', 'selective']).default('full'),

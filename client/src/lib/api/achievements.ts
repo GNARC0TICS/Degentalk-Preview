@@ -5,12 +5,12 @@
  * and achievement management.
  */
 
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import type { AchievementId } from '@db/types';
 
 export interface UserAchievement {
 	id: AchievementId;
-	achievementId: number;
+	achievementId: AchievementId;
 	currentProgress: any;
 	progressPercentage: string;
 	isCompleted: boolean;
@@ -159,7 +159,7 @@ export const achievementApi = {
 	/**
 	 * Bulk update achievements (admin)
 	 */
-	bulkUpdateAchievements: (ids: number[], updates: Partial<Achievement>) =>
+	bulkUpdateAchievements: (ids: AchievementId[], updates: Partial<Achievement>) =>
 		apiRequest<{ data: Achievement[]; message: string }>({
 			url: '/api/achievements/bulk',
 			method: 'PUT',

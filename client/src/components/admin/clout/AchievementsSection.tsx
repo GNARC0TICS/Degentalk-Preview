@@ -62,8 +62,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
-import type { CloutAchievement } from '@/pages/admin/clout';
+import { apiRequest } from '@/lib/api-request';
+import type { CloutAchievement } from '@schema/economy/cloutAchievements';
 import type { AchievementId } from '@db/types';
 
 interface AchievementsSectionProps {
@@ -164,11 +164,8 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 	const updateAchievementMutation = useMutation({
 		mutationFn: async (data: AchievementForm & { id: AchievementId }) => {
 			const { id, ...updateData } = data;
-			return apiRequest({
-				url: `/api/admin/clout/achievements/${id}`,
-				method: 'PUT',
-				data: updateData
-			});
+			return apiRequest({ url: `/api/admin/clout/achievements/${id}`, method: 'PUT', data: updateData
+			 });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['admin-clout-achievements'] });
@@ -191,10 +188,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 	// Delete achievement mutation
 	const deleteAchievementMutation = useMutation({
 		mutationFn: async (id: AchievementId) => {
-			return apiRequest({
-				url: `/api/admin/clout/achievements/${id}`,
-				method: 'DELETE'
-			});
+			return apiRequest({ url: `/api/admin/clout/achievements/${id}`, method: 'DELETE' });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['admin-clout-achievements'] });
@@ -217,10 +211,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 	// Toggle achievement mutation
 	const toggleAchievementMutation = useMutation({
 		mutationFn: async (id: AchievementId) => {
-			return apiRequest({
-				url: `/api/admin/clout/achievements/${id}/toggle`,
-				method: 'POST'
-			});
+			return apiRequest({ url: `/api/admin/clout/achievements/${id}/toggle`, method: 'POST' });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['admin-clout-achievements'] });
@@ -264,7 +255,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 	};
 
 	const handleToggleAchievement = (achievement: CloutAchievement) => {
-		toggleAchievementMutation.mutate(achievement.id);
+		toggleAchievementMutation.mutate(achievement.id as AchievementId);
 	};
 
 	const onCreateSubmit = (data: AchievementForm) => {
@@ -273,13 +264,13 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 
 	const onEditSubmit = (data: AchievementForm) => {
 		if (selectedAchievement) {
-			updateAchievementMutation.mutate({ ...data, id: selectedAchievement.id });
+			updateAchievementMutation.mutate({ ...data, id: selectedAchievement.id as AchievementId });
 		}
 	};
 
 	const confirmDelete = () => {
 		if (selectedAchievement) {
-			deleteAchievementMutation.mutate(selectedAchievement.id);
+			deleteAchievementMutation.mutate(selectedAchievement.id as AchievementId);
 		}
 	};
 
@@ -377,7 +368,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 											<TableCell>
 												<div className="space-y-1">
 													<Badge variant="outline">
-														{getCriteriaTypeLabel(achievement.criteriaType)}
+														{getCriteriaTypeLabel(achievement.criteriaType || undefined)}
 													</Badge>
 													{achievement.criteriaValue && (
 														<p className="text-xs text-muted-foreground">

@@ -67,7 +67,7 @@ interface User {
 }
 
 interface XpAdjustment {
-	id: number;
+	id: string;
 	userId: string;
 	username: string;
 	adjustmentType: 'add' | 'subtract' | 'set';

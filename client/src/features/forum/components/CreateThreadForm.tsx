@@ -353,7 +353,7 @@ export function CreateThreadForm({
 			forumSlug: activeForumData.slug,
 			prefixId:
 				values.prefixId && values.prefixId.trim() !== '' && values.prefixId !== 'none'
-					? parseInt(values.prefixId)
+					? values.prefixId
 					: undefined,
 			tags: values.tags,
 			editorState: values.editorState

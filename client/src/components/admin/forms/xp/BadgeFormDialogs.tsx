@@ -23,14 +23,14 @@ import {
 import { Upload } from 'lucide-react';
 import { MediaPickerModal } from '@/components/admin/media/MediaPickerModal';
 import { MediaAsset } from '@/components/media/MediaAsset';
-import type { BadgeId } from '@db/types';
+import type { BadgeId, EntityId } from '@db/types';
 
 // Badge types (can be shared from a types file if available)
 export interface BadgeFormData {
 	name: string;
 	description: string;
 	iconUrl: string;
-	mediaId?: number | null;
+	mediaId?: EntityId | null;
 	rarity: string;
 }
 

@@ -16,7 +16,7 @@ import { MessageSquare, Eye, BookmarkIcon } from 'lucide-react';
 import { getInitials } from '@/lib/utils';
 
 export type FeaturedThread = {
-	thread_id: number;
+	thread_id: string;
 	title: string;
 	slug: string;
 	post_count: number;
@@ -24,7 +24,7 @@ export type FeaturedThread = {
 	featured_at: string;
 	created_at: string;
 	last_post_at: string;
-	user_id: number;
+	user_id: string;
 	username: string;
 	avatar_url?: string;
 	category_name: string;

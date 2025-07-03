@@ -2,7 +2,7 @@ import type { BreadcrumbItem } from '@/components/navigation/ForumBreadcrumbs';
 import { getForumUrl, getSubforumUrl, getThreadUrl } from '@/utils/forum-urls';
 
 export interface ForumContext {
-	id: number;
+	id: string;
 	name: string;
 	slug: string;
 	isPrimary?: boolean;

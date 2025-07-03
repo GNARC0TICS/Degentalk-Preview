@@ -92,7 +92,7 @@ export class AdminUsersService {
 			// Create stats map for quick access
 			const statsMap = new Map();
 			userStats.forEach((stat) => {
-				statsMap.set(Number(stat.userId), {
+				statsMap.set(stat.userId, {
 					posts: Number(stat.postCount) || 0,
 					threads: Number(stat.threadCount) || 0
 				});

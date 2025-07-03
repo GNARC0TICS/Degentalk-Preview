@@ -153,8 +153,7 @@ export function useDraft({
 		// Delete from cloud if it exists
 		if (localDraft.id && enableCloudSync && user) {
 			try {
-				await apiRequest({
-					url: `/api/forum/drafts/${localDraft.id}`,
+				await apiRequest({ url: `/api/forum/drafts/${localDraft.id}`,
 					method: 'DELETE'
 				});
 			} catch (error) {

@@ -33,7 +33,7 @@ interface QuickStat {
 	title: string;
 	value: string | number;
 	change?: string;
-	icon: React.ComponentType<{ className?: string }>;
+	icon: any;
 	color: string;
 }
 

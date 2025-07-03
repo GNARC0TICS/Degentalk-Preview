@@ -23,7 +23,7 @@ export function XpActionRow({ action }: Props) {
 	const save = () => {
 		update.mutate({
 			actionKey: action.action,
-			payload: { baseValue: xp, enabled }
+			payload: { xp, enabled }
 		});
 	};
 

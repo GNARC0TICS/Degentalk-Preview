@@ -91,9 +91,9 @@ export interface LevelData {
 }
 
 export interface LevelUnlocks {
-	titles?: number[];
-	badges?: number[];
-	frames?: number[];
+	titles?: string[];
+	badges?: string[];
+	frames?: string[];
 	perks?: string[];
 	features?: string[];
 }

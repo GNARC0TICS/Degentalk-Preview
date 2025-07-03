@@ -32,7 +32,7 @@ export class TipController {
 
 		// Validate input using zod
 		const tipSchema = z.object({
-			toUserId: z.number().int().positive(),
+			toUserId: z.string().uuid(),
 			amount: z.number().positive(),
 			reason: z.string().optional()
 		});

@@ -37,9 +37,9 @@ export default function ForumStructureAdminPage() {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [editingEntity, setEditingEntity] = useState<Entity | null>(null);
 	const [accessControl, setAccessControl] = useState<{
-		canView: number[];
-		canPost: number[];
-		canTip: number[];
+		canView: string[];
+		canPost: string[];
+		canTip: string[];
 	}>({
 		canView: [],
 		canPost: [],
@@ -89,7 +89,7 @@ export default function ForumStructureAdminPage() {
 	});
 
 	const deleteMutation = useMutation({
-		mutationFn: async (id: number) => {
+		mutationFn: async (id: string) => {
 			const res = await fetch(`/admin/forum/entities/${id}`, { method: 'DELETE' });
 			if (!res.ok) throw new Error('Failed to delete entity');
 			return res.json();

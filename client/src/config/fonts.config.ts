@@ -9,7 +9,7 @@ export interface FontConfig {
 	name: string;
 	family: string;
 	googleFontsUrl: string;
-	weights: number[];
+	weights: string[];
 	category: 'display' | 'body' | 'mono' | 'handwriting' | 'special';
 	description: string;
 	previewText?: string;

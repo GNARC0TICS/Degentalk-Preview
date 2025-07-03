@@ -9,7 +9,7 @@ import { z } from 'zod';
 // Schema for making a deposit from treasury to a user
 export const TreasuryDepositSchema = z.object({
 	amount: z.number().positive({ message: 'Amount must be a positive number.' }),
-	userId: z.number().int({ message: 'User ID must be an integer.' }),
+	userId: z.string().uuid().int({ message: 'User ID must be an integer.' }),
 	description: z.string().optional(),
 	metadata: z.record(z.any()).optional()
 });
@@ -17,7 +17,7 @@ export const TreasuryDepositSchema = z.object({
 // Schema for recovering funds from a user to treasury
 export const TreasuryWithdrawalSchema = z.object({
 	amount: z.number().positive({ message: 'Amount must be a positive number.' }),
-	userId: z.number().int({ message: 'User ID must be an integer.' }),
+	userId: z.string().uuid().int({ message: 'User ID must be an integer.' }),
 	description: z.string().optional(),
 	metadata: z.record(z.any()).optional()
 });

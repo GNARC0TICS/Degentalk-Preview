@@ -29,7 +29,7 @@ import { useAuth } from '@/hooks/use-auth';
 import type { AdminModule } from '@shared/config/admin.config';
 
 // Icon mapping for module icons
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+const iconMap: Record<string, any> = {
 	Settings,
 	Shield,
 	Users: () => (
@@ -86,7 +86,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 // Get icon component from icon name
-const getIconComponent = (iconName: string): React.ComponentType<{ className?: string }> => {
+const getIconComponent = (iconName: string): any => {
 	return iconMap[iconName] || iconMap.default;
 };
 
@@ -166,7 +166,7 @@ export default function ModularAdminSidebar({
 
 		// Sort within each section
 		Object.keys(grouped).forEach((key) => {
-			grouped[Number(key)].sort((a, b) => a.order - b.order);
+			grouped[Number(key)]?.sort((a, b) => a.order - b.order);
 		});
 
 		return grouped;

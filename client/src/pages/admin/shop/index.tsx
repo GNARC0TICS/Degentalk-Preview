@@ -62,7 +62,7 @@ export default function AdminShopItemsPage() {
 		}
 	});
 
-	const handleDelete = (productId: number) => {
+	const handleDelete = (productId: string) => {
 		if (window.confirm('Are you sure you want to archive this item?')) {
 			deleteMutation.mutate(productId);
 		}

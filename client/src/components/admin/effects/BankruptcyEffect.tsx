@@ -22,7 +22,7 @@ export function BankruptcyEffect({ isOpen, username, onClose }: BankruptcyEffect
 				XP_EASTER_EGGS.liquidationMessages[
 					Math.floor(Math.random() * XP_EASTER_EGGS.liquidationMessages.length)
 				];
-			setCurrentMessage(randomMessage);
+			setCurrentMessage(randomMessage as BankruptcyMessage);
 
 			// Auto-close after 10 seconds if user doesn't interact
 			const autoCloseTimer = setTimeout(() => {
@@ -31,6 +31,7 @@ export function BankruptcyEffect({ isOpen, username, onClose }: BankruptcyEffect
 
 			return () => clearTimeout(autoCloseTimer);
 		}
+		return undefined;
 	}, [isOpen, onClose]);
 
 	if (!isOpen) return null;

@@ -1,11 +1,11 @@
-import {
+import type {
 	BaseVaultItem,
 	VaultFrame,
 	VaultTitle,
 	VaultColor,
-	VaultBoost,
-	vaultItems
+	VaultBoost
 } from './rare-items-vault';
+import { vaultItems } from './rare-items-vault';
 import type {
 	ItemCategory,
 	ItemRarity,
@@ -14,17 +14,19 @@ import type {
 	VaultEvent,
 	AdminActionLog,
 	ItemHistory,
-	VaultAdminService
+	VaultAdminService,
+	VaultAdminAction,
+	VaultActionDetails
 } from '@/types/vault.types';
 
 // Mock implementation for demo purposes
 export class MockVaultAdminService implements VaultAdminService {
-	private items: BaseVaultItem[] = [
-		...vaultItems.frames,
-		...vaultItems.titles,
-		...vaultItems.colors,
-		...vaultItems.boosts,
-		...vaultItems.exclusives
+	private items: import('@/types/vault.types').BaseVaultItem[] = [
+		...vaultItems.frames as any[],
+		...vaultItems.titles as any[],
+		...vaultItems.colors as any[],
+		...vaultItems.boosts as any[],
+		...vaultItems.exclusives as any[]
 	];
 
 	private events: VaultEvent[] = [];
@@ -32,7 +34,7 @@ export class MockVaultAdminService implements VaultAdminService {
 	private itemHistory: Record<string, ItemHistory[]> = {};
 
 	// Helper to log admin actions
-	private logAction(action: VaultAdminAction, itemId?: string, details?: VaultActionDetails): void {
+	private logAction(action: VaultAdminAction, itemId?: string, details: VaultActionDetails = {}): void {
 		const timestamp = new Date().toISOString();
 		const logEntry: AdminActionLog = {
 			id: `log-${Date.now()}`,
@@ -81,31 +83,33 @@ export class MockVaultAdminService implements VaultAdminService {
 	}
 
 	// Item CRUD operations
-	async getItem(id: string): Promise<BaseVaultItem | null> {
+	async getItem(id: string): Promise<import('@/types/vault.types').BaseVaultItem | null> {
 		const item = this.items.find((item) => item.id === id);
 		return item || null;
 	}
 
-	async getAllItems(): Promise<BaseVaultItem[]> {
+	async getAllItems(): Promise<import('@/types/vault.types').BaseVaultItem[]> {
 		return [...this.items];
 	}
 
-	async getItemsByCategory(category: ItemCategory): Promise<BaseVaultItem[]> {
+	async getItemsByCategory(category: ItemCategory): Promise<import('@/types/vault.types').BaseVaultItem[]> {
 		return this.items.filter((item) => item.category === category);
 	}
 
-	async getItemsByRarity(rarity: ItemRarity): Promise<BaseVaultItem[]> {
+	async getItemsByRarity(rarity: ItemRarity): Promise<import('@/types/vault.types').BaseVaultItem[]> {
 		return this.items.filter((item) => item.rarity === rarity);
 	}
 
-	async createItem(itemData: Omit<BaseVaultItem, 'id'>): Promise<BaseVaultItem> {
+	async createItem(itemData: Omit<import('@/types/vault.types').BaseVaultItem, 'id'>): Promise<import('@/types/vault.types').BaseVaultItem> {
 		// Generate a unique ID
 		const id = `${itemData.category}-${Date.now()}`;
 		const newItem = {
 			...itemData,
 			id,
-			isEnabled: true
-		} as BaseVaultItem;
+			isActive: true,
+			createdAt: new Date().toISOString(),
+			updatedAt: new Date().toISOString()
+		} as import('@/types/vault.types').BaseVaultItem;
 
 		this.items.push(newItem);
 		this.logAction('create_item', id, {
@@ -116,14 +120,14 @@ export class MockVaultAdminService implements VaultAdminService {
 		return newItem;
 	}
 
-	async updateItem(id: string, updates: Partial<BaseVaultItem>): Promise<BaseVaultItem> {
+	async updateItem(id: string, updates: Partial<import('@/types/vault.types').BaseVaultItem>): Promise<import('@/types/vault.types').BaseVaultItem> {
 		const index = this.items.findIndex((item) => item.id === id);
 		if (index === -1) throw new Error(`Item with ID ${id} not found`);
 
 		const updatedItem = {
 			...this.items[index],
 			...updates
-		};
+		} as import('@/types/vault.types').BaseVaultItem;
 
 		this.items[index] = updatedItem;
 		this.logAction('update_item', id, {
@@ -150,26 +154,25 @@ export class MockVaultAdminService implements VaultAdminService {
 	}
 
 	// Specialized operations
-	async enableItem(id: string): Promise<BaseVaultItem> {
-		return this.updateItem(id, { isEnabled: true });
+	async enableItem(id: string): Promise<import('@/types/vault.types').BaseVaultItem> {
+		return this.updateItem(id, { isActive: true });
 	}
 
-	async disableItem(id: string): Promise<BaseVaultItem> {
-		return this.updateItem(id, { isEnabled: false });
+	async disableItem(id: string): Promise<import('@/types/vault.types').BaseVaultItem> {
+		return this.updateItem(id, { isActive: false });
 	}
 
-	async setItemRarity(id: string, rarity: ItemRarity): Promise<BaseVaultItem> {
+	async setItemRarity(id: string, rarity: ItemRarity): Promise<import('@/types/vault.types').BaseVaultItem> {
 		return this.updateItem(id, { rarity });
 	}
 
-	async setItemPrice(id: string, prices: { dgt?: number; usdt?: number }): Promise<BaseVaultItem> {
+	async setItemPrice(id: string, prices: { dgt?: number; usdt?: number }): Promise<import('@/types/vault.types').BaseVaultItem> {
 		return this.updateItem(id, {
-			dgtPrice: prices.dgt,
-			usdtPrice: prices.usdt
+			prices
 		});
 	}
 
-	async addItemUnlockMethod(id: string, method: UnlockMethod): Promise<BaseVaultItem> {
+	async addItemUnlockMethod(id: string, method: UnlockMethod): Promise<import('@/types/vault.types').BaseVaultItem> {
 		const item = await this.getItem(id);
 		if (!item) throw new Error(`Item with ID ${id} not found`);
 
@@ -181,7 +184,7 @@ export class MockVaultAdminService implements VaultAdminService {
 		return this.updateItem(id, { unlockMethods });
 	}
 
-	async removeItemUnlockMethod(id: string, method: UnlockMethod): Promise<BaseVaultItem> {
+	async removeItemUnlockMethod(id: string, method: UnlockMethod): Promise<import('@/types/vault.types').BaseVaultItem> {
 		const item = await this.getItem(id);
 		if (!item) throw new Error(`Item with ID ${id} not found`);
 
@@ -190,17 +193,23 @@ export class MockVaultAdminService implements VaultAdminService {
 		return this.updateItem(id, { unlockMethods });
 	}
 
-	async setItemXpRequirement(id: string, xp: number): Promise<BaseVaultItem> {
-		return this.updateItem(id, { xpRequirement: xp });
+	async setItemXpRequirement(id: string, xp: number): Promise<import('@/types/vault.types').BaseVaultItem> {
+		// XP requirement should be stored in metadata
+		const item = await this.getItem(id);
+		if (!item) throw new Error(`Item with ID ${id} not found`);
+		const metadata = { ...item.metadata, xpRequirement: xp };
+		return this.updateItem(id, { metadata });
 	}
 
 	// Seasonal management
-	async setItemSeason(id: string, season: SeasonType): Promise<BaseVaultItem> {
+	async setItemSeason(id: string, season: SeasonType): Promise<import('@/types/vault.types').BaseVaultItem> {
 		const item = await this.getItem(id);
 		if (!item) throw new Error(`Item with ID ${id} not found`);
 
 		// If changing to seasonal, update rarity
-		const updates: Partial<BaseVaultItem> = { season };
+		// Season should be stored in metadata
+		const metadata = { ...item.metadata, season };
+		const updates: Partial<import('@/types/vault.types').BaseVaultItem> = { metadata };
 		if (item.rarity !== 'seasonal') {
 			updates.rarity = 'seasonal';
 		}
@@ -212,11 +221,11 @@ export class MockVaultAdminService implements VaultAdminService {
 		id: string,
 		releaseDateUtc: string,
 		expiryDateUtc: string
-	): Promise<BaseVaultItem> {
+	): Promise<import('@/types/vault.types').BaseVaultItem> {
 		return this.updateItem(id, { releaseDateUtc, expiryDateUtc });
 	}
 
-	async getCurrentSeasonalItems(): Promise<BaseVaultItem[]> {
+	async getCurrentSeasonalItems(): Promise<import('@/types/vault.types').BaseVaultItem[]> {
 		const now = new Date();
 
 		return this.items.filter((item) => {
@@ -231,11 +240,11 @@ export class MockVaultAdminService implements VaultAdminService {
 	}
 
 	// Lootbox management
-	async setItemDropChance(id: string, dropChance: number): Promise<BaseVaultItem> {
+	async setItemDropChance(id: string, dropChance: number): Promise<import('@/types/vault.types').BaseVaultItem> {
 		return this.updateItem(id, { dropChance });
 	}
 
-	async getLootboxItems(): Promise<BaseVaultItem[]> {
+	async getLootboxItems(): Promise<import('@/types/vault.types').BaseVaultItem[]> {
 		return this.items.filter(
 			(item) => item.unlockMethods.includes('lootbox') && item.dropChance !== undefined
 		);
@@ -287,6 +296,41 @@ export class MockVaultAdminService implements VaultAdminService {
 
 	async getAdminActionLog(): Promise<AdminActionLog[]> {
 		return [...this.actionLog];
+	}
+
+	// Already implemented this above, removing duplicate
+	// removeItemUnlockMethod is already implemented as async above
+
+	async updateEvent(id: string, updates: Partial<VaultEvent>): Promise<VaultEvent> {
+		throw new Error('Method not implemented.');
+	}
+
+	async endEvent(id: string): Promise<VaultEvent> {
+		throw new Error('Method not implemented.');
+	}
+
+	async getActiveEvents(): Promise<VaultEvent[]> {
+		throw new Error('Method not implemented.');
+	}
+
+	async grantItemToUser(userId: string, itemId: string, method: UnlockMethod): Promise<any> {
+		throw new Error('Method not implemented.');
+	}
+
+	async revokeItemFromUser(userId: string, itemId: string): Promise<boolean> {
+		throw new Error('Method not implemented.');
+	}
+
+	async getUserItems(userId: string): Promise<any[]> {
+		throw new Error('Method not implemented.');
+	}
+
+	async getItemStatistics(itemId: string): Promise<any> {
+		throw new Error('Method not implemented.');
+	}
+
+	async getAdminActionLogs(filters?: any): Promise<AdminActionLog[]> {
+		return Promise.resolve([...this.actionLog]);
 	}
 }
 

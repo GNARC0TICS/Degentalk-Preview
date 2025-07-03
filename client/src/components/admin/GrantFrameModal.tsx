@@ -8,10 +8,10 @@ import {
 	DialogFooter
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import { LoadingSpinner } from '@/components/ui/loader';
 import type { AvatarFrame } from '@/types/compat/avatar';
 import type { FrameId, UserId } from '@db/types';
@@ -34,8 +34,7 @@ export const GrantFrameModal: React.FC<Props> = ({ frame, open, onClose, onSucce
 
 	const grantMutation = useMutation<void, Error, { frameId: FrameId; userIds: UserId[] }>({
 		mutationFn: ({ frameId, userIds }) =>
-			apiRequest({
-				url: `/api/admin/avatar-frames/${frameId}/grant`,
+			apiRequest({ url: `/api/admin/avatar-frames/${frameId}/grant`,
 				method: 'POST',
 				data: { userIds }
 			}),
@@ -65,7 +64,7 @@ export const GrantFrameModal: React.FC<Props> = ({ frame, open, onClose, onSucce
 			});
 			return;
 		}
-		grantMutation.mutate({ frameId: frame.id, userIds: ids });
+		grantMutation.mutate({ frameId: frame.id, userIds: ids as UserId[] });
 	};
 
 	return (
@@ -77,8 +76,7 @@ export const GrantFrameModal: React.FC<Props> = ({ frame, open, onClose, onSucce
 				</DialogHeader>
 
 				<form onSubmit={handleSubmit} className="grid gap-4 py-4">
-					<Input
-						as="textarea"
+					<Textarea
 						value={userIds}
 						onChange={(e) => setUserIds(e.target.value)}
 						placeholder="uuid-1, uuid-2, uuid-3"

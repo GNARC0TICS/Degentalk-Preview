@@ -11,7 +11,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-hot-toast';
+import { useToast } from '@/hooks/use-toast';
 import {
 	Settings,
 	MessageSquare,

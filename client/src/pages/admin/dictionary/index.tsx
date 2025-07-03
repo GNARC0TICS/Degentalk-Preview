@@ -8,7 +8,7 @@ import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 
 interface PendingEntry {
-	id: number;
+	id: string;
 	word: string;
 	definition: string;
 	author: { username: string };
@@ -52,7 +52,7 @@ export default function DictionaryAdminQueue() {
 	});
 
 	const moderateMutation = useMutation({
-		mutationFn: ({ id, status }: { id: number; status: 'approved' | 'rejected' }) =>
+		mutationFn: ({ id, status }: { id: string; status: 'approved' | 'rejected' }) =>
 			dictionaryApi.moderate(id, status),
 		onSuccess: () => {
 			queryClient.invalidateQueries(['dictionary', 'pending']);

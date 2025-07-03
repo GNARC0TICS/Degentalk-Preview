@@ -8,7 +8,7 @@ import { Loader2, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Item {
-	id: number;
+	id: string;
 	name: string;
 	iconUrl?: string | null;
 }
@@ -16,8 +16,8 @@ interface Item {
 interface UnlockMultiSelectProps {
 	label: string;
 	endpoint: string; // /api/admin/titles etc.
-	selectedIds: number[];
-	onChange: (ids: number[]) => void;
+	selectedIds: string[];
+	onChange: (ids: string[]) => void;
 	className?: string;
 }
 
@@ -41,7 +41,7 @@ export const UnlockMultiSelect: React.FC<UnlockMultiSelectProps> = ({
 		}
 	});
 
-	const toggle = (id: number) => {
+	const toggle = (id: string) => {
 		if (selectedIds.includes(id)) {
 			onChange(selectedIds.filter((i) => i !== id));
 		} else {

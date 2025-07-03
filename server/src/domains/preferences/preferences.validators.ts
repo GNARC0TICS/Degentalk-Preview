@@ -13,9 +13,9 @@ export const profileSettingsSchema = z.object({
 	twitterHandle: z.string().optional().nullable(),
 	website: z.string().url().optional().nullable(),
 	telegramHandle: z.string().optional().nullable(),
-	activeTitleId: z.number().int().positive().optional().nullable(),
-	activeBadgeId: z.number().int().positive().optional().nullable(),
-	activeFrameId: z.number().int().positive().optional().nullable()
+	activeTitleId: z.string().uuid().optional().nullable(),
+	activeBadgeId: z.string().uuid().optional().nullable(),
+	activeFrameId: z.string().uuid().optional().nullable()
 });
 
 /**

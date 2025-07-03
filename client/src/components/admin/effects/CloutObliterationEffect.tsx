@@ -25,7 +25,7 @@ export function CloutObliterationEffect({
 				CLOUT_EASTER_EGGS.obliterationMessages[
 					Math.floor(Math.random() * CLOUT_EASTER_EGGS.obliterationMessages.length)
 				];
-			setMessage(randomMessage);
+			setMessage(randomMessage as typeof CLOUT_EASTER_EGGS.obliterationMessages[number]);
 
 			// Auto close after duration
 			const timer = setTimeout(() => {
@@ -34,6 +34,7 @@ export function CloutObliterationEffect({
 
 			return () => clearTimeout(timer);
 		}
+		return undefined;
 	}, [isOpen, onClose]);
 
 	return (

@@ -27,7 +27,7 @@ export const useForumMetrics = (structureId?: number) => {
 };
 
 export interface HotThread {
-	id: number;
+	id: string;
 	title: string;
 	slug: string;
 	replyCount: number;

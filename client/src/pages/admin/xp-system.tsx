@@ -133,7 +133,7 @@ function XPSystemModuleContent() {
 	});
 
 	const updateLevelMutation = useMutation({
-		mutationFn: ({ id, data }: { id: number; data: LevelFormData }) =>
+		mutationFn: ({ id, data }: { id: string; data: LevelFormData }) =>
 			apiRequest({ url: `/api/admin/xp/levels/${id}`, method: 'PUT', data }),
 		onSuccess: () => {
 			toast({ title: 'Level updated', description: 'The XP level has been updated successfully.' });
@@ -147,7 +147,7 @@ function XPSystemModuleContent() {
 	});
 
 	const deleteLevelMutation = useMutation({
-		mutationFn: (id: number) => apiRequest({ url: `/api/admin/xp/levels/${id}`, method: 'DELETE' }),
+		mutationFn: (id: string) => apiRequest({ url: `/api/admin/xp/levels/${id}`, method: 'DELETE' }),
 		onSuccess: () => {
 			toast({ title: 'Level deleted', description: 'The XP level has been deleted successfully.' });
 			setIsDeleteDialogOpen(false);

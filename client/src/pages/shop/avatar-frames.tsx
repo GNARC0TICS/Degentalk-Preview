@@ -18,7 +18,7 @@ interface StoreFrame {
 	rarity: keyof typeof frameRarityConfig;
 	animated: boolean;
 	price: number;
-	productId: number;
+	productId: string;
 }
 
 export default function AvatarFramesShopPage() {
@@ -52,7 +52,7 @@ export default function AvatarFramesShopPage() {
 
 	// Equip mutation
 	const equipMutation = useMutation<{ success: boolean }, Error, number>({
-		mutationFn: (frameId: number) =>
+		mutationFn: (frameId: string) =>
 			apiRequest({ url: `/api/users/me/frames/${frameId}/equip`, method: 'POST' }),
 		onSuccess: (_data, frameId) => {
 			setActiveEquipped(frameId);
@@ -63,11 +63,11 @@ export default function AvatarFramesShopPage() {
 		}
 	});
 
-	const handleBuy = (frameId: number) => {
+	const handleBuy = (frameId: string) => {
 		purchaseMutation.mutate(frameId);
 	};
 
-	const handleEquip = (frameId: number) => {
+	const handleEquip = (frameId: string) => {
 		equipMutation.mutate(frameId);
 	};
 

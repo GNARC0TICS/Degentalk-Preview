@@ -15,7 +15,7 @@ export const CategorySchema = z.object({
 		.min(2)
 		.max(100)
 		.regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
-	parentId: z.number().int().nullable().optional(),
+	parentId: z.string().uuid().nullable().optional(),
 	position: z.number().int().min(0).default(0),
 	icon: z.string().optional().nullable(),
 	isHidden: z.boolean().default(false).optional(),
@@ -32,7 +32,7 @@ export const PrefixSchema = z.object({
 		.regex(/^#([0-9A-F]{3,6})$/i, 'Must be a valid hex color (e.g., #RRGGBB or #RGB)')
 		.default('#3366ff'),
 	icon: z.string().optional().nullable(),
-	categoryId: z.number().int().nullable().optional(), // Null if global
+	categoryId: z.string().uuid().nullable().optional(), // Null if global
 	isHidden: z.boolean().default(false).optional(),
 	position: z.number().int().min(0).default(0)
 });
@@ -42,8 +42,8 @@ export const ModerateThreadSchema = z.object({
 	isLocked: z.boolean().optional(),
 	isSticky: z.boolean().optional(), // Using isSticky field from schema instead of isPinned
 	isHidden: z.boolean().optional(),
-	prefixId: z.number().int().nullable().optional(),
-	categoryId: z.number().int().optional(),
+	prefixId: z.string().uuid().nullable().optional(),
+	categoryId: z.string().uuid().optional(),
 	moderationReason: z.string().max(255).optional()
 });
 
@@ -74,7 +74,7 @@ export const createEntitySchema = z.object({
 		.regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
 	description: z.string().max(500).optional().nullable(),
 	type: z.enum(['zone', 'category', 'forum']),
-	parentId: z.number().int().positive().optional().nullable(),
+	parentId: z.string().uuid().optional().nullable(),
 	position: z.number().int().min(0).default(0),
 	isVip: z.boolean().default(false),
 	isLocked: z.boolean().default(false),

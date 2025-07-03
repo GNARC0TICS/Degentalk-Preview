@@ -214,7 +214,7 @@ export function generateSecureToken(length: number = 32): string {
  * Normalize and validate admin entity IDs
  */
 export function validateEntityId(id: any, entityType: string): number {
-	const numId = Number(id);
+	const numId = id;
 
 	if (isNaN(numId) || !isFinite(numId) || numId <= 0) {
 		throw new AdminError(

@@ -43,7 +43,7 @@ export type ThreadSortOption =
 
 export interface ThreadFiltersState {
 	sortBy: ThreadSortOption;
-	tags: number[];
+	tags: string[];
 	prefixId?: PrefixId;
 	solved?: 'solved' | 'unsolved';
 	bookmarked?: boolean;

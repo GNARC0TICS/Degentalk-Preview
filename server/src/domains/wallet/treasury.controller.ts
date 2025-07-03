@@ -24,7 +24,7 @@ import { z } from 'zod';
 
 // Validation schemas
 const adjustBalanceSchema = z.object({
-	userId: z.number().positive(),
+	userId: z.string().uuid().positive(),
 	amount: z.number(),
 	reason: z.string().min(1).max(500),
 	type: z.enum(['credit', 'debit'])

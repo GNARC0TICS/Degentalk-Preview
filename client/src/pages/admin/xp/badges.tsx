@@ -94,7 +94,7 @@ export default function BadgeManagementPage() {
 		}
 	});
 
-	const updateBadgeMutation = useCrudMutation<unknown, Error, { id: number; data: BadgeFormData }>({
+	const updateBadgeMutation = useCrudMutation<unknown, Error, { id: string; data: BadgeFormData }>({
 		mutationFn: ({ id, data }) =>
 			apiRequest({ url: `/api/admin/badges/${id}`, method: 'PUT', data }),
 		queryKeyToInvalidate: ['/api/admin/badges'],

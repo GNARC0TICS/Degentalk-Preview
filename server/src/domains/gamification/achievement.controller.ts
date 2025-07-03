@@ -27,12 +27,12 @@ const getProgressSchema = z.object({
 });
 
 const awardAchievementSchema = z.object({
-	userId: z.number().int().min(1),
-	achievementId: z.number().int().min(1)
+	userId: z.string().uuid(),
+	achievementId: z.string().uuid()
 });
 
 const checkAchievementsSchema = z.object({
-	userId: z.number().int().min(1),
+	userId: z.string().uuid(),
 	actionType: z.string().min(1).max(100),
 	metadata: z.record(z.any()).optional()
 });
@@ -446,7 +446,7 @@ export class AchievementController {
 	 */
 	async getAchievementById(req: Request, res: Response) {
 		try {
-			const achievementId = Number(req.params.id);
+			const achievementId = req.params.id;
 			if (isNaN(achievementId)) {
 				throw new AppError('Invalid achievement ID', 400);
 			}

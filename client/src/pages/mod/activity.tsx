@@ -51,7 +51,7 @@ import type { ReportId, ContentId } from '@db/types';
 
 // Types
 interface ActivityLogEntry {
-	id: number;
+	id: string;
 	action:
 		| 'ban'
 		| 'unban'
@@ -150,7 +150,7 @@ const activityApi = {
 		});
 	},
 
-	async getActivityDetails(id: number) {
+	async getActivityDetails(id: string) {
 		return apiRequest<{ activity: ActivityLogEntry }>({
 			url: `/api/mod/activity/${id}`,
 			method: 'GET'

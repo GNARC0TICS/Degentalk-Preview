@@ -1,3 +1,4 @@
+import type { UserId } from '@db/types';
 import React, { useState, useEffect, useRef, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useVirtualizer } from '@tanstack/react-virtual';
@@ -40,7 +41,7 @@ export interface AdaptiveForumGridProps<T> {
 }
 
 const AdaptiveForumGrid = memo(
-	<T extends { id: string | number }>({
+	<T extends { id: UserId }>({
 		items,
 		renderItem,
 		layout = 'auto',

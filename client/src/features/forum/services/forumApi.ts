@@ -101,7 +101,7 @@ export const forumApi = {
 		slugOrId: string | number,
 		params?: { page?: number; limit?: number }
 	): Promise<ThreadWithPostsAndUser | null> => {
-		const isSlug = typeof slugOrId === 'string' && isNaN(Number(slugOrId));
+		const isSlug = typeof slugOrId === 'string' && isNaN(slugOrId);
 		const url = isSlug ? `/api/forum/threads/slug/${slugOrId}` : `/api/forum/threads/${slugOrId}`;
 
 		// Convert params to string for apiRequest if they exist
@@ -138,11 +138,11 @@ export const forumApi = {
 
 	createThread: async (data: {
 		title: string;
-		structureId: number;
+		structureId: string;
 		content: string;
 		prefixId?: PrefixId;
 		editorState?: Record<string, unknown>;
-		tagIds?: number[];
+		tagIds?: string[];
 	}): Promise<ThreadWithUser> => {
 		const directResult = await apiRequest<ThreadWithUser>({
 			url: '/api/forum/threads',
@@ -160,7 +160,7 @@ export const forumApi = {
 			prefixId?: PrefixId;
 			isLocked?: boolean;
 			isSticky?: boolean;
-			tagIds?: number[];
+			tagIds?: string[];
 		}
 	): Promise<ThreadWithUser> => {
 		const directResult = await apiRequest<ThreadWithUser>({
@@ -420,7 +420,7 @@ export const forumApi = {
 		return directResponse;
 	},
 
-	agreeToRules: async (ruleIds: number[]): Promise<{ success: boolean }> => {
+	agreeToRules: async (ruleIds: string[]): Promise<{ success: boolean }> => {
 		// Server returns { success: true, ... } directly
 		const directResponse = await apiRequest<{ success: boolean }>({
 			url: '/api/forum/rules/agree',

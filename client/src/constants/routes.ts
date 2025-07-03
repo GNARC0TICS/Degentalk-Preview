@@ -1,3 +1,4 @@
+import type { UserId } from '@db/types';
 // Centralized route constants for use in <Link> and router calls
 // Usage: import { ROUTES } from '@/constants/routes';
 
@@ -35,7 +36,7 @@ export const ROUTES = {
 	// Admin routes
 	ADMIN: '/admin',
 	ADMIN_USERS: '/admin/users',
-	ADMIN_USER_EDIT: (id: string | number) => `/admin/users/${id}`,
+	ADMIN_USER_EDIT: (id: UserId) => `/admin/users/${id}`,
 	ADMIN_USER_GROUPS: '/admin/user-groups',
 	ADMIN_CATEGORIES: '/admin/categories',
 	ADMIN_PREFIXES: '/admin/prefixes',

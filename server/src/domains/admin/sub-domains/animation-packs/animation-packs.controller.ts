@@ -21,7 +21,7 @@ export const createPack = async (req: Request, res: Response, next: NextFunction
 
 export const updatePack = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const id = Number(req.params.id);
+		const id = req.params.id;
 		const pack = await animationPackService.update(id, req.body);
 		res.json(pack);
 	} catch (err) {
@@ -31,7 +31,7 @@ export const updatePack = async (req: Request, res: Response, next: NextFunction
 
 export const deletePack = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const id = Number(req.params.id);
+		const id = req.params.id;
 		await animationPackService.delete(id);
 		res.status(204).end();
 	} catch (err) {

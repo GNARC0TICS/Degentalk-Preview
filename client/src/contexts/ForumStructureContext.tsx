@@ -64,7 +64,7 @@ const PluginDataSchema = z
 
 const ApiEntitySchema = z
 	.object({
-		id: z.number(),
+		id: z.string(),
 		slug: z.string().min(1),
 		name: z.string().min(1),
 		description: z.string().nullish(),
@@ -116,9 +116,7 @@ const ApiEntitySchema = z
 		updatedAt: z.union([z.string(), z.date()]).optional().nullable(),
 		isPopular: z.boolean().optional().nullable(),
 		lastActivityAt: z.union([z.string(), z.date()]).optional().nullable(),
-		// Backend returns lastPostAt, map to lastActivityAt
 		lastPostAt: z.union([z.string(), z.date()]).optional().nullable(),
-		// Additional fields that backend might return
 		parentForumSlug: z.string().optional().nullable()
 	})
 	.passthrough();
@@ -156,7 +154,7 @@ export interface MergedForum {
 	name: string;
 	description?: string | null;
 	type: 'forum';
-	parentId?: number | null;
+	parentId?: string | null;
 	parentZoneId?: ParentZoneId | null;
 	isSubforum: boolean;
 	subforums: MergedForum[];
@@ -176,7 +174,7 @@ export interface MergedForum {
 }
 
 export interface MergedZone {
-	id: number;
+	id: string;
 	slug: string;
 	name: string;
 	description?: string | null;
@@ -202,15 +200,15 @@ export interface MergedZone {
 export interface ForumStructureContextType {
 	zones: MergedZone[];
 	forums: Record<string, MergedForum>;
-	forumsById: Record<number, MergedForum>;
+	forumsById: Record<string, MergedForum>;
 	primaryZones: MergedZone[];
 	generalZones: MergedZone[];
 	getZone: (slug: string) => MergedZone | undefined;
-	getZoneById: (id: number) => MergedZone | undefined;
+	getZoneById: (id: string) => MergedZone | undefined;
 	getForum: (slug: string) => MergedForum | undefined;
-	getForumById: (id: number) => MergedForum | undefined;
+	getForumById: (id: string) => MergedForum | undefined;
 	getParentZone: (forumSlug: string) => MergedZone | undefined;
-	getThreadContext: (structureId: number) => {
+	getThreadContext: (structureId: string) => {
 		forum: MergedForum | undefined;
 		zone: MergedZone | undefined;
 	};
@@ -277,10 +275,10 @@ function makeMergedForum(api: ApiEntity, parentZoneId: ParentZoneId): MergedForu
 function processApiData(resp: ForumStructureApiResponse) {
 	const zones: MergedZone[] = [];
 	const forums: Record<string, MergedForum> = {};
-	const forumsById: Record<number, MergedForum> = {};
-	const zoneById = new Map<number, MergedZone>();
-	const forumById = new Map<number, MergedForum>();
-	const handled = new Set<number>();
+	const forumsById: Record<string, MergedForum> = {};
+	const zoneById = new Map<string, MergedZone>();
+	const forumById = new Map<string, MergedForum>();
+	const handled = new Set<string>();
 
 	// Zones first
 	resp.zones.forEach((z) => {
@@ -316,10 +314,10 @@ function processApiData(resp: ForumStructureApiResponse) {
 		if (f.parentId && zoneById.has(f.parentId)) {
 			const m = makeMergedForum(f, f.parentId);
 			forums[m.slug] = m;
-			forumsById[m.id as number] = m;
-			forumById.set(m.id as number, m);
+			forumsById[m.id as string] = m;
+			forumById.set(m.id as string, m);
 			zoneById.get(f.parentId)!.forums.push(m);
-			handled.add(m.id as number);
+			handled.add(m.id as string);
 		}
 	});
 
@@ -330,8 +328,8 @@ function processApiData(resp: ForumStructureApiResponse) {
 			const sub = makeMergedForum(f, parent.parentZoneId!);
 			sub.isSubforum = true;
 			forums[sub.slug] = sub;
-			forumsById[sub.id as number] = sub;
-			forumById.set(sub.id as number, sub);
+			forumsById[sub.id as string] = sub;
+			forumById.set(sub.id as string, sub);
 			parent.subforums.push(sub);
 		}
 	});
@@ -342,7 +340,7 @@ function processApiData(resp: ForumStructureApiResponse) {
 function fallbackStructure(staticZones: Zone[]) {
 	const zones: MergedZone[] = [];
 	const forums: Record<string, MergedForum> = {};
-	const forumsById: Record<number, MergedForum> = {};
+	const forumsById: Record<string, MergedForum> = {};
 
 	staticZones.forEach((z) => {
 		const zoneId = FALLBACK_ZONE_ID();

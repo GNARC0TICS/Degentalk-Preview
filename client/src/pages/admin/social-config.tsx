@@ -132,10 +132,7 @@ export default function SocialConfigPage() {
 	// Reset configuration mutation
 	const resetConfigMutation = useMutation({
 		mutationFn: async () => {
-			return await apiRequest({
-				url: '/api/admin/social/reset',
-				method: 'POST'
-			});
+			return await apiRequest({ url: '/api/admin/social/reset', method: 'POST' });
 		},
 		onSuccess: () => {
 			toast({
@@ -150,10 +147,7 @@ export default function SocialConfigPage() {
 	// Emergency disable mutation
 	const emergencyDisableMutation = useMutation({
 		mutationFn: async () => {
-			return await apiRequest({
-				url: '/api/admin/social/emergency-disable',
-				method: 'POST'
-			});
+			return await apiRequest({ url: '/api/admin/social/emergency-disable', method: 'POST' });
 		},
 		onSuccess: () => {
 			toast({

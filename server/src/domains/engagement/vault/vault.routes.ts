@@ -335,7 +335,7 @@ router.post('/unlock', async (req: Request, res: Response) => {
 // Get vaults for a user
 router.get('/:userId', async (req: Request, res: Response) => {
 	try {
-		const userId = Number(req.params.userId);
+		const userId = req.params.userId;
 
 		if (isNaN(userId)) {
 			return res.status(400).json({ error: 'Invalid user ID' });
@@ -364,7 +364,7 @@ router.get('/:userId', async (req: Request, res: Response) => {
 // Get vault statistics
 router.get('/stats/:userId?', async (req: Request, res: Response) => {
 	try {
-		const userId = req.params.userId ? Number(req.params.userId) : undefined;
+		const userId = req.params.userId ? req.params.userId : undefined;
 
 		if (req.params.userId && isNaN(userId!)) {
 			return res.status(400).json({ error: 'Invalid user ID' });

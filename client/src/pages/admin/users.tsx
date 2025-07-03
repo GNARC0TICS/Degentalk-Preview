@@ -1,3 +1,4 @@
+import type { UserId } from '@db/types';
 import { useState } from 'react';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
@@ -347,7 +348,7 @@ export default function AdminUsersPage() {
 	};
 
 	const banUserMutation = useCrudMutation({
-		mutationFn: async (userId: string | number) => {
+		mutationFn: async (userId: UserId) => {
 			return apiRequest<{ success: boolean; message: string }>({
 				url: `/api/admin/users/${userId}/ban`,
 				method: 'POST'
@@ -359,7 +360,7 @@ export default function AdminUsersPage() {
 	});
 
 	const unbanUserMutation = useCrudMutation({
-		mutationFn: async (userId: string | number) => {
+		mutationFn: async (userId: UserId) => {
 			return apiRequest<{ success: boolean; message: string }>({
 				url: `/api/admin/users/${userId}/unban`,
 				method: 'POST'
@@ -371,7 +372,7 @@ export default function AdminUsersPage() {
 	});
 
 	const deleteUserMutation = useCrudMutation({
-		mutationFn: async (userId: string | number) => {
+		mutationFn: async (userId: UserId) => {
 			return apiRequest<{ success: boolean; message: string }>({
 				url: `/api/admin/users/${userId}`,
 				method: 'DELETE'
@@ -383,7 +384,7 @@ export default function AdminUsersPage() {
 	});
 
 	const changeRoleMutation = useCrudMutation({
-		mutationFn: async ({ userId, newRole }: { userId: string | number; newRole: string }) => {
+		mutationFn: async ({ userId, newRole }: { userId: UserId; newRole: string }) => {
 			return apiRequest<{ success: boolean; data: AdminUser }>({
 				url: `/api/admin/users/${userId}/role`,
 				method: 'PATCH',
@@ -395,7 +396,7 @@ export default function AdminUsersPage() {
 		errorMessage: 'Failed to update user role'
 	});
 
-	const handleBanUser = async (userId: string | number) => {
+	const handleBanUser = async (userId: UserId) => {
 		try {
 			await banUserMutation.mutateAsync(userId);
 			setUserToBan(null);
@@ -404,7 +405,7 @@ export default function AdminUsersPage() {
 		}
 	};
 
-	const handleUnbanUser = async (userId: string | number) => {
+	const handleUnbanUser = async (userId: UserId) => {
 		try {
 			await unbanUserMutation.mutateAsync(userId);
 			setUserToUnban(null);
@@ -413,7 +414,7 @@ export default function AdminUsersPage() {
 		}
 	};
 
-	const handleDeleteUser = async (userId: string | number) => {
+	const handleDeleteUser = async (userId: UserId) => {
 		try {
 			await deleteUserMutation.mutateAsync(userId);
 			setUserToDelete(null);
@@ -422,7 +423,7 @@ export default function AdminUsersPage() {
 		}
 	};
 
-	const handleChangeUserRole = async (userId: string | number, newRole: string) => {
+	const handleChangeUserRole = async (userId: UserId, newRole: string) => {
 		try {
 			await changeRoleMutation.mutateAsync({ userId, newRole });
 			setUserToChangeRole(null);

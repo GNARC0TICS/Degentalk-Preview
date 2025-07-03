@@ -1,4 +1,4 @@
-import type { ForumId, ParentZoneId, ZoneId, UserId, ThreadId, StructureId } from '@db/types';
+import type { ForumId, ParentZoneId, ZoneId, UserId, ThreadId, StructureId, PostId, TagId } from '@db/types';
 
 /**
  * Canonical Forum Types
@@ -150,14 +150,14 @@ export interface CanonicalThread {
 	title: string;
 	slug: string;
 	content?: string; // First post content (optional for list views)
-	structureId: number; // Forum or subforum ID
+	structureId: StructureId;
 
 	// Thread classification
 	isSticky: boolean;
 	isLocked: boolean;
 	isHidden: boolean;
 	isSolved: boolean;
-	solvingPostId?: number;
+	solvingPostId?: PostId;
 
 	// Content stats
 	viewCount: number;
@@ -170,7 +170,7 @@ export interface CanonicalThread {
 	lastPostAt?: string;
 
 	// Author relationship
-	userId: string;
+	userId: UserId;
 	user: CanonicalUser;
 
 	// Structure relationships
@@ -206,8 +206,8 @@ export interface CanonicalPost {
 	id: UserId;
 	content: string;
 	threadId: ThreadId;
-	userId: string;
-	replyToPostId?: number;
+	userId: UserId;
+	replyToPostId?: PostId;
 
 	// Post status
 	isHidden: boolean;
@@ -244,7 +244,7 @@ export interface CanonicalPost {
  * Unified user representation across all forum contexts
  */
 export interface CanonicalUser {
-	id: string;
+	id: UserId;
 	username: string;
 	displayName?: string;
 	avatarUrl?: string;
@@ -343,8 +343,8 @@ export interface CanonicalThreadSearchParams {
 
 	// Content filtering
 	search?: string;
-	tagIds?: number[];
-	userId?: string;
+	tagIds?: TagId[];
+	userId?: UserId;
 
 	// Status filtering
 	isSticky?: boolean;
@@ -365,8 +365,8 @@ export interface CanonicalThreadSearchParams {
 export interface CanonicalThreadCreateParams {
 	title: string;
 	content: string;
-	structureId: number; // Forum or subforum ID
-	tagIds?: number[];
+	structureId: StructureId;
+	tagIds?: TagId[];
 	isSticky?: boolean;
 	isLocked?: boolean;
 }
@@ -377,7 +377,7 @@ export interface CanonicalThreadCreateParams {
 export interface CanonicalPostCreateParams {
 	threadId: ThreadId;
 	content: string;
-	replyToPostId?: number;
+	replyToPostId?: PostId;
 }
 
 // =============================================================================
@@ -390,8 +390,8 @@ export interface CanonicalPostCreateParams {
  */
 export interface ForumStructureContext {
 	zones: CanonicalZone[];
-	forumsById: Record<number, CanonicalForum>;
-	subforumsById: Record<number, CanonicalSubforum>;
+	forumsById: Record<StructureId, CanonicalForum>;
+	subforumsById: Record<StructureId, CanonicalSubforum>;
 
 	// Utility functions
 	getZoneBySlug: (slug: string) => CanonicalZone | undefined;

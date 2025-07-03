@@ -1,15 +1,16 @@
 import type { UserId } from '@db/types';
+import type { AppliedCosmetics } from '@/types/inventory';
 
 interface UserInventoryItem {
-	id: string | number;
-	productId: string | number;
+	id: string;
+	productId: string;
 	userId: UserId;
 	equipped: boolean;
 	quantity: number;
 	createdAt: string | Date;
 	updatedAt: string | Date;
 	product: {
-		id: string | number;
+		id: string;
 		name: string;
 		pluginReward?: {
 			type: string;
@@ -18,14 +19,6 @@ interface UserInventoryItem {
 		};
 		// other product fields
 	};
-}
-
-interface AppliedCosmetics {
-	usernameColor?: string;
-	userTitle?: string;
-	avatarFrameUrl?: string;
-	emojiMap: Record<string, string>;
-	unlockedFeatures: string[];
 }
 
 /**

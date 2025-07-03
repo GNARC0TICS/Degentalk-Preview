@@ -9,7 +9,7 @@ const walletApi = new WalletApiService();
 export const PackagesGrid: React.FC = () => {
 	const { data: packages = [], isLoading } = useDgtPackages();
 
-	const handleBuy = async (pkgId: number) => {
+	const handleBuy = async (pkgId: string) => {
 		try {
 			const { depositUrl } = await walletApi.createPurchaseOrder(pkgId);
 			window.location.href = depositUrl;

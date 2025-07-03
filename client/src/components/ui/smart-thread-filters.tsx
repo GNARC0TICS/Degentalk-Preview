@@ -48,7 +48,7 @@ import type { PrefixId, EntityId } from '@/types/ids';
 export interface ThreadFiltersState {
 	sortBy: string;
 	search?: string;
-	tags: number[];
+	tags: string[];
 	prefixId?: PrefixId | null;
 	solved?: 'all' | 'solved' | 'unsolved';
 	bookmarked?: boolean;

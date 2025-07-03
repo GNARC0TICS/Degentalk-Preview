@@ -17,7 +17,7 @@ export const createReferralSourceSchema = z.object({
  * Validator for recording a user referral
  */
 export const recordUserReferralSchema = z.object({
-	userId: z.number().int().positive('User ID must be a positive integer'),
+	userId: z.string().uuid().positive('User ID must be a positive integer'),
 	referredByUserId: z
 		.number()
 		.int()

@@ -18,11 +18,11 @@ const getUserMissionsSchema = z.object({
 });
 
 const claimRewardSchema = z.object({
-	missionId: z.number().int().min(1)
+	missionId: z.string().uuid()
 });
 
 const updateProgressSchema = z.object({
-	userId: z.number().int().min(1),
+	userId: z.string().uuid(),
 	actionType: z.string().min(1).max(100),
 	metadata: z.record(z.any()).optional()
 });
@@ -347,7 +347,7 @@ export class MissionController {
 	 */
 	async getMissionById(req: Request, res: Response) {
 		try {
-			const missionId = Number(req.params.id);
+			const missionId = req.params.id;
 			if (isNaN(missionId)) {
 				throw new AppError('Invalid mission ID', 400);
 			}
@@ -416,7 +416,7 @@ export class MissionController {
 	 */
 	async updateMission(req: Request, res: Response) {
 		try {
-			const missionId = Number(req.params.id);
+			const missionId = req.params.id;
 			if (isNaN(missionId)) {
 				throw new AppError('Invalid mission ID', 400);
 			}

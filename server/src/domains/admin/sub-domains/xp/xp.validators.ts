@@ -32,7 +32,7 @@ export const CreateLevelSchema = z
 export const UpdateLevelSchema = CreateLevelSchema.partial();
 
 export const AdjustUserXpSchema = z.object({
-	userId: z.number().int().positive(),
+	userId: z.string().uuid(),
 	amount: z.number().int().min(-100000).max(100000),
 	reason: z.string().min(1).max(200)
 });

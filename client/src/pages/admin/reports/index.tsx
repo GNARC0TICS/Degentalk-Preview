@@ -70,7 +70,7 @@ import type { ContentId, UserId } from '@db/types';
 
 // Types for reports
 interface ReportedContent {
-	id: number;
+	id: string;
 	reporterId: string;
 	contentType: 'post' | 'thread' | 'message' | 'user';
 	contentId: ContentId;
@@ -165,18 +165,14 @@ export default function ReportsPage() {
 				search
 			});
 
-			return apiRequest({
-				url: `/api/admin/reports?${params}`,
-				method: 'GET'
-			});
+			return apiRequest({ url: `/api/admin/reports?${params}`, method: 'GET' });
 		}
 	});
 
 	// Resolve report mutation
 	const resolveReportMutation = useMutation({
-		mutationFn: async (data: { id: number; notes?: string }) => {
-			return apiRequest({
-				url: `/api/admin/reports/${data.id}/resolve`,
+		mutationFn: async (data: { id: string; notes?: string }) => {
+			return apiRequest({ url: `/api/admin/reports/${data.id}/resolve`,
 				method: 'POST',
 				data: { notes: data.notes }
 			});
@@ -191,9 +187,8 @@ export default function ReportsPage() {
 
 	// Dismiss report mutation
 	const dismissReportMutation = useMutation({
-		mutationFn: async (data: { id: number; notes?: string }) => {
-			return apiRequest({
-				url: `/api/admin/reports/${data.id}/dismiss`,
+		mutationFn: async (data: { id: string; notes?: string }) => {
+			return apiRequest({ url: `/api/admin/reports/${data.id}/dismiss`,
 				method: 'POST',
 				data: { notes: data.notes }
 			});
@@ -209,8 +204,7 @@ export default function ReportsPage() {
 	// Ban user mutation
 	const banUserMutation = useMutation({
 		mutationFn: async (data: { userId: UserId; reason: string; duration?: string }) => {
-			return apiRequest({
-				url: `/api/admin/reports/users/${data.userId}/ban`,
+			return apiRequest({ url: `/api/admin/reports/users/${data.userId}/ban`,
 				method: 'POST',
 				data: { reason: data.reason, duration: data.duration }
 			});
@@ -226,8 +220,7 @@ export default function ReportsPage() {
 	// Delete content mutation
 	const deleteContentMutation = useMutation({
 		mutationFn: async (data: { contentType: string; contentId: ContentId; reason: string }) => {
-			return apiRequest({
-				url: `/api/admin/reports/content/${data.contentType}/${data.contentId}`,
+			return apiRequest({ url: `/api/admin/reports/content/${data.contentType}/${data.contentId}`,
 				method: 'DELETE',
 				data: { reason: data.reason }
 			});

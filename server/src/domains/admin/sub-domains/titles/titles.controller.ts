@@ -48,7 +48,7 @@ export class AdminTitlesController {
 	async update(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
-			const titleId = parseInt(id);
+			const titleId = id;
 			if (isNaN(titleId)) {
 				return res.status(400).json({ error: 'Invalid title ID' });
 			}
@@ -66,7 +66,7 @@ export class AdminTitlesController {
 	async delete(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
-			const titleId = parseInt(id);
+			const titleId = id;
 			if (isNaN(titleId)) {
 				return res.status(400).json({ error: 'Invalid title ID' });
 			}

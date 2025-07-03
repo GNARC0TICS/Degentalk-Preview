@@ -39,7 +39,7 @@ export type ThreadSearchParams = OriginalThreadSearchParams & {
 	mine?: boolean;
 	replied?: boolean;
 	q?: string;
-	tags?: number[];
+	tags?: string[];
 };
 
 /**
@@ -98,7 +98,7 @@ export const useThread = (slugOrId: string | number | undefined) => {
 export interface CreateThreadParams {
 	title: string;
 	content: string;
-	structureId: number;
+	structureId: string;
 	forumSlug?: string; // Optional, not used by API but handy for cache keys / XP logic
 	prefixId?: PrefixId;
 	tags?: string[];

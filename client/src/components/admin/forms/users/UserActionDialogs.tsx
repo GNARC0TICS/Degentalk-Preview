@@ -26,10 +26,11 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select'; // Assuming Select is available
+import type { UserId } from '@db/types';
 
 // Define a basic User type for props, replace with actual User type
 interface User {
-	id: string | number;
+	id: UserId;
 	username: string;
 	role?: string; // Example, adjust as needed
 }
@@ -38,7 +39,7 @@ interface BanUserDialogProps {
 	isOpen: boolean;
 	onClose: () => void;
 	user: User | null;
-	onConfirm: (userId: string | number) => void;
+	onConfirm: (userId: UserId) => void;
 }
 
 export const BanUserDialog: React.FC<BanUserDialogProps> = ({
@@ -70,7 +71,7 @@ interface UnbanUserDialogProps {
 	isOpen: boolean;
 	onClose: () => void;
 	user: User | null;
-	onConfirm: (userId: string | number) => void;
+	onConfirm: (userId: UserId) => void;
 }
 
 export const UnbanUserDialog: React.FC<UnbanUserDialogProps> = ({
@@ -102,7 +103,7 @@ interface DeleteUserDialogProps {
 	isOpen: boolean;
 	onClose: () => void;
 	user: User | null;
-	onConfirm: (userId: string | number) => void;
+	onConfirm: (userId: UserId) => void;
 }
 
 export const DeleteUserDialog: React.FC<DeleteUserDialogProps> = ({
@@ -140,7 +141,7 @@ interface ChangeUserRoleDialogProps {
 	onClose: () => void;
 	user: User | null;
 	roles: string[]; // Example: ['admin', 'moderator', 'user']
-	onConfirm: (userId: string | number, newRole: string) => void;
+	onConfirm: (userId: UserId, newRole: string) => void;
 }
 
 export const ChangeUserRoleDialog: React.FC<ChangeUserRoleDialogProps> = ({

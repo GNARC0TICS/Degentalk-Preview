@@ -40,7 +40,7 @@ export const JsonEditor: React.FC<JsonEditorProps> = ({
 				height={height}
 				options={{
 					minimap: { enabled: false },
-					readOnly,
+					readOnly: readOnly || false,
 					fontSize: 13,
 					tabSize: 2
 				}}

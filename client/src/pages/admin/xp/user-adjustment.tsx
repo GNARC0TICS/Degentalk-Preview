@@ -72,7 +72,7 @@ type User = {
 
 // XP Adjustment log entry type
 type XpAdjustmentLog = {
-	id: number;
+	id: string;
 	userId: UserId;
 	username: string;
 	adjustmentType: 'add' | 'subtract' | 'set';

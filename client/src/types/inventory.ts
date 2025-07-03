@@ -1,4 +1,4 @@
-import type { ProductId } from '@db/types';
+import type { ProductId, InventoryId, UserId } from '@db/types';
 
 export interface PluginReward {
 	type: string;
@@ -18,9 +18,9 @@ export interface Product {
 }
 
 export interface UserInventory {
-	id: number; // This is the inventory item's own ID, should be number
-	userId: string; // User ID should be string
-	productId: number;
+	id: InventoryId; // Inventory item UUID
+	userId: UserId;
+	productId: ProductId;
 	quantity: number;
 	equipped: boolean;
 	acquiredAt: string; // ISO date string
@@ -30,9 +30,9 @@ export interface UserInventory {
 }
 
 export interface UserInventoryWithProduct {
-	id: number; // This is the inventory item's own ID, should be number
-	userId: string; // User ID should be string
-	productId: number;
+	id: InventoryId;
+	userId: UserId;
+	productId: ProductId;
 	equipped: boolean;
 	purchasedAt: string;
 	product: Product;

@@ -27,7 +27,7 @@ import { AdminAccessSelector } from '@/components/admin/inputs/AdminAccessSelect
 import { cn } from '@/lib/utils';
 
 interface Rarity {
-	id: number;
+	id: string;
 	name: string;
 	slug: string;
 	hexColor: string;
@@ -45,7 +45,7 @@ const CategorySchema = z.object({
 	isActive: z.boolean().default(true)
 });
 
-type Category = z.infer<typeof CategorySchema> & { id: number };
+type Category = z.infer<typeof CategorySchema> & { id: string };
 
 export default function AdminShopCategoriesPage() {
 	const queryClient = useQueryClient();
@@ -109,7 +109,7 @@ export default function AdminShopCategoriesPage() {
 	});
 
 	const deleteMutation = useMutation({
-		mutationFn: async (id: number) => {
+		mutationFn: async (id: string) => {
 			const res = await fetch(`/api/admin/shop/categories/${id}`, { method: 'DELETE' });
 			if (!res.ok) throw new Error('Failed to delete category');
 			return res.json();
@@ -263,7 +263,7 @@ export default function AdminShopCategoriesPage() {
 						{/* Allowed rarities selector */}
 						<AdminAccessSelector
 							label="Allowed Rarities"
-							selectedIds={form.watch('allowedRarities') as number[]}
+							selectedIds={form.watch('allowedRarities') as string[]}
 							onChange={(ids) => form.setValue('allowedRarities', ids)}
 							className="mt-2"
 						/>

@@ -110,7 +110,7 @@ router.get('/conversation/:userId', isAuthenticated, async (req: Request, res: R
 router.post('/send', isAuthenticated, async (req: Request, res: Response) => {
 	try {
 		const sendMessageSchema = z.object({
-			recipientId: z.number(),
+			recipientId: z.string().uuid(),
 			content: z.string().min(1).max(2000)
 		});
 

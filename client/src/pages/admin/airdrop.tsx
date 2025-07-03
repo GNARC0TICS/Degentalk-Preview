@@ -37,7 +37,7 @@ interface AirdropPayload {
 	amount: number;
 	targetCriteria: {
 		type: 'group' | 'userIds' | 'role'; // Extend as needed
-		value: number | number[]; // Group ID or array of User IDs or Role ID
+		value: GroupId | string[] | string; // Group ID or array of User IDs or Role ID
 	};
 	note?: string;
 }
@@ -52,14 +52,14 @@ const AdminAirdropPage: React.FC = () => {
 	// Fetch user groups for the dropdown
 	const { data: userGroups, isLoading: isLoadingGroups } = useQuery<UserGroup[]>({
 		queryKey: ['adminUserGroups'],
-		queryFn: async () => apiRequest<UserGroup[]>({ url: '/api/admin/users/groups', method: 'GET' }) // TODO: Verify endpoint
+		queryFn: async () => apiRequest({ url: '/api/admin/users/groups', method: 'GET' }) // TODO: Verify endpoint
 	});
 
 	// Mutation for submitting the airdrop
 	const airdropMutation = useMutation({
 		mutationFn: async (payload: AirdropPayload) => {
 			// TODO: Implement the actual API call to /api/admin/airdrop
-			return apiRequest<{ success: boolean; message?: string }>({
+			return apiRequest({
 				url: '/api/admin/airdrop',
 				method: 'POST',
 				data: payload
@@ -101,7 +101,7 @@ const AdminAirdropPage: React.FC = () => {
 			amount,
 			targetCriteria: {
 				type: 'group',
-				value: parseInt(targetGroupId, 10)
+				value: targetGroupId
 			},
 			note
 		};

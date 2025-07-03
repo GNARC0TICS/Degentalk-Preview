@@ -33,6 +33,7 @@ export const MediaLibraryModal: React.FC<Props> = ({ open, onClose, onUploaded }
 		(acceptedFiles: File[]) => {
 			if (!acceptedFiles?.length) return;
 			const picked = acceptedFiles[0];
+			if (!picked) return;
 			if (picked.size > 2 * 1024 * 1024) {
 				toast({ title: 'File too large (max 2MB)', variant: 'destructive' });
 				return;

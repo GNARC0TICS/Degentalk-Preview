@@ -40,7 +40,7 @@ import { MediaAsset } from '@/components/media/MediaAsset';
 
 // Title types
 interface Title {
-	id: number;
+	id: string;
 	name: string;
 	description: string | null;
 	color: string;
@@ -171,7 +171,7 @@ export default function TitleManagementPage() {
 	});
 
 	const updateTitleMutation = useMutation({
-		mutationFn: async ({ id, data }: { id: number; data: TitleFormData }) => {
+		mutationFn: async ({ id, data }: { id: string; data: TitleFormData }) => {
 			return apiRequest({ method: 'PUT', url: `/api/admin/titles/${id}`, data });
 		},
 		onSuccess: () => {
@@ -193,7 +193,7 @@ export default function TitleManagementPage() {
 	});
 
 	const deleteTitleMutation = useMutation({
-		mutationFn: async (id: number) => {
+		mutationFn: async (id: string) => {
 			return apiRequest({ method: 'DELETE', url: `/api/admin/titles/${id}` });
 		},
 		onSuccess: () => {

@@ -6,6 +6,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { mockUuid, mockUserId, mockThreadId, mockPostId, mockMissionId, mockAchievementId, TEST_UUIDS } from "@shared/test-utils/mock-uuid";
 import { UserRepository } from '../repositories/user-repository';
 import type { User } from '@schema';
 import type { IUserRepository } from '../interfaces';
@@ -30,7 +31,7 @@ vi.mock('@server/src/core/logger', () => ({
 
 // Mock user data
 const mockUser: User = {
-	id: 1,
+	id: mockUuid(),
 	username: 'testuser',
 	email: 'test@example.com',
 	role: 'user',
@@ -220,7 +221,7 @@ describe('UserRepository', () => {
 				role: 'user' as const
 			};
 
-			const createdUser = { ...mockUser, ...userData, id: 2 };
+			const createdUser = { ...mockUser, ...userData, id: mockUuid() };
 
 			mockDb.insert.mockReturnValue({
 				values: vi.fn().mockReturnValue({
@@ -246,7 +247,7 @@ describe('UserRepository', () => {
 			const createdUser = {
 				...mockUser,
 				...userData,
-				id: 2,
+				id: mockUuid(),
 				role: 'user',
 				xp: 0,
 				level: 1,

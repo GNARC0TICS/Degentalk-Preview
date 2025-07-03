@@ -58,7 +58,7 @@ export default function PackBuilderPage() {
 		if (contents.find((c) => c.id === item.id)) return;
 		setContents([...contents, item]);
 	};
-	const removeFromPack = (id: number) => setContents(contents.filter((c) => c.id !== id));
+	const removeFromPack = (id: string) => setContents(contents.filter((c) => c.id !== id));
 
 	const onSave = () => {
 		const payload: PackPayload = {

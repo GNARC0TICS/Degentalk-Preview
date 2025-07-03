@@ -1,3 +1,4 @@
+import type { UserId } from '@db/types';
 import React, { memo } from 'react';
 import { Link } from 'wouter';
 import { motion } from 'framer-motion';
@@ -60,7 +61,7 @@ export interface ZoneCardProps {
 			threadCount: number;
 			isPopular?: boolean;
 			subforums?: Array<{
-				id: string | number;
+				id: UserId;
 				name: string;
 			}>;
 		}>;

@@ -5,7 +5,7 @@ import { ROUTES } from '@/constants/routes';
  */
 
 export interface ForumContext {
-	id: number;
+	id: string;
 	slug: string;
 	name: string;
 	isPrimary?: boolean; // Featured Forum flag

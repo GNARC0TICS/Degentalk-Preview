@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'wouter';
 import { generateSidebarLinks } from '@shared/config/admin.config';
 
-const adminLinks = generateSidebarLinks() as const;
+const adminLinks = generateSidebarLinks();
 
 interface SimpleMenuProps {
 	onItemClick?: () => void;

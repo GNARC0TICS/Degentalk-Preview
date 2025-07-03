@@ -71,8 +71,8 @@ const userRateLimiters = {
 // Message validation schema
 const messageSchema = z.object({
 	content: z.string().min(1).max(500),
-	roomId: z.number().optional(),
-	replyTo: z.number().optional(),
+	roomId: z.string().uuid().optional(),
+	replyTo: z.string().uuid().optional(),
 	mentions: z.array(z.string()).optional()
 });
 

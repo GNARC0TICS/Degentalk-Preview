@@ -181,8 +181,7 @@ export function FriendsManager() {
 			requestId: RequestId;
 			response: 'accept' | 'decline' | 'block';
 		}) => {
-			return await apiRequest({
-				url: `/api/social/friends/requests/${requestId}/respond`,
+			return await apiRequest({ url: `/api/social/friends/requests/${requestId}/respond`,
 				method: 'POST',
 				data: { response }
 			});

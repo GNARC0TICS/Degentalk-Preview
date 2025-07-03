@@ -76,7 +76,7 @@ export interface PerformanceHeatmap {
 	metrics: Array<{
 		name: string;
 		type: 'response_time' | 'request_count' | 'error_rate' | 'cache_hit_rate';
-		data: number[][];
+		data: string[][];
 		threshold: {
 			excellent: number;
 			good: number;

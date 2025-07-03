@@ -36,6 +36,7 @@ import { Trash2, Edit, Plus, Eye, Users as UsersIcon } from 'lucide-react';
 import { FramedAvatar } from '@/components/users/framed-avatar';
 import { GrantFrameModal } from '@/components/admin/GrantFrameModal';
 import type { AvatarFrame } from '@/types/compat/avatar';
+import type { FrameId } from '@db/types';
 
 interface CreateFrameData {
 	name: string;
@@ -67,7 +68,7 @@ export default function AdminAvatarFramesPage() {
 		refetch
 	} = useQuery<AvatarFrame[]>({
 		queryKey: ['admin', 'avatar-frames'],
-		queryFn: () => apiRequest({ url: '/api/admin/avatar-frames' })
+		queryFn: () => apiRequest({ url: '/api/admin/avatar-frames', method: 'GET' })
 	});
 
 	// Create frame mutation
@@ -97,10 +98,9 @@ export default function AdminAvatarFramesPage() {
 	});
 
 	// Update frame mutation
-	const updateMutation = useMutation<AvatarFrame, Error, { id: number; data: CreateFrameData }>({
+	const updateMutation = useMutation<AvatarFrame, Error, { id: string; data: CreateFrameData }>({
 		mutationFn: ({ id, data }) =>
-			apiRequest({
-				url: `/api/admin/avatar-frames/${id}`,
+			apiRequest({ url: `/api/admin/avatar-frames/${id}`,
 				method: 'PUT',
 				data
 			}),
@@ -123,12 +123,9 @@ export default function AdminAvatarFramesPage() {
 	});
 
 	// Delete frame mutation
-	const deleteMutation = useMutation<void, Error, number>({
+	const deleteMutation = useMutation<void, Error, FrameId>({
 		mutationFn: (id) =>
-			apiRequest({
-				url: `/api/admin/avatar-frames/${id}`,
-				method: 'DELETE'
-			}),
+			apiRequest({ url: `/api/admin/avatar-frames/${id}`, method: 'DELETE' }),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['admin', 'avatar-frames'] });
 			toast({

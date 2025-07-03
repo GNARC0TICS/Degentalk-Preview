@@ -90,7 +90,7 @@ export class EmailTemplateController {
 
 		return boundary.execute(async () => {
 			const { id } = req.params;
-			const templateId = isNaN(Number(id)) ? id : Number(id);
+			const templateId = isNaN(id) ? id : id;
 
 			const template = await emailTemplateService.getTemplate(templateId);
 
@@ -133,7 +133,7 @@ export class EmailTemplateController {
 		});
 		return boundary.execute(async () => {
 			const { id } = req.params;
-			const templateId = Number(id);
+			const templateId = id;
 			const updateData = emailTemplateSchema.partial().parse(req.body);
 			const { changeDescription } = req.body;
 			const adminId = userService.getUserFromRequest(req)?.id;
@@ -168,7 +168,7 @@ export class EmailTemplateController {
 		});
 		return boundary.execute(async () => {
 			const { id } = req.params;
-			const templateId = Number(id);
+			const templateId = id;
 			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
@@ -219,7 +219,7 @@ export class EmailTemplateController {
 		});
 		return boundary.execute(async () => {
 			const { id } = req.params;
-			const templateId = Number(id);
+			const templateId = id;
 
 			if (isNaN(templateId)) {
 				throw new AdminError('Invalid template ID', 400, AdminErrorCodes.INVALID_REQUEST);
@@ -242,8 +242,8 @@ export class EmailTemplateController {
 		});
 		return boundary.execute(async () => {
 			const { id, versionId } = req.params;
-			const templateId = Number(id);
-			const versionNumber = Number(versionId);
+			const templateId = id;
+			const versionNumber = versionId;
 			const adminId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminId) {
@@ -280,7 +280,7 @@ export class EmailTemplateController {
 		return boundary.execute(async () => {
 			const { id } = req.params;
 			const { days } = req.query;
-			const templateId = Number(id);
+			const templateId = id;
 			const statsDays = days ? Number(days) : 30;
 
 			if (isNaN(templateId)) {

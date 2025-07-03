@@ -26,7 +26,13 @@ const UserFormDialog: React.FC<UserFormDialogProps> = ({ isOpen, onClose, user, 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		// Collect form data
-		const formData = {}; // Placeholder
+		const formData: UserFormData = {
+			username: user?.username || '',
+			email: user?.email || '',
+			role: user?.role || 'user',
+			status: user?.status || 'active',
+			permissions: user?.permissions || []
+		};
 		onSubmit(formData);
 	};
 

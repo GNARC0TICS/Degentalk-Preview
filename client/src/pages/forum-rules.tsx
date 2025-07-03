@@ -163,7 +163,7 @@ const ForumRules: React.FC = () => {
 			// Get all rule IDs that have been checked
 			const ruleIds = Object.entries(agreedRules)
 				.filter(([_, agreed]) => agreed)
-				.map(([ruleId]) => parseInt(ruleId));
+				.map(([ruleId]) => ruleId);
 
 			// Submit the agreements
 			await apiRequest<{ success: boolean }>({

@@ -46,7 +46,7 @@ export const createStickerSchema = z.object({
 
 	// Collectible properties
 	rarity: StickerRaritySchema.default('common'),
-	packId: z.number().int().positive().optional(),
+	packId: z.string().uuid().optional(),
 
 	// Unlock mechanics
 	unlockType: StickerUnlockTypeSchema.default('shop'),
@@ -147,12 +147,12 @@ export const bulkDeleteStickerPacksSchema = z.object({
 
 // Sticker pack management (add/remove stickers)
 export const addStickersToPackSchema = z.object({
-	packId: z.number().int().positive(),
+	packId: z.string().uuid(),
 	stickerIds: z.array(z.number().int().positive()).min(1).max(100)
 });
 
 export const removeStickersFromPackSchema = z.object({
-	packId: z.number().int().positive(),
+	packId: z.string().uuid(),
 	stickerIds: z.array(z.number().int().positive()).min(1).max(100)
 });
 
@@ -169,7 +169,7 @@ export const stickerFileUploadSchema = z.object({
 
 // Usage tracking
 export const trackStickerUsageSchema = z.object({
-	stickerId: z.number().int().positive(),
+	stickerId: z.string().uuid(),
 	contextType: z.enum(['thread', 'comment', 'shoutbox', 'message']),
 	contextId: z.string().optional()
 });

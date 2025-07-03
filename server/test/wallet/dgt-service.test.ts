@@ -10,6 +10,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi, Mock } from 'vitest';
+import { mockUuid, mockUserId, mockThreadId, mockPostId, mockMissionId, mockAchievementId, TEST_UUIDS } from "@shared/test-utils/mock-uuid";
 import { dgtService } from '../../src/domains/wallet/dgt.service';
 import { db } from '@db';
 import { eq } from 'drizzle-orm';
@@ -145,7 +146,7 @@ describe('DGT Service', () => {
 				.mockReturnValueOnce({
 					from: vi.fn().mockReturnValue({
 						where: vi.fn().mockReturnValue({
-							limit: vi.fn().mockReturnValue([{ id: 2 }])
+							limit: vi.fn().mockReturnValue([{ id: mockUuid() }])
 						})
 					})
 				} as any);
@@ -191,8 +192,8 @@ describe('DGT Service', () => {
 						where: vi.fn().mockReturnValue({
 							limit: vi.fn().mockReturnValue([
 								{
-									id: 1,
-									userId: 1,
+									id: mockUuid(),
+									userId: mockUserId(),
 									dgtAmountRequested: '1000',
 									status: 'pending',
 									metadata: {}
@@ -219,7 +220,7 @@ describe('DGT Service', () => {
 					where: vi.fn().mockReturnValue({
 						returning: vi.fn().mockReturnValue([
 							{
-								id: 1,
+								id: mockUuid(),
 								status: 'confirmed'
 							}
 						])
@@ -232,7 +233,7 @@ describe('DGT Service', () => {
 			});
 
 			expect(result).toEqual({
-				id: 1,
+				id: mockUuid(),
 				status: 'confirmed'
 			});
 			expect(db.transaction).toHaveBeenCalled();

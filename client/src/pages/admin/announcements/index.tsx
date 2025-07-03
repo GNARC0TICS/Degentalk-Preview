@@ -72,7 +72,7 @@ import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 // Define the Announcement type
 interface Announcement {
-	id: number;
+	id: string;
 	content: string;
 	icon?: string;
 	type: string;
@@ -215,11 +215,8 @@ export default function AnnouncementsPage() {
 	// Create mutation
 	const createMutation = useMutation({
 		mutationFn: async (values: AnnouncementFormValues) => {
-			return await apiRequest({
-				url: '/api/admin/announcements',
-				method: 'POST',
-				data: values
-			});
+			return await apiRequest({ url: '/api/admin/announcements', method: 'POST', data: values
+			 });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/api/admin/announcements'] });
@@ -242,12 +239,9 @@ export default function AnnouncementsPage() {
 
 	// Update mutation
 	const updateMutation = useMutation({
-		mutationFn: async ({ id, values }: { id: number; values: AnnouncementFormValues }) => {
-			return await apiRequest({
-				url: `/api/admin/announcements/${id}`,
-				method: 'PUT',
-				data: values
-			});
+		mutationFn: async ({ id, values }: { id: string; values: AnnouncementFormValues }) => {
+			return await apiRequest({ url: `/api/admin/announcements/${id}`, method: 'PUT', data: values
+			 });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/api/admin/announcements'] });
@@ -270,11 +264,8 @@ export default function AnnouncementsPage() {
 
 	// Delete mutation
 	const deleteMutation = useMutation({
-		mutationFn: async (id: number) => {
-			return await apiRequest({
-				url: `/api/admin/announcements/${id}`,
-				method: 'DELETE'
-			});
+		mutationFn: async (id: string) => {
+			return await apiRequest({ url: `/api/admin/announcements/${id}`, method: 'DELETE' });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/api/admin/announcements'] });

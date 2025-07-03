@@ -39,9 +39,9 @@ export interface LevelFormData {
 	rarity?: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
 	// Unlocks JSON (advanced)
 	unlocks?: {
-		titles?: number[];
-		badges?: number[];
-		frames?: number[];
+		titles?: string[];
+		badges?: string[];
+		frames?: string[];
 		[extra: string]: any;
 	};
 }

@@ -27,8 +27,7 @@ export function useFollowing(userId: string | undefined): UseFollowingResult {
 		queryKey: ['following', userId],
 		queryFn: async () => {
 			if (!userId) return undefined;
-			return apiRequest({
-				url: `/api/users/${userId}/following?page=1&limit=40`,
+			return apiRequest({ url: `/api/users/${userId}/following?page=1&limit=40`,
 				method: 'GET'
 			});
 		},

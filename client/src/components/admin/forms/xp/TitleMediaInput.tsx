@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Upload } from 'lucide-react';
 import { MediaAsset } from '@/components/media/MediaAsset';
 import { MediaPickerModal } from '@/components/admin/media/MediaPickerModal';
+import type { EntityId } from '@db/types';
 
 interface Props {
 	iconUrl: string;
-	onChange: (url: string, mediaId?: number) => void;
+	onChange: (url: string, mediaId?: EntityId) => void;
 }
 
 export const TitleMediaInput: React.FC<Props> = ({ iconUrl, onChange }) => {

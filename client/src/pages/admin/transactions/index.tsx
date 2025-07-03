@@ -14,9 +14,9 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface Transaction {
-	transaction_id: number;
+	transaction_id: string;
 	uuid: string;
-	user_id: number;
+	user_id: string;
 	from_user_id?: number;
 	to_user_id?: number;
 	amount: number;

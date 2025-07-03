@@ -28,21 +28,15 @@ export default function EconomyConfigPage() {
 	} = useQuery({
 		queryKey: ['admin-economy-config'],
 		queryFn: async (): Promise<EconomyConfigResponse> => {
-			return apiRequest({
-				url: '/api/admin/economy/config',
-				method: 'GET'
-			});
+			return apiRequest({ url: '/api/admin/economy/config', method: 'GET' });
 		}
 	});
 
 	// Update config mutation
 	const updateConfigMutation = useMutation({
 		mutationFn: async (config: Record<string, any>) => {
-			return apiRequest({
-				url: '/api/admin/economy/config',
-				method: 'PUT',
-				data: config
-			});
+			return apiRequest({ url: '/api/admin/economy/config', method: 'PUT', data: config
+			 });
 		},
 		onSuccess: (data) => {
 			queryClient.setQueryData(['admin-economy-config'], data);
@@ -63,10 +57,7 @@ export default function EconomyConfigPage() {
 	// Reset config mutation
 	const resetConfigMutation = useMutation({
 		mutationFn: async () => {
-			return apiRequest({
-				url: '/api/admin/economy/config',
-				method: 'DELETE'
-			});
+			return apiRequest({ url: '/api/admin/economy/config', method: 'DELETE' });
 		},
 		onSuccess: (data) => {
 			queryClient.setQueryData(['admin-economy-config'], data);

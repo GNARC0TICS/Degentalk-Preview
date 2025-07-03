@@ -35,7 +35,7 @@ const RaritySchema = z.object({
 	isAnimated: z.boolean().optional()
 });
 
-type Rarity = z.infer<typeof RaritySchema> & { id: number };
+type Rarity = z.infer<typeof RaritySchema> & { id: string };
 
 export default function AdminRaritiesPage() {
 	const queryClient = useQueryClient();
@@ -88,7 +88,7 @@ export default function AdminRaritiesPage() {
 	});
 
 	const deleteMutation = useMutation({
-		mutationFn: async (id: number) => {
+		mutationFn: async (id: string) => {
 			const res = await fetch(`/api/admin/shop/rarities/${id}`, { method: 'DELETE' });
 			if (!res.ok) throw new Error('Failed to delete rarity');
 			return res.json();

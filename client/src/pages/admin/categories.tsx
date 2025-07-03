@@ -204,7 +204,7 @@ export default function AdminCategoriesPage() {
 		}
 	};
 
-	const handleReorderCategory = (id: number, direction: 'up' | 'down') => {
+	const handleReorderCategory = (id: string, direction: 'up' | 'down') => {
 		reorderCategoryMutation.mutate({ id, direction });
 	};
 

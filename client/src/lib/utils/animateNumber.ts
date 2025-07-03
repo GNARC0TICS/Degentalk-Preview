@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { AnimationFrameId } from '@db/types';
 
 /**
  * Animates a number change from start to end value.
@@ -19,7 +18,7 @@ export function animateNumber(
 ): { cancel: () => void } {
 	const startTime = performance.now();
 	const difference = endValue - startValue;
-	let animationFrameId: AnimationFrameId;
+	let animationFrameId: number;
 
 	// Check for reduced motion preference
 	const prefersReducedMotion =

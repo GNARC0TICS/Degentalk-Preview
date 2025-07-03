@@ -1,3 +1,4 @@
+import type { UserId } from '@db/types';
 import React from 'react';
 import {
 	Table,
@@ -17,7 +18,7 @@ export interface ColumnDef<T> {
 	render?: (row: T) => React.ReactNode; // Custom render function for the cell
 }
 
-interface EntityTableProps<T extends { id: string | number }> {
+interface EntityTableProps<T extends { id: UserId }> {
 	columns: ColumnDef<T>[];
 	data: T[];
 	isLoading: boolean;
@@ -36,7 +37,7 @@ interface EntityTableProps<T extends { id: string | number }> {
 	tableClassName?: string;
 }
 
-export function EntityTable<T extends { id: string | number }>({
+export function EntityTable<T extends { id: UserId }>({
 	columns,
 	data,
 	isLoading,

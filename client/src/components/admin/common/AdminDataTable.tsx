@@ -1,3 +1,4 @@
+import type { UserId } from '@db/types';
 import React from 'react';
 import { EntityTable } from '@/components/admin/layout/EntityTable';
 
@@ -6,16 +7,16 @@ import { EntityTable } from '@/components/admin/layout/EntityTable';
  * progressively migrate all pages without rewriting logic immediately.
  * Provides the same API surface but lives in a central location to stop duplication.
  */
-export interface AdminDataTableProps<T> {
+export interface AdminDataTableProps<T extends { id: UserId }> {
 	columns: Parameters<typeof EntityTable<T>>[0]['columns'];
 	data: T[];
-	isLoading?: boolean;
+	isLoading: boolean;
 	isError?: boolean;
 	error?: unknown;
 	emptyStateMessage?: string;
 	renderActions?: (row: T) => React.ReactNode;
 }
 
-export function AdminDataTable<T>(props: AdminDataTableProps<T>) {
+export function AdminDataTable<T extends { id: UserId }>(props: AdminDataTableProps<T>) {
 	return <EntityTable<T> {...props} />;
 }

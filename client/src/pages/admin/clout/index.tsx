@@ -14,7 +14,7 @@ import { CloutLogsSection } from '@/components/admin/clout/CloutLogsSection';
 
 // Types
 export interface CloutAchievement {
-	id: number;
+	id: string;
 	achievementKey: string;
 	name: string;
 	description?: string;
@@ -27,7 +27,7 @@ export interface CloutAchievement {
 }
 
 export interface CloutLog {
-	id: number;
+	id: string;
 	userId: string;
 	achievementId?: number;
 	cloutEarned: number;
@@ -148,10 +148,7 @@ export default function CloutSystemPage() {
 	} = useQuery({
 		queryKey: ['admin-clout-achievements'],
 		queryFn: async () => {
-			return apiRequest({
-				url: '/api/admin/clout/achievements',
-				method: 'GET'
-			});
+			return apiRequest({ url: '/api/admin/clout/achievements', method: 'GET' });
 		}
 	});
 
@@ -163,10 +160,7 @@ export default function CloutSystemPage() {
 	} = useQuery({
 		queryKey: ['admin-clout-logs'],
 		queryFn: async () => {
-			return apiRequest({
-				url: '/api/admin/clout/logs?limit=100',
-				method: 'GET'
-			});
+			return apiRequest({ url: '/api/admin/clout/logs?limit=100', method: 'GET' });
 		}
 	});
 

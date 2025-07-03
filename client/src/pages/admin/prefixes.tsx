@@ -235,7 +235,7 @@ export default function AdminPrefixesPage() {
 		}
 	};
 
-	const handleReorderPrefix = (id: number, direction: 'up' | 'down') => {
+	const handleReorderPrefix = (id: string, direction: 'up' | 'down') => {
 		reorderPrefixMutation.mutate({ id, direction });
 	};
 

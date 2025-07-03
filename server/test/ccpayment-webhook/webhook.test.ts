@@ -10,6 +10,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { mockUuid, mockUserId, mockThreadId, mockPostId, mockMissionId, mockAchievementId, TEST_UUIDS } from "@shared/test-utils/mock-uuid";
 import { ccpaymentWebhookService } from '../../src/domains/ccpayment-webhook/ccpayment-webhook.service';
 import { ccpaymentService } from '../../src/domains/wallet/ccpayment.service';
 import { dgtService } from '../../src/domains/wallet/dgt.service';
@@ -19,7 +20,7 @@ import { db } from '@db';
 vi.mock('../../src/domains/wallet/dgt.service', () => ({
 	dgtService: {
 		fulfillDgtPurchase: vi.fn().mockResolvedValue({
-			id: 1,
+			id: mockUuid(),
 			status: 'confirmed'
 		})
 	}
@@ -38,8 +39,8 @@ vi.mock('../../src/core/db', () => ({
 				where: vi.fn(() => ({
 					limit: vi.fn(() => [
 						{
-							id: 1,
-							userId: 1,
+							id: mockUuid(),
+							userId: mockUserId(),
 							ccpaymentReference: 'test-order-id',
 							status: 'pending'
 						}
@@ -140,7 +141,7 @@ describe('CCPayment Webhook Service', () => {
 					where: vi.fn().mockReturnValue({
 						limit: vi.fn().mockReturnValue([
 							{
-								id: 1,
+								id: mockUuid(),
 								type: 'WITHDRAWAL',
 								status: 'pending',
 								metadata: {
@@ -181,7 +182,7 @@ describe('CCPayment Webhook Service', () => {
 					where: vi.fn().mockReturnValue({
 						limit: vi.fn().mockReturnValue([
 							{
-								id: 1,
+								id: mockUuid(),
 								type: 'WITHDRAWAL',
 								status: 'pending',
 								metadata: {

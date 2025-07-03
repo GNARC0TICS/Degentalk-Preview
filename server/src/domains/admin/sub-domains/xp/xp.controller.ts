@@ -150,7 +150,7 @@ export const createBadge = async (req: Request, res: Response, next: NextFunctio
 export const updateBadge = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// const { badgeId } = req.params;
-		// const updatedBadge = await xpAdminService.updateBadge(parseInt(badgeId), req.body);
+		// const updatedBadge = await xpAdminService.updateBadge(badgeId, req.body);
 		// res.json(updatedBadge);
 		res.status(501).json({ message: 'Update Badge not implemented' });
 	} catch (error) {
@@ -166,7 +166,7 @@ export const updateBadge = async (req: Request, res: Response, next: NextFunctio
 export const deleteBadge = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// const { badgeId } = req.params;
-		// await xpAdminService.deleteBadge(parseInt(badgeId));
+		// await xpAdminService.deleteBadge(badgeId);
 		// res.status(204).send();
 		res.status(501).json({ message: 'Delete Badge not implemented' });
 	} catch (error) {
@@ -213,7 +213,7 @@ export const createTitle = async (req: Request, res: Response, next: NextFunctio
 export const updateTitle = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// const { titleId } = req.params;
-		// const updatedTitle = await xpAdminService.updateTitle(parseInt(titleId), req.body);
+		// const updatedTitle = await xpAdminService.updateTitle(titleId, req.body);
 		// res.json(updatedTitle);
 		res.status(501).json({ message: 'Update Title not implemented' });
 	} catch (error) {
@@ -229,7 +229,7 @@ export const updateTitle = async (req: Request, res: Response, next: NextFunctio
 export const deleteTitle = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// const { titleId } = req.params;
-		// await xpAdminService.deleteTitle(parseInt(titleId));
+		// await xpAdminService.deleteTitle(titleId);
 		// res.status(204).send();
 		res.status(501).json({ message: 'Delete Title not implemented' });
 	} catch (error) {
@@ -269,12 +269,12 @@ export const adjustUserXp = async (req: Request, res: Response, next: NextFuncti
 		});
 
 		const result = await xpService.updateUserXp(
-			Number(userId),
+			userId,
 			Number(amount),
 			adjustmentType as 'add' | 'subtract' | 'set',
 			{
 				reason: reason || 'Admin adjustment',
-				adminId: Number(adminId),
+				adminId: adminId,
 				logAdjustment: true
 			}
 		);
@@ -298,7 +298,7 @@ export const adjustUserXp = async (req: Request, res: Response, next: NextFuncti
 
 export const getXpAdjustmentLogs = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const userId = req.query.userId ? Number(req.query.userId) : undefined;
+		const userId = req.query.userId ? req.query.userId : undefined;
 		const limit = req.query.limit ? Number(req.query.limit) : 50;
 
 		let query = db
@@ -357,7 +357,7 @@ export const testXpActionAward = async (req: Request, res: Response, next: NextF
 		});
 
 		// Call the service to award XP
-		const result = await xpService.awardXp(Number(userId), action as XP_ACTION, metadata);
+		const result = await xpService.awardXp(userId, action as XP_ACTION, metadata);
 
 		if (!result) {
 			return res.status(429).json({
@@ -368,7 +368,7 @@ export const testXpActionAward = async (req: Request, res: Response, next: NextF
 		res.status(200).json({
 			message: 'XP awarded successfully',
 			result,
-			limits: await xpService.getActionLimitsForUser(Number(userId), action as XP_ACTION)
+			limits: await xpService.getActionLimitsForUser(userId, action as XP_ACTION)
 		});
 	} catch (error: any) {
 		logger.error(

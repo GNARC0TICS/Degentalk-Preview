@@ -4,7 +4,7 @@ import { apiRequest, apiPost, apiPut, apiDelete } from '@/lib/api-request';
 export interface QuoteFilters {
 	type?: string[];
 	tags?: string[];
-	intensity?: number[];
+	intensity?: string[];
 	theme?: string[];
 	targetAudience?: string[];
 	isActive?: boolean;

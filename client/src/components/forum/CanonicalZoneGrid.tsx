@@ -1,3 +1,4 @@
+import type { UserId } from '@db/types';
 import React from 'react';
 // Link is not used directly in CanonicalZoneGrid if ZoneCard handles its own linking.
 // import { Link } from 'wouter';
@@ -17,7 +18,7 @@ import ZoneCard, { type ZoneCardProps } from '@/components/forum/ZoneCard';
 
 // Re-export ShopCardData for external consumers (unchanged)
 export interface ShopCardData {
-	id: string | number;
+	id: UserId;
 	type: 'shop';
 	isStatic: true;
 	featuredItem?: {

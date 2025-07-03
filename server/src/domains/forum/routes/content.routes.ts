@@ -55,7 +55,7 @@ router.get(
 
 			// Use unified thread service
 			const result = await threadService.searchThreads({
-				structureId: forumId ? Number(forumId) : undefined,
+				structureId: forumId ? forumId : undefined,
 				page: pageNum,
 				limit: limitNum,
 				sortBy,

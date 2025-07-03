@@ -5,8 +5,6 @@
  * Explicit exports ensure tree-shaking and clean APIs.
  */
 
-import type { UserId } from '@db/types';
-
 // Re-export legacy API types (preserved for compatibility)
 export type {
   ApiSuccess,

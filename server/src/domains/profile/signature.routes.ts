@@ -21,11 +21,11 @@ const updateSignatureSchema = z.object({
 });
 
 const purchaseItemSchema = z.object({
-	itemId: z.number().int().positive()
+	itemId: z.string().uuid()
 });
 
 const activateItemSchema = z.object({
-	itemId: z.number().int().positive()
+	itemId: z.string().uuid()
 });
 
 /**

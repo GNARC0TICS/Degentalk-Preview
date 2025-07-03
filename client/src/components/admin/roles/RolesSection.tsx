@@ -40,7 +40,7 @@ import {
 	ChevronDown
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import { RoleForm } from './RoleForm';
 import { PermissionsEditor } from '../permissions/PermissionsEditor';
 import type { Role, Title, Permission } from '@/pages/admin/roles-titles';
@@ -64,10 +64,7 @@ export function RolesSection({ roles, permissions, titles, isLoading }: RolesSec
 	// Delete role mutation
 	const deleteRoleMutation = useMutation({
 		mutationFn: async (roleId: string) => {
-			return apiRequest({
-				url: `/api/admin/roles/${roleId}`,
-				method: 'DELETE'
-			});
+			return apiRequest({ url: `/api/admin/roles/${roleId}`, method: 'DELETE' });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['admin-roles'] });
@@ -393,7 +390,7 @@ export function RolesSection({ roles, permissions, titles, isLoading }: RolesSec
 						</DialogDescription>
 					</DialogHeader>
 					<RoleForm
-						role={null}
+						role={undefined}
 						permissions={permissions}
 						titles={titles}
 						onSuccess={() => {
@@ -415,7 +412,7 @@ export function RolesSection({ roles, permissions, titles, isLoading }: RolesSec
 						</DialogDescription>
 					</DialogHeader>
 					<RoleForm
-						role={selectedRole}
+						role={selectedRole || undefined}
 						permissions={permissions}
 						titles={titles}
 						onSuccess={() => {

@@ -6,7 +6,7 @@ export interface PackPayload {
 	rarity: 'cope' | 'mid' | 'exit' | 'mythic';
 	priceDgt?: number;
 	isPublished: boolean;
-	contents: number[];
+	contents: string[];
 }
 
 export class AnimationPackApiService {

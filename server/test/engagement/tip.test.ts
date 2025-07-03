@@ -9,6 +9,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { mockUuid, mockUserId, mockThreadId, mockPostId, mockMissionId, mockAchievementId, TEST_UUIDS } from "@shared/test-utils/mock-uuid";
 import { tipService } from '../../src/domains/engagement/tip/tip.service';
 import { dgtService } from '../../src/domains/wallet/dgt.service';
 import { db } from '@db';
@@ -29,7 +30,7 @@ vi.mock('../../src/core/db', () => ({
 		transaction: vi.fn((callback) => callback()),
 		insert: vi.fn(() => ({
 			values: vi.fn(() => ({
-				returning: vi.fn(() => [{ id: 1 }])
+				returning: vi.fn(() => [{ id: mockUuid() }])
 			}))
 		})),
 		select: vi.fn(() => ({
@@ -79,7 +80,7 @@ describe('Tip Service', () => {
 				2, // toUserId
 				BigInt(100), // amount
 				'Great post!', // reason
-				{ type: 'post', id: 123 } // contentReference
+				{ type: 'post', id: mockUuid() } // contentReference
 			);
 
 			expect(result).toBeDefined();

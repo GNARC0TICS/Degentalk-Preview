@@ -26,7 +26,7 @@ export function ActivityStatsCard({
 	className
 }: ActivityStatsCardProps) {
 	const hasRankings = posterRank || tipperRank || likerRank;
-	const topRank = Math.min(...([posterRank, tipperRank, likerRank].filter(Boolean) as number[]));
+	const topRank = Math.min(...([posterRank, tipperRank, likerRank].filter(Boolean) as string[]));
 
 	return (
 		<div

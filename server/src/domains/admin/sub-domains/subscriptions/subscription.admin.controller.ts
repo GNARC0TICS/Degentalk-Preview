@@ -269,7 +269,7 @@ export class AdminSubscriptionController {
 			const { reason } = req.body;
 			const adminUserId = userService.getUserFromRequest(req)?.id;
 
-			const subscriptionId = parseInt(id);
+			const subscriptionId = id;
 			if (isNaN(subscriptionId)) {
 				res.status(400).json({
 					success: false,

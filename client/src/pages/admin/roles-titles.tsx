@@ -90,10 +90,7 @@ export default function RolesTitlesPage() {
 	} = useQuery({
 		queryKey: ['admin-roles'],
 		queryFn: async (): Promise<Role[]> => {
-			return apiRequest({
-				url: '/api/admin/roles',
-				method: 'GET'
-			});
+			return apiRequest({ url: '/api/admin/roles', method: 'GET' });
 		}
 	});
 
@@ -105,10 +102,7 @@ export default function RolesTitlesPage() {
 	} = useQuery({
 		queryKey: ['admin-titles'],
 		queryFn: async (): Promise<Title[]> => {
-			return apiRequest({
-				url: '/api/admin/titles',
-				method: 'GET'
-			});
+			return apiRequest({ url: '/api/admin/titles', method: 'GET' });
 		}
 	});
 
@@ -120,10 +114,7 @@ export default function RolesTitlesPage() {
 	} = useQuery({
 		queryKey: ['admin-permissions-grouped'],
 		queryFn: async (): Promise<Record<string, Permission[]>> => {
-			return apiRequest({
-				url: '/api/admin/permissions/by-category',
-				method: 'GET'
-			});
+			return apiRequest({ url: '/api/admin/permissions/by-category', method: 'GET' });
 		}
 	});
 

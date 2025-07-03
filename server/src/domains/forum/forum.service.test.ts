@@ -1,4 +1,5 @@
 import { forumService } from './forum.service';
+import { mockUuid, mockUserId, mockThreadId, mockPostId, mockMissionId, mockAchievementId, TEST_UUIDS } from "@shared/test-utils/mock-uuid";
 import { forumCategories } from '@schema';
 import { db } from '@db';
 import { eq } from 'drizzle-orm';
@@ -28,7 +29,7 @@ describe('ForumService - getForumStructure', () => {
 	test('should correctly identify primary zones via pluginData.configZoneType', async () => {
 		mockGetCategoriesWithStats.mockResolvedValue([
 			{
-				id: 1,
+				id: mockUuid(),
 				name: 'Primary Zone 1',
 				slug: 'pz1',
 				type: 'zone',
@@ -40,7 +41,7 @@ describe('ForumService - getForumStructure', () => {
 				canonical: true
 			},
 			{
-				id: 2,
+				id: mockUuid(),
 				name: 'General Zone 1',
 				slug: 'gz1',
 				type: 'zone',
@@ -52,7 +53,7 @@ describe('ForumService - getForumStructure', () => {
 				canonical: true
 			},
 			{
-				id: 3,
+				id: mockUuid(),
 				name: 'Forum In Primary',
 				slug: 'fip1',
 				type: 'forum',
@@ -80,7 +81,7 @@ describe('ForumService - getForumStructure', () => {
 	test('should default to isPrimary: false and log warning if pluginData is missing configZoneType', async () => {
 		mockGetCategoriesWithStats.mockResolvedValue([
 			{
-				id: 1,
+				id: mockUuid(),
 				name: 'Zone Missing Type',
 				slug: 'zmt',
 				type: 'zone',
@@ -105,7 +106,7 @@ describe('ForumService - getForumStructure', () => {
 	test('should default to isPrimary: false and log warning if pluginData is null', async () => {
 		mockGetCategoriesWithStats.mockResolvedValue([
 			{
-				id: 1,
+				id: mockUuid(),
 				name: 'Zone Null PluginData',
 				slug: 'znpd',
 				type: 'zone',
@@ -130,7 +131,7 @@ describe('ForumService - getForumStructure', () => {
 	test('should default to isPrimary: false and log warning if pluginData.configZoneType is malformed', async () => {
 		mockGetCategoriesWithStats.mockResolvedValue([
 			{
-				id: 1,
+				id: mockUuid(),
 				name: 'Zone Malformed Type',
 				slug: 'zmtp',
 				type: 'zone',
@@ -155,7 +156,7 @@ describe('ForumService - getForumStructure', () => {
 	test('should correctly parse features, customComponents, and staffOnly from pluginData', async () => {
 		mockGetCategoriesWithStats.mockResolvedValue([
 			{
-				id: 1,
+				id: mockUuid(),
 				name: 'Full Zone',
 				slug: 'fz1',
 				type: 'zone',
@@ -172,7 +173,7 @@ describe('ForumService - getForumStructure', () => {
 				canonical: true
 			},
 			{
-				id: 2,
+				id: mockUuid(),
 				name: 'Minimal Zone',
 				slug: 'mz1',
 				type: 'zone',
@@ -205,7 +206,7 @@ describe('ForumService - getForumStructure', () => {
 	test('should handle empty pluginData object for a zone', async () => {
 		mockGetCategoriesWithStats.mockResolvedValue([
 			{
-				id: 1,
+				id: mockUuid(),
 				name: 'Empty Plugin Zone',
 				slug: 'epz',
 				type: 'zone',

@@ -1,4 +1,4 @@
-import type { UserId } from '@db/types';
+import type { UserId, FrameId, TitleId, BadgeId, ProductId } from '@db/types';
 
 export interface ProfileData {
 	id: string;
@@ -24,24 +24,24 @@ export interface ProfileData {
 	twitterHandle?: string | null;
 	telegramHandle?: string | null;
 	website?: string | null;
-	activeFrameId: number | null;
+	activeFrameId: FrameId | null;
 	activeFrame: {
-		id: UserId;
+		id: FrameId;
 		name: string;
 		imageUrl: string;
 		rarity: string;
 	} | null;
-	activeTitleId: number | null;
+	activeTitleId: TitleId | null;
 	activeTitle: {
-		id: UserId;
+		id: TitleId;
 		name: string;
 		description: string | null;
 		iconUrl: string | null;
 		rarity: string;
 	} | null;
-	activeBadgeId: number | null;
+	activeBadgeId: BadgeId | null;
 	activeBadge: {
-		id: UserId;
+		id: BadgeId;
 		name: string;
 		description: string | null;
 		iconUrl: string;
@@ -64,7 +64,7 @@ export interface ProfileData {
 	inventory: {
 		id: UserId;
 		userId: string;
-		productId: number;
+		productId: ProductId;
 		isEquipped: boolean;
 		productName: string;
 		productType: string;

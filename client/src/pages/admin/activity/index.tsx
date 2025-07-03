@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useAdminActivityFeed } from '@/features/activity/hooks/useActivityFeed';
-import { EventLog, EventLogFilters } from '@/features/activity/services/activityApi';
+import type { EventLog, EventLogFilters } from '@/features/activity/services/activityApi';
 import { format } from 'date-fns';
-import { useAuth } from '@/hooks/useAuth';
+// TODO: Replace with actual auth hook when available
+// import { useAuth } from '@/hooks/use-auth';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { Wide } from '@/layout/primitives';
 
@@ -10,7 +11,9 @@ import { Wide } from '@/layout/primitives';
  * Admin page for viewing all user activities
  */
 const AdminActivityPage: React.FC = () => {
-	const { user } = useAuth();
+	// TODO: Replace with actual auth hook when available
+	// const { user } = useAuth();
+	const user = null; // Temporary placeholder
 	const [filters, setFilters] = useState<EventLogFilters>({
 		limit: 20,
 		page: 1

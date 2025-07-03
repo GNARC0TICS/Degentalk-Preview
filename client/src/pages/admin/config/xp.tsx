@@ -10,7 +10,7 @@ export default function XpConfigPage() {
 	const { toast } = useToast();
 	const { data, isLoading } = useQuery<any>({
 		queryKey: ['/api/admin/config/xp'],
-		queryFn: () => apiRequest({ url: '/api/admin/config/xp' })
+		queryFn: () => apiRequest({ url: '/api/admin/config/xp', method: 'GET' })
 	});
 
 	const [json, setJson] = useState('');
@@ -22,7 +22,7 @@ export default function XpConfigPage() {
 	const saveMutation = useMutation({
 		mutationFn: async (body: string) => {
 			const parsed = JSON.parse(body);
-			await apiRequest({ url: '/api/admin/config/xp', method: 'PUT', data: parsed });
+			await apiRequest({ url: '/api/admin/config/xp', method: 'PUT', data: parsed  });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/api/admin/config/xp'] });

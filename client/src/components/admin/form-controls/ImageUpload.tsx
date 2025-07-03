@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, type Accept } from 'react-dropzone';
 
 export interface ImageUploadProps {
 	value?: string | File | null; // URL string or File object
 	onChange: (file: File | null) => void;
 	label?: React.ReactNode;
 	className?: string;
-	accept?: string;
+	accept?: Accept;
 	maxSize?: number; // bytes
 }
 
@@ -18,7 +18,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 	onChange,
 	label,
 	className,
-	accept = 'image/*',
+	accept = { 'image/*': [] },
 	maxSize = 5 * 1024 * 1024 // 5MB default
 }) => {
 	const onDrop = useCallback(

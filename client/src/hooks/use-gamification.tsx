@@ -61,7 +61,7 @@ export function useGamification() {
 
 	// Claim mission reward mutation
 	const claimMissionReward = useMutation({
-		mutationFn: (missionId: number) => gamificationApi.claimMissionReward(missionId),
+		mutationFn: (missionId: string) => gamificationApi.claimMissionReward(missionId),
 		onSuccess: (data) => {
 			// Invalidate relevant queries
 			queryClient.invalidateQueries({ queryKey: ['/api/gamification/missions'] });

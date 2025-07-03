@@ -68,7 +68,7 @@ export const shopAdminController = {
 			const product = await db
 				.select()
 				.from(products)
-				.where(eq(products.id, parseInt(productId)))
+				.where(eq(products.id, productId))
 				.limit(1);
 			if (product.length === 0) {
 				return res.status(404).json({ message: 'Product not found' });
@@ -105,7 +105,7 @@ export const shopAdminController = {
 			const updatedProduct = await db
 				.update(products)
 				.set({ ...updates, updatedAt: new Date() })
-				.where(eq(products.id, parseInt(productId)))
+				.where(eq(products.id, productId))
 				.returning();
 
 			if (updatedProduct.length === 0) {
@@ -125,7 +125,7 @@ export const shopAdminController = {
 			const deletedProduct = await db
 				.update(products)
 				.set({ isDeleted: true, status: 'archived', deletedAt: new Date() })
-				.where(eq(products.id, parseInt(productId)))
+				.where(eq(products.id, productId))
 				.returning();
 
 			if (deletedProduct.length === 0) {
