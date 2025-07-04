@@ -26,7 +26,7 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select'; // Assuming Select is available
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 
 // Define a basic User type for props, replace with actual User type
 interface User {

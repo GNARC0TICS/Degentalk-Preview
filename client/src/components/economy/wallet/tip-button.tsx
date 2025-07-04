@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import {
 	Dialog,
 	DialogContent,

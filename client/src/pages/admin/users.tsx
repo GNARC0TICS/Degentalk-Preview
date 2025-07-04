@@ -1,4 +1,4 @@
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { useState } from 'react';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';

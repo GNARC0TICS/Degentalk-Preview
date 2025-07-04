@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { CategoryId } from '@db/types';
+import type { CategoryId } from '@shared/types';
 import { formatTimestamp } from '@/lib/format-date';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -68,7 +68,7 @@ import { Badge } from '@/components/ui/badge';
 import { useLocation } from 'wouter'; // Fixed import for useLocation
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { apiRequest } from '@/lib/api-request';
-import type { CategoryId } from '@db/types';
+import type { CategoryId } from '@shared/types';
 
 const categorySchema = z.object({
 	name: z

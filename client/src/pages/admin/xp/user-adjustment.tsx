@@ -44,7 +44,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 
 // Form schema for user search
 const searchFormSchema = z.object({

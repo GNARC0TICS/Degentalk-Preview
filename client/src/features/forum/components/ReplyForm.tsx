@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import { getAdaptiveConfig } from '@/utils/adaptiveSpacing';
 import type { PostWithUser } from '@/types/compat/forum';
-import type { ThreadId, PostId } from '@db/types';
+import type { ThreadId, PostId } from '@shared/types';
 
 interface ReplyFormProps {
 	threadId: ThreadId;

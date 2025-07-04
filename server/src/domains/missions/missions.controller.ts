@@ -1,5 +1,5 @@
 import { userService } from '@server/src/core/services/user.service';
-import type { UserId, MissionId } from '@db/types';
+import type { UserId, MissionId } from '@shared/types';
 import type { Request, Response, NextFunction } from 'express';
 import { logger } from '../../core/logger';
 import { MissionsService } from './missions.service';

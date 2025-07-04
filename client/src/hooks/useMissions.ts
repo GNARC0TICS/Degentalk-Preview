@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
-import type { MissionId, UserId } from '@db/types';
+import type { MissionId, UserId } from '@shared/types';
 
 // Types for missions
 export interface Mission {

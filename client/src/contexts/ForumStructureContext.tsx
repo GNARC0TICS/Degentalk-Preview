@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { z } from 'zod';
 import { forumMap } from '@/config/forumMap.config';
 import type { Zone } from '@/config/forumMap.config';
-import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@db/types';
+import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@shared/types';
 
 // ===========================================================
 // ForumStructureContext v2.0  🛠️  (2025-06-16)

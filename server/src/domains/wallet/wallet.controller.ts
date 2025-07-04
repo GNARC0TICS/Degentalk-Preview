@@ -1,5 +1,6 @@
 import { userService } from '@server/src/core/services/user.service';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
+import { EconomyTransformer } from '../economy/transformers/economy.transformer';
 /**
  * Wallet Controller
  *
@@ -22,7 +23,7 @@ import { eq, desc, and, sql, SQL, asc } from 'drizzle-orm';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
 import crypto from 'crypto';
 import { z } from 'zod';
-import type { UserId, OrderId } from '@/db/types';
+import type { UserId, OrderId } from '@shared/types';
 // import { validateRequest } from '../../middleware/validate'; // Ensure this is commented or removed
 import { DGT_CURRENCY, DEFAULT_DGT_REWARD_CREATE_THREAD } from './wallet.constants';
 import { walletService } from './wallet.service';
@@ -166,11 +167,49 @@ export class WalletController extends BaseController {
 				.from(transactions)
 				.where(and(...conditions));
 
+			// Transform transactions using EconomyTransformer for enhanced history view
+			const requestingUser = userService.getUserFromRequest(req);
+			
+			// Prepare filters for enhanced transaction history
+			const historyFilters: any = {};
+			
+			if (currencyFilter === 'DGT') {
+				historyFilters.categories = ['social', 'shopping', 'earning', 'system'];
+			}
+			
+			if (typeFilter) {
+				// Map frontend type filter to backend categories
+				const typeMap: Record<string, string[]> = {
+					'tips': ['social'],
+					'purchases': ['shopping'],
+					'deposits': ['wallet'],
+					'rewards': ['earning'],
+					'admin': ['system']
+				};
+				
+				if (typeMap[typeFilter]) {
+					historyFilters.categories = typeMap[typeFilter];
+				}
+			}
+
+			// Use enhanced transaction history transformer
+			const { transactions: transformedTransactions, summary } = EconomyTransformer.toTransactionHistory(
+				txHistory,
+				requestingUser,
+				historyFilters
+			);
+
 			res.json({
-				transactions: txHistory,
+				transactions: transformedTransactions,
+				summary,
 				total: countResult?.count || 0,
 				page,
-				limit
+				limit,
+				filters: {
+					currency: currencyFilter,
+					type: typeFilter,
+					enhanced: true // Flag to indicate enhanced history format
+				}
 			});
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : String(error);

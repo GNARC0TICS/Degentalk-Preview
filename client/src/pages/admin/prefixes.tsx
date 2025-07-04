@@ -43,7 +43,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { ThreadPrefix } from '@/types/compat/forum';
-import type { PrefixId, CategoryId } from '@db/types';
+import type { PrefixId, CategoryId } from '@shared/types';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 
 // Define validation schema for prefixes

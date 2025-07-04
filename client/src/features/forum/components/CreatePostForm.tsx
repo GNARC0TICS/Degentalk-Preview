@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
-import type { ThreadId, PostId } from '@db/types';
+import type { ThreadId, PostId } from '@shared/types';
 import { useMutation } from '@tanstack/react-query';
 
 // Define a custom form schema instead of importing from shared/schema

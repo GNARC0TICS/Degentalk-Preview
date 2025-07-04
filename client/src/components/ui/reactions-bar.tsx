@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dialog } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import type { PostId } from '@db/types';
+import type { PostId } from '@shared/types';
 
 type Reaction = {
 	type: string;

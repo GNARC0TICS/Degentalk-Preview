@@ -10,7 +10,7 @@ import { Search, Filter, Users, TrendingUp, ChevronLeft, ChevronRight } from 'lu
 import { UserDirectoryTable } from '@/components/users/UserDirectoryTable';
 import { UserFilters } from '@/components/users/UserFilters';
 import { motion } from 'framer-motion';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 
 export interface DegenUser {
 	id: UserId;

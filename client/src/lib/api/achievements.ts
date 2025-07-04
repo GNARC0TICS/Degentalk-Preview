@@ -6,7 +6,7 @@
  */
 
 import { apiRequest } from '@/lib/api-request';
-import type { AchievementId } from '@db/types';
+import type { AchievementId } from '@shared/types';
 
 export interface UserAchievement {
 	id: AchievementId;

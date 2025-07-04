@@ -1,5 +1,5 @@
 import { db } from '@db';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { featureFlags, users } from '@schema'; // Corrected import
 import { logger, LogLevel } from '../../core/logger';
 import { eq, and } from 'drizzle-orm';

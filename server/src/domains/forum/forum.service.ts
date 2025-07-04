@@ -13,7 +13,7 @@ import type {
 	ForumStructureWithStats,
 	ThreadWithPostsAndUser
 } from '../../../db/types/forum.types';
-import type { ForumId } from '@db/types';
+import type { ForumId } from '@shared/types';
 
 // Import specialized services
 import { forumStructureService } from './services/structure.service';
@@ -21,7 +21,7 @@ import { threadService } from './services/thread.service';
 import { postService } from './services/post.service';
 import { configService } from './services/config.service';
 import { cacheService } from './services/cache.service';
-import type { ForumId, ParentForumId, StructureId, ThreadId, PostId } from '@/db/types';
+import type { ForumId, ParentForumId, StructureId, ThreadId, PostId } from '@shared/types';
 
 export interface ThreadSearchParams {
 	structureId?: StructureId;

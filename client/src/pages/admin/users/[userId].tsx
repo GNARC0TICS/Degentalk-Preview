@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, CheckCircle, XCircle, Gift } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { UserInventoryWithProduct, Product } from '@/types/inventory';
-import type { InventoryId } from '@db/types';
+import type { InventoryId } from '@shared/types';
 
 export default function AdminUserInventoryPage() {
 	const params = useParams();

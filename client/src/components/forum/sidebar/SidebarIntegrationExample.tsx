@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { DynamicSidebar } from './DynamicSidebar';
-import type { EntityId } from '@db/types';
+import type { EntityId } from '@shared/types';
 
 // BEFORE: Manual widget management
 // import { QuickStats } from '@/components/forum/QuickStats';

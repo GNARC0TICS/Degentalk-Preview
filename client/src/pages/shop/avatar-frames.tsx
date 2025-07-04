@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { Coins, Check, Sparkles } from 'lucide-react';
-import type { FrameId } from '@db/types';
+import type { FrameId } from '@shared/types';
 
 interface StoreFrame {
 	id: FrameId;

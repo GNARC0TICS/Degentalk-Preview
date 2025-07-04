@@ -6,7 +6,7 @@ import { userService } from '@server/src/core/services/user.service';
  */
 
 import type { Request, Response } from 'express';
-import type { ReportId, MessageId } from '@db/types';
+import type { ReportId, MessageId } from '@shared/types';
 import { adminReportsService } from './reports.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { getUserId } from '../../admin.middleware';

@@ -1,5 +1,5 @@
 import { apiRequest } from '@/lib/queryClient';
-import type { EntryId } from '@db/types';
+import type { EntryId } from '@shared/types';
 
 export const dictionaryApi = {
 	list: (params?: Record<string, any>) =>

@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { db } from '../../core/db';
 import { users } from '@schema/user/users';
 

@@ -11,7 +11,7 @@
  */
 
 import { logger } from '../../../core/logger';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { db } from '@db';
 import { dgtService } from '../wallet/dgt.service';
 import { tipService } from './tip/tip.service';

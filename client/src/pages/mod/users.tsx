@@ -63,7 +63,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { apiRequest } from '@/lib/queryClient';
-import type { BanId, WarningId } from '@db/types';
+import type { BanId, WarningId } from '@shared/types';
 
 // Types
 interface User {

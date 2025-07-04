@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { apiRequest } from '@/lib/queryClient';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
-import type { ThreadId } from '@db/types';
+import type { ThreadId } from '@shared/types';
 
 interface BookmarkButtonProps {
 	threadId: ThreadId;

@@ -23,7 +23,7 @@ import {
 } from '@schema';
 import { logger } from '../../core/logger';
 import { XpService } from '../xp/xp.service';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 
 export interface LevelInfo {
 	level: number;

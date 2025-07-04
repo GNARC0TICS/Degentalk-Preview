@@ -7,7 +7,7 @@ import type {
 	DepositAddress,
 	WalletBalances
 } from '@/types/wallet';
-import type { RoomId, TipId, VaultId, ActionId, UserId } from '@db/types';
+import type { RoomId, TipId, VaultId, ActionId, UserId } from '@shared/types';
 
 // API endpoint base URL
 const API_BASE_URL = '/api';

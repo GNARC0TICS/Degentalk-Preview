@@ -1,5 +1,5 @@
 import { apiRequest } from '@/lib/queryClient';
-import type { EntityId } from '@db/types';
+import type { EntityId } from '@shared/types';
 
 export type MediaType = 'emoji' | 'lottie' | 'badge' | 'title' | 'flair';
 

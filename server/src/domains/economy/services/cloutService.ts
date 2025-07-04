@@ -3,7 +3,7 @@ import { cloutAchievements, userCloutLog } from '@schema';
 import { users } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
-import type { UserId, AchievementId } from '@db/types';
+import type { UserId, AchievementId } from '@shared/types';
 
 export class CloutService {
 	constructor(private drizzle = db) {}

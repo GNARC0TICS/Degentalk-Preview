@@ -9,7 +9,7 @@ import { db } from '@db';
 import { wallets, transactions, users } from '@schema';
 import { eq, and, sql, desc } from 'drizzle-orm';
 import { walletConfigService } from './wallet-config.service';
-import type { ItemId, ActionId, WalletId, TransactionId } from '@/db/types';
+import type { ItemId, ActionId, WalletId, TransactionId, DgtAmount, UserId } from '@shared/types';
 
 export interface DGTTransactionMetadata {
 	source:
@@ -38,16 +38,16 @@ export interface DGTTransactionMetadata {
 }
 
 export interface DGTBalance {
-	userId: string;
-	balance: number;
+	userId: UserId;
+	balance: DgtAmount;
 	lastTransactionAt: Date | null;
 	walletId: WalletId;
 }
 
 export interface DGTTransaction {
 	id: TransactionId;
-	userId: string;
-	amount: number;
+	userId: UserId;
+	amount: DgtAmount;
 	type: string;
 	balanceAfter: number;
 	metadata: DGTTransactionMetadata;

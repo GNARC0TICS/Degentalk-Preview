@@ -5,7 +5,7 @@
  */
 
 import { db } from '@db';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import {
 	users,
 	transactions,
@@ -15,6 +15,7 @@ import {
 import type { Transaction } from '@schema';
 import { sql, eq, desc, and, inArray } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
+import { vanitySinkAnalyzer } from '../../../shop/services/vanity-sink.analyzer';
 import type {
 	TreasuryDepositInput,
 	TreasuryWithdrawalInput,
@@ -186,6 +187,22 @@ export class AdminTreasuryService {
 					isTreasuryTransaction: true
 				})
 				.returning();
+
+			// Track DGT burn for vanity sink analysis (recovery to treasury is effectively a burn)
+			await vanitySinkAnalyzer.trackBurn({
+				userId: userId,
+				orderId: newTransaction.id,
+				dgtBurned: transferAmountDgt,
+				burnType: 'burn',
+				source: 'treasury',
+				userLevel: 1, // TODO: Get actual user level
+				userLifetimeSpent: 0, // TODO: Get actual lifetime spending
+				metadata: {
+					adminUserId,
+					description: description || 'Recovery to treasury',
+					burnReason: 'admin_treasury_recovery'
+				}
+			});
 
 			return { ...newTransaction, amount: formatDgtAmount(newTransaction.amount || 0) };
 		});

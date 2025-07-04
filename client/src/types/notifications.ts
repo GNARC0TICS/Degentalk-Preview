@@ -2,7 +2,7 @@
  * Notifications
  */
 
-import type { UserId, ThreadId, PostId } from '@db/types';
+import type { UserId, ThreadId, PostId } from '@shared/types';
 export interface Notification {
 	id: UserId;
 	userId: UserId;

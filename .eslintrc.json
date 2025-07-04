@@ -32,6 +32,10 @@
 							{
 								"name": "../hooks/useForumStructure",
 								"message": "Deprecated: use the context hooks exported from '@/contexts/ForumStructureContext' instead."
+							},
+							{
+								"name": "@db/types",
+								"message": "CRITICAL: Frontend code must not import database types. Use '@shared/types' instead."
 							}
 						]
 					}
@@ -51,6 +55,18 @@
 							{
 								"name": "@server/src/core/database",
 								"message": "Deprecated: use '@db' or '@server/src/core/db' instead."
+							},
+							{
+								"name": "@db/types",
+								"message": "Use '@shared/types' instead of '@db/types' for branded IDs."
+							},
+							{
+								"name": "@db/types/id.types",
+								"message": "Use '@shared/types' instead of '@db/types' for branded IDs."
+							},
+							{
+								"name": "@db_types",
+								"message": "Use '@shared/types' branded ID module."
 							}
 						]
 					}

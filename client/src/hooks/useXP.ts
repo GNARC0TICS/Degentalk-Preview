@@ -3,7 +3,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { createSafeWebSocket } from '@/lib/safeWebSocket';
-import type { TitleId, BadgeId, LevelId } from '@db/types';
+import type { TitleId, BadgeId, LevelId } from '@shared/types';
 
 export interface Level {
 	level: number;

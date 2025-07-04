@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import { avatarFrameService } from './avatar-frames.service';
 import { logger } from '../../../../core/logger';
 import { z } from 'zod';
-import type { FrameId } from '@db/types';
+import type { FrameId } from '@shared/types';
 
 const createFrameSchema = z.object({
 	name: z.string().min(1, 'Name is required').max(255, 'Name must be less than 255 characters'),

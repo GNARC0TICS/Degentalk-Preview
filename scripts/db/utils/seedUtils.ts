@@ -1,4 +1,4 @@
-import type { AdminId } from '@db/types';
+import type { AdminId } from '@shared/types';
 import { db } from '../../../db';
 import { PgTransaction } from 'drizzle-orm/pg-core';
 

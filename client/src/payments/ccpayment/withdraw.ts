@@ -7,7 +7,7 @@
 import { ccpaymentClient } from './ccpayment-client';
 import { generateOrderId } from './utils';
 import { SupportedCurrency } from './types';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 
 /**
  * Withdrawal request parameters

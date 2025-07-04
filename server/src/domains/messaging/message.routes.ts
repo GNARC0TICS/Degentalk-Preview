@@ -6,14 +6,15 @@
 
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { z } from 'zod';
 import { db } from '@db';
-import { randomUUID } from 'crypto';
-import { eq, and, or, desc, sql } from 'drizzle-orm';
-import { messages, users } from '@schema';
+import { eq } from 'drizzle-orm';
+import { users } from '@schema';
 import { getUserIdFromRequest } from '@server/src/utils/auth';
 import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware/auth.middleware';
+import { MessageTransformer } from './transformers/message.transformer';
+import { MessageService } from './message.service';
 
 const router = Router();
 
@@ -25,42 +26,22 @@ router.get('/conversations', isAuthenticated, async (req: Request, res: Response
 			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
 		}
 
-		// Get unique conversations with last message and unread count
-		const conversations = await db.execute(sql`
-      WITH latest_messages AS (
-        SELECT 
-          CASE 
-            WHEN sender_id = ${userId} THEN recipient_id
-            ELSE sender_id
-          END AS conversation_user_id,
-          MAX(id) as latest_message_id
-        FROM messages
-        WHERE sender_id = ${userId} OR recipient_id = ${userId}
-        GROUP BY conversation_user_id
-      ),
-      unread_counts AS (
-        SELECT 
-          sender_id,
-          COUNT(*) as unread_count
-        FROM messages
-        WHERE recipient_id = ${userId} AND is_read = false
-        GROUP BY sender_id
-      )
-      SELECT 
-        u.id as user_id,
-        u.username,
-        u.avatar_url as "avatarUrl",
-        m.content as "lastMessage",
-        m.created_at as "lastMessageTime",
-        COALESCE(uc.unread_count, 0) as "unreadCount"
-      FROM latest_messages lm
-      JOIN messages m ON m.id = lm.latest_message_id
-      JOIN users u ON u.id = lm.conversation_user_id
-      LEFT JOIN unread_counts uc ON uc.sender_id = lm.conversation_user_id
-      ORDER BY m.created_at DESC
-    `);
+		// Get conversations using the service
+		const conversations = await MessageService.getConversations(userId);
 
-		res.json(conversations.rows);
+		// Get current user for transformation
+		const [currentUser] = await db
+			.select()
+			.from(users)
+			.where(eq(users.id, userId))
+			.limit(1);
+		
+		// Transform conversations for authenticated user
+		const transformedConversations = conversations.map(conversation => 
+			MessageTransformer.toAuthenticatedConversation(conversation, currentUser, conversation.participants)
+		);
+		
+		res.json(transformedConversations);
 	} catch (error) {
 		console.error('Error getting conversations:', error);
 		res.status(500).json({ message: 'Failed to get conversations' });
@@ -80,26 +61,33 @@ router.get('/conversation/:userId', isAuthenticated, async (req: Request, res: R
 			return res.status(400).json({ message: 'Invalid user ID' });
 		}
 
-		// Get messages between the two users
-		const conversationMessages = await db
-			.select({
-				id: messages.id,
-				senderId: messages.senderId,
-				recipientId: messages.recipientId,
-				content: messages.content,
-				timestamp: messages.createdAt,
-				isRead: messages.isRead
-			})
-			.from(messages)
-			.where(
-				or(
-					and(eq(messages.senderId, currentUserId), eq(messages.recipientId, otherUserId)),
-					and(eq(messages.senderId, otherUserId), eq(messages.recipientId, currentUserId))
-				)
-			)
-			.orderBy(messages.createdAt);
+		// Get messages using the service
+		const conversationMessages = await MessageService.getMessageThread(currentUserId, otherUserId);
 
-		res.json(conversationMessages);
+		// Get other user details
+		const [otherUser] = await db
+			.select()
+			.from(users)
+			.where(eq(users.id, otherUserId))
+			.limit(1);
+
+		// Get current user details
+		const [currentUser] = await db
+			.select()
+			.from(users)
+			.where(eq(users.id, currentUserId))
+			.limit(1);
+
+		// Transform messages for authenticated user
+		const messageThread = {
+			participants: [currentUser, otherUser],
+			messages: conversationMessages.map(message => 
+				MessageTransformer.toAuthenticatedMessage(message, currentUser)
+			),
+			totalCount: conversationMessages.length
+		};
+
+		res.json(messageThread);
 	} catch (error) {
 		console.error('Error getting conversation messages:', error);
 		res.status(500).json({ message: 'Failed to get conversation messages' });
@@ -121,39 +109,23 @@ router.post('/send', isAuthenticated, async (req: Request, res: Response) => {
 			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
 		}
 
-		// Check if recipient exists
-		const recipientExists = await db
-			.select({ id: users.id })
+		// Send message using the service
+		const newMessage = await MessageService.sendMessage(senderId, { recipientId, content });
+
+		// Get current user details for transformation
+		const [currentUser] = await db
+			.select()
 			.from(users)
-			.where(eq(users.id, recipientId))
+			.where(eq(users.id, senderId))
 			.limit(1);
 
-		if (recipientExists.length === 0) {
-			return res.status(404).json({ message: 'Recipient not found' });
-		}
+		// Transform the message before sending response
+		const transformedMessage = MessageTransformer.toAuthenticatedMessage(
+			newMessage,
+			currentUser
+		);
 
-		// Don't allow sending messages to self
-		if (senderId === recipientId) {
-			return res.status(400).json({ message: 'Cannot send messages to yourself' });
-		}
-
-		// Insert the new message
-		const [newMessage] = await db
-			.insert(messages)
-			.values({
-				id: parseInt(Date.now().toString().slice(-9)),
-				uuid: randomUUID(),
-				senderId,
-				recipientId,
-				content,
-				isRead: false,
-				isDeleted: false,
-				createdAt: new Date(),
-				updatedAt: new Date()
-			})
-			.returning();
-
-		res.status(201).json(newMessage);
+		res.status(201).json(transformedMessage);
 	} catch (error) {
 		console.error('Error sending message:', error);
 		if (error instanceof z.ZodError) {
@@ -176,20 +148,8 @@ router.post('/mark-read/:userId', isAuthenticated, async (req: Request, res: Res
 			return res.status(400).json({ message: 'Invalid user ID' });
 		}
 
-		// Update all unread messages from the sender to the current user
-		await db
-			.update(messages)
-			.set({
-				isRead: true,
-				updatedAt: new Date()
-			})
-			.where(
-				and(
-					eq(messages.senderId, senderId),
-					eq(messages.recipientId, currentUserId),
-					eq(messages.isRead, false)
-				)
-			);
+		// Mark messages as read using the service
+		await MessageService.markMessagesAsRead(currentUserId, senderId);
 
 		res.json({ success: true, message: 'Messages marked as read' });
 	} catch (error) {
@@ -211,19 +171,8 @@ router.delete('/conversation/:userId', isAuthenticated, async (req: Request, res
 			return res.status(400).json({ message: 'Invalid user ID' });
 		}
 
-		// Soft delete all messages between the two users
-		await db
-			.update(messages)
-			.set({
-				isDeleted: true,
-				updatedAt: new Date()
-			})
-			.where(
-				or(
-					and(eq(messages.senderId, currentUserId), eq(messages.recipientId, otherUserId)),
-					and(eq(messages.senderId, otherUserId), eq(messages.recipientId, currentUserId))
-				)
-			);
+		// Delete conversation using the service
+		await MessageService.deleteConversation(currentUserId, otherUserId);
 
 		res.json({ success: true, message: 'Conversation deleted' });
 	} catch (error) {
@@ -240,24 +189,94 @@ router.get('/unread-count', isAuthenticated, async (req: Request, res: Response)
 			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
 		}
 
-		// Count unread messages for the current user
-		const result = await db
-			.select({ count: sql<number>`count(*)` })
-			.from(messages)
-			.where(
-				and(
-					eq(messages.recipientId, userId),
-					eq(messages.isRead, false),
-					eq(messages.isDeleted, false)
-				)
-			);
-
-		const total = result[0]?.count || 0;
+		// Get unread count using the service
+		const total = await MessageService.getUnreadCount(userId);
 
 		res.json({ total });
 	} catch (error) {
 		console.error('Error getting unread count:', error);
 		res.status(500).json({ message: 'Failed to get unread message count' });
+	}
+});
+
+// Edit a message
+router.put('/message/:messageId', isAuthenticated, async (req: Request, res: Response) => {
+	try {
+		const editMessageSchema = z.object({
+			content: z.string().min(1).max(2000)
+		});
+
+		const { content } = editMessageSchema.parse(req.body);
+		const messageId = req.params.messageId;
+		const userId = getUserIdFromRequest(req);
+
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+		}
+
+		await MessageService.editMessage(messageId, userId, content);
+
+		res.json({ success: true, message: 'Message edited successfully' });
+	} catch (error) {
+		console.error('Error editing message:', error);
+		if (error instanceof z.ZodError) {
+			return res.status(400).json({ message: 'Invalid message data', errors: error.errors });
+		}
+		if (error instanceof Error) {
+			return res.status(400).json({ message: error.message });
+		}
+		res.status(500).json({ message: 'Failed to edit message' });
+	}
+});
+
+// Delete a single message
+router.delete('/message/:messageId', isAuthenticated, async (req: Request, res: Response) => {
+	try {
+		const messageId = req.params.messageId;
+		const userId = getUserIdFromRequest(req);
+
+		if (userId === undefined) {
+			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+		}
+
+		await MessageService.deleteMessage(messageId, userId);
+
+		res.json({ success: true, message: 'Message deleted successfully' });
+	} catch (error) {
+		console.error('Error deleting message:', error);
+		if (error instanceof Error) {
+			return res.status(400).json({ message: error.message });
+		}
+		res.status(500).json({ message: 'Failed to delete message' });
+	}
+});
+
+// Admin: Get all messages for moderation
+router.get('/admin/messages', isAdminOrModerator, async (req: Request, res: Response) => {
+	try {
+		const { userId, page = 1, limit = 50 } = req.query;
+		
+		// Get messages for admin moderation view
+		const messages = await MessageService.getMessagesForModeration({ 
+			userId: userId as string, 
+			page: parseInt(page as string), 
+			limit: parseInt(limit as string) 
+		});
+		
+		// Transform messages for admin view
+		const transformedMessages = messages.map(message => 
+			MessageTransformer.toAdminMessage(message)
+		);
+		
+		res.json({ 
+			messages: transformedMessages,
+			total: messages.length,
+			page: parseInt(page as string),
+			limit: parseInt(limit as string)
+		});
+	} catch (error) {
+		console.error('Error getting messages for moderation:', error);
+		res.status(500).json({ message: 'Failed to get messages for moderation' });
 	}
 });
 

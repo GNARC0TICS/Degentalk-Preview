@@ -1,4 +1,4 @@
-import type { UserId, ItemId, FrameId, BadgeId, TitleId } from '@db/types/id.types';
+import type { UserId, ItemId, FrameId, BadgeId, TitleId } from '@shared/types';
 
 /**
  * Cosmetics Domain Types

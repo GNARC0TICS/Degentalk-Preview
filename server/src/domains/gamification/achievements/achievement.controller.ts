@@ -6,7 +6,7 @@
  */
 
 import type { Request, Response } from 'express';
-import type { AchievementId } from '@db/types';
+import type { AchievementId } from '@shared/types';
 import { AchievementProcessorService } from './achievement-processor.service';
 import { AchievementAdminService } from './achievement-admin.service';
 import { AchievementEventEmitter } from '../../../core/events/achievement-events.service';

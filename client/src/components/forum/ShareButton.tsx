@@ -1,4 +1,4 @@
-import type { ThreadId } from '@db/types';
+import type { ThreadId } from '@shared/types';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Share2 } from 'lucide-react';

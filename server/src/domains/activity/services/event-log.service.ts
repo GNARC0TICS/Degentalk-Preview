@@ -2,7 +2,7 @@ import { db } from '../../../core/db';
 import { eventLogs } from '@schema/system/event_logs';
 import { users } from '@schema/user/users';
 import { eq, and, gte, lte, desc, inArray } from 'drizzle-orm';
-import type { EventLogFilters, EventLogPagination } from '@db_types/system.types';
+import type { EventLogFilters, EventLogPagination } from '@shared/types';
 import type { InsertEventLog } from '@schema/system/event_logs';
 
 /**

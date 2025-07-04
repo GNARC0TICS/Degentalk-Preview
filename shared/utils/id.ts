@@ -5,7 +5,7 @@
  * from numeric IDs to UUID-based branded types.
  */
 
-import type { Id } from '@db/types';
+import type { Id } from '@shared/types';
 
 /**
  * Type-safe ID constructor that ensures proper branding

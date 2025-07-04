@@ -1,4 +1,4 @@
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { apiRequest } from '@/lib/queryClient';
 import type { ActiveUser } from '@/components/users/ActiveMembersWidget';
 

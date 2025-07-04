@@ -1,4 +1,4 @@
-import type { TransactionId, UserId } from '@db/types';
+import type { TransactionId, UserId } from '@shared/types';
 import {
 	users,
 	posts,

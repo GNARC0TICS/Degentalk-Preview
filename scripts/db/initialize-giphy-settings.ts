@@ -1,4 +1,4 @@
-import type { AdminId } from '@db/types';
+import type { AdminId } from '@shared/types';
 import { db } from '@db';
 import { siteSettings } from '../../shared/schema';
 import { eq } from 'drizzle-orm';

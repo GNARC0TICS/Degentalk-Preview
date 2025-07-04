@@ -6,7 +6,7 @@
  */
 
 import { db } from '@server/src/core/db';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { logger } from '@server/src/core/logger';
 import { sql } from 'drizzle-orm';
 

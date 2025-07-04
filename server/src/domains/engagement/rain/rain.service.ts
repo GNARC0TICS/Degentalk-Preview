@@ -9,7 +9,7 @@
  */
 
 import { db } from '@db';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import {
 	transactions,
 	users,
@@ -24,6 +24,7 @@ import { WalletError, ErrorCodes as WalletErrorCodes } from '../../../core/error
 import { dgtService } from '../../../domains/wallet/dgt.service';
 import { walletService } from '../../../domains/wallet/wallet.service';
 import { WalletService } from '../../wallet/wallet.service';
+import { vanitySinkAnalyzer } from '../../shop/services/vanity-sink.analyzer';
 import type { ActionId } from '@/db/types';
 
 // Constants
@@ -212,6 +213,23 @@ export class RainService {
 					recipients,
 					rainTransaction.id
 				);
+				
+				// Track DGT burn for vanity sink analysis
+				await vanitySinkAnalyzer.trackBurn({
+					userId: senderUserId,
+					orderId: rainTransaction.id,
+					dgtBurned: amount,
+					burnType: 'event',
+					source: 'rain',
+					userLevel: 1, // TODO: Get actual user level
+					userLifetimeSpent: 0, // TODO: Get actual lifetime spending
+					metadata: {
+						recipientCount,
+						perUserAmount,
+						source,
+						burnReason: 'rain_distribution'
+					}
+				});
 			} else {
 				// For crypto, we don't currently support direct transfers
 				// Instead, we could convert to DGT or implement when CCPayment supports it

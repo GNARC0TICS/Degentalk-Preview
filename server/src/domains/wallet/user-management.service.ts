@@ -2,7 +2,7 @@ import { db } from '@db';
 import { ccpaymentUsers, users, cryptoWallets } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { CCPaymentService } from './ccpayment.service';
-import type { CoinId } from '@/db/types';
+import type { CoinId } from '@shared/types';
 
 /**
  * User Management Service for CCPayment Integration

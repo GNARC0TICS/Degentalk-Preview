@@ -8,7 +8,7 @@ import { Router } from 'express';
 import { adminForumController } from './forum.controller';
 import { asyncHandler } from '../../admin.middleware';
 import { forumPrefixService } from '../forumPrefix/forumPrefix.service';
-import type { PrefixId } from '@db/types';
+import type { PrefixId } from '@shared/types';
 
 const router = Router();
 

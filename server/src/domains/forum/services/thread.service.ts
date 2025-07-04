@@ -27,7 +27,7 @@ import type {
 	ThreadWithUserAndCategory
 } from '../../../../db/types/forum.types';
 import { eventLogger } from '../../activity/services/event-logger.service';
-import type { ForumId, StructureId, ThreadId, UserId, PostId, TagId } from '@/db/types';
+import type { ForumId, StructureId, ThreadId, UserId, PostId, TagId } from '@shared/types';
 
 // Using centralized cache service (Redis with in-memory fallback)
 

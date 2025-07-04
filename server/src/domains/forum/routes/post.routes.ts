@@ -17,7 +17,8 @@ import {
 	requirePostDeletePermission
 } from '../services/permissions.service';
 import { asyncHandler } from '@server/src/core/errors';
-import type { ThreadId, PostId, UserId } from '@/db/types';
+import type { ThreadId, PostId, UserId } from '@shared/types';
+import { ForumTransformer } from '../transformers/forum.transformer';
 
 const router = Router();
 
@@ -66,9 +67,13 @@ router.post(
 				replyToPostId: validatedData.replyToPostId
 			});
 
+			// Transform post response using ForumTransformer for authenticated user
+			const requestingUser = userService.getUserFromRequest(req);
+			const transformedPost = ForumTransformer.toAuthenticatedPost(newPost, requestingUser);
+
 			res.status(201).json({
 				success: true,
-				data: newPost
+				data: transformedPost
 			});
 		} catch (error) {
 			logger.error('PostRoutes', 'Error in POST /posts', { error });
@@ -104,9 +109,13 @@ router.put(
 				content: validatedData.content
 			});
 
+			// Transform post response using ForumTransformer for authenticated user
+			const requestingUser = userService.getUserFromRequest(req);
+			const transformedPost = ForumTransformer.toAuthenticatedPost(updatedPost, requestingUser);
+
 			res.json({
 				success: true,
-				data: updatedPost
+				data: transformedPost
 			});
 		} catch (error) {
 			logger.error('PostRoutes', 'Error in PUT /posts/:id', { error });
@@ -250,9 +259,17 @@ router.get(
 
 			const replies = await postService.getPostReplies(postId);
 
+			// Transform post replies using ForumTransformer based on user context
+			const requestingUser = userService.getUserFromRequest(req);
+			const transformedReplies = replies.map(reply => {
+				return requestingUser ? 
+					ForumTransformer.toAuthenticatedPost(reply, requestingUser) :
+					ForumTransformer.toPublicPost(reply);
+			});
+
 			res.json({
 				success: true,
-				data: replies
+				data: transformedReplies
 			});
 		} catch (error) {
 			logger.error('PostRoutes', 'Error in GET /posts/:postId/replies', { error });

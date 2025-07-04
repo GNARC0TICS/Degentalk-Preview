@@ -10,7 +10,7 @@
  */
 
 import { db } from '@db';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { logger } from '@server/src/core/logger';
 import { ShoutboxCacheService } from './cache.service';
 import { eq, and, desc, asc, sql, gte, lte, inArray } from 'drizzle-orm';

@@ -1,4 +1,4 @@
-import type { UserId, WalletId } from '@db/types/id.types';
+import type { UserId, WalletId } from '@shared/types';
 import type { UserRole } from '@db/schema/core/enums';
 
 // UserLevel is a numeric value, not an enum

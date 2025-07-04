@@ -1,6 +1,6 @@
 import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
-import type { EntityId } from '@db/types';
+import type { EntityId } from '@shared/types';
 import { z } from 'zod';
 import { insertAnnouncementSchema } from '@schema';
 import {

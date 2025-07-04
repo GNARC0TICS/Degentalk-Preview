@@ -1,4 +1,4 @@
-import type { AdminId } from '@db/types';
+import type { AdminId } from '@shared/types';
 import fs from 'fs/promises';
 import path from 'path';
 import { glob } from 'glob';

@@ -284,3 +284,7 @@ export type OrderItemId = Id<'orderitem'>;
 export type ProductCategoryId = Id<'productcategory'>;
 export type ProductMediaId = Id<'productmedia'>;
 export type SignatureShopItemId = Id<'signatureshopitem'>;
+
+// TEMPORARY BRIDGE: Export shared types for gradual migration
+// This allows @db/types imports to work while we migrate to @shared/types
+export * from '@shared/types/ids';

@@ -5,7 +5,7 @@
  */
 
 import type { Request, Response } from 'express';
-import type { GroupId } from '@db/types';
+import type { GroupId } from '@shared/types';
 import { adminUserGroupsService } from './user-groups.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { getUserId } from '../../admin.middleware';

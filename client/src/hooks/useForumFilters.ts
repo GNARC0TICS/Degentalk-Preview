@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useLocation, useSearch } from 'wouter';
 import type { ThreadFiltersState, ThreadSortOption } from '@/components/forum/ThreadFilters';
-import type { TagId } from '@db/types';
+import type { TagId } from '@shared/types';
 import type { PrefixId } from '@/types/ids';
 
 interface UseForumFiltersOptions {

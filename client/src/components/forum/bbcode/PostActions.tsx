@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { brandConfig } from '@/config/brand.config';
-import type { PostId } from '@db/types';
+import type { PostId } from '@shared/types';
 
 interface PostActionsProps {
 	postId: PostId;

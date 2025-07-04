@@ -1,4 +1,4 @@
-import type { RuntimeBrandConfig, BrandConfigUpdate } from '@db_types/brand.types';
+import type { RuntimeBrandConfig, BrandConfigUpdate } from '@shared/types';
 import { brandConfigurations } from '@schema/admin/brandConfig';
 import { db } from '@server/src/core/db';
 import { eq, desc } from 'drizzle-orm';

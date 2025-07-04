@@ -14,7 +14,7 @@ import {
 	roles as rolesTable,
 	forumStructure
 } from '@schema';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { eq, sql, lte, desc, and, isNull } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 import { getLevelForXp, getXpForLevel } from '@shared/economy/reward-calculator';

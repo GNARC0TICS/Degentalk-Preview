@@ -13,7 +13,7 @@ import { userService } from '@server/src/core/services/user.service';
 
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import type { MessageId, RoomId, UserId } from '@db/types';
+import type { MessageId, RoomId, UserId } from '@shared/types';
 import { db } from '@db';
 import {
 	shoutboxMessages,

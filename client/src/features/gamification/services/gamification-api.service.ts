@@ -10,7 +10,7 @@
  */
 
 import { apiRequest } from '@/lib/queryClient';
-import type { UserId, AchievementId, MissionId } from '@db/types';
+import type { UserId, AchievementId, MissionId } from '@shared/types';
 
 // Types for API responses
 export interface LevelInfo {

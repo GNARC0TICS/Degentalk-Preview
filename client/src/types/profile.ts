@@ -1,4 +1,4 @@
-import type { UserId, FrameId, TitleId, BadgeId, ProductId } from '@db/types';
+import type { UserId, FrameId, TitleId, BadgeId, ProductId } from '@shared/types';
 
 export interface ProfileData {
 	id: string;

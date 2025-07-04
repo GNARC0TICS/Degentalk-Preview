@@ -12,7 +12,7 @@ import { airdropService, AirdropOptions } from './airdrop.service';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../../core/errors';
 import { asyncHandler } from '../../../core/errors';
 import { logger } from '../../../core/logger';
-import type { EntityId } from '@db/types';
+import type { EntityId } from '@shared/types';
 
 /**
  * Controller for airdrop functionality

@@ -1,5 +1,5 @@
 import { userService } from '@server/src/core/services/user.service';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 /**
  * XP Path Routes
  * Handles API endpoints for the XP path specialization system

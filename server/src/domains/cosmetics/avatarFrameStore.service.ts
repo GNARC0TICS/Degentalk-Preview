@@ -1,6 +1,6 @@
 import { db } from '@db';
 import { products, avatarFrames, userOwnedFrames } from '@schema';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { eq, and } from 'drizzle-orm';
 import { dgtService } from '../wallet/dgt.service';
 

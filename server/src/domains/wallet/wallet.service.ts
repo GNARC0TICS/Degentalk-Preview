@@ -13,7 +13,7 @@ import { CCPaymentService } from './ccpayment.service';
 import { UserManagementService } from './user-management.service';
 import { walletConfigService } from './wallet-config.service';
 import { dgtService } from './dgt.service';
-import type { CoinId, ActionId } from '@/db/types';
+import type { CoinId, ActionId } from '@shared/types';
 
 /**
  * High-level Wallet Service
@@ -92,10 +92,14 @@ export class WalletService {
 				}
 			}
 
+			// Transform DGT balance for consistent response format
+			const transformedDgtBalance: DgtAmount = EconomyTransformer['sanitizeDgtAmount'](dgtBalance.balance) as DgtAmount;
+
 			return {
 				dgt: {
-					balance: dgtBalance.balance,
-					lastTransactionAt: dgtBalance.lastTransactionAt
+					balance: transformedDgtBalance,
+					lastTransactionAt: dgtBalance.lastTransactionAt,
+					usdValue: EconomyTransformer['calculateUsdValue'](transformedDgtBalance) as UsdAmount
 				},
 				crypto: cryptoBalances
 			};

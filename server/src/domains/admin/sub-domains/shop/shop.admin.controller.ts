@@ -1,13 +1,20 @@
 import { db } from '@db'; // Adjust path to your db instance
 import { products } from '@schema'; // Adjust path to your schema
 import { eq, desc, and } from 'drizzle-orm';
+import { ShopTransformer } from '../../transformers/shop.transformer';
 
 export const shopAdminController = {
 	// List all products
 	async listProducts(req, res) {
 		// TODO: Add pagination, filtering, sorting
 		const allProducts = await db.select().from(products).orderBy(desc(products.createdAt));
-		res.json(allProducts);
+		
+		// Transform products for admin view
+		const transformedProducts = allProducts.map(product => 
+			ShopTransformer.toAdminShopItem(product)
+		);
+		
+		res.json(transformedProducts);
 	},
 
 	// Create a new product
@@ -73,7 +80,11 @@ export const shopAdminController = {
 			if (product.length === 0) {
 				return res.status(404).json({ message: 'Product not found' });
 			}
-			res.json(product[0]);
+			
+			// Transform product for admin view
+			const transformedProduct = ShopTransformer.toAdminShopItem(product[0]);
+			
+			res.json(transformedProduct);
 		} catch (error) {
 			console.error('Error fetching product by ID:', error);
 			res.status(500).json({ message: 'Error fetching product by ID', error: error.message });
@@ -111,7 +122,10 @@ export const shopAdminController = {
 			if (updatedProduct.length === 0) {
 				return res.status(404).json({ message: 'Product not found' });
 			}
-			res.json(updatedProduct[0]);
+			// Transform updated product for admin view
+			const transformedProduct = ShopTransformer.toAdminShopItem(updatedProduct[0]);
+			
+			res.json(transformedProduct);
 		} catch (error) {
 			console.error('Error updating product:', error);
 			res.status(500).json({ message: 'Error updating product', error: error.message });

@@ -50,7 +50,7 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
 		}
 
 		const roleId = req.headers['x-dev-role-id']
-			? req.headers['x-dev-role-id'] as string, 10
+			? parseInt(req.headers['x-dev-role-id'] as string, 10)
 			: devRole === 'admin'
 				? 1
 				: devRole === 'moderator'
@@ -89,7 +89,7 @@ export function isAuthenticatedOptional(req: Request, res: Response, next: NextF
 		// Get the dev mode role from headers or default to 'user'
 		const devRole = (req.headers['x-dev-role'] as string) || 'user';
 		const roleId = req.headers['x-dev-role-id']
-			? req.headers['x-dev-role-id'] as string, 10
+			? parseInt(req.headers['x-dev-role-id'] as string, 10)
 			: devRole === 'admin'
 				? 1
 				: devRole === 'moderator'
@@ -137,7 +137,7 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
 		});
 
 		const roleId = req.headers['x-dev-role-id']
-			? req.headers['x-dev-role-id'] as string, 10
+			? parseInt(req.headers['x-dev-role-id'] as string, 10)
 			: 1;
 
 		(req as any).user = createMockUser(roleId, 'admin');
@@ -171,7 +171,7 @@ export function isModerator(req: Request, res: Response, next: NextFunction) {
 		});
 		const devRole = req.headers['x-dev-role'] as 'moderator' | 'admin';
 		const roleId = req.headers['x-dev-role-id']
-			? req.headers['x-dev-role-id'] as string, 10
+			? parseInt(req.headers['x-dev-role-id'] as string, 10)
 			: devRole === 'admin'
 				? 1
 				: 2;

@@ -3,7 +3,7 @@ import { avatarFrames, users } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
 import type { AvatarFrame } from '@schema';
-import type { FrameId } from '@db/types';
+import type { FrameId } from '@shared/types';
 
 interface CreateFrameData {
 	name: string;

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { cn } from '@/lib/utils';
-import type { ThreadId } from '@db/types';
+import type { ThreadId } from '@shared/types';
 
 interface QuickReplyBoxProps {
 	threadId: ThreadId;

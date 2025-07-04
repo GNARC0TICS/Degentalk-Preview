@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 import { brandConfig } from '@/config/brand.config';
 import { cn } from '@/lib/utils';
-import type { PostId } from '@db/types';
+import type { PostId } from '@shared/types';
 
 interface PostHeaderProps {
 	postId: PostId;

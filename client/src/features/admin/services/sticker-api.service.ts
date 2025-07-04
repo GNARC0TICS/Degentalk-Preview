@@ -5,7 +5,7 @@
  */
 
 import { apiRequest } from '@/lib/queryClient';
-import type { PackId, StickerId } from '@db/types';
+import type { PackId, StickerId } from '@shared/types';
 
 // Types
 export interface Sticker {

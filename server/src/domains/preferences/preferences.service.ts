@@ -19,7 +19,7 @@ import type {
 	PasswordChangeInput,
 	DisplayPreferencesInput
 } from './preferences.validators';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import bcrypt from 'bcrypt';
 
 /**

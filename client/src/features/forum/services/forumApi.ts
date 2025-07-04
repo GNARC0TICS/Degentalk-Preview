@@ -14,7 +14,7 @@ import type {
 	ThreadWithPostsAndUser
 } from '@/types/compat/forum';
 import type { ApiErrorData } from '@/types/core.types';
-import type { ReportId, ForumId, TagId, ContentId, PrefixId, ThreadId, PostId } from '@db/types';
+import type { ReportId, ForumId, TagId, ContentId, PrefixId, ThreadId, PostId } from '@shared/types';
 
 export interface ThreadSearchParams {
 	structureId?: ForumId;

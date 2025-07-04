@@ -4,7 +4,7 @@
  */
 import { db } from '@db';
 import { sql } from 'drizzle-orm';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 
 interface XpPath {
 	id: string;

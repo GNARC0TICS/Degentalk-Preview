@@ -7,7 +7,7 @@
 
 import { logger } from '../../core/logger';
 import { WalletError, ErrorCodes } from '../../core/errors';
-import type { UserId } from '@/db/types';
+import type { UserId } from '@shared/types';
 
 // Import specialized services
 import { ccpaymentApiService } from './services/ccpayment-api.service';
@@ -275,6 +275,60 @@ export class CCPaymentService {
 	 */
 	async getUserTotalUSDValue(ccPaymentUserId: string): Promise<number> {
 		return ccpaymentBalanceService.getTotalUSDValue(ccPaymentUserId);
+	}
+
+	/**
+	 * Get token information with logo and network details
+	 */
+	async getTokenInfo(coinId: number) {
+		return ccpaymentTokenService.getTokenInfo(coinId);
+	}
+
+	/**
+	 * Get current token prices in USDT
+	 */
+	async getTokenPrices(coinIds: number[]) {
+		return ccpaymentTokenService.getTokenPrices(coinIds);
+	}
+
+	/**
+	 * Get withdrawal fee for specific token and chain
+	 */
+	async getWithdrawFee(coinId: number, chain: string) {
+		return ccpaymentTokenService.getWithdrawFee(coinId, chain);
+	}
+
+	/**
+	 * Check if withdrawal address is valid
+	 */
+	async checkWithdrawalAddressValidity(chain: string, address: string) {
+		return ccpaymentTokenService.checkWithdrawalAddressValidity(chain, address);
+	}
+
+	/**
+	 * Rescan lost transaction
+	 */
+	async rescanLostTransaction(params: {
+		chain: string;
+		toAddress: string;
+		txId: string;
+		memo?: string;
+	}) {
+		return ccpaymentTokenService.rescanLostTransaction(params);
+	}
+
+	/**
+	 * Get app balance list (merchant balances)
+	 */
+	async getAppBalanceList() {
+		return ccpaymentTokenService.getAppBalanceList();
+	}
+
+	/**
+	 * Get specific app coin balance
+	 */
+	async getAppCoinBalance(coinId: number) {
+		return ccpaymentTokenService.getAppCoinBalance(coinId);
 	}
 }
 

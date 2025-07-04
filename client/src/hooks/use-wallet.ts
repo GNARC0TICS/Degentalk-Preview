@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { walletApiService } from '@/features/wallet/services/wallet-api.service';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import { formatDgt, parseDgt, formatUsd } from '@/utils/format';
 
 // Import types from wallet API service
 import type {

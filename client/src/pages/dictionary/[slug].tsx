@@ -7,7 +7,7 @@ import { ErrorDisplay } from '@/components/ui/error-display';
 import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/tooltip';
 import { dictionaryApi } from '@/features/dictionary/services/dictionaryApi';
-import type { DictionaryEntryId } from '@db/types';
+import type { DictionaryEntryId } from '@shared/types';
 
 interface DictionaryEntry {
 	id: DictionaryEntryId;

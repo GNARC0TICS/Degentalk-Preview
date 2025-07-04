@@ -50,7 +50,7 @@ import type { Tag, ThreadPrefix as Prefix } from '@/types/forum';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedRules } from '@/contexts/ForumStructureContext';
 import { usePermission } from '@/hooks/usePermission';
-import type { DraftId } from '@db/types';
+import type { DraftId } from '@shared/types';
 
 interface DraftData {
 	id: DraftId;

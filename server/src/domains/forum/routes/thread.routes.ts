@@ -22,7 +22,8 @@ import { threadService } from '../services/thread.service';
 import { postService } from '../services/post.service';
 import { logger } from '@server/src/core/logger';
 import { asyncHandler } from '@server/src/core/errors';
-import type { ThreadId, PostId, StructureId } from '@/db/types';
+import type { ThreadId, PostId, StructureId } from '@shared/types';
+import { ForumTransformer } from '../transformers/forum.transformer';
 
 const router = Router();
 
@@ -77,8 +78,20 @@ router.get(
 				search
 			});
 
+			// Get user context for permissions and personalization
+			const requestingUser = userService.getUserFromRequest(req);
+			
+			// Transform threads using ForumTransformer based on user context
+			const transformedThreads = result.threads.map(thread => {
+				if (requestingUser) {
+					return ForumTransformer.toSlimThread(thread);
+				} else {
+					return ForumTransformer.toPublicThread(thread);
+				}
+			});
+
 			logger.debug('ThreadRoutes', 'Thread search results', {
-				threadCount: result.threads.length,
+				threadCount: transformedThreads.length,
 				total: result.total,
 				page: result.page,
 				totalPages: result.totalPages
@@ -87,7 +100,7 @@ router.get(
 			res.json({
 				success: true,
 				data: {
-					threads: result.threads,
+					threads: transformedThreads,
 					pagination: {
 						page,
 						limit: limit,
@@ -126,9 +139,17 @@ router.get(
 				});
 			}
 
+			// Get user context for permissions and personalization
+			const requestingUser = userService.getUserFromRequest(req);
+			
+			// Transform thread using ForumTransformer based on user context
+			const transformedThread = requestingUser ? 
+				ForumTransformer.toAuthenticatedThread(thread, requestingUser) :
+				ForumTransformer.toPublicThread(thread);
+
 			res.json({
 				success: true,
-				data: thread
+				data: transformedThread
 			});
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in GET /threads/:id', { error });
@@ -158,9 +179,17 @@ router.get(
 			// Increment view count
 			await threadService.incrementViewCount(thread.id);
 
+			// Get user context for permissions and personalization
+			const requestingUser = userService.getUserFromRequest(req);
+			
+			// Transform thread using ForumTransformer based on user context
+			const transformedThread = requestingUser ? 
+				ForumTransformer.toAuthenticatedThread(thread, requestingUser) :
+				ForumTransformer.toPublicThread(thread);
+
 			res.json({
 				success: true,
-				data: thread
+				data: transformedThread
 			});
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in GET /threads/slug/:slug', { error });
@@ -349,10 +378,20 @@ router.get(
 				sortBy: sortBy as any
 			});
 
+			// Get user context for permissions and personalization
+			const requestingUser = userService.getUserFromRequest(req);
+			
+			// Transform posts using ForumTransformer based on user context
+			const transformedPosts = result.posts.map(post => {
+				return requestingUser ? 
+					ForumTransformer.toAuthenticatedPost(post, requestingUser) :
+					ForumTransformer.toPublicPost(post);
+			});
+
 			res.json({
 				success: true,
 				data: {
-					posts: result.posts,
+					posts: transformedPosts,
 					pagination: {
 						page: result.page,
 						limit,

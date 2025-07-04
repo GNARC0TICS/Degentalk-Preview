@@ -10,7 +10,7 @@ import { db } from '@db';
 import { posts, threads, forumStructure } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
-import type { EntityId, ForumId, UserId, PostId, ThreadId } from '@/db/types';
+import type { EntityId, ForumId, UserId, PostId, ThreadId } from '@shared/types';
 
 export interface User {
 	id: UserId;

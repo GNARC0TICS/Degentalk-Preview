@@ -1,4 +1,4 @@
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import React from 'react';
 // Link is not used directly in CanonicalZoneGrid if ZoneCard handles its own linking.
 // import { Link } from 'wouter';

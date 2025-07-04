@@ -1,4 +1,4 @@
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 // Centralized route constants for use in <Link> and router calls
 // Usage: import { ROUTES } from '@/constants/routes';
 

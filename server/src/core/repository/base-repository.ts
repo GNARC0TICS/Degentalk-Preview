@@ -9,7 +9,7 @@ import { db } from '@db';
 import { sql, eq, and, or, SQL, count, desc, asc } from 'drizzle-orm';
 import type { AnyPgColumn, AnyPgTable } from 'drizzle-orm/pg-core';
 import { logger } from '../logger';
-import type { EntityId } from '@db/types';
+import type { EntityId } from '@shared/types';
 
 export interface PaginationOptions {
 	page?: number;

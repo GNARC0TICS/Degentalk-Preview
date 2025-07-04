@@ -1,4 +1,4 @@
-import type { AdminId } from '@db/types';
+import type { AdminId } from '@shared/types';
 /**
  * @deprecated Use useForumStructure().getForum(slug)?.rules instead
  * This function is kept for backward compatibility but will be removed.

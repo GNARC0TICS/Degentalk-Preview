@@ -9,7 +9,7 @@ import { db } from '@db';
 import { users, userRoles } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { logger } from '../logger';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 
 export interface User {
 	id: UserId;

@@ -3,7 +3,7 @@
  * CCPayment integration and wallet management types
  */
 
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 
 // Supported currencies
 export type SupportedCurrency = 'BTC' | 'ETH' | 'USDT' | 'USDC' | 'LTC' | 'BCH' | 'BNB';

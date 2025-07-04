@@ -10,7 +10,7 @@
  */
 
 import { logger } from '@server/src/core/logger';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { EventEmitter } from 'events';
 import type { RoomId, MessageId } from '@/db/types';
 

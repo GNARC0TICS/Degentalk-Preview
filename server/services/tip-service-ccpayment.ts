@@ -7,7 +7,7 @@
 
 import { db } from '../db';
 import { transactions, users, tipSettings, cooldownSettings } from '@schema';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { eq, and } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../src/core/errors';

@@ -1,5 +1,5 @@
 import { TwitterApi } from 'twitter-api-v2';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { db } from '@server/src/core/db';
 import { users } from '@schema/user/users';
 import { xShares } from '@schema/user/xShares';

@@ -5,7 +5,7 @@
  */
 
 import { db } from '@db';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { rainEvents, users, transactions } from '@schema';
 import { sql, desc, eq, count, sum, and, between } from 'drizzle-orm';
 import { startOfDay, subDays, format } from 'date-fns';

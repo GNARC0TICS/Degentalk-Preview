@@ -5,7 +5,7 @@
  */
 
 import { logger } from '../logger';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { userService } from '../services/user.service';
 import fs from 'fs/promises';
 import path from 'path';

@@ -64,7 +64,7 @@ import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/api-request';
 import type { CloutAchievement } from '@schema/economy/cloutAchievements';
-import type { AchievementId } from '@db/types';
+import type { AchievementId } from '@shared/types';
 
 interface AchievementsSectionProps {
 	achievements: CloutAchievement[];

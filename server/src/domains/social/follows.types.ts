@@ -1,4 +1,4 @@
-import type { EntityId } from '@db/types';
+import type { EntityId } from '@shared/types';
 
 export interface FollowNotificationSettings {
 	notifyOnPosts: boolean;

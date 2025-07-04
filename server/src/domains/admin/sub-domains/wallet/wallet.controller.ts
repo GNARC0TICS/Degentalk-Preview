@@ -2,6 +2,7 @@ import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { walletConfigService } from '../../../wallet/wallet-config.service';
 import { dgtService } from '../../../wallet/dgt.service';
+import { EconomyTransformer } from '../../../economy/transformers/economy.transformer';
 
 /**
  * Admin Wallet Controller
@@ -93,9 +94,12 @@ export class AdminWalletController {
 				reason: reason || 'Manual admin credit'
 			});
 
+			// Transform transaction for admin view with full audit trail
+			const transformedTransaction = EconomyTransformer.toAdminTransaction(transaction);
+
 			res.json({
 				success: true,
-				data: transaction,
+				data: transformedTransaction,
 				message: `Successfully credited ${amount} DGT to user ${userId}`
 			});
 		} catch (error) {
@@ -129,9 +133,12 @@ export class AdminWalletController {
 				reason: reason || 'Manual admin debit'
 			});
 
+			// Transform transaction for admin view with full audit trail
+			const transformedTransaction = EconomyTransformer.toAdminTransaction(transaction);
+
 			res.json({
 				success: true,
-				data: transaction,
+				data: transformedTransaction,
 				message: `Successfully debited ${amount} DGT from user ${userId}`
 			});
 		} catch (error) {
@@ -159,11 +166,15 @@ export class AdminWalletController {
 				})
 			]);
 
+			// Transform wallet and transactions for admin view
+			const transformedWallet = EconomyTransformer.toAdminWallet(balance);
+			const transformedHistory = EconomyTransformer.toTransactionList(history, { role: 'admin' }, 'admin');
+
 			res.json({
 				success: true,
 				data: {
-					balance,
-					history
+					wallet: transformedWallet,
+					history: transformedHistory
 				}
 			});
 		} catch (error) {

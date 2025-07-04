@@ -5,4 +5,4 @@
  * for convenient importing in client components.
  */
 
-export * from '@db/types/id.types';
+export * from '@shared/types';

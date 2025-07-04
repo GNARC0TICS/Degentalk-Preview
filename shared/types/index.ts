@@ -46,11 +46,19 @@ export type {
 
 // Core domain types
 export type {
-  // User types
+  // User types - Security-Enhanced
   User,
-  UserSettings,
+  PublicUser,
+  AuthenticatedUserSelf,
+  AdminUserDetail,
+  UserRole,
+  Permission,
+  PermissionScope,
+  SessionToken,
+  UserPreferences,
   NotificationSettings,
   PrivacySettings,
+  UserSettings,
   DisplaySettings,
   UserStats,
   UserProfile,
@@ -62,11 +70,14 @@ export type {
   UserInventory,
   CreateUserRequest,
   UpdateUserRequest,
+  AdminUpdateUserRequest,
   UserSearchParams,
   UserWithWallet,
   UserWithStats,
-  PublicUser,
   UserSummary,
+  UserWarning,
+  UserSuspension,
+  GDPRDataExport,
   
   // Forum types
   Forum,
@@ -188,7 +199,7 @@ export type {
   FeaturesConfig,
   FeatureFlag,
   RolloutStrategy,
-  Permission,
+  Permission as ConfigPermission,
   Role,
   AccessRule,
   ForumAccess
@@ -233,12 +244,10 @@ export type {
 export {
   isValidUuid,
   isValidUserId,
-  createIdValidator,
   isValidDate,
   isValidDateString,
   isPositiveNumber,
   isNonNegativeNumber,
-  isValidAmount,
   isNonEmptyString,
   isValidEmail,
   isValidUsername,
@@ -254,7 +263,7 @@ export {
   createValidationError
 } from './validation';
 
-// Branded ID types from database layer
+// Frontend-safe ID types
 export type {
   // Core entity IDs
   UserId,
@@ -279,10 +288,62 @@ export type {
   ConversationId,
   RoomId,
   CategoryId,
+  VaultId,
+  ActionId,
+  TipId,
+  EntityId,
+  EmojiId,
+  ReporterId,
+  ContentId,
+  LevelId,
+  TagId,
+  OrderId,
+  GroupId,
+  ParentZoneId,
+  ZoneId,
+  StructureId,
+  InventoryId,
+  MessageId,
+  AnnouncementId,
+  MentionId,
+  
+  // Economy-specific IDs
+  CryptoWalletId,
+  RainEventId,
+  WithdrawalId,
+  DgtPackageId,
+  PurchaseOrderId,
   
   // Generic ID helper
   Id
-} from '@db/types/id.types';
+} from './ids';
+
+// ID validation utilities
+export {
+  isValidUUID,
+  isValidId,
+  createIdValidator,
+  isUserId,
+  isThreadId,
+  isPostId,
+  isWalletId,
+  isTransactionId,
+  isForumId,
+  isItemId,
+  isFrameId,
+  isBadgeId,
+  isTitleId,
+  asUserId,
+  asThreadId,
+  asPostId,
+  asWalletId,
+  asTransactionId,
+  asForumId,
+  asItemId,
+  asFrameId,
+  asBadgeId,
+  asTitleId
+} from './ids';
 
 // Common utility types
 export type Nullable<T> = T | null;
@@ -324,3 +385,43 @@ export type SearchResult<T> = WithPagination<T> & {
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
 };
+
+// Economy value types
+export type {
+  // Amount types
+  DgtAmount,
+  UsdAmount,
+  XpAmount,
+  ReputationAmount,
+  TipAmount,
+  RainAmount,
+  WithdrawalAmount,
+  DepositAmount,
+  FeeAmount,
+  ExchangeRate,
+  PriceInDgt,
+  PriceInUsd,
+  
+  // Economy enums
+  TransactionType,
+  TransactionStatus,
+  WithdrawalStatus,
+  VaultStatus
+} from './economy';
+
+// Economy validation and utilities
+export {
+  isValidAmount,
+  isDgtAmount,
+  isUsdAmount,
+  isXpAmount,
+  asDgtAmount,
+  asUsdAmount,
+  asXpAmount,
+  asTipAmount,
+  asRainAmount,
+  toDgtAmount,
+  toUsdAmount,
+  toXpAmount,
+  ECONOMY_CONSTANTS
+} from './economy';

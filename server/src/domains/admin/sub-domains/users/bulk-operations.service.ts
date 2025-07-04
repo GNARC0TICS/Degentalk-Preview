@@ -6,7 +6,7 @@
  */
 
 import { db } from '@db';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { eq, inArray, sql } from 'drizzle-orm';
 import { users, userBans, auditLogs } from '@schema';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';

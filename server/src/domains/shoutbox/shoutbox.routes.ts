@@ -7,7 +7,7 @@ import { userService } from '@server/src/core/services/user.service';
 
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import type { MessageId, UserId } from '@db/types';
+import type { MessageId, UserId } from '@shared/types';
 import { db } from '@db';
 import {
 	shoutboxMessages,
@@ -27,7 +27,7 @@ import { getUserId } from '../auth/services/auth.service';
 import { canUser } from '@lib/auth/canUser.ts';
 import { logger } from '@server/src/core/logger';
 import { MentionsService } from '../social/mentions.service';
-import type { RoomId, GroupId } from '@db/types';
+import type { RoomId, GroupId } from '@shared/types';
 
 // Rate limiting for shoutbox messages (10 seconds cooldown)
 const userLastMessageTime = new Map<UserId, number>();

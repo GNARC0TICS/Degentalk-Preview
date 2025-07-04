@@ -1,4 +1,4 @@
-import type { AdminId } from '@db/types';
+import type { AdminId } from '@shared/types';
 import { readFileSync, writeFileSync } from 'fs';
 import { glob } from 'glob';
 import path from 'path';

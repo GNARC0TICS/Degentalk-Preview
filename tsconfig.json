@@ -62,6 +62,7 @@
 		"types": ["node"],
 		"paths": {
 			"@/*": ["client/src/*"],
+			"@shared/types": ["shared/types/index.ts"],
 			"@shared/*": ["shared/*"],
 			"@server/*": ["server/*"],
 			"@server-core/*": ["server/src/core/*"],

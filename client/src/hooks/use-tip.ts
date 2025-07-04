@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import type { TipId, UserId } from '@db/types';
+import type { TipId, UserId } from '@shared/types';
 
 export interface TipParams {
 	toUserId: UserId;

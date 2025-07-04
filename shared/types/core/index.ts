@@ -5,7 +5,7 @@
  * Tree-shakable and maintains clean public API.
  */
 
-// User domain types
+// Legacy user domain types (maintained for backward compatibility)
 export type {
   User,
   UserSettings,
@@ -29,6 +29,26 @@ export type {
   PublicUser,
   UserSummary
 } from './user.types';
+
+// Security-enhanced user types (preferred for new development)
+export type {
+  PublicUser as SecurePublicUser,
+  AuthenticatedUserSelf,
+  AdminUserDetail,
+  UserRole,
+  Permission,
+  PermissionScope,
+  SessionToken,
+  UserPreferences as SecureUserPreferences,
+  UserWarning,
+  UserSuspension,
+  GDPRDataExport,
+  LoginRecord,
+  DataProcessingRecord,
+  AdminUpdateUserRequest,
+  SecureUserResponse,
+  UserContext
+} from './user-secure.types';
 
 // User type guards
 export {

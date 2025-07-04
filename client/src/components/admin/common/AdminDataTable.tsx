@@ -1,4 +1,4 @@
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import React from 'react';
 import { EntityTable } from '@/components/admin/layout/EntityTable';
 

@@ -12,7 +12,8 @@ import { logger } from '../../../core/logger';
 import { isAuthenticatedOptional } from '../../auth/middleware/auth.middleware';
 import { threadService } from '../services/thread.service';
 import { asyncHandler } from '@server/src/core/errors';
-import type { ForumId } from '@/db/types';
+import type { ForumId } from '@shared/types';
+import { ForumTransformer } from '../transformers/forum.transformer';
 
 const router = Router();
 
@@ -63,9 +64,19 @@ router.get(
 				followingUserId: tab === 'following' ? userService.getUserFromRequest(req)?.id : undefined
 			});
 
+			// Get user context for permissions and personalization
+			const requestingUser = userService.getUserFromRequest(req);
+			
+			// Transform threads using ForumTransformer based on user context
+			const transformedThreads = result.threads.map(thread => {
+				return requestingUser ? 
+					ForumTransformer.toSlimThread(thread) :
+					ForumTransformer.toPublicThread(thread);
+			});
+
 			// Return unified ThreadDisplay format (includes zone data)
 			res.json({
-				items: result.threads,
+				items: transformedThreads,
 				meta: {
 					hasMore: result.page < result.totalPages,
 					total: result.total,

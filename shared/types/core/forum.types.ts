@@ -1,4 +1,4 @@
-import type { ThreadId, PostId, ForumId, UserId, PrefixId } from '@db/types/id.types';
+import type { ThreadId, PostId, ForumId, UserId, PrefixId } from '@shared/types';
 import type { ThreadStatus, PostStatus } from '@db/schema/core/enums';
 
 /**

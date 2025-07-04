@@ -18,7 +18,7 @@ import {
 	MoreHorizontal
 } from 'lucide-react';
 import type { PostWithUser } from '@/types/compat/forum';
-import type { PostId } from '@db/types';
+import type { PostId } from '@shared/types';
 import { SolveBadge } from '@/components/forum/SolveBadge';
 import { SignatureRenderer } from '@/components/forum/SignatureRenderer';
 import { useAuth } from '@/hooks/use-auth';

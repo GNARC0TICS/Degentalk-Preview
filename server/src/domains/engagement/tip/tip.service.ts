@@ -7,7 +7,7 @@
  */
 
 import { db } from '@db';
-import type { UserId, TipId, TransactionId } from '@db/types';
+import type { UserId, TipId, TransactionId } from '@shared/types';
 import { users, transactions } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { logger } from '../../../core/logger';

@@ -13,7 +13,7 @@ import { WalletError, ErrorCodes } from '../../../core/errors'; // Changed Walle
 import { asyncHandler } from '@server/src/core/errors';
 import { logger } from '../../../core/logger';
 import { VaultService } from './vault.service';
-import type { EntityId } from '@db/types';
+import type { EntityId } from '@shared/types';
 // import { VaultError, VaultErrorCodes } from './vault.errors'; // Removed as file not found and errors not used
 
 /**

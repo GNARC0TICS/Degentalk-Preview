@@ -1,6 +1,6 @@
 // No canonical AvatarFrame yet; define minimal shape here.
 
-import type { FrameId } from '@db/types';
+import type { FrameId } from '@shared/types';
 
 // Minimal AvatarFrame interface replicating schema for frontend usage
 export interface AvatarFrame {

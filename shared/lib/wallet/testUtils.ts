@@ -1,4 +1,4 @@
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 
 export function logDevEvent(action: string, result: any, setLog: (lines: string[]) => void) {
 	setLog((prev) => [

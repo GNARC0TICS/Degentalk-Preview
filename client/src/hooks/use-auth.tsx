@@ -4,7 +4,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { useLocation } from 'wouter';
 import { getUserPermissions } from '@/lib/roles';
 import type { Role } from '@/lib/roles';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 
 const { createContext, useContext, useState, useEffect, useMemo } = React;
 

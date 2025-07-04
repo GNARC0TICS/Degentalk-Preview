@@ -24,7 +24,7 @@ import {
 } from './stickers.validators';
 import { formatAdminResponse, AdminOperationBoundary } from '@server/src/domains/admin/shared';
 import { AdminError, AdminErrorCodes } from '@server/src/domains/admin/admin.errors';
-import type { StickerId, PackId } from '@db/types';
+import type { StickerId, PackId } from '@shared/types';
 
 // Additional validation schemas
 const stickerIdSchema = z.object({

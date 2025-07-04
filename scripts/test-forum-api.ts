@@ -1,4 +1,4 @@
-import type { AdminId } from '@db/types';
+import type { AdminId } from '@shared/types';
 #!/usr/bin/env tsx
 /**
  * Forum API Test Script

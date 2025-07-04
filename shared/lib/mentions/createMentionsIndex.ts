@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import { mentionsIndex } from '@db/schema';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 
 /**
  * Creates mentions index entries for discovered mentions in content

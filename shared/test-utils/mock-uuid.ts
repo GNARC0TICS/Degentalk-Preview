@@ -4,7 +4,7 @@
  * Provides consistent UUID mocking for tests in the UUID-first architecture
  */
 
-import type { UserId, ThreadId, PostId, MissionId, AchievementId } from '@db/types';
+import type { UserId, ThreadId, PostId, MissionId, AchievementId } from '@shared/types';
 
 /**
  * Deterministic UUID generator for tests

@@ -7,7 +7,7 @@ import { db } from '@db';
 import { forumStructure } from '@schema';
 import { inArray } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
-import type { StructureId } from '@/db/types';
+import type { StructureId } from '@shared/types';
 
 /**
  * Batch fetch zone information for multiple structure IDs

@@ -1,4 +1,4 @@
-import type { UserId } from '@db/types/id.types';
+import type { UserId } from '@shared/types';
 
 /**
  * Type-Safe API Response Interfaces

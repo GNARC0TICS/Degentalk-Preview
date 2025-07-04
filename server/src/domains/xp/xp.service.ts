@@ -17,7 +17,7 @@ import {
 	roles as rolesTable,
 	forumStructure
 } from '@schema';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { eq, sql, and, desc, gte, lt, asc, gt, count } from 'drizzle-orm';
 import { db } from '@db';
 import { MissionsService } from '../missions/missions.service';

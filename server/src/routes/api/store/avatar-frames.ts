@@ -8,7 +8,8 @@ import { db } from '@db';
 import { products, avatarFrames } from '@schema';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
-import type { FrameId } from '@db/types';
+import type { FrameId } from '@shared/types';
+import { CosmeticsTransformer } from '../../../domains/shop/transformers/cosmetics.transformer';
 
 const router = Router();
 
@@ -16,7 +17,13 @@ const router = Router();
 router.get('/', async (_req, res) => {
 	try {
 		const frames = await avatarFrameStoreService.listAvailableFrames();
-		return res.json(frames);
+
+		// Transform raw DB rows → public DTOs (security-first)
+		const transformed = frames.map((frame: any) =>
+			CosmeticsTransformer.toPublicCosmetic(frame)
+		);
+
+		return res.json(transformed);
 	} catch (error) {
 		console.error('Failed to fetch store avatar frames', error);
 		return res.status(500).json({ error: 'Failed to fetch avatar frames' });

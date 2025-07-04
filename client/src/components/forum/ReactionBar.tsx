@@ -24,7 +24,7 @@ import {
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { formatDistanceToNow } from 'date-fns';
-import type { PostId } from '@db/types';
+import type { PostId } from '@shared/types';
 
 interface ReactionBarProps {
 	postId: PostId;

@@ -4,6 +4,7 @@ import { WalletService } from './wallet.service';
 import { UserManagementService } from './user-management.service';
 import { isDevMode } from '@server/src/utils/environment';
 import walletTestRoutes from './wallet.test.routes';
+import { EconomyTransformer } from '../economy/transformers/economy.transformer';
 
 const router = Router();
 const walletService = new WalletService();
@@ -63,9 +64,22 @@ router.get('/balances', async (req, res) => {
 
 		const balances = await walletService.getUserBalances(userId);
 
+		// Get requesting user for proper transformation
+		const requestingUser = userService.getUserFromRequest(req);
+		
+		// Transform balances using EconomyTransformer
+		// If requesting their own wallet, use authenticated view
+		const transformedBalances = balances.map(wallet => {
+			if (requestingUser && wallet.userId === requestingUser.id) {
+				return EconomyTransformer.toAuthenticatedWallet(wallet, requestingUser);
+			} else {
+				return EconomyTransformer.toPublicWallet(wallet);
+			}
+		});
+
 		res.json({
 			success: true,
-			data: balances
+			data: transformedBalances
 		});
 	} catch (error) {
 		console.error('Error getting balances:', error);
@@ -90,9 +104,23 @@ router.get('/deposit-addresses', async (req, res) => {
 
 		const addresses = await walletService.getUserDepositAddresses(userId);
 
+		// Get requesting user for proper transformation  
+		const requestingUser = userService.getUserFromRequest(req);
+		
+		// Transform crypto wallets using EconomyTransformer
+		// Only show addresses to the wallet owner for security
+		const transformedAddresses = addresses.map(cryptoWallet => {
+			if (requestingUser && cryptoWallet.userId === requestingUser.id) {
+				return EconomyTransformer.toAuthenticatedCryptoWallet(cryptoWallet, requestingUser);
+			} else {
+				// For security, only show public info (no addresses)
+				return EconomyTransformer.toPublicCryptoWallet(cryptoWallet);
+			}
+		});
+
 		res.json({
 			success: true,
-			data: addresses
+			data: transformedAddresses
 		});
 	} catch (error) {
 		console.error('Error getting deposit addresses:', error);

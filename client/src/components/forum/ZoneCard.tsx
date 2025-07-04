@@ -1,4 +1,4 @@
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import React, { memo } from 'react';
 import { Link } from 'wouter';
 import { motion } from 'framer-motion';

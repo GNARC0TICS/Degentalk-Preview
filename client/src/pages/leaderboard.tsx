@@ -13,7 +13,7 @@ import {
 	TableRow
 } from '@/components/ui/table';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import type { UserId } from '@db/types';
+import type { UserId } from '@shared/types';
 import { Trophy } from 'lucide-react'; // Removed TrendingUp, CircleDollarSign, Diamond
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { motion } from 'framer-motion';

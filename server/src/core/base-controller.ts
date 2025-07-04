@@ -13,14 +13,16 @@ import type {
 	ApiErrorCode,
 	PaginationMeta,
 	FilterMeta,
-	TypedResponse
-} from '@shared/types/api.types';
+	TypedResponse,
+	UserId
+} from '@shared/types';
 import { userService } from './services/user.service';
 import { ForbiddenError, NotFoundError, UnauthorizedError, ValidationError } from './errors';
+import { transform } from './type-transformer';
 
 export abstract class BaseController {
 	/**
-	 * Send a successful response
+	 * Send a successful response with type transformation
 	 */
 	protected success<T>(
 		res: Response,
@@ -37,6 +39,20 @@ export abstract class BaseController {
 		};
 
 		return res.status(200).json(response);
+	}
+
+	/**
+	 * Send a successful response with automatic data transformation
+	 */
+	protected successWithTransform<T>(
+		res: Response,
+		data: any,
+		transformer: (data: any) => T,
+		message?: string,
+		meta?: PaginationMeta | FilterMeta
+	): TypedResponse<T> {
+		const transformedData = transformer(data);
+		return this.success(res, transformedData, message, meta);
 	}
 
 	/**
@@ -76,12 +92,12 @@ export abstract class BaseController {
 	/**
 	 * Extract user ID from request with type safety
 	 */
-	protected getUserId(req: any): number {
+	protected getUserId(req: any): UserId {
 		const authUser = userService.getUserFromRequest(req);
-		if (!authUser || typeof authUser.id !== 'number') {
+		if (!authUser) {
 			throw new UnauthorizedError('User not authenticated');
 		}
-		return authUser.id;
+		return transform.toUserId(authUser.id);
 	}
 
 	/**

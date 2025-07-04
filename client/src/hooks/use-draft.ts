@@ -15,7 +15,7 @@ const debounce = <T extends (...args: any[]) => any>(
 		timeoutId = setTimeout(() => func(...args), delay);
 	};
 };
-import type { CategoryId, PrefixId, DraftId, TagId } from '@db/types';
+import type { CategoryId, PrefixId, DraftId, TagId } from '@shared/types';
 
 interface DraftData {
 	id?: DraftId;

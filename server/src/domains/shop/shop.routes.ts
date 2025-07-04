@@ -9,74 +9,105 @@ import { isAuthenticated } from '../auth/middleware/auth.middleware';
 import { walletConfig } from '@shared/wallet.config';
 import { logger } from '../../core/logger';
 import { z } from 'zod';
+import { EconomyTransformer } from '../economy/transformers/economy.transformer';
+import { ShopTransformer } from './transformers/shop.transformer';
+import { vanitySinkAnalyzer } from './services/vanity-sink.analyzer';
+import type { DgtAmount, UserId, ItemId, OrderId } from '@shared/types';
 
 const router = Router();
 
 // GET /api/shop/items
 router.get('/items', async (req, res) => {
 	try {
-		const { category } = req.query;
+		const { category, sort = 'popular', page = 1, limit = 20 } = req.query;
+		const requestingUser = userService.getUserFromRequest(req);
 
-		// TODO: Switch to database query once seeded
-		// For now, we'll use mock data but transform it to match ShopItem interface
+		let items = shopItems;
 
-		// Example database query (commented out until DB is seeded):
-		/*
-    const now = new Date();
-    const dbItems = await db.select().from(products)
-      .where(and(
-        eq(products.status, 'published'),
-        eq(products.isDeleted, false),
-        or(
-          isNull(products.availableFrom),
-          lte(products.availableFrom, now)
-        ),
-        or(
-          isNull(products.availableUntil),
-          gte(products.availableUntil, now)
-        )
-      ));
-    */
-
-		// Transform mock items to match ShopItem interface expected by frontend
-		const transformedItems = shopItems.map((item) => ({
-			...item,
-			// These fields are already in mock data
-			id: item.id,
-			name: item.name,
-			description: item.description,
-			category: item.category,
-			priceDGT: item.priceDGT,
-			priceUSDT: item.priceUSDT,
-			rarity: item.rarity,
-			imageUrl: item.imageUrl,
-
-			// Add missing fields with defaults
-			isOwned: false,
-			isEquipped: false,
-			isLocked: false,
-			requiredXP: null,
-			expiresAt: null,
-			availableFrom: null,
-			availableUntil: null,
-			stockLimit: null,
-			stockLeft: null,
-			isFeatured: false,
-			featuredUntil: null,
-			promotionLabel: null
-		}));
-
-		// Filter by category if provided
+		// Filter by category if specified
 		if (category && category !== 'all') {
-			const filtered = transformedItems.filter((item) => item.category === category);
-			return res.json(filtered);
+			items = items.filter(item => item.category === category);
 		}
 
-		res.json(transformedItems);
+		// Sort items
+		switch (sort) {
+			case 'price_low':
+				items.sort((a, b) => (a.priceDGT || 0) - (b.priceDGT || 0));
+				break;
+			case 'price_high':
+				items.sort((a, b) => (b.priceDGT || 0) - (a.priceDGT || 0));
+				break;
+			case 'newest':
+				items.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+				break;
+			case 'rarity':
+				const rarityOrder = { 'mythic': 5, 'legendary': 4, 'epic': 3, 'rare': 2, 'common': 1 };
+				items.sort((a, b) => (rarityOrder[b.rarity] || 0) - (rarityOrder[a.rarity] || 0));
+				break;
+			case 'popular':
+			default:
+				items.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+				break;
+		}
+
+		// Pagination
+		const pageNum = parseInt(page as string);
+		const limitNum = parseInt(limit as string);
+		const startIndex = (pageNum - 1) * limitNum;
+		const endIndex = startIndex + limitNum;
+		const paginatedItems = items.slice(startIndex, endIndex);
+
+		// Transform items based on user authentication status
+		let transformedItems;
+		if (requestingUser) {
+			// Get user inventory for ownership checking
+			const userInventoryData = await db
+				.select()
+				.from(userInventory)
+				.where(eq(userInventory.userId, requestingUser.id));
+
+			transformedItems = paginatedItems.map(item => {
+				// Convert mock item to database-like format for transformer
+				const dbItem = {
+					...item,
+					price: item.priceDGT,
+					isAvailable: true,
+					isActive: true,
+					popularityScore: item.popularity || 0
+				};
+				return ShopTransformer.toAuthenticatedShopItem(dbItem, requestingUser, userInventoryData);
+			});
+		} else {
+			transformedItems = paginatedItems.map(item => {
+				const dbItem = {
+					...item,
+					price: item.priceDGT,
+					isAvailable: true,
+					isActive: true,
+					popularityScore: item.popularity || 0
+				};
+				return ShopTransformer.toPublicShopItem(dbItem);
+			});
+		}
+
+		res.json({
+			items: transformedItems,
+			total: items.length,
+			page: pageNum,
+			limit: limitNum,
+			totalPages: Math.ceil(items.length / limitNum),
+			filters: {
+				category: category || 'all',
+				sort: sort
+			},
+			user: requestingUser ? {
+				isAuthenticated: true,
+				dgtBalance: requestingUser.dgtBalance || 0
+			} : { isAuthenticated: false }
+		});
 	} catch (error) {
-		console.error('Error fetching shop items:', error);
-		const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
-		res.status(500).json({ message: 'Error fetching shop items', error: errorMessage });
+		logger.error('ShopController', 'Error fetching shop items', { error });
+		res.status(500).json({ error: 'Failed to fetch shop items' });
 	}
 });
 
@@ -84,36 +115,53 @@ router.get('/items', async (req, res) => {
 router.get('/items/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
+		const requestingUser = userService.getUserFromRequest(req);
 
 		// Find in mock data for now
 		const item = shopItems.find((item) => item.id === id);
 
 		if (!item) {
-			return res.status(404).json({ message: 'Item not found' });
+			return res.status(404).json({ error: 'Item not found' });
 		}
 
-		// Transform to match ShopItem interface
-		const transformedItem = {
-			...item,
-			isOwned: false,
-			isEquipped: false,
-			isLocked: false,
-			requiredXP: null,
-			expiresAt: null,
-			availableFrom: null,
-			availableUntil: null,
-			stockLimit: null,
-			stockLeft: null,
-			isFeatured: false,
-			featuredUntil: null,
-			promotionLabel: null
-		};
+		// Transform item based on user context
+		let transformedItem;
+		if (requestingUser) {
+			// Get user inventory for ownership checking
+			const userInventoryData = await db
+				.select()
+				.from(userInventory)
+				.where(eq(userInventory.userId, requestingUser.id));
 
-		res.json(transformedItem);
+			const dbItem = {
+				...item,
+				price: item.priceDGT,
+				isAvailable: true,
+				isActive: true,
+				popularityScore: item.popularity || 0
+			};
+			transformedItem = ShopTransformer.toAuthenticatedShopItem(dbItem, requestingUser, userInventoryData);
+		} else {
+			const dbItem = {
+				...item,
+				price: item.priceDGT,
+				isAvailable: true,
+				isActive: true,
+				popularityScore: item.popularity || 0
+			};
+			transformedItem = ShopTransformer.toPublicShopItem(dbItem);
+		}
+
+		res.json({
+			item: transformedItem,
+			user: requestingUser ? {
+				isAuthenticated: true,
+				dgtBalance: requestingUser.dgtBalance || 0
+			} : { isAuthenticated: false }
+		});
 	} catch (error) {
-		console.error('Error fetching shop item:', error);
-		const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
-		res.status(500).json({ message: 'Error fetching shop item', error: errorMessage });
+		logger.error('ShopController', 'Error fetching shop item', { error, itemId: req.params.id });
+		res.status(500).json({ error: 'Failed to fetch shop item' });
 	}
 });
 
@@ -181,13 +229,24 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 				});
 			}
 
-			// Deduct DGT
-			await dgtService.deductDGT(
+			// Create transaction metadata for audit trail
+			const transactionMetadata = {
+				itemId,
+				itemName: item.name,
+				category: item.category,
+				price: price as DgtAmount,
+				source: 'shop_purchase',
+				ipAddress: req.ip,
+				userAgent: req.get('User-Agent')
+			};
+
+			// Deduct DGT with enhanced audit trail
+			const transactionResult = await dgtService.deductDGT(
 				userId,
 				dgtAmountRequired,
 				'SHOP_PURCHASE',
 				`Purchased ${item.name}`,
-				{ itemId, itemName: item.name, price }
+				transactionMetadata
 			);
 
 			// Add item to user's inventory
@@ -209,20 +268,53 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 				itemId,
 				itemName: item.name,
 				price,
-				currency
+				currency,
+				transactionId: transactionResult?.transactionId
 			});
+
+			// Track vanity sink event for analytics
+			await vanitySinkAnalyzer.trackShopPurchase({
+				userId: userId as UserId,
+				orderId: `shop_${Date.now()}` as OrderId,
+				itemId: itemId as ItemId,
+				dgtAmount: price as DgtAmount,
+				itemCategory: item.category as any,
+				metadata: {
+					purchaseSource: 'web_shop',
+					itemRarity: item.rarity,
+					currency
+				}
+			});
+
+			// Transform response using both EconomyTransformer and ShopTransformer
+			const transformedTransaction = transactionResult?.transaction 
+				? EconomyTransformer.toAuthenticatedTransaction(transactionResult.transaction, { id: userId })
+				: undefined;
+
+			const requestingUser = userService.getUserFromRequest(req);
+			const dbItem = {
+				...item,
+				price: item.priceDGT,
+				isAvailable: true,
+				isActive: true
+			};
+			const transformedItem = ShopTransformer.toAuthenticatedShopItem(
+				dbItem, 
+				{ ...requestingUser, dgtBalance: (requestingUser?.dgtBalance || 0) - price },
+				[{ ...inventoryItem, itemId, name: item.name, category: item.category }]
+			);
 
 			res.json({
 				success: true,
 				message: `Successfully purchased ${item.name}`,
-				item: {
-					id: item.id,
-					name: item.name,
+				item: transformedItem,
+				inventoryId: inventoryItem.id,
+				transaction: transformedTransaction,
+				vanityMetrics: {
+					dgtBurned: price as DgtAmount,
 					category: item.category,
-					price,
-					currency
-				},
-				inventoryId: inventoryItem.id
+					contributesToDeflation: true
+				}
 			});
 		} else {
 			// TODO: Implement USDT payments via CCPayment
@@ -243,33 +335,80 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 	}
 });
 
-// GET /api/shop/inventory - Get user's purchased items
+// GET /api/shop/inventory - Get user's purchased items with enhanced transformations
 router.get('/inventory', isAuthenticated, async (req, res) => {
 	try {
-		if (!userService.getUserFromRequest(req)) {
+		const requestingUser = userService.getUserFromRequest(req);
+		if (!requestingUser) {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
 
-		const userId = (userService.getUserFromRequest(req) as { id: number }).id;
+		const userId = requestingUser.id;
+		const { category, equipped } = req.query;
 
 		// Get user's inventory
-		const inventory = await db.select().from(userInventory).where(eq(userInventory.userId, userId));
+		let inventoryQuery = db.select().from(userInventory).where(eq(userInventory.userId, userId));
+		
+		// Filter by equipped status if specified
+		if (equipped === 'true') {
+			inventoryQuery = inventoryQuery.where(eq(userInventory.isEquipped, true));
+		} else if (equipped === 'false') {
+			inventoryQuery = inventoryQuery.where(eq(userInventory.isEquipped, false));
+		}
 
-		// Enrich with item details from mock data
-		const enrichedInventory = inventory
+		const inventory = await inventoryQuery;
+
+		// Transform inventory items using ShopTransformer
+		const transformedInventory = inventory
 			.map((inv) => {
 				const item = shopItems.find((item) => item.id === inv.itemId);
-				return {
+				if (!item) return null;
+
+				// Create enhanced inventory item data
+				const inventoryItem = {
 					...inv,
-					item: item || null,
-					purchasePrice: inv.purchasePrice / 100 // Convert from cents
+					name: item.name,
+					category: item.category,
+					rarity: item.rarity,
+					type: item.category,
+					purchasePrice: inv.purchasePrice ? inv.purchasePrice / 100 : undefined // Convert from cents
 				};
+
+				return ShopTransformer.toUserInventoryItem(inventoryItem);
 			})
-			.filter((inv) => inv.item !== null); // Filter out items that no longer exist
+			.filter(item => item !== null); // Filter out items that no longer exist
+
+		// Filter by category if specified
+		let filteredInventory = transformedInventory;
+		if (category && category !== 'all') {
+			filteredInventory = transformedInventory.filter(item => item.category === category);
+		}
+
+		// Group by category for better organization
+		const inventoryByCategory = filteredInventory.reduce((acc, item) => {
+			if (!acc[item.category]) {
+				acc[item.category] = [];
+			}
+			acc[item.category].push(item);
+			return acc;
+		}, {} as Record<string, any[]>);
+
+		// Calculate stats
+		const stats = {
+			totalItems: filteredInventory.length,
+			equippedItems: filteredInventory.filter(item => item.isEquipped).length,
+			totalValue: filteredInventory.reduce((sum, item) => sum + (item.purchasePrice || 0), 0),
+			rareItems: filteredInventory.filter(item => ['epic', 'legendary', 'mythic'].includes(item.rarity)).length
+		};
 
 		res.json({
-			inventory: enrichedInventory,
-			totalItems: enrichedInventory.length
+			inventory: filteredInventory,
+			inventoryByCategory,
+			stats,
+			filters: {
+				category: category || 'all',
+				equipped: equipped || 'all'
+			}
 		});
 	} catch (error) {
 		logger.error('ShopController', 'Error getting inventory', {
