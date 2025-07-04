@@ -11,7 +11,7 @@ import {
 } from '@schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
-import type { AdminId } from '@/db/types';
+import type { AdminId } from '@shared/types';
 
 // Import core XP service once refactored, e.g.:
 // import { coreXpService } from '../../../xp/xp.service';

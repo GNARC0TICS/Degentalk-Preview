@@ -6,7 +6,7 @@ import { xShares } from '@schema/user/xShares';
 import { eq } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
 import { awardXShareReward } from '../../economy/services/rewardService';
-import type { ContentId } from '@/db/types';
+import type { ContentId } from '@shared/types';
 
 export async function shareToX(opts: {
 	userId: UserId;

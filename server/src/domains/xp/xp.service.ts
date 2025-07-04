@@ -28,7 +28,7 @@ import { xpActionLogs, xpActionLimits } from './xp-actions-schema';
 // Import the centralized event handlers
 import { handleXpAward, handleXpLoss, handleLevelUp } from './events/xp.events';
 import { economyConfig, sanitizeMultiplier } from '@shared/economy/economy.config';
-import type { AdminId, ForumId, UserId } from '@/db/types';
+import type { AdminId, ForumId, UserId } from '@shared/types';
 
 const { MAX_XP_PER_DAY, MAX_TIP_XP_PER_DAY } = economyConfig;
 

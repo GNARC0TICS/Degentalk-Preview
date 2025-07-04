@@ -19,7 +19,7 @@ import { rainService } from './rain/rain.service';
 import { airdropService } from './airdrop/airdrop.service';
 import { WalletError, WalletErrorCodes } from '../../../core/errors';
 import { vaultService } from './vault/vault.service';
-import type { AdminUserId, EntityId } from '@/db/types';
+import type { AdminUserId, EntityId } from '@shared/types';
 
 /**
  * Engagement service for orchestrating social engagement features

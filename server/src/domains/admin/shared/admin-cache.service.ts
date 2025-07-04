@@ -7,7 +7,7 @@
 
 import NodeCache from 'node-cache';
 import { AdminError, AdminErrorCodes } from '../admin.errors';
-import type { EntityId } from '@/db/types';
+import type { EntityId } from '@shared/types';
 
 export interface CacheConfig {
 	defaultTTL: number; // Time to live in seconds

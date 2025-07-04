@@ -6,7 +6,7 @@
 import { Factory } from '../core/factory';
 import { UserFactory, AdminUserFactory, CryptoWhaleFactory } from '../factories/user.factory';
 import { ThreadFactory, PostFactory, ForumCategoryFactory } from '../factories/forum.factory';
-import type { AdminId, WhaleId } from '@/db/types';
+import type { AdminId, WhaleId } from '@shared/types';
 
 // Register all factories
 Factory.register('user', new UserFactory());

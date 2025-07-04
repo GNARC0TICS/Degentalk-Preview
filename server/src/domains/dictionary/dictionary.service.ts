@@ -3,7 +3,7 @@ import { and, count, desc, eq, ilike, or, sql } from 'drizzle-orm';
 import { dictionaryEntries, dictionaryUpvotes, insertDictionaryEntrySchema } from '@schema';
 import { XP_ACTIONS, xpLevelService } from '../../../services/xp-level-service';
 import slugify from 'slugify';
-import type { EntryId } from '@/db/types';
+import type { EntryId } from '@shared/types';
 
 export const DictionaryStatus = {
 	PENDING: 'pending',

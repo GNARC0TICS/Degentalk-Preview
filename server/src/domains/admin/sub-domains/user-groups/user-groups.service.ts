@@ -9,7 +9,7 @@ import { roles as userGroups, users } from '@schema'; // userGroups is deprecate
 import { eq, and, sql, count, desc, ne } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type { UserGroupInput, ListGroupUsersQueryInput } from './user-groups.validators';
-import type { GroupId } from '@/db/types';
+import type { GroupId } from '@shared/types';
 
 export class AdminUserGroupsService {
 	async getAllGroupsWithCounts() {

@@ -13,7 +13,7 @@ import { logger } from '../../../core/logger';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../../core/errors';
 import { dgtService } from '../../wallet/dgt.service';
 import { v4 as uuidv4 } from 'uuid';
-import type { AdminUserId, AirdropId, ActionId } from '@/db/types';
+import type { AdminUserId, AirdropId, ActionId } from '@shared/types';
 
 /**
  * Airdrop options structure

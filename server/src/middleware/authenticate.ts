@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { db } from '@db';
 import { users } from '@schema';
 import { eq } from 'drizzle-orm';
-import type { GroupId, UserId } from '@/db/types';
+import type { GroupId, UserId } from '@shared/types';
 
 // Extend Express Request type to include user
 declare global {

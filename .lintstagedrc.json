@@ -1,0 +1,17 @@
+{
+  "*.{ts,tsx}": [
+    "eslint --fix --max-warnings 0",
+    "prettier --write"
+  ],
+  "*.{js,jsx}": [
+    "eslint --fix --max-warnings 0", 
+    "prettier --write"
+  ],
+  "*.{json,md,yml,yaml}": [
+    "prettier --write"
+  ],
+  "server/**/*.ts": [
+    "bash -c 'if grep -l \"console\\.\" \"$0\" | grep -v \".test.ts\" | grep -v \"logger.ts\"; then echo \"❌ Console usage detected in $0\"; exit 1; fi'",
+    "bash -c 'if grep -l \"req\\.user\" \"$0\" | grep -v \".test.ts\"; then echo \"❌ req.user direct access detected in $0\"; exit 1; fi'"
+  ]
+}

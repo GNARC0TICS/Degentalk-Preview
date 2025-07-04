@@ -16,7 +16,7 @@ import { z } from 'zod';
 import { db } from '@db';
 import { users } from '@schema';
 import { ilike } from 'drizzle-orm';
-import type { UserId, AdminId } from '@/db/types';
+import type { UserId, AdminId } from '@shared/types';
 import { toId, isValidId } from '@shared/utils/id';
 
 export class AdminUsersController {

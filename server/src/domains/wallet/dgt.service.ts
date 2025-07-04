@@ -9,6 +9,7 @@ import { db } from '@db';
 import { wallets, transactions, users } from '@schema';
 import { eq, and, sql, desc } from 'drizzle-orm';
 import { walletConfigService } from './wallet-config.service';
+import { vanitySinkAnalyzer } from '../shop/services/vanity-sink.analyzer';
 import type { ItemId, ActionId, WalletId, TransactionId, DgtAmount, UserId } from '@shared/types';
 
 export interface DGTTransactionMetadata {
@@ -228,6 +229,22 @@ export class DGTService {
 			});
 
 			console.log(`DGT debited: ${amount} DGT from user ${userId} (${metadata.source})`);
+
+			// Track DGT burn for XP boost purchases
+			if (metadata.source === 'xp_boost') {
+				await vanitySinkAnalyzer.trackBurn({
+					userId,
+					orderId: result.id,
+					dgtBurned: amount,
+					burnType: 'xp_boost',
+					source: 'gamification',
+					metadata: {
+						boostType: metadata.metadata?.boostType || 'personal_xp_multiplier',
+						burnReason: 'xp_boost_purchase',
+						...metadata.metadata
+					}
+				});
+			}
 
 			return {
 				id: result.id,

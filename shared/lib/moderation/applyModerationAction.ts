@@ -1,8 +1,7 @@
-import type { AdminId } from '@shared/types';
+import type { AdminId, ModeratorId } from '@shared/types';
 import { db } from '@server/src/lib/db';
 import { eq } from 'drizzle-orm';
 import { threads, posts, contentModerationActions } from '@schema';
-import type { AdminId, ModeratorId } from '@/db/types';
 
 export type VisibilityStatus =
 	| 'draft'

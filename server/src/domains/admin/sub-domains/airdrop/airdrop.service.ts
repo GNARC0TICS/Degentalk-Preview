@@ -5,7 +5,7 @@ import { dgtService } from '../../../wallet/dgt.service'; // Core DGT service fo
 import { eq, inArray } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
 import { v4 as uuidv4 } from 'uuid';
-import type { AdminId } from '@/db/types';
+import type { AdminId } from '@shared/types';
 
 interface AirdropRequest {
 	adminId: AdminId;

@@ -22,7 +22,7 @@ import {
 	transactions
 } from '@schema';
 import { logger } from '../../core/logger';
-import type { UserId } from '@/db/types';
+import type { UserId } from '@shared/types';
 
 export interface ProgressionMetrics {
 	period: string;

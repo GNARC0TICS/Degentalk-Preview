@@ -16,6 +16,7 @@ import {
 	type ThreadBoost,
 	type ProfileSpotlight
 } from '@schema';
+import { vanitySinkAnalyzer } from '../shop/services/vanity-sink.analyzer';
 
 export interface CreatePromotionRequest {
 	type:
@@ -684,7 +685,7 @@ export class UserPromotionService {
 			.where(eq(wallets.userId, userId));
 
 		// Create completed transaction
-		await db.insert(transactions).values({
+		const [transaction] = await db.insert(transactions).values({
 			userId,
 			type: 'promotion_payment',
 			amount: amount.toString(),
@@ -692,6 +693,20 @@ export class UserPromotionService {
 			status: 'completed',
 			metadata: { promotionId, type: 'user_promotion_payment' },
 			description: `DGT payment for user promotion ${promotionId}`
+		}).returning();
+
+		// Track DGT burn for promotion purchase
+		await vanitySinkAnalyzer.trackBurn({
+			userId,
+			orderId: transaction.id,
+			dgtBurned: amount,
+			burnType: 'promotion',
+			source: 'advertising',
+			metadata: {
+				promotionId,
+				promotionType: 'user_promotion',
+				burnReason: 'thread_boost_purchase'
+			}
 		});
 
 		// Update promotion spent amount

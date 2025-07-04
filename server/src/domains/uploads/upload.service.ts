@@ -9,7 +9,7 @@ import {
 	// type GetPresignedUploadUrlParams, // This type is for storageService, not directly used here
 	// type PresignedUrlInfo // This type is for storageService, not directly used here
 } from '../../core/storage.service';
-import type { PackId, StickerId } from '@/db/types';
+import type { PackId, StickerId } from '@shared/types';
 
 // --- Types specific to this Upload Domain Service ---
 export type UploadType =

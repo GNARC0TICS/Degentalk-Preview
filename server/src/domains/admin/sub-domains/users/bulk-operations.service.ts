@@ -16,7 +16,7 @@ import {
 	validateRoleAssignment,
 	USER_ROLES
 } from '../../shared';
-import type { AdminId } from '@/db/types';
+import type { AdminId } from '@shared/types';
 
 export interface BulkOperationResult {
 	success: boolean;

@@ -19,7 +19,7 @@ import { pipeline } from 'stream/promises';
 import { Transform } from 'stream';
 import archiver from 'archiver';
 import { format } from 'date-fns';
-import type { RoomId } from '@/db/types';
+import type { RoomId } from '@shared/types';
 
 interface MessageHistoryOptions {
 	roomId?: RoomId;

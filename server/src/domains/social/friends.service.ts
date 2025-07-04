@@ -7,7 +7,7 @@ import {
 	users
 } from '@schema';
 import { eq, and, desc, sql, count, inArray, or } from 'drizzle-orm';
-import type { RequestId } from '@/db/types';
+import type { RequestId } from '@shared/types';
 
 export class FriendsService {
 	/**

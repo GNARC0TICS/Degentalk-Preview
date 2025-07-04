@@ -17,7 +17,7 @@ import { eq, and, lt, sql, gte } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
 import { WalletError, ErrorCodes } from '../../../core/errors';
 import { dgtService } from '../../wallet/dgt.service.js';
-import type { UnlockTransactionId, VaultLockId, ActionId } from '@/db/types';
+import type { UnlockTransactionId, VaultLockId, ActionId } from '@shared/types';
 
 /**
  * Vault lock options structure

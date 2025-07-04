@@ -50,7 +50,7 @@
 		"audit:uuid": "tsx scripts/migration/generate-uuid-audit.ts",
 		"generate:id-aliases": "tsx scripts/migration/generate-id-aliases.ts",
 		"codemod:plan": "tsx scripts/codemods/generate-id-codemod-plan.ts",
-		"codemod:dry": "tsx scripts/codemods/apply-id-codemod.ts --dry",
+		"codemod:legacy-dry": "tsx scripts/codemods/apply-id-codemod.ts --dry",
 		"codemod:apply": "tsx scripts/codemods/apply-id-codemod.ts",
 		"codemod:tsmorph:dry": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts --dry",
 		"codemod:tsmorph:apply": "tsx scripts/codemods/apply-id-codemod-tsmorph.ts",
@@ -68,7 +68,17 @@
 		"generate:tree": "node scripts/tools/generate-tree.js",
 		"prepare": "simple-git-hooks",
 		"db:generate": "drizzle-kit generate --dialect postgresql --schema \"./db/schema/**/*.ts\" --out ./migrations/postgres",
-		"db:migrate:dev": "pnpm run db:push && pnpm run db:studio"
+		"db:migrate:dev": "pnpm run db:push && pnpm run db:studio",
+		"phase5:validate": "tsx scripts/phase5/validate-phase5.ts",
+		"phase5:rollback": "tsx scripts/phase5/rollback.ts",
+		"codemod:console": "tsx scripts/codemods/phase5/console-to-logger.ts",
+		"codemod:req-user": "tsx scripts/codemods/phase5/req-user-removal.ts",
+		"codemod:transformers": "tsx scripts/codemods/phase5/enforce-transformers.ts",
+		"codemod:numeric-ids": "tsx scripts/codemods/phase5/numeric-id-migration.ts",
+		"codemod:all": "tsx scripts/codemods/phase5/run-all.ts",
+		"codemod:dry": "tsx scripts/codemods/phase5/run-all.ts --dry-run",
+		"codemod:test": "tsx scripts/codemods/phase5/test-compilation.ts",
+		"lint:staged": "lint-staged"
 	},
 	"devDependencies": {
 		"@paralleldrive/cuid2": "^2.2.2",
@@ -86,6 +96,7 @@
 		"drizzle-orm": "0.44.2",
 		"eslint": "^8.57.0",
 		"glob": "^10.3.10",
+		"lint-staged": "^15.2.10",
 		"minimist": "^1.2.8",
 		"prettier": "^3.5.3",
 		"simple-git-hooks": "^2.12.0",
@@ -97,7 +108,7 @@
 		"utility-types": "^3.10.0"
 	},
 	"simple-git-hooks": {
-		"pre-commit": "echo \"[simple-git-hooks] Prettier formatting temporarily disabled (2025-07-01). Remove this line or revert commit to re-enable.\""
+		"pre-commit": "pnpm lint:staged && pnpm typecheck"
 	},
 	"pnpm": {
 		"overrides": {

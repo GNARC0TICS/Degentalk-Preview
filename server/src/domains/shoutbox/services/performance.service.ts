@@ -15,7 +15,7 @@ import { logger } from '@server/src/core/logger';
 import { ShoutboxCacheService } from './cache.service';
 import { eq, and, desc, asc, sql, gte, lte, inArray } from 'drizzle-orm';
 import { shoutboxMessages, chatRooms, users, shoutboxConfig } from '@schema';
-import type { RoomId } from '@/db/types';
+import type { RoomId } from '@shared/types';
 
 interface QueryMetrics {
 	queryType: string;

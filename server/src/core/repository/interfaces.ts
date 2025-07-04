@@ -7,7 +7,7 @@
 
 import type { User, ForumCategory, Thread, Post, Transaction } from '@schema';
 import type { PaginatedResult, QueryOptions } from './base-repository';
-import type { CategoryId, AuthorId, EntityId, UserId, ThreadId, PostId } from '@/db/types';
+import type { CategoryId, AuthorId, EntityId, UserId, ThreadId, PostId } from '@shared/types';
 
 // Base repository interface
 export interface IBaseRepository<T> {

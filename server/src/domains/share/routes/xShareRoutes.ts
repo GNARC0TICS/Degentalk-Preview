@@ -2,7 +2,7 @@ import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { shareToX } from '../services/xShareService';
 import { isAuthenticated } from '../../auth/auth.routes';
-import type { ContentId } from '@/db/types';
+import type { ContentId } from '@shared/types';
 
 const router = Router();
 

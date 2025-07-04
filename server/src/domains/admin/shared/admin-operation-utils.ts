@@ -7,7 +7,7 @@
 
 import { logger } from '@server/src/core/logger';
 import { AdminError, AdminErrorCodes } from '../admin.errors';
-import type { AdminId, EntityId } from '@/db/types';
+import type { AdminId, EntityId } from '@shared/types';
 
 // Common role definitions
 export const USER_ROLES = {

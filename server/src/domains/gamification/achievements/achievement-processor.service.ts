@@ -14,7 +14,7 @@ import { users } from '@schema';
 import { logger } from '../../../core/logger';
 import { XpService } from '../../xp/xp.service';
 import { DegenAchievementEvaluators } from './evaluators/degen-evaluators';
-import type { UserId, AchievementId } from '@/db/types';
+import type { UserId, AchievementId } from '@shared/types';
 
 export interface AchievementProgress {
 	current: number;

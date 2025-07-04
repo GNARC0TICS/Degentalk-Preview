@@ -5,7 +5,7 @@
 
 import { Factory } from '../core/factory';
 import { scenarioGenerator, AvailableScenario } from './scenario-generator';
-import type { AdminId } from '@/db/types';
+import type { AdminId } from '@shared/types';
 
 // Setup helpers for test environments
 export class TestDataManager {

@@ -2,7 +2,7 @@ import type { AdminId } from '@shared/types';
 import { db } from '../../../db';
 import { PgTransaction } from 'drizzle-orm/pg-core';
 
-export function logSeed(scriptName: : AdminId, message: : AdminId, error?: boolean) {
+export function logSeed(scriptName: string, message: string, error?: boolean) {
   const prefix = error ? '❌' : '🌱';
   console.log(`${prefix} [${scriptName}] ${message}`);
 }
@@ -11,7 +11,7 @@ export function logSeed(scriptName: : AdminId, message: : AdminId, error?: boole
 export async function withTransaction<T>(
   dbInstance: typeof db, // Or specific transaction type from Drizzle
   operation: (tx: PgTransaction<any, any, any>) => Promise<T>,
-  scriptName: : AdminId
+  scriptName: string
 ): Promise<T> {
   try {
     // This is a simplified placeholder. Real implementation would use dbInstance.transaction()
@@ -32,7 +32,7 @@ export async function withTransaction<T>(
 }
 
 // Utility to generate a slug (example, adjust as needed)
-export function slugify(text: : AdminId): : AdminId {
+export function slugify(text: string): string {
   return text
     .toString()
     .toLowerCase()

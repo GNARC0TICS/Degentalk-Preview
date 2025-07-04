@@ -2,7 +2,7 @@ import { db } from '@db';
 import { threadPrefixes } from '@schema';
 import { eq, not, and, asc, desc } from 'drizzle-orm';
 import { AdminError } from '../../admin.errors';
-import type { CategoryId } from '@/db/types';
+import type { CategoryId } from '@shared/types';
 
 interface UpdatePrefixInput {
 	name?: string;

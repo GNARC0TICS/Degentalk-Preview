@@ -9,7 +9,7 @@ import { userService } from '@server/src/core/services/user.service';
 import { logger } from '@server/src/core/logger';
 import { AdminError, AdminErrorCodes } from '../admin.errors';
 import type { Request, Response } from 'express';
-import type { EntityId, RequestId } from '@/db/types';
+import type { EntityId, RequestId } from '@shared/types';
 
 // Enhanced error types with context
 export interface AdminErrorContext {
