@@ -10,7 +10,7 @@ import type {
   MessageId, 
   ConversationId,
   DgtAmount 
-} from '@shared/types';
+} from '@shared/types/ids';
 
 // ==========================================
 // MESSAGE TYPES

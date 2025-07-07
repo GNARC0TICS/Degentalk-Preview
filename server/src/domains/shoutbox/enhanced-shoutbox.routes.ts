@@ -1,4 +1,5 @@
 import { userService } from '@server/src/core/services/user.service';
+import type { UserId } from '@shared/types/ids';
 /**
  * Enhanced Shoutbox Routes
  *

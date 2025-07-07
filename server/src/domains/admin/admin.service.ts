@@ -8,7 +8,7 @@ import { db } from '@db';
 import { count, desc, eq, sql, and, like, isNull, or, ne, sum } from 'drizzle-orm';
 import { users, auditLogs, transactions } from '@schema';
 import { AdminError, AdminErrorCodes } from './admin.errors';
-import type { AdminId, UserId } from '@shared/types';
+import type { AdminId, UserId } from '@shared/types/ids';
 import { logger } from '../../core/logger';
 
 export class AdminService {

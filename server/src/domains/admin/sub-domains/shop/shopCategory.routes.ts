@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { asyncHandler } from '../../admin.middleware';
 import { shopCategoryService } from './shopCategory.service';
-import type { EntityId } from '@shared/types';
+import type { EntityId } from '@shared/types/ids';
 
 const router = Router();
 

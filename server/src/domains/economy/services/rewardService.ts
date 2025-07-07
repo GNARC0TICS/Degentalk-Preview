@@ -1,5 +1,5 @@
 import { db } from '@db';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { economySettings } from '@schema';
 import { eq } from 'drizzle-orm';
 import { dgtService } from '../../wallet/dgt.service';

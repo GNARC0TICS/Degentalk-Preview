@@ -12,7 +12,7 @@ import { AchievementEventEmitter } from '../../../core/events/achievement-events
 import { posts, threads, users as usersTable, postReactions } from '@schema';
 import { sql, desc, asc, eq, and, count } from 'drizzle-orm';
 import type { PostWithUser } from '../../../../db/types/forum.types';
-import type { ThreadId, UserId, PostId } from '@shared/types';
+import type { ThreadId, UserId, PostId } from '@shared/types/ids';
 
 export interface PostCreateInput {
 	content: string;

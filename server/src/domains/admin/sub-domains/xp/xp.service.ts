@@ -1,5 +1,5 @@
 import { db } from '@db';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import {
 	users,
 	levels,
@@ -11,8 +11,8 @@ import {
 } from '@schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
-import type { AdminId } from '@shared/types';
-import { UserId } from "@shared/types";
+import type { AdminId } from '@shared/types/ids';
+import { UserId } from "@shared/types/ids";
 
 // Import core XP service once refactored, e.g.:
 // import { coreXpService } from '../../../xp/xp.service';

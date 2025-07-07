@@ -5,7 +5,7 @@
  */
 
 import { db } from '@db';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import {
 	users,
 	transactions,
@@ -22,7 +22,7 @@ import type {
 	TreasurySettingsUpdateInput,
 	MassAirdropInput
 } from './treasury.validators';
-import type { AdminUserId, ActionId } from '@shared/types';
+import type { AdminUserId, ActionId } from '@shared/types/ids';
 import { logger } from '../../../../core/logger';
 
 // Helper to format DGT amounts for display (assuming 6 decimal places for DGT)

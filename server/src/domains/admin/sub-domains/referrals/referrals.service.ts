@@ -1,5 +1,5 @@
 import { eq, sql } from 'drizzle-orm';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { db } from '../../../../core/db';
 import { referralSources } from '@schema/system/referralSources';
 import { userReferrals } from '@schema/system/userReferrals';

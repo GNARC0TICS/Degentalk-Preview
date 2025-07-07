@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import { forumService } from './forum.service';
 import type { ThreadSearchParams } from './forum.service';
 import { logger } from '@server/src/core/logger';
-import type { StructureId, ThreadId } from '@shared/types';
+import type { StructureId, ThreadId } from '@shared/types/ids';
 // import { isAuthenticated } from "@server/src/domains/auth/middleware/auth.middleware"; // Removed as unused
 
 // TODO: @syncSchema threads

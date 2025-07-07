@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { db } from '@db';
 import { users } from '@schema';
 import { ilike } from 'drizzle-orm';
-import type { UserId, AdminId } from '@shared/types';
+import type { UserId, AdminId } from '@shared/types/ids';
 import { toId, isValidId } from '@shared/utils/id';
 import { logger } from '../../../../core/logger';
 

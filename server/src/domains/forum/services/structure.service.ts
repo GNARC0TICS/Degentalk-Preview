@@ -10,7 +10,7 @@ import { logger } from '@server/src/core/logger';
 import { forumStructure, threads, posts, users as usersTable } from '@schema';
 import { sql, desc, eq, count, isNull } from 'drizzle-orm';
 import type { ForumStructureWithStats } from '../../../../db/types/forum.types';
-import type { StructureId } from '@shared/types';
+import type { StructureId } from '@shared/types/ids';
 
 // Simple in-memory cache for forum structure
 const CACHE_DURATION_MS = 30 * 1000; // 30 seconds

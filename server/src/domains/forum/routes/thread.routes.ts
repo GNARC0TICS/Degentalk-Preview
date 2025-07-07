@@ -22,7 +22,7 @@ import { threadService } from '../services/thread.service';
 import { postService } from '../services/post.service';
 import { logger } from '@server/src/core/logger';
 import { asyncHandler } from '@server/src/core/errors';
-import type { ThreadId, PostId, StructureId } from '@shared/types';
+import type { ThreadId, PostId, StructureId } from '@shared/types/ids';
 import { ForumTransformer } from '../transformers/forum.transformer';
 
 const router = Router();

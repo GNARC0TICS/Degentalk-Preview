@@ -19,7 +19,7 @@ import type {
   MessageId,
   ConversationId,
   Id
-} from '@shared/types';
+} from '@shared/types/ids';
 import { logger } from './logger';
 
 // Type transformation utilities

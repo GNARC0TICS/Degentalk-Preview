@@ -7,7 +7,7 @@
 
 import { logger } from '../../core/logger';
 import { WalletError, ErrorCodes } from '../../core/errors';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 
 // Import specialized services
 import { ccpaymentApiService } from './services/ccpayment-api.service';

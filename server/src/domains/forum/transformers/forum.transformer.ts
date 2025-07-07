@@ -5,8 +5,8 @@
  * response objects with GDPR compliance and audit trail.
  */
 
-import type { 
-  PublicThread, 
+import type { UserId } from '@shared/types/ids';
+import type { PublicThread, 
   SlimThread, 
   AuthenticatedThread, 
   ModerationThread,
@@ -15,9 +15,8 @@ import type {
   ModerationPost,
   PublicForumStructure,
   AuthenticatedForumStructure,
-  ModerationForumStructure
-} from '../types';
-import type { ThreadId, PostId, UserId, ForumId, ZoneId } from '@shared/types';
+  ModerationForumStructure } from '../types';
+import type { ThreadId, PostId, UserId, ForumId, ZoneId } from '@shared/types/ids';
 // import { UserTransformer } from '../../users/transformers/user.transformer'; // TODO: Add when available
 import { createHash } from 'crypto';
 

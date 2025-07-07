@@ -17,7 +17,7 @@ import type {
 } from '@schema';
 import { logger } from '../../../core/logger';
 import { DegenAchievementEvaluators } from './evaluators/degen-evaluators';
-import type { AchievementId, UserId } from '@shared/types';
+import type { AchievementId, UserId } from '@shared/types/ids';
 
 export interface AchievementFilters {
 	category?: AchievementCategory;

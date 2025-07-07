@@ -11,7 +11,7 @@ import { eq, ilike, asc, sql } from 'drizzle-orm';
 import { BaseRepository, RepositoryError } from '../base-repository';
 import type { IUserRepository } from '../interfaces';
 import type { User } from '@schema';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { logger } from '@server/src/core/logger';
 
 export class UserRepository extends BaseRepository<User> implements IUserRepository {

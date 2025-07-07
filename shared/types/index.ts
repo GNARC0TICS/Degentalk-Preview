@@ -1,3 +1,4 @@
+import { isValidId } from '@shared/utils/id';
 /**
  * Shared Types System - Main Export
  * 

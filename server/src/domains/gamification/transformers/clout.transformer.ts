@@ -9,7 +9,7 @@ import type {
   UserId,
   AchievementId,
   CloutAmount 
-} from '@shared/types';
+} from '@shared/types/ids';
 // import { UserTransformer } from '../../users/transformers/user.transformer'; // TODO: Add when available
 
 // Public clout data (leaderboards, etc.)

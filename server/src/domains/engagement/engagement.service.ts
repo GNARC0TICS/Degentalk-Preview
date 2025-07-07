@@ -11,7 +11,7 @@
  */
 
 import { logger } from '../../../core/logger';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { db } from '@db';
 import { dgtService } from '../wallet/dgt.service';
 import { tipService } from './tip/tip.service';
@@ -19,7 +19,7 @@ import { rainService } from './rain/rain.service';
 import { airdropService } from './airdrop/airdrop.service';
 import { WalletError, WalletErrorCodes } from '../../../core/errors';
 import { vaultService } from './vault/vault.service';
-import type { AdminUserId, EntityId } from '@shared/types';
+import type { AdminUserId, EntityId } from '@shared/types/ids';
 
 /**
  * Engagement service for orchestrating social engagement features

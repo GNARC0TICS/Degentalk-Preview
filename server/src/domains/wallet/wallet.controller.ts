@@ -1,5 +1,5 @@
 import { userService } from '@server/src/core/services/user.service';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { EconomyTransformer } from '../economy/transformers/economy.transformer';
 /**
  * Wallet Controller
@@ -23,7 +23,7 @@ import { eq, desc, and, sql, SQL, asc } from 'drizzle-orm';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
 import crypto from 'crypto';
 import { z } from 'zod';
-import type { UserId, OrderId } from '@shared/types';
+import type { OrderId } from '@shared/types/ids';
 import { UnauthorizedError } from '../../core/errors';
 // import { validateRequest } from '../../middleware/validate'; // Ensure this is commented or removed
 import { DGT_CURRENCY, DEFAULT_DGT_REWARD_CREATE_THREAD } from './wallet.constants';

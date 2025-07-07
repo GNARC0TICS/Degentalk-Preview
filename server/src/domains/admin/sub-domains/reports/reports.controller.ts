@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { userService } from '@server/src/core/services/user.service';
-import type { ReportId, MessageId } from '@shared/types';
+import type { ReportId, MessageId } from '@shared/types/ids';
 import { adminReportsService } from './reports.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { getUserId } from '../../admin.middleware';

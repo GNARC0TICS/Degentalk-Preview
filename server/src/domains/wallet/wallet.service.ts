@@ -13,7 +13,7 @@ import { CCPaymentService } from './ccpayment.service';
 import { UserManagementService } from './user-management.service';
 import { walletConfigService } from './wallet-config.service';
 import { dgtService } from './dgt.service';
-import type { CoinId, ActionId, UserId, DgtAmount, UsdAmount } from '@shared/types';
+import type { CoinId, ActionId, UserId, DgtAmount, UsdAmount } from '@shared/types/ids';
 import { logger } from "../../core/logger";
 import { EconomyTransformer } from '../economy/transformers/economy.transformer';
 

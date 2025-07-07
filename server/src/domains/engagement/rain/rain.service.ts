@@ -9,7 +9,7 @@
  */
 
 import { db } from '@db';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import {
 	transactions,
 	users,
@@ -25,7 +25,7 @@ import { dgtService } from '../../../domains/wallet/dgt.service';
 import { walletService } from '../../../domains/wallet/wallet.service';
 import { WalletService } from '../../wallet/wallet.service';
 import { vanitySinkAnalyzer } from '../../shop/services/vanity-sink.analyzer';
-import type { ActionId } from '@shared/types';
+import type { ActionId } from '@shared/types/ids';
 
 // Constants
 const MIN_RAIN_AMOUNT_DGT = 10; // Minimum rain amount for DGT

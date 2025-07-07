@@ -66,7 +66,8 @@
 		{
 			"files": ["server/**/*.{ts,tsx}"],
 			"parserOptions": {
-				"project": ["server/tsconfig.eslint.json"]
+				"project": ["./tsconfig.eslint.json"],
+				"tsconfigRootDir": "./server"
 			},
 			"rules": {
 				"no-console": ["error", { "allow": ["warn", "error"] }], // Disallow console.log, .info, .debug, .trace but allow .warn and .error

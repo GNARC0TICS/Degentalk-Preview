@@ -6,14 +6,10 @@
  * Follows security-first pattern with role-based data exposure
  */
 
-import type {
-  PublicCosmetic,
-  OwnedCosmetic,
-  AdminCosmetic
-} from '../types';
+import type { UserId } from '@shared/types/ids';
+import type { PublicCosmetic, OwnedCosmetic, AdminCosmetic } from '../types';
 
 import type { 
-  UserId, 
   ItemId,
   DgtAmount, 
   ItemRarity

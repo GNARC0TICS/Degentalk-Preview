@@ -25,7 +25,7 @@ import type {
   DgtAmount,
   UsdAmount,
   XpAmount
-} from '@shared/types';
+} from '@shared/types/ids';
 import { createHash } from 'crypto';
 import { logger } from "../../../core/logger";
 

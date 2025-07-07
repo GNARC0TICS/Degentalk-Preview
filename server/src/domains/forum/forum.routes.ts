@@ -24,7 +24,7 @@ import { logger } from '@server/src/core/logger';
 import { forumStructureService } from './services/structure.service';
 import { threadService } from './services/thread.service';
 import { asyncHandler } from '@server/src/core/errors';
-import type { StructureId } from '@shared/types';
+import type { StructureId } from '@shared/types/ids';
 
 // Import specialized route modules
 import threadRoutes from './routes/thread.routes';

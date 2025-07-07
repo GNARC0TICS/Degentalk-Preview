@@ -6,6 +6,7 @@
  */
 
 import type { Id } from '@shared/types/ids';
+import { isValidId } from '@shared/utils/id';
 
 /**
  * Type-safe ID constructor that ensures proper branding

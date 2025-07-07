@@ -7,7 +7,7 @@ export function validateWalletTransaction(req: Request, res: Response, next: Nex
 	const { amount, toAddress } = req.body;
 
 	// Check amount
-	if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
+	if (!amount || !isValidId(userId)) {
 		return res.status(400).json({
 			error: 'Invalid amount',
 			message: 'Transaction amount must be a positive number.'

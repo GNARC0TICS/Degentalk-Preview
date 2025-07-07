@@ -22,8 +22,8 @@ import {
 	transactions
 } from '@schema';
 import { logger } from '../../core/logger';
-import type { UserId } from '@shared/types';
-import { AchievementId } from "@shared/types";
+import type { UserId } from '@shared/types/ids';
+import { AchievementId } from "@shared/types/ids";
 
 export interface ProgressionMetrics {
 	period: string;

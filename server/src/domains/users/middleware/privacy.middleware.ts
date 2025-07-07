@@ -7,7 +7,7 @@
 
 import type { Request, Response, NextFunction } from 'express';
 import { UserTransformer } from '../transformers/user.transformer';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { logger } from "../../../core/logger";
 import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
 

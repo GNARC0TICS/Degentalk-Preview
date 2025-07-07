@@ -6,7 +6,7 @@
 
 import { db } from '@db';
 import { reportedContent } from '@schema';
-import type { ContentId } from '@shared/types';
+import type { ContentId } from '@shared/types/ids';
 
 export interface CreateReportData {
 	contentType: 'post' | 'thread' | 'message';

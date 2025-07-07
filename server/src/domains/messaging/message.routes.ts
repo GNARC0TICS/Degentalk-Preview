@@ -6,7 +6,7 @@
 
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { z } from 'zod';
 import { db } from '@db';
 import { eq } from 'drizzle-orm';

@@ -6,7 +6,7 @@
  */
 
 import { db } from '@db';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { eq, inArray, sql } from 'drizzle-orm';
 import { users, userBans, auditLogs } from '@schema';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
@@ -16,7 +16,7 @@ import {
 	validateRoleAssignment,
 	USER_ROLES
 } from '../../shared';
-import type { AdminId } from '@shared/types';
+import type { AdminId } from '@shared/types/ids';
 
 export interface BulkOperationResult {
 	success: boolean;

@@ -23,7 +23,7 @@ import type {
 	BanUserInput,
 	DeleteContentInput
 } from './reports.validators';
-import type { ReportId, AdminUserId, AuthorId, ContentId } from '@shared/types';
+import type { ReportId, AdminUserId, AuthorId, ContentId } from '@shared/types/ids';
 import { logger } from '../../../../core/logger';
 
 async function getContentPreview(type: string, contentId: ContentId): Promise<string | null> {

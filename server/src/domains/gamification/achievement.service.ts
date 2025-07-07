@@ -6,7 +6,6 @@
  */
 
 import { db } from '../../core/db';
-import type { UserId } from '@shared/types';
 import { eq, and, desc, asc, gte, lte, count, sum, sql, inArray, isNull } from 'drizzle-orm';
 import {
 	achievements,
@@ -23,7 +22,7 @@ import {
 } from '@schema';
 import { logger } from '../../core/logger';
 import { XpService } from '../xp/xp.service';
-import type { UserId, AchievementId } from '@shared/types';
+import type { UserId, AchievementId } from '@shared/types/ids';
 
 export interface AchievementDefinition {
 	id: AchievementId;

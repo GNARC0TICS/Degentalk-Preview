@@ -22,7 +22,7 @@ import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
 import type { ColumnDef } from '@/components/admin/layout/EntityTable'; // Type-only import
 import ManualDgtAdjustmentDialog from '@/components/admin/forms/wallets/ManualDgtAdjustmentDialog';
 import { MockWebhookTrigger } from '@/components/admin/wallet/mock-webhook-trigger';
-import { type UserId } from "@shared/types";
+import { type UserId } from "@shared/types/ids";
 
 // Type definitions
 interface WalletStats {

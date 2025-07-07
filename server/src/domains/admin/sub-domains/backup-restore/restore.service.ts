@@ -14,7 +14,7 @@ import { spawn } from 'child_process';
 import { existsSync, statSync } from 'fs';
 import { randomUUID } from 'crypto';
 import { z } from 'zod';
-import type { BackupId } from '@shared/types';
+import type { BackupId } from '@shared/types/ids';
 import { logger } from '../../../../core/logger';
 
 // Validation schemas

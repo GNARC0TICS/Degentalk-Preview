@@ -11,7 +11,7 @@ import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { AdminPaginationQuery } from '@shared/validators/admin';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { logger } from '../../../../core/logger';
 
 export class AdminUsersService {

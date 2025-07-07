@@ -8,7 +8,7 @@
 import { logger } from '../../../core/logger';
 import { WalletError, ErrorCodes } from '../../../core/errors';
 import { ccpaymentApiService } from './ccpayment-api.service';
-import type { CoinId } from '@shared/types';
+import type { CoinId } from '@shared/types/ids';
 import { EntityId } from "@shared/types";
 
 export interface CCPaymentTokenInfo {

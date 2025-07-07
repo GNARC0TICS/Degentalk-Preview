@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { db } from '../core/db';
 import { users } from '@schema';
 import { eq } from 'drizzle-orm';
-import type { GroupId, UserId } from '@shared/types';
+import type { GroupId, UserId } from '@shared/types/ids';
 import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
 import { logger } from "../core/logger";
 

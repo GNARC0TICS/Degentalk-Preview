@@ -11,7 +11,7 @@ import type {
   AdminUserDetail,
   UserRole 
 } from '../types';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { createHash } from 'crypto';
 
 export class UserTransformer {

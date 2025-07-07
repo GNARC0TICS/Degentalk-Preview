@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { adminService } from './admin.service';
 import { getUserId } from './admin.middleware';
 import { AdminError } from './admin.errors';
-import type { AdminId, UserId } from '@shared/types';
+import type { AdminId, UserId } from '@shared/types/ids';
 import { userService } from '@server/src/core/services/user.service';
 
 export class AdminController {

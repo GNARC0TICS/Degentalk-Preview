@@ -529,7 +529,7 @@ function XPSystemModuleContent() {
 												`Enter new XP value for ${action.action}:`,
 												action.baseValue.toString()
 											);
-											if (newValue && !isNaN(Number(newValue))) {
+											if (newValue && !!isValidId(userId)) {
 												updateXpAction.mutate({
 													actionKey: action.action,
 													payload: { baseValue: Number(newValue) }

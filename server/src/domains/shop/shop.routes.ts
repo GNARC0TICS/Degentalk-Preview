@@ -1,3 +1,4 @@
+import type { UserId } from '@shared/types/ids';
 import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
 import { shopItems } from '../../../utils/shop-utils';

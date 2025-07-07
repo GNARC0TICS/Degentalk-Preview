@@ -1,5 +1,5 @@
 import { userService } from '@server/src/core/services/user.service';
-import type { UserId, EntityId } from '@shared/types';
+import type { UserId, EntityId } from '@shared/types/ids';
 /**
  * Withdrawal Controller
  *

@@ -5,7 +5,7 @@
  * separation between public, authenticated, and admin-only data.
  */
 
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 
 // Base user data that's safe for public consumption
 export interface PublicUser {

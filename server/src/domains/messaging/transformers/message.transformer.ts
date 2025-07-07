@@ -6,19 +6,10 @@
  * Follows established patterns from Users, Forums, Economy, and Shop domains
  */
 
-import type {
-  PublicMessage,
-  AuthenticatedMessage,
-  AdminMessage,
-  PublicConversation,
-  AuthenticatedConversation,
-  AdminConversation,
-  MessageSearchResult,
-  TypingStatus
-} from '../types';
+import type { UserId } from '@shared/types/ids';
+import type { PublicMessage, AuthenticatedMessage, AdminMessage, PublicConversation, AuthenticatedConversation, AdminConversation, MessageSearchResult, TypingStatus } from '../types';
 
 import type { 
-  UserId, 
   MessageId, 
   ConversationId,
   DgtAmount

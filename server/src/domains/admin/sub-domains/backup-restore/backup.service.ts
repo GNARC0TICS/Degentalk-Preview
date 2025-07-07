@@ -17,7 +17,7 @@ import { pipeline } from 'stream/promises';
 import { join, dirname } from 'path';
 import { mkdirSync } from 'fs';
 import { z } from 'zod';
-import type { BackupId } from '@shared/types';
+import type { BackupId } from '@shared/types/ids';
 import { logger } from '../../../../core/logger';
 
 // Validation schemas

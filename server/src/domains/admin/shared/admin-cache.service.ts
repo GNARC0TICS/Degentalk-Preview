@@ -7,7 +7,7 @@
 
 import NodeCache from 'node-cache';
 import { AdminError, AdminErrorCodes } from '../admin.errors';
-import type { EntityId } from '@shared/types';
+import type { EntityId } from '@shared/types/ids';
 import { logger } from '../../../../core/logger';
 
 export interface CacheConfig {

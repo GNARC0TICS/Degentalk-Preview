@@ -2,7 +2,7 @@ import { db } from '@db';
 import { animationPacks, animationPackItems, mediaLibrary } from '@schema';
 import { eq, asc } from 'drizzle-orm';
 import slugify from 'slugify';
-import type { PackId } from '@shared/types';
+import type { PackId } from '@shared/types/ids';
 
 export interface PackInput {
 	name: string;

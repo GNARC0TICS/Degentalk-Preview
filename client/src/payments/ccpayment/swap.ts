@@ -6,7 +6,7 @@
 
 import { generateOrderId } from './utils';
 import { SupportedCurrency } from './types';
-import type { UserId, type OrderId } from '@shared/types/ids';
+import type { UserId, OrderId } from '@shared/types/ids';
 
 /**
  * Swap request parameters

@@ -6,7 +6,7 @@
  */
 
 import { db } from '@db';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { transactions } from '@schema';
 import { eq, and, desc, asc, sum, sql } from 'drizzle-orm';
 import {

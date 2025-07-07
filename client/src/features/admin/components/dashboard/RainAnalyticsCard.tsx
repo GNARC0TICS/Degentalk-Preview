@@ -22,7 +22,7 @@ import {
 	CardTitle
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import {
 	Select,
 	SelectContent,

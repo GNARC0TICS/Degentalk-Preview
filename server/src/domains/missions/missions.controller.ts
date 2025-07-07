@@ -5,6 +5,7 @@ import { logger } from '../../core/logger';
 import { MissionsService } from './missions.service';
 import { xpService } from '../xp/xp.service';
 import { walletService } from '../wallet/wallet.service';
+import type { UserId } from '@shared/types/ids';
 
 /**
  * Get all missions (admin only)

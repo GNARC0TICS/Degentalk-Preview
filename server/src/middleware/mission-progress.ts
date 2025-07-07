@@ -3,7 +3,7 @@ import { missionsService } from '../domains/missions/missions.service';
 import { userService } from '../core/services/user.service';
 import { MissionType } from '@schema';
 import { logger } from '../core/logger';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 
 /**
  * Middleware for tracking mission progress when users perform actions

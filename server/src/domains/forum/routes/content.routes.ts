@@ -12,7 +12,7 @@ import { logger } from '../../../core/logger';
 import { isAuthenticatedOptional } from '../../auth/middleware/auth.middleware';
 import { threadService } from '../services/thread.service';
 import { asyncHandler } from '@server/src/core/errors';
-import type { ForumId } from '@shared/types';
+import type { ForumId } from '@shared/types/ids';
 import { ForumTransformer } from '../transformers/forum.transformer';
 
 const router = Router();

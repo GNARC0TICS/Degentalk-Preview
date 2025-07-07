@@ -12,7 +12,7 @@ import { marked } from 'marked';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { adminCacheService, AdminCacheKeys } from '../../shared/admin-cache.service';
 import { z } from 'zod';
-import type { TemplateId } from '@shared/types';
+import type { TemplateId } from '@shared/types/ids';
 import { logger } from '../../../../core/logger';
 
 // Template variable schema

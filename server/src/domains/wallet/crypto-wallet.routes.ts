@@ -1,3 +1,4 @@
+import type { UserId } from '@shared/types/ids';
 /**
  * Crypto Wallet Routes
  * 
@@ -13,7 +14,7 @@ import { EconomyTransformer } from '../economy/transformers/economy.transformer'
 import { ccpaymentService } from './ccpayment.service';
 import { walletService } from './wallet.service';
 import { z } from 'zod';
-import type { UserId, CoinId } from '@shared/types';
+import type { UserId, CoinId } from '@shared/types/ids';
 
 const router = Router();
 
@@ -310,7 +311,7 @@ router.get('/supported-tokens', async (req, res) => {
  */
 router.get('/token-info/:coinId', async (req, res) => {
   try {
-    const coinId = parseInt(req.params.coinId);
+    const coinId = req.params.coinId as UserId;
     if (isNaN(coinId)) {
       return res.status(400).json({ error: 'Invalid coin ID' });
     }

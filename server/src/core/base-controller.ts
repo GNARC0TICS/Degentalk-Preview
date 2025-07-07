@@ -13,9 +13,9 @@ import type {
 	ApiErrorCode,
 	PaginationMeta,
 	FilterMeta,
-	TypedResponse,
-	UserId
+	TypedResponse
 } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { userService } from './services/user.service';
 import { ForbiddenError, NotFoundError, UnauthorizedError, ValidationError } from './errors';
 import { transform } from './type-transformer';

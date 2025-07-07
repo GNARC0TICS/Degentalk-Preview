@@ -5,6 +5,8 @@
  * It handles different log levels, formats, and outputs (console, file).
  */
 
+/* eslint-disable no-console */
+
 import fs from 'fs';
 import path from 'path';
 import { createWriteStream, WriteStream } from 'fs';

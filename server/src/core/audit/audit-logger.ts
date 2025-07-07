@@ -5,11 +5,10 @@
  */
 
 import { logger } from '../logger';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { userService } from '../services/user.service';
 import fs from 'fs/promises';
 import path from 'path';
-import { UserId } from "@shared/types";
 
 export type AuditEventType =
 	| 'auth.login'

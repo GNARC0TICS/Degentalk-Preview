@@ -5,7 +5,7 @@
  * between public, authenticated, and moderation data.
  */
 
-import type { UserId, ThreadId, PostId, ForumId, ZoneId, TagId } from '@shared/types';
+import type { UserId, ThreadId, PostId, ForumId, ZoneId, TagId } from '@shared/types/ids';
 
 // Base thread data safe for public consumption
 export interface PublicThread {

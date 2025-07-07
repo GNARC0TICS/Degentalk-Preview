@@ -17,7 +17,7 @@ import {
 	requirePostDeletePermission
 } from '../services/permissions.service';
 import { asyncHandler } from '@server/src/core/errors';
-import type { ThreadId, PostId, UserId } from '@shared/types';
+import type { ThreadId, PostId, UserId } from '@shared/types/ids';
 import { ForumTransformer } from '../transformers/forum.transformer';
 
 const router = Router();

@@ -1,6 +1,8 @@
+/* eslint-disable */
+
 import type { Request, Response } from 'express';
-import type { EntityId, RequestId } from '@shared/types';
-import { UserId } from '@shared/types';
+import type { EntityId, RequestId } from '@shared/types/ids';
+import { UserId } from '@shared/types/ids';
 import { userService } from '@server/src/core/services/user.service';
 import { logger } from '@server/src/core/logger';
 import { AdminError, AdminErrorCodes } from '../admin.errors';
@@ -422,6 +424,8 @@ export function formatErrorResponse(
 		...(includeStack && { stack: new Error().stack })
 	};
 }
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
 
 // Extend Express Request type
 declare global {

@@ -1,5 +1,5 @@
 import { userService } from '@server/src/core/services/user.service';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
 import { featureFlags, users } from '@schema';

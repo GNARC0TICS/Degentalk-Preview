@@ -1,3 +1,4 @@
+import type { UserId } from '@shared/types/ids';
 /**
  * Cosmetics Routes
  * 

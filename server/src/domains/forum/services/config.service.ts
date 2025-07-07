@@ -12,7 +12,7 @@ import {
 	type Zone as ConfigZone
 } from '../../../../../client/src/config/forumMap.config';
 import type { ForumCategoryWithStats } from '../../../../db/types/forum.types';
-import type { StructureId } from '@shared/types';
+import type { StructureId } from '@shared/types/ids';
 
 export interface ForumConfigEntry {
 	forum: ConfigForum;

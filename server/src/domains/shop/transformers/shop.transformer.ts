@@ -6,20 +6,10 @@
  * Follows established patterns from Users, Forums, and Economy domains
  */
 
-import type {
-  PublicShopItem,
-  AuthenticatedShopItem,
-  AdminShopItem,
-  UserOrder,
-  AdminOrder,
-  UserInventoryItem,
-  AdminInventoryItem,
-  VanitySinkMetrics,
-  VanitySinkEvent
-} from '../types';
+import type { UserId } from '@shared/types/ids';
+import type { PublicShopItem, AuthenticatedShopItem, AdminShopItem, UserOrder, AdminOrder, UserInventoryItem, AdminInventoryItem, VanitySinkMetrics, VanitySinkEvent } from '../types';
 
 import type { 
-  UserId, 
   ItemId,
   DgtAmount, 
   UsdAmount,

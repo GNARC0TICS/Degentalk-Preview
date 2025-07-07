@@ -7,7 +7,7 @@
 import { db } from '@db';
 import { eq, and, or, sql, desc } from 'drizzle-orm';
 import { messages, users, directMessages } from '@schema';
-import type { UserId, MessageId } from '@shared/types';
+import type { UserId, MessageId } from '@shared/types/ids';
 import { MessageTransformer } from './transformers';
 import type { SendMessageRequest } from './types';
 import { randomUUID } from 'crypto';

@@ -7,7 +7,7 @@ import { eq, and, desc } from 'drizzle-orm';
 import { isAdminOrModerator } from '../../../auth/middleware/auth.middleware';
 import { getUserIdFromRequest } from '@server/src/utils/auth';
 import { logger } from '@server/src/core/logger';
-import type { EntityId } from '@shared/types';
+import type { EntityId } from '@shared/types/ids';
 
 const router = Router();
 

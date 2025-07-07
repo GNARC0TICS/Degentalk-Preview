@@ -10,7 +10,7 @@ import { wallets, transactions, users } from '@schema';
 import { eq, and, sql, desc } from 'drizzle-orm';
 import { walletConfigService } from './wallet-config.service';
 import { vanitySinkAnalyzer } from '../shop/services/vanity-sink.analyzer';
-import type { ItemId, ActionId, WalletId, TransactionId, DgtAmount, UserId } from '@shared/types';
+import type { ItemId, ActionId, WalletId, TransactionId, DgtAmount, UserId } from '@shared/types/ids';
 import { logger } from "../../core/logger";
 
 export interface DGTTransactionMetadata {

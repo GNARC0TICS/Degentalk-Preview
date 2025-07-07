@@ -19,7 +19,7 @@ import { threadService } from './services/thread.service';
 import { postService } from './services/post.service';
 import { configService } from './services/config.service';
 import { cacheService } from './services/cache.service';
-import type { ForumId, StructureId, ThreadId, PostId } from '@shared/types';
+import type { ForumId, StructureId, ThreadId, PostId } from '@shared/types/ids';
 
 export interface ThreadSearchParams {
 	categoryId?: StructureId;
