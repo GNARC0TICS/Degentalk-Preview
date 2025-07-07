@@ -5,7 +5,6 @@
  */
 
 import { useState } from 'react';
-import type { UserId } from '@/types/ids';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -35,9 +34,9 @@ import {
 	ChevronDown
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useLocation } from 'wouter';
+import { useRouter } from 'wouter';
 import type { LeaderboardEntry } from '@/features/gamification/services/gamification-api.service';
-import { type UserId } from "@shared/types";
+import type { UserId } from "@shared/types/ids";
 
 interface LeaderboardProps {
 	entries: LeaderboardEntry[];

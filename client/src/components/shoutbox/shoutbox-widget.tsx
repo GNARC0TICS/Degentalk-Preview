@@ -51,12 +51,11 @@ import {
 	Maximize2,
 	Lock as LockIcon
 } from 'lucide-react';
-import type { GroupId, MessageId, EntityId } from '@/types/ids';
-import { type EntityId, type GroupId, type MessageId } from "@shared/types";
+import type { GroupId, MessageId, UserId } from "@shared/types/ids";
 
 // Types for shoutbox messages
 interface ShoutboxUser {
-	id: EntityId;
+	id: UserId;
 	username: string;
 	avatarUrl: string | null;
 	activeAvatarUrl: string | null;
@@ -77,7 +76,7 @@ interface ShoutboxMessage {
 
 // Types for custom emojis
 interface CustomEmoji {
-	id: EntityId;
+	id: string;
 	name: string;
 	code: string;
 	imageUrl: string;

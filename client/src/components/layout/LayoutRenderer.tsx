@@ -1,9 +1,8 @@
-import React from 'react';
 import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
 import { pageSlotMap } from '@/config/pageSlotMap';
 import { SlotRenderer } from './SlotRenderer';
 
-export const LayoutRenderer: React.FC<{ page: 'home' | 'forum' | 'profile' }> = ({ page }) => {
+export const LayoutRenderer = ({ page }: { page: 'home' | 'forum' | 'profile' }) => {
 	const sidebars = useLayoutStore((s) => s.sidebars);
 	const slotsForPage = pageSlotMap[page];
 

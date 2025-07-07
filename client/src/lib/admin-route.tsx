@@ -1,3 +1,4 @@
+import type { ComponentType } from 'react';
 import { Redirect, Route } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
 import { Loader2 } from 'lucide-react';
@@ -11,7 +12,7 @@ export function AdminRoute({
 	component: Component
 }: {
 	path: string;
-	component: React.ComponentType<any>; // Changed to React.ComponentType<any> for broader compatibility
+	component: ComponentType<any>;
 }) {
 	const { user, isLoading, isDevMode } = useAuth();
 

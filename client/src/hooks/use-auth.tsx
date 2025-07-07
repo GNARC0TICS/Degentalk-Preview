@@ -1,12 +1,11 @@
-import * as React from 'react';
+import type { ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useLocation } from 'wouter';
 import { getUserPermissions } from '@/lib/roles';
 import type { Role } from '@/lib/roles';
-import type { UserId, type FrameId } from '@shared/types';
-
-const { createContext, useContext, useState, useEffect, useMemo } = React;
+import type { UserId, FrameId } from '@shared/types/ids';
 
 // Define user type
 export interface User {
@@ -34,8 +33,8 @@ export interface User {
 	lastActiveAt?: string | null;
 	bannerUrl?: string | null;
 	dgtBalance?: number;
-	activeFrameId?: Id<'activeFrame'> | null;
-	avatarFrameId?: Id<'avatarFrame'> | null;
+	activeFrameId?: FrameId | null;
+	avatarFrameId?: FrameId | null;
 	isBanned: boolean;
 }
 
@@ -75,7 +74,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // Mock User Definitions for Development
 const mockUsers: Record<MockRole, User> = {
 	user: {
-		id: 999,
+		id: '999' as UserId,
 		username: 'DevUser',
 		email: 'dev@example.com',
 		avatarUrl: null,
@@ -99,12 +98,12 @@ const mockUsers: Record<MockRole, User> = {
 		lastActiveAt: new Date().toISOString(),
 		bannerUrl: '/images/profile-banner-mock.png',
 		dgtBalance: 1000,
-		activeFrameId: 1,
-		avatarFrameId: 1,
+		activeFrameId: '1' as FrameId,
+		avatarFrameId: '1' as FrameId,
 		isBanned: false
 	},
 	moderator: {
-		id: 998,
+		id: '998' as UserId,
 		username: 'DevMod',
 		email: 'devmod@example.com',
 		avatarUrl: null,
@@ -133,7 +132,7 @@ const mockUsers: Record<MockRole, User> = {
 		isBanned: false
 	},
 	admin: {
-		id: 997,
+		id: '997' as UserId,
 		username: 'cryptoadmin',
 		email: 'admin@degentalk.dev',
 		avatarUrl: '/images/avatars/admin.png',
@@ -157,12 +156,12 @@ const mockUsers: Record<MockRole, User> = {
 		lastActiveAt: new Date().toISOString(),
 		bannerUrl: '/images/banners/admin-banner.jpg',
 		dgtBalance: 100000,
-		activeFrameId: 2,
-		avatarFrameId: 2,
+		activeFrameId: '2' as FrameId,
+		avatarFrameId: '2' as FrameId,
 		isBanned: false
 	},
 	super_admin: {
-		id: 996,
+		id: '996' as UserId,
 		username: 'SuperAdmin',
 		email: 'superadmin@degentalk.dev',
 		avatarUrl: '/images/avatars/super-admin.png',
@@ -186,15 +185,15 @@ const mockUsers: Record<MockRole, User> = {
 		lastActiveAt: new Date().toISOString(),
 		bannerUrl: '/images/banners/super-admin-banner.jpg',
 		dgtBalance: 1000000,
-		activeFrameId: 3,
-		avatarFrameId: 3,
+		activeFrameId: '3' as FrameId,
+		avatarFrameId: '3' as FrameId,
 		isBanned: false
 	}
 };
 
 // MAIN AUTH PROVIDER - Single source of truth for authentication state
 // This provider manages all authentication logic and state for the entire application
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
 	// CRITICAL: Use the QueryClient from the provider context (RootProvider)
 	// This ensures we're using the same instance with on401: 'returnNull' configuration
 	const queryClient = useQueryClient();
@@ -214,7 +213,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	// CACHE CLEARING: Remove any stale auth data on provider initialization
 	// This prevents the "login button → authenticated UI" bug by ensuring
 	// we start with a clean slate each time the provider mounts
-	React.useEffect(() => {
+	useEffect(() => {
 		queryClient.removeQueries({ queryKey: ['/api/auth/user'] });
 	}, []);
 
@@ -356,7 +355,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	};
 
 	// Development auto-login: when in development and real user not authenticated, use mock user unless explicitly logged out
-	React.useEffect(() => {
+	useEffect(() => {
 		if (
 			isDevelopment && // only in dev
 			!isInitialLoading && // wait until initial auth check completes
@@ -434,7 +433,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	]);
 
 	// Development-only check for duplicate providers
-	React.useEffect(() => {
+	useEffect(() => {
 		if (import.meta.env.MODE === 'development') {
 			const dataAttr = 'data-auth-provider';
 			const providerElements = document.querySelectorAll(`[${dataAttr}="true"]`);

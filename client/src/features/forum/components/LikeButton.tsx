@@ -1,7 +1,7 @@
 import React from 'react';
 import { Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { PostId } from '@shared/types';
+import type { PostId } from '@shared/types/ids';
 
 interface LikeButtonProps {
 	postId: PostId; // Retained for context, though not directly used in this simplified version

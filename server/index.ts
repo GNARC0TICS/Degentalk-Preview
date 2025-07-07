@@ -53,7 +53,7 @@ const startupLog = (message: string, type: 'info' | 'success' | 'error' | 'warni
 		error: '❌',
 		warning: '⚠️'
 	}[type];
-	logger.info(`[BACKEND] ${prefix} ${message}`);
+	logger.info('BACKEND', message, { type, prefix });
 };
 
 const app = express();

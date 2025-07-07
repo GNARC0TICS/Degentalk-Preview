@@ -5,8 +5,8 @@
  * Handles balance and transaction history operations with proper separation of concerns
  */
 
-import { logger } from '@server/src/core/logger';
-import { WalletError, ErrorCodes } from '@server/src/core/errors';
+import { logger } from '../../../core/logger';
+import { WalletError, ErrorCodes } from '../../../core/errors';
 import { ccpaymentApiService } from './ccpayment-api.service';
 
 export interface CryptoBalance {

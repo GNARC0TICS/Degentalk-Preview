@@ -46,7 +46,7 @@ export type {
   LoginRecord,
   DataProcessingRecord,
   AdminUpdateUserRequest,
-  SecureUserResponse,
+  // SecureUserResponse, // Temporarily disabled due to circular imports
   UserContext
 } from './user-secure.types';
 

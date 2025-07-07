@@ -24,7 +24,7 @@ import {
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { formatDistanceToNow } from 'date-fns';
-import type { PostId } from '@shared/types';
+import type { PostId } from '@shared/types/ids';
 
 interface ReactionBarProps {
 	postId: PostId;
@@ -98,7 +98,7 @@ export function ReactionBar({
 			// Could add a toast notification here
 			onCopyLink?.(postId);
 		} catch (err) {
-			console.error('Failed to copy link:', err);
+			// Failed to copy link
 		}
 	};
 

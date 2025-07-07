@@ -8,7 +8,7 @@ import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { AddWordModal } from '@/features/dictionary/components/AddWordModal';
 import { Tooltip } from '@/components/ui/tooltip';
-import type { DictionaryEntryId } from '@shared/types';
+import type { DictionaryEntryId } from '@shared/types/ids';
 
 interface DictionaryEntry {
 	id: DictionaryEntryId;

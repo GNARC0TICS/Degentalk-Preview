@@ -1,8 +1,8 @@
-import { db } from '@server/src/core/db';
+import { db } from '@db';
 import { cloutAchievements, userCloutLog } from '@schema';
 import { users } from '@schema';
 import { eq, and } from 'drizzle-orm';
-import { logger } from '@server/src/core/logger';
+import { logger } from '../../../core/logger';
 import type { UserId, AchievementId } from '@shared/types';
 
 export class CloutService {

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { AvatarFrame } from '@/components/identity/AvatarFrame';
 import { cn } from '@/lib/utils';
-import type { ThreadId } from '@shared/types';
+import type { ThreadId } from '@shared/types/ids';
 
 interface QuickReplyBoxProps {
 	threadId: ThreadId;
@@ -36,7 +36,7 @@ export function QuickReplyBox({
 			await onSubmit?.(content);
 			setContent(''); // Clear on success
 		} catch (error) {
-			console.error('Failed to submit reply:', error);
+			// Failed to submit reply
 		} finally {
 			setIsSubmitting(false);
 		}

@@ -1,4 +1,4 @@
-import type { UserId } from '@shared/types';
+import type { UserId, ForumId } from '@shared/types/ids';
 import React, { memo } from 'react';
 import { Link } from 'wouter';
 import { motion } from 'framer-motion';
@@ -391,7 +391,7 @@ const ZoneCardPure = memo(
 								(slots?.preview ?? (
 									<div className="space-y-2">
 										<div className="text-xs font-medium text-zinc-300 mb-2">Forums:</div>
-										{previewForums.map((forumItem: any) => (
+										{previewForums.map((forumItem: { id: ForumId; name: string; threadCount?: number }) => (
 											<div
 												key={forumItem.id}
 												className="flex items-center justify-between p-2 rounded bg-zinc-800/40 hover:bg-zinc-800/60 transition-colors"

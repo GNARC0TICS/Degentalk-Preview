@@ -53,7 +53,6 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 			parentForum = getForum(params.forumSlug);
 		}
 	} catch (error) {
-		console.error('Error retrieving forum data:', error);
 		throw error as Error; // bubble up to error boundary
 	}
 

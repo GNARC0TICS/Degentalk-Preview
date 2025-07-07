@@ -27,7 +27,7 @@ import {
 	DropdownMenuContent,
 	DropdownMenuCheckboxItem
 } from '@/components/ui/dropdown-menu';
-import type { OrderId, PostId, ThreadId, EntityId, type UserId } from '@shared/types';
+import type { OrderId, PostId, ThreadId, EntityId, UserId } from '@shared/types/ids';
 
 // Types
 /**

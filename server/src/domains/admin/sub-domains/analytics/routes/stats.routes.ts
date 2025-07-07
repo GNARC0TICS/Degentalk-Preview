@@ -9,7 +9,7 @@ import { platformStatistics } from '@schema';
 import { eq } from 'drizzle-orm';
 import { platformStatsService } from '../services/platformStats.service';
 import { isAdmin } from '../../../../auth/middleware/auth.middleware';
-import { logger } from "../../../../../core/logger";
+import { logger } from '../../../../core/logger';
 
 const router = Router();
 

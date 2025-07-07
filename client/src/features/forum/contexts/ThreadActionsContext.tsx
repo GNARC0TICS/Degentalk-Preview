@@ -4,9 +4,8 @@ import { useTip } from '@/hooks/use-tip';
 import { useCreatePost } from '@/features/forum/hooks/useForumQueries';
 import { useBookmarkThread, useRemoveBookmark } from '@/features/forum/hooks/useForumQueries';
 import type { ThreadDisplay } from '@/types/thread.types';
-import type { UserId, ThreadId } from '@degentalk/shared/types/core';
 import { useQueryClient } from '@tanstack/react-query';
-import { type UserId, type ThreadId } from "@shared/types";
+import type { UserId, ThreadId } from '@shared/types/ids';
 
 interface ThreadActionsContextValue {
 	isBookmarked: boolean;
@@ -79,7 +78,7 @@ export const ThreadActionsProvider: React.FC<{
 				});
 				navigator.sendBeacon?.('/api/analytics/track', payload);
 			} catch (err) {
-				console.debug('analytics beacon failed', err);
+				// analytics beacon failed
 			}
 		});
 	}, [thread.slug, thread.id, toast]);

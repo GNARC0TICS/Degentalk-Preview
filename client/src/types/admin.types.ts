@@ -3,7 +3,7 @@
  * Comprehensive types for admin components and operations
  */
 
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 
 // Base User Interface
 export interface User {

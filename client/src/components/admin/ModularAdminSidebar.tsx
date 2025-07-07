@@ -86,7 +86,7 @@ const iconMap: Record<string, any> = {
 };
 
 // Get icon component from icon name
-const getIconComponent = (iconName: string): any => {
+const getIconComponent = (iconName: string): React.ComponentType => {
 	return iconMap[iconName] || iconMap.default;
 };
 

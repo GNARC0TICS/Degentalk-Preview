@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/adminApi';
+import type { UserId } from '@shared/types/ids';
 
 export const CLOUT_LOGS_KEY = ['admin', 'clout', 'logs'];
 
 export function useGrantClout() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: (payload: { userId: string; amount: number; reason: string }) =>
+		mutationFn: (payload: { userId: UserId; amount: number; reason: string }) =>
 			adminApi.post('/clout/grants', payload),
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: CLOUT_LOGS_KEY });

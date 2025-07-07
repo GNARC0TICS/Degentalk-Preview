@@ -5,7 +5,7 @@ import { referralSources } from '@schema/system/referralSources';
 import { userReferrals } from '@schema/system/userReferrals';
 import { users } from '@schema/user/users';
 import { EntityId } from "@shared/types";
-import { logger } from "../../../../core/logger";
+import { logger } from '../../../../core/logger';
 
 /**
  * Service for managing referral sources and user referrals

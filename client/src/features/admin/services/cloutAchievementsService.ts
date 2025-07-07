@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/adminApi';
 import type { AchievementId } from '@shared/types';
+import type { AchievementData } from '@/types/admin.types';
 
 export const ACHIEVEMENTS_KEY = ['admin', 'clout', 'achievements'];
 
@@ -14,7 +15,7 @@ export function useCloutAchievements() {
 export function useCreateAchievement() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: (payload: any) => adminApi.post('/clout/achievements', payload),
+		mutationFn: (payload: AchievementData) => adminApi.post('/clout/achievements', payload),
 		onSuccess: () => qc.invalidateQueries({ queryKey: ACHIEVEMENTS_KEY })
 	});
 }
@@ -22,7 +23,7 @@ export function useCreateAchievement() {
 export function useUpdateAchievement() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: ({ id, payload }: { id: AchievementId; payload: any }) =>
+		mutationFn: ({ id, payload }: { id: AchievementId; payload: Partial<AchievementData> }) =>
 			adminApi.put(`/clout/achievements/${id}`, payload),
 		onSuccess: () => qc.invalidateQueries({ queryKey: ACHIEVEMENTS_KEY })
 	});

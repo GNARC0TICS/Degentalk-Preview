@@ -126,9 +126,9 @@ export const useCacheOperation = () => {
 				description: `Successfully performed ${variables.operation} operation`
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: unknown) => {
 			toast.error('Cache Operation Failed', {
-				description: error.message || 'Failed to perform cache operation'
+				description: (error as Error)?.message || 'Failed to perform cache operation'
 			});
 		}
 	});

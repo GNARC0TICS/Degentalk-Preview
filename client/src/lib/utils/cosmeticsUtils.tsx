@@ -1,4 +1,4 @@
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import type { AppliedCosmetics } from '@/types/inventory';
 
 interface UserInventoryItem {

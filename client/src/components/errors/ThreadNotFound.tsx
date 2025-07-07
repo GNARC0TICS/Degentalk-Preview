@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import type { ThreadId } from '@/types/ids';
+import type { ThreadId } from '@shared/types/ids';
 
 interface ThreadNotFoundProps {
 	threadId?: string | number;

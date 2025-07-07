@@ -1,5 +1,5 @@
-import { apiRequest } from '@/lib/queryClient';
-import { type UserId } from "@shared/types";
+import { apiRequest } from '@/lib/api-request';
+import type { UserId } from '@shared/types/ids';
 
 export interface WalletBalance {
 	dgt: number;
@@ -59,14 +59,15 @@ export class WalletApiService {
 		status?: string;
 		limit?: number;
 	}): Promise<TransactionItem[]> {
-		const params = new URLSearchParams();
-		if (filters?.type) params.append('type', filters.type);
-		if (filters?.status) params.append('status', filters.status);
-		if (filters?.limit) params.append('limit', filters.limit.toString());
+		const queryParams: Record<string, string> = {};
+		if (filters?.type) queryParams.type = filters.type;
+		if (filters?.status) queryParams.status = filters.status;
+		if (filters?.limit) queryParams.limit = filters.limit.toString();
 
 		return apiRequest<TransactionItem[]>({
-			url: `/api/wallet/transactions?${params.toString()}`,
-			method: 'GET'
+			url: '/api/wallet/transactions',
+			method: 'GET',
+			params: Object.keys(queryParams).length > 0 ? queryParams : undefined
 		});
 	}
 
@@ -78,7 +79,7 @@ export class WalletApiService {
 	}
 
 	static async transferDgt(data: {
-		toUserId: string;
+		toUserId: UserId;
 		amount: number;
 		note?: string;
 	}): Promise<void> {

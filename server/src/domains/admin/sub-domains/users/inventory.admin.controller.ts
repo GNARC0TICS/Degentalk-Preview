@@ -1,7 +1,7 @@
 import { db } from '@db'; // Adjust
 import { userInventory, products } from '@schema'; // Adjust
 import { eq, and, getTableColumns } from 'drizzle-orm';
-import { logger } from "../../../../core/logger";
+import { logger } from '../../../../core/logger';
 
 export const userInventoryAdminController = {
 	// View a user's inventory

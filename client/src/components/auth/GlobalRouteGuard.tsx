@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import type { ReactNode } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
 import { getRouteProtection } from '@/lib/routeConfig';
@@ -6,7 +7,7 @@ import { hasRoleAtLeast } from '@/lib/roles';
 import type { Role } from '@/lib/roles';
 
 interface GlobalRouteGuardProps {
-	children: React.ReactNode;
+	children: ReactNode;
 	onUnauthorizedAccess?: (path: string, reason: string) => void;
 	enableLogging?: boolean;
 }

@@ -2,7 +2,7 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import pgPkg from 'pg';
 import { sql } from 'drizzle-orm';
 import { config } from 'dotenv';
-import { logger } from "./src/core/logger";
+import { logger } from "../src/core/logger";
 
 config();
 

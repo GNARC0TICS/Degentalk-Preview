@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import type { Tag } from '@/types/forum';
 import type { ThreadPrefix } from '@/types/compat/forum';
 import { useEffect } from 'react';
-import type { ForumId, TagId, ContentId, PrefixId, ThreadId, PostId } from '@shared/types';
+import type { ForumId, TagId, ContentId, PrefixId, ThreadId, PostId } from '@shared/types/ids';
 
 // Utility for common cache invalidation patterns
 const invalidatePostQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
@@ -110,7 +110,13 @@ export const useCreateThread = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: (data: CreateThreadParams) => forumApi.createThread(data), // forumApi.createThread needs to accept this new param type
+		mutationFn: (data: CreateThreadParams) => {
+			const { forumSlug, ...apiData } = data;
+			return forumApi.createThread({
+				...apiData,
+				tagIds: data.tags
+			});
+		},
 		onSuccess: async (_, variables) => {
 			// Invalidate queries that list threads, potentially per-forum if keys are specific
 			queryClient.invalidateQueries({
@@ -391,12 +397,12 @@ export const usePrefixes = (params?: { forumId?: ForumId }) => {
 		queryKey,
 		queryFn: () => forumApi.getPrefixes(forumId),
 		staleTime: 1000 * 60 * 5,
-		enabled: typeof forumId === 'number'
+		enabled: forumId !== undefined
 	});
 
 	// Ensure fresh data if forum changes
 	useEffect(() => {
-		if (typeof forumId === 'number') {
+		if (forumId !== undefined) {
 			queryClient.invalidateQueries({ queryKey: ['/api/forum/prefixes', { forumId }] });
 		}
 	}, [forumId, queryClient]);

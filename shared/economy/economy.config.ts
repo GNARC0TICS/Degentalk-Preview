@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import type { ForumId } from '@degentalk/db/types';
+import type { ForumId } from '@shared/types/ids';
 import { logger } from "../../server/src/core/logger";
-import { UserId } from "@shared/types";
+import { UserId } from "@shared/types/ids";
 
 /*
  * Centralised XP / DGT economy configuration.

@@ -18,7 +18,7 @@ import {
 	SelectValue
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { type UserId } from "@shared/types";
+import type { UserId } from '@shared/types/ids';
 
 interface ManualDgtAdjustmentDialogProps {
 	isOpen: boolean;
@@ -91,7 +91,6 @@ const ManualDgtAdjustmentDialog: React.FC<ManualDgtAdjustmentDialogProps> = ({
 			// onClose will typically be called by the parent component on successful submission
 		} catch (error) {
 			// Error toast is usually handled by the mutation's onError in the parent component
-			console.error('Error in dialog submission:', error);
 		}
 	};
 

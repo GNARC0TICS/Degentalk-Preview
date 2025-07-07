@@ -123,13 +123,13 @@ export class TipService {
 
 			if (currency === 'DGT') {
 				// Handle DGT tip using internal transfer
-				const result = await dgtService.transferDGT(fromUserId, toUserId, amount, 'tip', {
+				const result = await dgtService.transferDgt(fromUserId, toUserId, BigInt(amount), 'TIP', {
 					source,
 					contextId,
 					message
 				});
 
-				transactionIds = [result.senderTransactionId, result.recipientTransactionId];
+				transactionIds = [result.transactionId];
 			} else {
 				// For crypto: Not directly supported - we'd need to simulate it
 				// since CCPayment likely doesn't support direct wallet-to-wallet transfers
@@ -210,7 +210,7 @@ export class TipService {
 		}
 
 		// Check minimum tip amount
-		if (currency === 'DGT' && settings.minTipAmountDGT && amount < settings.minTipAmountDGT) {
+		if (currency === 'DGT' && settings.minTipAmountDGT && amount < Number(settings.minTipAmountDGT)) {
 			throw new WalletError(
 				`Minimum DGT tip amount is ${settings.minTipAmountDGT}`,
 				400,
@@ -219,7 +219,7 @@ export class TipService {
 		}
 
 		// Check maximum tip amount
-		if (currency === 'DGT' && settings.maxTipAmountDGT && amount > settings.maxTipAmountDGT) {
+		if (currency === 'DGT' && settings.maxTipAmountDGT && amount > Number(settings.maxTipAmountDGT)) {
 			throw new WalletError(
 				`Maximum DGT tip amount is ${settings.maxTipAmountDGT}`,
 				400,
@@ -245,7 +245,7 @@ export class TipService {
 
 			const totalSentToday = Number(dailyTotal.total) || 0;
 
-			if (totalSentToday + amount > settings.dailyTipLimitDGT) {
+			if (totalSentToday + amount > Number(settings.dailyTipLimitDGT)) {
 				throw new WalletError(
 					`Daily DGT tip limit of ${settings.dailyTipLimitDGT} would be exceeded`,
 					400,
@@ -264,11 +264,11 @@ export class TipService {
 				.select()
 				.from(tipRecords)
 				.where(
-					sql`
-          from_user_id = ${fromUserId} 
-          AND to_user_id = ${toUserId}
-          AND created_at >= ${cooldownTime.toISOString()}
-        `
+					and(
+						eq(tipRecords.fromUserId, fromUserId),
+						eq(tipRecords.toUserId, toUserId),
+						sql`${tipRecords.createdAt} >= ${cooldownTime.toISOString()}`
+					)
 				)
 				.limit(1);
 

@@ -5,7 +5,7 @@ export type ContentTab = 'trending' | 'recent' | 'following';
 
 // Use unified ThreadDisplay type instead of custom ContentItem
 import type { ThreadDisplay } from '@/types/thread.types';
-import type { ForumId } from '@shared/types';
+import type { ForumId } from '@shared/types/ids';
 
 export type ContentItem = ThreadDisplay;
 

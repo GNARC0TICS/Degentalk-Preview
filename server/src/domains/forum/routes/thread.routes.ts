@@ -364,7 +364,7 @@ router.get(
 			const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
 			const sortBy = (req.query.sortBy as string) || 'oldest';
 
-			if (isNaN(threadId)) {
+			if (!threadId) {
 				return res.status(400).json({
 					success: false,
 					error: 'Invalid thread ID'

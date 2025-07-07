@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Send } from 'lucide-react';
-import type { GroupId } from '@shared/types';
+import type { GroupId } from '@shared/types/ids';
 
 // Types
 interface UserGroup {

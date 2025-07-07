@@ -15,15 +15,15 @@ import { AppError } from '../../core/errors';
 
 // Validation schemas
 const getUserAchievementsSchema = z.object({
-	userId: z.string().transform(Number).pipe(z.number().int().min(1))
+	userId: z.string().uuid()
 });
 
 const getProgressSchema = z.object({
-	userId: z.string().transform(Number).pipe(z.number().int().min(1)),
+	userId: z.string().uuid(),
 	achievementIds: z
 		.string()
 		.optional()
-		.transform((str) => (str ? str.split(',').map(Number) : undefined))
+		.transform((str) => (str ? str.split(',') : undefined))
 });
 
 const awardAchievementSchema = z.object({
@@ -54,7 +54,7 @@ const createAchievementSchema = z.object({
 });
 
 const getLeaderboardSchema = z.object({
-	limit: z.string().transform(Number).pipe(z.number().int().min(1).max(100)).optional().default(50)
+	limit: z.string().optional().transform((val) => val ? parseInt(val) : 50).pipe(z.number().int().min(1).max(100))
 });
 
 export class AchievementController {
@@ -241,7 +241,7 @@ export class AchievementController {
 			}
 
 			const achievementIds = req.query.achievementIds
-				? String(req.query.achievementIds).split(',').map(Number)
+				? String(req.query.achievementIds).split(',')
 				: undefined;
 
 			const progress = await this.service.getUserAchievementProgress(userId, achievementIds);
@@ -447,7 +447,7 @@ export class AchievementController {
 	async getAchievementById(req: Request, res: Response) {
 		try {
 			const achievementId = req.params.id;
-			if (isNaN(achievementId)) {
+			if (!achievementId) {
 				throw new AppError('Invalid achievement ID', 400);
 			}
 

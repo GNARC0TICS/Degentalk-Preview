@@ -13,17 +13,16 @@ import type {
 	ForumStructureWithStats,
 	ThreadWithPostsAndUser
 } from '../../../db/types/forum.types';
-import type { ForumId } from '@shared/types';
-
 // Import specialized services
 import { forumStructureService } from './services/structure.service';
 import { threadService } from './services/thread.service';
 import { postService } from './services/post.service';
 import { configService } from './services/config.service';
 import { cacheService } from './services/cache.service';
-import type { ForumId, ParentForumId, StructureId, ThreadId, PostId } from '@shared/types';
+import type { ForumId, StructureId, ThreadId, PostId } from '@shared/types';
 
 export interface ThreadSearchParams {
+	categoryId?: StructureId;
 	structureId?: StructureId;
 	prefix?: string;
 	tag?: string;
@@ -147,6 +146,28 @@ export const forumService = {
 	},
 
 	/**
+	 * Get categories tree - delegates to StructureService
+	 */
+	async getCategoriesTree(options: StructureTreeOptions = {}) {
+		return forumStructureService.getStructureTree(options);
+	},
+
+	/**
+	 * Get categories with stats - delegates to StructureService
+	 */
+	async getCategoriesWithStats(): Promise<ForumStructureWithStats[]> {
+		return forumStructureService.getStructuresWithStats();
+	},
+
+	/**
+	 * Get forum with topics by slug
+	 */
+	async getForumBySlugWithTopics(slug: string): Promise<{ forum: ForumStructureWithStats | null }> {
+		const forum = await this.getCategoryBySlug(slug);
+		return { forum };
+	},
+
+	/**
 	 * Get forum and sub-forums by slug
 	 */
 	async getForumAndItsSubForumsBySlug(slug: string): Promise<{
@@ -157,9 +178,9 @@ export const forumService = {
 	},
 
 	/**
-	 * Get forum by ID from structure
+	 * Get category by ID from structure
 	 */
-	async getForumById(id: ForumId): Promise<ForumStructureWithStats | null> {
+	async getCategoryById(id: StructureId): Promise<ForumStructureWithStats | null> {
 		const { zones } = await this.getForumStructure();
 		for (const zone of zones) {
 			for (const parentForum of zone.childForums || []) {
@@ -178,11 +199,11 @@ export const forumService = {
 	},
 
 	/**
-	 * Get sub-forums by parent forum ID
+	 * Get structures by parent ID
 	 */
-	async getSubForumsByParentForumId(parentForumId: ForumId): Promise<ForumStructureWithStats[]> {
-		const parentForum = await this.getForumById(parentForumId);
-		return parentForum?.childForums || [];
+	async getForumsByParentId(parentId: StructureId): Promise<ForumStructureWithStats[]> {
+		const parentStructure = await this.getCategoryById(parentId);
+		return parentStructure?.childForums || [];
 	},
 
 	/**
@@ -219,7 +240,7 @@ export const forumService = {
 	/**
 	 * Get thread prefixes - simple delegation
 	 */
-	async getPrefixes(forumId?: ForumId) {
+	async getPrefixes(forumId?: StructureId) {
 		if (forumId) {
 			return db
 				.select()

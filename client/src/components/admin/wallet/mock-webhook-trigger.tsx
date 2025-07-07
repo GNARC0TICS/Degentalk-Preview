@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import type { UserId } from '@/types/ids';
 import {
 	Card,
 	CardContent,
@@ -21,7 +20,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/api-request';
-import { type UserId } from "@shared/types";
+import type { UserId } from '@shared/types/ids';
 
 interface MockWebhookResponse {
 	success: boolean;
@@ -62,7 +61,6 @@ export function MockWebhookTrigger() {
 					}
 				});
 			} catch (error) {
-				console.error('Error triggering mock webhook:', error);
 				throw error;
 			}
 		},
@@ -73,7 +71,7 @@ export function MockWebhookTrigger() {
 				description: `Successfully triggered a ${webhookType} webhook. Transaction ID: ${data.transactionId}`
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				variant: 'destructive',
 				title: 'Error Triggering Webhook',

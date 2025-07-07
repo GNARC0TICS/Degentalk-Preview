@@ -4,7 +4,7 @@ import { HotTopicsWidget } from './HotTopicsWidget';
 import { ActivityFeedWidget } from './ActivityFeedWidget';
 import { getSidebarWidgets, getZoneThemeKey, type WidgetType } from '@/lib/forum/sidebarUtils';
 import { cn } from '@/lib/utils';
-import { type StructureId } from "@shared/types";
+import { type StructureId } from "@shared/types/ids";
 
 interface DynamicSidebarProps {
 	structureId?: StructureId;
@@ -40,7 +40,6 @@ const WidgetFactory: React.FC<{
 
 		default:
 			// Fallback for unknown widget types
-			console.warn(`Unknown widget type: ${widgetType}`);
 			return null;
 	}
 };

@@ -3,8 +3,7 @@ import { useParams } from 'wouter';
 import { useUserActivityFeed } from '@/features/activity/hooks/useActivityFeed';
 import { EventLogFilters } from '@/features/activity/services/activityApi';
 import { format } from 'date-fns';
-// TODO: Replace with actual auth hook when available
-// import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@/hooks/use-auth';
 import { Link } from 'wouter';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { Wide } from '@/layout/primitives';

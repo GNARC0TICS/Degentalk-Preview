@@ -179,18 +179,23 @@ async function performPreflightChecks(): Promise<void> {
     {
       name: 'TypeScript compilation',
       check: () => {
-        // Temporarily skip TypeScript checks as branded ID imports
-        // will be fixed by the numeric-id-migration codemod
-        console.log('⚠️  Skipping TypeScript checks (will be fixed by codemods)');
-        return true;
+        try {
+          execSync('pnpm typecheck', { stdio: 'pipe' });
+          return true;
+        } catch {
+          return false;
+        }
       }
     },
     {
       name: 'ESLint passing',
       check: () => {
-        // Temporarily skip ESLint checks - may have warnings we can ignore
-        console.log('⚠️  Skipping ESLint checks for codemod execution');
-        return true;
+        try {
+          execSync('pnpm lint', { stdio: 'pipe' });
+          return true;
+        } catch {
+          return false;
+        }
       }
     }
   ];
@@ -228,14 +233,14 @@ async function performPostExecutionValidation(): Promise<void> {
   console.log('\n🔬 Performing post-execution validation...');
   
   const validationChecks = [
-    // {
-    //   name: 'TypeScript compilation',
-    //   command: 'pnpm typecheck'
-    // },
-    // {
-    //   name: 'ESLint with strict warnings',
-    //   command: 'pnpm lint --max-warnings 0'
-    // },
+    {
+      name: 'TypeScript compilation',
+      command: 'pnpm typecheck'
+    },
+    {
+      name: 'ESLint with strict warnings',
+      command: 'pnpm lint --max-warnings 0'
+    },
     {
       name: 'No console.log in server code',
       check: async () => {

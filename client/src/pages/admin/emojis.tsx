@@ -47,7 +47,7 @@ import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { MediaLibraryModal } from '@/components/admin/media/MediaLibraryModal';
 import { mediaApiService } from '@/features/admin/services/media-api.service';
 import { MediaAsset } from '@/components/media/MediaAsset';
-import type { EmojiId } from '@shared/types';
+import type { EmojiId } from '@shared/types/ids';
 
 // Type for emoji schema validation
 const emojiFormSchema = z.object({

@@ -1,10 +1,10 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import { ProtectedRoute } from './ProtectedRoute';
 import type { Role } from '@/lib/roles';
 
 interface RouteGuardProps {
-	children: React.ReactNode;
-	fallback?: React.ReactNode;
+	children: ReactNode;
+	fallback?: ReactNode;
 	redirectTo?: string;
 }
 

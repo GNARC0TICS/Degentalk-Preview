@@ -1,4 +1,4 @@
-import type { ProductId, InventoryId, UserId } from '@shared/types';
+import type { ProductId, InventoryId, UserId } from '@shared/types/ids';
 
 export interface PluginReward {
 	type: string;

@@ -23,7 +23,7 @@ import type {
 	MassAirdropInput
 } from './treasury.validators';
 import type { AdminUserId, ActionId } from '@shared/types';
-import { logger } from "../../../../core/logger";
+import { logger } from '../../../../core/logger';
 
 // Helper to format DGT amounts for display (assuming 6 decimal places for DGT)
 function formatDgtAmount(amount: number): number {

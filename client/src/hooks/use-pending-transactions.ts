@@ -19,7 +19,7 @@ interface TransactionStatusResponse {
 	id: string;
 	status: string;
 	timestamp: string;
-	details?: any;
+	details?: Record<string, unknown>;
 }
 
 export function usePendingTransactions() {

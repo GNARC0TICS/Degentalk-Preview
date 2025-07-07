@@ -166,22 +166,23 @@ export function validateXpConfig(config: unknown): XpConfig {
 }
 
 export function validatePartialXpConfig(config: unknown): Partial<XpConfig> {
-  return XpConfigSchema.partial().parse(config);
+  const result = XpConfigSchema.partial().parse(config);
+  return result as Partial<XpConfig>;
 }
 
 // Default configuration
 export const defaultXpConfig: XpConfig = {
   version: '1.0.0',
   actions: {
-    post: { base: 5, multiplierEligible: true, cooldown: 60 },
-    thread: { base: 10, multiplierEligible: true, cooldown: 300 },
-    reply: { base: 3, multiplierEligible: true, cooldown: 30 },
-    upvote: { base: 1, multiplierEligible: false, cooldown: 0, dailyCap: 50 },
-    tip_sent: { base: 2, multiplierEligible: false, cooldown: 0 },
-    tip_received: { base: 3, multiplierEligible: true, cooldown: 0 },
-    daily_login: { base: 25, multiplierEligible: true, cooldown: 86400 },
-    achievement: { base: 50, multiplierEligible: false, cooldown: 0 },
-    referral: { base: 100, multiplierEligible: false, cooldown: 0 }
+    post: { base: 5, multiplierEligible: true, cooldown: 60, requiredLevel: 1 },
+    thread: { base: 10, multiplierEligible: true, cooldown: 300, requiredLevel: 1 },
+    reply: { base: 3, multiplierEligible: true, cooldown: 30, requiredLevel: 1 },
+    upvote: { base: 1, multiplierEligible: false, cooldown: 0, dailyCap: 50, requiredLevel: 1 },
+    tip_sent: { base: 2, multiplierEligible: false, cooldown: 0, requiredLevel: 5 },
+    tip_received: { base: 3, multiplierEligible: true, cooldown: 0, requiredLevel: 1 },
+    daily_login: { base: 25, multiplierEligible: true, cooldown: 86400, requiredLevel: 1 },
+    achievement: { base: 50, multiplierEligible: false, cooldown: 0, requiredLevel: 1 },
+    referral: { base: 100, multiplierEligible: false, cooldown: 0, requiredLevel: 10 }
   },
   multipliers: {
     enabled: true,

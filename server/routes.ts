@@ -117,6 +117,8 @@ import {
 import { rateLimiters } from './src/core/services/rate-limit.service';
 import healthCheckRouter, { requestMetricsMiddleware } from './src/core/monitoring/health-check';
 import { auditMiddleware } from './src/core/audit/audit-logger';
+// Import logger
+import { logger } from './src/core/logger';
 // X integration routes
 import xAuthRoutes from './src/domains/auth/routes/xAuthRoutes';
 import xShareRoutes from './src/domains/share/routes/xShareRoutes';

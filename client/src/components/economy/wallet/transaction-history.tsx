@@ -15,9 +15,10 @@ import {
 	RefreshCw,
 	TrendingUp,
 	UserPlus,
-	Coins
+	Coins,
+	Clock
 } from 'lucide-react';
-import type { Transaction } from '@/features/wallet/services/wallet-api.service';
+import type { TransactionItem as Transaction } from '@/features/wallet/services/wallet-api.service';
 
 interface TransactionHistoryProps {
 	history: Transaction[];

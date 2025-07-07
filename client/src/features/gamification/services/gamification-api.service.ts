@@ -9,8 +9,8 @@
  * - Analytics and statistics
  */
 
-import { apiRequest } from '@/lib/queryClient';
-import type { UserId, AchievementId, MissionId } from '@shared/types';
+import { apiRequest } from '@/lib/api-request';
+import type { UserId, AchievementId, MissionId } from '@shared/types/ids';
 
 // Types for API responses
 export interface LevelInfo {
@@ -190,7 +190,7 @@ export class GamificationApiService {
 		return apiRequest<{ success: boolean; data: LeaderboardEntry[] }>({
 			url: `${this.baseUrl}/leaderboard`,
 			method: 'GET',
-			params: { type, limit, offset }
+			params: { type: type.toString(), limit: limit.toString(), offset: offset.toString() }
 		});
 	}
 
@@ -206,7 +206,7 @@ export class GamificationApiService {
 		}>({
 			url: `${this.baseUrl}/achievements`,
 			method: 'GET',
-			params: { active: activeOnly }
+			params: { active: activeOnly.toString() }
 		});
 	}
 
@@ -271,7 +271,10 @@ export class GamificationApiService {
 		}>({
 			url: `${this.baseUrl}/missions`,
 			method: 'GET',
-			params: { userLevel, activeOnly }
+				params: { 
+				...(userLevel !== undefined && { userLevel: userLevel.toString() }),
+				activeOnly: activeOnly.toString()
+			}
 		});
 	}
 

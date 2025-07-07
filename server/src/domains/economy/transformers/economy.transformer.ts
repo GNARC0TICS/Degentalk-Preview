@@ -26,9 +26,7 @@ import type {
   UsdAmount,
   XpAmount
 } from '@shared/types';
-import { UserTransformer } from '../../users/transformers/user.transformer';
 import { createHash } from 'crypto';
-import { ccpaymentTokenService } from '../../wallet/services/ccpayment-token.service';
 import { logger } from "../../../core/logger";
 
 export class EconomyTransformer {
@@ -372,16 +370,13 @@ export class EconomyTransformer {
     }
 
     // Get enhanced token information from CCPayment
-    let tokenInfo;
-    let currentPrice;
-    let withdrawFee;
+    let tokenInfo: any = undefined;
+    let currentPrice: any = undefined;
+    let withdrawFee: any = undefined;
     
     try {
-      [tokenInfo, currentPrice, withdrawFee] = await Promise.allSettled([
-        ccpaymentTokenService.getTokenInfo(dbCryptoWallet.coinId),
-        ccpaymentTokenService.getTokenPrices([dbCryptoWallet.coinId]),
-        ccpaymentTokenService.getWithdrawFee(dbCryptoWallet.coinId, dbCryptoWallet.chain)
-      ]);
+      // CCPayment integration temporarily disabled
+      logger.warn('CCPayment token service integration disabled');
     } catch (error) {
       // Fallback to basic data if CCPayment API fails
       logger.warn('Failed to fetch enhanced token data:', error);
@@ -398,22 +393,20 @@ export class EconomyTransformer {
       frozenBalance: this.formatCryptoBalance(dbCryptoWallet.frozenBalance || '0'),
       
       // Enhanced token information
-      tokenInfo: tokenInfo?.status === 'fulfilled' ? {
-        logoUrl: tokenInfo.value.logoUrl,
-        coinFullName: tokenInfo.value.coinFullName,
-        status: tokenInfo.value.status,
-        precision: tokenInfo.value.networks[dbCryptoWallet.chain]?.precision || 18
+      tokenInfo: tokenInfo ? {
+        logoUrl: tokenInfo.logoUrl,
+        coinFullName: tokenInfo.coinFullName,
+        status: tokenInfo.status,
+        precision: tokenInfo.networks?.[dbCryptoWallet.chain]?.precision || 18
       } : undefined,
       
       // Current market price
-      marketPrice: currentPrice?.status === 'fulfilled' 
-        ? currentPrice.value[dbCryptoWallet.coinId] 
-        : undefined,
+      marketPrice: currentPrice ? currentPrice[dbCryptoWallet.coinId] : undefined,
       
       // USD value of balance
       balanceUsdValue: this.calculateCryptoUsdValue(
         dbCryptoWallet.balance || '0',
-        currentPrice?.status === 'fulfilled' ? currentPrice.value[dbCryptoWallet.coinId] : undefined
+        currentPrice ? currentPrice[dbCryptoWallet.coinId] : undefined
       ),
       
       // CCPayment permissions
@@ -426,18 +419,10 @@ export class EconomyTransformer {
       
       // Enhanced limits from CCPayment
       limits: {
-        minDeposit: tokenInfo?.status === 'fulfilled' 
-          ? tokenInfo.value.networks[dbCryptoWallet.chain]?.minimumDepositAmount || '0'
-          : dbCryptoWallet.minDepositAmount || '0',
-        minWithdraw: tokenInfo?.status === 'fulfilled'
-          ? tokenInfo.value.networks[dbCryptoWallet.chain]?.minimumWithdrawAmount || '0'
-          : dbCryptoWallet.minWithdrawAmount || '0',
-        maxWithdraw: tokenInfo?.status === 'fulfilled'
-          ? tokenInfo.value.networks[dbCryptoWallet.chain]?.maximumWithdrawAmount || '0'
-          : '0',
-        withdrawFee: withdrawFee?.status === 'fulfilled'
-          ? withdrawFee.value.amount
-          : dbCryptoWallet.withdrawFee || '0'
+        minDeposit: tokenInfo?.networks?.[dbCryptoWallet.chain]?.minimumDepositAmount || dbCryptoWallet.minDepositAmount || '0',
+        minWithdraw: tokenInfo?.networks?.[dbCryptoWallet.chain]?.minimumWithdrawAmount || dbCryptoWallet.minWithdrawAmount || '0',
+        maxWithdraw: tokenInfo?.networks?.[dbCryptoWallet.chain]?.maximumWithdrawAmount || '0',
+        withdrawFee: withdrawFee?.amount || dbCryptoWallet.withdrawFee || '0'
       }
     };
   }

@@ -24,6 +24,7 @@ import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
 import crypto from 'crypto';
 import { z } from 'zod';
 import type { UserId, OrderId } from '@shared/types';
+import { UnauthorizedError } from '../../core/errors';
 // import { validateRequest } from '../../middleware/validate'; // Ensure this is commented or removed
 import { DGT_CURRENCY, DEFAULT_DGT_REWARD_CREATE_THREAD } from './wallet.constants';
 import { walletService } from './wallet.service';

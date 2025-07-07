@@ -1,5 +1,5 @@
 import { eq, and, sql, desc, asc } from 'drizzle-orm';
-import { db } from '@server/src/core/database';
+import { db } from '@server/src/core/db';
 import {
 	campaigns,
 	adPlacements,

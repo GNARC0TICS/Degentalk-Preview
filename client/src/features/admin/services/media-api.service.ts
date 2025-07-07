@@ -1,5 +1,5 @@
-import { apiRequest } from '@/lib/queryClient';
-import type { EntityId } from '@shared/types';
+import { apiRequest } from '@/lib/api-request';
+import type { EntityId } from '@shared/types/ids';
 
 export type MediaType = 'emoji' | 'lottie' | 'badge' | 'title' | 'flair';
 
@@ -32,8 +32,11 @@ export class MediaApiService {
 	}
 
 	async listMedia(type?: MediaType): Promise<MediaItem[]> {
-		const url = type ? `/api/admin/media?type=${type}` : '/api/admin/media';
-		return apiRequest<MediaItem[]>({ url, method: 'GET' });
+		return apiRequest<MediaItem[]>({
+			url: '/api/admin/media',
+			method: 'GET',
+			params: type ? { type } : undefined
+		});
 	}
 
 	listLottie() {

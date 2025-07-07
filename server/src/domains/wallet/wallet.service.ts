@@ -13,8 +13,9 @@ import { CCPaymentService } from './ccpayment.service';
 import { UserManagementService } from './user-management.service';
 import { walletConfigService } from './wallet-config.service';
 import { dgtService } from './dgt.service';
-import type { CoinId, ActionId } from '@shared/types';
+import type { CoinId, ActionId, UserId, DgtAmount, UsdAmount } from '@shared/types';
 import { logger } from "../../core/logger";
+import { EconomyTransformer } from '../economy/transformers/economy.transformer';
 
 /**
  * High-level Wallet Service
@@ -33,7 +34,7 @@ export class WalletService {
 	/**
 	 * Get user's wallet balances (includes DGT and crypto)
 	 */
-	async getUserBalances(userId: string): Promise<{
+	async getUserBalances(userId: UserId): Promise<{
 		dgt: {
 			balance: number;
 			lastTransactionAt: Date | null;
@@ -94,13 +95,12 @@ export class WalletService {
 			}
 
 			// Transform DGT balance for consistent response format
-			const transformedDgtBalance: DgtAmount = EconomyTransformer['sanitizeDgtAmount'](dgtBalance.balance) as DgtAmount;
+			const transformedDgtBalance = dgtBalance.balance as number;
 
 			return {
 				dgt: {
 					balance: transformedDgtBalance,
-					lastTransactionAt: dgtBalance.lastTransactionAt,
-					usdValue: EconomyTransformer['calculateUsdValue'](transformedDgtBalance) as UsdAmount
+					lastTransactionAt: dgtBalance.lastTransactionAt
 				},
 				crypto: cryptoBalances
 			};
@@ -113,7 +113,7 @@ export class WalletService {
 	/**
 	 * Get user's deposit addresses
 	 */
-	async getUserDepositAddresses(userId: string): Promise<
+	async getUserDepositAddresses(userId: UserId): Promise<
 		Array<{
 			coinId: CoinId;
 			coinSymbol: string;
@@ -144,7 +144,7 @@ export class WalletService {
 	 * Initiate withdrawal to blockchain
 	 */
 	async withdrawToBlockchain(
-		userId: string,
+		userId: UserId,
 		params: {
 			coinId: CoinId;
 			amount: string;
@@ -196,9 +196,9 @@ export class WalletService {
 	 * Transfer to another CCPayment user (internal transfer)
 	 */
 	async transferToUser(
-		fromUserId: string,
+		fromUserId: UserId,
 		params: {
-			toUserId: string;
+			toUserId: UserId;
 			coinId: CoinId;
 			amount: string;
 			note?: string;
@@ -247,7 +247,7 @@ export class WalletService {
 	 * Swap cryptocurrencies
 	 */
 	async swapCrypto(
-		userId: string,
+		userId: UserId,
 		params: {
 			fromCoinId: CoinId;
 			toCoinId: CoinId;
@@ -296,7 +296,7 @@ export class WalletService {
 	 * Get user's transaction history
 	 */
 	async getUserTransactionHistory(
-		userId: string,
+		userId: UserId,
 		params?: {
 			type?: 'deposit' | 'withdrawal' | 'transfer' | 'swap';
 			limit?: number;
@@ -376,9 +376,9 @@ export class WalletService {
 	 * Transfer DGT between users
 	 */
 	async transferDGT(
-		fromUserId: string,
+		fromUserId: UserId,
 		params: {
-			toUserId: string;
+			toUserId: UserId;
 			amount: number;
 			note?: string;
 		}
@@ -406,7 +406,7 @@ export class WalletService {
 	 * Get DGT transaction history
 	 */
 	async getDGTHistory(
-		userId: string,
+		userId: UserId,
 		options?: {
 			limit?: number;
 			offset?: number;
@@ -533,7 +533,7 @@ export class WalletService {
 	/**
 	 * Ensure CCPayment wallet exists for user (used by auth controller)
 	 */
-	async ensureCcPaymentWallet(userId: string): Promise<string> {
+	async ensureCcPaymentWallet(userId: UserId): Promise<string> {
 		try {
 			return await this.userManagementService.getOrCreateCCPaymentUser(userId);
 		} catch (error) {

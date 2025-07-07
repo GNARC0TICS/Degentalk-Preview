@@ -43,8 +43,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import type { PrefixId, EntityId } from '@/types/ids';
-import { type EntityId } from "@shared/types";
+import type { PrefixId, EntityId } from '@shared/types/ids';
 
 export interface ThreadFiltersState {
 	sortBy: string;

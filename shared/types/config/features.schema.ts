@@ -8,7 +8,7 @@ import { z } from 'zod';
  */
 
 // Feature flag rollout strategies
-export const RolloutStrategySchema = z.discriminatedUnion('type', [
+export const RolloutStrategySchema: any = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('all'),
     enabled: z.boolean()
@@ -35,7 +35,7 @@ export const RolloutStrategySchema = z.discriminatedUnion('type', [
   }),
   z.object({
     type: z.literal('combined'),
-    strategies: z.array(z.lazy(() => RolloutStrategySchema)),
+    strategies: z.array(z.lazy((): any => RolloutStrategySchema)),
     operator: z.enum(['AND', 'OR']).default('AND')
   })
 ]);
@@ -256,8 +256,17 @@ export function validateFeaturesConfig(config: unknown): FeaturesConfig {
 }
 
 export function validatePartialFeaturesConfig(config: unknown): Partial<FeaturesConfig> {
-  return FeaturesConfigSchema.partial().parse(config);
+  const result = FeaturesConfigSchema.partial().parse(config);
+  return result as Partial<FeaturesConfig>;
 }
+
+// Default configuration
+export const defaultFeaturesConfig: Partial<FeaturesConfig> = {
+  version: '1.0.0',
+  flags: [],
+  permissions: [],
+  roles: []
+};
 
 // Feature flag evaluation helper
 export function evaluateFeatureFlag(
@@ -292,7 +301,7 @@ export function evaluateFeatureFlag(
       return now >= start && (!end || now <= end);
     
     case 'combined':
-      const results = rollout.strategies.map(s => evaluateFeatureFlag({ ...flag, rollout: s }, context));
+      const results = rollout.strategies.map((s: any) => evaluateFeatureFlag({ ...flag, rollout: s }, context));
       return rollout.operator === 'AND' ? results.every(Boolean) : results.some(Boolean);
     
     default:

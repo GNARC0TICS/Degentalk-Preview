@@ -31,7 +31,7 @@ import {
 	ArrowDown
 } from 'lucide-react';
 import type { CloutLog, CloutAchievement } from '@/pages/admin/clout';
-import { type UserId } from "@shared/types";
+import type { UserId } from '@shared/types/ids';
 
 interface CloutLogsSectionProps {
 	logs: CloutLog[];
@@ -47,7 +47,7 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 
 	// Create achievement lookup map
 	const achievementMap = achievements.reduce(
-		(map: any, achievement) => {
+		(map: Record<number, CloutAchievement>, achievement) => {
 			map[achievement.id] = achievement;
 			return map;
 		},

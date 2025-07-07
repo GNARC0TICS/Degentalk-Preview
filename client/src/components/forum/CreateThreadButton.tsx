@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import type { ButtonProps } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
-import type { CategoryId } from '@shared/types';
+import type { CategoryId } from '@shared/types/ids';
 
 // import { ROUTES } from '@/constants/routes'; // ROUTES not used directly here
 

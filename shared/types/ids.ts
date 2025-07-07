@@ -51,6 +51,11 @@ export type MessageId = Id<'MessageId'>;
 export type AnnouncementId = Id<'AnnouncementId'>;
 export type MentionId = Id<'MentionId'>;
 
+// Social IDs
+export type FriendId = Id<'FriendId'>;
+export type FollowId = Id<'FollowId'>;
+export type RequestId = Id<'RequestId'>;
+
 // Admin & moderation IDs
 export type AdminUserId = Id<'AdminUserId'>;
 export type ModeratorId = Id<'ModeratorId'>;
@@ -100,6 +105,11 @@ export const isFrameId = createIdValidator('FrameId');
 export const isBadgeId = createIdValidator('BadgeId');
 export const isTitleId = createIdValidator('TitleId');
 
+// Social ID validators
+export const isFriendId = createIdValidator('FriendId');
+export const isFollowId = createIdValidator('FollowId');
+export const isRequestId = createIdValidator('RequestId');
+
 // ID casting helpers (use with caution, prefer validation)
 export const asUserId = (id: string): UserId => id as UserId;
 export const asThreadId = (id: string): ThreadId => id as ThreadId;
@@ -111,3 +121,8 @@ export const asItemId = (id: string): ItemId => id as ItemId;
 export const asFrameId = (id: string): FrameId => id as FrameId;
 export const asBadgeId = (id: string): BadgeId => id as BadgeId;
 export const asTitleId = (id: string): TitleId => id as TitleId;
+
+// Social ID casting helpers
+export const asFriendId = (id: string): FriendId => id as FriendId;
+export const asFollowId = (id: string): FollowId => id as FollowId;
+export const asRequestId = (id: string): RequestId => id as RequestId;

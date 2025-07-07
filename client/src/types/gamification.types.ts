@@ -3,7 +3,7 @@
  * Types for XP, achievements, missions, and gamified content
  */
 
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import type { StandardApiResponse } from './core.types';
 
 // Achievement System

@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Quote, Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { PostWithUser } from '@/types/compat/forum';
-import { type PostId } from "@shared/types";
+import type { PostId } from "@shared/types/ids";
 
 interface QuotePostModalProps {
 	isOpen: boolean;

@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/ui/loader';
 import { Coins, Check, Sparkles } from 'lucide-react';
-import type { FrameId } from '@shared/types';
+import type { FrameId } from '@shared/types/ids';
 
 interface StoreFrame {
 	id: FrameId;
@@ -51,8 +51,8 @@ export default function AvatarFramesShopPage() {
 	});
 
 	// Equip mutation
-	const equipMutation = useMutation<{ success: boolean }, Error, number>({
-		mutationFn: (frameId: string) =>
+	const equipMutation = useMutation<{ success: boolean }, Error, FrameId>({
+		mutationFn: (frameId: FrameId) =>
 			apiRequest({ url: `/api/users/me/frames/${frameId}/equip`, method: 'POST' }),
 		onSuccess: (_data, frameId) => {
 			setActiveEquipped(frameId);
@@ -63,11 +63,11 @@ export default function AvatarFramesShopPage() {
 		}
 	});
 
-	const handleBuy = (frameId: string) => {
+	const handleBuy = (frameId: FrameId) => {
 		purchaseMutation.mutate(frameId);
 	};
 
-	const handleEquip = (frameId: string) => {
+	const handleEquip = (frameId: FrameId) => {
 		equipMutation.mutate(frameId);
 	};
 

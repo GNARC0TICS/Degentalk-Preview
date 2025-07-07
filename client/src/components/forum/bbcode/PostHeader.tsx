@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 import { brandConfig } from '@/config/brand.config';
 import { cn } from '@/lib/utils';
-import type { PostId } from '@shared/types';
+import type { PostId } from '@shared/types/ids';
 
 interface PostHeaderProps {
 	postId: PostId;
@@ -39,7 +39,7 @@ export function PostHeader({
 			await navigator.clipboard.writeText(postUrl);
 			onCopyPermalink?.();
 		} catch (err) {
-			console.error('Failed to copy permalink:', err);
+			// Failed to copy permalink
 		}
 	};
 

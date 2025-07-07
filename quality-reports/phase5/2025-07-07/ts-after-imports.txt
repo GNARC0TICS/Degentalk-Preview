@@ -1,0 +1,24 @@
+
+> @degentalk/monorepo@1.0.0 typecheck /Users/gnarcotic/Degentalk
+> pnpm -r typecheck
+
+Scope: 5 of 6 workspace projects
+client typecheck$ tsc --noEmit
+client typecheck: src/components/admin/clout/AchievementsSection.tsx(67,15): error TS2305: Module '"@shared/types"' has no exported member 'AchievementId'.
+client typecheck: src/components/admin/clout/CloutLogsSection.tsx(34,15): error TS2305: Module '"@shared/types"' has no exported member 'UserId'.
+client typecheck: src/components/admin/common/AdminDataTable.tsx(1,15): error TS2305: Module '"@shared/types"' has no exported member 'UserId'.
+client typecheck: src/components/admin/forms/reports/ViewReportDialog.tsx(27,15): error TS2305: Module '"@shared/types"' has no exported member 'ReporterId'.
+client typecheck: src/components/admin/forms/reports/ViewReportDialog.tsx(27,27): error TS2305: Module '"@shared/types"' has no exported member 'ContentId'.
+client typecheck: src/components/admin/forms/reports/ViewReportDialog.tsx(27,38): error TS2305: Module '"@shared/types"' has no exported member 'EntityId'.
+client typecheck: src/components/admin/forms/reports/ViewReportDialog.tsx(27,48): error TS2305: Module '"@shared/types"' has no exported member 'UserId'.
+client typecheck: src/components/admin/forms/users/UserActionDialogs.tsx(29,15): error TS2305: Module '"@shared/types"' has no exported member 'UserId'.
+client typecheck: src/components/admin/forms/wallets/ManualDgtAdjustmentDialog.tsx(21,15): error TS2305: Module '"@shared/types"' has no exported member 'UserId'.
+client typecheck: src/components/admin/forms/xp/BadgeFormDialogs.tsx(26,15): error TS2305: Module '"@shared/types"' has no exported member 'BadgeId'.
+client typecheck: src/components/admin/forms/xp/BadgeFormDialogs.tsx(26,24): error TS2305: Module '"@shared/types"' has no exported member 'EntityId'.
+client typecheck: src/components/admin/forms/xp/LevelFormDialogs.tsx(24,15): error TS2305: Module '"@shared/types"' has no exported member 'LevelId'.
+client typecheck: src/components/admin/forms/xp/TitleMediaInput.tsx(6,15): error TS2305: Module '"@shared/types"' has no exported member 'EntityId'.
+client typecheck: src/components/admin/GrantFrameModal.tsx(17,15): error TS2305: Module '"@shared/types"' has no exported member 'FrameId'.
+client typecheck: src/components/admin/GrantFrameModal.tsx(17,24): error TS2305: Module '"@shared/types"' has no exported member 'UserId'.
+client typecheck: src/components/admin/layout/AdminPageShell.tsx(56,6): error TS2375: Type '{ children: (Element | Element[])[]; value: string; onValueChange: ((value: string) => void) | undefined; className: string; }' is not assignable to type 'TabsProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+client typecheck:   Types of property 'onValueChange' are incompatible.
+client typecheck:     Type '((value: string) => void) | undefined' is not assignable to type '(value: string) => void'.

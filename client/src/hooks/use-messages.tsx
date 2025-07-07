@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { MessageId } from '@/types/ids';
-import { type MessageId } from "@shared/types";
+import type { MessageId } from '@shared/types/ids';
 
 export interface Message {
 	id: MessageId;

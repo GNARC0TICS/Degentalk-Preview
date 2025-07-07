@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import type { UserId } from '@/types/ids';
-import { type UserId, type BadgeId, type FrameId, type TitleId } from "@shared/types";
+import type { UserId, BadgeId, FrameId, TitleId } from '@shared/types/ids';
 
 /**
  * Type definitions for User Preferences data
@@ -19,9 +18,9 @@ export interface UserSettingsData {
 		twitterHandle: string | null;
 		website: string | null;
 		telegramHandle: string | null;
-		activeTitleId: Id<'activeTitle'> | null;
-		activeBadgeId: Id<'activeBadge'> | null;
-		activeFrameId: Id<'activeFrame'> | null;
+		activeTitleId: TitleId | null;
+		activeBadgeId: BadgeId | null;
+		activeFrameId: FrameId | null;
 	};
 	preferences: {
 		userId: UserId;

@@ -298,7 +298,7 @@ export class RainService {
 		// Process rain for each recipient individually
 		for (const recipientId of recipientIds) {
 			// Use dgtService to handle the transfer
-			await dgtService.transferDGT(senderUserId, recipientId, perUserAmount, 'rain', {
+			await dgtService.transferDgt(senderUserId, recipientId, BigInt(perUserAmount), 'RAIN', {
 				parentTransactionId: transactionId,
 				isRain: true
 			});

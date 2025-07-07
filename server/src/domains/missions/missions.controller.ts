@@ -24,9 +24,9 @@ export const getAllMissions = async (req: Request, res: Response, next: NextFunc
  */
 export const getActiveMissions = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		// @ts-ignore - user is added by auth middleware
+		// @ts-expect-error - user is added by auth middleware
 		const userId = userService.getUserFromRequest(req)?.id;
-		// @ts-ignore - user is added by auth middleware
+		// @ts-expect-error - user is added by auth middleware
 		const userLevel = userService.getUserFromRequest(req)?.level || 1;
 
 		if (!userId) {
@@ -46,7 +46,7 @@ export const getActiveMissions = async (req: Request, res: Response, next: NextF
  */
 export const getUserMissionProgress = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		// @ts-ignore - user is added by auth middleware
+		// @ts-expect-error - user is added by auth middleware
 		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
@@ -135,7 +135,7 @@ export const updateMission = async (req: Request, res: Response, next: NextFunct
  */
 export const claimMissionReward = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		// @ts-ignore - user is added by auth middleware
+		// @ts-expect-error - user is added by auth middleware
 		const userId = userService.getUserFromRequest(req)?.id;
 		const { missionId } = req.params;
 

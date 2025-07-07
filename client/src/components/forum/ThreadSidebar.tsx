@@ -61,7 +61,7 @@ export function ThreadSidebar({
 			await navigator.clipboard.writeText(window.location.href);
 			// Could add toast notification here
 		} catch (err) {
-			console.error('Failed to copy link:', err);
+			// Failed to copy link
 		}
 	};
 

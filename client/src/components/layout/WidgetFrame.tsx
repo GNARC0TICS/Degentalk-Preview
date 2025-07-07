@@ -1,4 +1,5 @@
-import React, { Suspense, useMemo, useState } from 'react';
+import type { ComponentType } from 'react';
+import { Suspense, useMemo, useState, lazy } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Settings, AlertCircle, Maximize2, Minimize2, GripVertical } from 'lucide-react';
 import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
@@ -21,7 +22,7 @@ interface WidgetFrameProps {
 	className?: string;
 }
 
-export const WidgetFrame: React.FC<WidgetFrameProps> = ({ instanceId, className }) => {
+export const WidgetFrame = ({ instanceId, className }: WidgetFrameProps) => {
 	const instance = useLayoutStore((s) => s.instances[instanceId]);
 	const order = useLayoutStore((s) => s.order);
 	const moveWidget = useLayoutStore((s) => s.moveWidget);
@@ -87,7 +88,7 @@ export const WidgetFrame: React.FC<WidgetFrameProps> = ({ instanceId, className 
 	const componentId = instance.componentId as keyof typeof widgetRegistry;
 
 	// Provide slot-aware default props for certain widgets
-	const extraProps = React.useMemo(() => {
+	const extraProps = useMemo(() => {
 		if (componentId === 'hotThreads') {
 			return {
 				variant: currentSlot?.startsWith('sidebar/') ? 'widget' : 'feed'
@@ -98,8 +99,8 @@ export const WidgetFrame: React.FC<WidgetFrameProps> = ({ instanceId, className 
 	}, [componentId, currentSlot]);
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const WidgetComponent = React.lazy(
-		widgetConfig.component as () => Promise<{ default: React.ComponentType<any> }>
+	const WidgetComponent = lazy(
+		widgetConfig.component as () => Promise<{ default: ComponentType<any> }>
 	);
 
 	const WidgetError = ({ error }: { error: Error }) => (

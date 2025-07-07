@@ -20,7 +20,7 @@ import type {
   ConversationId,
   Id
 } from '@shared/types';
-import { logger } from "logger";
+import { logger } from './logger';
 
 // Type transformation utilities
 export class TypeTransformer {

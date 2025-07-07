@@ -1,4 +1,4 @@
-import type { AdminId } from '@shared/types';
+import type { AdminId } from '@shared/types/ids';
 import { getForumRules } from './getForumRules';
 
 export type ThreadEngagementStats = {

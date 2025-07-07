@@ -47,7 +47,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { apiRequest } from '@/lib/queryClient';
-import type { ReportId, ContentId, type UserId } from '@shared/types';
+import type { ReportId, ContentId, type UserId } from '@shared/types/ids';
 
 // Types
 interface ActivityLogEntry {

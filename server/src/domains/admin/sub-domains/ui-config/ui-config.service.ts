@@ -1,6 +1,6 @@
 import { eq, and, or, like, inArray, gte, lte, desc, asc, sql } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { db } from '../../../../core/db.ts';
+import { db } from '../../../../core/db';
 import {
 	uiQuotes,
 	uiCollections,
@@ -26,8 +26,8 @@ import {
 	type ExportQuotesRequest,
 	type PaginationOptions,
 	type UiConfigService as IUiConfigService
-} from './ui-config.types.ts';
-import { logger } from "../../../../core/logger";
+} from './ui-config.types';
+import { logger } from '../../../../core/logger';
 
 export class UiConfigService implements IUiConfigService {
 	/**

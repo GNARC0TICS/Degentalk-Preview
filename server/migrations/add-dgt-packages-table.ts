@@ -1,6 +1,6 @@
-import { db } from '../db'; // Assuming this path is correct for your setup
+import { db } from '../src/core/db';
 import { sql } from 'drizzle-orm';
-import { logger } from "./src/core/logger";
+import { logger } from "../src/core/logger";
 
 /**
  * Migration to add the dgt_packages table

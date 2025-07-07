@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import type { PackageId } from '@shared/types';
+import type { PackageId } from '@shared/types/ids';
 
 export interface DgtPackage {
 	id: PackageId;

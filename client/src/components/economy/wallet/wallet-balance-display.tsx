@@ -59,11 +59,8 @@ export function WalletBalanceDisplay({
 		);
 	}
 
-	const dgtBalance = balance?.dgt?.balance || 0;
-	const totalCryptoValue =
-		balance?.crypto?.reduce((sum, crypto) => {
-			return sum + (parseFloat(crypto.balance) || 0);
-		}, 0) || 0;
+	const dgtBalance = balance?.dgt || 0;
+	const totalCryptoValue = (balance?.btc || 0) + (balance?.eth || 0) + (balance?.usdt || 0);
 
 	return (
 		<div
@@ -130,16 +127,6 @@ export function WalletBalanceDisplay({
 					</div>
 				</div>
 
-				{balance?.dgt?.lastTransactionAt && (
-					<div className="mt-3 pt-3 border-t border-emerald-800/30">
-						<div className="flex items-center justify-between text-sm">
-							<span className="text-emerald-400/80">Last Activity</span>
-							<span className="text-emerald-400 font-medium">
-								{new Date(balance.dgt.lastTransactionAt).toLocaleDateString()}
-							</span>
-						</div>
-					</div>
-				)}
 
 				<div className="mt-3 pt-3 border-t border-emerald-800/30">
 					<div className="text-xs text-zinc-400">
@@ -149,7 +136,7 @@ export function WalletBalanceDisplay({
 			</div>
 
 			{/* Crypto Balances - Secondary Display */}
-			{balance?.crypto && balance.crypto.length > 0 && (
+			{totalCryptoValue > 0 && (
 				<div className="bg-gradient-to-br from-zinc-900/20 to-zinc-800/10 rounded-lg p-4 sm:p-5 border border-zinc-800/30 hover:border-zinc-700/50 transition-all">
 					<div className="flex items-center space-x-3 mb-4">
 						<div className="bg-zinc-900/50 rounded-full p-2.5">
@@ -164,28 +151,31 @@ export function WalletBalanceDisplay({
 					</div>
 
 					<div className="space-y-2">
-						{balance.crypto.map((crypto) => (
-							<div
-								key={`${crypto.coinSymbol}_${crypto.chain}`}
-								className="flex items-center justify-between text-sm"
-							>
-								<span className="text-zinc-300">
-									{crypto.coinSymbol} ({crypto.chain})
-								</span>
-								<span className="text-zinc-400 font-medium">
-									{parseFloat(crypto.balance).toFixed(6)}
-								</span>
+						{balance?.btc && balance.btc > 0 && (
+							<div className="flex items-center justify-between text-sm">
+								<span className="text-zinc-300">BTC</span>
+								<span className="text-zinc-400 font-medium">{balance.btc.toFixed(6)}</span>
 							</div>
-						))}
+						)}
+						{balance?.eth && balance.eth > 0 && (
+							<div className="flex items-center justify-between text-sm">
+								<span className="text-zinc-300">ETH</span>
+								<span className="text-zinc-400 font-medium">{balance.eth.toFixed(6)}</span>
+							</div>
+						)}
+						{balance?.usdt && balance.usdt > 0 && (
+							<div className="flex items-center justify-between text-sm">
+								<span className="text-zinc-300">USDT</span>
+								<span className="text-zinc-400 font-medium">{balance.usdt.toFixed(2)}</span>
+							</div>
+						)}
 					</div>
 
-					{totalCryptoValue > 0 && (
-						<div className="mt-3 pt-3 border-t border-zinc-800/30">
-							<div className="text-xs text-zinc-400">
-								⚡ These balances can be converted to DGT through admin action
-							</div>
+					<div className="mt-3 pt-3 border-t border-zinc-800/30">
+						<div className="text-xs text-zinc-400">
+							⚡ These balances can be converted to DGT through admin action
 						</div>
-					)}
+					</div>
 				</div>
 			)}
 		</div>

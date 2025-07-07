@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { brandConfig } from '@/config/brand.config';
-import type { PostId } from '@shared/types';
+import type { PostId } from '@shared/types/ids';
 
 interface PostActionsProps {
 	postId: PostId;
@@ -101,7 +101,7 @@ export function PostActions({
 			await navigator.clipboard.writeText(postUrl);
 			onCopyLink?.(postId);
 		} catch (err) {
-			console.error('Failed to copy link:', err);
+			// Failed to copy link
 		}
 	};
 

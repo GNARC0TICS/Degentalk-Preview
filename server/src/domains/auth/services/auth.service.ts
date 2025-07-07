@@ -3,7 +3,7 @@ import type { UserId } from '@shared/types';
 import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
 import { featureFlags, users } from '@schema';
-import { db } from '@db';
+import { db } from '@server/src/core/db';
 import { eq, count } from 'drizzle-orm';
 import { isDevMode } from '../../../utils/environment';
 import { logger } from '@server/src/core/logger';
@@ -107,7 +107,7 @@ export async function verifyEmailToken(token: string): Promise<{ userId: UserId 
 
 		// For demo purposes, we're returning a fake userId
 		// In production, you would query the actual token from the database
-		return { userId: 1 }; // Return userId if token is valid
+		return { userId: "1" as UserId }; // Return userId if token is valid
 	} catch (error) {
 		logger.error('AuthService', 'Error verifying token', { err: error, token });
 		return false;
@@ -182,7 +182,7 @@ export function getSessionCookieSettings(): {
  * Backward compatibility helper to get user ID from request
  * Prefer using userService.getUserFromRequest but some routes still expect getUserId
  */
-export function getUserId(req: any): number | null {
+export function getUserId(req: any): string | null {
 	const user = userService.getUserFromRequest(req as any);
 	return user?.id ?? null;
 }

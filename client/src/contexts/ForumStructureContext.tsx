@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useMemo, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { z } from 'zod';
 import { forumMap } from '@/config/forumMap.config';
 import type { Zone } from '@/config/forumMap.config';
-import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@shared/types';
+import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@shared/types/ids';
 
 // ===========================================================
 // ForumStructureContext v2.0  🛠️  (2025-06-16)
@@ -130,7 +130,7 @@ const ForumStructureApiResponseSchema = z.object({
 export type ApiEntity = z.infer<typeof ApiEntitySchema>;
 export type PluginData = z.infer<typeof PluginDataSchema>;
 export type ForumStructureApiResponse = z.infer<typeof ForumStructureApiResponseSchema>;
-export type ForumId = string | ForumId;
+// Remove circular definition - use imported ForumId from @shared/types/ids
 
 export interface MergedTheme {
 	icon?: string | null;
@@ -419,12 +419,12 @@ function fallbackStructure(staticZones: Zone[]) {
 // ---------------- Context ------------------
 const ForumStructureContext = createContext<ForumStructureContextType | undefined>(undefined);
 
-export const ForumStructureProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-	const [raw, setRaw] = React.useState<ForumStructureApiResponse | null>(null);
-	const [isLoading, setLoading] = React.useState(true);
-	const [netErr, setNetErr] = React.useState<Error | null>(null);
+export const ForumStructureProvider = ({ children }: { children: ReactNode }) => {
+	const [raw, setRaw] = useState<ForumStructureApiResponse | null>(null);
+	const [isLoading, setLoading] = useState(true);
+	const [netErr, setNetErr] = useState<Error | null>(null);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		(async () => {
 			try {
 				const resp = await fetch('/api/forum/structure');

@@ -43,7 +43,7 @@ export function RoleForm({ role, onSubmit, onCancel, isLoading }: RoleFormProps)
 		onSubmit(formData);
 	};
 
-	const handleInputChange = (field: keyof Role, value: any) => {
+	const handleInputChange = (field: keyof Role, value: string | number | boolean) => {
 		setFormData((prev) => ({
 			...prev,
 			[field]: value

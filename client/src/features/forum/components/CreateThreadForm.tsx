@@ -10,7 +10,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import RichTextEditor from '@/components/editor/rich-text-editor';
-import { useAuth } from '@/hooks/use-auth.tsx';
+import { useAuth } from '@/hooks/use-auth';
 import { usePrefixes, useCreateThread } from '@/features/forum/hooks/useForumQueries';
 import type { CreateThreadParams } from '@/features/forum/hooks/useForumQueries';
 import { PrefixBadge } from '@/components/forum/prefix-badge';
@@ -50,7 +50,7 @@ import type { Tag, ThreadPrefix as Prefix } from '@/types/forum';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import type { MergedRules } from '@/contexts/ForumStructureContext';
 import { usePermission } from '@/hooks/usePermission';
-import type { DraftId } from '@shared/types';
+import type { DraftId } from '@shared/types/ids';
 
 interface DraftData {
 	id: DraftId;

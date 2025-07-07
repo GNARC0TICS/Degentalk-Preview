@@ -18,7 +18,7 @@ import type {
   ModerationForumStructure
 } from '../types';
 import type { ThreadId, PostId, UserId, ForumId, ZoneId } from '@shared/types';
-import { UserTransformer } from '../../users/transformers/user.transformer';
+// import { UserTransformer } from '../../users/transformers/user.transformer'; // TODO: Add when available
 import { createHash } from 'crypto';
 
 export class ForumTransformer {

@@ -7,7 +7,7 @@
 import { ccpaymentClient } from './ccpayment-client';
 import { generateOrderId } from './utils';
 import { SupportedCurrency } from './types';
-import type { UserId, type OrderId } from '@shared/types';
+import type { UserId, type OrderId } from '@shared/types/ids';
 
 /**
  * Deposit request parameters

@@ -1,7 +1,7 @@
-import { db } from '@db';
+import { db } from '../src/core/db';
 import { xpAdjustmentLogs } from "../../shared/schema";
 import { sql } from "drizzle-orm";
-import { logger } from "./src/core/logger";
+import { logger } from "../src/core/logger";
 
 export async function up() {
   logger.info('Running migration: Create XP adjustment logs table');

@@ -40,7 +40,7 @@ export default function SimpleMenu({ onItemClick }: SimpleMenuProps) {
 						>
 							{item.label}
 						</div>
-						{buildLinks(item.children as any, depth + 1)}
+						{buildLinks(item.children, depth + 1)}
 					</React.Fragment>
 				);
 			}

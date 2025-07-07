@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { EntityId } from '@/types/ids';
+import type { EntityId, FollowId } from '@shared/types/ids';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,7 +28,6 @@ import { formatDistanceToNow } from 'date-fns';
 import { Link } from 'wouter';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { type EntityId } from "@shared/types";
 
 interface FollowUser {
 	id: string;

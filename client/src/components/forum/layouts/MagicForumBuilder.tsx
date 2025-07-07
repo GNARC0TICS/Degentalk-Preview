@@ -667,7 +667,7 @@ const MagicForumBuilder = memo(
 										{config.showReactions && (
 											<QuickReactions
 												reactions={sampleReactions}
-												onReact={(type) => console.log('React:', type)}
+												onReact={(type) => {}}
 												compact={config.cardVariant === 'compact'}
 											/>
 										)}

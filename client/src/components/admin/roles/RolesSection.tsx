@@ -75,7 +75,7 @@ export function RolesSection({ roles, permissions, titles, isLoading }: RolesSec
 				description: 'The role has been successfully deleted.'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Delete Failed',
 				description: error.message || 'Failed to delete role',

@@ -1,8 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import type { RoomId, ActionId, type UserId } from '@shared/types';
-import type { UserId } from '@/types/ids';
+import type { RoomId, ActionId, UserId } from '@shared/types/ids';
 
 export interface RainParams {
 	amount: number;
@@ -23,7 +22,7 @@ interface RainResponse {
 
 interface RecentRainResponse {
 	events: Array<{
-		id: UserId;
+		id: ActionId;
 		fromUserId: UserId;
 		fromUsername: string;
 		amount: number;
@@ -73,7 +72,7 @@ export function useRain() {
 				description: `Your rain was sent successfully to ${recipientCount} users!`
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				variant: 'error',
 				title: 'Error Sending Rain',

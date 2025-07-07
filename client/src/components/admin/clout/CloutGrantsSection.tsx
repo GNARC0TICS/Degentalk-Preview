@@ -101,7 +101,7 @@ export function CloutGrantsSection({ isLoading }: CloutGrantsSectionProps) {
 				description: 'Clout has been successfully granted to the user.'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Grant Failed',
 				description: error.message || 'Failed to grant clout',

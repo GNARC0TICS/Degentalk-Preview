@@ -18,13 +18,13 @@ const getLevelSchema = z.object({
 });
 
 const getUserProgressionSchema = z.object({
-	userId: z.string().transform(Number).pipe(z.number().int().min(1))
+	userId: z.string().uuid()
 });
 
 const getLeaderboardSchema = z.object({
 	type: z.enum(['level', 'xp', 'weekly', 'monthly']).optional().default('xp'),
-	limit: z.string().transform(Number).pipe(z.number().int().min(1).max(100)).optional().default(50),
-	offset: z.string().transform(Number).pipe(z.number().int().min(0)).optional().default(0)
+	limit: z.string().optional().transform((val) => val ? parseInt(val) : 50).pipe(z.number().int().min(1).max(100)),
+	offset: z.string().optional().transform((val) => val ? parseInt(val) : 0).pipe(z.number().int().min(0))
 });
 
 const createLevelSchema = z.object({
@@ -79,7 +79,7 @@ export class LevelingController {
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error getting level info:', error);
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({
+				res.status(error.httpStatus || 500).json({
 					success: false,
 					error: error.message
 				});
@@ -138,7 +138,7 @@ export class LevelingController {
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error getting user progression:', error);
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({
+				res.status(error.httpStatus || 500).json({
 					success: false,
 					error: error.message
 				});
@@ -175,7 +175,7 @@ export class LevelingController {
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error getting user progression:', error);
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({
+				res.status(error.httpStatus || 500).json({
 					success: false,
 					error: error.message
 				});
@@ -350,7 +350,7 @@ export class LevelingController {
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error getting user rank:', error);
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({
+				res.status(error.httpStatus || 500).json({
 					success: false,
 					error: error.message
 				});
@@ -391,7 +391,7 @@ export class LevelingController {
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error simulating level rewards:', error);
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({
+				res.status(error.httpStatus || 500).json({
 					success: false,
 					error: error.message
 				});

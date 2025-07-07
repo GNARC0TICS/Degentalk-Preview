@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { hasRoleAtLeast } from '@/lib/roles';
 import type { Role } from '@/lib/roles';
@@ -8,12 +8,12 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 
 interface ProtectedRouteProps {
-	children: React.ReactNode;
+	children: ReactNode;
 	minRole?: Role;
 	exactRole?: Role;
 	requireAuth?: boolean;
 	redirectTo?: string;
-	fallback?: React.ReactNode;
+	fallback?: ReactNode;
 	showError?: boolean;
 }
 

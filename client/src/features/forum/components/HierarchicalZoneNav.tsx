@@ -406,7 +406,7 @@ function HierarchicalZoneNav({ className = '', isCollapsed = false }: Hierarchic
 			try {
 				setExpandedCategories(JSON.parse(stored));
 			} catch (e) {
-				console.error('Failed to parse stored expanded general categories', e);
+				// Failed to parse stored expanded general categories
 			}
 		}
 		const currentCategoryNode = navigationTree.find(

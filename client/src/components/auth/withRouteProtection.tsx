@@ -1,10 +1,10 @@
-import React from 'react';
+import type { ReactNode, ComponentType } from 'react';
 import { useLocation } from 'wouter';
 import { ProtectedRoute } from './ProtectedRoute';
 import { getRouteProtection } from '@/lib/routeConfig';
 
 interface WithRouteProtectionOptions {
-	fallback?: React.ReactNode;
+	fallback?: ReactNode;
 	showError?: boolean;
 	customRedirect?: string;
 }
@@ -14,7 +14,7 @@ interface WithRouteProtectionOptions {
  * based on the route configuration defined in routeConfig.ts
  */
 export function withRouteProtection<P extends object>(
-	Component: React.ComponentType<P>,
+	Component: ComponentType<P>,
 	options: WithRouteProtectionOptions = {}
 ) {
 	return function ProtectedComponent(props: P) {
@@ -37,11 +37,11 @@ export function withRouteProtection<P extends object>(
 }
 
 // Convenience HOCs for common patterns
-export function withAuth<P extends object>(Component: React.ComponentType<P>) {
+export function withAuth<P extends object>(Component: ComponentType<P>) {
 	return withRouteProtection(Component, { customRedirect: '/auth' });
 }
 
-export function withAdmin<P extends object>(Component: React.ComponentType<P>) {
+export function withAdmin<P extends object>(Component: ComponentType<P>) {
 	return function AdminProtectedComponent(props: P) {
 		return (
 			<ProtectedRoute minRole="admin" redirectTo="/" showError={true}>
@@ -51,7 +51,7 @@ export function withAdmin<P extends object>(Component: React.ComponentType<P>) {
 	};
 }
 
-export function withModerator<P extends object>(Component: React.ComponentType<P>) {
+export function withModerator<P extends object>(Component: ComponentType<P>) {
 	return function ModeratorProtectedComponent(props: P) {
 		return (
 			<ProtectedRoute minRole="moderator" redirectTo="/" showError={true}>
@@ -61,7 +61,7 @@ export function withModerator<P extends object>(Component: React.ComponentType<P
 	};
 }
 
-export function withSuperAdmin<P extends object>(Component: React.ComponentType<P>) {
+export function withSuperAdmin<P extends object>(Component: ComponentType<P>) {
 	return function SuperAdminProtectedComponent(props: P) {
 		return (
 			<ProtectedRoute exactRole="super_admin" redirectTo="/admin" showError={true}>

@@ -267,5 +267,20 @@ export function validateEconomyConfig(config: unknown): EconomyConfig {
 }
 
 export function validatePartialEconomyConfig(config: unknown): Partial<EconomyConfig> {
-  return EconomyConfigSchema.partial().parse(config);
+  const result = EconomyConfigSchema.partial().parse(config);
+  return result as Partial<EconomyConfig>;
 }
+
+// Default configuration
+export const defaultEconomyConfig: Partial<EconomyConfig> = {
+  version: '1.0.0',
+  currency: {
+    symbol: 'DGT',
+    name: 'DegenTalk Token',
+    decimals: 8,
+    displayDecimals: 2,
+    minAmount: 0.00000001,
+    maxAmount: 1000000000,
+    dustThreshold: 0.0001
+  }
+};

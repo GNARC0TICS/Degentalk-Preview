@@ -6,7 +6,7 @@
  */
 
 import type { Brand } from 'utility-types';
-import type { Id } from '@shared/types';
+import type { Id } from '@shared/types/ids';
 
 /**
  * Type guard to check if a value is a valid UUID string

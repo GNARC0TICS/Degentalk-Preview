@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'wouter';
 import {
 	Home,
@@ -20,7 +19,7 @@ import { HierarchicalZoneNav } from '@/features/forum/components/HierarchicalZon
 import { ROUTES } from '@/constants/routes';
 import { ProfileCard } from '@/components/widgets/ProfileCard';
 import { useAuth } from '@/hooks/use-auth';
-import type { CategoryId, ForumId } from '@shared/types';
+import type { CategoryId, ForumId } from '@shared/types/ids';
 
 // Helper function to determine icon for a category
 function getCategoryEmoji(name: string): string {

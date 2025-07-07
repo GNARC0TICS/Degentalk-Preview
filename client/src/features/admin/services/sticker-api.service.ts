@@ -4,8 +4,8 @@
  * API client for sticker system management
  */
 
-import { apiRequest } from '@/lib/queryClient';
-import type { PackId, StickerId } from '@shared/types';
+import { apiRequest } from '@/lib/api-request';
+import type { PackId, StickerId } from '@shared/types/ids';
 
 // Types
 export interface Sticker {
@@ -190,10 +190,18 @@ export class StickerApiService {
 	 * Get all stickers with filtering and pagination
 	 */
 	async getStickers(params: ListStickersParams = {}): Promise<PaginatedResponse<Sticker>> {
+		// Convert params to strings for apiRequest
+		const stringParams: Record<string, string> = {};
+		Object.entries(params).forEach(([key, value]) => {
+			if (value !== undefined) {
+				stringParams[key] = String(value);
+			}
+		});
+
 		return apiRequest<PaginatedResponse<Sticker>>({
 			url: `${this.baseUrl}/stickers`,
 			method: 'GET',
-			params
+			params: Object.keys(stringParams).length > 0 ? stringParams : undefined
 		});
 	}
 
@@ -265,10 +273,18 @@ export class StickerApiService {
 	async getStickerPacks(
 		params: ListStickerPacksParams = {}
 	): Promise<PaginatedResponse<StickerPack>> {
+		// Convert params to strings for apiRequest
+		const stringParams: Record<string, string> = {};
+		Object.entries(params).forEach(([key, value]) => {
+			if (value !== undefined) {
+				stringParams[key] = String(value);
+			}
+		});
+
 		return apiRequest<PaginatedResponse<StickerPack>>({
 			url: `${this.baseUrl}/sticker-packs`,
 			method: 'GET',
-			params
+			params: Object.keys(stringParams).length > 0 ? stringParams : undefined
 		});
 	}
 

@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import { getAdaptiveConfig } from '@/utils/adaptiveSpacing';
 import type { PostWithUser } from '@/types/compat/forum';
-import type { ThreadId, PostId } from '@shared/types';
+import type { ThreadId, PostId } from '@shared/types/ids';
 
 interface ReplyFormProps {
 	threadId: ThreadId;
@@ -106,7 +106,7 @@ ${postContent}
 				onCancel();
 			}
 		} catch (error) {
-			console.error('Error submitting reply:', error);
+			// Error submitting reply
 		} finally {
 			setIsSubmitting(false);
 		}

@@ -32,7 +32,7 @@ export async function up() {
       logger.info('✅ Successfully added dailyXpGained and lastXpGainDate columns to users table');
     });
     logger.info('✅ Migration applied successfully: Add Daily XP Tracking Fields');
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('❌ Error applying migration (Add Daily XP Tracking Fields):', error);
     throw error; // Re-throw to indicate failure
   } finally {
@@ -58,7 +58,7 @@ export async function down() {
       logger.info('✅ Successfully removed dailyXpGained and lastXpGainDate columns from users table');
     });
     logger.info('✅ Migration reverted successfully: Add Daily XP Tracking Fields');
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('❌ Error reverting migration (Add Daily XP Tracking Fields):', error);
     throw error; // Re-throw to indicate failure
   } finally {

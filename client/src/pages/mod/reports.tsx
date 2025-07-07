@@ -52,7 +52,7 @@ import {
 import { toast } from 'sonner';
 import { apiRequest } from '@/lib/queryClient';
 import type { ApiErrorData } from '@/types/core.types';
-import type { ReportId, ContentId } from '@shared/types';
+import type { ReportId, ContentId } from '@shared/types/ids';
 
 // Types
 interface Report {

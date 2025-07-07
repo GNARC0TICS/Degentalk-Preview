@@ -16,7 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
 import { MessageSquare, Eye, ArrowRight } from 'lucide-react';
 import { getInitials } from '@/lib/utils';
-import type { PostId, ThreadId, UserId } from '@shared/types';
+import type { PostId, ThreadId, UserId } from '@shared/types/ids';
 
 export type RecentPost = {
 	post_id: PostId;

@@ -1,11 +1,5 @@
-import { userService } from '@server/src/core/services/user.service';
-/**
- * Backup & Restore Controller
- *
- * Handles HTTP requests for backup and restore operations
- */
-
 import type { Request, Response } from 'express';
+import { userService } from '@server/src/core/services/user.service';
 import { z } from 'zod';
 import { backupService, createBackupSchema, listBackupsSchema } from './backup.service';
 import {
@@ -21,7 +15,7 @@ import {
 } from './schedule.service';
 import { formatAdminResponse, AdminOperationBoundary } from '../../shared';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import { logger } from "../../../../core/logger";
+import { logger } from '../../../../core/logger';
 
 // Additional validation schemas
 const backupIdSchema = z.object({

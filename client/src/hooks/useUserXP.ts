@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import type { UserId } from '@/types/ids';
-import { type UserId } from "@shared/types";
+import type { UserId } from '@shared/types/ids';
 
 export type UserXPData = {
 	userId: UserId;

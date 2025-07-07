@@ -4,7 +4,7 @@
  * Frontend API service for system performance analytics
  */
 
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 
 // ============ TYPE DEFINITIONS ============
 
@@ -276,7 +276,7 @@ export const systemAnalyticsApi = {
 	async performCacheOperation(operation: CacheOperationParams) {
 		return apiRequest<{
 			operation: string;
-			result: any;
+			result: unknown;
 			executedBy: string;
 			timestamp: string;
 		}>({

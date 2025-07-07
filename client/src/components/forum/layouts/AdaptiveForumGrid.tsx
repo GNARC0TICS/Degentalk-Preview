@@ -1,4 +1,4 @@
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import React, { useState, useEffect, useRef, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useVirtualizer } from '@tanstack/react-virtual';

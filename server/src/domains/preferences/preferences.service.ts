@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '../../core/db';
 import {
 	users,
 	userSettings as userPreferencesSchema,

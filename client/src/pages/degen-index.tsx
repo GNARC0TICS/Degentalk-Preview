@@ -10,7 +10,7 @@ import { Search, Filter, Users, TrendingUp, ChevronLeft, ChevronRight } from 'lu
 import { UserDirectoryTable } from '@/components/users/UserDirectoryTable';
 import { UserFilters } from '@/components/users/UserFilters';
 import { motion } from 'framer-motion';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 
 export interface DegenUser {
 	id: UserId;
@@ -24,6 +24,7 @@ export interface DegenUser {
 	isOnline: boolean;
 	level: number;
 	title: string;
+	badges: string[];
 }
 
 export default function DegenIndexPage() {
@@ -59,7 +60,7 @@ export default function DegenIndexPage() {
 			const generateMockUsers = (): DegenUser[] => {
 				const baseUsers = [
 					{
-						id: 1,
+						id: 'user-cryptoking-001' as UserId,
 						username: 'CryptoKing',
 						avatarUrl: 'https://avatar.vercel.sh/cryptoking',
 						xp: 15000,
@@ -69,10 +70,11 @@ export default function DegenIndexPage() {
 						lastActive: '2 minutes ago',
 						isOnline: true,
 						level: 15,
-						title: 'Crypto Overlord'
+						title: 'Crypto Overlord',
+						badges: ['Legend', 'Whale', 'Early Adopter']
 					},
 					{
-						id: 2,
+						id: 'user-diamondhands-002' as UserId,
 						username: 'DiamondHands',
 						avatarUrl: 'https://avatar.vercel.sh/diamondhands',
 						xp: 12500,
@@ -82,10 +84,11 @@ export default function DegenIndexPage() {
 						lastActive: '1 hour ago',
 						isOnline: false,
 						level: 12,
-						title: 'HODL Master'
+						title: 'HODL Master',
+						badges: ['Diamond Hands', 'Veteran']
 					},
 					{
-						id: 3,
+						id: 'user-whalewatcher-003' as UserId,
 						username: 'WhaleWatcher',
 						avatarUrl: 'https://avatar.vercel.sh/whalewatcher',
 						xp: 11000,
@@ -95,10 +98,11 @@ export default function DegenIndexPage() {
 						lastActive: '5 minutes ago',
 						isOnline: true,
 						level: 11,
-						title: 'Market Analyst'
+						title: 'Market Analyst',
+						badges: ['Analyst', 'Active']
 					},
 					{
-						id: 4,
+						id: 'user-nftguru-004' as UserId,
 						username: 'NFTGuru',
 						avatarUrl: 'https://avatar.vercel.sh/nftguru',
 						xp: 9500,
@@ -108,10 +112,11 @@ export default function DegenIndexPage() {
 						lastActive: '3 hours ago',
 						isOnline: false,
 						level: 9,
-						title: 'Digital Artist'
+						title: 'Digital Artist',
+						badges: ['Artist', 'Creator']
 					},
 					{
-						id: 5,
+						id: 'user-shillmaster-005' as UserId,
 						username: 'ShillMaster',
 						avatarUrl: 'https://avatar.vercel.sh/shillmaster',
 						xp: 8000,
@@ -121,10 +126,11 @@ export default function DegenIndexPage() {
 						lastActive: '1 day ago',
 						isOnline: false,
 						level: 8,
-						title: 'Marketing Guru'
+						title: 'Marketing Guru',
+						badges: ['Marketer', 'Influencer']
 					},
 					{
-						id: 6,
+						id: 'user-paperhands-006' as UserId,
 						username: 'PaperHands',
 						avatarUrl: 'https://avatar.vercel.sh/paperhands',
 						xp: 500,
@@ -134,10 +140,11 @@ export default function DegenIndexPage() {
 						lastActive: '2 weeks ago',
 						isOnline: false,
 						level: 1,
-						title: 'Newbie Trader'
+						title: 'Newbie Trader',
+						badges: ['Newbie']
 					},
 					{
-						id: 7,
+						id: 'user-lasereyes-007' as UserId,
 						username: 'LaserEyes',
 						xp: 7500,
 						clout: 110,
@@ -146,10 +153,11 @@ export default function DegenIndexPage() {
 						lastActive: '30 minutes ago',
 						isOnline: true,
 						level: 7,
-						title: 'Future Seer'
+						title: 'Future Seer',
+						badges: ['Seer', 'Prophet']
 					},
 					{
-						id: 8,
+						id: 'user-tothemoon-008' as UserId,
 						username: 'ToTheMoon',
 						xp: 6800,
 						clout: 105,
@@ -158,7 +166,8 @@ export default function DegenIndexPage() {
 						lastActive: '4 hours ago',
 						isOnline: false,
 						level: 6,
-						title: 'Moon Chaser'
+						title: 'Moon Chaser',
+						badges: ['Moonshot', 'Dreamer']
 					}
 				];
 
@@ -261,7 +270,7 @@ export default function DegenIndexPage() {
 					const level = Math.max(1, Math.floor(xp / 1000)); // 1000 XP per level
 
 					additionalUsers.push({
-						id: 9 + i,
+						id: `user-${username.toLowerCase()}-${String(9 + i).padStart(3, '0')}` as UserId,
 						username,
 						avatarUrl: `https://avatar.vercel.sh/${username.toLowerCase()}`,
 						xp,
@@ -278,7 +287,8 @@ export default function DegenIndexPage() {
 							Math.random() > 0.7 ? 'Online' : `${Math.floor(Math.random() * 24) + 1} hours ago`,
 						isOnline: Math.random() > 0.8,
 						level,
-						title: titles[Math.min(level - 1, titles.length - 1)]
+						title: titles[Math.min(level - 1, titles.length - 1)],
+						badges: level > 10 ? ['Veteran', 'Active'] : level > 5 ? ['Active'] : ['Newbie']
 					});
 				}
 

@@ -11,6 +11,7 @@ import { eq, ilike, asc, sql } from 'drizzle-orm';
 import { BaseRepository, RepositoryError } from '../base-repository';
 import type { IUserRepository } from '../interfaces';
 import type { User } from '@schema';
+import type { UserId } from '@shared/types';
 import { logger } from '@server/src/core/logger';
 
 export class UserRepository extends BaseRepository<User> implements IUserRepository {
@@ -79,7 +80,7 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
 	/**
 	 * Update user's last login timestamp
 	 */
-	async updateLastLogin(id: Id<'id'>): Promise<void> {
+	async updateLastLogin(id: UserId): Promise<void> {
 		try {
 			await db
 				.update(users)
@@ -102,7 +103,7 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
 	/**
 	 * Increment user's XP (can be negative for decrement)
 	 */
-	async incrementXP(id: Id<'id'>, amount: number): Promise<User> {
+	async incrementXP(id: UserId, amount: number): Promise<User> {
 		try {
 			const [result] = await db
 				.update(users)
@@ -241,7 +242,7 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
 	/**
 	 * Override update to add validation
 	 */
-	async update(id: Id<'id'> | string, data: Partial<User>): Promise<User> {
+	async update(id: UserId, data: Partial<User>): Promise<User> {
 		this.validateUserData(data);
 		return super.update(id, data);
 	}

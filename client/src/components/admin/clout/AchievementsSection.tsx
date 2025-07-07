@@ -64,7 +64,7 @@ import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/api-request';
 import type { CloutAchievement } from '@schema/economy/cloutAchievements';
-import type { AchievementId } from '@shared/types';
+import type { AchievementId } from '@shared/types/ids';
 
 interface AchievementsSectionProps {
 	achievements: CloutAchievement[];
@@ -151,7 +151,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 				description: 'New achievement has been created successfully.'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Creation Failed',
 				description: error.message || 'Failed to create achievement',
@@ -164,8 +164,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 	const updateAchievementMutation = useMutation({
 		mutationFn: async (data: AchievementForm & { id: AchievementId }) => {
 			const { id, ...updateData } = data;
-			return apiRequest({ url: `/api/admin/clout/achievements/${id}`, method: 'PUT', data: updateData
-			 });
+			return apiRequest({ url: `/api/admin/clout/achievements/${id}`, method: 'PUT', data: updateData });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['admin-clout-achievements'] });
@@ -176,7 +175,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 				description: 'Achievement has been updated successfully.'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Update Failed',
 				description: error.message || 'Failed to update achievement',
@@ -199,7 +198,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 				description: 'Achievement has been deleted successfully.'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Delete Failed',
 				description: error.message || 'Failed to delete achievement',
@@ -220,7 +219,7 @@ export function AchievementsSection({ achievements, isLoading }: AchievementsSec
 				description: 'Achievement status has been updated.'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Toggle Failed',
 				description: error.message || 'Failed to toggle achievement',

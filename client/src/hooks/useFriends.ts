@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import { useAuth } from '@/hooks/use-auth.tsx';
-import { type UserId } from "@shared/types";
+import { useAuth } from '@/hooks/use-auth';
+import type { UserId } from '@shared/types/ids';
 
 export interface FriendUserLite {
 	id: string;

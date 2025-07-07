@@ -24,9 +24,9 @@ export interface ApiRequestConfig {
  * @returns The JSON response (automatically unwrapped from standard format)
  * @throws ApiError if the request fails
  */
-export async function apiRequest<T = any>(config: ApiRequestConfig): Promise<T>;
-export async function apiRequest<T = any>(url: string, options: RequestInit): Promise<T>;
-export async function apiRequest<T = any>(
+export async function apiRequest<T = unknown>(config: ApiRequestConfig): Promise<T>;
+export async function apiRequest<T = unknown>(url: string, options: RequestInit): Promise<T>;
+export async function apiRequest<T = unknown>(
 	configOrUrl: ApiRequestConfig | string,
 	options: RequestInit = {}
 ): Promise<T> {
@@ -87,7 +87,7 @@ export async function apiRequest<T = any>(
  * @returns The JSON response
  * @throws ApiError if the request fails
  */
-export async function apiPost<T = any, U = any>(
+export async function apiPost<T = unknown, U = unknown>(
 	url: string,
 	body: U,
 	options: Partial<ApiRequestConfig> = {}
@@ -108,7 +108,7 @@ export async function apiPost<T = any, U = any>(
  * @returns The JSON response
  * @throws ApiError if the request fails
  */
-export async function apiPut<T = any, U = any>(
+export async function apiPut<T = unknown, U = unknown>(
 	url: string,
 	body: U,
 	options: Partial<ApiRequestConfig> = {}
@@ -129,7 +129,7 @@ export async function apiPut<T = any, U = any>(
  * @returns The JSON response
  * @throws ApiError if the request fails
  */
-export async function apiPatch<T = any, U = any>(
+export async function apiPatch<T = unknown, U = unknown>(
 	url: string,
 	body: U,
 	options: Partial<ApiRequestConfig> = {}
@@ -149,7 +149,7 @@ export async function apiPatch<T = any, U = any>(
  * @returns The JSON response
  * @throws ApiError if the request fails
  */
-export async function apiDelete<T = any>(
+export async function apiDelete<T = unknown>(
 	url: string,
 	options: Partial<ApiRequestConfig> = {}
 ): Promise<T> {

@@ -4,7 +4,7 @@
  * Runtime guards and helpers to enforce UUID-first architecture
  */
 
-import type { UserId, ThreadId, PostId, MissionId, AchievementId } from '@shared/types';
+import type { UserId, ThreadId, PostId, MissionId, AchievementId } from '@shared/types/ids';
 import { z } from 'zod';
 
 /**

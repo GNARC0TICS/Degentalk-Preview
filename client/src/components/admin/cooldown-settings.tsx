@@ -59,7 +59,7 @@ export function CooldownSettings() {
 	}, [settings]);
 
 	// Handle form changes
-	const handleChange = (field: keyof CooldownSettings, value: any) => {
+	const handleChange = (field: keyof CooldownSettings, value: number | boolean) => {
 		setFormData((prev) => ({
 			...prev,
 			[field]: typeof value === 'boolean' ? value : Number(value)
@@ -80,10 +80,10 @@ export function CooldownSettings() {
 				variant: 'default'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				title: 'Error saving cooldown settings',
-				description: error.response?.data?.message || 'An error occurred while saving settings',
+				description: (error as any).response?.data?.message || 'An error occurred while saving settings',
 				variant: 'destructive'
 			});
 		}

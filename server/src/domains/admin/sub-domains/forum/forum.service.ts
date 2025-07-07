@@ -16,7 +16,7 @@ import type {
 	PaginationInput
 } from './forum.validators';
 import { ThreadId } from "@shared/types";
-import { logger } from "../../../../core/logger";
+import { logger } from '../../../../core/logger';
 
 export class AdminForumService {
 	async getAllCategories() {

@@ -2,14 +2,14 @@
 
 import { users, roles } from '@schema';
 import { eq } from 'drizzle-orm';
-import { pool } from '@db';
+import { pool } from '../src/core/db';
 import * as crypto from 'crypto';
 import { logger } from '../src/core/logger';
 import bcrypt from 'bcryptjs';
 import { config } from 'dotenv';
 
 export async function seedDevUser() {
-	console.log('👤 [SEED-DEV-USER] Starting dev user seeding process...');
+	logger.info('SEED_DEV_USER', 'Starting dev user seeding process...');
 	try {
 		// Ensure default admin role (role_id = 1) exists
 		const roleCheck = await pool.query(`SELECT role_id FROM roles WHERE role_id = 1`);
@@ -19,7 +19,7 @@ export async function seedDevUser() {
         VALUES (1, 'Administrator', 'admin', true, true, '{"admin": true, "manage_users": true, "manage_content": true}') 
         ON CONFLICT (role_id) DO NOTHING
       `);
-			console.log('✅ [SEED-DEV-USER] Ensured default admin role (ID: 1) exists.');
+			logger.info('SEED_DEV_USER', 'Ensured default admin role (ID: 1) exists.');
 			logger.info('USER_SEED', '✅ Ensured default admin role (ID: 1) exists.');
 		}
 
@@ -56,19 +56,19 @@ export async function seedDevUser() {
 
 			const userId = result.rows[0]?.user_id;
 			if (userId) {
-				console.log(`✅ [SEED-DEV-USER] DevUser seeded successfully with ID: ${userId}`);
+				logger.info('SEED_DEV_USER', `DevUser seeded successfully with ID: ${userId}`);
 				logger.info('USER_SEED', `✅ DevUser seeded with ID: ${userId}`);
 			} else {
-				console.error('❌ [SEED-DEV-USER] Failed to seed DevUser, no ID returned.');
+				logger.error('SEED_DEV_USER', 'Failed to seed DevUser, no ID returned.');
 				logger.error('USER_SEED', '❌ Failed to seed DevUser, no ID returned.');
 			}
 		} else {
 			const userId = existingResult.rows[0]?.user_id;
-			console.log(`⏭️ [SEED-DEV-USER] DevUser already exists with ID: ${userId}. Skipped.`);
+			logger.info('SEED_DEV_USER', `DevUser already exists with ID: ${userId}. Skipped.`);
 			logger.info('USER_SEED', `ℹ️ DevUser already exists with ID: ${userId}`);
 		}
 	} catch (error) {
-		console.error('❌ [SEED-DEV-USER] Error during dev user seeding:', error);
+		logger.error('SEED_DEV_USER', 'Error during dev user seeding:', error);
 		logger.error('USER_SEED', '❌ Failed to seed DevUser', error as any);
 		throw error;
 	}

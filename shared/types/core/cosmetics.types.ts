@@ -1,4 +1,4 @@
-import type { UserId, ItemId, FrameId, BadgeId, TitleId } from '@shared/types';
+import type { UserId, ItemId, FrameId, BadgeId, TitleId, Id } from '../ids';
 
 /**
  * Cosmetics Domain Types
@@ -11,7 +11,7 @@ export type ItemRarity = 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
 export type ItemCategory = 'frame' | 'badge' | 'title' | 'effect' | 'emoji' | 'theme';
 export type ItemType = 'cosmetic' | 'consumable' | 'permanent' | 'limited';
 
-export interface ShopItem<TId extends ItemId = ItemId> {
+export interface ShopItem<TId extends Id<any> = ItemId> {
   id: TId;
   name: string;
   description: string;

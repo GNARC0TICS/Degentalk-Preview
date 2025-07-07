@@ -45,7 +45,8 @@ export {
   StakingConfigSchema,
   ShopPricingSchema,
   validateEconomyConfig,
-  validatePartialEconomyConfig
+  validatePartialEconomyConfig,
+  defaultEconomyConfig
 } from './economy.schema';
 
 // Features & Access Control Configuration
@@ -69,6 +70,7 @@ export {
   ForumAccessSchema,
   validateFeaturesConfig,
   validatePartialFeaturesConfig,
+  defaultFeaturesConfig,
   evaluateFeatureFlag
 } from './features.schema';
 

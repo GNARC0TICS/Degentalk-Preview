@@ -173,7 +173,7 @@ class AdminErrorBoundary extends React.Component<
 	}
 
 	componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-		console.error(`Admin module error [${this.props.moduleId}]:`, error, errorInfo);
+		// Error boundary caught admin module error
 	}
 
 	render() {
@@ -221,14 +221,14 @@ class AdminErrorBoundary extends React.Component<
 	}
 }
 
-export function withAdminProtection(
-	Component: React.ComponentType<any>,
+export function withAdminProtection<T extends Record<string, unknown>>(
+	Component: React.ComponentType<T>,
 	permissionOrModuleId: string,
 	options?: Omit<ProtectedAdminRouteProps, 'children' | 'permission' | 'moduleId'>
 ) {
 	const isPermissionFormat = permissionOrModuleId.includes(':');
 
-	return function ProtectedComponent(props: any) {
+	return function ProtectedComponent(props: T) {
 		return (
 			<ProtectedAdminRoute
 				{...(isPermissionFormat

@@ -11,7 +11,7 @@ import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { adminCacheService } from '../../shared';
 import { backupService } from './backup.service';
 import { z } from 'zod';
-import { logger } from "../../../../core/logger";
+import { logger } from '../../../../core/logger';
 
 // Validation schemas
 export const createScheduleSchema = z.object({

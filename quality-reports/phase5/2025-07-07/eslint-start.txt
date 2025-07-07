@@ -1,0 +1,1417 @@
+
+> @degentalk/client@1.0.0 lint /Users/gnarcotic/Degentalk/client
+> eslint . --ext .ts,.tsx  "--max-warnings" "0"
+
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/AdminDashboard.tsx
+  36:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/ModularAdminSidebar.tsx
+  32:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  89:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/VisualJsonTabs.tsx
+   3:10  warning  'z' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  41:5   warning  React Hook React.useEffect has missing dependencies: 'onChange' and 'shapeSchema'. Either include them or remove the dependency array. If 'onChange' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+  54:5   warning  React Hook React.useEffect has missing dependencies: 'onChange' and 'shapeSchema'. Either include them or remove the dependency array. If 'onChange' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/clout/AchievementsSection.tsx
+  154:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  168:3   warning  Mixed spaces and tabs                     no-mixed-spaces-and-tabs
+  179:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  202:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  223:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/clout/CloutGrantsSection.tsx
+  104:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/clout/CloutLogsSection.tsx
+  50:9  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/cooldown-settings.tsx
+  62:62  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  83:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/forms/xp/LevelFormDialogs.tsx
+   45:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  215:72  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/media/MediaLibraryModal.tsx
+  68:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/protected-admin-route.tsx
+   50:8   warning  'location' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   75:9   warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                         degen/no-raw-container-auto
+  182:10  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                         degen/no-raw-container-auto
+  225:33  warning  Unexpected any. Specify a different type                                                              @typescript-eslint/no-explicit-any
+  231:44  warning  Unexpected any. Specify a different type                                                              @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/roles/RoleForm.tsx
+  46:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/roles/RolesSection.tsx
+  78:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/simple-menu.tsx
+  43:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/titles/TitlesSection.tsx
+  4:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  5:9   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  9:33  warning  'titles' is defined but never used        @typescript-eslint/no-unused-vars
+  9:41  warning  'roles' is defined but never used         @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/admin/wallet/mock-webhook-trigger.tsx
+  76:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/auth/GlobalRouteGuard.tsx
+  91:9  warning  'trackData' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/auth/ProtectedRoute.tsx
+  62:11  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"  degen/no-raw-container-auto
+  96:11  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"  degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/components/auth/protected-route.tsx
+   8:33  warning  Unexpected any. Specify a different type                                                          @typescript-eslint/no-explicit-any
+  12:10  warning  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/economy/WalletDashboard.tsx
+  2:10  warning  'useQuery' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/economy/shoutbox/enhanced-shoutbox-widget.tsx
+  121:22  warning  'setTypingUsers' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  220:20  warning  Unexpected any. Specify a different type                                                                    @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/economy/wallet/WalletSheet.tsx
+    1:27  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                      @typescript-eslint/no-unused-vars
+   50:29  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+   57:3   warning  'isLoadingBalance' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u      @typescript-eslint/no-unused-vars
+   60:3   warning  'createDepositAddress' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  101:34  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  102:26  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  103:35  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  104:30  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  393:67  warning  'index' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/economy/wallet/deposit-button.tsx
+  26:19  warning  'setShowGlow' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/economy/wallet/transaction-history.tsx
+  25:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/economy/wallet/wallet-balance-display.tsx
+  20:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/economy/xp/LevelUpNotification.tsx
+  43:5  warning  React Hook useEffect has a missing dependency: 'handleDismiss'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/components/editor/enhanced-gif-picker.tsx
+   2:10  warning  'apiRequest' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                                     @typescript-eslint/no-unused-vars
+  67:5   warning  React Hook useEffect has missing dependencies: 'fetchTrendingGifs' and 'trendingGifs.length'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/components/editor/gif-picker.tsx
+   2:10  warning  'apiRequest' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                                     @typescript-eslint/no-unused-vars
+  54:9   warning  'manualGifUrl' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                          @typescript-eslint/no-unused-vars
+  54:23  warning  'setManualGifUrl' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                       @typescript-eslint/no-unused-vars
+  64:5   warning  React Hook useEffect has missing dependencies: 'fetchTrendingGifs' and 'trendingGifs.length'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/components/editor/rich-text-editor.tsx
+  165:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/editor/suggestion.ts
+  19:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  50:29  warning  'index' is defined but never used         @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/errors/ErrorBoundary.tsx
+  225:42  warning  'errorInfo' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/errors/NetworkError.tsx
+  50:5  warning  React Hook useEffect has a missing dependency: 'handleRetry'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/components/fixtures/fixture-builder.tsx
+   29:28  warning  Unexpected any. Specify a different type                                                                                                             @typescript-eslint/no-explicit-any
+   30:32  warning  Unexpected any. Specify a different type                                                                                                             @typescript-eslint/no-explicit-any
+   34:26  warning  Unexpected any. Specify a different type                                                                                                             @typescript-eslint/no-explicit-any
+   46:61  warning  Unexpected any. Specify a different type                                                                                                             @typescript-eslint/no-explicit-any
+   97:5   warning  React Hook useCallback has missing dependencies: 'postStates', 'threadStates', and 'userStates'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  153:3   warning  React Hook useMemo has a missing dependency: 'fixtureTypes'. Either include it or remove the dependency array                                        react-hooks/exhaustive-deps
+  200:79  warning  Unexpected any. Specify a different type                                                                                                             @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/fixtures/fixture-preview.tsx
+   29:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   34:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   47:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  101:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  153:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  192:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  237:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  335:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/footer/LiveStats.tsx
+   2:10  warning  'motion' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  70:28  warning  'index' is defined but never used                                                          @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/footer/SiteFooter.tsx
+  25:38  warning  'index' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/BBCodePostCard.tsx
+  6:10  warning  'brandConfig' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/CanonicalZoneGrid.tsx
+  56:19  warning  React Hook "React.useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+  75:24  warning  React Hook "React.useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/ForumPage.tsx
+   6:30  warning  'parseForumUrl' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  21:27  warning  'className' is defined but never used                                                             @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/ModeratorActions.tsx
+   79:21  warning  React Hook "useMutation" is called conditionally. React Hooks must be called in the exact same order in every component render       react-hooks/rules-of-hooks
+   95:20  warning  React Hook "useMutation" is called conditionally. React Hooks must be called in the exact same order in every component render       react-hooks/rules-of-hooks
+  111:21  warning  React Hook "useMutation" is called conditionally. React Hooks must be called in the exact same order in every component render       react-hooks/rules-of-hooks
+  127:21  warning  React Hook "useMutation" is called conditionally. React Hooks must be called in the exact same order in every component render       react-hooks/rules-of-hooks
+  146:27  warning  React Hook "useMutation" is called conditionally. React Hooks must be called in the exact same order in every component render       react-hooks/rules-of-hooks
+  169:22  warning  React Hook "useSolveThread" is called conditionally. React Hooks must be called in the exact same order in every component render    react-hooks/rules-of-hooks
+  170:24  warning  React Hook "useUnsolveThread" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/ProfileCard.tsx
+  28:2  warning  'showFlair' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  29:2  warning  'showTitle' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/ReactionBar.tsx
+  148:27  warning  'amount' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/ThreadAuthor.tsx
+  10:8   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  61:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/ThreadCard.tsx
+  298:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  332:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/UserLevelDisplay.tsx
+  46:8  warning  'getBadgeClasses' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/ZoneCard.tsx
+  394:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/bbcode/PostActions.tsx
+  27:10  warning  'brandConfig' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/bbcode/PostBody.tsx
+   4:10  warning  'brandConfig' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  18:2   warning  'username' is defined but never used                                                            @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/bbcode/PostFooter.tsx
+  5:10  warning  'brandConfig' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/bbcode/PostHeader.tsx
+  33:8  warning  'timeAgo' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/bbcode/PostSidebar.tsx
+  174:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/bbcode/QuickReplyBox.tsx
+  20:2  warning  'threadId' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/category-card.tsx
+  33:2  warning  'id' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/enhanced/CryptoEngagementBar.tsx
+  50:3   warning  'onShare' is defined but never used                                                                               @typescript-eslint/no-unused-vars
+  56:29  warning  'setSelectedTipAmount' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/enhanced/MobileForumNavigation.tsx
+  109:78  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  214:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/enhanced/__tests__/CryptoEngagementBar.test.tsx
+  15:33  warning  Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+  17:34  warning  Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+  39:8   warning  'mockOnShare' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/enhanced/__tests__/EnhancedThreadCard.test.tsx
+  15:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  17:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  22:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/enhanced/__tests__/QuickReactions.test.tsx
+  15:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  16:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  18:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/forum-card.tsx
+  28:2  warning  'id' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/layouts/AdaptiveForumGrid.tsx
+  121:6   warning  React Hook useEffect has a missing dependency: 'getColumnCount'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  210:59  warning  Unexpected any. Specify a different type                                                                           @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/layouts/MagicForumBuilder.tsx
+  129:83  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  342:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  381:77  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  651:20  warning  'id' is defined but never used            @typescript-eslint/no-unused-vars
+  651:24  warning  'amount' is defined but never used        @typescript-eslint/no-unused-vars
+  652:25  warning  'id' is defined but never used            @typescript-eslint/no-unused-vars
+  662:21  warning  'amount' is defined but never used        @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/layouts/ResponsiveForumLayout.tsx
+  205:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/layouts/__tests__/AdaptiveForumGrid.test.tsx
+   17:33  warning  Unexpected any. Specify a different type                                                               @typescript-eslint/no-explicit-any
+   19:34  warning  Unexpected any. Specify a different type                                                               @typescript-eslint/no-explicit-any
+  108:11  warning  'container' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  250:37  warning  Unexpected any. Specify a different type                                                               @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/layouts/__tests__/ResponsiveForumLayout.test.tsx
+   19:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   20:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   21:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   22:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   24:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   53:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   54:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   55:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   68:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  196:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  265:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/sidebar/ActivityFeedWidget.tsx
+  20:2  warning  'isCompact' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/sidebar/HotTopicsWidget.tsx
+  7:10  warning  'formatDistanceToNow' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  8:10  warning  'cn' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                   @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/sidebar/SidebarIntegrationExample.tsx
+  54:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  57:9   warning  'thread' is defined but never used        @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/forum/tag-input.tsx
+   28:31  warning  'isLoading' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  107:22  warning  'index' is defined but never used                                                                      @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/gamification/achievement-grid.tsx
+   57:6   warning  Unexpected lexical declaration in case block      no-case-declarations
+  188:50  warning  'categoryAchievements' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/gamification/leaderboard.tsx
+   38:10  warning  'useLocation' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  143:65  warning  Unexpected any. Specify a different type                                                        @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/gamification/mission-dashboard.tsx
+  70:8  warning  'specialMissions' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/gamification/profile-gamification-widget.tsx
+  20:10  warning  'useLocation' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/gamification/progression-card.tsx
+  22:10  warning  'useLocation' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/header/HeaderPluginSlot.tsx
+  20:32  warning  'position' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/header/NavLink.tsx
+  19:2  warning  'prefetch' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/header/PrimaryNav.tsx
+   74:5  warning  React Hook useEffect has a missing dependency: 'visibleNavigation'. Either include it or remove the dependency array     react-hooks/exhaustive-deps
+  105:5  warning  React Hook useEffect has a missing dependency: 'handleLocationChange'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/components/header/SiteHeader.tsx
+  23:22  warning  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/icons/iconRenderer.tsx
+  55:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/icons/types.ts
+  15:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/layout/AppSidebar.tsx
+  26:10  warning  'getCategoryEmoji' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  54:27  warning  'activeCategoryId' is defined but never used                                                         @typescript-eslint/no-unused-vars
+  54:45  warning  'forumId' is defined but never used                                                                  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/layout/ResponsiveLayoutWrapper.tsx
+  25:2   warning  'page' is defined but never used                                                                                                   @typescript-eslint/no-unused-vars
+  33:19  warning  React Hook "useLayoutStore" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  34:24  warning  React Hook "useLayoutStore" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  35:23  warning  React Hook "useLayoutStore" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  37:20  warning  React Hook "useMediaQuery" is called conditionally. React Hooks must be called in the exact same order in every component render   react-hooks/rules-of-hooks
+  38:19  warning  React Hook "useMediaQuery" is called conditionally. React Hooks must be called in the exact same order in every component render   react-hooks/rules-of-hooks
+  41:46  warning  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render        react-hooks/rules-of-hooks
+  42:36  warning  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render        react-hooks/rules-of-hooks
+  45:2   warning  React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render       react-hooks/rules-of-hooks
+  65:5   warning  React Hook useEffect has missing dependencies: 'sidebars' and 'toggleSidebar'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/components/layout/SidebarNavigation.tsx
+  1:17  warning  'useState' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  2:29  warning  'useRoute' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/layout/WidgetFrame.tsx
+   83:30  warning  Unexpected any. Specify a different type                                                                                                                                                         @typescript-eslint/no-explicit-any
+   90:21  warning  React Hook "React.useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+  102:74  warning  Unexpected any. Specify a different type                                                                                                                                                         @typescript-eslint/no-explicit-any
+  123:24  warning  React Hook "useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?        react-hooks/rules-of-hooks
+  246:25  warning  Unexpected any. Specify a different type                                                                                                                                                         @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/layout/WidgetGallery.tsx
+   34:8   warning  'order' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   42:66  warning  'id' is defined but never used                                                                     @typescript-eslint/no-unused-vars
+  214:84  warning  Unexpected any. Specify a different type                                                           @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/layout/announcement-ticker.tsx
+  34:7  warning  'getIconComponent' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  92:3  warning  'isLoading' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u         @typescript-eslint/no-unused-vars
+  93:3  warning  'error' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u             @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/layout/hero-section.tsx
+  67:9  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"  degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/components/layout/site-layout-wrapper.tsx
+  15:10  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"  degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/components/mentions/MentionAutocomplete.tsx
+  52:8  warning  The 'users' logical expression could make the dependencies of useEffect Hook (at line 57) change on every render. To fix this, wrap the initialization of 'users' in its own useMemo() Hook    react-hooks/exhaustive-deps
+  52:8  warning  The 'users' logical expression could make the dependencies of useCallback Hook (at line 85) change on every render. To fix this, wrap the initialization of 'users' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/components/messages/WhisperButton.tsx
+  33:16  warning  'currentUser' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/messages/WhispersInbox.tsx
+  20:10  warning  'useQuery' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/missions/MissionsWidget.tsx
+   2:10  warning  'useLocation' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  17:10  warning  'cn' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u           @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/mod/mod-layout.tsx
+   3:44  warning  'X' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                           @typescript-eslint/no-unused-vars
+  23:39  warning  'title' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u              @typescript-eslint/no-unused-vars
+  25:9   warning  'isSearchActive' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u     @typescript-eslint/no-unused-vars
+  25:25  warning  'setIsSearchActive' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/mod/mod-sidebar.tsx
+  21:10  warning  'cn' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/modals/QuotePostModal.tsx
+  14:10  warning  'cn' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/navigation/nav-item.tsx
+  74:15  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/notifications/MentionsNotifications.tsx
+  63:3  warning  'refetch' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/notifications/NotificationPanel.tsx
+   1:27  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                        @typescript-eslint/no-unused-vars
+  37:35  warning  Unexpected empty object pattern                                                                                     no-empty-pattern
+  38:10  warning  'isLoadingNotifications' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  38:49  warning  'notificationsError' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u      @typescript-eslint/no-unused-vars
+  38:69  warning  'refreshNotifications' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u    @typescript-eslint/no-unused-vars
+  41:23  warning  'setIsRefreshing' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u         @typescript-eslint/no-unused-vars
+  43:8   warning  'isMobile' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/paths/path-progress.tsx
+   3:10  warning  'availablePaths' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  62:22  warning  Unexpected any. Specify a different type                                                           @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/paths/user-paths-display.tsx
+  9:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/platform-energy/featured-threads/featured-threads-slider.tsx
+  61:8  warning  'formatDate' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/platform-energy/leaderboards/weekly-leaderboard.tsx
+  87:8  warning  'getMetricLabel' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/preferences/account-preferences.tsx
+   10:30  warning  'X' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   50:38  warning  'user' is defined but never used                                                      @typescript-eslint/no-unused-vars
+  230:76  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  241:88  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  253:76  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/preferences/display-preferences.tsx
+  23:38  warning  'user' is defined but never used          @typescript-eslint/no-unused-vars
+  51:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/preferences/notification-preferences.tsx
+  26:43  warning  'user' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/preferences/profile-preferences.tsx
+  65:29  warning  'type' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/preferences/session-preferences.tsx
+  44:38  warning  'user' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/preferences/social-preferences.tsx
+  134:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  144:72  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/profile/AchievementsTab.tsx
+   22:43  warning  'profile' is defined but never used                                                                       @typescript-eslint/no-unused-vars
+   22:52  warning  'isOwnProfile' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  163:39  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/profile/CosmeticControlPanel.tsx
+   44:2   warning  'activeBadge' is defined but never used   @typescript-eslint/no-unused-vars
+  297:92  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  323:64  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  336:90  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/profile/FriendsTab.tsx
+  74:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/profile/InventoryTab.tsx
+  24:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  49:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/profile/ProfileDashboard.tsx
+   31:42  warning  'error' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u         @typescript-eslint/no-unused-vars
+  128:2   warning  'extendedStats' is defined but never used                                                                 @typescript-eslint/no-unused-vars
+  128:17  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  130:8   warning  'basePriority' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  146:17  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/profile/ProfileNavigation.tsx
+   6:10  warning  'useAuth' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                          @typescript-eslint/no-unused-vars
+  35:5   warning  React Hook useEffect has a missing dependency: 'recentlyVisited'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/components/profile/ProfileSidebar.tsx
+    1:17  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u             @typescript-eslint/no-unused-vars
+    3:20  warning  'useMutation' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u           @typescript-eslint/no-unused-vars
+   19:28  warning  'formatCurrency' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u        @typescript-eslint/no-unused-vars
+   37:10  warning  'toast' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u        @typescript-eslint/no-unused-vars
+   39:8   warning  'queryClient' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   40:10  warning  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u         @typescript-eslint/no-unused-vars
+   87:27  warning  Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+  115:44  warning  Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/profile/ProfileSkeleton.tsx
+  10:8  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"  degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/components/profile/SignatureRenderer.tsx
+   5:10  warning  'cn' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                             @typescript-eslint/no-unused-vars
+  25:2   warning  'userId' is defined but never used                                                                                @typescript-eslint/no-unused-vars
+  47:8   warning  'hasUnicodeSignatures' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  60:17  warning  Do not access Object.prototype method 'hasOwnProperty' from target object                                         no-prototype-builtins
+
+/Users/gnarcotic/Degentalk/client/src/components/profile/UnifiedProfileCard.tsx
+   37:2   warning  'showJoinDate' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u      @typescript-eslint/no-unused-vars
+   39:2   warning  'showRole' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u          @typescript-eslint/no-unused-vars
+   40:2   warning  'showOnlineStatus' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   62:8   warning  'joinedAgo' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u         @typescript-eslint/no-unused-vars
+  135:55  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/profile/UserProfileRenderer.tsx
+  29:2   warning  'showBio' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u            @typescript-eslint/no-unused-vars
+  32:2   warning  'showVerifiedBadge' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  35:2   warning  'linkToProfile' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u      @typescript-eslint/no-unused-vars
+  56:43  warning  Unexpected any. Specify a different type                                                                       @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/profile/widgets/MilestoneCard.tsx
+  135:2  warning  'xp' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/profile/widgets/QuickActionsCard.tsx
+  17:2   warning  'profileId' is defined but never used                                                             @typescript-eslint/no-unused-vars
+  23:10  warning  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/shop/shop-item-card.tsx
+  38:14  warning  'ownershipLoading' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u       @typescript-eslint/no-unused-vars
+  39:20  warning  'ownershipAuth' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u          @typescript-eslint/no-unused-vars
+  54:8   warning  'isAvailableFromFuture' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  55:8   warning  'isAvailableUntilPast' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u   @typescript-eslint/no-unused-vars
+  56:8   warning  'isSoldOut' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u              @typescript-eslint/no-unused-vars
+  57:8   warning  'isFeatured' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u             @typescript-eslint/no-unused-vars
+  58:8   warning  'hasPromotion' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u           @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/shoutbox/ShoutboxContainer.tsx
+  44:10  warning  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  71:20  warning  Unexpected any. Specify a different type                                                          @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/shoutbox/ShoutboxInput.tsx
+  66:3  warning  React Hook useCallback has a missing dependency: 'handleSend'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/components/shoutbox/integration-example.tsx
+   6:17  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                @typescript-eslint/no-unused-vars
+  28:8   warning  'renderMessage' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u   @typescript-eslint/no-unused-vars
+  28:34  warning  Unexpected any. Specify a different type                                                                    @typescript-eslint/no-explicit-any
+  54:8   warning  'processMessage' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/shoutbox/shoutbox-message-styles.tsx
+  16:2  warning  'sender' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/shoutbox/shoutbox-position-selector.tsx
+   79:8   warning  'slotOptions' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u           @typescript-eslint/no-unused-vars
+   89:8   warning  'handlePositionChange' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  138:93  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  159:20  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  217:54  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  228:57  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  242:56  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  254:59  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/shoutbox/shoutbox-widget.tsx
+  323:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/sidebar/leaderboard-widget.tsx
+  35:10  warning  'activeTab' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/skeletons/HomePageSkeleton.tsx
+  11:9  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"  degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/components/social/FollowButton.tsx
+  38:59  warning  React Hook "useQuery" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?     react-hooks/rules-of-hooks
+  49:25  warning  React Hook "useMutation" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+  68:20  warning  Unexpected any. Specify a different type                                                                                                                                                       @typescript-eslint/no-explicit-any
+  78:27  warning  React Hook "useMutation" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+  97:20  warning  Unexpected any. Specify a different type                                                                                                                                                       @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/social/FriendsManager.tsx
+  167:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  197:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  222:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/social/WhaleWatchDashboard.tsx
+    1:27  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  157:20  warning  Unexpected any. Specify a different type                                                      @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/ui/accessibility-enhancements.tsx
+   17:10  warning  'cn' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                                                                                                              @typescript-eslint/no-unused-vars
+  386:8   warning  The 'toggleAccessibilityMenu' function makes the dependencies of useEffect Hook (at line 454) change on every render. To fix this, wrap the definition of 'toggleAccessibilityMenu' in its own useCallback() Hook  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/components/ui/candlestick-menu.tsx
+  72:5  warning  React Hook useEffect has a missing dependency: 'getRandomPattern'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/components/ui/content-area.tsx
+  10:10  warning  'useContent' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                       @typescript-eslint/no-unused-vars
+  46:17  warning  React Hook "useContentFeed" is called conditionally. React Hooks must be called in the exact same order in every component render   react-hooks/rules-of-hooks
+  52:32  warning  React Hook "useForumContent" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  52:71  warning  React Hook "useHomeContent" is called conditionally. React Hooks must be called in the exact same order in every component render   react-hooks/rules-of-hooks
+
+/Users/gnarcotic/Degentalk/client/src/components/ui/content-feed.tsx
+   91:50  warning  'action' is defined but never used  @typescript-eslint/no-unused-vars
+  342:23  warning  'index' is defined but never used   @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/ui/enhanced-notifications.tsx
+   35:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  138:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/ui/enhanced-thread-card.tsx
+  44:3   warning  'showPreview' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u    @typescript-eslint/no-unused-vars
+  45:3   warning  'onTip' is defined but never used                                                                          @typescript-eslint/no-unused-vars
+  52:10  warning  'isExpanded' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u     @typescript-eslint/no-unused-vars
+  52:22  warning  'setIsExpanded' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  59:9   warning  'isCompactView' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/ui/input.tsx
+  41:16  warning  'variant' is defined but never used  @typescript-eslint/no-unused-vars
+  41:25  warning  'size' is defined but never used     @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/ui/mobile-forum-nav.tsx
+  49:17  warning  'isUsingFallback' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  51:9   warning  'dragY' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u            @typescript-eslint/no-unused-vars
+  69:32  warning  Unexpected any. Specify a different type                                                                     @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/ui/pagination.tsx
+  130:35  warning  'i' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/ui/reactions-bar.tsx
+    5:22  warning  'queryClient' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  206:27  warning  'amount' is defined but never used                                                              @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/ui/smart-thread-filters.tsx
+    1:27  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                   @typescript-eslint/no-unused-vars
+   95:3   warning  'availablePrefixes' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   99:21  warning  'isTablet' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u           @typescript-eslint/no-unused-vars
+  179:9   warning  'loadSavedFilter' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u    @typescript-eslint/no-unused-vars
+  363:70  warning  Unexpected any. Specify a different type                                                                       @typescript-eslint/no-explicit-any
+  380:73  warning  Unexpected any. Specify a different type                                                                       @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/ui/tab-switcher.tsx
+  85:30  warning  'index' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/ui/tooltip-utils.tsx
+  22:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  67:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/users/UserCard.tsx
+  110:46  warning  'index' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/users/UserFilters.tsx
+  25:71  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/components/users/Username.tsx
+  50:2  warning  'userId' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/widgets/ProfileCard.tsx
+  37:44  warning  'currentMockRole' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/components/xp/XPBarsContainer.tsx
+  16:8  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"  degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/config/widgetRegistry.ts
+  19:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/contexts/ForumStructureContext.tsx
+  21:7  warning  'FORUM_STRUCTURE_API_PATH' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/contexts/ForumThemeProvider.tsx
+  164:5  warning  React Hook useCallback has a missing dependency: 'getTheme'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/contexts/XpToastContext.tsx
+  77:26  warning  'index' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/contexts/mock-shoutbox-context.tsx
+  73:9  warning  'prevPosition' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/contexts/shoutbox-context.tsx
+  241:9  warning  'levelLabels' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                  @typescript-eslint/no-unused-vars
+  279:8  warning  'getMobileAwarePositionLabel' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/core/api.ts
+  239:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  295:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/features/activity/services/activityApi.ts
+  8:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/features/admin/api/system-analytics.api.ts
+  279:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/features/admin/components/analytics/APIMetricsCard.tsx
+  31:8  warning  'getErrorRateColor' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/features/admin/components/analytics/CacheAnalyticsCard.tsx
+  30:10  warning  'toast' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/features/admin/components/analytics/SystemOverviewCard.tsx
+  30:8  warning  'getHealthColor' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/features/admin/hooks/useSystemAnalytics.ts
+  129:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/features/admin/services/cloutAchievementsService.ts
+  17:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  25:63  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/features/admin/services/economyConfigService.ts
+  21:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/features/admin/services/settingsService.ts
+  18:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/features/admin/services/uiConfigApi.ts
+   37:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   64:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  119:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  122:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  128:80  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  170:27  warning  'filters' is defined but never used       @typescript-eslint/no-unused-vars
+  170:51  warning  'pagination' is defined but never used    @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/features/dictionary/services/dictionaryApi.ts
+  5:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  8:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/features/forum/components/CreatePostForm.tsx
+  49:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  55:15  warning  'data' is defined but never used          @typescript-eslint/no-unused-vars
+  74:13  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/features/forum/components/CreateThreadForm.tsx
+    5:10  warning  'useForm' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                                                                                                                      @typescript-eslint/no-unused-vars
+    6:10  warning  'zodResolver' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                                                                                                                  @typescript-eslint/no-unused-vars
+  159:5   warning  React Hook useEffect has a missing dependency: 'getForum'. Either include it or remove the dependency array                                                                                                                     react-hooks/exhaustive-deps
+  178:5   warning  React Hook useEffect has a missing dependency: 'getForum'. Either include it or remove the dependency array                                                                                                                     react-hooks/exhaustive-deps
+  182:14  warning  'loadingDraft' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                                                                                                        @typescript-eslint/no-unused-vars
+  243:17  warning  'updateDraft' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                                                                                                         @typescript-eslint/no-unused-vars
+  243:30  warning  'clearDraft' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                                                                                                          @typescript-eslint/no-unused-vars
+  243:42  warning  'isDirty' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                                                                                                             @typescript-eslint/no-unused-vars
+  272:5   warning  React Hook useEffect has an unnecessary dependency: 'form'. Either exclude it or remove the dependency array. Outer scope values like 'form' aren't valid dependencies because mutating them doesn't re-render the component    react-hooks/exhaustive-deps
+  294:3   warning  React Hook useCallback has an unnecessary dependency: 'form'. Either exclude it or remove the dependency array. Outer scope values like 'form' aren't valid dependencies because mutating them doesn't re-render the component  react-hooks/exhaustive-deps
+  365:17  warning  Unexpected any. Specify a different type                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  397:29  warning  React Hook useCallback received a function whose dependencies are unknown. Pass an inline function instead                                                                                                                      react-hooks/exhaustive-deps
+  406:5   warning  React Hook useEffect has an unnecessary dependency: 'form'. Either exclude it or remove the dependency array. Outer scope values like 'form' aren't valid dependencies because mutating them doesn't re-render the component    react-hooks/exhaustive-deps
+  597:17  warning  'field' is defined but never used                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  698:39  warning  Unexpected any. Specify a different type                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  698:49  warning  Unexpected any. Specify a different type                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/features/forum/components/EditPostDialog.tsx
+  24:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/features/forum/components/ForumListItem.tsx
+  24:2  warning  'parentForumSlug' is defined but never used                                                              @typescript-eslint/no-unused-vars
+  69:9  warning  'accessLevel' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/features/forum/components/HierarchicalZoneNav.tsx
+  418:5  warning  React Hook useEffect has a missing dependency: 'expandedCategories'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/features/forum/components/HotThreads.tsx
+   72:8   warning  'getBadgeStyle' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u    @typescript-eslint/no-unused-vars
+   79:8   warning  'getHotnessLevel' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   96:8   warning  'getInitials' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u      @typescript-eslint/no-unused-vars
+  101:52  warning  'index' is defined but never used                                                                            @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/features/forum/components/PostCard.tsx
+  66:2  warning  'parentForumTheme' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/features/forum/components/ReplyForm.tsx
+  29:2   warning  'threadId' is defined but never used                                                                                              @typescript-eslint/no-unused-vars
+  30:2   warning  'replyToId' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                             @typescript-eslint/no-unused-vars
+  39:10  warning  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                  @typescript-eslint/no-unused-vars
+  76:5   warning  React Hook useEffect has missing dependencies: 'content' and 'editorContent'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/features/forum/components/ReportPostDialog.tsx
+  74:8  warning  'selectedReason' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/features/forum/components/ThreadForm.tsx
+  43:17  warning  '_forumRules' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/features/forum/components/ThreadList.tsx
+  29:2   warning  'forumSlug' is defined but never used                                                                      @typescript-eslint/no-unused-vars
+  30:2   warning  'availableTags' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  89:4   warning  Unnecessary try/catch wrapper                                                                              no-useless-catch
+  90:76  warning  Unexpected any. Specify a different type                                                                   @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/features/forum/hooks/useThreadPermissions.ts
+   78:8  warning  'isAdmin' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                @typescript-eslint/no-unused-vars
+  108:8  warning  'checkBasicPermissions' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/features/gamification/services/gamification-api.service.ts
+   26:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   70:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  153:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  154:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  155:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  156:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  204:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  234:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  243:81  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  269:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  291:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  315:77  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  325:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  340:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/features/users/services/usersApi.ts
+   2:10  warning  'apiRequest' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u      @typescript-eslint/no-unused-vars
+  33:38  warning  'userId' is defined but never used                                                                 @typescript-eslint/no-unused-vars
+  44:50  warning  'limit' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/features/wallet/services/wallet-api.service.ts
+  19:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/hooks/__tests__/useMediaQuery.test.tsx
+    6:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   58:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  253:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/hooks/preferences/useUpdateUserSettings.ts
+  17:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  36:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  72:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/hooks/preferences/useUserSettings.ts
+  31:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-admin-modules.ts
+  54:48  warning  Unexpected any. Specify a different type                                                                       @typescript-eslint/no-explicit-any
+  74:5   warning  React Hook useMemo has an unnecessary dependency: 'modules'. Either exclude it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-auth.tsx
+   31:30  warning  Unexpected any. Specify a different type                                                                                                                     @typescript-eslint/no-explicit-any
+  219:5   warning  React Hook React.useEffect has a missing dependency: 'queryClient'. Either include it or remove the dependency array                                         react-hooks/exhaustive-deps
+  231:10  warning  'userError' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                                        @typescript-eslint/no-unused-vars
+  426:5   warning  React Hook useMemo has missing dependencies: 'currentMockRoleState', 'isDevelopment', and 'setMockRole'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-content.ts
+  59:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-draft.ts
+    8:39  warning  Unexpected any. Specify a different type                                                                                        @typescript-eslint/no-explicit-any
+    8:49  warning  Unexpected any. Specify a different type                                                                                        @typescript-eslint/no-explicit-any
+  112:5   warning  React Hook useEffect has missing dependencies: 'setLocalDraft' and 'toast'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  115:24  warning  React Hook useCallback received a function whose dependencies are unknown. Pass an inline function instead                      react-hooks/exhaustive-deps
+  144:3   warning  React Hook useCallback has a missing dependency: 'setLocalDraft'. Either include it or remove the dependency array              react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-gamification.tsx
+   83:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   94:75  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  120:75  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-mentions.ts
+    1:41  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u            @typescript-eslint/no-unused-vars
+   57:15  warning  Unexpected any. Specify a different type                                                                @typescript-eslint/no-explicit-any
+   85:27  warning  'type' is defined but never used                                                                        @typescript-eslint/no-unused-vars
+   85:65  warning  'metadata' is defined but never used                                                                    @typescript-eslint/no-unused-vars
+   85:76  warning  Unexpected any. Specify a different type                                                                @typescript-eslint/no-explicit-any
+  139:11  warning  'lineHeight' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-notifications.ts
+   1:10  warning  'useState' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u        @typescript-eslint/no-unused-vars
+   2:20  warning  'useMutation' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u     @typescript-eslint/no-unused-vars
+   3:10  warning  'apiRequest' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u      @typescript-eslint/no-unused-vars
+  10:10  warning  'toast' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-pending-transactions.ts
+  22:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-rain-notifications.ts
+  48:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-rain.ts
+  76:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-shop-ownership.tsx
+  1:10  warning  'useState' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u   @typescript-eslint/no-unused-vars
+  1:20  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-tip.ts
+  70:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-toast.ts
+  19:17  warning  'props' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/hooks/use-wallet.ts
+    6:10  warning  'formatDgt' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                 @typescript-eslint/no-unused-vars
+    6:21  warning  'parseDgt' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                  @typescript-eslint/no-unused-vars
+    6:31  warning  'formatUsd' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                 @typescript-eslint/no-unused-vars
+   20:23  warning  'setIsDepositing' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   63:20  warning  Unexpected any. Specify a different type                                                                     @typescript-eslint/no-explicit-any
+  104:20  warning  Unexpected any. Specify a different type                                                                     @typescript-eslint/no-explicit-any
+  127:20  warning  Unexpected any. Specify a different type                                                                     @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/hooks/useDgtPurchase.ts
+   4:10  warning  'useQuery' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                     @typescript-eslint/no-unused-vars
+   6:10  warning  'toast' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                        @typescript-eslint/no-unused-vars
+  21:21  warning  Unexpected any. Specify a different type                                                                        @typescript-eslint/no-explicit-any
+  22:20  warning  Unexpected any. Specify a different type                                                                        @typescript-eslint/no-explicit-any
+  36:9   warning  'isLoading' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u           @typescript-eslint/no-unused-vars
+  37:26  warning  'setSelectedPackage' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  67:24  warning  'packageId' is defined but never used                                                                           @typescript-eslint/no-unused-vars
+  87:15  warning  'data' is defined but never used                                                                                @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/hooks/useFeatureGates.ts
+  145:23  warning  'isLoading' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/hooks/useForumFilters.ts
+  24:11  warning  'setLocation' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/hooks/useJsonConfig.ts
+  62:3  warning  React Hook useCallback has a missing dependency: 'toast'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/hooks/useMissions.ts
+  105:4   warning  'missionId' is defined but never used     @typescript-eslint/no-unused-vars
+  127:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/hooks/useProfileEngagement.ts
+    7:28  warning  Unexpected any. Specify a different type                                                                                   @typescript-eslint/no-explicit-any
+   25:74  warning  Unexpected any. Specify a different type                                                                                   @typescript-eslint/no-explicit-any
+   38:10  warning  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                           @typescript-eslint/no-unused-vars
+   65:5   warning  React Hook useEffect has missing dependencies: 'events' and 'metrics'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  110:62  warning  Unexpected any. Specify a different type                                                                                   @typescript-eslint/no-explicit-any
+  238:9   warning  'analyticsData' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/hooks/useRouteProtection.ts
+  9:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/hooks/useSearchParams.ts
+  20:5  warning  React Hook useMemo has an unnecessary dependency: 'location'. Either exclude it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/gnarcotic/Degentalk/client/src/hooks/useXP.ts
+  160:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/layout/primitives/FullBleedSection.tsx
+  33:10  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"  degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/lib/admin-route.tsx
+  14:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/lib/admin-vault-service.ts
+   25:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   26:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   27:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   28:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   29:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  304:20  warning  'id' is defined but never used            @typescript-eslint/no-unused-vars
+  304:32  warning  'updates' is defined but never used       @typescript-eslint/no-unused-vars
+  308:17  warning  'id' is defined but never used            @typescript-eslint/no-unused-vars
+  316:24  warning  'userId' is defined but never used        @typescript-eslint/no-unused-vars
+  316:40  warning  'itemId' is defined but never used        @typescript-eslint/no-unused-vars
+  316:56  warning  'method' is defined but never used        @typescript-eslint/no-unused-vars
+  316:87  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  320:27  warning  'userId' is defined but never used        @typescript-eslint/no-unused-vars
+  320:43  warning  'itemId' is defined but never used        @typescript-eslint/no-unused-vars
+  324:21  warning  'userId' is defined but never used        @typescript-eslint/no-unused-vars
+  324:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  328:26  warning  'itemId' is defined but never used        @typescript-eslint/no-unused-vars
+  328:51  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  332:27  warning  'filters' is defined but never used       @typescript-eslint/no-unused-vars
+  332:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/lib/adminApi.ts
+   4:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   8:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   8:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  12:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  12:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  16:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  16:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  20:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  24:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  24:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/lib/api-request.ts
+    6:26  warning  'isStandardApiResponse' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   10:9   warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+   16:9   warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+   27:38  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+   28:38  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+   29:38  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+   90:35  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+   90:44  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  111:34  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  111:43  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  132:36  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  132:45  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  152:37  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/lib/api-response.ts
+   13:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   26:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   68:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  112:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  116:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  129:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  140:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  157:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  158:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  161:71  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  168:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  198:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  223:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/lib/api/achievements.ts
+   14:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   45:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  125:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  183:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  201:71  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/lib/format-date.ts
+  1:61  warning  'formatRelative' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/lib/forum/urls.ts
+   64:51  warning  Unnecessary escape character: \/  no-useless-escape
+   97:49  warning  Unnecessary escape character: \/  no-useless-escape
+  152:48  warning  Unnecessary escape character: \/  no-useless-escape
+  152:57  warning  Unnecessary escape character: \/  no-useless-escape
+  156:50  warning  Unnecessary escape character: \/  no-useless-escape
+
+/Users/gnarcotic/Degentalk/client/src/lib/queryClient.ts
+   21:22  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+   68:31  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  105:50  warning  Don't use `Function` as a type. The `Function` type accepts any function-like value.
+It provides no type safety when calling the function, which can be a common source of bugs.
+It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
+If you are expecting the function to accept certain arguments, you should explicitly define the function shape  @typescript-eslint/ban-types
+  130:51  warning  Don't use `Function` as a type. The `Function` type accepts any function-like value.
+It provides no type safety when calling the function, which can be a common source of bugs.
+It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
+If you are expecting the function to accept certain arguments, you should explicitly define the function shape  @typescript-eslint/ban-types
+  135:14  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/lib/rare-items-vault.ts
+  56:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/lib/safeWebSocket.ts
+   9:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  19:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:37  warning  'options' is defined but never used       @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/lib/utils/applyPluginRewards.ts
+  68:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/lib/utils/cosmeticsUtils.tsx
+   17:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  129:35  warning  Unnecessary escape character: \-          no-useless-escape
+
+/Users/gnarcotic/Degentalk/client/src/pages/RouteProtectionDemo.tsx
+   9:2  warning  'useRouteProtection' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  24:9  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                          degen/no-raw-container-auto
+  41:8  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                          degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/activity/user/[userId].tsx
+  197:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/airdrop.tsx
+    1:27  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   79:20  warning  Unexpected any. Specify a different type                                                      @typescript-eslint/no-explicit-any
+  112:8   warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                 degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/announcements/index.tsx
+  219:3  warning  Mixed spaces and tabs  no-mixed-spaces-and-tabs
+  244:3  warning  Mixed spaces and tabs  no-mixed-spaces-and-tabs
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/avatar-frames.tsx
+   67:3  warning  'isLoading' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   68:3  warning  'refetch' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u    @typescript-eslint/no-unused-vars
+  184:8  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                          degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/categories.tsx
+    3:10  warning  'formatTimestamp' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u        @typescript-eslint/no-unused-vars
+  106:8   warning  'location' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u      @typescript-eslint/no-unused-vars
+  128:22  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  134:22  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  149:19  warning  'categoryData' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  150:22  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  164:22  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  178:22  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  267:58  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  268:42  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/clout/achievements.tsx
+  35:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/clout/grants.tsx
+  49:36  warning  'getTierForClout' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/clout/index.tsx
+    2:20  warning  'useMutation' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u              @typescript-eslint/no-unused-vars
+  141:8   warning  'queryClient' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u     @typescript-eslint/no-unused-vars
+  180:8   warning  'getTierByClout' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/config/economy.tsx
+   13:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   37:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   39:3   warning  Mixed spaces and tabs                     no-mixed-spaces-and-tabs
+   48:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   69:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   93:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  113:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/config/tags.tsx
+  11:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/config/xp.tsx
+  11:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/config/zones.tsx
+  11:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/dev/seeding.tsx
+  35:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/emojis.tsx
+    1:27  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u        @typescript-eslint/no-unused-vars
+   48:10  warning  'mediaApiService' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   95:18  warning  Unexpected any. Specify a different type                                                            @typescript-eslint/no-explicit-any
+   96:21  warning  Unexpected any. Specify a different type                                                            @typescript-eslint/no-explicit-any
+  131:20  warning  Unexpected any. Specify a different type                                                            @typescript-eslint/no-explicit-any
+  164:20  warning  Unexpected any. Specify a different type                                                            @typescript-eslint/no-explicit-any
+  188:20  warning  Unexpected any. Specify a different type                                                            @typescript-eslint/no-explicit-any
+  834:18  warning  'media' is defined but never used                                                                   @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/feature-flags.tsx
+   93:10  warning  'module' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  101:9   warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                       degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/features/index.tsx
+   78:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   95:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  118:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/forum-structure.tsx
+  109:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  109:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  153:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  212:61  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/live-database.tsx
+   87:8   warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  115:20  warning  'setSortField' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  116:20  warning  'setSortOrder' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  119:47  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  120:58  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  125:8   warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  204:11  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  205:25  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  219:20  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  226:64  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  238:20  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  264:13  warning  'error' is defined but never used                                                                         @typescript-eslint/no-unused-vars
+  264:20  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  329:8   warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  335:30  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  415:37  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+  554:61  warning  Unexpected any. Specify a different type                                                                  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/missions/index.tsx
+  116:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  139:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  160:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  181:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  202:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  285:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/roles-titles.tsx
+   2:20  warning  'useMutation' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u           @typescript-eslint/no-unused-vars
+  33:30  warning  Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+  67:36  warning  Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+  82:8   warning  'queryClient' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/shop/categories.tsx
+   80:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   96:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:8   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  213:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/shop/edit.tsx
+   28:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   31:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   37:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  127:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  131:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  175:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/shop/index.tsx
+   1:17  warning  'useState' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u          @typescript-eslint/no-unused-vars
+   1:27  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u         @typescript-eslint/no-unused-vars
+  22:17  warning  Unexpected any. Specify a different type                                                             @typescript-eslint/no-explicit-any
+  26:37  warning  Unexpected any. Specify a different type                                                             @typescript-eslint/no-explicit-any
+  44:3   warning  'isError' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  53:37  warning  Unexpected any. Specify a different type                                                             @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/shop/rarities.tsx
+  26:10  warning  'cn' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  59:28  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  75:39  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/shoutbox.tsx
+   12:27  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                    @typescript-eslint/no-unused-vars
+   14:10  warning  'useToast' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                     @typescript-eslint/no-unused-vars
+   63:30  warning  Unexpected any. Specify a different type                                                                        @typescript-eslint/no-explicit-any
+   64:34  warning  Unexpected any. Specify a different type                                                                        @typescript-eslint/no-explicit-any
+   79:30  warning  Unexpected any. Specify a different type                                                                        @typescript-eslint/no-explicit-any
+  102:9   warning  'editingRoom' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u         @typescript-eslint/no-unused-vars
+  171:32  warning  Unexpected any. Specify a different type                                                                        @typescript-eslint/no-explicit-any
+  185:20  warning  Unexpected any. Specify a different type                                                                        @typescript-eslint/no-explicit-any
+  191:8   warning  'updateRoomMutation' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  192:70  warning  Unexpected any. Specify a different type                                                                        @typescript-eslint/no-explicit-any
+  224:20  warning  Unexpected any. Specify a different type                                                                        @typescript-eslint/no-explicit-any
+  229:66  warning  Unexpected any. Specify a different type                                                                        @typescript-eslint/no-explicit-any
+  323:49  warning  Unexpected any. Specify a different type                                                                        @typescript-eslint/no-explicit-any
+  570:55  warning  'index' is defined but never used                                                                               @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/social-config.tsx
+  123:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  173:89  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/stickers.tsx
+  638:22  warning  'data' is defined but never used  @typescript-eslint/no-unused-vars
+  660:22  warning  'data' is defined but never used  @typescript-eslint/no-unused-vars
+  682:22  warning  'data' is defined but never used  @typescript-eslint/no-unused-vars
+  704:22  warning  'data' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/tags.tsx
+  532:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  537:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/treasury.tsx
+  530:10  warning  Mixed spaces and tabs                     no-mixed-spaces-and-tabs
+  532:60  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/ui-config.tsx
+   63:10  warning  'useAdminModule' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u              @typescript-eslint/no-unused-vars
+  133:15  warning  'setPage' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u            @typescript-eslint/no-unused-vars
+  191:5   warning  React Hook useEffect has a missing dependency: 'loadQuotes'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  345:9   warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                                  degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/ui/animations.tsx
+  35:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/ui/pack-builder.tsx
+  53:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  67:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/users/[userId].tsx
+   1:27  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  45:36  warning  Unexpected any. Specify a different type                                                      @typescript-eslint/no-explicit-any
+  58:38  warning  Unexpected any. Specify a different type                                                      @typescript-eslint/no-explicit-any
+  78:40  warning  Unexpected any. Specify a different type                                                      @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/xp-system.tsx
+   55:9   warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                                                                                                                               degen/no-raw-container-auto
+   69:54  warning  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render                                                                                 react-hooks/rules-of-hooks
+   70:50  warning  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render                                                                                 react-hooks/rules-of-hooks
+   71:54  warning  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render                                                                                 react-hooks/rules-of-hooks
+   73:44  warning  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render                                                                                 react-hooks/rules-of-hooks
+   74:34  warning  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render                                                                                 react-hooks/rules-of-hooks
+   93:6   warning  React Hook "useQuery" is called conditionally. React Hooks must be called in the exact same order in every component render                                                                                 react-hooks/rules-of-hooks
+  121:30  warning  React Hook "useMutation" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?               react-hooks/rules-of-hooks
+  135:30  warning  React Hook "useMutation" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?               react-hooks/rules-of-hooks
+  149:30  warning  React Hook "useMutation" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?               react-hooks/rules-of-hooks
+  163:33  warning  React Hook "useMutation" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?               react-hooks/rules-of-hooks
+  490:57  warning  React Hook "useXpActions" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?              react-hooks/rules-of-hooks
+  491:25  warning  React Hook "useUpdateXpAction" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?         react-hooks/rules-of-hooks
+  508:31  warning  Unexpected any. Specify a different type                                                                                                                                                                    @typescript-eslint/no-explicit-any
+  552:64  warning  React Hook "useXpCloutSettings" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?        react-hooks/rules-of-hooks
+  553:8   warning  'updateCloutSettings' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                                                                             @typescript-eslint/no-unused-vars
+  553:30  warning  React Hook "useUpdateXpCloutSettings" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+
+/Users/gnarcotic/Degentalk/client/src/pages/admin/xp/actions.tsx
+  30:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/auth.tsx
+  60:9  warning  'location' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/pages/degen-index.tsx
+  306:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  306:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/dev/ControlsDrawer.tsx
+  35:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/dev/DemoCard.tsx
+   4:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  12:51  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/dev/DevPlaygroundLayout.tsx
+  30:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/dictionary/[slug].tsx
+  38:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/fixtures-dashboard.tsx
+   37:12  warning  Unexpected any. Specify a different type                                       @typescript-eslint/no-explicit-any
+   91:14  warning  Unexpected any. Specify a different type                                       @typescript-eslint/no-explicit-any
+  180:34  warning  Unexpected any. Specify a different type                                       @typescript-eslint/no-explicit-any
+  189:9   warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"  degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/pages/forum-rules.tsx
+   61:10  warning  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  165:15  warning  '_' is defined but never used                                                                     @typescript-eslint/no-unused-vars
+  211:9   warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                     degen/no-raw-container-auto
+  221:9   warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                     degen/no-raw-container-auto
+  236:9   warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                     degen/no-raw-container-auto
+  249:8   warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                     degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/pages/forums/index.tsx
+   67:16  warning  'activeUsers' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u         @typescript-eslint/no-unused-vars
+   67:45  warning  'activeUsersLoading' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   75:8   warning  'totalStats' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u          @typescript-eslint/no-unused-vars
+  154:15  warning  'zoneId' is defined but never used                                                                              @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/pages/home.tsx
+  38:37  warning  React Hook "useActiveUsers" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?   react-hooks/rules-of-hooks
+  42:23  warning  React Hook "useZoneStatsMap" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+
+/Users/gnarcotic/Degentalk/client/src/pages/invite/[code].tsx
+  74:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/mod/activity.tsx
+  284:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/mod/reports.tsx
+  174:9  warning  'resolveDialogOpen' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u      @typescript-eslint/no-unused-vars
+  225:8  warning  'deleteContentMutation' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/pages/profile/[username].tsx
+  30:7  warning  ESLint found too many warnings (maximum: 0).
+'TAB_GRID_CLASSES' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/pages/profile/activity.tsx
+  13:9  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"  degen/no-raw-container-auto
+  23:8  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"  degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/pages/profile/xp.tsx
+  20:8  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"  degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/pages/progress.tsx
+   13:10  warning  'cn' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u               @typescript-eslint/no-unused-vars
+   29:10  warning  'gamificationApi' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+   50:67  warning  Unexpected any. Specify a different type                                                            @typescript-eslint/no-explicit-any
+  103:10  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                       degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/pages/referrals/index.tsx
+   1:27  warning  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u            @typescript-eslint/no-unused-vars
+  55:10  warning  'statsError' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/pages/shop.tsx
+  83:26  warning  'item' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/pages/shop/avatar-frames.tsx
+  25:8  warning  'queryClient' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+  87:8  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                            degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/pages/tags/[tagSlug].tsx
+  58:10  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"  degen/no-raw-container-auto
+
+/Users/gnarcotic/Degentalk/client/src/pages/threads/BBCodeThreadPage.tsx
+  201:22  warning  'postId' is defined but never used    @typescript-eslint/no-unused-vars
+  201:38  warning  'hasLiked' is defined but never used  @typescript-eslint/no-unused-vars
+  205:23  warning  'postId' is defined but never used    @typescript-eslint/no-unused-vars
+  210:23  warning  'postId' is defined but never used    @typescript-eslint/no-unused-vars
+  215:22  warning  'postId' is defined but never used    @typescript-eslint/no-unused-vars
+  219:24  warning  'postId' is defined but never used    @typescript-eslint/no-unused-vars
+  223:30  warning  'postId' is defined but never used    @typescript-eslint/no-unused-vars
+  227:21  warning  'postId' is defined but never used    @typescript-eslint/no-unused-vars
+  231:24  warning  'postId' is defined but never used    @typescript-eslint/no-unused-vars
+  235:35  warning  'content' is defined but never used   @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/pages/ui-playground.tsx
+  17:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  21:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:67  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/pages/ui-playground/animations/ButtonPulseDemo.tsx
+  16:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/payments/ccpayment/ccpayment-client.ts
+   40:51  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  138:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/payments/ccpayment/deposit.ts
+  20:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/payments/ccpayment/swap.ts
+  19:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/payments/ccpayment/utils.ts
+  23:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  30:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  61:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/payments/ccpayment/withdraw.ts
+  20:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/payments/shared/index.ts
+  32:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/stores/useLayoutStore.ts
+  104:10  warning  'get' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/gnarcotic/Degentalk/client/src/stores/usePlaygroundControls.ts
+   6:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  10:69  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  11:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/test/setup.ts
+  59:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  78:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  79:72  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/gnarcotic/Degentalk/client/src/types/canonical.types.ts
+  311:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 818 problems (0 errors, 818 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.

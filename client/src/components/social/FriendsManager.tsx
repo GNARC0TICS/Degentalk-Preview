@@ -38,8 +38,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Link } from 'wouter';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import type { RequestId, EntityId } from '@/types/ids';
-import { type EntityId } from "@shared/types";
+import type { RequestId, EntityId, FriendId } from "@shared/types/ids";
 
 interface FriendUser {
 	id: string;

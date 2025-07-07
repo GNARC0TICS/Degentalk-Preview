@@ -1,6 +1,6 @@
 import type { ForumStructureNode } from '../schema/forum/structure';
 import type { threadPrefixes } from '../schema'; // Import threadPrefixes schema
-import type { TagId } from '@shared/types';
+import type { TagId } from '@shared/types/ids';
 
 // Canonical types – single source of truth
 import type { CanonicalThread, CanonicalPost } from '../../client/src/types/canonical.types';

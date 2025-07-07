@@ -8,7 +8,7 @@ import { useContentFeed } from '@/contexts/content-feed-context';
 import { RefreshCw, Wifi, WifiOff, AlertCircle, RotateCcw } from 'lucide-react';
 import type { ContentTab, UseContentParams } from '@/hooks/use-content';
 import { useContent, useHomeContent, useForumContent } from '@/hooks/use-content';
-import type { ForumId } from '@shared/types';
+import type { ForumId } from '@shared/types/ids';
 
 export interface ContentAreaProps {
 	className?: string;

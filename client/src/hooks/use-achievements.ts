@@ -9,7 +9,7 @@ import { achievementApi, type AchievementFilters, type Achievement } from '@/lib
 import { useAuth } from './use-auth';
 import { toast } from 'sonner';
 import type { ApiErrorData } from '@/types/core.types';
-import type { AchievementId } from '@shared/types';
+import type { AchievementId } from '@shared/types/ids';
 
 /**
  * Get user's achievements with progress

@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { HotThreadsSkeleton } from '@/components/ui/thread-skeleton';
 import { API_ROUTES } from '@/constants/apiRoutes';
-import type { ThreadId } from '@shared/types';
+import type { ThreadId } from '@shared/types/ids';
 // Removed motion, AnimatePresence
 
 interface ThreadResponse {

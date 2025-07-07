@@ -1,6 +1,6 @@
 import React from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
-import { z, ZodSchema } from 'zod';
+import { ZodSchema } from 'zod';
 import { JsonEditor } from './form-controls/JsonEditor';
 import { InlineError } from './form-controls/InlineError';
 

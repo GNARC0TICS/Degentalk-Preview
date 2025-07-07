@@ -11,7 +11,7 @@ import {
 	updateAnnouncement,
 	deactivateAnnouncement
 } from '../services/announcements.service';
-import { logger } from "../../../../../core/logger";
+import { logger } from '../../../../core/logger';
 
 // Removed redundant getUserId helper - use userService.getUserFromRequest(req)?.id directly
 

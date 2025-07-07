@@ -68,7 +68,6 @@ import { Badge } from '@/components/ui/badge';
 import { useLocation } from 'wouter'; // Fixed import for useLocation
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { apiRequest } from '@/lib/api-request';
-import type { CategoryId } from '@shared/types';
 
 const categorySchema = z.object({
 	name: z

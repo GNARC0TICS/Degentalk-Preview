@@ -1,10 +1,9 @@
 import React from 'react';
-import type { FrameId } from '@/types/ids';
 import { FramedAvatar } from './framed-avatar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { useUserCosmetics } from '@/hooks/useUserCosmetics';
-import { type FrameId } from "@shared/types";
+import type { FrameId } from "@shared/types/ids";
 
 interface UserAvatarProps {
 	user: {

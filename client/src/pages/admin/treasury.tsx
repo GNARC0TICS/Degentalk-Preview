@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/table';
 import type { Transaction } from '@/types/wallet';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
-import type { SettingId, WalletId, UserId } from '@shared/types';
+import type { SettingId, WalletId, UserId } from '@shared/types/ids';
 
 type TreasurySetting = {
 	settingId: SettingId;

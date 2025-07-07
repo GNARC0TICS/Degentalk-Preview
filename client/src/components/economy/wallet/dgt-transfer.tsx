@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useWallet } from '@/hooks/use-wallet';
-import { type UserId } from "@shared/types";
+import type { UserId } from '@shared/types/ids';
 
 interface DgtTransferProps {
 	className?: string;
@@ -23,7 +23,7 @@ export function DgtTransfer({ className = '' }: DgtTransferProps) {
 	const [transferAmount, setTransferAmount] = useState('');
 	const [transferNote, setTransferNote] = useState('');
 	const [isValidatingUser, setIsValidatingUser] = useState(false);
-	const [validatedUser, setValidatedUser] = useState<{ id: string; username: string } | null>(null);
+	const [validatedUser, setValidatedUser] = useState<{ id: UserId; username: string } | null>(null);
 
 	const { toast } = useToast();
 	const { balance, walletConfig, transferDgt, isTransferringDgt } = useWallet();
@@ -51,7 +51,7 @@ export function DgtTransfer({ className = '' }: DgtTransferProps) {
 
 			// Mock validation - in real app, call /api/users/search
 			const mockUser = {
-				id: `user_${recipientUsername.toLowerCase()}`,
+				id: `user_${recipientUsername.toLowerCase()}` as UserId,
 				username: recipientUsername
 			};
 

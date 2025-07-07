@@ -10,7 +10,7 @@ import type {
   AchievementId,
   CloutAmount 
 } from '@shared/types';
-import { UserTransformer } from '../../users/transformers/user.transformer';
+// import { UserTransformer } from '../../users/transformers/user.transformer'; // TODO: Add when available
 
 // Public clout data (leaderboards, etc.)
 export interface PublicCloutAchievement {

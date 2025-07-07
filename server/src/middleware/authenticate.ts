@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { db } from '@db';
+import { db } from '../core/db';
 import { users } from '@schema';
 import { eq } from 'drizzle-orm';
 import type { GroupId, UserId } from '@shared/types';
@@ -61,7 +61,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 		}
 
 		// Attach user to request
-		getAuthenticatedUser(req) = {
+		(req as any).user = {
 			id: user.id,
 			username: user.username,
 			email: user.email,

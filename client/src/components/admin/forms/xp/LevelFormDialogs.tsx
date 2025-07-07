@@ -21,7 +21,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { TitleMediaInput } from '@/components/admin/forms/xp/TitleMediaInput';
 import { UnlockMultiSelect } from '@/components/admin/inputs/UnlockMultiSelect';
-import type { LevelId } from '@shared/types';
+import type { LevelId } from '@shared/types/ids';
 // Assuming Level and LevelFormData types might be needed by the page as well
 // If not, they can be kept internal to this file.
 
@@ -42,7 +42,7 @@ export interface LevelFormData {
 		titles?: string[];
 		badges?: string[];
 		frames?: string[];
-		[extra: string]: any;
+		[extra: string]: unknown;
 	};
 }
 
@@ -212,7 +212,7 @@ export const LevelFormDialogComponent: React.FC<LevelFormDialogProps> = ({
 								<Label>Rarity</Label>
 								<Select
 									value={formData.rarity || 'common'}
-									onValueChange={(v) => setFormData({ ...formData, rarity: v as any })}
+									onValueChange={(v) => setFormData({ ...formData, rarity: v as 'common' | 'rare' | 'epic' | 'legendary' | 'mythic' })}
 								>
 									<SelectTrigger>
 										<SelectValue placeholder="Select rarity" />

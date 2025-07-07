@@ -13,7 +13,7 @@ import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { adminCacheService, AdminCacheKeys } from '../../shared/admin-cache.service';
 import { z } from 'zod';
 import type { TemplateId } from '@shared/types';
-import { logger } from "../../../../core/logger";
+import { logger } from '../../../../core/logger';
 
 // Template variable schema
 const templateVariableSchema = z.object({

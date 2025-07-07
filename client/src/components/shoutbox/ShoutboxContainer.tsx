@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import type { UserId } from '@/types/ids';
 import { MessageSquare, Send, Lock } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
@@ -21,7 +20,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import FeatureGate from '@/components/ui/feature-gate';
 import { Username } from '@/components/users/Username';
 import RainButton from '@/components/economy/wallet/rain-button';
-import { type UserId } from "@shared/types";
+import type { UserId } from "@shared/types/ids";
 
 // ShoutMessage type definition
 interface ShoutMessage {

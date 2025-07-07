@@ -1,12 +1,12 @@
 import { sql } from "drizzle-orm";
-import { db } from '@db';
+import { db } from '../src/core/db';
 import { xpActionSettings } from "../../shared/schema";
-import { logger } from "./src/core/logger";
+import { logger } from "../src/core/logger";
 
 export async function up() {
   logger.info('Running migration: Create XP action settings table');
 
-  await sql`
+  await db.execute(sql`
     -- Create the xp_action_settings table for storing configurable XP action values
     CREATE TABLE IF NOT EXISTS xp_action_settings (
       action TEXT PRIMARY KEY,
@@ -21,13 +21,13 @@ export async function up() {
     
     -- Create indexes for performance
     CREATE INDEX IF NOT EXISTS idx_xp_action_settings_enabled ON xp_action_settings(enabled);
-  `;
+  `);
 }
 
 export async function down() {
   logger.info('Reverting migration: Create XP action settings table');
   
-  await sql`
+  await db.execute(sql`
     DROP TABLE IF EXISTS xp_action_settings;
-  `;
+  `);
 } 

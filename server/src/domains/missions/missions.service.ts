@@ -1,4 +1,4 @@
-import { db } from '@db';
+import { db } from '../../core/db';
 import type { UserId, MissionId } from '@shared/types';
 import { eq, and, gte, lte, SQL, isNull, inArray } from 'drizzle-orm';
 import {

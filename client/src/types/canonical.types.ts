@@ -1,4 +1,4 @@
-import type { ForumId, ParentZoneId, ZoneId, UserId, ThreadId, StructureId, PostId, TagId } from '@shared/types';
+import type { ForumId, ParentZoneId, ZoneId, UserId, ThreadId, StructureId, PostId, TagId } from '@shared/types/ids';
 
 /**
  * Canonical Forum Types

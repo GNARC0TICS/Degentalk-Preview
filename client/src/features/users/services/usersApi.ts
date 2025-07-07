@@ -1,5 +1,5 @@
-import type { UserId } from '@shared/types';
-import { apiRequest } from '@/lib/queryClient';
+import type { UserId } from '@shared/types/ids';
+import { apiRequest } from '@/lib/api-request';
 import type { ActiveUser } from '@/components/users/ActiveMembersWidget';
 
 /**
@@ -10,11 +10,11 @@ import type { ActiveUser } from '@/components/users/ActiveMembersWidget';
  */
 export async function getActiveUsers(limit: number = 5): Promise<ActiveUser[]> {
 	const MOCK_ACTIVE_USERS: ActiveUser[] = [
-		{ id: 1, name: 'CryptoMaster', avatar: null, lastActive: '2 min ago' },
-		{ id: 2, name: 'Hodler3000', avatar: null, lastActive: '5 min ago' },
-		{ id: 3, name: 'BlockchainWiz', avatar: null, lastActive: '12 min ago' },
-		{ id: 4, name: 'DeFiExplorer', avatar: null, lastActive: '18 min ago' },
-		{ id: 5, name: 'TokenTrader', avatar: null, lastActive: '25 min ago' }
+		{ id: 'user-1', name: 'CryptoMaster', avatar: null, lastActive: '2 min ago' },
+		{ id: 'user-2', name: 'Hodler3000', avatar: null, lastActive: '5 min ago' },
+		{ id: 'user-3', name: 'BlockchainWiz', avatar: null, lastActive: '12 min ago' },
+		{ id: 'user-4', name: 'DeFiExplorer', avatar: null, lastActive: '18 min ago' },
+		{ id: 'user-5', name: 'TokenTrader', avatar: null, lastActive: '25 min ago' }
 	];
 
 	return new Promise<ActiveUser[]>((resolve) => {

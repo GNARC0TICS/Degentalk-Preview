@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { UserInventoryWithProduct, AppliedCosmetics } from '@/types/inventory';
 import { apiRequest } from '@/lib/queryClient';
 import { applyPluginRewards } from '@/lib/utils/applyPluginRewards';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 
 // TODO: Replace with actual useUser hook from your application
 // This is a placeholder/mock for demonstration if the real hook doesn't exist yet.

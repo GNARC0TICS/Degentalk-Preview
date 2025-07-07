@@ -1,4 +1,3 @@
-import React from 'react';
 import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
 import { WidgetFrame } from './WidgetFrame';
 
@@ -7,13 +6,7 @@ interface SlotRendererProps {
 	className?: string;
 }
 
-/**
- * SlotRenderer is a lightweight utility component that renders all widget instances
- * for the given slotId using the ordering from the global layout store. This allows
- * any page or layout container to embed dynamic widget areas without re-implementing
- * the mapping logic each time.
- */
-export const SlotRenderer: React.FC<SlotRendererProps> = ({ slotId, className }) => {
+export const SlotRenderer = ({ slotId, className }: SlotRendererProps) => {
 	const order = useLayoutStore((s) => s.order);
 	const hasHydrated = useLayoutStore((s) => s._hasHydrated);
 

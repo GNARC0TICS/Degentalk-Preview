@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import type { AnnouncementId } from '@/types/ids';
+import type { CSSProperties } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './announcement-ticker.css';
 import {
 	AlertCircle,
@@ -16,7 +16,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Link } from 'wouter';
-import { type AnnouncementId } from "@shared/types";
+import type { AnnouncementId } from "@shared/types/ids";
 
 interface Announcement {
 	id: AnnouncementId;
@@ -166,7 +166,7 @@ export function AnnouncementTicker() {
 					<div ref={contentRef} className={`ticker-content ${isHovered ? 'paused' : ''}`}>
 						{displayAnnouncements.map((announcement, index) => {
 							// Prepare custom styles
-							const customStyle: React.CSSProperties = {};
+							const customStyle: CSSProperties = {};
 
 							if (announcement.bgColor) {
 								customStyle.backgroundColor = announcement.bgColor;
@@ -204,7 +204,7 @@ export function AnnouncementTicker() {
 						{/* Duplicate announcements op */}
 						{[...displayAnnouncements].map((announcement, index) => {
 							// duplicate set for seamless scrolling
-							const customStyle: React.CSSProperties = {};
+							const customStyle: CSSProperties = {};
 
 							if (announcement.bgColor) customStyle.backgroundColor = announcement.bgColor;
 							if (announcement.textColor) customStyle.color = announcement.textColor;

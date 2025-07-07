@@ -5,7 +5,7 @@
  * different payment providers.
  */
 
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 
 /**
  * Generic transaction type

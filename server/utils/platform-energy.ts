@@ -2,21 +2,22 @@
 // TODO: Implement full functionality when schema is complete
 
 import { sql } from 'drizzle-orm';
-import { db } from '@db';
+import { db } from '../src/core/db';
 import type { UserId } from '@shared/types';
 import { threads, posts, users, forumStructure } from '@schema';
 import { eq, desc, and, count } from 'drizzle-orm';
 import { ThreadId } from "@shared/types";
+import { logger } from '../src/core/logger';
 
 /**
  * Recalculates hot scores for all threads - Simplified for MVP
  */
 export async function recalculateHotScores() {
 	try {
-		console.log('✅ Hot score recalculation (MVP stub - not implemented)');
+		logger.info('PLATFORM_ENERGY', 'Hot score recalculation (MVP stub - not implemented)');
 		return true;
 	} catch (error) {
-		console.error('❌ Error recalculating hot scores:', error);
+		logger.error('PLATFORM_ENERGY', 'Error recalculating hot scores:', error);
 		return false;
 	}
 }
@@ -26,10 +27,10 @@ export async function recalculateHotScores() {
  */
 export async function updatePlatformStats() {
 	try {
-		console.log('✅ Platform stats update (MVP stub - not implemented)');
+		logger.info('PLATFORM_ENERGY', 'Platform stats update (MVP stub - not implemented)');
 		return true;
 	} catch (error) {
-		console.error('❌ Error updating platform statistics:', error);
+		logger.error('PLATFORM_ENERGY', 'Error updating platform statistics:', error);
 		return false;
 	}
 }
@@ -39,10 +40,10 @@ export async function updatePlatformStats() {
  */
 export async function resetWeeklyLeaderboards() {
 	try {
-		console.log('✅ Weekly leaderboard reset (MVP stub - not implemented)');
+		logger.info('PLATFORM_ENERGY', 'Weekly leaderboard reset (MVP stub - not implemented)');
 		return true;
 	} catch (error) {
-		console.error('❌ Error resetting weekly leaderboards:', error);
+		logger.error('PLATFORM_ENERGY', 'Error resetting weekly leaderboards:', error);
 		return false;
 	}
 }
@@ -52,10 +53,10 @@ export async function resetWeeklyLeaderboards() {
  */
 export async function expireFeaturedThreads() {
 	try {
-		console.log('✅ Featured thread expiration (MVP stub - not implemented)');
+		logger.info('PLATFORM_ENERGY', 'Featured thread expiration (MVP stub - not implemented)');
 		return true;
 	} catch (error) {
-		console.error('❌ Error expiring featured threads:', error);
+		logger.error('PLATFORM_ENERGY', 'Error expiring featured threads:', error);
 		return false;
 	}
 }
@@ -81,7 +82,7 @@ export async function getRecentPosts(limit: number = 10) {
 
 		return recentPosts;
 	} catch (error) {
-		console.error('❌ Error getting recent posts:', error);
+		logger.error('PLATFORM_ENERGY', 'Error getting recent posts:', error);
 		return [];
 	}
 }
@@ -108,7 +109,7 @@ export async function getHotThreads(limit: number = 10) {
 
 		return hotThreads;
 	} catch (error) {
-		console.error('❌ Error getting hot threads:', error);
+		logger.error('PLATFORM_ENERGY', 'Error getting hot threads:', error);
 		return [];
 	}
 }
@@ -135,7 +136,7 @@ export async function getFeaturedThreads(limit: number = 5) {
 
 		return featuredThreads;
 	} catch (error) {
-		console.error('❌ Error getting featured threads:', error);
+		logger.error('PLATFORM_ENERGY', 'Error getting featured threads:', error);
 		return [];
 	}
 }
@@ -170,7 +171,7 @@ export async function getPlatformStats() {
 			mostPopularPath: 'none' // Placeholder
 		};
 	} catch (error) {
-		console.error('❌ Error getting platform statistics:', error);
+		logger.error('PLATFORM_ENERGY', 'Error getting platform statistics:', error);
 		return {};
 	}
 }
@@ -181,10 +182,10 @@ export async function getPlatformStats() {
 export async function getLeaderboards(type: string = 'xp', isCurrentWeek: boolean = true) {
 	try {
 		// Placeholder - return empty array for MVP
-		console.log(`✅ Getting ${type} leaderboard (MVP stub - returning empty)`);
+		logger.info('PLATFORM_ENERGY', `Getting ${type} leaderboard (MVP stub - returning empty)`);
 		return [];
 	} catch (error) {
-		console.error(`❌ Error getting ${type} leaderboard:`, error);
+		logger.error('PLATFORM_ENERGY', `Error getting ${type} leaderboard:`, error);
 		return [];
 	}
 }
@@ -194,10 +195,10 @@ export async function getLeaderboards(type: string = 'xp', isCurrentWeek: boolea
  */
 export async function featureThread(threadId: ThreadId, userId: UserId, expiresAt?: Date) {
 	try {
-		console.log(`✅ Thread ${threadId} featured by user ${userId} (MVP stub - not implemented)`);
+		logger.info('PLATFORM_ENERGY', `Thread ${threadId} featured by user ${userId} (MVP stub - not implemented)`);
 		return true;
 	} catch (error) {
-		console.error('❌ Error featuring thread:', error);
+		logger.error('PLATFORM_ENERGY', 'Error featuring thread:', error);
 		return false;
 	}
 }
@@ -207,10 +208,10 @@ export async function featureThread(threadId: ThreadId, userId: UserId, expiresA
  */
 export async function unfeatureThread(threadId: ThreadId) {
 	try {
-		console.log(`✅ Thread ${threadId} unfeatured (MVP stub - not implemented)`);
+		logger.info('PLATFORM_ENERGY', `Thread ${threadId} unfeatured (MVP stub - not implemented)`);
 		return true;
 	} catch (error) {
-		console.error('❌ Error unfeaturing thread:', error);
+		logger.error('PLATFORM_ENERGY', 'Error unfeaturing thread:', error);
 		return false;
 	}
 }

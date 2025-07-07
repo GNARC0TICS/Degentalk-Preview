@@ -5,7 +5,7 @@
  * for the comprehensive gamification system.
  */
 
-import { db } from '@db';
+import { db } from '../../core/db';
 import type { UserId } from '@shared/types';
 import { eq, and, desc, asc, gte, lte, count, sum, sql, inArray, isNull } from 'drizzle-orm';
 import {
@@ -532,10 +532,10 @@ export class AchievementService {
 	 * Helper methods for progress calculation
 	 */
 	private async countUserPosts(userId: UserId, timeFilter?: Date): Promise<number> {
-		let query = db.select({ count: count() }).from(posts).where(eq(posts.authorId, userId));
+		let query = db.select({ count: count() }).from(posts).where(eq(posts.userId, userId));
 
 		if (timeFilter) {
-			query = query.where(and(eq(posts.authorId, userId), gte(posts.createdAt, timeFilter)));
+			query = query.where(and(eq(posts.userId, userId), gte(posts.createdAt, timeFilter)));
 		}
 
 		const result = await query;
@@ -543,10 +543,10 @@ export class AchievementService {
 	}
 
 	private async countUserThreads(userId: UserId, timeFilter?: Date): Promise<number> {
-		let query = db.select({ count: count() }).from(threads).where(eq(threads.authorId, userId));
+		let query = db.select({ count: count() }).from(threads).where(eq(threads.userId, userId));
 
 		if (timeFilter) {
-			query = query.where(and(eq(threads.authorId, userId), gte(threads.createdAt, timeFilter)));
+			query = query.where(and(eq(threads.userId, userId), gte(threads.createdAt, timeFilter)));
 		}
 
 		const result = await query;
@@ -592,7 +592,7 @@ export class AchievementService {
 				and(
 					eq(transactions.userId, userId),
 					sql`${transactions.type} = 'TIP'`,
-					gte(transactions.createdAt || transactions.updatedAt, timeFilter)
+					gte(transactions.updatedAt, timeFilter)
 				)
 			);
 		}

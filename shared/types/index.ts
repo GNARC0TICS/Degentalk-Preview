@@ -58,9 +58,6 @@ export type {
   PermissionScope,
   SessionToken,
   SecureUserPreferences as UserPreferences,
-  PublicUser,
-  AuthenticatedUserSelf,
-  AdminUserDetail,
   NotificationSettings,
   PrivacySettings,
   UserSettings,
@@ -314,9 +311,6 @@ export type {
   ActionId,
   TipId,
   EmojiId,
-  ReporterId,
-  ContentId,
-  LevelId,
   TagId,
   OrderId,
   GroupId,
@@ -385,8 +379,8 @@ export type SoftDeletable = {
 };
 
 export type Auditable = Timestamped & {
-  createdBy?: UserId;
-  updatedBy?: UserId;
+  createdBy?: string; // Use string for now to avoid circular dependency
+  updatedBy?: string;
 };
 
 // API utilities
@@ -446,3 +440,6 @@ export {
   toXpAmount,
   ECONOMY_CONSTANTS
 } from './economy';
+
+// Branded ID types
+export * from './ids';

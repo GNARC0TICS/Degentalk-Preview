@@ -50,7 +50,6 @@ export function useUserReferrals() {
 			// Reset copied state after 3 seconds
 			setTimeout(() => setIsCopied(false), 3000);
 		} catch (error) {
-			console.error('Failed to copy referral link:', error);
 			toast({
 				title: 'Error',
 				description: 'Failed to copy referral link',

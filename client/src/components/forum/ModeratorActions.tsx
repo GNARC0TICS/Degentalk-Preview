@@ -39,11 +39,11 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
 import { useSolveThread, useUnsolveThread } from '@/features/forum/hooks/useForumQueries';
-import type { ItemId } from '@shared/types';
+import type { ThreadId, PostId } from '@shared/types/ids';
 
 interface ModeratorActionsProps {
 	type: 'thread' | 'post';
-	itemId: ItemId;
+	itemId: ThreadId | PostId;
 	itemData: {
 		isLocked?: boolean;
 		isSticky?: boolean;
@@ -73,7 +73,6 @@ export function ModeratorActions({
 
 	// Check if user is moderator or admin
 	const isModerator = user?.role === 'mod' || user?.role === 'admin';
-	if (!isModerator) return null;
 
 	// Thread actions
 	const toggleLock = useMutation({
@@ -168,6 +167,9 @@ export function ModeratorActions({
 	// Solve / Unsolve thread
 	const solveThread = useSolveThread();
 	const unsolveThread = useUnsolveThread();
+
+	// Early return after all hooks
+	if (!isModerator) return null;
 
 	return (
 		<>

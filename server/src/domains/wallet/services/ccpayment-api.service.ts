@@ -7,8 +7,8 @@
 
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
 import crypto from 'crypto';
-import { logger } from '@server/src/core/logger';
-import { WalletError, ErrorCodes } from '@server/src/core/errors';
+import { logger } from '../../../core/logger';
+import { WalletError, ErrorCodes } from '../../../core/errors';
 
 export interface CCPaymentConfig {
 	apiUrl?: string;

@@ -43,6 +43,7 @@ export async function consoleToLoggerCodemod(dryRun = false) {
       'tests/**',
       'e2e/**',
       'shared/**',
+      'config/**',     // Skip config files to avoid server imports in client builds
       'server/src/core/logger.ts',
       'server/utils/**', // Skip wallet CLI utilities
       'archive/**',

@@ -1,5 +1,5 @@
-import { apiRequest } from '@/lib/queryClient';
-import type { UserId } from '@shared/types';
+import { apiRequest } from '@/lib/api-request';
+import type { UserId } from '@shared/types/ids';
 
 /**
  * Interface for user referral statistics

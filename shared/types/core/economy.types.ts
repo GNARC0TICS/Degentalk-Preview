@@ -1,4 +1,4 @@
-import type { UserId, WalletId, TransactionId, ProductId } from '@shared/types';
+import type { UserId, WalletId, TransactionId, ProductId } from '../ids';
 import type { TransactionType, TransactionStatus } from '@db/schema/core/enums';
 
 /**

@@ -10,7 +10,7 @@ import { sql, eq, desc, and, count, sum, gte, lte, between } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type { AnalyticsPeriodInput, AnalyticsQueryInput } from './analytics.validators';
 import { subDays, formatISO } from 'date-fns';
-import { logger } from "../../../../core/logger";
+import { logger } from '../../../../core/logger';
 
 // Helper to get date range based on period or explicit dates
 function getDateRange(params: AnalyticsPeriodInput): { startDateSQL: string; endDateSQL: string } {

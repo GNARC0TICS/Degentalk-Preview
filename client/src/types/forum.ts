@@ -1,5 +1,5 @@
 import type { ThreadPrefix, ForumTag as ThreadTag } from '@/types/compat/forum';
-import type { GroupId, UserId, ThreadId, ForumId, type PostId } from '@shared/types';
+import type { GroupId, UserId, ThreadId, ForumId, type PostId } from '@shared/types/ids';
 
 // Local fallback interfaces to avoid cross-boundary imports
 // These are intentionally minimal and should be replaced with canonical types once the backend API stabilises.

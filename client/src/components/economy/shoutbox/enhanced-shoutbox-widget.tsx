@@ -14,7 +14,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import {
 	Send,
@@ -34,8 +34,7 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { apiRequest } from '@/lib/queryClient';
-import type { GroupId, MessageId, RoomId, UserId, EntityId } from '@/types/ids';
-import { type UserId, type EntityId, type RoomId, type GroupId, type MessageId } from "@shared/types";
+import type { GroupId, MessageId, RoomId, UserId, EntityId } from "@shared/types/ids";
 
 interface User {
 	id: UserId;
@@ -113,12 +112,12 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
-	const [selectedRoom, setSelectedRoom] = useState<number | null>(defaultRoomId || null);
+	const [selectedRoom, setSelectedRoom] = useState<RoomId | null>(defaultRoomId || null);
 	const [message, setMessage] = useState('');
 	const [isExpanded, setIsExpanded] = useState(position === 'main');
-	const [showUserMenu, setShowUserMenu] = useState<number | null>(null);
-	const [ignoredUsers, setIgnoredUsers] = useState<Set<number>>(new Set());
-	const [typingUsers, setTypingUsers] = useState<Map<number, string>>(new Map());
+	const [showUserMenu, setShowUserMenu] = useState<MessageId | null>(null);
+	const [ignoredUsers, setIgnoredUsers] = useState<Set<UserId>>(new Set());
+	const [typingUsers, setTypingUsers] = useState<Map<UserId, string>>(new Map());
 	const [cooldownRemaining, setCooldownRemaining] = useState(0);
 	const [messageQueue, setMessageQueue] = useState<string[]>([]);
 
@@ -169,7 +168,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 	});
 
 	// Fetch ignored users
-	const { data: ignoreList } = useQuery<string[]>({
+	const { data: ignoreList } = useQuery<UserId[]>({
 		queryKey: ['shoutbox-ignored-users', user?.id],
 		queryFn: async () => {
 			if (!user) return [];

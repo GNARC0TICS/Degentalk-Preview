@@ -1,8 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { Title, Role } from '@/pages/admin/roles-titles';
 
 interface TitlesSectionProps {
-	titles: any[];
-	roles: any[];
+	titles: Title[];
+	roles: Role[];
 	isLoading: boolean;
 }
 

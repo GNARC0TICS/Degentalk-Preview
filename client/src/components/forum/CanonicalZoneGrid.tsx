@@ -1,4 +1,4 @@
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import React from 'react';
 // Link is not used directly in CanonicalZoneGrid if ZoneCard handles its own linking.
 // import { Link } from 'wouter';
@@ -45,30 +45,27 @@ export const CanonicalZoneGrid = React.memo(function CanonicalZoneGrid({
 	includeShopCard = true,
 	shopCardData
 }: CanonicalZoneGridProps) {
-	if (!zones || zones.length === 0) {
-		return (
-			<div className="text-center text-zinc-400 py-12">
-				<p>No primary zones available</p>
-			</div>
-		);
-	}
-
 	const gridData = React.useMemo<GridCardData[]>(
-		() => [
-			// Spread in zone data directly – assume zones are already fully shaped for ZoneCard
-			...zones,
-			// Optionally append a static ShopCard entry
-			...(includeShopCard
-				? [
-						{
-							id: 'shop-card',
-							type: 'shop',
-							isStatic: true,
-							featuredItem: shopCardData
-						} as ShopCardData
-					]
-				: [])
-		],
+		() => {
+			if (!zones || zones.length === 0) {
+				return [];
+			}
+			return [
+				// Spread in zone data directly – assume zones are already fully shaped for ZoneCard
+				...zones,
+				// Optionally append a static ShopCard entry
+				...(includeShopCard
+					? [
+							{
+								id: 'shop-card',
+								type: 'shop',
+								isStatic: true,
+								featuredItem: shopCardData
+							} as ShopCardData
+						]
+					: [])
+			];
+		},
 		[zones, includeShopCard, shopCardData]
 	);
 
@@ -94,6 +91,14 @@ export const CanonicalZoneGrid = React.memo(function CanonicalZoneGrid({
 			)),
 		[gridData]
 	);
+
+	if (!zones || zones.length === 0) {
+		return (
+			<div className="text-center text-zinc-400 py-12">
+				<p>No primary zones available</p>
+			</div>
+		);
+	}
 
 	return (
 		<div

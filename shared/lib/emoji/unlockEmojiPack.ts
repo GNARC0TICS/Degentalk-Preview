@@ -1,7 +1,7 @@
 import { db } from '@server/src/lib/db';
 import { userEmojiPacks } from '@schema';
 import { eq, and } from 'drizzle-orm';
-import type { EmojiPackId, PackId, UserId } from '@shared/types';
+import type { EmojiPackId, PackId, UserId } from '@shared/types/ids';
 
 interface UnlockEmojiPackParams {
 	userId: UserId;

@@ -14,7 +14,7 @@ import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/api-request';
 import { LoadingSpinner } from '@/components/ui/loader';
 import type { AvatarFrame } from '@/types/compat/avatar';
-import type { FrameId, UserId } from '@shared/types';
+import type { FrameId, UserId } from '@shared/types/ids';
 
 interface Props {
 	frame: AvatarFrame | null;

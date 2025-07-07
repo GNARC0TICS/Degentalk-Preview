@@ -1,7 +1,6 @@
 import { useUserCosmetics } from '@/hooks/useUserCosmetics';
 import { useUserXP } from '@/hooks/useUserXP';
-import type { UserId, RoleId } from '@/types/ids';
-import { type UserId, type RoleId } from "@shared/types";
+import type { UserId, RoleId } from '@shared/types/ids';
 
 interface BaseUser {
 	id: string;

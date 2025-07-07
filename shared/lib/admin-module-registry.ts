@@ -39,7 +39,7 @@ export class AdminModuleRegistry {
 		this.initialized = true;
 
 		if (this.options.devMode) {
-			logger.info(`[AdminModuleRegistry] Initialized with ${this.modules.size} modules`);
+			logger.info('AdminModuleRegistry', `Initialized with ${this.modules.size} modules`);
 		}
 	}
 
@@ -62,7 +62,7 @@ export class AdminModuleRegistry {
 		}
 
 		if (this.options.devMode) {
-			logger.info(`[AdminModuleRegistry] Registered module: ${module.id}`);
+			logger.info('AdminModuleRegistry', `Registered module: ${module.id}`);
 		}
 	}
 
@@ -80,7 +80,7 @@ export class AdminModuleRegistry {
 		const existed = this.modules.delete(moduleId);
 
 		if (existed && this.options.devMode) {
-			logger.info(`[AdminModuleRegistry] Unregistered module: ${moduleId}`);
+			logger.info('AdminModuleRegistry', `Unregistered module: ${moduleId}`);
 		}
 
 		return existed;
@@ -176,7 +176,7 @@ export class AdminModuleRegistry {
 		module.enabled = enabled;
 
 		if (this.options.devMode) {
-			logger.info(`[AdminModuleRegistry] Module ${moduleId} ${enabled ? 'enabled' : 'disabled'}`);
+			logger.info('AdminModuleRegistry', `Module ${moduleId} ${enabled ? 'enabled' : 'disabled'}`);
 		}
 
 		return true;
@@ -194,7 +194,7 @@ export class AdminModuleRegistry {
 		module.settings = { ...module.settings, ...settings };
 
 		if (this.options.devMode) {
-			logger.info(`[AdminModuleRegistry] Updated settings for module: ${moduleId}`);
+			logger.info('AdminModuleRegistry', `Updated settings for module: ${moduleId}`);
 		}
 
 		return true;
@@ -205,8 +205,8 @@ export class AdminModuleRegistry {
 	 */
 	getNavigationStructure(user: User | null): AdminModule[] {
 		const userModules = this.getModulesForUser(user);
-		logger.info('DEBUG: userModules count:', userModules.length);
-		logger.info('DEBUG: userModules sample:', userModules.slice(0, 2).map((m) => ({
+		logger.info('AdminModuleRegistry', 'DEBUG userModules count', { count: userModules.length });
+		logger.info('AdminModuleRegistry', 'DEBUG userModules sample', userModules.slice(0, 2).map((m) => ({
         				id: m.id,
         				hasSubModules: !!m.subModules,
         				subModulesCount: m.subModules?.length || 0

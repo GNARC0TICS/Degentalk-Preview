@@ -14,11 +14,11 @@ import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, CheckCircle, XCircle, Gift } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { UserInventoryWithProduct, Product } from '@/types/inventory';
-import type { InventoryId } from '@shared/types';
+import type { InventoryId } from '@shared/types/ids';
 
 export default function AdminUserInventoryPage() {
 	const params = useParams();
-	const userId = params.userId;
+	const userId = params.userId as string;
 	const queryClient = useQueryClient();
 	const { toast } = useToast();
 

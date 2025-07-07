@@ -1,5 +1,4 @@
 import React from 'react';
-import type { UserId } from '@/types/ids';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -15,7 +14,7 @@ import { Users, Activity, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createWidgetQueryKey } from '@/hooks/widgetData';
 import { WidgetSkeleton } from '@/components/ui/widget-skeleton';
-import { type UserId } from "@shared/types";
+import type { UserId } from "@shared/types/ids";
 
 export interface ActiveUser {
 	id: UserId | string;

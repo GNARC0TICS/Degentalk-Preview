@@ -12,7 +12,7 @@ import type {
 	Transaction,
 	DepositAddress
 } from '@/features/wallet/services/wallet-api.service';
-import { type UserId } from "@shared/types";
+import type { UserId } from '@shared/types/ids';
 
 export function useWallet() {
 	const queryClient = useQueryClient();
@@ -60,7 +60,7 @@ export function useWallet() {
 				description: 'Your deposit addresses have been refreshed.'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				variant: 'error',
 				title: 'Error Refreshing Addresses',
@@ -101,7 +101,7 @@ export function useWallet() {
 					'Your DGT purchase request has been initiated. Please check your transaction history for updates.'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				variant: 'error',
 				title: 'Error Purchasing DGT',
@@ -124,7 +124,7 @@ export function useWallet() {
 				description: 'Your DGT transfer was completed successfully.'
 			});
 		},
-		onError: (error: any) => {
+		onError: (error: Error) => {
 			toast({
 				variant: 'error',
 				title: 'Error Transferring DGT',

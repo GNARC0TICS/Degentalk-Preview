@@ -50,7 +50,6 @@ export function EditPostDialog({ post, isOpen, onClose }: EditPostDialogProps) {
 			setEditorState(null);
 		} catch (error) {
 			// Error handling is already done in the mutation
-			console.error('Failed to update post:', error);
 		}
 	};
 

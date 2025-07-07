@@ -20,7 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth.tsx';
 import { apiRequest } from '@/lib/queryClient';
 import { LoadingSpinner as Spinner } from '@/components/ui/loader';
-import type { RuleId, UserId, EntityId } from '@shared/types';
+import type { RuleId, UserId, EntityId } from '@shared/types/ids';
 
 // Type definitions
 interface ForumRule {

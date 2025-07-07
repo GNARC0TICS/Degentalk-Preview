@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/adminApi';
+import type { SettingValue } from '@/types/admin.types';
 
 // Query keys
 const SETTINGS_KEY = ['admin', 'settings'];
@@ -15,7 +16,7 @@ export function useSiteSettings(category?: string) {
 export function useUpdateSetting() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: ({ key, value }: { key: string; value: any }) =>
+		mutationFn: ({ key, value }: { key: string; value: SettingValue }) =>
 			adminApi.put(`/settings/${key}`, { value }),
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: SETTINGS_KEY });

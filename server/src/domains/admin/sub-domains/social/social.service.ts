@@ -4,7 +4,7 @@ import { db } from '@db';
 import { eq, count, sql as drizzleSql } from 'drizzle-orm';
 import { defaultSocialConfig } from '@shared/config/social.config';
 import type { SocialConfig } from '@shared/config/social.config';
-import { logger } from "../../../../core/logger";
+import { logger } from '../../../../core/logger';
 
 export class SocialService {
 	private static readonly CONFIG_KEY = 'social_config';

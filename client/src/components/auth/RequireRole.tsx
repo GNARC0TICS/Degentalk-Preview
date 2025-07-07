@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { hasRoleAtLeast } from '@/lib/roles';
 import type { Role } from '@/lib/roles';

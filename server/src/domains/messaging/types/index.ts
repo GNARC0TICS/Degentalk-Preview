@@ -299,3 +299,24 @@ export interface TypingStatus {
   startedAt: string;
   expiresAt: string;
 }
+
+// ==========================================
+// REQUEST/RESPONSE TYPES
+// ==========================================
+
+/**
+ * Send message request payload
+ */
+export interface SendMessageRequest {
+  recipientId: UserId;
+  content: string;
+  type?: 'text' | 'image' | 'file' | 'tip';
+  replyToId?: MessageId;
+  tipAmount?: DgtAmount;
+  attachments?: Array<{
+    filename: string;
+    size: number;
+    mimeType: string;
+    data: string; // base64 or file URL
+  }>;
+}

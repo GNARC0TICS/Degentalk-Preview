@@ -235,12 +235,12 @@ export class LevelingService {
 			const recentAchievements = await db
 				.select({
 					achievement: achievements,
-					earnedAt: userAchievements.awardedAt
+					earnedAt: userAchievements.earnedAt
 				})
 				.from(userAchievements)
 				.innerJoin(achievements, eq(userAchievements.achievementId, achievements.id))
 				.where(eq(userAchievements.userId, userId))
-				.orderBy(desc(userAchievements.awardedAt))
+				.orderBy(desc(userAchievements.earnedAt))
 				.limit(5);
 
 			// Get mission stats

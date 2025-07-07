@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Upload } from 'lucide-react';
 import { MediaAsset } from '@/components/media/MediaAsset';
 import { MediaPickerModal } from '@/components/admin/media/MediaPickerModal';
-import type { EntityId } from '@shared/types';
+import type { EntityId } from '@shared/types/ids';
 
 interface Props {
 	iconUrl: string;

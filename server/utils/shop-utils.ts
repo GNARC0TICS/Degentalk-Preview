@@ -1,6 +1,6 @@
 import { users, products, userInventory } from '@schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
-import { pool } from '@db';
+import { pool } from '../src/core/db';
 import { logger, LogLevel, LogAction } from '../src/core/logger';
 import slugify from 'slugify';
 

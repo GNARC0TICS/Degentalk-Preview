@@ -45,11 +45,11 @@ export const hasAdminPermission = (user: any, permission: string): boolean => {
 };
 
 // Utility type for API responses that automatically use secure types
-export type SecureUserResponse<T extends 'public' | 'self' | 'admin'> = 
-  T extends 'public' ? PublicUser :
-  T extends 'self' ? AuthenticatedUserSelf :
-  T extends 'admin' ? AdminUserDetail :
-  never;
+// export type SecureUserResponse<T extends 'public' | 'self' | 'admin'> = 
+//   T extends 'public' ? PublicUser :
+//   T extends 'self' ? AuthenticatedUserSelf :
+//   T extends 'admin' ? any : // TODO: Fix AdminUserDetail import
+//   never;
 
 // Context type for determining which user data to return
 export type UserContext = {

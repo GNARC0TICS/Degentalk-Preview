@@ -4,7 +4,7 @@ import { Pool } from "pg";
 import { sql } from "drizzle-orm";
 import * as schema from "../../shared/schema";
 import * as dotenv from "dotenv";
-import { logger } from "./src/core/logger";
+import { logger } from "../src/core/logger";
 
 // [REFAC-DGT] Custom migration script to create the dgt_purchase_orders table
 // This supplements the Drizzle SQL migrations for more complex operations
@@ -67,7 +67,7 @@ const runMigration = async () => {
     
     logger.info("Successfully created dgt_purchase_orders table");
     
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error("Error executing migration:", error);
     process.exit(1);
   } finally {

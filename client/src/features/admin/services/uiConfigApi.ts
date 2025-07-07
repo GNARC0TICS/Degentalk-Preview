@@ -34,7 +34,7 @@ export interface CreateQuoteData {
 	startDate?: Date;
 	endDate?: Date;
 	variant?: string;
-	metadata?: Record<string, any>;
+	metadata?: Record<string, unknown>;
 }
 
 export interface UpdateQuoteData extends CreateQuoteData {
@@ -61,7 +61,7 @@ export interface QuoteAnalyticsData {
 }
 
 // Helper function to build query string
-const buildQueryString = (params: Record<string, any>): string => {
+const buildQueryString = (params: Record<string, unknown>): string => {
 	const searchParams = new URLSearchParams();
 	Object.entries(params).forEach(([key, value]) => {
 		if (value !== undefined && value !== null) {
@@ -116,16 +116,16 @@ export const uiConfigApi = {
 		startDate?: Date;
 		endDate?: Date;
 		quoteIds?: string[];
-		config?: Record<string, any>;
+		config?: Record<string, unknown>;
 	}) => apiPost('/api/admin/ui-config/collections', data),
 
-	updateCollection: (id: string, data: any) =>
+	updateCollection: (id: string, data: Record<string, unknown>) =>
 		apiPut(`/api/admin/ui-config/collections/${id}`, data),
 
 	deleteCollection: (id: string) => apiDelete(`/api/admin/ui-config/collections/${id}`),
 
 	// Analytics
-	trackQuoteEvent: (quoteId: string, eventType: string, context: Record<string, any>) =>
+	trackQuoteEvent: (quoteId: string, eventType: string, context: Record<string, unknown>) =>
 		apiPost('/api/admin/ui-config/analytics/track', {
 			quoteId,
 			eventType,

@@ -4,8 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Clock, FolderIcon, MessageSquare, MessagesSquare } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import type { ForumId, ThreadId } from '@/types/ids';
-import { type ThreadId, type ForumId } from "@shared/types";
+import type { ForumId, ThreadId } from "@shared/types/ids";
 
 interface ForumCardProps {
 	id: ForumId;

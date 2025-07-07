@@ -14,7 +14,7 @@ import type {
 	ThreadWithPostsAndUser
 } from '@/types/compat/forum';
 import type { ApiErrorData } from '@/types/core.types';
-import type { ReportId, ForumId, TagId, ContentId, PrefixId, ThreadId, PostId } from '@shared/types';
+import type { ReportId, ForumId, TagId, ContentId, PrefixId, ThreadId, PostId } from '@shared/types/ids';
 
 export interface ThreadSearchParams {
 	structureId?: ForumId;
@@ -80,8 +80,9 @@ export const forumApi = {
 				params: apiParams
 			});
 			return directResult;
-		} catch (err: ApiErrorData) {
-			if ([401, 403].includes(err?.response?.status)) {
+		} catch (err: unknown) {
+			const apiError = err as ApiErrorData;
+			if ([401, 403].includes(apiError?.response?.status)) {
 				return {
 					threads: [],
 					pagination: {
@@ -128,8 +129,9 @@ export const forumApi = {
 
 			// 2) If backend returned the raw thread object, normalise into { thread: obj }
 			return { thread: response } as unknown as ThreadWithPostsAndUser;
-		} catch (err: ApiErrorData) {
-			if ([401, 403].includes(err?.response?.status)) {
+		} catch (err: unknown) {
+			const apiError = err as ApiErrorData;
+			if ([401, 403].includes(apiError?.response?.status)) {
 				return null; // caller handles restricted access
 			}
 			throw err;
@@ -273,7 +275,10 @@ export const forumApi = {
 		}>({
 			url: `/api/forum/threads/${threadId}/posts`,
 			method: 'GET',
-			params: params as Record<string, string>
+			params: params ? {
+				...(params.page !== undefined && { page: String(params.page) }),
+				...(params.limit !== undefined && { limit: String(params.limit) })
+			} : undefined
 		});
 
 		// Backend returns { success: true, data: { posts: ..., pagination: ... } }

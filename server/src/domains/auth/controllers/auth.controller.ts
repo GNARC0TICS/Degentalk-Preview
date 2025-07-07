@@ -6,7 +6,7 @@ import passport from 'passport';
 import { insertUserSchema } from '@schema';
 import { users } from '@schema';
 import { logger } from '@server/src/core/logger';
-import { storage } from '../../../../storage'; // Will be refactored in a future step
+import { storage } from '@server/src/storage'; // Will be refactored in a future step
 import { hashPassword, storeTempDevMetadata, verifyEmailToken } from '../services/auth.service';
 import { isDevMode } from '../../../utils/environment';
 import { walletService } from '../../wallet/wallet.service';
