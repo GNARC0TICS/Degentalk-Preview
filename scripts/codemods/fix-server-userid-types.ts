@@ -66,8 +66,8 @@ async function run(): Promise<void> {
     if (replacements === 0) continue;
 
     // Ensure import exists
-    if (!/import\s+[^;]*UserId[^;]*from\s+["']@shared\/types["']/.test(content)) {
-      const importStmt = "import type { UserId } from '@shared/types';";
+    if (!/import\s+[^;]*UserId[^;]*from\s+["']@shared\/types\/ids["']/.test(content)) {
+      const importStmt = "import type { UserId } from '@shared/types/ids';";
       // place after first import block or at top
       const firstImportMatch = content.match(/import[^;]+;/);
       if (firstImportMatch) {

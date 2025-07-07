@@ -15,6 +15,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, Link, useLocation } from 'wouter';
 import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import type { Id } from '@shared/types/ids';
 
 // Define Product type locally for now since we don't have the exact import path
 interface Product {
@@ -74,7 +75,7 @@ const getCosmeticTemplate = (type: string) => {
 };
 
 export default function AdminShopItemEditPage() {
-	const params = useParams();
+	const params = useParams<{ id: string }>();
 	const itemId = params.id === 'new' ? null : params.id;
 	const queryClient = useQueryClient();
 	const [, navigate] = useLocation();

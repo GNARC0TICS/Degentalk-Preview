@@ -10,7 +10,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { RolesSection } from '@/components/admin/roles/RolesSection';
 import { TitlesSection } from '@/components/admin/titles/TitlesSection';
 import { PermissionsOverview } from '@/components/admin/permissions/PermissionsOverview';
-import type { TitleId, PermissionId } from '@shared/types';
+import type { TitleId, PermissionId } from '@shared/types/ids';
 
 // Types
 export interface Role {

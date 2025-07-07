@@ -188,3 +188,19 @@ export interface AdminActivityLog {
 	userAgent: string;
 	createdAt: string;
 }
+
+// Settings type for admin services
+export type SettingValue = string | number | boolean | Record<string, unknown>;
+
+// Achievement data type for admin services
+export interface AchievementData {
+	name: string;
+	description: string;
+	category: string;
+	rarity: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
+	requirements: AchievementRequirement[];
+	rewards: AchievementReward[];
+	isActive: boolean;
+	icon?: string;
+	color?: string;
+}

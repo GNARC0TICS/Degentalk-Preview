@@ -16,7 +16,7 @@ import { Pagination } from '@/components/ui/pagination';
 import type { ThreadDisplay, ThreadsApiResponse } from '@/types/thread.types';
 
 export default function TagPage() {
-	const { tagSlug } = useParams();
+	const { tagSlug } = useParams<{ tagSlug: string }>();
 	const [page, setPage] = React.useState(1);
 	const limit = 20;
 

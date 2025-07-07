@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { CategoryId } from '@shared/types';
+import type { CategoryId } from '@shared/types/ids';
 import { formatTimestamp } from '@/lib/format-date';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/adminApi';
-import type { AchievementId } from '@shared/types';
+import type { AchievementId } from '@shared/types/ids';
 import type { AchievementData } from '@/types/admin.types';
 
 export const ACHIEVEMENTS_KEY = ['admin', 'clout', 'achievements'];

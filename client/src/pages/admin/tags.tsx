@@ -43,7 +43,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { ForumTag } from '@/types/compat/forum';
-import type { TagId } from '@shared/types';
+import type { TagId } from '@shared/types/ids';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 

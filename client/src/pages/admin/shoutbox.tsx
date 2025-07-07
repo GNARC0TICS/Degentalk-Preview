@@ -26,7 +26,7 @@ import {
 	EyeOff,
 	RefreshCw
 } from 'lucide-react';
-import type { RoomId, GroupId, UserId } from '@shared/types';
+import type { RoomId, GroupId, UserId } from '@shared/types/ids';
 
 interface ShoutboxConfig {
 	id: string;

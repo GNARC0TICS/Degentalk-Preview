@@ -20,6 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import type { ThreadDisplay } from '@/types/thread.types';
+import type { ThreadId } from '@shared/types/ids';
 import { getZoneTheme } from '@shared/config/zoneThemes.config';
 import { useThreadActionsOptional } from '@/features/forum/contexts/ThreadActionsContext';
 import QuickReplyInput from '@/components/forum/QuickReplyInput';
@@ -29,8 +30,8 @@ export interface ThreadCardProps {
 	thread: ThreadDisplay;
 	variant?: 'default' | 'compact' | 'featured';
 	showPreview?: boolean;
-	onTip?: (threadId: string, amount: number) => void;
-	onBookmark?: (threadId: string) => void;
+	onTip?: (threadId: ThreadId, amount: number) => void;
+	onBookmark?: (threadId: ThreadId) => void;
 	className?: string;
 }
 
@@ -295,7 +296,7 @@ const ThreadCard = memo(
 									onClick={(e) => {
 										e.preventDefault();
 										e.stopPropagation();
-										tipFn?.(threadId as any, 10);
+										tipFn?.(threadId as ThreadId, 10);
 									}}
 								>
 									<Zap
@@ -329,7 +330,7 @@ const ThreadCard = memo(
 									if (bookmarkFn.length === 0) {
 										(bookmarkFn as () => void)();
 									} else {
-										bookmarkFn?.(threadId as any);
+										bookmarkFn?.(threadId as ThreadId);
 									}
 								}}
 							>

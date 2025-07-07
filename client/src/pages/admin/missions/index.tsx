@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import type { MissionId } from '@shared/types';
+import type { MissionId } from '@shared/types/ids';
 import { Trophy, Edit, Plus, Trash, CheckCircle, X, Save, RefreshCw, Filter } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
