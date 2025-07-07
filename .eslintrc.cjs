@@ -112,6 +112,7 @@ module.exports = {
         ],
         'prefer-const': 'warn',
         'no-constant-condition': 'warn',
+        '@typescript-eslint/no-unused-vars': 'off',
       },
     },
     {
