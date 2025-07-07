@@ -1,0 +1,48 @@
+🚀 Starting transformer enforcement audit 
+
+📊 Transformer Enforcement Report
+==================================================
+Total violations: 1931
+  - Errors: 1295
+  - Warnings: 596
+  - Auto-fixed: 0
+
+Violations by domain:
+  - admin: 596
+  - wallet: 193
+  - gamification: 176
+  - forum: 148
+  - social: 119
+  - advertising: 100
+  - shoutbox: 94
+  - engagement: 65
+  - profile: 52
+  - shop: 43
+  - preferences: 37
+  - messaging: 33
+  - auth: 29
+  - subscriptions: 27
+  - treasury: 26
+  - paths: 26
+  - missions: 20
+  - xp: 18
+  - uploads: 15
+  - activity: 15
+  - notifications: 13
+  - feature-gates: 13
+  - dictionary: 12
+  - i: 11
+  - unknown: 10
+  - s: 10
+  - editor: 10
+  - user: 9
+  - share: 4
+  - ccpayment-webhook: 4
+  - collectibles: 2
+  - users: 1
+
+
+📝 Run with --detailed for full violation report
+📝 Run with --fix-simple to auto-fix obvious cases
+
+❌ 1295 critical violations require attention

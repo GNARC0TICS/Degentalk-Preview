@@ -67,7 +67,7 @@ export class VaultService {
 			const unlockDate = new Date();
 			unlockDate.setDate(unlockDate.getDate() + lockDurationDays);
 
-			let transactionId: ActionId | null = null; // This will be lockTransactionId in vaults table
+			const transactionId: ActionId | null = null; // This will be lockTransactionId in vaults table
 
 			if (currency === 'DGT') {
 				const deductResult = await dgtService.deductDgt(
@@ -168,7 +168,7 @@ export class VaultService {
 				});
 			}
 
-			let unlockTransactionId: UnlockTransactionId | null = null;
+			const unlockTransactionId: UnlockTransactionId | null = null;
 			const vaultCurrency = (vaultLock.metadata as any)?.currency || 'DGT';
 
 			if (vaultCurrency === 'DGT') {

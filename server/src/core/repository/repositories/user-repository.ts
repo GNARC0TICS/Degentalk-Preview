@@ -79,7 +79,7 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
 	/**
 	 * Update user's last login timestamp
 	 */
-	async updateLastLogin(id: number): Promise<void> {
+	async updateLastLogin(id: Id<'id'>): Promise<void> {
 		try {
 			await db
 				.update(users)
@@ -102,7 +102,7 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
 	/**
 	 * Increment user's XP (can be negative for decrement)
 	 */
-	async incrementXP(id: number, amount: number): Promise<User> {
+	async incrementXP(id: Id<'id'>, amount: number): Promise<User> {
 		try {
 			const [result] = await db
 				.update(users)
@@ -241,7 +241,7 @@ export class UserRepository extends BaseRepository<User> implements IUserReposit
 	/**
 	 * Override update to add validation
 	 */
-	async update(id: number | string, data: Partial<User>): Promise<User> {
+	async update(id: Id<'id'> | string, data: Partial<User>): Promise<User> {
 		this.validateUserData(data);
 		return super.update(id, data);
 	}

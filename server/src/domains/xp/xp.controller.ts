@@ -154,7 +154,7 @@ export const getUserXpLogs = async (req: Request, res: Response, next: NextFunct
 		const period = req.query.period as string; // 'today', 'week', 'month'
 
 		// Build the query filters
-		let filters = [eq(xpActionLogs.userId, userIdToQuery)];
+		const filters = [eq(xpActionLogs.userId, userIdToQuery)];
 
 		// Add action filter if specified
 		if (action) {

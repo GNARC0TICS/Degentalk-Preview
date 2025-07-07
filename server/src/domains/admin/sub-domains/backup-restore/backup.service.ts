@@ -222,7 +222,7 @@ export class BackupService {
 	/**
 	 * Get backup details by ID
 	 */
-	async getBackup(id: number) {
+	async getBackup(id: Id<'id'>) {
 		try {
 			const [backup] = await db.select().from(adminBackups).where(eq(adminBackups.id, id));
 
@@ -253,7 +253,7 @@ export class BackupService {
 	/**
 	 * Delete a backup and its file
 	 */
-	async deleteBackup(id: number, adminId: string) {
+	async deleteBackup(id: Id<'id'>, adminId: string) {
 		try {
 			const backup = await this.getBackup(id);
 
@@ -303,7 +303,7 @@ export class BackupService {
 	/**
 	 * Get backup progress for active operations
 	 */
-	getBackupProgress(id: number): BackupProgress | null {
+	getBackupProgress(id: Id<'id'>): BackupProgress | null {
 		return this.activeBackups.get(id) || null;
 	}
 
@@ -548,7 +548,7 @@ export class BackupService {
 	}
 
 	private async updateBackupStatus(
-		id: number,
+		id: Id<'id'>,
 		status: 'pending' | 'running' | 'completed' | 'failed',
 		errorMessage?: string | null,
 		additionalData?: Record<string, any>

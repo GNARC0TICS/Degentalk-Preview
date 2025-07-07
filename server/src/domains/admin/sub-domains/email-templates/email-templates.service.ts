@@ -173,7 +173,7 @@ export class EmailTemplateService {
 	 * Update an email template with version control
 	 */
 	async updateTemplate(
-		id: number,
+		id: Id<'id'>,
 		data: UpdateEmailTemplateInput,
 		adminId: string,
 		changeDescription?: string
@@ -239,7 +239,7 @@ export class EmailTemplateService {
 	/**
 	 * Delete an email template (soft delete by deactivating)
 	 */
-	async deleteTemplate(id: number, adminId: string) {
+	async deleteTemplate(id: Id<'id'>, adminId: string) {
 		try {
 			const template = await this.getTemplate(id);
 
@@ -324,7 +324,7 @@ export class EmailTemplateService {
 	/**
 	 * Restore a previous version
 	 */
-	async restoreVersion(templateId: TemplateId, versionId: number, adminId: string) {
+	async restoreVersion(templateId: TemplateId, versionId: Id<'version'>, adminId: string) {
 		try {
 			// Get the version to restore
 			const [version] = await db

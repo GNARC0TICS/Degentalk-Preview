@@ -25,7 +25,7 @@ export class EventLogService {
 		const page = Math.floor(offset / limit) + 1;
 
 		// Build the where clause based on filters
-		let whereClause = [];
+		const whereClause = [];
 
 		if (userId) {
 			whereClause.push(eq(eventLogs.userId, userId));

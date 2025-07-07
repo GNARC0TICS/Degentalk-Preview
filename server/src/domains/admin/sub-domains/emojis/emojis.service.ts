@@ -174,7 +174,7 @@ export const emojiService = {
 	/**
 	 * Get a single emoji by ID
 	 */
-	async getById(id: number) {
+	async getById(id: Id<'id'>) {
 		try {
 			logger.info('EMOJI_SERVICE', `Fetching emoji with ID: ${id}`);
 
@@ -279,7 +279,7 @@ export const emojiService = {
 	/**
 	 * Update an existing emoji
 	 */
-	async update(id: number, emojiData: UpdateEmojiData) {
+	async update(id: Id<'id'>, emojiData: UpdateEmojiData) {
 		try {
 			logger.info('EMOJI_SERVICE', `Updating emoji with ID: ${id}`, emojiData);
 
@@ -341,7 +341,7 @@ export const emojiService = {
 	/**
 	 * Soft delete an emoji
 	 */
-	async delete(id: number) {
+	async delete(id: Id<'id'>) {
 		try {
 			logger.info('EMOJI_SERVICE', `Deleting emoji with ID: ${id}`);
 

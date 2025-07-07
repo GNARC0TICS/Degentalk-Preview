@@ -329,8 +329,8 @@ export class CampaignManagementService {
 	 * Get bid recommendations based on performance data
 	 */
 	async getBidRecommendations(campaignId: string): Promise<{
-		currentBid: number;
-		recommendedBid: number;
+		currentBid: Id<'currentBid'>;
+		recommendedBid: Id<'recommendedBid'>;
 		reasoning: string;
 		expectedImprovement: {
 			impressions: number;

@@ -1,0 +1,10 @@
+  26:1   error    'pool' is never reassigned. Use 'const' instead  prefer-const
+  34:1   error    'db' is never reassigned. Use 'const' instead    prefer-const
+/Users/gnarcotic/Degentalk/server/src/core/errors.ts
+  219:5   error    Unexpected console statement              no-console
+  222:5   error    Unexpected console statement              no-console
+  232:5   error    Unexpected console statement              no-console
+  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/src/core/repository/__tests__/user-repository.test.ts` using `parserOptions.project`: /users/gnarcotic/degentalk/server/tsconfig.eslint.json
+See the typescript-eslint docs for more info: https://typescript-eslint.io/linting/troubleshooting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+/Users/gnarcotic/Degentalk/server/src/core/utils/error-response.util.ts
+  28:7  error  'whereClause' is never reassigned. Use 'const' instead  prefer-const

@@ -35,7 +35,7 @@ export class AchievementController {
 			const { userId } = req.params;
 			const { completed, category, tier } = req.query;
 
-			let whereConditions: any[] = [eq(userAchievements.userId, userId)];
+			const whereConditions: any[] = [eq(userAchievements.userId, userId)];
 
 			if (completed === 'true') {
 				whereConditions.push(eq(userAchievements.isCompleted, true));

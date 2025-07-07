@@ -56,7 +56,7 @@ export class AchievementAdminService {
 	): Promise<{ achievements: AchievementWithStats[]; total: number }> {
 		try {
 			const offset = (page - 1) * limit;
-			let whereConditions: any[] = [];
+			const whereConditions: any[] = [];
 
 			// Build where conditions based on filters
 			if (filters.category) {

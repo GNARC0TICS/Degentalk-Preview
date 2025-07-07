@@ -184,7 +184,7 @@ export class RestoreService {
 		try {
 			const validatedFilters = listRestoreOperationsSchema.parse(filters);
 
-			let query = db.select().from(restoreOperations);
+			const query = db.select().from(restoreOperations);
 			const conditions = [];
 
 			// Apply filters
@@ -309,7 +309,7 @@ export class RestoreService {
 	// Private helper methods
 
 	private async executeRestore(
-		dbId: number,
+		dbId: Id<'db'>,
 		operationId: string,
 		options: CreateRestoreInput,
 		adminId: string
@@ -632,7 +632,7 @@ export class RestoreService {
 	}
 
 	private async updateRestoreStatus(
-		id: number,
+		id: Id<'id'>,
 		status: 'pending' | 'pre_backup' | 'restoring' | 'completed' | 'failed' | 'cancelled',
 		errorMessage?: string | null,
 		additionalData?: Record<string, any>

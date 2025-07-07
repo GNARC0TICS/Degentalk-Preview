@@ -26,7 +26,7 @@ export class RarityService {
 		return created;
 	}
 
-	async update(id: number, data: Partial<RarityInput>) {
+	async update(id: Id<'id'>, data: Partial<RarityInput>) {
 		const [existing] = await db.select().from(rarities).where(eq(rarities.id, id));
 		if (!existing) throw AdminError.notFound('Rarity', id);
 		const [updated] = await db
@@ -37,7 +37,7 @@ export class RarityService {
 		return updated;
 	}
 
-	async delete(id: number) {
+	async delete(id: Id<'id'>) {
 		const [deleted] = await db.delete(rarities).where(eq(rarities.id, id)).returning();
 		if (!deleted) throw AdminError.notFound('Rarity', id);
 		return { success: true };

@@ -160,7 +160,7 @@ export class StickerService {
 	/**
 	 * Get single sticker by ID
 	 */
-	async getSticker(id: number): Promise<Sticker & { packName?: string }> {
+	async getSticker(id: Id<'id'>): Promise<Sticker & { packName?: string }> {
 		const result = await db
 			.select({
 				id: stickers.id,
@@ -274,7 +274,7 @@ export class StickerService {
 	 * Update existing sticker
 	 */
 	async updateSticker(
-		id: number,
+		id: Id<'id'>,
 		data: UpdateStickerInput,
 		adminId: string
 	): Promise<{ message: string }> {
@@ -341,7 +341,7 @@ export class StickerService {
 	/**
 	 * Soft delete sticker
 	 */
-	async deleteSticker(id: number, adminId: string): Promise<{ message: string }> {
+	async deleteSticker(id: Id<'id'>, adminId: string): Promise<{ message: string }> {
 		const existingSticker = await this.getSticker(id);
 
 		await db
@@ -487,7 +487,7 @@ export class StickerService {
 	/**
 	 * Get single sticker pack by ID
 	 */
-	async getStickerPack(id: number): Promise<StickerPack> {
+	async getStickerPack(id: Id<'id'>): Promise<StickerPack> {
 		const result = await db.select().from(stickerPacks).where(eq(stickerPacks.id, id)).limit(1);
 
 		if (!result[0]) {
@@ -532,7 +532,7 @@ export class StickerService {
 	 * Update existing sticker pack
 	 */
 	async updateStickerPack(
-		id: number,
+		id: Id<'id'>,
 		data: UpdateStickerPackInput,
 		adminId: string
 	): Promise<{ message: string }> {
@@ -563,7 +563,7 @@ export class StickerService {
 	/**
 	 * Delete sticker pack (and unlink stickers)
 	 */
-	async deleteStickerPack(id: number, adminId: string): Promise<{ message: string }> {
+	async deleteStickerPack(id: Id<'id'>, adminId: string): Promise<{ message: string }> {
 		// Check if pack exists
 		await this.getStickerPack(id);
 

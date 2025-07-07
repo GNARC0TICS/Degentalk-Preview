@@ -352,7 +352,7 @@ function generateDetailedReport(violations: TransformerViolation[]): void {
 }
 
 // CLI interface
-if (typeof require !== 'undefined' && require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const dryRun = process.argv.includes('--dry-run') || process.argv.includes('--dry');
   const fixSimple = process.argv.includes('--fix-simple');
   const detailed = process.argv.includes('--detailed');

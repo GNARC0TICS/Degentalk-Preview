@@ -301,7 +301,7 @@ export const getCloutAdjustmentLogs = async (req: Request, res: Response, next: 
 
 			// Determine adjustment type and amount from cloutEarned
 			let adjustmentType: 'add' | 'subtract' | 'set' = 'add';
-			let amount = Math.abs(log.cloutEarned);
+			const amount = Math.abs(log.cloutEarned);
 
 			if (log.cloutEarned > 0) {
 				adjustmentType = 'add';

@@ -53,7 +53,7 @@ export interface AuditEvent {
 	};
 	target?: {
 		type: 'user' | 'thread' | 'post' | 'forum' | 'system';
-		id?: number | string;
+		id?: Id<'id'> | string;
 		name?: string;
 	};
 	action: string;

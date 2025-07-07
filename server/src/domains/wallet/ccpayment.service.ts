@@ -280,7 +280,7 @@ export class CCPaymentService {
 	/**
 	 * Get token information with logo and network details
 	 */
-	async getTokenInfo(coinId: number) {
+	async getTokenInfo(coinId: Id<'coin'>) {
 		return ccpaymentTokenService.getTokenInfo(coinId);
 	}
 
@@ -294,7 +294,7 @@ export class CCPaymentService {
 	/**
 	 * Get withdrawal fee for specific token and chain
 	 */
-	async getWithdrawFee(coinId: number, chain: string) {
+	async getWithdrawFee(coinId: Id<'coin'>, chain: string) {
 		return ccpaymentTokenService.getWithdrawFee(coinId, chain);
 	}
 
@@ -327,7 +327,7 @@ export class CCPaymentService {
 	/**
 	 * Get specific app coin balance
 	 */
-	async getAppCoinBalance(coinId: number) {
+	async getAppCoinBalance(coinId: Id<'coin'>) {
 		return ccpaymentTokenService.getAppCoinBalance(coinId);
 	}
 }

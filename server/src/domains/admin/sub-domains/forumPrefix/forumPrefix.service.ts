@@ -13,7 +13,7 @@ interface UpdatePrefixInput {
 }
 
 export class ForumPrefixService {
-	async updatePrefix(id: number, data: UpdatePrefixInput) {
+	async updatePrefix(id: Id<'id'>, data: UpdatePrefixInput) {
 		const [existing] = await db.select().from(threadPrefixes).where(eq(threadPrefixes.id, id));
 
 		if (!existing) throw AdminError.notFound('Thread Prefix', id);
@@ -43,7 +43,7 @@ export class ForumPrefixService {
 		return updated;
 	}
 
-	async deletePrefix(id: number) {
+	async deletePrefix(id: Id<'id'>) {
 		const [deleted] = await db.delete(threadPrefixes).where(eq(threadPrefixes.id, id)).returning();
 
 		if (!deleted) throw AdminError.notFound('Thread Prefix', id);

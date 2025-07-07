@@ -80,7 +80,7 @@ export class AdminTitlesService {
 		return title;
 	}
 
-	async update(id: number, data: UpdateTitleInput) {
+	async update(id: Id<'id'>, data: UpdateTitleInput) {
 		// Validate role exists if roleId is provided
 		if (data.roleId) {
 			const [role] = await db
@@ -100,7 +100,7 @@ export class AdminTitlesService {
 		return title;
 	}
 
-	async delete(id: number) {
+	async delete(id: Id<'id'>) {
 		const [title] = await db.select().from(titlesTable).where(eq(titlesTable.id, id));
 		if (!title) throw new Error('Title not found');
 

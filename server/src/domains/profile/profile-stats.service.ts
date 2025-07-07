@@ -55,7 +55,7 @@ export interface ExtendedProfileStats {
 		type: string;
 		status: string;
 		endDate: string | null;
-		pricePaid: number;
+		pricePaid: Id<'pricePaid'>;
 	} | null;
 	primaryRole: {
 		name: string;

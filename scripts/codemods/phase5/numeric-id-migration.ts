@@ -338,7 +338,7 @@ export async function removeBridgeFile(dryRun = false): Promise<boolean> {
 }
 
 // CLI interface
-if (typeof require !== 'undefined' && require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const dryRun = process.argv.includes('--dry-run') || process.argv.includes('--dry');
   const removeBridge = process.argv.includes('--remove-bridge');
   

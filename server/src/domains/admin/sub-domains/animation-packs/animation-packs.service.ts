@@ -50,7 +50,7 @@ export class AnimationPackService {
 		return { ...pack, contents: await this.contentsForPack(pack.id) };
 	}
 
-	async update(id: number, data: PackInput) {
+	async update(id: Id<'id'>, data: PackInput) {
 		await db
 			.update(animationPacks)
 			.set({
@@ -67,7 +67,7 @@ export class AnimationPackService {
 		return { ...pack, contents: await this.contentsForPack(id) };
 	}
 
-	async delete(id: number) {
+	async delete(id: Id<'id'>) {
 		await db.delete(animationPacks).where(eq(animationPacks.id, id));
 	}
 

@@ -117,7 +117,7 @@ export class AdminSubscriptionController {
 			const offset = (page - 1) * limit;
 
 			// Build where conditions
-			let whereConditions = [eq(subscriptions.isDeleted, false)];
+			const whereConditions = [eq(subscriptions.isDeleted, false)];
 
 			if (status) {
 				whereConditions.push(eq(subscriptions.status, status));
@@ -209,7 +209,7 @@ export class AdminSubscriptionController {
 			const offset = (page - 1) * limit;
 
 			// Build where conditions
-			let whereConditions = [];
+			const whereConditions = [];
 
 			if (month && year) {
 				whereConditions.push(eq(cosmeticDrops.dropMonth, month));

@@ -235,7 +235,7 @@ export class AdServingService {
 		campaign: Campaign,
 		request: AdRequest,
 		placement: AdPlacement
-	): Promise<{ blocked: boolean; adjustedBid?: number; metadata?: any }> {
+	): Promise<{ blocked: boolean; adjustedBid?: Id<'adjustedBid'>; metadata?: any }> {
 		// Get applicable rules
 		const rules = await db
 			.select()

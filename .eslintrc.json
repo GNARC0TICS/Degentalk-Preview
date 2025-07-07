@@ -1,5 +1,6 @@
 {
 	"root": true,
+	"ignorePatterns": [".backup/**", "quality-reports/**"],
 	"env": {
 		"browser": true,
 		"es2021": true,
@@ -47,6 +48,12 @@
 			"rules": {
 				"no-console": "off",
 				"@typescript-eslint/no-explicit-any": "off"
+			}
+		},
+		{
+			"files": ["server/src/core/logger.ts"],
+			"rules": {
+				"no-console": "off"
 			}
 		},
 		{

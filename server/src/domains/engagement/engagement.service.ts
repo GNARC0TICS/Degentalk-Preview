@@ -71,7 +71,7 @@ export class EngagementService {
 		fromUserId: UserId,
 		amount: bigint,
 		recipientCount: number,
-		channelId?: number
+		channelId?: Id<'channel'>
 	) {
 		try {
 			return await rainService.processRain(fromUserId, amount, recipientCount, channelId);

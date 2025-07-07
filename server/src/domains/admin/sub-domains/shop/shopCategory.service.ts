@@ -31,7 +31,7 @@ export class ShopCategoryService {
 		return created;
 	}
 
-	async update(id: number, data: Partial<CategoryInput>) {
+	async update(id: Id<'id'>, data: Partial<CategoryInput>) {
 		const [existing] = await db
 			.select()
 			.from(cosmeticCategories)
@@ -46,7 +46,7 @@ export class ShopCategoryService {
 		return updated;
 	}
 
-	async delete(id: number) {
+	async delete(id: Id<'id'>) {
 		const [deleted] = await db
 			.delete(cosmeticCategories)
 			.where(eq(cosmeticCategories.id, id))

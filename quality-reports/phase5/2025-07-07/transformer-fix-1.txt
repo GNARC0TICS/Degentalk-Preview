@@ -1,0 +1,7 @@
+🔧 Starting transformer violation fixes...
+
+✅ Fixed 1 violations in server/src/domains/auth/controllers/auth.controller.ts
+
+📊 Summary: Fixed 1 violations in 1 files
+
+✅ Transformer violation fixes complete!

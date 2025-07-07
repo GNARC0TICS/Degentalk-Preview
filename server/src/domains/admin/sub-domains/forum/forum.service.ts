@@ -56,7 +56,7 @@ export class AdminForumService {
 		}
 	}
 
-	async getCategoryById(id: number) {
+	async getCategoryById(id: Id<'id'>) {
 		try {
 			const [category] = await db.select().from(forumStructure).where(eq(forumStructure.id, id));
 
@@ -129,7 +129,7 @@ export class AdminForumService {
 		}
 	}
 
-	async updateCategory(id: number, data: CategoryInput) {
+	async updateCategory(id: Id<'id'>, data: CategoryInput) {
 		try {
 			// Check category exists
 			const [existingCategory] = await db
@@ -196,7 +196,7 @@ export class AdminForumService {
 		}
 	}
 
-	async deleteCategory(id: number) {
+	async deleteCategory(id: Id<'id'>) {
 		try {
 			// Check category exists
 			const [existingCategory] = await db
@@ -361,7 +361,7 @@ export class AdminForumService {
 		}
 	}
 
-	async updateTag(id: number, data: TagInput) {
+	async updateTag(id: Id<'id'>, data: TagInput) {
 		try {
 			// Check tag exists
 			const [existingTag] = await db.select().from(tags).where(eq(tags.id, id));
@@ -412,7 +412,7 @@ export class AdminForumService {
 		}
 	}
 
-	async deleteTag(id: number) {
+	async deleteTag(id: Id<'id'>) {
 		try {
 			// Check tag exists
 			const [existingTag] = await db.select().from(tags).where(eq(tags.id, id));
@@ -502,7 +502,7 @@ export class AdminForumService {
 		return entities;
 	}
 
-	async getEntityById(id: number) {
+	async getEntityById(id: Id<'id'>) {
 		const [entity] = await db
 			.select()
 			.from(forumStructure)
@@ -518,7 +518,7 @@ export class AdminForumService {
 		return entity;
 	}
 
-	async updateEntity(id: number, data: any) {
+	async updateEntity(id: Id<'id'>, data: any) {
 		const [entity] = await db
 			.update(forumStructure)
 			.set({
@@ -531,7 +531,7 @@ export class AdminForumService {
 		return entity;
 	}
 
-	async deleteEntity(id: number) {
+	async deleteEntity(id: Id<'id'>) {
 		// Check if entity has children
 		const children = await db
 			.select({ id: forumStructure.id })

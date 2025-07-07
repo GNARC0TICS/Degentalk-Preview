@@ -52,7 +52,7 @@ export class WalletService {
 			const dgtBalance = await dgtService.getDGTBalance(userId);
 
 			// Get crypto balances (if user has CCPayment account)
-			let cryptoBalances = [];
+			const cryptoBalances = [];
 			const ccpaymentUserId = await this.userManagementService.getCCPaymentUserId(userId);
 
 			if (ccpaymentUserId) {

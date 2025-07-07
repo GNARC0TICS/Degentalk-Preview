@@ -32,7 +32,7 @@ export class DgtPackageService {
 		return created;
 	}
 
-	async update(id: number, data: Partial<DgtPackageInput>) {
+	async update(id: Id<'id'>, data: Partial<DgtPackageInput>) {
 		const [existing] = await db.select().from(dgtPackages).where(eq(dgtPackages.id, id));
 		if (!existing) throw AdminError.notFound('DGT Package', id);
 
@@ -44,7 +44,7 @@ export class DgtPackageService {
 		return updated;
 	}
 
-	async delete(id: number) {
+	async delete(id: Id<'id'>) {
 		const [deleted] = await db.delete(dgtPackages).where(eq(dgtPackages.id, id)).returning();
 		if (!deleted) throw AdminError.notFound('DGT Package', id);
 		return { success: true };

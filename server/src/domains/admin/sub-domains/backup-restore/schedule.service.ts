@@ -98,7 +98,7 @@ export class BackupScheduleService {
 	/**
 	 * Update an existing backup schedule
 	 */
-	async updateSchedule(id: number, data: UpdateScheduleInput, adminId: string) {
+	async updateSchedule(id: Id<'id'>, data: UpdateScheduleInput, adminId: string) {
 		try {
 			const validatedData = updateScheduleSchema.parse(data);
 
@@ -156,7 +156,7 @@ export class BackupScheduleService {
 	/**
 	 * Delete a backup schedule
 	 */
-	async deleteSchedule(id: number, adminId: string) {
+	async deleteSchedule(id: Id<'id'>, adminId: string) {
 		try {
 			const [schedule] = await db.select().from(backupSchedules).where(eq(backupSchedules.id, id));
 
@@ -253,7 +253,7 @@ export class BackupScheduleService {
 	/**
 	 * Get schedule details by ID
 	 */
-	async getSchedule(id: number) {
+	async getSchedule(id: Id<'id'>) {
 		try {
 			const [schedule] = await db.select().from(backupSchedules).where(eq(backupSchedules.id, id));
 
@@ -296,7 +296,7 @@ export class BackupScheduleService {
 	/**
 	 * Trigger a schedule to run immediately
 	 */
-	async triggerSchedule(id: number, adminId: string) {
+	async triggerSchedule(id: Id<'id'>, adminId: string) {
 		try {
 			const schedule = await this.getSchedule(id);
 

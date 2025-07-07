@@ -198,7 +198,7 @@ export class ThreadService {
 			const offset = (page - 1) * limit;
 
 			// Build WHERE conditions
-			let whereConditions = [];
+			const whereConditions = [];
 
 			// Filter by structureId if provided
 			if (structureId) {

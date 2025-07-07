@@ -84,39 +84,39 @@ type SessionStore = connectPGSink.PGStore;
 
 export interface IStorage {
 	// User methods
-	getUser(id: number | string): Promise<User | undefined>;
+	getUser(id: Id<'id'> | string): Promise<User | undefined>;
 	getUserByUsername(username: string): Promise<User | undefined>;
 	getUserByEmail(email: string): Promise<User | undefined>;
 	createUser(user: InsertUser): Promise<User>;
-	updateUser(id: number, userData: Partial<User>): Promise<User>;
+	updateUser(id: Id<'id'>, userData: Partial<User>): Promise<User>;
 	getUsersInGroup(groupId: GroupId): Promise<User[]>;
 	hashPassword(password: string): Promise<string>;
 
 	// Staff and groups methods
 	getUserGroups(): Promise<(typeof userGroups.$inferSelect)[]>;
-	getUserGroup(id: number): Promise<typeof userGroups.$inferSelect | undefined>;
+	getUserGroup(id: Id<'id'>): Promise<typeof userGroups.$inferSelect | undefined>;
 	createUserGroup(group: typeof userGroups.$inferInsert): Promise<typeof userGroups.$inferSelect>;
 	updateUserGroup(
-		id: number,
+		id: Id<'id'>,
 		data: Partial<typeof userGroups.$inferSelect>
 	): Promise<typeof userGroups.$inferSelect>;
-	deleteUserGroup(id: number): Promise<void>;
+	deleteUserGroup(id: Id<'id'>): Promise<void>;
 
 	// Forum rules methods
 	getForumRules(section?: string, status?: string): Promise<ForumRule[]>;
-	getForumRule(id: number): Promise<ForumRule | undefined>;
+	getForumRule(id: Id<'id'>): Promise<ForumRule | undefined>;
 	createForumRule(rule: InsertForumRule & { createdBy?: UserId }): Promise<ForumRule>;
 	updateForumRule(
-		id: number,
+		id: Id<'id'>,
 		rule: Partial<ForumRule> & { updatedBy?: number }
 	): Promise<ForumRule>;
-	deleteForumRule(id: number): Promise<void>;
+	deleteForumRule(id: Id<'id'>): Promise<void>;
 	getUserRuleAgreements(userId: UserId): Promise<UserRulesAgreement[]>;
-	agreeToRule(userId: UserId, ruleId: number, versionHash: string): Promise<void>;
+	agreeToRule(userId: UserId, ruleId: Id<'rule'>, versionHash: string): Promise<void>;
 
 	// Forum structure methods
 	getStructures(): Promise<ForumStructureWithStats[]>;
-	getStructure(id: number): Promise<ForumStructureWithStats | undefined>;
+	getStructure(id: Id<'id'>): Promise<ForumStructureWithStats | undefined>;
 	getStructureBySlug(slug: string): Promise<ForumStructureWithStats | undefined>;
 	createStructure(structure: NewForumStructureNode): Promise<ForumStructureNode>;
 
@@ -127,18 +127,18 @@ export interface IStorage {
 		offset?: number,
 		sortBy?: string
 	): Promise<ThreadWithUser[]>;
-	getThread(id: number): Promise<ThreadWithUser | undefined>;
+	getThread(id: Id<'id'>): Promise<ThreadWithUser | undefined>;
 	getThreadBySlug(slug: string): Promise<ThreadWithUser | undefined>;
 	createThread(thread: InsertThread & { userId: UserId }): Promise<Thread>;
-	incrementThreadViewCount(id: number): Promise<void>;
+	incrementThreadViewCount(id: Id<'id'>): Promise<void>;
 
 	// Thread draft methods
-	getDraft(id: number): Promise<ThreadDraft | undefined>;
+	getDraft(id: Id<'id'>): Promise<ThreadDraft | undefined>;
 	getDraftsByUser(userId: UserId, structureId?: StructureId): Promise<ThreadDraft[]>;
 	saveDraft(draft: InsertThreadDraft): Promise<ThreadDraft>;
-	updateDraft(id: number, data: Partial<ThreadDraft>): Promise<ThreadDraft>;
-	deleteDraft(id: number): Promise<void>;
-	publishDraft(id: number): Promise<Thread>;
+	updateDraft(id: Id<'id'>, data: Partial<ThreadDraft>): Promise<ThreadDraft>;
+	deleteDraft(id: Id<'id'>): Promise<void>;
+	publishDraft(id: Id<'id'>): Promise<Thread>;
 
 	// Thread feature permissions methods
 	getThreadFeaturePermissions(): Promise<(typeof threadFeaturePermissions.$inferSelect)[]>;
@@ -146,10 +146,10 @@ export interface IStorage {
 
 	// Post methods
 	getPosts(threadId: ThreadId, limit?: number, offset?: number): Promise<PostWithUser[]>;
-	getPost(id: number): Promise<PostWithUser | undefined>;
+	getPost(id: Id<'id'>): Promise<PostWithUser | undefined>;
 	createPost(post: InsertPost & { userId: UserId; isFirstPost?: boolean }): Promise<Post>;
-	updatePost(id: number, postData: Partial<Post> & { editorId: UserId }): Promise<Post>;
-	deletePost(id: number): Promise<void>;
+	updatePost(id: Id<'id'>, postData: Partial<Post> & { editorId: UserId }): Promise<Post>;
+	deletePost(id: Id<'id'>): Promise<void>;
 
 	// Reaction methods
 	addReaction(userId: UserId, postId: PostId, reaction: string): Promise<void>;
@@ -157,30 +157,30 @@ export interface IStorage {
 
 	// Notification methods
 	getNotifications(userId: UserId, limit?: number, offset?: number): Promise<Notification[]>;
-	markNotificationAsRead(id: number): Promise<void>;
+	markNotificationAsRead(id: Id<'id'>): Promise<void>;
 
 	// Custom emoji methods
 	getEmojis(category?: string): Promise<CustomEmoji[]>;
-	getEmoji(id: number): Promise<CustomEmoji | undefined>;
+	getEmoji(id: Id<'id'>): Promise<CustomEmoji | undefined>;
 	createEmoji(emoji: InsertCustomEmoji): Promise<CustomEmoji>;
-	updateEmoji(id: number, emoji: Partial<CustomEmoji>): Promise<CustomEmoji>;
-	deleteEmoji(id: number): Promise<void>;
+	updateEmoji(id: Id<'id'>, emoji: Partial<CustomEmoji>): Promise<CustomEmoji>;
+	deleteEmoji(id: Id<'id'>): Promise<void>;
 	getAvailableEmojisForUser(userId: UserId): Promise<EmojiWithAvailability[]>;
 	unlockEmojiForUser(userId: UserId, emojiId: EmojiId): Promise<void>;
 
 	// Shop and products methods
 	getProducts(category?: string): Promise<Product[]>;
-	getProduct(id: number): Promise<Product | undefined>;
+	getProduct(id: Id<'id'>): Promise<Product | undefined>;
 	createProduct(product: typeof products.$inferInsert): Promise<Product>;
-	updateProduct(id: number, data: Partial<Product>): Promise<Product>;
-	deleteProduct(id: number): Promise<void>;
+	updateProduct(id: Id<'id'>, data: Partial<Product>): Promise<Product>;
+	deleteProduct(id: Id<'id'>): Promise<void>;
 	purchaseProduct(userId: UserId, productId: ProductId, quantity?: number): Promise<Order>;
 
 	// Messaging system
 	getConversations(
 		userId: UserId
 	): Promise<(Conversation & { participants: ConversationParticipant[] })[]>;
-	getConversation(id: number): Promise<Conversation | undefined>;
+	getConversation(id: Id<'id'>): Promise<Conversation | undefined>;
 	createConversation(data: {
 		title?: string;
 		isGroup: boolean;
@@ -259,7 +259,7 @@ export class DatabaseStorage implements IStorage {
 	}
 
 	// User methods
-	async getUser(id: number | string): Promise<User | undefined> {
+	async getUser(id: Id<'id'> | string): Promise<User | undefined> {
 		logger.info('🔍 getUser called with ID:', id, 'type:', typeof id);
 
 		try {
@@ -491,7 +491,7 @@ export class DatabaseStorage implements IStorage {
 		return user;
 	}
 
-	async updateUser(id: number, userData: Partial<User>): Promise<User> {
+	async updateUser(id: Id<'id'>, userData: Partial<User>): Promise<User> {
 		const [updatedUser] = await db
 			.update(users)
 			.set({
@@ -556,7 +556,7 @@ export class DatabaseStorage implements IStorage {
 		return structuresWithStats;
 	}
 
-	async getStructure(id: number): Promise<ForumStructureWithStats | undefined> {
+	async getStructure(id: Id<'id'>): Promise<ForumStructureWithStats | undefined> {
 		const [structure] = await db
 			.select({
 				...forumStructure,
@@ -667,7 +667,7 @@ export class DatabaseStorage implements IStorage {
 		return query;
 	}
 
-	async getThread(id: number): Promise<ThreadWithUser | undefined> {
+	async getThread(id: Id<'id'>): Promise<ThreadWithUser | undefined> {
 		const [thread] = await db
 			.select({
 				...threads,
@@ -745,7 +745,7 @@ export class DatabaseStorage implements IStorage {
 		return newThread;
 	}
 
-	async incrementThreadViewCount(id: number): Promise<void> {
+	async incrementThreadViewCount(id: Id<'id'>): Promise<void> {
 		await db
 			.update(threads)
 			.set({
@@ -755,7 +755,7 @@ export class DatabaseStorage implements IStorage {
 	}
 
 	// Thread draft methods
-	async getDraft(id: number): Promise<ThreadDraft | undefined> {
+	async getDraft(id: Id<'id'>): Promise<ThreadDraft | undefined> {
 		const [draft] = await db.select().from(threadDrafts).where(eq(threadDrafts.id, id));
 
 		return draft;
@@ -790,7 +790,7 @@ export class DatabaseStorage implements IStorage {
 		return newDraft;
 	}
 
-	async updateDraft(id: number, data: Partial<ThreadDraft>): Promise<ThreadDraft> {
+	async updateDraft(id: Id<'id'>, data: Partial<ThreadDraft>): Promise<ThreadDraft> {
 		const [updatedDraft] = await db
 			.update(threadDrafts)
 			.set({
@@ -804,11 +804,11 @@ export class DatabaseStorage implements IStorage {
 		return updatedDraft;
 	}
 
-	async deleteDraft(id: number): Promise<void> {
+	async deleteDraft(id: Id<'id'>): Promise<void> {
 		await db.delete(threadDrafts).where(eq(threadDrafts.id, id));
 	}
 
-	async publishDraft(id: number): Promise<Thread> {
+	async publishDraft(id: Id<'id'>): Promise<Thread> {
 		return db.transaction(async (tx: PgTransaction<any, any, any>) => {
 			// Get the draft
 			const [draft] = await tx.select().from(threadDrafts).where(eq(threadDrafts.id, id));
@@ -923,7 +923,7 @@ export class DatabaseStorage implements IStorage {
 			.offset(offset);
 	}
 
-	async getPost(id: number): Promise<PostWithUser | undefined> {
+	async getPost(id: Id<'id'>): Promise<PostWithUser | undefined> {
 		const [post] = await db
 			.select({
 				...posts,
@@ -968,7 +968,7 @@ export class DatabaseStorage implements IStorage {
 		return newPost;
 	}
 
-	async updatePost(id: number, postData: Partial<Post> & { editorId: UserId }): Promise<Post> {
+	async updatePost(id: Id<'id'>, postData: Partial<Post> & { editorId: UserId }): Promise<Post> {
 		const { editorId, ...updateData } = postData;
 
 		const [updatedPost] = await db.transaction(async (tx: PgTransaction<any, any, any>) => {
@@ -1010,7 +1010,7 @@ export class DatabaseStorage implements IStorage {
 		return updatedPost;
 	}
 
-	async deletePost(id: number): Promise<void> {
+	async deletePost(id: Id<'id'>): Promise<void> {
 		await db.transaction(async (tx: PgTransaction<any, any, any>) => {
 			// Get the post first to check permissions and get thread info
 			const [post] = await tx.select().from(posts).where(eq(posts.id, id));
@@ -1177,7 +1177,7 @@ export class DatabaseStorage implements IStorage {
 			.offset(offset);
 	}
 
-	async markNotificationAsRead(id: number): Promise<void> {
+	async markNotificationAsRead(id: Id<'id'>): Promise<void> {
 		await db
 			.update(notifications)
 			.set({
@@ -1198,7 +1198,7 @@ export class DatabaseStorage implements IStorage {
 		return query.orderBy(customEmojis.name);
 	}
 
-	async getEmoji(id: number): Promise<CustomEmoji | undefined> {
+	async getEmoji(id: Id<'id'>): Promise<CustomEmoji | undefined> {
 		const [emoji] = await db
 			.select()
 			.from(customEmojis)
@@ -1219,7 +1219,7 @@ export class DatabaseStorage implements IStorage {
 		return newEmoji;
 	}
 
-	async updateEmoji(id: number, emoji: Partial<CustomEmoji>): Promise<CustomEmoji> {
+	async updateEmoji(id: Id<'id'>, emoji: Partial<CustomEmoji>): Promise<CustomEmoji> {
 		const [updatedEmoji] = await db
 			.update(customEmojis)
 			.set({
@@ -1232,7 +1232,7 @@ export class DatabaseStorage implements IStorage {
 		return updatedEmoji;
 	}
 
-	async deleteEmoji(id: number): Promise<void> {
+	async deleteEmoji(id: Id<'id'>): Promise<void> {
 		await db
 			.update(customEmojis)
 			.set({
@@ -1324,7 +1324,7 @@ export class DatabaseStorage implements IStorage {
 		return db.select().from(userGroups).orderBy(userGroups.staffPriority);
 	}
 
-	async getUserGroup(id: number): Promise<typeof userGroups.$inferSelect | undefined> {
+	async getUserGroup(id: Id<'id'>): Promise<typeof userGroups.$inferSelect | undefined> {
 		const [group] = await db.select().from(userGroups).where(eq(userGroups.id, id));
 		return group;
 	}
@@ -1348,7 +1348,7 @@ export class DatabaseStorage implements IStorage {
 		return rules;
 	}
 
-	async getForumRule(id: number): Promise<ForumRule | undefined> {
+	async getForumRule(id: Id<'id'>): Promise<ForumRule | undefined> {
 		const [rule] = await db.select().from(forumRules).where(eq(forumRules.id, id));
 		return rule;
 	}
@@ -1371,7 +1371,7 @@ export class DatabaseStorage implements IStorage {
 	}
 
 	async updateForumRule(
-		id: number,
+		id: Id<'id'>,
 		rule: Partial<ForumRule> & { updatedBy?: number }
 	): Promise<ForumRule> {
 		// If content is being updated, generate a new version hash
@@ -1393,7 +1393,7 @@ export class DatabaseStorage implements IStorage {
 		return updatedRule;
 	}
 
-	async deleteForumRule(id: number): Promise<void> {
+	async deleteForumRule(id: Id<'id'>): Promise<void> {
 		await db.delete(forumRules).where(eq(forumRules.id, id));
 	}
 
@@ -1405,7 +1405,7 @@ export class DatabaseStorage implements IStorage {
 		return agreements;
 	}
 
-	async agreeToRule(userId: UserId, ruleId: number, versionHash: string): Promise<void> {
+	async agreeToRule(userId: UserId, ruleId: Id<'rule'>, versionHash: string): Promise<void> {
 		// Check if the user has already agreed to this rule
 		const [existingAgreement] = await db
 			.select()
@@ -1536,7 +1536,7 @@ export class DatabaseStorage implements IStorage {
 	}
 
 	async updateUserGroup(
-		id: number,
+		id: Id<'id'>,
 		data: Partial<typeof userGroups.$inferSelect>
 	): Promise<typeof userGroups.$inferSelect> {
 		const [updatedGroup] = await db
@@ -1551,7 +1551,7 @@ export class DatabaseStorage implements IStorage {
 		return updatedGroup;
 	}
 
-	async deleteUserGroup(id: number): Promise<void> {
+	async deleteUserGroup(id: Id<'id'>): Promise<void> {
 		// Check if it's a default group
 		const [group] = await db.select().from(userGroups).where(eq(userGroups.id, id));
 		if (group && group.isDefault) {
@@ -1607,7 +1607,7 @@ export class DatabaseStorage implements IStorage {
 		return query.orderBy(products.name);
 	}
 
-	async getProduct(id: number): Promise<Product | undefined> {
+	async getProduct(id: Id<'id'>): Promise<Product | undefined> {
 		const [product] = await db
 			.select({
 				id: products.id,
@@ -1644,7 +1644,7 @@ export class DatabaseStorage implements IStorage {
 		return newProduct;
 	}
 
-	async updateProduct(id: number, data: Partial<Product>): Promise<Product> {
+	async updateProduct(id: Id<'id'>, data: Partial<Product>): Promise<Product> {
 		const [updatedProduct] = await db
 			.update(products)
 			.set({
@@ -1657,7 +1657,7 @@ export class DatabaseStorage implements IStorage {
 		return updatedProduct;
 	}
 
-	async deleteProduct(id: number): Promise<void> {
+	async deleteProduct(id: Id<'id'>): Promise<void> {
 		await db
 			.update(products)
 			.set({
@@ -1854,7 +1854,7 @@ export class DatabaseStorage implements IStorage {
 		return Array.from(conversationsMap.values());
 	}
 
-	async getConversation(id: number): Promise<Conversation | undefined> {
+	async getConversation(id: Id<'id'>): Promise<Conversation | undefined> {
 		const [conversation] = await db.select().from(conversations).where(eq(conversations.id, id));
 		return conversation;
 	}
@@ -2152,7 +2152,7 @@ export class DatabaseStorage implements IStorage {
 
 		const pathXp = user.pathXp || {};
 		const currentMultipliers = user.pathMultipliers || {};
-		let newMultipliers = { ...currentMultipliers };
+		const newMultipliers = { ...currentMultipliers };
 		let multiplierChanged = false;
 
 		// Apply multiplier rules - example rule: 1.2x multiplier at 1000 XP

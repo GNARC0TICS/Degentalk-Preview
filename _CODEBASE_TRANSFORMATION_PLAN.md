@@ -192,6 +192,27 @@ pnpm lint 2>&1 | grep error | wc -l
 # Target: < 30 manual fixes needed
 ```
 
+#### Step 2.3: Evidence-Based Checklist (NEW)
+> Complete each box before marking Phase 2 finished.  Store all scans under `quality-reports/phase5/<date>/`.
+
+| Task | Command | Expectation |
+|------|---------|-------------|
+| 🔍 Dry-run entire codemod suite | `pnpm tsx scripts/codemods/phase5/run-all.ts --dry-run` | • Pre-flight passes  ✔︎  <br>• `transformCount` for numeric-ID ≥ 100  <br>• `violations` list from transformer codemod exported to `transformer-report.json` |
+| 📝 Commit JSON evidence | `git add quality-reports/phase5/* && git commit -m "phase2: codemod dry-run evidence"` | Evidence artefacts tracked |
+| ⚡ Execute codemods live | `pnpm tsx scripts/codemods/phase5/run-all.ts` | All steps succeed, post-validation passes |
+| 📊 Re-scan metrics | 1. `grep -r "res\.json(" server/src | wc -l`  <br>2. `pnpm lint 2>&1 | grep -E "error" | wc -l` | Transformer violations ≤ 10  <br> ESLint errors = 0 |
+| 🗑️ Remove bridge file | `pnpm tsx scripts/codemods/phase5/numeric-id-migration.ts --remove-bridge` | File `db/types/id.types.ts` gone, typecheck green |
+| 🚦 Tag checkpoint | `git tag phase2-complete-$(date -u +"%Y-%m-%dT%H-%M-%SZ")` | Lightweight tag created |
+
+#### Step 2.4: Phase 2 Acceptance Criteria (NEW)
+1. **Transformer violations** ≤ 10 (preferably 0) – verified by `transformer-report.json`.
+2. **Numeric-ID coverage** ≥ 95 % (bridge file removed, no `@db/types` imports).
+3. **Console statements in runtime code** 0. (use updated grep that excludes migrations/scripts path).
+4. **ESLint**: 0 errors, < 1 000 warnings (goal < 100 will be hit in Phase 1 wrap-up).
+5. **CI pipeline** (lint, typecheck, test) green on `phase2-codemods` branch.
+
+*Only after all five conditions pass should the Progress Tracker move Phase 2 to ✅.*
+
 ### PHASE 3: COMPONENT CONSOLIDATION (Day 1 - 3 hours)
 
 **Goal:** Single implementation for each component type
@@ -482,10 +503,10 @@ Update this section after each phase:
 ### Ready for Execution
 | Codemod | Path | Version | Status | Notes |
 |---------|------|---------|--------|-------|
-| Console → Logger | scripts/codemods/phase5/console-to-logger.ts | v2 | ✅  Patched | Transforms console.* ➜ logger.*, now handles warn/error, uses robust relative import logic |
-| req.user Removal | scripts/codemods/phase5/req-user-removal.ts | v2 | ✅  Patched | Replaces direct req.user, helper live at `server/src/lib/auth.helpers.ts`, supports aliased Request parameter names |
-| Transformer Enforcement | scripts/codemods/phase5/enforce-transformers.ts | v2 | ✅  Patched | Audits raw res.json/send, auto-imports missing transformers, supports return statements |
-| Numeric-ID Migration | scripts/codemods/phase5/numeric-id-migration.ts | v2 | ✅  Patched | Rewrites number/bigint & nullable unions to branded IDs, auto-adds `import type`, client sweep next |
+| Console → Logger | scripts/codemods/phase5/console-to-logger.ts | v2 | ✅  Applied* | Transforms console.* ➜ logger.* (runtime code).  Migrations / scripts still pending second pass |
+| req.user Removal | scripts/codemods/phase5/req-user-removal.ts | v2 | ✅  Applied | Direct `req.user` references removed; helper auto-imported |
+| Transformer Enforcement | scripts/codemods/phase5/enforce-transformers.ts | v2 | ⚠️  Pending | Patched and ready; must be run with `--fix-simple` |
+| Numeric-ID Migration | scripts/codemods/phase5/numeric-id-migration.ts | v2 | 🟡 Partial | Patched; first live run transformed 1 file. Needs full re-run (expect ≥100 transforms) |
 | Phase-5 Runner | scripts/codemods/phase5/run-all.ts | v2 | ✅  Patched | Cross-platform, propagates codemod failures, console grep covers .ts & .tsx |
 
 ### In-Progress / Upcoming Codemods
