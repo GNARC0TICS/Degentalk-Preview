@@ -1,0 +1,50 @@
+
+> @degentalk/monorepo@1.0.0 lint /Users/gnarcotic/Degentalk
+> pnpm -r lint && eslint . --ext .ts,.tsx
+
+Scope: 5 of 6 workspace projects
+client lint$ eslint . --ext .ts,.tsx 
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/AdminDashboard.tsx
+client lint:   36:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/ModularAdminSidebar.tsx
+client lint:   32:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint:   89:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/VisualJsonTabs.tsx
+client lint:    3:10  warning  'z' is defined but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u                                                                                                                                                                       @typescript-eslint/no-unused-vars
+client lint:   41:5   warning  React Hook React.useEffect has missing dependencies: 'onChange' and 'shapeSchema'. Either include them or remove the dependency array. If 'onChange' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+client lint:   54:5   warning  React Hook React.useEffect has missing dependencies: 'onChange' and 'shapeSchema'. Either include them or remove the dependency array. If 'onChange' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/clout/AchievementsSection.tsx
+client lint:   154:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint:   168:3   warning  Mixed spaces and tabs                     no-mixed-spaces-and-tabs
+client lint:   179:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint:   202:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint:   223:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/clout/CloutGrantsSection.tsx
+client lint:   104:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/clout/CloutLogsSection.tsx
+client lint:   49:9  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/cooldown-settings.tsx
+client lint:   62:62  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint:   83:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/forms/xp/LevelFormDialogs.tsx
+client lint:    45:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint:   215:72  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/media/MediaLibraryModal.tsx
+client lint:   68:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/protected-admin-route.tsx
+client lint:    50:8   warning  'location' is assigned a value but never used. Allowed unused vars must match /^[A-Z][A-Za-z0-9]+$/u  @typescript-eslint/no-unused-vars
+client lint:    75:9   warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                         degen/no-raw-container-auto
+client lint:   182:10  warning  Use <Wide>, <Prose>, or <FullBleedSection> instead of raw "container mx-auto"                         degen/no-raw-container-auto
+client lint:   225:33  warning  Unexpected any. Specify a different type                                                              @typescript-eslint/no-explicit-any
+client lint:   231:44  warning  Unexpected any. Specify a different type                                                              @typescript-eslint/no-explicit-any
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/roles/RoleForm.tsx
+client lint:   46:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/roles/RolesSection.tsx
+client lint:   78:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/simple-menu.tsx
+client lint:   43:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint: /Users/gnarcotic/Degentalk/client/src/components/admin/titles/TitlesSection.tsx
+client lint:   4:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint:   5:9   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+client lint:   9:33  warning  'titles' is defined but never used        @typescript-eslint/no-unused-vars
+client lint:   9:41  warning  'roles' is defined but never used         @typescript-eslint/no-unused-vars
