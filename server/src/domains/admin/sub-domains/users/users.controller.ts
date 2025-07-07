@@ -18,6 +18,7 @@ import { users } from '@schema';
 import { ilike } from 'drizzle-orm';
 import type { UserId, AdminId } from '@shared/types';
 import { toId, isValidId } from '@shared/utils/id';
+import { logger } from "../../../../core/logger";
 
 export class AdminUsersController {
 	/**
@@ -404,7 +405,7 @@ export class AdminUsersController {
 				data: { users: transformedResults }
 			});
 		} catch (error) {
-			console.error('Error searching users:', error);
+			logger.error('Error searching users:', error);
 			return res.status(500).json({
 				success: false,
 				error: 'Failed to search users'

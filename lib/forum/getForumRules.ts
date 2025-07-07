@@ -5,12 +5,11 @@
  */
 
 import type { MergedRules } from '@/contexts/ForumStructureContext';
+import { logger } from "../../server/src/core/logger";
 
 // This function is deprecated - use ForumStructureContext instead
 export function getForumRules(forumSlug: string): MergedRules | undefined {
-	console.warn(
-		'getForumRules() is deprecated. Use useForumStructure().getForum(slug)?.rules instead'
-	);
+	logger.warn('getForumRules() is deprecated. Use useForumStructure().getForum(slug)?.rules instead');
 	// Return undefined to force migration to context-based approach
 	return undefined;
 }

@@ -2,6 +2,7 @@ import { db } from '@db';
 import { mentions, userMentionPreferences, users } from '@schema';
 import { eq, and, desc, sql, inArray } from 'drizzle-orm';
 import type { MentionType } from './mentions.types';
+import { logger } from "../../core/logger";
 
 export class MentionsService {
 	/**
@@ -93,7 +94,7 @@ export class MentionsService {
 
 			return mentionRecords;
 		} catch (error) {
-			console.error('Error processing mentions:', error);
+			logger.error('Error processing mentions:', error);
 			return [];
 		}
 	}

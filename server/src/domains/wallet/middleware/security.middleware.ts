@@ -5,6 +5,7 @@ import { wallets, users } from '@schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { walletConfigService } from '../wallet-config.service';
 import type { SecurityMiddleware, RateLimitResult } from './types';
+import { logger } from "../../../core/logger";
 
 /**
  * Wallet Security Middleware
@@ -98,7 +99,7 @@ const depositRateLimit = async (req: Request, res: Response, next: NextFunction)
 
 		next();
 	} catch (error) {
-		console.error('Error in deposit rate limit middleware:', error);
+		logger.error('Error in deposit rate limit middleware:', error);
 		res.status(500).json({ success: false, message: 'Internal server error' });
 	}
 };
@@ -149,7 +150,7 @@ const transferRateLimit = async (
 
 		next();
 	} catch (error) {
-		console.error('Error in transfer rate limit middleware:', error);
+		logger.error('Error in transfer rate limit middleware:', error);
 		res.status(500).json({ success: false, message: 'Internal server error' });
 	}
 };
@@ -215,7 +216,7 @@ const withdrawalSecurityCheck = async (
 
 		next();
 	} catch (error) {
-		console.error('Error in withdrawal security check:', error);
+		logger.error('Error in withdrawal security check:', error);
 		res.status(500).json({ success: false, message: 'Internal server error' });
 	}
 };
@@ -285,7 +286,7 @@ const dgtTransferValidation = async (
 
 		next();
 	} catch (error) {
-		console.error('Error in DGT transfer validation:', error);
+		logger.error('Error in DGT transfer validation:', error);
 		res.status(500).json({ success: false, message: 'Internal server error' });
 	}
 };
@@ -360,7 +361,7 @@ const adminDGTOperationValidation = async (
 
 		next();
 	} catch (error) {
-		console.error('Error in admin DGT operation validation:', error);
+		logger.error('Error in admin DGT operation validation:', error);
 		res.status(500).json({ success: false, message: 'Internal server error' });
 	}
 };

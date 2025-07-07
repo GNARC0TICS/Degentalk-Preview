@@ -11,6 +11,7 @@ import {
 	updateAnnouncement,
 	deactivateAnnouncement
 } from '../services/announcements.service';
+import { logger } from "../../../../../core/logger";
 
 // Removed redundant getUserId helper - use userService.getUserFromRequest(req)?.id directly
 
@@ -32,7 +33,7 @@ export async function getAnnouncementsController(req: Request, res: Response) {
 
 		return res.status(200).json(announcements);
 	} catch (error) {
-		console.error('Error fetching announcements:', error);
+		logger.error('Error fetching announcements:', error);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 }
@@ -45,7 +46,7 @@ export async function getAllAnnouncementsController(req: Request, res: Response)
 		const announcements = await getAllAnnouncements();
 		return res.status(200).json(announcements);
 	} catch (error) {
-		console.error('Error fetching all announcements:', error);
+		logger.error('Error fetching all announcements:', error);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 }
@@ -68,7 +69,7 @@ export async function getAnnouncementByIdController(req: Request, res: Response)
 
 		return res.status(200).json(announcement);
 	} catch (error) {
-		console.error('Error fetching announcement:', error);
+		logger.error('Error fetching announcement:', error);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 }
@@ -94,7 +95,7 @@ export async function createAnnouncementController(req: Request, res: Response) 
 		if (error.name === 'ZodError') {
 			return res.status(400).json({ message: 'Invalid announcement data', errors: error.errors });
 		}
-		console.error('Error creating announcement:', error);
+		logger.error('Error creating announcement:', error);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 }
@@ -121,7 +122,7 @@ export async function updateAnnouncementController(req: Request, res: Response) 
 
 		return res.status(200).json(updatedAnnouncement);
 	} catch (error) {
-		console.error('Error updating announcement:', error);
+		logger.error('Error updating announcement:', error);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 }
@@ -144,7 +145,7 @@ export async function deactivateAnnouncementController(req: Request, res: Respon
 
 		return res.status(200).json({ message: 'Announcement deactivated successfully' });
 	} catch (error) {
-		console.error('Error deactivating announcement:', error);
+		logger.error('Error deactivating announcement:', error);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 }

@@ -340,7 +340,7 @@ export class BackupScheduleService {
 			try {
 				await this.processDueSchedules();
 			} catch (error) {
-				console.error('Error processing backup schedules:', error);
+				logger.error('Error processing backup schedules:', error);
 			}
 		}, 60 * 1000); // 1 minute
 
@@ -413,7 +413,7 @@ export class BackupScheduleService {
 
 				logger.info(`Scheduled backup completed: ${schedule.name}, next run: ${nextRun}`);
 			} catch (error) {
-				console.error(`Scheduled backup failed: ${schedule.name}`, error);
+				logger.error(`Scheduled backup failed: ${schedule.name}`, error);
 
 				// Update failure count and error
 				await db
@@ -496,7 +496,7 @@ export class BackupScheduleService {
 				await backupService.deleteBackup(backup.id, schedule.createdBy);
 			}
 		} catch (error) {
-			console.warn(`Failed to cleanup old backups for schedule ${schedule.name}:`, error);
+			logger.warn(`Failed to cleanup old backups for schedule ${schedule.name}:`, error);
 		}
 	}
 

@@ -156,10 +156,7 @@ export class UploadService {
 				// Catch DegenUploadError from storageService
 				throw err;
 			}
-			console.error(
-				`UploadService: Error creating presigned URL for ${relativePath} via storageService:`,
-				err
-			);
+			logger.error(`UploadService: Error creating presigned URL for ${relativePath} via storageService:`, err);
 			const statusCode =
 				typeof err === 'object' &&
 				err !== null &&
@@ -197,9 +194,7 @@ export class UploadService {
 				relativePath.startsWith('stickers/') || relativePath.startsWith('packs/');
 
 			if (!isValidStickerPath) {
-				console.error(
-					`UploadService: Invalid sticker path structure. Path ${relativePath} does not match expected sticker patterns.`
-				);
+				logger.error(`UploadService: Invalid sticker path structure. Path ${relativePath} does not match expected sticker patterns.`);
 				throw new DegenUploadError(
 					`Invalid sticker upload path: ${relativePath}. Sticker files must be in stickers/ or packs/ directories.`,
 					400
@@ -209,9 +204,7 @@ export class UploadService {
 			// Original user folder security check for avatars/banners
 			const expectedUserFolder = `users/${userId}/`;
 			if (!relativePath.startsWith(expectedUserFolder)) {
-				console.error(
-					`UploadService: Security check failed. User ${userId} trying to confirm path ${relativePath} not matching their folder.`
-				);
+				logger.error(`UploadService: Security check failed. User ${userId} trying to confirm path ${relativePath} not matching their folder.`);
 				throw new DegenUploadError(
 					`Hold your horses, degenerate! That path (${relativePath}) ain't yours to confirm. Nice try, script kiddie.`,
 					403
@@ -223,9 +216,7 @@ export class UploadService {
 			const fileExists = await storageService.verifyFileExists(bucketName, relativePath);
 
 			if (!fileExists) {
-				console.warn(
-					`UploadService: File not found in storage at path ${relativePath} during confirmation for user ${userId}.`
-				);
+				logger.warn(`UploadService: File not found in storage at path ${relativePath} during confirmation for user ${userId}.`);
 				throw new DegenUploadError(
 					`We checked the blockchain (our storage, lol) and your file at ${relativePath} is pure vaporware. Upload it first, genius.`,
 					404
@@ -245,10 +236,7 @@ export class UploadService {
 				// Catch DegenUploadError from storageService
 				throw err;
 			}
-			console.error(
-				`UploadService: Unexpected error in confirmUpload for path ${relativePath} (user ${userId}):`,
-				err
-			);
+			logger.error(`UploadService: Unexpected error in confirmUpload for path ${relativePath} (user ${userId}):`, err);
 			const statusCode =
 				typeof err === 'object' &&
 				err !== null &&
@@ -300,10 +288,7 @@ export class UploadService {
 			if (err instanceof DegenUploadError) {
 				throw err;
 			}
-			console.error(
-				`UploadService: Error deleting file ${bucketName}/${relativePath} by admin ${adminId}:`,
-				err
-			);
+			logger.error(`UploadService: Error deleting file ${bucketName}/${relativePath} by admin ${adminId}:`, err);
 			throw new DegenUploadError(
 				`Failed to delete file ${relativePath}. Storage service error.`,
 				500

@@ -121,7 +121,7 @@ app.use(traceMiddleware);
 
 			startupLog(`Express error handler caught: ${err.message}`, 'error');
 			if (err.stack) {
-				console.error(err.stack);
+				logger.error(err.stack);
 			}
 
 			res.status(status).json({ message });

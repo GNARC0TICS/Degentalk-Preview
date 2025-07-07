@@ -2,6 +2,7 @@ import { db } from '@db'; // Adjust path to your db instance
 import { products } from '@schema'; // Adjust path to your schema
 import { eq, desc, and } from 'drizzle-orm';
 import { ShopTransformer } from '../../transformers/shop.transformer';
+import { logger } from "../../../../core/logger";
 
 export const shopAdminController = {
 	// List all products
@@ -63,7 +64,7 @@ export const shopAdminController = {
 				.returning();
 			res.status(201).json(newProduct[0]);
 		} catch (error) {
-			console.error('Error creating product:', error);
+			logger.error('Error creating product:', error);
 			res.status(500).json({ message: 'Error creating product', error: error.message });
 		}
 	},
@@ -86,7 +87,7 @@ export const shopAdminController = {
 			
 			res.json(transformedProduct);
 		} catch (error) {
-			console.error('Error fetching product by ID:', error);
+			logger.error('Error fetching product by ID:', error);
 			res.status(500).json({ message: 'Error fetching product by ID', error: error.message });
 		}
 	},
@@ -127,7 +128,7 @@ export const shopAdminController = {
 			
 			res.json(transformedProduct);
 		} catch (error) {
-			console.error('Error updating product:', error);
+			logger.error('Error updating product:', error);
 			res.status(500).json({ message: 'Error updating product', error: error.message });
 		}
 	},
@@ -149,7 +150,7 @@ export const shopAdminController = {
 				.status(200)
 				.json({ message: 'Product archived successfully', product: deletedProduct[0] });
 		} catch (error) {
-			console.error('Error deleting product:', error);
+			logger.error('Error deleting product:', error);
 			res.status(500).json({ message: 'Error deleting product', error: error.message });
 		}
 	}

@@ -41,8 +41,8 @@ async function testSimpleThreadQuery() {
 			logger.info(`- Thread: ${row.threads.title}, User: ${row.users?.username || 'No user'}`);
 		});
 	} catch (error) {
-		console.error('Error in test:', error.message);
-		console.error('Stack:', error.stack);
+		logger.error('Error in test:', error.message);
+		logger.error('Stack:', error.stack);
 	}
 }
 

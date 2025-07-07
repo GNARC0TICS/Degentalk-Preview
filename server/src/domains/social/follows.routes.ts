@@ -4,6 +4,7 @@ import type { EntityId } from '@shared/types';
 import { FollowsService } from './follows.service';
 import { requireAuth } from '../../../middleware/auth';
 import { z } from 'zod';
+import { logger } from "../../core/logger";
 
 const router = Router();
 
@@ -76,7 +77,7 @@ router.post('/', requireAuth, async (req, res) => {
 
 		res.status(201).json(result);
 	} catch (error) {
-		console.error('Error following user:', error);
+		logger.error('Error following user:', error);
 		if (error instanceof Error) {
 			res.status(400).json({ error: error.message });
 		} else {
@@ -98,7 +99,7 @@ router.delete('/', requireAuth, async (req, res) => {
 
 		res.json({ success: true });
 	} catch (error) {
-		console.error('Error unfollowing user:', error);
+		logger.error('Error unfollowing user:', error);
 		if (error instanceof Error) {
 			res.status(400).json({ error: error.message });
 		} else {
@@ -127,7 +128,7 @@ router.get('/following', requireAuth, async (req, res) => {
 			}
 		});
 	} catch (error) {
-		console.error('Error fetching following list:', error);
+		logger.error('Error fetching following list:', error);
 		res.status(500).json({ error: 'Failed to fetch following list' });
 	}
 });
@@ -152,7 +153,7 @@ router.get('/followers', requireAuth, async (req, res) => {
 			}
 		});
 	} catch (error) {
-		console.error('Error fetching followers list:', error);
+		logger.error('Error fetching followers list:', error);
 		res.status(500).json({ error: 'Failed to fetch followers list' });
 	}
 });
@@ -168,7 +169,7 @@ router.get('/counts', requireAuth, async (req, res) => {
 
 		res.json(counts);
 	} catch (error) {
-		console.error('Error fetching follow counts:', error);
+		logger.error('Error fetching follow counts:', error);
 		res.status(500).json({ error: 'Failed to fetch follow counts' });
 	}
 });
@@ -186,7 +187,7 @@ router.get('/check/:userId', requireAuth, async (req, res) => {
 
 		res.json({ isFollowing });
 	} catch (error) {
-		console.error('Error checking follow status:', error);
+		logger.error('Error checking follow status:', error);
 		res.status(500).json({ error: 'Failed to check follow status' });
 	}
 });
@@ -202,7 +203,7 @@ router.get('/requests', requireAuth, async (req, res) => {
 
 		res.json({ requests });
 	} catch (error) {
-		console.error('Error fetching follow requests:', error);
+		logger.error('Error fetching follow requests:', error);
 		res.status(500).json({ error: 'Failed to fetch follow requests' });
 	}
 });
@@ -224,7 +225,7 @@ router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
 
 		res.json(result);
 	} catch (error) {
-		console.error('Error responding to follow request:', error);
+		logger.error('Error responding to follow request:', error);
 		if (error instanceof Error) {
 			res.status(400).json({ error: error.message });
 		} else {
@@ -249,7 +250,7 @@ router.get('/whales', requireAuth, async (req, res) => {
 
 		res.json({ whales });
 	} catch (error) {
-		console.error('Error fetching whale candidates:', error);
+		logger.error('Error fetching whale candidates:', error);
 		res.status(500).json({ error: 'Failed to fetch whale candidates' });
 	}
 });
@@ -267,7 +268,7 @@ router.get('/activity', requireAuth, async (req, res) => {
 
 		res.json(activity);
 	} catch (error) {
-		console.error('Error fetching following activity:', error);
+		logger.error('Error fetching following activity:', error);
 		res.status(500).json({ error: 'Failed to fetch following activity' });
 	}
 });
@@ -285,7 +286,7 @@ router.get('/search', requireAuth, async (req, res) => {
 
 		res.json({ users });
 	} catch (error) {
-		console.error('Error searching users to follow:', error);
+		logger.error('Error searching users to follow:', error);
 		res.status(500).json({ error: 'Failed to search users' });
 	}
 });
@@ -301,7 +302,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 
 		res.json(preferences);
 	} catch (error) {
-		console.error('Error fetching follow preferences:', error);
+		logger.error('Error fetching follow preferences:', error);
 		res.status(500).json({ error: 'Failed to fetch preferences' });
 	}
 });
@@ -319,7 +320,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
 
 		res.json(updatedPrefs[0]);
 	} catch (error) {
-		console.error('Error updating follow preferences:', error);
+		logger.error('Error updating follow preferences:', error);
 		res.status(500).json({ error: 'Failed to update preferences' });
 	}
 });
@@ -342,7 +343,7 @@ router.put('/:userId/notifications', requireAuth, async (req, res) => {
 
 		res.json(result);
 	} catch (error) {
-		console.error('Error updating follow notification settings:', error);
+		logger.error('Error updating follow notification settings:', error);
 		if (error instanceof Error) {
 			res.status(400).json({ error: error.message });
 		} else {

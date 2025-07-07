@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import { xpService } from '../../xp/xp.service';
 import { XP_ACTION } from '../../xp/xp-actions';
 import { FrameId } from "@shared/types";
+import { logger } from "../../core/logger";
 
 class FrameEquipService {
 	async userOwnsFrame(userId: string, frameId: FrameId): Promise<boolean> {
@@ -27,7 +28,7 @@ class FrameEquipService {
 		try {
 			await xpService.awardXp(userId as unknown as number, XP_ACTION.FRAME_EQUIPPED, { frameId });
 		} catch (err) {
-			console.error('Failed to award XP for frame equip', err);
+			logger.error('Failed to award XP for frame equip', err);
 		}
 	}
 

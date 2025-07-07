@@ -18,6 +18,7 @@ import { join, dirname } from 'path';
 import { mkdirSync } from 'fs';
 import { z } from 'zod';
 import type { BackupId } from '@shared/types';
+import { logger } from "../../../../core/logger";
 
 // Validation schemas
 export const createBackupSchema = z.object({
@@ -116,7 +117,7 @@ export class BackupService {
 
 			// Start backup process asynchronously
 			this.executeBackup(backup.id, filePath, validatedData).catch((error) => {
-				console.error(`Backup ${backup.id} failed:`, error);
+				logger.error(`Backup ${backup.id} failed:`, error);
 				this.updateBackupStatus(backup.id, 'failed', error.message);
 			});
 
@@ -279,7 +280,7 @@ export class BackupService {
 				try {
 					unlinkSync(backup.filePath);
 				} catch (fileError) {
-					console.warn(`Could not delete backup file ${backup.filePath}:`, fileError);
+					logger.warn(`Could not delete backup file ${backup.filePath}:`, fileError);
 				}
 			}
 
@@ -427,7 +428,7 @@ export class BackupService {
 			try {
 				if (existsSync(filePath)) unlinkSync(filePath);
 			} catch (cleanupError) {
-				console.warn(`Could not clean up failed backup file:`, cleanupError);
+				logger.warn(`Could not clean up failed backup file:`, cleanupError);
 			}
 
 			throw error;

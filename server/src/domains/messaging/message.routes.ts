@@ -15,6 +15,7 @@ import { getUserIdFromRequest } from '@server/src/utils/auth';
 import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware/auth.middleware';
 import { MessageTransformer } from './transformers/message.transformer';
 import { MessageService } from './message.service';
+import { logger } from "../../core/logger";
 
 const router = Router();
 
@@ -43,7 +44,7 @@ router.get('/conversations', isAuthenticated, async (req: Request, res: Response
 		
 		res.json(transformedConversations);
 	} catch (error) {
-		console.error('Error getting conversations:', error);
+		logger.error('Error getting conversations:', error);
 		res.status(500).json({ message: 'Failed to get conversations' });
 	}
 });
@@ -89,7 +90,7 @@ router.get('/conversation/:userId', isAuthenticated, async (req: Request, res: R
 
 		res.json(messageThread);
 	} catch (error) {
-		console.error('Error getting conversation messages:', error);
+		logger.error('Error getting conversation messages:', error);
 		res.status(500).json({ message: 'Failed to get conversation messages' });
 	}
 });
@@ -127,7 +128,7 @@ router.post('/send', isAuthenticated, async (req: Request, res: Response) => {
 
 		res.status(201).json(transformedMessage);
 	} catch (error) {
-		console.error('Error sending message:', error);
+		logger.error('Error sending message:', error);
 		if (error instanceof z.ZodError) {
 			return res.status(400).json({ message: 'Invalid message data', errors: error.errors });
 		}
@@ -153,7 +154,7 @@ router.post('/mark-read/:userId', isAuthenticated, async (req: Request, res: Res
 
 		res.json({ success: true, message: 'Messages marked as read' });
 	} catch (error) {
-		console.error('Error marking messages as read:', error);
+		logger.error('Error marking messages as read:', error);
 		res.status(500).json({ message: 'Failed to mark messages as read' });
 	}
 });
@@ -176,7 +177,7 @@ router.delete('/conversation/:userId', isAuthenticated, async (req: Request, res
 
 		res.json({ success: true, message: 'Conversation deleted' });
 	} catch (error) {
-		console.error('Error deleting conversation:', error);
+		logger.error('Error deleting conversation:', error);
 		res.status(500).json({ message: 'Failed to delete conversation' });
 	}
 });
@@ -194,7 +195,7 @@ router.get('/unread-count', isAuthenticated, async (req: Request, res: Response)
 
 		res.json({ total });
 	} catch (error) {
-		console.error('Error getting unread count:', error);
+		logger.error('Error getting unread count:', error);
 		res.status(500).json({ message: 'Failed to get unread message count' });
 	}
 });
@@ -218,7 +219,7 @@ router.put('/message/:messageId', isAuthenticated, async (req: Request, res: Res
 
 		res.json({ success: true, message: 'Message edited successfully' });
 	} catch (error) {
-		console.error('Error editing message:', error);
+		logger.error('Error editing message:', error);
 		if (error instanceof z.ZodError) {
 			return res.status(400).json({ message: 'Invalid message data', errors: error.errors });
 		}
@@ -243,7 +244,7 @@ router.delete('/message/:messageId', isAuthenticated, async (req: Request, res: 
 
 		res.json({ success: true, message: 'Message deleted successfully' });
 	} catch (error) {
-		console.error('Error deleting message:', error);
+		logger.error('Error deleting message:', error);
 		if (error instanceof Error) {
 			return res.status(400).json({ message: error.message });
 		}
@@ -275,7 +276,7 @@ router.get('/admin/messages', isAdminOrModerator, async (req: Request, res: Resp
 			limit: parseInt(limit as string)
 		});
 	} catch (error) {
-		console.error('Error getting messages for moderation:', error);
+		logger.error('Error getting messages for moderation:', error);
 		res.status(500).json({ message: 'Failed to get messages for moderation' });
 	}
 });

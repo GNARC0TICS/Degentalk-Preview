@@ -73,7 +73,7 @@ export class WalletConfigService {
 			configCache.set(config);
 			return config;
 		} catch (error) {
-			console.error('Error loading wallet config, using defaults:', error);
+			logger.error('Error loading wallet config, using defaults:', error);
 			return this.getDefaultConfig();
 		}
 	}
@@ -109,7 +109,7 @@ export class WalletConfigService {
 
 			logger.info(`Wallet config updated: ${key} = ${value}`);
 		} catch (error) {
-			console.error('Error updating wallet config:', error);
+			logger.error('Error updating wallet config:', error);
 			throw new Error(`Failed to update wallet configuration: ${error.message}`);
 		}
 	}
@@ -148,7 +148,7 @@ export class WalletConfigService {
 
 			logger.info(`Wallet config batch updated: ${Object.keys(updates).length} settings`);
 		} catch (error) {
-			console.error('Error updating multiple wallet configs:', error);
+			logger.error('Error updating multiple wallet configs:', error);
 			throw new Error(`Failed to update wallet configurations: ${error.message}`);
 		}
 	}
@@ -169,7 +169,7 @@ export class WalletConfigService {
 
 			logger.info('Wallet config reset to defaults');
 		} catch (error) {
-			console.error('Error resetting wallet config:', error);
+			logger.error('Error resetting wallet config:', error);
 			throw new Error(`Failed to reset wallet configuration: ${error.message}`);
 		}
 	}
@@ -242,7 +242,7 @@ export class WalletConfigService {
 				}
 			}
 		} catch (error) {
-			console.error('Error loading wallet settings from database:', error);
+			logger.error('Error loading wallet settings from database:', error);
 			// Return defaults if database load fails
 		}
 
@@ -272,7 +272,7 @@ export class WalletConfigService {
 				overrides[setting.key] = JSON.parse(setting.value);
 			}
 		} catch (error) {
-			console.error('Error loading config overrides:', error);
+			logger.error('Error loading config overrides:', error);
 		}
 
 		return overrides;
@@ -343,7 +343,7 @@ export class WalletConfigService {
 
 			logger.info('Wallet configuration updated successfully');
 		} catch (error) {
-			console.error('Error updating wallet config:', error);
+			logger.error('Error updating wallet config:', error);
 			throw new Error(`Failed to update wallet configuration: ${error.message}`);
 		}
 	}

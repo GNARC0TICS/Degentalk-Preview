@@ -22,7 +22,7 @@ logger.info(`[LOAD_ENV] Attempting to load env file from: ${envLocalPath}`);
 const envLocalResult = dotenv.config({ path: envLocalPath });
 
 if (envLocalResult.error) {
-	console.error(`[LOAD_ENV] Error loading ${envLocalPath}:`, envLocalResult.error);
+	logger.error(`[LOAD_ENV] Error loading ${envLocalPath}:`, envLocalResult.error);
 } else {
 	if (envLocalResult.parsed) {
 		logger.info(`[LOAD_ENV] Successfully parsed ${envLocalPath}. Keys: ${Object.keys(envLocalResult.parsed).join(', ')}`);
@@ -38,7 +38,7 @@ const dotEnvResult = dotenv.config({ path: dotEnvPath }); // Explicitly path to 
 if (dotEnvResult.error) {
 	// It's okay if .env doesn't exist, as env.local might be the primary
 	if ((dotEnvResult.error as any).code !== 'ENOENT') {
-		console.error(`[LOAD_ENV] Error loading ${dotEnvPath}:`, dotEnvResult.error);
+		logger.error(`[LOAD_ENV] Error loading ${dotEnvPath}:`, dotEnvResult.error);
 	} else {
 		logger.info(`[LOAD_ENV] ${dotEnvPath} not found, which is acceptable if env.local is used primarily.`);
 	}
@@ -55,5 +55,5 @@ logger.info(`[LOAD_ENV] DATABASE_URL after all attempts: ${process.env.DATABASE_
 logger.info(`[LOAD_ENV] DATABASE_PROVIDER after all attempts: ${process.env.DATABASE_PROVIDER}`);
 
 if (!process.env.DATABASE_URL) {
-	console.error('[LOAD_ENV] CRITICAL: DATABASE_URL is still not set after loading attempts!');
+	logger.error('[LOAD_ENV] CRITICAL: DATABASE_URL is still not set after loading attempts!');
 }

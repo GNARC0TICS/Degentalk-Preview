@@ -9,9 +9,7 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
-	console.error(
-		'❌ STORAGE SERVICE: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is missing. Storage operations will fail.'
-	);
+	logger.error('❌ STORAGE SERVICE: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is missing. Storage operations will fail.');
 }
 const supabase: SupabaseClient = createClient(supabaseUrl!, supabaseServiceKey!);
 
@@ -169,14 +167,14 @@ class SupabaseStorageService implements IStorageService {
 			const { data, error } = await supabase.storage.from(bucket).createSignedUploadUrl(targetPath);
 
 			if (error) {
-				console.error(`Supabase createSignedUploadUrl error for ${bucket}/${targetPath}:`, error);
+				logger.error(`Supabase createSignedUploadUrl error for ${bucket}/${targetPath}:`, error);
 				throw new DegenUploadError(
 					`Supabase ghosted us on the presigned URL for ${targetPath}. Sadge.`,
 					503
 				);
 			}
 			if (!data || !data.signedUrl) {
-				console.error(`No signedUrl in Supabase response for ${bucket}/${targetPath}:`, data);
+				logger.error(`No signedUrl in Supabase response for ${bucket}/${targetPath}:`, data);
 				throw new DegenUploadError(
 					`Supabase returned empty handed for ${targetPath}. Probably a server rug.`,
 					500
@@ -195,7 +193,7 @@ class SupabaseStorageService implements IStorageService {
 			};
 		} catch (err) {
 			if (err instanceof DegenUploadError) throw err;
-			console.error(`Unexpected error in getPresignedUploadUrl for ${targetPath}:`, err);
+			logger.error(`Unexpected error in getPresignedUploadUrl for ${targetPath}:`, err);
 			throw new DegenUploadError(
 				`Server's brain farted while getting upload URL for ${targetPath}. Try again maybe?`,
 				500
@@ -205,7 +203,7 @@ class SupabaseStorageService implements IStorageService {
 
 	getPublicUrl(bucket: string, relativePath: string): string {
 		if (!supabaseUrl) {
-			console.error('Supabase URL not configured, cannot get public URL.');
+			logger.error('Supabase URL not configured, cannot get public URL.');
 			// Return a non-functional placeholder or throw, depending on desired strictness
 			return `error://supabase_url_not_configured/${bucket}/${relativePath}`;
 		}
@@ -214,9 +212,7 @@ class SupabaseStorageService implements IStorageService {
 		if (!data || !data.publicUrl) {
 			// This can happen if the object doesn't exist or bucket isn't public
 			// For robustness, construct a predictable URL, assuming public access is set up
-			console.warn(
-				`Could not retrieve public URL directly for ${bucket}/${relativePath}. Constructing fallback.`
-			);
+			logger.warn(`Could not retrieve public URL directly for ${bucket}/${relativePath}. Constructing fallback.`);
 			return `${supabaseUrl}/storage/v1/object/public/${bucket}/${relativePath}`;
 		}
 		return data.publicUrl;
@@ -224,7 +220,7 @@ class SupabaseStorageService implements IStorageService {
 
 	async verifyFileExists(bucket: string, relativePath: string): Promise<boolean> {
 		if (!supabaseUrl || !supabaseServiceKey) {
-			console.error('Supabase creds not set, cannot verify file.');
+			logger.error('Supabase creds not set, cannot verify file.');
 			return false; // Or throw
 		}
 		try {
@@ -240,12 +236,12 @@ class SupabaseStorageService implements IStorageService {
 			});
 
 			if (error) {
-				console.error(`Error verifying file ${bucket}/${relativePath}:`, error);
+				logger.error(`Error verifying file ${bucket}/${relativePath}:`, error);
 				return false; // Or throw a DegenUploadError
 			}
 			return data !== null && data.length > 0 && data[0].name === fileName;
 		} catch (err) {
-			console.error(`Unexpected error verifying file ${bucket}/${relativePath}:`, err);
+			logger.error(`Unexpected error verifying file ${bucket}/${relativePath}:`, err);
 			return false; // Or throw
 		}
 	}
@@ -255,7 +251,7 @@ class SupabaseStorageService implements IStorageService {
 	 */
 	async deleteFile(bucket: string, relativePath: string): Promise<boolean> {
 		if (!supabaseUrl || !supabaseServiceKey) {
-			console.error('Supabase creds not set, cannot delete file.');
+			logger.error('Supabase creds not set, cannot delete file.');
 			throw new DegenUploadError(
 				'Storage service misconfigured for file deletion. Check your environment setup.',
 				500
@@ -266,7 +262,7 @@ class SupabaseStorageService implements IStorageService {
 			const { error } = await supabase.storage.from(bucket).remove([relativePath]);
 
 			if (error) {
-				console.error(`Error deleting file ${bucket}/${relativePath}:`, error);
+				logger.error(`Error deleting file ${bucket}/${relativePath}:`, error);
 				throw new DegenUploadError(
 					`Failed to delete file ${relativePath} from ${bucket}. Storage service error: ${error.message}`,
 					500
@@ -276,14 +272,14 @@ class SupabaseStorageService implements IStorageService {
 			// Verify deletion
 			const stillExists = await this.verifyFileExists(bucket, relativePath);
 			if (stillExists) {
-				console.warn(`File ${bucket}/${relativePath} still exists after deletion attempt`);
+				logger.warn(`File ${bucket}/${relativePath} still exists after deletion attempt`);
 				return false;
 			}
 
 			return true;
 		} catch (err) {
 			if (err instanceof DegenUploadError) throw err;
-			console.error(`Unexpected error deleting file ${bucket}/${relativePath}:`, err);
+			logger.error(`Unexpected error deleting file ${bucket}/${relativePath}:`, err);
 			throw new DegenUploadError(
 				`Something went wrong deleting ${relativePath}. Storage service might be having issues.`,
 				500
@@ -301,9 +297,7 @@ class GoogleCloudStorageService implements IStorageService {
 	constructor() {
 		// Initialize GCS client here using GOOGLE_APPLICATION_CREDENTIALS or other auth
 		// eslint-disable-next-line no-console
-		console.warn(
-			'GCS_STORAGE_SERVICE: Initialized (STUB). Implement actual GCS logic if switching providers.'
-		);
+		logger.warn('GCS_STORAGE_SERVICE: Initialized (STUB). Implement actual GCS logic if switching providers.');
 	}
 
 	async getPresignedUploadUrl(params: GetPresignedUploadUrlParams): Promise<PresignedUrlInfo> {

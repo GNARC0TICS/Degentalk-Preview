@@ -16,7 +16,7 @@ const runMigration = async () => {
   const connectionString = process.env.DATABASE_URL;
   
   if (!connectionString) {
-    console.error("DATABASE_URL environment variable is not set");
+    logger.error("DATABASE_URL environment variable is not set");
     process.exit(1);
   }
   
@@ -68,7 +68,7 @@ const runMigration = async () => {
     logger.info("Successfully created dgt_purchase_orders table");
     
   } catch (error) {
-    console.error("Error executing migration:", error);
+    logger.error("Error executing migration:", error);
     process.exit(1);
   } finally {
     await pool.end();

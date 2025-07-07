@@ -50,6 +50,23 @@ export type MessageId = Id<'MessageId'>;
 export type AnnouncementId = Id<'AnnouncementId'>;
 export type MentionId = Id<'MentionId'>;
 
+// Admin & moderation IDs
+export type AdminUserId = Id<'AdminUserId'>;
+export type ModeratorId = Id<'ModeratorId'>;
+export type BanId = Id<'BanId'>;
+export type WarningId = Id<'WarningId'>;
+export type PermissionId = Id<'PermissionId'>;
+export type RoleId = Id<'RoleId'>;
+
+// Content & cosmetics IDs
+export type DraftId = Id<'DraftId'>;
+export type EmojiPackId = Id<'EmojiPackId'>;
+export type CosmeticId = Id<'CosmeticId'>;
+export type PackageId = Id<'PackageId'>;
+export type InventoryItemId = Id<'InventoryItemId'>;
+export type TemplateId = Id<'TemplateId'>;
+export type SubscriptionId = Id<'SubscriptionId'>;
+
 // Economy-specific IDs
 export type CryptoWalletId = Id<'CryptoWalletId'>;
 export type RainEventId = Id<'RainEventId'>;

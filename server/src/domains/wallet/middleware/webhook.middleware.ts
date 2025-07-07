@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
 import type { WebhookMiddleware } from './types';
+import { logger } from "../../../core/logger";
 
 /**
  * Webhook Validation Middleware
@@ -35,7 +36,7 @@ const validateCCPaymentWebhook = async (
 		// Get app secret from environment
 		const appSecret = process.env.CCPAYMENT_APP_SECRET;
 		if (!appSecret) {
-			console.error('CCPAYMENT_APP_SECRET not configured');
+			logger.error('CCPAYMENT_APP_SECRET not configured');
 			res.status(500).json({
 				success: false,
 				message: 'Webhook validation not configured',
@@ -72,11 +73,11 @@ const validateCCPaymentWebhook = async (
 			.digest('hex');
 
 		if (signature !== expectedSignature) {
-			console.error('Webhook signature validation failed', {
-				received: signature,
-				expected: expectedSignature,
-				payload: payloadString.substring(0, 100) + '...'
-			});
+			logger.error('Webhook signature validation failed', {
+            				received: signature,
+            				expected: expectedSignature,
+            				payload: payloadString.substring(0, 100) + '...'
+            			});
 
 			res.status(401).json({
 				success: false,
@@ -89,7 +90,7 @@ const validateCCPaymentWebhook = async (
 		// Signature is valid, proceed
 		next();
 	} catch (error) {
-		console.error('Error validating webhook:', error);
+		logger.error('Error validating webhook:', error);
 		res.status(500).json({
 			success: false,
 			message: 'Webhook validation error',
@@ -149,7 +150,7 @@ const rateLimitWebhooks = async (
 
 		next();
 	} catch (error) {
-		console.error('Error in webhook rate limiting:', error);
+		logger.error('Error in webhook rate limiting:', error);
 		res.status(500).json({
 			success: false,
 			message: 'Webhook rate limiting error',
@@ -236,7 +237,7 @@ const validateWebhookPayload = (req: Request, res: Response, next: NextFunction)
 
 		next();
 	} catch (error) {
-		console.error('Error validating webhook payload:', error);
+		logger.error('Error validating webhook payload:', error);
 		res.status(500).json({
 			success: false,
 			message: 'Webhook payload validation error',

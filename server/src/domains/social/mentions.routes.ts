@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { MentionsService } from './mentions.service';
 import { requireAuth } from '../../../middleware/auth';
 import { z } from 'zod';
+import { logger } from "../../core/logger";
 
 const router = Router();
 
@@ -54,7 +55,7 @@ router.get('/', requireAuth, async (req, res) => {
 			}
 		});
 	} catch (error) {
-		console.error('Error fetching mentions:', error);
+		logger.error('Error fetching mentions:', error);
 		res.status(500).json({ error: 'Failed to fetch mentions' });
 	}
 });
@@ -70,7 +71,7 @@ router.get('/unread-count', requireAuth, async (req, res) => {
 
 		res.json({ unreadCount: count });
 	} catch (error) {
-		console.error('Error fetching unread mention count:', error);
+		logger.error('Error fetching unread mention count:', error);
 		res.status(500).json({ error: 'Failed to fetch unread count' });
 	}
 });
@@ -88,7 +89,7 @@ router.post('/mark-read', requireAuth, async (req, res) => {
 
 		res.json({ success: true });
 	} catch (error) {
-		console.error('Error marking mentions as read:', error);
+		logger.error('Error marking mentions as read:', error);
 		res.status(500).json({ error: 'Failed to mark mentions as read' });
 	}
 });
@@ -104,7 +105,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 
 		res.json(preferences);
 	} catch (error) {
-		console.error('Error fetching mention preferences:', error);
+		logger.error('Error fetching mention preferences:', error);
 		res.status(500).json({ error: 'Failed to fetch preferences' });
 	}
 });
@@ -122,7 +123,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
 
 		res.json(updatedPrefs[0]);
 	} catch (error) {
-		console.error('Error updating mention preferences:', error);
+		logger.error('Error updating mention preferences:', error);
 		res.status(500).json({ error: 'Failed to update preferences' });
 	}
 });
@@ -139,7 +140,7 @@ router.get('/search-users', requireAuth, async (req, res) => {
 
 		res.json({ users });
 	} catch (error) {
-		console.error('Error searching users for mentions:', error);
+		logger.error('Error searching users for mentions:', error);
 		res.status(500).json({ error: 'Failed to search users' });
 	}
 });

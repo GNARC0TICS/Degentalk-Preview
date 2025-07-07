@@ -5,6 +5,7 @@ import { referralSources } from '@schema/system/referralSources';
 import { userReferrals } from '@schema/system/userReferrals';
 import { users } from '@schema/user/users';
 import { EntityId } from "@shared/types";
+import { logger } from "../../../../core/logger";
 
 /**
  * Service for managing referral sources and user referrals
@@ -86,7 +87,7 @@ export class ReferralsService {
 			return result[0] || null;
 		} catch (error) {
 			// Log error but don't throw, as we want to silently handle duplicates
-			console.error('Error recording user referral:', error);
+			logger.error('Error recording user referral:', error);
 			return null;
 		}
 	}

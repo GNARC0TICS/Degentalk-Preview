@@ -28,7 +28,7 @@ export async function hashPassword(password: string): Promise<string> {
  */
 export async function comparePasswords(supplied: string, stored: string): Promise<boolean> {
 	if (!stored) {
-		console.warn('No stored password provided');
+		logger.warn('No stored password provided');
 		return false;
 	}
 
@@ -42,7 +42,7 @@ export async function comparePasswords(supplied: string, stored: string): Promis
 	// Handle mock password for development (from seeding)
 	if (stored === 'mocked_hash') {
 		// For development users with mocked passwords, accept any password
-		console.warn('Using mocked password for development user');
+		logger.warn('Using mocked password for development user');
 		return true;
 	}
 
@@ -50,7 +50,7 @@ export async function comparePasswords(supplied: string, stored: string): Promis
 	if (stored.includes('.')) {
 		const [hashed, salt] = stored.split('.');
 		if (!hashed || !salt) {
-			console.warn('Invalid scrypt password format - missing hash or salt');
+			logger.warn('Invalid scrypt password format - missing hash or salt');
 			return false;
 		}
 
@@ -59,7 +59,7 @@ export async function comparePasswords(supplied: string, stored: string): Promis
 		return timingSafeEqual(hashedBuf, suppliedBuf);
 	}
 
-	console.warn('Unknown password format - neither bcrypt nor scrypt');
+	logger.warn('Unknown password format - neither bcrypt nor scrypt');
 	return false;
 }
 

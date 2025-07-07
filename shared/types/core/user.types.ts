@@ -253,4 +253,11 @@ export function isUserInventory(value: unknown): value is UserInventory {
 export type UserWithWallet = User & { wallet: UserWallet };
 export type UserWithStats = User & { stats: UserStats };
 export type PublicUser = Omit<User, 'email' | 'emailVerified' | 'settings'>;
+
+// Additional user response types for different contexts
+export type AuthenticatedUserSelf = User; // Full user data for own profile
+export type AdminUserDetail = User & { 
+  adminNotes?: string;
+  internalFlags?: string[];
+}; // Admin view with additional fields
 export type UserSummary = Pick<User, 'id' | 'username' | 'level' | 'profilePictureUrl'>;

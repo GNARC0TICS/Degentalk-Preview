@@ -14,6 +14,7 @@ import { isValidId } from '@shared/utils/id';
 
 import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware/auth.middleware';
 import { getUserIdFromRequest } from '@server/src/utils/auth';
+import { logger } from "../../core/logger";
 
 const router = Router();
 
@@ -46,7 +47,7 @@ router.get('/:userId/followers', async (req: Request, res: Response) => {
 
 		return res.status(200).json(followers);
 	} catch (error) {
-		console.error('Error fetching followers:', error);
+		logger.error('Error fetching followers:', error);
 		return res.status(500).json({ message: 'Error fetching followers' });
 	}
 });
@@ -80,7 +81,7 @@ router.get('/:userId/following', async (req: Request, res: Response) => {
 
 		return res.status(200).json(following);
 	} catch (error) {
-		console.error('Error fetching following:', error);
+		logger.error('Error fetching following:', error);
 		return res.status(500).json({ message: 'Error fetching following' });
 	}
 });
@@ -147,7 +148,7 @@ router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Respon
 			relationship: newRelationship[0]
 		});
 	} catch (error) {
-		console.error('Error following user:', error);
+		logger.error('Error following user:', error);
 		return res.status(500).json({ message: 'Error following user' });
 	}
 });
@@ -195,7 +196,7 @@ router.delete('/unfollow/:userId', isAuthenticated, async (req: Request, res: Re
 
 		return res.status(200).json({ message: 'Successfully unfollowed user' });
 	} catch (error) {
-		console.error('Error unfollowing user:', error);
+		logger.error('Error unfollowing user:', error);
 		return res.status(500).json({ message: 'Error unfollowing user' });
 	}
 });
@@ -228,7 +229,7 @@ router.get('/is-following/:userId', isAuthenticated, async (req: Request, res: R
 
 		return res.status(200).json({ isFollowing: existingRelationship.length > 0 });
 	} catch (error) {
-		console.error('Error checking follow status:', error);
+		logger.error('Error checking follow status:', error);
 		return res.status(500).json({ message: 'Error checking follow status' });
 	}
 });

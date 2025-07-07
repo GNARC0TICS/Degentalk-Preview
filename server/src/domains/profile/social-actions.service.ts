@@ -86,7 +86,7 @@ export class SocialActionsService {
 				};
 			}
 		} catch (error) {
-			console.error('Error toggling follow:', error);
+			logger.error('Error toggling follow:', error);
 			return {
 				success: false,
 				action: 'follow',
@@ -256,7 +256,7 @@ export class SocialActionsService {
 					};
 			}
 		} catch (error) {
-			console.error('Error managing friend request:', error);
+			logger.error('Error managing friend request:', error);
 			return {
 				success: false,
 				action: 'friend',
@@ -340,7 +340,7 @@ export class SocialActionsService {
 				};
 			}
 		} catch (error) {
-			console.error('Error toggling block:', error);
+			logger.error('Error toggling block:', error);
 			return {
 				success: false,
 				action: 'block',
@@ -414,7 +414,7 @@ export class SocialActionsService {
 
 			return status;
 		} catch (error) {
-			console.error('Error getting relationship status:', error);
+			logger.error('Error getting relationship status:', error);
 			throw new Error('Failed to get relationship status');
 		}
 	}
@@ -438,7 +438,7 @@ export class SocialActionsService {
 				createdAt: new Date()
 			});
 		} catch (error) {
-			console.error('Error creating notification:', error);
+			logger.error('Error creating notification:', error);
 			// Don't throw - notifications are non-critical
 		}
 	}
@@ -452,7 +452,7 @@ export class SocialActionsService {
 			// For now, just log the action
 			logger.info(`Follower count update needed: ${followerId} -> ${targetId}`);
 		} catch (error) {
-			console.error('Error updating follower counts:', error);
+			logger.error('Error updating follower counts:', error);
 		}
 	}
 }

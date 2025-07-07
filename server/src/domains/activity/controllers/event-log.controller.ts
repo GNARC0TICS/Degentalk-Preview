@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { eventLogService } from '../services/event-log.service';
 import { z } from 'zod';
 import { eventTypeEnum } from '@schema/system/event_logs';
+import { logger } from "../../../core/logger";
 
 /**
  * Controller for event log endpoints
@@ -27,7 +28,7 @@ export class EventLogController {
 				data: result
 			});
 		} catch (error) {
-			console.error('Error creating event log:', error);
+			logger.error('Error creating event log:', error);
 			return res.status(400).json({
 				success: false,
 				message: error instanceof Error ? error.message : 'Failed to create event log'
@@ -79,7 +80,7 @@ export class EventLogController {
 				data: result
 			});
 		} catch (error) {
-			console.error('Error getting event logs:', error);
+			logger.error('Error getting event logs:', error);
 			return res.status(400).json({
 				success: false,
 				message: error instanceof Error ? error.message : 'Failed to get event logs'
@@ -137,7 +138,7 @@ export class EventLogController {
 				data: result
 			});
 		} catch (error) {
-			console.error('Error getting user event logs:', error);
+			logger.error('Error getting user event logs:', error);
 			return res.status(400).json({
 				success: false,
 				message: error instanceof Error ? error.message : 'Failed to get user event logs'
@@ -173,7 +174,7 @@ export class EventLogController {
 				data: result
 			});
 		} catch (error) {
-			console.error('Error getting event log:', error);
+			logger.error('Error getting event log:', error);
 			return res.status(400).json({
 				success: false,
 				message: error instanceof Error ? error.message : 'Failed to get event log'
@@ -209,7 +210,7 @@ export class EventLogController {
 				message: 'Event log deleted successfully'
 			});
 		} catch (error) {
-			console.error('Error deleting event log:', error);
+			logger.error('Error deleting event log:', error);
 			return res.status(400).json({
 				success: false,
 				message: error instanceof Error ? error.message : 'Failed to delete event log'

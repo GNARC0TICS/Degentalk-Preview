@@ -94,7 +94,7 @@ export class DGTService {
 				walletId: userWallet.id
 			};
 		} catch (error) {
-			console.error('Error getting DGT balance:', error);
+			logger.error('Error getting DGT balance:', error);
 			throw new Error('Failed to retrieve DGT balance');
 		}
 	}
@@ -168,7 +168,7 @@ export class DGTService {
 				createdAt: result.createdAt
 			};
 		} catch (error) {
-			console.error('Error crediting DGT:', error);
+			logger.error('Error crediting DGT:', error);
 			const err = error as Error;
 			throw new Error(`Failed to credit DGT: ${err.message}`);
 		}
@@ -257,7 +257,7 @@ export class DGTService {
 				createdAt: result.createdAt
 			};
 		} catch (error) {
-			console.error('Error debiting DGT:', error);
+			logger.error('Error debiting DGT:', error);
 			const err = error as Error;
 			throw new Error(`Failed to debit DGT: ${err.message}`);
 		}
@@ -347,7 +347,7 @@ export class DGTService {
 				transferId
 			};
 		} catch (error) {
-			console.error('Error transferring DGT:', error);
+			logger.error('Error transferring DGT:', error);
 			const err = error as Error;
 			throw new Error(`Failed to transfer DGT: ${err.message}`);
 		}
@@ -396,7 +396,7 @@ export class DGTService {
 				createdAt: tx.createdAt
 			}));
 		} catch (error) {
-			console.error('Error getting DGT history:', error);
+			logger.error('Error getting DGT history:', error);
 			throw new Error('Failed to retrieve DGT transaction history');
 		}
 	}
@@ -459,7 +459,7 @@ export class DGTService {
 				averageBalance
 			};
 		} catch (error) {
-			console.error('Error getting DGT analytics:', error);
+			logger.error('Error getting DGT analytics:', error);
 			throw new Error('Failed to retrieve DGT analytics');
 		}
 	}
@@ -490,7 +490,7 @@ export class DGTService {
 
 			logger.info(`DGT wallet created for user: ${userId}`);
 		} catch (error) {
-			console.error('Error creating DGT wallet:', error);
+			logger.error('Error creating DGT wallet:', error);
 			throw new Error('Failed to create DGT wallet');
 		}
 	}

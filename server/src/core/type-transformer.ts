@@ -20,6 +20,7 @@ import type {
   ConversationId,
   Id
 } from '@shared/types';
+import { logger } from "logger";
 
 // Type transformation utilities
 export class TypeTransformer {
@@ -214,7 +215,7 @@ export class TypeTransformer {
   ): boolean {
     for (const field of requiredFields) {
       if (!(field in transformed)) {
-        console.warn(`Missing required field in transformation: ${field}`);
+        logger.warn(`Missing required field in transformation: ${field}`);
         return false;
       }
     }

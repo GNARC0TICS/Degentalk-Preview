@@ -39,7 +39,7 @@ export class WebhookService {
 
 			return signature === expectedSignature;
 		} catch (error) {
-			console.error('Error verifying webhook signature:', error);
+			logger.error('Error verifying webhook signature:', error);
 			return false;
 		}
 	}
@@ -105,7 +105,7 @@ export class WebhookService {
 
 			return result;
 		} catch (error) {
-			console.error('Error processing webhook event:', error);
+			logger.error('Error processing webhook event:', error);
 			return {
 				success: false,
 				message: `Processing error: ${error instanceof Error ? error.message : 'Unknown error'}`
@@ -216,7 +216,7 @@ export class WebhookService {
 				message: `Deposit ${recordId} processed successfully`
 			};
 		} catch (error) {
-			console.error('Error handling deposit webhook:', error);
+			logger.error('Error handling deposit webhook:', error);
 			return {
 				success: false,
 				message: `Deposit processing error: ${error instanceof Error ? error.message : 'Unknown error'}`
@@ -299,7 +299,7 @@ export class WebhookService {
 				message: `Withdrawal ${recordId} processed successfully`
 			};
 		} catch (error) {
-			console.error('Error handling withdrawal webhook:', error);
+			logger.error('Error handling withdrawal webhook:', error);
 			return {
 				success: false,
 				message: `Withdrawal processing error: ${error instanceof Error ? error.message : 'Unknown error'}`
@@ -375,7 +375,7 @@ export class WebhookService {
 				message: `Internal transfer ${recordId} processed successfully`
 			};
 		} catch (error) {
-			console.error('Error handling internal transfer webhook:', error);
+			logger.error('Error handling internal transfer webhook:', error);
 			return {
 				success: false,
 				message: `Internal transfer processing error: ${error instanceof Error ? error.message : 'Unknown error'}`
@@ -458,7 +458,7 @@ export class WebhookService {
 				message: `Swap ${recordId} processed successfully`
 			};
 		} catch (error) {
-			console.error('Error handling swap webhook:', error);
+			logger.error('Error handling swap webhook:', error);
 			return {
 				success: false,
 				message: `Swap processing error: ${error instanceof Error ? error.message : 'Unknown error'}`
@@ -505,7 +505,7 @@ export class WebhookService {
 
 			return result;
 		} catch (error) {
-			console.error('Error retrying webhook:', error);
+			logger.error('Error retrying webhook:', error);
 			return {
 				success: false,
 				message: `Retry error: ${error instanceof Error ? error.message : 'Unknown error'}`
@@ -568,7 +568,7 @@ export class WebhookService {
 
 			logger.info(`DGT conversion completed: ${depositAmount} ${originalToken} → ${dgtAmount} DGT for user ${userId}`);
 		} catch (error) {
-			console.error(`Error processing DGT conversion for deposit ${recordId}:`, error);
+			logger.error(`Error processing DGT conversion for deposit ${recordId}:`, error);
 
 			// Update deposit record with conversion error
 			await db

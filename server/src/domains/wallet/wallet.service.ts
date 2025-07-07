@@ -14,6 +14,7 @@ import { UserManagementService } from './user-management.service';
 import { walletConfigService } from './wallet-config.service';
 import { dgtService } from './dgt.service';
 import type { CoinId, ActionId } from '@shared/types';
+import { logger } from "../../core/logger";
 
 /**
  * High-level Wallet Service
@@ -78,7 +79,7 @@ export class WalletService {
 							address: wallet.address
 						});
 					} catch (error) {
-						console.error(`Error getting balance for ${wallet.coinSymbol}:`, error);
+						logger.error(`Error getting balance for ${wallet.coinSymbol}:`, error);
 						// Include wallet with zero balance if API call fails
 						cryptoBalances.push({
 							coinId: wallet.coinId,
@@ -104,7 +105,7 @@ export class WalletService {
 				crypto: cryptoBalances
 			};
 		} catch (error) {
-			console.error('Error getting user balances:', error);
+			logger.error('Error getting user balances:', error);
 			throw new Error('Failed to retrieve wallet balances');
 		}
 	}
@@ -134,7 +135,7 @@ export class WalletService {
 				memo: wallet.memo || undefined
 			}));
 		} catch (error) {
-			console.error('Error getting deposit addresses:', error);
+			logger.error('Error getting deposit addresses:', error);
 			throw new Error('Failed to retrieve deposit addresses');
 		}
 	}
@@ -186,7 +187,7 @@ export class WalletService {
 
 			return recordId;
 		} catch (error) {
-			console.error('Error initiating blockchain withdrawal:', error);
+			logger.error('Error initiating blockchain withdrawal:', error);
 			throw new Error('Failed to initiate withdrawal');
 		}
 	}
@@ -237,7 +238,7 @@ export class WalletService {
 
 			return recordId;
 		} catch (error) {
-			console.error('Error initiating internal transfer:', error);
+			logger.error('Error initiating internal transfer:', error);
 			throw new Error('Failed to transfer funds');
 		}
 	}
@@ -286,7 +287,7 @@ export class WalletService {
 
 			return recordId;
 		} catch (error) {
-			console.error('Error initiating swap:', error);
+			logger.error('Error initiating swap:', error);
 			throw new Error('Failed to swap cryptocurrencies');
 		}
 	}
@@ -366,7 +367,7 @@ export class WalletService {
 				swaps
 			};
 		} catch (error) {
-			console.error('Error getting transaction history:', error);
+			logger.error('Error getting transaction history:', error);
 			throw new Error('Failed to retrieve transaction history');
 		}
 	}
@@ -396,7 +397,7 @@ export class WalletService {
 
 			return await dgtService.transferDGT(fromUserId, params.toUserId, params.amount, params.note);
 		} catch (error) {
-			console.error('Error transferring DGT:', error);
+			logger.error('Error transferring DGT:', error);
 			throw new Error(`Failed to transfer DGT: ${error.message}`);
 		}
 	}
@@ -415,7 +416,7 @@ export class WalletService {
 		try {
 			return await dgtService.getDGTHistory(userId, options);
 		} catch (error) {
-			console.error('Error getting DGT history:', error);
+			logger.error('Error getting DGT history:', error);
 			throw new Error('Failed to retrieve DGT transaction history');
 		}
 	}
@@ -460,7 +461,7 @@ export class WalletService {
 				}
 			};
 		} catch (error) {
-			console.error('Error getting wallet config:', error);
+			logger.error('Error getting wallet config:', error);
 			throw new Error('Failed to retrieve wallet configuration');
 		}
 	}
@@ -524,7 +525,7 @@ export class WalletService {
 				supportsSwap: true
 			}));
 		} catch (error) {
-			console.error('Error getting supported cryptocurrencies:', error);
+			logger.error('Error getting supported cryptocurrencies:', error);
 			throw new Error('Failed to retrieve supported cryptocurrencies');
 		}
 	}
@@ -536,7 +537,7 @@ export class WalletService {
 		try {
 			return await this.userManagementService.getOrCreateCCPaymentUser(userId);
 		} catch (error) {
-			console.error('Error ensuring CCPayment wallet:', error);
+			logger.error('Error ensuring CCPayment wallet:', error);
 			throw new Error('Failed to ensure CCPayment wallet');
 		}
 	}

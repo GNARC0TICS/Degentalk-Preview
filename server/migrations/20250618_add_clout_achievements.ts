@@ -62,7 +62,7 @@ export async function up() {
     });
     logger.info('✅ Migration applied: clout_achievements & user_clout_log');
   } catch (err) {
-    console.error('❌ Migration failed:', err);
+    logger.error('❌ Migration failed:', err);
     logger.error('Migration failed: clout_achievements & user_clout_log', { err });
     throw err;
   } finally {
@@ -81,7 +81,7 @@ export async function down() {
     });
     logger.info('✅ Reverted migration: clout_achievements & user_clout_log');
   } catch (err) {
-    console.error('❌ Revert failed:', err);
+    logger.error('❌ Revert failed:', err);
     logger.error('Revert failed: clout_achievements & user_clout_log', { err });
     throw err;
   } finally {

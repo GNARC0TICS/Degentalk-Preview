@@ -75,7 +75,7 @@ export async function up() {
     
     logger.info("Migration completed successfully");
   } catch (error) {
-    console.error("Migration failed:", error);
+    logger.error("Migration failed:", error);
     throw error;
   }
 }
@@ -96,7 +96,7 @@ export async function down() {
     
     logger.info("Rollback completed successfully");
   } catch (error) {
-    console.error("Rollback failed:", error);
+    logger.error("Rollback failed:", error);
     throw error;
   }
 } 

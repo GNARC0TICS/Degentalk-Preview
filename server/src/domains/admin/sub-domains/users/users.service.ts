@@ -12,6 +12,7 @@ import { AdminPaginationQuery } from '@shared/validators/admin';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import type { UserId } from '@shared/types';
+import { logger } from "../../../../core/logger";
 
 export class AdminUsersService {
 	/**
@@ -112,7 +113,7 @@ export class AdminUsersService {
 				pageSize
 			};
 		} catch (error) {
-			console.error('Error fetching users:', error);
+			logger.error('Error fetching users:', error);
 			throw new AdminError('Failed to fetch users', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});
@@ -178,7 +179,7 @@ export class AdminUsersService {
 			if (error instanceof AdminError) {
 				throw error;
 			}
-			console.error('Error fetching user details:', error);
+			logger.error('Error fetching user details:', error);
 			throw new AdminError('Failed to fetch user details', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});
@@ -239,7 +240,7 @@ export class AdminUsersService {
 			if (error instanceof AdminError) {
 				throw error;
 			}
-			console.error('Error updating user:', error);
+			logger.error('Error updating user:', error);
 			throw new AdminError('Failed to update user', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});
@@ -297,7 +298,7 @@ export class AdminUsersService {
 			if (error instanceof AdminError) {
 				throw error;
 			}
-			console.error('Error creating user:', error);
+			logger.error('Error creating user:', error);
 			throw new AdminError('Failed to create user', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});
@@ -337,7 +338,7 @@ export class AdminUsersService {
 			if (error instanceof AdminError) {
 				throw error;
 			}
-			console.error('Error deleting user:', error);
+			logger.error('Error deleting user:', error);
 			throw new AdminError('Failed to delete user', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});
@@ -388,7 +389,7 @@ export class AdminUsersService {
 			if (error instanceof AdminError) {
 				throw error;
 			}
-			console.error('Error banning user:', error);
+			logger.error('Error banning user:', error);
 			throw new AdminError('Failed to ban user', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});
@@ -438,7 +439,7 @@ export class AdminUsersService {
 			if (error instanceof AdminError) {
 				throw error;
 			}
-			console.error('Error unbanning user:', error);
+			logger.error('Error unbanning user:', error);
 			throw new AdminError('Failed to unban user', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});
@@ -485,7 +486,7 @@ export class AdminUsersService {
 			if (error instanceof AdminError) {
 				throw error;
 			}
-			console.error('Error changing user role:', error);
+			logger.error('Error changing user role:', error);
 			throw new AdminError('Failed to change user role', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});

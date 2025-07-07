@@ -8,6 +8,7 @@ import {
 	walletTransactions
 } from '../../../db/schema';
 import { eq, sql, and, desc, count } from 'drizzle-orm';
+import { logger } from "../../core/logger";
 
 export interface ExtendedProfileStats {
 	// Core profile data
@@ -221,7 +222,7 @@ export class ProfileStatsService {
 				lastLogin: user.lastLogin?.toISOString() || null
 			};
 		} catch (error) {
-			console.error('Error fetching extended profile stats:', error);
+			logger.error('Error fetching extended profile stats:', error);
 			throw new Error('Failed to fetch profile statistics');
 		}
 	}

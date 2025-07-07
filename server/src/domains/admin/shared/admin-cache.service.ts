@@ -8,6 +8,7 @@
 import NodeCache from 'node-cache';
 import { AdminError, AdminErrorCodes } from '../admin.errors';
 import type { EntityId } from '@shared/types';
+import { logger } from "../../../core/logger";
 
 export interface CacheConfig {
 	defaultTTL: number; // Time to live in seconds
@@ -109,7 +110,7 @@ export class AdminCacheService {
 				return null;
 			}
 		} catch (error) {
-			console.error('Cache get error:', error);
+			logger.error('Cache get error:', error);
 			return null;
 		}
 	}
@@ -131,7 +132,7 @@ export class AdminCacheService {
 
 			return success;
 		} catch (error) {
-			console.error('Cache set error:', error);
+			logger.error('Cache set error:', error);
 			return false;
 		}
 	}
@@ -151,7 +152,7 @@ export class AdminCacheService {
 
 			return false;
 		} catch (error) {
-			console.error('Cache delete error:', error);
+			logger.error('Cache delete error:', error);
 			return false;
 		}
 	}
@@ -176,7 +177,7 @@ export class AdminCacheService {
 
 			return deletedCount;
 		} catch (error) {
-			console.error('Cache clear by pattern error:', error);
+			logger.error('Cache clear by pattern error:', error);
 			return 0;
 		}
 	}
@@ -201,7 +202,7 @@ export class AdminCacheService {
 
 			return data;
 		} catch (error) {
-			console.error('Cache getOrSet error:', error);
+			logger.error('Cache getOrSet error:', error);
 			// On error, still try to return fresh data
 			return await fetcher();
 		}
@@ -237,7 +238,7 @@ export class AdminCacheService {
 				const data = await fetcher();
 				await this.set(key, data);
 			} catch (error) {
-				console.error(`Cache warmup failed for ${key}:`, error);
+				logger.error(`Cache warmup failed for ${key}:`, error);
 			}
 		});
 

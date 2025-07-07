@@ -33,7 +33,7 @@ export async function up() {
     });
     logger.info('✅ Migration applied successfully: Add Daily XP Tracking Fields');
   } catch (error) {
-    console.error('❌ Error applying migration (Add Daily XP Tracking Fields):', error);
+    logger.error('❌ Error applying migration (Add Daily XP Tracking Fields):', error);
     throw error; // Re-throw to indicate failure
   } finally {
     await pool.end();
@@ -59,7 +59,7 @@ export async function down() {
     });
     logger.info('✅ Migration reverted successfully: Add Daily XP Tracking Fields');
   } catch (error) {
-    console.error('❌ Error reverting migration (Add Daily XP Tracking Fields):', error);
+    logger.error('❌ Error reverting migration (Add Daily XP Tracking Fields):', error);
     throw error; // Re-throw to indicate failure
   } finally {
     await pool.end();

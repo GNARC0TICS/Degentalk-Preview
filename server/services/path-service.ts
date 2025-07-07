@@ -5,6 +5,7 @@
 import { db } from '@db';
 import { sql } from 'drizzle-orm';
 import type { UserId } from '@shared/types';
+import { logger } from "../src/core/logger";
 
 interface XpPath {
 	id: string;
@@ -37,7 +38,7 @@ export class PathService {
       `);
 			return result.rows as XpPath[];
 		} catch (error) {
-			console.error('Error getting XP paths:', error);
+			logger.error('Error getting XP paths:', error);
 			return [];
 		}
 	}
@@ -58,7 +59,7 @@ export class PathService {
 
 			return result.rows[0] as XpPath;
 		} catch (error) {
-			console.error(`Error getting XP path by ID ${id}:`, error);
+			logger.error(`Error getting XP path by ID ${id}:`, error);
 			return null;
 		}
 	}
@@ -93,7 +94,7 @@ export class PathService {
 				}
 			}));
 		} catch (error) {
-			console.error(`Error getting user paths for user ${userId}:`, error);
+			logger.error(`Error getting user paths for user ${userId}:`, error);
 			return [];
 		}
 	}
@@ -133,7 +134,7 @@ export class PathService {
 				}
 			};
 		} catch (error) {
-			console.error(`Error getting primary path for user ${userId}:`, error);
+			logger.error(`Error getting primary path for user ${userId}:`, error);
 			return null;
 		}
 	}
@@ -185,7 +186,7 @@ export class PathService {
 				return true;
 			});
 		} catch (error) {
-			console.error(`Error setting primary path for user ${userId}:`, error);
+			logger.error(`Error setting primary path for user ${userId}:`, error);
 			return false;
 		}
 	}
@@ -266,7 +267,7 @@ export class PathService {
 				};
 			});
 		} catch (error) {
-			console.error(`Error awarding path XP for user ${userId}:`, error);
+			logger.error(`Error awarding path XP for user ${userId}:`, error);
 			return { success: false, xpAwarded: 0, newTotal: 0, levelUp: false };
 		}
 	}
@@ -298,7 +299,7 @@ export class PathService {
 
 			return result.rows;
 		} catch (error) {
-			console.error(`Error getting path leaderboard for path ${pathId}:`, error);
+			logger.error(`Error getting path leaderboard for path ${pathId}:`, error);
 			return [];
 		}
 	}
@@ -320,7 +321,7 @@ export class PathService {
 
 			return result.rows[0].path_rank;
 		} catch (error) {
-			console.error(`Error getting path rank for user ${userId} and path ${pathId}:`, error);
+			logger.error(`Error getting path rank for user ${userId} and path ${pathId}:`, error);
 			return null;
 		}
 	}

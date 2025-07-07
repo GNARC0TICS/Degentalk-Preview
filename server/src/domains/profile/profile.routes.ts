@@ -25,6 +25,7 @@ import signatureRoutes from './signature.routes'; // Import signature routes
 import { authenticate } from '../../middleware/authenticate';
 import { profileService } from './profile.service';
 import { referralsService } from './referrals.service';
+import { logger } from "../../core/logger";
 
 const router = Router();
 
@@ -158,7 +159,7 @@ router.get('/:username', async (req: Request, res: Response) => {
 
 		return res.status(200).json(profileData);
 	} catch (error) {
-		console.error('Error fetching profile:', error);
+		logger.error('Error fetching profile:', error);
 		return res.status(500).json({ message: 'Error fetching profile data' });
 	}
 });
@@ -178,7 +179,7 @@ router.get('/', authenticate, async (req, res) => {
 		const profile = await profileService.getUserProfile(userId);
 		return res.json({ success: true, data: profile });
 	} catch (error) {
-		console.error('Error fetching profile:', error);
+		logger.error('Error fetching profile:', error);
 		return res.status(500).json({ success: false, message: 'Failed to fetch profile' });
 	}
 });
@@ -198,7 +199,7 @@ router.get('/referrals', authenticate, async (req, res) => {
 		const referrals = await referralsService.getUserReferrals(userId);
 		return res.json({ success: true, data: referrals });
 	} catch (error) {
-		console.error('Error fetching referrals:', error);
+		logger.error('Error fetching referrals:', error);
 		return res.status(500).json({ success: false, message: 'Failed to fetch referral data' });
 	}
 });
@@ -218,7 +219,7 @@ router.get('/referrals/link', authenticate, async (req, res) => {
 		const referralLink = await referralsService.getUserReferralLink(userId);
 		return res.json({ success: true, data: { referralLink } });
 	} catch (error) {
-		console.error('Error generating referral link:', error);
+		logger.error('Error generating referral link:', error);
 		return res.status(500).json({ success: false, message: 'Failed to generate referral link' });
 	}
 });

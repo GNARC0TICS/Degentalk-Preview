@@ -38,8 +38,8 @@ describe('ErrorService', () => {
 			expect(recentErrors).toHaveLength(1);
 
 			const appError = recentErrors[0];
-			expect(appError.message).toBe('Test error message');
-			expect(appError.context).toBe('test-context');
+			expect(appError?.message).toBe('Test error message');
+			expect(appError?.context).toBe('test-context');
 			expect(appError.id).toMatch(/^err_\d+_[a-z0-9]+$/);
 			expect(appError.timestamp).toBeDefined();
 		});

@@ -12,6 +12,7 @@ import { z } from 'zod';
 import { validateRequest } from '../../middleware/validate-request';
 import { getUserIdFromRequest } from '@server/src/utils/auth';
 import { isValidId } from '@shared/utils/id';
+import { logger } from "../../core/logger";
 
 const router = Router();
 
@@ -47,7 +48,7 @@ router.get('/me', async (req: Request, res: Response) => {
 
 		return res.status(200).json(signatureData);
 	} catch (error) {
-		console.error('Error fetching signature:', error);
+		logger.error('Error fetching signature:', error);
 		return res.status(500).json({ message: 'Error fetching signature data' });
 	}
 });
@@ -71,7 +72,7 @@ router.get('/:userId', async (req: Request, res: Response) => {
 
 		return res.status(200).json(signatureData);
 	} catch (error) {
-		console.error('Error fetching signature:', error);
+		logger.error('Error fetching signature:', error);
 		return res.status(500).json({ message: 'Error fetching signature data' });
 	}
 });
@@ -96,7 +97,7 @@ router.put('/', validateRequest(updateSignatureSchema), async (req: Request, res
 
 		return res.status(200).json(result);
 	} catch (error: any) {
-		console.error('Error updating signature:', error);
+		logger.error('Error updating signature:', error);
 		return res.status(400).json({ message: error.message || 'Error updating signature' });
 	}
 });
@@ -119,7 +120,7 @@ router.get('/shop/items', async (req: Request, res: Response) => {
 		const items = await SignatureService.getSignatureShopItems(userLevel);
 		return res.status(200).json(items);
 	} catch (error) {
-		console.error('Error fetching signature shop items:', error);
+		logger.error('Error fetching signature shop items:', error);
 		return res.status(500).json({ message: 'Error fetching signature shop items' });
 	}
 });
@@ -138,7 +139,7 @@ router.get('/shop/my-items', async (req: Request, res: Response) => {
 		const items = await SignatureService.getUserSignatureItems(userId);
 		return res.status(200).json(items);
 	} catch (error) {
-		console.error('Error fetching user signature items:', error);
+		logger.error('Error fetching user signature items:', error);
 		return res.status(500).json({ message: 'Error fetching user signature items' });
 	}
 });
@@ -162,7 +163,7 @@ router.post(
 			const result = await SignatureService.purchaseSignatureItem(userId, itemId);
 			return res.status(200).json(result);
 		} catch (error: any) {
-			console.error('Error purchasing signature item:', error);
+			logger.error('Error purchasing signature item:', error);
 			return res.status(400).json({ message: error.message || 'Error purchasing signature item' });
 		}
 	}
@@ -187,7 +188,7 @@ router.post(
 			const result = await SignatureService.activateSignatureItem(userId, itemId);
 			return res.status(200).json(result);
 		} catch (error: any) {
-			console.error('Error activating signature item:', error);
+			logger.error('Error activating signature item:', error);
 			return res.status(400).json({ message: error.message || 'Error activating signature item' });
 		}
 	}

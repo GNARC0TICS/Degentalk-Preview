@@ -1,6 +1,7 @@
 import { db } from '@db';
 import { userSocialPreferences } from '@schema';
 import { eq } from 'drizzle-orm';
+import { logger } from "../../core/logger";
 
 export interface SocialPreferences {
 	// Mentions preferences
@@ -94,7 +95,7 @@ export class UserPreferencesService {
 				allowSocialDiscovery: prefs.allowSocialDiscovery
 			};
 		} catch (error) {
-			console.error('Error fetching social preferences:', error);
+			logger.error('Error fetching social preferences:', error);
 			return this.DEFAULT_SOCIAL_PREFERENCES;
 		}
 	}
@@ -164,7 +165,7 @@ export class UserPreferencesService {
 
 			return newPrefs;
 		} catch (error) {
-			console.error('Error updating social preferences:', error);
+			logger.error('Error updating social preferences:', error);
 			throw new Error('Failed to update social preferences');
 		}
 	}

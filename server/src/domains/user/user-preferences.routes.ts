@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { UserPreferencesService } from './user-preferences.service';
 import { requireAuth } from '../auth/middleware/auth.middleware';
+import { logger } from "../../core/logger";
 
 const router = Router();
 
@@ -45,7 +46,7 @@ router.get('/social-preferences', requireAuth, async (req, res) => {
 		const preferences = await UserPreferencesService.getSocialPreferences(userId);
 		res.json(preferences);
 	} catch (error) {
-		console.error('Error fetching social preferences:', error);
+		logger.error('Error fetching social preferences:', error);
 		res.status(500).json({
 			error: 'Failed to fetch social preferences',
 			details: error instanceof Error ? error.message : 'Unknown error'
@@ -69,7 +70,7 @@ router.put('/social-preferences', requireAuth, async (req, res) => {
 
 		res.json(updatedPreferences);
 	} catch (error) {
-		console.error('Error updating social preferences:', error);
+		logger.error('Error updating social preferences:', error);
 		if (error instanceof z.ZodError) {
 			res.status(400).json({
 				error: 'Invalid preferences data',
@@ -94,7 +95,7 @@ router.get('/privacy-summary', requireAuth, async (req, res) => {
 		const summary = await UserPreferencesService.getPrivacySummary(userId);
 		res.json(summary);
 	} catch (error) {
-		console.error('Error fetching privacy summary:', error);
+		logger.error('Error fetching privacy summary:', error);
 		res.status(500).json({
 			error: 'Failed to fetch privacy summary',
 			details: error instanceof Error ? error.message : 'Unknown error'
@@ -112,7 +113,7 @@ router.post('/reset-social-preferences', requireAuth, async (req, res) => {
 		const defaultPreferences = await UserPreferencesService.resetSocialPreferences(userId);
 		res.json(defaultPreferences);
 	} catch (error) {
-		console.error('Error resetting social preferences:', error);
+		logger.error('Error resetting social preferences:', error);
 		res.status(500).json({
 			error: 'Failed to reset social preferences',
 			details: error instanceof Error ? error.message : 'Unknown error'

@@ -10,6 +10,7 @@ import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import type { FrameId } from '@shared/types';
 import { CosmeticsTransformer } from '../../../domains/shop/transformers/cosmetics.transformer';
+import { logger } from "../../../core/logger";
 
 const router = Router();
 
@@ -25,7 +26,7 @@ router.get('/', async (_req, res) => {
 
 		return res.json(transformed);
 	} catch (error) {
-		console.error('Failed to fetch store avatar frames', error);
+		logger.error('Failed to fetch store avatar frames', error);
 		return res.status(500).json({ error: 'Failed to fetch avatar frames' });
 	}
 });
@@ -61,7 +62,7 @@ router.post('/:id/purchase', isAuthenticated, async (req, res) => {
 		await frameEquipService.grantOwnership(userId, frameId, 'shop');
 		return res.status(200).json({ success: true, price });
 	} catch (error) {
-		console.error('Purchase avatar frame failed', error);
+		logger.error('Purchase avatar frame failed', error);
 		return res.status(500).json({ error: 'Purchase failed' });
 	}
 });

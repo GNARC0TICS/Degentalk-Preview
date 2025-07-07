@@ -14,11 +14,11 @@ runTipRainMigration()
       logger.info('✅ Tip & Rain migration completed successfully');
       process.exit(0);
     } else {
-      console.error('❌ Migration process failed');
+      logger.error('❌ Migration process failed');
       process.exit(1);
     }
   })
   .catch((error) => {
-    console.error('❌ Unhandled error in migration process:', error);
+    logger.error('❌ Unhandled error in migration process:', error);
     process.exit(1);
   }); 

@@ -21,6 +21,7 @@ import {
 } from './schedule.service';
 import { formatAdminResponse, AdminOperationBoundary } from '../../shared';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
+import { logger } from "../../../../core/logger";
 
 // Additional validation schemas
 const backupIdSchema = z.object({
@@ -165,7 +166,7 @@ export class BackupRestoreController {
 			const stream = fs.createReadStream(backup.filePath);
 
 			stream.on('error', (error) => {
-				console.error('Error streaming backup file:', error);
+				logger.error('Error streaming backup file:', error);
 				res.status(500).json({
 					success: false,
 					error: 'Failed to download backup file'

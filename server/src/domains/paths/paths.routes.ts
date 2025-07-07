@@ -14,6 +14,7 @@ import { sql } from 'drizzle-orm';
 import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
 import { isValidId } from '@shared/utils/id';
+import { logger } from "../../core/logger";
 
 // Using shared isAuthenticated middleware from middleware/auth.ts
 
@@ -28,7 +29,7 @@ export function registerPathRoutes(router: Router) {
 			const paths = await PathService.getPaths();
 			res.json(paths);
 		} catch (error) {
-			console.error('Error fetching paths:', error);
+			logger.error('Error fetching paths:', error);
 			res.status(500).json({ message: 'Server error' });
 		}
 	});
@@ -49,7 +50,7 @@ export function registerPathRoutes(router: Router) {
 
 			res.json(path);
 		} catch (error) {
-			console.error('Error fetching path:', error);
+			logger.error('Error fetching path:', error);
 			res.status(500).json({ message: 'Server error' });
 		}
 	});
@@ -65,7 +66,7 @@ export function registerPathRoutes(router: Router) {
 			const userPaths = await PathService.getUserPaths(userId);
 			res.json(userPaths);
 		} catch (error) {
-			console.error('Error fetching user paths:', error);
+			logger.error('Error fetching user paths:', error);
 			res.status(500).json({ message: 'Server error' });
 		}
 	});
@@ -86,7 +87,7 @@ export function registerPathRoutes(router: Router) {
 
 			res.json(primaryPath);
 		} catch (error) {
-			console.error('Error fetching primary path:', error);
+			logger.error('Error fetching primary path:', error);
 			res.status(500).json({ message: 'Server error' });
 		}
 	});
@@ -116,7 +117,7 @@ export function registerPathRoutes(router: Router) {
 
 				res.json({ success: true, message: 'Primary path updated successfully' });
 			} catch (error) {
-				console.error('Error setting primary path:', error);
+				logger.error('Error setting primary path:', error);
 				res.status(500).json({ message: 'Server error' });
 			}
 		}
@@ -143,7 +144,7 @@ export function registerPathRoutes(router: Router) {
 			const leaderboard = await PathService.getPathLeaderboard(pathId, limit, offset);
 			res.json(leaderboard);
 		} catch (error) {
-			console.error('Error fetching path leaderboard:', error);
+			logger.error('Error fetching path leaderboard:', error);
 			res.status(500).json({ message: 'Server error' });
 		}
 	});
@@ -186,7 +187,7 @@ export function registerPathRoutes(router: Router) {
 
 			res.json(userPath);
 		} catch (error) {
-			console.error('Error fetching user path:', error);
+			logger.error('Error fetching user path:', error);
 			res.status(500).json({ message: 'Server error' });
 		}
 	});
@@ -216,7 +217,7 @@ export function registerPathRoutes(router: Router) {
 			const summary = await PathService.getUserPathSummary(userId);
 			res.json(summary);
 		} catch (error) {
-			console.error('Error fetching user path summary:', error);
+			logger.error('Error fetching user path summary:', error);
 			res.status(500).json({ message: 'Server error' });
 		}
 	});

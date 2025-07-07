@@ -3,6 +3,7 @@ import { adController } from './ad.controller';
 import { adAdminController } from './ad-admin.controller';
 import { adConfigurationService } from './ad-configuration.service';
 import { userPromotionRoutes } from './user-promotion.routes';
+import { logger } from "../../core/logger";
 
 const router = Router();
 
@@ -129,7 +130,7 @@ router.post('/governance/proposals/:proposalId/vote', async (req, res) => {
 
 		res.json({ success: true, message: 'Vote recorded successfully' });
 	} catch (error) {
-		console.error('Vote error:', error);
+		logger.error('Vote error:', error);
 		res.status(400).json({
 			error: 'Failed to record vote',
 			message: error instanceof Error ? error.message : 'Unknown error'

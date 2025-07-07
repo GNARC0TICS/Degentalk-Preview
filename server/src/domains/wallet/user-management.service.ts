@@ -3,6 +3,7 @@ import { ccpaymentUsers, users, cryptoWallets } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { CCPaymentService } from './ccpayment.service';
 import type { CoinId } from '@shared/types';
+import { logger } from "../../core/logger";
 
 /**
  * User Management Service for CCPayment Integration
@@ -65,7 +66,7 @@ export class UserManagementService {
 
 			return ccpaymentUserId;
 		} catch (error) {
-			console.error('Error getting/creating CCPayment user:', error);
+			logger.error('Error getting/creating CCPayment user:', error);
 			throw new Error('Failed to initialize user wallet');
 		}
 	}
@@ -83,7 +84,7 @@ export class UserManagementService {
 
 			return mapping.length > 0 ? mapping[0].ccpaymentUserId : null;
 		} catch (error) {
-			console.error('Error getting CCPayment user ID:', error);
+			logger.error('Error getting CCPayment user ID:', error);
 			return null;
 		}
 	}
@@ -101,7 +102,7 @@ export class UserManagementService {
 
 			return mapping.length > 0 ? mapping[0].userId : null;
 		} catch (error) {
-			console.error('Error getting Degentalk user ID:', error);
+			logger.error('Error getting Degentalk user ID:', error);
 			return null;
 		}
 	}
@@ -119,7 +120,7 @@ export class UserManagementService {
 
 			return mapping.length > 0;
 		} catch (error) {
-			console.error('Error checking CCPayment account:', error);
+			logger.error('Error checking CCPayment account:', error);
 			return false;
 		}
 	}
@@ -174,7 +175,7 @@ export class UserManagementService {
 						address: address
 					});
 				} catch (walletError) {
-					console.error(`Error creating wallet for ${coin.coinSymbol}:`, walletError);
+					logger.error(`Error creating wallet for ${coin.coinSymbol}:`, walletError);
 					// Continue with other wallets even if one fails
 				}
 			}
@@ -184,7 +185,7 @@ export class UserManagementService {
 				wallets
 			};
 		} catch (error) {
-			console.error('Error initializing user wallet:', error);
+			logger.error('Error initializing user wallet:', error);
 			throw new Error('Failed to initialize wallet system');
 		}
 	}
@@ -229,12 +230,12 @@ export class UserManagementService {
 							address: address
 						});
 					} catch (walletError) {
-						console.error(`Error creating wallet for ${coin.coinSymbol}:`, walletError);
+						logger.error(`Error creating wallet for ${coin.coinSymbol}:`, walletError);
 					}
 				}
 			}
 		} catch (error) {
-			console.error('Error ensuring user wallets:', error);
+			logger.error('Error ensuring user wallets:', error);
 			throw new Error('Failed to ensure user wallets');
 		}
 	}

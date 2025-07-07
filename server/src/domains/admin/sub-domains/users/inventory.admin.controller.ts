@@ -1,6 +1,7 @@
 import { db } from '@db'; // Adjust
 import { userInventory, products } from '@schema'; // Adjust
 import { eq, and, getTableColumns } from 'drizzle-orm';
+import { logger } from "../../../../core/logger";
 
 export const userInventoryAdminController = {
 	// View a user's inventory
@@ -58,7 +59,7 @@ export const userInventoryAdminController = {
 				.returning();
 			res.status(201).json(newItem[0]);
 		} catch (error) {
-			console.error('Error granting item:', error);
+			logger.error('Error granting item:', error);
 			res.status(500).json({ message: 'Error granting item', error: error.message });
 		}
 	},
@@ -103,7 +104,7 @@ export const userInventoryAdminController = {
 						currentItemType = parsedPluginReward?.type;
 					}
 				} catch (e) {
-					console.error('Failed to parse pluginReward for item to equip:', itemToEquip.id, e);
+					logger.error('Failed to parse pluginReward for item to equip:', itemToEquip.id, e);
 					// Decide if this is a critical error. If type is essential for equip logic,
 					// you might want to throw an error or handle it gracefully.
 					// For now, we'll proceed, and it won't unequip others if type is unknown.
@@ -139,11 +140,7 @@ export const userInventoryAdminController = {
 								}
 							}
 						} catch (e) {
-							console.error(
-								'Failed to parse pluginReward for an equipped item:',
-								equippedItem.inventoryId,
-								e
-							);
+							logger.error('Failed to parse pluginReward for an equipped item:', equippedItem.inventoryId, e);
 							// Continue to the next item, don't let one bad JSON break the loop
 						}
 					}
@@ -185,7 +182,7 @@ export const userInventoryAdminController = {
 				item: finalEquippedItem[0]
 			});
 		} catch (error) {
-			console.error('Error equipping item:', error);
+			logger.error('Error equipping item:', error);
 			res.status(500).json({
 				success: false,
 				message: error.message || 'Error equipping item'
@@ -213,7 +210,7 @@ export const userInventoryAdminController = {
 			}
 			res.json(unequippedItem[0]);
 		} catch (error) {
-			console.error('Error unequipping item:', error);
+			logger.error('Error unequipping item:', error);
 			res.status(500).json({ message: 'Error unequipping item', error: error.message });
 		}
 	}

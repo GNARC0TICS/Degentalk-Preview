@@ -180,7 +180,7 @@ describe('AdminModuleRegistry', () => {
 			const modules = registry.getEnabled();
 
 			for (let i = 1; i < modules.length; i++) {
-				expect(modules[i].order).toBeGreaterThanOrEqual(modules[i - 1].order);
+				expect(modules[i]?.order).toBeGreaterThanOrEqual(modules[i - 1]?.order ?? 0);
 			}
 		});
 

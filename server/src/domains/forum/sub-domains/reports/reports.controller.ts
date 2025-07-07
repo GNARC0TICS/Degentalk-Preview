@@ -8,6 +8,7 @@ import type { Request, Response } from 'express';
 import { reportsService } from './reports.service';
 import { CreateReportSchema } from './reports.validators';
 import { getUserIdFromRequest } from '@server/src/utils/auth';
+import { logger } from "../../../../core/logger";
 
 export class ReportsController {
 	async createReport(req: Request, res: Response) {
@@ -38,7 +39,7 @@ export class ReportsController {
 				reportId: report.id
 			});
 		} catch (error) {
-			console.error('Error creating report:', error);
+			logger.error('Error creating report:', error);
 			res.status(500).json({ error: 'Failed to submit report' });
 		}
 	}

@@ -24,6 +24,7 @@ import type {
 	DeleteContentInput
 } from './reports.validators';
 import type { ReportId, AdminUserId, AuthorId, ContentId } from '@shared/types';
+import { logger } from "../../../../core/logger";
 
 async function getContentPreview(type: string, contentId: ContentId): Promise<string | null> {
 	try {
@@ -55,7 +56,7 @@ async function getContentPreview(type: string, contentId: ContentId): Promise<st
 				return 'Unknown content type';
 		}
 	} catch (error) {
-		console.error(`Error getting content preview for ${type} ${contentId}:`, error);
+		logger.error(`Error getting content preview for ${type} ${contentId}:`, error);
 		return 'Error retrieving content preview';
 	}
 }

@@ -8,6 +8,7 @@ import {
 } from '../auth/middleware/auth.middleware';
 import { insertDictionaryEntrySchema } from '@schema';
 import rateLimit from 'express-rate-limit';
+import { logger } from "../../core/logger";
 
 const router = Router();
 
@@ -26,7 +27,7 @@ router.get('/', async (req, res) => {
 		});
 		return res.json(result);
 	} catch (error) {
-		console.error('Dictionary list error', error);
+		logger.error('Dictionary list error', error);
 		return res.status(500).json({ error: 'Failed to fetch dictionary entries' });
 	}
 });
@@ -40,7 +41,7 @@ router.get('/:slug', async (req, res) => {
 		}
 		return res.json(entry);
 	} catch (error) {
-		console.error('Dictionary entry fetch error', error);
+		logger.error('Dictionary entry fetch error', error);
 		return res.status(500).json({ error: 'Failed to fetch entry' });
 	}
 });
@@ -59,7 +60,7 @@ router.post(
 			});
 			return res.status(201).json(created);
 		} catch (error) {
-			console.error('Entry submission error', error);
+			logger.error('Entry submission error', error);
 			return res.status(400).json({ error: 'Invalid submission' });
 		}
 	}
@@ -79,7 +80,7 @@ router.patch('/:id', requireAuth, isAdminOrModerator, async (req: any, res) => {
 		);
 		return res.json(updated);
 	} catch (error) {
-		console.error('Moderation error', error);
+		logger.error('Moderation error', error);
 		return res.status(500).json({ error: 'Failed to update entry' });
 	}
 });
@@ -93,7 +94,7 @@ router.post('/:id/upvote', requireAuth, async (req: any, res) => {
 		);
 		return res.json(result);
 	} catch (error) {
-		console.error('Upvote error', error);
+		logger.error('Upvote error', error);
 		return res.status(500).json({ error: 'Failed to toggle upvote' });
 	}
 });

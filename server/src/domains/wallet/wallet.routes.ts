@@ -5,6 +5,7 @@ import { UserManagementService } from './user-management.service';
 import { isDevMode } from '@server/src/utils/environment';
 import walletTestRoutes from './wallet.test.routes';
 import { EconomyTransformer } from '../economy/transformers/economy.transformer';
+import { logger } from "../../core/logger";
 
 const router = Router();
 const walletService = new WalletService();
@@ -42,7 +43,7 @@ router.post('/initialize', async (req, res) => {
 			data: result
 		});
 	} catch (error) {
-		console.error('Error initializing wallet:', error);
+		logger.error('Error initializing wallet:', error);
 		res.status(500).json({
 			error: 'Failed to initialize wallet',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -82,7 +83,7 @@ router.get('/balances', async (req, res) => {
 			data: transformedBalances
 		});
 	} catch (error) {
-		console.error('Error getting balances:', error);
+		logger.error('Error getting balances:', error);
 		res.status(500).json({
 			error: 'Failed to retrieve balances',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -123,7 +124,7 @@ router.get('/deposit-addresses', async (req, res) => {
 			data: transformedAddresses
 		});
 	} catch (error) {
-		console.error('Error getting deposit addresses:', error);
+		logger.error('Error getting deposit addresses:', error);
 		res.status(500).json({
 			error: 'Failed to retrieve deposit addresses',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -162,7 +163,7 @@ router.post('/withdraw', async (req, res) => {
 			data: { recordId }
 		});
 	} catch (error) {
-		console.error('Error processing withdrawal:', error);
+		logger.error('Error processing withdrawal:', error);
 		res.status(500).json({
 			error: 'Failed to process withdrawal',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -201,7 +202,7 @@ router.post('/transfer', async (req, res) => {
 			data: { recordId }
 		});
 	} catch (error) {
-		console.error('Error processing transfer:', error);
+		logger.error('Error processing transfer:', error);
 		res.status(500).json({
 			error: 'Failed to process transfer',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -239,7 +240,7 @@ router.post('/swap', async (req, res) => {
 			data: { recordId }
 		});
 	} catch (error) {
-		console.error('Error processing swap:', error);
+		logger.error('Error processing swap:', error);
 		res.status(500).json({
 			error: 'Failed to process swap',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -273,7 +274,7 @@ router.get('/history', async (req, res) => {
 			data: history
 		});
 	} catch (error) {
-		console.error('Error getting transaction history:', error);
+		logger.error('Error getting transaction history:', error);
 		res.status(500).json({
 			error: 'Failed to retrieve transaction history',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -294,7 +295,7 @@ router.get('/supported-coins', async (req, res) => {
 			data: coins
 		});
 	} catch (error) {
-		console.error('Error getting supported coins:', error);
+		logger.error('Error getting supported coins:', error);
 		res.status(500).json({
 			error: 'Failed to retrieve supported coins',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -326,7 +327,7 @@ router.get('/status', async (req, res) => {
 			}
 		});
 	} catch (error) {
-		console.error('Error checking wallet status:', error);
+		logger.error('Error checking wallet status:', error);
 		res.status(500).json({
 			error: 'Failed to check wallet status',
 			message: error instanceof Error ? error.message : 'Unknown error'

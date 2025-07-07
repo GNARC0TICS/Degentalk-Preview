@@ -9,7 +9,8 @@ import { users, threads, posts, postReactions, transactions, shoutboxMessages } 
 import { sql, eq, desc, and, count, sum, gte, lte, between } from 'drizzle-orm';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import type { AnalyticsPeriodInput, AnalyticsQueryInput } from './analytics.validators';
-import { subDays, formatISO } from 'date-fns'; // Using date-fns for date manipulations
+import { subDays, formatISO } from 'date-fns';
+import { logger } from "../../../../core/logger";
 
 // Helper to get date range based on period or explicit dates
 function getDateRange(params: AnalyticsPeriodInput): { startDateSQL: string; endDateSQL: string } {
@@ -111,7 +112,7 @@ export class AdminAnalyticsService {
 				}
 			};
 		} catch (error: any) {
-			console.error('Error fetching overview stats:', error);
+			logger.error('Error fetching overview stats:', error);
 			throw new AdminError('Failed to fetch overview statistics', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});
@@ -149,7 +150,7 @@ export class AdminAnalyticsService {
 
 			return growthData.map((d) => ({ period: d.period, userCount: Number(d.count) }));
 		} catch (error: any) {
-			console.error('Error fetching user growth data:', error);
+			logger.error('Error fetching user growth data:', error);
 			throw new AdminError('Failed to fetch user growth data', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});
@@ -176,7 +177,7 @@ export class AdminAnalyticsService {
 
 			return activeThreads;
 		} catch (error: any) {
-			console.error('Error fetching most active threads:', error);
+			logger.error('Error fetching most active threads:', error);
 			throw new AdminError('Failed to fetch most active threads', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});

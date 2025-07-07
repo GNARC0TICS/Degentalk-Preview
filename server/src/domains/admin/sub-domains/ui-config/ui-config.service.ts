@@ -27,6 +27,7 @@ import {
 	type PaginationOptions,
 	type UiConfigService as IUiConfigService
 } from './ui-config.types.ts';
+import { logger } from "../../../../core/logger";
 
 export class UiConfigService implements IUiConfigService {
 	/**
@@ -206,7 +207,7 @@ export class UiConfigService implements IUiConfigService {
 			});
 			return true;
 		} catch (error) {
-			console.error('Error reordering quotes:', error);
+			logger.error('Error reordering quotes:', error);
 			return false;
 		}
 	}
@@ -470,7 +471,7 @@ export class UiConfigService implements IUiConfigService {
 
 			return true;
 		} catch (error) {
-			console.error('Error in bulk operation:', error);
+			logger.error('Error in bulk operation:', error);
 			return false;
 		}
 	}
@@ -511,7 +512,7 @@ export class UiConfigService implements IUiConfigService {
 
 					imported++;
 				} catch (error) {
-					console.error('Error importing quote:', error);
+					logger.error('Error importing quote:', error);
 					skipped++;
 				}
 			}

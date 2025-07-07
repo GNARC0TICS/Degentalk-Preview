@@ -23,6 +23,7 @@ import { isAuthenticated } from '../../auth/middleware/auth.middleware';
 import { storage } from '../../../../storage';
 import { asyncHandler } from '@server/src/core/errors'; // Assuming asyncHandler is in core errors
 import { getUserIdFromRequest } from '@server/src/utils/auth';
+import { logger } from "../../../core/logger";
 
 const router = Router();
 
@@ -55,7 +56,7 @@ router.get(
 				count: rules.length
 			});
 		} catch (error) {
-			console.error('Error fetching forum rules:', error);
+			logger.error('Error fetching forum rules:', error);
 			return res.status(500).json({ error: 'Failed to fetch forum rules' });
 		}
 	})
@@ -89,7 +90,7 @@ router.get(
 
 			return res.status(200).json({ rule });
 		} catch (error) {
-			console.error('Error fetching forum rule:', error);
+			logger.error('Error fetching forum rule:', error);
 			return res.status(500).json({ error: 'Failed to fetch forum rule' });
 		}
 	})
@@ -143,7 +144,7 @@ router.get(
 				requiresAction: !allRequiredRulesAgreed
 			});
 		} catch (error) {
-			console.error('Error fetching user rule agreements:', error);
+			logger.error('Error fetching user rule agreements:', error);
 			return res.status(500).json({ error: 'Failed to fetch user rule agreements' });
 		}
 	})
@@ -262,7 +263,7 @@ router.post(
 				ruleIds
 			});
 		} catch (error) {
-			console.error('Error agreeing to rules:', error);
+			logger.error('Error agreeing to rules:', error);
 			return res.status(500).json({ error: 'Failed to process rule agreements' });
 		}
 	})

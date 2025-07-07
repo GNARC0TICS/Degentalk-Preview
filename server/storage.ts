@@ -273,7 +273,7 @@ export class DatabaseStorage implements IStorage {
 				logger.info('❌ Drizzle ORM: No user found with ID:', id);
 			}
 		} catch (err) {
-			console.warn('❌ Error fetching user with Drizzle ORM, trying direct SQL', err);
+			logger.warn('❌ Error fetching user with Drizzle ORM, trying direct SQL', err);
 		}
 
 		// Try with user_id column as fallback with proper column mapping
@@ -381,7 +381,7 @@ export class DatabaseStorage implements IStorage {
 				}
 			}
 		} catch (err) {
-			console.warn('Direct SQL query for user failed', err);
+			logger.warn('Direct SQL query for user failed', err);
 		}
 
 		return undefined;
@@ -406,7 +406,7 @@ export class DatabaseStorage implements IStorage {
 
 			logger.info(`Verification token stored for user ${userId}, expires at ${expiresAt}`);
 		} catch (error) {
-			console.error('Error storing verification token:', error);
+			logger.error('Error storing verification token:', error);
 			throw error;
 		}
 	}
@@ -421,7 +421,7 @@ export class DatabaseStorage implements IStorage {
 
 			if (user) return user;
 		} catch (err) {
-			console.warn('Error fetching user by username with ORM, falling back to SQL', err);
+			logger.warn('Error fetching user by username with ORM, falling back to SQL', err);
 		}
 
 		// Fall back to direct SQL query in development mode
@@ -438,7 +438,7 @@ export class DatabaseStorage implements IStorage {
 					return result.rows[0] as any as User;
 				}
 			} catch (sqlErr) {
-				console.warn('Direct SQL query for user by username failed', sqlErr);
+				logger.warn('Direct SQL query for user by username failed', sqlErr);
 			}
 		}
 
@@ -455,7 +455,7 @@ export class DatabaseStorage implements IStorage {
 
 			if (user) return user;
 		} catch (err) {
-			console.warn('Error fetching user by email with ORM, falling back to SQL', err);
+			logger.warn('Error fetching user by email with ORM, falling back to SQL', err);
 		}
 
 		// Fall back to direct SQL query in development mode
@@ -472,7 +472,7 @@ export class DatabaseStorage implements IStorage {
 					return result.rows[0] as any as User;
 				}
 			} catch (sqlErr) {
-				console.warn('Direct SQL query for user by email failed', sqlErr);
+				logger.warn('Direct SQL query for user by email failed', sqlErr);
 			}
 		}
 
@@ -1509,7 +1509,7 @@ export class DatabaseStorage implements IStorage {
 					try {
 						parsedValue = JSON.parse(setting.value || '{}');
 					} catch (error) {
-						console.error(`Error parsing JSON for setting ${setting.key}:`, error);
+						logger.error(`Error parsing JSON for setting ${setting.key}:`, error);
 						parsedValue = {};
 					}
 					break;

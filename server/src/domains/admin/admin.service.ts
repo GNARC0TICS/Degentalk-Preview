@@ -11,6 +11,7 @@ import { count, desc, eq, sql, and, like, isNull, or, ne, sum } from 'drizzle-or
 import { users, auditLogs, transactions } from '@schema';
 import { AdminError, AdminErrorCodes } from './admin.errors';
 import type { AdminId, UserId } from '@shared/types';
+import { logger } from "../../core/logger";
 
 export class AdminService {
 	/**
@@ -32,7 +33,7 @@ export class AdminService {
 				details: details || {}
 			});
 		} catch (error) {
-			console.error('Error logging admin action:', error);
+			logger.error('Error logging admin action:', error);
 			// Non-blocking - we continue even if logging fails
 		}
 	}
@@ -63,7 +64,7 @@ export class AdminService {
 				}
 			};
 		} catch (error) {
-			console.error('Error fetching admin dashboard stats:', error);
+			logger.error('Error fetching admin dashboard stats:', error);
 			throw new AdminError('Failed to fetch dashboard statistics', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});
@@ -94,7 +95,7 @@ export class AdminService {
 			if (error instanceof AdminError) {
 				throw error;
 			}
-			console.error('Error fetching user by ID:', error);
+			logger.error('Error fetching user by ID:', error);
 			throw new AdminError('Failed to fetch user', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});
@@ -124,7 +125,7 @@ export class AdminService {
 
 			return recentActions;
 		} catch (error) {
-			console.error('Error fetching recent admin actions:', error);
+			logger.error('Error fetching recent admin actions:', error);
 			throw new AdminError('Failed to fetch recent admin actions', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});

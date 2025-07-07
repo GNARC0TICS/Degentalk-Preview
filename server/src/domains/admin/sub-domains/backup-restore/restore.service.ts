@@ -15,6 +15,7 @@ import { existsSync, statSync } from 'fs';
 import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import type { BackupId } from '@shared/types';
+import { logger } from "../../../../core/logger";
 
 // Validation schemas
 export const createRestoreSchema = z.object({
@@ -156,7 +157,7 @@ export class RestoreService {
 
 			// Start restore process asynchronously
 			this.executeRestore(operation.id, operationId, validatedData, adminId).catch((error) => {
-				console.error(`Restore operation ${operationId} failed:`, error);
+				logger.error(`Restore operation ${operationId} failed:`, error);
 				this.updateRestoreStatus(operation.id, 'failed', error.message);
 			});
 

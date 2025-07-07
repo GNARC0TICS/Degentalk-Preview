@@ -16,6 +16,7 @@ import type {
 	PaginationInput
 } from './forum.validators';
 import { ThreadId } from "@shared/types";
+import { logger } from "../../../../core/logger";
 
 export class AdminForumService {
 	async getAllCategories() {
@@ -50,7 +51,7 @@ export class AdminForumService {
 				threadCount: countMap.get(category.id) || 0
 			}));
 		} catch (error) {
-			console.error('Error fetching categories:', error);
+			logger.error('Error fetching categories:', error);
 			throw AdminError.database('Failed to fetch categories');
 		}
 	}
@@ -75,7 +76,7 @@ export class AdminForumService {
 			};
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error fetching category:', error);
+			logger.error('Error fetching category:', error);
 			throw AdminError.database('Failed to fetch category');
 		}
 	}
@@ -123,7 +124,7 @@ export class AdminForumService {
 			return newCategory;
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error creating category:', error);
+			logger.error('Error creating category:', error);
 			throw AdminError.database('Failed to create category');
 		}
 	}
@@ -190,7 +191,7 @@ export class AdminForumService {
 			return updatedCategory;
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error updating category:', error);
+			logger.error('Error updating category:', error);
 			throw AdminError.database('Failed to update category');
 		}
 	}
@@ -233,7 +234,7 @@ export class AdminForumService {
 			return { success: true, message: 'Category deleted successfully' };
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error deleting category:', error);
+			logger.error('Error deleting category:', error);
 			throw AdminError.database('Failed to delete category');
 		}
 	}
@@ -249,7 +250,7 @@ export class AdminForumService {
 
 			return prefixes;
 		} catch (error) {
-			console.error('Error fetching prefixes:', error);
+			logger.error('Error fetching prefixes:', error);
 			throw AdminError.database('Failed to fetch thread prefixes');
 		}
 	}
@@ -303,7 +304,7 @@ export class AdminForumService {
 			return newPrefix;
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error creating thread prefix:', error);
+			logger.error('Error creating thread prefix:', error);
 			throw AdminError.database('Failed to create thread prefix');
 		}
 	}
@@ -316,7 +317,7 @@ export class AdminForumService {
 
 			return allTags;
 		} catch (error) {
-			console.error('Error fetching tags:', error);
+			logger.error('Error fetching tags:', error);
 			throw AdminError.database('Failed to fetch tags');
 		}
 	}
@@ -355,7 +356,7 @@ export class AdminForumService {
 			return newTag;
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error creating tag:', error);
+			logger.error('Error creating tag:', error);
 			throw AdminError.database('Failed to create tag');
 		}
 	}
@@ -406,7 +407,7 @@ export class AdminForumService {
 			return updatedTag;
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error updating tag:', error);
+			logger.error('Error updating tag:', error);
 			throw AdminError.database('Failed to update tag');
 		}
 	}
@@ -426,7 +427,7 @@ export class AdminForumService {
 			return { success: true, message: 'Tag deleted successfully' };
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error deleting tag:', error);
+			logger.error('Error deleting tag:', error);
 			throw AdminError.database('Failed to delete tag');
 		}
 	}
@@ -486,7 +487,7 @@ export class AdminForumService {
 			return updatedThread;
 		} catch (error) {
 			if (error instanceof AdminError) throw error;
-			console.error('Error moderating thread:', error);
+			logger.error('Error moderating thread:', error);
 			throw AdminError.database('Failed to moderate thread');
 		}
 	}

@@ -4,6 +4,7 @@ import type { UserId } from '@shared/types';
 import { eq, and } from 'drizzle-orm';
 import { dgtService } from '../wallet/dgt.service';
 import { EntityId, ProductId, FrameId } from "@shared/types";
+import { logger } from "../../core/logger";
 
 export interface StoreFrame {
 	id: EntityId;
@@ -115,7 +116,7 @@ class AvatarFrameStoreService {
 						: `Successfully obtained ${frame.frameName}!`
 			};
 		} catch (error) {
-			console.error('Error purchasing frame:', error);
+			logger.error('Error purchasing frame:', error);
 
 			// Handle specific DGT errors
 			if (error.message?.includes('Insufficient DGT balance')) {

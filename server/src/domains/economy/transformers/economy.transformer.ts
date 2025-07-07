@@ -29,6 +29,7 @@ import type {
 import { UserTransformer } from '../../users/transformers/user.transformer';
 import { createHash } from 'crypto';
 import { ccpaymentTokenService } from '../../wallet/services/ccpayment-token.service';
+import { logger } from "../../../core/logger";
 
 export class EconomyTransformer {
   /**
@@ -383,7 +384,7 @@ export class EconomyTransformer {
       ]);
     } catch (error) {
       // Fallback to basic data if CCPayment API fails
-      console.warn('Failed to fetch enhanced token data:', error);
+      logger.warn('Failed to fetch enhanced token data:', error);
     }
     
     return {

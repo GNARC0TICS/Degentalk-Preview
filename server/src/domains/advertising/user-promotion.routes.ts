@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { userPromotionService } from './user-promotion.service';
 import { isAuthenticated, isAdmin } from '../auth/middleware/auth.middleware';
+import { logger } from "../../core/logger";
 
 const router = Router();
 
@@ -62,7 +63,7 @@ router.post('/user-promotions', isAuthenticated, async (req, res) => {
 
 		res.status(201).json(result);
 	} catch (error) {
-		console.error('Create user promotion error:', error);
+		logger.error('Create user promotion error:', error);
 		res.status(400).json({
 			error: 'Failed to create promotion',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -91,7 +92,7 @@ router.get('/user-promotions', isAuthenticated, async (req, res) => {
 		const result = await userPromotionService.getUserPromotions(userId, filters);
 		res.json(result);
 	} catch (error) {
-		console.error('Get user promotions error:', error);
+		logger.error('Get user promotions error:', error);
 		res.status(500).json({
 			error: 'Failed to get promotions',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -120,7 +121,7 @@ router.post('/user-promotions/calculate-cost', isAuthenticated, async (req, res)
 
 		res.json(costCalculation);
 	} catch (error) {
-		console.error('Calculate cost error:', error);
+		logger.error('Calculate cost error:', error);
 		res.status(400).json({
 			error: 'Failed to calculate cost',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -153,7 +154,7 @@ router.post('/user-promotions/:id/extend', isAuthenticated, async (req, res) => 
 			additionalHours
 		});
 	} catch (error) {
-		console.error('Extend promotion error:', error);
+		logger.error('Extend promotion error:', error);
 		res.status(400).json({
 			error: 'Failed to extend promotion',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -184,7 +185,7 @@ router.delete('/user-promotions/:id', isAuthenticated, async (req, res) => {
 			promotionId: id
 		});
 	} catch (error) {
-		console.error('Cancel promotion error:', error);
+		logger.error('Cancel promotion error:', error);
 		res.status(400).json({
 			error: 'Failed to cancel promotion',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -212,7 +213,7 @@ router.get('/user-promotions/:id/analytics', isAuthenticated, async (req, res) =
 		const analytics = await userPromotionService.getPromotionAnalytics(id, timeRange);
 		res.json(analytics);
 	} catch (error) {
-		console.error('Get promotion analytics error:', error);
+		logger.error('Get promotion analytics error:', error);
 		res.status(500).json({
 			error: 'Failed to get analytics',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -245,7 +246,7 @@ router.get('/announcement-slots/available', async (req, res) => {
 		);
 		res.json(availableSlots);
 	} catch (error) {
-		console.error('Get available slots error:', error);
+		logger.error('Get available slots error:', error);
 		res.status(500).json({
 			error: 'Failed to get available slots',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -271,7 +272,7 @@ router.post('/announcement-slots/reserve', isAuthenticated, async (req, res) => 
 		await userPromotionService.reserveAnnouncementSlot(slotId, promotionId, userId);
 		res.json({ success: true, message: 'Slot reserved successfully' });
 	} catch (error) {
-		console.error('Reserve slot error:', error);
+		logger.error('Reserve slot error:', error);
 		res.status(400).json({
 			error: 'Failed to reserve slot',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -293,7 +294,7 @@ router.get('/announcement-slots/active', async (req, res) => {
 			message: 'Active announcement slots feature coming soon'
 		});
 	} catch (error) {
-		console.error('Get active slots error:', error);
+		logger.error('Get active slots error:', error);
 		res.status(500).json({
 			error: 'Failed to get active slots',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -314,7 +315,7 @@ router.get('/shoutbox/pins/active', async (req, res) => {
 		const activePins = await userPromotionService.getActivePinnedMessages();
 		res.json(activePins);
 	} catch (error) {
-		console.error('Get active pins error:', error);
+		logger.error('Get active pins error:', error);
 		res.status(500).json({
 			error: 'Failed to get active pins',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -347,7 +348,7 @@ router.post('/user-promotions/:id/track/:eventType', async (req, res) => {
 
 		res.json({ success: true });
 	} catch (error) {
-		console.error('Track promotion event error:', error);
+		logger.error('Track promotion event error:', error);
 		res.status(400).json({
 			error: 'Failed to track event',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -374,7 +375,7 @@ router.get('/admin/user-promotions/pending', isAdmin, async (req, res) => {
 		const pendingPromotions = await userPromotionService.getPendingPromotions(filters);
 		res.json(pendingPromotions);
 	} catch (error) {
-		console.error('Get pending promotions error:', error);
+		logger.error('Get pending promotions error:', error);
 		res.status(500).json({
 			error: 'Failed to get pending promotions',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -407,7 +408,7 @@ router.post('/admin/user-promotions/:id/moderate', isAdmin, async (req, res) => 
 			res.json({ success: true, message: 'Promotion rejected successfully' });
 		}
 	} catch (error) {
-		console.error('Moderate promotion error:', error);
+		logger.error('Moderate promotion error:', error);
 		res.status(400).json({
 			error: 'Failed to moderate promotion',
 			message: error instanceof Error ? error.message : 'Unknown error'
@@ -437,7 +438,7 @@ router.get('/admin/user-promotions/analytics', isAdmin, async (req, res) => {
 			message: 'Admin analytics feature coming soon'
 		});
 	} catch (error) {
-		console.error('Get admin analytics error:', error);
+		logger.error('Get admin analytics error:', error);
 		res.status(500).json({
 			error: 'Failed to get admin analytics',
 			message: error instanceof Error ? error.message : 'Unknown error'

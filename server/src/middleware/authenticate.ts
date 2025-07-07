@@ -5,6 +5,7 @@ import { users } from '@schema';
 import { eq } from 'drizzle-orm';
 import type { GroupId, UserId } from '@shared/types';
 import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
+import { logger } from "../core/logger";
 
 // Extend Express Request type to include user
 declare global {
@@ -71,7 +72,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 			return res.status(401).json({ error: 'Token expired' });
 		}
 
-		console.error('Authentication error:', error);
+		logger.error('Authentication error:', error);
 		return res.status(401).json({ error: 'Invalid token' });
 	}
 };

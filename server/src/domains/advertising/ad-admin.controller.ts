@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { adConfigurationService } from './ad-configuration.service';
 import { campaignManagementService } from './campaign-management.service';
+import { logger } from "../../core/logger";
 
 // Admin validation schemas
 const placementConfigSchema = z.object({
@@ -135,7 +136,7 @@ export class AdAdminController {
 			const config = await adConfigurationService.getSystemConfiguration();
 			res.json(config);
 		} catch (error) {
-			console.error('Get system config error:', error);
+			logger.error('Get system config error:', error);
 			res.status(500).json({
 				error: 'Failed to get system configuration',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -159,7 +160,7 @@ export class AdAdminController {
 
 			res.json(updatedConfig);
 		} catch (error) {
-			console.error('Update system config error:', error);
+			logger.error('Update system config error:', error);
 			res.status(400).json({
 				error: 'Failed to update system configuration',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -178,7 +179,7 @@ export class AdAdminController {
 
 			res.status(201).json(placement);
 		} catch (error) {
-			console.error('Create placement error:', error);
+			logger.error('Create placement error:', error);
 			res.status(400).json({
 				error: 'Failed to create placement',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -199,7 +200,7 @@ export class AdAdminController {
 
 			res.json(placement);
 		} catch (error) {
-			console.error('Update placement error:', error);
+			logger.error('Update placement error:', error);
 			res.status(400).json({
 				error: 'Failed to update placement',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -218,7 +219,7 @@ export class AdAdminController {
 
 			res.status(204).send();
 		} catch (error) {
-			console.error('Delete placement error:', error);
+			logger.error('Delete placement error:', error);
 			res.status(400).json({
 				error: 'Failed to delete placement',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -251,7 +252,7 @@ export class AdAdminController {
 
 			res.json(placementsWithAnalytics);
 		} catch (error) {
-			console.error('List placements error:', error);
+			logger.error('List placements error:', error);
 			res.status(500).json({
 				error: 'Failed to list placements',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -275,7 +276,7 @@ export class AdAdminController {
 
 			res.status(201).json(rule);
 		} catch (error) {
-			console.error('Create rule error:', error);
+			logger.error('Create rule error:', error);
 			res.status(400).json({
 				error: 'Failed to create rule',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -296,7 +297,7 @@ export class AdAdminController {
 
 			res.json(rule);
 		} catch (error) {
-			console.error('Update rule error:', error);
+			logger.error('Update rule error:', error);
 			res.status(400).json({
 				error: 'Failed to update rule',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -319,7 +320,7 @@ export class AdAdminController {
 
 			res.json(rules);
 		} catch (error) {
-			console.error('List rules error:', error);
+			logger.error('List rules error:', error);
 			res.status(500).json({
 				error: 'Failed to list rules',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -362,7 +363,7 @@ export class AdAdminController {
 
 			res.json(analytics);
 		} catch (error) {
-			console.error('Get platform analytics error:', error);
+			logger.error('Get platform analytics error:', error);
 			res.status(500).json({
 				error: 'Failed to get platform analytics',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -394,7 +395,7 @@ export class AdAdminController {
 
 			res.json(campaigns);
 		} catch (error) {
-			console.error('Get all campaigns error:', error);
+			logger.error('Get all campaigns error:', error);
 			res.status(500).json({
 				error: 'Failed to get campaigns',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -430,7 +431,7 @@ export class AdAdminController {
 
 			res.json(result);
 		} catch (error) {
-			console.error('Review campaign error:', error);
+			logger.error('Review campaign error:', error);
 			res.status(400).json({
 				error: 'Failed to review campaign',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -454,7 +455,7 @@ export class AdAdminController {
 
 			res.status(201).json(proposal);
 		} catch (error) {
-			console.error('Create proposal error:', error);
+			logger.error('Create proposal error:', error);
 			res.status(400).json({
 				error: 'Failed to create proposal',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -474,7 +475,7 @@ export class AdAdminController {
 
 			res.json({ success: true, message: 'Proposal executed successfully' });
 		} catch (error) {
-			console.error('Execute proposal error:', error);
+			logger.error('Execute proposal error:', error);
 			res.status(400).json({
 				error: 'Failed to execute proposal',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -503,7 +504,7 @@ export class AdAdminController {
 
 			res.json(alerts);
 		} catch (error) {
-			console.error('Get fraud alerts error:', error);
+			logger.error('Get fraud alerts error:', error);
 			res.status(500).json({
 				error: 'Failed to get fraud alerts',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -539,7 +540,7 @@ export class AdAdminController {
 
 			res.json(report);
 		} catch (error) {
-			console.error('Get revenue report error:', error);
+			logger.error('Get revenue report error:', error);
 			res.status(500).json({
 				error: 'Failed to get revenue report',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -571,7 +572,7 @@ export class AdAdminController {
 
 			res.json(exportData);
 		} catch (error) {
-			console.error('Export analytics error:', error);
+			logger.error('Export analytics error:', error);
 			res.status(500).json({
 				error: 'Failed to export analytics',
 				message: error instanceof Error ? error.message : 'Unknown error'

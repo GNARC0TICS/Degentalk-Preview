@@ -92,7 +92,7 @@ export async function up() {
 
     logger.info('✅ Migration applied successfully: XP, Clout, Levels & Titles Enhancements');
   } catch (error) {
-    console.error('❌ Error applying migration (XP, Clout, Levels & Titles Enhancements):', error);
+    logger.error('❌ Error applying migration (XP, Clout, Levels & Titles Enhancements):', error);
     logger.error('Migration failed (XP, Clout, Levels & Titles Enhancements):', { error });
     throw error;
   } finally {
@@ -134,7 +134,7 @@ export async function down() {
     });
     logger.info('✅ Migration reverted successfully: XP, Clout, Levels & Titles Enhancements');
   } catch (error) {
-    console.error('❌ Error reverting migration (XP, Clout, Levels & Titles Enhancements):', error);
+    logger.error('❌ Error reverting migration (XP, Clout, Levels & Titles Enhancements):', error);
     logger.error('Revert migration failed (XP, Clout, Levels & Titles Enhancements):', { error });
     throw error;
   } finally {

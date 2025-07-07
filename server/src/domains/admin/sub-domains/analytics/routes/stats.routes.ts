@@ -9,6 +9,7 @@ import { platformStatistics } from '@schema';
 import { eq } from 'drizzle-orm';
 import { platformStatsService } from '../services/platformStats.service';
 import { isAdmin } from '../../../../auth/middleware/auth.middleware';
+import { logger } from "../../../../../core/logger";
 
 const router = Router();
 
@@ -46,7 +47,7 @@ router.get('/', async (req, res) => {
 
 		res.json(response);
 	} catch (error) {
-		console.error('Error fetching platform statistics:', error);
+		logger.error('Error fetching platform statistics:', error);
 		res.status(500).json({ error: 'Failed to fetch platform statistics' });
 	}
 });
@@ -75,7 +76,7 @@ router.get('/:key', async (req, res) => {
 			lastUpdated: stat.lastUpdatedAt
 		});
 	} catch (error) {
-		console.error('Error fetching platform statistic:', error);
+		logger.error('Error fetching platform statistic:', error);
 		res.status(500).json({ error: 'Failed to fetch platform statistic' });
 	}
 });
@@ -94,7 +95,7 @@ router.post('/refresh', async (req, res) => {
 			stats
 		});
 	} catch (error) {
-		console.error('Error refreshing platform statistics:', error);
+		logger.error('Error refreshing platform statistics:', error);
 		res.status(500).json({ error: 'Failed to refresh platform statistics' });
 	}
 });

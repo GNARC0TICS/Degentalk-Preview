@@ -212,7 +212,7 @@ export const profileService = {
 				.returning({ updatedId: users.id }); // Ensure the update happened
 
 			if (result.length === 0) {
-				console.warn(`User with ID ${userId} not found for media URL update.`);
+				logger.warn(`User with ID ${userId} not found for media URL update.`);
 				// Consider throwing a "User not found" error or returning a specific failure message
 				return { success: false, message: `User not found. Couldn't update ${mediaType}.` };
 			}

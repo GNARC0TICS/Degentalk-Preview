@@ -10,7 +10,8 @@ import {
 	// type PresignedUploadServiceResult, // Removed as it's implicitly handled by service return types
 	type UploadConfirmationServiceResult // For response of confirmUploadController
 } from './upload.service';
-import { profileService, type ProfileMediaUpdateParams } from '../profile/profile.service'; // Import profileService
+import { profileService, type ProfileMediaUpdateParams } from '../profile/profile.service';
+import { logger } from "../../core/logger";
 
 // The `authenticate` middleware augments Express.Request to include `user`.
 // So, `req.user` should be available and typed correctly if `requireAuth` middleware is used.
@@ -64,10 +65,10 @@ export async function createPresignedUploadUrlController(req: AuthenticatedReque
 		return res.status(200).json(result);
 	} catch (error) {
 		if (error instanceof DegenUploadError) {
-			console.warn(`DegenUploadError: ${error.message}`);
+			logger.warn(`DegenUploadError: ${error.message}`);
 			return res.status(error.statusCode).json({ error: error.message });
 		}
-		console.error('Error generating presigned URL:', error);
+		logger.error('Error generating presigned URL:', error);
 		return res.status(500).json({
 			error:
 				'Internal server error: Our server just rugged itself trying to get that URL. Try again later, maybe?'
@@ -142,9 +143,7 @@ export async function confirmUploadController(
 			// If profile update failed, this is a server-side issue.
 			// The file is uploaded and confirmed in storage, but DB link failed.
 			// This might require a retry mechanism or manual intervention in a real system.
-			console.error(
-				`Failed to update profile for user ${userId} after upload confirmation: ${profileUpdateResult.message}`
-			);
+			logger.error(`Failed to update profile for user ${userId} after upload confirmation: ${profileUpdateResult.message}`);
 			return res.status(500).json({
 				error: `Upload confirmed, but we fumbled updating your profile. Your ${uploadType} is in the void, but not on your page. Our bad.`,
 				details: profileUpdateResult.message
@@ -160,17 +159,17 @@ export async function confirmUploadController(
 		});
 	} catch (error) {
 		if (error instanceof DegenUploadError) {
-			console.warn(`DegenUploadError in confirmUploadController: ${error.message}`);
+			logger.warn(`DegenUploadError in confirmUploadController: ${error.message}`);
 			return res.status(error.statusCode).json({ error: error.message });
 		}
 		// Handle errors from profileService.updateMediaUrl if it throws standard Error
 		if (error instanceof Error && error.message.includes('Failed to update')) {
-			console.error('Error updating profile media URL in controller:', error);
+			logger.error('Error updating profile media URL in controller:', error);
 			return res
 				.status(500)
 				.json({ error: `Profile update failed after confirming upload: ${error.message}` });
 		}
-		console.error('Unexpected error in confirmUploadController:', error);
+		logger.error('Unexpected error in confirmUploadController:', error);
 		return res.status(500).json({
 			error: 'Internal server error: The confirmation ritual failed. Server demons strike again.'
 		});

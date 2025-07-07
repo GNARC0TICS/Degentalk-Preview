@@ -23,6 +23,7 @@ import type {
 	MassAirdropInput
 } from './treasury.validators';
 import type { AdminUserId, ActionId } from '@shared/types';
+import { logger } from "../../../../core/logger";
 
 // Helper to format DGT amounts for display (assuming 6 decimal places for DGT)
 function formatDgtAmount(amount: number): number {
@@ -72,7 +73,7 @@ export class AdminTreasuryService {
 				holders: holdersCount
 			};
 		} catch (error: any) {
-			console.error('Error in getDgtSupplyStats:', error);
+			logger.error('Error in getDgtSupplyStats:', error);
 			throw new AdminError('Failed to fetch DGT supply statistics', 500, AdminErrorCodes.DB_ERROR, {
 				originalError: error.message
 			});
@@ -325,7 +326,7 @@ export class AdminTreasuryService {
 				maxTipAmount: settings.maxTipAmount ? formatDgtAmount(Number(settings.maxTipAmount)) : 0
 			};
 		} catch (error: any) {
-			console.error('Error in getDgtEconomyParameters:', error);
+			logger.error('Error in getDgtEconomyParameters:', error);
 			throw new AdminError(
 				'Failed to fetch DGT economy parameters',
 				500,
@@ -401,7 +402,7 @@ export class AdminTreasuryService {
 					: 0
 			};
 		} catch (error: any) {
-			console.error('Error in updateDgtEconomyParameters:', error);
+			logger.error('Error in updateDgtEconomyParameters:', error);
 			throw new AdminError(
 				'Failed to update DGT economy parameters',
 				500,

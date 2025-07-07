@@ -14,6 +14,7 @@ import { users, transactions } from '@schema';
 import { eq } from 'drizzle-orm';
 import { isAdmin } from '../auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
+import { logger } from "../../core/logger";
 
 /**
  * Format DGT amount from storage format (BIGINT with 6 decimal precision) to display format
@@ -196,7 +197,7 @@ async function adjustTreasuryBalance(
 			message: `Successfully ${type === 'credit' ? 'credited' : 'debited'} ${amountNumeric} ${currency} to treasury`
 		});
 	} catch (error: any) {
-		console.error('Error adjusting treasury balance:', error);
+		logger.error('Error adjusting treasury balance:', error);
 
 		if (
 			error.message &&
@@ -306,7 +307,7 @@ router.get('/overview', isAdmin, async (req: Request, res: Response) => {
 					}
 				}
 			} catch (e) {
-				console.warn('Error parsing transaction metadata:', e);
+				logger.warn('Error parsing transaction metadata:', e);
 			}
 
 			// Use DGT formatting for DGT, regular for USDT
@@ -354,7 +355,7 @@ router.get('/overview', isAdmin, async (req: Request, res: Response) => {
 
 		return res.status(200).json(overview);
 	} catch (error) {
-		console.error('Error fetching treasury overview:', error);
+		logger.error('Error fetching treasury overview:', error);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 });
@@ -490,7 +491,7 @@ router.post('/adjust-balance', isAdmin, async (req: Request, res: Response) => {
 			type
 		});
 	} catch (error) {
-		console.error('Error adjusting balance:', error);
+		logger.error('Error adjusting balance:', error);
 
 		if (error.message === 'Insufficient user balance') {
 			return res.status(400).json({ message: 'Insufficient user balance for debit operation' });
@@ -606,7 +607,7 @@ router.put('/settings', isAdmin, async (req: Request, res: Response) => {
 			message: 'Treasury settings updated successfully'
 		});
 	} catch (error: any) {
-		console.error('Error updating treasury settings:', error);
+		logger.error('Error updating treasury settings:', error);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 });
@@ -625,7 +626,7 @@ router.post('/adjust-usdt', isAdmin, async (req: Request, res: Response) => {
 			currency: 'USDT'
 		});
 	} catch (error) {
-		console.error('Error in adjust-usdt endpoint:', error);
+		logger.error('Error in adjust-usdt endpoint:', error);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 });
@@ -651,7 +652,7 @@ router.get('/balance-history', isAdmin, async (req: Request, res: Response) => {
 
 		return res.status(200).json(history);
 	} catch (error: any) {
-		console.error('Error fetching treasury balance history:', error);
+		logger.error('Error fetching treasury balance history:', error);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 });
@@ -684,7 +685,7 @@ router.get('/transaction-history', isAdmin, async (req: Request, res: Response) 
 
 		return res.status(200).json(history);
 	} catch (error: any) {
-		console.error('Error fetching treasury transaction history:', error);
+		logger.error('Error fetching treasury transaction history:', error);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 });

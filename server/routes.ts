@@ -200,7 +200,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 			res.json(result);
 		} catch (error) {
-			console.error('Error fetching content:', error);
+			logger.error('Error fetching content:', error);
 			res.status(500).json({ error: 'Failed to fetch content' });
 		}
 	});
@@ -242,7 +242,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 			res.json(hotThreads);
 		} catch (error) {
-			console.error('Error fetching hot threads:', error);
+			logger.error('Error fetching hot threads:', error);
 			res.status(500).json({ error: 'Failed to fetch hot threads' });
 		}
 	});
@@ -438,7 +438,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			});
 			return res.status(204).end();
 		} catch (e) {
-			console.error('Analytics track error', e);
+			logger.error('Analytics track error', e);
 			return res.status(500).json({ error: 'Failed to record analytics' });
 		}
 	});
@@ -517,7 +517,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 						}
 					}
 				} catch (error) {
-					console.error('Error processing WebSocket message:', error);
+					logger.error('Error processing WebSocket message:', error);
 				}
 			});
 

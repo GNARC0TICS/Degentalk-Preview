@@ -98,7 +98,7 @@ export class AdServingService {
 
 			return adResponse;
 		} catch (error) {
-			console.error('Ad serving error:', error);
+			logger.error('Ad serving error:', error);
 			return null;
 		}
 	}
@@ -502,7 +502,7 @@ export class AdServingService {
 					qualityScore: response.metadata.qualityScore.toString()
 				});
 			} catch (error) {
-				console.error('Failed to track impression:', error);
+				logger.error('Failed to track impression:', error);
 			}
 		}, 0);
 	}

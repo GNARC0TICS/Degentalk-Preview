@@ -112,7 +112,7 @@ export class AdController {
 
 			res.json(adResponse);
 		} catch (error) {
-			console.error('Ad serving error:', error);
+			logger.error('Ad serving error:', error);
 			res.status(500).json({
 				error: 'Failed to serve ad',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -139,14 +139,14 @@ export class AdController {
 					// TODO: Implement event tracking service
 					logger.info('Tracking event:', trackingData);
 				} catch (error) {
-					console.error('Failed to track event:', error);
+					logger.error('Failed to track event:', error);
 				}
 			}, 0);
 
 			// Return quickly to avoid blocking user experience
 			res.status(200).json({ success: true });
 		} catch (error) {
-			console.error('Event tracking error:', error);
+			logger.error('Event tracking error:', error);
 			res.status(400).json({
 				error: 'Invalid tracking data',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -173,7 +173,7 @@ export class AdController {
 
 			res.status(201).json(result);
 		} catch (error) {
-			console.error('Campaign creation error:', error);
+			logger.error('Campaign creation error:', error);
 			res.status(400).json({
 				error: 'Failed to create campaign',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -194,7 +194,7 @@ export class AdController {
 
 			res.json(campaign);
 		} catch (error) {
-			console.error('Get campaign error:', error);
+			logger.error('Get campaign error:', error);
 			res.status(404).json({
 				error: 'Campaign not found',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -221,7 +221,7 @@ export class AdController {
 
 			res.json(result);
 		} catch (error) {
-			console.error('List campaigns error:', error);
+			logger.error('List campaigns error:', error);
 			res.status(500).json({
 				error: 'Failed to list campaigns',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -249,7 +249,7 @@ export class AdController {
 
 			res.json(campaign);
 		} catch (error) {
-			console.error('Update campaign error:', error);
+			logger.error('Update campaign error:', error);
 			res.status(400).json({
 				error: 'Failed to update campaign',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -270,7 +270,7 @@ export class AdController {
 
 			res.status(204).send();
 		} catch (error) {
-			console.error('Delete campaign error:', error);
+			logger.error('Delete campaign error:', error);
 			res.status(400).json({
 				error: 'Failed to delete campaign',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -299,7 +299,7 @@ export class AdController {
 
 			res.json(analytics);
 		} catch (error) {
-			console.error('Get analytics error:', error);
+			logger.error('Get analytics error:', error);
 			res.status(500).json({
 				error: 'Failed to get analytics',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -319,7 +319,7 @@ export class AdController {
 
 			res.json(recommendations);
 		} catch (error) {
-			console.error('Get bid recommendations error:', error);
+			logger.error('Get bid recommendations error:', error);
 			res.status(500).json({
 				error: 'Failed to get bid recommendations',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -340,7 +340,7 @@ export class AdController {
 
 			res.json(result);
 		} catch (error) {
-			console.error('Optimize campaign error:', error);
+			logger.error('Optimize campaign error:', error);
 			res.status(500).json({
 				error: 'Failed to optimize campaign',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -377,7 +377,7 @@ export class AdController {
 
 			res.json(publicPlacements);
 		} catch (error) {
-			console.error('Get placements error:', error);
+			logger.error('Get placements error:', error);
 			res.status(500).json({
 				error: 'Failed to get placements',
 				message: error instanceof Error ? error.message : 'Unknown error'
@@ -410,7 +410,7 @@ export class AdController {
 
 			res.json(publicConfig);
 		} catch (error) {
-			console.error('Get config error:', error);
+			logger.error('Get config error:', error);
 			res.status(500).json({
 				error: 'Failed to get configuration',
 				message: error instanceof Error ? error.message : 'Unknown error'
