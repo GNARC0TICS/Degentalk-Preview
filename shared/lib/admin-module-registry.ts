@@ -1,4 +1,5 @@
 import { adminConfig, type AdminModule, type AdminPermission } from '../config/admin.config';
+import { logger } from "../../server/src/core/logger";
 
 // Simple User interface for admin module registry
 interface User {
@@ -38,7 +39,7 @@ export class AdminModuleRegistry {
 		this.initialized = true;
 
 		if (this.options.devMode) {
-			console.log(`[AdminModuleRegistry] Initialized with ${this.modules.size} modules`);
+			logger.info(`[AdminModuleRegistry] Initialized with ${this.modules.size} modules`);
 		}
 	}
 
@@ -61,7 +62,7 @@ export class AdminModuleRegistry {
 		}
 
 		if (this.options.devMode) {
-			console.log(`[AdminModuleRegistry] Registered module: ${module.id}`);
+			logger.info(`[AdminModuleRegistry] Registered module: ${module.id}`);
 		}
 	}
 
@@ -79,7 +80,7 @@ export class AdminModuleRegistry {
 		const existed = this.modules.delete(moduleId);
 
 		if (existed && this.options.devMode) {
-			console.log(`[AdminModuleRegistry] Unregistered module: ${moduleId}`);
+			logger.info(`[AdminModuleRegistry] Unregistered module: ${moduleId}`);
 		}
 
 		return existed;
@@ -175,7 +176,7 @@ export class AdminModuleRegistry {
 		module.enabled = enabled;
 
 		if (this.options.devMode) {
-			console.log(`[AdminModuleRegistry] Module ${moduleId} ${enabled ? 'enabled' : 'disabled'}`);
+			logger.info(`[AdminModuleRegistry] Module ${moduleId} ${enabled ? 'enabled' : 'disabled'}`);
 		}
 
 		return true;
@@ -193,7 +194,7 @@ export class AdminModuleRegistry {
 		module.settings = { ...module.settings, ...settings };
 
 		if (this.options.devMode) {
-			console.log(`[AdminModuleRegistry] Updated settings for module: ${moduleId}`);
+			logger.info(`[AdminModuleRegistry] Updated settings for module: ${moduleId}`);
 		}
 
 		return true;
@@ -204,15 +205,12 @@ export class AdminModuleRegistry {
 	 */
 	getNavigationStructure(user: User | null): AdminModule[] {
 		const userModules = this.getModulesForUser(user);
-		console.log('DEBUG: userModules count:', userModules.length);
-		console.log(
-			'DEBUG: userModules sample:',
-			userModules.slice(0, 2).map((m) => ({
-				id: m.id,
-				hasSubModules: !!m.subModules,
-				subModulesCount: m.subModules?.length || 0
-			}))
-		);
+		logger.info('DEBUG: userModules count:', userModules.length);
+		logger.info('DEBUG: userModules sample:', userModules.slice(0, 2).map((m) => ({
+        				id: m.id,
+        				hasSubModules: !!m.subModules,
+        				subModulesCount: m.subModules?.length || 0
+        			})));
 
 		// Build a complete tree first, ensuring every module has subModules array
 		const moduleMap = new Map<string, AdminModule>();
@@ -237,21 +235,16 @@ export class AdminModuleRegistry {
 					this.hasPermission(subModule.id, user)
 				);
 				moduleWithSubs.subModules = accessibleSubModules;
-				console.log(
-					`DEBUG: Module ${module.id} has ${module.subModules.length} total subModules, ${accessibleSubModules.length} accessible`
-				);
+				logger.info(`DEBUG: Module ${module.id} has ${module.subModules.length} total subModules, ${accessibleSubModules.length} accessible`);
 			}
 
 			rootModules.push(moduleWithSubs);
 		}
 
-		console.log('DEBUG: rootModules count:', rootModules.length);
-		console.log(
-			'DEBUG: rootModules with subModules:',
-			rootModules
-				.filter((m) => m.subModules && m.subModules.length > 0)
-				.map((m) => ({ id: m.id, subModulesCount: m.subModules?.length }))
-		);
+		logger.info('DEBUG: rootModules count:', rootModules.length);
+		logger.info('DEBUG: rootModules with subModules:', rootModules
+        				.filter((m) => m.subModules && m.subModules.length > 0)
+        				.map((m) => ({ id: m.id, subModulesCount: m.subModules?.length })));
 
 		return rootModules;
 	}

@@ -12,6 +12,7 @@ import {
 import { eq, and, desc, sql } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
 import type { AdminId } from '@shared/types';
+import { UserId } from "@shared/types";
 
 // Import core XP service once refactored, e.g.:
 // import { coreXpService } from '../../../xp/xp.service';
@@ -253,7 +254,7 @@ export class XpAdminService {
 		return result;
 	}
 
-	async getXpAdjustmentLogs(params: { userId?: number; limit?: number; offset?: number }) {
+	async getXpAdjustmentLogs(params: { userId?: UserId; limit?: number; offset?: number }) {
 		const { userId, limit = 50, offset = 0 } = params; // Default limit to 50 as per your plan
 		logger.info('XP_ADMIN_SERVICE', 'Get XP Adjustment Logs called', params);
 

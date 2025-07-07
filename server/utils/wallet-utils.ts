@@ -3,6 +3,7 @@ import { sql } from 'drizzle-orm';
 import { users, transactions } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger, LogLevel, LogAction } from '../src/core/logger';
+import { TransactionId } from "@shared/types";
 
 /**
  * Convert DGT amount from storage format (BIGINT with 6 decimal precision) to display format
@@ -44,7 +45,7 @@ export async function calculateDgtFromUsdt(usdtAmount: number): Promise<number> 
  * This function would be called by an admin action or automated blockchain listener
  */
 export async function confirmDeposit(
-	transactionId: number,
+	transactionId: TransactionId,
 	usdtAmount: number,
 	blockchainTxId?: string
 ): Promise<boolean> {
@@ -111,7 +112,7 @@ export async function confirmDeposit(
  * This function would be called by an admin action
  */
 export async function processWithdrawal(
-	transactionId: number,
+	transactionId: TransactionId,
 	status: 'confirmed' | 'rejected',
 	blockchainTxId?: string,
 	adminNotes?: string

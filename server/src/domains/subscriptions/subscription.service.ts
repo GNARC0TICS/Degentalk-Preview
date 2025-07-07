@@ -19,6 +19,7 @@ import { eq, and, sql, desc, gte, lt } from 'drizzle-orm';
 import { dgtService } from '../wallet/dgt.service';
 import { logger } from '../../core/logger';
 import type { CosmeticId, ItemId, SubscriptionId } from '@shared/types';
+import { EntityId } from "@shared/types";
 
 export interface SubscriptionPurchaseRequest {
 	userId: string;
@@ -26,7 +27,7 @@ export interface SubscriptionPurchaseRequest {
 }
 
 export interface SubscriptionInfo {
-	id: number;
+	id: EntityId;
 	userId: string;
 	type: 'vip_pass' | 'degen_pass';
 	status: 'active' | 'expired' | 'cancelled' | 'lifetime';

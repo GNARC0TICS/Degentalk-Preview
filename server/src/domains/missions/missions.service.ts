@@ -11,6 +11,7 @@ import {
 } from '@schema';
 import { logger } from '../../core/logger';
 import { addDays, startOfDay, endOfDay, isBefore, format, parse, addWeeks } from 'date-fns';
+import { MissionId } from "@shared/types";
 
 interface MissionProgressUpdate {
 	userId: UserId;
@@ -425,7 +426,7 @@ export class MissionsService {
 	 */
 	async claimMissionReward(
 		userId: UserId,
-		missionId: number
+		missionId: MissionId
 	): Promise<{
 		success: boolean;
 		rewards?: {

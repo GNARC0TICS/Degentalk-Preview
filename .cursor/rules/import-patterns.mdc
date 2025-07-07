@@ -88,3 +88,16 @@ import { api } from '@/lib/api';
 // Then use specific endpoints
 api.shop.getItems()
 ```
+
+## Type-only Imports
+To avoid runtime "missing export" errors in ESM/TS projects, **types and interfaces must be imported with the `import type` keyword**.
+
+```typescript
+// ✅ Good – type import erased at runtime
+import type { Request, Response, NextFunction } from 'express';
+
+// ❌ Bad – will look for actual exports and crash in ESM
+import { Request, Response, NextFunction } from 'express';
+```
+
+This applies to all server code and shared libraries.  A custom ESLint rule (`degen/no-missing-branded-id-import`) already enforces this; violations fail CI.

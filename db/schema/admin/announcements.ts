@@ -34,7 +34,7 @@ export const announcements = pgTable(
 		priority: integer('priority').default(0),
 		visibleTo: jsonb('visible_to')
 			.$type<string[]>()
-			.default(JSON.stringify(['all'])), // Storing as JSON string array
+			.default(sql`'["all"]'::jsonb`), // Storing as JSON string array
 		tickerMode: boolean('ticker_mode').default(true),
 		link: varchar('link', { length: 255 }),
 		bgColor: varchar('bg_color', { length: 30 }),

@@ -65,6 +65,7 @@ import { xpLevelService, XP_ACTIONS } from '../server/services/xp-level-service'
 import { eq } from 'drizzle-orm';
 import { fileURLToPath } from 'url';
 import { config } from 'dotenv';
+import { UserId } from "@shared/types";
 
 // Load environment variables from .env file
 config();
@@ -82,7 +83,7 @@ async function testXpSystem() {
       .where(eq(users.username, 'xp_test_user'))
       .limit(1);
     
-    let userId: number;
+    let userId: UserId;
     
     if (testUser.length === 0) {
       console.log('Creating test user...');

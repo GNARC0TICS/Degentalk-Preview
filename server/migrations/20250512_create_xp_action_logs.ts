@@ -1,9 +1,10 @@
 import { sql } from "drizzle-orm";
 import { db } from '@db';
 import { xpActionLogs } from "../../shared/schema";
+import { logger } from "./src/core/logger";
 
 export async function up() {
-  console.log('Running migration: Create XP action logs tables');
+  logger.info('Running migration: Create XP action logs tables');
 
   await sql`
     -- Create the xp_action_logs table for tracking all XP awards from actions
@@ -41,7 +42,7 @@ export async function up() {
 }
 
 export async function down() {
-  console.log('Reverting migration: Create XP action logs tables');
+  logger.info('Reverting migration: Create XP action logs tables');
   
   await sql`
     DROP TABLE IF EXISTS xp_action_limits;

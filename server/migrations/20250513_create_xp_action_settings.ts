@@ -1,9 +1,10 @@
 import { sql } from "drizzle-orm";
 import { db } from '@db';
 import { xpActionSettings } from "../../shared/schema";
+import { logger } from "./src/core/logger";
 
 export async function up() {
-  console.log('Running migration: Create XP action settings table');
+  logger.info('Running migration: Create XP action settings table');
 
   await sql`
     -- Create the xp_action_settings table for storing configurable XP action values
@@ -24,7 +25,7 @@ export async function up() {
 }
 
 export async function down() {
-  console.log('Reverting migration: Create XP action settings table');
+  logger.info('Reverting migration: Create XP action settings table');
   
   await sql`
     DROP TABLE IF EXISTS xp_action_settings;

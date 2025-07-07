@@ -19,6 +19,7 @@ import { eq, sql, lte, desc, and, isNull } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 import { getLevelForXp, getXpForLevel } from '@shared/economy/reward-calculator';
 import { sanitizeMultiplier } from '@shared/economy/economy.config';
+import { TitleId, BadgeId, FrameId, ForumId } from "@shared/types";
 
 /**
  * XP Action types used in economySettings
@@ -414,7 +415,7 @@ export class XpLevelService {
 						await tx
 							.insert(userTitles)
 							.values(
-								unlocks.titles.map((titleId: number) => ({
+								unlocks.titles.map((titleId: TitleId) => ({
 									userId,
 									titleId,
 									awardedAt: new Date()
@@ -428,7 +429,7 @@ export class XpLevelService {
 						await tx
 							.insert(userBadges)
 							.values(
-								unlocks.badges.map((badgeId: number) => ({
+								unlocks.badges.map((badgeId: BadgeId) => ({
 									userId,
 									badgeId,
 									awardedAt: new Date()
@@ -442,7 +443,7 @@ export class XpLevelService {
 						await tx
 							.insert(userOwnedFrames)
 							.values(
-								unlocks.frames.map((frameId: number) => ({
+								unlocks.frames.map((frameId: FrameId) => ({
 									userId,
 									frameId,
 									source: 'level'
@@ -554,7 +555,7 @@ export class XpLevelService {
 	 * If the user has no roles with a multiplier > 0, a default of 1 is returned.
 	 * Now includes forum multiplier protection against stacking exploits.
 	 */
-	private async getUserXpMultiplier(userId: UserId, forumId?: number): Promise<number> {
+	private async getUserXpMultiplier(userId: UserId, forumId?: ForumId): Promise<number> {
 		try {
 			// Get role multiplier
 			const roleMultipliers = await this.db

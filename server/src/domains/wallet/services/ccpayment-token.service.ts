@@ -9,9 +9,10 @@ import { logger } from '@server/src/core/logger';
 import { WalletError, ErrorCodes } from '@server/src/core/errors';
 import { ccpaymentApiService } from './ccpayment-api.service';
 import type { CoinId } from '@shared/types';
+import { EntityId } from "@shared/types";
 
 export interface CCPaymentTokenInfo {
-  coinId: number;
+  coinId: EntityId;
   symbol: string;
   coinFullName: string;
   logoUrl: string;
@@ -33,20 +34,20 @@ export interface CCPaymentNetworkInfo {
 }
 
 export interface CCPaymentTokenPrice {
-  coinId: number;
+  coinId: EntityId;
   usdtPrice: string;
   timestamp: number;
 }
 
 export interface CCPaymentWithdrawFee {
-  coinId: number;
+  coinId: EntityId;
   coinSymbol: string;
   amount: string;
   chain: string;
 }
 
 export interface CCPaymentAppBalance {
-  coinId: number;
+  coinId: EntityId;
   coinSymbol: string;
   available: string;
 }
@@ -216,7 +217,7 @@ export class CCPaymentTokenService {
 
       const response = await ccpaymentApiService.makeRequest<{
         fee: {
-          coinId: number;
+          coinId: EntityId;
           coinSymbol: string;
           amount: string;
         };

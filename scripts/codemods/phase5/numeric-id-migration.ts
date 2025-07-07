@@ -2,6 +2,8 @@ import { Project, SyntaxKind, TypeNode, PropertySignature, Parameter, InterfaceD
 import { globSync } from 'glob';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import fs from 'node:fs';
+import { execSync } from 'node:child_process';
 
 /**
  * Codemod: numeric-id-migration
@@ -223,8 +225,9 @@ export async function numericIdMigrationCodemod(dryRun = false): Promise<Migrati
 }
 
 function isNumericType(typeNode: TypeNode): boolean {
-  const typeText = typeNode.getText().trim();
-  return typeText === 'number' || typeText === 'bigint';
+  const txt = typeNode.getText().replace(/\s+/g, '');
+  // Matches: number, bigint, number|null, number|undefined, bigint|null|undefined etc.
+  return /^(number|bigint)(\|null)?(\|undefined)?$/.test(txt);
 }
 
 function getBrandedTypeForProperty(propertyName: string, propSig: PropertySignature): string | null {
@@ -303,7 +306,7 @@ export async function removeBridgeFile(dryRun = false): Promise<boolean> {
   }).map(file => {
     const fullPath = path.join(projectRoot, file);
     try {
-      const content = require('fs').readFileSync(fullPath, 'utf8');
+      const content = fs.readFileSync(fullPath, 'utf8');
       if (content.includes('@db/types') && !file.includes('db/types/id.types.ts')) {
         return file;
       }
@@ -325,7 +328,6 @@ export async function removeBridgeFile(dryRun = false): Promise<boolean> {
   }
 
   try {
-    const fs = require('fs');
     fs.unlinkSync(bridgePath);
     console.log(`✅ Bridge file removed: ${bridgePath}`);
     return true;
@@ -368,7 +370,6 @@ if (typeof require !== 'undefined' && require.main === module) {
       console.log('\n🔍 Validating TypeScript compilation before bridge removal...');
       
       try {
-        const { execSync } = require('child_process');
         execSync('pnpm typecheck', { stdio: 'pipe' });
         console.log('✅ TypeScript compilation successful');
         

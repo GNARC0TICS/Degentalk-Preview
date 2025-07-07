@@ -1,9 +1,10 @@
 import { db } from '@db';
 import { xpAdjustmentLogs } from "../../shared/schema";
 import { sql } from "drizzle-orm";
+import { logger } from "./src/core/logger";
 
 export async function up() {
-  console.log('Running migration: Create XP adjustment logs table');
+  logger.info('Running migration: Create XP adjustment logs table');
 
   await db.execute(sql`
     CREATE TABLE IF NOT EXISTS xp_adjustment_logs (
@@ -25,7 +26,7 @@ export async function up() {
 }
 
 export async function down() {
-  console.log('Reverting migration: Create XP adjustment logs table');
+  logger.info('Reverting migration: Create XP adjustment logs table');
   
   await db.execute(sql`
     DROP TABLE IF EXISTS xp_adjustment_logs;

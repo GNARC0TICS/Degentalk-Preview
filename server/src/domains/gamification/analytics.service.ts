@@ -23,6 +23,7 @@ import {
 } from '@schema';
 import { logger } from '../../core/logger';
 import type { UserId } from '@shared/types';
+import { AchievementId } from "@shared/types";
 
 export interface ProgressionMetrics {
 	period: string;
@@ -41,13 +42,13 @@ export interface AchievementMetrics {
 	totalCompletions: number;
 	avgCompletionRate: number;
 	popularAchievements: Array<{
-		achievementId: number;
+		achievementId: AchievementId;
 		name: string;
 		completions: number;
 		completionRate: number;
 	}>;
 	rareAchievements: Array<{
-		achievementId: number;
+		achievementId: AchievementId;
 		name: string;
 		completions: number;
 		rarity: number;

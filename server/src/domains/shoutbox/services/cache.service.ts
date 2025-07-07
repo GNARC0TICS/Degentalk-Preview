@@ -13,6 +13,7 @@ import type { UserId } from '@shared/types';
 import { logger } from '@server/src/core/logger';
 import { createHash } from 'crypto';
 import type { RoomId, MessageId } from '@shared/types';
+import { MessageId, EntityId } from "@shared/types";
 
 interface CacheItem<T> {
 	data: T;
@@ -21,7 +22,7 @@ interface CacheItem<T> {
 }
 
 interface MessageCacheEntry {
-	id: number;
+	id: MessageId;
 	userId: UserId | null;
 	roomId: RoomId;
 	content: string;
@@ -51,7 +52,7 @@ interface UserSessionCache {
 }
 
 interface RoomCache {
-	id: number;
+	id: EntityId;
 	name: string;
 	config: any;
 	accessibleUsers: Set<UserId>;

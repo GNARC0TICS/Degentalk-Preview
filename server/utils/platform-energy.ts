@@ -6,6 +6,7 @@ import { db } from '@db';
 import type { UserId } from '@shared/types';
 import { threads, posts, users, forumStructure } from '@schema';
 import { eq, desc, and, count } from 'drizzle-orm';
+import { ThreadId } from "@shared/types";
 
 /**
  * Recalculates hot scores for all threads - Simplified for MVP
@@ -191,7 +192,7 @@ export async function getLeaderboards(type: string = 'xp', isCurrentWeek: boolea
 /**
  * Feature a thread - Placeholder for MVP
  */
-export async function featureThread(threadId: number, userId: UserId, expiresAt?: Date) {
+export async function featureThread(threadId: ThreadId, userId: UserId, expiresAt?: Date) {
 	try {
 		console.log(`✅ Thread ${threadId} featured by user ${userId} (MVP stub - not implemented)`);
 		return true;
@@ -204,7 +205,7 @@ export async function featureThread(threadId: number, userId: UserId, expiresAt?
 /**
  * Unfeature a thread - Placeholder for MVP
  */
-export async function unfeatureThread(threadId: number) {
+export async function unfeatureThread(threadId: ThreadId) {
 	try {
 		console.log(`✅ Thread ${threadId} unfeatured (MVP stub - not implemented)`);
 		return true;

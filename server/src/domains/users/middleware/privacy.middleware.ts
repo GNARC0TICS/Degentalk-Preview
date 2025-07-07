@@ -8,6 +8,8 @@
 import type { Request, Response, NextFunction } from 'express';
 import { UserTransformer } from '../transformers/user.transformer';
 import type { UserId } from '@shared/types';
+import { logger } from "../../../core/logger";
+import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
 
 export interface PrivacyRequest extends Request {
   user?: {
@@ -30,7 +32,7 @@ export const userPrivacyMiddleware = (req: PrivacyRequest, res: Response, next: 
   
   res.json = function(data: any) {
     if (data && data.success && data.data) {
-      const transformedData = transformUserData(data.data, req.user, req.targetUser);
+      const transformedData = transformUserData(data.data, getAuthenticatedUser(req), req.targetUser);
       
       return originalJson.call(this, {
         ...data,
@@ -195,7 +197,7 @@ function anonymizeIP(ip: string): string {
 export const gdprConsentMiddleware = (req: PrivacyRequest, res: Response, next: NextFunction) => {
   // For data export or sensitive operations, check consent
   if (req.path.includes('/export') || req.path.includes('/analytics')) {
-    if (!req.user) {
+    if (!getAuthenticatedUser(req)) {
       return res.status(401).json({
         success: false,
         error: 'Authentication required for data processing operations'
@@ -217,9 +219,9 @@ export const dataAccessAuditMiddleware = (req: PrivacyRequest, res: Response, ne
   
   res.json = function(data: any) {
     // Log data access for audit trail
-    if (req.user && data && data.success) {
+    if (getAuthenticatedUser(req) && data && data.success) {
       logDataAccess({
-        userId: req.user.id,
+        userId: getAuthenticatedUser(req).id,
         action: `${req.method} ${req.path}`,
         timestamp: new Date(),
         ip: req.ip,
@@ -244,11 +246,11 @@ function logDataAccess(event: {
   userAgent: string;
 }) {
   // Implementation would typically write to audit log database
-  console.log('[GDPR AUDIT]', {
-    userId: event.userId,
-    action: event.action,
-    timestamp: event.timestamp.toISOString(),
-    ip: event.ip, // Already anonymized by ipAnonymizationMiddleware
-    userAgent: event.userAgent
-  });
+  logger.info('[GDPR AUDIT]', {
+        userId: event.userId,
+        action: event.action,
+        timestamp: event.timestamp.toISOString(),
+        ip: event.ip, // Already anonymized by ipAnonymizationMiddleware
+        userAgent: event.userAgent
+      });
 }

@@ -4,6 +4,7 @@ import { db } from '@db';
 import { eq, count, sql as drizzleSql } from 'drizzle-orm';
 import { defaultSocialConfig } from '@shared/config/social.config';
 import type { SocialConfig } from '@shared/config/social.config';
+import { logger } from "../../../../core/logger";
 
 export class SocialService {
 	private static readonly CONFIG_KEY = 'social_config';
@@ -32,7 +33,7 @@ export class SocialService {
 		this.validateConfig(newConfig);
 
 		// TODO: Implement database storage once schema imports are fixed
-		console.log('Social config update attempted (disabled):', newConfig);
+		logger.info('Social config update attempted (disabled):', newConfig);
 
 		return newConfig;
 	}
@@ -58,7 +59,7 @@ export class SocialService {
 	 */
 	static async resetToDefaults(adminUserId: string): Promise<SocialConfig> {
 		// TODO: Implement database reset once schema imports are fixed
-		console.log('Social config reset attempted (disabled) by:', adminUserId);
+		logger.info('Social config reset attempted (disabled) by:', adminUserId);
 		return defaultSocialConfig;
 	}
 

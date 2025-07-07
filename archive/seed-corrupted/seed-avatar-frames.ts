@@ -1,5 +1,5 @@
 import type { HeatEventId } from 'import { randomUUID } from "crypto";
-@db/types';
+@shared/types';
 import type { ActionId } from '@shared/types';
 import type { AuditLogId } from '@shared/types';
 import type { EventId } from '@shared/types';

@@ -243,3 +243,12 @@ export const adminConfig = {
 - **Feature flags** for all new functionality
 
 This pattern makes DegenTalk infinitely more flexible, maintainable, and scalable! 🚀
+
+### 6. Single-Source Build Configs (@configCanonical)
+**Trigger:** Any Tailwind, PostCSS, Vite, ESLint, Prettier, or Style-Dictionary config file added/edited.
+
+**Action:** Only the canonical copies inside the root `config/` directory are allowed.  Sub-packages must **either**:
+1. Omit their own config file, letting the root setting cascade; **or**
+2. Create a one-liner re-export (e.g. `module.exports = require('../../config/tailwind.config');`).
+
+**CI Guard:** Script `scripts/validation/validate-config-canonicalization.ts` fails the build if additional `*config.*` files are detected outside `config/`.

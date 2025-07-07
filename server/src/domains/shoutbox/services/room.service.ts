@@ -12,6 +12,7 @@ import { eq, and, or, desc, asc, sql, gt, lt, isNull, inArray, not, count } from
 import { logger } from '@server/src/core/logger';
 import { createId } from '@paralleldrive/cuid2';
 import type { RoomId, GroupId } from '@shared/types';
+import { EntityId } from "@shared/types";
 
 export interface CreateRoomData {
 	name: string;
@@ -27,7 +28,7 @@ export interface CreateRoomData {
 }
 
 export interface RoomWithStats {
-	id: number;
+	id: EntityId;
 	name: string;
 	description: string | null;
 	isPrivate: boolean;

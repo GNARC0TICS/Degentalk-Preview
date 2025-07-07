@@ -4,6 +4,7 @@ import { db } from '../../../../core/db';
 import { referralSources } from '@schema/system/referralSources';
 import { userReferrals } from '@schema/system/userReferrals';
 import { users } from '@schema/user/users';
+import { EntityId } from "@shared/types";
 
 /**
  * Service for managing referral sources and user referrals
@@ -56,7 +57,7 @@ export class ReferralsService {
 	 */
 	async recordUserReferral(params: {
 		userId: UserId;
-		referredByUserId?: number;
+		referredByUserId?: EntityId;
 		sourceSlug: string;
 	}) {
 		const { userId, referredByUserId, sourceSlug } = params;

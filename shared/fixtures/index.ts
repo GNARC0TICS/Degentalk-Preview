@@ -53,6 +53,7 @@ export {
 import { Factory } from './core/factory';
 import { UserFactory, AdminUserFactory, CryptoWhaleFactory } from './factories/user.factory';
 import { ThreadFactory, PostFactory, ForumCategoryFactory } from './factories/forum.factory';
+import { logger } from "../../server/src/core/logger";
 
 // Register all factories globally
 Factory.register('user', new UserFactory());
@@ -139,7 +140,7 @@ export function initializeFixtures(config: FixturesConfig = {}): void {
 
 	// Apply configuration to all factories
 	// This would be implemented to configure the faker instances
-	console.log('Fixtures initialized with config:', defaultConfig);
+	logger.info('Fixtures initialized with config:', defaultConfig);
 }
 
 // Export convenience types for TypeScript users

@@ -65,9 +65,9 @@ const colors = {
  * Log a test step with color coding
  */
 function logStep(step: string, data?: any) {
-	console.log(`${colors.fg.cyan}[TEST STEP]${colors.reset} ${step}`);
+	logger.info(`${colors.fg.cyan}[TEST STEP]${colors.reset} ${step}`);
 	if (data) {
-		console.log(`${colors.dim}${JSON.stringify(data, null, 2)}${colors.reset}`);
+		logger.info(`${colors.dim}${JSON.stringify(data, null, 2)}${colors.reset}`);
 	}
 }
 
@@ -77,9 +77,9 @@ function logStep(step: string, data?: any) {
 function logResult(passed: boolean, message: string, data?: any) {
 	const color = passed ? colors.fg.green : colors.fg.red;
 	const status = passed ? 'PASSED' : 'FAILED';
-	console.log(`${color}[${status}]${colors.reset} ${message}`);
+	logger.info(`${color}[${status}]${colors.reset} ${message}`);
 	if (data) {
-		console.log(`${colors.dim}${JSON.stringify(data, null, 2)}${colors.reset}`);
+		logger.info(`${colors.dim}${JSON.stringify(data, null, 2)}${colors.reset}`);
 	}
 }
 
@@ -274,9 +274,7 @@ async function testSendRain() {
  * Run all wallet tests
  */
 async function runAllTests() {
-	console.log(
-		`${colors.fg.yellow}${colors.bright}===== STARTING WALLET API TESTS =====${colors.reset}\n`
-	);
+	logger.info(`${colors.fg.yellow}${colors.bright}===== STARTING WALLET API TESTS =====${colors.reset}\n`);
 
 	// Core wallet tests
 	const balanceResult = await testGetWalletBalance();
@@ -300,17 +298,15 @@ async function runAllTests() {
 		{ name: 'Send Rain', result: rainResult }
 	];
 
-	console.log(`\n${colors.fg.yellow}${colors.bright}===== TEST SUMMARY =====${colors.reset}`);
+	logger.info(`\n${colors.fg.yellow}${colors.bright}===== TEST SUMMARY =====${colors.reset}`);
 	allTests.forEach((test) => {
 		const statusColor = test.result.passed ? colors.fg.green : colors.fg.red;
 		const statusText = test.result.passed ? 'PASSED' : 'FAILED';
-		console.log(`${statusColor}[${statusText}]${colors.reset} ${test.name}`);
+		logger.info(`${statusColor}[${statusText}]${colors.reset} ${test.name}`);
 	});
 
 	const passedCount = allTests.filter((test) => test.result.passed).length;
-	console.log(
-		`\n${colors.fg.yellow}${passedCount}/${allTests.length} tests passed${colors.reset}\n`
-	);
+	logger.info(`\n${colors.fg.yellow}${passedCount}/${allTests.length} tests passed${colors.reset}\n`);
 
 	return {
 		totalTests: allTests.length,

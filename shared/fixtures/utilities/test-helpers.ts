@@ -6,6 +6,8 @@
 import { Factory } from '../core/factory';
 import { scenarioGenerator, AvailableScenario } from './scenario-generator';
 import type { AdminId } from '@shared/types';
+import { logger } from "../../../server/src/core/logger";
+import { ThreadId } from "@shared/types";
 
 // Setup helpers for test environments
 export class TestDataManager {
@@ -82,7 +84,7 @@ export class TestDataManager {
 		// Register cleanup for any database operations
 		this.registerCleanup(async () => {
 			// Cleanup logic would go here
-			console.log(`Cleaning up scenario: ${scenarioName}`);
+			logger.info(`Cleaning up scenario: ${scenarioName}`);
 		});
 
 		return result.generatedData;
@@ -257,7 +259,7 @@ export class TestDataManager {
 	}
 
 	// Test data generation helpers
-	generateRealisticPosts(threadId: number, userIds: number[], count: number = 10): any[] {
+	generateRealisticPosts(threadId: ThreadId, userIds: number[], count: number = 10): any[] {
 		const cryptoPostTemplates = [
 			'Just bought the dip! Who else is accumulating?',
 			'This pump is insane! Target: {target}',
@@ -351,9 +353,7 @@ export class TestDataManager {
 	}): any {
 		const { users = 1000, threads = 500, posts = 5000, transactions = 10000 } = config;
 
-		console.log(
-			`Generating large dataset: ${users} users, ${threads} threads, ${posts} posts, ${transactions} transactions`
-		);
+		logger.info(`Generating large dataset: ${users} users, ${threads} threads, ${posts} posts, ${transactions} transactions`);
 
 		const userData = Factory.createMany('user', users);
 		const threadData = Factory.createMany('thread', threads);

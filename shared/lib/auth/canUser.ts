@@ -8,11 +8,12 @@
 import { db } from '@/lib/db';
 import { eq, inArray } from 'drizzle-orm';
 import { users, roles, userRoles, rolePermissions } from '@schema';
+import { UserId } from "@shared/types";
 
 export type UserRole = 'user' | 'moderator' | 'admin' | 'super_admin';
 
 export interface RBACUser {
-	id: number;
+	id: UserId;
 	primaryRoleId?: number | null;
 	// optional cache of secondary roles to avoid extra DB hits
 	secondaryRoleIds?: number[];

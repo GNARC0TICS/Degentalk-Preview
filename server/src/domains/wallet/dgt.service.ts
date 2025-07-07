@@ -11,6 +11,7 @@ import { eq, and, sql, desc } from 'drizzle-orm';
 import { walletConfigService } from './wallet-config.service';
 import { vanitySinkAnalyzer } from '../shop/services/vanity-sink.analyzer';
 import type { ItemId, ActionId, WalletId, TransactionId, DgtAmount, UserId } from '@shared/types';
+import { logger } from "../../core/logger";
 
 export interface DGTTransactionMetadata {
 	source:
@@ -155,7 +156,7 @@ export class DGTService {
 				return transaction;
 			});
 
-			console.log(`DGT credited: ${amount} DGT to user ${userId} (${metadata.source})`);
+			logger.info(`DGT credited: ${amount} DGT to user ${userId} (${metadata.source})`);
 
 			return {
 				id: result.id,
@@ -228,7 +229,7 @@ export class DGTService {
 				return transaction;
 			});
 
-			console.log(`DGT debited: ${amount} DGT from user ${userId} (${metadata.source})`);
+			logger.info(`DGT debited: ${amount} DGT from user ${userId} (${metadata.source})`);
 
 			// Track DGT burn for XP boost purchases
 			if (metadata.source === 'xp_boost') {
@@ -337,7 +338,7 @@ export class DGTService {
 				};
 			});
 
-			console.log(`DGT transfer: ${amount} DGT from ${fromUserId} to ${toUserId} (${transferId})`);
+			logger.info(`DGT transfer: ${amount} DGT from ${fromUserId} to ${toUserId} (${transferId})`);
 
 			return {
 				transactionId: result.debit.id,
@@ -487,7 +488,7 @@ export class DGTService {
 				updatedAt: new Date()
 			});
 
-			console.log(`DGT wallet created for user: ${userId}`);
+			logger.info(`DGT wallet created for user: ${userId}`);
 		} catch (error) {
 			console.error('Error creating DGT wallet:', error);
 			throw new Error('Failed to create DGT wallet');

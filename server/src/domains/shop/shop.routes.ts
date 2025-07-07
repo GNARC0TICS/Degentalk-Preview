@@ -13,6 +13,7 @@ import { EconomyTransformer } from '../economy/transformers/economy.transformer'
 import { ShopTransformer } from './transformers/shop.transformer';
 import { vanitySinkAnalyzer } from './services/vanity-sink.analyzer';
 import type { DgtAmount, UserId, ItemId, OrderId } from '@shared/types';
+import { EntityId } from "@shared/types";
 
 const router = Router();
 
@@ -178,7 +179,7 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 			return res.status(401).json({ error: 'User not authenticated' });
 		}
 
-		const userId = (userService.getUserFromRequest(req) as { id: number }).id;
+		const userId = (userService.getUserFromRequest(req) as { id: EntityId }).id;
 		const { itemId, paymentMethod } = purchaseSchema.parse(req.body);
 
 		// Find the item in mock data (TODO: replace with database query)

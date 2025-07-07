@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { runTipRainMigration } from './tip-rain-features';
+import { logger } from "./src/core/logger";
 
 // ARCHIVE: This was a one-off runner for the tip/rain migration. No longer used in active migration flow.
 // TODO: Do not use in production. Kept for reference only.
@@ -10,7 +11,7 @@ import { runTipRainMigration } from './tip-rain-features';
 runTipRainMigration()
   .then((success) => {
     if (success) {
-      console.log('✅ Tip & Rain migration completed successfully');
+      logger.info('✅ Tip & Rain migration completed successfully');
       process.exit(0);
     } else {
       console.error('❌ Migration process failed');

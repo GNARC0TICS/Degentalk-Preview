@@ -1,7 +1,8 @@
 // server/src/core/storage.service.ts
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { DegenUploadError } from '../domains/uploads/upload.service'; // Re-use DegenUploadError, removed UploadType
+import { DegenUploadError } from '../domains/uploads/upload.service';
+import { logger } from "../core/logger";
 
 // --- Environment Variables ---
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -310,9 +311,7 @@ class GoogleCloudStorageService implements IStorageService {
 		// TODO: Implement GCS presigned URL generation
 		// Example: const [url] = await storage.bucket(bucket).file(relativePath).getSignedUrl({ action: 'write', expires: '03-17-2025', contentType: fileType });
 		// eslint-disable-next-line no-console
-		console.log(
-			`GCS_STORAGE_SERVICE: STUB - getPresignedUploadUrl for ${bucket}/${relativePath} (type: ${fileType}, size: ${fileSize})`
-		);
+		logger.info(`GCS_STORAGE_SERVICE: STUB - getPresignedUploadUrl for ${bucket}/${relativePath} (type: ${fileType}, size: ${fileSize})`);
 		if (bucket === 'gcs_error_test_bucket') {
 			// For testing error propagation
 			throw new DegenUploadError('GCS is feeling moody today, no URLs for you.', 503);
@@ -328,7 +327,7 @@ class GoogleCloudStorageService implements IStorageService {
 		// TODO: Implement GCS public URL construction
 		// Example: return `https://storage.googleapis.com/${bucket}/${relativePath}`;
 		// eslint-disable-next-line no-console
-		console.log(`GCS_STORAGE_SERVICE: STUB - getPublicUrl for ${bucket}/${relativePath}`);
+		logger.info(`GCS_STORAGE_SERVICE: STUB - getPublicUrl for ${bucket}/${relativePath}`);
 		return `gcs-public-url-for-${bucket}/${relativePath}`;
 	}
 
@@ -336,7 +335,7 @@ class GoogleCloudStorageService implements IStorageService {
 		// TODO: Implement GCS file existence check
 		// Example: const [exists] = await storage.bucket(bucket).file(relativePath).exists();
 		// eslint-disable-next-line no-console
-		console.log(`GCS_STORAGE_SERVICE: STUB - verifyFileExists for ${bucket}/${relativePath}`);
+		logger.info(`GCS_STORAGE_SERVICE: STUB - verifyFileExists for ${bucket}/${relativePath}`);
 		if (relativePath.includes('nonexistent')) return false; // For testing
 		return true;
 	}

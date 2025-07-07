@@ -9,6 +9,7 @@ import {
 	type Campaign,
 	type AdPlacement
 } from '@schema';
+import { logger } from "../../core/logger";
 
 export interface AdRequest {
 	placementSlug: string;
@@ -93,7 +94,7 @@ export class AdServingService {
 			this.trackImpressionAsync(winningCampaign, placement, request, adResponse);
 
 			const responseTime = Date.now() - startTime;
-			console.log(`Ad served in ${responseTime}ms`);
+			logger.info(`Ad served in ${responseTime}ms`);
 
 			return adResponse;
 		} catch (error) {

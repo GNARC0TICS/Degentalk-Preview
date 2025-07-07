@@ -14,12 +14,12 @@ const getDb = () => {
 };
 
 export async function up() {
-  console.log('🚀 Applying migration: clout_achievements & user_clout_log');
+  logger.info('🚀 Applying migration: clout_achievements & user_clout_log');
   const { db, pool } = getDb();
   try {
     await db.transaction(async (tx) => {
       // clout_achievements
-      console.log('Creating clout_achievements table...');
+      logger.info('Creating clout_achievements table...');
       await tx.execute(sql`
         CREATE TABLE IF NOT EXISTS clout_achievements (
           id SERIAL PRIMARY KEY,
@@ -36,7 +36,7 @@ export async function up() {
       `);
 
       // user_clout_log
-      console.log('Creating user_clout_log table...');
+      logger.info('Creating user_clout_log table...');
       await tx.execute(sql`
         CREATE TABLE IF NOT EXISTS user_clout_log (
           id SERIAL PRIMARY KEY,
@@ -50,7 +50,7 @@ export async function up() {
       await tx.execute(sql`CREATE INDEX IF NOT EXISTS idx_user_clout ON user_clout_log (user_id, created_at);`);
 
       // Seed default achievements (optional, safe for idempotent insert)
-      console.log('Seeding default clout achievements...');
+      logger.info('Seeding default clout achievements...');
       await tx.execute(sql`
         INSERT INTO clout_achievements (achievement_key, name, description, clout_reward, criteria_type, criteria_value)
         VALUES
@@ -60,7 +60,7 @@ export async function up() {
         ON CONFLICT (achievement_key) DO NOTHING;
       `);
     });
-    console.log('✅ Migration applied: clout_achievements & user_clout_log');
+    logger.info('✅ Migration applied: clout_achievements & user_clout_log');
   } catch (err) {
     console.error('❌ Migration failed:', err);
     logger.error('Migration failed: clout_achievements & user_clout_log', { err });
@@ -72,14 +72,14 @@ export async function up() {
 }
 
 export async function down() {
-  console.log('↩️ Reverting migration: clout_achievements & user_clout_log');
+  logger.info('↩️ Reverting migration: clout_achievements & user_clout_log');
   const { db, pool } = getDb();
   try {
     await db.transaction(async (tx) => {
       await tx.execute(sql`DROP TABLE IF EXISTS user_clout_log;`);
       await tx.execute(sql`DROP TABLE IF EXISTS clout_achievements;`);
     });
-    console.log('✅ Reverted migration: clout_achievements & user_clout_log');
+    logger.info('✅ Reverted migration: clout_achievements & user_clout_log');
   } catch (err) {
     console.error('❌ Revert failed:', err);
     logger.error('Revert failed: clout_achievements & user_clout_log', { err });

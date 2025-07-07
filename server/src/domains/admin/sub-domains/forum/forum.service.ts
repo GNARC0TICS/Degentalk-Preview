@@ -15,6 +15,7 @@ import type {
 	ModerateThreadInput,
 	PaginationInput
 } from './forum.validators';
+import { ThreadId } from "@shared/types";
 
 export class AdminForumService {
 	async getAllCategories() {
@@ -432,7 +433,7 @@ export class AdminForumService {
 
 	// Thread moderation
 
-	async moderateThread(threadId: number, data: ModerateThreadInput) {
+	async moderateThread(threadId: ThreadId, data: ModerateThreadInput) {
 		try {
 			// Check thread exists
 			const [existingThread] = await db.select().from(threads).where(eq(threads.id, threadId));

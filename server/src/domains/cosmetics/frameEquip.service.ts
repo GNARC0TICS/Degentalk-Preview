@@ -3,9 +3,10 @@ import { avatarFrames, userOwnedFrames, users } from '@schema';
 import { eq } from 'drizzle-orm';
 import { xpService } from '../../xp/xp.service';
 import { XP_ACTION } from '../../xp/xp-actions';
+import { FrameId } from "@shared/types";
 
 class FrameEquipService {
-	async userOwnsFrame(userId: string, frameId: number): Promise<boolean> {
+	async userOwnsFrame(userId: string, frameId: FrameId): Promise<boolean> {
 		const res = await db
 			.select({ id: userOwnedFrames.id })
 			.from(userOwnedFrames)
@@ -15,7 +16,7 @@ class FrameEquipService {
 		return res.length > 0;
 	}
 
-	async equipFrame(userId: string, frameId: number) {
+	async equipFrame(userId: string, frameId: FrameId) {
 		const owns = await this.userOwnsFrame(userId, frameId);
 		if (!owns) {
 			throw new Error('Frame not owned');
@@ -30,7 +31,7 @@ class FrameEquipService {
 		}
 	}
 
-	async grantOwnership(userId: string, frameId: number, source: string = 'purchase') {
+	async grantOwnership(userId: string, frameId: FrameId, source: string = 'purchase') {
 		// Idempotent insert
 		const exists = await this.userOwnsFrame(userId, frameId);
 		if (exists) return;

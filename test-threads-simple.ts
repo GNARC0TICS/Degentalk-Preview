@@ -1,10 +1,11 @@
 import { db } from './db/index.js';
 import { threads, users as usersTable, forumStructure } from './db/schema/index.js';
 import { eq, desc, count } from 'drizzle-orm';
+import { logger } from "server/src/core/logger";
 
 async function testSimpleThreadQuery() {
 	try {
-		console.log('Testing simple thread count...');
+		logger.info('Testing simple thread count...');
 
 		// Test 1: Basic count
 		const countResult = await db
@@ -12,19 +13,19 @@ async function testSimpleThreadQuery() {
 			.from(threads)
 			.execute();
 
-		console.log('Thread count:', countResult[0]?.count || 0);
+		logger.info('Thread count:', countResult[0]?.count || 0);
 
 		if (countResult[0]?.count === 0) {
-			console.log('No threads found in database');
+			logger.info('No threads found in database');
 			return;
 		}
 
 		// Test 2: Basic thread query
 		const basicThreads = await db.select().from(threads).limit(3).execute();
 
-		console.log(`Found ${basicThreads.length} threads:`);
+		logger.info(`Found ${basicThreads.length} threads:`);
 		basicThreads.forEach((thread) => {
-			console.log(`- ID: ${thread.id}, Title: ${thread.title}, StructureId: ${thread.structureId}`);
+			logger.info(`- ID: ${thread.id}, Title: ${thread.title}, StructureId: ${thread.structureId}`);
 		});
 
 		// Test 3: Join with users
@@ -35,9 +36,9 @@ async function testSimpleThreadQuery() {
 			.limit(2)
 			.execute();
 
-		console.log(`Threads with users (${threadsWithUsers.length}):`);
+		logger.info(`Threads with users (${threadsWithUsers.length}):`);
 		threadsWithUsers.forEach((row) => {
-			console.log(`- Thread: ${row.threads.title}, User: ${row.users?.username || 'No user'}`);
+			logger.info(`- Thread: ${row.threads.title}, User: ${row.users?.username || 'No user'}`);
 		});
 	} catch (error) {
 		console.error('Error in test:', error.message);

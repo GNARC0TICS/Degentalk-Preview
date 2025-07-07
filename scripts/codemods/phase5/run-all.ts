@@ -1,4 +1,5 @@
 import { execSync } from 'child_process';
+import fs from 'node:fs';
 import { consoleToLoggerCodemod } from './console-to-logger';
 import { reqUserRemovalCodemod } from './req-user-removal';
 import { enforceTransformersCodemod } from './enforce-transformers';
@@ -222,7 +223,7 @@ function createSafetyCheckpoint(): void {
     console.log(`✅ Safety checkpoint created: ${tagName}`);
     
     // Store tag name for rollback
-    require('fs').writeFileSync('.phase5-checkpoint', tagName);
+    fs.writeFileSync('.phase5-checkpoint', tagName);
   } catch (error) {
     console.warn('⚠️  Could not create git tag checkpoint:', error);
   }
@@ -244,7 +245,7 @@ async function performPostExecutionValidation(): Promise<void> {
       name: 'No console.log in server code',
       check: async () => {
         try {
-          const result = execSync('grep -r "console\\." server/ --include="*.ts" | grep -v ".test.ts" | grep -v "logger.ts"', { encoding: 'utf8' });
+          const result = execSync('grep -r "console\\." server/ --include="*.ts" --include="*.tsx" | grep -v ".test.ts" | grep -v ".test.tsx" | grep -v "logger.ts"', { encoding: 'utf8' });
           return result.trim().length === 0;
         } catch {
           return true; // No matches found
@@ -290,7 +291,6 @@ async function performRollback(): Promise<void> {
   
   try {
     // Check for checkpoint file
-    const fs = require('fs');
     let checkpointTag: string;
     
     try {
@@ -307,7 +307,7 @@ async function performRollback(): Promise<void> {
     }
     
     // Prompt for confirmation
-    const readline = require('readline').createInterface({
+    const readline = (await import('node:readline')).createInterface({
       input: process.stdin,
       output: process.stdout
     });

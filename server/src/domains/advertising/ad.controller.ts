@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { adServingService } from './ad-serving.service';
 import { campaignManagementService } from './campaign-management.service';
 import { adConfigurationService } from './ad-configuration.service';
+import { logger } from "../../core/logger";
 
 // Request validation schemas
 const adRequestSchema = z.object({
@@ -136,7 +137,7 @@ export class AdController {
 			setTimeout(async () => {
 				try {
 					// TODO: Implement event tracking service
-					console.log('Tracking event:', trackingData);
+					logger.info('Tracking event:', trackingData);
 				} catch (error) {
 					console.error('Failed to track event:', error);
 				}

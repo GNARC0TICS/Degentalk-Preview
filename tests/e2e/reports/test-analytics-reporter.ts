@@ -6,6 +6,7 @@
 import { FullResult, TestCase, TestResult, Reporter } from '@playwright/test/reporter';
 import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
+import { logger } from "../../../server/src/core/logger";
 
 export interface TestAnalytics {
 	summary: {
@@ -149,8 +150,8 @@ export class TestAnalyticsReporter implements Reporter {
 	}
 
 	onBegin(): void {
-		console.log('\n🧪 Starting E2E Behavioral Flow Verification Tests');
-		console.log(`📊 Analytics will be saved to: ${this.outputDir}`);
+		logger.info('\n🧪 Starting E2E Behavioral Flow Verification Tests');
+		logger.info(`📊 Analytics will be saved to: ${this.outputDir}`);
 	}
 
 	onTestEnd(test: TestCase, result: TestResult): void {
@@ -188,14 +189,12 @@ export class TestAnalyticsReporter implements Reporter {
 		this.generateHTMLReport();
 		this.generateMetricsCSV();
 
-		console.log('\n📈 Test Analytics Summary:');
-		console.log(`   Total Tests: ${this.analytics.summary.totalTests}`);
-		console.log(
-			`   Passed: ${this.analytics.summary.passed} (${Math.round((this.analytics.summary.passed / this.analytics.summary.totalTests) * 100)}%)`
-		);
-		console.log(`   Failed: ${this.analytics.summary.failed}`);
-		console.log(`   Duration: ${Math.round(this.analytics.summary.duration / 1000)}s`);
-		console.log(`\n📋 Reports generated in: ${this.outputDir}`);
+		logger.info('\n📈 Test Analytics Summary:');
+		logger.info(`   Total Tests: ${this.analytics.summary.totalTests}`);
+		logger.info(`   Passed: ${this.analytics.summary.passed} (${Math.round((this.analytics.summary.passed / this.analytics.summary.totalTests) * 100)}%)`);
+		logger.info(`   Failed: ${this.analytics.summary.failed}`);
+		logger.info(`   Duration: ${Math.round(this.analytics.summary.duration / 1000)}s`);
+		logger.info(`\n📋 Reports generated in: ${this.outputDir}`);
 	}
 
 	private extractTestMetrics(test: TestCase, result: TestResult): void {

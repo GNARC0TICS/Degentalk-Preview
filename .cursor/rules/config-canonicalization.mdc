@@ -1,0 +1,36 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Config Canonicalization Rule
+
+## Objective
+Prevent configuration drift by ensuring only one authoritative copy of each build/tool config exists in the repo.
+
+---
+
+## Canonical Directory
+`/config` holds:
+* `tailwind.config.ts`
+* `postcss.config.js`
+* `vite.config.ts`
+* `eslint.config.mjs` (or `.eslintrc.json`)
+* `prettier.config.cjs`
+
+---
+
+## Rules
+1. **No duplicate `*config.*` files** elsewhere (e.g. `client/tailwind.config.ts`).
+2. When a sub-package needs custom tweaks, create a one-liner re-export.
+3. Validation script `scripts/validation/validate-config-canonicalization.ts` errors on duplicates.
+
+---
+
+## Migration Steps
+1. Delete or re-export any extra configs discovered during audit.
+2. Update README docs to reference root configs only.
+
+---
+
+**Status:** Active after Phase-5 hardening

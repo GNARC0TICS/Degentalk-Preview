@@ -14,7 +14,7 @@
  * Notes
  * • Only touches TypeScript/TSX inside server/src/**
  * • Creates a *.bak copy of each modified file for safety.
- * • Skips files already importing `UserId` from `@db/types`.
+ * • Skips files already importing `UserId` from `@shared/types`.
  * • Logs a concise report at the end.
  */
 
@@ -66,8 +66,8 @@ async function run(): Promise<void> {
     if (replacements === 0) continue;
 
     // Ensure import exists
-    if (!/import\s+[^;]*UserId[^;]*from\s+["']@db\/types["']/.test(content)) {
-      const importStmt = "import type { UserId } from '@db/types';";
+    if (!/import\s+[^;]*UserId[^;]*from\s+["']@shared\/types["']/.test(content)) {
+      const importStmt = "import type { UserId } from '@shared/types';";
       // place after first import block or at top
       const firstImportMatch = content.match(/import[^;]+;/);
       if (firstImportMatch) {

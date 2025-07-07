@@ -10,13 +10,14 @@ import { logger } from '@server/src/core/logger';
 import { AdminError, AdminErrorCodes } from '../admin.errors';
 import type { Request, Response } from 'express';
 import type { EntityId, RequestId } from '@shared/types';
+import { UserId } from "@shared/types";
 
 // Enhanced error types with context
 export interface AdminErrorContext {
 	operation: string;
 	entityType?: string;
 	entityId?: string | EntityId;
-	userId?: number;
+	userId?: UserId;
 	timestamp: Date;
 	requestId?: string;
 	metadata?: Record<string, any>;

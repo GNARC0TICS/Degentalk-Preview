@@ -1,11 +1,12 @@
 import { db } from '../db'; // Assuming this path is correct for your setup
 import { sql } from 'drizzle-orm';
+import { logger } from "./src/core/logger";
 
 /**
  * Migration to add the dgt_packages table
  */
 export async function up() {
-  console.log('Applying migration: Create dgt_packages table and seed default packages');
+  logger.info('Applying migration: Create dgt_packages table and seed default packages');
   
   // The CREATE TABLE IF NOT EXISTS handles the check, so checkTableExists is not needed here.
   await db.execute(sql`
@@ -83,15 +84,15 @@ export async function up() {
     ON CONFLICT (name) DO NOTHING; -- Added ON CONFLICT to make data seeding safer if re-run
   `);
   
-  console.log('✅ Created dgt_packages table and inserted/updated default packages');
+  logger.info('✅ Created dgt_packages table and inserted/updated default packages');
 }
 
 export async function down() {
-  console.log('Reverting migration: Drop dgt_packages table');
+  logger.info('Reverting migration: Drop dgt_packages table');
   await db.execute(sql`
     DROP TABLE IF EXISTS dgt_packages;
   `);
-  console.log('✅ Dropped dgt_packages table');
+  logger.info('✅ Dropped dgt_packages table');
 }
 
 // Removed checkTableExists and migrate() call.

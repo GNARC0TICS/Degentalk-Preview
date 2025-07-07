@@ -2,6 +2,7 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import pgPkg from 'pg';
 import { sql } from 'drizzle-orm';
 import { config } from 'dotenv';
+import { logger } from "./src/core/logger";
 
 config();
 
@@ -14,7 +15,7 @@ const getDb = () => {
 };
 
 export async function up() {
-  console.log('🚀 20250624 ‑ Add visual fields to levels');
+  logger.info('🚀 20250624 ‑ Add visual fields to levels');
   const { db, pool } = getDb();
 
   try {
@@ -58,14 +59,14 @@ export async function up() {
       );
     });
 
-    console.log('✅ Migration applied: visual fields added to levels');
+    logger.info('✅ Migration applied: visual fields added to levels');
   } finally {
     (await getDb()).pool.end();
   }
 }
 
 export async function down() {
-  console.log('↩️  Reverting 20250624 visual fields migration');
+  logger.info('↩️  Reverting 20250624 visual fields migration');
   const { db, pool } = getDb();
   try {
     await db.transaction(async (tx) => {
@@ -76,7 +77,7 @@ export async function down() {
       await tx.execute(sql`ALTER TABLE levels DROP COLUMN IF EXISTS rarity;`);
       await tx.execute(sql`ALTER TABLE levels DROP COLUMN IF EXISTS icon_url;`);
     });
-    console.log('✅ Reverted 20250624 migration');
+    logger.info('✅ Reverted 20250624 migration');
   } finally {
     (await getDb()).pool.end();
   }

@@ -46,7 +46,7 @@ export const emailTemplates = pgTable('email_templates', {
 
 	// Version control
 	version: integer('version').notNull().default(1),
-	previousVersionId: uuid('previous_version_id').references(() => emailTemplates.id)
+	previousVersionId: uuid('previous_version_id') // Self-reference removed to avoid circular dependency
 });
 
 export const emailTemplateVersions = pgTable('email_template_versions', {

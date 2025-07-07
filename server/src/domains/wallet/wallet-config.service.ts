@@ -10,6 +10,7 @@ import { siteSettings } from '@schema';
 import { eq } from 'drizzle-orm';
 import type { WalletConfig } from '@shared/wallet.config';
 import { walletConfig as defaultWalletConfig } from '@shared/wallet.config';
+import { logger } from "../../core/logger";
 
 // Generate a simple mapping of wallet config paths for description purposes
 const WALLET_CONFIG_KEYS = Object.keys(defaultWalletConfig).reduce(
@@ -106,7 +107,7 @@ export class WalletConfigService {
 			// Invalidate cache
 			configCache.invalidate();
 
-			console.log(`Wallet config updated: ${key} = ${value}`);
+			logger.info(`Wallet config updated: ${key} = ${value}`);
 		} catch (error) {
 			console.error('Error updating wallet config:', error);
 			throw new Error(`Failed to update wallet configuration: ${error.message}`);
@@ -145,7 +146,7 @@ export class WalletConfigService {
 			// Invalidate cache
 			configCache.invalidate();
 
-			console.log(`Wallet config batch updated: ${Object.keys(updates).length} settings`);
+			logger.info(`Wallet config batch updated: ${Object.keys(updates).length} settings`);
 		} catch (error) {
 			console.error('Error updating multiple wallet configs:', error);
 			throw new Error(`Failed to update wallet configurations: ${error.message}`);
@@ -166,7 +167,7 @@ export class WalletConfigService {
 			// Invalidate cache
 			configCache.invalidate();
 
-			console.log('Wallet config reset to defaults');
+			logger.info('Wallet config reset to defaults');
 		} catch (error) {
 			console.error('Error resetting wallet config:', error);
 			throw new Error(`Failed to reset wallet configuration: ${error.message}`);
@@ -340,7 +341,7 @@ export class WalletConfigService {
 				});
 			}
 
-			console.log('Wallet configuration updated successfully');
+			logger.info('Wallet configuration updated successfully');
 		} catch (error) {
 			console.error('Error updating wallet config:', error);
 			throw new Error(`Failed to update wallet configuration: ${error.message}`);

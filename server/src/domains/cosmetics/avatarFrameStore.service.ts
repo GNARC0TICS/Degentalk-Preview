@@ -3,15 +3,16 @@ import { products, avatarFrames, userOwnedFrames } from '@schema';
 import type { UserId } from '@shared/types';
 import { eq, and } from 'drizzle-orm';
 import { dgtService } from '../wallet/dgt.service';
+import { EntityId, ProductId, FrameId } from "@shared/types";
 
 export interface StoreFrame {
-	id: number;
+	id: EntityId;
 	name: string;
 	imageUrl: string;
 	rarity: string;
 	animated: boolean;
 	price: number;
-	productId: number;
+	productId: ProductId;
 }
 
 class AvatarFrameStoreService {
@@ -36,10 +37,10 @@ class AvatarFrameStoreService {
 
 	async purchaseFrame(
 		userId: string,
-		frameId: number
+		frameId: FrameId
 	): Promise<{
 		success: boolean;
-		frameId: number;
+		frameId: FrameId;
 		newBalance?: number;
 		message: string;
 	}> {

@@ -1,0 +1,35 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Workspace TSConfig Rule
+
+## Objective
+Maintain clear TypeScript project boundaries to speed up IDE performance and ensure ESLint / Type-Checking targets only relevant source files.
+
+---
+
+## Structure
+| Workspace | TS Config | Extends |
+|-----------|-----------|---------|
+| Root | `tsconfig.json` | – base compiler options |
+| Server | `server/tsconfig.json` | root |
+| Client | `client/tsconfig.json` | root |
+| Shared | `shared/tsconfig.json` | root |
+| DB | `db/tsconfig.json` | root |
+
+Each workspace may also have a **lint-only** config `tsconfig.eslint.json` that includes additional folders (tests, utils).
+
+---
+
+## Rules
+1. **Do not import across workspace boundaries** without using the alias defined in `paths`.
+2. **Declaration emission only** in build configs; keep `noEmit` for lint configs.
+3. **No wildcard `include`** – be explicit (`src/**/*.ts`, `domains/**/*.ts`).
+
+Validation script: `scripts/validation/validate-tsconfig-boundaries.ts`.
+
+---
+
+**Status:** Active after Phase-5 hardening

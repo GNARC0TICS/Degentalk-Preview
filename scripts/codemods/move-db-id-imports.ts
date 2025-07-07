@@ -6,8 +6,8 @@ import { fileURLToPath } from 'node:url';
 /**
  * Codemod: move-db-id-imports
  * --------------------------------------
- * Rewrites legacy branded-ID imports that reference `@db/types` or
- * `@db/types/id.types` to the new canonical module `@shared/types`.
+ * Rewrites legacy branded-ID imports that reference `@shared/types` or
+ * `@shared/types/id.types` to the new canonical module `@shared/types`.
  *
  *  – Skips node_modules, archive, deprecated, and declaration files
  *  – Idempotent: running twice makes no changes
@@ -43,8 +43,8 @@ for (const sf of project.getSourceFiles()) {
   sf.getImportDeclarations().forEach((imp) => {
     const spec = imp.getModuleSpecifierValue();
     if (
-      spec === '@db/types' ||
-      spec === '@db/types/id.types' ||
+      spec === '@shared/types' ||
+      spec === '@shared/types/id.types' ||
       spec.startsWith('@db_types')
     ) {
       imp.setModuleSpecifier('@shared/types');
@@ -61,4 +61,4 @@ for (const sf of project.getSourceFiles()) {
 
 console.log(importCount
   ? `✨  Updated ${importCount} import statements.\n   Rerun to confirm zero legacy paths remain.`
-  : '✅  No legacy @db/types imports found.'); 
+  : '✅  No legacy @shared/types imports found.'); 

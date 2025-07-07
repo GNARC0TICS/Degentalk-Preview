@@ -7,6 +7,7 @@ import { type Server } from 'http';
 
 import { nanoid } from 'nanoid';
 import crypto from 'crypto';
+import { logger } from "./src/core/logger";
 
 // Get the directory name from the URL
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -40,7 +41,7 @@ export function log(message: string, source = 'express') {
 		hour12: true
 	});
 
-	console.log(`${formattedTime} [${source}] ${message}`);
+	logger.info(`${formattedTime} [${source}] ${message}`);
 }
 
 export async function setupVite(app: Express, server: Server) {

@@ -10,6 +10,7 @@ import {
 	// type PresignedUrlInfo // This type is for storageService, not directly used here
 } from '../../core/storage.service';
 import type { PackId, StickerId } from '@shared/types';
+import { logger } from "../../core/logger";
 
 // --- Types specific to this Upload Domain Service ---
 export type UploadType =
@@ -284,9 +285,7 @@ export class UploadService {
 			const deleted = await storageService.deleteFile(bucketName, relativePath);
 
 			if (deleted) {
-				console.log(
-					`UploadService: Admin ${adminId} successfully deleted file ${bucketName}/${relativePath}`
-				);
+				logger.info(`UploadService: Admin ${adminId} successfully deleted file ${bucketName}/${relativePath}`);
 				return {
 					success: true,
 					message: `File ${relativePath} deleted successfully from ${bucketName}`

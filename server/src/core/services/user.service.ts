@@ -10,6 +10,7 @@ import { users, userRoles } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { logger } from '../logger';
 import type { UserId } from '@shared/types';
+import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
 
 export interface User {
 	id: UserId;
@@ -44,7 +45,7 @@ class UserService {
 	 * Get user from Express request object with type safety
 	 */
 	getUserFromRequest(req: any): AuthenticatedUser | null {
-		const user = req.user;
+		const user = getAuthenticatedUser(req);
 		if (!user || !user.id) {
 			return null;
 		}

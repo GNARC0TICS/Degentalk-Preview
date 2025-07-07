@@ -182,18 +182,18 @@ function extractNeededImports(content: string, appliedFixes: TypeFix[]): string[
 function addMissingImports(content: string, neededImports: string[]): string {
   if (neededImports.length === 0) return content;
   
-  // Check if there's already an import from @db/types
-  const existingImportMatch = content.match(/import\s+(?:type\s+)?\{([^}]+)\}\s+from\s+['"]@db\/types['"];?/);
+  // Check if there's already an import from @shared/types
+  const existingImportMatch = content.match(/import\s+(?:type\s+)?\{([^}]+)\}\s+from\s+['"]@shared\/types['"];?/);
   
   if (existingImportMatch) {
     // Add to existing import
     const existingTypes = existingImportMatch[1].split(',').map(t => t.trim());
     const allTypes = [...new Set([...existingTypes, ...neededImports])];
-    const newImport = `import type { ${allTypes.join(', ')} } from '@db/types';`;
+    const newImport = `import type { ${allTypes.join(', ')} } from '@shared/types';`;
     return content.replace(existingImportMatch[0], newImport);
   } else {
     // Add new import
-    const newImport = `import type { ${neededImports.join(', ')} } from '@db/types';\n`;
+    const newImport = `import type { ${neededImports.join(', ')} } from '@shared/types';\n`;
     
     // Find the first import or the start of the file
     const firstImportMatch = content.match(/^import\s/m);

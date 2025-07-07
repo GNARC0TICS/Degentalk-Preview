@@ -94,7 +94,7 @@ function generateValidationFix(content: string, filePath: string): Fix[] {
 function generateImportFix(content: string, filePath: string): Fix[] {
   const fixes: Fix[] = [];
   const needsIsValidId = content.includes('isValidId') && !content.includes("import { isValidId }") && !content.includes("from '@shared/utils/id'");
-  const needsUserId = content.includes('as UserId') && !content.includes("import type { UserId }") && !content.includes("from '@db/types'");
+  const needsUserId = content.includes('as UserId') && !content.includes("import type { UserId }") && !content.includes("from '@shared/types'");
   
   if (needsIsValidId || needsUserId) {
     let importLine = '';
@@ -107,7 +107,7 @@ function generateImportFix(content: string, filePath: string): Fix[] {
       importLine += `import { isValidId } from '@shared/utils/id';\n`;
     }
     if (needsUserId) {
-      importLine += `import type { UserId } from '@db/types';\n`;
+      importLine += `import type { UserId } from '@shared/types';\n`;
     }
     
     fixes.push({

@@ -1,6 +1,7 @@
 import { roles as rolesTable, userRoles as userRolesTable } from '@schema';
 import { db } from '@db';
 import { and, eq, inArray } from 'drizzle-orm';
+import type { UserId } from "@shared/types";
 
 /**
  * Shape of the User object expected in permission checks.
@@ -8,7 +9,7 @@ import { and, eq, inArray } from 'drizzle-orm';
  * - `roles` is an optional array of secondary role IDs already pre-loaded by the calling code.
  */
 export interface RBACUser {
-	id: number;
+	id: UserId;
 	primaryRoleId?: string | null;
 	// optional cache of secondary roles to avoid extra DB hits
 	secondaryRoleIds?: string[];
@@ -29,7 +30,7 @@ async function getUserPermissions(user: RBACUser): Promise<string[]> {
 			.select({ roleId: userRolesTable.roleId })
 			.from(userRolesTable)
 			.where(eq(userRolesTable.userId, user.id));
-		roleIds.push(...pivotRows.map((r) => r.roleId));
+		roleIds.push(...pivotRows.map((r: { roleId: string }) => r.roleId));
 	}
 
 	if (roleIds.length === 0) return [];
@@ -40,9 +41,9 @@ async function getUserPermissions(user: RBACUser): Promise<string[]> {
 		.where(inArray(rolesTable.id, roleIds));
 
 	const perms = new Set<string>();
-	roleRows.forEach((row) => {
+	roleRows.forEach((row: { permissions: string[] | null }) => {
 		if (Array.isArray(row.permissions)) {
-			row.permissions.forEach((p) => perms.add(p));
+			row.permissions.forEach((p: string) => perms.add(p));
 		}
 	});
 	return Array.from(perms);
@@ -76,7 +77,7 @@ export async function getXpMultiplier(user: RBACUser): Promise<number> {
 		.select({ xpMultiplier: rolesTable.xpMultiplier })
 		.from(rolesTable)
 		.where(inArray(rolesTable.id, roleIds));
-	const max = rows.reduce((acc, r) => Math.max(acc, r.xpMultiplier ?? 1), 1);
+	const max = rows.reduce((acc: number, r: { xpMultiplier: number | null }) => Math.max(acc, r.xpMultiplier ?? 1), 1);
 	return max || 1.0;
 }
 

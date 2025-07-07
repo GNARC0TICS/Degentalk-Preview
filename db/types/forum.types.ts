@@ -1,9 +1,9 @@
 import type { ForumStructureNode } from '../schema/forum/structure';
 import type { threadPrefixes } from '../schema'; // Import threadPrefixes schema
-import type { TagId } from './id.types';
+import type { TagId } from '@shared/types';
 
 // Canonical types – single source of truth
-import type { CanonicalThread, CanonicalPost } from '@/client/src/types/canonical.types';
+import type { CanonicalThread, CanonicalPost } from '../../client/src/types/canonical.types';
 
 /**
  * ---------------------------------------------------------------------------
@@ -59,7 +59,7 @@ export interface ForumCategoryWithStats extends ForumStructureNode {
 	threadCount: number;
 	postCount: number;
 	lastThread?: ThreadWithUser;
-	parentId: number | null;
+	parentId: string | null;
 	pluginData: Record<string, unknown>;
 	minXp: number;
 	type: string;

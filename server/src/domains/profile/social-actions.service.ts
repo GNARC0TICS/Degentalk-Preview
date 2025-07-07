@@ -1,6 +1,7 @@
 import { db } from '../../../db';
 import { users, userRelationships, notifications } from '../../../db/schema';
 import { eq, and, or } from 'drizzle-orm';
+import { logger } from "../../core/logger";
 
 export type RelationshipType = 'follow' | 'friend' | 'block';
 export type RelationshipStatus = 'pending' | 'accepted' | 'declined';
@@ -449,7 +450,7 @@ export class SocialActionsService {
 		try {
 			// This could be implemented as a background job
 			// For now, just log the action
-			console.log(`Follower count update needed: ${followerId} -> ${targetId}`);
+			logger.info(`Follower count update needed: ${followerId} -> ${targetId}`);
 		} catch (error) {
 			console.error('Error updating follower counts:', error);
 		}

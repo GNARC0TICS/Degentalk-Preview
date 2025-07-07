@@ -42,7 +42,8 @@ import { seedDevUser } from './utils/seed-dev-user';
 import { traceMiddleware } from './src/middleware/trace.middleware'; // Import new traceMiddleware
 // Dynamic imports for seed scripts to avoid path resolution issues at startup
 import { initEventNotificationListener } from './src/domains/notifications/event-notification-listener';
-import './src/core/background-processor'; // Import to start background processing
+import './src/core/background-processor';
+import { logger } from "./src/core/logger";
 
 // Startup logging helper
 const startupLog = (message: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
@@ -52,7 +53,7 @@ const startupLog = (message: string, type: 'info' | 'success' | 'error' | 'warni
 		error: '❌',
 		warning: '⚠️'
 	}[type];
-	console.log(`[BACKEND] ${prefix} ${message}`);
+	logger.info(`[BACKEND] ${prefix} ${message}`);
 };
 
 const app = express();

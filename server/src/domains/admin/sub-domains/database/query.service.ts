@@ -9,6 +9,7 @@ import { db } from '@server/src/core/db';
 import type { UserId } from '@shared/types';
 import { logger } from '@server/src/core/logger';
 import { sql } from 'drizzle-orm';
+import { UserId } from "@shared/types";
 
 // Dangerous SQL keywords that are completely forbidden
 const FORBIDDEN_KEYWORDS = [
@@ -244,7 +245,7 @@ export class QueryService {
 	/**
 	 * Get query execution history
 	 */
-	getQueryHistory(userId?: number): QueryHistory[] {
+	getQueryHistory(userId?: UserId): QueryHistory[] {
 		if (userId) {
 			return this.queryHistory.filter((h) => h.userId === userId);
 		}
@@ -254,7 +255,7 @@ export class QueryService {
 	/**
 	 * Clear query history
 	 */
-	clearHistory(userId?: number): void {
+	clearHistory(userId?: UserId): void {
 		if (userId) {
 			this.queryHistory = this.queryHistory.filter((h) => h.userId !== userId);
 		} else {

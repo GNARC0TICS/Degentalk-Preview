@@ -4,6 +4,7 @@ import { Pool } from "pg";
 import { sql } from "drizzle-orm";
 import * as schema from "../../shared/schema";
 import * as dotenv from "dotenv";
+import { logger } from "./src/core/logger";
 
 // [REFAC-DGT] Custom migration script to create the dgt_purchase_orders table
 // This supplements the Drizzle SQL migrations for more complex operations
@@ -27,7 +28,7 @@ const runMigration = async () => {
     // Create a Drizzle client instance
     const db = drizzle(pool, { schema });
     
-    console.log("Connected to the database. Starting dgt_purchase_orders table migration...");
+    logger.info("Connected to the database. Starting dgt_purchase_orders table migration...");
     
     // Check if the table already exists to avoid duplicate migrations
     const tableExists = await db.execute(sql`
@@ -39,7 +40,7 @@ const runMigration = async () => {
     `);
     
     if (tableExists.rows[0]?.exists) {
-      console.log("dgt_purchase_orders table already exists. Skipping migration.");
+      logger.info("dgt_purchase_orders table already exists. Skipping migration.");
       return;
     }
     
@@ -64,14 +65,14 @@ const runMigration = async () => {
       CREATE INDEX "idx_dgt_purchase_orders_created_at" ON "dgt_purchase_orders"("created_at");
     `);
     
-    console.log("Successfully created dgt_purchase_orders table");
+    logger.info("Successfully created dgt_purchase_orders table");
     
   } catch (error) {
     console.error("Error executing migration:", error);
     process.exit(1);
   } finally {
     await pool.end();
-    console.log("Migration complete");
+    logger.info("Migration complete");
   }
 };
 

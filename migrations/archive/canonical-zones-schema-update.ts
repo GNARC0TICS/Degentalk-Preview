@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import { db } from "../db";
+import { logger } from "../../server/src/core/logger";
 
 /**
  * ForumFusion - Add Canonical Zone Fields Migration
@@ -15,7 +16,7 @@ import { db } from "../db";
  */
 
 export async function up() {
-  console.log("Running migration: Add Canonical Zone Fields");
+  logger.info("Running migration: Add Canonical Zone Fields");
   
   try {
     // Add isZone column if it doesn't exist
@@ -72,7 +73,7 @@ export async function up() {
       END $$;
     `);
     
-    console.log("Migration completed successfully");
+    logger.info("Migration completed successfully");
   } catch (error) {
     console.error("Migration failed:", error);
     throw error;
@@ -80,7 +81,7 @@ export async function up() {
 }
 
 export async function down() {
-  console.log("Rolling back migration: Add Canonical Zone Fields");
+  logger.info("Rolling back migration: Add Canonical Zone Fields");
   
   try {
     // Remove added columns
@@ -93,7 +94,7 @@ export async function down() {
         DROP COLUMN IF EXISTS last_thread_id;
     `);
     
-    console.log("Rollback completed successfully");
+    logger.info("Rollback completed successfully");
   } catch (error) {
     console.error("Rollback failed:", error);
     throw error;

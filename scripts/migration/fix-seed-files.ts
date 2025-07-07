@@ -154,7 +154,7 @@ async function fixSeedFile(filePath: string): Promise<{ fixed: number; issues: S
   // Special handling for the shop cosmetics file
   if (filePath.includes('seed-default-cosmetics.ts')) {
     // Remove excessive imports
-    const cleanImports = `import type { UserId, ProductId } from '@db/types';
+    const cleanImports = `import type { UserId, ProductId } from '@shared/types';
 import { randomUUID } from 'crypto';`;
     
     updatedContent = updatedContent.replace(

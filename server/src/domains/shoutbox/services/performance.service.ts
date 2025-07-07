@@ -16,6 +16,7 @@ import { ShoutboxCacheService } from './cache.service';
 import { eq, and, desc, asc, sql, gte, lte, inArray } from 'drizzle-orm';
 import { shoutboxMessages, chatRooms, users, shoutboxConfig } from '@schema';
 import type { RoomId } from '@shared/types';
+import { UserId, EntityId } from "@shared/types";
 
 interface QueryMetrics {
 	queryType: string;
@@ -44,7 +45,7 @@ interface OptimizedMessageQuery {
 	cursor?: number;
 	direction?: 'before' | 'after';
 	includeDeleted?: boolean;
-	userId?: number;
+	userId?: UserId;
 }
 
 export class PerformanceService {
@@ -279,7 +280,7 @@ export class PerformanceService {
 	 */
 	static async getActiveUsersInRoom(roomId: RoomId): Promise<
 		Array<{
-			id: number;
+			id: EntityId;
 			username: string;
 			level: number;
 			roles: string[];

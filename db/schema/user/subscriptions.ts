@@ -15,20 +15,10 @@ import { users } from './users';
 import { subscriptionTypeEnum, subscriptionStatusEnum, cosmeticTypeEnum } from '../core/enums';
 
 /**
- * Subscription Types
+ * Subscription Types and Status are defined in core/enums.ts
  * - vip_pass: One-time lifetime unlock (500 DGT)
  * - degen_pass: Monthly subscription (100 DGT/month) with 120 DGT cosmetic value
  */
-export type SubscriptionType = 'vip_pass' | 'degen_pass';
-
-/**
- * Subscription Status
- * - active: Currently active subscription
- * - expired: Subscription has expired (for monthly)
- * - cancelled: User cancelled subscription
- * - lifetime: Lifetime VIP Pass (never expires)
- */
-export type SubscriptionStatus = 'active' | 'expired' | 'cancelled' | 'lifetime';
 
 /**
  * User Subscriptions Table

@@ -7,6 +7,7 @@ import { Factory } from '../core/factory';
 import { UserFactory, AdminUserFactory, CryptoWhaleFactory } from '../factories/user.factory';
 import { ThreadFactory, PostFactory, ForumCategoryFactory } from '../factories/forum.factory';
 import type { AdminId, WhaleId } from '@shared/types';
+import { UserId, ThreadId } from "@shared/types";
 
 // Register all factories
 Factory.register('user', new UserFactory());
@@ -550,7 +551,7 @@ Thanks in advance for any help! 🙏`,
 		return engagements;
 	}
 
-	private generateOnboardingProgression(userId: number): any[] {
+	private generateOnboardingProgression(userId: UserId): any[] {
 		return [
 			{ step: 'registration', completed: true, timestamp: new Date() },
 			{ step: 'email_verification', completed: false, timestamp: null },
@@ -621,7 +622,7 @@ Thanks in advance for any help! 🙏`,
 		return reactions[index % reactions.length];
 	}
 
-	private generateMarketReactionData(users: any[], threadId: number): any {
+	private generateMarketReactionData(users: any[], threadId: ThreadId): any {
 		return {
 			threadActivity: {
 				threadId,

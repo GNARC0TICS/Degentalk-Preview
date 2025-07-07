@@ -9,6 +9,7 @@ import type { UserId } from '@shared/types';
 import { userService } from '../services/user.service';
 import fs from 'fs/promises';
 import path from 'path';
+import { UserId } from "@shared/types";
 
 export type AuditEventType =
 	| 'auth.login'
@@ -44,7 +45,7 @@ export interface AuditEvent {
 	type: AuditEventType;
 	severity: AuditSeverity;
 	actor: {
-		userId?: number;
+		userId?: UserId;
 		username?: string;
 		ipAddress: string;
 		userAgent?: string;
@@ -248,7 +249,7 @@ class AuditLogger {
 		>,
 		action: string,
 		ipAddress: string,
-		userId?: number,
+		userId?: UserId,
 		username?: string,
 		context?: AuditEvent['context'],
 		metadata?: Record<string, any>
@@ -301,7 +302,7 @@ class AuditLogger {
 	 */
 	async searchEvents(filters: {
 		type?: AuditEventType;
-		userId?: number;
+		userId?: UserId;
 		ipAddress?: string;
 		severity?: AuditSeverity;
 		startDate?: Date;

@@ -1,13 +1,13 @@
 # @degentalk/monorepo Directory Structure
 
-Generated on: 2025-07-04
+Generated on: 2025-07-07
 
 ```
 ├─ .claude/
 │  ├─ audit/
 �# @degentalk/monorepo Directory Structure
 
-Generated on: 2025-07-04
+Generated on: 2025-07-07
 
 ```
 ├─ .claude/
@@ -46,6 +46,7 @@ Generated on: 2025-07-04
 │  └─ workflows/
 │     ├─ ci.yml
 │     ├─ migrate.yml
+│     ├─ phase5-validation.yml
 │     ├─ prebuild.yml
 │     ├─ promote-to-prod.yml
 │     └─ validate-codebase.yml
@@ -70,22 +71,29 @@ Generated on: 2025-07-04
 │  │  ├─ run-dry-run.sh
 │  │  ├─ user-avatar.js
 │  │  └─ username.js
-│  └─ legacy/
-│     ├─ codemods/
-│     │  ├─ apply-id-codemod-tsmorph.ts
-│     │  ├─ apply-id-codemod.ts
-│     │  ├─ fix-typescript-uuid-types-safe.ts
-│     │  ├─ fix-typescript-uuid-types.ts
-│     │  ├─ generate-id-codemod-plan.ts
-│     │  ├─ migrate-user-fetch.ts
-│     │  ├─ replace-degentalk-case.ts
-│     │  ├─ replace-zonecard-import.cjs
-│     │  ├─ update-schema-to-uuid.ts
-│     │  └─ wrap-with-asyncHandler.ts
-│     └─ wallet/
-│        ├─ migrate-wallet-components.ts
-│        ├─ migrate-wallet-imports.ts
-│        └─ wallet-refactor-migration.ts
+│  ├─ legacy/
+│  │  ├─ codemods/
+│  │  │  ├─ apply-id-codemod-tsmorph.ts
+│  │  │  ├─ apply-id-codemod.ts
+│  │  │  ├─ fix-typescript-uuid-types-safe.ts
+│  │  │  ├─ fix-typescript-uuid-types.ts
+│  │  │  ├─ generate-id-codemod-plan.ts
+│  │  │  ├─ migrate-user-fetch.ts
+│  │  │  ├─ replace-degentalk-case.ts
+│  │  │  ├─ replace-zonecard-import.cjs
+│  │  │  ├─ update-schema-to-uuid.ts
+│  │  │  └─ wrap-with-asyncHandler.ts
+│  │  └─ wallet/
+│  │     ├─ migrate-wallet-components.ts
+│  │     ├─ migrate-wallet-imports.ts
+│  │     └─ wallet-refactor-migration.ts
+│  └─ seed-corrupted/
+│     ├─ avatar-frames.ts
+│     ├─ dictionary.ts
+│     ├─ run-username-colors.ts
+│     ├─ seed-all-comprehensive.ts
+│     ├─ seed-avatar-frames.ts
+│     └─ seedForumsFromConfig.ts
 ├─ attached_assets/
 │  ├─ generated-icon.png
 │  ├─ IMG_5701.png
@@ -941,6 +949,7 @@ Generated on: 2025-07-04
 │  │  │  ├─ adaptiveSpacing.ts
 │  │  │  ├─ avatar.ts
 │  │  │  ├─ card-constants.ts
+│  │  │  ├─ format.ts
 │  │  │  ├─ forum-routing-helper.ts
 │  │  │  ├─ forum-urls.ts
 │  │  │  ├─ forumStats.ts
@@ -1165,7 +1174,6 @@ Generated on: 2025-07-04
 │  │  ├─ brand.types.ts
 │  │  ├─ emoji.types.ts
 │  │  ├─ forum.types.ts
-│  │  ├─ id.types.ts
 │  │  ├─ index.ts
 │  │  ├─ system.types.ts
 │  │  ├─ user.types.ts
@@ -1317,6 +1325,14 @@ Generated on: 2025-07-04
 │  │  ├─ query-performance-audit.ts
 │  │  └─ validate-admin-controllers.ts
 │  ├─ codemods/
+│  │  ├─ phase5/
+│  │  │  ├─ console-to-logger.ts
+│  │  │  ├─ enforce-transformers.ts
+│  │  │  ├─ numeric-id-migration.ts
+│  │  │  ├─ README.md
+│  │  │  ├─ req-user-removal.ts
+│  │  │  ├─ run-all.ts
+│  │  │  └─ test-compilation.ts
 │  │  ├─ fix-id-validation-patterns.ts
 │  │  ├─ fix-server-userid-types.ts
 │  │  ├─ id-to-entityid.ts
@@ -1478,6 +1494,9 @@ Generated on: 2025-07-04
 │  │  ├─ neon-sync-agent.ts
 │  │  ├─ setup-xp-system.sh
 │  │  └─ validate-safe-migrations.ts
+│  ├─ phase5/
+│  │  ├─ rollback.ts
+│  │  └─ validate-phase5.ts
 │  ├─ quality/
 │  │  └─ quality-metrics.ts
 │  ├─ refactor/
@@ -1488,13 +1507,7 @@ Generated on: 2025-07-04
 │  │  ├─ shop/
 │  │  │  ├─ seed-default-cosmetics.ts
 │  │  │  └─ username-colors.ts
-│  │  ├─ avatar-frames.ts
-│  │  ├─ dictionary.ts
-│  │  ├─ README.md
-│  │  ├─ run-username-colors.ts
-│  │  ├─ seed-all-comprehensive.ts
-│  │  ├─ seed-avatar-frames.ts
-│  │  └─ seedForumsFromConfig.ts
+│  │  └─ README.md
 │  ├─ templates/
 │  │  ├─ transaction-domain-template.ts
 │  │  └─ vault-domain-template.ts
@@ -1543,8 +1556,6 @@ Generated on: 2025-07-04
 ├─ server/
 │  ├─ .claude/
 │  │  └─ audit/
-│  ├─ .tscache/
-│  │  └─ .tsbuildinfo
 │  ├─ config/
 │  │  └─ loadEnv.ts
 │  ├─ logs/
@@ -1608,6 +1619,7 @@ Generated on: 2025-07-04
 │  │  │  │  ├─ rate-limit.service.ts
 │  │  │  │  └─ user.service.ts
 │  │  │  ├─ utils/
+│  │  │  │  ├─ auth.helpers.ts
 │  │  │  │  └─ error-response.util.ts
 │  │  │  ├─ background-processor.ts
 │  │  │  ├─ base-controller.ts
@@ -2110,7 +2122,6 @@ Generated on: 2025-07-04
 │     ├─ admin-settings.spec.ts
 │     ├─ avatarFrames.spec.ts.backup
 │     └─ forum-home.spec.ts
-├─ types/
 ├─ UIVERSE/
 │  ├─ AnimatedCheckbox.css
 │  ├─ AnimatedCheckbox.tsx
@@ -2157,10 +2168,12 @@ Generated on: 2025-07-04
 ├─ .eslintrc.json
 ├─ .gitignore
 ├─ .jscodeshift.json
+├─ .lintstagedrc.json
 ├─ .markdown-link-check.json
 ├─ .markdownlint.json
 ├─ .markdownlintignore
 ├─ .npmrc
+├─ .phase5-checkpoint
 ├─ .prettierignore
 ├─ .prettierrc
 ├─ CLEANUP-SUMMARY.md
@@ -2176,6 +2189,9 @@ Generated on: 2025-07-04
 ├─ fix-package-manager.sh
 ├─ IMPLEMENTATION_SAFETY_CHECKLIST.md
 ├─ package.json
+├─ PHASE_5_AUDIT_FIXES.md
+├─ PHASE_5_FINAL_VERIFICATION.md
+├─ PHASE_5_MAX_DEBT_ERADICATION.md
 ├─ playwright.config.ts
 ├─ pnpm-lock.yaml
 ├─ pnpm-workspace.yaml

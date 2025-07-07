@@ -15,12 +15,12 @@ const getDbConnection = () => {
 };
 
 export async function up() {
-  console.log('🚀 Applying migration: Add Daily XP Tracking Fields');
+  logger.info('🚀 Applying migration: Add Daily XP Tracking Fields');
   const { db, pool } = getDbConnection();
 
   try {
     await db.transaction(async (tx) => {
-      console.log('Adding XP tracking fields to users table...');
+      logger.info('Adding XP tracking fields to users table...');
       await tx.execute(sql`
         ALTER TABLE users 
         ADD COLUMN IF NOT EXISTS daily_xp_gained INTEGER NOT NULL DEFAULT 0;
@@ -29,9 +29,9 @@ export async function up() {
         ALTER TABLE users 
         ADD COLUMN IF NOT EXISTS last_xp_gain_date TIMESTAMP WITH TIME ZONE;
       `);
-      console.log('✅ Successfully added dailyXpGained and lastXpGainDate columns to users table');
+      logger.info('✅ Successfully added dailyXpGained and lastXpGainDate columns to users table');
     });
-    console.log('✅ Migration applied successfully: Add Daily XP Tracking Fields');
+    logger.info('✅ Migration applied successfully: Add Daily XP Tracking Fields');
   } catch (error) {
     console.error('❌ Error applying migration (Add Daily XP Tracking Fields):', error);
     throw error; // Re-throw to indicate failure
@@ -41,12 +41,12 @@ export async function up() {
 }
 
 export async function down() {
-  console.log('↩️ Reverting migration: Add Daily XP Tracking Fields');
+  logger.info('↩️ Reverting migration: Add Daily XP Tracking Fields');
   const { db, pool } = getDbConnection();
 
   try {
     await db.transaction(async (tx) => {
-      console.log('Removing XP tracking fields from users table...');
+      logger.info('Removing XP tracking fields from users table...');
       await tx.execute(sql`
         ALTER TABLE users 
         DROP COLUMN IF EXISTS daily_xp_gained;
@@ -55,9 +55,9 @@ export async function down() {
         ALTER TABLE users 
         DROP COLUMN IF EXISTS last_xp_gain_date;
       `);
-      console.log('✅ Successfully removed dailyXpGained and lastXpGainDate columns from users table');
+      logger.info('✅ Successfully removed dailyXpGained and lastXpGainDate columns from users table');
     });
-    console.log('✅ Migration reverted successfully: Add Daily XP Tracking Fields');
+    logger.info('✅ Migration reverted successfully: Add Daily XP Tracking Fields');
   } catch (error) {
     console.error('❌ Error reverting migration (Add Daily XP Tracking Fields):', error);
     throw error; // Re-throw to indicate failure
@@ -76,7 +76,7 @@ if (isMainModule) {
   } else if (operation === 'down') {
     down().then(() => process.exit(0)).catch(() => process.exit(1));
   } else {
-    console.log("Please specify 'up' or 'down' as an argument.");
+    logger.info("Please specify 'up' or 'down' as an argument.");
     process.exit(1);
   }
 }

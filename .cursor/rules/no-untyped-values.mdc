@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
 # No Untyped Values Rule (`no-any`)
@@ -81,3 +81,47 @@ function parseData(raw: unknown): Data {
 ---
 
 **Status:** Active as of 2025-06-22
+
+> **Note:** Replacing `any` with `unknown` is **not** enough.  You **must** refine `unknown` with a Zod schema, `in` guards, or discriminated unions **before** use.  Assigning `unknown` to a typed variable without a guard is flagged by `@typescript-eslint/consistent-type-assertions`.
+
+---
+
+## Advanced Type Workflow Enhancements (2025-Q3)
+
+1. **Generics Before `unknown`**
+   • When a helper can be typed generically, prefer `<T extends z.ZodTypeAny>(schema: T) => z.infer<T>` rather than returning `unknown` + cast.
+
+2. **External Library Interop**
+   • For libraries that return `any` (e.g. `lodash.get`, `express-fileupload`), immediately wrap the call in a *local* typed helper.
+   ```ts
+   export const safeGet = <T>(obj: unknown, path: string, fallback: T): T => {
+     return (lodashGet(obj as object, path, fallback)) as T;
+   };
+   ```
+   • Ban direct use of such functions (`eslint-plugin-degen/no-raw-lodash-get`).
+
+3. **Zod-first Parsing Pipeline**
+   • Every external JSON payload (HTTP, WebSocket, 3rd-party SDK) must have a sibling `<name>.schema.ts` file exporting a Zod schema.
+   • Use `infer` types from the schema in the service / transformer layer.
+
+4. **Discriminated Unions for Polymorphic Data**
+   • Replace `Record<string, unknown>` shapes with tagged unions. ESLint rule `degen/require-tagged-union` warns.
+
+5. **Typed Feature Flags**
+   • `client/src/config/features.config.ts` generates `FeatureFlags` type.  Never index flags with string keys—use `keyof FeatureFlags`.
+
+6. **Assert-Never Enforcement**
+   • Switch default branches on exhaustive `switch` statements to `assertNever(x)` which throws at runtime and fails compile if new union cases are added.
+
+7. **CI Static Analysis**
+   • `pnpm typecheck:strict` runs `tsc --noEmit --incremental false` with `exactOptionalPropertyTypes` and `noUncheckedIndexedAccess`.
+   • Build fails if any new error is introduced.
+
+8. **Type-Only Import Hygiene**
+   • All interface / type imports must use `import type`.
+   • Violations caught by `degen/require-type-only-import` (new rule).
+
+---
+
+### Quick Reference Flowchart
+`raw data` ➜ *parse with Zod* ➜ *DTO / branded IDs* ➜ *business logic* ➜ *transformer* ➜ *API* ➜ *typed React Query hook*

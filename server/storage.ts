@@ -70,6 +70,8 @@ import { promisify } from 'util';
 import { xpCloutService } from './services/xp-clout-service';
 import { logger, LogLevel, LogAction } from './src/core/logger';
 import { PgTransaction } from 'drizzle-orm/pg-core';
+import { ConversationId, ProductId, GroupId, StructureId, ThreadId, PostId, EmojiId, CategoryId } from "@shared/types";
+
 // import multerS3 from "multer-s3"; // Removed as not a dependency
 // import { S3Client } from "@aws-sdk/client-s3"; // Removed as not a dependency
 
@@ -87,7 +89,7 @@ export interface IStorage {
 	getUserByEmail(email: string): Promise<User | undefined>;
 	createUser(user: InsertUser): Promise<User>;
 	updateUser(id: number, userData: Partial<User>): Promise<User>;
-	getUsersInGroup(groupId: number): Promise<User[]>;
+	getUsersInGroup(groupId: GroupId): Promise<User[]>;
 	hashPassword(password: string): Promise<string>;
 
 	// Staff and groups methods
@@ -120,7 +122,7 @@ export interface IStorage {
 
 	// Thread methods
 	getThreads(
-		structureId?: number,
+		structureId?: StructureId,
 		limit?: number,
 		offset?: number,
 		sortBy?: string
@@ -132,7 +134,7 @@ export interface IStorage {
 
 	// Thread draft methods
 	getDraft(id: number): Promise<ThreadDraft | undefined>;
-	getDraftsByUser(userId: UserId, structureId?: number): Promise<ThreadDraft[]>;
+	getDraftsByUser(userId: UserId, structureId?: StructureId): Promise<ThreadDraft[]>;
 	saveDraft(draft: InsertThreadDraft): Promise<ThreadDraft>;
 	updateDraft(id: number, data: Partial<ThreadDraft>): Promise<ThreadDraft>;
 	deleteDraft(id: number): Promise<void>;
@@ -143,15 +145,15 @@ export interface IStorage {
 	getThreadFeaturePermissionsForUser(userId: UserId): Promise<Record<string, boolean>>;
 
 	// Post methods
-	getPosts(threadId: number, limit?: number, offset?: number): Promise<PostWithUser[]>;
+	getPosts(threadId: ThreadId, limit?: number, offset?: number): Promise<PostWithUser[]>;
 	getPost(id: number): Promise<PostWithUser | undefined>;
 	createPost(post: InsertPost & { userId: UserId; isFirstPost?: boolean }): Promise<Post>;
 	updatePost(id: number, postData: Partial<Post> & { editorId: UserId }): Promise<Post>;
 	deletePost(id: number): Promise<void>;
 
 	// Reaction methods
-	addReaction(userId: UserId, postId: number, reaction: string): Promise<void>;
-	removeReaction(userId: UserId, postId: number, reaction: string): Promise<void>;
+	addReaction(userId: UserId, postId: PostId, reaction: string): Promise<void>;
+	removeReaction(userId: UserId, postId: PostId, reaction: string): Promise<void>;
 
 	// Notification methods
 	getNotifications(userId: UserId, limit?: number, offset?: number): Promise<Notification[]>;
@@ -164,7 +166,7 @@ export interface IStorage {
 	updateEmoji(id: number, emoji: Partial<CustomEmoji>): Promise<CustomEmoji>;
 	deleteEmoji(id: number): Promise<void>;
 	getAvailableEmojisForUser(userId: UserId): Promise<EmojiWithAvailability[]>;
-	unlockEmojiForUser(userId: UserId, emojiId: number): Promise<void>;
+	unlockEmojiForUser(userId: UserId, emojiId: EmojiId): Promise<void>;
 
 	// Shop and products methods
 	getProducts(category?: string): Promise<Product[]>;
@@ -172,7 +174,7 @@ export interface IStorage {
 	createProduct(product: typeof products.$inferInsert): Promise<Product>;
 	updateProduct(id: number, data: Partial<Product>): Promise<Product>;
 	deleteProduct(id: number): Promise<void>;
-	purchaseProduct(userId: UserId, productId: number, quantity?: number): Promise<Order>;
+	purchaseProduct(userId: UserId, productId: ProductId, quantity?: number): Promise<Order>;
 
 	// Messaging system
 	getConversations(
@@ -186,18 +188,18 @@ export interface IStorage {
 		participants: UserId[];
 	}): Promise<Conversation>;
 	getMessages(
-		conversationId: number,
+		conversationId: ConversationId,
 		limit?: number,
 		offset?: number
 	): Promise<(Message & { sender: User })[]>;
 	sendMessage(data: {
-		conversationId: number;
+		conversationId: ConversationId;
 		senderId: UserId;
 		content: string;
 		attachmentUrl?: string;
 		attachmentType?: string;
 	}): Promise<Message>;
-	markMessagesAsRead(conversationId: number, userId: UserId): Promise<void>;
+	markMessagesAsRead(conversationId: ConversationId, userId: UserId): Promise<void>;
 
 	// XP engine methods
 	addUserXp(userId: UserId, amount: number, path?: string): Promise<void>;
@@ -206,16 +208,16 @@ export interface IStorage {
 
 	// User inventory methods
 	getUserInventory(userId: UserId): Promise<UserInventoryItem[]>;
-	checkUserOwnsProduct(userId: UserId, productId: number): Promise<boolean>;
+	checkUserOwnsProduct(userId: UserId, productId: ProductId): Promise<boolean>;
 	addProductToUserInventory(item: InsertUserInventoryItem): Promise<UserInventoryItem>;
 	updateUserInventoryItem(
 		userId: UserId,
-		productId: number,
+		productId: ProductId,
 		updates: Partial<UserInventoryItem>
 	): Promise<UserInventoryItem | undefined>;
 	createInventoryTransaction(data: {
 		userId: UserId;
-		productId: number;
+		productId: ProductId;
 		transactionType: string;
 		amount: number;
 		currency: string;
@@ -258,17 +260,17 @@ export class DatabaseStorage implements IStorage {
 
 	// User methods
 	async getUser(id: number | string): Promise<User | undefined> {
-		console.log('🔍 getUser called with ID:', id, 'type:', typeof id);
+		logger.info('🔍 getUser called with ID:', id, 'type:', typeof id);
 
 		try {
 			// Handle both numeric and UUID string IDs
 			const [user] = await db.select().from(users).where(eq(users.id, id));
 
 			if (user) {
-				console.log('✅ Drizzle ORM result for user:', JSON.stringify(user, null, 2));
+				logger.info('✅ Drizzle ORM result for user:', JSON.stringify(user, null, 2));
 				return user;
 			} else {
-				console.log('❌ Drizzle ORM: No user found with ID:', id);
+				logger.info('❌ Drizzle ORM: No user found with ID:', id);
 			}
 		} catch (err) {
 			console.warn('❌ Error fetching user with Drizzle ORM, trying direct SQL', err);
@@ -327,7 +329,7 @@ export class DatabaseStorage implements IStorage {
 
 				if (result.rows && result.rows.length > 0) {
 					const rawUser = result.rows[0] as any;
-					console.log('SQL query result for user:', JSON.stringify(rawUser, null, 2));
+					logger.info('SQL query result for user:', JSON.stringify(rawUser, null, 2));
 
 					// Manually map the raw database row to the expected User object
 					const user: User = {
@@ -402,7 +404,7 @@ export class DatabaseStorage implements IStorage {
 				createdAt: new Date()
 			});
 
-			console.log(`Verification token stored for user ${userId}, expires at ${expiresAt}`);
+			logger.info(`Verification token stored for user ${userId}, expires at ${expiresAt}`);
 		} catch (error) {
 			console.error('Error storing verification token:', error);
 			throw error;
@@ -609,7 +611,7 @@ export class DatabaseStorage implements IStorage {
 
 	// Thread methods
 	async getThreads(
-		categoryId?: number,
+		categoryId?: CategoryId,
 		limit = 20,
 		offset = 0,
 		sortBy = 'latest'
@@ -759,7 +761,7 @@ export class DatabaseStorage implements IStorage {
 		return draft;
 	}
 
-	async getDraftsByUser(userId: UserId, structureId?: number): Promise<ThreadDraft[]> {
+	async getDraftsByUser(userId: UserId, structureId?: StructureId): Promise<ThreadDraft[]> {
 		const query = db
 			.select()
 			.from(threadDrafts)
@@ -907,7 +909,7 @@ export class DatabaseStorage implements IStorage {
 	}
 
 	// Post methods
-	async getPosts(threadId: number, limit = 20, offset = 0): Promise<PostWithUser[]> {
+	async getPosts(threadId: ThreadId, limit = 20, offset = 0): Promise<PostWithUser[]> {
 		return db
 			.select({
 				...posts,
@@ -1068,7 +1070,7 @@ export class DatabaseStorage implements IStorage {
 	}
 
 	// Reaction methods
-	async addReaction(userId: UserId, postId: number, reaction: string): Promise<void> {
+	async addReaction(userId: UserId, postId: PostId, reaction: string): Promise<void> {
 		await db.transaction(async (tx: PgTransaction<any, any, any>) => {
 			// Add reaction
 			await tx
@@ -1106,7 +1108,7 @@ export class DatabaseStorage implements IStorage {
 		});
 	}
 
-	async removeReaction(userId: UserId, postId: number, reaction: string): Promise<void> {
+	async removeReaction(userId: UserId, postId: PostId, reaction: string): Promise<void> {
 		await db.transaction(async (tx: PgTransaction<any, any, any>) => {
 			// Remove reaction
 			const deleteResult = await tx.delete(postReactions).where(
@@ -1284,7 +1286,7 @@ export class DatabaseStorage implements IStorage {
 		});
 	}
 
-	async unlockEmojiForUser(userId: UserId, emojiId: number): Promise<void> {
+	async unlockEmojiForUser(userId: UserId, emojiId: EmojiId): Promise<void> {
 		// Get user and emoji
 		const [user] = await db.select().from(users).where(eq(users.id, userId));
 		const [emoji] = await db.select().from(customEmojis).where(eq(customEmojis.id, emojiId));
@@ -1314,7 +1316,7 @@ export class DatabaseStorage implements IStorage {
 	}
 
 	// Staff Groups methods
-	async getUsersInGroup(groupId: number): Promise<User[]> {
+	async getUsersInGroup(groupId: GroupId): Promise<User[]> {
 		return db.select().from(users).where(eq(users.groupId, groupId));
 	}
 
@@ -1665,7 +1667,7 @@ export class DatabaseStorage implements IStorage {
 			.where(eq(products.id, id));
 	}
 
-	async purchaseProduct(userId: UserId, productId: number, quantity: number = 1): Promise<Order> {
+	async purchaseProduct(userId: UserId, productId: ProductId, quantity: number = 1): Promise<Order> {
 		const [user] = await db.select().from(users).where(eq(users.id, userId));
 		const [product] = await db.select().from(products).where(eq(products.id, productId));
 
@@ -1903,7 +1905,7 @@ export class DatabaseStorage implements IStorage {
 	}
 
 	async getMessages(
-		conversationId: number,
+		conversationId: ConversationId,
 		limit = 20,
 		offset = 0
 	): Promise<(Message & { sender: User })[]> {
@@ -1921,7 +1923,7 @@ export class DatabaseStorage implements IStorage {
 	}
 
 	async sendMessage(data: {
-		conversationId: number;
+		conversationId: ConversationId;
 		senderId: UserId;
 		content: string;
 		attachmentUrl?: string;
@@ -1995,7 +1997,7 @@ export class DatabaseStorage implements IStorage {
 		});
 	}
 
-	async markMessagesAsRead(conversationId: number, userId: UserId): Promise<void> {
+	async markMessagesAsRead(conversationId: ConversationId, userId: UserId): Promise<void> {
 		await db.transaction(async (tx: PgTransaction<any, any, any>) => {
 			// Get unread messages
 			const unreadMessages = await tx
@@ -2223,7 +2225,7 @@ export class DatabaseStorage implements IStorage {
 		return inventoryItems;
 	}
 
-	async checkUserOwnsProduct(userId: UserId, productId: number): Promise<boolean> {
+	async checkUserOwnsProduct(userId: UserId, productId: ProductId): Promise<boolean> {
 		const [item] = await db
 			.select({
 				id: userInventory.id
@@ -2292,7 +2294,7 @@ export class DatabaseStorage implements IStorage {
 
 	async updateUserInventoryItem(
 		userId: UserId,
-		productId: number,
+		productId: ProductId,
 		updates: Partial<UserInventoryItem>
 	): Promise<UserInventoryItem | undefined> {
 		const [updatedItem] = await db
@@ -2316,7 +2318,7 @@ export class DatabaseStorage implements IStorage {
 
 	async createInventoryTransaction(data: {
 		userId: UserId;
-		productId: number;
+		productId: ProductId;
 		transactionType: string;
 		amount: number;
 		currency: string;

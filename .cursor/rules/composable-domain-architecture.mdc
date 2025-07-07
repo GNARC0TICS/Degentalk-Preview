@@ -172,9 +172,32 @@ const TipButton = ({ recipientId, amount }: TipButtonProps) => {
 };
 ```
 
+### 5. Transformer Gate Enforcement (@transformerGate)
+**Trigger:** Writing or modifying any Express/HTTP route or service that returns JSON
+
+**Action:** All outgoing objects **must** be produced by a tiered transformer function (`toPublicX`, `toAuthenticatedX`, `toAdminX`).
+
+```typescript
+// ✅ EXCELLENT – DTO produced by transformer
+import { toPublicThread } from '@/server/src/domains/forum/transformers/thread.transformer';
+
+router.get('/:threadId', async (req, res) => {
+  const dbRow = await threadService.getById(req.params.threadId);
+  return res.json(toPublicThread(dbRow));
+});
+
+// ❌ AVOID – raw DB row leaks to client
+router.get('/:threadId', async (req, res) => {
+  const thread = await db.select().from(threads).where(eq(threads.id, id)).limit(1);
+  res.json(thread); // ❌ banned by @transformerGate
+});
+```
+
+**CI Guard:** ESLint rule `degen/no-raw-response` blocks any `res.json(` call outside `*/transformers/*` context.
+
 ## 🚀 Advanced Composition Patterns
 
-### 5. Render Props for Maximum Flexibility (@renderProps)
+### 6. Render Props for Maximum Flexibility (@renderProps)
 ```typescript
 // ✅ EXCELLENT - Render props for complex logic sharing
 interface ThreadListProps {
@@ -206,7 +229,7 @@ const ThreadList = ({ forumId, children }: ThreadListProps) => {
 </ThreadList>
 ```
 
-### 6. Composable Hooks (@composableHooks)
+### 7. Composable Hooks (@composableHooks)
 ```typescript
 // ✅ EXCELLENT - Composable hook pattern
 // hooks/useForumInteraction.ts

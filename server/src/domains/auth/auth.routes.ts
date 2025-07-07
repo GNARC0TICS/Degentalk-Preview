@@ -26,6 +26,7 @@ import {
 } from './middleware/auth.middleware';
 import { isDevMode } from '../../utils/environment';
 import { logger } from '@server/src/core/logger';
+import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
 
 const router = Router();
 
@@ -139,7 +140,7 @@ export function setupAuthPassport(sessionStore: any) {
 					logger.warn('Deserializer: storage.getUser returned null/undefined', { id });
 				}
 			} catch (storageErr) {
-				console.log('❌ Deserializer: storage.getUser threw error:', storageErr);
+				logger.info('❌ Deserializer: storage.getUser threw error:', storageErr);
 				logger.warn('AuthRoutes', 'Storage getUser error during deserialization, falling back.', {
 					err: storageErr,
 					userId: id
@@ -149,11 +150,11 @@ export function setupAuthPassport(sessionStore: any) {
 
 			// If in development mode, create a mock user
 			if (isDevMode()) {
-				console.log('⚠️ Deserializer: Creating mock user in dev mode for ID:', id);
+				logger.info('⚠️ Deserializer: Creating mock user in dev mode for ID:', id);
 				// Check if there's a dev role stored in session
 				const role = (global as any).devRole || 'user';
 				const mockUser = createMockUser(id, role as any);
-				console.log('🎭 Mock user created:', JSON.stringify(mockUser, null, 2));
+				logger.info('🎭 Mock user created:', JSON.stringify(mockUser, null, 2));
 				// Ensure role is not null and groupId is undefined if null for mock user too
 				const mockUserWithRole = {
 					...mockUser,
@@ -192,7 +193,7 @@ router.post('/resend-verification', resendVerification);
 router.get('/test-roles', (req, res) => {
 	if (!req.isAuthenticated()) return res.json({ authenticated: false });
 
-	const user = req.user as any;
+	const user = getAuthenticatedUser(req) as any;
 	const computedRoles = {
 		originalRole: user.role,
 		isAdmin: ['admin', 'super_admin'].includes(user.role),

@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import { ProfileStatsService } from './profile-stats.service';
 import { handleControllerError } from '../../lib/error-handler';
 import { z } from 'zod';
+import { logger } from "../../core/logger";
 
 // Request validation schemas
 const GetProfileStatsSchema = z.object({
@@ -161,13 +162,13 @@ export class ProfileStatsController {
 	 */
 	private static async storeEngagementAnalytics(data: any) {
 		// Example implementation - replace with your analytics service
-		console.log('Profile Engagement Analytics:', {
-			profileUsername: data.profileUsername,
-			viewerId: data.viewerId,
-			engagementScore: data.metrics.engagementScore,
-			sessionDuration: data.sessionDuration,
-			timestamp: data.timestamp
-		});
+		logger.info('Profile Engagement Analytics:', {
+        			profileUsername: data.profileUsername,
+        			viewerId: data.viewerId,
+        			engagementScore: data.metrics.engagementScore,
+        			sessionDuration: data.sessionDuration,
+        			timestamp: data.timestamp
+        		});
 
 		// TODO: Implement actual analytics storage
 		// - Send to analytics service (Mixpanel, Amplitude, etc.)

@@ -19,6 +19,7 @@ import type {
   TransactionStatus,
   WithdrawalStatus
 } from '@shared/types';
+import { EntityId } from "@shared/types";
 
 // Base wallet data safe for public consumption
 export interface PublicWallet {
@@ -187,7 +188,7 @@ export interface AuthenticatedCryptoWallet extends PublicCryptoWallet {
 export interface AdminCryptoWallet extends AuthenticatedCryptoWallet {
   // Admin data
   ccpaymentUserId: string;
-  coinId: number;
+  coinId: EntityId;
   
   // System tracking
   createdAt: Date;

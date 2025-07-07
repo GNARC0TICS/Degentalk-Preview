@@ -4,6 +4,7 @@ import { db } from '@db';
 import { users } from '@schema';
 import { eq } from 'drizzle-orm';
 import type { GroupId, UserId } from '@shared/types';
+import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
 
 // Extend Express Request type to include user
 declare global {
@@ -57,7 +58,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 		}
 
 		// Attach user to request
-		req.user = {
+		getAuthenticatedUser(req) = {
 			id: user.id,
 			username: user.username,
 			email: user.email,

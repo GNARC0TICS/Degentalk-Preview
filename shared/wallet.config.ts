@@ -1,3 +1,5 @@
+import { UserId } from "@shared/types";
+
 // Unified Wallet System Configuration
 // Consolidated from 3 separate configs for single source of truth
 
@@ -185,7 +187,7 @@ export class WalletFeatureChecker {
 		featureId: string,
 		userLevel: number,
 		isDev: boolean = false,
-		userId?: number
+		userId?: UserId
 	): { hasAccess: boolean; reason?: string } {
 		const feature = WALLET_FEATURE_GATES.find((f) => f.id === featureId);
 
@@ -225,7 +227,7 @@ export class WalletFeatureChecker {
 	static getUserFeatures(
 		userLevel: number,
 		isDev: boolean = false,
-		userId?: number
+		userId?: UserId
 	): Array<WalletFeatureGate & { hasAccess: boolean; reason?: string }> {
 		return WALLET_FEATURE_GATES.map((feature) => ({
 			...feature,
@@ -240,7 +242,7 @@ export class WalletFeatureChecker {
 		featureIds: string[],
 		userLevel: number,
 		isDev: boolean = false,
-		userId?: number
+		userId?: UserId
 	): Record<string, boolean> {
 		const result: Record<string, boolean> = {};
 

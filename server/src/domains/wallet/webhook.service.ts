@@ -11,6 +11,7 @@ import { eq, and } from 'drizzle-orm';
 import crypto from 'crypto';
 import { walletConfigService } from './wallet-config.service';
 import { dgtService } from './dgt.service';
+import { logger } from "../../core/logger";
 
 /**
  * Enhanced Webhook Service for CCPayment Integration
@@ -527,7 +528,7 @@ export class WebhookService {
 
 			// Check if auto-conversion is enabled
 			if (!config.ccpayment.autoSwapEnabled) {
-				console.log(`DGT auto-conversion disabled for deposit ${recordId}`);
+				logger.info(`DGT auto-conversion disabled for deposit ${recordId}`);
 				return;
 			}
 
@@ -538,9 +539,7 @@ export class WebhookService {
 
 			// Check minimum deposit threshold
 			if (usdtAmount < config.dgt.minDepositUSD) {
-				console.log(
-					`Deposit ${recordId} below minimum threshold: $${usdtAmount} < $${config.dgt.minDepositUSD}`
-				);
+				logger.info(`Deposit ${recordId} below minimum threshold: $${usdtAmount} < $${config.dgt.minDepositUSD}`);
 				return;
 			}
 
@@ -567,9 +566,7 @@ export class WebhookService {
 				reason: `Crypto deposit conversion: ${depositAmount} ${originalToken} → ${dgtAmount} DGT`
 			});
 
-			console.log(
-				`DGT conversion completed: ${depositAmount} ${originalToken} → ${dgtAmount} DGT for user ${userId}`
-			);
+			logger.info(`DGT conversion completed: ${depositAmount} ${originalToken} → ${dgtAmount} DGT for user ${userId}`);
 		} catch (error) {
 			console.error(`Error processing DGT conversion for deposit ${recordId}:`, error);
 

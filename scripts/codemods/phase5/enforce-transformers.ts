@@ -247,6 +247,17 @@ function isAutoFixable(context: string): boolean {
   );
 }
 
+// Utility: ensure a named import exists (adds it if missing)
+function ensureImport(sourceFile: any, named: string, module: string) {
+  const existing = sourceFile.getImportDeclaration(i => i.getModuleSpecifierValue() === module);
+  if (existing) {
+    const already = existing.getNamedImports().some((ni: any) => ni.getName() === named);
+    if (!already) existing.addNamedImport(named);
+  } else {
+    sourceFile.addImportDeclaration({ moduleSpecifier: module, namedImports: [named] });
+  }
+}
+
 function attemptAutoFix(callExpr: CallExpression, violation: TransformerViolation, sourceFile: any): boolean {
   try {
     const args = callExpr.getArguments();
@@ -257,16 +268,19 @@ function attemptAutoFix(callExpr: CallExpression, violation: TransformerViolatio
     // Simple transformations
     if (arg === 'user') {
       callExpr.replaceWithText('res.json(UserTransformer.toPublicUser(user))');
+      ensureImport(sourceFile, 'UserTransformer', '@server/src/transformers/user.transformer');
       return true;
     }
     
     if (arg === 'users') {
       callExpr.replaceWithText('res.json(UserTransformer.toPublicUsers(users))');
+      ensureImport(sourceFile, 'UserTransformer', '@server/src/transformers/user.transformer');
       return true;
     }
     
     if (arg === 'transaction') {
       callExpr.replaceWithText('res.json(EconomyTransformer.toTransaction(transaction))');
+      ensureImport(sourceFile, 'EconomyTransformer', '@server/src/transformers/economy.transformer');
       return true;
     }
     

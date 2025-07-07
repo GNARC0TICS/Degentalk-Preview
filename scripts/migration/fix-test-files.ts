@@ -142,7 +142,7 @@ async function fixTestFile(filePath: string): Promise<{ fixed: number; issues: T
     if (updatedContent.includes('mockUserId') && !updatedContent.includes('UserId')) {
       updatedContent = updatedContent.replace(
         'import { mockUuid',
-        'import type { UserId, ThreadId, PostId } from "@db/types";\nimport { mockUuid'
+        'import type { UserId, ThreadId, PostId } from "@shared/types";\nimport { mockUuid'
       );
     }
   }

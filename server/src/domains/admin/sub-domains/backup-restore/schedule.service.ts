@@ -11,6 +11,7 @@ import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { adminCacheService } from '../../shared';
 import { backupService } from './backup.service';
 import { z } from 'zod';
+import { logger } from "../../../../core/logger";
 
 // Validation schemas
 export const createScheduleSchema = z.object({
@@ -343,7 +344,7 @@ export class BackupScheduleService {
 			}
 		}, 60 * 1000); // 1 minute
 
-		console.log('Backup scheduler started');
+		logger.info('Backup scheduler started');
 		return { message: 'Backup scheduler started successfully' };
 	}
 
@@ -357,7 +358,7 @@ export class BackupScheduleService {
 		}
 
 		this.schedulerRunning = false;
-		console.log('Backup scheduler stopped');
+		logger.info('Backup scheduler stopped');
 		return { message: 'Backup scheduler stopped' };
 	}
 
@@ -391,7 +392,7 @@ export class BackupScheduleService {
 
 		for (const schedule of dueSchedules) {
 			try {
-				console.log(`Executing scheduled backup: ${schedule.name}`);
+				logger.info(`Executing scheduled backup: ${schedule.name}`);
 
 				// Execute the backup
 				const result = await this.executeScheduledBackup(schedule, schedule.createdBy);
@@ -410,7 +411,7 @@ export class BackupScheduleService {
 					})
 					.where(eq(backupSchedules.id, schedule.id));
 
-				console.log(`Scheduled backup completed: ${schedule.name}, next run: ${nextRun}`);
+				logger.info(`Scheduled backup completed: ${schedule.name}, next run: ${nextRun}`);
 			} catch (error) {
 				console.error(`Scheduled backup failed: ${schedule.name}`, error);
 
@@ -431,7 +432,7 @@ export class BackupScheduleService {
 				// Send notification if configured
 				if (schedule.notifyOnFailure) {
 					// Implementation would send email/webhook notification
-					console.log(`Backup failure notification for schedule: ${schedule.name}`);
+					logger.info(`Backup failure notification for schedule: ${schedule.name}`);
 				}
 			}
 		}

@@ -1,4 +1,5 @@
 import { getPathForCategory, xpRewards } from '@shared/path-config';
+import { CategoryId } from "@shared/types";
 
 export interface UserPaths {
 	paths?: Record<string, number>;
@@ -21,7 +22,7 @@ const MULTIPLIER_VALUE = 1.2;
  */
 export function awardPathXp(
 	pluginData: Record<string, any> | null,
-	categoryId: number,
+	categoryId: CategoryId,
 	actionType: 'newThread' | 'newPost'
 ): Record<string, any> {
 	// Initialize plugin data if not exists

@@ -125,6 +125,7 @@ import { randomUUID } from 'crypto';
 import { analyticsEvents } from '@schema/system/analyticsEvents';
 import gamificationRoutes from './src/domains/gamification/gamification.routes';
 import { achievementRoutes } from './src/domains/gamification/achievements';
+import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
 
 export async function registerRoutes(app: Express): Promise<Server> {
 	// ===================================================================
@@ -170,7 +171,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			const page = parseInt(req.query.page as string) || 1;
 			const limit = Math.min(parseInt(req.query.limit as string) || 20, 50); // Max 50
 			const forumId = req.query.forumId ? parseInt(req.query.forumId as string) : undefined;
-			const userId = req.user?.id; // From auth middleware
+			const userId = getAuthenticatedUser(req)?.id; // From auth middleware
 
 			// Validate tab
 			const validTabs = ['trending', 'recent', 'following'];
@@ -455,14 +456,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 	// WebSocket server setup - only in production
 	if (!IS_DEVELOPMENT) {
-		console.log('🚀 Setting up WebSocket server in production mode');
+		logger.info('🚀 Setting up WebSocket server in production mode');
 
 		// Set up WebSocket server on the same HTTP server but with a distinct path
 		const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
 
 		// Handle WebSocket connections
 		wss.on('connection', (ws) => {
-			console.log('WebSocket client connected');
+			logger.info('WebSocket client connected');
 			clients.add(ws);
 
 			// Send initial message
@@ -476,7 +477,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			// Handle incoming messages
 			ws.on('message', (message) => {
 				try {
-					console.log('Received message:', message.toString());
+					logger.info('Received message:', message.toString());
 					const data = JSON.parse(message.toString());
 
 					// Process different message types
@@ -522,13 +523,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 			// Handle disconnection
 			ws.on('close', () => {
-				console.log('WebSocket client disconnected');
+				logger.info('WebSocket client disconnected');
 				clients.delete(ws);
 			});
 		});
 	} else {
 		// In development mode, log that WebSocket is disabled
-		console.log('⚠️ WebSocket server is DISABLED in development mode to prevent connection errors');
+		logger.info('⚠️ WebSocket server is DISABLED in development mode to prevent connection errors');
 	}
 
 	// Export the WebSocket clients set so other routes can access it

@@ -2,6 +2,7 @@ import { db } from '@db';
 import { announcements, users } from '@schema';
 import { count, desc, eq, isNull, lte, gte, sql, and } from 'drizzle-orm';
 import { insertAnnouncementSchema } from '@schema';
+import { UserId } from "@shared/types";
 
 /**
  * Get all active announcements with filtering
@@ -9,7 +10,7 @@ import { insertAnnouncementSchema } from '@schema';
 export async function getActiveAnnouncements(options: {
 	tickerOnly?: boolean;
 	userRole?: string;
-	userId?: number;
+	userId?: UserId;
 	limit?: number;
 }) {
 	const { tickerOnly, userRole = 'guest', userId, limit = 10 } = options;

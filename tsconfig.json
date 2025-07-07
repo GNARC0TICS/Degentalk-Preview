@@ -27,6 +27,7 @@
 		"scripts/migration/cleanup-old-category-schema.ts",
 		"scripts/migration/generate-id-aliases.ts",
 		"scripts/migration/generate-uuid-audit.ts",
+		"archive/seed-corrupted/**",
 		"shared/fixtures/**",
 		"server/test/**",
 		"server/tests/**",

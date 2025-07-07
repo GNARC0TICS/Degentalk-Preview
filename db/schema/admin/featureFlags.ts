@@ -34,7 +34,7 @@ export const featureFlags = pgTable('feature_flags', {
 	updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }), // Changed to uuid
 	rolloutPercentage: numeric('rollout_percentage', { precision: 5, scale: 2 })
 		.notNull()
-		.default(100) // TODO: @syncSchema added column for gradual rollout support
+		.default('100.00') // TODO: @syncSchema added column for gradual rollout support
 });
 
 export type FeatureFlag = typeof featureFlags.$inferSelect;

@@ -40,6 +40,9 @@ export async function consoleToLoggerCodemod(dryRun = false) {
       '**/*.spec.ts', 
       'scripts/**',
       'client/**',
+      'tests/**',
+      'e2e/**',
+      'shared/**',
       'server/src/core/logger.ts',
       'server/utils/**', // Skip wallet CLI utilities
       'archive/**',
@@ -69,13 +72,13 @@ export async function consoleToLoggerCodemod(dryRun = false) {
             const object = propAccess.getExpression().getText().trim();
             const property = propAccess.getName();
             
-            if (object === 'console' && ['log', 'info', 'debug', 'trace'].includes(property)) {
+            if (object === 'console' && ['log', 'info', 'debug', 'trace', 'warn', 'error'].includes(property)) {
               needsLoggerImport = true;
               
-              // Determine logger method mapping
-              const loggerMethod = property === 'log' ? 'info' : 
-                                  property === 'trace' ? 'debug' : 
-                                  property; // 'info' or 'debug' stay the same
+              // Map console methods → logger methods
+              const loggerMethod = property === 'log'   ? 'info'  :
+                                  property === 'trace' ? 'debug' :
+                                  property; // 'info', 'debug', 'warn', 'error' remain unchanged
               
               // Get arguments and preserve them
               const args = callExpr.getArguments().map(arg => arg.getText()).join(', ');
@@ -138,71 +141,10 @@ export async function consoleToLoggerCodemod(dryRun = false) {
 
 // Helper to generate relative path to logger
 function generateRelativeLoggerImport(filePath: string): string {
-  // Count directory depth from project root
-  const depth = filePath.split('/').length - 1;
-  
-  // If in server/src/**, use relative path to core/logger
-  if (filePath.includes('server/src/')) {
-    const serverSrcDepth = filePath.split('server/src/')[1].split('/').length - 1;
-    const relativePath = '../'.repeat(serverSrcDepth) + 'core/logger';
-    return relativePath;
-  }
-  
-  // For other server files, navigate to server/src/core/logger
-  if (filePath.includes('server/')) {
-    return './src/core/logger';
-  }
-  
-  // Fallback to absolute path construction
-  const upLevels = '../'.repeat(depth);
-  return `${upLevels}server/src/core/logger`;
-}
-
-// Helper to create the logger import if needed
-function createLoggerHelper() {
-  const helperContent = `/**
- * Auth Helper Utilities
- * Centralizes authentication-related helper functions
- */
-
-import type { Request } from 'express';
-import type { AuthenticatedUser } from '@shared/types';
-
-/**
- * Safely extract authenticated user from request
- * Replaces direct req.user access for better type safety
- */
-export function getAuthenticatedUser(req: Request): AuthenticatedUser | null {
-  return (req as any).user || null;
-}
-
-/**
- * Assert that user is authenticated (throws if not)
- * Use for endpoints that require authentication
- */
-export function requireAuthenticatedUser(req: Request): AuthenticatedUser {
-  const user = getAuthenticatedUser(req);
-  if (!user) {
-    throw new Error('User not authenticated');
-  }
-  return user;
-}
-
-/**
- * Check if user has admin privileges
- */
-export function isAdmin(user: AuthenticatedUser | null): boolean {
-  return user?.role === 'admin' || user?.role === 'owner';
-}
-
-/**
- * Check if user has moderator or higher privileges  
- */
-export function isModerator(user: AuthenticatedUser | null): boolean {
-  return user?.role === 'moderator' || isAdmin(user);
-}`;
-
-  return helperContent;
+  // Use ts-morph independent path helper to ensure accuracy across OSes
+  const from = path.dirname(path.join(projectRoot, filePath));
+  const to   = path.join(projectRoot, 'server/src/core/logger');
+  return path.relative(from, to).replace(/\\/g, '/').replace(/\.ts$/, '') || './logger';
 }
 
 // ESM-safe CLI entry point check

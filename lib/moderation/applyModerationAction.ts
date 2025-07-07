@@ -1,6 +1,7 @@
 import { db } from '@server/src/lib/db';
 import { eq } from 'drizzle-orm';
 import { threads, posts, contentModerationActions } from '@schema';
+import { EntityId } from "@shared/types";
 
 export type VisibilityStatus =
 	| 'draft'
@@ -11,9 +12,9 @@ export type VisibilityStatus =
 	| 'deleted';
 
 interface ApplyModerationActionParams {
-	moderatorId: number;
+	moderatorId: EntityId;
 	targetType: 'thread' | 'post';
-	targetId: number;
+	targetId: EntityId;
 	newVisibility: VisibilityStatus;
 	reason: string;
 }

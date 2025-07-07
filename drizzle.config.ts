@@ -1,13 +1,14 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import type { Config } from 'drizzle-kit';
-import 'dotenv/config'; // Load environment variables from .env files
+import 'dotenv/config';
+import { logger } from "server/src/core/logger";
 
 if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL not set');
 
 // Debug logging
-console.log('Database URL:', process.env.DATABASE_URL.replace(/:[^:@]+@/, ':****@')); // Hide password in logs
-console.log('Environment:', process.env.NODE_ENV || 'development');
+logger.info('Database URL:', process.env.DATABASE_URL.replace(/:[^:@]+@/, ':****@')); // Hide password in logs
+logger.info('Environment:', process.env.NODE_ENV || 'development');
 
 export default {
 	dialect: 'postgresql',

@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import type { ForumId } from '@degentalk/db/types';
+import { logger } from "../../server/src/core/logger";
+import { UserId } from "@shared/types";
 
 /*
  * Centralised XP / DGT economy configuration.
@@ -173,7 +175,7 @@ export function sanitizeMultiplier(
 	roleMultiplier: number,
 	forumMultiplier: number,
 	contextInfo?: {
-		userId?: number;
+		userId?: UserId;
 		forumId?: ForumId;
 		action?: string;
 	}
@@ -263,7 +265,7 @@ export function sanitizeMultiplier(
 				finalMultiplier = originalMultiplier;
 				break;
 			case 'log_only':
-				console.log('XP_MULTIPLIER_ANALYSIS', 'Multiplier data logged', logData);
+				logger.info('XP_MULTIPLIER_ANALYSIS', 'Multiplier data logged', logData);
 				// In log_only mode, return original uncapped multiplier
 				finalMultiplier = originalMultiplier;
 				break;

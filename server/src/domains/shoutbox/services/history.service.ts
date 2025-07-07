@@ -20,10 +20,11 @@ import { Transform } from 'stream';
 import archiver from 'archiver';
 import { format } from 'date-fns';
 import type { RoomId } from '@shared/types';
+import { UserId } from "@shared/types";
 
 interface MessageHistoryOptions {
 	roomId?: RoomId;
-	userId?: number;
+	userId?: UserId;
 	dateFrom?: Date;
 	dateTo?: Date;
 	includeDeleted?: boolean;
@@ -45,7 +46,7 @@ interface ExportOptions {
 }
 
 interface MessageWithUser {
-	id: number;
+	id: UserId;
 	userId: UserId | null;
 	roomId: RoomId;
 	content: string;

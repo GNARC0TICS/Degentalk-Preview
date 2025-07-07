@@ -1,5 +1,5 @@
 import type { CustomEmoji } from '../schema/forum/customEmojis';
-import type { CustomEmojiId } from './id.types';
+import type { EmojiId as CustomEmojiId } from '@shared/types';
 
 export interface EmojiWithAvailability extends CustomEmoji {
 	isAvailable: boolean;

@@ -2,12 +2,13 @@ import { db } from '@server/src/lib/db';
 import { mentionsIndex, users } from '@schema';
 import { mentionSourceTypeEnum } from '@schema';
 import { and, eq, inArray } from 'drizzle-orm';
+import { EntityId } from "@shared/types";
 
 export type MentionSourceType = 'post' | 'thread' | 'chat';
 
 interface CreateMentionsIndexParams {
 	sourceType: MentionSourceType;
-	sourceId: number;
+	sourceId: EntityId;
 	mentionedUserIds: number[];
 	triggeredBy?: number; // ID of the user who wrote the mention
 }

@@ -24,6 +24,7 @@ import {
 import { logger } from '../../core/logger';
 import { XpService } from '../xp/xp.service';
 import type { UserId } from '@shared/types';
+import { TitleId, BadgeId, EntityId } from "@shared/types";
 
 export interface LevelInfo {
 	level: number;
@@ -38,8 +39,8 @@ export interface LevelInfo {
 	unlocks?: any;
 	rewards: {
 		dgt?: number;
-		titleId?: number;
-		badgeId?: number;
+		titleId?: TitleId;
+		badgeId?: BadgeId;
 	};
 }
 
@@ -583,8 +584,8 @@ export class LevelingService {
 		animationEffect?: string;
 		unlocks?: any;
 		rewardDgt?: number;
-		rewardTitleId?: number;
-		rewardBadgeId?: number;
+		rewardTitleId?: EntityId;
+		rewardBadgeId?: EntityId;
 	}): Promise<LevelInfo> {
 		try {
 			const result = await db
