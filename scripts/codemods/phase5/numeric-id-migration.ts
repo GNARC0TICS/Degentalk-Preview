@@ -302,7 +302,7 @@ export async function removeBridgeFile(dryRun = false): Promise<boolean> {
   // Search for any remaining imports of the bridge file
   const remainingImports = globSync('**/*.{ts,tsx}', {
     cwd: projectRoot,
-    ignore: ['node_modules/**', 'archive/**']
+    ignore: ['node_modules/**', 'archive/**', 'scripts/codemods/**']
   }).map(file => {
     const fullPath = path.join(projectRoot, file);
     try {
