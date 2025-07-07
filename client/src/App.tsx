@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import AdminLayout from './pages/admin/admin-layout';
 import { ModLayout } from './components/mod/mod-layout';
 import { SiteHeader, HeaderProvider } from '@/components/header';
-import { ProtectedRoute } from '@/components/auth/protected-route';
+import { GlobalRouteGuard } from '@/components/auth/GlobalRouteGuard';
 import WalletPage from './pages/wallet';
 
 // Pages

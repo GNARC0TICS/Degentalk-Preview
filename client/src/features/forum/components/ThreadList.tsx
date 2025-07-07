@@ -8,9 +8,8 @@ import type { ThreadFiltersState } from '@/components/forum/ThreadFilters';
 import type { ThreadDisplay, ThreadsApiResponse } from '@/types/thread.types';
 import { PAGINATION_CONFIG } from '@/config/pagination.config';
 import { ThreadActionsProvider } from '@/features/forum/contexts/ThreadActionsContext';
-import type { ThreadId, type ForumId } from '@shared/types/ids';
+import type { ThreadId, ForumId } from '@shared/types/ids';
 import ThreadRow from '@/components/forum/ThreadRow';
-import type { ForumId } from '@shared/types/ids';
 
 type DisplayMode = 'card' | 'table';
 

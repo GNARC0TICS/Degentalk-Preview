@@ -10,6 +10,7 @@ import type { Request, Response } from 'express';
 import { forumStructureService } from '../services/structure.service';
 import { logger } from '@server/src/core/logger';
 import { asyncHandler } from '@server/src/core/errors';
+import { ForumTransformer } from '../transformers/forum.transformer';
 
 const router = Router();
 
@@ -34,7 +35,10 @@ router.get(
 			const zones = allStructures.filter((s) => s.type === 'zone');
 			const forums = allStructures.filter((s) => s.type === 'forum');
 
-			res.json({ zones, forums });
+			res.json({ 
+				zones: zones.map(z => ForumTransformer.toPublicForumStructure(z)), 
+				forums: forums.map(f => ForumTransformer.toPublicForumStructure(f)) 
+			});
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /structure', { error });
 			res.status(500).json({
@@ -51,7 +55,10 @@ router.get(
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
 			const hierarchy = await forumStructureService.getForumHierarchy();
-			res.json(hierarchy);
+			const transformedHierarchy = Array.isArray(hierarchy) 
+				? hierarchy.map(item => ForumTransformer.toPublicForumStructure(item))
+				: ForumTransformer.toPublicForumStructure(hierarchy);
+			res.json(transformedHierarchy);
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /hierarchy', { error });
 			res.status(500).json({
@@ -72,7 +79,7 @@ router.get(
 
 			res.json({
 				success: true,
-				data: structures
+				data: structures.map(s => ForumTransformer.toPublicForumStructure(s))
 			});
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /structures', { error });
@@ -99,7 +106,9 @@ router.get(
 
 			res.json({
 				success: true,
-				data: tree
+				data: Array.isArray(tree) 
+					? tree.map(item => ForumTransformer.toPublicForumStructure(item))
+					: ForumTransformer.toPublicForumStructure(tree)
 			});
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /structure/tree', { error });
@@ -128,7 +137,7 @@ router.get(
 
 			res.json({
 				success: true,
-				data: structure
+				data: ForumTransformer.toPublicForumStructure(structure)
 			});
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /structure/slug/:slug', { error });

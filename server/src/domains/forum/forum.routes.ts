@@ -25,6 +25,7 @@ import { forumStructureService } from './services/structure.service';
 import { threadService } from './services/thread.service';
 import { asyncHandler } from '@server/src/core/errors';
 import type { StructureId } from '@shared/types/ids';
+import { ForumTransformer } from './transformers/forum.transformer';
 
 // Import specialized route modules
 import threadRoutes from './routes/thread.routes';
@@ -60,7 +61,10 @@ router.get(
 			const structures = await forumStructureService.getStructuresWithStats();
 			const zones = structures.filter((s) => s.type === 'zone');
 			const forums = structures.filter((s) => s.type === 'forum');
-			return res.json({ zones, forums });
+			return res.json({ 
+				zones: zones.map(z => ForumTransformer.toPublicForumStructure(z)), 
+				forums: forums.map(f => ForumTransformer.toPublicForumStructure(f)) 
+			});
 		} catch (error) {
 			logger.error('ForumRoutes', 'Error in GET /structure', { error });
 			return res.status(500).json({
@@ -98,7 +102,11 @@ router.get(
 
 			res.json({
 				success: true,
-				data: users_results
+				data: users_results.map(user => ({
+					id: user.id,
+					username: user.username,
+					avatar: user.avatar
+				}))
 			});
 		} catch (error) {
 			logger.error('ForumRoutes', 'Error in GET /users/search', { error });
@@ -210,9 +218,17 @@ router.get(
 				search
 			});
 
+			// Transform threads using ForumTransformer
+			const transformedThreads = result.threads.map(thread => 
+				ForumTransformer.toPublicThread(thread)
+			);
+
 			return res.json({
 				success: true,
-				data: result,
+				data: {
+					...result,
+					threads: transformedThreads
+				},
 				pagination: {
 					page,
 					limit,

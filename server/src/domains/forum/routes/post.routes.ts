@@ -51,7 +51,7 @@ router.post(
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
 			const validatedData = createPostSchema.parse(req.body);
-			const UNUSED_UserId = (userService.getUserFromRequest(req) as any)?.id;
+			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!userId) {
 				return res.status(401).json({
@@ -103,7 +103,7 @@ router.put(
 		try {
 			const postId = req.params.id as PostId;
 			const validatedData = updatePostSchema.parse(req.body);
-			const UNUSED_UserId = (userService.getUserFromRequest(req) as any)?.id;
+			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			const updatedPost = await postService.updatePost(postId, {
 				content: validatedData.content
@@ -144,7 +144,7 @@ router.delete(
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
 			const postId = req.params.id as PostId;
-			const UNUSED_UserId = (userService.getUserFromRequest(req) as any)?.id;
+			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			await postService.deletePost(postId);
 
@@ -170,7 +170,7 @@ router.post(
 		try {
 			const postId = req.params.postId as PostId;
 			const validatedData = postReactionSchema.parse(req.body);
-			const UNUSED_UserId = (userService.getUserFromRequest(req) as any)?.id;
+			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!userId) {
 				return res.status(401).json({
@@ -214,11 +214,11 @@ router.post(
 	requireAuth,
 	asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const UNUSED_PostId = req.params.postId as PostId;
-			const UNUSED_ValidatedData = tipPostSchema.parse(req.body);
-			const UNUSED_UserId = (userService.getUserFromRequest(req) as any)?.id;
+			const postId = req.params.postId as PostId;
+			const validatedData = tipPostSchema.parse(req.body);
+			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
-			if (!UNUSED_UserId) {
+			if (!userId) {
 				return res.status(401).json({
 					success: false,
 					error: 'User not authenticated'

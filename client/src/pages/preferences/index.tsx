@@ -13,7 +13,7 @@ import { SessionPreferences } from '@/components/preferences/session-preferences
 import { ReferralPreferences } from '@/components/preferences/referral-preferences';
 import { SocialPreferences } from '@/components/preferences/social-preferences';
 import { User, Shield, Bell, Monitor, Lock, Users, Share2, UserCheck } from 'lucide-react';
-import { ProtectedRoute } from '@/components/auth/protected-route';
+import { GlobalRouteGuard } from '@/components/auth/GlobalRouteGuard';
 import { Container } from '@/components/ui/container';
 
 /**

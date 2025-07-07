@@ -222,9 +222,15 @@ router.post(
 				userId: userId
 			});
 
+			// Transform the created thread for response
+			const requestingUser = userService.getUserFromRequest(req);
+			const transformedThread = requestingUser ? 
+				ForumTransformer.toAuthenticatedThread(newThread, requestingUser) :
+				ForumTransformer.toPublicThread(newThread);
+
 			res.status(201).json({
 				success: true,
-				data: newThread
+				data: transformedThread
 			});
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in POST /threads', { error });
@@ -268,9 +274,15 @@ router.put(
 				});
 			}
 
+			// Transform the updated thread for response
+			const requestingUser = userService.getUserFromRequest(req);
+			const transformedThread = requestingUser ? 
+				ForumTransformer.toAuthenticatedThread(updatedThread, requestingUser) :
+				ForumTransformer.toPublicThread(updatedThread);
+
 			res.json({
 				success: true,
-				data: updatedThread
+				data: transformedThread
 			});
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in PUT /threads/:threadId/solve', { error });
