@@ -5,9 +5,9 @@ Generated on: 2025-07-07
 ```
 ├─ .claude/
 │  ├─ audit/
-�# @degentalk/monorepo Directory Structure
+�# @degentalk/monorepo Directory Structure
 
-Generated on: 2025-07-07
+Generated on: 2025-07-08
 
 ```
 ├─ .claude/
