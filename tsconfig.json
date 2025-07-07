@@ -18,6 +18,7 @@
 		"dist",
 		"**/__tests__",
 		"scripts/templates/**",
+		".backup/**",
 		"scripts/auth/auth-refactor.ts",
 		"scripts/codemods/**",
 		"scripts/wallet/**",

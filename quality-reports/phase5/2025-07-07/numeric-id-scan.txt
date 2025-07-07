@@ -1,0 +1,19 @@
+🔍 Scanning schema files for non-UUID columns...
+
+🎯 Non-UUID Column Scan Results
+
+📊 Summary:
+  Total files scanned: 160
+  Tables with issues: 1
+  Total issues found: 1
+  Critical: 0
+  High: 0
+  Medium: 1
+  Low: 0
+
+🚨 MEDIUM Issues (1):
+  ● /db/schema/admin/emailTemplates.ts:emailTemplates.previousVersionId
+    Foreign key column missing .references() (uuid)
+    → Add: .references(() => [targetTable].id)
+
+📊 Report saved to: /Users/gnarcotic/Degentalk/uuid-migration-scan-2025-07-07T07-25-34-807Z.csv

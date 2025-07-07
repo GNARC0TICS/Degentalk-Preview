@@ -1,0 +1,2 @@
+File,Table,Column,Current Type,Issue,Severity,Recommendation
+"/db/schema/admin/emailTemplates.ts","emailTemplates","previousVersionId","uuid","Foreign key column missing .references()","medium","Add: .references(() => [targetTable].id)"

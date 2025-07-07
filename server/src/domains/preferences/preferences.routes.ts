@@ -85,7 +85,7 @@ router.get('/me/preferences-all', authenticate, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req).id;
 		const preferences = await getAllPreferences(userId);
-		res.json(preferences);
+		res.json({ preferences });
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error getting user preferences', error);
 		res.status(500).json({
@@ -108,7 +108,7 @@ router.put(
 			const userId = userService.getUserFromRequest(req).id;
 			const ipAddress = req.ip;
 			const result = await updateProfilePreferences(userId, req.body, ipAddress);
-			res.json(result);
+			res.json({ success: true, data: result });
 		} catch (error) {
 			logger.error('PREFERENCES', 'Error updating profile preferences', error);
 			res.status(500).json({
@@ -132,7 +132,7 @@ router.put(
 			const userId = userService.getUserFromRequest(req).id;
 			const ipAddress = req.ip;
 			const result = await updateAccountPreferences(userId, req.body, ipAddress);
-			res.json(result);
+			res.json({ success: true, data: result });
 		} catch (error) {
 			logger.error('PREFERENCES', 'Error updating account preferences', error);
 			res.status(500).json({
@@ -156,7 +156,7 @@ router.put(
 			const userId = userService.getUserFromRequest(req).id;
 			const ipAddress = req.ip;
 			const result = await updateNotificationPreferences(userId, req.body, ipAddress);
-			res.json(result);
+			res.json({ success: true, data: result });
 		} catch (error) {
 			logger.error('PREFERENCES', 'Error updating notification preferences', error);
 			res.status(500).json({
@@ -180,7 +180,7 @@ router.put(
 			const userId = userService.getUserFromRequest(req).id;
 			const ipAddress = req.ip;
 			const result = await updateDisplayPreferences(userId, req.body, ipAddress);
-			res.json(result);
+			res.json({ success: true, data: result });
 		} catch (error) {
 			logger.error('PREFERENCES', 'Error updating display preferences', error);
 			res.status(500).json({
@@ -204,7 +204,7 @@ router.post(
 			const userId = userService.getUserFromRequest(req).id;
 			const ipAddress = req.ip;
 			const result = await changePassword(userId, req.body, ipAddress);
-			res.json(result);
+			res.json({ success: true, data: result });
 		} catch (error) {
 			logger.error('PREFERENCES', 'Error changing password', error);
 			res.status(400).json({
@@ -411,7 +411,7 @@ router.get('/social-preferences', isAuthenticated, async (req, res) => {
 		}
 
 		const preferences = await UserPreferencesService.getSocialPreferences(userId);
-		res.json(preferences);
+		res.json({ preferences });
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error fetching social preferences', error);
 		res.status(500).json({
@@ -445,7 +445,7 @@ router.put('/social-preferences', isAuthenticated, async (req, res) => {
 			validation.data
 		);
 
-		res.json(updatedPreferences);
+		res.json({ preferences: updatedPreferences });
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error updating social preferences', error);
 		res.status(500).json({
@@ -467,7 +467,7 @@ router.get('/privacy-summary', isAuthenticated, async (req, res) => {
 		}
 
 		const summary = await UserPreferencesService.getPrivacySummary(userId);
-		res.json(summary);
+		res.json({ summary });
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error fetching privacy summary', error);
 		res.status(500).json({
@@ -489,7 +489,7 @@ router.post('/reset-social-preferences', isAuthenticated, async (req, res) => {
 		}
 
 		const defaultPreferences = await UserPreferencesService.resetSocialPreferences(userId);
-		res.json(defaultPreferences);
+		res.json({ preferences: defaultPreferences });
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error resetting social preferences', error);
 		res.status(500).json({
