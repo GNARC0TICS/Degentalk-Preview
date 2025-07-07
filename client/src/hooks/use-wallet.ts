@@ -12,6 +12,7 @@ import type {
 	Transaction,
 	DepositAddress
 } from '@/features/wallet/services/wallet-api.service';
+import { type UserId } from "@shared/types";
 
 export function useWallet() {
 	const queryClient = useQueryClient();

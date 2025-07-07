@@ -3,6 +3,7 @@ import { PathProgress } from './path-progress';
 import { getDominantPath } from '@shared/path-config';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Lightbulb } from 'lucide-react';
+import { type PathId } from "@shared/types";
 
 interface UserPathsDisplayProps {
 	pluginData: Record<string, any> | null;

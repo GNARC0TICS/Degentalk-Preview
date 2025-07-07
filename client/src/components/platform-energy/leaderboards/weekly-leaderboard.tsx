@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { getInitials } from '@/lib/utils';
 import { Award, MessageSquare, TrendingUp, Clock } from 'lucide-react';
 import type { UserId } from '@/types/ids';
+import { type UserId } from "@shared/types";
 
 export type LeaderboardUser = {
 	id: UserId;

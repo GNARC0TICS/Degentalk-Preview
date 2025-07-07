@@ -21,6 +21,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/api-request';
+import { type UserId } from "@shared/types";
 
 interface MockWebhookResponse {
 	success: boolean;

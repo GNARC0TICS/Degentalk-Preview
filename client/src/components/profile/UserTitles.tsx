@@ -4,6 +4,7 @@ import type { TitleId } from '@/types/ids';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { rarityBorderMap, rarityColorMap } from '@/config/rarity.config';
+import { type TitleId } from "@shared/types";
 
 type UserTitlesProps = {
 	titles: Array<{

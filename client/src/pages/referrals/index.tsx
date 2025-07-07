@@ -13,6 +13,7 @@ import { useAuth } from '@/hooks/use-auth.tsx';
 import { ProtectedRoute } from '@/components/auth/protected-route';
 import { Users, Link2, Copy, CheckCircle, Gift, TrendingUp, Star, Calendar } from 'lucide-react';
 import { toast } from 'sonner';
+import { type UserId } from "@shared/types";
 
 interface ReferralStats {
 	totalReferrals: number;

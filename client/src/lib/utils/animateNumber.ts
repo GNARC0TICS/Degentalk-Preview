@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { type FrameId } from "@shared/types";
 
 /**
  * Animates a number change from start to end value.

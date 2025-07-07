@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Link } from 'wouter';
 import { FolderOpen, ChevronDown, ChevronRight, MessageSquare, Megaphone } from 'lucide-react';
 import type { ForumId, ZoneId, ThreadId, EntityId } from '@/types/ids';
+import { type ThreadId, type ForumId, type EntityId, type ZoneId } from "@shared/types";
 
 // Define theme colors for different zones
 const ZONE_COLORS = {

@@ -16,6 +16,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Link } from 'wouter';
+import { type AnnouncementId } from "@shared/types";
 
 interface Announcement {
 	id: AnnouncementId;

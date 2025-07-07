@@ -4,6 +4,7 @@ import { SidebarWidgetCard } from './SidebarWidgetCard';
 import { WidgetSkeleton } from './WidgetSkeleton';
 import { useForumMetrics } from '@/features/forum/hooks/useForumStats';
 import { cn } from '@/lib/utils';
+import { type StructureId } from "@shared/types";
 
 interface Stat {
 	label: string;

@@ -1,3 +1,5 @@
+import { type OrderId } from "@shared/types";
+
 /**
  * CCPayment Integration
  *

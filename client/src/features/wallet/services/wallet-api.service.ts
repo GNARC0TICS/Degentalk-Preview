@@ -1,4 +1,5 @@
 import { apiRequest } from '@/lib/queryClient';
+import { type UserId } from "@shared/types";
 
 export interface WalletBalance {
 	dgt: number;

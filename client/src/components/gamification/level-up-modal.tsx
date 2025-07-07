@@ -15,6 +15,7 @@ import { Sparkles, Trophy, Gift, ArrowRight, Zap, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import type { LevelInfo } from '@/features/gamification/services/gamification-api.service';
+import { type BadgeId, type TitleId } from "@shared/types";
 
 interface LevelUpModalProps {
 	isOpen: boolean;

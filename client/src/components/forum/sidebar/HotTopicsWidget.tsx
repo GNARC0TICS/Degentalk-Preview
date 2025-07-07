@@ -6,6 +6,7 @@ import { WidgetSkeleton } from './WidgetSkeleton';
 import { useHotThreads } from '@/features/forum/hooks/useForumStats';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { type StructureId } from "@shared/types";
 
 interface HotTopicsWidgetProps {
 	structureId?: StructureId;

@@ -14,6 +14,7 @@ import { Link } from 'wouter';
 import { applyPluginRewards } from '@/lib/utils/applyPluginRewards';
 import type { UserInventoryWithProduct } from '@/types/inventory';
 import type { InventoryId, EntityId } from '@/types/ids';
+import { type EntityId, type InventoryId } from "@shared/types";
 
 interface CosmeticControlPanelProps {
 	userId: string; // Changed to string

@@ -29,6 +29,7 @@ import type {
 	Mission
 } from '@/features/gamification/services/gamification-api.service';
 import type { MissionId } from '@/types/ids';
+import { type MissionId } from "@shared/types";
 
 interface MissionDashboardProps {
 	missions: {

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import type { UserId } from '@/types/ids';
+import { type UserId, type BadgeId, type FrameId, type TitleId } from "@shared/types";
 
 /**
  * Type definitions for User Preferences data

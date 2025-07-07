@@ -5,6 +5,7 @@ import { FrostCard } from '@/components/ui/frost-card';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { ThreadId } from '@/types/ids';
+import { type ThreadId } from "@shared/types";
 
 interface HotThread {
 	id: ThreadId;

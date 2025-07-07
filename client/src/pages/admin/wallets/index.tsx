@@ -21,7 +21,8 @@ import type { TabConfig } from '@/components/admin/layout/AdminPageShell'; // Ty
 import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
 import type { ColumnDef } from '@/components/admin/layout/EntityTable'; // Type-only import
 import ManualDgtAdjustmentDialog from '@/components/admin/forms/wallets/ManualDgtAdjustmentDialog';
-import { MockWebhookTrigger } from '@/components/admin/wallet/mock-webhook-trigger'; // Assuming this path is correct
+import { MockWebhookTrigger } from '@/components/admin/wallet/mock-webhook-trigger';
+import { type UserId } from "@shared/types";
 
 // Type definitions
 interface WalletStats {

@@ -6,6 +6,7 @@
 
 import crypto from 'crypto';
 import { CCPaymentTransactionStatus } from './types';
+import { type OrderId } from "@shared/types";
 
 /**
  * Creates a signature for CCPayment API requests

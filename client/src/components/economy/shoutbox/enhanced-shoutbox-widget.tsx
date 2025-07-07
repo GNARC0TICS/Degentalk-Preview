@@ -35,6 +35,7 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { apiRequest } from '@/lib/queryClient';
 import type { GroupId, MessageId, RoomId, UserId, EntityId } from '@/types/ids';
+import { type UserId, type EntityId, type RoomId, type GroupId, type MessageId } from "@shared/types";
 
 interface User {
 	id: UserId;

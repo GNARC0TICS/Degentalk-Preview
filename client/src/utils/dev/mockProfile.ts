@@ -1,4 +1,5 @@
 import type { ProfileData } from '@/types/profile';
+import { type BadgeId, type FrameId, type TitleId } from "@shared/types";
 
 /**
  * Generates mock `ProfileData` for local development.

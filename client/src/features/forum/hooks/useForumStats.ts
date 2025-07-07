@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
+import { type StructureId } from "@shared/types";
 
 export interface ForumMetrics {
 	totalThreads: number;

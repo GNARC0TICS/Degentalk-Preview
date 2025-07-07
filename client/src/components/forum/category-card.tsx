@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import type { CategoryId } from '@/types/ids';
+import { type CategoryId } from "@shared/types";
 
 interface CategoryCardProps {
 	id: CategoryId;

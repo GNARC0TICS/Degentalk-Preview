@@ -27,6 +27,7 @@ import { Trophy, Target, TrendingUp, Sparkles, AlertCircle, RefreshCw } from 'lu
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/use-auth';
 import { gamificationApi } from '@/features/gamification/services/gamification-api.service';
+import { type UserId } from "@shared/types";
 
 export default function GamificationPage() {
 	const { user } = useAuth();

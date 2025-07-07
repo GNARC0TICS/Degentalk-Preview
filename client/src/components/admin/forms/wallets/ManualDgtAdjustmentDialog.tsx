@@ -18,6 +18,7 @@ import {
 	SelectValue
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { type UserId } from "@shared/types";
 
 interface ManualDgtAdjustmentDialogProps {
 	isOpen: boolean;

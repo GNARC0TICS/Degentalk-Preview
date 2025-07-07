@@ -5,6 +5,7 @@ import { FrostCard } from '@/components/ui/frost-card';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { EntityId } from '@/types/ids';
+import { type EntityId } from "@shared/types";
 
 interface ActivityItem {
 	id: EntityId;

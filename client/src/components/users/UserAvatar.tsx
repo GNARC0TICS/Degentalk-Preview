@@ -4,6 +4,7 @@ import { FramedAvatar } from './framed-avatar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { useUserCosmetics } from '@/hooks/useUserCosmetics';
+import { type FrameId } from "@shared/types";
 
 interface UserAvatarProps {
 	user: {

@@ -37,6 +37,7 @@ import {
 import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 import type { LeaderboardEntry } from '@/features/gamification/services/gamification-api.service';
+import { type UserId } from "@shared/types";
 
 interface LeaderboardProps {
 	entries: LeaderboardEntry[];

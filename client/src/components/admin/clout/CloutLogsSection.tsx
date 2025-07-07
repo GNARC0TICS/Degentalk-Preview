@@ -31,6 +31,7 @@ import {
 	ArrowDown
 } from 'lucide-react';
 import type { CloutLog, CloutAchievement } from '@/pages/admin/clout';
+import { type UserId } from "@shared/types";
 
 interface CloutLogsSectionProps {
 	logs: CloutLog[];

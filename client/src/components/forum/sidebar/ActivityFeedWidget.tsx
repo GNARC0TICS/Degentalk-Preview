@@ -6,6 +6,7 @@ import { WidgetSkeleton } from './WidgetSkeleton';
 import { useActivityFeed } from '@/features/activity/hooks/useActivityFeed';
 import { formatDistanceToNow } from 'date-fns';
 import type { EventLog } from '@/features/activity/services/activityApi';
+import { type StructureId } from "@shared/types";
 
 interface ActivityFeedWidgetProps {
 	structureId?: StructureId;

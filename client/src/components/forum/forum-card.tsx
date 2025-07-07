@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Clock, FolderIcon, MessageSquare, MessagesSquare } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import type { ForumId, ThreadId } from '@/types/ids';
+import { type ThreadId, type ForumId } from "@shared/types";
 
 interface ForumCardProps {
 	id: ForumId;
