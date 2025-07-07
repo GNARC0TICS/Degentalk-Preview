@@ -1,3 +1,4 @@
+/* eslint-disable degen/no-missing-branded-id-import */
 /**
  * Frontend-Safe ID Types
  * 
