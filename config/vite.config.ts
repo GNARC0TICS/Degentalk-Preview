@@ -1,4 +1,4 @@
-logger.info('🚨 VITE CONFIG LOADED - If you see this during backend startup, you have a ghost import!');
+// Removed ghost logger import - this was causing vite config to import server logger
 
 /**
  * @file config/vite.config.ts
@@ -25,7 +25,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
-import { logger } from "../server/src/core/logger";
+// Logger import removed to prevent server-side imports in build config
 
 // import tsconfigPaths from 'vite-tsconfig-paths'; // Temporarily remove this plugin
 
