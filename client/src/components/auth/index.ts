@@ -1,5 +1,5 @@
 // Core route protection components
-export { ProtectedRoute } from './ProtectedRoute';
+export { default as ProtectedRoute } from './ProtectedRoute';
 export { RequireRole } from './RequireRole';
 
 // Convenience route guard components
