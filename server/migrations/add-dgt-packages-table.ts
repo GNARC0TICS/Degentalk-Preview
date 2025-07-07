@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { db } from '../src/core/db';
 import { sql } from 'drizzle-orm';
 import { logger } from "../src/core/logger";

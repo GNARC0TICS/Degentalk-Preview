@@ -4,7 +4,7 @@
  * Service for handling user profile operations.
  */
 import { db } from '@db';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { users, userInventory, threads, posts, userBadges, userTitles } from '@schema'; // Removed 'products'
 import { eq, sql, count } from 'drizzle-orm'; // Removed 'and' and 'InferModel'
 // type User = InferModel<typeof users, 'select'>; // Removed as ESLint flagged as unused, Drizzle types are inferred.

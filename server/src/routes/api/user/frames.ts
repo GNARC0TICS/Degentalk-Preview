@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import type { FrameId } from '@shared/types';
+import type { FrameId } from '@shared/types/ids';
 import { isAuthenticated } from '../../../domains/auth/middleware/auth.middleware';
 import { frameEquipService } from '../../../domains/cosmetics/frameEquip.service';
 import { userService } from '../../../core/services/user.service';

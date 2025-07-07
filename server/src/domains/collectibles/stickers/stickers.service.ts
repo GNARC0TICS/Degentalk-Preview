@@ -27,7 +27,7 @@ import {
 	type BulkDeleteStickersInput,
 	type TrackStickerUsageInput
 } from './stickers.validators';
-import type { PackId, StickerId } from '@shared/types';
+import type { PackId, StickerId } from '@shared/types/ids';
 
 export class StickerService {
 	// ============ STICKER MANAGEMENT ============

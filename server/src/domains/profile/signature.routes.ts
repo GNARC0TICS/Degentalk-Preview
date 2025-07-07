@@ -5,7 +5,7 @@
  */
 
 import { Router } from 'express';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import type { Request, Response } from 'express';
 import { SignatureService } from './signature.service';
 import { z } from 'zod';

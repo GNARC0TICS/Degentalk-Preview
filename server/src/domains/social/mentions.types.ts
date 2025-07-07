@@ -1,4 +1,4 @@
-import type { EntityId } from '@shared/types';
+import type { EntityId } from '@shared/types/ids';
 
 export type MentionType = 'thread' | 'post' | 'shoutbox' | 'whisper';
 

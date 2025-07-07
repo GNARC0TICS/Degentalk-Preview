@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { sql } from 'drizzle-orm';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import Stripe from 'stripe';
 
 // Initialize Stripe with secret key if available

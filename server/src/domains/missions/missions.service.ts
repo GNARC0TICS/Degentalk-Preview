@@ -1,5 +1,5 @@
 import { db } from '../../core/db';
-import type { UserId, MissionId } from '@shared/types';
+import type { UserId, MissionId } from '@shared/types/ids';
 import { eq, and, gte, lte, SQL, isNull, inArray } from 'drizzle-orm';
 import {
 	missions,
@@ -10,8 +10,9 @@ import {
 	type InsertMission
 } from '@schema';
 import { logger } from '../../core/logger';
-import { addDays, startOfDay, endOfDay, isBefore, format, parse, addWeeks } from 'date-fns';
-import { MissionId } from "@shared/types";
+import { addDays, endOfDay, addWeeks } from 'date-fns';
+
+type MissionType = string; // TODO: Define proper MissionType enum
 
 interface MissionProgressUpdate {
 	userId: UserId;

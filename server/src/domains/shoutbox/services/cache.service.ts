@@ -1,4 +1,4 @@
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 /**
  * Shoutbox Cache Service
  *
@@ -12,8 +12,8 @@ import type { UserId } from '@shared/types';
 
 import { logger } from '@server/src/core/logger';
 import { createHash } from 'crypto';
-import type { RoomId, MessageId } from '@shared/types';
-import { MessageId, EntityId } from "@shared/types";
+import type { RoomId, MessageId } from '@shared/types/ids';
+import { EntityId } from "@shared/types/ids";
 
 interface CacheItem<T> {
 	data: T;

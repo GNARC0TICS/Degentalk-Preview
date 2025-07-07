@@ -16,7 +16,7 @@ import { eq, and, inArray } from 'drizzle-orm';
 import { CosmeticsTransformer } from './transformers/cosmetics.transformer';
 import { vanitySinkAnalyzer } from './services/vanity-sink.analyzer';
 import { z } from 'zod';
-import type { UserId, ItemId } from '@shared/types';
+import type { UserId, ItemId } from '@shared/types/ids';
 
 const router = Router();
 

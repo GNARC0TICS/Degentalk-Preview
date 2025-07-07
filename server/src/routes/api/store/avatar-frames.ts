@@ -8,7 +8,7 @@ import { db } from '@db';
 import { products, avatarFrames } from '@schema';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
-import type { FrameId } from '@shared/types';
+import type { FrameId } from '@shared/types/ids';
 import { CosmeticsTransformer } from '../../../domains/shop/transformers/cosmetics.transformer';
 import { logger } from "../../../core/logger";
 

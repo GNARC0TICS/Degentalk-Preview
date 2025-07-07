@@ -10,7 +10,7 @@
  */
 
 import { db } from '@db';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import {
 	shoutboxMessages,
 	chatRooms,
@@ -25,7 +25,7 @@ import { eq, and, or, desc, asc, sql, gt, lt, isNull, inArray, not } from 'drizz
 import { logger } from '@server/src/core/logger';
 import { createId } from '@paralleldrive/cuid2';
 import type { NewShoutboxConfig, ShoutboxConfig } from '@schema/admin/shoutboxConfig';
-import type { RoomId } from '@shared/types';
+import type { RoomId } from '@shared/types/ids';
 
 interface MessageContext {
 	userId: UserId;

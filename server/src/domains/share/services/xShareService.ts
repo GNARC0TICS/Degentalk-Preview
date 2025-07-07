@@ -1,12 +1,12 @@
 import { TwitterApi } from 'twitter-api-v2';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { db } from '@server/src/core/db';
 import { users } from '@schema/user/users';
 import { xShares } from '@schema/user/xShares';
 import { eq } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
 import { awardXShareReward } from '../../economy/services/rewardService';
-import type { ContentId } from '@shared/types';
+import type { ContentId } from '@shared/types/ids';
 
 export async function shareToX(opts: {
 	userId: UserId;

@@ -14,7 +14,7 @@ import type { UserId } from '@shared/types/ids';
 
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import type { MessageId, RoomId, UserId } from '@shared/types';
+import type { MessageId, RoomId, UserId } from '@shared/types/ids';
 import { db } from '@db';
 import {
 	shoutboxMessages,

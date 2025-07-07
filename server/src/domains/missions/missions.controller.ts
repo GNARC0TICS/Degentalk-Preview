@@ -1,11 +1,10 @@
 import { userService } from '@server/src/core/services/user.service';
-import type { UserId, MissionId } from '@shared/types';
+import type { UserId, MissionId } from '@shared/types/ids';
 import type { Request, Response, NextFunction } from 'express';
 import { logger } from '../../core/logger';
 import { MissionsService } from './missions.service';
 import { xpService } from '../xp/xp.service';
 import { walletService } from '../wallet/wallet.service';
-import type { UserId } from '@shared/types/ids';
 
 /**
  * Get all missions (admin only)

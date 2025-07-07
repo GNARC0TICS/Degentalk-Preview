@@ -13,7 +13,7 @@ import type {
   ItemId,
   DgtAmount, 
   ItemRarity
-} from '@shared/types';
+} from '@shared/types/ids';
 
 import { ShopTransformer } from './shop.transformer';
 

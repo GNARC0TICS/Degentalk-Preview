@@ -1,4 +1,4 @@
-import type { AdminId } from '@shared/types';
+import type { AdminId } from '@shared/types/ids';
 import chalk from 'chalk';
 import { db } from '@db';
 import { roles as rolesTable, users as usersTable, userRoles as userRolesTable } from '@schema';

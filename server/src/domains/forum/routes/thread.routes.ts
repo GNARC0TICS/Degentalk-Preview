@@ -22,7 +22,7 @@ import { threadService } from '../services/thread.service';
 import { postService } from '../services/post.service';
 import { logger } from '@server/src/core/logger';
 import { asyncHandler } from '@server/src/core/errors';
-import type { ThreadId, PostId, StructureId } from '@shared/types/ids';
+import type { ThreadId, StructureId } from '@shared/types/ids';
 import { ForumTransformer } from '../transformers/forum.transformer';
 
 const router = Router();
@@ -254,7 +254,7 @@ router.put(
 		try {
 			const threadId = req.params.threadId as ThreadId;
 			const validatedData = updateThreadSolvedSchema.parse(req.body);
-			const userId = (userService.getUserFromRequest(req) as any)?.id;
+			const _userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			const updatedThread = await threadService.updateThreadSolvedStatus({
 				threadId,
@@ -300,7 +300,7 @@ router.post(
 		try {
 			const threadId = req.params.threadId as ThreadId;
 			const validatedData = addTagsSchema.parse(req.body);
-			const userId = (userService.getUserFromRequest(req) as any)?.id;
+			const _userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			// Permission check is handled by middleware
 			// TODO: Implement tag addition logic

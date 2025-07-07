@@ -3,7 +3,7 @@ import { sql } from 'drizzle-orm';
 import { users, transactions } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger, LogLevel, LogAction } from '../src/core/logger';
-import { TransactionId } from "@shared/types";
+import { TransactionId } from "@shared/types/ids";
 
 /**
  * Convert DGT amount from storage format (BIGINT with 6 decimal precision) to display format

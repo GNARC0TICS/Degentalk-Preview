@@ -8,7 +8,6 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { forumStructureService } from '../services/structure.service';
-import { forumService } from '../forum.service';
 import { logger } from '@server/src/core/logger';
 import { asyncHandler } from '@server/src/core/errors';
 

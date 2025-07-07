@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { db } from '../src/core/db';
 import { xpAdjustmentLogs } from "../../shared/schema";
 import { sql } from "drizzle-orm";

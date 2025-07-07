@@ -1,4 +1,4 @@
-import type { AdminId } from '@shared/types';
+import type { AdminId } from '@shared/types/ids';
 import { readFileSync, writeFileSync } from 'fs';
 import { glob } from 'glob';
 import path from 'path';
@@ -12,7 +12,7 @@ async function fixTableReferences() {
   for (const file of files) {
     let content = readFileSync(file, 'utf-8');
     let originalContent = content;
-    let changes: : AdminId[] = [];
+    let changes: string[] = [];
     
     // Fix users table references
     // The actual field in code is 'id' but maps to 'user_id' column

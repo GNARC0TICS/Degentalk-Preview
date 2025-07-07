@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { drizzle } from 'drizzle-orm/node-postgres';
 import pgPkg from 'pg';
 import { sql } from 'drizzle-orm';

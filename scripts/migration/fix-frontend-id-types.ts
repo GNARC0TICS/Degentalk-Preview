@@ -189,11 +189,11 @@ function addMissingImports(content: string, neededImports: string[]): string {
     // Add to existing import
     const existingTypes = existingImportMatch[1].split(',').map(t => t.trim());
     const allTypes = [...new Set([...existingTypes, ...neededImports])];
-    const newImport = `import type { ${allTypes.join(', ')} } from '@shared/types';`;
+    const newImport = `import type { ${allTypes.join(', ')} } from '@shared/types/ids';`;
     return content.replace(existingImportMatch[0], newImport);
   } else {
     // Add new import
-    const newImport = `import type { ${neededImports.join(', ')} } from '@shared/types';\n`;
+    const newImport = `import type { ${neededImports.join(', ')} } from '@shared/types/ids';\n`;
     
     // Find the first import or the start of the file
     const firstImportMatch = content.match(/^import\s/m);

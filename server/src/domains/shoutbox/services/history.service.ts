@@ -1,4 +1,4 @@
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 /**
  * Message History Service
  *
@@ -19,8 +19,8 @@ import { pipeline } from 'stream/promises';
 import { Transform } from 'stream';
 import archiver from 'archiver';
 import { format } from 'date-fns';
-import type { RoomId } from '@shared/types';
-import { UserId } from "@shared/types";
+import type { RoomId } from '@shared/types/ids';
+import { UserId } from "@shared/types/ids";
 
 interface MessageHistoryOptions {
 	roomId?: RoomId;

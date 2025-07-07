@@ -14,12 +14,12 @@ import {
 	roles as rolesTable,
 	forumStructure
 } from '@schema';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { eq, sql, lte, desc, and, isNull } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 import { getLevelForXp, getXpForLevel } from '@shared/economy/reward-calculator';
 import { sanitizeMultiplier } from '@shared/economy/economy.config';
-import { TitleId, BadgeId, FrameId, ForumId } from "@shared/types";
+import { TitleId, BadgeId, FrameId, ForumId } from "@shared/types/ids";
 
 /**
  * XP Action types used in economySettings

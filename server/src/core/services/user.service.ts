@@ -6,7 +6,7 @@
  */
 
 import { db } from '@db';
-import { users, userRoles } from '@schema';
+import { users } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { logger } from '../logger';
 import type { UserId } from '@shared/types/ids';

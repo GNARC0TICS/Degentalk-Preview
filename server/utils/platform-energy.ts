@@ -3,10 +3,10 @@
 
 import { sql } from 'drizzle-orm';
 import { db } from '../src/core/db';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { threads, posts, users, forumStructure } from '@schema';
 import { eq, desc, and, count } from 'drizzle-orm';
-import { ThreadId } from "@shared/types";
+import { ThreadId } from "@shared/types/ids";
 import { logger } from '../src/core/logger';
 
 /**

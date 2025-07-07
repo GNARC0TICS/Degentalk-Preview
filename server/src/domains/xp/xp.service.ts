@@ -17,7 +17,7 @@ import {
 	roles as rolesTable,
 	forumStructure
 } from '@schema';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { eq, sql, and, desc, gte, lt, asc, gt, count } from 'drizzle-orm';
 import { db } from '@db';
 import { MissionsService } from '../missions/missions.service';
@@ -28,7 +28,7 @@ import { xpActionLogs, xpActionLimits } from './xp-actions-schema';
 // Import the centralized event handlers
 import { handleXpAward, handleXpLoss, handleLevelUp } from './events/xp.events';
 import { economyConfig, sanitizeMultiplier } from '@shared/economy/economy.config';
-import type { AdminId, ForumId, UserId } from '@shared/types';
+import type { AdminId, ForumId, UserId } from '@shared/types/ids';
 
 const { MAX_XP_PER_DAY, MAX_TIP_XP_PER_DAY } = economyConfig;
 

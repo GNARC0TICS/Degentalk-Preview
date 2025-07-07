@@ -20,7 +20,7 @@ import type {
   ItemId,
   OrderId,
   ItemCategory
-} from '@shared/types';
+} from '@shared/types/ids';
 
 export interface VanitySinkConfig {
   trackingEnabled: boolean;

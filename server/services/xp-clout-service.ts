@@ -1,6 +1,6 @@
 import { db } from '@db';
 import { users, xpCloutSettings } from '@schema';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { eq, sql } from 'drizzle-orm';
 import { logger } from '../src/core/logger';
 

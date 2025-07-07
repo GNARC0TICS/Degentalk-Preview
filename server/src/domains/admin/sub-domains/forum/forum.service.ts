@@ -15,7 +15,7 @@ import type {
 	ModerateThreadInput,
 	PaginationInput
 } from './forum.validators';
-import { ThreadId } from "@shared/types";
+import { ThreadId } from "@shared/types/ids";
 import { logger } from '../../../../core/logger';
 
 export class AdminForumService {

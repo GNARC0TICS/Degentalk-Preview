@@ -10,10 +10,9 @@
  */
 
 import { logger } from '@server/src/core/logger';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { EventEmitter } from 'events';
-import type { RoomId, MessageId } from '@shared/types';
-import { UserId } from "@shared/types";
+import type { RoomId, MessageId } from '@shared/types/ids';
 
 interface QueuedMessage {
 	id: string;

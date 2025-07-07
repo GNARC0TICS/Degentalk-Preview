@@ -6,7 +6,7 @@ import { userService } from '@server/src/core/services/user.service';
  */
 
 import type { Request, Response } from 'express';
-import type { EntityId } from '@shared/types';
+import type { EntityId } from '@shared/types/ids';
 import { subscriptionService } from './subscription.service';
 import { logger } from '../../core/logger';
 

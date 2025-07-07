@@ -4,7 +4,7 @@ import { db } from '../../../../core/db';
 import { referralSources } from '@schema/system/referralSources';
 import { userReferrals } from '@schema/system/userReferrals';
 import { users } from '@schema/user/users';
-import { EntityId } from "@shared/types";
+import { EntityId } from "@shared/types/ids";
 import { logger } from '../../../../core/logger';
 
 /**

@@ -6,7 +6,7 @@
 
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 import { db } from '@db';
 import { users, userRelationships } from '@schema';
 import { eq, and, sql, desc, not, or, count, gt, isNull } from 'drizzle-orm';

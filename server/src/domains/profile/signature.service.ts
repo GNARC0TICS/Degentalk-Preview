@@ -8,7 +8,7 @@ import { db } from '@db';
 import { users, signatureShopItems, userSignatureItems } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import { getSignatureTierForLevel } from '@shared/signature/SignatureTierConfig';
-import type { ItemId, UserId } from '@shared/types';
+import type { ItemId, UserId } from '@shared/types/ids';
 
 interface UpdateSignatureParams {
 	userId: UserId;

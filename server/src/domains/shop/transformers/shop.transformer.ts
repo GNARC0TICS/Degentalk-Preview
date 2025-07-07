@@ -17,7 +17,7 @@ import type {
   ItemCategory,
   OrderId,
   InventoryItemId
-} from '@shared/types';
+} from '@shared/types/ids';
 
 import { UserTransformer } from '../../users/transformers/user.transformer';
 import { createHash } from 'crypto';

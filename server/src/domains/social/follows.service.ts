@@ -2,7 +2,7 @@ import { db } from '@db';
 import { userFollows, userFollowPreferences, followRequests, users } from '@schema';
 import { eq, and, desc, sql, count, inArray } from 'drizzle-orm';
 import type { FollowNotificationSettings, UserStats } from './follows.types';
-import type { RequestId } from '@shared/types';
+import type { RequestId } from '@shared/types/ids';
 
 export class FollowsService {
 	/**

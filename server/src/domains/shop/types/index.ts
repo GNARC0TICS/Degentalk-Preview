@@ -14,7 +14,7 @@ import type {
   ItemRarity,
   ItemCategory,
   InventoryItemId
-} from '@shared/types';
+} from '@shared/types/ids';
 
 // ==========================================
 // SHOP PRODUCT TYPES

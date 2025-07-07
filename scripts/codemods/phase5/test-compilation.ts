@@ -57,7 +57,7 @@ export function testController(req: Request, res: Response) {
         name: 'branded ID types',
         path: 'test-branded-ids.ts',
         content: `
-import type { UserId, ThreadId, PostId } from '@shared/types';
+import type { UserId, ThreadId, PostId } from '@shared/types/ids';
 
 export interface TestInterface {
   userId: UserId;

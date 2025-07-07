@@ -1,4 +1,4 @@
-import { UserId } from "@shared/types";
+import { UserId } from "@shared/types/ids";
 
 // Unified Wallet System Configuration
 // Consolidated from 3 separate configs for single source of truth

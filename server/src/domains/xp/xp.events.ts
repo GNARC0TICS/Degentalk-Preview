@@ -5,7 +5,7 @@
  * These are used for triggering notifications and other actions when XP changes occur
  */
 
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 
 /**
  * Event emitted when a user gains XP

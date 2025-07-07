@@ -1,6 +1,6 @@
 import { userService } from '@server/src/core/services/user.service';
 import { Router } from 'express';
-import type { EntityId } from '@shared/types';
+import type { EntityId } from '@shared/types/ids';
 import { DictionaryService, DictionaryStatus } from './dictionary.service';
 import {
 	isAuthenticated as requireAuth,

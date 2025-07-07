@@ -10,7 +10,7 @@
  */
 
 import { db } from '@db';
-import { eq, and, desc, asc, gte, lte, count, sum, avg, sql, between } from 'drizzle-orm';
+import { eq, and, desc, gte, count, sum, avg, sql } from 'drizzle-orm';
 import {
 	users,
 	levels,

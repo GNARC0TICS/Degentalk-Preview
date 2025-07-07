@@ -20,7 +20,7 @@ import { eq, desc } from 'drizzle-orm';
 import { logger } from '../../../core/logger';
 import { dgtService } from '../../wallet/dgt.service';
 import { PgTransaction } from 'drizzle-orm/pg-core';
-import type { UserId } from '@shared/types';
+import type { UserId } from '@shared/types/ids';
 
 // Re-export event types from the main events file
 import { XpGainEvent, XpLossEvent, LevelUpEvent } from '../xp.events';

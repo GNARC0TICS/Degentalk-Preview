@@ -1,4 +1,4 @@
-import type { AdminId } from '@shared/types';
+import type { AdminId } from '@shared/types/ids';
 import { Project, SyntaxKind } from 'ts-morph';
 import fg from 'fast-glob';
 import fs from 'fs';
