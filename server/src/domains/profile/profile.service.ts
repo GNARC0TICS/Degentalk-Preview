@@ -263,7 +263,7 @@ import { PROFILE_UPDATED_EVENT } from './profile.service'; // Adjust path as nee
 import { eventEmitter } from '../notifications/event-notification-listener'; // Adjust path as needed
 
 eventEmitter.on(PROFILE_UPDATED_EVENT, (payload) => {
-  console.log('Received profileUpdated event:', payload);
+  logger.info('Received profileUpdated event:', { payload });
   // Here, you would typically send this payload over a WebSocket connection
   // to the relevant clients.
   // e.g., webSocketService.sendToUser(payload.userId, payload);

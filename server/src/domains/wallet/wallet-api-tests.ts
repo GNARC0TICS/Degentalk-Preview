@@ -317,7 +317,7 @@ async function runAllTests() {
 
 // If file is executed directly, run the tests
 if (require.main === module) {
-	runAllTests().catch(console.error);
+	runAllTests().catch((error) => logger.error('Test runner failed:', { error }));
 }
 
 // Export functions for external use
