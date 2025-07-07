@@ -7,6 +7,8 @@ import type { GroupId, UserId } from '@shared/types';
 import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
 import { logger } from "../core/logger";
 
+/* eslint-disable @typescript-eslint/no-namespace */
+
 // Extend Express Request type to include user
 declare global {
 	namespace Express {

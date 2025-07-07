@@ -93,6 +93,12 @@
 					}
 				]
 			}
+		},
+		{
+			"files": ["shared/types/**", "shared/types/ids.ts"],
+			"rules": {
+				"degen/no-missing-branded-id-import": "off"
+			}
 		}
 	],
 	"rules": {

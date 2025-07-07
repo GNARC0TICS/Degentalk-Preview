@@ -12,7 +12,12 @@
 		"client/**/*.spec.ts",
 		"client/**/*.spec.tsx",
 		"client/vitest.config.ts",
-		"drizzle.config.ts"
+		"drizzle.config.ts",
+		"server/test/**/*",
+		"tests/**/*",
+		"test/**/*",
+		"*.spec.ts",
+		"*.test.ts"
 	],
 	"exclude": ["node_modules", "shared/fixtures/**"]
 }

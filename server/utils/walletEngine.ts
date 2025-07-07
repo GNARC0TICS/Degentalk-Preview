@@ -138,7 +138,7 @@ export class WalletEngine {
 	/**
 	 * Get a specific DGT unlock by ID
 	 */
-	static async getDgtUnlockById(unlockId: number): Promise<DgtUnlock | null> {
+	static async getDgtUnlockById(unlockId: Id<'unlock'>): Promise<DgtUnlock | null> {
 		try {
 			const result = await db.execute(sql`
         SELECT * FROM dgt_unlocks
@@ -191,7 +191,7 @@ export class WalletEngine {
 	/**
 	 * Purchase a DGT unlock
 	 */
-	static async purchaseDgtUnlock(userId: UserId, unlockId: number): Promise<DgtPurchaseResult> {
+	static async purchaseDgtUnlock(userId: UserId, unlockId: Id<'unlock'>): Promise<DgtPurchaseResult> {
 		try {
 			return await db.transaction(async (tx) => {
 				// Get the unlock

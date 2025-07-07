@@ -8,7 +8,7 @@ export interface ForumMetrics {
 	todaysActivity: number;
 }
 
-export const useForumMetrics = (structureId?: number) => {
+export const useForumMetrics = (structureId?: StructureId) => {
 	return useQuery<ForumMetrics>({
 		queryKey: ['/api/forum/metrics', { structureId }],
 		queryFn: async () => {
@@ -40,7 +40,7 @@ export interface HotThread {
 	isHot?: boolean;
 }
 
-export const useHotThreads = (params?: { limit?: number; structureId?: number }) => {
+export const useHotThreads = (params?: { limit?: number; structureId?: StructureId }) => {
 	const limit = params?.limit || 5;
 
 	return useQuery<HotThread[]>({

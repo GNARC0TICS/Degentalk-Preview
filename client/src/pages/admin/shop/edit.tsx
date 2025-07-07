@@ -18,7 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 
 // Define Product type locally for now since we don't have the exact import path
 interface Product {
-	id?: number;
+	id?: Id<'id'>;
 	name: string;
 	description?: string;
 	price: number; // Assuming DGT price

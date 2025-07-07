@@ -6,6 +6,8 @@
 
 import type { UserId, ThreadId, PostId, MissionId, AchievementId } from '@shared/types';
 
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 /**
  * Deterministic UUID generator for tests
  * Generates consistent UUIDs based on an incremental counter

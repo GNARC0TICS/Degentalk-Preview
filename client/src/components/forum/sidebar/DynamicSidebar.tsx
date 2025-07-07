@@ -6,7 +6,7 @@ import { getSidebarWidgets, getZoneThemeKey, type WidgetType } from '@/lib/forum
 import { cn } from '@/lib/utils';
 
 interface DynamicSidebarProps {
-	structureId?: number;
+	structureId?: StructureId;
 	zoneSlug?: string;
 	className?: string;
 }
@@ -17,7 +17,7 @@ interface DynamicSidebarProps {
  */
 const WidgetFactory: React.FC<{
 	widgetType: WidgetType;
-	structureId?: number;
+	structureId?: StructureId;
 	colorTheme: string;
 	className?: string;
 }> = ({ widgetType, structureId, colorTheme, className }) => {

@@ -7,7 +7,7 @@ interface UnlockEmojiPackParams {
 	userId: UserId;
 	emojiPackId: EmojiPackId;
 	unlockType: 'shop' | 'admin' | 'xp_reward';
-	pricePaid?: number;
+	pricePaid?: Id<'pricePaid'>;
 }
 
 /**

@@ -5,6 +5,8 @@
  * Explicit exports ensure tree-shaking and clean APIs.
  */
 
+/* eslint-disable degen/no-missing-branded-id-import */
+
 // Re-export legacy API types (preserved for compatibility)
 export type {
   ApiSuccess,

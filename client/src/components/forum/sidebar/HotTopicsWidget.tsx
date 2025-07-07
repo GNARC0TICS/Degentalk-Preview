@@ -8,7 +8,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 
 interface HotTopicsWidgetProps {
-	structureId?: number;
+	structureId?: StructureId;
 	limit?: number;
 	colorTheme?: string;
 	className?: string;

@@ -13,7 +13,7 @@ interface Stat {
 }
 
 interface StatsWidgetProps {
-	structureId?: number;
+	structureId?: StructureId;
 	colorTheme?: string;
 	className?: string;
 }

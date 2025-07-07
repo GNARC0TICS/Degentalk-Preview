@@ -8,7 +8,7 @@ import { formatDistanceToNow } from 'date-fns';
 import type { EventLog } from '@/features/activity/services/activityApi';
 
 interface ActivityFeedWidgetProps {
-	structureId?: number;
+	structureId?: StructureId;
 	limit?: number;
 	colorTheme?: string;
 	className?: string;

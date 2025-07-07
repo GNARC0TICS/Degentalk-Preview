@@ -24,8 +24,8 @@ interface LevelUpModalProps {
 	levelInfo: LevelInfo;
 	rewards?: {
 		dgt?: number;
-		titleId?: number;
-		badgeId?: number;
+		titleId?: TitleId;
+		badgeId?: BadgeId;
 		unlocks?: string[];
 	};
 }

@@ -8,7 +8,7 @@ import { useMessages } from '@/hooks/use-messages';
 import { useQuery } from '@tanstack/react-query';
 
 interface WhisperButtonProps extends ButtonProps {
-	userId?: number;
+	userId?: UserId;
 	username?: string;
 	avatarUrl?: string;
 	label?: string;

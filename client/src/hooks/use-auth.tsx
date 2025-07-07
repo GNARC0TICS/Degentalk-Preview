@@ -34,8 +34,8 @@ export interface User {
 	lastActiveAt?: string | null;
 	bannerUrl?: string | null;
 	dgtBalance?: number;
-	activeFrameId?: number | null;
-	avatarFrameId?: number | null;
+	activeFrameId?: Id<'activeFrame'> | null;
+	avatarFrameId?: Id<'avatarFrame'> | null;
 	isBanned: boolean;
 }
 

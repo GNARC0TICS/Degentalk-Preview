@@ -23,7 +23,7 @@ interface QuotePostModalProps {
 }
 
 // Helper to convert content to BBCode quote format
-const formatQuoteBBCode = (content: string, username: string, postId?: number): string => {
+const formatQuoteBBCode = (content: string, username: string, postId?: PostId): string => {
 	// Split content into lines and add > prefix for BBCode quote style
 	const lines = content
 		.split('\n')

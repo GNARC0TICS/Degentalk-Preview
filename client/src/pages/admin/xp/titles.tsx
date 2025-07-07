@@ -58,7 +58,7 @@ interface TitleFormData {
 	description: string;
 	color: string;
 	icon: string;
-	mediaId?: number | null;
+	mediaId?: Id<'media'> | null;
 	rarity: string;
 	category: string;
 	requiredPath: string;

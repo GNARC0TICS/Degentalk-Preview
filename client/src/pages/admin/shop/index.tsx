@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 
 // Local Product shape (minimal) – avoids server schema coupling
 interface Product {
-	id?: number;
+	id?: Id<'id'>;
 	name: string;
 	price: number;
 	stock: number;

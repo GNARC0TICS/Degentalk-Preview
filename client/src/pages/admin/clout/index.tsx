@@ -29,7 +29,7 @@ export interface CloutAchievement {
 export interface CloutLog {
 	id: string;
 	userId: string;
-	achievementId?: number;
+	achievementId?: AchievementId;
 	cloutEarned: number;
 	reason?: string;
 	createdAt: string;

@@ -19,7 +19,7 @@ const ZONE_SLUG_TO_THEME_MAP: Record<string, string> = {
  * Gets the sidebar widgets for a specific structure ID or zone
  * Falls back to default configuration if zone not found
  */
-export function getSidebarWidgets(structureId?: number, zoneSlug?: string): WidgetType[] {
+export function getSidebarWidgets(structureId?: StructureId, zoneSlug?: string): WidgetType[] {
 	// If we have a zone slug, use it directly
 	if (zoneSlug) {
 		const themeKey = ZONE_SLUG_TO_THEME_MAP[zoneSlug] || 'default';

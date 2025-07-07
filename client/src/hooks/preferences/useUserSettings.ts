@@ -18,9 +18,9 @@ export interface UserSettingsData {
 		twitterHandle: string | null;
 		website: string | null;
 		telegramHandle: string | null;
-		activeTitleId: number | null;
-		activeBadgeId: number | null;
-		activeFrameId: number | null;
+		activeTitleId: Id<'activeTitle'> | null;
+		activeBadgeId: Id<'activeBadge'> | null;
+		activeFrameId: Id<'activeFrame'> | null;
 	};
 	preferences: {
 		userId: UserId;
