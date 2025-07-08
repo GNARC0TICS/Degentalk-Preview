@@ -27,9 +27,9 @@ export function XPHistoryLog({
 }: XPHistoryLogProps) {
 	// Ensure xpHistory is always an array
 	const safeXpHistory = Array.isArray(xpHistory) ? xpHistory : [];
-	// Get the icon for the source type
-	const getSourceIcon = (source: XpAdjustmentEntry['source']) => {
-		switch (source) {
+	// Get the icon for the adjustment type
+	const getSourceIcon = (adjustmentType: XpAdjustmentEntry['adjustmentType']) => {
+		switch (adjustmentType) {
 			case 'post':
 			case 'reply':
 			case 'thread':
@@ -45,9 +45,9 @@ export function XPHistoryLog({
 		}
 	};
 
-	// Get appropriate color class based on source
-	const getSourceColorClass = (source: XpAdjustmentEntry['source']) => {
-		switch (source) {
+	// Get appropriate color class based on adjustment type
+	const getSourceColorClass = (adjustmentType: XpAdjustmentEntry['adjustmentType']) => {
+		switch (adjustmentType) {
 			case 'post':
 			case 'thread':
 				return 'bg-emerald-500/20 text-emerald-400';
@@ -117,10 +117,10 @@ export function XPHistoryLog({
 								<div
 									className={cn(
 										'rounded-full p-2 flex-shrink-0',
-										getSourceColorClass(entry.source)
+										getSourceColorClass(entry.adjustmentType)
 									)}
 								>
-									{getSourceIcon(entry.source)}
+									{getSourceIcon(entry.adjustmentType)}
 								</div>
 								<div className="space-y-1 flex-1">
 									<div className="flex justify-between items-start">

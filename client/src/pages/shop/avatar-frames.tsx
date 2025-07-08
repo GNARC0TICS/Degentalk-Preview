@@ -34,7 +34,7 @@ export default function AvatarFramesShopPage() {
 		error
 	} = useQuery<StoreFrame[]>({
 		queryKey: ['shop', 'avatar-frames'],
-		queryFn: () => apiRequest({ url: '/api/store/avatar-frames' })
+		queryFn: () => apiRequest({ url: '/api/store/avatar-frames', method: 'GET' })
 	});
 
 	// Purchase mutation

@@ -17,12 +17,14 @@ import {
 } from './forum.validators';
 import { logger } from '@server/src/core/logger';
 import { validateRequestBody, validateQueryParams } from '../../admin.validation';
+import { ForumTransformer } from '@server/src/domains/forum/transformers/forum.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 
 export class AdminForumController {
 	async getAllCategories(req: Request, res: Response) {
 		try {
 			const categories = await adminForumService.getAllCategories();
-			res.json(categories);
+			res.json(toPublicList(categories, (category) => ({ ...category, id: category.id })));
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -37,7 +39,7 @@ export class AdminForumController {
 			const categoryId = req.params.id as CategoryId;
 
 			const category = await adminForumService.getCategoryById(categoryId);
-			res.json(category);
+			res.json({ ...category, id: category.id });
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -59,7 +61,7 @@ export class AdminForumController {
 				category.id.toString(),
 				data
 			);
-			res.status(201).json(category);
+			res.status(201).json({ ...category, id: category.id });
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -83,7 +85,7 @@ export class AdminForumController {
 				categoryId.toString(),
 				data
 			);
-			res.json(category);
+			res.json({ ...category, id: category.id });
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -118,7 +120,7 @@ export class AdminForumController {
 	async getAllPrefixes(req: Request, res: Response) {
 		try {
 			const prefixes = await adminForumService.getAllPrefixes();
-			res.json(prefixes);
+			res.json(toPublicList(prefixes, (prefix) => ({ ...prefix, id: prefix.id })));
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -140,7 +142,7 @@ export class AdminForumController {
 				prefix.id.toString(),
 				dataPrefix
 			);
-			res.status(201).json(prefix);
+			res.status(201).json({ ...prefix, id: prefix.id });
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -155,7 +157,7 @@ export class AdminForumController {
 	async getAllTags(req: Request, res: Response) {
 		try {
 			const tags = await adminForumService.getAllTags();
-			res.json(tags);
+			res.json(toPublicList(tags, (tag) => ({ ...tag, id: tag.id })));
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -171,7 +173,7 @@ export class AdminForumController {
 			if (!dataTag) return;
 			const tag = await adminForumService.createTag(dataTag);
 			await adminController.logAction(req, 'CREATE_TAG', 'tag', tag.id.toString(), dataTag);
-			res.status(201).json(tag);
+			res.status(201).json({ ...tag, id: tag.id });
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -189,7 +191,7 @@ export class AdminForumController {
 			if (!dataTagU) return;
 			const tag = await adminForumService.updateTag(tagId, dataTagU);
 			await adminController.logAction(req, 'UPDATE_TAG', 'tag', tagId.toString(), dataTagU);
-			res.json(tag);
+			res.json({ ...tag, id: tag.id });
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -229,7 +231,7 @@ export class AdminForumController {
 			);
 			const moderationType = this.determineModerationType(dataMod);
 			await adminController.logAction(req, moderationType, 'thread', threadId.toString(), dataMod);
-			res.json(thread);
+			res.json(ForumTransformer.toModerationThread(thread));
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -257,7 +259,7 @@ export class AdminForumController {
 		try {
 			const pagination = validateQueryParams(req, res, PaginationSchema) || undefined;
 			const entities = await adminForumService.getAllEntities(pagination);
-			res.json(entities);
+			res.json(toPublicList(entities, (entity) => ({ ...entity, id: entity.id })));
 		} catch (error) {
 			logger.error('AdminForumController', 'Error getting all entities', { err: error });
 			res.status(500).json({ message: 'Failed to get forum entities' });
@@ -273,7 +275,7 @@ export class AdminForumController {
 				return res.status(404).json({ message: 'Entity not found' });
 			}
 
-			res.json(entity);
+			res.json({ ...entity, id: entity.id });
 		} catch (error) {
 			logger.error('AdminForumController', 'Error getting entity by ID', { err: error });
 			res.status(500).json({ message: 'Failed to get entity' });
@@ -292,7 +294,7 @@ export class AdminForumController {
 				entity.id.toString(),
 				dataEnt
 			);
-			res.status(201).json(entity);
+			res.status(201).json({ ...entity, id: entity.id });
 		} catch (error) {
 			logger.error('AdminForumController', 'Error creating entity', { err: error });
 			res.status(500).json({ message: 'Failed to create entity' });
@@ -317,7 +319,7 @@ export class AdminForumController {
 				entityId.toString(),
 				dataEntU
 			);
-			res.json(entity);
+			res.json({ ...entity, id: entity.id });
 		} catch (error) {
 			logger.error('AdminForumController', 'Error updating entity', { err: error });
 			res.status(500).json({ message: 'Failed to update entity' });

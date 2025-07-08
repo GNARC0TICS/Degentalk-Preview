@@ -58,7 +58,8 @@ export function BBCodePostCard({
 	className = ''
 }: BBCodePostCardProps) {
 	// Calculate post number (this would typically come from props in a real implementation)
-	const postNumber = post.id;
+	// TODO: Get actual post number from thread context or props
+	const postNumber = 1;
 
 	// Handle post action callbacks
 	const handleCopyPermalink = () => {
@@ -86,7 +87,7 @@ export function BBCodePostCard({
 					editedAt={post.updatedAt ? new Date(post.updatedAt) : null}
 					isFirst={isFirst}
 					isSolution={isSolution}
-					threadTitle={threadTitle}
+					threadTitle={threadTitle || ''}
 					onCopyPermalink={handleCopyPermalink}
 				/>
 
@@ -94,8 +95,8 @@ export function BBCodePostCard({
 				<div className="flex border-separate">
 					{/* Left Sidebar - User Info */}
 					<PostSidebar
-						username={post.authorUsername}
-						authorAvatar={post.authorAvatar}
+						username={post.user.username}
+						authorAvatar={post.user.avatarUrl || null}
 						isFirst={isFirst}
 					/>
 
@@ -105,7 +106,7 @@ export function BBCodePostCard({
 						<PostBody
 							content={post.content}
 							signature={null} // TODO: Get signature from user profile
-							username={post.authorUsername}
+							username={post.user.username}
 							showSignatures={showSignatures}
 							isFirst={isFirst}
 							className="flex-1"
@@ -115,7 +116,7 @@ export function BBCodePostCard({
 						<PostActions
 							postId={post.id}
 							likeCount={post.likeCount}
-							hasLiked={post.hasLiked}
+							hasLiked={post.hasLiked || false}
 							canEdit={canEdit}
 							canDelete={canDelete}
 							canMarkSolution={canMarkSolution}
@@ -123,7 +124,7 @@ export function BBCodePostCard({
 							isThreadSolved={isThreadSolved}
 							isFirst={isFirst}
 							tippingEnabled={tippingEnabled}
-							onLike={onLike}
+							onLike={onLike || ((() => {}) as any)}
 							onReply={onReply}
 							onQuote={onQuote}
 							onEdit={onEdit}
@@ -142,7 +143,7 @@ export function BBCodePostCard({
 							editedAt={post.updatedAt ? new Date(post.updatedAt) : null}
 							isEdited={post.isEdited}
 							reactionCount={post.likeCount}
-							hasReacted={post.hasLiked}
+							hasReacted={post.hasLiked || false}
 						/>
 					</div>
 				</div>
@@ -167,7 +168,7 @@ export function BBCodePostCard({
 				<div className="p-4 border-b border-zinc-700/30">
 					<div className="flex items-center justify-between mb-2">
 						<UnifiedProfileCard
-							username={post.authorUsername}
+							username={post.user.username}
 							variant="mini"
 							showLevel={true}
 							showOnlineStatus={true}
@@ -202,7 +203,7 @@ export function BBCodePostCard({
 				<PostBody
 					content={post.content}
 					signature={null}
-					username={post.authorUsername}
+					username={post.user.username}
 					showSignatures={showSignatures}
 					className="border-b border-zinc-700/30"
 				/>
@@ -211,7 +212,7 @@ export function BBCodePostCard({
 				<PostActions
 					postId={post.id}
 					likeCount={post.likeCount}
-					hasLiked={post.hasLiked}
+					hasLiked={post.hasLiked || false}
 					canEdit={canEdit}
 					canDelete={canDelete}
 					canMarkSolution={canMarkSolution}
@@ -219,17 +220,17 @@ export function BBCodePostCard({
 					isThreadSolved={isThreadSolved}
 					isFirst={isFirst}
 					tippingEnabled={tippingEnabled}
-					onLike={onLike}
-					onReply={onReply}
-					onQuote={onQuote}
-					onEdit={onEdit}
-					onDelete={onDelete}
-					onMarkSolution={onMarkSolution}
-					onTip={onTip}
-					onReport={onReport}
-					onBookmark={onBookmark}
-					onShare={onShare}
-					onCopyLink={onCopyLink}
+					onLike={onLike || ((() => {}) as any)}
+					onReply={onReply || ((() => {}) as any)}
+					onQuote={onQuote || ((() => {}) as any)}
+					onEdit={onEdit || ((() => {}) as any)}
+					onDelete={onDelete || ((() => {}) as any)}
+					onMarkSolution={onMarkSolution || ((() => {}) as any)}
+					onTip={onTip || ((() => {}) as any)}
+					onReport={onReport || ((() => {}) as any)}
+					onBookmark={onBookmark || ((() => {}) as any)}
+					onShare={onShare || ((() => {}) as any)}
+					onCopyLink={onCopyLink || ((() => {}) as any)}
 					className="border-none"
 				/>
 			</motion.div>

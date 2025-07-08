@@ -19,18 +19,23 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AdminAccessSelector } from '@/components/admin/inputs/AdminAccessSelector';
 import { AdminToggle } from '@/components/admin/inputs/AdminToggle';
+import type { ForumId, CategoryId, ZoneId, UserId } from '@shared/types/ids';
 
 const EntitySchema = z.object({
-	id: z.number().optional(),
+	id: z.string().optional(),
 	name: z.string().min(2).max(100),
 	slug: z.string().min(2).max(100),
 	description: z.string().max(255).optional().nullable(),
 	type: z.enum(['zone', 'category', 'forum']),
-	parentId: z.number().nullable().optional(),
+	parentId: z.string().nullable().optional(),
 	position: z.number().int().min(0).default(0)
 });
 
-type Entity = z.infer<typeof EntitySchema>;
+type EntityFormData = z.infer<typeof EntitySchema>;
+
+type Entity = EntityFormData & {
+	id: UserId; // Using UserId as a generic entity ID since AdminDataTable expects it
+};
 
 export default function ForumStructureAdminPage() {
 	const queryClient = useQueryClient();

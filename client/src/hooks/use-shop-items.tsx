@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import type { ItemCategory } from '@/hooks/use-vault-items';
 
 // Define the ShopItem type

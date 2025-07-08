@@ -29,27 +29,27 @@ import type { PostId } from '@shared/types/ids';
 
 interface PostActionsProps {
 	postId: PostId;
-	likeCount?: number;
-	hasLiked?: boolean;
-	canEdit?: boolean;
-	canDelete?: boolean;
-	canMarkSolution?: boolean;
-	isSolution?: boolean;
-	isThreadSolved?: boolean;
-	isFirst?: boolean;
-	tippingEnabled?: boolean;
-	className?: string;
-	onLike?: (postId: PostId, hasLiked: boolean) => void;
-	onReply?: (postId: PostId) => void;
-	onQuote?: (postId: PostId) => void;
-	onEdit?: (postId: PostId) => void;
-	onDelete?: (postId: PostId) => void;
-	onMarkSolution?: (postId: PostId) => void;
-	onTip?: (postId: PostId) => void;
-	onReport?: (postId: PostId) => void;
-	onBookmark?: (postId: PostId) => void;
-	onShare?: (postId: PostId) => void;
-	onCopyLink?: (postId: PostId) => void;
+	likeCount?: number | undefined;
+	hasLiked?: boolean | undefined;
+	canEdit?: boolean | undefined;
+	canDelete?: boolean | undefined;
+	canMarkSolution?: boolean | undefined;
+	isSolution?: boolean | undefined;
+	isThreadSolved?: boolean | undefined;
+	isFirst?: boolean | undefined;
+	tippingEnabled?: boolean | undefined;
+	className?: string | undefined;
+	onLike?: (postId: PostId, hasLiked: boolean) => void | undefined;
+	onReply?: (postId: PostId) => void | undefined;
+	onQuote?: (postId: PostId) => void | undefined;
+	onEdit?: (postId: PostId) => void | undefined;
+	onDelete?: (postId: PostId) => void | undefined;
+	onMarkSolution?: (postId: PostId) => void | undefined;
+	onTip?: (postId: PostId) => void | undefined;
+	onReport?: (postId: PostId) => void | undefined;
+	onBookmark?: (postId: PostId) => void | undefined;
+	onShare?: (postId: PostId) => void | undefined;
+	onCopyLink?: (postId: PostId) => void | undefined;
 }
 
 export function PostActions({

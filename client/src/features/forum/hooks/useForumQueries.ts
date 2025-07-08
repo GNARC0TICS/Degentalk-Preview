@@ -10,6 +10,7 @@ import { forumApi } from '../services/forumApi';
 import type { ThreadSearchParams as OriginalThreadSearchParams } from '../services/forumApi';
 import { toast } from 'sonner';
 import type { Tag } from '@/types/forum';
+import type { ForumTag } from '@/types/compat/forum';
 import type { ThreadPrefix } from '@/types/compat/forum';
 import { useEffect } from 'react';
 import type { ForumId, TagId, ContentId, PrefixId, ThreadId, PostId } from '@shared/types/ids';
@@ -349,7 +350,7 @@ export const useUserBookmarks = () => {
  * Tags -- NEW Hooks
  */
 export const useTags = () => {
-	return useQuery<Tag[], Error>({
+	return useQuery<ForumTag[], Error>({
 		queryKey: ['/api/forum/tags'],
 		queryFn: forumApi.getTags,
 		staleTime: 5 * 60 * 1000 // 5 minutes, tags don't change too frequently
@@ -358,7 +359,7 @@ export const useTags = () => {
 
 export const useAddTagToThread = () => {
 	const queryClient = useQueryClient();
-	return useMutation<Tag, Error, { threadId: ThreadId; tagId: TagId }>({
+	return useMutation<ForumTag, Error, { threadId: ThreadId; tagId: TagId }>({
 		mutationFn: ({ threadId, tagId }) => forumApi.addTagToThread(threadId, tagId),
 		onSuccess: (data, variables) => {
 			queryClient.invalidateQueries({ queryKey: [`/api/forum/threads/${variables.threadId}`] });

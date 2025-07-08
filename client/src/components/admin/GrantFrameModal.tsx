@@ -15,12 +15,13 @@ import { apiRequest } from '@/lib/api-request';
 import { LoadingSpinner } from '@/components/ui/loader';
 import type { AvatarFrame } from '@/types/compat/avatar';
 import type { FrameId, UserId } from '@shared/types/ids';
+import { toId, parseId } from '@shared/utils/id';
 
 interface Props {
 	frame: AvatarFrame | null;
 	open: boolean;
 	onClose: () => void;
-	onSuccess?: () => void;
+	onSuccess?: (() => void) | undefined;
 }
 
 /**
@@ -64,7 +65,8 @@ export const GrantFrameModal: React.FC<Props> = ({ frame, open, onClose, onSucce
 			});
 			return;
 		}
-		grantMutation.mutate({ frameId: frame.id, userIds: ids as UserId[] });
+		const convertedIds = ids.map(id => parseId<'UserId'>(id) || toId<'UserId'>(id));
+		grantMutation.mutate({ frameId: frame.id, userIds: convertedIds });
 	};
 
 	return (

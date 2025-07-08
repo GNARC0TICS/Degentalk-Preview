@@ -13,8 +13,8 @@ import { SessionPreferences } from '@/components/preferences/session-preferences
 import { ReferralPreferences } from '@/components/preferences/referral-preferences';
 import { SocialPreferences } from '@/components/preferences/social-preferences';
 import { User, Shield, Bell, Monitor, Lock, Users, Share2, UserCheck } from 'lucide-react';
-import { GlobalRouteGuard } from '@/components/auth/GlobalRouteGuard';
-import { Container } from '@/components/ui/container';
+import { ProtectedRoute } from '@/components/auth';
+import { Container } from '@/components/ui/Container';
 
 /**
  * Preferences page with tabbed interface for different preferences categories.

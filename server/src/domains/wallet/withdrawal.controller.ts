@@ -1,4 +1,6 @@
 import { userService } from '@server/src/core/services/user.service';
+import { EconomyTransformer } from '../economy/transformers/economy.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 import type { UserId, EntityId } from '@shared/types/ids';
 /**
  * Withdrawal Controller
@@ -152,18 +154,20 @@ export class WithdrawalController {
 				dgtDeducted: Number(dgtAmountNeeded) / 100000000
 			});
 
+			const withdrawalResponse = {
+				id: withdrawalRequest.id,
+				amount,
+				currency,
+				network: network || 'default',
+				address,
+				fee: totalFeeUSD,
+				status: 'pending',
+				createdAt: withdrawalRequest.createdAt
+			};
+
 			res.json({
 				success: true,
-				withdrawalRequest: {
-					id: withdrawalRequest.id,
-					amount,
-					currency,
-					network: network || 'default',
-					address,
-					fee: totalFeeUSD,
-					status: 'pending',
-					createdAt: withdrawalRequest.createdAt
-				}
+				withdrawalRequest: withdrawalResponse
 			});
 		} catch (error) {
 			if (error instanceof z.ZodError) {
@@ -215,12 +219,14 @@ export class WithdrawalController {
 				.from(withdrawalRequests)
 				.where(eq(withdrawalRequests.userId, userId));
 
+			const transformedWithdrawals = withdrawals.map((w) => ({
+				...w,
+				amount: w.amount / 100, // Convert from cents
+				processingFee: w.processingFee / 100
+			}));
+
 			res.json({
-				withdrawals: withdrawals.map((w) => ({
-					...w,
-					amount: w.amount / 100, // Convert from cents
-					processingFee: w.processingFee / 100
-				})),
+				withdrawals: transformedWithdrawals,
 				pagination: {
 					page,
 					limit,
@@ -280,12 +286,14 @@ export class WithdrawalController {
 				.from(withdrawalRequests)
 				.where(conditions.length > 0 ? and(...conditions) : undefined);
 
+			const transformedWithdrawals = withdrawals.map((w) => ({
+				...w,
+				amount: w.amount / 100, // Convert from cents
+				processingFee: w.processingFee / 100
+			}));
+
 			res.json({
-				withdrawals: withdrawals.map((w) => ({
-					...w,
-					amount: w.amount / 100, // Convert from cents
-					processingFee: w.processingFee / 100
-				})),
+				withdrawals: transformedWithdrawals,
 				pagination: {
 					page,
 					limit,
@@ -348,11 +356,13 @@ export class WithdrawalController {
 					amount: withdrawalRequest.amount / 100
 				});
 
-				res.json({
+				const approvalResponse = {
 					success: true,
 					message: 'Withdrawal request approved',
 					requestId
-				});
+				};
+
+				res.json(approvalResponse);
 			} else {
 				// Reject and refund DGT
 				await db
@@ -386,11 +396,13 @@ export class WithdrawalController {
 					dgtRefunded: Number(dgtToRefund) / 100000000
 				});
 
-				res.json({
+				const rejectionResponse = {
 					success: true,
 					message: 'Withdrawal request rejected and DGT refunded',
 					requestId
-				});
+				};
+
+				res.json(rejectionResponse);
 			}
 		} catch (error) {
 			if (error instanceof z.ZodError) {

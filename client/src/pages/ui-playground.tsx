@@ -12,7 +12,8 @@ import { FontsSection } from '@/pages/ui-playground/sections/FontsSection';
 // Auto-import UI components in client/src/components/ui
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-const uiModules = import.meta.glob('@/components/ui/*.tsx', { eager: true });
+// Vite's glob import must start with '/' or './' and cannot use path aliases.
+const uiModules = import.meta.glob('/src/components/ui/*.tsx', { eager: true });
 
 const uiComponents: Record<string, React.FC<any>> = {};
 for (const [path, mod] of Object.entries(uiModules)) {

@@ -13,8 +13,8 @@ export interface Achievement {
 	description: string;
 	category: 'forum' | 'social' | 'economy' | 'milestone' | 'special';
 	rarity: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
-	icon?: string;
-	color?: string;
+	icon?: string | undefined;
+	color?: string | undefined;
 	isActive: boolean;
 	requirements: AchievementRequirement[];
 	rewards: AchievementReward[];
@@ -26,16 +26,16 @@ export interface AchievementRequirement {
 	type: 'count' | 'threshold' | 'streak' | 'composite' | 'custom';
 	action: string;
 	target: number;
-	timeframe?: 'daily' | 'weekly' | 'monthly' | 'lifetime' | 'session';
-	conditions?: Record<string, unknown>;
-	operator?: 'gte' | 'lte' | 'eq' | 'between';
+	timeframe?: 'daily' | 'weekly' | 'monthly' | 'lifetime' | 'session' | undefined;
+	conditions?: Record<string, unknown> | undefined;
+	operator?: 'gte' | 'lte' | 'eq' | 'between' | undefined;
 }
 
 export interface AchievementReward {
 	type: 'xp' | 'dgt' | 'title' | 'badge' | 'frame' | 'permission';
 	value: number | string;
-	quantity?: number;
-	metadata?: Record<string, unknown>;
+	quantity?: number | undefined;
+	metadata?: Record<string, unknown> | undefined;
 }
 
 export interface UserAchievement {
@@ -43,8 +43,8 @@ export interface UserAchievement {
 	userId: string;
 	achievementId: string;
 	achievedAt: string;
-	progress?: AchievementProgress;
-	achievement?: Achievement;
+	progress?: AchievementProgress | undefined;
+	achievement?: Achievement | undefined;
 }
 
 export interface AchievementProgress {
@@ -61,17 +61,17 @@ export interface XPAction {
 	action: string;
 	baseXP: number;
 	multiplier: number;
-	cooldown?: number;
+	cooldown?: number | undefined;
 	category: 'forum' | 'social' | 'economy' | 'special';
 	isActive: boolean;
-	conditions?: XPCondition[];
+	conditions?: XPCondition[] | undefined;
 }
 
 export interface XPCondition {
 	type: 'user_level' | 'forum_access' | 'time_based' | 'custom';
 	operator: 'gte' | 'lte' | 'eq' | 'in';
 	value: number | string | string[];
-	message?: string;
+	message?: string | undefined;
 }
 
 export interface XPLog {
@@ -81,7 +81,7 @@ export interface XPLog {
 	xpAwarded: number;
 	multiplier: number;
 	source: string;
-	metadata?: Record<string, unknown>;
+	metadata?: Record<string, unknown> | undefined;
 	createdAt: string;
 }
 
@@ -128,7 +128,7 @@ export interface MissionObjective {
 	type: 'count' | 'visit' | 'interact' | 'achieve' | 'custom';
 	target: number;
 	action: string;
-	metadata?: Record<string, unknown>;
+	metadata?: Record<string, unknown> | undefined;
 }
 
 export interface MissionProgress {
@@ -153,8 +153,8 @@ export interface ObjectiveProgress {
 export interface MissionReward {
 	type: 'xp' | 'dgt' | 'item' | 'title' | 'badge';
 	value: number | string;
-	quantity?: number;
-	metadata?: Record<string, unknown>;
+	quantity?: number | undefined;
+	metadata?: Record<string, unknown> | undefined;
 }
 
 // Leaderboards
@@ -229,8 +229,8 @@ export interface CreateAchievementRequest {
 	rarity: Achievement['rarity'];
 	requirements: Omit<AchievementRequirement, 'id'>[];
 	rewards: Omit<AchievementReward, 'id'>[];
-	icon?: string;
-	color?: string;
+	icon?: string | undefined;
+	color?: string | undefined;
 }
 
 export interface UpdateAchievementRequest extends Partial<CreateAchievementRequest> {

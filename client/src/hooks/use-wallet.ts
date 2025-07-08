@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { walletApiService } from '@/features/wallet/services/wallet-api.service';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import { useToast } from '@/hooks/use-toast';
 import { formatDgt, parseDgt, formatUsd } from '@/utils/format';
 

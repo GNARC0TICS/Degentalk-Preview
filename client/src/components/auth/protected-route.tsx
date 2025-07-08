@@ -1,1 +1,1 @@
-export { GlobalRouteGuard as default } from './GlobalRouteGuard';
+export { ProtectedRoute as default } from './RouteGuards';

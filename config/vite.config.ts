@@ -64,8 +64,8 @@ export default defineConfig(async () => {
 				{ find: '@schema', replacement: path.resolve(projectRoot, 'db/schema/index.ts') },
 				{ find: /^@schema\/(.*)/, replacement: path.resolve(projectRoot, 'db/schema/$1') },
 				// Force Vite to use the single React copy from root node_modules
-				{ find: 'react', replacement: path.resolve(projectRoot, 'node_modules/react') },
-				{ find: 'react-dom', replacement: path.resolve(projectRoot, 'node_modules/react-dom') }
+				// { find: 'react', replacement: path.resolve(projectRoot, 'node_modules/react') },
+				// { find: 'react-dom', replacement: path.resolve(projectRoot, 'node_modules/react-dom') }
 			],
 			// Ensure only one React instance
 			dedupe: ['react', 'react-dom']
@@ -91,6 +91,9 @@ export default defineConfig(async () => {
 			// Drop all console.* and debugger statements in production builds for smaller bundle & less runtime overhead
 			esbuild: {
 				drop: ['console', 'debugger']
+			},
+			rollupOptions: {
+				external: ['./UIVERSE/**']
 			}
 		},
 		css: {

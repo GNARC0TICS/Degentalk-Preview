@@ -43,7 +43,7 @@ export function WithdrawButton({
 	const canSpendDGT = walletConfig?.features?.allowDGTSpending ?? false;
 
 	const withdrawMutation = useMutation({
-		mutationFn: async (data: { amount: number; currency: string; address?: string }) => {
+		mutationFn: async (data: { amount: number; currency: string; address?: string | undefined }) => {
 			return walletApiService.requestWithdrawal(data.amount, data.currency, data.address || '');
 		},
 		onMutate: () => {
@@ -171,7 +171,7 @@ export function WithdrawButton({
 		withdrawMutation.mutate({
 			amount,
 			currency: activeTab === 'crypto' ? 'USDT' : 'DGT',
-			address: activeTab === 'crypto' ? withdrawAddress : undefined
+			address: activeTab === 'crypto' ? withdrawAddress || undefined : undefined
 		});
 	};
 

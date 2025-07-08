@@ -18,10 +18,12 @@ export class AdminWalletController {
 		try {
 			const config = await walletConfigService.getConfig();
 
-			res.json({
+			const configResult = {
 				success: true,
 				data: config
-			});
+			};
+			
+			res.json(configResult);
 		} catch (error) {
 			logger.error('Error getting wallet config:', error);
 			res.status(500).json({

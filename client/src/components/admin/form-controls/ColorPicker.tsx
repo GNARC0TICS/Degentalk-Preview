@@ -7,9 +7,17 @@ export interface ColorPickerProps {
 	/** Callback invoked when color changes */
 	onChange: (next: string) => void;
 	/** Optional label shown above the picker */
-	label?: React.ReactNode;
+	label?: React.ReactNode | undefined;
 	/** Additional class names */
-	className?: string;
+	className?: string | undefined;
+	/** Optional helper text */
+	helperText?: string | undefined;
+	/** Whether the picker is disabled */
+	disabled?: boolean | undefined;
+	/** Show input field */
+	showInput?: boolean | undefined;
+	/** Compact mode */
+	compact?: boolean | undefined;
 }
 
 /**

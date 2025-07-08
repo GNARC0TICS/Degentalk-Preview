@@ -14,7 +14,7 @@ import { EconomyTransformer } from '../economy/transformers/economy.transformer'
 import { ShopTransformer } from './transformers/shop.transformer';
 import { vanitySinkAnalyzer } from './services/vanity-sink.analyzer';
 import type { DgtAmount, UserId, ItemId, OrderId } from '@shared/types/ids';
-import { EntityId } from "@shared/types/ids";
+import type { EntityId } from "@shared/types/ids";
 
 const router = Router();
 

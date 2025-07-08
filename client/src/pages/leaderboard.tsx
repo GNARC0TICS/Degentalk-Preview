@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/table';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import type { UserId } from '@shared/types/ids';
+import { toId } from '@shared/utils/id';
 import { Trophy } from 'lucide-react'; // Removed TrendingUp, CircleDollarSign, Diamond
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { motion } from 'framer-motion';
@@ -51,7 +52,7 @@ export default function LeaderboardPage() {
 			// if (Math.random() > 0.5) throw new Error("Failed to fetch leaderboard data!");
 			return [
 				{
-					id: '1' as UserId,
+					id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440001'),
 					username: 'CryptoKing',
 					xp: 150000,
 					clout: 2500,
@@ -59,7 +60,7 @@ export default function LeaderboardPage() {
 					avatarUrl: 'https://avatar.vercel.sh/cryptoking'
 				},
 				{
-					id: '2' as UserId,
+					id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440002'),
 					username: 'DiamondHands',
 					xp: 125000,
 					clout: 1800,
@@ -67,7 +68,7 @@ export default function LeaderboardPage() {
 					avatarUrl: 'https://avatar.vercel.sh/diamondhands'
 				},
 				{
-					id: '3' as UserId,
+					id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440003'),
 					username: 'WhaleWatcher',
 					xp: 110000,
 					clout: 1500,
@@ -75,7 +76,7 @@ export default function LeaderboardPage() {
 					avatarUrl: 'https://avatar.vercel.sh/whalewatcher'
 				},
 				{
-					id: '4' as UserId,
+					id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440004'),
 					username: 'NFTGuru',
 					xp: 95000,
 					clout: 1200,
@@ -83,7 +84,7 @@ export default function LeaderboardPage() {
 					avatarUrl: 'https://avatar.vercel.sh/nftguru'
 				},
 				{
-					id: '5' as UserId,
+					id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440005'),
 					username: 'ShillMaster',
 					xp: 80000,
 					clout: 900,
@@ -91,17 +92,17 @@ export default function LeaderboardPage() {
 					avatarUrl: 'https://avatar.vercel.sh/shillmaster'
 				},
 				{
-					id: '6' as UserId,
+					id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440006'),
 					username: 'PaperHands',
 					xp: 5000,
 					clout: 10,
 					dgtBalance: 100,
 					avatarUrl: 'https://avatar.vercel.sh/paperhands'
 				},
-				{ id: '7' as UserId, username: 'LaserEyes', xp: 75000, clout: 1100, dgtBalance: 12000 },
-				{ id: '8' as UserId, username: 'ToTheMoon', xp: 68000, clout: 1050, dgtBalance: 9000 },
-				{ id: '9' as UserId, username: 'RugPullSurvivor', xp: 60000, clout: 850, dgtBalance: 7500 },
-				{ id: '10' as UserId, username: 'HODLer', xp: 55000, clout: 800, dgtBalance: 20000 }
+				{ id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440007'), username: 'LaserEyes', xp: 75000, clout: 1100, dgtBalance: 12000 },
+				{ id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440008'), username: 'ToTheMoon', xp: 68000, clout: 1050, dgtBalance: 9000 },
+				{ id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440009'), username: 'RugPullSurvivor', xp: 60000, clout: 850, dgtBalance: 7500 },
+				{ id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440010'), username: 'HODLer', xp: 55000, clout: 800, dgtBalance: 20000 }
 			].sort((a, b) => b.xp - a.xp); // Sort by XP descending
 
 			/* Uncomment when API is ready

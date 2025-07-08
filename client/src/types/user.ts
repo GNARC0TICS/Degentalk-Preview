@@ -1,6 +1,6 @@
 export interface User {
 	id: string;
 	role: string;
-	email?: string;
-	permissions?: string[];
+	email?: string | undefined;
+	permissions?: string[] | undefined;
 }

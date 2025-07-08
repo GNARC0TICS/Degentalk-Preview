@@ -13,7 +13,7 @@ import type { UserId } from '@shared/types/ids';
 import { logger } from '@server/src/core/logger';
 import { createHash } from 'crypto';
 import type { RoomId, MessageId } from '@shared/types/ids';
-import { EntityId } from "@shared/types/ids";
+import type { EntityId } from "@shared/types/ids";
 
 interface CacheItem<T> {
 	data: T;

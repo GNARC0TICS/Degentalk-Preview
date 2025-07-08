@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import type { MissionId, UserId } from '@shared/types/ids';
@@ -69,8 +69,8 @@ export function useMissions() {
 		error: missionsErrorData
 	} = useQuery<Mission[]>({
 		queryKey: ['activeMissions'],
-		queryFn: async () => {
-			return apiRequest({ url: '/api/missions/active', method: 'GET' });
+		queryFn: async (): Promise<Mission[]> => {
+			return apiRequest<Mission[]>({ url: '/api/missions/active', method: 'GET' });
 		},
 		enabled: !!user?.id,
 		refetchInterval: 60 * 1000 // Refresh every minute in case there are changes
@@ -84,8 +84,8 @@ export function useMissions() {
 		error: progressErrorData
 	} = useQuery<MissionProgress[]>({
 		queryKey: ['missionProgress'],
-		queryFn: async () => {
-			return apiRequest({ url: '/api/missions/progress', method: 'GET' });
+		queryFn: async (): Promise<MissionProgress[]> => {
+			return apiRequest<MissionProgress[]>({ url: '/api/missions/progress', method: 'GET' });
 		},
 		enabled: !!user?.id,
 		refetchInterval: 30 * 1000 // Refresh every 30 seconds to update progress in real-time
@@ -98,7 +98,7 @@ export function useMissions() {
 		MissionId
 	>({
 		mutationFn: async (missionId: MissionId) => {
-			return apiRequest({ url: `/api/missions/claim/${missionId}`, method: 'POST' });
+			return apiRequest<{ success: boolean; message: string; rewards: MissionReward }>({ url: `/api/missions/claim/${missionId}`, method: 'POST' });
 		},
 		onSuccess: (
 			data: { success: boolean; message: string; rewards: MissionReward },

@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import { useLocation } from 'wouter';
 import { getUserPermissions } from '@/lib/roles';
 import type { Role } from '@/lib/roles';
 import type { UserId, FrameId } from '@shared/types/ids';
+import { toId } from '@shared/utils/id';
 
 // Define user type
 export interface User {
@@ -74,7 +75,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // Mock User Definitions for Development
 const mockUsers: Record<MockRole, User> = {
 	user: {
-		id: '999' as UserId,
+		id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440001'),
 		username: 'DevUser',
 		email: 'dev@example.com',
 		avatarUrl: null,
@@ -98,12 +99,12 @@ const mockUsers: Record<MockRole, User> = {
 		lastActiveAt: new Date().toISOString(),
 		bannerUrl: '/images/profile-banner-mock.png',
 		dgtBalance: 1000,
-		activeFrameId: '1' as FrameId,
-		avatarFrameId: '1' as FrameId,
+		activeFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440002'),
+		avatarFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440002'),
 		isBanned: false
 	},
 	moderator: {
-		id: '998' as UserId,
+		id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440003'),
 		username: 'DevMod',
 		email: 'devmod@example.com',
 		avatarUrl: null,
@@ -132,7 +133,7 @@ const mockUsers: Record<MockRole, User> = {
 		isBanned: false
 	},
 	admin: {
-		id: '997' as UserId,
+		id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440004'),
 		username: 'cryptoadmin',
 		email: 'admin@degentalk.dev',
 		avatarUrl: '/images/avatars/admin.png',
@@ -156,12 +157,12 @@ const mockUsers: Record<MockRole, User> = {
 		lastActiveAt: new Date().toISOString(),
 		bannerUrl: '/images/banners/admin-banner.jpg',
 		dgtBalance: 100000,
-		activeFrameId: '2' as FrameId,
-		avatarFrameId: '2' as FrameId,
+		activeFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440005'),
+		avatarFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440005'),
 		isBanned: false
 	},
 	super_admin: {
-		id: '996' as UserId,
+		id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440006'),
 		username: 'SuperAdmin',
 		email: 'superadmin@degentalk.dev',
 		avatarUrl: '/images/avatars/super-admin.png',
@@ -185,8 +186,8 @@ const mockUsers: Record<MockRole, User> = {
 		lastActiveAt: new Date().toISOString(),
 		bannerUrl: '/images/banners/super-admin-banner.jpg',
 		dgtBalance: 1000000,
-		activeFrameId: '3' as FrameId,
-		avatarFrameId: '3' as FrameId,
+		activeFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440007'),
+		avatarFrameId: toId<'FrameId'>('550e8400-e29b-41d4-a716-446655440007'),
 		isBanned: false
 	}
 };
@@ -257,7 +258,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 	// Login Mutation (Only really used in Production)
 	const loginMutation = useMutation<User, Error, { username: string; password: string }>({
-		mutationFn: async (credentials) => {
+		mutationFn: async (credentials): Promise<User> => {
 			return await apiRequest<User>({
 				url: '/api/auth/login',
 				method: 'POST',
@@ -285,7 +286,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		Error,
 		{ username: string; email: string; password: string }
 	>({
-		mutationFn: async (userData) => {
+		mutationFn: async (userData): Promise<User> => {
 			return await apiRequest<User>({
 				url: '/api/auth/register',
 				method: 'POST',
@@ -309,7 +310,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 	// Logout Mutation
 	const logoutMutation = useMutation<void, Error, void>({
-		mutationFn: async () => {
+		mutationFn: async (): Promise<void> => {
 			await apiRequest<void>({
 				url: '/api/auth/logout',
 				method: 'POST'

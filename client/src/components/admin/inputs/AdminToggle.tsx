@@ -5,10 +5,18 @@ import { cn } from '@/lib/utils';
 
 interface AdminToggleProps {
 	label: string;
-	description?: string;
+	description?: string | undefined;
 	checked: boolean;
 	onChange: (value: boolean) => void;
-	className?: string;
+	className?: string | undefined;
+	/** Disabled state */
+	disabled?: boolean | undefined;
+	/** Required field */
+	required?: boolean | undefined;
+	/** Error message */
+	error?: string | undefined;
+	/** Helper text */
+	helperText?: string | undefined;
 }
 
 /**

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { forumMap } from '@/config/forumMap.config';
 import type { Zone } from '@/config/forumMap.config';
 import type { CategoryId, ForumId, GroupId, ParentZoneId, ZoneId } from '@shared/types/ids';
+import { toId, parseId } from '@shared/utils/id';
 
 // ===========================================================
 // ForumStructureContext v2.0  🛠️  (2025-06-16)
@@ -244,7 +245,7 @@ function buildTheme(entity: ApiEntity): MergedTheme {
 
 function makeMergedForum(api: ApiEntity, parentZoneId: ParentZoneId): MergedForum {
 	return {
-		id: api.id as ForumId,
+		id: parseId<'ForumId'>(api.id) || toId<'ForumId'>(api.id),
 		slug: api.slug,
 		name: api.name,
 		description: api.description,
@@ -314,10 +315,10 @@ function processApiData(resp: ForumStructureApiResponse) {
 		if (f.parentId && zoneById.has(f.parentId)) {
 			const m = makeMergedForum(f, f.parentId);
 			forums[m.slug] = m;
-			forumsById[m.id as string] = m;
-			forumById.set(m.id as string, m);
+			forumsById[m.id] = m;
+			forumById.set(m.id, m);
 			zoneById.get(f.parentId)!.forums.push(m);
-			handled.add(m.id as string);
+			handled.add(m.id);
 		}
 	});
 
@@ -328,8 +329,8 @@ function processApiData(resp: ForumStructureApiResponse) {
 			const sub = makeMergedForum(f, parent.parentZoneId!);
 			sub.isSubforum = true;
 			forums[sub.slug] = sub;
-			forumsById[sub.id as string] = sub;
-			forumById.set(sub.id as string, sub);
+			forumsById[sub.id] = sub;
+			forumById.set(sub.id, sub);
 			parent.subforums.push(sub);
 		}
 	});
@@ -343,7 +344,8 @@ function fallbackStructure(staticZones: Zone[]) {
 	const forumsById: Record<string, MergedForum> = {};
 
 	staticZones.forEach((z) => {
-		const zoneId = FALLBACK_ZONE_ID();
+		const zoneIdNum = FALLBACK_ZONE_ID();
+		const zoneId = String(zoneIdNum);
 		const mz: MergedZone = {
 			id: zoneId,
 			slug: z.slug,
@@ -368,7 +370,8 @@ function fallbackStructure(staticZones: Zone[]) {
 		};
 
 		z.forums.forEach((f) => {
-			const forumId = FALLBACK_FORUM_ID();
+			const forumIdNum = FALLBACK_FORUM_ID();
+			const forumId = toId<'ForumId'>(`550e8400-e29b-41d4-a716-${String(forumIdNum).padStart(12, '0')}`);
 			const mf: MergedForum = {
 				id: forumId,
 				slug: f.slug,

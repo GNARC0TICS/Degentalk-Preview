@@ -37,9 +37,15 @@ interface RoleFormDialogProps {
 	isOpen: boolean;
 	onOpenChange: (isOpen: boolean) => void;
 	onSubmit: (values: RoleFormValues) => void;
-	initialData?: RoleFormValues | null;
-	isSubmitting?: boolean;
+	initialData?: RoleFormValues | null | undefined;
+	isSubmitting?: boolean | undefined;
 	form: UseFormReturn<RoleFormValues>; // Pass the form instance
+	/** Optional dialog title override */
+	title?: string | undefined;
+	/** Optional dialog description override */
+	description?: string | undefined;
+	/** Show cancel button */
+	showCancel?: boolean | undefined;
 }
 
 export function RoleFormDialog({

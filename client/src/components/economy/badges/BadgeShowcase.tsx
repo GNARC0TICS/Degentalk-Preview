@@ -126,7 +126,7 @@ export function BadgeShowcase({
 											}}
 										>
 											<img
-												src={badge.imageUrl}
+												src={badge.iconUrl}
 												alt={badge.name}
 												className="object-contain w-3/4 h-3/4 group-hover:scale-110 transition-transform"
 											/>
@@ -148,7 +148,7 @@ export function BadgeShowcase({
 											<p className="text-xs mt-2 text-zinc-400">{badge.description}</p>
 											<p className="text-xs mt-1.5 text-zinc-500">
 												Earned{' '}
-												{formatDistanceToNow(new Date(badge.earnedAt), {
+												{formatDistanceToNow(new Date(badge.awardedAt), {
 													addSuffix: true
 												})}
 											</p>
@@ -177,7 +177,7 @@ export function BadgeShowcase({
 									}}
 								>
 									<img
-										src={badge.imageUrl}
+										src={badge.iconUrl}
 										alt={badge.name}
 										className="object-contain w-3/4 h-3/4"
 									/>
@@ -199,7 +199,7 @@ export function BadgeShowcase({
 									<p className="text-xs text-zinc-400">{badge.description}</p>
 									<p className="text-xs text-zinc-500">
 										Earned{' '}
-										{formatDistanceToNow(new Date(badge.earnedAt), {
+										{formatDistanceToNow(new Date(badge.awardedAt), {
 											addSuffix: true
 										})}
 									</p>

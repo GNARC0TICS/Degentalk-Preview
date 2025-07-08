@@ -5,6 +5,7 @@ import { UserManagementService } from './user-management.service';
 import { isDevMode } from '@server/src/utils/environment';
 import walletTestRoutes from './wallet.test.routes';
 import { EconomyTransformer } from '../economy/transformers/economy.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 import { logger } from "../../core/logger";
 
 const router = Router();

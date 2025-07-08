@@ -1,4 +1,6 @@
 import { userService } from '@server/src/core/services/user.service';
+import { EconomyTransformer } from '../economy/transformers/economy.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 import type { UserId } from '@shared/types/ids';
 /**
  * Treasury Controller
@@ -113,7 +115,7 @@ export class TreasuryController {
 				.from(dgtPurchaseOrders)
 				.where(eq(dgtPurchaseOrders.status, 'pending'));
 
-			res.json({
+			const treasuryOverview = {
 				treasury: {
 					totalMinted: totalMinted / 100000000,
 					totalUserBalances,
@@ -135,7 +137,9 @@ export class TreasuryController {
 						totalValue: purchaseStats?.pendingValue || 0
 					}
 				}
-			});
+			};
+
+			res.json(treasuryOverview);
 		} catch (error) {
 			logger.error('TreasuryController', 'Error getting treasury overview', {
 				error: error instanceof Error ? error.message : String(error)
@@ -182,7 +186,7 @@ export class TreasuryController {
 				.where(eq(transactions.userId, userId))
 				.groupBy(transactions.type);
 
-			res.json({
+			const userBalanceDetails = {
 				user: {
 					id: user.id,
 					username: user.username,
@@ -200,7 +204,9 @@ export class TreasuryController {
 					totalAmount: summary.totalAmount / 100000000
 				})),
 				recentTransactions: transactionHistory.slice(0, 20)
-			});
+			};
+
+			res.json(userBalanceDetails);
 		} catch (error) {
 			logger.error('TreasuryController', 'Error getting user balance details', {
 				error: error instanceof Error ? error.message : String(error),
@@ -255,11 +261,13 @@ export class TreasuryController {
 			// Get new balance
 			const newBalance = await dgtService.getUserBalance(userId);
 
-			res.json({
+			const adjustmentResult = {
 				success: true,
 				message: `Successfully ${type === 'credit' ? 'credited' : 'debited'} ${amount} DGT ${type === 'credit' ? 'to' : 'from'} ${user.username}`,
 				newBalance: Number(newBalance) / 100000000
-			});
+			};
+
+			res.json(adjustmentResult);
 		} catch (error) {
 			if (error instanceof z.ZodError) {
 				return res.status(400).json({ error: 'Invalid request', details: error.errors });
@@ -357,7 +365,7 @@ export class TreasuryController {
 				reason
 			});
 
-			res.json({
+			const airdropResult = {
 				success: true,
 				message: `Airdrop completed: ${successCount}/${targetUserList.length} users received ${amount} DGT`,
 				summary: {
@@ -368,7 +376,9 @@ export class TreasuryController {
 					totalDistributed: totalAmount
 				},
 				results: results.slice(0, 50) // Limit results for response size
-			});
+			};
+
+			res.json(airdropResult);
 		} catch (error) {
 			if (error instanceof z.ZodError) {
 				return res.status(400).json({ error: 'Invalid request', details: error.errors });
@@ -431,7 +441,7 @@ export class TreasuryController {
 				.orderBy(desc(sql`totalSpent`))
 				.limit(10);
 
-			res.json({
+			const analyticsResult = {
 				period: {
 					days,
 					startDate: startDate.toISOString(),
@@ -453,7 +463,9 @@ export class TreasuryController {
 					totalSpent: spender.totalSpent / 100000000,
 					transactionCount: spender.transactionCount
 				}))
-			});
+			};
+
+			res.json(analyticsResult);
 		} catch (error) {
 			logger.error('TreasuryController', 'Error getting transaction analytics', {
 				error: error instanceof Error ? error.message : String(error)

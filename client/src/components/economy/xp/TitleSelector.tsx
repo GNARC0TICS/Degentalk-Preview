@@ -36,16 +36,16 @@ export function TitleSelector({
 	className,
 	compact = false
 }: TitleSelectorProps) {
-	// Get appropriate color class for title
-	const getTitleColorClass = (color: string) => {
-		switch (color) {
-			case 'emerald':
+	// Get appropriate color class for title based on rarity
+	const getTitleColorClass = (rarity: string) => {
+		switch (rarity) {
+			case 'common':
+				return 'text-zinc-400';
+			case 'uncommon':
 				return 'text-emerald-400';
-			case 'cyan':
-				return 'text-cyan-400';
-			case 'blue':
+			case 'rare':
 				return 'text-blue-400';
-			case 'purple':
+			case 'epic':
 				return 'text-purple-400';
 			case 'amber':
 				return 'text-amber-400';
@@ -124,7 +124,7 @@ export function TitleSelector({
 					<Button variant="outline" className="flex items-center justify-between w-full">
 						<div className="flex items-center">
 							{equippedTitle ? (
-								<span className={cn('font-medium', getTitleColorClass(equippedTitle.color))}>
+								<span className={cn('font-medium', getTitleColorClass(equippedTitle.rarity))}>
 									{equippedTitle.name}
 								</span>
 							) : (
@@ -148,7 +148,7 @@ export function TitleSelector({
 								onClick={() => onEquipTitle(title.id)}
 							>
 								<div className="flex items-center">
-									<span className={cn('font-medium', getTitleColorClass(title.color))}>
+									<span className={cn('font-medium', getTitleColorClass(title.rarity))}>
 										{title.name}
 									</span>
 									<span className={cn('ml-2 text-xs', getRarityColor(title.rarity))}>
@@ -196,7 +196,7 @@ export function TitleSelector({
 							<div className="flex items-center justify-between">
 								<div className="flex items-center gap-2">
 									<span
-										className={cn('font-medium text-lg', getTitleColorClass(equippedTitle.color))}
+										className={cn('font-medium text-lg', getTitleColorClass(equippedTitle.rarity))}
 									>
 										{equippedTitle.name}
 									</span>
@@ -230,7 +230,7 @@ export function TitleSelector({
 									onClick={() => onEquipTitle(title.id)}
 								>
 									<div className="flex items-center gap-2">
-										<span className={cn('font-medium', getTitleColorClass(title.color))}>
+										<span className={cn('font-medium', getTitleColorClass(title.rarity))}>
 											{title.name}
 										</span>
 										<Badge

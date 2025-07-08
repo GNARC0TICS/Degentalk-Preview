@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import { useToast } from '@/hooks/use-toast';
 import type { PreferenceSection } from '@/types/preferences.types';
 
@@ -15,7 +15,7 @@ export function useUpdateUserSettings(section: PreferenceSection) {
 
 	return useMutation({
 		mutationFn: async (data: Record<string, any>) => {
-			return apiRequest({ url: `/api/users/me/preferences/${section}`,
+			return apiRequest<{ success: boolean; data: any }>({ url: `/api/users/me/preferences/${section}`,
 				method: 'PUT',
 				data
 			});
@@ -55,7 +55,7 @@ export function useUpdatePassword() {
 
 	return useMutation({
 		mutationFn: async (data: { oldPassword: string; newPassword: string }) => {
-			return apiRequest({
+			return apiRequest<{ success: boolean; message: string }>({
 				url: '/api/users/me/security/change-password',
 				method: 'POST',
 				data

@@ -5,17 +5,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface Props {
 	children: ReactNode;
-	fallback?: ReactNode;
-	onError?: (error: Error, errorInfo: ErrorInfo) => void;
-	level?: 'page' | 'component' | 'critical';
-	context?: string;
+	fallback?: ReactNode | undefined;
+	onError?: (error: Error, errorInfo: ErrorInfo) => void | undefined;
+	level?: 'page' | 'component' | 'critical' | undefined;
+	context?: string | undefined;
 }
 
 interface State {
 	hasError: boolean;
 	error: Error | null;
 	errorInfo: ErrorInfo | null;
-	eventId?: string;
+	eventId?: string | undefined;
 }
 
 /**

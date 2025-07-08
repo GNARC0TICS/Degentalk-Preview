@@ -6,6 +6,7 @@ import { useBookmarkThread, useRemoveBookmark } from '@/features/forum/hooks/use
 import type { ThreadDisplay } from '@/types/thread.types';
 import { useQueryClient } from '@tanstack/react-query';
 import type { UserId, ThreadId } from '@shared/types/ids';
+import { toId, parseId } from '@shared/utils/id';
 
 interface ThreadActionsContextValue {
 	isBookmarked: boolean;
@@ -36,14 +37,14 @@ export const ThreadActionsProvider: React.FC<{
 		(...args: [string, number] | [number]) => {
 			const amount = args.length === 1 ? args[0] : args[1];
 			if (typeof amount !== 'number') return;
-			const authorId = thread.user.id as UserId;
+			const authorId = parseId<'UserId'>(String(thread.user.id)) || toId<'UserId'>(String(thread.user.id));
 			sendTip({ toUserId: authorId, amount, reason: 'thread_tip', source: 'forum_thread' });
 		},
 		[sendTip, thread.user.id]
 	);
 
 	const toggleBookmark = useCallback(() => {
-		const threadId = thread.id as ThreadId;
+		const threadId = parseId<'ThreadId'>(String(thread.id)) || toId<'ThreadId'>(String(thread.id));
 
 		setIsBookmarked((prev) => {
 			const next = !prev;
@@ -85,7 +86,7 @@ export const ThreadActionsProvider: React.FC<{
 
 	const quickReply = useCallback(
 		(content: string) => {
-			const threadId = thread.id as ThreadId;
+			const threadId = parseId<'ThreadId'>(String(thread.id)) || toId<'ThreadId'>(String(thread.id));
 			if (!content.trim()) return;
 
 			createPost.mutate(

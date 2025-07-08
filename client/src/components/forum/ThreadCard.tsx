@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
 import type { ThreadDisplay } from '@/types/thread.types';
 import type { ThreadId } from '@shared/types/ids';
+import { toId, parseId } from '@shared/utils/id';
 import { getZoneTheme } from '@shared/config/zoneThemes.config';
 import { useThreadActionsOptional } from '@/features/forum/contexts/ThreadActionsContext';
 import QuickReplyInput from '@/components/forum/QuickReplyInput';
@@ -28,11 +29,11 @@ import { ButtonTooltip } from '@/components/ui/tooltip-utils';
 
 export interface ThreadCardProps {
 	thread: ThreadDisplay;
-	variant?: 'default' | 'compact' | 'featured';
-	showPreview?: boolean;
-	onTip?: (threadId: ThreadId, amount: number) => void;
-	onBookmark?: (threadId: ThreadId) => void;
-	className?: string;
+	variant?: 'default' | 'compact' | 'featured' | undefined;
+	showPreview?: boolean | undefined;
+	onTip?: ((threadId: ThreadId, amount: number) => void) | undefined;
+	onBookmark?: ((threadId: ThreadId) => void) | undefined;
+	className?: string | undefined;
 }
 
 const ThreadCard = memo(
@@ -63,7 +64,7 @@ const ThreadCard = memo(
 		const isHot = thread.isHot || (thread.hotScore && thread.hotScore > 10);
 		const timeAgo = formatDistanceToNow(new Date(thread.createdAt), { addSuffix: true });
 
-		const threadId = String(thread.id);
+		const threadId = parseId<'ThreadId'>(String(thread.id)) || toId<'ThreadId'>(String(thread.id));
 
 		const tipFn = onTip ?? actionsCtx?.tip;
 		const bookmarkFn = onBookmark ?? actionsCtx?.toggleBookmark;
@@ -296,7 +297,7 @@ const ThreadCard = memo(
 									onClick={(e) => {
 										e.preventDefault();
 										e.stopPropagation();
-										tipFn?.(threadId as ThreadId, 10);
+										tipFn?.(threadId, 10);
 									}}
 								>
 									<Zap
@@ -330,7 +331,7 @@ const ThreadCard = memo(
 									if (bookmarkFn.length === 0) {
 										(bookmarkFn as () => void)();
 									} else {
-										bookmarkFn?.(threadId as ThreadId);
+										bookmarkFn?.(threadId);
 									}
 								}}
 							>

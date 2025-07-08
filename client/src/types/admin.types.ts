@@ -14,13 +14,13 @@ export interface User {
 	status: 'active' | 'suspended' | 'banned' | 'pending';
 	createdAt: string;
 	updatedAt: string;
-	permissions?: string[];
-	lastLoginAt?: string;
+	permissions?: string[] | undefined;
+	lastLoginAt?: string | undefined;
 	profileData?: {
-		bio?: string;
-		avatarUrl?: string;
-		activeAvatarUrl?: string;
-	};
+		bio?: string | undefined;
+		avatarUrl?: string | undefined;
+		activeAvatarUrl?: string | undefined;
+	} | undefined;
 }
 
 // User Form Data Interface
@@ -30,18 +30,18 @@ export interface UserFormData {
 	role: string;
 	status: 'active' | 'suspended' | 'banned' | 'pending';
 	permissions: string[];
-	password?: string; // Only for new users
+	password?: string | undefined; // Only for new users
 	profileData?: {
-		bio?: string;
-		avatarUrl?: string;
-	};
+		bio?: string | undefined;
+		avatarUrl?: string | undefined;
+	} | undefined;
 }
 
 // Role Management
 export interface Role {
 	id: string;
 	name: string;
-	description?: string;
+	description?: string | undefined;
 	permissions: string[];
 	isSystemRole: boolean;
 	createdAt: string;
@@ -85,17 +85,17 @@ export interface LevelData {
 	level: number;
 	name: string;
 	xpRequired: number;
-	color?: string;
-	icon?: string;
-	unlocks?: LevelUnlocks;
+	color?: string | undefined;
+	icon?: string | undefined;
+	unlocks?: LevelUnlocks | undefined;
 }
 
 export interface LevelUnlocks {
-	titles?: string[];
-	badges?: string[];
-	frames?: string[];
-	perks?: string[];
-	features?: string[];
+	titles?: string[] | undefined;
+	badges?: string[] | undefined;
+	frames?: string[] | undefined;
+	perks?: string[] | undefined;
+	features?: string[] | undefined;
 }
 
 // Achievement System
@@ -108,38 +108,38 @@ export interface Achievement {
 	requirements: AchievementRequirement[];
 	rewards: AchievementReward[];
 	isActive: boolean;
-	icon?: string;
-	color?: string;
+	icon?: string | undefined;
+	color?: string | undefined;
 }
 
 export interface AchievementRequirement {
 	type: 'posts' | 'likes' | 'threads' | 'tips' | 'login_streak' | 'custom';
 	value: number;
 	operator: 'gte' | 'lte' | 'eq';
-	metadata?: Record<string, unknown>;
+	metadata?: Record<string, unknown> | undefined;
 }
 
 export interface AchievementReward {
 	type: 'xp' | 'dgt' | 'title' | 'badge' | 'frame';
 	value: number | string;
-	metadata?: Record<string, unknown>;
+	metadata?: Record<string, unknown> | undefined;
 }
 
 // API Response Wrappers
 export interface AdminApiResponse<T> {
 	success: boolean;
 	data: T;
-	message?: string;
-	errors?: string[];
+	message?: string | undefined;
+	errors?: string[] | undefined;
 	metadata?: {
 		pagination?: {
 			page: number;
 			limit: number;
 			total: number;
 			totalPages: number;
-		};
+		} | undefined;
 		timestamp: string;
-	};
+	} | undefined;
 }
 
 // Module System
@@ -151,7 +151,7 @@ export interface AdminModule {
 	enabled: boolean;
 	permissions: string[];
 	settings: ModuleSettings;
-	dependencies?: string[];
+	dependencies?: string[] | undefined;
 	version: string;
 }
 
@@ -163,8 +163,8 @@ export interface ModuleSettings {
 export interface BulkOperationRequest {
 	operation: 'delete' | 'update' | 'suspend' | 'ban' | 'activate';
 	targets: string[];
-	data?: Record<string, unknown>;
-	reason?: string;
+	data?: Record<string, unknown> | undefined;
+	reason?: string | undefined;
 }
 
 export interface BulkOperationResult {
@@ -182,7 +182,7 @@ export interface AdminActivityLog {
 	adminId: string;
 	action: string;
 	targetType: 'user' | 'post' | 'thread' | 'config' | 'system';
-	targetId?: string;
+	targetId?: string | undefined;
 	details: Record<string, unknown>;
 	ipAddress: string;
 	userAgent: string;
@@ -201,6 +201,6 @@ export interface AchievementData {
 	requirements: AchievementRequirement[];
 	rewards: AchievementReward[];
 	isActive: boolean;
-	icon?: string;
-	color?: string;
+	icon?: string | undefined;
+	color?: string | undefined;
 }

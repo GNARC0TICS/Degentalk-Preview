@@ -17,18 +17,18 @@ export interface LevelInfo {
 	level: number;
 	name: string;
 	minXp: number;
-	nextLevelXp?: number;
-	iconUrl?: string;
+	nextLevelXp?: number | undefined;
+	iconUrl?: string | undefined;
 	rarity: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
-	frameUrl?: string;
-	colorTheme?: string;
-	animationEffect?: string;
-	unlocks?: Record<string, any>;
+	frameUrl?: string | undefined;
+	colorTheme?: string | undefined;
+	animationEffect?: string | undefined;
+	unlocks?: Record<string, any> | undefined;
 	rewards?: {
-		dgt?: number;
-		titleId?: AchievementId;
-		badgeId?: AchievementId;
-	};
+		dgt?: number | undefined;
+		titleId?: AchievementId | undefined;
+		badgeId?: AchievementId | undefined;
+	} | undefined;
 }
 
 export interface UserProgression {
@@ -40,7 +40,7 @@ export interface UserProgression {
 	xpForNextLevel: number;
 	progressPercentage: number;
 	levelInfo: LevelInfo;
-	nextLevelInfo?: Partial<LevelInfo>;
+	nextLevelInfo?: Partial<LevelInfo> | undefined;
 	recentLevelUps: number;
 	weeklyXpGain: number;
 	rank: number;
@@ -59,15 +59,15 @@ export interface Achievement {
 	id: AchievementId;
 	name: string;
 	description: string;
-	iconUrl?: string;
+	iconUrl?: string | undefined;
 	rewardXp: number;
-	rewardPoints?: number;
+	rewardPoints?: number | undefined;
 	requirement: {
 		type: 'count' | 'threshold' | 'streak' | 'composite';
 		action: string;
 		target: number;
-		timeframe?: 'daily' | 'weekly' | 'monthly' | 'lifetime';
-		conditions?: Record<string, any>;
+		timeframe?: 'daily' | 'weekly' | 'monthly' | 'lifetime' | undefined;
+		conditions?: Record<string, any> | undefined;
 	};
 	isActive: boolean;
 	rarity: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
@@ -79,7 +79,7 @@ export interface UserAchievement {
 	achievementId: AchievementId;
 	currentProgress: number;
 	isCompleted: boolean;
-	earnedAt?: string;
+	earnedAt?: string | undefined;
 	progressPercentage: number;
 	achievement: Achievement;
 }
@@ -92,9 +92,9 @@ export interface Mission {
 	requiredAction: string;
 	requiredCount: number;
 	xpReward: number;
-	dgtReward?: number;
-	badgeReward?: string;
-	icon?: string;
+	dgtReward?: number | undefined;
+	badgeReward?: string | undefined;
+	icon?: string | undefined;
 	isDaily: boolean;
 	isWeekly: boolean;
 	isActive: boolean;

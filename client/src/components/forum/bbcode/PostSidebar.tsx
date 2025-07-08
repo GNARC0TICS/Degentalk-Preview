@@ -12,9 +12,9 @@ import type { ProfileData } from '@/types/profile';
 
 interface PostSidebarProps {
 	username: string;
-	authorAvatar?: string | null;
-	isFirst?: boolean;
-	className?: string;
+	authorAvatar?: string | null | undefined;
+	isFirst?: boolean | undefined;
+	className?: string | undefined;
 }
 
 export function PostSidebar({
@@ -168,10 +168,9 @@ export function PostSidebar({
 			</div>
 
 			{/* Level badge */}
-			{(profile.levelConfig || profile.level) && (
+			{profile.level && (
 				<div className="flex justify-center mb-4">
 					<LevelBadge
-						levelConfig={profile.levelConfig as any}
 						level={profile.level}
 						compact={true}
 					/>

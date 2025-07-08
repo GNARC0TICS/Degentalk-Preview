@@ -43,9 +43,9 @@ export function extractApiData<T>(response: any): T {
 export function createStandardResponse<T>(
 	data: T,
 	options?: {
-		meta?: StandardApiResponse<T>['meta'];
-		requestId?: string;
-	}
+		meta?: StandardApiResponse<T>['meta'] | undefined;
+		requestId?: string | undefined;
+	} | undefined
 ): StandardApiResponse<T> {
 	return {
 		success: true,
@@ -65,11 +65,11 @@ export function createErrorResponse(
 	error: {
 		code: string;
 		message: string;
-		details?: Record<string, any>;
+		details?: Record<string, any> | undefined;
 	},
 	options?: {
-		requestId?: string;
-	}
+		requestId?: string | undefined;
+	} | undefined
 ): StandardApiResponse<null> {
 	return {
 		success: false,
@@ -208,9 +208,9 @@ export function withTiming<T>(
 export async function withRetry<T>(
 	request: () => Promise<T>,
 	options: {
-		retries?: number;
-		delay?: number;
-		backoff?: number;
+		retries?: number | undefined;
+		delay?: number | undefined;
+		backoff?: number | undefined;
 	} = {}
 ): Promise<T> {
 	const { retries = 3, delay = 1000, backoff = 2 } = options;

@@ -14,6 +14,7 @@ import {
 } from '../../admin.validation';
 import { logger } from '../../../../core/logger';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 
 // Removed redundant getUserId helper - use userService.getUserFromRequest(req)?.id directly
 
@@ -47,7 +48,7 @@ export const getAllEmojis = async (req: Request, res: Response) => {
 
 		return res.json({
 			success: true,
-			data: result.emojis,
+			data: toPublicList(result.emojis, (emoji) => ({ ...emoji, id: emoji.id })),
 			pagination: result.pagination
 		});
 	} catch (error) {
@@ -91,7 +92,7 @@ export const getEmojiById = async (req: Request, res: Response) => {
 
 		return res.json({
 			success: true,
-			data: emoji
+			data: { ...emoji, id: emoji.id }
 		});
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error fetching emoji by ID:', error);
@@ -136,7 +137,7 @@ export const createEmoji = async (req: Request, res: Response) => {
 		return res.status(201).json({
 			success: true,
 			message: `Emoji '${newEmoji.name}' created successfully`,
-			data: newEmoji
+			data: { ...newEmoji, id: newEmoji.id }
 		});
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error creating emoji:', error);
@@ -198,7 +199,7 @@ export const updateEmoji = async (req: Request, res: Response) => {
 		return res.json({
 			success: true,
 			message: `Emoji '${updatedEmoji.name}' updated successfully`,
-			data: updatedEmoji
+			data: { ...updatedEmoji, id: updatedEmoji.id }
 		});
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error updating emoji:', error);
@@ -345,7 +346,7 @@ export const getEmojiCategories = async (req: Request, res: Response) => {
 
 		return res.json({
 			success: true,
-			data: categories
+			data: toPublicList(categories, (category) => ({ ...category, id: category.id }))
 		});
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error fetching emoji categories:', error);

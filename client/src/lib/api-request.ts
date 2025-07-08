@@ -6,16 +6,16 @@
 import { extractApiData, isStandardApiResponse } from './api-response';
 
 export interface ApiError extends Error {
-	status?: number;
-	data?: any;
+	status?: number | undefined;
+	data?: any | undefined;
 }
 
 export interface ApiRequestConfig {
 	url: string;
 	method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-	data?: any;
-	params?: Record<string, string>;
-	headers?: Record<string, string>;
+	data?: any | undefined;
+	params?: Record<string, string> | undefined;
+	headers?: Record<string, string> | undefined;
 }
 
 /**

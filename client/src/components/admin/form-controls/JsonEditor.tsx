@@ -4,11 +4,21 @@ import Editor from '@monaco-editor/react';
 export interface JsonEditorProps {
 	value: string;
 	onChange: (next: string) => void;
-	height?: string | number;
-	className?: string;
-	readOnly?: boolean;
+	height?: string | number | undefined;
+	className?: string | undefined;
+	readOnly?: boolean | undefined;
 	/** Array of error messages to display above the editor */
-	errors?: string[];
+	errors?: string[] | undefined;
+	/** Optional label */
+	label?: string | undefined;
+	/** Optional helper text */
+	helperText?: string | undefined;
+	/** Language mode */
+	language?: string | undefined;
+	/** Theme */
+	theme?: 'vs-light' | 'vs-dark' | undefined;
+	/** Minimap enabled */
+	minimap?: boolean | undefined;
 }
 
 /**

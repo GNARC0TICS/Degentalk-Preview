@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState } from 'react';
 import type { ShopItem } from './use-shop-items';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import { useAuth } from '@/hooks/use-auth';
 
 interface PurchaseModalContextType {

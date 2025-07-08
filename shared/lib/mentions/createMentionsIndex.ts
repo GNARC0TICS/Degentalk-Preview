@@ -1,5 +1,5 @@
-import { db } from '@/lib/db';
-import { mentionsIndex } from '@db/schema';
+import { db } from '@db';
+import { mentionsIndex } from '@schema';
 import type { UserId } from '@shared/types/ids';
 
 /**

@@ -5,6 +5,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Wallet, LogOut, TrendingUp, ArrowDownToLine, ArrowUpToLine } from 'lucide-react';
 
+interface WalletData {
+	dgtPoints?: number;
+	dgtWalletBalance?: number;
+	walletBalanceUSDT?: number;
+	walletAddress?: string;
+	isConnected?: boolean;
+}
+
 interface WalletDisplayProps {
 	variant?: 'mini' | 'standard' | 'detailed';
 	className?: string;
@@ -23,7 +31,7 @@ export function WalletDisplay({
 	horizontal = false
 }: WalletDisplayProps) {
 	// Fetch wallet data from API
-	const { data: walletData, isLoading } = useQuery({
+	const { data: walletData, isLoading } = useQuery<WalletData>({
 		queryKey: ['/api/wallet'],
 		enabled: true
 	});
@@ -45,12 +53,12 @@ export function WalletDisplay({
 	}
 
 	// Sample data in case the API hasn't loaded yet or we're in development
-	const wallet = walletData || {
-		dgtPoints: 0,
-		dgtWalletBalance: 0,
-		walletBalanceUSDT: 0,
-		walletAddress: '',
-		isConnected: false
+	const wallet = {
+		dgtPoints: walletData?.dgtPoints ?? 0,
+		dgtWalletBalance: walletData?.dgtWalletBalance ?? 0,
+		walletBalanceUSDT: walletData?.walletBalanceUSDT ?? 0,
+		walletAddress: walletData?.walletAddress ?? '',
+		isConnected: walletData?.isConnected ?? false
 	};
 
 	if (variant === 'mini') {
@@ -59,7 +67,7 @@ export function WalletDisplay({
 				<div className="h-6 w-6 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center shadow-[0_0_8px_rgba(0,255,170,0.3)]">
 					<Wallet className="h-3 w-3 text-black" />
 				</div>
-				<div className="text-sm font-medium">{wallet.dgtPoints.toLocaleString()} DGT</div>
+				<div className="text-sm font-medium">{wallet.dgtPoints?.toLocaleString() ?? '0'} DGT</div>
 			</div>
 		);
 	}
@@ -102,7 +110,7 @@ export function WalletDisplay({
 								<TrendingUp className="mr-1 h-3 w-3" /> DGT
 							</div>
 							<div className="text-lg font-bold text-white">
-								{wallet.dgtPoints.toLocaleString()}
+								{wallet.dgtPoints?.toLocaleString() ?? '0'}
 							</div>
 						</div>
 
@@ -111,7 +119,7 @@ export function WalletDisplay({
 								<Wallet className="mr-1 h-3 w-3" /> USDT Balance
 							</div>
 							<div className="text-lg font-bold text-white">
-								{wallet.walletBalanceUSDT.toFixed(2)}
+								{wallet.walletBalanceUSDT?.toFixed(2) ?? '0.00'}
 							</div>
 						</div>
 					</div>

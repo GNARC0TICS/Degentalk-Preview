@@ -19,7 +19,7 @@ import type {
   TransactionStatus,
   WithdrawalStatus
 } from '@shared/types/ids';
-import { EntityId } from "@shared/types/ids";
+import type { EntityId } from "@shared/types/ids";
 
 // Base wallet data safe for public consumption
 export interface PublicWallet {

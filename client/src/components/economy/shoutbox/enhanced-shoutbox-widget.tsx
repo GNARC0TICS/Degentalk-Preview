@@ -33,7 +33,7 @@ import {
 	ChevronDown
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import type { GroupId, MessageId, RoomId, UserId, EntityId } from "@shared/types/ids";
 
 interface User {
@@ -42,7 +42,7 @@ interface User {
 	avatarUrl?: string;
 	level: number;
 	groupId?: GroupId;
-	roles?: string[];
+	role?: string;
 	usernameColor?: string;
 }
 
@@ -83,6 +83,7 @@ interface ShoutboxConfig {
 	allowRainCommands: boolean;
 	userIgnoreSystemEnabled: boolean;
 	typingIndicatorsEnabled: boolean;
+	messageQueueEnabled?: boolean;
 	themeConfig: {
 		primaryColor?: string;
 		backgroundColor?: string;
@@ -124,20 +125,19 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 	// Fetch configuration
 	const { data: config } = useQuery<ShoutboxConfig>({
 		queryKey: ['shoutbox-config', selectedRoom],
-		queryFn: async () => {
+		queryFn: async (): Promise<ShoutboxConfig> => {
 			const url = selectedRoom
 				? `/api/shoutbox/config?roomId=${selectedRoom}`
 				: '/api/shoutbox/config';
-			const response = await apiRequest({ url });
-			return response.data;
+			return await apiRequest<ShoutboxConfig>({ url, method: 'GET' });
 		}
 	});
 
 	// Fetch rooms
 	const { data: rooms } = useQuery<Room[]>({
 		queryKey: ['shoutbox-rooms'],
-		queryFn: async () => {
-			const response = await apiRequest({ url: '/api/shoutbox/rooms' });
+		queryFn: async (): Promise<Room[]> => {
+			const response = await apiRequest<Room[]>({ url: '/api/shoutbox/rooms', method: 'GET' });
 			return response;
 		}
 	});
@@ -156,11 +156,10 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 		meta: { count: number; hasMore: boolean };
 	}>({
 		queryKey: ['shoutbox-messages', selectedRoom],
-		queryFn: async () => {
+		queryFn: async (): Promise<{ data: Message[]; meta: { count: number; hasMore: boolean } }> => {
 			if (!selectedRoom) return { data: [], meta: { count: 0, hasMore: false } };
 
-			const response = await apiRequest({ url: `/api/shoutbox/messages?roomId=${selectedRoom}&limit=50`
-			});
+			const response = await apiRequest<{ data: Message[]; meta: { count: number; hasMore: boolean } }>({ url: `/api/shoutbox/messages?roomId=${selectedRoom}&limit=50`, method: 'GET' });
 			return response;
 		},
 		enabled: !!selectedRoom,
@@ -170,13 +169,12 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 	// Fetch ignored users
 	const { data: ignoreList } = useQuery<UserId[]>({
 		queryKey: ['shoutbox-ignored-users', user?.id],
-		queryFn: async () => {
+		queryFn: async (): Promise<UserId[]> => {
 			if (!user) return [];
-			const response = await apiRequest({ url: `/api/shoutbox/ignore?userId=${user.id}`
-			});
+			const response = await apiRequest<{ data: UserId[] }>({ url: `/api/shoutbox/ignore?userId=${user.id}`, method: 'GET' });
 			return response.data || [];
 		},
-		enabled: !!user && config?.userIgnoreSystemEnabled
+		enabled: !!user && !!config?.userIgnoreSystemEnabled
 	});
 
 	// Update ignored users set when data loads
@@ -189,12 +187,12 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 	// Send message mutation
 	const sendMessageMutation = useMutation({
 		mutationFn: async (content: string) => {
-			const response = await apiRequest({
+			const response = await apiRequest<{ success: boolean; data: Message }>({
 				url: '/api/shoutbox/messages',
 				method: 'POST',
 				data: {
 					content,
-					roomId: selectedRoom
+					roomId: selectedRoom || null
 				}
 			});
 			return response;
@@ -231,7 +229,8 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 	// Pin/unpin message mutation
 	const pinMessageMutation = useMutation({
 		mutationFn: async ({ messageId, isPinned }: { messageId: MessageId; isPinned: boolean }) => {
-			const response = await apiRequest({ url: `/api/shoutbox/messages/${messageId}/pin`,
+			const response = await apiRequest<{ success: boolean; data: Message }>({
+				url: `/api/shoutbox/messages/${messageId}/pin`,
 				method: 'PATCH',
 				data: { isPinned }
 			});
@@ -246,7 +245,8 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 	// Delete message mutation
 	const deleteMessageMutation = useMutation({
 		mutationFn: async (messageId: MessageId) => {
-			const response = await apiRequest({ url: `/api/shoutbox/messages/${messageId}`,
+			const response = await apiRequest<{ success: boolean; message: string }>({
+				url: `/api/shoutbox/messages/${messageId}`,
 				method: 'DELETE'
 			});
 			return response;
@@ -261,16 +261,17 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 	const toggleIgnoreUserMutation = useMutation({
 		mutationFn: async ({ userId, ignore }: { userId: UserId; ignore: boolean }) => {
 			if (ignore) {
-				const response = await apiRequest({
+				const response = await apiRequest<{ success: boolean; message: string }>({
 					url: '/api/shoutbox/ignore',
 					method: 'POST',
-					data: { targetUserId: userId, roomId: selectedRoom }
+					data: { targetUserId: userId, roomId: selectedRoom || null }
 				});
 				return response;
 			} else {
-				const response = await apiRequest({ url: `/api/shoutbox/ignore/${userId}`,
+				const response = await apiRequest<{ success: boolean; message: string }>({
+					url: `/api/shoutbox/ignore/${userId}`,
 					method: 'DELETE',
-					params: { roomId: selectedRoom }
+					params: { roomId: selectedRoom || 'null' }
 				});
 				return response;
 			}
@@ -331,10 +332,10 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 		}
 	};
 
-	const getRoleBadge = (roles?: string[]) => {
-		if (!roles || roles.length === 0) return null;
+	const getRoleBadge = (role?: string) => {
+		if (!role) return null;
 
-		if (roles.includes('admin')) {
+		if (role === 'admin') {
 			return (
 				<div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-red-100 text-red-700 rounded text-xs font-medium">
 					<Crown className="w-3 h-3" />
@@ -343,7 +344,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 			);
 		}
 
-		if (roles.includes('moderator')) {
+		if (role === 'moderator') {
 			return (
 				<div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-green-100 text-green-700 rounded text-xs font-medium">
 					<Shield className="w-3 h-3" />
@@ -352,7 +353,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 			);
 		}
 
-		if (roles.includes('vip')) {
+		if (role === 'vip') {
 			return (
 				<div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-medium">
 					<Star className="w-3 h-3" />
@@ -381,7 +382,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 		if (ignoredUsers.has(msg.user.id)) return null;
 
 		const isOwnMessage = user?.id === msg.user.id;
-		const canModerate = user?.roles?.includes('admin') || user?.roles?.includes('moderator');
+		const canModerate = user?.role === 'admin' || user?.role === 'moderator';
 
 		return (
 			<div
@@ -420,7 +421,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 								{msg.user.username}
 							</span>
 
-							{getRoleBadge(msg.user.roles)}
+							{getRoleBadge(msg.user.role)}
 
 							<span className="text-xs text-gray-500">Level {msg.user.level}</span>
 

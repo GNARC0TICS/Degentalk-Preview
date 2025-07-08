@@ -176,7 +176,7 @@ export function MockWebhookTrigger() {
 								id="user-id"
 								type="number"
 								value={userId}
-								onChange={(e) => setUserId(e.target.value as UserId | '')}
+								onChange={(e) => setUserId(e.target.value as UserId)}
 								placeholder="Random if empty"
 							/>
 						</div>

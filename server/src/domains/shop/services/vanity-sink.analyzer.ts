@@ -1,4 +1,3 @@
-import type { UserId } from '@shared/types/ids';
 /**
  * Vanity Sink Analyzer
  * 

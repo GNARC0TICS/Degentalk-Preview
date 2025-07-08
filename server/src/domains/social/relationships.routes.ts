@@ -15,6 +15,8 @@ import { isValidId } from '@shared/utils/id';
 import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware/auth.middleware';
 import { getUserIdFromRequest } from '@server/src/utils/auth';
 import { logger } from "../../core/logger";
+import { UserTransformer } from '@server/src/domains/users/transformers/user.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -45,7 +47,7 @@ router.get('/:userId/followers', async (req: Request, res: Response) => {
 			)
 			.orderBy(desc(userRelationships.createdAt));
 
-		return res.status(200).json(followers);
+		return res.status(200).json(toPublicList(followers, UserTransformer.toPublicUser));
 	} catch (error) {
 		logger.error('Error fetching followers:', error);
 		return res.status(500).json({ message: 'Error fetching followers' });
@@ -79,7 +81,7 @@ router.get('/:userId/following', async (req: Request, res: Response) => {
 			)
 			.orderBy(desc(userRelationships.createdAt));
 
-		return res.status(200).json(following);
+		return res.status(200).json(toPublicList(following, UserTransformer.toPublicUser));
 	} catch (error) {
 		logger.error('Error fetching following:', error);
 		return res.status(500).json({ message: 'Error fetching following' });

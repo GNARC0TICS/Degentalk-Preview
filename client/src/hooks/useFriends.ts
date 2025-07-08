@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import { useAuth } from '@/hooks/use-auth';
 import type { UserId } from '@shared/types/ids';
 
@@ -34,9 +34,9 @@ export function useFriends(profileUserId: string | undefined): UseFriendsResult 
 		error: profileError
 	} = useQuery<FriendsApiResponse | undefined, Error>({
 		queryKey: ['friends-profile', profileUserId],
-		queryFn: async () => {
+		queryFn: async (): Promise<FriendsApiResponse | undefined> => {
 			if (!profileUserId) return undefined;
-			return apiRequest({ url: `/api/social/friends?user=${profileUserId}&status=accepted` });
+			return apiRequest<FriendsApiResponse>({ url: `/api/social/friends?user=${profileUserId}&status=accepted`, method: 'GET' });
 		},
 		enabled: Boolean(profileUserId)
 	});
@@ -47,9 +47,9 @@ export function useFriends(profileUserId: string | undefined): UseFriendsResult 
 		Error
 	>({
 		queryKey: ['friends-viewer'],
-		queryFn: async () => {
+		queryFn: async (): Promise<FriendsApiResponse | undefined> => {
 			if (!currentUser || viewingOwnProfile) return undefined;
-			return apiRequest({ url: `/api/social/friends?user=${currentUser.id}&status=accepted` });
+			return apiRequest<FriendsApiResponse>({ url: `/api/social/friends?user=${currentUser.id}&status=accepted`, method: 'GET' });
 		},
 		enabled: Boolean(currentUser) && !viewingOwnProfile
 	});

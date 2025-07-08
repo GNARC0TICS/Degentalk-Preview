@@ -34,7 +34,8 @@
 		"server/tests/**",
 		"server/**/*.test.ts",
 		"server/**/*.spec.ts",
-		"server/utils/**"
+		"server/utils/**",
+		"UIVERSE"
 	],
 	"compilerOptions": {
 		"incremental": true,

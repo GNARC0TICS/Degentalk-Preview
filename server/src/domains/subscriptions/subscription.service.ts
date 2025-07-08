@@ -19,7 +19,7 @@ import { eq, and, sql, desc, gte, lt } from 'drizzle-orm';
 import { dgtService } from '../wallet/dgt.service';
 import { logger } from '../../core/logger';
 import type { CosmeticId, ItemId, SubscriptionId } from '@shared/types/ids';
-import { EntityId } from "@shared/types/ids";
+import type { EntityId } from "@shared/types/ids";
 
 export interface SubscriptionPurchaseRequest {
 	userId: string;

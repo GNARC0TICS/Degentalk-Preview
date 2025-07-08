@@ -16,6 +16,7 @@ import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware
 import { MessageTransformer } from './transformers/message.transformer';
 import { MessageService } from './message.service';
 import { logger } from "../../core/logger";
+import { UserTransformer } from '@server/src/domains/users/transformers/user.transformer';
 
 const router = Router();
 
@@ -81,7 +82,7 @@ router.get('/conversation/:userId', isAuthenticated, async (req: Request, res: R
 
 		// Transform messages for authenticated user
 		const messageThread = {
-			participants: [currentUser, otherUser],
+			participants: [currentUser, otherUser].map(user => UserTransformer.toPublicUser(user)),
 			messages: conversationMessages.map(message => 
 				MessageTransformer.toAuthenticatedMessage(message, currentUser)
 			),

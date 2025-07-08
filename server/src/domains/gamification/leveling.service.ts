@@ -24,7 +24,7 @@ import {
 import { logger } from '../../core/logger';
 import { XpService } from '../xp/xp.service';
 import type { UserId } from '@shared/types/ids';
-import { TitleId, BadgeId, EntityId } from "@shared/types/ids";
+import type { TitleId, BadgeId, EntityId } from "@shared/types/ids";
 
 export interface LevelInfo {
 	level: number;

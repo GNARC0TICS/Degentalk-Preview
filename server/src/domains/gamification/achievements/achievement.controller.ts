@@ -16,6 +16,8 @@ import {
 	getTemplatesByTags,
 	getTemplatesByCategory
 } from './templates/achievement-templates';
+import { CloutTransformer } from '../transformers/clout.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 import { logger } from '../../../core/logger';
 import { db } from '@db';
 import { eq, and, desc, count } from 'drizzle-orm';
@@ -72,9 +74,14 @@ export class AchievementController {
 				.where(and(...whereConditions))
 				.orderBy(desc(userAchievements.completedAt));
 
+			const transformedData = userAchievementsData.map(item => ({
+				...item,
+				achievement: CloutTransformer.toAuthenticatedAchievement(item.achievement, { id: userId })
+			}));
+
 			res.json({
 				success: true,
-				data: userAchievementsData
+				data: transformedData
 			});
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to get user achievements', {
@@ -122,7 +129,7 @@ export class AchievementController {
 
 			res.json({
 				success: true,
-				data: result.achievements,
+				data: toPublicList(result.achievements, CloutTransformer.toPublicAchievement),
 				pagination: {
 					page: parseInt(page as string),
 					limit: parseInt(limit as string),

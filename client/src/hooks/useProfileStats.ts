@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 
 export interface ExtendedProfileStats {
 	// Core profile data
@@ -84,7 +84,7 @@ export function useProfileStats(username: string | undefined) {
 		},
 		enabled: !!username,
 		staleTime: 30000, // Cache for 30 seconds
-		cacheTime: 5 * 60 * 1000 // Keep in cache for 5 minutes
+		gcTime: 5 * 60 * 1000 // Keep in cache for 5 minutes
 	});
 }
 
@@ -101,7 +101,7 @@ export function useProfile(username: string | undefined) {
 		},
 		enabled: !!username,
 		staleTime: 30000,
-		cacheTime: 5 * 60 * 1000
+		gcTime: 5 * 60 * 1000
 	});
 }
 

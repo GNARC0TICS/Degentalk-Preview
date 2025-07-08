@@ -7,13 +7,14 @@
  */
 
 import type { CanonicalThread, CanonicalUser, CanonicalZone } from './canonical.types';
+import type { UserId } from '@shared/types/ids';
 
 // Canonical zone with optional isPrimary flag for frontend helpers
 export type ResolvedZone = CanonicalZone & { isPrimary?: boolean };
 
 // User type for thread author
 export interface ThreadUser {
-	id: string;
+	id: UserId;
 	username: string;
 	avatarUrl?: string | null;
 	activeAvatarUrl?: string | null;

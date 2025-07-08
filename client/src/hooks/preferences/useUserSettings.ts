@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import type { UserId, BadgeId, FrameId, TitleId } from '@shared/types/ids';
 
 /**
@@ -50,8 +50,8 @@ export interface UserSettingsData {
 export function useUserSettings() {
 	return useQuery<UserSettingsData>({
 		queryKey: ['user-preferences'],
-		queryFn: async () => {
-			return apiRequest({
+		queryFn: async (): Promise<UserSettingsData> => {
+			return apiRequest<UserSettingsData>({
 				url: '/api/users/me/preferences-all',
 				method: 'GET'
 			});

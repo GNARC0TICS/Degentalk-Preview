@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import type { UserId } from '@shared/types/ids';
+import { toId } from '@shared/utils/id';
 
 export type UserXPData = {
 	userId: UserId;
@@ -40,9 +41,12 @@ export function useUserXP(userId?: UserId) {
 
 	const { data, isLoading, error, refetch } = useQuery<UserXPData>({
 		queryKey: [`user-xp-${userId || 'me'}`],
-		queryFn: async () => {
+		queryFn: async (): Promise<UserXPData> => {
 			try {
-				const response = await apiRequest(endpoint);
+				const response = await apiRequest<UserXPData>({
+					url: endpoint,
+					method: 'GET'
+				});
 
 				if (!response) {
 					throw new Error('Failed to fetch XP data');
@@ -63,7 +67,7 @@ export function useUserXP(userId?: UserId) {
 		refetchOnWindowFocus: false,
 		// Fallback for unauthenticated users or errors
 		placeholderData: {
-			userId: 'guest' as UserId,
+			userId: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440000'),
 			username: 'Guest',
 			currentXp: 0,
 			currentLevel: 1,

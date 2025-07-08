@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { WhaleWatchService } from './whale-watch.service';
 import { isAuthenticated } from '../auth/middleware/auth.middleware';
 import { logger } from '@server/src/core/logger';
+import { UserTransformer } from '@server/src/domains/users/transformers/user.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -105,7 +107,7 @@ router.get('/users/:id/following', async (req, res) => {
 		const following = await WhaleWatchService.getUserFollowing(userId, page, limit);
 
 		res.json({
-			following,
+			following: toPublicList(following, UserTransformer.toPublicUser),
 			pagination: {
 				page,
 				limit,
@@ -130,7 +132,7 @@ router.get('/users/:id/followers', async (req, res) => {
 		const followers = await WhaleWatchService.getUserFollowers(userId, page, limit);
 
 		res.json({
-			followers,
+			followers: toPublicList(followers, UserTransformer.toPublicUser),
 			pagination: {
 				page,
 				limit,
@@ -152,7 +154,7 @@ router.get('/users/:id/follow-counts', async (req, res) => {
 		const userId = req.params.id;
 		const counts = await WhaleWatchService.getFollowCounts(userId);
 
-		res.json(counts);
+		res.json(counts); // counts is already a safe object
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error fetching follow counts', { error });
 		res.status(500).json({ error: 'Failed to fetch follow counts' });
@@ -170,7 +172,7 @@ router.get('/follow-status/:userId', isAuthenticated, async (req, res) => {
 
 		const isFollowing = await WhaleWatchService.isFollowing(currentUserId, targetUserId);
 
-		res.json({ isFollowing });
+		res.json({ isFollowing }); // isFollowing is already a safe boolean
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error checking follow status', { error });
 		res.status(500).json({ error: 'Failed to check follow status' });
@@ -186,7 +188,7 @@ router.get('/whales', async (req, res) => {
 		const { limit } = paginationSchema.parse(req.query);
 		const whales = await WhaleWatchService.getWhales(limit);
 
-		res.json({ whales });
+		res.json({ whales: toPublicList(whales, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error fetching whales', { error });
 		res.status(500).json({ error: 'Failed to fetch whales' });
@@ -204,7 +206,7 @@ router.get('/search-users', isAuthenticated, async (req, res) => {
 
 		const users = await WhaleWatchService.searchUsers(q, currentUserId, limit);
 
-		res.json({ users });
+		res.json({ users: toPublicList(users, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error searching users', { error });
 		res.status(500).json({ error: 'Failed to search users' });
@@ -220,7 +222,7 @@ router.get('/whale-status/:userId', async (req, res) => {
 		const userId = req.params.userId;
 		const whaleStatus = await WhaleWatchService.getWhaleStatus(userId);
 
-		res.json(whaleStatus);
+		res.json(whaleStatus); // whaleStatus is already a safe object
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error fetching whale status', { error });
 		res.status(500).json({ error: 'Failed to fetch whale status' });

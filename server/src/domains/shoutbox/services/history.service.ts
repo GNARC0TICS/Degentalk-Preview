@@ -20,7 +20,7 @@ import { Transform } from 'stream';
 import archiver from 'archiver';
 import { format } from 'date-fns';
 import type { RoomId } from '@shared/types/ids';
-import { UserId } from "@shared/types/ids";
+import type { UserId } from "@shared/types/ids";
 
 interface MessageHistoryOptions {
 	roomId?: RoomId;

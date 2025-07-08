@@ -1,4 +1,4 @@
-import { db } from '@server/src/lib/db';
+import { db } from '@db';
 import { userEmojiPacks } from '@schema';
 import { eq, and } from 'drizzle-orm';
 import type { EmojiPackId, PackId, UserId } from '@shared/types/ids';

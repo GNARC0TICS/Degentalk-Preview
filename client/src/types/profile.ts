@@ -19,11 +19,11 @@ export interface ProfileData {
 	xp: number;
 	nextLevelXp: number;
 	bannerUrl: string | null;
-	email?: string | null;
-	discordHandle?: string | null;
-	twitterHandle?: string | null;
-	telegramHandle?: string | null;
-	website?: string | null;
+	email?: string | null | undefined;
+	discordHandle?: string | null | undefined;
+	twitterHandle?: string | null | undefined;
+	telegramHandle?: string | null | undefined;
+	website?: string | null | undefined;
 	activeFrameId: FrameId | null;
 	activeFrame: {
 		id: FrameId;

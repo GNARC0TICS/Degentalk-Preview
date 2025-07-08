@@ -8,7 +8,9 @@ import { userService } from '@server/src/core/services/user.service';
 
 import type { Request, Response } from 'express';
 import { z } from 'zod';
-import { missionsService, MissionsService } from '../missions/missions.service';
+import { missionsService, MissionsService } from '../../domains/missions/missions.service';
+import { MissionsTransformer } from '../../domains/missions/transformers/missions.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 import { logger } from '../../core/logger';
 import { AppError } from '../../core/errors';
 
@@ -115,11 +117,18 @@ export class MissionController {
 				{} as Record<string, typeof missions>
 			);
 
+			const transformedMissions = toPublicList(missions, MissionsTransformer.toPublicMission);
+			const transformedGrouped = {
+				daily: grouped.daily ? toPublicList(grouped.daily, MissionsTransformer.toPublicMission) : [],
+				weekly: grouped.weekly ? toPublicList(grouped.weekly, MissionsTransformer.toPublicMission) : [],
+				other: grouped.other ? toPublicList(grouped.other, MissionsTransformer.toPublicMission) : []
+			};
+
 			res.json({
 				success: true,
 				data: {
-					missions,
-					grouped,
+					missions: transformedMissions,
+					grouped: transformedGrouped,
 					stats: {
 						total: missions.length,
 						daily: grouped.daily?.length || 0,
@@ -178,12 +187,12 @@ export class MissionController {
 			res.json({
 				success: true,
 				data: {
-					all: userProgress,
-					completed,
-					readyToClaim,
-					inProgress,
-					notStarted,
-					claimed,
+					all: toPublicList(userProgress, MissionsTransformer.toAuthenticatedMission),
+					completed: toPublicList(completed, MissionsTransformer.toAuthenticatedMission),
+					readyToClaim: toPublicList(readyToClaim, MissionsTransformer.toAuthenticatedMission),
+					inProgress: toPublicList(inProgress, MissionsTransformer.toAuthenticatedMission),
+					notStarted: toPublicList(notStarted, MissionsTransformer.toAuthenticatedMission),
+					claimed: toPublicList(claimed, MissionsTransformer.toAuthenticatedMission),
 					stats: {
 						total: userProgress.length,
 						completed: completed.length,
@@ -312,8 +321,8 @@ export class MissionController {
 			res.json({
 				success: true,
 				data: {
-					updatedProgress,
-					completedMissions,
+					updatedProgress: toPublicList(updatedProgress, MissionsTransformer.toAuthenticatedMission),
+					completedMissions: toPublicList(completedMissions, MissionsTransformer.toAuthenticatedMission),
 					stats: {
 						updated: updatedProgress.length,
 						completed: completedMissions.length
@@ -360,7 +369,7 @@ export class MissionController {
 
 			res.json({
 				success: true,
-				data: mission
+				data: MissionsTransformer.toPublicMission(mission)
 			});
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error getting mission by ID:', error);
@@ -390,7 +399,7 @@ export class MissionController {
 
 			res.status(201).json({
 				success: true,
-				data: mission,
+				data: MissionsTransformer.toAdminMission(mission),
 				message: `Mission "${mission.title}" created successfully`
 			});
 		} catch (error) {
@@ -431,7 +440,7 @@ export class MissionController {
 
 			res.json({
 				success: true,
-				data: mission,
+				data: MissionsTransformer.toAdminMission(mission),
 				message: `Mission "${mission.title}" updated successfully`
 			});
 		} catch (error) {

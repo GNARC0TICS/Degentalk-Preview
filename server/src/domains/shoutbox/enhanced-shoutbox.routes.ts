@@ -42,6 +42,8 @@ import { messageQueue, MessageQueueService } from './services/queue.service';
 import { PerformanceService } from './services/performance.service';
 import { createCustomRateLimiter } from '@server/src/core/services/rate-limit.service';
 import { isValidId } from '@shared/utils/id';
+import { ShoutboxTransformer } from '@server/src/domains/economy/shoutbox/transformers/shoutbox.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -153,7 +155,7 @@ router.get('/rooms', isAuthenticatedOptional, async (req: Request, res: Response
 				.where(eq(chatRooms.isDeleted, false))
 				.orderBy(asc(chatRooms.order));
 
-			res.json(rooms);
+			res.json(toPublicList(rooms, ShoutboxTransformer.toPublicShoutbox));
 		}
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error fetching rooms', { error });
@@ -567,7 +569,7 @@ router.patch(
 			res.json({
 				success: true,
 				message: `Message ${isPinned ? 'pinned' : 'unpinned'} successfully`,
-				data: updatedMessage
+				data: ShoutboxTransformer.toAuthenticatedShoutbox(updatedMessage)
 			});
 		} catch (error) {
 			logger.error('Enhanced Shoutbox', 'Error pinning/unpinning message', { error });

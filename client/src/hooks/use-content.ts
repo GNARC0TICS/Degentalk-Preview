@@ -35,7 +35,7 @@ export function useContent(params: UseContentParams = {}) {
 
 	const { data, isLoading, error, refetch, isFetching } = useQuery<ContentResponse>({
 		queryKey: ['content', activeTab, params.forumId || 'all'],
-		queryFn: async () => {
+		queryFn: async (): Promise<ContentResponse> => {
 			const searchParams = new URLSearchParams({
 				tab: activeTab,
 				page: '1',

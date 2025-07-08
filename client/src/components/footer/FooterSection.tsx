@@ -6,7 +6,7 @@ import type { FooterLink } from '@/config/footer-navigation';
 interface FooterSectionProps {
 	title: string;
 	links: FooterLink[];
-	animationDelay?: number;
+	animationDelay?: number | undefined;
 }
 
 export function FooterSection({ title, links, animationDelay = 0 }: FooterSectionProps) {

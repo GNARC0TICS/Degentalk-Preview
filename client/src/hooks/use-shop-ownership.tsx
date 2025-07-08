@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from './use-auth';
 

@@ -35,7 +35,7 @@ interface WalletStats {
 
 export interface TopUser {
 	// Export for potential use in dialog or other components
-	id: string;
+	id: UserId;
 	username: string;
 	dgtBalance: number;
 	lastActive: string;
@@ -48,11 +48,11 @@ interface TopUsersResponse {
 
 export interface Transaction {
 	// Export for potential use
-	id: string;
+	id: UserId;
 	type: string;
 	amount: number;
 	currency: string;
-	userId: string;
+	userId: UserId;
 	username: string;
 	timestamp: string;
 	status: string;

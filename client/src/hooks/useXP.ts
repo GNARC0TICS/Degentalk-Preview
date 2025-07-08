@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { createSafeWebSocket } from '@/lib/safeWebSocket';
@@ -95,7 +95,7 @@ export function useXP(userId?: string): {
 		queryFn: async (): Promise<UserXP> => {
 			const endpoint = userId ? `/api/xp/users/${userId}/info` : '/api/xp/me/info';
 
-			return apiRequest({ url: endpoint });
+			return apiRequest<UserXP>({ url: endpoint, method: 'GET' });
 		}
 	});
 
@@ -105,7 +105,7 @@ export function useXP(userId?: string): {
 		queryFn: async (): Promise<UserTitle[]> => {
 			const endpoint = userId ? `/api/xp/users/${userId}/titles` : '/api/xp/me/titles';
 
-			return apiRequest({ url: endpoint });
+			return apiRequest<UserTitle[]>({ url: endpoint, method: 'GET' });
 		},
 		enabled: !!xpData
 	});
@@ -116,7 +116,7 @@ export function useXP(userId?: string): {
 		queryFn: async (): Promise<UserBadge[]> => {
 			const endpoint = userId ? `/api/xp/users/${userId}/badges` : '/api/xp/me/badges';
 
-			return apiRequest({ url: endpoint });
+			return apiRequest<UserBadge[]>({ url: endpoint, method: 'GET' });
 		},
 		enabled: !!xpData
 	});
@@ -129,7 +129,7 @@ export function useXP(userId?: string): {
 				? `/api/xp/adjustments/history/${userId}`
 				: '/api/xp/me/adjustments/history';
 
-			return apiRequest({ url: endpoint });
+			return apiRequest<XpAdjustmentEntry[]>({ url: endpoint, method: 'GET' });
 		},
 		enabled: !!xpData
 	});

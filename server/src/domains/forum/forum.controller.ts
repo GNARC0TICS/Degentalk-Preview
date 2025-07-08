@@ -4,6 +4,8 @@ import { forumService } from './forum.service';
 import type { ThreadSearchParams } from './forum.service';
 import { logger } from '@server/src/core/logger';
 import type { StructureId, ThreadId } from '@shared/types/ids';
+import { ForumTransformer } from '@server/src/domains/forum/transformers/forum.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 // import { isAuthenticated } from "@server/src/domains/auth/middleware/auth.middleware"; // Removed as unused
 
 // TODO: @syncSchema threads
@@ -15,7 +17,7 @@ export const forumController = {
 	async getCategoriesWithStats(req: Request, res: Response) {
 		try {
 			const categories = await forumService.getCategoriesWithStats();
-			return res.status(200).json(categories);
+			return res.status(200).json(toPublicList(categories, ForumTransformer.toPublicForumStructure));
 		} catch (error) {
 			logger.error('ForumController', 'Error fetching forum categories', { err: error });
 			return res.status(500).json({ message: 'Failed to fetch forum categories' });
@@ -38,7 +40,7 @@ export const forumController = {
 				includeEmptyStats
 			});
 
-			return res.status(200).json(categories);
+			return res.status(200).json(toPublicList(categories, ForumTransformer.toPublicForumStructure));
 		} catch (error) {
 			logger.error('ForumController', 'Error fetching forum category tree', {
 				err: error,
@@ -63,7 +65,7 @@ export const forumController = {
 				return res.status(404).json({ message: 'Category not found' });
 			}
 
-			return res.status(200).json(category);
+			return res.status(200).json(ForumTransformer.toPublicForumStructure(category));
 		} catch (error) {
 			logger.error('ForumController', 'Error fetching category by slug', {
 				err: error,
@@ -88,7 +90,13 @@ export const forumController = {
 				return res.status(404).json({ message: 'Forum not found' });
 			}
 
-			return res.status(200).json(result);
+			// Transform forum and threads separately
+			const transformedResult = {
+				forum: ForumTransformer.toPublicForumStructure(result.forum),
+				threads: result.threads ? toPublicList(result.threads, ForumTransformer.toPublicThread) : []
+			};
+
+			return res.status(200).json(transformedResult);
 		} catch (error) {
 			logger.error('ForumController', 'Error fetching forum with topics by slug', {
 				err: error,
@@ -113,7 +121,7 @@ export const forumController = {
 				return res.status(404).json({ message: 'Category not found' });
 			}
 
-			return res.status(200).json(category);
+			return res.status(200).json(ForumTransformer.toPublicForumStructure(category));
 		} catch (error) {
 			logger.error('ForumController', 'Error fetching category by ID', {
 				err: error,
@@ -170,7 +178,12 @@ export const forumController = {
 			logger.debug('ForumController', 'Processed search params', { params });
 
 			const result = await forumService.searchThreads(params);
-			return res.status(200).json(result);
+			// Transform the threads in the result
+			const transformedResult = {
+				...result,
+				threads: toPublicList(result.threads || [], ForumTransformer.toPublicThread)
+			};
+			return res.status(200).json(transformedResult);
 		} catch (error) {
 			logger.error('ForumController', 'Error searching threads', { err: error, query: req.query });
 			return res.status(500).json({ message: 'Failed to search threads' });
@@ -195,8 +208,8 @@ export const forumController = {
 				return res.status(404).json({ message: 'Thread not found or update failed.' });
 			}
 
-			// Send success response
-			return res.status(200).json({ success: true, thread: updatedThread });
+			// Send success response with transformed thread
+			return res.status(200).json({ success: true, thread: ForumTransformer.toPublicThread(updatedThread) });
 		} catch (error) {
 			logger.error('ForumController', 'Error in solveThread', {
 				err: error,
@@ -228,7 +241,7 @@ export const forumController = {
 				return res.status(404).json({ message: 'Forum not found' });
 			}
 
-			return res.status(200).json({ forum });
+			return res.status(200).json({ forum: ForumTransformer.toPublicForumStructure(forum) });
 		} catch (error) {
 			logger.error('ForumController', 'Error fetching forum by slug', {
 				err: error,
@@ -249,7 +262,7 @@ export const forumController = {
 
 			const forums = await forumService.getForumsByParentId(parentId);
 
-			return res.status(200).json({ forums });
+			return res.status(200).json({ forums: toPublicList(forums, ForumTransformer.toPublicForumStructure) });
 		} catch (error) {
 			logger.error('ForumController', 'Error fetching forums by parent ID', {
 				err: error,

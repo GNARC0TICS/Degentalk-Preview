@@ -20,7 +20,7 @@ export const useActivityFeed = (filters?: EventLogFilters) => {
 			return activityApi.getCurrentUserEventLogs(userId, filters);
 		},
 		enabled: !!userId,
-		keepPreviousData: true
+		placeholderData: (previousData) => previousData
 	});
 
 	return {
@@ -39,7 +39,7 @@ export const useAdminActivityFeed = (filters?: EventLogFilters) => {
 	const { data, isLoading, isError, error, refetch } = useQuery({
 		queryKey: ['adminActivityFeed', filters],
 		queryFn: () => activityApi.getAllEventLogs(filters),
-		keepPreviousData: true
+		placeholderData: (previousData) => previousData
 	});
 
 	return {
@@ -64,7 +64,7 @@ export const useUserActivityFeed = (userId: string | undefined, filters?: EventL
 			return activityApi.getUserEventLogs(userId, filters);
 		},
 		enabled: !!userId,
-		keepPreviousData: true
+		placeholderData: (previousData) => previousData
 	});
 
 	return {

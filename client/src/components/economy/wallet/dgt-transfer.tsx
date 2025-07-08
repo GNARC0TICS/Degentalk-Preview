@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useWallet } from '@/hooks/use-wallet';
 import type { UserId } from '@shared/types/ids';
+import { toId } from '@shared/utils/id';
 
 interface DgtTransferProps {
 	className?: string;
@@ -51,7 +52,7 @@ export function DgtTransfer({ className = '' }: DgtTransferProps) {
 
 			// Mock validation - in real app, call /api/users/search
 			const mockUser = {
-				id: `user_${recipientUsername.toLowerCase()}` as UserId,
+				id: toId<'UserId'>(`550e8400-e29b-41d4-a716-${recipientUsername.toLowerCase().padStart(12, '0')}`),
 				username: recipientUsername
 			};
 
@@ -131,11 +132,14 @@ export function DgtTransfer({ className = '' }: DgtTransferProps) {
 		}
 
 		try {
-			await transferDgt({
+			const transferData: Parameters<typeof transferDgt>[0] = {
 				toUserId: validatedUser.id,
-				amount,
-				note: transferNote.trim() || undefined
-			});
+				amount
+			};
+			if (transferNote.trim()) {
+				transferData.note = transferNote.trim();
+			}
+			await transferDgt(transferData);
 
 			// Reset form on success
 			setRecipientUsername('');

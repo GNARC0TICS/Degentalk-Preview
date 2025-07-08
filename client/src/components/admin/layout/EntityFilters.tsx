@@ -19,16 +19,28 @@ export interface FilterConfig {
 	id: string;
 	label: string;
 	type: 'text' | 'select' | /* 'date-range' | */ 'boolean'; // Commented out date-range
-	placeholder?: string;
-	options?: { value: string; label: string }[];
+	placeholder?: string | undefined;
+	options?: { value: string; label: string }[] | undefined;
+	/** Optional default value */
+	defaultValue?: FilterValue | undefined;
+	/** Required field */
+	required?: boolean | undefined;
+	/** Disabled state */
+	disabled?: boolean | undefined;
 }
 
 interface EntityFiltersProps {
 	filtersConfig: FilterConfig[];
 	filters: Record<string, FilterValue>;
 	onFilterChange: (filterId: string, value: FilterValue) => void;
-	onClearFilters?: () => void;
-	className?: string;
+	onClearFilters?: (() => void) | undefined;
+	className?: string | undefined;
+	/** Show filter count */
+	showFilterCount?: boolean | undefined;
+	/** Compact mode */
+	compact?: boolean | undefined;
+	/** Loading state */
+	loading?: boolean | undefined;
 }
 
 export const EntityFilters: React.FC<EntityFiltersProps> = ({

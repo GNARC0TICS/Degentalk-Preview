@@ -76,12 +76,16 @@ export class WalletController extends BaseController {
 			//   cryptoBalances = await ccpaymentService.getUserCryptoBalances(ccpaymentAccountId);
 			// }
 
+			// Transform wallet balance using EconomyTransformer
+			const walletBalance = {
+				userId,
+				balance: Number(dgtBalance),
+				crypto: cryptoBalances
+			};
+
 			return this.success(
 				res,
-				{
-					dgt: Number(dgtBalance),
-					crypto: cryptoBalances
-				},
+				EconomyTransformer.toAuthenticatedWallet(walletBalance, authUser),
 				'Balance retrieved successfully'
 			);
 		} catch (error) {
@@ -93,18 +97,10 @@ export class WalletController extends BaseController {
 			);
 
 			if (error instanceof WalletError) {
-				res.status(error.httpStatus).json({
-					error: error.message,
-					code: error.code
-				});
-				return;
+				return this.error(res, error.message, error.httpStatus, error.code);
 			}
 
-			res.status(500).json({
-				error: 'Failed to get wallet balance',
-				code: WalletErrorCodes.UNKNOWN_ERROR
-			});
-			return;
+			return this.error(res, 'Failed to get wallet balance', 500, WalletErrorCodes.UNKNOWN_ERROR);
 		}
 	}
 
@@ -200,7 +196,7 @@ export class WalletController extends BaseController {
 				historyFilters
 			);
 
-			res.json({
+			return this.success(res, {
 				transactions: transformedTransactions,
 				summary,
 				total: countResult?.count || 0,
@@ -221,18 +217,10 @@ export class WalletController extends BaseController {
 			);
 
 			if (error instanceof WalletError) {
-				res.status(error.httpStatus).json({
-					error: error.message,
-					code: error.code
-				});
-				return;
+				return this.error(res, error.message, error.httpStatus, error.code);
 			}
 
-			res.status(500).json({
-				error: 'Failed to get transaction history',
-				code: WalletErrorCodes.UNKNOWN_ERROR
-			});
-			return;
+			return this.error(res, 'Failed to get transaction history', 500, WalletErrorCodes.UNKNOWN_ERROR);
 		}
 	}
 
@@ -246,27 +234,17 @@ export class WalletController extends BaseController {
 					'WALLET_CONTROLLER',
 					`Attempt to access createDepositAddress without authentication. Request details: path ${req.path}, ip ${req.ip}`
 				);
-				return res
-					.status(401)
-					.json({ error: 'User not authenticated', code: WalletErrorCodes.UNAUTHORIZED });
+				return this.error(res, 'User not authenticated', 401, WalletErrorCodes.UNAUTHORIZED);
 			}
 			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id; // Explicit cast after check
 			const { currency } = req.body;
 
 			if (!currency) {
-				res.status(400).json({
-					error: 'Currency is required',
-					code: WalletErrorCodes.INVALID_REQUEST
-				});
-				return;
+				return this.error(res, 'Currency is required', 400, WalletErrorCodes.INVALID_REQUEST);
 			}
 			// Check if deposits are enabled
 			if (!walletConfig.DEPOSITS_ENABLED) {
-				res.status(501).json({
-					message: 'Crypto deposits are temporarily disabled.',
-					code: 'SERVICE_UNAVAILABLE'
-				});
-				return;
+				return this.error(res, 'Crypto deposits are temporarily disabled.', 501, 'SERVICE_UNAVAILABLE');
 			}
 
 			// Ensure user has CCPayment wallet
@@ -284,7 +262,7 @@ export class WalletController extends BaseController {
 				address: depositAddress.address
 			});
 
-			res.json(depositAddress);
+			return this.success(res, depositAddress);
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : String(error);
 			logger.error(
@@ -294,18 +272,10 @@ export class WalletController extends BaseController {
 			);
 
 			if (error instanceof WalletError) {
-				res.status(error.httpStatus).json({
-					error: error.message,
-					code: error.code
-				});
-				return;
+				return this.error(res, error.message, error.httpStatus, error.code);
 			}
 
-			res.status(500).json({
-				error: 'Failed to create deposit address',
-				code: WalletErrorCodes.UNKNOWN_ERROR
-			});
-			return;
+			return this.error(res, 'Failed to create deposit address', 500, WalletErrorCodes.UNKNOWN_ERROR);
 		}
 	}
 
@@ -319,19 +289,13 @@ export class WalletController extends BaseController {
 					'WALLET_CONTROLLER',
 					`Attempt to access createDgtPurchase without authentication. Request details: path ${req.path}, ip ${req.ip}`
 				);
-				return res
-					.status(401)
-					.json({ error: 'User not authenticated', code: WalletErrorCodes.UNAUTHORIZED });
+				return this.error(res, 'User not authenticated', 401, WalletErrorCodes.UNAUTHORIZED);
 			}
 			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id; // Explicit cast after check
 			const { dgtAmount, cryptoCurrency } = req.body;
 
 			if (!dgtAmount || !cryptoCurrency) {
-				res.status(400).json({
-					error: 'DGT amount and crypto currency are required',
-					code: WalletErrorCodes.INVALID_REQUEST
-				});
-				return;
+				return this.error(res, 'DGT amount and crypto currency are required', 400, WalletErrorCodes.INVALID_REQUEST);
 			}
 
 			// Calculate crypto amount based on configured DGT price in USD
@@ -372,7 +336,7 @@ export class WalletController extends BaseController {
 				cryptoAmount
 			});
 
-			res.json({
+			return this.success(res, {
 				orderId: purchaseOrder.id,
 				depositUrl,
 				dgtAmount,
@@ -387,18 +351,10 @@ export class WalletController extends BaseController {
 			});
 
 			if (error instanceof WalletError) {
-				res.status(error.httpStatus).json({
-					error: error.message,
-					code: error.code
-				});
-				return;
+				return this.error(res, error.message, error.httpStatus, error.code);
 			}
 
-			res.status(500).json({
-				error: 'Failed to create DGT purchase order',
-				code: WalletErrorCodes.UNKNOWN_ERROR
-			});
-			return;
+			return this.error(res, 'Failed to create DGT purchase order', 500, WalletErrorCodes.UNKNOWN_ERROR);
 		}
 	}
 
@@ -413,19 +369,13 @@ export class WalletController extends BaseController {
 					req.path,
 					req.ip
 				);
-				return res
-					.status(401)
-					.json({ error: 'User not authenticated', code: WalletErrorCodes.UNAUTHORIZED });
+				return this.error(res, 'User not authenticated', 401, WalletErrorCodes.UNAUTHORIZED);
 			}
 			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id; // Explicit cast after check
 			const orderId = req.params.orderId as OrderId;
 
 			if (!orderId) {
-				res.status(400).json({
-					error: 'Invalid order ID',
-					code: WalletErrorCodes.INVALID_REQUEST
-				});
-				return;
+				return this.error(res, 'Invalid order ID', 400, WalletErrorCodes.INVALID_REQUEST);
 			}
 
 			// Get purchase order
@@ -436,15 +386,10 @@ export class WalletController extends BaseController {
 				.limit(1);
 
 			if (!purchaseOrder) {
-				res.status(404).json({
-					error: 'Purchase order not found',
-					code: WalletErrorCodes.NOT_FOUND
-				});
-				return;
+				return this.error(res, 'Purchase order not found', 404, WalletErrorCodes.NOT_FOUND);
 			}
 
-			res.json(purchaseOrder);
-			return;
+			return this.success(res, purchaseOrder);
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : String(error);
 			logger.error('Error getting purchase order status: %s. Details: %o', errorMessage, {
@@ -453,18 +398,10 @@ export class WalletController extends BaseController {
 			});
 
 			if (error instanceof WalletError) {
-				res.status(error.httpStatus).json({
-					error: error.message,
-					code: error.code
-				});
-				return;
+				return this.error(res, error.message, error.httpStatus, error.code);
 			}
 
-			res.status(500).json({
-				error: 'Failed to get purchase order status',
-				code: WalletErrorCodes.UNKNOWN_ERROR
-			});
-			return;
+			return this.error(res, 'Failed to get purchase order status', 500, WalletErrorCodes.UNKNOWN_ERROR);
 		}
 	}
 
@@ -479,19 +416,13 @@ export class WalletController extends BaseController {
 					req.path,
 					req.ip
 				);
-				return res
-					.status(401)
-					.json({ error: 'User not authenticated', code: WalletErrorCodes.UNAUTHORIZED });
+				return this.error(res, 'User not authenticated', 401, WalletErrorCodes.UNAUTHORIZED);
 			}
 			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id; // Explicit cast after check
 			const { toUserId, amount, reason } = req.body;
 
 			if (!toUserId || !amount) {
-				res.status(400).json({
-					error: 'Recipient ID and amount are required',
-					code: WalletErrorCodes.INVALID_REQUEST
-				});
-				return;
+				return this.error(res, 'Recipient ID and amount are required', 400, WalletErrorCodes.INVALID_REQUEST);
 			}
 
 			// Transfer DGT
@@ -504,8 +435,7 @@ export class WalletController extends BaseController {
 				{ reason }
 			);
 
-			res.json({
-				success: true,
+			return this.success(res, {
 				senderNewBalance: Number(result.senderBalance),
 				recipientNewBalance: Number(result.recipientBalance)
 			});
@@ -517,18 +447,10 @@ export class WalletController extends BaseController {
 			});
 
 			if (error instanceof WalletError) {
-				res.status(error.httpStatus).json({
-					error: error.message,
-					code: error.code
-				});
-				return;
+				return this.error(res, error.message, error.httpStatus, error.code);
 			}
 
-			res.status(500).json({
-				error: 'Failed to transfer DGT',
-				code: WalletErrorCodes.UNKNOWN_ERROR
-			});
-			return;
+			return this.error(res, 'Failed to transfer DGT', 500, WalletErrorCodes.UNKNOWN_ERROR);
 		}
 	}
 
@@ -539,7 +461,7 @@ export class WalletController extends BaseController {
 		try {
 			// In production, this would fetch from CCPayment API or config
 			// For now, return a static list
-			res.json([
+			const supportedCurrencies = [
 				{
 					code: 'BTC',
 					name: 'Bitcoin',
@@ -564,19 +486,16 @@ export class WalletController extends BaseController {
 					networks: ['ERC20'],
 					isEnabled: true
 				}
-			]);
-			return;
+			];
+			
+			return this.success(res, supportedCurrencies);
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : String(error);
 			logger.error('WALLET_CONTROLLER', `Error getting supported currencies: ${errorMessage}`, {
 				details: { stack: error instanceof Error ? error.stack : undefined, errorObj: error }
 			});
 
-			res.status(500).json({
-				error: 'Failed to get supported currencies',
-				code: WalletErrorCodes.UNKNOWN_ERROR
-			});
-			return;
+			return this.error(res, 'Failed to get supported currencies', 500, WalletErrorCodes.UNKNOWN_ERROR);
 		}
 	}
 
@@ -592,7 +511,7 @@ export class WalletController extends BaseController {
 			const authenticatedUserId = (req as any).user?.id;
 
 			if (!userId) {
-				return res.status(400).json({ error: 'User ID is required.' });
+				return this.error(res, 'User ID is required.', 400);
 			}
 			// entityId might be optional depending on context
 
@@ -610,7 +529,7 @@ export class WalletController extends BaseController {
 					'DGT_CONTROLLER',
 					`DGT reward for '${context}' is zero or negative. No transaction created for user ${userId}.`
 				);
-				return res.status(200).json({ dgtAwarded: 0, message: 'DGT reward for action is zero.' });
+				return this.success(res, { dgtAwarded: 0, message: 'DGT reward for action is zero.' });
 			}
 
 			// Use dgtService to handle the DGT addition and transaction logging
@@ -629,7 +548,7 @@ export class WalletController extends BaseController {
 				}
 			);
 
-			res.status(200).json({
+			return this.success(res, {
 				dgtAwarded: dgtAmountToAward,
 				newBalance: newBalance.toString() // dgtService returns bigint
 			});
@@ -639,7 +558,7 @@ export class WalletController extends BaseController {
 				`Error in createDgtRewardTransaction for context '${req.body.context}':`,
 				err
 			);
-			res.status(500).json({ error: err.message || 'Server error creating DGT transaction.' });
+			return this.error(res, err.message || 'Server error creating DGT transaction.', 500);
 		}
 	}
 
@@ -650,27 +569,27 @@ export class WalletController extends BaseController {
 				.from(dgtPackages)
 				.where(eq(dgtPackages.isActive, true))
 				.orderBy(asc(dgtPackages.sortOrder), asc(dgtPackages.id));
-			res.json(packages);
+			return this.success(res, packages);
 		} catch (error) {
 			logger.error('WALLET_CONTROLLER', 'Error listing DGT packages', error);
-			res.status(500).json({ error: 'Failed to list packages' });
+			return this.error(res, 'Failed to list packages', 500);
 		}
 	}
 
 	async createPurchaseOrder(req: Request, res: Response): Promise<void> {
 		try {
 			if (!userService.getUserFromRequest(req))
-				return res.status(401).json({ error: 'Unauthenticated' });
+				return this.error(res, 'Unauthenticated', 401);
 			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id;
 			const { packageId, cryptoCurrency = 'USDT' } = req.body;
 
-			if (!packageId) return res.status(400).json({ error: 'packageId is required' });
+			if (!packageId) return this.error(res, 'packageId is required', 400);
 
 			const [pkg] = await db
 				.select()
 				.from(dgtPackages)
 				.where(eq(dgtPackages.id, packageId));
-			if (!pkg || !pkg.isActive) return res.status(404).json({ error: 'Package not found' });
+			if (!pkg || !pkg.isActive) return this.error(res, 'Package not found', 404);
 
 			// Generate merchant order id
 			const merchantOrderId = `pkg_${pkg.id}_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
@@ -698,10 +617,10 @@ export class WalletController extends BaseController {
 				})
 				.returning();
 
-			res.status(201).json({ order, depositUrl });
+			return this.success(res, { order, depositUrl }, '', 201);
 		} catch (error) {
 			logger.error('WALLET_CONTROLLER', 'Error creating purchase order', error);
-			res.status(500).json({ error: 'Failed to create purchase order' });
+			return this.error(res, 'Failed to create purchase order', 500);
 		}
 	}
 }

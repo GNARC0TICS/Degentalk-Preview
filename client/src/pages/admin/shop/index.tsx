@@ -9,10 +9,11 @@ import { AdminPageShell } from '@/components/admin/layout/AdminPageShell';
 import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
 import type { ColumnDef } from '@/components/admin/layout/EntityTable';
 import { Badge } from '@/components/ui/badge';
+import type { UserId } from '@shared/types/ids';
 
 // Local Product shape (minimal) – avoids server schema coupling
 interface Product {
-	id?: Id<'id'>;
+	id: UserId; // Using UserId as required by AdminDataTable
 	name: string;
 	price: number;
 	stock: number;

@@ -7,7 +7,7 @@ import { Factory } from '../core/factory';
 import { scenarioGenerator, AvailableScenario } from './scenario-generator';
 import type { AdminId } from '@shared/types/ids';
 import { logger } from "../../../server/src/core/logger";
-import { ThreadId } from "@shared/types/ids";
+import type { ThreadId } from "@shared/types/ids";
 
 // Setup helpers for test environments
 export class TestDataManager {

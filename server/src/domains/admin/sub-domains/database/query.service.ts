@@ -9,7 +9,6 @@ import { db } from '@server/src/core/db';
 import type { UserId } from '@shared/types/ids';
 import { logger } from '@server/src/core/logger';
 import { sql } from 'drizzle-orm';
-import { UserId } from "@shared/types/ids";
 
 // Dangerous SQL keywords that are completely forbidden
 const FORBIDDEN_KEYWORDS = [

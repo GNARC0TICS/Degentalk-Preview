@@ -12,7 +12,9 @@ export {
 	RequireShoutboxMod,
 	RequireContentMod,
 	RequireMarketMod,
-	RequireRole as RequireSpecificRole
+	RequireRole as RequireSpecificRole,
+	RequireTeamAccess,
+	PublicOnlyRoute
 } from './RouteGuards';
 
 // Higher-order components

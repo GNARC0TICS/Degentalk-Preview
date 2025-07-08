@@ -1,5 +1,4 @@
 import { isValidId } from '@shared/utils/id';
-import type { UserId } from '@shared/types/ids';
 /* eslint-disable degen/no-missing-branded-id-import */
 /**
  * Frontend-Safe ID Types
@@ -75,6 +74,22 @@ export type InventoryItemId = Id<'InventoryItemId'>;
 export type TemplateId = Id<'TemplateId'>;
 export type SubscriptionId = Id<'SubscriptionId'>;
 
+// Dictionary & content IDs
+export type DictionaryEntryId = Id<'DictionaryEntryId'>;
+export type EntryId = Id<'EntryId'>;
+export type RuleId = Id<'RuleId'>;
+
+// Settings & configuration IDs
+export type SettingId = Id<'SettingId'>;
+export type ConfigId = Id<'ConfigId'>;
+export type LogEntryId = Id<'LogEntryId'>;
+export type AuditLogId = Id<'AuditLogId'>;
+export type NotificationId = Id<'NotificationId'>;
+
+// Sticker & pack IDs
+export type StickerId = Id<'StickerId'>;
+export type PackId = Id<'PackId'>;
+
 // Economy-specific IDs
 export type CryptoWalletId = Id<'CryptoWalletId'>;
 export type RainEventId = Id<'RainEventId'>;
@@ -82,17 +97,15 @@ export type WithdrawalId = Id<'WithdrawalId'>;
 export type DgtPackageId = Id<'DgtPackageId'>;
 export type PurchaseOrderId = Id<'PurchaseOrderId'>;
 
-// ID validation helpers
 export const isValidUUID = (id: string): boolean => {
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   return uuidRegex.test(id);
 };
 
-export const isValidId = <T extends string>(id: unknown): id is Id<T> => {
-  return typeof id === 'string' && isValidUUID(id);
-};
-
-export const createIdValidator = <T extends string>(tag: T) => 
+/**
+ * Generic helper to create a branded ID validator using the shared `isValidId` util.
+ */
+export const createIdValidator = <T extends string>(tag: T) =>
   (id: unknown): id is Id<T> => isValidId(id);
 
 // Specific ID validators
@@ -106,6 +119,22 @@ export const isItemId = createIdValidator('ItemId');
 export const isFrameId = createIdValidator('FrameId');
 export const isBadgeId = createIdValidator('BadgeId');
 export const isTitleId = createIdValidator('TitleId');
+
+// Dictionary & content ID validators
+export const isDictionaryEntryId = createIdValidator('DictionaryEntryId');
+export const isEntryId = createIdValidator('EntryId');
+export const isRuleId = createIdValidator('RuleId');
+
+// Settings & configuration ID validators
+export const isSettingId = createIdValidator('SettingId');
+export const isConfigId = createIdValidator('ConfigId');
+export const isLogEntryId = createIdValidator('LogEntryId');
+export const isAuditLogId = createIdValidator('AuditLogId');
+export const isNotificationId = createIdValidator('NotificationId');
+
+// Sticker & pack ID validators
+export const isStickerId = createIdValidator('StickerId');
+export const isPackId = createIdValidator('PackId');
 
 // Social ID validators
 export const isFriendId = createIdValidator('FriendId');
@@ -123,6 +152,22 @@ export const asItemId = (id: string): ItemId => id as ItemId;
 export const asFrameId = (id: string): FrameId => id as FrameId;
 export const asBadgeId = (id: string): BadgeId => id as BadgeId;
 export const asTitleId = (id: string): TitleId => id as TitleId;
+
+// Dictionary & content ID casting helpers
+export const asDictionaryEntryId = (id: string): DictionaryEntryId => id as DictionaryEntryId;
+export const asEntryId = (id: string): EntryId => id as EntryId;
+export const asRuleId = (id: string): RuleId => id as RuleId;
+
+// Settings & configuration ID casting helpers
+export const asSettingId = (id: string): SettingId => id as SettingId;
+export const asConfigId = (id: string): ConfigId => id as ConfigId;
+export const asLogEntryId = (id: string): LogEntryId => id as LogEntryId;
+export const asAuditLogId = (id: string): AuditLogId => id as AuditLogId;
+export const asNotificationId = (id: string): NotificationId => id as NotificationId;
+
+// Sticker & pack ID casting helpers
+export const asStickerId = (id: string): StickerId => id as StickerId;
+export const asPackId = (id: string): PackId => id as PackId;
 
 // Social ID casting helpers
 export const asFriendId = (id: string): FriendId => id as FriendId;

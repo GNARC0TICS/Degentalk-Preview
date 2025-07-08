@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { UserInventoryWithProduct, AppliedCosmetics } from '@/types/inventory';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/api-request';
 import { applyPluginRewards } from '@/lib/utils/applyPluginRewards';
 import type { UserId } from '@shared/types/ids';
 
@@ -61,7 +61,7 @@ export function useUserCosmetics(targetUserId?: string | number): {
 		},
 		enabled: !!effectiveUserId, // Only fetch if user ID is available
 		staleTime: 5 * 60 * 1000, // Data considered fresh for 5 minutes
-		cacheTime: 10 * 60 * 1000 // Data remains in cache for 10 minutes
+		gcTime: 10 * 60 * 1000 // Data remains in cache for 10 minutes
 	});
 
 	const [appliedCosmetics, setAppliedCosmetics] = useState<AppliedCosmetics>({

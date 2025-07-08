@@ -370,9 +370,9 @@ export class EconomyTransformer {
     }
 
     // Get enhanced token information from CCPayment
-    let tokenInfo: any = undefined;
-    let currentPrice: any = undefined;
-    let withdrawFee: any = undefined;
+    const tokenInfo: any = undefined;
+    const currentPrice: any = undefined;
+    const withdrawFee: any = undefined;
     
     try {
       // CCPayment integration temporarily disabled

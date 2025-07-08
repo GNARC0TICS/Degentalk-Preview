@@ -1,4 +1,4 @@
-import { db } from '@server/src/lib/db';
+import { db } from '@db';
 import { mentionsIndex, users } from '@schema';
 import { mentionSourceTypeEnum } from '@schema';
 import { and, eq, inArray } from 'drizzle-orm';

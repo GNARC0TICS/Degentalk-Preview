@@ -3,7 +3,15 @@ import { AlertTriangle } from 'lucide-react';
 
 export interface InlineErrorProps {
 	message: string;
-	className?: string;
+	className?: string | undefined;
+	/** Optional icon to display */
+	icon?: React.ReactNode | undefined;
+	/** Variant styling */
+	variant?: 'error' | 'warning' | 'info' | undefined;
+	/** Show dismiss button */
+	dismissible?: boolean | undefined;
+	/** Callback when dismissed */
+	onDismiss?: (() => void) | undefined;
 }
 
 export const InlineError: React.FC<InlineErrorProps> = ({ message, className }) => (

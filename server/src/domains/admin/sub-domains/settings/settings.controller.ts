@@ -72,7 +72,7 @@ export class AdminSettingsController {
 				count: data.settings.length,
 				keys: data.settings.map((s) => s.key)
 			});
-			res.json(settings);
+			return sendSuccess(res, settings);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -85,7 +85,7 @@ export class AdminSettingsController {
 	async getAllSettingGroups(req: Request, res: Response) {
 		try {
 			const groups = await adminSettingsService.getAllSettingGroups();
-			res.json(groups);
+			return sendSuccess(res, groups);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -128,7 +128,7 @@ export class AdminSettingsController {
 				...data,
 				originalKey: key
 			});
-			res.json(group);
+			return sendSuccess(res, group);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -148,7 +148,7 @@ export class AdminSettingsController {
 				newGroupKey,
 				reassignedSettings: result.reassignedSettings
 			});
-			res.json(result);
+			return sendSuccess(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -182,7 +182,7 @@ export class AdminSettingsController {
 			if (!data) return;
 			const setting = await adminSettingsService.updateSettingMetadata(key, data);
 			await adminController.logAction(req, 'UPDATE_SETTING_METADATA', 'setting', key, data);
-			res.json(setting);
+			return sendSuccess(res, setting);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -198,7 +198,7 @@ export class AdminSettingsController {
 
 			const result = await adminSettingsService.deleteSetting(key);
 			await adminController.logAction(req, 'DELETE_SETTING', 'setting', key, {});
-			res.json(result);
+			return sendSuccess(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -211,7 +211,7 @@ export class AdminSettingsController {
 	async getFeatureFlags(req: Request, res: Response) {
 		try {
 			const flags = await adminSettingsService.getAllFeatureFlags();
-			res.json(flags);
+			return sendSuccess(res, flags);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -228,7 +228,7 @@ export class AdminSettingsController {
 			if (!data) return;
 			const result = await adminSettingsService.updateFeatureFlag(data);
 			await adminController.logAction(req, 'UPDATE_FEATURE_FLAG', 'feature_flag', key, data);
-			res.json(result);
+			return sendSuccess(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res

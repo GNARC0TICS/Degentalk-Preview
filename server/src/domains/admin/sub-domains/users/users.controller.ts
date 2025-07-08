@@ -13,6 +13,8 @@ import { ilike } from 'drizzle-orm';
 import type { UserId, AdminId } from '@shared/types/ids';
 import { toId, isValidId } from '@shared/utils/id';
 import { logger } from '../../../../core/logger';
+import { UserTransformer } from '@server/src/domains/users/transformers/user.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 
 export class AdminUsersController {
 	/**
@@ -25,7 +27,10 @@ export class AdminUsersController {
 			const users = await adminUsersService.getUsers(query);
 			return res.json({
 				success: true,
-				data: users
+				data: {
+					...users,
+					users: toPublicList(users.users, UserTransformer.toAdminUserDetail)
+				}
 			});
 		} catch (error) {
 			if (error instanceof AdminError) {
@@ -59,7 +64,7 @@ export class AdminUsersController {
 			const userData = await adminUsersService.getUserById(userId);
 			return res.json({
 				success: true,
-				data: userData
+				data: UserTransformer.toAdminUserDetail(userData)
 			});
 		} catch (error) {
 			if (error instanceof AdminError) {
@@ -101,7 +106,7 @@ export class AdminUsersController {
 
 			return res.json({
 				success: true,
-				data: updatedUser,
+				data: UserTransformer.toAdminUserDetail(updatedUser),
 				message: 'User updated successfully'
 			});
 		} catch (error) {
@@ -140,7 +145,7 @@ export class AdminUsersController {
 
 			return res.status(201).json({
 				success: true,
-				data: newUser,
+				data: UserTransformer.toAdminUserDetail(newUser),
 				message: 'User created successfully'
 			});
 		} catch (error) {

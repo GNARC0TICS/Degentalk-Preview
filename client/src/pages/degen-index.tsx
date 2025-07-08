@@ -11,6 +11,7 @@ import { UserDirectoryTable } from '@/components/users/UserDirectoryTable';
 import { UserFilters } from '@/components/users/UserFilters';
 import { motion } from 'framer-motion';
 import type { UserId } from '@shared/types/ids';
+import { toId } from '@shared/utils/id';
 
 export interface DegenUser {
 	id: UserId;
@@ -60,7 +61,7 @@ export default function DegenIndexPage() {
 			const generateMockUsers = (): DegenUser[] => {
 				const baseUsers = [
 					{
-						id: 'user-cryptoking-001' as UserId,
+						id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440001'),
 						username: 'CryptoKing',
 						avatarUrl: 'https://avatar.vercel.sh/cryptoking',
 						xp: 15000,
@@ -74,7 +75,7 @@ export default function DegenIndexPage() {
 						badges: ['Legend', 'Whale', 'Early Adopter']
 					},
 					{
-						id: 'user-diamondhands-002' as UserId,
+						id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440002'),
 						username: 'DiamondHands',
 						avatarUrl: 'https://avatar.vercel.sh/diamondhands',
 						xp: 12500,
@@ -88,7 +89,7 @@ export default function DegenIndexPage() {
 						badges: ['Diamond Hands', 'Veteran']
 					},
 					{
-						id: 'user-whalewatcher-003' as UserId,
+						id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440003'),
 						username: 'WhaleWatcher',
 						avatarUrl: 'https://avatar.vercel.sh/whalewatcher',
 						xp: 11000,
@@ -102,7 +103,7 @@ export default function DegenIndexPage() {
 						badges: ['Analyst', 'Active']
 					},
 					{
-						id: 'user-nftguru-004' as UserId,
+						id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440004'),
 						username: 'NFTGuru',
 						avatarUrl: 'https://avatar.vercel.sh/nftguru',
 						xp: 9500,
@@ -116,7 +117,7 @@ export default function DegenIndexPage() {
 						badges: ['Artist', 'Creator']
 					},
 					{
-						id: 'user-shillmaster-005' as UserId,
+						id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440005'),
 						username: 'ShillMaster',
 						avatarUrl: 'https://avatar.vercel.sh/shillmaster',
 						xp: 8000,
@@ -130,7 +131,7 @@ export default function DegenIndexPage() {
 						badges: ['Marketer', 'Influencer']
 					},
 					{
-						id: 'user-paperhands-006' as UserId,
+						id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440006'),
 						username: 'PaperHands',
 						avatarUrl: 'https://avatar.vercel.sh/paperhands',
 						xp: 500,
@@ -144,7 +145,7 @@ export default function DegenIndexPage() {
 						badges: ['Newbie']
 					},
 					{
-						id: 'user-lasereyes-007' as UserId,
+						id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440007'),
 						username: 'LaserEyes',
 						xp: 7500,
 						clout: 110,
@@ -157,7 +158,7 @@ export default function DegenIndexPage() {
 						badges: ['Seer', 'Prophet']
 					},
 					{
-						id: 'user-tothemoon-008' as UserId,
+						id: toId<'UserId'>('550e8400-e29b-41d4-a716-446655440008'),
 						username: 'ToTheMoon',
 						xp: 6800,
 						clout: 105,
@@ -270,7 +271,7 @@ export default function DegenIndexPage() {
 					const level = Math.max(1, Math.floor(xp / 1000)); // 1000 XP per level
 
 					additionalUsers.push({
-						id: `user-${username.toLowerCase()}-${String(9 + i).padStart(3, '0')}` as UserId,
+						id: toId<'UserId'>(`550e8400-e29b-41d4-a716-${String(9 + i).padStart(12, '0')}`),
 						username,
 						avatarUrl: `https://avatar.vercel.sh/${username.toLowerCase()}`,
 						xp,

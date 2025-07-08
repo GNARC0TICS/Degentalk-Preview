@@ -5,6 +5,7 @@ import AdminLayout from './pages/admin/admin-layout';
 import { ModLayout } from './components/mod/mod-layout';
 import { SiteHeader, HeaderProvider } from '@/components/header';
 import { GlobalRouteGuard } from '@/components/auth/GlobalRouteGuard';
+import { ProtectedRoute } from '@/components/auth';
 import WalletPage from './pages/wallet';
 
 // Pages

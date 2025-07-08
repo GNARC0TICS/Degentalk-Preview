@@ -40,6 +40,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
 import { useSolveThread, useUnsolveThread } from '@/features/forum/hooks/useForumQueries';
 import type { ThreadId, PostId } from '@shared/types/ids';
+import { parseId, toId } from '@shared/utils/id';
 
 interface ModeratorActionsProps {
 	type: 'thread' | 'post';
@@ -220,10 +221,11 @@ export function ModeratorActions({
 
 							<DropdownMenuItem
 								onClick={() => {
+									const threadId = parseId<'ThreadId'>(String(itemId)) || toId<'ThreadId'>(String(itemId));
 									if (itemData.isSolved) {
-										unsolveThread.mutate(itemId);
+										unsolveThread.mutate(threadId);
 									} else {
-										solveThread.mutate({ threadId: itemId });
+										solveThread.mutate({ threadId });
 									}
 								}}
 							>

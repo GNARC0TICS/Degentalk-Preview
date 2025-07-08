@@ -28,6 +28,8 @@ import { canUser } from '@lib/auth/canUser.ts';
 import { logger } from '@server/src/core/logger';
 import { MentionsService } from '../social/mentions.service';
 import type { RoomId, GroupId } from '@shared/types/ids';
+import { ShoutboxTransformer } from '@server/src/domains/economy/shoutbox/transformers/shoutbox.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 
 // Rate limiting for shoutbox messages (10 seconds cooldown)
 const userLastMessageTime = new Map<UserId, number>();
@@ -191,7 +193,7 @@ router.get('/rooms', async (req: Request, res: Response) => {
 			};
 		});
 
-		res.json(roomsWithAccess);
+		res.json(toPublicList(roomsWithAccess, ShoutboxTransformer.toPublicShoutbox));
 	} catch (error) {
 		logger.error('ShoutboxRoutes', 'Error fetching chat rooms', { err: error });
 		res.status(500).json({ error: 'Failed to fetch chat rooms' });

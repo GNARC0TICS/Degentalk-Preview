@@ -20,7 +20,7 @@ import type { ForumId, ParentZoneId, ZoneId, UserId, ThreadId, StructureId, Post
  * Replaces: ZoneWithForums, MergedZone, etc.
  */
 export interface CanonicalZone {
-	id: UserId;
+	id: ZoneId;
 	name: string;
 	slug: string;
 	description?: string;
@@ -57,7 +57,7 @@ export interface CanonicalZone {
  * Replaces: ForumCategoryWithStats, MergedForum, etc.
  */
 export interface CanonicalForum {
-	id: UserId;
+	id: ForumId;
 	name: string;
 	slug: string;
 	description?: string;
@@ -107,7 +107,7 @@ export interface CanonicalForum {
  * Replaces: various subforum representations
  */
 export interface CanonicalSubforum {
-	id: UserId;
+	id: ForumId;
 	name: string;
 	slug: string;
 	description?: string;
@@ -146,7 +146,7 @@ export interface CanonicalSubforum {
  * Replaces: ThreadWithUser, ThreadWithPostsAndUser, etc.
  */
 export interface CanonicalThread {
-	id: UserId;
+	id: ThreadId;
 	title: string;
 	slug: string;
 	content?: string; // First post content (optional for list views)
@@ -175,7 +175,7 @@ export interface CanonicalThread {
 
 	// Structure relationships
 	structure: {
-		id: UserId;
+		id: StructureId;
 		name: string;
 		slug: string;
 		type: 'forum' | 'subforum';
@@ -203,7 +203,7 @@ export interface CanonicalThread {
  * Replaces: PostWithUser, various post representations
  */
 export interface CanonicalPost {
-	id: UserId;
+	id: PostId;
 	content: string;
 	threadId: ThreadId;
 	userId: UserId;
@@ -272,7 +272,7 @@ export interface CanonicalUser {
  * Canonical Tag - Thread categorization
  */
 export interface CanonicalTag {
-	id: UserId;
+	id: TagId;
 	name: string;
 	slug: string;
 	description?: string;

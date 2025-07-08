@@ -22,10 +22,10 @@ interface Role {
 }
 
 interface RoleFormProps {
-	role?: Role;
+	role?: Role | undefined;
 	onSubmit: (role: Partial<Role>) => void;
 	onCancel: () => void;
-	isLoading?: boolean;
+	isLoading?: boolean | undefined;
 }
 
 export function RoleForm({ role, onSubmit, onCancel, isLoading }: RoleFormProps) {

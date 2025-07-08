@@ -33,11 +33,11 @@ export interface AdaptiveForumGridProps<T> {
 		value: string;
 		label: string;
 	}>;
-	onSortChange?: (sort: string) => void;
-	currentSort?: string;
-	isLoading?: boolean;
-	loadingSkeletons?: number;
-	className?: string;
+	onSortChange?: (sort: string) => void | undefined;
+	currentSort?: string | undefined;
+	isLoading?: boolean | undefined;
+	loadingSkeletons?: number | undefined;
+	className?: string | undefined;
 }
 
 const AdaptiveForumGrid = memo(
@@ -217,7 +217,7 @@ const AdaptiveForumGrid = memo(
 
 						{/* Sort Options */}
 						{sortOptions && onSortChange && (
-							<Select value={currentSort} onValueChange={onSortChange}>
+							<Select value={currentSort || ''} onValueChange={onSortChange}>
 								<SelectTrigger className="w-48 h-8 bg-zinc-800/50 border-zinc-700/50">
 									<div className="flex items-center gap-2">
 										<SortAsc className="h-3 w-3" />

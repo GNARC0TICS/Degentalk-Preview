@@ -4,12 +4,12 @@ import { motion } from 'framer-motion';
 import { ShoppingCart, Sparkles, Coins, TrendingUp, Zap } from 'lucide-react';
 
 interface ShopCardProps {
-	className?: string;
+	className?: string | undefined;
 	featuredItem?: {
 		name: string;
 		price: number;
-		image?: string;
-	};
+		image?: string | undefined;
+	} | undefined;
 }
 
 /**

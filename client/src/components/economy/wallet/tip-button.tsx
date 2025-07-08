@@ -91,13 +91,15 @@ export default function TipButton({
 			return;
 		}
 
-		sendTip(
-			{
-				toUserId: recipientId,
-				amount: values.amount,
-				reason: values.message,
-				source
-			},
+		const tipData: Parameters<typeof sendTip>[0] = {
+			toUserId: recipientId,
+			amount: values.amount,
+			source
+		};
+		if (values.message) {
+			tipData.reason = values.message;
+		}
+		sendTip(tipData,
 			{
 				onSuccess: () => {
 					setIsOpen(false);

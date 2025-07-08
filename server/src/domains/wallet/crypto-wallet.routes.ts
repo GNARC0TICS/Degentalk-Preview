@@ -11,6 +11,7 @@ import { userService } from '@server/src/core/services/user.service';
 import { isAuthenticated } from '../auth/middleware/auth.middleware';
 import { logger } from '../../core/logger';
 import { EconomyTransformer } from '../economy/transformers/economy.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 import { ccpaymentService } from './ccpayment.service';
 import { walletService } from './wallet.service';
 import { z } from 'zod';
@@ -85,7 +86,7 @@ router.get('/addresses', isAuthenticated, async (req, res) => {
     );
 
     res.json({
-      addresses: enhancedAddresses,
+      addresses: toPublicList(enhancedAddresses, EconomyTransformer.toPublicCryptoWallet),
       totalAddresses: enhancedAddresses.length
     });
 
@@ -134,7 +135,13 @@ router.get('/balances', isAuthenticated, async (req, res) => {
       }
     }
 
-    res.json(balances);
+    // Transform balances using EconomyTransformer
+    const transformedBalances = {
+      ...balances,
+      crypto: toPublicList(balances.crypto, EconomyTransformer.toAuthenticatedCryptoWallet)
+    };
+    
+    res.json(transformedBalances);
 
   } catch (error) {
     logger.error('CryptoWalletRoutes', 'Error getting crypto balances', {
@@ -161,13 +168,15 @@ router.post('/validate-address', isAuthenticated, async (req, res) => {
     // Check address validity with CCPayment
     const isValid = await ccpaymentService.checkWithdrawalAddressValidity(chain, address);
 
-    res.json({
+    const result = {
       isValid,
       chain,
       message: isValid 
         ? 'Address is valid for withdrawal'
         : 'Invalid address for the specified chain'
-    });
+    };
+    
+    res.json(result);
 
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -201,10 +210,12 @@ router.post('/get-withdraw-fee', isAuthenticated, async (req, res) => {
     // Get withdrawal fee from CCPayment
     const feeInfo = await ccpaymentService.getWithdrawFee(coinId, chain);
 
-    res.json({
+    const result = {
       fee: feeInfo,
       message: `Withdrawal fee for ${feeInfo.coinSymbol} on ${chain}: ${feeInfo.amount}`
-    });
+    };
+    
+    res.json(result);
 
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -244,11 +255,13 @@ router.post('/rescan-transaction', isAuthenticated, async (req, res) => {
       chain: transactionData.chain
     });
 
-    res.json({
+    const result = {
       success: true,
       description,
       message: 'Transaction rescan initiated successfully'
-    });
+    };
+    
+    res.json(result);
 
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -291,11 +304,13 @@ router.get('/supported-tokens', async (req, res) => {
       priceAvailable: !!prices[token.coinId]
     }));
 
-    res.json({
+    const result = {
       tokens: enhancedTokens,
       totalTokens: enhancedTokens.length,
       pricesLastUpdated: new Date().toISOString()
-    });
+    };
+    
+    res.json(result);
 
   } catch (error) {
     logger.error('CryptoWalletRoutes', 'Error getting supported tokens', {
@@ -328,11 +343,13 @@ router.get('/token-info/:coinId', async (req, res) => {
       logger.warn('CryptoWalletRoutes', 'Failed to fetch token price', { coinId, error });
     }
 
-    res.json({
+    const result = {
       ...tokenInfo,
       currentPrice,
       priceLastUpdated: new Date().toISOString()
-    });
+    };
+    
+    res.json(result);
 
   } catch (error) {
     logger.error('CryptoWalletRoutes', 'Error getting token info', {

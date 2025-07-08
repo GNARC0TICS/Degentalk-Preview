@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/hooks/use-auth.tsx';
-import { GlobalRouteGuard } from '@/components/auth/GlobalRouteGuard';
+import { ProtectedRoute } from '@/components/auth';
 import { Users, Link2, Copy, CheckCircle, Gift, TrendingUp, Star, Calendar } from 'lucide-react';
 import { toast } from 'sonner';
 import { type UserId } from "@shared/types/ids";

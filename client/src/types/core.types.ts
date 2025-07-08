@@ -6,44 +6,44 @@
 // Base error handling types
 export interface ApiErrorResponse {
 	message: string;
-	code?: string;
-	details?: Record<string, unknown>;
-	status?: number;
-	timestamp?: string;
+	code?: string | undefined;
+	details?: Record<string, unknown> | undefined;
+	status?: number | undefined;
+	timestamp?: string | undefined;
 }
 
 export interface ApiErrorData {
 	message: string;
-	code?: string;
-	details?: Record<string, unknown>;
-	field?: string;
+	code?: string | undefined;
+	details?: Record<string, unknown> | undefined;
+	field?: string | undefined;
 }
 
 // Timing and performance metadata
 export interface TimingMetadata {
 	_timing?: {
 		duration: number;
-		requestId?: string;
-		cacheHit?: boolean;
-	};
+		requestId?: string | undefined;
+		cacheHit?: boolean | undefined;
+	} | undefined;
 }
 
 // Standardized API response wrapper
 export interface StandardApiResponse<T> {
 	data: T;
 	success: boolean;
-	message?: string;
-	errors?: ApiErrorData[];
+	message?: string | undefined;
+	errors?: ApiErrorData[] | undefined;
 	meta?: {
 		timestamp: string;
-		requestId?: string;
+		requestId?: string | undefined;
 		pagination?: {
 			page: number;
 			limit: number;
 			total: number;
 			totalPages: number;
-		};
-	} & TimingMetadata;
+		} | undefined;
+	} & TimingMetadata | undefined;
 }
 
 // Test utilities
@@ -52,8 +52,8 @@ export interface TestUser {
 	username: string;
 	email: string;
 	role: 'admin' | 'moderator' | 'user' | 'super_admin';
-	permissions?: string[];
-	status?: 'active' | 'suspended' | 'banned';
+	permissions?: string[] | undefined;
+	status?: 'active' | 'suspended' | 'banned' | undefined;
 }
 
 export interface MockComponentProps {
@@ -85,22 +85,22 @@ export interface UploadedFile {
 export interface FormValidationError {
 	field: string;
 	message: string;
-	code?: string;
+	code?: string | undefined;
 }
 
 export interface SelectOption<T = string> {
 	label: string;
 	value: T;
-	disabled?: boolean;
-	metadata?: Record<string, unknown>;
+	disabled?: boolean | undefined;
+	metadata?: Record<string, unknown> | undefined;
 }
 
 // Pagination types
 export interface PaginationParams {
-	page?: number;
-	limit?: number;
-	sortBy?: string;
-	sortOrder?: 'asc' | 'desc';
+	page?: number | undefined;
+	limit?: number | undefined;
+	sortBy?: string | undefined;
+	sortOrder?: 'asc' | 'desc' | undefined;
 }
 
 export interface PaginatedResponse<T> {
@@ -117,9 +117,9 @@ export interface PaginatedResponse<T> {
 
 // Search and filtering
 export interface SearchParams {
-	query?: string;
-	filters?: Record<string, unknown>;
-	categories?: string[];
+	query?: string | undefined;
+	filters?: Record<string, unknown> | undefined;
+	categories?: string[] | undefined;
 }
 
 // Date range utilities
@@ -132,5 +132,5 @@ export interface DateRange {
 export interface EntityReference {
 	id: string;
 	type: string;
-	name?: string;
+	name?: string | undefined;
 }

@@ -10,6 +10,8 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { achievementService, AchievementService } from './achievement.service';
 import type { AchievementRequirement } from './achievement.service';
+import { CloutTransformer } from './transformers/clout.transformer';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 import { logger } from '../../core/logger';
 import { AppError } from '../../core/errors';
 
@@ -86,11 +88,19 @@ export class AchievementController {
 				{} as Record<string, typeof achievements>
 			);
 
+			const transformedAchievements = toPublicList(achievements, CloutTransformer.toPublicAchievement);
+			const transformedGrouped = Object.fromEntries(
+				Object.entries(grouped).map(([category, items]) => [
+					category,
+					toPublicList(items, CloutTransformer.toPublicAchievement)
+				])
+			);
+
 			res.json({
 				success: true,
 				data: {
-					achievements,
-					grouped,
+					achievements: transformedAchievements,
+					grouped: transformedGrouped,
 					stats: {
 						total: achievements.length,
 						byCategory: Object.fromEntries(
@@ -125,9 +135,18 @@ export class AchievementController {
 
 			const stats = await this.service.getUserAchievementStats(userId);
 
+			// Transform recent achievements in stats
+			const transformedStats = {
+				...stats,
+				recentEarned: toPublicList(stats.recentEarned, (earned: any) => ({
+					...CloutTransformer.toAuthenticatedAchievement(earned.achievement, { id: userId }),
+					earnedAt: earned.earnedAt
+				}))
+			};
+
 			res.json({
 				success: true,
-				data: stats
+				data: transformedStats
 			});
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting user achievements:', error);
@@ -159,9 +178,18 @@ export class AchievementController {
 
 			const stats = await this.service.getUserAchievementStats(userId);
 
+			// Transform recent achievements in stats
+			const transformedStats = {
+				...stats,
+				recentEarned: toPublicList(stats.recentEarned, (earned: any) => ({
+					...CloutTransformer.toAuthenticatedAchievement(earned.achievement, { id: userId }),
+					earnedAt: earned.earnedAt
+				}))
+			};
+
 			res.json({
 				success: true,
-				data: stats
+				data: transformedStats
 			});
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting user achievements:', error);
@@ -197,13 +225,19 @@ export class AchievementController {
 			const inProgress = progress.filter((p) => !p.isCompleted && p.progressPercentage > 0);
 			const notStarted = progress.filter((p) => !p.isCompleted && p.progressPercentage === 0);
 
+			const transformProgress = (progressItems: any[]) => 
+				progressItems.map(p => ({
+					...p,
+					achievement: CloutTransformer.toAuthenticatedAchievement(p.achievement, { id: userId })
+				}));
+
 			res.json({
 				success: true,
 				data: {
-					all: progress,
-					completed,
-					inProgress,
-					notStarted,
+					all: transformProgress(progress),
+					completed: transformProgress(completed),
+					inProgress: transformProgress(inProgress),
+					notStarted: transformProgress(notStarted),
 					stats: {
 						total: progress.length,
 						completed: completed.length,
@@ -251,13 +285,19 @@ export class AchievementController {
 			const inProgress = progress.filter((p) => !p.isCompleted && p.progressPercentage > 0);
 			const notStarted = progress.filter((p) => !p.isCompleted && p.progressPercentage === 0);
 
+			const transformProgress = (progressItems: any[]) => 
+				progressItems.map(p => ({
+					...p,
+					achievement: CloutTransformer.toAuthenticatedAchievement(p.achievement, { id: userId })
+				}));
+
 			res.json({
 				success: true,
 				data: {
-					all: progress,
-					completed,
-					inProgress,
-					notStarted,
+					all: transformProgress(progress),
+					completed: transformProgress(completed),
+					inProgress: transformProgress(inProgress),
+					notStarted: transformProgress(notStarted),
 					stats: {
 						total: progress.length,
 						completed: completed.length,
@@ -299,7 +339,7 @@ export class AchievementController {
 			res.json({
 				success: true,
 				data: {
-					awarded: awardedAchievements,
+					awarded: toPublicList(awardedAchievements, CloutTransformer.toPublicAchievement),
 					count: awardedAchievements.length
 				},
 				message:
@@ -372,7 +412,7 @@ export class AchievementController {
 
 			res.status(201).json({
 				success: true,
-				data: achievement,
+				data: CloutTransformer.toAdminAchievement(achievement),
 				message: `Achievement "${achievement.name}" created successfully`
 			});
 		} catch (error) {
@@ -460,7 +500,7 @@ export class AchievementController {
 
 			res.json({
 				success: true,
-				data: achievement
+				data: CloutTransformer.toPublicAchievement(achievement)
 			});
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting achievement by ID:', error);

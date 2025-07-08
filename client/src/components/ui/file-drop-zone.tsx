@@ -12,24 +12,40 @@ export interface FileDropZoneProps {
 	/**
 	 * Allowed mime types. Example: ['image/jpeg', 'image/png']
 	 */
-	accept?: string[];
+	accept?: string[] | undefined;
 	/**
 	 * Maximum file size in bytes. Defaults to 10 MB.
 	 */
-	maxSize?: number;
+	maxSize?: number | undefined;
 	/**
 	 * Optional class name for styling overrides.
 	 */
-	className?: string;
+	className?: string | undefined;
 	/**
 	 * Whether to show a preview thumbnail after a file is selected.
 	 * Only works for images.
 	 */
-	showPreview?: boolean;
+	showPreview?: boolean | undefined;
 	/**
 	 * Whether the component is currently disabled (e.g., during upload)
 	 */
-	disabled?: boolean;
+	disabled?: boolean | undefined;
+	/**
+	 * Optional placeholder text
+	 */
+	placeholder?: string | undefined;
+	/**
+	 * Optional error message
+	 */
+	errorMessage?: string | undefined;
+	/**
+	 * Optional helper text
+	 */
+	helperText?: string | undefined;
+	/**
+	 * Multiple file selection
+	 */
+	multiple?: boolean | undefined;
 }
 
 export const FileDropZone: React.FC<FileDropZoneProps> = ({

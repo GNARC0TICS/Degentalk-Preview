@@ -19,6 +19,7 @@ import {
 	TrackEventSchema
 } from './ui-config.validators';
 import { validateRequestBody, validateQueryParams } from '../../admin.validation';
+import { toPublicList } from '@server/src/core/utils/transformer.helpers';
 
 export class UiConfigController {
 	// ==================== QUOTE OPERATIONS ====================
@@ -202,7 +203,7 @@ export class UiConfigController {
 	async getCollections(req: Request, res: Response) {
 		try {
 			const collections = await uiConfigService.getCollections();
-			res.json(collections);
+			res.json(toPublicList(collections, (collection) => ({ ...collection, id: collection.id })));
 		} catch (error) {
 			res.status(500).json({ error: 'Failed to fetch collections' });
 		}

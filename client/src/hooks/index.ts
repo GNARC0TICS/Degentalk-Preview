@@ -1,6 +1,5 @@
 // Auth hooks
 export { useAuth } from './use-auth';
-export { useAuthRequired } from './use-auth-required';
 
 // UI hooks
 export { useToast } from './use-toast';
