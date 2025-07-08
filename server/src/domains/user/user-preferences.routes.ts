@@ -3,8 +3,8 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { UserPreferencesService } from './user-preferences.service';
 import { requireAuth } from '../auth/middleware/auth.middleware';
-import { logger } from "../../core/logger";
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { logger } from '../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -48,10 +48,7 @@ router.get('/social-preferences', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, preferences);
 	} catch (error) {
 		logger.error('Error fetching social preferences:', error);
-		res.status(500).json({
-			error: 'Failed to fetch social preferences',
-			details: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to fetch social preferences', 500);
 	}
 });
 
@@ -73,15 +70,9 @@ router.put('/social-preferences', requireAuth, async (req, res) => {
 	} catch (error) {
 		logger.error('Error updating social preferences:', error);
 		if (error instanceof z.ZodError) {
-			res.status(400).json({
-				error: 'Invalid preferences data',
-				details: error.errors
-			});
+			sendErrorResponse(res, 'Invalid preferences data', 400);
 		} else {
-			res.status(500).json({
-				error: 'Failed to update social preferences',
-				details: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to update social preferences', 500);
 		}
 	}
 });
@@ -97,10 +88,7 @@ router.get('/privacy-summary', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, summary);
 	} catch (error) {
 		logger.error('Error fetching privacy summary:', error);
-		res.status(500).json({
-			error: 'Failed to fetch privacy summary',
-			details: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to fetch privacy summary', 500);
 	}
 });
 
@@ -115,10 +103,7 @@ router.post('/reset-social-preferences', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, defaultPreferences);
 	} catch (error) {
 		logger.error('Error resetting social preferences:', error);
-		res.status(500).json({
-			error: 'Failed to reset social preferences',
-			details: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to reset social preferences', 500);
 	}
 });
 

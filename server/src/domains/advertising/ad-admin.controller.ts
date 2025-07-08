@@ -2,8 +2,8 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { adConfigurationService } from './ad-configuration.service';
 import { campaignManagementService } from './campaign-management.service';
-import { logger } from "../../core/logger";
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { logger } from '../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 // Admin validation schemas
 const placementConfigSchema = z.object({
@@ -340,10 +340,7 @@ export class AdAdminController {
 			sendSuccessResponse(res, analytics);
 		} catch (error) {
 			logger.error('Get platform analytics error:', error);
-			res.status(500).json({
-				error: 'Failed to get platform analytics',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to get platform analytics', 500);
 		}
 	}
 

@@ -8,16 +8,16 @@ import {
 } from '../auth/middleware/auth.middleware';
 import { insertDictionaryEntrySchema } from '@schema';
 import rateLimit from 'express-rate-limit';
-import { logger } from "../../core/logger";
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { logger } from '../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
 // GET /api/dictionary
-sendErrorResponse(res, 'Server error', 500);
+// sendErrorResponse(res, 'Server error', 500);
 
 // GET /api/dictionary/:slug
-sendErrorResponse(res, 'Server error', 404);
+// sendErrorResponse(res, 'Server error', 404);
 
 // POST /api/dictionary (requires auth)
 router.post(
@@ -31,18 +31,18 @@ router.post(
 				...data,
 				authorId: userService.getUserFromRequest(req).id
 			});
-			return res.status(201).json(created);
+			return sendSuccessResponse(res, created, 'Entry created successfully');
 		} catch (error) {
 			logger.error('Entry submission error', error);
-			return res.status(400).json({ error: 'Invalid submission' });
+			return sendErrorResponse(res, 'Invalid submission', 400);
 		}
 	}
 );
 
 // PATCH /api/dictionary/:id (approve/reject) admin/moderator only
-sendErrorResponse(res, 'Server error', 400);
+// sendErrorResponse(res, 'Server error', 400);
 
 // POST /api/dictionary/:id/upvote (toggle)
-sendErrorResponse(res, 'Server error', 500);
+// sendErrorResponse(res, 'Server error', 500);
 
 export default router;

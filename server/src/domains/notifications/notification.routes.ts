@@ -17,7 +17,7 @@ import {
 	getUnreadNotificationCount
 } from './notification.service';
 import { isAuthenticated } from '../auth';
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 const router = express.Router();
 
@@ -32,7 +32,7 @@ router.get('/getPaginatedNotifications', async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			return res.status(401).json({ error: 'Unauthorized' });
+			return sendErrorResponse(res, 'Unauthorized', 401);
 		}
 
 		const page = parseInt(req.query.page as string) || 0;
@@ -44,9 +44,7 @@ router.get('/getPaginatedNotifications', async (req, res) => {
 		sendSuccessResponse(res, { page, pageSize, notifications });
 	} catch (error) {
 		logger.error('NOTIFICATIONS', 'Error getting notifications', error);
-		res.status(500).json({
-			error: 'Failed to retrieve user notifications'
-		});
+		sendErrorResponse(res, 'Failed to retrieve user notifications', 500);
 	}
 });
 
@@ -58,7 +56,7 @@ router.get('/unread/count', async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			return res.status(401).json({ error: 'Unauthorized' });
+			return sendErrorResponse(res, 'Unauthorized', 401);
 		}
 
 		const count = await getUnreadNotificationCount(userId);
@@ -66,9 +64,7 @@ router.get('/unread/count', async (req, res) => {
 		sendSuccessResponse(res, { count });
 	} catch (error) {
 		logger.error('NOTIFICATIONS', 'Error getting unread notification count', error);
-		res.status(500).json({
-			error: 'Failed to retrieve unread notification count'
-		});
+		sendErrorResponse(res, 'Failed to retrieve unread notification count', 500);
 	}
 });
 
@@ -80,7 +76,7 @@ router.put('/:id/read', async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			return res.status(401).json({ error: 'Unauthorized' });
+			return sendErrorResponse(res, 'Unauthorized', 401);
 		}
 
 		const notificationId = req.params.id;
@@ -89,13 +85,11 @@ router.put('/:id/read', async (req, res) => {
 		if (success) {
 			sendSuccessResponse(res, { success: true });
 		} else {
-			res.status(404).json({ error: 'Notification not found or not owned by user' });
+			sendErrorResponse(res, 'Notification not found or not owned by user', 404);
 		}
 	} catch (error) {
 		logger.error('NOTIFICATIONS', 'Error marking notification as read', error);
-		res.status(500).json({
-			error: 'Failed to mark notification as read'
-		});
+		sendErrorResponse(res, 'Failed to mark notification as read', 500);
 	}
 });
 
@@ -107,7 +101,7 @@ router.put('/read-all', async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			return res.status(401).json({ error: 'Unauthorized' });
+			return sendErrorResponse(res, 'Unauthorized', 401);
 		}
 
 		const count = await markAllNotificationsAsRead(userId);
@@ -115,9 +109,7 @@ router.put('/read-all', async (req, res) => {
 		sendSuccessResponse(res, { success: true, count });
 	} catch (error) {
 		logger.error('NOTIFICATIONS', 'Error marking all notifications as read', error);
-		res.status(500).json({
-			error: 'Failed to mark all notifications as read'
-		});
+		sendErrorResponse(res, 'Failed to mark all notifications as read', 500);
 	}
 });
 

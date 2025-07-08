@@ -10,8 +10,8 @@ import axios from 'axios';
 import { z } from 'zod';
 import { isAuthenticated } from '../../domains/auth/middleware/auth.middleware.ts';
 import type { IStorage } from '../../../storage';
-import { logger } from "../../core/logger";
-import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+import { logger } from '../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 /**
  * Initialize editor routes
@@ -19,7 +19,7 @@ import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/t
 const router = Router();
 
 // Check if Giphy is enabled
-sendErrorResponse(res, 'Server error', 500);
+// sendErrorResponse(res, 'Server error', 500);
 
 // Get trending GIFs
 router.get('/giphy-trending', async (req: Request, res: Response) => {
@@ -33,7 +33,7 @@ router.get('/giphy-trending', async (req: Request, res: Response) => {
 
 		// If not enabled or no API key, return error
 		if (!giphyEnabled || !giphyApiKey) {
-			return res.status(403).json({ error: 'Giphy integration is not enabled' });
+			return sendErrorResponse(res, 'Giphy integration is not enabled', 403);
 		}
 
 		// Get limit and rating from settings
@@ -52,7 +52,7 @@ router.get('/giphy-trending', async (req: Request, res: Response) => {
 		sendSuccessResponse(res, response.data);
 	} catch (error) {
 		logger.error('Error fetching trending GIFs:', error);
-		res.status(500).json({ error: 'Failed to fetch trending GIFs' });
+		sendErrorResponse(res, 'Failed to fetch trending GIFs', 500);
 	}
 });
 
@@ -62,7 +62,7 @@ router.post('/giphy-search', async (req: Request, res: Response) => {
 		const { query } = req.body;
 
 		if (!query) {
-			return res.status(400).json({ error: 'Search query is required' });
+			return sendErrorResponse(res, 'Search query is required', 400);
 		}
 
 		const storage = req.app.get('storage') as IStorage;
@@ -74,7 +74,7 @@ router.post('/giphy-search', async (req: Request, res: Response) => {
 
 		// If not enabled or no API key, return error
 		if (!giphyEnabled || !giphyApiKey) {
-			return res.status(403).json({ error: 'Giphy integration is not enabled' });
+			return sendErrorResponse(res, 'Giphy integration is not enabled', 403);
 		}
 
 		// Get limit and rating from settings
@@ -94,7 +94,7 @@ router.post('/giphy-search', async (req: Request, res: Response) => {
 		sendSuccessResponse(res, response.data);
 	} catch (error) {
 		logger.error('Error searching GIFs:', error);
-		res.status(500).json({ error: 'Failed to search GIFs' });
+		sendErrorResponse(res, 'Failed to search GIFs', 500);
 	}
 });
 
