@@ -14,6 +14,10 @@ import { asyncHandler } from '@server/src/core/errors';
 import { logger } from '../../../core/logger';
 import { VaultService } from './vault.service';
 import type { EntityId } from '@shared/types/ids';
+import { 
+	sendSuccessResponse,
+	sendErrorResponse
+} from '@server/src/core/utils/transformer.helpers';
 // import { VaultError, VaultErrorCodes } from './vault.errors'; // Removed as file not found and errors not used
 
 /**
@@ -27,21 +31,14 @@ export class VaultController {
 		const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 		if (!userId) {
-			return res.status(401).json({
-				error: 'Authentication required',
-				code: ErrorCodes.UNAUTHORIZED // Changed
-			});
+			return sendErrorResponse(res, 'Authentication required', 401);
 		}
 
 		const { amount, currency, lockDurationDays, reason } = req.body;
 
 		// Validate required fields
 		if (!amount || !currency || !lockDurationDays) {
-			return res.status(400).json({
-				error: 'Missing required fields',
-				code: ErrorCodes.INVALID_REQUEST, // Changed
-				details: 'amount, currency, and lockDurationDays are required'
-			});
+			return sendErrorResponse(res, 'Missing required fields: amount, currency, and lockDurationDays are required', 400);
 		}
 
 		// Create lock options
@@ -57,28 +54,17 @@ export class VaultController {
 			// Process the lock
 			const result = await vaultService.lockTokens(lockOptions);
 
-			return res.status(200).json({
-				success: true,
-				data: result
-			});
+			return sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof WalletError) {
-				return res.status(error.httpStatus).json({
-					// Changed statusCode to httpStatus
-					error: error.message,
-					code: error.code,
-					details: error.details
-				});
+				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
 
 			logger.error(
 				'VaultController',
 				`Error locking tokens: ${error instanceof Error ? error.message : String(error)}`
 			); // Handle unknown error
-			return res.status(500).json({
-				error: 'Failed to lock tokens',
-				code: ErrorCodes.OPERATION_FAILED // Changed
-			});
+			return sendErrorResponse(res, 'Failed to lock tokens', 500);
 		}
 	});
 
@@ -89,19 +75,13 @@ export class VaultController {
 		const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 		if (!userId) {
-			return res.status(401).json({
-				error: 'Authentication required',
-				code: ErrorCodes.UNAUTHORIZED // Changed
-			});
+			return sendErrorResponse(res, 'Authentication required', 401);
 		}
 
 		const vaultLockId = req.params.id as EntityId;
 
 		if (!vaultLockId) {
-			return res.status(400).json({
-				error: 'Invalid vault lock ID',
-				code: ErrorCodes.INVALID_REQUEST // Changed
-			});
+			return sendErrorResponse(res, 'Invalid vault lock ID', 400);
 		}
 
 		try {
@@ -110,35 +90,20 @@ export class VaultController {
 
 			// Check if the vault lock belongs to the user
 			if (result.userId !== userId) {
-				return res.status(403).json({
-					error: 'Permission denied',
-					code: ErrorCodes.FORBIDDEN, // Changed
-					details: 'You can only unlock your own vault locks'
-				});
+				return sendErrorResponse(res, 'Permission denied: You can only unlock your own vault locks', 403);
 			}
 
-			return res.status(200).json({
-				success: true,
-				data: result
-			});
+			return sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof WalletError) {
-				return res.status(error.httpStatus).json({
-					// Changed statusCode to httpStatus
-					error: error.message,
-					code: error.code,
-					details: error.details
-				});
+				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
 
 			logger.error(
 				'VaultController',
 				`Error unlocking tokens: ${error instanceof Error ? error.message : String(error)}`
 			); // Handle unknown error
-			return res.status(500).json({
-				error: 'Failed to unlock tokens',
-				code: ErrorCodes.OPERATION_FAILED // Changed
-			});
+			return sendErrorResponse(res, 'Failed to unlock tokens', 500);
 		}
 	});
 
@@ -149,28 +114,19 @@ export class VaultController {
 		const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 		if (!userId) {
-			return res.status(401).json({
-				error: 'Authentication required',
-				code: ErrorCodes.UNAUTHORIZED // Changed
-			});
+			return sendErrorResponse(res, 'Authentication required', 401);
 		}
 
 		try {
 			const vaultLocks = await vaultService.getUserVaultLocks(userId);
 
-			return res.status(200).json({
-				success: true,
-				data: vaultLocks
-			});
+			return sendSuccessResponse(res, vaultLocks);
 		} catch (error) {
 			logger.error(
 				'VaultController',
 				`Error getting user vault locks: ${error instanceof Error ? error.message : String(error)}`
 			); // Handle unknown error
-			return res.status(500).json({
-				error: 'Failed to get vault locks',
-				code: ErrorCodes.OPERATION_FAILED // Changed
-			});
+			return sendErrorResponse(res, 'Failed to get vault locks', 500);
 		}
 	});
 
@@ -182,39 +138,26 @@ export class VaultController {
 		const isAdmin = (userService.getUserFromRequest(req) as any)?.role === 'admin';
 
 		if (!userId) {
-			return res.status(401).json({
-				error: 'Authentication required',
-				code: ErrorCodes.UNAUTHORIZED // Changed
-			});
+			return sendErrorResponse(res, 'Authentication required', 401);
 		}
 
 		if (!isAdmin) {
-			return res.status(403).json({
-				error: 'Permission denied',
-				code: ErrorCodes.FORBIDDEN, // Changed
-				details: 'Only administrators can process automatic unlocks'
-			});
+			return sendErrorResponse(res, 'Permission denied: Only administrators can process automatic unlocks', 403);
 		}
 
 		try {
 			const results = await vaultService.processAutomaticUnlocks();
 
-			return res.status(200).json({
-				success: true,
-				data: {
-					processedCount: results.length,
-					processedLocks: results
-				}
+			return sendSuccessResponse(res, {
+				processedCount: results.length,
+				processedLocks: results
 			});
 		} catch (error) {
 			logger.error(
 				'VaultController',
 				`Error processing automatic unlocks: ${error instanceof Error ? error.message : String(error)}`
 			); // Handle unknown error
-			return res.status(500).json({
-				error: 'Failed to process automatic unlocks',
-				code: ErrorCodes.OPERATION_FAILED // Changed
-			});
+			return sendErrorResponse(res, 'Failed to process automatic unlocks', 500);
 		}
 	});
 }

@@ -64,10 +64,7 @@ router.get('/admin/vaults', isAdmin, async (req: Request, res: Response) => {
 			{ error: error instanceof Error ? error.message : String(error) }
 		);
 
-		res.status(500).json({
-			error: 'Failed to fetch vault list',
-			details: error instanceof Error ? error.message : String(error)
-		});
+		sendErrorResponse(res, `Failed to fetch vault list: ${error instanceof Error ? error.message : String(error)}`, 500);
 	}
 });
 
@@ -76,18 +73,18 @@ router.post('/admin/vaults/unlock/:vaultId', isAdmin, async (req: Request, res: 
 	try {
 		const vaultId = req.params.vaultId;
 		if (!isValidId(vaultId)) {
-			return res.status(400).json({ error: 'Invalid vault ID' });
+			return sendErrorResponse(res, 'Invalid vault ID', 400);
 		}
 
 		// Get the vault
 		const vault = await vaultService.getVault(vaultId);
 		if (!vault) {
-			return res.status(404).json({ error: 'Vault not found' });
+			return sendErrorResponse(res, 'Vault not found', 404);
 		}
 
 		// Check if already unlocked
 		if (vault.status === 'unlocked') {
-			return res.status(400).json({ error: 'Vault is already unlocked' });
+			return sendErrorResponse(res, 'Vault is already unlocked', 400);
 		}
 
 		// Force unlock through database directly to bypass time checks
@@ -158,10 +155,7 @@ router.post('/admin/vaults/unlock/:vaultId', isAdmin, async (req: Request, res: 
 			}
 		);
 
-		res.status(500).json({
-			error: 'Failed to unlock vault',
-			details: error instanceof Error ? error.message : String(error)
-		});
+		sendErrorResponse(res, `Failed to unlock vault: ${error instanceof Error ? error.message : String(error)}`, 500);
 	}
 });
 
@@ -177,7 +171,7 @@ if (process.env.NODE_ENV !== 'production') {
       `);
 
 			if (!testUser.rows || testUser.rows.length === 0) {
-				return res.status(404).json({ error: 'No users found in database' });
+				return sendErrorResponse(res, 'No users found in database', 404);
 			}
 
 			const user = testUser.rows[0];
@@ -247,10 +241,7 @@ if (process.env.NODE_ENV !== 'production') {
 				{ error: error instanceof Error ? error.message : String(error) }
 			);
 
-			res.status(500).json({
-				error: 'Failed to run vault test',
-				details: error instanceof Error ? error.message : String(error)
-			});
+			sendErrorResponse(res, `Failed to run vault test: ${error instanceof Error ? error.message : String(error)}`, 500);
 		}
 	});
 }
@@ -264,17 +255,13 @@ router.post('/lock', async (req: Request, res: Response) => {
 		// Validate that unlock time is in the future
 		const now = new Date();
 		if (unlockTime <= now) {
-			return res.status(400).json({
-				error: 'Unlock time must be in the future.'
-			});
+			return sendErrorResponse(res, 'Unlock time must be in the future.', 400);
 		}
 
 		// Validate minimum lock duration (24 hours)
 		const minLockDuration = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 		if (unlockTime.getTime() - now.getTime() < minLockDuration) {
-			return res.status(400).json({
-				error: 'Minimum lock duration is 24 hours.'
-			});
+			return sendErrorResponse(res, 'Minimum lock duration is 24 hours.', 400);
 		}
 
 		// Create the vault
@@ -296,9 +283,7 @@ router.post('/lock', async (req: Request, res: Response) => {
 		);
 
 		// Return error response
-		res.status(400).json({
-			error: error instanceof Error ? error.message : 'Failed to lock funds'
-		});
+		sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to lock funds', 400);
 	}
 });
 
@@ -327,9 +312,7 @@ router.post('/unlock', async (req: Request, res: Response) => {
 		);
 
 		// Return error response
-		res.status(400).json({
-			error: error instanceof Error ? error.message : 'Failed to unlock funds'
-		});
+		sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to unlock funds', 400);
 	}
 });
 
@@ -339,7 +322,7 @@ router.get('/:userId', async (req: Request, res: Response) => {
 		const userId = req.params.userId;
 
 		if (isNaN(userId)) {
-			return res.status(400).json({ error: 'Invalid user ID' });
+			return sendErrorResponse(res, 'Invalid user ID', 400);
 		}
 
 		const vaults = await vaultService.getUserVaults(userId);
@@ -356,9 +339,7 @@ router.get('/:userId', async (req: Request, res: Response) => {
 		);
 
 		// Return error response
-		res.status(500).json({
-			error: 'Failed to fetch vaults'
-		});
+		sendErrorResponse(res, 'Failed to fetch vaults', 500);
 	}
 });
 
@@ -368,7 +349,7 @@ router.get('/stats/:userId?', async (req: Request, res: Response) => {
 		const userId = req.params.userId ? req.params.userId : undefined;
 
 		if (req.params.userId && isNaN(userId!)) {
-			return res.status(400).json({ error: 'Invalid user ID' });
+			return sendErrorResponse(res, 'Invalid user ID', 400);
 		}
 
 		const stats = await vaultService.getVaultStatistics(userId);
@@ -385,9 +366,7 @@ router.get('/stats/:userId?', async (req: Request, res: Response) => {
 		);
 
 		// Return error response
-		res.status(500).json({
-			error: 'Failed to fetch vault statistics'
-		});
+		sendErrorResponse(res, 'Failed to fetch vault statistics', 500);
 	}
 });
 

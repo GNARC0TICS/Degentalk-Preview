@@ -202,7 +202,7 @@ router.get('/rooms', async (req: Request, res: Response) => {
 		sendTransformedListResponse(res, roomsWithAccess, ShoutboxTransformer.toPublicShoutbox);
 	} catch (error) {
 		logger.error('ShoutboxRoutes', 'Error fetching chat rooms', { err: error });
-		res.status(500).json({ error: 'Failed to fetch chat rooms' });
+		sendErrorResponse(res, 'Failed to fetch chat rooms', 500);
 	}
 });
 
@@ -219,7 +219,7 @@ router.delete('/messages/:id', isAdminOrModerator, async (req: Request, res: Res
 			.limit(1);
 
 		if (existingMessage.length === 0) {
-			return res.status(404).json({ error: 'Message not found' });
+			return sendErrorResponse(res, 'Message not found', 404);
 		}
 
 		// Soft delete the message (mark as deleted)
@@ -269,7 +269,7 @@ router.delete('/messages/:id', isAdminOrModerator, async (req: Request, res: Res
 			err: error,
 			messageId: messageIdForLog
 		});
-		res.status(500).json({ error: 'Failed to delete message' });
+		sendErrorResponse(res, 'Failed to delete message', 500);
 	}
 });
 
@@ -284,7 +284,7 @@ router.get('/messages', async (req: Request, res: Response) => {
 		if (roomId && currentUserId) {
 			const hasAccess = await userHasRoomAccess(currentUserId, roomId);
 			if (!hasAccess) {
-				return res.status(403).json({ error: 'You do not have access to this room' });
+				return sendErrorResponse(res, 'You do not have access to this room', 403);
 			}
 		} else if (roomId && !currentUserId) {
 			// If guest tries to access a specific room, check if it's public
@@ -294,7 +294,7 @@ router.get('/messages', async (req: Request, res: Response) => {
 				.where(eq(chatRooms.id, roomId))
 				.limit(1);
 			if (roomInfo.length === 0 || roomInfo[0].isPrivate) {
-				return res.status(403).json({ error: 'You do not have access to this room' });
+				return sendErrorResponse(res, 'You do not have access to this room', 403);
 			}
 		}
 
@@ -319,14 +319,14 @@ router.get('/messages', async (req: Request, res: Response) => {
 				}
 			} catch (error) {
 				logger.warn('ShoutboxRoutes', 'Error fetching default room', { err: error });
-				return res.status(500).json({ error: 'Failed to determine chat room' });
+				return sendErrorResponse(res, 'Failed to determine chat room', 500);
 			}
 		}
 
 		// Ensure we have a target room ID to filter by
 		if (!targetRoomId) {
 			// This case should ideally not be reached if the logic above is sound
-			return res.status(400).json({ error: 'Could not determine the target chat room.' });
+			return sendErrorResponse(res, 'Could not determine the target chat room', 400);
 		}
 
 		whereCondition = eq(shoutboxMessages.roomId, targetRoomId);
@@ -425,7 +425,7 @@ router.get('/messages', async (req: Request, res: Response) => {
 			roomId: roomIdForLog,
 			limit: limitForLog
 		});
-		res.status(500).json({ error: 'Failed to fetch shoutbox messages' });
+		sendErrorResponse(res, 'Failed to fetch shoutbox messages', 500);
 	}
 });
 
@@ -441,16 +441,14 @@ router.post('/messages', isAuthenticated, async (req: Request, res: Response) =>
 
 		if (now - lastMessageTime < COOLDOWN_MS) {
 			const waitTime = Math.ceil((COOLDOWN_MS - (now - lastMessageTime)) / 1000);
-			return res.status(429).json({
-				error: `Please wait ${waitTime} seconds before sending another message`
-			});
+			return sendErrorResponse(res, `Please wait ${waitTime} seconds before sending another message`, 429);
 		}
 
 		// If roomId is provided, check if user has access to this room
 		if (roomId) {
 			const hasAccess = await userHasRoomAccess(userId, roomId);
 			if (!hasAccess) {
-				return res.status(403).json({ error: 'You do not have access to this room' });
+				return sendErrorResponse(res, 'You do not have access to this room', 403);
 			}
 		} else {
 			// If no roomId specified, get the default room (degen-lounge)
@@ -538,10 +536,7 @@ router.post('/messages', isAuthenticated, async (req: Request, res: Response) =>
 		sendSuccessResponse(res, responseData);
 	} catch (error) {
 		if (error instanceof ZodError) {
-			return res.status(400).json({
-				error: 'Invalid message data',
-				details: error.errors
-			});
+			return sendErrorResponse(res, 'Invalid message data', 400);
 		}
 
 		const userIdForLog = userService.getUserFromRequest(req); // Ensure userId is available
@@ -551,7 +546,7 @@ router.post('/messages', isAuthenticated, async (req: Request, res: Response) =>
 			userId: userIdForLog,
 			roomId: roomIdForLog
 		});
-		res.status(500).json({ error: 'Failed to create shoutbox message' });
+		sendErrorResponse(res, 'Failed to create shoutbox message', 500);
 	}
 });
 
@@ -568,7 +563,7 @@ router.patch('/messages/:id', isAdminOrModerator, async (req: Request, res: Resp
 			.limit(1);
 
 		if (existingMessage.length === 0) {
-			return res.status(404).json({ error: 'Message not found' });
+			return sendErrorResponse(res, 'Message not found', 404);
 		}
 
 		// Validate update data - currently only supporting isPinned
@@ -576,7 +571,7 @@ router.patch('/messages/:id', isAdminOrModerator, async (req: Request, res: Resp
 
 		// Check if isPinned is a boolean
 		if (typeof isPinned !== 'boolean') {
-			return res.status(400).json({ error: 'isPinned must be a boolean value' });
+			return sendErrorResponse(res, 'isPinned must be a boolean value', 400);
 		}
 
 		// Update the message
@@ -633,7 +628,7 @@ router.patch('/messages/:id', isAdminOrModerator, async (req: Request, res: Resp
 			messageId: messageIdForLog,
 			isPinned: isPinnedForLog
 		});
-		res.status(500).json({ error: 'Failed to update message' });
+		sendErrorResponse(res, 'Failed to update message', 500);
 	}
 });
 

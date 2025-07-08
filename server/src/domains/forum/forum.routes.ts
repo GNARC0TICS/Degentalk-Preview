@@ -71,10 +71,7 @@ router.get(
 			});
 		} catch (error) {
 			logger.error('ForumRoutes', 'Error in GET /structure', { error });
-			return res.status(500).json({
-				success: false,
-				error: 'Failed to fetch forum structure'
-			});
+			return sendErrorResponse(res, 'Failed to fetch forum structure', 500);
 		}
 	})
 );
@@ -113,17 +110,10 @@ router.get(
 			logger.error('ForumRoutes', 'Error in GET /users/search', { error });
 
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({
-					success: false,
-					error: 'Invalid search query',
-					details: error.errors
-				});
+				return sendErrorResponse(res, 'Invalid search query', 400);
 			}
 
-			res.status(500).json({
-				success: false,
-				error: 'Failed to search users'
-			});
+			return sendErrorResponse(res, 'Failed to search users', 500);
 		}
 	})
 );
@@ -153,10 +143,7 @@ router.get(
 			sendSuccessResponse(res, prefixes);
 		} catch (error) {
 			logger.error('ForumRoutes', 'Error in GET /prefixes', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch prefixes'
-			});
+			return sendErrorResponse(res, 'Failed to fetch prefixes', 500);
 		}
 	})
 );
@@ -171,10 +158,7 @@ router.get(
 			sendSuccessResponse(res, allTags);
 		} catch (error) {
 			logger.error('ForumRoutes', 'Error in GET /tags', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch tags'
-			});
+			return sendErrorResponse(res, 'Failed to fetch tags', 500);
 		}
 	})
 );
@@ -229,10 +213,7 @@ router.get(
 			});
 		} catch (error) {
 			logger.error('ForumRoutes', 'Error in GET /forums/:id/threads', { error });
-			return res.status(500).json({
-				success: false,
-				error: 'Failed to fetch threads'
-			});
+			return sendErrorResponse(res, 'Failed to fetch threads', 500);
 		}
 	})
 );
@@ -249,7 +230,7 @@ router.get(
 		try {
 			const slug = (req.query.slug as string) ?? '';
 			if (!slug) {
-				return res.status(400).json({ success: false, error: 'Missing slug query param' });
+				return sendErrorResponse(res, 'Missing slug query param', 400);
 			}
 
 			// Fetch the zone node
@@ -259,7 +240,7 @@ router.get(
 				.where(eq(forumStructure.slug, slug))
 				.limit(1);
 			if (!zone || zone.type !== 'zone') {
-				return res.status(404).json({ success: false, error: 'Zone not found' });
+				return sendErrorResponse(res, 'Zone not found', 404);
 			}
 
 			// Find forums under this zone
@@ -320,7 +301,7 @@ router.get(
 			return sendSuccessResponse(res, { todaysPosts, trendingThreads, lastActiveUser, createdAt: zone.createdAt });
 		} catch (error) {
 			logger.error('ForumRoutes', 'Error in GET /zone-stats', { error });
-			return res.status(500).json({ success: false, error: 'Failed to fetch zone stats' });
+			return sendErrorResponse(res, 'Failed to fetch zone stats', 500);
 		}
 	})
 );

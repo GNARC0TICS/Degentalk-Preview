@@ -138,10 +138,7 @@ export class AdAdminController {
 			sendSuccessResponse(res, config);
 		} catch (error) {
 			logger.error('Get system config error:', error);
-			res.status(500).json({
-				error: 'Failed to get system configuration',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to get system configuration', 500);
 		}
 	}
 
@@ -162,10 +159,7 @@ export class AdAdminController {
 			sendSuccessResponse(res, updatedConfig);
 		} catch (error) {
 			logger.error('Update system config error:', error);
-			res.status(400).json({
-				error: 'Failed to update system configuration',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to update system configuration', 400);
 		}
 	}
 
@@ -178,13 +172,11 @@ export class AdAdminController {
 			const placementData = placementConfigSchema.parse(req.body);
 			const placement = await adConfigurationService.createPlacement(placementData);
 
-			res.status(201).json(placement);
+			res.status(201);
+			sendSuccessResponse(res, placement);
 		} catch (error) {
 			logger.error('Create placement error:', error);
-			res.status(400).json({
-				error: 'Failed to create placement',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to create placement', 400);
 		}
 	}
 
@@ -202,10 +194,7 @@ export class AdAdminController {
 			sendSuccessResponse(res, placement);
 		} catch (error) {
 			logger.error('Update placement error:', error);
-			res.status(400).json({
-				error: 'Failed to update placement',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to update placement', 400);
 		}
 	}
 
@@ -221,10 +210,7 @@ export class AdAdminController {
 			res.status(204).send();
 		} catch (error) {
 			logger.error('Delete placement error:', error);
-			res.status(400).json({
-				error: 'Failed to delete placement',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to delete placement', 400);
 		}
 	}
 
@@ -254,10 +240,7 @@ export class AdAdminController {
 			sendSuccessResponse(res, placementsWithAnalytics);
 		} catch (error) {
 			logger.error('List placements error:', error);
-			res.status(500).json({
-				error: 'Failed to list placements',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to list placements', 500);
 		}
 	}
 
@@ -275,13 +258,11 @@ export class AdAdminController {
 				validUntil: ruleData.validUntil ? new Date(ruleData.validUntil) : undefined
 			});
 
-			res.status(201).json(rule);
+			res.status(201);
+			sendSuccessResponse(res, rule);
 		} catch (error) {
 			logger.error('Create rule error:', error);
-			res.status(400).json({
-				error: 'Failed to create rule',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to create rule', 400);
 		}
 	}
 
@@ -299,10 +280,7 @@ export class AdAdminController {
 			sendSuccessResponse(res, rule);
 		} catch (error) {
 			logger.error('Update rule error:', error);
-			res.status(400).json({
-				error: 'Failed to update rule',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to update rule', 400);
 		}
 	}
 
@@ -322,10 +300,7 @@ export class AdAdminController {
 			sendSuccessResponse(res, rules);
 		} catch (error) {
 			logger.error('List rules error:', error);
-			res.status(500).json({
-				error: 'Failed to list rules',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to list rules', 500);
 		}
 	}
 
@@ -397,10 +372,7 @@ export class AdAdminController {
 			sendSuccessResponse(res, campaigns);
 		} catch (error) {
 			logger.error('Get all campaigns error:', error);
-			res.status(500).json({
-				error: 'Failed to get campaigns',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to get campaigns', 500);
 		}
 	}
 
@@ -414,7 +386,7 @@ export class AdAdminController {
 			const { action, reason } = req.body; // action: 'approve' | 'reject'
 
 			if (!['approve', 'reject'].includes(action)) {
-				res.status(400).json({ error: 'Invalid action. Must be approve or reject.' });
+				sendErrorResponse(res, 'Invalid action. Must be approve or reject.', 400);
 				return;
 			}
 
@@ -433,10 +405,7 @@ export class AdAdminController {
 			sendSuccessResponse(res, result);
 		} catch (error) {
 			logger.error('Review campaign error:', error);
-			res.status(400).json({
-				error: 'Failed to review campaign',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to review campaign', 400);
 		}
 	}
 
@@ -454,13 +423,11 @@ export class AdAdminController {
 				proposerUserId
 			});
 
-			res.status(201).json(proposal);
+			res.status(201);
+			sendSuccessResponse(res, proposal);
 		} catch (error) {
 			logger.error('Create proposal error:', error);
-			res.status(400).json({
-				error: 'Failed to create proposal',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to create proposal', 400);
 		}
 	}
 
@@ -477,10 +444,7 @@ export class AdAdminController {
 			sendSuccessResponse(res, { success: true, message: 'Proposal executed successfully' });
 		} catch (error) {
 			logger.error('Execute proposal error:', error);
-			res.status(400).json({
-				error: 'Failed to execute proposal',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to execute proposal', 400);
 		}
 	}
 
@@ -506,10 +470,7 @@ export class AdAdminController {
 			sendSuccessResponse(res, alerts);
 		} catch (error) {
 			logger.error('Get fraud alerts error:', error);
-			res.status(500).json({
-				error: 'Failed to get fraud alerts',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to get fraud alerts', 500);
 		}
 	}
 
@@ -542,10 +503,7 @@ export class AdAdminController {
 			sendSuccessResponse(res, report);
 		} catch (error) {
 			logger.error('Get revenue report error:', error);
-			res.status(500).json({
-				error: 'Failed to get revenue report',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to get revenue report', 500);
 		}
 	}
 
@@ -558,7 +516,7 @@ export class AdAdminController {
 			const { format = 'csv', type = 'campaigns', from, to } = req.query;
 
 			if (!['csv', 'json'].includes(format as string)) {
-				res.status(400).json({ error: 'Format must be csv or json' });
+				sendErrorResponse(res, 'Format must be csv or json', 400);
 				return;
 			}
 
@@ -574,10 +532,7 @@ export class AdAdminController {
 			sendSuccessResponse(res, exportData);
 		} catch (error) {
 			logger.error('Export analytics error:', error);
-			res.status(500).json({
-				error: 'Failed to export analytics',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to export analytics', 500);
 		}
 	}
 }

@@ -88,9 +88,9 @@ router.post('/', requireAuth, async (req, res) => {
 	} catch (error) {
 		logger.error('Error following user:', error);
 		if (error instanceof Error) {
-			res.status(400).json({ error: error.message });
+			sendErrorResponse(res, error.message, 400);
 		} else {
-			res.status(500).json({ error: 'Failed to follow user' });
+			sendErrorResponse(res, 'Failed to follow user', 500);
 		}
 	}
 });
@@ -110,9 +110,9 @@ router.delete('/', requireAuth, async (req, res) => {
 	} catch (error) {
 		logger.error('Error unfollowing user:', error);
 		if (error instanceof Error) {
-			res.status(400).json({ error: error.message });
+			sendErrorResponse(res, error.message, 400);
 		} else {
-			res.status(500).json({ error: 'Failed to unfollow user' });
+			sendErrorResponse(res, 'Failed to unfollow user', 500);
 		}
 	}
 });
@@ -138,7 +138,7 @@ router.get('/following', requireAuth, async (req, res) => {
 		});
 	} catch (error) {
 		logger.error('Error fetching following list:', error);
-		res.status(500).json({ error: 'Failed to fetch following list' });
+		sendErrorResponse(res, 'Failed to fetch following list', 500);
 	}
 });
 
@@ -163,7 +163,7 @@ router.get('/followers', requireAuth, async (req, res) => {
 		});
 	} catch (error) {
 		logger.error('Error fetching followers list:', error);
-		res.status(500).json({ error: 'Failed to fetch followers list' });
+		sendErrorResponse(res, 'Failed to fetch followers list', 500);
 	}
 });
 
@@ -179,7 +179,7 @@ router.get('/counts', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, counts);
 	} catch (error) {
 		logger.error('Error fetching follow counts:', error);
-		res.status(500).json({ error: 'Failed to fetch follow counts' });
+		sendErrorResponse(res, 'Failed to fetch follow counts', 500);
 	}
 });
 
@@ -197,7 +197,7 @@ router.get('/check/:userId', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, { isFollowing });
 	} catch (error) {
 		logger.error('Error checking follow status:', error);
-		res.status(500).json({ error: 'Failed to check follow status' });
+		sendErrorResponse(res, 'Failed to check follow status', 500);
 	}
 });
 
@@ -213,7 +213,7 @@ router.get('/requests', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, { requests: toPublicList(requests, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error fetching follow requests:', error);
-		res.status(500).json({ error: 'Failed to fetch follow requests' });
+		sendErrorResponse(res, 'Failed to fetch follow requests', 500);
 	}
 });
 
@@ -227,7 +227,7 @@ router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
 		const { approve } = respondToRequestSchema.parse(req.body);
 
 		if (!requestId) {
-			return res.status(400).json({ error: 'Invalid request ID' });
+			return sendErrorResponse(res, 'Invalid request ID', 400);
 		}
 
 		const result = await FollowsService.respondToFollowRequest(requestId, approve);
@@ -236,9 +236,9 @@ router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
 	} catch (error) {
 		logger.error('Error responding to follow request:', error);
 		if (error instanceof Error) {
-			res.status(400).json({ error: error.message });
+			sendErrorResponse(res, error.message, 400);
 		} else {
-			res.status(500).json({ error: 'Failed to respond to follow request' });
+			sendErrorResponse(res, 'Failed to respond to follow request', 500);
 		}
 	}
 });
@@ -260,7 +260,7 @@ router.get('/whales', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, { whales: toPublicList(whales, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error fetching whale candidates:', error);
-		res.status(500).json({ error: 'Failed to fetch whale candidates' });
+		sendErrorResponse(res, 'Failed to fetch whale candidates', 500);
 	}
 });
 
@@ -278,7 +278,7 @@ router.get('/activity', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, activity);
 	} catch (error) {
 		logger.error('Error fetching following activity:', error);
-		res.status(500).json({ error: 'Failed to fetch following activity' });
+		sendErrorResponse(res, 'Failed to fetch following activity', 500);
 	}
 });
 
@@ -296,7 +296,7 @@ router.get('/search', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, { users: toPublicList(users, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error searching users to follow:', error);
-		res.status(500).json({ error: 'Failed to search users' });
+		sendErrorResponse(res, 'Failed to search users', 500);
 	}
 });
 
@@ -312,7 +312,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, preferences);
 	} catch (error) {
 		logger.error('Error fetching follow preferences:', error);
-		res.status(500).json({ error: 'Failed to fetch preferences' });
+		sendErrorResponse(res, 'Failed to fetch preferences', 500);
 	}
 });
 
@@ -330,7 +330,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, updatedPrefs[0]);
 	} catch (error) {
 		logger.error('Error updating follow preferences:', error);
-		res.status(500).json({ error: 'Failed to update preferences' });
+		sendErrorResponse(res, 'Failed to update preferences', 500);
 	}
 });
 
@@ -354,9 +354,9 @@ router.put('/:userId/notifications', requireAuth, async (req, res) => {
 	} catch (error) {
 		logger.error('Error updating follow notification settings:', error);
 		if (error instanceof Error) {
-			res.status(400).json({ error: error.message });
+			sendErrorResponse(res, error.message, 400);
 		} else {
-			res.status(500).json({ error: 'Failed to update notification settings' });
+			sendErrorResponse(res, 'Failed to update notification settings', 500);
 		}
 	}
 });

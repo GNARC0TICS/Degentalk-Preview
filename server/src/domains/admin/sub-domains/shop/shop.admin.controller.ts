@@ -36,7 +36,7 @@ export const shopAdminController = {
 		} = req.body;
 		// Basic validation (you'll want more robust validation, e.g., Zod)
 		if (!name || typeof priceDGT === 'undefined') {
-			return res.status(400).json({ message: 'Name and DGT Price are required.' });
+			return sendErrorResponse(res, 'Name and DGT Price are required.', 400);
 		}
 
 		try {
@@ -63,10 +63,10 @@ export const shopAdminController = {
 					status: 'published' // Default to published, or make it a parameter
 				})
 				.returning();
-			res.status(201).json(newProduct[0]);
+			return sendSuccessResponse(res, newProduct[0]);
 		} catch (error) {
 			logger.error('Error creating product:', error);
-			res.status(500).json({ message: 'Error creating product', error: error.message });
+			return sendErrorResponse(res, 'Error creating product');
 		}
 	},
 
@@ -80,7 +80,7 @@ export const shopAdminController = {
 				.where(eq(products.id, productId))
 				.limit(1);
 			if (product.length === 0) {
-				return res.status(404).json({ message: 'Product not found' });
+				return sendErrorResponse(res, 'Product not found', 404);
 			}
 			
 			// Transform product for admin view
@@ -89,7 +89,7 @@ export const shopAdminController = {
 			sendSuccessResponse(res, transformedProduct);
 		} catch (error) {
 			logger.error('Error fetching product by ID:', error);
-			res.status(500).json({ message: 'Error fetching product by ID', error: error.message });
+			return sendErrorResponse(res, 'Error fetching product by ID');
 		}
 	},
 
@@ -99,7 +99,7 @@ export const shopAdminController = {
 		const updates = req.body;
 
 		if (Object.keys(updates).length === 0) {
-			return res.status(400).json({ message: 'No update data provided.' });
+			return sendErrorResponse(res, 'No update data provided.', 400);
 		}
 
 		try {
@@ -108,7 +108,7 @@ export const shopAdminController = {
 				try {
 					updates.pluginReward = JSON.parse(updates.pluginReward);
 				} catch (e) {
-					return res.status(400).json({ message: 'Invalid pluginReward JSON format.' });
+					return sendErrorResponse(res, 'Invalid pluginReward JSON format.', 400);
 				}
 			}
 			if (updates.name && !updates.slug) {
@@ -122,7 +122,7 @@ export const shopAdminController = {
 				.returning();
 
 			if (updatedProduct.length === 0) {
-				return res.status(404).json({ message: 'Product not found' });
+				return sendErrorResponse(res, 'Product not found', 404);
 			}
 			// Transform updated product for admin view
 			const transformedProduct = ShopTransformer.toAdminShopItem(updatedProduct[0]);
@@ -130,7 +130,7 @@ export const shopAdminController = {
 			sendSuccessResponse(res, transformedProduct);
 		} catch (error) {
 			logger.error('Error updating product:', error);
-			res.status(500).json({ message: 'Error updating product', error: error.message });
+			return sendErrorResponse(res, 'Error updating product');
 		}
 	},
 
@@ -145,14 +145,12 @@ export const shopAdminController = {
 				.returning();
 
 			if (deletedProduct.length === 0) {
-				return res.status(404).json({ message: 'Product not found' });
+				return sendErrorResponse(res, 'Product not found', 404);
 			}
-			res
-				.status(200)
-				.json({ message: 'Product archived successfully', product: deletedProduct[0] });
+			return sendSuccessResponse(res, { message: 'Product archived successfully', product: deletedProduct[0] });
 		} catch (error) {
 			logger.error('Error deleting product:', error);
-			res.status(500).json({ message: 'Error deleting product', error: error.message });
+			return sendErrorResponse(res, 'Error deleting product');
 		}
 	}
 };

@@ -21,10 +21,8 @@ export class AdminUserGroupsController {
 			sendSuccessResponse(res, groups);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch user groups' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to fetch user groups');
 		}
 	}
 
@@ -37,10 +35,8 @@ export class AdminUserGroupsController {
 			sendSuccessResponse(res, group);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch user group' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to fetch user group');
 		}
 	}
 
@@ -56,13 +52,11 @@ export class AdminUserGroupsController {
 				newGroup.id.toString(),
 				data
 			);
-			res.status(201).json(newGroup);
+			return sendSuccessResponse(res, newGroup);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to create user group' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to create user group');
 		}
 	}
 
@@ -85,10 +79,8 @@ export class AdminUserGroupsController {
 			sendSuccessResponse(res, updatedGroup);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to update user group' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to update user group');
 		}
 	}
 
@@ -105,10 +97,8 @@ export class AdminUserGroupsController {
 			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to delete user group' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to delete user group');
 		}
 	}
 
@@ -125,10 +115,8 @@ export class AdminUserGroupsController {
 			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch users in group' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to fetch users in group');
 		}
 	}
 }

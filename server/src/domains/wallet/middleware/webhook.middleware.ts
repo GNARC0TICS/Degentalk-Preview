@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
 import type { WebhookMiddleware } from './types';
 import { logger } from "../../../core/logger";
+import { sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 /**
  * Webhook Validation Middleware
@@ -25,11 +26,7 @@ const validateCCPaymentWebhook = async (
 		const timestamp = req.headers['ccpayment-timestamp'] as string;
 
 		if (!signature || !timestamp) {
-			res.status(400).json({
-				success: false,
-				message: 'Missing webhook signature or timestamp',
-				error: { type: 'MISSING_WEBHOOK_HEADERS' }
-			});
+			sendErrorResponse(res, 'Missing webhook signature or timestamp', 400);
 			return;
 		}
 
@@ -37,11 +34,7 @@ const validateCCPaymentWebhook = async (
 		const appSecret = process.env.CCPAYMENT_APP_SECRET;
 		if (!appSecret) {
 			logger.error('CCPAYMENT_APP_SECRET not configured');
-			res.status(500).json({
-				success: false,
-				message: 'Webhook validation not configured',
-				error: { type: 'CONFIGURATION_ERROR' }
-			});
+			sendErrorResponse(res, 'Webhook validation not configured', 500);
 			return;
 		}
 
@@ -52,15 +45,7 @@ const validateCCPaymentWebhook = async (
 
 		if (timeDiff > 300) {
 			// 5 minutes
-			res.status(400).json({
-				success: false,
-				message: 'Webhook timestamp too old',
-				error: {
-					type: 'TIMESTAMP_TOO_OLD',
-					maxAge: 300,
-					actualAge: timeDiff
-				}
-			});
+			sendErrorResponse(res, 'Webhook timestamp too old', 400);
 			return;
 		}
 
@@ -79,11 +64,7 @@ const validateCCPaymentWebhook = async (
             				payload: payloadString.substring(0, 100) + '...'
             			});
 
-			res.status(401).json({
-				success: false,
-				message: 'Invalid webhook signature',
-				error: { type: 'INVALID_SIGNATURE' }
-			});
+			sendErrorResponse(res, 'Invalid webhook signature', 401);
 			return;
 		}
 
@@ -91,11 +72,7 @@ const validateCCPaymentWebhook = async (
 		next();
 	} catch (error) {
 		logger.error('Error validating webhook:', error);
-		res.status(500).json({
-			success: false,
-			message: 'Webhook validation error',
-			error: { type: 'VALIDATION_ERROR' }
-		});
+		sendErrorResponse(res, 'Webhook validation error', 500);
 	}
 };
 
@@ -126,15 +103,7 @@ const rateLimitWebhooks = async (
 		}
 
 		if (record.count >= maxRequests) {
-			res.status(429).json({
-				success: false,
-				message: 'Webhook rate limit exceeded',
-				error: {
-					type: 'WEBHOOK_RATE_LIMIT_EXCEEDED',
-					resetTime: new Date(record.resetTime).toISOString(),
-					maxRequests
-				}
-			});
+			sendErrorResponse(res, 'Webhook rate limit exceeded', 429);
 			return;
 		}
 
@@ -151,11 +120,7 @@ const rateLimitWebhooks = async (
 		next();
 	} catch (error) {
 		logger.error('Error in webhook rate limiting:', error);
-		res.status(500).json({
-			success: false,
-			message: 'Webhook rate limiting error',
-			error: { type: 'RATE_LIMIT_ERROR' }
-		});
+		sendErrorResponse(res, 'Webhook rate limiting error', 500);
 	}
 };
 
@@ -167,24 +132,13 @@ const validateWebhookPayload = (req: Request, res: Response, next: NextFunction)
 		const { eventType } = req.body;
 
 		if (!eventType) {
-			res.status(400).json({
-				success: false,
-				message: 'Missing eventType in webhook payload',
-				error: { type: 'MISSING_EVENT_TYPE' }
-			});
+			sendErrorResponse(res, 'Missing eventType in webhook payload', 400);
 			return;
 		}
 
 		const validEventTypes = ['deposit', 'withdraw', 'internal_transfer', 'swap'];
 		if (!validEventTypes.includes(eventType)) {
-			res.status(400).json({
-				success: false,
-				message: `Invalid eventType: ${eventType}`,
-				error: {
-					type: 'INVALID_EVENT_TYPE',
-					validTypes: validEventTypes
-				}
-			});
+			sendErrorResponse(res, `Invalid eventType: ${eventType}`, 400);
 			return;
 		}
 
@@ -192,44 +146,28 @@ const validateWebhookPayload = (req: Request, res: Response, next: NextFunction)
 		switch (eventType) {
 			case 'deposit':
 				if (!req.body.recordId || !req.body.uid || !req.body.amount) {
-					res.status(400).json({
-						success: false,
-						message: 'Missing required fields for deposit webhook',
-						error: { type: 'MISSING_DEPOSIT_FIELDS' }
-					});
+					sendErrorResponse(res, 'Missing required fields for deposit webhook', 400);
 					return;
 				}
 				break;
 
 			case 'withdraw':
 				if (!req.body.recordId || !req.body.uid || !req.body.amount) {
-					res.status(400).json({
-						success: false,
-						message: 'Missing required fields for withdrawal webhook',
-						error: { type: 'MISSING_WITHDRAWAL_FIELDS' }
-					});
+					sendErrorResponse(res, 'Missing required fields for withdrawal webhook', 400);
 					return;
 				}
 				break;
 
 			case 'internal_transfer':
 				if (!req.body.recordId || !req.body.fromUid || !req.body.toUid || !req.body.amount) {
-					res.status(400).json({
-						success: false,
-						message: 'Missing required fields for transfer webhook',
-						error: { type: 'MISSING_TRANSFER_FIELDS' }
-					});
+					sendErrorResponse(res, 'Missing required fields for transfer webhook', 400);
 					return;
 				}
 				break;
 
 			case 'swap':
 				if (!req.body.recordId || !req.body.uid || !req.body.fromAmount || !req.body.toCoinId) {
-					res.status(400).json({
-						success: false,
-						message: 'Missing required fields for swap webhook',
-						error: { type: 'MISSING_SWAP_FIELDS' }
-					});
+					sendErrorResponse(res, 'Missing required fields for swap webhook', 400);
 					return;
 				}
 				break;
@@ -238,11 +176,7 @@ const validateWebhookPayload = (req: Request, res: Response, next: NextFunction)
 		next();
 	} catch (error) {
 		logger.error('Error validating webhook payload:', error);
-		res.status(500).json({
-			success: false,
-			message: 'Webhook payload validation error',
-			error: { type: 'PAYLOAD_VALIDATION_ERROR' }
-		});
+		sendErrorResponse(res, 'Webhook payload validation error', 500);
 	}
 };
 

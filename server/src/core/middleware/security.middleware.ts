@@ -12,6 +12,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { env, getCorsConfig, isProduction, isDevelopment } from '../config/environment';
 import { userService } from '../services/user.service';
 import { logger } from '../logger';
+import { sendErrorResponse, sendSuccessResponse } from '../utils/transformer.helpers';
 
 /**
  * Configure CORS with environment-specific settings
@@ -74,10 +75,7 @@ export function csrfProtection(req: Request, res: Response, next: NextFunction) 
 			method: req.method,
 			ip: req.ip
 		});
-		return res.status(403).json({
-			error: 'CSRF validation failed',
-			message: 'Session required'
-		});
+		return sendErrorResponse(res, 'CSRF validation failed: Session required', 403);
 	}
 
 	// Get CSRF token from various sources
@@ -93,10 +91,7 @@ export function csrfProtection(req: Request, res: Response, next: NextFunction) 
 			sessionId: sessionId.substring(0, 8) + '...'
 		});
 
-		return res.status(403).json({
-			error: 'CSRF validation failed',
-			message: 'Invalid or missing CSRF token'
-		});
+		return sendErrorResponse(res, 'CSRF validation failed: Invalid or missing CSRF token', 403);
 	}
 
 	next();
@@ -204,13 +199,10 @@ export function csrfTokenProvider(req: Request, res: Response, next: NextFunctio
 		const token = generateSessionCsrfToken(req);
 
 		if (!token) {
-			return res.status(400).json({
-				error: 'No session available',
-				message: 'Session required to generate CSRF token'
-			});
+			return sendErrorResponse(res, 'No session available: Session required to generate CSRF token', 400);
 		}
 
-		return res.json({
+		return sendSuccessResponse(res, {
 			csrfToken: token,
 			expires: new Date(Date.now() + 3600000).toISOString() // 1 hour
 		});
@@ -305,10 +297,7 @@ export function originValidation(req: Request, res: Response, next: NextFunction
 				path: req.path
 			});
 
-			return res.status(403).json({
-				error: 'Forbidden',
-				message: 'Origin not allowed'
-			});
+			return sendErrorResponse(res, 'Forbidden: Origin not allowed', 403);
 		}
 	}
 

@@ -21,6 +21,7 @@ import {
 	sendTransformedResponse,
 	sendTransformedListResponse
 } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccess, sendError, sendValidationError, handleAdminError } from '../../admin.response';
 
 // Removed redundant getUserId helper - use userService.getUserFromRequest(req)?.id directly
 
@@ -29,11 +30,7 @@ import {
  */
 function handleValidationError(error: any, res: Response) {
 	if (error.name === 'ZodError') {
-		return res.status(400).json({
-			error: 'Validation failed',
-			code: AdminErrorCodes.VALIDATION_ERROR,
-			details: error.errors
-		});
+		return sendValidationError(res, 'Validation failed', error.errors);
 	}
 	return null;
 }
@@ -60,17 +57,10 @@ export const getAllEmojis = async (req: Request, res: Response) => {
 		logger.error('EMOJI_CONTROLLER', 'Error fetching emojis:', error);
 
 		if (error instanceof AdminError) {
-			return res.status(error.httpStatus).json({
-				error: error.message,
-				code: error.code,
-				details: error.details
-			});
+			return handleAdminError(res, error);
 		}
 
-		return res.status(500).json({
-			error: 'Internal server error while fetching emojis',
-			code: AdminErrorCodes.INTERNAL_ERROR
-		});
+		return sendError(res, 'Internal server error while fetching emojis');
 	}
 };
 
@@ -87,10 +77,7 @@ export const getEmojiById = async (req: Request, res: Response) => {
 		const emoji = await emojiService.getById(id);
 
 		if (!emoji) {
-			return res.status(404).json({
-				error: `Emoji with ID ${id} not found`,
-				code: AdminErrorCodes.NOT_FOUND
-			});
+			return sendError(res, `Emoji with ID ${id} not found`, 404);
 		}
 
 		logger.info('EMOJI_CONTROLLER', `Successfully fetched emoji: ${emoji.name}`);
@@ -100,17 +87,10 @@ export const getEmojiById = async (req: Request, res: Response) => {
 		logger.error('EMOJI_CONTROLLER', 'Error fetching emoji by ID:', error);
 
 		if (error instanceof AdminError) {
-			return res.status(error.httpStatus).json({
-				error: error.message,
-				code: error.code,
-				details: error.details
-			});
+			return handleAdminError(res, error);
 		}
 
-		return res.status(500).json({
-			error: 'Internal server error while fetching emoji',
-			code: AdminErrorCodes.INTERNAL_ERROR
-		});
+		return sendError(res, 'Internal server error while fetching emoji');
 	}
 };
 
@@ -142,27 +122,17 @@ export const createEmoji = async (req: Request, res: Response) => {
 		logger.error('EMOJI_CONTROLLER', 'Error creating emoji:', error);
 
 		if (error instanceof AdminError) {
-			return res.status(error.httpStatus).json({
-				error: error.message,
-				code: error.code,
-				details: error.details
-			});
+			return handleAdminError(res, error);
 		}
 
 		// Handle specific database constraint errors
 		if (error instanceof Error) {
 			if (error.message.includes('already exists')) {
-				return res.status(409).json({
-					error: error.message,
-					code: AdminErrorCodes.DUPLICATE_RESOURCE
-				});
+				return sendError(res, error.message, 409);
 			}
 		}
 
-		return res.status(500).json({
-			error: 'Internal server error while creating emoji',
-			code: AdminErrorCodes.INTERNAL_ERROR
-		});
+		return sendError(res, 'Internal server error while creating emoji');
 	}
 };
 
@@ -183,10 +153,7 @@ export const updateEmoji = async (req: Request, res: Response) => {
 		if (!dataUpdate) return;
 
 		if (Object.keys(dataUpdate).length === 0) {
-			return res.status(400).json({
-				error: 'No fields provided for update',
-				code: AdminErrorCodes.VALIDATION_ERROR
-			});
+			return sendValidationError(res, 'No fields provided for update');
 		}
 
 		const updateData = dataUpdate;
@@ -200,33 +167,20 @@ export const updateEmoji = async (req: Request, res: Response) => {
 		logger.error('EMOJI_CONTROLLER', 'Error updating emoji:', error);
 
 		if (error instanceof AdminError) {
-			return res.status(error.httpStatus).json({
-				error: error.message,
-				code: error.code,
-				details: error.details
-			});
+			return handleAdminError(res, error);
 		}
 
 		// Handle specific errors
 		if (error instanceof Error) {
 			if (error.message.includes('not found')) {
-				return res.status(404).json({
-					error: error.message,
-					code: AdminErrorCodes.NOT_FOUND
-				});
+				return sendError(res, error.message, 404);
 			}
 			if (error.message.includes('already uses this')) {
-				return res.status(409).json({
-					error: error.message,
-					code: AdminErrorCodes.DUPLICATE_RESOURCE
-				});
+				return sendError(res, error.message, 409);
 			}
 		}
 
-		return res.status(500).json({
-			error: 'Internal server error while updating emoji',
-			code: AdminErrorCodes.INTERNAL_ERROR
-		});
+		return sendError(res, 'Internal server error while updating emoji');
 	}
 };
 
@@ -249,33 +203,20 @@ export const deleteEmoji = async (req: Request, res: Response) => {
 		logger.error('EMOJI_CONTROLLER', 'Error deleting emoji:', error);
 
 		if (error instanceof AdminError) {
-			return res.status(error.httpStatus).json({
-				error: error.message,
-				code: error.code,
-				details: error.details
-			});
+			return handleAdminError(res, error);
 		}
 
 		// Handle specific errors
 		if (error instanceof Error) {
 			if (error.message.includes('not found')) {
-				return res.status(404).json({
-					error: error.message,
-					code: AdminErrorCodes.NOT_FOUND
-				});
+				return sendError(res, error.message, 404);
 			}
 			if (error.message.includes('already deleted')) {
-				return res.status(409).json({
-					error: error.message,
-					code: AdminErrorCodes.INVALID_OPERATION
-				});
+				return sendError(res, error.message, 409);
 			}
 		}
 
-		return res.status(500).json({
-			error: 'Internal server error while deleting emoji',
-			code: AdminErrorCodes.INTERNAL_ERROR
-		});
+		return sendError(res, 'Internal server error while deleting emoji');
 	}
 };
 
@@ -305,17 +246,10 @@ export const bulkDeleteEmojis = async (req: Request, res: Response) => {
 		logger.error('EMOJI_CONTROLLER', 'Error bulk deleting emojis:', error);
 
 		if (error instanceof AdminError) {
-			return res.status(error.httpStatus).json({
-				error: error.message,
-				code: error.code,
-				details: error.details
-			});
+			return handleAdminError(res, error);
 		}
 
-		return res.status(500).json({
-			error: 'Internal server error while bulk deleting emojis',
-			code: AdminErrorCodes.INTERNAL_ERROR
-		});
+		return sendError(res, 'Internal server error while bulk deleting emojis');
 	}
 };
 
@@ -336,16 +270,9 @@ export const getEmojiCategories = async (req: Request, res: Response) => {
 		logger.error('EMOJI_CONTROLLER', 'Error fetching emoji categories:', error);
 
 		if (error instanceof AdminError) {
-			return res.status(error.httpStatus).json({
-				error: error.message,
-				code: error.code,
-				details: error.details
-			});
+			return handleAdminError(res, error);
 		}
 
-		return res.status(500).json({
-			error: 'Internal server error while fetching emoji categories',
-			code: AdminErrorCodes.INTERNAL_ERROR
-		});
+		return sendError(res, 'Internal server error while fetching emoji categories');
 	}
 };

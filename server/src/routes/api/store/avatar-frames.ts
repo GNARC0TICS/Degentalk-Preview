@@ -11,6 +11,7 @@ import { z } from 'zod';
 import type { FrameId } from '@shared/types/ids';
 import { CosmeticsTransformer } from '../../../domains/shop/transformers/cosmetics.transformer';
 import { logger } from "../../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from '../../../core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -24,17 +25,17 @@ router.get('/', async (_req, res) => {
 			CosmeticsTransformer.toPublicCosmetic(frame)
 		);
 
-		return res.json(transformed);
+		return sendSuccessResponse(res, transformed);
 	} catch (error) {
 		logger.error('Failed to fetch store avatar frames', error);
-		return res.status(500).json({ error: 'Failed to fetch avatar frames' });
+		return sendErrorResponse(res, 'Failed to fetch avatar frames', 500);
 	}
 });
 
 // POST /api/store/avatar-frames/:id/purchase
 router.post('/:id/purchase', isAuthenticated, async (req, res) => {
 	const authUser = userService.getUserFromRequest(req);
-	if (!authUser) return res.status(401).json({ error: 'Not authenticated' });
+	if (!authUser) return sendErrorResponse(res, 'Not authenticated', 401);
 	const userId = String(authUser.id);
 	const frameId = req.params.id as FrameId;
 
@@ -48,7 +49,7 @@ router.post('/:id/purchase', isAuthenticated, async (req, res) => {
 			.limit(1);
 
 		if (!row) {
-			return res.status(404).json({ error: 'Frame not found' });
+			return sendErrorResponse(res, 'Frame not found', 404);
 		}
 
 		const price = row.price ?? 0;
@@ -60,10 +61,10 @@ router.post('/:id/purchase', isAuthenticated, async (req, res) => {
 		}
 
 		await frameEquipService.grantOwnership(userId, frameId, 'shop');
-		return res.status(200).json({ success: true, price });
+		return sendSuccessResponse(res, { price });
 	} catch (error) {
 		logger.error('Purchase avatar frame failed', error);
-		return res.status(500).json({ error: 'Purchase failed' });
+		return sendErrorResponse(res, 'Purchase failed', 500);
 	}
 });
 

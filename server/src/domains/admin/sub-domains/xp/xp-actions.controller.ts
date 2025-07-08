@@ -9,6 +9,7 @@ import { db } from '@db';
 import { xpActionSettings } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 import { xpService } from '../../../xp/xp.service';
 import { XP_ACTION, getXpActions, loadXpActionsFromDb } from '../../../xp/xp-actions';
 // import { XpActionSettingsSchema, XpActionKeySchema } from '@shared/validators/admin'; // Commented out as schemas not found/used
@@ -23,7 +24,7 @@ export const getAllXpActions = async (req: Request, res: Response, next: NextFun
 		// Get all XP actions from database, including disabled ones
 		const actions = await db.select().from(xpActionSettings).orderBy(xpActionSettings.action);
 
-		res.status(200).json({
+		return sendSuccessResponse(res, {
 			actions,
 			count: actions.length
 		});
@@ -44,7 +45,7 @@ export const getXpActionByKey = async (req: Request, res: Response, next: NextFu
 		const { actionKey } = req.params;
 
 		if (!actionKey) {
-			return res.status(400).json({ message: 'Action key is required' });
+			return sendErrorResponse(res, 'Action key is required', 400);
 		}
 
 		const actions = await db
@@ -54,10 +55,10 @@ export const getXpActionByKey = async (req: Request, res: Response, next: NextFu
 			.limit(1);
 
 		if (actions.length === 0) {
-			return res.status(404).json({ message: `XP action "${actionKey}" not found` });
+			return sendErrorResponse(res, `XP action "${actionKey}" not found`, 404);
 		}
 
-		res.status(200).json(actions[0]);
+		return sendSuccessResponse(res, actions[0]);
 	} catch (error) {
 		logger.error(
 			'Error getting XP action:',
@@ -75,9 +76,7 @@ export const createXpAction = async (req: Request, res: Response, next: NextFunc
 		const { action, baseValue, description, maxPerDay, cooldownSec, enabled } = req.body;
 
 		if (!action || baseValue === undefined || !description) {
-			return res.status(400).json({
-				message: 'Missing required fields. action, baseValue, and description are required.'
-			});
+			return sendErrorResponse(res, 'Missing required fields. action, baseValue, and description are required.', 400);
 		}
 
 		// Check if action already exists
@@ -88,9 +87,7 @@ export const createXpAction = async (req: Request, res: Response, next: NextFunc
 			.limit(1);
 
 		if (existingActions.length > 0) {
-			return res.status(409).json({
-				message: `XP action "${action}" already exists. Use the update endpoint instead.`
-			});
+			return sendErrorResponse(res, `XP action "${action}" already exists. Use the update endpoint instead.`, 409);
 		}
 
 		// Insert new XP action
@@ -108,7 +105,7 @@ export const createXpAction = async (req: Request, res: Response, next: NextFunc
 		// Force refresh the XP actions cache
 		await loadXpActionsFromDb(true);
 
-		res.status(201).json({
+		return sendSuccessResponse(res, {
 			message: `XP action "${action}" created successfully`,
 			action: {
 				action,
@@ -137,7 +134,7 @@ export const updateXpAction = async (req: Request, res: Response, next: NextFunc
 		const { baseValue, description, maxPerDay, cooldownSec, enabled } = req.body;
 
 		if (!actionKey) {
-			return res.status(400).json({ message: 'Action key is required' });
+			return sendErrorResponse(res, 'Action key is required', 400);
 		}
 
 		// Check if action exists
@@ -148,7 +145,7 @@ export const updateXpAction = async (req: Request, res: Response, next: NextFunc
 			.limit(1);
 
 		if (existingActions.length === 0) {
-			return res.status(404).json({ message: `XP action "${actionKey}" not found` });
+			return sendErrorResponse(res, `XP action "${actionKey}" not found`, 404);
 		}
 
 		// Prepare update data
@@ -168,7 +165,7 @@ export const updateXpAction = async (req: Request, res: Response, next: NextFunc
 		// Force refresh the XP actions cache
 		await loadXpActionsFromDb(true);
 
-		res.status(200).json({
+		return sendSuccessResponse(res, {
 			message: `XP action "${actionKey}" updated successfully`,
 			action: {
 				...existingActions[0],
@@ -192,7 +189,7 @@ export const toggleXpAction = async (req: Request, res: Response, next: NextFunc
 		const { actionKey } = req.params;
 
 		if (!actionKey) {
-			return res.status(400).json({ message: 'Action key is required' });
+			return sendErrorResponse(res, 'Action key is required', 400);
 		}
 
 		// Check if action exists and get current enabled state
@@ -203,7 +200,7 @@ export const toggleXpAction = async (req: Request, res: Response, next: NextFunc
 			.limit(1);
 
 		if (existingActions.length === 0) {
-			return res.status(404).json({ message: `XP action "${actionKey}" not found` });
+			return sendErrorResponse(res, `XP action "${actionKey}" not found`, 404);
 		}
 
 		const currentEnabled = existingActions[0].enabled;
@@ -220,7 +217,7 @@ export const toggleXpAction = async (req: Request, res: Response, next: NextFunc
 		// Force refresh the XP actions cache
 		await loadXpActionsFromDb(true);
 
-		res.status(200).json({
+		return sendSuccessResponse(res, {
 			message: `XP action "${actionKey}" ${!currentEnabled ? 'enabled' : 'disabled'} successfully`,
 			action: {
 				...existingActions[0],
@@ -244,16 +241,14 @@ export const resetXpAction = async (req: Request, res: Response, next: NextFunct
 		const { actionKey } = req.params;
 
 		if (!actionKey) {
-			return res.status(400).json({ message: 'Action key is required' });
+			return sendErrorResponse(res, 'Action key is required', 400);
 		}
 
 		// Check if this is a default action (in the XP_ACTION enum)
 		const isDefaultAction = Object.values(XP_ACTION).includes(actionKey as XP_ACTION);
 
 		if (!isDefaultAction) {
-			return res.status(400).json({
-				message: `Cannot reset custom action "${actionKey}". Only default actions can be reset.`
-			});
+			return sendErrorResponse(res, `Cannot reset custom action "${actionKey}". Only default actions can be reset.`, 400);
 		}
 
 		// Get all XP actions from code and extract the default for this key
@@ -261,9 +256,7 @@ export const resetXpAction = async (req: Request, res: Response, next: NextFunct
 		const defaultAction = defaultActionsObj[actionKey];
 
 		if (!defaultAction) {
-			return res
-				.status(404)
-				.json({ message: `Default configuration for "${actionKey}" not found` });
+			return sendErrorResponse(res, `Default configuration for "${actionKey}" not found`, 404);
 		}
 
 		// Update the action with default values
@@ -282,7 +275,7 @@ export const resetXpAction = async (req: Request, res: Response, next: NextFunct
 		// Force refresh the XP actions cache
 		await loadXpActionsFromDb(true);
 
-		res.status(200).json({
+		return sendSuccessResponse(res, {
 			message: `XP action "${actionKey}" reset to default values successfully`,
 			action: {
 				action: actionKey,

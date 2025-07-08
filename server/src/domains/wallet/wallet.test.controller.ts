@@ -4,6 +4,7 @@ import { logger } from '@server/src/core/logger';
 import { walletService } from './wallet.service';
 import { dgtService } from './dgt.service';
 import { isDevMode } from '@server/src/utils/environment';
+import { sendErrorResponse, sendSuccessResponse } from '@server/src/core/utils/transformer.helpers';
 
 /**
  * Test Controller for CCPayment Wallet Creation
@@ -24,16 +25,16 @@ export class WalletTestController {
 				(!userService.getUserFromRequest(req) ||
 					(userService.getUserFromRequest(req) as any).role !== 'admin')
 			) {
-				return res.status(403).json({
-					error: 'Wallet testing only available in development mode or for admins'
-				});
+				sendErrorResponse(res, 'Wallet testing only available in development mode or for admins', 403);
+				return;
 			}
 
 			const { userId, testMode = true } = req.body;
 			const targetUserId = userId || (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!targetUserId) {
-				return res.status(400).json({ error: 'User ID required' });
+				sendErrorResponse(res, 'User ID required', 400);
+				return;
 			}
 
 			logger.info('WalletTestController', 'Testing wallet creation', {
@@ -77,8 +78,7 @@ export class WalletTestController {
 				});
 			}
 
-			res.status(200).json({
-				success: true,
+			sendSuccessResponse(res, {
 				message: 'Wallet creation test completed successfully',
 				data: {
 					userId: targetUserId,
@@ -104,11 +104,7 @@ export class WalletTestController {
 				userId: req.body?.userId
 			});
 
-			res.status(500).json({
-				success: false,
-				error: 'Wallet creation test failed',
-				details: isDevMode() ? error.message : 'Internal server error'
-			});
+			sendErrorResponse(res, 'Wallet creation test failed', 500);
 		}
 	}
 
@@ -120,9 +116,8 @@ export class WalletTestController {
 		try {
 			// Security: Only allow in dev mode
 			if (!isDevMode()) {
-				return res.status(403).json({
-					error: 'Signup simulation only available in development mode'
-				});
+				sendErrorResponse(res, 'Signup simulation only available in development mode', 403);
+				return;
 			}
 
 			const {
@@ -146,8 +141,7 @@ export class WalletTestController {
 				walletResult = await this.performWalletCreation(mockUserId);
 			}
 
-			res.status(200).json({
-				success: true,
+			sendSuccessResponse(res, {
 				message: 'Signup simulation completed',
 				data: {
 					user: {
@@ -167,11 +161,7 @@ export class WalletTestController {
 				stack: error.stack
 			});
 
-			res.status(500).json({
-				success: false,
-				error: 'Signup simulation failed',
-				details: error.message
-			});
+			sendErrorResponse(res, 'Signup simulation failed', 500);
 		}
 	}
 
@@ -183,9 +173,8 @@ export class WalletTestController {
 		try {
 			// Security: Only allow in dev mode
 			if (!isDevMode()) {
-				return res.status(403).json({
-					error: 'Webhook simulation only available in development mode'
-				});
+				sendErrorResponse(res, 'Webhook simulation only available in development mode', 403);
+				return;
 			}
 
 			const {
@@ -198,7 +187,8 @@ export class WalletTestController {
 			const targetUserId = userId || (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!targetUserId) {
-				return res.status(400).json({ error: 'User ID required for webhook simulation' });
+				sendErrorResponse(res, 'User ID required for webhook simulation', 400);
+				return;
 			}
 
 			logger.info('WalletTestController', 'Simulating webhook event', {
@@ -224,8 +214,7 @@ export class WalletTestController {
 					throw new Error(`Unknown webhook event type: ${eventType}`);
 			}
 
-			res.status(200).json({
-				success: true,
+			sendSuccessResponse(res, {
 				message: `Webhook event '${eventType}' simulated successfully`,
 				data: result
 			});
@@ -235,11 +224,7 @@ export class WalletTestController {
 				eventType: req.body?.eventType
 			});
 
-			res.status(500).json({
-				success: false,
-				error: 'Webhook simulation failed',
-				details: error.message
-			});
+			sendErrorResponse(res, 'Webhook simulation failed', 500);
 		}
 	}
 
@@ -256,15 +241,15 @@ export class WalletTestController {
 					((userService.getUserFromRequest(req) as any).role !== 'admin' &&
 						(userService.getUserFromRequest(req) as any).id !== req.params.userId))
 			) {
-				return res.status(403).json({
-					error: 'Debug info access denied'
-				});
+				sendErrorResponse(res, 'Debug info access denied', 403);
+				return;
 			}
 
 			const targetUserId = req.params.userId || (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!targetUserId) {
-				return res.status(400).json({ error: 'User ID required' });
+				sendErrorResponse(res, 'User ID required', 400);
+				return;
 			}
 
 			// Get comprehensive wallet status
@@ -277,8 +262,7 @@ export class WalletTestController {
 				walletService.getWalletConfig().catch((e) => ({ error: e.message }))
 			]);
 
-			res.status(200).json({
-				success: true,
+			sendSuccessResponse(res, {
 				debug: {
 					userId: targetUserId,
 					timestamp: new Date().toISOString(),
@@ -300,11 +284,7 @@ export class WalletTestController {
 				userId: req.params.userId
 			});
 
-			res.status(500).json({
-				success: false,
-				error: 'Debug info retrieval failed',
-				details: error.message
-			});
+			sendErrorResponse(res, 'Debug info retrieval failed', 500);
 		}
 	}
 

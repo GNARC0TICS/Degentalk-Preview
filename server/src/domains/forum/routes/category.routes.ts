@@ -45,10 +45,7 @@ router.get(
 			});
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /structure', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch forum structure'
-			});
+			return sendErrorResponse(res, 'Failed to fetch forum structure', 500);
 		}
 	})
 );
@@ -65,10 +62,7 @@ router.get(
 			sendSuccessResponse(res, transformedHierarchy);
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /hierarchy', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch forum hierarchy'
-			});
+			return sendErrorResponse(res, 'Failed to fetch forum hierarchy', 500);
 		}
 	})
 );
@@ -84,10 +78,7 @@ router.get(
 			sendSuccessResponse(res, structures.map(s => ForumTransformer.toPublicForumStructure(s)));
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /structures', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch forum structures'
-			});
+			return sendErrorResponse(res, 'Failed to fetch forum structures', 500);
 		}
 	})
 );
@@ -110,10 +101,7 @@ router.get(
 				: ForumTransformer.toPublicForumStructure(tree));
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /structure/tree', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch structure tree'
-			});
+			return sendErrorResponse(res, 'Failed to fetch structure tree', 500);
 		}
 	})
 );
@@ -127,19 +115,13 @@ router.get(
 			const structure = await forumStructureService.getStructureBySlug(slug);
 
 			if (!structure) {
-				return res.status(404).json({
-					success: false,
-					error: 'Forum structure not found'
-				});
+				return sendErrorResponse(res, 'Forum structure not found', 404);
 			}
 
 			sendSuccessResponse(res, ForumTransformer.toPublicForumStructure(structure));
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /structure/slug/:slug', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch forum structure'
-			});
+			return sendErrorResponse(res, 'Failed to fetch forum structure', 500);
 		}
 	})
 );
@@ -155,10 +137,7 @@ router.get(
 			sendSuccessResponse(res, stats);
 		} catch (error) {
 			logger.error('StructureRoutes', 'Error in GET /structure/:id/stats', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch structure statistics'
-			});
+			return sendErrorResponse(res, 'Failed to fetch structure statistics', 500);
 		}
 	})
 );

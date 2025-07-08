@@ -6,6 +6,7 @@ import { eq, and, sql } from 'drizzle-orm';
 import { walletConfigService } from '../wallet-config.service';
 import type { SecurityMiddleware, RateLimitResult } from './types';
 import { logger } from "../../../core/logger";
+import { sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 /**
  * Wallet Security Middleware
@@ -64,7 +65,7 @@ const depositRateLimit = async (req: Request, res: Response, next: NextFunction)
 	try {
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			res.status(401).json({ success: false, message: 'Authentication required' });
+			sendErrorResponse(res, 'Authentication required', 401);
 			return;
 		}
 
@@ -78,15 +79,7 @@ const depositRateLimit = async (req: Request, res: Response, next: NextFunction)
 
 		if (!rateCheck.allowed) {
 			const resetTime = new Date(rateCheck.resetTime);
-			res.status(429).json({
-				success: false,
-				message: 'Deposit rate limit exceeded',
-				error: {
-					type: 'RATE_LIMIT_EXCEEDED',
-					resetTime: resetTime.toISOString(),
-					maxAttempts: config.limits.depositsPerHour
-				}
-			});
+			sendErrorResponse(res, 'Deposit rate limit exceeded', 429);
 			return;
 		}
 
@@ -100,7 +93,7 @@ const depositRateLimit = async (req: Request, res: Response, next: NextFunction)
 		next();
 	} catch (error) {
 		logger.error('Error in deposit rate limit middleware:', error);
-		res.status(500).json({ success: false, message: 'Internal server error' });
+		sendErrorResponse(res, 'Internal server error', 500);
 	}
 };
 
@@ -115,7 +108,7 @@ const transferRateLimit = async (
 	try {
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			res.status(401).json({ success: false, message: 'Authentication required' });
+			sendErrorResponse(res, 'Authentication required', 401);
 			return;
 		}
 
@@ -129,15 +122,7 @@ const transferRateLimit = async (
 
 		if (!rateCheck.allowed) {
 			const resetTime = new Date(rateCheck.resetTime);
-			res.status(429).json({
-				success: false,
-				message: 'Transfer rate limit exceeded',
-				error: {
-					type: 'RATE_LIMIT_EXCEEDED',
-					resetTime: resetTime.toISOString(),
-					maxAttempts: config.limits.tipsPerMinute
-				}
-			});
+			sendErrorResponse(res, 'Transfer rate limit exceeded', 429);
 			return;
 		}
 
@@ -151,7 +136,7 @@ const transferRateLimit = async (
 		next();
 	} catch (error) {
 		logger.error('Error in transfer rate limit middleware:', error);
-		res.status(500).json({ success: false, message: 'Internal server error' });
+		sendErrorResponse(res, 'Internal server error', 500);
 	}
 };
 
@@ -166,18 +151,14 @@ const withdrawalSecurityCheck = async (
 	try {
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			res.status(401).json({ success: false, message: 'Authentication required' });
+			sendErrorResponse(res, 'Authentication required', 401);
 			return;
 		}
 
 		// Check if withdrawals are enabled
 		const config = await walletConfigService.getConfig();
 		if (!config.features.allowCryptoWithdrawals) {
-			res.status(403).json({
-				success: false,
-				message: 'Crypto withdrawals are currently disabled',
-				error: { type: 'FEATURE_DISABLED' }
-			});
+			sendErrorResponse(res, 'Crypto withdrawals are currently disabled', 403);
 			return;
 		}
 
@@ -185,7 +166,7 @@ const withdrawalSecurityCheck = async (
 		const user = await db.select().from(users).where(eq(users.id, userId)).limit(1);
 
 		if (user.length === 0) {
-			res.status(404).json({ success: false, message: 'User not found' });
+			sendErrorResponse(res, 'User not found', 404);
 			return;
 		}
 
@@ -202,22 +183,14 @@ const withdrawalSecurityCheck = async (
 		const minAccountAge = 24 * 60 * 60 * 1000; // 24 hours
 
 		if (accountAge < minAccountAge) {
-			res.status(403).json({
-				success: false,
-				message: 'Account must be at least 24 hours old to withdraw',
-				error: {
-					type: 'ACCOUNT_TOO_NEW',
-					accountAge: Math.floor(accountAge / (60 * 60 * 1000)), // hours
-					requiredAge: 24
-				}
-			});
+			sendErrorResponse(res, 'Account must be at least 24 hours old to withdraw', 403);
 			return;
 		}
 
 		next();
 	} catch (error) {
 		logger.error('Error in withdrawal security check:', error);
-		res.status(500).json({ success: false, message: 'Internal server error' });
+		sendErrorResponse(res, 'Internal server error', 500);
 	}
 };
 
@@ -234,41 +207,26 @@ const dgtTransferValidation = async (
 		const fromUserId = userService.getUserFromRequest(req)?.id;
 
 		if (!fromUserId) {
-			res.status(401).json({ success: false, message: 'Authentication required' });
+			sendErrorResponse(res, 'Authentication required', 401);
 			return;
 		}
 
 		// Validate amount
 		if (!amount || amount <= 0) {
-			res.status(400).json({
-				success: false,
-				message: 'Invalid transfer amount',
-				error: { type: 'INVALID_AMOUNT' }
-			});
+			sendErrorResponse(res, 'Invalid transfer amount', 400);
 			return;
 		}
 
 		// Check config limits
 		const config = await walletConfigService.getConfig();
 		if (amount > config.limits.maxDGTTransfer) {
-			res.status(400).json({
-				success: false,
-				message: `Transfer amount exceeds maximum limit of ${config.limits.maxDGTTransfer} DGT`,
-				error: {
-					type: 'AMOUNT_EXCEEDS_LIMIT',
-					maxAmount: config.limits.maxDGTTransfer
-				}
-			});
+			sendErrorResponse(res, `Transfer amount exceeds maximum limit of ${config.limits.maxDGTTransfer} DGT`, 400);
 			return;
 		}
 
 		// Validate target user
 		if (!toUserId || fromUserId === toUserId) {
-			res.status(400).json({
-				success: false,
-				message: 'Invalid transfer recipient',
-				error: { type: 'INVALID_RECIPIENT' }
-			});
+			sendErrorResponse(res, 'Invalid transfer recipient', 400);
 			return;
 		}
 
@@ -276,18 +234,14 @@ const dgtTransferValidation = async (
 		const targetUser = await db.select().from(users).where(eq(users.id, toUserId)).limit(1);
 
 		if (targetUser.length === 0) {
-			res.status(404).json({
-				success: false,
-				message: 'Transfer recipient not found',
-				error: { type: 'RECIPIENT_NOT_FOUND' }
-			});
+			sendErrorResponse(res, 'Transfer recipient not found', 404);
 			return;
 		}
 
 		next();
 	} catch (error) {
 		logger.error('Error in DGT transfer validation:', error);
-		res.status(500).json({ success: false, message: 'Internal server error' });
+		sendErrorResponse(res, 'Internal server error', 500);
 	}
 };
 
@@ -304,17 +258,13 @@ const adminDGTOperationValidation = async (
 		const adminUserId = userService.getUserFromRequest(req)?.id;
 
 		if (!adminUserId) {
-			res.status(401).json({ success: false, message: 'Admin authentication required' });
+			sendErrorResponse(res, 'Admin authentication required', 401);
 			return;
 		}
 
 		// Validate amount
 		if (!amount || amount <= 0) {
-			res.status(400).json({
-				success: false,
-				message: 'Invalid operation amount',
-				error: { type: 'INVALID_AMOUNT' }
-			});
+			sendErrorResponse(res, 'Invalid operation amount', 400);
 			return;
 		}
 
@@ -326,24 +276,13 @@ const adminDGTOperationValidation = async (
 		// This could be implemented with more sophisticated tracking
 		// For now, we'll just check the config limit
 		if (amount > config.limits.maxDailyCreditAmount) {
-			res.status(400).json({
-				success: false,
-				message: `Operation amount exceeds daily limit of ${config.limits.maxDailyCreditAmount} DGT`,
-				error: {
-					type: 'DAILY_LIMIT_EXCEEDED',
-					maxDailyAmount: config.limits.maxDailyCreditAmount
-				}
-			});
+			sendErrorResponse(res, `Operation amount exceeds daily limit of ${config.limits.maxDailyCreditAmount} DGT`, 400);
 			return;
 		}
 
 		// Validate target user
 		if (!targetUserId) {
-			res.status(400).json({
-				success: false,
-				message: 'Target user ID required',
-				error: { type: 'MISSING_TARGET_USER' }
-			});
+			sendErrorResponse(res, 'Target user ID required', 400);
 			return;
 		}
 
@@ -351,18 +290,14 @@ const adminDGTOperationValidation = async (
 		const targetUser = await db.select().from(users).where(eq(users.id, targetUserId)).limit(1);
 
 		if (targetUser.length === 0) {
-			res.status(404).json({
-				success: false,
-				message: 'Target user not found',
-				error: { type: 'TARGET_USER_NOT_FOUND' }
-			});
+			sendErrorResponse(res, 'Target user not found', 404);
 			return;
 		}
 
 		next();
 	} catch (error) {
 		logger.error('Error in admin DGT operation validation:', error);
-		res.status(500).json({ success: false, message: 'Internal server error' });
+		sendErrorResponse(res, 'Internal server error', 500);
 	}
 };
 

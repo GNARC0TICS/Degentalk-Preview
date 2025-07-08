@@ -10,6 +10,7 @@ import {
 	sendSuccessResponse,
 	sendErrorResponse
 } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccess, sendError, sendValidationError, handleAdminError } from '../../admin.response';
 
 const databaseService = new DatabaseService();
 const queryService = new QueryService();
@@ -66,10 +67,7 @@ export async function getTables(req: Request, res: Response) {
 		sendSuccessResponse(res, tables);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error getting tables', { error: error.message });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to retrieve database tables'
-		});
+		return sendError(res, 'Failed to retrieve database tables');
 	}
 }
 
@@ -82,10 +80,7 @@ export async function getTableSchema(req: Request, res: Response) {
 		const { table } = req.params;
 
 		if (!table) {
-			return res.status(400).json({
-				success: false,
-				error: 'Table name is required'
-			});
+			return sendValidationError(res, 'Table name is required');
 		}
 
 		const schema = await databaseService.getTableSchema(table);
@@ -103,10 +98,7 @@ export async function getTableSchema(req: Request, res: Response) {
 			error: error.message,
 			table: req.params.table
 		});
-		res.status(500).json({
-			success: false,
-			error: 'Failed to retrieve table schema'
-		});
+		return sendError(res, 'Failed to retrieve table schema');
 	}
 }
 
@@ -120,10 +112,7 @@ export async function getTableData(req: Request, res: Response) {
 		const queryParams = tableQuerySchema.parse(req.query);
 
 		if (!table) {
-			return res.status(400).json({
-				success: false,
-				error: 'Table name is required'
-			});
+			return sendValidationError(res, 'Table name is required');
 		}
 
 		const result = await databaseService.getTableData(table, queryParams);
@@ -143,10 +132,7 @@ export async function getTableData(req: Request, res: Response) {
 			error: error.message,
 			table: req.params.table
 		});
-		res.status(500).json({
-			success: false,
-			error: 'Failed to retrieve table data'
-		});
+		return sendError(res, 'Failed to retrieve table data');
 	}
 }
 
@@ -172,17 +158,13 @@ export async function updateRow(req: Request, res: Response) {
 				response.message = `This is a configuration table. Please use the dedicated config panel: ${accessInfo.configRoute}`;
 			}
 
-			return res.status(403).json(response);
+			return sendError(res, response.error || 'Table editing is not allowed', 403);
 		}
 
 		// Validate data
 		const validation = await databaseService.validateRowData(requestData.table, requestData.data);
 		if (!validation.valid) {
-			return res.status(400).json({
-				success: false,
-				error: 'Data validation failed',
-				details: validation.errors
-			});
+			return sendValidationError(res, 'Data validation failed', validation.errors);
 		}
 
 		const result = await databaseService.updateRow(
@@ -207,10 +189,7 @@ export async function updateRow(req: Request, res: Response) {
 		sendSuccessResponse(res, result);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error updating row', { error: error.message });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to update row'
-		});
+		return sendError(res, 'Failed to update row');
 	}
 }
 
@@ -236,17 +215,13 @@ export async function createRow(req: Request, res: Response) {
 				response.message = `This is a configuration table. Please use the dedicated config panel: ${accessInfo.configRoute}`;
 			}
 
-			return res.status(403).json(response);
+			return sendError(res, response.error || 'Table editing is not allowed', 403);
 		}
 
 		// Validate data
 		const validation = await databaseService.validateRowData(requestData.table, requestData.data);
 		if (!validation.valid) {
-			return res.status(400).json({
-				success: false,
-				error: 'Data validation failed',
-				details: validation.errors
-			});
+			return sendValidationError(res, 'Data validation failed', validation.errors);
 		}
 
 		const result = await databaseService.createRow(requestData.table, requestData.data);
@@ -266,10 +241,7 @@ export async function createRow(req: Request, res: Response) {
 		sendSuccessResponse(res, result);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error creating row', { error: error.message });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to create row'
-		});
+		return sendError(res, 'Failed to create row');
 	}
 }
 
@@ -295,7 +267,7 @@ export async function deleteRow(req: Request, res: Response) {
 				response.message = `This is a configuration table. Please use the dedicated config panel: ${accessInfo.configRoute}`;
 			}
 
-			return res.status(403).json(response);
+			return sendError(res, response.error || 'Table editing is not allowed', 403);
 		}
 
 		// Get row data before deletion for audit log
@@ -318,10 +290,7 @@ export async function deleteRow(req: Request, res: Response) {
 		sendSuccessResponse(res, result);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error deleting row', { error: error.message });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to delete row'
-		});
+		return sendError(res, 'Failed to delete row');
 	}
 }
 
@@ -347,15 +316,12 @@ export async function bulkOperation(req: Request, res: Response) {
 				response.message = `This is a configuration table. Please use the dedicated config panel: ${accessInfo.configRoute}`;
 			}
 
-			return res.status(403).json(response);
+			return sendError(res, response.error || 'Table editing is not allowed', 403);
 		}
 
 		// Limit bulk operations to prevent abuse
 		if (requestData.rowIds.length > 100) {
-			return res.status(400).json({
-				success: false,
-				error: 'Bulk operations are limited to 100 rows at a time'
-			});
+			return sendValidationError(res, 'Bulk operations are limited to 100 rows at a time');
 		}
 
 		const result = await databaseService.bulkOperation(
@@ -382,10 +348,7 @@ export async function bulkOperation(req: Request, res: Response) {
 		sendSuccessResponse(res, result);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error performing bulk operation', { error: error.message });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to perform bulk operation'
-		});
+		return sendError(res, 'Failed to perform bulk operation');
 	}
 }
 
@@ -398,10 +361,7 @@ export async function exportTableCSV(req: Request, res: Response) {
 		const { table } = req.params;
 
 		if (!table) {
-			return res.status(400).json({
-				success: false,
-				error: 'Table name is required'
-			});
+			return sendValidationError(res, 'Table name is required');
 		}
 
 		const csvData = await databaseService.exportTableAsCSV(table);
@@ -421,10 +381,7 @@ export async function exportTableCSV(req: Request, res: Response) {
 			error: error.message,
 			table: req.params.table
 		});
-		res.status(500).json({
-			success: false,
-			error: 'Failed to export table data'
-		});
+		return sendError(res, 'Failed to export table data');
 	}
 }
 
@@ -437,10 +394,7 @@ export async function getTableRelationships(req: Request, res: Response) {
 		const { table } = req.params;
 
 		if (!table) {
-			return res.status(400).json({
-				success: false,
-				error: 'Table name is required'
-			});
+			return sendValidationError(res, 'Table name is required');
 		}
 
 		const relationships = await databaseService.getTableRelationships(table);
@@ -458,10 +412,7 @@ export async function getTableRelationships(req: Request, res: Response) {
 			error: error.message,
 			table: req.params.table
 		});
-		res.status(500).json({
-			success: false,
-			error: 'Failed to retrieve table relationships'
-		});
+		return sendError(res, 'Failed to retrieve table relationships');
 	}
 }
 
@@ -484,9 +435,6 @@ export async function getDatabaseStats(req: Request, res: Response) {
 		sendSuccessResponse(res, stats);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error getting database stats', { error: error.message });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to retrieve database statistics'
-		});
+		return sendError(res, 'Failed to retrieve database statistics');
 	}
 }

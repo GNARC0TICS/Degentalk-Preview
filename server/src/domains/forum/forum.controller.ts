@@ -25,7 +25,7 @@ export const forumController = {
 			return sendSuccessResponse(res, toPublicList(categories, ForumTransformer.toPublicForumStructure));
 		} catch (error) {
 			logger.error('ForumController', 'Error fetching forum categories', { err: error });
-			return res.status(500).json({ message: 'Failed to fetch forum categories' });
+			return sendErrorResponse(res, 'Failed to fetch forum categories', 500);
 		}
 	},
 
@@ -52,7 +52,7 @@ export const forumController = {
 				err: error,
 				query: req.query
 			});
-			return res.status(500).json({ message: 'Failed to fetch forum category tree' });
+			return sendErrorResponse(res, 'Failed to fetch forum category tree', 500);
 		}
 	},
 
@@ -62,13 +62,13 @@ export const forumController = {
 			const { slug } = req.params;
 
 			if (!slug) {
-				return res.status(400).json({ message: 'Category slug is required' });
+				return sendErrorResponse(res, 'Category slug is required', 400);
 			}
 
 			const category = await forumService.getCategoryBySlug(slug);
 
 			if (!category) {
-				return res.status(404).json({ message: 'Category not found' });
+				return sendErrorResponse(res, 'Category not found', 404);
 			}
 
 			res.status(200);
@@ -78,7 +78,7 @@ export const forumController = {
 				err: error,
 				slug: req.params.slug
 			});
-			return res.status(500).json({ message: 'Failed to fetch category' });
+			return sendErrorResponse(res, 'Failed to fetch category', 500);
 		}
 	},
 
@@ -88,13 +88,13 @@ export const forumController = {
 			const { slug } = req.params;
 
 			if (!slug) {
-				return res.status(400).json({ message: 'Forum slug is required' });
+				return sendErrorResponse(res, 'Forum slug is required', 400);
 			}
 
 			const result = await forumService.getForumBySlugWithTopics(slug);
 
 			if (!result.forum) {
-				return res.status(404).json({ message: 'Forum not found' });
+				return sendErrorResponse(res, 'Forum not found', 404);
 			}
 
 			// Transform forum and threads separately
@@ -110,7 +110,7 @@ export const forumController = {
 				err: error,
 				slug: req.params.slug
 			});
-			return res.status(500).json({ message: 'Failed to fetch forum with topics' });
+			return sendErrorResponse(res, 'Failed to fetch forum with topics', 500);
 		}
 	},
 
@@ -120,13 +120,13 @@ export const forumController = {
 			const { id } = req.params;
 
 			if (!id) {
-				return res.status(400).json({ message: 'Valid category ID is required' });
+				return sendErrorResponse(res, 'Valid category ID is required', 400);
 			}
 
 			const category = await forumService.getCategoryById(id as StructureId);
 
 			if (!category) {
-				return res.status(404).json({ message: 'Category not found' });
+				return sendErrorResponse(res, 'Category not found', 404);
 			}
 
 			res.status(200);
@@ -136,7 +136,7 @@ export const forumController = {
 				err: error,
 				categoryId: req.params.id
 			});
-			return res.status(500).json({ message: 'Failed to fetch category' });
+			return sendErrorResponse(res, 'Failed to fetch category', 500);
 		}
 	},
 
@@ -155,7 +155,7 @@ export const forumController = {
 				err: error,
 				categoryId: req.query.categoryId
 			});
-			return res.status(500).json({ message: 'Failed to fetch thread prefixes' });
+			return sendErrorResponse(res, 'Failed to fetch thread prefixes', 500);
 		}
 	},
 
@@ -167,7 +167,7 @@ export const forumController = {
 			return sendSuccessResponse(res, tags);
 		} catch (error) {
 			logger.error('ForumController', 'Error fetching tags', { err: error });
-			return res.status(500).json({ message: 'Failed to fetch tags' });
+			return sendErrorResponse(res, 'Failed to fetch tags', 500);
 		}
 	},
 
@@ -198,7 +198,7 @@ export const forumController = {
 			return sendSuccessResponse(res, transformedResult);
 		} catch (error) {
 			logger.error('ForumController', 'Error searching threads', { err: error, query: req.query });
-			return res.status(500).json({ message: 'Failed to search threads' });
+			return sendErrorResponse(res, 'Failed to search threads', 500);
 		}
 	},
 
@@ -217,7 +217,7 @@ export const forumController = {
 			});
 
 			if (!updatedThread) {
-				return res.status(404).json({ message: 'Thread not found or update failed.' });
+				return sendErrorResponse(res, 'Thread not found or update failed.', 404);
 			}
 
 			// Send success response with transformed thread
@@ -245,13 +245,13 @@ export const forumController = {
 			const { slug } = req.params;
 
 			if (!slug) {
-				return res.status(400).json({ message: 'Forum slug is required' });
+				return sendErrorResponse(res, 'Forum slug is required', 400);
 			}
 
 			const forum = await forumService.getCategoryBySlug(slug);
 
 			if (!forum) {
-				return res.status(404).json({ message: 'Forum not found' });
+				return sendErrorResponse(res, 'Forum not found', 404);
 			}
 
 			res.status(200);
@@ -261,7 +261,7 @@ export const forumController = {
 				err: error,
 				slug: req.params.slug
 			});
-			return res.status(500).json({ message: 'Failed to fetch forum' });
+			return sendErrorResponse(res, 'Failed to fetch forum', 500);
 		}
 	},
 
@@ -271,7 +271,7 @@ export const forumController = {
 			const parentId = req.query.parentId ? (req.query.parentId as StructureId) : undefined;
 
 			if (!parentId) {
-				return res.status(400).json({ message: 'Valid parent ID is required' });
+				return sendErrorResponse(res, 'Valid parent ID is required', 400);
 			}
 
 			const forums = await forumService.getForumsByParentId(parentId);
@@ -283,7 +283,7 @@ export const forumController = {
 				err: error,
 				parentId: req.query.parentId
 			});
-			return res.status(500).json({ message: 'Failed to fetch child forums' });
+			return sendErrorResponse(res, 'Failed to fetch child forums', 500);
 		}
 	}
 };

@@ -7,7 +7,7 @@ import { XP_ACTION } from '../../../xp/xp-actions';
 import { db } from '@db';
 import { xpAdjustmentLogs } from '@schema';
 import { eq, desc } from 'drizzle-orm';
-import { sendSuccess, sendError, sendValidationError } from '../../admin.response';
+import { sendSuccess, sendError, sendValidationError, handleAdminError } from '../../admin.response';
 import { validateRequestBody, validateNumberParam } from '../../admin.validation';
 import {
 	XpSettingsSchema,
@@ -20,8 +20,8 @@ import {
 export const getXpSettings = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// const settings = await xpAdminService.getXpSettings();
-		// res.json(settings);
-		res.status(501).json({ message: 'Get XP Settings not implemented' });
+		// AdminResponse.success(settings);
+		return sendError(res, 'Get XP Settings not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -105,7 +105,7 @@ export const deleteLevel = async (req: Request, res: Response, next: NextFunctio
 		// const { levelNumber } = req.params;
 		// await xpAdminService.deleteLevel(parseInt(levelNumber));
 		// res.status(204).send();
-		res.status(501).json({ message: 'Delete Level not implemented' });
+		return sendError(res, 'Delete Level not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -120,8 +120,8 @@ export const deleteLevel = async (req: Request, res: Response, next: NextFunctio
 export const getBadges = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// const badges = await xpAdminService.getBadges();
-		// res.json(badges);
-		res.status(501).json({ message: 'Get Badges not implemented' });
+		// AdminResponse.success(badges);
+		return sendError(res, 'Get Badges not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -136,7 +136,7 @@ export const createBadge = async (req: Request, res: Response, next: NextFunctio
 	try {
 		// const newBadge = await xpAdminService.createBadge(req.body);
 		// res.status(201).json(newBadge);
-		res.status(501).json({ message: 'Create Badge not implemented' });
+		return sendError(res, 'Create Badge not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -151,8 +151,8 @@ export const updateBadge = async (req: Request, res: Response, next: NextFunctio
 	try {
 		// const { badgeId } = req.params;
 		// const updatedBadge = await xpAdminService.updateBadge(badgeId, req.body);
-		// res.json(updatedBadge);
-		res.status(501).json({ message: 'Update Badge not implemented' });
+		// AdminResponse.success(updatedBadge);
+		return sendError(res, 'Update Badge not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -168,7 +168,7 @@ export const deleteBadge = async (req: Request, res: Response, next: NextFunctio
 		// const { badgeId } = req.params;
 		// await xpAdminService.deleteBadge(badgeId);
 		// res.status(204).send();
-		res.status(501).json({ message: 'Delete Badge not implemented' });
+		return sendError(res, 'Delete Badge not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -183,8 +183,8 @@ export const deleteBadge = async (req: Request, res: Response, next: NextFunctio
 export const getTitles = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// const titles = await xpAdminService.getTitles();
-		// res.json(titles);
-		res.status(501).json({ message: 'Get Titles not implemented' });
+		// AdminResponse.success(titles);
+		return sendError(res, 'Get Titles not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -199,7 +199,7 @@ export const createTitle = async (req: Request, res: Response, next: NextFunctio
 	try {
 		// const newTitle = await xpAdminService.createTitle(req.body);
 		// res.status(201).json(newTitle);
-		res.status(501).json({ message: 'Create Title not implemented' });
+		return sendError(res, 'Create Title not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -214,8 +214,8 @@ export const updateTitle = async (req: Request, res: Response, next: NextFunctio
 	try {
 		// const { titleId } = req.params;
 		// const updatedTitle = await xpAdminService.updateTitle(titleId, req.body);
-		// res.json(updatedTitle);
-		res.status(501).json({ message: 'Update Title not implemented' });
+		// AdminResponse.success(updatedTitle);
+		return sendError(res, 'Update Title not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -231,7 +231,7 @@ export const deleteTitle = async (req: Request, res: Response, next: NextFunctio
 		// const { titleId } = req.params;
 		// await xpAdminService.deleteTitle(titleId);
 		// res.status(204).send();
-		res.status(501).json({ message: 'Delete Title not implemented' });
+		return sendError(res, 'Delete Title not implemented', 501);
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -249,15 +249,11 @@ export const adjustUserXp = async (req: Request, res: Response, next: NextFuncti
 		const adminId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId || !amount || !adjustmentType) {
-			return res.status(400).json({
-				message: 'Missing required parameters: userId, amount, and adjustmentType are required.'
-			});
+			return sendValidationError(res, 'Missing required parameters: userId, amount, and adjustmentType are required.');
 		}
 
 		if (!['add', 'subtract', 'set'].includes(adjustmentType)) {
-			return res.status(400).json({
-				message: 'Invalid adjustmentType. Must be one of: add, subtract, set.'
-			});
+			return sendValidationError(res, 'Invalid adjustmentType. Must be one of: add, subtract, set.');
 		}
 
 		logger.info('XP_ADMIN_CONTROLLER', 'Admin adjusting user XP', {
@@ -279,10 +275,7 @@ export const adjustUserXp = async (req: Request, res: Response, next: NextFuncti
 			}
 		);
 
-		res.status(200).json({
-			message: 'XP adjusted successfully',
-			result
-		});
+		return sendSuccess(res, result, 'XP adjusted successfully');
 	} catch (error: any) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -290,7 +283,7 @@ export const adjustUserXp = async (req: Request, res: Response, next: NextFuncti
 			error instanceof Error ? error.message : String(error)
 		);
 		if (error.message && error.message.includes('not found')) {
-			return res.status(404).json({ message: error.message });
+			return sendError(res, error.message, 404);
 		}
 		next(error);
 	}
@@ -313,9 +306,7 @@ export const getXpAdjustmentLogs = async (req: Request, res: Response, next: Nex
 
 		const logs = await query;
 
-		res.status(200).json({
-			logs
-		});
+		return sendSuccess(res, { logs });
 	} catch (error) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -337,16 +328,12 @@ export const testXpActionAward = async (req: Request, res: Response, next: NextF
 		const { userId, action, metadata } = req.body;
 
 		if (!userId || !action) {
-			return res.status(400).json({
-				message: 'Missing required parameters. userId and action are required.'
-			});
+			return sendValidationError(res, 'Missing required parameters. userId and action are required.');
 		}
 
 		// Ensure action is valid
 		if (!Object.values(XP_ACTION).includes(action as XP_ACTION)) {
-			return res.status(400).json({
-				message: `Invalid action. Must be one of: ${Object.values(XP_ACTION).join(', ')}`
-			});
+			return sendValidationError(res, `Invalid action. Must be one of: ${Object.values(XP_ACTION).join(', ')}`);
 		}
 
 		logger.info('XP_ADMIN_CONTROLLER', 'Admin testing XP action award', {
@@ -360,16 +347,13 @@ export const testXpActionAward = async (req: Request, res: Response, next: NextF
 		const result = await xpService.awardXp(userId, action as XP_ACTION, metadata);
 
 		if (!result) {
-			return res.status(429).json({
-				message: 'Could not award XP. The user may have reached a limit for this action.'
-			});
+			return sendError(res, 'Could not award XP. The user may have reached a limit for this action.', 429);
 		}
 
-		res.status(200).json({
-			message: 'XP awarded successfully',
+		return sendSuccess(res, {
 			result,
 			limits: await xpService.getActionLimitsForUser(userId, action as XP_ACTION)
-		});
+		}, 'XP awarded successfully');
 	} catch (error: any) {
 		logger.error(
 			'XP_ADMIN_CONTROLLER',
@@ -377,7 +361,7 @@ export const testXpActionAward = async (req: Request, res: Response, next: NextF
 			error instanceof Error ? error.message : String(error)
 		);
 		if (error.message && error.message.includes('not found')) {
-			return res.status(404).json({ message: error.message });
+			return sendError(res, error.message, 404);
 		}
 		next(error);
 	}

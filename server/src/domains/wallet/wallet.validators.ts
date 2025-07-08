@@ -11,6 +11,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
+import { sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 /**
  * Middleware to validate cryptocurrency amounts in requests
@@ -23,24 +24,18 @@ export function validateAmountMiddleware(minAmount: number = 0, maxAmount?: numb
 			parseFloat(req.body.amount) || parseFloat(req.body.value) || parseFloat(req.params.amount);
 
 		if (isNaN(amount)) {
-			return res.status(400).json({
-				error: 'Invalid amount',
-				details: 'Amount must be a valid number.'
-			});
+			sendErrorResponse(res, 'Invalid amount', 400);
+			return;
 		}
 
 		if (amount < minAmount) {
-			return res.status(400).json({
-				error: `Amount too small`,
-				details: `Minimum amount is ${minAmount}.`
-			});
+			sendErrorResponse(res, `Amount too small`, 400);
+			return;
 		}
 
 		if (maxAmount !== undefined && amount > maxAmount) {
-			return res.status(400).json({
-				error: `Amount too large`,
-				details: `Maximum amount is ${maxAmount}.`
-			});
+			sendErrorResponse(res, `Amount too large`, 400);
+			return;
 		}
 
 		// Amount is valid, proceed to the next middleware/handler
@@ -133,10 +128,8 @@ export function validateRequest(schema: z.ZodSchema) {
 			next();
 		} catch (error) {
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400);
+				return;
 			}
 			next(error);
 		}

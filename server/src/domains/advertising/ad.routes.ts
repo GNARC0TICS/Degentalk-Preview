@@ -132,10 +132,7 @@ router.post('/governance/proposals/:proposalId/vote', async (req, res) => {
 		sendSuccessResponse(res, { success: true, message: 'Vote recorded successfully' });
 	} catch (error) {
 		logger.error('Vote error:', error);
-		res.status(400).json({
-			error: 'Failed to record vote',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to record vote', 400);
 	}
 });
 

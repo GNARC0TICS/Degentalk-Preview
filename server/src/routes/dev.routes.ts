@@ -10,13 +10,17 @@ import { cacheService } from '@server/src/core/cache.service';
 import { logger } from '@server/src/core/logger';
 import { isDevMode } from '@server/src/utils/environment';
 import { devSecurity } from '@server/src/middleware/dev-security.middleware';
+import { 
+	sendSuccessResponse,
+	sendErrorResponse 
+} from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
 // Ensure dev mode for all routes
 router.use((req, res, next) => {
 	if (!isDevMode()) {
-		return res.status(404).json({ error: 'Not found' });
+		return sendErrorResponse(res, 'Not found', 404);
 	}
 	next();
 });
@@ -40,7 +44,7 @@ router.get('/health', async (req, res) => {
 		// Memory usage
 		const memUsage = process.memoryUsage();
 
-		res.json({
+		sendSuccessResponse(res, {
 			status: 'healthy',
 			timestamp: new Date().toISOString(),
 			environment: {
@@ -66,10 +70,7 @@ router.get('/health', async (req, res) => {
 		});
 	} catch (error) {
 		logger.error('DevRoutes', 'Health check failed', { error });
-		res.status(500).json({
-			status: 'unhealthy',
-			error: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, error instanceof Error ? error.message : 'Unknown error', 500);
 	}
 });
 
@@ -83,17 +84,14 @@ router.post('/clear-cache', devSecurity.ipAllowlist, async (req, res) => {
 
 		logger.info('DevRoutes', 'Cache cleared via dev endpoint');
 
-		res.json({
+		sendSuccessResponse(res, {
 			success: true,
 			message: 'All caches cleared',
 			timestamp: new Date().toISOString()
 		});
 	} catch (error) {
 		logger.error('DevRoutes', 'Failed to clear cache', { error });
-		res.status(500).json({
-			error: 'Failed to clear cache',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, error instanceof Error ? error.message : 'Unknown error', 500);
 	}
 });
 
@@ -103,7 +101,7 @@ router.post('/clear-cache', devSecurity.ipAllowlist, async (req, res) => {
  * POST /api/dev/logs/levels { level: 'debug' | 'info' | 'warn' | 'error' }
  */
 router.get('/logs/levels', (req, res) => {
-	res.json({
+	sendSuccessResponse(res, {
 		current: process.env.LOG_LEVEL || 'info',
 		available: ['debug', 'info', 'warn', 'error'],
 		description: {
@@ -119,17 +117,14 @@ router.post('/logs/levels', devSecurity.ipAllowlist, (req, res) => {
 	const { level } = req.body;
 
 	if (!['debug', 'info', 'warn', 'error'].includes(level)) {
-		return res.status(400).json({
-			error: 'Invalid log level',
-			valid: ['debug', 'info', 'warn', 'error']
-		});
+		return sendErrorResponse(res, 'Invalid log level', 400);
 	}
 
 	process.env.LOG_LEVEL = level;
 
 	logger.info('DevRoutes', 'Log level changed', { newLevel: level });
 
-	res.json({
+	sendSuccessResponse(res, {
 		success: true,
 		oldLevel: process.env.LOG_LEVEL,
 		newLevel: level,
@@ -158,7 +153,7 @@ router.get('/db/test', devSecurity.ipAllowlist, async (req, res) => {
 
 		const queryTime = Date.now() - startTime;
 
-		res.json({
+		sendSuccessResponse(res, {
 			success: true,
 			queryTime: `${queryTime}ms`,
 			result: result[0],
@@ -166,10 +161,7 @@ router.get('/db/test', devSecurity.ipAllowlist, async (req, res) => {
 		});
 	} catch (error) {
 		logger.error('DevRoutes', 'Database test failed', { error });
-		res.status(500).json({
-			error: 'Database test failed',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, error instanceof Error ? error.message : 'Unknown error', 500);
 	}
 });
 

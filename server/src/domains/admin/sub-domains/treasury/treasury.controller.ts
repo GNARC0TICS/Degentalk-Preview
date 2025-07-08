@@ -24,9 +24,9 @@ export class AdminTreasuryController {
 			sendSuccessResponse(res, stats);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return res.status(error.httpStatus).json({ error: error.message, code: error.code });
+				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			res.status(500).json({ error: 'Failed to get DGT supply statistics' });
+			return sendErrorResponse(res, 'Failed to get DGT supply statistics');
 		}
 	}
 
@@ -45,11 +45,9 @@ export class AdminTreasuryController {
 			sendSuccessResponse(res, { message: 'DGT sent from treasury successfully', data: result });
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
+				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			res.status(500).json({ error: 'Failed to send DGT from treasury' });
+			return sendErrorResponse(res, 'Failed to send DGT from treasury');
 		}
 	}
 
@@ -68,11 +66,9 @@ export class AdminTreasuryController {
 			sendSuccessResponse(res, { message: 'DGT recovered to treasury successfully', data: result });
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
+				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			res.status(500).json({ error: 'Failed to recover DGT to treasury' });
+			return sendErrorResponse(res, 'Failed to recover DGT to treasury');
 		}
 	}
 
@@ -92,11 +88,9 @@ export class AdminTreasuryController {
 			sendSuccessResponse(res, { message: 'Mass airdrop process completed.', data: result });
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
+				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			res.status(500).json({ error: 'Failed to process mass airdrop' });
+			return sendErrorResponse(res, 'Failed to process mass airdrop');
 		}
 	}
 
@@ -109,9 +103,9 @@ export class AdminTreasuryController {
 			sendSuccessResponse(res, settings);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return res.status(error.httpStatus).json({ error: error.message, code: error.code });
+				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			res.status(500).json({ error: 'Failed to get treasury settings' });
+			return sendErrorResponse(res, 'Failed to get treasury settings');
 		}
 	}
 
@@ -134,11 +128,9 @@ export class AdminTreasuryController {
 			sendSuccessResponse(res, { message: 'Treasury settings updated successfully', data: result });
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
+				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			res.status(500).json({ error: 'Failed to update treasury settings' });
+			return sendErrorResponse(res, 'Failed to update treasury settings');
 		}
 	}
 }

@@ -44,6 +44,7 @@ import { traceMiddleware } from './src/middleware/trace.middleware'; // Import n
 import { initEventNotificationListener } from './src/domains/notifications/event-notification-listener';
 import './src/core/background-processor';
 import { logger } from "./src/core/logger";
+import { sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 // Startup logging helper
 const startupLog = (message: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
@@ -124,7 +125,7 @@ app.use(traceMiddleware);
 				logger.error(err.stack);
 			}
 
-			res.status(status).json({ message });
+			sendErrorResponse(res, message, status);
 		});
 
 		// Setup vite or serve static files

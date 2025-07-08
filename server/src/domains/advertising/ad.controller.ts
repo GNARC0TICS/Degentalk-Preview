@@ -101,7 +101,8 @@ export class AdController {
 			const adResponse = await adServingService.serveAd(adRequest);
 
 			if (!adResponse) {
-				res.status(204).json({ message: 'No ad available' });
+				res.status(204);
+				sendSuccessResponse(res, { message: 'No ad available' });
 				return;
 			}
 
@@ -114,10 +115,7 @@ export class AdController {
 			sendSuccessResponse(res, adResponse);
 		} catch (error) {
 			logger.error('Ad serving error:', error);
-			res.status(500).json({
-				error: 'Failed to serve ad',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to serve ad', 500);
 		}
 	}
 
@@ -145,13 +143,11 @@ export class AdController {
 			}, 0);
 
 			// Return quickly to avoid blocking user experience
-			res.status(200).json({ success: true });
+			res.status(200);
+			sendSuccessResponse(res, { success: true });
 		} catch (error) {
 			logger.error('Event tracking error:', error);
-			res.status(400).json({
-				error: 'Invalid tracking data',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Invalid tracking data', 400);
 		}
 	}
 
@@ -172,13 +168,11 @@ export class AdController {
 				endDate: campaignData.endDate ? new Date(campaignData.endDate) : undefined
 			});
 
-			res.status(201).json(result);
+			res.status(201);
+		sendSuccessResponse(res, result);
 		} catch (error) {
 			logger.error('Campaign creation error:', error);
-			res.status(400).json({
-				error: 'Failed to create campaign',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to create campaign', 400);
 		}
 	}
 
@@ -196,10 +190,7 @@ export class AdController {
 			sendSuccessResponse(res, campaign);
 		} catch (error) {
 			logger.error('Get campaign error:', error);
-			res.status(404).json({
-				error: 'Campaign not found',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Campaign not found', 404);
 		}
 	}
 
@@ -223,10 +214,7 @@ export class AdController {
 			sendSuccessResponse(res, result);
 		} catch (error) {
 			logger.error('List campaigns error:', error);
-			res.status(500).json({
-				error: 'Failed to list campaigns',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to list campaigns', 500);
 		}
 	}
 
@@ -251,10 +239,7 @@ export class AdController {
 			sendSuccessResponse(res, campaign);
 		} catch (error) {
 			logger.error('Update campaign error:', error);
-			res.status(400).json({
-				error: 'Failed to update campaign',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to update campaign', 400);
 		}
 	}
 
@@ -272,10 +257,7 @@ export class AdController {
 			res.status(204).send();
 		} catch (error) {
 			logger.error('Delete campaign error:', error);
-			res.status(400).json({
-				error: 'Failed to delete campaign',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to delete campaign', 400);
 		}
 	}
 
@@ -301,10 +283,7 @@ export class AdController {
 			sendSuccessResponse(res, analytics);
 		} catch (error) {
 			logger.error('Get analytics error:', error);
-			res.status(500).json({
-				error: 'Failed to get analytics',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to get analytics', 500);
 		}
 	}
 
@@ -321,10 +300,7 @@ export class AdController {
 			sendSuccessResponse(res, recommendations);
 		} catch (error) {
 			logger.error('Get bid recommendations error:', error);
-			res.status(500).json({
-				error: 'Failed to get bid recommendations',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to get bid recommendations', 500);
 		}
 	}
 
@@ -342,10 +318,7 @@ export class AdController {
 			sendSuccessResponse(res, result);
 		} catch (error) {
 			logger.error('Optimize campaign error:', error);
-			res.status(500).json({
-				error: 'Failed to optimize campaign',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to optimize campaign', 500);
 		}
 	}
 
@@ -379,10 +352,7 @@ export class AdController {
 			sendSuccessResponse(res, publicPlacements);
 		} catch (error) {
 			logger.error('Get placements error:', error);
-			res.status(500).json({
-				error: 'Failed to get placements',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to get placements', 500);
 		}
 	}
 
@@ -412,10 +382,7 @@ export class AdController {
 			sendSuccessResponse(res, publicConfig);
 		} catch (error) {
 			logger.error('Get config error:', error);
-			res.status(500).json({
-				error: 'Failed to get configuration',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to get configuration', 500);
 		}
 	}
 

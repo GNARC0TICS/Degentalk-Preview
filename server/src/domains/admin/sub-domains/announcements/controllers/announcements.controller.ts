@@ -12,6 +12,7 @@ import {
 	deactivateAnnouncement
 } from '../services/announcements.service';
 import { logger } from '../../../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 // Removed redundant getUserId helper - use userService.getUserFromRequest(req)?.id directly
 
@@ -31,10 +32,10 @@ export async function getAnnouncementsController(req: Request, res: Response) {
 			limit: 10
 		});
 
-		return res.status(200).json(announcements);
+		return sendSuccessResponse(res, announcements);
 	} catch (error) {
 		logger.error('Error fetching announcements:', error);
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error');
 	}
 }
 
@@ -44,10 +45,10 @@ export async function getAnnouncementsController(req: Request, res: Response) {
 export async function getAllAnnouncementsController(req: Request, res: Response) {
 	try {
 		const announcements = await getAllAnnouncements();
-		return res.status(200).json(announcements);
+		return sendSuccessResponse(res, announcements);
 	} catch (error) {
 		logger.error('Error fetching all announcements:', error);
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error');
 	}
 }
 
@@ -58,19 +59,19 @@ export async function getAnnouncementByIdController(req: Request, res: Response)
 	try {
 		const id = req.params.id as EntityId;
 		if (isNaN(id)) {
-			return res.status(400).json({ message: 'Invalid announcement ID' });
+			return sendErrorResponse(res, 'Invalid announcement ID', 400);
 		}
 
 		const announcement = await getAnnouncementById(id);
 
 		if (!announcement) {
-			return res.status(404).json({ message: 'Announcement not found' });
+			return sendErrorResponse(res, 'Announcement not found', 404);
 		}
 
-		return res.status(200).json(announcement);
+		return sendSuccessResponse(res, announcement);
 	} catch (error) {
 		logger.error('Error fetching announcement:', error);
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error');
 	}
 }
 
@@ -80,7 +81,7 @@ export async function getAnnouncementByIdController(req: Request, res: Response)
 export async function createAnnouncementController(req: Request, res: Response) {
 	try {
 		if (!userService.getUserFromRequest(req)) {
-			return res.status(401).json({ message: 'Unauthorized' });
+			return sendErrorResponse(res, 'Unauthorized', 401);
 		}
 
 		// Validate input against schema
@@ -90,13 +91,13 @@ export async function createAnnouncementController(req: Request, res: Response) 
 		});
 
 		const newAnnouncement = await createAnnouncement(validatedData);
-		return res.status(201).json(newAnnouncement);
+		return sendSuccessResponse(res, newAnnouncement);
 	} catch (error: any) {
 		if (error.name === 'ZodError') {
-			return res.status(400).json({ message: 'Invalid announcement data', errors: error.errors });
+			return sendErrorResponse(res, 'Invalid announcement data', 400);
 		}
 		logger.error('Error creating announcement:', error);
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error');
 	}
 }
 
@@ -107,23 +108,23 @@ export async function updateAnnouncementController(req: Request, res: Response) 
 	try {
 		const id = req.params.id as EntityId;
 		if (isNaN(id)) {
-			return res.status(400).json({ message: 'Invalid announcement ID' });
+			return sendErrorResponse(res, 'Invalid announcement ID', 400);
 		}
 
 		// First check if the announcement exists
 		const existingAnnouncement = await getAnnouncementById(id);
 
 		if (!existingAnnouncement) {
-			return res.status(404).json({ message: 'Announcement not found' });
+			return sendErrorResponse(res, 'Announcement not found', 404);
 		}
 
 		// Update the announcement
 		const updatedAnnouncement = await updateAnnouncement(id, req.body);
 
-		return res.status(200).json(updatedAnnouncement);
+		return sendSuccessResponse(res, updatedAnnouncement);
 	} catch (error) {
 		logger.error('Error updating announcement:', error);
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error');
 	}
 }
 
@@ -134,18 +135,18 @@ export async function deactivateAnnouncementController(req: Request, res: Respon
 	try {
 		const id = req.params.id as EntityId;
 		if (isNaN(id)) {
-			return res.status(400).json({ message: 'Invalid announcement ID' });
+			return sendErrorResponse(res, 'Invalid announcement ID', 400);
 		}
 
 		const deactivatedAnnouncement = await deactivateAnnouncement(id);
 
 		if (!deactivatedAnnouncement) {
-			return res.status(404).json({ message: 'Announcement not found' });
+			return sendErrorResponse(res, 'Announcement not found', 404);
 		}
 
-		return res.status(200).json({ message: 'Announcement deactivated successfully' });
+		return sendSuccessResponse(res, { message: 'Announcement deactivated successfully' });
 	} catch (error) {
 		logger.error('Error deactivating announcement:', error);
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error');
 	}
 }

@@ -116,11 +116,7 @@ router.get(
 				stack: error.stack,
 				query: req.query
 			});
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch threads',
-				details: error.message
-			});
+			return sendErrorResponse(res, 'Failed to fetch threads', 500);
 		}
 	})
 );
@@ -134,10 +130,7 @@ router.get(
 			const thread = await threadService.getThreadById(threadId);
 
 			if (!thread) {
-				return res.status(404).json({
-					success: false,
-					error: 'Thread not found'
-				});
+				return sendErrorResponse(res, 'Thread not found', 404);
 			}
 
 			// Get user context for permissions and personalization
@@ -151,10 +144,7 @@ router.get(
 			sendSuccessResponse(res, transformedThread);
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in GET /threads/:id', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch thread'
-			});
+			return sendErrorResponse(res, 'Failed to fetch thread', 500);
 		}
 	})
 );
@@ -168,10 +158,7 @@ router.get(
 			const thread = await threadService.getThreadBySlug(slug);
 
 			if (!thread) {
-				return res.status(404).json({
-					success: false,
-					error: 'Thread not found'
-				});
+				return sendErrorResponse(res, 'Thread not found', 404);
 			}
 
 			// Increment view count
@@ -188,10 +175,7 @@ router.get(
 			sendSuccessResponse(res, transformedThread);
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in GET /threads/slug/:slug', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch thread'
-			});
+			return sendErrorResponse(res, 'Failed to fetch thread', 500);
 		}
 	})
 );
@@ -206,10 +190,7 @@ router.post(
 			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!userId) {
-				return res.status(401).json({
-					success: false,
-					error: 'User not authenticated'
-				});
+				return sendErrorResponse(res, 'User not authenticated', 401);
 			}
 
 			const newThread = await threadService.createThread({
@@ -229,17 +210,10 @@ router.post(
 			logger.error('ThreadRoutes', 'Error in POST /threads', { error });
 
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({
-					success: false,
-					error: 'Invalid input data',
-					details: error.errors
-				});
+				return sendErrorResponse(res, 'Invalid input data', 400);
 			}
 
-			res.status(500).json({
-				success: false,
-				error: 'Failed to create thread'
-			});
+			return sendErrorResponse(res, 'Failed to create thread', 500);
 		}
 	})
 );
@@ -261,10 +235,7 @@ router.put(
 			});
 
 			if (!updatedThread) {
-				return res.status(404).json({
-					success: false,
-					error: 'Thread not found'
-				});
+				return sendErrorResponse(res, 'Thread not found', 404);
 			}
 
 			// Transform the updated thread for response
@@ -278,17 +249,10 @@ router.put(
 			logger.error('ThreadRoutes', 'Error in PUT /threads/:threadId/solve', { error });
 
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({
-					success: false,
-					error: 'Invalid input data',
-					details: error.errors
-				});
+				return sendErrorResponse(res, 'Invalid input data', 400);
 			}
 
-			res.status(500).json({
-				success: false,
-				error: 'Failed to update thread'
-			});
+			return sendErrorResponse(res, 'Failed to update thread', 500);
 		}
 	})
 );
@@ -312,17 +276,10 @@ router.post(
 			logger.error('ThreadRoutes', 'Error in POST /threads/:threadId/tags', { error });
 
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({
-					success: false,
-					error: 'Invalid input data',
-					details: error.errors
-				});
+				return sendErrorResponse(res, 'Invalid input data', 400);
 			}
 
-			res.status(500).json({
-				success: false,
-				error: 'Failed to add tags'
-			});
+			return sendErrorResponse(res, 'Failed to add tags', 500);
 		}
 	})
 );
@@ -342,10 +299,7 @@ router.delete(
 			sendSuccessResponse(res, null, 'Tag removed successfully');
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in DELETE /threads/:threadId/tags/:tagId', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to remove tag'
-			});
+			return sendErrorResponse(res, 'Failed to remove tag', 500);
 		}
 	})
 );
@@ -361,10 +315,7 @@ router.get(
 			const sortBy = (req.query.sortBy as string) || 'oldest';
 
 			if (!threadId) {
-				return res.status(400).json({
-					success: false,
-					error: 'Invalid thread ID'
-				});
+				return sendErrorResponse(res, 'Invalid thread ID', 400);
 			}
 
 			const result = await postService.getPostsByThread({
@@ -399,10 +350,7 @@ router.get(
 				stack: error.stack,
 				threadId: req.params.threadId
 			});
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch thread posts'
-			});
+			return sendErrorResponse(res, 'Failed to fetch thread posts', 500);
 		}
 	})
 );
@@ -419,10 +367,7 @@ router.get(
 			sendSuccessResponse(res, []);
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in GET /threads/:threadId/tags', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch thread tags'
-			});
+			return sendErrorResponse(res, 'Failed to fetch thread tags', 500);
 		}
 	})
 );

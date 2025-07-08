@@ -128,6 +128,10 @@ import { analyticsEvents } from '@schema/system/analyticsEvents';
 import gamificationRoutes from './src/domains/gamification/gamification.routes';
 import { achievementRoutes } from './src/domains/gamification/achievements';
 import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
+import { 
+	sendSuccessResponse,
+	sendErrorResponse 
+} from '@server/src/core/utils/transformer.helpers';
 
 export async function registerRoutes(app: Express): Promise<Server> {
 	// ===================================================================
@@ -163,7 +167,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 	// Test endpoint (before auth setup)
 	app.get('/', async (req, res) => {
-		res.json({ message: 'Backend working!!!' }).status(200);
+		sendSuccessResponse(res, { message: 'Backend working!!!' });
 	});
 
 	// Add new unified content endpoint
@@ -178,14 +182,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			// Validate tab
 			const validTabs = ['trending', 'recent', 'following'];
 			if (!validTabs.includes(tab)) {
-				return res
-					.status(400)
-					.json({ error: 'Invalid tab. Must be one of: trending, recent, following' });
+				return sendErrorResponse(res, 'Invalid tab. Must be one of: trending, recent, following', 400);
 			}
 
 			// Require auth for following tab
 			if (tab === 'following' && !userId) {
-				return res.status(401).json({ error: 'Authentication required for following tab' });
+				return sendErrorResponse(res, 'Authentication required for following tab', 401);
 			}
 
 			// Import here to avoid circular dependencies
@@ -200,10 +202,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 				userId
 			});
 
-			res.json(result);
+			sendSuccessResponse(res, result);
 		} catch (error) {
 			logger.error('Error fetching content:', error);
-			res.status(500).json({ error: 'Failed to fetch content' });
+			sendErrorResponse(res, 'Failed to fetch content', 500);
 		}
 	});
 
@@ -242,10 +244,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 				like_count: thread.firstPostLikeCount || 0
 			}));
 
-			res.json(hotThreads);
+			sendSuccessResponse(res, hotThreads);
 		} catch (error) {
 			logger.error('Error fetching hot threads:', error);
-			res.status(500).json({ error: 'Failed to fetch hot threads' });
+			sendErrorResponse(res, 'Failed to fetch hot threads', 500);
 		}
 	});
 
@@ -427,7 +429,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			});
 			const parsed = schema.safeParse(req.body);
 			if (!parsed.success) {
-				return res.status(400).json({ error: 'Invalid payload' });
+				return sendErrorResponse(res, 'Invalid payload', 400);
 			}
 			const { event, threadId, data } = parsed.data;
 			await db.insert(analyticsEvents).values({
@@ -441,7 +443,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 			return res.status(204).end();
 		} catch (e) {
 			logger.error('Analytics track error', e);
-			return res.status(500).json({ error: 'Failed to record analytics' });
+			return sendErrorResponse(res, 'Failed to record analytics', 500);
 		}
 	});
 

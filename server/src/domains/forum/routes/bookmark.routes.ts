@@ -37,10 +37,7 @@ router.post(
 			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!userId) {
-				return res.status(401).json({
-					success: false,
-					error: 'User not authenticated'
-				});
+				return sendErrorResponse(res, 'User not authenticated', 401);
 			}
 
 			// Check if bookmark already exists
@@ -56,10 +53,7 @@ router.post(
 				.limit(1);
 
 			if (existingBookmark.length > 0) {
-				return res.status(409).json({
-					success: false,
-					error: 'Thread already bookmarked'
-				});
+				return sendErrorResponse(res, 'Thread already bookmarked', 409);
 			}
 
 			// Create bookmark
@@ -75,17 +69,10 @@ router.post(
 			logger.error('BookmarkRoutes', 'Error in POST /bookmarks', { error });
 
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({
-					success: false,
-					error: 'Invalid input data',
-					details: error.errors
-				});
+				return sendErrorResponse(res, 'Invalid input data', 400);
 			}
 
-			res.status(500).json({
-				success: false,
-				error: 'Failed to create bookmark'
-			});
+			return sendErrorResponse(res, 'Failed to create bookmark', 500);
 		}
 	})
 );
@@ -100,10 +87,7 @@ router.delete(
 			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!userId) {
-				return res.status(401).json({
-					success: false,
-					error: 'User not authenticated'
-				});
+				return sendErrorResponse(res, 'User not authenticated', 401);
 			}
 
 			const result = await db
@@ -115,10 +99,7 @@ router.delete(
 			sendSuccessResponse(res, null, 'Bookmark removed successfully');
 		} catch (error) {
 			logger.error('BookmarkRoutes', 'Error in DELETE /bookmarks/:threadId', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to remove bookmark'
-			});
+			return sendErrorResponse(res, 'Failed to remove bookmark', 500);
 		}
 	})
 );
@@ -135,10 +116,7 @@ router.get(
 			const offset = (page - 1) * limit;
 
 			if (!userId) {
-				return res.status(401).json({
-					success: false,
-					error: 'User not authenticated'
-				});
+				return sendErrorResponse(res, 'User not authenticated', 401);
 			}
 
 			const bookmarks = await db
@@ -163,10 +141,7 @@ router.get(
 			});
 		} catch (error) {
 			logger.error('BookmarkRoutes', 'Error in GET /bookmarks', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch bookmarks'
-			});
+			return sendErrorResponse(res, 'Failed to fetch bookmarks', 500);
 		}
 	})
 );

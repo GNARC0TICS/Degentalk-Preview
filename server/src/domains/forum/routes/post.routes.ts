@@ -58,10 +58,7 @@ router.post(
 			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!userId) {
-				return res.status(401).json({
-					success: false,
-					error: 'User not authenticated'
-				});
+				return sendErrorResponse(res, 'User not authenticated', 401);
 			}
 
 			const newPost = await postService.createPost({
@@ -81,17 +78,10 @@ router.post(
 			logger.error('PostRoutes', 'Error in POST /posts', { error });
 
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({
-					success: false,
-					error: 'Invalid input data',
-					details: error.errors
-				});
+				return sendErrorResponse(res, 'Invalid input data', 400);
 			}
 
-			res.status(500).json({
-				success: false,
-				error: 'Failed to create post'
-			});
+			return sendErrorResponse(res, 'Failed to create post', 500);
 		}
 	})
 );
@@ -120,17 +110,10 @@ router.put(
 			logger.error('PostRoutes', 'Error in PUT /posts/:id', { error });
 
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({
-					success: false,
-					error: 'Invalid input data',
-					details: error.errors
-				});
+				return sendErrorResponse(res, 'Invalid input data', 400);
 			}
 
-			res.status(500).json({
-				success: false,
-				error: 'Failed to update post'
-			});
+			return sendErrorResponse(res, 'Failed to update post', 500);
 		}
 	})
 );
@@ -150,10 +133,7 @@ router.delete(
 			sendSuccessResponse(res, null, 'Post deleted successfully');
 		} catch (error) {
 			logger.error('PostRoutes', 'Error in DELETE /posts/:id', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to delete post'
-			});
+			return sendErrorResponse(res, 'Failed to delete post', 500);
 		}
 	})
 );
@@ -169,10 +149,7 @@ router.post(
 			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!userId) {
-				return res.status(401).json({
-					success: false,
-					error: 'User not authenticated'
-				});
+				return sendErrorResponse(res, 'User not authenticated', 401);
 			}
 
 			if (validatedData.reactionType === 'like') {
@@ -186,17 +163,10 @@ router.post(
 			logger.error('PostRoutes', 'Error in POST /posts/:postId/react', { error });
 
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({
-					success: false,
-					error: 'Invalid input data',
-					details: error.errors
-				});
+				return sendErrorResponse(res, 'Invalid input data', 400);
 			}
 
-			res.status(500).json({
-				success: false,
-				error: 'Failed to update reaction'
-			});
+			return sendErrorResponse(res, 'Failed to update reaction', 500);
 		}
 	})
 );
@@ -212,10 +182,7 @@ router.post(
 			const userId = (userService.getUserFromRequest(req) as any)?.id;
 
 			if (!userId) {
-				return res.status(401).json({
-					success: false,
-					error: 'User not authenticated'
-				});
+				return sendErrorResponse(res, 'User not authenticated', 401);
 			}
 
 			// TODO: Implement tipping logic with DGT service integration
@@ -225,17 +192,10 @@ router.post(
 			logger.error('PostRoutes', 'Error in POST /posts/:postId/tip', { error });
 
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({
-					success: false,
-					error: 'Invalid input data',
-					details: error.errors
-				});
+				return sendErrorResponse(res, 'Invalid input data', 400);
 			}
 
-			res.status(500).json({
-				success: false,
-				error: 'Failed to tip post'
-			});
+			return sendErrorResponse(res, 'Failed to tip post', 500);
 		}
 	})
 );
@@ -260,10 +220,7 @@ router.get(
 			sendSuccessResponse(res, transformedReplies);
 		} catch (error) {
 			logger.error('PostRoutes', 'Error in GET /posts/:postId/replies', { error });
-			res.status(500).json({
-				success: false,
-				error: 'Failed to fetch post replies'
-			});
+			return sendErrorResponse(res, 'Failed to fetch post replies', 500);
 		}
 	})
 );

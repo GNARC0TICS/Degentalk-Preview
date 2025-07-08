@@ -64,7 +64,7 @@ router.get('/', requireAuth, async (req, res) => {
 		});
 	} catch (error) {
 		logger.error('Error fetching mentions:', error);
-		res.status(500).json({ error: 'Failed to fetch mentions' });
+		sendErrorResponse(res, 'Failed to fetch mentions', 500);
 	}
 });
 
@@ -80,7 +80,7 @@ router.get('/unread-count', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, { unreadCount: count });
 	} catch (error) {
 		logger.error('Error fetching unread mention count:', error);
-		res.status(500).json({ error: 'Failed to fetch unread count' });
+		sendErrorResponse(res, 'Failed to fetch unread count', 500);
 	}
 });
 
@@ -98,7 +98,7 @@ router.post('/mark-read', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, null);
 	} catch (error) {
 		logger.error('Error marking mentions as read:', error);
-		res.status(500).json({ error: 'Failed to mark mentions as read' });
+		sendErrorResponse(res, 'Failed to mark mentions as read', 500);
 	}
 });
 
@@ -114,7 +114,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, preferences);
 	} catch (error) {
 		logger.error('Error fetching mention preferences:', error);
-		res.status(500).json({ error: 'Failed to fetch preferences' });
+		sendErrorResponse(res, 'Failed to fetch preferences', 500);
 	}
 });
 
@@ -132,7 +132,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, updatedPrefs[0]);
 	} catch (error) {
 		logger.error('Error updating mention preferences:', error);
-		res.status(500).json({ error: 'Failed to update preferences' });
+		sendErrorResponse(res, 'Failed to update preferences', 500);
 	}
 });
 
@@ -149,7 +149,7 @@ router.get('/search-users', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, { users: toPublicList(users, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error searching users for mentions:', error);
-		res.status(500).json({ error: 'Failed to search users' });
+		sendErrorResponse(res, 'Failed to search users', 500);
 	}
 });
 

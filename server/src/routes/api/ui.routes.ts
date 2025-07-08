@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { uiThemesService } from '../../domains/admin/sub-domains/ui-config/uiThemes.service';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from '../../core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -11,10 +12,10 @@ const router = Router();
 router.get('/themes', async (_req, res) => {
 	try {
 		const themes = await uiThemesService.getAll();
-		res.json(themes);
+		sendSuccessResponse(res, themes);
 	} catch (err) {
 		logger.error('Failed to fetch ui themes', err);
-		res.status(500).json({ message: 'Failed to fetch themes' });
+		sendErrorResponse(res, 'Failed to fetch themes', 500);
 	}
 });
 

@@ -58,9 +58,9 @@ router.post('/follow', isAuthenticated, async (req, res) => {
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error following user', { error });
 		if (error instanceof Error) {
-			res.status(400).json({ error: error.message });
+			sendErrorResponse(res, error.message, 400);
 		} else {
-			res.status(500).json({ error: 'Failed to follow user' });
+			sendErrorResponse(res, 'Failed to follow user', 500);
 		}
 	}
 });
@@ -87,9 +87,9 @@ router.delete('/unfollow', isAuthenticated, async (req, res) => {
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error unfollowing user', { error });
 		if (error instanceof Error) {
-			res.status(400).json({ error: error.message });
+			sendErrorResponse(res, error.message, 400);
 		} else {
-			res.status(500).json({ error: 'Failed to unfollow user' });
+			sendErrorResponse(res, 'Failed to unfollow user', 500);
 		}
 	}
 });
@@ -115,7 +115,7 @@ router.get('/users/:id/following', async (req, res) => {
 		});
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error fetching following list', { error });
-		res.status(500).json({ error: 'Failed to fetch following list' });
+		sendErrorResponse(res, 'Failed to fetch following list', 500);
 	}
 });
 
@@ -140,7 +140,7 @@ router.get('/users/:id/followers', async (req, res) => {
 		});
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error fetching followers list', { error });
-		res.status(500).json({ error: 'Failed to fetch followers list' });
+		sendErrorResponse(res, 'Failed to fetch followers list', 500);
 	}
 });
 
@@ -156,7 +156,7 @@ router.get('/users/:id/follow-counts', async (req, res) => {
 		sendSuccessResponse(res, counts);
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error fetching follow counts', { error });
-		res.status(500).json({ error: 'Failed to fetch follow counts' });
+		sendErrorResponse(res, 'Failed to fetch follow counts', 500);
 	}
 });
 
@@ -174,7 +174,7 @@ router.get('/follow-status/:userId', isAuthenticated, async (req, res) => {
 		sendSuccessResponse(res, { isFollowing });
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error checking follow status', { error });
-		res.status(500).json({ error: 'Failed to check follow status' });
+		sendErrorResponse(res, 'Failed to check follow status', 500);
 	}
 });
 
@@ -190,7 +190,7 @@ router.get('/whales', async (req, res) => {
 		sendSuccessResponse(res, { whales: toPublicList(whales, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error fetching whales', { error });
-		res.status(500).json({ error: 'Failed to fetch whales' });
+		sendErrorResponse(res, 'Failed to fetch whales', 500);
 	}
 });
 
@@ -208,7 +208,7 @@ router.get('/search-users', isAuthenticated, async (req, res) => {
 		sendSuccessResponse(res, { users: toPublicList(users, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error searching users', { error });
-		res.status(500).json({ error: 'Failed to search users' });
+		sendErrorResponse(res, 'Failed to search users', 500);
 	}
 });
 
@@ -224,7 +224,7 @@ router.get('/whale-status/:userId', async (req, res) => {
 		sendSuccessResponse(res, whaleStatus);
 	} catch (error) {
 		logger.error('WhaleWatch', 'Error fetching whale status', { error });
-		res.status(500).json({ error: 'Failed to fetch whale status' });
+		sendErrorResponse(res, 'Failed to fetch whale status', 500);
 	}
 });
 

@@ -52,7 +52,7 @@ router.post('/user-promotions', isAuthenticated, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		const promotionData = createUserPromotionSchema.parse(req.body);
@@ -62,13 +62,11 @@ router.post('/user-promotions', isAuthenticated, async (req, res) => {
 			startTime: promotionData.startTime ? new Date(promotionData.startTime) : undefined
 		});
 
-		res.status(201).json(result);
+		res.status(201);
+	sendSuccessResponse(res, result);
 	} catch (error) {
 		logger.error('Create user promotion error:', error);
-		res.status(400).json({
-			error: 'Failed to create promotion',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to create promotion', 400);
 	}
 });
 
@@ -80,7 +78,7 @@ router.get('/user-promotions', isAuthenticated, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		const filters = {
@@ -94,10 +92,7 @@ router.get('/user-promotions', isAuthenticated, async (req, res) => {
 		sendSuccessResponse(res, result);
 	} catch (error) {
 		logger.error('Get user promotions error:', error);
-		res.status(500).json({
-			error: 'Failed to get promotions',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to get promotions', 500);
 	}
 });
 
@@ -110,7 +105,7 @@ router.post('/user-promotions/calculate-cost', isAuthenticated, async (req, res)
 		const { type, duration, startTime } = req.body;
 
 		if (!type || !duration) {
-			return res.status(400).json({ error: 'Type and duration are required' });
+			return sendErrorResponse(res, 'Type and duration are required', 400);
 		}
 
 		const targetTime = startTime ? new Date(startTime) : new Date();
@@ -123,10 +118,7 @@ router.post('/user-promotions/calculate-cost', isAuthenticated, async (req, res)
 		sendSuccessResponse(res, costCalculation);
 	} catch (error) {
 		logger.error('Calculate cost error:', error);
-		res.status(400).json({
-			error: 'Failed to calculate cost',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to calculate cost', 400);
 	}
 });
 
@@ -156,10 +148,7 @@ router.post('/user-promotions/:id/extend', isAuthenticated, async (req, res) => 
         		});
 	} catch (error) {
 		logger.error('Extend promotion error:', error);
-		res.status(400).json({
-			error: 'Failed to extend promotion',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to extend promotion', 400);
 	}
 });
 
@@ -187,10 +176,7 @@ router.delete('/user-promotions/:id', isAuthenticated, async (req, res) => {
         		});
 	} catch (error) {
 		logger.error('Cancel promotion error:', error);
-		res.status(400).json({
-			error: 'Failed to cancel promotion',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to cancel promotion', 400);
 	}
 });
 
@@ -215,10 +201,7 @@ router.get('/user-promotions/:id/analytics', isAuthenticated, async (req, res) =
 		sendSuccessResponse(res, analytics);
 	} catch (error) {
 		logger.error('Get promotion analytics error:', error);
-		res.status(500).json({
-			error: 'Failed to get analytics',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to get analytics', 500);
 	}
 });
 
@@ -235,7 +218,7 @@ router.get('/announcement-slots/available', async (req, res) => {
 		const { date, duration } = req.query;
 
 		if (!date || !duration) {
-			return res.status(400).json({ error: 'Date and duration are required' });
+			return sendErrorResponse(res, 'Date and duration are required', 400);
 		}
 
 		const startTime = new Date(date as string);
@@ -248,10 +231,7 @@ router.get('/announcement-slots/available', async (req, res) => {
 		sendSuccessResponse(res, availableSlots);
 	} catch (error) {
 		logger.error('Get available slots error:', error);
-		res.status(500).json({
-			error: 'Failed to get available slots',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to get available slots', 500);
 	}
 });
 
@@ -265,19 +245,14 @@ router.post('/announcement-slots/reserve', isAuthenticated, async (req, res) => 
 		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!slotId || !promotionId || !userId) {
-			return res
-				.status(400)
-				.json({ error: 'Slot ID, promotion ID, and user authentication are required' });
+			return sendErrorResponse(res, 'Slot ID, promotion ID, and user authentication are required', 400);
 		}
 
 		await userPromotionService.reserveAnnouncementSlot(slotId, promotionId, userId);
 		sendSuccessResponse(res, { success: true, message: 'Slot reserved successfully' });
 	} catch (error) {
 		logger.error('Reserve slot error:', error);
-		res.status(400).json({
-			error: 'Failed to reserve slot',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to reserve slot', 400);
 	}
 });
 
@@ -296,10 +271,7 @@ router.get('/announcement-slots/active', async (req, res) => {
         		});
 	} catch (error) {
 		logger.error('Get active slots error:', error);
-		res.status(500).json({
-			error: 'Failed to get active slots',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to get active slots', 500);
 	}
 });
 
@@ -317,10 +289,7 @@ router.get('/shoutbox/pins/active', async (req, res) => {
 		sendSuccessResponse(res, activePins);
 	} catch (error) {
 		logger.error('Get active pins error:', error);
-		res.status(500).json({
-			error: 'Failed to get active pins',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to get active pins', 500);
 	}
 });
 
@@ -338,7 +307,7 @@ router.post('/user-promotions/:id/track/:eventType', async (req, res) => {
 		const metadata = req.body;
 
 		if (!['impression', 'click', 'conversion'].includes(eventType)) {
-			return res.status(400).json({ error: 'Invalid event type' });
+			return sendErrorResponse(res, 'Invalid event type', 400);
 		}
 
 		await userPromotionService.trackPromotionEvent(
@@ -350,10 +319,7 @@ router.post('/user-promotions/:id/track/:eventType', async (req, res) => {
 		sendSuccessResponse(res, { success: true });
 	} catch (error) {
 		logger.error('Track promotion event error:', error);
-		res.status(400).json({
-			error: 'Failed to track event',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to track event', 400);
 	}
 });
 
@@ -377,10 +343,7 @@ router.get('/admin/user-promotions/pending', isAdmin, async (req, res) => {
 		sendSuccessResponse(res, pendingPromotions);
 	} catch (error) {
 		logger.error('Get pending promotions error:', error);
-		res.status(500).json({
-			error: 'Failed to get pending promotions',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to get pending promotions', 500);
 	}
 });
 
@@ -395,7 +358,7 @@ router.post('/admin/user-promotions/:id/moderate', isAdmin, async (req, res) => 
 		const { action, notes, rejectionReason } = moderationActionSchema.parse(req.body);
 
 		if (!moderatorId) {
-			return res.status(401).json({ error: 'Moderator not authenticated' });
+			return sendErrorResponse(res, 'Moderator not authenticated', 401);
 		}
 
 		if (action === 'approve') {
@@ -403,17 +366,14 @@ router.post('/admin/user-promotions/:id/moderate', isAdmin, async (req, res) => 
 			sendSuccessResponse(res, { success: true, message: 'Promotion approved successfully' });
 		} else {
 			if (!rejectionReason) {
-				return res.status(400).json({ error: 'Rejection reason is required' });
+				return sendErrorResponse(res, 'Rejection reason is required', 400);
 			}
 			await userPromotionService.rejectPromotion(id, moderatorId, rejectionReason);
 			sendSuccessResponse(res, { success: true, message: 'Promotion rejected successfully' });
 		}
 	} catch (error) {
 		logger.error('Moderate promotion error:', error);
-		res.status(400).json({
-			error: 'Failed to moderate promotion',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to moderate promotion', 400);
 	}
 });
 
@@ -440,10 +400,7 @@ router.get('/admin/user-promotions/analytics', isAdmin, async (req, res) => {
         		});
 	} catch (error) {
 		logger.error('Get admin analytics error:', error);
-		res.status(500).json({
-			error: 'Failed to get admin analytics',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to get admin analytics', 500);
 	}
 });
 

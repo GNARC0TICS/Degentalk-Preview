@@ -84,9 +84,9 @@ router.post('/request', requireAuth, async (req, res) => {
 	} catch (error) {
 		logger.error('Error sending friend request:', error);
 		if (error instanceof Error) {
-			res.status(400).json({ error: error.message });
+			sendErrorResponse(res, error.message, 400);
 		} else {
-			res.status(500).json({ error: 'Failed to send friend request' });
+			sendErrorResponse(res, 'Failed to send friend request', 500);
 		}
 	}
 });
@@ -106,9 +106,9 @@ router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
 	} catch (error) {
 		logger.error('Error responding to friend request:', error);
 		if (error instanceof Error) {
-			res.status(400).json({ error: error.message });
+			sendErrorResponse(res, error.message, 400);
 		} else {
-			res.status(500).json({ error: 'Failed to respond to friend request' });
+			sendErrorResponse(res, 'Failed to respond to friend request', 500);
 		}
 	}
 });
@@ -128,9 +128,9 @@ router.delete('/', requireAuth, async (req, res) => {
 	} catch (error) {
 		logger.error('Error removing friend:', error);
 		if (error instanceof Error) {
-			res.status(400).json({ error: error.message });
+			sendErrorResponse(res, error.message, 400);
 		} else {
-			res.status(500).json({ error: 'Failed to remove friend' });
+			sendErrorResponse(res, 'Failed to remove friend', 500);
 		}
 	}
 });
@@ -156,7 +156,7 @@ router.get('/', requireAuth, async (req, res) => {
 		});
 	} catch (error) {
 		logger.error('Error fetching friends list:', error);
-		res.status(500).json({ error: 'Failed to fetch friends list' });
+		sendErrorResponse(res, 'Failed to fetch friends list', 500);
 	}
 });
 
@@ -172,7 +172,7 @@ router.get('/requests/incoming', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, { requests: toPublicList(requests, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error fetching incoming friend requests:', error);
-		res.status(500).json({ error: 'Failed to fetch incoming requests' });
+		sendErrorResponse(res, 'Failed to fetch incoming requests', 500);
 	}
 });
 
@@ -188,7 +188,7 @@ router.get('/requests/outgoing', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, { requests: toPublicList(requests, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error fetching outgoing friend requests:', error);
-		res.status(500).json({ error: 'Failed to fetch outgoing requests' });
+		sendErrorResponse(res, 'Failed to fetch outgoing requests', 500);
 	}
 });
 
@@ -204,7 +204,7 @@ router.get('/counts', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, counts);
 	} catch (error) {
 		logger.error('Error fetching friend counts:', error);
-		res.status(500).json({ error: 'Failed to fetch friend counts' });
+		sendErrorResponse(res, 'Failed to fetch friend counts', 500);
 	}
 });
 
@@ -222,7 +222,7 @@ router.get('/check/:userId', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, { areFriends });
 	} catch (error) {
 		logger.error('Error checking friendship status:', error);
-		res.status(500).json({ error: 'Failed to check friendship status' });
+		sendErrorResponse(res, 'Failed to check friendship status', 500);
 	}
 });
 
@@ -240,7 +240,7 @@ router.get('/mutual/:userId', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, { mutualFriends: toPublicList(mutualFriends, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error fetching mutual friends:', error);
-		res.status(500).json({ error: 'Failed to fetch mutual friends' });
+		sendErrorResponse(res, 'Failed to fetch mutual friends', 500);
 	}
 });
 
@@ -258,7 +258,7 @@ router.get('/search', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, { users: toPublicList(users, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error searching users for friends:', error);
-		res.status(500).json({ error: 'Failed to search users' });
+		sendErrorResponse(res, 'Failed to search users', 500);
 	}
 });
 
@@ -274,7 +274,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, preferences);
 	} catch (error) {
 		logger.error('Error fetching friend preferences:', error);
-		res.status(500).json({ error: 'Failed to fetch preferences' });
+		sendErrorResponse(res, 'Failed to fetch preferences', 500);
 	}
 });
 
@@ -292,7 +292,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, updatedPrefs[0]);
 	} catch (error) {
 		logger.error('Error updating friend preferences:', error);
-		res.status(500).json({ error: 'Failed to update preferences' });
+		sendErrorResponse(res, 'Failed to update preferences', 500);
 	}
 });
 
@@ -312,9 +312,9 @@ router.put('/:userId/permissions', requireAuth, async (req, res) => {
 	} catch (error) {
 		logger.error('Error updating friendship permissions:', error);
 		if (error instanceof Error) {
-			res.status(400).json({ error: error.message });
+			sendErrorResponse(res, error.message, 400);
 		} else {
-			res.status(500).json({ error: 'Failed to update permissions' });
+			sendErrorResponse(res, 'Failed to update permissions', 500);
 		}
 	}
 });
@@ -333,7 +333,7 @@ router.get('/whisper-permission/:userId', requireAuth, async (req, res) => {
 		sendSuccessResponse(res, { canSendWhisper });
 	} catch (error) {
 		logger.error('Error checking whisper permission:', error);
-		res.status(500).json({ error: 'Failed to check whisper permission' });
+		sendErrorResponse(res, 'Failed to check whisper permission', 500);
 	}
 });
 

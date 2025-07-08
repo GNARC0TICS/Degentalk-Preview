@@ -8,7 +8,7 @@ import type { Request, Response } from 'express';
 import { adminSettingsService } from './settings.service.refactored';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { adminController } from '../../admin.controller';
-import { sendSuccess, sendError } from '../../admin.response';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 import { validateRequestBody, validateQueryParams } from '../../admin.validation';
 import {
 	UpdateSettingSchema,
@@ -26,12 +26,12 @@ export class AdminSettingsController {
 			const filters = validateQueryParams(req, res, FilterSettingsSchema) || undefined;
 
 			const settings = await adminSettingsService.getAllSettings(filters);
-			return sendSuccess(res, settings);
+			return sendSuccessResponse(res, settings);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return sendError(res, error.message, error.httpStatus, error.code);
+				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return sendError(res, 'Failed to fetch settings');
+			return sendErrorResponse(res, 'Failed to fetch settings');
 		}
 	}
 
@@ -39,12 +39,12 @@ export class AdminSettingsController {
 		try {
 			const key = req.params.key;
 			const setting = await adminSettingsService.getSettingByKey(key);
-			return sendSuccess(res, setting);
+			return sendSuccessResponse(res, setting);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return sendError(res, error.message, error.httpStatus, error.code);
+				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return sendError(res, 'Failed to fetch setting');
+			return sendErrorResponse(res, 'Failed to fetch setting');
 		}
 	}
 
@@ -54,12 +54,12 @@ export class AdminSettingsController {
 			if (!data) return;
 			const setting = await adminSettingsService.updateSetting(data);
 			await adminController.logAction(req, 'UPDATE_SETTING', 'setting', data.key, data);
-			return sendSuccess(res, setting, 'Setting updated successfully');
+			return sendSuccessResponse(res, setting, 'Setting updated successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return sendError(res, error.message, error.httpStatus, error.code);
+				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return sendError(res, 'Failed to update setting');
+			return sendErrorResponse(res, 'Failed to update setting');
 		}
 	}
 
@@ -72,26 +72,22 @@ export class AdminSettingsController {
 				count: data.settings.length,
 				keys: data.settings.map((s) => s.key)
 			});
-			return sendSuccess(res, settings);
+			return sendSuccessResponse(res, settings);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to update settings' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to update settings');
 		}
 	}
 
 	async getAllSettingGroups(req: Request, res: Response) {
 		try {
 			const groups = await adminSettingsService.getAllSettingGroups();
-			return sendSuccess(res, groups);
+			return sendSuccessResponse(res, groups);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch setting groups' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to fetch setting groups');
 		}
 	}
 
@@ -107,13 +103,11 @@ export class AdminSettingsController {
 				group.key,
 				data
 			);
-			res.status(201).json(group);
+			return sendSuccessResponse(res, group);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to create setting group' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to create setting group');
 		}
 	}
 
@@ -128,13 +122,11 @@ export class AdminSettingsController {
 				...data,
 				originalKey: key
 			});
-			return sendSuccess(res, group);
+			return sendSuccessResponse(res, group);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to update setting group' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to update setting group');
 		}
 	}
 
@@ -148,13 +140,11 @@ export class AdminSettingsController {
 				newGroupKey,
 				reassignedSettings: result.reassignedSettings
 			});
-			return sendSuccess(res, result);
+			return sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to delete setting group' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to delete setting group');
 		}
 	}
 
@@ -164,13 +154,11 @@ export class AdminSettingsController {
 			if (!data) return;
 			const setting = await adminSettingsService.createSetting(data);
 			await adminController.logAction(req, 'CREATE_SETTING', 'setting', setting.key, data);
-			res.status(201).json(setting);
+			return sendSuccessResponse(res, setting);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to create setting' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to create setting');
 		}
 	}
 
@@ -182,13 +170,11 @@ export class AdminSettingsController {
 			if (!data) return;
 			const setting = await adminSettingsService.updateSettingMetadata(key, data);
 			await adminController.logAction(req, 'UPDATE_SETTING_METADATA', 'setting', key, data);
-			return sendSuccess(res, setting);
+			return sendSuccessResponse(res, setting);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to update setting metadata' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to update setting metadata');
 		}
 	}
 
@@ -198,26 +184,22 @@ export class AdminSettingsController {
 
 			const result = await adminSettingsService.deleteSetting(key);
 			await adminController.logAction(req, 'DELETE_SETTING', 'setting', key, {});
-			return sendSuccess(res, result);
+			return sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to delete setting' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to delete setting');
 		}
 	}
 
 	async getFeatureFlags(req: Request, res: Response) {
 		try {
 			const flags = await adminSettingsService.getAllFeatureFlags();
-			return sendSuccess(res, flags);
+			return sendSuccessResponse(res, flags);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch feature flags' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to fetch feature flags');
 		}
 	}
 
@@ -228,13 +210,11 @@ export class AdminSettingsController {
 			if (!data) return;
 			const result = await adminSettingsService.updateFeatureFlag(data);
 			await adminController.logAction(req, 'UPDATE_FEATURE_FLAG', 'feature_flag', key, data);
-			return sendSuccess(res, result);
+			return sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to update feature flag' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			return sendErrorResponse(res, 'Failed to update feature flag');
 		}
 	}
 }

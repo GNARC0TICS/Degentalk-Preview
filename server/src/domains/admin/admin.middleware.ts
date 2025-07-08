@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
 import { db } from '@server/src/core/db';
 import { logger } from '@server/src/core/logger';
+import { sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 /**
  * Extract userId from request consistently
@@ -46,7 +47,7 @@ export async function isAdmin(req: Request, res: Response, next: NextFunction) {
 							'Error auto-authenticating as DevUser for admin route',
 							{ err, userId: devUser.id || devUser.user_id }
 						);
-						return res.status(401).json({ message: 'Unauthorized' });
+						return sendErrorResponse(res, 'Unauthorized', 401);
 					}
 
 					logger.info(
@@ -58,11 +59,11 @@ export async function isAdmin(req: Request, res: Response, next: NextFunction) {
 				});
 			} else {
 				logger.warn('AdminMiddleware', 'DevUser not found in database, admin auth failed');
-				return res.status(401).json({ message: 'Unauthorized' });
+				return sendErrorResponse(res, 'Unauthorized', 401);
 			}
 		} catch (error) {
 			logger.error('AdminMiddleware', 'Error in dev mode admin authentication', { err: error });
-			return res.status(401).json({ message: 'Unauthorized' });
+			return sendErrorResponse(res, 'Unauthorized', 401);
 		}
 	} else if (req.isAuthenticated()) {
 		// Normal authentication - use RBAC util
@@ -71,10 +72,10 @@ export async function isAdmin(req: Request, res: Response, next: NextFunction) {
 		if (user && (await canUser(user, 'canViewAdminPanel'))) {
 			return next();
 		}
-		return res.status(403).json({ message: 'Forbidden - Admin access required' });
+		return sendErrorResponse(res, 'Forbidden - Admin access required', 403);
 	} else {
 		// Not authenticated and not in dev mode
-		return res.status(401).json({ message: 'Unauthorized' });
+		return sendErrorResponse(res, 'Unauthorized', 401);
 	}
 }
 
@@ -108,7 +109,7 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
 							'Error auto-authenticating as DevUser for admin/mod route',
 							{ err, userId: devUser.id || devUser.user_id }
 						);
-						return res.status(401).json({ message: 'Unauthorized' });
+						return sendErrorResponse(res, 'Unauthorized', 401);
 					}
 
 					logger.info(
@@ -120,11 +121,11 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
 				});
 			} else {
 				logger.warn('AdminMiddleware', 'DevUser not found in database, admin/mod auth failed');
-				return res.status(401).json({ message: 'Unauthorized' });
+				return sendErrorResponse(res, 'Unauthorized', 401);
 			}
 		} catch (error) {
 			logger.error('AdminMiddleware', 'Error in dev mode admin/mod authentication', { err: error });
-			return res.status(401).json({ message: 'Unauthorized' });
+			return sendErrorResponse(res, 'Unauthorized', 401);
 		}
 	} else if (req.isAuthenticated()) {
 		const user = userService.getUserFromRequest(req) as any;
@@ -132,10 +133,10 @@ export async function isAdminOrModerator(req: Request, res: Response, next: Next
 		if (user && (await canUser(user, 'canManageUsers'))) {
 			return next();
 		}
-		return res.status(403).json({ message: 'Forbidden - Admin or moderator access required' });
+		return sendErrorResponse(res, 'Forbidden - Admin or moderator access required', 403);
 	} else {
 		// Not authenticated and not in dev mode
-		return res.status(401).json({ message: 'Unauthorized' });
+		return sendErrorResponse(res, 'Unauthorized', 401);
 	}
 }
 
@@ -152,15 +153,9 @@ export const asyncHandler = (fn: Function) => (req: Request, res: Response, next
 		});
 
 		if (error instanceof WalletError) {
-			return res.status(error.httpStatus).json({
-				error: error.message,
-				code: error.code
-			});
+			return sendErrorResponse(res, error.message, error.httpStatus);
 		}
 
-		return res.status(500).json({
-			error: 'An unexpected error occurred',
-			message: error.message || 'Internal server error'
-		});
+		return sendErrorResponse(res, 'An unexpected error occurred');
 	});
 };

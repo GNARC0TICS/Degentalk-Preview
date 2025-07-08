@@ -32,7 +32,7 @@ router.get('/:userId/followers', async (req: Request, res: Response) => {
 		const userId = req.params.userId as UserId;
 
 		if (!userId || !isValidId(userId)) {
-			return res.status(400).json({ message: 'Valid user ID is required' });
+			return sendErrorResponse(res, 'Valid user ID is required', 400);
 		}
 
 		// Get followers
@@ -57,7 +57,7 @@ router.get('/:userId/followers', async (req: Request, res: Response) => {
 		return sendTransformedListResponse(res, followers, UserTransformer.toPublicUser);
 	} catch (error) {
 		logger.error('Error fetching followers:', error);
-		return res.status(500).json({ message: 'Error fetching followers' });
+		return sendErrorResponse(res, 'Error fetching followers', 500);
 	}
 });
 
@@ -67,7 +67,7 @@ router.get('/:userId/following', async (req: Request, res: Response) => {
 		const userId = req.params.userId as UserId;
 
 		if (!userId || !isValidId(userId)) {
-			return res.status(400).json({ message: 'Valid user ID is required' });
+			return sendErrorResponse(res, 'Valid user ID is required', 400);
 		}
 
 		// Get following
@@ -92,7 +92,7 @@ router.get('/:userId/following', async (req: Request, res: Response) => {
 		return sendTransformedListResponse(res, following, UserTransformer.toPublicUser);
 	} catch (error) {
 		logger.error('Error fetching following:', error);
-		return res.status(500).json({ message: 'Error fetching following' });
+		return sendErrorResponse(res, 'Error fetching following', 500);
 	}
 });
 
@@ -103,11 +103,11 @@ router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Respon
 		const followerId = getUserIdFromRequest(req);
 
 		if (!userId || !isValidId(userId)) {
-			return res.status(400).json({ message: 'Valid user ID is required' });
+			return sendErrorResponse(res, 'Valid user ID is required', 400);
 		}
 
 		if (followerId === undefined) {
-			return res.status(401).json({ message: 'You must be logged in to follow users' });
+			return sendErrorResponse(res, 'You must be logged in to follow users', 401);
 		}
 
 		// Check if already following
@@ -123,7 +123,7 @@ router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Respon
 			);
 
 		if (existingRelationship.length > 0) {
-			return res.status(400).json({ message: 'You are already following this user' });
+			return sendErrorResponse(res, 'You are already following this user', 400);
 		}
 
 		// Check if user exists
@@ -133,12 +133,12 @@ router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Respon
 			.where(eq(users.id, userId));
 
 		if (userExists.length === 0) {
-			return res.status(404).json({ message: 'User not found' });
+			return sendErrorResponse(res, 'User not found', 404);
 		}
 
 		// Cannot follow yourself
 		if (followerId === userId) {
-			return res.status(400).json({ message: 'You cannot follow yourself' });
+			return sendErrorResponse(res, 'You cannot follow yourself', 400);
 		}
 
 		// Create follow relationship
@@ -157,7 +157,7 @@ router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Respon
 		return sendSuccessResponse(res, { relationship: newRelationship[0] }, 'Successfully followed user');
 	} catch (error) {
 		logger.error('Error following user:', error);
-		return res.status(500).json({ message: 'Error following user' });
+		return sendErrorResponse(res, 'Error following user', 500);
 	}
 });
 
@@ -168,11 +168,11 @@ router.delete('/unfollow/:userId', isAuthenticated, async (req: Request, res: Re
 		const followerId = getUserIdFromRequest(req);
 
 		if (!userId || !isValidId(userId)) {
-			return res.status(400).json({ message: 'Valid user ID is required' });
+			return sendErrorResponse(res, 'Valid user ID is required', 400);
 		}
 
 		if (followerId === undefined) {
-			return res.status(401).json({ message: 'You must be logged in to unfollow users' });
+			return sendErrorResponse(res, 'You must be logged in to unfollow users', 401);
 		}
 
 		// Check if relationship exists
@@ -188,7 +188,7 @@ router.delete('/unfollow/:userId', isAuthenticated, async (req: Request, res: Re
 			);
 
 		if (existingRelationship.length === 0) {
-			return res.status(400).json({ message: 'You are not following this user' });
+			return sendErrorResponse(res, 'You are not following this user', 400);
 		}
 
 		// Delete relationship
@@ -206,7 +206,7 @@ router.delete('/unfollow/:userId', isAuthenticated, async (req: Request, res: Re
 		return sendSuccessResponse(res, null, 'Successfully unfollowed user');
 	} catch (error) {
 		logger.error('Error unfollowing user:', error);
-		return res.status(500).json({ message: 'Error unfollowing user' });
+		return sendErrorResponse(res, 'Error unfollowing user', 500);
 	}
 });
 
@@ -217,11 +217,11 @@ router.get('/is-following/:userId', isAuthenticated, async (req: Request, res: R
 		const followerId = getUserIdFromRequest(req);
 
 		if (!userId || !isValidId(userId)) {
-			return res.status(400).json({ message: 'Valid user ID is required' });
+			return sendErrorResponse(res, 'Valid user ID is required', 400);
 		}
 
 		if (followerId === undefined) {
-			return res.status(401).json({ message: 'You must be logged in to check follow status' });
+			return sendErrorResponse(res, 'You must be logged in to check follow status', 401);
 		}
 
 		// Check if relationship exists
@@ -240,7 +240,7 @@ router.get('/is-following/:userId', isAuthenticated, async (req: Request, res: R
 		return sendSuccessResponse(res, { isFollowing: existingRelationship.length > 0 });
 	} catch (error) {
 		logger.error('Error checking follow status:', error);
-		return res.status(500).json({ message: 'Error checking follow status' });
+		return sendErrorResponse(res, 'Error checking follow status', 500);
 	}
 });
 

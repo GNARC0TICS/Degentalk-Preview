@@ -25,6 +25,7 @@ import {
 	sendTransformedResponse,
 	sendTransformedListResponse
 } from '@server/src/core/utils/transformer.helpers';
+import { sendSuccess, sendError, sendValidationError, handleAdminError } from '../../admin.response';
 
 export class AdminForumController {
 	async getAllCategories(req: Request, res: Response) {
@@ -33,10 +34,8 @@ export class AdminForumController {
 			sendTransformedListResponse(res, categories, ForumTransformer.toModerationForumStructure);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch categories' });
+				return handleAdminError(res, error);
+			return sendError(res, 'Failed to fetch categories');
 		}
 	}
 
@@ -48,10 +47,8 @@ export class AdminForumController {
 			sendTransformedResponse(res, category, ForumTransformer.toModerationForumStructure);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch category' });
+				return handleAdminError(res, error);
+			return sendError(res, 'Failed to fetch category');
 		}
 	}
 
@@ -71,10 +68,8 @@ export class AdminForumController {
 			sendTransformedResponse(res, category, ForumTransformer.toModerationForumStructure);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to create category' });
+				return handleAdminError(res, error);
+			return sendError(res, 'Failed to create category');
 		}
 	}
 
@@ -95,10 +90,8 @@ export class AdminForumController {
 			sendTransformedResponse(res, category, ForumTransformer.toModerationForumStructure);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to update category' });
+				return handleAdminError(res, error);
+			return sendError(res, 'Failed to update category');
 		}
 	}
 
@@ -117,10 +110,8 @@ export class AdminForumController {
 			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to delete category' });
+				return handleAdminError(res, error);
+			return sendError(res, 'Failed to delete category');
 		}
 	}
 
@@ -130,10 +121,8 @@ export class AdminForumController {
 			sendTransformedListResponse(res, prefixes, (prefix) => ({ ...prefix, id: prefix.id }));
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch thread prefixes' });
+				return handleAdminError(res, error);
+			return sendError(res, 'Failed to fetch thread prefixes');
 		}
 	}
 
@@ -153,10 +142,8 @@ export class AdminForumController {
 			sendSuccessResponse(res, { ...prefix, id: prefix.id });
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to create thread prefix' });
+				return handleAdminError(res, error);
+			return sendError(res, 'Failed to create thread prefix');
 		}
 	}
 
@@ -168,10 +155,8 @@ export class AdminForumController {
 			sendTransformedListResponse(res, tags, (tag) => ({ ...tag, id: tag.id }));
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch tags' });
+				return handleAdminError(res, error);
+			return sendError(res, 'Failed to fetch tags');
 		}
 	}
 
@@ -185,10 +170,8 @@ export class AdminForumController {
 			sendSuccessResponse(res, { ...tag, id: tag.id });
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to create tag' });
+				return handleAdminError(res, error);
+			return sendError(res, 'Failed to create tag');
 		}
 	}
 
@@ -203,10 +186,8 @@ export class AdminForumController {
 			sendSuccessResponse(res, { ...tag, id: tag.id });
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to update tag' });
+				return handleAdminError(res, error);
+			return sendError(res, 'Failed to update tag');
 		}
 	}
 
@@ -219,10 +200,8 @@ export class AdminForumController {
 			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to delete tag' });
+				return handleAdminError(res, error);
+			return sendError(res, 'Failed to delete tag');
 		}
 	}
 
@@ -243,10 +222,8 @@ export class AdminForumController {
 			sendTransformedResponse(res, thread, ForumTransformer.toModerationThread);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to moderate thread' });
+				return handleAdminError(res, error);
+			return sendError(res, 'Failed to moderate thread');
 		}
 	}
 
@@ -271,7 +248,7 @@ export class AdminForumController {
 			sendTransformedListResponse(res, entities, ForumTransformer.toModerationForumStructure);
 		} catch (error) {
 			logger.error('AdminForumController', 'Error getting all entities', { err: error });
-			res.status(500).json({ message: 'Failed to get forum entities' });
+			return sendError(res, 'Failed to get forum entities');
 		}
 	}
 
@@ -281,13 +258,13 @@ export class AdminForumController {
 
 			const entity = await adminForumService.getEntityById(entityId);
 			if (!entity) {
-				return res.status(404).json({ message: 'Entity not found' });
+				return sendError(res, 'Entity not found', 404);
 			}
 
 			sendTransformedResponse(res, entity, ForumTransformer.toModerationForumStructure);
 		} catch (error) {
 			logger.error('AdminForumController', 'Error getting entity by ID', { err: error });
-			res.status(500).json({ message: 'Failed to get entity' });
+			return sendError(res, 'Failed to get entity');
 		}
 	}
 
@@ -307,7 +284,7 @@ export class AdminForumController {
 			sendTransformedResponse(res, entity, ForumTransformer.toModerationForumStructure);
 		} catch (error) {
 			logger.error('AdminForumController', 'Error creating entity', { err: error });
-			res.status(500).json({ message: 'Failed to create entity' });
+			return sendError(res, 'Failed to create entity');
 		}
 	}
 
@@ -319,7 +296,7 @@ export class AdminForumController {
 			if (!dataEntU) return;
 			const entity = await adminForumService.updateEntity(entityId, dataEntU);
 			if (!entity) {
-				return res.status(404).json({ message: 'Entity not found' });
+				return sendError(res, 'Entity not found', 404);
 			}
 
 			await adminController.logAction(
@@ -332,7 +309,7 @@ export class AdminForumController {
 			sendTransformedResponse(res, entity, ForumTransformer.toModerationForumStructure);
 		} catch (error) {
 			logger.error('AdminForumController', 'Error updating entity', { err: error });
-			res.status(500).json({ message: 'Failed to update entity' });
+			return sendError(res, 'Failed to update entity');
 		}
 	}
 
@@ -342,13 +319,13 @@ export class AdminForumController {
 
 			const result = await adminForumService.deleteEntity(entityId);
 			if (!result) {
-				return res.status(404).json({ message: 'Entity not found' });
+				return sendError(res, 'Entity not found', 404);
 			}
 
 			sendSuccessResponse(res, null, 'Entity deleted successfully');
 		} catch (error) {
 			logger.error('AdminForumController', 'Error deleting entity', { err: error });
-			res.status(500).json({ message: 'Failed to delete entity' });
+			return sendError(res, 'Failed to delete entity');
 		}
 	}
 }

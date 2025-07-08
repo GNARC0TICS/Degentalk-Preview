@@ -109,7 +109,7 @@ router.get('/config', isAdmin, async (req: Request, res: Response) => {
 		sendSuccessResponse(res, config);
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error fetching config', { error });
-		res.status(500).json({ error: 'Failed to fetch configuration' });
+		sendErrorResponse(res, 'Failed to fetch configuration', 500);
 	}
 });
 
@@ -132,7 +132,7 @@ router.patch('/config', isAdmin, async (req: Request, res: Response) => {
 		sendSuccessResponse(res, updatedConfig, 'Configuration updated successfully');
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error updating config', { error });
-		res.status(500).json({ error: 'Failed to update configuration' });
+		sendErrorResponse(res, 'Failed to update configuration', 500);
 	}
 });
 
@@ -159,7 +159,7 @@ router.get('/rooms', isAuthenticatedOptional, async (req: Request, res: Response
 		}
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error fetching rooms', { error });
-		res.status(500).json({ error: 'Failed to fetch rooms' });
+		sendErrorResponse(res, 'Failed to fetch rooms', 500);
 	}
 });
 
@@ -185,14 +185,11 @@ router.post('/rooms', isAdmin, async (req: Request, res: Response) => {
 		}
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			return res.status(400).json({
-				error: 'Invalid room data',
-				details: error.errors
-			});
+			return sendErrorResponse(res, 'Invalid room data', 400);
 		}
 
 		logger.error('Enhanced Shoutbox', 'Error creating room', { error });
-		res.status(500).json({ error: 'Failed to create room' });
+		sendErrorResponse(res, 'Failed to create room', 500);
 	}
 });
 
@@ -214,7 +211,7 @@ router.patch('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => {
 		}
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error updating room', { error });
-		res.status(500).json({ error: 'Failed to update room' });
+		sendErrorResponse(res, 'Failed to update room', 500);
 	}
 });
 
@@ -236,7 +233,7 @@ router.delete('/rooms/:roomId', isAdmin, async (req: Request, res: Response) => 
 		}
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error deleting room', { error });
-		res.status(500).json({ error: 'Failed to delete room' });
+		sendErrorResponse(res, 'Failed to delete room', 500);
 	}
 });
 
@@ -248,7 +245,7 @@ router.patch('/rooms/reorder', isAdmin, async (req: Request, res: Response) => {
 		const { roomOrders } = req.body;
 
 		if (!Array.isArray(roomOrders)) {
-			return res.status(400).json({ error: 'roomOrders must be an array' });
+			return sendErrorResponse(res, 'roomOrders must be an array', 400);
 		}
 
 		const result = await RoomService.reorderRooms(roomOrders);
@@ -261,7 +258,7 @@ router.patch('/rooms/reorder', isAdmin, async (req: Request, res: Response) => {
 		}
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error reordering rooms', { error });
-		res.status(500).json({ error: 'Failed to reorder rooms' });
+		sendErrorResponse(res, 'Failed to reorder rooms', 500);
 	}
 });
 
@@ -281,10 +278,7 @@ router.get('/messages', isAuthenticatedOptional, async (req: Request, res: Respo
 		if (roomId && userId) {
 			const accessCheck = await RoomService.checkRoomAccess(userId, roomId);
 			if (!accessCheck.hasAccess) {
-				return res.status(403).json({
-					error: 'Access denied',
-					reason: accessCheck.reason
-				});
+				return sendErrorResponse(res, 'Access denied', 403);
 			}
 		}
 
@@ -347,7 +341,7 @@ router.get('/messages', isAuthenticatedOptional, async (req: Request, res: Respo
 		});
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error fetching messages', { error });
-		res.status(500).json({ error: 'Failed to fetch messages' });
+		sendErrorResponse(res, 'Failed to fetch messages', 500);
 	}
 });
 
@@ -355,7 +349,7 @@ router.get('/messages', isAuthenticatedOptional, async (req: Request, res: Respo
 async function dynamicRateLimiter(req: Request, res: Response, next: Function) {
 	try {
 		const userId = userService.getUserFromRequest(req);
-		if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+		if (!userId) return sendErrorResponse(res, 'Unauthorized', 401);
 
 		const user = await db.query.users.findFirst({
 			where: eq(users.id, userId),
@@ -368,7 +362,7 @@ async function dynamicRateLimiter(req: Request, res: Response, next: Function) {
 			}
 		});
 
-		if (!user) return res.status(401).json({ error: 'User not found' });
+		if (!user) return sendErrorResponse(res, 'User not found', 401);
 
 		let rateLimiter = userRateLimiters.regular;
 		if (
@@ -386,7 +380,7 @@ async function dynamicRateLimiter(req: Request, res: Response, next: Function) {
 		return rateLimiter(req, res, next);
 	} catch (err) {
 		logger.error('Enhanced Shoutbox', 'Rate-limit middleware failed', { err });
-		return res.status(429).json({ error: 'Rate limit exceeded' });
+		return sendErrorResponse(res, 'Rate limit exceeded', 429);
 	}
 }
 
@@ -414,10 +408,7 @@ router.post(
 			const accessCheck = await RoomService.checkRoomAccess(userId, roomId);
 
 			if (!accessCheck.hasAccess) {
-				return res.status(403).json({
-					error: 'Access denied',
-					reason: accessCheck.reason
-				});
+				return sendErrorResponse(res, 'Access denied', 403);
 			}
 
 			// Process message through enhanced service
@@ -445,27 +436,18 @@ router.post(
 					}
 				}
 
-				res.status(201).json({
-					success: true,
-					message: result.message,
-					data: result.data
-				});
+				res.status(201);
+				sendSuccessResponse(res, result.data, result.message);
 			} else {
-				res.status(400).json({
-					error: result.message,
-					code: result.error
-				});
+				sendErrorResponse(res, result.message, 400);
 			}
 		} catch (error) {
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({
-					error: 'Invalid message data',
-					details: error.errors
-				});
+				return sendErrorResponse(res, 'Invalid message data', 400);
 			}
 
 			logger.error('Enhanced Shoutbox', 'Error in message endpoint', { error });
-			res.status(500).json({ error: 'Failed to send message' });
+			sendErrorResponse(res, 'Failed to send message', 500);
 		}
 	}
 );
@@ -483,7 +465,7 @@ router.patch(
 			const userId = userService.getUserFromRequest(req);
 
 			if (typeof isPinned !== 'boolean') {
-				return res.status(400).json({ error: 'Invalid parameters' });
+				return sendErrorResponse(res, 'Invalid parameters', 400);
 			}
 
 			// Check if message exists
@@ -492,7 +474,7 @@ router.patch(
 			});
 
 			if (!message) {
-				return res.status(404).json({ error: 'Message not found' });
+				return sendErrorResponse(res, 'Message not found', 404);
 			}
 
 			// Check room configuration for pinning limits
@@ -511,9 +493,7 @@ router.patch(
 					);
 
 				if (pinnedCount[0].count >= config.maxPinnedMessages) {
-					return res.status(400).json({
-						error: `Maximum ${config.maxPinnedMessages} pinned messages allowed`
-					});
+					return sendErrorResponse(res, `Maximum ${config.maxPinnedMessages} pinned messages allowed`, 400);
 				}
 			}
 
@@ -555,7 +535,7 @@ router.patch(
 			sendTransformedResponse(res, updatedMessage, ShoutboxTransformer.toAuthenticatedShoutbox, `Message ${isPinned ? 'pinned' : 'unpinned'} successfully`);
 		} catch (error) {
 			logger.error('Enhanced Shoutbox', 'Error pinning/unpinning message', { error });
-			res.status(500).json({ error: 'Failed to update message' });
+			sendErrorResponse(res, 'Failed to update message', 500);
 		}
 	}
 );
@@ -579,7 +559,7 @@ router.delete('/messages/:messageId', isAdminOrModerator, async (req: Request, r
 			.returning();
 
 		if (!deletedMessage) {
-			return res.status(404).json({ error: 'Message not found' });
+			return sendErrorResponse(res, 'Message not found', 404);
 		}
 
 		// Log action
@@ -610,7 +590,7 @@ router.delete('/messages/:messageId', isAdminOrModerator, async (req: Request, r
 		sendSuccessResponse(res, null, 'Message deleted successfully');
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error deleting message', { error });
-		res.status(500).json({ error: 'Failed to delete message' });
+		sendErrorResponse(res, 'Failed to delete message', 500);
 	}
 });
 
@@ -623,7 +603,7 @@ router.post('/ignore', isAuthenticated, async (req: Request, res: Response) => {
 		const { targetUserId, roomId, options } = req.body;
 
 		if (!targetUserId || !isValidId(targetUserId)) {
-			return res.status(400).json({ error: 'Invalid target user ID' });
+			return sendErrorResponse(res, 'Invalid target user ID', 400);
 		}
 
 		const result = await RoomService.ignoreUser(
@@ -636,7 +616,7 @@ router.post('/ignore', isAuthenticated, async (req: Request, res: Response) => {
 		sendSuccessResponse(res, result);
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error ignoring user', { error });
-		res.status(500).json({ error: 'Failed to ignore user' });
+		sendErrorResponse(res, 'Failed to ignore user', 500);
 	}
 });
 
@@ -647,7 +627,7 @@ router.delete('/ignore/:targetUserId', isAuthenticated, async (req: Request, res
 		const roomId = req.query.roomId ? (req.query.roomId as string) : undefined;
 
 		if (typeof targetUserId !== 'string') {
-			return res.status(400).json({ error: 'Invalid target user ID' });
+			return sendErrorResponse(res, 'Invalid target user ID', 400);
 		}
 
 		const result = await RoomService.unignoreUser(userId, targetUserId, roomId);
@@ -655,7 +635,7 @@ router.delete('/ignore/:targetUserId', isAuthenticated, async (req: Request, res
 		sendSuccessResponse(res, result);
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error unignoring user', { error });
-		res.status(500).json({ error: 'Failed to unignore user' });
+		sendErrorResponse(res, 'Failed to unignore user', 500);
 	}
 });
 
@@ -738,7 +718,7 @@ router.get('/analytics', isAdmin, async (req: Request, res: Response) => {
 		});
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error fetching analytics', { error });
-		res.status(500).json({ error: 'Failed to fetch analytics' });
+		sendErrorResponse(res, 'Failed to fetch analytics', 500);
 	}
 });
 
@@ -793,7 +773,7 @@ router.get('/export', isAdmin, async (req: Request, res: Response) => {
 				'Content-Disposition',
 				`attachment; filename="shoutbox-export-${Date.now()}.csv"`
 			);
-			res.send(csv);
+			res.end(csv);
 		} else {
 			sendSuccessResponse(res, {
 				exportedAt: new Date().toISOString(),
@@ -804,7 +784,7 @@ router.get('/export', isAdmin, async (req: Request, res: Response) => {
 		}
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error exporting messages', { error });
-		res.status(500).json({ error: 'Failed to export messages' });
+		sendErrorResponse(res, 'Failed to export messages', 500);
 	}
 });
 
@@ -827,7 +807,7 @@ router.get('/performance/stats', isAdmin, async (req: Request, res: Response) =>
 		});
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error fetching performance stats', { error });
-		res.status(500).json({ error: 'Failed to fetch performance statistics' });
+		sendErrorResponse(res, 'Failed to fetch performance statistics', 500);
 	}
 });
 
@@ -842,7 +822,7 @@ router.get('/performance/analyze', isAdmin, async (req: Request, res: Response) 
 		});
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error analyzing performance', { error });
-		res.status(500).json({ error: 'Failed to analyze performance' });
+		sendErrorResponse(res, 'Failed to analyze performance', 500);
 	}
 });
 
@@ -856,7 +836,7 @@ router.get('/messages/optimized', isAuthenticatedOptional, async (req: Request, 
 		const userId = userService.getUserFromRequest(req);
 
 		if (!roomId) {
-			return res.status(400).json({ error: 'Room ID is required' });
+			return sendErrorResponse(res, 'Room ID is required', 400);
 		}
 
 		const result = await PerformanceService.getOptimizedMessages({
@@ -870,7 +850,7 @@ router.get('/messages/optimized', isAuthenticatedOptional, async (req: Request, 
 		sendSuccessResponse(res, result);
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error fetching optimized messages', { error });
-		res.status(500).json({ error: 'Failed to fetch messages' });
+		sendErrorResponse(res, 'Failed to fetch messages', 500);
 	}
 });
 
@@ -890,7 +870,7 @@ router.get('/queue/status', isAdmin, async (req: Request, res: Response) => {
 		});
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error fetching queue status', { error });
-		res.status(500).json({ error: 'Failed to fetch queue status' });
+		sendErrorResponse(res, 'Failed to fetch queue status', 500);
 	}
 });
 
@@ -903,11 +883,11 @@ router.delete('/queue/:messageId', isAdmin, async (req: Request, res: Response) 
 		if (removed) {
 			sendSuccessResponse(res, null, 'Message removed from queue');
 		} else {
-			res.status(404).json({ error: 'Message not found in queue' });
+			sendErrorResponse(res, 'Message not found in queue', 404);
 		}
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error removing message from queue', { error });
-		res.status(500).json({ error: 'Failed to remove message from queue' });
+		sendErrorResponse(res, 'Failed to remove message from queue', 500);
 	}
 });
 
@@ -932,13 +912,13 @@ router.post('/cache/clear', isAdmin, async (req: Request, res: Response) => {
 				ShoutboxCacheService.clearAll();
 				break;
 			default:
-				return res.status(400).json({ error: 'Invalid cache type' });
+				return sendErrorResponse(res, 'Invalid cache type', 400);
 		}
 
 		sendSuccessResponse(res, null, `Cache cleared for type: ${type}`);
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error clearing cache', { error });
-		res.status(500).json({ error: 'Failed to clear cache' });
+		sendErrorResponse(res, 'Failed to clear cache', 500);
 	}
 });
 
@@ -967,7 +947,7 @@ router.get('/history/advanced', isAdminOrModerator, async (req: Request, res: Re
 		});
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error fetching message history', { error });
-		res.status(500).json({ error: 'Failed to fetch message history' });
+		sendErrorResponse(res, 'Failed to fetch message history', 500);
 	}
 });
 
@@ -989,7 +969,7 @@ router.get('/stats/messages', isAdminOrModerator, async (req: Request, res: Resp
 		sendSuccessResponse(res, stats);
 	} catch (error) {
 		logger.error('Enhanced Shoutbox', 'Error fetching message statistics', { error });
-		res.status(500).json({ error: 'Failed to fetch message statistics' });
+		sendErrorResponse(res, 'Failed to fetch message statistics', 500);
 	}
 });
 
@@ -1002,7 +982,7 @@ router.get(
 			const roomId = req.params.roomId as RoomId;
 
 			if (!roomId) {
-				return res.status(400).json({ error: 'Invalid room ID' });
+				return sendErrorResponse(res, 'Invalid room ID', 400);
 			}
 
 			const activeUsers = await PerformanceService.getActiveUsersInRoom(roomId);
@@ -1010,7 +990,7 @@ router.get(
 			sendTransformedListResponse(res, activeUsers, UserTransformer.toPublicUser);
 		} catch (error) {
 			logger.error('Enhanced Shoutbox', 'Error fetching active users', { error });
-			res.status(500).json({ error: 'Failed to fetch active users' });
+			sendErrorResponse(res, 'Failed to fetch active users', 500);
 		}
 	}
 );
