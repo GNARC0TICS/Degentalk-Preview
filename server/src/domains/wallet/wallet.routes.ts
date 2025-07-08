@@ -5,7 +5,13 @@ import { UserManagementService } from './user-management.service';
 import { isDevMode } from '@server/src/utils/environment';
 import walletTestRoutes from './wallet.test.routes';
 import { EconomyTransformer } from '../economy/transformers/economy.transformer';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse
+} from '@server/src/core/utils/transformer.helpers';
 import { logger } from "../../core/logger";
 
 const router = Router();
@@ -34,21 +40,17 @@ router.post('/initialize', async (req, res) => {
 		const userId = req.body.userId || userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		const result = await userManagementService.initializeUserWallet(userId);
 
-		res.json({
-			success: true,
-			data: result
-		});
+		sendTransformedResponse(res, result, (data) => 
+			EconomyTransformer.toAuthenticatedWalletInit(data, userService.getUserFromRequest(req))
+		);
 	} catch (error) {
 		logger.error('Error initializing wallet:', error);
-		res.status(500).json({
-			error: 'Failed to initialize wallet',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to initialize wallet', 500);
 	}
 });
 
@@ -61,7 +63,7 @@ router.get('/balances', async (req, res) => {
 		const userId = (req.query.userId as string) || userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		const balances = await walletService.getUserBalances(userId);
@@ -79,16 +81,10 @@ router.get('/balances', async (req, res) => {
 			}
 		});
 
-		res.json({
-			success: true,
-			data: transformedBalances
-		});
+		sendSuccessResponse(res, transformedBalances);
 	} catch (error) {
 		logger.error('Error getting balances:', error);
-		res.status(500).json({
-			error: 'Failed to retrieve balances',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to retrieve balances', 500);
 	}
 });
 
@@ -101,7 +97,7 @@ router.get('/deposit-addresses', async (req, res) => {
 		const userId = (req.query.userId as string) || userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		const addresses = await walletService.getUserDepositAddresses(userId);
@@ -120,16 +116,10 @@ router.get('/deposit-addresses', async (req, res) => {
 			}
 		});
 
-		res.json({
-			success: true,
-			data: transformedAddresses
-		});
+		sendSuccessResponse(res, transformedAddresses);
 	} catch (error) {
 		logger.error('Error getting deposit addresses:', error);
-		res.status(500).json({
-			error: 'Failed to retrieve deposit addresses',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to retrieve deposit addresses', 500);
 	}
 });
 
@@ -143,13 +133,11 @@ router.post('/withdraw', async (req, res) => {
 		const { coinId, amount, toAddress, memo } = req.body;
 
 		if (!userId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		if (!coinId || !amount || !toAddress) {
-			return res.status(400).json({
-				error: 'Missing required fields: coinId, amount, toAddress'
-			});
+			return sendErrorResponse(res, 'Missing required fields: coinId, amount, toAddress', 400);
 		}
 
 		const recordId = await walletService.withdrawToBlockchain(userId, {
@@ -159,16 +147,10 @@ router.post('/withdraw', async (req, res) => {
 			memo
 		});
 
-		res.json({
-			success: true,
-			data: { recordId }
-		});
+		sendSuccessResponse(res, { recordId });
 	} catch (error) {
 		logger.error('Error processing withdrawal:', error);
-		res.status(500).json({
-			error: 'Failed to process withdrawal',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to process withdrawal', 500);
 	}
 });
 
@@ -182,13 +164,11 @@ router.post('/transfer', async (req, res) => {
 		const { toUserId, coinId, amount, note } = req.body;
 
 		if (!fromUserId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		if (!toUserId || !coinId || !amount) {
-			return res.status(400).json({
-				error: 'Missing required fields: toUserId, coinId, amount'
-			});
+			return sendErrorResponse(res, 'Missing required fields: toUserId, coinId, amount', 400);
 		}
 
 		const recordId = await walletService.transferToUser(fromUserId, {
@@ -198,16 +178,10 @@ router.post('/transfer', async (req, res) => {
 			note
 		});
 
-		res.json({
-			success: true,
-			data: { recordId }
-		});
+		sendSuccessResponse(res, { recordId });
 	} catch (error) {
 		logger.error('Error processing transfer:', error);
-		res.status(500).json({
-			error: 'Failed to process transfer',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to process transfer', 500);
 	}
 });
 
@@ -221,13 +195,11 @@ router.post('/swap', async (req, res) => {
 		const { fromCoinId, toCoinId, fromAmount } = req.body;
 
 		if (!userId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		if (!fromCoinId || !toCoinId || !fromAmount) {
-			return res.status(400).json({
-				error: 'Missing required fields: fromCoinId, toCoinId, fromAmount'
-			});
+			return sendErrorResponse(res, 'Missing required fields: fromCoinId, toCoinId, fromAmount', 400);
 		}
 
 		const recordId = await walletService.swapCrypto(userId, {
@@ -236,16 +208,10 @@ router.post('/swap', async (req, res) => {
 			fromAmount
 		});
 
-		res.json({
-			success: true,
-			data: { recordId }
-		});
+		sendSuccessResponse(res, { recordId });
 	} catch (error) {
 		logger.error('Error processing swap:', error);
-		res.status(500).json({
-			error: 'Failed to process swap',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to process swap', 500);
 	}
 });
 
@@ -261,7 +227,7 @@ router.get('/history', async (req, res) => {
 		const offset = parseInt(req.query.offset as string) || 0;
 
 		if (!userId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		const history = await walletService.getUserTransactionHistory(userId, {
@@ -270,16 +236,12 @@ router.get('/history', async (req, res) => {
 			offset
 		});
 
-		res.json({
-			success: true,
-			data: history
-		});
+		sendTransformedResponse(res, history, (data) => 
+			EconomyTransformer.toAuthenticatedTransactionHistory(data, userService.getUserFromRequest(req))
+		);
 	} catch (error) {
 		logger.error('Error getting transaction history:', error);
-		res.status(500).json({
-			error: 'Failed to retrieve transaction history',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to retrieve transaction history', 500);
 	}
 });
 
@@ -291,16 +253,10 @@ router.get('/supported-coins', async (req, res) => {
 	try {
 		const coins = await walletService.getSupportedCryptocurrencies();
 
-		res.json({
-			success: true,
-			data: coins
-		});
+		sendTransformedResponse(res, coins, EconomyTransformer.toPublicSupportedCoins);
 	} catch (error) {
 		logger.error('Error getting supported coins:', error);
-		res.status(500).json({
-			error: 'Failed to retrieve supported coins',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to retrieve supported coins', 500);
 	}
 });
 
@@ -313,26 +269,20 @@ router.get('/status', async (req, res) => {
 		const userId = (req.query.userId as string) || userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		const hasWallet = await userManagementService.hasCCPaymentAccount(userId);
 		const ccpaymentUserId = await userManagementService.getCCPaymentUserId(userId);
 
-		res.json({
-			success: true,
-			data: {
-				hasWallet,
-				ccpaymentUserId,
-				isInitialized: !!ccpaymentUserId
-			}
+		sendSuccessResponse(res, {
+			hasWallet,
+			ccpaymentUserId,
+			isInitialized: !!ccpaymentUserId
 		});
 	} catch (error) {
 		logger.error('Error checking wallet status:', error);
-		res.status(500).json({
-			error: 'Failed to check wallet status',
-			message: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to check wallet status', 500);
 	}
 });
 

@@ -15,6 +15,7 @@ import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware
 import { getUserId } from '../auth/services/auth.service';
 import { isValidId } from '@shared/utils/id';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 // Using shared isAuthenticated middleware from middleware/auth.ts
 
@@ -27,7 +28,7 @@ export function registerPathRoutes(router: Router) {
 	router.get('/paths', async (req: Request, res: Response) => {
 		try {
 			const paths = await PathService.getPaths();
-			res.json(paths);
+			sendSuccessResponse(res, paths);
 		} catch (error) {
 			logger.error('Error fetching paths:', error);
 			res.status(500).json({ message: 'Server error' });
@@ -48,7 +49,7 @@ export function registerPathRoutes(router: Router) {
 				return res.status(404).json({ message: 'Path not found' });
 			}
 
-			res.json(path);
+			sendSuccessResponse(res, path);
 		} catch (error) {
 			logger.error('Error fetching path:', error);
 			res.status(500).json({ message: 'Server error' });
@@ -64,7 +65,7 @@ export function registerPathRoutes(router: Router) {
 		try {
 			const userId = userService.getUserFromRequest(req);
 			const userPaths = await PathService.getUserPaths(userId);
-			res.json(userPaths);
+			sendSuccessResponse(res, userPaths);
 		} catch (error) {
 			logger.error('Error fetching user paths:', error);
 			res.status(500).json({ message: 'Server error' });
@@ -85,7 +86,7 @@ export function registerPathRoutes(router: Router) {
 				return res.status(404).json({ message: 'No primary path set' });
 			}
 
-			res.json(primaryPath);
+			sendSuccessResponse(res, primaryPath);
 		} catch (error) {
 			logger.error('Error fetching primary path:', error);
 			res.status(500).json({ message: 'Server error' });
@@ -115,7 +116,7 @@ export function registerPathRoutes(router: Router) {
 				// Set primary path
 				await PathService.setUserPrimaryPath(userId, pathId);
 
-				res.json({ success: true, message: 'Primary path updated successfully' });
+				sendSuccessResponse(res, { success: true, message: 'Primary path updated successfully' });
 			} catch (error) {
 				logger.error('Error setting primary path:', error);
 				res.status(500).json({ message: 'Server error' });
@@ -142,7 +143,7 @@ export function registerPathRoutes(router: Router) {
 			}
 
 			const leaderboard = await PathService.getPathLeaderboard(pathId, limit, offset);
-			res.json(leaderboard);
+			sendSuccessResponse(res, leaderboard);
 		} catch (error) {
 			logger.error('Error fetching path leaderboard:', error);
 			res.status(500).json({ message: 'Server error' });
@@ -185,7 +186,7 @@ export function registerPathRoutes(router: Router) {
 				return res.status(404).json({ message: 'User has not started this path' });
 			}
 
-			res.json(userPath);
+			sendSuccessResponse(res, userPath);
 		} catch (error) {
 			logger.error('Error fetching user path:', error);
 			res.status(500).json({ message: 'Server error' });
@@ -215,7 +216,7 @@ export function registerPathRoutes(router: Router) {
 			}
 
 			const summary = await PathService.getUserPathSummary(userId);
-			res.json(summary);
+			sendSuccessResponse(res, summary);
 		} catch (error) {
 			logger.error('Error fetching user path summary:', error);
 			res.status(500).json({ message: 'Server error' });

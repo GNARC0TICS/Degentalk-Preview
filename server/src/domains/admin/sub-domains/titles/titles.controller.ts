@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { AdminTitlesService } from './titles.service';
 import { createTitleSchema, updateTitleSchema } from './titles.validators';
 import { validateRequestBody } from '../../admin.validation';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const service = new AdminTitlesService();
 
@@ -9,7 +10,7 @@ export class AdminTitlesController {
 	async list(req: Request, res: Response) {
 		try {
 			const titles = await service.list();
-			res.json(titles);
+			sendSuccessResponse(res, titles);
 		} catch (error: any) {
 			res.status(500).json({ error: error.message });
 		}
@@ -19,7 +20,7 @@ export class AdminTitlesController {
 		try {
 			const { roleId } = req.params;
 			const titles = await service.getByRole(roleId);
-			res.json(titles);
+			sendSuccessResponse(res, titles);
 		} catch (error: any) {
 			res.status(500).json({ error: error.message });
 		}
@@ -28,7 +29,7 @@ export class AdminTitlesController {
 	async getCustomTitles(req: Request, res: Response) {
 		try {
 			const titles = await service.getCustomTitles();
-			res.json(titles);
+			sendSuccessResponse(res, titles);
 		} catch (error: any) {
 			res.status(500).json({ error: error.message });
 		}
@@ -57,7 +58,7 @@ export class AdminTitlesController {
 			if (!data) return;
 
 			const title = await service.update(titleId, data);
-			res.json(title);
+			sendSuccessResponse(res, title);
 		} catch (error: any) {
 			res.status(404).json({ error: error.message });
 		}
@@ -72,7 +73,7 @@ export class AdminTitlesController {
 			}
 
 			const result = await service.delete(titleId);
-			res.json(result);
+			sendSuccessResponse(res, result);
 		} catch (error: any) {
 			res.status(404).json({ error: error.message });
 		}

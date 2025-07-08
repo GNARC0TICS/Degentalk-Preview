@@ -1,6 +1,11 @@
 import { userService } from '@server/src/core/services/user.service';
 import { EconomyTransformer } from '../economy/transformers/economy.transformer';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse
+} from '@server/src/core/utils/transformer.helpers';
 import type { UserId } from '@shared/types/ids';
 /**
  * Treasury Controller
@@ -139,7 +144,7 @@ export class TreasuryController {
 				}
 			};
 
-			res.json(treasuryOverview);
+			sendTransformedResponse(res, treasuryOverview, EconomyTransformer.toAdminTreasuryOverview);
 		} catch (error) {
 			logger.error('TreasuryController', 'Error getting treasury overview', {
 				error: error instanceof Error ? error.message : String(error)
@@ -168,7 +173,7 @@ export class TreasuryController {
 				.where(eq(users.id, userId));
 
 			if (!user) {
-				return res.status(404).json({ error: 'User not found' });
+				return sendErrorResponse(res, 'User not found', 404);
 			}
 
 			// Get wallet details
@@ -206,7 +211,7 @@ export class TreasuryController {
 				recentTransactions: transactionHistory.slice(0, 20)
 			};
 
-			res.json(userBalanceDetails);
+			sendTransformedResponse(res, userBalanceDetails, EconomyTransformer.toAdminUserBalanceDetails);
 		} catch (error) {
 			logger.error('TreasuryController', 'Error getting user balance details', {
 				error: error instanceof Error ? error.message : String(error),
@@ -231,7 +236,7 @@ export class TreasuryController {
 				.where(eq(users.id, userId));
 
 			if (!user) {
-				return res.status(404).json({ error: 'User not found' });
+				return sendErrorResponse(res, 'User not found', 404);
 			}
 
 			const dgtAmount = BigInt(Math.floor(Math.abs(amount) * 100000000));
@@ -267,10 +272,10 @@ export class TreasuryController {
 				newBalance: Number(newBalance) / 100000000
 			};
 
-			res.json(adjustmentResult);
+			sendTransformedResponse(res, adjustmentResult, EconomyTransformer.toAdminBalanceAdjustment);
 		} catch (error) {
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({ error: 'Invalid request', details: error.errors });
+				return sendErrorResponse(res, 'Invalid request', 400);
 			}
 			logger.error('TreasuryController', 'Error adjusting user balance', {
 				error: error instanceof Error ? error.message : String(error)
@@ -322,7 +327,7 @@ export class TreasuryController {
 			}
 
 			if (targetUserList.length === 0) {
-				return res.status(400).json({ error: 'No users match the criteria' });
+				return sendErrorResponse(res, 'No users match the criteria', 400);
 			}
 
 			// Execute airdrop
@@ -378,10 +383,10 @@ export class TreasuryController {
 				results: results.slice(0, 50) // Limit results for response size
 			};
 
-			res.json(airdropResult);
+			sendTransformedResponse(res, airdropResult, EconomyTransformer.toAdminAirdropResult);
 		} catch (error) {
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({ error: 'Invalid request', details: error.errors });
+				return sendErrorResponse(res, 'Invalid request', 400);
 			}
 			logger.error('TreasuryController', 'Error executing bulk airdrop', {
 				error: error instanceof Error ? error.message : String(error)
@@ -465,7 +470,7 @@ export class TreasuryController {
 				}))
 			};
 
-			res.json(analyticsResult);
+			sendTransformedResponse(res, analyticsResult, EconomyTransformer.toAdminTransactionAnalytics);
 		} catch (error) {
 			logger.error('TreasuryController', 'Error getting transaction analytics', {
 				error: error instanceof Error ? error.message : String(error)

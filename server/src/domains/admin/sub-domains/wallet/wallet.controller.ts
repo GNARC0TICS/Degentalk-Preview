@@ -4,6 +4,7 @@ import { walletConfigService } from '../../../wallet/wallet-config.service';
 import { dgtService } from '../../../wallet/dgt.service';
 import { EconomyTransformer } from '../../../economy/transformers/economy.transformer';
 import { logger } from '../../../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 /**
  * Admin Wallet Controller
@@ -23,7 +24,7 @@ export class AdminWalletController {
 				data: config
 			};
 			
-			res.json(configResult);
+			sendSuccessResponse(res, configResult);
 		} catch (error) {
 			logger.error('Error getting wallet config:', error);
 			res.status(500).json({
@@ -42,10 +43,10 @@ export class AdminWalletController {
 
 			await walletConfigService.updateConfig(config);
 
-			res.json({
-				success: true,
-				message: 'Wallet configuration updated successfully'
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				message: 'Wallet configuration updated successfully'
+            			});
 		} catch (error) {
 			logger.error('Error updating wallet config:', error);
 			res.status(500).json({
@@ -62,10 +63,10 @@ export class AdminWalletController {
 		try {
 			const analytics = await dgtService.getDGTAnalytics();
 
-			res.json({
-				success: true,
-				data: analytics
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: analytics
+            			});
 		} catch (error) {
 			logger.error('Error getting DGT analytics:', error);
 			res.status(500).json({
@@ -100,11 +101,11 @@ export class AdminWalletController {
 			// Transform transaction for admin view with full audit trail
 			const transformedTransaction = EconomyTransformer.toAdminTransaction(transaction);
 
-			res.json({
-				success: true,
-				data: transformedTransaction,
-				message: `Successfully credited ${amount} DGT to user ${userId}`
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: transformedTransaction,
+            				message: `Successfully credited ${amount} DGT to user ${userId}`
+            			});
 		} catch (error) {
 			logger.error('Error crediting DGT:', error);
 			res.status(500).json({
@@ -139,11 +140,11 @@ export class AdminWalletController {
 			// Transform transaction for admin view with full audit trail
 			const transformedTransaction = EconomyTransformer.toAdminTransaction(transaction);
 
-			res.json({
-				success: true,
-				data: transformedTransaction,
-				message: `Successfully debited ${amount} DGT from user ${userId}`
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: transformedTransaction,
+            				message: `Successfully debited ${amount} DGT from user ${userId}`
+            			});
 		} catch (error) {
 			logger.error('Error debiting DGT:', error);
 			res.status(500).json({
@@ -173,13 +174,13 @@ export class AdminWalletController {
 			const transformedWallet = EconomyTransformer.toAdminWallet(balance);
 			const transformedHistory = EconomyTransformer.toTransactionList(history, { role: 'admin' }, 'admin');
 
-			res.json({
-				success: true,
-				data: {
-					wallet: transformedWallet,
-					history: transformedHistory
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: {
+            					wallet: transformedWallet,
+            					history: transformedHistory
+            				}
+            			});
 		} catch (error) {
 			logger.error('Error getting user DGT info:', error);
 			res.status(500).json({
@@ -196,10 +197,10 @@ export class AdminWalletController {
 		try {
 			await walletConfigService.resetToDefaults();
 
-			res.json({
-				success: true,
-				message: 'Wallet configuration reset to defaults'
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				message: 'Wallet configuration reset to defaults'
+            			});
 		} catch (error) {
 			logger.error('Error resetting wallet config:', error);
 			res.status(500).json({
@@ -235,10 +236,10 @@ export class AdminWalletController {
 				configLastUpdated: config.updatedAt || new Date()
 			};
 
-			res.json({
-				success: true,
-				data: status
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: status
+            			});
 		} catch (error) {
 			logger.error('Error getting wallet system status:', error);
 			res.status(500).json({

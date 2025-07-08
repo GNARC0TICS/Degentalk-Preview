@@ -28,8 +28,14 @@ import { canUser } from '@lib/auth/canUser.ts';
 import { logger } from '@server/src/core/logger';
 import { MentionsService } from '../social/mentions.service';
 import type { RoomId, GroupId } from '@shared/types/ids';
-import { ShoutboxTransformer } from '@server/src/domains/economy/shoutbox/transformers/shoutbox.transformer';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { ShoutboxTransformer } from './transformers/shoutbox.transformer';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 // Rate limiting for shoutbox messages (10 seconds cooldown)
 const userLastMessageTime = new Map<UserId, number>();
@@ -193,7 +199,7 @@ router.get('/rooms', async (req: Request, res: Response) => {
 			};
 		});
 
-		res.json(toPublicList(roomsWithAccess, ShoutboxTransformer.toPublicShoutbox));
+		sendTransformedListResponse(res, roomsWithAccess, ShoutboxTransformer.toPublicShoutbox);
 	} catch (error) {
 		logger.error('ShoutboxRoutes', 'Error fetching chat rooms', { err: error });
 		res.status(500).json({ error: 'Failed to fetch chat rooms' });
@@ -255,11 +261,7 @@ router.delete('/messages/:id', isAdminOrModerator, async (req: Request, res: Res
 			}
 		}
 
-		res.json({
-			success: true,
-			message: 'Message deleted successfully',
-			deletedMessage: deletedMessage
-		});
+		sendTransformedResponse(res, deletedMessage, ShoutboxTransformer.toAdminShout, 'Message deleted successfully');
 	} catch (error) {
 		// console.error('Error deleting shoutbox message:', error); // Original console.error removed
 		const messageIdForLog = req.params.id as MessageId; // Ensure messageId is available for logging
@@ -313,7 +315,7 @@ router.get('/messages', async (req: Request, res: Response) => {
 				} else {
 					// If no default room, maybe return empty or fetch from all public rooms?
 					// For now, let's return empty if no room is specified and default doesn't exist.
-					return res.json([]);
+					return sendSuccessResponse(res, []);
 				}
 			} catch (error) {
 				logger.warn('ShoutboxRoutes', 'Error fetching default room', { err: error });
@@ -414,7 +416,7 @@ router.get('/messages', async (req: Request, res: Response) => {
 			};
 		});
 
-		res.json(messages);
+		sendSuccessResponse(res, messages);
 	} catch (error) {
 		const roomIdForLog = req.query.roomId ? (req.query.roomId as string) as RoomId : null;
 		const limitForLog = req.query.limit ? parseInt(req.query.limit as string) : 50;
@@ -532,7 +534,8 @@ router.post('/messages', isAuthenticated, async (req: Request, res: Response) =>
 			}
 		}
 
-		res.status(201).json(responseData);
+		res.status(201);
+		sendSuccessResponse(res, responseData);
 	} catch (error) {
 		if (error instanceof ZodError) {
 			return res.status(400).json({
@@ -620,11 +623,7 @@ router.patch('/messages/:id', isAdminOrModerator, async (req: Request, res: Resp
 			}
 		}
 
-		res.json({
-			success: true,
-			message: isPinned ? 'Message pinned successfully' : 'Message unpinned successfully',
-			updatedMessage: updatedMessage
-		});
+		sendTransformedResponse(res, updatedMessage, ShoutboxTransformer.toAdminShout, isPinned ? 'Message pinned successfully' : 'Message unpinned successfully');
 	} catch (error) {
 		// console.error('Error updating shoutbox message:', error); // Original console.error removed
 		const messageIdForLog = req.params.id as MessageId; // Ensure messageId is available

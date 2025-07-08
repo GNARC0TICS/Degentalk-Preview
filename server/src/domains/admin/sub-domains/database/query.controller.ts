@@ -11,6 +11,7 @@ import { logger } from '@server/src/core/logger';
 import { adminCreateAuditLogEntry } from '../../shared/admin-operation-utils';
 import { getUserId } from '../../admin.middleware';
 import { z } from 'zod';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const queryService = new QueryService();
 
@@ -81,10 +82,10 @@ export async function executeQuery(req: Request, res: Response) {
 			}
 		});
 
-		res.json({
-			success: true,
-			data: result
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: result
+        		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error executing query', { error: error.message });
 		res.status(400).json({
@@ -117,10 +118,10 @@ export async function validateQuery(req: Request, res: Response) {
 			}
 		});
 
-		res.json({
-			success: true,
-			data: validation
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: validation
+        		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error validating query', { error: error.message });
 		res.status(400).json({
@@ -154,10 +155,10 @@ export async function getQueryHistory(req: Request, res: Response) {
 			}
 		});
 
-		res.json({
-			success: true,
-			data: history
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: history
+        		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error getting query history', { error: error.message });
 		res.status(500).json({
@@ -194,10 +195,10 @@ export async function clearQueryHistory(req: Request, res: Response) {
 			}
 		});
 
-		res.json({
-			success: true,
-			message: 'Query history cleared'
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			message: 'Query history cleared'
+        		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error clearing query history', { error: error.message });
 		res.status(500).json({
@@ -223,10 +224,10 @@ export async function getSuggestedQueries(req: Request, res: Response) {
 			details: `Viewed query suggestions (${suggestions.length} available)`
 		});
 
-		res.json({
-			success: true,
-			data: suggestions
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: suggestions
+        		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error getting suggested queries', { error: error.message });
 		res.status(500).json({
@@ -317,10 +318,10 @@ export async function getQueryMetrics(req: Request, res: Response) {
 			details: 'Viewed query performance metrics'
 		});
 
-		res.json({
-			success: true,
-			data: metrics
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: metrics
+        		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error getting query metrics', { error: error.message });
 		res.status(500).json({

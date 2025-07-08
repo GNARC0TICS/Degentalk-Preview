@@ -2,6 +2,7 @@ import { db } from '@db'; // Adjust
 import { userInventory, products } from '@schema'; // Adjust
 import { eq, and, getTableColumns } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 export const userInventoryAdminController = {
 	// View a user's inventory
@@ -16,7 +17,7 @@ export const userInventoryAdminController = {
 			.from(userInventory)
 			.leftJoin(products, eq(userInventory.productId, products.id))
 			.where(eq(userInventory.userId, userId));
-		res.json(inventoryItems);
+		sendSuccessResponse(res, inventoryItems);
 	},
 
 	// Grant an item to a user
@@ -176,11 +177,11 @@ export const userInventoryAdminController = {
 				.where(eq(userInventory.id, inventoryItemId))
 				.limit(1);
 
-			res.json({
-				success: true,
-				message: 'Item equipped successfully',
-				item: finalEquippedItem[0]
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				message: 'Item equipped successfully',
+            				item: finalEquippedItem[0]
+            			});
 		} catch (error) {
 			logger.error('Error equipping item:', error);
 			res.status(500).json({
@@ -208,7 +209,7 @@ export const userInventoryAdminController = {
 			if (unequippedItem.length === 0) {
 				return res.status(404).json({ message: 'Inventory item not found or not owned by user.' });
 			}
-			res.json(unequippedItem[0]);
+			sendSuccessResponse(res, unequippedItem[0]);
 		} catch (error) {
 			logger.error('Error unequipping item:', error);
 			res.status(500).json({ message: 'Error unequipping item', error: error.message });

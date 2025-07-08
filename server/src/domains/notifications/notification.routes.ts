@@ -17,6 +17,7 @@ import {
 	getUnreadNotificationCount
 } from './notification.service';
 import { isAuthenticated } from '../auth';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const router = express.Router();
 
@@ -40,7 +41,7 @@ router.get('/getPaginatedNotifications', async (req, res) => {
 
 		const notifications = await getNotifications(userId, pageSize, offset);
 
-		res.json({ page, pageSize, notifications });
+		sendSuccessResponse(res, { page, pageSize, notifications });
 	} catch (error) {
 		logger.error('NOTIFICATIONS', 'Error getting notifications', error);
 		res.status(500).json({
@@ -62,7 +63,7 @@ router.get('/unread/count', async (req, res) => {
 
 		const count = await getUnreadNotificationCount(userId);
 
-		res.json({ count });
+		sendSuccessResponse(res, { count });
 	} catch (error) {
 		logger.error('NOTIFICATIONS', 'Error getting unread notification count', error);
 		res.status(500).json({
@@ -86,7 +87,7 @@ router.put('/:id/read', async (req, res) => {
 		const success = await markNotificationAsRead(notificationId, userId);
 
 		if (success) {
-			res.json({ success: true });
+			sendSuccessResponse(res, { success: true });
 		} else {
 			res.status(404).json({ error: 'Notification not found or not owned by user' });
 		}
@@ -111,7 +112,7 @@ router.put('/read-all', async (req, res) => {
 
 		const count = await markAllNotificationsAsRead(userId);
 
-		res.json({ success: true, count });
+		sendSuccessResponse(res, { success: true, count });
 	} catch (error) {
 		logger.error('NOTIFICATIONS', 'Error marking all notifications as read', error);
 		res.status(500).json({

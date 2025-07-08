@@ -8,6 +8,7 @@ import { isAdminOrModerator } from '../../../auth/middleware/auth.middleware';
 import { getUserIdFromRequest } from '@server/src/utils/auth';
 import { logger } from '@server/src/core/logger';
 import type { EntityId } from '@shared/types/ids';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const router = Router();
 
@@ -82,7 +83,7 @@ router.get('/', isAdminOrModerator, async (req, res) => {
 			)
 			.orderBy(desc(moderatorNotes.createdAt));
 
-		res.json(notes);
+		sendSuccessResponse(res, notes);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			return res.status(400).json({

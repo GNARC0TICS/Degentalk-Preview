@@ -14,6 +14,10 @@ import { threadService } from '../services/thread.service';
 import { asyncHandler } from '@server/src/core/errors';
 import type { ForumId } from '@shared/types/ids';
 import { ForumTransformer } from '../transformers/forum.transformer';
+import { 
+	sendSuccessResponse,
+	sendErrorResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -75,7 +79,7 @@ router.get(
 			});
 
 			// Return unified ThreadDisplay format (includes zone data)
-			res.json({
+			sendSuccessResponse(res, {
 				items: transformedThreads,
 				meta: {
 					hasMore: result.page < result.totalPages,

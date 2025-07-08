@@ -44,6 +44,8 @@ import { backupRestoreRoutes } from './sub-domains/backup-restore/backup-restore
 import { stickerRoutes } from '../collectibles/stickers/stickers.routes';
 import subscriptionAdminRoutes from './sub-domains/subscriptions/subscription.admin.routes';
 import databaseRoutes from './sub-domains/database/database.routes';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
+
 // import userAdminRoutes from './users/users.admin.routes'; // DEPRECATED
 // import economyAdminRoutes from './settings/economy.routes'; // Placeholder for future
 
@@ -105,7 +107,7 @@ adminRouter.use('/ui-config', uiConfigRoutes);
 adminRouter.get('/dashboard', asyncHandler(adminController.getDashboardStats)); // Corrected method name
 
 // Admin account validation
-adminRouter.get('/validate', (req, res) => res.json({ isAdmin: true }));
+sendSuccessResponse(res, { isAdmin: true });
 
 /**
  * Register admin routes with the Express application

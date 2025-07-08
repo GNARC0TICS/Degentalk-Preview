@@ -4,6 +4,14 @@ import { MentionsService } from './mentions.service';
 import { requireAuth } from '../../../middleware/auth';
 import { z } from 'zod';
 import { logger } from "../../core/logger";
+import { UserTransformer } from '@server/src/domains/users/transformers/user.transformer';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -45,7 +53,7 @@ router.get('/', requireAuth, async (req, res) => {
 		const mentions = await MentionsService.getUserMentions(userId, page, limit);
 		const unreadCount = await MentionsService.getUnreadMentionCount(userId);
 
-		res.json({
+		sendSuccessResponse(res, {
 			mentions,
 			unreadCount,
 			pagination: {
@@ -69,7 +77,7 @@ router.get('/unread-count', requireAuth, async (req, res) => {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const count = await MentionsService.getUnreadMentionCount(userId);
 
-		res.json({ unreadCount: count });
+		sendSuccessResponse(res, { unreadCount: count });
 	} catch (error) {
 		logger.error('Error fetching unread mention count:', error);
 		res.status(500).json({ error: 'Failed to fetch unread count' });
@@ -87,7 +95,7 @@ router.post('/mark-read', requireAuth, async (req, res) => {
 
 		await MentionsService.markMentionsAsRead(userId, mentionIds);
 
-		res.json({ success: true });
+		sendSuccessResponse(res, null);
 	} catch (error) {
 		logger.error('Error marking mentions as read:', error);
 		res.status(500).json({ error: 'Failed to mark mentions as read' });
@@ -103,7 +111,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const preferences = await MentionsService.getUserMentionPreferences(userId);
 
-		res.json(preferences);
+		sendSuccessResponse(res, preferences);
 	} catch (error) {
 		logger.error('Error fetching mention preferences:', error);
 		res.status(500).json({ error: 'Failed to fetch preferences' });
@@ -121,7 +129,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
 
 		const updatedPrefs = await MentionsService.updateUserMentionPreferences(userId, preferences);
 
-		res.json(updatedPrefs[0]);
+		sendSuccessResponse(res, updatedPrefs[0]);
 	} catch (error) {
 		logger.error('Error updating mention preferences:', error);
 		res.status(500).json({ error: 'Failed to update preferences' });
@@ -138,7 +146,7 @@ router.get('/search-users', requireAuth, async (req, res) => {
 
 		const users = await MentionsService.searchUsersForMention(q, limit);
 
-		res.json({ users });
+		sendSuccessResponse(res, { users: toPublicList(users, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error searching users for mentions:', error);
 		res.status(500).json({ error: 'Failed to search users' });

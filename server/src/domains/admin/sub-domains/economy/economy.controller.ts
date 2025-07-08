@@ -3,6 +3,7 @@ import { loadEconomyConfig, saveEconomyOverrides } from '@server/src/utils/econo
 import { economyConfig as canonicalEconomyConfig } from '@shared/economy/economy.config';
 import { z } from 'zod';
 import { validateRequestBody } from '../../admin.validation';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 /**
  * GET /api/admin/economy/config
@@ -12,7 +13,7 @@ export const getEconomyConfig = async (req: Request, res: Response, next: NextFu
 	try {
 		const mergedConfig = await loadEconomyConfig();
 		const hasOverrides = JSON.stringify(mergedConfig) !== JSON.stringify(canonicalEconomyConfig);
-		res.json({ config: mergedConfig, hasOverrides });
+		sendSuccessResponse(res, { config: mergedConfig, hasOverrides });
 	} catch (err) {
 		next(err);
 	}
@@ -29,7 +30,7 @@ export const updateEconomyConfig = async (req: Request, res: Response, next: Nex
 		if (!partialOverride) return; // Error handled inside validateRequestBody
 		await saveEconomyOverrides(partialOverride);
 		const mergedConfig = await loadEconomyConfig();
-		res.json({ config: mergedConfig, hasOverrides: true });
+		sendSuccessResponse(res, { config: mergedConfig, hasOverrides: true });
 	} catch (err) {
 		next(err);
 	}
@@ -43,7 +44,7 @@ export const resetEconomyConfig = async (req: Request, res: Response, next: Next
 	try {
 		await saveEconomyOverrides(null);
 		const mergedConfig = await loadEconomyConfig();
-		res.json({ config: mergedConfig, hasOverrides: false });
+		sendSuccessResponse(res, { config: mergedConfig, hasOverrides: false });
 	} catch (err) {
 		next(err);
 	}

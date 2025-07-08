@@ -11,6 +11,7 @@ import { z } from 'zod';
 import { isAuthenticated } from '../../domains/auth/middleware/auth.middleware.ts';
 import type { IStorage } from '../../../storage';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 /**
  * Initialize editor routes
@@ -18,28 +19,7 @@ import { logger } from "../../core/logger";
 const router = Router();
 
 // Check if Giphy is enabled
-router.get('/giphy-status', async (req: Request, res: Response) => {
-	try {
-		const storage = req.app.get('storage') as IStorage;
-		const settings = await storage.getSiteSettings();
-
-		// Find giphy settings
-		const giphyApiKey = process.env.GIPHY_API_KEY;
-		const giphyEnabled = settings.find((s) => s.key === 'giphy_enabled')?.value === 'true';
-
-		// If no API key, Giphy is not available regardless of settings
-		if (!giphyApiKey) {
-			return res.json({ enabled: false });
-		}
-
-		return res.json({
-			enabled: giphyEnabled
-		});
-	} catch (error) {
-		logger.error('Error checking Giphy status:', error);
-		res.status(500).json({ error: 'Failed to check Giphy status' });
-	}
-});
+sendErrorResponse(res, 'Server error', 500);
 
 // Get trending GIFs
 router.get('/giphy-trending', async (req: Request, res: Response) => {
@@ -69,7 +49,7 @@ router.get('/giphy-trending', async (req: Request, res: Response) => {
 			}
 		});
 
-		res.json(response.data);
+		sendSuccessResponse(res, response.data);
 	} catch (error) {
 		logger.error('Error fetching trending GIFs:', error);
 		res.status(500).json({ error: 'Failed to fetch trending GIFs' });
@@ -111,7 +91,7 @@ router.post('/giphy-search', async (req: Request, res: Response) => {
 			}
 		});
 
-		res.json(response.data);
+		sendSuccessResponse(res, response.data);
 	} catch (error) {
 		logger.error('Error searching GIFs:', error);
 		res.status(500).json({ error: 'Failed to search GIFs' });

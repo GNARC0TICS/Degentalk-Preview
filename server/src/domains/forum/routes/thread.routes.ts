@@ -24,6 +24,10 @@ import { logger } from '@server/src/core/logger';
 import { asyncHandler } from '@server/src/core/errors';
 import type { ThreadId, StructureId } from '@shared/types/ids';
 import { ForumTransformer } from '../transformers/forum.transformer';
+import { 
+	sendSuccessResponse,
+	sendErrorResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -97,16 +101,13 @@ router.get(
 				totalPages: result.totalPages
 			});
 
-			res.json({
-				success: true,
-				data: {
-					threads: transformedThreads,
-					pagination: {
-						page,
-						limit: limit,
-						totalThreads: result.total,
-						totalPages: result.totalPages
-					}
+			sendSuccessResponse(res, {
+				threads: transformedThreads,
+				pagination: {
+					page,
+					limit: limit,
+					totalThreads: result.total,
+					totalPages: result.totalPages
 				}
 			});
 		} catch (error) {
@@ -147,10 +148,7 @@ router.get(
 				ForumTransformer.toAuthenticatedThread(thread, requestingUser) :
 				ForumTransformer.toPublicThread(thread);
 
-			res.json({
-				success: true,
-				data: transformedThread
-			});
+			sendSuccessResponse(res, transformedThread);
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in GET /threads/:id', { error });
 			res.status(500).json({
@@ -187,10 +185,7 @@ router.get(
 				ForumTransformer.toAuthenticatedThread(thread, requestingUser) :
 				ForumTransformer.toPublicThread(thread);
 
-			res.json({
-				success: true,
-				data: transformedThread
-			});
+			sendSuccessResponse(res, transformedThread);
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in GET /threads/slug/:slug', { error });
 			res.status(500).json({
@@ -228,10 +223,8 @@ router.post(
 				ForumTransformer.toAuthenticatedThread(newThread, requestingUser) :
 				ForumTransformer.toPublicThread(newThread);
 
-			res.status(201).json({
-				success: true,
-				data: transformedThread
-			});
+			res.status(201);
+			sendSuccessResponse(res, transformedThread);
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in POST /threads', { error });
 
@@ -280,10 +273,7 @@ router.put(
 				ForumTransformer.toAuthenticatedThread(updatedThread, requestingUser) :
 				ForumTransformer.toPublicThread(updatedThread);
 
-			res.json({
-				success: true,
-				data: transformedThread
-			});
+			sendSuccessResponse(res, transformedThread);
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in PUT /threads/:threadId/solve', { error });
 
@@ -317,10 +307,7 @@ router.post(
 			// Permission check is handled by middleware
 			// TODO: Implement tag addition logic
 
-			res.json({
-				success: true,
-				message: 'Tags added successfully'
-			});
+			sendSuccessResponse(res, null, 'Tags added successfully');
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in POST /threads/:threadId/tags', { error });
 
@@ -352,10 +339,7 @@ router.delete(
 
 			// TODO: Implement tag removal logic
 
-			res.json({
-				success: true,
-				message: 'Tag removed successfully'
-			});
+			sendSuccessResponse(res, null, 'Tag removed successfully');
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in DELETE /threads/:threadId/tags/:tagId', { error });
 			res.status(500).json({
@@ -400,16 +384,13 @@ router.get(
 					ForumTransformer.toPublicPost(post);
 			});
 
-			res.json({
-				success: true,
-				data: {
-					posts: transformedPosts,
-					pagination: {
-						page: result.page,
-						limit,
-						totalPosts: result.total,
-						totalPages: result.totalPages
-					}
+			sendSuccessResponse(res, {
+				posts: transformedPosts,
+				pagination: {
+					page: result.page,
+					limit,
+					totalPosts: result.total,
+					totalPages: result.totalPages
 				}
 			});
 		} catch (error) {
@@ -435,10 +416,7 @@ router.get(
 
 			// TODO: Implement get thread tags logic
 
-			res.json({
-				success: true,
-				data: []
-			});
+			sendSuccessResponse(res, []);
 		} catch (error) {
 			logger.error('ThreadRoutes', 'Error in GET /threads/:threadId/tags', { error });
 			res.status(500).json({

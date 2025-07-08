@@ -97,5 +97,47 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
+// Response helpers to eliminate raw res.json() calls
+export function sendSuccessResponse<T>(res: any, data: T, message?: string): void {
+  res.status(200).json({
+    success: true,
+    data,
+    message
+  });
+}
+
+export function sendErrorResponse(res: any, message: string, status = 500): void {
+  res.status(status).json({
+    success: false,
+    error: message
+  });
+}
+
+export function sendTransformedResponse<T, R>(
+  res: any,
+  data: T,
+  transformer: (item: T) => R,
+  message?: string
+): void {
+  res.status(200).json({
+    success: true,
+    data: transformer(data),
+    message
+  });
+}
+
+export function sendTransformedListResponse<T, R>(
+  res: any,
+  data: T[],
+  transformer: (item: T) => R,
+  message?: string
+): void {
+  res.status(200).json({
+    success: true,
+    data: data.map(transformer),
+    message
+  });
+}
+
 // Re-export common response helpers
 export { toPublicList as transformList }; // Alias for backward compatibility

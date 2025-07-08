@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import { userService } from '@server/src/core/services/user.service';
 import { referralsService } from './referrals.service';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 /**
  * Controller for managing referral sources and user referrals in the admin panel
@@ -40,10 +41,10 @@ export class ReferralsController {
 		try {
 			const sources = await referralsService.getAllReferralSources();
 
-			return res.json({
-				success: true,
-				data: sources
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: sources
+            			});
 		} catch (error) {
 			return res.status(500).json({
 				success: false,
@@ -59,10 +60,10 @@ export class ReferralsController {
 		try {
 			const stats = await referralsService.getReferralSourceStats();
 
-			return res.json({
-				success: true,
-				data: stats
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: stats
+            			});
 		} catch (error) {
 			return res.status(500).json({
 				success: false,
@@ -78,10 +79,10 @@ export class ReferralsController {
 		try {
 			const stats = await referralsService.getUserReferralStats();
 
-			return res.json({
-				success: true,
-				data: stats
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: stats
+            			});
 		} catch (error) {
 			return res.status(500).json({
 				success: false,
@@ -97,10 +98,10 @@ export class ReferralsController {
 		try {
 			const stats = await referralsService.getReferralCountByUser();
 
-			return res.json({
-				success: true,
-				data: stats
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: stats
+            			});
 		} catch (error) {
 			return res.status(500).json({
 				success: false,

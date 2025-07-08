@@ -17,6 +17,12 @@ import { MessageTransformer } from './transformers/message.transformer';
 import { MessageService } from './message.service';
 import { logger } from "../../core/logger";
 import { UserTransformer } from '@server/src/domains/users/transformers/user.transformer';
+import { 
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -43,7 +49,7 @@ router.get('/conversations', isAuthenticated, async (req: Request, res: Response
 			MessageTransformer.toAuthenticatedConversation(conversation, currentUser, conversation.participants)
 		);
 		
-		res.json(transformedConversations);
+		sendSuccessResponse(res, transformedConversations);
 	} catch (error) {
 		logger.error('Error getting conversations:', error);
 		res.status(500).json({ message: 'Failed to get conversations' });
@@ -89,7 +95,7 @@ router.get('/conversation/:userId', isAuthenticated, async (req: Request, res: R
 			totalCount: conversationMessages.length
 		};
 
-		res.json(messageThread);
+		sendSuccessResponse(res, messageThread);
 	} catch (error) {
 		logger.error('Error getting conversation messages:', error);
 		res.status(500).json({ message: 'Failed to get conversation messages' });
@@ -127,7 +133,8 @@ router.post('/send', isAuthenticated, async (req: Request, res: Response) => {
 			currentUser
 		);
 
-		res.status(201).json(transformedMessage);
+		res.status(201);
+		sendSuccessResponse(res, transformedMessage);
 	} catch (error) {
 		logger.error('Error sending message:', error);
 		if (error instanceof z.ZodError) {
@@ -153,7 +160,7 @@ router.post('/mark-read/:userId', isAuthenticated, async (req: Request, res: Res
 		// Mark messages as read using the service
 		await MessageService.markMessagesAsRead(currentUserId, senderId);
 
-		res.json({ success: true, message: 'Messages marked as read' });
+		sendSuccessResponse(res, null, 'Messages marked as read');
 	} catch (error) {
 		logger.error('Error marking messages as read:', error);
 		res.status(500).json({ message: 'Failed to mark messages as read' });
@@ -176,7 +183,7 @@ router.delete('/conversation/:userId', isAuthenticated, async (req: Request, res
 		// Delete conversation using the service
 		await MessageService.deleteConversation(currentUserId, otherUserId);
 
-		res.json({ success: true, message: 'Conversation deleted' });
+		sendSuccessResponse(res, null, 'Conversation deleted');
 	} catch (error) {
 		logger.error('Error deleting conversation:', error);
 		res.status(500).json({ message: 'Failed to delete conversation' });
@@ -194,7 +201,7 @@ router.get('/unread-count', isAuthenticated, async (req: Request, res: Response)
 		// Get unread count using the service
 		const total = await MessageService.getUnreadCount(userId);
 
-		res.json({ total });
+		sendSuccessResponse(res, { total });
 	} catch (error) {
 		logger.error('Error getting unread count:', error);
 		res.status(500).json({ message: 'Failed to get unread message count' });
@@ -218,7 +225,7 @@ router.put('/message/:messageId', isAuthenticated, async (req: Request, res: Res
 
 		await MessageService.editMessage(messageId, userId, content);
 
-		res.json({ success: true, message: 'Message edited successfully' });
+		sendSuccessResponse(res, null, 'Message edited successfully');
 	} catch (error) {
 		logger.error('Error editing message:', error);
 		if (error instanceof z.ZodError) {
@@ -243,7 +250,7 @@ router.delete('/message/:messageId', isAuthenticated, async (req: Request, res: 
 
 		await MessageService.deleteMessage(messageId, userId);
 
-		res.json({ success: true, message: 'Message deleted successfully' });
+		sendSuccessResponse(res, null, 'Message deleted successfully');
 	} catch (error) {
 		logger.error('Error deleting message:', error);
 		if (error instanceof Error) {
@@ -270,7 +277,7 @@ router.get('/admin/messages', isAdminOrModerator, async (req: Request, res: Resp
 			MessageTransformer.toAdminMessage(message)
 		);
 		
-		res.json({ 
+		sendSuccessResponse(res, { 
 			messages: transformedMessages,
 			total: messages.length,
 			page: parseInt(page as string),

@@ -26,6 +26,7 @@ import { authenticate } from '../../middleware/authenticate';
 import { profileService } from './profile.service';
 import { referralsService } from './referrals.service';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const router = Router();
 
@@ -164,64 +165,10 @@ router.get('/:username', async (req: Request, res: Response) => {
 	}
 });
 
-/**
- * @route   GET /api/profile
- * @desc    Get user profile
- * @access  Private
- */
-router.get('/', authenticate, async (req, res) => {
-	try {
-		const userId = userService.getUserFromRequest(req)?.id;
-		if (!userId) {
-			return res.status(401).json({ success: false, message: 'User not authenticated' });
-		}
+sendErrorResponse(res, 'Server error', 401);
 
-		const profile = await profileService.getUserProfile(userId);
-		return res.json({ success: true, data: profile });
-	} catch (error) {
-		logger.error('Error fetching profile:', error);
-		return res.status(500).json({ success: false, message: 'Failed to fetch profile' });
-	}
-});
+sendErrorResponse(res, 'Server error', 401);
 
-/**
- * @route   GET /api/profile/referrals
- * @desc    Get user referral stats
- * @access  Private
- */
-router.get('/referrals', authenticate, async (req, res) => {
-	try {
-		const userId = userService.getUserFromRequest(req)?.id;
-		if (!userId) {
-			return res.status(401).json({ success: false, message: 'User not authenticated' });
-		}
-
-		const referrals = await referralsService.getUserReferrals(userId);
-		return res.json({ success: true, data: referrals });
-	} catch (error) {
-		logger.error('Error fetching referrals:', error);
-		return res.status(500).json({ success: false, message: 'Failed to fetch referral data' });
-	}
-});
-
-/**
- * @route   GET /api/profile/referrals/link
- * @desc    Get user's referral link
- * @access  Private
- */
-router.get('/referrals/link', authenticate, async (req, res) => {
-	try {
-		const userId = userService.getUserFromRequest(req)?.id;
-		if (!userId) {
-			return res.status(401).json({ success: false, message: 'User not authenticated' });
-		}
-
-		const referralLink = await referralsService.getUserReferralLink(userId);
-		return res.json({ success: true, data: { referralLink } });
-	} catch (error) {
-		logger.error('Error generating referral link:', error);
-		return res.status(500).json({ success: false, message: 'Failed to generate referral link' });
-	}
-});
+sendErrorResponse(res, 'Server error', 401);
 
 export default router;

@@ -9,6 +9,14 @@ import { userService } from '@server/src/core/services/user.service';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { levelingService, LevelingService } from './leveling.service';
+import { CloutTransformer } from './transformers/clout.transformer';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse 
+} from '@server/src/core/utils/transformer.helpers';
 import { logger } from '../../core/logger';
 import { AppError } from '../../core/errors';
 
@@ -72,22 +80,13 @@ export class LevelingController {
 				throw new AppError(`Level ${level} not found`, 404);
 			}
 
-			res.json({
-				success: true,
-				data: levelInfo
-			});
+			sendSuccessResponse(res, levelInfo);
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error getting level info:', error);
 			if (error instanceof AppError) {
-				res.status(error.httpStatus || 500).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, error.httpStatus || 500);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -100,20 +99,13 @@ export class LevelingController {
 		try {
 			const levels = await this.service.getAllLevels();
 
-			res.json({
-				success: true,
-				data: levels,
-				meta: {
-					count: levels.length,
-					maxLevel: Math.max(...levels.map((l) => l.level))
-				}
+			sendSuccessResponse(res, levels, undefined, {
+				count: levels.length,
+				maxLevel: Math.max(...levels.map((l) => l.level))
 			});
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error getting all levels:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -131,22 +123,13 @@ export class LevelingController {
 				throw new AppError(`User ${userId} not found`, 404);
 			}
 
-			res.json({
-				success: true,
-				data: progression
-			});
+			sendSuccessResponse(res, progression);
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error getting user progression:', error);
 			if (error instanceof AppError) {
-				res.status(error.httpStatus || 500).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, error.httpStatus || 500);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -168,22 +151,13 @@ export class LevelingController {
 				throw new AppError('User not found', 404);
 			}
 
-			res.json({
-				success: true,
-				data: progression
-			});
+			sendSuccessResponse(res, progression);
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error getting user progression:', error);
 			if (error instanceof AppError) {
-				res.status(error.httpStatus || 500).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, error.httpStatus || 500);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -198,22 +172,15 @@ export class LevelingController {
 
 			const leaderboard = await this.service.getLeaderboard(type, limit, offset);
 
-			res.json({
-				success: true,
-				data: leaderboard,
-				meta: {
-					type,
-					limit,
-					offset,
-					count: leaderboard.length
-				}
+			sendSuccessResponse(res, leaderboard, undefined, {
+				type,
+				limit,
+				offset,
+				count: leaderboard.length
 			});
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error getting leaderboard:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -227,20 +194,13 @@ export class LevelingController {
 
 			const analytics = await this.service.getProgressionAnalytics(timeframe);
 
-			res.json({
-				success: true,
-				data: analytics,
-				meta: {
-					timeframe,
-					generatedAt: new Date().toISOString()
-				}
+			sendSuccessResponse(res, analytics, undefined, {
+				timeframe,
+				generatedAt: new Date().toISOString()
 			});
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error getting progression analytics:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -254,24 +214,14 @@ export class LevelingController {
 
 			const level = await this.service.createLevel(levelData);
 
-			res.status(201).json({
-				success: true,
-				data: level,
-				message: `Level ${levelData.level} created successfully`
-			});
+			res.status(201);
+			sendSuccessResponse(res, level, `Level ${levelData.level} created successfully`);
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error creating level:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -287,29 +237,18 @@ export class LevelingController {
 			const curve = await this.service.generateXpCurve(maxLevel, baseXp);
 			await this.service.importXpCurve(curve);
 
-			res.json({
-				success: true,
-				data: {
-					curve: curve.slice(0, 10), // Return first 10 levels as preview
-					total: curve.length,
-					maxLevel,
-					maxXp: Math.max(...curve.map((c) => c.minXp))
-				},
-				message: `Generated and imported ${curve.length} levels`
-			});
+			sendSuccessResponse(res, {
+				curve: curve.slice(0, 10),
+				total: curve.length,
+				maxLevel,
+				maxXp: Math.max(...curve.map((c) => c.minXp))
+			}, `Generated and imported ${curve.length} levels`);
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error generating XP curve:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -336,29 +275,20 @@ export class LevelingController {
 				Math.max(0, progression.rank - contextSize)
 			);
 
-			res.json({
-				success: true,
-				data: {
-					userId: progression.userId,
-					username: progression.username,
-					rank: progression.rank,
-					level: progression.currentLevel,
-					xp: progression.currentXp,
-					context: leaderboard
-				}
+			sendSuccessResponse(res, {
+				userId: progression.userId,
+				username: progression.username,
+				rank: progression.rank,
+				level: progression.currentLevel,
+				xp: progression.currentXp,
+				context: leaderboard
 			});
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error getting user rank:', error);
 			if (error instanceof AppError) {
-				res.status(error.httpStatus || 500).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, error.httpStatus || 500);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -378,28 +308,18 @@ export class LevelingController {
 
 			const { rewards, unlocks } = await this.service.processLevelUp(userId, level - 1, level);
 
-			res.json({
-				success: true,
-				data: {
-					level,
-					userId,
-					rewards,
-					unlocks
-				},
-				message: `Simulated level ${level} rewards for user ${userId}`
-			});
+			sendSuccessResponse(res, {
+				level,
+				userId,
+				rewards,
+				unlocks
+			}, `Simulated level ${level} rewards for user ${userId}`);
 		} catch (error) {
 			logger.error('LEVELING_CONTROLLER', 'Error simulating level rewards:', error);
 			if (error instanceof AppError) {
-				res.status(error.httpStatus || 500).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, error.httpStatus || 500);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}

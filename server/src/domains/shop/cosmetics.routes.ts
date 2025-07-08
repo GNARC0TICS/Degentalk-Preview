@@ -17,6 +17,7 @@ import { CosmeticsTransformer } from './transformers/cosmetics.transformer';
 import { vanitySinkAnalyzer } from './services/vanity-sink.analyzer';
 import { z } from 'zod';
 import type { UserId, ItemId } from '@shared/types/ids';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const router = Router();
 
@@ -132,26 +133,26 @@ router.get('/browse', async (req, res) => {
       );
     }
 
-    res.json({
-      cosmetics: transformedCosmetics,
-      total: filteredCosmetics.length,
-      page: pageNum,
-      limit: limitNum,
-      totalPages: Math.ceil(filteredCosmetics.length / limitNum),
-      filters: {
-        type: type || 'all',
-        rarity: rarity || 'all'
-      },
-      user: requestingUser ? {
-        isAuthenticated: true,
-        equippedCosmetics: CosmeticsTransformer.getUserEquippedCosmetics(
-          await db.select().from(userInventory).where(and(
-            eq(userInventory.userId, requestingUser.id),
-            eq(userInventory.isEquipped, true)
-          ))
-        )
-      } : { isAuthenticated: false }
-    });
+    sendSuccessResponse(res, {
+            cosmetics: transformedCosmetics,
+            total: filteredCosmetics.length,
+            page: pageNum,
+            limit: limitNum,
+            totalPages: Math.ceil(filteredCosmetics.length / limitNum),
+            filters: {
+              type: type || 'all',
+              rarity: rarity || 'all'
+            },
+            user: requestingUser ? {
+              isAuthenticated: true,
+              equippedCosmetics: CosmeticsTransformer.getUserEquippedCosmetics(
+                await db.select().from(userInventory).where(and(
+                  eq(userInventory.userId, requestingUser.id),
+                  eq(userInventory.isEquipped, true)
+                ))
+              )
+            } : { isAuthenticated: false }
+          });
 
   } catch (error) {
     logger.error('CosmeticsController', 'Error browsing cosmetics', { error });
@@ -191,18 +192,18 @@ router.get('/equipped', isAuthenticated, async (req, res) => {
       customizations: item.customizations || {}
     }));
 
-    res.json({
-      equippedCosmetics: cosmeticsWithDetails,
-      totalEquipped: cosmeticsWithDetails.length,
-      availableSlots: {
-        avatar_frame: !equippedCosmetics.avatar_frame,
-        username_color: !equippedCosmetics.username_color,
-        title: !equippedCosmetics.title,
-        badge: !equippedCosmetics.badge,
-        signature_effect: !equippedCosmetics.signature_effect,
-        theme: !equippedCosmetics.theme
-      }
-    });
+    sendSuccessResponse(res, {
+            equippedCosmetics: cosmeticsWithDetails,
+            totalEquipped: cosmeticsWithDetails.length,
+            availableSlots: {
+              avatar_frame: !equippedCosmetics.avatar_frame,
+              username_color: !equippedCosmetics.username_color,
+              title: !equippedCosmetics.title,
+              badge: !equippedCosmetics.badge,
+              signature_effect: !equippedCosmetics.signature_effect,
+              theme: !equippedCosmetics.theme
+            }
+          });
 
   } catch (error) {
     logger.error('CosmeticsController', 'Error getting equipped cosmetics', {
@@ -299,13 +300,13 @@ router.post('/equip', isAuthenticated, async (req, res) => {
         conflicts: validation.conflicts
       });
 
-      res.json({
-        success: true,
-        message: 'Cosmetic equipped successfully',
-        itemId,
-        action: 'equipped',
-        unequippedConflicts: validation.conflicts
-      });
+      sendSuccessResponse(res, {
+                success: true,
+                message: 'Cosmetic equipped successfully',
+                itemId,
+                action: 'equipped',
+                unequippedConflicts: validation.conflicts
+              });
 
     } else { // unequip
       if (!inventoryItem.isEquipped) {
@@ -326,12 +327,12 @@ router.post('/equip', isAuthenticated, async (req, res) => {
         itemId
       });
 
-      res.json({
-        success: true,
-        message: 'Cosmetic unequipped successfully',
-        itemId,
-        action: 'unequipped'
-      });
+      sendSuccessResponse(res, {
+                success: true,
+                message: 'Cosmetic unequipped successfully',
+                itemId,
+                action: 'unequipped'
+              });
     }
 
   } catch (error) {
@@ -412,18 +413,18 @@ router.post('/customize', isAuthenticated, async (req, res) => {
       customizations: Object.keys(customizations)
     });
 
-    res.json({
-      success: true,
-      message: 'Cosmetic customized successfully',
-      itemId,
-      customizations,
-      dgtCost: dgtCost || 0,
-      vanityMetrics: dgtCost ? {
-        dgtBurned: dgtCost,
-        burnType: 'customization',
-        contributesToDeflation: true
-      } : undefined
-    });
+    sendSuccessResponse(res, {
+            success: true,
+            message: 'Cosmetic customized successfully',
+            itemId,
+            customizations,
+            dgtCost: dgtCost || 0,
+            vanityMetrics: dgtCost ? {
+              dgtBurned: dgtCost,
+              burnType: 'customization',
+              contributesToDeflation: true
+            } : undefined
+          });
 
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -470,14 +471,14 @@ router.get('/preview/:itemIds', async (req, res) => {
       mockCosmetics.slice(1) // Current equipment
     );
 
-    res.json({
-      previewUrl: preview.previewUrl,
-      equipmentSet: preview.equipmentSet,
-      user: requestingUser ? {
-        isAuthenticated: true,
-        canPreview: true
-      } : { isAuthenticated: false, canPreview: true }
-    });
+    sendSuccessResponse(res, {
+            previewUrl: preview.previewUrl,
+            equipmentSet: preview.equipmentSet,
+            user: requestingUser ? {
+              isAuthenticated: true,
+              canPreview: true
+            } : { isAuthenticated: false, canPreview: true }
+          });
 
   } catch (error) {
     logger.error('CosmeticsController', 'Error generating cosmetic preview', {
@@ -523,11 +524,11 @@ router.get('/analytics', isAuthenticated, async (req, res) => {
       }
     };
 
-    res.json({
-      vanitySink: vanitySinkMetrics,
-      cosmetics: cosmeticsAnalytics,
-      generatedAt: new Date().toISOString()
-    });
+    sendSuccessResponse(res, {
+            vanitySink: vanitySinkMetrics,
+            cosmetics: cosmeticsAnalytics,
+            generatedAt: new Date().toISOString()
+          });
 
   } catch (error) {
     logger.error('CosmeticsController', 'Error getting cosmetics analytics', {

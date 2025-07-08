@@ -9,6 +9,7 @@
  */
 
 import { Router } from 'express';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 import levelingRoutes from './leveling.routes';
 import achievementRoutes from './achievement.routes';
 import missionRoutes from './mission.routes';
@@ -27,8 +28,7 @@ router.use('/admin', adminRoutes);
 
 // Health check endpoint for gamification system
 router.get('/health', (req, res) => {
-	res.json({
-		success: true,
+	sendSuccessResponse(res, {
 		service: 'gamification',
 		features: {
 			leveling: 'active',
@@ -45,19 +45,13 @@ router.get('/health', (req, res) => {
 router.get('/stats', async (req, res) => {
 	try {
 		// This would aggregate key stats from all gamification systems
-		res.json({
-			success: true,
-			data: {
-				placeholder: true,
-				message: 'Gamification stats aggregation - to be implemented',
-				features: ['levels', 'achievements', 'missions', 'leaderboards', 'analytics']
-			}
+		sendSuccessResponse(res, {
+			placeholder: true,
+			message: 'Gamification stats aggregation - to be implemented',
+			features: ['levels', 'achievements', 'missions', 'leaderboards', 'analytics']
 		});
 	} catch (error) {
-		res.status(500).json({
-			success: false,
-			error: 'Failed to fetch gamification stats'
-		});
+		sendErrorResponse(res, 'Failed to fetch gamification stats', 500);
 	}
 });
 

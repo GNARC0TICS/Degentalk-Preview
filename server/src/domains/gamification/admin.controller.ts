@@ -15,6 +15,15 @@ import { levelingService } from './leveling.service';
 import { achievementService } from './achievement.service';
 import { missionsService } from '../missions/missions.service';
 import { gamificationAnalyticsService } from './analytics.service';
+import { CloutTransformer } from './transformers/clout.transformer';
+import { MissionsTransformer } from '../missions/transformers/missions.transformer';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse 
+} from '@server/src/core/utils/transformer.helpers';
 import { logger } from '../../core/logger';
 import { AppError } from '../../core/errors';
 
@@ -157,20 +166,13 @@ export class GamificationAdminController {
 				}
 			};
 
-			res.json({
-				success: true,
-				data: overview,
-				meta: {
-					generatedAt: new Date().toISOString(),
-					version: '1.0.0'
-				}
+			sendSuccessResponse(res, overview, undefined, {
+				generatedAt: new Date().toISOString(),
+				version: '1.0.0'
 			});
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error getting admin overview:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -192,31 +194,20 @@ export class GamificationAdminController {
 				}
 			}
 
-			res.json({
-				success: true,
-				data: {
-					created: createdLevels,
-					stats: {
-						requested: levels.length,
-						created: createdLevels.length,
-						failed: levels.length - createdLevels.length
-					}
-				},
-				message: `Created ${createdLevels.length} out of ${levels.length} levels`
-			});
+			sendSuccessResponse(res, {
+				created: createdLevels,
+				stats: {
+					requested: levels.length,
+					created: createdLevels.length,
+					failed: levels.length - createdLevels.length
+				}
+			}, `Created ${createdLevels.length} out of ${levels.length} levels`);
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error bulk creating levels:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -243,31 +234,20 @@ export class GamificationAdminController {
 				}
 			}
 
-			res.json({
-				success: true,
-				data: {
-					created: createdAchievements,
-					stats: {
-						requested: achievements.length,
-						created: createdAchievements.length,
-						failed: achievements.length - createdAchievements.length
-					}
-				},
-				message: `Created ${createdAchievements.length} out of ${achievements.length} achievements`
-			});
+			sendSuccessResponse(res, {
+				created: toPublicList(createdAchievements, CloutTransformer.toAdminAchievement),
+				stats: {
+					requested: achievements.length,
+					created: createdAchievements.length,
+					failed: achievements.length - createdAchievements.length
+				}
+			}, `Created ${createdAchievements.length} out of ${achievements.length} achievements`);
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error bulk creating achievements:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -290,31 +270,20 @@ export class GamificationAdminController {
 				}
 			}
 
-			res.json({
-				success: true,
-				data: {
-					created: createdMissions,
-					stats: {
-						requested: missions.length,
-						created: createdMissions.length,
-						failed: missions.length - createdMissions.length
-					}
-				},
-				message: `Created ${createdMissions.length} out of ${missions.length} missions`
-			});
+			sendSuccessResponse(res, {
+				created: toPublicList(createdMissions, MissionsTransformer.toAdminMission),
+				stats: {
+					requested: missions.length,
+					created: createdMissions.length,
+					failed: missions.length - createdMissions.length
+				}
+			}, `Created ${createdMissions.length} out of ${missions.length} missions`);
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error bulk creating missions:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -339,20 +308,13 @@ export class GamificationAdminController {
 				analyticsRetentionDays: 90
 			};
 
-			res.json({
-				success: true,
-				data: config,
-				meta: {
-					lastUpdated: new Date().toISOString(),
-					version: '1.0.0'
-				}
+			sendSuccessResponse(res, config, undefined, {
+				lastUpdated: new Date().toISOString(),
+				version: '1.0.0'
 			});
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error getting system config:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -367,24 +329,13 @@ export class GamificationAdminController {
 			// TODO: Implement actual config storage
 			logger.info('ADMIN_CONTROLLER', 'System config update requested:', configUpdate);
 
-			res.json({
-				success: true,
-				data: configUpdate,
-				message: 'System configuration updated successfully'
-			});
+			sendSuccessResponse(res, configUpdate, 'System configuration updated successfully');
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error updating system config:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -405,29 +356,18 @@ export class GamificationAdminController {
 				adminId: userService.getUserFromRequest(req)?.id
 			});
 
-			res.json({
-				success: true,
-				data: {
-					userId,
-					resetType,
-					reason,
-					resetAt: new Date().toISOString()
-				},
-				message: `User ${userId} ${resetType} progress reset successfully`
-			});
+			sendSuccessResponse(res, {
+				userId,
+				resetType,
+				reason,
+				resetAt: new Date().toISOString()
+			}, `User ${userId} ${resetType} progress reset successfully`);
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error resetting user progress:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -472,27 +412,17 @@ export class GamificationAdminController {
 					throw new AppError(`Unknown maintenance operation: ${operation}`, 400);
 			}
 
-			res.json({
-				success: true,
-				data: {
-					operation,
-					results,
-					completedAt: new Date().toISOString()
-				},
-				message: `Maintenance operation "${operation}" completed successfully`
-			});
+			sendSuccessResponse(res, {
+				operation,
+				results,
+				completedAt: new Date().toISOString()
+			}, `Maintenance operation "${operation}" completed successfully`);
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error performing maintenance:', error);
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, error.statusCode);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -517,23 +447,17 @@ export class GamificationAdminController {
 				}
 			];
 
-			res.json({
-				success: true,
-				data: {
-					logs,
-					meta: {
-						count: logs.length,
-						limit,
-						level
-					}
+			sendSuccessResponse(res, {
+				logs,
+				meta: {
+					count: logs.length,
+					limit,
+					level
 				}
 			});
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error getting system logs:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -573,20 +497,13 @@ export class GamificationAdminController {
 				results.push('Default level curve failed');
 			}
 
-			res.json({
-				success: true,
-				data: {
-					results,
-					completedAt: new Date().toISOString()
-				},
-				message: 'Default data seeding completed'
-			});
+			sendSuccessResponse(res, {
+				results,
+				completedAt: new Date().toISOString()
+			}, 'Default data seeding completed');
 		} catch (error) {
 			logger.error('ADMIN_CONTROLLER', 'Error seeding defaults:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 }

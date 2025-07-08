@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { userPromotionService } from './user-promotion.service';
 import { isAuthenticated, isAdmin } from '../auth/middleware/auth.middleware';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const router = Router();
 
@@ -90,7 +91,7 @@ router.get('/user-promotions', isAuthenticated, async (req, res) => {
 		};
 
 		const result = await userPromotionService.getUserPromotions(userId, filters);
-		res.json(result);
+		sendSuccessResponse(res, result);
 	} catch (error) {
 		logger.error('Get user promotions error:', error);
 		res.status(500).json({
@@ -119,7 +120,7 @@ router.post('/user-promotions/calculate-cost', isAuthenticated, async (req, res)
 			targetTime
 		);
 
-		res.json(costCalculation);
+		sendSuccessResponse(res, costCalculation);
 	} catch (error) {
 		logger.error('Calculate cost error:', error);
 		res.status(400).json({
@@ -147,12 +148,12 @@ router.post('/user-promotions/:id/extend', isAuthenticated, async (req, res) => 
 		// 4. Extend the promotion end time
 		// 5. Charge additional DGT
 
-		res.json({
-			success: true,
-			message: 'Promotion extension feature coming soon',
-			promotionId: id,
-			additionalHours
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			message: 'Promotion extension feature coming soon',
+        			promotionId: id,
+        			additionalHours
+        		});
 	} catch (error) {
 		logger.error('Extend promotion error:', error);
 		res.status(400).json({
@@ -179,11 +180,11 @@ router.delete('/user-promotions/:id', isAuthenticated, async (req, res) => {
 		// 4. Process refund to user's DGT balance
 		// 5. Update promotion status to 'cancelled'
 
-		res.json({
-			success: true,
-			message: 'Promotion cancellation feature coming soon',
-			promotionId: id
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			message: 'Promotion cancellation feature coming soon',
+        			promotionId: id
+        		});
 	} catch (error) {
 		logger.error('Cancel promotion error:', error);
 		res.status(400).json({
@@ -211,7 +212,7 @@ router.get('/user-promotions/:id/analytics', isAuthenticated, async (req, res) =
 				: undefined;
 
 		const analytics = await userPromotionService.getPromotionAnalytics(id, timeRange);
-		res.json(analytics);
+		sendSuccessResponse(res, analytics);
 	} catch (error) {
 		logger.error('Get promotion analytics error:', error);
 		res.status(500).json({
@@ -244,7 +245,7 @@ router.get('/announcement-slots/available', async (req, res) => {
 			startTime,
 			durationHours
 		);
-		res.json(availableSlots);
+		sendSuccessResponse(res, availableSlots);
 	} catch (error) {
 		logger.error('Get available slots error:', error);
 		res.status(500).json({
@@ -270,7 +271,7 @@ router.post('/announcement-slots/reserve', isAuthenticated, async (req, res) => 
 		}
 
 		await userPromotionService.reserveAnnouncementSlot(slotId, promotionId, userId);
-		res.json({ success: true, message: 'Slot reserved successfully' });
+		sendSuccessResponse(res, { success: true, message: 'Slot reserved successfully' });
 	} catch (error) {
 		logger.error('Reserve slot error:', error);
 		res.status(400).json({
@@ -289,10 +290,10 @@ router.get('/announcement-slots/active', async (req, res) => {
 		// TODO: Implement getting active announcement slots for display
 		// This would return currently active user promotions for the announcement bar
 
-		res.json({
-			announcements: [],
-			message: 'Active announcement slots feature coming soon'
-		});
+		sendSuccessResponse(res, {
+        			announcements: [],
+        			message: 'Active announcement slots feature coming soon'
+        		});
 	} catch (error) {
 		logger.error('Get active slots error:', error);
 		res.status(500).json({
@@ -313,7 +314,7 @@ router.get('/announcement-slots/active', async (req, res) => {
 router.get('/shoutbox/pins/active', async (req, res) => {
 	try {
 		const activePins = await userPromotionService.getActivePinnedMessages();
-		res.json(activePins);
+		sendSuccessResponse(res, activePins);
 	} catch (error) {
 		logger.error('Get active pins error:', error);
 		res.status(500).json({
@@ -346,7 +347,7 @@ router.post('/user-promotions/:id/track/:eventType', async (req, res) => {
 			metadata
 		);
 
-		res.json({ success: true });
+		sendSuccessResponse(res, { success: true });
 	} catch (error) {
 		logger.error('Track promotion event error:', error);
 		res.status(400).json({
@@ -373,7 +374,7 @@ router.get('/admin/user-promotions/pending', isAdmin, async (req, res) => {
 		};
 
 		const pendingPromotions = await userPromotionService.getPendingPromotions(filters);
-		res.json(pendingPromotions);
+		sendSuccessResponse(res, pendingPromotions);
 	} catch (error) {
 		logger.error('Get pending promotions error:', error);
 		res.status(500).json({
@@ -399,13 +400,13 @@ router.post('/admin/user-promotions/:id/moderate', isAdmin, async (req, res) => 
 
 		if (action === 'approve') {
 			await userPromotionService.approvePromotion(id, moderatorId, notes);
-			res.json({ success: true, message: 'Promotion approved successfully' });
+			sendSuccessResponse(res, { success: true, message: 'Promotion approved successfully' });
 		} else {
 			if (!rejectionReason) {
 				return res.status(400).json({ error: 'Rejection reason is required' });
 			}
 			await userPromotionService.rejectPromotion(id, moderatorId, rejectionReason);
-			res.json({ success: true, message: 'Promotion rejected successfully' });
+			sendSuccessResponse(res, { success: true, message: 'Promotion rejected successfully' });
 		}
 	} catch (error) {
 		logger.error('Moderate promotion error:', error);
@@ -430,13 +431,13 @@ router.get('/admin/user-promotions/analytics', isAdmin, async (req, res) => {
 		// - User engagement metrics
 		// - Moderation queue statistics
 
-		res.json({
-			totalPromotions: 0,
-			totalDgtSpent: 0,
-			activePromotions: 0,
-			pendingApproval: 0,
-			message: 'Admin analytics feature coming soon'
-		});
+		sendSuccessResponse(res, {
+        			totalPromotions: 0,
+        			totalDgtSpent: 0,
+        			activePromotions: 0,
+        			pendingApproval: 0,
+        			message: 'Admin analytics feature coming soon'
+        		});
 	} catch (error) {
 		logger.error('Get admin analytics error:', error);
 		res.status(500).json({

@@ -13,6 +13,7 @@ import { walletService } from '../../wallet/wallet.service';
 import { dgtService } from '../../wallet/dgt.service';
 import { walletConfig } from '@shared/wallet.config';
 import { UserTransformer } from "@server/src/domains/users/transformers/user.transformer";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 type User = typeof users.$inferSelect;
 
@@ -199,7 +200,7 @@ export function getCurrentUser(req: Request, res: Response) {
 	userResponse.isModerator = ['moderator', 'mod'].includes(userResponse.role);
 	userResponse.isSuperAdmin = userResponse.role === 'super_admin';
 
-	res.json(UserTransformer.toAuthenticatedSelf(userResponse));
+	sendSuccessResponse(res, UserTransformer.toAuthenticatedSelf(userResponse));
 }
 
 /**

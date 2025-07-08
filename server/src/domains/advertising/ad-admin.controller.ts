@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { adConfigurationService } from './ad-configuration.service';
 import { campaignManagementService } from './campaign-management.service';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 // Admin validation schemas
 const placementConfigSchema = z.object({
@@ -134,7 +135,7 @@ export class AdAdminController {
 		try {
 			// TODO: Verify admin permissions
 			const config = await adConfigurationService.getSystemConfiguration();
-			res.json(config);
+			sendSuccessResponse(res, config);
 		} catch (error) {
 			logger.error('Get system config error:', error);
 			res.status(500).json({
@@ -158,7 +159,7 @@ export class AdAdminController {
 				adminUserId
 			);
 
-			res.json(updatedConfig);
+			sendSuccessResponse(res, updatedConfig);
 		} catch (error) {
 			logger.error('Update system config error:', error);
 			res.status(400).json({
@@ -198,7 +199,7 @@ export class AdAdminController {
 
 			const placement = await adConfigurationService.updatePlacement(placementId, updates);
 
-			res.json(placement);
+			sendSuccessResponse(res, placement);
 		} catch (error) {
 			logger.error('Update placement error:', error);
 			res.status(400).json({
@@ -250,7 +251,7 @@ export class AdAdminController {
 				})
 			);
 
-			res.json(placementsWithAnalytics);
+			sendSuccessResponse(res, placementsWithAnalytics);
 		} catch (error) {
 			logger.error('List placements error:', error);
 			res.status(500).json({
@@ -295,7 +296,7 @@ export class AdAdminController {
 
 			const rule = await adConfigurationService.updateGlobalRule(ruleId, updates);
 
-			res.json(rule);
+			sendSuccessResponse(res, rule);
 		} catch (error) {
 			logger.error('Update rule error:', error);
 			res.status(400).json({
@@ -318,7 +319,7 @@ export class AdAdminController {
 
 			const rules = await adConfigurationService.listGlobalRules(filters);
 
-			res.json(rules);
+			sendSuccessResponse(res, rules);
 		} catch (error) {
 			logger.error('List rules error:', error);
 			res.status(500).json({
@@ -361,7 +362,7 @@ export class AdAdminController {
 				]
 			};
 
-			res.json(analytics);
+			sendSuccessResponse(res, analytics);
 		} catch (error) {
 			logger.error('Get platform analytics error:', error);
 			res.status(500).json({
@@ -393,7 +394,7 @@ export class AdAdminController {
 				filters: filters
 			};
 
-			res.json(campaigns);
+			sendSuccessResponse(res, campaigns);
 		} catch (error) {
 			logger.error('Get all campaigns error:', error);
 			res.status(500).json({
@@ -429,7 +430,7 @@ export class AdAdminController {
 				reason
 			};
 
-			res.json(result);
+			sendSuccessResponse(res, result);
 		} catch (error) {
 			logger.error('Review campaign error:', error);
 			res.status(400).json({
@@ -473,7 +474,7 @@ export class AdAdminController {
 
 			await adConfigurationService.executeGovernanceProposal(proposalId);
 
-			res.json({ success: true, message: 'Proposal executed successfully' });
+			sendSuccessResponse(res, { success: true, message: 'Proposal executed successfully' });
 		} catch (error) {
 			logger.error('Execute proposal error:', error);
 			res.status(400).json({
@@ -502,7 +503,7 @@ export class AdAdminController {
 				}
 			];
 
-			res.json(alerts);
+			sendSuccessResponse(res, alerts);
 		} catch (error) {
 			logger.error('Get fraud alerts error:', error);
 			res.status(500).json({
@@ -538,7 +539,7 @@ export class AdAdminController {
 				]
 			};
 
-			res.json(report);
+			sendSuccessResponse(res, report);
 		} catch (error) {
 			logger.error('Get revenue report error:', error);
 			res.status(500).json({
@@ -570,7 +571,7 @@ export class AdAdminController {
 				downloadUrl: '/api/admin/ads/downloads/export-12345.csv'
 			};
 
-			res.json(exportData);
+			sendSuccessResponse(res, exportData);
 		} catch (error) {
 			logger.error('Export analytics error:', error);
 			res.status(500).json({

@@ -1,10 +1,11 @@
 import type { Request, Response, NextFunction } from 'express';
 import { animationPackService } from './animation-packs.service';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 export const listPacks = async (_req: Request, res: Response, next: NextFunction) => {
 	try {
 		const data = await animationPackService.list();
-		res.json(data);
+		sendSuccessResponse(res, data);
 	} catch (err) {
 		next(err);
 	}
@@ -23,7 +24,7 @@ export const updatePack = async (req: Request, res: Response, next: NextFunction
 	try {
 		const id = req.params.id;
 		const pack = await animationPackService.update(id, req.body);
-		res.json(pack);
+		sendSuccessResponse(res, pack);
 	} catch (err) {
 		next(err);
 	}

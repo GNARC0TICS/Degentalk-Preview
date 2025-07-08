@@ -17,7 +17,13 @@ import {
 	getTemplatesByCategory
 } from './templates/achievement-templates';
 import { CloutTransformer } from '../transformers/clout.transformer';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse 
+} from '@server/src/core/utils/transformer.helpers';
 import { logger } from '../../../core/logger';
 import { db } from '@db';
 import { eq, and, desc, count } from 'drizzle-orm';
@@ -79,19 +85,13 @@ export class AchievementController {
 				achievement: CloutTransformer.toAuthenticatedAchievement(item.achievement, { id: userId })
 			}));
 
-			res.json({
-				success: true,
-				data: transformedData
-			});
+			sendSuccessResponse(res, transformedData);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to get user achievements', {
 				userId: req.params.userId,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			res.status(500).json({
-				success: false,
-				error: 'Failed to get user achievements'
-			});
+			sendErrorResponse(res, 'Failed to get user achievements', 500);
 		}
 	}
 
@@ -127,24 +127,17 @@ export class AchievementController {
 				parseInt(limit as string)
 			);
 
-			res.json({
-				success: true,
-				data: toPublicList(result.achievements, CloutTransformer.toPublicAchievement),
-				pagination: {
-					page: parseInt(page as string),
-					limit: parseInt(limit as string),
-					total: result.total,
-					pages: Math.ceil(result.total / parseInt(limit as string))
-				}
+			sendSuccessResponse(res, toPublicList(result.achievements, CloutTransformer.toPublicAchievement), undefined, {
+				page: parseInt(page as string),
+				limit: parseInt(limit as string),
+				total: result.total,
+				pages: Math.ceil(result.total / parseInt(limit as string))
 			});
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to get achievements', {
 				error: error instanceof Error ? error.message : String(error)
 			});
-			res.status(500).json({
-				success: false,
-				error: 'Failed to get achievements'
-			});
+			sendErrorResponse(res, 'Failed to get achievements', 500);
 		}
 	}
 
@@ -156,18 +149,12 @@ export class AchievementController {
 		try {
 			const stats = await this.adminService.getAchievementStats();
 
-			res.json({
-				success: true,
-				data: stats
-			});
+			sendSuccessResponse(res, stats);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to get achievement stats', {
 				error: error instanceof Error ? error.message : String(error)
 			});
-			res.status(500).json({
-				success: false,
-				error: 'Failed to get achievement stats'
-			});
+			sendErrorResponse(res, 'Failed to get achievement stats', 500);
 		}
 	}
 
@@ -181,26 +168,17 @@ export class AchievementController {
 			const achievement = await this.adminService.getAchievementById(id as AchievementId);
 
 			if (!achievement) {
-				res.status(404).json({
-					success: false,
-					error: 'Achievement not found'
-				});
+				sendErrorResponse(res, 'Achievement not found', 404);
 				return;
 			}
 
-			res.json({
-				success: true,
-				data: achievement
-			});
+			sendTransformedResponse(res, achievement, CloutTransformer.toPublicAchievement);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to get achievement', {
 				id: req.params.id,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			res.status(500).json({
-				success: false,
-				error: 'Failed to get achievement'
-			});
+			sendErrorResponse(res, 'Failed to get achievement', 500);
 		}
 	}
 
@@ -212,19 +190,14 @@ export class AchievementController {
 		try {
 			const achievement = await this.adminService.createAchievement(req.body);
 
-			res.status(201).json({
-				success: true,
-				data: achievement
-			});
+			res.status(201);
+			sendTransformedResponse(res, achievement, CloutTransformer.toAdminAchievement);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to create achievement', {
 				body: req.body,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			res.status(400).json({
-				success: false,
-				error: error instanceof Error ? error.message : 'Failed to create achievement'
-			});
+			sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to create achievement', 400);
 		}
 	}
 
@@ -237,20 +210,14 @@ export class AchievementController {
 			const { id } = req.params;
 			const achievement = await this.adminService.updateAchievement(id as AchievementId, req.body);
 
-			res.json({
-				success: true,
-				data: achievement
-			});
+			sendTransformedResponse(res, achievement, CloutTransformer.toAdminAchievement);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to update achievement', {
 				id: req.params.id,
 				body: req.body,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			res.status(400).json({
-				success: false,
-				error: error instanceof Error ? error.message : 'Failed to update achievement'
-			});
+			sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to update achievement', 400);
 		}
 	}
 
@@ -263,19 +230,13 @@ export class AchievementController {
 			const { id } = req.params;
 			await this.adminService.deleteAchievement(id as AchievementId);
 
-			res.json({
-				success: true,
-				message: 'Achievement deleted successfully'
-			});
+			sendSuccessResponse(res, undefined, 'Achievement deleted successfully');
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to delete achievement', {
 				id: req.params.id,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			res.status(400).json({
-				success: false,
-				error: error instanceof Error ? error.message : 'Failed to delete achievement'
-			});
+			sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to delete achievement', 400);
 		}
 	}
 
@@ -288,20 +249,13 @@ export class AchievementController {
 			const { ids, updates } = req.body;
 			const achievements = await this.adminService.bulkUpdateAchievements(ids, updates);
 
-			res.json({
-				success: true,
-				data: achievements,
-				message: `Updated ${achievements.length} achievements`
-			});
+			sendTransformedListResponse(res, achievements, CloutTransformer.toAdminAchievement, `Updated ${achievements.length} achievements`);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to bulk update achievements', {
 				body: req.body,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			res.status(400).json({
-				success: false,
-				error: error instanceof Error ? error.message : 'Failed to bulk update achievements'
-			});
+			sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to bulk update achievements', 400);
 		}
 	}
 
@@ -320,25 +274,18 @@ export class AchievementController {
 				parseInt(limit as string)
 			);
 
-			res.json({
-				success: true,
-				data: result.completions,
-				pagination: {
-					page: parseInt(page as string),
-					limit: parseInt(limit as string),
-					total: result.total,
-					pages: Math.ceil(result.total / parseInt(limit as string))
-				}
+			sendSuccessResponse(res, result.completions, undefined, {
+				page: parseInt(page as string),
+				limit: parseInt(limit as string),
+				total: result.total,
+				pages: Math.ceil(result.total / parseInt(limit as string))
 			});
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to get achievement completions', {
 				id: req.params.id,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			res.status(500).json({
-				success: false,
-				error: 'Failed to get achievement completions'
-			});
+			sendErrorResponse(res, 'Failed to get achievement completions', 500);
 		}
 	}
 
@@ -353,20 +300,14 @@ export class AchievementController {
 
 			await this.adminService.manuallyAwardAchievement(id as AchievementId, userIds, reason);
 
-			res.json({
-				success: true,
-				message: `Achievement awarded to ${userIds.length} users`
-			});
+			sendSuccessResponse(res, undefined, `Achievement awarded to ${userIds.length} users`);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to manually award achievement', {
 				id: req.params.id,
 				body: req.body,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			res.status(400).json({
-				success: false,
-				error: error instanceof Error ? error.message : 'Failed to award achievement'
-			});
+			sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to award achievement', 400);
 		}
 	}
 
@@ -401,10 +342,7 @@ export class AchievementController {
 			];
 
 			if (!validEventTypes.includes(eventType)) {
-				res.status(400).json({
-					success: false,
-					error: 'Invalid event type'
-				});
+				sendErrorResponse(res, 'Invalid event type', 400);
 				return;
 			}
 
@@ -414,19 +352,13 @@ export class AchievementController {
 			// Process the event
 			await this.processorService.processEvent(eventType, userId, eventData);
 
-			res.json({
-				success: true,
-				message: 'Event emitted and processed successfully'
-			});
+			sendSuccessResponse(res, undefined, 'Event emitted and processed successfully');
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to emit achievement event', {
 				body: req.body,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			res.status(400).json({
-				success: false,
-				error: error instanceof Error ? error.message : 'Failed to emit event'
-			});
+			sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to emit event', 400);
 		}
 	}
 
@@ -449,19 +381,13 @@ export class AchievementController {
 				templates = getAllAchievementTemplates();
 			}
 
-			res.json({
-				success: true,
-				data: templates
-			});
+			sendSuccessResponse(res, templates);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to get achievement templates', {
 				query: req.query,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			res.status(500).json({
-				success: false,
-				error: 'Failed to get achievement templates'
-			});
+			sendErrorResponse(res, 'Failed to get achievement templates', 500);
 		}
 	}
 
@@ -475,10 +401,7 @@ export class AchievementController {
 			const template = getTemplateById(templateId);
 
 			if (!template) {
-				res.status(404).json({
-					success: false,
-					error: 'Template not found'
-				});
+				sendErrorResponse(res, 'Template not found', 404);
 				return;
 			}
 
@@ -499,21 +422,15 @@ export class AchievementController {
 
 			const achievement = await this.adminService.createAchievement(finalData);
 
-			res.status(201).json({
-				success: true,
-				data: achievement,
-				message: `Achievement created from template: ${template.templateName}`
-			});
+			res.status(201);
+			sendTransformedResponse(res, achievement, CloutTransformer.toAdminAchievement, `Achievement created from template: ${template.templateName}`);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Failed to create achievement from template', {
 				templateId: req.params.templateId,
 				body: req.body,
 				error: error instanceof Error ? error.message : String(error)
 			});
-			res.status(400).json({
-				success: false,
-				error: error instanceof Error ? error.message : 'Failed to create achievement from template'
-			});
+			sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to create achievement from template', 400);
 		}
 	}
 }

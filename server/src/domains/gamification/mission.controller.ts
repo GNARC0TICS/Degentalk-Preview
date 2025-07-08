@@ -10,7 +10,13 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { missionsService, MissionsService } from '../../domains/missions/missions.service';
 import { MissionsTransformer } from '../../domains/missions/transformers/missions.transformer';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse 
+} from '@server/src/core/utils/transformer.helpers';
 import { logger } from '../../core/logger';
 import { AppError } from '../../core/errors';
 
@@ -124,32 +130,22 @@ export class MissionController {
 				other: grouped.other ? toPublicList(grouped.other, MissionsTransformer.toPublicMission) : []
 			};
 
-			res.json({
-				success: true,
-				data: {
-					missions: transformedMissions,
-					grouped: transformedGrouped,
-					stats: {
-						total: missions.length,
-						daily: grouped.daily?.length || 0,
-						weekly: grouped.weekly?.length || 0,
-						other: grouped.other?.length || 0
-					}
+			sendSuccessResponse(res, {
+				missions: transformedMissions,
+				grouped: transformedGrouped,
+				stats: {
+					total: missions.length,
+					daily: grouped.daily?.length || 0,
+					weekly: grouped.weekly?.length || 0,
+					other: grouped.other?.length || 0
 				}
 			});
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error getting missions:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -184,43 +180,33 @@ export class MissionController {
 				return sum + xp + dgt * 2;
 			}, 0);
 
-			res.json({
-				success: true,
-				data: {
-					all: toPublicList(userProgress, MissionsTransformer.toAuthenticatedMission),
-					completed: toPublicList(completed, MissionsTransformer.toAuthenticatedMission),
-					readyToClaim: toPublicList(readyToClaim, MissionsTransformer.toAuthenticatedMission),
-					inProgress: toPublicList(inProgress, MissionsTransformer.toAuthenticatedMission),
-					notStarted: toPublicList(notStarted, MissionsTransformer.toAuthenticatedMission),
-					claimed: toPublicList(claimed, MissionsTransformer.toAuthenticatedMission),
-					stats: {
-						total: userProgress.length,
-						completed: completed.length,
-						readyToClaim: readyToClaim.length,
-						inProgress: inProgress.length,
-						claimed: claimed.length,
-						completionRate:
-							userProgress.length > 0 ? (claimed.length / userProgress.length) * 100 : 0,
-						earnedRewards,
-						totalPossibleRewards,
-						rewardEfficiency:
-							totalPossibleRewards > 0 ? (earnedRewards / totalPossibleRewards) * 100 : 0
-					}
+			sendSuccessResponse(res, {
+				all: toPublicList(userProgress, MissionsTransformer.toAuthenticatedMission),
+				completed: toPublicList(completed, MissionsTransformer.toAuthenticatedMission),
+				readyToClaim: toPublicList(readyToClaim, MissionsTransformer.toAuthenticatedMission),
+				inProgress: toPublicList(inProgress, MissionsTransformer.toAuthenticatedMission),
+				notStarted: toPublicList(notStarted, MissionsTransformer.toAuthenticatedMission),
+				claimed: toPublicList(claimed, MissionsTransformer.toAuthenticatedMission),
+				stats: {
+					total: userProgress.length,
+					completed: completed.length,
+					readyToClaim: readyToClaim.length,
+					inProgress: inProgress.length,
+					claimed: claimed.length,
+					completionRate:
+						userProgress.length > 0 ? (claimed.length / userProgress.length) * 100 : 0,
+					earnedRewards,
+					totalPossibleRewards,
+					rewardEfficiency:
+						totalPossibleRewards > 0 ? (earnedRewards / totalPossibleRewards) * 100 : 0
 				}
 			});
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error getting user missions:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -242,15 +228,9 @@ export class MissionController {
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error getting user missions:', error);
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, error.statusCode);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -274,29 +254,15 @@ export class MissionController {
 				throw new AppError(result.message || 'Failed to claim reward', 400);
 			}
 
-			res.json({
-				success: true,
-				data: result.rewards,
-				message: 'Mission reward claimed successfully'
-			});
+			sendSuccessResponse(res, result.rewards, 'Mission reward claimed successfully');
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error claiming mission reward:', error);
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, error.statusCode);
 			} else if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -318,34 +284,22 @@ export class MissionController {
 			// Check if any missions were completed
 			const completedMissions = updatedProgress.filter((p) => p.isCompleted);
 
-			res.json({
-				success: true,
-				data: {
-					updatedProgress: toPublicList(updatedProgress, MissionsTransformer.toAuthenticatedMission),
-					completedMissions: toPublicList(completedMissions, MissionsTransformer.toAuthenticatedMission),
-					stats: {
-						updated: updatedProgress.length,
-						completed: completedMissions.length
-					}
-				},
-				message:
-					completedMissions.length > 0
-						? `${completedMissions.length} mission(s) completed!`
-						: 'Progress updated'
-			});
+			sendSuccessResponse(res, {
+				updatedProgress: toPublicList(updatedProgress, MissionsTransformer.toAuthenticatedMission),
+				completedMissions: toPublicList(completedMissions, MissionsTransformer.toAuthenticatedMission),
+				stats: {
+					updated: updatedProgress.length,
+					completed: completedMissions.length
+				}
+			}, completedMissions.length > 0
+				? `${completedMissions.length} mission(s) completed!`
+				: 'Progress updated');
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error updating mission progress:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -367,22 +321,13 @@ export class MissionController {
 				throw new AppError('Mission not found', 404);
 			}
 
-			res.json({
-				success: true,
-				data: MissionsTransformer.toPublicMission(mission)
-			});
+			sendTransformedResponse(res, mission, MissionsTransformer.toPublicMission);
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error getting mission by ID:', error);
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, error.statusCode);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -397,24 +342,14 @@ export class MissionController {
 
 			const mission = await this.service.createMission(missionData);
 
-			res.status(201).json({
-				success: true,
-				data: MissionsTransformer.toAdminMission(mission),
-				message: `Mission "${mission.title}" created successfully`
-			});
+			res.status(201);
+			sendTransformedResponse(res, mission, MissionsTransformer.toAdminMission, `Mission "${mission.title}" created successfully`);
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error creating mission:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -438,29 +373,15 @@ export class MissionController {
 				throw new AppError('Mission not found', 404);
 			}
 
-			res.json({
-				success: true,
-				data: MissionsTransformer.toAdminMission(mission),
-				message: `Mission "${mission.title}" updated successfully`
-			});
+			sendTransformedResponse(res, mission, MissionsTransformer.toAdminMission, `Mission "${mission.title}" updated successfully`);
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error updating mission:', error);
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, error.statusCode);
 			} else if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -473,16 +394,10 @@ export class MissionController {
 		try {
 			await this.service.resetDailyMissions();
 
-			res.json({
-				success: true,
-				message: 'Daily missions reset successfully'
-			});
+			sendSuccessResponse(res, undefined, 'Daily missions reset successfully');
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error resetting daily missions:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -494,16 +409,10 @@ export class MissionController {
 		try {
 			await this.service.resetWeeklyMissions();
 
-			res.json({
-				success: true,
-				message: 'Weekly missions reset successfully'
-			});
+			sendSuccessResponse(res, undefined, 'Weekly missions reset successfully');
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error resetting weekly missions:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -515,16 +424,10 @@ export class MissionController {
 		try {
 			await this.service.createDefaultMissions();
 
-			res.json({
-				success: true,
-				message: 'Default missions created successfully'
-			});
+			sendSuccessResponse(res, undefined, 'Default missions created successfully');
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error seeding default missions:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -537,19 +440,13 @@ export class MissionController {
 			// TODO: Implement comprehensive mission analytics
 			// This would include completion rates, popular missions, user engagement, etc.
 
-			res.json({
-				success: true,
-				data: {
-					message: 'Mission analytics endpoint - to be implemented',
-					placeholder: true
-				}
+			sendSuccessResponse(res, {
+				message: 'Mission analytics endpoint - to be implemented',
+				placeholder: true
 			});
 		} catch (error) {
 			logger.error('MISSION_CONTROLLER', 'Error getting mission analytics:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 }

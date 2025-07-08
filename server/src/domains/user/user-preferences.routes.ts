@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { UserPreferencesService } from './user-preferences.service';
 import { requireAuth } from '../auth/middleware/auth.middleware';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const router = Router();
 
@@ -44,7 +45,7 @@ router.get('/social-preferences', requireAuth, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const preferences = await UserPreferencesService.getSocialPreferences(userId);
-		res.json(preferences);
+		sendSuccessResponse(res, preferences);
 	} catch (error) {
 		logger.error('Error fetching social preferences:', error);
 		res.status(500).json({
@@ -68,7 +69,7 @@ router.put('/social-preferences', requireAuth, async (req, res) => {
 			validatedData
 		);
 
-		res.json(updatedPreferences);
+		sendSuccessResponse(res, updatedPreferences);
 	} catch (error) {
 		logger.error('Error updating social preferences:', error);
 		if (error instanceof z.ZodError) {
@@ -93,7 +94,7 @@ router.get('/privacy-summary', requireAuth, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const summary = await UserPreferencesService.getPrivacySummary(userId);
-		res.json(summary);
+		sendSuccessResponse(res, summary);
 	} catch (error) {
 		logger.error('Error fetching privacy summary:', error);
 		res.status(500).json({
@@ -111,7 +112,7 @@ router.post('/reset-social-preferences', requireAuth, async (req, res) => {
 	try {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const defaultPreferences = await UserPreferencesService.resetSocialPreferences(userId);
-		res.json(defaultPreferences);
+		sendSuccessResponse(res, defaultPreferences);
 	} catch (error) {
 		logger.error('Error resetting social preferences:', error);
 		res.status(500).json({

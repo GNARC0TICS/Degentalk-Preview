@@ -4,6 +4,7 @@ import { adServingService } from './ad-serving.service';
 import { campaignManagementService } from './campaign-management.service';
 import { adConfigurationService } from './ad-configuration.service';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 // Request validation schemas
 const adRequestSchema = z.object({
@@ -110,7 +111,7 @@ export class AdController {
 				Vary: 'User-Agent, Accept-Encoding'
 			});
 
-			res.json(adResponse);
+			sendSuccessResponse(res, adResponse);
 		} catch (error) {
 			logger.error('Ad serving error:', error);
 			res.status(500).json({
@@ -192,7 +193,7 @@ export class AdController {
 
 			const campaign = await campaignManagementService.getCampaign(campaignId, advertiserUserId);
 
-			res.json(campaign);
+			sendSuccessResponse(res, campaign);
 		} catch (error) {
 			logger.error('Get campaign error:', error);
 			res.status(404).json({
@@ -219,7 +220,7 @@ export class AdController {
 
 			const result = await campaignManagementService.listCampaigns(advertiserUserId, filters);
 
-			res.json(result);
+			sendSuccessResponse(res, result);
 		} catch (error) {
 			logger.error('List campaigns error:', error);
 			res.status(500).json({
@@ -247,7 +248,7 @@ export class AdController {
 				updateData
 			);
 
-			res.json(campaign);
+			sendSuccessResponse(res, campaign);
 		} catch (error) {
 			logger.error('Update campaign error:', error);
 			res.status(400).json({
@@ -297,7 +298,7 @@ export class AdController {
 
 			const analytics = await campaignManagementService.getCampaignAnalytics(campaignId, timeRange);
 
-			res.json(analytics);
+			sendSuccessResponse(res, analytics);
 		} catch (error) {
 			logger.error('Get analytics error:', error);
 			res.status(500).json({
@@ -317,7 +318,7 @@ export class AdController {
 
 			const recommendations = await campaignManagementService.getBidRecommendations(campaignId);
 
-			res.json(recommendations);
+			sendSuccessResponse(res, recommendations);
 		} catch (error) {
 			logger.error('Get bid recommendations error:', error);
 			res.status(500).json({
@@ -338,7 +339,7 @@ export class AdController {
 
 			const result = await campaignManagementService.optimizeCampaign(campaignId, advertiserUserId);
 
-			res.json(result);
+			sendSuccessResponse(res, result);
 		} catch (error) {
 			logger.error('Optimize campaign error:', error);
 			res.status(500).json({
@@ -375,7 +376,7 @@ export class AdController {
 				maxDailyImpressions: placement.maxDailyImpressions
 			}));
 
-			res.json(publicPlacements);
+			sendSuccessResponse(res, publicPlacements);
 		} catch (error) {
 			logger.error('Get placements error:', error);
 			res.status(500).json({
@@ -408,7 +409,7 @@ export class AdController {
 				}
 			};
 
-			res.json(publicConfig);
+			sendSuccessResponse(res, publicConfig);
 		} catch (error) {
 			logger.error('Get config error:', error);
 			res.status(500).json({

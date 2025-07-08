@@ -5,6 +5,7 @@ import { db } from '@server/src/core/db';
 import { users } from '@schema/user/users';
 import { eq } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 // Environment variables required
 const { X_CLIENT_ID, X_CLIENT_SECRET, X_CALLBACK_URL } = process.env as Record<string, string>;
@@ -142,7 +143,7 @@ export async function unlinkXAccount(req: Request, res: Response, next: NextFunc
 			})
 			.where(eq(users.id, (userService.getUserFromRequest(req) as any).id));
 
-		return res.json({ success: true });
+		sendSuccessResponse(res, { success: true });
 	} catch (err) {
 		return next(err);
 	}

@@ -23,6 +23,10 @@ import { isAuthenticated } from '../../auth/middleware/auth.middleware';
 import { storage } from '../../../../storage';
 import { asyncHandler } from '@server/src/core/errors'; // Assuming asyncHandler is in core errors
 import { getUserIdFromRequest } from '@server/src/utils/auth';
+import { 
+	sendSuccessResponse,
+	sendErrorResponse
+} from '@server/src/core/utils/transformer.helpers';
 import { logger } from "../../../core/logger";
 
 const router = Router();
@@ -51,8 +55,9 @@ router.get(
 			// Execute query and sort by position
 			const rules = await query.orderBy(forumRules.position);
 
-			return res.status(200).json({
-				data: rules,
+			res.status(200);
+			return sendSuccessResponse(res, {
+				rules,
 				count: rules.length
 			});
 		} catch (error) {
@@ -88,7 +93,8 @@ router.get(
 				return res.status(403).json({ error: 'This rule is not published' });
 			}
 
-			return res.status(200).json({ rule });
+			res.status(200);
+			return sendSuccessResponse(res, rule);
 		} catch (error) {
 			logger.error('Error fetching forum rule:', error);
 			return res.status(500).json({ error: 'Failed to fetch forum rule' });
@@ -137,7 +143,8 @@ router.get(
 				agreedRequiredRuleIds.includes(rule.id)
 			);
 
-			return res.status(200).json({
+			res.status(200);
+			return sendSuccessResponse(res, {
 				agreements,
 				requiredRules,
 				allRequiredRulesAgreed,
@@ -257,11 +264,11 @@ router.post(
 				}
 			}
 
-			return res.status(200).json({
+			res.status(200);
+			return sendSuccessResponse(res, {
 				success: true,
-				message: 'Successfully agreed to rules',
 				ruleIds
-			});
+			}, 'Successfully agreed to rules');
 		} catch (error) {
 			logger.error('Error agreeing to rules:', error);
 			return res.status(500).json({ error: 'Failed to process rule agreements' });

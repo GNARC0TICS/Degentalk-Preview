@@ -6,6 +6,10 @@ import { logger } from '@server/src/core/logger';
 import { adminCreateAuditLogEntry } from '../../shared/admin-operation-utils';
 import { getUserId } from '../../admin.middleware';
 import { z } from 'zod';
+import { 
+	sendSuccessResponse,
+	sendErrorResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 const databaseService = new DatabaseService();
 const queryService = new QueryService();
@@ -59,10 +63,7 @@ export async function getTables(req: Request, res: Response) {
 			details: `Viewed database table list (${tables.length} tables)`
 		});
 
-		res.json({
-			success: true,
-			data: tables
-		});
+		sendSuccessResponse(res, tables);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error getting tables', { error: error.message });
 		res.status(500).json({
@@ -96,10 +97,7 @@ export async function getTableSchema(req: Request, res: Response) {
 			details: `Viewed schema for table: ${table}`
 		});
 
-		res.json({
-			success: true,
-			data: schema
-		});
+		sendSuccessResponse(res, schema);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error getting table schema', {
 			error: error.message,
@@ -139,10 +137,7 @@ export async function getTableData(req: Request, res: Response) {
 			});
 		}
 
-		res.json({
-			success: true,
-			data: result
-		});
+		sendSuccessResponse(res, result);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error getting table data', {
 			error: error.message,
@@ -209,10 +204,7 @@ export async function updateRow(req: Request, res: Response) {
 			}
 		});
 
-		res.json({
-			success: true,
-			data: result
-		});
+		sendSuccessResponse(res, result);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error updating row', { error: error.message });
 		res.status(500).json({
@@ -271,10 +263,7 @@ export async function createRow(req: Request, res: Response) {
 			}
 		});
 
-		res.json({
-			success: true,
-			data: result
-		});
+		sendSuccessResponse(res, result);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error creating row', { error: error.message });
 		res.status(500).json({
@@ -326,10 +315,7 @@ export async function deleteRow(req: Request, res: Response) {
 			}
 		});
 
-		res.json({
-			success: true,
-			data: result
-		});
+		sendSuccessResponse(res, result);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error deleting row', { error: error.message });
 		res.status(500).json({
@@ -393,10 +379,7 @@ export async function bulkOperation(req: Request, res: Response) {
 			}
 		});
 
-		res.json({
-			success: true,
-			data: result
-		});
+		sendSuccessResponse(res, result);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error performing bulk operation', { error: error.message });
 		res.status(500).json({
@@ -469,10 +452,7 @@ export async function getTableRelationships(req: Request, res: Response) {
 			details: `Viewed relationships for table: ${table}`
 		});
 
-		res.json({
-			success: true,
-			data: relationships
-		});
+		sendSuccessResponse(res, relationships);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error getting table relationships', {
 			error: error.message,
@@ -501,10 +481,7 @@ export async function getDatabaseStats(req: Request, res: Response) {
 			details: 'Viewed database statistics'
 		});
 
-		res.json({
-			success: true,
-			data: stats
-		});
+		sendSuccessResponse(res, stats);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error getting database stats', { error: error.message });
 		res.status(500).json({

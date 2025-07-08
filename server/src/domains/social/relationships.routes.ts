@@ -16,7 +16,13 @@ import { isAuthenticated, isAdminOrModerator, isAdmin } from '../auth/middleware
 import { getUserIdFromRequest } from '@server/src/utils/auth';
 import { logger } from "../../core/logger";
 import { UserTransformer } from '@server/src/domains/users/transformers/user.transformer';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -47,7 +53,8 @@ router.get('/:userId/followers', async (req: Request, res: Response) => {
 			)
 			.orderBy(desc(userRelationships.createdAt));
 
-		return res.status(200).json(toPublicList(followers, UserTransformer.toPublicUser));
+		res.status(200);
+		return sendTransformedListResponse(res, followers, UserTransformer.toPublicUser);
 	} catch (error) {
 		logger.error('Error fetching followers:', error);
 		return res.status(500).json({ message: 'Error fetching followers' });
@@ -81,7 +88,8 @@ router.get('/:userId/following', async (req: Request, res: Response) => {
 			)
 			.orderBy(desc(userRelationships.createdAt));
 
-		return res.status(200).json(toPublicList(following, UserTransformer.toPublicUser));
+		res.status(200);
+		return sendTransformedListResponse(res, following, UserTransformer.toPublicUser);
 	} catch (error) {
 		logger.error('Error fetching following:', error);
 		return res.status(500).json({ message: 'Error fetching following' });
@@ -145,10 +153,8 @@ router.post('/follow/:userId', isAuthenticated, async (req: Request, res: Respon
 			})
 			.returning();
 
-		return res.status(201).json({
-			message: 'Successfully followed user',
-			relationship: newRelationship[0]
-		});
+		res.status(201);
+		return sendSuccessResponse(res, { relationship: newRelationship[0] }, 'Successfully followed user');
 	} catch (error) {
 		logger.error('Error following user:', error);
 		return res.status(500).json({ message: 'Error following user' });
@@ -196,7 +202,8 @@ router.delete('/unfollow/:userId', isAuthenticated, async (req: Request, res: Re
 				)
 			);
 
-		return res.status(200).json({ message: 'Successfully unfollowed user' });
+		res.status(200);
+		return sendSuccessResponse(res, null, 'Successfully unfollowed user');
 	} catch (error) {
 		logger.error('Error unfollowing user:', error);
 		return res.status(500).json({ message: 'Error unfollowing user' });
@@ -229,7 +236,8 @@ router.get('/is-following/:userId', isAuthenticated, async (req: Request, res: R
 				)
 			);
 
-		return res.status(200).json({ isFollowing: existingRelationship.length > 0 });
+		res.status(200);
+		return sendSuccessResponse(res, { isFollowing: existingRelationship.length > 0 });
 	} catch (error) {
 		logger.error('Error checking follow status:', error);
 		return res.status(500).json({ message: 'Error checking follow status' });

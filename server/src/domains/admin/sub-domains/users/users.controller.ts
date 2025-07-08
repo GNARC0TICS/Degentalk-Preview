@@ -14,7 +14,13 @@ import type { UserId, AdminId } from '@shared/types/ids';
 import { toId, isValidId } from '@shared/utils/id';
 import { logger } from '../../../../core/logger';
 import { UserTransformer } from '@server/src/domains/users/transformers/user.transformer';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 export class AdminUsersController {
 	/**
@@ -25,12 +31,9 @@ export class AdminUsersController {
 			const query = validateQueryParams(req, res, AdminPaginationQuery);
 			if (!query) return;
 			const users = await adminUsersService.getUsers(query);
-			return res.json({
-				success: true,
-				data: {
-					...users,
-					users: toPublicList(users.users, UserTransformer.toAdminUserDetail)
-				}
+			return sendSuccessResponse(res, {
+				...users,
+				users: toPublicList(users.users, UserTransformer.toAdminUserDetail)
 			});
 		} catch (error) {
 			if (error instanceof AdminError) {
@@ -62,10 +65,7 @@ export class AdminUsersController {
 
 			const userId = toId<'User'>(userIdParam);
 			const userData = await adminUsersService.getUserById(userId);
-			return res.json({
-				success: true,
-				data: UserTransformer.toAdminUserDetail(userData)
-			});
+			return sendTransformedResponse(res, userData, UserTransformer.toAdminUserDetail);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -104,11 +104,7 @@ export class AdminUsersController {
 				changes: data
 			});
 
-			return res.json({
-				success: true,
-				data: UserTransformer.toAdminUserDetail(updatedUser),
-				message: 'User updated successfully'
-			});
+			return sendTransformedResponse(res, updatedUser, UserTransformer.toAdminUserDetail, 'User updated successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -143,11 +139,8 @@ export class AdminUsersController {
 				userData: dataCreate
 			});
 
-			return res.status(201).json({
-				success: true,
-				data: UserTransformer.toAdminUserDetail(newUser),
-				message: 'User created successfully'
-			});
+			res.status(201);
+			return sendTransformedResponse(res, newUser, UserTransformer.toAdminUserDetail, 'User created successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -182,10 +175,7 @@ export class AdminUsersController {
 			// Log admin action
 			await adminController.logAction(req, 'DELETE_USER', 'user', userId, {});
 
-			return res.json({
-				success: true,
-				message: 'User deleted successfully'
-			});
+			return sendSuccessResponse(res, null, 'User deleted successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -223,10 +213,7 @@ export class AdminUsersController {
 				reason
 			});
 
-			return res.json({
-				success: true,
-				message: 'User banned successfully'
-			});
+			return sendSuccessResponse(res, null, 'User banned successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -261,10 +248,7 @@ export class AdminUsersController {
 			// Log admin action
 			await adminController.logAction(req, 'UNBAN_USER', 'user', userId, {});
 
-			return res.json({
-				success: true,
-				message: 'User unbanned successfully'
-			});
+			return sendSuccessResponse(res, null, 'User unbanned successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -309,11 +293,7 @@ export class AdminUsersController {
 				newRole: role
 			});
 
-			return res.json({
-				success: true,
-				data: updatedUser,
-				message: 'User role updated successfully'
-			});
+			return sendSuccessResponse(res, updatedUser, 'User role updated successfully');
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -336,10 +316,7 @@ export class AdminUsersController {
 		try {
 			const term = req.query.term as string;
 			if (!term || term.length < 3) {
-				return res.status(200).json({
-					success: true,
-					data: { users: [] }
-				});
+				return sendSuccessResponse(res, { users: [] });
 			}
 
 			// Search users by username or ID and include clout data
@@ -399,10 +376,7 @@ export class AdminUsersController {
 				};
 			});
 
-			return res.status(200).json({
-				success: true,
-				data: { users: transformedResults }
-			});
+			return sendSuccessResponse(res, { users: transformedResults });
 		} catch (error) {
 			logger.error('Error searching users:', error);
 			return res.status(500).json({

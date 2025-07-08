@@ -4,6 +4,7 @@ import { adAdminController } from './ad-admin.controller';
 import { adConfigurationService } from './ad-configuration.service';
 import { userPromotionRoutes } from './user-promotion.routes';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const router = Router();
 
@@ -128,7 +129,7 @@ router.post('/governance/proposals/:proposalId/vote', async (req, res) => {
 
 		await adConfigurationService.voteOnProposal(proposalId, voterUserId, vote, votingPower, reason);
 
-		res.json({ success: true, message: 'Vote recorded successfully' });
+		sendSuccessResponse(res, { success: true, message: 'Vote recorded successfully' });
 	} catch (error) {
 		logger.error('Vote error:', error);
 		res.status(400).json({

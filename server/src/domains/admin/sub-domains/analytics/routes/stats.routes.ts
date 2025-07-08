@@ -10,6 +10,7 @@ import { eq } from 'drizzle-orm';
 import { platformStatsService } from '../services/platformStats.service';
 import { isAdmin } from '../../../../auth/middleware/auth.middleware';
 import { logger } from '../../../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const router = Router();
 
@@ -45,7 +46,7 @@ router.get('/', async (req, res) => {
 			lastUpdated: latestStat?.lastUpdatedAt || new Date()
 		};
 
-		res.json(response);
+		sendSuccessResponse(res, response);
 	} catch (error) {
 		logger.error('Error fetching platform statistics:', error);
 		res.status(500).json({ error: 'Failed to fetch platform statistics' });
@@ -70,11 +71,11 @@ router.get('/:key', async (req, res) => {
 			return res.status(404).json({ error: `Statistic '${key}' not found` });
 		}
 
-		res.json({
-			key: stat.statKey,
-			value: Number(stat.statValue),
-			lastUpdated: stat.lastUpdatedAt
-		});
+		sendSuccessResponse(res, {
+        			key: stat.statKey,
+        			value: Number(stat.statValue),
+        			lastUpdated: stat.lastUpdatedAt
+        		});
 	} catch (error) {
 		logger.error('Error fetching platform statistic:', error);
 		res.status(500).json({ error: 'Failed to fetch platform statistic' });
@@ -90,10 +91,10 @@ router.post('/refresh', async (req, res) => {
 	try {
 		const stats = await platformStatsService.updateAllStats();
 
-		res.json({
-			message: 'Platform statistics refreshed successfully',
-			stats
-		});
+		sendSuccessResponse(res, {
+        			message: 'Platform statistics refreshed successfully',
+        			stats
+        		});
 	} catch (error) {
 		logger.error('Error refreshing platform statistics:', error);
 		res.status(500).json({ error: 'Failed to refresh platform statistics' });

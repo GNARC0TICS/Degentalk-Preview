@@ -6,7 +6,13 @@ import { requireAuth } from '../../../middleware/auth';
 import { z } from 'zod';
 import { logger } from "../../core/logger";
 import { UserTransformer } from '@server/src/domains/users/transformers/user.transformer';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -73,7 +79,8 @@ router.post('/request', requireAuth, async (req, res) => {
 			message
 		});
 
-		res.status(201).json(request);
+		res.status(201);
+		sendSuccessResponse(res, request);
 	} catch (error) {
 		logger.error('Error sending friend request:', error);
 		if (error instanceof Error) {
@@ -95,7 +102,7 @@ router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
 
 		const result = await FriendsService.respondToFriendRequest(requestId, response);
 
-		res.json(result); // result is already a safe object
+		sendSuccessResponse(res, result);
 	} catch (error) {
 		logger.error('Error responding to friend request:', error);
 		if (error instanceof Error) {
@@ -117,7 +124,7 @@ router.delete('/', requireAuth, async (req, res) => {
 
 		await FriendsService.removeFriend(userId, friendId);
 
-		res.json({ success: true });
+		sendSuccessResponse(res, null);
 	} catch (error) {
 		logger.error('Error removing friend:', error);
 		if (error instanceof Error) {
@@ -139,7 +146,7 @@ router.get('/', requireAuth, async (req, res) => {
 
 		const friends = await FriendsService.getUserFriends(userId, page, limit);
 
-		res.json({
+		sendSuccessResponse(res, {
 			friends: toPublicList(friends, UserTransformer.toPublicUser),
 			pagination: {
 				page,
@@ -162,7 +169,7 @@ router.get('/requests/incoming', requireAuth, async (req, res) => {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const requests = await FriendsService.getIncomingFriendRequests(userId);
 
-		res.json({ requests: toPublicList(requests, UserTransformer.toPublicUser) });
+		sendSuccessResponse(res, { requests: toPublicList(requests, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error fetching incoming friend requests:', error);
 		res.status(500).json({ error: 'Failed to fetch incoming requests' });
@@ -178,7 +185,7 @@ router.get('/requests/outgoing', requireAuth, async (req, res) => {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const requests = await FriendsService.getOutgoingFriendRequests(userId);
 
-		res.json({ requests: toPublicList(requests, UserTransformer.toPublicUser) });
+		sendSuccessResponse(res, { requests: toPublicList(requests, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error fetching outgoing friend requests:', error);
 		res.status(500).json({ error: 'Failed to fetch outgoing requests' });
@@ -194,7 +201,7 @@ router.get('/counts', requireAuth, async (req, res) => {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const counts = await FriendsService.getFriendCounts(userId);
 
-		res.json(counts); // counts is already a safe object
+		sendSuccessResponse(res, counts);
 	} catch (error) {
 		logger.error('Error fetching friend counts:', error);
 		res.status(500).json({ error: 'Failed to fetch friend counts' });
@@ -212,7 +219,7 @@ router.get('/check/:userId', requireAuth, async (req, res) => {
 
 		const areFriends = await FriendsService.areFriends(userId, friendId);
 
-		res.json({ areFriends });
+		sendSuccessResponse(res, { areFriends });
 	} catch (error) {
 		logger.error('Error checking friendship status:', error);
 		res.status(500).json({ error: 'Failed to check friendship status' });
@@ -230,7 +237,7 @@ router.get('/mutual/:userId', requireAuth, async (req, res) => {
 
 		const mutualFriends = await FriendsService.getMutualFriends(userId, otherUserId);
 
-		res.json({ mutualFriends: toPublicList(mutualFriends, UserTransformer.toPublicUser) });
+		sendSuccessResponse(res, { mutualFriends: toPublicList(mutualFriends, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error fetching mutual friends:', error);
 		res.status(500).json({ error: 'Failed to fetch mutual friends' });
@@ -248,7 +255,7 @@ router.get('/search', requireAuth, async (req, res) => {
 
 		const users = await FriendsService.searchUsersForFriends(q, currentUserId, limit);
 
-		res.json({ users: toPublicList(users, UserTransformer.toPublicUser) });
+		sendSuccessResponse(res, { users: toPublicList(users, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error searching users for friends:', error);
 		res.status(500).json({ error: 'Failed to search users' });
@@ -264,7 +271,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const preferences = await FriendsService.getUserFriendPreferences(userId);
 
-		res.json(preferences); // preferences is already a safe object
+		sendSuccessResponse(res, preferences);
 	} catch (error) {
 		logger.error('Error fetching friend preferences:', error);
 		res.status(500).json({ error: 'Failed to fetch preferences' });
@@ -282,7 +289,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
 
 		const updatedPrefs = await FriendsService.updateUserFriendPreferences(userId, preferences);
 
-		res.json(updatedPrefs[0]); // updatedPrefs is already a safe object
+		sendSuccessResponse(res, updatedPrefs[0]);
 	} catch (error) {
 		logger.error('Error updating friend preferences:', error);
 		res.status(500).json({ error: 'Failed to update preferences' });
@@ -301,7 +308,7 @@ router.put('/:userId/permissions', requireAuth, async (req, res) => {
 
 		const result = await FriendsService.updateFriendshipPermissions(userId, friendId, permissions);
 
-		res.json(result); // result is already a safe object
+		sendSuccessResponse(res, result);
 	} catch (error) {
 		logger.error('Error updating friendship permissions:', error);
 		if (error instanceof Error) {
@@ -323,7 +330,7 @@ router.get('/whisper-permission/:userId', requireAuth, async (req, res) => {
 
 		const canSendWhisper = await FriendsService.canSendWhisper(senderId, recipientId);
 
-		res.json({ canSendWhisper }); // canSendWhisper is already a safe boolean
+		sendSuccessResponse(res, { canSendWhisper });
 	} catch (error) {
 		logger.error('Error checking whisper permission:', error);
 		res.status(500).json({ error: 'Failed to check whisper permission' });

@@ -8,6 +8,14 @@
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { gamificationAnalyticsService, GamificationAnalyticsService } from './analytics.service';
+import { CloutTransformer } from './transformers/clout.transformer';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse 
+} from '@server/src/core/utils/transformer.helpers';
 import { logger } from '../../core/logger';
 import { AppError } from '../../core/errors';
 
@@ -38,28 +46,17 @@ export class GamificationAnalyticsController {
 
 			const dashboard = await this.service.generateDashboard(timeframe);
 
-			res.json({
-				success: true,
-				data: dashboard,
-				meta: {
-					timeframe,
-					generatedAt: new Date().toISOString(),
-					version: '1.0.0'
-				}
+			sendSuccessResponse(res, dashboard, undefined, {
+				timeframe,
+				generatedAt: new Date().toISOString(),
+				version: '1.0.0'
 			});
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting dashboard:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -74,28 +71,21 @@ export class GamificationAnalyticsController {
 			const dashboard = await this.service.generateDashboard(timeframe);
 
 			// Return just the overview section for performance
-			res.json({
-				success: true,
-				data: {
-					overview: dashboard.overview,
-					topPerformers: dashboard.topPerformers.slice(0, 5), // Top 5 only
-					quickStats: {
-						avgLevel: dashboard.progression.avgLevelGain,
-						completionRate: dashboard.achievements.avgCompletionRate,
-						activeUsers: dashboard.engagement.uniqueUsers
-					}
-				},
-				meta: {
-					timeframe,
-					generatedAt: new Date().toISOString()
+			sendSuccessResponse(res, {
+				overview: dashboard.overview,
+				topPerformers: dashboard.topPerformers.slice(0, 5),
+				quickStats: {
+					avgLevel: dashboard.progression.avgLevelGain,
+					completionRate: dashboard.achievements.avgCompletionRate,
+					activeUsers: dashboard.engagement.uniqueUsers
 				}
+			}, undefined, {
+				timeframe,
+				generatedAt: new Date().toISOString()
 			});
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting overview:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -108,25 +98,18 @@ export class GamificationAnalyticsController {
 			const timeframe = (req.query.timeframe as 'day' | 'week' | 'month') || 'week';
 			const dashboard = await this.service.generateDashboard(timeframe);
 
-			res.json({
-				success: true,
-				data: {
-					progression: dashboard.progression,
-					trends: {
-						xpGrowth: dashboard.trends.xpGrowth
-					}
-				},
-				meta: {
-					timeframe,
-					generatedAt: new Date().toISOString()
+			sendSuccessResponse(res, {
+				progression: dashboard.progression,
+				trends: {
+					xpGrowth: dashboard.trends.xpGrowth
 				}
+			}, undefined, {
+				timeframe,
+				generatedAt: new Date().toISOString()
 			});
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting progression metrics:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -139,28 +122,21 @@ export class GamificationAnalyticsController {
 			const timeframe = (req.query.timeframe as 'day' | 'week' | 'month') || 'week';
 			const dashboard = await this.service.generateDashboard(timeframe);
 
-			res.json({
-				success: true,
-				data: {
-					achievements: dashboard.achievements,
-					trends: {
-						completionRates: dashboard.trends.completionRates.map((t) => ({
-							date: t.date,
-							achievements: t.achievements
-						}))
-					}
-				},
-				meta: {
-					timeframe,
-					generatedAt: new Date().toISOString()
+			sendSuccessResponse(res, {
+				achievements: dashboard.achievements,
+				trends: {
+					completionRates: dashboard.trends.completionRates.map((t) => ({
+						date: t.date,
+						achievements: t.achievements
+					}))
 				}
+			}, undefined, {
+				timeframe,
+				generatedAt: new Date().toISOString()
 			});
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting achievement metrics:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -173,28 +149,21 @@ export class GamificationAnalyticsController {
 			const timeframe = (req.query.timeframe as 'day' | 'week' | 'month') || 'week';
 			const dashboard = await this.service.generateDashboard(timeframe);
 
-			res.json({
-				success: true,
-				data: {
-					missions: dashboard.missions,
-					trends: {
-						completionRates: dashboard.trends.completionRates.map((t) => ({
-							date: t.date,
-							missions: t.missions
-						}))
-					}
-				},
-				meta: {
-					timeframe,
-					generatedAt: new Date().toISOString()
+			sendSuccessResponse(res, {
+				missions: dashboard.missions,
+				trends: {
+					completionRates: dashboard.trends.completionRates.map((t) => ({
+						date: t.date,
+						missions: t.missions
+					}))
 				}
+			}, undefined, {
+				timeframe,
+				generatedAt: new Date().toISOString()
 			});
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting mission metrics:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -207,25 +176,18 @@ export class GamificationAnalyticsController {
 			const timeframe = (req.query.timeframe as 'day' | 'week' | 'month') || 'week';
 			const dashboard = await this.service.generateDashboard(timeframe);
 
-			res.json({
-				success: true,
-				data: {
-					engagement: dashboard.engagement,
-					trends: {
-						userActivity: dashboard.trends.userActivity
-					}
-				},
-				meta: {
-					timeframe,
-					generatedAt: new Date().toISOString()
+			sendSuccessResponse(res, {
+				engagement: dashboard.engagement,
+				trends: {
+					userActivity: dashboard.trends.userActivity
 				}
+			}, undefined, {
+				timeframe,
+				generatedAt: new Date().toISOString()
 			});
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting engagement metrics:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -238,21 +200,14 @@ export class GamificationAnalyticsController {
 			const timeframe = (req.query.timeframe as 'day' | 'week' | 'month') || 'week';
 			const dashboard = await this.service.generateDashboard(timeframe);
 
-			res.json({
-				success: true,
-				data: dashboard.trends,
-				meta: {
-					timeframe,
-					generatedAt: new Date().toISOString(),
-					dataPoints: dashboard.trends.xpGrowth.length
-				}
+			sendSuccessResponse(res, dashboard.trends, undefined, {
+				timeframe,
+				generatedAt: new Date().toISOString(),
+				dataPoints: dashboard.trends.xpGrowth.length
 			});
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting trends:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -268,29 +223,22 @@ export class GamificationAnalyticsController {
 			// Get more detailed leaderboard data
 			const topPerformers = dashboard.topPerformers.slice(0, limit);
 
-			res.json({
-				success: true,
-				data: {
-					performers: topPerformers,
-					stats: {
-						totalEntries: topPerformers.length,
-						avgLevel: topPerformers.reduce((sum, p) => sum + p.level, 0) / topPerformers.length,
-						avgXp: topPerformers.reduce((sum, p) => sum + p.xp, 0) / topPerformers.length,
-						avgAchievements:
-							topPerformers.reduce((sum, p) => sum + p.achievements, 0) / topPerformers.length
-					}
-				},
-				meta: {
-					limit,
-					generatedAt: new Date().toISOString()
+			sendSuccessResponse(res, {
+				performers: topPerformers,
+				stats: {
+					totalEntries: topPerformers.length,
+					avgLevel: topPerformers.reduce((sum, p) => sum + p.level, 0) / topPerformers.length,
+					avgXp: topPerformers.reduce((sum, p) => sum + p.xp, 0) / topPerformers.length,
+					avgAchievements:
+						topPerformers.reduce((sum, p) => sum + p.achievements, 0) / topPerformers.length
 				}
+			}, undefined, {
+				limit,
+				generatedAt: new Date().toISOString()
 			});
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting top performers:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -302,18 +250,12 @@ export class GamificationAnalyticsController {
 		try {
 			const health = await this.service.getSystemHealth();
 
-			res.json({
-				success: true,
-				data: health,
+			sendSuccessResponse(res, health, undefined, {
 				status: health.responseTime < 1000 ? 'healthy' : 'degraded'
 			});
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting system health:', error);
-			res.status(500).json({
-				success: false,
-				error: 'System health check failed',
-				status: 'unhealthy'
-			});
+			sendErrorResponse(res, 'System health check failed', 500, { status: 'unhealthy' });
 		}
 	}
 
@@ -328,7 +270,7 @@ export class GamificationAnalyticsController {
 			const exportData = await this.service.exportAnalytics(format, timeframe);
 
 			if (format === 'json') {
-				res.json(exportData);
+				sendSuccessResponse(res, exportData);
 			} else {
 				// CSV format
 				res.setHeader('Content-Type', 'text/csv');
@@ -341,16 +283,9 @@ export class GamificationAnalyticsController {
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error exporting analytics:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -387,20 +322,13 @@ export class GamificationAnalyticsController {
 				}
 			};
 
-			res.json({
-				success: true,
-				data: summary,
-				meta: {
-					generatedAt: new Date().toISOString(),
-					period: 'week'
-				}
+			sendSuccessResponse(res, summary, undefined, {
+				generatedAt: new Date().toISOString(),
+				period: 'week'
 			});
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting summary:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -413,20 +341,14 @@ export class GamificationAnalyticsController {
 			// TODO: Implement real-time activity tracking
 			// This would typically use WebSocket or Server-Sent Events
 
-			res.json({
-				success: true,
-				data: {
-					message: 'Real-time activity tracking - to be implemented',
-					placeholder: true,
-					lastUpdate: new Date().toISOString()
-				}
+			sendSuccessResponse(res, {
+				message: 'Real-time activity tracking - to be implemented',
+				placeholder: true,
+				lastUpdate: new Date().toISOString()
 			});
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error getting real-time activity:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 }

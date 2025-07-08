@@ -19,6 +19,10 @@ import {
 import { asyncHandler } from '@server/src/core/errors';
 import type { PostId } from '@shared/types/ids';
 import { ForumTransformer } from '../transformers/forum.transformer';
+import { 
+	sendSuccessResponse,
+	sendErrorResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -71,10 +75,8 @@ router.post(
 			const requestingUser = userService.getUserFromRequest(req);
 			const transformedPost = ForumTransformer.toAuthenticatedPost(newPost, requestingUser);
 
-			res.status(201).json({
-				success: true,
-				data: transformedPost
-			});
+			res.status(201);
+			sendSuccessResponse(res, transformedPost);
 		} catch (error) {
 			logger.error('PostRoutes', 'Error in POST /posts', { error });
 
@@ -113,10 +115,7 @@ router.put(
 			const requestingUser = userService.getUserFromRequest(req);
 			const transformedPost = ForumTransformer.toAuthenticatedPost(updatedPost, requestingUser);
 
-			res.json({
-				success: true,
-				data: transformedPost
-			});
+			sendSuccessResponse(res, transformedPost);
 		} catch (error) {
 			logger.error('PostRoutes', 'Error in PUT /posts/:id', { error });
 
@@ -148,10 +147,7 @@ router.delete(
 
 			await postService.deletePost(postId);
 
-			res.json({
-				success: true,
-				message: 'Post deleted successfully'
-			});
+			sendSuccessResponse(res, null, 'Post deleted successfully');
 		} catch (error) {
 			logger.error('PostRoutes', 'Error in DELETE /posts/:id', { error });
 			res.status(500).json({
@@ -185,10 +181,7 @@ router.post(
 				await postService.unlikePost(postId, userId);
 			}
 
-			res.json({
-				success: true,
-				message: 'Reaction updated successfully'
-			});
+			sendSuccessResponse(res, null, 'Reaction updated successfully');
 		} catch (error) {
 			logger.error('PostRoutes', 'Error in POST /posts/:postId/react', { error });
 
@@ -227,10 +220,7 @@ router.post(
 
 			// TODO: Implement tipping logic with DGT service integration
 
-			res.json({
-				success: true,
-				message: 'Post tipped successfully'
-			});
+			sendSuccessResponse(res, null, 'Post tipped successfully');
 		} catch (error) {
 			logger.error('PostRoutes', 'Error in POST /posts/:postId/tip', { error });
 
@@ -267,10 +257,7 @@ router.get(
 					ForumTransformer.toPublicPost(reply);
 			});
 
-			res.json({
-				success: true,
-				data: transformedReplies
-			});
+			sendSuccessResponse(res, transformedReplies);
 		} catch (error) {
 			logger.error('PostRoutes', 'Error in GET /posts/:postId/replies', { error });
 			res.status(500).json({

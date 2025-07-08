@@ -12,6 +12,7 @@ import { TipService } from './tip.service';
 import { asyncHandler } from '../../../core/errors';
 import { z } from 'zod';
 import { logger } from '../../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 /**
  * Controller for tipping functionality
@@ -46,10 +47,10 @@ export class TipController {
 			validatedData.reason || 'Tip'
 		);
 
-		return res.json({
-			success: true,
-			data: result
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: result
+        		});
 	});
 
 	/**
@@ -63,10 +64,10 @@ export class TipController {
 
 		const tipHistory = await this.tipService.getTipHistory(userId, limit, offset, type);
 
-		return res.json({
-			success: true,
-			data: tipHistory
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: tipHistory
+        		});
 	});
 
 	/**
@@ -80,10 +81,10 @@ export class TipController {
 
 		const leaderboard = await this.tipService.getTipLeaderboard(period, type, limit);
 
-		return res.json({
-			success: true,
-			data: leaderboard
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: leaderboard
+        		});
 	});
 
 	/**
@@ -92,10 +93,10 @@ export class TipController {
 	getTipSettings = asyncHandler(async (req: Request, res: Response) => {
 		const settings = await this.tipService.getTipSettings();
 
-		return res.json({
-			success: true,
-			data: settings
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: settings
+        		});
 	});
 
 	/**
@@ -122,10 +123,10 @@ export class TipController {
 
 		const updatedSettings = await this.tipService.updateTipSettings(userId, validatedData);
 
-		return res.json({
-			success: true,
-			data: updatedSettings
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: updatedSettings
+        		});
 	});
 }
 

@@ -3,6 +3,10 @@ import { Router } from 'express';
 import { walletTestController } from './wallet.test.controller';
 import { isAuthenticated, isAuthenticatedOptional } from '../auth/middleware/auth.middleware';
 import { isDevMode } from '@server/src/utils/environment';
+import { 
+	sendSuccessResponse,
+	sendErrorResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -16,9 +20,7 @@ const router = Router();
 // Middleware to ensure dev mode for most test routes
 const ensureDevMode = (req: any, res: any, next: any) => {
 	if (!isDevMode() && userService.getUserFromRequest(req)?.role !== 'admin') {
-		return res.status(403).json({
-			error: 'Test endpoints only available in development mode or for admins'
-		});
+		return sendErrorResponse(res, 'Test endpoints only available in development mode or for admins', 403);
 	}
 	next();
 };
@@ -76,7 +78,7 @@ router.get(
  * GET /api/wallet/test/health
  */
 router.get('/health', (req, res) => {
-	res.json({
+	sendSuccessResponse(res, {
 		status: 'ok',
 		timestamp: new Date().toISOString(),
 		environment: {

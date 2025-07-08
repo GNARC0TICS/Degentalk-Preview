@@ -12,12 +12,13 @@ import { getUserId } from '../../admin.middleware';
 import { adminController } from '../../admin.controller';
 import { UserGroupSchema, ListGroupUsersQuerySchema } from './user-groups.validators';
 import { validateRequestBody, validateQueryParams } from '../../admin.validation';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 export class AdminUserGroupsController {
 	async getAllGroups(req: Request, res: Response) {
 		try {
 			const groups = await adminUserGroupsService.getAllGroupsWithCounts();
-			res.json(groups);
+			sendSuccessResponse(res, groups);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -33,7 +34,7 @@ export class AdminUserGroupsController {
 			if (isNaN(groupId))
 				throw new AdminError('Invalid group ID', 400, AdminErrorCodes.INVALID_REQUEST);
 			const group = await adminUserGroupsService.getGroupById(groupId);
-			res.json(group);
+			sendSuccessResponse(res, group);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -81,7 +82,7 @@ export class AdminUserGroupsController {
 				groupId.toString(),
 				data
 			);
-			res.json(updatedGroup);
+			sendSuccessResponse(res, updatedGroup);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -101,7 +102,7 @@ export class AdminUserGroupsController {
 			await adminController.logAction(req, 'DELETE_USER_GROUP', 'user_group', groupId.toString(), {
 				reassignedUsers: result.reassignedUsers
 			});
-			res.json(result);
+			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -121,7 +122,7 @@ export class AdminUserGroupsController {
 			if (!query) return;
 
 			const result = await adminUserGroupsService.getUsersInGroup(groupId, query);
-			res.json(result);
+			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res

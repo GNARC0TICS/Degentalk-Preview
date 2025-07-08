@@ -6,7 +6,13 @@ import { requireAuth } from '../../../middleware/auth';
 import { z } from 'zod';
 import { logger } from "../../core/logger";
 import { UserTransformer } from '@server/src/domains/users/transformers/user.transformer';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -77,7 +83,8 @@ router.post('/', requireAuth, async (req, res) => {
 			notificationSettings
 		});
 
-		res.status(201).json(result);
+		res.status(201);
+		sendSuccessResponse(res, result);
 	} catch (error) {
 		logger.error('Error following user:', error);
 		if (error instanceof Error) {
@@ -99,7 +106,7 @@ router.delete('/', requireAuth, async (req, res) => {
 
 		await FollowsService.unfollowUser(followerId, followedId);
 
-		res.json({ success: true });
+		sendSuccessResponse(res, null);
 	} catch (error) {
 		logger.error('Error unfollowing user:', error);
 		if (error instanceof Error) {
@@ -121,7 +128,7 @@ router.get('/following', requireAuth, async (req, res) => {
 
 		const following = await FollowsService.getUserFollowing(userId, page, limit);
 
-		res.json({
+		sendSuccessResponse(res, {
 			following: toPublicList(following, UserTransformer.toPublicUser),
 			pagination: {
 				page,
@@ -146,7 +153,7 @@ router.get('/followers', requireAuth, async (req, res) => {
 
 		const followers = await FollowsService.getUserFollowers(userId, page, limit);
 
-		res.json({
+		sendSuccessResponse(res, {
 			followers: toPublicList(followers, UserTransformer.toPublicUser),
 			pagination: {
 				page,
@@ -169,7 +176,7 @@ router.get('/counts', requireAuth, async (req, res) => {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const counts = await FollowsService.getUserFollowCounts(userId);
 
-		res.json(counts); // counts is already a safe object
+		sendSuccessResponse(res, counts);
 	} catch (error) {
 		logger.error('Error fetching follow counts:', error);
 		res.status(500).json({ error: 'Failed to fetch follow counts' });
@@ -187,7 +194,7 @@ router.get('/check/:userId', requireAuth, async (req, res) => {
 
 		const isFollowing = await FollowsService.isFollowing(followerId, followedId);
 
-		res.json({ isFollowing });
+		sendSuccessResponse(res, { isFollowing });
 	} catch (error) {
 		logger.error('Error checking follow status:', error);
 		res.status(500).json({ error: 'Failed to check follow status' });
@@ -203,7 +210,7 @@ router.get('/requests', requireAuth, async (req, res) => {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const requests = await FollowsService.getFollowRequests(userId);
 
-		res.json({ requests: toPublicList(requests, UserTransformer.toPublicUser) });
+		sendSuccessResponse(res, { requests: toPublicList(requests, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error fetching follow requests:', error);
 		res.status(500).json({ error: 'Failed to fetch follow requests' });
@@ -225,7 +232,7 @@ router.post('/requests/:requestId/respond', requireAuth, async (req, res) => {
 
 		const result = await FollowsService.respondToFollowRequest(requestId, approve);
 
-		res.json(result); // result is already a safe object
+		sendSuccessResponse(res, result);
 	} catch (error) {
 		logger.error('Error responding to follow request:', error);
 		if (error instanceof Error) {
@@ -250,7 +257,7 @@ router.get('/whales', requireAuth, async (req, res) => {
 
 		const whales = await FollowsService.getWhaleCandidates(limit);
 
-		res.json({ whales: toPublicList(whales, UserTransformer.toPublicUser) });
+		sendSuccessResponse(res, { whales: toPublicList(whales, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error fetching whale candidates:', error);
 		res.status(500).json({ error: 'Failed to fetch whale candidates' });
@@ -268,7 +275,7 @@ router.get('/activity', requireAuth, async (req, res) => {
 
 		const activity = await FollowsService.getFollowingActivity(userId, page, limit);
 
-		res.json(activity); // activity is already a safe object
+		sendSuccessResponse(res, activity);
 	} catch (error) {
 		logger.error('Error fetching following activity:', error);
 		res.status(500).json({ error: 'Failed to fetch following activity' });
@@ -286,7 +293,7 @@ router.get('/search', requireAuth, async (req, res) => {
 
 		const users = await FollowsService.searchUsersToFollow(q, currentUserId, limit);
 
-		res.json({ users: toPublicList(users, UserTransformer.toPublicUser) });
+		sendSuccessResponse(res, { users: toPublicList(users, UserTransformer.toPublicUser) });
 	} catch (error) {
 		logger.error('Error searching users to follow:', error);
 		res.status(500).json({ error: 'Failed to search users' });
@@ -302,7 +309,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
 		const userId = userService.getUserFromRequest(req)!.id;
 		const preferences = await FollowsService.getUserFollowPreferences(userId);
 
-		res.json(preferences); // preferences is already a safe object
+		sendSuccessResponse(res, preferences);
 	} catch (error) {
 		logger.error('Error fetching follow preferences:', error);
 		res.status(500).json({ error: 'Failed to fetch preferences' });
@@ -320,7 +327,7 @@ router.put('/preferences', requireAuth, async (req, res) => {
 
 		const updatedPrefs = await FollowsService.updateUserFollowPreferences(userId, preferences);
 
-		res.json(updatedPrefs[0]); // updatedPrefs is already a safe object
+		sendSuccessResponse(res, updatedPrefs[0]);
 	} catch (error) {
 		logger.error('Error updating follow preferences:', error);
 		res.status(500).json({ error: 'Failed to update preferences' });
@@ -343,7 +350,7 @@ router.put('/:userId/notifications', requireAuth, async (req, res) => {
 			settings
 		);
 
-		res.json(result); // result is already a safe object
+		sendSuccessResponse(res, result);
 	} catch (error) {
 		logger.error('Error updating follow notification settings:', error);
 		if (error instanceof Error) {

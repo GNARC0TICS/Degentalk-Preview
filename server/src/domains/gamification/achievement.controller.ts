@@ -11,7 +11,13 @@ import { z } from 'zod';
 import { achievementService, AchievementService } from './achievement.service';
 import type { AchievementRequirement } from './achievement.service';
 import { CloutTransformer } from './transformers/clout.transformer';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse 
+} from '@server/src/core/utils/transformer.helpers';
 import { logger } from '../../core/logger';
 import { AppError } from '../../core/errors';
 
@@ -96,32 +102,26 @@ export class AchievementController {
 				])
 			);
 
-			res.json({
-				success: true,
-				data: {
-					achievements: transformedAchievements,
-					grouped: transformedGrouped,
-					stats: {
-						total: achievements.length,
-						byCategory: Object.fromEntries(
-							Object.entries(grouped).map(([cat, items]) => [cat, items.length])
-						),
-						byRarity: achievements.reduce(
-							(acc, a) => {
-								acc[a.rarity] = (acc[a.rarity] || 0) + 1;
-								return acc;
-							},
-							{} as Record<string, number>
-						)
-					}
+			sendSuccessResponse(res, {
+				achievements: transformedAchievements,
+				grouped: transformedGrouped,
+				stats: {
+					total: achievements.length,
+					byCategory: Object.fromEntries(
+						Object.entries(grouped).map(([cat, items]) => [cat, items.length])
+					),
+					byRarity: achievements.reduce(
+						(acc, a) => {
+							acc[a.rarity] = (acc[a.rarity] || 0) + 1;
+							return acc;
+						},
+						{} as Record<string, number>
+					)
 				}
 			});
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting all achievements:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -144,23 +144,13 @@ export class AchievementController {
 				}))
 			};
 
-			res.json({
-				success: true,
-				data: transformedStats
-			});
+			sendSuccessResponse(res, transformedStats);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting user achievements:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -187,22 +177,13 @@ export class AchievementController {
 				}))
 			};
 
-			res.json({
-				success: true,
-				data: transformedStats
-			});
+			sendSuccessResponse(res, transformedStats);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting user achievements:', error);
 			if (error instanceof AppError) {
-				res.status(error.httpStatus).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, error.httpStatus);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -231,34 +212,24 @@ export class AchievementController {
 					achievement: CloutTransformer.toAuthenticatedAchievement(p.achievement, { id: userId })
 				}));
 
-			res.json({
-				success: true,
-				data: {
-					all: transformProgress(progress),
-					completed: transformProgress(completed),
-					inProgress: transformProgress(inProgress),
-					notStarted: transformProgress(notStarted),
-					stats: {
-						total: progress.length,
-						completed: completed.length,
-						inProgress: inProgress.length,
-						completionRate: progress.length > 0 ? (completed.length / progress.length) * 100 : 0
-					}
+			sendSuccessResponse(res, {
+				all: transformProgress(progress),
+				completed: transformProgress(completed),
+				inProgress: transformProgress(inProgress),
+				notStarted: transformProgress(notStarted),
+				stats: {
+					total: progress.length,
+					completed: completed.length,
+					inProgress: inProgress.length,
+					completionRate: progress.length > 0 ? (completed.length / progress.length) * 100 : 0
 				}
 			});
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting user progress:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -291,33 +262,24 @@ export class AchievementController {
 					achievement: CloutTransformer.toAuthenticatedAchievement(p.achievement, { id: userId })
 				}));
 
-			res.json({
-				success: true,
-				data: {
-					all: transformProgress(progress),
-					completed: transformProgress(completed),
-					inProgress: transformProgress(inProgress),
-					notStarted: transformProgress(notStarted),
-					stats: {
-						total: progress.length,
-						completed: completed.length,
-						inProgress: inProgress.length,
-						completionRate: progress.length > 0 ? (completed.length / progress.length) * 100 : 0
-					}
+			sendSuccessResponse(res, {
+				all: transformProgress(progress),
+				completed: transformProgress(completed),
+				inProgress: transformProgress(inProgress),
+				notStarted: transformProgress(notStarted),
+				stats: {
+					total: progress.length,
+					completed: completed.length,
+					inProgress: inProgress.length,
+					completionRate: progress.length > 0 ? (completed.length / progress.length) * 100 : 0
 				}
 			});
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting user progress:', error);
 			if (error instanceof AppError) {
-				res.status(error.httpStatus).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, error.httpStatus);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -336,30 +298,18 @@ export class AchievementController {
 				metadata
 			);
 
-			res.json({
-				success: true,
-				data: {
-					awarded: toPublicList(awardedAchievements, CloutTransformer.toPublicAchievement),
-					count: awardedAchievements.length
-				},
-				message:
-					awardedAchievements.length > 0
-						? `Awarded ${awardedAchievements.length} achievement(s)`
-						: 'No new achievements awarded'
-			});
+			sendSuccessResponse(res, {
+				awarded: toPublicList(awardedAchievements, CloutTransformer.toPublicAchievement),
+				count: awardedAchievements.length
+			}, awardedAchievements.length > 0
+				? `Awarded ${awardedAchievements.length} achievement(s)`
+				: 'No new achievements awarded');
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error checking achievements:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -374,28 +324,15 @@ export class AchievementController {
 
 			await this.service.awardAchievement(userId, achievementId);
 
-			res.json({
-				success: true,
-				message: `Achievement ${achievementId} awarded to user ${userId}`
-			});
+			sendSuccessResponse(res, undefined, `Achievement ${achievementId} awarded to user ${userId}`);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error awarding achievement:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else if (error instanceof Error && error.message.includes('not found')) {
-				res.status(404).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, 404);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -410,24 +347,14 @@ export class AchievementController {
 
 			const achievement = await this.service.createAchievement(achievementData);
 
-			res.status(201).json({
-				success: true,
-				data: CloutTransformer.toAdminAchievement(achievement),
-				message: `Achievement "${achievement.name}" created successfully`
-			});
+			res.status(201);
+			sendTransformedResponse(res, achievement, CloutTransformer.toAdminAchievement, `Achievement "${achievement.name}" created successfully`);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error creating achievement:', error);
 			if (error instanceof z.ZodError) {
-				res.status(400).json({
-					success: false,
-					error: 'Validation error',
-					details: error.errors
-				});
+				sendErrorResponse(res, 'Validation error', 400, error.errors);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}
@@ -442,20 +369,13 @@ export class AchievementController {
 
 			const leaderboard = await this.service.getAchievementLeaderboard(limit);
 
-			res.json({
-				success: true,
-				data: leaderboard,
-				meta: {
-					limit,
-					count: leaderboard.length
-				}
+			sendSuccessResponse(res, leaderboard, undefined, {
+				limit,
+				count: leaderboard.length
 			});
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting achievement leaderboard:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -467,16 +387,10 @@ export class AchievementController {
 		try {
 			await this.service.createDefaultAchievements();
 
-			res.json({
-				success: true,
-				message: 'Default achievements created successfully'
-			});
+			sendSuccessResponse(res, undefined, 'Default achievements created successfully');
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error seeding default achievements:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Internal server error'
-			});
+			sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 
@@ -498,22 +412,13 @@ export class AchievementController {
 				throw new AppError('Achievement not found', 404);
 			}
 
-			res.json({
-				success: true,
-				data: CloutTransformer.toPublicAchievement(achievement)
-			});
+			sendTransformedResponse(res, achievement, CloutTransformer.toPublicAchievement);
 		} catch (error) {
 			logger.error('ACHIEVEMENT_CONTROLLER', 'Error getting achievement by ID:', error);
 			if (error instanceof AppError) {
-				res.status(error.httpStatus).json({
-					success: false,
-					error: error.message
-				});
+				sendErrorResponse(res, error.message, error.httpStatus);
 			} else {
-				res.status(500).json({
-					success: false,
-					error: 'Internal server error'
-				});
+				sendErrorResponse(res, 'Internal server error', 500);
 			}
 		}
 	}

@@ -9,6 +9,7 @@ import { adminAnalyticsService } from './analytics.service';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { AnalyticsQuerySchema, AnalyticsPeriodSchema } from './analytics.validators';
 import { validateQueryParams } from '../../admin.validation';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 export class AdminAnalyticsController {
 	async getOverviewStats(req: Request, res: Response) {
@@ -16,7 +17,7 @@ export class AdminAnalyticsController {
 			const query = validateQueryParams(req, res, AnalyticsPeriodSchema);
 			if (!query) return;
 			const stats = await adminAnalyticsService.getOverviewStats(query);
-			res.json(stats);
+			sendSuccessResponse(res, stats);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -31,7 +32,7 @@ export class AdminAnalyticsController {
 			const query = validateQueryParams(req, res, AnalyticsQuerySchema);
 			if (!query) return;
 			const chartData = await adminAnalyticsService.getUserGrowthChart(query);
-			res.json(chartData);
+			sendSuccessResponse(res, chartData);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -46,7 +47,7 @@ export class AdminAnalyticsController {
 			const query = validateQueryParams(req, res, AnalyticsQuerySchema);
 			if (!query) return;
 			const threads = await adminAnalyticsService.getMostActiveThreads(query);
-			res.json(threads);
+			sendSuccessResponse(res, threads);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res

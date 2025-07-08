@@ -15,12 +15,13 @@ import {
 	type MassAirdropInput
 } from './treasury.validators';
 import { validateRequestBody } from '../../admin.validation';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 export class AdminTreasuryController {
 	async getDgtSupplyStats(req: Request, res: Response) {
 		try {
 			const stats = await adminTreasuryService.getDgtSupplyStats();
-			res.json(stats);
+			sendSuccessResponse(res, stats);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({ error: error.message, code: error.code });
@@ -41,7 +42,7 @@ export class AdminTreasuryController {
 				recipientUserId: data.userId,
 				description: data.description
 			});
-			res.json({ message: 'DGT sent from treasury successfully', data: result });
+			sendSuccessResponse(res, { message: 'DGT sent from treasury successfully', data: result });
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res
@@ -64,7 +65,7 @@ export class AdminTreasuryController {
 				sourceUserId: data.userId,
 				description: data.description
 			});
-			res.json({ message: 'DGT recovered to treasury successfully', data: result });
+			sendSuccessResponse(res, { message: 'DGT recovered to treasury successfully', data: result });
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res
@@ -88,7 +89,7 @@ export class AdminTreasuryController {
 				reason: dataAirdrop.reason,
 				missingUserIds: result.missingUserIds
 			});
-			res.json({ message: 'Mass airdrop process completed.', data: result });
+			sendSuccessResponse(res, { message: 'Mass airdrop process completed.', data: result });
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res
@@ -105,7 +106,7 @@ export class AdminTreasuryController {
 			if (!settings) {
 				throw new AdminError('Treasury settings not found.', 404, AdminErrorCodes.NOT_FOUND);
 			}
-			res.json(settings);
+			sendSuccessResponse(res, settings);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({ error: error.message, code: error.code });
@@ -130,7 +131,7 @@ export class AdminTreasuryController {
 					updatedSettings: dataSettings
 				}
 			);
-			res.json({ message: 'Treasury settings updated successfully', data: result });
+			sendSuccessResponse(res, { message: 'Treasury settings updated successfully', data: result });
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res

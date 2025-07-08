@@ -19,7 +19,13 @@ import {
 	TrackEventSchema
 } from './ui-config.validators';
 import { validateRequestBody, validateQueryParams } from '../../admin.validation';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 export class UiConfigController {
 	// ==================== QUOTE OPERATIONS ====================
@@ -37,7 +43,7 @@ export class UiConfigController {
 
 			const result = await uiConfigService.getQuotes(filters, pagination);
 
-			res.json(result);
+			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -66,7 +72,7 @@ export class UiConfigController {
 				throw new AdminError('Quote not found', 404, AdminErrorCodes.RESOURCE_NOT_FOUND);
 			}
 
-			res.json(quote);
+			sendSuccessResponse(res, quote);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -92,7 +98,8 @@ export class UiConfigController {
 			// Log admin action
 			await adminController.logAction(req, 'CREATE_UI_QUOTE', 'ui_quote', quote.id, data);
 
-			res.status(201).json(quote);
+			res.status(201);
+			sendSuccessResponse(res, quote);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -122,7 +129,7 @@ export class UiConfigController {
 			// Log admin action
 			await adminController.logAction(req, 'UPDATE_UI_QUOTE', 'ui_quote', id, dataUpdate);
 
-			res.json(quote);
+			sendSuccessResponse(res, quote);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -181,7 +188,7 @@ export class UiConfigController {
 				count: data.quoteOrders.length
 			});
 
-			res.json({ success: true });
+			sendSuccessResponse(res, { success: true });
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -203,7 +210,7 @@ export class UiConfigController {
 	async getCollections(req: Request, res: Response) {
 		try {
 			const collections = await uiConfigService.getCollections();
-			res.json(toPublicList(collections, (collection) => ({ ...collection, id: collection.id })));
+			sendTransformedListResponse(res, collections, (collection) => ({ ...collection, id: collection.id }));
 		} catch (error) {
 			res.status(500).json({ error: 'Failed to fetch collections' });
 		}
@@ -229,7 +236,8 @@ export class UiConfigController {
 				data
 			);
 
-			res.status(201).json(collection);
+			res.status(201);
+			sendSuccessResponse(res, collection);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -259,7 +267,7 @@ export class UiConfigController {
 			// Log admin action
 			await adminController.logAction(req, 'UPDATE_UI_COLLECTION', 'ui_collection', id, dataUpdate);
 
-			res.json(collection);
+			sendSuccessResponse(res, collection);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -343,7 +351,7 @@ export class UiConfigController {
 			if (!queryAnalytics) return;
 
 			const result = await uiConfigService.getQuoteAnalytics(queryAnalytics);
-			res.json(result);
+			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -374,7 +382,7 @@ export class UiConfigController {
 				count: data.quoteIds.length
 			});
 
-			res.json({ success: true });
+			sendSuccessResponse(res, { success: true });
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -407,7 +415,7 @@ export class UiConfigController {
 				total: data.quotes.length
 			});
 
-			res.json(result);
+			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({

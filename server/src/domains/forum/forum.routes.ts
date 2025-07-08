@@ -26,6 +26,10 @@ import { threadService } from './services/thread.service';
 import { asyncHandler } from '@server/src/core/errors';
 import type { StructureId } from '@shared/types/ids';
 import { ForumTransformer } from './transformers/forum.transformer';
+import { 
+	sendSuccessResponse,
+	sendErrorResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 // Import specialized route modules
 import threadRoutes from './routes/thread.routes';
@@ -61,7 +65,7 @@ router.get(
 			const structures = await forumStructureService.getStructuresWithStats();
 			const zones = structures.filter((s) => s.type === 'zone');
 			const forums = structures.filter((s) => s.type === 'forum');
-			return res.json({ 
+			return sendSuccessResponse(res, {
 				zones: zones.map(z => ForumTransformer.toPublicForumStructure(z)), 
 				forums: forums.map(f => ForumTransformer.toPublicForumStructure(f)) 
 			});
@@ -100,14 +104,11 @@ router.get(
 				.limit(10)
 				.orderBy(asc(users.username));
 
-			res.json({
-				success: true,
-				data: users_results.map(user => ({
-					id: user.id,
-					username: user.username,
-					avatar: user.avatar
-				}))
-			});
+			sendSuccessResponse(res, users_results.map(user => ({
+				id: user.id,
+				username: user.username,
+				avatar: user.avatar
+			})));
 		} catch (error) {
 			logger.error('ForumRoutes', 'Error in GET /users/search', { error });
 
@@ -149,10 +150,7 @@ router.get(
 					.orderBy(asc(threadPrefixes.position));
 			}
 
-			res.json({
-				success: true,
-				data: prefixes
-			});
+			sendSuccessResponse(res, prefixes);
 		} catch (error) {
 			logger.error('ForumRoutes', 'Error in GET /prefixes', { error });
 			res.status(500).json({
@@ -170,10 +168,7 @@ router.get(
 		try {
 			const allTags = await db.select().from(tags).orderBy(asc(tags.name));
 
-			res.json({
-				success: true,
-				data: allTags
-			});
+			sendSuccessResponse(res, allTags);
 		} catch (error) {
 			logger.error('ForumRoutes', 'Error in GET /tags', { error });
 			res.status(500).json({
@@ -188,8 +183,7 @@ router.get(
 router.get(
 	'/health',
 	asyncHandler((req: Request, res: Response) => {
-		res.json({
-			success: true,
+		sendSuccessResponse(res, {
 			message: 'Forum API is healthy',
 			timestamp: new Date().toISOString()
 		});
@@ -223,12 +217,9 @@ router.get(
 				ForumTransformer.toPublicThread(thread)
 			);
 
-			return res.json({
-				success: true,
-				data: {
-					...result,
-					threads: transformedThreads
-				},
+			return sendSuccessResponse(res, {
+				...result,
+				threads: transformedThreads,
 				pagination: {
 					page,
 					limit,
@@ -279,7 +270,7 @@ router.get(
 
 			const forumIds = forumRows.map((f) => f.id);
 			if (forumIds.length === 0) {
-				return res.json({
+				return sendSuccessResponse(res, {
 					todaysPosts: 0,
 					trendingThreads: 0,
 					lastActiveUser: null,
@@ -326,7 +317,7 @@ router.get(
 				if (u) lastActiveUser = { username: u.username, avatarUrl: u.avatarUrl };
 			}
 
-			return res.json({ todaysPosts, trendingThreads, lastActiveUser, createdAt: zone.createdAt });
+			return sendSuccessResponse(res, { todaysPosts, trendingThreads, lastActiveUser, createdAt: zone.createdAt });
 		} catch (error) {
 			logger.error('ForumRoutes', 'Error in GET /zone-stats', { error });
 			return res.status(500).json({ success: false, error: 'Failed to fetch zone stats' });

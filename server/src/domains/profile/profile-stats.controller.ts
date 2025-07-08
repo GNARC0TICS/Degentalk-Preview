@@ -4,6 +4,7 @@ import { ProfileStatsService } from './profile-stats.service';
 import { handleControllerError } from '../../lib/error-handler';
 import { z } from 'zod';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 // Request validation schemas
 const GetProfileStatsSchema = z.object({
@@ -53,12 +54,12 @@ export class ProfileStatsController {
 				userService.getUserFromRequest(req)?.id === stats.id
 			);
 
-			res.json({
-				success: true,
-				data: sanitizedStats,
-				cached: false,
-				timestamp: new Date().toISOString()
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: sanitizedStats,
+            				cached: false,
+            				timestamp: new Date().toISOString()
+            			});
 		} catch (error) {
 			handleControllerError(error, res, 'Failed to fetch profile statistics');
 		}
@@ -81,10 +82,10 @@ export class ProfileStatsController {
 				timestamp: new Date()
 			});
 
-			res.json({
-				success: true,
-				message: 'Engagement data recorded'
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				message: 'Engagement data recorded'
+            			});
 		} catch (error) {
 			handleControllerError(error, res, 'Failed to record engagement analytics');
 		}
@@ -119,12 +120,12 @@ export class ProfileStatsController {
 				primaryActivity: this.getPrimaryActivity(stats)
 			};
 
-			res.json({
-				success: true,
-				data: quickStats,
-				cached: true,
-				timestamp: new Date().toISOString()
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: quickStats,
+            				cached: true,
+            				timestamp: new Date().toISOString()
+            			});
 		} catch (error) {
 			handleControllerError(error, res, 'Failed to fetch quick profile stats');
 		}

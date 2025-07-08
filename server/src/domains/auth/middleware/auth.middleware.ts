@@ -4,6 +4,7 @@ import { env, isDevelopment, isProduction } from '@server/src/core/config/enviro
 import { createMockUser } from '../services/auth.service';
 import { logger } from '@server/src/core/logger';
 import { shouldBypassAuth } from '@server/src/utils/environment';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 /**
  * Determines if a user has a specific role
@@ -227,9 +228,9 @@ export function devModeAuthHandler(req: Request, res: Response, next: NextFuncti
 	// Set a session cookie with the selected role
 	(req.session as any).devRole = role;
 
-	res.json({
-		message: `Development mode authentication set to: ${role}`,
-		role: role,
-		warning: 'DEVELOPMENT ONLY - This endpoint is disabled in production'
-	});
+	sendSuccessResponse(res, {
+    		message: `Development mode authentication set to: ${role}`,
+    		role: role,
+    		warning: 'DEVELOPMENT ONLY - This endpoint is disabled in production'
+    	});
 }

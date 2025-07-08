@@ -12,6 +12,7 @@ import { RainService } from './rain.service';
 import { asyncHandler } from '../../../core/errors';
 import { z } from 'zod';
 import { logger } from '../../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 /**
  * Controller for rain functionality
@@ -53,10 +54,10 @@ export class RainController {
 			validatedData.message
 		);
 
-		return res.json({
-			success: true,
-			data: result
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: result
+        		});
 	});
 
 	/**
@@ -68,10 +69,10 @@ export class RainController {
 
 		const events = await this.rainService.getRecentRainEvents(limit, offset);
 
-		return res.json({
-			success: true,
-			data: events
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: events
+        		});
 	});
 
 	/**
@@ -80,10 +81,10 @@ export class RainController {
 	getRainSettings = asyncHandler(async (req: Request, res: Response) => {
 		const settings = await this.rainService.getRainSettings();
 
-		return res.json({
-			success: true,
-			data: settings
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: settings
+        		});
 	});
 
 	/**
@@ -121,10 +122,10 @@ export class RainController {
 
 		const updatedSettings = await this.rainService.updateRainSettings(userId, validatedData);
 
-		return res.json({
-			success: true,
-			data: updatedSettings
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: updatedSettings
+        		});
 	});
 }
 

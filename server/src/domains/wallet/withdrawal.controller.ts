@@ -1,6 +1,11 @@
 import { userService } from '@server/src/core/services/user.service';
 import { EconomyTransformer } from '../economy/transformers/economy.transformer';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse
+} from '@server/src/core/utils/transformer.helpers';
 import type { UserId, EntityId } from '@shared/types/ids';
 /**
  * Withdrawal Controller
@@ -41,17 +46,14 @@ export class WithdrawalController {
 	async createWithdrawalRequest(req: Request, res: Response, next: NextFunction) {
 		try {
 			if (!userService.getUserFromRequest(req)) {
-				return res.status(401).json({ error: 'User not authenticated' });
+				return sendErrorResponse(res, 'User not authenticated', 401);
 			}
 
 			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id;
 
 			// Check if withdrawals are enabled
 			if (!walletConfig.WITHDRAWALS_ENABLED) {
-				return res.status(503).json({
-					error: 'Withdrawals are temporarily disabled',
-					code: 'SERVICE_UNAVAILABLE'
-				});
+				return sendErrorResponse(res, 'Withdrawals are temporarily disabled', 503);
 			}
 
 			// Validate request body
@@ -64,10 +66,7 @@ export class WithdrawalController {
 				.where(eq(users.id, userId));
 
 			if (!user || user.level < walletConfig.REQUIREMENTS.MIN_LEVEL_TO_WITHDRAW) {
-				return res.status(403).json({
-					error: `Level ${walletConfig.REQUIREMENTS.MIN_LEVEL_TO_WITHDRAW} required to withdraw`,
-					code: 'INSUFFICIENT_LEVEL'
-				});
+				return sendErrorResponse(res, `Level ${walletConfig.REQUIREMENTS.MIN_LEVEL_TO_WITHDRAW} required to withdraw`, 403);
 			}
 
 			// Check withdrawal limits
@@ -75,10 +74,7 @@ export class WithdrawalController {
 				amount < walletConfig.LIMITS.MIN_WITHDRAWAL_USD ||
 				amount > walletConfig.LIMITS.MAX_WITHDRAWAL_USD
 			) {
-				return res.status(400).json({
-					error: `Withdrawal amount must be between $${walletConfig.LIMITS.MIN_WITHDRAWAL_USD} and $${walletConfig.LIMITS.MAX_WITHDRAWAL_USD}`,
-					code: 'INVALID_AMOUNT'
-				});
+				return sendErrorResponse(res, `Withdrawal amount must be between $${walletConfig.LIMITS.MIN_WITHDRAWAL_USD} and $${walletConfig.LIMITS.MAX_WITHDRAWAL_USD}`, 400);
 			}
 
 			// Check daily limit
@@ -97,11 +93,7 @@ export class WithdrawalController {
 				);
 
 			if (dailyTotal && dailyTotal.total + amount > walletConfig.LIMITS.DAILY_WITHDRAWAL_LIMIT) {
-				return res.status(429).json({
-					error: `Daily withdrawal limit of $${walletConfig.LIMITS.DAILY_WITHDRAWAL_LIMIT} exceeded`,
-					code: 'DAILY_LIMIT_EXCEEDED',
-					remainingLimit: Math.max(0, walletConfig.LIMITS.DAILY_WITHDRAWAL_LIMIT - dailyTotal.total)
-				});
+				return sendErrorResponse(res, `Daily withdrawal limit of $${walletConfig.LIMITS.DAILY_WITHDRAWAL_LIMIT} exceeded`, 429);
 			}
 
 			// Calculate DGT amount needed (including fees)
@@ -116,12 +108,7 @@ export class WithdrawalController {
 			// Check DGT balance
 			const dgtBalance = await dgtService.getUserBalance(userId);
 			if (dgtBalance < dgtAmountNeeded) {
-				return res.status(400).json({
-					error: 'Insufficient DGT balance',
-					code: 'INSUFFICIENT_BALANCE',
-					required: Number(dgtAmountNeeded) / 100000000,
-					available: Number(dgtBalance) / 100000000
-				});
+				return sendErrorResponse(res, 'Insufficient DGT balance', 400);
 			}
 
 			// Create withdrawal request
@@ -165,13 +152,12 @@ export class WithdrawalController {
 				createdAt: withdrawalRequest.createdAt
 			};
 
-			res.json({
-				success: true,
-				withdrawalRequest: withdrawalResponse
+			sendSuccessResponse(res, {
+				withdrawalRequest: EconomyTransformer.toAuthenticatedWithdrawalRequest(withdrawalResponse, userService.getUserFromRequest(req))
 			});
 		} catch (error) {
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({ error: 'Invalid request', details: error.errors });
+				return sendErrorResponse(res, 'Invalid request', 400);
 			}
 			logger.error('WithdrawalController', 'Error creating withdrawal request', {
 				error: error instanceof Error ? error.message : String(error),
@@ -187,7 +173,7 @@ export class WithdrawalController {
 	async getWithdrawalHistory(req: Request, res: Response, next: NextFunction) {
 		try {
 			if (!userService.getUserFromRequest(req)) {
-				return res.status(401).json({ error: 'User not authenticated' });
+				return sendErrorResponse(res, 'User not authenticated', 401);
 			}
 
 			const userId = (userService.getUserFromRequest(req) as { id: UserId }).id;
@@ -225,8 +211,8 @@ export class WithdrawalController {
 				processingFee: w.processingFee / 100
 			}));
 
-			res.json({
-				withdrawals: transformedWithdrawals,
+			sendSuccessResponse(res, {
+				withdrawals: toPublicList(transformedWithdrawals, EconomyTransformer.toAuthenticatedWithdrawalHistory),
 				pagination: {
 					page,
 					limit,
@@ -292,8 +278,8 @@ export class WithdrawalController {
 				processingFee: w.processingFee / 100
 			}));
 
-			res.json({
-				withdrawals: transformedWithdrawals,
+			sendSuccessResponse(res, {
+				withdrawals: toPublicList(transformedWithdrawals, EconomyTransformer.toAdminWithdrawalRequest),
 				pagination: {
 					page,
 					limit,
@@ -325,14 +311,11 @@ export class WithdrawalController {
 				.where(eq(withdrawalRequests.id, requestId));
 
 			if (!withdrawalRequest) {
-				return res.status(404).json({ error: 'Withdrawal request not found' });
+				return sendErrorResponse(res, 'Withdrawal request not found', 404);
 			}
 
 			if (withdrawalRequest.status !== 'pending') {
-				return res.status(400).json({
-					error: 'Only pending requests can be processed',
-					currentStatus: withdrawalRequest.status
-				});
+				return sendErrorResponse(res, 'Only pending requests can be processed', 400);
 			}
 
 			if (action === 'approve') {
@@ -362,7 +345,7 @@ export class WithdrawalController {
 					requestId
 				};
 
-				res.json(approvalResponse);
+				sendTransformedResponse(res, approvalResponse, EconomyTransformer.toAdminWithdrawalApproval);
 			} else {
 				// Reject and refund DGT
 				await db
@@ -402,11 +385,11 @@ export class WithdrawalController {
 					requestId
 				};
 
-				res.json(rejectionResponse);
+				sendTransformedResponse(res, rejectionResponse, EconomyTransformer.toAdminWithdrawalRejection);
 			}
 		} catch (error) {
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({ error: 'Invalid request', details: error.errors });
+				return sendErrorResponse(res, 'Invalid request', 400);
 			}
 			logger.error('WithdrawalController', 'Error processing withdrawal request', {
 				error: error instanceof Error ? error.message : String(error),

@@ -7,6 +7,7 @@
 import { Router } from 'express';
 import { uiConfigController } from './ui-config.controller';
 import { asyncHandler } from '../../admin.middleware';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 // Create router instance
 const router = Router();
@@ -160,11 +161,11 @@ router.get(
  * @access Admin
  */
 router.get('/health', (req, res) => {
-	res.json({
-		service: 'ui-config',
-		status: 'healthy',
-		timestamp: new Date().toISOString()
-	});
+	sendSuccessResponse(res, {
+    		service: 'ui-config',
+    		status: 'healthy',
+    		timestamp: new Date().toISOString()
+    	});
 });
 
 // Export the router

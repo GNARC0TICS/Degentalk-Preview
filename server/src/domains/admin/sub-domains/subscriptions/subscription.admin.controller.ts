@@ -11,6 +11,7 @@ import { logger } from '../../../../core/logger';
 import { db } from '@db';
 import { subscriptions, cosmeticDrops, users } from '@schema';
 import { eq, sql, desc, count, sum } from 'drizzle-orm';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 export class AdminSubscriptionController {
 	/**
@@ -90,10 +91,10 @@ export class AdminSubscriptionController {
 				}
 			};
 
-			res.json({
-				success: true,
-				data: { analytics }
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: { analytics }
+            			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error getting analytics:', error);
 			res.status(500).json({
@@ -150,18 +151,18 @@ export class AdminSubscriptionController {
 				.from(subscriptions)
 				.where(sql`${whereConditions.join(' AND ')}`);
 
-			res.json({
-				success: true,
-				data: {
-					subscriptions: results,
-					pagination: {
-						page,
-						limit,
-						total: totalCount?.count || 0,
-						pages: Math.ceil((totalCount?.count || 0) / limit)
-					}
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: {
+            					subscriptions: results,
+            					pagination: {
+            						page,
+            						limit,
+            						total: totalCount?.count || 0,
+            						pages: Math.ceil((totalCount?.count || 0) / limit)
+            					}
+            				}
+            			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error getting all subscriptions:', error);
 			res.status(500).json({
@@ -179,13 +180,13 @@ export class AdminSubscriptionController {
 		try {
 			const results = await subscriptionService.processMonthlyCosmetics();
 
-			res.json({
-				success: true,
-				data: {
-					results,
-					message: `Cosmetic drops processed: ${results.processed} successful, ${results.failed} failed`
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: {
+            					results,
+            					message: `Cosmetic drops processed: ${results.processed} successful, ${results.failed} failed`
+            				}
+            			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error processing cosmetics:', error);
 			res.status(500).json({
@@ -238,18 +239,18 @@ export class AdminSubscriptionController {
 				.from(cosmeticDrops)
 				.where(whereConditions.length > 0 ? sql`${whereConditions.join(' AND ')}` : undefined);
 
-			res.json({
-				success: true,
-				data: {
-					drops: results,
-					pagination: {
-						page,
-						limit,
-						total: totalCount?.count || 0,
-						pages: Math.ceil((totalCount?.count || 0) / limit)
-					}
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: {
+            					drops: results,
+            					pagination: {
+            						page,
+            						limit,
+            						total: totalCount?.count || 0,
+            						pages: Math.ceil((totalCount?.count || 0) / limit)
+            					}
+            				}
+            			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error getting cosmetic drops:', error);
 			res.status(500).json({
@@ -309,12 +310,12 @@ export class AdminSubscriptionController {
 				`Subscription ${subscriptionId} cancelled by admin ${adminUserId}: ${reason}`
 			);
 
-			res.json({
-				success: true,
-				data: {
-					message: 'Subscription cancelled successfully'
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: {
+            					message: 'Subscription cancelled successfully'
+            				}
+            			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error cancelling subscription:', error);
 			res.status(500).json({
@@ -386,13 +387,13 @@ export class AdminSubscriptionController {
 				`${type} granted to user ${userId} by admin ${adminUserId}: ${reason}`
 			);
 
-			res.json({
-				success: true,
-				data: {
-					subscription,
-					message: `${type.replace('_', ' ')} granted successfully`
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: {
+            					subscription,
+            					message: `${type.replace('_', ' ')} granted successfully`
+            				}
+            			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error granting subscription:', error);
 			res.status(500).json({

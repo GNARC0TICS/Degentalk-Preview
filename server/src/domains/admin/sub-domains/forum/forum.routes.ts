@@ -9,6 +9,7 @@ import { adminForumController } from './forum.controller';
 import { asyncHandler } from '../../admin.middleware';
 import { forumPrefixService } from '../forumPrefix/forumPrefix.service';
 import type { PrefixId } from '@shared/types/ids';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const router = Router();
 
@@ -71,7 +72,7 @@ router.put(
 	asyncHandler(async (req, res) => {
 		const id = req.params.id as PrefixId;
 		const updated = await forumPrefixService.updatePrefix(id, req.body);
-		res.json(updated);
+		sendSuccessResponse(res, updated);
 	})
 );
 
@@ -80,7 +81,7 @@ router.delete(
 	asyncHandler(async (req, res) => {
 		const id = req.params.id as PrefixId;
 		const result = await forumPrefixService.deletePrefix(id);
-		res.json(result);
+		sendSuccessResponse(res, result);
 	})
 );
 
@@ -91,7 +92,7 @@ router.post(
 		const { order } = req.body as { order: number[] };
 		if (!Array.isArray(order)) return res.status(400).json({ message: 'order must be array' });
 		const result = await forumPrefixService.reorderPrefixes(order);
-		res.json(result);
+		sendSuccessResponse(res, result);
 	})
 );
 

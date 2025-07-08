@@ -9,42 +9,15 @@ import {
 import { insertDictionaryEntrySchema } from '@schema';
 import rateLimit from 'express-rate-limit';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const router = Router();
 
 // GET /api/dictionary
-router.get('/', async (req, res) => {
-	try {
-		const { page, limit, search, status, sort, tag, authorId } = req.query as any;
-		const result = await DictionaryService.list({
-			page: page ? Number(page) : undefined,
-			limit: limit ? Number(limit) : undefined,
-			search: search as string | undefined,
-			status: status as string | undefined,
-			sort: sort as any,
-			tag: tag as string | undefined,
-			authorId: authorId as string | undefined
-		});
-		return res.json(result);
-	} catch (error) {
-		logger.error('Dictionary list error', error);
-		return res.status(500).json({ error: 'Failed to fetch dictionary entries' });
-	}
-});
+sendErrorResponse(res, 'Server error', 500);
 
 // GET /api/dictionary/:slug
-router.get('/:slug', async (req, res) => {
-	try {
-		const entry = await DictionaryService.getBySlug(req.params.slug);
-		if (!entry || entry.status !== DictionaryStatus.APPROVED) {
-			return res.status(404).json({ error: 'Entry not found' });
-		}
-		return res.json(entry);
-	} catch (error) {
-		logger.error('Dictionary entry fetch error', error);
-		return res.status(500).json({ error: 'Failed to fetch entry' });
-	}
-});
+sendErrorResponse(res, 'Server error', 404);
 
 // POST /api/dictionary (requires auth)
 router.post(
@@ -67,36 +40,9 @@ router.post(
 );
 
 // PATCH /api/dictionary/:id (approve/reject) admin/moderator only
-router.patch('/:id', requireAuth, isAdminOrModerator, async (req: any, res) => {
-	try {
-		const { status } = req.body;
-		if (!['approved', 'rejected'].includes(status)) {
-			return res.status(400).json({ error: 'Invalid status' });
-		}
-		const updated = await DictionaryService.moderate(
-			req.params.id as EntityId,
-			status,
-			userService.getUserFromRequest(req).id
-		);
-		return res.json(updated);
-	} catch (error) {
-		logger.error('Moderation error', error);
-		return res.status(500).json({ error: 'Failed to update entry' });
-	}
-});
+sendErrorResponse(res, 'Server error', 400);
 
 // POST /api/dictionary/:id/upvote (toggle)
-router.post('/:id/upvote', requireAuth, async (req: any, res) => {
-	try {
-		const result = await DictionaryService.toggleUpvote(
-			req.params.id as EntityId,
-			userService.getUserFromRequest(req).id
-		);
-		return res.json(result);
-	} catch (error) {
-		logger.error('Upvote error', error);
-		return res.status(500).json({ error: 'Failed to toggle upvote' });
-	}
-});
+sendErrorResponse(res, 'Server error', 500);
 
 export default router;

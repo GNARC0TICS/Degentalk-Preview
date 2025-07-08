@@ -14,7 +14,13 @@ import {
 } from '../../admin.validation';
 import { logger } from '../../../../core/logger';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse,
+	sendTransformedListResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 // Removed redundant getUserId helper - use userService.getUserFromRequest(req)?.id directly
 
@@ -46,8 +52,7 @@ export const getAllEmojis = async (req: Request, res: Response) => {
 
 		logger.info('EMOJI_CONTROLLER', `Successfully fetched ${result.emojis.length} emojis`);
 
-		return res.json({
-			success: true,
+		return sendSuccessResponse(res, {
 			data: toPublicList(result.emojis, (emoji) => ({ ...emoji, id: emoji.id })),
 			pagination: result.pagination
 		});
@@ -90,10 +95,7 @@ export const getEmojiById = async (req: Request, res: Response) => {
 
 		logger.info('EMOJI_CONTROLLER', `Successfully fetched emoji: ${emoji.name}`);
 
-		return res.json({
-			success: true,
-			data: { ...emoji, id: emoji.id }
-		});
+		return sendSuccessResponse(res, { ...emoji, id: emoji.id });
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error fetching emoji by ID:', error);
 
@@ -134,11 +136,8 @@ export const createEmoji = async (req: Request, res: Response) => {
 			`Successfully created emoji: ${newEmoji.name} (ID: ${newEmoji.id})`
 		);
 
-		return res.status(201).json({
-			success: true,
-			message: `Emoji '${newEmoji.name}' created successfully`,
-			data: { ...newEmoji, id: newEmoji.id }
-		});
+		res.status(201);
+		return sendSuccessResponse(res, { ...newEmoji, id: newEmoji.id }, `Emoji '${newEmoji.name}' created successfully`);
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error creating emoji:', error);
 
@@ -196,11 +195,7 @@ export const updateEmoji = async (req: Request, res: Response) => {
 
 		logger.info('EMOJI_CONTROLLER', `Successfully updated emoji: ${updatedEmoji.name} (ID: ${id})`);
 
-		return res.json({
-			success: true,
-			message: `Emoji '${updatedEmoji.name}' updated successfully`,
-			data: { ...updatedEmoji, id: updatedEmoji.id }
-		});
+		return sendSuccessResponse(res, { ...updatedEmoji, id: updatedEmoji.id }, `Emoji '${updatedEmoji.name}' updated successfully`);
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error updating emoji:', error);
 
@@ -249,11 +244,7 @@ export const deleteEmoji = async (req: Request, res: Response) => {
 
 		logger.info('EMOJI_CONTROLLER', `Successfully deleted emoji (ID: ${id})`);
 
-		return res.json({
-			success: true,
-			message: `Emoji deleted successfully`,
-			data: { id: deletedEmoji.id, name: deletedEmoji.name }
-		});
+		return sendSuccessResponse(res, { id: deletedEmoji.id, name: deletedEmoji.name }, 'Emoji deleted successfully');
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error deleting emoji:', error);
 
@@ -306,14 +297,10 @@ export const bulkDeleteEmojis = async (req: Request, res: Response) => {
 
 		logger.info('EMOJI_CONTROLLER', `Successfully bulk deleted ${deletedEmojis.length} emojis`);
 
-		return res.json({
-			success: true,
-			message: `Successfully deleted ${deletedEmojis.length} emoji(s)`,
-			data: {
-				deleted: deletedEmojis,
-				count: deletedEmojis.length
-			}
-		});
+		return sendSuccessResponse(res, {
+			deleted: deletedEmojis,
+			count: deletedEmojis.length
+		}, `Successfully deleted ${deletedEmojis.length} emoji(s)`);
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error bulk deleting emojis:', error);
 
@@ -344,10 +331,7 @@ export const getEmojiCategories = async (req: Request, res: Response) => {
 
 		logger.info('EMOJI_CONTROLLER', `Successfully fetched ${categories.length} emoji categories`);
 
-		return res.json({
-			success: true,
-			data: toPublicList(categories, (category) => ({ ...category, id: category.id }))
-		});
+		return sendTransformedListResponse(res, categories, (category) => ({ ...category, id: category.id }));
 	} catch (error) {
 		logger.error('EMOJI_CONTROLLER', 'Error fetching emoji categories:', error);
 

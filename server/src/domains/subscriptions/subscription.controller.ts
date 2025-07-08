@@ -9,6 +9,7 @@ import type { Request, Response } from 'express';
 import type { EntityId } from '@shared/types/ids';
 import { subscriptionService } from './subscription.service';
 import { logger } from '../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 export class SubscriptionController {
 	/**
@@ -75,13 +76,13 @@ export class SubscriptionController {
 
 			const subscription = await subscriptionService.getUserActiveSubscription(userId);
 
-			res.json({
-				success: true,
-				data: {
-					subscription,
-					hasActiveSubscription: subscription !== null
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: {
+            					subscription,
+            					hasActiveSubscription: subscription !== null
+            				}
+            			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error getting current subscription:', error);
 			res.status(500).json({
@@ -109,13 +110,13 @@ export class SubscriptionController {
 
 			const subscriptions = await subscriptionService.getUserSubscriptions(userId);
 
-			res.json({
-				success: true,
-				data: {
-					subscriptions,
-					count: subscriptions.length
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: {
+            					subscriptions,
+            					count: subscriptions.length
+            				}
+            			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error getting subscription history:', error);
 			res.status(500).json({
@@ -154,12 +155,12 @@ export class SubscriptionController {
 			const success = await subscriptionService.cancelSubscription(userId, subscriptionId);
 
 			if (success) {
-				res.json({
-					success: true,
-					data: {
-						message: 'Subscription cancelled successfully'
-					}
-				});
+				sendSuccessResponse(res, {
+                					success: true,
+                					data: {
+                						message: 'Subscription cancelled successfully'
+                					}
+                				});
 			} else {
 				res.status(400).json({
 					success: false,
@@ -193,14 +194,14 @@ export class SubscriptionController {
 
 			const drops = await subscriptionService.getUserCosmeticDrops(userId);
 
-			res.json({
-				success: true,
-				data: {
-					drops,
-					count: drops.length,
-					totalValue: drops.reduce((sum, drop) => sum + drop.cosmeticValue, 0)
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: {
+            					drops,
+            					count: drops.length,
+            					totalValue: drops.reduce((sum, drop) => sum + drop.cosmeticValue, 0)
+            				}
+            			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error getting cosmetic drops:', error);
 			res.status(500).json({
@@ -237,13 +238,13 @@ export class SubscriptionController {
 
 			const hasBenefit = await subscriptionService.hasSubscriptionBenefit(userId, benefitKey);
 
-			res.json({
-				success: true,
-				data: {
-					benefitKey,
-					hasBenefit
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: {
+            					benefitKey,
+            					hasBenefit
+            				}
+            			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error checking benefit:', error);
 			res.status(500).json({
@@ -291,13 +292,13 @@ export class SubscriptionController {
 				}
 			};
 
-			res.json({
-				success: true,
-				data: {
-					pricing,
-					currency: 'DGT'
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: {
+            					pricing,
+            					currency: 'DGT'
+            				}
+            			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error getting pricing:', error);
 			res.status(500).json({
@@ -326,13 +327,13 @@ export class SubscriptionController {
 
 			const results = await subscriptionService.processMonthlyCosmetics();
 
-			res.json({
-				success: true,
-				data: {
-					results,
-					message: `Cosmetic drops processed: ${results.processed} successful, ${results.failed} failed`
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: {
+            					results,
+            					message: `Cosmetic drops processed: ${results.processed} successful, ${results.failed} failed`
+            				}
+            			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error processing cosmetics:', error);
 			res.status(500).json({

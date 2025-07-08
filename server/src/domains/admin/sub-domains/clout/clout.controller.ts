@@ -5,6 +5,7 @@ import { eq, desc } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
 import { CloutService } from '../../../economy/services/cloutService';
 import { CloutTransformer } from '../../../gamification/transformers/clout.transformer';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 // Instantiate once – can be swapped with dependency injection later
 const cloutService = new CloutService();
@@ -17,7 +18,7 @@ export const getAllAchievements = async (req: Request, res: Response, next: Next
 		// Transform achievements for admin view
 		const transformedAchievements = CloutTransformer.toAchievementList(achievements, { role: 'admin' }, 'admin');
 		
-		res.json({ achievements: transformedAchievements, count: transformedAchievements.length });
+		sendSuccessResponse(res, { achievements: transformedAchievements, count: transformedAchievements.length });
 	} catch (err) {
 		logger.error('CloutAdmin', 'Error fetching achievements', err);
 		next(err);
@@ -37,7 +38,7 @@ export const getAchievementById = async (req: Request, res: Response, next: Next
 		// Transform achievement for admin view
 		const transformedAchievement = CloutTransformer.toAdminAchievement(rows[0]);
 		
-		res.json(transformedAchievement);
+		sendSuccessResponse(res, transformedAchievement);
 	} catch (err) {
 		next(err);
 	}
@@ -93,7 +94,7 @@ export const updateAchievement = async (req: Request, res: Response, next: NextF
 		if (!exists.length) return res.status(404).json({ message: 'Achievement not found' });
 
 		await db.update(cloutAchievements).set(updateData).where(eq(cloutAchievements.id, id));
-		res.json({ message: 'Achievement updated' });
+		sendSuccessResponse(res, { message: 'Achievement updated' });
 	} catch (err) {
 		next(err);
 	}
@@ -103,7 +104,7 @@ export const deleteAchievement = async (req: Request, res: Response, next: NextF
 	try {
 		const id = req.params.id;
 		await db.delete(cloutAchievements).where(eq(cloutAchievements.id, id));
-		res.json({ message: 'Achievement deleted' });
+		sendSuccessResponse(res, { message: 'Achievement deleted' });
 	} catch (err) {
 		next(err);
 	}
@@ -120,7 +121,7 @@ export const toggleAchievement = async (req: Request, res: Response, next: NextF
 		if (!rows.length) return res.status(404).json({ message: 'Achievement not found' });
 		const enabled = !rows[0].enabled;
 		await db.update(cloutAchievements).set({ enabled }).where(eq(cloutAchievements.id, id));
-		res.json({ message: `Achievement ${enabled ? 'enabled' : 'disabled'}` });
+		sendSuccessResponse(res, { message: `Achievement ${enabled ? 'enabled' : 'disabled'}` });
 	} catch (err) {
 		next(err);
 	}
@@ -164,7 +165,7 @@ export const getCloutLogs = async (req: Request, res: Response, next: NextFuncti
 		// Transform logs for admin view
 		const { logs: transformedLogs, summary } = CloutTransformer.toCloutLogHistory(logs, { role: 'admin' }, 'admin');
 		
-		res.json({ logs: transformedLogs, summary, count: transformedLogs.length });
+		sendSuccessResponse(res, { logs: transformedLogs, summary, count: transformedLogs.length });
 	} catch (err) {
 		next(err);
 	}
@@ -254,17 +255,17 @@ export const adjustClout = async (req: Request, res: Response, next: NextFunctio
 			clout: updatedUser.clout
 		};
 		
-		res.json({
-			message: `Clout adjustment applied`,
-			user: userResponse,
-			adjustment: {
-				type: adjustmentType,
-				amount,
-				oldClout,
-				newClout: updatedUser.clout,
-				reason
-			}
-		});
+		sendSuccessResponse(res, {
+        			message: `Clout adjustment applied`,
+        			user: userResponse,
+        			adjustment: {
+        				type: adjustmentType,
+        				amount,
+        				oldClout,
+        				newClout: updatedUser.clout,
+        				reason
+        			}
+        		});
 	} catch (err) {
 		logger.error('CloutAdmin', 'Error adjusting clout', err);
 		next(err);
@@ -331,7 +332,7 @@ export const getCloutAdjustmentLogs = async (req: Request, res: Response, next: 
 			timestamp: log.timestamp
 		}));
 		
-		res.json(transformedLogs);
+		sendSuccessResponse(res, transformedLogs);
 	} catch (err) {
 		logger.error('CloutAdmin', 'Error fetching clout adjustment logs', err);
 		next(err);

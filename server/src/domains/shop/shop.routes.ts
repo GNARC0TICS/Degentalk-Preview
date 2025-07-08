@@ -15,6 +15,7 @@ import { ShopTransformer } from './transformers/shop.transformer';
 import { vanitySinkAnalyzer } from './services/vanity-sink.analyzer';
 import type { DgtAmount, UserId, ItemId, OrderId } from '@shared/types/ids';
 import type { EntityId } from "@shared/types/ids";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const router = Router();
 
@@ -92,21 +93,21 @@ router.get('/items', async (req, res) => {
 			});
 		}
 
-		res.json({
-			items: transformedItems,
-			total: items.length,
-			page: pageNum,
-			limit: limitNum,
-			totalPages: Math.ceil(items.length / limitNum),
-			filters: {
-				category: category || 'all',
-				sort: sort
-			},
-			user: requestingUser ? {
-				isAuthenticated: true,
-				dgtBalance: requestingUser.dgtBalance || 0
-			} : { isAuthenticated: false }
-		});
+		sendSuccessResponse(res, {
+        			items: transformedItems,
+        			total: items.length,
+        			page: pageNum,
+        			limit: limitNum,
+        			totalPages: Math.ceil(items.length / limitNum),
+        			filters: {
+        				category: category || 'all',
+        				sort: sort
+        			},
+        			user: requestingUser ? {
+        				isAuthenticated: true,
+        				dgtBalance: requestingUser.dgtBalance || 0
+        			} : { isAuthenticated: false }
+        		});
 	} catch (error) {
 		logger.error('ShopController', 'Error fetching shop items', { error });
 		res.status(500).json({ error: 'Failed to fetch shop items' });
@@ -154,13 +155,13 @@ router.get('/items/:id', async (req, res) => {
 			transformedItem = ShopTransformer.toPublicShopItem(dbItem);
 		}
 
-		res.json({
-			item: transformedItem,
-			user: requestingUser ? {
-				isAuthenticated: true,
-				dgtBalance: requestingUser.dgtBalance || 0
-			} : { isAuthenticated: false }
-		});
+		sendSuccessResponse(res, {
+        			item: transformedItem,
+        			user: requestingUser ? {
+        				isAuthenticated: true,
+        				dgtBalance: requestingUser.dgtBalance || 0
+        			} : { isAuthenticated: false }
+        		});
 	} catch (error) {
 		logger.error('ShopController', 'Error fetching shop item', { error, itemId: req.params.id });
 		res.status(500).json({ error: 'Failed to fetch shop item' });
@@ -306,18 +307,18 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 				[{ ...inventoryItem, itemId, name: item.name, category: item.category }]
 			);
 
-			res.json({
-				success: true,
-				message: `Successfully purchased ${item.name}`,
-				item: transformedItem,
-				inventoryId: inventoryItem.id,
-				transaction: transformedTransaction,
-				vanityMetrics: {
-					dgtBurned: price as DgtAmount,
-					category: item.category,
-					contributesToDeflation: true
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				message: `Successfully purchased ${item.name}`,
+            				item: transformedItem,
+            				inventoryId: inventoryItem.id,
+            				transaction: transformedTransaction,
+            				vanityMetrics: {
+            					dgtBurned: price as DgtAmount,
+            					category: item.category,
+            					contributesToDeflation: true
+            				}
+            			});
 		} else {
 			// TODO: Implement USDT payments via CCPayment
 			return res.status(501).json({
@@ -403,15 +404,15 @@ router.get('/inventory', isAuthenticated, async (req, res) => {
 			rareItems: filteredInventory.filter(item => ['epic', 'legendary', 'mythic'].includes(item.rarity)).length
 		};
 
-		res.json({
-			inventory: filteredInventory,
-			inventoryByCategory,
-			stats,
-			filters: {
-				category: category || 'all',
-				equipped: equipped || 'all'
-			}
-		});
+		sendSuccessResponse(res, {
+        			inventory: filteredInventory,
+        			inventoryByCategory,
+        			stats,
+        			filters: {
+        				category: category || 'all',
+        				equipped: equipped || 'all'
+        			}
+        		});
 	} catch (error) {
 		logger.error('ShopController', 'Error getting inventory', {
 			error: error instanceof Error ? error.message : String(error),

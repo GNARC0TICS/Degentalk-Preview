@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { userService } from '@server/src/core/services/user.service';
 import { SocialService } from './social.service';
 import { logger } from '@server/src/core/logger';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 export class SocialController {
 	/**
@@ -10,7 +11,7 @@ export class SocialController {
 	static async getSocialConfig(req: Request, res: Response) {
 		try {
 			const config = await SocialService.getSocialConfig();
-			res.json(config);
+			sendSuccessResponse(res, config);
 		} catch (error) {
 			logger.error('SocialController', 'Error fetching social config', { error });
 			res.status(500).json({
@@ -33,7 +34,7 @@ export class SocialController {
 				changes: Object.keys(validatedData)
 			});
 
-			res.json(updatedConfig);
+			sendSuccessResponse(res, updatedConfig);
 		} catch (error) {
 			logger.error('SocialController', 'Error updating social config', { error });
 			res.status(500).json({
@@ -49,7 +50,7 @@ export class SocialController {
 	static async getSocialStats(req: Request, res: Response) {
 		try {
 			const stats = await SocialService.getSocialStats();
-			res.json(stats);
+			sendSuccessResponse(res, stats);
 		} catch (error) {
 			logger.error('SocialController', 'Error fetching social stats', { error });
 			res.status(500).json({
@@ -71,7 +72,7 @@ export class SocialController {
 				adminUserId
 			});
 
-			res.json(defaultConfig);
+			sendSuccessResponse(res, defaultConfig);
 		} catch (error) {
 			logger.error('SocialController', 'Error resetting social config', { error });
 			res.status(500).json({
@@ -87,7 +88,7 @@ export class SocialController {
 	static async getFeatureStatus(req: Request, res: Response) {
 		try {
 			const status = await SocialService.getFeatureStatus();
-			res.json(status);
+			sendSuccessResponse(res, status);
 		} catch (error) {
 			logger.error('SocialController', 'Error fetching feature status', { error });
 			res.status(500).json({
@@ -109,7 +110,7 @@ export class SocialController {
 				adminUserId
 			});
 
-			res.json(result);
+			sendSuccessResponse(res, result);
 		} catch (error) {
 			logger.error('SocialController', 'Error during emergency disable', { error });
 			res.status(500).json({

@@ -14,6 +14,7 @@ import { z } from 'zod';
 import multer from 'multer';
 import csvParser from 'csv-parser';
 import { Readable } from 'stream';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const databaseService = new DatabaseService();
 
@@ -52,162 +53,7 @@ export async function importCSV(req: Request, res: Response) {
 		const userId = userService.getUserFromRequest(req);
 
 		// Handle file upload
-		upload(req, res, async (uploadError) => {
-			if (uploadError) {
-				return res.status(400).json({
-					success: false,
-					error: uploadError.message
-				});
-			}
-
-			if (!req.file) {
-				return res.status(400).json({
-					success: false,
-					error: 'No file uploaded'
-				});
-			}
-
-			const { table, validateOnly, updateExisting } = importValidationSchema.parse(req.body);
-
-			// Check table access permissions
-			const accessInfo = await databaseService.getTableAccessInfo(table);
-			if (!accessInfo.canEdit) {
-				return res.status(403).json({
-					success: false,
-					error: accessInfo.reason || 'Table editing is not allowed',
-					tableType: accessInfo.isConfig ? 'configuration' : 'restricted',
-					configRoute: accessInfo.configRoute
-				});
-			}
-
-			// Parse CSV data
-			const csvData: any[] = [];
-			const csvStream = Readable.from(req.file.buffer);
-
-			try {
-				await new Promise((resolve, reject) => {
-					csvStream
-						.pipe(csvParser())
-						.on('data', (row) => csvData.push(row))
-						.on('end', resolve)
-						.on('error', reject);
-				});
-
-				// Validate data structure
-				if (csvData.length === 0) {
-					return res.status(400).json({
-						success: false,
-						error: 'CSV file is empty or invalid'
-					});
-				}
-
-				// Validate each row against table schema
-				const validationResults = [];
-				for (let i = 0; i < csvData.length; i++) {
-					const validation = await databaseService.validateRowData(table, csvData[i]);
-					if (!validation.valid) {
-						validationResults.push({
-							row: i + 1,
-							errors: validation.errors
-						});
-					}
-				}
-
-				// If validation only, return results
-				if (validateOnly) {
-					await adminCreateAuditLogEntry({
-						adminUserId: userId,
-						action: 'database_import_validated',
-						details: `Validated CSV import for table ${table} (${csvData.length} rows, ${validationResults.length} errors)`
-					});
-
-					return res.json({
-						success: true,
-						data: {
-							totalRows: csvData.length,
-							validRows: csvData.length - validationResults.length,
-							errors: validationResults,
-							preview: csvData.slice(0, 5) // First 5 rows for preview
-						}
-					});
-				}
-
-				// If there are validation errors, don't proceed with import
-				if (validationResults.length > 0) {
-					return res.status(400).json({
-						success: false,
-						error: 'Data validation failed',
-						details: validationResults
-					});
-				}
-
-				// Perform the import
-				let imported = 0;
-				let updated = 0;
-				let errors = 0;
-
-				for (const row of csvData) {
-					try {
-						if (updateExisting) {
-							// Try to update first, then create if not exists
-							const schema = await databaseService.getTableSchema(table);
-							const primaryKey = schema.primaryKey[0];
-
-							if (primaryKey && row[primaryKey]) {
-								const existing = await databaseService.getRowById(table, row[primaryKey]);
-								if (existing) {
-									await databaseService.updateRow(table, row[primaryKey], row);
-									updated++;
-								} else {
-									await databaseService.createRow(table, row);
-									imported++;
-								}
-							} else {
-								await databaseService.createRow(table, row);
-								imported++;
-							}
-						} else {
-							await databaseService.createRow(table, row);
-							imported++;
-						}
-					} catch (error) {
-						errors++;
-						logger.warn('BulkController', 'Failed to import row', { error, row });
-					}
-				}
-
-				// Log the import
-				await adminCreateAuditLogEntry({
-					adminUserId: userId,
-					action: 'database_bulk_import',
-					details: `Imported CSV data to table ${table}`,
-					metadata: {
-						table,
-						totalRows: csvData.length,
-						imported,
-						updated,
-						errors,
-						filename: req.file.originalname
-					}
-				});
-
-				res.json({
-					success: true,
-					data: {
-						totalRows: csvData.length,
-						imported,
-						updated,
-						errors
-					}
-				});
-			} catch (parseError: any) {
-				logger.error('BulkController', 'CSV parsing error', { error: parseError.message });
-				res.status(400).json({
-					success: false,
-					error: 'Failed to parse CSV file'
-				});
-			}
-		});
+		sendErrorResponse(res, 'Server error', 400);
 	} catch (error: any) {
 		logger.error('BulkController', 'Error importing CSV', { error: error.message });
 		res.status(500).json({
@@ -328,15 +174,15 @@ export async function validateImportData(req: Request, res: Response) {
 			details: `Validated ${data.length} rows for table ${table}`
 		});
 
-		res.json({
-			success: true,
-			data: {
-				totalRows: data.length,
-				validRows: data.length - validationResults.length,
-				invalidRows: validationResults.length,
-				errors: validationResults
-			}
-		});
+		sendSuccessResponse(res, {
+        			success: true,
+        			data: {
+        				totalRows: data.length,
+        				validRows: data.length - validationResults.length,
+        				invalidRows: validationResults.length,
+        				errors: validationResults
+        			}
+        		});
 	} catch (error: any) {
 		logger.error('BulkController', 'Error validating import data', { error: error.message });
 		res.status(500).json({

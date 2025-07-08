@@ -4,6 +4,7 @@ import { avatarFrameService } from './avatar-frames.service';
 import { logger } from '../../../../core/logger';
 import { z } from 'zod';
 import type { FrameId } from '@shared/types/ids';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const createFrameSchema = z.object({
 	name: z.string().min(1, 'Name is required').max(255, 'Name must be less than 255 characters'),
@@ -21,7 +22,7 @@ class AvatarFrameController {
 	async getAllFrames(req: Request, res: Response) {
 		try {
 			const frames = await avatarFrameService.getAllFrames();
-			return res.json(frames);
+			sendSuccessResponse(res, frames);
 		} catch (error) {
 			logger.error('AvatarFrameController', 'Failed to get all frames', { error });
 			return res.status(500).json({
@@ -40,7 +41,7 @@ class AvatarFrameController {
 				return res.status(404).json({ error: 'Avatar frame not found' });
 			}
 
-			return res.json(frame);
+			sendSuccessResponse(res, frame);
 		} catch (error) {
 			logger.error('AvatarFrameController', 'Failed to get frame', {
 				error,
@@ -101,7 +102,7 @@ class AvatarFrameController {
 				updatedBy: userService.getUserFromRequest(req)?.id
 			});
 
-			return res.json(frame);
+			sendSuccessResponse(res, frame);
 		} catch (error) {
 			if (error instanceof z.ZodError) {
 				return res.status(400).json({

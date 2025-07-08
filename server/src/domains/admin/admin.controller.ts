@@ -4,6 +4,7 @@ import { getUserId } from './admin.middleware';
 import { AdminError } from './admin.errors';
 import type { AdminId, UserId } from '@shared/types/ids';
 import { userService } from '@server/src/core/services/user.service';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 export class AdminController {
 	/**
@@ -12,7 +13,7 @@ export class AdminController {
 	async getDashboardStats(req: Request, res: Response) {
 		try {
 			const stats = await adminService.getDashboardStats();
-			return res.json(stats);
+			sendSuccessResponse(res, stats);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({
@@ -34,7 +35,7 @@ export class AdminController {
 			const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
 			const recentActions = await adminService.getRecentAdminActions(limit);
 
-			return res.json(recentActions);
+			sendSuccessResponse(res, recentActions);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return res.status(error.httpStatus).json({

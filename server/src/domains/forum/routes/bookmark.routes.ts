@@ -15,6 +15,10 @@ import { eq, and } from 'drizzle-orm';
 import { isAuthenticated as requireAuth } from '../../auth/middleware/auth.middleware';
 import { logger } from '@server/src/core/logger';
 import { asyncHandler } from '@server/src/core/errors';
+import { 
+	sendSuccessResponse,
+	sendErrorResponse
+} from '@server/src/core/utils/transformer.helpers';
 
 const router = Router();
 
@@ -65,10 +69,8 @@ router.post(
 				createdAt: new Date()
 			});
 
-			res.status(201).json({
-				success: true,
-				message: 'Thread bookmarked successfully'
-			});
+			res.status(201);
+			sendSuccessResponse(res, null, 'Thread bookmarked successfully');
 		} catch (error) {
 			logger.error('BookmarkRoutes', 'Error in POST /bookmarks', { error });
 
@@ -110,10 +112,7 @@ router.delete(
 					and(eq(userThreadBookmarks.userId, userId), eq(userThreadBookmarks.threadId, threadId))
 				);
 
-			res.json({
-				success: true,
-				message: 'Bookmark removed successfully'
-			});
+			sendSuccessResponse(res, null, 'Bookmark removed successfully');
 		} catch (error) {
 			logger.error('BookmarkRoutes', 'Error in DELETE /bookmarks/:threadId', { error });
 			res.status(500).json({
@@ -151,10 +150,11 @@ router.get(
 				.orderBy(userThreadBookmarks.createdAt);
 
 			// TODO: Join with threads table to get thread details
+			// Note: Raw bookmarks data returned as this is just bookmark metadata
+			// If/when we add thread details, we'll need to transform the thread data
 
-			res.json({
-				success: true,
-				data: bookmarks,
+			sendSuccessResponse(res, {
+				bookmarks,
 				pagination: {
 					page,
 					limit,

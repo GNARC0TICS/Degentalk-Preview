@@ -12,6 +12,7 @@ import {
 	DeleteContentSchema
 } from './reports.validators';
 import { validateRequestBody, validateQueryParams } from '../../admin.validation';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 export class AdminReportsController {
 	async getReports(req: Request, res: Response) {
@@ -19,7 +20,7 @@ export class AdminReportsController {
 			const query = validateQueryParams(req, res, GetReportsQuerySchema);
 			if (!query) return;
 			const result = await adminReportsService.getReports(query);
-			res.json(result);
+			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -34,7 +35,7 @@ export class AdminReportsController {
 			const reportId = req.params.id as ReportId;
 
 			const report = await adminReportsService.getReportById(reportId);
-			res.json(report);
+			sendSuccessResponse(res, report);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -62,7 +63,7 @@ export class AdminReportsController {
 				notes: body.notes,
 				finalStatus: 'resolved'
 			});
-			res.json({ message: 'Report resolved successfully', data: updatedReport });
+			sendSuccessResponse(res, { message: 'Report resolved successfully', data: updatedReport });
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -90,7 +91,7 @@ export class AdminReportsController {
 				notes: body.notes,
 				finalStatus: 'dismissed'
 			});
-			res.json({ message: 'Report dismissed successfully', data: updatedReport });
+			sendSuccessResponse(res, { message: 'Report dismissed successfully', data: updatedReport });
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -113,7 +114,7 @@ export class AdminReportsController {
 				reason: body.reason,
 				duration: body.duration
 			});
-			res.json({ message: 'User banned successfully', data: banResult });
+			sendSuccessResponse(res, { message: 'User banned successfully', data: banResult });
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res
@@ -153,7 +154,7 @@ export class AdminReportsController {
 				contentId.toString(),
 				{ reason: body.reason }
 			);
-			res.json(deleteResult);
+			sendSuccessResponse(res, deleteResult);
 		} catch (error) {
 			if (error instanceof AdminError)
 				return res

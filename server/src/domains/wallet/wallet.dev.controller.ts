@@ -1,4 +1,11 @@
 import { userService } from '@server/src/core/services/user.service';
+import { EconomyTransformer } from '../economy/transformers/economy.transformer';
+import { 
+	toPublicList,
+	sendSuccessResponse,
+	sendErrorResponse,
+	sendTransformedResponse
+} from '@server/src/core/utils/transformer.helpers';
 /**
  * Development endpoints for wallet testing
  * These are only available in development mode
@@ -32,12 +39,12 @@ const simulateWebhookSchema = z.object({
 export async function initializeWallet(req: Request, res: Response, next: NextFunction) {
 	try {
 		if (!isDevMode() || !walletConfig.DEV_MODE.ALLOW_DEV_TOPUP) {
-			return res.status(403).json({ error: 'This endpoint is only available in development mode' });
+			return sendErrorResponse(res, 'This endpoint is only available in development mode', 403);
 		}
 
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		// Initialize DGT wallet
@@ -48,8 +55,7 @@ export async function initializeWallet(req: Request, res: Response, next: NextFu
 
 		logger.info('WalletDevController', 'Initialized wallets for user', { userId, ccpaymentId });
 
-		res.json({
-			success: true,
+		sendSuccessResponse(res, {
 			message: 'Wallets initialized successfully',
 			ccpaymentId
 		});
@@ -68,12 +74,12 @@ export async function initializeWallet(req: Request, res: Response, next: NextFu
 export async function devTopUp(req: Request, res: Response, next: NextFunction) {
 	try {
 		if (!isDevMode() || !walletConfig.DEV_MODE.ALLOW_DEV_TOPUP) {
-			return res.status(403).json({ error: 'This endpoint is only available in development mode' });
+			return sendErrorResponse(res, 'This endpoint is only available in development mode', 403);
 		}
 
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		const { amount, token } = topUpSchema.parse(req.body);
@@ -85,21 +91,20 @@ export async function devTopUp(req: Request, res: Response, next: NextFunction) 
 
 			logger.info('WalletDevController', 'DGT top-up completed', { userId, amount });
 
-			res.json({
-				success: true,
+			sendSuccessResponse(res, {
 				message: `Added ${amount} DGT to your wallet`,
-				newBalance: await dgtService.getUserBalance(userId)
+				newBalance: EconomyTransformer.toAuthenticatedDgtBalance(await dgtService.getUserBalance(userId), userService.getUserFromRequest(req))
 			});
 		} else {
 			// For USDT, we would simulate a deposit via CCPayment webhook
-			res.json({
-				success: false,
-				message: 'USDT top-up not implemented yet. Use the simulate webhook endpoint instead.'
+			sendSuccessResponse(res, {
+				message: 'USDT top-up not implemented yet. Use the simulate webhook endpoint instead.',
+				success: false
 			});
 		}
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			return res.status(400).json({ error: 'Invalid request', details: error.errors });
+			return sendErrorResponse(res, 'Invalid request', 400);
 		}
 		logger.error('WalletDevController', 'Error in dev top-up', {
 			error: error instanceof Error ? error.message : String(error),
@@ -115,20 +120,20 @@ export async function devTopUp(req: Request, res: Response, next: NextFunction) 
 export async function getDevWalletInfo(req: Request, res: Response, next: NextFunction) {
 	try {
 		if (!isDevMode()) {
-			return res.status(403).json({ error: 'This endpoint is only available in development mode' });
+			return sendErrorResponse(res, 'This endpoint is only available in development mode', 403);
 		}
 
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		const wallet = await walletService.getUserWallet(userId);
 		const transactions = await walletService.getTransactionHistory(userId, 10);
 
-		res.json({
-			wallet,
-			recentTransactions: transactions,
+		sendSuccessResponse(res, {
+			wallet: EconomyTransformer.toAuthenticatedWallet(wallet, userService.getUserFromRequest(req)),
+			recentTransactions: toPublicList(transactions, EconomyTransformer.toTransaction),
 			devMode: true,
 			mockCCPayment: walletConfig.DEV_MODE.MOCK_CCPAYMENT
 		});
@@ -147,9 +152,7 @@ export async function getDevWalletInfo(req: Request, res: Response, next: NextFu
 export async function simulateWebhook(req: Request, res: Response, next: NextFunction) {
 	try {
 		if (!isDevMode() || !walletConfig.DEV_MODE.MOCK_CCPAYMENT) {
-			return res
-				.status(403)
-				.json({ error: 'This endpoint is only available in development mode with mock CCPayment' });
+			return sendErrorResponse(res, 'This endpoint is only available in development mode with mock CCPayment', 403);
 		}
 
 		const { orderId, status, amount, txHash } = simulateWebhookSchema.parse(req.body);
@@ -172,15 +175,14 @@ export async function simulateWebhook(req: Request, res: Response, next: NextFun
 
 		logger.info('WalletDevController', 'Simulated webhook processed', { orderId, status, result });
 
-		res.json({
-			success: true,
+		sendSuccessResponse(res, {
 			message: 'Webhook simulation processed',
 			event: webhookEvent,
 			result
 		});
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			return res.status(400).json({ error: 'Invalid request', details: error.errors });
+			return sendErrorResponse(res, 'Invalid request', 400);
 		}
 		logger.error('WalletDevController', 'Error simulating webhook', {
 			error: error instanceof Error ? error.message : String(error)
@@ -195,20 +197,20 @@ export async function simulateWebhook(req: Request, res: Response, next: NextFun
 export async function resetWallet(req: Request, res: Response, next: NextFunction) {
 	try {
 		if (!isDevMode() || process.env.ALLOW_WALLET_RESET !== 'true') {
-			return res.status(403).json({ error: 'This endpoint is disabled for safety' });
+			return sendErrorResponse(res, 'This endpoint is disabled for safety', 403);
 		}
 
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		// This would reset the user's wallet to initial state
 		// Implementation depends on your requirements
 
-		res.json({
-			success: false,
-			message: 'Wallet reset not implemented for safety reasons'
+		sendSuccessResponse(res, {
+			message: 'Wallet reset not implemented for safety reasons',
+			success: false
 		});
 	} catch (error) {
 		logger.error('WalletDevController', 'Error resetting wallet', {

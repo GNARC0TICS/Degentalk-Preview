@@ -25,6 +25,7 @@ import {
 import { formatAdminResponse, AdminOperationBoundary } from '@server/src/domains/admin/shared';
 import { AdminError, AdminErrorCodes } from '@server/src/domains/admin/admin.errors';
 import type { StickerId, PackId } from '@shared/types/ids';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 // Additional validation schemas
 const stickerIdSchema = z.object({
@@ -565,18 +566,18 @@ export class StickerController {
 			const sticker = await stickerService.getSticker(id);
 
 			// Return sticker URLs for preview
-			res.json({
-				success: true,
-				data: {
-					staticUrl: sticker.staticUrl,
-					animatedUrl: sticker.animatedUrl,
-					thumbnailUrl: sticker.thumbnailUrl,
-					format: sticker.format,
-					isAnimated: sticker.isAnimated,
-					width: sticker.width,
-					height: sticker.height
-				}
-			});
+			sendSuccessResponse(res, {
+            				success: true,
+            				data: {
+            					staticUrl: sticker.staticUrl,
+            					animatedUrl: sticker.animatedUrl,
+            					thumbnailUrl: sticker.thumbnailUrl,
+            					format: sticker.format,
+            					isAnimated: sticker.isAnimated,
+            					width: sticker.width,
+            					height: sticker.height
+            				}
+            			});
 		} catch (error) {
 			res.status(500).json({
 				success: false,

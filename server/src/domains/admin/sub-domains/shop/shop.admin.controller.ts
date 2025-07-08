@@ -3,6 +3,7 @@ import { products } from '@schema'; // Adjust path to your schema
 import { eq, desc, and } from 'drizzle-orm';
 import { ShopTransformer } from '../../transformers/shop.transformer';
 import { logger } from '../../../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 export const shopAdminController = {
 	// List all products
@@ -15,7 +16,7 @@ export const shopAdminController = {
 			ShopTransformer.toAdminShopItem(product)
 		);
 		
-		res.json(transformedProducts);
+		sendSuccessResponse(res, transformedProducts);
 	},
 
 	// Create a new product
@@ -85,7 +86,7 @@ export const shopAdminController = {
 			// Transform product for admin view
 			const transformedProduct = ShopTransformer.toAdminShopItem(product[0]);
 			
-			res.json(transformedProduct);
+			sendSuccessResponse(res, transformedProduct);
 		} catch (error) {
 			logger.error('Error fetching product by ID:', error);
 			res.status(500).json({ message: 'Error fetching product by ID', error: error.message });
@@ -126,7 +127,7 @@ export const shopAdminController = {
 			// Transform updated product for admin view
 			const transformedProduct = ShopTransformer.toAdminShopItem(updatedProduct[0]);
 			
-			res.json(transformedProduct);
+			sendSuccessResponse(res, transformedProduct);
 		} catch (error) {
 			logger.error('Error updating product:', error);
 			res.status(500).json({ message: 'Error updating product', error: error.message });

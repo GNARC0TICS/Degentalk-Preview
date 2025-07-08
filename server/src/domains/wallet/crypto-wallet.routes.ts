@@ -11,7 +11,12 @@ import { userService } from '@server/src/core/services/user.service';
 import { isAuthenticated } from '../auth/middleware/auth.middleware';
 import { logger } from '../../core/logger';
 import { EconomyTransformer } from '../economy/transformers/economy.transformer';
-import { toPublicList } from '@server/src/core/utils/transformer.helpers';
+import { 
+  toPublicList,
+  sendSuccessResponse,
+  sendErrorResponse,
+  sendTransformedResponse
+} from '@server/src/core/utils/transformer.helpers';
 import { ccpaymentService } from './ccpayment.service';
 import { walletService } from './wallet.service';
 import { z } from 'zod';
@@ -45,7 +50,7 @@ router.get('/addresses', isAuthenticated, async (req, res) => {
   try {
     const authUser = userService.getUserFromRequest(req);
     if (!authUser?.id) {
-      return res.status(401).json({ error: 'User not authenticated' });
+      return sendErrorResponse(res, 'User not authenticated', 401);
     }
 
     const userId = authUser.id as UserId;
@@ -85,7 +90,7 @@ router.get('/addresses', isAuthenticated, async (req, res) => {
       })
     );
 
-    res.json({
+    sendSuccessResponse(res, {
       addresses: toPublicList(enhancedAddresses, EconomyTransformer.toPublicCryptoWallet),
       totalAddresses: enhancedAddresses.length
     });
@@ -95,7 +100,7 @@ router.get('/addresses', isAuthenticated, async (req, res) => {
       error: error.message,
       userId: userService.getUserFromRequest(req)?.id
     });
-    res.status(500).json({ error: 'Failed to retrieve crypto addresses' });
+    sendErrorResponse(res, 'Failed to retrieve crypto addresses', 500);
   }
 });
 
@@ -107,7 +112,7 @@ router.get('/balances', isAuthenticated, async (req, res) => {
   try {
     const authUser = userService.getUserFromRequest(req);
     if (!authUser?.id) {
-      return res.status(401).json({ error: 'User not authenticated' });
+      return sendErrorResponse(res, 'User not authenticated', 401);
     }
 
     const userId = authUser.id.toString();
@@ -141,14 +146,14 @@ router.get('/balances', isAuthenticated, async (req, res) => {
       crypto: toPublicList(balances.crypto, EconomyTransformer.toAuthenticatedCryptoWallet)
     };
     
-    res.json(transformedBalances);
+    sendSuccessResponse(res, transformedBalances);
 
   } catch (error) {
     logger.error('CryptoWalletRoutes', 'Error getting crypto balances', {
       error: error.message,
       userId: userService.getUserFromRequest(req)?.id
     });
-    res.status(500).json({ error: 'Failed to retrieve crypto balances' });
+    sendErrorResponse(res, 'Failed to retrieve crypto balances', 500);
   }
 });
 
@@ -160,7 +165,7 @@ router.post('/validate-address', isAuthenticated, async (req, res) => {
   try {
     const authUser = userService.getUserFromRequest(req);
     if (!authUser?.id) {
-      return res.status(401).json({ error: 'User not authenticated' });
+      return sendErrorResponse(res, 'User not authenticated', 401);
     }
 
     const { chain, address } = addressValidationSchema.parse(req.body);
@@ -176,21 +181,18 @@ router.post('/validate-address', isAuthenticated, async (req, res) => {
         : 'Invalid address for the specified chain'
     };
     
-    res.json(result);
+    sendSuccessResponse(res, result);
 
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ 
-        error: 'Invalid request', 
-        details: error.errors 
-      });
+      return sendErrorResponse(res, 'Invalid request', 400);
     }
 
     logger.error('CryptoWalletRoutes', 'Error validating address', {
       error: error.message,
       userId: userService.getUserFromRequest(req)?.id
     });
-    res.status(500).json({ error: 'Failed to validate address' });
+    sendErrorResponse(res, 'Failed to validate address', 500);
   }
 });
 
@@ -202,7 +204,7 @@ router.post('/get-withdraw-fee', isAuthenticated, async (req, res) => {
   try {
     const authUser = userService.getUserFromRequest(req);
     if (!authUser?.id) {
-      return res.status(401).json({ error: 'User not authenticated' });
+      return sendErrorResponse(res, 'User not authenticated', 401);
     }
 
     const { coinId, chain } = withdrawFeeSchema.parse(req.body);
@@ -215,21 +217,18 @@ router.post('/get-withdraw-fee', isAuthenticated, async (req, res) => {
       message: `Withdrawal fee for ${feeInfo.coinSymbol} on ${chain}: ${feeInfo.amount}`
     };
     
-    res.json(result);
+    sendTransformedResponse(res, result, EconomyTransformer.toPublicWithdrawFeeInfo);
 
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ 
-        error: 'Invalid request', 
-        details: error.errors 
-      });
+      return sendErrorResponse(res, 'Invalid request', 400);
     }
 
     logger.error('CryptoWalletRoutes', 'Error getting withdraw fee', {
       error: error.message,
       userId: userService.getUserFromRequest(req)?.id
     });
-    res.status(500).json({ error: 'Failed to get withdrawal fee' });
+    sendErrorResponse(res, 'Failed to get withdrawal fee', 500);
   }
 });
 
@@ -241,7 +240,7 @@ router.post('/rescan-transaction', isAuthenticated, async (req, res) => {
   try {
     const authUser = userService.getUserFromRequest(req);
     if (!authUser?.id) {
-      return res.status(401).json({ error: 'User not authenticated' });
+      return sendErrorResponse(res, 'User not authenticated', 401);
     }
 
     const transactionData = rescanTransactionSchema.parse(req.body);
@@ -261,21 +260,18 @@ router.post('/rescan-transaction', isAuthenticated, async (req, res) => {
       message: 'Transaction rescan initiated successfully'
     };
     
-    res.json(result);
+    sendSuccessResponse(res, result);
 
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ 
-        error: 'Invalid request', 
-        details: error.errors 
-      });
+      return sendErrorResponse(res, 'Invalid request', 400);
     }
 
     logger.error('CryptoWalletRoutes', 'Error rescanning transaction', {
       error: error.message,
       userId: userService.getUserFromRequest(req)?.id
     });
-    res.status(500).json({ error: 'Failed to rescan transaction' });
+    sendErrorResponse(res, 'Failed to rescan transaction', 500);
   }
 });
 
@@ -310,13 +306,13 @@ router.get('/supported-tokens', async (req, res) => {
       pricesLastUpdated: new Date().toISOString()
     };
     
-    res.json(result);
+    sendTransformedResponse(res, result, EconomyTransformer.toPublicSupportedTokens);
 
   } catch (error) {
     logger.error('CryptoWalletRoutes', 'Error getting supported tokens', {
       error: error.message
     });
-    res.status(500).json({ error: 'Failed to retrieve supported tokens' });
+    sendErrorResponse(res, 'Failed to retrieve supported tokens', 500);
   }
 });
 
@@ -328,7 +324,7 @@ router.get('/token-info/:coinId', async (req, res) => {
   try {
     const coinId = req.params.coinId as UserId;
     if (isNaN(coinId)) {
-      return res.status(400).json({ error: 'Invalid coin ID' });
+      return sendErrorResponse(res, 'Invalid coin ID', 400);
     }
 
     // Get detailed token information
@@ -349,14 +345,14 @@ router.get('/token-info/:coinId', async (req, res) => {
       priceLastUpdated: new Date().toISOString()
     };
     
-    res.json(result);
+    sendTransformedResponse(res, result, EconomyTransformer.toPublicTokenInfo);
 
   } catch (error) {
     logger.error('CryptoWalletRoutes', 'Error getting token info', {
       coinId: req.params.coinId,
       error: error.message
     });
-    res.status(500).json({ error: 'Failed to retrieve token information' });
+    sendErrorResponse(res, 'Failed to retrieve token information', 500);
   }
 });
 
