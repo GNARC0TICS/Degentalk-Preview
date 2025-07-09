@@ -22,6 +22,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { TitleMediaInput } from '@/components/admin/forms/xp/TitleMediaInput';
 import { UnlockMultiSelect } from '@/components/admin/inputs/UnlockMultiSelect';
 import type { LevelId } from '@shared/types/ids';
+
 // Assuming Level and LevelFormData types might be needed by the page as well
 // If not, they can be kept internal to this file.
 

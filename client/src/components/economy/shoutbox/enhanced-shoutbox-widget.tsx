@@ -205,13 +205,15 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 			// Process message queue
 			if (messageQueue.length > 0) {
 				const nextMessage = messageQueue[0];
-				setMessageQueue((prev) => prev.slice(1));
-				setTimeout(
-					() => {
-						sendMessageMutation.mutate(nextMessage);
-					},
-					(config?.rateLimitSeconds || 10) * 1000
-				);
+				if (nextMessage) {
+					setMessageQueue((prev) => prev.slice(1));
+					setTimeout(
+						() => {
+							sendMessageMutation.mutate(nextMessage);
+						},
+						(config?.rateLimitSeconds || 10) * 1000
+					);
+				}
 			}
 		},
 		onError: (error: any) => {

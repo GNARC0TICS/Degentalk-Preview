@@ -3,6 +3,7 @@
  */
 
 import type { UserId, ThreadId, PostId } from '@shared/types/ids';
+
 export interface Notification {
 	id: UserId;
 	userId: UserId;

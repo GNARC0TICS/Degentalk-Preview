@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { HotThreadsSkeleton } from '@/components/ui/thread-skeleton';
 import { API_ROUTES } from '@/constants/apiRoutes';
 import type { ThreadId } from '@shared/types/ids';
+
 // Removed motion, AnimatePresence
 
 interface ThreadResponse {
