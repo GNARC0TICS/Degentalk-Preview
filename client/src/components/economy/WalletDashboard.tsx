@@ -59,7 +59,7 @@ export function WalletDashboard({
 	};
 
 	const handleWalletAction = (action: string) => {
-		console.log(`Wallet action: ${action}`);
+		// console.log(`Wallet action: ${action}`);
 		// Implement wallet actions
 	};
 

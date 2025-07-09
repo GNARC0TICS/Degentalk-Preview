@@ -55,14 +55,14 @@ export function useWallet() {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/api/wallet/deposit-addresses'] });
 			toast({
-				variant: 'success',
+				variant: 'default',
 				title: 'Addresses Refreshed',
 				description: 'Your deposit addresses have been refreshed.'
 			});
 		},
 		onError: (error: Error) => {
 			toast({
-				variant: 'error',
+				variant: 'destructive',
 				title: 'Error Refreshing Addresses',
 				description: error?.message || 'Failed to refresh deposit addresses. Please try again.'
 			});
@@ -95,7 +95,7 @@ export function useWallet() {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['/api/wallet/balance'] });
 			toast({
-				variant: 'success',
+				variant: 'default',
 				title: 'DGT Purchase Initiated',
 				description:
 					'Your DGT purchase request has been initiated. Please check your transaction history for updates.'
@@ -103,7 +103,7 @@ export function useWallet() {
 		},
 		onError: (error: Error) => {
 			toast({
-				variant: 'error',
+				variant: 'destructive',
 				title: 'Error Purchasing DGT',
 				description: error?.message || 'Failed to purchase DGT. Please try again.'
 			});
@@ -119,14 +119,14 @@ export function useWallet() {
 			queryClient.invalidateQueries({ queryKey: ['/api/wallet/balances'] });
 			queryClient.invalidateQueries({ queryKey: ['/api/wallet/transactions'] });
 			toast({
-				variant: 'success',
+				variant: 'default',
 				title: 'DGT Transfer Complete',
 				description: 'Your DGT transfer was completed successfully.'
 			});
 		},
 		onError: (error: Error) => {
 			toast({
-				variant: 'error',
+				variant: 'destructive',
 				title: 'Error Transferring DGT',
 				description: error?.message || 'Failed to transfer DGT. Please try again.'
 			});

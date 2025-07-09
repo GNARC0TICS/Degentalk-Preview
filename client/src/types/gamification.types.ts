@@ -13,8 +13,8 @@ export interface Achievement {
 	description: string;
 	category: 'forum' | 'social' | 'economy' | 'milestone' | 'special';
 	rarity: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
-	icon?: string | undefined;
-	color?: string | undefined;
+	icon?: string;
+	color?: string;
 	isActive: boolean;
 	requirements: AchievementRequirement[];
 	rewards: AchievementReward[];
@@ -71,7 +71,7 @@ export interface XPCondition {
 	type: 'user_level' | 'forum_access' | 'time_based' | 'custom';
 	operator: 'gte' | 'lte' | 'eq' | 'in';
 	value: number | string | string[];
-	message?: string | undefined;
+	message?: string;
 }
 
 export interface XPLog {
@@ -229,8 +229,8 @@ export interface CreateAchievementRequest {
 	rarity: Achievement['rarity'];
 	requirements: Omit<AchievementRequirement, 'id'>[];
 	rewards: Omit<AchievementReward, 'id'>[];
-	icon?: string | undefined;
-	color?: string | undefined;
+	icon?: string;
+	color?: string;
 }
 
 export interface UpdateAchievementRequest extends Partial<CreateAchievementRequest> {

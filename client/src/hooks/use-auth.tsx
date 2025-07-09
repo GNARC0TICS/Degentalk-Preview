@@ -40,7 +40,7 @@ export interface User {
 }
 
 // Possible roles for mock user switching
-type MockRole = 'user' | 'moderator' | 'admin' | 'super_admin';
+export type MockRole = 'user' | 'moderator' | 'admin' | 'super_admin';
 
 // Auth context type
 interface AuthContextType {
@@ -247,11 +247,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 			// Debug log to track auth state changes
 			if (import.meta.env.MODE === 'development') {
-				console.log('[AUTH] User state update:', {
-					userLoading,
-					fetchedUser: fetchedUser ? 'user object' : 'null',
-					willSetAuthenticated: !!fetchedUser
-				});
+				// console.log - user state update for development
 			}
 		}
 	}, [fetchedUser, userLoading]);
@@ -331,7 +327,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		},
 		onError: (error) => {
 			// Handle logout error, maybe just log it?
-			console.error('Logout failed:', error.message);
+			// console.error('Logout failed:', error.message);
 			// Still clear state locally even if server logout fails?
 			setUserState(null);
 			setAuthError(null);
@@ -349,7 +345,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	// Dev Mode: Function to set the mock role
 	const setMockRole = (role: MockRole) => {
 		if (!isDevelopment) {
-			console.warn('setMockRole can only be used in development mode.');
+			// console.warn('setMockRole can only be used in development mode.');
 			return;
 		}
 		setCurrentMockRoleState(role);
@@ -368,7 +364,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			setUserState(mockUser);
 
 			if (import.meta.env.MODE === 'development') {
-				console.log('[AUTH] Dev auto-login activated with mock role:', currentMockRoleState);
+				// console.log('[AUTH] Dev auto-login activated with mock role:', currentMockRoleState);
 			}
 		}
 	}, [isDevelopment, isInitialLoading, fetchedUser, isLoggedOut, currentMockRoleState, userState]);
@@ -381,15 +377,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 		// Debug log for auth context changes
 		if (import.meta.env.MODE === 'development') {
-			console.log('[AUTH] Context value update:', {
-				userState: userState ? `${userState.username} (ID: ${userState.id})` : 'null',
-				isAuthenticated,
-				isInitialLoading,
-				userLoading,
-				userRole: userState?.role,
-				userLevel: userState?.level,
-				permissions
-			});
+			// console.log - auth context value update for development
 		}
 
 		return {
@@ -439,10 +427,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			const dataAttr = 'data-auth-provider';
 			const providerElements = document.querySelectorAll(`[${dataAttr}="true"]`);
 			if (providerElements.length > 1) {
-				console.error(
-					'Multiple AuthProviders detected! This will cause context conflicts. ' +
-						'Ensure you are only using the AuthProvider from the RootProvider.'
-				);
+				// console.error - multiple auth providers detected in development
 				// Optionally throw an error in dev to make it more obvious
 				// throw new Error("Multiple AuthProviders rendered. Check RootProvider setup.");
 			}

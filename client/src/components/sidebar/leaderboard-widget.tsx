@@ -49,10 +49,10 @@ export default function LeaderboardWidget({
 			return (users as User[]).map((user, index) => ({
 				id: String(user.id),
 				username: user.username,
-				xp: user.xp || 0,
-				level: user.level || 1,
+				xp: user.forumStats?.xp ?? 0,
+				level: user.forumStats?.level ?? 1,
 				rank: index + 1,
-				avatar: user.avatarUrl || undefined
+				avatar: user.avatarUrl ?? undefined
 			}));
 		}
 

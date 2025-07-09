@@ -18,7 +18,7 @@ import { dgtEconomyParameters } from './dgtEconomyParameters';
 import { tipSettings } from './tipSettings';
 import { rainSettings } from './rainSettings';
 import { cooldownSettings } from './cooldownSettings';
-import { xpCloutSettings } from './xpCloutSettings';
+import { xpCloutSettings } from './settings';
 import { economySettings } from './economySettings';
 import { titles } from './titles';
 import { transactions } from './transactions';

@@ -15,16 +15,16 @@ interface AdminPageShellProps {
 	breadcrumb?: React.ReactNode | undefined;
 	pageActions?: React.ReactNode | undefined;
 	tabsConfig?: TabConfig[] | undefined;
-	activeTab?: string | undefined;
+	activeTab?: string;
 	onTabChange?: ((value: string) => void) | undefined;
 	children?: React.ReactNode | undefined; // To be used if not using tabs, or as a fallback
-	className?: string | undefined;
+	className?: string;
 	// Common props that admin pages often pass
-	subtitle?: string | undefined;
+	subtitle?: string;
 	loading?: boolean | undefined;
-	error?: string | undefined;
+	error?: string;
 	headerActions?: React.ReactNode | undefined;
-	description?: string | undefined;
+	description?: string;
 }
 
 export function AdminPageShell({

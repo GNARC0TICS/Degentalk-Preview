@@ -136,7 +136,7 @@ export default function TipRainSettings() {
 			toast({
 				title: 'Tip settings saved',
 				description: 'Your tip settings have been updated successfully',
-				variant: 'success'
+				variant: 'default'
 			});
 		},
 		onError: (error: unknown) => {
@@ -160,7 +160,7 @@ export default function TipRainSettings() {
 			toast({
 				title: 'Rain settings saved',
 				description: 'Your rain settings have been updated successfully',
-				variant: 'success'
+				variant: 'default'
 			});
 		},
 		onError: (error: unknown) => {

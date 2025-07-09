@@ -10,6 +10,7 @@ import {
 	type CampaignRule,
 	type CryptoPayment
 } from '@schema';
+import type { Id } from '@shared/types/ids';
 
 export interface CreateCampaignRequest {
 	name: string;

@@ -10,6 +10,7 @@ import {
 	type AdPlacement
 } from '@schema';
 import { logger } from "../../core/logger";
+import type { Id } from '@shared/types/ids';
 
 export interface AdRequest {
 	placementSlug: string;

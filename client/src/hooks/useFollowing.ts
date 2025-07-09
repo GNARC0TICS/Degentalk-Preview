@@ -22,7 +22,7 @@ interface UseFollowingResult {
  * Fetches list of users that the given userId is following (Whale-Watch "following" list).
  * @param userId target profile user id (uuid string)
  */
-export function useFollowing(userId: string | undefined): UseFollowingResult {
+export function useFollowing(userId: string): UseFollowingResult {
 	const { data, isLoading, error } = useQuery<{ following: FollowUser[] } | undefined, Error>({
 		queryKey: ['following', userId],
 		queryFn: async () => {

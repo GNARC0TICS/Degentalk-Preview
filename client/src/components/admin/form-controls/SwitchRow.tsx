@@ -7,13 +7,13 @@ export interface SwitchRowProps {
 	checked: boolean;
 	onChange: (value: boolean) => void;
 	disabled?: boolean | undefined;
-	className?: string | undefined;
+	className?: string;
 	/** Optional helper text */
-	helperText?: string | undefined;
+	helperText?: string;
 	/** Required field indicator */
 	required?: boolean | undefined;
 	/** Error message */
-	error?: string | undefined;
+	error?: string;
 	/** Show loading state */
 	loading?: boolean | undefined;
 }

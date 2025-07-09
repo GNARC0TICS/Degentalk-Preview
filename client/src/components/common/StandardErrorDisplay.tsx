@@ -7,7 +7,7 @@ interface StandardErrorDisplayProps {
 	message?: string;
 	error?: Error | unknown;
 	onRetry?: () => void;
-	variant?: 'card' | 'inline' | 'full';
+	variant?: 'card' | 'inline' | 'default';
 	className?: string;
 }
 

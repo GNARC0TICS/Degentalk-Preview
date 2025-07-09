@@ -5,16 +5,16 @@ export interface JsonEditorProps {
 	value: string;
 	onChange: (next: string) => void;
 	height?: string | number | undefined;
-	className?: string | undefined;
+	className?: string;
 	readOnly?: boolean | undefined;
 	/** Array of error messages to display above the editor */
 	errors?: string[] | undefined;
 	/** Optional label */
-	label?: string | undefined;
+	label?: string;
 	/** Optional helper text */
-	helperText?: string | undefined;
+	helperText?: string;
 	/** Language mode */
-	language?: string | undefined;
+	language?: string;
 	/** Theme */
 	theme?: 'vs-light' | 'vs-dark' | undefined;
 	/** Minimap enabled */

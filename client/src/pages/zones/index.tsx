@@ -9,7 +9,9 @@ import { LoadingSpinner } from '@/components/ui/loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
 import { Folder, LayoutGrid } from 'lucide-react';
 import type { ZoneCardProps } from '@/components/forum/ZoneCard';
-import ForumErrorBoundary from '@/components/forum/ForumErrorBoundary';
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
+
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 function ZonesPage() {
 	// Changed to regular function for clarity with provider
@@ -24,33 +26,33 @@ function ZonesPage() {
 
 	if (isLoading) {
 		return (
-			<ForumErrorBoundary>
-				<div className="flex flex-col min-h-screen">
+            <ErrorBoundary level='component'>
+                <div className="flex flex-col min-h-screen">
 					<div className="max-w-7xl mx-auto px-4 py-6 flex-grow">
 						<LoadingSpinner text="Loading Zones..." />
 					</div>
 					<SiteFooter />
 				</div>
-			</ForumErrorBoundary>
-		);
+            </ErrorBoundary>
+        );
 	}
 
 	if (error) {
 		return (
-			<ForumErrorBoundary>
-				<div className="flex flex-col min-h-screen">
+            <ErrorBoundary level='component'>
+                <div className="flex flex-col min-h-screen">
 					<div className="max-w-7xl mx-auto px-4 py-6 flex-grow">
 						<ErrorDisplay title="Error loading zones" error={error} />
 					</div>
 					<SiteFooter />
 				</div>
-			</ForumErrorBoundary>
-		);
+            </ErrorBoundary>
+        );
 	}
 
 	return (
-		<ForumErrorBoundary>
-			<div className="flex flex-col min-h-screen">
+        <ErrorBoundary level='component'>
+            <div className="flex flex-col min-h-screen">
 				<div className="max-w-7xl mx-auto px-4 py-6 flex-grow">
 					<div className="mb-8">
 						<h1 className="text-3xl font-bold text-white mb-4">Zones & Categories</h1>
@@ -122,8 +124,8 @@ function ZonesPage() {
 				</div>
 				<SiteFooter />
 			</div>
-		</ForumErrorBoundary>
-	);
+        </ErrorBoundary>
+    );
 }
 
 export default ZonesPage;

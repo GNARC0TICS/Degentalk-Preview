@@ -67,14 +67,14 @@ export function useRain() {
 			const recipientCount = data?.recipients?.length || 0;
 
 			toast({
-				variant: 'success',
+				variant: 'default',
 				title: 'Rain Sent',
 				description: `Your rain was sent successfully to ${recipientCount} users!`
 			});
 		},
 		onError: (error: Error) => {
 			toast({
-				variant: 'error',
+				variant: 'destructive',
 				title: 'Error Sending Rain',
 				description: error?.message || 'Failed to send rain. Please try again.'
 			});

@@ -8,14 +8,14 @@ interface Props {
 	fallback?: ReactNode | undefined;
 	onError?: (error: Error, errorInfo: ErrorInfo) => void | undefined;
 	level?: 'page' | 'component' | 'critical' | undefined;
-	context?: string | undefined;
+	context?: string;
 }
 
 interface State {
 	hasError: boolean;
 	error: Error | null;
 	errorInfo: ErrorInfo | null;
-	eventId?: string | undefined;
+	eventId?: string;
 }
 
 /**

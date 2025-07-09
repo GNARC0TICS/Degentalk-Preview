@@ -8,7 +8,7 @@
  */
 import { db } from '../db';
 import { sql } from 'drizzle-orm';
-import type { UserId } from '@shared/types/ids';
+import type { UserId, Id } from '@shared/types/ids';
 
 interface DgtTransaction {
 	id: string;

@@ -41,9 +41,9 @@ interface RoleFormDialogProps {
 	isSubmitting?: boolean | undefined;
 	form: UseFormReturn<RoleFormValues>; // Pass the form instance
 	/** Optional dialog title override */
-	title?: string | undefined;
+	title?: string;
 	/** Optional dialog description override */
-	description?: string | undefined;
+	description?: string;
 	/** Show cancel button */
 	showCancel?: boolean | undefined;
 }

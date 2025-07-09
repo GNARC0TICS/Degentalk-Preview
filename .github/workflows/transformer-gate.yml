@@ -1,0 +1,48 @@
+name: Transformer Gate Check
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  transformer-gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run transformer gate check
+        run: |
+          echo "Checking for transformer gate violations..."
+          VIOLATIONS=$(pnpm tsx scripts/codemods/phase5/enforce-transformers.ts --dry-run 2>&1 | grep -c "Violation:" || echo "0")
+          echo "Found $VIOLATIONS violations"
+
+          if [ "$VIOLATIONS" -gt 0 ]; then
+            echo "❌ Transformer gate violations found!"
+            echo "Raw res.json() calls detected. All API responses must use transformers."
+            echo "Run: pnpm tsx scripts/codemods/phase5/enforce-transformers.ts"
+            exit 1
+          else
+            echo "✅ No transformer gate violations detected"
+          fi
+
+      - name: Validate unique table names
+        run: |
+          echo "Validating unique pgTable names..."
+          pnpm tsx scripts/validation/unique-pg-tables.ts
+
+      - name: Check for orphan backup files
+        run: |
+          echo "Checking for orphan .bak and .backup files..."
+          pnpm tsx scripts/validation/no-orphan-bak.ts

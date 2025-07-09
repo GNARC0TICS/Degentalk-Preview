@@ -12,7 +12,7 @@ import { ErrorBoundary } from './ErrorBoundary';
 interface AdminErrorFallbackProps {
 	error: Error;
 	resetErrorBoundary: () => void;
-	context?: string | undefined;
+	context?: string;
 }
 
 function AdminErrorFallback({ error, resetErrorBoundary, context }: AdminErrorFallbackProps) {
@@ -88,7 +88,7 @@ function AdminErrorFallback({ error, resetErrorBoundary, context }: AdminErrorFa
 
 interface AdminErrorBoundaryProps {
 	children: React.ReactNode;
-	context?: string | undefined;
+	context?: string;
 }
 
 export function AdminErrorBoundary({ children, context }: AdminErrorBoundaryProps) {

@@ -25,7 +25,7 @@ interface UseThreadZoneReturn {
 }
 
 export function useThreadZone(
-	threadSlug: string | undefined | null,
+	threadSlug: string | null,
 	params?: UseThreadZoneParams
 ): UseThreadZoneReturn {
 	const { page = 1, limit = 20 } = params || {}; // Default pagination if not provided

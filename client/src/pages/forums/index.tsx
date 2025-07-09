@@ -28,8 +28,10 @@ import {
 	AccordionContent
 } from '@/components/ui/accordion';
 import { DynamicSidebar } from '@/components/forum/sidebar';
-import ForumErrorBoundary from '@/components/forum/ForumErrorBoundary';
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { PageBackdrop } from '@/layout/primitives';
+
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 // Generate dynamic theme colors based on zone theme
 const getDynamicZoneColors = (colorTheme: string | null) => {
@@ -252,33 +254,33 @@ export default function ForumsIndexPage() {
 
 	if (structureLoading) {
 		return (
-			<ForumErrorBoundary>
-				<PageBackdrop className="flex flex-col min-h-screen">
+            <ErrorBoundary level='component'>
+                <PageBackdrop className="flex flex-col min-h-screen">
 					<div className="max-w-7xl mx-auto px-4 py-6 flex-grow">
 						<LoadingSpinner text="Loading Zones..." />
 					</div>
 					<SiteFooter />
 				</PageBackdrop>
-			</ForumErrorBoundary>
-		);
+            </ErrorBoundary>
+        );
 	}
 
 	if (structureErrorDetails) {
 		return (
-			<ForumErrorBoundary>
-				<PageBackdrop className="flex flex-col min-h-screen">
+            <ErrorBoundary level='component'>
+                <PageBackdrop className="flex flex-col min-h-screen">
 					<div className="max-w-7xl mx-auto px-4 py-6 flex-grow">
 						<ErrorDisplay title="Error loading forums" error={structureErrorDetails} />
 					</div>
 					<SiteFooter />
 				</PageBackdrop>
-			</ForumErrorBoundary>
-		);
+            </ErrorBoundary>
+        );
 	}
 
 	return (
-		<ForumErrorBoundary>
-			<PageBackdrop className="flex flex-col min-h-screen">
+        <ErrorBoundary level='component'>
+            <PageBackdrop className="flex flex-col min-h-screen">
 				<div className={getForumLayout('page')}>
 					<Wide className={`${getForumSpacing('container')} flex-grow`}>
 						<BackToHomeButton />
@@ -429,6 +431,6 @@ export default function ForumsIndexPage() {
 					<SiteFooter />
 				</div>
 			</PageBackdrop>
-		</ForumErrorBoundary>
-	);
+        </ErrorBoundary>
+    );
 }

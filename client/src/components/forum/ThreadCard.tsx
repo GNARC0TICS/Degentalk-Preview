@@ -33,7 +33,7 @@ export interface ThreadCardProps {
 	showPreview?: boolean | undefined;
 	onTip?: ((threadId: ThreadId, amount: number) => void) | undefined;
 	onBookmark?: ((threadId: ThreadId) => void) | undefined;
-	className?: string | undefined;
+	className?: string;
 }
 
 const ThreadCard = memo(

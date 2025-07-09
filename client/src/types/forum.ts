@@ -49,9 +49,9 @@ export interface ThreadCardPropsData {
 // This will be the prop type for the ThreadCard component
 export interface ThreadCardComponentProps {
 	thread: ThreadCardPropsData;
-	className?: string | undefined;
+	className?: string;
 	linkAs?: 'wouter' | 'next' | undefined; // For choosing link component
-	forumSlug?: string | undefined;
+	forumSlug?: string;
 	parentForumTheme?: string | null | undefined;
 	tippingEnabled?: boolean | undefined;
 }

@@ -54,7 +54,7 @@ export const ThreadActionsProvider: React.FC<{
 					// Revert
 					setIsBookmarked(prev);
 					toast({
-						variant: 'error',
+						variant: 'destructive',
 						title: 'Bookmark failed',
 						description: 'Unable to update bookmark'
 					});
@@ -68,7 +68,7 @@ export const ThreadActionsProvider: React.FC<{
 		if (typeof navigator === 'undefined') return;
 		const url = `${window.location.origin}/threads/${thread.slug}`;
 		navigator.clipboard?.writeText(url).then(() => {
-			toast({ variant: 'success', title: 'Link copied!', description: 'Thread URL copied.' });
+			toast({ variant: 'default', title: 'Link copied!', description: 'Thread URL copied.' });
 
 			// Simple analytics beacon
 			try {

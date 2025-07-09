@@ -7,6 +7,7 @@ import type { Role } from '@/lib/roles';
 import { Loader2, AlertCircle, Lock } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { permissionToModuleMap } from '@shared/config/admin.config';
 
 interface ProtectedAdminRouteProps {
@@ -84,10 +85,10 @@ export function ProtectedAdminRoute({
 	}
 
 	return (
-		<Suspense fallback={<AdminLoadingFallback />}>
-			<AdminErrorBoundary moduleId={resolvedModuleId || ''}>{children}</AdminErrorBoundary>
-		</Suspense>
-	);
+        <Suspense fallback={<AdminLoadingFallback />}>
+            <ErrorBoundary context={resolvedModuleId || ''} level='page'>{children}</ErrorBoundary>
+        </Suspense>
+    );
 }
 
 function AdminLoadingFallback() {

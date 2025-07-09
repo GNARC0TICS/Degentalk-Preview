@@ -13,15 +13,15 @@ export interface AdminDataTableProps<T extends { id: UserId }> {
 	isLoading: boolean;
 	isError?: boolean | undefined;
 	error?: unknown | undefined;
-	emptyStateMessage?: string | undefined;
+	emptyStateMessage?: string;
 	renderActions?: ((row: T) => React.ReactNode) | undefined;
 	// Common props that admin pages often pass
 	loading?: boolean | undefined;
-	searchPlaceholder?: string | undefined;
-	searchTerm?: string | undefined;
+	searchPlaceholder?: string;
+	searchTerm?: string;
 	onSearchChange?: ((newSearchTerm: string) => void) | undefined;
-	className?: string | undefined;
-	tableClassName?: string | undefined;
+	className?: string;
+	tableClassName?: string;
 	renderRow?: ((row: T, columns: Parameters<typeof EntityTable<T>>[0]['columns']) => React.ReactNode) | undefined;
 	pagination?: { page: number; pageSize: number; total: number } | undefined;
 	onPageChange?: ((page: number) => void) | undefined;

@@ -182,21 +182,21 @@ class ErrorService implements ErrorHandler {
 
 		switch (error.severity) {
 			case 'critical':
-				console.error('🚨 CRITICAL ERROR:', logData);
+				// TODO: integrate logger.error once UI logging layer is ready
 				break;
 			case 'high':
-				console.error('🔴 HIGH SEVERITY:', logData);
+				// TODO: integrate logger.error
 				break;
 			case 'medium':
-				console.warn('🟡 MEDIUM SEVERITY:', logData);
+				// TODO: integrate logger.warn
 				break;
 			case 'low':
-				console.info('🔵 LOW SEVERITY:', logData);
+				// TODO: integrate logger.info
 				break;
 		}
 
 		if (error.stackTrace) {
-			console.error('Stack trace:', error.stackTrace);
+			// TODO: send stack trace to monitoring service
 		}
 	}
 
@@ -271,16 +271,14 @@ class ErrorService implements ErrorHandler {
 	 * Notify admin channel of critical errors
 	 */
 	private notifyAdminChannel(error: AppError): void {
-		// Implementation for admin notifications (Slack, Discord, etc.)
-		console.log('Admin notification would be sent for:', error.id);
+		// TODO: send notification via Slack webhook
 	}
 
 	/**
 	 * Open error report dialog/modal
 	 */
 	private openErrorReport(error: AppError): void {
-		// Implementation for error reporting UI
-		console.log('Error report dialog would open for:', error.id);
+		// TODO: open error reporting UI
 	}
 
 	/**

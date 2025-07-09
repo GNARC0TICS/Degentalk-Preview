@@ -1,0 +1,29 @@
+{
+	"compilerOptions": {
+		"incremental": true,
+		"tsBuildInfoFile": "./.tscache/.tsbuildinfo",
+		"noEmit": true,
+		"module": "ESNext",
+		"target": "ES2022",
+		"lib": ["esnext", "dom", "dom.iterable"],
+		"jsx": "react-jsx",
+		"moduleResolution": "bundler",
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"strictFunctionTypes": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noUncheckedIndexedAccess": true,
+		"exactOptionalPropertyTypes": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowImportingTsExtensions": true,
+		"verbatimModuleSyntax": true,
+		"types": ["node"],
+		"isolatedModules": true
+	}
+}

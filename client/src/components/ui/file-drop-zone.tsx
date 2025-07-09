@@ -12,36 +12,36 @@ export interface FileDropZoneProps {
 	/**
 	 * Allowed mime types. Example: ['image/jpeg', 'image/png']
 	 */
-	accept?: string[] | undefined;
+	accept?: string[];
 	/**
 	 * Maximum file size in bytes. Defaults to 10 MB.
 	 */
-	maxSize?: number | undefined;
+	maxSize?: number;
 	/**
 	 * Optional class name for styling overrides.
 	 */
-	className?: string | undefined;
+	className?: string;
 	/**
 	 * Whether to show a preview thumbnail after a file is selected.
 	 * Only works for images.
 	 */
-	showPreview?: boolean | undefined;
+	showPreview?: boolean;
 	/**
 	 * Whether the component is currently disabled (e.g., during upload)
 	 */
-	disabled?: boolean | undefined;
+	disabled?: boolean;
 	/**
 	 * Optional placeholder text
 	 */
-	placeholder?: string | undefined;
+	placeholder?: string;
 	/**
 	 * Optional error message
 	 */
-	errorMessage?: string | undefined;
+	errorMessage?: string;
 	/**
 	 * Optional helper text
 	 */
-	helperText?: string | undefined;
+	helperText?: string;
 	/**
 	 * Multiple file selection
 	 */
@@ -100,7 +100,7 @@ export const FileDropZone: React.FC<FileDropZoneProps> = ({
 					// if (showPreview) setPreviewUrl(null);
 				}, 2000);
 			} catch (error) {
-				console.error('FileDropZone upload error:', error);
+				// Error logging should be handled by the parent component
 				// Error display (e.g., toast) should be handled by the parent (ProfileEditor)
 				// Reset local state
 				setUploadProgress(0);

@@ -1,6 +1,5 @@
 import type { ComponentType } from 'react';
 import { Suspense, useMemo, useState, lazy } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
 import { Settings, AlertCircle, Maximize2, Minimize2, GripVertical } from 'lucide-react';
 import { useLayoutStore, type SlotId } from '@/stores/useLayoutStore';
 import { widgetRegistry, getWidgetMetadata } from '@/config/widgetRegistry';
@@ -16,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useShoutbox } from '@/contexts/shoutbox-context';
 import { cn } from '@/lib/utils';
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 interface WidgetFrameProps {
 	instanceId: string;

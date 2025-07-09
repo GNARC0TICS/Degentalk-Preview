@@ -44,7 +44,7 @@ export function createStandardResponse<T>(
 	data: T,
 	options?: {
 		meta?: StandardApiResponse<T>['meta'] | undefined;
-		requestId?: string | undefined;
+		requestId?: string;
 	} | undefined
 ): StandardApiResponse<T> {
 	return {
@@ -68,7 +68,7 @@ export function createErrorResponse(
 		details?: Record<string, any> | undefined;
 	},
 	options?: {
-		requestId?: string | undefined;
+		requestId?: string;
 	} | undefined
 ): StandardApiResponse<null> {
 	return {

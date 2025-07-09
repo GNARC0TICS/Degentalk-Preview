@@ -114,7 +114,7 @@ export function hasSystemRole(role?: string): boolean {
 }
 
 // Helper to get system role color
-export function getSystemRoleColor(role?: string): string | undefined {
+export function getSystemRoleColor(role?: string): string {
 	return role ? SYSTEM_ROLE_COLORS[role] : undefined;
 }
 

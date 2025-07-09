@@ -62,14 +62,14 @@ export function useTip() {
 			queryClient.invalidateQueries({ queryKey: ['/api/engagement/tip/history'] });
 
 			toast({
-				variant: 'success',
+				variant: 'default',
 				title: 'Tip Sent',
 				description: 'Your tip was sent successfully!'
 			});
 		},
 		onError: (error: Error) => {
 			toast({
-				variant: 'error',
+				variant: 'destructive',
 				title: 'Error Sending Tip',
 				description: error?.message || 'Failed to send tip. Please try again.'
 			});

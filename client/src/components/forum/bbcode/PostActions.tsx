@@ -38,7 +38,7 @@ interface PostActionsProps {
 	isThreadSolved?: boolean | undefined;
 	isFirst?: boolean | undefined;
 	tippingEnabled?: boolean | undefined;
-	className?: string | undefined;
+	className?: string;
 	onLike?: (postId: PostId, hasLiked: boolean) => void | undefined;
 	onReply?: (postId: PostId) => void | undefined;
 	onQuote?: (postId: PostId) => void | undefined;

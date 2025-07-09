@@ -1,6 +1,6 @@
 import React from 'react';
 import ForumPageView from '@/components/forum/ForumPage';
-import ForumErrorBoundary from '@/components/forum/ForumErrorBoundary';
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 /**
  * Forum Route Page
@@ -11,10 +11,10 @@ import ForumErrorBoundary from '@/components/forum/ForumErrorBoundary';
  */
 const ForumRoutePage: React.FC = () => {
 	return (
-		<ForumErrorBoundary>
-			<ForumPageView />
-		</ForumErrorBoundary>
-	);
+        <ErrorBoundary level='component'>
+            <ForumPageView />
+        </ErrorBoundary>
+    );
 };
 
 export default ForumRoutePage;

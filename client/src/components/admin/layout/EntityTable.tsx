@@ -16,7 +16,7 @@ export interface ColumnDef<T> {
 	key: string; // Corresponds to a key in the data object T
 	header: string;
 	render?: ((row: T) => React.ReactNode) | undefined; // Custom render function for the cell
-	width?: string | undefined;
+	width?: string;
 	align?: 'left' | 'center' | 'right' | undefined;
 	sortable?: boolean | undefined;
 }
@@ -27,17 +27,17 @@ interface EntityTableProps<T extends { id: UserId }> {
 	isLoading: boolean;
 	isError?: boolean | undefined;
 	error?: unknown | undefined; // Error object or message
-	emptyStateMessage?: string | undefined;
+	emptyStateMessage?: string;
 	// For basic search functionality directly within the table component
-	searchPlaceholder?: string | undefined;
-	searchTerm?: string | undefined;
+	searchPlaceholder?: string;
+	searchTerm?: string;
 	onSearchChange?: ((newSearchTerm: string) => void) | undefined;
 	// For custom row rendering logic if needed, though columns[].render should cover most cases
 	renderRow?: ((row: T, columns: ColumnDef<T>[]) => React.ReactNode) | undefined;
 	// For action buttons (e.g., Edit, Delete) per row
 	renderActions?: ((row: T) => React.ReactNode) | undefined;
-	className?: string | undefined;
-	tableClassName?: string | undefined;
+	className?: string;
+	tableClassName?: string;
 	// Additional common props
 	selectable?: boolean | undefined;
 	selected?: Set<string> | undefined;

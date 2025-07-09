@@ -218,19 +218,24 @@ export function log(options: {
 	if (config.console) {
 		switch (level) {
 			case LogLevel.DEBUG:
+				// eslint-disable-next-line no-console
 				console.debug(formattedMessage, data);
 				break;
 			case LogLevel.INFO:
+				// eslint-disable-next-line no-console
 				console.info(formattedMessage, data);
 				break;
 			case LogLevel.WARN:
+				// eslint-disable-next-line no-console
 				console.warn(formattedMessage, data);
 				break;
 			case LogLevel.ERROR:
 			case LogLevel.CRITICAL:
+				// eslint-disable-next-line no-console
 				console.error(formattedMessage, data);
 				break;
 			default:
+				// eslint-disable-next-line no-console
 				console.log(formattedMessage, data);
 		}
 	}

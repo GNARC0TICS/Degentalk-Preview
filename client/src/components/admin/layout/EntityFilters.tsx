@@ -19,7 +19,7 @@ export interface FilterConfig {
 	id: string;
 	label: string;
 	type: 'text' | 'select' | /* 'date-range' | */ 'boolean'; // Commented out date-range
-	placeholder?: string | undefined;
+	placeholder?: string;
 	options?: { value: string; label: string }[] | undefined;
 	/** Optional default value */
 	defaultValue?: FilterValue | undefined;
@@ -34,7 +34,7 @@ interface EntityFiltersProps {
 	filters: Record<string, FilterValue>;
 	onFilterChange: (filterId: string, value: FilterValue) => void;
 	onClearFilters?: (() => void) | undefined;
-	className?: string | undefined;
+	className?: string;
 	/** Show filter count */
 	showFilterCount?: boolean | undefined;
 	/** Compact mode */

@@ -43,7 +43,7 @@ export function WithdrawButton({
 	const canSpendDGT = walletConfig?.features?.allowDGTSpending ?? false;
 
 	const withdrawMutation = useMutation({
-		mutationFn: async (data: { amount: number; currency: string; address?: string | undefined }) => {
+		mutationFn: async (data: { amount: number; currency: string; address?: string }) => {
 			return walletApiService.requestWithdrawal(data.amount, data.currency, data.address || '');
 		},
 		onMutate: () => {
@@ -62,7 +62,7 @@ export function WithdrawButton({
 			toast({
 				title: 'Withdrawal Requested',
 				description: `Your withdrawal of ${variables.amount} ${variables.currency} has been submitted and is being processed.`,
-				variant: 'success'
+				variant: 'default'
 			});
 
 			// Reset success state after a delay
@@ -76,7 +76,7 @@ export function WithdrawButton({
 			toast({
 				title: 'Withdrawal Failed',
 				description: error instanceof Error ? error.message : 'Please try again later.',
-				variant: 'error'
+				variant: 'destructive'
 			});
 		}
 	});
@@ -88,7 +88,7 @@ export function WithdrawButton({
 			toast({
 				title: 'Invalid Amount',
 				description: 'Please enter a valid withdrawal amount',
-				variant: 'error'
+				variant: 'destructive'
 			});
 			return;
 		}
@@ -99,7 +99,7 @@ export function WithdrawButton({
 				toast({
 					title: 'Feature Disabled',
 					description: 'Crypto withdrawals are currently disabled',
-					variant: 'error'
+					variant: 'destructive'
 				});
 				return;
 			}
@@ -109,7 +109,7 @@ export function WithdrawButton({
 				toast({
 					title: 'Insufficient Balance',
 					description: 'Your crypto balance is too low for this withdrawal',
-					variant: 'error'
+					variant: 'destructive'
 				});
 				return;
 			}
@@ -119,7 +119,7 @@ export function WithdrawButton({
 				toast({
 					title: 'Invalid Address',
 					description: 'Please enter a valid wallet address',
-					variant: 'error'
+					variant: 'destructive'
 				});
 				return;
 			}
@@ -130,7 +130,7 @@ export function WithdrawButton({
 				toast({
 					title: 'Amount Too Low',
 					description: `Minimum withdrawal is $${minWithdraw} USD value`,
-					variant: 'error'
+					variant: 'destructive'
 				});
 				return;
 			}
@@ -140,7 +140,7 @@ export function WithdrawButton({
 				toast({
 					title: 'Feature Disabled',
 					description: 'DGT spending is currently disabled',
-					variant: 'error'
+					variant: 'destructive'
 				});
 				return;
 			}
@@ -150,7 +150,7 @@ export function WithdrawButton({
 				toast({
 					title: 'Insufficient Balance',
 					description: 'Your DGT balance is too low for this conversion',
-					variant: 'error'
+					variant: 'destructive'
 				});
 				return;
 			}
@@ -161,7 +161,7 @@ export function WithdrawButton({
 				toast({
 					title: 'Amount Too Low',
 					description: `Minimum DGT conversion is ${minDGTConversion} DGT`,
-					variant: 'error'
+					variant: 'destructive'
 				});
 				return;
 			}
@@ -186,13 +186,13 @@ export function WithdrawButton({
 				toast({
 					title: 'Address Validated',
 					description: 'Your withdrawal address appears to be valid',
-					variant: 'success'
+					variant: 'default'
 				});
 			} else {
 				toast({
 					title: 'Invalid Address',
 					description: 'Please enter a valid Tron (TRC-20) address',
-					variant: 'error'
+					variant: 'destructive'
 				});
 			}
 		} else {
@@ -200,7 +200,7 @@ export function WithdrawButton({
 			toast({
 				title: 'Invalid Address',
 				description: 'Please enter a complete wallet address',
-				variant: 'error'
+				variant: 'destructive'
 			});
 		}
 	};

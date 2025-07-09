@@ -1,4 +1,4 @@
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth, type MockRole } from '@/hooks/use-auth';
 import {
 	Select,
 	SelectContent,
@@ -23,15 +23,16 @@ export function DevRoleSwitcher() {
 			</Badge>
 			<Select
 				value={currentMockRole}
-				onValueChange={(value) => setMockRole(value as 'user' | 'mod' | 'admin')}
+				onValueChange={(value) => setMockRole(value as MockRole)}
 			>
 				<SelectTrigger className="w-[120px] h-8 text-xs">
 					<SelectValue placeholder="Select Role" />
 				</SelectTrigger>
 				<SelectContent>
 					<SelectItem value="user">User</SelectItem>
-					<SelectItem value="mod">Moderator</SelectItem>
+					<SelectItem value="moderator">Moderator</SelectItem>
 					<SelectItem value="admin">Admin</SelectItem>
+					<SelectItem value="super_admin">Super Admin</SelectItem>
 				</SelectContent>
 			</Select>
 		</div>

@@ -15,11 +15,11 @@ export interface User {
 	createdAt: string;
 	updatedAt: string;
 	permissions?: string[] | undefined;
-	lastLoginAt?: string | undefined;
+	lastLoginAt?: string;
 	profileData?: {
-		bio?: string | undefined;
-		avatarUrl?: string | undefined;
-		activeAvatarUrl?: string | undefined;
+		bio?: string;
+		avatarUrl?: string;
+		activeAvatarUrl?: string;
 	} | undefined;
 }
 
@@ -30,10 +30,10 @@ export interface UserFormData {
 	role: string;
 	status: 'active' | 'suspended' | 'banned' | 'pending';
 	permissions: string[];
-	password?: string | undefined; // Only for new users
+	password?: string; // Only for new users
 	profileData?: {
-		bio?: string | undefined;
-		avatarUrl?: string | undefined;
+		bio?: string;
+		avatarUrl?: string;
 	} | undefined;
 }
 
@@ -41,7 +41,7 @@ export interface UserFormData {
 export interface Role {
 	id: string;
 	name: string;
-	description?: string | undefined;
+	description?: string;
 	permissions: string[];
 	isSystemRole: boolean;
 	createdAt: string;
@@ -85,8 +85,8 @@ export interface LevelData {
 	level: number;
 	name: string;
 	xpRequired: number;
-	color?: string | undefined;
-	icon?: string | undefined;
+	color?: string;
+	icon?: string;
 	unlocks?: LevelUnlocks | undefined;
 }
 
@@ -108,8 +108,8 @@ export interface Achievement {
 	requirements: AchievementRequirement[];
 	rewards: AchievementReward[];
 	isActive: boolean;
-	icon?: string | undefined;
-	color?: string | undefined;
+	icon?: string;
+	color?: string;
 }
 
 export interface AchievementRequirement {
@@ -129,7 +129,7 @@ export interface AchievementReward {
 export interface AdminApiResponse<T> {
 	success: boolean;
 	data: T;
-	message?: string | undefined;
+	message?: string;
 	errors?: string[] | undefined;
 	metadata?: {
 		pagination?: {
@@ -164,7 +164,7 @@ export interface BulkOperationRequest {
 	operation: 'delete' | 'update' | 'suspend' | 'ban' | 'activate';
 	targets: string[];
 	data?: Record<string, unknown> | undefined;
-	reason?: string | undefined;
+	reason?: string;
 }
 
 export interface BulkOperationResult {
@@ -182,7 +182,7 @@ export interface AdminActivityLog {
 	adminId: string;
 	action: string;
 	targetType: 'user' | 'post' | 'thread' | 'config' | 'system';
-	targetId?: string | undefined;
+	targetId?: string;
 	details: Record<string, unknown>;
 	ipAddress: string;
 	userAgent: string;
@@ -201,6 +201,6 @@ export interface AchievementData {
 	requirements: AchievementRequirement[];
 	rewards: AchievementReward[];
 	isActive: boolean;
-	icon?: string | undefined;
-	color?: string | undefined;
+	icon?: string;
+	color?: string;
 }

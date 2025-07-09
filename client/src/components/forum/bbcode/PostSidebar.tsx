@@ -14,7 +14,7 @@ interface PostSidebarProps {
 	username: string;
 	authorAvatar?: string | null | undefined;
 	isFirst?: boolean | undefined;
-	className?: string | undefined;
+	className?: string;
 }
 
 export function PostSidebar({

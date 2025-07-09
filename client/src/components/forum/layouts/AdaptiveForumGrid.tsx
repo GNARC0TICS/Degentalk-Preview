@@ -34,10 +34,10 @@ export interface AdaptiveForumGridProps<T> {
 		label: string;
 	}>;
 	onSortChange?: (sort: string) => void | undefined;
-	currentSort?: string | undefined;
+	currentSort?: string;
 	isLoading?: boolean | undefined;
 	loadingSkeletons?: number | undefined;
-	className?: string | undefined;
+	className?: string;
 }
 
 const AdaptiveForumGrid = memo(

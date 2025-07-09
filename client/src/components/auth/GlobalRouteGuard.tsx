@@ -33,7 +33,7 @@ export function GlobalRouteGuard({
 		// Check if route has protection requirements
 		if (!protection.requireAuth && !protection.minRole && !protection.exactRole) {
 			if (enableLogging) {
-				console.log(`[ROUTE] ✅ Public route accessed: ${location}`);
+				// console.log(`[ROUTE] ✅ Public route accessed: ${location}`);
 			}
 			return;
 		}
@@ -41,7 +41,7 @@ export function GlobalRouteGuard({
 		// Authentication check
 		if (protection.requireAuth && !isAuthenticated) {
 			if (enableLogging) {
-				console.warn(`[ROUTE] ❌ Unauthenticated access attempt: ${location}`);
+				// console.warn(`[ROUTE] ❌ Unauthenticated access attempt: ${location}`);
 			}
 			onUnauthorizedAccess?.(location, 'Authentication required');
 			return;
@@ -54,9 +54,7 @@ export function GlobalRouteGuard({
 			// Exact role check
 			if (protection.exactRole && userRole !== protection.exactRole) {
 				if (enableLogging) {
-					console.warn(
-						`[ROUTE] ❌ Insufficient role for ${location}: requires ${protection.exactRole}, user has ${userRole}`
-					);
+					// console.warn - insufficient role for route
 				}
 				onUnauthorizedAccess?.(location, `Requires exactly ${protection.exactRole} role`);
 				return;
@@ -65,16 +63,14 @@ export function GlobalRouteGuard({
 			// Minimum role check
 			if (protection.minRole && !hasRoleAtLeast(userRole, protection.minRole)) {
 				if (enableLogging) {
-					console.warn(
-						`[ROUTE] ❌ Insufficient role for ${location}: requires min ${protection.minRole}, user has ${userRole}`
-					);
+					// console.warn - insufficient minimum role for route
 				}
 				onUnauthorizedAccess?.(location, `Requires minimum ${protection.minRole} role`);
 				return;
 			}
 
 			if (enableLogging) {
-				console.log(`[ROUTE] ✅ Authorized access: ${location} (${userRole})`);
+				// console.log(`[ROUTE] ✅ Authorized access: ${location} (${userRole})`);
 			}
 		}
 	}, [location, user, isAuthenticated, isLoading, onUnauthorizedAccess, enableLogging]);

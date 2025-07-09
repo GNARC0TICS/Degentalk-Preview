@@ -3,7 +3,7 @@ import { AlertTriangle } from 'lucide-react';
 
 export interface InlineErrorProps {
 	message: string;
-	className?: string | undefined;
+	className?: string;
 	/** Optional icon to display */
 	icon?: React.ReactNode | undefined;
 	/** Variant styling */

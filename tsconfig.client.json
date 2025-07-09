@@ -1,5 +1,33 @@
 {
-	"extends": "./tsconfig.json",
-	"include": ["client/src/**/*", "shared/**/*"],
-	"exclude": ["node_modules", "server/**/*", "scripts/**/*", "dist", "build", "shared/fixtures/**"]
+	"extends": "./tsconfig.base.json",
+	"include": [
+		"client/src/**/*",
+		"client/**/*.test.ts",
+		"client/**/*.test.tsx",
+		"client/**/*.spec.ts",
+		"client/**/*.spec.tsx",
+		"client/vitest.config.ts",
+		"shared/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		"build",
+		"dist",
+		"server/**/*",
+		"db/**/*",
+		"scripts/**/*",
+		"**/*.bak.ts",
+		"**/*.bak.tsx",
+		"UIVERSE",
+		"archive/**/*",
+		"shared/fixtures/**"
+	],
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["client/src/*"],
+			"@shared/types": ["shared/types/index.ts"],
+			"@shared/*": ["shared/*"]
+		}
+	}
 }

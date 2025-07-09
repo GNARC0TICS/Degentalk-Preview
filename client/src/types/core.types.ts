@@ -6,24 +6,24 @@
 // Base error handling types
 export interface ApiErrorResponse {
 	message: string;
-	code?: string | undefined;
+	code?: string;
 	details?: Record<string, unknown> | undefined;
 	status?: number | undefined;
-	timestamp?: string | undefined;
+	timestamp?: string;
 }
 
 export interface ApiErrorData {
 	message: string;
-	code?: string | undefined;
+	code?: string;
 	details?: Record<string, unknown> | undefined;
-	field?: string | undefined;
+	field?: string;
 }
 
 // Timing and performance metadata
 export interface TimingMetadata {
 	_timing?: {
 		duration: number;
-		requestId?: string | undefined;
+		requestId?: string;
 		cacheHit?: boolean | undefined;
 	} | undefined;
 }
@@ -32,11 +32,11 @@ export interface TimingMetadata {
 export interface StandardApiResponse<T> {
 	data: T;
 	success: boolean;
-	message?: string | undefined;
+	message?: string;
 	errors?: ApiErrorData[] | undefined;
 	meta?: {
 		timestamp: string;
-		requestId?: string | undefined;
+		requestId?: string;
 		pagination?: {
 			page: number;
 			limit: number;
@@ -85,7 +85,7 @@ export interface UploadedFile {
 export interface FormValidationError {
 	field: string;
 	message: string;
-	code?: string | undefined;
+	code?: string;
 }
 
 export interface SelectOption<T = string> {
@@ -99,7 +99,7 @@ export interface SelectOption<T = string> {
 export interface PaginationParams {
 	page?: number | undefined;
 	limit?: number | undefined;
-	sortBy?: string | undefined;
+	sortBy?: string;
 	sortOrder?: 'asc' | 'desc' | undefined;
 }
 
@@ -117,7 +117,7 @@ export interface PaginatedResponse<T> {
 
 // Search and filtering
 export interface SearchParams {
-	query?: string | undefined;
+	query?: string;
 	filters?: Record<string, unknown> | undefined;
 	categories?: string[] | undefined;
 }
@@ -132,5 +132,5 @@ export interface DateRange {
 export interface EntityReference {
 	id: string;
 	type: string;
-	name?: string | undefined;
+	name?: string;
 }

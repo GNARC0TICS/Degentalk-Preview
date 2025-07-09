@@ -32,61 +32,61 @@ import type { AdminModule } from '@shared/config/admin.config';
 const iconMap: Record<string, any> = {
 	Settings,
 	Shield,
-	Users: () => (
-		<div className="w-4 h-4 rounded bg-blue-500 text-white text-xs flex items-center justify-center">
+	Users: ({ className }: { className?: string }) => (
+		<div className={`w-4 h-4 rounded bg-blue-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
 			U
 		</div>
 	),
-	TrendingUp: () => (
-		<div className="w-4 h-4 rounded bg-green-500 text-white text-xs flex items-center justify-center">
+	TrendingUp: ({ className }: { className?: string }) => (
+		<div className={`w-4 h-4 rounded bg-green-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
 			↗
 		</div>
 	),
-	Wallet: () => (
-		<div className="w-4 h-4 rounded bg-yellow-500 text-white text-xs flex items-center justify-center">
+	Wallet: ({ className }: { className?: string }) => (
+		<div className={`w-4 h-4 rounded bg-yellow-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
 			W
 		</div>
 	),
-	ShoppingBag: () => (
-		<div className="w-4 h-4 rounded bg-purple-500 text-white text-xs flex items-center justify-center">
+	ShoppingBag: ({ className }: { className?: string }) => (
+		<div className={`w-4 h-4 rounded bg-purple-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
 			S
 		</div>
 	),
-	BarChart3: () => (
-		<div className="w-4 h-4 rounded bg-blue-600 text-white text-xs flex items-center justify-center">
+	BarChart3: ({ className }: { className?: string }) => (
+		<div className={`w-4 h-4 rounded bg-blue-600 text-white text-xs flex items-center justify-center ${className || ''}`}>
 			📊
 		</div>
 	),
-	Megaphone: () => (
-		<div className="w-4 h-4 rounded bg-orange-500 text-white text-xs flex items-center justify-center">
+	Megaphone: ({ className }: { className?: string }) => (
+		<div className={`w-4 h-4 rounded bg-orange-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
 			📢
 		</div>
 	),
-	Package: () => (
-		<div className="w-4 h-4 rounded bg-indigo-500 text-white text-xs flex items-center justify-center">
+	Package: ({ className }: { className?: string }) => (
+		<div className={`w-4 h-4 rounded bg-indigo-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
 			📦
 		</div>
 	),
-	ToggleLeft: () => (
-		<div className="w-4 h-4 rounded bg-gray-500 text-white text-xs flex items-center justify-center">
+	ToggleLeft: ({ className }: { className?: string }) => (
+		<div className={`w-4 h-4 rounded bg-gray-500 text-white text-xs flex items-center justify-center ${className || ''}`}>
 			⚙
 		</div>
 	),
-	Landmark: () => (
-		<div className="w-4 h-4 rounded bg-emerald-600 text-white text-xs flex items-center justify-center">
+	Landmark: ({ className }: { className?: string }) => (
+		<div className={`w-4 h-4 rounded bg-emerald-600 text-white text-xs flex items-center justify-center ${className || ''}`}>
 			🏛
 		</div>
 	),
 	// Add fallback
-	default: () => (
-		<div className="w-4 h-4 rounded bg-gray-400 text-white text-xs flex items-center justify-center">
+	default: ({ className }: { className?: string }) => (
+		<div className={`w-4 h-4 rounded bg-gray-400 text-white text-xs flex items-center justify-center ${className || ''}`}>
 			•
 		</div>
 	)
 };
 
 // Get icon component from icon name
-const getIconComponent = (iconName: string): React.ComponentType => {
+const getIconComponent = (iconName: string): React.ComponentType<{ className?: string }> => {
 	return iconMap[iconName] || iconMap.default;
 };
 

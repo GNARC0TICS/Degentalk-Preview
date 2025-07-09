@@ -13,9 +13,14 @@ import {
 
 export { apiPost, apiPut, apiPatch, apiDelete };
 
-// Wrapper adds XP-gain detection but delegates actual HTTP to base implementation
-export const apiRequest = async <T>(config: Parameters<typeof baseApiRequest>[0]): Promise<T> => {
-	const data = await baseApiRequest<T>(config);
+// Wrapper adds XP-gain detection but delegates actual HTTP to base implementation  
+export async function apiRequest<T = unknown>(config: import('@/lib/api-request').ApiRequestConfig): Promise<T>;
+export async function apiRequest<T = unknown>(url: string, options?: RequestInit): Promise<T>;
+export async function apiRequest<T = unknown>(
+	configOrUrl: import('@/lib/api-request').ApiRequestConfig | string, 
+	options?: RequestInit
+): Promise<T> {
+	const data = await baseApiRequest<T>(configOrUrl as any, options as any);
 	// Reuse existing helper for XP toast if available
 	try {
 		(checkForXpGain as any)?.(data);
@@ -23,7 +28,7 @@ export const apiRequest = async <T>(config: Parameters<typeof baseApiRequest>[0]
 		/* noop */
 	}
 	return data;
-};
+}
 
 async function throwIfResNotOk(res: Response) {
 	if (!res.ok) {

@@ -5,19 +5,19 @@ export interface ImageUploadProps {
 	value?: string | File | null | undefined; // URL string or File object
 	onChange: (file: File | null) => void;
 	label?: React.ReactNode | undefined;
-	className?: string | undefined;
+	className?: string;
 	accept?: Accept | undefined;
 	maxSize?: number | undefined; // bytes
 	// Common props that admin pages often pass
 	disabled?: boolean | undefined;
 	multiple?: boolean | undefined;
 	previewSize?: number | undefined;
-	placeholder?: string | undefined;
-	errorMessage?: string | undefined;
+	placeholder?: string;
+	errorMessage?: string;
 	showPreview?: boolean | undefined;
 	variant?: 'default' | 'compact' | 'large' | undefined;
 	required?: boolean | undefined;
-	helperText?: string | undefined;
+	helperText?: string;
 }
 
 /**

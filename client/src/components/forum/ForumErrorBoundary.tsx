@@ -1,8 +1,8 @@
 import React from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Wide } from '@/layout/primitives';
 import { Button } from '@/components/ui/button';
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 interface FallbackProps {
 	error: Error;
@@ -29,8 +29,11 @@ function ForumErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 
 export default function ForumErrorBoundary({ children }: { children: React.ReactNode }) {
 	return (
-		<ErrorBoundary FallbackComponent={ForumErrorFallback} onReset={() => window.location.reload()}>
-			{children}
-		</ErrorBoundary>
-	);
+        <ErrorBoundary
+            FallbackComponent={ForumErrorFallback}
+            onReset={() => window.location.reload()}
+            level='component'>
+            {children}
+        </ErrorBoundary>
+    );
 }

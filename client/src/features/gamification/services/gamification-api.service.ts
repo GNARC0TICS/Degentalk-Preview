@@ -18,11 +18,11 @@ export interface LevelInfo {
 	name: string;
 	minXp: number;
 	nextLevelXp?: number | undefined;
-	iconUrl?: string | undefined;
+	iconUrl?: string;
 	rarity: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
-	frameUrl?: string | undefined;
-	colorTheme?: string | undefined;
-	animationEffect?: string | undefined;
+	frameUrl?: string;
+	colorTheme?: string;
+	animationEffect?: string;
 	unlocks?: Record<string, any> | undefined;
 	rewards?: {
 		dgt?: number | undefined;
@@ -59,7 +59,7 @@ export interface Achievement {
 	id: AchievementId;
 	name: string;
 	description: string;
-	iconUrl?: string | undefined;
+	iconUrl?: string;
 	rewardXp: number;
 	rewardPoints?: number | undefined;
 	requirement: {
@@ -79,7 +79,7 @@ export interface UserAchievement {
 	achievementId: AchievementId;
 	currentProgress: number;
 	isCompleted: boolean;
-	earnedAt?: string | undefined;
+	earnedAt?: string;
 	progressPercentage: number;
 	achievement: Achievement;
 }
@@ -93,8 +93,8 @@ export interface Mission {
 	requiredCount: number;
 	xpReward: number;
 	dgtReward?: number | undefined;
-	badgeReward?: string | undefined;
-	icon?: string | undefined;
+	badgeReward?: string;
+	icon?: string;
 	isDaily: boolean;
 	isWeekly: boolean;
 	isActive: boolean;

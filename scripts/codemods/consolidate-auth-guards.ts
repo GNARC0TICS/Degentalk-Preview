@@ -35,8 +35,12 @@ const LEGACY_SOURCES = [
   '@/components/auth/RouteGuards',
 ];
 
-export default function transformer(file: FileInfo, api: API, _options: Options) {
+export default function transformer(file: FileInfo, api: API, options: Options) {
   const j: JSCodeshift = api.jscodeshift;
+  
+  // Configure parser for TypeScript
+  const parser = options.parser || 'tsx';
+  
   const root = j(file.source);
 
   let modified = false;

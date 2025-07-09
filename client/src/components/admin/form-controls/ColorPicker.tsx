@@ -9,9 +9,9 @@ export interface ColorPickerProps {
 	/** Optional label shown above the picker */
 	label?: React.ReactNode | undefined;
 	/** Additional class names */
-	className?: string | undefined;
+	className?: string;
 	/** Optional helper text */
-	helperText?: string | undefined;
+	helperText?: string;
 	/** Whether the picker is disabled */
 	disabled?: boolean | undefined;
 	/** Show input field */

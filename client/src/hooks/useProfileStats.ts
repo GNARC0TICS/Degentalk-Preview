@@ -71,7 +71,7 @@ export interface ExtendedProfileStats {
 	lastLogin: string | null;
 }
 
-export function useProfileStats(username: string | undefined) {
+export function useProfileStats(username: string) {
 	return useQuery<ExtendedProfileStats>({
 		queryKey: ['profile-stats', username],
 		queryFn: async () => {
@@ -89,7 +89,7 @@ export function useProfileStats(username: string | undefined) {
 }
 
 // Hook for basic profile data (existing functionality)
-export function useProfile(username: string | undefined) {
+export function useProfile(username: string) {
 	return useQuery({
 		queryKey: ['profile', username],
 		queryFn: async () => {
@@ -106,7 +106,7 @@ export function useProfile(username: string | undefined) {
 }
 
 // Helper hook to check if stats are available
-export function useProfileStatsAvailable(username: string | undefined) {
+export function useProfileStatsAvailable(username: string) {
 	const { data, isLoading, isError } = useProfileStats(username);
 
 	return {

@@ -21,7 +21,9 @@ import HomePageSkeleton from '@/components/skeletons/HomePageSkeleton';
 // Removed grid-related UI imports (Skeleton, Button, icons)
 
 import type { ZoneCardProps } from '@/components/forum/ZoneCard';
-import ForumErrorBoundary from '@/components/forum/ForumErrorBoundary';
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
+
+import { ErrorBoundary } from '@/components/errors/ErrorBoundary';
 
 function HomePage() {
 	// Get forum structure from context
@@ -87,20 +89,18 @@ function HomePage() {
 	);
 
 	return (
-		<ForumErrorBoundary>
-			<HeroSection />
-			<AnnouncementTicker />
-
-			{/* Primary Zone Carousel */}
-			{primaryZonesFromContext.length > 0 && (
+        <ErrorBoundary level='component'>
+            <HeroSection />
+            <AnnouncementTicker />
+            {/* Primary Zone Carousel */}
+            {primaryZonesFromContext.length > 0 && (
 				<PrimaryZoneCarousel
 					zones={zoneCardDataForGrid}
 					autoRotateMs={8000}
 					className="bg-gradient-to-b from-zinc-900/50 to-transparent"
 				/>
 			)}
-
-			<ContentFeedProvider initialTab="trending">
+            <ContentFeedProvider initialTab="trending">
 				<ResponsiveLayoutWrapper page="home">
 					<Wide as="div" className={getForumSpacing('container')}>
 						{/* New tab-based content feed */}
@@ -108,9 +108,9 @@ function HomePage() {
 					</Wide>
 				</ResponsiveLayoutWrapper>
 			</ContentFeedProvider>
-			<SiteFooter />
-		</ForumErrorBoundary>
-	);
+            <SiteFooter />
+        </ErrorBoundary>
+    );
 }
 
 export default HomePage;

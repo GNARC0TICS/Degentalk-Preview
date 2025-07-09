@@ -54,7 +54,7 @@ export const useAdminActivityFeed = (filters?: EventLogFilters) => {
 /**
  * Hook for fetching and managing admin activity feed for a specific user
  */
-export const useUserActivityFeed = (userId: string | undefined, filters?: EventLogFilters) => {
+export const useUserActivityFeed = (userId: string, filters?: EventLogFilters) => {
 	const { data, isLoading, isError, error, refetch } = useQuery({
 		queryKey: ['userActivityFeed', userId, filters],
 		queryFn: () => {

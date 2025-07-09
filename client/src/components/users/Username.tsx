@@ -72,7 +72,7 @@ export function Username({
 	// 4. Default white
 	let displayUsernameColor = groupColor;
 	let isSpecialColor = false;
-	let colorRarity: string | undefined;
+	let colorRarity: string;
 
 	// Check for system role color first
 	if (userRole && SYSTEM_ROLE_COLORS[userRole]) {

@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 
 interface AdminThemeProviderProps {
 	children: ReactNode;
-	className?: string | undefined;
+	className?: string;
 }
 
 export default function AdminThemeProvider({ children, className }: AdminThemeProviderProps) {

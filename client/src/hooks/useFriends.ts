@@ -23,7 +23,7 @@ interface UseFriendsResult {
 	error: Error | null;
 }
 
-export function useFriends(profileUserId: string | undefined): UseFriendsResult {
+export function useFriends(profileUserId: string): UseFriendsResult {
 	const { user: currentUser } = useAuth();
 	const viewingOwnProfile = currentUser && profileUserId === currentUser.id;
 

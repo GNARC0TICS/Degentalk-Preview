@@ -171,7 +171,7 @@ export interface MergedForum {
 	parentCategoryId?: CategoryId | null;
 	canHaveThreads?: boolean;
 	isPopular?: boolean;
-	lastActivityAt?: string | undefined;
+	lastActivityAt?: string;
 }
 
 export interface MergedZone {
