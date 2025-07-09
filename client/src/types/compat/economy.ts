@@ -10,4 +10,5 @@ export interface InsertXpActionSetting {
 	key: string;
 	xp: number;
 	description?: string;
+	enabled?: boolean;
 }

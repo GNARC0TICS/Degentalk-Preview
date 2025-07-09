@@ -28,7 +28,7 @@
 		"scripts/migration/cleanup-old-category-schema.ts",
 		"scripts/migration/generate-id-aliases.ts",
 		"scripts/migration/generate-uuid-audit.ts",
-		"archive/seed-corrupted/**",
+		"archive/**",
 		"shared/fixtures/**",
 		"server/test/**",
 		"server/tests/**",
@@ -84,7 +84,8 @@
 			"@degentalk/db/types": ["db/types/index.ts"],
 			"@/types/ids": ["client/src/types/ids.ts"],
 			"@lib/*": ["./lib/*"],
-			"@forum-sdk/*": ["forum-sdk/*"]
+			"@forum-sdk/*": ["forum-sdk/*"],
+			"@new-wallet/*": ["server/src/domains/_new-wallet/*"]
 		},
 		"isolatedModules": true
 	}

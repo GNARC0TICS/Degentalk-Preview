@@ -38,3 +38,4 @@ test-results/
 # Migration backup files
 *.backup.*
 UIVERSE/
+zen-mcp-server

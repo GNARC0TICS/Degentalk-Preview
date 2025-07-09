@@ -159,11 +159,13 @@ export const featureGateSchema = z.object({
 	rolloutPercentage: z.number().min(0).max(100).optional()
 });
 
-export const configUpdateSchema = z.object({
+export const configCreateSchema = z.object({
 	field: nonEmptyString,
 	value: z.any(),
-	reason: z.string().optional()
+	reason: z.string()
 });
+
+export const configUpdateSchema = configCreateSchema.partial();
 
 // Wallet/Economy schemas
 export const dgtAmountSchema = z

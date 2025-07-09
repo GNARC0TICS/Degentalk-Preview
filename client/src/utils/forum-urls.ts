@@ -95,14 +95,14 @@ export function parseForumUrl(pathname: string): ParsedForumUrl {
 
 	// Handle current /forums/ structure
 	if (segments[0] === 'forums') {
-		if (segments.length === 2) {
+		if (segments.length === 2 && segments[1]) {
 			return {
 				type: 'forum-direct',
 				forumSlug: segments[1]
 			};
 		}
 
-		if (segments.length === 3) {
+		if (segments.length === 3 && segments[1] && segments[2]) {
 			return {
 				type: 'subforum',
 				forumSlug: segments[1],
@@ -117,14 +117,14 @@ export function parseForumUrl(pathname: string): ParsedForumUrl {
 	}
 
 	if (segments[0] === 'zones') {
-		if (segments.length === 2) {
+		if (segments.length === 2 && segments[1]) {
 			return {
 				type: 'legacy-zone-overview',
 				legacyZoneSlug: segments[1]
 			};
 		}
 
-		if (segments.length === 3) {
+		if (segments.length === 3 && segments[1] && segments[2]) {
 			return {
 				type: 'legacy-zone-forum',
 				legacyZoneSlug: segments[1],
@@ -132,7 +132,7 @@ export function parseForumUrl(pathname: string): ParsedForumUrl {
 			};
 		}
 
-		if (segments.length === 4) {
+		if (segments.length === 4 && segments[1] && segments[2] && segments[3]) {
 			return {
 				type: 'legacy-zone-subforum',
 				legacyZoneSlug: segments[1],

@@ -1,5 +1,6 @@
 import { db } from '@db';
 import { dgtPackages } from '@schema';
+import type { Id } from '@shared/types/ids';
 import { eq, asc } from 'drizzle-orm';
 import { AdminError } from '../../admin.errors';
 

@@ -28,7 +28,7 @@ export function StandardErrorDisplay({
 			title={errorTitle}
 			message={errorMessage}
 			error={error}
-			onRetry={onRetry}
+			{...(onRetry && { onRetry })}
 			variant={variant}
 			className={className}
 		/>

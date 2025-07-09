@@ -19,56 +19,63 @@ export const AdminPaginationQuery = z.object({
 });
 
 /**
- * User update schema
+ * User schemas
  */
-export const AdminUserUpdateSchema = z.object({
-	username: z.string().min(3).max(50).optional(),
-	email: z.string().email().optional(),
-	bio: z.string().max(1000).optional().nullable(),
-	groupId: groupId.nullable().optional(),
-	isActive: z.boolean().optional(),
-	isVerified: z.boolean().optional(),
-	isBanned: z.boolean().optional(),
-	role: z.enum(['user', 'mod', 'admin']).optional()
+export const AdminUserCreateSchema = z.object({
+	username: z.string().min(3).max(50),
+	email: z.string().email(),
+	bio: z.string().max(1000).nullable(),
+	groupId: groupId.nullable(),
+	isActive: z.boolean(),
+	isVerified: z.boolean(),
+	isBanned: z.boolean(),
+	role: z.enum(['user', 'mod', 'admin'])
 });
 
-/**
- * Category update schema
- */
-export const AdminCategoryUpdateSchema = z.object({
-	name: z.string().min(1).max(100).optional(),
-	description: z.string().max(1000).optional().nullable(),
-	slug: z.string().min(1).max(100).optional(),
-	position: z.number().optional(),
-	isLocked: z.boolean().optional(),
-	isVip: z.boolean().optional(),
-	parentId: z.string().uuid().nullable().optional()
-});
+export const AdminUserUpdateSchema = AdminUserCreateSchema.partial();
 
 /**
- * Thread prefix update schema
+ * Category schemas
  */
-export const AdminThreadPrefixUpdateSchema = z.object({
-	name: z.string().min(1).max(30).optional(),
-	color: z.string().min(3).max(20).optional(),
-	isActive: z.boolean().optional(),
-	position: z.number().optional()
+export const AdminCategoryCreateSchema = z.object({
+	name: z.string().min(1).max(100),
+	description: z.string().max(1000).nullable(),
+	slug: z.string().min(1).max(100),
+	position: z.number(),
+	isLocked: z.boolean(),
+	isVip: z.boolean(),
+	parentId: z.string().uuid().nullable()
 });
 
+export const AdminCategoryUpdateSchema = AdminCategoryCreateSchema.partial();
+
 /**
- * Feature flag update schema
+ * Thread prefix schemas
  */
-export const AdminFeatureFlagUpdateSchema = z.object({
-	enabled: z.boolean().optional(),
-	name: z.string().min(1).max(100).optional(),
-	description: z.string().optional(),
-	expiresAt: z.date().optional().nullable(),
+export const AdminThreadPrefixCreateSchema = z.object({
+	name: z.string().min(1).max(30),
+	color: z.string().min(3).max(20),
+	isActive: z.boolean(),
+	position: z.number()
+});
+
+export const AdminThreadPrefixUpdateSchema = AdminThreadPrefixCreateSchema.partial();
+
+/**
+ * Feature flag schemas
+ */
+export const AdminFeatureFlagCreateSchema = z.object({
+	enabled: z.boolean(),
+	name: z.string().min(1).max(100),
+	description: z.string(),
+	expiresAt: z.date().nullable(),
 	rolloutPercentage: z
 		.number()
 		.min(0, 'Must be between 0 and 100')
 		.max(100, 'Must be between 0 and 100')
-		.optional()
 });
+
+export const AdminFeatureFlagUpdateSchema = AdminFeatureFlagCreateSchema.partial();
 
 // User schema for admin create/update
 export const AdminUserBody = z.object({
@@ -142,7 +149,7 @@ export const XpActionCreateSchema = z.object({
 });
 export type XpActionCreateInput = z.infer<typeof XpActionCreateSchema>;
 
-export const XpActionUpdateSchema = XpActionCreateSchema.extend({
+export const XpActionUpdateSchema = XpActionCreateSchema.partial().extend({
 	id: z.string().uuid()
 });
 export type XpActionUpdateInput = z.infer<typeof XpActionUpdateSchema>;
@@ -156,7 +163,7 @@ export const PermissionGroupCreateSchema = z.object({
 });
 export type PermissionGroupCreateInput = z.infer<typeof PermissionGroupCreateSchema>;
 
-export const PermissionGroupUpdateSchema = PermissionGroupCreateSchema.extend({
+export const PermissionGroupUpdateSchema = PermissionGroupCreateSchema.partial().extend({
 	id: z.string().uuid()
 });
 export type PermissionGroupUpdateInput = z.infer<typeof PermissionGroupUpdateSchema>;

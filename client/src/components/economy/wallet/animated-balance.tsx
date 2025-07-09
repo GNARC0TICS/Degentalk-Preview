@@ -43,6 +43,7 @@ export function AnimatedBalance({
 
 			return () => clearTimeout(timeout);
 		}
+		return undefined;
 	}, [value]);
 
 	const formattedValue =

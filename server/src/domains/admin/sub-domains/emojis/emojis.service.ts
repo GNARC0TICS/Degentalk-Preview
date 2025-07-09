@@ -2,6 +2,7 @@ import { db } from '@db';
 import { customEmojis, users } from '@schema';
 import { and, asc, desc, eq, ilike, inArray, sql } from 'drizzle-orm';
 import { logger } from '../../../../core/logger';
+import type { Id } from '@shared/types/ids';
 
 export interface ListEmojisOptions {
 	category?: string;

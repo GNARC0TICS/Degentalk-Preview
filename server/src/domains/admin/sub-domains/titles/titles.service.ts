@@ -2,68 +2,68 @@ import { db } from '@db';
 import { titles as titlesTable, roles as rolesTable } from '@schema';
 import type { CreateTitleInput, UpdateTitleInput } from './titles.validators';
 import { eq, desc, asc, isNull, isNotNull } from 'drizzle-orm';
+import type { Id } from '@shared/types/ids';
+
+// Alias for backward compatibility with existing variable names
+const titles = titlesTable;
 
 export class AdminTitlesService {
 	async list() {
 		// Get titles with their associated role information
 		const titles = await db
 			.select({
-				id: titlesTable.id,
-				name: titlesTable.name,
-				description: titlesTable.description,
-				iconUrl: titlesTable.iconUrl,
-				rarity: titlesTable.rarity,
-				emoji: titlesTable.emoji,
-				fontFamily: titlesTable.fontFamily,
-				fontSize: titlesTable.fontSize,
-				fontWeight: titlesTable.fontWeight,
-				textColor: titlesTable.textColor,
-				backgroundColor: titlesTable.backgroundColor,
-				borderColor: titlesTable.borderColor,
-				borderWidth: titlesTable.borderWidth,
-				borderStyle: titlesTable.borderStyle,
-				borderRadius: titlesTable.borderRadius,
-				glowColor: titlesTable.glowColor,
-				glowIntensity: titlesTable.glowIntensity,
-				shadowColor: titlesTable.shadowColor,
-				shadowBlur: titlesTable.shadowBlur,
-				shadowOffsetX: titlesTable.shadowOffsetX,
-				shadowOffsetY: titlesTable.shadowOffsetY,
-				gradientStart: titlesTable.gradientStart,
-				gradientEnd: titlesTable.gradientEnd,
-				gradientDirection: titlesTable.gradientDirection,
-				animation: titlesTable.animation,
-				animationDuration: titlesTable.animationDuration,
-				roleId: titlesTable.roleId,
-				isShopItem: titlesTable.isShopItem,
-				isUnlockable: titlesTable.isUnlockable,
-				unlockConditions: titlesTable.unlockConditions,
-				shopPrice: titlesTable.shopPrice,
-				shopCurrency: titlesTable.shopCurrency,
-				createdAt: titlesTable.createdAt,
+				id: titles.id,
+				name: titles.name,
+				description: titles.description,
+				iconUrl: titles.iconUrl,
+				rarity: titles.rarity,
+				emoji: titles.emoji,
+				fontFamily: titles.fontFamily,
+				fontSize: titles.fontSize,
+				fontWeight: titles.fontWeight,
+				textColor: titles.textColor,
+				backgroundColor: titles.backgroundColor,
+				borderColor: titles.borderColor,
+				borderWidth: titles.borderWidth,
+				borderStyle: titles.borderStyle,
+				borderRadius: titles.borderRadius,
+				glowColor: titles.glowColor,
+				glowIntensity: titles.glowIntensity,
+				shadowColor: titles.shadowColor,
+				shadowBlur: titles.shadowBlur,
+				shadowOffsetX: titles.shadowOffsetX,
+				shadowOffsetY: titles.shadowOffsetY,
+				gradientStart: titles.gradientStart,
+				gradientEnd: titles.gradientEnd,
+				gradientDirection: titles.gradientDirection,
+				animation: titles.animation,
+				animationDuration: titles.animationDuration,
+				roleId: titles.roleId,
+				isShopItem: titles.isShopItem,
+				isUnlockable: titles.isUnlockable,
+				unlockConditions: titles.unlockConditions,
+				shopPrice: titles.shopPrice,
+				shopCurrency: titles.shopCurrency,
+				createdAt: titles.createdAt,
 				roleName: rolesTable.name
 			})
-			.from(titlesTable)
-			.leftJoin(rolesTable, eq(titlesTable.roleId, rolesTable.id))
-			.orderBy(asc(titlesTable.rarity), asc(titlesTable.name));
+			.from(titles)
+			.leftJoin(rolesTable, eq(titles.roleId, rolesTable.id))
+			.orderBy(asc(titles.rarity), asc(titles.name));
 
 		return titles;
 	}
 
 	async getByRole(roleId: string) {
-		return db
-			.select()
-			.from(titlesTable)
-			.where(eq(titlesTable.roleId, roleId))
-			.orderBy(asc(titlesTable.name));
+		return db.select().from(titles).where(eq(titles.roleId, roleId)).orderBy(asc(titles.name));
 	}
 
 	async getCustomTitles() {
 		return db
 			.select()
-			.from(titlesTable)
-			.where(isNull(titlesTable.roleId))
-			.orderBy(asc(titlesTable.rarity), asc(titlesTable.name));
+			.from(titles)
+			.where(isNull(titles.roleId))
+			.orderBy(asc(titles.rarity), asc(titles.name));
 	}
 
 	async create(data: CreateTitleInput) {
@@ -76,7 +76,7 @@ export class AdminTitlesService {
 			if (!role) throw new Error('Role not found');
 		}
 
-		const [title] = await db.insert(titlesTable).values(data).returning();
+		const [title] = await db.insert(titles).values(data).returning();
 		return title;
 	}
 
@@ -90,21 +90,17 @@ export class AdminTitlesService {
 			if (!role) throw new Error('Role not found');
 		}
 
-		const [title] = await db
-			.update(titlesTable)
-			.set(data)
-			.where(eq(titlesTable.id, id))
-			.returning();
+		const [title] = await db.update(titles).set(data).where(eq(titles.id, id)).returning();
 
 		if (!title) throw new Error('Title not found');
 		return title;
 	}
 
 	async delete(id: Id<'id'>) {
-		const [title] = await db.select().from(titlesTable).where(eq(titlesTable.id, id));
+		const [title] = await db.select().from(titles).where(eq(titles.id, id));
 		if (!title) throw new Error('Title not found');
 
-		await db.delete(titlesTable).where(eq(titlesTable.id, id));
+		await db.delete(titles).where(eq(titles.id, id));
 		return { success: true };
 	}
 }

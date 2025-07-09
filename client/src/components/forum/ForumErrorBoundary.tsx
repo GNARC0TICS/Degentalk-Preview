@@ -29,11 +29,22 @@ function ForumErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 
 export default function ForumErrorBoundary({ children }: { children: React.ReactNode }) {
 	return (
-        <ErrorBoundary
-            FallbackComponent={ForumErrorFallback}
-            onReset={() => window.location.reload()}
-            level='component'>
-            {children}
-        </ErrorBoundary>
-    );
+		<ErrorBoundary
+			fallback={
+				<ForumErrorFallback
+					error={new Error()}
+					resetErrorBoundary={() => window.location.reload()}
+				/>
+			}
+			onError={(error, errorInfo) => {
+				// Log error details for debugging
+				if (error.message) {
+					console.debug('Forum error details:', { error: error.message, errorInfo });
+				}
+			}}
+			context="forum"
+		>
+			{children}
+		</ErrorBoundary>
+	);
 }

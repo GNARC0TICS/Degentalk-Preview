@@ -3,7 +3,7 @@ import { useParams } from 'wouter';
 import { Filter } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { getCreateThreadUrl, parseForumUrl } from '@/utils/forum-urls';
+import { getCreateThreadUrl } from '@/utils/forum-urls';
 import { useForumStructure } from '@/contexts/ForumStructureContext';
 import { useForumFilters } from '@/hooks/useForumFilters';
 import { Wide } from '@/layout/primitives';
@@ -13,12 +13,13 @@ import ThreadList from '@/features/forum/components/ThreadList';
 import { DynamicSidebar } from '@/components/forum/sidebar';
 import { SiteFooter } from '@/components/footer';
 import { ForumHeader } from '@/components/forum/ForumHeader';
+import type { ForumId, StructureId } from '@shared/types/ids';
 
 export interface ForumPageProps {
 	className?: string;
 }
 
-const ForumPage = memo(({ className }: ForumPageProps) => {
+const ForumPage = memo(() => {
 	const params = useParams<{ zoneSlug?: string; forumSlug?: string; subforumSlug?: string }>();
 	// Use subforum slug if present, otherwise forum slug
 	const forumSlug = params?.subforumSlug || params?.forumSlug;
@@ -137,7 +138,7 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 						{/* Thread List */}
 						{forum?.id && !isUsingFallback ? (
 							<ThreadList
-								forumId={forum.id as number}
+								forumId={forum.id as ForumId}
 								forumSlug={forum.slug}
 								availableTags={[]}
 								filters={filters}
@@ -153,7 +154,7 @@ const ForumPage = memo(({ className }: ForumPageProps) => {
 					{/* Right Sidebar */}
 					<aside className="space-y-6">
 						{parentZone && (
-							<DynamicSidebar structureId={forum?.id as number} zoneSlug={parentZone.slug} />
+							<DynamicSidebar structureId={forum?.id as StructureId} zoneSlug={parentZone.slug} />
 						)}
 					</aside>
 				</div>

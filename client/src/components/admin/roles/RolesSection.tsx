@@ -52,7 +52,7 @@ interface RolesSectionProps {
 	isLoading: boolean;
 }
 
-export function RolesSection({ roles, permissions, titles, isLoading }: RolesSectionProps) {
+export function RolesSection({ roles, titles, isLoading }: Omit<RolesSectionProps, 'permissions'>) {
 	const { toast } = useToast();
 	const queryClient = useQueryClient();
 	const [selectedRole, setSelectedRole] = useState<Role | null>(null);
@@ -391,9 +391,7 @@ export function RolesSection({ roles, permissions, titles, isLoading }: RolesSec
 					</DialogHeader>
 					<RoleForm
 						role={undefined}
-						permissions={permissions}
-						titles={titles}
-						onSuccess={() => {
+						onSubmit={() => {
 							setIsCreateDialogOpen(false);
 							queryClient.invalidateQueries({ queryKey: ['admin-roles'] });
 						}}
@@ -413,9 +411,7 @@ export function RolesSection({ roles, permissions, titles, isLoading }: RolesSec
 					</DialogHeader>
 					<RoleForm
 						role={selectedRole || undefined}
-						permissions={permissions}
-						titles={titles}
-						onSuccess={() => {
+						onSubmit={() => {
 							setIsEditDialogOpen(false);
 							setSelectedRole(null);
 							queryClient.invalidateQueries({ queryKey: ['admin-roles'] });

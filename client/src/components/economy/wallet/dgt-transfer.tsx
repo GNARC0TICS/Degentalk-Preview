@@ -52,7 +52,9 @@ export function DgtTransfer({ className = '' }: DgtTransferProps) {
 
 			// Mock validation - in real app, call /api/users/search
 			const mockUser = {
-				id: toId<'UserId'>(`550e8400-e29b-41d4-a716-${recipientUsername.toLowerCase().padStart(12, '0')}`),
+				id: toId<'UserId'>(
+					`550e8400-e29b-41d4-a716-${recipientUsername.toLowerCase().padStart(12, '0')}`
+				),
 				username: recipientUsername
 			};
 
@@ -271,7 +273,7 @@ export function DgtTransfer({ className = '' }: DgtTransferProps) {
 								placeholder="Add a message with your transfer..."
 								value={transferNote}
 								onChange={(e) => setTransferNote(e.target.value)}
-								variant="wallet"
+								variant="default"
 								className="focus:border-purple-800/70 resize-none"
 								rows={3}
 								maxLength={200}

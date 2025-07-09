@@ -34,7 +34,7 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { apiRequest } from '@/lib/api-request';
-import type { GroupId, MessageId, RoomId, UserId, EntityId } from "@shared/types/ids";
+import type { GroupId, MessageId, RoomId, UserId, EntityId } from '@shared/types/ids';
 
 interface User {
 	id: UserId;
@@ -118,7 +118,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 	const [isExpanded, setIsExpanded] = useState(position === 'main');
 	const [showUserMenu, setShowUserMenu] = useState<MessageId | null>(null);
 	const [ignoredUsers, setIgnoredUsers] = useState<Set<UserId>>(new Set());
-	const [typingUsers, setTypingUsers] = useState<Map<UserId, string>>(new Map());
+	const [typingUsers] = useState<Map<UserId, string>>(new Map());
 	const [cooldownRemaining, setCooldownRemaining] = useState(0);
 	const [messageQueue, setMessageQueue] = useState<string[]>([]);
 
@@ -159,7 +159,10 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 		queryFn: async (): Promise<{ data: Message[]; meta: { count: number; hasMore: boolean } }> => {
 			if (!selectedRoom) return { data: [], meta: { count: 0, hasMore: false } };
 
-			const response = await apiRequest<{ data: Message[]; meta: { count: number; hasMore: boolean } }>({ url: `/api/shoutbox/messages?roomId=${selectedRoom}&limit=50`, method: 'GET' });
+			const response = await apiRequest<{
+				data: Message[];
+				meta: { count: number; hasMore: boolean };
+			}>({ url: `/api/shoutbox/messages?roomId=${selectedRoom}&limit=50`, method: 'GET' });
 			return response;
 		},
 		enabled: !!selectedRoom,
@@ -171,7 +174,10 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 		queryKey: ['shoutbox-ignored-users', user?.id],
 		queryFn: async (): Promise<UserId[]> => {
 			if (!user) return [];
-			const response = await apiRequest<{ data: UserId[] }>({ url: `/api/shoutbox/ignore?userId=${user.id}`, method: 'GET' });
+			const response = await apiRequest<{ data: UserId[] }>({
+				url: `/api/shoutbox/ignore?userId=${user.id}`,
+				method: 'GET'
+			});
 			return response.data || [];
 		},
 		enabled: !!user && !!config?.userIgnoreSystemEnabled
@@ -302,6 +308,7 @@ const EnhancedShoutboxWidget: React.FC<EnhancedShoutboxWidgetProps> = ({
 			}, 1000);
 			return () => clearTimeout(timer);
 		}
+		return undefined;
 	}, [cooldownRemaining]);
 
 	// Auto-scroll to bottom

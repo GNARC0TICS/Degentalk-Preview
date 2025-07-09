@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
 	Sheet,
 	SheetContent,
@@ -57,7 +57,6 @@ export function WalletSheet({ isOpen, onOpenChange }: WalletSheetProps) {
 		isLoadingBalance,
 		transactions,
 		isLoadingTransactions,
-		createDepositAddress,
 		refreshBalance,
 		refreshTransactions
 	} = useWallet();
@@ -158,9 +157,8 @@ export function WalletSheet({ isOpen, onOpenChange }: WalletSheetProps) {
 						<div className="p-4 sm:p-6 space-y-6">
 							{/* Wallet Balance Display */}
 							<WalletBalanceDisplay
-								walletBalanceUSDT={walletDataWithDefaults.walletBalanceUSDT}
-								dgtPoints={walletDataWithDefaults.dgtPoints}
-								pendingWithdrawals={walletDataWithDefaults.pendingWithdrawals}
+								balance={walletDataWithDefaults}
+								isLoading={isLoadingBalance}
 								className="w-full"
 							/>
 
@@ -390,7 +388,7 @@ export function WalletSheet({ isOpen, onOpenChange }: WalletSheetProps) {
 										</div>
 									) : transactions && transactions.length > 0 ? (
 										<div className="divide-y divide-zinc-800/50">
-											{transactions.slice(0, maxTransactionsToShow).map((tx, index) => (
+											{transactions.slice(0, maxTransactionsToShow).map((tx) => (
 												<div
 													key={tx.id}
 													className="p-4 flex items-center justify-between transition-colors hover:bg-zinc-800/30 group"

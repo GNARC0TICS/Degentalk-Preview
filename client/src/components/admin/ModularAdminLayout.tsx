@@ -48,7 +48,7 @@ export default function ModularAdminLayout({ children, className }: ModularAdmin
 	};
 
 	return (
-		<AdminThemeProvider className={className}>
+		<AdminThemeProvider {...(className && { className })}>
 			<div className="min-h-screen flex">
 				{/* Desktop Sidebar */}
 				{!isMobile && (

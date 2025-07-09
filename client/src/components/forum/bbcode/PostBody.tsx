@@ -1,12 +1,11 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
 import { cn } from '@/lib/utils';
-import { brandConfig } from '@/config/brand.config';
 
 interface PostBodyProps {
 	content: string;
 	signature?: string | null;
-	username: string;
+	username?: string;
 	showSignatures?: boolean;
 	isFirst?: boolean;
 	className?: string;
@@ -15,7 +14,6 @@ interface PostBodyProps {
 export function PostBody({
 	content,
 	signature,
-	username,
 	showSignatures = true,
 	isFirst = false,
 	className = ''
@@ -123,7 +121,7 @@ export function PostBody({
 			)}
 
 			{/* BBCode-style post content styling */}
-			<style jsx>{`
+			<style>{`
 				.post-content {
 					line-height: 1.6;
 					font-family:

@@ -139,7 +139,10 @@ export function PostSidebar({
 			{/* Username and role */}
 			<div className="text-center mb-4">
 				<div className={cn('font-semibold mb-1', getRoleColor(profile.role))}>
-					<UserName user={profile} className="hover:text-emerald-400 transition-colors" />
+					<UserName
+						username={profile.username}
+						className="hover:text-emerald-400 transition-colors"
+					/>
 				</div>
 
 				{/* Role badge */}
@@ -170,10 +173,7 @@ export function PostSidebar({
 			{/* Level badge */}
 			{profile.level && (
 				<div className="flex justify-center mb-4">
-					<LevelBadge
-						level={profile.level}
-						compact={true}
-					/>
+					<LevelBadge level={profile.level} size="sm" />
 				</div>
 			)}
 

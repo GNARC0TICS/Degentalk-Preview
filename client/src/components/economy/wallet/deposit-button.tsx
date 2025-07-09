@@ -23,7 +23,7 @@ export function DepositButton({ variant = 'default', className, onClick }: Depos
 	const [copiedAddress, setCopiedAddress] = useState(false);
 	const [depositAmount, setDepositAmount] = useState('');
 	const [depositMemo, setDepositMemo] = useState('');
-	const [showGlow, setShowGlow] = useState(false);
+	const [showGlow] = useState(false);
 	const { toast } = useToast();
 	const {
 		depositAddresses,
@@ -47,7 +47,9 @@ export function DepositButton({ variant = 'default', className, onClick }: Depos
 			// Default to ETH if available, otherwise first option
 			const ethAddress = depositAddresses.find((addr) => addr.coinSymbol === 'ETH');
 			const defaultAddress = ethAddress || depositAddresses[0];
-			setSelectedCrypto(`${defaultAddress.coinSymbol}_${defaultAddress.chain}`);
+			if (defaultAddress) {
+				setSelectedCrypto(`${defaultAddress.coinSymbol}_${defaultAddress.chain}`);
+			}
 		}
 	}, [depositAddresses, selectedCrypto]);
 

@@ -22,11 +22,20 @@ export type CloutTier = (typeof CLOUT_TIERS)[number];
 export function getTierForClout(clout: number): CloutTier {
 	// Find the highest tier that the user qualifies for
 	for (let i = CLOUT_TIERS.length - 1; i >= 0; i--) {
-		if (clout >= CLOUT_TIERS[i].cloutRequired) {
-			return CLOUT_TIERS[i];
+		const tier = CLOUT_TIERS[i];
+		if (tier && clout >= tier.cloutRequired) {
+			return tier;
 		}
 	}
-	return CLOUT_TIERS[0]; // Default to Unknown
+	return (
+		CLOUT_TIERS[0] ??
+		({
+			tier: 0,
+			name: 'Unknown',
+			cloutRequired: 0,
+			color: '#6b7280'
+		} as const)
+	);
 }
 
 /**

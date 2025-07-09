@@ -37,6 +37,13 @@ export interface WalletConfig {
 	};
 }
 
+export interface DepositAddress {
+	coinSymbol: string;
+	chain: string;
+	address: string;
+	memo?: string;
+}
+
 export interface DgtPackage {
 	id: string;
 	name: string;
@@ -90,8 +97,8 @@ export class WalletApiService {
 		});
 	}
 
-	static async getDepositAddresses(): Promise<Record<string, string>> {
-		return apiRequest<Record<string, string>>({
+	static async getDepositAddresses(): Promise<DepositAddress[]> {
+		return apiRequest<DepositAddress[]>({
 			url: '/api/wallet/deposit-addresses',
 			method: 'GET'
 		});

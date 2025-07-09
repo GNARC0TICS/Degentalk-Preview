@@ -5,6 +5,7 @@
  */
 
 import { db } from '@db';
+import type { Id } from '@shared/types/ids';
 import { forumStructure, threads, posts, threadPrefixes, tags } from '@schema';
 import { eq, and, sql, count, desc, asc, isNull, not, ne } from 'drizzle-orm';
 import { AdminError } from '../../admin.errors';
@@ -15,7 +16,6 @@ import type {
 	ModerateThreadInput,
 	PaginationInput
 } from './forum.validators';
-import type { ThreadId } from "@shared/types/ids";
 import { logger } from '../../../../core/logger';
 
 export class AdminForumService {
@@ -434,7 +434,7 @@ export class AdminForumService {
 
 	// Thread moderation
 
-	async moderateThread(threadId: ThreadId, data: ModerateThreadInput) {
+	async moderateThread(threadId: Id<'id'>, data: ModerateThreadInput) {
 		try {
 			// Check thread exists
 			const [existingThread] = await db.select().from(threads).where(eq(threads.id, threadId));
