@@ -25,9 +25,9 @@ export function MentionRenderer({ content, className, onMentionClick }: MentionR
 		// Every odd index is a captured username from the regex
 		if (i % 2 === 1) {
 			// This is a username from a mention
-			const username = part;
+			const username = part ?? '';
 			const mentionElement = (
-				<MentionLink key={i} username={username} onClick={() => onMentionClick?.(username)} />
+				<MentionLink key={i} username={username} onClick={() => onMentionClick?.(username ?? '')} />
 			);
 			elements.push(mentionElement);
 		} else {

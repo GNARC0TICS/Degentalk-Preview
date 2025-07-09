@@ -30,7 +30,11 @@ export interface MobileForumNavigationProps {
 }
 
 // Generate dynamic theme based on colorTheme
-const getDynamicMobileTheme = (colorTheme: string | null) => {
+const getDynamicMobileTheme = (colorTheme: string | null): {
+	gradient: string;
+	accent: string;
+	icon: typeof Folder;
+} => {
 	const themeMap: Record<
 		string,
 		{
@@ -76,7 +80,9 @@ const getDynamicMobileTheme = (colorTheme: string | null) => {
 		}
 	};
 
-	return themeMap[colorTheme || 'default'] || themeMap.default;
+	const key = colorTheme || 'default';
+	const theme = themeMap[key];
+	return theme || themeMap.default!;
 };
 
 const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) => {
@@ -267,7 +273,7 @@ const MobileForumNavigation = memo(({ className }: MobileForumNavigationProps) =
 										) : (
 											filteredZones.map((zone) => {
 												// Use dynamic theme generation instead of static getZoneTheme
-												const theme = getDynamicMobileTheme(zone.theme.colorTheme);
+												const theme = getDynamicMobileTheme(zone.theme?.colorTheme ?? null);
 												const IconComponent = theme.icon;
 
 												return (

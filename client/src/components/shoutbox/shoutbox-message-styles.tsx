@@ -101,10 +101,10 @@ export function detectMessageType(content: string): {
 		return {
 			type: 'rain',
 			command: 'rain',
-			username: rainMatch[1],
-			amount: parseFloat(rainMatch[2]),
-			currency: rainMatch[3].toUpperCase() as 'DGT' | 'USDT',
-			recipientCount: parseInt(rainMatch[4])
+			username: rainMatch[1] ?? '',
+			amount: parseFloat(rainMatch[2] ?? '0'),
+			currency: (rainMatch[3] ?? 'DGT').toUpperCase() as 'DGT' | 'USDT',
+			recipientCount: parseInt(rainMatch[4] ?? '0')
 		};
 	}
 
@@ -116,9 +116,9 @@ export function detectMessageType(content: string): {
 		return {
 			type: 'tip',
 			command: 'tip',
-			username: tipMatch[1], // sender
-			amount: parseFloat(tipMatch[2]),
-			currency: tipMatch[3].toUpperCase() as 'DGT' | 'USDT'
+			username: tipMatch[1] ?? '', // sender
+			amount: parseFloat(tipMatch[2] ?? '0'),
+			currency: (tipMatch[3] ?? 'DGT').toUpperCase() as 'DGT' | 'USDT'
 		};
 	}
 
