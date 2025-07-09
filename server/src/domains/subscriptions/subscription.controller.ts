@@ -59,12 +59,12 @@ export class SubscriptionController {
 			const subscription = await subscriptionService.getUserActiveSubscription(userId);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					subscription,
-            					hasActiveSubscription: subscription !== null
-            				}
-            			});
+				success: true,
+				data: {
+					subscription,
+					hasActiveSubscription: subscription !== null
+				}
+			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error getting current subscription:', error);
 			sendErrorResponse(res, 'Failed to retrieve subscription information', 500);
@@ -86,12 +86,12 @@ export class SubscriptionController {
 			const subscriptions = await subscriptionService.getUserSubscriptions(userId);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					subscriptions,
-            					count: subscriptions.length
-            				}
-            			});
+				success: true,
+				data: {
+					subscriptions,
+					count: subscriptions.length
+				}
+			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error getting subscription history:', error);
 			sendErrorResponse(res, 'Failed to retrieve subscription history', 500);
@@ -120,11 +120,11 @@ export class SubscriptionController {
 
 			if (success) {
 				sendSuccessResponse(res, {
-                					success: true,
-                					data: {
-                						message: 'Subscription cancelled successfully'
-                					}
-                				});
+					success: true,
+					data: {
+						message: 'Subscription cancelled successfully'
+					}
+				});
 			} else {
 				return sendErrorResponse(res, 'Failed to cancel subscription', 400);
 			}
@@ -149,13 +149,13 @@ export class SubscriptionController {
 			const drops = await subscriptionService.getUserCosmeticDrops(userId);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					drops,
-            					count: drops.length,
-            					totalValue: drops.reduce((sum, drop) => sum + drop.cosmeticValue, 0)
-            				}
-            			});
+				success: true,
+				data: {
+					drops,
+					count: drops.length,
+					totalValue: drops.reduce((sum, drop) => sum + drop.cosmeticValue, 0)
+				}
+			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error getting cosmetic drops:', error);
 			sendErrorResponse(res, 'Failed to retrieve cosmetic drop history', 500);
@@ -182,12 +182,12 @@ export class SubscriptionController {
 			const hasBenefit = await subscriptionService.hasSubscriptionBenefit(userId, benefitKey);
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					benefitKey,
-            					hasBenefit
-            				}
-            			});
+				success: true,
+				data: {
+					benefitKey,
+					hasBenefit
+				}
+			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error checking benefit:', error);
 			sendErrorResponse(res, 'Failed to check subscription benefit', 500);
@@ -233,12 +233,12 @@ export class SubscriptionController {
 			};
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					pricing,
-            					currency: 'DGT'
-            				}
-            			});
+				success: true,
+				data: {
+					pricing,
+					currency: 'DGT'
+				}
+			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error getting pricing:', error);
 			sendErrorResponse(res, 'Failed to retrieve subscription pricing', 500);
@@ -261,12 +261,12 @@ export class SubscriptionController {
 			const results = await subscriptionService.processMonthlyCosmetics();
 
 			sendSuccessResponse(res, {
-            				success: true,
-            				data: {
-            					results,
-            					message: `Cosmetic drops processed: ${results.processed} successful, ${results.failed} failed`
-            				}
-            			});
+				success: true,
+				data: {
+					results,
+					message: `Cosmetic drops processed: ${results.processed} successful, ${results.failed} failed`
+				}
+			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error processing cosmetics:', error);
 			sendErrorResponse(res, 'Failed to process monthly cosmetic drops', 500);

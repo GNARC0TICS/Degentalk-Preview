@@ -65,10 +65,10 @@ export const MediaLibraryModal: React.FC<Props> = ({ open, onClose, onUploaded }
 			setFile(null);
 			setPreviewUrl(null);
 			onClose();
-		} catch (err: Error) {
+		} catch (err: unknown) {
 			toast({
 				title: 'Upload failed',
-				description: err?.message || 'Unknown error',
+				description: err instanceof Error ? err.message : 'Unknown error',
 				variant: 'destructive'
 			});
 		} finally {

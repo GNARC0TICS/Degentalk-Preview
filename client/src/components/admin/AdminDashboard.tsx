@@ -18,7 +18,8 @@ import {
 	BarChart3,
 	Settings,
 	Shield,
-	ExternalLink
+	ExternalLink,
+	type LucideIcon
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -33,7 +34,7 @@ interface QuickStat {
 	title: string;
 	value: string | number;
 	change?: string;
-	icon: React.ComponentType;
+	icon: LucideIcon;
 	color: string;
 }
 

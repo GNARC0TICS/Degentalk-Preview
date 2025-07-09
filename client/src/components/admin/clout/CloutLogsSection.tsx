@@ -48,7 +48,9 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 	// Create achievement lookup map
 	const achievementMap = achievements.reduce(
 		(map: Record<number, CloutAchievement>, achievement) => {
-			map[achievement.id] = achievement;
+			if (typeof achievement.id === 'number') {
+				map[achievement.id] = achievement;
+			}
 			return map;
 		},
 		{} as Record<number, CloutAchievement>
@@ -67,7 +69,7 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 				return (
 					log.userId.toLowerCase().includes(searchLower) ||
 					log.reason?.toLowerCase().includes(searchLower) ||
-					(log.achievementId &&
+					(log.achievementId && typeof log.achievementId === 'number' &&
 						achievementMap[log.achievementId]?.name.toLowerCase().includes(searchLower))
 				);
 			}
@@ -97,7 +99,7 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 	const uniqueUsers = new Set(logs.map((log) => log.userId)).size;
 
 	const getLogType = (log: CloutLog) => {
-		if (log.achievementId) {
+		if (log.achievementId && typeof log.achievementId === 'number') {
 			const achievement = achievementMap[log.achievementId];
 			return achievement ? 'Achievement' : 'Unknown Achievement';
 		}
@@ -105,7 +107,7 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 	};
 
 	const getLogIcon = (log: CloutLog) => {
-		if (log.achievementId) {
+		if (log.achievementId && typeof log.achievementId === 'number') {
 			return <Trophy className="h-4 w-4 text-yellow-500" />;
 		}
 		return log.cloutEarned > 0 ? (
@@ -325,7 +327,7 @@ export function CloutLogsSection({ logs, achievements, isLoading }: CloutLogsSec
 												</Badge>
 											</TableCell>
 											<TableCell className="max-w-xs">
-												{log.achievementId ? (
+												{log.achievementId && typeof log.achievementId === 'number' ? (
 													<div>
 														<p className="font-medium">
 															{achievementMap[log.achievementId]?.name || 'Unknown Achievement'}

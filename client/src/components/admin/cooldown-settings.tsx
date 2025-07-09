@@ -145,7 +145,7 @@ export function CooldownSettings() {
 								max={300}
 								step={5}
 								value={[formData.tipCooldownSeconds]}
-								onValueChange={(value) => handleChange('tipCooldownSeconds', value[0])}
+								onValueChange={(value) => handleChange('tipCooldownSeconds', value[0] || 0)}
 								className="w-full"
 							/>
 							<p className="text-xs text-zinc-400">
@@ -167,7 +167,7 @@ export function CooldownSettings() {
 								max={3600}
 								step={30}
 								value={[formData.rainCooldownSeconds]}
-								onValueChange={(value) => handleChange('rainCooldownSeconds', value[0])}
+								onValueChange={(value) => handleChange('rainCooldownSeconds', value[0] || 0)}
 								className="w-full"
 							/>
 							<p className="text-xs text-zinc-400">

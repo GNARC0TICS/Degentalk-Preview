@@ -59,10 +59,10 @@ const validateCCPaymentWebhook = async (
 
 		if (signature !== expectedSignature) {
 			logger.error('Webhook signature validation failed', {
-            				received: signature,
-            				expected: expectedSignature,
-            				payload: payloadString.substring(0, 100) + '...'
-            			});
+				received: signature,
+				expected: expectedSignature,
+				payload: payloadString.substring(0, 100) + '...'
+			});
 
 			sendErrorResponse(res, 'Invalid webhook signature', 401);
 			return;

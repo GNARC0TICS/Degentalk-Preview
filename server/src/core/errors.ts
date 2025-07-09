@@ -9,7 +9,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { logger } from './logger';
 import { getAuthenticatedUser } from "@server/src/core/utils/auth.helpers";
 
-// Error severity for monitoring & alerting
+// Error severity for monitoring and alerting
 export enum ErrorSeverity {
 	LOW = 'low',
 	MEDIUM = 'medium',
