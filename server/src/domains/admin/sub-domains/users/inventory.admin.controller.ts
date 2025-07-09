@@ -26,7 +26,7 @@ export const userInventoryAdminController = {
 		const { productId, quantity = 1, metadata } = req.body;
 
 		if (!productId) {
-			return res.status(400).json({ message: 'Product ID is required.' });
+			return sendErrorResponse(res, 'Product ID is required.', 400);
 		}
 
 		try {
@@ -43,9 +43,7 @@ export const userInventoryAdminController = {
 
 			if (existingItem.length > 0) {
 				// Optionally, update quantity if item is stackable, or just return info
-				return res
-					.status(409)
-					.json({ message: 'User already owns this item.', item: existingItem[0] });
+				return sendErrorResponse(res, 'User already owns this item.', 409);
 			}
 
 			const newItem = await db
@@ -58,10 +56,10 @@ export const userInventoryAdminController = {
 					acquiredAt: new Date()
 				})
 				.returning();
-			res.status(201).json(newItem[0]);
+			sendSuccessResponse(res, newItem[0]);
 		} catch (error) {
 			logger.error('Error granting item:', error);
-			res.status(500).json({ message: 'Error granting item', error: error.message });
+			sendErrorResponse(res, 'Error granting item', 500);
 		}
 	},
 
@@ -184,10 +182,7 @@ export const userInventoryAdminController = {
             			});
 		} catch (error) {
 			logger.error('Error equipping item:', error);
-			res.status(500).json({
-				success: false,
-				message: error.message || 'Error equipping item'
-			});
+			sendErrorResponse(res, error.message || 'Error equipping item', 500);
 		}
 	},
 
@@ -207,12 +202,12 @@ export const userInventoryAdminController = {
 				.returning();
 
 			if (unequippedItem.length === 0) {
-				return res.status(404).json({ message: 'Inventory item not found or not owned by user.' });
+				return sendErrorResponse(res, 'Inventory item not found or not owned by user.', 404);
 			}
 			sendSuccessResponse(res, unequippedItem[0]);
 		} catch (error) {
 			logger.error('Error unequipping item:', error);
-			res.status(500).json({ message: 'Error unequipping item', error: error.message });
+			sendErrorResponse(res, 'Error unequipping item', 500);
 		}
 	}
 };

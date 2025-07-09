@@ -8,6 +8,7 @@ import { Router } from 'express';
 import { adminForumController } from './forum.controller';
 import { asyncHandler } from '../../admin.middleware';
 import { forumPrefixService } from '../forumPrefix/forumPrefix.service';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 import type { PrefixId } from '@shared/types/ids';
 import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
@@ -90,7 +91,7 @@ router.post(
 	'/prefixes/reorder',
 	asyncHandler(async (req, res) => {
 		const { order } = req.body as { order: number[] };
-		if (!Array.isArray(order)) return res.status(400).json({ message: 'order must be array' });
+		if (!Array.isArray(order)) return sendErrorResponse(res, 'order must be array', 400);
 		const result = await forumPrefixService.reorderPrefixes(order);
 		sendSuccessResponse(res, result);
 	})

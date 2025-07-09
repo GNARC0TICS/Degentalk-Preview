@@ -15,6 +15,7 @@ import { eq } from 'drizzle-orm';
 import { isAdmin } from '../auth/middleware/auth.middleware';
 import { getUserId } from '../auth/services/auth.service';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 /**
  * Format DGT amount from storage format (BIGINT with 6 decimal precision) to display format
@@ -48,27 +49,21 @@ async function adjustTreasuryBalance(
 		const { amount, type, reason, currency } = params;
 
 		if (!amount || !type || !currency) {
-			return res.status(400).json({
-				message: 'Required fields: amount, type (credit/debit), currency (DGT/USDT)'
-			});
+			return sendErrorResponse(res, 'Required fields: amount, type (credit/debit), currency (DGT/USDT)', 400);
 		}
 
 		if (type !== 'credit' && type !== 'debit') {
-			return res.status(400).json({
-				message: "Type must be 'credit' or 'debit'"
-			});
+			return sendErrorResponse(res, "Type must be 'credit' or 'debit'", 400);
 		}
 
 		if (currency !== 'DGT' && currency !== 'USDT') {
-			return res.status(400).json({
-				message: "Currency must be 'DGT' or 'USDT'"
-			});
+			return sendErrorResponse(res, "Currency must be 'DGT' or 'USDT'", 400);
 		}
 
 		// Validate amount
 		const amountNumeric = parseFloat(amount.toString());
 		if (isNaN(amountNumeric) || amountNumeric <= 0) {
-			return res.status(400).json({ message: 'Amount must be a positive number' });
+			return sendErrorResponse(res, 'Amount must be a positive number', 400);
 		}
 
 		// Begin transaction
@@ -192,7 +187,7 @@ async function adjustTreasuryBalance(
       `);
 		});
 
-		return res.status(200).json({
+		return sendSuccessResponse(res, {
 			success: true,
 			message: `Successfully ${type === 'credit' ? 'credited' : 'debited'} ${amountNumeric} ${currency} to treasury`
 		});
@@ -204,10 +199,10 @@ async function adjustTreasuryBalance(
 			(error.message.includes('Insufficient treasury') ||
 				error.message === 'Treasury settings not found')
 		) {
-			return res.status(400).json({ message: error.message });
+			return sendErrorResponse(res, error.message, 400);
 		}
 
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error', 500);
 	}
 }
 
@@ -233,7 +228,7 @@ router.get('/overview', isAdmin, async (req: Request, res: Response) => {
 		const treasurySettings = treasuryResult.rows[0];
 
 		if (!treasurySettings) {
-			return res.status(404).json({ message: 'Treasury settings not found' });
+			return sendErrorResponse(res, 'Treasury settings not found', 404);
 		}
 
 		// Get total circulating supply
@@ -353,10 +348,10 @@ router.get('/overview', isAdmin, async (req: Request, res: Response) => {
 			}
 		};
 
-		return res.status(200).json(overview);
+		return sendSuccessResponse(res, overview);
 	} catch (error) {
 		logger.error('Error fetching treasury overview:', error);
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error', 500);
 	}
 });
 
@@ -367,15 +362,11 @@ router.post('/adjust-balance', isAdmin, async (req: Request, res: Response) => {
 		const { user_id, amount, type, reason } = req.body;
 
 		if (!user_id || !amount || !type) {
-			return res.status(400).json({
-				message: 'Required fields: user_id, amount, type (credit/debit)'
-			});
+			return sendErrorResponse(res, 'Required fields: user_id, amount, type (credit/debit)', 400);
 		}
 
 		if (type !== 'credit' && type !== 'debit') {
-			return res.status(400).json({
-				message: "Type must be 'credit' or 'debit'"
-			});
+			return sendErrorResponse(res, "Type must be 'credit' or 'debit'", 400);
 		}
 
 		// Check if user exists
@@ -386,7 +377,7 @@ router.post('/adjust-balance', isAdmin, async (req: Request, res: Response) => {
     `);
 
 		if (userCheck.rows.length === 0) {
-			return res.status(404).json({ message: 'User not found' });
+			return sendErrorResponse(res, 'User not found', 404);
 		}
 
 		const user = userCheck.rows[0];
@@ -483,7 +474,7 @@ router.post('/adjust-balance', isAdmin, async (req: Request, res: Response) => {
       `);
 		});
 
-		return res.status(200).json({
+		return sendSuccessResponse(res, {
 			success: true,
 			message: `Successfully ${type === 'credit' ? 'credited' : 'debited'} ${amount} DGT to user ID ${user_id}`,
 			user_id,
@@ -494,10 +485,10 @@ router.post('/adjust-balance', isAdmin, async (req: Request, res: Response) => {
 		logger.error('Error adjusting balance:', error);
 
 		if (error.message === 'Insufficient user balance') {
-			return res.status(400).json({ message: 'Insufficient user balance for debit operation' });
+			return sendErrorResponse(res, 'Insufficient user balance for debit operation', 400);
 		}
 
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error', 500);
 	}
 });
 
@@ -525,9 +516,7 @@ router.put('/settings', isAdmin, async (req: Request, res: Response) => {
 			min_withdrawal_amount &&
 			(isNaN(parseFloat(min_withdrawal_amount)) || parseFloat(min_withdrawal_amount) < 0)
 		) {
-			return res
-				.status(400)
-				.json({ message: 'Minimum withdrawal amount must be a non-negative number' });
+			return sendErrorResponse(res, 'Minimum withdrawal amount must be a non-negative number', 400);
 		}
 		if (
 			withdrawal_fee_percent &&
@@ -535,7 +524,7 @@ router.put('/settings', isAdmin, async (req: Request, res: Response) => {
 				parseFloat(withdrawal_fee_percent) < 0 ||
 				parseFloat(withdrawal_fee_percent) > 100)
 		) {
-			return res.status(400).json({ message: 'Withdrawal fee percent must be between 0 and 100' });
+			return sendErrorResponse(res, 'Withdrawal fee percent must be between 0 and 100', 400);
 		}
 		// Add more validation as needed
 
@@ -570,7 +559,7 @@ router.put('/settings', isAdmin, async (req: Request, res: Response) => {
 		}
 
 		if (setClauses.length === 0) {
-			return res.status(400).json({ message: 'No settings provided to update' });
+			return sendErrorResponse(res, 'No settings provided to update', 400);
 		}
 
 		setClauses.push(`updated_at = NOW()`);
@@ -602,13 +591,13 @@ router.put('/settings', isAdmin, async (req: Request, res: Response) => {
       )
     `);
 
-		return res.status(200).json({
+		return sendSuccessResponse(res, {
 			success: true,
 			message: 'Treasury settings updated successfully'
 		});
 	} catch (error: any) {
 		logger.error('Error updating treasury settings:', error);
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error', 500);
 	}
 });
 
@@ -627,7 +616,7 @@ router.post('/adjust-usdt', isAdmin, async (req: Request, res: Response) => {
 		});
 	} catch (error) {
 		logger.error('Error in adjust-usdt endpoint:', error);
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error', 500);
 	}
 });
 
@@ -650,10 +639,10 @@ router.get('/balance-history', isAdmin, async (req: Request, res: Response) => {
 			usdtBalance: Number(row.usdtBalance) || 0
 		}));
 
-		return res.status(200).json(history);
+		return sendSuccessResponse(res, history);
 	} catch (error: any) {
 		logger.error('Error fetching treasury balance history:', error);
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error', 500);
 	}
 });
 
@@ -683,10 +672,10 @@ router.get('/transaction-history', isAdmin, async (req: Request, res: Response) 
 			metadata: row.metadata
 		}));
 
-		return res.status(200).json(history);
+		return sendSuccessResponse(res, history);
 	} catch (error: any) {
 		logger.error('Error fetching treasury transaction history:', error);
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error', 500);
 	}
 });
 

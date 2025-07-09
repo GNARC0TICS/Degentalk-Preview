@@ -89,10 +89,7 @@ router.get('/me/preferences-all', authenticate, async (req, res) => {
 		sendSuccessResponse(res, { preferences });
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error getting user preferences', error);
-		res.status(500).json({
-			error: 'Failed to retrieve user preferences',
-			message: error.message
-		});
+		sendErrorResponse(res, 'Failed to retrieve user preferences', 500);
 	}
 });
 
@@ -112,10 +109,7 @@ router.put(
 			sendSuccessResponse(res, { success: true, data: result });
 		} catch (error) {
 			logger.error('PREFERENCES', 'Error updating profile preferences', error);
-			res.status(500).json({
-				error: 'Failed to update profile preferences',
-				message: error.message
-			});
+			sendErrorResponse(res, 'Failed to update profile preferences', 500);
 		}
 	}
 );
@@ -136,10 +130,7 @@ router.put(
 			sendSuccessResponse(res, { success: true, data: result });
 		} catch (error) {
 			logger.error('PREFERENCES', 'Error updating account preferences', error);
-			res.status(500).json({
-				error: 'Failed to update account preferences',
-				message: error.message
-			});
+			sendErrorResponse(res, 'Failed to update account preferences', 500);
 		}
 	}
 );
@@ -160,10 +151,7 @@ router.put(
 			sendSuccessResponse(res, { success: true, data: result });
 		} catch (error) {
 			logger.error('PREFERENCES', 'Error updating notification preferences', error);
-			res.status(500).json({
-				error: 'Failed to update notification preferences',
-				message: error.message
-			});
+			sendErrorResponse(res, 'Failed to update notification preferences', 500);
 		}
 	}
 );
@@ -184,10 +172,7 @@ router.put(
 			sendSuccessResponse(res, { success: true, data: result });
 		} catch (error) {
 			logger.error('PREFERENCES', 'Error updating display preferences', error);
-			res.status(500).json({
-				error: 'Failed to update display preferences',
-				message: error.message
-			});
+			sendErrorResponse(res, 'Failed to update display preferences', 500);
 		}
 	}
 );
@@ -208,10 +193,7 @@ router.post(
 			sendSuccessResponse(res, { success: true, data: result });
 		} catch (error) {
 			logger.error('PREFERENCES', 'Error changing password', error);
-			res.status(400).json({
-				error: 'Failed to change password',
-				message: error.message
-			});
+			sendErrorResponse(res, 'Failed to change password', 400);
 		}
 	}
 );
@@ -242,9 +224,9 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
 					profileVisibility: 'public',
 					language: 'en'
 				};
-				return res.status(200).json(mockPreferences);
+				return sendSuccessResponse(res, mockPreferences);
 			}
-			return res.status(500).json({ message: 'Failed to identify user' });
+			return sendErrorResponse(res, 'Failed to identify user', 500);
 		}
 
 		// Check if user preferences exist
@@ -267,7 +249,7 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
 
 			try {
 				await db.insert(userPreferencesSchema).values(defaultPreferences);
-				return res.status(200).json(defaultPreferences);
+				return sendSuccessResponse(res, defaultPreferences);
 			} catch (insertError) {
 				logger.error('PREFERENCES', 'Error creating default user preferences', insertError);
 
@@ -277,14 +259,14 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
 						'PREFERENCES',
 						`🔧 Returning default mock preferences for user ${userId} after insert failure (dev mode only)`
 					);
-					return res.status(200).json(defaultPreferences);
+					return sendSuccessResponse(res, defaultPreferences);
 				}
 
-				return res.status(500).json({ message: 'Failed to create user preferences' });
+				return sendErrorResponse(res, 'Failed to create user preferences', 500);
 			}
 		}
 
-		return res.status(200).json(userSettingsData[0]);
+		return sendSuccessResponse(res, userSettingsData[0]);
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error fetching user preferences', error);
 
@@ -304,10 +286,10 @@ router.get('/', isAuthenticated, async (req: Request, res: Response) => {
 				profileVisibility: 'public',
 				language: 'en'
 			};
-			return res.status(200).json(mockPreferences);
+			return sendSuccessResponse(res, mockPreferences);
 		}
 
-		return res.status(500).json({ message: 'Internal server error' });
+		return sendErrorResponse(res, 'Internal server error', 500);
 	}
 });
 
@@ -319,15 +301,12 @@ router.put(
 		try {
 			const userId = getUserIdFromRequest(req);
 			if (userId === undefined) {
-				return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+				return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
 			}
 			const validation = updateShoutboxPositionSchema.safeParse(req.body);
 
 			if (!validation.success) {
-				return res.status(400).json({
-					message: 'Invalid position format',
-					errors: validation.error.errors
-				});
+				return sendErrorResponse(res, 'Invalid position format', 400);
 			}
 
 			const { position } = validation.data;
@@ -389,13 +368,13 @@ router.put(
 				// Continue with the response even if broadcast fails
 			}
 
-			return res.status(200).json({
+			return sendSuccessResponse(res, {
 				message: 'Shoutbox position updated successfully',
 				position
 			});
 		} catch (error) {
 			logger.error('PREFERENCES', 'Error updating shoutbox position', error);
-			return res.status(500).json({ message: 'Internal server error' });
+			return sendErrorResponse(res, 'Internal server error', 500);
 		}
 	}
 );
@@ -408,17 +387,14 @@ router.get('/social-preferences', isAuthenticated, async (req, res) => {
 	try {
 		const userId = getUserIdFromRequest(req);
 		if (userId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+			return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
 		}
 
 		const preferences = await UserPreferencesService.getSocialPreferences(userId);
 		sendSuccessResponse(res, { preferences });
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error fetching social preferences', error);
-		res.status(500).json({
-			error: 'Failed to fetch social preferences',
-			details: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to fetch social preferences', 500);
 	}
 });
 
@@ -430,15 +406,12 @@ router.put('/social-preferences', isAuthenticated, async (req, res) => {
 	try {
 		const userId = getUserIdFromRequest(req);
 		if (userId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+			return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
 		}
 
 		const validation = socialPreferencesSchema.safeParse(req.body);
 		if (!validation.success) {
-			return res.status(400).json({
-				error: 'Invalid preferences data',
-				details: validation.error.errors
-			});
+			return sendErrorResponse(res, 'Invalid preferences data', 400);
 		}
 
 		const updatedPreferences = await UserPreferencesService.updateSocialPreferences(
@@ -449,10 +422,7 @@ router.put('/social-preferences', isAuthenticated, async (req, res) => {
 		sendSuccessResponse(res, { preferences: updatedPreferences });
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error updating social preferences', error);
-		res.status(500).json({
-			error: 'Failed to update social preferences',
-			details: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to update social preferences', 500);
 	}
 });
 
@@ -464,17 +434,14 @@ router.get('/privacy-summary', isAuthenticated, async (req, res) => {
 	try {
 		const userId = getUserIdFromRequest(req);
 		if (userId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+			return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
 		}
 
 		const summary = await UserPreferencesService.getPrivacySummary(userId);
 		sendSuccessResponse(res, { summary });
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error fetching privacy summary', error);
-		res.status(500).json({
-			error: 'Failed to fetch privacy summary',
-			details: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to fetch privacy summary', 500);
 	}
 });
 
@@ -486,17 +453,14 @@ router.post('/reset-social-preferences', isAuthenticated, async (req, res) => {
 	try {
 		const userId = getUserIdFromRequest(req);
 		if (userId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+			return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
 		}
 
 		const defaultPreferences = await UserPreferencesService.resetSocialPreferences(userId);
 		sendSuccessResponse(res, { preferences: defaultPreferences });
 	} catch (error) {
 		logger.error('PREFERENCES', 'Error resetting social preferences', error);
-		res.status(500).json({
-			error: 'Failed to reset social preferences',
-			details: error instanceof Error ? error.message : 'Unknown error'
-		});
+		sendErrorResponse(res, 'Failed to reset social preferences', 500);
 	}
 });
 

@@ -20,10 +20,8 @@ export class AdminAnalyticsController {
 			sendSuccessResponse(res, stats);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch overview statistics' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			sendErrorResponse(res, 'Failed to fetch overview statistics', 500);
 		}
 	}
 
@@ -35,10 +33,8 @@ export class AdminAnalyticsController {
 			sendSuccessResponse(res, chartData);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch user growth chart data' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			sendErrorResponse(res, 'Failed to fetch user growth chart data', 500);
 		}
 	}
 
@@ -50,10 +46,8 @@ export class AdminAnalyticsController {
 			sendSuccessResponse(res, threads);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch most active threads' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			sendErrorResponse(res, 'Failed to fetch most active threads', 500);
 		}
 	}
 

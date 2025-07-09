@@ -38,7 +38,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 		// Check if username already exists
 		const existingUser = await storage.getUserByUsername(userData.username);
 		if (existingUser) {
-			return res.status(400).json({ message: 'Username already exists' });
+			return sendErrorResponse(res, 'Username already exists', 400);
 		}
 
 		// Store temporary dev metadata if beta tools are enabled
@@ -95,10 +95,10 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 
 		// In dev mode, we skip verification
 		if (isDevMode()) {
-			return res.status(201).json({
+			return sendSuccessResponse(res, {
 				message: 'Registration successful in development mode. User is automatically activated.',
 				devMode: true
-			});
+			}, '', 201);
 		}
 
 		// Generate verification token
@@ -112,15 +112,12 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 			token: verificationToken
 		});
 
-		res.status(201).json({
+		sendSuccessResponse(res, {
 			message: 'Registration successful. Please check your email to verify your account.'
-		});
+		}, '', 201);
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			return res.status(400).json({
-				message: 'Validation error',
-				errors: err.errors
-			});
+			return sendErrorResponse(res, 'Validation error', 400, { errors: err.errors });
 		}
 		next(err);
 	}
@@ -139,7 +136,7 @@ export function login(req: Request, res: Response, next: NextFunction) {
 		}
 		if (!user) {
 			logger.warn('Authentication failed', { message: info?.message || 'No user returned' });
-			return res.status(401).json({ message: info?.message || 'Authentication failed' });
+			return sendErrorResponse(res, info?.message || 'Authentication failed', 401);
 		}
 
 		logger.info('User authenticated', { username: user.username, userId: user.id });
@@ -170,7 +167,7 @@ export function login(req: Request, res: Response, next: NextFunction) {
 			const userResponse = { ...user };
 			delete userResponse.password;
 
-			res.status(200).json(userResponse);
+			sendSuccessResponse(res, userResponse);
 		});
 	})(req, res, next);
 }
@@ -189,7 +186,7 @@ export function logout(req: Request, res: Response, next: NextFunction) {
  * Get current user profile
  */
 export function getCurrentUser(req: Request, res: Response) {
-	if (!req.isAuthenticated()) return res.sendStatus(401);
+	if (!req.isAuthenticated()) return sendErrorResponse(res, 'Unauthorized', 401);
 
 	// Remove password from response
 	const userResponse = { ...(userService.getUserFromRequest(req) as any) };
@@ -211,23 +208,21 @@ export async function verifyEmail(req: Request, res: Response, next: NextFunctio
 		const { token } = req.query;
 
 		if (!token || typeof token !== 'string') {
-			return res.status(400).json({ message: 'Invalid verification token' });
+			return sendErrorResponse(res, 'Invalid verification token', 400);
 		}
 
 		// Find and validate token
 		const isValid = await verifyEmailToken(token);
 
 		if (!isValid) {
-			return res.status(400).json({
-				message: 'Invalid or expired verification token. Please request a new one.'
-			});
+			return sendErrorResponse(res, 'Invalid or expired verification token. Please request a new one.', 400);
 		}
 
 		// Activate the user account
 		const userId = isValid.userId;
 		await storage.updateUser(userId, { isActive: true });
 
-		return res.status(200).json({
+		return sendSuccessResponse(res, {
 			message: 'Email verified successfully. You can now log in to your account.'
 		});
 	} catch (err) {
@@ -243,14 +238,14 @@ export async function resendVerification(req: Request, res: Response, next: Next
 		const { email } = req.body;
 
 		if (!email) {
-			return res.status(400).json({ message: 'Email is required' });
+			return sendErrorResponse(res, 'Email is required', 400);
 		}
 
 		// Find user by email
 		const user = await storage.getUserByEmail(email);
 		if (!user) {
 			// For security reasons, don't reveal if email exists or not
-			return res.status(200).json({
+			return sendSuccessResponse(res, {
 				message:
 					'If your email exists in our system, you will receive a verification email shortly.'
 			});
@@ -258,9 +253,7 @@ export async function resendVerification(req: Request, res: Response, next: Next
 
 		// Check if account is already active
 		if (user.isActive) {
-			return res.status(400).json({
-				message: 'This account is already active. Please try logging in.'
-			});
+			return sendErrorResponse(res, 'This account is already active. Please try logging in.', 400);
 		}
 
 		// Generate new verification token
@@ -275,7 +268,7 @@ export async function resendVerification(req: Request, res: Response, next: Next
 			token: verificationToken
 		});
 
-		res.status(200).json({
+		sendSuccessResponse(res, {
 			message: 'If your email exists in our system, you will receive a verification email shortly.'
 		});
 	} catch (err) {

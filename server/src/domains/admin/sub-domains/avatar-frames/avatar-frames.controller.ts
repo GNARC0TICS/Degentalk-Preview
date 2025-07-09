@@ -25,10 +25,7 @@ class AvatarFrameController {
 			sendSuccessResponse(res, frames);
 		} catch (error) {
 			logger.error('AvatarFrameController', 'Failed to get all frames', { error });
-			return res.status(500).json({
-				error: 'Failed to fetch avatar frames',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			return sendErrorResponse(res, 'Failed to fetch avatar frames', 500);
 		}
 	}
 
@@ -38,7 +35,7 @@ class AvatarFrameController {
 
 			const frame = await avatarFrameService.getFrameById(frameId);
 			if (!frame) {
-				return res.status(404).json({ error: 'Avatar frame not found' });
+				return sendErrorResponse(res, 'Avatar frame not found', 404);
 			}
 
 			sendSuccessResponse(res, frame);
@@ -47,10 +44,7 @@ class AvatarFrameController {
 				error,
 				frameId: req.params.id
 			});
-			return res.status(500).json({
-				error: 'Failed to fetch avatar frame',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			return sendErrorResponse(res, 'Failed to fetch avatar frame', 500);
 		}
 	}
 
@@ -66,23 +60,17 @@ class AvatarFrameController {
 				createdBy: userService.getUserFromRequest(req)?.id
 			});
 
-			return res.status(201).json(frame);
+			return sendSuccessResponse(res, frame);
 		} catch (error) {
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({
-					error: 'Validation failed',
-					details: error.errors
-				});
+				return sendErrorResponse(res, 'Validation failed', 400);
 			}
 
 			logger.error('AvatarFrameController', 'Failed to create frame', {
 				error,
 				userId: userService.getUserFromRequest(req)?.id
 			});
-			return res.status(500).json({
-				error: 'Failed to create avatar frame',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			return sendErrorResponse(res, 'Failed to create avatar frame', 500);
 		}
 	}
 
@@ -94,7 +82,7 @@ class AvatarFrameController {
 
 			const frame = await avatarFrameService.updateFrame(frameId, validatedData);
 			if (!frame) {
-				return res.status(404).json({ error: 'Avatar frame not found' });
+				return sendErrorResponse(res, 'Avatar frame not found', 404);
 			}
 
 			logger.info('AvatarFrameController', 'Frame updated', {
@@ -105,10 +93,7 @@ class AvatarFrameController {
 			sendSuccessResponse(res, frame);
 		} catch (error) {
 			if (error instanceof z.ZodError) {
-				return res.status(400).json({
-					error: 'Validation failed',
-					details: error.errors
-				});
+				return sendErrorResponse(res, 'Validation failed', 400);
 			}
 
 			logger.error('AvatarFrameController', 'Failed to update frame', {
@@ -116,10 +101,7 @@ class AvatarFrameController {
 				frameId: req.params.id,
 				userId: userService.getUserFromRequest(req)?.id
 			});
-			return res.status(500).json({
-				error: 'Failed to update avatar frame',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			return sendErrorResponse(res, 'Failed to update avatar frame', 500);
 		}
 	}
 
@@ -129,7 +111,7 @@ class AvatarFrameController {
 
 			const deleted = await avatarFrameService.deleteFrame(frameId);
 			if (!deleted) {
-				return res.status(404).json({ error: 'Avatar frame not found' });
+				return sendErrorResponse(res, 'Avatar frame not found', 404);
 			}
 
 			logger.info('AvatarFrameController', 'Frame deleted', {
@@ -137,17 +119,14 @@ class AvatarFrameController {
 				deletedBy: userService.getUserFromRequest(req)?.id
 			});
 
-			return res.status(204).send();
+			return sendSuccessResponse(res, null);
 		} catch (error) {
 			logger.error('AvatarFrameController', 'Failed to delete frame', {
 				error,
 				frameId: req.params.id,
 				userId: userService.getUserFromRequest(req)?.id
 			});
-			return res.status(500).json({
-				error: 'Failed to delete avatar frame',
-				message: error instanceof Error ? error.message : 'Unknown error'
-			});
+			return sendErrorResponse(res, 'Failed to delete avatar frame', 500);
 		}
 	}
 }

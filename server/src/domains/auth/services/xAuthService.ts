@@ -53,7 +53,7 @@ export async function handleXCallback(req: Request, res: Response, next: NextFun
 		const { state, code } = req.query as Record<string, string>;
 		const sessionData = req.session!.x_oauth;
 		if (!sessionData || state !== sessionData.state) {
-			return res.status(400).json({ message: 'Invalid OAuth state' });
+			return sendErrorResponse(res, 'Invalid OAuth state', 400);
 		}
 
 		const client = getTwitterClient();
@@ -131,7 +131,7 @@ export async function handleXCallback(req: Request, res: Response, next: NextFun
 export async function unlinkXAccount(req: Request, res: Response, next: NextFunction) {
 	try {
 		if (!userService.getUserFromRequest(req))
-			return res.status(401).json({ message: 'Not logged in' });
+			return sendErrorResponse(res, 'Not logged in', 401);
 		await db
 			.update(users)
 			.set({

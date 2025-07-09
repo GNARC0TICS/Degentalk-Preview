@@ -9,7 +9,7 @@ import type { UserId } from '@shared/types/ids';
 import { Router } from 'express';
 import { userService } from '@server/src/core/services/user.service';
 import { isAuthenticated } from '../auth/middleware/auth.middleware';
-import { logger } from '../../core/logger';
+import { logger } from '../../core/logger';\nimport { sendSuccessResponse, sendErrorResponse } from '../../core/utils/transformer.helpers';
 import { db } from '@db';
 import { userInventory, transactions } from '@schema';
 import { eq, and, inArray } from 'drizzle-orm';
@@ -156,7 +156,7 @@ router.get('/browse', async (req, res) => {
 
   } catch (error) {
     logger.error('CosmeticsController', 'Error browsing cosmetics', { error });
-    res.status(500).json({ error: 'Failed to browse cosmetics' });
+    sendErrorResponse(res, 'Failed to browse cosmetics', 500);
   }
 });
 
@@ -168,7 +168,7 @@ router.get('/equipped', isAuthenticated, async (req, res) => {
   try {
     const requestingUser = userService.getUserFromRequest(req);
     if (!requestingUser?.id) {
-      return res.status(401).json({ error: 'User not authenticated' });
+      return sendErrorResponse(res, 'User not authenticated', 401);
     }
 
     // Get equipped cosmetics
@@ -210,7 +210,7 @@ router.get('/equipped', isAuthenticated, async (req, res) => {
       error,
       userId: userService.getUserFromRequest(req)?.id
     });
-    res.status(500).json({ error: 'Failed to get equipped cosmetics' });
+    sendErrorResponse(res, 'Failed to get equipped cosmetics', 500);
   }
 });
 
@@ -222,7 +222,7 @@ router.post('/equip', isAuthenticated, async (req, res) => {
   try {
     const requestingUser = userService.getUserFromRequest(req);
     if (!requestingUser?.id) {
-      return res.status(401).json({ error: 'User not authenticated' });
+      return sendErrorResponse(res, 'User not authenticated', 401);
     }
 
     const { itemId, action } = equipCosmeticSchema.parse(req.body);
@@ -239,7 +239,7 @@ router.post('/equip', isAuthenticated, async (req, res) => {
       .limit(1);
 
     if (ownedItem.length === 0) {
-      return res.status(400).json({ error: 'You do not own this cosmetic item' });
+      return sendErrorResponse(res, 'You do not own this cosmetic item', 400);
     }
 
     const inventoryItem = ownedItem[0];
@@ -247,7 +247,7 @@ router.post('/equip', isAuthenticated, async (req, res) => {
     if (action === 'equip') {
       // Check if already equipped
       if (inventoryItem.isEquipped) {
-        return res.status(400).json({ error: 'Item is already equipped' });
+        return sendErrorResponse(res, 'Item is already equipped', 400);
       }
 
       // Get user's current inventory for conflict checking
@@ -267,8 +267,7 @@ router.post('/equip', isAuthenticated, async (req, res) => {
       const validation = CosmeticsTransformer.validateEquipmentChange(cosmeticData, userInventoryData);
       
       if (!validation.canEquip) {
-        return res.status(400).json({ 
-          error: 'Cannot equip this item',
+        return sendErrorResponse(res, 'Cannot equip this item', 400, {
           reason: validation.reason,
           conflicts: validation.conflicts
         });
@@ -310,7 +309,7 @@ router.post('/equip', isAuthenticated, async (req, res) => {
 
     } else { // unequip
       if (!inventoryItem.isEquipped) {
-        return res.status(400).json({ error: 'Item is not currently equipped' });
+        return sendErrorResponse(res, 'Item is not currently equipped', 400);
       }
 
       // Unequip the item
@@ -337,9 +336,8 @@ router.post('/equip', isAuthenticated, async (req, res) => {
 
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ 
-        error: 'Invalid request', 
-        details: error.errors 
+      return sendErrorResponse(res, 'Invalid request', 400, {
+        details: error.errors
       });
     }
 
@@ -347,7 +345,7 @@ router.post('/equip', isAuthenticated, async (req, res) => {
       error,
       userId: userService.getUserFromRequest(req)?.id
     });
-    res.status(500).json({ error: 'Failed to update cosmetic equipment' });
+    sendErrorResponse(res, 'Failed to update cosmetic equipment', 500);
   }
 });
 
@@ -359,7 +357,7 @@ router.post('/customize', isAuthenticated, async (req, res) => {
   try {
     const requestingUser = userService.getUserFromRequest(req);
     if (!requestingUser?.id) {
-      return res.status(401).json({ error: 'User not authenticated' });
+      return sendErrorResponse(res, 'User not authenticated', 401);
     }
 
     const { itemId, customizations, dgtCost } = customizeCosmeticSchema.parse(req.body);
@@ -376,7 +374,7 @@ router.post('/customize', isAuthenticated, async (req, res) => {
       .limit(1);
 
     if (ownedItem.length === 0) {
-      return res.status(400).json({ error: 'You do not own this cosmetic item' });
+      return sendErrorResponse(res, 'You do not own this cosmetic item', 400);
     }
 
     // Handle DGT cost for premium customizations
@@ -428,9 +426,8 @@ router.post('/customize', isAuthenticated, async (req, res) => {
 
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ 
-        error: 'Invalid request', 
-        details: error.errors 
+      return sendErrorResponse(res, 'Invalid request', 400, {
+        details: error.errors
       });
     }
 
@@ -438,7 +435,7 @@ router.post('/customize', isAuthenticated, async (req, res) => {
       error,
       userId: userService.getUserFromRequest(req)?.id
     });
-    res.status(500).json({ error: 'Failed to customize cosmetic' });
+    sendErrorResponse(res, 'Failed to customize cosmetic', 500);
   }
 });
 
@@ -452,7 +449,7 @@ router.get('/preview/:itemIds', async (req, res) => {
     const requestingUser = userService.getUserFromRequest(req);
 
     if (!itemIds) {
-      return res.status(400).json({ error: 'Item IDs required' });
+      return sendErrorResponse(res, 'Item IDs required', 400);
     }
 
     const itemIdArray = itemIds.split(',');
@@ -485,7 +482,7 @@ router.get('/preview/:itemIds', async (req, res) => {
       error,
       itemIds: req.params.itemIds
     });
-    res.status(500).json({ error: 'Failed to generate preview' });
+    sendErrorResponse(res, 'Failed to generate preview', 500);
   }
 });
 
@@ -499,7 +496,7 @@ router.get('/analytics', isAuthenticated, async (req, res) => {
     
     // Basic role check (in real implementation, this would be more sophisticated)
     if (requestingUser?.role !== 'admin') {
-      return res.status(403).json({ error: 'Admin access required' });
+      return sendErrorResponse(res, 'Admin access required', 403);
     }
 
     // Get real-time vanity sink metrics
@@ -535,7 +532,7 @@ router.get('/analytics', isAuthenticated, async (req, res) => {
       error,
       userId: userService.getUserFromRequest(req)?.id
     });
-    res.status(500).json({ error: 'Failed to get analytics' });
+    sendErrorResponse(res, 'Failed to get analytics', 500);
   }
 });
 

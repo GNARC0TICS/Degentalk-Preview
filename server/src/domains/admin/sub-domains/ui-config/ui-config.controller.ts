@@ -92,7 +92,6 @@ export class UiConfigController {
 			// Log admin action
 			await adminController.logAction(req, 'CREATE_UI_QUOTE', 'ui_quote', quote.id, data);
 
-			res.status(201);
 			sendSuccessResponse(res, quote);
 		} catch (error) {
 			if (error instanceof AdminError) {
@@ -147,7 +146,7 @@ export class UiConfigController {
 			// Log admin action
 			await adminController.logAction(req, 'DELETE_UI_QUOTE', 'ui_quote', id, {});
 
-			res.status(204).send();
+			sendSuccessResponse(res, { success: true });
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return handleAdminError(res, error);
@@ -215,7 +214,6 @@ export class UiConfigController {
 				data
 			);
 
-			res.status(201);
 			sendSuccessResponse(res, collection);
 		} catch (error) {
 			if (error instanceof AdminError) {
@@ -270,7 +268,7 @@ export class UiConfigController {
 			// Log admin action
 			await adminController.logAction(req, 'DELETE_UI_COLLECTION', 'ui_collection', id, {});
 
-			res.status(204).send();
+			sendSuccessResponse(res, { success: true });
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return handleAdminError(res, error);
@@ -293,7 +291,7 @@ export class UiConfigController {
 
 			await uiConfigService.trackQuoteEvent(quoteId, eventType, context);
 
-			res.status(204).send();
+			sendSuccessResponse(res, { success: true });
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return handleAdminError(res, error);
@@ -406,7 +404,7 @@ export class UiConfigController {
 				includeAnalytics: data.includeAnalytics
 			});
 
-			res.send(result);
+			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError) {
 				return handleAdminError(res, error);

@@ -49,7 +49,7 @@ router.get('/', async (req, res) => {
 		sendSuccessResponse(res, response);
 	} catch (error) {
 		logger.error('Error fetching platform statistics:', error);
-		res.status(500).json({ error: 'Failed to fetch platform statistics' });
+		sendErrorResponse(res, 'Failed to fetch platform statistics', 500);
 	}
 });
 
@@ -68,7 +68,7 @@ router.get('/:key', async (req, res) => {
 			.where(eq(platformStatistics.statKey, key));
 
 		if (!stat) {
-			return res.status(404).json({ error: `Statistic '${key}' not found` });
+			return sendErrorResponse(res, `Statistic '${key}' not found`, 404);
 		}
 
 		sendSuccessResponse(res, {
@@ -78,7 +78,7 @@ router.get('/:key', async (req, res) => {
         		});
 	} catch (error) {
 		logger.error('Error fetching platform statistic:', error);
-		res.status(500).json({ error: 'Failed to fetch platform statistic' });
+		sendErrorResponse(res, 'Failed to fetch platform statistic', 500);
 	}
 });
 
@@ -97,7 +97,7 @@ router.post('/refresh', async (req, res) => {
         		});
 	} catch (error) {
 		logger.error('Error refreshing platform statistics:', error);
-		res.status(500).json({ error: 'Failed to refresh platform statistics' });
+		sendErrorResponse(res, 'Failed to refresh platform statistics', 500);
 	}
 });
 

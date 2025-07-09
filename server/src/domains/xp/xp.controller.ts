@@ -17,6 +17,7 @@ import { desc, eq, and, gte, sql } from 'drizzle-orm';
 import { xpActionSettings, users, xpAdjustmentLogs, levels } from '@schema'; // Adjusted path
 import { handleXpAward } from './events/xp.events'; // Assuming this handles level ups and logging
 import { isValidId } from '@shared/utils/id';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 // import { z } from 'zod'; // Removed as unused
 // import { x } from 'drizzle-orm/select-builder/select'; // Removed as unused
 
@@ -28,16 +29,12 @@ export const awardXpForAction = async (req: Request, res: Response, next: NextFu
 		const { userId, action, metadata } = req.body;
 
 		if (!userId || !action) {
-			return res.status(400).json({
-				message: 'Missing required parameters. userId and action are required.'
-			});
+			return sendErrorResponse(res, 'Missing required parameters. userId and action are required.', 400);
 		}
 
 		// Ensure action is valid
 		if (!Object.values(XP_ACTION).includes(action as XP_ACTION)) {
-			return res.status(400).json({
-				message: `Invalid action. Must be one of: ${Object.values(XP_ACTION).join(', ')}`
-			});
+			return sendErrorResponse(res, `Invalid action. Must be one of: ${Object.values(XP_ACTION).join(', ')}`, 400);
 		}
 
 		logger.info('Awarding XP for action (via API)', JSON.stringify({ userId, action, metadata }));
@@ -46,12 +43,10 @@ export const awardXpForAction = async (req: Request, res: Response, next: NextFu
 		const result = await xpService.awardXp(userId, action as XP_ACTION, metadata);
 
 		if (!result) {
-			return res.status(429).json({
-				message: 'Could not award XP. You may have reached a limit for this action.'
-			});
+			return sendErrorResponse(res, 'Could not award XP. You may have reached a limit for this action.', 429);
 		}
 
-		res.status(200).json({
+		sendSuccessResponse(res, {
 			message: 'XP awarded successfully',
 			result
 		});
@@ -63,7 +58,7 @@ export const awardXpForAction = async (req: Request, res: Response, next: NextFu
 		);
 		if (error.message && error.message.includes('not found')) {
 			// This check might need adjustment if error is not Error instance
-			return res.status(404).json({ message: error.message });
+			return sendErrorResponse(res, error.message, 404);
 		}
 		next(error);
 	}
@@ -77,12 +72,12 @@ export const getUserXpInfo = async (req: Request, res: Response, next: NextFunct
 		const userId = req.params.userId;
 
 		if (!userId) {
-			return res.status(400).json({ message: 'User ID is required' });
+			return sendErrorResponse(res, 'User ID is required', 400);
 		}
 
 		const xpInfo = await xpService.getUserXpInfo(userId);
 
-		res.status(200).json(xpInfo);
+		sendSuccessResponse(res, xpInfo);
 	} catch (error: any) {
 		// Keep error as any for now
 		logger.error(
@@ -91,7 +86,7 @@ export const getUserXpInfo = async (req: Request, res: Response, next: NextFunct
 		);
 		if (error.message && error.message.includes('not found')) {
 			// This check might need adjustment
-			return res.status(404).json({ message: error.message });
+			return sendErrorResponse(res, error.message, 404);
 		}
 		next(error);
 	}
@@ -104,7 +99,7 @@ export const getXpActions = async (req: Request, res: Response) => {
 	try {
 		// Dynamically import to avoid issues if xp-actions itself has problems during initial load
 		const xpActionsModule = await import('./xp-actions');
-		res.status(200).json({
+		sendSuccessResponse(res, {
 			actions: Object.values(xpActionsModule.XP_ACTION) // Use the imported module
 		});
 	} catch (error) {
@@ -112,7 +107,7 @@ export const getXpActions = async (req: Request, res: Response) => {
 			'Error getting XP actions:',
 			error instanceof Error ? error.message : String(error)
 		);
-		res.status(500).json({ message: 'Error retrieving XP actions' });
+		sendErrorResponse(res, 'Error retrieving XP actions', 500);
 	}
 };
 
@@ -132,15 +127,13 @@ export const getUserXpLogs = async (req: Request, res: Response, next: NextFunct
 		const isAdmin = (userService.getUserFromRequest(req) as any)?.role === 'admin'; // Added type assertion
 
 		if (!isOwnLogs && !isAdmin) {
-			return res.status(403).json({
-				message: 'You can only access your own XP logs'
-			});
+			return sendErrorResponse(res, 'You can only access your own XP logs', 403);
 		}
 
 		const userIdToQuery = paramUserId || authUserId;
 
 		if (!userIdToQuery) {
-			return res.status(400).json({ message: 'User ID is required' });
+			return sendErrorResponse(res, 'User ID is required', 400);
 		}
 
 		// Parse query parameters
@@ -217,7 +210,7 @@ export const getUserXpLogs = async (req: Request, res: Response, next: NextFunct
 		const totalCount = Number(countResult[0]?.count || 0);
 
 		// Format the response
-		res.status(200).json({
+		sendSuccessResponse(res, {
 			logs,
 			pagination: {
 				total: totalCount,
@@ -248,7 +241,7 @@ export const awardActionXp = async (req: Request, res: Response) => {
 
 		if (!userId || !action || !isValidId(userId)) {
 			// entityId can be optional for some actions
-			return res.status(400).json({ error: 'Missing or invalid required parameters (userId, action).' });
+			return sendErrorResponse(res, 'Missing or invalid required parameters (userId, action).', 400);
 		}
 
 		// Optional: Validate that authenticatedUserId matches userId or is an admin if they differ
@@ -264,16 +257,12 @@ export const awardActionXp = async (req: Request, res: Response) => {
 		if (!setting || !setting.enabled) {
 			logger.warn('XP_CONTROLLER', `XP action '${action}' not found or not enabled.`);
 			// Return a success to not break client flow, but award 0 XP
-			return res
-				.status(200)
-				.json({ xpAwarded: 0, message: 'XP action not configured or disabled.' });
+			return sendSuccessResponse(res, { xpAwarded: 0, message: 'XP action not configured or disabled.' });
 		}
 
 		const xpToAward = setting.baseValue;
 		if (xpToAward <= 0) {
-			return res
-				.status(200)
-				.json({ xpAwarded: 0, message: 'XP amount for action is zero or negative.' });
+			return sendSuccessResponse(res, { xpAwarded: 0, message: 'XP amount for action is zero or negative.' });
 		}
 
 		// Use the centralized event handler for awarding XP
@@ -285,7 +274,7 @@ export const awardActionXp = async (req: Request, res: Response) => {
 			`${action} for entity #${entityId}` // reason for the log
 		);
 
-		res.status(200).json({
+		sendSuccessResponse(res, {
 			xpAwarded: xpToAward,
 			newTotalXp: newXp,
 			leveledUp,
@@ -293,6 +282,6 @@ export const awardActionXp = async (req: Request, res: Response) => {
 		});
 	} catch (err: any) {
 		logger.error('XP_CONTROLLER', `Error in awardActionXp for action '${req.body.action}':`, err);
-		res.status(500).json({ error: err.message || 'Server error awarding XP.' });
+		sendErrorResponse(res, err.message || 'Server error awarding XP.', 500);
 	}
 };

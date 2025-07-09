@@ -18,7 +18,7 @@ router.post(
 	'/',
 	asyncHandler(async (req, res) => {
 		const created = await rarityService.create(req.body);
-		res.status(201).json(created);
+		sendSuccessResponse(res, created);
 	})
 );
 

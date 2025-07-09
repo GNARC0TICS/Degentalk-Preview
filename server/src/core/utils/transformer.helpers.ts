@@ -2,6 +2,8 @@
  * Transformer utility helpers to reduce boilerplate
  */
 
+import { logger } from '../logger';
+
 // Transform a list of items using a transformer function
 export function toPublicList<T, R>(items: T[], transformer: (item: T) => R): R[] {
   return items.map(transformer);
@@ -17,7 +19,7 @@ export function safeTransformList<T, R>(
     try {
       return transformer(item);
     } catch (error) {
-      console.error('Transform error:', error);
+      logger.error('TRANSFORMER_HELPERS', 'Transform error', { error });
       return fallback;
     }
   });

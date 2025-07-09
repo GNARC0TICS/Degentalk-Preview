@@ -22,15 +22,9 @@ export class ReferralsController {
 				createdBy
 			);
 
-			return res.status(201).json({
-				success: true,
-				data: source
-			});
+			return sendSuccessResponse(res, source);
 		} catch (error) {
-			return res.status(400).json({
-				success: false,
-				message: error.message || 'Failed to create referral source'
-			});
+			return sendErrorResponse(res, error.message || 'Failed to create referral source', 400);
 		}
 	}
 
@@ -46,10 +40,7 @@ export class ReferralsController {
             				data: sources
             			});
 		} catch (error) {
-			return res.status(500).json({
-				success: false,
-				message: 'Failed to fetch referral sources'
-			});
+			return sendErrorResponse(res, 'Failed to fetch referral sources', 500);
 		}
 	}
 
@@ -65,10 +56,7 @@ export class ReferralsController {
             				data: stats
             			});
 		} catch (error) {
-			return res.status(500).json({
-				success: false,
-				message: 'Failed to fetch referral source statistics'
-			});
+			return sendErrorResponse(res, 'Failed to fetch referral source statistics', 500);
 		}
 	}
 
@@ -84,10 +72,7 @@ export class ReferralsController {
             				data: stats
             			});
 		} catch (error) {
-			return res.status(500).json({
-				success: false,
-				message: 'Failed to fetch user referral statistics'
-			});
+			return sendErrorResponse(res, 'Failed to fetch user referral statistics', 500);
 		}
 	}
 
@@ -103,10 +88,7 @@ export class ReferralsController {
             				data: stats
             			});
 		} catch (error) {
-			return res.status(500).json({
-				success: false,
-				message: 'Failed to fetch referral count by user'
-			});
+			return sendErrorResponse(res, 'Failed to fetch referral count by user', 500);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 import { db } from '@db';
+import { eq } from 'drizzle-orm';
 import { xpCloutSettings } from '@schema';
 import { AdminError } from '../../admin.errors';
 
@@ -15,7 +16,7 @@ export class XpCloutService {
 		const [updated] = await db
 			.update(xpCloutSettings)
 			.set({ ...data, updatedAt: new Date() })
-			.where(xpCloutSettings.id.eq(existing.id))
+			.where(eq(xpCloutSettings.actionKey, existing.actionKey))
 			.returning();
 		return updated;
 	}

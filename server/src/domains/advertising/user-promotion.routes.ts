@@ -62,8 +62,7 @@ router.post('/user-promotions', isAuthenticated, async (req, res) => {
 			startTime: promotionData.startTime ? new Date(promotionData.startTime) : undefined
 		});
 
-		res.status(201);
-	sendSuccessResponse(res, result);
+		sendSuccessResponse(res, result);
 	} catch (error) {
 		logger.error('Create user promotion error:', error);
 		sendErrorResponse(res, 'Failed to create promotion', 400);

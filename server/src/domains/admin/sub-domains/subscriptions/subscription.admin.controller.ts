@@ -97,10 +97,7 @@ export class AdminSubscriptionController {
             			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error getting analytics:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Failed to retrieve subscription analytics'
-			});
+			sendErrorResponse(res, 'Failed to retrieve subscription analytics', 500);
 		}
 	}
 
@@ -165,10 +162,7 @@ export class AdminSubscriptionController {
             			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error getting all subscriptions:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Failed to retrieve subscriptions'
-			});
+			sendErrorResponse(res, 'Failed to retrieve subscriptions', 500);
 		}
 	}
 
@@ -189,10 +183,7 @@ export class AdminSubscriptionController {
             			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error processing cosmetics:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Failed to process monthly cosmetic drops'
-			});
+			sendErrorResponse(res, 'Failed to process monthly cosmetic drops', 500);
 		}
 	}
 
@@ -253,10 +244,7 @@ export class AdminSubscriptionController {
             			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error getting cosmetic drops:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Failed to retrieve cosmetic drop history'
-			});
+			sendErrorResponse(res, 'Failed to retrieve cosmetic drop history', 500);
 		}
 	}
 
@@ -272,10 +260,7 @@ export class AdminSubscriptionController {
 
 			const subscriptionId = id;
 			if (isNaN(subscriptionId)) {
-				res.status(400).json({
-					success: false,
-					error: 'Valid subscription ID required'
-				});
+				sendErrorResponse(res, 'Valid subscription ID required', 400);
 				return;
 			}
 
@@ -287,10 +272,7 @@ export class AdminSubscriptionController {
 				.limit(1);
 
 			if (subscription.length === 0) {
-				res.status(404).json({
-					success: false,
-					error: 'Subscription not found'
-				});
+				sendErrorResponse(res, 'Subscription not found', 404);
 				return;
 			}
 
@@ -318,10 +300,7 @@ export class AdminSubscriptionController {
             			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error cancelling subscription:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Failed to cancel subscription'
-			});
+			sendErrorResponse(res, 'Failed to cancel subscription', 500);
 		}
 	}
 
@@ -335,10 +314,7 @@ export class AdminSubscriptionController {
 			const adminUserId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId || !type || !['vip_pass', 'degen_pass'].includes(type)) {
-				res.status(400).json({
-					success: false,
-					error: 'Valid userId and subscription type required'
-				});
+				sendErrorResponse(res, 'Valid userId and subscription type required', 400);
 				return;
 			}
 
@@ -348,10 +324,7 @@ export class AdminSubscriptionController {
 				type
 			);
 			if (existingSubscription) {
-				res.status(400).json({
-					success: false,
-					error: `User already has an active ${type.replace('_', ' ')} subscription`
-				});
+				sendErrorResponse(res, `User already has an active ${type.replace('_', ' ')} subscription`, 400);
 				return;
 			}
 
@@ -396,10 +369,7 @@ export class AdminSubscriptionController {
             			});
 		} catch (error) {
 			logger.error('ADMIN_SUBSCRIPTION', 'Error granting subscription:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Failed to grant subscription'
-			});
+			sendErrorResponse(res, 'Failed to grant subscription', 500);
 		}
 	}
 }

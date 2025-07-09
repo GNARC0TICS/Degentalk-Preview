@@ -41,10 +41,7 @@ export async function executeQuery(req: Request, res: Response) {
 				userId,
 				queryPreview: query.slice(0, 100)
 			});
-			return res.status(403).json({
-				success: false,
-				error: 'Only read-only SELECT/EXPLAIN queries are permitted.'
-			});
+			return sendErrorResponse(res, 'Only read-only SELECT/EXPLAIN queries are permitted.', 403);
 		}
 
 		// Reject multi-statement queries to avoid stacked injections
@@ -53,10 +50,7 @@ export async function executeQuery(req: Request, res: Response) {
 				userId,
 				queryPreview: query.slice(0, 100)
 			});
-			return res.status(403).json({
-				success: false,
-				error: 'Multiple SQL statements are not allowed.'
-			});
+			return sendErrorResponse(res, 'Multiple SQL statements are not allowed.', 403);
 		}
 
 		// Log query attempt
@@ -88,10 +82,7 @@ export async function executeQuery(req: Request, res: Response) {
         		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error executing query', { error: error.message });
-		res.status(400).json({
-			success: false,
-			error: 'Invalid query request'
-		});
+		sendErrorResponse(res, 'Invalid query request', 400);
 	}
 }
 
@@ -124,10 +115,7 @@ export async function validateQuery(req: Request, res: Response) {
         		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error validating query', { error: error.message });
-		res.status(400).json({
-			success: false,
-			error: 'Invalid validation request'
-		});
+		sendErrorResponse(res, 'Invalid validation request', 400);
 	}
 }
 
@@ -161,10 +149,7 @@ export async function getQueryHistory(req: Request, res: Response) {
         		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error getting query history', { error: error.message });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to retrieve query history'
-		});
+		sendErrorResponse(res, 'Failed to retrieve query history', 500);
 	}
 }
 
@@ -201,10 +186,7 @@ export async function clearQueryHistory(req: Request, res: Response) {
         		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error clearing query history', { error: error.message });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to clear query history'
-		});
+		sendErrorResponse(res, 'Failed to clear query history', 500);
 	}
 }
 
@@ -230,10 +212,7 @@ export async function getSuggestedQueries(req: Request, res: Response) {
         		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error getting suggested queries', { error: error.message });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to retrieve suggested queries'
-		});
+		sendErrorResponse(res, 'Failed to retrieve suggested queries', 500);
 	}
 }
 
@@ -249,10 +228,7 @@ export async function exportQueryResults(req: Request, res: Response) {
 		const result = await queryService.executeQuery(query, userId);
 
 		if (!result.success) {
-			return res.status(400).json({
-				success: false,
-				error: result.error
-			});
+			return sendErrorResponse(res, result.error, 400);
 		}
 
 		// Convert to CSV
@@ -272,13 +248,10 @@ export async function exportQueryResults(req: Request, res: Response) {
 
 		res.setHeader('Content-Type', 'text/csv');
 		res.setHeader('Content-Disposition', `attachment; filename="query_results_${Date.now()}.csv"`);
-		res.send(csvData);
+		sendSuccessResponse(res, csvData);
 	} catch (error: any) {
 		logger.error('QueryController', 'Error exporting query results', { error: error.message });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to export query results'
-		});
+		sendErrorResponse(res, 'Failed to export query results', 500);
 	}
 }
 
@@ -324,9 +297,6 @@ export async function getQueryMetrics(req: Request, res: Response) {
         		});
 	} catch (error: any) {
 		logger.error('QueryController', 'Error getting query metrics', { error: error.message });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to retrieve query metrics'
-		});
+		sendErrorResponse(res, 'Failed to retrieve query metrics', 500);
 	}
 }

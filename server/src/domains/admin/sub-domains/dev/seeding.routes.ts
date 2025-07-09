@@ -31,16 +31,14 @@ router.post(
 
 		if (env !== 'development') {
 			// Extra safeguard – resist running destructive ops in prod
-			return res
-				.status(403)
-				.json({ message: 'Seeding endpoints are disabled outside development mode.' });
+			return sendErrorResponse(res, 'Seeding endpoints are disabled outside development mode.', 403);
 		}
 
 		const scriptName = req.params.name;
 		const npmScript = SEED_SCRIPT_MAP[scriptName];
 
 		if (!npmScript) {
-			return res.status(400).json({ message: `Unknown seed script: ${scriptName}` });
+			return sendErrorResponse(res, `Unknown seed script: ${scriptName}`, 400);
 		}
 
 		// Spawn a child process to execute the npm script.

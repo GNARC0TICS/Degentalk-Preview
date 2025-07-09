@@ -10,7 +10,7 @@ export class AdminPermissionsController {
 			const permissions = await service.list();
 			sendSuccessResponse(res, permissions);
 		} catch (error: any) {
-			res.status(500).json({ error: error.message });
+			sendErrorResponse(res, error.message, 500);
 		}
 	}
 
@@ -19,7 +19,7 @@ export class AdminPermissionsController {
 			const permissions = await service.getByCategory();
 			sendSuccessResponse(res, permissions);
 		} catch (error: any) {
-			res.status(500).json({ error: error.message });
+			sendErrorResponse(res, error.message, 500);
 		}
 	}
 }

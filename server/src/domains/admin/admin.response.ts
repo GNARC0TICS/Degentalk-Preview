@@ -5,6 +5,7 @@
  */
 
 import type { Response } from 'express';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 export interface StandardResponse<T = any> {
 	success: boolean;
@@ -24,11 +25,8 @@ export function sendSuccess<T>(
 	message?: string,
 	statusCode: number = 200
 ): Response {
-	return res.status(statusCode).json({
-		success: true,
-		data,
-		...(message && { message })
-	});
+	sendSuccessResponse(res, data, message);
+	return res;
 }
 
 /**
@@ -41,12 +39,8 @@ export function sendError(
 	code?: string,
 	details?: any
 ): Response {
-	return res.status(statusCode).json({
-		success: false,
-		error,
-		...(code && { code }),
-		...(details && { details })
-	});
+	sendErrorResponse(res, error, statusCode);
+	return res;
 }
 
 /**

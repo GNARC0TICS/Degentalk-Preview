@@ -118,20 +118,20 @@ export function createErrorHandler(context: string) {
 
 		// Handle different error types
 		if (error instanceof ZodError) {
-			return res.status(400).json(handleValidationError(error));
+			const response = handleValidationError(error);
+			return res.status(400).json(response);
 		}
 
 		if (error instanceof ResponseError) {
-			return res
-				.status(error.statusCode)
-				.json(formatErrorResponse(error, error.statusCode, error.code, error.details));
+			const response = formatErrorResponse(error, error.statusCode, error.code, error.details);
+			return res.status(error.statusCode).json(response);
 		}
 
 		// Default error response
 		const statusCode = (error as any).statusCode || 500;
 		const response = formatErrorResponse(error, statusCode, (error as any).code);
 
-		res.status(statusCode).json(response);
+		return res.status(statusCode).json(response);
 	};
 }
 
@@ -260,11 +260,11 @@ export function controllerMethod<T extends any[]>(
 
 		// If result has success property, send as-is
 		if (result && typeof result === 'object' && 'success' in result) {
-			return res.json(result);
+			return res.status(200).json(result);
 		}
 
 		// Otherwise wrap in success response
-		return res.json(formatSuccessResponse(result));
+		return res.status(200).json(formatSuccessResponse(result));
 	});
 }
 

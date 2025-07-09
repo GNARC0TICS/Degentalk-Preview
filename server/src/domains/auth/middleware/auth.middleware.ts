@@ -25,10 +25,7 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
 
 	// SECURITY: Strict production check - no bypass allowed
 	if (isProduction()) {
-		return res.status(401).json({
-			message: 'Unauthorized',
-			error: 'PRODUCTION_AUTH_REQUIRED'
-		});
+		return sendErrorResponse(res, 'Unauthorized', 401, { error: 'PRODUCTION_AUTH_REQUIRED' });
 	}
 
 	// Development mode bypass with strict validation
@@ -44,10 +41,7 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
 		const validRoles = ['user', 'moderator', 'admin'];
 
 		if (!validRoles.includes(devRole)) {
-			return res.status(400).json({
-				message: 'Invalid development role',
-				validRoles
-			});
+			return sendErrorResponse(res, 'Invalid development role', 400, { validRoles });
 		}
 
 		const roleId = req.headers['x-dev-role-id']
@@ -67,8 +61,7 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
 		return next();
 	}
 
-	res.status(401).json({
-		message: 'Unauthorized',
+	sendErrorResponse(res, 'Unauthorized', 401, {
 		hint: isDevelopment() ? 'Set DEV_BYPASS_PASSWORD=true for development bypass' : undefined
 	});
 }
@@ -123,10 +116,7 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
 			userRole: (userService.getUserFromRequest(req) as any)?.role,
 			ip: req.ip
 		});
-		return res.status(403).json({
-			message: 'Forbidden - Admin access required',
-			error: 'PRODUCTION_ADMIN_REQUIRED'
-		});
+		return sendErrorResponse(res, 'Forbidden - Admin access required', 403, { error: 'PRODUCTION_ADMIN_REQUIRED' });
 	}
 
 	// Development mode bypass with strict validation
@@ -147,8 +137,7 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
 		return next();
 	}
 
-	res.status(403).json({
-		message: 'Forbidden - Admin access required',
+	sendErrorResponse(res, 'Forbidden - Admin access required', 403, {
 		hint: isDevelopment() ? 'Set x-dev-role header to "admin" for development bypass' : undefined
 	});
 }
@@ -181,7 +170,7 @@ export function isModerator(req: Request, res: Response, next: NextFunction) {
 		return next();
 	}
 
-	res.status(403).json({ message: 'Forbidden' });
+	sendErrorResponse(res, 'Forbidden', 403);
 }
 
 /**
@@ -199,12 +188,12 @@ export function isAdminOrModerator(req: Request, res: Response, next: NextFuncti
 export function devModeAuthHandler(req: Request, res: Response, next: NextFunction) {
 	// SECURITY: Strict production check
 	if (isProduction()) {
-		return res.status(404).json({ message: 'Not found' });
+		return sendErrorResponse(res, 'Not found', 404);
 	}
 
 	// Only available in development mode with bypass enabled
 	if (!isDevelopment() || !env.DEV_BYPASS_PASSWORD) {
-		return res.status(404).json({ message: 'Not found' });
+		return sendErrorResponse(res, 'Not found', 404);
 	}
 
 	// Log security-sensitive operation
@@ -219,10 +208,7 @@ export function devModeAuthHandler(req: Request, res: Response, next: NextFuncti
 	const validRoles = ['user', 'moderator', 'admin'];
 
 	if (!validRoles.includes(role)) {
-		return res.status(400).json({
-			message: 'Invalid role',
-			validRoles
-		});
+		return sendErrorResponse(res, 'Invalid role', 400, { validRoles });
 	}
 
 	// Set a session cookie with the selected role

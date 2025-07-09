@@ -4,6 +4,7 @@ import { logger, LogLevel } from '../../core/logger';
 import { featureGatesService } from './feature-gates.service';
 import { isValidId } from '@shared/utils/id';
 import type { UserId } from '@shared/types/ids';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 /**
  * Get all feature gates
@@ -11,7 +12,7 @@ import type { UserId } from '@shared/types/ids';
 export const getAllFeatureGates = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const gates = await featureGatesService.getAllFeatureGates();
-		res.status(200).json(gates);
+		sendSuccessResponse(res, gates);
 	} catch (error) {
 		logger.error('Error getting feature gates:', error);
 		next(error);
@@ -26,16 +27,16 @@ export const getFeatureGate = async (req: Request, res: Response, next: NextFunc
 		const { featureId } = req.params;
 
 		if (!featureId) {
-			return res.status(400).json({ message: 'Feature ID is required' });
+			return sendErrorResponse(res, 'Feature ID is required', 400);
 		}
 
 		const gate = await featureGatesService.getFeatureGate(featureId);
 
 		if (!gate) {
-			return res.status(404).json({ message: 'Feature gate not found' });
+			return sendErrorResponse(res, 'Feature gate not found', 404);
 		}
 
-		res.status(200).json(gate);
+		sendSuccessResponse(res, gate);
 	} catch (error) {
 		logger.error('Error getting feature gate:', error);
 		next(error);
@@ -52,20 +53,15 @@ export const checkFeatureAccess = async (req: Request, res: Response, next: Next
 		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
-			return res.status(401).json({
-				message: 'Authentication required',
-				featureId,
-				hasAccess: false,
-				reason: 'login_required'
-			});
+			return sendErrorResponse(res, 'Authentication required', 401);
 		}
 
 		if (!featureId) {
-			return res.status(400).json({ message: 'Feature ID is required' });
+			return sendErrorResponse(res, 'Feature ID is required', 400);
 		}
 
 		const access = await featureGatesService.checkFeatureAccess(userId, featureId);
-		res.status(200).json(access);
+		sendSuccessResponse(res, access);
 	} catch (error) {
 		logger.error('Error checking feature access:', error);
 		next(error);
@@ -81,11 +77,11 @@ export const checkAllFeatureAccess = async (req: Request, res: Response, next: N
 		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
-			return res.status(401).json({ message: 'Authentication required' });
+			return sendErrorResponse(res, 'Authentication required', 401);
 		}
 
 		const access = await featureGatesService.checkAllFeatureAccess(userId);
-		res.status(200).json(access);
+		sendSuccessResponse(res, access);
 	} catch (error) {
 		logger.error('Error checking all feature access:', error);
 		next(error);
@@ -104,13 +100,11 @@ export const checkFeatureAccessForUser = async (
 		const { userId, featureId } = req.params;
 
 		if (!userId || !featureId || !isValidId(userId)) {
-			return res.status(400).json({
-				message: 'User ID and Feature ID are required and must be valid'
-			});
+			return sendErrorResponse(res, 'User ID and Feature ID are required and must be valid', 400);
 		}
 
 		const access = await featureGatesService.checkFeatureAccess(userId as UserId, featureId);
-		res.status(200).json(access);
+		sendSuccessResponse(res, access);
 	} catch (error) {
 		logger.error('Error checking feature access for user:', error);
 		next(error);
@@ -129,11 +123,11 @@ export const getAllFeatureAccessForUser = async (
 		const { userId } = req.params;
 
 		if (!userId || !isValidId(userId)) {
-			return res.status(400).json({ message: 'User ID is required and must be valid' });
+			return sendErrorResponse(res, 'User ID is required and must be valid', 400);
 		}
 
 		const access = await featureGatesService.checkAllFeatureAccess(userId as UserId);
-		res.status(200).json(access);
+		sendSuccessResponse(res, access);
 	} catch (error) {
 		logger.error('Error getting all feature access for user:', error);
 		next(error);

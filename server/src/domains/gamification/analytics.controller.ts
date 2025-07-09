@@ -122,8 +122,8 @@ export class GamificationAnalyticsController {
 			const timeframe = (req.query.timeframe as 'day' | 'week' | 'month') || 'week';
 			const dashboard = await this.service.generateDashboard(timeframe);
 
-			sendSuccessResponse(res, {
-				achievements: dashboard.achievements,
+			sendTransformedResponse(res, {
+				achievements: dashboard.achievements.map((a) => CloutTransformer.toPublicAchievement(a)),
 				trends: {
 					completionRates: dashboard.trends.completionRates.map((t) => ({
 						date: t.date,
@@ -278,7 +278,7 @@ export class GamificationAnalyticsController {
 					'Content-Disposition',
 					`attachment; filename="gamification-analytics-${timeframe}.csv"`
 				);
-				res.send(exportData.data || 'CSV export not implemented');
+				res.end(exportData.data || 'CSV export not implemented');
 			}
 		} catch (error) {
 			logger.error('ANALYTICS_CONTROLLER', 'Error exporting analytics:', error);

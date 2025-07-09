@@ -33,7 +33,7 @@ export const getAchievementById = async (req: Request, res: Response, next: Next
 			.from(cloutAchievements)
 			.where(eq(cloutAchievements.id, id))
 			.limit(1);
-		if (!rows.length) return res.status(404).json({ message: 'Achievement not found' });
+		if (!rows.length) return sendErrorResponse(res, 'Achievement not found', 404);
 		
 		// Transform achievement for admin view
 		const transformedAchievement = CloutTransformer.toAdminAchievement(rows[0]);
@@ -58,7 +58,7 @@ export const createAchievement = async (req: Request, res: Response, next: NextF
 		} = req.body;
 
 		if (!achievementKey || !name) {
-			return res.status(400).json({ message: 'achievementKey and name are required' });
+			return sendErrorResponse(res, 'achievementKey and name are required', 400);
 		}
 
 		await db.insert(cloutAchievements).values({
@@ -73,7 +73,7 @@ export const createAchievement = async (req: Request, res: Response, next: NextF
 			createdAt: new Date()
 		});
 
-		res.status(201).json({ message: 'Achievement created' });
+		sendSuccessResponse(res, { message: 'Achievement created' });
 	} catch (err) {
 		next(err);
 	}
@@ -91,7 +91,7 @@ export const updateAchievement = async (req: Request, res: Response, next: NextF
 			.from(cloutAchievements)
 			.where(eq(cloutAchievements.id, id))
 			.limit(1);
-		if (!exists.length) return res.status(404).json({ message: 'Achievement not found' });
+		if (!exists.length) return sendErrorResponse(res, 'Achievement not found', 404);
 
 		await db.update(cloutAchievements).set(updateData).where(eq(cloutAchievements.id, id));
 		sendSuccessResponse(res, { message: 'Achievement updated' });
@@ -118,7 +118,7 @@ export const toggleAchievement = async (req: Request, res: Response, next: NextF
 			.from(cloutAchievements)
 			.where(eq(cloutAchievements.id, id))
 			.limit(1);
-		if (!rows.length) return res.status(404).json({ message: 'Achievement not found' });
+		if (!rows.length) return sendErrorResponse(res, 'Achievement not found', 404);
 		const enabled = !rows[0].enabled;
 		await db.update(cloutAchievements).set({ enabled }).where(eq(cloutAchievements.id, id));
 		sendSuccessResponse(res, { message: `Achievement ${enabled ? 'enabled' : 'disabled'}` });
@@ -136,7 +136,7 @@ export const grantClout = async (req: Request, res: Response, next: NextFunction
 			reason: string;
 		};
 		if (!userId || !amount || !reason)
-			return res.status(400).json({ message: 'userId, amount, reason required' });
+			return sendErrorResponse(res, 'userId, amount, reason required', 400);
 
 		// Validate user exists
 		const userExists = await db
@@ -144,11 +144,11 @@ export const grantClout = async (req: Request, res: Response, next: NextFunction
 			.from(users)
 			.where(eq(users.id, userId))
 			.limit(1);
-		if (!userExists.length) return res.status(404).json({ message: 'User not found' });
+		if (!userExists.length) return sendErrorResponse(res, 'User not found', 404);
 
 		await cloutService.grantClout(userId, amount, reason);
 
-		res.status(200).json({ message: `Granted ${amount} clout to user ${userId}` });
+		sendSuccessResponse(res, { message: `Granted ${amount} clout to user ${userId}` });
 	} catch (err) {
 		next(err);
 	}
@@ -189,9 +189,7 @@ export const adjustClout = async (req: Request, res: Response, next: NextFunctio
 		};
 
 		if (!userId || !amount || !adjustmentType || !reason) {
-			return res.status(400).json({
-				message: 'userId, amount, adjustmentType, and reason are required'
-			});
+			return sendErrorResponse(res, 'userId, amount, adjustmentType, and reason are required', 400);
 		}
 
 		// Validate user exists and get current clout
@@ -202,7 +200,7 @@ export const adjustClout = async (req: Request, res: Response, next: NextFunctio
 			.limit(1);
 
 		if (!userRows.length) {
-			return res.status(404).json({ message: 'User not found' });
+			return sendErrorResponse(res, 'User not found', 404);
 		}
 
 		const user = userRows[0];
@@ -221,7 +219,7 @@ export const adjustClout = async (req: Request, res: Response, next: NextFunctio
 				newClout = Math.max(0, amount);
 				break;
 			default:
-				return res.status(400).json({ message: 'Invalid adjustmentType' });
+				return sendErrorResponse(res, 'Invalid adjustmentType', 400);
 		}
 
 		const cloutChange = newClout - oldClout;

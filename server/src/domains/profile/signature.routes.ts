@@ -13,6 +13,7 @@ import { validateRequest } from '../../middleware/validate-request';
 import { getUserIdFromRequest } from '@server/src/utils/auth';
 import { isValidId } from '@shared/utils/id';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 const router = Router();
 
@@ -37,19 +38,19 @@ router.get('/me', async (req: Request, res: Response) => {
 		const userId = getUserIdFromRequest(req);
 
 		if (userId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized' });
+			return sendErrorResponse(res, 'Unauthorized', 401);
 		}
 
 		const signatureData = await SignatureService.getUserSignature(userId);
 
 		if (!signatureData) {
-			return res.status(404).json({ message: 'User not found' });
+			return sendErrorResponse(res, 'User not found', 404);
 		}
 
-		return res.status(200).json(signatureData);
+		return sendSuccessResponse(res, signatureData);
 	} catch (error) {
 		logger.error('Error fetching signature:', error);
-		return res.status(500).json({ message: 'Error fetching signature data' });
+		return sendErrorResponse(res, 'Error fetching signature data', 500);
 	}
 });
 
@@ -61,19 +62,19 @@ router.get('/:userId', async (req: Request, res: Response) => {
 		const userId = req.params.userId as UserId;
 
 		if (!userId || !isValidId(userId)) {
-			return res.status(400).json({ message: 'Invalid user ID' });
+			return sendErrorResponse(res, 'Invalid user ID', 400);
 		}
 
 		const signatureData = await SignatureService.getUserSignature(userId);
 
 		if (!signatureData) {
-			return res.status(404).json({ message: 'User not found' });
+			return sendErrorResponse(res, 'User not found', 404);
 		}
 
-		return res.status(200).json(signatureData);
+		return sendSuccessResponse(res, signatureData);
 	} catch (error) {
 		logger.error('Error fetching signature:', error);
-		return res.status(500).json({ message: 'Error fetching signature data' });
+		return sendErrorResponse(res, 'Error fetching signature data', 500);
 	}
 });
 
@@ -85,7 +86,7 @@ router.put('/', validateRequest(updateSignatureSchema), async (req: Request, res
 		const userId = getUserIdFromRequest(req);
 
 		if (userId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized' });
+			return sendErrorResponse(res, 'Unauthorized', 401);
 		}
 
 		const { signature } = req.body;
@@ -95,10 +96,10 @@ router.put('/', validateRequest(updateSignatureSchema), async (req: Request, res
 			signatureText: signature
 		});
 
-		return res.status(200).json(result);
+		return sendSuccessResponse(res, result);
 	} catch (error: any) {
 		logger.error('Error updating signature:', error);
-		return res.status(400).json({ message: error.message || 'Error updating signature' });
+		return sendErrorResponse(res, error.message || 'Error updating signature', 400);
 	}
 });
 
@@ -118,10 +119,10 @@ router.get('/shop/items', async (req: Request, res: Response) => {
 		}
 
 		const items = await SignatureService.getSignatureShopItems(userLevel);
-		return res.status(200).json(items);
+		return sendSuccessResponse(res, items);
 	} catch (error) {
 		logger.error('Error fetching signature shop items:', error);
-		return res.status(500).json({ message: 'Error fetching signature shop items' });
+		return sendErrorResponse(res, 'Error fetching signature shop items', 500);
 	}
 });
 
@@ -133,14 +134,14 @@ router.get('/shop/my-items', async (req: Request, res: Response) => {
 		const userId = getUserIdFromRequest(req);
 
 		if (userId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized' });
+			return sendErrorResponse(res, 'Unauthorized', 401);
 		}
 
 		const items = await SignatureService.getUserSignatureItems(userId);
-		return res.status(200).json(items);
+		return sendSuccessResponse(res, items);
 	} catch (error) {
 		logger.error('Error fetching user signature items:', error);
-		return res.status(500).json({ message: 'Error fetching user signature items' });
+		return sendErrorResponse(res, 'Error fetching user signature items', 500);
 	}
 });
 
@@ -155,16 +156,16 @@ router.post(
 			const userId = getUserIdFromRequest(req);
 
 			if (userId === undefined) {
-				return res.status(401).json({ message: 'Unauthorized' });
+				return sendErrorResponse(res, 'Unauthorized', 401);
 			}
 
 			const { itemId } = req.body;
 
 			const result = await SignatureService.purchaseSignatureItem(userId, itemId);
-			return res.status(200).json(result);
+			return sendSuccessResponse(res, result);
 		} catch (error: any) {
 			logger.error('Error purchasing signature item:', error);
-			return res.status(400).json({ message: error.message || 'Error purchasing signature item' });
+			return sendErrorResponse(res, error.message || 'Error purchasing signature item', 400);
 		}
 	}
 );
@@ -180,16 +181,16 @@ router.post(
 			const userId = getUserIdFromRequest(req);
 
 			if (userId === undefined) {
-				return res.status(401).json({ message: 'Unauthorized' });
+				return sendErrorResponse(res, 'Unauthorized', 401);
 			}
 
 			const { itemId } = req.body;
 
 			const result = await SignatureService.activateSignatureItem(userId, itemId);
-			return res.status(200).json(result);
+			return sendSuccessResponse(res, result);
 		} catch (error: any) {
 			logger.error('Error activating signature item:', error);
-			return res.status(400).json({ message: error.message || 'Error activating signature item' });
+			return sendErrorResponse(res, error.message || 'Error activating signature item', 400);
 		}
 	}
 );

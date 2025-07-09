@@ -3,6 +3,7 @@ import { eventLogService } from '../services/event-log.service';
 import { z } from 'zod';
 import { eventTypeEnum } from '@schema/system/event_logs';
 import { logger } from "../../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 /**
  * Controller for event log endpoints
@@ -23,16 +24,13 @@ export class EventLogController {
 			const validatedData = schema.parse(req.body);
 			const result = await eventLogService.createEventLog(validatedData);
 
-			return res.status(201).json({
+			return sendSuccessResponse(res, {
 				success: true,
 				data: result
-			});
+			}, 201);
 		} catch (error) {
 			logger.error('Error creating event log:', error);
-			return res.status(400).json({
-				success: false,
-				message: error instanceof Error ? error.message : 'Failed to create event log'
-			});
+			return sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to create event log', 400);
 		}
 	}
 
@@ -75,16 +73,13 @@ export class EventLogController {
 
 			const result = await eventLogService.getAllEventLogs(validatedFilters);
 
-			return res.status(200).json({
+			return sendSuccessResponse(res, {
 				success: true,
 				data: result
 			});
 		} catch (error) {
 			logger.error('Error getting event logs:', error);
-			return res.status(400).json({
-				success: false,
-				message: error instanceof Error ? error.message : 'Failed to get event logs'
-			});
+			return sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to get event logs', 400);
 		}
 	}
 
@@ -96,10 +91,7 @@ export class EventLogController {
 			const userId = req.params.userId;
 
 			if (!userId) {
-				return res.status(400).json({
-					success: false,
-					message: 'User ID is required'
-				});
+				return sendErrorResponse(res, 'User ID is required', 400);
 			}
 
 			const schema = z.object({
@@ -133,16 +125,13 @@ export class EventLogController {
 				userId
 			});
 
-			return res.status(200).json({
+			return sendSuccessResponse(res, {
 				success: true,
 				data: result
 			});
 		} catch (error) {
 			logger.error('Error getting user event logs:', error);
-			return res.status(400).json({
-				success: false,
-				message: error instanceof Error ? error.message : 'Failed to get user event logs'
-			});
+			return sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to get user event logs', 400);
 		}
 	}
 
@@ -154,31 +143,22 @@ export class EventLogController {
 			const id = req.params.id;
 
 			if (!id) {
-				return res.status(400).json({
-					success: false,
-					message: 'Event log ID is required'
-				});
+				return sendErrorResponse(res, 'Event log ID is required', 400);
 			}
 
 			const result = await eventLogService.getEventLogById(id);
 
 			if (!result) {
-				return res.status(404).json({
-					success: false,
-					message: 'Event log not found'
-				});
+				return sendErrorResponse(res, 'Event log not found', 404);
 			}
 
-			return res.status(200).json({
+			return sendSuccessResponse(res, {
 				success: true,
 				data: result
 			});
 		} catch (error) {
 			logger.error('Error getting event log:', error);
-			return res.status(400).json({
-				success: false,
-				message: error instanceof Error ? error.message : 'Failed to get event log'
-			});
+			return sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to get event log', 400);
 		}
 	}
 
@@ -190,31 +170,22 @@ export class EventLogController {
 			const id = req.params.id;
 
 			if (!id) {
-				return res.status(400).json({
-					success: false,
-					message: 'Event log ID is required'
-				});
+				return sendErrorResponse(res, 'Event log ID is required', 400);
 			}
 
 			const result = await eventLogService.deleteEventLog(id);
 
 			if (!result) {
-				return res.status(404).json({
-					success: false,
-					message: 'Event log not found or already deleted'
-				});
+				return sendErrorResponse(res, 'Event log not found or already deleted', 404);
 			}
 
-			return res.status(200).json({
+			return sendSuccessResponse(res, {
 				success: true,
 				message: 'Event log deleted successfully'
 			});
 		} catch (error) {
 			logger.error('Error deleting event log:', error);
-			return res.status(400).json({
-				success: false,
-				message: error instanceof Error ? error.message : 'Failed to delete event log'
-			});
+			return sendErrorResponse(res, error instanceof Error ? error.message : 'Failed to delete event log', 400);
 		}
 	}
 }

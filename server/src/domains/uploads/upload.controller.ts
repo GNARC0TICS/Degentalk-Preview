@@ -12,6 +12,7 @@ import {
 } from './upload.service';
 import { profileService, type ProfileMediaUpdateParams } from '../profile/profile.service';
 import { logger } from "../../core/logger";
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 // The `authenticate` middleware augments Express.Request to include `user`.
 // So, `req.user` should be available and typed correctly if `requireAuth` middleware is used.
@@ -34,22 +35,15 @@ export async function createPresignedUploadUrlController(req: AuthenticatedReque
 		// Ensure user is authenticated and userId is available
 		const userId = userService.getUserFromRequest(req)?.id;
 		if (!userId) {
-			return res.status(401).json({
-				error: 'Unauthorized: User ID missing. You gotta be logged in to flex that new PFP, anon.'
-			});
+			return sendErrorResponse(res, 'Unauthorized: User ID missing. You gotta be logged in to flex that new PFP, anon.', 401);
 		}
 
 		if (!fileName || !fileType || fileSize === undefined || !uploadType) {
-			return res.status(400).json({
-				error:
-					'Missing parameters: fileName, fileType, fileSize, and uploadType are required. Spill the tea, what are you uploading?'
-			});
+			return sendErrorResponse(res, 'Missing parameters: fileName, fileType, fileSize, and uploadType are required. Spill the tea, what are you uploading?', 400);
 		}
 
 		if (uploadType !== 'avatar' && uploadType !== 'banner') {
-			return res
-				.status(400)
-				.json({ error: 'Invalid uploadType. Must be "avatar" or "banner". Choose your fighter!' });
+			return sendErrorResponse(res, 'Invalid uploadType. Must be "avatar" or "banner". Choose your fighter!', 400);
 		}
 
 		const params: CreatePresignedUrlServiceParams = {
@@ -62,17 +56,14 @@ export async function createPresignedUploadUrlController(req: AuthenticatedReque
 		};
 
 		const result = await uploadService.createPresignedUploadUrl(params);
-		return res.status(200).json(result);
+		return sendSuccessResponse(res, result);
 	} catch (error) {
 		if (error instanceof DegenUploadError) {
 			logger.warn(`DegenUploadError: ${error.message}`);
-			return res.status(error.statusCode).json({ error: error.message });
+			return sendErrorResponse(res, error.message, error.statusCode);
 		}
 		logger.error('Error generating presigned URL:', error);
-		return res.status(500).json({
-			error:
-				'Internal server error: Our server just rugged itself trying to get that URL. Try again later, maybe?'
-		});
+		return sendErrorResponse(res, 'Internal server error: Our server just rugged itself trying to get that URL. Try again later, maybe?', 500);
 	}
 }
 
@@ -94,22 +85,14 @@ export async function confirmUploadController(
 		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
-			return res.status(401).json({
-				error:
-					"Unauthorized: User ID missing. Can't confirm without knowing who you are, space cadet."
-			});
+			return sendErrorResponse(res, "Unauthorized: User ID missing. Can't confirm without knowing who you are, space cadet.", 401);
 		}
 
 		if (!relativePath || !uploadType) {
-			return res.status(400).json({
-				error:
-					'Missing parameters: relativePath and uploadType are required. Details, degen, details!'
-			});
+			return sendErrorResponse(res, 'Missing parameters: relativePath and uploadType are required. Details, degen, details!', 400);
 		}
 		if (uploadType !== 'avatar' && uploadType !== 'banner') {
-			return res
-				.status(400)
-				.json({ error: 'Invalid uploadType. Must be "avatar" or "banner". Pick one, chief.' });
+			return sendErrorResponse(res, 'Invalid uploadType. Must be "avatar" or "banner". Pick one, chief.', 400);
 		}
 
 		const confirmServiceParams: ConfirmUploadServiceParams = { relativePath, uploadType }; // Updated type name
@@ -123,11 +106,7 @@ export async function confirmUploadController(
 			// DegenUploadError from confirmUpload should have been caught by the generic catch block.
 			// This handles cases where success is false without an error being thrown by the service,
 			// or if essential data for profile update is missing.
-			return res.status(400).json({
-				error:
-					confirmation.message ||
-					'Upload confirmation failed for reasons... unknown and unknowable. Relative path or public URL missing.'
-			});
+			return sendErrorResponse(res, confirmation.message || 'Upload confirmation failed for reasons... unknown and unknowable. Relative path or public URL missing.', 400);
 		}
 
 		// Now update the user's profile with the new media's relative path
@@ -144,15 +123,12 @@ export async function confirmUploadController(
 			// The file is uploaded and confirmed in storage, but DB link failed.
 			// This might require a retry mechanism or manual intervention in a real system.
 			logger.error(`Failed to update profile for user ${userId} after upload confirmation: ${profileUpdateResult.message}`);
-			return res.status(500).json({
-				error: `Upload confirmed, but we fumbled updating your profile. Your ${uploadType} is in the void, but not on your page. Our bad.`,
-				details: profileUpdateResult.message
-			});
+			return sendErrorResponse(res, `Upload confirmed, but we fumbled updating your profile. Your ${uploadType} is in the void, but not on your page. Our bad.`, 500);
 		}
 
 		// TODO: WebSocket event for 'profileUpdated' is handled within profileService.updateMediaUrl
 
-		return res.status(200).json({
+		return sendSuccessResponse(res, {
 			success: true,
 			message: `PFP/Banner confirmed and profile updated! You're now officially more degen. ${profileUpdateResult.message}`,
 			publicUrl: confirmation.newPublicUrl
@@ -160,18 +136,14 @@ export async function confirmUploadController(
 	} catch (error) {
 		if (error instanceof DegenUploadError) {
 			logger.warn(`DegenUploadError in confirmUploadController: ${error.message}`);
-			return res.status(error.statusCode).json({ error: error.message });
+			return sendErrorResponse(res, error.message, error.statusCode);
 		}
 		// Handle errors from profileService.updateMediaUrl if it throws standard Error
 		if (error instanceof Error && error.message.includes('Failed to update')) {
 			logger.error('Error updating profile media URL in controller:', error);
-			return res
-				.status(500)
-				.json({ error: `Profile update failed after confirming upload: ${error.message}` });
+			return sendErrorResponse(res, `Profile update failed after confirming upload: ${error.message}`, 500);
 		}
 		logger.error('Unexpected error in confirmUploadController:', error);
-		return res.status(500).json({
-			error: 'Internal server error: The confirmation ritual failed. Server demons strike again.'
-		});
+		return sendErrorResponse(res, 'Internal server error: The confirmation ritual failed. Server demons strike again.', 500);
 	}
 }

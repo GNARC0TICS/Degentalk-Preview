@@ -101,9 +101,7 @@ export class AdController {
 			const adResponse = await adServingService.serveAd(adRequest);
 
 			if (!adResponse) {
-				res.status(204);
-				sendSuccessResponse(res, { message: 'No ad available' });
-				return;
+				return res.status(204).end();
 			}
 
 			// Set caching headers for performance
@@ -143,7 +141,6 @@ export class AdController {
 			}, 0);
 
 			// Return quickly to avoid blocking user experience
-			res.status(200);
 			sendSuccessResponse(res, { success: true });
 		} catch (error) {
 			logger.error('Event tracking error:', error);
@@ -168,8 +165,7 @@ export class AdController {
 				endDate: campaignData.endDate ? new Date(campaignData.endDate) : undefined
 			});
 
-			res.status(201);
-		sendSuccessResponse(res, result);
+			sendSuccessResponse(res, result);
 		} catch (error) {
 			logger.error('Campaign creation error:', error);
 			sendErrorResponse(res, 'Failed to create campaign', 400);
@@ -254,7 +250,7 @@ export class AdController {
 
 			await campaignManagementService.deleteCampaign(campaignId, advertiserUserId);
 
-			res.status(204).send();
+			res.status(204).end();
 		} catch (error) {
 			logger.error('Delete campaign error:', error);
 			sendErrorResponse(res, 'Failed to delete campaign', 400);

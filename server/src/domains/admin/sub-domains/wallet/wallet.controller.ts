@@ -27,10 +27,7 @@ export class AdminWalletController {
 			sendSuccessResponse(res, configResult);
 		} catch (error) {
 			logger.error('Error getting wallet config:', error);
-			res.status(500).json({
-				success: false,
-				message: 'Failed to retrieve wallet configuration'
-			});
+			sendErrorResponse(res, 'Failed to retrieve wallet configuration', 500);
 		}
 	}
 
@@ -49,10 +46,7 @@ export class AdminWalletController {
             			});
 		} catch (error) {
 			logger.error('Error updating wallet config:', error);
-			res.status(500).json({
-				success: false,
-				message: 'Failed to update wallet configuration'
-			});
+			sendErrorResponse(res, 'Failed to update wallet configuration', 500);
 		}
 	}
 
@@ -69,10 +63,7 @@ export class AdminWalletController {
             			});
 		} catch (error) {
 			logger.error('Error getting DGT analytics:', error);
-			res.status(500).json({
-				success: false,
-				message: 'Failed to retrieve DGT analytics'
-			});
+			sendErrorResponse(res, 'Failed to retrieve DGT analytics', 500);
 		}
 	}
 
@@ -85,10 +76,7 @@ export class AdminWalletController {
 			const adminUserId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminUserId) {
-				res.status(401).json({
-					success: false,
-					message: 'Admin authentication required'
-				});
+				sendErrorResponse(res, 'Admin authentication required', 401);
 				return;
 			}
 
@@ -108,10 +96,7 @@ export class AdminWalletController {
             			});
 		} catch (error) {
 			logger.error('Error crediting DGT:', error);
-			res.status(500).json({
-				success: false,
-				message: error.message || 'Failed to credit DGT'
-			});
+			sendErrorResponse(res, error.message || 'Failed to credit DGT', 500);
 		}
 	}
 
@@ -124,10 +109,7 @@ export class AdminWalletController {
 			const adminUserId = userService.getUserFromRequest(req)?.id;
 
 			if (!adminUserId) {
-				res.status(401).json({
-					success: false,
-					message: 'Admin authentication required'
-				});
+				sendErrorResponse(res, 'Admin authentication required', 401);
 				return;
 			}
 
@@ -147,10 +129,7 @@ export class AdminWalletController {
             			});
 		} catch (error) {
 			logger.error('Error debiting DGT:', error);
-			res.status(500).json({
-				success: false,
-				message: error.message || 'Failed to debit DGT'
-			});
+			sendErrorResponse(res, error.message || 'Failed to debit DGT', 500);
 		}
 	}
 
@@ -183,10 +162,7 @@ export class AdminWalletController {
             			});
 		} catch (error) {
 			logger.error('Error getting user DGT info:', error);
-			res.status(500).json({
-				success: false,
-				message: 'Failed to retrieve user DGT information'
-			});
+			sendErrorResponse(res, 'Failed to retrieve user DGT information', 500);
 		}
 	}
 
@@ -203,10 +179,7 @@ export class AdminWalletController {
             			});
 		} catch (error) {
 			logger.error('Error resetting wallet config:', error);
-			res.status(500).json({
-				success: false,
-				message: 'Failed to reset wallet configuration'
-			});
+			sendErrorResponse(res, 'Failed to reset wallet configuration', 500);
 		}
 	}
 
@@ -242,10 +215,7 @@ export class AdminWalletController {
             			});
 		} catch (error) {
 			logger.error('Error getting wallet system status:', error);
-			res.status(500).json({
-				success: false,
-				message: 'Failed to retrieve wallet system status'
-			});
+			sendErrorResponse(res, 'Failed to retrieve wallet system status', 500);
 		}
 	}
 }

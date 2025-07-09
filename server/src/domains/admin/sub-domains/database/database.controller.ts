@@ -375,7 +375,7 @@ export async function exportTableCSV(req: Request, res: Response) {
 
 		res.setHeader('Content-Type', 'text/csv');
 		res.setHeader('Content-Disposition', `attachment; filename="${table}_export.csv"`);
-		res.send(csvData);
+		sendSuccessResponse(res, csvData);
 	} catch (error: any) {
 		logger.error('DatabaseController', 'Error exporting table CSV', {
 			error: error.message,

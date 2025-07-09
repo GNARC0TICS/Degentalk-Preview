@@ -31,10 +31,7 @@ export class SocialActionsController {
 	static async toggleFollow(req: Request, res: Response) {
 		try {
 			if (!userService.getUserFromRequest(req)?.id) {
-				return res.status(401).json({
-					success: false,
-					error: 'Authentication required'
-				});
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			const { targetUserId } = FollowUserSchema.parse(req.body);
@@ -46,7 +43,7 @@ export class SocialActionsController {
 
 			const statusCode = result.success ? 200 : 400;
 
-			res.status(statusCode).json({
+			const responseData = {
 				success: result.success,
 				data: {
 					action: result.action,
@@ -54,7 +51,13 @@ export class SocialActionsController {
 					message: result.message
 				},
 				timestamp: new Date().toISOString()
-			});
+			};
+
+			if (result.success) {
+				sendSuccessResponse(res, responseData);
+			} else {
+				sendErrorResponse(res, result.message || 'Operation failed', 400);
+			}
 		} catch (error) {
 			handleControllerError(error, res, 'Failed to update follow status');
 		}
@@ -67,10 +70,7 @@ export class SocialActionsController {
 	static async manageFriendRequest(req: Request, res: Response) {
 		try {
 			if (!userService.getUserFromRequest(req)?.id) {
-				return res.status(401).json({
-					success: false,
-					error: 'Authentication required'
-				});
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			const { targetUserId, action } = FriendRequestSchema.parse(req.body);
@@ -83,7 +83,7 @@ export class SocialActionsController {
 
 			const statusCode = result.success ? 200 : 400;
 
-			res.status(statusCode).json({
+			const responseData = {
 				success: result.success,
 				data: {
 					action: result.action,
@@ -91,7 +91,13 @@ export class SocialActionsController {
 					message: result.message
 				},
 				timestamp: new Date().toISOString()
-			});
+			};
+
+			if (result.success) {
+				sendSuccessResponse(res, responseData);
+			} else {
+				sendErrorResponse(res, result.message || 'Operation failed', 400);
+			}
 		} catch (error) {
 			handleControllerError(error, res, 'Failed to manage friend request');
 		}
@@ -104,10 +110,7 @@ export class SocialActionsController {
 	static async toggleBlock(req: Request, res: Response) {
 		try {
 			if (!userService.getUserFromRequest(req)?.id) {
-				return res.status(401).json({
-					success: false,
-					error: 'Authentication required'
-				});
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			const { targetUserId } = BlockUserSchema.parse(req.body);
@@ -119,7 +122,7 @@ export class SocialActionsController {
 
 			const statusCode = result.success ? 200 : 400;
 
-			res.status(statusCode).json({
+			const responseData = {
 				success: result.success,
 				data: {
 					action: result.action,
@@ -127,7 +130,13 @@ export class SocialActionsController {
 					message: result.message
 				},
 				timestamp: new Date().toISOString()
-			});
+			};
+
+			if (result.success) {
+				sendSuccessResponse(res, responseData);
+			} else {
+				sendErrorResponse(res, result.message || 'Operation failed', 400);
+			}
 		} catch (error) {
 			handleControllerError(error, res, 'Failed to update block status');
 		}
@@ -140,10 +149,7 @@ export class SocialActionsController {
 	static async getRelationshipStatus(req: Request, res: Response) {
 		try {
 			if (!userService.getUserFromRequest(req)?.id) {
-				return res.status(401).json({
-					success: false,
-					error: 'Authentication required'
-				});
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			const { targetUserId } = RelationshipStatusSchema.parse(req.params);
@@ -170,10 +176,7 @@ export class SocialActionsController {
 	static async getSocialSuggestions(req: Request, res: Response) {
 		try {
 			if (!userService.getUserFromRequest(req)?.id) {
-				return res.status(401).json({
-					success: false,
-					error: 'Authentication required'
-				});
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			// TODO: Implement suggestion algorithm
@@ -206,10 +209,7 @@ export class SocialActionsController {
 	static async getPendingFriendRequests(req: Request, res: Response) {
 		try {
 			if (!userService.getUserFromRequest(req)?.id) {
-				return res.status(401).json({
-					success: false,
-					error: 'Authentication required'
-				});
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			// TODO: Implement pending requests query

@@ -14,10 +14,7 @@ export class SocialController {
 			sendSuccessResponse(res, config);
 		} catch (error) {
 			logger.error('SocialController', 'Error fetching social config', { error });
-			res.status(500).json({
-				error: 'Failed to fetch social configuration',
-				details: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to fetch social configuration', 500);
 		}
 	}
 
@@ -37,10 +34,7 @@ export class SocialController {
 			sendSuccessResponse(res, updatedConfig);
 		} catch (error) {
 			logger.error('SocialController', 'Error updating social config', { error });
-			res.status(500).json({
-				error: 'Failed to update social configuration',
-				details: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to update social configuration', 500);
 		}
 	}
 
@@ -53,10 +47,7 @@ export class SocialController {
 			sendSuccessResponse(res, stats);
 		} catch (error) {
 			logger.error('SocialController', 'Error fetching social stats', { error });
-			res.status(500).json({
-				error: 'Failed to fetch social statistics',
-				details: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to fetch social statistics', 500);
 		}
 	}
 
@@ -75,10 +66,7 @@ export class SocialController {
 			sendSuccessResponse(res, defaultConfig);
 		} catch (error) {
 			logger.error('SocialController', 'Error resetting social config', { error });
-			res.status(500).json({
-				error: 'Failed to reset social configuration',
-				details: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to reset social configuration', 500);
 		}
 	}
 
@@ -91,10 +79,7 @@ export class SocialController {
 			sendSuccessResponse(res, status);
 		} catch (error) {
 			logger.error('SocialController', 'Error fetching feature status', { error });
-			res.status(500).json({
-				error: 'Failed to fetch feature status',
-				details: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to fetch feature status', 500);
 		}
 	}
 
@@ -113,10 +98,7 @@ export class SocialController {
 			sendSuccessResponse(res, result);
 		} catch (error) {
 			logger.error('SocialController', 'Error during emergency disable', { error });
-			res.status(500).json({
-				error: 'Failed to emergency disable social features',
-				details: error instanceof Error ? error.message : 'Unknown error'
-			});
+			sendErrorResponse(res, 'Failed to emergency disable social features', 500);
 		}
 	}
 }

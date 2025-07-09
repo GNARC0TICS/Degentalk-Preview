@@ -15,7 +15,7 @@ export const getPackageById = async (req: Request, res: Response, next: NextFunc
 	try {
 		const id = req.params.packageId;
 		const [item] = await dgtPackageService.list().then((r) => r.filter((p) => p.id === id));
-		if (!item) return res.status(404).json({ error: 'Package not found' });
+		if (!item) return sendErrorResponse(res, 'Package not found', 404);
 		sendSuccessResponse(res, item);
 	} catch (err) {
 		next(err);
@@ -25,7 +25,7 @@ export const getPackageById = async (req: Request, res: Response, next: NextFunc
 export const createPackage = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const created = await dgtPackageService.create(req.body);
-		res.status(201).json(created);
+		sendSuccessResponse(res, created);
 	} catch (err) {
 		next(err);
 	}

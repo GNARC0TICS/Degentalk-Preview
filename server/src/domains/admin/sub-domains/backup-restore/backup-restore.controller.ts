@@ -16,6 +16,7 @@ import {
 import { formatAdminResponse, AdminOperationBoundary } from '../../shared';
 import { AdminError, AdminErrorCodes } from '../../admin.errors';
 import { logger } from '../../../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 // Additional validation schemas
 const backupIdSchema = z.object({
@@ -145,10 +146,7 @@ export class BackupRestoreController {
 			const backup = await backupService.getBackup(id);
 
 			if (!backup.fileExists) {
-				return res.status(404).json({
-					success: false,
-					error: 'Backup file not found'
-				});
+				return sendErrorResponse(res, 'Backup file not found', 404);
 			}
 
 			// Set appropriate headers for file download
@@ -161,18 +159,12 @@ export class BackupRestoreController {
 
 			stream.on('error', (error) => {
 				logger.error('Error streaming backup file:', error);
-				res.status(500).json({
-					success: false,
-					error: 'Failed to download backup file'
-				});
+				sendErrorResponse(res, 'Failed to download backup file', 500);
 			});
 
 			stream.pipe(res);
 		} catch (error) {
-			res.status(500).json({
-				success: false,
-				error: error.message || 'Failed to download backup'
-			});
+			sendErrorResponse(res, error.message || 'Failed to download backup', 500);
 		}
 	}
 

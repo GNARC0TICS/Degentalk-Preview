@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { userService } from '@server/src/core/services/user.service';
 import { AdminTitlesController } from './titles.controller';
 import { canUser } from '@lib/auth/canUser';
+import { sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 const controller = new AdminTitlesController();
 const router = Router();
@@ -11,7 +12,7 @@ router.use(async (req: any, res, next) => {
 	try {
 		const user = userService.getUserFromRequest(req);
 		if (!user || !(await canUser(user, 'manageTitles'))) {
-			return res.status(403).json({ message: 'Forbidden' });
+			return sendErrorResponse(res, 'Forbidden', 403);
 		}
 		next();
 	} catch (err) {

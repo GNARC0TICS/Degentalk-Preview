@@ -4,6 +4,7 @@ import { airdropAdminService } from './airdrop.service';
 import { logger } from '../../../../core/logger';
 import { z } from 'zod';
 import { validateRequestBody } from '../../admin.validation';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 const airdropRequestSchema = z.object({
 	tokenType: z.enum(['XP', 'DGT']),
@@ -19,7 +20,7 @@ export const executeAirdrop = async (req: Request, res: Response, next: NextFunc
 	try {
 		const adminId = userService.getUserFromRequest(req)?.id; // Assuming adminId is available from auth middleware
 		if (!adminId) {
-			return res.status(401).json({ message: 'Unauthorized: Admin ID not found.' });
+			return sendErrorResponse(res, 'Unauthorized: Admin ID not found.', 401);
 		}
 
 		const data = validateRequestBody(req, res, airdropRequestSchema);
@@ -35,15 +36,12 @@ export const executeAirdrop = async (req: Request, res: Response, next: NextFunc
 		});
 
 		if (result.success) {
-			res.status(200).json(result);
+			sendSuccessResponse(res, result);
 		} else {
 			// Determine appropriate status code based on the nature of the failure
 			// For now, using 400 for general processing issues that aren't outright server errors
-			res
-				.status(
-					result.message.includes('Unsupported') || result.message.includes('positive') ? 400 : 500
-				)
-				.json(result);
+			const statusCode = result.message.includes('Unsupported') || result.message.includes('positive') ? 400 : 500;
+			sendErrorResponse(res, result.message, statusCode);
 		}
 	} catch (error) {
 		logger.error('AIRDROP_CONTROLLER', 'Error executing airdrop:', error);

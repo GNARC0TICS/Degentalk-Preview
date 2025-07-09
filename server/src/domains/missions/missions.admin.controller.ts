@@ -10,6 +10,7 @@ import { MissionsService } from './missions.service';
 // import { MissionAlreadyExistsError } from './missions.errors'; // Removed as file not found and error not used
 import { logger } from '../../core/logger';
 import { asyncHandler } from '../../core/errors';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 /**
  * Admin-specific functions for mission management
@@ -36,7 +37,7 @@ export const getMissionAuditLog = async (req: Request, res: Response, next: Next
 		// This would be implemented when we add mission audit logging
 		// For now, just return a placeholder response
 
-		res.status(200).json({
+		sendSuccessResponse(res, {
 			message: 'Mission audit log feature coming soon',
 			timestamp: new Date()
 		});

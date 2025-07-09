@@ -11,6 +11,7 @@ import { posts, threads, forumStructure } from '@schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@server/src/core/logger';
 import type { EntityId, ForumId, UserId, PostId, ThreadId } from '@shared/types/ids';
+import { sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 export interface User {
 	id: UserId;
@@ -244,19 +245,13 @@ export function createPermissionChecker<T extends (...args: any[]) => Promise<bo
 			const user = userService.getUserFromRequest(req);
 
 			if (!user) {
-				return res.status(401).json({
-					success: false,
-					error: 'Authentication required'
-				});
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			// Extract entity ID from params
 			const rawId = req.params.id || req.params.postId || req.params.threadId;
 			if (!rawId || typeof rawId !== 'string') {
-				return res.status(400).json({ 
-					success: false, 
-					error: 'Invalid ID format' 
-				});
+				return sendErrorResponse(res, 'Invalid ID format', 400);
 			}
 			const entityId = rawId; // Keep as string for branded type system
 
@@ -271,19 +266,13 @@ export function createPermissionChecker<T extends (...args: any[]) => Promise<bo
 					method: req.method
 				});
 
-				return res.status(403).json({
-					success: false,
-					error: errorMessage
-				});
+				return sendErrorResponse(res, errorMessage, 403);
 			}
 
 			next();
 		} catch (error) {
 			logger.error('PermissionsService', 'Error in permission check', { error });
-			return res.status(500).json({
-				success: false,
-				error: 'Permission check failed'
-			});
+			return sendErrorResponse(res, 'Permission check failed', 500);
 		}
 	};
 }
@@ -328,10 +317,7 @@ export function requireModerator(req: any, res: any, next: any) {
 	const user = userService.getUserFromRequest(req);
 
 	if (!user) {
-		return res.status(401).json({
-			success: false,
-			error: 'Authentication required'
-		});
+		return sendErrorResponse(res, 'Authentication required', 401);
 	}
 
 	if (!isModerator(user)) {
@@ -341,10 +327,7 @@ export function requireModerator(req: any, res: any, next: any) {
 			path: req.path
 		});
 
-		return res.status(403).json({
-			success: false,
-			error: 'Moderator privileges required'
-		});
+		return sendErrorResponse(res, 'Moderator privileges required', 403);
 	}
 
 	next();
@@ -354,10 +337,7 @@ export function requireAdmin(req: any, res: any, next: any) {
 	const user = userService.getUserFromRequest(req);
 
 	if (!user) {
-		return res.status(401).json({
-			success: false,
-			error: 'Authentication required'
-		});
+		return sendErrorResponse(res, 'Authentication required', 401);
 	}
 
 	if (!isAdmin(user)) {
@@ -367,10 +347,7 @@ export function requireAdmin(req: any, res: any, next: any) {
 			path: req.path
 		});
 
-		return res.status(403).json({
-			success: false,
-			error: 'Administrator privileges required'
-		});
+		return sendErrorResponse(res, 'Administrator privileges required', 403);
 	}
 
 	next();

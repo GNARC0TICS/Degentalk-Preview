@@ -12,7 +12,7 @@ export class AdminTitlesController {
 			const titles = await service.list();
 			sendSuccessResponse(res, titles);
 		} catch (error: any) {
-			res.status(500).json({ error: error.message });
+			sendErrorResponse(res, error.message, 500);
 		}
 	}
 
@@ -22,7 +22,7 @@ export class AdminTitlesController {
 			const titles = await service.getByRole(roleId);
 			sendSuccessResponse(res, titles);
 		} catch (error: any) {
-			res.status(500).json({ error: error.message });
+			sendErrorResponse(res, error.message, 500);
 		}
 	}
 
@@ -31,7 +31,7 @@ export class AdminTitlesController {
 			const titles = await service.getCustomTitles();
 			sendSuccessResponse(res, titles);
 		} catch (error: any) {
-			res.status(500).json({ error: error.message });
+			sendErrorResponse(res, error.message, 500);
 		}
 	}
 
@@ -40,9 +40,9 @@ export class AdminTitlesController {
 			const data = validateRequestBody(req, res, createTitleSchema);
 			if (!data) return;
 			const title = await service.create(data);
-			res.status(201).json(title);
+			sendSuccessResponse(res, title);
 		} catch (error: any) {
-			res.status(500).json({ error: error.message });
+			sendErrorResponse(res, error.message, 500);
 		}
 	}
 
@@ -51,7 +51,7 @@ export class AdminTitlesController {
 			const { id } = req.params;
 			const titleId = id;
 			if (isNaN(titleId)) {
-				return res.status(400).json({ error: 'Invalid title ID' });
+				return sendErrorResponse(res, 'Invalid title ID', 400);
 			}
 
 			const data = validateRequestBody(req, res, updateTitleSchema);
@@ -60,7 +60,7 @@ export class AdminTitlesController {
 			const title = await service.update(titleId, data);
 			sendSuccessResponse(res, title);
 		} catch (error: any) {
-			res.status(404).json({ error: error.message });
+			sendErrorResponse(res, error.message, 404);
 		}
 	}
 
@@ -69,13 +69,13 @@ export class AdminTitlesController {
 			const { id } = req.params;
 			const titleId = id;
 			if (isNaN(titleId)) {
-				return res.status(400).json({ error: 'Invalid title ID' });
+				return sendErrorResponse(res, 'Invalid title ID', 400);
 			}
 
 			const result = await service.delete(titleId);
 			sendSuccessResponse(res, result);
 		} catch (error: any) {
-			res.status(404).json({ error: error.message });
+			sendErrorResponse(res, error.message, 404);
 		}
 	}
 }

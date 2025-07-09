@@ -11,6 +11,7 @@ import { ccpaymentService } from '../wallet/ccpayment.service';
 import { ccpaymentWebhookService } from './ccpayment-webhook.service';
 import { WalletError, ErrorCodes as WalletErrorCodes } from '../../core/errors';
 import crypto from 'crypto';
+import { sendSuccessResponse, sendErrorResponse } from '../../core/utils/transformer.helpers';
 
 /**
  * CCPayment webhook controller
@@ -39,10 +40,7 @@ export class CCPaymentWebhookController {
 			// Verify required headers are present
 			if (!signature || !timestamp || !appId) {
 				logger.warn('Missing required webhook headers');
-				res.status(400).json({
-					success: false,
-					message: 'Missing required webhook headers'
-				});
+				sendErrorResponse(res, 'Missing required webhook headers', 400);
 				return;
 			}
 
@@ -51,10 +49,7 @@ export class CCPaymentWebhookController {
 
 			if (!isValid) {
 				logger.warn('Invalid webhook signature');
-				res.status(401).json({
-					success: false,
-					message: 'Invalid webhook signature'
-				});
+				sendErrorResponse(res, 'Invalid webhook signature', 401);
 				return;
 			}
 
@@ -74,7 +69,7 @@ export class CCPaymentWebhookController {
 			const processPromise = ccpaymentWebhookService.processWebhookEvent(webhookEvent);
 
 			// Immediately respond to the webhook
-			res.status(200).json({
+			sendSuccessResponse(res, {
 				success: true,
 				message: 'Webhook received and validated'
 			});
@@ -87,7 +82,7 @@ export class CCPaymentWebhookController {
 
 			// Still respond with 200 to CCPayment to prevent retries
 			// CCPayment expects 200 OK even if processing fails
-			res.status(200).json({
+			sendSuccessResponse(res, {
 				success: false,
 				message: 'Webhook received but processing failed'
 			});

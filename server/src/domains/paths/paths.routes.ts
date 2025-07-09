@@ -31,7 +31,7 @@ export function registerPathRoutes(router: Router) {
 			sendSuccessResponse(res, paths);
 		} catch (error) {
 			logger.error('Error fetching paths:', error);
-			res.status(500).json({ message: 'Server error' });
+			sendErrorResponse(res, 'Server error', 500);
 		}
 	});
 
@@ -46,13 +46,13 @@ export function registerPathRoutes(router: Router) {
 			const path = await PathService.getPathById(pathId);
 
 			if (!path) {
-				return res.status(404).json({ message: 'Path not found' });
+				return sendErrorResponse(res, 'Path not found', 404);
 			}
 
 			sendSuccessResponse(res, path);
 		} catch (error) {
 			logger.error('Error fetching path:', error);
-			res.status(500).json({ message: 'Server error' });
+			sendErrorResponse(res, 'Server error', 500);
 		}
 	});
 
@@ -68,7 +68,7 @@ export function registerPathRoutes(router: Router) {
 			sendSuccessResponse(res, userPaths);
 		} catch (error) {
 			logger.error('Error fetching user paths:', error);
-			res.status(500).json({ message: 'Server error' });
+			sendErrorResponse(res, 'Server error', 500);
 		}
 	});
 
@@ -83,13 +83,13 @@ export function registerPathRoutes(router: Router) {
 			const primaryPath = await PathService.getUserPrimaryPath(userId);
 
 			if (!primaryPath) {
-				return res.status(404).json({ message: 'No primary path set' });
+				return sendErrorResponse(res, 'No primary path set', 404);
 			}
 
 			sendSuccessResponse(res, primaryPath);
 		} catch (error) {
 			logger.error('Error fetching primary path:', error);
-			res.status(500).json({ message: 'Server error' });
+			sendErrorResponse(res, 'Server error', 500);
 		}
 	});
 
@@ -110,7 +110,7 @@ export function registerPathRoutes(router: Router) {
 				const pathExists = await PathService.getPathById(pathId);
 
 				if (!pathExists) {
-					return res.status(404).json({ message: 'Path not found' });
+					return sendErrorResponse(res, 'Path not found', 404);
 				}
 
 				// Set primary path
@@ -119,7 +119,7 @@ export function registerPathRoutes(router: Router) {
 				sendSuccessResponse(res, { success: true, message: 'Primary path updated successfully' });
 			} catch (error) {
 				logger.error('Error setting primary path:', error);
-				res.status(500).json({ message: 'Server error' });
+				sendErrorResponse(res, 'Server error', 500);
 			}
 		}
 	);
@@ -139,14 +139,14 @@ export function registerPathRoutes(router: Router) {
 			const pathExists = await PathService.getPathById(pathId);
 
 			if (!pathExists) {
-				return res.status(404).json({ message: 'Path not found' });
+				return sendErrorResponse(res, 'Path not found', 404);
 			}
 
 			const leaderboard = await PathService.getPathLeaderboard(pathId, limit, offset);
 			sendSuccessResponse(res, leaderboard);
 		} catch (error) {
 			logger.error('Error fetching path leaderboard:', error);
-			res.status(500).json({ message: 'Server error' });
+			sendErrorResponse(res, 'Server error', 500);
 		}
 	});
 
@@ -161,7 +161,7 @@ export function registerPathRoutes(router: Router) {
 			const pathId = req.params.pathId;
 
 			if (!userId || !isValidId(userId)) {
-				return res.status(400).json({ message: 'Invalid user ID' });
+				return sendErrorResponse(res, 'Invalid user ID', 400);
 			}
 
 			// Check if user exists
@@ -170,26 +170,26 @@ export function registerPathRoutes(router: Router) {
       `);
 
 			if (parseInt(userExists.rows[0].count) === 0) {
-				return res.status(404).json({ message: 'User not found' });
+				return sendErrorResponse(res, 'User not found', 404);
 			}
 
 			// Check if path exists
 			const pathExists = await PathService.getPathById(pathId);
 
 			if (!pathExists) {
-				return res.status(404).json({ message: 'Path not found' });
+				return sendErrorResponse(res, 'Path not found', 404);
 			}
 
 			const userPath = await PathService.getUserPath(userId, pathId);
 
 			if (!userPath) {
-				return res.status(404).json({ message: 'User has not started this path' });
+				return sendErrorResponse(res, 'User has not started this path', 404);
 			}
 
 			sendSuccessResponse(res, userPath);
 		} catch (error) {
 			logger.error('Error fetching user path:', error);
-			res.status(500).json({ message: 'Server error' });
+			sendErrorResponse(res, 'Server error', 500);
 		}
 	});
 
@@ -203,7 +203,7 @@ export function registerPathRoutes(router: Router) {
 			const userId = req.params.userId as UserId;
 
 			if (!userId || !isValidId(userId)) {
-				return res.status(400).json({ message: 'Invalid user ID' });
+				return sendErrorResponse(res, 'Invalid user ID', 400);
 			}
 
 			// Check if user exists
@@ -212,14 +212,14 @@ export function registerPathRoutes(router: Router) {
       `);
 
 			if (parseInt(userExists.rows[0].count) === 0) {
-				return res.status(404).json({ message: 'User not found' });
+				return sendErrorResponse(res, 'User not found', 404);
 			}
 
 			const summary = await PathService.getUserPathSummary(userId);
 			sendSuccessResponse(res, summary);
 		} catch (error) {
 			logger.error('Error fetching user path summary:', error);
-			res.status(500).json({ message: 'Server error' });
+			sendErrorResponse(res, 'Server error', 500);
 		}
 	});
 }

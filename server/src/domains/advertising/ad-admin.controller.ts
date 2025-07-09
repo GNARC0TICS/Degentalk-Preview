@@ -172,7 +172,6 @@ export class AdAdminController {
 			const placementData = placementConfigSchema.parse(req.body);
 			const placement = await adConfigurationService.createPlacement(placementData);
 
-			res.status(201);
 			sendSuccessResponse(res, placement);
 		} catch (error) {
 			logger.error('Create placement error:', error);
@@ -207,7 +206,7 @@ export class AdAdminController {
 			const { placementId } = req.params;
 			await adConfigurationService.deletePlacement(placementId);
 
-			res.status(204).send();
+			res.status(204).end();
 		} catch (error) {
 			logger.error('Delete placement error:', error);
 			sendErrorResponse(res, 'Failed to delete placement', 400);
@@ -258,7 +257,6 @@ export class AdAdminController {
 				validUntil: ruleData.validUntil ? new Date(ruleData.validUntil) : undefined
 			});
 
-			res.status(201);
 			sendSuccessResponse(res, rule);
 		} catch (error) {
 			logger.error('Create rule error:', error);
@@ -420,7 +418,6 @@ export class AdAdminController {
 				proposerUserId
 			});
 
-			res.status(201);
 			sendSuccessResponse(res, proposal);
 		} catch (error) {
 			logger.error('Create proposal error:', error);

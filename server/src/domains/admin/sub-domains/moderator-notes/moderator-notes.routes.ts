@@ -31,7 +31,7 @@ router.post('/', isAdminOrModerator, async (req, res) => {
 		const userId = getUserIdFromRequest(req);
 
 		if (!userId) {
-			return res.status(401).json({ error: 'Unauthorized' });
+			return sendErrorResponse(res, 'Unauthorized', 401);
 		}
 
 		const [note] = await db
@@ -49,13 +49,10 @@ router.post('/', isAdminOrModerator, async (req, res) => {
 			createdBy: userId
 		});
 
-		res.status(201).json(note);
+		sendSuccessResponse(res, note);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			return res.status(400).json({
-				error: 'Invalid request data',
-				details: error.flatten()
-			});
+			return sendErrorResponse(res, 'Invalid request data', 400);
 		}
 
 		logger.error('ModeratorNotes', 'Error creating moderator note', {
@@ -63,7 +60,7 @@ router.post('/', isAdminOrModerator, async (req, res) => {
 			body: req.body
 		});
 
-		res.status(500).json({ error: 'Internal server error' });
+		sendErrorResponse(res, 'Internal server error', 500);
 	}
 });
 
@@ -86,10 +83,7 @@ router.get('/', isAdminOrModerator, async (req, res) => {
 		sendSuccessResponse(res, notes);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			return res.status(400).json({
-				error: 'Invalid query parameters',
-				details: error.flatten()
-			});
+			return sendErrorResponse(res, 'Invalid query parameters', 400);
 		}
 
 		logger.error('ModeratorNotes', 'Error fetching moderator notes', {
@@ -97,7 +91,7 @@ router.get('/', isAdminOrModerator, async (req, res) => {
 			query: req.query
 		});
 
-		res.status(500).json({ error: 'Internal server error' });
+		sendErrorResponse(res, 'Internal server error', 500);
 	}
 });
 
@@ -115,13 +109,13 @@ router.delete('/:id', isAdminOrModerator, async (req, res) => {
 			.limit(1);
 
 		if (!existingNote) {
-			return res.status(404).json({ error: 'Note not found' });
+			return sendErrorResponse(res, 'Note not found', 404);
 		}
 
 		// Only allow deletion by the creator or admins
 		const isAdmin = userService.getUserFromRequest(req)?.role === 'admin';
 		if (existingNote.createdBy !== userId && !isAdmin) {
-			return res.status(403).json({ error: 'You can only delete your own notes' });
+			return sendErrorResponse(res, 'You can only delete your own notes', 403);
 		}
 
 		await db.delete(moderatorNotes).where(eq(moderatorNotes.id, noteId));
@@ -131,14 +125,14 @@ router.delete('/:id', isAdminOrModerator, async (req, res) => {
 			deletedBy: userId
 		});
 
-		res.status(204).send();
+		sendSuccessResponse(res, null);
 	} catch (error) {
 		logger.error('ModeratorNotes', 'Error deleting moderator note', {
 			error,
 			noteId: req.params.id
 		});
 
-		res.status(500).json({ error: 'Internal server error' });
+		sendErrorResponse(res, 'Internal server error', 500);
 	}
 });
 

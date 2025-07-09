@@ -110,7 +110,7 @@ router.get('/items', async (req, res) => {
         		});
 	} catch (error) {
 		logger.error('ShopController', 'Error fetching shop items', { error });
-		res.status(500).json({ error: 'Failed to fetch shop items' });
+		sendErrorResponse(res, 'Failed to fetch shop items', 500);
 	}
 });
 
@@ -124,7 +124,7 @@ router.get('/items/:id', async (req, res) => {
 		const item = shopItems.find((item) => item.id === id);
 
 		if (!item) {
-			return res.status(404).json({ error: 'Item not found' });
+			return sendErrorResponse(res, 'Item not found', 404);
 		}
 
 		// Transform item based on user context
@@ -164,7 +164,7 @@ router.get('/items/:id', async (req, res) => {
         		});
 	} catch (error) {
 		logger.error('ShopController', 'Error fetching shop item', { error, itemId: req.params.id });
-		res.status(500).json({ error: 'Failed to fetch shop item' });
+		sendErrorResponse(res, 'Failed to fetch shop item', 500);
 	}
 });
 
@@ -178,7 +178,7 @@ const purchaseSchema = z.object({
 router.post('/purchase', isAuthenticated, async (req, res) => {
 	try {
 		if (!userService.getUserFromRequest(req)) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		const userId = (userService.getUserFromRequest(req) as { id: EntityId }).id;
@@ -187,7 +187,7 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 		// Find the item in mock data (TODO: replace with database query)
 		const item = shopItems.find((item) => item.id === itemId);
 		if (!item) {
-			return res.status(404).json({ error: 'Item not found' });
+			return sendErrorResponse(res, 'Item not found', 404);
 		}
 
 		// Check if user already owns this item
@@ -198,7 +198,7 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 			.limit(1);
 
 		if (existingItem.length > 0) {
-			return res.status(400).json({ error: 'You already own this item' });
+			return sendErrorResponse(res, 'You already own this item', 400);
 		}
 
 		// Get price based on payment method
@@ -207,13 +207,13 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 
 		if (paymentMethod === 'DGT') {
 			if (!item.priceDGT) {
-				return res.status(400).json({ error: 'Item not available for DGT purchase' });
+				return sendErrorResponse(res, 'Item not available for DGT purchase', 400);
 			}
 			price = item.priceDGT;
 			currency = 'DGT';
 		} else {
 			if (!item.priceUSDT) {
-				return res.status(400).json({ error: 'Item not available for USDT purchase' });
+				return sendErrorResponse(res, 'Item not available for USDT purchase', 400);
 			}
 			price = item.priceUSDT;
 			currency = 'USDT';
@@ -225,8 +225,7 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
 			const userBalance = await dgtService.getUserBalance(userId);
 
 			if (userBalance < dgtAmountRequired) {
-				return res.status(400).json({
-					error: 'Insufficient DGT balance',
+				return sendErrorResponse(res, 'Insufficient DGT balance', 400, {
 					required: price,
 					available: Number(userBalance) / 100000000
 				});
@@ -321,20 +320,19 @@ router.post('/purchase', isAuthenticated, async (req, res) => {
             			});
 		} else {
 			// TODO: Implement USDT payments via CCPayment
-			return res.status(501).json({
-				error: 'USDT payments not yet implemented',
+			return sendErrorResponse(res, 'USDT payments not yet implemented', 501, {
 				message: 'Please use DGT for now'
 			});
 		}
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			return res.status(400).json({ error: 'Invalid request', details: error.errors });
+			return sendErrorResponse(res, 'Invalid request', 400, { details: error.errors });
 		}
 		logger.error('ShopController', 'Error processing purchase', {
 			error: error instanceof Error ? error.message : String(error),
 			userId: userService.getUserFromRequest(req)?.id
 		});
-		res.status(500).json({ error: 'Failed to process purchase' });
+		sendErrorResponse(res, 'Failed to process purchase', 500);
 	}
 });
 
@@ -343,7 +341,7 @@ router.get('/inventory', isAuthenticated, async (req, res) => {
 	try {
 		const requestingUser = userService.getUserFromRequest(req);
 		if (!requestingUser) {
-			return res.status(401).json({ error: 'User not authenticated' });
+			return sendErrorResponse(res, 'User not authenticated', 401);
 		}
 
 		const userId = requestingUser.id;
@@ -418,7 +416,7 @@ router.get('/inventory', isAuthenticated, async (req, res) => {
 			error: error instanceof Error ? error.message : String(error),
 			userId: userService.getUserFromRequest(req)?.id
 		});
-		res.status(500).json({ error: 'Failed to get inventory' });
+		sendErrorResponse(res, 'Failed to get inventory', 500);
 	}
 });
 

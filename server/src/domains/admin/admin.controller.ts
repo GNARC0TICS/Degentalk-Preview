@@ -16,14 +16,9 @@ export class AdminController {
 			sendSuccessResponse(res, stats);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return res.status(error.httpStatus).json({
-					error: error.message,
-					code: error.code
-				});
+				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return res.status(500).json({
-				error: 'Failed to fetch dashboard statistics'
-			});
+			return sendErrorResponse(res, 'Failed to fetch dashboard statistics', 500);
 		}
 	}
 
@@ -38,14 +33,9 @@ export class AdminController {
 			sendSuccessResponse(res, recentActions);
 		} catch (error) {
 			if (error instanceof AdminError) {
-				return res.status(error.httpStatus).json({
-					error: error.message,
-					code: error.code
-				});
+				return sendErrorResponse(res, error.message, error.httpStatus);
 			}
-			return res.status(500).json({
-				error: 'Failed to fetch activity log'
-			});
+			return sendErrorResponse(res, 'Failed to fetch activity log', 500);
 		}
 	}
 

@@ -22,19 +22,11 @@ export class SubscriptionController {
 			const userId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId) {
-				res.status(401).json({
-					success: false,
-					error: 'Authentication required'
-				});
-				return;
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			if (!type || !['vip_pass', 'degen_pass'].includes(type)) {
-				res.status(400).json({
-					success: false,
-					error: 'Valid subscription type required (vip_pass or degen_pass)'
-				});
-				return;
+				return sendErrorResponse(res, 'Valid subscription type required (vip_pass or degen_pass)', 400);
 			}
 
 			const subscription = await subscriptionService.purchaseSubscription({
@@ -42,19 +34,13 @@ export class SubscriptionController {
 				type
 			});
 
-			res.status(201).json({
-				success: true,
-				data: {
-					subscription,
-					message: `${type.replace('_', ' ')} purchased successfully!`
-				}
-			});
+			sendSuccessResponse(res, {
+				subscription,
+				message: `${type.replace('_', ' ')} purchased successfully!`
+			}, 201);
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error purchasing subscription:', error);
-			res.status(400).json({
-				success: false,
-				error: error.message || 'Failed to purchase subscription'
-			});
+			sendErrorResponse(res, error.message || 'Failed to purchase subscription', 400);
 		}
 	}
 
@@ -67,11 +53,7 @@ export class SubscriptionController {
 			const userId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId) {
-				res.status(401).json({
-					success: false,
-					error: 'Authentication required'
-				});
-				return;
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			const subscription = await subscriptionService.getUserActiveSubscription(userId);
@@ -85,10 +67,7 @@ export class SubscriptionController {
             			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error getting current subscription:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Failed to retrieve subscription information'
-			});
+			sendErrorResponse(res, 'Failed to retrieve subscription information', 500);
 		}
 	}
 
@@ -101,11 +80,7 @@ export class SubscriptionController {
 			const userId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId) {
-				res.status(401).json({
-					success: false,
-					error: 'Authentication required'
-				});
-				return;
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			const subscriptions = await subscriptionService.getUserSubscriptions(userId);
@@ -119,10 +94,7 @@ export class SubscriptionController {
             			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error getting subscription history:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Failed to retrieve subscription history'
-			});
+			sendErrorResponse(res, 'Failed to retrieve subscription history', 500);
 		}
 	}
 
@@ -136,20 +108,12 @@ export class SubscriptionController {
 			const userId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId) {
-				res.status(401).json({
-					success: false,
-					error: 'Authentication required'
-				});
-				return;
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			const subscriptionId = id as EntityId;
 			if (!subscriptionId) {
-				res.status(400).json({
-					success: false,
-					error: 'Valid subscription ID required'
-				});
-				return;
+				return sendErrorResponse(res, 'Valid subscription ID required', 400);
 			}
 
 			const success = await subscriptionService.cancelSubscription(userId, subscriptionId);
@@ -162,17 +126,11 @@ export class SubscriptionController {
                 					}
                 				});
 			} else {
-				res.status(400).json({
-					success: false,
-					error: 'Failed to cancel subscription'
-				});
+				return sendErrorResponse(res, 'Failed to cancel subscription', 400);
 			}
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error cancelling subscription:', error);
-			res.status(400).json({
-				success: false,
-				error: error.message || 'Failed to cancel subscription'
-			});
+			sendErrorResponse(res, error.message || 'Failed to cancel subscription', 400);
 		}
 	}
 
@@ -185,11 +143,7 @@ export class SubscriptionController {
 			const userId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId) {
-				res.status(401).json({
-					success: false,
-					error: 'Authentication required'
-				});
-				return;
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			const drops = await subscriptionService.getUserCosmeticDrops(userId);
@@ -204,10 +158,7 @@ export class SubscriptionController {
             			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error getting cosmetic drops:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Failed to retrieve cosmetic drop history'
-			});
+			sendErrorResponse(res, 'Failed to retrieve cosmetic drop history', 500);
 		}
 	}
 
@@ -221,19 +172,11 @@ export class SubscriptionController {
 			const userId = userService.getUserFromRequest(req)?.id;
 
 			if (!userId) {
-				res.status(401).json({
-					success: false,
-					error: 'Authentication required'
-				});
-				return;
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			if (!benefitKey) {
-				res.status(400).json({
-					success: false,
-					error: 'Benefit key required'
-				});
-				return;
+				return sendErrorResponse(res, 'Benefit key required', 400);
 			}
 
 			const hasBenefit = await subscriptionService.hasSubscriptionBenefit(userId, benefitKey);
@@ -247,10 +190,7 @@ export class SubscriptionController {
             			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error checking benefit:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Failed to check subscription benefit'
-			});
+			sendErrorResponse(res, 'Failed to check subscription benefit', 500);
 		}
 	}
 
@@ -301,10 +241,7 @@ export class SubscriptionController {
             			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error getting pricing:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Failed to retrieve subscription pricing'
-			});
+			sendErrorResponse(res, 'Failed to retrieve subscription pricing', 500);
 		}
 	}
 
@@ -318,11 +255,7 @@ export class SubscriptionController {
 			const userRole = userService.getUserFromRequest(req)?.role;
 
 			if (!userId || userRole !== 'admin') {
-				res.status(403).json({
-					success: false,
-					error: 'Admin access required'
-				});
-				return;
+				return sendErrorResponse(res, 'Admin access required', 403);
 			}
 
 			const results = await subscriptionService.processMonthlyCosmetics();
@@ -336,10 +269,7 @@ export class SubscriptionController {
             			});
 		} catch (error) {
 			logger.error('SUBSCRIPTION_CONTROLLER', 'Error processing cosmetics:', error);
-			res.status(500).json({
-				success: false,
-				error: 'Failed to process monthly cosmetic drops'
-			});
+			sendErrorResponse(res, 'Failed to process monthly cosmetic drops', 500);
 		}
 	}
 }

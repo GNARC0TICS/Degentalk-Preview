@@ -89,7 +89,7 @@ router.get(
 			});
 		} catch (error) {
 			logger.error('ContentRoutes', 'Error fetching content', { error });
-			res.status(500).json({ error: 'Failed to fetch content' });
+			sendErrorResponse(res, 'Failed to fetch content', 500);
 		}
 	})
 );

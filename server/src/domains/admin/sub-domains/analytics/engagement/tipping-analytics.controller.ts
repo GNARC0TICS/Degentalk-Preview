@@ -7,6 +7,7 @@
 import type { Request, Response } from 'express';
 import { tippingAnalyticsService } from './tipping-analytics.service';
 import { logger } from '../../../../../core/logger';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
 
 class TippingAnalyticsController {
 	/**
@@ -21,27 +22,21 @@ class TippingAnalyticsController {
 
 			// Validate parameters
 			if (isNaN(days) || days < 1 || days > 365) {
-				return res.status(400).json({
-					error: 'Invalid days parameter. Must be between 1 and 365.'
-				});
+				return sendErrorResponse(res, 'Invalid days parameter. Must be between 1 and 365.', 400);
 			}
 
 			if (isNaN(topLimit) || topLimit < 1 || topLimit > 100) {
-				return res.status(400).json({
-					error: 'Invalid topLimit parameter. Must be between 1 and 100.'
-				});
+				return sendErrorResponse(res, 'Invalid topLimit parameter. Must be between 1 and 100.', 400);
 			}
 
 			// Get analytics data from service
 			const analytics = await tippingAnalyticsService.getTippingAnalytics(days, topLimit);
 
 			// Return the data
-			return res.status(200).json(analytics);
+			return sendSuccessResponse(res, analytics);
 		} catch (error) {
 			logger.error('Error fetching tipping analytics:', error);
-			return res.status(500).json({
-				error: 'An error occurred while fetching tipping analytics'
-			});
+			return sendErrorResponse(res, 'An error occurred while fetching tipping analytics', 500);
 		}
 	}
 }

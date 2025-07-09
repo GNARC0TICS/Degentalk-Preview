@@ -42,10 +42,7 @@ export class ProfileStatsController {
 			const stats = await ProfileStatsService.getExtendedProfileStats(username);
 
 			if (!stats) {
-				return res.status(404).json({
-					success: false,
-					error: 'Profile not found'
-				});
+				return sendErrorResponse(res, 'Profile not found', 404);
 			}
 
 			// Remove sensitive data if not own profile
@@ -102,10 +99,7 @@ export class ProfileStatsController {
 			const stats = await ProfileStatsService.getExtendedProfileStats(username);
 
 			if (!stats) {
-				return res.status(404).json({
-					success: false,
-					error: 'Profile not found'
-				});
+				return sendErrorResponse(res, 'Profile not found', 404);
 			}
 
 			// Return only essential stats for quick previews

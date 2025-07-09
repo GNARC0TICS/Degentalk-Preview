@@ -56,10 +56,7 @@ export async function importCSV(req: Request, res: Response) {
 		sendErrorResponse(res, 'Server error', 400);
 	} catch (error: any) {
 		logger.error('BulkController', 'Error importing CSV', { error: error.message });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to import CSV data'
-		});
+		sendErrorResponse(res, 'Failed to import CSV data', 500);
 	}
 }
 
@@ -72,19 +69,13 @@ export async function getImportTemplate(req: Request, res: Response) {
 		const { table } = req.params;
 
 		if (!table) {
-			return res.status(400).json({
-				success: false,
-				error: 'Table name is required'
-			});
+			return sendErrorResponse(res, 'Table name is required', 400);
 		}
 
 		// Check table access
 		const accessInfo = await databaseService.getTableAccessInfo(table);
 		if (!accessInfo.canView) {
-			return res.status(403).json({
-				success: false,
-				error: 'Table access denied'
-			});
+			return sendErrorResponse(res, 'Table access denied', 403);
 		}
 
 		// Get table schema
@@ -124,16 +115,13 @@ export async function getImportTemplate(req: Request, res: Response) {
 
 		res.setHeader('Content-Type', 'text/csv');
 		res.setHeader('Content-Disposition', `attachment; filename="${table}_import_template.csv"`);
-		res.send(csvContent);
+		sendSuccessResponse(res, csvContent);
 	} catch (error: any) {
 		logger.error('BulkController', 'Error generating import template', {
 			error: error.message,
 			table: req.params.table
 		});
-		res.status(500).json({
-			success: false,
-			error: 'Failed to generate import template'
-		});
+		sendErrorResponse(res, 'Failed to generate import template', 500);
 	}
 }
 
@@ -148,10 +136,7 @@ export async function validateImportData(req: Request, res: Response) {
 		// Check table access
 		const accessInfo = await databaseService.getTableAccessInfo(table);
 		if (!accessInfo.canEdit) {
-			return res.status(403).json({
-				success: false,
-				error: accessInfo.reason || 'Table editing is not allowed'
-			});
+			return sendErrorResponse(res, accessInfo.reason || 'Table editing is not allowed', 403);
 		}
 
 		// Validate each row
@@ -185,9 +170,6 @@ export async function validateImportData(req: Request, res: Response) {
         		});
 	} catch (error: any) {
 		logger.error('BulkController', 'Error validating import data', { error: error.message });
-		res.status(500).json({
-			success: false,
-			error: 'Failed to validate import data'
-		});
+		sendErrorResponse(res, 'Failed to validate import data', 500);
 	}
 }

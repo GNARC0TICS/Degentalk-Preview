@@ -23,10 +23,8 @@ export class AdminReportsController {
 			sendSuccessResponse(res, result);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch reports' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			sendErrorResponse(res, 'Failed to fetch reports', 500);
 		}
 	}
 
@@ -38,10 +36,8 @@ export class AdminReportsController {
 			sendSuccessResponse(res, report);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to fetch report details' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			sendErrorResponse(res, 'Failed to fetch report details', 500);
 		}
 	}
 
@@ -66,10 +62,8 @@ export class AdminReportsController {
 			sendSuccessResponse(res, { message: 'Report resolved successfully', data: updatedReport });
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to resolve report' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			sendErrorResponse(res, 'Failed to resolve report', 500);
 		}
 	}
 
@@ -94,10 +88,8 @@ export class AdminReportsController {
 			sendSuccessResponse(res, { message: 'Report dismissed successfully', data: updatedReport });
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to dismiss report' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			sendErrorResponse(res, 'Failed to dismiss report', 500);
 		}
 	}
 
@@ -117,10 +109,8 @@ export class AdminReportsController {
 			sendSuccessResponse(res, { message: 'User banned successfully', data: banResult });
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to ban user' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			sendErrorResponse(res, 'Failed to ban user', 500);
 		}
 	}
 
@@ -157,10 +147,8 @@ export class AdminReportsController {
 			sendSuccessResponse(res, deleteResult);
 		} catch (error) {
 			if (error instanceof AdminError)
-				return res
-					.status(error.httpStatus)
-					.json({ error: error.message, code: error.code, details: error.details });
-			res.status(500).json({ error: 'Failed to delete content' });
+				return sendErrorResponse(res, error.message, error.httpStatus);
+			sendErrorResponse(res, 'Failed to delete content', 500);
 		}
 	}
 }

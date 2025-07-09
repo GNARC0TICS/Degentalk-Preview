@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
+import { sendErrorResponse } from "@server/src/core/utils/transformer.helpers";
 
 /**
  * Admin Wallet Validators
@@ -59,19 +60,9 @@ export const validateWalletConfig = (req: Request, res: Response, next: NextFunc
 		next();
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			res.status(400).json({
-				success: false,
-				message: 'Invalid wallet configuration',
-				errors: error.errors.map((e) => ({
-					field: e.path.join('.'),
-					message: e.message
-				}))
-			});
+			sendErrorResponse(res, 'Invalid wallet configuration', 400);
 		} else {
-			res.status(400).json({
-				success: false,
-				message: 'Invalid request format'
-			});
+			sendErrorResponse(res, 'Invalid request format', 400);
 		}
 	}
 };
@@ -85,19 +76,9 @@ export const validateDGTTransaction = (req: Request, res: Response, next: NextFu
 		next();
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			res.status(400).json({
-				success: false,
-				message: 'Invalid DGT transaction request',
-				errors: error.errors.map((e) => ({
-					field: e.path.join('.'),
-					message: e.message
-				}))
-			});
+			sendErrorResponse(res, 'Invalid DGT transaction request', 400);
 		} else {
-			res.status(400).json({
-				success: false,
-				message: 'Invalid request format'
-			});
+			sendErrorResponse(res, 'Invalid request format', 400);
 		}
 	}
 };
@@ -111,19 +92,9 @@ export const validateUserId = (req: Request, res: Response, next: NextFunction):
 		next();
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			res.status(400).json({
-				success: false,
-				message: 'Invalid user ID format',
-				errors: error.errors.map((e) => ({
-					field: e.path.join('.'),
-					message: e.message
-				}))
-			});
+			sendErrorResponse(res, 'Invalid user ID format', 400);
 		} else {
-			res.status(400).json({
-				success: false,
-				message: 'Invalid request format'
-			});
+			sendErrorResponse(res, 'Invalid request format', 400);
 		}
 	}
 };

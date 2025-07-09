@@ -31,7 +31,7 @@ router.get('/conversations', isAuthenticated, async (req: Request, res: Response
 	try {
 		const userId = getUserIdFromRequest(req);
 		if (userId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+			return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
 		}
 
 		// Get conversations using the service
@@ -52,7 +52,7 @@ router.get('/conversations', isAuthenticated, async (req: Request, res: Response
 		sendSuccessResponse(res, transformedConversations);
 	} catch (error) {
 		logger.error('Error getting conversations:', error);
-		res.status(500).json({ message: 'Failed to get conversations' });
+		sendErrorResponse(res, 'Failed to get conversations', 500);
 	}
 });
 
@@ -61,12 +61,12 @@ router.get('/conversation/:userId', isAuthenticated, async (req: Request, res: R
 	try {
 		const currentUserId = getUserIdFromRequest(req);
 		if (currentUserId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+			return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
 		}
 		const otherUserId = req.params.userId as UserId;
 
 		if (isNaN(otherUserId)) {
-			return res.status(400).json({ message: 'Invalid user ID' });
+			return sendErrorResponse(res, 'Invalid user ID', 400);
 		}
 
 		// Get messages using the service
@@ -98,7 +98,7 @@ router.get('/conversation/:userId', isAuthenticated, async (req: Request, res: R
 		sendSuccessResponse(res, messageThread);
 	} catch (error) {
 		logger.error('Error getting conversation messages:', error);
-		res.status(500).json({ message: 'Failed to get conversation messages' });
+		sendErrorResponse(res, 'Failed to get conversation messages', 500);
 	}
 });
 
@@ -114,7 +114,7 @@ router.post('/send', isAuthenticated, async (req: Request, res: Response) => {
 		const senderId = getUserIdFromRequest(req);
 
 		if (senderId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+			return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
 		}
 
 		// Send message using the service
@@ -138,9 +138,9 @@ router.post('/send', isAuthenticated, async (req: Request, res: Response) => {
 	} catch (error) {
 		logger.error('Error sending message:', error);
 		if (error instanceof z.ZodError) {
-			return res.status(400).json({ message: 'Invalid message data', errors: error.errors });
+			return sendErrorResponse(res, 'Invalid message data', 400, { errors: error.errors });
 		}
-		res.status(500).json({ message: 'Failed to send message' });
+		sendErrorResponse(res, 'Failed to send message', 500);
 	}
 });
 
@@ -149,12 +149,12 @@ router.post('/mark-read/:userId', isAuthenticated, async (req: Request, res: Res
 	try {
 		const currentUserId = getUserIdFromRequest(req);
 		if (currentUserId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+			return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
 		}
 		const senderId = req.params.userId as UserId;
 
 		if (isNaN(senderId)) {
-			return res.status(400).json({ message: 'Invalid user ID' });
+			return sendErrorResponse(res, 'Invalid user ID', 400);
 		}
 
 		// Mark messages as read using the service
@@ -163,7 +163,7 @@ router.post('/mark-read/:userId', isAuthenticated, async (req: Request, res: Res
 		sendSuccessResponse(res, null, 'Messages marked as read');
 	} catch (error) {
 		logger.error('Error marking messages as read:', error);
-		res.status(500).json({ message: 'Failed to mark messages as read' });
+		sendErrorResponse(res, 'Failed to mark messages as read', 500);
 	}
 });
 
@@ -172,12 +172,12 @@ router.delete('/conversation/:userId', isAuthenticated, async (req: Request, res
 	try {
 		const currentUserId = getUserIdFromRequest(req);
 		if (currentUserId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+			return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
 		}
 		const otherUserId = req.params.userId as UserId;
 
 		if (isNaN(otherUserId)) {
-			return res.status(400).json({ message: 'Invalid user ID' });
+			return sendErrorResponse(res, 'Invalid user ID', 400);
 		}
 
 		// Delete conversation using the service
@@ -186,7 +186,7 @@ router.delete('/conversation/:userId', isAuthenticated, async (req: Request, res
 		sendSuccessResponse(res, null, 'Conversation deleted');
 	} catch (error) {
 		logger.error('Error deleting conversation:', error);
-		res.status(500).json({ message: 'Failed to delete conversation' });
+		sendErrorResponse(res, 'Failed to delete conversation', 500);
 	}
 });
 
@@ -195,7 +195,7 @@ router.get('/unread-count', isAuthenticated, async (req: Request, res: Response)
 	try {
 		const userId = getUserIdFromRequest(req);
 		if (userId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+			return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
 		}
 
 		// Get unread count using the service
@@ -204,7 +204,7 @@ router.get('/unread-count', isAuthenticated, async (req: Request, res: Response)
 		sendSuccessResponse(res, { total });
 	} catch (error) {
 		logger.error('Error getting unread count:', error);
-		res.status(500).json({ message: 'Failed to get unread message count' });
+		sendErrorResponse(res, 'Failed to get unread message count', 500);
 	}
 });
 
@@ -220,7 +220,7 @@ router.put('/message/:messageId', isAuthenticated, async (req: Request, res: Res
 		const userId = getUserIdFromRequest(req);
 
 		if (userId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+			return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
 		}
 
 		await MessageService.editMessage(messageId, userId, content);
@@ -229,12 +229,12 @@ router.put('/message/:messageId', isAuthenticated, async (req: Request, res: Res
 	} catch (error) {
 		logger.error('Error editing message:', error);
 		if (error instanceof z.ZodError) {
-			return res.status(400).json({ message: 'Invalid message data', errors: error.errors });
+			return sendErrorResponse(res, 'Invalid message data', 400, { errors: error.errors });
 		}
 		if (error instanceof Error) {
-			return res.status(400).json({ message: error.message });
+			return sendErrorResponse(res, error.message, 400);
 		}
-		res.status(500).json({ message: 'Failed to edit message' });
+		sendErrorResponse(res, 'Failed to edit message', 500);
 	}
 });
 
@@ -245,7 +245,7 @@ router.delete('/message/:messageId', isAuthenticated, async (req: Request, res: 
 		const userId = getUserIdFromRequest(req);
 
 		if (userId === undefined) {
-			return res.status(401).json({ message: 'Unauthorized - User ID not found' });
+			return sendErrorResponse(res, 'Unauthorized - User ID not found', 401);
 		}
 
 		await MessageService.deleteMessage(messageId, userId);
@@ -254,9 +254,9 @@ router.delete('/message/:messageId', isAuthenticated, async (req: Request, res: 
 	} catch (error) {
 		logger.error('Error deleting message:', error);
 		if (error instanceof Error) {
-			return res.status(400).json({ message: error.message });
+			return sendErrorResponse(res, error.message, 400);
 		}
-		res.status(500).json({ message: 'Failed to delete message' });
+		sendErrorResponse(res, 'Failed to delete message', 500);
 	}
 });
 
@@ -285,7 +285,7 @@ router.get('/admin/messages', isAdminOrModerator, async (req: Request, res: Resp
 		});
 	} catch (error) {
 		logger.error('Error getting messages for moderation:', error);
-		res.status(500).json({ message: 'Failed to get messages for moderation' });
+		sendErrorResponse(res, 'Failed to get messages for moderation', 500);
 	}
 });
 

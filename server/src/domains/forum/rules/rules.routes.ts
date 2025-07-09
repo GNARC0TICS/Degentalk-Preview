@@ -62,7 +62,7 @@ router.get(
 			});
 		} catch (error) {
 			logger.error('Error fetching forum rules:', error);
-			return res.status(500).json({ error: 'Failed to fetch forum rules' });
+			return sendErrorResponse(res, 'Failed to fetch forum rules', 500);
 		}
 	})
 );
@@ -74,13 +74,13 @@ router.get(
 		try {
 			const ruleId = req.params.id;
 			if (!ruleId || typeof ruleId !== 'string') {
-				return res.status(400).json({ error: 'Invalid rule ID' });
+				return sendErrorResponse(res, 'Invalid rule ID', 400);
 			}
 
 			const rule = await storage.getForumRule(ruleId);
 
 			if (!rule) {
-				return res.status(404).json({ error: 'Rule not found' });
+				return sendErrorResponse(res, 'Rule not found', 404);
 			}
 
 			// Only allow published rules to be viewed, unless the user is an admin
@@ -90,14 +90,14 @@ router.get(
 					(userService.getUserFromRequest(req) as any).role !== 'admin')
 			) {
 				// Fixed isAdmin check
-				return res.status(403).json({ error: 'This rule is not published' });
+				return sendErrorResponse(res, 'This rule is not published', 403);
 			}
 
 			res.status(200);
 			return sendSuccessResponse(res, rule);
 		} catch (error) {
 			logger.error('Error fetching forum rule:', error);
-			return res.status(500).json({ error: 'Failed to fetch forum rule' });
+			return sendErrorResponse(res, 'Failed to fetch forum rule', 500);
 		}
 	})
 );
@@ -107,7 +107,7 @@ router.get(
 	'/user-agreements',
 	asyncHandler(async (req: Request, res: Response) => {
 		if (!req.isAuthenticated() || !userService.getUserFromRequest(req)) {
-			return res.status(401).json({ error: 'Authentication required' });
+			return sendErrorResponse(res, 'Authentication required', 401);
 		}
 
 		try {
@@ -115,7 +115,7 @@ router.get(
 			if (userId === undefined) {
 				// This case should ideally be caught by !req.isAuthenticated() already,
 				// but as a safeguard if req.user exists but ID doesn't.
-				return res.status(401).json({ error: 'User ID not found after authentication' });
+				return sendErrorResponse(res, 'User ID not found after authentication', 401);
 			}
 
 			// Get all user rule agreements
@@ -152,7 +152,7 @@ router.get(
 			});
 		} catch (error) {
 			logger.error('Error fetching user rule agreements:', error);
-			return res.status(500).json({ error: 'Failed to fetch user rule agreements' });
+			return sendErrorResponse(res, 'Failed to fetch user rule agreements', 500);
 		}
 	})
 );
@@ -162,7 +162,7 @@ router.post(
 	'/agree',
 	asyncHandler(async (req: Request, res: Response) => {
 		if (!req.isAuthenticated() || !userService.getUserFromRequest(req)) {
-			return res.status(401).json({ error: 'Authentication required' });
+			return sendErrorResponse(res, 'Authentication required', 401);
 		}
 
 		// Validate request body using Zod
@@ -172,8 +172,7 @@ router.post(
 
 		const parsed = agreeSchema.safeParse(req.body);
 		if (!parsed.success) {
-			return res.status(400).json({
-				error: 'Invalid request body',
+			return sendErrorResponse(res, 'Invalid request body', 400, {
 				details: parsed.error.issues
 			});
 		}
@@ -184,7 +183,7 @@ router.post(
 			const userId = getUserIdFromRequest(req);
 			if (userId === undefined) {
 				// This case should ideally be caught by !req.isAuthenticated() already.
-				return res.status(401).json({ error: 'User ID not found after authentication' });
+				return sendErrorResponse(res, 'User ID not found after authentication', 401);
 			}
 
 			// Get rules
@@ -194,9 +193,7 @@ router.post(
 				.where(and(inArray(forumRules.id, ruleIds), eq(forumRules.status, 'published')));
 
 			if (rules.length !== ruleIds.length) {
-				return res.status(404).json({
-					error: 'One or more rules not found or not published'
-				});
+				return sendErrorResponse(res, 'One or more rules not found or not published', 404);
 			}
 
 			// Get existing agreements
@@ -271,7 +268,7 @@ router.post(
 			}, 'Successfully agreed to rules');
 		} catch (error) {
 			logger.error('Error agreeing to rules:', error);
-			return res.status(500).json({ error: 'Failed to process rule agreements' });
+			return sendErrorResponse(res, 'Failed to process rule agreements', 500);
 		}
 	})
 );

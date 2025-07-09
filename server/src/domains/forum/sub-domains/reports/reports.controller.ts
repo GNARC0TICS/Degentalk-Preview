@@ -19,8 +19,7 @@ export class ReportsController {
 		try {
 			const validation = CreateReportSchema.safeParse(req.body);
 			if (!validation.success) {
-				return res.status(400).json({
-					error: 'Invalid report data',
+				return sendErrorResponse(res, 'Invalid report data', 400, {
 					details: validation.error.format()
 				});
 			}
@@ -28,7 +27,7 @@ export class ReportsController {
 			// Get user ID from session/auth middleware
 			const userId = getUserIdFromRequest(req);
 			if (!userId) {
-				return res.status(401).json({ error: 'Authentication required' });
+				return sendErrorResponse(res, 'Authentication required', 401);
 			}
 
 			// Convert userId to string for UUID compatibility
@@ -43,7 +42,7 @@ export class ReportsController {
 			}, 'Report submitted successfully');
 		} catch (error) {
 			logger.error('Error creating report:', error);
-			res.status(500).json({ error: 'Failed to submit report' });
+			sendErrorResponse(res, 'Failed to submit report', 500);
 		}
 	}
 }

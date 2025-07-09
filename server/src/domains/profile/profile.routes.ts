@@ -39,14 +39,14 @@ router.get('/:username', async (req: Request, res: Response) => {
 		const { username } = req.params;
 
 		if (!username) {
-			return res.status(400).json({ message: 'Username is required' });
+			return sendErrorResponse(res, 'Username is required', 400);
 		}
 
 		// Fetch user data using simple select (avoiding relational issues)
 		const [user] = await db.select().from(users).where(eq(users.username, username));
 
 		if (!user) {
-			return res.status(404).json({ message: 'User not found' });
+			return sendErrorResponse(res, 'User not found', 404);
 		}
 
 		const userId = user.id;
@@ -158,17 +158,12 @@ router.get('/:username', async (req: Request, res: Response) => {
 			}
 		};
 
-		return res.status(200).json(profileData);
+		return sendSuccessResponse(res, profileData);
 	} catch (error) {
 		logger.error('Error fetching profile:', error);
-		return res.status(500).json({ message: 'Error fetching profile data' });
+		return sendErrorResponse(res, 'Error fetching profile data', 500);
 	}
 });
 
-sendErrorResponse(res, 'Server error', 401);
-
-sendErrorResponse(res, 'Server error', 401);
-
-sendErrorResponse(res, 'Server error', 401);
 
 export default router;

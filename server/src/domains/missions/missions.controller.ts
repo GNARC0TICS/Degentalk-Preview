@@ -5,6 +5,9 @@ import { logger } from '../../core/logger';
 import { MissionsService } from './missions.service';
 import { xpService } from '../xp/xp.service';
 import { walletService } from '../wallet/wallet.service';
+import { sendSuccessResponse, sendErrorResponse } from '@server/src/core/utils/transformer.helpers';
+
+const missionsService = new MissionsService();
 
 /**
  * Get all missions (admin only)
@@ -12,7 +15,7 @@ import { walletService } from '../wallet/wallet.service';
 export const getAllMissions = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const missions = await missionsService.getAllMissions();
-		res.status(200).json(missions);
+		sendSuccessResponse(res, missions);
 	} catch (error) {
 		logger.error('Error getting all missions:', error);
 		next(error);
@@ -30,11 +33,11 @@ export const getActiveMissions = async (req: Request, res: Response, next: NextF
 		const userLevel = userService.getUserFromRequest(req)?.level || 1;
 
 		if (!userId) {
-			return res.status(401).json({ message: 'Authentication required' });
+			return sendErrorResponse(res, 'Authentication required', 401);
 		}
 
 		const missions = await missionsService.getActiveMissions(userLevel);
-		res.status(200).json(missions);
+		sendSuccessResponse(res, missions);
 	} catch (error) {
 		logger.error('Error getting active missions:', error);
 		next(error);
@@ -50,11 +53,11 @@ export const getUserMissionProgress = async (req: Request, res: Response, next: 
 		const userId = userService.getUserFromRequest(req)?.id;
 
 		if (!userId) {
-			return res.status(401).json({ message: 'Authentication required' });
+			return sendErrorResponse(res, 'Authentication required', 401);
 		}
 
 		const progress = await missionsService.getUserMissionProgress(userId);
-		res.status(200).json(progress);
+		sendSuccessResponse(res, progress);
 	} catch (error) {
 		logger.error('Error getting user mission progress:', error);
 		next(error);
@@ -73,11 +76,11 @@ export const getUserMissionProgressById = async (
 		const { userId } = req.params;
 
 		if (!userId) {
-			return res.status(400).json({ message: 'User ID is required' });
+			return sendErrorResponse(res, 'User ID is required', 400);
 		}
 
 		const progress = await missionsService.getUserMissionProgress(userId as UserId);
-		res.status(200).json(progress);
+		sendSuccessResponse(res, progress);
 	} catch (error) {
 		logger.error('Error getting user mission progress by ID:', error);
 		next(error);
@@ -92,13 +95,11 @@ export const createMission = async (req: Request, res: Response, next: NextFunct
 		const missionData = req.body;
 
 		if (!missionData.title || !missionData.type || !missionData.requiredAction) {
-			return res.status(400).json({
-				message: 'Missing required fields: title, type, and requiredAction are required'
-			});
+			return sendErrorResponse(res, 'Missing required fields: title, type, and requiredAction are required', 400);
 		}
 
 		const mission = await missionsService.createMission(missionData);
-		res.status(201).json(mission);
+		sendSuccessResponse(res, mission, 201);
 	} catch (error) {
 		logger.error('Error creating mission:', error);
 		next(error);
@@ -114,16 +115,16 @@ export const updateMission = async (req: Request, res: Response, next: NextFunct
 		const missionData = req.body;
 
 		if (!id) {
-			return res.status(400).json({ message: 'Mission ID is required' });
+			return sendErrorResponse(res, 'Mission ID is required', 400);
 		}
 
 		const mission = await missionsService.updateMission(id as MissionId, missionData);
 
 		if (!mission) {
-			return res.status(404).json({ message: 'Mission not found' });
+			return sendErrorResponse(res, 'Mission not found', 404);
 		}
 
-		res.status(200).json(mission);
+		sendSuccessResponse(res, mission);
 	} catch (error) {
 		logger.error('Error updating mission:', error);
 		next(error);
@@ -140,17 +141,17 @@ export const claimMissionReward = async (req: Request, res: Response, next: Next
 		const { missionId } = req.params;
 
 		if (!userId) {
-			return res.status(401).json({ message: 'Authentication required' });
+			return sendErrorResponse(res, 'Authentication required', 401);
 		}
 
 		if (!missionId) {
-			return res.status(400).json({ message: 'Mission ID is required' });
+			return sendErrorResponse(res, 'Mission ID is required', 400);
 		}
 
 		const result = await missionsService.claimMissionReward(userId as UserId, missionId as MissionId);
 
 		if (!result.success) {
-			return res.status(400).json({ message: result.message });
+			return sendErrorResponse(res, result.message, 400);
 		}
 
 		// Process rewards if the claim was successful
@@ -179,8 +180,7 @@ export const claimMissionReward = async (req: Request, res: Response, next: Next
 			// if (result.rewards.badge) { ... }
 		}
 
-		res.status(200).json({
-			success: true,
+		sendSuccessResponse(res, {
 			message: 'Mission rewards claimed successfully',
 			rewards: result.rewards
 		});
@@ -200,7 +200,7 @@ export const initializeDefaultMissions = async (
 ) => {
 	try {
 		await missionsService.createDefaultMissions();
-		res.status(200).json({ message: 'Default missions created successfully' });
+		sendSuccessResponse(res, { message: 'Default missions created successfully' });
 	} catch (error) {
 		logger.error('Error initializing default missions:', error);
 		next(error);
@@ -213,7 +213,7 @@ export const initializeDefaultMissions = async (
 export const resetDailyMissions = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		await missionsService.resetDailyMissions();
-		res.status(200).json({ message: 'Daily missions reset successfully' });
+		sendSuccessResponse(res, { message: 'Daily missions reset successfully' });
 	} catch (error) {
 		logger.error('Error resetting daily missions:', error);
 		next(error);
@@ -226,7 +226,7 @@ export const resetDailyMissions = async (req: Request, res: Response, next: Next
 export const resetWeeklyMissions = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		await missionsService.resetWeeklyMissions();
-		res.status(200).json({ message: 'Weekly missions reset successfully' });
+		sendSuccessResponse(res, { message: 'Weekly missions reset successfully' });
 	} catch (error) {
 		logger.error('Error resetting weekly missions:', error);
 		next(error);
