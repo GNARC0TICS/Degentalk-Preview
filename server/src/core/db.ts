@@ -12,9 +12,6 @@ if (!process.env.DATABASE_URL) {
 	throw new Error('DATABASE_URL must be set. Did you forget to provision a database?');
 }
 
-let db: any; // Use 'any' for now, or create a common Drizzle instance type
-let pool: Pool | undefined; // Pool is only for Neon/Postgres
-
 // Configure pool with retry settings
 const poolConfig = {
 	connectionString: process.env.DATABASE_URL,
@@ -23,7 +20,7 @@ const poolConfig = {
 	retryDelay: 1000,
 	maxRetries: 3
 };
-pool = new Pool(poolConfig);
+const pool = new Pool(poolConfig);
 
 // Add connection error handling
 pool.on('error', (err) => {
@@ -31,7 +28,7 @@ pool.on('error', (err) => {
 	process.exit(-1);
 });
 
-db = drizzleNeon(pool, { schema });
+const db = drizzleNeon(pool, { schema });
 logger.info('DATABASE', 'Using PostgreSQL (Neon) database provider.');
 
 // Add retry wrapper

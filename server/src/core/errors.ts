@@ -263,7 +263,7 @@ export function createErrorContext(req: Request): ErrorContext {
 }
 
 // Enhanced async handler with context
-export const asyncHandler = (fn: Function) => (req: Request, res: Response, next: NextFunction) => {
+export const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) => (req: Request, res: Response, next: NextFunction) => {
 	const context = createErrorContext(req);
 	Promise.resolve(fn(req, res, next)).catch((error) => {
 		if (error instanceof AppError) {

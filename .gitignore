@@ -39,3 +39,4 @@ test-results/
 *.backup.*
 UIVERSE/
 zen-mcp-server
+scripts/codemods/logger-migration.ts

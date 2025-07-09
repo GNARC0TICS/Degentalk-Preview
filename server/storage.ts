@@ -61,7 +61,7 @@ import type {
 	ThreadWithUser,
 	PostWithUser
 } from '../db/types/forum.types.ts';
-import type { UserPluginData } from '../db/types/user.types.ts';
+import type { UserPluginData } from '../db/types/user-plugin-data.types.ts';
 import type { EmojiWithAvailability } from '../db/types/emoji.types.ts';
 import session from 'express-session';
 import connectPGSink from 'connect-pg-simple';

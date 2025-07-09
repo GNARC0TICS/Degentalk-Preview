@@ -21,6 +21,7 @@ export type {
   UserAchievement,
   UserInventory,
   InventoryItem,
+  LevelConfig,
   CreateUserRequest,
   UpdateUserRequest,
   UserSearchParams,

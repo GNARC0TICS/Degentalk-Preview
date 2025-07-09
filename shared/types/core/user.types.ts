@@ -1,8 +1,18 @@
+// STREAM-LOCK: B
 import type { UserId, WalletId } from '../ids';
 import type { UserRole } from '@db/schema/core/enums';
 
 // UserLevel is a numeric value, not an enum
 export type UserLevel = number;
+
+// Level configuration for user progression
+export interface LevelConfig {
+  level: number;
+  name: string;
+  minXp: number;
+  maxXp: number;
+  color: string;
+}
 
 /**
  * Core User Domain Types
@@ -68,6 +78,13 @@ export interface DisplaySettings {
   dateFormat: 'relative' | 'absolute';
   showSignatures: boolean;
   postsPerPage: number;
+  theme: string;
+  fontSize: string;
+  threadDisplayMode: string;
+  reducedMotion: boolean;
+  hideNsfw: boolean;
+  showMatureContent: boolean;
+  showOfflineUsers: boolean;
 }
 
 export interface UserStats {
@@ -76,6 +93,7 @@ export interface UserStats {
   tipsSent: number;
   tipsReceived: number;
   reputation: number;
+  totalXp: number;
   dailyStreak: number;
   bestStreak: number;
   achievementCount: number;
@@ -90,6 +108,7 @@ export interface UserProfile extends Pick<User, 'id' | 'username' | 'level' | 'r
   frame: UserFrame | null;
   isOnline: boolean;
   lastSeen: Date;
+  levelConfig?: LevelConfig;
 }
 
 export interface UserBadge {

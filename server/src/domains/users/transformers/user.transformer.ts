@@ -5,13 +5,20 @@
  * response objects with GDPR compliance and audit trail.
  */
 
+// STREAM-LOCK: B
 import type { 
   PublicUser, 
   AuthenticatedUserSelf, 
   AdminUserDetail,
   UserRole 
 } from '../types';
-import type { UserId } from '@shared/types/ids';
+import type { DisplaySettings } from '../../../../../shared/types/core/user.types';
+import type { 
+  PublicUserDTO,
+  AuthenticatedUserSelfDTO,
+  UserProfileDTO
+} from '../../../../../shared/dto/user';
+import type { UserId } from '../../../../../shared/types/ids';
 import { createHash } from 'crypto';
 
 export class UserTransformer {
@@ -36,7 +43,32 @@ export class UserTransformer {
       stats: dbUser.stats ? {
         postCount: dbUser.stats.postCount || 0,
         threadCount: dbUser.stats.threadCount || 0,
-        reputation: dbUser.stats.reputation || 0
+        reputation: dbUser.stats.reputation || dbUser.reputation || 0
+      } : undefined
+    };
+  }
+
+  /**
+   * Transform user data for API public consumption (DTO)
+   */
+  static toPublicUserDTO(dbUser: any): PublicUserDTO {
+    if (!dbUser) {
+      throw new Error('Invalid user data provided to transformer');
+    }
+
+    return {
+      id: dbUser.id as UserId,
+      username: dbUser.username,
+      displayName: dbUser.displayName || undefined,
+      avatarUrl: dbUser.avatarUrl || undefined,
+      role: dbUser.role as UserRole,
+      isOnline: this.calculateOnlineStatus(dbUser.lastSeen),
+      lastSeen: this.shouldShowLastSeen(dbUser) ? dbUser.lastSeen : undefined,
+      createdAt: dbUser.createdAt,
+      stats: dbUser.stats ? {
+        postCount: dbUser.stats.postCount || 0,
+        threadCount: dbUser.stats.threadCount || 0,
+        reputation: dbUser.stats.reputation || dbUser.reputation || 0
       } : undefined
     };
   }
@@ -53,6 +85,31 @@ export class UserTransformer {
       email: dbUser.email,
       emailVerified: dbUser.emailVerified || false,
       preferences: dbUser.preferences || this.getDefaultPreferences(),
+      notifications: dbUser.notificationSettings || this.getDefaultNotificationSettings(),
+      privacy: dbUser.privacySettings || this.getDefaultPrivacySettings()
+    };
+  }
+
+  /**
+   * Transform user data for authenticated user viewing their own profile (DTO)
+   */
+  static toAuthenticatedSelfDTO(dbUser: any): AuthenticatedUserSelfDTO {
+    const publicData = this.toPublicUserDTO(dbUser);
+    
+    return {
+      ...publicData,
+      email: dbUser.email,
+      emailVerified: dbUser.emailVerified || false,
+      totalXp: dbUser.totalXp || dbUser.stats?.totalXp || dbUser.xp || 0,
+      preferences: {
+        theme: dbUser.preferences?.theme || 'auto',
+        language: dbUser.preferences?.language || 'en',
+        timezone: dbUser.preferences?.timezone || 'UTC',
+        emailNotifications: dbUser.preferences?.emailNotifications || true,
+        pushNotifications: dbUser.preferences?.pushNotifications || true,
+        marketingEmails: dbUser.preferences?.marketingEmails || false,
+        display: dbUser.preferences?.display || this.getDefaultDisplaySettings()
+      },
       notifications: dbUser.notificationSettings || this.getDefaultNotificationSettings(),
       privacy: dbUser.privacySettings || this.getDefaultPrivacySettings()
     };
@@ -78,6 +135,39 @@ export class UserTransformer {
       // Internal tracking
       internalNotes: dbUser.internalNotes || undefined,
       riskScore: dbUser.riskScore || undefined
+    };
+  }
+
+  /**
+   * Transform user data for profile view (DTO)
+   */
+  static toUserProfileDTO(dbUser: any): UserProfileDTO {
+    if (!dbUser) {
+      throw new Error('Invalid user data provided to transformer');
+    }
+
+    return {
+      id: dbUser.id as UserId,
+      username: dbUser.username,
+      displayName: dbUser.displayName || dbUser.username,
+      avatarUrl: dbUser.avatarUrl || undefined,
+      role: dbUser.role as UserRole,
+      level: dbUser.level || 1,
+      bio: dbUser.bio || undefined,
+      isOnline: this.calculateOnlineStatus(dbUser.lastSeen),
+      lastSeen: dbUser.lastSeen,
+      reputation: dbUser.stats?.reputation || dbUser.reputation || 0,
+      totalXp: dbUser.stats?.totalXp || dbUser.totalXp || dbUser.xp || 0,
+      levelConfig: dbUser.levelConfig ? {
+        level: dbUser.levelConfig.level,
+        name: dbUser.levelConfig.name,
+        minXp: dbUser.levelConfig.minXp,
+        maxXp: dbUser.levelConfig.maxXp,
+        color: dbUser.levelConfig.color
+      } : undefined,
+      badges: dbUser.badges || [],
+      title: dbUser.title || undefined,
+      frame: dbUser.frame || undefined
     };
   }
 
@@ -196,7 +286,25 @@ export class UserTransformer {
       timezone: 'UTC',
       emailNotifications: true,
       pushNotifications: true,
-      marketingEmails: false
+      marketingEmails: false,
+      display: this.getDefaultDisplaySettings()
+    };
+  }
+
+  private static getDefaultDisplaySettings(): DisplaySettings {
+    return {
+      language: 'en',
+      timezone: 'UTC',
+      dateFormat: 'relative',
+      showSignatures: true,
+      postsPerPage: 20,
+      theme: 'system',
+      fontSize: 'medium',
+      threadDisplayMode: 'card',
+      reducedMotion: false,
+      hideNsfw: true,
+      showMatureContent: false,
+      showOfflineUsers: true
     };
   }
 
@@ -226,4 +334,11 @@ export class UserTransformer {
 }
 
 // Export convenience methods
-export const { toPublicUser, toAuthenticatedSelf, toAdminUserDetail } = UserTransformer;
+export const { 
+  toPublicUser, 
+  toAuthenticatedSelf, 
+  toAdminUserDetail,
+  toPublicUserDTO,
+  toAuthenticatedSelfDTO,
+  toUserProfileDTO
+} = UserTransformer;

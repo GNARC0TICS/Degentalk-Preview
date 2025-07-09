@@ -5,7 +5,7 @@
  */
 
 import { Router } from 'express';
-import type { Request, Response } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { db } from '@db';
 import { sql } from 'drizzle-orm';
 import { queryMonitor } from './query-performance';
@@ -229,7 +229,7 @@ const healthMonitor = new HealthMonitor();
 /**
  * Middleware to track request metrics
  */
-export function requestMetricsMiddleware(req: Request, res: Response, next: Function) {
+export function requestMetricsMiddleware(req: Request, res: Response, next: NextFunction) {
 	const startTime = Date.now();
 
 	res.on('finish', () => {

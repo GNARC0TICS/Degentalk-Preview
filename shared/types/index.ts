@@ -1,4 +1,3 @@
-import { isValidId } from '@shared/utils/id';
 /**
  * Shared Types System - Main Export
  * 
@@ -71,6 +70,7 @@ export type {
   UserWallet,
   UserAchievement,
   UserInventory,
+  LevelConfig,
   CreateUserRequest,
   UpdateUserRequest,
   AdminUpdateUserRequest,

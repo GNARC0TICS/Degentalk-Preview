@@ -2,8 +2,10 @@
  * User factory with crypto-community personas and realistic test data
  */
 
+// STREAM-LOCK: B
 import { BaseFactory } from '../core/factory';
 import type { User } from '@schema';
+import type { UserStats, LevelConfig, DisplaySettings } from '../../types/core/user.types';
 import { generateId } from '@shared/utils/id';
 
 export class UserFactory extends BaseFactory<User> {
@@ -71,6 +73,66 @@ export class UserFactory extends BaseFactory<User> {
 		const xp = this.faker.number.int({ min: 0, max: 10000 });
 		// Simple XP to level calculation
 		return Math.floor(Math.sqrt(xp / 100)) + 1;
+	}
+
+	/**
+	 * Create mock UserStats with new fields
+	 */
+	static createUserStats(): UserStats {
+		const faker = this.createFaker();
+		return {
+			postCount: faker.number.int({ min: 0, max: 500 }),
+			threadCount: faker.number.int({ min: 0, max: 50 }),
+			tipsSent: faker.number.int({ min: 0, max: 100 }),
+			tipsReceived: faker.number.int({ min: 0, max: 100 }),
+			reputation: faker.number.int({ min: -100, max: 1000 }),
+			totalXp: faker.number.int({ min: 0, max: 50000 }),
+			dailyStreak: faker.number.int({ min: 0, max: 365 }),
+			bestStreak: faker.number.int({ min: 0, max: 365 }),
+			achievementCount: faker.number.int({ min: 0, max: 50 }),
+			lastPostAt: faker.date.recent({ days: 30 }),
+			joinedAt: faker.date.past({ years: 2 })
+		};
+	}
+
+	/**
+	 * Create mock LevelConfig
+	 */
+	static createLevelConfig(level: number = 1): LevelConfig {
+		const levelNames = [
+			'Newcomer', 'Lurker', 'Poster', 'Regular', 'Veteran', 
+			'Elite', 'Legend', 'Master', 'Grandmaster', 'Deity'
+		];
+		const colors = ['#gray', '#green', '#blue', '#purple', '#orange', '#red'];
+		
+		return {
+			level,
+			name: levelNames[Math.min(level - 1, levelNames.length - 1)] || `Level ${level}`,
+			minXp: level === 1 ? 0 : (level - 1) * 1000,
+			maxXp: level * 1000,
+			color: colors[Math.min(level - 1, colors.length - 1)] || '#gold'
+		};
+	}
+
+	/**
+	 * Create mock DisplaySettings
+	 */
+	static createDisplaySettings(): DisplaySettings {
+		const faker = this.createFaker();
+		return {
+			language: 'en',
+			timezone: 'UTC',
+			dateFormat: faker.helpers.arrayElement(['relative', 'absolute']),
+			showSignatures: faker.datatype.boolean(0.8),
+			postsPerPage: faker.helpers.arrayElement([10, 20, 50, 100]),
+			theme: faker.helpers.arrayElement(['system', 'light', 'dark']),
+			fontSize: faker.helpers.arrayElement(['small', 'medium', 'large']),
+			threadDisplayMode: faker.helpers.arrayElement(['card', 'list', 'compact']),
+			reducedMotion: faker.datatype.boolean(0.2),
+			hideNsfw: faker.datatype.boolean(0.7),
+			showMatureContent: faker.datatype.boolean(0.3),
+			showOfflineUsers: faker.datatype.boolean(0.6)
+		};
 	}
 
 	private generateCryptoBio(): string {
